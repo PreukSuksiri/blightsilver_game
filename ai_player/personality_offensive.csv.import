@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://tt1aj5p0eeqx"
+
+[deps]
+
+files=["res://ai_player/personality_offensive.Description.translation", "res://ai_player/personality_offensive.Difficulty.translation"]
+
+source_file="res://ai_player/personality_offensive.csv"
+dest_files=["res://ai_player/personality_offensive.Description.translation", "res://ai_player/personality_offensive.Difficulty.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

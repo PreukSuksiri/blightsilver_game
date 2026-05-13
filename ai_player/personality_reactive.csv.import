@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://b8ux5yl7lnr6w"
+
+[deps]
+
+files=["res://ai_player/personality_reactive.Description.translation", "res://ai_player/personality_reactive.😎.translation", "res://ai_player/personality_reactive.🤣.translation", "res://ai_player/personality_reactive.🤝.translation", "res://ai_player/personality_reactive.👍.translation", "res://ai_player/personality_reactive.🥺.translation", "res://ai_player/personality_reactive.🧨.translation", "res://ai_player/personality_reactive.🖕.translation", "res://ai_player/personality_reactive.😃.translation", "res://ai_player/personality_reactive.❤️.translation", "res://ai_player/personality_reactive.☠️.translation"]
+
+source_file="res://ai_player/personality_reactive.csv"
+dest_files=["res://ai_player/personality_reactive.Description.translation", "res://ai_player/personality_reactive.😎.translation", "res://ai_player/personality_reactive.🤣.translation", "res://ai_player/personality_reactive.🤝.translation", "res://ai_player/personality_reactive.👍.translation", "res://ai_player/personality_reactive.🥺.translation", "res://ai_player/personality_reactive.🧨.translation", "res://ai_player/personality_reactive.🖕.translation", "res://ai_player/personality_reactive.😃.translation", "res://ai_player/personality_reactive.❤️.translation", "res://ai_player/personality_reactive.☠️.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

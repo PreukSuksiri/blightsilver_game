@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bckso087hmnc7"]
+
+[ext_resource type="Script" uid="uid://dav6mgvhplhhf" path="res://scripts/Credits.gd" id="1"]
+
+[node name="Credits" type="Control" unique_id=370391531]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")

@@ -1,0 +1,454 @@
+[
+	{
+		"comment": "<<-- Library -->",
+		"wait": 0.01
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed.png",
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed.png",
+		"fade_color": "#000000",
+		"text": "The possessed girl stopped and barely can stand."
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed_2.png",
+		"fade_color": "#000000",
+		"sfx": "res://assets/audio/sound_axe1.mp3",
+		"text": "** Thud **"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed_2.png",
+		"fade_color": "#000000",
+		"text": "She passed out and fell down like an unwanted toy. "
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed_2.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"fade_color": "#000000",
+		"speaker": "Nex",
+		"text": "Mayu!!"
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed_3.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"music": "res://assets/audio/bgm_heroic.mp3"
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed_3.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"text": "The evil that possessed Mayu has revealed itself."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed_3.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"speaker": "The dark entity",
+		"text": "(Mumble unrecognize words)"
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_mayu_depossessed_3.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+			}
+		],
+		"fade_color": "#000000",
+		"speaker": "The dark entity",
+		"text": "There it is!! It's Midnight Shadow!!"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"flip": true,
+				"position": "far_left",
+				"scale": 300.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_midnight_shadow.png"
+			}
+		],
+		"fade_color": "#000000",
+		"speaker": "Midnight Shadow",
+		"text": "** Angry Growl **"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"flip": true,
+				"position": "far_left",
+				"scale": 300.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_midnight_shadow.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
+			}
+		],
+		"fade_color": "#000000",
+		"speaker": "Kelly",
+		"text": "Let me show your damned soul the authority of god. He also works at midnight."
+	},
+	{
+		"characters": [
+			{
+				"flip": true,
+				"position": "far_left",
+				"scale": 300.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_midnight_shadow.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
+			}
+		],
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_kelly_shoot_midnight_shadow.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"flash_color": "#ffffff",
+		"flash_count": 3.0,
+		"flash_delay": 0.4,
+		"flash_duration": 0.2,
+		"sfx": "res://assets/audio/sound_sledgehammer1.mp3",
+		"text": "** Bang!! **  ** Bang!! **  ** Bang!! **"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_kelly_shoot_midnight_shadow_mini.png",
+		"fade_color": "#000000",
+		"text": "Silver bullets blew through the dark entity and shreded it to mere pieces of black smokes"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"flip": true,
+				"position": "far_left",
+				"scale": 200.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_midnight_shadow_mini.png"
+			}
+		],
+		"fade_color": "#000000",
+		"shake": "far_left",
+		"shake_magnitude": 20.0,
+		"speaker": "Midnight Shadow",
+		"text": "** Screech ***"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"flip": true,
+				"position": "far_left",
+				"scale": 200.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_midnight_shadow_mini.png"
+			}
+		],
+		"fade_color": "#000000",
+		"text": "The midnight shadow's body are torn like an old paper."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"position": "far_left",
+				"scale": 200.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_midnight_shadow_mini.png"
+			}
+		],
+		"fade_color": "#000000",
+		"text": "It turned back and tried to escape."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"position": "far_left",
+				"scale": 200.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_midnight_shadow_mini.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
+			}
+		],
+		"fade_color": "#000000",
+		"speaker": "Kelly",
+		"text": "Not so fast!!"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
+			}
+		],
+		"fade_color": "#000000",
+		"flash_color": "#FFFFFF",
+		"flash_count": 2.0,
+		"flash_delay": 0.4,
+		"flash_duration": 0.2,
+		"sfx": "res://assets/audio/sound_sledgehammer1.mp3",
+		"text": "** Bang!! ** ** Bang!!**"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
+			}
+		],
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_midnight_shadow_escaped.png",
+		"fade_color": "#000000"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_midnight_shadow_escaped.png",
+		"fade_color": "#000000",
+		"text": "Like a hyena running away from a larger predator, the dark entity quickly slipped through the broken window glass."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
+			}
+		],
+		"fade_color": "#000000",
+		"flash_color": "#FFFFFF",
+		"flash_count": 2,
+		"flash_delay": 0.4,
+		"flash_duration": 0.2,
+		"sfx": "res://assets/audio/sound_sledgehammer1.mp3",
+		"text": "** Bang!! ** ** Bang!!**"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
+			}
+		],
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
+			}
+		],
+		"fade_color": "#000000",
+		"speaker": "Kelly",
+		"text": "......"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
+			}
+		],
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+			}
+		],
+		"fade_color": "#000000",
+		"speaker": "Kelly",
+		"text": "Damn... it escaped..."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+			}
+		],
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"fade_color": "#000000",
+		"speaker": "Nex",
+		"text": "Kelly! We need to take Mayu to the hospital now!"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			},
+			{
+				"flip":true,
+				"crop_bottom": 30.0,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+			}
+		],
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "You're right. Take my car downstairs."
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 3.0,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_kelly_car_drive_university.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.01
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_kelly_car_drive_university.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"text": "The black sedan glide swiftly on an empty university road, toward the hospital."
+		
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 3.0,
+		"wait": 0.001,
+		"music_fade_out": 3.0
+	},
+	{
+		"wait": 3.0
+	},
+	{
+		"comment": "<<-- Hospital -->",
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_hospitalized_2.png",
+		"fade_in": 3.0,
+		"wait": 0.01
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_hospitalized_2.png",
+		"characters": [],
+		"fade_in": 3.0,
+		"music": "res://assets/audio/bgm_storytelling_1.mp3",
+		"text": "They made it to the hospital. Mayu lie unconscious on the bed. Nex sit on her. He pat on her forehead to check for fever.",
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_hospitalized_2.png"
+	}
+]

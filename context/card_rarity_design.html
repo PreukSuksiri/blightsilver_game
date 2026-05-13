@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Blightsilver — Card Rarity Design</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #060810;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 32px 64px;
+    gap: 56px;
+  }
+
+  h1 {
+    color: #6ab4cc;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .row {
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  /* ── Rarity label below card ─────────────────────────────── */
+  .rarity-label {
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    opacity: 0.4;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     BASE CARD
+  ═══════════════════════════════════════════════════════════ */
+  .card {
+    width: 200px;
+    height: 272px;
+    border-radius: 10px;
+    position: relative;
+    overflow: visible; /* allow outer glow */
+    display: flex;
+    flex-direction: column;
+    cursor: default;
+  }
+
+  /* inner clip for art/info */
+  .card-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Art area 65% = 177px */
+  .art {
+    width: 100%;
+    height: 177px;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 30%, #1a1000 0%, #110D00 80%);
+  }
+
+  .art-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #FFCC33;
+    opacity: 0.18;
+  }
+
+  .type-badge {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 24px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+    display: flex;
+    align-items: center;
+    padding: 0 9px;
+    gap: 6px;
+  }
+  .type-badge .type-name {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #FFCC33;
+    opacity: 0.85;
+  }
+
+  .cost-pill {
+    position: absolute;
+    top: 5px; right: 6px;
+    min-width: 40px;
+    height: 18px;
+    padding: 0 7px;
+    border-radius: 9px;
+    border: 1.5px solid rgba(255,204,51,0.7);
+    background: rgba(0,0,0,0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #FFE080;
+    white-space: nowrap;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: rgba(255,204,51,0.25);
+    flex-shrink: 0;
+  }
+
+  /* Info area 35% = 95px */
+  .info {
+    flex: 1;
+    padding: 7px 10px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative;
+    background: #110D00;
+  }
+
+  .card-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #FFE899;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-stats {
+    font-size: 9.5px;
+    color: #FFCC33;
+    opacity: 0.85;
+    display: flex;
+    gap: 6px;
+  }
+
+  .stat-pill {
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 8.5px;
+    font-weight: 700;
+    border: 1px solid;
+  }
+  .atk { background: rgba(255,107,61,0.2); border-color: rgba(255,107,61,0.6); color: #FF8C5A; }
+  .def { background: rgba(61,143,255,0.2); border-color: rgba(61,143,255,0.6); color: #6AADFF; }
+
+  .card-desc {
+    font-size: 8.5px;
+    line-height: 1.4;
+    color: #B8A870;
+    opacity: 0.7;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    flex: 1;
+  }
+
+  /* Rarity gem row — bottom of info */
+  .rarity-gems {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 3px;
+    height: 12px;
+  }
+
+  /* Bottom accent bar */
+  .bottom-bar {
+    height: 3px;
+    flex-shrink: 0;
+    border-radius: 0 0 10px 10px;
+  }
+
+
+  /* ═══════════════════════════════════════════════════════════
+     ① COMMON  —  Plain, no adornment. Absence is the signal.
+  ═══════════════════════════════════════════════════════════ */
+  .common .card-inner {
+    border: 1px solid rgba(255,204,51,0.28);
+    box-shadow: none;
+  }
+  .common .divider { background: rgba(255,204,51,0.15); }
+  .common .bottom-bar { background: rgba(255,204,51,0.18); }
+  /* No gems */
+
+
+  /* ═══════════════════════════════════════════════════════════
+     ② UNCOMMON  —  Single ◆ gem. Soft glow.
+  ═══════════════════════════════════════════════════════════ */
+  .uncommon .card-inner {
+    border: 1.5px solid rgba(255,204,51,0.6);
+    box-shadow: 0 0 10px rgba(255,204,51,0.12);
+  }
+  .uncommon .divider { background: rgba(255,204,51,0.28); }
+  .uncommon .bottom-bar {
+    background: linear-gradient(to right, transparent, rgba(255,204,51,0.45), transparent);
+  }
+  .uncommon .gem { color: #aab8cc; font-size: 9px; opacity: 0.9; }
+
+
+  /* ═══════════════════════════════════════════════════════════
+     ③ RARE  —  Three gems. Bright glow. Shimmer sweep on art.
+  ═══════════════════════════════════════════════════════════ */
+  .rare .card-inner {
+    border: 2px solid rgba(255,204,51,0.9);
+    box-shadow:
+      0 0 16px rgba(255,204,51,0.28),
+      0 0 4px  rgba(255,204,51,0.5) inset;
+  }
+  .rare .divider { background: rgba(255,204,51,0.45); }
+  .rare .bottom-bar {
+    background: linear-gradient(to right, transparent, rgba(255,204,51,0.75), transparent);
+  }
+  .rare .gem { color: #4aa8ff; font-size: 9px; text-shadow: 0 0 6px rgba(74,168,255,0.8); }
+
+  /* Shimmer sweep overlay */
+  .rare .art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      115deg,
+      transparent 30%,
+      rgba(255,255,255,0.12) 48%,
+      rgba(255,255,255,0.18) 50%,
+      rgba(255,255,255,0.12) 52%,
+      transparent 70%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+
+  /* ═══════════════════════════════════════════════════════════
+     ④ LEGENDARY  —  Crown ornament. Double border. Gold foil.
+                     Corner L-brackets.
+  ═══════════════════════════════════════════════════════════ */
+  .legendary .card-inner {
+    border: 2.5px solid rgba(255,210,80,1);
+    box-shadow:
+      0 0 28px rgba(255,180,30,0.45),
+      0 0 8px  rgba(255,220,80,0.6) inset,
+      0 0 60px rgba(255,180,30,0.15);
+  }
+
+  /* Inner border ring */
+  .legendary .card-inner::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,210,80,0.25);
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Corner L-bracket ornaments */
+  .legendary .card::after,
+  .legendary .card::before {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: rgba(255,210,80,0.9);
+    border-style: solid;
+    z-index: 2;
+  }
+  .legendary .card::before {
+    top: -3px; left: -3px;
+    border-width: 2px 0 0 2px;
+    border-radius: 3px 0 0 0;
+  }
+  .legendary .card::after {
+    bottom: -3px; right: -3px;
+    border-width: 0 2px 2px 0;
+    border-radius: 0 0 3px 0;
+  }
+
+  /* Gold foil gradient on info */
+  .legendary .info {
+    background: linear-gradient(
+      160deg,
+      #1a1000 0%,
+      #1f1500 40%,
+      #1a1200 70%,
+      #110d00 100%
+    );
+  }
+
+  /* Animated gold dust on art */
+  .legendary .art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80px 40px at 30% 60%, rgba(255,200,50,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 60px 30px at 75% 30%, rgba(255,180,20,0.07) 0%, transparent 70%);
+    animation: goldshift 4s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes goldshift {
+    0%   { opacity: 0.6; }
+    100% { opacity: 1.2; }
+  }
+
+  .legendary .divider {
+    background: linear-gradient(to right, transparent, rgba(255,200,50,0.7), transparent);
+    height: 1.5px;
+  }
+  .legendary .bottom-bar {
+    height: 4px;
+    background: linear-gradient(to right, transparent, rgba(255,200,50,0.9), transparent);
+  }
+  .legendary .gem {
+    color: #FFD700;
+    font-size: 14px;
+    text-shadow: 0 0 8px rgba(255,200,50,0.9), 0 0 16px rgba(255,180,20,0.5);
+  }
+
+
+  /* ═══════════════════════════════════════════════════════════
+     ⑤ EXOTIC  —  Prismatic/rainbow border. Iridescent art.
+                  Pulsing aurora. No fixed color identity.
+  ═══════════════════════════════════════════════════════════ */
+
+  /* Rainbow border via pseudo + conic-gradient */
+  .exotic .card-inner {
+    border: 2px solid transparent;
+    box-shadow:
+      0 0 24px rgba(180,100,255,0.35),
+      0 0 48px rgba(100,200,255,0.20),
+      0 0 6px  rgba(255,100,200,0.3) inset;
+  }
+  .exotic .card-inner::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    padding: 2px;
+    background: conic-gradient(
+      from 0deg,
+      #ff4466, #ff9900, #ffdd00,
+      #44ff88, #00ccff, #8844ff,
+      #ff44cc, #ff4466
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: rotateBorder 4s linear infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @keyframes rotateBorder {
+    0%   { --angle: 0deg;   background: conic-gradient(from 0deg,   #ff4466,#ff9900,#ffdd00,#44ff88,#00ccff,#8844ff,#ff44cc,#ff4466); }
+    100% { --angle: 360deg; background: conic-gradient(from 360deg, #ff4466,#ff9900,#ffdd00,#44ff88,#00ccff,#8844ff,#ff44cc,#ff4466); }
+  }
+
+  /* Aurora iridescent overlay on art */
+  .exotic .art {
+    background: radial-gradient(ellipse at 50% 30%, #0d0520 0%, #07080F 80%);
+  }
+  .exotic .art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255,80,150,0.10) 0%,
+      rgba(80,200,255,0.12) 25%,
+      rgba(120,255,180,0.08) 50%,
+      rgba(200,80,255,0.10) 75%,
+      rgba(255,180,80,0.08) 100%
+    );
+    background-size: 300% 300%;
+    animation: aurora 5s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes aurora {
+    0%   { background-position: 0% 50%; opacity: 0.7; }
+    50%  { background-position: 100% 50%; opacity: 1.2; }
+    100% { background-position: 0% 100%; opacity: 0.8; }
+  }
+
+  /* Holographic grid on info */
+  .exotic .info {
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px,
+        transparent 1px, transparent 12px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px,
+        transparent 1px, transparent 12px
+      ),
+      #07080F;
+  }
+  .exotic .card-name { color: #e8e0ff; }
+  .exotic .card-stats { color: #a0e8ff; }
+  .exotic .card-desc { color: #c0c0e0; }
+
+  .exotic .cost-pill {
+    border-color: transparent;
+    background: linear-gradient(135deg, rgba(255,100,200,0.4), rgba(100,200,255,0.4));
+    color: #fff;
+    font-weight: 800;
+    animation: pillglow 2s ease-in-out infinite alternate;
+  }
+  @keyframes pillglow {
+    0%   { box-shadow: 0 0 6px rgba(255,100,200,0.6); }
+    100% { box-shadow: 0 0 12px rgba(100,200,255,0.6); }
+  }
+
+  .exotic .type-badge .type-name {
+    background: linear-gradient(90deg, #ff88cc, #88ddff, #aaffcc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: textshift 3s linear infinite;
+    background-size: 200%;
+  }
+  @keyframes textshift {
+    0%   { background-position: 0%; }
+    100% { background-position: 200%; }
+  }
+
+  .exotic .divider {
+    height: 1.5px;
+    background: linear-gradient(to right,
+      transparent, #ff44aa, #44aaff, #44ffaa, #ffaa44, transparent);
+    background-size: 200%;
+    animation: dividershift 3s linear infinite;
+  }
+  @keyframes dividershift {
+    0%   { background-position: 0%; }
+    100% { background-position: 200%; }
+  }
+
+  .exotic .bottom-bar {
+    height: 4px;
+    background: linear-gradient(to right,
+      #ff4466, #ff9900, #ffdd00, #44ff88, #00ccff, #8844ff, #ff44cc);
+    background-size: 200%;
+    animation: barshift 3s linear infinite;
+  }
+  @keyframes barshift {
+    0%   { background-position: 0%; }
+    100% { background-position: 200%; }
+  }
+
+  .exotic .gem {
+    font-size: 13px;
+    background: linear-gradient(90deg, #ff88cc, #88ddff, #aaffcc, #ffcc88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 4px rgba(180,120,255,0.8));
+    animation: textshift 2s linear infinite;
+    background-size: 300%;
+  }
+
+
+  /* ═══════════════════════════════════════════════════════════
+     REFERENCE TABLE
+  ═══════════════════════════════════════════════════════════ */
+  .ref-table {
+    border-collapse: collapse;
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    min-width: 720px;
+  }
+  .ref-table th {
+    text-align: left;
+    padding: 6px 14px 6px 0;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.22);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .ref-table td {
+    padding: 7px 14px 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    vertical-align: top;
+    font-size: 10.5px;
+  }
+  .ref-table td:first-child {
+    color: rgba(255,255,255,0.3);
+    white-space: nowrap;
+    width: 90px;
+  }
+  .ref-table td:nth-child(2) {
+    color: rgba(200,220,255,0.8);
+    width: 110px;
+    font-weight: 600;
+  }
+  .ref-table .note { color: rgba(180,180,200,0.5); font-size: 10px; }
+
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+</style>
+</head>
+<body>
+
+<h1>Blightsilver — Card Rarity Design</h1>
+
+<div class="row">
+
+  <!-- ① COMMON -->
+  <div class="col">
+    <div class="card common">
+      <div class="card-inner">
+        <div class="art">
+          <div class="art-placeholder">[ illustration ]</div>
+          <div class="type-badge"><span class="type-name">CHARACTER</span></div>
+          <div class="cost-pill">1500◆</div>
+        </div>
+        <div class="divider"></div>
+        <div class="info">
+          <div class="card-name">Shadow Warden</div>
+          <div class="card-stats">
+            <span class="stat-pill atk">ATK 3</span>
+            <span class="stat-pill def">DEF 2</span>
+          </div>
+          <div class="card-desc">No special ability. Occupies a grid cell.</div>
+          <div class="rarity-gems">
+            <!-- no gems for common -->
+          </div>
+        </div>
+        <div class="bottom-bar"></div>
+      </div>
+    </div>
+    <div class="rarity-label">Common</div>
+  </div>
+
+  <!-- ② UNCOMMON -->
+  <div class="col">
+    <div class="card uncommon">
+      <div class="card-inner">
+        <div class="art">
+          <div class="art-placeholder">[ illustration ]</div>
+          <div class="type-badge"><span class="type-name">CHARACTER</span></div>
+          <div class="cost-pill">1500◆</div>
+        </div>
+        <div class="divider"></div>
+        <div class="info">
+          <div class="card-name">Shadow Warden</div>
+          <div class="card-stats">
+            <span class="stat-pill atk">ATK 3</span>
+            <span class="stat-pill def">DEF 2</span>
+          </div>
+          <div class="card-desc">On place: reveal one adjacent face-down card.</div>
+          <div class="rarity-gems">
+            <span class="gem">◆</span>
+          </div>
+        </div>
+        <div class="bottom-bar"></div>
+      </div>
+    </div>
+    <div class="rarity-label">Uncommon</div>
+  </div>
+
+  <!-- ③ RARE -->
+  <div class="col">
+    <div class="card rare">
+      <div class="card-inner">
+        <div class="art">
+          <div class="art-placeholder">[ illustration ]</div>
+          <div class="type-badge"><span class="type-name">CHARACTER</span></div>
+          <div class="cost-pill">1500◆</div>
+        </div>
+        <div class="divider"></div>
+        <div class="info">
+          <div class="card-name">Shadow Warden</div>
+          <div class="card-stats">
+            <span class="stat-pill atk">ATK 3</span>
+            <span class="stat-pill def">DEF 2</span>
+          </div>
+          <div class="card-desc">On attack: gain +1 DEF until end of turn.</div>
+          <div class="rarity-gems">
+            <span class="gem">◆</span>
+            <span class="gem">◆</span>
+            <span class="gem">◆</span>
+          </div>
+        </div>
+        <div class="bottom-bar"></div>
+      </div>
+    </div>
+    <div class="rarity-label">Rare</div>
+  </div>
+
+  <!-- ④ LEGENDARY -->
+  <div class="col">
+    <div class="card legendary">
+      <div class="card-inner">
+        <div class="art">
+          <div class="art-placeholder">[ illustration ]</div>
+          <div class="type-badge"><span class="type-name">CHARACTER</span></div>
+          <div class="cost-pill">1500◆</div>
+        </div>
+        <div class="divider"></div>
+        <div class="info">
+          <div class="card-name">Shadow Warden</div>
+          <div class="card-stats">
+            <span class="stat-pill atk">ATK 3</span>
+            <span class="stat-pill def">DEF 2</span>
+          </div>
+          <div class="card-desc">Barrier — immune to Trap reveal effects.</div>
+          <div class="rarity-gems">
+            <span class="gem">♛</span>
+          </div>
+        </div>
+        <div class="bottom-bar"></div>
+      </div>
+    </div>
+    <div class="rarity-label">Legendary</div>
+  </div>
+
+  <!-- ⑤ EXOTIC -->
+  <div class="col">
+    <div class="card exotic">
+      <div class="card-inner">
+        <div class="art">
+          <div class="art-placeholder">[ illustration ]</div>
+          <div class="type-badge"><span class="type-name">CHARACTER</span></div>
+          <div class="cost-pill">1500◆</div>
+        </div>
+        <div class="divider"></div>
+        <div class="info">
+          <div class="card-name">Shadow Warden</div>
+          <div class="card-stats">
+            <span class="stat-pill atk">ATK 3</span>
+            <span class="stat-pill def">DEF 2</span>
+          </div>
+          <div class="card-desc">On reveal: copy the ability of any revealed card on the board.</div>
+          <div class="rarity-gems">
+            <span class="gem">✦</span>
+            <span class="gem">✦</span>
+            <span class="gem">✦</span>
+          </div>
+        </div>
+        <div class="bottom-bar"></div>
+      </div>
+    </div>
+    <div class="rarity-label">Exotic</div>
+  </div>
+
+</div>
+
+<!-- ── Reference table ──────────────────────────────────────── -->
+<table class="ref-table">
+  <tr>
+    <th>Rarity</th>
+    <th>Gimmick</th>
+    <th>Border</th>
+    <th>Glow</th>
+    <th>Gem symbol</th>
+    <th>Godot implementation</th>
+  </tr>
+  <tr>
+    <td><span class="dot" style="background:#555"></span>Common</td>
+    <td>No decoration — absence is the signal</td>
+    <td>1px, 28% opacity</td>
+    <td>None</td>
+    <td class="note">—</td>
+    <td class="note">StyleBoxFlat, low border opacity</td>
+  </tr>
+  <tr>
+    <td><span class="dot" style="background:#aab8cc"></span>Uncommon</td>
+    <td>Single ◆ gem, soft glow</td>
+    <td>1.5px, 60% opacity</td>
+    <td>10px, 12%</td>
+    <td>◆ (silver)</td>
+    <td class="note">StyleBoxFlat + shadow_size=8</td>
+  </tr>
+  <tr>
+    <td><span class="dot" style="background:#4aa8ff"></span>Rare</td>
+    <td>Three ◆◆◆ gems + shimmer sweep across art</td>
+    <td>2px, full opacity</td>
+    <td>16px, 28%</td>
+    <td>◆◆◆ (blue)</td>
+    <td class="note">StyleBoxFlat + shadow + AnimationPlayer shader</td>
+  </tr>
+  <tr>
+    <td><span class="dot" style="background:#FFD700"></span>Legendary</td>
+    <td>Crown ♛, double border, gold foil, corner L-brackets</td>
+    <td>2.5px gold + inner ring</td>
+    <td>28px gold, 45%</td>
+    <td>♛ (gold)</td>
+    <td class="note">StyleBoxFlat + ColorRect corner brackets (like main menu)</td>
+  </tr>
+  <tr>
+    <td><span class="dot" style="background:linear-gradient(90deg,#f0f,#0ff,#ff0)" style="background:conic-gradient(#ff4466,#00ccff,#44ff88,#ff4466)"></span>Exotic</td>
+    <td>Rotating rainbow border, aurora art overlay, holographic info grid, ✦✦✦ prismatic gems</td>
+    <td>2px rainbow (animated)</td>
+    <td>Multi-color, pulsing</td>
+    <td>✦✦✦ (rainbow)</td>
+    <td class="note">CanvasItem shader required for rainbow border + aurora</td>
+  </tr>
+</table>
+
+</body>
+</html>

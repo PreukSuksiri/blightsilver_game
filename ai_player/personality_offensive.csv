@@ -1,0 +1,23 @@
+Personality Name,Description,Difficulty
+Center Hoarder,"Strongly prefers attacking the center 3x3 area, Expose all of their character without hesitation",Easy
+Border Guard,"Prefers attacking the outer border/edges, Expose all of their character without hesitation",Easy
+Corner Assassin,Heavily targets the 4 corners. Expose their character by one or two at a time. Tolerant to skip their first two turns until they see opponent card,Medium
+Melee Fighter,Focuses on the top horizontal rows and move downward by one column. Expose their character by one or two at a time.,Medium
+Sniper,Focuses on the bottom horizontal rows and move upward by one column. Expose their character by one or two at a time.,Medium
+Leftist,Focuses on the leftmost vertical rows and move to the right by one column. Expose their character card aggressively if destroyed at least 1 opponent’s character,Medium
+Rightist,Focuses on the rightmost vertical rows and move to the left by one column. Expose their character card aggressively if destroyed at least 1 opponent’s character,Medium
+X Sabre,Attacks mainly along the two main diagonals. Expose all of their character without hesitation,Easy
+Crusader,Attacks mainly in the middle row (cross pattern). Expose all of their character without hesitation,Easy
+Column Crusher,"Focuses on one a single vertical columns, before moving to another. Change column if find any trap. Expose their character by one or two at a time.",Medium
+Row Ripper,"Focuses on one a single horizontal row, before moving to another. Change row if find any trap. Expose their character by one or two at a time.",Medium
+Revealed Hunter,Prefers attacking near already revealed cards. Expose their character card aggressively if destroyed at least 1 opponent’s character,Medium
+Explorer,Prefers attacking far from revealed cards (not blank). Expose their character by one or two at a time.,Easy
+Tinkerer,"Once it finds a trap, it keeps hammering that area. Expose their without hesitation after finding opponent’s trap",Hard
+Berserker,"Once it finds a monster, it keeps hammering that area. Expose all of their character without hesitation",Hard
+Shadow Lurker,Attack randomly. Expose their character by one or two at a time. Tolerant to skip their first two turns until they see opponent card,Hard
+Sleeping Dragon,"Once it finds a monster, it keeps hammering that area. Expose all of their character without hesitation. Tolerant to skip their first two turns until they see opponent card",Hard
+Rambo,"Attack randomly, Expose all of their character without hesitation",Medium
+Spy,Avoid attacking border. Expose their character by one or two at a time. Tolerant to skip their first two turns until they see opponent card,Medium
+X Alien,Attacks mainly along the two main diagonals. Expose their character card aggressively if destroyed at least 1 opponent’s character. Tolerant to skip their first two turns until they see opponent card,Medium
+Technophobia,Prefers attacking far from revealed trap. Expose their character by one or two at a time. Tolerant to skip their first two turns until they see opponent card,Medium
+Witchhunter,Prefers attacking far from revealed character. Attacks mainly in the middle row (cross pattern). Expose their character by one or two at a time,Medium

@@ -1,0 +1,276 @@
+[
+{
+		"comment": "<<<-- Nex Dorm -->>>",
+		"wait": 0.001
+	},
+	{
+		"fade_out": 0.001,
+		"fade_color": "#000000",
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [],
+		"fade_in": 3.0,
+		"fade_color": "#000000",
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [],
+		"text": {
+			"en": "Kelly gathered and squaring up the Vellum Card deck into a neat and perfect stack."
+		},
+		"music": "res://assets/audio/bgm_relaxed_1.mp3"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png",
+				"position": "left",
+				"flip": true,
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Kelly",
+		"text": "You have a talent to be a duelist. I'm counting on you."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png",
+				"position": "right",
+				"scale": 190,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Thanks... Err... What now...?"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png",
+				"position": "left",
+				"flip": true,
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Kelly",
+		"text": "You are going to be my assistant tonight. We are going for a ghost busting at the library."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png",
+				"position": "right",
+				"scale": 190,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Tonight...!? So suddenly... Ummm...."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png",
+				"position": "left",
+				"flip": true,
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Oh? Are you going to let your female friend bleed dried first until you do something?"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png",
+				"position": "right",
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "No... That's not what I meant.... I... Err..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png",
+				"position": "right",
+				"scale": 190,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I will do it."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png",
+				"position": "left",
+				"flip": true,
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Kelly",
+		"text": "There. I know who I can count on."
+	},
+	{
+		"wait": 0.5
+	}
+	,
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png",
+				"position": "left",
+				"flip": true,
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Kelly",
+		"text": "I've already made a plan. We are infiltrating the library and hide in the toilet until midnight. Then we go to the crime scene."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png",
+				"position": "right",
+				"scale": 190,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Infiltrating?? Wait... What?? The library is a public access. No need to play detective."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png",
+				"position": "left",
+				"flip": true,
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Ohhh. Nex Crowmont. I've forgot to mention that currently... You are a wanted fugitive."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png",
+				"position": "right",
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Wanted fugitive!? What are you talking about..? I'm not a criminal..!!"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png",
+				"position": "left",
+				"flip": true,
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Kelly",
+		"text": "The security camera couldn't capture an image of a possessed person. The only image they can captured is you. Nex."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png",
+				"position": "left",
+				"flip": true,
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Kelly",
+		"text": "So the culprit who ransacked the library's shelves and destroyed university's properties is you."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png",
+				"position": "right",
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "What the hell!? No way!!"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png",
+				"position": "left",
+				"flip": true,
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Kelly",
+		"text": "You are to follow my plan without a question. Find yourself a disguise. We are going undercover.",
+		"music_fade_out": 3.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [],
+		"fade_out": 3.0,
+		"fade_color": "#000000",
+		"wait": 0.001
+	}
+
+]

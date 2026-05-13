@@ -1,0 +1,35 @@
+[
+	{
+		"comment": "<<-- Hospital -->"
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_hospitalized_2.png",
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_hospitalized_2.png",
+		"music": "res://assets/audio/bgm_storytelling_1.mp3",
+		"text": "Nex and Kelly brought Mayu to the hospital in time. She lied unconscious on the bed. Her face is all pale."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_hospitalized_2.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "The doctor said that she's out of critical stages now. We're lucky. Now let her recover."
+	}
+]

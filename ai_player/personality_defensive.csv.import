@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://qt47g8yo82rf"
+
+[deps]
+
+files=["res://ai_player/personality_defensive.Description.translation", "res://ai_player/personality_defensive.Difficulty.translation"]
+
+source_file="res://ai_player/personality_defensive.csv"
+dest_files=["res://ai_player/personality_defensive.Description.translation", "res://ai_player/personality_defensive.Difficulty.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

@@ -1,0 +1,735 @@
+extends Control
+# Visual Novel player — loads a JSON scene file and plays it beat by beat.
+# Usage: instantiate vn_player.tscn, add_child, then call play_scene(path, callback).
+
+# ─────────────────────────────────────────────────────────────
+# Constants
+# ─────────────────────────────────────────────────────────────
+const SLOT_NAMES  := ["far_left", "left", "center", "right", "far_right"]
+const SLOT_X      := [0.0,        200.0,  640.0,    1080.0,  1280.0]
+const CHAR_W      := 320.0
+const CHAR_H      := 560.0
+const CHAR_Y      := 80.0
+const DIALOG_Y    := 640.0
+const DIALOG_H    := 260.0
+
+const HINT_ICON_PATH  := "res://assets/textures/vn/etc/star_compass.png"
+const FONT_PATH       := "res://assets/fonts/Chivo-VariableFont_wght.ttf"
+const WINDOWSKIN_PATH := "res://assets/textures/ui/decorations/ui_window_skin.png"
+
+# ── Toggle dialog style ───────────────────────────────────────
+# true  = decorative windowskin (NinePatchRect)
+# false = original flat dark panel
+const USE_WINDOWSKIN: bool = false
+
+# ─────────────────────────────────────────────────────────────
+# State
+# ─────────────────────────────────────────────────────────────
+var locale: String = "en"   # set before play_scene() to switch language
+
+var _beats: Array = []
+var _beat_index: int = 0
+var _on_complete: Callable = Callable()
+var _current_bg_path: String = ""
+var _accepting_input: bool = true
+
+# ─────────────────────────────────────────────────────────────
+# UI refs
+# ─────────────────────────────────────────────────────────────
+var _stage: Control = null          # all visuals live here; shaken for screen shake
+var _bg_rect: TextureRect = null
+var _char_slots: Dictionary = {}    # slot_name -> TextureRect
+var _dialog_panel: Panel = null
+var _speaker_panel: PanelContainer = null
+var _speaker_lbl: Label = null
+var _dialog_lbl: RichTextLabel = null
+var _hint_icon: TextureRect = null
+var _hint_tween: Tween = null
+var _video_player: VideoStreamPlayer = null
+var _music_player: AudioStreamPlayer = null
+var _music_fade_tween: Tween = null
+var _current_music_path: String = ""
+var _fade_rect: ColorRect = null
+var _kb_tween: Tween = null      # Ken Burns background animation
+
+# ─────────────────────────────────────────────────────────────
+# Localisation helper
+# ─────────────────────────────────────────────────────────────
+# val can be a plain String or a {"en": "...", "th": "..."} dict.
+# Returns the string for the current locale, falling back to the
+# first available language if the locale key is not found.
+func _loc(val) -> String:
+	if val is Dictionary:
+		if val.has(locale):
+			return str(val[locale])
+		if not val.is_empty():
+			return str(val.values()[0])
+		return ""
+	return str(val) if val != null else ""
+
+# ─────────────────────────────────────────────────────────────
+# Font helper
+# ─────────────────────────────────────────────────────────────
+func _make_font(weight: int) -> FontVariation:
+	var base := load(FONT_PATH) as FontFile
+	var fv := FontVariation.new()
+	fv.base_font = base
+	fv.variation_opentype = {"wght": weight}
+	return fv
+
+# ─────────────────────────────────────────────────────────────
+# Lifecycle
+# ─────────────────────────────────────────────────────────────
+func _ready() -> void:
+	set_anchors_preset(Control.PRESET_FULL_RECT)
+	z_index = 100
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	_build_ui()
+
+# ─────────────────────────────────────────────────────────────
+# Build UI
+# ─────────────────────────────────────────────────────────────
+func _build_ui() -> void:
+	# Stage container — everything visual goes here so screen shake works
+	_stage = Control.new()
+	_stage.position = Vector2(0.0, 0.0)
+	_stage.size     = Vector2(1600.0, 900.0)
+	add_child(_stage)
+
+	# Dark base background
+	var base := ColorRect.new()
+	base.position = Vector2(0.0, 0.0)
+	base.size     = Vector2(1600.0, 900.0)
+	base.color    = Color(0.04, 0.06, 0.14, 1.0)
+	_stage.add_child(base)
+
+	# Full-screen background image
+	_bg_rect = TextureRect.new()
+	_bg_rect.position     = Vector2(0.0, 0.0)
+	_bg_rect.size         = Vector2(1600.0, 900.0)
+	_bg_rect.pivot_offset = Vector2(800.0, 450.0)
+	_bg_rect.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	_bg_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_bg_rect.modulate     = Color(1.0, 1.0, 1.0, 0.0)
+	_stage.add_child(_bg_rect)
+
+	# Character slots — 5 fixed-position TextureRects
+	var slot_name_list: Array = ["far_left", "left", "center", "right", "far_right"]
+	var slot_x_list: Array    = [0.0, 200.0, 640.0, 1080.0, 1280.0]
+	for i in slot_name_list.size():
+		var sname: String = slot_name_list[i]
+		var slot := TextureRect.new()
+		slot.name         = sname
+		slot.position     = Vector2(slot_x_list[i], CHAR_Y)
+		slot.size         = Vector2(CHAR_W, CHAR_H)
+		slot.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+		slot.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		slot.modulate     = Color(1.0, 1.0, 1.0, 0.0)
+		_stage.add_child(slot)
+		_char_slots[sname] = slot
+
+	# Dialog panel (bottom strip)
+	_dialog_panel = Panel.new()
+	_dialog_panel.position            = Vector2(0.0, DIALOG_Y)
+	_dialog_panel.size                = Vector2(1600.0, DIALOG_H)
+	_dialog_panel.custom_minimum_size = Vector2(1600.0, DIALOG_H)
+	if USE_WINDOWSKIN:
+		_dialog_panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+		var nine := NinePatchRect.new()
+		nine.texture             = load(WINDOWSKIN_PATH) as Texture2D
+		nine.patch_margin_left   = 110
+		nine.patch_margin_right  = 110
+		nine.patch_margin_top    = 110
+		nine.patch_margin_bottom = 110
+		nine.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		_dialog_panel.add_child(nine)
+	else:
+		var sb_dlg := StyleBoxFlat.new()
+		sb_dlg.bg_color         = Color(0.02, 0.04, 0.12, 0.93)
+		sb_dlg.border_width_top = 2
+		sb_dlg.border_color     = Color(0.38, 0.65, 1.0, 0.35)
+		_dialog_panel.add_theme_stylebox_override("panel", sb_dlg)
+	_dialog_panel.z_index = 1
+	_stage.add_child(_dialog_panel)
+
+	# Speaker name panel — child of dialog panel so it anchors to its top edge
+	_speaker_panel = PanelContainer.new()
+	_speaker_panel.position = Vector2(40.0, 0.0)
+	var sb_spk := StyleBoxFlat.new()
+	sb_spk.bg_color               = Color(0.08, 0.16, 0.38, 0.97)
+	sb_spk.border_width_left      = 1
+	sb_spk.border_width_top       = 1
+	sb_spk.border_width_right     = 1
+	sb_spk.border_width_bottom    = 0
+	sb_spk.border_color           = Color(0.38, 0.65, 1.0, 0.6)
+	sb_spk.corner_radius_top_left  = 6
+	sb_spk.corner_radius_top_right = 6
+	sb_spk.content_margin_left    = 18.0
+	sb_spk.content_margin_right   = 18.0
+	sb_spk.content_margin_top     = 7.0
+	sb_spk.content_margin_bottom  = 7.0
+	_speaker_panel.add_theme_stylebox_override("panel", sb_spk)
+	_speaker_panel.z_index = 2
+	_speaker_panel.visible = false
+	_dialog_panel.add_child(_speaker_panel)
+
+	_speaker_lbl = Label.new()
+	_speaker_lbl.add_theme_font_override("font", _make_font(700))
+	_speaker_lbl.add_theme_font_size_override("font_size", 24)
+	_speaker_lbl.add_theme_color_override("font_color", Color(0.72, 0.92, 1.0, 1.0))
+	_speaker_panel.add_child(_speaker_lbl)
+
+	# Dialog text (inside panel) — RichTextLabel for BBCode color tag support
+	_dialog_lbl = RichTextLabel.new()
+	_dialog_lbl.position        = Vector2(50.0, 18.0)
+	_dialog_lbl.size            = Vector2(1460.0, 218.0)
+	_dialog_lbl.bbcode_enabled  = true
+	_dialog_lbl.scroll_active   = false
+	_dialog_lbl.add_theme_font_override("normal_font", _make_font(400))
+	_dialog_lbl.add_theme_font_size_override("normal_font_size", 30)
+	_dialog_lbl.add_theme_color_override("default_color", Color(0.90, 0.95, 1.0, 0.97))
+	_dialog_panel.add_child(_dialog_lbl)
+
+	# Continue icon (bottom-right of dialog panel)
+	_hint_icon = TextureRect.new()
+	_hint_icon.position     = Vector2(1530.0, DIALOG_H - 62.0)
+	_hint_icon.size         = Vector2(52.0, 52.0)
+	_hint_icon.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	_hint_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	if ResourceLoader.exists(HINT_ICON_PATH):
+		_hint_icon.texture = load(HINT_ICON_PATH) as Texture2D
+	_dialog_panel.add_child(_hint_icon)
+
+	# Video player — full-screen, above bg/chars, below fade overlay
+	_video_player = VideoStreamPlayer.new()
+	_video_player.position     = Vector2(0.0, 0.0)
+	_video_player.size         = Vector2(1600.0, 900.0)
+	_video_player.expand       = true
+	_video_player.z_index      = 5
+	_video_player.visible      = false
+	_video_player.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_video_player.finished.connect(_on_video_finished)
+	_stage.add_child(_video_player)
+
+	# Fade overlay — sits above everything; used for fade_in / fade_out beats
+	_fade_rect = ColorRect.new()
+	_fade_rect.position     = Vector2(0.0, 0.0)
+	_fade_rect.size         = Vector2(1600.0, 900.0)
+	_fade_rect.color        = Color(0.0, 0.0, 0.0, 0.0)
+	_fade_rect.z_index      = 10
+	_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_fade_rect)
+
+# ─────────────────────────────────────────────────────────────
+# Hint icon — pulse animation
+# ─────────────────────────────────────────────────────────────
+func _show_hint_icon() -> void:
+	_hint_icon.visible = true
+	if _hint_tween != null:
+		_hint_tween.kill()
+	_hint_tween = create_tween()
+	_hint_tween.set_loops()
+	_hint_tween.tween_property(_hint_icon, "modulate:a", 0.3, 0.8)
+	_hint_tween.tween_property(_hint_icon, "modulate:a", 1.0, 0.8)
+
+func _hide_hint_icon() -> void:
+	if _hint_tween != null:
+		_hint_tween.kill()
+		_hint_tween = null
+	_hint_icon.visible = false
+
+# ─────────────────────────────────────────────────────────────
+# Public API
+# ─────────────────────────────────────────────────────────────
+func play_scene(json_path: String, on_complete: Callable) -> void:
+	_on_complete = on_complete
+
+	var file := FileAccess.open(json_path, FileAccess.READ)
+	if file == null:
+		push_warning("VNPlayer: cannot open '%s'" % json_path)
+		_finish()
+		return
+
+	var raw := file.get_as_text()
+	file.close()
+
+	var parsed = JSON.parse_string(raw)
+	if parsed == null or not parsed is Array:
+		push_warning("VNPlayer: invalid JSON in '%s'" % json_path)
+		_finish()
+		return
+
+	# Filter beats by hidden flag and NSFW flag:
+	#   hidden=true   → always skipped
+	#   "safe" beats  → only play when NSFW is OFF
+	#   "nsfw" beats  → only play when NSFW is ON
+	#   "both" / absent → always play
+	_beats = (parsed as Array).filter(func(b: Variant) -> bool:
+		if b.get("hidden", false):
+			return false
+		var flag: String = str(b.get("nsfw", "both")).to_lower()
+		if flag == "safe":
+			return not SaveManager.nsfw_enabled
+		elif flag == "nsfw":
+			return SaveManager.nsfw_enabled
+		return true)
+	_beat_index = 0
+	_show_beat()
+
+# ─────────────────────────────────────────────────────────────
+# Beat rendering
+# ─────────────────────────────────────────────────────────────
+func _show_beat() -> void:
+	if _beat_index >= _beats.size():
+		_finish()
+		return
+
+	var beat: Dictionary = _beats[_beat_index]
+	_beat_index += 1
+
+	# ── Debug message ──
+	if beat.has("debug"):
+		print("[VNPlayer] beat %d — %s" % [_beat_index, str(beat.get("debug", ""))])
+
+	# ── Video ──
+	if beat.has("video"):
+		var vid_path: String = str(beat["video"])
+		var stream := load(vid_path) as VideoStream
+		if stream:
+			_accepting_input      = false
+			_hide_hint_icon()
+			_dialog_panel.visible = false
+			_video_player.stream  = stream
+			_video_player.visible = true
+			_video_player.play()
+			return
+		else:
+			push_warning("VNPlayer: failed to load video '%s' — skipping beat" % vid_path)
+			_show_beat()
+			return
+
+	# ── Fade out (before visuals update) ──
+	if beat.has("fade_out"):
+		var dur: float = maxf(float(beat.get("fade_out", 0.5)), 0.01)
+		if beat.has("fade_color"):
+			var fc := Color.html(beat.get("fade_color", "#000000"))
+			_fade_rect.color = Color(fc.r, fc.g, fc.b, _fade_rect.color.a)
+		_accepting_input = false
+		_hide_hint_icon()
+		var tw := create_tween()
+		tw.tween_property(_fade_rect, "color:a", 1.0, dur)
+		await tw.finished
+		_accepting_input = true
+
+	# ── Background ──
+	if beat.has("background"):
+		var bg_val = beat["background"]
+		if bg_val == null:
+			_kb_stop_reset()
+			_bg_rect.texture  = null
+			_bg_rect.modulate = Color(1.0, 1.0, 1.0, 0.0)
+			_current_bg_path  = ""
+		else:
+			var bg_path: String = bg_val
+			if bg_path != "" and bg_path != _current_bg_path:
+				_kb_stop_reset()
+				_current_bg_path = bg_path
+				var tex := load(bg_path) as Texture2D
+				if tex:
+					_bg_rect.texture  = tex
+					_bg_rect.modulate = Color(1.0, 1.0, 1.0, 1.0)
+				else:
+					push_warning("VNPlayer: failed to load background '%s'" % bg_path)
+
+	# ── Ken Burns (slow zoom/pan on background) ──
+	if beat.has("bg_ken_burns"):
+		var kb = beat["bg_ken_burns"]
+		var zoom: float = float(kb.get("zoom", 1.05))
+		var pan_x: float = float(kb.get("pan_x", 0.0))
+		var pan_y: float = float(kb.get("pan_y", 0.0))
+		var dur: float  = maxf(float(kb.get("duration", 4.0)), 0.1)
+		if _kb_tween != null:
+			_kb_tween.kill()
+		_kb_tween = create_tween()
+		_kb_tween.set_parallel(true)
+		_kb_tween.tween_property(_bg_rect, "scale",    Vector2(zoom, zoom),  dur).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_kb_tween.tween_property(_bg_rect, "position", Vector2(pan_x, pan_y), dur).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+	# ── Characters ──
+	# Always clear all slots; populate only when key is present and non-empty.
+	for i in SLOT_NAMES.size():
+		var sn: String = SLOT_NAMES[i]
+		_char_slots[sn].texture  = null
+		_char_slots[sn].flip_h   = false
+		_char_slots[sn].size     = Vector2(CHAR_W, CHAR_H)
+		_char_slots[sn].position = Vector2(SLOT_X[i], CHAR_Y)
+		_char_slots[sn].modulate = Color(1.0, 1.0, 1.0, 0.0)
+	if beat.has("characters"):
+		var char_data: Array = beat["characters"]
+		var active_slots: Array = []
+		for ci in char_data:
+			var pos_name: String = ci.get("position", "center")
+			var spr_path: String = ci.get("sprite", "")
+			if not _char_slots.has(pos_name):
+				continue
+			if spr_path != "":
+				var tex := load(spr_path) as Texture2D
+				if tex:
+					# Crop bottom percentage by using an AtlasTexture sub-region
+					var crop: float     = clampf(float(ci.get("crop_bottom", 0.0)), 0.0, 99.0)
+					var src_w: float    = float(tex.get_width())
+					var src_h: float    = float(tex.get_height())
+					var visible_h: float = src_h * (1.0 - crop / 100.0)
+					var display_tex: Texture2D = tex
+					if crop > 0.0:
+						var atlas := AtlasTexture.new()
+						atlas.atlas  = tex
+						atlas.region = Rect2(0.0, 0.0, src_w, visible_h)
+						display_tex  = atlas
+					var scale_pct: float    = clampf(float(ci.get("scale", 100.0)), 10.0, 500.0)
+					var scale_factor: float = scale_pct / 100.0
+					var draw_w: float       = CHAR_W * scale_factor
+					var draw_h: float       = draw_w * visible_h / src_w
+					var slot_idx: int       = SLOT_NAMES.find(pos_name)
+					_char_slots[pos_name].size         = Vector2(draw_w, draw_h)
+					_char_slots[pos_name].position.x   = SLOT_X[slot_idx] + (CHAR_W - draw_w) / 2.0
+					_char_slots[pos_name].position.y   = DIALOG_Y - draw_h
+					_char_slots[pos_name].stretch_mode = TextureRect.STRETCH_SCALE
+					_char_slots[pos_name].texture      = display_tex
+					_char_slots[pos_name].flip_h       = ci.get("flip", false)
+					_char_slots[pos_name].modulate     = Color(1.0, 1.0, 1.0, 1.0)
+					active_slots.append(pos_name)
+				else:
+					push_warning("VNPlayer: failed to load character sprite '%s'" % spr_path)
+		if beat.get("dim_others", false) and active_slots.size() > 0:
+			for sn in SLOT_NAMES:
+				if _char_slots[sn].texture != null and sn not in active_slots:
+					_char_slots[sn].modulate = Color(0.38, 0.38, 0.38, 1.0)
+
+	# ── Speaker ──
+	var speaker: String = _loc(beat.get("speaker", ""))
+	if speaker != "":
+		_speaker_lbl.text      = speaker
+		_speaker_panel.reset_size()
+		var ph: float = _speaker_panel.get_minimum_size().y
+		_speaker_panel.position.y = -ph
+		_speaker_panel.visible = true
+	else:
+		_speaker_panel.visible = false
+
+	# ── Dialog text ──
+	_dialog_lbl.text = ""
+	_dialog_lbl.append_text(_loc(beat.get("text", "")))
+
+	# ── Music ──
+	if beat.has("music"):
+		var music_val = beat["music"]
+		var music_path: String = music_val if music_val != null else ""
+		_set_music(music_path,
+			beat.get("music_fade_out", 0.0),
+			beat.get("music_fade_in",  0.0))
+	elif beat.has("music_fade_out"):
+		_set_music("", beat.get("music_fade_out", 0.0), 0.0)
+
+	# ── Sound effect ──
+	var sfx_path: String = beat.get("sfx", beat.get("sound", ""))
+	if sfx_path != "":
+		var vol_pct: float = clampf(float(beat.get("sfx_volume", beat.get("sound_volume", 100.0))), 0.0, 200.0)
+		var vol_db: float  = -80.0 if vol_pct <= 0.0 else linear_to_db(vol_pct / 100.0)
+		_play_sfx(sfx_path, vol_db)
+
+	# ── Character shake ──
+	var shake_val = beat.get("shake", null)
+	if shake_val != null:
+		_do_shake(shake_val, beat.get("shake_magnitude", 8.0))
+
+	# ── Screen shake ──
+	var screen_shake = beat.get("shake_screen", null)
+	if screen_shake != null:
+		var smag: float = 10.0
+		if screen_shake is bool:
+			if not screen_shake:
+				smag = 0.0
+		elif screen_shake is float or screen_shake is int:
+			smag = float(screen_shake)
+		if smag > 0.0:
+			_do_screen_shake(smag)
+
+	# ── Fade in (after visuals update) ──
+	if beat.has("fade_in"):
+		var dur: float = maxf(float(beat.get("fade_in", 0.5)), 0.01)
+		if beat.has("fade_color"):
+			var fc := Color.html(beat.get("fade_color", "#000000"))
+			_fade_rect.color = Color(fc.r, fc.g, fc.b, _fade_rect.color.a)
+		_accepting_input = false
+		_hide_hint_icon()
+		var tw := create_tween()
+		tw.tween_property(_fade_rect, "color:a", 0.0, dur)
+		await tw.finished
+		_accepting_input = true
+
+	# ── Flash effect ──
+	if beat.has("flash_count") or beat.has("flash_color"):
+		var count: int   = int(beat.get("flash_count", 1))
+		var dur: float   = maxf(float(beat.get("flash_duration", 0.2)), 0.01)
+		var delay: float = maxf(float(beat.get("flash_delay", 0.05)), 0.0)
+		var fc := Color.html(beat.get("flash_color", "#ffffff"))
+		var target       = beat.get("flash_target", "screen")
+		_accepting_input = false
+		_hide_hint_icon()
+		await _do_flash(fc, count, dur, delay, target)
+		_accepting_input = true
+
+	# ── Wait (auto-advance after N seconds, blocks input) ──
+	var wait_sec: float = beat.get("wait", 0.0)
+	if wait_sec > 0.0:
+		_accepting_input = false
+		_hide_hint_icon()
+		await get_tree().create_timer(wait_sec).timeout
+		_accepting_input = true
+		_show_beat()
+		return
+
+	# ── Auto-advance if screen is fully covered and there is nothing to read ──
+	# After a fade_out with no text the screen is black — hint icon is invisible,
+	# so waiting for a click makes no sense. Skip to the next beat automatically.
+	if beat.has("fade_out") and not beat.has("text"):
+		_show_beat()
+		return
+
+	# ── Battle portraits (set before optional start_battle) ──
+	if beat.has("portrait_p1"):
+		GameState.player_portraits[0] = str(beat["portrait_p1"])
+	if beat.has("portrait_p2"):
+		GameState.player_portraits[1] = str(beat["portrait_p2"])
+
+	# ── Start battle ──
+	if beat.get("start_battle", false):
+		_set_music("", 0.0, 0.0)
+		GameState.new_game(GameState.GameMode.VS_AI)
+		# Set post-new_game fields (new_game resets most state but not these)
+		GameState.vn_on_win  = str(beat.get("on_win",  ""))
+		GameState.vn_on_lose = str(beat.get("on_lose", ""))
+		var bgm: String = str(beat.get("battle_bgm", ""))
+		GameState.battle_bgm_path   = bgm if bgm != "" else "res://assets/audio/bgm_boss_1.mp3"
+		GameState.battle_bgm_volume = float(beat.get("battle_bgm_volume", 100.0))
+		# Player names — override display names shown in battle HUD
+		var p1n: String = str(beat.get("player1_name", "")).strip_edges()
+		var p2n: String = str(beat.get("player2_name", "")).strip_edges()
+		if not p1n.is_empty() or not p2n.is_empty():
+			GameState.campaign_player_names = [p1n, p2n]
+		else:
+			GameState.campaign_player_names = []
+		# Enemy deck — override what cards the AI places this battle
+		var enemy_deck: Variant = beat.get("enemy_deck", null)
+		if enemy_deck is Dictionary:
+			GameState.campaign_enemy_config = {
+				"forced_characters": (enemy_deck as Dictionary).get("characters", []),
+				"forced_traps":      (enemy_deck as Dictionary).get("traps", []),
+				"forced_tech":       (enemy_deck as Dictionary).get("tech", []),
+			}
+		else:
+			GameState.campaign_enemy_config = {}
+		CheckerTransition.fade_out_to_battle(func() -> void:
+			get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
+		return
+
+	# ── Continue hint icon ──
+	_show_hint_icon()
+
+func _on_video_finished() -> void:
+	_video_player.visible  = false
+	_video_player.stream   = null
+	_dialog_panel.visible  = true
+	_accepting_input       = true
+	_show_beat()
+
+func _finish() -> void:
+	_hide_hint_icon()
+	_set_music("", 0.0, 0.0)
+	if _on_complete.is_valid():
+		_on_complete.call()
+	queue_free()
+
+# ─────────────────────────────────────────────────────────────
+# Sound effect — fire and forget
+# ─────────────────────────────────────────────────────────────
+func _play_sfx(path: String, vol_db: float = 0.0) -> void:
+	var stream := load(path) as AudioStream
+	if stream == null:
+		return
+	var player := AudioStreamPlayer.new()
+	player.stream    = stream
+	player.volume_db = vol_db
+	player.bus       = &"SFX"
+	player.finished.connect(player.queue_free)
+	add_child(player)
+	player.play()
+
+# ─────────────────────────────────────────────────────────────
+# Music — looping BGM, one track at a time, with fade in/out
+# ─────────────────────────────────────────────────────────────
+func _set_music(path: String, fade_out: float = 0.0, fade_in: float = 0.0) -> void:
+	if path == _current_music_path:
+		return
+	_current_music_path = path
+
+	# Kill any in-progress fade tween
+	if _music_fade_tween != null:
+		_music_fade_tween.kill()
+		_music_fade_tween = null
+
+	# Fade out or stop the current track
+	if _music_player != null:
+		if fade_out > 0.0:
+			var old_player := _music_player
+			_music_player = null
+			var tw := create_tween()
+			tw.tween_property(old_player, "volume_db", -80.0, fade_out)
+			tw.tween_callback(old_player.queue_free)
+		else:
+			_music_player.stop()
+			_music_player.queue_free()
+			_music_player = null
+
+	if path == "":
+		return
+
+	var stream := load(path) as AudioStream
+	if stream == null:
+		push_warning("VNPlayer: failed to load music '%s'" % path)
+		return
+
+	_music_player = AudioStreamPlayer.new()
+	_music_player.stream = stream
+	_music_player.bus    = &"Music"
+	add_child(_music_player)
+
+	if fade_in > 0.0:
+		_music_player.volume_db = -80.0
+		_music_player.play()
+		_music_fade_tween = create_tween()
+		_music_fade_tween.tween_property(_music_player, "volume_db", 0.0, fade_in)
+	else:
+		_music_player.volume_db = 0.0
+		_music_player.play()
+
+# ─────────────────────────────────────────────────────────────
+# Character shake — damped horizontal oscillation
+# ─────────────────────────────────────────────────────────────
+func _do_shake(shake_val, magnitude: float) -> void:
+	var slots_to_shake: Array = []
+	if shake_val is String and shake_val == "all":
+		for sn in SLOT_NAMES:
+			if _char_slots[sn].texture != null:
+				slots_to_shake.append(_char_slots[sn])
+	elif shake_val is Array:
+		for sn in shake_val:
+			if _char_slots.has(sn) and _char_slots[sn].texture != null:
+				slots_to_shake.append(_char_slots[sn])
+
+	var m: float = magnitude
+	for slot in slots_to_shake:
+		var ox: float = slot.position.x
+		var tw := create_tween()
+		tw.tween_property(slot, "position:x", ox + m,         0.035)
+		tw.tween_property(slot, "position:x", ox - m,         0.035)
+		tw.tween_property(slot, "position:x", ox + m * 0.75,  0.030)
+		tw.tween_property(slot, "position:x", ox - m * 0.75,  0.030)
+		tw.tween_property(slot, "position:x", ox + m * 0.375, 0.025)
+		tw.tween_property(slot, "position:x", ox,             0.025)
+
+# ─────────────────────────────────────────────────────────────
+# Screen shake — shakes the entire stage in 2D
+# ─────────────────────────────────────────────────────────────
+func _do_screen_shake(magnitude: float) -> void:
+	var ox: float = _stage.position.x
+	var oy: float = _stage.position.y
+	var m: float  = magnitude
+	var tw := create_tween()
+	tw.tween_property(_stage, "position", Vector2(ox + m,          oy + m * 0.4),  0.03)
+	tw.tween_property(_stage, "position", Vector2(ox - m,          oy - m * 0.3),  0.03)
+	tw.tween_property(_stage, "position", Vector2(ox + m * 0.6,    oy + m * 0.2),  0.025)
+	tw.tween_property(_stage, "position", Vector2(ox - m * 0.4,    oy - m * 0.15), 0.025)
+	tw.tween_property(_stage, "position", Vector2(ox + m * 0.2,    oy + m * 0.05), 0.02)
+	tw.tween_property(_stage, "position", Vector2(ox,              oy),             0.02)
+
+# ─────────────────────────────────────────────────────────────
+# Ken Burns — stop animation and reset bg to neutral transform
+# ─────────────────────────────────────────────────────────────
+func _kb_stop_reset() -> void:
+	if _kb_tween != null:
+		_kb_tween.kill()
+		_kb_tween = null
+	_bg_rect.scale    = Vector2(1.0, 1.0)
+	_bg_rect.position = Vector2(0.0, 0.0)
+
+# ─────────────────────────────────────────────────────────────
+# Flash — repeating overlay pulse (screen) or modulate pulse (characters)
+# target: "screen" | "all" | ["left", "right", ...]
+# ─────────────────────────────────────────────────────────────
+func _do_flash(color: Color, count: int, duration: float, delay: float, target = "screen") -> void:
+	var half: float = duration / 2.0
+
+	# Resolve target to a list of character slots, or nil for screen mode
+	var slots: Array = []
+	if target != "screen":
+		if target == "all":
+			for sn in SLOT_NAMES:
+				if _char_slots[sn].texture != null:
+					slots.append(_char_slots[sn])
+		elif target is Array:
+			for sn in target:
+				if _char_slots.has(sn) and _char_slots[sn].texture != null:
+					slots.append(_char_slots[sn])
+
+	# If character target but nothing visible, fall back to screen
+	var use_screen: bool = target == "screen" or slots.is_empty()
+
+	if use_screen:
+		_fade_rect.color = Color(color.r, color.g, color.b, 0.0)
+		for i in count:
+			var tw := create_tween()
+			tw.tween_property(_fade_rect, "color:a", 1.0, half)
+			tw.tween_property(_fade_rect, "color:a", 0.0, half)
+			await tw.finished
+			if delay > 0.0 and i < count - 1:
+				await get_tree().create_timer(delay).timeout
+	else:
+		# Save original modulate for each slot (respects dim_others)
+		var saved: Dictionary = {}
+		for slot in slots:
+			saved[slot] = slot.modulate
+		for i in count:
+			var tw1 := create_tween()
+			tw1.set_parallel(true)
+			for slot in slots:
+				tw1.tween_property(slot, "modulate", color, half)
+			await tw1.finished
+			var tw2 := create_tween()
+			tw2.set_parallel(true)
+			for slot in slots:
+				tw2.tween_property(slot, "modulate", saved[slot], half)
+			await tw2.finished
+			if delay > 0.0 and i < count - 1:
+				await get_tree().create_timer(delay).timeout
+
+# ─────────────────────────────────────────────────────────────
+# Input
+# ─────────────────────────────────────────────────────────────
+func _input(event: InputEvent) -> void:
+	if not _accepting_input:
+		return
+	var advance := false
+	if event is InputEventMouseButton:
+		var mbe := event as InputEventMouseButton
+		if mbe.pressed and mbe.button_index == MOUSE_BUTTON_LEFT:
+			advance = true
+	elif event is InputEventKey:
+		var ke := event as InputEventKey
+		if ke.pressed and not ke.echo:
+			if ke.keycode == KEY_SPACE or ke.keycode == KEY_ENTER:
+				advance = true
+	if advance:
+		get_viewport().set_input_as_handled()
+		_show_beat()

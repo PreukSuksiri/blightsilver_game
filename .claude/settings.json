@@ -1,0 +1,13 @@
+{
+  "enabledPlugins": {
+    "randroids-dojo-godot-claude-skills@cascade-code-languages-misc-2": true
+  },
+  "extraKnownMarketplaces": {
+    "cascade-code-languages-misc-2": {
+      "source": {
+        "source": "github",
+        "repo": "joshuarweaver/cascade-code-languages-misc-2"
+      }
+    }
+  }
+}

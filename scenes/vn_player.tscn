@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://vn_player_scene"]
+
+[ext_resource type="Script" path="res://scripts/VNPlayer.gd" id="1_vnplayer"]
+
+[node name="VNPlayer" type="Control"]
+script = ExtResource("1_vnplayer")

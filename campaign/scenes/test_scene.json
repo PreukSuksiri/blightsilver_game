@@ -1,0 +1,115 @@
+[
+  {
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"text": {"en":"Nex ran away from the library. It was late at night. There were barely any people walking on the sidewalk"},
+	"music": "res://assets/audio/bgm_calm_2.mp3"
+  },
+  {
+	
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [{ "sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png", "position": "right", "scale": 175, "crop_bottom": 30  }],
+	"speaker": "Nex",
+	"text": {"en":"*Huff* *Huff*"}
+  },
+  {
+	
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [{ "sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png", "position": "right", "scale": 175, "crop_bottom": 30  }],
+	"speaker": "Nex",
+	"text": {"en":"What just happened...!?"}
+  },
+  {
+	
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [{ "sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png", "position": "right", "scale": 175, "crop_bottom": 30  }],
+	"speaker": "Nex",
+	"text": {"en":"Is this a dream!?"}
+  },
+  {
+	
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [{ "sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png", "position": "right", "scale": 175, "crop_bottom": 30  }],
+	"speaker": "Nex",
+	"text": {"en":"Is it okay to just leave Mayu like that...!? But... she's out of her mind..."}
+  },
+  {
+	
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+  "characters": [],
+	"text": {"en":"What just happened is probably too much for an ordinary young man"}
+  },
+  {
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [],
+	"text": {"en":"A lot of though came through his mind. His head went blank, but his foot keep running, not noticing what's ahead"}
+  },
+  {
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [{ "sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_surprised.png", "position": "left", "flip": true, "scale": 175, "crop_bottom": 30},{"sprite": "res://assets/textures/vn/characters/vn_char_nex_shocked.png", "position": "right", "scale": 175, "crop_bottom": 30}],
+	"text": {"en":"....!!!"},
+	"music_fade_out": 3.0
+  },
+  { "fade_out": 3.0,
+	"fade_color": "#ffffff",
+	"wait": 0.1},
+  {
+	"background": "res://assets/textures/vn/backgrounds/vn_cut_nex_kelly_bump_1.png",
+	"characters": [],
+	"fade_in": 3.0,
+	"fade_color": "#ffffff",
+	"wait": 0.1,
+  "music":"res://assets/audio/bgm_sexy_1.mp3"
+  },
+  {
+	"background": "res://assets/textures/vn/backgrounds/vn_cut_nex_kelly_bump_1.png",
+   "text": "** BUMP!! **",
+	"characters": [],
+	"shake_screen": 25.0,
+	"shake": "all",
+	"shake_magnitude": 20.0,
+	"wait": 3,
+	"sound" : "res://assets/audio/sound_sledgehammer1.mp3",
+	"sound_volume": "140%"
+  },
+  {
+	"background": "res://assets/textures/vn/backgrounds/vn_cut_nex_kelly_bump_2.png",
+	"text": {"en":"!!!!"},
+	"wait": 3
+  },
+   {
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [{ "sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_crossed_arm.png", "position": "left", "flip": true, "scale": 175, "crop_bottom": 30 }],
+	"sound": "res://assets/audio/sound_axe1.mp3",
+	"sound_volume": "140%",
+	"text": {"en":"(The woman pushed Nex away)"},
+  "wait": 2
+  },
+  {
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [{ "sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_crossed_arm.png", "position": "left", "flip": true, "scale": 175, "crop_bottom": 30 }],
+	"speaker": "Silver-haired woman",
+	"text": {"en":"Watch where you're going!"}
+  },
+  {
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [{ "sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png", "position": "right", "scale": 175, "crop_bottom": 30 }],
+	"speaker": "Nex",
+	"text": {"en":"S.... sorry!!! I'm so sorry!!"}
+  },
+  {
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [],
+	"text": {"en":"Nex kept running"}
+  },
+   {
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [{ "sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_surprised.png", "position": "left", "flip": true, "scale": 175, "crop_bottom": 30 }],
+	"speaker": "Silver-haired woman",
+	"text": {"en":"Wait!"}
+  },
+  {
+	"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+	"characters": [],
+	"text": {"en":"The silver-haired woman's trying to stop him. Strangely, she should've been pissed off, but it's more like she's worried about something important"}
+  }
+]

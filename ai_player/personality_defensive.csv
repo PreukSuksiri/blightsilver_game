@@ -1,0 +1,17 @@
+Personality Name,Description,Difficulty
+Frontline,Places strong cards on the outer border. Weak cards are placed inside,Easy
+Fortress,Concentrates strong cards (mixed character and trap) in the center 3x3. Weak cards care placed outside,Medium
+Watch Tower,Places strong cards (mixed character and trap) on the 4 corners,Easy
+Mine Field,Concentrates characters (mixed character and trap) in the center 3x3. Trap cards care placed outside,Easy
+Tomb Trap,Concentrates traps in the center 3x3. Character cards care placed outside,Medium
+Bait Trap,Places trap cards on the 4 corners. Characters are placed randomly,Medium
+Diagonal Shield,Places cards along the two main diagonals,Hard
+Cluster Defender,Groups all cards tightly together in one random area,Medium
+Checker,Spreads cards like a checker board (always skip 1 slot between each card),Hard
+Straightforward,Place cards in one line (random axis),Easy
+Midwit,Prefer to populate the exact second border of the grid (not center),Medium
+Symmetric Defender,Places cards in a mirror-symmetric pattern,Medium
+Random Defender,Places cards completely randomly (unpredictable defense),Hard
+Religious,Places a card in a cross pattern,Easy
+Zoro,Places card in Z pattern,Medium
+Helios,Places card in H pattern,Medium

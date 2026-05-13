@@ -1,0 +1,560 @@
+[
+	{
+		"comment": "<<<-- Toilet Stall -->>>",
+		"wait": 0.001
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"characters": [],
+		"music": "res://assets/audio/bgm_storytelling_2.mp3",
+		"text": {
+			"en": "Nex and Kelly proceeded their undecover plan. Nex entered one of the library's toilet stall."
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I feel like a real criminal now"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "So all I have to do is just hide here until midnight right...? Sounds easy."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_out": 3.0,
+		"wait": 0.001
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_night.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_night.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "It's time... I guess I'll go out. Waiting was not easy at all.."
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": {
+			"en": "......"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "......"
+		}
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"shake_screen": 25.0,
+		"speaker": "Kelly",
+		"text": {
+			"en": "eeeeekk...!!"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_sigh.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": {
+			"en": "Oh, it's you. I'm totally fell for it. That flu mask was kinda scary."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_sigh.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Are you sure you're a ghost busting agent?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I have turned off the light of this floor to reproduce the same environment. Now where is the scene of incident?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "At the back of this floor. A secluded study area."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"music_fade_out": 3.0,
+		"speaker": "Kelly",
+		"text": {
+			"en": "Perfect spot for anomaly. Let's go."
+		}
+	},
+	{
+		"comment": "<<<-- Secluded Study Area -->>>",
+		"wait": 0.001
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"text": "The library secluded area has looked a little different this time."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"text": "There is broken windows, scattered stuffs, and a pool of blood."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "This look worse..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Where is she...?"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Mayu! It's me! Come and get the pretty stuffs! Here, look! My neck is really bright and clean!"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"text": "**Splush** **Splush**"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"text": "Sound of spattered liquid is heard faintly"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": {
+			"en": "I heard something..."
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [],
+		"text": "**Splush** **Splush**"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [],
+		"text": "The splatting voice is coming closer..."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
+		"bg_ken_burns": {
+			"duration": 2.0,
+			"pan_x": -30.0,
+			"pan_y": 30.0,
+			"zoom": 1.1
+		},
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"nsfw": "nsfw",
+		"shake_screen": 10.0,
+		"text": "!!!",
+		"wait": 2.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
+		"nsfw": "nsfw"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
+		"nsfw": "nsfw",
+		"text": "Mayu's body is covered in blood. She crawled on four legs. Gruesome smile is welcoming the tasty friends"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
+		"nsfw": "nsfw",
+		"speaker": "Possessed Mayu",
+		"text": "(mumbles unrecognized words)"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"bg_ken_burns": {
+			"duration": 2.0,
+			"pan_x": -30.0,
+			"pan_y": 30.0,
+			"zoom": 1.1
+		},
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"nsfw": "safe",
+		"shake_screen": 10.0,
+		"text": "!!!",
+		"wait": 2.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"nsfw": "safe",
+		"text": "Mayu's body is covered in blood. She crawled on four legs. Gruesome smile is welcoming the tasty friends"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"nsfw": "safe",
+		"speaker": "Possessed Mayu",
+		"text": "(mumbles unrecognized words)"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_warning.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": {
+			"en": "Nex!! Use the Vellum Card!!"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "May the silver path show your true sins!! Vellum cards commence!!"
+		}
+	},
+	{
+		"comment": "Battle - Midnight Shadow",
+		"enemy_deck": {
+			"characters": [
+				"Doom Wisp",
+				"Chaotic Wisp",
+				"Foul Wisp",
+				"Night Whisperer",
+				"Bat Swarm",
+				"Ectoplasm"
+			],
+			"tech": [
+				"Radar",
+				"Harsh Training",
+				"Force Shield"
+			],
+			"traps": [
+				"Trap Hole",
+				"Checkpoint",
+				"Hypnosis",
+				"Mana Drain"
+			]
+		},
+		"on_lose": "game_over",
+		"on_win": "res://campaign/scenes/ch1_s1_post.json",
+		"player1_name": "Nex Crowmont",
+		"player2_name": "Midnight Shadow",
+		"portrait_p1": "res://assets/textures/vn/characters/vn_char_nex_seething.png",
+		"portrait_p2": "res://assets/textures/vn/characters/vn_char_midnight_shadow.png",
+		"start_battle": true
+	}
+]

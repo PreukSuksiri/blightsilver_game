@@ -1,0 +1,106 @@
+[
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png",
+				"position": "right",
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Kelly",
+		"text": {
+			"en": "I heard something..."
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+    "characters":[],
+    "text":"**Splush** **Splush**"
+	},
+	{
+		"wait": 0.5
+	},
+{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+    "characters":[],
+    "text":"The splatting voice is coming closer..."
+	},
+	{
+		"wait": 0.5
+	},
+  {
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
+    "characters":[],
+     "bg_ken_burns": { "pan_y": 30,"pan_x": -30, "duration": 2.0, "zoom": 1.1},                                                                                                                
+    "shake_screen": 25.0,
+    "music":"res://assets/audio/bgm_horror_1.mp3",
+    "wait": 2,
+    "text":"!!!"
+	}
+  ,
+  {
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
+    "characters":[]
+	}
+  ,
+  {
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
+    "characters":[],
+    "text":"Mayu's body is covered in blood. She crawled on four legs. Gruesome smile is welcoming the tasty friends"
+	}
+  ,
+  {
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
+    "speaker": "Possessed Mayu",
+    "characters":[],
+    "text":"(mumbles unrecognized words)"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_warning.png",
+				"position": "right",
+				"scale": 175,
+				"crop_bottom": 30
+			},
+      {
+				"sprite": "res://assets/textures/vn/characters/assets/textures/vn/characters/vn_char_mayu_possessed_2.png",
+				"position": "left",
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Kelly",
+		"text": {
+			"en": "Nex!! Use the Vellum Card!!"
+		}
+	}
+  ,
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png",
+				"position": "right",
+				"scale": 175,
+				"crop_bottom": 30
+			},
+      {
+				"sprite": "res://assets/textures/vn/characters/assets/textures/vn/characters/vn_char_mayu_possessed_2.png",
+				"position": "left",
+				"scale": 175,
+				"crop_bottom": 30
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "May the silver path show your true sin!! Vellum cards commence!!"
+		}
+	}
+]
