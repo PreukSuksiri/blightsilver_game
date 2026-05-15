@@ -117,9 +117,18 @@ func _connect_buttons() -> void:
 	char_list.item_selected.connect(_on_char_list_selected)
 	trap_list.item_selected.connect(_on_trap_list_selected)
 	tech_list.item_selected.connect(_on_tech_list_selected)
+	# Double-tap deck lists to remove
+	char_list.item_activated.connect(func(_i: int) -> void: _on_remove_char())
+	trap_list.item_activated.connect(func(_i: int) -> void: _on_remove_trap())
+	tech_list.item_activated.connect(func(_i: int) -> void: _on_remove_tech())
 	remove_char_btn.pressed.connect(_on_remove_char)
 	remove_trap_btn.pressed.connect(_on_remove_trap)
 	remove_tech_btn.pressed.connect(_on_remove_tech)
+	# Long-press on ItemLists → CardDetailOverlay
+	_setup_list_long_press(trunk_list)
+	_setup_list_long_press(char_list)
+	_setup_list_long_press(trap_list)
+	_setup_list_long_press(tech_list)
 	deck_select.item_selected.connect(_on_deck_selected)
 	new_deck_btn.pressed.connect(_on_new_deck)
 	delete_deck_btn.pressed.connect(_on_delete_deck)
@@ -181,6 +190,35 @@ func _on_duplicate_deck() -> void:
 func _on_deck_name_changed(new_name: String) -> void:
 	if current_deck:
 		current_deck.deck_name = new_name
+
+func _setup_list_long_press(list: ItemList) -> void:
+	var pressed_idx: Array[int] = [-1]
+	var lp_timer := Timer.new()
+	lp_timer.one_shot = true
+	lp_timer.wait_time = 0.5
+	add_child(lp_timer)
+	lp_timer.timeout.connect(func() -> void:
+		var idx: int = pressed_idx[0]
+		if idx >= 0 and idx < list.item_count:
+			var meta: Variant = list.get_item_metadata(idx)
+			if meta is Dictionary:
+				CardDetailOverlay.open(self, (meta as Dictionary).get("name", ""), (meta as Dictionary).get("type", "")))
+	list.gui_input.connect(func(ev: InputEvent) -> void:
+		if not (ev is InputEventMouseButton):
+			return
+		var mb := ev as InputEventMouseButton
+		if mb.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if mb.pressed and not mb.double_click:
+			var idx: int = list.get_item_at_position(mb.position)
+			pressed_idx[0] = idx
+			if idx >= 0:
+				lp_timer.start()
+			else:
+				lp_timer.stop()
+		else:
+			lp_timer.stop()
+			pressed_idx[0] = -1)
 
 # ── Trunk list ────────────────────────────────────────────────
 func _set_filter(f: String) -> void:
@@ -786,15 +824,28 @@ func _make_pool_tile(card_name: String, card_type: String) -> Control:
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
 	tile.tooltip_text = card_name
+	var lp_pool := Timer.new()
+	lp_pool.one_shot = true
+	lp_pool.wait_time = 0.5
+	tile.add_child(lp_pool)
+	lp_pool.timeout.connect(func() -> void: CardDetailOverlay.open(self, card_name, card_type))
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
-		if not (ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed \
-				and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT):
+		if not (ev is InputEventMouseButton):
 			return
-		_gallery_selected_name = card_name
-		_gallery_selected_type = card_type
-		_show_preview(card_type, card_name)
-		if (ev as InputEventMouseButton).double_click:
-			_add_card_to_deck(card_type, card_name))
+		var mb := ev as InputEventMouseButton
+		if mb.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if mb.pressed:
+			_gallery_selected_name = card_name
+			_gallery_selected_type = card_type
+			if mb.double_click:
+				lp_pool.stop()
+				_add_card_to_deck(card_type, card_name)
+			else:
+				lp_pool.start()
+				_show_preview(card_type, card_name)
+		else:
+			lp_pool.stop())
 	return tile
 
 func _make_deck_tile(card_name: String, card_type: String) -> Control:
@@ -837,11 +888,27 @@ func _make_deck_tile(card_name: String, card_type: String) -> Control:
 	rm.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 0.9))
 	rm.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tile.add_child(rm)
-	tile.tooltip_text = card_name + "  (click to remove)"
+	tile.tooltip_text = card_name + "  (double-tap to remove)"
+	var lp_deck := Timer.new()
+	lp_deck.one_shot = true
+	lp_deck.wait_time = 0.5
+	tile.add_child(lp_deck)
+	lp_deck.timeout.connect(func() -> void: CardDetailOverlay.open(self, card_name, card_type))
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed \
-				and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
-			_remove_card_gallery(card_name, card_type))
+		if not (ev is InputEventMouseButton):
+			return
+		var mb := ev as InputEventMouseButton
+		if mb.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if mb.pressed:
+			if mb.double_click:
+				lp_deck.stop()
+				_remove_card_gallery(card_name, card_type)
+			else:
+				lp_deck.start()
+				_show_preview(card_type, card_name)
+		else:
+			lp_deck.stop())
 	return tile
 
 func _remove_card_gallery(card_name: String, card_type: String) -> void:

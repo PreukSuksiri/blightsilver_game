@@ -14,6 +14,7 @@ signal battle_preview_needed(attacker_player: int, attacker: GameState.CardInsta
 signal battle_preview_done
 signal crystal_animation_done
 signal attack_aborted
+signal card_effect_flash_done
 
 # Pending choices for async UI flows
 var _pending_trap_resolve: Callable
@@ -208,6 +209,8 @@ func play_tech_card(tech_name: String) -> void:
 	emit_signal("tech_played", player, tech_name)
 	GameState.emit_signal("tech_card_used", player, tech_name)
 	GameState.post_message("Player %d plays %s!" % [player + 1, tech_name])
+	GameState.emit_signal("card_effect_triggered", tech_name, "tech")
+	await card_effect_flash_done
 
 	# Effects that resolve immediately without needing targets
 	match data.effect_type:

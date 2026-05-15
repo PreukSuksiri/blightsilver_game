@@ -106,6 +106,7 @@ var _flip_tween: Tween = null
 var _attacked_icon_tween: Tween = null
 var _wait_glow_tween: Tween = null
 var _active_glow_tween: Tween = null
+var _target_hover_tween: Tween = null
 var _is_peeking: bool = false
 var _is_enemy_view: bool = false
 var _is_destroying: bool = false
@@ -562,6 +563,37 @@ func set_highlighted(highlighted: bool) -> void:
 	is_highlighted = highlighted
 	highlight_border.visible = highlighted and not _is_enemy_view
 
+func set_target_hover(hovered: bool) -> void:
+	if not is_highlighted:
+		return
+	var sb := highlight_border.get_theme_stylebox("panel") as StyleBoxFlat
+	if sb == null:
+		return
+	if _target_hover_tween and _target_hover_tween.is_valid():
+		_target_hover_tween.kill()
+		_target_hover_tween = null
+	if hovered:
+		sb.border_color = Color(1.0, 0.85, 0.2, 1.0)
+		sb.shadow_color  = Color(1.0, 0.85, 0.2, 0.7)
+		sb.border_width_left   = 3
+		sb.border_width_top    = 3
+		sb.border_width_right  = 3
+		sb.border_width_bottom = 3
+		modulate = Color.WHITE
+		_target_hover_tween = create_tween().set_loops()
+		_target_hover_tween.tween_property(self, "modulate",
+			Color(1.4, 1.2, 0.6, 1.0), 0.22).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_target_hover_tween.tween_property(self, "modulate",
+			Color.WHITE, 0.22).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	else:
+		modulate = Color.WHITE
+		sb.border_color = Color(0.3, 0.9, 1.0, 0.9)
+		sb.shadow_color  = Color(0.3, 0.9, 1.0, 0.5)
+		sb.border_width_left   = 2
+		sb.border_width_top    = 2
+		sb.border_width_right  = 2
+		sb.border_width_bottom = 2
+
 func set_locked(locked: bool) -> void:
 	is_locked = locked
 	if not _is_enemy_view:
@@ -574,8 +606,14 @@ func play_reveal_animation() -> void:
 	pivot_offset = size * 0.5
 	var tween := create_tween()
 	tween.tween_property(self, "scale", Vector2(0.05, 1.0), 0.12).set_trans(Tween.TRANS_CUBIC)
-	tween.tween_callback(_refresh_display)
-	tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.12).set_trans(Tween.TRANS_CUBIC)
+	if card_data != null and card_data.card_type == "dead_end":
+		tween.tween_callback(_show_blank)
+		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.12).set_trans(Tween.TRANS_CUBIC)
+		tween.tween_interval(0.5)
+		tween.tween_callback(_show_empty_slot)
+	else:
+		tween.tween_callback(_refresh_display)
+		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.12).set_trans(Tween.TRANS_CUBIC)
 
 func play_destroy_animation() -> void:
 	_is_destroying = true

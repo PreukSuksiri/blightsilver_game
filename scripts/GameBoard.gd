@@ -108,6 +108,7 @@ var _hover_atk_lbl: Label = null
 var _hover_def_lbl: Label = null
 var _hover_aff_lbl: Label = null
 var _hover_desc_lbl: Label = null
+var _tech_hover_node: Control = null  # card node currently showing target hover highlight
 
 # grid_nodes[player][row][col] -> Card control node
 var grid_nodes: Array = [[], []]
@@ -149,6 +150,12 @@ var _context_card_player: int = -1
 var _context_card_pos: Vector2i = Vector2i(-1, -1)
 var pending_tech_filter: String = ""
 var pending_tech_name: String = ""
+var _tech_reveals_remaining: int = 0   # for multi-reveal effects (e.g. Radar)
+var _tech_reveals_total: int = 0
+
+# Cursor-following guide box
+var _guide_box: Control = null
+var _guide_label: Label = null
 var locked_positions: Array = []
 # HOT_SEAT handoff tracking: avoid showing handoff again for the same player's continued turn
 var _handoff_last_player: int = -1
@@ -289,6 +296,7 @@ func _connect_signals() -> void:
 		_update_tech_stacks()
 		if _tech_overlay_panel != null and _tech_overlay_panel.visible:
 			_rebuild_tech_overlay_content(_tech_overlay_player))
+	GameState.card_effect_triggered.connect(_on_card_effect_triggered)
 
 const GRID_LINE_W: int = 2
 const GRID_LINE_COLOR: Color = Color(0.65, 0.88, 0.95, 0.9)  # silver-cyan
@@ -2658,6 +2666,11 @@ func _on_grid_card_hovered(player: int, row: int, col: int) -> void:
 	var inst: GameState.CardInstance = GameState.get_card(player, row, col)
 	if inst == null or inst.card_type == "dead_end":
 		return
+	# Flash hover during tech target selection even if card is face-down
+	if selection_state == SelectionState.SELECTING_TECH_TARGET \
+			and "opponent_squares" in pending_tech_filter \
+			and player == GameState.get_opponent(GameState.current_player):
+		_set_tech_hover_node(grid_nodes[player][row][col])
 	var is_own := (player == GameState.current_player)
 	if not (is_own or inst.face_up):
 		return
@@ -2713,6 +2726,14 @@ func _show_hover_info(card_name: String, card_type: String) -> void:
 func _hide_hover_info() -> void:
 	if _hover_panel != null:
 		_hover_panel.visible = false
+	_set_tech_hover_node(null)
+
+func _set_tech_hover_node(node: Control) -> void:
+	if _tech_hover_node != null and _tech_hover_node != node:
+		_tech_hover_node.set_target_hover(false)
+	_tech_hover_node = node
+	if _tech_hover_node != null:
+		_tech_hover_node.set_target_hover(true)
 
 func _stop_battle_music() -> void:
 	if _battle_music != null:
@@ -3182,17 +3203,20 @@ func _current_skip_tax() -> int:
 	return TAX_BASE << GameState.skip_counts[GameState.current_player]
 
 func _on_end_turn_requested() -> void:
-	# Check if this player attacked at all this turn
+	# Check if this player attacked at all this turn.
+	# Two sources: surviving characters with attacked_this_turn=true, OR
+	# attacks_remaining dropped below 2 (covers destroyed attackers whose flag is gone).
 	var player := GameState.current_player
-	var has_attacked := false
-	for r in range(GameState.GRID_SIZE):
-		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(player, r, c)
-			if card.card_type == "character" and card.attacked_this_turn:
-				has_attacked = true
+	var has_attacked := GameState.attacks_remaining < 2
+	if not has_attacked:
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(player, r, c)
+				if card.card_type == "character" and card.attacked_this_turn:
+					has_attacked = true
+					break
+			if has_attacked:
 				break
-		if has_attacked:
-			break
 	if not has_attacked and GameState.can_player_attack(player):
 		_show_tax_confirm()
 	else:
@@ -3637,7 +3661,19 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	action_label.text = prompt
 	action_panel.visible = true
 	pending_tech_filter = filter
+	# Parse reveal count for multi-reveal filters (e.g. "opponent_squares_3")
+	if "opponent_squares" in filter:
+		var parts := filter.split("_")
+		_tech_reveals_remaining = int(parts[-1]) if parts[-1].is_valid_int() else 1
+		_tech_reveals_total = _tech_reveals_remaining
+	else:
+		_tech_reveals_total = 0
 	_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
+	# Show guide text
+	if _tech_reveals_total > 1:
+		_show_guide("Select %s card to reveal" % _ordinal(1))
+	else:
+		_show_guide(prompt)
 	_highlight_tech_targets(filter)
 
 	# If AI turn, auto-resolve target
@@ -3656,7 +3692,16 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	if "opponent_squares" in pending_tech_filter:
 		if player == opponent:
 			GameState.reveal_card(player, pos.x, pos.y)
-			_finish_tech_action(current_player)
+			_tech_reveals_remaining -= 1
+			if _tech_reveals_remaining <= 0:
+				_finish_tech_action(current_player)
+			else:
+				var next_idx: int = _tech_reveals_total - _tech_reveals_remaining + 1
+				_show_guide("Select %s card to reveal" % _ordinal(next_idx))
+				if _is_ai_turn():
+					await get_tree().create_timer(0.4).timeout
+					var ai_target := ai_player.decide_target(pending_tech_filter)
+					_handle_tech_target(opponent, ai_target)
 		return
 
 	if pending_tech_filter == "own_faceup_character" or pending_tech_filter == "own_faceup_character_berserk":
@@ -3706,6 +3751,10 @@ func _clear_after_tech() -> void:
 	action_panel.visible = false
 	pending_tech_filter = ""
 	pending_tech_name = ""
+	_tech_reveals_remaining = 0
+	_tech_reveals_total = 0
+	_hide_guide()
+	_set_tech_hover_node(null)
 	_clear_selection()
 	_set_selection_state(SelectionState.NONE)
 	_refresh_all_grids()
@@ -3721,6 +3770,8 @@ func _highlight_attackable_chars() -> void:
 	pass  # Active glow is card-internal (own face-up chars glow automatically on your turn)
 
 func _has_any_attackable_char() -> bool:
+	if GameState.attacks_remaining <= 0:
+		return false
 	var cp := GameState.current_player
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
@@ -3740,6 +3791,8 @@ func _update_end_turn_blink() -> void:
 			_end_turn_blink_tween = null
 		if _end_turn_btn:
 			_end_turn_btn.modulate = Color.WHITE
+		if selection_state == SelectionState.SELECTING_ATTACKER:
+			_hide_guide()
 		return
 	if not _has_any_attackable_char():
 		if _end_turn_blink_tween == null or not _end_turn_blink_tween.is_valid():
@@ -3748,11 +3801,15 @@ func _update_end_turn_blink() -> void:
 				Color(1.0, 1.0, 0.3, 1.0), 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 			_end_turn_blink_tween.tween_property(_end_turn_btn, "modulate",
 				Color.WHITE, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		if selection_state == SelectionState.SELECTING_ATTACKER:
+			_show_guide("No more attacks — End your turn")
 	else:
 		if _end_turn_blink_tween and _end_turn_blink_tween.is_valid():
 			_end_turn_blink_tween.kill()
 			_end_turn_blink_tween = null
 		_end_turn_btn.modulate = Color.WHITE
+		if selection_state == SelectionState.SELECTING_ATTACKER:
+			_show_guide("Choose a character to attack with")
 
 func _highlight_valid_targets() -> void:
 	pass  # No visual hints on opponent cards during target selection
@@ -3803,14 +3860,73 @@ func _clear_selection() -> void:
 
 func _set_selection_state(state: SelectionState) -> void:
 	selection_state = state
+	match state:
+		SelectionState.SELECTING_ATTACKER:
+			_show_guide("Choose a character to attack with")
+		SelectionState.SELECTING_TARGET:
+			_show_guide("Choose a target to attack")
+		SelectionState.SELECTING_TECH_TARGET:
+			pass  # guide text set by _on_awaiting_target_selection
+		_:
+			_hide_guide()
+
+func _ordinal(n: int) -> String:
+	match n:
+		1: return "1st"
+		2: return "2nd"
+		3: return "3rd"
+		_: return "%dth" % n
+
+
+func _build_guide_box() -> void:
+	if _guide_box != null:
+		return
+	var panel := PanelContainer.new()
+	panel.z_index = 210
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.visible = false
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.0, 0.0, 0.0, 0.72)
+	sb.border_width_left = 1; sb.border_width_right  = 1
+	sb.border_width_top  = 1; sb.border_width_bottom = 1
+	sb.border_color = Color(0.9, 0.85, 0.6, 0.85)
+	sb.corner_radius_top_left     = 5
+	sb.corner_radius_top_right    = 5
+	sb.corner_radius_bottom_right = 5
+	sb.corner_radius_bottom_left  = 5
+	sb.content_margin_left   = 10.0
+	sb.content_margin_right  = 10.0
+	sb.content_margin_top    = 6.0
+	sb.content_margin_bottom = 6.0
+	panel.add_theme_stylebox_override("panel", sb)
+	var lbl := Label.new()
+	lbl.add_theme_color_override("font_color", Color(1.0, 0.96, 0.75))
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.add_child(lbl)
+	add_child(panel)
+	_guide_box = panel
+	_guide_label = lbl
+
+func _show_guide(text: String) -> void:
+	_build_guide_box()
+	_guide_label.text = text
+	_guide_box.visible = true
+
+func _hide_guide() -> void:
+	if _guide_box != null:
+		_guide_box.visible = false
 
 # ─────────────────────────────────────────────────────────────
 # Card Events
 # ─────────────────────────────────────────────────────────────
 func _on_card_revealed(player: int, row: int, col: int) -> void:
 	var node: Control = grid_nodes[player][row][col]
+	var inst := GameState.get_card(player, row, col)
 	node.play_reveal_animation()
-	await get_tree().create_timer(0.3).timeout
+	# Dead-end reveal plays a 0.5s hold before disappearing — wait for that to finish
+	var delay := 0.75 if (inst != null and inst.card_type == "dead_end") else 0.3
+	await get_tree().create_timer(delay).timeout
 	_refresh_card_node(player, row, col)
 
 func _on_card_destroyed(player: int, row: int, col: int) -> void:
@@ -3883,12 +3999,136 @@ func _on_ai_tech_chosen(tech_name: String) -> void:
 	turn_manager.play_tech_card(tech_name)
 
 # ─────────────────────────────────────────────────────────────
+# Card Effect Flash (tech cards, outside battle overlay)
+# ─────────────────────────────────────────────────────────────
+const SFX_SPELL_FLASH: AudioStream = preload("res://assets/audio/sound_spellcasting_2.mp3")
+const FULL_CARDS_DIR: String = "res://assets/textures/cards/full_cards/"
+
+func _on_card_effect_triggered(card_name: String, card_type: String) -> void:
+	await _show_card_effect_flash(card_name, card_type)
+	turn_manager.emit_signal("card_effect_flash_done")
+
+func _show_card_effect_flash(card_name: String, card_type: String) -> void:
+	# Build full-screen overlay
+	var overlay := Control.new()
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.z_index = 50
+	add_child(overlay)
+
+	# Semi-transparent dim
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.0, 0.0, 0.0, 0.0)
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(dim)
+
+	# Load card image (same slug logic as DeckBuilder)
+	var snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
+	var card_tex: Texture2D = null
+	if SaveManager.nsfw_enabled:
+		var nsfw: String = FULL_CARDS_DIR + snake + "_nsfw.png"
+		if ResourceLoader.exists(nsfw):
+			card_tex = load(nsfw) as Texture2D
+		if card_tex == null:
+			nsfw = FULL_CARDS_DIR + card_type + "_" + snake + "_nsfw.png"
+			if ResourceLoader.exists(nsfw):
+				card_tex = load(nsfw) as Texture2D
+	if card_tex == null:
+		var p: String = FULL_CARDS_DIR + snake + ".png"
+		if ResourceLoader.exists(p):
+			card_tex = load(p) as Texture2D
+	if card_tex == null:
+		var p: String = FULL_CARDS_DIR + card_type + "_" + snake + ".png"
+		if ResourceLoader.exists(p):
+			card_tex = load(p) as Texture2D
+
+	var vp := get_viewport().get_visible_rect().size
+	var card_h: float = minf(vp.y * 0.75, 600.0)
+	var card_w: float = card_h * (819.0 / 1126.0)
+
+	var card_img := TextureRect.new()
+	card_img.texture = card_tex
+	card_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	card_img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	card_img.size = Vector2(card_w, card_h)
+	card_img.position = Vector2((vp.x - card_w) * 0.5, (vp.y - card_h) * 0.5)
+	card_img.pivot_offset = Vector2(card_w * 0.5, card_h * 0.5)
+	card_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(card_img)
+
+	# Burst ring around card
+	var ring := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(1.0, 1.0, 1.0, 0.0)
+	sb.border_color = Color(1.0, 0.92, 0.5, 0.95)
+	var bw: int = 10
+	sb.border_width_left = bw; sb.border_width_right  = bw
+	sb.border_width_top  = bw; sb.border_width_bottom = bw
+	var cr: int = 24
+	sb.corner_radius_top_left = cr; sb.corner_radius_top_right  = cr
+	sb.corner_radius_bottom_left = cr; sb.corner_radius_bottom_right = cr
+	ring.add_theme_stylebox_override("panel", sb)
+	ring.size = Vector2(card_w, card_h)
+	ring.position = card_img.position
+	ring.pivot_offset = Vector2(card_w * 0.5, card_h * 0.5)
+	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(ring)
+
+	# Screen flash
+	var flash := ColorRect.new()
+	flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	flash.color = Color(1.0, 1.0, 1.0, 0.0)
+	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(flash)
+
+	# Spellcasting SFX
+	var sfx := AudioStreamPlayer.new()
+	sfx.stream = SFX_SPELL_FLASH
+	sfx.bus = "SFX"
+	add_child(sfx)
+	sfx.finished.connect(sfx.queue_free)
+
+	# Fade in overlay + card
+	overlay.modulate.a = 0.0
+	card_img.scale = Vector2(0.85, 0.85)
+	var tin := create_tween()
+	tin.tween_property(overlay, "modulate:a", 1.0, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tin.parallel().tween_property(dim, "color:a", 0.65, 0.2)
+	tin.parallel().tween_property(card_img, "scale", Vector2(1.0, 1.0), 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	await tin.finished
+
+	sfx.play()
+
+	# Burst ring expand + fade
+	var t_ring := create_tween()
+	t_ring.tween_property(ring, "scale", Vector2(1.5, 1.5), 0.45).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+	t_ring.parallel().tween_property(ring, "modulate:a", 0.0, 0.45).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+
+	# Screen flash
+	var t_flash := create_tween()
+	t_flash.tween_property(flash, "color:a", 0.7, 0.06).set_trans(Tween.TRANS_LINEAR)
+	t_flash.tween_property(flash, "color:a", 0.0, 0.4).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
+	# Linger
+	await get_tree().create_timer(1.0).timeout
+
+	# Fade out
+	var tout := create_tween()
+	tout.tween_property(overlay, "modulate:a", 0.0, 0.35).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	await tout.finished
+
+	overlay.queue_free()
+
+# ─────────────────────────────────────────────────────────────
 # Game Over
 # ─────────────────────────────────────────────────────────────
 func _on_return_to_map() -> void:
 	get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
 
 func _process(_delta: float) -> void:
+	if _guide_box != null and _guide_box.visible:
+		_guide_box.global_position = get_global_mouse_position() + Vector2(4.0, 112.0)
 	if _shake_active:
 		var ml: Control = get_node("MainLayout")
 		ml.position = _shake_origin + Vector2(

@@ -207,14 +207,17 @@ func _wrap_card_tile(card_node: Control, card_name: String, card_type: String) -
 	# Tooltip hint
 	wrapper.tooltip_text = card_name
 
-	# Click: forward card_clicked signal from card.tscn, or connect gui_input
+	# Click: forward card_clicked signal from card.tscn, or connect to card_node
+	# (wrapper.gui_input is never reached because card_node has MOUSE_FILTER_STOP)
 	if card_node.has_signal("card_clicked"):
 		card_node.card_clicked.connect(
 			func(_n: Control) -> void: CardDetailOverlay.open(self, card_name, card_type))
 	else:
-		wrapper.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton and ev.pressed \
-					and ev.button_index == MOUSE_BUTTON_LEFT:
+		card_node.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed \
+					and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+				CardDetailOverlay.open(self, card_name, card_type)
+			elif ev is InputEventScreenTouch and (ev as InputEventScreenTouch).pressed:
 				CardDetailOverlay.open(self, card_name, card_type))
 
 	return wrapper

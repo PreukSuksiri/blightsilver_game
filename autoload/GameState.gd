@@ -28,6 +28,7 @@ signal card_destroyed(player_index: int, row: int, col: int)
 signal dice_rolled(result: int)
 signal game_over(winner: int)  # -1 = tie, 0 = player 1, 1 = player 2
 signal tech_card_used(player_index: int, card_name: String)
+signal card_effect_triggered(card_name: String, card_type: String)
 signal attack_used(player_index: int, attacks_remaining: int)
 signal message_posted(text: String)
 

@@ -39,7 +39,7 @@ func _ready() -> void:
 	version_label.text = "v0.1 Prototype"
 	(bgm.stream as AudioStreamMP3).loop = true
 	bgm.play()
-	var tween := create_tween()
+	var tween := create_tween()	
 	tween.tween_property(fade_overlay, "color:a", 0.0, 1.2) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_refresh_deck_status()

@@ -11,6 +11,7 @@ const SFX_CLANK       := preload("res://assets/audio/sound_axe1.mp3")
 const SFX_GEAR        := preload("res://assets/audio/sound_sledgehammer1.mp3")
 const SFX_SHATTER     := preload("res://assets/audio/sound_glass_2.mp3")
 const SFX_SWOOSH      := preload("res://assets/audio/sound_swoosh_2.mp3")
+const SFX_SPELL       := preload("res://assets/audio/sound_spellcasting_2.mp3")
 
 # Card layout constants (mirrors CardDetailOverlay)
 const FRAME_ASPECT := 819.0 / 1126.0
@@ -372,6 +373,16 @@ func _run_async(
 	# Positive dx means move right (toward center for P1 attacker)
 	var bounce_dx: float = _card_w * 0.28 * (1.0 if attacker_player == 0 else -1.0)
 
+	# Card effect flash — trap or character ability
+	var att_rest_x: float = _left_rest_x if attacker_player == 0 else _right_rest_x
+	var def_rest_x: float = _right_rest_x if attacker_player == 0 else _left_rest_x
+	if result.special_trigger == "trap_effect":
+		await _animate_card_effect_flash(def_ctrl, def_rest_x)
+	elif result.ability_triggered_attacker:
+		await _animate_card_effect_flash(att_ctrl, att_rest_x)
+	elif result.ability_triggered_defender:
+		await _animate_card_effect_flash(def_ctrl, def_rest_x)
+
 	# Run scenario animation
 	var scenario := _get_scenario(defender, result)
 	match scenario:
@@ -414,6 +425,60 @@ func _play_sfx(stream: AudioStream) -> void:
 	add_child(asp)
 	asp.play()
 	asp.finished.connect(asp.queue_free)
+
+func _animate_card_effect_flash(ctrl: Control, rest_x: float) -> void:
+	_play_sfx(SFX_SPELL)
+	var vp_size := get_viewport().get_visible_rect().size
+	var center_x := (vp_size.x - _card_w) * 0.5
+	# Move card to center
+	var t_in := create_tween()
+	t_in.tween_property(ctrl, "position:x", center_x, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	await t_in.finished
+	# Burst ring + flash
+	_play_burst_ring(ctrl)
+	_flash_white(ctrl)
+	_flash_screen_white()
+	# Linger
+	await get_tree().create_timer(1.0).timeout
+	# Move back
+	var t_out := create_tween()
+	t_out.tween_property(ctrl, "position:x", rest_x, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	await t_out.finished
+
+func _play_burst_ring(ctrl: Control) -> void:
+	var ring := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(1.0, 1.0, 1.0, 0.0)
+	sb.border_color = Color(1.0, 0.95, 0.6, 0.9)
+	var bw: int = 8
+	sb.border_width_left = bw; sb.border_width_right  = bw
+	sb.border_width_top  = bw; sb.border_width_bottom = bw
+	var r: int = 20
+	sb.corner_radius_top_left = r; sb.corner_radius_top_right  = r
+	sb.corner_radius_bottom_left = r; sb.corner_radius_bottom_right = r
+	ring.add_theme_stylebox_override("panel", sb)
+	ring.size = Vector2(_card_w, BADGE_H + _card_h)
+	ring.position = ctrl.position
+	ring.pivot_offset = ring.size * 0.5
+	ring.mouse_filter = MOUSE_FILTER_IGNORE
+	ring.z_index = 5
+	add_child(ring)
+	var t := create_tween()
+	t.tween_property(ring, "scale", Vector2(1.6, 1.6), 0.45).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+	t.parallel().tween_property(ring, "modulate:a", 0.0, 0.45).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	t.tween_callback(ring.queue_free)
+
+func _flash_screen_white() -> void:
+	var flash := ColorRect.new()
+	flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	flash.color = Color(1.0, 1.0, 1.0, 0.0)
+	flash.mouse_filter = MOUSE_FILTER_IGNORE
+	flash.z_index = 10
+	add_child(flash)
+	var t := create_tween()
+	t.tween_property(flash, "color:a", 0.65, 0.06).set_trans(Tween.TRANS_LINEAR)
+	t.tween_property(flash, "color:a", 0.0, 0.35).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	t.tween_callback(flash.queue_free)
 
 func _bounce_forward(ctrl: Control, dx: float) -> void:
 	var t := create_tween()

@@ -14,6 +14,8 @@ class BattleResult:
 	var messages: Array = []
 	var special_trigger: String = ""
 	var special_params: Dictionary = {}
+	var ability_triggered_attacker: bool = false
+	var ability_triggered_defender: bool = false
 
 # ─────────────────────────────────────────────────────────────
 # Main Resolution
@@ -53,14 +55,22 @@ static func _resolve_character_vs_character(
 		defender_player: int,
 		result: BattleResult
 ) -> void:
+	var base_atk: int = attacker.get_effective_atk()
 	var eff_atk: int = _get_effective_atk(attacker, defender, dice_roll)
+	if eff_atk != base_atk:
+		result.ability_triggered_attacker = true
+
+	var base_def: int = defender.get_effective_def()
 	var eff_def: int = _get_effective_def(defender, attacker)
+	if eff_def != base_def:
+		result.ability_triggered_defender = true
 
 	result.messages.append("%s ATK %d vs %s DEF %d" % [attacker.card_name, eff_atk, defender.card_name, eff_def])
 
 	# Check Pit Lord destroyed-by-divine rule
 	if attacker.ability_type == CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE:
 		if defender.affinity == CharacterData.Affinity.DIVINE:
+			result.ability_triggered_attacker = true
 			result.attacker_destroyed = true
 			result.attacker_crystal_loss = attacker.crystal_cost
 			result.messages.append("%s is destroyed by Divine!" % attacker.card_name)
@@ -97,6 +107,7 @@ static func _resolve_character_vs_character(
 	# Lab Bloater Mutagen effect (overrides normal if defender survives)
 	if not result.defender_destroyed and defender.has_mutagen_flag:
 		if defender.ability_type == CharacterData.AbilityType.MUTAGEN_DESTROY_ATTACKER:
+			result.ability_triggered_defender = true
 			result.attacker_destroyed = true
 			result.attacker_crystal_loss = attacker.crystal_cost
 			result.defender_crystal_loss = 0  # no crystal loss for bloater
@@ -226,12 +237,14 @@ static func _apply_defend_effects(
 ) -> void:
 	match defender.ability_type:
 		CharacterData.AbilityType.CRYSTAL_GAIN_ON_DEFEND:
+			result.ability_triggered_defender = true
 			result.defender_crystal_gain += defender.ability_params.get("amount", 0)
 			result.messages.append("%s gains %d Crystals!" % [
 				defender.card_name,
 				defender.ability_params.get("amount", 0)
 			])
 		CharacterData.AbilityType.DEFEND_DRAIN_ATTACKER:
+			result.ability_triggered_defender = true
 			result.attacker_crystal_loss += defender.ability_params.get("drain_amount", 0)
 			result.messages.append("%s drains %d Crystals from attacker!" % [
 				defender.card_name,
@@ -239,6 +252,7 @@ static func _apply_defend_effects(
 			])
 		CharacterData.AbilityType.ONE_USE_DEF_BOOST:
 			if not defender.one_use_def_boost_used:
+				result.ability_triggered_defender = true
 				defender.one_use_def_boost_used = true
 
 # ─────────────────────────────────────────────────────────────
