@@ -110,7 +110,9 @@ func admin_command(raw: String) -> String:
 				+ "  export_all_cards\n"
 				+ "  export_nsfw_card <card_name>\n"
 				+ "  export_all_nsfw_cards\n"
-				+ "  export_blank_card\n"
+				+ "  export_dead_end_card\n"
+				+ "  win_battle\n"
+				+ "  lose_battle\n"
 				+ "  map_editor\n"
 				+ "  vn_editor [filename]\n"
 				+ "  card_info <card_name>\n"
@@ -271,14 +273,28 @@ func admin_command(raw: String) -> String:
 			exporter.export_all_nsfw_cards()
 			return "Exporting NSFW cards (only those with _nsfw art)... (check Output log)"
 
-		"export_blank_card":
+		"export_dead_end_card":
 			if _exporter_active:
 				return "Export already in progress."
 			_exporter_active = true
 			var exporter: Node = load("res://scripts/CardExporter.gd").new()
 			add_child(exporter)
-			exporter.export_blank_card()
-			return "Exporting blank card to full_cards/blank.png..."
+			exporter.export_dead_end_card()
+			return "Exporting dead end card to full_cards/dead_end.png..."
+
+		"win_battle":
+			if GameState.current_phase == GameState.Phase.GAME_OVER \
+					or GameState.current_phase == GameState.Phase.NONE:
+				return "Not in a battle."
+			GameState.force_game_over(0)
+			return "Player 1 wins — battle ended."
+
+		"lose_battle":
+			if GameState.current_phase == GameState.Phase.GAME_OVER \
+					or GameState.current_phase == GameState.Phase.NONE:
+				return "Not in a battle."
+			GameState.force_game_over(1)
+			return "Player 2 wins — battle ended."
 
 		"map_editor":
 			var scene := get_tree().current_scene

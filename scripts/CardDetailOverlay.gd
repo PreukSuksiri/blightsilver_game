@@ -362,8 +362,8 @@ func _populate(card_name: String, card_type: String) -> void:
 			_set_rarity(data.rarity)
 			AudioManager.speak("Tech card... %s...... %s... Cost: %d." % [
 				card_name, data.get_effect_description(), data.crystal_cost])
-		"blank":
-			# Show the pre-rendered blank card PNG as the full card image
+		"dead_end":
+			# Show the pre-rendered dead end card PNG as the full card image
 			var card_h := _info_y / INFO_TOP_PCT
 			_art.position     = Vector2.ZERO
 			_art.size         = Vector2(_card_w, card_h)

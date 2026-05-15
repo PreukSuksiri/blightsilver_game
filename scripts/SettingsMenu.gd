@@ -78,6 +78,7 @@ func _ready() -> void:
 		func(v: bool) -> void:
 			SaveManager.nsfw_enabled = v
 			SaveManager.save_data()
+			SaveManager.nsfw_changed.emit(v)
 			nsfw_warning.visible = v
 	))
 	vbox.add_child(nsfw_warning)

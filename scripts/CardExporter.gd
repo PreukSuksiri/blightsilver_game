@@ -65,8 +65,8 @@ func export_one_card(card_name: String, card_type: String) -> void:
 	MailboxManager._exporter_active = false
 	queue_free()
 
-func export_blank_card() -> void:
-	await _render_and_save("blank", "blank")
+func export_dead_end_card() -> void:
+	await _render_and_save("dead_end", "dead_end")
 	MailboxManager._exporter_active = false
 	queue_free()
 
@@ -401,7 +401,7 @@ func _populate_card_node(card_name: String, card_type: String) -> void:
 			_art.position = _art_base_pos + data.artwork_offset
 			_load_art(CardDatabase.find_artwork(card_name, "tech"))
 			_set_rarity(data.rarity)
-		"blank":
+		"dead_end":
 			# Pure frame — black art area, no text, no pills
 			_frame.modulate  = Color(1.0, 1.0, 1.0)
 			_art.texture     = null   # art_bg ColorRect stays black

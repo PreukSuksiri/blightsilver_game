@@ -37,9 +37,9 @@ func _make_char(name: String, atk: int, def_val: int, cost: int,
 	c.ability_params = params
 	return c
 
-func _make_blank() -> GameState.CardInstance:
+func _make_dead_end() -> GameState.CardInstance:
 	var c := GameState.CardInstance.new()
-	c.card_type = "blank"
+	c.card_type = "dead_end"
 	return c
 
 func _make_trap(name: String, cost: int) -> GameState.CardInstance:
@@ -97,11 +97,11 @@ func test_equal_both_destroyed() -> void:
 	assert_eq(result.defender_crystal_loss, 600, "Defender pays own cost")
 
 func test_vs_blank_nothing_happens() -> void:
-	print("-- test_vs_blank_nothing_happens")
+	print("-- test_vs_dead_end_nothing_happens")
 	var attacker := _make_char("A", 80, 0, 500)
-	var blank := _make_blank()
+	var blank := _make_dead_end()
 	var result := BattleResolver.resolve_battle(attacker, blank, 3, 0, 1)
-	assert_true(not result.attacker_destroyed, "Attacker not destroyed vs blank")
+	assert_true(not result.attacker_destroyed, "Attacker not destroyed vs dead end")
 	assert_true(not result.defender_destroyed, "No defender vs blank")
 	assert_eq(result.attacker_crystal_loss, 0, "No crystal loss vs blank")
 

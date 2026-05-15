@@ -13,6 +13,7 @@ signal awaiting_target_selection(prompt: String, filter: String)
 signal battle_preview_needed(attacker_player: int, attacker: GameState.CardInstance, defender: GameState.CardInstance, result: BattleResolver.BattleResult)
 signal battle_preview_done
 signal crystal_animation_done
+signal attack_aborted
 
 # Pending choices for async UI flows
 var _pending_trap_resolve: Callable
@@ -23,7 +24,7 @@ func start_turn(player_index: int) -> void:
 	GameState.current_player = player_index
 	GameState.turn_number += 1
 	GameState.current_mode = GameState.TurnMode.NONE
-	GameState.attacks_remaining = 0
+	GameState.attacks_remaining = 2
 
 	# Clear per-turn state
 	_clear_turn_state(player_index)
@@ -77,18 +78,26 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 
 	if attacker.card_type != "character":
 		GameState.post_message("You must attack with a Character.")
+		emit_signal("attack_aborted")
 		return
 	if attacker.attacked_this_turn:
 		GameState.post_message("%s has already attacked this turn." % attacker.card_name)
+		emit_signal("attack_aborted")
+		return
+	if GameState.attacks_remaining <= 0:
+		GameState.post_message("No attacks remaining this turn.")
+		emit_signal("attack_aborted")
 		return
 	if attacker.cannot_attack_until >= GameState.turn_number:
 		GameState.post_message("%s cannot attack yet." % attacker.card_name)
+		emit_signal("attack_aborted")
 		return
 
 	# Berserk: only berserk card can attack
 	if GameState.berserk_active[player] != null:
 		if GameState.berserk_active[player] != attacker:
 			GameState.post_message("Only the Berserk character can attack!")
+			emit_signal("attack_aborted")
 			return
 
 	GameState.attacker_card = attacker
@@ -97,7 +106,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	# Flip attacker face-up
 	GameState.reveal_card(player, attacker_pos.x, attacker_pos.y)
 	# Flip target face-up (skip for blank — it gets destroyed directly, no reveal needed)
-	if defender.card_type != "blank":
+	if defender.card_type != "dead_end":
 		GameState.reveal_card(opponent, target_pos.x, target_pos.y)
 
 	# Update field-based bonuses before battle
@@ -123,7 +132,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 		# Trap becomes blank area regardless — animate destroy
 		GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 	else:
-		if defender.card_type == "blank":
+		if defender.card_type == "dead_end":
 			# Blank slot hit — destroy directly, skip battle resolution (nothing to resolve)
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 		else:
@@ -132,6 +141,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	emit_signal("attack_completed", attacker_pos, target_pos, result)
 
 	attacker.attacked_this_turn = true
+	GameState.attacks_remaining -= 1
 
 	# Check Pit Lord one_use_def_boost mark
 	if defender.ability_type == CharacterData.AbilityType.ONE_USE_DEF_BOOST:
@@ -459,7 +469,7 @@ func _handle_trap_effect(
 					return
 			GameState.lose_crystals(player, attacker.crystal_cost)
 			await crystal_animation_done
-			GameState.place_blank(player, attacker_pos.x, attacker_pos.y)
+			GameState.place_dead_end(player, attacker_pos.x, attacker_pos.y)
 			emit_signal("awaiting_target_selection",
 				"Explosive Barrels: Choose 1 revealed card on defender's field to destroy (no crystal loss).",
 				"opponent_faceup_no_cost")
@@ -471,7 +481,7 @@ func _handle_trap_effect(
 		TrapData.TrapEffectType.DESTROY_ATTACKER:
 			GameState.lose_crystals(player, attacker.crystal_cost)
 			await crystal_animation_done
-			GameState.place_blank(player, attacker_pos.x, attacker_pos.y)
+			GameState.place_dead_end(player, attacker_pos.x, attacker_pos.y)
 			GameState.post_message("Flame Trap: %s destroyed!" % attacker.card_name)
 
 		TrapData.TrapEffectType.LOCK_ATTACKER_REMAINING_ATTACKS:

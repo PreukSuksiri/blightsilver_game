@@ -31,7 +31,7 @@ func run_all_tests() -> void:
 	test_both_zero_crystals_is_tie()
 	test_place_and_get_character()
 	test_place_and_get_trap()
-	test_place_blank_overwrites()
+	test_place_dead_end_overwrites()
 	test_destroy_card_pays_cost()
 	test_destroy_card_no_cost()
 	test_get_adjacent_positions_center()
@@ -96,13 +96,13 @@ func test_place_and_get_trap() -> void:
 	assert_eq(card.card_name, "Flame Trap", "Card name matches")
 	assert_eq(card.crystal_cost, 1000, "Flame Trap cost = 1000")
 
-func test_place_blank_overwrites() -> void:
-	print("-- test_place_blank_overwrites")
+func test_place_dead_end_overwrites() -> void:
+	print("-- test_place_dead_end_overwrites")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	GameState.place_character(0, 1, 1, "Canyon Warg")
-	GameState.place_blank(0, 1, 1)
+	GameState.place_dead_end(0, 1, 1)
 	var card := GameState.get_card(0, 1, 1)
-	assert_eq(card.card_type, "blank", "Blank overwrites character")
+	assert_eq(card.card_type, "dead_end", "Dead end overwrites character")
 
 func test_destroy_card_pays_cost() -> void:
 	print("-- test_destroy_card_pays_cost")
@@ -111,7 +111,7 @@ func test_destroy_card_pays_cost() -> void:
 	GameState.destroy_card(0, 0, 0, true)
 	assert_eq(GameState.crystals[0], 2500, "Player 0 loses 500 crystals on destroy")
 	var card := GameState.get_card(0, 0, 0)
-	assert_eq(card.card_type, "blank", "Square becomes blank after destroy")
+	assert_eq(card.card_type, "dead_end", "Square becomes dead end after destroy")
 
 func test_destroy_card_no_cost() -> void:
 	print("-- test_destroy_card_no_cost")

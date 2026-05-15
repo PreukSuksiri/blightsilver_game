@@ -185,6 +185,12 @@ func _input(event: InputEvent) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and (event as InputEventKey).pressed:
+		var ke := event as InputEventKey
+		if ke.keycode == KEY_A and ke.ctrl_pressed and ke.shift_pressed:
+			_toggle_admin_console()
+			get_viewport().set_input_as_handled()
+			return
 	var is_left_press: bool = (
 		(event is InputEventMouseButton and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT and event.pressed) or
 		(event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed)
@@ -192,6 +198,15 @@ func _unhandled_input(event: InputEvent) -> void:
 	if is_left_press:
 		_hide_hover_info()
 		_close_tech_overlay()
+
+func _toggle_admin_console() -> void:
+	const AdminConsoleScene: PackedScene = preload("res://scenes/admin_console.tscn")
+	if get_node_or_null("AdminConsoleOverlay") != null:
+		get_node("AdminConsoleOverlay").queue_free()
+		return
+	var overlay: Node = AdminConsoleScene.instantiate()
+	overlay.name = "AdminConsoleOverlay"
+	add_child(overlay)
 
 func _ready() -> void:
 	_setup_turn_manager()
@@ -233,6 +248,7 @@ func _setup_turn_manager() -> void:
 	turn_manager.awaiting_trap_choice.connect(_on_awaiting_trap_choice)
 	turn_manager.awaiting_target_selection.connect(_on_awaiting_target_selection)
 	turn_manager.battle_preview_needed.connect(_on_battle_preview_needed)
+	turn_manager.attack_aborted.connect(_on_attack_aborted)
 
 func _setup_ai() -> void:
 	ai_player = AIPlayer.new()
@@ -756,7 +772,7 @@ func _begin_game() -> void:
 func _start_setup_music() -> void:
 	if _setup_music != null:
 		return
-	var stream := load("res://assets/audio/bgm_soft_rock_1.mp3") as AudioStream
+	var stream := load("res://assets/audio/bgm_placement_1.mp3") as AudioStream
 	if stream == null:
 		push_warning("GameBoard: failed to load setup BGM")
 		return
@@ -1594,10 +1610,11 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 		and card.card_type == "character"
 		and not card.attacked_this_turn
 		and card.cannot_attack_until < GameState.turn_number
+		and GameState.attacks_remaining > 0
 		and (GameState.berserk_active[current_player] == null
 			or GameState.berserk_active[current_player] == card)
 	)
-	var can_info: bool  = (card.card_type != "blank" and card.card_name != "")
+	var can_info: bool  = (card.card_type != "dead_end" and card.card_name != "")
 	var can_bluff: bool = (ctx_player == current_player)
 
 	if not can_attack and not can_info and not can_bluff:
@@ -2639,7 +2656,7 @@ func _build_hover_panel() -> void:
 
 func _on_grid_card_hovered(player: int, row: int, col: int) -> void:
 	var inst: GameState.CardInstance = GameState.get_card(player, row, col)
-	if inst == null or inst.card_type == "blank":
+	if inst == null or inst.card_type == "dead_end":
 		return
 	var is_own := (player == GameState.current_player)
 	if not (is_own or inst.face_up):
@@ -2890,6 +2907,8 @@ func _on_crystals_changed(player_index: int, new_amount: int) -> void:
 		_play_crystal_burst(player_index)
 		await _tick_down_crystal(player_index, old_amount, new_amount)
 		await get_tree().create_timer(1.0).timeout
+		if new_amount <= 0:
+			_fade_out_battle_music(0.5)
 	else:
 		var bottom_lbl := _p1_bottom_crystal if player_index == 0 else _p2_bottom_crystal
 		if bottom_lbl != null:
@@ -3414,6 +3433,16 @@ func _on_attack_completed(_from: Vector2i, _to: Vector2i, _result: BattleResolve
 	_update_end_turn_blink()
 	# Phase returns to MODE_SELECT after battle; _enter_mode_select() re-enables selection.
 
+func _on_attack_aborted() -> void:
+	if _attack_confirm_panel:
+		_attack_confirm_panel.visible = false
+	if _end_turn_btn:
+		_end_turn_btn.visible = true
+	_clear_selection()
+	_set_selection_state(SelectionState.SELECTING_ATTACKER)
+	_highlight_attackable_chars()
+	_update_end_turn_blink()
+
 func _on_battle_preview_needed(attacker_player: int, attacker: GameState.CardInstance, defender: GameState.CardInstance, result: BattleResolver.BattleResult) -> void:
 	var overlay := BattleCalculationOverlay.new()
 	overlay.z_index = 100
@@ -3512,7 +3541,7 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 		SelectionState.CONFIRMING_ATTACK,
 		SelectionState.SELECTING_TECH_TARGET,
 	]
-	if clicked_card.card_type == "blank" and player == current_player and not _in_targeting:
+	if clicked_card.card_type == "dead_end" and player == current_player and not _in_targeting:
 		_show_blank_context(player, row, col)
 		return
 
@@ -3529,6 +3558,9 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 			if player != opponent:
 				return  # own-cell taps handled by _input cancel logic
 			var target_card: GameState.CardInstance = GameState.get_card(player, row, col)
+			if target_card.was_destroyed:
+				GameState.post_message("Cannot target an empty cell.")
+				return
 			if pos in locked_positions:
 				GameState.post_message("That square is locked.")
 				return
@@ -3650,7 +3682,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter in ["any_faceup_card", "opponent_faceup_no_cost"]:
-		if card.face_up and card.card_type != "blank":
+		if card.face_up and card.card_type != "dead_end":
 			var pay_cost := pending_tech_name != "Accident" and pending_tech_filter != "opponent_faceup_no_cost"
 			GameState.destroy_card(player, pos.x, pos.y, pay_cost)
 			_finish_tech_action(current_player)
@@ -3749,7 +3781,7 @@ func _highlight_tech_targets(filter: String) -> void:
 			for r in range(GameState.GRID_SIZE):
 				for c in range(GameState.GRID_SIZE):
 					var card: GameState.CardInstance = GameState.get_card(p, r, c)
-					grid_nodes[p][r][c].set_highlighted(card.face_up and card.card_type != "blank")
+					grid_nodes[p][r][c].set_highlighted(card.face_up and card.card_type != "dead_end")
 
 func _clear_highlights() -> void:
 	for p in range(2):
@@ -3782,9 +3814,9 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 	_refresh_card_node(player, row, col)
 
 func _on_card_destroyed(player: int, row: int, col: int) -> void:
-	# Signal fires before place_blank(), so card data is still available
+	# Signal fires before place_dead_end(), so card data is still available
 	var inst: GameState.CardInstance = GameState.get_card(player, row, col)
-	if inst != null and inst.card_type != "blank":
+	if inst != null and inst.card_type != "dead_end":
 		_void_piles[player].append({"card_name": inst.card_name, "card_type": inst.card_type})
 		_update_void_stacks()
 	var node: Control = grid_nodes[player][row][col]
@@ -3901,19 +3933,30 @@ func _on_game_over(winner: int) -> void:
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = false
 
+	# ── 0. Brief pause so the crystal-hit-zero moment lands before the chaos ──
+	await get_tree().create_timer(1.2).timeout
+
 	# ── 1. Flip-reveal all face-down cards (with screen shake) ───────────────
 	var ml: Control = get_node("MainLayout")
 	_shake_origin = ml.position
 	_shake_active = true
+	# Fade battle music out; start result music immediately at shake
+	_fade_out_battle_music(0.5)
+	var result_music := AudioStreamPlayer.new()
+	result_music.stream = load("res://assets/audio/bgm_ost_even_if_everything_flips.mp3") as AudioStream
+	result_music.bus = &"Music"
+	result_music.volume_db = -80.0
+	result_music.finished.connect(func() -> void: result_music.play(68.0))
+	add_child(result_music)
+	result_music.play(68.0)
+	var result_fade := create_tween()
+	result_fade.tween_property(result_music, "volume_db", 0.0, 1.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 	await _flip_reveal_all_cards()
 	_shake_active = false
 	ml.position = _shake_origin
 
 	# ── 2. White flash fade-out ───────────────────────────────────────────────
 	var white_overlay: ColorRect = await _fade_to_white()
-
-	# ── 3. Fade out battle BGM (don't await — run concurrently) ──────────────
-	_fade_out_battle_music(1.5)
 
 	# ── 4. Build endgame screen while white covers it ─────────────────────────
 	_show_endgame_screen(winner)
@@ -4024,18 +4067,6 @@ func _show_endgame_screen(winner: int) -> void:
 			{"type": "credits", "amount": 50}
 		)
 
-	# Result music
-	var music_path := "res://assets/audio/bgm_win.mp3" if is_win_screen \
-		else "res://assets/audio/bgm_storytelling_1.mp3"
-	var music_stream := load(music_path) as AudioStream
-	if music_stream:
-		var asp := AudioStreamPlayer.new()
-		asp.stream = music_stream
-		asp.bus = &"Music"
-		asp.finished.connect(func() -> void: asp.play())
-		add_child(asp)
-		asp.play()
-
 	# ── Build full-screen overlay ────────────────────────────────────────────
 	var overlay := Control.new()
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -4053,9 +4084,11 @@ func _show_endgame_screen(winner: int) -> void:
 		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		overlay.add_child(bg)
 	else:
-		var bg := ColorRect.new()
+		var bg := TextureRect.new()
 		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		bg.color        = Color(0.04, 0.03, 0.08, 1.0)
+		bg.texture      = load("res://assets/textures/ui/backgrounds/bg_game_over_2.png")
+		bg.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		overlay.add_child(bg)
 
@@ -4066,20 +4099,42 @@ func _show_endgame_screen(winner: int) -> void:
 	vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.add_child(vignette)
 
+	# "Game Over" fade-in text (lose screen only)
+	if not is_win_screen:
+		var go_lbl := Label.new()
+		go_lbl.text               = "Game Over"
+		go_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		go_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+		go_lbl.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		go_lbl.offset_left  = -600.0
+		go_lbl.offset_right =  600.0
+		go_lbl.offset_top   = -160.0
+		go_lbl.offset_bottom =  60.0
+		go_lbl.add_theme_font_size_override("font_size", 96)
+		go_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+		go_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+		go_lbl.add_theme_constant_override("shadow_offset_x", 4)
+		go_lbl.add_theme_constant_override("shadow_offset_y", 4)
+		go_lbl.add_theme_constant_override("shadow_outline_size", 2)
+		go_lbl.modulate.a = 0.0
+		overlay.add_child(go_lbl)
+		var go_tw := create_tween()
+		go_tw.tween_property(go_lbl, "modulate:a", 1.0, 1.8).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+
 	# Title label
-	var title_lbl := Label.new()
-	title_lbl.text                 = title_text
-	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-	title_lbl.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	title_lbl.offset_left  = -500.0
-	title_lbl.offset_right =  500.0
-	title_lbl.offset_top   = -80.0
-	title_lbl.offset_bottom =  40.0
-	title_lbl.add_theme_font_size_override("font_size", 52)
-	title_lbl.add_theme_color_override("font_color",
-		Color(1.0, 0.92, 0.55) if is_win_screen else Color(0.72, 0.72, 0.88))
-	overlay.add_child(title_lbl)
+	if is_win_screen:
+		var title_lbl := Label.new()
+		title_lbl.text                 = title_text
+		title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		title_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+		title_lbl.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		title_lbl.offset_left  = -500.0
+		title_lbl.offset_right =  500.0
+		title_lbl.offset_top   = -80.0
+		title_lbl.offset_bottom =  40.0
+		title_lbl.add_theme_font_size_override("font_size", 52)
+		title_lbl.add_theme_color_override("font_color", Color(1.0, 0.92, 0.55))
+		overlay.add_child(title_lbl)
 
 	# "Tap to continue" hint — blinks gently
 	var hint_lbl := Label.new()

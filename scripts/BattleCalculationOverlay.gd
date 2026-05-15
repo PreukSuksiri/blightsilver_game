@@ -106,7 +106,7 @@ func _build_slot(inst: GameState.CardInstance, is_attacker: bool) -> Control:
 	badge.size = Vector2(_card_w, BADGE_H)
 	badge.mouse_filter = MOUSE_FILTER_IGNORE
 
-	#if inst.card_type != "blank":
+	#if inst.card_type != "dead_end":
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", int(_card_w * 0.04))
 	row.mouse_filter = MOUSE_FILTER_IGNORE
@@ -116,7 +116,7 @@ func _build_slot(inst: GameState.CardInstance, is_attacker: bool) -> Control:
 	
 	if inst.card_type == "trap":
 		icon.texture = ICON_TRAP
-	elif inst.card_type == "blank": 
+	elif inst.card_type == "dead_end": 
 		icon.texture = ICON_BLANK
 	else	:
 		icon.texture = ICON_ATTACK if is_attacker else ICON_DEFEND
@@ -127,7 +127,7 @@ func _build_slot(inst: GameState.CardInstance, is_attacker: bool) -> Control:
 	icon.mouse_filter = MOUSE_FILTER_IGNORE
 	row.add_child(icon)
 
-	if inst.card_type != "trap" and inst.card_type != "blank":
+	if inst.card_type != "trap" and inst.card_type != "dead_end":
 		var num_lbl := Label.new()
 		var stat_val: int = inst.get_effective_atk() if is_attacker else inst.get_effective_def()
 		num_lbl.text = str(stat_val)
@@ -153,7 +153,7 @@ func _build_slot(inst: GameState.CardInstance, is_attacker: bool) -> Control:
 	return slot
 
 func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> void:
-	if inst.card_type == "blank":
+	if inst.card_type == "dead_end":
 		var img := TextureRect.new()
 		img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -392,7 +392,7 @@ func _run_async(
 	queue_free()
 
 func _get_scenario(defender: GameState.CardInstance, result: BattleResolver.BattleResult) -> String:
-	if defender.card_type == "blank":
+	if defender.card_type == "dead_end":
 		return "3F"
 	if result.special_trigger in ["trap_effect", "trap_nullified"]:
 		return "3E" if result.attacker_destroyed else "3D"

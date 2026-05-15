@@ -224,7 +224,7 @@ func _refresh_display() -> void:
 		_show_empty_slot()
 		return
 	match card_data.card_type:
-		"blank":
+		"dead_end":
 			# Show face-down when the card is unrevealed AND either:
 			#   - it belongs to the opponent (always hidden from current player), or
 			#   - it's own card but peek is OFF (enemy-view simulation).
@@ -643,7 +643,7 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			if event.double_click:
-				if card_data != null and card_data.card_type != "blank":
+				if card_data != null and card_data.card_type != "dead_end":
 					# Block detail view on opponent's face-down cards
 					if card_data.face_up or player_owner == GameState.current_player:
 						emit_signal("card_detail_requested", card_data.card_name, card_data.card_type)

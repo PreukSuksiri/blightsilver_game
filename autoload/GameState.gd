@@ -37,16 +37,17 @@ signal message_posted(text: String)
 const GRID_SIZE: int = 5
 const STARTING_CRYSTALS: int = 5000
 const STARTING_TECH_HAND: int = 3
-const MIN_CHARACTERS: int = 6
+const MIN_CHARACTERS: int = 8
 const MAX_CHARACTERS: int = 12
 const MIN_TRAPS: int = 4
-const MAX_TRAPS: int = 8
+const MAX_TRAPS: int = 6
 
 # ─────────────────────────────────────────────────────────────
 # CardInstance – Runtime card state on the grid
 # ─────────────────────────────────────────────────────────────
 class CardInstance:
-	var card_type: String = ""       # "character", "trap", "blank"
+	var card_type: String = ""       # "character", "trap", "dead_end"
+	var was_destroyed: bool = false  # true when this slot was cleared by destroy_card
 	var card_name: String = ""
 	var rarity: int = 0  # CharacterData.Rarity.COMMON
 	var face_up: bool = false
@@ -128,7 +129,7 @@ var vn_on_win: String = ""
 var vn_on_lose: String = ""
 
 # Battle BGM (set by VNPlayer or defaults; not reset by new_game())
-var battle_bgm_path: String = "res://assets/audio/bgm_boss_1.mp3"
+var battle_bgm_path: String = "res://assets/audio/bgm_battle_2.mp3"
 var battle_bgm_volume: float = 100.0   # percentage  (100 = 0 dB)
 
 var divine_protection_active: Array = [false, false]
@@ -161,7 +162,7 @@ func _init_grids() -> void:
 			var bluff_row: Array = []
 			for _c in range(GRID_SIZE):
 				var blank := CardInstance.new()
-				blank.card_type = "blank"
+				blank.card_type = "dead_end"
 				row.append(blank)
 				bluff_row.append("")
 			player_grid.append(row)
@@ -244,9 +245,9 @@ func place_trap(player_index: int, row: int, col: int, trap_name: String) -> voi
 	inst.rarity = data.rarity
 	grids[player_index][row][col] = inst
 
-func place_blank(player_index: int, row: int, col: int) -> void:
+func place_dead_end(player_index: int, row: int, col: int) -> void:
 	var inst := CardInstance.new()
-	inst.card_type = "blank"
+	inst.card_type = "dead_end"
 	grids[player_index][row][col] = inst
 
 func reveal_card(player_index: int, row: int, col: int) -> void:
@@ -257,12 +258,13 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 
 func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) -> void:
 	var card: CardInstance = get_card(player_index, row, col)
-	if pay_cost and card.card_type != "blank":
+	if pay_cost and card.card_type != "dead_end":
 		lose_crystals(player_index, card.crystal_cost)
 	emit_signal("card_destroyed", player_index, row, col)
-	place_blank(player_index, row, col)
-	# Mark the resulting blank as revealed so both players can see the empty slot
+	place_dead_end(player_index, row, col)
+	# Mark the resulting slot as revealed and destroyed so it can't be re-targeted
 	grids[player_index][row][col].face_up = true
+	grids[player_index][row][col].was_destroyed = true
 
 func get_adjacent_positions(row: int, col: int) -> Array:
 	var result: Array = []
@@ -337,6 +339,11 @@ func is_stuck(player_index: int) -> bool:
 func _end_game(winner: int) -> void:
 	set_phase(Phase.GAME_OVER)
 	emit_signal("game_over", winner)
+
+func force_game_over(winner: int) -> void:
+	if current_phase == Phase.GAME_OVER or current_phase == Phase.NONE:
+		return
+	_end_game(winner)
 
 func check_stuck_win_condition() -> void:
 	var p0_stuck := is_stuck(0)

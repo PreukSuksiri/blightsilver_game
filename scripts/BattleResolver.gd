@@ -28,8 +28,8 @@ static func resolve_battle(
 	var result := BattleResult.new()
 
 	match defender.card_type:
-		"blank":
-			result.messages.append("Nothing happens — Blank Area.")
+		"dead_end":
+			result.messages.append("Nothing happens — Dead End.")
 			return result
 
 		"trap":

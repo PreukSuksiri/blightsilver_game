@@ -38,7 +38,7 @@ const DeckData = preload("res://resources/DeckData.gd")
 @onready var char_count_label:  Label       = $MainLayout/RightPanel/Inner/CharSection/CharHeaderRow/CharCountLabel
 @onready var trap_count_label:  Label       = $MainLayout/RightPanel/Inner/TrapSection/TrapHeaderRow/TrapCountLabel
 @onready var tech_count_label:  Label       = $MainLayout/RightPanel/Inner/TechSection/TechHeaderRow/TechCountLabel
-@onready var blank_count_label: Label       = $MainLayout/RightPanel/Inner/BlankRow/BlankLabel
+@onready var blank_count_label: Label       = $MainLayout/RightPanel/Inner/DeadEndRow/DeadEndLabel
 @onready var status_label:      Label       = $MainLayout/RightPanel/Inner/StatusLabel
 @onready var save_btn:          Button      = $MainLayout/RightPanel/Inner/BottomBar/SaveBtn
 @onready var back_btn:          Button      = $MainLayout/RightPanel/Inner/BottomBar/BackBtn
@@ -385,12 +385,12 @@ func _rebuild_deck_lists() -> void:
 	var nc: int = current_deck.characters.size()
 	var nt: int = current_deck.traps.size()
 	var ntech: int = current_deck.techs.size()
-	var nb: int = current_deck.blank_count()
+	var nb: int = current_deck.dead_end_count()
 
 	char_count_label.text  = "Characters: %d / %d  (min %d)" % [nc, DeckData.MAX_CHARACTERS, DeckData.MIN_CHARACTERS]
 	trap_count_label.text  = "Traps: %d / %d  (min %d)" % [nt, DeckData.MAX_TRAPS, DeckData.MIN_TRAPS]
 	tech_count_label.text  = "Tech Cards: %d / %d" % [ntech, DeckData.TECH_COUNT]
-	blank_count_label.text = "Blank Areas (auto-fill): %d" % nb
+	blank_count_label.text = "Dead End Areas (auto-fill): %d" % nb
 
 	# Colour-code counters
 	var char_ok: bool = nc >= DeckData.MIN_CHARACTERS and nc <= DeckData.MAX_CHARACTERS
@@ -855,6 +855,13 @@ func _remove_card_gallery(card_name: String, card_type: String) -> void:
 
 func _load_full_card_tex(card_name: String, card_type: String) -> Texture2D:
 	var snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
+	if SaveManager.nsfw_enabled:
+		var nsfw_path: String = FULL_CARDS_DIR + snake + "_nsfw.png"
+		if ResourceLoader.exists(nsfw_path):
+			return load(nsfw_path) as Texture2D
+		nsfw_path = FULL_CARDS_DIR + card_type + "_" + snake + "_nsfw.png"
+		if ResourceLoader.exists(nsfw_path):
+			return load(nsfw_path) as Texture2D
 	var path: String = FULL_CARDS_DIR + snake + ".png"
 	if ResourceLoader.exists(path):
 		return load(path) as Texture2D

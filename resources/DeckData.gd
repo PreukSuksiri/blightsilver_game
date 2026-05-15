@@ -1,11 +1,11 @@
 # No class_name — callers access via: const DeckData = preload("res://resources/DeckData.gd")
 extends Resource
 
-const TOTAL_SLOTS:    int = 25   # grid cards (characters + traps + blanks)
-const MIN_CHARACTERS: int = 6
+const TOTAL_SLOTS:    int = 25   # grid cards (characters + traps + dead ends)
+const MIN_CHARACTERS: int = 8
 const MAX_CHARACTERS: int = 12
 const MIN_TRAPS:      int = 4
-const MAX_TRAPS:      int = 8
+const MAX_TRAPS:      int = 6
 const TECH_COUNT:     int = 3   # exactly 3 tech cards held in hand
 
 @export var deck_name:  String = "My Deck"
@@ -14,7 +14,7 @@ const TECH_COUNT:     int = 3   # exactly 3 tech cards held in hand
 @export var techs:      Array  = []   # Array of String card names (exactly TECH_COUNT)
 
 # ── Derived ───────────────────────────────────────────────────
-func blank_count() -> int:
+func dead_end_count() -> int:
 	return TOTAL_SLOTS - characters.size() - traps.size()
 
 func total_cards() -> int:
@@ -26,7 +26,7 @@ func is_valid() -> bool:
 		and traps.size() >= MIN_TRAPS
 		and traps.size() <= MAX_TRAPS
 		and techs.size() == TECH_COUNT
-		and blank_count() >= 0)
+		and dead_end_count() >= 0)
 
 func validation_message() -> String:
 	var msgs: Array = []
@@ -42,7 +42,7 @@ func validation_message() -> String:
 		msgs.append("Need %d more Tech Card(s)" % (TECH_COUNT - techs.size()))
 	elif techs.size() > TECH_COUNT:
 		msgs.append("Too many Tech Cards (exactly %d required)" % TECH_COUNT)
-	if blank_count() < 0:
+	if dead_end_count() < 0:
 		msgs.append("Exceeds 25-card grid limit")
 	if msgs.is_empty():
 		return "Deck ready!"

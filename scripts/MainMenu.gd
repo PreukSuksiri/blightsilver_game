@@ -50,19 +50,71 @@ func _refresh_deck_status() -> void:
 	var deck: DeckData = SaveManager.get_active_deck()
 	if deck == null:
 		deck_status_label.text = "No deck saved."
-		local_2p_btn.disabled = true
+		deck_status_label.add_theme_color_override("font_color", Color(1.0, 0.5, 0.3))
 		return
-	deck_status_label.text = 'Active deck: "%s"  (%d chars / %d traps / %d tech / %d blanks)' % [
+	deck_status_label.text = 'Active deck: "%s"  (%d chars / %d traps / %d tech / %d dead ends)' % [
 		deck.deck_name,
 		deck.characters.size(),
 		deck.traps.size(),
 		deck.techs.size(),
-		deck.blank_count()
+		deck.dead_end_count()
 	]
 	var valid: bool = deck.is_valid()
-	local_2p_btn.disabled = not valid
 	deck_status_label.add_theme_color_override("font_color",
 		Color(0.4, 0.9, 1.0) if valid else Color(1.0, 0.5, 0.3))
+
+func _deck_warning_message() -> String:
+	var deck: DeckData = SaveManager.get_active_deck()
+	if deck == null:
+		return "No deck saved. Please build a deck first."
+	return deck.validation_message()
+
+func _is_deck_ready() -> bool:
+	var deck: DeckData = SaveManager.get_active_deck()
+	return deck != null and deck.is_valid()
+
+func _show_deck_warning() -> void:
+	if get_node_or_null("DeckWarningPanel") != null:
+		return
+	var panel := Panel.new()
+	panel.name = "DeckWarningPanel"
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.059, 0.078, 0.145, 0.98)
+	sb.border_width_left = 2; sb.border_width_top = 2
+	sb.border_width_right = 2; sb.border_width_bottom = 2
+	sb.border_color = Color(1.0, 0.5, 0.3, 0.85)
+	sb.corner_radius_top_left = 8; sb.corner_radius_top_right = 8
+	sb.corner_radius_bottom_right = 8; sb.corner_radius_bottom_left = 8
+	panel.add_theme_stylebox_override("panel", sb)
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.size = Vector2(380, 140)
+	panel.position -= panel.size * 0.5
+	panel.z_index = 20
+	add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vbox.offset_left = 16; vbox.offset_top = 16
+	vbox.offset_right = -16; vbox.offset_bottom = -16
+	vbox.add_theme_constant_override("separation", 12)
+	panel.add_child(vbox)
+
+	var lbl := Label.new()
+	lbl.text = "Deck not ready\n" + _deck_warning_message()
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.add_theme_font_override("font", CHIVO_FONT)
+	lbl.add_theme_font_size_override("font_size", 16)
+	lbl.add_theme_color_override("font_color", Color(1.0, 0.6, 0.35, 1.0))
+	vbox.add_child(lbl)
+
+	var ok_btn := Button.new()
+	ok_btn.text = "OK"
+	ok_btn.add_theme_font_override("font", CHIVO_FONT)
+	ok_btn.add_theme_font_size_override("font_size", 17)
+	_apply_menu_btn_style(ok_btn, false)
+	ok_btn.pressed.connect(func() -> void: panel.queue_free())
+	vbox.add_child(ok_btn)
 
 func _refresh_inventory_badge() -> void:
 	var count := MailboxManager.get_unclaimed_count()
@@ -135,10 +187,16 @@ func _on_single_player() -> void:
 
 	_add_btn.call("CAMPAIGN", func() -> void:
 		picker.queue_free()
+		if not _is_deck_ready():
+			_show_deck_warning()
+			return
 		_on_campaign())
 
 	_add_btn.call("VS AI", func() -> void:
 		picker.queue_free()
+		if not _is_deck_ready():
+			_show_deck_warning()
+			return
 		bgm.stop()
 		GameState.game_mode = GameState.GameMode.VS_AI
 		CheckerTransition.fade_out_to_battle(func() -> void:
@@ -220,6 +278,9 @@ func _on_multiplayer() -> void:
 
 	_add_btn.call("HOT SEAT", func() -> void:
 		picker.queue_free()
+		if not _is_deck_ready():
+			_show_deck_warning()
+			return
 		bgm.stop()
 		GameState.game_mode = GameState.GameMode.HOT_SEAT
 		CheckerTransition.fade_out_to_battle(func() -> void:

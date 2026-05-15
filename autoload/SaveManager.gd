@@ -5,6 +5,8 @@ const DeckData = preload("res://resources/DeckData.gd")
 
 const SAVE_PATH: String = "user://save_data.json"
 
+signal nsfw_changed(enabled: bool)
+
 var decks: Array = []          # Array of DeckData
 var active_deck_index: int = 0
 var nsfw_enabled: bool = false

@@ -616,7 +616,7 @@ func _reset_grid() -> void:
 			var cell: GridCell = _grid_cells[r][c]
 			cell.vacate()
 			cell.set_emoticon("")
-			GameState.place_blank(current_setup_player, r, c)
+			GameState.place_dead_end(current_setup_player, r, c)
 
 func _load_card_tex(card_name: String, card_type: String = "") -> Texture2D:
 	var snake: String = _card_name_to_snake(card_name)
@@ -694,7 +694,7 @@ func _on_card_dropped(r: int, c: int, data: Dictionary) -> void:
 	if from_grid and src_r >= 0 and src_c >= 0:
 		var src_cell: GridCell = _grid_cells[src_r][src_c]
 		src_cell.vacate()
-		GameState.place_blank(current_setup_player, src_r, src_c)
+		GameState.place_dead_end(current_setup_player, src_r, src_c)
 	else:
 		if card_type == "character":
 			_chars_remaining.erase(card_name)
@@ -716,7 +716,7 @@ func _on_cell_unplace(r: int, c: int) -> void:
 		return
 	_return_to_pool(cell.occupied_name, cell.occupied_type)
 	cell.vacate()
-	GameState.place_blank(current_setup_player, r, c)
+	GameState.place_dead_end(current_setup_player, r, c)
 	_refresh_gallery()
 	_refresh_confirm()
 
@@ -737,7 +737,7 @@ func _on_random_formation() -> void:
 			if not cell.occupied_name.is_empty():
 				_return_to_pool(cell.occupied_name, cell.occupied_type)
 				cell.vacate()
-			GameState.place_blank(current_setup_player, r, c)
+			GameState.place_dead_end(current_setup_player, r, c)
 
 	# Build a shuffled list of all 25 positions
 	var positions: Array = []

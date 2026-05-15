@@ -123,7 +123,7 @@ func _choose_target_for(attacker_pos: Vector2i) -> Vector2i:
 			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
 			if card.card_type == "character" and card.face_up:
 				revealed_chars.append(Vector2i(r, c))
-			elif card.card_type != "blank":
+			elif card.card_type != "dead_end":
 				unrevealed.append(Vector2i(r, c))
 
 	# No revealed targets — attack a random unrevealed cell (rule 3).

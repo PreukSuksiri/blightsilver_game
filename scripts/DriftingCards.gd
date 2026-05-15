@@ -18,7 +18,8 @@ const TEX_BACK      := "res://assets/textures/cards/sample/card_back.png"
 const FULL_CARDS_DIR := "res://assets/textures/cards/full_cards/"
 
 var _tex_back:    Texture2D = null
-var _front_paths: Array[String] = []
+var _safe_paths:  Array[String] = []   # one entry per base card (safe art)
+var _nsfw_paths:  Array[String] = []   # one entry per base card (nsfw art, or safe fallback)
 var _cards:       Array[Dictionary] = []
 var _time       := 0.0
 var _screen_w   := 1280.0
@@ -32,6 +33,7 @@ func _ready() -> void:
 	_tex_back = load(TEX_BACK) as Texture2D
 	_scan_front_textures()
 	_init_cards()
+	SaveManager.nsfw_changed.connect(_on_nsfw_changed)
 	# Pre-simulate 30 s so cards look mid-drift on the very first frame.
 	# 150 steps × 0.2 s = 30 s of physics, no rendering cost.
 	for _i in 150:
@@ -39,25 +41,59 @@ func _ready() -> void:
 
 
 func _scan_front_textures() -> void:
+	_safe_paths.clear()
+	_nsfw_paths.clear()
+
 	var dir := DirAccess.open(FULL_CARDS_DIR)
 	if dir == null:
 		return
+
+	# Collect all image filenames
+	var all_files: Array[String] = []
 	dir.list_dir_begin()
 	var fname := dir.get_next()
 	while fname != "":
 		if not dir.current_is_dir():
 			var ext := fname.get_extension().to_lower()
-			if ext in ["png", "jpg", "jpeg", "gif"]:
-				_front_paths.append(FULL_CARDS_DIR + fname)
+			if ext in ["png", "jpg", "jpeg"]:
+				all_files.append(fname)
 		fname = dir.get_next()
 	dir.list_dir_end()
-	_front_paths.shuffle()
+
+	# Build a lookup: stem_without_extension → full path, for nsfw files only
+	var nsfw_map: Dictionary = {}
+	for f: String in all_files:
+		var stem: String = f.get_basename()
+		if stem.ends_with("_nsfw"):
+			nsfw_map[stem] = FULL_CARDS_DIR + f
+
+	# One entry per base card (non-nsfw files)
+	for f: String in all_files:
+		var stem: String = f.get_basename()
+		if stem.ends_with("_nsfw"):
+			continue  # handled via nsfw_map
+		var safe_path: String = FULL_CARDS_DIR + f
+		_safe_paths.append(safe_path)
+		var nsfw_key: String = stem + "_nsfw"
+		if nsfw_key in nsfw_map:
+			_nsfw_paths.append(nsfw_map[nsfw_key])
+		else:
+			_nsfw_paths.append(safe_path)  # no nsfw art → fall back to safe
+
+	_safe_paths.shuffle()
+	_nsfw_paths.shuffle()
 
 func _pick_front_tex() -> Texture2D:
-	if _front_paths.is_empty():
-		return _tex_back   # fallback when full_cards is empty
-	var path := _front_paths[randi() % _front_paths.size()]
+	var pool: Array[String] = _nsfw_paths if SaveManager.nsfw_enabled else _safe_paths
+	if pool.is_empty():
+		return _tex_back
+	var path: String = pool[randi() % pool.size()]
 	return load(path) as Texture2D
+
+func _on_nsfw_changed(_enabled: bool) -> void:
+	_scan_front_textures()
+	for card: Dictionary in _cards:
+		card["tex_front"] = _pick_front_tex()
 
 func _init_cards() -> void:
 	var rng := RandomNumberGenerator.new()

@@ -449,7 +449,7 @@ theme_override_styles/disabled = SubResource("SBF_add_n")
 
 [node name="RightPanel" type="Panel" parent="MainLayout"]
 layout_mode = 2
-custom_minimum_size = Vector2(460, 0)
+custom_minimum_size = Vector2(640, 0)
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("SBF_right_panel")
 
@@ -565,6 +565,7 @@ theme_override_font_sizes/font_size = 17
 
 [node name="TechSection" type="VBoxContainer" parent="MainLayout/RightPanel/Inner"]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 4
 
 [node name="TechHeaderRow" type="HBoxContainer" parent="MainLayout/RightPanel/Inner/TechSection"]
@@ -591,22 +592,23 @@ theme_override_styles/disabled = SubResource("SBF_remove_n")
 
 [node name="TechList" type="ItemList" parent="MainLayout/RightPanel/Inner/TechSection"]
 layout_mode = 2
+size_flags_vertical = 3
 custom_minimum_size = Vector2(0, 72)
 theme_override_font_sizes/font_size = 17
 
-[node name="BlankRow" type="HBoxContainer" parent="MainLayout/RightPanel/Inner"]
+[node name="DeadEndRow" type="HBoxContainer" parent="MainLayout/RightPanel/Inner"]
 layout_mode = 2
 
-[node name="BlankIcon" type="Label" parent="MainLayout/RightPanel/Inner/BlankRow"]
+[node name="DeadEndIcon" type="Label" parent="MainLayout/RightPanel/Inner/DeadEndRow"]
 layout_mode = 2
 text = "░"
 theme_override_font_sizes/font_size = 17
 theme_override_colors/font_color = Color(0.451, 0.451, 0.502, 1)
 
-[node name="BlankLabel" type="Label" parent="MainLayout/RightPanel/Inner/BlankRow"]
+[node name="DeadEndLabel" type="Label" parent="MainLayout/RightPanel/Inner/DeadEndRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Blank Areas (auto-fill): 25"
+text = "Dead End Areas (auto-fill): 25"
 theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.451, 0.502, 0.651, 1)
 
