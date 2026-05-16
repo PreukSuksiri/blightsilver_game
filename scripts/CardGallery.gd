@@ -66,6 +66,7 @@ func _build_filter_bar() -> void:
 		["character", "CHARACTERS"],
 		["trap",      "TRAPS"],
 		["tech",      "TECH"],
+		["union",     "UNION"],
 	]
 	for d: Array in defs:
 		var btn := Button.new()
@@ -175,6 +176,17 @@ func _build_all_cards() -> void:
 			"atk": -1, "def": -1,
 			"desc": data.get_effect_description()})
 
+	var union_list: Array = UnionDatabase.get_all_unions()
+	union_list.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)
+	for u: UnionData in union_list:
+		var tile := _make_union_tile(u)
+		card_flow.add_child(tile)
+		var is_unlocked: bool = SaveManager.is_union_unlocked(u.card_name)
+		_tiles.append({"node": tile, "card_name": u.card_name, "card_type": "union",
+			"affinity": int(u.affinity), "cost": u.summon_cost,
+			"atk": u.base_atk, "def": u.base_def,
+			"desc": u.ability_description if is_unlocked else u.partial_ability_description})
+
 	_apply_filter()
 
 # ─────────────────────────────────────────────────────────────
@@ -220,6 +232,25 @@ func _wrap_card_tile(card_node: Control, card_name: String, card_type: String) -
 			elif ev is InputEventScreenTouch and (ev as InputEventScreenTouch).pressed:
 				CardDetailOverlay.open(self, card_name, card_type))
 
+	return wrapper
+
+func _make_union_tile(u: UnionData) -> Control:
+	var wrapper := _make_simple_tile(u.card_name, "union")
+	if not SaveManager.is_union_unlocked(u.card_name):
+		var lock_overlay := ColorRect.new()
+		lock_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		lock_overlay.color = Color(0.0, 0.0, 0.0, 0.50)
+		lock_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		wrapper.add_child(lock_overlay)
+		var lock_lbl := Label.new()
+		lock_lbl.text = "?"
+		lock_lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		lock_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lock_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+		lock_lbl.add_theme_font_size_override("font_size", 28)
+		lock_lbl.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0, 0.8))
+		lock_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		wrapper.add_child(lock_lbl)
 	return wrapper
 
 func _make_char_tile(data: CharacterData) -> Control:

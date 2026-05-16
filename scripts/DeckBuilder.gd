@@ -48,7 +48,8 @@ const DeckData = preload("res://resources/DeckData.gd")
 
 # ── State ─────────────────────────────────────────────────────
 var current_deck: DeckData = null
-var _filter: String = "all"   # "all" | "character" | "trap" | "tech"
+var _filter: String = "all"   # "all" | "character" | "trap" | "tech" | "union"
+var _filter_union_btn: Button = null
 var _preview_card_type: String = ""
 var _preview_card_name: String = ""
 
@@ -89,6 +90,11 @@ var _view_toggle_btn: Button = null
 var _gallery_selected_name: String = ""
 var _gallery_selected_type: String = ""
 
+# Union right-panel section
+var _union_section: VBoxContainer = null
+var _union_list: ItemList = null
+var _union_header_label: Label = null
+
 func _ready() -> void:
 	_connect_buttons()
 	_refresh_deck_select()
@@ -101,8 +107,10 @@ func _ready() -> void:
 	preview_card_area.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
 
 	_build_advanced_filters()
+	_add_union_filter_button()
 	_update_filter_colors()
 	_setup_gallery_containers()
+	_setup_union_section()
 
 # ── Button wiring ─────────────────────────────────────────────
 func _connect_buttons() -> void:
@@ -227,6 +235,8 @@ func _set_filter(f: String) -> void:
 	filter_char.button_pressed = (f == "character")
 	filter_trap.button_pressed = (f == "trap")
 	filter_tech.button_pressed = (f == "tech")
+	if _filter_union_btn != null:
+		_filter_union_btn.button_pressed = (f == "union")
 	_update_filter_colors()
 	_rebuild_trunk_list()
 
@@ -237,6 +247,9 @@ func _update_filter_colors() -> void:
 	filter_char.add_theme_color_override("font_color", active_col if _filter == "character" else inactive_col)
 	filter_trap.add_theme_color_override("font_color", active_col if _filter == "trap"      else inactive_col)
 	filter_tech.add_theme_color_override("font_color", active_col if _filter == "tech"      else inactive_col)
+	if _filter_union_btn != null:
+		_filter_union_btn.add_theme_color_override("font_color",
+			Color(0.25, 0.90, 1.0) if _filter == "union" else inactive_col)
 
 func _rebuild_trunk_list() -> void:
 	trunk_list.clear()
@@ -268,6 +281,31 @@ func _rebuild_trunk_list() -> void:
 			trunk_list.add_item(label)
 			trunk_list.set_item_metadata(trunk_list.item_count - 1,
 				{"type": "character", "name": char_name})
+
+	if _filter in ["all", "union"]:
+		var union_list: Array = UnionDatabase.get_all_unions()
+		union_list.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)
+		for u: UnionData in union_list:
+			if not SaveManager.is_union_unlocked(u.card_name):
+				continue
+			if name_q != "" and name_q not in u.card_name.to_lower():
+				continue
+			if use_aff and int(u.affinity) != _filter_affinity:
+				continue
+			if u.summon_cost < _filter_cost_min or u.summon_cost > _filter_cost_max:
+				continue
+			if use_atk and (u.base_atk < _filter_atk_min or u.base_atk > _filter_atk_max):
+				continue
+			if use_def and (u.base_def < _filter_def_min or u.base_def > _filter_def_max):
+				continue
+			if abil_q != "" and abil_q not in u.ability_description.to_lower():
+				continue
+			var label: String = "UNION: %s  ATK:%d DEF:%d  %d◆" % [
+				u.card_name, u.base_atk, u.base_def, u.summon_cost]
+			trunk_list.add_item(label)
+			trunk_list.set_item_custom_fg_color(trunk_list.item_count - 1, Color(0.25, 0.90, 1.0))
+			trunk_list.set_item_metadata(trunk_list.item_count - 1,
+				{"type": "union", "name": u.card_name})
 
 	# Traps and Tech have no affinity/ATK/DEF — hide them when those filters are active
 	if not use_aff and not use_atk and not use_def:
@@ -355,6 +393,9 @@ func _add_card_to_deck(card_type: String, card_name: String) -> void:
 				status_label.text = "Tech limit reached (exactly %d required)." % DeckData.TECH_COUNT
 				return
 			current_deck.techs.append(card_name)
+		"union":
+			_add_union_materials_to_deck(card_name)
+			return
 	_rebuild_deck_lists()
 
 # ── Remove card from deck ─────────────────────────────────────
@@ -453,6 +494,7 @@ func _rebuild_deck_lists() -> void:
 
 	if _gallery_mode and _deck_chars_flow != null:
 		_rebuild_deck_galleries()
+	_rebuild_union_section()
 
 # ── Card list selection → preview ─────────────────────────────
 func _on_trunk_selected(idx: int) -> void:
@@ -518,6 +560,19 @@ func _show_preview(card_type: String, card_name: String) -> void:
 			preview_frame.texture = null
 			_load_preview_art(card_name, "tech")
 
+		"union":
+			accent  = Color(0.25, 0.90, 1.0)
+			info_bg = Color(0.02, 0.07, 0.10)
+			var data: UnionData = UnionDatabase.get_union(card_name)
+			if data:
+				preview_name.text  = card_name
+				preview_stats.text = "[%s]  ATK %d  DEF %d  %d◆" % [
+					CharacterData.Affinity.keys()[int(data.affinity)].capitalize(),
+					data.base_atk, data.base_def, data.summon_cost]
+				var is_unlocked: bool = SaveManager.is_union_unlocked(card_name)
+				preview_desc.text = data.ability_description if is_unlocked else data.partial_ability_description
+			preview_frame.texture = null
+			_load_preview_art(card_name, "unions")
 	preview_stats.add_theme_color_override("font_color", accent)
 	preview_bg.color         = info_bg
 	preview_info_strip.color = info_bg
@@ -528,6 +583,176 @@ func _load_preview_art(card_name: String, subfolder: String) -> void:
 		preview_art.texture = load(path)
 	else:
 		preview_art.texture = _ART_PLACEHOLDER
+
+# ── Union filter button ───────────────────────────────────────
+func _add_union_filter_button() -> void:
+	_filter_union_btn = Button.new()
+	_filter_union_btn.text = "UNION"
+	_filter_union_btn.toggle_mode = true
+	_filter_union_btn.add_theme_font_size_override("font_size", 13)
+	_filter_union_btn.pressed.connect(func() -> void: _set_filter("union"))
+	filter_bar.add_child(_filter_union_btn)
+	filter_bar.move_child(_filter_union_btn, filter_tech.get_index() + 1)
+
+# ── Union material auto-add ───────────────────────────────────
+func _card_satisfies_cond(cname: String, cond: Dictionary) -> bool:
+	if cond.is_empty():
+		return true
+	var data: CharacterData = CardDatabase.get_character(cname)
+	if data == null:
+		return false
+	if cond.has("card_name") and data.card_name != str(cond["card_name"]):
+		return false
+	if cond.has("name_contains") and not data.card_name.to_lower().contains(str(cond["name_contains"])):
+		return false
+	if cond.has("affinity") and int(cond["affinity"]) >= 0 and int(data.affinity) != int(cond["affinity"]):
+		return false
+	if cond.has("min_cost") and data.crystal_cost < int(cond["min_cost"]):
+		return false
+	if cond.has("min_atk") and data.base_atk < int(cond["min_atk"]):
+		return false
+	if cond.has("min_def") and data.base_def < int(cond["min_def"]):
+		return false
+	return true
+
+func _deck_can_form_union(u: UnionData) -> bool:
+	var available: Array = current_deck.characters.duplicate()
+	for cond: Dictionary in u.material_conditions:
+		var found: int = -1
+		for i: int in range(available.size()):
+			if _card_satisfies_cond(available[i], cond):
+				found = i
+				break
+		if found < 0:
+			return false
+		available.remove_at(found)
+	return true
+
+func _describe_cond(cond: Dictionary) -> String:
+	if cond.is_empty():
+		return "Any character card"
+	if cond.has("card_name"):
+		return str(cond["card_name"])
+	var parts: Array = []
+	if cond.has("name_contains"):
+		parts.append('name contains "%s"' % str(cond["name_contains"]))
+	if cond.has("affinity") and int(cond["affinity"]) >= 0:
+		parts.append("%s affinity" % CharacterData.Affinity.keys()[int(cond["affinity"])].capitalize())
+	if cond.has("min_cost"):
+		parts.append("%d◆+" % int(cond["min_cost"]))
+	if cond.has("min_atk"):
+		parts.append("ATK %d+" % int(cond["min_atk"]))
+	if cond.has("min_def"):
+		parts.append("DEF %d+" % int(cond["min_def"]))
+	return ", ".join(parts) if parts.size() > 0 else "Any character card"
+
+func _add_union_materials_to_deck(union_name: String) -> void:
+	if current_deck == null:
+		return
+	var u: UnionData = UnionDatabase.get_union(union_name)
+	if u == null:
+		return
+
+	var assigned: Array = []
+	var missing_conds: Array = []
+	var used_in_assign: Array = []
+
+	for cond: Dictionary in u.material_conditions:
+		var candidates: Array = []
+		for cname: String in CardDatabase.get_all_character_names():
+			if Collection.get_card_count(cname) == 0:
+				continue
+			if cname in current_deck.characters:
+				continue
+			if cname in used_in_assign:
+				continue
+			if _card_satisfies_cond(cname, cond):
+				var data: CharacterData = CardDatabase.get_character(cname)
+				candidates.append({"name": cname, "cost": data.crystal_cost})
+		if candidates.is_empty():
+			missing_conds.append(cond)
+		else:
+			candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+				return a["cost"] < b["cost"] if a["cost"] != b["cost"] else a["name"] < b["name"])
+			var chosen: String = candidates[0]["name"]
+			assigned.append(chosen)
+			used_in_assign.append(chosen)
+
+	if missing_conds.size() > 0:
+		var found_str: String = ", ".join(assigned) if assigned.size() > 0 else "none"
+		var missing_str: String = ""
+		for cond: Dictionary in missing_conds:
+			missing_str += "\n  • " + _describe_cond(cond)
+		var popup := AcceptDialog.new()
+		popup.title = "Not Enough Union Material"
+		popup.dialog_text = (
+			"Not enough union material.\n\nFormula: %s\n\nFound: %s\nMissing:%s"
+			% [u.formula_description, found_str, missing_str])
+		add_child(popup)
+		popup.popup_centered()
+		popup.confirmed.connect(func() -> void: popup.queue_free())
+		popup.canceled.connect(func() -> void: popup.queue_free())
+		return
+
+	for cname: String in assigned:
+		if cname in current_deck.characters:
+			continue
+		if current_deck.characters.size() >= DeckData.MAX_CHARACTERS:
+			status_label.text = "Character limit reached; some union materials could not be added."
+			break
+		var grid_cards: int = current_deck.characters.size() + current_deck.traps.size()
+		if grid_cards >= DeckData.TOTAL_SLOTS:
+			status_label.text = "Grid deck is full; some union materials could not be added."
+			break
+		current_deck.characters.append(cname)
+
+	_rebuild_deck_lists()
+
+# ── Union right-panel section ─────────────────────────────────
+func _setup_union_section() -> void:
+	var tech_section: Control = tech_list.get_parent()
+	var right_inner: Control = tech_section.get_parent()
+
+	_union_section = VBoxContainer.new()
+	_union_section.add_theme_constant_override("separation", 2)
+
+	var header_row := HBoxContainer.new()
+	_union_header_label = Label.new()
+	_union_header_label.text = "Union (0 achievable)"
+	_union_header_label.add_theme_font_size_override("font_size", 13)
+	_union_header_label.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0))
+	_union_header_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	header_row.add_child(_union_header_label)
+	_union_section.add_child(header_row)
+
+	_union_list = ItemList.new()
+	_union_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_union_list.custom_minimum_size = Vector2(0, 60)
+	_union_list.add_theme_font_size_override("font_size", 12)
+	_union_list.select_mode = ItemList.SELECT_SINGLE
+	_union_list.mouse_filter = Control.MOUSE_FILTER_PASS
+	_union_section.add_child(_union_list)
+
+	right_inner.add_child(_union_section)
+	right_inner.move_child(_union_section, tech_section.get_index() + 1)
+	_rebuild_union_section()
+
+func _rebuild_union_section() -> void:
+	if _union_list == null or current_deck == null:
+		return
+	_union_list.clear()
+	var count: int = 0
+	var union_list: Array = UnionDatabase.get_all_unions()
+	union_list.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)
+	for u: UnionData in union_list:
+		if not SaveManager.is_union_unlocked(u.card_name):
+			continue
+		if _deck_can_form_union(u):
+			_union_list.add_item("⊕ %s  ATK %d / DEF %d  %d◆" % [
+				u.card_name, u.base_atk, u.base_def, u.summon_cost])
+			_union_list.set_item_custom_fg_color(_union_list.item_count - 1, Color(0.25, 0.90, 1.0))
+			count += 1
+	_union_header_label.text = "Union (%d achievable)" % count
 
 # ── Save / Back ───────────────────────────────────────────────
 func _on_save() -> void:

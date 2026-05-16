@@ -10,6 +10,7 @@ signal nsfw_changed(enabled: bool)
 var decks: Array = []          # Array of DeckData
 var active_deck_index: int = 0
 var nsfw_enabled: bool = false
+var unlocked_unions: Array = []  # union card names the player has ever summoned
 
 func _ready() -> void:
 	load_data()
@@ -28,6 +29,14 @@ func get_active_deck() -> DeckData:
 func set_active_deck_index(index: int) -> void:
 	active_deck_index = clampi(index, 0, decks.size() - 1)
 	save_data()
+
+func unlock_union(union_name: String) -> void:
+	if union_name not in unlocked_unions:
+		unlocked_unions.append(union_name)
+		save_data()
+
+func is_union_unlocked(union_name: String) -> bool:
+	return union_name in unlocked_unions
 
 # ── CRUD ─────────────────────────────────────────────────────
 func save_deck(deck: DeckData) -> void:
@@ -71,6 +80,7 @@ func save_data() -> void:
 		"collection": Collection.to_dict(),
 		"campaign": CampaignManager.to_dict(),
 		"nsfw_enabled": nsfw_enabled,
+		"unlocked_unions": unlocked_unions,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -111,3 +121,7 @@ func load_data() -> void:
 		CampaignManager.load_from_dict(campaign_data)
 
 	nsfw_enabled = bool(parsed.get("nsfw_enabled", false))
+
+	var ul: Variant = parsed.get("unlocked_unions", [])
+	if ul is Array:
+		unlocked_unions = ul

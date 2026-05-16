@@ -323,6 +323,7 @@ func _build_ui(card_w: float, card_h: float) -> void:
 const TYPE_COLOR_CHARACTER := Color(1.0, 0.71, 0.2, 1.0)  # yellow
 const TYPE_COLOR_TRAP      := Color(1.0, 0.263, 0.345, 1.0)  # red
 const TYPE_COLOR_TECH      := Color(0.18, 0.764, 0.341, 1.0)  # green
+const TYPE_COLOR_UNION     := Color(0.25, 0.90, 1.00, 1.0)   # cyan
 
 func _populate(card_name: String, card_type: String) -> void:
 	match card_type:
@@ -421,6 +422,31 @@ func _populate(card_name: String, card_type: String) -> void:
 			_set_rarity(data.rarity)
 			AudioManager.speak("Tech card... %s...... %s... Cost: %d." % [
 				card_name, data.get_effect_description(), data.crystal_cost])
+		"union":
+			var u: UnionData = UnionDatabase.get_union(card_name)
+			if not u:
+				return
+			var is_unlocked: bool = SaveManager.is_union_unlocked(card_name)
+			var aff_name: String = CharacterData.Affinity.keys()[int(u.affinity)].capitalize()
+			var shown_desc: String = u.ability_description if is_unlocked else u.partial_ability_description
+			_type.text = "UNION" + ("" if is_unlocked else "  🔒")
+			_type.add_theme_color_override("font_color", TYPE_COLOR_UNION)
+			_frame.modulate = Color(0.55, 0.95, 1.0)
+			_cost_num.text = str(u.summon_cost)
+			_name.text = card_name
+			_atk.text  = "ATK %d" % u.base_atk
+			_def.text  = "DEF %d" % u.base_def
+			_aff.text  = aff_name
+			_aff.add_theme_color_override("font_color", TYPE_COLOR_UNION)
+			_desc.text = shown_desc
+			_style_pill(_atk, Color(0.75, 0.28, 0.05), Color(1.0, 0.55, 0.28))
+			_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
+			_mod_label.visible      = false
+			_cost_mod_label.visible = false
+			_load_art(CardDatabase.find_artwork(card_name, "unions", SaveManager.nsfw_enabled))
+			_set_rarity(int(u.rarity))
+			AudioManager.speak("Union... %s...... %s... Cost: %d... ATK: %d... DEF: %d... Affinity: %s." % [
+				card_name, shown_desc, u.summon_cost, u.base_atk, u.base_def, aff_name])
 		"dead_end":
 			# Show the pre-rendered dead end card PNG as the full card image
 			var card_h := _info_y / INFO_TOP_PCT

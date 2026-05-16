@@ -69,6 +69,7 @@ class CardInstance:
 	var ability_params: Dictionary = {}
 	var has_mutagen_flag: bool = false
 	var is_token: bool = false
+	var is_union: bool = false       # true when this card is a Union monster
 	var attacked_this_turn: bool = false
 	var cannot_attack_until: int = -1  # Turn number when restriction lifts
 	var effect_nullified_until: int = -1
@@ -277,6 +278,34 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 	# Mark the resulting slot as revealed and destroyed so it can't be re-targeted
 	grids[player_index][row][col].face_up = true
 	grids[player_index][row][col].was_destroyed = true
+
+## Remove a Union material card silently (no crystal loss, no card_destroyed signal,
+## no was_destroyed flag). The slot becomes a normal blank dead_end.
+func remove_union_material(player_index: int, row: int, col: int) -> void:
+	place_dead_end(player_index, row, col)
+	# Mark face_up so it can be attacked as a normal blank slot
+	grids[player_index][row][col].face_up = true
+
+## Place a Union monster at (row, col) for player.
+## The card appears face-up and behaves like a character card.
+func place_union_card(player_index: int, row: int, col: int, u: UnionData) -> void:
+	var inst := CardInstance.new()
+	inst.card_type    = "character"
+	inst.is_union     = true
+	inst.card_name    = u.card_name
+	inst.affinity     = int(u.affinity)
+	inst.base_atk     = u.base_atk
+	inst.base_def     = u.base_def
+	inst.current_atk  = u.base_atk
+	inst.current_def  = u.base_def
+	inst.crystal_cost = u.summon_cost   # crystal loss = summon cost if destroyed
+	inst.rarity       = int(u.rarity)
+	inst.ability_type = int(u.ability_type)
+	inst.ability_params = u.ability_params
+	inst.face_up      = true
+	inst.revealed_on_turn = turn_number
+	grids[player_index][row][col] = inst
+	emit_signal("card_revealed", player_index, row, col)
 
 func get_adjacent_positions(row: int, col: int) -> Array:
 	var result: Array = []

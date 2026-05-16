@@ -392,6 +392,11 @@ func _show_character_face_up() -> void:
 	face_down_overlay.visible = false
 	frame_rect.texture = VELLUM_FRAME
 
+	# ── Union card rendering ──────────────────────────────────
+	if card_data.is_union:
+		_show_union_face_up()
+		return
+
 	var aff_color: Color = AFFINITY_COLORS.get(card_data.affinity, Color.WHITE)
 	bg.color = Color(0.05, 0.04, 0.08)
 
@@ -451,6 +456,65 @@ func _show_character_face_up() -> void:
 		_set_active_glow(is_own_turn and card_data.face_up)
 		_set_attacked_icon(is_own_turn and card_data.attacked_this_turn)
 		_apply_rarity(aff_color)
+		_refresh_flag_badges()
+
+# ─────────────────────────────────────────────────────────────
+# Union face-up (character subtype, cyan frame)
+# ─────────────────────────────────────────────────────────────
+const UNION_CYAN: Color = Color(0.25, 0.90, 1.00)
+
+func _show_union_face_up() -> void:
+	face_down_overlay.visible = false
+	frame_rect.texture = VELLUM_FRAME
+	bg.color = Color(0.02, 0.08, 0.14)
+
+	card_type_label.text = "UNION"
+	card_type_label.add_theme_color_override("font_color", UNION_CYAN)
+	affinity_label.text = "⊕"
+	affinity_label.add_theme_color_override("font_color", UNION_CYAN)
+
+	name_label.text = card_data.card_name
+
+	var eff_atk: int = card_data.get_effective_atk()
+	var eff_def: int = card_data.get_effective_def()
+	atk_label.text = "ATK %d" % eff_atk
+	def_label.text = "DEF %d" % eff_def
+	atk_label.add_theme_color_override("font_color", Color(1.0, 0.40, 0.30))
+	def_label.add_theme_color_override("font_color", Color(0.30, 0.70, 1.0))
+
+	var aff_idx: int = card_data.affinity
+	var aff_keys: Array = CharacterData.Affinity.keys()
+	affinity_stat_label.text = aff_keys[aff_idx].capitalize() if aff_idx < aff_keys.size() else ""
+	affinity_stat_label.add_theme_color_override("font_color", Color(UNION_CYAN.r, UNION_CYAN.g, UNION_CYAN.b, 0.7))
+
+	cost_label.text = "%d◆" % card_data.crystal_cost
+	cost_label.add_theme_color_override("font_color", Color(1.0, 0.90, 0.30))
+
+	var u: UnionData = UnionDatabase.get_union(card_data.card_name)
+	if u:
+		ability_label.text = u.ability_description
+		_load_artwork(u.artwork_path, card_data.card_name, "unions")
+	else:
+		ability_label.text = ""
+		_clear_art()
+
+	attacked_indicator.visible = false
+	_blank_found_icon.visible  = false
+	_trap_icon.visible         = false
+	mutagen_indicator.visible  = false
+	if _is_enemy_view:
+		shield_indicator.visible = false
+		_set_active_glow(false)
+		_set_attacked_icon(false)
+		_clear_rarity()
+		_flag_bar.visible = false
+	else:
+		shield_indicator.visible = card_data.force_shielded
+		shield_indicator.text = "🛡"
+		var is_own_turn := player_owner == GameState.current_player
+		_set_active_glow(is_own_turn and card_data.face_up)
+		_set_attacked_icon(is_own_turn and card_data.attacked_this_turn)
+		_apply_rarity(UNION_CYAN)
 		_refresh_flag_badges()
 
 # ─────────────────────────────────────────────────────────────

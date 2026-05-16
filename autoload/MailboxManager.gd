@@ -120,6 +120,11 @@ func admin_command(raw: String) -> String:
 				+ "  list_chars\n"
 				+ "  list_traps\n"
 				+ "  list_tech\n"
+				+ "  list_unions\n"
+				+ "  unlock_union <union_name>\n"
+				+ "  unlock_all_unions\n"
+				+ "  lock_union <union_name>\n"
+				+ "  lock_all_unions\n"
 				+ "  card_editor\n"
 				+ "  animation_vellum_card_commence_flip\n"
 				+ "  animation_vellum_card_commence_facedown"
@@ -417,6 +422,47 @@ func admin_command(raw: String) -> String:
 			scene.add_child(anim)
 			anim.call("launch", false)
 			return "Vellum Card Commence (face-down) animation started."
+
+		"list_unions":
+			var all_unions: Array = UnionDatabase.get_all_unions()
+			all_unions.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)
+			var lines: Array = []
+			for u: UnionData in all_unions:
+				var status: String = "[UNLOCKED]" if SaveManager.is_union_unlocked(u.card_name) else "[locked]  "
+				lines.append("%s %s" % [status, u.card_name])
+			return "Unions (%d):\n  " % all_unions.size() + "\n  ".join(PackedStringArray(lines))
+
+		"unlock_union":
+			if parts.size() < 2:
+				return "Usage: unlock_union <union_name>"
+			var uname: String = " ".join(PackedStringArray(parts.slice(1)))
+			var u: UnionData = UnionDatabase.get_union(uname)
+			if u == null:
+				return "Union not found: '%s'" % uname
+			SaveManager.unlock_union(uname)
+			return "Unlocked union: %s" % uname
+
+		"unlock_all_unions":
+			var all_unions: Array = UnionDatabase.get_all_unions()
+			for u: UnionData in all_unions:
+				SaveManager.unlock_union(u.card_name)
+			return "Unlocked all %d unions." % all_unions.size()
+
+		"lock_union":
+			if parts.size() < 2:
+				return "Usage: lock_union <union_name>"
+			var uname: String = " ".join(PackedStringArray(parts.slice(1)))
+			var u: UnionData = UnionDatabase.get_union(uname)
+			if u == null:
+				return "Union not found: '%s'" % uname
+			SaveManager.unlocked_unions.erase(uname)
+			SaveManager.save_data()
+			return "Locked union: %s" % uname
+
+		"lock_all_unions":
+			SaveManager.unlocked_unions.clear()
+			SaveManager.save_data()
+			return "Locked all unions."
 
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd

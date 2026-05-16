@@ -1,0 +1,553 @@
+extends Node
+## UnionDatabase — autoload that holds all Union card definitions
+## and provides zone-match validation.
+##
+## Zone shapes are defined as arrays of Vector2i (row_offset, col_offset)
+## from the top-left anchor of the zone's bounding box.
+##
+## Admin / debug tip:
+##   To test a zone, call:
+##     UnionDatabase.debug_print_zone("Gryphon Rider")
+##   To force-show all unions for a position (ignoring material checks):
+##     UnionDatabase.find_available_unions(player, row, col, true)
+
+# ─────────────────────────────────────────────────────────────
+# Registry
+# ─────────────────────────────────────────────────────────────
+var _unions: Dictionary = {}  # card_name → UnionData
+
+func _ready() -> void:
+	_load_unions()
+
+func get_union(name: String) -> UnionData:
+	var u: Variant = _unions.get(name, null)
+	return u as UnionData
+
+func get_all_unions() -> Array:
+	return _unions.values()
+
+# ─────────────────────────────────────────────────────────────
+# Zone shape library
+# (row_offset, col_offset) from top-left anchor of bounding box
+# ─────────────────────────────────────────────────────────────
+#
+#  ── 2-cell ───────────────────────────────────────────────────
+# Z_H2   = [X][X]       Z_V2 = [X]     Z_D2  = [X][ ]
+#                                [X]           [ ][X]
+#
+# Z_D2L  = [ ][X]       Z_SH2 = [X][ ][X]    Z_SV2 = [X]
+#           [X][ ]                                    [ ]
+#                                                     [X]
+#
+# Z_FAR_D = [X][ ][ ]   Z_FAR_DL = [ ][ ][X]
+#            [ ][ ][ ]              [ ][ ][ ]
+#            [ ][ ][X]              [X][ ][ ]
+#
+#  ── 3-cell ───────────────────────────────────────────────────
+# Z_V3 = [X]      Z_H3 = [X][X][X]    Z_L3 = [X][ ]
+#         [X]                                  [X][X]
+#         [X]
+#
+# Z_J3 = [ ][X]   Z_T3 = [X][X]       Z_TRI = [X][X]
+#         [X][X]          [ ][X]               [X][ ]
+#
+# Z_DIAG3 = [X][ ][ ]
+#            [ ][X][ ]
+#            [ ][ ][X]
+#
+#  ── 4-cell ───────────────────────────────────────────────────
+# Z_SQ = [X][X]   Z_T4 = [X][X][X]   Z_L4 = [X]
+#         [X][X]          [ ][X][ ]           [X]
+#                                             [X][X]
+#
+#  ── 5-cell ───────────────────────────────────────────────────
+# Z_PLUS = [ ][X][ ]   Z_X = [X][ ][X]   Z_V5 = [X]
+#           [X][X][X]        [ ][X][ ]           [X]
+#           [ ][X][ ]        [X][ ][X]           [X]
+#                                                [X]
+#                                                [X]
+
+func _z(pairs: Array) -> Array:
+	var result: Array = []
+	for p: Array in pairs:
+		result.append(Vector2i(p[0], p[1]))
+	return result
+
+# ─────────────────────────────────────────────────────────────
+# Data loading
+# ─────────────────────────────────────────────────────────────
+func _load_unions() -> void:
+	var A := CharacterData.Affinity
+	var R := CharacterData.Rarity
+	var AB := CharacterData.AbilityType
+
+	# ─────────────────────────────────────────────────────────
+	# Union definitions — sourced from card_data.xlsx Union tab
+	# _add(name, affinity, atk, def, summon_cost, rarity,
+	#      ability_type, ability_params,
+	#      full_description, partial_description, formula,
+	#      zone_shape, material_conditions)
+	#
+	# Zone shapes are Vector2i (row,col) offsets from top-left anchor.
+	# material_conditions: one dict per zone cell (unordered matching).
+	#   {} = any character card.
+	# ─────────────────────────────────────────────────────────
+
+	# ── Divine ────────────────────────────────────────────────
+
+	_add("Gryphon Rider", A.DIVINE, 150, 95, 1000, R.RARE,
+		AB.NONE, {}, "No ability.", "None",
+		"Gryphon + 1 Divine + 1000 crystals",
+		_z([[0,0],[1,1],[2,2],[3,3],[4,4]]),
+		_conds([{"name_contains": "gryphon"}, {"affinity": A.DIVINE}], 5))
+
+	_add("Seraphim Fistmaster", A.DIVINE, 120, 120, 1500, R.LEGENDARY,
+		AB.NONE, {}, "Double ATK and DEF against Chaos.",
+		"Double ATK and DEF against ??? Affinity",
+		"1 Seraph monster + 1 Divine monster with at least 1000 crystal cost + 1500 crystals",
+		_z([[0,0],[0,1],[0,3],[0,4],[1,0],[1,4],[3,0],[3,4],[4,0],[4,1],[4,3],[4,4]]),
+		_conds([{"name_contains": "seraph"}, {"affinity": A.DIVINE, "min_cost": 1000}], 12))
+
+	_add("One Winged Angel", A.DIVINE, 120, 120, 1500, R.LEGENDARY,
+		AB.PERM_BOOST_END_OF_TURN, {"atk": 30, "def": 0},
+		"+30 ATK permanently at the end of your turn.",
+		"+??? ATK permanently at ???",
+		"1 Cleaver Saint + 1 Divine card + 1500 crystals",
+		_z([[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]]),
+		_conds([{"card_name": "Cleaver Saint"}, {"affinity": A.DIVINE}], 10))
+
+	_add("Pixie Queen", A.DIVINE, 30, 30, 1000, R.UNCOMMON,
+		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"atk_bonus": 5, "def_bonus": 0, "affinity": A.DIVINE},
+		"+5 ATK for each Divine card on own field.",
+		"+5 ATK for each ????",
+		"1 Tiny Pixie + 1 Divine card + 1000 crystals",
+		_z([[0,2],[1,2],[2,0],[2,4],[3,0],[3,2],[3,4],[4,1],[4,3]]),
+		_conds([{"card_name": "Tiny Pixie"}, {"affinity": A.DIVINE}], 9))
+
+	_add("Diamond Unicorn", A.DIVINE, 50, 35, 1000, R.UNCOMMON,
+		AB.ONE_USE_DEF_BOOST, {"bonus": 15},
+		"+15 ATK until the end of this turn, once.",
+		"+15 ATK until ????",
+		"1 Ponycorn + 1 Divine card + 1000 crystals",
+		_z([[0,2],[1,1],[1,3],[2,0],[2,4],[3,1],[3,3],[4,2]]),
+		_conds([{"name_contains": "ponycorn"}, {"affinity": A.DIVINE}], 8))
+
+	_add("Choir Lead Amber", A.DIVINE, 35, 35, 1000, R.RARE,
+		AB.NONE, {}, "+20 ATK to all Divine characters on own field.",
+		"+20 ATK to all ?????",
+		"3 Choir Lady cards + 1000 crystals",
+		_z([[0,1],[0,2],[1,1],[1,3],[1,4],[2,1],[2,4],[3,0],[3,1],[4,0],[4,1]]),
+		_conds([{"name_contains": "choir lady"}, {"name_contains": "choir lady"}, {"name_contains": "choir lady"}], 11))
+
+	_add("Genesis Mech", A.DIVINE, 60, 40, 1000, R.RARE,
+		AB.NONE, {}, "Once, destroy a Divine or Anima card.",
+		"Once, destroy ???or ??? card",
+		"1 Cruel Angel + 1 Anima card + 1000 crystals",
+		_z([[0,0],[0,1],[0,2],[0,3],[0,4],[1,0],[1,1],[1,2],[1,3],[1,4]]),
+		_conds([{"name_contains": "cruel angel"}, {"affinity": A.ANIMA}], 10))
+
+	_add("Keeper of the Afterlife", A.DIVINE, 40, 65, 1000, R.UNCOMMON,
+		AB.NONE, {}, "At battle calculation, flip a coin. If heads, the attack does nothing.",
+		"At battle calculation, flip a coin. If head, ????",
+		"1 Sphinx character + 1 Divine card + 1000 crystals",
+		_z([[0,2],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[2,4]]),
+		_conds([{"name_contains": "sphinx"}, {"affinity": A.DIVINE}], 9))
+
+	_add("Keeper of the Sun", A.DIVINE, 70, 35, 1000, R.UNCOMMON,
+		AB.NONE, {}, "Cannot attack if there is a card with affinity other than Divine or Anima on own field.",
+		"This card cannot attack if there is card with affinity other than ??? Or ???",
+		"1 Sphinx character + 1 Anima + 1000 crystals",
+		_z([[0,0],[0,1],[0,2],[0,3],[0,4],[1,1],[1,2],[1,3],[2,2]]),
+		_conds([{"name_contains": "sphinx"}, {"affinity": A.ANIMA}], 9))
+
+	_add("Keeper of Righteous", A.DIVINE, 90, 80, 2000, R.RARE,
+		AB.ATK_BONUS_VS_TWO_AFFINITIES, {"aff1": A.CHAOS, "aff2": A.ARCANE, "bonus": 20},
+		"+20 ATK vs Chaos and Arcane.",
+		"+??? ATK vs ?? and ??",
+		"2 Sphinx characters + 2000 crystals",
+		_z([[0,0],[0,4],[1,1],[1,3],[2,2],[3,1],[3,3],[4,0],[4,4]]),
+		_conds([{"name_contains": "sphinx"}, {"name_contains": "sphinx"}], 9))
+
+	_add("Lucky Wanderer", A.DIVINE, 70, 50, 1000, R.UNCOMMON,
+		AB.NONE, {}, "During the end of that turn, flip a coin. If heads, +10 ATK permanently. If tails, +10 DEF permanently.",
+		"During the end of that turn, flip a coin. If head, +??? ATK. If tail, +?? DEF",
+		"1 Lucky Statue + 1 Divine card + 1000 crystals",
+		_z([[0,0],[1,0],[2,0],[3,0],[4,0]]),
+		_conds([{"name_contains": "lucky statue"}, {"affinity": A.DIVINE}], 5))
+
+	_add("Raijin and Fujin", A.DIVINE, 80, 80, 1000, R.RARE,
+		AB.NONE, {}, "No ability.", "None",
+		"Raijin + Fujin + 1000 crystals",
+		_z([[0,0],[0,4],[1,0],[1,4],[2,0],[2,4],[3,0],[3,4],[4,0],[4,4]]),
+		_conds([{"card_name": "Raijin"}, {"card_name": "Fujin"}], 10))
+
+	_add("Joyce the Rafflesia", A.DIVINE, 45, 45, 1000, R.UNCOMMON,
+		AB.PERM_BOOST_END_OF_TURN, {"atk": 5, "def": 5},
+		"At the end of this turn, +5 ATK and DEF permanently.",
+		"At the end of this turn, +??? ATK and DEF ????",
+		"Bloom Fairy + 1 Nature card + 1000 crystals",
+		_z([[0,0],[0,1],[0,2],[0,3],[0,4],[1,0],[1,1],[1,3],[1,4],[2,2],[3,2],[4,2]]),
+		_conds([{"card_name": "Bloom Fairy"}, {"affinity": A.NATURE}], 12))
+
+	_add("Sky Protector", A.DIVINE, 0, 0, 1000, R.RARE,
+		AB.NONE, {}, "If this card defends, DEF becomes 50, ATK becomes 0. If this card attacks, ATK becomes 50, DEF becomes 0.",
+		"If this card defends, DEF becomes ???, ATK becomes ???. If this card performs attack, ATK becomes ???, DEF becomes ???.",
+		"Sunrise Lady + Moonrise Gentleman + 1000 crystals",
+		_z([[0,0],[0,1],[0,2],[0,3],[0,4]]),
+		_conds([{"card_name": "Sunrise Lady"}, {"card_name": "Moonrise Gentleman"}], 5))
+
+	_add("Twin Axe Saintess", A.DIVINE, 40, 30, 1500, R.RARE,
+		AB.NONE, {}, "This card can attack twice per turn.",
+		"This card can ??? per turn",
+		"Lady of the Sacred Pond + 1 Anima + 1500 crystals",
+		_z([[0,0],[0,1],[0,3],[0,4],[1,1],[1,3],[2,1],[2,3],[3,1],[3,3]]),
+		_conds([{"card_name": "Lady of the Sacred Pond"}, {"affinity": A.ANIMA}], 10))
+
+	_add("Blast Beam Seraph", A.DIVINE, 100, 50, 1500, R.LEGENDARY,
+		AB.NONE, {}, "No ability.", "None",
+		"Gerald of the Heavenly Light + 1 Divine + 1500 crystals",
+		_z([[0,0],[0,1],[0,2],[0,3],[0,4],[1,2],[2,0],[2,1],[2,2],[2,3],[2,4],[3,2]]),
+		_conds([{"card_name": "Gerald of the Heavenly Light"}, {"affinity": A.DIVINE}], 12))
+
+	_add("Balthier the Supreme Holiness", A.DIVINE, 100, 100, 1500, R.LEGENDARY,
+		AB.BOOST_PER_ANIMA_ON_FIELD, {"atk_bonus": 50, "def_bonus": 50},
+		"+50 ATK and DEF for each Divine card on the field. This bonus does not exceed a maximum of 100.",
+		"+??? ATK and DEF for each ???cards on the field. This bonus does not exceed maximum of 1???",
+		"2 Divine monsters with at least 1000 crystal cost + 1500 crystals",
+		_z([[0,2],[1,0],[1,1],[1,2],[1,3],[1,4],[2,2],[3,2],[4,2]]),
+		_conds([{"affinity": A.DIVINE, "min_cost": 1000}, {"affinity": A.DIVINE, "min_cost": 1000}], 9))
+
+	# ── Nature ────────────────────────────────────────────────
+
+	_add("Gaia Turtle", A.NATURE, 0, 220, 2000, R.LEGENDARY,
+		AB.NONE, {}, "No ability.", "None",
+		"2 characters with at least 100 DEF + 2000 crystals",
+		_z([[0,0],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]]),
+		_conds([{"min_def": 100}, {"min_def": 100}], 8))
+
+	_add("Barros the Collossol", A.NATURE, 150, 130, 1500, R.RARE,
+		AB.NONE, {}, "No ability.", "None",
+		"2 Nature + 1500 crystals",
+		_z([[0,0],[0,2],[1,1],[2,0],[2,2]]),
+		_conds([{"affinity": A.NATURE}, {"affinity": A.NATURE}], 5))
+
+	_add("Armored Dino", A.NATURE, 100, 60, 1000, R.UNCOMMON,
+		AB.NONE, {}, "During battle calculation, pay 1000 crystal cost to +60 DEF.",
+		"During battle calculation, pay ??? crystal cost to +??DEF",
+		"1 Armored Nature card + 1 Nature + 1000 crystals",
+		_z([[0,0],[0,1],[0,2],[0,3],[0,4],[1,0],[1,1],[1,2],[1,3],[1,4]]),
+		_conds([{"name_contains": "armored", "affinity": A.NATURE}, {"affinity": A.NATURE}], 10))
+
+	# ── Bio ───────────────────────────────────────────────────
+
+	_add("Tendrill Tyrant", A.BIO, 90, 110, 1500, R.LEGENDARY,
+		AB.NONE, {}, "Can attack 3 times per turn.",
+		"Can attack ? times per turn",
+		"Bio card with mutagen flag + 2 Bio cards + 1500 crystals",
+		_z([[0,2],[1,2],[2,0],[2,1],[2,2],[2,3],[2,4],[3,2],[4,2]]),
+		_conds([{"affinity": A.BIO, "has_flag": "mutagen"}, {"affinity": A.BIO}, {"affinity": A.BIO}], 9))
+
+	_add("Bioterrorist", A.BIO, 150, 0, 1000, R.RARE,
+		AB.NONE, {}, "Destroy this card after battle calculation.",
+		"Destroy this card after ???",
+		"2 Bio cards + 1000 crystals",
+		_z([[0,0],[0,4],[1,1],[1,3],[3,1],[3,3],[4,0],[4,4]]),
+		_conds([{"affinity": A.BIO}, {"affinity": A.BIO}], 8))
+
+	_add("Rocket Tyrant", A.BIO, 130, 110, 1000, R.RARE,
+		AB.NONE, {}, "No ability.", "None",
+		"1 Bio + 1 Anima + 1000 crystals",
+		_z([[0,0],[0,2],[0,4],[1,1],[1,3],[2,0],[2,2],[2,4],[3,1],[3,3],[4,0],[4,2],[4,4]]),
+		_conds([{"affinity": A.BIO}, {"affinity": A.ANIMA}], 13))
+
+	# ── Cosmic ────────────────────────────────────────────────
+
+	_add("Helios the Prideful Fortress", A.COSMIC, 145, 100, 1500, R.LEGENDARY,
+		AB.NONE, {}, "As long as there is a face-up Cosmic character on own field, this card cannot be destroyed.",
+		"As long as there is face-up ???, this card cannot be ???",
+		"2 Cosmic card + 1500 crystals",
+		_z([[0,2],[1,1],[1,3],[2,0],[2,4],[3,1],[3,3],[4,2]]),
+		_conds([{"affinity": A.COSMIC}, {"affinity": A.COSMIC}], 8))
+
+	_add("Slim Gray Plasma Bomber", A.COSMIC, 80, 60, 1000, R.RARE,
+		AB.NONE, {}, "+100 ATK and DEF if 15 or more of own cells are revealed.",
+		"+?? ATK and DEF if ?? or more of your cells is revealed",
+		"1 Slim Gray + 1 Cosmic card + 1000 crystals",
+		_z([[0,1],[1,0],[1,1],[1,2],[2,0],[2,2],[3,0],[3,1],[3,2]]),
+		_conds([{"name_contains": "slim gray"}, {"affinity": A.COSMIC}], 9))
+
+	_add("Interplanetary Assassin", A.COSMIC, 100, 70, 1500, R.RARE,
+		AB.ATK_BONUS_VS_AFFINITY, {"affinity": A.COSMIC, "bonus": 100},
+		"+100 ATK vs Cosmic.",
+		"+?? ATK vs Cosmic",
+		"2 Cosmic cards + 1500 crystals",
+		_z([[0,2],[1,0],[1,1],[1,2],[1,3],[1,4],[3,0],[3,1],[3,2],[3,3],[3,4],[4,2]]),
+		_conds([{"affinity": A.COSMIC}, {"affinity": A.COSMIC}], 12))
+
+	_add("Giant Mining Pod", A.COSMIC, 20, 80, 1000, R.UNCOMMON,
+		AB.NONE, {}, "If this card attacks a dead end card, you receive 200 crystals.",
+		"If this card attacks a dead end card, you receive ???crystals",
+		"1 Miner Probe + 1 Cosmic + 1000 crystals",
+		_z([[0,0],[0,1],[0,2],[0,3],[0,4],[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,2],[4,2]]),
+		_conds([{"name_contains": "miner probe"}, {"affinity": A.COSMIC}], 13))
+
+	# ── Anima ─────────────────────────────────────────────────
+
+	_add("X-Death Squad", A.ANIMA, 50, 50, 1000, R.LEGENDARY,
+		AB.NONE, {}, "Pay 1000 crystals: destroy opponent character during damage calculation. Opponent does not lose crystals under this effect.",
+		"Pay ????, destroy opponent character during damage calculation. Opponent do not ????",
+		"1 Anima with at least 800 crystal cost + 2 Anima cards + 1000 crystals",
+		_z([[0,0],[0,2],[0,4],[2,0],[2,2],[2,4],[4,0],[4,2],[4,4]]),
+		_conds([{"affinity": A.ANIMA, "min_cost": 800}, {"affinity": A.ANIMA}, {"affinity": A.ANIMA}], 9))
+
+	# ── Chaos ─────────────────────────────────────────────────
+
+	_add("Lord of Terror", A.CHAOS, 200, 100, 1000, R.LEGENDARY,
+		AB.NONE, {}, "-50 ATK if attacks dead end card.",
+		"-50 ATK if ???",
+		"2 Chaos + 1000 crystals",
+		_z([[0,2],[1,2],[2,2],[3,0],[3,1],[3,2],[3,3],[3,4],[4,2]]),
+		_conds([{"affinity": A.CHAOS}, {"affinity": A.CHAOS}], 9))
+
+	_add("Greater Succubus", A.CHAOS, 30, 50, 1000, R.RARE,
+		AB.NONE, {}, "If this card survived a battle, gain half of ATK and DEF equal to the card it battled.",
+		"If this card survived a battle, gain ????",
+		"1 Succubus + 1 Chaos card + 1000 crystals",
+		_z([[0,2],[1,0],[1,1],[1,2],[1,3],[1,4],[2,0],[2,4],[3,0],[3,4]]),
+		_conds([{"name_contains": "succubus"}, {"affinity": A.CHAOS}], 10))
+
+	_add("Kitsune", A.CHAOS, 35, 35, 1000, R.UNCOMMON,
+		AB.NONE, {}, "No ability.", "None",
+		"Dark Monk + 1 Chaos + 1000 crystals",
+		_z([[0,0],[0,1],[1,1],[1,2],[2,0],[2,1],[3,1],[3,2],[4,0],[4,1]]),
+		_conds([{"card_name": "Dark Monk"}, {"affinity": A.CHAOS}], 10))
+
+	_add("Ten Arms Yaksa", A.CHAOS, 45, 30, 1000, R.RARE,
+		AB.NONE, {}, "This card can attack 3 times. -5 ATK for each successful attack.",
+		"This card can attack ??? times. -?? ATK for each successful attack.",
+		"Yaksa + 1 Chaos + 1000 crystals",
+		_z([[0,0],[0,1],[0,3],[0,4],[1,2],[2,2],[3,0],[3,1],[3,2],[3,3],[3,4],[4,0],[4,2],[4,4]]),
+		_conds([{"card_name": "Yaksa"}, {"affinity": A.CHAOS}], 14))
+
+	_add("Skeleton Overlord", A.CHAOS, 50, 5, 1000, R.RARE,
+		AB.NONE, {}, "No ability.", "None",
+		"3 Skeleton cards + 1000 crystals",
+		_z([[0,1],[0,2],[0,3],[2,0],[2,1],[2,2],[2,3],[2,4],[4,1],[4,2],[4,3]]),
+		_conds([{"name_contains": "skeleton"}, {"name_contains": "skeleton"}, {"name_contains": "skeleton"}], 11))
+
+	_add("Oblivion Dragon", A.CHAOS, 200, 0, 2000, R.LEGENDARY,
+		AB.NONE, {}, "When this card defends, halve its attack and increase DEF by that amount permanently.",
+		"When this card defends, halve its ??? an???",
+		"5 Chaos cards with 600 or more cost + 2000 crystals",
+		_z([[0,0],[0,4],[4,0],[4,4]]),
+		_conds([
+			{"affinity": A.CHAOS, "min_cost": 600},
+			{"affinity": A.CHAOS, "min_cost": 600},
+			{"affinity": A.CHAOS, "min_cost": 600},
+			{"affinity": A.CHAOS, "min_cost": 600},
+		], 4))
+
+	# ── No affinity ───────────────────────────────────────────
+
+	_add("Katana Shark", A.DIVINE, 75, 50, 0, R.UNCOMMON,
+		AB.NONE, {}, "No ability.", "None",
+		"3 Shark cards",
+		_z([[0,0],[0,1],[1,2],[2,3],[3,3],[4,4]]),
+		_conds([{"name_contains": "shark"}, {"name_contains": "shark"}, {"name_contains": "shark"}], 6))
+
+func _add(
+		name: String,
+		aff: CharacterData.Affinity,
+		atk: int, def_val: int,
+		cost: int,
+		rarity: CharacterData.Rarity,
+		ability: CharacterData.AbilityType,
+		params: Dictionary,
+		desc: String,
+		partial_desc: String,
+		formula: String,
+		zone: Array,
+		conds: Array
+) -> void:
+	if _unions.has(name):
+		return
+	var d := UnionData.new()
+	d.card_name = name
+	d.affinity = aff
+	d.base_atk = atk
+	d.base_def = def_val
+	d.summon_cost = cost
+	d.rarity = rarity
+	d.ability_type = ability
+	d.ability_params = params
+	d.ability_description = desc
+	d.partial_ability_description = partial_desc if partial_desc != "" else desc
+	d.formula_description = formula
+	d.union_zone = zone
+	d.material_conditions = conds
+	_unions[name] = d
+
+## Build a conditions array: specific conditions padded with {} to reach zone size.
+func _conds(specific: Array, total: int) -> Array:
+	var result: Array = specific.duplicate()
+	while result.size() < total:
+		result.append({})
+	return result
+
+# ─────────────────────────────────────────────────────────────
+# Validation
+# ─────────────────────────────────────────────────────────────
+
+## Find all unions the current player can summon using the card at (tapped_row, tapped_col).
+## Returns Array of:
+##   { union: UnionData, zone_cells: Array[Vector2i], tapped_pos: Vector2i }
+## where zone_cells are the absolute grid positions the zone occupies.
+## If ignore_materials = true, skips condition checking (for admin/debug use).
+func find_available_unions(
+		player: int,
+		tapped_row: int,
+		tapped_col: int,
+		ignore_materials: bool = false
+) -> Array:
+	var tapped := Vector2i(tapped_row, tapped_col)
+	var results: Array = []
+	var seen_keys: Dictionary = {}  # prevent duplicate (union_name + anchor) entries
+
+	for union: UnionData in _unions.values():
+		var zone: Array = union.union_zone
+		var zone_size: int = zone.size()
+
+		# Try placing each zone cell at the tapped position
+		for i: int in range(zone_size):
+			var offset: Vector2i = zone[i]
+			var anchor: Vector2i = tapped - offset
+
+			# Compute all absolute zone positions
+			var zone_cells: Array = []
+			var fits: bool = true
+			for j: int in range(zone_size):
+				var cell: Vector2i = anchor + (zone[j] as Vector2i)
+				if cell.x < 0 or cell.x >= GameState.GRID_SIZE or cell.y < 0 or cell.y >= GameState.GRID_SIZE:
+					fits = false
+					break
+				zone_cells.append(cell)
+
+			if not fits:
+				continue
+
+			# Deduplicate: same union + same anchor = same placement
+			var key: String = union.card_name + "|%d,%d" % [anchor.x, anchor.y]
+			if seen_keys.has(key):
+				continue
+			seen_keys[key] = true
+
+			# All zone cells must have face-up character cards
+			var all_chars: bool = true
+			for cell: Vector2i in zone_cells:
+				var card: GameState.CardInstance = GameState.get_card(player, cell.x, cell.y)
+				if card.card_type != "character" or not card.face_up:
+					all_chars = false
+					break
+			if not all_chars:
+				continue
+
+			# Material conditions must be satisfiable
+			if not ignore_materials and not _materials_match(player, zone_cells, union.material_conditions):
+				continue
+
+			results.append({
+				"union": union,
+				"zone_cells": zone_cells,
+				"tapped_pos": tapped,
+			})
+
+	return results
+
+## Check whether zone_cells (Array[Vector2i]) satisfy all material_conditions.
+## Uses greedy matching: most-specific conditions first.
+func _materials_match(player: int, zone_cells: Array, conditions: Array) -> bool:
+	if conditions.size() != zone_cells.size():
+		return false
+
+	# Sort conditions by specificity descending (more keys = more specific)
+	var sorted_conds: Array = conditions.duplicate()
+	sorted_conds.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return a.size() > b.size()
+	)
+
+	var used: Array = []
+	used.resize(zone_cells.size())
+	used.fill(false)
+
+	for cond: Dictionary in sorted_conds:
+		var found: bool = false
+		for i: int in range(zone_cells.size()):
+			if used[i]:
+				continue
+			var pos: Vector2i = zone_cells[i]
+			var card: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
+			if _card_satisfies(card, cond):
+				used[i] = true
+				found = true
+				break
+		if not found:
+			return false
+
+	return true
+
+func _card_satisfies(card: GameState.CardInstance, cond: Dictionary) -> bool:
+	if card.card_type != "character":
+		return false
+
+	var cn: Variant = cond.get("card_name", "")
+	if cn is String and (cn as String) != "" and card.card_name != (cn as String):
+		return false
+
+	var nc: Variant = cond.get("name_contains", "")
+	if nc is String and (nc as String) != "" and not card.card_name.to_lower().contains((nc as String)):
+		return false
+
+	var aff: Variant = cond.get("affinity", -1)
+	if aff is int and (aff as int) >= 0 and card.affinity != (aff as int):
+		return false
+
+	var mc: Variant = cond.get("min_cost", 0)
+	if mc is int and card.crystal_cost < (mc as int):
+		return false
+
+	var ma: Variant = cond.get("min_atk", 0)
+	if ma is int and card.base_atk < (ma as int):
+		return false
+
+	var md: Variant = cond.get("min_def", 0)
+	if md is int and card.base_def < (md as int):
+		return false
+
+	var hf: Variant = cond.get("has_flag", "")
+	if hf is String and (hf as String) != "" and not card.flags.has(hf as String):
+		return false
+
+	return true
+
+# ─────────────────────────────────────────────────────────────
+# Debug helpers
+# ─────────────────────────────────────────────────────────────
+
+## Print the zone shape of a union card to the output log.
+func debug_print_zone(union_name: String) -> void:
+	var u: UnionData = get_union(union_name)
+	if u == null:
+		print("UnionDatabase: '%s' not found." % union_name)
+		return
+	var grid: Array = []
+	for _r in range(GameState.GRID_SIZE):
+		var row_arr: Array = []
+		for _c in range(GameState.GRID_SIZE):
+			row_arr.append(".")
+		grid.append(row_arr)
+	for cell: Vector2i in u.union_zone:
+		if cell.x < GameState.GRID_SIZE and cell.y < GameState.GRID_SIZE:
+			grid[cell.x][cell.y] = "X"
+	print("=== Union zone: %s ===" % union_name)
+	for r: int in range(GameState.GRID_SIZE):
+		print(" ".join(grid[r]))

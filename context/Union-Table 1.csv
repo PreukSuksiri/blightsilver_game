@@ -1,0 +1,177 @@
+Table 1
+Card Name,Card Type,Cost,ATK,DEF,Affinity,Rarity,Partial Ability,Full Ability,Formula,Union Zone,Have illustration
+Gryphon Rider,Union,,150,95,Divine,,None,None,Gryphon + 1 Divine + 1000 crystals,"10000
+01000
+00100
+00010
+00001",
+Seraphim Fistmaster,Union,,120,120,Divine,,Double ATK and DEF against ??? Affinity,Double ATK and DEF against Chaos,1 Seraph monster + 1 Divine monsters with at least 1000 crystal cost + 1500 crystal,"11011
+10001
+00000
+10001
+11011",
+Gaia Turtle,Union,,0,220,Nature,,None,None,2 characters with at least 100 DEF + 2000 crystals,"00000
+01010
+01110
+01110
+00000",
+Barros the Collossol,Union,,150,130,Nature,,None,None,2 Nature + 1500 crystals,"00000
+01010
+00100
+01010
+00000",
+Tendrill Tyrant,Union,,90,110,Bio,,Can attack ? times per turn,Can attack 3 times per turn, Bio card with mutagen flag + 2 Bio cards + 1500 :  Can attack 3 times per turn,"00100
+00100
+11111
+00100
+00100",
+Helios the Prideful Fortress,Union,,145,100,Cosmic,,"As long as there is face-up ???, this card cannot be ???","As long as there is face-up cosmic character on their own field, this card cannot be destroyed",2 Cosmic card + 1500 crystal,"00100
+01010
+10001
+01010
+00100",
+X-Death Squad,Union,,50,50,Anima,,"Pay ????, destroy opponent character during damage calculation. Opponent do not ????","Pay 1000, destroy opponent character during damage calculation. Opponent do not lose crystal under this effect.",1 Anima with at least 800 crystal cost + 2 Anima cards + 1000 crystals,"10101
+00000
+10101
+00000
+10101",
+Slim Gray Plasma Bomber,,,80,60,Cosmic,,+?? ATK and DEF if ?? or more of your cells is revealed,+100 ATK and DEF if 15 or more of your cells is revealed,1 Slim Gray + 1 Cosmic card + 1000 crystals,"00100
+01110
+01010
+01110
+00000",
+Interplanetary Assassin,,,100,70,Cosmic,,+?? ATK vs Cosmic,+100 ATK vs Cosmic,2 Cosmic cards + 1500 crystals,"00100
+11111
+00000
+11111
+00100",
+Bioterrorist,,,150,0,Bio,,Destroy this card after ???,Destroy this card after battle calculation,2 Bio cards + 1000 crystal,"10001
+01010
+00000
+01010
+10001",
+One Winged Angel,,,120,120,Divine,,+??? ATK permanently at ???,+30 ATK permanently at the end of your turn,1 Cleaver Saint + 1 Divine card + 1500 crystal,"00011
+00011
+00011
+00011
+00011",
+Rocket Tyrant,,,130,110,Bio,,None,None,1 Bio + 1 Anima + 1000 crystal,"10101
+01010
+10101
+01010
+10101",
+Lord of Terror,,,200,100,Chaos,,-50 ATK if ???,-50 ATK if attacks dead end card,2 Chaos + 1000 crystal,"00100
+00100
+00100
+11111
+00100",
+Armored Dino,,,100,60,Nature,,"During battle calculation, pay ??? crystal cost to +??DEF","During battle calculation, pay 1000 crystal cost to +60 DEF",1 Armored Nature card + 1 Nature + 1000 crystal,"00000
+11111
+11111
+00000
+00000",
+Greater Succubus,,,30,50,Chaos,,"If this card survived a battle, gain ????","If this card survived a battle, gain half of ATK and DEF equal to card it battled",1 Succubus + 1 Chaos card + 1000 crystal cost,"00100
+11111
+10001
+10001
+00000",
+Pixie Queen,,,30,30,Divine,,+5 ATK for each ????,+5 ATK for each Divine cards on their own field,1 Tiny Pixie + 1 Divine card + 1000 crystal,"00100
+00100
+10001
+10101
+01010",
+Diamond Unicorn,,,50,35,Divine,,+15 ATK until ????,"+15 ATK until the end of this turn, once.",1 Ponycorn + 1 Divine card + 1000 crystal cost ,"00100
+01010
+10001
+01010
+00100",
+Choir Lead Amber,,,35,35,Divine,,+20 ATK to all ?????,+20 ATK to all Divine characters on their own field,3 Choir Lady cards + 1000 crystals,"01100
+01011
+01001
+11000
+11000",
+Genesis Mech,,,60,40,Divine,,"Once, destroy ???or ??? card","Once, destroy Divine or Anima card",1 Cruel Angel + 1 Anima Card + 1000 crystals,"11111
+11111
+00000
+00000
+00000",
+Keeper of the Afterlife,,,40,65,Divine,,"At battle calculation, flip a coin. If head, ????","At battle calculation, flip a coin. If head, the attack does nothing",1 Sphinx character + 1 Divine card + 1000 crystals,"00000
+00000
+00100
+01110
+11111",
+Keeper of the Sun,,,70,35,Divine,,This card cannot attack if there is card with affinity other than ??? Or ???,This card cannot attack if there is card with affinity other than Divine or Anima on their own field,1 Sphinx character + 1 Anima + 1000 crystals,"11111
+01110
+00100
+00000
+00000",
+Keeper of Righteous,,,90,80,Divine,,+??? ATK vs ?? and ??,+20 ATK vs Chaos and Arcane,2 Sphinx characters + 2000 crystals,"10001
+01010
+00100
+01010
+10001",
+Lucky Wanderer,,,70,50,Divine,,"During the end of that turn, flip a coin. If head, +??? ATK. If tail, +?? DEF","During the end of that turn, flip a coin. If head, +10 ATK. If tail, +10 DEF",1 Lucky Statue + 1 Divine card + 1000 crystals,"00100
+00100
+00100
+00100
+00100",
+Raijin and Fujin,,,80,80,Divine,,None,None,Raijin + Fujin + 1000 crystals,"10001
+10001
+10001
+10001
+10001",
+Joyce the Rafflesia,,,45,45,Divine,,"At the end of this turn, +??? ATK and DEF ????","At the end of this turn, +5 ATK and DEF permanently.",Bloom Fairy + 1 Nature card + 1000 crystals,"11111
+11011
+00100
+00100
+00100",
+Sky Protector,,,0,0,Divine,,"If this card defends, DEF becomes ???, ATK becomes ???. If this card performs attack, ATK becomes ???, DEF becomes ???.","If this card defends, DEF becomes 50, ATK becomes 0. If this card performs attack, ATK becomes 50, DEF becomes 0.",Sunrise Lady + Moonrise Gentleman + 1000 crystal,"11111
+00000
+00000
+00000
+00000",
+Twin Axe Saintess,,,40,30,Divine,,This card can ??? per turn,This card can attack twice per turn,Lady of the Sacred Pond + 1 Anima + 1500 crystals,"11011
+01010
+01010
+01010
+00000",
+Blast Beam Seraph,,,100,50,Divine,,None,None,Gerald of the Heavenly Light + 1 Divine + 1500 crystals,"11111
+00100
+11111
+00100
+00000",
+Balthier the Supreme Holiness,,,100,100,Divine,,+??? ATK and DEF for each ???cards on the field. This bonus does not exceed maximum of 1???,+50 ATK and DEF for each Divine cards on the field. This bonus does not exceed maximum of 100,2 Divine monsters with at least 1000 crystal cost + 1500 crystal,"00100
+11111
+00100
+00100
+00100",
+Giant Mining Pod,,,20,80,Cosmic,,"If this card attacks a dead end card, you receive ???crystals","If this card attacks a dead end card, you receive 200 crystals",1 Miner probe + 1 Cosmic + 1000,"11111
+01110
+01110
+00100
+00100",
+Kitsune,,,35,35,Chaos,,None,None,Dark Monk + 1 Chaos + 1000,"01100
+00110
+01100
+00110
+01100",
+Ten Arms Yaksa,,,45,30,Chaos,,This card can attack ??? times. -?? ATK for each successful attack.,This card can attack 3 times. -5 ATK for each successful attack.,Yaksa + 1 Chaos + 1000,"11011
+00100
+00100
+11111
+10101",
+Skeleton Overlord,,,50,5,Chaos,,None,None,3 Skeleton cards + 1000,"01110
+00000
+11111
+00000
+01110",
+Oblivion Dragon,,,200,0,Chaos,,"When this card defends, halve its ??? an???","When this card defends, halve its attack and increase DEF by that amount  permanently",5 Chaos card with 600 or more cost + 2000 crystals,"10001
+00000
+00000
+00000
+10001",
+Katana Shark,,,75,50,,,None,None,3 sharks card,"11000
+00100
+00010
+00010
+00001",

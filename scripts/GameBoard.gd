@@ -1625,8 +1625,16 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	)
 	var can_info: bool  = (card.card_type != "dead_end" and card.card_name != "")
 	var can_bluff: bool = (ctx_player == current_player)
+	var _union_phase_ok: bool = GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]
+	var _available_unions: Array = UnionDatabase.find_available_unions(ctx_player, row, col) if (
+		ctx_player == current_player
+		and card.card_type == "character"
+		and card.face_up
+		and _union_phase_ok
+	) else []
+	var can_union: bool = _available_unions.size() > 0
 
-	if not can_attack and not can_info and not can_bluff:
+	if not can_attack and not can_info and not can_bluff and not can_union:
 		return
 
 	# ── Fullscreen backdrop — catches outside clicks to dismiss ──
@@ -1704,11 +1712,27 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 		)
 		hbox.add_child(btn)
 
+	if can_union:
+		var union_snap_player: int = ctx_player
+		var union_snap_row: int = row
+		var union_snap_col: int = col
+		var union_snap_available: Array = _available_unions
+		var ubtn := Button.new()
+		ubtn.text = "UNION"
+		ubtn.custom_minimum_size = Vector2(52.0, 52.0)
+		ubtn.add_theme_color_override("font_color", Color(0.25, 0.90, 1.00))
+		ubtn.add_theme_font_size_override("font_size", 11)
+		ubtn.pressed.connect(func() -> void:
+			_hide_card_context()
+			_open_union_modal(union_snap_player, union_snap_row, union_snap_col, union_snap_available)
+		)
+		hbox.add_child(ubtn)
+
 	# ── Size and position: horizontal strip above the cursor ──
 	const ICON_SZ: float = 52.0
 	const PAD: float     = 8.0
 	const SEP: float     = 6.0
-	var btn_count: int   = int(can_attack) + int(can_info) + int(can_bluff)
+	var btn_count: int   = int(can_attack) + int(can_info) + int(can_bluff) + int(can_union)
 	var popup_w: float   = btn_count * ICON_SZ + maxf(float(btn_count - 1), 0.0) * SEP + PAD * 2.0
 	var popup_h: float   = ICON_SZ + PAD * 2.0
 
@@ -1887,6 +1911,79 @@ func _hide_card_context() -> void:
 	_context_popup = null
 	_context_card_player = -1
 	_context_card_pos = Vector2i(-1, -1)
+
+# ─────────────────────────────────────────────────────────────
+# Union Summon
+# ─────────────────────────────────────────────────────────────
+var _union_modal: Node = null
+var _union_highlighted_cells: Array = []
+var _union_highlighted_player: int = -1
+
+func _open_union_modal(player: int, _row: int, _col: int, available: Array) -> void:
+	_clear_union_zone_highlight()
+	var modal: UnionModal = UnionModal.open(
+		self,
+		player,
+		available,
+		func(zone_cells: Array) -> void: _set_union_zone_highlight(player, zone_cells),
+		func() -> void: _clear_union_zone_highlight()
+	)
+	_union_modal = modal
+	modal.union_confirmed.connect(_on_union_confirmed)
+	modal.union_cancelled.connect(_on_union_cancelled)
+
+func _on_union_confirmed(player: int, union_name: String, tapped_pos: Vector2i, zone_cells: Array) -> void:
+	_union_modal = null
+	_clear_union_zone_highlight()
+	var u: UnionData = UnionDatabase.get_union(union_name)
+	if u == null:
+		push_error("Union not found: " + union_name)
+		return
+	# Pay crystal cost
+	GameState.lose_crystals(player, u.summon_cost)
+	# Remove all material cards except tapped_pos (which gets replaced by union)
+	for cell: Vector2i in zone_cells:
+		if cell != tapped_pos:
+			GameState.remove_union_material(player, cell.x, cell.y)
+	# Place the union card at the tapped position
+	GameState.place_union_card(player, tapped_pos.x, tapped_pos.y, u)
+	# Record unlock (human players only; in VS_AI mode only player 0 is human)
+	var human_player: bool = GameState.game_mode != GameState.GameMode.VS_AI or player == 0
+	if human_player:
+		SaveManager.unlock_union(union_name)
+	# Screen shake + refresh
+	_do_union_shake()
+	_refresh_all_grids()
+
+func _on_union_cancelled() -> void:
+	_union_modal = null
+	_clear_union_zone_highlight()
+
+func _set_union_zone_highlight(player: int, zone_cells: Array) -> void:
+	_clear_union_zone_highlight()
+	_union_highlighted_player = player
+	for cell: Vector2i in zone_cells:
+		grid_nodes[player][cell.x][cell.y].set_highlighted(true)
+		_union_highlighted_cells.append(cell)
+
+func _clear_union_zone_highlight() -> void:
+	var p: int = _union_highlighted_player
+	if p >= 0:
+		for cell: Vector2i in _union_highlighted_cells:
+			if cell.x >= 0 and cell.x < GameState.GRID_SIZE and cell.y >= 0 and cell.y < GameState.GRID_SIZE:
+				grid_nodes[p][cell.x][cell.y].set_highlighted(false)
+	_union_highlighted_cells.clear()
+	_union_highlighted_player = -1
+
+func _do_union_shake() -> void:
+	var ml: Control = get_node("MainLayout")
+	var origin: Vector2 = ml.position
+	var t := create_tween()
+	t.tween_property(ml, "position", origin + Vector2(8, 0), 0.04)
+	t.tween_property(ml, "position", origin + Vector2(-8, 0), 0.04)
+	t.tween_property(ml, "position", origin + Vector2(6, 0), 0.04)
+	t.tween_property(ml, "position", origin + Vector2(-4, 0), 0.04)
+	t.tween_property(ml, "position", origin, 0.04)
 
 func _show_blank_context(ctx_player: int, row: int, col: int) -> void:
 	_hide_card_context()
