@@ -441,11 +441,11 @@ func find_available_unions(
 				continue
 			seen_keys[key] = true
 
-			# All zone cells must have face-up character cards
+			# All zone cells must have character cards (face-up OR face-down allowed)
 			var all_chars: bool = true
 			for cell: Vector2i in zone_cells:
 				var card: GameState.CardInstance = GameState.get_card(player, cell.x, cell.y)
-				if card.card_type != "character" or not card.face_up:
+				if card.card_type != "character":
 					all_chars = false
 					break
 			if not all_chars:
@@ -528,6 +528,10 @@ func _card_satisfies(card: GameState.CardInstance, cond: Dictionary) -> bool:
 		return false
 
 	return true
+
+## Public wrapper — lets GameBoard check individual card/condition pairs.
+func card_satisfies_condition(card: GameState.CardInstance, cond: Dictionary) -> bool:
+	return _card_satisfies(card, cond)
 
 # ─────────────────────────────────────────────────────────────
 # Debug helpers

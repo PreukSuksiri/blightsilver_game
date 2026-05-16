@@ -115,6 +115,7 @@ var _attacked_icon_tween: Tween = null
 var _wait_glow_tween: Tween = null
 var _active_glow_tween: Tween = null
 var _target_hover_tween: Tween = null
+var _union_flash_tween: Tween = null
 var _is_peeking: bool = false
 var _is_enemy_view: bool = false
 var _is_destroying: bool = false
@@ -766,6 +767,20 @@ func set_locked(locked: bool) -> void:
 	is_locked = locked
 	if not _is_enemy_view:
 		modulate = Color(0.45, 0.45, 0.45, 1.0) if locked else Color(1, 1, 1, 1)
+
+func set_union_flash(flashing: bool) -> void:
+	if _union_flash_tween and _union_flash_tween.is_valid():
+		_union_flash_tween.kill()
+		_union_flash_tween = null
+	if flashing:
+		modulate = Color.WHITE
+		_union_flash_tween = create_tween().set_loops()
+		_union_flash_tween.tween_property(self, "modulate",
+			Color(0.4, 1.2, 1.4, 1.0), 0.28).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_union_flash_tween.tween_property(self, "modulate",
+			Color.WHITE, 0.28).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	else:
+		modulate = Color.WHITE
 
 # ─────────────────────────────────────────────────────────────
 # Animations

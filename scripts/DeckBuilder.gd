@@ -111,6 +111,8 @@ func _ready() -> void:
 	_update_filter_colors()
 	_setup_gallery_containers()
 	_setup_union_section()
+	# Hide the dead end row — it auto-fills and needs no user action
+	blank_count_label.get_parent().visible = false
 
 # ── Button wiring ─────────────────────────────────────────────
 func _connect_buttons() -> void:
@@ -587,9 +589,15 @@ func _load_preview_art(card_name: String, subfolder: String) -> void:
 # ── Union filter button ───────────────────────────────────────
 func _add_union_filter_button() -> void:
 	_filter_union_btn = Button.new()
-	_filter_union_btn.text = "UNION"
+	_filter_union_btn.text = "Union"
 	_filter_union_btn.toggle_mode = true
+	_filter_union_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_filter_union_btn.add_theme_font_size_override("font_size", 13)
+	# Copy StyleBoxes from filter_all so it looks identical
+	for style_name: String in ["normal", "hover", "pressed", "focus", "disabled"]:
+		var sb: StyleBox = filter_all.get_theme_stylebox(style_name)
+		if sb != null:
+			_filter_union_btn.add_theme_stylebox_override(style_name, sb)
 	_filter_union_btn.pressed.connect(func() -> void: _set_filter("union"))
 	filter_bar.add_child(_filter_union_btn)
 	filter_bar.move_child(_filter_union_btn, filter_tech.get_index() + 1)
@@ -713,8 +721,12 @@ func _setup_union_section() -> void:
 	var tech_section: Control = tech_list.get_parent()
 	var right_inner: Control = tech_section.get_parent()
 
+	# Fix size_flags so TechSection doesn't stretch to fill remaining space
+	tech_section.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
 	_union_section = VBoxContainer.new()
 	_union_section.add_theme_constant_override("separation", 2)
+	_union_section.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 
 	var header_row := HBoxContainer.new()
 	_union_header_label = Label.new()
@@ -725,34 +737,80 @@ func _setup_union_section() -> void:
 	header_row.add_child(_union_header_label)
 	_union_section.add_child(header_row)
 
-	_union_list = ItemList.new()
-	_union_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_union_list.custom_minimum_size = Vector2(0, 60)
-	_union_list.add_theme_font_size_override("font_size", 12)
-	_union_list.select_mode = ItemList.SELECT_SINGLE
-	_union_list.mouse_filter = Control.MOUSE_FILTER_PASS
-	_union_section.add_child(_union_list)
+	var union_scroll := ScrollContainer.new()
+	union_scroll.custom_minimum_size = Vector2(0, 130)
+	union_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	union_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	union_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	_union_section.add_child(union_scroll)
+
+	_union_list = null  # no longer used
+	var union_flow := HFlowContainer.new()
+	union_flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	union_flow.add_theme_constant_override("h_separation", 3)
+	union_flow.add_theme_constant_override("v_separation", 3)
+	union_scroll.add_child(union_flow)
+
+	# Store the flow reference in _union_list's place (reuse var with different type note)
+	# We use _union_header_label's parent as the scroll, flow is accessed via it
+	_union_section.set_meta("_union_flow", union_flow)
 
 	right_inner.add_child(_union_section)
 	right_inner.move_child(_union_section, tech_section.get_index() + 1)
 	_rebuild_union_section()
 
 func _rebuild_union_section() -> void:
-	if _union_list == null or current_deck == null:
+	if _union_section == null or current_deck == null:
 		return
-	_union_list.clear()
+	var union_flow: HFlowContainer = _union_section.get_meta("_union_flow") as HFlowContainer
+	if union_flow == null:
+		return
+	for ch: Node in union_flow.get_children():
+		ch.queue_free()
 	var count: int = 0
-	var union_list: Array = UnionDatabase.get_all_unions()
-	union_list.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)
-	for u: UnionData in union_list:
+	var all_unions: Array = UnionDatabase.get_all_unions()
+	all_unions.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)
+	for u: UnionData in all_unions:
 		if not SaveManager.is_union_unlocked(u.card_name):
 			continue
 		if _deck_can_form_union(u):
-			_union_list.add_item("⊕ %s  ATK %d / DEF %d  %d◆" % [
-				u.card_name, u.base_atk, u.base_def, u.summon_cost])
-			_union_list.set_item_custom_fg_color(_union_list.item_count - 1, Color(0.25, 0.90, 1.0))
+			union_flow.add_child(_make_union_right_tile(u))
 			count += 1
 	_union_header_label.text = "Union (%d achievable)" % count
+
+func _make_union_right_tile(u: UnionData) -> Control:
+	var tile := Control.new()
+	tile.custom_minimum_size = Vector2(76, 104)
+	tile.mouse_filter = Control.MOUSE_FILTER_STOP
+	var tex: Texture2D = _load_full_card_tex(u.card_name, "union")
+	if tex != null:
+		var art := TextureRect.new()
+		art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		art.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		art.texture = tex
+		tile.add_child(art)
+	else:
+		var bg := ColorRect.new()
+		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		bg.color = Color(0.04, 0.14, 0.20, 1.0)
+		tile.add_child(bg)
+		var lbl := Label.new()
+		lbl.text = u.card_name
+		lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+		lbl.add_theme_font_size_override("font_size", 7)
+		lbl.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0))
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tile.add_child(lbl)
+	tile.tooltip_text = "%s  ATK %d / DEF %d  %d◆" % [u.card_name, u.base_atk, u.base_def, u.summon_cost]
+	tile.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed:
+			_show_preview("union", u.card_name))
+	return tile
 
 # ── Save / Back ───────────────────────────────────────────────
 func _on_save() -> void:
@@ -1034,17 +1092,34 @@ func _make_pool_tile(card_name: String, card_type: String) -> Control:
 		art.texture = tex
 		tile.add_child(art)
 	else:
+		var is_union: bool = card_type == "union"
 		var bg := ColorRect.new()
 		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		bg.color = Color(0.05, 0.06, 0.14, 1.0)
+		bg.color = Color(0.04, 0.14, 0.20, 1.0) if is_union else Color(0.05, 0.06, 0.14, 1.0)
 		tile.add_child(bg)
+		if is_union:
+			var icon_lbl := Label.new()
+			icon_lbl.text = "⊕"
+			icon_lbl.layout_mode = 1
+			icon_lbl.anchor_left = 0.0; icon_lbl.anchor_right  = 1.0
+			icon_lbl.anchor_top  = 0.1; icon_lbl.anchor_bottom = 0.55
+			icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			icon_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+			icon_lbl.add_theme_font_size_override("font_size", 28)
+			icon_lbl.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0, 0.55))
+			icon_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			tile.add_child(icon_lbl)
 		var lbl := Label.new()
 		lbl.text = card_name
-		lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		lbl.layout_mode = 1
+		lbl.anchor_left = 0.0; lbl.anchor_right  = 1.0
+		lbl.anchor_top  = 0.55; lbl.anchor_bottom = 1.0
+		lbl.offset_left = 2.0; lbl.offset_right = -2.0; lbl.offset_bottom = -2.0
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 		lbl.add_theme_font_size_override("font_size", 8)
-		lbl.add_theme_color_override("font_color", Color(0.55, 0.65, 0.75, 0.8))
+		lbl.add_theme_color_override("font_color",
+			Color(0.25, 0.90, 1.0) if is_union else Color(0.55, 0.65, 0.75, 0.8))
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)

@@ -132,7 +132,7 @@ var _handoff_crystals_lbl: Label = null
 var _handoff_ready_btn: Button = null
 var _handoff_callback: Callable = Callable()
 
-enum SelectionState { NONE, SELECTING_ATTACKER, SELECTING_TARGET, CONFIRMING_ATTACK, SELECTING_TECH_TARGET, AWAITING_TRAP_CHOICE }
+enum SelectionState { NONE, SELECTING_ATTACKER, SELECTING_TARGET, CONFIRMING_ATTACK, SELECTING_TECH_TARGET, AWAITING_TRAP_CHOICE, SELECTING_UNION_MATERIALS }
 var selection_state: SelectionState = SelectionState.NONE
 var selected_attacker_pos: Vector2i = Vector2i(-1, -1)
 var _confirm_target_pos: Vector2i = Vector2i(-1, -1)
@@ -190,6 +190,12 @@ func _input(event: InputEvent) -> void:
 			_clear_selection()
 			_set_selection_state(SelectionState.SELECTING_ATTACKER)
 			_highlight_attackable_chars()
+
+	# Cancel union material selection when tapping outside own grid
+	if selection_state == SelectionState.SELECTING_UNION_MATERIALS:
+		var own_grid: GridContainer = p1_grid if _pending_union_player == 0 else p2_grid
+		if not own_grid.get_global_rect().has_point(click_pos):
+			_cancel_union_material_selection()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -1596,6 +1602,7 @@ func _build_attack_confirm_panel() -> void:
 const CTX_ICON_ATTACK: Texture2D = preload("res://assets/textures/ui/decorations/ui_context_menu_attack.png")
 const CTX_ICON_INFO:   Texture2D = preload("res://assets/textures/ui/decorations/ui_context_menu_info.png")
 const CTX_ICON_BLUFF:  Texture2D = preload("res://assets/textures/ui/decorations/ui_context_menu_bluff.png")
+const CTX_ICON_UNION:  Texture2D = preload("res://assets/textures/ui/decorations/ui_icon_union.png")
 
 func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	# Close any existing popup first
@@ -1629,7 +1636,6 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	var _available_unions: Array = UnionDatabase.find_available_unions(ctx_player, row, col) if (
 		ctx_player == current_player
 		and card.card_type == "character"
-		and card.face_up
 		and _union_phase_ok
 	) else []
 	var can_union: bool = _available_unions.size() > 0
@@ -1714,17 +1720,11 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 
 	if can_union:
 		var union_snap_player: int = ctx_player
-		var union_snap_row: int = row
-		var union_snap_col: int = col
 		var union_snap_available: Array = _available_unions
-		var ubtn := Button.new()
-		ubtn.text = "UNION"
-		ubtn.custom_minimum_size = Vector2(52.0, 52.0)
-		ubtn.add_theme_color_override("font_color", Color(0.25, 0.90, 1.00))
-		ubtn.add_theme_font_size_override("font_size", 11)
+		var ubtn := _make_context_icon_btn(CTX_ICON_UNION)
 		ubtn.pressed.connect(func() -> void:
 			_hide_card_context()
-			_open_union_modal(union_snap_player, union_snap_row, union_snap_col, union_snap_available)
+			_open_union_modal(union_snap_player, union_snap_available)
 		)
 		hbox.add_child(ubtn)
 
@@ -1918,46 +1918,130 @@ func _hide_card_context() -> void:
 var _union_modal: Node = null
 var _union_highlighted_cells: Array = []
 var _union_highlighted_player: int = -1
+# Pending union material selection state
+var _pending_union_data: UnionData = null
+var _pending_union_player: int = -1
+var _pending_union_zone_cells: Array = []
+var _pending_union_conditions_remaining: Array = []
+var _pending_union_selected_materials: Array = []   # Array[Vector2i]
+var _union_flash_nodes: Array = []                  # Array[Card nodes]
 
-func _open_union_modal(player: int, _row: int, _col: int, available: Array) -> void:
-	_clear_union_zone_highlight()
-	var modal: UnionModal = UnionModal.open(
-		self,
-		player,
-		available,
-		func(zone_cells: Array) -> void: _set_union_zone_highlight(player, zone_cells),
-		func() -> void: _clear_union_zone_highlight()
-	)
+func _open_union_modal(player: int, available: Array) -> void:
+	var modal: UnionModal = UnionModal.open(self, player, available)
 	_union_modal = modal
-	modal.union_confirmed.connect(_on_union_confirmed)
-	modal.union_cancelled.connect(_on_union_cancelled)
+	modal.union_selected.connect(_on_union_selected)
+	modal.union_cancelled.connect(_on_union_modal_cancelled)
 
-func _on_union_confirmed(player: int, union_name: String, tapped_pos: Vector2i, zone_cells: Array) -> void:
+func _on_union_modal_cancelled() -> void:
 	_union_modal = null
-	_clear_union_zone_highlight()
+
+func _on_union_selected(player: int, union_name: String, zone_cells: Array) -> void:
+	_union_modal = null
 	var u: UnionData = UnionDatabase.get_union(union_name)
 	if u == null:
 		push_error("Union not found: " + union_name)
 		return
+	if GameState.crystals[player] < u.summon_cost:
+		GameState.post_message("Not enough crystals.")
+		return
+	_enter_union_material_selection(player, u, zone_cells)
+
+func _enter_union_material_selection(player: int, u: UnionData, zone_cells: Array) -> void:
+	_pending_union_player = player
+	_pending_union_data = u
+	_pending_union_zone_cells = zone_cells.duplicate()
+	_pending_union_conditions_remaining = u.material_conditions.duplicate()
+	_pending_union_selected_materials.clear()
+	_set_selection_state(SelectionState.SELECTING_UNION_MATERIALS)
+	_refresh_union_flash_cells()
+	GameState.post_message("Tap %d material card(s) on the field." % u.material_conditions.size())
+
+func _compute_flash_cells() -> Array:
+	# Cards in zone_cells that satisfy at least one remaining condition
+	var flash: Array = []
+	for cell: Vector2i in _pending_union_zone_cells:
+		if cell in _pending_union_selected_materials:
+			continue
+		var card: GameState.CardInstance = GameState.get_card(_pending_union_player, cell.x, cell.y)
+		if card.card_type != "character":
+			continue
+		for cond: Dictionary in _pending_union_conditions_remaining:
+			if UnionDatabase.card_satisfies_condition(card, cond):
+				flash.append(cell)
+				break
+	return flash
+
+func _refresh_union_flash_cells() -> void:
+	_clear_union_flash_nodes()
+	var cells: Array = _compute_flash_cells()
+	for cell: Vector2i in cells:
+		var node: Control = grid_nodes[_pending_union_player][cell.x][cell.y]
+		if node.has_method("set_union_flash"):
+			node.set_union_flash(true)
+			_union_flash_nodes.append(node)
+
+func _clear_union_flash_nodes() -> void:
+	for node: Control in _union_flash_nodes:
+		if is_instance_valid(node) and node.has_method("set_union_flash"):
+			node.set_union_flash(false)
+	_union_flash_nodes.clear()
+
+func _on_union_material_tapped(pos: Vector2i) -> void:
+	var card: GameState.CardInstance = GameState.get_card(_pending_union_player, pos.x, pos.y)
+	# Find a remaining condition this card satisfies
+	var matched_idx: int = -1
+	for i: int in range(_pending_union_conditions_remaining.size()):
+		if UnionDatabase.card_satisfies_condition(card, _pending_union_conditions_remaining[i]):
+			matched_idx = i
+			break
+	if matched_idx < 0:
+		return  # card doesn't satisfy any remaining condition, ignore tap
+	_pending_union_selected_materials.append(pos)
+	_pending_union_conditions_remaining.remove_at(matched_idx)
+	if _pending_union_conditions_remaining.is_empty():
+		_perform_pending_union()
+	else:
+		_refresh_union_flash_cells()
+		GameState.post_message("%d more material(s) needed." % _pending_union_conditions_remaining.size())
+
+func _perform_pending_union() -> void:
+	_clear_union_flash_nodes()
+	_set_selection_state(SelectionState.SELECTING_ATTACKER)
+	var player: int = _pending_union_player
+	var u: UnionData = _pending_union_data
+	var first_cell: Vector2i = _pending_union_selected_materials[0]
 	# Pay crystal cost
 	GameState.lose_crystals(player, u.summon_cost)
-	# Remove all material cards except tapped_pos (which gets replaced by union)
-	for cell: Vector2i in zone_cells:
-		if cell != tapped_pos:
-			GameState.remove_union_material(player, cell.x, cell.y)
-	# Place the union card at the tapped position
-	GameState.place_union_card(player, tapped_pos.x, tapped_pos.y, u)
-	# Record unlock (human players only; in VS_AI mode only player 0 is human)
+	# Remove selected material cards (except the first which becomes the union)
+	for i: int in range(1, _pending_union_selected_materials.size()):
+		var cell: Vector2i = _pending_union_selected_materials[i]
+		GameState.remove_union_material(player, cell.x, cell.y)
+	# Place union at first selected cell
+	GameState.place_union_card(player, first_cell.x, first_cell.y, u)
+	# Record unlock (human players only)
 	var human_player: bool = GameState.game_mode != GameState.GameMode.VS_AI or player == 0
 	if human_player:
-		SaveManager.unlock_union(union_name)
+		SaveManager.unlock_union(u.card_name)
+	# Clear pending state
+	_pending_union_data = null
+	_pending_union_player = -1
+	_pending_union_zone_cells.clear()
+	_pending_union_conditions_remaining.clear()
+	_pending_union_selected_materials.clear()
 	# Screen shake + refresh
 	_do_union_shake()
 	_refresh_all_grids()
+	_highlight_attackable_chars()
 
-func _on_union_cancelled() -> void:
-	_union_modal = null
-	_clear_union_zone_highlight()
+func _cancel_union_material_selection() -> void:
+	_clear_union_flash_nodes()
+	_pending_union_data = null
+	_pending_union_player = -1
+	_pending_union_zone_cells.clear()
+	_pending_union_conditions_remaining.clear()
+	_pending_union_selected_materials.clear()
+	_set_selection_state(SelectionState.SELECTING_ATTACKER)
+	_highlight_attackable_chars()
 
 func _set_union_zone_highlight(player: int, zone_cells: Array) -> void:
 	_clear_union_zone_highlight()
@@ -3215,10 +3299,49 @@ func _refresh_tech_hand() -> void:
 	title_row.add_child(cancel)
 
 	# Card row — each card column grows to fill remaining height
+	# Wrap in scroll container + optional arrows when hand has more than 3 cards
+	var show_scroll: bool = hand.size() > 3
+	var tech_scroll_c: ScrollContainer = null
+
+	if show_scroll:
+		var scroll_row := HBoxContainer.new()
+		scroll_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		scroll_row.add_theme_constant_override("separation", 4)
+		vbox.add_child(scroll_row)
+
+		var left_arr := Button.new()
+		left_arr.text = "<"
+		left_arr.custom_minimum_size = Vector2(40.0, 0.0)
+		left_arr.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		left_arr.add_theme_font_size_override("font_size", 22)
+		scroll_row.add_child(left_arr)
+
+		tech_scroll_c = ScrollContainer.new()
+		tech_scroll_c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tech_scroll_c.size_flags_vertical   = Control.SIZE_EXPAND_FILL
+		tech_scroll_c.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		tech_scroll_c.vertical_scroll_mode   = ScrollContainer.SCROLL_MODE_DISABLED
+		scroll_row.add_child(tech_scroll_c)
+
+		var right_arr := Button.new()
+		right_arr.text = ">"
+		right_arr.custom_minimum_size = Vector2(40.0, 0.0)
+		right_arr.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		right_arr.add_theme_font_size_override("font_size", 22)
+		scroll_row.add_child(right_arr)
+
+		left_arr.pressed.connect(func() -> void:
+			tech_scroll_c.scroll_horizontal = maxi(tech_scroll_c.scroll_horizontal - 220, 0))
+		right_arr.pressed.connect(func() -> void:
+			tech_scroll_c.scroll_horizontal += 220)
+
 	var card_hbox := HBoxContainer.new()
 	card_hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	card_hbox.add_theme_constant_override("separation", GAP)
-	vbox.add_child(card_hbox)
+	if show_scroll and tech_scroll_c != null:
+		tech_scroll_c.add_child(card_hbox)
+	else:
+		vbox.add_child(card_hbox)
 
 	for i in range(hand.size()):
 		var tech_name: String = str(hand[i])
@@ -3667,6 +3790,24 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 	var current_player := GameState.current_player
 	var opponent := GameState.get_opponent(current_player)
 
+	# During union material selection: any tap on own grid is handled here
+	if selection_state == SelectionState.SELECTING_UNION_MATERIALS:
+		if player != _pending_union_player:
+			_cancel_union_material_selection()
+			return
+		# Check this cell is in the valid zone and is a character
+		if pos not in _pending_union_zone_cells:
+			_cancel_union_material_selection()
+			return
+		if pos in _pending_union_selected_materials:
+			return  # already selected
+		var mat_card: GameState.CardInstance = GameState.get_card(player, row, col)
+		if mat_card.card_type != "character":
+			_cancel_union_material_selection()
+			return
+		_on_union_material_tapped(pos)
+		return
+
 	# Own blank/empty cell → show blank context menu (with BLUFF option)
 	var clicked_card: GameState.CardInstance = GameState.get_card(player, row, col)
 	var _in_targeting: bool = selection_state in [
@@ -3984,6 +4125,8 @@ func _set_selection_state(state: SelectionState) -> void:
 			_show_guide("Choose a target to attack")
 		SelectionState.SELECTING_TECH_TARGET:
 			pass  # guide text set by _on_awaiting_target_selection
+		SelectionState.SELECTING_UNION_MATERIALS:
+			_show_guide("Tap a valid material card on the field (or tap elsewhere to cancel)")
 		_:
 			_hide_guide()
 
