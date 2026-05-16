@@ -40,6 +40,10 @@ var _rarity:   Label
 
 var _mod_label:      Label = null   # ATK/DEF modifier indicator
 var _cost_mod_label: Label = null   # Cost modifier indicator
+
+var _union_info_panel: ColorRect   # combined zone+formula strip (union only)
+var _zone_cells:       Array       # Array[ColorRect], row-major (row*5+col)
+var _mat_formula_lbl:  Label
 var _card_inst: Variant = null  # GameState.CardInstance or null
 
 var _info_y: float
@@ -317,6 +321,48 @@ func _build_ui(card_w: float, card_h: float) -> void:
 	_rarity.mouse_filter         = MOUSE_FILTER_IGNORE
 	card.add_child(_rarity)
 
+	# Union info panel — single wide strip at bottom of art area (hidden for non-union cards)
+	const ZONE_C: int = 20
+	const ZONE_G: int = 2
+	const ZONE_P: int = 5
+	const ZONE_S: int = 5 * ZONE_C + 4 * ZONE_G + ZONE_P * 2  # 118px
+	var zone_bot:  float = 0.76 * card_h - 10.0
+	var pan_left:  float = ART_L_PCT * card_w + 12.0
+	var pan_right: float = ART_R_PCT * card_w - 12.0
+	var pan_w:     float = pan_right - pan_left
+
+	_union_info_panel = ColorRect.new()
+	_union_info_panel.position     = Vector2(pan_left, zone_bot - ZONE_S)
+	_union_info_panel.size         = Vector2(pan_w, ZONE_S)
+	_union_info_panel.color        = Color(0.0, 0.0, 0.0, 0.72)
+	_union_info_panel.visible      = false
+	_union_info_panel.mouse_filter = MOUSE_FILTER_IGNORE
+	card.add_child(_union_info_panel)
+
+	var grid_x_off: float = pan_w - float(ZONE_S)
+	_zone_cells = []
+	for _zr: int in range(5):
+		for _zc: int in range(5):
+			var _zcr := ColorRect.new()
+			_zcr.size         = Vector2(ZONE_C, ZONE_C)
+			_zcr.position     = Vector2(grid_x_off + ZONE_P + _zc * (ZONE_C + ZONE_G),
+									   ZONE_P + _zr * (ZONE_C + ZONE_G))
+			_zcr.color        = Color(0.12, 0.12, 0.22, 0.75)
+			_zcr.mouse_filter = MOUSE_FILTER_IGNORE
+			_union_info_panel.add_child(_zcr)
+			_zone_cells.append(_zcr)
+
+	_mat_formula_lbl = Label.new()
+	_mat_formula_lbl.position              = Vector2(8.0, 6.0)
+	_mat_formula_lbl.size                  = Vector2(grid_x_off - 16.0, float(ZONE_S) - 12.0)
+	_mat_formula_lbl.autowrap_mode         = TextServer.AUTOWRAP_WORD_SMART
+	_mat_formula_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_mat_formula_lbl.add_theme_font_size_override("font_size", 24)
+	_mat_formula_lbl.add_theme_color_override("font_color", Color.WHITE)
+	_mat_formula_lbl.add_theme_font_override("font", CHIVO_FONT)
+	_mat_formula_lbl.mouse_filter = MOUSE_FILTER_IGNORE
+	_union_info_panel.add_child(_mat_formula_lbl)
+
 # ─────────────────────────────────────────────────────────────
 # Data population
 # ─────────────────────────────────────────────────────────────
@@ -445,6 +491,19 @@ func _populate(card_name: String, card_type: String) -> void:
 			_cost_mod_label.visible = false
 			_load_art(CardDatabase.find_artwork(card_name, "unions", SaveManager.nsfw_enabled))
 			_set_rarity(int(u.rarity))
+			# Union zone + formula panel
+			var uz_set: Dictionary = {}
+			for uzv: Vector2i in u.union_zone:
+				uz_set[uzv] = true
+			_union_info_panel.visible = true
+			for _idx: int in range(_zone_cells.size()):
+				var _uzr: int = _idx / 5
+				var _uzc: int = _idx % 5
+				(_zone_cells[_idx] as ColorRect).color = Color(0.25, 0.90, 1.00, 0.95) \
+					if uz_set.has(Vector2i(_uzr, _uzc)) else Color(0.12, 0.12, 0.22, 0.75)
+			var _mat_text: String = u.formula_description.replace(
+				str(u.summon_cost) + " crystals", "◆" + str(u.summon_cost))
+			_mat_formula_lbl.text = _mat_text
 			AudioManager.speak("Union... %s...... %s... Cost: %d... ATK: %d... DEF: %d... Affinity: %s." % [
 				card_name, shown_desc, u.summon_cost, u.base_atk, u.base_def, aff_name])
 		"dead_end":

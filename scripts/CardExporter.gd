@@ -52,6 +52,10 @@ var _aff:          Label
 var _desc:         Label
 var _rarity:       Label
 
+var _union_info_panel: ColorRect    # single combined panel (zone + formula)
+var _zone_cells:       Array        # Array[ColorRect], row-major (row*5+col)
+var _mat_formula_lbl:  Label
+
 var _info_y: float
 var _info_h: float
 var _pad_x:  float
@@ -331,6 +335,52 @@ func _build_card_node() -> Control:
 	_rarity.mouse_filter         = Control.MOUSE_FILTER_IGNORE
 	card.add_child(_rarity)
 
+	# Union info — single wide panel at the bottom of the art area.
+	# Left side: material formula text.  Right side: 5×5 zone grid.
+	const ZONE_C: int = 20   # cell size px
+	const ZONE_G: int = 2    # gap between cells px
+	const ZONE_P: int = 5    # padding inside panel px
+	const ZONE_S: int = 5 * ZONE_C + 4 * ZONE_G + ZONE_P * 2  # 118px (grid block)
+	# 0.76 = vellum frame art-area bottom (artwork area 8-76%)
+	var zone_bot: float = 0.76 * card_h - 10.0
+	var pan_left: float = ART_L_PCT * card_w + 12.0
+	var pan_right: float = ART_R_PCT * card_w - 12.0
+	var pan_w: float = pan_right - pan_left
+
+	_union_info_panel = ColorRect.new()
+	_union_info_panel.position     = Vector2(pan_left, zone_bot - ZONE_S)
+	_union_info_panel.size         = Vector2(pan_w, ZONE_S)
+	_union_info_panel.color        = Color(0.0, 0.0, 0.0, 0.72)
+	_union_info_panel.visible      = false
+	_union_info_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card.add_child(_union_info_panel)
+
+	# Zone grid — right side of the panel
+	var grid_x_off: float = pan_w - float(ZONE_S)
+	_zone_cells = []
+	for _zr: int in range(5):
+		for _zc: int in range(5):
+			var _zcr := ColorRect.new()
+			_zcr.size         = Vector2(ZONE_C, ZONE_C)
+			_zcr.position     = Vector2(grid_x_off + ZONE_P + _zc * (ZONE_C + ZONE_G),
+									   ZONE_P + _zr * (ZONE_C + ZONE_G))
+			_zcr.color        = Color(0.12, 0.12, 0.22, 0.75)
+			_zcr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_union_info_panel.add_child(_zcr)
+			_zone_cells.append(_zcr)
+
+	# Material formula label — left side of the panel
+	_mat_formula_lbl = Label.new()
+	_mat_formula_lbl.position              = Vector2(8.0, 6.0)
+	_mat_formula_lbl.size                  = Vector2(grid_x_off - 16.0, float(ZONE_S) - 12.0)
+	_mat_formula_lbl.autowrap_mode         = TextServer.AUTOWRAP_WORD_SMART
+	_mat_formula_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_mat_formula_lbl.add_theme_font_size_override("font_size", 24)
+	_mat_formula_lbl.add_theme_color_override("font_color", Color.WHITE)
+	_mat_formula_lbl.add_theme_font_override("font", CHIVO_FONT)
+	_mat_formula_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_union_info_panel.add_child(_mat_formula_lbl)
+
 	return card
 
 # ─────────────────────────────────────────────────────────────
@@ -401,6 +451,44 @@ func _populate_card_node(card_name: String, card_type: String) -> void:
 			_art.position = _art_base_pos + data.artwork_offset
 			_load_art(CardDatabase.find_artwork(card_name, "tech"))
 			_set_rarity(data.rarity)
+		"union":
+			var u: UnionData = UnionDatabase.get_union(card_name)
+			if not u:
+				push_warning("[CardExporter] Unknown union: " + card_name)
+				return
+			const UNION_CYAN: Color = Color(0.25, 0.90, 1.00)
+			var aff_keys: Array = CharacterData.Affinity.keys()
+			var aff_idx: int = int(u.affinity)
+			var aff_name: String = aff_keys[aff_idx].capitalize() if aff_idx < aff_keys.size() else ""
+			_type.text = "UNION"
+			_type.add_theme_color_override("font_color", UNION_CYAN)
+			_frame.modulate = Color(1.0, 1.0, 1.0)
+			_cost_num.text = str(u.summon_cost)
+			_name.text = card_name
+			_atk.text  = "ATK %d" % u.base_atk
+			_def.text  = "DEF %d" % u.base_def
+			_aff.text  = aff_name
+			_aff.add_theme_color_override("font_color", UNION_CYAN)
+			_desc.text = u.ability_description
+			_style_pill(_atk, Color(0.75, 0.28, 0.05), Color(1.0, 0.55, 0.28))
+			_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
+			_art.position = _art_base_pos
+			_load_art(u.artwork_path)
+			_set_rarity(u.rarity)
+			# Zone grid
+			var uz_set: Dictionary = {}
+			for uzv: Vector2i in u.union_zone:
+				uz_set[uzv] = true
+			_union_info_panel.visible = true
+			for _idx: int in range(_zone_cells.size()):
+				var _zr: int = _idx / 5
+				var _zc: int = _idx % 5
+				(_zone_cells[_idx] as ColorRect).color = Color(0.25, 0.90, 1.00, 0.95) \
+					if uz_set.has(Vector2i(_zr, _zc)) else Color(0.12, 0.12, 0.22, 0.75)
+			# Material formula
+			var _mat_text: String = u.formula_description.replace(
+				str(u.summon_cost) + " crystals", "◆" + str(u.summon_cost))
+			_mat_formula_lbl.text = _mat_text
 		"dead_end":
 			# Pure frame — black art area, no text, no pills
 			_frame.modulate  = Color(1.0, 1.0, 1.0)
@@ -510,6 +598,7 @@ func _type_to_subfolder(card_type: String) -> String:
 		"character": return "characters"
 		"trap":      return "traps"
 		"tech":      return "tech"
+		"union":     return "unions"
 	return ""
 
 func _output_path_nsfw(card_name: String) -> String:
@@ -517,9 +606,10 @@ func _output_path_nsfw(card_name: String) -> String:
 	var res_path := OUTPUT_DIR + snake + "_nsfw.png"
 	return ProjectSettings.globalize_path(res_path)
 
-func _output_path(card_name: String, _card_type: String) -> String:
+func _output_path(card_name: String, card_type: String) -> String:
 	var snake    := _card_name_to_snake(card_name)
-	var res_path := OUTPUT_DIR + snake + ".png"
+	var prefix   := "union_" if card_type == "union" else ""
+	var res_path := OUTPUT_DIR + prefix + snake + ".png"
 	return ProjectSettings.globalize_path(res_path)
 
 func _collect_all_pairs() -> Array:
@@ -530,4 +620,6 @@ func _collect_all_pairs() -> Array:
 		pairs.append([name, "trap"])
 	for name: String in CardDatabase.get_all_tech_names():
 		pairs.append([name, "tech"])
+	for u: UnionData in UnionDatabase.get_all_unions():
+		pairs.append([u.card_name, "union"])
 	return pairs

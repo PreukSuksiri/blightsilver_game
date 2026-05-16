@@ -60,6 +60,13 @@ var _options_panel: Control = null
 var _options_btn: TextureButton = null
 var _music_changed_this_turn: bool = false
 
+# Union Suggestion Button (center HUD, visible when active player can summon a union)
+var _union_suggest_btn:   TextureButton = null
+var _union_suggest_glow:  TextureRect   = null
+var _union_suggest_tween: Tween         = null
+# Once-per-duel summon tracking (index = player)
+var _union_summoned_this_duel: Array[bool] = [false, false]
+
 # Setup-phase BGM player (started when placement begins, stopped at _begin_game)
 var _setup_music: AudioStreamPlayer = null
 # Battle BGM player (started at _begin_game, stopped at game over)
@@ -241,6 +248,7 @@ func _ready() -> void:
 	_build_bottom_crystal_labels()
 	_build_turn_number_label()
 	_build_options_button()
+	_build_union_suggest_button()
 	game_over_panel.visible = false
 	mode_panel.visible = false
 	action_panel.visible = false
@@ -589,6 +597,7 @@ func _on_handoff_ready() -> void:
 	_handoff_callback = Callable()
 
 func _start_game() -> void:
+	_union_summoned_this_duel = [false, false]
 	GameState.new_game(GameState.game_mode)
 	# Apply campaign-supplied player names if VNPlayer set them
 	if GameState.campaign_player_names.size() == 2:
@@ -1633,11 +1642,14 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	var can_info: bool  = (card.card_type != "dead_end" and card.card_name != "")
 	var can_bluff: bool = (ctx_player == current_player)
 	var _union_phase_ok: bool = GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]
-	var _available_unions: Array = UnionDatabase.find_available_unions(ctx_player, row, col) if (
-		ctx_player == current_player
-		and card.card_type == "character"
-		and _union_phase_ok
-	) else []
+	var _available_unions: Array = []
+	if ctx_player == current_player and card.card_type == "character" and _union_phase_ok:
+		for _entry: Dictionary in UnionDatabase.find_available_unions(ctx_player, row, col):
+			var _u: UnionData = _entry["union"]
+			for _cond: Dictionary in _u.material_conditions:
+				if UnionDatabase.card_satisfies_condition(card, _cond):
+					_available_unions.append(_entry)
+					break
 	var can_union: bool = _available_unions.size() > 0
 
 	if not can_attack and not can_info and not can_bluff and not can_union:
@@ -1952,9 +1964,57 @@ func _enter_union_material_selection(player: int, u: UnionData, zone_cells: Arra
 	_pending_union_zone_cells = zone_cells.duplicate()
 	_pending_union_conditions_remaining = u.material_conditions.duplicate()
 	_pending_union_selected_materials.clear()
+	await _play_union_zone_preview(player, zone_cells)
 	_set_selection_state(SelectionState.SELECTING_UNION_MATERIALS)
 	_refresh_union_flash_cells()
 	GameState.post_message("Tap %d material card(s) on the field." % u.material_conditions.size())
+
+func _play_union_zone_preview(player: int, zone_cells: Array) -> void:
+	# Block all input during the flash
+	var blocker := Control.new()
+	blocker.set_anchors_preset(Control.PRESET_FULL_RECT)
+	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	blocker.z_index = 20
+	add_child(blocker)
+
+	# Cyan flash overlay on each zone cell card node
+	var overlays: Array = []
+	for cell: Vector2i in zone_cells:
+		if cell.x < 0 or cell.x >= GameState.GRID_SIZE or cell.y < 0 or cell.y >= GameState.GRID_SIZE:
+			continue
+		var card_node: Control = grid_nodes[player][cell.x][cell.y]
+		var cr := ColorRect.new()
+		cr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		cr.color        = Color(0.25, 0.90, 1.00, 0.0)
+		cr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		cr.z_index      = 10
+		card_node.add_child(cr)
+		overlays.append(cr)
+
+	if overlays.is_empty():
+		blocker.queue_free()
+		return
+
+	# Fade in 0.5 s
+	var t_in := create_tween()
+	for cr: ColorRect in overlays:
+		t_in.parallel().tween_property(cr, "color:a", 0.75, 0.5)
+	await t_in.finished
+
+	# Hold 0.5 s
+	await get_tree().create_timer(0.5).timeout
+
+	# Fade out 0.5 s
+	var t_out := create_tween()
+	for cr: ColorRect in overlays:
+		t_out.parallel().tween_property(cr, "color:a", 0.0, 0.5)
+	await t_out.finished
+
+	# Cleanup
+	for cr: ColorRect in overlays:
+		if is_instance_valid(cr):
+			cr.queue_free()
+	blocker.queue_free()
 
 func _compute_flash_cells() -> Array:
 	# Cards in zone_cells that satisfy at least one remaining condition
@@ -2010,6 +2070,11 @@ func _perform_pending_union() -> void:
 	var player: int = _pending_union_player
 	var u: UnionData = _pending_union_data
 	var first_cell: Vector2i = _pending_union_selected_materials[0]
+	# Collect material names BEFORE removal for the battle log
+	var material_names: Array[String] = []
+	for _mc: Vector2i in _pending_union_selected_materials:
+		var _card: GameState.CardInstance = GameState.get_card(player, _mc.x, _mc.y)
+		material_names.append(_card.card_name if _card else "?")
 	# Pay crystal cost
 	GameState.lose_crystals(player, u.summon_cost)
 	# Remove selected material cards (except the first which becomes the union)
@@ -2022,14 +2087,24 @@ func _perform_pending_union() -> void:
 	var human_player: bool = GameState.game_mode != GameState.GameMode.VS_AI or player == 0
 	if human_player:
 		SaveManager.unlock_union(u.card_name)
+	# Mark once-per-duel flag and hide suggestion button
+	_union_summoned_this_duel[player] = true
+	_update_union_suggest_button()
+	# Battle log entry
+	var mat_list: String = ", ".join(material_names)
+	GameState.post_message("Player %d summoned [%s] using: %s" % [player + 1, u.card_name, mat_list])
 	# Clear pending state
 	_pending_union_data = null
 	_pending_union_player = -1
 	_pending_union_zone_cells.clear()
 	_pending_union_conditions_remaining.clear()
 	_pending_union_selected_materials.clear()
-	# Screen shake + refresh
+	# Capture cell center before grid refresh (node positions stay the same)
+	var union_node: Control = grid_nodes[player][first_cell.x][first_cell.y]
+	var cell_center: Vector2 = union_node.global_position + union_node.size * 0.5
+	# Screen shake + shockwave + refresh
 	_do_union_shake()
+	_spawn_union_shockwave(cell_center)
 	_refresh_all_grids()
 	_highlight_attackable_chars()
 
@@ -2063,11 +2138,48 @@ func _do_union_shake() -> void:
 	var ml: Control = get_node("MainLayout")
 	var origin: Vector2 = ml.position
 	var t := create_tween()
-	t.tween_property(ml, "position", origin + Vector2(8, 0), 0.04)
-	t.tween_property(ml, "position", origin + Vector2(-8, 0), 0.04)
-	t.tween_property(ml, "position", origin + Vector2(6, 0), 0.04)
-	t.tween_property(ml, "position", origin + Vector2(-4, 0), 0.04)
+	t.tween_property(ml, "position", origin + Vector2(14,  7), 0.05)
+	t.tween_property(ml, "position", origin + Vector2(-14, -5), 0.05)
+	t.tween_property(ml, "position", origin + Vector2(10,  6), 0.05)
+	t.tween_property(ml, "position", origin + Vector2(-8,  -4), 0.05)
+	t.tween_property(ml, "position", origin + Vector2(5,   3), 0.04)
+	t.tween_property(ml, "position", origin + Vector2(-3,  -2), 0.04)
 	t.tween_property(ml, "position", origin, 0.04)
+
+func _spawn_union_shockwave(cell_center: Vector2) -> void:
+	const UNION_CYAN: Color = Color(0.25, 0.90, 1.00)
+	# Three expanding rings with staggered start — cyan, white, cyan
+	var ring_colors: Array = [UNION_CYAN, Color(1.0, 1.0, 1.0, 0.9), UNION_CYAN]
+	var ring_delays: Array = [0.0, 0.10, 0.20]
+	for k: int in range(3):
+		var ring := Panel.new()
+		const RING_BASE: float = 80.0
+		ring.size        = Vector2(RING_BASE, RING_BASE)
+		ring.pivot_offset = Vector2(RING_BASE * 0.5, RING_BASE * 0.5)
+		ring.position    = cell_center - Vector2(RING_BASE * 0.5, RING_BASE * 0.5)
+		ring.z_index     = 200
+		ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var rsb := StyleBoxFlat.new()
+		rsb.bg_color            = Color(0, 0, 0, 0)
+		rsb.border_color        = ring_colors[k]
+		rsb.border_width_left   = 4
+		rsb.border_width_right  = 4
+		rsb.border_width_top    = 4
+		rsb.border_width_bottom = 4
+		rsb.corner_radius_top_left     = int(RING_BASE * 0.5)
+		rsb.corner_radius_top_right    = int(RING_BASE * 0.5)
+		rsb.corner_radius_bottom_left  = int(RING_BASE * 0.5)
+		rsb.corner_radius_bottom_right = int(RING_BASE * 0.5)
+		ring.add_theme_stylebox_override("panel", rsb)
+		ring.scale = Vector2(0.05, 0.05)
+		add_child(ring)
+		var t := create_tween()
+		t.tween_interval(ring_delays[k])
+		t.tween_property(ring, "scale", Vector2(10.0, 10.0), 0.55) \
+			.set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+		t.parallel().tween_property(ring, "modulate:a", 0.0, 0.55) \
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		t.tween_callback(ring.queue_free)
 
 func _show_blank_context(ctx_player: int, row: int, col: int) -> void:
 	_hide_card_context()
@@ -2378,6 +2490,100 @@ func _on_options_btn_pressed() -> void:
 	if _options_panel != null:
 		return
 	_show_options_panel()
+
+# ─────────────────────────────────────────────────────────────
+# Union Suggestion Button
+# ─────────────────────────────────────────────────────────────
+
+func _build_union_suggest_button() -> void:
+	const BTN_SIZE:  float = 110.0
+	const GLOW_SIZE: float = 155.0
+
+	# Pulsing cyan glow halo behind the button
+	var glow := TextureRect.new()
+	glow.texture = load("res://assets/textures/ui/decorations/ui_icon_union.png")
+	glow.ignore_texture_size = true
+	glow.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	glow.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	glow.layout_mode  = 1
+	glow.anchor_left   = 0.5; glow.anchor_right  = 0.5
+	glow.anchor_top    = 0.5; glow.anchor_bottom = 0.5
+	glow.offset_left   = -(GLOW_SIZE * 0.5); glow.offset_right  =  (GLOW_SIZE * 0.5)
+	glow.offset_top    = -(GLOW_SIZE * 0.5); glow.offset_bottom =  (GLOW_SIZE * 0.5)
+	glow.modulate    = Color(0.25, 0.90, 1.00, 0.0)
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	glow.z_index  = 3
+	glow.visible  = false
+	add_child(glow)
+	_union_suggest_glow = glow
+
+	# Tappable button on top
+	var btn := TextureButton.new()
+	btn.texture_normal   = load("res://assets/textures/ui/decorations/ui_icon_union.png")
+	btn.ignore_texture_size = true
+	btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	btn.layout_mode  = 1
+	btn.anchor_left   = 0.5; btn.anchor_right  = 0.5
+	btn.anchor_top    = 0.5; btn.anchor_bottom = 0.5
+	btn.offset_left   = -(BTN_SIZE * 0.5); btn.offset_right  =  (BTN_SIZE * 0.5)
+	btn.offset_top    = -(BTN_SIZE * 0.5); btn.offset_bottom =  (BTN_SIZE * 0.5)
+	btn.z_index  = 4
+	btn.visible  = false
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	btn.pressed.connect(_on_union_suggest_pressed)
+	add_child(btn)
+	_union_suggest_btn = btn
+
+func _collect_all_available_unions(player: int) -> Array:
+	if _union_summoned_this_duel[player]:
+		return []
+	var seen: Dictionary = {}
+	var results: Array   = []
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if card.card_type != "character":
+				continue
+			for entry: Dictionary in UnionDatabase.find_available_unions(player, r, c):
+				var u: UnionData = entry["union"]
+				if GameState.crystals[player] < u.summon_cost:
+					continue
+				if seen.has(u.card_name):
+					continue
+				seen[u.card_name] = true
+				results.append(entry)
+	return results
+
+func _update_union_suggest_button() -> void:
+	if _union_suggest_btn == null:
+		return
+	var phase: GameState.Phase = GameState.current_phase
+	var active: bool = phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]
+	if not active:
+		_union_suggest_btn.visible  = false
+		_union_suggest_glow.visible = false
+		if _union_suggest_tween != null and _union_suggest_tween.is_valid():
+			_union_suggest_tween.kill()
+		_union_suggest_tween = null
+		return
+	var available: Array = _collect_all_available_unions(GameState.current_player)
+	var show: bool = available.size() > 0
+	_union_suggest_btn.visible  = show
+	_union_suggest_glow.visible = show
+	if show and (_union_suggest_tween == null or not _union_suggest_tween.is_valid()):
+		_union_suggest_tween = create_tween().set_loops()
+		_union_suggest_tween.tween_property(_union_suggest_glow, "modulate:a", 0.65, 0.7)
+		_union_suggest_tween.tween_property(_union_suggest_glow, "modulate:a", 0.15, 0.7)
+	elif not show:
+		if _union_suggest_tween != null and _union_suggest_tween.is_valid():
+			_union_suggest_tween.kill()
+		_union_suggest_tween = null
+
+func _on_union_suggest_pressed() -> void:
+	var available: Array = _collect_all_available_unions(GameState.current_player)
+	if available.is_empty():
+		return
+	_open_union_modal(GameState.current_player, available)
 
 # ─────────────────────────────────────────────────────────────
 # Options Menu
@@ -3125,6 +3331,7 @@ func _on_crystals_changed(player_index: int, new_amount: int) -> void:
 		# before TurnManager executes `await crystal_animation_done`, causing a hang.
 		await get_tree().process_frame
 	# Unblock TurnManager (or whoever is awaiting after lose_crystals)
+	_update_union_suggest_button()
 	if turn_manager != null:
 		turn_manager.crystal_animation_done.emit()
 
@@ -3621,6 +3828,7 @@ func _on_phase_changed(phase: GameState.Phase) -> void:
 	_update_void_stacks()
 	_update_crystal_visibility()
 	_update_reveal_buttons()
+	_update_union_suggest_button()
 	if phase == GameState.Phase.MODE_SELECT:
 		# Only reset at the start of a genuinely new turn, not on mid-turn
 		# MODE_SELECT re-entries that happen after each attack completes.

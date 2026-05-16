@@ -486,7 +486,7 @@ func _materials_match(player: int, zone_cells: Array, conditions: Array) -> bool
 	return true
 
 func _card_satisfies(card: GameState.CardInstance, cond: Dictionary) -> bool:
-	if card.card_type != "character":
+	if card.card_type != "character" or card.is_union:
 		return false
 
 	var cn: Variant = cond.get("card_name", "")

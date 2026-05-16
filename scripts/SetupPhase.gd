@@ -66,9 +66,10 @@ class GridCell extends Panel:
 	var on_hover_cb:   Callable = Callable()
 	var on_detail_cb:  Callable = Callable()
 	var on_bluff_cb:   Callable = Callable()
-	var _card_tex:     TextureRect = null
-	var _emoticon_lbl: Label       = null
-	var _drag_started: bool        = false
+	var _card_tex:      TextureRect = null
+	var _emoticon_lbl:  Label       = null
+	var _flash_overlay: ColorRect   = null
+	var _drag_started:  bool        = false
 
 	func set_emoticon(emoji: String) -> void:
 		if _emoticon_lbl == null:
@@ -174,6 +175,10 @@ var _info_preview_btn: Button     = null
 var _info_card_name : String      = ""
 var _info_card_type : String      = ""
 
+var _union_flow:  HFlowContainer = null
+var _flash_tween: Tween          = null
+var _flash_cells: Array          = []
+
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
 # ─────────────────────────────────────────────────────────────
@@ -223,6 +228,8 @@ func start_setup(player_index: int) -> void:
 	GameState.tech_hands[player_index] = deck.techs.duplicate()
 	_random_btn.disabled = false
 	_refresh_gallery()
+	_stop_zone_flash()
+	_refresh_union_panel()
 	_refresh_confirm()
 
 # ─────────────────────────────────────────────────────────────
@@ -423,6 +430,13 @@ func _build_grid_panel(parent: Control) -> void:
 			cell_sb.corner_radius_bottom_left  = 4
 			cell_sb.corner_radius_bottom_right = 4
 			cell.add_theme_stylebox_override("panel", cell_sb)
+			var flash_cr := ColorRect.new()
+			flash_cr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			flash_cr.color        = Color(0.25, 0.90, 1.00, 0.0)
+			flash_cr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			flash_cr.z_index      = 5
+			cell._flash_overlay   = flash_cr
+			cell.add_child(flash_cr)
 			grid_cont.add_child(cell)
 			row_arr.append(cell)
 		_grid_cells.append(row_arr)
@@ -436,6 +450,7 @@ func _build_right_panel(parent: Control) -> void:
 	parent.add_child(right_vbox)
 
 	_build_gallery_panel(right_vbox)
+	_build_union_panel(right_vbox)
 	_build_info_panel(right_vbox)
 
 func _build_gallery_panel(parent: Control) -> void:
@@ -482,6 +497,51 @@ func _build_gallery_panel(parent: Control) -> void:
 	_gallery_flow.add_theme_constant_override("h_separation", GAL_GAP)
 	_gallery_flow.add_theme_constant_override("v_separation", GAL_GAP)
 	scroll.add_child(_gallery_flow)
+
+func _build_union_panel(parent: Control) -> void:
+	const ONE_ROW_H: float = (GAL_H + 22.0) + GAL_GAP + 38.0
+	var panel := Panel.new()
+	panel.custom_minimum_size   = Vector2(0.0, ONE_ROW_H)
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var sb := StyleBoxFlat.new()
+	sb.bg_color                   = Color(0.04, 0.08, 0.16, 1.0)
+	sb.border_color               = Color(0.25, 0.85, 1.0, 0.40)
+	sb.border_width_left          = 1
+	sb.border_width_right         = 1
+	sb.border_width_top           = 1
+	sb.border_width_bottom        = 1
+	sb.corner_radius_top_left     = 8
+	sb.corner_radius_top_right    = 8
+	sb.corner_radius_bottom_left  = 8
+	sb.corner_radius_bottom_right = 8
+	panel.add_theme_stylebox_override("panel", sb)
+	parent.add_child(panel)
+
+	var hdr := Label.new()
+	hdr.text = "POSSIBLE UNIONS  —  tap to highlight zone"
+	hdr.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	hdr.offset_top    = 6.0
+	hdr.offset_bottom = 28.0
+	hdr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hdr.add_theme_font_size_override("font_size", 12)
+	hdr.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0, 0.90))
+	panel.add_child(hdr)
+
+	var scroll := ScrollContainer.new()
+	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
+	scroll.offset_top    = 30.0
+	scroll.offset_left   = 8.0
+	scroll.offset_right  = -8.0
+	scroll.offset_bottom = -8.0
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.vertical_scroll_mode   = ScrollContainer.SCROLL_MODE_DISABLED
+	panel.add_child(scroll)
+
+	_union_flow = HFlowContainer.new()
+	_union_flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_union_flow.add_theme_constant_override("h_separation", GAL_GAP)
+	_union_flow.add_theme_constant_override("v_separation", GAL_GAP)
+	scroll.add_child(_union_flow)
 
 func _build_info_panel(parent: Control) -> void:
 	var info_panel := Panel.new()
@@ -606,6 +666,21 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 			else:
 				_info_stats.text = "Tech"
 				_info_desc.text  = ""
+		"union":
+			const UNION_CYAN: Color = Color(0.25, 0.90, 1.00)
+			_info_name.add_theme_color_override("font_color", UNION_CYAN)
+			_info_stats.add_theme_color_override("font_color", UNION_CYAN)
+			var u: UnionData = UnionDatabase.get_union(card_name)
+			if u != null:
+				var aff_keys: Array = CharacterData.Affinity.keys()
+				var aff_name: String = aff_keys[int(u.affinity)].capitalize() \
+					if int(u.affinity) < aff_keys.size() else ""
+				_info_stats.text = "[%s]  ATK %d  DEF %d  %d◆" % [
+					aff_name, u.base_atk, u.base_def, u.summon_cost]
+				_info_desc.text = u.formula_description + "\n" + u.ability_description
+			else:
+				_info_stats.text = "Union"
+				_info_desc.text  = ""
 
 # ─────────────────────────────────────────────────────────────
 # Grid management
@@ -641,6 +716,123 @@ func _refresh_gallery() -> void:
 		_add_gallery_card(card_name, "character")
 	for card_name: String in _traps_remaining:
 		_add_gallery_card(card_name, "trap")
+
+# ─────────────────────────────────────────────────────────────
+# Union panel
+# ─────────────────────────────────────────────────────────────
+func _refresh_union_panel() -> void:
+	for ch in _union_flow.get_children():
+		ch.queue_free()
+	for u: UnionData in _find_possible_unions(_chars_remaining):
+		_union_flow.add_child(_make_union_tile(u))
+
+func _find_possible_unions(char_names: Array) -> Array:
+	var result: Array = []
+	for u: UnionData in UnionDatabase.get_all_unions():
+		if _union_feasible(u, char_names):
+			result.append(u)
+	return result
+
+func _union_feasible(u: UnionData, char_names: Array) -> bool:
+	var cards: Array = []
+	for cname: String in char_names:
+		var cd: CharacterData = CardDatabase.get_character(cname)
+		if cd == null:
+			continue
+		var ci := GameState.CardInstance.new()
+		ci.card_name    = cname
+		ci.card_type    = "character"
+		ci.affinity     = cd.affinity
+		ci.crystal_cost = cd.crystal_cost
+		ci.base_atk     = cd.base_atk
+		ci.base_def     = cd.base_def
+		cards.append(ci)
+	var remaining: Array = cards.duplicate()
+	for cond: Dictionary in u.material_conditions:
+		var found: bool = false
+		for idx: int in range(remaining.size()):
+			if UnionDatabase.card_satisfies_condition(remaining[idx], cond):
+				remaining.remove_at(idx)
+				found = true
+				break
+		if not found:
+			return false
+	return true
+
+func _make_union_tile(u: UnionData) -> Control:
+	var wrap := VBoxContainer.new()
+	wrap.custom_minimum_size = Vector2(GAL_W, GAL_H + 22.0)
+	wrap.add_theme_constant_override("separation", 2)
+
+	var img := TextureRect.new()
+	img.custom_minimum_size   = Vector2(GAL_W, GAL_H)
+	img.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	img.expand_mode           = TextureRect.EXPAND_IGNORE_SIZE
+	img.stretch_mode          = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	var tex: Texture2D = _load_card_tex(u.card_name, "union")
+	if tex != null:
+		img.texture = tex
+	else:
+		img.modulate = Color(0.25, 0.90, 1.00)
+	var captured_u: UnionData = u
+	img.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton:
+			var mbe := ev as InputEventMouseButton
+			if mbe.button_index == MOUSE_BUTTON_LEFT and mbe.pressed:
+				if mbe.double_click:
+					CardDetailOverlay.open(self, captured_u.card_name, "union")
+				else:
+					_start_zone_flash(captured_u))
+	wrap.add_child(img)
+
+	var lbl := Label.new()
+	lbl.text                 = u.card_name
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
+	lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+	lbl.add_theme_font_size_override("font_size", 10)
+	lbl.add_theme_color_override("font_color", Color(0.25, 0.90, 1.00))
+	wrap.add_child(lbl)
+	return wrap
+
+func _start_zone_flash(u: UnionData) -> void:
+	_stop_zone_flash()
+	_show_card_info(u.card_name, "union")
+
+	_flash_cells = []
+	for zv: Vector2i in u.union_zone:
+		if zv.x >= 0 and zv.x < GRID_N and zv.y >= 0 and zv.y < GRID_N:
+			_flash_cells.append(_grid_cells[zv.x][zv.y] as GridCell)
+
+	if _flash_cells.is_empty():
+		return
+
+	# 3 blink cycles (fade in + fade out), then auto-stop
+	_flash_tween = create_tween().set_loops(3)
+	var first: bool = true
+	for cell: GridCell in _flash_cells:
+		if first:
+			_flash_tween.tween_property(cell._flash_overlay, "color:a", 0.45, 0.30)
+			first = false
+		else:
+			_flash_tween.parallel().tween_property(cell._flash_overlay, "color:a", 0.45, 0.30)
+	first = true
+	for cell: GridCell in _flash_cells:
+		if first:
+			_flash_tween.tween_property(cell._flash_overlay, "color:a", 0.0, 0.30)
+			first = false
+		else:
+			_flash_tween.parallel().tween_property(cell._flash_overlay, "color:a", 0.0, 0.30)
+	_flash_tween.finished.connect(_stop_zone_flash)
+
+func _stop_zone_flash() -> void:
+	if _flash_tween != null and _flash_tween.is_valid():
+		_flash_tween.kill()
+	_flash_tween = null
+	for cell: GridCell in _flash_cells:
+		if cell._flash_overlay != null:
+			cell._flash_overlay.color.a = 0.0
+	_flash_cells.clear()
 
 func _add_gallery_card(card_name: String, card_type: String) -> void:
 	var wrap := VBoxContainer.new()
