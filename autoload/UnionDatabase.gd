@@ -387,12 +387,11 @@ func _add(
 	d.material_conditions = conds
 	_unions[name] = d
 
-## Build a conditions array: specific conditions padded with {} to reach zone size.
-func _conds(specific: Array, total: int) -> Array:
-	var result: Array = specific.duplicate()
-	while result.size() < total:
-		result.append({})
-	return result
+## Build the material conditions for a union.
+## Only the specific conditions matter — the second parameter (zone size) is ignored.
+## The zone shape defines WHERE on the board materials can be, not how many are needed.
+func _conds(specific: Array, _zone_size: int) -> Array:
+	return specific.duplicate()
 
 # ─────────────────────────────────────────────────────────────
 # Validation
@@ -441,16 +440,6 @@ func find_available_unions(
 				continue
 			seen_keys[key] = true
 
-			# All zone cells must have character cards (face-up OR face-down allowed)
-			var all_chars: bool = true
-			for cell: Vector2i in zone_cells:
-				var card: GameState.CardInstance = GameState.get_card(player, cell.x, cell.y)
-				if card.card_type != "character":
-					all_chars = false
-					break
-			if not all_chars:
-				continue
-
 			# Material conditions must be satisfiable
 			if not ignore_materials and not _materials_match(player, zone_cells, union.material_conditions):
 				continue
@@ -463,11 +452,12 @@ func find_available_unions(
 
 	return results
 
-## Check whether zone_cells (Array[Vector2i]) satisfy all material_conditions.
+## Check whether zone_cells (Array[Vector2i]) contain cards satisfying all material_conditions.
 ## Uses greedy matching: most-specific conditions first.
+## The zone may have more cells than conditions — only conditions.size() cards need to match.
 func _materials_match(player: int, zone_cells: Array, conditions: Array) -> bool:
-	if conditions.size() != zone_cells.size():
-		return false
+	if conditions.is_empty():
+		return true
 
 	# Sort conditions by specificity descending (more keys = more specific)
 	var sorted_conds: Array = conditions.duplicate()

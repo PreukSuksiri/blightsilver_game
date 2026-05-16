@@ -277,17 +277,34 @@ func _make_simple_tile(card_name: String, card_type: String) -> Control:
 		art.texture = tex
 		tile.add_child(art)
 	else:
+		var is_union: bool = card_type == "union"
 		var bg := ColorRect.new()
 		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		bg.color = Color(0.05, 0.06, 0.14, 1.0)
+		bg.color = Color(0.04, 0.14, 0.20, 1.0) if is_union else Color(0.05, 0.06, 0.14, 1.0)
 		tile.add_child(bg)
+		if is_union:
+			var icon_lbl := Label.new()
+			icon_lbl.text = "⊕"
+			icon_lbl.layout_mode = 1
+			icon_lbl.anchor_left = 0.0; icon_lbl.anchor_right  = 1.0
+			icon_lbl.anchor_top  = 0.1; icon_lbl.anchor_bottom = 0.55
+			icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			icon_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+			icon_lbl.add_theme_font_size_override("font_size", 36)
+			icon_lbl.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0, 0.45))
+			icon_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			tile.add_child(icon_lbl)
 		var lbl := Label.new()
 		lbl.text = card_name
-		lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		lbl.layout_mode = 1
+		lbl.anchor_left = 0.0; lbl.anchor_right  = 1.0
+		lbl.anchor_top  = 0.55; lbl.anchor_bottom = 1.0
+		lbl.offset_left = 4.0; lbl.offset_right = -4.0; lbl.offset_bottom = -4.0
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 		lbl.add_theme_font_size_override("font_size", 9)
-		lbl.add_theme_color_override("font_color", Color(0.55, 0.65, 0.75, 0.8))
+		lbl.add_theme_color_override("font_color",
+			Color(0.25, 0.90, 1.0) if is_union else Color(0.55, 0.65, 0.75, 0.8))
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
