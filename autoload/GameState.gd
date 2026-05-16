@@ -31,6 +31,13 @@ signal tech_card_used(player_index: int, card_name: String)
 signal card_effect_triggered(card_name: String, card_type: String)
 signal attack_used(player_index: int, attacks_remaining: int)
 signal message_posted(text: String)
+signal card_flag_added(player_index: int, row: int, col: int, flag: String)
+signal card_flag_removed(player_index: int, row: int, col: int, flag: String)
+signal card_atk_changed(player_index: int, row: int, col: int, old_val: int, new_val: int)
+signal card_def_changed(player_index: int, row: int, col: int, old_val: int, new_val: int)
+signal bluff_changed(player_index: int, row: int, col: int, emoticon: String)
+signal attack_target_selected(attacker_player: int, target_player: int, row: int, col: int)
+signal tech_target_selected(user_player: int, target_player: int, row: int, col: int)
 
 # ─────────────────────────────────────────────────────────────
 # Constants
@@ -74,6 +81,9 @@ class CardInstance:
 	var halved: bool = false
 	var mutagen_attacked: bool = false # Mutagen immediate attack used
 	var atk_debuff: int = 0
+	var revealed_on_turn: int = -1       # set to turn_number when flipped face-up; -1 = never
+	var flags: Array[String] = []        # string tags: "bio", "cosmic", "mutagen", etc.
+	var active_rules: Array = []         # Array of CardRule — populated by CardRuleEngine
 
 	func get_effective_atk() -> int:
 		return max(0, current_atk + perm_atk_bonus + temp_atk_bonus - atk_debuff)
@@ -255,6 +265,7 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 	var card: CardInstance = get_card(player_index, row, col)
 	if not card.face_up:
 		card.face_up = true
+		card.revealed_on_turn = turn_number
 		emit_signal("card_revealed", player_index, row, col)
 
 func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) -> void:
@@ -379,6 +390,17 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	skip_counts = [0, 0]
 	_init_grids()
 	set_phase(Phase.SETUP_P1)
+
+func add_flag(player_index: int, row: int, col: int, flag: String) -> void:
+	var card: CardInstance = get_card(player_index, row, col)
+	if flag not in card.flags:
+		card.flags.append(flag)
+		emit_signal("card_flag_added", player_index, row, col, flag)
+
+func remove_flag(player_index: int, row: int, col: int, flag: String) -> void:
+	var card: CardInstance = get_card(player_index, row, col)
+	card.flags.erase(flag)
+	emit_signal("card_flag_removed", player_index, row, col, flag)
 
 func post_message(text: String) -> void:
 	emit_signal("message_posted", text)

@@ -899,7 +899,7 @@ func _add_fan_card(tech_name: String, player: int,
 	card.set_card_data(inst, player, Vector2i(-1, -1))
 
 	card.card_detail_requested.connect(
-		func(cn: String, ct: String) -> void: CardDetailOverlay.open(self, cn, ct))
+		func(cn: String, ct: String, _p: int, _r: int, _c: int) -> void: CardDetailOverlay.open(self, cn, ct))
 
 	# Rise/lower on hover (tween position Y)
 	var base_y: float = pos_y
@@ -1682,10 +1682,14 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	if can_info:
 		var card_name_snap: String = card.card_name
 		var card_type_snap: String = card.card_type
+		var player_snap: int = ctx_player
+		var row_snap: int = row
+		var col_snap: int = col
 		var btn := _make_context_icon_btn(CTX_ICON_INFO)
 		btn.pressed.connect(func() -> void:
 			_hide_card_context()
-			CardDetailOverlay.open(self, card_name_snap, card_type_snap)
+			var inst_snap: Variant = GameState.get_card(player_snap, row_snap, col_snap)
+			CardDetailOverlay.open(self, card_name_snap, card_type_snap, inst_snap)
 		)
 		hbox.add_child(btn)
 
@@ -3553,8 +3557,11 @@ func _show_turn_banner(player: int) -> void:
 # ─────────────────────────────────────────────────────────────
 # Card Click Handling
 # ─────────────────────────────────────────────────────────────
-func _on_card_detail_requested(card_name: String, card_type: String) -> void:
-	CardDetailOverlay.open(self, card_name, card_type)
+func _on_card_detail_requested(card_name: String, card_type: String, owner_player: int, row: int, col: int) -> void:
+	var inst: Variant = null
+	if row >= 0 and col >= 0:
+		inst = GameState.get_card(owner_player, row, col)
+	CardDetailOverlay.open(self, card_name, card_type, inst)
 
 func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 	if _is_ai_turn():
@@ -3693,6 +3700,14 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var opponent := GameState.get_opponent(current_player)
 	var card: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
 	var data: TechCardData = CardDatabase.get_tech(pending_tech_name)
+
+	# Emit signals for CardRuleEngine CARD_TARGETED_BY_TECH / PLAYER_SELECT_TECH_TARGET
+	GameState.emit_signal("tech_target_selected", current_player, player, pos.x, pos.y)
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.CARD_TARGETED_BY_TECH,
+		{"source_player": player, "source_card": card, "tech_name": pending_tech_name})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.PLAYER_SELECT_TECH_TARGET,
+		{"source_player": current_player, "target_player": player,
+		 "tech_name": pending_tech_name})
 
 	if "opponent_squares" in pending_tech_filter:
 		if player == opponent:

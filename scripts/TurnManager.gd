@@ -45,6 +45,12 @@ func start_turn(player_index: int) -> void:
 	if GameState.current_phase == GameState.Phase.GAME_OVER:
 		return
 
+	# Fire TURN_START triggers
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.TURN_START_OWNER,
+		{"source_player": player_index})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.TURN_START_OPPONENT,
+		{"source_player": GameState.get_opponent(player_index)})
+
 	GameState.set_phase(GameState.Phase.MODE_SELECT)
 	GameState.post_message("Player %d's turn — play a Tech (optional) then Attack." % (player_index + 1))
 
@@ -104,6 +110,22 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	GameState.attacker_card = attacker
 	GameState.attacker_pos = attacker_pos
 
+	# Fire attack-initiated triggers
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_INITIATED_SELF,
+		{"source_player": player, "source_card": attacker, "attacker": attacker, "defender": defender})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_INITIATED_ANY_OWNER,
+		{"source_player": player, "attacker": attacker, "defender": defender})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_DEFEND_SELF,
+		{"source_player": opponent, "source_card": defender, "attacker": attacker, "defender": defender})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_DEFEND_ANY_OWNER,
+		{"source_player": opponent, "attacker": attacker, "defender": defender})
+	# Emit GameState signal for target selection tracking
+	GameState.emit_signal("attack_target_selected", player, opponent, target_pos.x, target_pos.y)
+
+	# Exposed = already face-up BEFORE this attack began (whatever revealed it has fully resolved).
+	# Revealed = this attack is what flips it — dust still in the air.
+	var defender_was_exposed: bool = defender.face_up
+
 	# Flip attacker face-up
 	GameState.reveal_card(player, attacker_pos.x, attacker_pos.y)
 	# Flip target face-up (skip for blank — it gets destroyed directly, no reveal needed)
@@ -116,7 +138,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 
 	GameState.set_phase(GameState.Phase.BATTLE)
 	var result := BattleResolver.resolve_battle(
-		attacker, defender, GameState.dice_result, player, opponent
+		attacker, defender, GameState.dice_result, player, opponent, defender_was_exposed
 	)
 
 	for msg in result.messages:
@@ -129,6 +151,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	# Handle trap special triggers
 	if result.special_trigger == "trap_effect":
 		await _handle_trap_effect(result.special_params, attacker, attacker_pos, target_pos, player, opponent)
+		CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_TRAP_TRIGGERED,
+			{"source_player": player, "source_card": attacker, "attacker": attacker, "defender": defender})
 	elif result.special_trigger == "trap_nullified":
 		# Trap becomes blank area regardless — animate destroy
 		GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
@@ -136,8 +160,49 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 		if defender.card_type == "dead_end":
 			# Blank slot hit — destroy directly, skip battle resolution (nothing to resolve)
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
+			CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_DEAD_END_DONE,
+				{"source_player": player, "source_card": attacker, "attacker": attacker})
 		else:
+			# Fire PRE_RESOLVE chain, then resolve and apply
+			CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_PRE_RESOLVE,
+				{"source_player": player, "attacker": attacker, "defender": defender,
+				 "dice_roll": GameState.dice_result})
+			CardRuleEngine.resolve_chain(
+				{"source_player": player, "attacker": attacker, "defender": defender})
+
 			await _apply_battle_result(result, player, opponent, attacker_pos, target_pos, attacker, defender)
+
+			# Fire exposed-card trigger if defender was already revealed
+			if result.defender_was_exposed:
+				CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_EXPOSED_CARD,
+					{"source_player": player, "source_card": attacker,
+					 "attacker": attacker, "defender": defender})
+
+			# Fire win/lose/tie triggers
+			var battle_ctx: Dictionary = {
+				"source_player": player, "attacker": attacker, "defender": defender
+			}
+			if result.attacker_destroyed and result.defender_destroyed:
+				CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_TIE_SELF, battle_ctx)
+			elif result.defender_destroyed:
+				CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_WIN_SELF,
+					{"source_player": player, "source_card": attacker,
+					 "attacker": attacker, "defender": defender})
+				CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_WIN_ANY_OWNER,
+					{"source_player": player, "attacker": attacker, "defender": defender})
+				CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_LOSE_SELF,
+					{"source_player": opponent, "source_card": defender,
+					 "attacker": attacker, "defender": defender})
+				CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_LOSE_ANY_OWNER,
+					{"source_player": opponent, "attacker": attacker, "defender": defender})
+			elif result.attacker_destroyed:
+				CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_LOSE_SELF,
+					{"source_player": player, "source_card": attacker,
+					 "attacker": attacker, "defender": defender})
+				CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_LOSE_ANY_OWNER,
+					{"source_player": player, "attacker": attacker, "defender": defender})
+				CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_WIN_ANY_OWNER,
+					{"source_player": opponent, "attacker": attacker, "defender": defender})
 
 	emit_signal("attack_completed", attacker_pos, target_pos, result)
 
@@ -208,6 +273,10 @@ func play_tech_card(tech_name: String) -> void:
 
 	emit_signal("tech_played", player, tech_name)
 	GameState.emit_signal("tech_card_used", player, tech_name)
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.TECH_CARD_USED_OWNER,
+		{"source_player": player, "tech_name": tech_name})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.TECH_CARD_USED_OPPONENT,
+		{"source_player": GameState.get_opponent(player), "tech_name": tech_name})
 	GameState.post_message("Player %d plays %s!" % [player + 1, tech_name])
 	GameState.emit_signal("card_effect_triggered", tech_name, "tech")
 	await card_effect_flash_done
@@ -348,7 +417,7 @@ func _temp_boost_all(player: int, atk_bonus: int, def_bonus: int) -> void:
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
 			var card: GameState.CardInstance = GameState.get_card(player, r, c)
-			if card.card_type == "character":
+			if card.card_type == "character" and card.face_up:
 				card.temp_atk_bonus += atk_bonus
 				card.temp_def_bonus += def_bonus
 
@@ -527,6 +596,17 @@ func end_turn(player: int) -> void:
 	_end_turn(player)
 
 func _end_turn(player: int) -> void:
+	# Fire TURN_END triggers before clearing state
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.TURN_END_OWNER,
+		{"source_player": player})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.TURN_END_OPPONENT,
+		{"source_player": GameState.get_opponent(player)})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.TURN_END_OWNER_NTH,
+		{"source_player": player})
+	CardRuleEngine.emit_trigger(CardRule.TriggerType.TURN_END_OPPONENT_NTH,
+		{"source_player": GameState.get_opponent(player)})
+	CardRuleEngine.tick_turn_end(player)
+
 	# Clear per-turn flags
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):

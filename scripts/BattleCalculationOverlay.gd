@@ -49,7 +49,7 @@ func start(
 	defender: GameState.CardInstance,
 	result: BattleResolver.BattleResult
 ) -> void:
-	_build_ui(attacker_player, attacker, defender)
+	_build_ui(attacker_player, attacker, defender, result)
 	await _run_async(attacker_player, attacker, defender, result)
 
 # ─────────────────────────────────────────────────────────────
@@ -58,7 +58,8 @@ func start(
 func _build_ui(
 	attacker_player: int,
 	attacker: GameState.CardInstance,
-	defender: GameState.CardInstance
+	defender: GameState.CardInstance,
+	result: BattleResolver.BattleResult
 ) -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = MOUSE_FILTER_STOP
@@ -82,21 +83,27 @@ func _build_ui(
 	_right_rest_x = origin_x + _card_w + gap
 
 	# P1 always left, P2 always right
-	var left_inst:  GameState.CardInstance = attacker if attacker_player == 0 else defender
-	var right_inst: GameState.CardInstance = defender if attacker_player == 0 else attacker
+	var left_inst:   GameState.CardInstance = attacker if attacker_player == 0 else defender
+	var right_inst:  GameState.CardInstance = defender if attacker_player == 0 else attacker
 	var left_is_attacker: bool = attacker_player == 0
 
-	_left_ctrl = _build_slot(left_inst, left_is_attacker)
+	# Deltas: attacker shows ATK delta, defender shows DEF delta
+	var left_atk_delta:  int = result.attacker_atk_delta if left_is_attacker else result.defender_atk_delta
+	var left_def_delta:  int = result.attacker_def_delta if left_is_attacker else result.defender_def_delta
+	var right_atk_delta: int = result.defender_atk_delta if left_is_attacker else result.attacker_atk_delta
+	var right_def_delta: int = result.defender_def_delta if left_is_attacker else result.attacker_def_delta
+
+	_left_ctrl = _build_slot(left_inst, left_is_attacker, left_atk_delta, left_def_delta)
 	_left_ctrl.position = Vector2(_left_rest_x, origin_y)
 	add_child(_left_ctrl)
 
-	_right_ctrl = _build_slot(right_inst, not left_is_attacker)
+	_right_ctrl = _build_slot(right_inst, not left_is_attacker, right_atk_delta, right_def_delta)
 	_right_ctrl.position = Vector2(_right_rest_x, origin_y)
 	add_child(_right_ctrl)
 
 	modulate.a = 0.0
 
-func _build_slot(inst: GameState.CardInstance, is_attacker: bool) -> Control:
+func _build_slot(inst: GameState.CardInstance, is_attacker: bool, atk_delta: int = 0, def_delta: int = 0) -> Control:
 	var slot := Control.new()
 	slot.size = Vector2(_card_w, BADGE_H + _card_h)
 	slot.mouse_filter = MOUSE_FILTER_IGNORE
@@ -150,6 +157,10 @@ func _build_slot(inst: GameState.CardInstance, is_attacker: bool) -> Control:
 	card_ctrl.mouse_filter = MOUSE_FILTER_IGNORE
 	_build_card_visual(card_ctrl, inst)
 	slot.add_child(card_ctrl)
+
+	# Stat delta overlay (only for character cards with non-zero deltas)
+	if inst.card_type == "character":
+		_add_stat_deltas(card_ctrl, atk_delta, def_delta)
 
 	return slot
 
@@ -332,6 +343,64 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> void:
 				desc_lbl.text = data.get_effect_description()
 				desc_lbl.position = Vector2(pad_x, info_y + info_h * 0.67)
 				desc_lbl.size = Vector2(cw - pad_x * 2.0, info_h * 0.32)
+
+## Show stacked green/red delta labels at the bottom-right of the card art area.
+## Each non-zero delta gets its own Label plus a crystal-indicator-style burst ghost.
+func _add_stat_deltas(card_ctrl: Control, atk_delta: int, def_delta: int) -> void:
+	var al := ART_L_PCT * _card_w
+	var at := ART_T_PCT * _card_h
+	var aw := (ART_R_PCT - ART_L_PCT) * _card_w
+	var ah := _card_h - at
+
+	var fsz := maxi(int(_card_w * 0.055), 9)
+	var lbl_w := _card_w * 0.32
+	var lbl_h := float(fsz) * 1.6
+
+	var deltas: Array[int] = []
+	var labels_str: Array[String] = []
+	if atk_delta != 0:
+		deltas.append(atk_delta)
+		labels_str.append(("+" if atk_delta > 0 else "") + "ATK %d" % atk_delta)
+	if def_delta != 0:
+		deltas.append(def_delta)
+		labels_str.append(("+" if def_delta > 0 else "") + "DEF %d" % def_delta)
+
+	for i in range(deltas.size()):
+		var delta_val: int = deltas[i]
+		var lbl := Label.new()
+		lbl.text = labels_str[i]
+		lbl.add_theme_font_override("font", CHIVO_FONT)
+		lbl.add_theme_font_size_override("font_size", fsz)
+		var col: Color = Color(0.35, 1.0, 0.45) if delta_val > 0 else Color(1.0, 0.35, 0.35)
+		lbl.add_theme_color_override("font_color", col)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		lbl.mouse_filter = MOUSE_FILTER_IGNORE
+		# Stack from bottom of art area upward
+		var stack_offset: float = float(deltas.size() - 1 - i) * (lbl_h + 2.0)
+		lbl.position = Vector2(al + aw - lbl_w, at + ah - lbl_h - stack_offset)
+		lbl.size = Vector2(lbl_w, lbl_h)
+		card_ctrl.add_child(lbl)
+		_play_stat_burst(lbl)
+
+func _play_stat_burst(lbl: Label) -> void:
+	# Delay to match overlay fade-in (0.25 s), then fire crystal-indicator-style burst
+	await get_tree().create_timer(0.28).timeout
+	if not is_instance_valid(lbl):
+		return
+	var ghost: Label = lbl.duplicate() as Label
+	ghost.pivot_offset = ghost.size * 0.5
+	lbl.get_parent().add_child(ghost)
+	ghost.position = lbl.position
+	ghost.z_index = 4
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(ghost, "scale", Vector2(2.4, 2.4), 0.42) \
+		.set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	tw.tween_property(ghost, "modulate:a", 0.0, 0.42) \
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	await tw.finished
+	if is_instance_valid(ghost):
+		ghost.queue_free()
 
 func _style_pill(lbl: Label, bg_col: Color, border_col: Color) -> void:
 	var sb := StyleBoxFlat.new()

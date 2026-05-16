@@ -28,6 +28,7 @@ Collection="*res://autoload/Collection.gd"
 ShopManager="*res://autoload/ShopManager.gd"
 CampaignManager="*res://autoload/CampaignManager.gd"
 CheckerTransition="*res://autoload/CheckerTransition.gd"
+CardRuleEngine="*res://autoload/CardRuleEngine.gd"
 
 [display]
 

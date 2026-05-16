@@ -1,7 +1,7 @@
 extends Control
 
 signal card_clicked()
-signal card_detail_requested(card_name: String, card_type: String)
+signal card_detail_requested(card_name: String, card_type: String, owner_player: int, row: int, col: int)
 
 # ─────────────────────────────────────────────────────────────
 # Style constants
@@ -57,6 +57,14 @@ const RARITY_SHADOW: Dictionary = {
 	CharacterData.Rarity.RARE:      10,
 	CharacterData.Rarity.LEGENDARY: 20,
 	CharacterData.Rarity.EXOTIC:    25,
+}
+
+# ─────────────────────────────────────────────────────────────
+# Flag badge definitions  (flag_name → {emoji, color})
+# Add new entries here to support future flags.
+# ─────────────────────────────────────────────────────────────
+const FLAG_DEFS: Dictionary = {
+	"mutagen": {"emoji": "🧬", "color": Color(0.55, 0.95, 0.55, 0.92)},
 }
 
 const ART_PLACEHOLDER: Texture2D    = preload("res://assets/textures/cards/placeholder.png")
@@ -120,6 +128,7 @@ var _last_loaded_art: String = ""
 
 var _blank_found_icon: TextureRect
 var _trap_icon: TextureRect
+var _flag_bar: HBoxContainer = null
 
 func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_STOP
@@ -132,6 +141,7 @@ func _ready() -> void:
 	_blank_found_icon = _make_card_icon(ICON_BLANK_FOUND)
 	_trap_icon        = _make_card_icon(ICON_TRAP)
 	_setup_overlay_styles()
+	_build_flag_bar()
 	_refresh_display()
 
 func _make_card_icon(tex: Texture2D) -> TextureRect:
@@ -145,6 +155,76 @@ func _make_card_icon(tex: Texture2D) -> TextureRect:
 	icon.visible      = false
 	add_child(icon)
 	return icon
+
+func _build_flag_bar() -> void:
+	_flag_bar = HBoxContainer.new()
+	# Anchor to the full bottom edge of the card; badges will be centred inside
+	_flag_bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_flag_bar.offset_top    = -18.0   # badge height
+	_flag_bar.offset_bottom = 0.0
+	_flag_bar.offset_left   = 0.0
+	_flag_bar.offset_right  = 0.0
+	_flag_bar.alignment     = BoxContainer.ALIGNMENT_CENTER
+	_flag_bar.add_theme_constant_override("separation", 3)
+	_flag_bar.mouse_filter  = MOUSE_FILTER_IGNORE
+	_flag_bar.visible       = false
+	add_child(_flag_bar)
+
+## Rebuild flag badge children from card_data.flags (+ legacy has_mutagen_flag).
+## Call from _show_character_face_up() only; all other states hide the bar.
+func _refresh_flag_badges() -> void:
+	for child in _flag_bar.get_children():
+		child.queue_free()
+
+	if card_data == null or _is_enemy_view:
+		_flag_bar.visible = false
+		return
+
+	# Collect active flags — new generic system + legacy bool bridge
+	var active_flags: Array[String] = []
+	for f: String in card_data.flags:
+		if f not in active_flags:
+			active_flags.append(f)
+	if card_data.has_mutagen_flag and "mutagen" not in active_flags:
+		active_flags.append("mutagen")
+
+	if active_flags.is_empty():
+		_flag_bar.visible = false
+		return
+
+	for flag_name: String in active_flags:
+		if flag_name not in FLAG_DEFS:
+			continue
+		var def: Dictionary = FLAG_DEFS[flag_name]
+		var badge_color: Color = def["color"]
+		var emoji: String      = def["emoji"]
+
+		var panel := Panel.new()
+		panel.mouse_filter = MOUSE_FILTER_IGNORE
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = badge_color
+		# Rounded top corners → flag-tab look; flat bottom sits on card edge
+		sb.corner_radius_top_left     = 5
+		sb.corner_radius_top_right    = 5
+		sb.corner_radius_bottom_left  = 0
+		sb.corner_radius_bottom_right = 0
+		sb.shadow_color  = Color(badge_color.r * 0.5, badge_color.g * 0.5, badge_color.b * 0.5, 0.6)
+		sb.shadow_offset = Vector2(0.0, 1.0)
+		sb.shadow_size   = 3
+		panel.add_theme_stylebox_override("panel", sb)
+		panel.custom_minimum_size = Vector2(24.0, 17.0)
+
+		var lbl := Label.new()
+		lbl.text = emoji
+		lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+		lbl.add_theme_font_size_override("font_size", 9)
+		lbl.mouse_filter = MOUSE_FILTER_IGNORE
+		panel.add_child(lbl)
+		_flag_bar.add_child(panel)
+
+	_flag_bar.visible = true
 
 func _setup_overlay_styles() -> void:
 	# Highlight border: border-only cyan outline (used for tech target selection)
@@ -257,6 +337,7 @@ func _show_blank() -> void:
 	shield_indicator.visible = false
 	_set_active_glow(false)
 	_set_attacked_icon(false)
+	_flag_bar.visible = false
 	frame_rect.texture = BLANK_FRAME_TEX
 	bg.color = Color(0.02, 0.02, 0.04, 1.0)
 	card_type_label.text = ""
@@ -280,6 +361,7 @@ func _show_empty_slot() -> void:
 	shield_indicator.visible = false
 	_set_active_glow(false)
 	_set_attacked_icon(false)
+	_flag_bar.visible = false
 	var is_revealed_blank := card_data != null and card_data.face_up
 	_blank_found_icon.visible = is_revealed_blank
 	_trap_icon.visible        = false
@@ -299,6 +381,7 @@ func _show_face_down() -> void:
 	shield_indicator.visible = false
 	_set_active_glow(false)
 	_set_attacked_icon(false)
+	_flag_bar.visible = false
 	_blank_found_icon.visible = false
 	_trap_icon.visible        = false
 
@@ -319,13 +402,31 @@ func _show_character_face_up() -> void:
 
 	name_label.text = card_data.card_name
 
-	atk_label.text = "ATK %d" % card_data.get_effective_atk()
-	def_label.text = "DEF %d" % card_data.get_effective_def()
+	var char_data: CharacterData = CardDatabase.get_character(card_data.card_name)
+
+	var eff_atk: int = card_data.get_effective_atk()
+	var eff_def: int = card_data.get_effective_def()
+	atk_label.text = "ATK %d" % eff_atk
+	def_label.text = "DEF %d" % eff_def
+	if char_data and eff_atk != char_data.base_atk:
+		atk_label.add_theme_color_override("font_color", Color(1.0, 0.68, 0.60))
+	else:
+		atk_label.add_theme_color_override("font_color", Color(1.0, 0.40, 0.30))
+	if char_data and eff_def != char_data.base_def:
+		def_label.add_theme_color_override("font_color", Color(0.62, 0.88, 1.0))
+	else:
+		def_label.add_theme_color_override("font_color", Color(0.30, 0.70, 1.0))
+
 	affinity_stat_label.text = CharacterData.Affinity.keys()[card_data.affinity].capitalize()
 	affinity_stat_label.add_theme_color_override("font_color", Color(aff_color.r, aff_color.g, aff_color.b, 0.7))
-	cost_label.text = "%d◆" % card_data.crystal_cost
 
-	var char_data: CharacterData = CardDatabase.get_character(card_data.card_name)
+	if char_data and card_data.crystal_cost != char_data.crystal_cost:
+		cost_label.text = "%d◆" % card_data.crystal_cost
+		cost_label.add_theme_color_override("font_color", Color(1.0, 0.96, 0.65))
+	else:
+		cost_label.text = "%d◆" % card_data.crystal_cost
+		cost_label.add_theme_color_override("font_color", Color(1.0, 0.90, 0.30))
+
 	if char_data:
 		ability_label.text = char_data.get_ability_description()
 		_load_artwork(char_data.artwork_path, card_data.card_name, "characters")
@@ -336,20 +437,21 @@ func _show_character_face_up() -> void:
 	attacked_indicator.visible = false  # replaced by attacked_icon_rect
 	_blank_found_icon.visible  = false
 	_trap_icon.visible         = false
+	mutagen_indicator.visible = false  # replaced by _flag_bar
 	if _is_enemy_view:
-		mutagen_indicator.visible = false
 		shield_indicator.visible = false
 		_set_active_glow(false)
 		_set_attacked_icon(false)
 		_clear_rarity()
+		_flag_bar.visible = false
 	else:
-		mutagen_indicator.visible = card_data.has_mutagen_flag
 		shield_indicator.visible = card_data.force_shielded
 		shield_indicator.text = "🛡"
 		var is_own_turn := player_owner == GameState.current_player
 		_set_active_glow(is_own_turn and card_data.face_up)
 		_set_attacked_icon(is_own_turn and card_data.attacked_this_turn)
 		_apply_rarity(aff_color)
+		_refresh_flag_badges()
 
 # ─────────────────────────────────────────────────────────────
 # Trap face-up
@@ -384,6 +486,7 @@ func _show_trap_face_up() -> void:
 	_set_attacked_icon(false)
 	_set_active_glow(player_owner == GameState.current_player and not _is_enemy_view and card_data.face_up)
 	_clear_rarity()
+	_flag_bar.visible = false
 	_blank_found_icon.visible = false
 	_trap_icon.visible        = true
 
@@ -421,6 +524,7 @@ func _show_tech_face_up() -> void:
 	_set_active_glow(false)
 	_set_attacked_icon(false)
 	_apply_rarity(TECH_COLOR)
+	_flag_bar.visible = false
 	_blank_found_icon.visible = false
 	_trap_icon.visible        = false
 
@@ -684,7 +788,7 @@ func _gui_input(event: InputEvent) -> void:
 				if card_data != null and card_data.card_type != "dead_end":
 					# Block detail view on opponent's face-down cards
 					if card_data.face_up or player_owner == GameState.current_player:
-						emit_signal("card_detail_requested", card_data.card_name, card_data.card_type)
+						card_detail_requested.emit(card_data.card_name, card_data.card_type, player_owner, grid_pos.x, grid_pos.y)
 						accept_event()
 			else:
 				card_clicked.emit()

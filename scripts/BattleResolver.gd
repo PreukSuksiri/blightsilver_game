@@ -16,6 +16,15 @@ class BattleResult:
 	var special_params: Dictionary = {}
 	var ability_triggered_attacker: bool = false
 	var ability_triggered_defender: bool = false
+	# Stat delta fields — difference between base and effective values entering battle
+	var attacker_atk_used: int = 0   # effective ATK used
+	var defender_def_used: int = 0   # effective DEF used
+	var attacker_atk_delta: int = 0  # positive = bonus, negative = debuff
+	var defender_def_delta: int = 0
+	var attacker_def_delta: int = 0  # for future symmetric display
+	var defender_atk_delta: int = 0
+	# Whether the defender was already face_up before this attack
+	var defender_was_exposed: bool = false
 
 # ─────────────────────────────────────────────────────────────
 # Main Resolution
@@ -25,9 +34,11 @@ static func resolve_battle(
 		defender: GameState.CardInstance,
 		dice_roll: int,
 		attacker_player: int,
-		defender_player: int
+		defender_player: int,
+		defender_was_exposed: bool = false
 ) -> BattleResult:
 	var result := BattleResult.new()
+	result.defender_was_exposed = defender_was_exposed
 
 	match defender.card_type:
 		"dead_end":
@@ -64,6 +75,12 @@ static func _resolve_character_vs_character(
 	var eff_def: int = _get_effective_def(defender, attacker)
 	if eff_def != base_def:
 		result.ability_triggered_defender = true
+
+	# Populate delta fields for overlay display
+	result.attacker_atk_used  = eff_atk
+	result.defender_def_used  = eff_def
+	result.attacker_atk_delta = eff_atk - base_atk
+	result.defender_def_delta = eff_def - base_def
 
 	result.messages.append("%s ATK %d vs %s DEF %d" % [attacker.card_name, eff_atk, defender.card_name, eff_def])
 
@@ -292,7 +309,8 @@ static func _count_matching_cards(player_index: int, source_card: GameState.Card
 			if card.card_type != "character":
 				continue
 			if name_filter != "" and name_filter in card.card_name.to_lower():
-				count += 1
+				if card.face_up:
+					count += 1
 			elif affinity_filter != -1 and card.affinity == affinity_filter:
 				if card.face_up:
 					count += 1

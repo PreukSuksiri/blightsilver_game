@@ -38,6 +38,10 @@ var _aff:      Label
 var _desc:     Label
 var _rarity:   Label
 
+var _mod_label:      Label = null   # ATK/DEF modifier indicator
+var _cost_mod_label: Label = null   # Cost modifier indicator
+var _card_inst: Variant = null  # GameState.CardInstance or null
+
 var _info_y: float
 var _info_h: float
 var _pad_x:  float
@@ -47,8 +51,10 @@ var _art_base_pos: Vector2
 # ─────────────────────────────────────────────────────────────
 # Entry point
 # ─────────────────────────────────────────────────────────────
-static func open(parent: Node, card_name: String, card_type: String) -> void:
+static func open(parent: Node, card_name: String, card_type: String,
+		card_inst: Variant = null) -> void:
 	var overlay := CardDetailOverlay.new()
+	overlay._card_inst = card_inst
 	overlay.z_index = 100
 	parent.add_child(overlay)
 
@@ -199,6 +205,18 @@ func _build_ui(card_w: float, card_h: float) -> void:
 	_cost = cost_pc
 	card.add_child(_cost)
 
+	# ── Cost modifier indicator (below cost badge) ──
+	_cost_mod_label = Label.new()
+	_cost_mod_label.position             = Vector2(card_w * 0.68, hdr_h * 0.88)
+	_cost_mod_label.size                 = Vector2(card_w * 0.27, hdr_h * 0.5)
+	_cost_mod_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_cost_mod_label.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+	_cost_mod_label.add_theme_font_size_override("font_size", maxi(int(card_w * 0.032), 8))
+	_cost_mod_label.add_theme_font_override("font", CHIVO_FONT)
+	_cost_mod_label.mouse_filter = MOUSE_FILTER_IGNORE
+	_cost_mod_label.visible = false
+	card.add_child(_cost_mod_label)
+
 	# Close button – outside the card frame, anchored to card's top-right corner
 	var close_btn := Button.new()
 	var cb_size   := 38.0
@@ -252,6 +270,19 @@ func _build_ui(card_w: float, card_h: float) -> void:
 	_def.add_theme_color_override("font_color", Color(0.38, 0.68, 1.0))
 	_def.add_theme_font_override("font", CHIVO_FONT)
 	card.add_child(_def)
+
+	# ── ATK/DEF modifier indicator (to the right of DEF pill) ──
+	var def_right_x := pad_x + 2.0 * pill_w + pill_gap + 4.0 + 8.0
+	var mod_w := card_w - def_right_x - pad_x * 0.5
+	_mod_label = Label.new()
+	_mod_label.position           = Vector2(def_right_x, stats_y)
+	_mod_label.size               = Vector2(mod_w, stats_h)
+	_mod_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_mod_label.add_theme_font_size_override("font_size", fsz_stat)
+	_mod_label.add_theme_font_override("font", CHIVO_FONT)
+	_mod_label.mouse_filter = MOUSE_FILTER_IGNORE
+	_mod_label.visible = false
+	card.add_child(_mod_label)
 
 	# Affinity – right-aligned, same row
 	_aff = Label.new()
@@ -312,6 +343,34 @@ func _populate(card_name: String, card_type: String) -> void:
 			_desc.text = data.get_ability_description()
 			_style_pill(_atk, Color(0.75, 0.28, 0.05), Color(1.0, 0.55, 0.28))
 			_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
+			# Modifier overlay — only shown when a live CardInstance is available
+			_mod_label.visible      = false
+			_cost_mod_label.visible = false
+			if _card_inst != null and _card_inst.card_type == "character":
+				var eff_atk: int = _card_inst.get_effective_atk()
+				var eff_def: int = _card_inst.get_effective_def()
+				var atk_changed: bool = eff_atk != data.base_atk
+				var def_changed: bool = eff_def != data.base_def
+				if atk_changed or def_changed:
+					_mod_label.text = "▶  ATK=%d / DEF=%d" % [eff_atk, eff_def]
+					var atk_up: bool = eff_atk > data.base_atk
+					var def_up: bool = eff_def > data.base_def
+					var mod_col: Color
+					if atk_up and def_up:
+						mod_col = Color(0.35, 1.0, 0.45)
+					elif not atk_up and not def_up:
+						mod_col = Color(1.0, 0.38, 0.38)
+					else:
+						mod_col = Color(1.0, 0.88, 0.35)
+					_mod_label.add_theme_color_override("font_color", mod_col)
+					_mod_label.visible = true
+				if _card_inst.crystal_cost != data.crystal_cost:
+					_cost_mod_label.text = "▼  %d◆" % _card_inst.crystal_cost
+					var cost_col: Color = Color(0.35, 1.0, 0.45) \
+						if _card_inst.crystal_cost < data.crystal_cost \
+						else Color(1.0, 0.38, 0.38)
+					_cost_mod_label.add_theme_color_override("font_color", cost_col)
+					_cost_mod_label.visible = true
 			_art.position = _art_base_pos + data.artwork_offset
 			_load_art(CardDatabase.find_artwork(card_name, "characters", SaveManager.nsfw_enabled))
 			_set_rarity(data.rarity)
