@@ -120,7 +120,9 @@ func admin_command(raw: String) -> String:
 				+ "  list_chars\n"
 				+ "  list_traps\n"
 				+ "  list_tech\n"
-				+ "  card_editor"
+				+ "  card_editor\n"
+				+ "  animation_vellum_card_commence_flip\n"
+				+ "  animation_vellum_card_commence_facedown"
 			)
 
 		"tts":
@@ -395,6 +397,26 @@ func admin_command(raw: String) -> String:
 			editor.name = "CardEditorOverlay"
 			scene.add_child(editor)
 			return "Card Editor opened."
+
+		"animation_vellum_card_commence_flip":
+			var scene: Node = get_tree().current_scene
+			if scene.get_node_or_null("VellumCardCommenceAnim") != null:
+				return "Animation is already running."
+			var anim: Node = load("res://scripts/VellumCardCommenceAnimation.gd").new()
+			anim.name = "VellumCardCommenceAnim"
+			scene.add_child(anim)
+			anim.call("launch", true)
+			return "Vellum Card Commence (flip) animation started."
+
+		"animation_vellum_card_commence_facedown":
+			var scene: Node = get_tree().current_scene
+			if scene.get_node_or_null("VellumCardCommenceAnim") != null:
+				return "Animation is already running."
+			var anim: Node = load("res://scripts/VellumCardCommenceAnimation.gd").new()
+			anim.name = "VellumCardCommenceAnim"
+			scene.add_child(anim)
+			anim.call("launch", false)
+			return "Vellum Card Commence (face-down) animation started."
 
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd

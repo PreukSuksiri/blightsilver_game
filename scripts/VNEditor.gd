@@ -8,6 +8,11 @@ signal closed
 const SCENES_DIR     := "res://campaign/scenes/"
 const LANG_CFG_PATH  := "res://campaign/scenes/languages.json"
 const SLOT_OPTIONS: Array = ["far_left", "left", "center", "right", "far_right"]
+const ANIMATION_REGISTRY: Array = [
+	{"label": "(none)",                                "key": ""},
+	{"label": "Vellum Card Commence — flip",           "key": "animation_vellum_card_commence_flip"},
+	{"label": "Vellum Card Commence — facedown",       "key": "animation_vellum_card_commence_facedown"},
+]
 const COLOR_PRESETS: Array = [
 	["R", "#FF4444"],
 	["G", "#44FF88"],
@@ -98,6 +103,7 @@ var _f_start_battle: CheckBox = null
 var _f_on_win: LineEdit = null
 var _f_on_lose: LineEdit = null
 var _f_nsfw: OptionButton = null
+var _f_animation: OptionButton = null
 
 # Enemy deck builder (for start_battle beats)
 var _enemy_deck_chars: Array = []
@@ -479,6 +485,33 @@ func _build_fields() -> void:
 	nsfw_hint.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	nsfw_hbox.add_child(nsfw_hint)
 
+	# ── Animation ─────────────────────────────────────────────
+	_section(v, "ANIMATION")
+	var anim_hbox := HBoxContainer.new()
+	anim_hbox.add_theme_constant_override("separation", 8)
+	v.add_child(anim_hbox)
+	var anim_lbl := Label.new()
+	anim_lbl.text = "Play Animation"
+	anim_lbl.custom_minimum_size.x = 140.0
+	anim_lbl.add_theme_font_size_override("font_size", 14)
+	anim_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.9))
+	anim_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	anim_hbox.add_child(anim_lbl)
+	_f_animation = OptionButton.new()
+	_f_animation.add_theme_font_size_override("font_size", 14)
+	for entry: Dictionary in ANIMATION_REGISTRY:
+		_f_animation.add_item(entry["label"] as String)
+	_f_animation.selected = 0
+	_f_animation.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_f_animation.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	anim_hbox.add_child(_f_animation)
+	var anim_hint := Label.new()
+	anim_hint.text = "Fires and continues; add Wait to hold on this beat"
+	anim_hint.add_theme_font_size_override("font_size", 13)
+	anim_hint.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.55))
+	anim_hint.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	anim_hbox.add_child(anim_hint)
+
 	# ── Audio ─────────────────────────────────────────────────
 	_section(v, "AUDIO")
 	_f_music = _row_le(v, "Music", "res://path  |  'null' to stop")
@@ -606,6 +639,7 @@ func _connect_static_signals() -> void:
 	_f_hidden.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_dim_others.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_nsfw.item_selected.connect(func(_i: int) -> void: ch.call())
+	_f_animation.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_start_battle.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_player1_name.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_player2_name.text_changed.connect(func(_s: String) -> void: ch.call())
@@ -1091,6 +1125,13 @@ func _populate_fields() -> void:
 	else:
 		_f_shake_screen.value = float(ss)
 
+	var anim_key: String = str(b.get("animation", ""))
+	_f_animation.selected = 0
+	for ai: int in range(ANIMATION_REGISTRY.size()):
+		if (ANIMATION_REGISTRY[ai] as Dictionary)["key"] == anim_key:
+			_f_animation.selected = ai
+			break
+
 	_f_start_battle.button_pressed = b.get("start_battle", false)
 	_f_player1_name.text = str(b.get("player1_name", ""))
 	_f_player2_name.text = str(b.get("player2_name", ""))
@@ -1288,6 +1329,10 @@ func _collect_beat() -> Dictionary:
 
 	if _f_shake_screen.value > 0.0:
 		b["shake_screen"] = _f_shake_screen.value
+
+	var anim_idx: int = _f_animation.selected
+	if anim_idx > 0:
+		b["animation"] = (ANIMATION_REGISTRY[anim_idx] as Dictionary)["key"]
 
 	if _f_start_battle.button_pressed:
 		b["start_battle"] = true

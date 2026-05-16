@@ -527,6 +527,11 @@
 		}
 	},
 	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"comment": "Animation",
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3"
+	},
+	{
 		"comment": "Battle - Midnight Shadow",
 		"enemy_deck": {
 			"characters": [

@@ -99,6 +99,7 @@ var _p2_reveal_btn: Button = null
 var _reveal_preview: Array[bool] = [false, false]
 var _enemy_view_active: bool = false
 var _tech_used_this_turn: Array[bool] = [false, false]
+var _tech_reset_turn: int = -1   # turn_number when _tech_used_this_turn was last cleared
 
 # Hover info panel (center column, battle phase only)
 var _hover_panel: Control = null
@@ -3397,7 +3398,11 @@ func _on_phase_changed(phase: GameState.Phase) -> void:
 	_update_crystal_visibility()
 	_update_reveal_buttons()
 	if phase == GameState.Phase.MODE_SELECT:
-		_tech_used_this_turn[GameState.current_player] = false
+		# Only reset at the start of a genuinely new turn, not on mid-turn
+		# MODE_SELECT re-entries that happen after each attack completes.
+		if GameState.turn_number != _tech_reset_turn:
+			_tech_reset_turn = GameState.turn_number
+			_tech_used_this_turn[GameState.current_player] = false
 	if _tech_overlay_panel != null and _tech_overlay_panel.visible:
 		_rebuild_tech_overlay_content(_tech_overlay_player)
 	match phase:

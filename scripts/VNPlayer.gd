@@ -6,6 +6,7 @@ extends Control
 # Constants
 # ─────────────────────────────────────────────────────────────
 const SLOT_NAMES  := ["far_left", "left", "center", "right", "far_right"]
+const _ANIMATION_SCENE := preload("res://scripts/VellumCardCommenceAnimation.gd")
 const SLOT_X      := [0.0,        200.0,  640.0,    1080.0,  1280.0]
 const CHAR_W      := 320.0
 const CHAR_H      := 560.0
@@ -479,6 +480,15 @@ func _show_beat() -> void:
 		_hide_hint_icon()
 		await _do_flash(fc, count, dur, delay, target)
 		_accepting_input = true
+
+	# ── Animation (fire-and-forget overlay) ──
+	var anim_key: String = str(beat.get("animation", ""))
+	if anim_key != "":
+		var anim: CanvasLayer = _ANIMATION_SCENE.new()
+		anim.name = "VNAnimation"
+		get_tree().current_scene.add_child(anim)
+		var flip: bool = anim_key == "animation_vellum_card_commence_flip"
+		anim.call("launch", flip)
 
 	# ── Wait (auto-advance after N seconds, blocks input) ──
 	var wait_sec: float = beat.get("wait", 0.0)
