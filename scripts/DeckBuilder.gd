@@ -111,6 +111,9 @@ func _ready() -> void:
 	_update_filter_colors()
 	_setup_gallery_containers()
 	_setup_union_section()
+	# Apply initial union mechanism visibility
+	_on_union_mechanism_changed(SaveManager.union_mechanism_unlocked)
+	SaveManager.union_mechanism_changed.connect(_on_union_mechanism_changed)
 	# Hide the dead end row — it auto-fills and needs no user action
 	blank_count_label.get_parent().visible = false
 
@@ -284,7 +287,7 @@ func _rebuild_trunk_list() -> void:
 			trunk_list.set_item_metadata(trunk_list.item_count - 1,
 				{"type": "character", "name": char_name})
 
-	if _filter in ["all", "union"]:
+	if _filter in ["all", "union"] and SaveManager.union_mechanism_unlocked:
 		var union_list: Array = UnionDatabase.get_all_unions()
 		union_list.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)
 		for u: UnionData in union_list:
@@ -586,13 +589,23 @@ func _load_preview_art(card_name: String, subfolder: String) -> void:
 	else:
 		preview_art.texture = _ART_PLACEHOLDER
 
+# ── Union mechanism visibility ────────────────────────────────
+func _on_union_mechanism_changed(unlocked: bool) -> void:
+	if _filter_union_btn != null:
+		_filter_union_btn.visible = unlocked
+	if _union_section != null:
+		_union_section.visible = unlocked
+	if not unlocked and _filter == "union":
+		_set_filter("all")
+	_rebuild_trunk_list()
+
 # ── Union filter button ───────────────────────────────────────
 func _add_union_filter_button() -> void:
 	_filter_union_btn = Button.new()
 	_filter_union_btn.text = "Union"
 	_filter_union_btn.toggle_mode = true
 	_filter_union_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_filter_union_btn.add_theme_font_size_override("font_size", 13)
+	_filter_union_btn.add_theme_font_size_override("font_size", 18)
 	# Copy StyleBoxes from filter_all so it looks identical
 	for style_name: String in ["normal", "hover", "pressed", "focus", "disabled"]:
 		var sb: StyleBox = filter_all.get_theme_stylebox(style_name)
@@ -721,8 +734,20 @@ func _setup_union_section() -> void:
 	var tech_section: Control = tech_list.get_parent()
 	var right_inner: Control = tech_section.get_parent()
 
-	# Fix size_flags so TechSection doesn't stretch to fill remaining space
+	# Set all three deck sections to SHRINK_BEGIN so none of them
+	# stretches with an empty gap — unused space falls to the bottom of the panel.
+	var char_section: Control = char_list.get_parent()
+	var trap_section: Control = trap_list.get_parent()
+	char_section.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	trap_section.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	tech_section.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	# Guarantee a visible minimum height for the ItemLists in list mode.
+	if char_list.custom_minimum_size.y < 211:
+		char_list.custom_minimum_size = Vector2(char_list.custom_minimum_size.x, 211)
+	if trap_list.custom_minimum_size.y < 104:
+		trap_list.custom_minimum_size = Vector2(trap_list.custom_minimum_size.x, 104)
+	if tech_list.custom_minimum_size.y < 104:
+		tech_list.custom_minimum_size = Vector2(tech_list.custom_minimum_size.x, 104)
 
 	_union_section = VBoxContainer.new()
 	_union_section.add_theme_constant_override("separation", 2)
@@ -731,24 +756,23 @@ func _setup_union_section() -> void:
 	var header_row := HBoxContainer.new()
 	_union_header_label = Label.new()
 	_union_header_label.text = "Union (0 achievable)"
-	_union_header_label.add_theme_font_size_override("font_size", 13)
+	_union_header_label.add_theme_font_size_override("font_size", 18)
 	_union_header_label.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0))
 	_union_header_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header_row.add_child(_union_header_label)
 	_union_section.add_child(header_row)
 
 	var union_scroll := ScrollContainer.new()
-	union_scroll.custom_minimum_size = Vector2(0, 130)
+	union_scroll.custom_minimum_size = Vector2(0, 110)
 	union_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	union_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	union_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	union_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	union_scroll.vertical_scroll_mode   = ScrollContainer.SCROLL_MODE_DISABLED
 	_union_section.add_child(union_scroll)
 
 	_union_list = null  # no longer used
-	var union_flow := HFlowContainer.new()
-	union_flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	union_flow.add_theme_constant_override("h_separation", 3)
-	union_flow.add_theme_constant_override("v_separation", 3)
+	var union_flow := HBoxContainer.new()
+	union_flow.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	union_flow.add_theme_constant_override("separation", 3)
 	union_scroll.add_child(union_flow)
 
 	# Store the flow reference in _union_list's place (reuse var with different type note)
@@ -762,7 +786,7 @@ func _setup_union_section() -> void:
 func _rebuild_union_section() -> void:
 	if _union_section == null or current_deck == null:
 		return
-	var union_flow: HFlowContainer = _union_section.get_meta("_union_flow") as HFlowContainer
+	var union_flow: HBoxContainer = _union_section.get_meta("_union_flow") as HBoxContainer
 	if union_flow == null:
 		return
 	for ch: Node in union_flow.get_children():
@@ -807,9 +831,22 @@ func _make_union_right_tile(u: UnionData) -> Control:
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
 	tile.tooltip_text = "%s  ATK %d / DEF %d  %d◆" % [u.card_name, u.base_atk, u.base_def, u.summon_cost]
+	var lp_union := Timer.new()
+	lp_union.one_shot = true
+	lp_union.wait_time = 0.5
+	tile.add_child(lp_union)
+	lp_union.timeout.connect(func() -> void: CardDetailOverlay.open(self, u.card_name, "union"))
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed:
-			_show_preview("union", u.card_name))
+		if not (ev is InputEventMouseButton):
+			return
+		var mb := ev as InputEventMouseButton
+		if mb.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if mb.pressed:
+			lp_union.start()
+			_show_preview("union", u.card_name)
+		else:
+			lp_union.stop())
 	return tile
 
 # ── Save / Back ───────────────────────────────────────────────
@@ -995,10 +1032,15 @@ func _setup_gallery_containers() -> void:
 	left_inner.add_child(_trunk_gallery_scroll)
 	left_inner.move_child(_trunk_gallery_scroll, trunk_list.get_index())
 
-	# Deck section galleries (each replaces its ItemList sibling)
+	# Deck section galleries (each replaces its ItemList sibling).
+	# Tile size: 76×104 px, gap 3 px.
+	# Characters: 2 rows visible (2×104 + 3 = 211 px), no vertical scroll.
+	# Traps / Tech: 1 row visible (104 px), no vertical scroll.
 	var char_section: Control = char_list.get_parent()
 	_deck_chars_scroll_gal = ScrollContainer.new()
-	_deck_chars_scroll_gal.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_deck_chars_scroll_gal.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	_deck_chars_scroll_gal.custom_minimum_size = Vector2(0, 211)
+	_deck_chars_scroll_gal.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_deck_chars_flow = HFlowContainer.new()
 	_deck_chars_flow.add_theme_constant_override("h_separation", 3)
 	_deck_chars_flow.add_theme_constant_override("v_separation", 3)
@@ -1009,7 +1051,9 @@ func _setup_gallery_containers() -> void:
 
 	var trap_section: Control = trap_list.get_parent()
 	_deck_traps_scroll_gal = ScrollContainer.new()
-	_deck_traps_scroll_gal.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_deck_traps_scroll_gal.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	_deck_traps_scroll_gal.custom_minimum_size = Vector2(0, 104)
+	_deck_traps_scroll_gal.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_deck_traps_flow = HFlowContainer.new()
 	_deck_traps_flow.add_theme_constant_override("h_separation", 3)
 	_deck_traps_flow.add_theme_constant_override("v_separation", 3)
@@ -1020,7 +1064,9 @@ func _setup_gallery_containers() -> void:
 
 	var tech_section: Control = tech_list.get_parent()
 	_deck_tech_scroll_gal = ScrollContainer.new()
-	_deck_tech_scroll_gal.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_deck_tech_scroll_gal.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	_deck_tech_scroll_gal.custom_minimum_size = Vector2(0, 104)
+	_deck_tech_scroll_gal.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_deck_tech_flow = HFlowContainer.new()
 	_deck_tech_flow.add_theme_constant_override("h_separation", 3)
 	_deck_tech_flow.add_theme_constant_override("v_separation", 3)

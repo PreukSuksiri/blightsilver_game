@@ -144,6 +144,12 @@ var vn_on_lose: String = ""
 var battle_bgm_path: String = "res://assets/audio/bgm_battle_2.mp3"
 var battle_bgm_volume: float = 100.0   # percentage  (100 = 0 dB)
 
+# Battle placement/summon config — reset by new_game(), then overwritten by VNPlayer
+var battle_ai_union_enabled: bool = true
+var battle_player_union_enabled: bool = true
+var battle_player_forced_cells: Array = []  # Array[Dictionary{card_name, row, col}]
+var battle_ai_forced_cells: Array = []      # Array[Dictionary{card_name, row, col}]
+
 var divine_protection_active: Array = [false, false]
 var siege_cannon_active: Array = [false, false]
 var berserk_active: Array = [null, null]     # CardInstance or null
@@ -417,6 +423,10 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	skip_next_turn = [false, false]
 	hypnotized_cards = [[], []]
 	skip_counts = [0, 0]
+	battle_ai_union_enabled = true
+	battle_player_union_enabled = true
+	battle_player_forced_cells.clear()
+	battle_ai_forced_cells.clear()
 	_init_grids()
 	set_phase(Phase.SETUP_P1)
 

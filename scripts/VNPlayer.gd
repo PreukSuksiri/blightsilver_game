@@ -540,6 +540,13 @@ func _show_beat() -> void:
 			}
 		else:
 			GameState.campaign_enemy_config = {}
+		# Union summon + forced placement config
+		GameState.battle_ai_union_enabled     = bool(beat.get("ai_union_enabled",     true))
+		GameState.battle_player_union_enabled = bool(beat.get("player_union_enabled", true))
+		var pfc: Variant = beat.get("player_forced_cells", null)
+		GameState.battle_player_forced_cells  = pfc if pfc is Array else []
+		var afc: Variant = beat.get("ai_forced_cells", null)
+		GameState.battle_ai_forced_cells      = afc if afc is Array else []
 		CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 		return

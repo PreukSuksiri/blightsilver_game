@@ -7,10 +7,13 @@ const SAVE_PATH: String = "user://save_data.json"
 
 signal nsfw_changed(enabled: bool)
 
+signal union_mechanism_changed(unlocked: bool)
+
 var decks: Array = []          # Array of DeckData
 var active_deck_index: int = 0
 var nsfw_enabled: bool = false
 var unlocked_unions: Array = []  # union card names the player has ever summoned
+var union_mechanism_unlocked: bool = false  # true = union system visible to player
 
 func _ready() -> void:
 	load_data()
@@ -37,6 +40,13 @@ func unlock_union(union_name: String) -> void:
 
 func is_union_unlocked(union_name: String) -> bool:
 	return union_name in unlocked_unions
+
+func set_union_mechanism_unlocked(val: bool) -> void:
+	if union_mechanism_unlocked == val:
+		return
+	union_mechanism_unlocked = val
+	save_data()
+	emit_signal("union_mechanism_changed", val)
 
 # ── CRUD ─────────────────────────────────────────────────────
 func save_deck(deck: DeckData) -> void:
@@ -81,6 +91,7 @@ func save_data() -> void:
 		"campaign": CampaignManager.to_dict(),
 		"nsfw_enabled": nsfw_enabled,
 		"unlocked_unions": unlocked_unions,
+		"union_mechanism_unlocked": union_mechanism_unlocked,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -125,3 +136,4 @@ func load_data() -> void:
 	var ul: Variant = parsed.get("unlocked_unions", [])
 	if ul is Array:
 		unlocked_unions = ul
+	union_mechanism_unlocked = bool(parsed.get("union_mechanism_unlocked", false))

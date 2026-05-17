@@ -125,9 +125,12 @@ func admin_command(raw: String) -> String:
 				+ "  unlock_all_unions\n"
 				+ "  lock_union <union_name>\n"
 				+ "  lock_all_unions\n"
+				+ "  lock_union_mechanism\n"
+				+ "  unlock_union_mechanism\n"
 				+ "  card_editor\n"
 				+ "  animation_vellum_card_commence_flip\n"
-				+ "  animation_vellum_card_commence_facedown"
+				+ "  animation_vellum_card_commence_facedown\n"
+				+ "  animation_pack_opening <pack_image> | <card1> | <card2> | <card3>"
 			)
 
 		"tts":
@@ -463,6 +466,32 @@ func admin_command(raw: String) -> String:
 			SaveManager.unlocked_unions.clear()
 			SaveManager.save_data()
 			return "Locked all unions."
+
+		"lock_union_mechanism":
+			SaveManager.set_union_mechanism_unlocked(false)
+			return "Union mechanism locked — union UI hidden."
+
+		"unlock_union_mechanism":
+			SaveManager.set_union_mechanism_unlocked(true)
+			return "Union mechanism unlocked — union UI visible."
+
+		"animation_pack_opening":
+			# Syntax: animation_pack_opening <pack_image> | <card1> | <card2> | <card3>
+			var rest: String = line.substr(cmd.length()).strip_edges()
+			var segs: PackedStringArray = rest.split("|")
+			if segs.size() < 4:
+				return (
+					"Usage: animation_pack_opening <pack_image_path> | <card1> | <card2> | <card3>\n"
+					+ "  pack_image_path: res:// path (or empty to use default)\n"
+					+ "  Example: animation_pack_opening  | Aether Warden | Radar | Bunker"
+				)
+			var pack_img: String = segs[0].strip_edges()
+			var c1: String = segs[1].strip_edges()
+			var c2: String = segs[2].strip_edges()
+			var c3: String = segs[3].strip_edges()
+			var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd")
+			overlay_script.open(get_tree().root, pack_img, c1, c2, c3)
+			return "Pack opening animation started  [%s | %s | %s]" % [c1, c2, c3]
 
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd

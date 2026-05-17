@@ -248,12 +248,20 @@ func _contents_text(pack: Dictionary) -> String:
 # Purchase flow
 # ─────────────────────────────────────────────────────────────
 func _on_buy(pack_id: String) -> void:
-	var res := ShopManager.purchase_pack(pack_id)
+	var res: Variant = ShopManager.purchase_pack(pack_id)
 	if not res["success"]:
 		_show_result("Purchase Failed", [], res["error"])
 		return
+	var cards: Array = res["cards"]
+	# Show pack-opening animation when exactly 3 cards are received
+	if cards.size() == 3:
+		var n0: String = (cards[0] as Dictionary).get("name", "")
+		var n1: String = (cards[1] as Dictionary).get("name", "")
+		var n2: String = (cards[2] as Dictionary).get("name", "")
+		var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd")
+		overlay_script.open(get_tree().root, "", n0, n1, n2)
 	var pack_name: String = ShopManager.get_pack(pack_id).get("name", "Pack")
-	_show_result(pack_name, res["cards"], "")
+	_show_result(pack_name, cards, "")
 
 func _show_result(pack_name: String, cards: Array, error: String) -> void:
 	for child in result_card_list.get_children():

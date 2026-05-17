@@ -66,6 +66,7 @@ class GridCell extends Panel:
 	var on_hover_cb:   Callable = Callable()
 	var on_detail_cb:  Callable = Callable()
 	var on_bluff_cb:   Callable = Callable()
+	var locked:         bool        = false  # forced placement — cannot be moved or removed
 	var _card_tex:      TextureRect = null
 	var _emoticon_lbl:  Label       = null
 	var _flash_overlay: ColorRect   = null
@@ -102,7 +103,7 @@ class GridCell extends Panel:
 			_card_tex.texture = null
 
 	func _get_drag_data(_pos: Vector2) -> Variant:
-		if occupied_name.is_empty():
+		if occupied_name.is_empty() or locked:
 			return null
 		_drag_started = true
 		# Keep info panel updated while dragging
@@ -142,7 +143,7 @@ class GridCell extends Panel:
 			if not _drag_started and on_bluff_cb.is_valid():
 				on_bluff_cb.call(grid_row, grid_col)
 		elif mbe.button_index == MOUSE_BUTTON_RIGHT and mbe.pressed:
-			if not occupied_name.is_empty() and on_unplace_cb.is_valid():
+			if not occupied_name.is_empty() and on_unplace_cb.is_valid() and not locked:
 				on_unplace_cb.call(grid_row, grid_col)
 
 	func _notification(what: int) -> void:
@@ -157,6 +158,8 @@ var current_setup_player: int = 0
 var _chars_remaining: Array = []
 var _traps_remaining: Array = []
 var _grid_cells: Array = []          # [row][col] -> GridCell
+var _locked_cells: Array = []        # Array[Vector2i] — forced placement cells
+var _union_panel_node: Panel = null  # ref to the "POSSIBLE UNIONS" panel
 
 var _player_lbl   : Label           = null
 var _instr_lbl    : Label           = null
@@ -227,9 +230,21 @@ func start_setup(player_index: int) -> void:
 	_traps_remaining = deck.traps.duplicate()
 	GameState.tech_hands[player_index] = deck.techs.duplicate()
 	_random_btn.disabled = false
+
+	# Apply forced cell placements for this player
+	_locked_cells.clear()
+	var forced: Array = GameState.battle_player_forced_cells if player_index == 0 \
+		else GameState.battle_ai_forced_cells
+	_apply_forced_cells(forced)
+
+	# Show/hide union panel based on game-wide mechanism lock
+	if _union_panel_node != null:
+		_union_panel_node.visible = SaveManager.union_mechanism_unlocked
+
 	_refresh_gallery()
 	_stop_zone_flash()
-	_refresh_union_panel()
+	if SaveManager.union_mechanism_unlocked:
+		_refresh_union_panel()
 	_refresh_confirm()
 
 # ─────────────────────────────────────────────────────────────
@@ -501,6 +516,7 @@ func _build_gallery_panel(parent: Control) -> void:
 func _build_union_panel(parent: Control) -> void:
 	const ONE_ROW_H: float = (GAL_H + 22.0) + GAL_GAP + 38.0
 	var panel := Panel.new()
+	_union_panel_node = panel
 	panel.custom_minimum_size   = Vector2(0.0, ONE_ROW_H)
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var sb := StyleBoxFlat.new()
@@ -690,6 +706,7 @@ func _reset_grid() -> void:
 		for c in range(GRID_N):
 			var cell: GridCell = _grid_cells[r][c]
 			cell.vacate()
+			cell.locked = false
 			cell.set_emoticon("")
 			GameState.place_dead_end(current_setup_player, r, c)
 
@@ -880,6 +897,9 @@ func _on_card_dropped(r: int, c: int, data: Dictionary) -> void:
 		return
 
 	var target_cell: GridCell = _grid_cells[r][c]
+	# Cannot drop onto a locked (forced) cell
+	if target_cell.locked:
+		return
 	if not target_cell.occupied_name.is_empty():
 		_return_to_pool(target_cell.occupied_name, target_cell.occupied_type)
 
@@ -904,7 +924,7 @@ func _on_card_dropped(r: int, c: int, data: Dictionary) -> void:
 
 func _on_cell_unplace(r: int, c: int) -> void:
 	var cell: GridCell = _grid_cells[r][c]
-	if cell.occupied_name.is_empty():
+	if cell.occupied_name.is_empty() or cell.locked:
 		return
 	_return_to_pool(cell.occupied_name, cell.occupied_type)
 	cell.vacate()
@@ -918,24 +938,63 @@ func _return_to_pool(card_name: String, card_type: String) -> void:
 	else:
 		_traps_remaining.append(card_name)
 
+func _apply_forced_cells(forced_cells: Array) -> void:
+	for fc_v: Variant in forced_cells:
+		if not (fc_v is Dictionary):
+			continue
+		var fc: Dictionary = fc_v as Dictionary
+		var card_name: String = str(fc.get("card_name", ""))
+		var row: int = int(fc.get("row", 0))
+		var col: int = int(fc.get("col", 0))
+		if card_name.is_empty():
+			continue
+		# Determine card type
+		var card_type: String = ""
+		if _chars_remaining.has(card_name):
+			card_type = "character"
+		elif _traps_remaining.has(card_name):
+			card_type = "trap"
+		else:
+			continue  # card not in this player's deck — skip
+		# Skip if cell already locked or occupied
+		var target_pos := Vector2i(row, col)
+		if _locked_cells.has(target_pos):
+			continue
+		var cell: GridCell = _grid_cells[row][col]
+		if not cell.occupied_name.is_empty():
+			continue  # cell already occupied — skip
+		# Place the card
+		if card_type == "character":
+			_chars_remaining.erase(card_name)
+			GameState.place_character(current_setup_player, row, col, card_name)
+		else:
+			_traps_remaining.erase(card_name)
+			GameState.place_trap(current_setup_player, row, col, card_name)
+		cell.occupy(card_name, card_type, _load_card_tex(card_name, card_type))
+		cell.locked = true
+		_locked_cells.append(target_pos)
+
 # ─────────────────────────────────────────────────────────────
 # Random formation
 # ─────────────────────────────────────────────────────────────
 func _on_random_formation() -> void:
-	# Return all currently placed cards back to the pool and clear the grid
+	# Return all non-locked placed cards back to the pool and clear non-locked cells
 	for r in range(GRID_N):
 		for c in range(GRID_N):
 			var cell: GridCell = _grid_cells[r][c]
+			if cell.locked:
+				continue  # forced card stays
 			if not cell.occupied_name.is_empty():
 				_return_to_pool(cell.occupied_name, cell.occupied_type)
 				cell.vacate()
 			GameState.place_dead_end(current_setup_player, r, c)
 
-	# Build a shuffled list of all 25 positions
+	# Build a shuffled list of non-locked positions
 	var positions: Array = []
 	for r in range(GRID_N):
 		for c in range(GRID_N):
-			positions.append(Vector2i(r, c))
+			if not (_grid_cells[r][c] as GridCell).locked:
+				positions.append(Vector2i(r, c))
 	positions.shuffle()
 
 	# Place all characters first, then traps, into random positions

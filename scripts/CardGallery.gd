@@ -56,6 +56,9 @@ func _ready() -> void:
 	_build_filter_bar()
 	_build_adv_gallery_filters()
 	_build_all_cards()
+	# Apply initial union mechanism visibility and subscribe to changes
+	_on_union_mechanism_changed(SaveManager.union_mechanism_unlocked)
+	SaveManager.union_mechanism_changed.connect(_on_union_mechanism_changed)
 
 # ─────────────────────────────────────────────────────────────
 # Filter bar
@@ -107,6 +110,10 @@ func _apply_filter() -> void:
 
 	for entry: Dictionary in _tiles:
 		if not is_instance_valid(entry["node"]):
+			continue
+		# Hide union tiles entirely when mechanism is locked
+		if entry["card_type"] == "union" and not SaveManager.union_mechanism_unlocked:
+			entry["node"].visible = false
 			continue
 		var show: bool = _active_filter == "all" or entry["card_type"] == _active_filter
 		if show and _search_text != "":
@@ -318,6 +325,15 @@ func _load_full_card_tex(card_name: String, card_type: String) -> Texture2D:
 # ─────────────────────────────────────────────────────────────
 func _on_collection_changed() -> void:
 	_build_all_cards()
+	_on_union_mechanism_changed(SaveManager.union_mechanism_unlocked)
+
+func _on_union_mechanism_changed(unlocked: bool) -> void:
+	if _filter_btns.has("union"):
+		_filter_btns["union"].visible = unlocked
+	if not unlocked and _active_filter == "union":
+		_set_filter("all")
+		return
+	_apply_filter()
 
 # ─────────────────────────────────────────────────────────────
 # Close

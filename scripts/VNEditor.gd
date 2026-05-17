@@ -104,6 +104,8 @@ var _f_on_win: LineEdit = null
 var _f_on_lose: LineEdit = null
 var _f_nsfw: OptionButton = null
 var _f_animation: OptionButton = null
+var _f_ai_union_enabled: CheckBox = null
+var _f_player_union_enabled: CheckBox = null
 
 # Enemy deck builder (for start_battle beats)
 var _enemy_deck_chars: Array = []
@@ -112,6 +114,12 @@ var _enemy_deck_tech: Array = []
 var _enemy_chars_chips: HBoxContainer = null
 var _enemy_traps_chips: HBoxContainer = null
 var _enemy_tech_chips: HBoxContainer = null
+
+# Forced cell placements
+var _player_forced_rows: Array = []  # Array[Dictionary{row_node, card_le, row_sb, col_sb}]
+var _ai_forced_rows: Array = []
+var _player_forced_vbox: VBoxContainer = null
+var _ai_forced_vbox: VBoxContainer = null
 
 # Battle reward rows
 var _battle_reward_rows: Array = []
@@ -590,6 +598,40 @@ func _build_fields() -> void:
 	_enemy_traps_chips = _build_enemy_deck_row(v, "Traps", "trap")
 	_enemy_tech_chips  = _build_enemy_deck_row(v, "Tech", "tech")
 
+	# ── Union Summon Flags ────────────────────────────────────
+	_section(v, "UNION SUMMON")
+	_f_ai_union_enabled = _row_cb(v, "AI Can Union Summon",
+		"Uncheck to prevent AI from union summoning this battle")
+	_f_ai_union_enabled.button_pressed = true
+	_f_player_union_enabled = _row_cb(v, "Player Can Union Summon",
+		"Uncheck to prevent the player from union summoning this battle")
+	_f_player_union_enabled.button_pressed = true
+
+	# ── Forced Cell Placements ────────────────────────────────
+	_section(v, "PLAYER FORCED CELLS  (placed at setup, cannot be moved)")
+	_player_forced_vbox = VBoxContainer.new()
+	_player_forced_vbox.add_theme_constant_override("separation", 3)
+	v.add_child(_player_forced_vbox)
+	var add_pfc_btn := Button.new()
+	add_pfc_btn.text = "+ Add Player Forced Cell"
+	add_pfc_btn.add_theme_font_size_override("font_size", 13)
+	add_pfc_btn.pressed.connect(func() -> void:
+		_add_forced_cell_row(_player_forced_vbox, _player_forced_rows)
+		_on_field_changed())
+	v.add_child(add_pfc_btn)
+
+	_section(v, "AI FORCED CELLS  (placed at setup, AI cannot touch)")
+	_ai_forced_vbox = VBoxContainer.new()
+	_ai_forced_vbox.add_theme_constant_override("separation", 3)
+	v.add_child(_ai_forced_vbox)
+	var add_afc_btn := Button.new()
+	add_afc_btn.text = "+ Add AI Forced Cell"
+	add_afc_btn.add_theme_font_size_override("font_size", 13)
+	add_afc_btn.pressed.connect(func() -> void:
+		_add_forced_cell_row(_ai_forced_vbox, _ai_forced_rows)
+		_on_field_changed())
+	v.add_child(add_afc_btn)
+
 	# ── Battle Reward ─────────────────────────────────────────
 	_section(v, "BATTLE REWARD  (on win)")
 	var rwd_hint := Label.new()
@@ -641,6 +683,8 @@ func _connect_static_signals() -> void:
 	_f_nsfw.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_animation.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_start_battle.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_ai_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_player_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_player1_name.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_player2_name.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_portrait_p1.text_changed.connect(func(_s: String) -> void: ch.call())
@@ -1158,6 +1202,18 @@ func _populate_fields() -> void:
 	_rebuild_enemy_chips("trap", _enemy_traps_chips)
 	_rebuild_enemy_chips("tech", _enemy_tech_chips)
 
+	# Union flags
+	_f_ai_union_enabled.button_pressed     = bool(b.get("ai_union_enabled",     true))
+	_f_player_union_enabled.button_pressed = bool(b.get("player_union_enabled", true))
+
+	# Forced cells
+	var pfc_raw: Variant = b.get("player_forced_cells", [])
+	_rebuild_forced_cell_rows(_player_forced_vbox, _player_forced_rows,
+		pfc_raw if pfc_raw is Array else [])
+	var afc_raw: Variant = b.get("ai_forced_cells", [])
+	_rebuild_forced_cell_rows(_ai_forced_vbox, _ai_forced_rows,
+		afc_raw if afc_raw is Array else [])
+
 	# Battle reward
 	var rwd_raw: Variant = b.get("battle_reward", [])
 	_rebuild_reward_rows(rwd_raw if rwd_raw is Array else [])
@@ -1367,6 +1423,20 @@ func _collect_beat() -> Dictionary:
 			"traps":      _enemy_deck_traps.duplicate(),
 			"tech":       _enemy_deck_tech.duplicate(),
 		}
+
+	# Union flags (only write if non-default to keep JSON clean)
+	if not _f_ai_union_enabled.button_pressed:
+		b["ai_union_enabled"] = false
+	if not _f_player_union_enabled.button_pressed:
+		b["player_union_enabled"] = false
+
+	# Forced cells
+	var pfc: Array = _collect_forced_cells(_player_forced_rows)
+	if not pfc.is_empty():
+		b["player_forced_cells"] = pfc
+	var afc: Array = _collect_forced_cells(_ai_forced_rows)
+	if not afc.is_empty():
+		b["ai_forced_cells"] = afc
 
 	# Battle reward
 	var rewards: Array = []
@@ -1759,6 +1829,79 @@ func _rebuild_enemy_chips(card_type: String, chips: HBoxContainer) -> void:
 			_on_field_changed()
 		)
 		chips.add_child(btn)
+
+# ─────────────────────────────────────────────────────────────
+# Forced cell row helpers
+# ─────────────────────────────────────────────────────────────
+func _add_forced_cell_row(vbox: VBoxContainer, rows_arr: Array, init: Dictionary = {}) -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	vbox.add_child(row)
+
+	var card_le := LineEdit.new()
+	card_le.placeholder_text = "Card name"
+	card_le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	card_le.add_theme_font_size_override("font_size", 14)
+	card_le.text = str(init.get("card_name", ""))
+	row.add_child(card_le)
+
+	var row_lbl := Label.new()
+	row_lbl.text = "R"
+	row_lbl.add_theme_font_size_override("font_size", 14)
+	row_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	row.add_child(row_lbl)
+	var row_sb := SpinBox.new()
+	row_sb.min_value = 0; row_sb.max_value = 4; row_sb.step = 1
+	row_sb.value = float(init.get("row", 0))
+	row_sb.custom_minimum_size = Vector2(65, 0)
+	row.add_child(row_sb)
+
+	var col_lbl := Label.new()
+	col_lbl.text = "C"
+	col_lbl.add_theme_font_size_override("font_size", 14)
+	col_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	row.add_child(col_lbl)
+	var col_sb := SpinBox.new()
+	col_sb.min_value = 0; col_sb.max_value = 4; col_sb.step = 1
+	col_sb.value = float(init.get("col", 0))
+	col_sb.custom_minimum_size = Vector2(65, 0)
+	row.add_child(col_sb)
+
+	var entry: Dictionary = {"row_node": row, "card_le": card_le, "row_sb": row_sb, "col_sb": col_sb}
+	var remove_btn := Button.new()
+	remove_btn.text = "✕"
+	remove_btn.add_theme_font_size_override("font_size", 13)
+	remove_btn.pressed.connect(func() -> void:
+		rows_arr.erase(entry)
+		row.queue_free()
+		_on_field_changed())
+	row.add_child(remove_btn)
+	rows_arr.append(entry)
+
+	card_le.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+	row_sb.value_changed.connect(func(_v: float) -> void: _on_field_changed())
+	col_sb.value_changed.connect(func(_v: float) -> void: _on_field_changed())
+
+func _collect_forced_cells(rows_arr: Array) -> Array:
+	var result: Array = []
+	for entry: Dictionary in rows_arr:
+		var cname: String = (entry["card_le"] as LineEdit).text.strip_edges()
+		if cname.is_empty():
+			continue
+		result.append({
+			"card_name": cname,
+			"row": int((entry["row_sb"] as SpinBox).value),
+			"col": int((entry["col_sb"] as SpinBox).value),
+		})
+	return result
+
+func _rebuild_forced_cell_rows(vbox: VBoxContainer, rows_arr: Array, data: Array) -> void:
+	for child in vbox.get_children():
+		child.queue_free()
+	rows_arr.clear()
+	for fc: Variant in data:
+		if fc is Dictionary:
+			_add_forced_cell_row(vbox, rows_arr, fc as Dictionary)
 
 # ─────────────────────────────────────────────────────────────
 # Battle reward row helpers

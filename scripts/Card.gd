@@ -494,7 +494,13 @@ func _show_union_face_up() -> void:
 	var u: UnionData = UnionDatabase.get_union(card_data.card_name)
 	if u:
 		ability_label.text = u.ability_description
-		_load_artwork(u.artwork_path, card_data.card_name, "unions")
+		var _snake: String = card_data.card_name.to_lower() \
+			.replace(" ", "_").replace("'", "").replace("-", "_")
+		var _full_path: String = "res://assets/textures/cards/full_cards/union_" + _snake + ".png"
+		if ResourceLoader.exists(_full_path):
+			_load_artwork(_full_path, card_data.card_name, "unions")
+		else:
+			_load_artwork(u.artwork_path, card_data.card_name, "unions")
 	else:
 		ability_label.text = ""
 		_clear_art()

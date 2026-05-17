@@ -33,6 +33,7 @@ extends Resource
 @export var ability_description: String = ""
 @export var partial_ability_description: String = ""
 @export var formula_description: String = ""
+@export var partial_formula_description: String = ""
 @export var artwork_path: String = ""
 
 ## Zone cell offsets from anchor (row, col).

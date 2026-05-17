@@ -139,6 +139,13 @@ var _handoff_crystals_lbl: Label = null
 var _handoff_ready_btn: Button = null
 var _handoff_callback: Callable = Callable()
 
+# ── Bribe choice overlay (built at runtime)
+var _bribe_overlay: Control = null
+var _bribe_desc_lbl: Label = null
+
+# ── Tech-resolution input blocker (invisible, shown while effect animates)
+var _tech_resolve_blocker: ColorRect = null
+
 enum SelectionState { NONE, SELECTING_ATTACKER, SELECTING_TARGET, CONFIRMING_ATTACK, SELECTING_TECH_TARGET, AWAITING_TRAP_CHOICE, SELECTING_UNION_MATERIALS }
 var selection_state: SelectionState = SelectionState.NONE
 var selected_attacker_pos: Vector2i = Vector2i(-1, -1)
@@ -236,6 +243,8 @@ func _ready() -> void:
 	_build_grids()
 	_setup_buttons()
 	_build_handoff_overlay()
+	_build_bribe_overlay()
+	_build_tech_resolve_blocker()
 	_build_portraits()
 	_build_hover_panel()
 	_build_tech_stacks()
@@ -249,6 +258,7 @@ func _ready() -> void:
 	_build_turn_number_label()
 	_build_options_button()
 	_build_union_suggest_button()
+	SaveManager.union_mechanism_changed.connect(func(_u: bool) -> void: _update_union_suggest_button())
 	game_over_panel.visible = false
 	mode_panel.visible = false
 	action_panel.visible = false
@@ -279,6 +289,7 @@ func _setup_ai() -> void:
 	ai_player.ai_attack_chosen.connect(_on_ai_attack_chosen)
 	ai_player.ai_tech_chosen.connect(_on_ai_tech_chosen)
 	ai_player.ai_end_turn.connect(func() -> void: turn_manager.end_attacks_early())
+	ai_player.ai_union_chosen.connect(_on_ai_union_chosen)
 
 	# Watchdog timer — fires if bot goes idle for 5 s between decide_turn() and its first signal
 	_ai_watchdog = Timer.new()
@@ -291,8 +302,29 @@ func _setup_ai() -> void:
 	ai_player.ai_mode_chosen.connect(func(_m: GameState.TurnMode) -> void: _ai_watchdog.start())
 	ai_player.ai_attack_chosen.connect(func(_a: Vector2i, _t: Vector2i) -> void: _ai_watchdog.start())
 	ai_player.ai_tech_chosen.connect(func(_n: String) -> void: _ai_watchdog.start())
+	ai_player.ai_union_chosen.connect(func(_n: String, _z: Array, _m: Array) -> void: _ai_watchdog.start())
 	# Turn fully done → stop watchdog
 	ai_player.ai_end_turn.connect(func() -> void: _ai_watchdog.stop())
+
+func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: Array) -> void:
+	if _union_summoned_this_duel[AIPlayer.AI_PLAYER]:
+		await get_tree().create_timer(0.3).timeout
+		ai_player.continue_after_union()
+		return
+	var u: UnionData = UnionDatabase.get_union(union_name)
+	if u == null or material_cells.is_empty() or GameState.crystals[AIPlayer.AI_PLAYER] < u.summon_cost:
+		await get_tree().create_timer(0.3).timeout
+		ai_player.continue_after_union()
+		return
+	_pending_union_player = AIPlayer.AI_PLAYER
+	_pending_union_data = u
+	_pending_union_zone_cells = zone_cells.duplicate()
+	_pending_union_conditions_remaining = []
+	_pending_union_selected_materials = material_cells.duplicate()
+	await _play_union_zone_preview(AIPlayer.AI_PLAYER, zone_cells)
+	_perform_pending_union()
+	await get_tree().create_timer(0.8).timeout
+	ai_player.continue_after_union()
 
 func _on_ai_watchdog_timeout() -> void:
 	var msg: String = "[AI WATCHDOG] Bot Player went idle for 5 s — no decision emitted."
@@ -523,6 +555,144 @@ func _build_handoff_overlay() -> void:
 	_handoff_ready_btn.add_theme_color_override("font_color", Color(0.72, 0.9, 1.0, 1.0))
 	_handoff_ready_btn.pressed.connect(_on_handoff_ready)
 	vbox.add_child(_handoff_ready_btn)
+
+func _build_bribe_overlay() -> void:
+	_bribe_overlay = Control.new()
+	_bribe_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_bribe_overlay.visible = false
+	_bribe_overlay.z_index = 6   # above handoff overlay
+	add_child(_bribe_overlay)
+
+	var bg := ColorRect.new()
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.color = Color(0.0, 0.0, 0.0, 0.80)
+	bg.mouse_filter = Control.MOUSE_FILTER_STOP   # block all clicks behind
+	_bribe_overlay.add_child(bg)
+
+	var panel := Panel.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.offset_left   = -260.0
+	panel.offset_top    = -160.0
+	panel.offset_right  =  260.0
+	panel.offset_bottom =  160.0
+	var sb := StyleBoxFlat.new()
+	sb.bg_color    = Color(0.03, 0.07, 0.15, 1.0)
+	sb.border_width_left   = 2
+	sb.border_width_top    = 2
+	sb.border_width_right  = 2
+	sb.border_width_bottom = 2
+	sb.border_color = Color(1.0, 0.75, 0.2, 0.7)   # gold
+	sb.corner_radius_top_left     = 10
+	sb.corner_radius_top_right    = 10
+	sb.corner_radius_bottom_right = 10
+	sb.corner_radius_bottom_left  = 10
+	panel.add_theme_stylebox_override("panel", sb)
+	_bribe_overlay.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vbox.offset_left   =  24.0
+	vbox.offset_top    =  20.0
+	vbox.offset_right  = -24.0
+	vbox.offset_bottom = -20.0
+	vbox.add_theme_constant_override("separation", 14)
+	panel.add_child(vbox)
+
+	var title_lbl := Label.new()
+	title_lbl.text = "BRIBE"
+	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title_lbl.add_theme_font_size_override("font_size", 22)
+	title_lbl.add_theme_color_override("font_color", Color(1.0, 0.80, 0.2, 1.0))
+	vbox.add_child(title_lbl)
+
+	_bribe_desc_lbl = Label.new()
+	_bribe_desc_lbl.text = ""
+	_bribe_desc_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_bribe_desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
+	_bribe_desc_lbl.add_theme_font_size_override("font_size", 15)
+	_bribe_desc_lbl.add_theme_color_override("font_color", Color(0.82, 0.90, 1.0, 0.90))
+	vbox.add_child(_bribe_desc_lbl)
+
+	var spacer := Control.new()
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(spacer)
+
+	var hbox := HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 12)
+	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_child(hbox)
+
+	# "Reveal" button
+	var reveal_btn := Button.new()
+	reveal_btn.text = "Reveal a Character  (+700 💎)"
+	reveal_btn.custom_minimum_size = Vector2(220.0, 48.0)
+	reveal_btn.add_theme_font_size_override("font_size", 14)
+	var rn := StyleBoxFlat.new()
+	rn.bg_color    = Color(0.12, 0.26, 0.08, 1.0)
+	rn.border_width_left = 2; rn.border_width_top = 2; rn.border_width_right = 2; rn.border_width_bottom = 2
+	rn.border_color = Color(0.3, 0.9, 0.3, 0.8)
+	rn.corner_radius_top_left = 6; rn.corner_radius_top_right = 6; rn.corner_radius_bottom_right = 6; rn.corner_radius_bottom_left = 6
+	var rh := rn.duplicate() as StyleBoxFlat
+	rh.bg_color = Color(0.18, 0.38, 0.12, 1.0)
+	rh.border_color = Color(0.4, 1.0, 0.4, 1.0)
+	reveal_btn.add_theme_stylebox_override("normal",  rn)
+	reveal_btn.add_theme_stylebox_override("hover",   rh)
+	reveal_btn.add_theme_stylebox_override("pressed", rn)
+	reveal_btn.add_theme_stylebox_override("focus",   rn)
+	reveal_btn.add_theme_color_override("font_color", Color(0.7, 1.0, 0.7, 1.0))
+	reveal_btn.pressed.connect(_on_bribe_reveal_pressed)
+	hbox.add_child(reveal_btn)
+
+	# "Pass" button
+	var pass_btn := Button.new()
+	pass_btn.text = "Pass"
+	pass_btn.custom_minimum_size = Vector2(120.0, 48.0)
+	pass_btn.add_theme_font_size_override("font_size", 14)
+	var pn := StyleBoxFlat.new()
+	pn.bg_color    = Color(0.06, 0.10, 0.22, 1.0)
+	pn.border_width_left = 2; pn.border_width_top = 2; pn.border_width_right = 2; pn.border_width_bottom = 2
+	pn.border_color = Color(0.38, 0.50, 0.75, 0.6)
+	pn.corner_radius_top_left = 6; pn.corner_radius_top_right = 6; pn.corner_radius_bottom_right = 6; pn.corner_radius_bottom_left = 6
+	var ph := pn.duplicate() as StyleBoxFlat
+	ph.bg_color = Color(0.10, 0.16, 0.34, 1.0)
+	ph.border_color = Color(0.55, 0.70, 1.0, 1.0)
+	pass_btn.add_theme_stylebox_override("normal",  pn)
+	pass_btn.add_theme_stylebox_override("hover",   ph)
+	pass_btn.add_theme_stylebox_override("pressed", pn)
+	pass_btn.add_theme_stylebox_override("focus",   pn)
+	pass_btn.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0, 1.0))
+	pass_btn.pressed.connect(_on_bribe_pass_pressed)
+	hbox.add_child(pass_btn)
+
+func _show_bribe_overlay(opponent: int) -> void:
+	_bribe_desc_lbl.text = "Player %d: Reveal one of your characters to gain 700 Crystals, or pass." % (opponent + 1)
+	_bribe_overlay.visible = true
+
+func _hide_bribe_overlay() -> void:
+	_bribe_overlay.visible = false
+
+func _on_bribe_reveal_pressed() -> void:
+	_hide_bribe_overlay()
+	pending_tech_filter = "bribe_reveal"
+	action_label.text = "Select one of your characters to reveal."
+	action_panel.visible = true
+	_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
+	_show_guide("Select one of your characters to reveal.")
+	_highlight_tech_targets("bribe_reveal")
+
+func _on_bribe_pass_pressed() -> void:
+	_hide_bribe_overlay()
+	GameState.post_message("Bribe: Opponent passed.")
+	_finish_tech_action(GameState.current_player)
+
+func _build_tech_resolve_blocker() -> void:
+	_tech_resolve_blocker = ColorRect.new()
+	_tech_resolve_blocker.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_tech_resolve_blocker.color = Color(0.0, 0.0, 0.0, 0.0)   # fully transparent
+	_tech_resolve_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	_tech_resolve_blocker.visible = false
+	_tech_resolve_blocker.z_index = 4   # above game field, below overlays
+	add_child(_tech_resolve_blocker)
 
 func _build_portraits() -> void:
 	# Scale each portrait to fill the full screen height at its natural aspect ratio,
@@ -761,6 +931,21 @@ func _on_setup_complete_p2() -> void:
 	_begin_game()
 
 func _do_ai_setup() -> void:
+	# Apply AI forced cells before decide_setup so AIPlayer can avoid those positions
+	for fc_v: Variant in GameState.battle_ai_forced_cells:
+		if not (fc_v is Dictionary):
+			continue
+		var fc: Dictionary = fc_v as Dictionary
+		var fc_name: String = str(fc.get("card_name", ""))
+		var fc_row: int = int(fc.get("row", 0))
+		var fc_col: int = int(fc.get("col", 0))
+		if fc_name.is_empty():
+			continue
+		if CardDatabase.get_character(fc_name) != null:
+			GameState.place_character(1, fc_row, fc_col, fc_name)
+		elif CardDatabase.get_trap(fc_name) != null:
+			GameState.place_trap(1, fc_row, fc_col, fc_name)
+
 	var placements := ai_player.decide_setup()
 	for placement in placements:
 		var pos: Vector2i = placement["pos"]
@@ -1643,7 +1828,8 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	var can_bluff: bool = (ctx_player == current_player)
 	var _union_phase_ok: bool = GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]
 	var _available_unions: Array = []
-	if ctx_player == current_player and card.card_type == "character" and _union_phase_ok:
+	if ctx_player == current_player and card.card_type == "character" and _union_phase_ok \
+			and SaveManager.union_mechanism_unlocked:
 		for _entry: Dictionary in UnionDatabase.find_available_unions(ctx_player, row, col):
 			var _u: UnionData = _entry["union"]
 			for _cond: Dictionary in _u.material_conditions:
@@ -2537,6 +2723,8 @@ func _build_union_suggest_button() -> void:
 func _collect_all_available_unions(player: int) -> Array:
 	if _union_summoned_this_duel[player]:
 		return []
+	if player == 0 and not GameState.battle_player_union_enabled:
+		return []
 	var seen: Dictionary = {}
 	var results: Array   = []
 	for r: int in range(GameState.GRID_SIZE):
@@ -2557,8 +2745,25 @@ func _collect_all_available_unions(player: int) -> Array:
 func _update_union_suggest_button() -> void:
 	if _union_suggest_btn == null:
 		return
+	# Hide entirely if union mechanism is locked for this save file
+	if not SaveManager.union_mechanism_unlocked:
+		_union_suggest_btn.visible  = false
+		_union_suggest_glow.visible = false
+		if _union_suggest_tween != null and _union_suggest_tween.is_valid():
+			_union_suggest_tween.kill()
+		_union_suggest_tween = null
+		return
+	# Never show the button during the AI's turn
+	if _is_ai_turn():
+		_union_suggest_btn.visible  = false
+		_union_suggest_glow.visible = false
+		if _union_suggest_tween != null and _union_suggest_tween.is_valid():
+			_union_suggest_tween.kill()
+		_union_suggest_tween = null
+		return
 	var phase: GameState.Phase = GameState.current_phase
-	var active: bool = phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]
+	var active: bool = phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK] \
+		and selection_state != SelectionState.SELECTING_UNION_MATERIALS
 	if not active:
 		_union_suggest_btn.visible  = false
 		_union_suggest_glow.visible = false
@@ -2580,6 +2785,8 @@ func _update_union_suggest_button() -> void:
 		_union_suggest_tween = null
 
 func _on_union_suggest_pressed() -> void:
+	if selection_state == SelectionState.SELECTING_UNION_MATERIALS:
+		return  # already in material selection — ignore duplicate tap
 	var available: Array = _collect_all_available_unions(GameState.current_player)
 	if available.is_empty():
 		return
@@ -3500,7 +3707,11 @@ func _refresh_tech_hand() -> void:
 	cancel.add_theme_font_size_override("font_size", 13)
 	cancel.pressed.connect(func() -> void:
 		_dismiss_tech_hand_overlay()
-		if GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]:
+		# Block cancel while mid-way through a multi-reveal sequence (e.g. Radar)
+		var mid_reveal := selection_state == SelectionState.SELECTING_TECH_TARGET \
+				and _tech_reveals_total > 1 \
+				and _tech_reveals_remaining < _tech_reveals_total
+		if not mid_reveal and GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]:
 			_set_selection_state(SelectionState.SELECTING_ATTACKER)
 			_highlight_attackable_chars())
 	title_row.add_child(cancel)
@@ -3554,6 +3765,12 @@ func _refresh_tech_hand() -> void:
 		var tech_name: String = str(hand[i])
 		var data: TechCardData = CardDatabase.get_tech(tech_name)
 		var can_use := data != null and crystals >= data.crystal_cost
+		# Reveal-type cards need at least 1 unrevealed opponent card to be usable
+		if can_use and data != null and data.effect_type in [
+				TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE,
+				TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE_CHAIN,
+				TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE_RISKY]:
+			can_use = _count_opponent_unrevealed(GameState.get_opponent(player)) > 0
 
 		var col := VBoxContainer.new()
 		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -3824,17 +4041,18 @@ func _enter_mode_select() -> void:
 func _on_phase_changed(phase: GameState.Phase) -> void:
 	_refresh_all_grids()
 	_update_turn_info()
-	_update_tech_stacks()
-	_update_void_stacks()
-	_update_crystal_visibility()
-	_update_reveal_buttons()
-	_update_union_suggest_button()
+	# Reset tech-used flag BEFORE updating stacks so the visual reflects the new state
 	if phase == GameState.Phase.MODE_SELECT:
 		# Only reset at the start of a genuinely new turn, not on mid-turn
 		# MODE_SELECT re-entries that happen after each attack completes.
 		if GameState.turn_number != _tech_reset_turn:
 			_tech_reset_turn = GameState.turn_number
 			_tech_used_this_turn[GameState.current_player] = false
+	_update_tech_stacks()
+	_update_void_stacks()
+	_update_crystal_visibility()
+	_update_reveal_buttons()
+	_update_union_suggest_button()
 	if _tech_overlay_panel != null and _tech_overlay_panel.visible:
 		_rebuild_tech_overlay_content(_tech_overlay_player)
 	match phase:
@@ -3915,18 +4133,23 @@ func _on_tech_played(player: int, _tech_name: String) -> void:
 	_tech_used_this_turn[player] = true
 	_update_tech_stacks()
 	_refresh_all_grids()
+	if _tech_resolve_blocker != null:
+		_tech_resolve_blocker.visible = true
 
 func _on_tech_resolved(_player: int) -> void:
 	# Tech played during MODE_SELECT — stay in turn, re-enable attacking
+	if _tech_resolve_blocker != null:
+		_tech_resolve_blocker.visible = false
 	action_panel.visible = false
 	mode_panel.visible = false
 	end_attack_btn.visible = false
 	_clear_selection()
 	_refresh_all_grids()
 	if _is_ai_turn():
+		# Go straight to attack — do NOT call decide_turn() again (would replay tech check)
 		await get_tree().create_timer(0.4).timeout
 		_ai_watchdog.start()
-		ai_player.decide_turn()
+		ai_player.continue_after_union()
 	else:
 		if _end_turn_btn:
 			_end_turn_btn.visible = true
@@ -4116,6 +4339,21 @@ func _cancel_confirm_attack() -> void:
 # Tech Target Handling
 # ─────────────────────────────────────────────────────────────
 func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
+	# Unblock input — player now needs to interact with the field or overlay
+	if _tech_resolve_blocker != null:
+		_tech_resolve_blocker.visible = false
+	# Bribe: show a non-dismissable choice overlay instead of grid selection
+	if filter == "bribe":
+		var opponent := GameState.get_opponent(GameState.current_player)
+		# In VS AI, if the AI is the opponent, auto-pass
+		if GameState.game_mode == GameState.GameMode.VS_AI and opponent == 1:
+			await get_tree().create_timer(0.5).timeout
+			GameState.post_message("Bribe: AI passed.")
+			_finish_tech_action(GameState.current_player)
+		else:
+			_show_bribe_overlay(opponent)
+		return
+
 	action_label.text = prompt
 	action_panel.visible = true
 	pending_tech_filter = filter
@@ -4157,17 +4395,34 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if "opponent_squares" in pending_tech_filter:
 		if player == opponent:
+			# Ignore already-revealed or dead-end cells — not valid targets
+			if card.card_type == "dead_end" or card.face_up:
+				return
 			GameState.reveal_card(player, pos.x, pos.y)
 			_tech_reveals_remaining -= 1
 			if _tech_reveals_remaining <= 0:
 				_finish_tech_action(current_player)
 			else:
+				# Auto-resolve if no unrevealed cards remain on opponent's field
+				if _count_opponent_unrevealed(opponent) == 0:
+					_finish_tech_action(current_player)
+					return
 				var next_idx: int = _tech_reveals_total - _tech_reveals_remaining + 1
 				_show_guide("Select %s card to reveal" % _ordinal(next_idx))
+				_highlight_tech_targets(pending_tech_filter)
 				if _is_ai_turn():
 					await get_tree().create_timer(0.4).timeout
 					var ai_target := ai_player.decide_target(pending_tech_filter)
 					_handle_tech_target(opponent, ai_target)
+		return
+
+	if pending_tech_filter == "bribe_reveal":
+		var bribe_opponent := GameState.get_opponent(current_player)
+		if player == bribe_opponent and card.card_type == "character":
+			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.gain_crystals(player, 700)
+			GameState.post_message("Bribe: Player %d revealed %s and received 700 Crystals." % [player + 1, card.card_name])
+			_finish_tech_action(current_player)
 		return
 
 	if pending_tech_filter == "own_faceup_character" or pending_tech_filter == "own_faceup_character_berserk":
@@ -4288,7 +4543,9 @@ func _highlight_tech_targets(filter: String) -> void:
 	if "opponent_squares" in filter:
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
-				grid_nodes[opponent][r][c].set_highlighted(true)
+				var opp_card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(
+					opp_card.card_type != "dead_end" and not opp_card.face_up)
 
 	elif "own_faceup_character" in filter or "own_bio_character" in filter:
 		for r in range(GameState.GRID_SIZE):
@@ -4305,6 +4562,22 @@ func _highlight_tech_targets(filter: String) -> void:
 				for c in range(GameState.GRID_SIZE):
 					var card: GameState.CardInstance = GameState.get_card(p, r, c)
 					grid_nodes[p][r][c].set_highlighted(card.face_up and card.card_type != "dead_end")
+
+	elif filter == "bribe_reveal":
+		# Highlight all character cells belonging to the opponent (the one choosing to reveal)
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(card.card_type == "character")
+
+func _count_opponent_unrevealed(opponent: int) -> int:
+	var count: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var opp_card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+			if opp_card.card_type != "dead_end" and not opp_card.face_up:
+				count += 1
+	return count
 
 func _clear_highlights() -> void:
 	for p in range(2):

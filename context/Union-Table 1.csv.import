@@ -6,7 +6,10 @@ uid="uid://tu4a7taljjqp"
 
 [deps]
 
+files=["res://context/Union-Table 1.Card Type.translation", "res://context/Union-Table 1.en.translation", "res://context/Union-Table 1.ATK.translation", "res://context/Union-Table 1.DEF.translation", "res://context/Union-Table 1.Affinity.translation", "res://context/Union-Table 1.en.translation", "res://context/Union-Table 1.Partial Ability.translation", "res://context/Union-Table 1.Full Ability.translation", "res://context/Union-Table 1.Partial Formula.translation", "res://context/Union-Table 1.Full Formula.translation", "res://context/Union-Table 1.Union Zone.translation", "res://context/Union-Table 1.en.translation"]
+
 source_file="res://context/Union-Table 1.csv"
+dest_files=["res://context/Union-Table 1.Card Type.translation", "res://context/Union-Table 1.en.translation", "res://context/Union-Table 1.ATK.translation", "res://context/Union-Table 1.DEF.translation", "res://context/Union-Table 1.Affinity.translation", "res://context/Union-Table 1.en.translation", "res://context/Union-Table 1.Partial Ability.translation", "res://context/Union-Table 1.Full Ability.translation", "res://context/Union-Table 1.Partial Formula.translation", "res://context/Union-Table 1.Full Formula.translation", "res://context/Union-Table 1.Union Zone.translation", "res://context/Union-Table 1.en.translation"]
 
 [params]
 

@@ -45,6 +45,7 @@ var _union_info_panel: ColorRect   # combined zone+formula strip (union only)
 var _zone_cells:       Array       # Array[ColorRect], row-major (row*5+col)
 var _mat_formula_lbl:  Label
 var _card_inst: Variant = null  # GameState.CardInstance or null
+var _force_unlocked: bool = false  # true when viewing a union placed on the board
 
 var _info_y: float
 var _info_h: float
@@ -374,6 +375,12 @@ const TYPE_COLOR_UNION     := Color(0.25, 0.90, 1.00, 1.0)   # cyan
 func _populate(card_name: String, card_type: String) -> void:
 	match card_type:
 		"character":
+			# A union card placed on the board has card_type="character" with is_union=true.
+			# Redirect to union rendering and treat it as unlocked for both players.
+			if _card_inst != null and _card_inst.is_union:
+				_force_unlocked = true
+				_populate(card_name, "union")
+				return
 			var data: CharacterData = CardDatabase.get_character(card_name)
 			if not data:
 				return
@@ -472,7 +479,7 @@ func _populate(card_name: String, card_type: String) -> void:
 			var u: UnionData = UnionDatabase.get_union(card_name)
 			if not u:
 				return
-			var is_unlocked: bool = SaveManager.is_union_unlocked(card_name)
+			var is_unlocked: bool = _force_unlocked or SaveManager.is_union_unlocked(card_name)
 			var aff_name: String = CharacterData.Affinity.keys()[int(u.affinity)].capitalize()
 			var shown_desc: String = u.ability_description if is_unlocked else u.partial_ability_description
 			_type.text = "UNION" + ("" if is_unlocked else "  🔒")
@@ -489,7 +496,16 @@ func _populate(card_name: String, card_type: String) -> void:
 			_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
 			_mod_label.visible      = false
 			_cost_mod_label.visible = false
-			_load_art(CardDatabase.find_artwork(card_name, "unions", SaveManager.nsfw_enabled))
+			# Art: locked vs unlocked version in full_cards/
+			var _snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
+			var _art_path: String
+			if is_unlocked:
+				_art_path = "res://assets/textures/cards/full_cards/union_" + _snake + ".png"
+			else:
+				_art_path = "res://assets/textures/cards/full_cards/union_" + _snake + "_locked.png"
+			if not ResourceLoader.exists(_art_path):
+				_art_path = CardDatabase.find_artwork(card_name, "unions", SaveManager.nsfw_enabled)
+			_load_art(_art_path)
 			_set_rarity(int(u.rarity))
 			# Union zone + formula panel
 			var uz_set: Dictionary = {}
@@ -501,7 +517,8 @@ func _populate(card_name: String, card_type: String) -> void:
 				var _uzc: int = _idx % 5
 				(_zone_cells[_idx] as ColorRect).color = Color(0.25, 0.90, 1.00, 0.95) \
 					if uz_set.has(Vector2i(_uzr, _uzc)) else Color(0.12, 0.12, 0.22, 0.75)
-			var _mat_text: String = u.formula_description.replace(
+			var _formula_src: String = u.formula_description if is_unlocked else u.partial_formula_description
+			var _mat_text: String = _formula_src.replace(
 				str(u.summon_cost) + " crystals", "◆" + str(u.summon_cost))
 			_mat_formula_lbl.text = _mat_text
 			AudioManager.speak("Union... %s...... %s... Cost: %d... ATK: %d... DEF: %d... Affinity: %s." % [

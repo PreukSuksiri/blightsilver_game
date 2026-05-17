@@ -66,6 +66,8 @@ var _pad_x:  float
 
 func export_one_card(card_name: String, card_type: String) -> void:
 	await _render_and_save(card_name, card_type)
+	if card_type == "union":
+		await _render_and_save_union_locked(card_name)
 	MailboxManager._exporter_active = false
 	queue_free()
 
@@ -81,8 +83,11 @@ func export_all_cards() -> void:
 		await _render_and_save(pair[0], pair[1])
 		done += 1
 		print("[CardExporter] %d/%d — %s (%s)" % [done, pairs.size(), pair[0], pair[1]])
+		if pair[1] == "union":
+			await _render_and_save_union_locked(pair[0])
+			print("[CardExporter] %d/%d — %s (union locked)" % [done, pairs.size(), pair[0]])
 		await get_tree().process_frame
-	print("[CardExporter] Complete. Exported %d cards to %s" % [done, OUTPUT_DIR])
+	print("[CardExporter] Complete. Exported %d cards (+locked union variants) to %s" % [done, OUTPUT_DIR])
 	MailboxManager._exporter_active = false
 	queue_free()
 
@@ -473,7 +478,11 @@ func _populate_card_node(card_name: String, card_type: String) -> void:
 			_style_pill(_atk, Color(0.75, 0.28, 0.05), Color(1.0, 0.55, 0.28))
 			_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
 			_art.position = _art_base_pos
-			_load_art(u.artwork_path)
+			var _snake_u: String = _card_name_to_snake(card_name)
+			var _art_u: String = OUTPUT_DIR + "union_" + _snake_u + ".png"
+			if not ResourceLoader.exists(_art_u):
+				_art_u = u.artwork_path
+			_load_art(_art_u)
 			_set_rarity(u.rarity)
 			# Zone grid
 			var uz_set: Dictionary = {}
@@ -485,7 +494,7 @@ func _populate_card_node(card_name: String, card_type: String) -> void:
 				var _zc: int = _idx % 5
 				(_zone_cells[_idx] as ColorRect).color = Color(0.25, 0.90, 1.00, 0.95) \
 					if uz_set.has(Vector2i(_zr, _zc)) else Color(0.12, 0.12, 0.22, 0.75)
-			# Material formula
+			# Material formula (unlocked)
 			var _mat_text: String = u.formula_description.replace(
 				str(u.summon_cost) + " crystals", "◆" + str(u.summon_cost))
 			_mat_formula_lbl.text = _mat_text
@@ -611,6 +620,72 @@ func _output_path(card_name: String, card_type: String) -> String:
 	var prefix   := "union_" if card_type == "union" else ""
 	var res_path := OUTPUT_DIR + prefix + snake + ".png"
 	return ProjectSettings.globalize_path(res_path)
+
+func _output_path_union_locked(card_name: String) -> String:
+	var res_path := OUTPUT_DIR + "union_" + _card_name_to_snake(card_name) + "_locked.png"
+	return ProjectSettings.globalize_path(res_path)
+
+func _render_and_save_union_locked(card_name: String) -> void:
+	var u: UnionData = UnionDatabase.get_union(card_name)
+	if not u:
+		return
+	var svp := SubViewport.new()
+	svp.size = Vector2i(int(EXPORT_W), int(EXPORT_H))
+	svp.transparent_bg = true
+	svp.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	add_child(svp)
+	var card := _build_card_node()
+	svp.add_child(card)
+	# Populate with locked content
+	const UNION_CYAN: Color = Color(0.25, 0.90, 1.00)
+	var aff_keys: Array = CharacterData.Affinity.keys()
+	var aff_idx: int = int(u.affinity)
+	var aff_name: String = aff_keys[aff_idx].capitalize() if aff_idx < aff_keys.size() else ""
+	_type.text = "UNION  🔒"
+	_type.add_theme_color_override("font_color", UNION_CYAN)
+	_frame.modulate = Color(1.0, 1.0, 1.0)
+	_cost_num.text = str(u.summon_cost)
+	_name.text = card_name
+	_atk.text  = "ATK %d" % u.base_atk
+	_def.text  = "DEF %d" % u.base_def
+	_aff.text  = aff_name
+	_aff.add_theme_color_override("font_color", UNION_CYAN)
+	_desc.text = u.partial_ability_description
+	_style_pill(_atk, Color(0.75, 0.28, 0.05), Color(1.0, 0.55, 0.28))
+	_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
+	_art.position = _art_base_pos
+	var _snake_l: String = _card_name_to_snake(card_name)
+	var _art_l: String = OUTPUT_DIR + "union_" + _snake_l + "_locked.png"
+	if not ResourceLoader.exists(_art_l):
+		_art_l = u.artwork_path  # fallback to same artwork
+	_load_art(_art_l)
+	_set_rarity(u.rarity)
+	var uz_set: Dictionary = {}
+	for uzv: Vector2i in u.union_zone:
+		uz_set[uzv] = true
+	_union_info_panel.visible = true
+	for _idx: int in range(_zone_cells.size()):
+		var _zr: int = _idx / 5
+		var _zc: int = _idx % 5
+		(_zone_cells[_idx] as ColorRect).color = Color(0.25, 0.90, 1.00, 0.95) \
+			if uz_set.has(Vector2i(_zr, _zc)) else Color(0.12, 0.12, 0.22, 0.75)
+	var _partial_formula: String = u.partial_formula_description.replace(
+		str(u.summon_cost) + " crystals", "◆" + str(u.summon_cost))
+	_mat_formula_lbl.text = _partial_formula
+
+	await get_tree().process_frame
+	svp.render_target_update_mode = SubViewport.UPDATE_ONCE
+	await get_tree().process_frame
+
+	var img: Image = svp.get_texture().get_image()
+	if img == null or img.is_empty():
+		push_error("[CardExporter] Failed to capture locked image for: " + card_name)
+		svp.queue_free()
+		return
+	var err := img.save_png(_output_path_union_locked(card_name))
+	if err != OK:
+		push_error("[CardExporter] save_png (locked) failed for '%s': error %d" % [card_name, err])
+	svp.queue_free()
 
 func _collect_all_pairs() -> Array:
 	var pairs: Array = []

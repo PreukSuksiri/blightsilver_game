@@ -474,6 +474,9 @@ func _run_async(
 func _get_scenario(defender: GameState.CardInstance, result: BattleResolver.BattleResult) -> String:
 	if defender.card_type == "dead_end":
 		return "3F"
+	# Trap defenders never move/bounce — always use trap scenario
+	if defender.card_type == "trap":
+		return "3E" if result.attacker_destroyed else "3D"
 	if result.special_trigger in ["trap_effect", "trap_nullified"]:
 		return "3E" if result.attacker_destroyed else "3D"
 	if result.attacker_destroyed and result.defender_destroyed:
