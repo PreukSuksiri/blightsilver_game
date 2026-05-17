@@ -98,6 +98,40 @@ func scrap_duplicates(card_name: String) -> int:
 	SaveManager.save_data()
 	return extras
 
+## Set owned copies of a card to exactly qty (0 removes it entirely).
+func set_card_quantity(card_name: String, qty: int) -> void:
+	qty = maxi(0, qty)
+	if qty == 0:
+		owned.erase(card_name)
+		emit_signal("collection_changed")
+		SaveManager.save_data()
+		return
+	if not owned.has(card_name):
+		var card_type: String = ""
+		if CardDatabase.get_character(card_name):   card_type = "character"
+		elif CardDatabase.get_trap(card_name):       card_type = "trap"
+		elif CardDatabase.get_tech(card_name):       card_type = "tech"
+		owned[card_name] = {"type": card_type, "copies": []}
+	var copies: Array = owned[card_name]["copies"]
+	while copies.size() < qty:
+		copies.append("Admin")
+	while copies.size() > qty:
+		copies.pop_back()
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+
+## Remove all copies of cards NOT in the protected list. Returns count of cards wiped.
+func confiscate_except(protected: Array) -> int:
+	var wiped: int = 0
+	for cname: String in owned.keys():
+		if not protected.has(cname):
+			owned.erase(cname)
+			wiped += 1
+	if wiped > 0:
+		emit_signal("collection_changed")
+		SaveManager.save_data()
+	return wiped
+
 ## Scrap duplicates for every owned card in one batch. Returns total copies removed.
 func scrap_all_duplicates() -> int:
 	var total: int = 0

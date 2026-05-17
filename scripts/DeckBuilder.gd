@@ -117,6 +117,14 @@ func _ready() -> void:
 	# Hide the dead end row — it auto-fills and needs no user action
 	blank_count_label.get_parent().visible = false
 
+	# Pin BottomBar (Save + Back) to the bottom of the right panel
+	var bottom_bar: Node = save_btn.get_parent()
+	var right_inner: Node = bottom_bar.get_parent()
+	var spacer := Control.new()
+	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right_inner.add_child(spacer)
+	right_inner.move_child(spacer, bottom_bar.get_index())
+
 # ── Button wiring ─────────────────────────────────────────────
 func _connect_buttons() -> void:
 	filter_all.pressed.connect(func(): _set_filter("all"))
@@ -266,6 +274,8 @@ func _rebuild_trunk_list() -> void:
 
 	if _filter in ["all", "character"]:
 		for char_name: String in CardDatabase.get_all_character_names():
+			if Collection.get_card_count(char_name) == 0:
+				continue
 			if name_q != "" and name_q not in char_name.to_lower():
 				continue
 			var data: CharacterData = CardDatabase.get_character(char_name)
@@ -316,6 +326,8 @@ func _rebuild_trunk_list() -> void:
 	if not use_aff and not use_atk and not use_def:
 		if _filter in ["all", "trap"]:
 			for trap_name: String in CardDatabase.get_all_trap_names():
+				if Collection.get_card_count(trap_name) == 0:
+					continue
 				if name_q != "" and name_q not in trap_name.to_lower():
 					continue
 				var data: TrapData = CardDatabase.get_trap(trap_name)
@@ -330,6 +342,8 @@ func _rebuild_trunk_list() -> void:
 
 		if _filter in ["all", "tech"]:
 			for tech_name: String in CardDatabase.get_all_tech_names():
+				if Collection.get_card_count(tech_name) == 0:
+					continue
 				if name_q != "" and name_q not in tech_name.to_lower():
 					continue
 				var data: TechCardData = CardDatabase.get_tech(tech_name)

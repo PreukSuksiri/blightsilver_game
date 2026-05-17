@@ -46,6 +46,7 @@ var _zone_cells:       Array       # Array[ColorRect], row-major (row*5+col)
 var _mat_formula_lbl:  Label
 var _card_inst: Variant = null  # GameState.CardInstance or null
 var _force_unlocked: bool = false  # true when viewing a union placed on the board
+var _show_quantity: bool = false  # true when opened from gallery
 
 var _info_y: float
 var _info_h: float
@@ -57,9 +58,10 @@ var _art_base_pos: Vector2
 # Entry point
 # ─────────────────────────────────────────────────────────────
 static func open(parent: Node, card_name: String, card_type: String,
-		card_inst: Variant = null) -> void:
+		card_inst: Variant = null, show_quantity: bool = false) -> void:
 	var overlay := CardDetailOverlay.new()
-	overlay._card_inst = card_inst
+	overlay._card_inst     = card_inst
+	overlay._show_quantity = show_quantity
 	overlay.z_index = 100
 	parent.add_child(overlay)
 
@@ -70,6 +72,8 @@ static func open(parent: Node, card_name: String, card_type: String,
 
 	overlay._build_ui(card_w, card_h)
 	overlay._populate(card_name, card_type)
+	if show_quantity:
+		overlay._add_quantity_label(card_name, card_w, card_h)
 
 # ─────────────────────────────────────────────────────────────
 # UI construction
@@ -586,6 +590,26 @@ func _load_art(path: String) -> void:
 # ─────────────────────────────────────────────────────────────
 # Close
 # ─────────────────────────────────────────────────────────────
+func _add_quantity_label(card_name: String, card_w: float, card_h: float) -> void:
+	var count: int = Collection.get_card_count(card_name)
+	var lbl := Label.new()
+	lbl.text = "Owned: %d cop%s" % [count, ("ies" if count != 1 else "y")]
+	lbl.add_theme_font_size_override("font_size", 18)
+	lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+	lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.9))
+	lbl.add_theme_constant_override("shadow_offset_x", 1)
+	lbl.add_theme_constant_override("shadow_offset_y", 1)
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.layout_mode = 1
+	lbl.anchor_left   = 0.5;  lbl.anchor_right  = 0.5
+	lbl.anchor_top    = 0.5;  lbl.anchor_bottom  = 0.5
+	lbl.offset_left   = -card_w * 0.5
+	lbl.offset_right  =  card_w * 0.5
+	lbl.offset_top    = -card_h * 0.5 - 36.0
+	lbl.offset_bottom = -card_h * 0.5 - 8.0
+	lbl.mouse_filter  = MOUSE_FILTER_IGNORE
+	add_child(lbl)
+
 func _close() -> void:
 	AudioManager.tts_stop()
 	queue_free()

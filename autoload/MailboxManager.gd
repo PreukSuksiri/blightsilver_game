@@ -130,7 +130,11 @@ func admin_command(raw: String) -> String:
 				+ "  card_editor\n"
 				+ "  animation_vellum_card_commence_flip\n"
 				+ "  animation_vellum_card_commence_facedown\n"
-				+ "  animation_pack_opening <pack_image> | <card1> | <card2> | <card3>"
+				+ "  animation_pack_opening <pack_image> | <card1> | <card2> | <card3>\n"
+				+ "  set_card_qty <card_name> | <quantity>\n"
+				+ "  confiscate_non_deck\n"
+				+ "  grant_deck_cards\n"
+				+ "  grant_all_cards"
 			)
 
 		"tts":
@@ -504,6 +508,66 @@ func admin_command(raw: String) -> String:
 			var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd")
 			overlay_script.open(get_tree().root, pack_img, c1, c2, c3)
 			return "Pack opening animation started  [%s | %s | %s]" % [c1, c2, c3]
+
+		"set_card_qty":
+			var rest: String = line.substr(cmd.length()).strip_edges()
+			var sep: int = rest.find("|")
+			if sep < 0:
+				return "Usage: set_card_qty <card_name> | <quantity>"
+			var cname: String = rest.substr(0, sep).strip_edges()
+			var qty: int = int(rest.substr(sep + 1).strip_edges())
+			if cname.is_empty():
+				return "Card name cannot be empty."
+			Collection.set_card_quantity(cname, qty)
+			return "Set '%s' quantity → %d" % [cname, qty]
+
+		"confiscate_non_deck":
+			var protected: Array = []
+			for deck in SaveManager.decks:
+				for cname: String in deck.characters: protected.append(cname)
+				for tname: String in deck.traps:      protected.append(tname)
+				for ename: String in deck.techs:      protected.append(ename)
+			var wiped: int = Collection.confiscate_except(protected)
+			return "Confiscated %d card(s) not in any deck." % wiped
+
+		"grant_deck_cards":
+			var deck: Variant = SaveManager.get_active_deck()
+			if deck == null:
+				return "No active deck."
+			var granted: Array = []
+			for cname: String in deck.characters:
+				if Collection.get_card_count(cname) == 0:
+					Collection.add_card(cname, "character", "Admin")
+					granted.append(cname)
+			for tname: String in deck.traps:
+				if Collection.get_card_count(tname) == 0:
+					Collection.add_card(tname, "trap", "Admin")
+					granted.append(tname)
+			for ename: String in deck.techs:
+				if Collection.get_card_count(ename) == 0:
+					Collection.add_card(ename, "tech", "Admin")
+					granted.append(ename)
+			if granted.is_empty():
+				return "All deck cards already owned — nothing granted."
+			return "Granted %d card(s): %s" % [granted.size(), ", ".join(granted)]
+
+		"grant_all_cards":
+			var granted: int = 0
+			for cname: String in CardDatabase.get_all_character_names():
+				if Collection.get_card_count(cname) == 0:
+					Collection.add_card(cname, "character", "Admin")
+					granted += 1
+			for tname: String in CardDatabase.get_all_trap_names():
+				if Collection.get_card_count(tname) == 0:
+					Collection.add_card(tname, "trap", "Admin")
+					granted += 1
+			for ename: String in CardDatabase.get_all_tech_names():
+				if Collection.get_card_count(ename) == 0:
+					Collection.add_card(ename, "tech", "Admin")
+					granted += 1
+			if granted == 0:
+				return "All cards already owned — nothing granted."
+			return "Granted %d card(s)." % granted
 
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd

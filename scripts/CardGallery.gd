@@ -50,6 +50,10 @@ var _filter_def_min:  int  = 0
 var _filter_def_max:  int  = 9999
 var _filter_ability:  String = ""
 
+# Count filter state
+var _filter_count: String = "all"   # "all" | "owned" | "unowned"
+var _count_filter_btns: Dictionary = {}
+
 # Advanced filter control refs
 var _adv_affinity_btn: OptionButton
 var _adv_cost_min:  SpinBox
@@ -64,6 +68,7 @@ func _ready() -> void:
 	Collection.collection_changed.connect(_on_collection_changed)
 	$Panel/VBox/Header/CloseBtn.pressed.connect(_on_close)
 	_build_filter_bar()
+	_build_count_filter_row()
 	_build_adv_gallery_filters()
 	_build_all_cards()
 	_add_scrap_all_button()
@@ -107,6 +112,37 @@ func _build_filter_bar() -> void:
 		_apply_filter())
 	filter_bar.add_child(search)
 
+func _build_count_filter_row() -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+
+	var lbl := Label.new()
+	lbl.text = "QTY:"
+	lbl.add_theme_font_size_override("font_size", 12)
+	lbl.add_theme_color_override("font_color", Color(0.55, 0.65, 0.80))
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	row.add_child(lbl)
+
+	var defs: Array = [["all", "ALL"], ["owned", "OWNED"], ["unowned", "NOT OWNED"]]
+	for d: Array in defs:
+		var btn := Button.new()
+		btn.text = d[1]
+		btn.toggle_mode = true
+		btn.button_pressed = (d[0] == "all")
+		btn.add_theme_font_size_override("font_size", 12)
+		btn.custom_minimum_size = Vector2(80, 26)
+		var cid: String = d[0]
+		btn.pressed.connect(func() -> void:
+			_filter_count = cid
+			for k: String in _count_filter_btns:
+				_count_filter_btns[k].button_pressed = (k == cid)
+			_apply_filter())
+		_count_filter_btns[d[0]] = btn
+		row.add_child(btn)
+
+	gallery_vbox.add_child(row)
+	gallery_vbox.move_child(row, filter_bar.get_index() + 1)
+
 func _set_filter(fid: String) -> void:
 	_active_filter = fid
 	for k: String in _filter_btns:
@@ -139,6 +175,12 @@ func _apply_filter() -> void:
 			show = entry["def"] >= 0 and entry["def"] >= _filter_def_min and entry["def"] <= _filter_def_max
 		if show and abil_q != "":
 			show = entry["desc"].to_lower().find(abil_q) >= 0
+		if show and _filter_count != "all":
+			var cnt: int = Collection.get_card_count(entry["card_name"])
+			if _filter_count == "owned":
+				show = cnt > 0
+			elif _filter_count == "unowned":
+				show = cnt == 0
 		entry["node"].visible = show
 	_update_stats()
 
@@ -219,18 +261,28 @@ func _wrap_card_tile(card_node: Control, card_name: String, card_type: String) -
 
 	var count: int = Collection.get_card_count(card_name)
 
+	if count == 0:
+		wrapper.modulate = Color(0.60, 0.60, 0.68, 1.0)
+
 	var badge := Label.new()
 	badge.text = "×%d" % count
-	badge.add_theme_font_size_override("font_size", 10)
+	var _badge_font := FontVariation.new()
+	_badge_font.base_font = preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
+	_badge_font.variation_opentype = {"wght": 1200}
+	badge.add_theme_font_override("font", _badge_font)
+	badge.add_theme_font_size_override("font_size", 12)
 	badge.add_theme_color_override("font_color",
-		Color(0.20, 1.0, 0.55, 1.0) if count > 0 else Color(0.5, 0.5, 0.55, 0.6))
+		Color(1.0, 1.0, 1.0, 1.0) if count > 0 else Color(1.0, 1.0, 1.0, 1.0))
+	badge.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+	badge.add_theme_constant_override("shadow_offset_x", 1)
+	badge.add_theme_constant_override("shadow_offset_y", 1)
 	badge.layout_mode = 1
-	badge.anchor_left   = 1.0; badge.anchor_right  = 1.0
-	badge.anchor_top    = 1.0; badge.anchor_bottom = 1.0
-	badge.offset_left   = -34.0; badge.offset_right  = -2.0
-	badge.offset_top    = -16.0; badge.offset_bottom = -2.0
-	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	badge.vertical_alignment   = VERTICAL_ALIGNMENT_BOTTOM
+	badge.anchor_left   = 0.0; badge.anchor_right  = 1.0
+	badge.anchor_top    = 0.0; badge.anchor_bottom = 0.0
+	badge.offset_left   = 0.0;  badge.offset_right  = 0.0
+	badge.offset_top    = 2.0; badge.offset_bottom = 18.0
+	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	badge.vertical_alignment   = VERTICAL_ALIGNMENT_TOP
 	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	wrapper.add_child(badge)
 
@@ -257,14 +309,14 @@ func _wrap_card_tile(card_node: Control, card_name: String, card_type: String) -
 	# (wrapper.gui_input is never reached because card_node has MOUSE_FILTER_STOP)
 	if card_node.has_signal("card_clicked"):
 		card_node.card_clicked.connect(
-			func(_n: Control) -> void: CardDetailOverlay.open(self, card_name, card_type))
+			func(_n: Control) -> void: CardDetailOverlay.open(self, card_name, card_type, null, true))
 	else:
 		card_node.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed \
 					and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
 				CardDetailOverlay.open(self, card_name, card_type)
 			elif ev is InputEventScreenTouch and (ev as InputEventScreenTouch).pressed:
-				CardDetailOverlay.open(self, card_name, card_type))
+				CardDetailOverlay.open(self, card_name, card_type, null, true))
 
 	return wrapper
 
