@@ -4,6 +4,15 @@ signal closed()
 
 const FULL_CARDS_DIR := "res://assets/textures/cards/full_cards/"
 
+# Credits earned per scrapped duplicate copy, by rarity
+const SCRAP_VALUES: Dictionary = {
+	CharacterData.Rarity.COMMON:    50,
+	CharacterData.Rarity.UNCOMMON:  100,
+	CharacterData.Rarity.RARE:      250,
+	CharacterData.Rarity.LEGENDARY: 600,
+	CharacterData.Rarity.EXOTIC:    1500,
+}
+
 # ── Affinity accent colours (mirrors Card.gd) ─────────────────
 const AFFINITY_COLORS: Dictionary = {
 	CharacterData.Affinity.DIVINE:  Color(1.00, 0.90, 0.30),
@@ -18,6 +27,7 @@ const TECH_ACCENT := Color(0.38, 0.65, 1.0)
 const TRAP_ACCENT := Color(1.0,  0.30, 0.30)
 
 @onready var stats_label: Label              = $Panel/VBox/Header/StatsLabel
+@onready var header_bar: HBoxContainer       = $Panel/VBox/Header
 @onready var filter_bar: HBoxContainer       = $Panel/VBox/FilterBar
 @onready var card_scroll: ScrollContainer    = $Panel/VBox/CardScroll
 @onready var card_flow: HFlowContainer       = $Panel/VBox/CardScroll/CardFlow
@@ -56,6 +66,7 @@ func _ready() -> void:
 	_build_filter_bar()
 	_build_adv_gallery_filters()
 	_build_all_cards()
+	_add_scrap_all_button()
 	# Apply initial union mechanism visibility and subscribe to changes
 	_on_union_mechanism_changed(SaveManager.union_mechanism_unlocked)
 	SaveManager.union_mechanism_changed.connect(_on_union_mechanism_changed)
@@ -222,6 +233,22 @@ func _wrap_card_tile(card_node: Control, card_name: String, card_type: String) -
 	badge.vertical_alignment   = VERTICAL_ALIGNMENT_BOTTOM
 	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	wrapper.add_child(badge)
+
+	# Scrap-one button: shown only for non-union cards with >1 copy
+	if card_type != "union" and count > 1:
+		var scrap_btn := Button.new()
+		scrap_btn.text = "✂"
+		scrap_btn.tooltip_text = "Scrap duplicates (keep 1)"
+		scrap_btn.add_theme_font_size_override("font_size", 10)
+		scrap_btn.layout_mode = 1
+		scrap_btn.anchor_left   = 0.0; scrap_btn.anchor_right  = 0.0
+		scrap_btn.anchor_top    = 1.0; scrap_btn.anchor_bottom = 1.0
+		scrap_btn.offset_left   = 2.0;  scrap_btn.offset_right  = 22.0
+		scrap_btn.offset_top    = -18.0; scrap_btn.offset_bottom = -2.0
+		var cap_name: String = card_name
+		var cap_type: String = card_type
+		scrap_btn.pressed.connect(func() -> void: _confirm_scrap_one(cap_name, cap_type))
+		wrapper.add_child(scrap_btn)
 
 	# Tooltip hint
 	wrapper.tooltip_text = card_name
@@ -468,3 +495,91 @@ func _input(event: InputEvent) -> void:
 		AudioManager.tts_stop()
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		_on_close()
+
+# ─────────────────────────────────────────────────────────────
+# Scrap duplicates
+# ─────────────────────────────────────────────────────────────
+
+func _add_scrap_all_button() -> void:
+	var btn := Button.new()
+	btn.text = "✂ SCRAP ALL DUPES"
+	btn.add_theme_font_size_override("font_size", 12)
+	btn.add_theme_color_override("font_color", Color(1.0, 0.55, 0.20))
+	btn.tooltip_text = "Scrap all duplicate copies, keeping 1 of each card"
+	btn.pressed.connect(_confirm_scrap_all)
+	# Insert before the CloseBtn
+	var close_btn: Node = $Panel/VBox/Header/CloseBtn
+	header_bar.add_child(btn)
+	header_bar.move_child(btn, close_btn.get_index())
+
+func _get_scrap_value(card_name: String, card_type: String) -> int:
+	var rarity: CharacterData.Rarity = CharacterData.Rarity.COMMON
+	if card_type == "character":
+		var cd: CharacterData = CardDatabase.get_character(card_name)
+		if cd != null:
+			rarity = cd.rarity
+	elif card_type == "trap":
+		var td: TrapData = CardDatabase.get_trap(card_name)
+		if td != null:
+			rarity = td.rarity
+	elif card_type == "tech":
+		var ed: TechCardData = CardDatabase.get_tech(card_name)
+		if ed != null:
+			rarity = ed.rarity
+	return SCRAP_VALUES.get(rarity, 50)
+
+func _calc_scrap_one_credits(card_name: String, card_type: String) -> int:
+	var extras: int = Collection.get_card_count(card_name) - 1
+	if extras <= 0:
+		return 0
+	return extras * _get_scrap_value(card_name, card_type)
+
+func _calc_scrap_all_credits() -> int:
+	var total: int = 0
+	for entry: Dictionary in _tiles:
+		var cname: String = entry["card_name"]
+		var ctype: String = entry["card_type"]
+		if ctype == "union":
+			continue
+		var extras: int = Collection.get_card_count(cname) - 1
+		if extras > 0:
+			total += extras * _get_scrap_value(cname, ctype)
+	return total
+
+func _confirm_scrap_one(card_name: String, card_type: String) -> void:
+	var extras: int = Collection.get_card_count(card_name) - 1
+	if extras <= 0:
+		return
+	var credits_gained: int = extras * _get_scrap_value(card_name, card_type)
+	var dlg := ConfirmationDialog.new()
+	dlg.title = "Scrap Duplicates"
+	dlg.dialog_text = "Scrap %d extra cop%s of \"%s\"?\nYou will receive %d credits." % [
+		extras, ("ies" if extras > 1 else "y"), card_name, credits_gained]
+	dlg.confirmed.connect(func() -> void:
+		Collection.scrap_duplicates(card_name)
+		Collection.add_credits(credits_gained)
+		dlg.queue_free())
+	dlg.canceled.connect(func() -> void: dlg.queue_free())
+	add_child(dlg)
+	dlg.popup_centered()
+
+func _confirm_scrap_all() -> void:
+	var credits_gained: int = _calc_scrap_all_credits()
+	if credits_gained == 0:
+		var dlg := AcceptDialog.new()
+		dlg.title = "Nothing to Scrap"
+		dlg.dialog_text = "You have no duplicate cards."
+		dlg.confirmed.connect(func() -> void: dlg.queue_free())
+		add_child(dlg)
+		dlg.popup_centered()
+		return
+	var dlg := ConfirmationDialog.new()
+	dlg.title = "Scrap All Duplicates"
+	dlg.dialog_text = "Scrap all duplicate copies across your entire collection?\nYou will receive %d credits." % credits_gained
+	dlg.confirmed.connect(func() -> void:
+		Collection.scrap_all_duplicates()
+		Collection.add_credits(credits_gained)
+		dlg.queue_free())
+	dlg.canceled.connect(func() -> void: dlg.queue_free())
+	add_child(dlg)
+	dlg.popup_centered()

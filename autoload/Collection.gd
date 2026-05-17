@@ -85,6 +85,33 @@ func get_card_type(card_name: String) -> String:
 func get_owned_names() -> Array:
 	return owned.keys()
 
+## Remove all but one copy of a named card. Returns number of copies removed.
+func scrap_duplicates(card_name: String) -> int:
+	if not owned.has(card_name):
+		return 0
+	var copies: Array = owned[card_name]["copies"]
+	var extras: int = copies.size() - 1
+	if extras <= 0:
+		return 0
+	owned[card_name]["copies"] = [copies[0]]
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+	return extras
+
+## Scrap duplicates for every owned card in one batch. Returns total copies removed.
+func scrap_all_duplicates() -> int:
+	var total: int = 0
+	for cname: String in owned.keys():
+		var copies: Array = owned[cname]["copies"]
+		var extras: int = copies.size() - 1
+		if extras > 0:
+			owned[cname]["copies"] = [copies[0]]
+			total += extras
+	if total > 0:
+		emit_signal("collection_changed")
+		SaveManager.save_data()
+	return total
+
 # ─────────────────────────────────────────────────────────────
 # Serialisation — called by SaveManager
 # ─────────────────────────────────────────────────────────────

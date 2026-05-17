@@ -477,18 +477,30 @@ func admin_command(raw: String) -> String:
 
 		"animation_pack_opening":
 			# Syntax: animation_pack_opening <pack_image> | <card1> | <card2> | <card3>
+			# pack_image can be: empty, a filename ("booster_pack_basic.png"), or a full res:// path
 			var rest: String = line.substr(cmd.length()).strip_edges()
 			var segs: PackedStringArray = rest.split("|")
 			if segs.size() < 4:
 				return (
-					"Usage: animation_pack_opening <pack_image_path> | <card1> | <card2> | <card3>\n"
-					+ "  pack_image_path: res:// path (or empty to use default)\n"
-					+ "  Example: animation_pack_opening  | Aether Warden | Radar | Bunker"
+					"Usage: animation_pack_opening <pack_image> | <card1> | <card2> | <card3>\n"
+					+ "  pack_image: filename, full res:// path, or empty for default\n"
+					+ "  Example (with image):    animation_pack_opening booster_pack_howling_grave.png | Aether Warden | Radar | Bunker\n"
+					+ "  Example (leading pipe):  animation_pack_opening | booster_pack_howling_grave.png | Aether Warden | Radar | Bunker\n"
+					+ "  Example (no image):      animation_pack_opening | Aether Warden | Radar | Bunker"
 				)
 			var pack_img: String = segs[0].strip_edges()
-			var c1: String = segs[1].strip_edges()
-			var c2: String = segs[2].strip_edges()
-			var c3: String = segs[3].strip_edges()
+			var c_start: int = 1
+			# If user wrote "| filename | c1 | c2 | c3" the first segment is empty;
+			# promote the next segment to pack image automatically.
+			if pack_img == "" and segs.size() >= 5:
+				pack_img = segs[1].strip_edges()
+				c_start = 2
+			# Resolve bare filename to the booster_pack folder
+			if pack_img != "" and not pack_img.begins_with("res://"):
+				pack_img = "res://assets/textures/cards/booster_pack/" + pack_img
+			var c1: String = segs[c_start].strip_edges()     if segs.size() > c_start     else ""
+			var c2: String = segs[c_start + 1].strip_edges() if segs.size() > c_start + 1 else ""
+			var c3: String = segs[c_start + 2].strip_edges() if segs.size() > c_start + 2 else ""
 			var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd")
 			overlay_script.open(get_tree().root, pack_img, c1, c2, c3)
 			return "Pack opening animation started  [%s | %s | %s]" % [c1, c2, c3]

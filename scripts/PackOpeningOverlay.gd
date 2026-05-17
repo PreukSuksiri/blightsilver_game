@@ -1,4 +1,5 @@
 extends Control
+class_name PackOpeningOverlay
 
 # ──────────────────────────────────────────────────────────────────────────────
 # PackOpeningOverlay — standalone booster-pack opening animation.
@@ -15,11 +16,12 @@ const PACK_TEX_PATH     : String = "res://assets/textures/cards/booster_pack/boo
 const FALLBACK_CARD_PATH: String = "res://assets/textures/cards/frames/vellum_card_frame_full.png"
 const FULL_CARDS_DIR    : String = "res://assets/textures/cards/full_cards/"
 
-const PACK_W  : float = 160.0
-const PACK_H  : float = 220.0
-const CARD_W  : float = 150.0
-const CARD_H  : float = 210.0
-const CARD_GAP: float = 16.0
+# Sizes computed from viewport at _ready; pack ~82% screen height, cards fill remaining width
+var _pack_w : float = 0.0
+var _pack_h : float = 0.0
+var _card_w : float = 0.0
+var _card_h : float = 0.0
+var _card_gap: float = 0.0
 
 # ── State ──────────────────────────────────────────────────────────────────────
 var _card_names     : Array[String] = []
@@ -56,8 +58,19 @@ static func open(parent: Node, pack_image: String, card1: String, card2: String,
 # Lifecycle
 # ──────────────────────────────────────────────────────────────────────────────
 func _ready() -> void:
+	_compute_sizes()
 	_build_ui()
 	_run.call_deferred()
+
+func _compute_sizes() -> void:
+	var s: Vector2 = get_viewport_rect().size
+	# pack_w / pack_h derived from actual image aspect ratio in _build_ui
+	# Cards: fit 3 side-by-side; gap = 4% of screen width
+	_card_gap = s.x * 0.04
+	var max_by_w: float = (s.x - 120.0) / 3.0 - _card_gap
+	var max_by_h: float = s.y * 0.78 * (150.0 / 210.0)
+	_card_w = min(max_by_h, max_by_w)
+	_card_h = _card_w * (210.0 / 150.0)
 
 func _input(event: InputEvent) -> void:
 	if _anim_done:
@@ -82,55 +95,77 @@ func _build_ui() -> void:
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_bg)
 
-	# Pack root — pivot at centre of pack image
-	_pack_root = Control.new()
-	_pack_root.custom_minimum_size = Vector2(PACK_W, PACK_H)
-	_pack_root.size                = Vector2(PACK_W, PACK_H)
-	_pack_root.pivot_offset        = Vector2(PACK_W * 0.5, PACK_H * 0.5)
-	_pack_root.mouse_filter        = Control.MOUSE_FILTER_IGNORE
-	add_child(_pack_root)
-
+	# ── Load texture first so we can derive the correct aspect ratio ──────
 	var tex_path: String = _pack_image_path \
 		if (_pack_image_path != "" and ResourceLoader.exists(_pack_image_path)) \
 		else PACK_TEX_PATH
-	var pack_tex: Variant = null
+	var pack_tex: Texture2D = null
 	if ResourceLoader.exists(tex_path):
-		pack_tex = load(tex_path)
+		pack_tex = load(tex_path) as Texture2D
 
-	# ── Top-half clip (clips top PACK_H/2 of the pack image) ──────────────
-	_clip_top = Control.new()
-	_clip_top.clip_contents  = true
-	_clip_top.size           = Vector2(PACK_W, PACK_H * 0.5)
-	_clip_top.position       = Vector2(0.0, 0.0)
-	_clip_top.pivot_offset   = Vector2(PACK_W * 0.5, PACK_H * 0.5)  # tear edge
-	_clip_top.mouse_filter   = Control.MOUSE_FILTER_IGNORE
+	# Pack display size derived from actual pixel dimensions
+	var s: Vector2 = get_viewport_rect().size
+	_pack_h = s.y * 0.84
+	if pack_tex != null:
+		_pack_w = _pack_h * (float(pack_tex.get_width()) / float(pack_tex.get_height()))
+	else:
+		_pack_w = _pack_h * (160.0 / 220.0)
+
+	# ── Pack root — pivot at centre ────────────────────────────────────────
+	_pack_root = Control.new()
+	_pack_root.custom_minimum_size = Vector2(_pack_w, _pack_h)
+	_pack_root.size                = Vector2(_pack_w, _pack_h)
+	_pack_root.pivot_offset        = Vector2(_pack_w * 0.5, _pack_h * 0.5)
+	_pack_root.mouse_filter        = Control.MOUSE_FILTER_IGNORE
+	add_child(_pack_root)
+
+	# Split at the midpoint in source-texture pixel space
+	var split_y: float     = floor(_pack_h * 0.5)
+	var tex_w  : float     = float(pack_tex.get_width())  if pack_tex != null else 832.0
+	var tex_h  : float     = float(pack_tex.get_height()) if pack_tex != null else 1216.0
+	var tex_mid: float     = floor(tex_h * 0.5)
+
+	# ── Top-half: AtlasTexture shows only the top portion of the source ────
+	# No clip_contents needed — the AtlasTexture itself limits what is drawn.
+	var atlas_top          := AtlasTexture.new()
+	atlas_top.atlas         = pack_tex
+	atlas_top.region        = Rect2(0.0, 0.0, tex_w, tex_mid)
+	atlas_top.filter_clip   = true
+
+	_clip_top              = Control.new()
+	_clip_top.size          = Vector2(_pack_w, split_y)
+	_clip_top.position      = Vector2(0.0, 0.0)
+	_clip_top.pivot_offset  = Vector2(_pack_w * 0.5, split_y)  # pivot at tear edge
+	_clip_top.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	_pack_root.add_child(_clip_top)
 
-	var top_img := TextureRect.new()
-	top_img.texture      = pack_tex as Texture2D
-	top_img.size         = Vector2(PACK_W, PACK_H)
-	top_img.position     = Vector2.ZERO
-	top_img.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
-	top_img.stretch_mode = TextureRect.STRETCH_SCALE
-	top_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var top_img            := TextureRect.new()
+	top_img.texture         = atlas_top
+	top_img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	top_img.expand_mode     = TextureRect.EXPAND_IGNORE_SIZE
+	top_img.stretch_mode    = TextureRect.STRETCH_SCALE
+	top_img.mouse_filter    = Control.MOUSE_FILTER_IGNORE
 	_clip_top.add_child(top_img)
 
-	# ── Bottom-half clip (clips bottom PACK_H/2 of the pack image) ────────
-	_clip_bot = Control.new()
-	_clip_bot.clip_contents = true
-	_clip_bot.size          = Vector2(PACK_W, PACK_H * 0.5)
-	_clip_bot.position      = Vector2(0.0, PACK_H * 0.5)
-	_clip_bot.pivot_offset  = Vector2(PACK_W * 0.5, 0.0)  # tear edge
+	# ── Bottom-half: AtlasTexture shows only the bottom portion ────────────
+	var atlas_bot          := AtlasTexture.new()
+	atlas_bot.atlas         = pack_tex
+	atlas_bot.region        = Rect2(0.0, tex_mid, tex_w, tex_h - tex_mid)
+	atlas_bot.filter_clip   = true
+
+	_clip_bot              = Control.new()
+	_clip_bot.size          = Vector2(_pack_w, _pack_h - split_y)
+	_clip_bot.position      = Vector2(0.0, split_y)
+	_clip_bot.pivot_offset  = Vector2(_pack_w * 0.5, 0.0)  # pivot at tear edge
 	_clip_bot.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	_pack_root.add_child(_clip_bot)
 
-	var bot_img := TextureRect.new()
-	bot_img.texture      = pack_tex as Texture2D
-	bot_img.size         = Vector2(PACK_W, PACK_H)
-	bot_img.position     = Vector2(0.0, -PACK_H * 0.5)   # offset so bottom shows
-	bot_img.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
-	bot_img.stretch_mode = TextureRect.STRETCH_SCALE
-	bot_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var bot_img            := TextureRect.new()
+	bot_img.texture         = atlas_bot
+	bot_img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bot_img.expand_mode     = TextureRect.EXPAND_IGNORE_SIZE
+	bot_img.stretch_mode    = TextureRect.STRETCH_SCALE
+	bot_img.mouse_filter    = Control.MOUSE_FILTER_IGNORE
 	_clip_bot.add_child(bot_img)
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -142,8 +177,8 @@ func _run() -> void:
 	var cy: float = screen.y * 0.5
 
 	# Start pack off the bottom
-	var pack_final_pos := Vector2(cx - PACK_W * 0.5, cy - PACK_H * 0.5)
-	_pack_root.position = Vector2(cx - PACK_W * 0.5, screen.y + 40.0)
+	var pack_final_pos := Vector2(cx - _pack_w * 0.5, cy - _pack_h * 0.5)
+	_pack_root.position = Vector2(cx - _pack_w * 0.5, screen.y + 40.0)
 	_pack_root.scale    = Vector2.ONE
 	_pack_root.rotation = 0.0
 
@@ -181,20 +216,20 @@ func _run() -> void:
 	_spawn_debris(cx, cy)
 
 	# ── Phase 5: Cards rise stacked from centre ───────────────────────────
-	var total_w: float  = CARD_W * 3.0 + CARD_GAP * 2.0
-	var card_y : float  = cy - CARD_H * 0.5
+	var total_w: float  = _card_w * 3.0 + _card_gap * 2.0
+	var card_y : float  = cy - _card_h * 0.5
 	var fan_positions: Array[Vector2] = [
-		Vector2(cx - total_w * 0.5,            card_y),
-		Vector2(cx - CARD_W * 0.5,             card_y),
-		Vector2(cx + total_w * 0.5 - CARD_W,   card_y),
+		Vector2(cx - total_w * 0.5,             card_y),
+		Vector2(cx - _card_w * 0.5,             card_y),
+		Vector2(cx + total_w * 0.5 - _card_w,   card_y),
 	]
 
 	var card_wrappers: Array = []
 	for i: int in range(3):
 		var w: Control = _make_card_ctrl(_card_names[i], i)
-		w.position     = Vector2(cx - CARD_W * 0.5, screen.y + 20.0)
+		w.position     = Vector2(cx - _card_w * 0.5, screen.y + 20.0)
 		w.scale        = Vector2(0.5, 0.5)
-		w.pivot_offset = Vector2(CARD_W * 0.5, CARD_H * 0.5)
+		w.pivot_offset = Vector2(_card_w * 0.5, _card_h * 0.5)
 		w.z_index      = 2
 		add_child(w)
 		card_wrappers.append(w)
@@ -230,7 +265,7 @@ func _run() -> void:
 	_skip_requested = false
 
 	# ── Phase 9: Cards fly to top-right corner ────────────────────────────
-	var dest: Vector2 = Vector2(screen.x + 60.0, -CARD_H - 60.0)
+	var dest: Vector2 = Vector2(screen.x + 60.0, -_card_h - 60.0)
 	var t9: Tween = create_tween().set_parallel(true)
 	for w: Control in card_wrappers:
 		t9.tween_property(w, "position", dest, 0.48) \
@@ -301,38 +336,40 @@ func _spawn_debris(cx: float, cy: float) -> void:
 # ──────────────────────────────────────────────────────────────────────────────
 func _make_card_ctrl(card_name: String, idx: int) -> Control:
 	var wrapper := Control.new()
-	wrapper.custom_minimum_size = Vector2(CARD_W, CARD_H)
-	wrapper.size                = Vector2(CARD_W, CARD_H)
+	wrapper.custom_minimum_size = Vector2(_card_w, _card_h)
+	wrapper.size                = Vector2(_card_w, _card_h)
 	wrapper.mouse_filter        = Control.MOUSE_FILTER_IGNORE
 
-	# Glow aura (shadow-based, behind the card image)
-	var glow_panel := Panel.new()
-	glow_panel.size         = Vector2(CARD_W + 28.0, CARD_H + 28.0)
-	glow_panel.position     = Vector2(-14.0, -14.0)
+	# Glow aura — Panel exactly the size of the card; shadow radiates outward from its edges.
+	# Transparent center so the card image on top shows through cleanly.
+	var glow_panel       := Panel.new()
+	glow_panel.size         = Vector2(_card_w, _card_h)
+	glow_panel.position     = Vector2.ZERO
 	glow_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	var gc: Color        = _glow_color_for(card_name)
-	var gp_sb            := StyleBoxFlat.new()
-	gp_sb.draw_center    = false
+	var gc: Color     = _glow_color_for(card_name)
+	var gp_sb         := StyleBoxFlat.new()
+	gp_sb.bg_color    = Color(0.0, 0.0, 0.0, 0.0)  # fully transparent fill
+	gp_sb.draw_center = true
 	gp_sb.border_width_left   = 0
 	gp_sb.border_width_top    = 0
 	gp_sb.border_width_right  = 0
 	gp_sb.border_width_bottom = 0
 	gp_sb.shadow_color  = gc
-	gp_sb.shadow_size   = 16
+	gp_sb.shadow_size   = int(_card_h * 0.05)
 	gp_sb.shadow_offset = Vector2.ZERO
 	glow_panel.add_theme_stylebox_override("panel", gp_sb)
 	wrapper.add_child(glow_panel)
 	_glow_sbs[idx] = gp_sb
 
 	# Card artwork
-	var card_img             := TextureRect.new()
-	card_img.size             = Vector2(CARD_W, CARD_H)
-	card_img.position         = Vector2.ZERO
-	card_img.expand_mode      = TextureRect.EXPAND_IGNORE_SIZE
-	card_img.stretch_mode     = TextureRect.STRETCH_SCALE
-	card_img.mouse_filter     = Control.MOUSE_FILTER_IGNORE
-	card_img.texture          = _load_card_tex(card_name)
+	var card_img         := TextureRect.new()
+	card_img.size         = Vector2(_card_w, _card_h)
+	card_img.position     = Vector2.ZERO
+	card_img.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	card_img.stretch_mode = TextureRect.STRETCH_SCALE
+	card_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card_img.texture      = _load_card_tex(card_name)
 	wrapper.add_child(card_img)
 
 	return wrapper
@@ -345,14 +382,16 @@ func _start_glow_pulse(idx: int) -> void:
 	if sb == null:
 		return
 	var gp_sb: StyleBoxFlat = sb as StyleBoxFlat
+	var lo: float = _card_h * 0.035
+	var hi: float = _card_h * 0.075
 	var tw: Tween = create_tween().set_loops()
 	tw.tween_method(
 		func(v: float) -> void: gp_sb.shadow_size = int(v),
-		16.0, 34.0, 0.65
+		lo, hi, 0.65
 	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tw.tween_method(
 		func(v: float) -> void: gp_sb.shadow_size = int(v),
-		34.0, 16.0, 0.65
+		hi, lo, 0.65
 	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -373,11 +412,23 @@ func _load_card_tex(card_name: String) -> Texture2D:
 # ──────────────────────────────────────────────────────────────────────────────
 func _glow_color_for(card_name: String) -> Color:
 	if card_name == null or card_name == "":
-		return Color(0.80, 0.80, 0.80, 0.9)
-	if CardDatabase.get_character(card_name) != null:
-		return Color(0.25, 0.90, 1.00, 0.9)   # cyan — character
-	if CardDatabase.get_trap(card_name) != null:
-		return Color(1.00, 0.28, 0.28, 0.9)   # red  — trap
-	if CardDatabase.get_tech(card_name) != null:
-		return Color(0.30, 1.00, 0.42, 0.9)   # green — tech
-	return Color(0.80, 0.80, 0.80, 0.9)       # grey  — unknown
+		return Color(0.65, 0.65, 0.65, 0.9)
+	var rarity: int = -1
+	var cd: CharacterData = CardDatabase.get_character(card_name)
+	if cd != null:
+		rarity = cd.rarity
+	else:
+		var td: TrapData = CardDatabase.get_trap(card_name)
+		if td != null:
+			rarity = td.rarity
+		else:
+			var tech: TechCardData = CardDatabase.get_tech(card_name)
+			if tech != null:
+				rarity = tech.rarity
+	match rarity:
+		CharacterData.Rarity.COMMON:    return Color(0.65, 0.65, 0.65, 0.9)  # grey
+		CharacterData.Rarity.UNCOMMON:  return Color(0.30, 0.90, 0.40, 0.9)  # green
+		CharacterData.Rarity.RARE:      return Color(0.30, 0.65, 1.00, 0.9)  # blue
+		CharacterData.Rarity.LEGENDARY: return Color(0.78, 0.35, 1.00, 0.9)  # purple
+		CharacterData.Rarity.EXOTIC:    return Color(1.00, 0.80, 0.10, 0.9)  # gold
+		_:                              return Color(0.65, 0.65, 0.65, 0.9)
