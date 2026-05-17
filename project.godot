@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 AudioManager="*res://autoload/AudioManager.gd"
 CardDatabase="*res://autoload/CardDatabase.gd"
 GameState="*res://autoload/GameState.gd"
+DatabaseManager="*res://autoload/DatabaseManager.gd"
 SaveManager="*res://autoload/SaveManager.gd"
 MailboxManager="*res://autoload/MailboxManager.gd"
 Collection="*res://autoload/Collection.gd"
@@ -42,6 +43,10 @@ window/stretch/aspect="expand"
 [editor]
 
 movie_writer/movie_file="/Users/blightsilver/blightsilver_game/video/test1.avi"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg")
 
 [input]
 

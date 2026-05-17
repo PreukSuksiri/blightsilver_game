@@ -520,6 +520,14 @@ func _show_beat() -> void:
 		# Set post-new_game fields (new_game resets most state but not these)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))
+		GameState.portrait_p1_offset = Vector2(
+			float(beat.get("portrait_p1_offset_x", 0.0)),
+			float(beat.get("portrait_p1_offset_y", 0.0)))
+		GameState.portrait_p1_size   = float(beat.get("portrait_p1_size", 1.0))
+		GameState.portrait_p2_offset = Vector2(
+			float(beat.get("portrait_p2_offset_x", 0.0)),
+			float(beat.get("portrait_p2_offset_y", 0.0)))
+		GameState.portrait_p2_size   = float(beat.get("portrait_p2_size", 1.0))
 		var bgm: String = str(beat.get("battle_bgm", ""))
 		GameState.battle_bgm_path   = bgm if bgm != "" else "res://assets/audio/bgm_boss_1.mp3"
 		GameState.battle_bgm_volume = float(beat.get("battle_bgm_volume", 100.0))
@@ -541,6 +549,8 @@ func _show_beat() -> void:
 		else:
 			GameState.campaign_enemy_config = {}
 		# Union summon + forced placement config
+		# Flag tells new_game() not to reset these values when the scene loads
+		GameState._vn_battle_pending          = true
 		GameState.battle_ai_union_enabled     = bool(beat.get("ai_union_enabled",     true))
 		GameState.battle_player_union_enabled = bool(beat.get("player_union_enabled", true))
 		var pfc: Variant = beat.get("player_forced_cells", null)

@@ -257,4 +257,47 @@ Each entry: **date → problem → finding/solution**.
 **Rule:** Any full-rect child Panel/Control that is purely cosmetic (borders, overlays, indicators) must explicitly set `mouse_filter = 2` (`MOUSE_FILTER_IGNORE`) in the scene file. Godot 4's default `MOUSE_FILTER_STOP` on Panel will silently block all input to parent nodes.
 **Solution:** Added `mouse_filter = 2` to both `HighlightBorder` and `SelectionBorder` nodes in `card.tscn`. The visual highlight still renders; clicks now pass through to the Card node.
 
+## 2026-05-17 — SQLite Integration (godot-sqlite addon)
+
+### godot-sqlite: source release vs binary release
+**Problem:** Downloaded the addon from GitHub and placed it in `addons/godot-sqlite/`. Got `Could not find type "SQLite"` parse error. The `bin/` folder only contained a `binaries_here.txt` placeholder and empty `.framework` folders.
+**Finding:** The GitHub repo has two kinds of releases: "Source code" zips (config files only, no `.dylib`) and a proper release zip with compiled binaries. The source zip looks complete but the `bin/` folder is intentionally empty — binaries must be downloaded separately or built from source.
+**Solution:** Built from source using `scons platform=macos arch=arm64 target=template_debug/release` from the cloned repo. Required: Xcode CLT + `brew install scons`. Output binaries go into `demo/addons/godot-sqlite/bin/` (not the repo root `addons/`).
+
+### godot-sqlite: `SQLite` type annotation causes parse error when binary missing
+**Problem:** `var _db: SQLite = null` caused "Could not find type 'SQLite'" even with the plugin enabled in project.godot, because the GDExtension binary wasn't loading.
+**Finding:** GDScript validates type annotations at parse time. If the GDExtension binary fails to load (missing, wrong platform, empty framework), the class is never registered and any static reference to `SQLite` fails at parse time — before the script can even run.
+**Solution:** Use `var _db: Variant = null` and replace `SQLite.new()` with `ClassDB.instantiate("SQLite")`, guarded by `ClassDB.class_exists("SQLite")`. This lets the script always parse cleanly and fail gracefully at runtime with a clear error message.
+
+### godot-sqlite: `_is_open` must be set before PRAGMA queries
+**Problem:** `DatabaseManager._open()` ran `_query("PRAGMA journal_mode = WAL")` before setting `_is_open = true`. `_query()` checks `_is_open` as a guard and returned early, causing `push_error` spam on every run.
+**Solution:** Move `_is_open = true` to immediately after `_db.open_db()` succeeds, before any PRAGMA calls.
+
+### godot-sqlite: `.db` extension is appended automatically
+**Finding:** The godot-sqlite addon appends `.db` to the path automatically. Set `_db.path = "user://blightsilver"` (no extension) — the file on disk will be `blightsilver.db`. Setting `"user://blightsilver.db"` creates `blightsilver.db.db`.
+
+### Save data location (macOS)
+**Finding:** Godot user data (`save_data.json`, `blightsilver.db`) lives at:
+`~/Library/Application Support/Godot/app_userdata/Blightsilver/`
+This is outside the repo and is machine-local. Never commit save files to git. To move save data between machines, manually copy both files to the same path on the target machine.
+
+---
+
+## 2026-05-17 — AI Bug: Reveal Cards (Radar, Spy, etc.) Get Stuck
+
+### AI targets dead_end cells with reveal tech, game hangs
+**Problem:** When the AI played a reveal tech card (Radar/Spy/Double Spy), the game sometimes got stuck — the reveal sequence never completed.
+**Finding:** `_random_unrevealed_opponent()` in `AIPlayer.gd` filtered for `not card.face_up` but did NOT exclude `dead_end` cells. Dead_end cells are placed face-down during setup (they're empty grid slots), so they passed the filter. But `_handle_tech_target()` in `GameBoard.gd` rejects dead_end cells with an early `return` without decrementing `_tech_reveals_remaining` or calling `_finish_tech_action()` — leaving the reveal sequence hung.
+**Solution:** Add `and card.card_type != "dead_end"` to the filter in `_random_unrevealed_opponent()`. This applies to all reveal-type cards since they all share this function.
+**Affected cards:** Radar, Spy, Double Spy, Corrupted Spy (any card using `REVEAL_OPPONENT_SQUARE` / `REVEAL_OPPONENT_SQUARE_CHAIN` effect type).
+
+---
+
+## 2026-05-17 — PackOpeningOverlay: Skippable Parameter
+
+### Added `skippable` flag to PackOpeningOverlay
+**Design:** Added `skippable: bool = true` parameter to `PackOpeningOverlay.open()`. When `false`, `_input()` ignores all click/Space input, forcing the player to watch the full animation (including the 3.5s hold phase).
+**Usage:** `PackOpeningOverlay.open(parent, img, c1, c2, c3, false)` — e.g. for story-critical pack reveals in VN sequences.
+**Default:** `true` — all existing callers (ShopMenu, admin command) are unaffected.
+
 <!-- New entries go above this line, newest first -->

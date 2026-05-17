@@ -97,6 +97,12 @@ var _f_player1_name: LineEdit = null
 var _f_player2_name: LineEdit = null
 var _f_portrait_p1: LineEdit = null
 var _f_portrait_p2: LineEdit = null
+var _f_portrait_p1_offset_x: SpinBox = null
+var _f_portrait_p1_offset_y: SpinBox = null
+var _f_portrait_p1_size:     SpinBox = null
+var _f_portrait_p2_offset_x: SpinBox = null
+var _f_portrait_p2_offset_y: SpinBox = null
+var _f_portrait_p2_size:     SpinBox = null
 var _f_battle_bgm: LineEdit = null
 var _f_battle_bgm_vol: SpinBox = null
 var _f_start_battle: CheckBox = null
@@ -575,8 +581,16 @@ func _build_fields() -> void:
 	_f_player2_name = _row_le(v, "Player 2 Name", "e.g. Midnight Shadow  (blank = keep default)")
 	_f_portrait_p1 = _row_le(v, "Portrait P1", "res://assets/textures/ui/portraits/...")
 	_add_browse(_f_portrait_p1, PackedStringArray(["*.png,*.jpg,*.webp;Image"]), "res://assets/textures/ui/portraits/")
+	_f_portrait_p1_offset_x = _row_sb(v, "P1 Portrait Offset X", -800.0, 800.0, 1.0, "pixels — positive = move right (toward center)")
+	_f_portrait_p1_offset_y = _row_sb(v, "P1 Portrait Offset Y", -720.0, 720.0, 1.0, "pixels — positive = move down")
+	_f_portrait_p1_size     = _row_sb(v, "P1 Portrait Size",       0.3,   3.0,  0.05, "multiplier  (1.0 = default height)")
+	_f_portrait_p1_size.value = 1.0
 	_f_portrait_p2 = _row_le(v, "Portrait P2", "res://assets/textures/ui/portraits/...")
 	_add_browse(_f_portrait_p2, PackedStringArray(["*.png,*.jpg,*.webp;Image"]), "res://assets/textures/ui/portraits/")
+	_f_portrait_p2_offset_x = _row_sb(v, "P2 Portrait Offset X", -800.0, 800.0, 1.0, "pixels — positive = move left (more visible)")
+	_f_portrait_p2_offset_y = _row_sb(v, "P2 Portrait Offset Y", -720.0, 720.0, 1.0, "pixels — positive = move up")
+	_f_portrait_p2_size     = _row_sb(v, "P2 Portrait Size",       0.3,   3.0,  0.05, "multiplier  (1.0 = default height)")
+	_f_portrait_p2_size.value = 1.0
 	_f_battle_bgm = _row_le(v, "Battle BGM", "res://assets/audio/bgm_boss_1.mp3  (blank = use default)")
 	_add_browse(_f_battle_bgm, PackedStringArray(["*.mp3,*.ogg,*.wav;Audio"]), "res://assets/audio/")
 	_f_battle_bgm_vol = _row_sb(v, "BGM Volume", 0.0, 200.0, 1.0, "100 = normal  |  50 = half")
@@ -689,6 +703,12 @@ func _connect_static_signals() -> void:
 	_f_player2_name.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_portrait_p1.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_portrait_p2.text_changed.connect(func(_s: String) -> void: ch.call())
+	_f_portrait_p1_offset_x.value_changed.connect(func(_v: float) -> void: ch.call())
+	_f_portrait_p1_offset_y.value_changed.connect(func(_v: float) -> void: ch.call())
+	_f_portrait_p1_size.value_changed.connect(func(_v: float) -> void: ch.call())
+	_f_portrait_p2_offset_x.value_changed.connect(func(_v: float) -> void: ch.call())
+	_f_portrait_p2_offset_y.value_changed.connect(func(_v: float) -> void: ch.call())
+	_f_portrait_p2_size.value_changed.connect(func(_v: float) -> void: ch.call())
 	_f_battle_bgm.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_battle_bgm_vol.value_changed.connect(func(_v: float) -> void: ch.call())
 	_f_on_win.text_changed.connect(func(_s: String) -> void: ch.call())
@@ -1180,7 +1200,13 @@ func _populate_fields() -> void:
 	_f_player1_name.text = str(b.get("player1_name", ""))
 	_f_player2_name.text = str(b.get("player2_name", ""))
 	_f_portrait_p1.text = str(b.get("portrait_p1", ""))
+	_f_portrait_p1_offset_x.value = float(b.get("portrait_p1_offset_x", 0.0))
+	_f_portrait_p1_offset_y.value = float(b.get("portrait_p1_offset_y", 0.0))
+	_f_portrait_p1_size.value     = float(b.get("portrait_p1_size", 1.0))
 	_f_portrait_p2.text = str(b.get("portrait_p2", ""))
+	_f_portrait_p2_offset_x.value = float(b.get("portrait_p2_offset_x", 0.0))
+	_f_portrait_p2_offset_y.value = float(b.get("portrait_p2_offset_y", 0.0))
+	_f_portrait_p2_size.value     = float(b.get("portrait_p2_size", 1.0))
 	_f_battle_bgm.text = str(b.get("battle_bgm", ""))
 	_f_battle_bgm_vol.value = float(b.get("battle_bgm_volume", 100.0))
 	_f_on_win.text  = str(b.get("on_win",  ""))
@@ -1401,9 +1427,27 @@ func _collect_beat() -> Dictionary:
 	var pp1: String = _f_portrait_p1.text.strip_edges()
 	if not pp1.is_empty():
 		b["portrait_p1"] = pp1
+	var p1ox: float = _f_portrait_p1_offset_x.value
+	if p1ox != 0.0:
+		b["portrait_p1_offset_x"] = p1ox
+	var p1oy: float = _f_portrait_p1_offset_y.value
+	if p1oy != 0.0:
+		b["portrait_p1_offset_y"] = p1oy
+	var p1sz: float = _f_portrait_p1_size.value
+	if p1sz != 1.0:
+		b["portrait_p1_size"] = p1sz
 	var pp2: String = _f_portrait_p2.text.strip_edges()
 	if not pp2.is_empty():
 		b["portrait_p2"] = pp2
+	var p2ox: float = _f_portrait_p2_offset_x.value
+	if p2ox != 0.0:
+		b["portrait_p2_offset_x"] = p2ox
+	var p2oy: float = _f_portrait_p2_offset_y.value
+	if p2oy != 0.0:
+		b["portrait_p2_offset_y"] = p2oy
+	var p2sz: float = _f_portrait_p2_size.value
+	if p2sz != 1.0:
+		b["portrait_p2_size"] = p2sz
 	var battle_bgm: String = _f_battle_bgm.text.strip_edges()
 	if not battle_bgm.is_empty():
 		b["battle_bgm"] = battle_bgm

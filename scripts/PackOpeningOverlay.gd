@@ -27,6 +27,7 @@ var _card_gap: float = 0.0
 var _card_names     : Array[String] = []
 var _pack_image_path: String        = ""   # overrides PACK_TEX_PATH when non-empty
 var _skip_requested : bool          = false
+var _skippable      : bool          = true
 var _anim_done      : bool          = false
 var _glow_sbs       : Array         = [null, null, null]  # StyleBoxFlat refs
 
@@ -41,9 +42,10 @@ var _clip_bot : Control   = null
 # pack_image: res:// path to the pack illustration (empty = use default)
 # card1/2/3 : card names (empty / invalid = shows fallback vellum frame)
 # ──────────────────────────────────────────────────────────────────────────────
-static func open(parent: Node, pack_image: String, card1: String, card2: String, card3: String) -> void:
+static func open(parent: Node, pack_image: String, card1: String, card2: String, card3: String, skippable: bool = true) -> void:
 	var overlay := PackOpeningOverlay.new()
 	overlay._pack_image_path = pack_image if pack_image != null else ""
+	overlay._skippable       = skippable
 	overlay._card_names = [
 		card1 if card1 != null else "",
 		card2 if card2 != null else "",
@@ -73,7 +75,7 @@ func _compute_sizes() -> void:
 	_card_h = _card_w * (210.0 / 150.0)
 
 func _input(event: InputEvent) -> void:
-	if _anim_done:
+	if _anim_done or not _skippable:
 		return
 	if event is InputEventMouseButton:
 		var mbe: InputEventMouseButton = event as InputEventMouseButton

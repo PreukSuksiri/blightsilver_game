@@ -229,7 +229,7 @@ func _random_unrevealed_opponent() -> Vector2i:
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
 			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
-			if not card.face_up:
+			if not card.face_up and card.card_type != "dead_end":
 				options.append(Vector2i(r, c))
 	if options.is_empty():
 		return Vector2i(0, 0)

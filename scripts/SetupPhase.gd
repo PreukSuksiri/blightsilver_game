@@ -237,13 +237,14 @@ func start_setup(player_index: int) -> void:
 		else GameState.battle_ai_forced_cells
 	_apply_forced_cells(forced)
 
-	# Show/hide union panel based on game-wide mechanism lock
+	# Show/hide union panel: requires both global unlock AND per-battle flag
+	var show_union: bool = SaveManager.union_mechanism_unlocked and GameState.battle_player_union_enabled
 	if _union_panel_node != null:
-		_union_panel_node.visible = SaveManager.union_mechanism_unlocked
+		_union_panel_node.visible = show_union
 
 	_refresh_gallery()
 	_stop_zone_flash()
-	if SaveManager.union_mechanism_unlocked:
+	if show_union:
 		_refresh_union_panel()
 	_refresh_confirm()
 

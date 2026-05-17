@@ -42,6 +42,9 @@ var ai_player: AIPlayer
 var _p1_portrait: TextureRect = null
 var _p2_portrait: TextureRect = null
 
+# VN path to play after the win screen is dismissed (set by _on_game_over)
+var _pending_win_vn: String = ""
+
 # Corner crystal displays (icon + label, above portraits)
 var _p1_bottom_crystal: Label = null
 var _p2_bottom_crystal: Label = null
@@ -116,7 +119,8 @@ var _hover_atk_lbl: Label = null
 var _hover_def_lbl: Label = null
 var _hover_aff_lbl: Label = null
 var _hover_desc_lbl: Label = null
-var _tech_hover_node: Control = null  # card node currently showing target hover highlight
+var _tech_hover_node: Control = null    # card node currently showing target hover highlight
+var _attack_hover_node: Control = null  # card node currently showing attack-target red hover
 
 # grid_nodes[player][row][col] -> Card control node
 var grid_nodes: Array = [[], []]
@@ -702,7 +706,11 @@ func _build_portraits() -> void:
 	var p1_tex: Texture2D = load(GameState.player_portraits[0])
 	if p1_tex:
 		var sz := p1_tex.get_size()
-		var pw: float = REF_H * sz.x / sz.y if sz.y > 0.0 else 300.0
+		var p1_scale: float = maxf(0.1, GameState.portrait_p1_size)
+		var p1h: float = REF_H * p1_scale
+		var pw: float = p1h * sz.x / sz.y if sz.y > 0.0 else 300.0
+		var p1ox: float = GameState.portrait_p1_offset.x
+		var p1oy: float = GameState.portrait_p1_offset.y
 		_p1_portrait = TextureRect.new()
 		_p1_portrait.texture       = p1_tex
 		_p1_portrait.layout_mode   = 1
@@ -710,10 +718,10 @@ func _build_portraits() -> void:
 		_p1_portrait.anchor_top    = 1.0
 		_p1_portrait.anchor_right  = 0.0
 		_p1_portrait.anchor_bottom = 1.0
-		_p1_portrait.offset_left   = -pw * 0.4
-		_p1_portrait.offset_top    = -REF_H
-		_p1_portrait.offset_right  = pw * 0.6
-		_p1_portrait.offset_bottom = 0.0
+		_p1_portrait.offset_left   = -pw * 0.4 + p1ox
+		_p1_portrait.offset_top    = -p1h + p1oy
+		_p1_portrait.offset_right  = pw * 0.6 + p1ox
+		_p1_portrait.offset_bottom = p1oy
 		_p1_portrait.visible       = false
 		_p1_portrait.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		_p1_portrait.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
@@ -725,7 +733,11 @@ func _build_portraits() -> void:
 	var p2_tex: Texture2D = load(GameState.player_portraits[1])
 	if p2_tex:
 		var sz := p2_tex.get_size()
-		var pw: float = REF_H * sz.x / sz.y if sz.y > 0.0 else 300.0
+		var p2_scale: float = maxf(0.1, GameState.portrait_p2_size)
+		var p2h: float = REF_H * p2_scale
+		var pw: float = p2h * sz.x / sz.y if sz.y > 0.0 else 300.0
+		var p2ox: float = GameState.portrait_p2_offset.x
+		var p2oy: float = GameState.portrait_p2_offset.y
 		_p2_portrait = TextureRect.new()
 		_p2_portrait.texture       = p2_tex
 		_p2_portrait.layout_mode   = 1
@@ -733,10 +745,10 @@ func _build_portraits() -> void:
 		_p2_portrait.anchor_top    = 1.0
 		_p2_portrait.anchor_right  = 1.0
 		_p2_portrait.anchor_bottom = 1.0
-		_p2_portrait.offset_left   = -pw * 0.6
-		_p2_portrait.offset_top    = -REF_H
-		_p2_portrait.offset_right  = pw * 0.4
-		_p2_portrait.offset_bottom = 0.0
+		_p2_portrait.offset_left   = -pw * 0.6 - p2ox
+		_p2_portrait.offset_top    = -p2h + p2oy
+		_p2_portrait.offset_right  = pw * 0.4 - p2ox
+		_p2_portrait.offset_bottom = p2oy
 		_p2_portrait.visible       = false
 		_p2_portrait.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		_p2_portrait.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
@@ -1829,7 +1841,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	var _union_phase_ok: bool = GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]
 	var _available_unions: Array = []
 	if ctx_player == current_player and card.card_type == "character" and _union_phase_ok \
-			and SaveManager.union_mechanism_unlocked:
+			and SaveManager.union_mechanism_unlocked and GameState.battle_player_union_enabled:
 		for _entry: Dictionary in UnionDatabase.find_available_unions(ctx_player, row, col):
 			var _u: UnionData = _entry["union"]
 			for _cond: Dictionary in _u.material_conditions:
@@ -3263,13 +3275,20 @@ func _build_hover_panel() -> void:
 
 func _on_grid_card_hovered(player: int, row: int, col: int) -> void:
 	var inst: GameState.CardInstance = GameState.get_card(player, row, col)
-	if inst == null or inst.card_type == "dead_end":
+	if inst == null:
 		return
 	# Flash hover during tech target selection even if card is face-down
 	if selection_state == SelectionState.SELECTING_TECH_TARGET \
 			and "opponent_squares" in pending_tech_filter \
 			and player == GameState.get_opponent(GameState.current_player):
 		_set_tech_hover_node(grid_nodes[player][row][col])
+	# Red hover during attack target selection — dead_end slots are valid targets too
+	if selection_state == SelectionState.SELECTING_TARGET \
+			and player == GameState.get_opponent(GameState.current_player):
+		_set_attack_hover_node(grid_nodes[player][row][col])
+	# Dead-end slots have no info to show
+	if inst.card_type == "dead_end":
+		return
 	var is_own := (player == GameState.current_player)
 	if not (is_own or inst.face_up):
 		return
@@ -3326,6 +3345,7 @@ func _hide_hover_info() -> void:
 	if _hover_panel != null:
 		_hover_panel.visible = false
 	_set_tech_hover_node(null)
+	_set_attack_hover_node(null)
 
 func _set_tech_hover_node(node: Control) -> void:
 	if _tech_hover_node != null and _tech_hover_node != node:
@@ -3333,6 +3353,13 @@ func _set_tech_hover_node(node: Control) -> void:
 	_tech_hover_node = node
 	if _tech_hover_node != null:
 		_tech_hover_node.set_target_hover(true)
+
+func _set_attack_hover_node(node: Control) -> void:
+	if _attack_hover_node != null and _attack_hover_node != node:
+		_attack_hover_node.set_attack_hover(false)
+	_attack_hover_node = node
+	if _attack_hover_node != null:
+		_attack_hover_node.set_attack_hover(true)
 
 func _stop_battle_music() -> void:
 	if _battle_music != null:
@@ -3371,7 +3398,9 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	var _p1_tex: Texture2D = load(GameState.player_portraits[0])
 	if _p1_tex:
 		var sz := _p1_tex.get_size()
-		var pw: float = REF_H * sz.x / sz.y if sz.y > 0.0 else PORTRAIT_W
+		var _p1h: float = REF_H * maxf(0.1, GameState.portrait_p1_size)
+		var pw: float = _p1h * sz.x / sz.y if sz.y > 0.0 else PORTRAIT_W
+		var _p1ox: float = GameState.portrait_p1_offset.x
 		coin_p1_port = TextureRect.new()
 		coin_p1_port.texture       = _p1_tex
 		coin_p1_port.layout_mode   = 1
@@ -3379,7 +3408,8 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		coin_p1_port.anchor_top    = 0.0
 		coin_p1_port.anchor_right  = 0.0
 		coin_p1_port.anchor_bottom = 1.0
-		coin_p1_port.offset_right  = pw
+		coin_p1_port.offset_left   = _p1ox
+		coin_p1_port.offset_right  = pw + _p1ox
 		coin_p1_port.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		coin_p1_port.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
 		coin_p1_port.flip_h        = true
@@ -3390,7 +3420,9 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	var _p2_tex: Texture2D = load(GameState.player_portraits[1])
 	if _p2_tex:
 		var sz := _p2_tex.get_size()
-		var pw: float = REF_H * sz.x / sz.y if sz.y > 0.0 else PORTRAIT_W
+		var _p2h: float = REF_H * maxf(0.1, GameState.portrait_p2_size)
+		var pw: float = _p2h * sz.x / sz.y if sz.y > 0.0 else PORTRAIT_W
+		var _p2ox: float = GameState.portrait_p2_offset.x
 		coin_p2_port = TextureRect.new()
 		coin_p2_port.texture       = _p2_tex
 		coin_p2_port.layout_mode   = 1
@@ -3398,7 +3430,8 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		coin_p2_port.anchor_top    = 0.0
 		coin_p2_port.anchor_right  = 1.0
 		coin_p2_port.anchor_bottom = 1.0
-		coin_p2_port.offset_left   = -pw
+		coin_p2_port.offset_left   = -pw - _p2ox
+		coin_p2_port.offset_right  = -_p2ox
 		coin_p2_port.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		coin_p2_port.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
 		coin_p2_port.mouse_filter  = Control.MOUSE_FILTER_IGNORE
@@ -4032,7 +4065,10 @@ func _enter_mode_select() -> void:
 		if _options_btn:
 			_options_btn.visible = false
 		_ai_watchdog.start()
-		ai_player.decide_turn()
+		if _tech_used_this_turn[GameState.current_player]:
+			ai_player.continue_after_union()  # tech already played this turn — skip to attack
+		else:
+			ai_player.decide_turn()
 		return
 	_set_selection_state(SelectionState.SELECTING_ATTACKER)
 	_highlight_attackable_chars()
@@ -4375,6 +4411,11 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	# If AI turn, auto-resolve target
 	if _is_ai_turn():
 		await get_tree().create_timer(0.4).timeout
+		# Guard: if a reveal-tech has no valid targets (all opponent cards already revealed),
+		# skip it rather than hanging on an unresolvable target selection.
+		if "opponent_squares" in filter and _count_opponent_unrevealed(GameState.get_opponent(GameState.current_player)) == 0:
+			_finish_tech_action(GameState.current_player)
+			return
 		var ai_target := ai_player.decide_target(filter)
 		var target_player := GameState.get_opponent(1) if "opponent" in filter else 1
 		_handle_tech_target(target_player, ai_target)
@@ -4588,6 +4629,7 @@ func _clear_highlights() -> void:
 
 func _clear_selection() -> void:
 	_hide_card_context()
+	_set_attack_hover_node(null)
 	for p in range(2):
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
@@ -4668,6 +4710,11 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 	# Dead-end reveal plays a 0.5s hold before disappearing — wait for that to finish
 	var delay := 0.75 if (inst != null and inst.card_type == "dead_end") else 0.3
 	await get_tree().create_timer(delay).timeout
+	# Trap revealed → sent to void immediately. No crystal cost. Slot becomes empty.
+	if inst != null and inst.card_type == "trap":
+		_void_piles[player].append({"card_name": inst.card_name, "card_type": inst.card_type})
+		_update_void_stacks()
+		GameState.void_trap(player, row, col)
 	_refresh_card_node(player, row, col)
 
 func _on_card_destroyed(player: int, row: int, col: int) -> void:
@@ -4878,25 +4925,29 @@ func _process(_delta: float) -> void:
 		)
 
 func _on_game_over(winner: int) -> void:
-	# ── VN-driven battle: skip the new sequence, go straight to VN ──────────
+	# Dismiss guide box immediately so it doesn't bleed into VN or win screen
+	_hide_guide()
+
+	# ── VN-driven battle ─────────────────────────────────────────────────────
 	var vn_win: String  = GameState.vn_on_win
 	var vn_lose: String = GameState.vn_on_lose
-	if vn_win != "" or vn_lose != "":
-		GameState.vn_on_win  = ""
-		GameState.vn_on_lose = ""
+	GameState.vn_on_win  = ""
+	GameState.vn_on_lose = ""
+	var player_won := (winner == 0)
+	if not player_won and vn_lose != "" and vn_lose != "game_over":
+		# Loss: go straight to lose VN, skip win screen
 		_stop_battle_music()
-		var player_won := (winner == 0)
-		var vn_path: String = vn_win if player_won else vn_lose
-		if vn_path != "" and vn_path != "game_over":
-			var vn := preload("res://scenes/vn_player.tscn").instantiate()
-			add_child(vn)
-			var cb := func() -> void: get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
-			vn.play_scene(vn_path, cb)
-			return
+		var vn := preload("res://scenes/vn_player.tscn").instantiate()
+		add_child(vn)
+		var cb := func() -> void: get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		vn.play_scene(vn_lose, cb)
+		return
+	if player_won and vn_win != "" and vn_win != "game_over":
+		# Win: show win screen first; VN plays after player taps
+		_pending_win_vn = vn_win
 
 	# ── Campaign: record result now, before any animation ────────────────────
 	if GameState.game_mode == GameState.GameMode.CAMPAIGN:
-		var player_won := (winner == 0)
 		if player_won:
 			CampaignManager.complete_node(GameState.campaign_node_id)
 		CampaignManager.pending_result = {
@@ -5163,7 +5214,17 @@ func _show_endgame_screen(winner: int) -> void:
 		add_child(black)
 		var out_tw := create_tween()
 		out_tw.tween_property(black, "color:a", 1.0, 0.5).set_trans(Tween.TRANS_SINE)
-		out_tw.tween_callback(func() -> void: get_tree().change_scene_to_file(dest)))
+		var pending_vn := _pending_win_vn
+		_pending_win_vn = ""
+		if pending_vn != "":
+			out_tw.tween_callback(func() -> void:
+				_stop_battle_music()
+				var vn := preload("res://scenes/vn_player.tscn").instantiate()
+				add_child(vn)
+				var cb := func() -> void: get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+				vn.play_scene(pending_vn, cb))
+		else:
+			out_tw.tween_callback(func() -> void: get_tree().change_scene_to_file(dest)))
 
 	# Fade in the endgame screen
 	var ft := create_tween()

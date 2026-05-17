@@ -437,16 +437,10 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
-		"bg_ken_burns": {
-			"duration": 2.0,
-			"pan_x": -30.0,
-			"pan_y": 30.0,
-			"zoom": 1.1
-		},
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"position": "right",
+				"position": "far_left",
 				"scale": 175.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
@@ -462,7 +456,7 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"position": "left",
+				"position": "far_left",
 				"scale": 175.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
@@ -475,7 +469,7 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"position": "right",
+				"position": "far_left",
 				"scale": 175.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
@@ -495,15 +489,13 @@
 			},
 			{
 				"crop_bottom": 30.0,
-				"position": "left",
+				"position": "far_left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
 		],
 		"speaker": "Kelly",
-		"text": {
-			"en": "Nex!! Use the Vellum Card!!"
-		}
+		"text": "Nex!! Use the Vellum Card!!"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
@@ -516,22 +508,38 @@
 			},
 			{
 				"crop_bottom": 30.0,
-				"position": "left",
+				"position": "far_left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "May the silver path show your true sins!! Vellum cards commence!!"
-		}
+		"text": "May the silver path show your true sins!! Vellum cards commence!!"
 	},
 	{
 		"animation": "animation_vellum_card_commence_facedown",
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
 		"comment": "Animation",
-		"sfx": "res://assets/audio/sound_spellcasting_2.mp3"
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"wait": 5.8
 	},
 	{
+		"ai_union_enabled": false,
+		"battle_bgm": "res://assets/audio/bgm_battle_2.mp3",
 		"comment": "Battle - Midnight Shadow",
 		"enemy_deck": {
 			"characters": [
@@ -558,8 +566,11 @@
 		"on_win": "res://campaign/scenes/ch1_s1_post.json",
 		"player1_name": "Nex Crowmont",
 		"player2_name": "Midnight Shadow",
+		"player_union_enabled": false,
 		"portrait_p1": "res://assets/textures/vn/characters/vn_char_nex_seething.png",
 		"portrait_p2": "res://assets/textures/vn/characters/vn_char_midnight_shadow.png",
+		"portrait_p2_offset_x": -160.0,
+		"portrait_p2_offset_y": 70.0,
 		"start_battle": true
 	}
 ]

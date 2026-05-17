@@ -139,12 +139,18 @@ var tech_cards_played_this_game: Array = [[], []]
 # VN-driven battle outcome routing (set by VNPlayer after new_game(), persists across scene change)
 var vn_on_win: String = ""
 var vn_on_lose: String = ""
+var portrait_p1_offset: Vector2 = Vector2.ZERO
+var portrait_p1_size:   float   = 1.0
+var portrait_p2_offset: Vector2 = Vector2.ZERO
+var portrait_p2_size:   float   = 1.0
 
 # Battle BGM (set by VNPlayer or defaults; not reset by new_game())
 var battle_bgm_path: String = "res://assets/audio/bgm_battle_2.mp3"
 var battle_bgm_volume: float = 100.0   # percentage  (100 = 0 dB)
 
-# Battle placement/summon config — reset by new_game(), then overwritten by VNPlayer
+# Battle placement/summon config — set by VNPlayer before scene change.
+# _vn_battle_pending = true tells new_game() to preserve these values instead of resetting them.
+var _vn_battle_pending: bool = false
 var battle_ai_union_enabled: bool = true
 var battle_player_union_enabled: bool = true
 var battle_player_forced_cells: Array = []  # Array[Dictionary{card_name, row, col}]
@@ -285,6 +291,13 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 	grids[player_index][row][col].face_up = true
 	grids[player_index][row][col].was_destroyed = true
 
+## Remove a trap card silently when revealed (no crystal cost, no was_destroyed flag).
+## The slot becomes a plain blank dead_end — completely empty, re-targetable.
+func void_trap(player_index: int, row: int, col: int) -> void:
+	var blank := CardInstance.new()
+	blank.card_type = "dead_end"
+	grids[player_index][row][col] = blank
+
 ## Remove a Union material card silently (no crystal loss, no card_destroyed signal,
 ## no was_destroyed flag). The slot becomes a normal blank dead_end.
 func remove_union_material(player_index: int, row: int, col: int) -> void:
@@ -423,10 +436,12 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	skip_next_turn = [false, false]
 	hypnotized_cards = [[], []]
 	skip_counts = [0, 0]
-	battle_ai_union_enabled = true
-	battle_player_union_enabled = true
-	battle_player_forced_cells.clear()
-	battle_ai_forced_cells.clear()
+	if not _vn_battle_pending:
+		battle_ai_union_enabled = true
+		battle_player_union_enabled = true
+		battle_player_forced_cells.clear()
+		battle_ai_forced_cells.clear()
+	_vn_battle_pending = false
 	_init_grids()
 	set_phase(Phase.SETUP_P1)
 

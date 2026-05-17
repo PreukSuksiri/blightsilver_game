@@ -1,0 +1,62 @@
+[
+	{
+
+	},
+	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"comment": "Animation",
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"wait": 5.8
+	},
+	{
+		"ai_union_enabled": false,
+		"battle_bgm": "res://assets/audio/bgm_battle_2.mp3",
+		"comment": "Battle - Midnight Shadow",
+		"enemy_deck": {
+			"characters": [
+				"Doom Wisp",
+				"Chaotic Wisp",
+				"Foul Wisp",
+				"Night Whisperer",
+				"Bat Swarm",
+				"Ectoplasm"
+			],
+			"tech": [
+				"Radar",
+				"Harsh Training",
+				"Force Shield"
+			],
+			"traps": [
+				"Trap Hole",
+				"Checkpoint",
+				"Hypnosis",
+				"Mana Drain"
+			]
+		},
+		"on_lose": "game_over",
+		"on_win": "res://campaign/scenes/ch1_s1_post.json",
+		"player1_name": "Nex Crowmont",
+		"player2_name": "Midnight Shadow",
+		"player_union_enabled": false,
+		"portrait_p1": "res://assets/textures/vn/characters/vn_char_nex_seething.png",
+		"portrait_p2": "res://assets/textures/vn/characters/vn_char_midnight_shadow.png",
+		"portrait_p2_offset_x": -160.0,
+		"portrait_p2_offset_y": 70.0,
+		"start_battle": true
+	}
+]

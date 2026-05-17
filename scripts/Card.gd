@@ -115,6 +115,7 @@ var _attacked_icon_tween: Tween = null
 var _wait_glow_tween: Tween = null
 var _active_glow_tween: Tween = null
 var _target_hover_tween: Tween = null
+var _attack_hover_tween: Tween = null
 var _union_flash_tween: Tween = null
 var _is_peeking: bool = false
 var _is_enemy_view: bool = false
@@ -768,6 +769,19 @@ func set_target_hover(hovered: bool) -> void:
 		sb.border_width_top    = 2
 		sb.border_width_right  = 2
 		sb.border_width_bottom = 2
+
+func set_attack_hover(hovered: bool) -> void:
+	if _attack_hover_tween and _attack_hover_tween.is_valid():
+		_attack_hover_tween.kill()
+		_attack_hover_tween = null
+	if hovered:
+		_attack_hover_tween = create_tween().set_loops()
+		_attack_hover_tween.tween_property(self, "modulate",
+			Color(1.5, 0.5, 0.5, 1.0), 0.22).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_attack_hover_tween.tween_property(self, "modulate",
+			Color.WHITE, 0.22).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	else:
+		modulate = Color.WHITE
 
 func set_locked(locked: bool) -> void:
 	is_locked = locked

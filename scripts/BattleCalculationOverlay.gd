@@ -633,20 +633,15 @@ func _anim_tie(att: Control, def: Control, dx: float) -> void:
 	await shatter_t.finished
 
 # 3D: Trap triggered, attacker survives
-func _anim_trap_survives(att: Control, def: Control, dx: float) -> void:
-	var att_rest := att.position.x
+func _anim_trap_survives(att: Control, def: Control, _dx: float) -> void:
 	_play_sfx(SFX_GEAR)
-	await _bounce_forward(att, dx)
-	_flash_white(def)  # runs concurrently as background coroutine
-	await _bounce_back(att, att_rest)
+	await _flash_white(def)
+	await get_tree().create_timer(0.3).timeout
 
 # 3E: Trap triggered, attacker destroyed
-func _anim_trap_destroys(att: Control, def: Control, dx: float) -> void:
-	var att_rest := att.position.x
+func _anim_trap_destroys(att: Control, def: Control, _dx: float) -> void:
 	_play_sfx(SFX_GEAR)
-	await _bounce_forward(att, dx)
-	_flash_white(def)  # runs concurrently as background coroutine
-	await _bounce_back(att, att_rest)
+	_flash_white(def)  # runs concurrently
 	await get_tree().create_timer(0.1).timeout
 	await _shatter(att)
 
