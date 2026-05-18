@@ -97,6 +97,31 @@ func _make_pack_card(pack: Dictionary) -> Control:
 	contents.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(contents)
 
+	# — View Contents button (pool packs only) ——————————
+	var card_pool: Variant = pack.get("card_pool", null)
+	if card_pool is Array and not (card_pool as Array).is_empty():
+		var vc_btn := Button.new()
+		vc_btn.text = "View Contents"
+		vc_btn.add_theme_font_size_override("font_size", 12)
+		vc_btn.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 0.85))
+		var vc_sb := StyleBoxFlat.new()
+		vc_sb.bg_color   = Color(accent.r * 0.08, accent.g * 0.08, accent.b * 0.08, 1.0)
+		vc_sb.border_width_left = 1; vc_sb.border_width_top    = 1
+		vc_sb.border_width_right = 1; vc_sb.border_width_bottom = 1
+		vc_sb.border_color = Color(accent.r, accent.g, accent.b, 0.4)
+		vc_sb.corner_radius_top_left     = 4; vc_sb.corner_radius_top_right    = 4
+		vc_sb.corner_radius_bottom_left  = 4; vc_sb.corner_radius_bottom_right = 4
+		var vc_sb_h := vc_sb.duplicate() as StyleBoxFlat
+		vc_sb_h.border_color = Color(accent.r, accent.g, accent.b, 0.9)
+		vc_btn.add_theme_stylebox_override("normal",  vc_sb)
+		vc_btn.add_theme_stylebox_override("hover",   vc_sb_h)
+		vc_btn.add_theme_stylebox_override("pressed", vc_sb)
+		vc_btn.add_theme_stylebox_override("focus",   vc_sb)
+		var pid: String = str(pack.get("id", ""))
+		vc_btn.pressed.connect(func() -> void:
+			load("res://scripts/PackContentsOverlay.gd").open(get_tree().root, pid))
+		vbox.add_child(vc_btn)
+
 	# — Price ——————————————————————————————
 	var price_lbl := Label.new()
 	price_lbl.text = "%d Credits" % pack["price"]
@@ -237,6 +262,11 @@ func _make_disc_card() -> Control:
 	return card
 
 func _contents_text(pack: Dictionary) -> String:
+	var card_pool: Variant = pack.get("card_pool", null)
+	if card_pool is Array and not (card_pool as Array).is_empty():
+		var count: int = int(pack.get("card_count", 3))
+		var pool_size: int = (card_pool as Array).size()
+		return "Draws %d · %d cards in pool" % [count, pool_size]
 	var parts: Array = []
 	for slot: Dictionary in pack.get("slots", []):
 		var n: int = slot.get("count", 1)
@@ -258,8 +288,11 @@ func _on_buy(pack_id: String) -> void:
 		var n0: String = (cards[0] as Dictionary).get("name", "")
 		var n1: String = (cards[1] as Dictionary).get("name", "")
 		var n2: String = (cards[2] as Dictionary).get("name", "")
+		var pack_dict: Dictionary = ShopManager.get_pack(pack_id)
+		var pack_img: String  = str(pack_dict.get("pack_image", ""))
+		var pack_nm: String   = str(pack_dict.get("name", ""))
 		var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd")
-		overlay_script.open(get_tree().root, "", n0, n1, n2)
+		overlay_script.open(get_tree().root, pack_img, n0, n1, n2, true, pack_nm)
 	var pack_name: String = ShopManager.get_pack(pack_id).get("name", "Pack")
 	_show_result(pack_name, cards, "")
 

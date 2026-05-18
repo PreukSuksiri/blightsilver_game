@@ -25,11 +25,13 @@ var _card_gap: float = 0.0
 
 # ── State ──────────────────────────────────────────────────────────────────────
 var _card_names     : Array[String] = []
-var _pack_image_path: String        = ""   # overrides PACK_TEX_PATH when non-empty
-var _skip_requested : bool          = false
-var _skippable      : bool          = true
-var _anim_done      : bool          = false
-var _glow_sbs       : Array         = [null, null, null]  # StyleBoxFlat refs
+var _pack_image_path:  String = ""   # overrides PACK_TEX_PATH when non-empty
+var _reroll_pack_name: String = ""   # non-empty enables Re-roll button
+var _skip_requested:   bool   = false
+var _skippable:        bool   = true
+var _anim_done:        bool   = false
+var _reroll_triggered: bool   = false
+var _glow_sbs:         Array  = [null, null, null]  # StyleBoxFlat refs
 
 # ── Scene nodes ───────────────────────────────────────────────────────────────
 var _bg       : ColorRect = null
@@ -42,10 +44,11 @@ var _clip_bot : Control   = null
 # pack_image: res:// path to the pack illustration (empty = use default)
 # card1/2/3 : card names (empty / invalid = shows fallback vellum frame)
 # ──────────────────────────────────────────────────────────────────────────────
-static func open(parent: Node, pack_image: String, card1: String, card2: String, card3: String, skippable: bool = true) -> void:
+static func open(parent: Node, pack_image: String, card1: String, card2: String, card3: String, skippable: bool = true, reroll_pack_name: String = "") -> void:
 	var overlay := PackOpeningOverlay.new()
-	overlay._pack_image_path = pack_image if pack_image != null else ""
-	overlay._skippable       = skippable
+	overlay._pack_image_path  = pack_image if pack_image != null else ""
+	overlay._reroll_pack_name = reroll_pack_name
+	overlay._skippable        = skippable
 	overlay._card_names = [
 		card1 if card1 != null else "",
 		card2 if card2 != null else "",
@@ -259,12 +262,22 @@ func _run() -> void:
 		_start_glow_pulse(i)
 
 	# ── Phase 8: Hold (skippable by click / Space) ─────────────────────────
+	# Show Re-roll button if player has winding keys and pack name is known
+	var reroll_btn: Button = null
+	if _reroll_pack_name != "":
+		reroll_btn = _make_reroll_btn(cx, card_y)
+
 	var elapsed: float = 0.0
-	while elapsed < 3.5 and not _skip_requested:
+	while elapsed < 3.5 and not _skip_requested and not _reroll_triggered:
 		await get_tree().create_timer(0.05).timeout
 		elapsed += 0.05
 
+	if _reroll_triggered:
+		return
+
 	_skip_requested = false
+	if reroll_btn and is_instance_valid(reroll_btn):
+		reroll_btn.queue_free()
 
 	# ── Phase 9: Cards fly to top-right corner ────────────────────────────
 	var dest: Vector2 = Vector2(screen.x + 60.0, -_card_h - 60.0)
@@ -279,6 +292,47 @@ func _run() -> void:
 
 	_anim_done = true
 	queue_free()
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Re-roll (winding key)
+# ──────────────────────────────────────────────────────────────────────────────
+func _make_reroll_btn(cx: float, card_y: float) -> Button:
+	var btn := Button.new()
+	btn.custom_minimum_size = Vector2(200, 44)
+	btn.position = Vector2(cx - 100.0, card_y + _card_h + 18.0)
+	btn.z_index  = 10
+	var key_icon_path := "res://assets/textures/ui/decorations/ui_icon_winding_key.png"
+	if ResourceLoader.exists(key_icon_path):
+		btn.icon = load(key_icon_path) as Texture2D
+	btn.pressed.connect(func() -> void: _on_reroll_pressed(btn))
+	add_child(btn)
+	# Update text and visibility whenever collection changes (e.g. after spending a key)
+	var _update := func() -> void:
+		var keys: int = Collection.winding_keys
+		btn.visible = keys > 0
+		btn.text    = "Re-roll  (%d)" % keys
+	_update.call()
+	Collection.collection_changed.connect(_update)
+	btn.tree_exiting.connect(func() -> void:
+		if Collection.collection_changed.is_connected(_update):
+			Collection.collection_changed.disconnect(_update))
+	return btn
+
+func _on_reroll_pressed(btn: Button) -> void:
+	if not Collection.spend_winding_key():
+		return
+	_reroll_triggered = true
+	if btn and is_instance_valid(btn):
+		btn.visible = false
+	var new_cards: Array = ShopManager.draw_pack_free(_reroll_pack_name)
+	var c1: String = new_cards[0].get("name","") if new_cards.size() > 0 else ""
+	var c2: String = new_cards[1].get("name","") if new_cards.size() > 1 else ""
+	var c3: String = new_cards[2].get("name","") if new_cards.size() > 2 else ""
+	var pack_dict: Dictionary = ShopManager.get_pack_by_name(_reroll_pack_name)
+	var pack_img: String = str(pack_dict.get("pack_image", ""))
+	var parent: Node = get_parent()
+	queue_free()
+	PackOpeningOverlay.open(parent, pack_img, c1, c2, c3, true, _reroll_pack_name)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Pack wiggle animation

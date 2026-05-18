@@ -136,7 +136,17 @@ func admin_command(raw: String) -> String:
 				+ "  grant_deck_cards\n"
 				+ "  grant_all_cards\n"
 				+ "  dungeon_builder [dungeon_id]\n"
-				+ "  dungeon_activator"
+				+ "  dungeon_activator\n"
+				+ "  dungeon_reset\n"
+				+ "  list_packs\n"
+				+ "  open_pack <pack_id_or_name>\n"
+				+ "  grant_pack <pack_id_or_name>\n"
+				+ "  pack_editor\n"
+				+ "  disc_editor\n"
+				+ "  list_discs\n"
+				+ "  grant_disc <disc_id>\n"
+				+ "  grant_winding_keys [count]\n"
+				+ "  grant_incense [count]"
 			)
 
 		"tts":
@@ -591,6 +601,133 @@ func admin_command(raw: String) -> String:
 			activator.name = "DungeonActivatorOverlay"
 			scene.add_child(activator)
 			return "Daily Dungeon Activator opened."
+
+		"dungeon_reset":
+			var dungeon_id: String = DailyDungeonManager.get_current_dungeon_id()
+			if dungeon_id.is_empty():
+				return "No active dungeon to reset."
+			DailyDungeonManager.node_progress.erase(dungeon_id)
+			DailyDungeonManager.player_map_node_id = ""
+			SaveManager.save_data()
+			return "Daily dungeon progress reset: %s" % dungeon_id
+
+		"list_packs":
+			var lines: Array = []
+			for p: Dictionary in ShopManager.get_all_packs():
+				lines.append("  [%s]  %s  —  %d cr  (%s)" % [
+					p.get("id",""), p.get("name",""),
+					p.get("price", 0),
+					", ".join(PackedStringArray(
+						p.get("slots",[]).map(func(s: Dictionary) -> String:
+							return "%dx %s" % [s.get("count",1), s.get("type","?")])
+					))
+				])
+			return "Packs:\n" + "\n".join(PackedStringArray(lines))
+
+		"open_pack":
+			# Open a pack with full animation (deducting credits)
+			if parts.size() < 2:
+				return "Usage: open_pack <pack_id_or_name>"
+			var query: String = " ".join(PackedStringArray(parts.slice(1)))
+			var pack: Dictionary = ShopManager.get_pack(query)
+			if pack.is_empty():
+				pack = ShopManager.get_pack_by_name(query)
+			if pack.is_empty():
+				return "Pack not found: '%s'. Use list_packs to see available packs." % query
+			var result: Dictionary = ShopManager.purchase_pack(pack.get("id",""))
+			if result.get("error", "") != "":
+				return "Purchase failed: %s" % result["error"]
+			var cards: Array = result.get("cards", [])
+			var c1: String = (cards[0] as Dictionary).get("name","") if cards.size() > 0 else ""
+			var c2: String = (cards[1] as Dictionary).get("name","") if cards.size() > 1 else ""
+			var c3: String = (cards[2] as Dictionary).get("name","") if cards.size() > 2 else ""
+			var pack_img: String = str(pack.get("pack_image", ""))
+			var pack_nm: String  = str(pack.get("name",""))
+			var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd") as GDScript
+			if overlay_script:
+				overlay_script.open(get_tree().root, pack_img, c1, c2, c3, true, pack_nm)
+			return "Opened %s: %s, %s, %s" % [pack_nm, c1, c2, c3]
+
+		"grant_pack":
+			# Grant a pack for free (no credit cost) with full animation
+			if parts.size() < 2:
+				return "Usage: grant_pack <pack_id_or_name>"
+			var query: String = " ".join(PackedStringArray(parts.slice(1)))
+			var pack: Dictionary = ShopManager.get_pack(query)
+			if pack.is_empty():
+				pack = ShopManager.get_pack_by_name(query)
+			if pack.is_empty():
+				return "Pack not found: '%s'. Use list_packs to see available packs." % query
+			# draw_pack_free already adds cards to Collection
+			var cards: Array = ShopManager.draw_pack_free(pack.get("name",""))
+			var c1: String = (cards[0] as Dictionary).get("name","") if cards.size() > 0 else ""
+			var c2: String = (cards[1] as Dictionary).get("name","") if cards.size() > 1 else ""
+			var c3: String = (cards[2] as Dictionary).get("name","") if cards.size() > 2 else ""
+			var pack_img: String = str(pack.get("pack_image", ""))
+			var pack_nm: String  = str(pack.get("name",""))
+			var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd") as GDScript
+			if overlay_script:
+				overlay_script.open(get_tree().root, pack_img, c1, c2, c3, true, pack_nm)
+			return "Granted %s (free): %s, %s, %s" % [pack_nm, c1, c2, c3]
+
+		"disc_editor":
+			var scene: Node = get_tree().current_scene
+			if scene.get_node_or_null("MusicDiscEditorOverlay") != null:
+				return "Music Disc Editor is already open."
+			var editor: Node = load("res://scripts/MusicDiscEditorOverlay.gd").new()
+			editor.name = "MusicDiscEditorOverlay"
+			scene.add_child(editor)
+			return "Music Disc Editor opened."
+
+		"list_discs":
+			var products: Array = ShopManager.get_all_disc_products()
+			if products.is_empty():
+				return "No disc products defined. Use disc_editor to create some."
+			var lines: Array = []
+			for p: Dictionary in products:
+				lines.append("  [%s]  %s  —  %d cr  |  %s" % [
+					p.get("id",""), p.get("name",""),
+					p.get("price", 0),
+					p.get("music_path","(no file)"),
+				])
+			return "Disc products:\n" + "\n".join(PackedStringArray(lines))
+
+		"grant_disc":
+			if parts.size() < 2:
+				return "Usage: grant_disc <disc_id>"
+			var disc_id: String = " ".join(PackedStringArray(parts.slice(1)))
+			var product: Dictionary = ShopManager.get_disc_product(disc_id)
+			if product.is_empty():
+				return "Disc product not found: '%s'. Use list_discs." % disc_id
+			Collection.add_disc(disc_id)
+			return "Granted disc '%s' (%s)." % [disc_id, product.get("name","")]
+
+		"grant_winding_keys":
+			var count: int = 1
+			if parts.size() >= 2:
+				count = int(parts[1])
+			if count <= 0:
+				return "Count must be positive."
+			Collection.add_winding_keys(count)
+			return "Granted %d winding key(s). Total: %d" % [count, Collection.winding_keys]
+
+		"grant_incense":
+			var count: int = 1
+			if parts.size() >= 2:
+				count = int(parts[1])
+			if count <= 0:
+				return "Count must be positive."
+			Collection.add_incenses(count)
+			return "Granted %d incense(s). Total: %d" % [count, Collection.incenses]
+
+		"pack_editor":
+			var scene: Node = get_tree().current_scene
+			if scene.get_node_or_null("PackEditorOverlay") != null:
+				return "Pack Editor is already open."
+			var editor: Node = load("res://scripts/PackEditorOverlay.gd").new()
+			editor.name = "PackEditorOverlay"
+			scene.add_child(editor)
+			return "Pack Editor opened."
 
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd

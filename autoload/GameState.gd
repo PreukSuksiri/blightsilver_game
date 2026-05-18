@@ -170,6 +170,7 @@ var tech_cards_played_this_game: Array = [[], []]
 # VN-driven battle outcome routing (set by VNPlayer after new_game(), persists across scene change)
 var vn_on_win: String = ""
 var vn_on_lose: String = ""
+var game_over_reason: String = ""  # "crystals" | "all_destroyed" | "no_moves" | "surrender"
 var portrait_p1_offset: Vector2 = Vector2.ZERO
 var portrait_p1_size:   float   = 1.0
 var portrait_p2_offset: Vector2 = Vector2.ZERO
@@ -257,10 +258,13 @@ func _check_crystal_win_condition() -> void:
 	var p0_zero: bool = crystals[0] <= 0
 	var p1_zero: bool = crystals[1] <= 0
 	if p0_zero and p1_zero:
+		game_over_reason = "crystals"
 		_end_game(-1)  # tie
 	elif p0_zero:
+		game_over_reason = "crystals"
 		_end_game(1)
 	elif p1_zero:
+		game_over_reason = "crystals"
 		_end_game(0)
 
 # ─────────────────────────────────────────────────────────────
@@ -439,14 +443,24 @@ func force_game_over(winner: int) -> void:
 		return
 	_end_game(winner)
 
+func has_any_character(player_index: int) -> bool:
+	for r in range(GRID_SIZE):
+		for c in range(GRID_SIZE):
+			if grids[player_index][r][c].card_type == "character":
+				return true
+	return false
+
 func check_stuck_win_condition() -> void:
 	var p0_stuck := is_stuck(0)
 	var p1_stuck := is_stuck(1)
 	if p0_stuck and p1_stuck:
+		game_over_reason = "no_moves"
 		_end_game(-1)  # tie
 	elif p0_stuck:
+		game_over_reason = "all_destroyed" if not has_any_character(0) else "no_moves"
 		_end_game(1)
 	elif p1_stuck:
+		game_over_reason = "all_destroyed" if not has_any_character(1) else "no_moves"
 		_end_game(0)
 
 # ─────────────────────────────────────────────────────────────
@@ -479,6 +493,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		battle_player_forced_cells.clear()
 		battle_ai_forced_cells.clear()
 	_vn_battle_pending = false
+	game_over_reason = ""
 	_init_grids()
 	set_phase(Phase.SETUP_P1)
 

@@ -695,7 +695,7 @@ func _build_tech_resolve_blocker() -> void:
 	_tech_resolve_blocker.color = Color(0.0, 0.0, 0.0, 0.0)   # fully transparent
 	_tech_resolve_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
 	_tech_resolve_blocker.visible = false
-	_tech_resolve_blocker.z_index = 4   # above game field, below overlays
+	_tech_resolve_blocker.z_index = 40  # above all game UI (≤10), below system overlays (50+)
 	add_child(_tech_resolve_blocker)
 
 func _build_portraits() -> void:
@@ -1849,7 +1849,8 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	var _union_phase_ok: bool = GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]
 	var _available_unions: Array = []
 	if ctx_player == current_player and card.card_type == "character" and _union_phase_ok \
-			and SaveManager.union_mechanism_unlocked and GameState.battle_player_union_enabled:
+			and SaveManager.union_mechanism_unlocked and GameState.battle_player_union_enabled \
+			and not _union_summoned_this_duel[ctx_player]:
 		for _entry: Dictionary in UnionDatabase.find_available_unions(ctx_player, row, col):
 			var _u: UnionData = _entry["union"]
 			for _cond: Dictionary in _u.material_conditions:
@@ -3197,6 +3198,7 @@ func _show_surrender_confirm() -> void:
 	yes_btn.pressed.connect(func() -> void:
 		dimmer.queue_free()
 		var winner: int = GameState.get_opponent(GameState.current_player)
+		GameState.game_over_reason = "surrender"
 		GameState._end_game(winner))
 	row.add_child(yes_btn)
 
@@ -5203,6 +5205,59 @@ func _show_endgame_screen(winner: int) -> void:
 		title_lbl.add_theme_font_size_override("font_size", 52)
 		title_lbl.add_theme_color_override("font_color", Color(1.0, 0.92, 0.55))
 		overlay.add_child(title_lbl)
+
+
+	# Reason label — explains why the game ended
+	var reason_text: String = ""
+	var reason := GameState.game_over_reason
+	match reason:
+		"crystals":
+			if winner == -1:
+				reason_text = "Both players' crystals hit zero at the same time."
+			elif is_win_screen:
+				reason_text = "Opponent's crystals were fully depleted."
+			else:
+				reason_text = "Your crystals were fully depleted."
+		"all_destroyed":
+			if is_win_screen:
+				reason_text = "All opponent's characters were destroyed."
+			else:
+				reason_text = "All your characters were destroyed."
+		"no_moves":
+			if winner == -1:
+				reason_text = "Neither player had any valid moves remaining."
+			elif is_win_screen:
+				reason_text = "Opponent had no valid moves remaining."
+			else:
+				reason_text = "You had no valid moves remaining."
+		"surrender":
+			if is_win_screen:
+				if is_hot_seat:
+					reason_text = "%s surrendered." % _player_names[1 - winner]
+				else:
+					reason_text = "Opponent surrendered."
+			else:
+				reason_text = "You surrendered."
+		_:
+			reason_text = ""
+	if reason_text != "":
+		var reason_lbl := Label.new()
+		reason_lbl.text = reason_text
+		reason_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		reason_lbl.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		reason_lbl.offset_left   = -420.0
+		reason_lbl.offset_right  =  420.0
+		reason_lbl.offset_top    =  44.0
+		reason_lbl.offset_bottom =  80.0
+		reason_lbl.add_theme_font_size_override("font_size", 18)
+		reason_lbl.add_theme_color_override("font_color",
+			Color(0.72, 0.88, 1.0, 0.90) if is_win_screen else Color(1.0, 0.72, 0.60, 0.85))
+		reason_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.7))
+		reason_lbl.add_theme_constant_override("shadow_offset_x", 2)
+		reason_lbl.add_theme_constant_override("shadow_offset_y", 2)
+		reason_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		reason_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
+		overlay.add_child(reason_lbl)
 
 	# "Tap to continue" hint — blinks gently
 	var hint_lbl := Label.new()

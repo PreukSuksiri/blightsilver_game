@@ -522,8 +522,42 @@ func _on_battle_pressed() -> void:
 	if deck == null or not deck.is_valid():
 		_show_deck_warning()
 		return
-	DailyDungeonManager.player_map_node_id = _player_node_id  # remember where we were
-	DailyDungeonManager.start_node_battle(nd, self)
+	# Walk to the selected node first if the character isn't already there
+	if _player_node_id != _selected_node_id:
+		_walk_to_then_battle(_player_node_id, _selected_node_id)
+	else:
+		DailyDungeonManager.player_map_node_id = _player_node_id
+		DailyDungeonManager.start_node_battle(nd, self)
+
+func _walk_to_then_battle(from_id: String, to_id: String) -> void:
+	_stop_doubt_cycle()
+	_stop_branch_highlight()
+	_is_walking = true
+	if _battle_btn:
+		_battle_btn.disabled = true
+
+	var from_pos: Vector2 = _node_canvas_pos(from_id) if not from_id.is_empty() \
+		else _player_sprite.position + Vector2(0.0, _sprite_foot_y)
+	var to_pos: Vector2 = _node_canvas_pos(to_id)
+
+	_player_sprite.animation = _direction_anim(from_pos, to_pos)
+	_player_sprite.play()
+
+	var distance: float = from_pos.distance_to(to_pos)
+	var duration: float = maxf(0.3, distance / PLAYER_WALK_PX_PER_SEC)
+
+	var start_spos: Vector2 = from_pos + Vector2(0.0, -_sprite_foot_y)
+	var end_spos: Vector2   = to_pos   + Vector2(0.0, -_sprite_foot_y)
+
+	var tw := create_tween()
+	tw.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_method(_move_player_to, start_spos, end_spos, duration)
+	tw.tween_callback(func() -> void:
+		_player_node_id = to_id
+		_is_walking = false
+		var nd: Dictionary = _find_node(to_id)
+		DailyDungeonManager.player_map_node_id = to_id
+		DailyDungeonManager.start_node_battle(nd, self))
 
 func _show_deck_warning() -> void:
 	if get_node_or_null("DeckWarning") != null:

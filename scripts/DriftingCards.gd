@@ -60,23 +60,41 @@ func _scan_front_textures() -> void:
 		fname = dir.get_next()
 	dir.list_dir_end()
 
-	# Build a lookup: stem_without_extension → full path, for nsfw files only
+	# Build a lookup: bare stem → nsfw path (old-style _nsfw files)
 	var nsfw_map: Dictionary = {}
 	for f: String in all_files:
 		var stem: String = f.get_basename()
 		if stem.ends_with("_nsfw"):
-			nsfw_map[stem] = FULL_CARDS_DIR + f
+			# e.g. "bait_nsfw" → stored under "bait"
+			nsfw_map[stem.trim_suffix("_nsfw")] = FULL_CARDS_DIR + f
 
-	# One entry per base card (non-nsfw files)
+	# Only use new-style type-prefixed files as the safe pool.
+	# Old-style files (no type prefix) may have inconsistent NSFW labeling and
+	# are excluded from the safe pool entirely to prevent NSFW art leaking when
+	# the NSFW setting is off.
+	const SAFE_PREFIXES: Array = ["character_", "trap_", "tech_"]
 	for f: String in all_files:
 		var stem: String = f.get_basename()
 		if stem.ends_with("_nsfw"):
-			continue  # handled via nsfw_map
+			continue
+		var has_prefix: bool = false
+		for pfx: String in SAFE_PREFIXES:
+			if stem.begins_with(pfx):
+				has_prefix = true
+				break
+		if not has_prefix:
+			continue
 		var safe_path: String = FULL_CARDS_DIR + f
 		_safe_paths.append(safe_path)
-		var nsfw_key: String = stem + "_nsfw"
-		if nsfw_key in nsfw_map:
-			_nsfw_paths.append(nsfw_map[nsfw_key])
+		# For NSFW pool: strip type prefix to find old-style _nsfw variant.
+		# e.g. "character_vampire_servant" → look for "vampire_servant_nsfw"
+		var bare_stem: String = stem
+		for pfx: String in SAFE_PREFIXES:
+			if bare_stem.begins_with(pfx):
+				bare_stem = bare_stem.trim_prefix(pfx)
+				break
+		if bare_stem in nsfw_map:
+			_nsfw_paths.append(nsfw_map[bare_stem])
 		else:
 			_nsfw_paths.append(safe_path)  # no nsfw art → fall back to safe
 

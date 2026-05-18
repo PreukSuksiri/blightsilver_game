@@ -74,6 +74,8 @@ static func open(parent: Node, card_name: String, card_type: String,
 	overlay._populate(card_name, card_type)
 	if show_quantity:
 		overlay._add_quantity_label(card_name, card_w, card_h)
+		if card_type in ["character", "trap", "tech"]:
+			overlay._add_gallery_buttons(card_name, card_type, card_w, card_h)
 
 # ─────────────────────────────────────────────────────────────
 # UI construction
@@ -609,6 +611,160 @@ func _add_quantity_label(card_name: String, card_w: float, card_h: float) -> voi
 	lbl.offset_bottom = -card_h * 0.5 - 8.0
 	lbl.mouse_filter  = MOUSE_FILTER_IGNORE
 	add_child(lbl)
+
+# ─────────────────────────────────────────────────────────────
+# Gallery-only buttons (Sourcing + Pray) — right of card frame
+# ─────────────────────────────────────────────────────────────
+func _add_gallery_buttons(card_name: String, _card_type: String, card_w: float, card_h: float) -> void:
+	var btn_w: float  = 160.0
+	var btn_h: float  = 44.0
+	var btn_x: float  = card_w * 0.5 + 12.0   # right of card
+	var btn_y0: float = -card_h * 0.5 + 54.0  # below close button
+
+	# ── Sourcing button ─────────────────────────────────────
+	var src_btn := Button.new()
+	src_btn.text = "Sourcing"
+	src_btn.layout_mode = 1
+	src_btn.anchor_left = 0.5; src_btn.anchor_right  = 0.5
+	src_btn.anchor_top  = 0.5; src_btn.anchor_bottom = 0.5
+	src_btn.offset_left   = btn_x
+	src_btn.offset_top    = btn_y0
+	src_btn.offset_right  = btn_x + btn_w
+	src_btn.offset_bottom = btn_y0 + btn_h
+	_style_gallery_btn(src_btn, Color(0.2, 0.5, 0.9))
+	src_btn.pressed.connect(func() -> void: _show_sourcing_panel(card_name, src_btn))
+	add_child(src_btn)
+
+	# ── Pray button ─────────────────────────────────────────
+	var pray_lbl := Label.new()  # result message, shown after praying
+	pray_lbl.layout_mode = 1
+	pray_lbl.anchor_left = 0.5; pray_lbl.anchor_right  = 0.5
+	pray_lbl.anchor_top  = 0.5; pray_lbl.anchor_bottom = 0.5
+	pray_lbl.offset_left   = btn_x
+	pray_lbl.offset_top    = btn_y0 + btn_h + 8.0 + btn_h + 8.0
+	pray_lbl.offset_right  = btn_x + btn_w
+	pray_lbl.offset_bottom = btn_y0 + btn_h + 8.0 + btn_h + 8.0 + 40.0
+	pray_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	pray_lbl.add_theme_font_size_override("font_size", 13)
+	pray_lbl.add_theme_color_override("font_color", Color(0.3, 1.0, 0.5))
+	pray_lbl.visible = false
+	pray_lbl.mouse_filter = MOUSE_FILTER_IGNORE
+	add_child(pray_lbl)
+
+	var pray_btn := Button.new()
+	pray_btn.layout_mode = 1
+	pray_btn.anchor_left = 0.5; pray_btn.anchor_right  = 0.5
+	pray_btn.anchor_top  = 0.5; pray_btn.anchor_bottom = 0.5
+	pray_btn.offset_left   = btn_x
+	pray_btn.offset_top    = btn_y0 + btn_h + 8.0
+	pray_btn.offset_right  = btn_x + btn_w
+	pray_btn.offset_bottom = btn_y0 + btn_h + 8.0 + btn_h
+	_style_gallery_btn(pray_btn, Color(0.6, 0.25, 0.9))
+
+	var incense_tex_path := "res://assets/textures/ui/decorations/ui_icon_incense.png"
+	if ResourceLoader.exists(incense_tex_path):
+		pray_btn.icon = load(incense_tex_path) as Texture2D
+
+	var _update_pray_btn := func() -> void:
+		var cnt: int = Collection.incenses
+		pray_btn.visible = cnt > 0
+		pray_btn.text = "Pray (%d)" % cnt
+	_update_pray_btn.call()
+	Collection.collection_changed.connect(_update_pray_btn)
+	tree_exiting.connect(func() -> void:
+		if Collection.collection_changed.is_connected(_update_pray_btn):
+			Collection.collection_changed.disconnect(_update_pray_btn))
+
+	pray_btn.pressed.connect(func() -> void:
+		var boost: float = Collection.pray_for_card(card_name)
+		if boost > 0.0:
+			pray_lbl.text = "+%.0f%% boost applied!" % (boost * 100.0)
+			pray_lbl.visible = true
+		else:
+			pray_lbl.text = "No incense."
+			pray_lbl.visible = true)
+	add_child(pray_btn)
+
+func _show_sourcing_panel(card_name: String, anchor_btn: Button) -> void:
+	# Remove existing sourcing panel if open
+	for ch: Node in get_children():
+		if ch.name == "SourcingPanel":
+			ch.queue_free()
+			return
+
+	var packs: Array = ShopManager.get_packs_containing_card(card_name)
+
+	var panel := PanelContainer.new()
+	panel.name = "SourcingPanel"
+	panel.z_index = 110
+	panel.mouse_filter = MOUSE_FILTER_STOP
+
+	var sb := StyleBoxFlat.new()
+	sb.bg_color         = Color(0.05, 0.08, 0.18, 0.98)
+	sb.border_color     = Color(0.3, 0.6, 1.0, 1.0)
+	sb.border_width_left   = 2; sb.border_width_right  = 2
+	sb.border_width_top    = 2; sb.border_width_bottom = 2
+	sb.corner_radius_top_left     = 6; sb.corner_radius_top_right    = 6
+	sb.corner_radius_bottom_left  = 6; sb.corner_radius_bottom_right = 6
+	panel.add_theme_stylebox_override("panel", sb)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 6)
+	panel.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "Found in packs:"
+	title.add_theme_font_size_override("font_size", 14)
+	title.add_theme_color_override("font_color", Color(0.5, 0.75, 1.0))
+	vbox.add_child(title)
+
+	if packs.is_empty():
+		var none_lbl := Label.new()
+		none_lbl.text = "Not in any pack pool."
+		none_lbl.add_theme_font_size_override("font_size", 13)
+		none_lbl.add_theme_color_override("font_color", Color(0.55, 0.55, 0.6))
+		vbox.add_child(none_lbl)
+	else:
+		var boost: float = Collection.get_card_boost(card_name)
+		for entry: Dictionary in packs:
+			var row_lbl := Label.new()
+			var pct: float = float(entry.get("drop_chance", 0.0))
+			var pname: String = str(entry.get("pack_name", ""))
+			row_lbl.text = "%s  —  %.2f%%" % [pname, pct]
+			row_lbl.add_theme_font_size_override("font_size", 13)
+			if boost > 0.0:
+				row_lbl.add_theme_color_override("font_color", Color(0.2, 0.9, 0.4))
+			else:
+				row_lbl.add_theme_color_override("font_color", Color(0.85, 0.85, 0.9))
+			vbox.add_child(row_lbl)
+		if boost > 0.0:
+			var boost_lbl := Label.new()
+			boost_lbl.text = "Incense boost: +%.0f%%" % (boost * 100.0)
+			boost_lbl.add_theme_font_size_override("font_size", 12)
+			boost_lbl.add_theme_color_override("font_color", Color(0.3, 1.0, 0.5))
+			vbox.add_child(boost_lbl)
+
+	# Position panel using viewport coordinates from the button's global position
+	add_child(panel)
+	panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	# We need one frame for the panel to get its size, so use a deferred position
+	var gpos: Vector2 = anchor_btn.global_position
+	panel.position = gpos - global_position + Vector2(anchor_btn.size.x + 8.0, 0.0)
+
+func _style_gallery_btn(btn: Button, accent: Color) -> void:
+	for state: StringName in [&"normal", &"hover", &"pressed", &"focus"]:
+		var bsb := StyleBoxFlat.new()
+		bsb.bg_color = accent.darkened(0.45) if state == &"normal" else accent.darkened(0.2)
+		bsb.border_color = accent
+		bsb.border_width_left   = 2; bsb.border_width_right  = 2
+		bsb.border_width_top    = 2; bsb.border_width_bottom = 2
+		bsb.corner_radius_top_left     = 6; bsb.corner_radius_top_right    = 6
+		bsb.corner_radius_bottom_left  = 6; bsb.corner_radius_bottom_right = 6
+		bsb.content_margin_left = 8; bsb.content_margin_right = 8
+		bsb.content_margin_top  = 4; bsb.content_margin_bottom = 4
+		btn.add_theme_stylebox_override(state, bsb)
+	btn.add_theme_color_override("font_color", Color(0.95, 0.95, 1.0))
+	btn.add_theme_font_size_override("font_size", 15)
 
 func _close() -> void:
 	AudioManager.tts_stop()

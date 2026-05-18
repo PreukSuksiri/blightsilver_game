@@ -8,8 +8,12 @@ signal collection_changed()
 
 const STARTING_CREDITS: int = 2000
 
-var credits:      int = STARTING_CREDITS
-var music_discs:  int = 0
+var credits:          int        = STARTING_CREDITS
+var music_discs:      int        = 0        # legacy — kept for save-file compat
+var winding_keys:     int        = 0
+var owned_discs:      Dictionary = {}       # disc_id -> count
+var incenses:         int        = 0
+var card_drop_boosts: Dictionary = {}       # card_name -> float (cumulative bonus, e.g. 0.35 = +35%)
 
 # owned[card_name] = {
 #   "type": "character" | "trap" | "tech",
@@ -58,6 +62,86 @@ func spend_music_disc() -> bool:
 	if music_discs <= 0:
 		return false
 	music_discs -= 1
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+	return true
+
+# ─────────────────────────────────────────────────────────────
+# Winding Keys (re-roll consumable)
+# ─────────────────────────────────────────────────────────────
+func add_winding_keys(count: int = 1) -> void:
+	winding_keys += count
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+
+## Returns false if the player has no winding keys.
+func spend_winding_key() -> bool:
+	if winding_keys <= 0:
+		return false
+	winding_keys -= 1
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+	return true
+
+# ─────────────────────────────────────────────────────────────
+# Individual music discs (disc product catalog)
+# ─────────────────────────────────────────────────────────────
+func add_disc(disc_id: String, count: int = 1) -> void:
+	owned_discs[disc_id] = owned_discs.get(disc_id, 0) + count
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+
+func get_disc_count(disc_id: String) -> int:
+	return owned_discs.get(disc_id, 0)
+
+# ─────────────────────────────────────────────────────────────
+# Incense (drop-rate booster)
+# ─────────────────────────────────────────────────────────────
+func add_incenses(count: int = 1) -> void:
+	incenses += count
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+
+## Returns false if the player has no incense.
+func spend_incense() -> bool:
+	if incenses <= 0:
+		return false
+	incenses -= 1
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+	return true
+
+## Apply a random +10%–+35% multiplicative boost to a card's pool weight.
+## Returns the boost fraction applied (e.g. 0.25 for +25%), or 0.0 if no incense.
+func pray_for_card(card_name: String) -> float:
+	if not spend_incense():
+		return 0.0
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	var boost: float = rng.randf_range(0.10, 0.35)
+	var current: float = float(card_drop_boosts.get(card_name, 0.0))
+	card_drop_boosts[card_name] = current + boost
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+	return boost
+
+func get_card_boost(card_name: String) -> float:
+	return float(card_drop_boosts.get(card_name, 0.0))
+
+## Reset boost after the card is found in a pack.
+func reset_card_boost(card_name: String) -> void:
+	if card_drop_boosts.has(card_name):
+		card_drop_boosts.erase(card_name)
+		emit_signal("collection_changed")
+		SaveManager.save_data()
+
+## Returns false if the player has none of this disc.
+func spend_disc(disc_id: String) -> bool:
+	if get_disc_count(disc_id) <= 0:
+		return false
+	owned_discs[disc_id] = (owned_discs[disc_id] as int) - 1
+	if (owned_discs[disc_id] as int) <= 0:
+		owned_discs.erase(disc_id)
 	emit_signal("collection_changed")
 	SaveManager.save_data()
 	return true
@@ -154,9 +238,24 @@ func to_dict() -> Dictionary:
 		"credits":      credits,
 		"owned":        owned.duplicate(true),
 		"music_discs":  music_discs,
+		"winding_keys":     winding_keys,
+		"owned_discs":      owned_discs.duplicate(),
+		"incenses":         incenses,
+		"card_drop_boosts": card_drop_boosts.duplicate(),
 	}
 
 func load_from_dict(d: Dictionary) -> void:
-	credits     = d.get("credits",     STARTING_CREDITS)
-	owned       = d.get("owned",       {})
-	music_discs = d.get("music_discs", 0)
+	credits      = d.get("credits",      STARTING_CREDITS)
+	owned        = d.get("owned",        {})
+	music_discs  = d.get("music_discs",  0)
+	winding_keys = d.get("winding_keys", 0)
+	var raw_discs: Variant = d.get("owned_discs", null)
+	if raw_discs is Dictionary:
+		owned_discs = raw_discs as Dictionary
+	else:
+		owned_discs = {}
+		if music_discs > 0:
+			owned_discs["generic"] = music_discs
+	incenses = d.get("incenses", 0)
+	var raw_boosts: Variant = d.get("card_drop_boosts", null)
+	card_drop_boosts = raw_boosts if raw_boosts is Dictionary else {}

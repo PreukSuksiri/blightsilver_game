@@ -12,54 +12,85 @@ extends Node
 #   description: String
 #   slots:       Array[{type, count}]  — what card types and how many
 #   accent:      Color   — UI accent colour
-const PACKS: Array = [
-	{
-		"id": "starter",
-		"name": "Starter Pack",
-		"price": 500,
-		"description": "One Character, one Trap, one Tech.\nA balanced start for any collection.",
-		"slots": [
-			{"type": "character", "count": 1},
-			{"type": "trap",      "count": 1},
-			{"type": "tech",      "count": 1},
-		],
-		"accent": Color(0.18, 0.65, 1.0),
-	},
-	{
-		"id": "fighters",
-		"name": "Fighters Pack",
-		"price": 900,
-		"description": "Three Characters.\nExpand your battle roster with new fighters.",
-		"slots": [
-			{"type": "character", "count": 3},
-		],
-		"accent": Color(1.0, 0.38, 0.25),
-	},
-	{
-		"id": "trapmaster",
-		"name": "Trapmaster Pack",
-		"price": 900,
-		"description": "Two Traps and one Tech card.\nMaster the art of the ambush.",
-		"slots": [
-			{"type": "trap", "count": 2},
-			{"type": "tech", "count": 1},
-		],
-		"accent": Color(0.62, 0.22, 1.0),
-	},
-	{
-		"id": "premium",
-		"name": "Premium Pack",
-		"price": 1800,
-		"description": "Two Characters and one Tech card.\nPremium selection for serious collectors.",
-		"slots": [
-			{"type": "character", "count": 2},
-			{"type": "tech",      "count": 1},
-		],
-		"accent": Color(1.0, 0.78, 0.1),
-	},
-]
-
+const PACKS: Array = []  # Built-in packs removed — define packs via pack_editor admin command
 const MUSIC_DISC_PRICE: int = 300
+const CUSTOM_PACKS_PATH: String = "res://shop/custom_packs.json"
+const MUSIC_DISCS_PATH:  String = "res://shop/music_discs.json"
+
+# ─────────────────────────────────────────────────────────────
+# Custom packs (editor-managed, persisted to JSON)
+# ─────────────────────────────────────────────────────────────
+var _custom_packs: Array = []
+var _music_disc_products: Array = []
+
+func _ready() -> void:
+	_load_custom_packs()
+	_load_music_disc_products()
+
+func _load_custom_packs() -> void:
+	if not FileAccess.file_exists(CUSTOM_PACKS_PATH):
+		return
+	var file := FileAccess.open(CUSTOM_PACKS_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if parsed is Array:
+		_custom_packs = parsed as Array
+
+func _load_music_disc_products() -> void:
+	if not FileAccess.file_exists(MUSIC_DISCS_PATH):
+		return
+	var file := FileAccess.open(MUSIC_DISCS_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if parsed is Array:
+		_music_disc_products = parsed as Array
+
+func save_music_disc_products() -> void:
+	DirAccess.make_dir_recursive_absolute("res://shop")
+	var file := FileAccess.open(MUSIC_DISCS_PATH, FileAccess.WRITE)
+	if file == null:
+		push_error("ShopManager: cannot write music_discs.json")
+		return
+	file.store_string(JSON.stringify(_music_disc_products, "\t"))
+	file.close()
+
+func get_all_disc_products() -> Array:
+	return _music_disc_products.duplicate()
+
+func get_disc_product(disc_id: String) -> Dictionary:
+	for p: Dictionary in _music_disc_products:
+		if p.get("id", "") == disc_id:
+			return p
+	return {}
+
+func get_disc_product_by_name(disc_name: String) -> Dictionary:
+	for p: Dictionary in _music_disc_products:
+		if p.get("name", "") == disc_name:
+			return p
+	return {}
+
+## Deducts credits and grants 1 copy of the disc. Returns {success, error}.
+func purchase_disc(disc_id: String) -> Dictionary:
+	var product := get_disc_product(disc_id)
+	if product.is_empty():
+		return {"success": false, "error": "Unknown disc product."}
+	if not Collection.spend_credits(product.get("price", MUSIC_DISC_PRICE)):
+		return {"success": false, "error": "Not enough credits."}
+	Collection.add_disc(disc_id)
+	return {"success": true, "error": ""}
+
+func save_custom_packs() -> void:
+	DirAccess.make_dir_recursive_absolute("res://shop")
+	var file := FileAccess.open(CUSTOM_PACKS_PATH, FileAccess.WRITE)
+	if file == null:
+		push_error("ShopManager: cannot write custom_packs.json")
+		return
+	file.store_string(JSON.stringify(_custom_packs, "\t"))
+	file.close()
 
 # ─────────────────────────────────────────────────────────────
 # Music disc purchase
@@ -75,17 +106,33 @@ func purchase_music_disc() -> bool:
 # Lookup
 # ─────────────────────────────────────────────────────────────
 func get_all_packs() -> Array:
-	return PACKS
+	var result: Array = PACKS.duplicate()
+	for p: Dictionary in _custom_packs:
+		if bool(p.get("shop_available", true)):
+			result.append(p)
+	return result
+
+## Returns all custom packs regardless of shop_available (for admin/editor use).
+func get_all_packs_unfiltered() -> Array:
+	var result: Array = PACKS.duplicate()
+	result.append_array(_custom_packs)
+	return result
 
 func get_pack(pack_id: String) -> Dictionary:
 	for p: Dictionary in PACKS:
 		if p["id"] == pack_id:
+			return p
+	for p: Dictionary in _custom_packs:
+		if p.get("id", "") == pack_id:
 			return p
 	return {}
 
 func get_pack_by_name(pack_name: String) -> Dictionary:
 	for p: Dictionary in PACKS:
 		if p["name"] == pack_name:
+			return p
+	for p: Dictionary in _custom_packs:
+		if p.get("name", "") == pack_name:
 			return p
 	return {}
 
@@ -135,28 +182,132 @@ func draw_pack_free(pack_name: String) -> Array:
 func _draw_cards(pack: Dictionary) -> Array:
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
+	var pack_name: String = pack.get("name", "Unknown Pack")
+	var result: Array = []
 
+	# Pool-based draw (custom packs with weighted card_pool)
+	var card_pool: Variant = pack.get("card_pool", null)
+	if card_pool is Array and not (card_pool as Array).is_empty():
+		var pool_arr: Array = card_pool as Array
+		var count: int = int(pack.get("card_count", 3))
+		for _i in range(count):
+			var drawn: Dictionary = _draw_from_pool(pool_arr, rng)
+			if not drawn.is_empty():
+				drawn["from_pack"] = pack_name
+				result.append(drawn)
+				Collection.reset_card_boost(str(drawn.get("name", "")))
+		return result
+
+	# Slot-based draw (built-in packs)
 	var all_chars: Array = CardDatabase.get_all_character_names()
 	var all_traps: Array = CardDatabase.get_all_trap_names()
 	var all_techs: Array = CardDatabase.get_all_tech_names()
 
-	var result: Array = []
 	for slot: Dictionary in pack.get("slots", []):
 		var pool: Array = []
 		match slot["type"]:
 			"character": pool = all_chars
 			"trap":      pool = all_traps
 			"tech":      pool = all_techs
-
 		if pool.is_empty():
 			continue
-
 		for _i in range(slot.get("count", 1)):
 			var idx: int = rng.randi() % pool.size()
 			result.append({
 				"name":      pool[idx],
 				"type":      slot["type"],
-				"from_pack": pack.get("name", "Unknown Pack"),
+				"from_pack": pack_name,
 			})
 
+	return result
+
+func _draw_from_pool(pool: Array, rng: RandomNumberGenerator) -> Dictionary:
+	var total: float = 0.0
+	for entry: Dictionary in pool:
+		var cname: String = str(entry.get("card_name", ""))
+		var base_w: float = float(entry.get("weight", 1))
+		var boost: float = Collection.get_card_boost(cname)
+		total += base_w * (1.0 + boost)
+	if total <= 0.0:
+		return {}
+	var roll: float = rng.randf() * total
+	var cum: float = 0.0
+	for entry: Dictionary in pool:
+		var cname: String = str(entry.get("card_name", ""))
+		var base_w: float = float(entry.get("weight", 1))
+		var boost: float = Collection.get_card_boost(cname)
+		cum += base_w * (1.0 + boost)
+		if roll < cum:
+			return {
+				"name": cname,
+				"type": str(entry.get("card_type", "character")),
+			}
+	var last: Dictionary = pool[pool.size() - 1]
+	return {
+		"name": str(last.get("card_name", "")),
+		"type": str(last.get("card_type", "character")),
+	}
+
+# ─────────────────────────────────────────────────────────────
+# Drop-rate helpers (used by PackContentsOverlay + CardDetailOverlay)
+# ─────────────────────────────────────────────────────────────
+## Returns sorted list of cards with effective drop chances for a pack.
+## Each entry: {card_name, card_type, base_weight, eff_weight, drop_chance, is_boosted}
+func get_pack_drop_rates(pack_id: String) -> Array:
+	var pack := get_pack(pack_id)
+	if pack.is_empty():
+		return []
+	var card_pool: Variant = pack.get("card_pool", null)
+	if not (card_pool is Array) or (card_pool as Array).is_empty():
+		return []
+	var pool_arr: Array = card_pool as Array
+	var total: float = 0.0
+	for entry: Dictionary in pool_arr:
+		var cname: String = str(entry.get("card_name", ""))
+		var base_w: float = float(entry.get("weight", 1))
+		var boost: float = Collection.get_card_boost(cname)
+		total += base_w * (1.0 + boost)
+	if total <= 0.0:
+		return []
+	var result: Array = []
+	for entry: Dictionary in pool_arr:
+		var cname: String = str(entry.get("card_name", ""))
+		var base_w: float = float(entry.get("weight", 1))
+		var boost: float = Collection.get_card_boost(cname)
+		var eff_w: float = base_w * (1.0 + boost)
+		result.append({
+			"card_name":   cname,
+			"card_type":   str(entry.get("card_type", "character")),
+			"base_weight": base_w,
+			"eff_weight":  eff_w,
+			"drop_chance": eff_w / total * 100.0,
+			"is_boosted":  boost > 0.0,
+		})
+	result.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return (a["drop_chance"] as float) > (b["drop_chance"] as float))
+	return result
+
+## Returns all pack IDs whose card_pool contains the given card.
+## Each entry: {pack_id, pack_name, drop_chance}
+func get_packs_containing_card(card_name: String) -> Array:
+	var result: Array = []
+	for pack: Dictionary in get_all_packs():
+		var pack_id: String = str(pack.get("id", ""))
+		var card_pool: Variant = pack.get("card_pool", null)
+		if not (card_pool is Array):
+			continue
+		for entry: Dictionary in (card_pool as Array):
+			if str(entry.get("card_name", "")) == card_name:
+				var rates := get_pack_drop_rates(pack_id)
+				var drop_chance: float = 0.0
+				for r: Dictionary in rates:
+					if str(r.get("card_name", "")) == card_name:
+						drop_chance = float(r.get("drop_chance", 0.0))
+						break
+				result.append({
+					"pack_id":    pack_id,
+					"pack_name":  str(pack.get("name", pack_id)),
+					"drop_chance": drop_chance,
+				})
+				break
 	return result
