@@ -134,7 +134,9 @@ func admin_command(raw: String) -> String:
 				+ "  set_card_qty <card_name> | <quantity>\n"
 				+ "  confiscate_non_deck\n"
 				+ "  grant_deck_cards\n"
-				+ "  grant_all_cards"
+				+ "  grant_all_cards\n"
+				+ "  dungeon_builder [dungeon_id]\n"
+				+ "  dungeon_activator"
 			)
 
 		"tts":
@@ -568,6 +570,27 @@ func admin_command(raw: String) -> String:
 			if granted == 0:
 				return "All cards already owned — nothing granted."
 			return "Granted %d card(s)." % granted
+
+		"dungeon_builder":
+			var scene: Node = get_tree().current_scene
+			if scene.get_node_or_null("DungeonBuilderOverlay") != null:
+				return "Dungeon Builder is already open."
+			var builder: Node = load("res://scripts/DailyDungeonBuilder.gd").new()
+			builder.name = "DungeonBuilderOverlay"
+			scene.add_child(builder)
+			if parts.size() >= 2:
+				var dungeon_id: String = " ".join(PackedStringArray(parts.slice(1)))
+				builder.call_deferred("_load_dungeon", dungeon_id)
+			return "Daily Dungeon Builder opened."
+
+		"dungeon_activator":
+			var scene: Node = get_tree().current_scene
+			if scene.get_node_or_null("DungeonActivatorOverlay") != null:
+				return "Dungeon Activator is already open."
+			var activator: Node = load("res://scripts/DailyDungeonActivator.gd").new()
+			activator.name = "DungeonActivatorOverlay"
+			scene.add_child(activator)
+			return "Daily Dungeon Activator opened."
 
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd

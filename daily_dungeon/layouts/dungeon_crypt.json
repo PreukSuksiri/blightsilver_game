@@ -1,0 +1,380 @@
+{
+	"background": "res://assets/textures/daily_dungeon/background/background_dungeon_shopping_district.jpg",
+	"connections": [
+		[
+			"crypt_entry",
+			"crypt_n3"
+		],
+		[
+			"crypt_n2",
+			"crypt_n4"
+		],
+		[
+			"crypt_n5",
+			"crypt_n6"
+		],
+		[
+			"crypt_n6",
+			"crypt_boss"
+		],
+		[
+			"crypt_entry",
+			"crypt_n2"
+		],
+		[
+			"crypt_n3",
+			"crypt_n5"
+		],
+		[
+			"crypt_n4",
+			"crypt_n6"
+		]
+	],
+	"id": "dungeon_crypt",
+	"name": "Shopping District",
+	"nodes": [
+		{
+			"ai_deck": {
+				"characters": [
+					"Chaotic Wisp",
+					"Foul Wisp",
+					"Doom Wisp",
+					"Leech Man",
+					"Bat Swarm"
+				],
+				"tech": [
+					"Spy"
+				],
+				"traps": [
+					"Trap Hole",
+					"Bait",
+					"Checkpoint"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "res://assets/textures/profile/battle_illustrations/profile_player_1_default.png",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/profile_canyon_warg.png",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "crypt_entry",
+			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_normal.png",
+			"is_entry": true,
+			"label": "Bus Stop",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 113,
+			"y": 142
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Night Whisperer",
+					"Chaotic Wisp",
+					"Foul Wisp",
+					"Void Stalker",
+					"Bat Swarm",
+					"Leech Man"
+				],
+				"tech": [
+					"Spy",
+					"Make Friend"
+				],
+				"traps": [
+					"Snare Trap",
+					"Spike Trap",
+					"Mana Drain",
+					"Checkpoint"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "res://assets/textures/profile/battle_illustrations/profile_player_1_default.png",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "crypt_n2",
+			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_normal.png",
+			"is_entry": false,
+			"label": "Alleyway",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 686,
+			"y": 98
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Poltergeist",
+					"Leech Man",
+					"Bat Swarm",
+					"Vampire Servant",
+					"Magenta the Nightbloom",
+					"Chaotic Wisp"
+				],
+				"tech": [
+					"Spy",
+					"Ceasefire"
+				],
+				"traps": [
+					"Cursed Reflection",
+					"Snare Trap",
+					"Trap Hole",
+					"Bait"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "res://assets/textures/profile/battle_illustrations/profile_player_1_default.png",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "crypt_n3",
+			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_normal.png",
+			"is_entry": false,
+			"label": "Side Street",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 36,
+			"y": 359
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Ancient Lich",
+					"Void Stalker",
+					"Night Whisperer",
+					"Chaotic Wisp",
+					"Doom Wisp",
+					"Immortal Vampire"
+				],
+				"tech": [
+					"Double Spy",
+					"Make Friend"
+				],
+				"traps": [
+					"Echo Barrier",
+					"Mana Drain",
+					"Cursed Reflection",
+					"Spike Trap",
+					"Snare Trap"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "res://assets/textures/profile/battle_illustrations/profile_player_1_default.png",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "crypt_n4",
+			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_normal.png",
+			"is_entry": false,
+			"label": "Apartment",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 866,
+			"y": 417
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Immortal Vampire",
+					"Vampire Servant",
+					"Void Stalker",
+					"Bat Swarm",
+					"Night Whisperer",
+					"Leech Man"
+				],
+				"tech": [
+					"Spy",
+					"Double Spy"
+				],
+				"traps": [
+					"Brainwash",
+					"Echo Barrier",
+					"Mana Drain",
+					"Checkpoint",
+					"Trap Hole"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "res://assets/textures/profile/battle_illustrations/profile_player_1_default.png",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "crypt_n5",
+			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_normal.png",
+			"is_entry": false,
+			"label": "Plaza",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 388,
+			"y": 707
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Ancient Lich",
+					"Immortal Vampire",
+					"Void Stalker",
+					"Night Whisperer",
+					"Vampire Servant",
+					"Poltergeist",
+					"Chaotic Wisp"
+				],
+				"tech": [
+					"Double Spy",
+					"Ceasefire"
+				],
+				"traps": [
+					"Flame Trap",
+					"Brainwash",
+					"Echo Barrier",
+					"Bunker",
+					"Mana Drain"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "res://assets/textures/profile/battle_illustrations/profile_player_1_default.png",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "crypt_n6",
+			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_normal.png",
+			"is_entry": false,
+			"label": "Crossroads",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 726,
+			"y": 653
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Pit Lord",
+					"Ancient Lich",
+					"Night Whisperer",
+					"Void Stalker",
+					"Immortal Vampire",
+					"Vampire Servant",
+					"Bat Swarm",
+					"Chaotic Wisp",
+					"Doom Wisp"
+				],
+				"tech": [
+					"Double Spy",
+					"Make Friend",
+					"Ceasefire"
+				],
+				"traps": [
+					"Flame Trap",
+					"Brainwash",
+					"Echo Barrier",
+					"Bunker",
+					"Mana Drain",
+					"Hypnosis"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "res://assets/textures/profile/battle_illustrations/profile_player_1_default.png",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "crypt_boss",
+			"image": "",
+			"is_entry": false,
+			"label": "Black Company",
+			"pack_reward": "Starter Pack",
+			"type": "boss",
+			"x": 1004,
+			"y": 741
+		}
+	]
+}

@@ -15,7 +15,7 @@ enum Phase {
 }
 
 enum TurnMode { NONE, ATTACK, TECH }
-enum GameMode { LOCAL_2P, VS_AI, HOT_SEAT, CAMPAIGN }
+enum GameMode { LOCAL_2P, VS_AI, HOT_SEAT, CAMPAIGN, DAILY_DUNGEON }
 
 # ─────────────────────────────────────────────────────────────
 # Signals
@@ -44,6 +44,11 @@ signal tech_target_selected(user_player: int, target_player: int, row: int, col:
 # ─────────────────────────────────────────────────────────────
 const GRID_SIZE: int = 5
 const STARTING_CRYSTALS: int = 5000
+
+# Maps affinity name strings (used by DailyDungeonManager) to CharacterData.Affinity int values.
+const DUNGEON_AFFINITY_TO_INT: Dictionary = {
+	"DIVINE": 0, "CHAOS": 1, "NATURE": 2, "ARCANE": 3, "COSMIC": 4, "BIO": 5, "ANIMA": 6
+}
 const STARTING_TECH_HAND: int = 3
 const MIN_CHARACTERS: int = 8
 const MAX_CHARACTERS: int = 12
@@ -87,10 +92,30 @@ class CardInstance:
 	var active_rules: Array = []         # Array of CardRule — populated by CardRuleEngine
 
 	func get_effective_atk() -> int:
-		return max(0, current_atk + perm_atk_bonus + temp_atk_bonus - atk_debuff)
+		var base: int = max(0, current_atk + perm_atk_bonus + temp_atk_bonus - atk_debuff)
+		if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+			var mods: Array = GameState.active_dungeon_modifiers
+			if "monster_overload" in mods:
+				base = int(base * 1.5)
+			if "affinity_day" in mods and GameState.dungeon_affinity_day_stat == "atk":
+				var aff_int: int = GameState.DUNGEON_AFFINITY_TO_INT.get(
+					GameState.dungeon_affinity_day_affinity, -99)
+				if affinity == aff_int:
+					base = int(base * 1.2)
+		return base
 
 	func get_effective_def() -> int:
-		return max(0, current_def + perm_def_bonus + temp_def_bonus)
+		var base: int = max(0, current_def + perm_def_bonus + temp_def_bonus)
+		if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+			var mods: Array = GameState.active_dungeon_modifiers
+			if "monster_overload" in mods:
+				base = int(base * 1.5)
+			if "affinity_day" in mods and GameState.dungeon_affinity_day_stat == "def":
+				var aff_int: int = GameState.DUNGEON_AFFINITY_TO_INT.get(
+					GameState.dungeon_affinity_day_affinity, -99)
+				if affinity == aff_int:
+					base = int(base * 1.2)
+		return base
 
 	func clear_temp_buffs() -> void:
 		temp_atk_bonus = 0
@@ -121,6 +146,12 @@ var player_portraits: Array[String] = [
 var campaign_node_id: String = ""
 var campaign_enemy_config: Dictionary = {}
 var campaign_player_names: Array[String] = []   # [p1_name, p2_name] — set by VNPlayer before battle
+
+# Daily Dungeon state (only meaningful when game_mode == DAILY_DUNGEON)
+var active_dungeon_node_id: String = ""
+var active_dungeon_modifiers: Array = []
+var dungeon_affinity_day_affinity: String = ""
+var dungeon_affinity_day_stat: String = ""
 
 var crystals: Array = [STARTING_CRYSTALS, STARTING_CRYSTALS]
 var grids: Array = []           # grids[player][row][col] -> CardInstance
@@ -211,6 +242,9 @@ func set_phase(new_phase: Phase) -> void:
 # Crystal Management
 # ─────────────────────────────────────────────────────────────
 func lose_crystals(player_index: int, amount: int) -> void:
+	# Risk & Reward: crystal losses cost 25% more in Daily Dungeon
+	if game_mode == GameMode.DAILY_DUNGEON and "risk_and_reward" in active_dungeon_modifiers:
+		amount = int(amount * 1.25)
 	crystals[player_index] = max(0, crystals[player_index] - amount)
 	emit_signal("crystals_changed", player_index, crystals[player_index])
 	_check_crystal_win_condition()
@@ -423,6 +457,9 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	current_player = 0
 	turn_number = 0
 	crystals = [STARTING_CRYSTALS, STARTING_CRYSTALS]
+	# Sudden Death: both players start with only 3 000 crystals
+	if mode == GameMode.DAILY_DUNGEON and "sudden_death" in active_dungeon_modifiers:
+		crystals = [3000, 3000]
 	tech_hands = [[], []]
 	tech_cards_played_this_game = [[], []]
 	dice_result = 0

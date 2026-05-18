@@ -89,6 +89,7 @@ func save_data() -> void:
 		"mailbox": MailboxManager.to_dict(),
 		"collection": Collection.to_dict(),
 		"campaign": CampaignManager.to_dict(),
+		"daily_dungeon": DailyDungeonManager.to_dict(),
 		"nsfw_enabled": nsfw_enabled,
 		"unlocked_unions": unlocked_unions,
 		"union_mechanism_unlocked": union_mechanism_unlocked,
@@ -130,6 +131,10 @@ func load_data() -> void:
 	var campaign_data = parsed.get("campaign", null)
 	if campaign_data is Dictionary:
 		CampaignManager.load_from_dict(campaign_data)
+
+	var dungeon_data = parsed.get("daily_dungeon", null)
+	if dungeon_data is Dictionary:
+		DailyDungeonManager.load_from_dict(dungeon_data)
 
 	nsfw_enabled = bool(parsed.get("nsfw_enabled", false))
 

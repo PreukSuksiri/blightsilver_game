@@ -1,0 +1,345 @@
+{
+	"background": "res://assets/textures/daily_dungeon/background/background_dungeon_pier.jpg",
+	"connections": [
+		[
+			"star_entry",
+			"star_n2"
+		],
+		[
+			"star_n2",
+			"star_n3"
+		],
+		[
+			"star_entry",
+			"star_n4"
+		],
+		[
+			"star_n4",
+			"star_n5"
+		],
+		[
+			"star_n4",
+			"star_n6"
+		],
+		[
+			"star_n6",
+			"star_boss"
+		]
+	],
+	"id": "dungeon_starport",
+	"name": "The Starport Ruins",
+	"nodes": [
+		{
+			"ai_deck": {
+				"characters": [
+					"Slim Gray Trooper",
+					"Space Boy",
+					"Scout Probe",
+					"Street Rogue",
+					"Ectoplasm"
+				],
+				"tech": [
+					"Spy"
+				],
+				"traps": [
+					"Trap Hole",
+					"Bait",
+					"Snare Trap"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "star_entry",
+			"image": "",
+			"is_entry": true,
+			"label": "Fish Market",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 50,
+			"y": 312
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Hyperspeed Saucer",
+					"Space Boy",
+					"Scout Probe",
+					"Slim Gray Trooper",
+					"Mountain Sage",
+					"Grand Wizard"
+				],
+				"tech": [
+					"Spy",
+					"Make Friend"
+				],
+				"traps": [
+					"Spike Trap",
+					"Checkpoint",
+					"Snare Trap",
+					"Mana Drain"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "star_n2",
+			"image": "",
+			"is_entry": false,
+			"label": "Fisherman's Village",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 493,
+			"y": 88
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"War Genie",
+					"Grand Wizard",
+					"Mountain Sage",
+					"Pyromancer",
+					"Space Boy",
+					"Slim Gray Trooper"
+				],
+				"tech": [
+					"Spy",
+					"Ceasefire"
+				],
+				"traps": [
+					"Echo Barrier",
+					"Mana Drain",
+					"Cursed Reflection",
+					"Checkpoint"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "star_n3",
+			"image": "",
+			"is_entry": false,
+			"label": "Lighthouse",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 950,
+			"y": 87
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Horn Face",
+					"Hyperspeed Saucer",
+					"Scout Probe",
+					"Railgun Tank",
+					"Space Boy",
+					"War Genie",
+					"Grand Wizard"
+				],
+				"tech": [
+					"Double Spy",
+					"Make Friend",
+					"Ceasefire"
+				],
+				"traps": [
+					"Flame Trap",
+					"Echo Barrier",
+					"Bunker",
+					"Brainwash",
+					"Mana Drain"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "star_n4",
+			"image": "",
+			"is_entry": false,
+			"label": "Captain's Office",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 264,
+			"y": 582
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Railgun Tank",
+					"Horn Face",
+					"Hyperspeed Saucer",
+					"War Genie",
+					"Grand Wizard",
+					"Space Boy",
+					"Scout Probe",
+					"Slim Gray Trooper",
+					"Mountain Sage"
+				],
+				"tech": [
+					"Double Spy",
+					"Invisible Spy",
+					"Ceasefire"
+				],
+				"traps": [
+					"Flame Trap",
+					"Echo Barrier",
+					"Bunker",
+					"Brainwash",
+					"Mana Drain",
+					"Hypnosis"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "star_boss",
+			"image": "",
+			"is_entry": false,
+			"label": "Rusty Ship",
+			"pack_reward": "Starter Pack",
+			"type": "boss",
+			"x": 611,
+			"y": 455
+		},
+		{
+			"ai_deck": {
+				"characters": [],
+				"tech": [],
+				"traps": []
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "star_n5",
+			"image": "",
+			"is_entry": false,
+			"label": "Pier Warehouse",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 1143,
+			"y": 724
+		},
+		{
+			"ai_deck": {
+				"characters": [],
+				"tech": [],
+				"traps": []
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "star_n6",
+			"image": "",
+			"is_entry": false,
+			"label": "Long Pier",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 864,
+			"y": 566
+		}
+	]
+}

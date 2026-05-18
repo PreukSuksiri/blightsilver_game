@@ -8,7 +8,8 @@ const ShopMenuScene     = preload("res://scenes/shop_menu.tscn")
 const CardGalleryScene  = preload("res://scenes/card_gallery.tscn")
 const DeckBuilderScene  = preload("res://scenes/deck_builder.tscn")
 const SettingsMenuScene  = preload("res://scenes/settings_menu.tscn")
-const CampaignMapScene   = preload("res://scenes/campaign_map.tscn")
+const CampaignMapScene      = preload("res://scenes/campaign_map.tscn")
+const DailyDungeonMapScene  = preload("res://scenes/daily_dungeon_map.tscn")
 
 @onready var local_2p_btn:      Button = $NewGameBtn
 @onready var deck_build_btn:    Button = $DeckBuilderBtn
@@ -45,6 +46,10 @@ func _ready() -> void:
 	_refresh_deck_status()
 	_refresh_inventory_badge()
 	MailboxManager.mailbox_changed.connect(_refresh_inventory_badge)
+	# Re-open dungeon map if returning from a dungeon battle
+	if DailyDungeonManager.return_to_dungeon_map:
+		DailyDungeonManager.return_to_dungeon_map = false
+		_on_daily_dungeon()
 
 func _refresh_deck_status() -> void:
 	var deck: DeckData = SaveManager.get_active_deck()
@@ -146,7 +151,7 @@ func _on_single_player() -> void:
 	picker.add_theme_stylebox_override("panel", sb)
 	picker.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	picker.position = Vector2(local_2p_btn.position.x, local_2p_btn.position.y + local_2p_btn.size.y + 4)
-	picker.size = Vector2(local_2p_btn.size.x, 126)
+	picker.size = Vector2(local_2p_btn.size.x, 168)
 	picker.z_index = 3
 
 	var backdrop := Control.new()
@@ -191,6 +196,13 @@ func _on_single_player() -> void:
 			_show_deck_warning()
 			return
 		_on_campaign())
+
+	_add_btn.call("DAILY DUNGEON", func() -> void:
+		picker.queue_free()
+		if not _is_deck_ready():
+			_show_deck_warning()
+			return
+		_on_daily_dungeon())
 
 	_add_btn.call("VS AI", func() -> void:
 		picker.queue_free()
@@ -324,6 +336,15 @@ func _on_campaign() -> void:
 		return
 	var overlay := CampaignMapScene.instantiate()
 	overlay.name = "CampaignMapOverlay"
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 10
+	add_child(overlay)
+
+func _on_daily_dungeon() -> void:
+	if get_node_or_null("DailyDungeonMapOverlay") != null:
+		return
+	var overlay := DailyDungeonMapScene.instantiate()
+	overlay.name = "DailyDungeonMapOverlay"
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index = 10
 	add_child(overlay)

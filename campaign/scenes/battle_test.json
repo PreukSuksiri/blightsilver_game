@@ -54,9 +54,7 @@
 		"player2_name": "Midnight Shadow",
 		"player_union_enabled": false,
 		"portrait_p1": "res://assets/textures/vn/characters/vn_char_nex_seething.png",
-		"portrait_p2": "res://assets/textures/vn/characters/vn_char_midnight_shadow.png",
-		"portrait_p2_offset_x": -160.0,
-		"portrait_p2_offset_y": 70.0,
+		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/profile_midnight_shadow.png",
 		"start_battle": true
 	}
 ]

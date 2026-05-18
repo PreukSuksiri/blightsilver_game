@@ -446,7 +446,7 @@ func _run_async(
 	var att_rest_x: float = _left_rest_x if attacker_player == 0 else _right_rest_x
 	var def_rest_x: float = _right_rest_x if attacker_player == 0 else _left_rest_x
 	if result.special_trigger == "trap_effect":
-		await _animate_card_effect_flash(def_ctrl, def_rest_x)
+		await _animate_trap_flash(def_ctrl)
 	elif result.ability_triggered_attacker:
 		await _animate_card_effect_flash(att_ctrl, att_rest_x)
 	elif result.ability_triggered_defender:
@@ -516,6 +516,13 @@ func _animate_card_effect_flash(ctrl: Control, rest_x: float) -> void:
 	var t_out := create_tween()
 	t_out.tween_property(ctrl, "position:x", rest_x, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	await t_out.finished
+
+func _animate_trap_flash(ctrl: Control) -> void:
+	_play_sfx(SFX_SPELL)
+	_play_burst_ring(ctrl)
+	_flash_white(ctrl)
+	_flash_screen_white()
+	await get_tree().create_timer(1.0).timeout
 
 func _play_burst_ring(ctrl: Control) -> void:
 	var ring := Panel.new()
@@ -633,15 +640,21 @@ func _anim_tie(att: Control, def: Control, dx: float) -> void:
 	await shatter_t.finished
 
 # 3D: Trap triggered, attacker survives
-func _anim_trap_survives(att: Control, def: Control, _dx: float) -> void:
+func _anim_trap_survives(att: Control, def: Control, dx: float) -> void:
+	var att_rest := att.position.x
 	_play_sfx(SFX_GEAR)
-	await _flash_white(def)
-	await get_tree().create_timer(0.3).timeout
+	await _bounce_forward(att, dx)
+	_flash_white(def)  # runs concurrently
+	await _bounce_back(att, att_rest)
+	await get_tree().create_timer(0.15).timeout
 
 # 3E: Trap triggered, attacker destroyed
-func _anim_trap_destroys(att: Control, def: Control, _dx: float) -> void:
+func _anim_trap_destroys(att: Control, def: Control, dx: float) -> void:
+	var att_rest := att.position.x
 	_play_sfx(SFX_GEAR)
+	await _bounce_forward(att, dx)
 	_flash_white(def)  # runs concurrently
+	await _bounce_back(att, att_rest)
 	await get_tree().create_timer(0.1).timeout
 	await _shatter(att)
 

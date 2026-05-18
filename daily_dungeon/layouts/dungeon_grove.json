@@ -1,0 +1,324 @@
+{
+	"background": "res://assets/textures/daily_dungeon/background/background_dungeon_shinto_temple.jpg",
+	"connections": [
+		[
+			"grove_entry",
+			"grove_n3"
+		],
+		[
+			"grove_n3",
+			"grove_n5"
+		],
+		[
+			"grove_n4",
+			"grove_boss"
+		],
+		[
+			"grove_n4",
+			"grove_n5"
+		],
+		[
+			"grove_n2",
+			"grove_n3"
+		]
+	],
+	"id": "dungeon_grove",
+	"name": "The Verdant Grove",
+	"nodes": [
+		{
+			"ai_deck": {
+				"characters": [
+					"Canyon Warg",
+					"Goblin Poacher",
+					"Death Stag",
+					"Street Rogue",
+					"Big Thug"
+				],
+				"tech": [
+					"Spy"
+				],
+				"traps": [
+					"Trap Hole",
+					"Bait",
+					"Checkpoint"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "grove_entry",
+			"image": "",
+			"is_entry": true,
+			"label": "Dirt Path",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 1185,
+			"y": 714
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Armored Rhino",
+					"Swarmcaller",
+					"Death Stag",
+					"Canyon Warg",
+					"Goblin Poacher",
+					"Armored Bee"
+				],
+				"tech": [
+					"Spy",
+					"Make Friend"
+				],
+				"traps": [
+					"Spike Trap",
+					"Snare Trap",
+					"Bait",
+					"Checkpoint"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "grove_n2",
+			"image": "",
+			"is_entry": false,
+			"label": "Foggy Cliff",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 612,
+			"y": 607
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Fierce Gladiator",
+					"Champion of the Valley",
+					"Big Thug",
+					"Death Stag",
+					"Canyon Warg",
+					"Street Rogue"
+				],
+				"tech": [
+					"Spy",
+					"Ceasefire"
+				],
+				"traps": [
+					"Trap Hole",
+					"Mana Drain",
+					"Snare Trap",
+					"Bait"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "grove_n3",
+			"image": "",
+			"is_entry": false,
+			"label": "Torii Gate",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 712,
+			"y": 423
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Leorudus the Warlord",
+					"Swarmcaller",
+					"Armored Rhino",
+					"Huntress of Green Glade",
+					"Tomb Bandit",
+					"Death Stag",
+					"Canyon Warg"
+				],
+				"tech": [
+					"Spy",
+					"Double Spy"
+				],
+				"traps": [
+					"Echo Barrier",
+					"Mana Drain",
+					"Spike Trap",
+					"Snare Trap",
+					"Checkpoint"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "grove_n4",
+			"image": "",
+			"is_entry": false,
+			"label": "Quiet Shrine",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 318,
+			"y": 113
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Ironclad Sentinel",
+					"Fierce Gladiator",
+					"Leorudus the Warlord",
+					"Swarmcaller",
+					"Champion of the Valley",
+					"Armored Rhino",
+					"Tomb Bandit"
+				],
+				"tech": [
+					"Double Spy",
+					"Make Friend"
+				],
+				"traps": [
+					"Flame Trap",
+					"Echo Barrier",
+					"Mana Drain",
+					"Bunker",
+					"Checkpoint"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "grove_n5",
+			"image": "",
+			"is_entry": false,
+			"label": "Ceremony Ground",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 600,
+			"y": 320
+		},
+		{
+			"ai_deck": {
+				"characters": [
+					"Leorudus the Warlord",
+					"Swarmcaller",
+					"Ironclad Sentinel",
+					"Fierce Gladiator",
+					"Tomb Bandit",
+					"Huntress of Green Glade",
+					"Armored Rhino",
+					"Armored Bee",
+					"Canyon Warg"
+				],
+				"tech": [
+					"Double Spy",
+					"Make Friend",
+					"Ceasefire"
+				],
+				"traps": [
+					"Flame Trap",
+					"Echo Barrier",
+					"Mana Drain",
+					"Bunker",
+					"Checkpoint",
+					"Brainwash"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "grove_boss",
+			"image": "",
+			"is_entry": false,
+			"label": "Blood-stained Toolshed",
+			"pack_reward": "Starter Pack",
+			"type": "boss",
+			"x": 99,
+			"y": 110
+		}
+	]
+}

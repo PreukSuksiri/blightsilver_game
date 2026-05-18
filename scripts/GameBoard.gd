@@ -792,8 +792,9 @@ func _start_game() -> void:
 		_apply_player_names()
 		GameState.campaign_player_names = []
 	_refresh_hud()
-	if GameState.game_mode == GameState.GameMode.VS_AI:
-		_player_names[1] = "Player 2 (Bot)"
+	if GameState.game_mode == GameState.GameMode.VS_AI \
+			or GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+		_player_names[1] = "Bot"
 		_apply_player_names()
 	if GameState.game_mode == GameState.GameMode.HOT_SEAT:
 		_start_setup_music()
@@ -925,7 +926,8 @@ func _apply_player_names() -> void:
 # ─────────────────────────────────────────────────────────────
 func _on_setup_complete_p1() -> void:
 	if GameState.game_mode == GameState.GameMode.VS_AI \
-			or GameState.game_mode == GameState.GameMode.CAMPAIGN:
+			or GameState.game_mode == GameState.GameMode.CAMPAIGN \
+			or GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 		_do_ai_setup()
 		_begin_game()
 	elif GameState.game_mode == GameState.GameMode.HOT_SEAT:
@@ -1055,6 +1057,12 @@ func _rebuild_tech_fan() -> void:
 		return
 	for ch in _tech_fan.get_children():
 		ch.queue_free()
+
+	# Stone Age: Tech cards disabled — hide the fan entirely
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "stone_age" in GameState.active_dungeon_modifiers:
+		_tech_fan.visible = false
+		return
 
 	var phase := GameState.current_phase
 	if phase in [GameState.Phase.NONE, GameState.Phase.SETUP_P1,
@@ -1685,7 +1693,7 @@ func _update_reveal_buttons() -> void:
 	if _p1_reveal_btn:
 		_p1_reveal_btn.visible = in_battle and GameState.current_player == 0
 	if _p2_reveal_btn:
-		var vs_ai: bool = GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN]
+		var vs_ai: bool = GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON]
 		_p2_reveal_btn.visible = in_battle and GameState.current_player == 1 and not vs_ai
 
 # ─────────────────────────────────────────────────────────────
@@ -2273,8 +2281,13 @@ func _perform_pending_union() -> void:
 	for _mc: Vector2i in _pending_union_selected_materials:
 		var _card: GameState.CardInstance = GameState.get_card(player, _mc.x, _mc.y)
 		material_names.append(_card.card_name if _card else "?")
-	# Pay crystal cost
-	GameState.lose_crystals(player, u.summon_cost)
+	# Pay crystal cost (Dimensional Gate: unions cost 0 and are destroyed next turn start)
+	var _union_cost: int = u.summon_cost
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "dimensional_gate" in GameState.active_dungeon_modifiers:
+		_union_cost = 0
+		DailyDungeonManager.register_dimensional_gate_union(player, first_cell.x, first_cell.y)
+	GameState.lose_crystals(player, _union_cost)
 	# Remove selected material cards (except the first which becomes the union)
 	for i: int in range(1, _pending_union_selected_materials.size()):
 		var cell: Vector2i = _pending_union_selected_materials[i]
@@ -2282,7 +2295,7 @@ func _perform_pending_union() -> void:
 	# Place union at first selected cell
 	GameState.place_union_card(player, first_cell.x, first_cell.y, u)
 	# Record unlock (human players only)
-	var human_player: bool = GameState.game_mode != GameState.GameMode.VS_AI or player == 0
+	var human_player: bool = GameState.game_mode not in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON] or player == 0
 	if human_player:
 		SaveManager.unlock_union(u.card_name)
 	# Mark once-per-duel flag and hide suggestion button
@@ -2775,7 +2788,10 @@ func _update_union_suggest_button() -> void:
 		return
 	var phase: GameState.Phase = GameState.current_phase
 	var active: bool = phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK] \
-		and selection_state != SelectionState.SELECTING_UNION_MATERIALS
+		and selection_state not in [
+			SelectionState.SELECTING_UNION_MATERIALS,
+			SelectionState.CONFIRMING_ATTACK,
+		]
 	if not active:
 		_union_suggest_btn.visible  = false
 		_union_suggest_glow.visible = false
@@ -3721,9 +3737,14 @@ func _refresh_tech_hand() -> void:
 	title_row.add_theme_constant_override("separation", 8)
 	vbox.add_child(title_row)
 
+	var _stone_age: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+		and "stone_age" in GameState.active_dungeon_modifiers
+	var _tech_royale: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+		and "tech_royale" in GameState.active_dungeon_modifiers
 	var can_use_tech: bool = (GameState.current_phase == GameState.Phase.MODE_SELECT
-		and not _tech_used_this_turn[player]
-		and player == GameState.current_player)
+		and (not _tech_used_this_turn[player] or _tech_royale)
+		and player == GameState.current_player
+		and not _stone_age)
 
 	var title := Label.new()
 	title.text = "TECH HAND  —  Choose a card to play" if can_use_tech else "TECH HAND  —  Viewing cards"
@@ -3851,7 +3872,8 @@ func _dismiss_tech_hand_overlay() -> void:
 # ─────────────────────────────────────────────────────────────
 func _is_ai_turn() -> bool:
 	return GameState.current_player == 1 and \
-		GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN]
+		GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+			GameState.GameMode.DAILY_DUNGEON]
 
 func _on_attack_btn() -> void:
 	if GameState.current_phase != GameState.Phase.MODE_SELECT:
@@ -3899,7 +3921,9 @@ func _on_end_turn_requested() -> void:
 					break
 			if has_attacked:
 				break
-	if not has_attacked and GameState.can_player_attack(player):
+	var _tax_free: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+		and "tax_free_zone" in GameState.active_dungeon_modifiers
+	if not has_attacked and GameState.can_player_attack(player) and not _tax_free:
 		_show_tax_confirm()
 	else:
 		turn_manager.end_attacks_early()
@@ -4065,7 +4089,9 @@ func _enter_mode_select() -> void:
 		if _options_btn:
 			_options_btn.visible = false
 		_ai_watchdog.start()
-		if _tech_used_this_turn[GameState.current_player]:
+		var _tech_royale_ai: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "tech_royale" in GameState.active_dungeon_modifiers
+		if _tech_used_this_turn[GameState.current_player] and not _tech_royale_ai:
 			ai_player.continue_after_union()  # tech already played this turn — skip to attack
 		else:
 			ai_player.decide_turn()
@@ -4322,6 +4348,7 @@ func _start_confirm_attack(target_player: int, target_pos: Vector2i) -> void:
 	_confirm_target_player = target_player
 	_confirm_target_pos = target_pos
 	_set_selection_state(SelectionState.CONFIRMING_ATTACK)
+	_update_union_suggest_button()
 	if _end_turn_btn:
 		_end_turn_btn.visible = false
 	if _attack_confirm_panel:
@@ -4354,6 +4381,7 @@ func _confirm_attack() -> void:
 	turn_manager.perform_attack(atk_from, atk_to)
 
 func _cancel_confirm_attack() -> void:
+	_update_union_suggest_button()
 	if _blink_tween and _blink_tween.is_valid():
 		_blink_tween.kill()
 		_blink_tween = null
@@ -4955,6 +4983,10 @@ func _on_game_over(winner: int) -> void:
 			"won": player_won
 		}
 
+	# ── Daily Dungeon: record result now, before any animation ───────────────
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+		DailyDungeonManager.complete_node(GameState.active_dungeon_node_id, player_won)
+
 	# ── Disable all interactive UI immediately ───────────────────────────────
 	if _end_turn_btn:
 		_end_turn_btn.visible = false
@@ -5048,8 +5080,9 @@ func _fade_out_battle_music(duration: float) -> void:
 
 func _show_endgame_screen(winner: int) -> void:
 	var mode := GameState.game_mode
-	var is_hot_seat := (mode == GameState.GameMode.HOT_SEAT)
-	var is_ai_game  := mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN]
+	var is_hot_seat   := (mode == GameState.GameMode.HOT_SEAT)
+	var is_ai_game    := mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON]
+	var is_dungeon    := (mode == GameState.GameMode.DAILY_DUNGEON)
 
 	# Determine win vs lose screen from the human player's perspective
 	var is_win_screen: bool
@@ -5079,19 +5112,22 @@ func _show_endgame_screen(winner: int) -> void:
 		if is_hot_seat:
 			title_text = "%s Wins!" % _player_names[winner]
 		elif is_ai_game and winner == 0:
-			var node_data: Variant = CampaignManager.get_node_data(GameState.campaign_node_id) \
-				if mode == GameState.GameMode.CAMPAIGN else null
-			var reward: int = node_data.data.get("reward_credits", 0) \
-				if node_data != null else 0
-			title_text = "You've Won the Duel." if reward == 0 \
-				else "You've Won the Duel.  +%d cr" % reward
+			if is_dungeon:
+				title_text = "You've Won the Duel."
+			else:
+				var node_data: Variant = CampaignManager.get_node_data(GameState.campaign_node_id) \
+					if mode == GameState.GameMode.CAMPAIGN else null
+				var reward: int = node_data.data.get("reward_credits", 0) \
+					if node_data != null else 0
+				title_text = "You've Won the Duel." if reward == 0 \
+					else "You've Won the Duel.  +%d cr" % reward
 		else:
 			title_text = "You've Won the Duel."
 	else:
 		title_text = "Defeat."
 
-	# Award credits on win (VS AI / Campaign only)
-	if is_win_screen and is_ai_game:
+	# Award credits on win (VS AI / Campaign only; Daily Dungeon handles its own rewards)
+	if is_win_screen and is_ai_game and not is_dungeon:
 		MailboxManager.send_mail(
 			"Battle Reward",
 			"Credits Earned!",

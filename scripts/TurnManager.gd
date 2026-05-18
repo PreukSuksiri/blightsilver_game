@@ -27,6 +27,20 @@ func start_turn(player_index: int) -> void:
 	GameState.current_mode = GameState.TurnMode.NONE
 	GameState.attacks_remaining = 2
 
+	# Frenzy Strike: +1 attack per turn for both players
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "frenzy_strike" in GameState.active_dungeon_modifiers:
+		GameState.attacks_remaining = 3
+
+	# Dimensional Gate: destroy all pending unions at turn start
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "dimensional_gate" in GameState.active_dungeon_modifiers:
+		for entry: Dictionary in DailyDungeonManager.pop_dimensional_gate_pending():
+			var p: int = int(entry.get("player", 0))
+			var r: int = int(entry.get("row", 0))
+			var c: int = int(entry.get("col", 0))
+			GameState.destroy_card(p, r, c)
+
 	# Clear per-turn state
 	_clear_turn_state(player_index)
 
@@ -499,6 +513,12 @@ func _handle_trap_effect(
 	GameState.lose_crystals(opponent, trap_data.crystal_cost)
 	await crystal_animation_done
 
+	# Honored Duel: trap is consumed but its effect is cancelled
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "honored_duel" in GameState.active_dungeon_modifiers:
+		GameState.post_message("Honored Duel: %s's effect is cancelled!" % trap_data.card_name)
+		return
+
 	match trap_data.effect_type:
 		TrapData.TrapEffectType.NULLIFY_ATTACK:
 			GameState.post_message("Attack nullified by %s." % trap_data.card_name)
@@ -621,6 +641,11 @@ func _end_turn(player: int) -> void:
 	if GameState.berserk_active[player] != null:
 		GameState.berserk_active[player] = null
 
+	# Lighthouse: reveal 1 random hidden opponent card at end of turn
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "lighthouse" in GameState.active_dungeon_modifiers:
+		_lighthouse_reveal(player)
+
 	emit_signal("turn_ended", player)
 
 	var next_player := GameState.get_opponent(player)
@@ -632,6 +657,21 @@ func _clear_turn_state(player: int) -> void:
 			var card: GameState.CardInstance = GameState.get_card(player, r, c)
 			if card.card_type == "character":
 				card.attacked_this_turn = false
+
+func _lighthouse_reveal(player: int) -> void:
+	var opponent: int = GameState.get_opponent(player)
+	var hidden_cells: Array = []
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+			if card.card_type == "character" and not card.face_up:
+				hidden_cells.append(Vector2i(r, c))
+	if hidden_cells.is_empty():
+		return
+	hidden_cells.shuffle()
+	var cell: Vector2i = hidden_cells[0]
+	GameState.reveal_card(opponent, cell.x, cell.y)
+	GameState.post_message("Lighthouse: One of Player %d's cards is revealed!" % (opponent + 1))
 
 func _apply_end_of_turn_boosts(player: int) -> void:
 	# Hyperspeed Saucer permanent boost

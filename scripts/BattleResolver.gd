@@ -180,6 +180,11 @@ static func _get_effective_atk(
 ) -> int:
 	var atk: int = attacker.get_effective_atk()
 
+	# Bare Hands Brawling: character abilities are cancelled
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
+		return atk
+
 	match attacker.ability_type:
 		CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY:
 			if defender.affinity == attacker.ability_params.get("affinity", -1):
@@ -222,6 +227,11 @@ static func _get_effective_def(
 ) -> int:
 	var def_val: int = defender.get_effective_def()
 
+	# Bare Hands Brawling: character abilities are cancelled
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
+		return def_val
+
 	match defender.ability_type:
 		CharacterData.AbilityType.DEF_BONUS_VS_AFFINITY:
 			if attacker.affinity == defender.ability_params.get("affinity", -1):
@@ -252,6 +262,10 @@ static func _apply_defend_effects(
 		result: BattleResult,
 		_defender_player: int
 ) -> void:
+	# Bare Hands Brawling: character abilities are cancelled
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
+		return
 	match defender.ability_type:
 		CharacterData.AbilityType.CRYSTAL_GAIN_ON_DEFEND:
 			result.ability_triggered_defender = true
