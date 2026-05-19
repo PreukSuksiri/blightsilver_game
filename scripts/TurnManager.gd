@@ -155,6 +155,19 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 			emit_signal("attack_aborted")
 			return
 
+	# Pre-battle: CANNOT_ATTACK_IF_NON_AFFINITY_ON_FIELD (Keeper of the Sun)
+	if attacker.ability_type == CharacterData.AbilityType.CANNOT_ATTACK_IF_NON_AFFINITY_ON_FIELD:
+		var _allowed: Array = attacker.ability_params.get("allowed", [])
+		for _cs_r: int in range(GameState.GRID_SIZE):
+			for _cs_c: int in range(GameState.GRID_SIZE):
+				var _cs_ally: GameState.CardInstance = GameState.get_card(player, _cs_r, _cs_c)
+				if _cs_ally == attacker or _cs_ally.card_type != "character" or not _cs_ally.face_up:
+					continue
+				if _cs_ally.affinity not in _allowed:
+					GameState.post_message("%s cannot attack — non-allowed affinity on own field!" % attacker.card_name)
+					emit_signal("attack_aborted")
+					return
+
 	# Pre-battle: COIN_FLIP_CANCEL_ATTACK (Lazy Troll) — tails = own attack cancelled
 	if attacker.ability_type == CharacterData.AbilityType.COIN_FLIP_CANCEL_ATTACK:
 		if randi() % 2 == 0:
@@ -176,6 +189,38 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 				await crystal_animation_done
 				attacker.temp_atk_bonus += _pb_boost
 				GameState.post_message("%s: Paid %d Crystals for +%d ATK!" % [attacker.card_name, _pb_cost, _pb_boost])
+
+	# Pre-battle: OPTIONAL_CRYSTAL_PAY_DEF_BOOST (Armored Dino)
+	if attacker.ability_type == CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_DEF_BOOST:
+		var _dd_cost: int = attacker.ability_params.get("cost", 1000)
+		var _dd_boost: int = attacker.ability_params.get("def", 60)
+		if GameState.crystals[player] >= _dd_cost:
+			emit_signal("awaiting_trap_choice",
+				"Pay %d Crystals for +%d DEF this battle?" % [_dd_cost, _dd_boost],
+				["Pay %d Crystals" % _dd_cost, "Skip"])
+			var _dd_choice: int = await ability_choice_resolved
+			if _dd_choice == 0:
+				GameState.lose_crystals(player, _dd_cost)
+				await crystal_animation_done
+				attacker.temp_def_bonus += _dd_boost
+				GameState.post_message("%s: Paid %d Crystals for +%d DEF!" % [attacker.card_name, _dd_cost, _dd_boost])
+
+	# Pre-battle: OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT (X-Death Squad)
+	if attacker.ability_type == CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT \
+			and defender.card_type == "character":
+		var _xd_cost: int = attacker.ability_params.get("cost", 1000)
+		if GameState.crystals[player] >= _xd_cost:
+			emit_signal("awaiting_trap_choice",
+				"Pay %d Crystals to destroy %s? (no crystal loss to opponent)" % [_xd_cost, defender.card_name],
+				["Pay %d Crystals" % _xd_cost, "Skip"])
+			var _xd_choice: int = await ability_choice_resolved
+			if _xd_choice == 0:
+				GameState.lose_crystals(player, _xd_cost)
+				await crystal_animation_done
+				GameState.post_message("%s: %s is destroyed!" % [attacker.card_name, defender.card_name])
+				GameState.place_dead_end(opponent, target_pos.x, target_pos.y)
+				emit_signal("attack_aborted")
+				return
 
 	# Pre-battle: INTERCEPT_ALLY_ATTACK (Armored Rhino / Bat Swarm)
 	if defender.card_type == "character":
@@ -304,12 +349,20 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	emit_signal("attack_completed", attacker_pos, target_pos, result)
 
 	# MULTI_ATTACK_VS_NON_CHARACTER: allow this card to keep attacking non-char cells within limit
+	# MULTI_ATTACK_ANY / MULTI_ATTACK_ANY_WITH_ATK_LOSS: allow multiple attacks any target
 	var _skip_mark: bool = false
 	if attacker.ability_type == CharacterData.AbilityType.MULTI_ATTACK_VS_NON_CHARACTER \
 			and defender.card_type != "character":
 		var _max_multi: int = attacker.ability_params.get("max_attacks", 3)
 		attacker.multi_attack_count += 1
 		if attacker.multi_attack_count < _max_multi:
+			_skip_mark = true
+	elif attacker.ability_type in [
+			CharacterData.AbilityType.MULTI_ATTACK_ANY,
+			CharacterData.AbilityType.MULTI_ATTACK_ANY_WITH_ATK_LOSS] \
+			and not result.attacker_destroyed:
+		var _ma_max2: int = attacker.ability_params.get("max_attacks", 2)
+		if attacker.multi_attack_count < _ma_max2:
 			_skip_mark = true
 
 	if not _skip_mark:
@@ -886,6 +939,15 @@ func _end_turn(player: int) -> void:
 			match _te_card.ability_type:
 				CharacterData.AbilityType.PERM_ATK_LOSS_PER_OWN_TURN:
 					_te_card.current_atk = max(0, _te_card.current_atk - _te_card.ability_params.get("amount", 2))
+				CharacterData.AbilityType.END_OF_TURN_COIN_FLIP_STAT_BOOST:
+					if randf() >= 0.5:
+						var _cf_atk: int = _te_card.ability_params.get("atk", 10)
+						_te_card.current_atk += _cf_atk
+						GameState.post_message("%s: Heads! +%d ATK permanently." % [_te_card.card_name, _cf_atk])
+					else:
+						var _cf_def: int = _te_card.ability_params.get("def", 10)
+						_te_card.current_def += _cf_def
+						GameState.post_message("%s: Tails! +%d DEF permanently." % [_te_card.card_name, _cf_def])
 				CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN:
 					# Automatically pick a random face-up opponent card and apply venom
 					var _venom_targets: Array = GameState.get_all_face_up_characters(_opp_end)
@@ -1085,6 +1147,38 @@ func _apply_post_battle_effects(
 		CharacterData.AbilityType.ONE_USE_ATK_BOOST, \
 		CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND:
 			attacker.one_use_atk_boost_used = true
+
+		CharacterData.AbilityType.DESTROY_SELF_AFTER_BATTLE:
+			if not result.attacker_destroyed:
+				GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
+				GameState.post_message("%s: self-destroyed after battle (no crystal loss)!" % attacker.card_name)
+
+		CharacterData.AbilityType.GAIN_HALF_STATS_ON_SURVIVE:
+			if not result.attacker_destroyed and defender.card_type == "character":
+				var _hs_atk: int = defender.current_atk / 2
+				var _hs_def: int = defender.current_def / 2
+				attacker.current_atk += _hs_atk
+				attacker.current_def += _hs_def
+				GameState.post_message("%s: gains +%d ATK +%d DEF from battle!" % [attacker.card_name, _hs_atk, _hs_def])
+
+		CharacterData.AbilityType.ATK_PENALTY_VS_DEAD_END:
+			if defender.card_type == "dead_end":
+				var _ded_pen: int = attacker.ability_params.get("penalty", 50)
+				attacker.current_atk = max(0, attacker.current_atk - _ded_pen)
+				GameState.post_message("%s: -%d ATK permanently from dead-end attack!" % [attacker.card_name, _ded_pen])
+
+	# MULTI_ATTACK_ANY: Twin Axe Saintess / Tendrill Tyrant — grant extra attacks up to max
+	if attacker.ability_type in [
+			CharacterData.AbilityType.MULTI_ATTACK_ANY,
+			CharacterData.AbilityType.MULTI_ATTACK_ANY_WITH_ATK_LOSS]:
+		var _ma_max: int = attacker.ability_params.get("max_attacks", 2)
+		attacker.multi_attack_count += 1
+		if attacker.ability_type == CharacterData.AbilityType.MULTI_ATTACK_ANY_WITH_ATK_LOSS:
+			var _ma_loss: int = attacker.ability_params.get("atk_loss", 5)
+			attacker.current_atk = max(0, attacker.current_atk - _ma_loss)
+			GameState.post_message("%s: -%d ATK after attack." % [attacker.card_name, _ma_loss])
+		if attacker.multi_attack_count < _ma_max and not result.attacker_destroyed:
+			extra += 1
 
 	# LOCK_ATTACKER_ON_DESTROYED: defender destroys attacker → lock further attacks this turn
 	if result.attacker_destroyed and defender.card_type == "character":

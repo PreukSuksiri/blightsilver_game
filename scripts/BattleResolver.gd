@@ -154,6 +154,29 @@ static func _resolve_character_vs_character(
 				result.defender_crystal_loss = defender.crystal_cost
 			return
 
+	# ONE_USE_DESTROY_BY_AFFINITY: Genesis Mech — once, destroy a card matching aff1 or aff2
+	if attacker.ability_type == CharacterData.AbilityType.ONE_USE_DESTROY_BY_AFFINITY \
+			and not attacker.one_use_atk_boost_used:
+		var _a1: int = attacker.ability_params.get("aff1", -1)
+		var _a2: int = attacker.ability_params.get("aff2", -1)
+		if defender.affinity == _a1 or defender.affinity == _a2:
+			attacker.one_use_atk_boost_used = true
+			result.ability_triggered_attacker = true
+			result.defender_destroyed = true
+			result.defender_crystal_loss = 0  # no crystal loss to defender
+			result.messages.append("%s: once-per-card destroy of %s!" % [attacker.card_name, defender.card_name])
+			_apply_post_attack_effects(attacker, result)
+			return
+
+	# COIN_FLIP_NULLIFY_ON_DEFEND: Keeper of the Afterlife — flip coin; heads = nullify attack
+	if defender.ability_type == CharacterData.AbilityType.COIN_FLIP_NULLIFY_ON_DEFEND:
+		result.ability_triggered_defender = true
+		if randf() >= 0.5:
+			result.messages.append("%s coin flip: heads — attack nullified!" % defender.card_name)
+			return  # no destruction, no damage
+		else:
+			result.messages.append("%s coin flip: tails — attack proceeds normally." % defender.card_name)
+
 	# Normal ATK vs DEF comparison
 	if eff_atk > eff_def:
 		result.defender_destroyed = true
@@ -172,6 +195,22 @@ static func _resolve_character_vs_character(
 		result.attacker_crystal_loss = attacker.crystal_cost
 		result.defender_crystal_loss = defender.crystal_cost
 		result.messages.append("Both cards are destroyed!")
+
+	# IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP: Helios — cannot be destroyed while another own card of same affinity is face-up
+	if result.defender_destroyed and defender.ability_type == CharacterData.AbilityType.IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP:
+		var _immune_aff: int = defender.ability_params.get("affinity", -1)
+		for _im_r in range(GameState.GRID_SIZE):
+			for _im_c in range(GameState.GRID_SIZE):
+				var _im_card: GameState.CardInstance = GameState.grids[defender_player][_im_r][_im_c]
+				if _im_card == defender or not _im_card.face_up or _im_card.card_type != "character":
+					continue
+				if _im_card.affinity == _immune_aff:
+					result.defender_destroyed = false
+					result.defender_crystal_loss = 0
+					result.messages.append("%s: protected by another %s ally!" % [
+						defender.card_name, CharacterData.Affinity.keys()[_immune_aff]])
+					result.ability_triggered_defender = true
+					break
 
 	# Lab Bloater Mutagen effect (overrides normal if defender survives)
 	if not result.defender_destroyed and defender.has_mutagen_flag:
@@ -364,8 +403,35 @@ static func _get_effective_atk(
 				if in_very_center:
 					atk += attacker.ability_params.get("center_bonus", 40)
 
+		CharacterData.AbilityType.DOUBLE_STATS_VS_AFFINITY:
+			if defender.affinity == attacker.ability_params.get("affinity", -1):
+				atk = attacker.get_effective_atk() * 2
+
+		CharacterData.AbilityType.STANCE_FIXED_STATS:
+			atk = attacker.ability_params.get("atk_atk", 50)
+
+		CharacterData.AbilityType.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE:
+			var _rev_count: int = 0
+			for _r in range(GameState.GRID_SIZE):
+				for _c in range(GameState.GRID_SIZE):
+					var _cell: GameState.CardInstance = GameState.grids[attacker_player][_r][_c]
+					if _cell.face_up and _cell.card_type != "dead_end":
+						_rev_count += 1
+			if _rev_count >= attacker.ability_params.get("min_revealed", 15):
+				atk += attacker.ability_params.get("atk", 100)
+
 		CharacterData.AbilityType.NOT_IMPLEMENTED:
 			GameState.show_center_message("Ability not implemented: " + attacker.card_name)
+
+	# FIELD_ATK_BOOST_OWN_AFFINITY: scan field for any card giving an aura boost to this attacker
+	for _fa_r in range(GameState.GRID_SIZE):
+		for _fa_c in range(GameState.GRID_SIZE):
+			var _fa_card: GameState.CardInstance = GameState.grids[attacker_player][_fa_r][_fa_c]
+			if _fa_card == attacker or not _fa_card.face_up:
+				continue
+			if _fa_card.ability_type == CharacterData.AbilityType.FIELD_ATK_BOOST_OWN_AFFINITY \
+					and attacker.affinity == _fa_card.ability_params.get("affinity", -1):
+				atk += _fa_card.ability_params.get("atk", 0)
 
 	# Check defender abilities that debuff attacker ATK
 	if defender.ability_type == CharacterData.AbilityType.ATTACKER_ATK_DEBUFF:
@@ -429,6 +495,28 @@ static func _get_effective_def(
 						if ally.card_type == "character" and ally.face_up and ally.affinity == needed_aff:
 							def_val += defender.ability_params.get("bonus", 0)
 							break
+
+		CharacterData.AbilityType.DOUBLE_STATS_VS_AFFINITY:
+			if attacker.affinity == defender.ability_params.get("affinity", -1):
+				def_val = defender.get_effective_def() * 2
+
+		CharacterData.AbilityType.STANCE_FIXED_STATS:
+			def_val = defender.ability_params.get("def_def", 50)
+
+		CharacterData.AbilityType.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE:
+			if defender_player >= 0:
+				var _rev_d: int = 0
+				for _r in range(GameState.GRID_SIZE):
+					for _c in range(GameState.GRID_SIZE):
+						var _cell: GameState.CardInstance = GameState.grids[defender_player][_r][_c]
+						if _cell.face_up and _cell.card_type != "dead_end":
+							_rev_d += 1
+				if _rev_d >= defender.ability_params.get("min_revealed", 15):
+					def_val += defender.ability_params.get("def", 100)
+
+		CharacterData.AbilityType.COIN_FLIP_NULLIFY_ON_DEFEND:
+			# Handled directly in _resolve_character_vs_character before ATK vs DEF comparison
+			pass
 
 		CharacterData.AbilityType.NOT_IMPLEMENTED:
 			GameState.show_center_message("Ability not implemented: " + defender.card_name)
@@ -520,6 +608,14 @@ static func _apply_defend_effects(
 				defender.current_def = max(0, defender.current_def - def_debuff)
 				result.messages.append("%s: permanently -%d DEF from defending." % [
 					defender.card_name, def_debuff])
+
+		CharacterData.AbilityType.HALVE_ATK_ADD_TO_DEF_ON_DEFEND:
+			result.ability_triggered_defender = true
+			var _halved: int = defender.current_atk / 2
+			defender.current_atk = max(0, defender.current_atk - _halved)
+			defender.current_def += _halved
+			result.messages.append("%s: halved ATK, -%d ATK +%d DEF permanently!" % [
+				defender.card_name, _halved, _halved])
 
 # ─────────────────────────────────────────────────────────────
 # Field-based stat calculation (called before each battle)

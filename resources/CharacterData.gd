@@ -139,6 +139,25 @@ enum AbilityType {
 	INTERCEPT_ALLY_ATTACK,           # When an allied specific-affinity card is targeted: prompt to intercept
 	SACRIFICE_FOR_CARD_TYPE,         # When a card matching name_contains would be destroyed: prompt to sacrifice self
 	OPTIONAL_CRYSTAL_PAY_ATK_BOOST,  # During battle: yes/no prompt to pay N crystals for +M ATK
+
+	# ── Union abilities ──
+	DOUBLE_STATS_VS_AFFINITY,            # ATK and DEF are doubled when battling a specific affinity
+	FIELD_ATK_BOOST_OWN_AFFINITY,        # Passive aura: while face-up, all own face-up chars of affinity get +N ATK
+	ONE_USE_DESTROY_BY_AFFINITY,         # Once: destroy defender if it matches aff1 or aff2 (no crystal loss to defender)
+	COIN_FLIP_NULLIFY_ON_DEFEND,         # When this card is attacked, flip coin; heads = attack does nothing
+	CANNOT_ATTACK_IF_NON_AFFINITY_ON_FIELD, # Cannot attack if any own face-up card has non-allowed affinity
+	END_OF_TURN_COIN_FLIP_STAT_BOOST,    # End of own turn: flip coin; heads = +N ATK perm; tails = +N DEF perm
+	STANCE_FIXED_STATS,                  # When attacking: ATK/DEF set to fixed values; when defending: different fixed values
+	MULTI_ATTACK_ANY,                    # Can attack up to N times per turn (any target)
+	OPTIONAL_CRYSTAL_PAY_DEF_BOOST,      # During battle: yes/no prompt to pay N crystals for +M DEF
+	DESTROY_SELF_AFTER_BATTLE,           # After any battle, this card is destroyed (no crystal loss)
+	IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP, # Cannot be destroyed while another own face-up card of same affinity exists
+	ATK_DEF_BONUS_IF_OWN_REVEALED_GTE,  # +N ATK/DEF if own revealed cell count >= threshold
+	OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT, # During battle: pay N crystals to destroy opponent (no crystal loss to defender)
+	ATK_PENALTY_VS_DEAD_END,             # Lose N ATK permanently when attacking a dead-end cell
+	GAIN_HALF_STATS_ON_SURVIVE,          # After surviving a battle, gain half of opponent's ATK/DEF permanently
+	MULTI_ATTACK_ANY_WITH_ATK_LOSS,      # Can attack up to N times; lose M ATK permanently per attack
+	HALVE_ATK_ADD_TO_DEF_ON_DEFEND,      # When this card defends (and survives), halve own ATK permanently and add that to DEF
 }
 
 @export var card_name: String = ""

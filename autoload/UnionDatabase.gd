@@ -103,7 +103,7 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "gryphon"}, {"affinity": A.DIVINE}], 5))
 
 	_add("Seraphim Fistmaster", A.DIVINE, 120, 120, 1500, R.LEGENDARY,
-		AB.NONE, {}, "Double ATK and DEF against Chaos.",
+		AB.DOUBLE_STATS_VS_AFFINITY, {"affinity": A.CHAOS}, "Double ATK and DEF against Chaos.",
 		"Double ATK and DEF against ??? Affinity",
 		"1 Seraph monster + 1 Divine monster with at least 1000 crystal cost + 1500 crystals",
 		"1 ??? + 1 ??? + 1500 crystals",
@@ -138,7 +138,7 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "ponycorn"}, {"affinity": A.DIVINE}], 8))
 
 	_add("Choir Lead Amber", A.DIVINE, 35, 35, 1000, R.RARE,
-		AB.NONE, {}, "+20 ATK to all Divine characters on own field.",
+		AB.FIELD_ATK_BOOST_OWN_AFFINITY, {"affinity": A.DIVINE, "atk": 20}, "+20 ATK to all Divine characters on own field.",
 		"+20 ATK to all ?????",
 		"3 Choir Lady cards + 1000 crystals",
 		"3 ??? + 1000 crystals",
@@ -146,7 +146,7 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "choir lady"}, {"name_contains": "choir lady"}, {"name_contains": "choir lady"}], 11))
 
 	_add("Genesis Mech", A.DIVINE, 60, 40, 1000, R.RARE,
-		AB.NONE, {}, "Once, destroy a Divine or Anima card.",
+		AB.ONE_USE_DESTROY_BY_AFFINITY, {"aff1": A.DIVINE, "aff2": A.ANIMA}, "Once, destroy a Divine or Anima card.",
 		"Once, destroy ???or ??? card",
 		"1 Cruel Angel + 1 Anima card + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
@@ -154,7 +154,7 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "cruel angel"}, {"affinity": A.ANIMA}], 10))
 
 	_add("Keeper of the Afterlife", A.DIVINE, 40, 65, 1000, R.UNCOMMON,
-		AB.NONE, {}, "At battle calculation, flip a coin. If heads, the attack does nothing.",
+		AB.COIN_FLIP_NULLIFY_ON_DEFEND, {}, "At battle calculation, flip a coin. If heads, the attack does nothing.",
 		"At battle calculation, flip a coin. If head, ????",
 		"1 Sphinx character + 1 Divine card + 1000 crystals",
 		"1 ??? + 1 ???+ 1000 crystals",
@@ -162,7 +162,7 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "sphinx"}, {"affinity": A.DIVINE}], 9))
 
 	_add("Keeper of the Sun", A.DIVINE, 70, 35, 1000, R.UNCOMMON,
-		AB.NONE, {}, "Cannot attack if there is a card with affinity other than Divine or Anima on own field.",
+		AB.CANNOT_ATTACK_IF_NON_AFFINITY_ON_FIELD, {"allowed": [CharacterData.Affinity.DIVINE, CharacterData.Affinity.ANIMA]}, "Cannot attack if there is a card with affinity other than Divine or Anima on own field.",
 		"This card cannot attack if there is card with affinity other than ??? Or ???",
 		"1 Sphinx character + 1 Anima + 1000 crystals",
 		"1 ???+ ??? + 1000 crystals",
@@ -179,7 +179,7 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "sphinx"}, {"name_contains": "sphinx"}], 9))
 
 	_add("Lucky Wanderer", A.DIVINE, 70, 50, 1000, R.UNCOMMON,
-		AB.NONE, {}, "During the end of that turn, flip a coin. If heads, +10 ATK permanently. If tails, +10 DEF permanently.",
+		AB.END_OF_TURN_COIN_FLIP_STAT_BOOST, {"atk": 10, "def": 10}, "During the end of that turn, flip a coin. If heads, +10 ATK permanently. If tails, +10 DEF permanently.",
 		"During the end of that turn, flip a coin. If head, +??? ATK. If tail, +?? DEF",
 		"1 Lucky Statue + 1 Divine card + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
@@ -203,7 +203,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Bloom Fairy"}, {"affinity": A.NATURE}], 12))
 
 	_add("Sky Protector", A.DIVINE, 0, 0, 1000, R.RARE,
-		AB.NONE, {}, "If this card defends, DEF becomes 50, ATK becomes 0. If this card attacks, ATK becomes 50, DEF becomes 0.",
+		AB.STANCE_FIXED_STATS, {"atk_atk": 50, "atk_def": 0, "def_atk": 0, "def_def": 50}, "If this card defends, DEF becomes 50, ATK becomes 0. If this card attacks, ATK becomes 50, DEF becomes 0.",
 		"If this card defends, DEF becomes ???, ATK becomes ???. If this card performs attack, ATK becomes ???, DEF becomes ???.",
 		"Sunrise Lady + Moonrise Gentleman + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
@@ -211,7 +211,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Sunrise Lady"}, {"card_name": "Moonrise Gentleman"}], 5))
 
 	_add("Twin Axe Saintess", A.DIVINE, 40, 30, 1500, R.RARE,
-		AB.NONE, {}, "This card can attack twice per turn.",
+		AB.MULTI_ATTACK_ANY, {"max_attacks": 2}, "This card can attack twice per turn.",
 		"This card can ??? per turn",
 		"Lady of the Sacred Pond + 1 Anima + 1500 crystals",
 		"1??? + 1 ??? + 1500 crystals",
@@ -251,7 +251,7 @@ func _load_unions() -> void:
 		_conds([{"affinity": A.NATURE}, {"affinity": A.NATURE}], 5))
 
 	_add("Armored Dino", A.NATURE, 100, 60, 1000, R.UNCOMMON,
-		AB.NONE, {}, "During battle calculation, pay 1000 crystal cost to +60 DEF.",
+		AB.OPTIONAL_CRYSTAL_PAY_DEF_BOOST, {"cost": 1000, "def": 60}, "During battle calculation, pay 1000 crystal cost to +60 DEF.",
 		"During battle calculation, pay ??? crystal cost to +??DEF",
 		"1 Armored Nature card + 1 Nature + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
@@ -261,7 +261,7 @@ func _load_unions() -> void:
 	# ── Bio ───────────────────────────────────────────────────
 
 	_add("Tendrill Tyrant", A.BIO, 90, 110, 1500, R.LEGENDARY,
-		AB.NONE, {}, "Can attack 3 times per turn.",
+		AB.MULTI_ATTACK_ANY, {"max_attacks": 3}, "Can attack 3 times per turn.",
 		"Can attack ? times per turn",
 		"Bio card with mutagen flag + 2 Bio cards + 1500 crystals",
 		"1 ??? + 2 ??? + 1500 crystals",
@@ -269,7 +269,7 @@ func _load_unions() -> void:
 		_conds([{"affinity": A.BIO, "has_flag": "mutagen"}, {"affinity": A.BIO}, {"affinity": A.BIO}], 9))
 
 	_add("Bioterrorist", A.BIO, 150, 0, 1000, R.RARE,
-		AB.NONE, {}, "Destroy this card after battle calculation.",
+		AB.DESTROY_SELF_AFTER_BATTLE, {}, "Destroy this card after battle calculation.",
 		"Destroy this card after ???",
 		"2 Bio cards + 1000 crystals",
 		"2 ??? + 1000 crystal",
@@ -286,7 +286,7 @@ func _load_unions() -> void:
 	# ── Cosmic ────────────────────────────────────────────────
 
 	_add("Helios the Prideful Fortress", A.COSMIC, 145, 100, 1500, R.LEGENDARY,
-		AB.NONE, {}, "As long as there is a face-up Cosmic character on own field, this card cannot be destroyed.",
+		AB.IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP, {"affinity": A.COSMIC}, "As long as there is a face-up Cosmic character on own field, this card cannot be destroyed.",
 		"As long as there is face-up ???, this card cannot be ???",
 		"2 Cosmic card + 1500 crystals",
 		"2 ??? + 1500 crystal",
@@ -294,7 +294,7 @@ func _load_unions() -> void:
 		_conds([{"affinity": A.COSMIC}, {"affinity": A.COSMIC}], 8))
 
 	_add("Slim Gray Plasma Bomber", A.COSMIC, 80, 60, 1000, R.RARE,
-		AB.NONE, {}, "+100 ATK and DEF if 15 or more of own cells are revealed.",
+		AB.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE, {"min_revealed": 15, "atk": 100, "def": 100}, "+100 ATK and DEF if 15 or more of own cells are revealed.",
 		"+?? ATK and DEF if ?? or more of your cells is revealed",
 		"1 Slim Gray + 1 Cosmic card + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
@@ -311,7 +311,7 @@ func _load_unions() -> void:
 		_conds([{"affinity": A.COSMIC}, {"affinity": A.COSMIC}], 12))
 
 	_add("Giant Mining Pod", A.COSMIC, 20, 80, 1000, R.UNCOMMON,
-		AB.NONE, {}, "If this card attacks a dead end card, you receive 200 crystals.",
+		AB.CRYSTAL_GAIN_ON_DEAD_END_ATTACK, {"amount": 200}, "If this card attacks a dead end card, you receive 200 crystals.",
 		"If this card attacks a dead end card, you receive ???crystals",
 		"1 Miner Probe + 1 Cosmic + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
@@ -321,7 +321,7 @@ func _load_unions() -> void:
 	# ── Anima ─────────────────────────────────────────────────
 
 	_add("X-Death Squad", A.ANIMA, 50, 50, 1000, R.LEGENDARY,
-		AB.NONE, {}, "Pay 1000 crystals: destroy opponent character during damage calculation. Opponent does not lose crystals under this effect.",
+		AB.OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT, {"cost": 1000}, "Pay 1000 crystals: destroy opponent character during damage calculation. Opponent does not lose crystals under this effect.",
 		"Pay ????, destroy opponent character during damage calculation. Opponent do not ????",
 		"1 Anima with at least 800 crystal cost + 2 Anima cards + 1000 crystals",
 		"1 ??? + ??? + 1000 crystals",
@@ -331,7 +331,7 @@ func _load_unions() -> void:
 	# ── Chaos ─────────────────────────────────────────────────
 
 	_add("Lord of Terror", A.CHAOS, 200, 100, 1000, R.LEGENDARY,
-		AB.NONE, {}, "-50 ATK if attacks dead end card.",
+		AB.ATK_PENALTY_VS_DEAD_END, {"penalty": 50}, "-50 ATK if attacks dead end card.",
 		"-50 ATK if ???",
 		"2 Chaos + 1000 crystals",
 		"2 ??? + 1000 crystal",
@@ -339,7 +339,7 @@ func _load_unions() -> void:
 		_conds([{"affinity": A.CHAOS}, {"affinity": A.CHAOS}], 9))
 
 	_add("Greater Succubus", A.CHAOS, 30, 50, 1000, R.RARE,
-		AB.NONE, {}, "If this card survived a battle, gain half of ATK and DEF equal to the card it battled.",
+		AB.GAIN_HALF_STATS_ON_SURVIVE, {}, "If this card survived a battle, gain half of ATK and DEF equal to the card it battled.",
 		"If this card survived a battle, gain ????",
 		"1 Succubus + 1 Chaos card + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
@@ -354,7 +354,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Dark Monk"}, {"affinity": A.CHAOS}], 10))
 
 	_add("Ten Arms Yaksa", A.CHAOS, 45, 30, 1000, R.RARE,
-		AB.NONE, {}, "This card can attack 3 times. -5 ATK for each successful attack.",
+		AB.MULTI_ATTACK_ANY_WITH_ATK_LOSS, {"max_attacks": 3, "atk_loss": 5}, "This card can attack 3 times. -5 ATK for each successful attack.",
 		"This card can attack ??? times. -?? ATK for each successful attack.",
 		"Yaksa + 1 Chaos + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
@@ -369,7 +369,7 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "skeleton"}, {"name_contains": "skeleton"}, {"name_contains": "skeleton"}], 11))
 
 	_add("Oblivion Dragon", A.CHAOS, 200, 0, 2000, R.LEGENDARY,
-		AB.NONE, {}, "When this card defends, halve its attack and increase DEF by that amount permanently.",
+		AB.HALVE_ATK_ADD_TO_DEF_ON_DEFEND, {}, "When this card defends, halve its attack and increase DEF by that amount permanently.",
 		"When this card defends, halve its ??? an???",
 		"5 Chaos cards with 600 or more cost + 2000 crystals",
 		"5 ??? + 2000 crystals",
