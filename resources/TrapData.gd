@@ -20,6 +20,18 @@ enum TrapEffectType {
 	FORCE_FRIENDLY_FIRE,              # Attacker must choose own ally as target
 	NULLIFY_BLOCK_ADJACENT,           # Nullify + block adjacent squares from being attacked this turn
 	NOT_IMPLEMENTED,                 # Effect exists but has no engine implementation yet
+
+	# ── New implemented trap effects ──
+	FIELD_BOOST_AFFINITY_DEF,         # +N DEF (temp) to all face-up specific-affinity chars until end of turn
+	SWAP_ATTACKER_ATK_DEF_TEMP,       # Swap attacker's ATK and DEF until end of this turn
+	CANCEL_ATTACKER_ATTACK,           # Cancel the attacking card's attack (trap is consumed)
+	DESTROY_ATTACKER_DEFENDER_PAYS,   # Destroy attacker; defending player also loses crystals = attacker's cost
+	TEMP_DEBUFF_ALL_ATTACKER_CHARS,   # -N ATK (temp) to ALL attacking player's characters until end of turn
+	TEMP_DEF_BOOST_ONE_OWN,           # +N DEF (temp) to 1 chosen own character until end of turn
+	COIN_FLIP_2_ATK_DEBUFF,           # Flip 2 coins; both heads → attacker loses N ATK until end of next turn
+	COIN_FLIP_2_LOCK_ATTACKER,        # Flip 2 coins; both heads → attacker cannot attack next turn
+	SELF_DESTROY_TEMP_ATK_BOOST,      # Choose 1 own character: +N ATK until end of next turn, destroyed at end (no crystal cost)
+	REVEAL_OWN_GAIN_CRYSTAL,          # Reveal 1 random own face-down cell; gain N crystals
 }
 
 @export var card_name: String = ""

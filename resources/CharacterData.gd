@@ -47,6 +47,98 @@ enum AbilityType {
 	MUTAGEN_DESTROY_ATTACKER,        # Bio: Destroy attacker + no crystal loss when Mutagen Flag active
 	MUTAGEN_IMMEDIATE_ATTACK,        # Bio: Can attack immediately once when Mutagen Flag obtained
 	NOT_IMPLEMENTED,                 # Ability exists but has no engine implementation yet
+
+	# ── Combat stance ──
+	ATTACK_STANCE_BOOST,             # +N ATK while attacking (temp, for that battle)
+	DEFENSE_STANCE_BOOST,            # +N DEF while defending (temp, for that battle)
+
+	# ── ATK/DEF bonus conditions ──
+	ATK_BONUS_VS_FACEDOWN,           # +N ATK when attacking a face-down card
+	ATK_BONUS_VS_UNION,              # +N ATK when attacking a Union card
+	ATK_BONUS_IF_AFFINITY_ON_FIELD,  # +N ATK if specific affinity face-up on own field
+	ATK_DEF_BONUS_IF_UNION_ON_FIELD, # +N ATK/DEF if Union card on own field
+	ATK_DEF_BONUS_VS_NON_AFFINITY,   # +N ATK/DEF vs cards that don't match specified affinity
+	DEF_BONUS_IF_AFFINITY_ON_FIELD,  # +N DEF if specific affinity card face-up on own field
+	ATK_PENALTY_WHEN_EXPOSED,        # -N ATK while this card is face-up
+	ATK_PENALTY_IF_NO_NAME_ALLY,     # -N ATK if no other card matching name_contains on own field
+	DEF_ZERO_WHEN_EXPOSED,           # DEF becomes 0 while this card is face-up
+
+	# ── Coin flip ──
+	COIN_FLIP_ATK_BOOST,             # Flip 1 coin; heads → +N ATK this battle
+	COIN_FLIP_CANCEL_ATTACK,         # Flip 1 coin before attack; tails → own attack is cancelled
+	COIN_FLIP_EXTRA_ATTACK,          # Flip 1 coin after attacking; heads → get one extra attack
+	COIN_FLIP_2_DESTROY_NON_AFFINITY,# Flip 2 coins; both heads → destroy defender if not specified affinity
+	COIN_FLIP_SWAP_POSITION,         # Flip 1 coin after battle; heads → player chooses own card to swap position
+	TURN_START_COIN_FLIP_FLAG,       # Turn start: select opp face-up card; coin → venom flag (heads) or mutagen (tails)
+
+	# ── Destroy / negate conditions ──
+	DESTROY_IF_OPPONENT_AFFINITY,    # At battle calc, destroy defender if they match specified affinity
+	DESTROY_SELF_VS_DIVINE_BOTH,     # This card is destroyed when it battles a Divine card (any role)
+	ATK_BONUS_VS_VENOM,              # +N ATK when battling a card that has the "venom" flag
+	ATTACKER_ATK_DEBUFF,             # Reduce attacker's ATK by N during battle (when this card is defender)
+	SWAP_ATK_DEF_WHEN_ATTACKING,     # Swap own ATK and DEF when this card attacks (temp for battle)
+	NEGATE_ZERO_COST_TRAPS_BOTH,     # Passive: zero-cost traps have no effect for either player
+
+	# ── One-use ATK boost ──
+	ONE_USE_ATK_BOOST,               # Once per card lifetime, +N ATK when attacking
+	ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND, # Once: +N ATK when attacking; once: +N DEF when defending (separate uses)
+
+	# ── Post-attack extra attacks ──
+	ONE_USE_EXTRA_ATTACK_ON_KILL,    # Once: win a battle → get one extra attack this turn
+	EXTRA_ATTACK_VS_REVEALED,        # Attack a face-up card → get one extra attack (once per turn)
+	MULTI_ATTACK_VS_NON_CHARACTER,   # Attack non-character cell → extra attack; up to N total attacks this turn
+	ONE_USE_EXTRA_ATTACK_ON_DEAD_END,# Once: attack dead_end cell → get one extra attack
+	EXTRA_ATTACK_ON_DEAD_END,        # Once per turn: attack dead_end cell → get one extra attack
+
+	# ── Post-attack field effects ──
+	LOCK_TARGET_ON_ATTACK,           # Attacked character cannot attack until end of their player's next turn
+	LOCK_SELF_AFTER_ATTACK,          # This card cannot attack on its next available turn
+	LOCK_ATTACKER_ON_DESTROYED,      # Card that destroys this card cannot attack again this turn
+	PERM_DEF_BOOST_PER_ATTACK_SURVIVE, # +N DEF permanently each time this card attacks and survives
+	PERM_ATK_LOSS_PER_ATTACK,        # -N ATK permanently each time this card attacks
+	ATK_ZERO_AFTER_WIN,              # ATK becomes 0 permanently after this card wins a battle
+
+	# ── Post-attack reveal ──
+	REVEAL_ON_WIN,                   # Win a battle → reveal 1 opponent cell (player chooses)
+	REVEAL_ON_DEAD_END_ATTACK,       # Attack dead_end cell → reveal 1 opponent cell
+	REVEAL_ON_ANY_ATTACK,            # After any attack → reveal 1 opponent cell
+	REVEAL_ON_TRAP_ATTACK,           # Attack a trap → reveal 1 opponent cell
+
+	# ── Post-attack crystal ──
+	CRYSTAL_GAIN_ON_DEAD_END_ATTACK, # +N crystals when this card attacks a dead_end cell
+
+	# ── Copy stats ──
+	ONE_USE_COPY_STATS_ON_SURVIVE,   # Once: survive battle → gain ATK and DEF of battled card as perm bonus
+
+	# ── Defend effects ──
+	PERM_DEF_BOOST_ON_DEFEND,        # +N DEF permanently after this card successfully defends
+	LOCK_ATTACKER_ON_DEFEND,         # Attacker cannot attack until end of their player's next turn
+	ONE_USE_PERM_DEBUFF_ATTACKER_ATK,# Once: when defending, attacker permanently loses N ATK
+	DEFEND_PERM_DEBUFF_ATTACKER_ATK_DEF, # When defending, attacker permanently loses N ATK and DEF
+	ONE_USE_DEFEND_MORPH,            # Once: after defending, permanently loses N DEF and gains N ATK vs attacker affinity
+
+	# ── Self modification ──
+	SELF_DEBUFF_ON_ATTACK_AND_DEFEND,# Once: -N ATK on first attack; once: -N DEF on first defend
+
+	# ── Turn-based ──
+	PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN, # +N ATK permanently each time this card is alive at end of opponent's turn
+	TEMP_ATK_BOOST_OWN_TURN_START,   # +N ATK (temp) at start of own turn; cleared at turn end
+	PERM_ATK_LOSS_PER_OWN_TURN,      # -N ATK permanently at end of each of this card owner's turns (when face-up)
+	SWAP_ATK_DEF_PER_OPP_TURN,       # Swap ATK/DEF values at end of each opponent's turn (when face-up)
+	HALVE_DEF_ON_FIRST_EXPOSE,       # Halve DEF permanently the first time this card becomes face-up
+	DESTROY_SELF_AT_END_OF_EXPOSE_TURN, # When first becoming face-up, destroyed at end of that turn
+	VENOM_FLAG_END_OF_TURN,          # End of own turn: player chooses 1 face-up opponent card → add "venom" flag
+
+	# ── Passive field effects ──
+	OPPONENT_EXTRA_CRYSTAL_LOSS,     # Opponent loses +N extra crystals on every crystal loss event
+	CRYSTAL_GAIN_ON_OPP_REVEAL,      # Gain +N crystals each time an opponent grid cell is revealed
+	TEMP_BOOST_ON_OPP_TECH,          # +N ATK/DEF (temp) when opponent plays a tech card
+	ATK_BONUS_VS_CENTER_ZONE,        # +N ATK attacking center 3x3 zone; +M more for the very center cell
+	CRYSTAL_RECOVER_ON_BIG_LOSS,     # If own crystal loss ≥ threshold in one event, recover N crystals
+	ONE_USE_SURVIVE_DESTRUCTION,     # Once: when this card would be destroyed, it survives instead
+	INTERCEPT_ALLY_ATTACK,           # When an allied specific-affinity card is targeted: prompt to intercept
+	SACRIFICE_FOR_CARD_TYPE,         # When a card matching name_contains would be destroyed: prompt to sacrifice self
+	OPTIONAL_CRYSTAL_PAY_ATK_BOOST,  # During battle: yes/no prompt to pay N crystals for +M ATK
 }
 
 @export var card_name: String = ""

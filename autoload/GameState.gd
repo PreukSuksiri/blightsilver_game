@@ -80,6 +80,8 @@ class CardInstance:
 	var cannot_attack_until: int = -1  # Turn number when restriction lifts
 	var effect_nullified_until: int = -1
 	var one_use_def_boost_used: bool = false
+	var one_use_atk_boost_used: bool = false  # for ONE_USE_ATK_BOOST and ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND ATK half
+	var multi_attack_count: int = 0            # for MULTI_ATTACK_VS_NON_CHARACTER — attacks used this turn
 	var perm_atk_bonus: int = 0
 	var perm_def_bonus: int = 0
 	var temp_atk_bonus: int = 0
@@ -247,8 +249,35 @@ func lose_crystals(player_index: int, amount: int) -> void:
 	# Risk & Reward: crystal losses cost 25% more in Daily Dungeon
 	if game_mode == GameMode.DAILY_DUNGEON and "risk_and_reward" in active_dungeon_modifiers:
 		amount = int(amount * 1.25)
+
+	# OPPONENT_EXTRA_CRYSTAL_LOSS: opponent's face-up card makes this player lose extra crystals
+	var extra_loss: int = 0
+	var opponent_idx: int = get_opponent(player_index)
+	for r in range(GRID_SIZE):
+		for c in range(GRID_SIZE):
+			var opp_card: CardInstance = grids[opponent_idx][r][c]
+			if opp_card.card_type == "character" and opp_card.face_up:
+				if opp_card.ability_type == CharacterData.AbilityType.OPPONENT_EXTRA_CRYSTAL_LOSS:
+					extra_loss += opp_card.ability_params.get("amount", 0)
+	amount += extra_loss
+
 	crystals[player_index] = max(0, crystals[player_index] - amount)
 	emit_signal("crystals_changed", player_index, crystals[player_index])
+
+	# CRYSTAL_RECOVER_ON_BIG_LOSS: if this player's loss was large, recover some crystals
+	if amount > 0:
+		for r in range(GRID_SIZE):
+			for c in range(GRID_SIZE):
+				var own_card: CardInstance = grids[player_index][r][c]
+				if own_card.card_type == "character" and own_card.face_up:
+					if own_card.ability_type == CharacterData.AbilityType.CRYSTAL_RECOVER_ON_BIG_LOSS:
+						var threshold: int = own_card.ability_params.get("threshold", 500)
+						var recover: int = own_card.ability_params.get("recover", 300)
+						if amount >= threshold:
+							crystals[player_index] = min(crystals[player_index] + recover, crystals[player_index] + recover)
+							emit_signal("crystals_changed", player_index, crystals[player_index])
+							post_message("%s: Recovered %d Crystals!" % [own_card.card_name, recover])
+
 	_check_crystal_win_condition()
 
 func gain_crystals(player_index: int, amount: int) -> void:
@@ -320,8 +349,36 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 		card.revealed_on_turn = turn_number
 		emit_signal("card_revealed", player_index, row, col)
 
+		# CRYSTAL_GAIN_ON_OPP_REVEAL: opponent gains crystals when this player's card is revealed
+		var opponent_idx: int = get_opponent(player_index)
+		for r in range(GRID_SIZE):
+			for c in range(GRID_SIZE):
+				var opp_card: CardInstance = grids[opponent_idx][r][c]
+				if opp_card.card_type == "character" and opp_card.face_up:
+					if opp_card.ability_type == CharacterData.AbilityType.CRYSTAL_GAIN_ON_OPP_REVEAL:
+						var amt: int = opp_card.ability_params.get("amount", 40)
+						gain_crystals(opponent_idx, amt)
+						post_message("%s: Gained %d Crystals from reveal!" % [opp_card.card_name, amt])
+
+		# HALVE_DEF_ON_FIRST_EXPOSE: halve DEF when this card first becomes face-up
+		if card.card_type == "character":
+			if card.ability_type == CharacterData.AbilityType.HALVE_DEF_ON_FIRST_EXPOSE:
+				card.current_def = card.current_def / 2
+				post_message("%s's DEF is halved upon reveal!" % card.card_name)
+			# DESTROY_SELF_AT_END_OF_EXPOSE_TURN: mark for end-of-turn self-destruction
+			elif card.ability_type == CharacterData.AbilityType.DESTROY_SELF_AT_END_OF_EXPOSE_TURN:
+				if "expose_destroy_pending" not in card.flags:
+					card.flags.append("expose_destroy_pending")
+
 func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) -> void:
 	var card: CardInstance = get_card(player_index, row, col)
+	# ONE_USE_SURVIVE_DESTRUCTION: card survives once
+	if card.card_type == "character":
+		if card.ability_type == CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION:
+			if "indestructible_used" not in card.flags:
+				card.flags.append("indestructible_used")
+				post_message("%s survives destruction!" % card.card_name)
+				return
 	if pay_cost and card.card_type != "dead_end":
 		lose_crystals(player_index, card.crystal_cost)
 	emit_signal("card_destroyed", player_index, row, col)
