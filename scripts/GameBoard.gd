@@ -343,6 +343,7 @@ func _connect_signals() -> void:
 	GameState.dice_rolled.connect(_on_dice_rolled)
 	GameState.game_over.connect(_on_game_over)
 	GameState.message_posted.connect(_on_message_posted)
+	GameState.center_message_requested.connect(_on_center_message_requested)
 	GameState.tech_card_used.connect(func(_p: int, _n: String) -> void:
 		_update_tech_stacks()
 		if _tech_overlay_panel != null and _tech_overlay_panel.visible:
@@ -3646,6 +3647,27 @@ func _on_message_posted(text: String) -> void:
 	print("[BATTLE LOG] ", text)
 	message_log.append_text("\n" + text)
 	_battle_log_lines.append(text)
+
+func _on_center_message_requested(text: String) -> void:
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.add_theme_font_size_override("font_size", 22)
+	lbl.add_theme_color_override("font_color", Color(1.0, 0.85, 0.2))
+	lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.9))
+	lbl.add_theme_constant_override("shadow_offset_x", 2)
+	lbl.add_theme_constant_override("shadow_offset_y", 2)
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.layout_mode = 1
+	lbl.anchor_left = 0.1; lbl.anchor_right  = 0.9
+	lbl.anchor_top  = 0.4; lbl.anchor_bottom = 0.6
+	lbl.z_index = 200
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(lbl)
+	var tw := create_tween()
+	tw.tween_interval(2.0)
+	tw.tween_property(lbl, "modulate:a", 0.0, 0.5)
+	tw.tween_callback(lbl.queue_free)
 
 func _update_portrait_dims() -> void:
 	if _p1_portrait == null or _p2_portrait == null:

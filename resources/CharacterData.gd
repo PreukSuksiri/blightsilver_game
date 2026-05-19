@@ -46,6 +46,7 @@ enum AbilityType {
 	MUTAGEN_ATK_BOOST_VS_AFFINITIES, # Bio: +N ATK vs affinities when Mutagen Flag active
 	MUTAGEN_DESTROY_ATTACKER,        # Bio: Destroy attacker + no crystal loss when Mutagen Flag active
 	MUTAGEN_IMMEDIATE_ATTACK,        # Bio: Can attack immediately once when Mutagen Flag obtained
+	NOT_IMPLEMENTED,                 # Ability exists but has no engine implementation yet
 }
 
 @export var card_name: String = ""
@@ -61,6 +62,7 @@ enum AbilityType {
 @export var rarity: Rarity = Rarity.COMMON
 @export var artwork_path: String = ""
 @export var artwork_offset: Vector2 = Vector2.ZERO
+@export var include_in_demo: bool = false
 
 func get_affinity_name() -> String:
 	return Affinity.keys()[affinity]

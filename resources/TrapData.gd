@@ -19,6 +19,7 @@ enum TrapEffectType {
 	NULLIFY_ATTACKER_EFFECT,          # Attacker's effect becomes None until end of next turn
 	FORCE_FRIENDLY_FIRE,              # Attacker must choose own ally as target
 	NULLIFY_BLOCK_ADJACENT,           # Nullify + block adjacent squares from being attacked this turn
+	NOT_IMPLEMENTED,                 # Effect exists but has no engine implementation yet
 }
 
 @export var card_name: String = ""
@@ -29,6 +30,7 @@ enum TrapEffectType {
 @export var effect_description: String = ""
 @export var artwork_path: String = ""
 @export var artwork_offset: Vector2 = Vector2.ZERO
+@export var include_in_demo: bool = false
 
 func get_effect_description() -> String:
 	if effect_description != "":

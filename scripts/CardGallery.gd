@@ -162,6 +162,10 @@ func _apply_filter() -> void:
 		if entry["card_type"] == "union" and not SaveManager.union_mechanism_unlocked:
 			entry["node"].visible = false
 			continue
+		# In demo mode, hide cards not flagged for demo
+		if SaveManager.demo_mode and not entry.get("include_in_demo", false):
+			entry["node"].visible = false
+			continue
 		var show: bool = _active_filter == "all" or entry["card_type"] == _active_filter
 		if show and _search_text != "":
 			show = entry["card_name"].to_lower().find(_search_text.to_lower()) >= 0
@@ -212,7 +216,8 @@ func _build_all_cards() -> void:
 		_tiles.append({"node": tile, "card_name": cname, "card_type": "character",
 			"affinity": data.affinity, "cost": data.crystal_cost,
 			"atk": data.base_atk, "def": data.base_def,
-			"desc": data.get_ability_description()})
+			"desc": data.get_ability_description(),
+			"include_in_demo": data.include_in_demo})
 
 	var trap_names: Array = CardDatabase.get_all_trap_names()
 	trap_names.sort()
@@ -223,7 +228,8 @@ func _build_all_cards() -> void:
 		_tiles.append({"node": tile, "card_name": tname, "card_type": "trap",
 			"affinity": -1, "cost": data.crystal_cost,
 			"atk": -1, "def": -1,
-			"desc": data.get_effect_description()})
+			"desc": data.get_effect_description(),
+			"include_in_demo": data.include_in_demo})
 
 	var tech_names: Array = CardDatabase.get_all_tech_names()
 	tech_names.sort()
@@ -234,7 +240,8 @@ func _build_all_cards() -> void:
 		_tiles.append({"node": tile, "card_name": ename, "card_type": "tech",
 			"affinity": -1, "cost": data.crystal_cost,
 			"atk": -1, "def": -1,
-			"desc": data.get_effect_description()})
+			"desc": data.get_effect_description(),
+			"include_in_demo": data.include_in_demo})
 
 	var union_list: Array = UnionDatabase.get_all_unions()
 	union_list.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)

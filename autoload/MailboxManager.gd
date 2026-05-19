@@ -146,7 +146,10 @@ func admin_command(raw: String) -> String:
 				+ "  list_discs\n"
 				+ "  grant_disc <disc_id>\n"
 				+ "  grant_winding_keys [count]\n"
-				+ "  grant_incense [count]"
+				+ "  grant_incense [count]\n"
+				+ "  demo_on\n"
+				+ "  demo_off\n"
+				+ "  demo_status"
 			)
 
 		"tts":
@@ -728,6 +731,28 @@ func admin_command(raw: String) -> String:
 			editor.name = "PackEditorOverlay"
 			scene.add_child(editor)
 			return "Pack Editor opened."
+
+		"demo_on":
+			SaveManager.set_demo_mode(true)
+			return "Demo mode ON. Card Gallery will show only demo-flagged cards."
+
+		"demo_off":
+			SaveManager.set_demo_mode(false)
+			return "Demo mode OFF. Card Gallery shows all cards."
+
+		"demo_status":
+			var state: String = "ON" if SaveManager.demo_mode else "OFF"
+			var flagged: int = 0
+			for cname: String in CardDatabase.characters:
+				if (CardDatabase.characters[cname] as CharacterData).include_in_demo:
+					flagged += 1
+			for tname: String in CardDatabase.traps:
+				if (CardDatabase.traps[tname] as TrapData).include_in_demo:
+					flagged += 1
+			for ename: String in CardDatabase.tech_cards:
+				if (CardDatabase.tech_cards[ename] as TechCardData).include_in_demo:
+					flagged += 1
+			return "Demo mode: %s\nCards flagged for demo: %d" % [state, flagged]
 
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd

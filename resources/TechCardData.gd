@@ -33,6 +33,7 @@ enum TechEffectType {
 	FORCE_SHIELD_ONE_CARD,            # 1 card on your field is not destroyed until end of opponent's turn
 	DESTROY_WISPS_REVEAL_OPPONENT,    # Destroy all wisps on your field; reveal that many opponent squares
 	TEMP_REROLL_DICE,                 # Until end of your next turn, you may re-roll the dice once
+	NOT_IMPLEMENTED,                 # Effect exists but has no engine implementation yet
 }
 
 @export var card_name: String = ""
@@ -43,6 +44,7 @@ enum TechEffectType {
 @export var effect_description: String = ""
 @export var artwork_path: String = ""
 @export var artwork_offset: Vector2 = Vector2.ZERO
+@export var include_in_demo: bool = false
 # For chain cards that require prior cards to have been played
 @export var required_prior_card: String = ""
 

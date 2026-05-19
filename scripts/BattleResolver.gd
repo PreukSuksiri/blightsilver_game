@@ -214,6 +214,9 @@ static func _get_effective_atk(
 				if defender.affinity in affinities:
 					atk += attacker.ability_params.get("bonus", 0)
 
+		CharacterData.AbilityType.NOT_IMPLEMENTED:
+			GameState.show_center_message("Ability not implemented: " + attacker.card_name)
+
 	# Nullified effect
 	if attacker.effect_nullified_until >= GameState.turn_number:
 		# don't apply ability bonus already added above — restore base
@@ -244,6 +247,9 @@ static func _get_effective_def(
 		CharacterData.AbilityType.ONE_USE_DEF_BOOST:
 			if not defender.one_use_def_boost_used:
 				def_val += defender.ability_params.get("bonus", 0)
+
+		CharacterData.AbilityType.NOT_IMPLEMENTED:
+			GameState.show_center_message("Ability not implemented: " + defender.card_name)
 
 	return def_val
 

@@ -396,6 +396,10 @@ func play_tech_card(tech_name: String) -> void:
 		TechCardData.TechEffectType.FORCE_SHIELD_ONE_CARD:
 			emit_signal("awaiting_target_selection", "Force Shield: Choose 1 of your cards to protect.", "own_any_card")
 
+		TechCardData.TechEffectType.NOT_IMPLEMENTED:
+			GameState.show_center_message("Ability not implemented: " + data.card_name)
+			after_tech_resolved(player)
+
 # ─────────────────────────────────────────────────────────────
 # Tech helpers
 # ─────────────────────────────────────────────────────────────
@@ -608,6 +612,9 @@ func _handle_trap_effect(
 		TrapData.TrapEffectType.NULLIFY_BLOCK_ADJACENT:
 			GameState.post_message("Bunker: Adjacent squares cannot be targeted this turn.")
 			emit_signal("awaiting_target_selection", "Bunker active.", "bunker_lock")
+
+		TrapData.TrapEffectType.NOT_IMPLEMENTED:
+			GameState.show_center_message("Ability not implemented: " + trap_data.card_name)
 
 # ─────────────────────────────────────────────────────────────
 # End Turn

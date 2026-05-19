@@ -31,6 +31,7 @@ signal tech_card_used(player_index: int, card_name: String)
 signal card_effect_triggered(card_name: String, card_type: String)
 signal attack_used(player_index: int, attacks_remaining: int)
 signal message_posted(text: String)
+signal center_message_requested(text: String)
 signal card_flag_added(player_index: int, row: int, col: int, flag: String)
 signal card_flag_removed(player_index: int, row: int, col: int, flag: String)
 signal card_atk_changed(player_index: int, row: int, col: int, old_val: int, new_val: int)
@@ -510,3 +511,7 @@ func remove_flag(player_index: int, row: int, col: int, flag: String) -> void:
 
 func post_message(text: String) -> void:
 	emit_signal("message_posted", text)
+
+func show_center_message(text: String) -> void:
+	emit_signal("message_posted", text)
+	emit_signal("center_message_requested", text)

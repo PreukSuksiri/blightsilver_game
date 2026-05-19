@@ -9,14 +9,37 @@ signal nsfw_changed(enabled: bool)
 
 signal union_mechanism_changed(unlocked: bool)
 
+const DEMO_CONFIG_PATH: String = "res://data/demo_config.json"
+
 var decks: Array = []          # Array of DeckData
 var active_deck_index: int = 0
 var nsfw_enabled: bool = false
 var unlocked_unions: Array = []  # union card names the player has ever summoned
 var union_mechanism_unlocked: bool = false  # true = union system visible to player
+var demo_mode: bool = false
 
 func _ready() -> void:
+	_load_demo_config()
 	load_data()
+
+func _load_demo_config() -> void:
+	if not FileAccess.file_exists(DEMO_CONFIG_PATH):
+		return
+	var file := FileAccess.open(DEMO_CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var text := file.get_as_text()
+	file.close()
+	var parsed: Variant = JSON.parse_string(text)
+	if parsed is Dictionary:
+		demo_mode = bool(parsed.get("demo_mode", false))
+
+func set_demo_mode(enabled: bool) -> void:
+	demo_mode = enabled
+	var file := FileAccess.open(DEMO_CONFIG_PATH, FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify({"demo_mode": enabled}, "\t"))
+		file.close()
 	# Ensure there is always at least one deck
 	if decks.is_empty():
 		var starter := DeckData.new()

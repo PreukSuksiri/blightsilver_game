@@ -35,11 +35,12 @@ var _apply_btn:      Button
 var _reset_btn:      Button
 
 # Input nodes (nullable – only present when a card is selected)
-var _spin_atk:       SpinBox      = null
-var _spin_def:       SpinBox      = null
-var _spin_cost:      SpinBox      = null
-var _opt_rarity:     OptionButton = null
-var _opt_affinity:   OptionButton = null
+var _spin_atk:         SpinBox      = null
+var _spin_def:         SpinBox      = null
+var _spin_cost:        SpinBox      = null
+var _opt_rarity:       OptionButton = null
+var _opt_affinity:     OptionButton = null
+var _check_demo:       CheckBox     = null
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -301,7 +302,7 @@ func _clear_detail() -> void:
 	for child in _fields_vbox.get_children():
 		child.queue_free()
 	_spin_atk = null; _spin_def = null; _spin_cost = null
-	_opt_rarity = null; _opt_affinity = null
+	_opt_rarity = null; _opt_affinity = null; _check_demo = null
 	_apply_btn.disabled = true
 	_reset_btn.disabled = true
 	_status_lbl.text = ""
@@ -310,7 +311,7 @@ func _build_detail(card_name: String) -> void:
 	for child in _fields_vbox.get_children():
 		child.queue_free()
 	_spin_atk = null; _spin_def = null; _spin_cost = null
-	_opt_rarity = null; _opt_affinity = null
+	_opt_rarity = null; _opt_affinity = null; _check_demo = null
 	_orig.clear()
 
 	match _current_tab:
@@ -324,17 +325,19 @@ func _build_detail(card_name: String) -> void:
 			_desc_lbl.text  = d.ability_description
 
 			_orig = {
-				"base_atk":     d.base_atk,
-				"base_def":     d.base_def,
-				"crystal_cost": d.crystal_cost,
-				"rarity":       d.rarity,
-				"affinity":     d.affinity,
+				"base_atk":      d.base_atk,
+				"base_def":      d.base_def,
+				"crystal_cost":  d.crystal_cost,
+				"rarity":        d.rarity,
+				"affinity":      d.affinity,
+				"include_in_demo": d.include_in_demo,
 			}
 			_spin_atk      = _add_spin_field("ATK",      d.base_atk,     0, 9999)
 			_spin_def      = _add_spin_field("DEF",      d.base_def,     0, 9999)
 			_spin_cost     = _add_spin_field("Cost",     d.crystal_cost, 0, 99999)
 			_opt_rarity    = _add_option_field("Rarity",   RARITY_NAMES,   d.rarity)
 			_opt_affinity  = _add_option_field("Affinity", AFFINITY_NAMES, d.affinity)
+			_check_demo    = _add_check_field("Include in Demo", d.include_in_demo)
 
 		"traps":
 			var d: TrapData = CardDatabase.get_trap(card_name)
@@ -344,11 +347,13 @@ func _build_detail(card_name: String) -> void:
 			_desc_lbl.text  = d.effect_description
 
 			_orig = {
-				"crystal_cost": d.crystal_cost,
-				"rarity":       d.rarity,
+				"crystal_cost":    d.crystal_cost,
+				"rarity":          d.rarity,
+				"include_in_demo": d.include_in_demo,
 			}
 			_spin_cost  = _add_spin_field("Cost",   d.crystal_cost, 0, 99999)
 			_opt_rarity = _add_option_field("Rarity", RARITY_NAMES,   d.rarity)
+			_check_demo = _add_check_field("Include in Demo", d.include_in_demo)
 
 		"tech":
 			var d: TechCardData = CardDatabase.get_tech(card_name)
@@ -360,11 +365,13 @@ func _build_detail(card_name: String) -> void:
 			_desc_lbl.text  = d.effect_description
 
 			_orig = {
-				"crystal_cost": d.crystal_cost,
-				"rarity":       d.rarity,
+				"crystal_cost":    d.crystal_cost,
+				"rarity":          d.rarity,
+				"include_in_demo": d.include_in_demo,
 			}
 			_spin_cost  = _add_spin_field("Cost",   d.crystal_cost, 0, 99999)
 			_opt_rarity = _add_option_field("Rarity", RARITY_NAMES,   d.rarity)
+			_check_demo = _add_check_field("Include in Demo", d.include_in_demo)
 
 	_apply_btn.disabled = false
 	_reset_btn.disabled = false
@@ -393,6 +400,26 @@ func _add_spin_field(label_text: String, value: int, min_v: int, max_v: int) -> 
 	row.add_child(spin)
 
 	return spin
+
+func _add_check_field(label_text: String, value: bool) -> CheckBox:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	_fields_vbox.add_child(row)
+
+	var lbl := Label.new()
+	lbl.text                = label_text
+	lbl.custom_minimum_size = Vector2(120.0, 0.0)
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(0.78, 0.78, 0.78))
+	lbl.vertical_alignment  = VERTICAL_ALIGNMENT_CENTER
+	row.add_child(lbl)
+
+	var chk := CheckBox.new()
+	chk.button_pressed      = value
+	chk.custom_minimum_size = Vector2(34.0, 34.0)
+	row.add_child(chk)
+
+	return chk
 
 func _add_option_field(label_text: String, options: Array, selected_idx: int) -> OptionButton:
 	var row := HBoxContainer.new()
@@ -428,30 +455,34 @@ func _on_apply() -> void:
 		"characters":
 			var d: CharacterData = CardDatabase.get_character(_selected_name)
 			if d == null: return
-			if _spin_atk:     d.base_atk      = int(_spin_atk.value)
-			if _spin_def:     d.base_def      = int(_spin_def.value)
-			if _spin_cost:    d.crystal_cost  = int(_spin_cost.value)
-			if _opt_rarity:   d.rarity        = _opt_rarity.selected
-			if _opt_affinity: d.affinity      = _opt_affinity.selected
+			if _spin_atk:     d.base_atk        = int(_spin_atk.value)
+			if _spin_def:     d.base_def        = int(_spin_def.value)
+			if _spin_cost:    d.crystal_cost    = int(_spin_cost.value)
+			if _opt_rarity:   d.rarity          = _opt_rarity.selected
+			if _opt_affinity: d.affinity        = _opt_affinity.selected
+			if _check_demo:   d.include_in_demo = _check_demo.button_pressed
 			_badge_lbl.text = "CHARACTER  ·  %s  ·  %s" % [
 				AFFINITY_NAMES[d.affinity], RARITY_NAMES[d.rarity]]
 
 		"traps":
 			var d: TrapData = CardDatabase.get_trap(_selected_name)
 			if d == null: return
-			if _spin_cost:  d.crystal_cost = int(_spin_cost.value)
-			if _opt_rarity: d.rarity       = _opt_rarity.selected
+			if _spin_cost:  d.crystal_cost    = int(_spin_cost.value)
+			if _opt_rarity: d.rarity          = _opt_rarity.selected
+			if _check_demo: d.include_in_demo = _check_demo.button_pressed
 			_badge_lbl.text = "TRAP  ·  %s" % RARITY_NAMES[d.rarity]
 
 		"tech":
 			var d: TechCardData = CardDatabase.get_tech(_selected_name)
 			if d == null: return
-			if _spin_cost:  d.crystal_cost = int(_spin_cost.value)
-			if _opt_rarity: d.rarity       = _opt_rarity.selected
+			if _spin_cost:  d.crystal_cost    = int(_spin_cost.value)
+			if _opt_rarity: d.rarity          = _opt_rarity.selected
+			if _check_demo: d.include_in_demo = _check_demo.button_pressed
 			var chain: String = ("Chain: requires '%s'" % d.required_prior_card) \
 				if d.required_prior_card != "" else ""
 			_badge_lbl.text = "TECH  ·  %s  %s" % [RARITY_NAMES[d.rarity], chain]
 
+	CardDatabase.save_demo_flags()
 	_status_lbl.text = "✓ Changes applied to %s" % _selected_name
 
 	# Update orig so a subsequent reset goes back to newly applied values
@@ -460,19 +491,21 @@ func _on_apply() -> void:
 func _on_reset() -> void:
 	if _orig.is_empty():
 		return
-	if _spin_atk and    _orig.has("base_atk"):     _spin_atk.value    = _orig["base_atk"]
-	if _spin_def and    _orig.has("base_def"):     _spin_def.value    = _orig["base_def"]
-	if _spin_cost and   _orig.has("crystal_cost"): _spin_cost.value   = _orig["crystal_cost"]
-	if _opt_rarity and  _orig.has("rarity"):       _opt_rarity.select(_orig["rarity"])
-	if _opt_affinity and _orig.has("affinity"):    _opt_affinity.select(_orig["affinity"])
+	if _spin_atk and     _orig.has("base_atk"):        _spin_atk.value         = _orig["base_atk"]
+	if _spin_def and     _orig.has("base_def"):        _spin_def.value         = _orig["base_def"]
+	if _spin_cost and    _orig.has("crystal_cost"):    _spin_cost.value        = _orig["crystal_cost"]
+	if _opt_rarity and   _orig.has("rarity"):          _opt_rarity.select(_orig["rarity"])
+	if _opt_affinity and _orig.has("affinity"):        _opt_affinity.select(_orig["affinity"])
+	if _check_demo and   _orig.has("include_in_demo"): _check_demo.button_pressed = _orig["include_in_demo"]
 	_status_lbl.text = "Reset to original values."
 
 func _sync_orig_from_inputs() -> void:
-	if _spin_atk:     _orig["base_atk"]     = int(_spin_atk.value)
-	if _spin_def:     _orig["base_def"]     = int(_spin_def.value)
-	if _spin_cost:    _orig["crystal_cost"] = int(_spin_cost.value)
-	if _opt_rarity:   _orig["rarity"]       = _opt_rarity.selected
-	if _opt_affinity: _orig["affinity"]     = _opt_affinity.selected
+	if _spin_atk:     _orig["base_atk"]        = int(_spin_atk.value)
+	if _spin_def:     _orig["base_def"]        = int(_spin_def.value)
+	if _spin_cost:    _orig["crystal_cost"]    = int(_spin_cost.value)
+	if _opt_rarity:   _orig["rarity"]          = _opt_rarity.selected
+	if _opt_affinity: _orig["affinity"]        = _opt_affinity.selected
+	if _check_demo:   _orig["include_in_demo"] = _check_demo.button_pressed
 
 # ─────────────────────────────────────────────────────────────
 # Close on Escape
