@@ -1,0 +1,89 @@
+[
+	{
+		"accent": [
+			1.0,
+			0.721568644046783,
+			0.219607844948769
+		],
+		"card_count": 3,
+		"card_pool": [
+			{
+				"card_name": "Street Rogue",
+				"card_type": "",
+				"weight": 100
+			},
+			{
+				"card_name": "Big Thug",
+				"card_type": "",
+				"weight": 50
+			},
+			{
+				"card_name": "Hammer Shark",
+				"card_type": "",
+				"weight": 100
+			},
+			{
+				"card_name": "Flame Lizard",
+				"card_type": "",
+				"weight": 50
+			},
+			{
+				"card_name": "Scout Probe",
+				"card_type": "",
+				"weight": 20
+			},
+			{
+				"card_name": "Void Stalker",
+				"card_type": "",
+				"weight": 20
+			},
+			{
+				"card_name": "Tomb Bandit",
+				"card_type": "",
+				"weight": 5
+			},
+			{
+				"card_name": "Lazy Troll",
+				"card_type": "",
+				"weight": 1
+			}
+		],
+		"description": "",
+		"id": "booster_blightsilver",
+		"name": "Booster Pack - Blight Silver",
+		"pack_image": "res://assets/textures/cards/booster_pack/booster_pack_basic.png",
+		"price": 500,
+		"shop_available": true
+	},
+	{
+		"accent": [
+			1.0,
+			0.721568644046783,
+			0.219607844948769
+		],
+		"card_count": 3,
+		"card_pool": [
+			{
+				"card_name": "Mine Guard",
+				"card_type": "",
+				"weight": 50
+			},
+			{
+				"card_name": "Dark Blob",
+				"card_type": "",
+				"weight": 50
+			},
+			{
+				"card_name": "Satellite Cannon",
+				"card_type": "",
+				"weight": 1
+			}
+		],
+		"description": "",
+		"id": "booster_unseen_presence",
+		"name": "Booster Pack - Unseen Presence",
+		"pack_image": "res://assets/textures/cards/booster_pack/booster_pack_unseen_presence.png",
+		"price": 500,
+		"shop_available": true
+	}
+]

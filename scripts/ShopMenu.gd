@@ -38,7 +38,14 @@ func _build_pack_cards() -> void:
 	pack_row.add_child(_make_disc_card())
 
 func _make_pack_card(pack: Dictionary) -> Control:
-	var accent: Color = pack.get("accent", Color(0.18, 0.55, 1.0))
+	var accent_raw: Variant = pack.get("accent", null)
+	var accent: Color
+	if accent_raw is Array and accent_raw.size() >= 3:
+		accent = Color(accent_raw[0], accent_raw[1], accent_raw[2], accent_raw[3] if accent_raw.size() >= 4 else 1.0)
+	elif accent_raw is Color:
+		accent = accent_raw
+	else:
+		accent = Color(0.18, 0.55, 1.0)
 	var can_afford: bool = Collection.credits >= pack["price"]
 
 	var card := PanelContainer.new()
