@@ -40,8 +40,8 @@ func _load_characters() -> void:
 	var defs: Array = [
 		# Name, Affinity, ATK, DEF, Cost, AbilityType, Params, Description, Rarity
 		["Aerial the Battlemage", CharacterData.Affinity.ARCANE, 50, 45, 700,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ATK_DEF_BONUS_IF_UNION_ON_FIELD,
+			{"atk": 20, "def": 20},
 			"+20 ATK and DEF if there is Union card on your field",
 			CharacterData.Rarity.RARE],
 
@@ -70,8 +70,8 @@ func _load_characters() -> void:
 			CharacterData.Rarity.UNCOMMON],
 
 		["Armored Money", CharacterData.Affinity.NATURE, 10, 20, 170,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ATK_BONUS_IF_AFFINITY_ON_FIELD,
+			{"affinity": CharacterData.Affinity.NATURE, "bonus": 10},
 			"+10 ATK if there is face-up Nature card",
 			CharacterData.Rarity.COMMON],
 
@@ -88,8 +88,8 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Bat Swarm", CharacterData.Affinity.CHAOS, 15, 15, 200,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.INTERCEPT_ALLY_ATTACK,
+			{"affinity": CharacterData.Affinity.CHAOS},
 			"If a Chaos card is being attacked. You can swap this card’s position with that card",
 			CharacterData.Rarity.RARE],
 
@@ -100,8 +100,8 @@ func _load_characters() -> void:
 			CharacterData.Rarity.UNCOMMON],
 
 		["Bladeshifter", CharacterData.Affinity.BIO, 0, 50, 420,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ONE_USE_DEFEND_MORPH,
+			{"atk": 40, "def": 40},
 			"Once, after this card defended successfully, it permanently lose -40 DEF and permanently gain +40 ATK against attacker’s affinity",
 			CharacterData.Rarity.UNCOMMON],
 
@@ -112,15 +112,15 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Blue Mage", CharacterData.Affinity.ARCANE, 45, 45, 800,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
-			"If this card battles non-Arcane card, flip a coins. If both are head, destroy it.",
+			CharacterData.AbilityType.COIN_FLIP_2_DESTROY_NON_AFFINITY,
+			{"affinity": CharacterData.Affinity.ARCANE},
+			"If this card battles non-Arcane card, flip 2 coins. If both are heads, destroy defender.",
 			CharacterData.Rarity.RARE],
 
 		["Bomber Fairy", CharacterData.Affinity.DIVINE, 30, 15, 500,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.ONE_USE_EXTRA_ATTACK_ON_KILL,
 			{},
-			"Once, if destroyed a card, this card an attack 1 more time",
+			"Once, if destroyed a card, this card can attack 1 more time",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Book with Fangs", CharacterData.Affinity.ARCANE, 45, 55, 700,
@@ -178,9 +178,9 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Dark Blob", CharacterData.Affinity.CHAOS, 20, 50, 500,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
-			"+5 ATK if at the end of opponent’s turn, this card survived.",
+			CharacterData.AbilityType.PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN,
+			{"atk": 5},
+			"+5 ATK permanently at the end of each opponent’s turn this card survives.",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Dark Monk", CharacterData.Affinity.CHAOS, 15, 25, 300,
@@ -190,15 +190,15 @@ func _load_characters() -> void:
 			CharacterData.Rarity.UNCOMMON],
 
 		["Dark Tengu", CharacterData.Affinity.CHAOS, 25, 25, 250,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.SELF_DEBUFF_ON_ATTACK_AND_DEFEND,
+			{"atk": 5, "def": 5},
 			"-5 ATK once it successfully attacked. -5 DEF once it successfully defended.",
 			CharacterData.Rarity.COMMON],
 
 		["Death Cobra", CharacterData.Affinity.NATURE, 85, 50, 850,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN,
 			{},
-			"At the end of this turn, select 1 face-up card on your opponent’s field. Put 1 venom flag on it.",
+			"At the end of this turn, a venom flag is placed on a random face-up opponent card.",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Death Knight", CharacterData.Affinity.CHAOS, 65, 65, 780,
@@ -220,21 +220,21 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Echo Bringer", CharacterData.Affinity.COSMIC, 55, 40, 500,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.EXTRA_ATTACK_VS_REVEALED,
 			{},
 			"When this card attacks a revealed card, it can attack a second time this turn (once per turn).",
 			CharacterData.Rarity.RARE],
 
 		["Electrogazer", CharacterData.Affinity.COSMIC, 45, 45, 600,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.NEGATE_ZERO_COST_TRAPS_BOTH,
 			{},
 			"Negate all zero cost trap on both player’s field",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Feral Vampire", CharacterData.Affinity.CHAOS, 40, 25, 400,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.DESTROY_SELF_VS_DIVINE_BOTH,
 			{},
-			"Destroy is card when battling with Divine card",
+			"Destroy this card when battling with Divine card",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Flame Lizard", CharacterData.Affinity.NATURE, 25, 40, 400,
@@ -268,8 +268,8 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Giant Centipede", CharacterData.Affinity.NATURE, 20, 20, 1500,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ATK_BONUS_VS_VENOM,
+			{"bonus": 100},
 			"+100 ATK vs cards with venom flag",
 			CharacterData.Rarity.RARE],
 
@@ -280,20 +280,20 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Goddess of Virtue", CharacterData.Affinity.DIVINE, 80, 100, 1400,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.DESTROY_IF_OPPONENT_AFFINITY,
+			{"affinity": CharacterData.Affinity.CHAOS},
 			"At battle calculation, destroy Chaos card",
 			CharacterData.Rarity.EXOTIC],
 
 		["Golden Senju", CharacterData.Affinity.DIVINE, 15, 0, 200,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.MULTI_ATTACK_VS_NON_CHARACTER,
+			{"max_attacks": 3},
 			"If this card attacked non-character card, this card can attack again, up to 3 times.",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Grand Fort Archer", CharacterData.Affinity.ANIMA, 20, 20, 280,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ONE_USE_ATK_BOOST,
+			{"bonus": 10},
 			"Once, +10 ATK when attack",
 			CharacterData.Rarity.UNCOMMON],
 
@@ -310,14 +310,14 @@ func _load_characters() -> void:
 			CharacterData.Rarity.UNCOMMON],
 
 		["Grave Worm", CharacterData.Affinity.CHAOS, 15, 30, 250,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.OPPONENT_EXTRA_CRYSTAL_LOSS,
+			{"amount": 20},
 			"Whenever your opponent lose crystal, they lose 20 more crystals",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Green Mage", CharacterData.Affinity.ARCANE, 15, 15, 400,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.DEFEND_PERM_DEBUFF_ATTACKER_ATK_DEF,
+			{"atk": 10, "def": 10},
 			"When this card defends, the attacker permanently loses 10 ATK and DEF.",
 			CharacterData.Rarity.UNCOMMON],
 
@@ -328,9 +328,9 @@ func _load_characters() -> void:
 			CharacterData.Rarity.EXOTIC],
 
 		["Hairpin Assassin", CharacterData.Affinity.ANIMA, 25, 15, 300,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
-			"At battle calculation, you can pay 100 crystal. This card gain +10 ATK",
+			CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_ATK_BOOST,
+			{"cost": 100, "atk": 10},
+			"At battle calculation, you can pay 100 crystal for +10 ATK",
 			CharacterData.Rarity.COMMON],
 
 		["Hammer Shark", CharacterData.Affinity.NATURE, 20, 20, 250,
@@ -340,9 +340,9 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Hands in the Attic", CharacterData.Affinity.CHAOS, 20, 20, 300,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
-			"+10 ATK at the end of your turn. Remove the bonus after battle calculation.",
+			CharacterData.AbilityType.TEMP_ATK_BOOST_OWN_TURN_START,
+			{"atk": 10},
+			"+10 ATK at the start of your turn (temp, cleared at end of turn).",
 			CharacterData.Rarity.COMMON],
 
 		["Heavy Tome Preacher", CharacterData.Affinity.DIVINE, 25, 20, 300,
@@ -376,26 +376,26 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Jirayu the Rebellious Prince", CharacterData.Affinity.ANIMA, 40, 40, 600,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.PERM_DEF_BOOST_ON_DEFEND,
+			{"def": 10},
 			"If this card successfully defended, +10 DEF permanently",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Joan the Faithful Warrior", CharacterData.Affinity.DIVINE, 25, 5, 280,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.DEF_BONUS_IF_AFFINITY_ON_FIELD,
+			{"affinity": CharacterData.Affinity.DIVINE, "def": 30},
 			"If at least 1 Divine card is on the field, this card gain 30 DEF",
 			CharacterData.Rarity.COMMON],
 
 		["Joseph the Battle Priest", CharacterData.Affinity.DIVINE, 60, 25, 600,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.COIN_FLIP_ATK_BOOST,
+			{"bonus": 10},
 			"At battle calculation, flip a coin, if head, +10 ATK",
 			CharacterData.Rarity.RARE],
 
 		["Kiyoko the Death Whisper", CharacterData.Affinity.ANIMA, 40, 35, 800,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ATK_BONUS_VS_UNION,
+			{"bonus": 50},
 			"This card gain +50 ATK when attacking Union card",
 			CharacterData.Rarity.LEGENDARY],
 
@@ -424,25 +424,25 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Laughing Granny", CharacterData.Affinity.CHAOS, 15, 20, 350,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND,
+			{"atk": 10, "def": 10},
 			"Once when defending, +10 DEF until end of turn. Once when attacking, +10 ATK until end of turn",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Lazy Troll", CharacterData.Affinity.NATURE, 120, 60, 900,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.COIN_FLIP_CANCEL_ATTACK,
 			{},
 			"If this card performs an attack, flip a coin, if tail, it stops attacking.",
 			CharacterData.Rarity.EXOTIC],
 
 		["Leech Man", CharacterData.Affinity.BIO, 60, 40, 850,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.PERM_DEF_BOOST_PER_ATTACK_SURVIVE,
+			{"def": 20},
 			"+20 DEF permanently each time it performed attack and survive",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Leopard Jailer", CharacterData.Affinity.ANIMA, 30, 45, 450,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.LOCK_TARGET_ON_ATTACK,
 			{},
 			"If this card attacks a character card, the target is unable to attack until the end of their turn.",
 			CharacterData.Rarity.UNCOMMON],
@@ -460,20 +460,20 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Mafia Associates", CharacterData.Affinity.ANIMA, 45, 40, 500,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.DEF_ZERO_WHEN_EXPOSED,
 			{},
-			"If this card is exposed, it defense becomes 0",
+			"If this card is exposed, its defense becomes 0",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Magenta the Nightbloom", CharacterData.Affinity.CHAOS, 25, 40, 300,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.HALVE_DEF_ON_FIRST_EXPOSE,
 			{},
-			"Half its DEF permanently at the end of that turn",
+			"Half its DEF permanently when first revealed",
 			CharacterData.Rarity.COMMON],
 
 		["Magical Butterfly", CharacterData.Affinity.NATURE, 15, 15, 180,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.TEMP_BOOST_ON_OPP_TECH,
+			{"atk": 10, "def": 10},
 			"Whenever opponent’s tech card is activated, +10 ATK and DEF until the start of your next turn",
 			CharacterData.Rarity.COMMON],
 
@@ -484,15 +484,15 @@ func _load_characters() -> void:
 			CharacterData.Rarity.UNCOMMON],
 
 		["Melissa the Healer", CharacterData.Affinity.DIVINE, 0, 25, 700,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.CRYSTAL_RECOVER_ON_BIG_LOSS,
+			{"threshold": 500, "amount": 300},
 			"If you lose 500 or more crystals, you recover 300 crystals",
 			CharacterData.Rarity.COMMON],
 
 		["Mephisto the Fallen", CharacterData.Affinity.DIVINE, 75, 0, 750,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.ATK_ZERO_AFTER_WIN,
 			{},
-			"After this card attacked successfully, its ATK becomes 0 permanently",
+			"After this card wins a battle, its ATK becomes 0 permanently",
 			CharacterData.Rarity.RARE],
 
 		["Mind Flayer", CharacterData.Affinity.ARCANE, 100, 70, 1200,
@@ -502,55 +502,55 @@ func _load_characters() -> void:
 			CharacterData.Rarity.EXOTIC],
 
 		["Mine Guard", CharacterData.Affinity.COSMIC, 20, 15, 300,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
-			"If ‘Miner’ card will be destroyed, you can destroy this card instead. Can be triggered face-down",
+			CharacterData.AbilityType.SACRIFICE_FOR_CARD_TYPE,
+			{"name_contains": "Miner"},
+			"If a Miner card will be destroyed, you can destroy this card instead.",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Miner Probe", CharacterData.Affinity.COSMIC, 10, 10, 200,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.CRYSTAL_GAIN_ON_DEAD_END_ATTACK,
+			{"amount": 20},
 			"If this card attacks a dead end card, you receive 20 crystals",
 			CharacterData.Rarity.COMMON],
 
 		["Moon Rover", CharacterData.Affinity.COSMIC, 15, 20, 200,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.REVEAL_ON_DEAD_END_ATTACK,
 			{},
 			"When this card attacks dead end, reveal 1 of your opponent’s cell",
 			CharacterData.Rarity.COMMON],
 
 		["Moon Tribe Marksman", CharacterData.Affinity.COSMIC, 35, 25, 300,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ATK_PENALTY_IF_NO_NAME_ALLY,
+			{"name_contains": "Moon", "penalty": 10},
 			"If you do not control another Moon card, -10 ATK",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Moon Tribe Twin Blades", CharacterData.Affinity.COSMIC, 30, 20, 300,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.COIN_FLIP_EXTRA_ATTACK,
 			{},
 			"If this card attacks, flip a coin. If head, this card can attack twice.",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Moonrise Gentleman", CharacterData.Affinity.DIVINE, 40, 30, 400,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
-			"+10 DEF and -10 ATK while performing defense.",
+			CharacterData.AbilityType.DEFENSE_STANCE_BOOST,
+			{"def": 10},
+			"+10 DEF while performing defense.",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Mysterious Miner", CharacterData.Affinity.CHAOS, 25, 15, 250,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.REVEAL_ON_WIN,
 			{},
 			"When it successfully attacked, reveal 1 cell on your opponent’s field",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Needle Porcupine", CharacterData.Affinity.NATURE, 10, 10, 200,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ONE_USE_PERM_DEBUFF_ATTACKER_ATK,
+			{"atk": 5},
 			"Once, when this card defends, the attacker permanently loses 5 ATK.",
 			CharacterData.Rarity.COMMON],
 
 		["Neptune Diver", CharacterData.Affinity.COSMIC, 20, 10, 200,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.REVEAL_ON_TRAP_ATTACK,
 			{},
 			"When this card attacks a trap, reveal 1 of your opponent’s cell",
 			CharacterData.Rarity.COMMON],
@@ -562,26 +562,26 @@ func _load_characters() -> void:
 			CharacterData.Rarity.RARE],
 
 		["Nuki the Tanuki", CharacterData.Affinity.NATURE, 10, 10, 100,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.COIN_FLIP_SWAP_POSITION,
 			{},
 			"At battle calculation, flip a coin, if head, swap this card’s position with any of character card on their own field",
 			CharacterData.Rarity.COMMON],
 
 		["Ostrich Cannon", CharacterData.Affinity.NATURE, 60, 30, 800,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.LOCK_SELF_AFTER_ATTACK,
 			{},
 			"This card cannot attack during your next turn.",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Ox Patrol", CharacterData.Affinity.ANIMA, 35, 35, 420,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ATK_DEF_BONUS_VS_NON_AFFINITY,
+			{"affinity": CharacterData.Affinity.ANIMA, "atk": 5, "def": 5},
 			"+5 ATK and DEF vs Non-Anima",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Parom the Smuggler", CharacterData.Affinity.COSMIC, 30, 20, 300,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.CRYSTAL_GAIN_ON_OPP_REVEAL,
+			{"amount": 40},
 			"Gain 40 crystals each time opponent’s grid is revealed",
 			CharacterData.Rarity.UNCOMMON],
 
@@ -592,13 +592,13 @@ func _load_characters() -> void:
 			CharacterData.Rarity.EXOTIC],
 
 		["Plant 29", CharacterData.Affinity.BIO, 45, 75, 800,
-			CharacterData.AbilityType.MUTAGEN_ATK_BOOST_VS_AFFINITIES,
-			{"bonus": 0, "affinities": []},
-			"At the start of your turn, select 1 face-up opponent’s card. Flip a coin, if head, put a venom flag on it. If tail, put mutagen flag on it.",
+			CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG,
+			{},
+			"At the start of your turn, a random face-up opponent card gets a venom flag (heads) or mutagen flag (tails).",
 			CharacterData.Rarity.RARE],
 
 		["Poltergeist", CharacterData.Affinity.CHAOS, 0, 70, 700,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.SWAP_ATK_DEF_WHEN_ATTACKING,
 			{},
 			"If this card performs an attack, switch this card’s ATK and DEF",
 			CharacterData.Rarity.RARE],
@@ -628,14 +628,14 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Rotten Shrieker", CharacterData.Affinity.BIO, 50, 30, 450,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.PERM_ATK_LOSS_PER_OWN_TURN,
+			{"amount": 10},
 			"-10 ATK permanently at the end of your turn",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Satellite Cannon", CharacterData.Affinity.COSMIC, 90, 80, 1100,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ATK_BONUS_VS_CENTER_ZONE,
+			{"bonus": 20, "center_bonus": 40},
 			"+20 ATK if attacking the 3x3 center zone. +40 more ATK if attacking the very center cell.",
 			CharacterData.Rarity.EXOTIC],
 
@@ -664,7 +664,7 @@ func _load_characters() -> void:
 			CharacterData.Rarity.UNCOMMON],
 
 		["Shepherd Detective", CharacterData.Affinity.ANIMA, 40, 25, 400,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.REVEAL_ON_ANY_ATTACK,
 			{},
 			"After this card attacks, reveal 1 of your opponent’s cell",
 			CharacterData.Rarity.UNCOMMON],
@@ -688,13 +688,13 @@ func _load_characters() -> void:
 			CharacterData.Rarity.UNCOMMON],
 
 		["Skeleton Archer", CharacterData.Affinity.CHAOS, 35, 5, 300,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ATK_BONUS_VS_FACEDOWN,
+			{"bonus": 5},
 			"+5 ATK vs face-down Defender",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Skeleton Grappler", CharacterData.Affinity.CHAOS, 20, 5, 150,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.LOCK_ATTACKER_ON_DESTROYED,
 			{},
 			"Character that destroyed this card cannot attack until the end of your opponent’s turn.",
 			CharacterData.Rarity.COMMON],
@@ -706,19 +706,19 @@ func _load_characters() -> void:
 			CharacterData.Rarity.UNCOMMON],
 
 		["Skeleton Scout", CharacterData.Affinity.CHAOS, 20, 5, 150,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.ONE_USE_EXTRA_ATTACK_ON_DEAD_END,
 			{},
 			"Once, attack again if this card attacked dead end card",
 			CharacterData.Rarity.COMMON],
 
 		["Sniping Fairy", CharacterData.Affinity.DIVINE, 40, 20, 350,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
-			"-20 AK if exposed",
+			CharacterData.AbilityType.ATK_PENALTY_WHEN_EXPOSED,
+			{"penalty": 20},
+			"-20 ATK while face-up",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Sonic Seraph", CharacterData.Affinity.DIVINE, 45, 50, 550,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.EXTRA_ATTACK_ON_DEAD_END,
 			{},
 			"Once per turn, if it attacked dead end card, it can attack again",
 			CharacterData.Rarity.RARE],
@@ -742,9 +742,9 @@ func _load_characters() -> void:
 			CharacterData.Rarity.UNCOMMON],
 
 		["Stinky Insect", CharacterData.Affinity.NATURE, 10, 10, 400,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.LOCK_ATTACKER_ON_DEFEND,
 			{},
-			"If this card defended, the attacker card cannot attack on the next of opponent’s turn",
+			"If this card defended, the attacker card cannot attack until end of their next turn.",
 			CharacterData.Rarity.COMMON],
 
 		["Street Rogue", CharacterData.Affinity.ANIMA, 25, 20, 350,
@@ -754,20 +754,20 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Striker Comet", CharacterData.Affinity.COSMIC, 25, 25, 200,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.DESTROY_SELF_AT_END_OF_EXPOSE_TURN,
 			{},
 			"Once face-up, destroy it and the end of this turn",
 			CharacterData.Rarity.COMMON],
 
 		["Succubus", CharacterData.Affinity.CHAOS, 10, 30, 400,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.ONE_USE_COPY_STATS_ON_SURVIVE,
 			{},
 			"Once, if this card survive battle, gain ATK and DEF equal to the card it battled",
 			CharacterData.Rarity.COMMON],
 
 		["Sunrise Lady", CharacterData.Affinity.DIVINE, 20, 25, 300,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ATTACK_STANCE_BOOST,
+			{"atk": 10},
 			"+10 ATK and -10 DEF while performing attack.",
 			CharacterData.Rarity.COMMON],
 
@@ -778,7 +778,7 @@ func _load_characters() -> void:
 			CharacterData.Rarity.LEGENDARY],
 
 		["Tiny Pixie", CharacterData.Affinity.DIVINE, 0, 0, 100,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION,
 			{},
 			"Once, this card is not destroyed",
 			CharacterData.Rarity.COMMON],
@@ -796,13 +796,13 @@ func _load_characters() -> void:
 			CharacterData.Rarity.RARE],
 
 		["Vampire Servant", CharacterData.Affinity.CHAOS, 20, 20, 500,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.SACRIFICE_FOR_CARD_TYPE,
+			{"name_contains": "Vampire"},
 			"If a 'Vampire' card will be destroyed, destroy this card instead. Can be triggered face-down.",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Vile Creeper", CharacterData.Affinity.BIO, 10, 30, 200,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.SWAP_ATK_DEF_PER_OPP_TURN,
 			{},
 			"While this card is face-up, at the end of your opponent’s turn, swap its ATK and DEF",
 			CharacterData.Rarity.COMMON],
@@ -820,14 +820,14 @@ func _load_characters() -> void:
 			CharacterData.Rarity.RARE],
 
 		["War Genie", CharacterData.Affinity.ARCANE, 100, 80, 1000,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.PERM_ATK_LOSS_PER_ATTACK,
+			{"amount": 10},
 			"-10 ATK permanently after it attacked",
 			CharacterData.Rarity.LEGENDARY],
 
 		["White Tiger", CharacterData.Affinity.NATURE, 40, 25, 450,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
-			{},
+			CharacterData.AbilityType.ATTACKER_ATK_DEBUFF,
+			{"amount": 15},
 			"At battle calculation, -15 ATK to the attacker",
 			CharacterData.Rarity.UNCOMMON],
 
@@ -945,8 +945,8 @@ func _load_traps() -> void:
 			"Attacking player loses 50 Crystals",
 			CharacterData.Rarity.COMMON],
 
-		["Alarm", 0, TrapData.TrapEffectType.NOT_IMPLEMENTED,
-			{},
+		["Alarm", 0, TrapData.TrapEffectType.FIELD_BOOST_AFFINITY_DEF,
+			{"affinity": CharacterData.Affinity.ANIMA, "def": 5},
 			"Unil the end of this urn, All face-up Anima monster gain +5 DEF",
 			CharacterData.Rarity.COMMON],
 
@@ -970,12 +970,12 @@ func _load_traps() -> void:
 			"Player cannot select adjacent cell as an attack target until the end of this turn.",
 			CharacterData.Rarity.LEGENDARY],
 
-		["Cursed Reflection", 500, TrapData.TrapEffectType.NOT_IMPLEMENTED,
+		["Cursed Reflection", 500, TrapData.TrapEffectType.SWAP_ATTACKER_ATK_DEF_TEMP,
 			{},
 			"Swap the attacker's ATK and DEF until the end of this turn",
 			CharacterData.Rarity.RARE],
 
-		["Decoy Puppet", 500, TrapData.TrapEffectType.NOT_IMPLEMENTED,
+		["Decoy Puppet", 500, TrapData.TrapEffectType.CANCEL_ATTACKER_ATTACK,
 			{},
 			"Can be triggered face-down. 1 attacker’s attack is cancelled",
 			CharacterData.Rarity.UNCOMMON],
@@ -990,7 +990,7 @@ func _load_traps() -> void:
 			"All attacker’s characters cannot attack until the end of this turn",
 			CharacterData.Rarity.RARE],
 
-		["Explosive Barrels", 0, TrapData.TrapEffectType.NOT_IMPLEMENTED,
+		["Explosive Barrels", 0, TrapData.TrapEffectType.DESTROY_ATTACKER_DEFENDER_PAYS,
 			{},
 			"Destroy the attacking character. Defending player also lose crystal equal to the attacking monster's cost.",
 			CharacterData.Rarity.EXOTIC],
@@ -1000,13 +1000,13 @@ func _load_traps() -> void:
 			"Permanently -10 ATK to the Attacking character",
 			CharacterData.Rarity.UNCOMMON],
 
-		["Foul Gas", 0, TrapData.TrapEffectType.NOT_IMPLEMENTED,
-			{},
+		["Foul Gas", 0, TrapData.TrapEffectType.TEMP_DEBUFF_ALL_ATTACKER_CHARS,
+			{"amount": 5},
 			"-5 ATK to all the attacking player’s characters until the end of this turn",
 			CharacterData.Rarity.RARE],
 
-		["Hard Scale", 700, TrapData.TrapEffectType.NOT_IMPLEMENTED,
-			{},
+		["Hard Scale", 700, TrapData.TrapEffectType.TEMP_DEF_BOOST_ONE_OWN,
+			{"def": 5},
 			"Can be triggered face-down. +5 DEF to 1 of your card until the end of this turn",
 			CharacterData.Rarity.COMMON],
 
@@ -1020,18 +1020,18 @@ func _load_traps() -> void:
 			"The attacking character cannot attack during their next turn",
 			CharacterData.Rarity.LEGENDARY],
 
-		["Pepper Spray", 0, TrapData.TrapEffectType.NOT_IMPLEMENTED,
-			{},
+		["Pepper Spray", 0, TrapData.TrapEffectType.COIN_FLIP_2_ATK_DEBUFF,
+			{"amount": 5},
 			"Flip 2 coin, if head, the attacking character lose -5 ATK until the end of their next turn.",
 			CharacterData.Rarity.COMMON],
 
-		["Red Card", 0, TrapData.TrapEffectType.NOT_IMPLEMENTED,
+		["Red Card", 0, TrapData.TrapEffectType.COIN_FLIP_2_LOCK_ATTACKER,
 			{},
 			"Flip 2 coin, if head, that character cannot attack next turn",
 			CharacterData.Rarity.UNCOMMON],
 
-		["Self-destruct", 0, TrapData.TrapEffectType.NOT_IMPLEMENTED,
-			{},
+		["Self-destruct", 0, TrapData.TrapEffectType.SELF_DESTROY_TEMP_ATK_BOOST,
+			{"atk": 10},
 			"Select 1 of your character card. Until the end of next turn, that card gain +10 ATK, but destroy it at the end of next turn. You do not lose crystal from card destroyed under this effect",
 			CharacterData.Rarity.UNCOMMON],
 
@@ -1045,8 +1045,8 @@ func _load_traps() -> void:
 			"Destroy the attacking character",
 			CharacterData.Rarity.EXOTIC],
 
-		["Street Joke", 0, TrapData.TrapEffectType.NOT_IMPLEMENTED,
-			{},
+		["Street Joke", 0, TrapData.TrapEffectType.REVEAL_OWN_GAIN_CRYSTAL,
+			{"amount": 100},
 			"Reveal 1 of your cell, you receive 100 crystal",
 			CharacterData.Rarity.COMMON],
 

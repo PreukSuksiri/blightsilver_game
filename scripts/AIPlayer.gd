@@ -217,9 +217,10 @@ func _choose_tech() -> void:
 # ─────────────────────────────────────────────────────────────
 func decide_target(filter: String) -> Vector2i:
 	match filter:
-		"opponent_squares_1", "opponent_squares_2", "opponent_squares_3":
+		"opponent_squares_1", "opponent_squares_2", "opponent_squares_3", "opponent_any_hidden":
 			return _random_unrevealed_opponent()
-		"own_faceup_character":
+		"own_faceup_character", "own_character_for_swap", \
+				"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct":
 			return _best_own_faceup()
 		_:
 			return _random_unrevealed_opponent()

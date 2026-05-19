@@ -147,6 +147,11 @@ var _handoff_callback: Callable = Callable()
 var _bribe_overlay: Control = null
 var _bribe_desc_lbl: Label = null
 
+# ── Binary ability-choice overlay (awaiting_trap_choice prompts)
+var _ability_choice_overlay: Control = null
+var _ability_choice_title_lbl: Label = null
+var _ability_choice_btns: Array[Button] = []
+
 # ── Tech-resolution input blocker (invisible, shown while effect animates)
 var _tech_resolve_blocker: ColorRect = null
 
@@ -248,6 +253,7 @@ func _ready() -> void:
 	_setup_buttons()
 	_build_handoff_overlay()
 	_build_bribe_overlay()
+	_build_ability_choice_overlay()
 	_build_tech_resolve_blocker()
 	_build_portraits()
 	_build_hover_panel()
@@ -668,6 +674,85 @@ func _build_bribe_overlay() -> void:
 	pass_btn.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0, 1.0))
 	pass_btn.pressed.connect(_on_bribe_pass_pressed)
 	hbox.add_child(pass_btn)
+
+func _build_ability_choice_overlay() -> void:
+	_ability_choice_overlay = Control.new()
+	_ability_choice_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_ability_choice_overlay.visible = false
+	_ability_choice_overlay.z_index = 7
+	add_child(_ability_choice_overlay)
+
+	var bg := ColorRect.new()
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.color = Color(0.0, 0.0, 0.0, 0.75)
+	bg.mouse_filter = Control.MOUSE_FILTER_STOP
+	_ability_choice_overlay.add_child(bg)
+
+	var panel := Panel.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.offset_left   = -200.0
+	panel.offset_right  =  200.0
+	panel.offset_top    = -110.0
+	panel.offset_bottom =  110.0
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.08, 0.08, 0.16, 0.96)
+	sb.border_width_left   = 2; sb.border_width_right  = 2
+	sb.border_width_top    = 2; sb.border_width_bottom = 2
+	sb.border_color = Color(0.4, 0.6, 1.0, 0.8)
+	sb.corner_radius_top_left     = 10
+	sb.corner_radius_top_right    = 10
+	sb.corner_radius_bottom_right = 10
+	sb.corner_radius_bottom_left  = 10
+	panel.add_theme_stylebox_override("panel", sb)
+	_ability_choice_overlay.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vbox.offset_left   =  16.0
+	vbox.offset_right  = -16.0
+	vbox.offset_top    =  14.0
+	vbox.offset_bottom = -14.0
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_theme_constant_override("separation", 12)
+	panel.add_child(vbox)
+
+	_ability_choice_title_lbl = Label.new()
+	_ability_choice_title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_ability_choice_title_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_ability_choice_title_lbl.add_theme_color_override("font_color", Color(0.9, 0.9, 1.0, 1.0))
+	vbox.add_child(_ability_choice_title_lbl)
+
+	# Pre-create 4 buttons (max expected choices)
+	_ability_choice_btns.clear()
+	for i: int in range(4):
+		var btn := Button.new()
+		btn.visible = false
+		btn.add_theme_color_override("font_color", Color(0.8, 0.95, 1.0, 1.0))
+		var capture_i: int = i
+		btn.pressed.connect(func() -> void:
+			_ability_choice_overlay.visible = false
+			for b: Button in _ability_choice_btns:
+				b.visible = false
+			turn_manager.resolve_ability_choice(capture_i)
+		)
+		vbox.add_child(btn)
+		_ability_choice_btns.append(btn)
+
+func _show_ability_choice_overlay(title: String, choices: Array) -> void:
+	_ability_choice_title_lbl.text = title
+	for i: int in range(_ability_choice_btns.size()):
+		var btn: Button = _ability_choice_btns[i]
+		if i < choices.size():
+			btn.text = choices[i]
+			btn.visible = true
+		else:
+			btn.visible = false
+	_ability_choice_overlay.visible = true
+
+func _hide_ability_choice_overlay() -> void:
+	_ability_choice_overlay.visible = false
+	for btn: Button in _ability_choice_btns:
+		btn.visible = false
 
 func _show_bribe_overlay(opponent: int) -> void:
 	_bribe_desc_lbl.text = "Player %d: Reveal one of your characters to gain 700 Crystals, or pass." % (opponent + 1)
@@ -4471,6 +4556,12 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		var ai_target := ai_player.decide_target(filter)
 		var target_player := GameState.get_opponent(1) if "opponent" in filter else 1
 		_handle_tech_target(target_player, ai_target)
+	# Trap effects where AI is the DEFENDING player (not AI's turn, but AI must self-select)
+	elif filter in ["own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct"] \
+			and GameState.game_mode == GameState.GameMode.VS_AI:
+		await get_tree().create_timer(0.4).timeout
+		var ai_target: Vector2i = ai_player.decide_target(filter)
+		_handle_tech_target(1, ai_target)  # AI is always player 1
 
 func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var current_player := GameState.current_player
@@ -4554,6 +4645,37 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			_clear_after_tech()
 		return
 
+	if pending_tech_filter == "opponent_any_hidden":
+		if player == opponent and card.card_type != "dead_end" and not card.face_up:
+			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.post_message("Revealed: %s" % card.card_name)
+			_clear_after_tech()
+		return
+
+	if pending_tech_filter == "own_character_for_swap":
+		if player == current_player and card.card_type == "character":
+			var swap_pos: Vector2i = turn_manager._pending_swap_attacker_pos
+			if swap_pos != Vector2i(-1, -1) and swap_pos != pos:
+				var swap_card: GameState.CardInstance = GameState.get_card(current_player, swap_pos.x, swap_pos.y)
+				GameState.grids[current_player][swap_pos.x][swap_pos.y] = card
+				GameState.grids[current_player][pos.x][pos.y] = swap_card
+				GameState.post_message("Positions swapped: %s ↔ %s" % [card.card_name, swap_card.card_name])
+			turn_manager._pending_swap_attacker_pos = Vector2i(-1, -1)
+			_clear_after_tech()
+		return
+
+	if pending_tech_filter == "own_faceup_for_trap_temp_def_boost":
+		if player == opponent and card.card_type == "character" and card.face_up:
+			turn_manager.resolve_trap_temp_def_boost(player, pos)
+			_clear_after_tech()
+		return
+
+	if pending_tech_filter == "own_character_for_trap_self_destruct":
+		if player == opponent and card.card_type == "character":
+			turn_manager.resolve_trap_self_destruct(player, pos)
+			_clear_after_tech()
+		return
+
 	# Fallback — end tech after any selection
 	_finish_tech_action(current_player)
 
@@ -4574,8 +4696,12 @@ func _clear_after_tech() -> void:
 	_refresh_all_grids()
 
 func _on_awaiting_trap_choice(trap_name: String, choices: Array) -> void:
-	action_label.text = "%s:\n1) %s\n2) %s\n\n(Click a grid square to continue)" % [trap_name, choices[0], choices[1]]
-	action_panel.visible = true
+	_show_ability_choice_overlay(trap_name, choices)
+	# AI auto-resolves: always pick choice 0 (first option)
+	if _is_ai_turn():
+		await get_tree().create_timer(0.6).timeout
+		_hide_ability_choice_overlay()
+		turn_manager.resolve_ability_choice(0)
 
 # ─────────────────────────────────────────────────────────────
 # Highlights
@@ -4662,6 +4788,31 @@ func _highlight_tech_targets(filter: String) -> void:
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 				grid_nodes[opponent][r][c].set_highlighted(card.card_type == "character")
+
+	elif filter == "opponent_any_hidden":
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(
+					card.card_type != "dead_end" and not card.face_up)
+
+	elif filter == "own_character_for_swap":
+		# ATTACKER picks one of their own characters to swap positions with
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(player, r, c)
+				grid_nodes[player][r][c].set_highlighted(card.card_type == "character" and card.face_up)
+
+	elif filter in ["own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct"]:
+		# DEFENDER (trap owner = opponent) picks one of their own characters
+		var require_faceup: bool = filter == "own_faceup_for_trap_temp_def_boost"
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				var ok: bool = card.card_type == "character"
+				if require_faceup:
+					ok = ok and card.face_up
+				grid_nodes[opponent][r][c].set_highlighted(ok)
 
 func _count_opponent_unrevealed(opponent: int) -> int:
 	var count: int = 0

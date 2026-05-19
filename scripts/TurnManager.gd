@@ -25,6 +25,7 @@ var _siege_cannon_attacker_player: int = -1
 var _pending_trap_def_boost: int = 0
 var _pending_trap_self_destruct_boost: int = 0
 var _pending_trap_self_destruct_player: int = -1
+var _pending_swap_attacker_pos: Vector2i = Vector2i(-1, -1)
 
 func resolve_ability_choice(choice_index: int) -> void:
 	emit_signal("ability_choice_resolved", choice_index)
@@ -980,6 +981,7 @@ func _apply_post_battle_effects(
 			"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
 
 	if result.pending_coin_flip_swap_position:
+		_pending_swap_attacker_pos = attacker_pos
 		emit_signal("awaiting_target_selection",
 			"%s: Choose 1 of your characters to swap position with." % attacker.card_name,
 			"own_character_for_swap")
