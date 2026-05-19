@@ -4,6 +4,13 @@ extends Node
 
 const AI_PLAYER: int = 1
 const HUMAN_PLAYER: int = 0
+const BLUFF_ANIM_SECS: float = 0.42   # slightly over GameBoard.BLUFF_ANIM_DURATION (0.38s)
+
+# Pre-compiled regex for integer extraction in decide_trap_choice
+var _int_regex: RegEx = RegEx.new()
+
+func _ready() -> void:
+	_int_regex.compile("\\d+")
 
 signal ai_mode_chosen(mode: GameState.TurnMode)
 signal ai_attack_chosen(attacker_pos: Vector2i, target_pos: Vector2i)
@@ -12,18 +19,20 @@ signal ai_target_chosen(pos: Vector2i)
 signal ai_trap_choice(choice_index: int)
 signal ai_end_turn
 signal ai_union_chosen(union_name: String, zone_cells: Array, material_cells: Array)
+signal ai_bluff(row: int, col: int, emoticon: String)
 
 # Per-duel state
 var _ai_turn_count: int = 0   # incremented at start of each decide_turn call
 var _union_used:    bool = false
+var _pending_death_bluff: Vector2i = Vector2i(-1, -1)  # set when AI card dies; flushed on next AI turn
 
 # Called at the start of each AI action opportunity (start of turn, after each attack, after tech).
 func decide_turn() -> void:
 	_ai_turn_count += 1
 	await get_tree().create_timer(0.6).timeout
 
-	# Rule 1: Tech priority — play tech card before attacking if one is available.
-	if GameState.has_playable_tech(AI_PLAYER):
+	# Rule 1: Tech priority — only enter TECH mode if a card actually scores > 0.
+	if GameState.has_playable_tech(AI_PLAYER) and _has_useful_tech():
 		emit_signal("ai_mode_chosen", GameState.TurnMode.TECH)
 		await get_tree().create_timer(0.3).timeout
 		_choose_tech()
@@ -37,7 +46,7 @@ func decide_turn() -> void:
 			var unions: Array = _get_available_unions()
 			if not unions.is_empty():
 				_union_used = true
-				var picked: Dictionary = unions[randi() % unions.size()]
+				var picked: Dictionary = _pick_best_union(unions)
 				var u: UnionData = picked["union"]
 				emit_signal("ai_union_chosen", u.card_name, picked["zone_cells"], picked["material_cells"])
 				return
@@ -138,65 +147,82 @@ func _choose_attacker() -> Vector2i:
 # Target selection (Training rules)
 # ─────────────────────────────────────────────────────────────
 func _choose_target_for(attacker_pos: Vector2i) -> Vector2i:
-	var attacker: GameState.CardInstance = GameState.get_card(AI_PLAYER, attacker_pos.x, attacker_pos.y)
-
-	var revealed_chars: Array = []
-	var unrevealed: Array = []   # face-down characters, traps (not blank slots)
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_score: int = -9999
 
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
+			var pos: Vector2i = Vector2i(r, c)
+			# Skip locked targets
+			if pos in GameState.locked_attack_positions:
+				continue
 			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
-			if card.card_type == "character" and card.face_up:
-				revealed_chars.append(Vector2i(r, c))
-			elif card.card_type != "dead_end":
-				unrevealed.append(Vector2i(r, c))
+			# Skip destroyed slots
+			if card.card_type == "dead_end" and card.was_destroyed:
+				continue
+			var sc: int = _score_attack(attacker_pos, pos) + randi() % 3
+			if sc > best_score:
+				best_score = sc
+				best_pos = pos
 
-	# No revealed targets — attack a random unrevealed cell (rule 3).
-	if revealed_chars.is_empty():
-		if unrevealed.is_empty():
-			return Vector2i(-1, -1)
-		return unrevealed[randi() % unrevealed.size()]
+	return best_pos
 
-	# There are revealed targets.
-	var atk: int = attacker.get_effective_atk()
+## Score an attack from attacker_pos onto target_pos. Higher = more desirable.
+func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
+	var attacker: GameState.CardInstance = GameState.get_card(AI_PLAYER, attacker_pos.x, attacker_pos.y)
+	var target: GameState.CardInstance   = GameState.get_card(HUMAN_PLAYER, target_pos.x, target_pos.y)
 
-	# Rule 4: pick the weakest-DEF revealed target we can beat (ATK > DEF).
-	var beatable: Array = []
-	for pos in revealed_chars:
-		var def_val: int = GameState.get_card(HUMAN_PLAYER, pos.x, pos.y).get_effective_def()
-		if atk > def_val:
-			beatable.append(pos)
+	if target.card_type == "dead_end":
+		return 10   # clears slot but no crystal gain
 
-	if not beatable.is_empty():
-		var best: Vector2i = beatable[0]
-		var best_def: int = GameState.get_card(HUMAN_PLAYER, best.x, best.y).get_effective_def()
-		for pos in beatable:
-			var def_val: int = GameState.get_card(HUMAN_PLAYER, pos.x, pos.y).get_effective_def()
-			if def_val < best_def:
-				best_def = def_val
-				best = pos
-		return best
+	if not target.face_up:
+		return 25   # probe unrevealed — medium priority
 
-	# Cannot beat any revealed char — prefer attacking an unrevealed cell to avoid losing our card.
-	if not unrevealed.is_empty():
-		return unrevealed[randi() % unrevealed.size()]
+	if target.card_type == "trap":
+		return 15   # hitting a trap is risky but better than nothing
 
-	# Last resort: attack the weakest revealed (accept potential crystal loss).
-	var weakest: Vector2i = revealed_chars[0]
-	var min_def: int = GameState.get_card(HUMAN_PLAYER, weakest.x, weakest.y).get_effective_def()
-	for pos in revealed_chars:
-		var def_val: int = GameState.get_card(HUMAN_PLAYER, pos.x, pos.y).get_effective_def()
-		if def_val < min_def:
-			min_def = def_val
-			weakest = pos
-	return weakest
+	# Revealed character — estimate outcome with ability-aware ATK
+	var eff_atk: int = attacker.get_effective_atk()
+
+	# Inline ability adjustments (safe — no side effects)
+	match attacker.ability_type:
+		CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY:
+			if target.affinity == attacker.ability_params.get("affinity", -1):
+				eff_atk += attacker.ability_params.get("bonus", 0)
+		CharacterData.AbilityType.ATK_DEF_BONUS_VS_AFFINITY:
+			if target.affinity == attacker.ability_params.get("affinity", -1):
+				eff_atk += attacker.ability_params.get("atk", 0)
+		CharacterData.AbilityType.ATK_BONUS_VS_TWO_AFFINITIES:
+			if target.affinity == attacker.ability_params.get("aff1", -1) \
+					or target.affinity == attacker.ability_params.get("aff2", -1):
+				eff_atk += attacker.ability_params.get("bonus", 0)
+		CharacterData.AbilityType.ATK_BONUS_IF_DICE_HIGH:
+			# ~50% expected value
+			eff_atk += attacker.ability_params.get("bonus", 0) / 2
+		CharacterData.AbilityType.ATK_BOOST_VS_REVEALED:
+			eff_atk += attacker.ability_params.get("bonus", 0)
+
+	var eff_def: int = target.get_effective_def()
+
+	if eff_atk > eff_def:
+		# Win — reward scales with how valuable the destroyed card is
+		return 80 + target.crystal_cost / 20
+	elif eff_atk == eff_def:
+		# Tie — both destroyed; slight penalty proportional to our card's cost
+		return 20 - attacker.crystal_cost / 30
+	else:
+		# Loss — penalty; prefer not to sacrifice expensive attackers
+		return -30 - attacker.crystal_cost / 20
 
 # ─────────────────────────────────────────────────────────────
 # Tech selection
 # ─────────────────────────────────────────────────────────────
 func _choose_tech() -> void:
-	var affordable: Array = []
-	for tech_name in GameState.tech_hands[AI_PLAYER]:
+	var snap: Dictionary = _board_snapshot()
+	var best_name: String = ""
+	var best_score: int = -1
+
+	for tech_name: String in GameState.tech_hands[AI_PLAYER]:
 		var data: TechCardData = CardDatabase.get_tech(tech_name)
 		if data == null:
 			continue
@@ -204,26 +230,366 @@ func _choose_tech() -> void:
 			continue
 		if data.required_prior_card != "" and not GameState.tech_name_played_this_game(AI_PLAYER, data.required_prior_card):
 			continue
-		affordable.append(tech_name)
+		var base_score: int = _score_tech(tech_name, snap)
+		if base_score <= 0:
+			continue
+		var sc: int = base_score + randi() % 5
+		if sc > best_score:
+			best_score = sc
+			best_name = tech_name
 
-	if affordable.is_empty():
-		return
+	if best_name == "":
+		return   # nothing worth playing
 
-	var chosen: String = affordable[randi() % affordable.size()]
-	emit_signal("ai_tech_chosen", chosen)
+	emit_signal("ai_tech_chosen", best_name)
+
+## Returns true if at least one affordable tech card scores > 0 on the current board.
+func _has_useful_tech() -> bool:
+	var snap: Dictionary = _board_snapshot()
+	for tech_name: String in GameState.tech_hands[AI_PLAYER]:
+		var data: TechCardData = CardDatabase.get_tech(tech_name)
+		if data == null or GameState.crystals[AI_PLAYER] < data.crystal_cost:
+			continue
+		if data.required_prior_card != "" and not GameState.tech_name_played_this_game(AI_PLAYER, data.required_prior_card):
+			continue
+		if _score_tech(tech_name, snap) > 0:
+			return true
+	return false
+
+## Score a tech card given the current board snapshot. Returns 0 to skip, >0 to play.
+func _score_tech(tech_name: String, snap: Dictionary) -> int:
+	var data: TechCardData = CardDatabase.get_tech(tech_name)
+	if data == null or data.effect_type == TechCardData.TechEffectType.NOT_IMPLEMENTED:
+		return 0
+
+	var ai_faceup: int  = snap["ai_faceup"]
+	var opp_rev: int    = snap["opp_revealed"]
+	var opp_hidden: int = snap["opp_hidden"]
+
+	match data.effect_type:
+		TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE, \
+		TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE_CHAIN:
+			if opp_hidden == 0:
+				return 0
+			return 60 + opp_hidden * 8
+
+		TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE_RISKY:
+			if opp_hidden == 0:
+				return 0
+			var count: int = data.effect_params.get("count", 3)
+			if snap["ai_crystals"] < count * 700 + 500:
+				return 0
+			return 40 + opp_hidden * 5
+
+		TechCardData.TechEffectType.OPPONENT_REVEALS_SQUARE, \
+		TechCardData.TechEffectType.OPPONENT_REVEALS_OR_GAINS:
+			if opp_hidden == 0:
+				return 0
+			return 30
+
+		TechCardData.TechEffectType.PERM_BOOST_ALL_FACEUP:
+			if ai_faceup == 0:
+				return 0
+			return 50 + ai_faceup * 15
+
+		TechCardData.TechEffectType.PERM_ATK_BOOST_ONE:
+			if ai_faceup == 0:
+				return 0
+			return 40 + _count_beatables_with_boost(data.effect_params.get("atk", 5)) * 20
+
+		TechCardData.TechEffectType.TEMP_ATK_BOOST_ATTACK_NOW:
+			if ai_faceup == 0:
+				return 0
+			return 55 + _count_beatables_with_boost(data.effect_params.get("atk", 5)) * 15
+
+		TechCardData.TechEffectType.TEMP_DEF_BOOST_ALL:
+			if ai_faceup == 0:
+				return 0
+			return 35 + ai_faceup * 8
+
+		TechCardData.TechEffectType.PERM_DEF_BOOST_ONE:
+			if ai_faceup == 0:
+				return 0
+			return 30
+
+		TechCardData.TechEffectType.OPPONENT_NEXT_DEFENDER_DESTROYED:
+			if opp_rev == 0:
+				return 0
+			return 55
+
+		TechCardData.TechEffectType.DESTROY_ALL_REVEALED_OPPONENT:
+			if opp_rev == 0:
+				return 0
+			return 40 + opp_rev * 35
+
+		TechCardData.TechEffectType.DESTROY_ROW_OR_COLUMN:
+			if opp_rev == 0:
+				return 0
+			return 30 + opp_rev * 20
+
+		TechCardData.TechEffectType.DESTROY_FACEUP_CARD, \
+		TechCardData.TechEffectType.DESTROY_FACEUP_NO_CRYSTAL_LOSS:
+			if opp_rev == 0:
+				return 0
+			return 60 + _strongest_opp_def() / 3
+
+		TechCardData.TechEffectType.DESTROY_OWN_BASE_ZERO_OPPONENT:
+			if opp_rev == 0 or ai_faceup < 2:
+				return 0
+			return 70
+
+		TechCardData.TechEffectType.MULTI_ATTACK_ONE:
+			if ai_faceup == 0:
+				return 0
+			return 50
+
+		TechCardData.TechEffectType.CLONE_CHARACTER_AS_TOKEN:
+			if ai_faceup == 0:
+				return 0
+			return 45
+
+		TechCardData.TechEffectType.REVIVE_CHARACTER_FULL, \
+		TechCardData.TechEffectType.REVIVE_CHARACTER_NO_ATK:
+			if not snap["has_graveyard"]:
+				return 0
+			return 55
+
+		TechCardData.TechEffectType.BOTH_SKIP_TURN:
+			# Useful when opponent has more revealed cards than us
+			if opp_rev >= ai_faceup + 2:
+				return 60
+			return 10
+
+		TechCardData.TechEffectType.BOTH_LOCK_CHOSEN_MONSTER:
+			if opp_rev == 0:
+				return 0
+			return 40
+
+		TechCardData.TechEffectType.ADD_MUTAGEN_FLAG:
+			if not snap["has_bio_char"]:
+				return 0
+			return 35
+
+		TechCardData.TechEffectType.DIVINE_PROTECTION:
+			if not snap["has_divine_char"]:
+				return 0
+			return 50
+
+		TechCardData.TechEffectType.REVEAL_ALL_OWN_CHARACTERS:
+			var ai_hidden: int = _count_hidden(AI_PLAYER)
+			if ai_hidden == 0:
+				return 0
+			return 25 + ai_hidden * 5
+
+		TechCardData.TechEffectType.REVEAL_OWN_AND_OPPONENT_REVEALS:
+			if opp_hidden == 0:
+				return 0
+			return 35
+
+		TechCardData.TechEffectType.MOVE_BUFFS_BETWEEN_CHARACTERS:
+			if ai_faceup < 2:
+				return 0
+			return 20
+
+		TechCardData.TechEffectType.FORCE_SHIELD_ONE_CARD:
+			if ai_faceup == 0:
+				return 0
+			return 30
+
+		TechCardData.TechEffectType.VIEW_OPPONENT_TECH:
+			return 20
+
+		TechCardData.TechEffectType.DESTROY_WISPS_REVEAL_OPPONENT:
+			if not snap["has_wisps"] or opp_hidden == 0:
+				return 0
+			return 50
+
+		TechCardData.TechEffectType.TEMP_REROLL_DICE:
+			return 25
+
+	return 0
 
 # ─────────────────────────────────────────────────────────────
 # Target decision for tech/trap effects
 # ─────────────────────────────────────────────────────────────
 func decide_target(filter: String) -> Vector2i:
 	match filter:
-		"opponent_squares_1", "opponent_squares_2", "opponent_squares_3", "opponent_any_hidden":
+		"opponent_squares_1", "opponent_squares_2", "opponent_squares_3", \
+				"opponent_squares_3_risky", "opponent_any_hidden", \
+				"lock_opponent_monster", "opponent_faceup_zero_stats", "row_or_column":
 			return _random_unrevealed_opponent()
 		"own_faceup_character", "own_character_for_swap", \
-				"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct":
+				"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct", \
+				"lock_own_monster", "own_faceup_character_source", "own_faceup_character_target", \
+				"self_faceup_for_copy", "own_armored_nature":
 			return _best_own_faceup()
+		"self_squares_1_opponent_turn", "self_reveal_choice", "own_facedown_character", \
+				"opponent_facedown_forced":
+			return _random_unrevealed_self()
+		"own_faceup_card_sacrifice", "own_any_card":
+			return _best_own_faceup()
+		"own_any_as_target":
+			return _worst_own_faceup()
+		"graveyard":
+			return _first_own_empty_slot()
+		"own_divine_character_redirect":
+			return _best_own_divine_sacrifice()
+		"any_faceup_card", "opponent_faceup_no_cost":
+			return _strongest_opp_faceup_pos()
 		_:
 			return _random_unrevealed_opponent()
+
+## Intelligent binary choice handler for awaiting_trap_choice prompts.
+## prompt is the trap_name/title string; choices is the array of choice labels.
+## Returns the chosen index (0 or 1).
+func decide_trap_choice(prompt: String, choices: Array) -> int:
+	# OPTIONAL_CRYSTAL_PAY_ATK_BOOST — "Pay N Crystals for +M ATK this battle?"
+	if "ATK this battle" in prompt:
+		var cost: int = _extract_first_int(prompt)
+		var boost: int = _extract_second_int(prompt)
+		if GameState.crystals[AI_PLAYER] >= cost:
+			var att: GameState.CardInstance = _get_current_attacker()
+			var tgt: GameState.CardInstance = _get_current_target()
+			if att != null and tgt != null:
+				var cur_atk: int = att.get_effective_atk()
+				var def_val: int = tgt.get_effective_def()
+				# Pay only if the boost flips a losing/tying battle into a win
+				if cur_atk <= def_val and (cur_atk + boost) > def_val:
+					return 0
+		return 1
+
+	# OPTIONAL_CRYSTAL_PAY_DEF_BOOST — "Pay N Crystals for +M DEF this battle?"
+	if "DEF this battle" in prompt:
+		var cost: int = _extract_first_int(prompt)
+		var boost: int = _extract_second_int(prompt)
+		if GameState.crystals[AI_PLAYER] >= cost:
+			var def_card: GameState.CardInstance = _get_current_target()  # AI's card is the defender
+			var opp_atk: int = _estimate_opponent_atk()
+			if def_card != null:
+				var cur_def: int = def_card.get_effective_def()
+				if cur_def < opp_atk and (cur_def + boost) >= opp_atk:
+					return 0
+		return 1
+
+	# OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT — "Pay N Crystals to destroy..."
+	if "Crystals to destroy" in prompt:
+		var cost: int = _extract_first_int(prompt)
+		if GameState.crystals[AI_PLAYER] >= cost:
+			var att: GameState.CardInstance = _get_current_attacker()
+			var tgt: GameState.CardInstance = _get_current_target()
+			if att != null and tgt != null:
+				# Pay if we'd otherwise lose or tie
+				if att.get_effective_atk() <= tgt.get_effective_def():
+					return 0
+		return 1
+
+	# INTERCEPT_ALLY_ATTACK — "X can intercept for Y!"
+	if "intercept" in prompt.to_lower():
+		# Intercept (choice 0) if we have enough other cards to spare
+		if _count_faceup(AI_PLAYER) >= 3:
+			return 0
+		return 1
+
+	# TEMP_REROLL_DICE — "Lucky Break: Re-roll dice? (current: N)"
+	if "Re-roll dice" in prompt:
+		var current_roll: int = GameState.dice_result
+		var att: GameState.CardInstance = _get_current_attacker()
+		if att != null and att.ability_type == int(CharacterData.AbilityType.ATK_BONUS_IF_DICE_HIGH):
+			var threshold: int = att.ability_params.get("threshold", 4)
+			if current_roll < threshold:
+				return 0  # re-roll — below threshold
+		if current_roll <= 2:
+			return 0  # generic: poor roll, re-roll
+		return 1
+
+	# SACRIFICE_FOR_CARD_TYPE — "X sacrifices itself to save Y?"
+	if "sacrifices itself to save" in prompt:
+		if _count_faceup(AI_PLAYER) >= 3:
+			return 0  # sacrifice weaker card to save the target
+		return 1
+
+	# NULLIFY_ATTACK_CHOICE (Checkpoint trap) — choices: [lose crystals, destroy attacker]
+	if "Checkpoint" in prompt:
+		var att: GameState.CardInstance = _get_current_attacker()
+		if att != null and GameState.crystals[AI_PLAYER] >= 500:
+			# Pay crystals if attacker is high-value (ATK+DEF >= 40)
+			if att.get_effective_atk() + att.get_effective_def() >= 40:
+				return 0
+		return 1  # let attacker be destroyed
+
+	# ATTACKER_DISCARD_OR_END_TURN (Blackmail trap) — choices: [discard tech, end turn]
+	if "Blackmail" in prompt:
+		if GameState.attacks_remaining > 0 and not GameState.tech_hands[AI_PLAYER].is_empty():
+			return 0  # discard tech, keep attacking
+		return 1
+
+	return 0  # safe default
+
+func _random_unrevealed_self() -> Vector2i:
+	var options: Array = []
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			if not card.face_up and card.card_type != "dead_end":
+				options.append(Vector2i(r, c))
+	if options.is_empty():
+		return Vector2i(0, 0)
+	return options[randi() % options.size()]
+
+func _worst_own_faceup() -> Vector2i:
+	# Pick the weakest own face-up card to sacrifice
+	var worst_pos: Vector2i = Vector2i(-1, -1)
+	var worst_atk: int = 99999
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			if card.card_type == "character" and card.face_up and card.current_atk < worst_atk:
+				worst_atk = card.current_atk
+				worst_pos = Vector2i(r, c)
+	if worst_pos == Vector2i(-1, -1):
+		return Vector2i(0, 0)
+	return worst_pos
+
+func _best_own_divine_sacrifice() -> Vector2i:
+	# Pick a face-up Divine card that is NOT Archbishop (lowest ATK to minimize loss)
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var lowest_atk: int = 99999
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			if card.card_type == "character" and card.face_up \
+					and card.affinity == CharacterData.Affinity.DIVINE \
+					and card.ability_type != int(CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY) \
+					and card.current_atk < lowest_atk:
+				lowest_atk = card.current_atk
+				best_pos = Vector2i(r, c)
+	if best_pos == Vector2i(-1, -1):
+		return Vector2i(0, 0)
+	return best_pos
+
+func _first_own_empty_slot() -> Vector2i:
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			if card.card_type == "dead_end" and not card.was_destroyed:
+				return Vector2i(r, c)
+	return Vector2i(0, 0)
+
+## Returns the opponent's face-up cell with the highest combined ATK+DEF (best to destroy).
+func _strongest_opp_faceup_pos() -> Vector2i:
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_score: int = -1
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			if card.face_up and card.card_type != "dead_end":
+				var sc: int = card.get_effective_atk() + card.get_effective_def()
+				if sc > best_score:
+					best_score = sc
+					best_pos = Vector2i(r, c)
+	if best_pos == Vector2i(-1, -1):
+		return Vector2i(0, 0)
+	return best_pos
 
 func _random_unrevealed_opponent() -> Vector2i:
 	var options: Array = []
@@ -278,6 +644,47 @@ func _get_available_unions() -> Array:
 					"material_cells": mats,
 				})
 	return results
+
+## Pick the best-scoring union from a list of candidates.
+func _pick_best_union(unions: Array) -> Dictionary:
+	var best_entry: Dictionary = unions[0]
+	var best_score: int = -1
+	for entry: Dictionary in unions:
+		var u: UnionData = entry["union"]
+		var sc: int = _score_union(u) + randi() % 5
+		if sc > best_score:
+			best_score = sc
+			best_entry = entry
+	return best_entry
+
+## Score a union for how desirable it is to summon right now.
+func _score_union(u: UnionData) -> int:
+	var score: int = u.base_atk + u.base_def
+
+	# Ability bonuses
+	match u.ability_type:
+		CharacterData.AbilityType.MULTI_ATTACK_ANY, \
+		CharacterData.AbilityType.MULTI_ATTACK_ANY_WITH_ATK_LOSS:
+			score += 40
+		CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY, \
+		CharacterData.AbilityType.ATK_DEF_BONUS_VS_AFFINITY:
+			var aff: int = u.ability_params.get("affinity", -1)
+			if aff >= 0 and _opponent_has_affinity_revealed(aff):
+				score += 30
+		CharacterData.AbilityType.DESTROY_IF_OPPONENT_AFFINITY:
+			var aff: int = u.ability_params.get("affinity", -1)
+			if aff >= 0 and _opponent_has_affinity_revealed(aff):
+				score += 50
+		CharacterData.AbilityType.NONE:
+			pass
+		_:
+			score += 15   # mild bonus for having any ability
+
+	# Bonus if this union can beat the strongest revealed opponent card
+	if u.base_atk > _strongest_opp_def():
+		score += 30
+
+	return score
 
 ## Greedy material-cell solver: returns the ordered list of Vector2i positions
 ## that satisfy u.material_conditions from the given zone_cells.
@@ -504,3 +911,200 @@ func _count_faceup(player: int) -> int:
 			if card.card_type == "character" and card.face_up:
 				count += 1
 	return count
+
+func _count_hidden(player: int) -> int:
+	var count: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if not card.face_up and card.card_type != "dead_end":
+				count += 1
+	return count
+
+func _has_affinity_faceup(player: int, aff: CharacterData.Affinity) -> bool:
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if card.card_type == "character" and card.face_up and card.affinity == int(aff):
+				return true
+	return false
+
+func _count_name_contains(player: int, fragment: String) -> int:
+	var n: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if card.card_type == "character" and fragment in card.card_name.to_lower():
+				n += 1
+	return n
+
+func _strongest_opp_def() -> int:
+	var max_def: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			if card.card_type == "character" and card.face_up:
+				max_def = maxi(max_def, card.get_effective_def())
+	return max_def
+
+func _opponent_has_affinity_revealed(aff: int) -> bool:
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			if card.card_type == "character" and card.face_up and card.affinity == aff:
+				return true
+	return false
+
+## How many currently revealed opponent chars become beatable if our best attacker gets +atk_boost
+func _count_beatables_with_boost(atk_boost: int) -> int:
+	var best_atk: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			if card.card_type == "character" and card.face_up:
+				best_atk = maxi(best_atk, card.get_effective_atk())
+	var count: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			if card.card_type == "character" and card.face_up:
+				var def_val: int = card.get_effective_def()
+				if best_atk <= def_val and (best_atk + atk_boost) > def_val:
+					count += 1
+	return count
+
+func _get_current_attacker() -> GameState.CardInstance:
+	var ap: Vector2i = GameState.attacker_pos
+	if ap.x >= 0:
+		return GameState.get_card(GameState.current_player, ap.x, ap.y)
+	return null
+
+func _get_current_target() -> GameState.CardInstance:
+	var dp: Vector2i = GameState.defender_pos
+	if dp.x >= 0:
+		var opp: int = 1 - GameState.current_player
+		return GameState.get_card(opp, dp.x, dp.y)
+	return null
+
+func _estimate_opponent_atk() -> int:
+	var best: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			if card.card_type == "character" and card.face_up:
+				best = maxi(best, card.get_effective_atk())
+	return best
+
+func _extract_first_int(s: String) -> int:
+	var match: Variant = _int_regex.search(s)
+	if match != null:
+		return (match as RegExMatch).get_string().to_int()
+	return 0
+
+func _extract_second_int(s: String) -> int:
+	var results: Variant = _int_regex.search_all(s)
+	if results != null:
+		var arr: Array = results as Array
+		if arr.size() >= 2:
+			return (arr[1] as RegExMatch).get_string().to_int()
+	return 0
+
+func _board_snapshot() -> Dictionary:
+	return {
+		"ai_faceup": _count_faceup(AI_PLAYER),
+		"opp_revealed": _count_faceup(HUMAN_PLAYER),
+		"opp_hidden": _count_hidden(HUMAN_PLAYER),
+		"ai_crystals": GameState.crystals[AI_PLAYER],
+		"has_graveyard": not GameState.graveyards[AI_PLAYER].is_empty(),
+		"has_bio_char": _has_affinity_faceup(AI_PLAYER, CharacterData.Affinity.BIO),
+		"has_divine_char": _has_affinity_faceup(AI_PLAYER, CharacterData.Affinity.DIVINE),
+		"has_wisps": _count_name_contains(AI_PLAYER, "wisp") > 0,
+	}
+
+# ─────────────────────────────────────────────────────────────
+# Bluff system
+# ─────────────────────────────────────────────────────────────
+
+## Fire-and-forget bluff decision at the start of each AI turn.
+## Called without await so it doesn't block the attack flow.
+func decide_bluff() -> void:
+	# Flush any pending death-bluff from the previous (opponent's) turn
+	if _pending_death_bluff.x >= 0:
+		var dp: Vector2i = _pending_death_bluff
+		_pending_death_bluff = Vector2i(-1, -1)
+		await get_tree().create_timer(randf_range(0.4, 1.0)).timeout
+		var use_poop: bool = SaveManager.nsfw_enabled
+		var death_emojis: Array = ["🤣", "💩" if use_poop else "🖕", "☠️", "🥺"]
+		emit_signal("ai_bluff", dp.x, dp.y, death_emojis[randi() % death_emojis.size()])
+		await get_tree().create_timer(BLUFF_ANIM_SECS).timeout   # wait for pop animation
+
+	if randf() > 0.30:
+		return   # 70% of turns AI stays silent
+	await get_tree().create_timer(randf_range(0.5, 2.5)).timeout
+
+	var roll: float = randf()
+
+	if roll < 0.45:
+		# Taunt: put a confident emoji on a face-down high-DEF card or trap
+		var pos: Vector2i = _bluff_pick_taunting_cell()
+		if pos.x >= 0:
+			var emojis: Array = ["😎", "☠️", "❤️", "👍", "🧨"]
+			emit_signal("ai_bluff", pos.x, pos.y, emojis[randi() % emojis.size()])
+
+	elif roll < 0.65:
+		# Misdirect: put a luring emoji on a dead-end cell to waste human attacks
+		var pos: Vector2i = _bluff_pick_dead_end_cell()
+		if pos.x >= 0:
+			var emojis: Array = ["😃", "🤣", "❤️", "😎"]
+			emit_signal("ai_bluff", pos.x, pos.y, emojis[randi() % emojis.size()])
+
+	else:
+		# Confident bluff: just act tough on a random face-down card
+		var pos: Vector2i = _random_unrevealed_self()
+		if pos.x >= 0:
+			var emojis: Array = ["😎", "👍", "😃"]
+			emit_signal("ai_bluff", pos.x, pos.y, emojis[randi() % emojis.size()])
+
+## Called when one of AI's face-up characters is destroyed.
+## Queues a mourning bluff to be shown at the start of the AI's next turn.
+func decide_death_bluff(row: int, col: int) -> void:
+	_pending_death_bluff = Vector2i(row, col)
+
+## Called when AI destroys a strong (100+ ATK/DEF) or union opponent card.
+## Places a taunting emoji on the attacker's cell after a short delay.
+func decide_kill_taunt(attacker_pos: Vector2i) -> void:
+	await get_tree().create_timer(randf_range(0.3, 0.9)).timeout
+	var use_poop: bool = SaveManager.nsfw_enabled
+	var emojis: Array = ["🤣", "💩" if use_poop else "🖕"]
+	emit_signal("ai_bluff", attacker_pos.x, attacker_pos.y, emojis[randi() % emojis.size()])
+
+## Returns the face-down cell with the highest DEF (or a trap) — good for taunting.
+func _bluff_pick_taunting_cell() -> Vector2i:
+	var best: Vector2i = Vector2i(-1, -1)
+	var best_score: int = -1
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			if card.face_up:
+				continue
+			var sc: int = -1
+			if card.card_type == "trap":
+				sc = 1000   # traps are the best to bluff on
+			elif card.card_type == "character":
+				sc = card.get_effective_def()
+			if sc > best_score:
+				best_score = sc
+				best = Vector2i(r, c)
+	return best
+
+## Returns a random dead-end cell to misdirect the opponent.
+func _bluff_pick_dead_end_cell() -> Vector2i:
+	var options: Array = []
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			if card.card_type == "dead_end" and not card.face_up:
+				options.append(Vector2i(r, c))
+	if options.is_empty():
+		return Vector2i(-1, -1)
+	return options[randi() % options.size()]

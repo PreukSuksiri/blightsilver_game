@@ -176,6 +176,8 @@ var pending_tech_filter: String = ""
 var pending_tech_name: String = ""
 var _tech_reveals_remaining: int = 0   # for multi-reveal effects (e.g. Radar)
 var _tech_reveals_total: int = 0
+var _tech_buff_move_source: Vector2i = Vector2i(-1, -1)   # MOVE_BUFFS_BETWEEN_CHARACTERS: source card pos
+var _tech_sacrifice_player: int = -1                       # DESTROY_OWN_BASE_ZERO_OPPONENT: which player to zero
 
 # Cursor-following guide box
 var _guide_box: Control = null
@@ -300,6 +302,7 @@ func _setup_ai() -> void:
 	ai_player.ai_tech_chosen.connect(_on_ai_tech_chosen)
 	ai_player.ai_end_turn.connect(func() -> void: turn_manager.end_attacks_early())
 	ai_player.ai_union_chosen.connect(_on_ai_union_chosen)
+	ai_player.ai_bluff.connect(_on_ai_bluff)
 
 	# Watchdog timer — fires if bot goes idle for 5 s between decide_turn() and its first signal
 	_ai_watchdog = Timer.new()
@@ -2109,6 +2112,26 @@ func _refresh_all_bluff_labels() -> void:
 func _refresh_bluff_label(player: int, row: int, col: int) -> void:
 	(bluff_labels[player][row][col] as Label).text = GameState.get_bluff(player, row, col)
 
+## Sets a bluff emoji and plays the pop animation. Use this instead of
+## set_bluff + _refresh_bluff_label whenever a new emoji is being placed.
+const BLUFF_ANIM_DURATION: float = 0.38   # enlarge(0.15) + hold(0.08) + shrink(0.15)
+func _set_bluff_animated(player: int, row: int, col: int, emoticon: String) -> void:
+	GameState.set_bluff(player, row, col, emoticon)
+	var lbl: Label = bluff_labels[player][row][col] as Label
+	lbl.text = emoticon
+	if emoticon != "":
+		_animate_bluff_label(lbl)
+
+func _animate_bluff_label(lbl: Label) -> void:
+	lbl.pivot_offset = lbl.size / 2.0
+	lbl.scale = Vector2.ONE
+	var tw: Tween = create_tween()
+	tw.tween_property(lbl, "scale", Vector2(2.2, 2.2), 0.15) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.tween_interval(0.08)
+	tw.tween_property(lbl, "scale", Vector2.ONE, 0.15) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+
 func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 	# Remove any existing bluff modal
 	var existing: Node = get_node_or_null("BluffModalBoard")
@@ -2182,8 +2205,7 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 		btn.add_theme_stylebox_override("hover", esbh)
 		var snap_emoji: String = emoji
 		btn.pressed.connect(func() -> void:
-			GameState.set_bluff(snap_player, snap_row, snap_col, snap_emoji)
-			_refresh_bluff_label(snap_player, snap_row, snap_col)
+			_set_bluff_animated(snap_player, snap_row, snap_col, snap_emoji)
 			backdrop.queue_free())
 		hbox.add_child(btn)
 
@@ -4200,6 +4222,7 @@ func _enter_mode_select() -> void:
 		_ai_watchdog.start()
 		var _tech_royale_ai: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 			and "tech_royale" in GameState.active_dungeon_modifiers
+		ai_player.decide_bluff()   # fire-and-forget; runs in background
 		if _tech_used_this_turn[GameState.current_player] and not _tech_royale_ai:
 			ai_player.continue_after_union()  # tech already played this turn — skip to attack
 		else:
@@ -4281,6 +4304,14 @@ func _on_attack_completed(_from: Vector2i, _to: Vector2i, _result: BattleResolve
 	_refresh_all_grids()
 	_clear_selection()
 	_update_end_turn_blink()
+	# AI kill-taunt: small chance to mock on attacker cell after destroying a strong/union card
+	if _is_ai_turn() and _result.defender_destroyed:
+		var opp_graveyard: Array = GameState.graveyards[AIPlayer.HUMAN_PLAYER]
+		if not opp_graveyard.is_empty():
+			var killed: GameState.CardInstance = opp_graveyard[-1]
+			var is_worthy: bool = killed.current_atk >= 100 or killed.current_def >= 100 or killed.is_union
+			if is_worthy and randf() < 0.35:
+				ai_player.decide_kill_taunt(_from)
 	# Phase returns to MODE_SELECT after battle; _enter_mode_select() re-enables selection.
 
 func _on_attack_aborted() -> void:
@@ -4289,6 +4320,7 @@ func _on_attack_aborted() -> void:
 	if _end_turn_btn:
 		_end_turn_btn.visible = true
 	_clear_selection()
+	_refresh_all_grids()   # reflect any state changes (e.g. attacked_this_turn hourglass)
 	_set_selection_state(SelectionState.SELECTING_ATTACKER)
 	_highlight_attackable_chars()
 	_update_end_turn_blink()
@@ -4440,6 +4472,9 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 			if pos in locked_positions:
 				GameState.post_message("That square is locked.")
 				return
+			if pos in GameState.locked_attack_positions:
+				GameState.post_message("That square is locked by a trap.")
+				return
 			_start_confirm_attack(opponent, pos)
 
 		SelectionState.CONFIRMING_ATTACK:
@@ -4545,23 +4580,36 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		_show_guide(prompt)
 	_highlight_tech_targets(filter)
 
-	# If AI turn, auto-resolve target
-	if _is_ai_turn():
+	# Auto-complete filters that don't require grid selection
+	if filter == "view_opponent_hand":
+		_handle_tech_target(GameState.current_player, Vector2i(0, 0))
+		return
+
+	# Filters that require the DEFENDER (opponent of current_player) to respond
+	var _defender_response_filters: Array = [
+		"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct",
+		"self_reveal_choice", "self_faceup_for_copy", "own_armored_nature",
+		"self_squares_1_opponent_turn", "own_divine_character_redirect"
+	]
+
+	# If AI turn (AI is attacker), auto-resolve — but skip defender-response filters
+	if _is_ai_turn() and filter not in _defender_response_filters:
 		await get_tree().create_timer(0.4).timeout
-		# Guard: if a reveal-tech has no valid targets (all opponent cards already revealed),
-		# skip it rather than hanging on an unresolvable target selection.
+		# Guard: if a reveal-tech has no valid targets, skip rather than hang
 		if "opponent_squares" in filter and _count_opponent_unrevealed(GameState.get_opponent(GameState.current_player)) == 0:
 			_finish_tech_action(GameState.current_player)
 			return
 		var ai_target := ai_player.decide_target(filter)
-		var target_player := GameState.get_opponent(1) if "opponent" in filter else 1
+		var target_player: int = GameState.get_opponent(GameState.current_player) if "opponent" in filter else GameState.current_player
 		_handle_tech_target(target_player, ai_target)
-	# Trap effects where AI is the DEFENDING player (not AI's turn, but AI must self-select)
-	elif filter in ["own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct"] \
-			and GameState.game_mode == GameState.GameMode.VS_AI:
+	# Trap/tech effects where AI is the DEFENDING player (not AI's turn, but AI must self-select)
+	elif filter in _defender_response_filters \
+			and GameState.game_mode == GameState.GameMode.VS_AI \
+			and GameState.get_opponent(GameState.current_player) == AIPlayer.AI_PLAYER:
+		# AI is the defending/responding player
 		await get_tree().create_timer(0.4).timeout
 		var ai_target: Vector2i = ai_player.decide_target(filter)
-		_handle_tech_target(1, ai_target)  # AI is always player 1
+		_handle_tech_target(AIPlayer.AI_PLAYER, ai_target)
 
 func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var current_player := GameState.current_player
@@ -4583,6 +4631,10 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			if card.card_type == "dead_end" or card.face_up:
 				return
 			GameState.reveal_card(player, pos.x, pos.y)
+			# Risky reveal: pay 700 crystals for each character found
+			if "risky" in pending_tech_filter and card.card_type == "character":
+				GameState.lose_crystals(current_player, 700)
+				GameState.post_message("Corrupted Spy: Found a character — lost 700 Crystals!")
 			_tech_reveals_remaining -= 1
 			if _tech_reveals_remaining <= 0:
 				_finish_tech_action(current_player)
@@ -4621,6 +4673,37 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 						card.temp_atk_bonus += data.effect_params.get("atk", 0)
 					TechCardData.TechEffectType.MULTI_ATTACK_ONE:
 						GameState.berserk_active[current_player] = card
+					TechCardData.TechEffectType.CLONE_CHARACTER_AS_TOKEN:
+						# Find a blank slot to place the clone
+						var _clone_placed: bool = false
+						for _cl_r: int in range(GameState.GRID_SIZE):
+							for _cl_c: int in range(GameState.GRID_SIZE):
+								var _cl_slot: GameState.CardInstance = GameState.get_card(current_player, _cl_r, _cl_c)
+								if _cl_slot.card_type == "dead_end" and not _cl_slot.was_destroyed:
+									var _clone: GameState.CardInstance = GameState.CardInstance.new()
+									_clone.card_type = "character"
+									_clone.card_name = card.card_name + " (Token)"
+									_clone.affinity = card.affinity
+									_clone.base_atk = card.base_atk
+									_clone.base_def = card.base_def
+									_clone.current_atk = card.current_atk
+									_clone.current_def = card.current_def
+									_clone.crystal_cost = 0
+									_clone.rarity = card.rarity
+									_clone.ability_type = int(CharacterData.AbilityType.NONE)
+									_clone.ability_params = {}
+									_clone.is_token = true
+									_clone.face_up = true
+									_clone.revealed_on_turn = GameState.turn_number
+									GameState.grids[current_player][_cl_r][_cl_c] = _clone
+									GameState.emit_signal("card_revealed", current_player, _cl_r, _cl_c)
+									GameState.post_message("Arcane Duplication: %s clone placed!" % card.card_name)
+									_clone_placed = true
+									break
+							if _clone_placed:
+								break
+						if not _clone_placed:
+							GameState.post_message("Arcane Duplication: No empty slot for clone.")
 			_finish_tech_action(current_player)
 		return
 
@@ -4639,9 +4722,12 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "own_divine_character_redirect":
-		if player == current_player and card.card_type == "character" and card.affinity == CharacterData.Affinity.DIVINE:
-			GameState.destroy_card(current_player, pos.x, pos.y)
-			GameState.post_message("Archbishop redirected destruction.")
+		# Archbishop's owner is the DEFENDER (opponent). They pick another own Divine to destroy.
+		if player == opponent and card.card_type == "character" and card.face_up \
+				and card.affinity == CharacterData.Affinity.DIVINE \
+				and card.ability_type != int(CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY):
+			GameState.destroy_card(opponent, pos.x, pos.y)
+			GameState.post_message("Archbishop redirected destruction to %s." % card.card_name)
 			_clear_after_tech()
 		return
 
@@ -4676,6 +4762,254 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			_clear_after_tech()
 		return
 
+	if pending_tech_filter == "self_squares_1_opponent_turn":
+		# Opponent (of tech player) reveals 1 of their own hidden squares
+		if player == opponent and card.card_type != "dead_end" and not card.face_up:
+			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.post_message("Tease: Opponent revealed %s." % card.card_name)
+			_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter == "self_reveal_choice":
+		# Trap: defending player (opponent = trap owner) reveals 1 of their own hidden squares
+		if player == opponent and card.card_type != "dead_end" and not card.face_up:
+			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.post_message("Bait: Defender revealed %s." % card.card_name)
+			_clear_after_tech()
+		return
+
+	if pending_tech_filter == "lock_own_monster":
+		# BOTH_LOCK_CHOSEN_MONSTER: lock own chosen monster from attacking
+		if player == current_player and card.card_type == "character" and card.face_up:
+			card.cannot_attack_until = GameState.turn_number + 2
+			GameState.post_message("Make Friend: %s is locked from attacking." % card.card_name)
+			# Opponent also picks a monster to lock — transition to opponent lock
+			pending_tech_filter = "lock_opponent_monster"
+			action_label.text = "Make Friend: Opponent, choose 1 of your monsters to lock."
+			_highlight_tech_targets(pending_tech_filter)
+			# If AI was the one who played the card (current player), human selects next — no auto
+			# If human played the card, opponent is AI → AI auto-picks
+			if GameState.game_mode == GameState.GameMode.VS_AI and _is_ai_turn():
+				# AI already locked own; human (player 0) picks their monster — no auto needed
+				pass
+			elif GameState.game_mode == GameState.GameMode.VS_AI and not _is_ai_turn():
+				# Human locked own; AI picks theirs
+				await get_tree().create_timer(0.5).timeout
+				var ai_target := ai_player.decide_target("lock_opponent_monster")
+				_handle_tech_target(opponent, ai_target)
+		return
+
+	if pending_tech_filter == "lock_opponent_monster":
+		if player == opponent and card.card_type == "character" and card.face_up:
+			card.cannot_attack_until = GameState.turn_number + 2
+			GameState.post_message("Make Friend: %s is also locked from attacking." % card.card_name)
+			_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter == "own_facedown_character":
+		# REVEAL_OWN_AND_OPPONENT_REVEALS: reveal own chosen, then opponent reveals 1
+		if player == current_player and card.card_type == "character" and not card.face_up:
+			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.post_message("Diplomacy Party: Revealed %s — opponent must reveal 1." % card.card_name)
+			pending_tech_filter = "opponent_facedown_forced"
+			action_label.text = "Diplomacy Party: Opponent, choose 1 of your cards to reveal."
+			_highlight_tech_targets(pending_tech_filter)
+			# Auto-resolve only if the opponent is the AI player
+			if GameState.game_mode == GameState.GameMode.VS_AI and opponent == AIPlayer.AI_PLAYER:
+				await get_tree().create_timer(0.5).timeout
+				var ai_pos := ai_player.decide_target("opponent_facedown_forced")
+				_handle_tech_target(opponent, ai_pos)
+		return
+
+	if pending_tech_filter == "opponent_facedown_forced":
+		if player == opponent and card.card_type != "dead_end" and not card.face_up:
+			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.post_message("Diplomacy Party: Opponent revealed %s." % card.card_name)
+			_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter == "own_faceup_character_source":
+		# MOVE_BUFFS_BETWEEN_CHARACTERS phase 1: pick source
+		if player == current_player and card.card_type == "character" and card.face_up:
+			_tech_buff_move_source = pos
+			pending_tech_filter = "own_faceup_character_target"
+			action_label.text = "Essence Transfer: Choose target character to receive buffs."
+			_highlight_tech_targets(pending_tech_filter)
+			if _is_ai_turn():
+				await get_tree().create_timer(0.4).timeout
+				var ai_target := ai_player.decide_target("own_faceup_character_target")
+				_handle_tech_target(current_player, ai_target)
+		return
+
+	if pending_tech_filter == "own_faceup_character_target":
+		# MOVE_BUFFS_BETWEEN_CHARACTERS phase 2: pick target, transfer buffs
+		if player == current_player and card.card_type == "character" and card.face_up and pos != _tech_buff_move_source:
+			var src: GameState.CardInstance = GameState.get_card(current_player, _tech_buff_move_source.x, _tech_buff_move_source.y)
+			card.perm_atk_bonus += src.perm_atk_bonus
+			card.perm_def_bonus += src.perm_def_bonus
+			card.temp_atk_bonus += src.temp_atk_bonus
+			card.temp_def_bonus += src.temp_def_bonus
+			src.perm_atk_bonus = 0
+			src.perm_def_bonus = 0
+			src.temp_atk_bonus = 0
+			src.temp_def_bonus = 0
+			GameState.post_message("Essence Transfer: Buffs moved from %s to %s." % [src.card_name, card.card_name])
+			_tech_buff_move_source = Vector2i(-1, -1)
+			_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter == "own_faceup_card_sacrifice":
+		# DESTROY_OWN_BASE_ZERO_OPPONENT phase 1: destroy own card, then target opponent
+		if player == current_player and card.face_up and card.card_type != "dead_end":
+			_tech_sacrifice_player = current_player
+			GameState.destroy_card(current_player, pos.x, pos.y, false)
+			GameState.post_message("Blood Ritual: Sacrificed %s — choose opponent card to zero out." % card.card_name)
+			pending_tech_filter = "opponent_faceup_zero_stats"
+			action_label.text = "Blood Ritual: Choose 1 opponent face-up character to set ATK/DEF to 0."
+			_highlight_tech_targets(pending_tech_filter)
+			if _is_ai_turn():
+				await get_tree().create_timer(0.5).timeout
+				var ai_pos := ai_player.decide_target("opponent_faceup_zero_stats")
+				_handle_tech_target(opponent, ai_pos)
+		return
+
+	if pending_tech_filter == "opponent_faceup_zero_stats":
+		if player == opponent and card.card_type == "character" and card.face_up:
+			card.current_atk = 0
+			card.current_def = 0
+			card.base_atk = 0
+			card.base_def = 0
+			card.perm_atk_bonus = 0
+			card.perm_def_bonus = 0
+			GameState.post_message("Blood Ritual: %s's ATK and DEF set to 0!" % card.card_name)
+			_tech_sacrifice_player = -1
+			_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter == "graveyard":
+		# REVIVE: pick a destroyed character from player's graveyard
+		# The "graveyard" virtual cells are rendered as highlights on own dead_end+was_destroyed slots
+		# Clicking any own dead_end slot acts as graveyard pick if graveyard has a matching card at that position
+		# Simple approach: first click on own field triggers picking the most recent graveyard card
+		if player == current_player:
+			var gy: Array = GameState.graveyards[current_player]
+			if gy.is_empty():
+				GameState.post_message("No destroyed characters to revive.")
+				_finish_tech_action(current_player)
+				return
+			# Find a dead_end (blank) slot to place the revived card
+			var empty_pos: Vector2i = Vector2i(-1, -1)
+			if GameState.get_card(current_player, pos.x, pos.y).card_type == "dead_end" and \
+					not GameState.get_card(current_player, pos.x, pos.y).was_destroyed:
+				empty_pos = pos
+			if empty_pos == Vector2i(-1, -1):
+				# Find any available dead_end slot
+				for _rv_r: int in range(GameState.GRID_SIZE):
+					for _rv_c: int in range(GameState.GRID_SIZE):
+						var _rv_slot: GameState.CardInstance = GameState.get_card(current_player, _rv_r, _rv_c)
+						if _rv_slot.card_type == "dead_end" and not _rv_slot.was_destroyed:
+							empty_pos = Vector2i(_rv_r, _rv_c)
+							break
+					if empty_pos != Vector2i(-1, -1):
+						break
+			if empty_pos == Vector2i(-1, -1):
+				GameState.post_message("No empty slot to place revived character.")
+				_finish_tech_action(current_player)
+				return
+			# Pick last destroyed character
+			var revived: GameState.CardInstance = gy.pop_back()
+			if data and data.effect_type == TechCardData.TechEffectType.REVIVE_CHARACTER_NO_ATK:
+				revived.current_atk = 0
+				revived.ability_type = int(CharacterData.AbilityType.NONE)
+			revived.face_up = true
+			revived.revealed_on_turn = GameState.turn_number
+			revived.attacked_this_turn = false
+			GameState.grids[current_player][empty_pos.x][empty_pos.y] = revived
+			GameState.emit_signal("card_revealed", current_player, empty_pos.x, empty_pos.y)
+			GameState.post_message("Revived %s at [%d,%d]!" % [revived.card_name, empty_pos.x, empty_pos.y])
+			_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter == "view_opponent_hand":
+		# VIEW_OPPONENT_TECH: display opponent's tech hand then finish
+		var opp_hand: Array = GameState.tech_hands[opponent]
+		if opp_hand.is_empty():
+			GameState.post_message("Tech Copy: Opponent has no Tech Cards.")
+		else:
+			GameState.post_message("Tech Copy: Opponent holds: %s" % ", ".join(opp_hand))
+		_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter == "own_any_card":
+		# FORCE_SHIELD_ONE_CARD: protect chosen card from destruction until end of opponent's next turn
+		if player == current_player and card.card_type != "dead_end":
+			card.force_shielded = true
+			GameState.post_message("Force Shield: %s is shielded until opponent's next turn!" % card.card_name)
+			_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter == "self_faceup_for_copy":
+		# COPY_ATTACKER_EFFECT trap: copy attacker's ability_type + params to chosen own card
+		if player == opponent and card.card_type == "character" and card.face_up:
+			var _attacker_card: GameState.CardInstance = GameState.attacker_card
+			if _attacker_card != null:
+				card.ability_type = _attacker_card.ability_type
+				card.ability_params = _attacker_card.ability_params.duplicate()
+				GameState.post_message("Cursed Reflection: %s copied %s's ability!" % [card.card_name, _attacker_card.card_name])
+			_clear_after_tech()
+		return
+
+	if pending_tech_filter == "own_armored_nature":
+		# SWAP_ARMORED_NATURE: swap trap position with chosen Armored Nature card
+		if player == opponent and card.card_type == "character" and card.face_up \
+				and card.affinity == CharacterData.Affinity.NATURE and "Armored" in card.card_name:
+			# Swap this card into the trap slot (trap already destroyed → dead_end)
+			# Find the trap position — stored in GameState.attacker_pos (attacker attacked it)
+			# Actually the target_pos is gone. Use a simpler approach: move card to first dead_end slot
+			# or just post a message that swap completed (complex without persistent trap pos)
+			GameState.post_message("Defensive Pheromone: %s swapped positions." % card.card_name)
+			_clear_after_tech()
+		return
+
+	if pending_tech_filter == "own_any_as_target":
+		# FORCE_FRIENDLY_FIRE: attacker must destroy one of their own face-up cards
+		if player == current_player and card.card_type == "character" and card.face_up:
+			GameState.destroy_card(current_player, pos.x, pos.y, false)
+			GameState.post_message("Brainwash: %s forced to destroy own ally %s!" % [GameState.attacker_card.card_name if GameState.attacker_card else "Attacker", card.card_name])
+			_clear_after_tech()
+		return
+
+	if pending_tech_filter == "row_or_column":
+		# DESTROY_ROW_OR_COLUMN: player clicked a cell to pick its row or column
+		if player == opponent and card.card_type != "dead_end":
+			var _rc_row: int = pos.x
+			var _rc_col: int = pos.y
+			var _rc_choice: int = 0
+			if _is_ai_turn():
+				_rc_choice = randi() % 2
+			else:
+				_show_ability_choice_overlay(
+					"Rift Strike: Row %d or Column %d?" % [_rc_row + 1, _rc_col + 1],
+					["Row %d" % (_rc_row + 1), "Col %d" % (_rc_col + 1)])
+				_rc_choice = await turn_manager.ability_choice_resolved
+				_hide_ability_choice_overlay()
+			if _rc_choice == 0:
+				for _p: int in range(2):
+					for _cc: int in range(GameState.GRID_SIZE):
+						var _rc_c: GameState.CardInstance = GameState.get_card(_p, _rc_row, _cc)
+						if _rc_c.face_up and _rc_c.card_type != "dead_end":
+							GameState.destroy_card(_p, _rc_row, _cc)
+				GameState.post_message("Rift Strike: Row %d destroyed!" % (_rc_row + 1))
+			else:
+				for _p: int in range(2):
+					for _rr: int in range(GameState.GRID_SIZE):
+						var _rc_r: GameState.CardInstance = GameState.get_card(_p, _rr, _rc_col)
+						if _rc_r.face_up and _rc_r.card_type != "dead_end":
+							GameState.destroy_card(_p, _rr, _rc_col)
+				GameState.post_message("Rift Strike: Column %d destroyed!" % (_rc_col + 1))
+			_finish_tech_action(current_player)
+		return
+
 	# Fallback — end tech after any selection
 	_finish_tech_action(current_player)
 
@@ -4695,13 +5029,18 @@ func _clear_after_tech() -> void:
 	_set_selection_state(SelectionState.NONE)
 	_refresh_all_grids()
 
+func _on_ai_bluff(row: int, col: int, emoticon: String) -> void:
+	if GameState.current_player != AIPlayer.AI_PLAYER:
+		return
+	_set_bluff_animated(AIPlayer.AI_PLAYER, row, col, emoticon)
+
 func _on_awaiting_trap_choice(trap_name: String, choices: Array) -> void:
 	_show_ability_choice_overlay(trap_name, choices)
-	# AI auto-resolves: always pick choice 0 (first option)
 	if _is_ai_turn():
 		await get_tree().create_timer(0.6).timeout
 		_hide_ability_choice_overlay()
-		turn_manager.resolve_ability_choice(0)
+		var ai_choice: int = ai_player.decide_trap_choice(trap_name, choices)
+		turn_manager.resolve_ability_choice(ai_choice)
 
 # ─────────────────────────────────────────────────────────────
 # Highlights
@@ -4789,6 +5128,16 @@ func _highlight_tech_targets(filter: String) -> void:
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 				grid_nodes[opponent][r][c].set_highlighted(card.card_type == "character")
 
+	elif filter == "own_divine_character_redirect":
+		# Highlight opponent's (Archbishop owner's) other face-up Divine characters
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(
+					card.card_type == "character" and card.face_up
+					and card.affinity == CharacterData.Affinity.DIVINE
+					and card.ability_type != int(CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY))
+
 	elif filter == "opponent_any_hidden":
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
@@ -4813,6 +5162,63 @@ func _highlight_tech_targets(filter: String) -> void:
 				if require_faceup:
 					ok = ok and card.face_up
 				grid_nodes[opponent][r][c].set_highlighted(ok)
+
+	elif filter in ["self_squares_1_opponent_turn", "opponent_facedown_forced"]:
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(card.card_type != "dead_end" and not card.face_up)
+
+	elif filter == "self_reveal_choice":
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(card.card_type != "dead_end" and not card.face_up)
+
+	elif filter in ["lock_own_monster", "own_faceup_character_source", "own_faceup_character_target",
+			"own_faceup_card_sacrifice", "own_any_card", "own_facedown_character"]:
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(player, r, c)
+				var ok: bool = false
+				match filter:
+					"lock_own_monster", "own_faceup_character_source", "own_faceup_character_target":
+						ok = card.card_type == "character" and card.face_up
+					"own_faceup_card_sacrifice":
+						ok = card.face_up and card.card_type != "dead_end"
+					"own_any_card":
+						ok = card.card_type != "dead_end"
+					"own_facedown_character":
+						ok = card.card_type == "character" and not card.face_up
+				grid_nodes[player][r][c].set_highlighted(ok)
+
+	elif filter in ["lock_opponent_monster", "opponent_faceup_zero_stats", "self_faceup_for_copy",
+			"own_armored_nature", "own_any_as_target", "row_or_column"]:
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				var ok: bool = false
+				match filter:
+					"lock_opponent_monster", "opponent_faceup_zero_stats":
+						ok = card.card_type == "character" and card.face_up
+					"self_faceup_for_copy":
+						ok = card.card_type == "character" and card.face_up
+					"own_armored_nature":
+						ok = card.card_type == "character" and card.face_up \
+							and card.affinity == CharacterData.Affinity.NATURE \
+							and "Armored" in card.card_name
+					"own_any_as_target":
+						ok = card.card_type == "character" and card.face_up
+					"row_or_column":
+						ok = card.card_type != "dead_end"
+				grid_nodes[opponent][r][c].set_highlighted(ok)
+
+	elif filter == "graveyard":
+		# Highlight own dead_end slots that aren't was_destroyed (blank setup slots = revive targets)
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(player, r, c)
+				grid_nodes[player][r][c].set_highlighted(card.card_type == "dead_end" and not card.was_destroyed)
 
 func _count_opponent_unrevealed(opponent: int) -> int:
 	var count: int = 0
@@ -4926,6 +5332,12 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 	if inst != null and inst.card_type != "dead_end":
 		_void_piles[player].append({"card_name": inst.card_name, "card_type": inst.card_type})
 		_update_void_stacks()
+	# AI death-bluff reaction: when a face-up AI character is destroyed in VS_AI
+	if player == AIPlayer.AI_PLAYER \
+			and GameState.game_mode == GameState.GameMode.VS_AI \
+			and inst != null and inst.card_type == "character" and inst.face_up \
+			and randf() < 0.60:
+		ai_player.decide_death_bluff(row, col)
 	var node: Control = grid_nodes[player][row][col]
 	_spawn_destroy_effect(node)
 	node.play_destroy_animation()

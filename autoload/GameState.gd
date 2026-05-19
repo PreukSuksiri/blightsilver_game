@@ -165,6 +165,7 @@ var attacks_remaining: int = 0
 var current_mode: TurnMode = TurnMode.NONE
 var attacker_card: CardInstance = null
 var attacker_pos: Vector2i = Vector2i(-1, -1)
+var defender_pos: Vector2i = Vector2i(-1, -1)
 
 # Track which tech cards have been played (for chain requirements)
 var tech_cards_played_this_game: Array = [[], []]
@@ -197,6 +198,9 @@ var berserk_active: Array = [null, null]     # CardInstance or null
 var skip_next_turn: Array = [false, false]
 var hypnotized_cards: Array = [[], []]       # List of CardInstances that can't attack
 var skip_counts: Array = [0, 0]              # Consecutive no-attack turns per player (for doubling tax)
+var reroll_dice_available: Array = [false, false]   # TEMP_REROLL_DICE tech: may reroll once before next attack
+var graveyards: Array = [[], []]                    # graveyards[player] -> Array of destroyed CardInstances
+var locked_attack_positions: Array = []             # Vector2i positions current player cannot attack this turn
 
 func _ready() -> void:
 	_init_grids()
@@ -379,6 +383,8 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 				card.flags.append("indestructible_used")
 				post_message("%s survives destruction!" % card.card_name)
 				return
+		# Track destroyed characters in graveyard
+		graveyards[player_index].append(card)
 	if pay_cost and card.card_type != "dead_end":
 		lose_crystals(player_index, card.crystal_cost)
 	emit_signal("card_destroyed", player_index, row, col)
@@ -539,12 +545,16 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	current_mode = TurnMode.NONE
 	attacker_card = null
 	attacker_pos = Vector2i(-1, -1)
+	defender_pos = Vector2i(-1, -1)
 	divine_protection_active = [false, false]
 	siege_cannon_active = [false, false]
 	berserk_active = [null, null]
 	skip_next_turn = [false, false]
 	hypnotized_cards = [[], []]
 	skip_counts = [0, 0]
+	reroll_dice_available = [false, false]
+	graveyards = [[], []]
+	locked_attack_positions = []
 	if not _vn_battle_pending:
 		battle_ai_union_enabled = true
 		battle_player_union_enabled = true

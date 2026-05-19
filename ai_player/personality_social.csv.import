@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://ixeoubmdd3ec"
+
+[deps]
+
+files=["res://ai_player/personality_social.Description.translation", "res://ai_player/personality_social.Frequency to use bluff.translation", "res://ai_player/personality_social.How they like pick bluff to use.translation", "res://ai_player/personality_social.When see 😎 on enemy’s cell.translation", "res://ai_player/personality_social.When see 🤣 on enemy’s cell.translation", "res://ai_player/personality_social.When see 🤝 on enemy’s cell.translation", "res://ai_player/personality_social.When see 👍 on enemy’s cell.translation", "res://ai_player/personality_social.When see 🥺 on enemy’s cell.translation", "res://ai_player/personality_social.When see🧨 on enemy’s cell.translation", "res://ai_player/personality_social.When see 🖕 on enemy’s cell.translation", "res://ai_player/personality_social.When see 😃 on enemy’s cell.translation", "res://ai_player/personality_social.When see ❤️ on enemy’s cell.translation", "res://ai_player/personality_social.When see ☠️ on enemy’s cell.translation"]
+
+source_file="res://ai_player/personality_social.csv"
+dest_files=["res://ai_player/personality_social.Description.translation", "res://ai_player/personality_social.Frequency to use bluff.translation", "res://ai_player/personality_social.How they like pick bluff to use.translation", "res://ai_player/personality_social.When see 😎 on enemy’s cell.translation", "res://ai_player/personality_social.When see 🤣 on enemy’s cell.translation", "res://ai_player/personality_social.When see 🤝 on enemy’s cell.translation", "res://ai_player/personality_social.When see 👍 on enemy’s cell.translation", "res://ai_player/personality_social.When see 🥺 on enemy’s cell.translation", "res://ai_player/personality_social.When see🧨 on enemy’s cell.translation", "res://ai_player/personality_social.When see 🖕 on enemy’s cell.translation", "res://ai_player/personality_social.When see 😃 on enemy’s cell.translation", "res://ai_player/personality_social.When see ❤️ on enemy’s cell.translation", "res://ai_player/personality_social.When see ☠️ on enemy’s cell.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

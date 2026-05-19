@@ -1,17 +1,21 @@
 Personality Name,Description,Difficulty
-Frontline,Places strong cards on the outer border. Weak cards are placed inside,Easy
-Fortress,Concentrates strong cards (mixed character and trap) in the center 3x3. Weak cards care placed outside,Medium
-Watch Tower,Places strong cards (mixed character and trap) on the 4 corners,Easy
-Mine Field,Concentrates characters (mixed character and trap) in the center 3x3. Trap cards care placed outside,Easy
-Tomb Trap,Concentrates traps in the center 3x3. Character cards care placed outside,Medium
-Bait Trap,Places trap cards on the 4 corners. Characters are placed randomly,Medium
-Diagonal Shield,Places cards along the two main diagonals,Hard
-Cluster Defender,Groups all cards tightly together in one random area,Medium
-Checker,Spreads cards like a checker board (always skip 1 slot between each card),Hard
-Straightforward,Place cards in one line (random axis),Easy
-Midwit,Prefer to populate the exact second border of the grid (not center),Medium
-Symmetric Defender,Places cards in a mirror-symmetric pattern,Medium
-Random Defender,Places cards completely randomly (unpredictable defense),Hard
-Religious,Places a card in a cross pattern,Easy
-Zoro,Places card in Z pattern,Medium
-Helios,Places card in H pattern,Medium
+Frontline,Places strong cards on the outer border. Weak cards are placed inside. No concern about Union formation.,Easy
+Fortress,Concentrates strong cards (mixed character and trap) in the center 3x3. Weak cards care placed outside. Concern about Union formation but only if it stay inside their preference.,Medium
+Watch Tower,Places strong cards (mixed character and trap) on the 4 corners. No concern about Union formation.,Easy
+Mine Field,Concentrates characters (mixed character and trap) in the center 3x3. Trap cards care placed outside. No concern about Union formation.,Easy
+Tomb Trap,Concentrates traps in the center 3x3. Character cards care placed outside. Concern about Union formation but only if it stay inside their preference.,Medium
+Bait Trap,Places trap cards on the 4 corners. Characters are placed randomly. Concern about Union formation but only if it stay inside their preference.,Medium
+Diagonal Shield,"Places cards along the two main diagonals. Highly concern about Union formation, even if it break their preference, they will try to be able to perform strongest Union summon.",Hard
+Cluster Defender,Groups all cards tightly together in one random area. Concern about Union formation but only if it stay inside their preference.,Medium
+Checker,"Spreads cards like a checker board (always skip 1 slot between each card). Highly concern about Union formation, even if it break their preference, they will try to be able to perform strongest Union summon.",Hard
+Straightforward,Place cards in one line (random axis). No concern about Union formation.,Easy
+Midwit,Prefer to populate the exact second border of the grid (not center). Concern about Union formation but only if it stay inside their preference.,Medium
+Symmetric Defender,Places cards in a mirror-symmetric pattern. Concern about Union formation but only if it stay inside their preference.,Medium
+Random Defender,"Places cards completely randomly (unpredictable defense). Highly concern about Union formation, even if it break their preference, they will try to be able to perform strongest Union summon.",Hard
+Religious,Places a card in a cross pattern. No concern about Union formation.,Easy
+Zoro,Places card in Z pattern. Concern about Union formation but only if it stay inside their preference.,Medium
+Helios,Places card in H pattern. Concern about Union formation but only if it stay inside their preference.,Medium
+Helios 2,"Places card in H pattern. Highly concern about Union formation, even if it break their preference, they will try to be able to perform strongest Union summon.",Hard
+Zoro 2,"Places card in Z pattern. Highly concern about Union formation, even if it break their preference, they will try to be able to perform strongest Union summon.",Hard
+Tomb Trap,"Highly concern about Union formation, even if it break their preference, they will try to be able to perform strongest Union summon.",Hard
+Frontline,"Places strong cards on the outer border. Weak cards are placed inside. Highly concern about Union formation, even if it break their preference, they will try to be able to perform strongest Union summon.",Hard

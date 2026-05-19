@@ -171,7 +171,9 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	# Pre-battle: COIN_FLIP_CANCEL_ATTACK (Lazy Troll) — tails = own attack cancelled
 	if attacker.ability_type == CharacterData.AbilityType.COIN_FLIP_CANCEL_ATTACK:
 		if randi() % 2 == 0:
-			GameState.post_message("%s flips tails — its attack is cancelled!" % attacker.card_name)
+			GameState.post_message("%s flips tails — too lazy to attack! It has to wait." % attacker.card_name)
+			attacker.attacked_this_turn = true                  # shows hourglass icon on card
+			GameState.attacks_remaining = maxi(0, GameState.attacks_remaining - 1)  # wasted attempt
 			emit_signal("attack_aborted")
 			return
 
@@ -275,6 +277,23 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	BattleResolver.calculate_field_bonuses(player)
 	BattleResolver.calculate_field_bonuses(opponent)
 
+	# Roll the attack dice
+	GameState.dice_result = DiceRoller.roll_attack_dice()
+	GameState.emit_signal("dice_rolled", GameState.dice_result)
+
+	# TEMP_REROLL_DICE: offer one re-roll before battle
+	if GameState.reroll_dice_available[player]:
+		GameState.reroll_dice_available[player] = false
+		emit_signal("awaiting_trap_choice",
+			"Lucky Break: Re-roll dice? (current: %d)" % GameState.dice_result,
+			["Re-roll", "Keep %d" % GameState.dice_result])
+		var _rr_choice: int = await ability_choice_resolved
+		if _rr_choice == 0:
+			GameState.dice_result = DiceRoller.roll_attack_dice()
+			GameState.emit_signal("dice_rolled", GameState.dice_result)
+			GameState.post_message("Lucky Break: Re-rolled — new result: %d" % GameState.dice_result)
+
+	GameState.defender_pos = target_pos
 	GameState.set_phase(GameState.Phase.BATTLE)
 	var result := BattleResolver.resolve_battle(
 		attacker, defender, GameState.dice_result, player, opponent, defender_was_exposed, target_pos
@@ -554,6 +573,39 @@ func play_tech_card(tech_name: String) -> void:
 		TechCardData.TechEffectType.FORCE_SHIELD_ONE_CARD:
 			emit_signal("awaiting_target_selection", "Force Shield: Choose 1 of your cards to protect.", "own_any_card")
 
+		TechCardData.TechEffectType.DESTROY_WISPS_REVEAL_OPPONENT:
+			var _dwro_opp: int = GameState.get_opponent(player)
+			var _dwro_count: int = 0
+			for _dwro_r: int in range(GameState.GRID_SIZE):
+				for _dwro_c: int in range(GameState.GRID_SIZE):
+					var _dwro_card: GameState.CardInstance = GameState.get_card(player, _dwro_r, _dwro_c)
+					if _dwro_card.card_type == "character" and "wisp" in _dwro_card.card_name.to_lower():
+						GameState.destroy_card(player, _dwro_r, _dwro_c, false)
+						_dwro_count += 1
+			if _dwro_count > 0:
+				var _dwro_hidden: Array = []
+				for _dwro_r2: int in range(GameState.GRID_SIZE):
+					for _dwro_c2: int in range(GameState.GRID_SIZE):
+						var _dwro_hcard: GameState.CardInstance = GameState.get_card(_dwro_opp, _dwro_r2, _dwro_c2)
+						if not _dwro_hcard.face_up and _dwro_hcard.card_type != "dead_end":
+							_dwro_hidden.append(Vector2i(_dwro_r2, _dwro_c2))
+				_dwro_hidden.shuffle()
+				var _dwro_revealed: int = 0
+				for _dwro_i: int in range(mini(_dwro_count, _dwro_hidden.size())):
+					GameState.reveal_card(_dwro_opp, _dwro_hidden[_dwro_i].x, _dwro_hidden[_dwro_i].y)
+					_dwro_revealed += 1
+				GameState.post_message("Wisp Light: %d Wisps destroyed, %d squares revealed." % [_dwro_count, _dwro_revealed])
+			else:
+				GameState.post_message("Wisp Light: No Wisps on your field.")
+			after_tech_resolved(player)
+			return
+
+		TechCardData.TechEffectType.TEMP_REROLL_DICE:
+			GameState.reroll_dice_available[player] = true
+			GameState.post_message("Lucky Break: You may re-roll the dice once before your next attack.")
+			after_tech_resolved(player)
+			return
+
 		TechCardData.TechEffectType.NOT_IMPLEMENTED:
 			GameState.show_center_message("Ability not implemented: " + data.card_name)
 			after_tech_resolved(player)
@@ -736,16 +788,24 @@ func _handle_trap_effect(
 
 		TrapData.TrapEffectType.NULLIFY_ATTACK_REVEAL_ADJACENT:
 			GameState.post_message("Hostage: Adjacent squares revealed and locked.")
-			var adj := GameState.get_adjacent_positions(target_pos.x, target_pos.y)
-			for pos in adj:
-				GameState.reveal_card(opponent, pos.x, pos.y)
-			# Lock adjacent squares as targets (handled by UI via emit)
-			emit_signal("awaiting_target_selection", "Hostage active.", "hostage_lock")
+			var _hst_adj: Array = GameState.get_adjacent_positions(target_pos.x, target_pos.y)
+			for _hst_pos: Vector2i in _hst_adj:
+				GameState.reveal_card(opponent, _hst_pos.x, _hst_pos.y)
+				if _hst_pos not in GameState.locked_attack_positions:
+					GameState.locked_attack_positions.append(_hst_pos)
 
 		TrapData.TrapEffectType.NULLIFY_ATTACK_CHOICE:
 			emit_signal("awaiting_trap_choice",
 				"Checkpoint",
 				["Lose 500 Crystals", "Destroy your attacking character"])
+			var _nac_choice: int = await ability_choice_resolved
+			if _nac_choice == 0:
+				GameState.lose_crystals(player, 500)
+				await crystal_animation_done
+				GameState.post_message("Checkpoint: Lost 500 Crystals.")
+			else:
+				GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
+				GameState.post_message("Checkpoint: %s destroyed!" % attacker.card_name)
 
 		TrapData.TrapEffectType.REVEAL_DEFENDING_CHOICE:
 			emit_signal("awaiting_target_selection", "Bait: Choose a square on your field to reveal.", "self_reveal_choice")
@@ -754,6 +814,17 @@ func _handle_trap_effect(
 			emit_signal("awaiting_trap_choice",
 				"Blackmail",
 				["Discard 1 Tech Card", "End your turn"])
+			var _bm_choice: int = await ability_choice_resolved
+			if _bm_choice == 0:
+				if not GameState.tech_hands[player].is_empty():
+					GameState.tech_hands[player].pop_back()
+					GameState.post_message("Blackmail: Discarded 1 Tech Card.")
+				else:
+					GameState.attacks_remaining = 0
+					GameState.post_message("Blackmail: No Tech Cards — turn ended.")
+			else:
+				GameState.attacks_remaining = 0
+				GameState.post_message("Blackmail: %s ended attacker's turn!" % trap_data.card_name)
 
 		TrapData.TrapEffectType.COPY_ATTACKER_EFFECT:
 			GameState.post_message("Cursed Reflection: Choose one of your face-up characters to copy %s's effect." % attacker.card_name)
@@ -812,7 +883,10 @@ func _handle_trap_effect(
 
 		TrapData.TrapEffectType.NULLIFY_BLOCK_ADJACENT:
 			GameState.post_message("Bunker: Adjacent squares cannot be targeted this turn.")
-			emit_signal("awaiting_target_selection", "Bunker active.", "bunker_lock")
+			var _bunk_adj: Array = GameState.get_adjacent_positions(target_pos.x, target_pos.y)
+			for _bunk_pos: Vector2i in _bunk_adj:
+				if _bunk_pos not in GameState.locked_attack_positions:
+					GameState.locked_attack_positions.append(_bunk_pos)
 
 		TrapData.TrapEffectType.FIELD_BOOST_AFFINITY_DEF:
 			var _fb_aff: int = trap_data.effect_params.get("affinity", -1)
@@ -1002,6 +1076,7 @@ func _end_turn(player: int) -> void:
 	start_turn(next_player)
 
 func _clear_turn_state(player: int) -> void:
+	GameState.locked_attack_positions.clear()
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
 			var card: GameState.CardInstance = GameState.get_card(player, r, c)
