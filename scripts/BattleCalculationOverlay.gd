@@ -39,6 +39,20 @@ var _card_w: float
 var _card_h: float
 var _skip_requested: bool = false
 var _skippable:     bool = false
+# Pause/resume support: set via pause_for_choice() / resume_with_result()
+var _paused: bool = false
+var _live_result: BattleResolver.BattleResult
+
+## Called by GameBoard when an ability-choice overlay appears on top of this overlay.
+## Prevents the overlay from animating or being dismissed until resume_with_result() is called.
+func pause_for_choice() -> void:
+	_paused = true
+
+## Called by GameBoard after the ability choice is resolved.
+## Updates the animation result to reflect any applied boosts, then unpauses.
+func resume_with_result(new_result: BattleResolver.BattleResult) -> void:
+	_live_result = new_result
+	_paused = false
 
 # ─────────────────────────────────────────────────────────────
 # Entry point
@@ -423,10 +437,18 @@ func _run_async(
 	defender: GameState.CardInstance,
 	result: BattleResolver.BattleResult
 ) -> void:
+	# Initialise _live_result from the preview passed in; may be updated via resume_with_result()
+	_live_result = result
+
 	# Fade in
 	var tin := create_tween()
 	tin.tween_property(self, "modulate:a", 1.0, 0.25).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	await tin.finished
+
+	# Wait for any pending ability-choice overlays (pause_for_choice set _paused = true)
+	while _paused:
+		_skip_requested = false  # don't let a stray click skip while choice is active
+		await get_tree().process_frame
 
 	# Skippable 2-second pause
 	_skippable = true
@@ -442,18 +464,18 @@ func _run_async(
 	# Positive dx means move right (toward center for P1 attacker)
 	var bounce_dx: float = _card_w * 0.28 * (1.0 if attacker_player == 0 else -1.0)
 
-	# Card effect flash — trap or character ability
+	# Card effect flash — trap or character ability (use _live_result for final outcome)
 	var att_rest_x: float = _left_rest_x if attacker_player == 0 else _right_rest_x
 	var def_rest_x: float = _right_rest_x if attacker_player == 0 else _left_rest_x
-	if result.special_trigger == "trap_effect":
+	if _live_result.special_trigger == "trap_effect":
 		await _animate_trap_flash(def_ctrl)
-	elif result.ability_triggered_attacker:
+	elif _live_result.ability_triggered_attacker:
 		await _animate_card_effect_flash(att_ctrl, att_rest_x)
-	elif result.ability_triggered_defender:
+	elif _live_result.ability_triggered_defender:
 		await _animate_card_effect_flash(def_ctrl, def_rest_x)
 
-	# Run scenario animation
-	var scenario := _get_scenario(defender, result)
+	# Run scenario animation using the final (possibly boosted) result
+	var scenario := _get_scenario(defender, _live_result)
 	match scenario:
 		"3A": await _anim_attacker_wins(att_ctrl, def_ctrl, bounce_dx)
 		"3B": await _anim_defender_wins(att_ctrl, def_ctrl, bounce_dx)
@@ -681,6 +703,9 @@ func _anim_exchange(att: Control, def: Control, dx: float) -> void:
 # Input
 # ─────────────────────────────────────────────────────────────
 func _input(event: InputEvent) -> void:
+	# Don't consume input while an ability-choice overlay is on top — buttons need those events
+	if _paused:
+		return
 	if _skippable:
 		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
 			_skip_requested = true

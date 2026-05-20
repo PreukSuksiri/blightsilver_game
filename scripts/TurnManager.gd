@@ -12,10 +12,12 @@ signal awaiting_trap_choice(trap_name: String, choices: Array)
 signal awaiting_target_selection(prompt: String, filter: String)
 signal battle_preview_needed(attacker_player: int, attacker: GameState.CardInstance, defender: GameState.CardInstance, result: BattleResolver.BattleResult)
 signal battle_preview_done
+signal battle_result_finalized(result: BattleResolver.BattleResult)
 signal crystal_animation_done
 signal attack_aborted
 signal card_effect_flash_done
 signal ability_choice_resolved(choice_index: int)
+signal awaiting_defender_choice(prompt: String, choices: Array)
 
 # Pending choices for async UI flows
 var _pending_trap_resolve: Callable
@@ -177,54 +179,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 			emit_signal("attack_aborted")
 			return
 
-	# Pre-battle: OPTIONAL_CRYSTAL_PAY_ATK_BOOST (Gryphon / Hairpin Assassin)
-	if attacker.ability_type == CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_ATK_BOOST:
-		var _pb_cost: int = attacker.ability_params.get("cost", 300)
-		var _pb_boost: int = attacker.ability_params.get("atk", 5)
-		if GameState.crystals[player] >= _pb_cost:
-			emit_signal("awaiting_trap_choice",
-				"Pay %d Crystals for +%d ATK this battle?" % [_pb_cost, _pb_boost],
-				["Pay %d Crystals" % _pb_cost, "Skip"])
-			var _pb_choice: int = await ability_choice_resolved
-			if _pb_choice == 0:
-				GameState.lose_crystals(player, _pb_cost)
-				await crystal_animation_done
-				attacker.temp_atk_bonus += _pb_boost
-				GameState.post_message("%s: Paid %d Crystals for +%d ATK!" % [attacker.card_name, _pb_cost, _pb_boost])
-
-	# Pre-battle: OPTIONAL_CRYSTAL_PAY_DEF_BOOST (Armored Dino)
-	if attacker.ability_type == CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_DEF_BOOST:
-		var _dd_cost: int = attacker.ability_params.get("cost", 1000)
-		var _dd_boost: int = attacker.ability_params.get("def", 60)
-		if GameState.crystals[player] >= _dd_cost:
-			emit_signal("awaiting_trap_choice",
-				"Pay %d Crystals for +%d DEF this battle?" % [_dd_cost, _dd_boost],
-				["Pay %d Crystals" % _dd_cost, "Skip"])
-			var _dd_choice: int = await ability_choice_resolved
-			if _dd_choice == 0:
-				GameState.lose_crystals(player, _dd_cost)
-				await crystal_animation_done
-				attacker.temp_def_bonus += _dd_boost
-				GameState.post_message("%s: Paid %d Crystals for +%d DEF!" % [attacker.card_name, _dd_cost, _dd_boost])
-
-	# Pre-battle: OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT (X-Death Squad)
-	if attacker.ability_type == CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT \
-			and defender.card_type == "character":
-		var _xd_cost: int = attacker.ability_params.get("cost", 1000)
-		if GameState.crystals[player] >= _xd_cost:
-			emit_signal("awaiting_trap_choice",
-				"Pay %d Crystals to destroy %s? (no crystal loss to opponent)" % [_xd_cost, defender.card_name],
-				["Pay %d Crystals" % _xd_cost, "Skip"])
-			var _xd_choice: int = await ability_choice_resolved
-			if _xd_choice == 0:
-				GameState.lose_crystals(player, _xd_cost)
-				await crystal_animation_done
-				GameState.post_message("%s: %s is destroyed!" % [attacker.card_name, defender.card_name])
-				GameState.place_dead_end(opponent, target_pos.x, target_pos.y)
-				emit_signal("attack_aborted")
-				return
-
-	# Pre-battle: INTERCEPT_ALLY_ATTACK (Armored Rhino / Bat Swarm)
+	# Pre-battle: INTERCEPT_ALLY_ATTACK (Armored Rhino / Bat Swarm) — may change target before reveals
 	if defender.card_type == "character":
 		var _ic_found: bool = false
 		for _ic_r: int in range(GameState.GRID_SIZE):
@@ -263,13 +218,11 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	# Emit GameState signal for target selection tracking
 	GameState.emit_signal("attack_target_selected", player, opponent, target_pos.x, target_pos.y)
 
-	# Exposed = already face-up BEFORE this attack began (whatever revealed it has fully resolved).
-	# Revealed = this attack is what flips it — dust still in the air.
+	# Exposed = already face-up BEFORE this attack began.
 	var defender_was_exposed: bool = defender.face_up
 
-	# Flip attacker face-up
+	# Flip cards face-up now so the player sees revealed stats while deciding on optional prompts
 	GameState.reveal_card(player, attacker_pos.x, attacker_pos.y)
-	# Flip target face-up (skip for blank — it gets destroyed directly, no reveal needed)
 	if defender.card_type != "dead_end":
 		GameState.reveal_card(opponent, target_pos.x, target_pos.y)
 
@@ -281,7 +234,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	GameState.dice_result = DiceRoller.roll_attack_dice()
 	GameState.emit_signal("dice_rolled", GameState.dice_result)
 
-	# TEMP_REROLL_DICE: offer one re-roll before battle
+	# TEMP_REROLL_DICE: offer one re-roll (before overlay so preview uses the final dice result)
 	if GameState.reroll_dice_available[player]:
 		GameState.reroll_dice_available[player] = false
 		emit_signal("awaiting_trap_choice",
@@ -293,17 +246,75 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 			GameState.emit_signal("dice_rolled", GameState.dice_result)
 			GameState.post_message("Lucky Break: Re-rolled — new result: %d" % GameState.dice_result)
 
+	# OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT (X-Death Squad) — before overlay since it may abort
+	if attacker.ability_type == CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT \
+			and defender.card_type == "character":
+		var _xd_cost: int = attacker.ability_params.get("cost", 1000)
+		if GameState.crystals[player] >= _xd_cost:
+			emit_signal("awaiting_trap_choice",
+				"Pay %d Crystals to destroy %s? (no crystal loss to opponent)" % [_xd_cost, defender.card_name],
+				["Pay %d Crystals" % _xd_cost, "Skip"])
+			var _xd_choice: int = await ability_choice_resolved
+			if _xd_choice == 0:
+				GameState.lose_crystals(player, _xd_cost)
+				await crystal_animation_done
+				GameState.post_message("%s: %s is destroyed!" % [attacker.card_name, defender.card_name])
+				GameState.place_dead_end(opponent, target_pos.x, target_pos.y)
+				emit_signal("attack_aborted")
+				return
+
 	GameState.defender_pos = target_pos
 	GameState.set_phase(GameState.Phase.BATTLE)
-	var result := BattleResolver.resolve_battle(
+
+	# Compute a preview result (without optional crystal boosts) for the battle overlay display
+	var preview_result := BattleResolver.resolve_battle(
 		attacker, defender, GameState.dice_result, player, opponent, defender_was_exposed, target_pos
 	)
 
+	# Show the battle overlay — optional prompts will appear on top of it
+	emit_signal("battle_preview_needed", player, attacker, defender, preview_result)
+
+	# OPTIONAL_CRYSTAL_PAY_ATK_BOOST (Gryphon / Hairpin Assassin) — on top of battle overlay
+	if attacker.ability_type == CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_ATK_BOOST:
+		var _pb_cost: int = attacker.ability_params.get("cost", 300)
+		var _pb_boost: int = attacker.ability_params.get("atk", 5)
+		if GameState.crystals[player] >= _pb_cost:
+			emit_signal("awaiting_trap_choice",
+				"Pay %d Crystals for +%d ATK this battle?" % [_pb_cost, _pb_boost],
+				["Pay %d Crystals" % _pb_cost, "Skip"])
+			var _pb_choice: int = await ability_choice_resolved
+			if _pb_choice == 0:
+				GameState.lose_crystals(player, _pb_cost)
+				await crystal_animation_done
+				attacker.temp_atk_bonus += _pb_boost
+				GameState.post_message("%s: Paid %d Crystals for +%d ATK!" % [attacker.card_name, _pb_cost, _pb_boost])
+
+	# OPTIONAL_CRYSTAL_PAY_DEF_BOOST (Armored Dino) — defender ability: fires when defending
+	# Uses awaiting_defender_choice so the decision routes to the defending player
+	if defender.card_type == "character" \
+			and defender.ability_type == CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_DEF_BOOST:
+		var _dd_cost: int = defender.ability_params.get("cost", 1000)
+		var _dd_boost: int = defender.ability_params.get("def", 60)
+		if GameState.crystals[opponent] >= _dd_cost:
+			emit_signal("awaiting_defender_choice",
+				"%s: Pay %d Crystals for +%d DEF this battle?" % [defender.card_name, _dd_cost, _dd_boost],
+				["Pay %d Crystals" % _dd_cost, "Skip"])
+			var _dd_choice: int = await ability_choice_resolved
+			if _dd_choice == 0:
+				GameState.lose_crystals(opponent, _dd_cost)
+				await crystal_animation_done
+				defender.temp_def_bonus += _dd_boost
+				GameState.post_message("%s: Paid %d Crystals for +%d DEF!" % [defender.card_name, _dd_cost, _dd_boost])
+
+	# Recompute with any applied temp bonuses and post final battle messages
+	var result := BattleResolver.resolve_battle(
+		attacker, defender, GameState.dice_result, player, opponent, defender_was_exposed, target_pos
+	)
 	for msg in result.messages:
 		GameState.post_message(msg)
 
-	# Show damage calculation overlay and wait for it to dismiss
-	emit_signal("battle_preview_needed", player, attacker, defender, result)
+	# Signal the overlay to update its animation to match the final result, then resume
+	emit_signal("battle_result_finalized", result)
 	await battle_preview_done
 
 	# Handle trap special triggers

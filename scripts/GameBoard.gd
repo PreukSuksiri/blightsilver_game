@@ -151,6 +151,8 @@ var _bribe_desc_lbl: Label = null
 var _ability_choice_overlay: Control = null
 var _ability_choice_title_lbl: Label = null
 var _ability_choice_btns: Array[Button] = []
+# ── Current battle calculation overlay (used to pause/resume around choice prompts)
+var _current_battle_overlay: BattleCalculationOverlay = null
 
 # ── Tech-resolution input blocker (invisible, shown while effect animates)
 var _tech_resolve_blocker: ColorRect = null
@@ -290,8 +292,10 @@ func _setup_turn_manager() -> void:
 	turn_manager.tech_resolved.connect(_on_tech_resolved)
 	turn_manager.turn_ended.connect(_on_turn_ended)
 	turn_manager.awaiting_trap_choice.connect(_on_awaiting_trap_choice)
+	turn_manager.awaiting_defender_choice.connect(_on_awaiting_defender_choice)
 	turn_manager.awaiting_target_selection.connect(_on_awaiting_target_selection)
 	turn_manager.battle_preview_needed.connect(_on_battle_preview_needed)
+	turn_manager.battle_result_finalized.connect(_on_battle_result_finalized)
 	turn_manager.attack_aborted.connect(_on_attack_aborted)
 
 func _setup_ai() -> void:
@@ -340,9 +344,9 @@ func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: 
 	ai_player.continue_after_union()
 
 func _on_ai_watchdog_timeout() -> void:
-	var msg: String = "[AI WATCHDOG] Bot Player went idle for 5 s — no decision emitted."
-	print(msg)
-	GameState.post_message("[DEBUG] Bot Player timed out (5 s idle).")
+	print("[AI WATCHDOG] Bot Player went idle for 5 s — forcing turn end.")
+	GameState.post_message("[DEBUG] Bot Player timed out — ending turn.")
+	turn_manager.end_attacks_early()
 
 func _connect_signals() -> void:
 	GameState.phase_changed.connect(_on_phase_changed)
@@ -383,12 +387,17 @@ func _build_grids() -> void:
 				# Bluff emoticon label — sits at the top edge of every cell
 				var bluff_lbl := Label.new()
 				bluff_lbl.set_anchors_preset(Control.PRESET_TOP_WIDE)
-				bluff_lbl.offset_top    = 2.0
-				bluff_lbl.offset_bottom = 26.0
+				bluff_lbl.offset_top    = -4.0
+				bluff_lbl.offset_bottom = 42.0
 				bluff_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 				bluff_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 				bluff_lbl.z_index = 5
 				bluff_lbl.text = ""
+				bluff_lbl.add_theme_font_size_override("font_size", 36)
+				bluff_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.75))
+				bluff_lbl.add_theme_constant_override("shadow_offset_x", 2)
+				bluff_lbl.add_theme_constant_override("shadow_offset_y", 2)
+				bluff_lbl.add_theme_constant_override("shadow_outline_size", 3)
 				card_node.add_child(bluff_lbl)
 				row_arr.append(card_node)
 				lbl_row.append(bluff_lbl)
@@ -682,7 +691,7 @@ func _build_ability_choice_overlay() -> void:
 	_ability_choice_overlay = Control.new()
 	_ability_choice_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_ability_choice_overlay.visible = false
-	_ability_choice_overlay.z_index = 7
+	_ability_choice_overlay.z_index = 110  # above BattleCalculationOverlay (z_index 100)
 	add_child(_ability_choice_overlay)
 
 	var bg := ColorRect.new()
@@ -1056,6 +1065,11 @@ func _do_ai_setup() -> void:
 			GameState.place_character(1, pos.x, pos.y, placement["card_name"])
 		elif placement["card_type"] == "trap":
 			GameState.place_trap(1, pos.x, pos.y, placement["card_name"])
+
+	# AI places bluff emoticons on some cells before the game starts
+	var setup_bluffs: Dictionary = ai_player.decide_setup_bluffs(placements)
+	for cell: Vector2i in setup_bluffs.keys():
+		GameState.set_bluff(AIPlayer.AI_PLAYER, cell.x, cell.y, setup_bluffs[cell])
 
 func _begin_game() -> void:
 	if setup_phase:
@@ -2281,6 +2295,7 @@ func _enter_union_material_selection(player: int, u: UnionData, zone_cells: Arra
 	_pending_union_selected_materials.clear()
 	await _play_union_zone_preview(player, zone_cells)
 	_set_selection_state(SelectionState.SELECTING_UNION_MATERIALS)
+	_update_union_suggest_button()
 	_refresh_union_flash_cells()
 	GameState.post_message("Tap %d material card(s) on the field." % u.material_conditions.size())
 
@@ -2436,6 +2451,7 @@ func _cancel_union_material_selection() -> void:
 	_pending_union_conditions_remaining.clear()
 	_pending_union_selected_materials.clear()
 	_set_selection_state(SelectionState.SELECTING_ATTACKER)
+	_update_union_suggest_button()
 	_highlight_attackable_chars()
 
 func _set_union_zone_highlight(player: int, zone_cells: Array) -> void:
@@ -3950,12 +3966,13 @@ func _refresh_tech_hand() -> void:
 		var tech_name: String = str(hand[i])
 		var data: TechCardData = CardDatabase.get_tech(tech_name)
 		var can_use := data != null and crystals >= data.crystal_cost
-		# Reveal-type cards need at least 1 unrevealed opponent card to be usable
+		# Reveal-type cards need at least 1 face-down opponent cell to be usable
+		# (includes dead_end cells — Radar can target blank slots)
 		if can_use and data != null and data.effect_type in [
 				TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE,
 				TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE_CHAIN,
 				TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE_RISKY]:
-			can_use = _count_opponent_unrevealed(GameState.get_opponent(player)) > 0
+			can_use = _count_opponent_facedown(GameState.get_opponent(player)) > 0
 
 		var col := VBoxContainer.new()
 		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -4317,10 +4334,17 @@ func _on_attack_completed(_from: Vector2i, _to: Vector2i, _result: BattleResolve
 func _on_attack_aborted() -> void:
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = false
-	if _end_turn_btn:
-		_end_turn_btn.visible = true
 	_clear_selection()
 	_refresh_all_grids()   # reflect any state changes (e.g. attacked_this_turn hourglass)
+	# If AI aborted its own attack (e.g. attacks_remaining ran out, coin-flip cancel),
+	# re-trigger the AI decision loop instead of showing human UI.
+	if _is_ai_turn():
+		await get_tree().create_timer(0.4).timeout
+		_ai_watchdog.start()
+		ai_player.continue_after_union()
+		return
+	if _end_turn_btn:
+		_end_turn_btn.visible = true
 	_set_selection_state(SelectionState.SELECTING_ATTACKER)
 	_highlight_attackable_chars()
 	_update_end_turn_blink()
@@ -4328,8 +4352,10 @@ func _on_attack_aborted() -> void:
 func _on_battle_preview_needed(attacker_player: int, attacker: GameState.CardInstance, defender: GameState.CardInstance, result: BattleResolver.BattleResult) -> void:
 	var overlay := BattleCalculationOverlay.new()
 	overlay.z_index = 100
+	_current_battle_overlay = overlay
 	add_child(overlay)
 	await overlay.start(attacker_player, attacker, defender, result)
+	_current_battle_overlay = null
 	turn_manager.battle_preview_done.emit()
 
 func _on_tech_played(player: int, _tech_name: String) -> void:
@@ -4525,7 +4551,6 @@ func _confirm_attack() -> void:
 	turn_manager.perform_attack(atk_from, atk_to)
 
 func _cancel_confirm_attack() -> void:
-	_update_union_suggest_button()
 	if _blink_tween and _blink_tween.is_valid():
 		_blink_tween.kill()
 		_blink_tween = null
@@ -4540,6 +4565,7 @@ func _cancel_confirm_attack() -> void:
 		_end_turn_btn.visible = true
 	_clear_selection()
 	_set_selection_state(SelectionState.SELECTING_ATTACKER)
+	_update_union_suggest_button()
 	_highlight_attackable_chars()
 	_update_end_turn_blink()
 
@@ -4580,6 +4606,10 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		_show_guide(prompt)
 	_highlight_tech_targets(filter)
 
+	# Diplomacy Party: let current player peek at own face-down characters to choose
+	if filter == "own_facedown_character":
+		_set_own_facedown_char_peek(true)
+
 	# Auto-complete filters that don't require grid selection
 	if filter == "view_opponent_hand":
 		_handle_tech_target(GameState.current_player, Vector2i(0, 0))
@@ -4596,7 +4626,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	if _is_ai_turn() and filter not in _defender_response_filters:
 		await get_tree().create_timer(0.4).timeout
 		# Guard: if a reveal-tech has no valid targets, skip rather than hang
-		if "opponent_squares" in filter and _count_opponent_unrevealed(GameState.get_opponent(GameState.current_player)) == 0:
+		if "opponent_squares" in filter and _count_opponent_facedown(GameState.get_opponent(GameState.current_player)) == 0:
 			_finish_tech_action(GameState.current_player)
 			return
 		var ai_target := ai_player.decide_target(filter)
@@ -4627,10 +4657,11 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if "opponent_squares" in pending_tech_filter:
 		if player == opponent:
-			# Ignore already-revealed or dead-end cells — not valid targets
-			if card.card_type == "dead_end" or card.face_up:
+			# Ignore already-revealed cells — dead_end slots are valid targets
+			if card.face_up:
 				return
 			GameState.reveal_card(player, pos.x, pos.y)
+			# _on_card_revealed handles trap auto-void when a trap is found
 			# Risky reveal: pay 700 crystals for each character found
 			if "risky" in pending_tech_filter and card.card_type == "character":
 				GameState.lose_crystals(current_player, 700)
@@ -4639,8 +4670,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			if _tech_reveals_remaining <= 0:
 				_finish_tech_action(current_player)
 			else:
-				# Auto-resolve if no unrevealed cards remain on opponent's field
-				if _count_opponent_unrevealed(opponent) == 0:
+				# Auto-resolve if no face-down cells remain on opponent's field
+				if _count_opponent_facedown(opponent) == 0:
 					_finish_tech_action(current_player)
 					return
 				var next_idx: int = _tech_reveals_total - _tech_reveals_remaining + 1
@@ -4809,6 +4840,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	if pending_tech_filter == "own_facedown_character":
 		# REVEAL_OWN_AND_OPPONENT_REVEALS: reveal own chosen, then opponent reveals 1
 		if player == current_player and card.card_type == "character" and not card.face_up:
+			_set_own_facedown_char_peek(false)   # restore all others to face-down before reveal
 			GameState.reveal_card(player, pos.x, pos.y)
 			GameState.post_message("Diplomacy Party: Revealed %s — opponent must reveal 1." % card.card_name)
 			pending_tech_filter = "opponent_facedown_forced"
@@ -5018,6 +5050,7 @@ func _finish_tech_action(player: int) -> void:
 	turn_manager.after_tech_resolved(player)
 
 func _clear_after_tech() -> void:
+	_set_own_facedown_char_peek(false)   # safety net — always clear peek on tech end
 	action_panel.visible = false
 	pending_tech_filter = ""
 	pending_tech_name = ""
@@ -5029,18 +5062,52 @@ func _clear_after_tech() -> void:
 	_set_selection_state(SelectionState.NONE)
 	_refresh_all_grids()
 
+## Temporarily show face-down character cards as face-up (visual peek only).
+## Does NOT change card.face_up in GameState — purely cosmetic.
+func _set_own_facedown_char_peek(enable: bool) -> void:
+	var cp: int = GameState.current_player
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(cp, r, c)
+			if card.card_type == "character" and not card.face_up:
+				(grid_nodes[cp][r][c] as Control).set_preview_revealed(enable)
+
 func _on_ai_bluff(row: int, col: int, emoticon: String) -> void:
 	if GameState.current_player != AIPlayer.AI_PLAYER:
 		return
 	_set_bluff_animated(AIPlayer.AI_PLAYER, row, col, emoticon)
 
 func _on_awaiting_trap_choice(trap_name: String, choices: Array) -> void:
+	if is_instance_valid(_current_battle_overlay):
+		_current_battle_overlay.pause_for_choice()
 	_show_ability_choice_overlay(trap_name, choices)
 	if _is_ai_turn():
 		await get_tree().create_timer(0.6).timeout
 		_hide_ability_choice_overlay()
 		var ai_choice: int = ai_player.decide_trap_choice(trap_name, choices)
 		turn_manager.resolve_ability_choice(ai_choice)
+
+## Routes OPTIONAL_CRYSTAL_PAY_DEF_BOOST defender choices to the correct player.
+## During the attacker's turn the defending player is the opponent — if that's the AI, auto-resolve.
+func _on_awaiting_defender_choice(prompt: String, choices: Array) -> void:
+	if is_instance_valid(_current_battle_overlay):
+		_current_battle_overlay.pause_for_choice()
+	var defender_player: int = GameState.get_opponent(GameState.current_player)
+	if GameState.game_mode == GameState.GameMode.VS_AI \
+			and defender_player == AIPlayer.AI_PLAYER:
+		# AI defends: AI decides whether to pay for its own DEF boost
+		await get_tree().create_timer(0.6).timeout
+		var ai_choice: int = ai_player.decide_trap_choice(prompt, choices)
+		turn_manager.resolve_ability_choice(ai_choice)
+	else:
+		# Human defends (or local 2-player): show choice overlay for human to decide
+		_show_ability_choice_overlay(prompt, choices)
+
+## Called when TurnManager has finalised the battle result after all optional prompts.
+## Updates the battle overlay's animation and resumes it.
+func _on_battle_result_finalized(result: BattleResolver.BattleResult) -> void:
+	if is_instance_valid(_current_battle_overlay):
+		_current_battle_overlay.resume_with_result(result)
 
 # ─────────────────────────────────────────────────────────────
 # Highlights
@@ -5102,8 +5169,8 @@ func _highlight_tech_targets(filter: String) -> void:
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var opp_card: GameState.CardInstance = GameState.get_card(opponent, r, c)
-				grid_nodes[opponent][r][c].set_highlighted(
-					opp_card.card_type != "dead_end" and not opp_card.face_up)
+				# dead_end slots are valid Radar targets — highlight any face-down cell
+				grid_nodes[opponent][r][c].set_highlighted(not opp_card.face_up)
 
 	elif "own_faceup_character" in filter or "own_bio_character" in filter:
 		for r in range(GameState.GRID_SIZE):
@@ -5226,6 +5293,15 @@ func _count_opponent_unrevealed(opponent: int) -> int:
 		for c in range(GameState.GRID_SIZE):
 			var opp_card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 			if opp_card.card_type != "dead_end" and not opp_card.face_up:
+				count += 1
+	return count
+
+# Counts ALL face-down cells including dead_end slots — used for Radar targeting
+func _count_opponent_facedown(opponent: int) -> int:
+	var count: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			if not GameState.get_card(opponent, r, c).face_up:
 				count += 1
 	return count
 

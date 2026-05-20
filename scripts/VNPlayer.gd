@@ -548,6 +548,13 @@ func _show_beat() -> void:
 			}
 		else:
 			GameState.campaign_enemy_config = {}
+		# AI personality overrides (empty string = pick randomly)
+		var _apd: String = str(beat.get("ai_personality_defensive", ""))
+		var _apo: String = str(beat.get("ai_personality_offensive", ""))
+		var _aps: String = str(beat.get("ai_personality_social",    ""))
+		if _apd != "": GameState.campaign_enemy_config["ai_personality_defensive"] = _apd
+		if _apo != "": GameState.campaign_enemy_config["ai_personality_offensive"] = _apo
+		if _aps != "": GameState.campaign_enemy_config["ai_personality_social"]    = _aps
 		# Union summon + forced placement config
 		# Flag tells new_game() not to reset these values when the scene loads
 		GameState._vn_battle_pending          = true

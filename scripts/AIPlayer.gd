@@ -26,6 +26,22 @@ var _ai_turn_count: int = 0   # incremented at start of each decide_turn call
 var _union_used:    bool = false
 var _pending_death_bluff: Vector2i = Vector2i(-1, -1)  # set when AI card dies; flushed on next AI turn
 
+# ── Personality system (assigned once per game in decide_setup) ──
+var _def_zone:       String  = ""            # defensive formation zone key
+var _union_concern:  String  = "normal"      # "none" | "normal" | "high"
+var _attack_zone:    String  = "random_off"  # offensive zone key
+var _expose_mode:    String  = "normal"      # "all" | "cautious" | "kill_triggered" | "normal"
+var _skip_turns:     int     = 0             # skip N turns if opp has nothing revealed
+var _bluff_freq:     float   = 0.30          # per-turn bluff probability
+var _bluff_pool:     Array   = []            # weighted emoji pool (strings)
+var _emoji_reactions: Dictionary = {}        # emoji -> int (-1 avoid / 0 neutral / 1 interested)
+var _cluster_origin: Vector2i = Vector2i(1, 1)
+var _line_axis:      int     = 0             # 0 = row line, 1 = column line
+var _line_idx:       int     = 2             # which row or col index
+var _zone_axis:      int     = 0             # current row/col for sweep zones
+var _zone_dir:       int     = 1             # sweep direction (+1 or -1)
+var _ai_kill_count:  int     = 0             # kills scored this game
+
 # Called at the start of each AI action opportunity (start of turn, after each attack, after tech).
 func decide_turn() -> void:
 	_ai_turn_count += 1
@@ -60,6 +76,16 @@ func continue_after_union() -> void:
 	_do_attack_decision()
 
 func _do_attack_decision() -> void:
+	# No attacks remaining — end turn immediately
+	if GameState.attacks_remaining <= 0:
+		emit_signal("ai_end_turn")
+		return
+	# Personality: skip early turns if opponent has nothing revealed yet
+	if _skip_turns > 0 and _ai_turn_count <= _skip_turns and _count_faceup(HUMAN_PLAYER) == 0:
+		emit_signal("ai_end_turn")
+		return
+	# Personality: advance sweep/focus axis if current one is exhausted or blocked
+	_maybe_advance_sweep_axis()
 	var attacker_pos: Vector2i = _choose_attacker()
 	if attacker_pos.x == -1:
 		emit_signal("ai_end_turn")
@@ -119,10 +145,18 @@ func _choose_attacker() -> Vector2i:
 	# When opponent has nothing revealed: only reveal 1-2 chars in total.
 	# When opponent has revealed chars: reveal at most as many as they have.
 	var max_ai_faceup: int
-	if opponent_faceup == 0:
-		max_ai_faceup = randi_range(1, 2)
-	else:
-		max_ai_faceup = opponent_faceup
+	match _expose_mode:
+		"all":
+			max_ai_faceup = 25
+		"cautious":
+			max_ai_faceup = randi_range(1, 2)
+		"kill_triggered":
+			max_ai_faceup = 25 if _ai_kill_count >= 1 else randi_range(1, 2)
+		_:  # "normal"
+			if opponent_faceup == 0:
+				max_ai_faceup = randi_range(1, 2)
+			else:
+				max_ai_faceup = opponent_faceup
 
 	if ai_faceup >= max_ai_faceup:
 		return Vector2i(-1, -1)
@@ -172,47 +206,50 @@ func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 	var attacker: GameState.CardInstance = GameState.get_card(AI_PLAYER, attacker_pos.x, attacker_pos.y)
 	var target: GameState.CardInstance   = GameState.get_card(HUMAN_PLAYER, target_pos.x, target_pos.y)
 
+	var base: int
 	if target.card_type == "dead_end":
-		return 10   # clears slot but no crystal gain
-
-	if not target.face_up:
-		return 25   # probe unrevealed — medium priority
-
-	if target.card_type == "trap":
-		return 15   # hitting a trap is risky but better than nothing
-
-	# Revealed character — estimate outcome with ability-aware ATK
-	var eff_atk: int = attacker.get_effective_atk()
-
-	# Inline ability adjustments (safe — no side effects)
-	match attacker.ability_type:
-		CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY:
-			if target.affinity == attacker.ability_params.get("affinity", -1):
-				eff_atk += attacker.ability_params.get("bonus", 0)
-		CharacterData.AbilityType.ATK_DEF_BONUS_VS_AFFINITY:
-			if target.affinity == attacker.ability_params.get("affinity", -1):
-				eff_atk += attacker.ability_params.get("atk", 0)
-		CharacterData.AbilityType.ATK_BONUS_VS_TWO_AFFINITIES:
-			if target.affinity == attacker.ability_params.get("aff1", -1) \
-					or target.affinity == attacker.ability_params.get("aff2", -1):
-				eff_atk += attacker.ability_params.get("bonus", 0)
-		CharacterData.AbilityType.ATK_BONUS_IF_DICE_HIGH:
-			# ~50% expected value
-			eff_atk += attacker.ability_params.get("bonus", 0) / 2
-		CharacterData.AbilityType.ATK_BOOST_VS_REVEALED:
-			eff_atk += attacker.ability_params.get("bonus", 0)
-
-	var eff_def: int = target.get_effective_def()
-
-	if eff_atk > eff_def:
-		# Win — reward scales with how valuable the destroyed card is
-		return 80 + target.crystal_cost / 20
-	elif eff_atk == eff_def:
-		# Tie — both destroyed; slight penalty proportional to our card's cost
-		return 20 - attacker.crystal_cost / 30
+		base = 10   # clears slot but no crystal gain
+	elif not target.face_up:
+		base = 25   # probe unrevealed — medium priority
+	elif target.card_type == "trap":
+		base = 15   # hitting a trap is risky but better than nothing
 	else:
-		# Loss — penalty; prefer not to sacrifice expensive attackers
-		return -30 - attacker.crystal_cost / 20
+		# Revealed character — estimate outcome with ability-aware ATK
+		var eff_atk: int = attacker.get_effective_atk()
+		match attacker.ability_type:
+			CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY:
+				if target.affinity == attacker.ability_params.get("affinity", -1):
+					eff_atk += attacker.ability_params.get("bonus", 0)
+			CharacterData.AbilityType.ATK_DEF_BONUS_VS_AFFINITY:
+				if target.affinity == attacker.ability_params.get("affinity", -1):
+					eff_atk += attacker.ability_params.get("atk", 0)
+			CharacterData.AbilityType.ATK_BONUS_VS_TWO_AFFINITIES:
+				if target.affinity == attacker.ability_params.get("aff1", -1) \
+						or target.affinity == attacker.ability_params.get("aff2", -1):
+					eff_atk += attacker.ability_params.get("bonus", 0)
+			CharacterData.AbilityType.ATK_BONUS_IF_DICE_HIGH:
+				eff_atk += attacker.ability_params.get("bonus", 0) / 2
+			CharacterData.AbilityType.ATK_BOOST_VS_REVEALED:
+				eff_atk += attacker.ability_params.get("bonus", 0)
+		var eff_def: int = target.get_effective_def()
+		if eff_atk > eff_def:
+			base = 80 + target.crystal_cost / 20
+		elif eff_atk == eff_def:
+			base = 20 - attacker.crystal_cost / 30
+		else:
+			base = -30 - attacker.crystal_cost / 20
+
+	# Personality: offensive zone bias
+	base += _score_pos_offensive(target_pos)
+
+	# Personality: emoji reaction bias
+	var opp_emoji: String = GameState.get_bluff(HUMAN_PLAYER, target_pos.x, target_pos.y)
+	if opp_emoji == "💩":   # normalize NSFW variant to canonical key
+		opp_emoji = "🖕"
+	if opp_emoji != "" and _emoji_reactions.has(opp_emoji):
+		base += (_emoji_reactions[opp_emoji] as int) * 15
+
+	return base
 
 # ─────────────────────────────────────────────────────────────
 # Tech selection
@@ -414,9 +451,12 @@ func _score_tech(tech_name: String, snap: Dictionary) -> int:
 # ─────────────────────────────────────────────────────────────
 func decide_target(filter: String) -> Vector2i:
 	match filter:
+		# opponent_squares: Radar/spy techs — can target dead_end slots too
 		"opponent_squares_1", "opponent_squares_2", "opponent_squares_3", \
-				"opponent_squares_3_risky", "opponent_any_hidden", \
-				"lock_opponent_monster", "opponent_faceup_zero_stats", "row_or_column":
+				"opponent_squares_3_risky":
+			return _random_facedown_opponent()
+		"opponent_any_hidden", "lock_opponent_monster", \
+				"opponent_faceup_zero_stats", "row_or_column":
 			return _random_unrevealed_opponent()
 		"own_faceup_character", "own_character_for_swap", \
 				"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct", \
@@ -602,6 +642,18 @@ func _random_unrevealed_opponent() -> Vector2i:
 		return Vector2i(0, 0)
 	return options[randi() % options.size()]
 
+# Like _random_unrevealed_opponent but includes dead_end slots — for Radar targeting
+func _random_facedown_opponent() -> Vector2i:
+	var options: Array = []
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			if not card.face_up:
+				options.append(Vector2i(r, c))
+	if options.is_empty():
+		return Vector2i(0, 0)
+	return options[randi() % options.size()]
+
 func _best_own_faceup() -> Vector2i:
 	var best_pos: Vector2i = Vector2i(-1, -1)
 	var best_atk: int = -1
@@ -718,6 +770,8 @@ func _solve_materials(u: UnionData, zone_cells: Array) -> Array:
 func decide_setup() -> Array:
 	_ai_turn_count = 0
 	_union_used    = false
+	_ai_kill_count = 0
+	_pick_personalities()
 
 	var placements: Array = []
 
@@ -761,7 +815,7 @@ func decide_setup() -> Array:
 	# Find the best union achievable from the char pool and pre-assign
 	# the required material cards to their correct zone cells.
 	var zone_assignments: Dictionary = {}   # Vector2i → char_name
-	if not is_forced:
+	if not is_forced and _union_concern != "none":
 		var strategic: Dictionary = _find_best_setup_union(char_pool, num_chars)
 		if not strategic.is_empty():
 			zone_assignments = strategic["assignments"]
@@ -796,6 +850,11 @@ func decide_setup() -> Array:
 			if not used_positions.has(Vector2i(r, c)):
 				remaining_pos.append(Vector2i(r, c))
 	remaining_pos.shuffle()
+	# Personality: sort preferred formation positions to the front so characters
+	# fill those cells first; traps naturally take the remaining positions.
+	if _def_zone != "" and _def_zone != "random_def":
+		remaining_pos.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+			return _score_pos_defensive(a) > _score_pos_defensive(b))
 
 	var pos_idx: int = 0
 	# Remaining characters
@@ -1038,8 +1097,8 @@ func decide_bluff() -> void:
 		emit_signal("ai_bluff", dp.x, dp.y, death_emojis[randi() % death_emojis.size()])
 		await get_tree().create_timer(BLUFF_ANIM_SECS).timeout   # wait for pop animation
 
-	if randf() > 0.30:
-		return   # 70% of turns AI stays silent
+	if randf() > _bluff_freq:
+		return   # personality frequency gate
 	await get_tree().create_timer(randf_range(0.5, 2.5)).timeout
 
 	var roll: float = randf()
@@ -1048,22 +1107,19 @@ func decide_bluff() -> void:
 		# Taunt: put a confident emoji on a face-down high-DEF card or trap
 		var pos: Vector2i = _bluff_pick_taunting_cell()
 		if pos.x >= 0:
-			var emojis: Array = ["😎", "☠️", "❤️", "👍", "🧨"]
-			emit_signal("ai_bluff", pos.x, pos.y, emojis[randi() % emojis.size()])
+			emit_signal("ai_bluff", pos.x, pos.y, _pick_bluff_emoji())
 
 	elif roll < 0.65:
 		# Misdirect: put a luring emoji on a dead-end cell to waste human attacks
 		var pos: Vector2i = _bluff_pick_dead_end_cell()
 		if pos.x >= 0:
-			var emojis: Array = ["😃", "🤣", "❤️", "😎"]
-			emit_signal("ai_bluff", pos.x, pos.y, emojis[randi() % emojis.size()])
+			emit_signal("ai_bluff", pos.x, pos.y, _pick_bluff_emoji())
 
 	else:
 		# Confident bluff: just act tough on a random face-down card
 		var pos: Vector2i = _random_unrevealed_self()
 		if pos.x >= 0:
-			var emojis: Array = ["😎", "👍", "😃"]
-			emit_signal("ai_bluff", pos.x, pos.y, emojis[randi() % emojis.size()])
+			emit_signal("ai_bluff", pos.x, pos.y, _pick_bluff_emoji())
 
 ## Called when one of AI's face-up characters is destroyed.
 ## Queues a mourning bluff to be shown at the start of the AI's next turn.
@@ -1073,6 +1129,7 @@ func decide_death_bluff(row: int, col: int) -> void:
 ## Called when AI destroys a strong (100+ ATK/DEF) or union opponent card.
 ## Places a taunting emoji on the attacker's cell after a short delay.
 func decide_kill_taunt(attacker_pos: Vector2i) -> void:
+	_ai_kill_count += 1   # track kills for kill_triggered expose mode
 	await get_tree().create_timer(randf_range(0.3, 0.9)).timeout
 	var use_poop: bool = SaveManager.nsfw_enabled
 	var emojis: Array = ["🤣", "💩" if use_poop else "🖕"]
@@ -1108,3 +1165,442 @@ func _bluff_pick_dead_end_cell() -> Vector2i:
 	if options.is_empty():
 		return Vector2i(-1, -1)
 	return options[randi() % options.size()]
+
+# ─────────────────────────────────────────────────────────────
+# Personality system
+# ─────────────────────────────────────────────────────────────
+
+# Canonical name lists — order must match the def_list / off_list / soc_list arrays below.
+const DEF_PERSONALITY_NAMES: Array = [
+	"Frontline","Fortress","Watch Tower","Mine Field","Tomb Trap","Bait Trap",
+	"Diagonal Shield","Cluster Defender","Checker","Straightforward","Midwit",
+	"Symmetric Defender","Random Defender","Religious","Zoro","Helios",
+	"Helios 2","Zoro 2","Tomb Trap (Hard)","Frontline (Hard)",
+]
+const OFF_PERSONALITY_NAMES: Array = [
+	"Center Hoarder","Border Guard","Corner Assassin","Melee Fighter","Sniper",
+	"Leftist","Rightist","X Sabre","Crusader","Column Crusher","Row Ripper",
+	"Revealed Hunter","Explorer","Tinkerer","Berserker","Shadow Lurker",
+	"Sleeping Dragon","Rambo","Spy","X Alien","Technophobia","Witchhunter",
+]
+const SOC_PERSONALITY_NAMES: Array = [
+	"Degen","Talkative","Fiddly","Flirty","Bully","Fun Guy","Daredevil",
+	"Vengeful","Paranoid","Skeptical","Ungrateful","Monk","Eager","Introvert",
+]
+
+## Pick one random personality per dimension and cache derived trait values.
+## Call once at the start of each game (from decide_setup).
+func _pick_personalities() -> void:
+	# ── Defensive personalities ──
+	var def_list: Array = [
+		{"zone": "border",        "union": "none"},     # Frontline
+		{"zone": "center",        "union": "normal"},   # Fortress
+		{"zone": "corners",       "union": "none"},     # Watch Tower
+		{"zone": "center",        "union": "none"},     # Mine Field
+		{"zone": "center",        "union": "normal"},   # Tomb Trap
+		{"zone": "corners",       "union": "normal"},   # Bait Trap
+		{"zone": "diagonals",     "union": "high"},     # Diagonal Shield
+		{"zone": "cluster",       "union": "normal"},   # Cluster Defender
+		{"zone": "checker",       "union": "high"},     # Checker
+		{"zone": "line",          "union": "none"},     # Straightforward
+		{"zone": "second_border", "union": "normal"},   # Midwit
+		{"zone": "symmetric",     "union": "normal"},   # Symmetric Defender
+		{"zone": "random_def",    "union": "high"},     # Random Defender
+		{"zone": "cross",         "union": "none"},     # Religious
+		{"zone": "z_pattern",     "union": "normal"},   # Zoro
+		{"zone": "h_pattern",     "union": "normal"},   # Helios
+		{"zone": "h_pattern",     "union": "high"},     # Helios 2
+		{"zone": "z_pattern",     "union": "high"},     # Zoro 2
+		{"zone": "center",        "union": "high"},     # Tomb Trap (Hard)
+		{"zone": "border",        "union": "high"},     # Frontline (Hard)
+	]
+
+	# ── Offensive personalities ──
+	var off_list: Array = [
+		{"zone": "center",       "expose": "all",           "skip": 0},  # Center Hoarder
+		{"zone": "border",       "expose": "all",           "skip": 0},  # Border Guard
+		{"zone": "corners",      "expose": "cautious",      "skip": 2},  # Corner Assassin
+		{"zone": "top_sweep",    "expose": "cautious",      "skip": 0},  # Melee Fighter
+		{"zone": "bot_sweep",    "expose": "cautious",      "skip": 0},  # Sniper
+		{"zone": "left_sweep",   "expose": "kill_triggered","skip": 0},  # Leftist
+		{"zone": "right_sweep",  "expose": "kill_triggered","skip": 0},  # Rightist
+		{"zone": "diagonals",    "expose": "all",           "skip": 0},  # X Sabre
+		{"zone": "cross",        "expose": "all",           "skip": 0},  # Crusader
+		{"zone": "col_focus",    "expose": "cautious",      "skip": 0},  # Column Crusher
+		{"zone": "row_focus",    "expose": "cautious",      "skip": 0},  # Row Ripper
+		{"zone": "near_revealed","expose": "kill_triggered","skip": 0},  # Revealed Hunter
+		{"zone": "far_revealed", "expose": "cautious",      "skip": 0},  # Explorer
+		{"zone": "near_trap",    "expose": "all",           "skip": 0},  # Tinkerer
+		{"zone": "near_monster", "expose": "all",           "skip": 0},  # Berserker
+		{"zone": "random_off",   "expose": "cautious",      "skip": 2},  # Shadow Lurker
+		{"zone": "near_monster", "expose": "all",           "skip": 2},  # Sleeping Dragon
+		{"zone": "random_off",   "expose": "all",           "skip": 0},  # Rambo
+		{"zone": "avoid_border", "expose": "cautious",      "skip": 2},  # Spy
+		{"zone": "diagonals",    "expose": "kill_triggered","skip": 2},  # X Alien
+		{"zone": "far_trap",     "expose": "cautious",      "skip": 2},  # Technophobia
+		{"zone": "cross_far_char","expose": "cautious",     "skip": 0},  # Witchhunter
+	]
+
+	# ── Social personalities ──
+	var soc_list: Array = [
+		# Degen
+		{"freq": 0.55, "prefer": ["🧨","☠️","🖕"], "avoid_emoji": ["🤝","👍","🥺","❤️","😃"],
+		 "reactions": {"😎":0,"🤣":0,"🤝":-1,"👍":-1,"🥺":-1,"🧨":1,"🖕":1,"😃":0,"❤️":0,"☠️":1}},
+		# Talkative
+		{"freq": 0.85, "prefer": ["😎","😃","🤣"], "avoid_emoji": ["🖕","🧨","☠️"],
+		 "reactions": {"😎":1,"🤣":1,"🤝":0,"👍":0,"🥺":0,"🧨":-1,"🖕":0,"😃":1,"❤️":1,"☠️":-1}},
+		# Fiddly
+		{"freq": 0.55, "prefer": ["🤝","👍","🖕"], "avoid_emoji": [],
+		 "reactions": {"😎":0,"🤣":0,"🤝":1,"👍":1,"🥺":0,"🧨":0,"🖕":1,"😃":0,"❤️":0,"☠️":0}},
+		# Flirty
+		{"freq": 0.55, "prefer": ["❤️","🥺"], "avoid_emoji": ["🖕","🧨","☠️"],
+		 "reactions": {"😎":1,"🤣":0,"🤝":0,"👍":0,"🥺":0,"🧨":-1,"🖕":-1,"😃":0,"❤️":1,"☠️":-1}},
+		# Bully
+		{"freq": 0.15, "prefer": ["🖕","🧨"], "avoid_emoji": ["❤️"],
+		 "reactions": {"😎":0,"🤣":0,"🤝":1,"👍":0,"🥺":1,"🧨":0,"🖕":1,"😃":0,"❤️":-1,"☠️":0}},
+		# Fun Guy
+		{"freq": 0.85, "prefer": ["🤣","😃","👍","🤝"], "avoid_emoji": ["🖕","☠️"],
+		 "reactions": {"😎":0,"🤣":1,"🤝":0,"👍":0,"🥺":0,"🧨":0,"🖕":-1,"😃":1,"❤️":0,"☠️":-1}},
+		# Daredevil
+		{"freq": 0.85, "prefer": ["🧨","☠️"], "avoid_emoji": [],
+		 "reactions": {"😎":0,"🤣":0,"🤝":0,"👍":0,"🥺":0,"🧨":1,"🖕":1,"😃":1,"❤️":0,"☠️":1}},
+		# Vengeful
+		{"freq": 0.15, "prefer": ["🖕","☠️"], "avoid_emoji": ["❤️","🤝","😃","🥺"],
+		 "reactions": {"😎":0,"🤣":1,"🤝":-1,"👍":-1,"🥺":-1,"🧨":1,"🖕":1,"😃":0,"❤️":-1,"☠️":1}},
+		# Paranoid
+		{"freq": 0.0,  "prefer": [], "avoid_emoji": ["😎","☠️","🧨","👍","🤣","🖕","😃","❤️","🥺","🤝"],
+		 "reactions": {"😎":-1,"🤣":-1,"🤝":-1,"👍":-1,"🥺":-1,"🧨":-1,"🖕":-1,"😃":-1,"❤️":-1,"☠️":-1}},
+		# Skeptical
+		{"freq": 0.0,  "prefer": [], "avoid_emoji": ["😎","☠️","🧨","👍","🤣","🖕","😃","❤️","🥺","🤝"],
+		 "reactions": {"😎":1,"🤣":1,"🤝":-1,"👍":-1,"🥺":-1,"🧨":1,"🖕":0,"😃":-1,"❤️":-1,"☠️":1}},
+		# Ungrateful
+		{"freq": 0.15, "prefer": [], "avoid_emoji": ["👍"],
+		 "reactions": {"😎":0,"🤣":0,"🤝":-1,"👍":-1,"🥺":0,"🧨":0,"🖕":1,"😃":0,"❤️":0,"☠️":0}},
+		# Monk
+		{"freq": 0.15, "prefer": ["👍","🤝"], "avoid_emoji": [],
+		 "reactions": {"😎":0,"🤣":0,"🤝":0,"👍":0,"🥺":0,"🧨":0,"🖕":0,"😃":0,"❤️":0,"☠️":0}},
+		# Eager
+		{"freq": 0.55, "prefer": ["😎","☠️","🧨","👍","🤣","🖕","😃","❤️","🥺","🤝"], "avoid_emoji": [],
+		 "reactions": {"😎":1,"🤣":1,"🤝":1,"👍":1,"🥺":1,"🧨":1,"🖕":1,"😃":1,"❤️":1,"☠️":1}},
+		# Introvert
+		{"freq": 0.0,  "prefer": [], "avoid_emoji": ["😎","🤣","😃"],
+		 "reactions": {"😎":-1,"🤣":-1,"🤝":0,"👍":0,"🥺":0,"🧨":-1,"🖕":0,"😃":-1,"❤️":0,"☠️":-1}},
+	]
+
+	# If campaign/dungeon config overrides a personality, use it; otherwise pick randomly.
+	var _cfg: Dictionary = GameState.campaign_enemy_config
+	var def_idx: int = randi() % def_list.size()
+	var cfg_def: String = str(_cfg.get("ai_personality_defensive", ""))
+	if cfg_def != "":
+		var oi: int = DEF_PERSONALITY_NAMES.find(cfg_def)
+		if oi >= 0:
+			def_idx = oi
+
+	var off_idx: int = randi() % off_list.size()
+	var cfg_off: String = str(_cfg.get("ai_personality_offensive", ""))
+	if cfg_off != "":
+		var oi: int = OFF_PERSONALITY_NAMES.find(cfg_off)
+		if oi >= 0:
+			off_idx = oi
+
+	var soc_idx: int = randi() % soc_list.size()
+	var cfg_soc: String = str(_cfg.get("ai_personality_social", ""))
+	if cfg_soc != "":
+		var oi: int = SOC_PERSONALITY_NAMES.find(cfg_soc)
+		if oi >= 0:
+			soc_idx = oi
+
+	var def_pick: Dictionary = def_list[def_idx]
+	var off_pick: Dictionary = off_list[off_idx]
+	var soc_pick: Dictionary = soc_list[soc_idx]
+
+	# ── Apply defensive traits ──
+	_def_zone      = def_pick["zone"] as String
+	_union_concern = def_pick["union"] as String
+	# Initialize zone-specific params
+	if _def_zone == "cluster":
+		_cluster_origin = Vector2i(randi() % 3, randi() % 3)  # top-left of a 3×3 area (0-2)
+	elif _def_zone == "line":
+		_line_axis = randi() % 2          # 0 = horizontal row, 1 = vertical column
+		_line_idx  = randi() % GameState.GRID_SIZE
+
+	# ── Apply offensive traits ──
+	_attack_zone  = off_pick["zone"] as String
+	_expose_mode  = off_pick["expose"] as String
+	_skip_turns   = off_pick["skip"] as int
+	match _attack_zone:
+		"top_sweep":
+			_zone_axis = 0; _zone_dir = 1
+		"bot_sweep":
+			_zone_axis = GameState.GRID_SIZE - 1; _zone_dir = -1
+		"left_sweep":
+			_zone_axis = 0; _zone_dir = 1
+		"right_sweep":
+			_zone_axis = GameState.GRID_SIZE - 1; _zone_dir = -1
+		"col_focus":
+			_zone_axis = randi() % GameState.GRID_SIZE; _zone_dir = 1
+		"row_focus":
+			_zone_axis = randi() % GameState.GRID_SIZE; _zone_dir = 1
+		_:
+			_zone_axis = 0; _zone_dir = 1
+
+	# ── Apply social traits ──
+	_bluff_freq      = soc_pick["freq"] as float
+	_emoji_reactions = soc_pick["reactions"] as Dictionary
+	_bluff_pool      = _build_bluff_pool(
+		soc_pick["prefer"] as Array,
+		soc_pick["avoid_emoji"] as Array)
+
+
+## Build a weighted emoji pool. Preferred emojis appear 3×, avoided emojis are excluded.
+func _build_bluff_pool(prefer: Array, avoid_list: Array) -> Array:
+	var all_emojis: Array = ["😎","☠️","🧨","👍","🤣","🖕","😃","❤️","🥺","🤝"]
+	var pool: Array = []
+	for e: Variant in all_emojis:
+		var emoji: String = e as String
+		if emoji in avoid_list:
+			continue
+		if emoji in prefer:
+			pool.append(emoji); pool.append(emoji); pool.append(emoji)
+		else:
+			pool.append(emoji)
+	if pool.is_empty():
+		pool.append("😎")   # always have a fallback
+	return pool
+
+
+## Pick one emoji from the personality pool, substituting NSFW variant if enabled.
+func _pick_bluff_emoji() -> String:
+	if _bluff_pool.is_empty():
+		return "😎"
+	var e: String = _bluff_pool[randi() % _bluff_pool.size()] as String
+	if e == "🖕" and SaveManager.nsfw_enabled:
+		return "💩"
+	return e
+
+
+## Advance the sweep or focus axis when the current one is exhausted or trapped.
+func _maybe_advance_sweep_axis() -> void:
+	var n: int = GameState.GRID_SIZE
+	match _attack_zone:
+		"top_sweep", "bot_sweep":
+			# Advance row when no valid (non-destroyed) targets remain in current row
+			var has_target: bool = false
+			for c in range(n):
+				var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, _zone_axis, c)
+				if not (card.card_type == "dead_end" and card.was_destroyed):
+					has_target = true
+					break
+			if not has_target:
+				_zone_axis = clampi(_zone_axis + _zone_dir, 0, n - 1)
+		"left_sweep", "right_sweep":
+			var has_target: bool = false
+			for r in range(n):
+				var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, _zone_axis)
+				if not (card.card_type == "dead_end" and card.was_destroyed):
+					has_target = true
+					break
+			if not has_target:
+				_zone_axis = clampi(_zone_axis + _zone_dir, 0, n - 1)
+		"col_focus":
+			# Change column if a trap has been revealed there
+			var found_trap: bool = false
+			for r in range(n):
+				var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, _zone_axis)
+				if card.card_type == "trap" and card.face_up:
+					found_trap = true; break
+			if found_trap:
+				_zone_axis = (_zone_axis + 1) % n
+		"row_focus":
+			var found_trap: bool = false
+			for c in range(n):
+				var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, _zone_axis, c)
+				if card.card_type == "trap" and card.face_up:
+					found_trap = true; break
+			if found_trap:
+				_zone_axis = (_zone_axis + 1) % n
+
+
+## Score a target position for the active defensive formation (for setup placement sorting).
+func _score_pos_defensive(pos: Vector2i) -> int:
+	var r: int = pos.x
+	var c: int = pos.y
+	match _def_zone:
+		"border":
+			return 10 if (r == 0 or r == 4 or c == 0 or c == 4) else 0
+		"center":
+			return 10 if (r >= 1 and r <= 3 and c >= 1 and c <= 3) else 0
+		"corners":
+			return 10 if ((r == 0 or r == 4) and (c == 0 or c == 4)) else 0
+		"diagonals":
+			return 10 if (r == c or r + c == 4) else 0
+		"cross":
+			return 10 if (r == 2 or c == 2) else 0
+		"second_border":
+			var on_second: bool = (r == 1 or r == 3 or c == 1 or c == 3)
+			var on_outer:  bool = (r == 0 or r == 4 or c == 0 or c == 4)
+			return 10 if (on_second and not on_outer) else 0
+		"z_pattern":
+			# Top row + anti-diagonal interior + bottom row
+			return 10 if (r == 0 or r == 4 or (r + c == 4 and r > 0 and r < 4)) else 0
+		"h_pattern":
+			# Left column + right column + middle row
+			return 10 if (c == 0 or c == 4 or r == 2) else 0
+		"checker":
+			return 10 if ((r + c) % 2 == 0) else 0
+		"cluster":
+			var cr: int = _cluster_origin.x
+			var cc: int = _cluster_origin.y
+			return 10 if (r >= cr and r <= cr + 2 and c >= cc and c <= cc + 2) else 0
+		"line":
+			return 10 if (_line_axis == 0 and r == _line_idx) \
+					  or (_line_axis == 1 and c == _line_idx) else 0
+		"symmetric":
+			return 10 if (c == 0 or c == 2 or c == 4) else 0
+		_:  # "random_def" or unknown
+			return 0
+
+
+## Additive score bias for attack target position based on offensive personality.
+func _score_pos_offensive(pos: Vector2i) -> int:
+	var r: int = pos.x
+	var c: int = pos.y
+	match _attack_zone:
+		"center":
+			return 15 if (r >= 1 and r <= 3 and c >= 1 and c <= 3) else -5
+		"border":
+			return 15 if (r == 0 or r == 4 or c == 0 or c == 4) else -5
+		"corners":
+			return 20 if ((r == 0 or r == 4) and (c == 0 or c == 4)) else -5
+		"diagonals":
+			return 15 if (r == c or r + c == 4) else -5
+		"cross":
+			return 15 if (r == 2 or c == 2) else -5
+		"avoid_border":
+			return -15 if (r == 0 or r == 4 or c == 0 or c == 4) else 5
+		"top_sweep", "bot_sweep":
+			if r == _zone_axis:
+				return 20
+			if r == _zone_axis + _zone_dir:
+				return 5
+			return -5
+		"left_sweep", "right_sweep":
+			if c == _zone_axis:
+				return 20
+			if c == _zone_axis + _zone_dir:
+				return 5
+			return -5
+		"col_focus":
+			return 20 if c == _zone_axis else -5
+		"row_focus":
+			return 20 if r == _zone_axis else -5
+		"near_revealed":
+			return _near_revealed_score(pos)
+		"far_revealed":
+			return -_near_revealed_score(pos)
+		"near_trap":
+			return _near_type_score(pos, "trap")
+		"far_trap":
+			return -_near_type_score(pos, "trap")
+		"near_monster":
+			return _near_type_score(pos, "character")
+		"cross_far_char":
+			var cross_bonus: int = 15 if (r == 2 or c == 2) else -5
+			return cross_bonus - _near_type_score(pos, "character")
+		_:  # "random_off"
+			return 0
+
+
+## Proximity score: how close pos is to any revealed card of the given type on opponent's field.
+func _near_type_score(pos: Vector2i, card_type: String) -> int:
+	var best: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			if card.card_type == card_type and card.face_up:
+				var dist: int = abs(pos.x - r) + abs(pos.y - c)
+				best = maxi(best, maxi(0, 12 - dist * 4))
+	return best
+
+
+## Proximity score: how close pos is to any revealed (non-dead-end) cell on opponent's field.
+func _near_revealed_score(pos: Vector2i) -> int:
+	var best: int = 0
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			if card.face_up and card.card_type != "dead_end":
+				var dist: int = abs(pos.x - r) + abs(pos.y - c)
+				best = maxi(best, maxi(0, 12 - dist * 4))
+	return best
+
+
+## Called after AI setup placements are applied.
+## Returns {Vector2i → emoji_string} for cells to bluff on before the game starts.
+## ~45% chance: no bluffs. ~30%: taunt (trap / high-DEF char cells). ~25%: mislead (dead-end cells).
+func decide_setup_bluffs(placements: Array) -> Dictionary:
+	var result: Dictionary = {}
+
+	if randf() >= _bluff_freq:
+		return result  # personality frequency gate — no bluffs this game
+
+	# Build a set of placed positions for quick lookup
+	var placed_set: Dictionary = {}
+	for entry: Variant in placements:
+		var p: Dictionary = entry as Dictionary
+		var pos: Vector2i = p["pos"] as Vector2i
+		placed_set[pos] = true
+
+	if randf() < 0.60:
+		# ── Taunt / act tough (60%) ──
+		# Prefer trap cells, then high-DEF character cells
+		var trap_cells: Array = []
+		var tough_chars: Array = []
+
+		for entry: Variant in placements:
+			var p: Dictionary = entry as Dictionary
+			var pos: Vector2i = p["pos"] as Vector2i
+			var ct: String = p["card_type"] as String
+			if ct == "trap":
+				trap_cells.append(pos)
+			elif ct == "character":
+				var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, pos.x, pos.y)
+				if card.get_effective_def() >= 60:
+					tough_chars.append(pos)
+
+		var candidates: Array = trap_cells + tough_chars
+		if candidates.is_empty():
+			return result
+
+		candidates.shuffle()
+		var count: int = 1 + (1 if randf() < 0.35 else 0)
+		for i in range(mini(count, candidates.size())):
+			var chosen_pos: Vector2i = candidates[i] as Vector2i
+			result[chosen_pos] = _pick_bluff_emoji()
+	else:
+		# ── Mislead / lure (40%) ──
+		var de_candidates: Array = []
+		var low_candidates: Array = []
+
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var pos: Vector2i = Vector2i(r, c)
+				if not placed_set.has(pos):
+					de_candidates.append(pos)
+
+		for entry: Variant in placements:
+			var p: Dictionary = entry as Dictionary
+			if (p["card_type"] as String) == "character":
+				var pos: Vector2i = p["pos"] as Vector2i
+				var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, pos.x, pos.y)
+				if card.get_effective_atk() + card.get_effective_def() < 50:
+					low_candidates.append(pos)
+
+		var candidates: Array = de_candidates + low_candidates
+		if candidates.is_empty():
+			return result
+
+		candidates.shuffle()
+		result[candidates[0] as Vector2i] = _pick_bluff_emoji()
+
+	return result

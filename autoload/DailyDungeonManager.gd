@@ -355,6 +355,13 @@ func start_node_battle(node: Dictionary, parent_node: Node) -> void:
 
 	GameState.battle_ai_union_enabled     = bool(bs.get("ai_union_enabled", true))
 	GameState.battle_player_union_enabled = bool(bs.get("player_union_enabled", true))
+	# AI personality overrides (empty string = pick randomly)
+	var _apd: String = str(bs.get("ai_personality_defensive", ""))
+	var _apo: String = str(bs.get("ai_personality_offensive", ""))
+	var _aps: String = str(bs.get("ai_personality_social",    ""))
+	if _apd != "": GameState.campaign_enemy_config["ai_personality_defensive"] = _apd
+	if _apo != "": GameState.campaign_enemy_config["ai_personality_offensive"] = _apo
+	if _aps != "": GameState.campaign_enemy_config["ai_personality_social"]    = _aps
 
 	var raw_pfc: Variant = bs.get("player_forced_cells", [])
 	var raw_afc: Variant = bs.get("ai_forced_cells", [])

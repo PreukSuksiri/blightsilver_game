@@ -74,6 +74,9 @@ var _prop_battle_bgm:    LineEdit = null
 var _prop_bgm_vol:       SpinBox  = null
 var _prop_ai_union_chk:  CheckBox = null
 var _prop_plr_union_chk: CheckBox = null
+var _prop_ai_pers_def: OptionButton = null
+var _prop_ai_pers_off: OptionButton = null
+var _prop_ai_pers_soc: OptionButton = null
 var _player_forced_rows: Array    = []
 var _ai_forced_rows:     Array    = []
 var _player_forced_vbox: VBoxContainer = null
@@ -512,6 +515,37 @@ func _build_prop_panel(parent: Control) -> void:
 	_prop_plr_union_chk.button_pressed = true
 	inner.add_child(_prop_plr_union_chk)
 
+	var _def_names: Array = ["Random","Frontline","Fortress","Watch Tower","Mine Field",
+		"Tomb Trap","Bait Trap","Diagonal Shield","Cluster Defender","Checker",
+		"Straightforward","Midwit","Symmetric Defender","Random Defender","Religious",
+		"Zoro","Helios","Helios 2","Zoro 2","Tomb Trap (Hard)","Frontline (Hard)"]
+	var _off_names: Array = ["Random","Center Hoarder","Border Guard","Corner Assassin",
+		"Melee Fighter","Sniper","Leftist","Rightist","X Sabre","Crusader",
+		"Column Crusher","Row Ripper","Revealed Hunter","Explorer","Tinkerer",
+		"Berserker","Shadow Lurker","Sleeping Dragon","Rambo","Spy",
+		"X Alien","Technophobia","Witchhunter"]
+	var _soc_names: Array = ["Random","Degen","Talkative","Fiddly","Flirty","Bully",
+		"Fun Guy","Daredevil","Vengeful","Paranoid","Skeptical","Ungrateful",
+		"Monk","Eager","Introvert"]
+	inner.add_child(_make_lbl("AI Defensive Personality"))
+	_prop_ai_pers_def = OptionButton.new()
+	_prop_ai_pers_def.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_prop_ai_pers_def.add_theme_font_size_override("font_size", 12)
+	for _dn: Variant in _def_names: _prop_ai_pers_def.add_item(_dn as String)
+	inner.add_child(_prop_ai_pers_def)
+	inner.add_child(_make_lbl("AI Offensive Personality"))
+	_prop_ai_pers_off = OptionButton.new()
+	_prop_ai_pers_off.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_prop_ai_pers_off.add_theme_font_size_override("font_size", 12)
+	for _on: Variant in _off_names: _prop_ai_pers_off.add_item(_on as String)
+	inner.add_child(_prop_ai_pers_off)
+	inner.add_child(_make_lbl("AI Social Personality"))
+	_prop_ai_pers_soc = OptionButton.new()
+	_prop_ai_pers_soc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_prop_ai_pers_soc.add_theme_font_size_override("font_size", 12)
+	for _sn: Variant in _soc_names: _prop_ai_pers_soc.add_item(_sn as String)
+	inner.add_child(_prop_ai_pers_soc)
+
 	inner.add_child(_make_lbl("Player Forced Cells (card / row / col)"))
 	_player_forced_vbox = VBoxContainer.new()
 	_player_forced_vbox.add_theme_constant_override("separation", 4)
@@ -603,6 +637,16 @@ func _build_prop_panel(parent: Control) -> void:
 	# Populate meta fields (also refreshed in _load_dungeon)
 	_dungeon_name_edit.text = _layout.get("name", "")
 	_bg_edit.text           = _layout.get("background", "")
+
+func _opt_select(opt: OptionButton, value: String) -> void:
+	if value == "":
+		opt.selected = 0
+		return
+	for i in range(opt.item_count):
+		if opt.get_item_text(i) == value:
+			opt.selected = i
+			return
+	opt.selected = 0
 
 func _make_lbl(text: String) -> Label:
 	var lbl := Label.new()
@@ -863,6 +907,9 @@ func _update_prop_panel() -> void:
 		_prop_bgm_vol.value      = float(bs.get("battle_bgm_volume", 100.0))
 		_prop_ai_union_chk.button_pressed  = bool(bs.get("ai_union_enabled", true))
 		_prop_plr_union_chk.button_pressed = bool(bs.get("player_union_enabled", true))
+		_opt_select(_prop_ai_pers_def, str(bs.get("ai_personality_defensive", "")))
+		_opt_select(_prop_ai_pers_off, str(bs.get("ai_personality_offensive", "")))
+		_opt_select(_prop_ai_pers_soc, str(bs.get("ai_personality_social",    "")))
 		var raw_pfc: Variant = bs.get("player_forced_cells", [])
 		var raw_afc: Variant = bs.get("ai_forced_cells", [])
 		_bld_rebuild_forced_cell_rows(_player_forced_vbox, _player_forced_rows,
@@ -918,6 +965,9 @@ func _apply_node_changes() -> void:
 			"battle_bgm_volume":    _prop_bgm_vol.value,
 			"ai_union_enabled":     _prop_ai_union_chk.button_pressed,
 			"player_union_enabled": _prop_plr_union_chk.button_pressed,
+			"ai_personality_defensive": _prop_ai_pers_def.get_item_text(_prop_ai_pers_def.selected) if _prop_ai_pers_def.selected > 0 else "",
+			"ai_personality_offensive": _prop_ai_pers_off.get_item_text(_prop_ai_pers_off.selected) if _prop_ai_pers_off.selected > 0 else "",
+			"ai_personality_social":    _prop_ai_pers_soc.get_item_text(_prop_ai_pers_soc.selected) if _prop_ai_pers_soc.selected > 0 else "",
 			"player_forced_cells":  pfc,
 			"ai_forced_cells":      afc,
 		}

@@ -112,6 +112,9 @@ var _f_nsfw: OptionButton = null
 var _f_animation: OptionButton = null
 var _f_ai_union_enabled: CheckBox = null
 var _f_player_union_enabled: CheckBox = null
+var _f_ai_pers_def: OptionButton = null
+var _f_ai_pers_off: OptionButton = null
+var _f_ai_pers_soc: OptionButton = null
 
 # Enemy deck builder (for start_battle beats)
 var _enemy_deck_chars: Array = []
@@ -621,6 +624,27 @@ func _build_fields() -> void:
 		"Uncheck to prevent the player from union summoning this battle")
 	_f_player_union_enabled.button_pressed = true
 
+	# ── AI Personality ────────────────────────────────────────
+	_section(v, "AI PERSONALITY")
+	var _def_names: Array = ["Random","Frontline","Fortress","Watch Tower","Mine Field",
+		"Tomb Trap","Bait Trap","Diagonal Shield","Cluster Defender","Checker",
+		"Straightforward","Midwit","Symmetric Defender","Random Defender","Religious",
+		"Zoro","Helios","Helios 2","Zoro 2","Tomb Trap (Hard)","Frontline (Hard)"]
+	var _off_names: Array = ["Random","Center Hoarder","Border Guard","Corner Assassin",
+		"Melee Fighter","Sniper","Leftist","Rightist","X Sabre","Crusader",
+		"Column Crusher","Row Ripper","Revealed Hunter","Explorer","Tinkerer",
+		"Berserker","Shadow Lurker","Sleeping Dragon","Rambo","Spy",
+		"X Alien","Technophobia","Witchhunter"]
+	var _soc_names: Array = ["Random","Degen","Talkative","Fiddly","Flirty","Bully",
+		"Fun Guy","Daredevil","Vengeful","Paranoid","Skeptical","Ungrateful",
+		"Monk","Eager","Introvert"]
+	_f_ai_pers_def = _row_opt(v, "Defensive", _def_names,
+		"Formation style — Random lets AI pick each match")
+	_f_ai_pers_off = _row_opt(v, "Offensive", _off_names,
+		"Attack target preference — Random lets AI pick each match")
+	_f_ai_pers_soc = _row_opt(v, "Social", _soc_names,
+		"Bluff & emoji reaction style — Random lets AI pick each match")
+
 	# ── Forced Cell Placements ────────────────────────────────
 	_section(v, "PLAYER FORCED CELLS  (placed at setup, cannot be moved)")
 	_player_forced_vbox = VBoxContainer.new()
@@ -699,6 +723,9 @@ func _connect_static_signals() -> void:
 	_f_start_battle.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_ai_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_player_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_ai_pers_def.item_selected.connect(func(_i: int) -> void: ch.call())
+	_f_ai_pers_off.item_selected.connect(func(_i: int) -> void: ch.call())
+	_f_ai_pers_soc.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_player1_name.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_player2_name.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_portrait_p1.text_changed.connect(func(_s: String) -> void: ch.call())
@@ -942,6 +969,43 @@ func _row_cb(parent: Control, label: String, hint: String) -> CheckBox:
 		hl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		hbox.add_child(hl)
 	return cb
+
+func _row_opt(parent: Control, label: String, items: Array, hint: String = "") -> OptionButton:
+	var hbox := HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 6)
+	parent.add_child(hbox)
+	var lbl := Label.new()
+	lbl.text = label
+	lbl.custom_minimum_size.x = 140.0
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.9))
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	hbox.add_child(lbl)
+	var opt := OptionButton.new()
+	opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	opt.add_theme_font_size_override("font_size", 13)
+	for item: Variant in items:
+		opt.add_item(item as String)
+	opt.selected = 0
+	hbox.add_child(opt)
+	if not hint.is_empty():
+		var hl := Label.new()
+		hl.text = hint
+		hl.add_theme_font_size_override("font_size", 12)
+		hl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.45))
+		hl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		hbox.add_child(hl)
+	return opt
+
+func _select_opt(opt: OptionButton, value: String) -> void:
+	if value == "":
+		opt.selected = 0
+		return
+	for i in range(opt.item_count):
+		if opt.get_item_text(i) == value:
+			opt.selected = i
+			return
+	opt.selected = 0
 
 func _make_textedit(parent: Control) -> TextEdit:
 	var te := TextEdit.new()
@@ -1232,6 +1296,11 @@ func _populate_fields() -> void:
 	_f_ai_union_enabled.button_pressed     = bool(b.get("ai_union_enabled",     true))
 	_f_player_union_enabled.button_pressed = bool(b.get("player_union_enabled", true))
 
+	# AI personality (index 0 = Random)
+	_select_opt(_f_ai_pers_def, str(b.get("ai_personality_defensive", "")))
+	_select_opt(_f_ai_pers_off, str(b.get("ai_personality_offensive", "")))
+	_select_opt(_f_ai_pers_soc, str(b.get("ai_personality_social",    "")))
+
 	# Forced cells
 	var pfc_raw: Variant = b.get("player_forced_cells", [])
 	_rebuild_forced_cell_rows(_player_forced_vbox, _player_forced_rows,
@@ -1473,6 +1542,14 @@ func _collect_beat() -> Dictionary:
 		b["ai_union_enabled"] = false
 	if not _f_player_union_enabled.button_pressed:
 		b["player_union_enabled"] = false
+
+	# AI personality (only write if not Random / index 0)
+	if _f_ai_pers_def.selected > 0:
+		b["ai_personality_defensive"] = _f_ai_pers_def.get_item_text(_f_ai_pers_def.selected)
+	if _f_ai_pers_off.selected > 0:
+		b["ai_personality_offensive"] = _f_ai_pers_off.get_item_text(_f_ai_pers_off.selected)
+	if _f_ai_pers_soc.selected > 0:
+		b["ai_personality_social"] = _f_ai_pers_soc.get_item_text(_f_ai_pers_soc.selected)
 
 	# Forced cells
 	var pfc: Array = _collect_forced_cells(_player_forced_rows)
