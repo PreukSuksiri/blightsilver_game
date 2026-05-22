@@ -228,6 +228,24 @@ func _on_turn_changed(player: int) -> void:
 func _log_initial_grid() -> void:
 	_raw("")
 	_raw("--- Initial Setup (server-side view) ---")
+	# Log AI personalities so behavior is interpretable during audit
+	if _ai0_ref != null:
+		_raw("AI-0 Personality:  DEF=%s  OFF=%s  SOC=%s" % [
+			_ai0_ref.personality_defensive,
+			_ai0_ref.personality_offensive,
+			_ai0_ref.personality_social])
+	if _ai1_ref != null:
+		_raw("AI-1 Personality:  DEF=%s  OFF=%s  SOC=%s" % [
+			_ai1_ref.personality_defensive,
+			_ai1_ref.personality_offensive,
+			_ai1_ref.personality_social])
+	# Log tech hands
+	for p: int in [0, 1]:
+		var hand: Array = GameState.tech_hands[p]
+		if hand.is_empty():
+			_raw("P%d Tech hand: (none)" % p)
+		else:
+			_raw("P%d Tech hand: %s" % [p, ", ".join(PackedStringArray(hand))])
 	for p: int in [0, 1]:
 		var lines: Array[String] = []
 		for r: int in range(GameState.GRID_SIZE):

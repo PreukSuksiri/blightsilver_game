@@ -31,6 +31,11 @@ var _ai_turn_count: int = 0   # incremented at start of each decide_turn call
 var _union_used:    bool = false
 var _pending_death_bluff: Vector2i = Vector2i(-1, -1)  # set when AI card dies; flushed on next AI turn
 
+# Personality names selected for this game (set by _pick_personalities; readable by AIvsAIManager)
+var personality_defensive: String = ""
+var personality_offensive: String = ""
+var personality_social:    String = ""
+
 # ── Personality system (assigned once per game in decide_setup) ──
 var _def_zone:       String  = ""            # defensive formation zone key
 var _union_concern:  String  = "normal"      # "none" | "normal" | "high"
@@ -1403,6 +1408,11 @@ func _pick_personalities() -> void:
 	_bluff_pool      = _build_bluff_pool(
 		soc_pick["prefer"] as Array,
 		soc_pick["avoid_emoji"] as Array)
+
+	# Store names for external logging
+	personality_defensive = DEF_PERSONALITY_NAMES[def_idx] as String
+	personality_offensive = OFF_PERSONALITY_NAMES[off_idx] as String
+	personality_social    = SOC_PERSONALITY_NAMES[soc_idx] as String
 
 
 ## Build a weighted emoji pool. Preferred emojis appear 3×, avoided emojis are excluded.

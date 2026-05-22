@@ -1,0 +1,203 @@
+=== AI vs AI Match ===
+Started:  2026-05-22 21:51:48
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0:   [C:Godd][C:Slim][C:Silv][C:Heav][T:Defe]
+      [  — ][C:Armo][  — ][C:Gryp][T:Brai]
+      [  — ][  — ][  — ][  — ][C:Fuji]
+      [C:Vamp][  — ][  — ][  — ][C:Gran]
+      [T:Snar][T:Stre][T:Deco][C:Stre][C:Lab ]
+P1:   [C:Joan][  — ][C:Curs][T:Alar][  — ]
+      [  — ][C:Stai][C:Void][C:Leec][T:Hypn]
+      [  — ][C:Armo][C:Deat][C:Jaco][  — ]
+      [  — ][C:Doom][C:Witc][C:Aste][T:Snar]
+      [  — ][T:Curs][  — ][  — ][T:Chec]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:05.607] Tech played  P0: "Ceasefire"
+[00:07.149] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:07.151] Turn ended  P1  |  Crystals P0=5000 P1=5000
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:07.153] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:08.053] AI1 attack decision: (0,0)"Joan the Faithful Warrior" [ATK=25] → (0,4) "Defensive Pheromone" [DEF=0]
+[00:08.354] Revealed: P1 (0,0) "Joan the Faithful Warrior"
+[00:08.354] Revealed: P0 (0,4) "Defensive Pheromone"
+[00:12.896] Card destroyed  P0 (0,4)
+[00:12.897] Crystals: P0 5000 → 4500 (-500)  [trap cost]
+[00:14.272] Target prompt: "Defensive Pheromone: Choose an 'Armored' Nature card to swap."  filter=own_armored_nature
+[00:14.276] Trap: "Defensive Pheromone" triggered  P1(0,0)→P0(0,4)
+[00:14.670] AI0 target chosen: (-1,-1)
+[00:15.171] Crystals: P1 5000 → 3800 (-1200)  [tech cost]
+[00:16.558] Tech played  P1: "Arcane Duplication"
+[00:18.097] Target prompt: "Arcane Duplication: Choose 1 of your face-up characters."  filter=own_faceup_character
+[00:18.496] Revealed: P1 (0,1) "Joan the Faithful Warrior (Token)"
+[00:19.696] AI1 attack decision: (0,1)"Joan the Faithful Warrior (Token)" [ATK=25] → (2,4) "Fujin" [DEF=40]
+[00:19.996] Revealed: P0 (2,4) "Fujin"
+[00:23.942] Card destroyed  P1 (0,1)
+[00:23.946] Attack P1(0,1)"(self-destroyed)" → P0(2,4)"Fujin"  Dice=2  ATK=25 vs DEF=40  → LOSE
+[00:24.446] Turn ended  P1  |  Crystals P0=4500 P1=3800
+
+--- Turn 5  |  Player 0  |  Crystals P0=4500 P1=3800 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][Fuji]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [Joan][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:26.526] Crystals: P0 4500 → 3000 (-1500)  [union]
+[00:26.526] Revealed: P0 (1,1) "Barros the Collossol"
+[00:30.267] AI0 attack decision: (1,1)"Barros the Collossol" [ATK=150] → (0,0) "Joan the Faithful Warrior" [DEF=5]
+[00:34.384] Crystals: P1 3800 → 3520 (-280)  [battle]
+[00:35.775] Card destroyed  P1 (0,0)
+[00:35.777] Attack P0(1,1)"Barros the Collossol" → P1(0,0)"(destroyed)"  Dice=5  ATK=150 vs DEF=5  → WIN
+[00:36.674] Crystals: P0 3000 → 2300 (-700)  [tech cost]
+[00:38.060] Tech played  P0: "Essence Transfer"
+[00:39.600] Target prompt: "Essence Transfer: Choose source character."  filter=own_faceup_character_source
+[00:56.685] [TIMEOUT] Player 0 AI watchdog expired — ending turn.
+[00:56.691] Turn ended  P0  |  Crystals P0=2300 P1=3520
+
+--- Turn 6  |  Player 1  |  Crystals P0=2300 P1=3520 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Barr][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Fuji]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:57.585] Crystals: P1 3520 → 1520 (-2000)  [tech cost]
+[00:58.964] Tech played  P1: "Time Travel"
+[01:00.500] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[01:00.901] Revealed: P1 (0,4) "Joan the Faithful Warrior"
+[01:02.091] AI1 attack decision: (0,4)"Joan the Faithful Warrior" [ATK=25] → (1,4) "Brainwash" [DEF=0]
+[01:02.392] Revealed: P0 (1,4) "Brainwash"
+[01:06.951] Card destroyed  P0 (1,4)
+[01:06.951] Crystals: P0 2300 → 800 (-1500)  [trap cost]
+[01:08.334] Target prompt: "Brainwash: Choose one of your own cards as the attack target."  filter=own_any_as_target
+[01:08.338] Trap: "Brainwash" triggered  P1(0,4)→P0(1,4)
+[01:08.726] Card destroyed  P1 (0,4)
+[01:09.124] AI1 attack decision: (2,1)"Armored Bee" [ATK=30] → (4,4) "Lab Zombie" [DEF=40]
+[01:09.426] Revealed: P1 (2,1) "Armored Bee"
+[01:09.426] Revealed: P0 (4,4) "Lab Zombie"
+[01:13.355] Crystals: P1 1520 → 1040 (-480)  [battle]
+[01:14.737] Card destroyed  P1 (2,1)
+[01:14.744] Attack P1(2,1)"(self-destroyed)" → P0(4,4)"Lab Zombie"  Dice=2  ATK=30 vs DEF=40  → LOSE
+[01:15.243] Turn ended  P1  |  Crystals P0=800 P1=1040
+
+--- Turn 7  |  Player 0  |  Crystals P0=800 P1=1040 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Fuji]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][Lab ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[01:16.146] AI0 attack decision: (1,1)"Barros the Collossol" [ATK=150] → (1,3) "Leech Man" [DEF=40]
+[01:16.447] Revealed: P1 (1,3) "Leech Man"
+[01:20.264] Crystals: P1 1040 → 190 (-850)  [battle]
+[01:21.647] Card destroyed  P1 (1,3)
+[01:21.652] Attack P0(1,1)"Barros the Collossol" → P1(1,3)"(destroyed)"  Dice=2  ATK=150 vs DEF=40  → WIN
+[01:22.546] AI0 attack decision: (4,4)"Lab Zombie" [ATK=55] → (1,1) "Staircase Lady" [DEF=0]
+[01:22.847] Revealed: P1 (1,1) "Staircase Lady"
+[01:26.672] Crystals: P1 190 → 10 (-180)  [battle]
+[01:28.063] Card destroyed  P1 (1,1)
+[01:28.068] Attack P0(4,4)"Lab Zombie" → P1(1,1)"(destroyed)"  Dice=5  ATK=55 vs DEF=0  → WIN
+[01:28.669] Turn ended  P0  |  Crystals P0=800 P1=10
+
+--- Turn 8  |  Player 1  |  Crystals P0=800 P1=10 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Fuji]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][Lab ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[01:29.562] AI1 attack decision: (1,2)"Void Stalker" [ATK=65] → (4,4) "Lab Zombie" [DEF=40]
+[01:29.864] Revealed: P1 (1,2) "Void Stalker"
+[01:35.288] Crystals: P0 800 → 100 (-700)  [battle]
+[01:36.680] Card destroyed  P0 (4,4)
+[01:36.687] Attack P1(1,2)"Void Stalker" → P0(4,4)"(destroyed)"  Dice=1  ATK=85 vs DEF=40  → WIN
+[01:37.301] Turn ended  P1  |  Crystals P0=100 P1=10
+
+--- Turn 9  |  Player 0  |  Crystals P0=100 P1=10 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Fuji]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][Void][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[01:38.179] AI0 attack decision: (1,1)"Barros the Collossol" [ATK=150] → (1,2) "Void Stalker" [DEF=25]
+[01:42.288] Crystals: P1 10 → 0 (-10)  [battle]
+
+=== GAME OVER ===
+[01:42.293] AI Player 0 wins
+[01:42.293] Final crystals — P0: 100  P1: 0  |  Turns: 9
+[01:42.293] Log saved to: res://logs/ai_vs_ai_2026-05-22_21-51-48.txt

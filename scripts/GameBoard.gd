@@ -4886,6 +4886,13 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		_handle_tech_target(GameState.current_player, Vector2i(0, 0))
 		return
 
+	# No-valid-target guard: if the highlight pass found no cells to interact with,
+	# cancel the effect rather than leaving any player (human or AI) stuck.
+	if not _any_highlighted():
+		GameState.post_message("No valid target — effect cancelled.")
+		_finish_tech_action(GameState.current_player)
+		return
+
 	# Filters that require the DEFENDER (opponent of current_player) to respond
 	var _defender_response_filters: Array = [
 		"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct",
@@ -4901,6 +4908,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			_finish_tech_action(GameState.current_player)
 			return
 		var ai_target := _active_ai.decide_target(filter)
+		_active_ai.ai_target_chosen.emit(ai_target)  # log AI tech/trap target choice
 		# "row_or_column" targets a cell on the opponent's grid even though the word
 		# "opponent" doesn't appear in the filter string — handle it explicitly.
 		var _targets_opponent: bool = "opponent" in filter or filter == "row_or_column"
@@ -4959,6 +4967,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				if _is_ai_turn():
 					await get_tree().create_timer(0.4).timeout
 					var ai_target := _active_ai.decide_target(pending_tech_filter)
+					_active_ai.ai_target_chosen.emit(ai_target)
 					_handle_tech_target(opponent, ai_target)
 		return
 
@@ -5153,6 +5162,25 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			if _is_ai_turn():
 				await get_tree().create_timer(0.4).timeout
 				var ai_target := _active_ai.decide_target("own_faceup_character_target")
+				# Guard: if AI picked the same card as source, pick any other face-up char
+				if ai_target == _tech_buff_move_source:
+					var fallback := Vector2i(-1, -1)
+					for r2: int in range(GameState.GRID_SIZE):
+						for c2: int in range(GameState.GRID_SIZE):
+							var alt: Vector2i = Vector2i(r2, c2)
+							if alt == _tech_buff_move_source:
+								continue
+							var alt_card: GameState.CardInstance = GameState.get_card(current_player, r2, c2)
+							if alt_card.card_type == "character" and alt_card.face_up:
+								fallback = alt
+								break
+						if fallback.x >= 0:
+							break
+					if fallback.x < 0:
+						_finish_tech_action(current_player)
+						return
+					ai_target = fallback
+				_active_ai.ai_target_chosen.emit(ai_target)
 				_handle_tech_target(current_player, ai_target)
 		return
 
@@ -5185,6 +5213,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			if _is_ai_turn():
 				await get_tree().create_timer(0.5).timeout
 				var ai_pos := _active_ai.decide_target("opponent_faceup_zero_stats")
+				_active_ai.ai_target_chosen.emit(ai_pos)
 				_handle_tech_target(opponent, ai_pos)
 		return
 
@@ -5470,6 +5499,15 @@ func _update_end_turn_blink() -> void:
 
 func _highlight_valid_targets() -> void:
 	pass  # No visual hints on opponent cards during target selection
+
+## Returns true if at least one cell is currently highlighted across both grids.
+func _any_highlighted() -> bool:
+	for p: int in range(2):
+		for r: int in range(GameState.GRID_SIZE):
+			for c: int in range(GameState.GRID_SIZE):
+				if grid_nodes[p][r][c].is_highlighted:
+					return true
+	return false
 
 func _highlight_tech_targets(filter: String) -> void:
 	_clear_highlights()
@@ -5774,6 +5812,44 @@ func _spawn_destroy_effect(card_node: Control) -> void:
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	rw.tween_callback(ring.queue_free)
 
+	# Fire friction sparks — large burst in all directions from card centre
+	var origin: Vector2 = local_pos + card_size * 0.5
+	var rng2 := RandomNumberGenerator.new()
+	rng2.randomize()
+	for _i: int in range(55):
+		var spark := ColorRect.new()
+		spark.size = Vector2(rng2.randf_range(4.0, 12.0), rng2.randf_range(20.0, 52.0))
+		# Fire palette: white-hot core → orange → deep red
+		var heat: float = rng2.randf_range(0.0, 1.0)
+		spark.color = Color(
+			1.0,
+			lerp(0.15, 1.0, heat),
+			lerp(0.0,  0.55, heat * heat),
+			1.0)
+		spark.pivot_offset = spark.size * 0.5
+		spark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		spark.z_index = 22
+
+		# Full 360° blast
+		var angle: float = rng2.randf_range(0.0, TAU)
+		var speed: float = rng2.randf_range(180.0, 520.0)
+		var duration: float = rng2.randf_range(0.25, 0.60)
+		var gravity: float = rng2.randf_range(60.0, 180.0)
+		var dx: float = cos(angle) * speed
+		var dy: float = sin(angle) * speed + gravity
+		spark.rotation = angle + PI * 0.5
+		spark.position = origin - spark.size * 0.5
+
+		add_child(spark)
+
+		var ts := create_tween()
+		ts.parallel().tween_property(spark, "position",
+			spark.position + Vector2(dx, dy), duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		ts.parallel().tween_property(spark, "modulate:a", 0.0, duration) \
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+		ts.tween_callback(spark.queue_free)
+
 # ─────────────────────────────────────────────────────────────
 # AI
 # ─────────────────────────────────────────────────────────────
@@ -6030,9 +6106,9 @@ func _show_union_summon_reveal(union_name: String) -> void:
 func _spawn_union_landing_sparks(overlay: Control, origin: Vector2) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
-	for _i: int in range(22):
+	for _i: int in range(42):
 		var spark := ColorRect.new()
-		spark.size = Vector2(rng.randf_range(2.0, 5.0), rng.randf_range(9.0, 22.0))
+		spark.size = Vector2(rng.randf_range(4.0, 11.0), rng.randf_range(18.0, 48.0))
 		spark.color = Color(1.0, rng.randf_range(0.80, 1.0), rng.randf_range(0.2, 0.6), 1.0)
 		spark.pivot_offset = spark.size * 0.5
 		spark.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -6040,10 +6116,10 @@ func _spawn_union_landing_sparks(overlay: Control, origin: Vector2) -> void:
 
 		# Arc upward and sideways
 		var angle: float = rng.randf_range(-PI * 0.95, -PI * 0.05)
-		var speed: float = rng.randf_range(90.0, 280.0)
-		var duration: float = rng.randf_range(0.30, 0.65)
+		var speed: float = rng.randf_range(160.0, 460.0)
+		var duration: float = rng.randf_range(0.35, 0.80)
 		var dx: float = cos(angle) * speed
-		var dy: float = sin(angle) * speed + rng.randf_range(10.0, 50.0)  # gravity sag
+		var dy: float = sin(angle) * speed + rng.randf_range(10.0, 60.0)  # gravity sag
 		spark.rotation = angle + PI * 0.5
 		spark.position = origin - spark.size * 0.5
 
