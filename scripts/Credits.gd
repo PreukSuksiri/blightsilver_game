@@ -75,7 +75,7 @@ Anifusion
 CARD ILLUSTRATIONS
 
 Anifusion
-Grok
+Grok Imagine
 
 
 

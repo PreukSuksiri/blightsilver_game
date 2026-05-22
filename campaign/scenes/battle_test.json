@@ -3,6 +3,33 @@
 
 	},
 	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "May the silver path show your true sins!!"
+	},
+	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_vellum_card_commence.png",
+		"comment": "Animation",
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"text": "Vellum cards commence!!",
+		"wait": 9.0
+	},
+	{
 		"animation": "animation_vellum_card_commence_facedown",
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
@@ -20,6 +47,7 @@
 			}
 		],
 		"comment": "Animation",
+		"hidden": true,
 		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
 		"wait": 5.8
 	},

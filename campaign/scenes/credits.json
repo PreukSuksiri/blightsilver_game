@@ -1,31 +1,31 @@
 [
   { "fade_out": 0.001, "fade_color": "#000000" },
   {
-    "background": null,
-    "characters": [],
-    "fade_in": 2.0,
-    "fade_color": "#000000",
-    "wait": 0.001
+	"background": null,
+	"characters": [],
+	"fade_in": 2.0,
+	"fade_color": "#000000",
+	"wait": 0.001
   },
   {
-    "background": null,
-    "characters": [],
-    "text": "— BLIGHTSILVER —"
+	"background": null,
+	"characters": [],
+	"text": "— BLIGHTSILVER —"
   },
   { "wait": 0.5 },
   {
-    "text": "Thank you for playing."
+	"text": "Thank you for playing."
   },
   { "wait": 1.0 },
   { "fade_out": 1.5, "fade_color": "#000000" },
   { "wait": 1.0 },
 
   {
-    "background": null,
-    "characters": [],
-    "fade_in": 1.5,
-    "fade_color": "#000000",
-    "text": "[color=#8BA8C8]STORY & GAME DESIGN[/color]"
+	"background": null,
+	"characters": [],
+	"fade_in": 1.5,
+	"fade_color": "#000000",
+	"text": "[color=#8BA8C8]STORY & GAME DESIGN[/color]"
   },
   { "wait": 0.3 },
   { "text": "Nokyang" },
@@ -33,11 +33,11 @@
   { "fade_out": 1.2, "fade_color": "#000000" },
 
   {
-    "background": null,
-    "characters": [],
-    "fade_in": 1.2,
-    "fade_color": "#000000",
-    "text": "[color=#8BA8C8]PROGRAMMING[/color]"
+	"background": null,
+	"characters": [],
+	"fade_in": 1.2,
+	"fade_color": "#000000",
+	"text": "[color=#8BA8C8]PROGRAMMING[/color]"
   },
   { "wait": 0.3 },
   { "text": "Nokyang" },
@@ -45,11 +45,11 @@
   { "fade_out": 1.2, "fade_color": "#000000" },
 
   {
-    "background": null,
-    "characters": [],
-    "fade_in": 1.2,
-    "fade_color": "#000000",
-    "text": "[color=#8BA8C8]ART DIRECTION[/color]"
+	"background": null,
+	"characters": [],
+	"fade_in": 1.2,
+	"fade_color": "#000000",
+	"text": "[color=#8BA8C8]ART DIRECTION[/color]"
   },
   { "wait": 0.3 },
   { "text": "Nokyang" },
@@ -57,47 +57,52 @@
   { "fade_out": 1.2, "fade_color": "#000000" },
 
   {
-    "background": null,
-    "characters": [],
-    "fade_in": 1.2,
-    "fade_color": "#000000",
-    "text": "[color=#8BA8C8]CHARACTER & BACKGROUND ILLUSTRATION[/color]"
+	"background": null,
+	"characters": [],
+	"fade_in": 1.2,
+	"fade_color": "#000000",
+	"text": "[color=#8BA8C8]CHARACTER & BACKGROUND ILLUSTRATION[/color]"
   },
   { "wait": 0.3 },
-  { "text": "AI-generated with Anifusion\nArt direction & selection — Nokyang" },
+  { "text": "Anifusion" },
+  { "wait": 0.5 },
+  { "fade_out": 1.2, "fade_color": "#000000" },
+
+  { "wait": 0.3 },
+  { "text": "Grok Imagine" },
   { "wait": 0.5 },
   { "fade_out": 1.2, "fade_color": "#000000" },
 
   {
-    "background": null,
-    "characters": [],
-    "fade_in": 1.2,
-    "fade_color": "#000000",
-    "text": "[color=#8BA8C8]MUSIC[/color]"
+	"background": null,
+	"characters": [],
+	"fade_in": 1.2,
+	"fade_color": "#000000",
+	"text": "[color=#8BA8C8]MUSIC[/color]"
   },
   { "wait": 0.3 },
-  { "text": "AI-generated with Suno\nCuration & selection — Nokyang" },
+  { "text": "Suno" },
   { "wait": 0.5 },
   { "fade_out": 1.2, "fade_color": "#000000" },
 
   {
-    "background": null,
-    "characters": [],
-    "fade_in": 1.2,
-    "fade_color": "#000000",
-    "text": "[color=#8BA8C8]SOUND EFFECTS[/color]"
+	"background": null,
+	"characters": [],
+	"fade_in": 1.2,
+	"fade_color": "#000000",
+	"text": "[color=#8BA8C8]SOUND EFFECTS[/color]"
   },
   { "wait": 0.3 },
-  { "text": "AI-generated with ElevenLabs" },
+  { "text": "ElevenLabs" },
   { "wait": 0.5 },
   { "fade_out": 1.2, "fade_color": "#000000" },
 
   {
-    "background": null,
-    "characters": [],
-    "fade_in": 1.2,
-    "fade_color": "#000000",
-    "text": "[color=#8BA8C8]FONT[/color]"
+	"background": null,
+	"characters": [],
+	"fade_in": 1.2,
+	"fade_color": "#000000",
+	"text": "[color=#8BA8C8]FONT[/color]"
   },
   { "wait": 0.3 },
   { "text": "Chivo Variable\nThe Chivo Project — Open Font License" },
@@ -105,23 +110,23 @@
   { "fade_out": 1.2, "fade_color": "#000000" },
 
   {
-    "background": null,
-    "characters": [],
-    "fade_in": 1.2,
-    "fade_color": "#000000",
-    "text": "[color=#8BA8C8]MADE WITH[/color]"
+	"background": null,
+	"characters": [],
+	"fade_in": 1.2,
+	"fade_color": "#000000",
+	"text": "[color=#8BA8C8]MADE WITH[/color]"
   },
   { "wait": 0.3 },
-  { "text": "Godot Engine 4\nClaude Code — Anthropic" },
+  { "text": "Godot Engine 4" },
   { "wait": 0.5 },
   { "fade_out": 1.2, "fade_color": "#000000" },
 
   {
-    "background": null,
-    "characters": [],
-    "fade_in": 1.2,
-    "fade_color": "#000000",
-    "text": "[color=#8BA8C8]SPECIAL THANKS[/color]"
+	"background": null,
+	"characters": [],
+	"fade_in": 1.2,
+	"fade_color": "#000000",
+	"text": "[color=#8BA8C8]SPECIAL THANKS[/color]"
   },
   { "wait": 0.3 },
   { "text": "[color=#FFE566]Game Testers[/color]\njames3ds\nluciferlight\nozzygen" },
@@ -130,11 +135,11 @@
   { "wait": 1.5 },
 
   {
-    "background": null,
-    "characters": [],
-    "fade_in": 2.0,
-    "fade_color": "#000000",
-    "text": "— BLIGHTSILVER —"
+	"background": null,
+	"characters": [],
+	"fade_in": 2.0,
+	"fade_color": "#000000",
+	"text": "— BLIGHTSILVER —"
   },
   { "wait": 2.0 },
   { "fade_out": 2.0, "fade_color": "#000000" },

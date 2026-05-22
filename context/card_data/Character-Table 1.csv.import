@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://c0qlsdbd7g051"
+
+[deps]
+
+files=["res://context/card_data/Character-Table 1.Card Type.translation", "res://context/card_data/Character-Table 1.Cost.translation", "res://context/card_data/Character-Table 1.ATK.translation", "res://context/card_data/Character-Table 1.DEF.translation", "res://context/card_data/Character-Table 1.Affinity.translation", "res://context/card_data/Character-Table 1.Rarity.translation", "res://context/card_data/Character-Table 1.Ability.translation", "res://context/card_data/Character-Table 1.en.translation", "res://context/card_data/Character-Table 1.Have illustration.translation", "res://context/card_data/Character-Table 1.Suggested cost.translation", "res://context/card_data/Character-Table 1.Demo.translation", "res://context/card_data/Character-Table 1.en.translation", "res://context/card_data/Character-Table 1.Booster Pack .translation", "res://context/card_data/Character-Table 1.Booster Pack .translation", "res://context/card_data/Character-Table 1.Booster Pack .translation"]
+
+source_file="res://context/card_data/Character-Table 1.csv"
+dest_files=["res://context/card_data/Character-Table 1.Card Type.translation", "res://context/card_data/Character-Table 1.Cost.translation", "res://context/card_data/Character-Table 1.ATK.translation", "res://context/card_data/Character-Table 1.DEF.translation", "res://context/card_data/Character-Table 1.Affinity.translation", "res://context/card_data/Character-Table 1.Rarity.translation", "res://context/card_data/Character-Table 1.Ability.translation", "res://context/card_data/Character-Table 1.en.translation", "res://context/card_data/Character-Table 1.Have illustration.translation", "res://context/card_data/Character-Table 1.Suggested cost.translation", "res://context/card_data/Character-Table 1.Demo.translation", "res://context/card_data/Character-Table 1.en.translation", "res://context/card_data/Character-Table 1.Booster Pack .translation", "res://context/card_data/Character-Table 1.Booster Pack .translation", "res://context/card_data/Character-Table 1.Booster Pack .translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

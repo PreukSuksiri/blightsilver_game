@@ -174,7 +174,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "Err...... It's went well but...."
+			"en": "Err...... It went well but...."
 		}
 	},
 	{
@@ -579,7 +579,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "No matter how hard the life is, she always reached her hand out to help me with that smile..."
+		"text": "She's always reached out her hand with that smile..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -592,7 +592,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "And the only good thing I gave her is being a dick and let her down..."
+		"text": "And the only good thing I gave her is being a dick..."
 	},
 	{
 		"wait": 0.5
@@ -690,7 +690,7 @@
 		"music": "res://assets/audio/bgm_horror_1.mp3",
 		"speaker": "Nex",
 		"text": {
-			"en": "Wait... What if Mayu has not gone home... But she'll still in the back?"
+			"en": "Wait... What if Mayu has not gone home... But she's still in the back?"
 		}
 	},
 	{
@@ -875,46 +875,20 @@
 		}
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_strangle.png",
-		"nsfw": "nsfw",
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
 		"wait": 2.0
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
-		"nsfw": "safe",
-		"wait": 2.0
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_strangle.png",
-		"nsfw": "nsfw",
 		"text": "Mayu jumped toward Nex unprepared, and immediately grip her hand on his neck. She strangled him. Her grip is absurdly powerful"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
-		"nsfw": "safe",
-		"text": "Mayu jumped toward Nex unprepared, and immediately grip her hand on his neck. She strangled him. Her grip is absurdly powerful"
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_strangle.png",
-		"nsfw": "nsfw",
 		"speaker": "Mayu",
 		"text": "Pretty... so pretty..!!"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
-		"nsfw": "safe",
-		"speaker": "Mayu",
-		"text": "Pretty... so pretty..!!"
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_strangle.png",
-		"nsfw": "nsfw",
-		"speaker": "Nex",
-		"text": "G... go away...!!"
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
-		"nsfw": "safe",
 		"speaker": "Nex",
 		"text": "G... go away...!!"
 	},
@@ -922,33 +896,16 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_strangle.png",
-		"nsfw": "nsfw",
-		"text": "No matter how hard he tried, he cannot break free of her grip."
-	},
-	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
-		"nsfw": "safe",
 		"text": "No matter how hard he tried, he cannot break free of her grip."
 	},
 	{
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_strangle.png",
-		"nsfw": "nsfw",
-		"shake_screen": 10.0,
-		"text": "Nex kicked the chair and knock the mad girl off-balance"
-	},
-	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
-		"nsfw": "safe",
 		"shake_screen": 10.0,
 		"text": "Nex kicked and knock the mad girl off-balance"
-	},
-	{
-		"hidden": true,
-		"video": "res://assets/video/ch_0_1/vn_vid_mayu_strangling.mp4"
 	},
 	{
 		"wait": 0.5
@@ -1153,41 +1110,14 @@
 		"wait": 0.001
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_nex_kelly_bump_1.png",
-		"fade_color": "#ffffff",
-		"fade_in": 3.0,
-		"music": "res://assets/audio/bgm_sexy_1.mp3",
-		"nsfw": "nsfw",
-		"wait": 0.001
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_nex_kelly_bump_1.png",
-		"nsfw": "nsfw",
-		"sfx": "res://assets/audio/sound_sledgehammer1.mp3",
-		"sfx_volume": 140.0,
-		"shake": "all",
-		"shake_magnitude": 20.0,
-		"shake_screen": 10.0,
-		"text": "** BUMP!! **",
-		"wait": 3.0
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_nex_kelly_bump_2.png",
-		"nsfw": "nsfw",
-		"text": "!!!!",
-		"wait": 3.0
-	},
-	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
 		"fade_color": "#ffffff",
 		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_sexy_1.mp3",
-		"nsfw": "safe",
 		"wait": 0.001
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
-		"nsfw": "safe",
 		"sfx": "res://assets/audio/sound_sledgehammer1.mp3",
 		"sfx_volume": 140.0,
 		"shake": "all",
@@ -1198,7 +1128,6 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
-		"nsfw": "safe",
 		"text": "!!!!",
 		"wait": 3.0
 	},

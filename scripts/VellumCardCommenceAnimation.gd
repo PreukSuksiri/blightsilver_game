@@ -10,8 +10,8 @@ const _FACEDOWN:   Texture2D = preload("res://assets/textures/cards/frames/faced
 const _FACE_BLANK: Texture2D = preload("res://assets/textures/cards/frames/vellum_card_frame_full.png")
 const _FULL_CARDS_DIR := "res://assets/textures/cards/full_cards/"
 
-const _CARD_W  := 80.0
-const _CARD_H  := 110.0
+const _CARD_W  := 160.0
+const _CARD_H  := 220.0
 const _STAGGER := 0.09   # seconds between launching successive cards
 
 # ─────────────────────────────────────────────────────────────

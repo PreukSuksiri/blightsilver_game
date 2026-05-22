@@ -293,18 +293,18 @@ static func _get_effective_atk(
 	# DEF_ZERO_WHEN_EXPOSED: attacker's DEF = 0 when face-up (doesn't affect ATK, skip)
 	# ATK_PENALTY_WHEN_EXPOSED: attacker's own ATK is penalised when face-up
 	if attacker.face_up and attacker.ability_type == CharacterData.AbilityType.ATK_PENALTY_WHEN_EXPOSED:
-		atk = max(0, atk - attacker.ability_params.get("amount", 0))
+		atk = max(0, atk - attacker.ability_params.get("penalty", attacker.ability_params.get("amount", 0)))
 
 	# ATK_PENALTY_IF_NO_NAME_ALLY: e.g. Moon Tribe Marksman
 	if attacker.ability_type == CharacterData.AbilityType.ATK_PENALTY_IF_NO_NAME_ALLY:
-		var name_filter: String = attacker.ability_params.get("name_contains", "").to_lower()
+		var name_filter: String = attacker.ability_params.get("name", attacker.ability_params.get("name_contains", "")).to_lower()
 		var found_ally: bool = false
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var ally: GameState.CardInstance = GameState.grids[attacker_player][r][c]
 				if ally == attacker:
 					continue
-				if ally.card_type == "character" and name_filter in ally.card_name.to_lower():
+				if ally.card_type == "character" and name_filter != "" and name_filter in ally.card_name.to_lower():
 					found_ally = true
 					break
 		if not found_ally:
@@ -346,16 +346,19 @@ static func _get_effective_atk(
 				atk += attacker.ability_params.get("bonus", 0)
 
 		CharacterData.AbilityType.ATK_DEF_BONUS_VS_NON_AFFINITY:
-			if defender.affinity != attacker.ability_params.get("affinity", -1):
-				atk += attacker.ability_params.get("bonus", 0)
+			var _non_aff: int = attacker.ability_params.get("affinity", -2)
+			if _non_aff == -2 or defender.affinity != _non_aff:
+				atk += attacker.ability_params.get("atk", attacker.ability_params.get("bonus", 0))
 
 		CharacterData.AbilityType.ATK_BONUS_IF_AFFINITY_ON_FIELD:
 			var needed_aff: int = attacker.ability_params.get("affinity", -1)
 			for r in range(GameState.GRID_SIZE):
 				for c in range(GameState.GRID_SIZE):
 					var ally: GameState.CardInstance = GameState.grids[attacker_player][r][c]
+					if ally == attacker:
+						continue
 					if ally.card_type == "character" and ally.face_up and ally.affinity == needed_aff:
-						atk += attacker.ability_params.get("bonus", 0)
+						atk += attacker.ability_params.get("atk", attacker.ability_params.get("bonus", 0))
 						break
 
 		CharacterData.AbilityType.ATK_DEF_BONUS_IF_UNION_ON_FIELD:
@@ -367,7 +370,7 @@ static func _get_effective_atk(
 						break
 
 		CharacterData.AbilityType.ATTACK_STANCE_BOOST:
-			atk += attacker.ability_params.get("atk_bonus", 0)
+			atk += attacker.ability_params.get("atk", attacker.ability_params.get("atk_bonus", 0))
 
 		CharacterData.AbilityType.COIN_FLIP_ATK_BOOST:
 			if randf() >= 0.5:
@@ -390,8 +393,8 @@ static func _get_effective_atk(
 		CharacterData.AbilityType.MUTAGEN_ATK_BOOST_VS_AFFINITIES:
 			if attacker.has_mutagen_flag:
 				var affinities = attacker.ability_params.get("affinities", [])
-				if defender.affinity in affinities:
-					atk += attacker.ability_params.get("bonus", 0)
+				if affinities.is_empty() or defender.affinity in affinities:
+					atk += attacker.ability_params.get("atk", attacker.ability_params.get("bonus", 0))
 
 		CharacterData.AbilityType.ATK_BONUS_VS_CENTER_ZONE:
 			if target_pos.x >= 0:
@@ -435,8 +438,8 @@ static func _get_effective_atk(
 
 	# Check defender abilities that debuff attacker ATK
 	if defender.ability_type == CharacterData.AbilityType.ATTACKER_ATK_DEBUFF:
-		if defender.effect_nullified_until < GameState.turn_number:
-			var debuff_amount: int = defender.ability_params.get("amount", 0)
+		if defender.effect_nullified_until == 0 or defender.effect_nullified_until < GameState.turn_number:
+			var debuff_amount: int = defender.ability_params.get("atk", defender.ability_params.get("amount", 0))
 			atk = max(0, atk - debuff_amount)
 			GameState.post_message("%s: Attacker loses %d ATK!" % [defender.card_name, debuff_amount])
 
@@ -472,8 +475,9 @@ static func _get_effective_def(
 				def_val += defender.ability_params.get("def", 0)
 
 		CharacterData.AbilityType.ATK_DEF_BONUS_VS_NON_AFFINITY:
-			if attacker.affinity != defender.ability_params.get("affinity", -1):
-				def_val += defender.ability_params.get("bonus", 0)
+			var _non_aff_d: int = defender.ability_params.get("affinity", -2)
+			if _non_aff_d == -2 or attacker.affinity != _non_aff_d:
+				def_val += defender.ability_params.get("def", defender.ability_params.get("bonus", 0))
 
 		CharacterData.AbilityType.ONE_USE_DEF_BOOST:
 			if not defender.one_use_def_boost_used:
@@ -484,7 +488,7 @@ static func _get_effective_def(
 				def_val += defender.ability_params.get("def_bonus", 0)
 
 		CharacterData.AbilityType.DEFENSE_STANCE_BOOST:
-			def_val += defender.ability_params.get("def_bonus", 0)
+			def_val += defender.ability_params.get("def", defender.ability_params.get("def_bonus", 0))
 
 		CharacterData.AbilityType.DEF_BONUS_IF_AFFINITY_ON_FIELD:
 			if defender_player >= 0:
@@ -492,8 +496,10 @@ static func _get_effective_def(
 				for r in range(GameState.GRID_SIZE):
 					for c in range(GameState.GRID_SIZE):
 						var ally: GameState.CardInstance = GameState.grids[defender_player][r][c]
+						if ally == defender:
+							continue
 						if ally.card_type == "character" and ally.face_up and ally.affinity == needed_aff:
-							def_val += defender.ability_params.get("bonus", 0)
+							def_val += defender.ability_params.get("def", defender.ability_params.get("bonus", 0))
 							break
 
 		CharacterData.AbilityType.DOUBLE_STATS_VS_AFFINITY:
@@ -569,25 +575,27 @@ static func _apply_defend_effects(
 
 		CharacterData.AbilityType.PERM_DEF_BOOST_ON_DEFEND:
 			result.ability_triggered_defender = true
-			defender.current_def += defender.ability_params.get("bonus", 0)
-			result.messages.append("%s gains +%d DEF permanently!" % [
-				defender.card_name, defender.ability_params.get("bonus", 0)])
+			var _perm_def: int = defender.ability_params.get("def", defender.ability_params.get("bonus", 0))
+			defender.current_def += _perm_def
+			result.messages.append("%s gains +%d DEF permanently!" % [defender.card_name, _perm_def])
 
 		CharacterData.AbilityType.ONE_USE_PERM_DEBUFF_ATTACKER_ATK:
 			if not defender.one_use_def_boost_used:
 				result.ability_triggered_defender = true
 				defender.one_use_def_boost_used = true
-				attacker.current_atk = max(0, attacker.current_atk - defender.ability_params.get("amount", 0))
+				var _debuff_atk: int = defender.ability_params.get("atk", defender.ability_params.get("amount", 0))
+				attacker.current_atk = max(0, attacker.current_atk - _debuff_atk)
 				result.messages.append("%s: %s permanently loses %d ATK!" % [
-					defender.card_name, attacker.card_name, defender.ability_params.get("amount", 0)])
+					defender.card_name, attacker.card_name, _debuff_atk])
 
 		CharacterData.AbilityType.DEFEND_PERM_DEBUFF_ATTACKER_ATK_DEF:
 			result.ability_triggered_defender = true
-			var debuff: int = defender.ability_params.get("amount", 0)
-			attacker.current_atk = max(0, attacker.current_atk - debuff)
-			attacker.current_def = max(0, attacker.current_def - debuff)
+			var _debuff_a: int = defender.ability_params.get("atk", defender.ability_params.get("amount", 0))
+			var _debuff_d: int = defender.ability_params.get("def", _debuff_a)
+			attacker.current_atk = max(0, attacker.current_atk - _debuff_a)
+			attacker.current_def = max(0, attacker.current_def - _debuff_d)
 			result.messages.append("%s: %s permanently loses %d ATK and DEF!" % [
-				defender.card_name, attacker.card_name, debuff])
+				defender.card_name, attacker.card_name, _debuff_a])
 
 		CharacterData.AbilityType.ONE_USE_DEFEND_MORPH:
 			if not defender.one_use_def_boost_used:

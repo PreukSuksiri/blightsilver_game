@@ -1,0 +1,421 @@
+Card Name,Card Type,Cost,ATK,DEF,Affinity,Rarity,Partial Ability,Full Ability,Partial Formula,Full Formula,Union Zone,Have illustration,Demo,Test 1
+Gryphon Rider,Union,,125,90,Divine,,None,None,1 ??? + 1 ??? + 1000 crystals,Gryphon + 1 Divine + 1000 crystals,"10000
+01000
+00100
+00010
+00001",,Yes,
+Seraphim Fistmaster,Union,,120,120,Divine,,Double ATK and DEF against ??? Affinity,Double ATK and DEF against Chaos,1 ??? + 1 ??? + 1500 crystals,1 card including ‘Seraph’ name + 1 Divine characters with at least 1000 crystal cost + 1500 crystals,"11011
+10001
+00000
+10001
+11011",,Yes,
+Gaia Turtle,Union,,0,220,Nature,,None,None,2 ??? + 2000 crystals,2 characters with at least 100 DEF + 2000 crystals,"00000
+01010
+01110
+01110
+00000",,Yes,
+Barros the Collossol,Union,,150,130,Nature,,None,None,2 ???+ 1500 crystals,2 Nature (≥ 1000 cost) + 1500 crystals,"00000
+01010
+00100
+01010
+00000",,Yes,
+Tendrill Tyrant,Union,,90,110,Bio,,Can attack ? times per turn,Can attack 3 times per turn,1 ??? + 2 ??? + 1500 crystals,Bio card with mutagen flag + 2 Bio cards + 1500 crystals,"00100
+00100
+11111
+00100
+00100",,,
+Helios the Prideful Fortress,Union,,145,100,Cosmic,,"As long as there is face-up ???, this card cannot be ???","As long as there is face-up cosmic character on their own field, this card cannot be destroyed",2 ??? + 1500 crystal,"2 Cosmic card (≥ 1000 cost)
+ + 1500 crystal","00100
+01010
+10001
+01010
+00100",,,
+X-Death Squad,Union,,50,50,Anima,,"Pay ????, destroy opponent character during damage calculation. Opponent do not ????","Pay 1000, destroy opponent character during damage calculation. Opponent do not lose crystal under this effect.",1 ??? + ??? + 1000 crystals,1 Anima (≥ 1000 cost) + 2 Anima cards + 1000 crystals,"10101
+00000
+10101
+00000
+10101",,Yes,
+Slim Gray Plasma Bomber,Union,,80,60,Cosmic,,+?? ATK and DEF if ?? or more of your cells is revealed,+100 ATK and DEF if 15 or more of your cells is revealed,1 ??? + 1 ??? + 1000 crystals,1 Slim Gray + 1 Cosmic card (≥ 1000 cost) + 1000 crystals,"00100
+01110
+01010
+01110
+00000",,,
+Interplanetary Assassin,Union,,100,70,Cosmic,,+?? ATK vs Cosmic,+100 ATK vs Cosmic,2 ??? + 1500 crystals,2 Cosmic cards (≥ 1000 cost)  + 1500 crystals,"00100
+11111
+00000
+11111
+00100",,,
+Bioterrorist,Union,,150,0,Bio,,Destroy this card after ???,Destroy this card after battle calculation,2 ??? + 1000 crystal,2 Bio cards (≥ 1000 cost) + 1000 crystal,"10001
+01010
+00000
+01010
+10001",,,
+One Winged Angel,Union,,120,120,Divine,,+??? ATK permanently at ???,+30 ATK permanently at the end of your turn,1 ??? + 1 ??? + 1500 crystals,1 Cleaver Saint + 1 Divine card + 1500 crystal,"00011
+00011
+00011
+00011
+00011",,,
+Rocket Tyrant,Union,,130,110,Bio,,None,None,1 ??? + 1 ??? + 1000 crystal,1 Bio (≥ 1000 cost) + 1 Anima (≥ 1000 cost) + 1000 crystal,"10101
+01010
+10101
+01010
+10101",,Yes,
+Lord of Terror,Union,,200,100,Chaos,,-50 ATK if ???,-50 ATK if attacks dead end card,2 ??? + 1000 crystal,2 Chaos (≥ 1000 cost) + 1000 crystal,"00100
+00100
+00100
+11111
+00100",,Yes,
+Armored Dino,Union,,100,60,Nature,,"During battle calculation, pay ??? crystal cost to +??DEF","During battle calculation, pay 1000 crystal cost to +60 DEF",1 ??? + 1 ??? + 1000 crystals,1 Armored Nature card + 1 Nature (≥ 1000 cost) + 1000 crystals,"00000
+11111
+11111
+00000
+00000",,Yes,
+Greater Succubus,Union,,30,50,Chaos,,"If this card survived a battle, gain ????","If this card survived a battle, gain half of ATK and DEF equal to card it battled",1 ??? + 1 ??? + 1000 crystals,1 Succubus + 1 Chaos card + 1000 crystals,"00100
+11111
+10001
+10001
+00000",,Yes,
+Pixie Queen,Union,,30,30,Divine,,+5 ATK for each ????,+5 ATK for each Divine cards on their own field,1 ??? + 1 ??? + 1000 crystal,1 Tiny Pixie + 1 Divine card + 1000 crystal,"00100
+00100
+10001
+10101
+01010",,Yes,
+Diamond Unicorn,Union,,50,35,Divine,,+15 ATK until ????,"+15 ATK until the end of this turn, once.",1 ??? + 1 ??? + 1000 crystals,1 Ponycorn + 1 Divine card + 1000 crystals,"00100
+01010
+10001
+01010
+00100",,Yes,
+Choir Lead Amber,Union,,35,35,Divine,,+20 ATK to all ?????,+20 ATK to all Divine characters on their own field,3 ??? + 1000 crystals,3 Choir Lady cards + 1000 crystals,"01100
+01011
+01001
+11000
+11000",,Yes,
+Genesis Mech,Union,,60,40,Divine,,"Once, destroy ???or ??? card","Once, destroy Divine or Anima card",1 ??? + 1 ??? + 1000 crystals,1 Cruel Angel + 1 Anima Card + 1000 crystals,"11111
+11111
+00000
+00000
+00000",,,
+Keeper of the Afterlife,Union,,40,65,Divine,,"At battle calculation, flip a coin. If head, ????","At battle calculation, flip a coin. If head, the attack does nothing",1 ??? + 1 ???+ 1000 crystals,1 Sphinx character + 1 Divine card + 1000 crystals,"00000
+00000
+00100
+01110
+11111",,,
+Keeper of the Sun,Union,,70,35,Divine,,This card cannot attack if there is card with affinity other than ??? Or ???,This card cannot attack if there is card with affinity other than Divine or Anima on their own field,1 ???+ ??? + 1000 crystals,1 Sphinx character + 1 Anima + 1000 crystals,"11111
+01110
+00100
+00000
+00000",,,
+Keeper of Righteous,Union,,90,80,Divine,,+??? ATK vs ?? and ??,+20 ATK vs Chaos and Arcane,2 ???+ 2000 crystals,2 Sphinx characters + 2000 crystals,"10001
+01010
+00100
+01010
+10001",,,
+Lucky Wanderer,Union,,70,50,Divine,,"During the end of that turn, flip a coin. If head, +??? ATK. If tail, +?? DEF","During the end of that turn, flip a coin. If head, +10 ATK. If tail, +10 DEF",1 ??? + 1 ??? + 1000 crystals,1 Lucky Statue + 1 Divine card + 1000 crystals,"00100
+00100
+00100
+00100
+00100",,,
+Raijin and Fujin,Union,,80,80,Divine,,None,None,1 ??? + 1 ??? + 1000 crystals,Raijin + Fujin + 1000 crystals,"10001
+10001
+10001
+10001
+10001",,Yes,
+Joyce the Rafflesia,Union,,45,45,Divine,,"At the end of this turn, +??? ATK and DEF ????","At the end of this turn, +5 ATK and DEF permanently.",1 ??? + 1 ??? + 1000 crystals,Bloom Fairy + 1 Nature card + 1000 crystals,"11111
+11011
+00100
+00100
+00100",,,
+Sky Protector,Union,,0,0,Divine,,"If this card defends, DEF becomes ???, ATK becomes ???. If this card performs attack, ATK becomes ???, DEF becomes ???.","If this card defends, DEF becomes 50, ATK becomes 0. If this card performs attack, ATK becomes 50, DEF becomes 0.",1 ??? + 1 ??? + 1000 crystals,Sunrise Lady + Moonrise Gentleman + 1000 crystals,"11111
+00000
+00000
+00000
+00000",,Yes,
+Twin Axe Saintess,Union,,40,30,Divine,,This card can ??? per turn,This card can attack twice per turn,1??? + 1 ??? + 1500 crystals,Lady of the Sacred Pond + 1 Anima + 1500 crystals,"11011
+01010
+01010
+01010
+00000",,,
+Blast Beam Seraph,Union,,100,50,Divine,,None,None,1 ??? + 1 ??? + 1500 crystals,Gerald of the Heavenly Light + 1 Divine + 1500 crystals,"11111
+00100
+11111
+00100
+00000",,,
+Balthier the Supreme Holiness,Union,,100,100,Divine,,+??? ATK and DEF for each ???cards on the field. This bonus does not exceed maximum of 1???,+50 ATK and DEF for each Divine cards on the field. This bonus does not exceed maximum of 100,2 ??? + 1500 crystals,2 Divine monsters with at least 1000 crystal cost + 2000 crystals,"00100
+11111
+00100
+00100
+00100",,,
+Giant Mining Pod,Union,,20,80,Cosmic,,"If this card attacks a dead end card, you receive ???crystals","If this card attacks a dead end card, you receive 200 crystals",1 ??? + 1 ??? + 1000 crystals,1 Miner probe + 1 Cosmic + 1000 crystals,"11111
+01110
+01110
+00100
+00100",,Yes,
+Kitsune,Union,,35,35,Chaos,,None,None,1 ??? + 1 ??? + 1000 crystals,Dark Monk + 1 Chaos + 1000 crystals,"01100
+00110
+01100
+00110
+01100",,Yes,
+Ten Arms Yaksa,Union,,45,30,Chaos,,This card can attack ??? times. -?? ATK for each successful attack.,This card can attack 3 times. -5 ATK for each successful attack.,1 ??? + 1 ??? + 1000 crystals,Yaksa + 1 Chaos + 1000 crystals,"11011
+00100
+00100
+11111
+10101",,Yes,
+Skeleton Overlord,Union,,50,5,Chaos,,None,None,3 ??? + 1000 crystals,3 Skeleton cards + 1000 crystals,"01110
+00000
+11111
+00000
+01110",,Yes,
+Oblivion Dragon,Union,,200,0,Chaos,,"When this card defends, halve its ??? an???","When this card defends, halve its attack and increase DEF by that amount  permanently",4 ??? + 2000 crystals,4 Chaos card (≥ 1000 cost) + 2000 crystals,"10001
+00000
+00000
+00000
+10001",,,
+Katana Shark,Union,,75,50,Nature,,None,None,3 ??? + 1000 crystals,3 sharks card + 1000 crystals,"11000
+00100
+00010
+00010
+00001",,Yes,
+Ultimate Volcanic Dragon,Union,,250,180,Nature,,Can attack if ???? on your field. Pay 1000 crystals to ????.,Can attack if this is the only face-up card on your field. Pay 1000 crystals to command this card to attack.,5 ??? + 3000 crystals,5 Nature cards + 3000 crystals,"10001
+00000
+00100
+00010
+10001",,,
+Rocket Peacock,Union,,150,100,Nature,,"After this card battles, select 1 card on your opponent’s field, flip a coin. If head, ???","After this card battles, select 1 card on your opponent’s field, flip a coin. If head, destroy that card",1 ??? + 1 ??? + 1500 crystals,Ostrich Cannon + 1 Nature card + 1500 crystals,"10001
+10001
+10001
+00000
+00100",,Yes,
+Scarlet Shroom,Union,,0,80,Nature,,"If ???, put venom flag on all ???. ","If this card is union summoned, put venom flag on ???",2 ??? + 1000 crystals,2 Nature cards + 1000 crystals,"11111
+00100
+00100
+00100
+00000",,Yes,
+Ancient Lizard,Union,,75,75,Nature,,None,None,1 ??? + 1 ???+ 1000 crystals,1 Flame Lizard + 1 Nature card + 1000 crystals,"00000
+00100
+01110
+00100
+00000",,Yes,
+Beowolf,Union,,55,50,Nature,,+?? ATK when this card can destroy ???,+25 ATK when this card can destroy a character card,1 ??? + 1 ??? + 1000 crystals,1 Kulu the Alpha Leader + 1 Anima card + 1000 crystals,"10101
+00000
+01010
+00000
+10101",,,
+Dew the Heroic Prince,Union,,80,70,Nature,,"At battle calculation, +?? ATK and +?? DEF vs ???","At battle calculation, +40 ATK and +40 DEF vs Union cards",1 ??? + 1 ??? + 1000 crystals,1 Dew the Frog Knight + 1 card including ‘princess’ name or card with princess flag + 1000 crystals,"11011
+00000
+00100
+00100
+11011",,,
+Gemina the Supreme Queen,Union,,90,90,Anima,,Both player cannot use ??? while this card is face-up. This card is unaffected by ???.,Both player cannot use tech while this card is face-up. This card is unaffected by traps.,3 ??? + 1500 crystals,3 cards including ‘princess’ name or card with princess flag + 1500 crystals,"01110
+10001
+10001
+10001
+01110",,,
+Wild Manticore,Union,,50,85,Nature,,"+?? ATK at the end of your turn. Whenever this card attacks, ??","+20 ATK at the end of your turn. Whenever this card attacks, reset this bonus.",1 ??? + 1 ??? + 1??? + 1500 crystals,Wild Centaur + Wild Minotaur + Wild Pegasus + 1500 crystals,"00000
+01110
+01010
+01110
+00000",,,
+Burning Phoenix,Union,,110,50,Arcane,,"This card cannot be destroyed by ???. When this card is targeted by tech, ???","This card cannot be destroyed by non-union cards. When this card is targeted by tech, destroy it immediately.",1 ??? + 1 ??? + 1 ??? + 2000 crystals,1 Arcane (≥ 1000 cost) + 1 Nature (≥ 1000 cost) + 1 Divine (≥ 1000 cost) + 2000 crystals,"00100
+01110
+10101
+00000
+00000",,Yes,
+Wyriah the Roc,Union,,80,25,Nature,,This card is unaffected by ???,This card is unaffected by trap effect,1 ??? + 1 ??? + 2000 crystals,1 Steel Eagle + 1 Nature (≥ 1000 cost) + 2000 crystals,"00000
+01110
+11111
+00100
+00100",,,
+Mad Eye the Collector,Union,,60,60,Cosmic,,"During battle, you can choose to destroy ??? to +??? ATK and DEF","During battle, you can choose to destroy 1 of your trap card to +60 ATK and DEF",1 ??? + 1 ??? + 1000 crystals,1 Space Janitor + 1 Cosmic + 1000 crystals,"00000
+00100
+01110
+00100
+00000",,,
+Berserk Hyena,Union,,40,0,Nature,,None,None,2 ???+ 1000 crystals,2 Nature + 1000 crystals,"00000
+11111
+10101
+10101
+00000",,Yes,
+Ice Hawk,Union,,35,25,Nature,,Defender is ??? on next opponent’s turn.,Defender is unable to attack on next opponent’s turn.,1 ??? + 1 ???+ 1000 crystals,Drill Woodpecker + 1 Nature + 1000 crystals,"10100
+01111
+10100
+00000
+00000",,,
+Ice Hawk,Union,,35,25,Divine,,Defender is ??? on next opponent’s turn.,Defender is unable to attack on next opponent’s turn.,1 ??? + 1 ???+ 1000 crystals,Drill Woodpecker + 1 Nature + 1000 crystals,"10100
+01111
+10100
+00000
+00000",,,
+False Prophet,Union,,20,40,Divine,,"At the start of your turn, you may flip ???. If it was a ???, destroy this card. If it was character or trap, ???.","At the start of your turn, you may flip one of your opponent face-down cards face-up. If it was a Dead End, destroy this card. If it was character or trap, gain 200 crystal",,2 Divine cards + 1000 crystals,"00100
+01010
+00100
+00000
+00000",,Yes,
+Dwarven Drill,Union,,55,80,Arcane,,"At the end of this turn, reveal ???. You cannot use this effect if ???.","At the end of this turn, reveal 2 card on your opponent field. You cannot use this effect if you have already attacked this turn.",2 ??? + 1500 crystal.,2 Dwarven cards + 1500 crystal.,"00001
+01111
+11100
+00000
+00000",,,
+Cullan the Flaming Blade,Union,,40,30,Arcane,,+??? ATK and DEF vs Nature,+30 ATK and DEF vs Nature,1 ??? + 1 ??? + 1000,Cullan the Magic Swordsman + Red Mage + 1000 crystals,"00001
+00010
+01100
+01110
+10000",,,
+The Undertaker,Union,,90,75,Chaos,,,"Whenever an opponent destroys one of your cards, gain +15 ATK permanently (max +60).",,Mad Doctor + 1 Chaos card + 1000 crystals,"00000
+00000 
+01110
+01110
+01110
+",,,
+Colorful Mage,Union,,55,40,Arcane,,,-10 ATK and DEF permanently if battles against non-Arcane card.,,Red Mage + Green Mage + Blue Mage + 1000 crystals,"00001
+00010
+01100
+01110
+10000",,Yes,
+Ethereal Marquees,Union,,175,140,Arcane,,-80 DEF if ???,"-80 DEF if defends against Arcane card. If this card battles and survived, pay 500 crystal cost",,Nobleman of Luminaso + 1 Arcane card + 1500 crystals,"00100
+01010
+10101
+01010
+10101",,,
+Charm Mistress,Union,,30,50,Arcane,,,"At the beginning of your opponent’s turn, flip a coin. If head, your opponent can only attack once.",,Alluring Spellcaster + 1 Arcane card + 1500 crystals,"00000
+01010 
+01110
+00100
+00000
+",,,
+Chronoteleporter,Union,,60,80,Arcane,,,"When another of your Arcane card defends, you can swap this card with the defender. Flip a coin, if head, the attack is negated",,Freya the Rift Walker + Bingo the Chrono Rabbit + 1500 crystals.,"00010
+01000 
+00010
+01000
+00001
+",,,
+Death Colony,Union,,180,150,Bio,,,This card can only choose attack target in the same pattern as its union zone,,Long Tongue + 1 Bio card + 1000 crystals.,"10001
+01010 
+00100
+01010
+10001
+",,,
+Diamond Elemental,Union,,60,90,Arcane,,,None,,Fire Elemental + Earth Elemental + 1000 crystals,"01010
+01110 
+01110
+00100
+00000
+",,,
+Ice Elemental,Union,,70,50,Arcane,,,Card that battles this card cannot perform attack until the end of their next turn.,,Water Elemental + Wind Elemental + 1000 crystals,"00000
+01110 
+00100
+01110
+00000
+",,,
+Cloud Elemental,Union,,60,60,Arcane,,,"Once, this card is not destroyed",,Fire Elemental + Water Elemental + 1000 crystals,"00100
+00100 
+01110
+01110
+00000
+",,,
+Thunder Elemental,Union,,80,55,Arcane,,,"After successful attack, reveal 1 of your opponent’s card",,Fire Elemental + Wind Elemental + 1000 crystals,"00010
+00110 
+00100
+01100
+01000
+",,,
+Wood Elemental,Union,,65,70,Arcane,,,"At the end of this turn, +10 DEF permanently",,Water Elemental + Earth Elemental + 1000 crystals,"00000
+00000 
+01110
+01110
+01110
+",,,
+Sand Elemental,Union,,50,50,Arcane,,,+40 ATK and DEF vs Non-Arcane cards,,Wind Elemental + Earth Elemental + 1000 crystals,"00000
+01110 
+01110
+01110
+00000
+",,,
+Nuclear Elemental,Union,,90,80,Arcane,,,"At the end of this turn, +10 ATK permanently",,Mind Elemental + Fire Elemental + 1500 crystals,"00000
+01110 
+01110
+01110
+00000
+",,,
+Acid Elemental,Union,,50,100,Arcane,,,"When this card is union summoned, put acid flag on all of your opponent’s face-up card. At the end of opponent’s turn, card with acid flag -10 DEF ",,Mind Elemental + Water Elemental + 1500 crystals,"00000
+01110 
+01110
+01110
+00000
+",,,
+Vacuum Elemental,Union,,155,0,Arcane,,,None,,Mind Elemental + Wind Elemental + 1500 crystals,"00000
+01110 
+01110
+01110
+00000
+",,,
+Magnet Elemental,Union,,10,120,Arcane,,,Your opponent’s non-Arcane cards cannot target face-up card other than this card.,,Mind Elemental + Earth Elemental + 1500 crystals,"00000
+01110 
+01110
+01110
+00000
+",,,
+Dwarven Berserker,Union,,120,0,Arcane,,,This card can attack twice,,1 Dwarven card + 1 Arcane or Anima card + 1500 crystals,"01110
+10101 
+00100
+00100
+00000
+",,,
+Grand Fort Captain,Union,,45,40,Anima,,,None,,2 Grand Fort card + 1000 crystals,"00000
+00100 
+01110
+00100
+00000
+",,Yes,
+Volatile Slasher,Union,,50,45,Bio,,,"While this card attacking, it gain +50 ATK bonus vs target’s affinity permanently, once per affinity.",,1 Bladeshifter + 1 Bio card + 1000 crystals,"10000
+01100 
+01100
+01100
+10000
+",,Yes,
+Moon Tribe Shaman,Union,,25,55,Cosmic,,,"Upon union, revive 1 Moon card on your empty cell. Double its cost.",,1 Moon card+ 1 Cosmic card + 1000 crystals,"10001
+01010 
+00100
+00100
+00100
+",,Yes,
+Rebel King,Union,,60,40,Anima,,,"At the end of your opponent’s turn, your opponent select 1 of their face-up card (if any) and swap ATK and DEF",,Jirayu the Rebellious Prince + 1 Anima card + 1000 crystals,"00100
+00000 
+10101
+00100
+00100
+",,Yes,
+Kiba the Giant Slayer,Union,,80,55,Anima,,,+30 ATK vs Union,,Kiyoko the Death Whisper + Silver Spearman + 1500,"01010
+01010 
+01010
+01010
+01010
+",,Yes,
+Moon Ninja Lady,Union,,65,50,Anima,,,"Once, this card is not destroyed.",,Kiyoko the Death Whisper + 1 Anima card + 1000,"00100
+00100 
+01110
+00100
+00100
+",,Yes,
+Imperial Frame,Union,,45,30,Cosmic,,,None,,Laser Walker + 1 Cosmic card + 1000,"00000
+00111
+00011
+10000
+11100
+",,Yes,
+Giant Meteor Vergaia,Union,,60,0,Cosmic,,,"Once face-up, destroy it and the end of this turn. Select all face-up opponent’s card in adjacent of target cell with 60 DEF or less, destroy them.",,Striker Comet + 2 Cosmic card + 2000,"10000
+01000 
+00000
+00111
+00111
+",,Yes,
+Blood-hungry Mutant,Union,,55,40,Cosmic,,,"If this card destroyed opponent’s card, +80 crystals",,2 Mutant cards + 1000 crystals,"00000
+01010
+10101
+01010
+00000",,Yes,
+Gamma Mermaid,Union,,30,20,Bio,,,-20 DEF to non-Bio defender,,1 Gamma cards + 1 Bio card + 1000,"00000
+01110 
+01010
+01110
+00000
+",,Yes,

@@ -12,6 +12,10 @@ func _ready() -> void:
 		"res://tests/test_card_database.gd",
 		"res://tests/test_game_state.gd",
 		"res://tests/test_battle_resolver.gd",
+		"res://tests/test_func_characters.gd",
+		"res://tests/test_func_traps.gd",
+		"res://tests/test_func_techs.gd",
+		"res://tests/test_func_unions.gd",
 	]
 
 	for suite_path in suites:

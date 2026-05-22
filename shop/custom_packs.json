@@ -1,89 +1,945 @@
 [
 	{
+		"id": "booster_blightsilver",
+		"name": "Booster Pack - Blightsilver",
+		"price": 500,
+		"description": "",
+		"card_count": 3,
+		"shop_available": true,
 		"accent": [
 			1.0,
 			0.721568644046783,
 			0.219607844948769
 		],
-		"card_count": 3,
+		"pack_image": "res://assets/textures/cards/booster_pack/booster_pack_basic.png",
 		"card_pool": [
 			{
+				"card_name": "Angel Gatekeeper",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Wandering Swordsman",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Huntress of Green Glade",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Armored Bee",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Chaotic Wisp",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Foul Wisp",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Doom Wisp",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Void Stalker",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Swarmcaller",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Scout Probe",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Lab Crawler",
+				"card_type": "character",
+				"weight": 1
+			},
+			{
+				"card_name": "Lazy Troll",
+				"card_type": "character",
+				"weight": 1
+			},
+			{
+				"card_name": "Immortal Vampire",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Bat Swarm",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Poltergeist",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
 				"card_name": "Street Rogue",
-				"card_type": "",
+				"card_type": "character",
 				"weight": 100
 			},
 			{
 				"card_name": "Big Thug",
-				"card_type": "",
+				"card_type": "character",
 				"weight": 50
 			},
 			{
-				"card_name": "Hammer Shark",
-				"card_type": "",
+				"card_name": "Magenta the Nightbloom",
+				"card_type": "character",
 				"weight": 100
 			},
 			{
-				"card_name": "Flame Lizard",
-				"card_type": "",
+				"card_name": "Tiny Pixie",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Melissa the Healer",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Ponycorn",
+				"card_type": "character",
 				"weight": 50
 			},
 			{
-				"card_name": "Scout Probe",
-				"card_type": "",
+				"card_name": "Sniping Fairy",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Bomber Fairy",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Raijin",
+				"card_type": "character",
 				"weight": 20
 			},
 			{
-				"card_name": "Void Stalker",
-				"card_type": "",
+				"card_name": "Fujin",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Cursed Well",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Shredder Doll",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Hands in the Attic",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Miner Probe",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Jacob the Ski Mask",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Dark Tengu",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Skeleton Grappler",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Skeleton Scout",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Skeleton Archer",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Skeleton Lancer",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Laughing Granny",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Death Knight",
+				"card_type": "character",
 				"weight": 20
 			},
 			{
-				"card_name": "Tomb Bandit",
-				"card_type": "",
+				"card_name": "Stinky Insect",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Mad Raccoon",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Armored Money",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Hammer Shark",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Red Mage",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Bleacher Squad",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Laser Walker",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Moon Tribe Marksman",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Grand Fort Footsoldier",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Grand Fort Archer",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Trap Hole",
+				"card_type": "trap",
+				"weight": 100
+			},
+			{
+				"card_name": "Hostage",
+				"card_type": "trap",
+				"weight": 50
+			},
+			{
+				"card_name": "Bait",
+				"card_type": "trap",
+				"weight": 100
+			},
+			{
+				"card_name": "Blackmail",
+				"card_type": "trap",
+				"weight": 50
+			},
+			{
+				"card_name": "Hypnosis ",
+				"card_type": "trap",
 				"weight": 5
 			},
 			{
-				"card_name": "Lazy Troll",
-				"card_type": "",
-				"weight": 1
+				"card_name": "Foul Gas",
+				"card_type": "trap",
+				"weight": 20
+			},
+			{
+				"card_name": "Acid Trap Hole",
+				"card_type": "trap",
+				"weight": 100
+			},
+			{
+				"card_name": "Street Joke",
+				"card_type": "trap",
+				"weight": 100
+			},
+			{
+				"card_name": "Alarm",
+				"card_type": "trap",
+				"weight": 100
+			},
+			{
+				"card_name": "Spy",
+				"card_type": "tech",
+				"weight": 100
+			},
+			{
+				"card_name": "Bribe",
+				"card_type": "tech",
+				"weight": 20
+			},
+			{
+				"card_name": "War Supply",
+				"card_type": "tech",
+				"weight": 20
+			},
+			{
+				"card_name": "Radar",
+				"card_type": "tech",
+				"weight": 100
 			}
-		],
-		"description": "",
-		"id": "booster_blightsilver",
-		"name": "Booster Pack - Blight Silver",
-		"pack_image": "res://assets/textures/cards/booster_pack/booster_pack_basic.png",
-		"price": 500,
-		"shop_available": true
+		]
 	},
 	{
+		"id": "booster_unseen_presence",
+		"name": "Booster Pack - Unseen Presence",
+		"price": 500,
+		"description": "",
+		"card_count": 3,
+		"shop_available": true,
 		"accent": [
 			1.0,
 			0.721568644046783,
 			0.219607844948769
 		],
-		"card_count": 3,
+		"pack_image": "res://assets/textures/cards/booster_pack/booster_pack_unseen_presence.png",
 		"card_pool": [
 			{
+				"card_name": "Armored Rhino",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Night Whisperor",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Leorudus the Warlord",
+				"card_type": "character",
+				"weight": 1
+			},
+			{
+				"card_name": "Lab Zombie",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Lab Bloater",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Pit Lord",
+				"card_type": "character",
+				"weight": 1
+			},
+			{
+				"card_name": "Space Boy",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Leech Man",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Immortal Vampire",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Vampire Servant",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Jirayu the Rebellious Prince",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Gryphon",
+				"card_type": "character",
+				"weight": 1
+			},
+			{
+				"card_name": "Succubus",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Joan the Faithful Warrior",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Choir Lady Alice",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Choir Lady Anna",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Choir Lady Abigail",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Golden Senju",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Flame Seraph",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Mephisto the Fallen",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Joseph the Battle Priest",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Sonic Seraph",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
 				"card_name": "Mine Guard",
-				"card_type": "",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Dark Monk",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Demon Spawn",
+				"card_type": "character",
 				"weight": 50
 			},
 			{
 				"card_name": "Dark Blob",
-				"card_type": "",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Grave Worm",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Staircase Lady",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Magical Butterfly",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Hammer Shark",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Saw Shark",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Spear Shark",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Scythe Shark",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Flame Lizard",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Death Cobra",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Green Mage",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Aerial the Battlemage",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Book with Fangs",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Claw Mutant",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Bladeshifter",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Rotten Shrieker",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Plant 29",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Striker Comet",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Parom the Smuggler",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Moon Tribe Twin Blades",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Electrogazer",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Ox Patrol",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Cursed Reflection",
+				"card_type": "trap",
+				"weight": 20
+			},
+			{
+				"card_name": "Flame Trap",
+				"card_type": "trap",
+				"weight": 50
+			},
+			{
+				"card_name": "Echo Barrier",
+				"card_type": "trap",
+				"weight": 20
+			},
+			{
+				"card_name": "Defensive Pheromone",
+				"card_type": "trap",
+				"weight": 20
+			},
+			{
+				"card_name": "Brainwash",
+				"card_type": "trap",
+				"weight": 1
+			},
+			{
+				"card_name": "Decoy Puppet",
+				"card_type": "trap",
+				"weight": 50
+			},
+			{
+				"card_name": "Hard Scale",
+				"card_type": "trap",
+				"weight": 100
+			},
+			{
+				"card_name": "Red Card",
+				"card_type": "trap",
+				"weight": 50
+			},
+			{
+				"card_name": "Pepper Spray",
+				"card_type": "trap",
+				"weight": 100
+			},
+			{
+				"card_name": "Tease",
+				"card_type": "tech",
+				"weight": 50
+			},
+			{
+				"card_name": "Release Mutagen",
+				"card_type": "tech",
+				"weight": 5
+			},
+			{
+				"card_name": "Prayer",
+				"card_type": "tech",
+				"weight": 5
+			}
+		]
+	},
+	{
+		"id": "booster_wind_of_dominance",
+		"name": "Booster Pack - Wind of Dominance",
+		"price": 500,
+		"description": "",
+		"card_count": 3,
+		"shop_available": true,
+		"accent": [
+			1.0,
+			0.721568644046783,
+			0.219607844948769
+		],
+		"pack_image": "res://assets/textures/cards/booster_pack/booster_pack_wind_of_dominance.png",
+		"card_pool": [
+			{
+				"card_name": "Pyromancer",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Angel Gatekeeper",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Wandering Swordsman",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Canyon Warg",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Tomb Bandit",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Scout Probe",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Lab Bloater",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "War Genie ",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Archbishop",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Goblin Poacher",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Ice Mage",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Mafia Associates",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Nuki the Tanuki",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Heavy Tome Preacher",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Church Guard",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Sunrise Lady",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Moonrise Gentleman",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Mephisto the Fallen",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Goddess of Virtue",
+				"card_type": "character",
+				"weight": 1
+			},
+			{
+				"card_name": "Mine Guard",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Araya the Eerie Dancer",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Yaksa",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Mysterious Miner",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Laughing Granny",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Vampire Duchess",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Mad Raccoon",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Armored Money",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Needle Porcupine",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Kiyoko the Death Whisper",
+				"card_type": "character",
+				"weight": 5
+			},
+			{
+				"card_name": "Giant Centipede",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "White Tiger",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Ostrich Cannon",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Shotgun Shark",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Blue Mage",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Mind Flayer",
+				"card_type": "character",
+				"weight": 1
+			},
+			{
+				"card_name": "Vile Creeper",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Gamma Emitter",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Scarlet Mutant",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Bladeshifter",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Plant 29",
+				"card_type": "character",
+				"weight": 20
+			},
+			{
+				"card_name": "Neptune Diver",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Moon Rover",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Mars Drill",
+				"card_type": "character",
 				"weight": 50
 			},
 			{
 				"card_name": "Satellite Cannon",
-				"card_type": "",
+				"card_type": "character",
 				"weight": 1
+			},
+			{
+				"card_name": "Grand Fort Footsoldier",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Hairpin Assassin",
+				"card_type": "character",
+				"weight": 100
+			},
+			{
+				"card_name": "Grand Fort Mauler",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Shepherd Detective",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Witchhunter",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Silver Spearman",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Leopard Jailer",
+				"card_type": "character",
+				"weight": 50
+			},
+			{
+				"card_name": "Explosive Barrels",
+				"card_type": "trap",
+				"weight": 1
+			},
+			{
+				"card_name": "Spike Trap",
+				"card_type": "trap",
+				"weight": 1
+			},
+			{
+				"card_name": "Snare Trap",
+				"card_type": "trap",
+				"weight": 5
+			},
+			{
+				"card_name": "Bunker",
+				"card_type": "trap",
+				"weight": 5
+			},
+			{
+				"card_name": "Self-destruct",
+				"card_type": "trap",
+				"weight": 50
+			},
+			{
+				"card_name": "Great Diplomacy",
+				"card_type": "tech",
+				"weight": 5
+			},
+			{
+				"card_name": "Siege Cannon",
+				"card_type": "tech",
+				"weight": 1
+			},
+			{
+				"card_name": "Accident",
+				"card_type": "tech",
+				"weight": 20
+			},
+			{
+				"card_name": "Resurrection",
+				"card_type": "tech",
+				"weight": 5
 			}
-		],
-		"description": "",
-		"id": "booster_unseen_presence",
-		"name": "Booster Pack - Unseen Presence",
-		"pack_image": "res://assets/textures/cards/booster_pack/booster_pack_unseen_presence.png",
-		"price": 500,
-		"shop_available": true
+		]
 	}
 ]

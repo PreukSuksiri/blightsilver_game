@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://do0o0payjacgu"
+
+[deps]
+
+files=["res://context/card_data/Union-Table 1.Card Type.translation", "res://context/card_data/Union-Table 1.en.translation", "res://context/card_data/Union-Table 1.ATK.translation", "res://context/card_data/Union-Table 1.DEF.translation", "res://context/card_data/Union-Table 1.Affinity.translation", "res://context/card_data/Union-Table 1.en.translation", "res://context/card_data/Union-Table 1.Partial Ability.translation", "res://context/card_data/Union-Table 1.Full Ability.translation", "res://context/card_data/Union-Table 1.Partial Formula.translation", "res://context/card_data/Union-Table 1.Full Formula.translation", "res://context/card_data/Union-Table 1.Union Zone.translation", "res://context/card_data/Union-Table 1.en.translation", "res://context/card_data/Union-Table 1.Demo.translation", "res://context/card_data/Union-Table 1.en.translation"]
+
+source_file="res://context/card_data/Union-Table 1.csv"
+dest_files=["res://context/card_data/Union-Table 1.Card Type.translation", "res://context/card_data/Union-Table 1.en.translation", "res://context/card_data/Union-Table 1.ATK.translation", "res://context/card_data/Union-Table 1.DEF.translation", "res://context/card_data/Union-Table 1.Affinity.translation", "res://context/card_data/Union-Table 1.en.translation", "res://context/card_data/Union-Table 1.Partial Ability.translation", "res://context/card_data/Union-Table 1.Full Ability.translation", "res://context/card_data/Union-Table 1.Partial Formula.translation", "res://context/card_data/Union-Table 1.Full Formula.translation", "res://context/card_data/Union-Table 1.Union Zone.translation", "res://context/card_data/Union-Table 1.en.translation", "res://context/card_data/Union-Table 1.Demo.translation", "res://context/card_data/Union-Table 1.en.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

@@ -407,35 +407,6 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
-		"bg_ken_burns": {
-			"duration": 2.0,
-			"pan_x": -30.0,
-			"pan_y": 30.0,
-			"zoom": 1.1
-		},
-		"music": "res://assets/audio/bgm_horror_1.mp3",
-		"nsfw": "nsfw",
-		"shake_screen": 10.0,
-		"text": "!!!",
-		"wait": 2.0
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
-		"nsfw": "nsfw"
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
-		"nsfw": "nsfw",
-		"text": "Mayu's body is covered in blood. She crawled on four legs. Gruesome smile is welcoming the tasty friends"
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
-		"nsfw": "nsfw",
-		"speaker": "Possessed Mayu",
-		"text": "(mumbles unrecognized words)"
-	},
-	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
@@ -446,7 +417,6 @@
 			}
 		],
 		"music": "res://assets/audio/bgm_horror_1.mp3",
-		"nsfw": "safe",
 		"shake_screen": 10.0,
 		"text": "!!!",
 		"wait": 2.0
@@ -461,7 +431,6 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
 		],
-		"nsfw": "safe",
 		"text": "Mayu's body is covered in blood. She crawled on four legs. Gruesome smile is welcoming the tasty friends"
 	},
 	{
@@ -474,7 +443,6 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
 		],
-		"nsfw": "safe",
 		"speaker": "Possessed Mayu",
 		"text": "(mumbles unrecognized words)"
 	},
