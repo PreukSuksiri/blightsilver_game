@@ -32,6 +32,7 @@ DailyDungeonManager="*res://autoload/DailyDungeonManager.gd"
 CheckerTransition="*res://autoload/CheckerTransition.gd"
 CardRuleEngine="*res://autoload/CardRuleEngine.gd"
 UnionDatabase="*res://autoload/UnionDatabase.gd"
+AIvsAIManager="*res://autoload/AIvsAIManager.gd"
 
 [display]
 

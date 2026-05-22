@@ -115,6 +115,7 @@ func admin_command(raw: String) -> String:
 				+ "  lose_battle\n"
 				+ "  map_editor\n"
 				+ "  vn_editor [filename]\n"
+				+ "  ai_vs_ai\n"
 				+ "  card_info <card_name>\n"
 				+ "  card_find <query>\n"
 				+ "  list_chars\n"
@@ -345,6 +346,14 @@ func admin_command(raw: String) -> String:
 			if parts.size() >= 2:
 				vned.call_deferred("open_file", " ".join(PackedStringArray(parts.slice(1))))
 			return "VN Beat Editor opened."
+
+		"ai_vs_ai":
+			if get_tree().current_scene.name == "GameBoard":
+				return "Cannot open AI vs AI while a match is in progress."
+			if get_tree().current_scene.name == "AIvsAIConfig":
+				return "AI vs AI config is already open."
+			get_tree().change_scene_to_file("res://scenes/ai_vs_ai_config.tscn")
+			return "Opening AI vs AI config..."
 
 		"card_info":
 			if parts.size() < 2:

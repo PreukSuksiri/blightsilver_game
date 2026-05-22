@@ -2,9 +2,14 @@ class_name AIPlayer
 extends Node
 # "Training" personality AI for VS_AI and Campaign modes.
 
-const AI_PLAYER: int = 1
-const HUMAN_PLAYER: int = 0
 const BLUFF_ANIM_SECS: float = 0.42   # slightly over GameBoard.BLUFF_ANIM_DURATION (0.38s)
+
+var player_index: int = 1    # which player this AI controls (0 or 1)
+var opponent_index: int = 0  # the other player
+
+func init_as(pi: int) -> void:
+	player_index   = pi
+	opponent_index = 1 - pi
 
 # Pre-compiled regex for integer extraction in decide_trap_choice
 var _int_regex: RegEx = RegEx.new()
@@ -48,7 +53,7 @@ func decide_turn() -> void:
 	await get_tree().create_timer(0.6).timeout
 
 	# Rule 1: Tech priority — only enter TECH mode if a card actually scores > 0.
-	if GameState.has_playable_tech(AI_PLAYER) and _has_useful_tech():
+	if GameState.has_playable_tech(player_index) and _has_useful_tech():
 		emit_signal("ai_mode_chosen", GameState.TurnMode.TECH)
 		await get_tree().create_timer(0.3).timeout
 		_choose_tech()
@@ -81,7 +86,7 @@ func _do_attack_decision() -> void:
 		emit_signal("ai_end_turn")
 		return
 	# Personality: skip early turns if opponent has nothing revealed yet
-	if _skip_turns > 0 and _ai_turn_count <= _skip_turns and _count_faceup(HUMAN_PLAYER) == 0:
+	if _skip_turns > 0 and _ai_turn_count <= _skip_turns and _count_faceup(opponent_index) == 0:
 		emit_signal("ai_end_turn")
 		return
 	# Personality: advance sweep/focus axis if current one is exhausted or blocked
@@ -102,15 +107,15 @@ func _do_attack_decision() -> void:
 # Attacker selection (Training rules)
 # ─────────────────────────────────────────────────────────────
 func _choose_attacker() -> Vector2i:
-	var opponent_faceup: int = _count_faceup(HUMAN_PLAYER)
-	var ai_faceup: int = _count_faceup(AI_PLAYER)
+	var opponent_faceup: int = _count_faceup(opponent_index)
+	var ai_faceup: int = _count_faceup(player_index)
 
 	var faceup_attackers: Array = []
 	var facedown_attackers: Array = []
 
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if card.card_type != "character":
 				continue
 			if card.attacked_this_turn:
@@ -118,8 +123,8 @@ func _choose_attacker() -> Vector2i:
 			if card.cannot_attack_until >= GameState.turn_number:
 				continue
 			# Berserk constraint: only the berserk card may attack.
-			if GameState.berserk_active[AI_PLAYER] != null:
-				if GameState.berserk_active[AI_PLAYER] != card:
+			if GameState.berserk_active[player_index] != null:
+				if GameState.berserk_active[player_index] != card:
 					continue
 			if card.face_up:
 				faceup_attackers.append(Vector2i(r, c))
@@ -129,9 +134,9 @@ func _choose_attacker() -> Vector2i:
 	# Rule 5: always use face-up characters first (pick highest ATK).
 	if not faceup_attackers.is_empty():
 		var best_pos: Vector2i = faceup_attackers[0]
-		var best_atk: int = GameState.get_card(AI_PLAYER, best_pos.x, best_pos.y).get_effective_atk()
+		var best_atk: int = GameState.get_card(player_index, best_pos.x, best_pos.y).get_effective_atk()
 		for pos in faceup_attackers:
-			var atk: int = GameState.get_card(AI_PLAYER, pos.x, pos.y).get_effective_atk()
+			var atk: int = GameState.get_card(player_index, pos.x, pos.y).get_effective_atk()
 			if atk > best_atk:
 				best_atk = atk
 				best_pos = pos
@@ -168,7 +173,7 @@ func _choose_attacker() -> Vector2i:
 		var adj: Array = GameState.get_adjacent_positions(pos.x, pos.y)
 		for ap_v in adj:
 			var ap: Vector2i = ap_v
-			var neighbor: GameState.CardInstance = GameState.get_card(AI_PLAYER, ap.x, ap.y)
+			var neighbor: GameState.CardInstance = GameState.get_card(player_index, ap.x, ap.y)
 			if neighbor.card_type == "character" and neighbor.face_up:
 				adjacent.append(pos)
 				break
@@ -190,7 +195,7 @@ func _choose_target_for(attacker_pos: Vector2i) -> Vector2i:
 			# Skip locked targets
 			if pos in GameState.locked_attack_positions:
 				continue
-			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			# Skip destroyed slots
 			if card.card_type == "dead_end" and card.was_destroyed:
 				continue
@@ -203,8 +208,8 @@ func _choose_target_for(attacker_pos: Vector2i) -> Vector2i:
 
 ## Score an attack from attacker_pos onto target_pos. Higher = more desirable.
 func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
-	var attacker: GameState.CardInstance = GameState.get_card(AI_PLAYER, attacker_pos.x, attacker_pos.y)
-	var target: GameState.CardInstance   = GameState.get_card(HUMAN_PLAYER, target_pos.x, target_pos.y)
+	var attacker: GameState.CardInstance = GameState.get_card(player_index, attacker_pos.x, attacker_pos.y)
+	var target: GameState.CardInstance   = GameState.get_card(opponent_index, target_pos.x, target_pos.y)
 
 	var base: int
 	if target.card_type == "dead_end":
@@ -243,7 +248,7 @@ func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 	base += _score_pos_offensive(target_pos)
 
 	# Personality: emoji reaction bias
-	var opp_emoji: String = GameState.get_bluff(HUMAN_PLAYER, target_pos.x, target_pos.y)
+	var opp_emoji: String = GameState.get_bluff(opponent_index, target_pos.x, target_pos.y)
 	if opp_emoji == "💩":   # normalize NSFW variant to canonical key
 		opp_emoji = "🖕"
 	if opp_emoji != "" and _emoji_reactions.has(opp_emoji):
@@ -259,13 +264,13 @@ func _choose_tech() -> void:
 	var best_name: String = ""
 	var best_score: int = -1
 
-	for tech_name: String in GameState.tech_hands[AI_PLAYER]:
+	for tech_name: String in GameState.tech_hands[player_index]:
 		var data: TechCardData = CardDatabase.get_tech(tech_name)
 		if data == null:
 			continue
-		if GameState.crystals[AI_PLAYER] < data.crystal_cost:
+		if GameState.crystals[player_index] < data.crystal_cost:
 			continue
-		if data.required_prior_card != "" and not GameState.tech_name_played_this_game(AI_PLAYER, data.required_prior_card):
+		if data.required_prior_card != "" and not GameState.tech_name_played_this_game(player_index, data.required_prior_card):
 			continue
 		var base_score: int = _score_tech(tech_name, snap)
 		if base_score <= 0:
@@ -283,11 +288,11 @@ func _choose_tech() -> void:
 ## Returns true if at least one affordable tech card scores > 0 on the current board.
 func _has_useful_tech() -> bool:
 	var snap: Dictionary = _board_snapshot()
-	for tech_name: String in GameState.tech_hands[AI_PLAYER]:
+	for tech_name: String in GameState.tech_hands[player_index]:
 		var data: TechCardData = CardDatabase.get_tech(tech_name)
-		if data == null or GameState.crystals[AI_PLAYER] < data.crystal_cost:
+		if data == null or GameState.crystals[player_index] < data.crystal_cost:
 			continue
-		if data.required_prior_card != "" and not GameState.tech_name_played_this_game(AI_PLAYER, data.required_prior_card):
+		if data.required_prior_card != "" and not GameState.tech_name_played_this_game(player_index, data.required_prior_card):
 			continue
 		if _score_tech(tech_name, snap) > 0:
 			return true
@@ -413,7 +418,7 @@ func _score_tech(tech_name: String, snap: Dictionary) -> int:
 			return 50
 
 		TechCardData.TechEffectType.REVEAL_ALL_OWN_CHARACTERS:
-			var ai_hidden: int = _count_hidden(AI_PLAYER)
+			var ai_hidden: int = _count_hidden(player_index)
 			if ai_hidden == 0:
 				return 0
 			return 25 + ai_hidden * 5
@@ -487,7 +492,7 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 	if "ATK this battle" in prompt:
 		var cost: int = _extract_first_int(prompt)
 		var boost: int = _extract_second_int(prompt)
-		if GameState.crystals[AI_PLAYER] >= cost:
+		if GameState.crystals[player_index] >= cost:
 			var att: GameState.CardInstance = _get_current_attacker()
 			var tgt: GameState.CardInstance = _get_current_target()
 			if att != null and tgt != null:
@@ -502,7 +507,7 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 	if "DEF this battle" in prompt:
 		var cost: int = _extract_first_int(prompt)
 		var boost: int = _extract_second_int(prompt)
-		if GameState.crystals[AI_PLAYER] >= cost:
+		if GameState.crystals[player_index] >= cost:
 			var def_card: GameState.CardInstance = _get_current_target()  # AI's card is the defender
 			var opp_atk: int = _estimate_opponent_atk()
 			if def_card != null:
@@ -514,7 +519,7 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 	# OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT — "Pay N Crystals to destroy..."
 	if "Crystals to destroy" in prompt:
 		var cost: int = _extract_first_int(prompt)
-		if GameState.crystals[AI_PLAYER] >= cost:
+		if GameState.crystals[player_index] >= cost:
 			var att: GameState.CardInstance = _get_current_attacker()
 			var tgt: GameState.CardInstance = _get_current_target()
 			if att != null and tgt != null:
@@ -526,7 +531,7 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 	# INTERCEPT_ALLY_ATTACK — "X can intercept for Y!"
 	if "intercept" in prompt.to_lower():
 		# Intercept (choice 0) if we have enough other cards to spare
-		if _count_faceup(AI_PLAYER) >= 3:
+		if _count_faceup(player_index) >= 3:
 			return 0
 		return 1
 
@@ -544,14 +549,14 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 
 	# SACRIFICE_FOR_CARD_TYPE — "X sacrifices itself to save Y?"
 	if "sacrifices itself to save" in prompt:
-		if _count_faceup(AI_PLAYER) >= 3:
+		if _count_faceup(player_index) >= 3:
 			return 0  # sacrifice weaker card to save the target
 		return 1
 
 	# NULLIFY_ATTACK_CHOICE (Checkpoint trap) — choices: [lose crystals, destroy attacker]
 	if "Checkpoint" in prompt:
 		var att: GameState.CardInstance = _get_current_attacker()
-		if att != null and GameState.crystals[AI_PLAYER] >= 500:
+		if att != null and GameState.crystals[player_index] >= 500:
 			# Pay crystals if attacker is high-value (ATK+DEF >= 40)
 			if att.get_effective_atk() + att.get_effective_def() >= 40:
 				return 0
@@ -559,7 +564,7 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 
 	# ATTACKER_DISCARD_OR_END_TURN (Blackmail trap) — choices: [discard tech, end turn]
 	if "Blackmail" in prompt:
-		if GameState.attacks_remaining > 0 and not GameState.tech_hands[AI_PLAYER].is_empty():
+		if GameState.attacks_remaining > 0 and not GameState.tech_hands[player_index].is_empty():
 			return 0  # discard tech, keep attacking
 		return 1
 
@@ -569,7 +574,7 @@ func _random_unrevealed_self() -> Vector2i:
 	var options: Array = []
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if not card.face_up and card.card_type != "dead_end":
 				options.append(Vector2i(r, c))
 	if options.is_empty():
@@ -582,7 +587,7 @@ func _worst_own_faceup() -> Vector2i:
 	var worst_atk: int = 99999
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if card.card_type == "character" and card.face_up and card.current_atk < worst_atk:
 				worst_atk = card.current_atk
 				worst_pos = Vector2i(r, c)
@@ -596,7 +601,7 @@ func _best_own_divine_sacrifice() -> Vector2i:
 	var lowest_atk: int = 99999
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if card.card_type == "character" and card.face_up \
 					and card.affinity == CharacterData.Affinity.DIVINE \
 					and card.ability_type != int(CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY) \
@@ -610,7 +615,7 @@ func _best_own_divine_sacrifice() -> Vector2i:
 func _first_own_empty_slot() -> Vector2i:
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if card.card_type == "dead_end" and not card.was_destroyed:
 				return Vector2i(r, c)
 	return Vector2i(0, 0)
@@ -621,7 +626,7 @@ func _strongest_opp_faceup_pos() -> Vector2i:
 	var best_score: int = -1
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			if card.face_up and card.card_type != "dead_end":
 				var sc: int = card.get_effective_atk() + card.get_effective_def()
 				if sc > best_score:
@@ -635,7 +640,7 @@ func _random_unrevealed_opponent() -> Vector2i:
 	var options: Array = []
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			if not card.face_up and card.card_type != "dead_end":
 				options.append(Vector2i(r, c))
 	if options.is_empty():
@@ -647,7 +652,7 @@ func _random_facedown_opponent() -> Vector2i:
 	var options: Array = []
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			if not card.face_up:
 				options.append(Vector2i(r, c))
 	if options.is_empty():
@@ -659,7 +664,7 @@ func _best_own_faceup() -> Vector2i:
 	var best_atk: int = -1
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if card.card_type == "character" and card.face_up:
 				if card.get_effective_atk() > best_atk:
 					best_atk = card.get_effective_atk()
@@ -677,14 +682,14 @@ func _get_available_unions() -> Array:
 	var seen: Dictionary = {}
 	for r: int in range(GameState.GRID_SIZE):
 		for c: int in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if card.card_type != "character" or card.is_union:
 				continue
-			for entry: Dictionary in UnionDatabase.find_available_unions(AI_PLAYER, r, c):
+			for entry: Dictionary in UnionDatabase.find_available_unions(player_index, r, c):
 				var u: UnionData = entry["union"]
 				if seen.has(u.card_name):
 					continue
-				if GameState.crystals[AI_PLAYER] < u.summon_cost:
+				if GameState.crystals[player_index] < u.summon_cost:
 					continue
 				seen[u.card_name] = true
 				var mats: Array = _solve_materials(u, entry["zone_cells"])
@@ -754,7 +759,7 @@ func _solve_materials(u: UnionData, zone_cells: Array) -> Array:
 			if used[i]:
 				continue
 			var pos: Vector2i = zone_cells[i]
-			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, pos.x, pos.y)
+			var card: GameState.CardInstance = GameState.get_card(player_index, pos.x, pos.y)
 			if UnionDatabase.card_satisfies_condition(card, cond):
 				found_idx = i
 				break
@@ -767,7 +772,7 @@ func _solve_materials(u: UnionData, zone_cells: Array) -> Array:
 # ─────────────────────────────────────────────────────────────
 # Setup phase placement
 # ─────────────────────────────────────────────────────────────
-func decide_setup() -> Array:
+func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -> Array:
 	_ai_turn_count = 0
 	_union_used    = false
 	_ai_kill_count = 0
@@ -775,41 +780,64 @@ func decide_setup() -> Array:
 
 	var placements: Array = []
 
-	var cfg: Dictionary = GameState.campaign_enemy_config \
-		if not GameState.campaign_enemy_config.is_empty() else {}
-
-	var forced_chars: Variant = cfg.get("forced_characters", null)
-	var is_forced: bool = forced_chars is Array and not (forced_chars as Array).is_empty()
-
 	var char_pool: Array
-	if is_forced:
-		char_pool = (forced_chars as Array).duplicate()
-	else:
-		char_pool = CardDatabase.get_all_character_names().duplicate()
-		char_pool.shuffle()
-
-	var forced_traps: Variant = cfg.get("forced_traps", null)
 	var trap_pool: Array
-	if forced_traps is Array and not (forced_traps as Array).is_empty():
-		trap_pool = (forced_traps as Array).duplicate()
-	else:
-		trap_pool = CardDatabase.get_all_trap_names().duplicate()
-		trap_pool.shuffle()
-
 	var num_chars: int
 	var num_traps: int
-	if is_forced:
+	var is_forced: bool = false
+
+	if deck_override != null:
+		# AI_VS_AI: use the provided deck directly
+		char_pool = (deck_override.characters as Array).duplicate()
+		char_pool.shuffle()
+		trap_pool = (deck_override.traps as Array).duplicate()
+		trap_pool.shuffle()
 		num_chars = char_pool.size()
+		num_traps = trap_pool.size()
 	else:
-		num_chars = randi_range(
-			cfg.get("min_chars", GameState.MIN_CHARACTERS),
-			cfg.get("max_chars", GameState.MAX_CHARACTERS))
-	if forced_traps is Array and not (forced_traps as Array).is_empty():
-		num_traps = min(trap_pool.size(), 25 - num_chars)
-	else:
-		num_traps = randi_range(
-			cfg.get("min_traps", GameState.MIN_TRAPS),
-			min(cfg.get("max_traps", GameState.MAX_TRAPS), 25 - num_chars))
+		var cfg: Dictionary = GameState.campaign_enemy_config \
+			if not GameState.campaign_enemy_config.is_empty() else {}
+
+		var forced_chars: Variant = cfg.get("forced_characters", null)
+		is_forced = forced_chars is Array and not (forced_chars as Array).is_empty()
+
+		if is_forced:
+			char_pool = (forced_chars as Array).duplicate()
+		else:
+			char_pool = CardDatabase.get_all_character_names().duplicate()
+			char_pool.shuffle()
+
+		var forced_traps: Variant = cfg.get("forced_traps", null)
+		if forced_traps is Array and not (forced_traps as Array).is_empty():
+			trap_pool = (forced_traps as Array).duplicate()
+		else:
+			trap_pool = CardDatabase.get_all_trap_names().duplicate()
+			trap_pool.shuffle()
+
+		if is_forced:
+			num_chars = char_pool.size()
+		else:
+			num_chars = randi_range(
+				cfg.get("min_chars", GameState.MIN_CHARACTERS),
+				cfg.get("max_chars", GameState.MAX_CHARACTERS))
+		if forced_traps is Array and not (forced_traps as Array).is_empty():
+			num_traps = min(trap_pool.size(), 25 - num_chars)
+		else:
+			num_traps = randi_range(
+				cfg.get("min_traps", GameState.MIN_TRAPS),
+				min(cfg.get("max_traps", GameState.MAX_TRAPS), 25 - num_chars))
+
+	# ── Demo mode filter — only allow demo-flagged cards ──────────────────────
+	if SaveManager.demo_mode:
+		char_pool = char_pool.filter(func(n: String) -> bool:
+			var cd: CharacterData = CardDatabase.get_character(n)
+			return cd != null and cd.include_in_demo)
+		trap_pool = trap_pool.filter(func(n: String) -> bool:
+			var td: TrapData = CardDatabase.get_trap(n)
+			return td != null and td.include_in_demo)
+		# Clamp counts to what's actually available after filtering
+		num_chars = min(num_chars, char_pool.size())
+		num_traps = min(num_traps, trap_pool.size())
 
 	# ── Strategic union zone placement (non-forced decks only) ──
 	# Find the best union achievable from the char pool and pre-assign
@@ -824,8 +852,10 @@ func decide_setup() -> Array:
 	var used_positions: Dictionary = {}
 	var used_chars:     Dictionary = {}
 
-	# Pre-occupy positions already filled by AI forced cells (placed by GameBoard)
-	for fc_v: Variant in GameState.battle_ai_forced_cells:
+	# Pre-occupy positions already filled by forced cells (placed by GameBoard)
+	var _my_forced_cells: Array = forced_cells_src if not forced_cells_src.is_empty() \
+		else GameState.battle_ai_forced_cells
+	for fc_v: Variant in _my_forced_cells:
 		if not (fc_v is Dictionary):
 			continue
 		var fc_d: Dictionary = fc_v as Dictionary
@@ -1001,7 +1031,7 @@ func _strongest_opp_def() -> int:
 	var max_def: int = 0
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			if card.card_type == "character" and card.face_up:
 				max_def = maxi(max_def, card.get_effective_def())
 	return max_def
@@ -1009,7 +1039,7 @@ func _strongest_opp_def() -> int:
 func _opponent_has_affinity_revealed(aff: int) -> bool:
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			if card.card_type == "character" and card.face_up and card.affinity == aff:
 				return true
 	return false
@@ -1019,13 +1049,13 @@ func _count_beatables_with_boost(atk_boost: int) -> int:
 	var best_atk: int = 0
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if card.card_type == "character" and card.face_up:
 				best_atk = maxi(best_atk, card.get_effective_atk())
 	var count: int = 0
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			if card.card_type == "character" and card.face_up:
 				var def_val: int = card.get_effective_def()
 				if best_atk <= def_val and (best_atk + atk_boost) > def_val:
@@ -1049,7 +1079,7 @@ func _estimate_opponent_atk() -> int:
 	var best: int = 0
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			if card.card_type == "character" and card.face_up:
 				best = maxi(best, card.get_effective_atk())
 	return best
@@ -1070,14 +1100,14 @@ func _extract_second_int(s: String) -> int:
 
 func _board_snapshot() -> Dictionary:
 	return {
-		"ai_faceup": _count_faceup(AI_PLAYER),
-		"opp_revealed": _count_faceup(HUMAN_PLAYER),
-		"opp_hidden": _count_hidden(HUMAN_PLAYER),
-		"ai_crystals": GameState.crystals[AI_PLAYER],
-		"has_graveyard": not GameState.graveyards[AI_PLAYER].is_empty(),
-		"has_bio_char": _has_affinity_faceup(AI_PLAYER, CharacterData.Affinity.BIO),
-		"has_divine_char": _has_affinity_faceup(AI_PLAYER, CharacterData.Affinity.DIVINE),
-		"has_wisps": _count_name_contains(AI_PLAYER, "wisp") > 0,
+		"ai_faceup": _count_faceup(player_index),
+		"opp_revealed": _count_faceup(opponent_index),
+		"opp_hidden": _count_hidden(opponent_index),
+		"ai_crystals": GameState.crystals[player_index],
+		"has_graveyard": not GameState.graveyards[player_index].is_empty(),
+		"has_bio_char": _has_affinity_faceup(player_index, CharacterData.Affinity.BIO),
+		"has_divine_char": _has_affinity_faceup(player_index, CharacterData.Affinity.DIVINE),
+		"has_wisps": _count_name_contains(player_index, "wisp") > 0,
 	}
 
 # ─────────────────────────────────────────────────────────────
@@ -1141,7 +1171,7 @@ func _bluff_pick_taunting_cell() -> Vector2i:
 	var best_score: int = -1
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if card.face_up:
 				continue
 			var sc: int = -1
@@ -1159,7 +1189,7 @@ func _bluff_pick_dead_end_cell() -> Vector2i:
 	var options: Array = []
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if card.card_type == "dead_end" and not card.face_up:
 				options.append(Vector2i(r, c))
 	if options.is_empty():
@@ -1387,7 +1417,7 @@ func _maybe_advance_sweep_axis() -> void:
 			# Advance row when no valid (non-destroyed) targets remain in current row
 			var has_target: bool = false
 			for c in range(n):
-				var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, _zone_axis, c)
+				var card: GameState.CardInstance = GameState.get_card(opponent_index, _zone_axis, c)
 				if not (card.card_type == "dead_end" and card.was_destroyed):
 					has_target = true
 					break
@@ -1396,7 +1426,7 @@ func _maybe_advance_sweep_axis() -> void:
 		"left_sweep", "right_sweep":
 			var has_target: bool = false
 			for r in range(n):
-				var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, _zone_axis)
+				var card: GameState.CardInstance = GameState.get_card(opponent_index, r, _zone_axis)
 				if not (card.card_type == "dead_end" and card.was_destroyed):
 					has_target = true
 					break
@@ -1406,7 +1436,7 @@ func _maybe_advance_sweep_axis() -> void:
 			# Change column if a trap has been revealed there
 			var found_trap: bool = false
 			for r in range(n):
-				var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, _zone_axis)
+				var card: GameState.CardInstance = GameState.get_card(opponent_index, r, _zone_axis)
 				if card.card_type == "trap" and card.face_up:
 					found_trap = true; break
 			if found_trap:
@@ -1414,7 +1444,7 @@ func _maybe_advance_sweep_axis() -> void:
 		"row_focus":
 			var found_trap: bool = false
 			for c in range(n):
-				var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, _zone_axis, c)
+				var card: GameState.CardInstance = GameState.get_card(opponent_index, _zone_axis, c)
 				if card.card_type == "trap" and card.face_up:
 					found_trap = true; break
 			if found_trap:
@@ -1516,7 +1546,7 @@ func _near_type_score(pos: Vector2i, card_type: String) -> int:
 	var best: int = 0
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			if card.card_type == card_type and card.face_up:
 				var dist: int = abs(pos.x - r) + abs(pos.y - c)
 				best = maxi(best, maxi(0, 12 - dist * 4))
@@ -1528,7 +1558,7 @@ func _near_revealed_score(pos: Vector2i) -> int:
 	var best: int = 0
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(HUMAN_PLAYER, r, c)
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			if card.face_up and card.card_type != "dead_end":
 				var dist: int = abs(pos.x - r) + abs(pos.y - c)
 				best = maxi(best, maxi(0, 12 - dist * 4))
@@ -1564,7 +1594,7 @@ func decide_setup_bluffs(placements: Array) -> Dictionary:
 			if ct == "trap":
 				trap_cells.append(pos)
 			elif ct == "character":
-				var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, pos.x, pos.y)
+				var card: GameState.CardInstance = GameState.get_card(player_index, pos.x, pos.y)
 				if card.get_effective_def() >= 60:
 					tough_chars.append(pos)
 
@@ -1592,7 +1622,7 @@ func decide_setup_bluffs(placements: Array) -> Dictionary:
 			var p: Dictionary = entry as Dictionary
 			if (p["card_type"] as String) == "character":
 				var pos: Vector2i = p["pos"] as Vector2i
-				var card: GameState.CardInstance = GameState.get_card(AI_PLAYER, pos.x, pos.y)
+				var card: GameState.CardInstance = GameState.get_card(player_index, pos.x, pos.y)
 				if card.get_effective_atk() + card.get_effective_def() < 50:
 					low_candidates.append(pos)
 

@@ -1,0 +1,96 @@
+=== AI vs AI Match ===
+Started:  2026-05-22 17:33:44
+AI-0 Deck:    Very Spicy
+AI-1 Deck:    Very Spicy
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:05.603] Tech played  P1: "Spy"
+[00:14.259] Card destroyed  P0 (1,2)
+[00:14.263] Attack P1(0,2)"Skeleton Scout" → P0(1,2)""  Dice=1  ATK=20 vs DEF=5  → WIN
+
+--- Turn 1  |  Player 1  |  Crystals P0=4850 P1=5000 ---
+[00:14.765] Turn ended  P1  |  Crystals P0=4850 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4850 P1=5000 ---
+[00:17.056] Tech played  P0: "Tech Copy"
+[00:25.368] Card destroyed  P1 (0,2)
+[00:25.440] Coin flip: Heads
+[00:28.184] Attack P0(2,2)"Moon Tribe Twin Blades" → P1(0,2)""  Dice=4  ATK=30 vs DEF=5  → WIN
+
+--- Turn 2  |  Player 0  |  Crystals P0=3850 P1=4850 ---
+[00:28.682] Turn ended  P0  |  Crystals P0=3850 P1=4850
+
+--- Turn 3  |  Player 1  |  Crystals P0=3850 P1=4850 ---
+[00:30.980] Tech played  P1: "Rift Strike"
+[00:49.594] [TIMEOUT] Player 1 AI watchdog expired — ending turn.
+[00:49.599] Turn ended  P1  |  Crystals P0=3850 P1=3350
+
+--- Turn 4  |  Player 0  |  Crystals P0=3850 P1=3350 ---
+[00:51.871] Tech played  P0: "Guerrilla Tactics"
+[00:59.869] Card destroyed  P1 (4,2)
+[00:59.940] Coin flip: Tails
+[01:02.697] Attack P0(2,2)"Moon Tribe Twin Blades" → P1(4,2)""  Dice=3  ATK=0 vs DEF=0  → TIE
+
+--- Turn 4  |  Player 0  |  Crystals P0=3350 P1=3350 ---
+[01:03.199] Turn ended  P0  |  Crystals P0=3350 P1=3350
+
+--- Turn 5  |  Player 1  |  Crystals P0=3350 P1=3350 ---
+[01:05.480] Tech played  P1: "Diplomacy Party"
+[01:14.773] Card destroyed  P0 (2,2)
+[01:14.779] Attack P1(3,1)"Choir Lady Abigail" → P0(2,2)""  Dice=4  ATK=25 vs DEF=20  → WIN
+
+--- Turn 5  |  Player 1  |  Crystals P0=3050 P1=2850 ---
+[01:15.273] Card destroyed  P1 (4,4)
+[01:15.275] Turn ended  P1  |  Crystals P0=3050 P1=2450
+
+--- Turn 6  |  Player 0  |  Crystals P0=3050 P1=2450 ---
+[01:24.497] Card destroyed  P1 (3,1)
+[01:24.501] Attack P0(0,2)"Lord of Terror" → P1(3,1)""  Dice=3  ATK=200 vs DEF=15  → WIN
+
+--- Turn 6  |  Player 0  |  Crystals P0=2050 P1=2200 ---
+[01:31.031] Card destroyed  P0 (4,4)
+[01:31.036] Attack P0(4,4)"" → P1(4,0)"Wandering Swordsman"  Dice=1  ATK=20 vs DEF=60  → LOSE
+
+--- Turn 6  |  Player 0  |  Crystals P0=1830 P1=2200 ---
+[01:31.628] Turn ended  P0  |  Crystals P0=1830 P1=2200
+
+--- Turn 7  |  Player 1  |  Crystals P0=1830 P1=2200 ---
+[01:37.389] Card destroyed  P0 (2,3)
+[01:37.403] Attack P1(4,0)"Wandering Swordsman" → P0(2,3)""  Dice=3  ATK=0 vs DEF=0  → TIE
+
+--- Turn 7  |  Player 1  |  Crystals P0=1830 P1=2200 ---
+[01:38.005] Turn ended  P1  |  Crystals P0=1830 P1=2200
+
+--- Turn 8  |  Player 0  |  Crystals P0=1830 P1=2200 ---
+[01:44.397] Card destroyed  P1 (4,0)
+[01:44.401] Attack P0(0,2)"Lord of Terror" → P1(4,0)""  Dice=4  ATK=200 vs DEF=60  → WIN
+
+--- Turn 8  |  Player 0  |  Crystals P0=1830 P1=1600 ---
+[01:50.156] Card destroyed  P1 (4,3)
+[01:51.554] Attack P0(1,1)"Foul Wisp" → P1(4,3)""  Dice=1  ATK=0 vs DEF=0  → TIE
+
+--- Turn 8  |  Player 0  |  Crystals P0=1830 P1=100 ---
+[01:51.940] Card destroyed  P0 (1,1)
+[01:52.144] Turn ended  P0  |  Crystals P0=1830 P1=100
+
+--- Turn 9  |  Player 1  |  Crystals P0=1830 P1=100 ---
+[01:56.748] Card destroyed  P0 (0,0)
+[01:56.754] Attack P1(4,1)"Scarlet Mutant" → P0(0,0)""  Dice=2  ATK=0 vs DEF=0  → TIE
+
+--- Turn 9  |  Player 1  |  Crystals P0=1830 P1=100 ---
+[02:03.156] Card destroyed  P0 (1,0)
+[02:03.163] Attack P1(0,3)"Lightbringer" → P0(1,0)""  Dice=5  ATK=80 vs DEF=65  → WIN
+
+--- Turn 9  |  Player 1  |  Crystals P0=1050 P1=100 ---
+[02:03.769] Turn ended  P1  |  Crystals P0=1050 P1=100
+
+--- Turn 10  |  Player 0  |  Crystals P0=1050 P1=100 ---
+
+=== GAME OVER ===
+[02:08.780] AI Player 0 wins
+[02:08.780] Final crystals — P0: 1050  P1: 0  |  Turns: 10
+[02:08.780] Log saved to: res://logs/ai_vs_ai_2026-05-22_17-33-44.txt

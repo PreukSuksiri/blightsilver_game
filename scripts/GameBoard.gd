@@ -37,6 +37,8 @@ var _player_names: Array[String] = ["Player 1", "Player 2"]
 
 var turn_manager: TurnManager
 var ai_player: AIPlayer
+var ai_player_0: AIPlayer = null   # AI_VS_AI mode only: controls player 0
+var _active_ai: AIPlayer = null    # whichever AI is currently taking a turn
 
 # Player portrait illustration nodes
 var _p1_portrait: TextureRect = null
@@ -177,6 +179,11 @@ var _context_card_pos: Vector2i = Vector2i(-1, -1)
 var pending_tech_filter: String = ""
 var pending_tech_name: String = ""
 var _tech_reveals_remaining: int = 0   # for multi-reveal effects (e.g. Radar)
+
+# Rift Strike hover state
+var _rift_hover_cell: Vector2i = Vector2i(-1, -1)
+var _rift_last_hover: Vector2i = Vector2i(-1, -1)
+var _rift_direction: String = "row"    # "row" or "col", updated by mouse motion
 var _tech_reveals_total: int = 0
 var _tech_buff_move_source: Vector2i = Vector2i(-1, -1)   # MOVE_BUFFS_BETWEEN_CHARACTERS: source card pos
 var _tech_sacrifice_player: int = -1                       # DESTROY_OWN_BASE_ZERO_OPPONENT: which player to zero
@@ -277,6 +284,8 @@ func _ready() -> void:
 	mode_panel.visible = false
 	action_panel.visible = false
 	_start_game()
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		AIvsAIManager.start_logging(self)
 	CheckerTransition.fade_in()
 
 # ─────────────────────────────────────────────────────────────
@@ -302,6 +311,7 @@ func _setup_turn_manager() -> void:
 func _setup_ai() -> void:
 	ai_player = AIPlayer.new()
 	add_child(ai_player)
+	_active_ai = ai_player   # default; overridden per-turn in AI_VS_AI mode
 	ai_player.ai_mode_chosen.connect(_on_ai_mode_chosen)
 	ai_player.ai_attack_chosen.connect(_on_ai_attack_chosen)
 	ai_player.ai_tech_chosen.connect(_on_ai_tech_chosen)
@@ -309,14 +319,14 @@ func _setup_ai() -> void:
 	ai_player.ai_union_chosen.connect(_on_ai_union_chosen)
 	ai_player.ai_bluff.connect(_on_ai_bluff)
 
-	# Watchdog timer — fires if bot goes idle for 5 s between decide_turn() and its first signal
+	# Watchdog timer — 20 s in AI_VS_AI mode (more complex turns), 5 s in VS_AI
 	_ai_watchdog = Timer.new()
-	_ai_watchdog.wait_time = 5.0
+	_ai_watchdog.wait_time = 20.0 if GameState.game_mode == GameState.GameMode.AI_VS_AI else 5.0
 	_ai_watchdog.one_shot  = true
 	_ai_watchdog.timeout.connect(_on_ai_watchdog_timeout)
 	add_child(_ai_watchdog)
 
-	# Intermediate AI signals → restart the 5 s window (bot is still active)
+	# Intermediate AI signals → restart the watchdog window (bot is still active)
 	ai_player.ai_mode_chosen.connect(func(_m: GameState.TurnMode) -> void: _ai_watchdog.start())
 	ai_player.ai_attack_chosen.connect(func(_a: Vector2i, _t: Vector2i) -> void: _ai_watchdog.start())
 	ai_player.ai_tech_chosen.connect(func(_n: String) -> void: _ai_watchdog.start())
@@ -324,29 +334,60 @@ func _setup_ai() -> void:
 	# Turn fully done → stop watchdog
 	ai_player.ai_end_turn.connect(func() -> void: _ai_watchdog.stop())
 
+	# AI_VS_AI: create a second AI instance that controls player 0
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		ai_player_0 = AIPlayer.new()
+		ai_player_0.init_as(0)
+		add_child(ai_player_0)
+		ai_player_0.ai_mode_chosen.connect(_on_ai_mode_chosen)
+		ai_player_0.ai_attack_chosen.connect(_on_ai_attack_chosen)
+		ai_player_0.ai_tech_chosen.connect(_on_ai_tech_chosen)
+		ai_player_0.ai_end_turn.connect(func() -> void: turn_manager.end_attacks_early())
+		ai_player_0.ai_union_chosen.connect(_on_ai_union_chosen)
+		ai_player_0.ai_bluff.connect(_on_ai_bluff)
+		ai_player_0.ai_mode_chosen.connect(func(_m: GameState.TurnMode) -> void: _ai_watchdog.start())
+		ai_player_0.ai_attack_chosen.connect(func(_a: Vector2i, _t: Vector2i) -> void: _ai_watchdog.start())
+		ai_player_0.ai_tech_chosen.connect(func(_n: String) -> void: _ai_watchdog.start())
+		ai_player_0.ai_union_chosen.connect(func(_n: String, _z: Array, _m: Array) -> void: _ai_watchdog.start())
+		ai_player_0.ai_end_turn.connect(func() -> void: _ai_watchdog.stop())
+
+## Returns the AI instance controlling the defending player (opponent of current_player).
+func _get_defending_ai() -> AIPlayer:
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		return ai_player_0 if GameState.current_player == 1 else ai_player
+	return ai_player
+
+## Returns the AI instance for a given player index (AI_VS_AI aware).
+func _get_ai_for_player(pi: int) -> AIPlayer:
+	if pi == 0 and ai_player_0 != null:
+		return ai_player_0
+	return ai_player
+
 func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: Array) -> void:
-	if _union_summoned_this_duel[AIPlayer.AI_PLAYER]:
+	var cp: int = GameState.current_player
+	if _union_summoned_this_duel[cp]:
 		await get_tree().create_timer(0.3).timeout
-		ai_player.continue_after_union()
+		_active_ai.continue_after_union()
 		return
 	var u: UnionData = UnionDatabase.get_union(union_name)
-	if u == null or material_cells.is_empty() or GameState.crystals[AIPlayer.AI_PLAYER] < u.summon_cost:
+	if u == null or material_cells.is_empty() or GameState.crystals[cp] < u.summon_cost:
 		await get_tree().create_timer(0.3).timeout
-		ai_player.continue_after_union()
+		_active_ai.continue_after_union()
 		return
-	_pending_union_player = AIPlayer.AI_PLAYER
+	_pending_union_player = cp
 	_pending_union_data = u
 	_pending_union_zone_cells = zone_cells.duplicate()
 	_pending_union_conditions_remaining = []
 	_pending_union_selected_materials = material_cells.duplicate()
-	await _play_union_zone_preview(AIPlayer.AI_PLAYER, zone_cells)
-	_perform_pending_union()
-	await get_tree().create_timer(0.8).timeout
-	ai_player.continue_after_union()
+	await _play_union_zone_preview(cp, zone_cells)
+	await _perform_pending_union()
+	_active_ai.continue_after_union()
 
 func _on_ai_watchdog_timeout() -> void:
-	print("[AI WATCHDOG] Bot Player went idle for 5 s — forcing turn end.")
+	print("[AI WATCHDOG] Bot Player went idle — forcing turn end.")
 	GameState.post_message("[DEBUG] Bot Player timed out — ending turn.")
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		AIvsAIManager.log_event("[TIMEOUT] Player %d AI watchdog expired — ending turn." % GameState.current_player)
 	turn_manager.end_attacks_early()
 
 func _connect_signals() -> void:
@@ -895,9 +936,18 @@ func _start_game() -> void:
 			or GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 		_player_names[1] = "Bot"
 		_apply_player_names()
+	elif GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		_player_names[0] = "Bot 0"
+		_player_names[1] = "Bot 1"
+		_apply_player_names()
 	if GameState.game_mode == GameState.GameMode.HOT_SEAT:
 		_start_setup_music()
 		_show_name_entry()
+	elif GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		# Skip human setup UI — both AIs place their cards directly
+		_do_ai_setup_p0()
+		_do_ai_setup()
+		_begin_game()
 	elif setup_phase:
 		setup_phase.visible = true
 		setup_phase.start_setup(0)
@@ -1044,8 +1094,13 @@ func _on_setup_complete_p2() -> void:
 	_begin_game()
 
 func _do_ai_setup() -> void:
-	# Apply AI forced cells before decide_setup so AIPlayer can avoid those positions
-	for fc_v: Variant in GameState.battle_ai_forced_cells:
+	# In AI_VS_AI, forced cells come from AIvsAIManager; otherwise from GameState
+	var fc_src: Array = AIvsAIManager.forced_cells_1 \
+		if GameState.game_mode == GameState.GameMode.AI_VS_AI \
+		else GameState.battle_ai_forced_cells
+
+	# Apply AI-1 forced cells before decide_setup so AIPlayer can avoid those positions
+	for fc_v: Variant in fc_src:
 		if not (fc_v is Dictionary):
 			continue
 		var fc: Dictionary = fc_v as Dictionary
@@ -1059,7 +1114,7 @@ func _do_ai_setup() -> void:
 		elif CardDatabase.get_trap(fc_name) != null:
 			GameState.place_trap(1, fc_row, fc_col, fc_name)
 
-	var placements := ai_player.decide_setup()
+	var placements := ai_player.decide_setup(GameState.battle_ai_deck, fc_src)
 	for placement in placements:
 		var pos: Vector2i = placement["pos"]
 		if placement["card_type"] == "character":
@@ -1070,7 +1125,37 @@ func _do_ai_setup() -> void:
 	# AI places bluff emoticons on some cells before the game starts
 	var setup_bluffs: Dictionary = ai_player.decide_setup_bluffs(placements)
 	for cell: Vector2i in setup_bluffs.keys():
-		GameState.set_bluff(AIPlayer.AI_PLAYER, cell.x, cell.y, setup_bluffs[cell])
+		GameState.set_bluff(ai_player.player_index, cell.x, cell.y, setup_bluffs[cell])
+
+func _do_ai_setup_p0() -> void:
+	# AI_VS_AI only: set up player 0's board using ai_player_0
+	var fc_src: Array = AIvsAIManager.forced_cells_0
+
+	for fc_v: Variant in fc_src:
+		if not (fc_v is Dictionary):
+			continue
+		var fc: Dictionary = fc_v as Dictionary
+		var fc_name: String = str(fc.get("card_name", ""))
+		var fc_row: int = int(fc.get("row", 0))
+		var fc_col: int = int(fc.get("col", 0))
+		if fc_name.is_empty():
+			continue
+		if CardDatabase.get_character(fc_name) != null:
+			GameState.place_character(0, fc_row, fc_col, fc_name)
+		elif CardDatabase.get_trap(fc_name) != null:
+			GameState.place_trap(0, fc_row, fc_col, fc_name)
+
+	var placements := ai_player_0.decide_setup(GameState.battle_player_deck, fc_src)
+	for placement in placements:
+		var pos: Vector2i = placement["pos"]
+		if placement["card_type"] == "character":
+			GameState.place_character(0, pos.x, pos.y, placement["card_name"])
+		elif placement["card_type"] == "trap":
+			GameState.place_trap(0, pos.x, pos.y, placement["card_name"])
+
+	var setup_bluffs: Dictionary = ai_player_0.decide_setup_bluffs(placements)
+	for cell: Vector2i in setup_bluffs.keys():
+		GameState.set_bluff(0, cell.x, cell.y, setup_bluffs[cell])
 
 func _begin_game() -> void:
 	if setup_phase:
@@ -2438,11 +2523,12 @@ func _perform_pending_union() -> void:
 	# Capture cell center before grid refresh (node positions stay the same)
 	var union_node: Control = grid_nodes[player][first_cell.x][first_cell.y]
 	var cell_center: Vector2 = union_node.global_position + union_node.size * 0.5
-	# Screen shake + shockwave + refresh
-	_do_union_shake()
+	# Shockwave on summoning cell + grid refresh
 	_spawn_union_shockwave(cell_center)
 	_refresh_all_grids()
 	_highlight_attackable_chars()
+	# Full cinematic reveal (landing shake is triggered inside)
+	await _show_union_summon_reveal(u.card_name)
 
 func _cancel_union_material_selection() -> void:
 	_clear_union_flash_nodes()
@@ -3416,10 +3502,45 @@ func _build_hover_panel() -> void:
 	_hover_desc_lbl.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	vbox.add_child(_hover_desc_lbl)
 
+## Highlights the full row or full column on the opponent's grid for Rift Strike targeting.
+func _rift_update_highlight() -> void:
+	var opp: int = GameState.get_opponent(GameState.current_player)
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			grid_nodes[opp][r][c].set_highlighted(false)
+	if _rift_hover_cell == Vector2i(-1, -1):
+		return
+	var hrow: int = _rift_hover_cell.x
+	var hcol: int = _rift_hover_cell.y
+	if _rift_direction == "row":
+		for c: int in range(GameState.GRID_SIZE):
+			if GameState.get_card(opp, hrow, c).card_type != "dead_end":
+				grid_nodes[opp][hrow][c].set_highlighted(true)
+	else:
+		for r: int in range(GameState.GRID_SIZE):
+			if GameState.get_card(opp, r, hcol).card_type != "dead_end":
+				grid_nodes[opp][r][hcol].set_highlighted(true)
+
 func _on_grid_card_hovered(player: int, row: int, col: int) -> void:
 	var inst: GameState.CardInstance = GameState.get_card(player, row, col)
 	if inst == null:
 		return
+	# Rift Strike hover: track direction and highlight full row or column
+	if selection_state == SelectionState.SELECTING_TECH_TARGET \
+			and pending_tech_filter == "row_or_column" \
+			and player == GameState.get_opponent(GameState.current_player):
+		var new_cell := Vector2i(row, col)
+		if new_cell != _rift_hover_cell:
+			if _rift_last_hover != Vector2i(-1, -1):
+				var dr: int = abs(new_cell.x - _rift_last_hover.x)
+				var dc: int = abs(new_cell.y - _rift_last_hover.y)
+				if dc > dr:
+					_rift_direction = "row"
+				elif dr > dc:
+					_rift_direction = "col"
+			_rift_last_hover = _rift_hover_cell
+			_rift_hover_cell = new_cell
+			_rift_update_highlight()
 	# Flash hover during tech target selection even if card is face-down
 	if selection_state == SelectionState.SELECTING_TECH_TARGET \
 			and "opponent_squares" in pending_tech_filter \
@@ -3816,6 +3937,10 @@ func _deal_tech_cards(player: int, count: int) -> void:
 		tech_pool = (forced_tech as Array).duplicate()
 	else:
 		tech_pool = CardDatabase.get_all_tech_names()
+		if SaveManager.demo_mode:
+			tech_pool = tech_pool.filter(func(n: String) -> bool:
+				var tc: TechCardData = CardDatabase.get_tech(n)
+				return tc != null and tc.include_in_demo)
 		tech_pool.shuffle()
 	for i in range(min(count, tech_pool.size())):
 		GameState.tech_hands[player].append(tech_pool[i])
@@ -4153,6 +4278,8 @@ func _dismiss_tech_hand_overlay() -> void:
 # Buttons
 # ─────────────────────────────────────────────────────────────
 func _is_ai_turn() -> bool:
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		return true
 	return GameState.current_player == 1 and \
 		GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
 			GameState.GameMode.DAILY_DUNGEON]
@@ -4373,11 +4500,14 @@ func _enter_mode_select() -> void:
 		_ai_watchdog.start()
 		var _tech_royale_ai: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 			and "tech_royale" in GameState.active_dungeon_modifiers
-		ai_player.decide_bluff()   # fire-and-forget; runs in background
+		# Pick the correct AI instance for this turn
+		_active_ai = ai_player_0 if (GameState.game_mode == GameState.GameMode.AI_VS_AI \
+			and GameState.current_player == 0) else ai_player
+		_active_ai.decide_bluff()   # fire-and-forget; runs in background
 		if _tech_used_this_turn[GameState.current_player] and not _tech_royale_ai:
-			ai_player.continue_after_union()  # tech already played this turn — skip to attack
+			_active_ai.continue_after_union()  # tech already played this turn — skip to attack
 		else:
-			ai_player.decide_turn()
+			_active_ai.decide_turn()
 		return
 	_set_selection_state(SelectionState.SELECTING_ATTACKER)
 	_highlight_attackable_chars()
@@ -4457,12 +4587,12 @@ func _on_attack_completed(_from: Vector2i, _to: Vector2i, _result: BattleResolve
 	_update_end_turn_blink()
 	# AI kill-taunt: small chance to mock on attacker cell after destroying a strong/union card
 	if _is_ai_turn() and _result.defender_destroyed:
-		var opp_graveyard: Array = GameState.graveyards[AIPlayer.HUMAN_PLAYER]
+		var opp_graveyard: Array = GameState.graveyards[GameState.get_opponent(GameState.current_player)]
 		if not opp_graveyard.is_empty():
 			var killed: GameState.CardInstance = opp_graveyard[-1]
 			var is_worthy: bool = killed.current_atk >= 100 or killed.current_def >= 100 or killed.is_union
 			if is_worthy and randf() < 0.35:
-				ai_player.decide_kill_taunt(_from)
+				_active_ai.decide_kill_taunt(_from)
 	# Phase returns to MODE_SELECT after battle; _enter_mode_select() re-enables selection.
 
 func _on_attack_aborted() -> void:
@@ -4475,7 +4605,7 @@ func _on_attack_aborted() -> void:
 	if _is_ai_turn():
 		await get_tree().create_timer(0.4).timeout
 		_ai_watchdog.start()
-		ai_player.continue_after_union()
+		_active_ai.continue_after_union()
 		return
 	if _end_turn_btn:
 		_end_turn_btn.visible = true
@@ -4512,7 +4642,7 @@ func _on_tech_resolved(_player: int) -> void:
 		# Go straight to attack — do NOT call decide_turn() again (would replay tech check)
 		await get_tree().create_timer(0.4).timeout
 		_ai_watchdog.start()
-		ai_player.continue_after_union()
+		_active_ai.continue_after_union()
 	else:
 		if _end_turn_btn:
 			_end_turn_btn.visible = true
@@ -4733,6 +4863,11 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	else:
 		_tech_reveals_total = 0
 	_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
+	# Reset Rift Strike hover state when entering row_or_column targeting
+	if filter == "row_or_column":
+		_rift_hover_cell = Vector2i(-1, -1)
+		_rift_last_hover = Vector2i(-1, -1)
+		_rift_direction = "row"
 	# Show guide text
 	if _tech_reveals_total > 1:
 		_show_guide("Select %s card to reveal" % _ordinal(1))
@@ -4763,17 +4898,24 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		if "opponent_squares" in filter and _count_opponent_facedown(GameState.get_opponent(GameState.current_player)) == 0:
 			_finish_tech_action(GameState.current_player)
 			return
-		var ai_target := ai_player.decide_target(filter)
-		var target_player: int = GameState.get_opponent(GameState.current_player) if "opponent" in filter else GameState.current_player
+		var ai_target := _active_ai.decide_target(filter)
+		# "row_or_column" targets a cell on the opponent's grid even though the word
+		# "opponent" doesn't appear in the filter string — handle it explicitly.
+		var _targets_opponent: bool = "opponent" in filter or filter == "row_or_column"
+		var target_player: int = GameState.get_opponent(GameState.current_player) if _targets_opponent else GameState.current_player
 		_handle_tech_target(target_player, ai_target)
 	# Trap/tech effects where AI is the DEFENDING player (not AI's turn, but AI must self-select)
 	elif filter in _defender_response_filters \
-			and GameState.game_mode == GameState.GameMode.VS_AI \
-			and GameState.get_opponent(GameState.current_player) == AIPlayer.AI_PLAYER:
+			and (GameState.game_mode == GameState.GameMode.AI_VS_AI \
+				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+					GameState.GameMode.DAILY_DUNGEON] \
+					and GameState.get_opponent(GameState.current_player) == ai_player.player_index)):
 		# AI is the defending/responding player
 		await get_tree().create_timer(0.4).timeout
-		var ai_target: Vector2i = ai_player.decide_target(filter)
-		_handle_tech_target(AIPlayer.AI_PLAYER, ai_target)
+		var def_player: int = GameState.get_opponent(GameState.current_player)
+		var def_ai: AIPlayer = _get_defending_ai()
+		var ai_target: Vector2i = def_ai.decide_target(filter)
+		_handle_tech_target(def_player, ai_target)
 
 func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var current_player := GameState.current_player
@@ -4813,7 +4955,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				_highlight_tech_targets(pending_tech_filter)
 				if _is_ai_turn():
 					await get_tree().create_timer(0.4).timeout
-					var ai_target := ai_player.decide_target(pending_tech_filter)
+					var ai_target := _active_ai.decide_target(pending_tech_filter)
 					_handle_tech_target(opponent, ai_target)
 		return
 
@@ -4952,11 +5094,12 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			pending_tech_filter = "lock_opponent_monster"
 			action_label.text = "Make Friend: Opponent, choose 1 of your monsters to lock."
 			_highlight_tech_targets(pending_tech_filter)
-			# If AI was the one who played the card (current player), human selects next — no auto
-			# If human played the card, opponent is AI → AI auto-picks
-			if GameState.game_mode == GameState.GameMode.VS_AI and _is_ai_turn():
-				# AI already locked own; human (player 0) picks their monster — no auto needed
-				pass
+			# In AI_VS_AI both players are AI — the defending AI auto-picks
+			# In VS_AI: if AI played, human picks (no auto); if human played, AI auto-picks
+			if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+				await get_tree().create_timer(0.5).timeout
+				var ai_target := _get_defending_ai().decide_target("lock_opponent_monster")
+				_handle_tech_target(opponent, ai_target)
 			elif GameState.game_mode == GameState.GameMode.VS_AI and not _is_ai_turn():
 				# Human locked own; AI picks theirs
 				await get_tree().create_timer(0.5).timeout
@@ -4980,10 +5123,13 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			pending_tech_filter = "opponent_facedown_forced"
 			action_label.text = "Diplomacy Party: Opponent, choose 1 of your cards to reveal."
 			_highlight_tech_targets(pending_tech_filter)
-			# Auto-resolve only if the opponent is the AI player
-			if GameState.game_mode == GameState.GameMode.VS_AI and opponent == AIPlayer.AI_PLAYER:
+			# Auto-resolve if opponent is AI (VS_AI or AI_VS_AI)
+			var _def_is_ai: bool = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+					GameState.GameMode.DAILY_DUNGEON] and opponent == ai_player.player_index)
+			if _def_is_ai:
 				await get_tree().create_timer(0.5).timeout
-				var ai_pos := ai_player.decide_target("opponent_facedown_forced")
+				var ai_pos := _get_defending_ai().decide_target("opponent_facedown_forced")
 				_handle_tech_target(opponent, ai_pos)
 		return
 
@@ -5003,7 +5149,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			_highlight_tech_targets(pending_tech_filter)
 			if _is_ai_turn():
 				await get_tree().create_timer(0.4).timeout
-				var ai_target := ai_player.decide_target("own_faceup_character_target")
+				var ai_target := _active_ai.decide_target("own_faceup_character_target")
 				_handle_tech_target(current_player, ai_target)
 		return
 
@@ -5035,7 +5181,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			_highlight_tech_targets(pending_tech_filter)
 			if _is_ai_turn():
 				await get_tree().create_timer(0.5).timeout
-				var ai_pos := ai_player.decide_target("opponent_faceup_zero_stats")
+				var ai_pos := _active_ai.decide_target("opponent_faceup_zero_stats")
 				_handle_tech_target(opponent, ai_pos)
 		return
 
@@ -5154,25 +5300,51 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			if _is_ai_turn():
 				_rc_choice = randi() % 2
 			else:
-				_show_ability_choice_overlay(
-					"Rift Strike: Row %d or Column %d?" % [_rc_row + 1, _rc_col + 1],
-					["Row %d" % (_rc_row + 1), "Col %d" % (_rc_col + 1)])
-				_rc_choice = await turn_manager.ability_choice_resolved
+				# Order choices by hover direction: row first if moving horizontally
+				var _choice_a: String = "Row %d" % (_rc_row + 1)
+				var _choice_b: String = "Col %d" % (_rc_col + 1)
+				var _prompt_str: String = "Rift Strike: Destroy Row %d or Column %d?" % [_rc_row + 1, _rc_col + 1]
+				if _rift_direction == "col":
+					_choice_a = "Col %d" % (_rc_col + 1)
+					_choice_b = "Row %d" % (_rc_row + 1)
+					_prompt_str = "Rift Strike: Destroy Column %d or Row %d?" % [_rc_col + 1, _rc_row + 1]
+				_show_ability_choice_overlay(_prompt_str, [_choice_a, _choice_b])
+				var _raw_choice: int = await turn_manager.ability_choice_resolved
 				_hide_ability_choice_overlay()
+				# Map choice back: if direction=="col" choice 0 = col, else choice 0 = row
+				if _rift_direction == "col":
+					_rc_choice = 1 if _raw_choice == 0 else 0
+				else:
+					_rc_choice = _raw_choice
+			# Count face-up targets before destroying
+			var _rc_destroyed: int = 0
 			if _rc_choice == 0:
+				# Destroy row
 				for _p: int in range(2):
 					for _cc: int in range(GameState.GRID_SIZE):
 						var _rc_c: GameState.CardInstance = GameState.get_card(_p, _rc_row, _cc)
 						if _rc_c.face_up and _rc_c.card_type != "dead_end":
 							GameState.destroy_card(_p, _rc_row, _cc)
-				GameState.post_message("Rift Strike: Row %d destroyed!" % (_rc_row + 1))
+							_rc_destroyed += 1
+				if _rc_destroyed == 0:
+					GameState.post_message("Rift Strike: No face-up card on Row %d — nothing was destroyed." % (_rc_row + 1))
+				else:
+					GameState.post_message("Rift Strike: Row %d destroyed!" % (_rc_row + 1))
 			else:
+				# Destroy column
 				for _p: int in range(2):
 					for _rr: int in range(GameState.GRID_SIZE):
 						var _rc_r: GameState.CardInstance = GameState.get_card(_p, _rr, _rc_col)
 						if _rc_r.face_up and _rc_r.card_type != "dead_end":
 							GameState.destroy_card(_p, _rr, _rc_col)
-				GameState.post_message("Rift Strike: Column %d destroyed!" % (_rc_col + 1))
+							_rc_destroyed += 1
+				if _rc_destroyed == 0:
+					GameState.post_message("Rift Strike: No face-up card on Column %d — nothing was destroyed." % (_rc_col + 1))
+				else:
+					GameState.post_message("Rift Strike: Column %d destroyed!" % (_rc_col + 1))
+			# Brief pause to let burst effects play before closing
+			if _rc_destroyed > 0:
+				await get_tree().create_timer(0.6).timeout
 			_finish_tech_action(current_player)
 		return
 
@@ -5190,6 +5362,8 @@ func _clear_after_tech() -> void:
 	pending_tech_name = ""
 	_tech_reveals_remaining = 0
 	_tech_reveals_total = 0
+	_rift_hover_cell = Vector2i(-1, -1)
+	_rift_last_hover = Vector2i(-1, -1)
 	_hide_guide()
 	_set_tech_hover_node(null)
 	_clear_selection()
@@ -5207,9 +5381,7 @@ func _set_own_facedown_char_peek(enable: bool) -> void:
 				(grid_nodes[cp][r][c] as Control).set_preview_revealed(enable)
 
 func _on_ai_bluff(row: int, col: int, emoticon: String) -> void:
-	if GameState.current_player != AIPlayer.AI_PLAYER:
-		return
-	_set_bluff_animated(AIPlayer.AI_PLAYER, row, col, emoticon)
+	_set_bluff_animated(GameState.current_player, row, col, emoticon)
 
 func _on_awaiting_trap_choice(trap_name: String, choices: Array) -> void:
 	if is_instance_valid(_current_battle_overlay):
@@ -5218,7 +5390,7 @@ func _on_awaiting_trap_choice(trap_name: String, choices: Array) -> void:
 	if _is_ai_turn():
 		await get_tree().create_timer(0.6).timeout
 		_hide_ability_choice_overlay()
-		var ai_choice: int = ai_player.decide_trap_choice(trap_name, choices)
+		var ai_choice: int = _active_ai.decide_trap_choice(trap_name, choices)
 		turn_manager.resolve_ability_choice(ai_choice)
 
 ## Routes OPTIONAL_CRYSTAL_PAY_DEF_BOOST defender choices to the correct player.
@@ -5227,11 +5399,13 @@ func _on_awaiting_defender_choice(prompt: String, choices: Array) -> void:
 	if is_instance_valid(_current_battle_overlay):
 		_current_battle_overlay.pause_for_choice()
 	var defender_player: int = GameState.get_opponent(GameState.current_player)
-	if GameState.game_mode == GameState.GameMode.VS_AI \
-			and defender_player == AIPlayer.AI_PLAYER:
+	var _def_ai_responding: bool = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+		or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+			GameState.GameMode.DAILY_DUNGEON] and defender_player == ai_player.player_index)
+	if _def_ai_responding:
 		# AI defends: AI decides whether to pay for its own DEF boost
 		await get_tree().create_timer(0.6).timeout
-		var ai_choice: int = ai_player.decide_trap_choice(prompt, choices)
+		var ai_choice: int = _get_defending_ai().decide_trap_choice(prompt, choices)
 		turn_manager.resolve_ability_choice(ai_choice)
 	else:
 		# Human defends (or local 2-player): show choice overlay for human to decide
@@ -5542,12 +5716,12 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 	if inst != null and inst.card_type != "dead_end":
 		_void_piles[player].append({"card_name": inst.card_name, "card_type": inst.card_type})
 		_update_void_stacks()
-	# AI death-bluff reaction: when a face-up AI character is destroyed in VS_AI
-	if player == AIPlayer.AI_PLAYER \
-			and GameState.game_mode == GameState.GameMode.VS_AI \
-			and inst != null and inst.card_type == "character" and inst.face_up \
-			and randf() < 0.60:
-		ai_player.decide_death_bluff(row, col)
+	# AI death-bluff reaction: when a face-up AI character is destroyed
+	if inst != null and inst.card_type == "character" and inst.face_up and randf() < 0.60:
+		if GameState.game_mode == GameState.GameMode.VS_AI and player == ai_player.player_index:
+			ai_player.decide_death_bluff(row, col)
+		elif GameState.game_mode == GameState.GameMode.AI_VS_AI:
+			_get_ai_for_player(player).decide_death_bluff(row, col)
 	var node: Control = grid_nodes[player][row][col]
 	_spawn_destroy_effect(node)
 	node.play_destroy_animation()
@@ -5733,6 +5907,186 @@ func _show_card_effect_flash(card_name: String, card_type: String) -> void:
 
 	overlay.queue_free()
 
+## Full-screen cinematic reveal played when a union is successfully summoned.
+## Card falls from off-screen top, slams to centre with screen shake, sparks, and dust.
+func _show_union_summon_reveal(union_name: String) -> void:
+	var vp := get_viewport().get_visible_rect().size
+
+	# ── Blocking overlay ──────────────────────────────────────
+	var overlay := Control.new()
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.z_index = 100
+	add_child(overlay)
+
+	# Dark dim
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.0, 0.0, 0.0, 0.0)
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(dim)
+
+	# ── Load card texture ──────────────────────────────────────
+	var snake: String = union_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
+	var card_tex: Texture2D = null
+	if SaveManager.nsfw_enabled:
+		var nsfw: String = FULL_CARDS_DIR + "union_" + snake + "_nsfw.png"
+		if ResourceLoader.exists(nsfw):
+			card_tex = load(nsfw) as Texture2D
+	if card_tex == null:
+		var p: String = FULL_CARDS_DIR + "union_" + snake + ".png"
+		if ResourceLoader.exists(p):
+			card_tex = load(p) as Texture2D
+	if card_tex == null:
+		var p: String = FULL_CARDS_DIR + snake + ".png"
+		if ResourceLoader.exists(p):
+			card_tex = load(p) as Texture2D
+
+	# ── Card node ─────────────────────────────────────────────
+	var card_h: float = minf(vp.y * 0.78, 640.0)
+	var card_w: float = card_h * (819.0 / 1126.0)
+	var land_x: float = (vp.x - card_w) * 0.5
+	var land_y: float = (vp.y - card_h) * 0.5
+
+	var card_img := TextureRect.new()
+	card_img.texture = card_tex
+	card_img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	card_img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	card_img.size = Vector2(card_w, card_h)
+	card_img.position = Vector2(land_x, -card_h - 80.0)
+	card_img.pivot_offset = Vector2(card_w * 0.5, card_h * 0.5)
+	card_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(card_img)
+
+	# Name label beneath card
+	var name_lbl := Label.new()
+	name_lbl.text = union_name.to_upper()
+	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_lbl.add_theme_font_size_override("font_size", 30)
+	name_lbl.add_theme_color_override("font_color", Color(0.95, 0.88, 0.5))
+	name_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.8))
+	name_lbl.add_theme_constant_override("shadow_offset_x", 2)
+	name_lbl.add_theme_constant_override("shadow_offset_y", 2)
+	name_lbl.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	name_lbl.position = Vector2((vp.x - 600.0) * 0.5, land_y + card_h + 12.0)
+	name_lbl.size = Vector2(600.0, 40.0)
+	name_lbl.modulate.a = 0.0
+	name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(name_lbl)
+
+	# ── Dim fades in ──────────────────────────────────────────
+	var t_dim := create_tween()
+	t_dim.tween_property(dim, "color:a", 0.78, 0.15)
+
+	# ── Card falls from sky ───────────────────────────────────
+	var t_fall := create_tween()
+	t_fall.tween_property(card_img, "position:y", land_y + 22.0, 0.42) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	await t_fall.finished
+
+	# ── Landing impact ────────────────────────────────────────
+	# Slight bounce back to resting position
+	var t_bounce := create_tween()
+	t_bounce.tween_property(card_img, "position:y", land_y, 0.10) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
+	# Screen shake on impact
+	var ml: Control = get_node("MainLayout")
+	var _shake_orig: Vector2 = ml.position
+	var t_sk := create_tween()
+	t_sk.tween_property(ml, "position", _shake_orig + Vector2(22.0,  12.0), 0.04)
+	t_sk.tween_property(ml, "position", _shake_orig + Vector2(-18.0, -10.0), 0.04)
+	t_sk.tween_property(ml, "position", _shake_orig + Vector2(14.0,   8.0), 0.04)
+	t_sk.tween_property(ml, "position", _shake_orig + Vector2(-10.0,  -6.0), 0.04)
+	t_sk.tween_property(ml, "position", _shake_orig + Vector2(6.0,    4.0), 0.04)
+	t_sk.tween_property(ml, "position", _shake_orig + Vector2(-3.0,  -2.0), 0.04)
+	t_sk.tween_property(ml, "position", _shake_orig, 0.03)
+
+	# Sparks and dust at card base
+	var card_base := Vector2(vp.x * 0.5, land_y + card_h * 0.95)
+	_spawn_union_landing_sparks(overlay, card_base)
+	_spawn_union_landing_dust(overlay, card_base)
+
+	await t_bounce.finished
+
+	# Fade in name label
+	var t_name := create_tween()
+	t_name.tween_property(name_lbl, "modulate:a", 1.0, 0.3).set_ease(Tween.EASE_OUT)
+
+	# ── Hold ──────────────────────────────────────────────────
+	await get_tree().create_timer(2.0).timeout
+
+	# ── Fade out ──────────────────────────────────────────────
+	var t_out := create_tween()
+	t_out.tween_property(overlay, "modulate:a", 0.0, 0.4) \
+		.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+	await t_out.finished
+	overlay.queue_free()
+
+## Bright sparks shooting from the card base on landing.
+func _spawn_union_landing_sparks(overlay: Control, origin: Vector2) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	for _i: int in range(22):
+		var spark := ColorRect.new()
+		spark.size = Vector2(rng.randf_range(2.0, 5.0), rng.randf_range(9.0, 22.0))
+		spark.color = Color(1.0, rng.randf_range(0.80, 1.0), rng.randf_range(0.2, 0.6), 1.0)
+		spark.pivot_offset = spark.size * 0.5
+		spark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		spark.z_index = 12
+
+		# Arc upward and sideways
+		var angle: float = rng.randf_range(-PI * 0.95, -PI * 0.05)
+		var speed: float = rng.randf_range(90.0, 280.0)
+		var duration: float = rng.randf_range(0.30, 0.65)
+		var dx: float = cos(angle) * speed
+		var dy: float = sin(angle) * speed + rng.randf_range(10.0, 50.0)  # gravity sag
+		spark.rotation = angle + PI * 0.5
+		spark.position = origin - spark.size * 0.5
+
+		overlay.add_child(spark)
+
+		var t := create_tween()
+		t.parallel().tween_property(spark, "position",
+			spark.position + Vector2(dx, dy), duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		t.parallel().tween_property(spark, "modulate:a", 0.0, duration) \
+			.set_ease(Tween.EASE_IN)
+		t.tween_callback(spark.queue_free)
+
+## Dust clouds rising from the card base on landing.
+func _spawn_union_landing_dust(overlay: Control, origin: Vector2) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	for _i: int in range(10):
+		var dust := Panel.new()
+		var r: float = rng.randf_range(14.0, 38.0)
+		dust.size = Vector2(r * 2.2, r)
+		dust.pivot_offset = dust.size * 0.5
+		dust.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		dust.z_index = 8
+
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.75, 0.70, 0.58, 0.60)
+		var cr: int = int(r)
+		sb.corner_radius_top_left = cr; sb.corner_radius_top_right = cr
+		sb.corner_radius_bottom_left = cr; sb.corner_radius_bottom_right = cr
+		dust.add_theme_stylebox_override("panel", sb)
+
+		var ox: float = rng.randf_range(-70.0, 70.0)
+		dust.position = origin + Vector2(ox, rng.randf_range(-8.0, 8.0)) - dust.size * 0.5
+		overlay.add_child(dust)
+
+		var end_pos: Vector2 = dust.position + Vector2(rng.randf_range(-50.0, 50.0),
+			rng.randf_range(-70.0, -25.0))
+		var duration: float = rng.randf_range(0.55, 1.05)
+
+		var t := create_tween()
+		t.parallel().tween_property(dust, "position", end_pos, duration).set_ease(Tween.EASE_OUT)
+		t.parallel().tween_property(dust, "scale", Vector2(2.8, 2.8), duration).set_ease(Tween.EASE_OUT)
+		t.parallel().tween_property(dust, "modulate:a", 0.0, duration).set_ease(Tween.EASE_IN)
+		t.tween_callback(dust.queue_free)
+
 # ─────────────────────────────────────────────────────────────
 # Game Over
 # ─────────────────────────────────────────────────────────────
@@ -5752,6 +6106,12 @@ func _process(_delta: float) -> void:
 func _on_game_over(winner: int) -> void:
 	# Dismiss guide box immediately so it doesn't bleed into VN or win screen
 	_hide_guide()
+
+	# ── AI vs AI mode: hand off to AIvsAIManager which logs + returns to config ──
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		_stop_battle_music()
+		AIvsAIManager.on_game_over(winner)
+		return
 
 	# ── VN-driven battle ─────────────────────────────────────────────────────
 	var vn_win: String  = GameState.vn_on_win
