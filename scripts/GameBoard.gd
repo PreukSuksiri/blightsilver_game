@@ -4843,8 +4843,10 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	# Bribe: show a non-dismissable choice overlay instead of grid selection
 	if filter == "bribe":
 		var opponent := GameState.get_opponent(GameState.current_player)
-		# In VS AI, if the AI is the opponent, auto-pass
-		if GameState.game_mode == GameState.GameMode.VS_AI and opponent == 1:
+		# In VS_AI mode (opponent is AI player 1) or AI_VS_AI (both players are AI) → auto-pass
+		var ai_will_respond := (GameState.game_mode == GameState.GameMode.VS_AI and opponent == 1) \
+			or GameState.game_mode == GameState.GameMode.AI_VS_AI
+		if ai_will_respond:
 			await get_tree().create_timer(0.5).timeout
 			GameState.post_message("Bribe: AI passed.")
 			_finish_tech_action(GameState.current_player)
@@ -4915,6 +4917,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		var def_player: int = GameState.get_opponent(GameState.current_player)
 		var def_ai: AIPlayer = _get_defending_ai()
 		var ai_target: Vector2i = def_ai.decide_target(filter)
+		def_ai.ai_target_chosen.emit(ai_target)  # log defender AI choice
 		_handle_tech_target(def_player, ai_target)
 
 func _handle_tech_target(player: int, pos: Vector2i) -> void:

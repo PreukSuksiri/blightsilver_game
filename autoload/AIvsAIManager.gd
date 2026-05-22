@@ -23,6 +23,8 @@ var _prev_crystals: Array[int] = [0, 0]  # snapshot for delta computation
 # ── Internal: connections to game signals ─────────────────────────────────────
 var _board_ref: Node = null
 var _tm_ref: Node = null                  # TurnManager
+var _ai0_ref: Node = null                 # AIPlayer for player 0 (AI_VS_AI only)
+var _ai1_ref: Node = null                 # AIPlayer for player 1
 
 # ─────────────────────────────────────────────────────────────────────────────
 func configure(d0: Variant, fc0: Array, d1: Variant, fc1: Array) -> void:
@@ -73,16 +75,36 @@ func start_logging(board: Node) -> void:
 	_prev_crystals[0] = GameState.crystals[0]
 	_prev_crystals[1] = GameState.crystals[1]
 
+	# Log initial grid state (setup happened before this call, so we scan retroactively)
+	_log_initial_grid()
+
 	# Connect signals
 	GameState.phase_changed.connect(_on_phase_changed)
 	GameState.game_over.connect(_on_game_over_signal)
+	GameState.card_placed.connect(_on_card_placed)
 	GameState.card_destroyed.connect(_on_card_destroyed)
+	GameState.card_revealed.connect(_on_card_revealed)
 	GameState.crystals_changed.connect(_on_crystals_changed)
 	GameState.turn_changed.connect(_on_turn_changed)
 	_tm_ref.attack_completed.connect(_on_attack_completed)
 	_tm_ref.tech_played.connect(_on_tech_played)
 	_tm_ref.turn_ended.connect(_on_turn_ended)
 	_tm_ref.coin_flip_visual_requested.connect(_on_coin_flip)
+	_tm_ref.awaiting_trap_choice.connect(_on_choice_prompt)
+	_tm_ref.awaiting_defender_choice.connect(_on_defender_choice_prompt)
+	_tm_ref.awaiting_target_selection.connect(_on_target_prompt)
+
+	# AI player signals (decisions made before execution)
+	_ai0_ref = _board_ref.ai_player_0
+	_ai1_ref = _board_ref.ai_player
+	if _ai0_ref != null:
+		_ai0_ref.ai_attack_chosen.connect(_on_ai0_attack_chosen)
+		_ai0_ref.ai_target_chosen.connect(_on_ai0_target_chosen)
+		_ai0_ref.ai_trap_choice.connect(_on_ai0_trap_choice)
+	if _ai1_ref != null:
+		_ai1_ref.ai_attack_chosen.connect(_on_ai1_attack_chosen)
+		_ai1_ref.ai_target_chosen.connect(_on_ai1_target_chosen)
+		_ai1_ref.ai_trap_choice.connect(_on_ai1_trap_choice)
 
 func on_game_over(winner: int) -> void:
 	# Called by GameBoard._on_game_over() in AI_VS_AI mode
@@ -145,8 +167,12 @@ func _disconnect_all() -> void:
 		GameState.phase_changed.disconnect(_on_phase_changed)
 	if GameState.game_over.is_connected(_on_game_over_signal):
 		GameState.game_over.disconnect(_on_game_over_signal)
+	if GameState.card_placed.is_connected(_on_card_placed):
+		GameState.card_placed.disconnect(_on_card_placed)
 	if GameState.card_destroyed.is_connected(_on_card_destroyed):
 		GameState.card_destroyed.disconnect(_on_card_destroyed)
+	if GameState.card_revealed.is_connected(_on_card_revealed):
+		GameState.card_revealed.disconnect(_on_card_revealed)
 	if GameState.crystals_changed.is_connected(_on_crystals_changed):
 		GameState.crystals_changed.disconnect(_on_crystals_changed)
 	if GameState.turn_changed.is_connected(_on_turn_changed):
@@ -160,7 +186,29 @@ func _disconnect_all() -> void:
 			_tm_ref.turn_ended.disconnect(_on_turn_ended)
 		if _tm_ref.coin_flip_visual_requested.is_connected(_on_coin_flip):
 			_tm_ref.coin_flip_visual_requested.disconnect(_on_coin_flip)
+		if _tm_ref.awaiting_trap_choice.is_connected(_on_choice_prompt):
+			_tm_ref.awaiting_trap_choice.disconnect(_on_choice_prompt)
+		if _tm_ref.awaiting_defender_choice.is_connected(_on_defender_choice_prompt):
+			_tm_ref.awaiting_defender_choice.disconnect(_on_defender_choice_prompt)
+		if _tm_ref.awaiting_target_selection.is_connected(_on_target_prompt):
+			_tm_ref.awaiting_target_selection.disconnect(_on_target_prompt)
+	if _ai0_ref != null:
+		if _ai0_ref.ai_attack_chosen.is_connected(_on_ai0_attack_chosen):
+			_ai0_ref.ai_attack_chosen.disconnect(_on_ai0_attack_chosen)
+		if _ai0_ref.ai_target_chosen.is_connected(_on_ai0_target_chosen):
+			_ai0_ref.ai_target_chosen.disconnect(_on_ai0_target_chosen)
+		if _ai0_ref.ai_trap_choice.is_connected(_on_ai0_trap_choice):
+			_ai0_ref.ai_trap_choice.disconnect(_on_ai0_trap_choice)
+	if _ai1_ref != null:
+		if _ai1_ref.ai_attack_chosen.is_connected(_on_ai1_attack_chosen):
+			_ai1_ref.ai_attack_chosen.disconnect(_on_ai1_attack_chosen)
+		if _ai1_ref.ai_target_chosen.is_connected(_on_ai1_target_chosen):
+			_ai1_ref.ai_target_chosen.disconnect(_on_ai1_target_chosen)
+		if _ai1_ref.ai_trap_choice.is_connected(_on_ai1_trap_choice):
+			_ai1_ref.ai_trap_choice.disconnect(_on_ai1_trap_choice)
 	_tm_ref = null
+	_ai0_ref = null
+	_ai1_ref = null
 	_board_ref = null
 
 # ── Signal handlers ───────────────────────────────────────────────────────────
@@ -172,9 +220,49 @@ func _on_turn_changed(player: int) -> void:
 	_raw("")
 	_raw("--- Turn %d  |  Player %d  |  Crystals P0=%d P1=%d ---" % [
 		GameState.turn_number, player, c0, c1])
+	_log_board_snapshot()
 	# Re-sync crystal snapshot so the first delta of the turn is relative to turn start
 	_prev_crystals[0] = c0
 	_prev_crystals[1] = c1
+
+func _log_initial_grid() -> void:
+	_raw("")
+	_raw("--- Initial Setup (server-side view) ---")
+	for p: int in [0, 1]:
+		var lines: Array[String] = []
+		for r: int in range(GameState.GRID_SIZE):
+			var cells: Array[String] = []
+			for c: int in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(p, r, c)
+				if card.card_type == "dead_end":
+					cells.append("[  — ]")
+				else:
+					var label: String = card.card_name.left(4) if not card.card_name.is_empty() else "???"
+					var type_tag: String = "C" if card.card_type == "character" else "T"
+					cells.append("[%s:%-4s]" % [type_tag, label])
+			lines.append("  " + "".join(PackedStringArray(cells)))
+		_raw("P%d: %s" % [p, lines[0]])
+		for i: int in range(1, lines.size()):
+			_raw("    " + lines[i])
+	_raw("")
+
+func _log_board_snapshot() -> void:
+	for p: int in [0, 1]:
+		var lines: Array[String] = []
+		for r: int in range(GameState.GRID_SIZE):
+			var cells: Array[String] = []
+			for c: int in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(p, r, c)
+				if card.card_type == "dead_end":
+					cells.append("[  — ]")
+				elif card.face_up:
+					cells.append("[%-4s]" % card.card_name.left(4))
+				else:
+					cells.append("[  ? ]")
+			lines.append("  " + "".join(PackedStringArray(cells)))
+		_raw("P%d: %s" % [p, lines[0]])
+		for i: int in range(1, lines.size()):
+			_raw("    " + lines[i])
 
 ## Crystal delta — fires on every lose_crystals / gain_crystals call.
 func _on_crystals_changed(player: int, new_amount: int, reason: String = "") -> void:
@@ -259,3 +347,58 @@ func _on_coin_flip(results: Array) -> void:
 func _on_game_over_signal(_winner: int) -> void:
 	# GameBoard handles this directly via on_game_over(); do nothing here
 	pass
+
+func _on_card_placed(player: int, row: int, col: int) -> void:
+	var card: GameState.CardInstance = GameState.get_card(player, row, col)
+	log_event("Placed: P%d (%d,%d) \"%s\" [%s]" % [player, row, col, card.card_name, card.card_type])
+
+func _on_card_revealed(player: int, row: int, col: int) -> void:
+	var card: GameState.CardInstance = GameState.get_card(player, row, col)
+	if card.card_name.is_empty():
+		return  # dead-end or blank slot — not a real reveal
+	log_event("Revealed: P%d (%d,%d) \"%s\"" % [player, row, col, card.card_name])
+
+# ── Prompt / choice logging ───────────────────────────────────────────────────
+
+func _on_choice_prompt(prompt: String, choices: Array) -> void:
+	var opts: String = " / ".join(PackedStringArray(choices.map(func(s: Variant) -> String: return str(s))))
+	log_event("Prompt: \"%s\"  [%s]" % [prompt, opts])
+
+func _on_defender_choice_prompt(prompt: String, choices: Array) -> void:
+	var opts: String = " / ".join(PackedStringArray(choices.map(func(s: Variant) -> String: return str(s))))
+	log_event("Defender prompt: \"%s\"  [%s]" % [prompt, opts])
+
+func _on_target_prompt(prompt: String, filter: String) -> void:
+	log_event("Target prompt: \"%s\"  filter=%s" % [prompt, filter])
+
+# ── AI decision logging ───────────────────────────────────────────────────────
+
+func _on_ai0_attack_chosen(attacker: Vector2i, target: Vector2i) -> void:
+	var a_card: GameState.CardInstance = GameState.get_card(0, attacker.x, attacker.y)
+	var t_card: GameState.CardInstance = GameState.get_card(1, target.x, target.y)
+	var t_info: String = "\"%s\" [DEF=%d]" % [t_card.card_name, t_card.get_effective_def()] \
+		if t_card.card_type != "dead_end" else "\"(dead-end)\""
+	log_event("AI0 attack decision: (%d,%d)\"%s\" [ATK=%d] → (%d,%d) %s" % [
+		attacker.x, attacker.y, a_card.card_name, a_card.get_effective_atk(),
+		target.x, target.y, t_info])
+
+func _on_ai1_attack_chosen(attacker: Vector2i, target: Vector2i) -> void:
+	var a_card: GameState.CardInstance = GameState.get_card(1, attacker.x, attacker.y)
+	var t_card: GameState.CardInstance = GameState.get_card(0, target.x, target.y)
+	var t_info: String = "\"%s\" [DEF=%d]" % [t_card.card_name, t_card.get_effective_def()] \
+		if t_card.card_type != "dead_end" else "\"(dead-end)\""
+	log_event("AI1 attack decision: (%d,%d)\"%s\" [ATK=%d] → (%d,%d) %s" % [
+		attacker.x, attacker.y, a_card.card_name, a_card.get_effective_atk(),
+		target.x, target.y, t_info])
+
+func _on_ai0_target_chosen(pos: Vector2i) -> void:
+	log_event("AI0 target chosen: (%d,%d)" % [pos.x, pos.y])
+
+func _on_ai1_target_chosen(pos: Vector2i) -> void:
+	log_event("AI1 target chosen: (%d,%d)" % [pos.x, pos.y])
+
+func _on_ai0_trap_choice(choice_index: int) -> void:
+	log_event("AI0 choice: %d" % choice_index)
+
+func _on_ai1_trap_choice(choice_index: int) -> void:
+	log_event("AI1 choice: %d" % choice_index)

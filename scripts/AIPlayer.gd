@@ -213,7 +213,7 @@ func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 
 	var base: int
 	if target.card_type == "dead_end":
-		base = 10   # clears slot but no crystal gain
+		base = -100  # blank slot — no crystal gain, wasted attack; only as absolute last resort
 	elif not target.face_up:
 		base = 25   # probe unrevealed — medium priority
 	elif target.card_type == "trap":
@@ -479,8 +479,18 @@ func decide_target(filter: String) -> Vector2i:
 			return _first_own_empty_slot()
 		"own_divine_character_redirect":
 			return _best_own_divine_sacrifice()
-		"any_faceup_card", "opponent_faceup_no_cost":
+		"any_faceup_card":
+			# Prefer strongest opponent face-up; fall back to own weakest if none
+			var opp_pos := _strongest_opp_faceup_pos()
+			var opp_card := GameState.get_card(opponent_index, opp_pos.x, opp_pos.y)
+			if opp_card.face_up:
+				return opp_pos
+			return _best_own_faceup()
+		"opponent_faceup_no_cost":
 			return _strongest_opp_faceup_pos()
+		"adjacent":
+			# Post-attack reveal (Scout Probe, etc.) — pick unrevealed cell adjacent to defender
+			return _random_adjacent_unrevealed_to(GameState.defender_pos, opponent_index)
 		_:
 			return _random_unrevealed_opponent()
 
@@ -569,6 +579,19 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 		return 1
 
 	return 0  # safe default
+
+func _random_adjacent_unrevealed_to(center: Vector2i, target_player: int) -> Vector2i:
+	var adj: Array = GameState.get_adjacent_positions(center.x, center.y)
+	var options: Array = []
+	for pos_v: Variant in adj:
+		var pos: Vector2i = pos_v as Vector2i
+		var card: GameState.CardInstance = GameState.get_card(target_player, pos.x, pos.y)
+		if not card.face_up and card.card_type != "dead_end":
+			options.append(pos)
+	if options.is_empty():
+		# No unrevealed adjacents — fall back to any unrevealed opponent cell
+		return _random_unrevealed_opponent()
+	return options[randi() % options.size()]
 
 func _random_unrevealed_self() -> Vector2i:
 	var options: Array = []

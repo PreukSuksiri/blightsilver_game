@@ -23,6 +23,7 @@ enum GameMode { LOCAL_2P, VS_AI, HOT_SEAT, CAMPAIGN, DAILY_DUNGEON, AI_VS_AI }
 signal phase_changed(new_phase: Phase)
 signal turn_changed(player_index: int)
 signal crystals_changed(player_index: int, new_amount: int, reason: String)
+signal card_placed(player_index: int, row: int, col: int)
 signal card_revealed(player_index: int, row: int, col: int)
 signal card_destroyed(player_index: int, row: int, col: int)
 signal dice_rolled(result: int)
@@ -330,6 +331,7 @@ func place_character(player_index: int, row: int, col: int, char_name: String) -
 	inst.ability_params = data.ability_params.duplicate()
 	inst.rarity = data.rarity
 	grids[player_index][row][col] = inst
+	emit_signal("card_placed", player_index, row, col)
 
 func place_trap(player_index: int, row: int, col: int, trap_name: String) -> void:
 	var data: TrapData = CardDatabase.get_trap(trap_name)
@@ -342,6 +344,7 @@ func place_trap(player_index: int, row: int, col: int, trap_name: String) -> voi
 	inst.crystal_cost = data.crystal_cost
 	inst.rarity = data.rarity
 	grids[player_index][row][col] = inst
+	emit_signal("card_placed", player_index, row, col)
 
 func place_dead_end(player_index: int, row: int, col: int) -> void:
 	var inst := CardInstance.new()
