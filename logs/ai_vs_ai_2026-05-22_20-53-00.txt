@@ -1,0 +1,60 @@
+=== AI vs AI Match ===
+Started:  2026-05-22 20:53:00
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+[00:06.778] Crystals: P1 5000 → 4000 (-1000)
+[00:15.369] Card destroyed  P0 (4,0)
+[00:15.369] Crystals: P0 5000 → 4300 (-700)
+[00:16.764] Trap: "Hard Scale" triggered  P1(0,2)→P0(4,0)
+[00:17.668] Crystals: P1 4000 → 3500 (-500)
+[00:19.055] Tech played  P1: "Guerrilla Tactics"
+[00:26.315] Crystals: P0 4300 → 4000 (-300)
+[00:27.705] Card destroyed  P0 (4,2)
+[00:27.710] Attack P1(2,1)"White Tiger" → P0(4,2)"(destroyed)"  Dice=5  ATK=40 vs DEF=5  → WIN
+[00:28.211] Turn ended  P1  |  Crystals P0=4000 P1=3500
+[00:29.114] Crystals: P0 4000 → 4000 (+0)
+[00:29.125] Tech played  P0: "Spy"
+[00:37.989] Crystals: P1 3500 → 3050 (-450)
+[00:39.372] Card destroyed  P1 (2,1)
+[00:39.378] Attack P0(2,3)"Echo Bringer" → P1(2,1)"(destroyed)"  Dice=1  ATK=40 vs DEF=25  → WIN
+[00:44.290] Crystals: P1 3050 → 2950 (-100)
+[00:45.681] Card destroyed  P1 (1,3)
+[00:45.687] Attack P0(1,3)"Hyperspeed Saucer" → P1(1,3)"(destroyed)"  Dice=1  ATK=80 vs DEF=25  → WIN
+[00:50.606] Crystals: P1 2950 → 2450 (-500)
+[00:51.997] Card destroyed  P1 (2,2)
+[00:52.003] Attack P0(2,4)"Mind Flayer" → P1(2,2)"(destroyed)"  Dice=3  ATK=100 vs DEF=10  → WIN
+[00:52.495] Turn ended  P0  |  Crystals P0=4000 P1=2450
+[00:53.390] Crystals: P1 2450 → 950 (-1500)
+[00:54.778] Tech played  P1: "Rift Strike"
+[01:02.031] Crystals: P0 4000 → 2800 (-1200)
+[01:03.421] Card destroyed  P0 (2,4)
+[01:03.427] Attack P1(0,2)"Lord of Terror" → P0(2,4)"(destroyed)"  Dice=4  ATK=200 vs DEF=70  → WIN
+[01:07.927] Card destroyed  P0 (4,1)
+[01:07.932] Attack P1(1,1)"Green Mage" → P0(4,1)"(dead-end)"  Dice=2  ATK=0 vs DEF=0  → TIE
+[01:08.433] Turn ended  P1  |  Crystals P0=2800 P1=950
+[01:09.336] Crystals: P0 2800 → 1300 (-1500)
+[01:10.725] Tech played  P0: "Berserk"
+[01:29.336] [TIMEOUT] Player 0 AI watchdog expired — ending turn.
+[01:29.343] Turn ended  P0  |  Crystals P0=1300 P1=950
+[01:34.359] Crystals: P0 1300 → 300 (-1000)
+[01:35.744] Card destroyed  P0 (1,3)
+[01:35.749] Attack P1(0,2)"Lord of Terror" → P0(1,3)"(destroyed)"  Dice=3  ATK=200 vs DEF=50  → WIN
+[01:40.326] Card destroyed  P0 (4,4)
+[01:40.332] Attack P1(1,1)"Green Mage" → P0(4,4)"(dead-end)"  Dice=2  ATK=0 vs DEF=0  → TIE
+[01:40.932] Turn ended  P1  |  Crystals P0=300 P1=950
+[01:45.948] Crystals: P1 950 → 550 (-400)
+[01:47.339] Card destroyed  P1 (1,1)
+[01:47.345] Attack P0(2,3)"Echo Bringer" → P1(1,1)"(destroyed)"  Dice=4  ATK=55 vs DEF=15  → WIN
+[01:52.369] Crystals: P1 550 → 250 (-300)
+[01:53.760] Card destroyed  P1 (3,2)
+[01:53.766] Attack P0(3,3)"Striker Comet" → P1(3,2)"(destroyed)"  Dice=4  ATK=25 vs DEF=20  → WIN
+[01:58.775] Crystals: P1 250 → 0 (-250)
+
+=== GAME OVER ===
+[01:58.780] AI Player 0 wins
+[01:58.780] Final crystals — P0: 300  P1: 0  |  Turns: 6
+[01:58.780] Log saved to: res://logs/ai_vs_ai_2026-05-22_20-53-00.txt

@@ -2497,7 +2497,7 @@ func _perform_pending_union() -> void:
 			and "dimensional_gate" in GameState.active_dungeon_modifiers:
 		_union_cost = 0
 		DailyDungeonManager.register_dimensional_gate_union(player, first_cell.x, first_cell.y)
-	GameState.lose_crystals(player, _union_cost)
+	GameState.lose_crystals(player, _union_cost, "union")
 	# Remove selected material cards (except the first which becomes the union)
 	for i: int in range(1, _pending_union_selected_materials.size()):
 		var cell: Vector2i = _pending_union_selected_materials[i]
@@ -3953,7 +3953,7 @@ func _refresh_hud() -> void:
 	_update_crystals(1, GameState.crystals[1])
 	_update_turn_info()
 
-func _on_crystals_changed(player_index: int, new_amount: int) -> void:
+func _on_crystals_changed(player_index: int, new_amount: int, _reason: String = "") -> void:
 	var old_amount := _prev_crystals[player_index]
 	_prev_crystals[player_index] = new_amount
 	if new_amount < old_amount:
@@ -4448,7 +4448,7 @@ func _show_tax_confirm() -> void:
 			_tax_confirm_panel.queue_free()
 			_tax_confirm_panel = null
 		GameState.skip_counts[player] += 1
-		GameState.lose_crystals(player, tax)
+		GameState.lose_crystals(player, tax, "skip tax")
 		GameState.post_message("Player %d skips without attacking — %d◆ tax (skip #%d this duel)" % [player + 1, tax, GameState.skip_counts[player]])
 		await turn_manager.crystal_animation_done
 		turn_manager.end_attacks_early())
@@ -4940,7 +4940,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			# _on_card_revealed handles trap auto-void when a trap is found
 			# Risky reveal: pay 700 crystals for each character found
 			if "risky" in pending_tech_filter and card.card_type == "character":
-				GameState.lose_crystals(current_player, 700)
+				GameState.lose_crystals(current_player, 700, "ability")
 				GameState.post_message("Corrupted Spy: Found a character — lost 700 Crystals!")
 			_tech_reveals_remaining -= 1
 			if _tech_reveals_remaining <= 0:
@@ -4963,7 +4963,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		var bribe_opponent := GameState.get_opponent(current_player)
 		if player == bribe_opponent and card.card_type == "character":
 			GameState.reveal_card(player, pos.x, pos.y)
-			GameState.gain_crystals(player, 700)
+			GameState.gain_crystals(player, 700, "ability")
 			GameState.post_message("Bribe: Player %d revealed %s and received 700 Crystals." % [player + 1, card.card_name])
 			_finish_tech_action(current_player)
 		return

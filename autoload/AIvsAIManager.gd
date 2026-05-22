@@ -18,6 +18,7 @@ var _file: FileAccess = null
 var _match_start_msec: int = 0
 var _file_path: String = ""
 var _active: bool = false                 # true while a match is in progress
+var _prev_crystals: Array[int] = [0, 0]  # snapshot for delta computation
 
 # ── Internal: connections to game signals ─────────────────────────────────────
 var _board_ref: Node = null
@@ -68,10 +69,16 @@ func start_logging(board: Node) -> void:
 	_raw("===")
 	_raw("")
 
+	# Initialise crystal snapshot for delta tracking
+	_prev_crystals[0] = GameState.crystals[0]
+	_prev_crystals[1] = GameState.crystals[1]
+
 	# Connect signals
 	GameState.phase_changed.connect(_on_phase_changed)
 	GameState.game_over.connect(_on_game_over_signal)
 	GameState.card_destroyed.connect(_on_card_destroyed)
+	GameState.crystals_changed.connect(_on_crystals_changed)
+	GameState.turn_changed.connect(_on_turn_changed)
 	_tm_ref.attack_completed.connect(_on_attack_completed)
 	_tm_ref.tech_played.connect(_on_tech_played)
 	_tm_ref.turn_ended.connect(_on_turn_ended)
@@ -140,6 +147,10 @@ func _disconnect_all() -> void:
 		GameState.game_over.disconnect(_on_game_over_signal)
 	if GameState.card_destroyed.is_connected(_on_card_destroyed):
 		GameState.card_destroyed.disconnect(_on_card_destroyed)
+	if GameState.crystals_changed.is_connected(_on_crystals_changed):
+		GameState.crystals_changed.disconnect(_on_crystals_changed)
+	if GameState.turn_changed.is_connected(_on_turn_changed):
+		GameState.turn_changed.disconnect(_on_turn_changed)
 	if _tm_ref != null:
 		if _tm_ref.attack_completed.is_connected(_on_attack_completed):
 			_tm_ref.attack_completed.disconnect(_on_attack_completed)
@@ -153,20 +164,48 @@ func _disconnect_all() -> void:
 	_board_ref = null
 
 # ── Signal handlers ───────────────────────────────────────────────────────────
-func _on_phase_changed(phase: GameState.Phase) -> void:
-	match phase:
-		GameState.Phase.MODE_SELECT:
-			var cp: int = GameState.current_player
-			var c0: int = GameState.crystals[0]
-			var c1: int = GameState.crystals[1]
-			_raw("")
-			_raw("--- Turn %d  |  Player %d  |  Crystals P0=%d P1=%d ---" % [
-				GameState.turn_number, cp, c0, c1])
+
+## Turn header — fires exactly once per turn when current_player changes.
+func _on_turn_changed(player: int) -> void:
+	var c0: int = GameState.crystals[0]
+	var c1: int = GameState.crystals[1]
+	_raw("")
+	_raw("--- Turn %d  |  Player %d  |  Crystals P0=%d P1=%d ---" % [
+		GameState.turn_number, player, c0, c1])
+	# Re-sync crystal snapshot so the first delta of the turn is relative to turn start
+	_prev_crystals[0] = c0
+	_prev_crystals[1] = c1
+
+## Crystal delta — fires on every lose_crystals / gain_crystals call.
+func _on_crystals_changed(player: int, new_amount: int, reason: String = "") -> void:
+	var delta: int = new_amount - _prev_crystals[player]
+	if delta == 0:
+		_prev_crystals[player] = new_amount
+		return
+	var sign: String = "+" if delta >= 0 else ""
+	var reason_tag: String = "  [%s]" % reason if not reason.is_empty() else ""
+	log_event("Crystals: P%d %d → %d (%s%d)%s" % [
+		player, _prev_crystals[player], new_amount, sign, delta, reason_tag])
+	_prev_crystals[player] = new_amount
+
+func _on_phase_changed(_phase: GameState.Phase) -> void:
+	pass  # Turn header is now handled by _on_turn_changed; nothing else needs logging here.
 
 func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 		result: BattleResolver.BattleResult) -> void:
 	var atk_player: int = GameState.current_player
 	var def_player: int = GameState.get_opponent(atk_player)
+
+	# Trap encounter — log trap name instead of misleading ATK=0 DEF=0 TIE
+	if result.special_trigger == "trap_effect":
+		var trap: Variant = result.special_params.get("trap_data", null)
+		var tname: String = trap.card_name if trap != null else "?"
+		log_event("Trap: \"%s\" triggered  P%d(%d,%d)→P%d(%d,%d)" % [
+			tname,
+			atk_player, attacker_pos.x, attacker_pos.y,
+			def_player, target_pos.x, target_pos.y])
+		return
+
 	var atk_card: GameState.CardInstance = GameState.get_card(atk_player, attacker_pos.x, attacker_pos.y)
 	var def_card: GameState.CardInstance = GameState.get_card(def_player, target_pos.x, target_pos.y)
 	# Card name may be empty if the card was destroyed during battle (slot became dead_end).

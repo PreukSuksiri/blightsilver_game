@@ -189,32 +189,29 @@ func _build_ai_column(parent: HBoxContainer, player_idx: int) -> void:
 func _populate_decks() -> void:
 	for opt: OptionButton in [_deck_opt_0, _deck_opt_1]:
 		opt.clear()
-		if SaveManager.decks.is_empty():
-			opt.add_item("(no saved decks)")
-			opt.disabled = true
-		else:
-			for i: int in range(SaveManager.decks.size()):
-				var d: DeckData = SaveManager.decks[i]
-				opt.add_item(d.deck_name)
-			opt.disabled = false
+		opt.add_item("Random (demo-filtered)")  # index 0 = null deck
+		opt.disabled = false
+		for i: int in range(SaveManager.decks.size()):
+			var d: DeckData = SaveManager.decks[i]
+			opt.add_item(d.deck_name)  # indices 1+ = saved decks
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Start Battle
 # ─────────────────────────────────────────────────────────────────────────────
 func _on_start_battle() -> void:
-	if SaveManager.decks.is_empty():
-		_status_lbl.text = "No saved decks found. Build a deck first."
-		return
-
-	var d0: DeckData = SaveManager.decks[_deck_opt_0.selected] if _deck_opt_0.selected >= 0 else null
-	var d1: DeckData = SaveManager.decks[_deck_opt_1.selected] if _deck_opt_1.selected >= 0 else null
-
-	if d0 == null or not d0.is_valid():
-		_status_lbl.text = "AI Player 0 deck is invalid."
-		return
-	if d1 == null or not d1.is_valid():
-		_status_lbl.text = "AI Player 1 deck is invalid."
-		return
+	# index 0 = random pool (null); indices 1+ = saved deck at [selected - 1]
+	var d0: Variant = null
+	if _deck_opt_0.selected > 0:
+		d0 = SaveManager.decks[_deck_opt_0.selected - 1]
+		if not (d0 as DeckData).is_valid():
+			_status_lbl.text = "AI Player 0 deck is invalid."
+			return
+	var d1: Variant = null
+	if _deck_opt_1.selected > 0:
+		d1 = SaveManager.decks[_deck_opt_1.selected - 1]
+		if not (d1 as DeckData).is_valid():
+			_status_lbl.text = "AI Player 1 deck is invalid."
+			return
 
 	var fc0: Array = _collect_forced_cells_from_grid(_forced_dict_0)
 	var fc1: Array = _collect_forced_cells_from_grid(_forced_dict_1)
@@ -222,7 +219,7 @@ func _on_start_battle() -> void:
 	AIvsAIManager.configure(d0, fc0, d1, fc1)
 
 	# Store config in GameState for GameBoard to read
-	GameState.game_mode                = GameState.GameMode.AI_VS_AI
+	GameState.game_mode                  = GameState.GameMode.AI_VS_AI
 	GameState.battle_player_forced_cells = fc0
 	GameState.battle_ai_forced_cells     = fc1
 	GameState.battle_player_deck         = d0

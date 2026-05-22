@@ -49,6 +49,7 @@ func _do_coin_flips(count: int) -> Array:
 func start_turn(player_index: int) -> void:
 	GameState.current_player = player_index
 	GameState.turn_number += 1
+	GameState.turn_changed.emit(player_index)
 	GameState.current_mode = GameState.TurnMode.NONE
 	GameState.attacks_remaining = 2
 
@@ -272,7 +273,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 				["Pay %d Crystals" % _xd_cost, "Skip"])
 			var _xd_choice: int = await ability_choice_resolved
 			if _xd_choice == 0:
-				GameState.lose_crystals(player, _xd_cost)
+				GameState.lose_crystals(player, _xd_cost, "ability")
 				await crystal_animation_done
 				GameState.post_message("%s: %s is destroyed!" % [attacker.card_name, defender.card_name])
 				GameState.place_dead_end(opponent, target_pos.x, target_pos.y)
@@ -300,7 +301,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 				["Pay %d Crystals" % _pb_cost, "Skip"])
 			var _pb_choice: int = await ability_choice_resolved
 			if _pb_choice == 0:
-				GameState.lose_crystals(player, _pb_cost)
+				GameState.lose_crystals(player, _pb_cost, "ability")
 				await crystal_animation_done
 				attacker.temp_atk_bonus += _pb_boost
 				GameState.post_message("%s: Paid %d Crystals for +%d ATK!" % [attacker.card_name, _pb_cost, _pb_boost])
@@ -317,7 +318,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 				["Pay %d Crystals" % _dd_cost, "Skip"])
 			var _dd_choice: int = await ability_choice_resolved
 			if _dd_choice == 0:
-				GameState.lose_crystals(opponent, _dd_cost)
+				GameState.lose_crystals(opponent, _dd_cost, "ability")
 				await crystal_animation_done
 				defender.temp_def_bonus += _dd_boost
 				GameState.post_message("%s: Paid %d Crystals for +%d DEF!" % [defender.card_name, _dd_cost, _dd_boost])
@@ -478,7 +479,7 @@ func play_tech_card(tech_name: String) -> void:
 			return
 
 	# Pay cost
-	GameState.lose_crystals(player, data.crystal_cost)
+	GameState.lose_crystals(player, data.crystal_cost, "tech cost")
 	await crystal_animation_done
 	GameState.tech_hands[player].erase(tech_name)
 	GameState.tech_cards_played_this_game[player].append(tech_name)
@@ -694,7 +695,7 @@ func _apply_battle_result(
 		defender: GameState.CardInstance
 ) -> void:
 	if result.attacker_crystal_loss > 0:
-		GameState.lose_crystals(player, result.attacker_crystal_loss)
+		GameState.lose_crystals(player, result.attacker_crystal_loss, "battle")
 		await crystal_animation_done
 	if result.defender_crystal_loss > 0:
 		# Divine Protection
@@ -705,16 +706,16 @@ func _apply_battle_result(
 				GameState.divine_protection_active[opponent] = false
 				GameState.post_message("Prayer protected %s!" % defender.card_name)
 			else:
-				GameState.lose_crystals(opponent, result.defender_crystal_loss)
+				GameState.lose_crystals(opponent, result.defender_crystal_loss, "battle")
 				await crystal_animation_done
 		else:
-			GameState.lose_crystals(opponent, result.defender_crystal_loss)
+			GameState.lose_crystals(opponent, result.defender_crystal_loss, "battle")
 			await crystal_animation_done
 
 	if result.attacker_crystal_gain > 0:
-		GameState.gain_crystals(player, result.attacker_crystal_gain)
+		GameState.gain_crystals(player, result.attacker_crystal_gain, "battle")
 	if result.defender_crystal_gain > 0:
-		GameState.gain_crystals(opponent, result.defender_crystal_gain)
+		GameState.gain_crystals(opponent, result.defender_crystal_gain, "battle")
 
 	# SACRIFICE_FOR_CARD_TYPE: a field card sacrifices itself to save the defender
 	if result.defender_destroyed and defender.card_type == "character":
@@ -799,7 +800,7 @@ func _handle_trap_effect(
 
 	# Trap always becomes blank after triggering — animate destroy
 	GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
-	GameState.lose_crystals(opponent, trap_data.crystal_cost)
+	GameState.lose_crystals(opponent, trap_data.crystal_cost, "trap cost")
 	await crystal_animation_done
 
 	# Honored Duel: trap is consumed but its effect is cancelled
@@ -832,7 +833,7 @@ func _handle_trap_effect(
 				["Lose 500 Crystals", "Destroy your attacking character"])
 			var _nac_choice: int = await ability_choice_resolved
 			if _nac_choice == 0:
-				GameState.lose_crystals(player, 500)
+				GameState.lose_crystals(player, 500, "trap")
 				await crystal_animation_done
 				GameState.post_message("Checkpoint: Lost 500 Crystals.")
 			else:
@@ -867,7 +868,7 @@ func _handle_trap_effect(
 				if GameState.get_all_face_up_characters(opponent).is_empty():
 					GameState.post_message("Explosive Barrels: No face-up defender — trap fizzles.")
 					return
-			GameState.lose_crystals(player, attacker.crystal_cost)
+			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await crystal_animation_done
 			GameState.place_dead_end(player, attacker_pos.x, attacker_pos.y)
 			emit_signal("awaiting_target_selection",
@@ -879,7 +880,7 @@ func _handle_trap_effect(
 			GameState.post_message("Hypnosis: %s cannot attack until end of next turn." % attacker.card_name)
 
 		TrapData.TrapEffectType.DESTROY_ATTACKER:
-			GameState.lose_crystals(player, attacker.crystal_cost)
+			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await crystal_animation_done
 			GameState.place_dead_end(player, attacker_pos.x, attacker_pos.y)
 			GameState.post_message("Flame Trap: %s destroyed!" % attacker.card_name)
@@ -890,7 +891,7 @@ func _handle_trap_effect(
 
 		TrapData.TrapEffectType.DRAIN_ATTACKER_CRYSTALS:
 			var amount: int = trap_data.effect_params.get("amount", 800)
-			GameState.lose_crystals(player, amount)
+			GameState.lose_crystals(player, amount, "trap")
 			await crystal_animation_done
 			GameState.post_message("Mana Drain: Player %d loses %d Crystals!" % [player + 1, amount])
 
@@ -944,11 +945,11 @@ func _handle_trap_effect(
 			GameState.post_message("%s: %s's attack is cancelled!" % [trap_data.card_name, attacker.card_name])
 
 		TrapData.TrapEffectType.DESTROY_ATTACKER_DEFENDER_PAYS:
-			GameState.lose_crystals(player, attacker.crystal_cost)
+			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await crystal_animation_done
 			GameState.place_dead_end(player, attacker_pos.x, attacker_pos.y)
 			var _dap_cost: int = trap_data.effect_params.get("amount", attacker.crystal_cost)
-			GameState.lose_crystals(opponent, _dap_cost)
+			GameState.lose_crystals(opponent, _dap_cost, "trap")
 			await crystal_animation_done
 			GameState.post_message("%s: %s destroyed! Defender loses %d Crystals." % [trap_data.card_name, attacker.card_name, _dap_cost])
 
@@ -1007,7 +1008,7 @@ func _handle_trap_effect(
 				_rogc_hidden.shuffle()
 				var _rogc_pos: Vector2i = _rogc_hidden[0]
 				GameState.reveal_card(opponent, _rogc_pos.x, _rogc_pos.y)
-				GameState.gain_crystals(opponent, _rogc_amount)
+				GameState.gain_crystals(opponent, _rogc_amount, "trap")
 				GameState.post_message("%s: Revealed own card, gained %d Crystals!" % [trap_data.card_name, _rogc_amount])
 			else:
 				GameState.post_message("%s: No hidden cards to reveal." % trap_data.card_name)
@@ -1248,7 +1249,7 @@ func _apply_post_battle_effects(
 		CharacterData.AbilityType.CRYSTAL_GAIN_ON_DEAD_END_ATTACK:
 			if defender.card_type == "dead_end":
 				var _crys: int = attacker.ability_params.get("amount", 300)
-				GameState.gain_crystals(player, _crys)
+				GameState.gain_crystals(player, _crys, "ability")
 				GameState.post_message("%s: Gained %d Crystals!" % [attacker.card_name, _crys])
 
 		CharacterData.AbilityType.ONE_USE_ATK_BOOST, \

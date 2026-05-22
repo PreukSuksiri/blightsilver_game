@@ -463,7 +463,7 @@ func decide_target(filter: String) -> Vector2i:
 		"opponent_any_hidden", "lock_opponent_monster", \
 				"opponent_faceup_zero_stats", "row_or_column":
 			return _random_unrevealed_opponent()
-		"own_faceup_character", "own_character_for_swap", \
+		"own_faceup_character", "own_faceup_character_berserk", "own_character_for_swap", \
 				"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct", \
 				"lock_own_monster", "own_faceup_character_source", "own_faceup_character_target", \
 				"self_faceup_for_copy", "own_armored_nature":

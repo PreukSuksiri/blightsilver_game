@@ -22,7 +22,7 @@ enum GameMode { LOCAL_2P, VS_AI, HOT_SEAT, CAMPAIGN, DAILY_DUNGEON, AI_VS_AI }
 # ─────────────────────────────────────────────────────────────
 signal phase_changed(new_phase: Phase)
 signal turn_changed(player_index: int)
-signal crystals_changed(player_index: int, new_amount: int)
+signal crystals_changed(player_index: int, new_amount: int, reason: String)
 signal card_revealed(player_index: int, row: int, col: int)
 signal card_destroyed(player_index: int, row: int, col: int)
 signal dice_rolled(result: int)
@@ -251,7 +251,7 @@ func set_phase(new_phase: Phase) -> void:
 # ─────────────────────────────────────────────────────────────
 # Crystal Management
 # ─────────────────────────────────────────────────────────────
-func lose_crystals(player_index: int, amount: int) -> void:
+func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 	# Risk & Reward: crystal losses cost 25% more in Daily Dungeon
 	if game_mode == GameMode.DAILY_DUNGEON and "risk_and_reward" in active_dungeon_modifiers:
 		amount = int(amount * 1.25)
@@ -268,7 +268,7 @@ func lose_crystals(player_index: int, amount: int) -> void:
 	amount += extra_loss
 
 	crystals[player_index] = max(0, crystals[player_index] - amount)
-	emit_signal("crystals_changed", player_index, crystals[player_index])
+	emit_signal("crystals_changed", player_index, crystals[player_index], reason)
 
 	# CRYSTAL_RECOVER_ON_BIG_LOSS: if this player's loss was large, recover some crystals
 	if amount > 0:
@@ -281,14 +281,14 @@ func lose_crystals(player_index: int, amount: int) -> void:
 						var recover: int = own_card.ability_params.get("recover", 300)
 						if amount >= threshold:
 							crystals[player_index] = min(crystals[player_index] + recover, crystals[player_index] + recover)
-							emit_signal("crystals_changed", player_index, crystals[player_index])
+							emit_signal("crystals_changed", player_index, crystals[player_index], "recovery")
 							post_message("%s: Recovered %d Crystals!" % [own_card.card_name, recover])
 
 	_check_crystal_win_condition()
 
-func gain_crystals(player_index: int, amount: int) -> void:
+func gain_crystals(player_index: int, amount: int, reason: String = "") -> void:
 	crystals[player_index] += amount
-	emit_signal("crystals_changed", player_index, crystals[player_index])
+	emit_signal("crystals_changed", player_index, crystals[player_index], reason)
 
 func _check_crystal_win_condition() -> void:
 	var p0_zero: bool = crystals[0] <= 0
@@ -363,7 +363,7 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 				if opp_card.card_type == "character" and opp_card.face_up:
 					if opp_card.ability_type == CharacterData.AbilityType.CRYSTAL_GAIN_ON_OPP_REVEAL:
 						var amt: int = opp_card.ability_params.get("amount", 40)
-						gain_crystals(opponent_idx, amt)
+						gain_crystals(opponent_idx, amt, "ability")
 						post_message("%s: Gained %d Crystals from reveal!" % [opp_card.card_name, amt])
 
 		# HALVE_DEF_ON_FIRST_EXPOSE: halve DEF when this card first becomes face-up
@@ -388,7 +388,7 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 		# Track destroyed characters in graveyard
 		graveyards[player_index].append(card)
 	if pay_cost and card.card_type != "dead_end":
-		lose_crystals(player_index, card.crystal_cost)
+		lose_crystals(player_index, card.crystal_cost, "card lost")
 	emit_signal("card_destroyed", player_index, row, col)
 	place_dead_end(player_index, row, col)
 	# Mark the resulting slot as revealed and destroyed so it can't be re-targeted

@@ -261,12 +261,12 @@ func _execute_effect(rule: CardRule, source_card: GameState.CardInstance, owner_
 		CardRule.EffectType.GAIN_CRYSTALS:
 			var amount: int = params.get("amount", 0)
 			var p: int = _resolve_player(params.get("player", "owner"), owner_player)
-			GameState.gain_crystals(p, amount)
+			GameState.gain_crystals(p, amount, "ability")
 
 		CardRule.EffectType.LOSE_CRYSTALS:
 			var amount: int = params.get("amount", 0)
 			var p: int = _resolve_player(params.get("player", "owner"), owner_player)
-			GameState.lose_crystals(p, amount)
+			GameState.lose_crystals(p, amount, "ability")
 
 		CardRule.EffectType.SKIP_TURN:
 			var p: int = _resolve_player(params.get("player", "opponent"), owner_player)
