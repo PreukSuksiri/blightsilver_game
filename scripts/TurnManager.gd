@@ -18,6 +18,8 @@ signal attack_aborted
 signal card_effect_flash_done
 signal ability_choice_resolved(choice_index: int)
 signal awaiting_defender_choice(prompt: String, choices: Array)
+signal coin_flip_visual_requested(results: Array)
+signal coin_flip_visual_done
 
 # Pending choices for async UI flows
 var _pending_trap_resolve: Callable
@@ -31,6 +33,18 @@ var _pending_swap_attacker_pos: Vector2i = Vector2i(-1, -1)
 
 func resolve_ability_choice(choice_index: int) -> void:
 	emit_signal("ability_choice_resolved", choice_index)
+
+func resolve_coin_flip_visual() -> void:
+	emit_signal("coin_flip_visual_done")
+
+## Roll count coins (true=heads, false=tails), show the visual overlay, then return results.
+func _do_coin_flips(count: int) -> Array:
+	var results: Array = []
+	for _i in range(count):
+		results.append(randi() % 2 == 1)
+	emit_signal("coin_flip_visual_requested", results)
+	await coin_flip_visual_done
+	return results
 
 func start_turn(player_index: int) -> void:
 	GameState.current_player = player_index
@@ -71,7 +85,8 @@ func start_turn(player_index: int) -> void:
 					if not _ts_targets.is_empty():
 						_ts_targets.shuffle()
 						var _ts_target: GameState.CardInstance = _ts_targets[0]
-						if randi() % 2 == 1:
+						var _ts_cf: Array = await _do_coin_flips(1)
+						if _ts_cf[0]:  # heads
 							if "venom" not in _ts_target.flags:
 								_ts_target.flags.append("venom")
 							GameState.post_message("%s: Heads! Venom on %s." % [_ts_card.card_name, _ts_target.card_name])
@@ -172,7 +187,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 
 	# Pre-battle: COIN_FLIP_CANCEL_ATTACK (Lazy Troll) — tails = own attack cancelled
 	if attacker.ability_type == CharacterData.AbilityType.COIN_FLIP_CANCEL_ATTACK:
-		if randi() % 2 == 0:
+		var _cca_results: Array = await _do_coin_flips(1)
+		if not _cca_results[0]:  # tails
 			GameState.post_message("%s flips tails — too lazy to attack! It has to wait." % attacker.card_name)
 			attacker.attacked_this_turn = true                  # shows hourglass icon on card
 			GameState.attacks_remaining = maxi(0, GameState.attacks_remaining - 1)  # wasted attempt
@@ -313,6 +329,11 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	for msg in result.messages:
 		GameState.post_message(msg)
 
+	# Show coin flip visual for any flips that happened inside BattleResolver
+	if not result.coin_flip_results.is_empty():
+		emit_signal("coin_flip_visual_requested", result.coin_flip_results)
+		await coin_flip_visual_done
+
 	# Signal the overlay to update its animation to match the final result, then resume
 	emit_signal("battle_result_finalized", result)
 	await battle_preview_done
@@ -374,7 +395,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 					{"source_player": opponent, "attacker": attacker, "defender": defender})
 
 	# Post-battle ability effects — must run before modifying attacked_this_turn
-	var _pb_extra: int = _apply_post_battle_effects(result, player, opponent, attacker, defender, attacker_pos, target_pos)
+	var _pb_extra: int = await _apply_post_battle_effects(result, player, opponent, attacker, defender, attacker_pos, target_pos)
 
 	emit_signal("attack_completed", attacker_pos, target_pos, result)
 
@@ -948,22 +969,20 @@ func _handle_trap_effect(
 
 		TrapData.TrapEffectType.COIN_FLIP_2_ATK_DEBUFF:
 			var _cf2d_amount: int = trap_data.effect_params.get("amount", 10)
-			var _cf2d_a: int = randi() % 2
-			var _cf2d_b: int = randi() % 2
+			var _cf2d_r: Array = await _do_coin_flips(2)
 			GameState.post_message("%s: %s, %s." % [trap_data.card_name,
-				"Heads" if _cf2d_a == 1 else "Tails", "Heads" if _cf2d_b == 1 else "Tails"])
-			if _cf2d_a == 1 and _cf2d_b == 1:
+				"Heads" if _cf2d_r[0] else "Tails", "Heads" if _cf2d_r[1] else "Tails"])
+			if _cf2d_r[0] and _cf2d_r[1]:
 				attacker.current_atk = max(0, attacker.current_atk - _cf2d_amount)
 				GameState.post_message("Both heads! %s -%d ATK permanently!" % [attacker.card_name, _cf2d_amount])
 			else:
 				GameState.post_message("Not both heads — no effect.")
 
 		TrapData.TrapEffectType.COIN_FLIP_2_LOCK_ATTACKER:
-			var _cf2l_a: int = randi() % 2
-			var _cf2l_b: int = randi() % 2
+			var _cf2l_r: Array = await _do_coin_flips(2)
 			GameState.post_message("%s: %s, %s." % [trap_data.card_name,
-				"Heads" if _cf2l_a == 1 else "Tails", "Heads" if _cf2l_b == 1 else "Tails"])
-			if _cf2l_a == 1 and _cf2l_b == 1:
+				"Heads" if _cf2l_r[0] else "Tails", "Heads" if _cf2l_r[1] else "Tails"])
+			if _cf2l_r[0] and _cf2l_r[1]:
 				attacker.cannot_attack_until = GameState.turn_number + 1
 				GameState.post_message("Both heads! %s cannot attack next turn!" % attacker.card_name)
 			else:
@@ -1025,7 +1044,8 @@ func _end_turn(player: int) -> void:
 				CharacterData.AbilityType.PERM_ATK_LOSS_PER_OWN_TURN:
 					_te_card.current_atk = max(0, _te_card.current_atk - _te_card.ability_params.get("amount", 2))
 				CharacterData.AbilityType.END_OF_TURN_COIN_FLIP_STAT_BOOST:
-					if randf() >= 0.5:
+					var _cfst_r: Array = await _do_coin_flips(1)
+					if _cfst_r[0]:  # heads
 						var _cf_atk: int = _te_card.ability_params.get("atk", 10)
 						_te_card.current_atk += _cf_atk
 						GameState.post_message("%s: Heads! +%d ATK permanently." % [_te_card.card_name, _cf_atk])
@@ -1193,7 +1213,8 @@ func _apply_post_battle_effects(
 				GameState.post_message("%s: Bonus attack for hitting dead end!" % attacker.card_name)
 
 		CharacterData.AbilityType.COIN_FLIP_EXTRA_ATTACK:
-			if randi() % 2 == 1:
+			var _cfea_r: Array = await _do_coin_flips(1)
+			if _cfea_r[0]:  # heads
 				extra += 1
 				GameState.post_message("%s: Coin flip heads — extra attack!" % attacker.card_name)
 			else:

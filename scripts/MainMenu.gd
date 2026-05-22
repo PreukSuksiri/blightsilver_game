@@ -36,7 +36,9 @@ func _ready() -> void:
 	campaign_btn.text = "MULTIPLAYER"
 	campaign_btn.pressed.connect(_on_multiplayer)
 	settings_icon_btn.pressed.connect(_on_settings)
+	settings_icon_btn.tooltip_text = "Settings"
 	exit_icon_btn.pressed.connect(func() -> void: get_tree().quit())
+	exit_icon_btn.tooltip_text = "Exit Game"
 	version_label.text = "v0.1 Prototype"
 	(bgm.stream as AudioStreamMP3).loop = true
 	bgm.play()

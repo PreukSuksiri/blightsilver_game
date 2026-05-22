@@ -297,6 +297,7 @@ func _setup_turn_manager() -> void:
 	turn_manager.battle_preview_needed.connect(_on_battle_preview_needed)
 	turn_manager.battle_result_finalized.connect(_on_battle_result_finalized)
 	turn_manager.attack_aborted.connect(_on_attack_aborted)
+	turn_manager.coin_flip_visual_requested.connect(_on_coin_flip_visual_requested)
 
 func _setup_ai() -> void:
 	ai_player = AIPlayer.new()
@@ -3508,6 +3509,139 @@ func _stop_battle_music() -> void:
 		_battle_music.stop()
 		_battle_music.queue_free()
 		_battle_music = null
+
+# ─────────────────────────────────────────────────────────────
+# Compact card-effect coin flip overlay (1–3 coins, auto-dismiss)
+# ─────────────────────────────────────────────────────────────
+func _on_coin_flip_visual_requested(results: Array) -> void:
+	await _show_compact_coin_flip(results)
+	turn_manager.resolve_coin_flip_visual()
+
+func _show_compact_coin_flip(results: Array) -> void:
+	var _COIN_FRONT: Texture2D = load("res://assets/textures/ui/decorations/ui_coin_front.png")
+	var _COIN_BACK:  Texture2D = load("res://assets/textures/ui/decorations/ui_coin_back.png")
+	const COIN_SZ   : float = 140.0
+	const NUM_FLIPS : int   = 5
+
+	var count: int = clampi(results.size(), 1, 3)
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+
+	# ── Semi-transparent panel ──────────────────────────────
+	var panel := PanelContainer.new()
+	panel.add_theme_stylebox_override("panel", _make_compact_flip_stylebox())
+	panel.z_index       = 80
+	panel.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	panel.anchor_left   = 0.5
+	panel.anchor_right  = 0.5
+	panel.anchor_top    = 0.5
+	panel.anchor_bottom = 0.5
+	add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_theme_constant_override("separation", 12)
+	panel.add_child(vbox)
+
+	var coins_row := HBoxContainer.new()
+	coins_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	coins_row.add_theme_constant_override("separation", 18)
+	vbox.add_child(coins_row)
+
+	var result_row := HBoxContainer.new()
+	result_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	result_row.add_theme_constant_override("separation", 18)
+	vbox.add_child(result_row)
+
+	# Build per-coin sprites and result labels
+	var coin_sprites: Array = []
+	var result_labels: Array = []
+	for i in range(count):
+		var is_heads: bool = results[i]
+
+		var spr := TextureRect.new()
+		spr.texture             = _COIN_FRONT
+		spr.custom_minimum_size = Vector2(COIN_SZ, COIN_SZ)
+		spr.expand_mode         = TextureRect.EXPAND_IGNORE_SIZE
+		spr.stretch_mode        = TextureRect.STRETCH_KEEP_ASPECT
+		spr.pivot_offset        = Vector2(COIN_SZ * 0.5, COIN_SZ * 0.5)
+		coins_row.add_child(spr)
+		coin_sprites.append(spr)
+
+		var lbl := Label.new()
+		lbl.text                    = "It's heads!!" if is_heads else "It's tails..!!"
+		lbl.horizontal_alignment    = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.add_theme_font_size_override("font_size", 17)
+		lbl.add_theme_color_override("font_color",
+			Color(0.3, 1.0, 0.4, 0.0) if is_heads else Color(1.0, 0.38, 0.38, 0.0))
+		lbl.custom_minimum_size = Vector2(COIN_SZ, 26)
+		result_row.add_child(lbl)
+		result_labels.append(lbl)
+
+	# Position panel centered
+	await get_tree().process_frame
+	var ps: Vector2 = panel.size
+	panel.offset_left   = -ps.x * 0.5
+	panel.offset_right  =  ps.x * 0.5
+	panel.offset_top    = -ps.y * 0.5
+	panel.offset_bottom =  ps.y * 0.5
+
+	# ── Flip animations (run all coins in parallel) ─────────
+	for flip in range(NUM_FLIPS):
+		var progress: float = float(flip) / float(NUM_FLIPS)
+		var half_dur: float = lerpf(0.055, 0.18, progress)
+
+		# Shrink all coins to 0 width simultaneously
+		var tw_in := create_tween()
+		for spr: TextureRect in coin_sprites:
+			tw_in.parallel().tween_property(spr, "scale:x", 0.0, half_dur) \
+				.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+		await tw_in.finished
+
+		# Swap textures based on flip parity
+		var show_front: bool = (flip % 2 == 0)  # starts front, alternates
+		var is_last: bool = (flip == NUM_FLIPS - 1)
+		for i in range(count):
+			var spr: TextureRect = coin_sprites[i]
+			if is_last:
+				spr.texture = _COIN_FRONT if bool(results[i]) else _COIN_BACK
+			else:
+				spr.texture = _COIN_BACK if show_front else _COIN_FRONT
+
+		# Expand back
+		var tw_out := create_tween()
+		for spr: TextureRect in coin_sprites:
+			tw_out.parallel().tween_property(spr, "scale:x", 1.0, half_dur) \
+				.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		await tw_out.finished
+
+	# ── Fade in result labels ───────────────────────────────
+	var lbl_in := create_tween()
+	for lbl: Label in result_labels:
+		var heads: bool = lbl.text.begins_with("It's heads")
+		var col: Color = Color(0.3, 1.0, 0.4, 1.0) if heads else Color(1.0, 0.38, 0.38, 1.0)
+		lbl_in.parallel().tween_property(lbl, "theme_override_colors/font_color", col, 0.25)
+	await lbl_in.finished
+
+	await get_tree().create_timer(1.1).timeout
+
+	# ── Fade out panel ──────────────────────────────────────
+	var fade := create_tween()
+	fade.tween_property(panel, "modulate:a", 0.0, 0.35)
+	await fade.finished
+	panel.queue_free()
+
+func _make_compact_flip_stylebox() -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color           = Color(0.06, 0.06, 0.10, 0.88)
+	sb.corner_radius_top_left     = 14
+	sb.corner_radius_top_right    = 14
+	sb.corner_radius_bottom_left  = 14
+	sb.corner_radius_bottom_right = 14
+	sb.content_margin_left   = 28.0
+	sb.content_margin_right  = 28.0
+	sb.content_margin_top    = 20.0
+	sb.content_margin_bottom = 20.0
+	return sb
 
 # ─────────────────────────────────────────────────────────────
 # Coin flip overlay

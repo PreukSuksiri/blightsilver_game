@@ -28,6 +28,14 @@ class BattleResult:
 	# Post-battle pending actions for TurnManager
 	var pending_reveal_opponent_cell: bool = false  # attacker should reveal 1 opp cell
 	var pending_coin_flip_swap_position: bool = false  # attacker should coin-flip swap position
+	# Coin results accumulated during this battle resolution (for visual display in GameBoard)
+	var coin_flip_results: Array = []  # Array of bool — true=heads, false=tails
+
+# ─────────────────────────────────────────────────────────────
+# Coin-flip accumulator — reset at start of each resolve_battle call
+# so _get_effective_atk helpers can append without carrying a result ref.
+# ─────────────────────────────────────────────────────────────
+static var _battle_coin_results: Array = []
 
 # ─────────────────────────────────────────────────────────────
 # Main Resolution
@@ -41,6 +49,7 @@ static func resolve_battle(
 		defender_was_exposed: bool = false,
 		target_pos: Vector2i = Vector2i(-1, -1)
 ) -> BattleResult:
+	_battle_coin_results = []
 	var result := BattleResult.new()
 	result.defender_was_exposed = defender_was_exposed
 
@@ -56,6 +65,7 @@ static func resolve_battle(
 		"character":
 			_resolve_character_vs_character(
 				attacker, defender, dice_roll, attacker_player, defender_player, target_pos, result)
+			result.coin_flip_results = _battle_coin_results.duplicate()
 			return result
 
 	return result
@@ -128,6 +138,8 @@ static func _resolve_character_vs_character(
 		if defender.affinity != attacker.ability_params.get("affinity", -1):
 			var h1: bool = randf() >= 0.5
 			var h2: bool = randf() >= 0.5
+			_battle_coin_results.append(h1)
+			_battle_coin_results.append(h2)
 			result.ability_triggered_attacker = true
 			if h1 and h2:
 				result.messages.append("%s: Two heads — %s is destroyed!" % [attacker.card_name, defender.card_name])
@@ -171,7 +183,9 @@ static func _resolve_character_vs_character(
 	# COIN_FLIP_NULLIFY_ON_DEFEND: Keeper of the Afterlife — flip coin; heads = nullify attack
 	if defender.ability_type == CharacterData.AbilityType.COIN_FLIP_NULLIFY_ON_DEFEND:
 		result.ability_triggered_defender = true
-		if randf() >= 0.5:
+		var _nullify_heads: bool = randf() >= 0.5
+		_battle_coin_results.append(_nullify_heads)
+		if _nullify_heads:
 			result.messages.append("%s coin flip: heads — attack nullified!" % defender.card_name)
 			return  # no destruction, no damage
 		else:
@@ -373,7 +387,9 @@ static func _get_effective_atk(
 			atk += attacker.ability_params.get("atk", attacker.ability_params.get("atk_bonus", 0))
 
 		CharacterData.AbilityType.COIN_FLIP_ATK_BOOST:
-			if randf() >= 0.5:
+			var _cfab_heads: bool = randf() >= 0.5
+			_battle_coin_results.append(_cfab_heads)
+			if _cfab_heads:
 				atk += attacker.ability_params.get("bonus", 0)
 				GameState.post_message("%s coin flip: heads! +%d ATK" % [attacker.card_name, attacker.ability_params.get("bonus", 0)])
 			else:

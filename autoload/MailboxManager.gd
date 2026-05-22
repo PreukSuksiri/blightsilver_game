@@ -149,7 +149,8 @@ func admin_command(raw: String) -> String:
 				+ "  grant_incense [count]\n"
 				+ "  demo_on\n"
 				+ "  demo_off\n"
-				+ "  demo_status"
+				+ "  demo_status\n"
+				+ "  hide_ui"
 			)
 
 		"tts":
@@ -424,6 +425,17 @@ func admin_command(raw: String) -> String:
 			editor.name = "CardEditorOverlay"
 			scene.add_child(editor)
 			return "Card Editor opened."
+
+		"hide_ui":
+			var scene: Node = get_tree().current_scene
+			if scene.name != "MainMenu":
+				return "hide_ui only works on the Main Menu."
+			if scene.get_node_or_null("UIHideCapture") != null:
+				return "UI is already hidden. Press any key or click to restore."
+			var cap: Node = load("res://scripts/UIHideCapture.gd").new()
+			cap.name = "UIHideCapture"
+			scene.add_child(cap)
+			return "UI hidden. Press any key or click to restore."
 
 		"animation_vellum_card_commence_flip":
 			var scene: Node = get_tree().current_scene

@@ -36,6 +36,9 @@ extends Resource
 @export var partial_formula_description: String = ""
 @export var artwork_path: String = ""
 
+## Whether this union card is included in the demo build.
+@export var include_in_demo: bool = true
+
 ## Zone cell offsets from anchor (row, col).
 @export var union_zone: Array = []  # Array[Vector2i]
 

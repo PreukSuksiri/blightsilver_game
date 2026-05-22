@@ -32,6 +32,10 @@ func _apply_demo_flags() -> void:
 			(traps[card_name] as TrapData).include_in_demo = flag
 		elif tech_cards.has(card_name):
 			(tech_cards[card_name] as TechCardData).include_in_demo = flag
+		else:
+			var u: UnionData = UnionDatabase.get_union(card_name)
+			if u != null:
+				u.include_in_demo = flag
 
 # ────────────────────────────────────────────────────────────
 # CHARACTER CARDS
@@ -1303,6 +1307,9 @@ func save_demo_flags() -> void:
 	for card_name: String in tech_cards:
 		if (tech_cards[card_name] as TechCardData).include_in_demo:
 			flags[card_name] = true
+	for u: UnionData in UnionDatabase.get_all_unions():
+		if not u.include_in_demo:
+			flags[u.card_name] = false
 	var file := FileAccess.open("res://data/demo_flags.json", FileAccess.WRITE)
 	if file:
 		file.store_string(JSON.stringify(flags, "\t"))

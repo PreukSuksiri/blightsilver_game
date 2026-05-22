@@ -34,6 +34,7 @@ func _ready() -> void:
 	_scan_front_textures()
 	_init_cards()
 	SaveManager.nsfw_changed.connect(_on_nsfw_changed)
+	SaveManager.demo_mode_changed.connect(_on_demo_mode_changed)
 	# Pre-simulate 30 s so cards look mid-drift on the very first frame.
 	# 150 steps × 0.2 s = 30 s of physics, no rendering cost.
 	for _i in 150:
@@ -98,8 +99,34 @@ func _scan_front_textures() -> void:
 		else:
 			_nsfw_paths.append(safe_path)  # no nsfw art → fall back to safe
 
+	# When demo mode is on, restrict to cards flagged include_in_demo
+	if SaveManager.demo_mode:
+		var demo_stems := _build_demo_stems()
+		var filtered_safe: Array[String] = []
+		var filtered_nsfw: Array[String] = []
+		for i in range(_safe_paths.size()):
+			var stem: String = _safe_paths[i].get_file().get_basename()
+			if stem in demo_stems:
+				filtered_safe.append(_safe_paths[i])
+				filtered_nsfw.append(_nsfw_paths[i])
+		_safe_paths = filtered_safe
+		_nsfw_paths = filtered_nsfw
+
 	_safe_paths.shuffle()
 	_nsfw_paths.shuffle()
+
+func _build_demo_stems() -> Dictionary:
+	var stems: Dictionary = {}
+	for cname: String in CardDatabase.characters:
+		if (CardDatabase.characters[cname] as CharacterData).include_in_demo:
+			stems["character_" + cname.to_lower().replace(" ", "_")] = true
+	for tname: String in CardDatabase.traps:
+		if (CardDatabase.traps[tname] as TrapData).include_in_demo:
+			stems["trap_" + tname.to_lower().replace(" ", "_")] = true
+	for ename: String in CardDatabase.tech_cards:
+		if (CardDatabase.tech_cards[ename] as TechCardData).include_in_demo:
+			stems["tech_" + ename.to_lower().replace(" ", "_")] = true
+	return stems
 
 func _pick_front_tex() -> Texture2D:
 	var pool: Array[String] = _nsfw_paths if SaveManager.nsfw_enabled else _safe_paths
@@ -109,6 +136,11 @@ func _pick_front_tex() -> Texture2D:
 	return load(path) as Texture2D
 
 func _on_nsfw_changed(_enabled: bool) -> void:
+	_scan_front_textures()
+	for card: Dictionary in _cards:
+		card["tex_front"] = _pick_front_tex()
+
+func _on_demo_mode_changed(_enabled: bool) -> void:
 	_scan_front_textures()
 	for card: Dictionary in _cards:
 		card["tex_front"] = _pick_front_tex()

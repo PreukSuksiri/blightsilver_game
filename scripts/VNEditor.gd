@@ -124,11 +124,19 @@ var _enemy_chars_chips: HBoxContainer = null
 var _enemy_traps_chips: HBoxContainer = null
 var _enemy_tech_chips: HBoxContainer = null
 
-# Forced cell placements
-var _player_forced_rows: Array = []  # Array[Dictionary{row_node, card_le, row_sb, col_sb}]
-var _ai_forced_rows: Array = []
-var _player_forced_vbox: VBoxContainer = null
-var _ai_forced_vbox: VBoxContainer = null
+# Forced cell placements — grid-based UI
+var _player_forced_grid: Dictionary = {}   # key="r,c"  value=card_name String
+var _ai_forced_grid:     Dictionary = {}
+var _player_forced_gc:   GridContainer = null
+var _ai_forced_gc:       GridContainer = null
+
+# Union zone highlight (for union card reference gallery)
+var _union_highlighted_name: String = ""
+var _union_highlight_cells: Array = []     # Array[Vector2i]
+
+# Union gallery UI
+var _union_gallery_search: LineEdit = null
+var _union_gallery_vbox:   VBoxContainer = null
 
 # Battle reward rows
 var _battle_reward_rows: Array = []
@@ -646,29 +654,17 @@ func _build_fields() -> void:
 		"Bluff & emoji reaction style — Random lets AI pick each match")
 
 	# ── Forced Cell Placements ────────────────────────────────
-	_section(v, "PLAYER FORCED CELLS  (placed at setup, cannot be moved)")
-	_player_forced_vbox = VBoxContainer.new()
-	_player_forced_vbox.add_theme_constant_override("separation", 3)
-	v.add_child(_player_forced_vbox)
-	var add_pfc_btn := Button.new()
-	add_pfc_btn.text = "+ Add Player Forced Cell"
-	add_pfc_btn.add_theme_font_size_override("font_size", 13)
-	add_pfc_btn.pressed.connect(func() -> void:
-		_add_forced_cell_row(_player_forced_vbox, _player_forced_rows)
-		_on_field_changed())
-	v.add_child(add_pfc_btn)
+	_section(v, "PLAYER FORCED CELLS  (tap a cell to assign / remove a card)")
+	_player_forced_gc = _build_forced_grid(_player_forced_grid)
+	v.add_child(_player_forced_gc)
 
-	_section(v, "AI FORCED CELLS  (placed at setup, AI cannot touch)")
-	_ai_forced_vbox = VBoxContainer.new()
-	_ai_forced_vbox.add_theme_constant_override("separation", 3)
-	v.add_child(_ai_forced_vbox)
-	var add_afc_btn := Button.new()
-	add_afc_btn.text = "+ Add AI Forced Cell"
-	add_afc_btn.add_theme_font_size_override("font_size", 13)
-	add_afc_btn.pressed.connect(func() -> void:
-		_add_forced_cell_row(_ai_forced_vbox, _ai_forced_rows)
-		_on_field_changed())
-	v.add_child(add_afc_btn)
+	_section(v, "AI FORCED CELLS  (tap a cell to assign / remove a card)")
+	_ai_forced_gc = _build_forced_grid(_ai_forced_grid)
+	v.add_child(_ai_forced_gc)
+
+	# ── Union Card Reference ───────────────────────────────────
+	_section(v, "UNION CARD REFERENCE  (tap to highlight zone on grids above)")
+	_build_union_gallery_section(v)
 
 	# ── Battle Reward ─────────────────────────────────────────
 	_section(v, "BATTLE REWARD  (on win)")
@@ -1303,10 +1299,10 @@ func _populate_fields() -> void:
 
 	# Forced cells
 	var pfc_raw: Variant = b.get("player_forced_cells", [])
-	_rebuild_forced_cell_rows(_player_forced_vbox, _player_forced_rows,
+	_rebuild_forced_grid(_player_forced_grid, _player_forced_gc,
 		pfc_raw if pfc_raw is Array else [])
 	var afc_raw: Variant = b.get("ai_forced_cells", [])
-	_rebuild_forced_cell_rows(_ai_forced_vbox, _ai_forced_rows,
+	_rebuild_forced_grid(_ai_forced_grid, _ai_forced_gc,
 		afc_raw if afc_raw is Array else [])
 
 	# Battle reward
@@ -1552,10 +1548,10 @@ func _collect_beat() -> Dictionary:
 		b["ai_personality_social"] = _f_ai_pers_soc.get_item_text(_f_ai_pers_soc.selected)
 
 	# Forced cells
-	var pfc: Array = _collect_forced_cells(_player_forced_rows)
+	var pfc: Array = _collect_forced_cells_from_grid(_player_forced_grid)
 	if not pfc.is_empty():
 		b["player_forced_cells"] = pfc
-	var afc: Array = _collect_forced_cells(_ai_forced_rows)
+	var afc: Array = _collect_forced_cells_from_grid(_ai_forced_grid)
 	if not afc.is_empty():
 		b["ai_forced_cells"] = afc
 
@@ -1952,77 +1948,256 @@ func _rebuild_enemy_chips(card_type: String, chips: HBoxContainer) -> void:
 		chips.add_child(btn)
 
 # ─────────────────────────────────────────────────────────────
-# Forced cell row helpers
+# Forced cell grid helpers
 # ─────────────────────────────────────────────────────────────
-func _add_forced_cell_row(vbox: VBoxContainer, rows_arr: Array, init: Dictionary = {}) -> void:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 4)
-	vbox.add_child(row)
+func _build_forced_grid(grid_dict: Dictionary) -> GridContainer:
+	var gc := GridContainer.new()
+	gc.columns = 5
+	gc.add_theme_constant_override("h_separation", 4)
+	gc.add_theme_constant_override("v_separation", 4)
+	for r: int in range(5):
+		for c: int in range(5):
+			var btn := Button.new()
+			btn.custom_minimum_size = Vector2(72, 48)
+			btn.clip_text = true
+			btn.add_theme_font_size_override("font_size", 10)
+			var r_cap := r
+			var c_cap := c
+			btn.pressed.connect(func() -> void:
+				if _selected_idx < 0:
+					return
+				_open_forced_cell_picker(grid_dict, gc, r_cap, c_cap))
+			gc.add_child(btn)
+	_refresh_forced_grid(grid_dict, gc)
+	return gc
 
-	var card_le := LineEdit.new()
-	card_le.placeholder_text = "Card name"
-	card_le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	card_le.add_theme_font_size_override("font_size", 14)
-	card_le.text = str(init.get("card_name", ""))
-	row.add_child(card_le)
+func _refresh_forced_grid(grid_dict: Dictionary, gc: GridContainer) -> void:
+	if gc == null:
+		return
+	var children: Array = gc.get_children()
+	for r: int in range(5):
+		for c: int in range(5):
+			var btn: Button = children[r * 5 + c] as Button
+			var key: String = str(r) + "," + str(c)
+			var is_hl: bool = Vector2i(r, c) in _union_highlight_cells
+			if grid_dict.has(key):
+				btn.text = grid_dict[key] as String
+				btn.modulate = Color(0.0, 1.0, 1.0) if is_hl else Color(0.55, 1.0, 0.55)
+			else:
+				btn.text = "%d,%d" % [r, c]
+				btn.modulate = Color(0.0, 0.85, 0.85, 0.75) if is_hl else Color(1.0, 1.0, 1.0, 0.45)
 
-	var row_lbl := Label.new()
-	row_lbl.text = "R"
-	row_lbl.add_theme_font_size_override("font_size", 14)
-	row_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	row.add_child(row_lbl)
-	var row_sb := SpinBox.new()
-	row_sb.min_value = 0; row_sb.max_value = 4; row_sb.step = 1
-	row_sb.value = float(init.get("row", 0))
-	row_sb.custom_minimum_size = Vector2(65, 0)
-	row.add_child(row_sb)
+func _open_forced_cell_picker(grid_dict: Dictionary, gc: GridContainer, r: int, c: int) -> void:
+	var overlay := ColorRect.new()
+	overlay.color = Color(0.0, 0.0, 0.0, 0.55)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.z_index = 70
+	add_child(overlay)
 
-	var col_lbl := Label.new()
-	col_lbl.text = "C"
-	col_lbl.add_theme_font_size_override("font_size", 14)
-	col_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	row.add_child(col_lbl)
-	var col_sb := SpinBox.new()
-	col_sb.min_value = 0; col_sb.max_value = 4; col_sb.step = 1
-	col_sb.value = float(init.get("col", 0))
-	col_sb.custom_minimum_size = Vector2(65, 0)
-	row.add_child(col_sb)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
 
-	var entry: Dictionary = {"row_node": row, "card_le": card_le, "row_sb": row_sb, "col_sb": col_sb}
-	var remove_btn := Button.new()
-	remove_btn.text = "✕"
-	remove_btn.add_theme_font_size_override("font_size", 13)
-	remove_btn.pressed.connect(func() -> void:
-		rows_arr.erase(entry)
-		row.queue_free()
-		_on_field_changed())
-	row.add_child(remove_btn)
-	rows_arr.append(entry)
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(380, 0)
+	center.add_child(panel)
 
-	card_le.text_changed.connect(func(_s: String) -> void: _on_field_changed())
-	row_sb.value_changed.connect(func(_v: float) -> void: _on_field_changed())
-	col_sb.value_changed.connect(func(_v: float) -> void: _on_field_changed())
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 8)
+	panel.add_child(vb)
 
-func _collect_forced_cells(rows_arr: Array) -> Array:
+	var title := Label.new()
+	title.text = "Cell [row %d, col %d]" % [r, c]
+	title.add_theme_font_size_override("font_size", 15)
+	vb.add_child(title)
+
+	var key: String = str(r) + "," + str(c)
+	var current: String = str(grid_dict.get(key, ""))
+
+	var le := LineEdit.new()
+	le.placeholder_text = "Character card name..."
+	le.text = current
+	le.add_theme_font_size_override("font_size", 14)
+	le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vb.add_child(le)
+
+	# Suggestion list
+	var sug_scroll := ScrollContainer.new()
+	sug_scroll.custom_minimum_size = Vector2(0, 130)
+	sug_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vb.add_child(sug_scroll)
+	var sug_vb := VBoxContainer.new()
+	sug_vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sug_scroll.add_child(sug_vb)
+
+	var refresh_sug := func(query: String) -> void:
+		for child: Node in sug_vb.get_children():
+			child.queue_free()
+		var q: String = query.strip_edges().to_lower()
+		var names: Array = []
+		for n: String in CardDatabase.characters:
+			if q.is_empty() or n.to_lower().contains(q):
+				names.append(n)
+		names.sort()
+		var shown: int = 0
+		for n: String in names:
+			if shown >= 25:
+				break
+			var sb := Button.new()
+			sb.text = n
+			sb.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			sb.add_theme_font_size_override("font_size", 12)
+			sb.pressed.connect(func() -> void: le.text = n)
+			sug_vb.add_child(sb)
+			shown += 1
+
+	le.text_changed.connect(refresh_sug)
+	refresh_sug.call(current)
+
+	var btn_hb := HBoxContainer.new()
+	btn_hb.add_theme_constant_override("separation", 6)
+	vb.add_child(btn_hb)
+
+	var set_btn := Button.new()
+	set_btn.text = "Set"
+	set_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_hb.add_child(set_btn)
+
+	var clear_btn := Button.new()
+	clear_btn.text = "Clear"
+	clear_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_hb.add_child(clear_btn)
+
+	var cancel_btn := Button.new()
+	cancel_btn.text = "Cancel"
+	cancel_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_hb.add_child(cancel_btn)
+
+	set_btn.pressed.connect(func() -> void:
+		var cname: String = le.text.strip_edges()
+		if not cname.is_empty():
+			grid_dict[key] = cname
+		else:
+			grid_dict.erase(key)
+		_refresh_forced_grid(grid_dict, gc)
+		_on_field_changed()
+		overlay.queue_free())
+
+	clear_btn.pressed.connect(func() -> void:
+		grid_dict.erase(key)
+		_refresh_forced_grid(grid_dict, gc)
+		_on_field_changed()
+		overlay.queue_free())
+
+	cancel_btn.pressed.connect(func() -> void:
+		overlay.queue_free())
+
+	overlay.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+			if not panel.get_global_rect().has_point((event as InputEventMouseButton).global_position):
+				overlay.queue_free())
+
+	le.grab_focus()
+	le.select_all()
+
+func _collect_forced_cells_from_grid(grid_dict: Dictionary) -> Array:
 	var result: Array = []
-	for entry: Dictionary in rows_arr:
-		var cname: String = (entry["card_le"] as LineEdit).text.strip_edges()
-		if cname.is_empty():
-			continue
-		result.append({
-			"card_name": cname,
-			"row": int((entry["row_sb"] as SpinBox).value),
-			"col": int((entry["col_sb"] as SpinBox).value),
-		})
+	for key: String in grid_dict:
+		var parts: PackedStringArray = key.split(",")
+		if parts.size() == 2:
+			result.append({
+				"card_name": grid_dict[key],
+				"row": int(parts[0]),
+				"col": int(parts[1]),
+			})
 	return result
 
-func _rebuild_forced_cell_rows(vbox: VBoxContainer, rows_arr: Array, data: Array) -> void:
-	for child in vbox.get_children():
-		child.queue_free()
-	rows_arr.clear()
+func _rebuild_forced_grid(grid_dict: Dictionary, gc: GridContainer, data: Array) -> void:
+	grid_dict.clear()
 	for fc: Variant in data:
 		if fc is Dictionary:
-			_add_forced_cell_row(vbox, rows_arr, fc as Dictionary)
+			var r: int = int((fc as Dictionary).get("row", 0))
+			var c: int = int((fc as Dictionary).get("col", 0))
+			var cname: Variant = (fc as Dictionary).get("card_name", "")
+			if cname is String and not (cname as String).is_empty():
+				grid_dict[str(r) + "," + str(c)] = cname as String
+	_refresh_forced_grid(grid_dict, gc)
+
+# ─────────────────────────────────────────────────────────────
+# Union card reference gallery
+# ─────────────────────────────────────────────────────────────
+func _build_union_gallery_section(parent: VBoxContainer) -> void:
+	var search_hb := HBoxContainer.new()
+	search_hb.add_theme_constant_override("separation", 6)
+	parent.add_child(search_hb)
+
+	var search_lbl := Label.new()
+	search_lbl.text = "Search:"
+	search_lbl.add_theme_font_size_override("font_size", 13)
+	search_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	search_hb.add_child(search_lbl)
+
+	_union_gallery_search = LineEdit.new()
+	_union_gallery_search.placeholder_text = "Union card name..."
+	_union_gallery_search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_union_gallery_search.add_theme_font_size_override("font_size", 13)
+	search_hb.add_child(_union_gallery_search)
+
+	var clear_btn := Button.new()
+	clear_btn.text = "✕"
+	clear_btn.add_theme_font_size_override("font_size", 13)
+	clear_btn.pressed.connect(func() -> void:
+		_union_gallery_search.text = ""
+		_refresh_union_gallery(""))
+	search_hb.add_child(clear_btn)
+
+	_union_gallery_vbox = VBoxContainer.new()
+	_union_gallery_vbox.add_theme_constant_override("separation", 3)
+	parent.add_child(_union_gallery_vbox)
+
+	_union_gallery_search.text_changed.connect(_refresh_union_gallery)
+	# No initial population — list only appears after user types a query
+
+func _refresh_union_gallery(query: String) -> void:
+	if _union_gallery_vbox == null:
+		return
+	for child: Node in _union_gallery_vbox.get_children():
+		child.queue_free()
+	var q: String = query.strip_edges().to_lower()
+	if q.is_empty():
+		return
+	var all_unions: Array = UnionDatabase.get_all_unions()
+	all_unions.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)
+	for u: UnionData in all_unions:
+		if SaveManager.demo_mode and not u.include_in_demo:
+			continue
+		if not q.is_empty() and not u.card_name.to_lower().contains(q):
+			continue
+		var btn := Button.new()
+		var is_active: bool = _union_highlighted_name == u.card_name
+		btn.text = ("► " if is_active else "  ") + u.card_name + "  [%d cells]" % u.union_zone.size()
+		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		btn.add_theme_font_size_override("font_size", 13)
+		btn.tooltip_text = u.formula_description
+		if is_active:
+			btn.modulate = Color(0.0, 1.0, 1.0)
+		var u_ref: UnionData = u
+		btn.pressed.connect(func() -> void: _toggle_union_highlight(u_ref))
+		_union_gallery_vbox.add_child(btn)
+
+func _toggle_union_highlight(u: UnionData) -> void:
+	if _union_highlighted_name == u.card_name:
+		_union_highlighted_name = ""
+		_union_highlight_cells.clear()
+	else:
+		_union_highlighted_name = u.card_name
+		_union_highlight_cells = u.union_zone.duplicate()
+	_refresh_forced_grid(_player_forced_grid, _player_forced_gc)
+	_refresh_forced_grid(_ai_forced_grid, _ai_forced_gc)
+	# Refresh gallery buttons to update active indicator
+	if _union_gallery_search != null:
+		_refresh_union_gallery(_union_gallery_search.text)
 
 # ─────────────────────────────────────────────────────────────
 # Battle reward row helpers

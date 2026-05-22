@@ -6,6 +6,7 @@ const DeckData = preload("res://resources/DeckData.gd")
 const SAVE_PATH: String = "user://save_data.json"
 
 signal nsfw_changed(enabled: bool)
+signal demo_mode_changed(enabled: bool)
 
 signal union_mechanism_changed(unlocked: bool)
 
@@ -36,6 +37,7 @@ func _load_demo_config() -> void:
 
 func set_demo_mode(enabled: bool) -> void:
 	demo_mode = enabled
+	emit_signal("demo_mode_changed", enabled)
 	var file := FileAccess.open(DEMO_CONFIG_PATH, FileAccess.WRITE)
 	if file:
 		file.store_string(JSON.stringify({"demo_mode": enabled}, "\t"))
