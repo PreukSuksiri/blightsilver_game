@@ -793,6 +793,7 @@ func _build_ability_choice_overlay() -> void:
 		_ability_choice_btns.append(btn)
 
 func _show_ability_choice_overlay(title: String, choices: Array) -> void:
+	SFXManager.play(SFXManager.SFX_POPUP)
 	_ability_choice_title_lbl.text = title
 	for i: int in range(_ability_choice_btns.size()):
 		var btn: Button = _ability_choice_btns[i]
@@ -2113,6 +2114,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 		var col_snap: int = col
 		var btn := _make_context_icon_btn(CTX_ICON_INFO)
 		btn.pressed.connect(func() -> void:
+			SFXManager.play(SFXManager.SFX_CARD_DETAIL)
 			_hide_card_context()
 			var inst_snap: Variant = GameState.get_card(player_snap, row_snap, col_snap)
 			CardDetailOverlay.open(self, card_name_snap, card_type_snap, inst_snap)
@@ -2224,6 +2226,7 @@ func _set_bluff_animated(player: int, row: int, col: int, emoticon: String) -> v
 	var lbl: Label = bluff_labels[player][row][col] as Label
 	lbl.text = emoticon
 	if emoticon != "":
+		SFXManager.play(SFXManager.SFX_BLUFF_PLACE)
 		_animate_bluff_label(lbl)
 
 func _animate_bluff_label(lbl: Label) -> void:
@@ -2323,6 +2326,7 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 	csb.corner_radius_bottom_right = 6; csb.corner_radius_bottom_left  = 6
 	clear_btn.add_theme_stylebox_override("normal", csb)
 	clear_btn.pressed.connect(func() -> void:
+		SFXManager.play(SFXManager.SFX_BLUFF_REMOVE)
 		GameState.set_bluff(snap_player, snap_row, snap_col, "")
 		_refresh_bluff_label(snap_player, snap_row, snap_col)
 		backdrop.queue_free())
@@ -2415,6 +2419,7 @@ func _play_union_zone_preview(player: int, zone_cells: Array) -> void:
 		blocker.queue_free()
 		return
 
+	SFXManager.play(SFXManager.SFX_UNION_FLASH)
 	# Fade in 0.5 s
 	var t_in := create_tween()
 	for cr: ColorRect in overlays:
@@ -2467,6 +2472,7 @@ func _clear_union_flash_nodes() -> void:
 	_union_flash_nodes.clear()
 
 func _on_union_material_tapped(pos: Vector2i) -> void:
+	SFXManager.play(SFXManager.SFX_TARGET)
 	var card: GameState.CardInstance = GameState.get_card(_pending_union_player, pos.x, pos.y)
 	# Find a remaining condition this card satisfies
 	var matched_idx: int = -1
@@ -2574,6 +2580,7 @@ func _do_union_shake() -> void:
 	t.tween_property(ml, "position", origin, 0.04)
 
 func _spawn_union_shockwave(cell_center: Vector2) -> void:
+	SFXManager.play(SFXManager.SFX_UNION_SHOCKWAVE)
 	const UNION_CYAN: Color = Color(0.25, 0.90, 1.00)
 	# Three expanding rings with staggered start — cyan, white, cyan
 	var ring_colors: Array = [UNION_CYAN, Color(1.0, 1.0, 1.0, 0.9), UNION_CYAN]
@@ -3711,6 +3718,7 @@ func _show_compact_coin_flip(results: Array) -> void:
 	panel.offset_bottom =  ps.y * 0.5
 
 	# ── Flip animations (run all coins in parallel) ─────────
+	SFXManager.play(SFXManager.SFX_COIN_FLIP)
 	for flip in range(NUM_FLIPS):
 		var progress: float = float(flip) / float(NUM_FLIPS)
 		var half_dur: float = lerpf(0.055, 0.18, progress)
@@ -3746,6 +3754,8 @@ func _show_compact_coin_flip(results: Array) -> void:
 		var col: Color = Color(0.3, 1.0, 0.4, 1.0) if heads else Color(1.0, 0.38, 0.38, 1.0)
 		lbl_in.parallel().tween_property(lbl, "theme_override_colors/font_color", col, 0.25)
 	await lbl_in.finished
+	for i: int in range(results.size()):
+		SFXManager.play(SFXManager.SFX_COIN_HEAD if bool(results[i]) else SFXManager.SFX_COIN_TAIL)
 
 	await get_tree().create_timer(1.1).timeout
 
@@ -3880,6 +3890,7 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	vbox.add_child(hint_lbl)
 
 	# ── Flip animation ────────────────────────────────────────
+	SFXManager.play(SFXManager.SFX_COIN_FLIP)
 	var is_front: bool = (first_player == 0)
 
 	for i in range(NUM_FLIPS):
@@ -3900,8 +3911,10 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	# ── Show result ───────────────────────────────────────────
 	if first_player == 0:
 		result_lbl.text = "HEADS — Player 1 goes first!"
+		SFXManager.play(SFXManager.SFX_COIN_HEAD)
 	else:
 		result_lbl.text = "TAILS — Player 2 goes first!"
+		SFXManager.play(SFXManager.SFX_COIN_TAIL)
 
 	# Reveal winner portrait
 	var winner_port: TextureRect = coin_p1_port if first_player == 0 else coin_p2_port
@@ -4035,6 +4048,7 @@ func _on_message_posted(text: String) -> void:
 	_battle_log_lines.append(text)
 
 func _on_center_message_requested(text: String) -> void:
+	SFXManager.play(SFXManager.SFX_POPUP)
 	var lbl := Label.new()
 	lbl.text = text
 	lbl.add_theme_font_size_override("font_size", 22)
@@ -4306,6 +4320,7 @@ func _on_end_attack_btn() -> void:
 	_on_end_turn_requested()
 
 func _on_cancel_btn() -> void:
+	SFXManager.play(SFXManager.SFX_CANCEL)
 	_clear_selection()
 	_set_selection_state(SelectionState.NONE)
 	action_panel.visible = false
@@ -4342,6 +4357,7 @@ func _on_end_turn_requested() -> void:
 		turn_manager.end_attacks_early()
 
 func _show_tax_confirm() -> void:
+	SFXManager.play(SFXManager.SFX_POPUP)
 	if _tax_confirm_panel != null:
 		return
 
@@ -4667,6 +4683,7 @@ func _on_turn_ended(_player: int) -> void:
 	_clear_selection()
 
 func _show_turn_banner(player: int) -> void:
+	SFXManager.play(SFXManager.SFX_TURN_BANNER)
 	var vp: Vector2 = get_viewport().get_visible_rect().size
 	const BANNER_H: float = 80.0
 	const FONT_SIZE: int = 52
@@ -4706,6 +4723,7 @@ func _show_turn_banner(player: int) -> void:
 # Card Click Handling
 # ─────────────────────────────────────────────────────────────
 func _on_card_detail_requested(card_name: String, card_type: String, owner_player: int, row: int, col: int) -> void:
+	SFXManager.play(SFXManager.SFX_CARD_DETAIL)
 	var inst: Variant = null
 	if row >= 0 and col >= 0:
 		inst = GameState.get_card(owner_player, row, col)
@@ -4769,6 +4787,7 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 			if pos in GameState.locked_attack_positions:
 				GameState.post_message("That square is locked by a trap.")
 				return
+			SFXManager.play(SFXManager.SFX_TARGET)
 			_start_confirm_attack(opponent, pos)
 
 		SelectionState.CONFIRMING_ATTACK:
@@ -4776,6 +4795,7 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 			pass
 
 		SelectionState.SELECTING_TECH_TARGET:
+			SFXManager.play(SFXManager.SFX_TARGET)
 			_handle_tech_target(player, pos)
 
 # ─────────────────────────────────────────────────────────────
@@ -4819,6 +4839,7 @@ func _confirm_attack() -> void:
 	turn_manager.perform_attack(atk_from, atk_to)
 
 func _cancel_confirm_attack() -> void:
+	SFXManager.play(SFXManager.SFX_CANCEL)
 	if _blink_tween and _blink_tween.is_valid():
 		_blink_tween.kill()
 		_blink_tween = null
@@ -5748,8 +5769,10 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 	# Dead-end reveal plays a 0.5s hold before disappearing — wait for that to finish
 	var delay := 0.75 if (inst != null and inst.card_type == "dead_end") else 0.3
 	await get_tree().create_timer(delay).timeout
-	# Trap revealed → sent to void immediately. No crystal cost. Slot becomes empty.
-	if inst != null and inst.card_type == "trap":
+	# Trap revealed → sent to void immediately, UNLESS it's being attacked (BATTLE phase).
+	# In BATTLE phase the trap will be destroyed by _handle_trap_effect instead.
+	if inst != null and inst.card_type == "trap" \
+			and GameState.current_phase != GameState.Phase.BATTLE:
 		_void_piles[player].append({"card_name": inst.card_name, "card_type": inst.card_type})
 		_update_void_stacks()
 		GameState.void_trap(player, row, col)
@@ -5768,12 +5791,17 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 		elif GameState.game_mode == GameState.GameMode.AI_VS_AI:
 			_get_ai_for_player(player).decide_death_bluff(row, col)
 	var node: Control = grid_nodes[player][row][col]
-	_spawn_destroy_effect(node)
-	node.play_destroy_animation()
-	await get_tree().create_timer(0.55).timeout
+	if inst != null and inst.card_type in ["dead_end", "trap"]:
+		_spawn_dissolve_effect(node)
+		await get_tree().create_timer(0.90).timeout
+	else:
+		_spawn_destroy_effect(node)
+		node.play_destroy_animation()
+		await get_tree().create_timer(0.55).timeout
 	_refresh_card_node(player, row, col)
 
 func _spawn_destroy_effect(card_node: Control) -> void:
+	SFXManager.play(SFXManager.SFX_DESTROY)
 	var card_rect := card_node.get_global_rect()
 	var local_pos := card_rect.position - global_position
 	var card_size := card_rect.size
@@ -5853,6 +5881,59 @@ func _spawn_destroy_effect(card_node: Control) -> void:
 		ts.parallel().tween_property(spark, "modulate:a", 0.0, duration) \
 			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 		ts.tween_callback(spark.queue_free)
+
+func _spawn_dissolve_effect(card_node: Control) -> void:
+	SFXManager.play(SFXManager.SFX_DISSOLVE)
+	var card_rect := card_node.get_global_rect()
+	var local_pos := card_rect.position - global_position
+	var card_size := card_rect.size
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+
+	# Gradually dissolve the card itself
+	var dissolve_tw := create_tween()
+	dissolve_tw.tween_property(card_node, "modulate:a", 0.0, 0.75) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+
+	# Rising dark grey smoke puffs
+	for _i: int in range(22):
+		var puff := Panel.new()
+		var sz: float = rng.randf_range(18.0, 48.0)
+		puff.size = Vector2(sz, sz)
+		puff.pivot_offset = puff.size * 0.5
+		var psb := StyleBoxFlat.new()
+		var grey: float = rng.randf_range(0.12, 0.38)
+		psb.bg_color = Color(grey, grey, grey, 0.88)
+		var rad: int = int(sz * 0.5)
+		psb.corner_radius_top_left     = rad
+		psb.corner_radius_top_right    = rad
+		psb.corner_radius_bottom_right = rad
+		psb.corner_radius_bottom_left  = rad
+		puff.add_theme_stylebox_override("panel", psb)
+		puff.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		puff.z_index = 22
+		var start_x: float = local_pos.x + rng.randf_range(0.0, card_size.x) - sz * 0.5
+		var start_y: float = local_pos.y + rng.randf_range(card_size.y * 0.3, card_size.y)
+		puff.position = Vector2(start_x, start_y)
+		add_child(puff)
+
+		var delay: float    = rng.randf_range(0.0, 0.38)
+		var rise: float     = rng.randf_range(55.0, 140.0)
+		var drift: float    = rng.randf_range(-28.0, 28.0)
+		var duration: float = rng.randf_range(0.45, 0.85)
+		var end_scale: float = rng.randf_range(1.3, 2.1)
+
+		var tp := create_tween()
+		tp.tween_interval(delay)
+		tp.tween_property(puff, "position",
+			puff.position + Vector2(drift, -rise), duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		tp.parallel().tween_property(puff, "scale",
+			Vector2(end_scale, end_scale), duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		tp.parallel().tween_property(puff, "modulate:a", 0.0, duration) \
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+		tp.tween_callback(puff.queue_free)
 
 # ─────────────────────────────────────────────────────────────
 # AI
@@ -6086,6 +6167,7 @@ func _show_union_summon_reveal(union_name: String) -> void:
 	t_sk.tween_property(ml, "position", _shake_orig, 0.03)
 
 	# Sparks and dust at card base
+	SFXManager.play(SFXManager.SFX_UNION_LAND)
 	var card_base := Vector2(vp.x * 0.5, land_y + card_h * 0.95)
 	_spawn_union_landing_sparks(overlay, card_base)
 	_spawn_union_landing_dust(overlay, card_base)
@@ -6504,9 +6586,9 @@ func _show_endgame_screen(winner: int) -> void:
 	hint_lbl.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 	hint_lbl.offset_left   = -300.0
 	hint_lbl.offset_right  =  300.0
-	hint_lbl.offset_top    =  80.0
-	hint_lbl.offset_bottom =  120.0
-	hint_lbl.add_theme_font_size_override("font_size", 16)
+	hint_lbl.offset_top    =  220.0
+	hint_lbl.offset_bottom =  270.0
+	hint_lbl.add_theme_font_size_override("font_size", 24)
 	hint_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.6))
 	hint_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.add_child(hint_lbl)

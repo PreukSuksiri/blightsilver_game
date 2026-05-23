@@ -633,9 +633,11 @@ func _build_info_panel(parent: Control) -> void:
 # ─────────────────────────────────────────────────────────────
 func _on_preview_btn() -> void:
 	if _info_card_name != "":
+		SFXManager.play(SFXManager.SFX_CARD_INFO)
 		CardDetailOverlay.open(self, _info_card_name, _info_card_type)
 
 func _open_card_detail(card_name: String, card_type: String) -> void:
+	SFXManager.play(SFXManager.SFX_CARD_INFO)
 	CardDetailOverlay.open(self, card_name, card_type)
 
 func _show_card_info(card_name: String, card_type: String) -> void:
@@ -798,6 +800,7 @@ func _make_union_tile(u: UnionData) -> Control:
 			var mbe := ev as InputEventMouseButton
 			if mbe.button_index == MOUSE_BUTTON_LEFT and mbe.pressed:
 				if mbe.double_click:
+					SFXManager.play(SFXManager.SFX_CARD_INFO)
 					CardDetailOverlay.open(self, captured_u.card_name, "union")
 				else:
 					_start_zone_flash(captured_u))
@@ -920,6 +923,7 @@ func _on_card_dropped(r: int, c: int, data: Dictionary) -> void:
 
 	var tex: Texture2D = _load_card_tex(card_name, card_type)
 	target_cell.occupy(card_name, card_type, tex)
+	SFXManager.play(SFXManager.SFX_PLACE)
 	_refresh_gallery()
 	_refresh_confirm()
 
@@ -927,6 +931,7 @@ func _on_cell_unplace(r: int, c: int) -> void:
 	var cell: GridCell = _grid_cells[r][c]
 	if cell.occupied_name.is_empty() or cell.locked:
 		return
+	SFXManager.play(SFXManager.SFX_REMOVE)
 	_return_to_pool(cell.occupied_name, cell.occupied_type)
 	cell.vacate()
 	GameState.place_dead_end(current_setup_player, r, c)
@@ -979,6 +984,7 @@ func _apply_forced_cells(forced_cells: Array) -> void:
 # Random formation
 # ─────────────────────────────────────────────────────────────
 func _on_random_formation() -> void:
+	SFXManager.play(SFXManager.SFX_PLACE)
 	# Return all non-locked placed cards back to the pool and clear non-locked cells
 	for r in range(GRID_N):
 		for c in range(GRID_N):
@@ -1187,6 +1193,7 @@ func _show_bluff_modal(row: int, col: int) -> void:
 		btn.add_theme_stylebox_override("hover", esbh)
 		var snap_emoji: String = emoji
 		btn.pressed.connect(func() -> void:
+			SFXManager.play(SFXManager.SFX_BLUFF_PLACE)
 			GameState.set_bluff(current_setup_player, snap_row, snap_col, snap_emoji)
 			(_grid_cells[snap_row][snap_col] as GridCell).set_emoticon(snap_emoji)
 			backdrop.queue_free())
@@ -1203,6 +1210,7 @@ func _show_bluff_modal(row: int, col: int) -> void:
 	csb.corner_radius_bottom_right = 6; csb.corner_radius_bottom_left  = 6
 	clear_btn.add_theme_stylebox_override("normal", csb)
 	clear_btn.pressed.connect(func() -> void:
+		SFXManager.play(SFXManager.SFX_BLUFF_REMOVE)
 		GameState.set_bluff(current_setup_player, snap_row, snap_col, "")
 		(_grid_cells[snap_row][snap_col] as GridCell).set_emoticon("")
 		backdrop.queue_free())

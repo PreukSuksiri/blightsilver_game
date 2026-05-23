@@ -166,6 +166,7 @@ func _connect_buttons() -> void:
 			(child as Control).mouse_filter = Control.MOUSE_FILTER_PASS
 	view_full_card_btn.pressed.connect(func() -> void:
 		if _preview_card_name != "":
+			SFXManager.play(SFXManager.SFX_CARD_INFO)
 			CardDetailOverlay.open(self, _preview_card_name, _preview_card_type))
 
 # ── Deck selector ─────────────────────────────────────────────
@@ -223,6 +224,7 @@ func _setup_list_long_press(list: ItemList) -> void:
 		if idx >= 0 and idx < list.item_count:
 			var meta: Variant = list.get_item_metadata(idx)
 			if meta is Dictionary:
+				SFXManager.play(SFXManager.SFX_CARD_INFO)
 				CardDetailOverlay.open(self, (meta as Dictionary).get("name", ""), (meta as Dictionary).get("type", "")))
 	list.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
@@ -849,7 +851,9 @@ func _make_union_right_tile(u: UnionData) -> Control:
 	lp_union.one_shot = true
 	lp_union.wait_time = 0.5
 	tile.add_child(lp_union)
-	lp_union.timeout.connect(func() -> void: CardDetailOverlay.open(self, u.card_name, "union"))
+	lp_union.timeout.connect(func() -> void:
+		SFXManager.play(SFXManager.SFX_CARD_INFO)
+		CardDetailOverlay.open(self, u.card_name, "union"))
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
 			return
@@ -1019,6 +1023,7 @@ func _on_preview_area_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed \
 			and event.button_index == MOUSE_BUTTON_LEFT \
 			and _preview_card_name != "":
+		SFXManager.play(SFXManager.SFX_CARD_INFO)
 		CardDetailOverlay.open(self, _preview_card_name, _preview_card_type)
 
 func _input(event: InputEvent) -> void:
@@ -1188,7 +1193,9 @@ func _make_pool_tile(card_name: String, card_type: String) -> Control:
 	lp_pool.one_shot = true
 	lp_pool.wait_time = 0.5
 	tile.add_child(lp_pool)
-	lp_pool.timeout.connect(func() -> void: CardDetailOverlay.open(self, card_name, card_type))
+	lp_pool.timeout.connect(func() -> void:
+		SFXManager.play(SFXManager.SFX_CARD_INFO)
+		CardDetailOverlay.open(self, card_name, card_type))
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
 			return
@@ -1253,7 +1260,9 @@ func _make_deck_tile(card_name: String, card_type: String) -> Control:
 	lp_deck.one_shot = true
 	lp_deck.wait_time = 0.5
 	tile.add_child(lp_deck)
-	lp_deck.timeout.connect(func() -> void: CardDetailOverlay.open(self, card_name, card_type))
+	lp_deck.timeout.connect(func() -> void:
+		SFXManager.play(SFXManager.SFX_CARD_INFO)
+		CardDetailOverlay.open(self, card_name, card_type))
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
 			return

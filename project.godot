@@ -33,6 +33,7 @@ CheckerTransition="*res://autoload/CheckerTransition.gd"
 CardRuleEngine="*res://autoload/CardRuleEngine.gd"
 UnionDatabase="*res://autoload/UnionDatabase.gd"
 AIvsAIManager="*res://autoload/AIvsAIManager.gd"
+SFXManager="*res://autoload/SFXManager.gd"
 
 [display]
 

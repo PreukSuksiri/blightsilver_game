@@ -290,6 +290,7 @@ func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 func gain_crystals(player_index: int, amount: int, reason: String = "") -> void:
 	crystals[player_index] += amount
 	emit_signal("crystals_changed", player_index, crystals[player_index], reason)
+	SFXManager.play(SFXManager.SFX_CRYSTAL_GAIN)
 
 func _check_crystal_win_condition() -> void:
 	var p0_zero: bool = crystals[0] <= 0

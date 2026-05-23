@@ -283,6 +283,10 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	GameState.defender_pos = target_pos
 	GameState.set_phase(GameState.Phase.BATTLE)
 
+	# If the defender is a trap, wait for its flip animation to complete before showing the overlay
+	if defender.card_type == "trap":
+		await get_tree().create_timer(0.30).timeout
+
 	# Compute a preview result (without optional crystal boosts) for the battle overlay display
 	var preview_result := BattleResolver.resolve_battle(
 		attacker, defender, GameState.dice_result, player, opponent, defender_was_exposed, target_pos
@@ -798,8 +802,18 @@ func _handle_trap_effect(
 	if trap_data == null:
 		return
 
-	# Trap always becomes blank after triggering — animate destroy
-	GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
+	# Traps that destroy the attacker defer their own destruction until after
+	# the character card has visually disappeared.
+	var _destroys_attacker: bool = trap_data.effect_type in [
+		TrapData.TrapEffectType.DESTROY_ATTACKER,
+		TrapData.TrapEffectType.DESTROY_ATTACKER_CHOICE_DESTROY,
+		TrapData.TrapEffectType.DESTROY_ATTACKER_DEFENDER_PAYS,
+	]
+
+	# Trap always becomes blank after triggering — animate destroy.
+	# For attacker-destroying traps this is deferred to after the character is gone.
+	if not _destroys_attacker:
+		GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 	GameState.lose_crystals(opponent, trap_data.crystal_cost, "trap cost")
 	await crystal_animation_done
 
@@ -807,6 +821,8 @@ func _handle_trap_effect(
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 			and "honored_duel" in GameState.active_dungeon_modifiers:
 		GameState.post_message("Honored Duel: %s's effect is cancelled!" % trap_data.card_name)
+		if _destroys_attacker:
+			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 		return
 
 	match trap_data.effect_type:
@@ -867,10 +883,13 @@ func _handle_trap_effect(
 			if trap_data.effect_params.get("requires_faceup_defender", false):
 				if GameState.get_all_face_up_characters(opponent).is_empty():
 					GameState.post_message("Explosive Barrels: No face-up defender — trap fizzles.")
+					GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 					return
 			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await crystal_animation_done
 			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
+			await get_tree().create_timer(0.65).timeout
+			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 			emit_signal("awaiting_target_selection",
 				"Explosive Barrels: Choose 1 revealed card on defender's field to destroy (no crystal loss).",
 				"opponent_faceup_no_cost")
@@ -883,6 +902,8 @@ func _handle_trap_effect(
 			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await crystal_animation_done
 			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
+			await get_tree().create_timer(0.65).timeout
+			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 			GameState.post_message("Flame Trap: %s destroyed!" % attacker.card_name)
 
 		TrapData.TrapEffectType.LOCK_ATTACKER_REMAINING_ATTACKS:
@@ -948,6 +969,8 @@ func _handle_trap_effect(
 			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await crystal_animation_done
 			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
+			await get_tree().create_timer(0.65).timeout
+			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 			var _dap_cost: int = trap_data.effect_params.get("amount", attacker.crystal_cost)
 			GameState.lose_crystals(opponent, _dap_cost, "trap")
 			await crystal_animation_done

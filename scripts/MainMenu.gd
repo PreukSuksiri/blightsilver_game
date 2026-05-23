@@ -37,7 +37,9 @@ func _ready() -> void:
 	campaign_btn.pressed.connect(_on_multiplayer)
 	settings_icon_btn.pressed.connect(_on_settings)
 	settings_icon_btn.tooltip_text = "Settings"
-	exit_icon_btn.pressed.connect(func() -> void: get_tree().quit())
+	exit_icon_btn.pressed.connect(func() -> void:
+		SFXManager.play(SFXManager.SFX_BTN)
+		get_tree().quit())
 	exit_icon_btn.tooltip_text = "Exit Game"
 	version_label.text = "v0.1 Prototype"
 	(bgm.stream as AudioStreamMP3).loop = true
@@ -133,6 +135,7 @@ func _refresh_inventory_badge() -> void:
 		mailbox_btn.add_theme_color_override("font_color", Color(0.95, 0.8, 0.3, 0.85))
 
 func _on_single_player() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
 	if get_node_or_null("ModeChoicePanel") != null:
 		get_node("ModeChoicePanel").queue_free()
 		return
@@ -217,6 +220,7 @@ func _on_single_player() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn")))
 
 func _on_multiplayer() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
 	if get_node_or_null("MultiplayerChoicePanel") != null:
 		get_node("MultiplayerChoicePanel").queue_free()
 		return
@@ -301,6 +305,7 @@ func _on_multiplayer() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn")))
 
 func _on_deck_builder() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
 	if get_node_or_null("DeckBuilderOverlay") != null:
 		return
 	var overlay := DeckBuilderScene.instantiate()
@@ -309,6 +314,7 @@ func _on_deck_builder() -> void:
 	add_child(overlay)
 
 func _on_shop() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
 	if get_node_or_null("ShopMenuOverlay") != null:
 		return
 	var overlay := ShopMenuScene.instantiate()
@@ -316,6 +322,7 @@ func _on_shop() -> void:
 	add_child(overlay)
 
 func _on_gallery() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
 	if get_node_or_null("CardGalleryOverlay") != null:
 		return
 	var overlay := CardGalleryScene.instantiate()
@@ -323,6 +330,7 @@ func _on_gallery() -> void:
 	add_child(overlay)
 
 func _on_inventory() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
 	if get_node_or_null("InventoryMenuOverlay") != null:
 		return
 	var overlay := InventoryMenuScene.instantiate()
@@ -331,6 +339,7 @@ func _on_inventory() -> void:
 	add_child(overlay)
 
 func _on_credits() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
 	get_tree().change_scene_to_file("res://scenes/credits.tscn")
 
 func _on_campaign() -> void:
@@ -352,6 +361,7 @@ func _on_daily_dungeon() -> void:
 	add_child(overlay)
 
 func _on_settings() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
 	if get_node_or_null("SettingsMenuOverlay") != null:
 		return
 	var overlay := SettingsMenuScene.instantiate()
