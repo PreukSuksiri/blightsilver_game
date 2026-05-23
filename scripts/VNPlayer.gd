@@ -30,9 +30,13 @@ var locale: String = "en"   # set before play_scene() to switch language
 
 var _beats: Array = []
 var _beat_index: int = 0
+var _beat_raw_indices: Array = []   # maps filtered index → raw JSON index
+var _scene_path: String = ""
 var _on_complete: Callable = Callable()
 var _current_bg_path: String = ""
 var _accepting_input: bool = true
+var _cmd_panel: PanelContainer = null
+var _cmd_input: LineEdit = null
 
 # ─────────────────────────────────────────────────────────────
 # UI refs
@@ -86,6 +90,27 @@ func _ready() -> void:
 	z_index = 100
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
+	# Mini command overlay (Ctrl+Shift+A to open during VN playback)
+	_cmd_panel = PanelContainer.new()
+	_cmd_panel.visible = false
+	_cmd_panel.z_index = 200
+	_cmd_panel.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	_cmd_panel.offset_top = 8.0
+	_cmd_panel.custom_minimum_size = Vector2(520.0, 0.0)
+	add_child(_cmd_panel)
+	var cmd_hbox := HBoxContainer.new()
+	cmd_hbox.add_theme_constant_override("separation", 6)
+	_cmd_panel.add_child(cmd_hbox)
+	var cmd_lbl := Label.new()
+	cmd_lbl.text = "VN CMD>"
+	cmd_lbl.add_theme_font_size_override("font_size", 16)
+	cmd_hbox.add_child(cmd_lbl)
+	_cmd_input = LineEdit.new()
+	_cmd_input.placeholder_text = "tag_bug"
+	_cmd_input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_cmd_input.add_theme_font_size_override("font_size", 16)
+	_cmd_input.text_submitted.connect(_handle_vn_command)
+	cmd_hbox.add_child(_cmd_input)
 
 # ─────────────────────────────────────────────────────────────
 # Build UI
@@ -260,20 +285,22 @@ func play_scene(json_path: String, on_complete: Callable) -> void:
 		_finish()
 		return
 
-	# Filter beats by hidden flag and NSFW flag:
-	#   hidden=true   → always skipped
-	#   "safe" beats  → only play when NSFW is OFF
-	#   "nsfw" beats  → only play when NSFW is ON
-	#   "both" / absent → always play
-	_beats = (parsed as Array).filter(func(b: Variant) -> bool:
-		if b.get("hidden", false):
-			return false
-		var flag: String = str(b.get("nsfw", "both")).to_lower()
-		if flag == "safe":
-			return not SaveManager.nsfw_enabled
-		elif flag == "nsfw":
-			return SaveManager.nsfw_enabled
-		return true)
+	# Filter beats by hidden/NSFW flags, tracking original JSON indices for bug tagging.
+	_scene_path = json_path
+	_beats = []
+	_beat_raw_indices = []
+	var raw_beats: Array = parsed as Array
+	for _ri: int in range(raw_beats.size()):
+		var _rb: Variant = raw_beats[_ri]
+		if (_rb as Dictionary).get("hidden", false):
+			continue
+		var _flag: String = str((_rb as Dictionary).get("nsfw", "both")).to_lower()
+		if _flag == "safe" and SaveManager.nsfw_enabled:
+			continue
+		if _flag == "nsfw" and not SaveManager.nsfw_enabled:
+			continue
+		_beats.append(_rb)
+		_beat_raw_indices.append(_ri)
 	_beat_index = 0
 	_show_beat()
 
@@ -586,6 +613,76 @@ func _finish() -> void:
 	queue_free()
 
 # ─────────────────────────────────────────────────────────────
+# Bug tagging (Ctrl+Shift+A → "tag_bug")
+# ─────────────────────────────────────────────────────────────
+const _BUG_TAGS_PATH := "user://vn_bug_tags.json"
+
+func _toggle_cmd_panel() -> void:
+	if _cmd_panel == null:
+		return
+	_cmd_panel.visible = not _cmd_panel.visible
+	if _cmd_panel.visible:
+		_cmd_input.clear()
+		_cmd_input.grab_focus()
+
+func _handle_vn_command(raw: String) -> void:
+	_cmd_panel.visible = false
+	var trimmed: String = raw.strip_edges()
+	if trimmed.to_lower().begins_with("tag_bug"):
+		var note: String = trimmed.substr(7).strip_edges()  # everything after "tag_bug"
+		_tag_current_beat(note)
+	else:
+		_show_vn_toast("Unknown command: " + raw)
+
+func _tag_current_beat(note: String) -> void:
+	if _beat_index <= 0 or _beat_index > _beat_raw_indices.size():
+		_show_vn_toast("Nothing to tag.")
+		return
+	var raw_idx: int = _beat_raw_indices[_beat_index - 1]
+	var tags: Dictionary = _vn_load_bug_tags()
+	if not tags.has(_scene_path):
+		tags[_scene_path] = {}
+	var file_tags: Dictionary = tags[_scene_path] as Dictionary
+	file_tags[str(raw_idx)] = note
+	tags[_scene_path] = file_tags
+	_vn_save_bug_tags(tags)
+	var msg: String = "Bug tagged  —  beat #%d  (%s)" % [raw_idx + 1, _scene_path.get_file()]
+	if not note.is_empty():
+		msg += "\n" + note
+	_show_vn_toast(msg)
+
+func _vn_load_bug_tags() -> Dictionary:
+	if not FileAccess.file_exists(_BUG_TAGS_PATH):
+		return {}
+	var f := FileAccess.open(_BUG_TAGS_PATH, FileAccess.READ)
+	if f == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(f.get_as_text())
+	f.close()
+	return parsed if parsed is Dictionary else {}
+
+func _vn_save_bug_tags(tags: Dictionary) -> void:
+	var f := FileAccess.open(_BUG_TAGS_PATH, FileAccess.WRITE)
+	if f == null:
+		return
+	f.store_string(JSON.stringify(tags, "\t"))
+	f.close()
+
+func _show_vn_toast(msg: String) -> void:
+	var lbl := Label.new()
+	lbl.text = msg
+	lbl.add_theme_font_size_override("font_size", 18)
+	lbl.add_theme_color_override("font_color", Color(1.0, 0.3, 0.3))
+	lbl.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	lbl.offset_top = 60.0
+	lbl.z_index = 201
+	add_child(lbl)
+	var tw := create_tween()
+	tw.tween_interval(2.5)
+	tw.tween_property(lbl, "modulate:a", 0.0, 0.5)
+	tw.tween_callback(lbl.queue_free)
+
+# ─────────────────────────────────────────────────────────────
 # Sound effect — fire and forget
 # ─────────────────────────────────────────────────────────────
 func _play_sfx(path: String, vol_db: float = 0.0) -> void:
@@ -752,6 +849,22 @@ func _do_flash(color: Color, count: int, duration: float, delay: float, target =
 # Input
 # ─────────────────────────────────────────────────────────────
 func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		var ke := event as InputEventKey
+		if ke.pressed and not ke.echo:
+			# Ctrl+Shift+A — toggle mini command panel
+			if ke.ctrl_pressed and ke.shift_pressed and ke.keycode == KEY_A:
+				_toggle_cmd_panel()
+				get_viewport().set_input_as_handled()
+				return
+			# Escape — close command panel
+			if ke.keycode == KEY_ESCAPE and _cmd_panel != null and _cmd_panel.visible:
+				_cmd_panel.visible = false
+				get_viewport().set_input_as_handled()
+				return
+	# Block beat advance while command panel is open
+	if _cmd_panel != null and _cmd_panel.visible:
+		return
 	if not _accepting_input:
 		return
 	var advance := false

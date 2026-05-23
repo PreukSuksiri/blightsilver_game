@@ -447,7 +447,6 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_hospitalized_2.png",
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"text": "Nex was sitting by the bed. He patted on her forehead."
 	},
@@ -464,7 +463,6 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
 		"text": "......"
@@ -474,7 +472,6 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_hospital_bed_night.png",
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"text": "** Door opening **"
 	},
@@ -486,10 +483,17 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"position": "right",
+				"flip": true,
+				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			},
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"music": "res://assets/audio/bgm_storytelling_1.mp3",
+		"text": "Kelly walked inside the patient's room"
+	},
+	{
+		"characters": [
 			{
 				"crop_bottom": 30.0,
 				"flip": true,
@@ -498,11 +502,6 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
 			}
 		],
-		"fade_in": 3.0,
-		"music": "res://assets/audio/bgm_storytelling_1.mp3",
-		"text": "Kelly walked inside the patient's room"
-	},
-	{
 		"wait": 0.5
 	},
 	{
@@ -510,19 +509,12 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"position": "right",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			},
-			{
-				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Kelly",
 		"text": "We're lucky. The doctor said it's just bruises and shallow cuts. Nothing's to worry. She'll get better."
@@ -538,21 +530,21 @@
 				"position": "right",
 				"scale": 175.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			},
-			{
-				"crop_bottom": 30.0,
-				"flip": true,
-				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
 		"text": "So these.... things... They do existed....?"
 	},
 	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
 		"wait": 0.5
 	},
 	{
@@ -563,21 +555,21 @@
 				"position": "right",
 				"scale": 175.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			},
-			{
-				"crop_bottom": 30.0,
-				"flip": true,
-				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
 		"text": "All of things unexplained... It's them all along...?"
 	},
 	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
 		"wait": 0.5
 	},
 	{
@@ -588,46 +580,21 @@
 				"position": "right",
 				"scale": 175.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			},
-			{
-				"crop_bottom": 30.0,
-				"flip": true,
-				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
 			}
 		],
-		"fade_in": 3.0,
-		"music": "res://assets/audio/bgm_storytelling_1.mp3",
-		"speaker": "Nex",
-		"text": "And they can hurt anyone... anytime..."
-	},
-	{
-		"wait": 0.5
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_cut_hospital_bed_night.png",
-		"characters": [
-			{
-				"crop_bottom": 30.0,
-				"position": "right",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			},
-			{
-				"crop_bottom": 30.0,
-				"flip": true,
-				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
-			}
-		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
 		"text": "What have Mayu done that she have to get hurt like this...?"
 	},
 	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
 		"wait": 0.5
 	},
 	{
@@ -638,16 +605,8 @@
 				"position": "right",
 				"scale": 175.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			},
-			{
-				"crop_bottom": 30.0,
-				"flip": true,
-				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
 		"text": "How can we live in a world like this...?"
@@ -660,24 +619,26 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"position": "right",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			},
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+			}
+		],
+		"music": "res://assets/audio/bgm_storytelling_1.mp3",
+		"speaker": "Kelly",
+		"text": "That's why people like us existed. We are here to turn things back to how it should be."
+	},
+	{
+		"characters": [
 			{
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
-		"fade_in": 3.0,
-		"music": "res://assets/audio/bgm_storytelling_1.mp3",
-		"speaker": "Kelly",
-		"text": "But that's why people like us existed"
-	},
-	{
 		"wait": 0.5
 	},
 	{
@@ -685,24 +646,26 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"position": "right",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			},
-			{
-				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Kelly",
 		"text": "I know you have a lot of question right now.  But I can assured that you're about to find out all the answers soon."
 	},
 	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+			}
+		],
 		"wait": 0.5
 	},
 	{
@@ -710,19 +673,12 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"position": "right",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			},
-			{
-				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Kelly",
 		"text": "Best you can do now is get some rest, Nex."
@@ -732,12 +688,19 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_hospital_bed_night.png",
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
-		"speaker": "Nex",
 		"text": "** Stomach growls **"
 	},
 	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
 		"wait": 0.5
 	},
 	{
@@ -745,24 +708,26 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"position": "right",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
-			},
-			{
-				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Kelly",
 		"text": "Sounds like you're about to find out that you've skipped dinner?"
 	},
 	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
 		"wait": 0.5
 	},
 	{
@@ -778,16 +743,30 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
 		"text": "That's right...! Shit... I haven't eaten anything since 5 PM..."
 	},
 	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
 		"wait": 0.5
 	},
 	{
@@ -803,16 +782,30 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Kelly",
-		"text": "If you don't mind... I do have some snack here..."
+		"text": "If you don't mind... I have some snack here..."
 	},
 	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
 		"wait": 0.5
 	},
 	{
@@ -828,16 +821,30 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Kelly",
 		"text": "** Kelly handed Nex a bag of what seems to be a crackers **"
 	},
 	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
 		"wait": 0.5
 	},
 	{
@@ -853,11 +860,10 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
 		"text": ".........?"
@@ -875,16 +881,30 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
 		"text": "Is that... crackers...?"
 	},
 	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
 		"wait": 0.5
 	},
 	{
@@ -900,16 +920,30 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Kelly",
 		"text": "Yeah, homemade crackers."
 	},
 	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
 		"wait": 0.5
 	},
 	{
@@ -925,14 +959,13 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
-		"text": "Homemade crackers?? That's....weird... "
+		"text": "Homemade crackers?? That's....weird... You sound like my mom..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_hospital_bed_night.png",
@@ -947,23 +980,23 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
 		"text": "Thanks, but I think I'll find something in a vending machine."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_hospital_bed_night.png",
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
+		"music_fade_out": 3.0,
 		"speaker": "Nex",
 		"text": "(Nex walked out of the door)"
 	},
 	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_hospital_bed_night.png",
 		"fade_color": "#000000",
 		"fade_out": 3.0,
 		"music_fade_out": 3.0,
@@ -980,9 +1013,12 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_2/bg_vn_hospital_4th_floor_ward_night.png",
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"text": "(Nex leaned and peeked inside the vending machine immaturely)"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bg_vn_hospital_4th_floor_ward_night.png",
+		"wait": 0.5
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_2/bg_vn_hospital_4th_floor_ward_night.png",
@@ -994,25 +1030,20 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
 			}
 		],
-		"fade_in": 3.0,
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
 		"text": "What...?"
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch1_2/bg_vn_hospital_4th_floor_ward_night.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
 			}
 		],
-		"fade_in": 3.0,
-		"music": "res://assets/audio/bgm_storytelling_1.mp3",
-		"speaker": "Nex",
-		"text": "The vending machine is almost empty?? Not a single rice ball..."
+		"wait": 0.5
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_2/bg_vn_hospital_4th_floor_ward_night.png",
@@ -1024,7 +1055,31 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
 			}
 		],
-		"fade_in": 3.0,
+		"music": "res://assets/audio/bgm_storytelling_1.mp3",
+		"speaker": "Nex",
+		"text": "The vending machine is almost empty?? Not a single rice ball..."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bg_vn_hospital_4th_floor_ward_night.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
 		"speaker": "Nex",
 		"text": "What's that...? Grape juice...? Only grape juice??"

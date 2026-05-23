@@ -7,6 +7,7 @@ signal closed
 
 const SCENES_DIR     := "res://campaign/scenes/"
 const LANG_CFG_PATH  := "res://campaign/scenes/languages.json"
+const BUG_TAGS_PATH  := "user://vn_bug_tags.json"
 const SLOT_OPTIONS: Array = ["far_left", "left", "center", "right", "far_right"]
 const ANIMATION_REGISTRY: Array = [
 	{"label": "(none)",                                "key": ""},
@@ -43,6 +44,7 @@ var _drag_from_idx: int = -1
 var _beat_modified: Dictionary = {}   # index → bool; cleared on save/load/structural ops
 var _anchor_idx: int = -1             # for Shift+click range selection
 var _file_cache: Dictionary = {}      # path → {beats, modified}; in-memory unsaved state per file
+var _bug_tags: Dictionary = {}        # path → Array[int] raw beat indices; loaded from BUG_TAGS_PATH
 
 # Preview
 var _preview_player: AudioStreamPlayer = null
@@ -81,6 +83,7 @@ var _f_hidden: CheckBox = null
 var _f_background: LineEdit = null
 var _f_video: LineEdit = null
 var _chars_vbox: VBoxContainer = null
+var _f_linger_chars: CheckBox = null
 var _f_dim_others: CheckBox = null
 var _f_kb_zoom: SpinBox = null
 var _f_kb_pan_x: SpinBox = null
@@ -165,6 +168,7 @@ func _ready() -> void:
 		(scene_bgm as AudioStreamPlayer).stop()
 	_load_languages()
 	_build_ui()
+	_bug_tags = _load_vn_bug_tags()
 	_scan_files()
 	# Audio preview player
 	_preview_player = AudioStreamPlayer.new()
@@ -310,6 +314,11 @@ func _build_header(parent: Control) -> void:
 	_status_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hbox.add_child(_status_lbl)
 
+	var resolve_btn := Button.new()
+	resolve_btn.text = "Resolve Bug"
+	resolve_btn.custom_minimum_size = Vector2(110, 34)
+	resolve_btn.pressed.connect(_resolve_bug_tag)
+	hbox.add_child(resolve_btn)
 	var save_btn := Button.new()
 	save_btn.text = "SAVE"
 	save_btn.custom_minimum_size = Vector2(100, 34)
@@ -498,6 +507,13 @@ func _build_fields() -> void:
 	char_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	char_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	char_row.add_child(char_lbl)
+	_f_linger_chars = CheckBox.new()
+	_f_linger_chars.text = "Linger"
+	_f_linger_chars.add_theme_font_size_override("font_size", 13)
+	_f_linger_chars.toggled.connect(func(_b: bool) -> void:
+		_chars_vbox.modulate.a = 0.3 if _f_linger_chars.button_pressed else 1.0
+		_on_field_changed())
+	char_row.add_child(_f_linger_chars)
 	var copy_chars_btn := Button.new()
 	copy_chars_btn.text = "Copy"
 	copy_chars_btn.custom_minimum_size = Vector2(56, 26)
@@ -1196,6 +1212,41 @@ func _scan_files() -> void:
 		_file_list.add_item(f)
 	_refresh_file_list_colors()
 
+func _load_vn_bug_tags() -> Dictionary:
+	if not FileAccess.file_exists(BUG_TAGS_PATH):
+		return {}
+	var f := FileAccess.open(BUG_TAGS_PATH, FileAccess.READ)
+	if f == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(f.get_as_text())
+	f.close()
+	return parsed if parsed is Dictionary else {}
+
+func _save_vn_bug_tags() -> void:
+	var f := FileAccess.open(BUG_TAGS_PATH, FileAccess.WRITE)
+	if f == null:
+		return
+	f.store_string(JSON.stringify(_bug_tags, "\t"))
+	f.close()
+
+func _resolve_bug_tag() -> void:
+	if _file_path.is_empty() or _selected_idx < 0:
+		_status_lbl.text = "Select a beat to resolve."
+		return
+	var file_tags: Dictionary = _bug_tags.get(_file_path, {}) as Dictionary
+	if not file_tags.has(str(_selected_idx)):
+		_status_lbl.text = "No bug tag on beat #%d." % (_selected_idx + 1)
+		return
+	file_tags.erase(str(_selected_idx))
+	if file_tags.is_empty():
+		_bug_tags.erase(_file_path)
+	else:
+		_bug_tags[_file_path] = file_tags
+	_save_vn_bug_tags()
+	_refresh_beat_list()
+	_refresh_file_list_colors()
+	_status_lbl.text = "Bug resolved  —  beat #%d" % (_selected_idx + 1)
+
 func _refresh_file_list_colors() -> void:
 	for i: int in range(_file_list.item_count):
 		var fpath: String = SCENES_DIR + _file_list.get_item_text(i)
@@ -1204,6 +1255,11 @@ func _refresh_file_list_colors() -> void:
 			_file_list.set_item_custom_bg_color(i, Color(0.5, 0.45, 0.0, 0.35))
 		else:
 			_file_list.set_item_custom_bg_color(i, Color(0.0, 0.0, 0.0, 0.0))
+		var file_tags: Dictionary = _bug_tags.get(fpath, {}) as Dictionary
+		if not file_tags.is_empty():
+			_file_list.set_item_custom_fg_color(i, Color(1.0, 0.25, 0.25))
+		else:
+			_file_list.set_item_custom_fg_color(i, Color(1.0, 1.0, 1.0))
 
 func _on_file_selected(idx: int) -> void:
 	_load_file(SCENES_DIR + _file_list.get_item_text(idx))
@@ -1250,10 +1306,15 @@ func _load_file(path: String) -> void:
 # ─────────────────────────────────────────────────────────────
 func _refresh_beat_list() -> void:
 	_beat_list.clear()
+	var tagged_beats: Dictionary = _bug_tags.get(_file_path, {}) as Dictionary
 	for i: int in range(_beats.size()):
 		_beat_list.add_item(_beat_summary(_beats[i], i))
 		if _beat_modified.get(i, false):
 			_beat_list.set_item_custom_bg_color(i, Color(0.5, 0.45, 0.0, 0.4))
+		if tagged_beats.has(str(i)):
+			_beat_list.set_item_custom_fg_color(i, Color(1.0, 0.25, 0.25))
+			var note: String = str(tagged_beats[str(i)])
+			_beat_list.set_item_tooltip(i, "[BUG]" if note.is_empty() else "[BUG] " + note)
 
 func _beat_summary(beat: Dictionary, idx: int) -> String:
 	var nsfw_tag: String = ""
@@ -1324,6 +1385,8 @@ func _populate_fields() -> void:
 	_f_background.text = "null" if bg == null else (str(bg) if bg != "" else "")
 	_f_video.text = str(b.get("video", ""))
 
+	_f_linger_chars.button_pressed = b.get("linger_characters", false)
+	_chars_vbox.modulate.a = 0.3 if _f_linger_chars.button_pressed else 1.0
 	_rebuild_char_rows(b.get("characters", []) as Array)
 	_f_dim_others.button_pressed = b.get("dim_others", false)
 	var nsfw_val: String = str(b.get("nsfw", "both")).to_lower()
@@ -1521,24 +1584,28 @@ func _collect_beat() -> Dictionary:
 		b["video"] = video
 
 	# Characters
-	var chars: Array = []
-	for row: Dictionary in _char_rows:
-		var spr: String = (row["sprite"] as LineEdit).text.strip_edges()
-		if spr.is_empty():
-			continue
-		var cd: Dictionary = {
-			"sprite":   spr,
-			"position": SLOT_OPTIONS[(row["position"] as OptionButton).selected],
-		}
-		if (row["flip"] as CheckBox).button_pressed:
-			cd["flip"] = true
-		if (row["crop"] as SpinBox).value > 0.0:
-			cd["crop_bottom"] = (row["crop"] as SpinBox).value
-		if (row["scale"] as SpinBox).value != 100.0:
-			cd["scale"] = (row["scale"] as SpinBox).value
-		chars.append(cd)
-	if not _char_rows.is_empty():
-		b["characters"] = chars
+	if _f_linger_chars.button_pressed:
+		b["linger_characters"] = true
+		# No "characters" key → VNPlayer keeps previous beat's characters unchanged
+	else:
+		var chars: Array = []
+		for row: Dictionary in _char_rows:
+			var spr: String = (row["sprite"] as LineEdit).text.strip_edges()
+			if spr.is_empty():
+				continue
+			var cd: Dictionary = {
+				"sprite":   spr,
+				"position": SLOT_OPTIONS[(row["position"] as OptionButton).selected],
+			}
+			if (row["flip"] as CheckBox).button_pressed:
+				cd["flip"] = true
+			if (row["crop"] as SpinBox).value > 0.0:
+				cd["crop_bottom"] = (row["crop"] as SpinBox).value
+			if (row["scale"] as SpinBox).value != 100.0:
+				cd["scale"] = (row["scale"] as SpinBox).value
+			chars.append(cd)
+		if not _char_rows.is_empty():
+			b["characters"] = chars
 
 	if _f_dim_others.button_pressed:
 		b["dim_others"] = true
@@ -1963,7 +2030,7 @@ func _on_beat_list_input(event: InputEvent) -> void:
 func _add_beat() -> void:
 	if _file_path.is_empty():
 		return
-	var new_beat: Dictionary = {}
+	var new_beat: Dictionary = {"linger_characters": true}
 	if _selected_idx >= 0:
 		_beats.insert(_selected_idx + 1, new_beat)
 		_selected_idx += 1
