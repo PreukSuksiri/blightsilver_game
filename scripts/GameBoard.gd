@@ -106,6 +106,14 @@ var _prev_crystals: Array[int] = [3000, 3000]
 var _p1_attack_lbl: Label = null
 var _p2_attack_lbl: Label = null
 
+# AI thinking bubble
+var _thinking_bubble: Control = null
+var _thinking_bubble_style: StyleBoxFlat = null
+var _thinking_dot_labels: Array[Label] = []
+var _thinking_dot_tween: Tween = null
+var _thinking_timer_active: bool = false
+var _portrait_last_tap: Array[float] = [0.0, 0.0]  # last tap timestamp per player
+
 # Tax confirmation overlay
 var _tax_confirm_panel: Control = null
 
@@ -282,6 +290,7 @@ func _ready() -> void:
 	_build_bottom_crystal_labels()
 	_build_turn_number_label()
 	_build_attack_count_indicators()
+	_build_thinking_bubble()
 	_build_options_button()
 	_build_union_suggest_button()
 	SaveManager.union_mechanism_changed.connect(func(_u: bool) -> void: _update_union_suggest_button())
@@ -320,7 +329,7 @@ func _setup_ai() -> void:
 	ai_player.ai_mode_chosen.connect(_on_ai_mode_chosen)
 	ai_player.ai_attack_chosen.connect(_on_ai_attack_chosen)
 	ai_player.ai_tech_chosen.connect(_on_ai_tech_chosen)
-	ai_player.ai_end_turn.connect(func() -> void: turn_manager.end_attacks_early())
+	ai_player.ai_end_turn.connect(_on_ai_end_turn)
 	ai_player.ai_union_chosen.connect(_on_ai_union_chosen)
 	ai_player.ai_bluff.connect(_on_ai_bluff)
 
@@ -347,7 +356,7 @@ func _setup_ai() -> void:
 		ai_player_0.ai_mode_chosen.connect(_on_ai_mode_chosen)
 		ai_player_0.ai_attack_chosen.connect(_on_ai_attack_chosen)
 		ai_player_0.ai_tech_chosen.connect(_on_ai_tech_chosen)
-		ai_player_0.ai_end_turn.connect(func() -> void: turn_manager.end_attacks_early())
+		ai_player_0.ai_end_turn.connect(_on_ai_end_turn)
 		ai_player_0.ai_union_chosen.connect(_on_ai_union_chosen)
 		ai_player_0.ai_bluff.connect(_on_ai_bluff)
 		ai_player_0.ai_mode_chosen.connect(func(_m: GameState.TurnMode) -> void: _ai_watchdog.start())
@@ -875,6 +884,18 @@ func _build_portraits() -> void:
 		_p1_portrait.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 		_p1_portrait.z_index       = 3
 		add_child(_p1_portrait)
+		## DISABLED: double-tap portrait to show thinking bubble
+		#_p1_portrait.gui_input.connect(func(ev: InputEvent) -> void:
+		#	if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+		#		var ctrl_sz: Vector2 = _p1_portrait.size
+		#		var tap_pos: Vector2 = (ev as InputEventMouseButton).position
+		#		var mx: float = ctrl_sz.x * 0.125; var my: float = ctrl_sz.y * 0.125
+		#		if tap_pos.x < mx or tap_pos.x > ctrl_sz.x - mx or tap_pos.y < my or tap_pos.y > ctrl_sz.y - my:
+		#			return
+		#		var now: float = Time.get_ticks_msec() / 1000.0
+		#		if now - _portrait_last_tap[0] <= 0.4:
+		#			_on_portrait_tapped(0)
+		#		_portrait_last_tap[0] = now)
 
 	var p2_tex: Texture2D = load(GameState.player_portraits[1])
 	if p2_tex:
@@ -901,6 +922,18 @@ func _build_portraits() -> void:
 		_p2_portrait.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 		_p2_portrait.z_index       = 3
 		add_child(_p2_portrait)
+		## DISABLED: double-tap portrait to show thinking bubble
+		#_p2_portrait.gui_input.connect(func(ev: InputEvent) -> void:
+		#	if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT:
+		#		var ctrl_sz: Vector2 = _p2_portrait.size
+		#		var tap_pos: Vector2 = (ev as InputEventMouseButton).position
+		#		var mx: float = ctrl_sz.x * 0.125; var my: float = ctrl_sz.y * 0.125
+		#		if tap_pos.x < mx or tap_pos.x > ctrl_sz.x - mx or tap_pos.y < my or tap_pos.y > ctrl_sz.y - my:
+		#			return
+		#		var now: float = Time.get_ticks_msec() / 1000.0
+		#		if now - _portrait_last_tap[1] <= 0.4:
+		#			_on_portrait_tapped(1)
+		#		_portrait_last_tap[1] = now)
 
 func _show_handoff(player: int, context: String, callback: Callable) -> void:
 	_handoff_callback = callback
@@ -2844,6 +2877,135 @@ func _build_bottom_crystal_labels() -> void:
 		p2_crystal_hbox.add_child(icon2)
 		_p2_crystal_icon = icon2
 
+## Builds the "thinking bubble" overlay used to show when the AI is processing.
+## Hidden by default; shown via _show_thinking_bubble() after a 0.5s delay.
+func _build_thinking_bubble() -> void:
+	_thinking_bubble = Control.new()
+	_thinking_bubble.layout_mode = 1
+	_thinking_bubble.z_index       = 8
+	_thinking_bubble.visible       = false
+	_thinking_bubble.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	add_child(_thinking_bubble)
+
+	# Rounded white background — corners adjusted per-player in _show_thinking_bubble()
+	var bg := Panel.new()
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_thinking_bubble_style = StyleBoxFlat.new()
+	_thinking_bubble_style.bg_color       = Color(0.96, 0.96, 1.0, 0.92)
+	_thinking_bubble_style.border_width_left   = 1; _thinking_bubble_style.border_width_right  = 1
+	_thinking_bubble_style.border_width_top    = 1; _thinking_bubble_style.border_width_bottom = 1
+	_thinking_bubble_style.border_color        = Color(0.7, 0.7, 0.85, 0.6)
+	bg.add_theme_stylebox_override("panel", _thinking_bubble_style)
+	_thinking_bubble.add_child(bg)
+
+	# Three dot labels centred inside the bubble
+	var hbox := HBoxContainer.new()
+	hbox.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	hbox.add_theme_constant_override("separation", 5)
+	hbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_thinking_bubble.add_child(hbox)
+
+	_thinking_dot_labels.clear()
+	for _i: int in range(3):
+		var dot := Label.new()
+		dot.text = "●"
+		dot.add_theme_font_size_override("font_size", 16)
+		dot.add_theme_color_override("font_color", Color(0.25, 0.25, 0.4, 1.0))
+		dot.modulate.a = 0.0
+		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		hbox.add_child(dot)
+		_thinking_dot_labels.append(dot)
+
+## Start a 0.5-second timer; if the AI is still thinking when it fires, show the bubble.
+func _start_ai_thinking() -> void:
+	_thinking_timer_active = true
+	await get_tree().create_timer(0.5).timeout
+	if _thinking_timer_active:
+		_show_thinking_bubble(_active_ai.player_index if is_instance_valid(_active_ai) else 1)
+
+func _show_thinking_bubble(thinking_player: int) -> void:
+	if _thinking_bubble == null:
+		return
+	# Position the bubble just inside the portrait edge at ~35% screen height.
+	# P1 (left portrait): bubble hugs the left edge, tip points LEFT (bottom-left corner sharp).
+	# P2 (right portrait): bubble hugs the right edge, tip points RIGHT (bottom-right corner sharp).
+	const W: float = 100.0
+	const H: float = 44.0
+	const MARGIN: float = 40.0
+	const R_ROUND: int = 14
+	const R_TIP: int   = 3
+	if thinking_player == 0:
+		_thinking_bubble.anchor_left   = 0.0;  _thinking_bubble.anchor_right  = 0.0
+		_thinking_bubble.anchor_top    = 0.35; _thinking_bubble.anchor_bottom = 0.35
+		_thinking_bubble.offset_left   = MARGIN
+		_thinking_bubble.offset_right  = MARGIN + W
+		_thinking_bubble.offset_top    = -H * 0.5
+		_thinking_bubble.offset_bottom =  H * 0.5
+		_thinking_bubble_style.corner_radius_top_left     = R_ROUND
+		_thinking_bubble_style.corner_radius_top_right    = R_ROUND
+		_thinking_bubble_style.corner_radius_bottom_right = R_ROUND
+		_thinking_bubble_style.corner_radius_bottom_left  = R_TIP   # tip points left
+	else:
+		_thinking_bubble.anchor_left   = 1.0;  _thinking_bubble.anchor_right  = 1.0
+		_thinking_bubble.anchor_top    = 0.35; _thinking_bubble.anchor_bottom = 0.35
+		_thinking_bubble.offset_right  = -MARGIN
+		_thinking_bubble.offset_left   = -MARGIN - W
+		_thinking_bubble.offset_top    = -H * 0.5
+		_thinking_bubble.offset_bottom =  H * 0.5
+		_thinking_bubble_style.corner_radius_top_left     = R_ROUND
+		_thinking_bubble_style.corner_radius_top_right    = R_ROUND
+		_thinking_bubble_style.corner_radius_bottom_right = R_TIP   # tip points right
+		_thinking_bubble_style.corner_radius_bottom_left  = R_ROUND
+	_thinking_bubble.visible = true
+	_start_dot_animation()
+
+func _hide_thinking_bubble() -> void:
+	_thinking_timer_active = false
+	if _thinking_dot_tween and _thinking_dot_tween.is_valid():
+		_thinking_dot_tween.kill()
+		_thinking_dot_tween = null
+	if _thinking_bubble != null:
+		_thinking_bubble.visible = false
+	for dot: Label in _thinking_dot_labels:
+		dot.modulate.a = 0.0
+
+## Manual trigger: tapping a player's portrait shows the thinking bubble for 3 seconds.
+## Only the human player's own portrait responds — opponent and AI portraits are ignored.
+func _on_portrait_tapped(player: int) -> void:
+	match GameState.game_mode:
+		GameState.GameMode.AI_VS_AI:
+			return  # no human players
+		GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON:
+			if player != 0:
+				return  # player 1 is AI
+		_:
+			# LOCAL_2P / HOT_SEAT: only the active player can tap their own portrait
+			if player != GameState.current_player:
+				return
+	_show_thinking_bubble(player)
+	await get_tree().create_timer(3.0).timeout
+	_hide_thinking_bubble()
+
+func _start_dot_animation() -> void:
+	if _thinking_dot_tween and _thinking_dot_tween.is_valid():
+		_thinking_dot_tween.kill()
+	for dot: Label in _thinking_dot_labels:
+		dot.modulate.a = 0.0
+	_thinking_dot_tween = create_tween().set_loops()
+	# Dots fade in one by one
+	_thinking_dot_tween.tween_property(_thinking_dot_labels[0], "modulate:a", 1.0, 0.18)
+	_thinking_dot_tween.tween_interval(0.12)
+	_thinking_dot_tween.tween_property(_thinking_dot_labels[1], "modulate:a", 1.0, 0.18)
+	_thinking_dot_tween.tween_interval(0.12)
+	_thinking_dot_tween.tween_property(_thinking_dot_labels[2], "modulate:a", 1.0, 0.18)
+	_thinking_dot_tween.tween_interval(0.35)
+	# All fade out simultaneously
+	_thinking_dot_tween.tween_property(_thinking_dot_labels[0], "modulate:a", 0.0, 0.22)
+	_thinking_dot_tween.parallel().tween_property(_thinking_dot_labels[1], "modulate:a", 0.0, 0.22)
+	_thinking_dot_tween.parallel().tween_property(_thinking_dot_labels[2], "modulate:a", 0.0, 0.22)
+	_thinking_dot_tween.tween_interval(0.25)
+
 ## Creates a fixed-size Control with the attack-count icon and a centered number label.
 ## Child 0 = TextureRect (icon), Child 1 = Label (count). Caller stores child 1 as _pN_attack_lbl.
 func _build_attack_count_icon() -> Control:
@@ -4425,6 +4587,30 @@ func _current_skip_tax() -> int:
 	# Doubles each consecutive no-attack turn: 50, 100, 200, 400, 800, 1600 …
 	return TAX_BASE << GameState.skip_counts[GameState.current_player]
 
+## AI end-turn handler — mirrors _on_end_turn_requested but auto-pays the skip tax.
+func _on_ai_end_turn() -> void:
+	_hide_thinking_bubble()
+	var player := GameState.current_player
+	var has_attacked := GameState.attacks_remaining < 2
+	if not has_attacked:
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(player, r, c)
+				if card.card_type == "character" and card.attacked_this_turn:
+					has_attacked = true
+					break
+			if has_attacked:
+				break
+	var _tax_free: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+		and "tax_free_zone" in GameState.active_dungeon_modifiers
+	if not has_attacked and GameState.can_player_attack(player) and not _tax_free:
+		var tax: int = _current_skip_tax()
+		GameState.skip_counts[player] += 1
+		GameState.lose_crystals(player, tax, "skip tax")
+		GameState.post_message("Player %d skips without attacking — %d◆ tax (skip #%d this duel)" % [player + 1, tax, GameState.skip_counts[player]])
+		await turn_manager.crystal_animation_done
+	turn_manager.end_attacks_early()
+
 func _on_end_turn_requested() -> void:
 	# Check if this player attacked at all this turn.
 	# Two sources: surviving characters with attacked_this_turn=true, OR
@@ -4615,6 +4801,7 @@ func _enter_mode_select() -> void:
 		_active_ai = ai_player_0 if (GameState.game_mode == GameState.GameMode.AI_VS_AI \
 			and GameState.current_player == 0) else ai_player
 		_active_ai.decide_bluff()   # fire-and-forget; runs in background
+		_start_ai_thinking()        # show thinking bubble after 0.5s if still processing
 		if _tech_used_this_turn[GameState.current_player] and not _tech_royale_ai:
 			_active_ai.continue_after_union()  # tech already played this turn — skip to attack
 		else:
@@ -4824,7 +5011,9 @@ func _on_card_detail_requested(card_name: String, card_type: String, owner_playe
 	CardDetailOverlay.open(self, card_name, card_type, inst)
 
 func _on_card_node_clicked(player: int, row: int, col: int) -> void:
-	if _is_ai_turn():
+	# Allow clicks during the AI's turn only when the human must respond to a tech/trap
+	# effect (e.g. Tease forces the opponent to reveal one of their own squares).
+	if _is_ai_turn() and selection_state != SelectionState.SELECTING_TECH_TARGET:
 		return
 	var pos := Vector2i(row, col)
 	var current_player := GameState.current_player
@@ -6033,6 +6222,7 @@ func _spawn_dissolve_effect(card_node: Control) -> void:
 # AI
 # ─────────────────────────────────────────────────────────────
 func _on_ai_mode_chosen(mode: GameState.TurnMode) -> void:
+	_hide_thinking_bubble()
 	turn_manager.select_mode(mode)
 
 func _on_ai_attack_chosen(attacker_pos: Vector2i, target_pos: Vector2i) -> void:

@@ -86,22 +86,25 @@ func continue_after_union() -> void:
 	_do_attack_decision()
 
 func _do_attack_decision() -> void:
-	# No attacks remaining — end turn immediately
+	# No attacks remaining — end turn immediately (already attacked, no tax)
 	if GameState.attacks_remaining <= 0:
 		emit_signal("ai_end_turn")
 		return
 	# Personality: skip early turns if opponent has nothing revealed yet
 	if _skip_turns > 0 and _ai_turn_count <= _skip_turns and _count_faceup(opponent_index) == 0:
+		await get_tree().create_timer(2.0).timeout
 		emit_signal("ai_end_turn")
 		return
 	# Personality: advance sweep/focus axis if current one is exhausted or blocked
 	_maybe_advance_sweep_axis()
 	var attacker_pos: Vector2i = _choose_attacker()
 	if attacker_pos.x == -1:
+		await get_tree().create_timer(2.0).timeout
 		emit_signal("ai_end_turn")
 		return
 	var target_pos: Vector2i = _choose_target_for(attacker_pos)
 	if target_pos.x == -1:
+		await get_tree().create_timer(2.0).timeout
 		emit_signal("ai_end_turn")
 		return
 	emit_signal("ai_mode_chosen", GameState.TurnMode.ATTACK)
@@ -201,8 +204,8 @@ func _choose_target_for(attacker_pos: Vector2i) -> Vector2i:
 			if pos in GameState.locked_attack_positions:
 				continue
 			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
-			# Skip destroyed slots
-			if card.card_type == "dead_end" and card.was_destroyed:
+			# Skip visibly destroyed slots (was_destroyed is shown as an empty cell)
+			if card.was_destroyed:
 				continue
 			var sc: int = _score_attack(attacker_pos, pos) + randi() % 3
 			if sc > best_score:
@@ -217,10 +220,10 @@ func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 	var target: GameState.CardInstance   = GameState.get_card(opponent_index, target_pos.x, target_pos.y)
 
 	var base: int
-	if target.card_type == "dead_end":
-		base = -100  # blank slot — no crystal gain, wasted attack; only as absolute last resort
+	if target.was_destroyed:
+		base = -100  # visibly destroyed/empty cell — avoid
 	elif not target.face_up:
-		base = 25   # probe unrevealed — medium priority
+		base = 25   # face-down unknown — treat all the same regardless of actual card type
 	elif target.card_type == "trap":
 		base = 15   # hitting a trap is risky but better than nothing
 	else:
@@ -591,7 +594,7 @@ func _random_adjacent_unrevealed_to(center: Vector2i, target_player: int) -> Vec
 	for pos_v: Variant in adj:
 		var pos: Vector2i = pos_v as Vector2i
 		var card: GameState.CardInstance = GameState.get_card(target_player, pos.x, pos.y)
-		if not card.face_up and card.card_type != "dead_end":
+		if not card.face_up and not card.was_destroyed:
 			options.append(pos)
 	if options.is_empty():
 		# No unrevealed adjacents — fall back to any unrevealed opponent cell
@@ -669,7 +672,7 @@ func _random_unrevealed_opponent() -> Vector2i:
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
 			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
-			if not card.face_up and card.card_type != "dead_end":
+			if not card.face_up and not card.was_destroyed:
 				options.append(Vector2i(r, c))
 	if options.is_empty():
 		return Vector2i(0, 0)
