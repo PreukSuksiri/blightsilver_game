@@ -71,6 +71,7 @@ var _lang_input: LineEdit = null
 var _file_list: ItemList = null
 var _beat_list: ItemList = null
 var _status_lbl: Label = null
+var _bug_note_lbl: Label = null
 
 # ─────────────────────────────────────────────────────────────
 # UI refs — right panel (non-locale)
@@ -319,6 +320,13 @@ func _build_header(parent: Control) -> void:
 	resolve_btn.custom_minimum_size = Vector2(110, 34)
 	resolve_btn.pressed.connect(_resolve_bug_tag)
 	hbox.add_child(resolve_btn)
+	_bug_note_lbl = Label.new()
+	_bug_note_lbl.add_theme_font_size_override("font_size", 14)
+	_bug_note_lbl.add_theme_color_override("font_color", Color(1.0, 0.25, 0.25))
+	_bug_note_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_bug_note_lbl.clip_text = true
+	_bug_note_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox.add_child(_bug_note_lbl)
 	var save_btn := Button.new()
 	save_btn.text = "SAVE"
 	save_btn.custom_minimum_size = Vector2(100, 34)
@@ -1245,6 +1253,7 @@ func _resolve_bug_tag() -> void:
 	_save_vn_bug_tags()
 	_refresh_beat_list()
 	_refresh_file_list_colors()
+	_bug_note_lbl.text = ""
 	_status_lbl.text = "Bug resolved  —  beat #%d" % (_selected_idx + 1)
 
 func _refresh_file_list_colors() -> void:
@@ -1299,6 +1308,8 @@ func _load_file(path: String) -> void:
 	_refresh_beat_list()
 	_refresh_file_list_colors()
 	_show_fields(false)
+	if _bug_note_lbl != null:
+		_bug_note_lbl.text = ""
 	_status_lbl.text = "%s  (%d beats)%s" % [path.get_file(), _beats.size(), "  *" if _dirty else ""]
 
 # ─────────────────────────────────────────────────────────────
@@ -1363,6 +1374,19 @@ func _on_beat_selected(idx: int) -> void:
 	_anchor_idx = idx
 	_populate_fields()
 	_show_fields(true)
+
+func _update_bug_note_label() -> void:
+	if _bug_note_lbl == null:
+		return
+	if _selected_idx < 0 or _file_path.is_empty():
+		_bug_note_lbl.text = ""
+		return
+	var file_tags: Dictionary = _bug_tags.get(_file_path, {}) as Dictionary
+	if file_tags.has(str(_selected_idx)):
+		var note: String = str(file_tags[str(_selected_idx)])
+		_bug_note_lbl.text = note if not note.is_empty() else "[no note]"
+	else:
+		_bug_note_lbl.text = ""
 
 func _show_fields(show: bool) -> void:
 	_no_beat_lbl.visible = not show
@@ -1500,6 +1524,7 @@ func _populate_fields() -> void:
 
 	_loading = false
 	_update_tab_colors()
+	_update_bug_note_label()
 
 func _populate_locale_fields(b: Dictionary) -> void:
 	# Speaker

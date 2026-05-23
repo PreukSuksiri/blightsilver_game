@@ -93,7 +93,7 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
 			}
 		],
@@ -122,6 +122,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
+				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "far_left",
 				"scale": 300.0,
@@ -130,17 +131,18 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
 			}
 		],
 		"fade_color": "#000000",
 		"speaker": "Kelly",
-		"text": "Let me show your damned soul the authority of god. He also works at midnight."
+		"text": "Let me show your damned soul the authority of god. The heaven also works at midnight."
 	},
 	{
 		"characters": [
 			{
+				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "far_left",
 				"scale": 300.0,
@@ -149,7 +151,7 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
 			}
 		],
@@ -222,6 +224,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
+				"crop_bottom": 30.0,
 				"position": "far_left",
 				"scale": 200.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_midnight_shadow_mini.png"
@@ -229,7 +232,7 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
 			}
 		],
@@ -243,13 +246,13 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
 			}
 		],
 		"fade_color": "#000000",
 		"flash_color": "#FFFFFF",
-		"flash_count": 2.0,
+		"flash_count": 2,
 		"flash_delay": 0.4,
 		"flash_duration": 0.2,
 		"sfx": "res://assets/audio/sound_sledgehammer1.mp3",
@@ -260,7 +263,7 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
 			}
 		],
@@ -281,13 +284,13 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
 			}
 		],
 		"fade_color": "#000000",
 		"flash_color": "#FFFFFF",
-		"flash_count": 2.0,
+		"flash_count": 2,
 		"flash_delay": 0.4,
 		"flash_duration": 0.2,
 		"sfx": "res://assets/audio/sound_sledgehammer1.mp3",
@@ -298,7 +301,7 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
 			}
 		],
@@ -310,7 +313,7 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
 			}
 		],
@@ -323,7 +326,7 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_aim_pistol.png"
 			}
 		],
@@ -335,7 +338,7 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
 			}
 		],
@@ -348,7 +351,7 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
 			}
 		],
@@ -360,7 +363,7 @@
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
 			}
 		],
@@ -380,8 +383,8 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
 			}
 		],
 		"wait": 0.5
@@ -393,7 +396,7 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
+				"scale": 150.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
 			},
 			{
@@ -711,7 +714,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
@@ -725,7 +728,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"wait": 0.5
@@ -744,7 +747,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"music": "res://assets/audio/bgm_storytelling_1.mp3",
@@ -1013,7 +1016,7 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_2/bg_vn_hospital_4th_floor_ward_night.png",
-		"music": "res://assets/audio/bgm_storytelling_1.mp3",
+		"music": "res://assets/audio/bgm_soft_rock_1.mp3",
 		"text": "(Nex leaned and peeked inside the vending machine immaturely)"
 	},
 	{
@@ -1065,7 +1068,7 @@
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
 			}
 		],
 		"wait": 0.5
