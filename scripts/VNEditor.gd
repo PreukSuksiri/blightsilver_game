@@ -35,9 +35,17 @@ var _dirty: bool = false
 var _char_rows: Array = []
 var _file_dialog: FileDialog = null
 var _browse_target: LineEdit = null
-var _clipboard: Dictionary = {}
+var _clipboard: Array = []   # Array[Dictionary] — supports multi-beat copy
 var _has_clipboard: bool = false
 var _drag_from_idx: int = -1
+var _beat_modified: Dictionary = {}   # index → bool; cleared on save/load/structural ops
+var _anchor_idx: int = -1             # for Shift+click range selection
+var _file_cache: Dictionary = {}      # path → {beats, modified}; in-memory unsaved state per file
+
+# Preview
+var _preview_player: AudioStreamPlayer = null
+var _img_popup: PopupPanel = null
+var _img_popup_tex: TextureRect = null
 
 # Language system
 var _languages: Array = ["en"]       # ordered list of language codes
@@ -149,9 +157,23 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = MOUSE_FILTER_STOP
 	z_index = 60
+	# Stop main menu BGM while editor is open
+	var scene_bgm: Variant = get_tree().current_scene.get_node_or_null("BGM")
+	if scene_bgm is AudioStreamPlayer:
+		(scene_bgm as AudioStreamPlayer).stop()
 	_load_languages()
 	_build_ui()
 	_scan_files()
+	# Audio preview player
+	_preview_player = AudioStreamPlayer.new()
+	add_child(_preview_player)
+	# Image preview popup
+	_img_popup = PopupPanel.new()
+	add_child(_img_popup)
+	_img_popup_tex = TextureRect.new()
+	_img_popup_tex.custom_minimum_size = Vector2(700, 500)
+	_img_popup_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_img_popup.add_child(_img_popup_tex)
 	if has_meta("_pending_path"):
 		open_file(str(get_meta("_pending_path")))
 
@@ -346,6 +368,7 @@ func _build_left_panel(parent: Control) -> void:
 	_beat_list = ItemList.new()
 	_beat_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_beat_list.add_theme_font_size_override("font_size", 15)
+	_beat_list.select_mode = ItemList.SELECT_MULTI
 	_beat_list.item_selected.connect(_on_beat_selected)
 	_beat_list.gui_input.connect(_on_beat_list_input)
 	left.add_child(_beat_list)
@@ -456,6 +479,7 @@ func _build_fields() -> void:
 	_add_browse(_f_background,
 		PackedStringArray(["*.png,*.jpg,*.jpeg,*.webp ; Image Files"]),
 		"res://assets/textures/vn/backgrounds/")
+	_add_image_preview(_f_background)
 
 	_f_video = _row_le(v, "Video", "res://path/to/clip.mp4  |  empty = none")
 	_add_browse(_f_video,
@@ -543,12 +567,14 @@ func _build_fields() -> void:
 	_add_browse(_f_music,
 		PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio Files"]),
 		"res://assets/audio/")
+	_add_audio_preview(_f_music)
 	_f_music_fade_in  = _row_sb(v, "Music Fade In",  0.0, 30.0, 0.001, "seconds  (0 = instant)")
 	_f_music_fade_out = _row_sb(v, "Music Fade Out", 0.0, 30.0, 0.001, "seconds  (0 = instant)")
 	_f_sfx = _row_le(v, "SFX", "res://path")
 	_add_browse(_f_sfx,
 		PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio Files"]),
 		"res://assets/audio/")
+	_add_audio_preview(_f_sfx)
 	_f_sfx_volume = _row_sb(v, "SFX Volume", 0.0, 200.0, 1.0, "% (100 = normal)")
 	_f_sfx_volume.value = 100.0
 
@@ -1078,6 +1104,62 @@ func _add_browse(le: LineEdit, filters: PackedStringArray, start_dir: String) ->
 	btn.pressed.connect(func() -> void: _browse(le, filters, start_dir))
 	le.get_parent().add_child(btn)
 
+func _add_audio_preview(le: LineEdit) -> void:
+	var play_btn := Button.new()
+	play_btn.text = "▶"
+	play_btn.custom_minimum_size = Vector2(30, 0)
+	play_btn.add_theme_font_size_override("font_size", 13)
+	play_btn.pressed.connect(func() -> void: _preview_audio(le.text.strip_edges()))
+	le.get_parent().add_child(play_btn)
+	var stop_btn := Button.new()
+	stop_btn.text = "■"
+	stop_btn.custom_minimum_size = Vector2(30, 0)
+	stop_btn.add_theme_font_size_override("font_size", 13)
+	stop_btn.pressed.connect(func() -> void: if _preview_player != null: _preview_player.stop())
+	le.get_parent().add_child(stop_btn)
+
+func _add_image_preview(le: LineEdit) -> void:
+	var btn := Button.new()
+	btn.text = "Img"
+	btn.custom_minimum_size = Vector2(36, 0)
+	btn.add_theme_font_size_override("font_size", 13)
+	btn.pressed.connect(func() -> void: _preview_image(le.text.strip_edges()))
+	le.get_parent().add_child(btn)
+
+func _preview_audio(path: String) -> void:
+	if _preview_player == null:
+		return
+	if path.is_empty() or path == "null":
+		_status_lbl.text = "No audio path set."
+		return
+	if not ResourceLoader.exists(path):
+		_status_lbl.text = "Audio not found: " + path.get_file()
+		return
+	var stream: Variant = load(path)
+	if not stream is AudioStream:
+		_status_lbl.text = "Not an audio file: " + path.get_file()
+		return
+	_preview_player.stream = stream as AudioStream
+	_preview_player.stop()
+	_preview_player.play()
+	_status_lbl.text = "Playing: " + path.get_file()
+
+func _preview_image(path: String) -> void:
+	if _img_popup == null:
+		return
+	if path.is_empty() or path == "null":
+		_status_lbl.text = "No image path set."
+		return
+	if not ResourceLoader.exists(path):
+		_status_lbl.text = "Image not found: " + path.get_file()
+		return
+	var tex: Variant = load(path)
+	if not tex is Texture2D:
+		_status_lbl.text = "Not an image: " + path.get_file()
+		return
+	_img_popup_tex.texture = tex as Texture2D
+	_img_popup.popup_centered(Vector2(820, 620))
+
 # ─────────────────────────────────────────────────────────────
 # File scanning / loading
 # ─────────────────────────────────────────────────────────────
@@ -1098,29 +1180,56 @@ func _scan_files() -> void:
 	files.sort()
 	for f: String in files:
 		_file_list.add_item(f)
+	_refresh_file_list_colors()
+
+func _refresh_file_list_colors() -> void:
+	for i: int in range(_file_list.item_count):
+		var fpath: String = SCENES_DIR + _file_list.get_item_text(i)
+		var is_dirty: bool = _file_cache.has(fpath) or (fpath == _file_path and _dirty)
+		if is_dirty:
+			_file_list.set_item_custom_bg_color(i, Color(0.5, 0.45, 0.0, 0.35))
+		else:
+			_file_list.set_item_custom_bg_color(i, Color(0.0, 0.0, 0.0, 0.0))
 
 func _on_file_selected(idx: int) -> void:
 	_load_file(SCENES_DIR + _file_list.get_item_text(idx))
 
 func _load_file(path: String) -> void:
-	var f := FileAccess.open(path, FileAccess.READ)
-	if f == null:
-		_status_lbl.text = "ERROR: cannot open " + path.get_file()
-		return
-	var raw: String = f.get_as_text()
-	f.close()
-	var parsed: Variant = JSON.parse_string(raw)
-	if not parsed is Array:
-		_status_lbl.text = "ERROR: invalid JSON in " + path.get_file()
-		return
-	_file_path = path
-	_beats = parsed
+	# Stash unsaved state for the current file before switching away
+	if not _file_path.is_empty() and _dirty:
+		_file_cache[_file_path] = {
+			"beats":    _beats.duplicate(true),
+			"modified": _beat_modified.duplicate()
+		}
+	# Try restoring from in-memory cache first; fall back to disk
+	if _file_cache.has(path):
+		var cached: Dictionary = _file_cache[path]
+		_file_path = path
+		_beats = (cached["beats"] as Array).duplicate(true)
+		_beat_modified = (cached["modified"] as Dictionary).duplicate()
+		_dirty = true
+	else:
+		var f := FileAccess.open(path, FileAccess.READ)
+		if f == null:
+			_status_lbl.text = "ERROR: cannot open " + path.get_file()
+			return
+		var raw: String = f.get_as_text()
+		f.close()
+		var parsed: Variant = JSON.parse_string(raw)
+		if not parsed is Array:
+			_status_lbl.text = "ERROR: invalid JSON in " + path.get_file()
+			return
+		_file_path = path
+		_beats = parsed
+		_beat_modified.clear()
+		_dirty = false
 	_selected_idx = -1
+	_anchor_idx = -1
 	_char_rows.clear()
-	_dirty = false
 	_refresh_beat_list()
+	_refresh_file_list_colors()
 	_show_fields(false)
-	_status_lbl.text = "%s  (%d beats)" % [path.get_file(), _beats.size()]
+	_status_lbl.text = "%s  (%d beats)%s" % [path.get_file(), _beats.size(), "  *" if _dirty else ""]
 
 # ─────────────────────────────────────────────────────────────
 # Beat list
@@ -1129,6 +1238,8 @@ func _refresh_beat_list() -> void:
 	_beat_list.clear()
 	for i: int in range(_beats.size()):
 		_beat_list.add_item(_beat_summary(_beats[i], i))
+		if _beat_modified.get(i, false):
+			_beat_list.set_item_custom_bg_color(i, Color(0.5, 0.45, 0.0, 0.4))
 
 func _beat_summary(beat: Dictionary, idx: int) -> String:
 	var nsfw_tag: String = ""
@@ -1174,6 +1285,7 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 # ─────────────────────────────────────────────────────────────
 func _on_beat_selected(idx: int) -> void:
 	_selected_idx = idx
+	_anchor_idx = idx
 	_populate_fields()
 	_show_fields(true)
 
@@ -1598,7 +1710,12 @@ func _on_field_changed() -> void:
 		return
 	_beats[_selected_idx] = _collect_beat()
 	_beat_list.set_item_text(_selected_idx, _beat_summary(_beats[_selected_idx], _selected_idx))
+	var was_dirty: bool = _dirty
 	_dirty = true
+	_beat_modified[_selected_idx] = true
+	_beat_list.set_item_custom_bg_color(_selected_idx, Color(0.5, 0.45, 0.0, 0.4))
+	if not was_dirty:
+		_refresh_file_list_colors()
 
 # ─────────────────────────────────────────────────────────────
 # Character rows
@@ -1647,6 +1764,12 @@ func _add_char_row_from(ci: Dictionary) -> void:
 			PackedStringArray(["*.png,*.jpg,*.jpeg,*.webp ; Image Files"]),
 			"res://assets/textures/vn/characters/"))
 	hbox.add_child(spr_browse)
+	var spr_prev := Button.new()
+	spr_prev.text = "Img"
+	spr_prev.custom_minimum_size = Vector2(36, 0)
+	spr_prev.add_theme_font_size_override("font_size", 13)
+	spr_prev.pressed.connect(func() -> void: _preview_image(spr_le.text.strip_edges()))
+	hbox.add_child(spr_prev)
 
 	var flip_cb := CheckBox.new()
 	flip_cb.text = "flip"
@@ -1694,24 +1817,32 @@ func _remove_char_row(row: Dictionary) -> void:
 # Beat operations (copy / paste / reorder / drag)
 # ─────────────────────────────────────────────────────────────
 func _copy_beat() -> void:
-	if _selected_idx < 0:
+	var selected: PackedInt32Array = _beat_list.get_selected_items()
+	if selected.is_empty():
 		return
-	_clipboard = _beats[_selected_idx].duplicate(true)
+	_clipboard.clear()
+	for idx: int in selected:
+		_clipboard.append((_beats[idx] as Dictionary).duplicate(true))
 	_has_clipboard = true
-	_status_lbl.text = "Copied beat #%d" % (_selected_idx + 1)
+	_status_lbl.text = "Copied %d beat(s)" % _clipboard.size()
 
 func _paste_beat() -> void:
 	if not _has_clipboard or _file_path.is_empty():
 		return
-	var copy: Dictionary = _clipboard.duplicate(true)
-	if _selected_idx >= 0:
-		_beats.insert(_selected_idx + 1, copy)
-		_selected_idx += 1
-	else:
-		_beats.append(copy)
-		_selected_idx = _beats.size() - 1
+	var insert_at: int = _selected_idx if _selected_idx >= 0 else _beats.size() - 1
+	var first_new: int = insert_at + 1
+	for i: int in range(_clipboard.size()):
+		_beats.insert(first_new + i, (_clipboard[i] as Dictionary).duplicate(true))
+	# Mark pasted beats as modified (yellow) and clear stale index tracking
+	_beat_modified.clear()
+	for i: int in range(_clipboard.size()):
+		_beat_modified[first_new + i] = true
+	_selected_idx = first_new + _clipboard.size() - 1
+	_anchor_idx = first_new
 	_refresh_beat_list()
-	_beat_list.select(_selected_idx)
+	_beat_list.deselect_all()
+	for i: int in range(_clipboard.size()):
+		_beat_list.select(first_new + i, false)
 	_populate_fields()
 	_show_fields(true)
 	_dirty = true
@@ -1723,22 +1854,69 @@ func _move_beat_to(from: int, to: int) -> void:
 	_beats.remove_at(from)
 	_beats.insert(to, beat)
 	_selected_idx = to
+	_anchor_idx = to
+	_beat_modified.clear()
 	_refresh_beat_list()
 	_beat_list.select(to)
 	_dirty = true
 
 func _on_beat_list_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		var mbe := event as InputEventMouseButton
-		if mbe.button_index == MOUSE_BUTTON_LEFT:
-			if mbe.pressed:
-				_drag_from_idx = _beat_list.get_item_at_position(mbe.position, false)
+	if not event is InputEventMouseButton:
+		return
+	var mbe := event as InputEventMouseButton
+	if mbe.button_index != MOUSE_BUTTON_LEFT:
+		return
+	var clicked_idx: int = _beat_list.get_item_at_position(mbe.position, false)
+	if mbe.pressed:
+		if clicked_idx < 0:
+			return
+		if mbe.shift_pressed and _anchor_idx >= 0:
+			# Range select from anchor to clicked (Google Sheets style)
+			_beat_list.deselect_all()
+			var lo: int = mini(_anchor_idx, clicked_idx)
+			var hi: int = maxi(_anchor_idx, clicked_idx)
+			for i: int in range(lo, hi + 1):
+				_beat_list.select(i, false)
+			_selected_idx = clicked_idx
+			_populate_fields()
+			_show_fields(true)
+			get_viewport().set_input_as_handled()
+		elif mbe.ctrl_pressed or mbe.meta_pressed:
+			# Ctrl/Cmd — toggle individual item
+			if _beat_list.is_selected(clicked_idx):
+				_beat_list.deselect(clicked_idx)
+				var sel: PackedInt32Array = _beat_list.get_selected_items()
+				_selected_idx = sel[sel.size() - 1] if sel.size() > 0 else -1
+				if _selected_idx >= 0:
+					_populate_fields()
+					_show_fields(true)
+				else:
+					_show_fields(false)
 			else:
-				if _drag_from_idx >= 0:
-					var drop_idx: int = _beat_list.get_item_at_position(mbe.position, false)
-					if drop_idx >= 0 and drop_idx != _drag_from_idx:
-						_move_beat_to(_drag_from_idx, drop_idx)
-				_drag_from_idx = -1
+				_beat_list.select(clicked_idx, false)
+				_selected_idx = clicked_idx
+				_populate_fields()
+				_show_fields(true)
+			_anchor_idx = clicked_idx
+			get_viewport().set_input_as_handled()
+		else:
+			# Plain click — handle selection explicitly (SELECT_MULTI doesn't fire item_selected)
+			_beat_list.deselect_all()
+			_beat_list.select(clicked_idx, true)
+			_selected_idx = clicked_idx
+			_anchor_idx = clicked_idx
+			_populate_fields()
+			_show_fields(true)
+			_drag_from_idx = clicked_idx
+			get_viewport().set_input_as_handled()
+	else:
+		# Mouse released — complete drag-reorder for plain clicks only
+		if not mbe.shift_pressed and not mbe.ctrl_pressed and not mbe.meta_pressed:
+			if _drag_from_idx >= 0:
+				var drop_idx: int = _beat_list.get_item_at_position(mbe.position, false)
+				if drop_idx >= 0 and drop_idx != _drag_from_idx:
+					_move_beat_to(_drag_from_idx, drop_idx)
+			_drag_from_idx = -1
 
 func _add_beat() -> void:
 	if _file_path.is_empty():
@@ -1750,6 +1928,8 @@ func _add_beat() -> void:
 	else:
 		_beats.append(new_beat)
 		_selected_idx = _beats.size() - 1
+	_beat_modified.clear()
+	_anchor_idx = _selected_idx
 	_refresh_beat_list()
 	_beat_list.select(_selected_idx)
 	_populate_fields()
@@ -1762,17 +1942,28 @@ func _duplicate_beat() -> void:
 	var copy: Dictionary = _beats[_selected_idx].duplicate(true)
 	_beats.insert(_selected_idx + 1, copy)
 	_selected_idx += 1
+	_beat_modified.clear()
+	_anchor_idx = _selected_idx
 	_refresh_beat_list()
 	_beat_list.select(_selected_idx)
 	_populate_fields()
 	_dirty = true
 
 func _delete_beat() -> void:
-	if _selected_idx < 0:
+	var selected: PackedInt32Array = _beat_list.get_selected_items()
+	if selected.is_empty():
 		return
-	_beats.remove_at(_selected_idx)
-	if _selected_idx >= _beats.size():
-		_selected_idx = _beats.size() - 1
+	# Delete from highest index to lowest so earlier indices stay valid
+	var sorted: Array[int] = []
+	for idx: int in selected:
+		sorted.append(idx)
+	sorted.sort()
+	sorted.reverse()
+	for idx: int in sorted:
+		_beats.remove_at(idx)
+	_beat_modified.clear()
+	_selected_idx = mini(int(selected[0]), _beats.size() - 1)
+	_anchor_idx = _selected_idx
 	_refresh_beat_list()
 	if _selected_idx >= 0:
 		_beat_list.select(_selected_idx)
@@ -1789,6 +1980,8 @@ func _move_beat_up() -> void:
 	_beats[_selected_idx - 1] = _beats[_selected_idx]
 	_beats[_selected_idx] = tmp
 	_selected_idx -= 1
+	_anchor_idx = _selected_idx
+	_beat_modified.clear()
 	_refresh_beat_list()
 	_beat_list.select(_selected_idx)
 	_dirty = true
@@ -1800,6 +1993,8 @@ func _move_beat_down() -> void:
 	_beats[_selected_idx + 1] = _beats[_selected_idx]
 	_beats[_selected_idx] = tmp
 	_selected_idx += 1
+	_anchor_idx = _selected_idx
+	_beat_modified.clear()
 	_refresh_beat_list()
 	_beat_list.select(_selected_idx)
 	_dirty = true
@@ -1836,6 +2031,10 @@ func _save() -> void:
 	f.store_string(JSON.stringify(_beats, "\t"))
 	f.close()
 	_dirty = false
+	_beat_modified.clear()
+	_file_cache.erase(_file_path)
+	_refresh_beat_list()
+	_refresh_file_list_colors()
 	_status_lbl.text = "Saved  (%d beats)  →  %s" % [_beats.size(), _file_path.get_file()]
 
 # ─────────────────────────────────────────────────────────────

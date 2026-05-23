@@ -86,6 +86,13 @@ func start_logging(board: Node) -> void:
 	GameState.card_revealed.connect(_on_card_revealed)
 	GameState.crystals_changed.connect(_on_crystals_changed)
 	GameState.turn_changed.connect(_on_turn_changed)
+	GameState.message_posted.connect(_on_message_posted)
+	GameState.dice_rolled.connect(_on_dice_rolled)
+	GameState.card_atk_changed.connect(_on_card_atk_changed)
+	GameState.card_def_changed.connect(_on_card_def_changed)
+	GameState.card_flag_added.connect(_on_card_flag_added)
+	GameState.card_flag_removed.connect(_on_card_flag_removed)
+	GameState.union_summoned.connect(_on_union_summoned)
 	_tm_ref.attack_completed.connect(_on_attack_completed)
 	_tm_ref.tech_played.connect(_on_tech_played)
 	_tm_ref.turn_ended.connect(_on_turn_ended)
@@ -93,6 +100,11 @@ func start_logging(board: Node) -> void:
 	_tm_ref.awaiting_trap_choice.connect(_on_choice_prompt)
 	_tm_ref.awaiting_defender_choice.connect(_on_defender_choice_prompt)
 	_tm_ref.awaiting_target_selection.connect(_on_target_prompt)
+	_tm_ref.ability_choice_resolved.connect(_on_ability_choice_resolved)
+	_tm_ref.mode_selected.connect(_on_mode_selected)
+	_tm_ref.attack_aborted.connect(_on_attack_aborted)
+	_tm_ref.tech_resolved.connect(_on_tech_resolved)
+	_tm_ref.attack_phase_started.connect(_on_attack_phase_started)
 
 	# AI player signals (decisions made before execution)
 	_ai0_ref = _board_ref.ai_player_0
@@ -177,6 +189,20 @@ func _disconnect_all() -> void:
 		GameState.crystals_changed.disconnect(_on_crystals_changed)
 	if GameState.turn_changed.is_connected(_on_turn_changed):
 		GameState.turn_changed.disconnect(_on_turn_changed)
+	if GameState.message_posted.is_connected(_on_message_posted):
+		GameState.message_posted.disconnect(_on_message_posted)
+	if GameState.dice_rolled.is_connected(_on_dice_rolled):
+		GameState.dice_rolled.disconnect(_on_dice_rolled)
+	if GameState.card_atk_changed.is_connected(_on_card_atk_changed):
+		GameState.card_atk_changed.disconnect(_on_card_atk_changed)
+	if GameState.card_def_changed.is_connected(_on_card_def_changed):
+		GameState.card_def_changed.disconnect(_on_card_def_changed)
+	if GameState.card_flag_added.is_connected(_on_card_flag_added):
+		GameState.card_flag_added.disconnect(_on_card_flag_added)
+	if GameState.card_flag_removed.is_connected(_on_card_flag_removed):
+		GameState.card_flag_removed.disconnect(_on_card_flag_removed)
+	if GameState.union_summoned.is_connected(_on_union_summoned):
+		GameState.union_summoned.disconnect(_on_union_summoned)
 	if _tm_ref != null:
 		if _tm_ref.attack_completed.is_connected(_on_attack_completed):
 			_tm_ref.attack_completed.disconnect(_on_attack_completed)
@@ -192,6 +218,16 @@ func _disconnect_all() -> void:
 			_tm_ref.awaiting_defender_choice.disconnect(_on_defender_choice_prompt)
 		if _tm_ref.awaiting_target_selection.is_connected(_on_target_prompt):
 			_tm_ref.awaiting_target_selection.disconnect(_on_target_prompt)
+		if _tm_ref.ability_choice_resolved.is_connected(_on_ability_choice_resolved):
+			_tm_ref.ability_choice_resolved.disconnect(_on_ability_choice_resolved)
+		if _tm_ref.mode_selected.is_connected(_on_mode_selected):
+			_tm_ref.mode_selected.disconnect(_on_mode_selected)
+		if _tm_ref.attack_aborted.is_connected(_on_attack_aborted):
+			_tm_ref.attack_aborted.disconnect(_on_attack_aborted)
+		if _tm_ref.tech_resolved.is_connected(_on_tech_resolved):
+			_tm_ref.tech_resolved.disconnect(_on_tech_resolved)
+		if _tm_ref.attack_phase_started.is_connected(_on_attack_phase_started):
+			_tm_ref.attack_phase_started.disconnect(_on_attack_phase_started)
 	if _ai0_ref != null:
 		if _ai0_ref.ai_attack_chosen.is_connected(_on_ai0_attack_chosen):
 			_ai0_ref.ai_attack_chosen.disconnect(_on_ai0_attack_chosen)
@@ -336,6 +372,15 @@ func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 		a_name = "(self-destroyed)"
 	else:
 		a_name = "?"
+	# Dead-end attack: no real defender — log as MISS, not TIE
+	if def_card != null and def_card.card_type == "dead_end":
+		log_event("Attack P%d(%d,%d)\"%s\" → P%d(%d,%d)(empty)  Dice=%d  → MISS" % [
+			atk_player, attacker_pos.x, attacker_pos.y, a_name,
+			def_player, target_pos.x, target_pos.y,
+			GameState.dice_result])
+		log_event("Anim: 3F  (blank slot)")
+		return
+
 	var d_name: String
 	if def_card != null and not def_card.card_name.is_empty():
 		d_name = def_card.card_name
@@ -382,7 +427,12 @@ func _on_turn_ended(player_index: int) -> void:
 		player_index, GameState.crystals[0], GameState.crystals[1]])
 
 func _on_card_destroyed(player_index: int, row: int, col: int) -> void:
-	log_event("Card destroyed  P%d (%d,%d)" % [player_index, row, col])
+	# Signal fires before place_dead_end() clears the slot, so card name is still readable.
+	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
+	if card == null or card.card_type == "dead_end" or card.card_name.is_empty():
+		log_event("Dead-end placed  P%d (%d,%d)" % [player_index, row, col])
+	else:
+		log_event("Card destroyed  P%d (%d,%d) \"%s\"" % [player_index, row, col, card.card_name])
 
 func _on_coin_flip(results: Array) -> void:
 	var strs: Array[String] = []
@@ -448,3 +498,86 @@ func _on_ai0_trap_choice(choice_index: int) -> void:
 
 func _on_ai1_trap_choice(choice_index: int) -> void:
 	log_event("AI1 choice: %d" % choice_index)
+
+# ── Additional signal handlers ────────────────────────────────────────────────
+
+## All post_message() calls — ability outcomes, tech effects, trap descriptions, etc.
+## Redundant messages already captured by structured log entries are suppressed.
+func _on_message_posted(text: String) -> void:
+	# Suppress: turn banner (captured by turn header)
+	if text.contains("'s turn — play a Tech"):
+		return
+	# Suppress: "Player X plays [tech]!" (captured by tech_played)
+	if text.begins_with("Player ") and text.contains(" plays ") and text.ends_with("!"):
+		return
+	# Suppress: "Player X ends their turn." (captured by turn_ended)
+	if text.begins_with("Player ") and text.contains("ends their turn"):
+		return
+	# Suppress: "X ATK N vs Y DEF N" battle comparison (captured by attack log)
+	if text.contains(" ATK ") and text.contains(" vs ") and text.contains(" DEF "):
+		return
+	# Suppress: "X defends successfully!" (captured by attack log outcome)
+	if text.ends_with(" defends successfully!"):
+		return
+	log_event("MSG: %s" % text)
+
+## Dice roll result (fired by GameState after every roll).
+func _on_dice_rolled(result: int) -> void:
+	log_event("Dice rolled: %d" % result)
+
+## ATK stat changed on a card (buff/debuff, ability effect, etc.).
+func _on_card_atk_changed(player_index: int, row: int, col: int, old_val: int, new_val: int) -> void:
+	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
+	var name_str: String = card.card_name if card != null else "?"
+	log_event("ATK changed P%d(%d,%d)\"%s\": %d → %d" % [player_index, row, col, name_str, old_val, new_val])
+
+## DEF stat changed on a card.
+func _on_card_def_changed(player_index: int, row: int, col: int, old_val: int, new_val: int) -> void:
+	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
+	var name_str: String = card.card_name if card != null else "?"
+	log_event("DEF changed P%d(%d,%d)\"%s\": %d → %d" % [player_index, row, col, name_str, old_val, new_val])
+
+## Yes/No ability choice resolved (Armored Dino, etc.).
+func _on_ability_choice_resolved(choice_index: int) -> void:
+	var label: String = "Yes" if choice_index == 0 else "No"
+	log_event("Ability choice resolved: %d (%s)" % [choice_index, label])
+
+## Attack was aborted (invalid target, already attacked, berserk block, etc.).
+## The reason is captured by the MSG: line posted by post_message() just before the signal fires.
+func _on_attack_aborted() -> void:
+	log_event("Attack aborted")
+
+## Tech effect fully resolved (async techs like Spy, Great Diplomacy, etc. complete here).
+func _on_tech_resolved(player_index: int) -> void:
+	log_event("Tech resolved  P%d" % player_index)
+
+## Card flag added (mutagen, venom, berserk, etc.).
+func _on_card_flag_added(player_index: int, row: int, col: int, flag: String) -> void:
+	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
+	var name_str: String = card.card_name if card != null and not card.card_name.is_empty() else "?"
+	log_event("Flag+ P%d(%d,%d)\"%s\": %s" % [player_index, row, col, name_str, flag])
+
+## Card flag removed.
+func _on_card_flag_removed(player_index: int, row: int, col: int, flag: String) -> void:
+	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
+	var name_str: String = card.card_name if card != null and not card.card_name.is_empty() else "?"
+	log_event("Flag- P%d(%d,%d)\"%s\": %s" % [player_index, row, col, name_str, flag])
+
+## Union summoned — fires before crystal cost is paid.
+func _on_union_summoned(player: int, union_name: String, material_names: Array) -> void:
+	log_event("Union summoned P%d: [%s] from %s" % [
+		player, union_name, ", ".join(PackedStringArray(material_names))])
+
+## Attack phase started — shows how many attacks this player has this turn.
+func _on_attack_phase_started(player_index: int, max_attacks: int) -> void:
+	log_event("Attack phase P%d: %d attack(s) available" % [player_index, max_attacks])
+
+## Turn mode selected (ATTACK / TECH / NONE).
+func _on_mode_selected(player_index: int, mode: GameState.TurnMode) -> void:
+	var mode_name: String
+	match mode:
+		GameState.TurnMode.ATTACK: mode_name = "ATTACK"
+		GameState.TurnMode.TECH:   mode_name = "TECH"
+		GameState.TurnMode.NONE:   mode_name = "NONE"
+		_:                         mode_name = str(mode)
+	log_event("Mode selected P%d: %s" % [player_index, mode_name])

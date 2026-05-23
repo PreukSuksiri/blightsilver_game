@@ -3,10 +3,10 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png",
+				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175,
-				"crop_bottom": 30
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -19,83 +19,306 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
-    "characters":[],
-    "text":"**Splush** **Splush**"
+		"characters": [],
+		"text": "**Splush** **Splush**"
 	},
 	{
 		"wait": 0.5
 	},
-{
+	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
-    "characters":[],
-    "text":"The splatting voice is coming closer..."
+		"characters": [],
+		"text": "The splatting voice is coming closer..."
 	},
 	{
 		"wait": 0.5
 	},
-  {
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Thanks... Err... What now...?"
+		}
+	},
+	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
-    "characters":[],
-     "bg_ken_burns": { "pan_y": 30,"pan_x": -30, "duration": 2.0, "zoom": 1.1},                                                                                                                
-    "shake_screen": 25.0,
-    "music":"res://assets/audio/bgm_horror_1.mp3",
-    "wait": 2,
-    "text":"!!!"
-	}
-  ,
-  {
+		"bg_ken_burns": {
+			"duration": 2.0,
+			"pan_x": -30.0,
+			"pan_y": 30.0,
+			"zoom": 1.1
+		},
+		"characters": [],
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"shake_screen": 25.0,
+		"text": "!!!",
+		"wait": 2.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Thanks... Err... What now...?"
+		}
+	},
+	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
-    "characters":[]
-	}
-  ,
-  {
+		"characters": []
+	},
+	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
-    "characters":[],
-    "text":"Mayu's body is covered in blood. She crawled on four legs. Gruesome smile is welcoming the tasty friends"
-	}
-  ,
-  {
+		"characters": [],
+		"text": "Mayu's body is covered in blood. She crawled on four legs. Gruesome smile is welcoming the tasty friends"
+	},
+	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_mayu_crawl_on_table_2.png",
-    "speaker": "Possessed Mayu",
-    "characters":[],
-    "text":"(mumbles unrecognized words)"
+		"characters": [],
+		"speaker": "Possessed Mayu",
+		"text": "(mumbles unrecognized words)"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "You are going to be my assistant tonight. We are going for a ghost busting at the library."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Tonight...!? So suddenly... Ummm...."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "No... That's not what I meant.... I... Err..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Thanks... Err... What now...?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Tonight...!? So suddenly... Ummm...."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "You are going to be my assistant tonight. We are going for a ghost busting at the library."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Tonight...!? So suddenly... Ummm...."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "No... That's not what I meant.... I... Err..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Thanks... Err... What now...?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "You are going to be my assistant tonight. We are going for a ghost busting at the library."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Tonight...!? So suddenly... Ummm...."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "No... That's not what I meant.... I... Err..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "No... That's not what I meant.... I... Err..."
+		}
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_warning.png",
+				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175,
-				"crop_bottom": 30
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_warning.png"
 			},
-      {
-				"sprite": "res://assets/textures/vn/characters/assets/textures/vn/characters/vn_char_mayu_possessed_2.png",
+			{
+				"crop_bottom": 30.0,
 				"position": "left",
-				"scale": 175,
-				"crop_bottom": 30
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
 		],
 		"speaker": "Kelly",
 		"text": {
 			"en": "Nex!! Use the Vellum Card!!"
 		}
-	}
-  ,
+	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png",
+				"crop_bottom": 30.0,
 				"position": "right",
-				"scale": 175,
-				"crop_bottom": 30
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png"
 			},
-      {
-				"sprite": "res://assets/textures/vn/characters/assets/textures/vn/characters/vn_char_mayu_possessed_2.png",
+			{
+				"crop_bottom": 30.0,
 				"position": "left",
-				"scale": 175,
-				"crop_bottom": 30
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
 			}
 		],
 		"speaker": "Nex",

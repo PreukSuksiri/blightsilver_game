@@ -9,7 +9,7 @@ const ART_PLACEHOLDER := preload("res://assets/textures/cards/placeholder.png")
 const CHIVO_FONT      := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 const SFX_CLANK       := preload("res://assets/audio/sound_axe1.mp3")
 const SFX_GEAR        := preload("res://assets/audio/sound_sledgehammer1.mp3")
-const SFX_SHATTER     := preload("res://assets/audio/sound_glass_2.mp3")
+const SFX_SHATTER     := preload("res://assets/audio/sfx/ceramic.mp3")
 const SFX_SWOOSH      := preload("res://assets/audio/sound_swoosh_2.mp3")
 const SFX_SPELL       := preload("res://assets/audio/sound_spellcasting_2.mp3")
 

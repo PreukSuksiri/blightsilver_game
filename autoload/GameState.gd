@@ -40,6 +40,7 @@ signal card_def_changed(player_index: int, row: int, col: int, old_val: int, new
 signal bluff_changed(player_index: int, row: int, col: int, emoticon: String)
 signal attack_target_selected(attacker_player: int, target_player: int, row: int, col: int)
 signal tech_target_selected(user_player: int, target_player: int, row: int, col: int)
+signal union_summoned(player: int, union_name: String, material_names: Array)
 
 # ─────────────────────────────────────────────────────────────
 # Constants

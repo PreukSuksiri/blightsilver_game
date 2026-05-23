@@ -59,6 +59,10 @@ var _turn_number_bg: TextureRect = null
 
 # Options menu & battle log
 var _battle_log_lines: Array[String] = []
+# File log for VS_AI / HOT_SEAT modes
+var _session_log_file: FileAccess = null
+var _session_log_start_msec: int = 0
+var _session_log_prev_crystals: Array[int] = [0, 0]
 var _ai_watchdog: Timer = null
 var _card_name_to_type: Dictionary = {}   # card_name -> "character"|"trap"|"tech"
 var _options_panel: Control = null
@@ -300,6 +304,8 @@ func _ready() -> void:
 	_start_game()
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
 		AIvsAIManager.start_logging(self)
+	elif GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.HOT_SEAT]:
+		_open_session_log()
 	CheckerTransition.fade_in()
 
 # ─────────────────────────────────────────────────────────────
@@ -2539,6 +2545,8 @@ func _perform_pending_union() -> void:
 	for _mc: Vector2i in _pending_union_selected_materials:
 		var _card: GameState.CardInstance = GameState.get_card(player, _mc.x, _mc.y)
 		material_names.append(_card.card_name if _card else "?")
+	# Announce union before cost is paid so log order is: summon → cost → reveal
+	GameState.union_summoned.emit(player, u.card_name, material_names)
 	# Pay crystal cost (Dimensional Gate: unions cost 0 and are destroyed next turn start)
 	var _union_cost: int = u.summon_cost
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
@@ -6564,6 +6572,9 @@ func _on_game_over(winner: int) -> void:
 		AIvsAIManager.on_game_over(winner)
 		return
 
+	# ── VS_AI / HOT_SEAT: close session log ──────────────────────────────────
+	_close_session_log(winner)
+
 	# ── Immediately halt AI and lock out all input ───────────────────────────
 	# Stop the AI watchdog so it cannot re-trigger another AI turn
 	if _ai_watchdog:
@@ -6949,3 +6960,227 @@ func _show_endgame_screen(winner: int) -> void:
 	# Fade in the endgame screen
 	var ft := create_tween()
 	ft.tween_property(overlay, "modulate:a", 1.0, 0.7)
+
+# ─────────────────────────────────────────────────────────────
+# Session log — lightweight file logging for VS_AI / HOT_SEAT
+# ─────────────────────────────────────────────────────────────
+
+func _open_session_log() -> void:
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://logs"))
+	var dt: Dictionary = Time.get_datetime_dict_from_system()
+	var mode_tag: String = "vs_ai" if GameState.game_mode == GameState.GameMode.VS_AI else "hot_seat"
+	var path: String = "res://logs/%s_%04d-%02d-%02d_%02d-%02d-%02d.txt" % [
+		mode_tag, dt["year"], dt["month"], dt["day"],
+		dt["hour"], dt["minute"], dt["second"]]
+	_session_log_file = FileAccess.open(path, FileAccess.WRITE)
+	_session_log_start_msec = Time.get_ticks_msec()
+	_session_log_prev_crystals = [GameState.crystals[0], GameState.crystals[1]]
+
+	if _session_log_file == null:
+		return
+
+	_session_log_file.store_line("=== %s Match ===" % mode_tag.to_upper().replace("_", " "))
+	_session_log_file.store_line("Started: %04d-%02d-%02d %02d:%02d:%02d" % [
+		dt["year"], dt["month"], dt["day"], dt["hour"], dt["minute"], dt["second"]])
+	_session_log_file.store_line("===")
+	_session_log_file.store_line("")
+
+	# Connect signals for session log
+	GameState.turn_changed.connect(_session_on_turn_changed)
+	GameState.message_posted.connect(_session_on_message)
+	GameState.crystals_changed.connect(_session_on_crystals)
+	GameState.card_destroyed.connect(_session_on_card_destroyed)
+	GameState.card_revealed.connect(_session_on_card_revealed)
+	GameState.dice_rolled.connect(_session_on_dice_rolled)
+	GameState.card_atk_changed.connect(_session_on_card_stat_changed.bind("ATK"))
+	GameState.card_def_changed.connect(_session_on_card_stat_changed.bind("DEF"))
+	GameState.union_summoned.connect(_session_on_union_summoned)
+	turn_manager.attack_completed.connect(_session_on_attack_completed)
+	turn_manager.tech_played.connect(_session_on_tech_played)
+	turn_manager.tech_resolved.connect(_session_on_tech_resolved)
+	turn_manager.turn_ended.connect(_session_on_turn_ended)
+	turn_manager.attack_aborted.connect(_session_on_attack_aborted)
+	turn_manager.mode_selected.connect(_session_on_mode_selected)
+	turn_manager.coin_flip_visual_requested.connect(_session_on_coin_flip)
+	turn_manager.awaiting_target_selection.connect(_session_on_target_prompt)
+	turn_manager.ability_choice_resolved.connect(_session_on_ability_choice_resolved)
+
+func _close_session_log(winner: int) -> void:
+	if _session_log_file == null:
+		return
+	var result_str: String
+	match winner:
+		-1: result_str = "Draw"
+		0:  result_str = "Player 1 wins"
+		1:  result_str = "Player 2 wins"
+		_:  result_str = "Unknown"
+	_session_log_file.store_line("")
+	_session_log_file.store_line("=== GAME OVER: %s ===" % result_str)
+	_session_log_file.store_line("Final crystals — P0: %d  P1: %d  |  Turns: %d" % [
+		GameState.crystals[0], GameState.crystals[1], GameState.turn_number])
+	_session_log_file.close()
+	_session_log_file = null
+	# Disconnect
+	if GameState.turn_changed.is_connected(_session_on_turn_changed):
+		GameState.turn_changed.disconnect(_session_on_turn_changed)
+	if GameState.message_posted.is_connected(_session_on_message):
+		GameState.message_posted.disconnect(_session_on_message)
+	if GameState.crystals_changed.is_connected(_session_on_crystals):
+		GameState.crystals_changed.disconnect(_session_on_crystals)
+	if GameState.card_destroyed.is_connected(_session_on_card_destroyed):
+		GameState.card_destroyed.disconnect(_session_on_card_destroyed)
+	if GameState.card_revealed.is_connected(_session_on_card_revealed):
+		GameState.card_revealed.disconnect(_session_on_card_revealed)
+	if GameState.dice_rolled.is_connected(_session_on_dice_rolled):
+		GameState.dice_rolled.disconnect(_session_on_dice_rolled)
+	if GameState.card_atk_changed.is_connected(_session_on_card_stat_changed):
+		GameState.card_atk_changed.disconnect(_session_on_card_stat_changed)
+	if GameState.card_def_changed.is_connected(_session_on_card_stat_changed):
+		GameState.card_def_changed.disconnect(_session_on_card_stat_changed)
+	if GameState.union_summoned.is_connected(_session_on_union_summoned):
+		GameState.union_summoned.disconnect(_session_on_union_summoned)
+	if turn_manager != null:
+		if turn_manager.attack_completed.is_connected(_session_on_attack_completed):
+			turn_manager.attack_completed.disconnect(_session_on_attack_completed)
+		if turn_manager.tech_played.is_connected(_session_on_tech_played):
+			turn_manager.tech_played.disconnect(_session_on_tech_played)
+		if turn_manager.tech_resolved.is_connected(_session_on_tech_resolved):
+			turn_manager.tech_resolved.disconnect(_session_on_tech_resolved)
+		if turn_manager.turn_ended.is_connected(_session_on_turn_ended):
+			turn_manager.turn_ended.disconnect(_session_on_turn_ended)
+		if turn_manager.attack_aborted.is_connected(_session_on_attack_aborted):
+			turn_manager.attack_aborted.disconnect(_session_on_attack_aborted)
+		if turn_manager.mode_selected.is_connected(_session_on_mode_selected):
+			turn_manager.mode_selected.disconnect(_session_on_mode_selected)
+		if turn_manager.coin_flip_visual_requested.is_connected(_session_on_coin_flip):
+			turn_manager.coin_flip_visual_requested.disconnect(_session_on_coin_flip)
+		if turn_manager.awaiting_target_selection.is_connected(_session_on_target_prompt):
+			turn_manager.awaiting_target_selection.disconnect(_session_on_target_prompt)
+		if turn_manager.ability_choice_resolved.is_connected(_session_on_ability_choice_resolved):
+			turn_manager.ability_choice_resolved.disconnect(_session_on_ability_choice_resolved)
+
+func _session_log(msg: String) -> void:
+	if _session_log_file == null:
+		return
+	var elapsed_ms: int = Time.get_ticks_msec() - _session_log_start_msec
+	var s: int = elapsed_ms / 1000
+	var ms: int = elapsed_ms % 1000
+	var min_: int = s / 60
+	s = s % 60
+	_session_log_file.store_line("[%02d:%02d.%03d] %s" % [min_, s, ms, msg])
+
+func _session_on_turn_changed(player: int) -> void:
+	var c0: int = GameState.crystals[0]
+	var c1: int = GameState.crystals[1]
+	_session_log_file.store_line("")
+	_session_log_file.store_line("--- Turn %d  |  Player %d  |  Crystals P0=%d P1=%d ---" % [
+		GameState.turn_number, player, c0, c1])
+	_session_log_prev_crystals[0] = c0
+	_session_log_prev_crystals[1] = c1
+
+func _session_on_message(text: String) -> void:
+	if text.contains("'s turn — play a Tech"):
+		return
+	if text.begins_with("Player ") and text.contains(" plays ") and text.ends_with("!"):
+		return
+	if text.begins_with("Player ") and text.contains("ends their turn"):
+		return
+	if text.contains(" ATK ") and text.contains(" vs ") and text.contains(" DEF "):
+		return
+	if text.ends_with(" defends successfully!"):
+		return
+	_session_log("MSG: %s" % text)
+
+func _session_on_crystals(player: int, new_amount: int, reason: String) -> void:
+	var delta: int = new_amount - _session_log_prev_crystals[player]
+	if delta == 0:
+		_session_log_prev_crystals[player] = new_amount
+		return
+	var sign: String = "+" if delta >= 0 else ""
+	var reason_tag: String = "  [%s]" % reason if not reason.is_empty() else ""
+	_session_log("Crystals: P%d %d → %d (%s%d)%s" % [
+		player, _session_log_prev_crystals[player], new_amount, sign, delta, reason_tag])
+	_session_log_prev_crystals[player] = new_amount
+
+func _session_on_card_destroyed(player_index: int, row: int, col: int) -> void:
+	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
+	if card == null or card.card_type == "dead_end" or card.card_name.is_empty():
+		_session_log("Dead-end placed  P%d (%d,%d)" % [player_index, row, col])
+	else:
+		_session_log("Card destroyed  P%d (%d,%d) \"%s\"" % [player_index, row, col, card.card_name])
+
+func _session_on_card_revealed(player_index: int, row: int, col: int) -> void:
+	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
+	if card == null or card.card_name.is_empty():
+		return
+	_session_log("Revealed: P%d (%d,%d) \"%s\"" % [player_index, row, col, card.card_name])
+
+func _session_on_dice_rolled(result: int) -> void:
+	_session_log("Dice rolled: %d" % result)
+
+func _session_on_card_stat_changed(player_index: int, row: int, col: int,
+		old_val: int, new_val: int, stat: String) -> void:
+	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
+	var name_str: String = card.card_name if card != null and not card.card_name.is_empty() else "?"
+	_session_log("%s changed P%d(%d,%d)\"%s\": %d → %d" % [stat, player_index, row, col, name_str, old_val, new_val])
+
+func _session_on_union_summoned(player: int, union_name: String, material_names: Array) -> void:
+	_session_log("Union summoned P%d: [%s] from %s" % [
+		player, union_name, ", ".join(PackedStringArray(material_names))])
+
+func _session_on_tech_resolved(player_index: int) -> void:
+	_session_log("Tech resolved  P%d" % player_index)
+
+func _session_on_turn_ended(player_index: int) -> void:
+	_session_log("Turn ended  P%d  |  Crystals P0=%d P1=%d" % [
+		player_index, GameState.crystals[0], GameState.crystals[1]])
+
+func _session_on_mode_selected(player_index: int, mode: GameState.TurnMode) -> void:
+	var mode_name: String
+	match mode:
+		GameState.TurnMode.ATTACK: mode_name = "ATTACK"
+		GameState.TurnMode.TECH:   mode_name = "TECH"
+		GameState.TurnMode.NONE:   mode_name = "NONE"
+		_:                         mode_name = str(mode)
+	_session_log("Mode selected P%d: %s" % [player_index, mode_name])
+
+func _session_on_coin_flip(results: Array) -> void:
+	var strs: Array[String] = []
+	for r: Variant in results:
+		strs.append("Heads" if r else "Tails")
+	_session_log("Coin flip: " + ", ".join(PackedStringArray(strs)))
+
+func _session_on_target_prompt(prompt: String, filter: String) -> void:
+	_session_log("Target prompt: \"%s\"  filter=%s" % [prompt, filter])
+
+func _session_on_ability_choice_resolved(choice_index: int) -> void:
+	var label: String = "Yes" if choice_index == 0 else "No"
+	_session_log("Ability choice: %d (%s)" % [choice_index, label])
+
+func _session_on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
+		result: BattleResolver.BattleResult) -> void:
+	var atk_player: int = GameState.current_player
+	var def_player: int = GameState.get_opponent(atk_player)
+	if result.special_trigger == "trap_effect":
+		var trap: Variant = result.special_params.get("trap_data", null)
+		var tname: String = trap.card_name if trap != null else "?"
+		_session_log("Trap: \"%s\" triggered  P%d(%d,%d)→P%d(%d,%d)" % [
+			tname, atk_player, attacker_pos.x, attacker_pos.y,
+			def_player, target_pos.x, target_pos.y])
+		return
+	var atk_card: GameState.CardInstance = GameState.get_card(atk_player, attacker_pos.x, attacker_pos.y)
+	var def_card: GameState.CardInstance = GameState.get_card(def_player, target_pos.x, target_pos.y)
+	var a_name: String = atk_card.card_name if atk_card != null and not atk_card.card_name.is_empty() else "?"
+	var d_name: String = def_card.card_name if def_card != null and not def_card.card_name.is_empty() else "(dead-end)"
+	var outcome: String = "WIN" if result.defender_destroyed and not result.attacker_destroyed \
+		else "LOSE" if result.attacker_destroyed and not result.defender_destroyed else "TIE"
+	_session_log("Attack P%d(%d,%d)\"%s\" → P%d(%d,%d)\"%s\"  Dice=%d  ATK=%d vs DEF=%d  → %s" % [
+		atk_player, attacker_pos.x, attacker_pos.y, a_name,
+		def_player, target_pos.x, target_pos.y, d_name,
+		GameState.dice_result, result.attacker_atk_used, result.defender_def_used, outcome])
+
+func _session_on_tech_played(player_index: int, tech_name: String) -> void:
+	_session_log("Tech played  P%d: \"%s\"" % [player_index, tech_name])
+
+func _session_on_attack_aborted() -> void:
+	_session_log("Attack aborted")

@@ -1,0 +1,361 @@
+=== AI vs AI Match ===
+Started:  2026-05-23 15:24:27
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Blood Ritual, Double Spy, Spy
+P1 Tech hand: Ceasefire, Wisp Light, Harsh Training
+P0:   [C:Hand][T:Bunk][C:Demo][C:Spea][T:Echo]
+      [  — ][  — ][C:Dark][T:Hard][T:Chec]
+      [  — ][  — ][C:Bat ][  — ][  — ]
+      [  — ][C:Lab ][  — ][  — ][  — ]
+      [T:Flam][C:Deat][C:Saw ][T:Red ][C:Iron]
+P1:   [C:Gamm][T:Brai][C:Tomb][T:Self][C:Leop]
+      [  — ][  — ][  — ][C:Mars][  — ]
+      [  — ][  — ][C:Dark][  — ][  — ]
+      [  — ][C:Need][  — ][T:Hypn][  — ]
+      [T:Bunk][C:Tiny][T:Red ][C:Lab ][T:Mana]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.589] Tech played  P1: "Ceasefire"
+[00:07.137] Turn ended  P1  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:07.139] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 3  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:07.140] Turn ended  P1  |  Crystals P0=5000 P1=5000
+
+--- Turn 4  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:08.042] Tech played  P0: "Spy"
+[00:09.572] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:09.971] AI0 target chosen: (0,4)
+[00:09.971] Revealed: P1 (0,4) "Leopard Jailer"
+[00:11.183] AI0 attack decision: (4,1)"Death Knight" [ATK=65] → (0,4) "Leopard Jailer" [DEF=45]
+[00:11.484] Revealed: P0 (4,1) "Death Knight"
+[00:16.166] Crystals: P1 5000 → 4550 (-450)  [battle]
+[00:17.561] Card destroyed  P1 (0,4)
+[00:17.567] Attack P0(4,1)"Death Knight" → P1(0,4)"(destroyed)"  Dice=4  ATK=65 vs DEF=45  → WIN
+[00:17.567] Anim: 3A  △ P1(0,4)
+[00:18.349] AI0 attack decision: (3,1)"Lab Bloater" [ATK=20] → (2,2) "Dark Blob" [DEF=50]
+[00:18.658] Revealed: P0 (3,1) "Lab Bloater"
+[00:18.658] Revealed: P1 (2,2) "Dark Blob"
+[00:23.467] Crystals: P0 5000 → 4200 (-800)  [battle]
+[00:24.859] Card destroyed  P0 (3,1)
+[00:24.868] Attack P0(3,1)"(self-destroyed)" → P1(2,2)"Dark Blob"  Dice=1  ATK=20 vs DEF=50  → LOSE
+[00:24.868] Anim: 3B  △ P0(3,1)
+[00:25.370] Turn ended  P0  |  Crystals P0=4200 P1=4550
+
+--- Turn 5  |  Player 1  |  Crystals P0=4200 P1=4550 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Deat][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Dark][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:26.271] Crystals: P1 4550 → 4050 (-500)  [tech cost]
+[00:27.653] Tech played  P1: "Harsh Training"
+[00:29.193] Target prompt: "Choose 1 face-up character to boost."  filter=own_faceup_character
+[00:29.592] AI1 target chosen: (2,2)
+[00:30.783] AI1 attack decision: (2,2)"Dark Blob" [ATK=75] → (4,1) "Death Knight" [DEF=65]
+[00:35.767] Crystals: P0 4200 → 3420 (-780)  [battle]
+[00:37.152] Card destroyed  P0 (4,1)
+[00:37.157] Attack P1(2,2)"Dark Blob" → P0(4,1)"(destroyed)"  Dice=3  ATK=75 vs DEF=65  → WIN
+[00:37.157] Anim: 3A  △ P0(4,1)
+[00:39.682] Turn ended  P1  |  Crystals P0=3420 P1=4050
+
+--- Turn 6  |  Player 0  |  Crystals P0=3420 P1=4050 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Dark][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:40.599] Tech played  P0: "Double Spy"
+[00:42.130] Target prompt: "Choose 2 square(s) to reveal on opponent's field."  filter=opponent_squares_2
+[00:42.529] AI0 target chosen: (0,0)
+[00:42.529] Revealed: P1 (0,0) "Gamma Emitter"
+[00:42.932] AI0 target chosen: (2,0)
+[00:44.149] AI0 attack decision: (0,3)"Spear Shark" [ATK=50] → (0,0) "Gamma Emitter" [DEF=15]
+[00:44.450] Revealed: P0 (0,3) "Spear Shark"
+[00:50.733] Crystals: P1 4050 → 3830 (-220)  [battle]
+[00:52.126] Card destroyed  P1 (0,0)
+[00:52.134] Attack P0(0,3)"Spear Shark" → P1(0,0)"(destroyed)"  Dice=2  ATK=50 vs DEF=25  → WIN
+[00:52.134] Anim: 3A  △ P1(0,0)
+[00:52.937] AI0 attack decision: (0,2)"Demon Spawn" [ATK=40] → (4,2) "Red Card" [DEF=0]
+[00:53.238] Revealed: P0 (0,2) "Demon Spawn"
+[00:53.238] Revealed: P1 (4,2) "Red Card"
+[00:57.631] Card destroyed  P1 (4,2)
+[00:57.699] Coin flip: Tails, Heads
+[01:00.459] Trap: "Red Card" triggered  P0(0,2)→P1(4,2)
+[01:00.459] Anim: 3D  (attacker survives)
+[01:00.957] Turn ended  P0  |  Crystals P0=3420 P1=3830
+
+--- Turn 7  |  Player 1  |  Crystals P0=3420 P1=3830 ---
+P0:   [  ? ][  ? ][Demo][Spea][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Dark][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:01.853] AI1 attack decision: (2,2)"Dark Blob" [ATK=80] → (0,3) "Spear Shark" [DEF=20]
+[01:06.833] Crystals: P0 3420 → 2940 (-480)  [battle]
+[01:08.231] Card destroyed  P0 (0,3)
+[01:08.239] Attack P1(2,2)"Dark Blob" → P0(0,3)"(destroyed)"  Dice=3  ATK=80 vs DEF=20  → WIN
+[01:08.239] Anim: 3A  △ P0(0,3)
+[01:09.136] AI1 attack decision: (1,3)"Mars Drill" [ATK=40] → (0,2) "Demon Spawn" [DEF=30]
+[01:09.446] Revealed: P1 (1,3) "Mars Drill"
+[01:14.132] Crystals: P0 2940 → 2540 (-400)  [battle]
+[01:15.528] Card destroyed  P0 (0,2)
+[01:15.535] Attack P1(1,3)"Mars Drill" → P0(0,2)"(destroyed)"  Dice=4  ATK=40 vs DEF=30  → WIN
+[01:15.535] Anim: 3A  △ P0(0,2)
+[01:16.154] Turn ended  P1  |  Crystals P0=2540 P1=3830
+
+--- Turn 8  |  Player 0  |  Crystals P0=2540 P1=3830 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][Mars][  — ]
+      [  — ][  — ][Dark][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:18.224] Crystals: P0 2540 → 1540 (-1000)  [union]
+[01:18.224] Revealed: P0 (1,2) "Lord of Terror"
+[01:21.949] AI0 attack decision: (1,2)"Lord of Terror" [ATK=200] → (2,2) "Dark Blob" [DEF=50]
+[01:26.933] Crystals: P1 3830 → 3330 (-500)  [battle]
+[01:28.328] Card destroyed  P1 (2,2)
+[01:28.335] Attack P0(1,2)"Lord of Terror" → P1(2,2)"(destroyed)"  Dice=4  ATK=200 vs DEF=50  → WIN
+[01:28.335] Anim: 3A  △ P1(2,2)
+[01:29.237] AI0 attack decision: (4,2)"Saw Shark" [ATK=25] → (0,2) "Tomb Bandit" [DEF=60]
+[01:29.537] Revealed: P0 (4,2) "Saw Shark"
+[01:29.537] Revealed: P1 (0,2) "Tomb Bandit"
+[01:34.350] Crystals: P0 1540 → 1260 (-280)  [battle]
+[01:35.744] Card destroyed  P0 (4,2)
+[01:35.752] Attack P0(4,2)"(self-destroyed)" → P1(0,2)"Tomb Bandit"  Dice=1  ATK=25 vs DEF=60  → LOSE
+[01:35.752] Anim: 3B  △ P0(4,2)
+[01:36.346] Turn ended  P0  |  Crystals P0=1260 P1=3330
+
+--- Turn 9  |  Player 1  |  Crystals P0=1260 P1=3330 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][Lord][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  ? ][Tomb][  ? ][  — ]
+      [  — ][  — ][  — ][Mars][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:37.245] AI1 attack decision: (0,2)"Tomb Bandit" [ATK=75] → (0,1) "Bunker" [DEF=0]
+[01:37.546] Revealed: P0 (0,1) "Bunker"
+[01:41.934] Card destroyed  P0 (0,1)
+[01:41.940] Attack P1(0,2)"Tomb Bandit" → P0(0,1)"(dead-end)"  Dice=4  ATK=0 vs DEF=0  → TIE
+[01:41.940] Anim: 3F  (blank slot)
+[01:42.828] AI1 attack decision: (1,3)"Mars Drill" [ATK=40] → (0,0) "Hands in the Attic" [DEF=20]
+[01:43.128] Revealed: P0 (0,0) "Hands in the Attic"
+[01:47.822] Crystals: P0 1260 → 960 (-300)  [battle]
+[01:49.216] Card destroyed  P0 (0,0)
+[01:49.224] Attack P1(1,3)"Mars Drill" → P0(0,0)"(destroyed)"  Dice=2  ATK=40 vs DEF=20  → WIN
+[01:49.224] Anim: 3A  △ P0(0,0)
+[01:49.840] Turn ended  P1  |  Crystals P0=960 P1=3330
+
+--- Turn 10  |  Player 0  |  Crystals P0=960 P1=3330 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Lord][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  ? ][Tomb][  ? ][  — ]
+      [  — ][  — ][  — ][Mars][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:50.733] AI0 attack decision: (1,2)"Lord of Terror" [ATK=200] → (0,2) "Tomb Bandit" [DEF=60]
+[01:55.725] Crystals: P1 3330 → 2430 (-900)  [battle]
+[01:57.118] Card destroyed  P1 (0,2)
+[01:57.126] Attack P0(1,2)"Lord of Terror" → P1(0,2)"(destroyed)"  Dice=5  ATK=200 vs DEF=60  → WIN
+[01:57.126] Anim: 3A  △ P1(0,2)
+[01:58.036] AI0 attack decision: (4,4)"Ironclad Sentinel" [ATK=55] → (1,3) "Mars Drill" [DEF=30]
+[01:58.346] Revealed: P0 (4,4) "Ironclad Sentinel"
+[02:03.024] Crystals: P1 2430 → 2030 (-400)  [battle]
+[02:04.419] Card destroyed  P1 (1,3)
+[02:04.425] Attack P0(4,4)"Ironclad Sentinel" → P1(1,3)"(destroyed)"  Dice=3  ATK=55 vs DEF=30  → WIN
+[02:04.425] Anim: 3A  △ P1(1,3)
+[02:05.024] Turn ended  P0  |  Crystals P0=960 P1=2030
+
+--- Turn 11  |  Player 1  |  Crystals P0=960 P1=2030 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Lord][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][Iron]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[02:05.933] AI1 attack decision: (3,1)"Needle Porcupine" [ATK=10] → (1,3) "Hard Scale" [DEF=0]
+[02:06.241] Revealed: P1 (3,1) "Needle Porcupine"
+[02:06.241] Revealed: P0 (1,3) "Hard Scale"
+[02:10.632] Card destroyed  P0 (1,3)
+[02:10.634] Crystals: P0 960 → 260 (-700)  [trap cost]
+[02:12.024] Target prompt: "Hard Scale: Choose 1 of your characters for +5 DEF this turn."  filter=own_faceup_for_trap_temp_def_boost
+[02:12.033] Trap: "Hard Scale" triggered  P1(3,1)→P0(1,3)
+[02:12.033] Anim: 3D  (attacker survives)
+[02:12.429] AI0 target chosen: (1,2)
+[02:14.646] Turn ended  P1  |  Crystals P0=260 P1=2030
+
+--- Turn 12  |  Player 0  |  Crystals P0=260 P1=2030 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Lord][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][Iron]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Need][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[02:15.549] AI0 attack decision: (1,2)"Lord of Terror" [ATK=200] → (3,1) "Needle Porcupine" [DEF=10]
+[02:20.546] Crystals: P1 2030 → 1830 (-200)  [battle]
+[02:21.939] Card destroyed  P1 (3,1)
+[02:21.945] Attack P0(1,2)"Lord of Terror" → P1(3,1)"(destroyed)"  Dice=3  ATK=200 vs DEF=10  → WIN
+[02:21.945] Anim: 3A  △ P1(3,1)
+[02:22.829] AI0 attack decision: (4,4)"Ironclad Sentinel" [ATK=55] → (0,3) "Self-destruct" [DEF=0]
+[02:23.128] Revealed: P1 (0,3) "Self-destruct"
+[02:27.521] Card destroyed  P1 (0,3)
+[02:27.526] Attack P0(4,4)"Ironclad Sentinel" → P1(0,3)"(dead-end)"  Dice=3  ATK=0 vs DEF=0  → TIE
+[02:27.526] Anim: 3F  (blank slot)
+[02:28.132] Turn ended  P0  |  Crystals P0=260 P1=1830
+
+--- Turn 13  |  Player 1  |  Crystals P0=260 P1=1830 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Lord][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][Iron]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[02:29.033] AI1 attack decision: (4,3)"Lab Bloater" [ATK=20] → (1,4) "Checkpoint" [DEF=0]
+[02:29.333] Revealed: P1 (4,3) "Lab Bloater"
+[02:29.334] Revealed: P0 (1,4) "Checkpoint"
+[02:33.742] Card destroyed  P0 (1,4)
+[02:33.752] Prompt: "Checkpoint"  [Lose 500 Crystals / Destroy your attacking character]
+[02:34.342] Crystals: P1 1830 → 1330 (-500)  [trap]
+[02:35.735] Trap: "Checkpoint" triggered  P1(4,3)→P0(1,4)
+[02:35.735] Anim: 3D  (attacker survives)
+[02:36.628] AI1 attack decision: (4,1)"Tiny Pixie" [ATK=0] → (4,3) "Red Card" [DEF=0]
+[02:36.938] Revealed: P1 (4,1) "Tiny Pixie"
+[02:36.938] Revealed: P0 (4,3) "Red Card"
+[02:41.330] Card destroyed  P0 (4,3)
+[02:41.399] Coin flip: Heads, Heads
+[02:44.154] Trap: "Red Card" triggered  P1(4,1)→P0(4,3)
+[02:44.154] Anim: 3D  (attacker survives)
+[02:44.749] Turn ended  P1  |  Crystals P0=260 P1=1330
+
+--- Turn 14  |  Player 0  |  Crystals P0=260 P1=1330 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][Iron]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Tiny][  — ][Lab ][  ? ]
+[02:45.649] AI0 attack decision: (1,2)"Lord of Terror" [ATK=200] → (4,3) "Lab Bloater" [DEF=85]
+[02:50.637] Crystals: P1 1330 → 530 (-800)  [battle]
+[02:52.031] Card destroyed  P1 (4,3)
+[02:52.039] Attack P0(1,2)"Lord of Terror" → P1(4,3)"(destroyed)"  Dice=2  ATK=200 vs DEF=85  → WIN
+[02:52.039] Anim: 3A  △ P1(4,3)
+[02:52.933] AI0 attack decision: (4,4)"Ironclad Sentinel" [ATK=55] → (4,1) "Tiny Pixie" [DEF=0]
+[02:57.924] Crystals: P1 530 → 430 (-100)  [battle]
+[02:59.328] Attack P0(4,4)"Ironclad Sentinel" → P1(4,1)"Tiny Pixie"  Dice=2  ATK=55 vs DEF=0  → WIN
+[02:59.328] Anim: 3A  △ P1(4,1)
+[02:59.939] Turn ended  P0  |  Crystals P0=260 P1=430
+
+--- Turn 15  |  Player 1  |  Crystals P0=260 P1=430 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][Iron]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Tiny][  — ][  — ][  ? ]
+[03:00.837] AI1 attack decision: (4,1)"Tiny Pixie" [ATK=0] → (0,4) "Echo Barrier" [DEF=0]
+[03:01.146] Revealed: P0 (0,4) "Echo Barrier"
+[03:05.538] Card destroyed  P0 (0,4)
+[03:05.538] Crystals: P0 260 → 0 (-260)  [trap cost]
+
+=== GAME OVER ===
+[03:05.547] AI Player 1 wins
+[03:05.547] Final crystals — P0: 0  P1: 430  |  Turns: 15
+[03:05.548] Log saved to: res://logs/ai_vs_ai_2026-05-23_15-24-27.txt
