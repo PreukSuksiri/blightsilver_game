@@ -35,8 +35,10 @@ var _dirty: bool = false
 var _char_rows: Array = []
 var _file_dialog: FileDialog = null
 var _browse_target: LineEdit = null
-var _clipboard: Array = []   # Array[Dictionary] — supports multi-beat copy
+var _clipboard: Array = []       # Array[Dictionary] — supports multi-beat copy
 var _has_clipboard: bool = false
+var _char_clipboard: Array = []  # Array[Dictionary] — characters copy/paste
+var _has_char_clipboard: bool = false
 var _drag_from_idx: int = -1
 var _beat_modified: Dictionary = {}   # index → bool; cleared on save/load/structural ops
 var _anchor_idx: int = -1             # for Shift+click range selection
@@ -496,6 +498,18 @@ func _build_fields() -> void:
 	char_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	char_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	char_row.add_child(char_lbl)
+	var copy_chars_btn := Button.new()
+	copy_chars_btn.text = "Copy"
+	copy_chars_btn.custom_minimum_size = Vector2(56, 26)
+	copy_chars_btn.add_theme_font_size_override("font_size", 13)
+	copy_chars_btn.pressed.connect(_copy_chars)
+	char_row.add_child(copy_chars_btn)
+	var paste_chars_btn := Button.new()
+	paste_chars_btn.text = "Paste"
+	paste_chars_btn.custom_minimum_size = Vector2(56, 26)
+	paste_chars_btn.add_theme_font_size_override("font_size", 13)
+	paste_chars_btn.pressed.connect(_paste_chars)
+	char_row.add_child(paste_chars_btn)
 	var add_char_btn := Button.new()
 	add_char_btn.text = "+ Add Slot"
 	add_char_btn.custom_minimum_size = Vector2(90, 26)
@@ -1812,6 +1826,34 @@ func _remove_char_row(row: Dictionary) -> void:
 	(row["hbox"] as HBoxContainer).queue_free()
 	_char_rows.erase(row)
 	_on_field_changed()
+
+func _copy_chars() -> void:
+	if _selected_idx < 0:
+		return
+	# Collect current characters from the live UI rows
+	var chars: Array = []
+	for row: Dictionary in _char_rows:
+		var spr: String = (row["sprite"] as LineEdit).text.strip_edges()
+		if spr.is_empty():
+			continue
+		var cd: Dictionary = {"sprite": spr, "position": SLOT_OPTIONS[(row["position"] as OptionButton).selected]}
+		if (row["flip"] as CheckBox).button_pressed:
+			cd["flip"] = true
+		if (row["crop"] as SpinBox).value > 0.0:
+			cd["crop_bottom"] = (row["crop"] as SpinBox).value
+		if (row["scale"] as SpinBox).value != 100.0:
+			cd["scale"] = (row["scale"] as SpinBox).value
+		chars.append(cd)
+	_char_clipboard = chars.duplicate(true)
+	_has_char_clipboard = true
+	_status_lbl.text = "Characters copied (%d slot(s))" % _char_clipboard.size()
+
+func _paste_chars() -> void:
+	if not _has_char_clipboard or _selected_idx < 0:
+		return
+	_rebuild_char_rows(_char_clipboard.duplicate(true))
+	_on_field_changed()
+	_status_lbl.text = "Characters pasted (%d slot(s))" % _char_clipboard.size()
 
 # ─────────────────────────────────────────────────────────────
 # Beat operations (copy / paste / reorder / drag)

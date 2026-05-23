@@ -61,3 +61,94 @@ Nex must confront Morgull in a final, desperate battle using everything he has l
 Nex successfully restore the world as we known without fear. And also restore the Order of the High Gate. 
 Nex has been promoted into a senior ranking order member.
 On the next day, Nex silently resigned from the order for an unknown reason. Nevertheless, from now on, the peace shall goes on for centuries.
+
+
+
+## Additional Lore - World Setting ##
+
+
+
+1. The Probability Collapse Rule (Strongly Recommended)
+Core Concept (Quantum-inspired + Bayesian):
+Humans unconsciously apply an extremely strong “probability collapse” on reality. Our minds constantly force the world toward the most probable, mundane outcome (the “baseline reality”). Supernatural entities exist in a perpetual state of low-probability superposition — they are technically present, but the human mind collapses their existence down to zero.
+How it works in practice:
+
+A ghost can stand right next to you in the elevator, but your brain instantly rewrites the moment as “wind” or “imagination.”
+A supernatural entity trying to touch a human feels like trying to push through an invisible probability wall — the moment collapses before contact can happen.
+
+The exception:
+Only the Vellum cards can temporarily override this collapse. When a human consciously uses a card, they create a “localized probability bubble” where supernatural events are allowed to stabilize for a short time.
+
+
+
+Recommended Formula (Best Version)
+“The Gold-Silver Accord” (or “The Divine-Silver Schism”)
+Core Rule:
+Reality is held together by an ancient, invisible Gold-Silver Accord.
+
+Gold represents Divine Order — the absolute, stable, “correct” version of reality that the human mind and the universe itself naturally strive toward. It is the force that collapses all supernatural possibilities into mundane outcomes.
+Silver represents Lunar Reflection — the fluid, probabilistic, dream-like layer where supernatural entities exist. It is subtle, shifting, and full of potential.
+
+Because Gold is fundamentally stronger than Silver in the material world, any attempt by a supernatural entity to interact directly with a human is instantly overwritten by the Gold Accord. The human mind acts as a living conduit for this Gold force. The moment contact is about to happen, reality “corrects” itself — the event is erased or rewritten as coincidence, imagination, or nothing at all.
+The only exception is the Vellum Cards.
+The cards are made through a forbidden ritual that fuses Gold and Silver in perfect (and unstable) balance.
+This alloy creates a temporary “Neutral Zone” where neither Gold nor Silver dominates. Inside this zone, supernatural entities can finally interact with humans without being collapsed by the Gold Accord.
+This is why:
+
+Only people holding/using Vellum cards can see and interact with the supernatural.
+Every time a card is played, the user is literally breaking the Gold-Silver Accord for a short moment — which is extremely dangerous and leaves traces (hence the risk/reward in your card battles).
+Nex’s Silver Axe is a personal exception — it was forged with a fragment of the same silver used in the first Vellum cards, giving him limited ability to interact without cards (but it’s unstable and drains him).
+
+Why This Formula is Strong for Blightsilver
+
+Perfectly explains why normal humans almost never notice the supernatural.
+Makes the Vellum cards feel genuinely special and ancient.
+Creates natural tension: using cards = temporarily defying divine order.
+Gives symbolic meaning to your color palette (Silver + Cyan = Moon + Probability).
+Ties directly into your game mechanics (hidden information = probability manipulation).
+Leaves room for future lore (e.g. “Gold-blooded” people who are naturally resistant to cards, or ancient Gold artifacts that suppress supernatural activity).
+
+
+
+## Additional Lore - World Setting 2 ##
+
+This universe is never-ending scale of computer-like system. "The god" created the world for us to live. But every creation has flaw. There were some 'glitch' in the systems. The supernatural entities: ghosts, vampires, they were all the glitches and misdesigns. The Order of High Gate is like a debugger software that keep rechecking the design/requirement and the actual system. Their order is to 'exorcist' which is actually a way to debug" so the actual system get regressed to the real design. The blueprint was created with gold. The world was created with the "mortal material" mercury, sulfur, and salt. The silver is a medium between gold and the mortal material. Once glitch is under influence of silver, they are reducing to the blueprint state and disappear. But some few glitches somehow gain ability to mutate itself (for example century-alive vampires) by re-assemble itself with "Prima Materia", an element that god did not put in the system. "Someone" had smuggled in the Prima Materia and caused a great unstability. 
+
+
+## Additional Lore - Prima Materia ##
+ Prima Materia (First Matter).Alchemists described it as a formless, chaotic, and invisible primordial sludge from which all creation was pulled. It was not inherently "evil," but it represented complete chaos, darkness, and the unconscious mind before it is purified.
+
+
+## Additional Lore - World Setting 2-B ##
+
+
+Refined Plot / Cosmology
+The Divine Blueprint
+Long ago, “The God” (or simply The Architect) designed the world according to a perfect Golden Blueprint — an immutable divine template written in pure Gold, the metal of absolute order and truth.
+To give the world life and change, The Architect poured three mortal materials into the design:
+
+Mercury (fluidity, mind, possibility)
+Sulfur (passion, will, transformation)
+Salt (body, memory, stability)
+
+This created the mortal realm we know.
+But every creation has imperfections. Tiny glitches appeared in the system — miscalculations in the divine code. These glitches became the supernatural entities: ghosts, vampires, demons, yokai, etc. They are not “evil” so much as errors that should not exist.
+The Order of the High Gate exists as the Architect’s built-in debugging protocol. Their exorcisms are not banishments — they are regressions. They force the world back to the original Golden Blueprint, erasing the glitch and restoring order.
+Silver’s Role
+Silver is the only metal that exists in perfect balance between the immutable Gold (divine order) and the mutable mortal triad (mercury + sulfur + salt).
+Because of this, Silver acts as a neutral mediator. When a silver weapon or artifact touches a glitch:
+
+It temporarily forces the entity into alignment with the Golden Blueprint.
+The glitch “remembers” what it was supposed to be (nothing) and dissolves.
+
+This is why silver-forged weapons (like Nex’s axe) are effective. They don’t destroy the entity through force — they correct it out of existence.
+The Prima Materia Incident
+At some point in history, an unknown party smuggled in Prima Materia — the pure, uncreated “first matter” that even The Architect deliberately left out of the design. Prima Materia has no place in the Blueprint. It is raw potential that can rewrite code on its own.
+Some glitches learned how to consume and incorporate Prima Materia. These mutated entities (ancient vampires, certain high-level demons, etc.) gained the ability to self-modify and resist regression. They became stable errors that the system can no longer easily delete.
+The current story begins during the early stages of a Silver Tide (the rare astronomical event when the lunar/silver influence peaks). During this period, the balance between Gold and Silver shifts. The debugging force of the Golden Blueprint weakens, allowing more glitches to manifest — and making the already mutated Prima Materia entities far more dangerous.
+The Vellum Cards
+The cards are forbidden artifacts created by fusing Gold (from the original Blueprint) and Silver (the mediator) using a trace amount of smuggled Prima Materia.
+They are the only objects that can create temporary stable neutral zones where the Gold Accord does not instantly collapse supernatural phenomena. In other words, they let humans and glitches interact without the system immediately correcting itself.
+
+
+## Additional Lore - Mayu's Cross
