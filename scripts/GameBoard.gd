@@ -2040,10 +2040,14 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	if ctx_player == current_player and card.card_type == "character" and _union_phase_ok \
 			and SaveManager.union_mechanism_unlocked and GameState.battle_player_union_enabled \
 			and not _union_summoned_this_duel[ctx_player]:
+		var _ctx_seen: Dictionary = {}
 		for _entry: Dictionary in UnionDatabase.find_available_unions(ctx_player, row, col):
 			var _u: UnionData = _entry["union"]
+			if _ctx_seen.has(_u.card_name):
+				continue
 			for _cond: Dictionary in _u.material_conditions:
 				if UnionDatabase.card_satisfies_condition(card, _cond):
+					_ctx_seen[_u.card_name] = true
 					_available_unions.append(_entry)
 					break
 	var can_union: bool = _available_unions.size() > 0
@@ -2520,15 +2524,15 @@ func _perform_pending_union() -> void:
 	_pending_union_zone_cells.clear()
 	_pending_union_conditions_remaining.clear()
 	_pending_union_selected_materials.clear()
-	# Capture cell center before grid refresh (node positions stay the same)
-	var union_node: Control = grid_nodes[player][first_cell.x][first_cell.y]
-	var cell_center: Vector2 = union_node.global_position + union_node.size * 0.5
-	# Shockwave on summoning cell + grid refresh
-	_spawn_union_shockwave(cell_center)
+	# Grid refresh first, then cinematic reveal
 	_refresh_all_grids()
 	_highlight_attackable_chars()
-	# Full cinematic reveal (landing shake is triggered inside)
+	# Full cinematic reveal (shake and dust happen inside on landing)
 	await _show_union_summon_reveal(u.card_name)
+	# Cyan shockwave plays on the union card node AFTER shake+dust landing
+	var union_node: Control = grid_nodes[player][first_cell.x][first_cell.y]
+	var cell_center: Vector2 = union_node.global_position + union_node.size * 0.5
+	_spawn_union_shockwave(cell_center)
 
 func _cancel_union_material_selection() -> void:
 	_clear_union_flash_nodes()

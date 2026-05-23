@@ -870,7 +870,7 @@ func _handle_trap_effect(
 					return
 			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await crystal_animation_done
-			GameState.place_dead_end(player, attacker_pos.x, attacker_pos.y)
+			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 			emit_signal("awaiting_target_selection",
 				"Explosive Barrels: Choose 1 revealed card on defender's field to destroy (no crystal loss).",
 				"opponent_faceup_no_cost")
@@ -882,7 +882,7 @@ func _handle_trap_effect(
 		TrapData.TrapEffectType.DESTROY_ATTACKER:
 			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await crystal_animation_done
-			GameState.place_dead_end(player, attacker_pos.x, attacker_pos.y)
+			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 			GameState.post_message("Flame Trap: %s destroyed!" % attacker.card_name)
 
 		TrapData.TrapEffectType.LOCK_ATTACKER_REMAINING_ATTACKS:
@@ -947,7 +947,7 @@ func _handle_trap_effect(
 		TrapData.TrapEffectType.DESTROY_ATTACKER_DEFENDER_PAYS:
 			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await crystal_animation_done
-			GameState.place_dead_end(player, attacker_pos.x, attacker_pos.y)
+			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 			var _dap_cost: int = trap_data.effect_params.get("amount", attacker.crystal_cost)
 			GameState.lose_crystals(opponent, _dap_cost, "trap")
 			await crystal_animation_done

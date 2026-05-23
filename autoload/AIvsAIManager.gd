@@ -310,6 +310,19 @@ func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 			tname,
 			atk_player, attacker_pos.x, attacker_pos.y,
 			def_player, target_pos.x, target_pos.y])
+		# attacker_destroyed is NOT set by BattleResolver for traps — check effect_type directly
+		var _destroys_attacker: bool = false
+		if trap is TrapData:
+			var td: TrapData = trap as TrapData
+			_destroys_attacker = td.effect_type in [
+				TrapData.TrapEffectType.DESTROY_ATTACKER,
+				TrapData.TrapEffectType.DESTROY_ATTACKER_CHOICE_DESTROY,
+				TrapData.TrapEffectType.DESTROY_ATTACKER_DEFENDER_PAYS,
+			]
+		if _destroys_attacker:
+			log_event("Anim: 3E  △ P%d(%d,%d)" % [atk_player, attacker_pos.x, attacker_pos.y])
+		else:
+			log_event("Anim: 3D  (attacker survives)")
 		return
 
 	var atk_card: GameState.CardInstance = GameState.get_card(atk_player, attacker_pos.x, attacker_pos.y)
@@ -345,6 +358,21 @@ func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 		result.defender_def_used,
 		outcome
 	])
+	# Animation scenario line — lets you audit which overlay animation fired
+	var anim_line: String
+	if result.attacker_destroyed and result.defender_destroyed:
+		anim_line = "3C  △ P%d(%d,%d) + △ P%d(%d,%d)" % [
+			atk_player, attacker_pos.x, attacker_pos.y,
+			def_player, target_pos.x, target_pos.y]
+	elif result.defender_destroyed:
+		anim_line = "3A  △ P%d(%d,%d)" % [def_player, target_pos.x, target_pos.y]
+	elif result.attacker_destroyed:
+		anim_line = "3B  △ P%d(%d,%d)" % [atk_player, attacker_pos.x, attacker_pos.y]
+	elif def_card != null and def_card.card_type == "dead_end":
+		anim_line = "3F  (blank slot)"
+	else:
+		anim_line = "exchange  (no destruction)"
+	log_event("Anim: " + anim_line)
 
 func _on_tech_played(player_index: int, tech_name: String) -> void:
 	log_event("Tech played  P%d: \"%s\"" % [player_index, tech_name])

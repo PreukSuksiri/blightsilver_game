@@ -169,7 +169,9 @@ func _build_slot(inst: GameState.CardInstance, is_attacker: bool, atk_delta: int
 	card_ctrl.size = Vector2(_card_w, _card_h)
 	card_ctrl.clip_contents = true
 	card_ctrl.mouse_filter = MOUSE_FILTER_IGNORE
-	_build_card_visual(card_ctrl, inst)
+	var art_tex: Texture2D = _build_card_visual(card_ctrl, inst)
+	slot.set_meta("art_tex", art_tex)
+	slot.set_meta("card_type_str", inst.card_type)
 	slot.add_child(card_ctrl)
 
 	# Stat delta overlay (only for character cards with non-zero deltas)
@@ -178,7 +180,7 @@ func _build_slot(inst: GameState.CardInstance, is_attacker: bool, atk_delta: int
 
 	return slot
 
-func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> void:
+func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Texture2D:
 	if inst.card_type == "dead_end":
 		var img := TextureRect.new()
 		img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -187,7 +189,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> void:
 		img.texture = load("res://assets/textures/cards/full_cards/blank.png")
 		img.mouse_filter = MOUSE_FILTER_IGNORE
 		parent.add_child(img)
-		return
+		return ART_PLACEHOLDER
 
 	var cw := _card_w
 	var ch := _card_h
@@ -357,6 +359,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> void:
 				desc_lbl.text = data.get_effect_description()
 				desc_lbl.position = Vector2(pad_x, info_y + info_h * 0.67)
 				desc_lbl.size = Vector2(cw - pad_x * 2.0, info_h * 0.32)
+	return art.texture if art.texture != null else ART_PLACEHOLDER
 
 ## Show stacked green/red delta labels at the bottom-right of the card art area.
 ## Each non-zero delta gets its own Label plus a crystal-indicator-style burst ghost.
@@ -450,6 +453,22 @@ func _run_async(
 		_skip_requested = false  # don't let a stray click skip while choice is active
 		await get_tree().process_frame
 
+	# _live_result is now final — pre-build triangle fragments only for the card(s) that
+	# will actually be destroyed.  This is synchronous and completes before any animation,
+	# using the ~2-second display pause as free build time.
+	var _att_pre: Control = _left_ctrl  if attacker_player == 0 else _right_ctrl
+	var _def_pre: Control = _right_ctrl if attacker_player == 0 else _left_ctrl
+	match _get_scenario(defender, _live_result):
+		"3A":
+			_prebuild_tri_polys(_def_pre)
+		"3B":
+			_prebuild_tri_polys(_att_pre)
+		"3C":
+			_prebuild_tri_polys(_att_pre)
+			_prebuild_tri_polys(_def_pre)
+		"3E":
+			_prebuild_tri_polys(_att_pre)
+
 	# Skippable 2-second pause
 	_skippable = true
 	var start_ms := Time.get_ticks_msec()
@@ -467,12 +486,13 @@ func _run_async(
 	# Card effect flash — trap or character ability (use _live_result for final outcome)
 	var att_rest_x: float = _left_rest_x if attacker_player == 0 else _right_rest_x
 	var def_rest_x: float = _right_rest_x if attacker_player == 0 else _left_rest_x
-	if _live_result.special_trigger == "trap_effect":
-		await _animate_trap_flash(def_ctrl)
-	elif _live_result.ability_triggered_attacker:
-		await _animate_card_effect_flash(att_ctrl, att_rest_x)
-	elif _live_result.ability_triggered_defender:
-		await _animate_card_effect_flash(def_ctrl, def_rest_x)
+	# Skip ability flash for trap encounters — the burst is embedded inside the scenario
+	# animation (fires after the bounce), so running it here would move the attacker twice.
+	if _live_result.special_trigger not in ["trap_effect", "trap_nullified"]:
+		if _live_result.ability_triggered_attacker:
+			await _animate_card_effect_flash(att_ctrl, att_rest_x)
+		elif _live_result.ability_triggered_defender:
+			await _animate_card_effect_flash(def_ctrl, def_rest_x)
 
 	# Run scenario animation using the final (possibly boosted) result
 	var scenario := _get_scenario(defender, _live_result)
@@ -494,12 +514,29 @@ func _run_async(
 	queue_free()
 
 func _get_scenario(defender: GameState.CardInstance, result: BattleResolver.BattleResult) -> String:
+	# Check special_trigger FIRST — defender.card_type may read as "dead_end" if the
+	# CardInstance was modified in-place after destruction, causing the dead_end guard
+	# below to short-circuit before we reach the trap checks.
+	if result.special_trigger == "trap_nullified":
+		return "3D"
+	if result.special_trigger == "trap_effect":
+		# result.attacker_destroyed is NOT set by BattleResolver for traps —
+		# the actual destruction happens in TurnManager._handle_trap_effect() AFTER
+		# the overlay finishes.  Check the trap_data directly to determine if
+		# this trap type destroys the attacker.
+		var _trap_data: Variant = result.special_params.get("trap_data", null)
+		if _trap_data is TrapData:
+			var td: TrapData = _trap_data as TrapData
+			if td.effect_type in [
+				TrapData.TrapEffectType.DESTROY_ATTACKER,
+				TrapData.TrapEffectType.DESTROY_ATTACKER_CHOICE_DESTROY,
+				TrapData.TrapEffectType.DESTROY_ATTACKER_DEFENDER_PAYS,
+			]:
+				return "3E"
+		return "3D"
 	if defender.card_type == "dead_end":
 		return "3F"
-	# Trap defenders never move/bounce — always use trap scenario
 	if defender.card_type == "trap":
-		return "3E" if result.attacker_destroyed else "3D"
-	if result.special_trigger in ["trap_effect", "trap_nullified"]:
 		return "3E" if result.attacker_destroyed else "3D"
 	if result.attacker_destroyed and result.defender_destroyed:
 		return "3C"
@@ -605,6 +642,166 @@ func _shatter(ctrl: Control) -> void:
 	t.parallel().tween_property(ctrl, "modulate:a", 0.0, 0.32).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	await t.finished
 
+## Always use triangle fragmentation — _shatter_triangles falls back to _shatter
+## if tri_levels was not pre-built.
+func _destroy_card(ctrl: Control) -> void:
+	await _shatter_triangles(ctrl)
+
+## Pre-builds all 4 triangle subdivision levels for a character slot.
+## Caller is responsible for only passing character slots.
+func _prebuild_tri_polys(slot: Control) -> void:
+	var art_tex_meta: Variant = slot.get_meta("art_tex", ART_PLACEHOLDER)
+	var tex: Texture2D = art_tex_meta as Texture2D
+	if tex == null:
+		tex = ART_PLACEHOLDER
+	var tex_w: float = float(tex.get_width())
+	var tex_h: float = float(tex.get_height())
+	if tex_w < 1.0 or tex_h < 1.0:
+		tex = ART_PLACEHOLDER
+		tex_w = float(tex.get_width())
+		tex_h = float(tex.get_height())
+
+	var ax: float = slot.position.x + ART_L_PCT * _card_w
+	var ay: float = slot.position.y + BADGE_H + ART_T_PCT * _card_h
+	var aw: float = (ART_R_PCT - ART_L_PCT) * _card_w
+	var ah: float = (1.0 - ART_T_PCT) * _card_h
+
+	var tl := Vector2(ax,      ay)
+	var tr := Vector2(ax + aw, ay)
+	var br := Vector2(ax + aw, ay + ah)
+	var bl := Vector2(ax,      ay + ah)
+	var uv_tl := Vector2(0.0,   0.0)
+	var uv_tr := Vector2(tex_w, 0.0)
+	var uv_br := Vector2(tex_w, tex_h)
+	var uv_bl := Vector2(0.0,   tex_h)
+
+	var triangles: Array = [
+		[PackedVector2Array([tl, tr, br]), PackedVector2Array([uv_tl, uv_tr, uv_br])],
+		[PackedVector2Array([tl, br, bl]), PackedVector2Array([uv_tl, uv_br, uv_bl])],
+	]
+
+	# levels[i] = Array of Polygon2D for subdivision level i (2/8/32/128 polys)
+	var levels: Array = []
+
+	for _level: int in range(4):
+		var level_polys: Array = []
+		for tri: Variant in triangles:
+			var arr: Array  = tri as Array
+			var verts: PackedVector2Array = arr[0] as PackedVector2Array
+			var uvs: PackedVector2Array   = arr[1] as PackedVector2Array
+			var cx: float = (verts[0].x + verts[1].x + verts[2].x) / 3.0
+			var cy: float = (verts[0].y + verts[1].y + verts[2].y) / 3.0
+			var centroid := Vector2(cx, cy)
+			var local_verts := PackedVector2Array()
+			for v: Vector2 in verts:
+				local_verts.append(v.lerp(centroid, 0.03) - centroid)
+			var poly := Polygon2D.new()
+			poly.texture = tex
+			poly.polygon = local_verts
+			poly.uv      = uvs
+			poly.position = centroid
+			poly.z_index  = 20
+			poly.visible  = false   # hidden until _shatter_triangles activates this level
+			add_child(poly)
+			level_polys.append(poly)
+		levels.append(level_polys)
+
+		if _level < 3:
+			var next_tris: Array = []
+			for tri: Variant in triangles:
+				var arr: Array = tri as Array
+				for sub: Variant in _subdivide_triangle(
+						arr[0] as PackedVector2Array,
+						arr[1] as PackedVector2Array):
+					next_tris.append(sub)
+			triangles = next_tris
+
+	slot.set_meta("tri_levels", levels)
+
+## Triangle fragmentation destruction for character cards.
+## All Polygon2D nodes were pre-built in _prebuild_tri_polys — this function only
+## toggles visibility and runs tweens, so there is no instantiation delay.
+func _shatter_triangles(ctrl: Control) -> void:
+	_play_sfx(SFX_SHATTER)
+	ctrl.modulate.a = 0.0
+
+	var levels_meta: Variant = ctrl.get_meta("tri_levels", [])
+	var levels: Array = levels_meta as Array
+	if levels.is_empty():
+		# Prebuild didn't run — build synchronously now so the animation still plays.
+		_prebuild_tri_polys(ctrl)
+		levels_meta = ctrl.get_meta("tri_levels", [])
+		levels = levels_meta as Array
+	if levels.is_empty():
+		await _shatter(ctrl)  # true fallback — prebuild failed entirely
+		return
+
+	var ax: float = ctrl.position.x + ART_L_PCT * _card_w
+	var ay: float = ctrl.position.y + BADGE_H + ART_T_PCT * _card_h
+	var aw: float = (ART_R_PCT - ART_L_PCT) * _card_w
+	var ah: float = (1.0 - ART_T_PCT) * _card_h
+
+	# Cycle through subdivision levels: show current, hide previous
+	for level_idx: int in range(levels.size()):
+		var cur: Array = levels[level_idx] as Array
+		for p: Variant in cur:
+			var poly: Polygon2D = p as Polygon2D
+			if is_instance_valid(poly):
+				poly.visible = true
+		if level_idx > 0:
+			var prev: Array = levels[level_idx - 1] as Array
+			for p: Variant in prev:
+				var poly: Polygon2D = p as Polygon2D
+				if is_instance_valid(poly):
+					poly.visible = false
+		if level_idx < levels.size() - 1:
+			await get_tree().create_timer(0.12).timeout
+
+	# Fly-apart: animate final level (128 triangles)
+	var final_polys: Array = levels[levels.size() - 1] as Array
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	var card_cx: float = ax + aw * 0.5
+	var card_cy: float = ay + ah * 0.5
+
+	for p: Variant in final_polys:
+		var poly: Polygon2D = p as Polygon2D
+		if not is_instance_valid(poly):
+			continue
+		var dir := Vector2(poly.position.x - card_cx, poly.position.y - card_cy)
+		if dir.length() < 1.0:
+			dir = Vector2(rng.randf_range(-1.0, 1.0), rng.randf_range(-1.0, 1.0))
+		dir = (dir.normalized() + Vector2(0.0, -0.4)).normalized()
+
+		var speed: float     = rng.randf_range(100.0, 360.0)
+		var duration: float  = rng.randf_range(0.42, 0.75)
+		var rot_delta: float = rng.randf_range(-TAU, TAU)
+
+		var tw := create_tween()
+		tw.tween_property(poly, "position", poly.position + dir * speed, duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+		tw.parallel().tween_property(poly, "modulate:a", 0.0, duration) \
+			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+		tw.parallel().tween_property(poly, "rotation", poly.rotation + rot_delta, duration) \
+			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_LINEAR)
+		tw.tween_callback(poly.queue_free)
+
+	await get_tree().create_timer(0.80).timeout  # covers max fly-apart duration (0.75) + buffer
+
+## Midpoint-subdivide one triangle into 4 interlocked children.
+func _subdivide_triangle(verts: PackedVector2Array, uvs: PackedVector2Array) -> Array:
+	var a := verts[0]; var b := verts[1]; var c := verts[2]
+	var ua := uvs[0];  var ub := uvs[1];  var uc := uvs[2]
+	var mab := (a  + b)  * 0.5; var muab := (ua + ub) * 0.5
+	var mbc := (b  + c)  * 0.5; var mubc := (ub + uc) * 0.5
+	var mca := (c  + a)  * 0.5; var muca := (uc + ua) * 0.5
+	return [
+		[PackedVector2Array([a,   mab, mca]), PackedVector2Array([ua,   muab, muca])],
+		[PackedVector2Array([mab, b,   mbc]), PackedVector2Array([muab, ub,   mubc])],
+		[PackedVector2Array([mbc, c,   mca]), PackedVector2Array([mubc, uc,   muca])],
+		[PackedVector2Array([mab, mbc, mca]), PackedVector2Array([muab, mubc, muca])],
+	]
+
 # ─────────────────────────────────────────────────────────────
 # Scenario animations
 # ─────────────────────────────────────────────────────────────
@@ -617,7 +814,7 @@ func _anim_attacker_wins(att: Control, def: Control, dx: float) -> void:
 	_flash_white(def)  # runs concurrently as background coroutine
 	await _bounce_back(att, att_rest)
 	await get_tree().create_timer(0.1).timeout
-	await _shatter(def)
+	await _destroy_card(def)
 
 # 3B: Defender wins — attacker destroyed
 func _anim_defender_wins(att: Control, def: Control, dx: float) -> void:
@@ -633,7 +830,7 @@ func _anim_defender_wins(att: Control, def: Control, dx: float) -> void:
 	await _bounce_back(att, att_rest)
 	await push_t.finished
 	await get_tree().create_timer(0.12).timeout
-	await _shatter(att)
+	await _destroy_card(att)
 
 # 3C: Tie — both destroyed
 func _anim_tie(att: Control, def: Control, dx: float) -> void:
@@ -650,23 +847,21 @@ func _anim_tie(att: Control, def: Control, dx: float) -> void:
 	_flash_white(att)  # fire-and-forget, runs concurrently
 	await _flash_white(def)
 	await get_tree().create_timer(0.06).timeout
-	# Both shatter together — first tweener without .parallel()
-	att.pivot_offset = Vector2(_card_w * 0.5, (BADGE_H + _card_h) * 0.5)
-	def.pivot_offset = Vector2(_card_w * 0.5, (BADGE_H + _card_h) * 0.5)
-	_play_sfx(SFX_SHATTER)
-	var shatter_t := create_tween()
-	shatter_t.tween_property(att, "scale", Vector2(1.18, 1.18), 0.32).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
-	shatter_t.parallel().tween_property(att, "modulate:a", 0.0, 0.32).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
-	shatter_t.parallel().tween_property(def, "scale", Vector2(1.18, 1.18), 0.32).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
-	shatter_t.parallel().tween_property(def, "modulate:a", 0.0, 0.32).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
-	await shatter_t.finished
+	# Both shatter simultaneously — fire att concurrently, await def
+	_destroy_card(att)
+	await _destroy_card(def)
 
 # 3D: Trap triggered, attacker survives
 func _anim_trap_survives(att: Control, def: Control, dx: float) -> void:
 	var att_rest := att.position.x
 	_play_sfx(SFX_GEAR)
 	await _bounce_forward(att, dx)
-	_flash_white(def)  # runs concurrently
+	# Trap burst fires at the moment of contact, after the bounce
+	_play_sfx(SFX_SPELL)
+	_play_burst_ring(def)
+	_flash_white(def)
+	_flash_screen_white()
+	await get_tree().create_timer(0.55).timeout
 	await _bounce_back(att, att_rest)
 	await get_tree().create_timer(0.15).timeout
 
@@ -675,10 +870,15 @@ func _anim_trap_destroys(att: Control, def: Control, dx: float) -> void:
 	var att_rest := att.position.x
 	_play_sfx(SFX_GEAR)
 	await _bounce_forward(att, dx)
-	_flash_white(def)  # runs concurrently
+	# Trap burst fires at the moment of contact, after the bounce
+	_play_sfx(SFX_SPELL)
+	_play_burst_ring(def)
+	_flash_white(def)
+	_flash_screen_white()
+	await get_tree().create_timer(0.55).timeout
 	await _bounce_back(att, att_rest)
 	await get_tree().create_timer(0.1).timeout
-	await _shatter(att)
+	await _destroy_card(att)
 
 # 3F: Blank slot — attacker hits empty space
 func _anim_blank(att: Control, def: Control, dx: float) -> void:
