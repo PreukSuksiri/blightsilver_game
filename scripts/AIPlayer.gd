@@ -24,7 +24,7 @@ signal ai_target_chosen(pos: Vector2i)
 signal ai_trap_choice(choice_index: int)
 signal ai_end_turn
 signal ai_union_chosen(union_name: String, zone_cells: Array, material_cells: Array)
-signal ai_bluff(row: int, col: int, emoticon: String)
+signal ai_bluff(player: int, row: int, col: int, emoticon: String)
 
 # Per-duel state
 var _ai_turn_count: int = 0   # incremented at start of each decide_turn call
@@ -1152,7 +1152,7 @@ func decide_bluff() -> void:
 		await get_tree().create_timer(randf_range(0.4, 1.0)).timeout
 		var use_poop: bool = SaveManager.nsfw_enabled
 		var death_emojis: Array = ["🤣", "💩" if use_poop else "🖕", "☠️", "🥺"]
-		emit_signal("ai_bluff", dp.x, dp.y, death_emojis[randi() % death_emojis.size()])
+		emit_signal("ai_bluff", player_index, dp.x, dp.y, death_emojis[randi() % death_emojis.size()])
 		await get_tree().create_timer(BLUFF_ANIM_SECS).timeout   # wait for pop animation
 
 	if randf() > _bluff_freq:
@@ -1165,19 +1165,19 @@ func decide_bluff() -> void:
 		# Taunt: put a confident emoji on a face-down high-DEF card or trap
 		var pos: Vector2i = _bluff_pick_taunting_cell()
 		if pos.x >= 0:
-			emit_signal("ai_bluff", pos.x, pos.y, _pick_bluff_emoji())
+			emit_signal("ai_bluff", player_index, pos.x, pos.y, _pick_bluff_emoji())
 
 	elif roll < 0.65:
 		# Misdirect: put a luring emoji on a dead-end cell to waste human attacks
 		var pos: Vector2i = _bluff_pick_dead_end_cell()
 		if pos.x >= 0:
-			emit_signal("ai_bluff", pos.x, pos.y, _pick_bluff_emoji())
+			emit_signal("ai_bluff", player_index, pos.x, pos.y, _pick_bluff_emoji())
 
 	else:
 		# Confident bluff: just act tough on a random face-down card
 		var pos: Vector2i = _random_unrevealed_self()
 		if pos.x >= 0:
-			emit_signal("ai_bluff", pos.x, pos.y, _pick_bluff_emoji())
+			emit_signal("ai_bluff", player_index, pos.x, pos.y, _pick_bluff_emoji())
 
 ## Called when one of AI's face-up characters is destroyed.
 ## Queues a mourning bluff to be shown at the start of the AI's next turn.
@@ -1191,7 +1191,7 @@ func decide_kill_taunt(attacker_pos: Vector2i) -> void:
 	await get_tree().create_timer(randf_range(0.3, 0.9)).timeout
 	var use_poop: bool = SaveManager.nsfw_enabled
 	var emojis: Array = ["🤣", "💩" if use_poop else "🖕"]
-	emit_signal("ai_bluff", attacker_pos.x, attacker_pos.y, emojis[randi() % emojis.size()])
+	emit_signal("ai_bluff", player_index, attacker_pos.x, attacker_pos.y, emojis[randi() % emojis.size()])
 
 ## Returns the face-down cell with the highest DEF (or a trap) — good for taunting.
 func _bluff_pick_taunting_cell() -> Vector2i:

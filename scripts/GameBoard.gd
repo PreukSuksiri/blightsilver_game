@@ -102,6 +102,10 @@ var _p1_crystal_icon: TextureRect = null
 var _p2_crystal_icon: TextureRect = null
 var _prev_crystals: Array[int] = [3000, 3000]
 
+# Attack count labels (shown below each player's crystal display)
+var _p1_attack_lbl: Label = null
+var _p2_attack_lbl: Label = null
+
 # Tax confirmation overlay
 var _tax_confirm_panel: Control = null
 
@@ -277,6 +281,7 @@ func _ready() -> void:
 	_build_card_name_lookup()
 	_build_bottom_crystal_labels()
 	_build_turn_number_label()
+	_build_attack_count_indicators()
 	_build_options_button()
 	_build_union_suggest_button()
 	SaveManager.union_mechanism_changed.connect(func(_u: bool) -> void: _update_union_suggest_button())
@@ -2839,6 +2844,38 @@ func _build_bottom_crystal_labels() -> void:
 		p2_crystal_hbox.add_child(icon2)
 		_p2_crystal_icon = icon2
 
+## Creates a fixed-size Control with the attack-count icon and a centered number label.
+## Child 0 = TextureRect (icon), Child 1 = Label (count). Caller stores child 1 as _pN_attack_lbl.
+func _build_attack_count_icon() -> Control:
+	const ICON_SIZE: float = 72.0
+	var container := Control.new()
+	container.custom_minimum_size = Vector2(ICON_SIZE, ICON_SIZE)
+	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var icon := TextureRect.new()
+	icon.texture = load("res://assets/textures/ui/decorations/ui_icon_attack_count.png")
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	container.add_child(icon)
+
+	var lbl := Label.new()
+	lbl.text = "2"
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+	lbl.add_theme_font_size_override("font_size", 32)
+	lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+	lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+	lbl.add_theme_constant_override("shadow_offset_x", 2)
+	lbl.add_theme_constant_override("shadow_offset_y", 2)
+	lbl.add_theme_constant_override("shadow_outline_size", 3)
+	lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	container.add_child(lbl)
+
+	return container
+
 func _update_crystal_visibility() -> void:
 	var show := GameState.current_phase not in [
 		GameState.Phase.NONE, GameState.Phase.SETUP_P1,
@@ -2853,6 +2890,60 @@ func _update_crystal_visibility() -> void:
 		_turn_number_bg.visible = show
 	if _options_btn:
 		_options_btn.visible = show
+
+func _refresh_attack_labels() -> void:
+	var phase := GameState.current_phase
+	var in_battle: bool = phase not in [
+		GameState.Phase.NONE, GameState.Phase.SETUP_P1,
+		GameState.Phase.SETUP_P2, GameState.Phase.GAME_OVER]
+	var cp: int = GameState.current_player
+	var remaining: int = GameState.attacks_remaining
+	for p: int in range(2):
+		var lbl: Label = _p1_attack_lbl if p == 0 else _p2_attack_lbl
+		if lbl == null:
+			continue
+		var container: Control = lbl.get_parent()
+		if container == null:
+			continue
+		container.visible = in_battle and p == cp
+		if not container.visible:
+			continue
+		lbl.text = str(remaining)
+
+func _build_attack_count_indicators() -> void:
+	const ICON_SIZE: float = 72.0
+	const MED_HALF: float  = 140.0   # MED_SIZE (280) / 2
+	const GAP: float       = 8.0
+
+	var p1_container: Control = _build_attack_count_icon()
+	p1_container.layout_mode = 1
+	p1_container.anchor_left   = 0.5
+	p1_container.anchor_right  = 0.5
+	p1_container.anchor_top    = 0.0
+	p1_container.anchor_bottom = 0.0
+	p1_container.offset_right  = -(MED_HALF + GAP)
+	p1_container.offset_left   = p1_container.offset_right - ICON_SIZE
+	p1_container.offset_top    = 4.0
+	p1_container.offset_bottom = 4.0 + ICON_SIZE
+	p1_container.z_index       = 4
+	p1_container.visible       = false
+	add_child(p1_container)
+	_p1_attack_lbl = p1_container.get_child(1) as Label
+
+	var p2_container: Control = _build_attack_count_icon()
+	p2_container.layout_mode = 1
+	p2_container.anchor_left   = 0.5
+	p2_container.anchor_right  = 0.5
+	p2_container.anchor_top    = 0.0
+	p2_container.anchor_bottom = 0.0
+	p2_container.offset_left   = MED_HALF + GAP
+	p2_container.offset_right  = p2_container.offset_left + ICON_SIZE
+	p2_container.offset_top    = 4.0
+	p2_container.offset_bottom = 4.0 + ICON_SIZE
+	p2_container.z_index       = 4
+	p2_container.visible       = false
+	add_child(p2_container)
+	_p2_attack_lbl = p2_container.get_child(1) as Label
 
 func _build_turn_number_label() -> void:
 	# Medallion background — upper half hidden above screen, lower half visible
@@ -4536,6 +4627,7 @@ func _enter_mode_select() -> void:
 func _on_phase_changed(phase: GameState.Phase) -> void:
 	_refresh_all_grids()
 	_update_turn_info()
+	_refresh_attack_labels()
 	# Reset tech-used flag BEFORE updating stacks so the visual reflects the new state
 	if phase == GameState.Phase.MODE_SELECT:
 		# Only reset at the start of a genuinely new turn, not on mid-turn
@@ -4605,6 +4697,7 @@ func _on_attack_completed(_from: Vector2i, _to: Vector2i, _result: BattleResolve
 	_refresh_all_grids()
 	_clear_selection()
 	_update_end_turn_blink()
+	_refresh_attack_labels()
 	# AI kill-taunt: small chance to mock on attacker cell after destroying a strong/union card
 	if _is_ai_turn() and _result.defender_destroyed:
 		var opp_graveyard: Array = GameState.graveyards[GameState.get_opponent(GameState.current_player)]
@@ -4620,6 +4713,7 @@ func _on_attack_aborted() -> void:
 		_attack_confirm_panel.visible = false
 	_clear_selection()
 	_refresh_all_grids()   # reflect any state changes (e.g. attacked_this_turn hourglass)
+	_refresh_attack_labels()
 	# If AI aborted its own attack (e.g. attacks_remaining ran out, coin-flip cancel),
 	# re-trigger the AI decision loop instead of showing human UI.
 	if _is_ai_turn():
@@ -5437,8 +5531,8 @@ func _set_own_facedown_char_peek(enable: bool) -> void:
 			if card.card_type == "character" and not card.face_up:
 				(grid_nodes[cp][r][c] as Control).set_preview_revealed(enable)
 
-func _on_ai_bluff(row: int, col: int, emoticon: String) -> void:
-	_set_bluff_animated(GameState.current_player, row, col, emoticon)
+func _on_ai_bluff(player: int, row: int, col: int, emoticon: String) -> void:
+	_set_bluff_animated(player, row, col, emoticon)
 
 func _on_awaiting_trap_choice(trap_name: String, choices: Array) -> void:
 	if is_instance_valid(_current_battle_overlay):
@@ -6149,6 +6243,9 @@ func _show_union_summon_reveal(union_name: String) -> void:
 	await t_fall.finished
 
 	# ── Landing impact ────────────────────────────────────────
+	# Play impact sound immediately on landing, before any other code
+	SFXManager.play(SFXManager.SFX_UNION_LAND)
+
 	# Slight bounce back to resting position
 	var t_bounce := create_tween()
 	t_bounce.tween_property(card_img, "position:y", land_y, 0.10) \
@@ -6167,7 +6264,6 @@ func _show_union_summon_reveal(union_name: String) -> void:
 	t_sk.tween_property(ml, "position", _shake_orig, 0.03)
 
 	# Sparks and dust at card base
-	SFXManager.play(SFXManager.SFX_UNION_LAND)
 	var card_base := Vector2(vp.x * 0.5, land_y + card_h * 0.95)
 	_spawn_union_landing_sparks(overlay, card_base)
 	_spawn_union_landing_dust(overlay, card_base)
@@ -6277,6 +6373,28 @@ func _on_game_over(winner: int) -> void:
 		_stop_battle_music()
 		AIvsAIManager.on_game_over(winner)
 		return
+
+	# ── Immediately halt AI and lock out all input ───────────────────────────
+	# Stop the AI watchdog so it cannot re-trigger another AI turn
+	if _ai_watchdog:
+		_ai_watchdog.stop()
+	# Disconnect AI bluff signals so any fire-and-forget coroutines that are
+	# still awaiting a timer cannot place bluffs during the reveal animation
+	if is_instance_valid(ai_player) \
+			and ai_player.ai_bluff.is_connected(_on_ai_bluff):
+		ai_player.ai_bluff.disconnect(_on_ai_bluff)
+	if is_instance_valid(ai_player_0) \
+			and ai_player_0.ai_bluff.is_connected(_on_ai_bluff):
+		ai_player_0.ai_bluff.disconnect(_on_ai_bluff)
+	# Full-screen transparent blocker — swallows all player taps/clicks
+	var _end_blocker := ColorRect.new()
+	_end_blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_end_blocker.color        = Color(0.0, 0.0, 0.0, 0.0)
+	_end_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	_end_blocker.z_index      = 5   # above grids but below all overlays
+	add_child(_end_blocker)
+	_hide_card_context()
+	_clear_selection()
 
 	# ── VN-driven battle ─────────────────────────────────────────────────────
 	var vn_win: String  = GameState.vn_on_win
@@ -6401,6 +6519,7 @@ func _fade_out_battle_music(duration: float) -> void:
 	_stop_battle_music()
 
 func _show_endgame_screen(winner: int) -> void:
+	_hide_card_context()
 	var mode := GameState.game_mode
 	var is_hot_seat   := (mode == GameState.GameMode.HOT_SEAT)
 	var is_ai_game    := mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON]

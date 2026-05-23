@@ -188,6 +188,10 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 
 	# Pre-battle: COIN_FLIP_CANCEL_ATTACK (Lazy Troll) — tails = own attack cancelled
 	if attacker.ability_type == CharacterData.AbilityType.COIN_FLIP_CANCEL_ATTACK:
+		# Reveal Lazy Troll face-up before the coin flip so the player sees who is flipping
+		if not attacker.face_up:
+			GameState.reveal_card(player, attacker_pos.x, attacker_pos.y)
+			await get_tree().create_timer(0.30).timeout
 		var _cca_results: Array = await _do_coin_flips(1)
 		if not _cca_results[0]:  # tails
 			GameState.post_message("%s flips tails — too lazy to attack! It has to wait." % attacker.card_name)

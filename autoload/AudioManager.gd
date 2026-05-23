@@ -12,6 +12,17 @@ var tts_enabled:  bool  = false
 
 var _tts_voice: String = ""
 
+# ── BGM filter state ──────────────────────────────────────────
+var _hp_filter: AudioEffectHighPassFilter = null
+var _lp_filter: AudioEffectLowPassFilter  = null
+var _filter_tween: Tween = null
+
+const _HP_NEUTRAL: float = 1.0       # effectively off (let all through)
+const _HP_ACTIVE:  float = 500.0     # cuts bass — music sounds thin/focused
+const _LP_NEUTRAL: float = 20500.0   # effectively off (let all through)
+const _LP_ACTIVE:  float = 800.0     # cuts treble — music sounds muffled
+const _FILTER_FADE: float = 0.5      # seconds for gradual transition
+
 func _ready() -> void:
 	_ensure_buses()
 	_load_settings()
@@ -36,6 +47,57 @@ func _ensure_buses() -> void:
 		var idx := AudioServer.bus_count - 1
 		AudioServer.set_bus_name(idx, "SFX")
 		AudioServer.set_bus_send(idx, "Master")
+	_ensure_music_filters()
+
+func _ensure_music_filters() -> void:
+	var m: int = AudioServer.get_bus_index("Music")
+	if m < 0:
+		return
+	# Remove any stale effects (e.g. from hot reload) then add fresh ones
+	while AudioServer.get_bus_effect_count(m) > 0:
+		AudioServer.remove_bus_effect(m, 0)
+	_hp_filter = AudioEffectHighPassFilter.new()
+	_hp_filter.cutoff_hz = _HP_NEUTRAL
+	AudioServer.add_bus_effect(m, _hp_filter)
+	_lp_filter = AudioEffectLowPassFilter.new()
+	_lp_filter.cutoff_hz = _LP_NEUTRAL
+	AudioServer.add_bus_effect(m, _lp_filter)
+
+# ── Public BGM filter API ──────────────────────────────────────
+
+## Apply a high-pass filter to the Music bus (cuts bass; music sounds thin/focused).
+## gradual=true tweens the cutoff over _FILTER_FADE seconds; false = instant.
+func apply_high_pass(gradual: bool = true) -> void:
+	_transition_filter(_HP_ACTIVE, _LP_NEUTRAL, gradual)
+
+## Apply a low-pass filter to the Music bus (cuts treble; music sounds muffled).
+## gradual=true tweens the cutoff over _FILTER_FADE seconds; false = instant.
+func apply_low_pass(gradual: bool = true) -> void:
+	_transition_filter(_HP_NEUTRAL, _LP_ACTIVE, gradual)
+
+## Remove any active BGM filter, restoring the Music bus to its original state.
+## gradual=true tweens back over _FILTER_FADE seconds; false = instant.
+func remove_bgm_filter(gradual: bool = true) -> void:
+	_transition_filter(_HP_NEUTRAL, _LP_NEUTRAL, gradual)
+
+func _transition_filter(target_hp: float, target_lp: float, gradual: bool) -> void:
+	if _filter_tween and _filter_tween.is_valid():
+		_filter_tween.kill()
+	if not gradual or _hp_filter == null or _lp_filter == null:
+		if _hp_filter:
+			_hp_filter.cutoff_hz = target_hp
+		if _lp_filter:
+			_lp_filter.cutoff_hz = target_lp
+		return
+	_filter_tween = create_tween()
+	_filter_tween.tween_method(
+		func(v: float) -> void: _hp_filter.cutoff_hz = v,
+		_hp_filter.cutoff_hz, target_hp, _FILTER_FADE
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_filter_tween.parallel().tween_method(
+		func(v: float) -> void: _lp_filter.cutoff_hz = v,
+		_lp_filter.cutoff_hz, target_lp, _FILTER_FADE
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 func _apply() -> void:
 	var m := AudioServer.get_bus_index("Music")

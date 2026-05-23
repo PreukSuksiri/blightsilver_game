@@ -45,14 +45,17 @@ var _live_result: BattleResolver.BattleResult
 
 ## Called by GameBoard when an ability-choice overlay appears on top of this overlay.
 ## Prevents the overlay from animating or being dismissed until resume_with_result() is called.
+## Also disables mouse blocking so the choice overlay above can receive clicks.
 func pause_for_choice() -> void:
 	_paused = true
+	mouse_filter = MOUSE_FILTER_IGNORE
 
 ## Called by GameBoard after the ability choice is resolved.
 ## Updates the animation result to reflect any applied boosts, then unpauses.
 func resume_with_result(new_result: BattleResolver.BattleResult) -> void:
 	_live_result = new_result
 	_paused = false
+	mouse_filter = MOUSE_FILTER_STOP
 
 # ─────────────────────────────────────────────────────────────
 # Entry point
@@ -63,8 +66,10 @@ func start(
 	defender: GameState.CardInstance,
 	result: BattleResolver.BattleResult
 ) -> void:
+	AudioManager.apply_high_pass(true)
 	_build_ui(attacker_player, attacker, defender, result)
 	await _run_async(attacker_player, attacker, defender, result)
+	AudioManager.remove_bgm_filter(true)
 
 # ─────────────────────────────────────────────────────────────
 # UI construction

@@ -23,6 +23,7 @@ const SFX_TURN_BANNER := preload("res://assets/audio/sfx/scifi_ui_39.mp3")   # R
 const SFX_COIN_FLIP   := preload("res://assets/audio/sfx/coin_clink_2.mp3")  # Rule 19: coin flip starts
 const SFX_COIN_HEAD   := preload("res://assets/audio/sfx/coin_flip_head.mp3") # Rule 20: landed heads
 const SFX_COIN_TAIL   := preload("res://assets/audio/sfx/coin_flip_tail.mp3") # Rule 21: landed tails
+const SFX_BATTLE_CALC := preload("res://assets/audio/sfx/chime_4.mp3")         # Rule 23: battle calculation overlay opens
 
 func play(stream: AudioStream) -> void:
 	if stream == null:
