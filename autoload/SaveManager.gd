@@ -18,6 +18,7 @@ var nsfw_enabled: bool = false
 var unlocked_unions: Array = []  # union card names the player has ever summoned
 var union_mechanism_unlocked: bool = false  # true = union system visible to player
 var demo_mode: bool = false
+var ai_exclude_placeholder: bool = false  # exclude placeholder_art cards from AI random deck pool
 
 func _ready() -> void:
 	_load_demo_config()

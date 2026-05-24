@@ -856,6 +856,10 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 			char_pool = (forced_chars as Array).duplicate()
 		else:
 			char_pool = CardDatabase.get_all_character_names().duplicate()
+			if SaveManager.ai_exclude_placeholder:
+				char_pool = char_pool.filter(func(n: String) -> bool:
+					var cd: CharacterData = CardDatabase.get_character(n)
+					return cd != null and not cd.placeholder_art)
 			char_pool.shuffle()
 
 		var forced_traps: Variant = cfg.get("forced_traps", null)
@@ -863,6 +867,10 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 			trap_pool = (forced_traps as Array).duplicate()
 		else:
 			trap_pool = CardDatabase.get_all_trap_names().duplicate()
+			if SaveManager.ai_exclude_placeholder:
+				trap_pool = trap_pool.filter(func(n: String) -> bool:
+					var td: TrapData = CardDatabase.get_trap(n)
+					return td != null and not td.placeholder_art)
 			trap_pool.shuffle()
 
 		if is_forced:
