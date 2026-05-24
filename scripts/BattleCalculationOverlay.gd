@@ -226,6 +226,16 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 		"character": art_path = CardDatabase.find_artwork(inst.card_name, "characters")
 		"trap":      art_path = CardDatabase.find_artwork(inst.card_name, "traps")
 		"tech":      art_path = CardDatabase.find_artwork(inst.card_name, "tech")
+	if inst.is_union:
+		var _snake: String = inst.card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
+		for _p: String in [
+			"res://assets/textures/cards/full_cards/" + _snake + ".png",
+			"res://assets/textures/cards/full_cards/union_" + _snake + ".png",
+			"res://assets/textures/cards/union/" + _snake + ".png",
+		]:
+			if ResourceLoader.exists(_p):
+				art_path = _p
+				break
 	if art_path != "" and ResourceLoader.exists(art_path):
 		art.texture = load(art_path)
 	else:

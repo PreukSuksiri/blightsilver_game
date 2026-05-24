@@ -1,0 +1,59 @@
+=== VS AI Match ===
+Started: 2026-05-24 21:58:22
+===
+
+[00:31.600] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[01:01.209] Revealed: P0 (3,2) "Angel Gatekeeper"
+[01:01.209] Dice rolled: 4
+[01:01.225] MSG: Nothing happens — Dead End.
+[01:08.493] Dead-end placed  P1 (3,1)
+[01:08.496] Attack P0(3,2)"Angel Gatekeeper" → P1(3,1)"(dead-end)"  Dice=4  ATK=0 vs DEF=0  → TIE
+[01:16.320] Revealed: P0 (1,2) "Lightbringer"
+[01:16.320] Dice rolled: 2
+[01:16.332] MSG: Nothing happens — Dead End.
+[01:23.571] Dead-end placed  P1 (1,2)
+[01:23.573] Attack P0(1,2)"Lightbringer" → P1(1,2)"(dead-end)"  Dice=2  ATK=0 vs DEF=0  → TIE
+[01:26.558] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[01:28.776] Mode selected P1: ATTACK
+[01:28.777] MSG: Player 2: tap a character to attack.
+[01:31.260] Revealed: P1 (3,0) "Sunrise Lady"
+[01:31.260] Revealed: P0 (1,1) "Hyperspeed Saucer"
+[01:31.260] Dice rolled: 4
+[01:48.972] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:50.091] Crystals: P1 5000 → 4700 (-300)  [battle]
+[01:55.470] Card destroyed  P1 (3,0) "Sunrise Lady"
+[01:55.472] Attack P1(3,0)"?" → P0(1,1)"Hyperspeed Saucer"  Dice=4  ATK=30 vs DEF=40  → LOSE
+[01:57.734] Mode selected P1: ATTACK
+[01:57.737] MSG: Player 2: tap a character to attack.
+[02:00.103] Revealed: P1 (0,2) "Canyon Warg"
+[02:00.103] Dice rolled: 1
+[02:00.127] MSG: Canyon Warg wins!
+[02:12.226] Crystals: P0 5000 → 4000 (-1000)  [battle]
+[02:17.367] Card destroyed  P0 (1,1) "Hyperspeed Saucer"
+[02:17.368] Attack P1(0,2)"Canyon Warg" → P0(1,1)"(dead-end)"  Dice=1  ATK=70 vs DEF=40  → WIN
+[02:19.609] Turn ended  P1  |  Crystals P0=4000 P1=4700
+
+--- Turn 3  |  Player 0  |  Crystals P0=4000 P1=4700 ---
+[02:33.443] Revealed: P0 (3,3) "War Genie"
+[02:33.443] Revealed: P1 (2,2) "Trap Hole"
+[02:33.443] Dice rolled: 1
+[02:34.577] MSG: Trap triggered: Trap Hole!
+[02:44.629] Card destroyed  P1 (2,2) "Trap Hole"
+[02:44.691] Crystals: P0 4000 → 3980 (-20)  [trap]
+[02:49.844] MSG: Mana Drain: Player 1 loses 20 Crystals!
+[02:49.848] Trap: "Trap Hole" triggered  P0(3,3)→P1(2,2)
+[03:05.831] MSG: Tap 2 material card(s) on the field.
+[03:06.522] MSG: 1 more material(s) needed.
+[03:09.151] Union summoned P0: [Barros the Collossol] from Lazy Troll, Canyon Warg
+[03:09.151] Crystals: P0 3980 → 2480 (-1500)  [union]
+[03:09.151] Revealed: P0 (1,3) "Barros the Collossol"
+[03:09.152] MSG: Player 1 summoned [Barros the Collossol] using: Lazy Troll, Canyon Warg
+[03:30.070] Dice rolled: 4
+[03:30.104] MSG: Barros the Collossol wins!
+[03:42.384] Crystals: P1 4700 → 4150 (-550)  [battle]
+[03:47.542] Card destroyed  P1 (0,2) "Canyon Warg"
+[03:47.545] Attack P0(1,3)"Barros the Collossol" → P1(0,2)"(dead-end)"  Dice=4  ATK=150 vs DEF=30  → WIN

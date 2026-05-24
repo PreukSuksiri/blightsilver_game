@@ -6393,13 +6393,14 @@ func _show_union_summon_reveal(union_name: String) -> void:
 		if ResourceLoader.exists(nsfw):
 			card_tex = load(nsfw) as Texture2D
 	if card_tex == null:
-		var p: String = FULL_CARDS_DIR + "union_" + snake + ".png"
-		if ResourceLoader.exists(p):
-			card_tex = load(p) as Texture2D
-	if card_tex == null:
-		var p: String = FULL_CARDS_DIR + snake + ".png"
-		if ResourceLoader.exists(p):
-			card_tex = load(p) as Texture2D
+		for _p: String in [
+			FULL_CARDS_DIR + snake + ".png",
+			FULL_CARDS_DIR + "union_" + snake + ".png",
+			"res://assets/textures/cards/union/" + snake + ".png",
+		]:
+			if ResourceLoader.exists(_p):
+				card_tex = load(_p) as Texture2D
+				break
 
 	# ── Card node ─────────────────────────────────────────────
 	var card_h: float = minf(vp.y * 0.78, 640.0)
