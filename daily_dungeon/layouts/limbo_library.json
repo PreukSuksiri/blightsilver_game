@@ -56,9 +56,9 @@
 				"battle_bgm": "",
 				"battle_bgm_volume": 100.0,
 				"player1_name": "",
-				"player2_name": "Wisp",
+				"player2_name": "Dark Wisp",
 				"player_forced_cells": [],
-				"player_union_enabled": false,
+				"player_union_enabled": true,
 				"portrait_p1": "",
 				"portrait_p1_offset_x": 0.0,
 				"portrait_p1_offset_y": 0.0,
@@ -74,27 +74,45 @@
 			"label": "node_01",
 			"pack_reward": "",
 			"post_battle_message": "",
-			"pre_battle_message": "",
+			"pre_battle_message": "You are in a \"Limbo\". A decrypted layer of the world. Please proceed your way to the last node you expel the stage boss",
 			"type": "normal",
 			"x": 821,
 			"y": 449
 		},
 		{
 			"ai_deck": {
-				"characters": [],
-				"tech": [],
-				"traps": []
+				"characters": [
+					"Chaotic Wisp",
+					"Doom Wisp",
+					"Foul Wisp",
+					"Skeleton Grappler",
+					"Skeleton Archer",
+					"Stinky Insect",
+					"Shredder Doll",
+					"Cursed Well"
+				],
+				"tech": [
+					"Spy",
+					"War Supply",
+					"Bribe"
+				],
+				"traps": [
+					"Trap Hole",
+					"Foul Gas",
+					"Pepper Spray",
+					"Hard Scale"
+				]
 			},
 			"battle_settings": {
 				"ai_forced_cells": [],
 				"ai_personality_defensive": "",
 				"ai_personality_offensive": "",
 				"ai_personality_social": "",
-				"ai_union_enabled": true,
+				"ai_union_enabled": false,
 				"battle_bgm": "",
 				"battle_bgm_volume": 100.0,
 				"player1_name": "",
-				"player2_name": "",
+				"player2_name": "Creepy Puppet",
 				"player_forced_cells": [],
 				"player_union_enabled": true,
 				"portrait_p1": "",
@@ -111,15 +129,35 @@
 			"is_entry": false,
 			"label": "node_02",
 			"pack_reward": "",
+			"post_battle_message": "",
+			"pre_battle_message": "",
 			"type": "normal",
 			"x": 605,
 			"y": 653
 		},
 		{
 			"ai_deck": {
-				"characters": [],
-				"tech": [],
-				"traps": []
+				"characters": [
+					"Chaotic Wisp",
+					"Doom Wisp",
+					"Foul Wisp",
+					"Skeleton Grappler",
+					"Skeleton Archer",
+					"Stinky Insect",
+					"Shredder Doll",
+					"Cursed Well"
+				],
+				"tech": [
+					"Spy",
+					"War Supply",
+					"Bribe"
+				],
+				"traps": [
+					"Trap Hole",
+					"Foul Gas",
+					"Pepper Spray",
+					"Hard Scale"
+				]
 			},
 			"battle_settings": {
 				"ai_forced_cells": [],
@@ -130,7 +168,7 @@
 				"battle_bgm": "",
 				"battle_bgm_volume": 100.0,
 				"player1_name": "",
-				"player2_name": "",
+				"player2_name": "Dust Roach",
 				"player_forced_cells": [],
 				"player_union_enabled": true,
 				"portrait_p1": "",
@@ -147,15 +185,36 @@
 			"is_entry": false,
 			"label": "node_03",
 			"pack_reward": "",
+			"post_battle_message": "",
+			"pre_battle_message": "",
 			"type": "normal",
 			"x": 241,
 			"y": 533
 		},
 		{
 			"ai_deck": {
-				"characters": [],
-				"tech": [],
-				"traps": []
+				"characters": [
+					"Chaotic Wisp",
+					"Doom Wisp",
+					"Foul Wisp",
+					"Skeleton Grappler",
+					"Skeleton Archer",
+					"Stinky Insect",
+					"Shredder Doll",
+					"Cursed Well",
+					"Night Whisperer"
+				],
+				"tech": [
+					"Spy",
+					"War Supply",
+					"Bribe"
+				],
+				"traps": [
+					"Trap Hole",
+					"Foul Gas",
+					"Pepper Spray",
+					"Hard Scale"
+				]
 			},
 			"battle_settings": {
 				"ai_forced_cells": [],
@@ -166,7 +225,7 @@
 				"battle_bgm": "",
 				"battle_bgm_volume": 100.0,
 				"player1_name": "",
-				"player2_name": "",
+				"player2_name": "Night Whisperer",
 				"player_forced_cells": [],
 				"player_union_enabled": true,
 				"portrait_p1": "",
@@ -183,26 +242,53 @@
 			"is_entry": false,
 			"label": "node_04",
 			"pack_reward": "",
+			"post_battle_message": "",
+			"pre_battle_message": "",
 			"type": "normal",
 			"x": 412,
 			"y": 350
 		},
 		{
 			"ai_deck": {
-				"characters": [],
-				"tech": [],
-				"traps": []
+				"characters": [
+					"Void Stalker",
+					"Bat Swarm",
+					"Poltergeist",
+					"Death Knight",
+					"Pit Lord",
+					"Succubus",
+					"Dark Blob",
+					"Mysterious Miner",
+					"Demon Spawn",
+					"Dark Monk",
+					"Scarlet Mutant",
+					"Moonrise Gentleman"
+				],
+				"tech": [
+					"Radar",
+					"War Supply",
+					"Accident"
+				],
+				"traps": [
+					"Hypnosis",
+					"Foul Gas",
+					"Pepper Spray",
+					"Hard Scale",
+					"Explosive Barrels",
+					"Cursed Reflection",
+					"Decoy Puppet"
+				]
 			},
 			"battle_settings": {
 				"ai_forced_cells": [],
-				"ai_personality_defensive": "",
-				"ai_personality_offensive": "",
-				"ai_personality_social": "",
+				"ai_personality_defensive": "Tomb Trap (Hard)",
+				"ai_personality_offensive": "Berserker",
+				"ai_personality_social": "Vengeful",
 				"ai_union_enabled": true,
 				"battle_bgm": "",
 				"battle_bgm_volume": 100.0,
 				"player1_name": "",
-				"player2_name": "",
+				"player2_name": "Nightmare Shadow",
 				"player_forced_cells": [],
 				"player_union_enabled": true,
 				"portrait_p1": "",
@@ -219,6 +305,8 @@
 			"is_entry": false,
 			"label": "node_05",
 			"pack_reward": "",
+			"post_battle_message": "",
+			"pre_battle_message": "",
 			"type": "boss",
 			"x": 257,
 			"y": 137
