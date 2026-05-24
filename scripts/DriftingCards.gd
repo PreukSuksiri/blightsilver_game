@@ -61,43 +61,30 @@ func _scan_front_textures() -> void:
 		fname = dir.get_next()
 	dir.list_dir_end()
 
-	# Build a lookup: bare stem → nsfw path (old-style _nsfw files)
+	# Build pools from old-style files (no type prefix, no _nsfw suffix).
+	# nsfw_map: bare_stem → _nsfw file path
 	var nsfw_map: Dictionary = {}
 	for f: String in all_files:
 		var stem: String = f.get_basename()
 		if stem.ends_with("_nsfw"):
-			# e.g. "bait_nsfw" → stored under "bait"
 			nsfw_map[stem.trim_suffix("_nsfw")] = FULL_CARDS_DIR + f
 
-	# Only use new-style type-prefixed files as the safe pool.
-	# Old-style files (no type prefix) may have inconsistent NSFW labeling and
-	# are excluded from the safe pool entirely to prevent NSFW art leaking when
-	# the NSFW setting is off.
-	const SAFE_PREFIXES: Array = ["character_", "trap_", "tech_"]
 	for f: String in all_files:
 		var stem: String = f.get_basename()
 		if stem.ends_with("_nsfw"):
 			continue
+		# Skip type-prefixed files (union_, character_, trap_, tech_)
+		const SKIP_PREFIXES: Array = ["union_", "character_", "trap_", "tech_"]
 		var has_prefix: bool = false
-		for pfx: String in SAFE_PREFIXES:
+		for pfx: String in SKIP_PREFIXES:
 			if stem.begins_with(pfx):
 				has_prefix = true
 				break
-		if not has_prefix:
+		if has_prefix:
 			continue
-		var safe_path: String = FULL_CARDS_DIR + f
-		_safe_paths.append(safe_path)
-		# For NSFW pool: strip type prefix to find old-style _nsfw variant.
-		# e.g. "character_vampire_servant" → look for "vampire_servant_nsfw"
-		var bare_stem: String = stem
-		for pfx: String in SAFE_PREFIXES:
-			if bare_stem.begins_with(pfx):
-				bare_stem = bare_stem.trim_prefix(pfx)
-				break
-		if bare_stem in nsfw_map:
-			_nsfw_paths.append(nsfw_map[bare_stem])
-		else:
-			_nsfw_paths.append(safe_path)  # no nsfw art → fall back to safe
+		# Old-style file: safe pool = this file; nsfw pool = _nsfw variant if it exists
+		_safe_paths.append(FULL_CARDS_DIR + f)
+		_nsfw_paths.append(nsfw_map.get(stem, FULL_CARDS_DIR + f) as String)
 
 	# Always exclude cards flagged as placeholder art
 	var placeholder_stems: Dictionary = _build_placeholder_stems()
@@ -132,15 +119,15 @@ func _build_placeholder_stems() -> Dictionary:
 	for cname: String in CardDatabase.characters:
 		var cd: CharacterData = CardDatabase.characters[cname] as CharacterData
 		if cd.placeholder_art:
-			stems["character_" + cname.to_lower().replace(" ", "_")] = true
+			stems[cname.to_lower().replace(" ", "_")] = true
 	for tname: String in CardDatabase.traps:
 		var td: TrapData = CardDatabase.traps[tname] as TrapData
 		if td.placeholder_art:
-			stems["trap_" + tname.to_lower().replace(" ", "_")] = true
+			stems[tname.to_lower().replace(" ", "_")] = true
 	for ename: String in CardDatabase.tech_cards:
 		var ed: TechCardData = CardDatabase.tech_cards[ename] as TechCardData
 		if ed.placeholder_art:
-			stems["tech_" + ename.to_lower().replace(" ", "_")] = true
+			stems[ename.to_lower().replace(" ", "_")] = true
 	return stems
 
 func _build_demo_stems() -> Dictionary:
@@ -148,15 +135,15 @@ func _build_demo_stems() -> Dictionary:
 	for cname: String in CardDatabase.characters:
 		var cd: CharacterData = CardDatabase.characters[cname] as CharacterData
 		if cd.include_in_demo and not cd.placeholder_art:
-			stems["character_" + cname.to_lower().replace(" ", "_")] = true
+			stems[cname.to_lower().replace(" ", "_")] = true
 	for tname: String in CardDatabase.traps:
 		var td: TrapData = CardDatabase.traps[tname] as TrapData
 		if td.include_in_demo and not td.placeholder_art:
-			stems["trap_" + tname.to_lower().replace(" ", "_")] = true
+			stems[tname.to_lower().replace(" ", "_")] = true
 	for ename: String in CardDatabase.tech_cards:
 		var ed: TechCardData = CardDatabase.tech_cards[ename] as TechCardData
 		if ed.include_in_demo and not ed.placeholder_art:
-			stems["tech_" + ename.to_lower().replace(" ", "_")] = true
+			stems[ename.to_lower().replace(" ", "_")] = true
 	return stems
 
 func _pick_front_tex() -> Texture2D:
