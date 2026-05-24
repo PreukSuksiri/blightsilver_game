@@ -556,7 +556,7 @@ func _build_fields() -> void:
 	char_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	char_row.add_child(char_lbl)
 	_f_linger_chars = CheckBox.new()
-	_f_linger_chars.text = "Linger"
+	_f_linger_chars.text = "Use previous characters"
 	_f_linger_chars.add_theme_font_size_override("font_size", 13)
 	_f_linger_chars.toggled.connect(func(_b: bool) -> void:
 		_chars_vbox.modulate.a = 0.3 if _f_linger_chars.button_pressed else 1.0

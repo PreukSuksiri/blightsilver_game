@@ -392,15 +392,16 @@ func _show_beat() -> void:
 		_kb_tween.tween_property(_bg_rect, "position", Vector2(pan_x, pan_y), dur).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 	# ── Characters ──
-	# Always clear all slots; populate only when key is present and non-empty.
-	for i in SLOT_NAMES.size():
-		var sn: String = SLOT_NAMES[i]
-		_char_slots[sn].texture  = null
-		_char_slots[sn].flip_h   = false
-		_char_slots[sn].size     = Vector2(CHAR_W, CHAR_H)
-		_char_slots[sn].position = Vector2(SLOT_X[i], CHAR_Y)
-		_char_slots[sn].modulate = Color(1.0, 1.0, 1.0, 0.0)
-	if beat.has("characters"):
+	# Skip entirely when linger_characters is set — keep previous beat's sprites.
+	if not beat.get("linger_characters", false):
+		for i in SLOT_NAMES.size():
+			var sn: String = SLOT_NAMES[i]
+			_char_slots[sn].texture  = null
+			_char_slots[sn].flip_h   = false
+			_char_slots[sn].size     = Vector2(CHAR_W, CHAR_H)
+			_char_slots[sn].position = Vector2(SLOT_X[i], CHAR_Y)
+			_char_slots[sn].modulate = Color(1.0, 1.0, 1.0, 0.0)
+	if not beat.get("linger_characters", false) and beat.has("characters"):
 		var char_data: Array = beat["characters"]
 		var active_slots: Array = []
 		for ci in char_data:

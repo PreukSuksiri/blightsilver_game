@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0yl1a3bjjp8x"
-path="res://.godot/imported/choir_singer_anna.jpg-db722aa102c56f9f5967401189036397.ctex"
+uid="uid://cdemvhy2atmgu"
+path="res://.godot/imported/choir_lady_anna.jpg-12191a85586d8d87048d4b3f770d662d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/choir_singer_anna.jpg"
-dest_files=["res://.godot/imported/choir_singer_anna.jpg-db722aa102c56f9f5967401189036397.ctex"]
+source_file="res://assets/textures/cards/characters/choir_lady_anna.jpg"
+dest_files=["res://.godot/imported/choir_lady_anna.jpg-12191a85586d8d87048d4b3f770d662d.ctex"]
 
 [params]
 

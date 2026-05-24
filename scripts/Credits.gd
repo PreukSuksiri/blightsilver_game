@@ -220,6 +220,14 @@ func _ready() -> void:
 	_scroll_label.text = "[center]" + processed + "[/center]"
 	clip.add_child(_scroll_label)
 
+	# ── Fade overlay — added BEFORE the process_frame await so the first
+	#    rendered frame is always fully black (prevents flash of background)
+	_fade = ColorRect.new()
+	_fade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_fade.color = Color(0.0, 0.0, 0.0, 1.0)
+	_fade.mouse_filter = MOUSE_FILTER_IGNORE
+	add_child(_fade)
+
 	# Wait one frame so the label calculates its height, then place below screen
 	await get_tree().process_frame
 	_scroll_label.position.y = vp_size.y
@@ -235,13 +243,6 @@ func _ready() -> void:
 	(_bgm.stream as AudioStreamMP3).loop = true
 	add_child(_bgm)
 	_bgm.play()
-
-	# ── Fade overlay (black → transparent on start) ───────────────
-	_fade = ColorRect.new()
-	_fade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_fade.color = Color(0.0, 0.0, 0.0, 1.0)
-	_fade.mouse_filter = MOUSE_FILTER_IGNORE
-	add_child(_fade)
 
 	var tween := create_tween()
 	tween.tween_property(_fade, "color:a", 0.0, FADE_DURATION).set_trans(Tween.TRANS_SINE)

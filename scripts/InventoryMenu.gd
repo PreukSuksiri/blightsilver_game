@@ -474,12 +474,13 @@ func _apply_reward(reward: Dictionary) -> void:
 				Collection.add_card(card_name, _detect_card_type(card_name), "Stage Bonus")
 				_open_pack_anim([card_name])
 		"booster_pack":
-			var drawn: Array = ShopManager.draw_pack_free(reward.get("pack_name", ""))
-			_open_pack_anim(drawn)
+			var pack_nm: String = reward.get("pack_name", "")
+			var drawn: Array = ShopManager.draw_pack_free(pack_nm)
+			_open_pack_anim(drawn, pack_nm)
 		"music_disc":
 			Collection.add_music_disc(reward.get("count", 1))
 
-func _open_pack_anim(cards: Array) -> void:
+func _open_pack_anim(cards: Array, pack_name: String = "") -> void:
 	var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd")
 	var get_name := func(i: int) -> String:
 		if i >= cards.size():
@@ -488,7 +489,11 @@ func _open_pack_anim(cards: Array) -> void:
 		if entry is Dictionary:
 			return (entry as Dictionary).get("name", "")
 		return str(entry)
-	overlay_script.open(get_tree().root, "", get_name.call(0), get_name.call(1), get_name.call(2))
+	var pack_img: String = ""
+	if pack_name != "":
+		var pack_dict: Dictionary = ShopManager.get_pack_by_name(pack_name)
+		pack_img = str(pack_dict.get("pack_image", ""))
+	overlay_script.open(get_tree().root, pack_img, get_name.call(0), get_name.call(1), get_name.call(2))
 
 func _detect_card_type(card_name: String) -> String:
 	if CardDatabase.get_character(card_name) != null: return "character"

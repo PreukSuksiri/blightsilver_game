@@ -152,7 +152,8 @@ func admin_command(raw: String) -> String:
 				+ "  demo_on\n"
 				+ "  demo_off\n"
 				+ "  demo_status\n"
-				+ "  hide_ui"
+				+ "  hide_ui\n"
+				+ "  ai_trailer [on|off]"
 			)
 
 		"tts":
@@ -783,6 +784,25 @@ func admin_command(raw: String) -> String:
 				if (CardDatabase.tech_cards[ename] as TechCardData).include_in_demo:
 					flagged += 1
 			return "Demo mode: %s\nCards flagged for demo: %d" % [state, flagged]
+
+		# ── ai_trailer — set / clear trailer AI personalities ───────────────
+		"ai_trailer":
+			# Usage: ai_trailer [on|off]   (default: on)
+			var sub: String = args.strip_edges().to_lower()
+			if sub == "off" or sub == "clear":
+				GameState.campaign_enemy_config.erase("ai_personality_defensive")
+				GameState.campaign_enemy_config.erase("ai_personality_offensive")
+				GameState.campaign_enemy_config.erase("ai_personality_social")
+				return "Trailer AI personalities cleared. Next VS AI game uses random personalities."
+			else:
+				GameState.campaign_enemy_config["ai_personality_defensive"] = "Trailer Defensive"
+				GameState.campaign_enemy_config["ai_personality_offensive"] = "Trailer Offensive"
+				GameState.campaign_enemy_config["ai_personality_social"]    = "Trailer Social"
+				return ("Trailer AI personalities set.\n"
+					+ "  Defensive: Trailer Defensive (Explosive Barrels centre, strong chars border)\n"
+					+ "  Offensive: Trailer Offensive (attack x2, target 💩/🖕 first, ATK tech only, no union)\n"
+					+ "  Social:    Trailer Social (laugh 🤣 on every character kill)\n"
+					+ "Start a VS AI game to apply. Use 'ai_trailer off' to revert.")
 
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd

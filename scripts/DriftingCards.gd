@@ -99,32 +99,63 @@ func _scan_front_textures() -> void:
 		else:
 			_nsfw_paths.append(safe_path)  # no nsfw art → fall back to safe
 
-	# When demo mode is on, restrict to cards flagged include_in_demo
+	# Always exclude cards flagged as placeholder art
+	var placeholder_stems: Dictionary = _build_placeholder_stems()
+	var filtered_safe: Array[String] = []
+	var filtered_nsfw: Array[String] = []
+	for i: int in range(_safe_paths.size()):
+		var stem: String = _safe_paths[i].get_file().get_basename()
+		if stem not in placeholder_stems:
+			filtered_safe.append(_safe_paths[i])
+			filtered_nsfw.append(_nsfw_paths[i])
+	_safe_paths = filtered_safe
+	_nsfw_paths = filtered_nsfw
+
+	# When demo mode is on, further restrict to cards flagged include_in_demo
 	if SaveManager.demo_mode:
-		var demo_stems := _build_demo_stems()
-		var filtered_safe: Array[String] = []
-		var filtered_nsfw: Array[String] = []
-		for i in range(_safe_paths.size()):
+		var demo_stems: Dictionary = _build_demo_stems()
+		var demo_safe: Array[String] = []
+		var demo_nsfw: Array[String] = []
+		for i: int in range(_safe_paths.size()):
 			var stem: String = _safe_paths[i].get_file().get_basename()
 			if stem in demo_stems:
-				filtered_safe.append(_safe_paths[i])
-				filtered_nsfw.append(_nsfw_paths[i])
-		_safe_paths = filtered_safe
-		_nsfw_paths = filtered_nsfw
+				demo_safe.append(_safe_paths[i])
+				demo_nsfw.append(_nsfw_paths[i])
+		_safe_paths = demo_safe
+		_nsfw_paths = demo_nsfw
 
 	_safe_paths.shuffle()
 	_nsfw_paths.shuffle()
 
+func _build_placeholder_stems() -> Dictionary:
+	var stems: Dictionary = {}
+	for cname: String in CardDatabase.characters:
+		var cd: CharacterData = CardDatabase.characters[cname] as CharacterData
+		if cd.placeholder_art:
+			stems["character_" + cname.to_lower().replace(" ", "_")] = true
+	for tname: String in CardDatabase.traps:
+		var td: TrapData = CardDatabase.traps[tname] as TrapData
+		if td.placeholder_art:
+			stems["trap_" + tname.to_lower().replace(" ", "_")] = true
+	for ename: String in CardDatabase.tech_cards:
+		var ed: TechCardData = CardDatabase.tech_cards[ename] as TechCardData
+		if ed.placeholder_art:
+			stems["tech_" + ename.to_lower().replace(" ", "_")] = true
+	return stems
+
 func _build_demo_stems() -> Dictionary:
 	var stems: Dictionary = {}
 	for cname: String in CardDatabase.characters:
-		if (CardDatabase.characters[cname] as CharacterData).include_in_demo:
+		var cd: CharacterData = CardDatabase.characters[cname] as CharacterData
+		if cd.include_in_demo and not cd.placeholder_art:
 			stems["character_" + cname.to_lower().replace(" ", "_")] = true
 	for tname: String in CardDatabase.traps:
-		if (CardDatabase.traps[tname] as TrapData).include_in_demo:
+		var td: TrapData = CardDatabase.traps[tname] as TrapData
+		if td.include_in_demo and not td.placeholder_art:
 			stems["trap_" + tname.to_lower().replace(" ", "_")] = true
 	for ename: String in CardDatabase.tech_cards:
-		if (CardDatabase.tech_cards[ename] as TechCardData).include_in_demo:
+		var ed: TechCardData = CardDatabase.tech_cards[ename] as TechCardData
+		if ed.include_in_demo and not ed.placeholder_art:
 			stems["tech_" + ename.to_lower().replace(" ", "_")] = true
 	return stems
 

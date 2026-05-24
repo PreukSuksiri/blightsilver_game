@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4q2lywy5iyd8"
-path="res://.godot/imported/release mutagen.jpg-14e2ff994c1f02fc8242c42d74114c07.ctex"
+uid="uid://k7ouovg3duo1"
+path="res://.godot/imported/araya_the_eerie_dancer.jpg-c9dd6b4bebe51c76e2545f8c98b55809.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/tech/release mutagen.jpg"
-dest_files=["res://.godot/imported/release mutagen.jpg-14e2ff994c1f02fc8242c42d74114c07.ctex"]
+source_file="res://assets/textures/cards/characters/araya_the_eerie_dancer.jpg"
+dest_files=["res://.godot/imported/araya_the_eerie_dancer.jpg-c9dd6b4bebe51c76e2545f8c98b55809.ctex"]
 
 [params]
 

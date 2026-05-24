@@ -4893,14 +4893,17 @@ func _on_attack_completed(_from: Vector2i, _to: Vector2i, _result: BattleResolve
 	_clear_selection()
 	_update_end_turn_blink()
 	_refresh_attack_labels()
-	# AI kill-taunt: small chance to mock on attacker cell after destroying a strong/union card
+	# AI kill-taunt: mock on attacker cell after destroying an opponent character
 	if _is_ai_turn() and _result.defender_destroyed:
 		var opp_graveyard: Array = GameState.graveyards[GameState.get_opponent(GameState.current_player)]
 		if not opp_graveyard.is_empty():
 			var killed: GameState.CardInstance = opp_graveyard[-1]
-			var is_worthy: bool = killed.current_atk >= 100 or killed.current_def >= 100 or killed.is_union
-			if is_worthy and randf() < 0.35:
+			if _active_ai._trailer_social and killed.card_type == "character":
 				_active_ai.decide_kill_taunt(_from)
+			else:
+				var is_worthy: bool = killed.current_atk >= 100 or killed.current_def >= 100 or killed.is_union
+				if is_worthy and randf() < 0.35:
+					_active_ai.decide_kill_taunt(_from)
 	# Phase returns to MODE_SELECT after battle; _enter_mode_select() re-enables selection.
 
 func _on_attack_aborted() -> void:

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cx61yophei4br"
-path="res://.godot/imported/choir_singer_alice.jpg-a681f1911047529cef196e5e1dd1bf68.ctex"
+uid="uid://c6krxc3aoh3r7"
+path="res://.godot/imported/needle_porcupine.jpg-d6b8742348c817bc77c2f48d7234b4f1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/choir_singer_alice.jpg"
-dest_files=["res://.godot/imported/choir_singer_alice.jpg-a681f1911047529cef196e5e1dd1bf68.ctex"]
+source_file="res://assets/textures/cards/characters/needle_porcupine.jpg"
+dest_files=["res://.godot/imported/needle_porcupine.jpg-d6b8742348c817bc77c2f48d7234b4f1.ctex"]
 
 [params]
 

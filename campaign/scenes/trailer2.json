@@ -1,0 +1,71 @@
+[
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bg_vn_hospitsl_director_room.png",
+		"fade_color": "#000000",
+		"fade_in": 0.5,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bg_vn_hospitsl_director_room.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/ch3_2/vn_char_hospital_director.png"
+			}
+		],
+		"speaker": "Doctor",
+		"text": "(The doctor smiled)"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bg_vn_hospitsl_director_room.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/ch3_2/vn_char_hospital_director.png"
+			}
+		],
+		"speaker": "Doctor",
+		"text": "Who or whatever you are... if you want to save lives... you are always deserved a seat in my lecture room."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bg_vn_hospitsl_director_room.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/ch3_2/vn_char_hospital_director.png"
+			}
+		],
+		"speaker": "Doctor",
+		"text": "So promised me... Don't ever skip the class again."
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.5,
+		"linger_characters": true,
+		"wait": 0.001
+	},
+	{
+		"linger_characters": true,
+		"wait": 5.0
+	}
+]
