@@ -50,8 +50,8 @@ func _ready() -> void:
 	_refresh_deck_status()
 	_refresh_inventory_badge()
 	MailboxManager.mailbox_changed.connect(_refresh_inventory_badge)
-	# Re-open dungeon map if returning from a dungeon battle
-	if DailyDungeonManager.return_to_dungeon_map:
+	# Re-open dungeon map if returning from a dungeon battle or VN dungeon session
+	if DailyDungeonManager.return_to_dungeon_map or DailyDungeonManager.vn_dungeon_id != "":
 		DailyDungeonManager.return_to_dungeon_map = false
 		_on_daily_dungeon()
 

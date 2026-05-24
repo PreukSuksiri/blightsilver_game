@@ -156,6 +156,14 @@ var _union_gallery_vbox:   VBoxContainer = null
 var _battle_reward_rows: Array = []
 var _reward_rows_vbox: VBoxContainer = null
 
+# Dungeon call fields
+var _f_call_dungeon:        CheckBox     = null
+var _f_dungeon_mode_filter: OptionButton = null   # editor UX only, not saved to JSON
+var _f_dungeon_opt:         OptionButton = null
+var _f_dungeon_on_win:      LineEdit     = null
+var _f_dungeon_on_lose:     LineEdit     = null
+var _dungeon_filtered_ids:  Array        = []
+
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
 # ─────────────────────────────────────────────────────────────
@@ -763,6 +771,24 @@ func _build_fields() -> void:
 	_reward_rows_vbox.add_theme_constant_override("separation", 3)
 	v.add_child(_reward_rows_vbox)
 
+	# ── Dungeon Call ───────────────────────────────────────────
+	_section(v, "DUNGEON CALL")
+	_f_call_dungeon = _row_cb(v, "Call Dungeon", "launch dungeon map from this beat")
+	_f_call_dungeon.toggled.connect(func(_b: bool) -> void: _on_field_changed())
+	_f_dungeon_mode_filter = _row_opt(v, "Mode filter",
+		["All", "Daily Dungeon", "Story Mode"],
+		"editor UX only — not saved")
+	_f_dungeon_mode_filter.item_selected.connect(func(_i: int) -> void:
+		_populate_dungeon_call_picker())
+	_f_dungeon_opt = _row_opt(v, "Dungeon", [], "")
+	_f_dungeon_opt.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	_f_dungeon_on_win  = _row_le(v, "On Win",  "VN JSON path played when dungeon is cleared")
+	_add_browse(_f_dungeon_on_win,  PackedStringArray(["*.json;JSON"]), "res://campaign/scenes/")
+	_f_dungeon_on_win.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+	_f_dungeon_on_lose = _row_le(v, "On Lose", "VN JSON path played on any battle loss")
+	_add_browse(_f_dungeon_on_lose, PackedStringArray(["*.json;JSON"]), "res://campaign/scenes/")
+	_f_dungeon_on_lose.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+
 	_connect_static_signals()
 
 func _connect_static_signals() -> void:
@@ -808,6 +834,29 @@ func _connect_static_signals() -> void:
 		_f_kb_zoom, _f_kb_pan_x, _f_kb_pan_y, _f_kb_duration,
 	]:
 		sp.value_changed.connect(func(_v: float) -> void: ch.call())
+
+# ─────────────────────────────────────────────────────────────
+# Dungeon call picker
+# ─────────────────────────────────────────────────────────────
+func _populate_dungeon_call_picker() -> void:
+	_f_dungeon_opt.clear()
+	_dungeon_filtered_ids.clear()
+	var filter_mode: String = ""
+	if _f_dungeon_mode_filter != null:
+		match _f_dungeon_mode_filter.selected:
+			1: filter_mode = "daily_dungeon"
+			2: filter_mode = "story_mode"
+	var all_ids: Array = DailyDungeonManager.get_all_layout_ids()
+	for did: String in all_ids:
+		if filter_mode != "":
+			var layout_data: Variant = DailyDungeonManager.get_layout(did)
+			var lm: String = (layout_data as Dictionary).get("mode", "daily_dungeon")
+			if lm != filter_mode:
+				continue
+		_dungeon_filtered_ids.append(did)
+		_f_dungeon_opt.add_item(did)
+	if _dungeon_filtered_ids.is_empty():
+		_f_dungeon_opt.add_item("(no layouts)")
 
 # ─────────────────────────────────────────────────────────────
 # Dynamic locale UI (speaker + text tabs)
@@ -1522,6 +1571,18 @@ func _populate_fields() -> void:
 	var rwd_raw: Variant = b.get("battle_reward", [])
 	_rebuild_reward_rows(rwd_raw if rwd_raw is Array else [])
 
+	# Dungeon call
+	var dcall: String = str(b.get("dungeon_call", ""))
+	_f_call_dungeon.button_pressed = dcall != ""
+	_populate_dungeon_call_picker()
+	if dcall != "":
+		for i: int in range(_dungeon_filtered_ids.size()):
+			if _dungeon_filtered_ids[i] == dcall:
+				_f_dungeon_opt.selected = i
+				break
+	_f_dungeon_on_win.text  = str(b.get("dungeon_on_win",  ""))
+	_f_dungeon_on_lose.text = str(b.get("dungeon_on_lose", ""))
+
 	_loading = false
 	_update_tab_colors()
 	_update_bug_note_label()
@@ -1794,6 +1855,19 @@ func _collect_beat() -> Dictionary:
 					rewards.append({"type": "booster_pack", "pack_name": pname})
 	if not rewards.is_empty():
 		b["battle_reward"] = rewards
+
+	# Dungeon call
+	if _f_call_dungeon.button_pressed and _f_dungeon_opt.selected >= 0:
+		var sel: int = _f_dungeon_opt.selected
+		var did: String = _dungeon_filtered_ids[sel] if sel < _dungeon_filtered_ids.size() else ""
+		if did != "" and did != "(no layouts)":
+			b["dungeon_call"] = did
+	var dw: String = _f_dungeon_on_win.text.strip_edges()
+	if not dw.is_empty():
+		b["dungeon_on_win"] = dw
+	var dl: String = _f_dungeon_on_lose.text.strip_edges()
+	if not dl.is_empty():
+		b["dungeon_on_lose"] = dl
 
 	return b
 

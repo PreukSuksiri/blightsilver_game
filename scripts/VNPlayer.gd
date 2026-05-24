@@ -595,6 +595,18 @@ func _show_beat() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 		return
 
+	# ── Dungeon call ──
+	var dungeon_id: String = str(beat.get("dungeon_call", ""))
+	if dungeon_id != "":
+		_set_music("", 0.0, 0.0)
+		DailyDungeonManager.vn_dungeon_id      = dungeon_id
+		DailyDungeonManager.vn_dungeon_on_win  = str(beat.get("dungeon_on_win",  ""))
+		DailyDungeonManager.vn_dungeon_on_lose = str(beat.get("dungeon_on_lose", ""))
+		SaveManager.save_data()
+		CheckerTransition.fade_out_to_battle(func() -> void:
+			get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		return
+
 	# ── Continue hint icon ──
 	_show_hint_icon()
 

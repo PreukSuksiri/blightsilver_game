@@ -139,6 +139,7 @@ func admin_command(raw: String) -> String:
 				+ "  dungeon_builder [dungeon_id]\n"
 				+ "  dungeon_activator\n"
 				+ "  dungeon_reset\n"
+				+ "  clear_campaign_progress\n"
 				+ "  list_packs\n"
 				+ "  open_pack <pack_id_or_name>\n"
 				+ "  grant_pack <pack_id_or_name>\n"
@@ -634,6 +635,14 @@ func admin_command(raw: String) -> String:
 			DailyDungeonManager.player_map_node_id = ""
 			SaveManager.save_data()
 			return "Daily dungeon progress reset: %s" % dungeon_id
+
+		"clear_campaign_progress":
+			var count: int = CampaignManager.completed.size()
+			CampaignManager.completed.clear()
+			CampaignManager.active_node_id = ""
+			CampaignManager.pending_result = {}
+			SaveManager.save_data()
+			return "Campaign progress cleared (%d nodes were completed)." % count
 
 		"list_packs":
 			var lines: Array = []

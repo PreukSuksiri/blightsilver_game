@@ -40,7 +40,10 @@ var _canvas:      Control    = null
 var _line_canvas: LineCanvas = null
 var _status_lbl:  Label      = null
 var _dungeon_picker: OptionButton = null
+var _mode_filter_opt: OptionButton = null   # header filter: All / Daily Dungeon / Story Mode
+var _dungeon_mode_opt: OptionButton = null  # meta panel: this layout's mode
 var _all_ids: Array = []
+var _filtered_ids: Array = []  # subset of _all_ids shown in picker after mode filter
 
 # Property panel refs
 var _prop_panel:        Control  = null
@@ -77,10 +80,21 @@ var _prop_plr_union_chk: CheckBox = null
 var _prop_ai_pers_def: OptionButton = null
 var _prop_ai_pers_off: OptionButton = null
 var _prop_ai_pers_soc: OptionButton = null
-var _player_forced_rows: Array    = []
-var _ai_forced_rows:     Array    = []
-var _player_forced_vbox: VBoxContainer = null
-var _ai_forced_vbox:     VBoxContainer = null
+var _player_forced_grid: Dictionary    = {}   # key="r,c"  value=card_name
+var _ai_forced_grid:     Dictionary    = {}
+var _player_forced_gc:   GridContainer = null
+var _ai_forced_gc:       GridContainer = null
+
+# Message fields
+var _prop_pre_msg_edit:  LineEdit = null
+var _prop_post_msg_edit: LineEdit = null
+
+# Battle data clipboard (Copy/Paste between nodes)
+var _battle_clipboard: Dictionary = {}
+
+# Dungeon BGM
+var _dungeon_bgm_edit:   LineEdit            = null
+var _dungeon_bgm_player: AudioStreamPlayer   = null
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -92,8 +106,8 @@ func _ready() -> void:
 	_build_ui()
 	_all_ids = DailyDungeonManager.get_all_layout_ids()
 	_populate_dungeon_picker()
-	if not _all_ids.is_empty():
-		_load_dungeon(_all_ids[0])
+	if not _filtered_ids.is_empty():
+		_load_dungeon(_filtered_ids[0])
 
 # ─────────────────────────────────────────────────────────────
 # Dungeon loading / saving
@@ -112,17 +126,23 @@ func _load_dungeon(dungeon_id: String) -> void:
 	_rebuild_canvas()
 	_refresh_canvas_bg()
 	_update_prop_panel()
+	if _dungeon_mode_opt:
+		_dungeon_mode_opt.selected = 1 if _layout.get("mode", "daily_dungeon") == "story_mode" else 0
 	if _dungeon_name_edit:
 		_dungeon_name_edit.text = _layout.get("name", "")
 	if _bg_edit:
 		_bg_edit.text = _layout.get("background", "")
+	if _dungeon_bgm_edit:
+		_dungeon_bgm_edit.text = str(_layout.get("dungeon_bgm", ""))
 	_set_status("Loaded: %s  (%d nodes)" % [dungeon_id, _positions.size()])
 
 func _save_layout() -> void:
 	# Auto-apply current node panel edits and dungeon meta before saving
 	_apply_node_changes()
-	_layout["name"] = _dungeon_name_edit.text
+	_layout["mode"]       = "story_mode" if _dungeon_mode_opt.selected == 1 else "daily_dungeon"
+	_layout["name"]       = _dungeon_name_edit.text
 	_layout["background"] = _bg_edit.text
+	_layout["dungeon_bgm"] = _dungeon_bgm_edit.text.strip_edges() if _dungeon_bgm_edit != null else ""
 	# Write positions back to node data
 	for nd: Dictionary in _layout.get("nodes", []):
 		var nid: String = nd.get("id", "")
@@ -234,6 +254,21 @@ func _build_header() -> void:
 	title.add_theme_color_override("font_color", Color(1.0, 0.78, 0.30))
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hbox.add_child(title)
+
+	var mode_filter_lbl := Label.new()
+	mode_filter_lbl.text = "Mode:"
+	mode_filter_lbl.add_theme_font_size_override("font_size", 12)
+	mode_filter_lbl.add_theme_color_override("font_color", Color(0.7, 0.7, 0.8, 0.8))
+	mode_filter_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	hbox.add_child(mode_filter_lbl)
+
+	_mode_filter_opt = OptionButton.new()
+	_mode_filter_opt.custom_minimum_size = Vector2(140, 34)
+	_mode_filter_opt.add_item("All")
+	_mode_filter_opt.add_item("Daily Dungeon")
+	_mode_filter_opt.add_item("Story Mode")
+	_mode_filter_opt.item_selected.connect(func(_i: int) -> void: _populate_dungeon_picker())
+	hbox.add_child(_mode_filter_opt)
 
 	var pick_lbl := Label.new()
 	pick_lbl.text = "Layout:"
@@ -370,6 +405,21 @@ func _build_prop_panel(parent: Control) -> void:
 
 	inner.add_child(_make_sep())
 
+	# ── Messages ──
+	inner.add_child(_make_lbl("Pre-battle message  (shown on node arrival)"))
+	_prop_pre_msg_edit = LineEdit.new()
+	_prop_pre_msg_edit.placeholder_text = "e.g. Welcome to the grove, traveler!"
+	_prop_pre_msg_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	inner.add_child(_prop_pre_msg_edit)
+
+	inner.add_child(_make_lbl("Post-battle message  (shown after result banner)"))
+	_prop_post_msg_edit = LineEdit.new()
+	_prop_post_msg_edit.placeholder_text = "e.g. You've proven your worth here."
+	_prop_post_msg_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	inner.add_child(_prop_post_msg_edit)
+
+	inner.add_child(_make_sep())
+
 	# ── AI Deck ──
 	inner.add_child(_make_lbl("AI Characters (one per line)"))
 	_prop_chars_edit = TextEdit.new()
@@ -403,6 +453,20 @@ func _build_prop_panel(parent: Control) -> void:
 	bs_hdr.add_theme_font_size_override("font_size", 12)
 	bs_hdr.add_theme_color_override("font_color", Color(0.75, 0.90, 1.0, 0.8))
 	inner.add_child(bs_hdr)
+
+	var copy_paste_row := HBoxContainer.new()
+	copy_paste_row.add_theme_constant_override("separation", 6)
+	inner.add_child(copy_paste_row)
+	var copy_btn := Button.new()
+	copy_btn.text = "Copy Battle Data"
+	copy_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	copy_btn.pressed.connect(_copy_battle_data)
+	copy_paste_row.add_child(copy_btn)
+	var paste_btn := Button.new()
+	paste_btn.text = "Paste Battle Data"
+	paste_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	paste_btn.pressed.connect(_paste_battle_data)
+	copy_paste_row.add_child(paste_btn)
 
 	inner.add_child(_make_lbl("Player 1 Name"))
 	_prop_p1_name = LineEdit.new()
@@ -546,25 +610,13 @@ func _build_prop_panel(parent: Control) -> void:
 	for _sn: Variant in _soc_names: _prop_ai_pers_soc.add_item(_sn as String)
 	inner.add_child(_prop_ai_pers_soc)
 
-	inner.add_child(_make_lbl("Player Forced Cells (card / row / col)"))
-	_player_forced_vbox = VBoxContainer.new()
-	_player_forced_vbox.add_theme_constant_override("separation", 4)
-	inner.add_child(_player_forced_vbox)
-	var add_plr_btn := Button.new()
-	add_plr_btn.text = "+ Add Player Cell"
-	add_plr_btn.pressed.connect(func() -> void:
-		_bld_add_forced_cell_row(_player_forced_vbox, _player_forced_rows))
-	inner.add_child(add_plr_btn)
+	inner.add_child(_make_lbl("Player Forced Cells  (click cell to assign card)"))
+	_player_forced_gc = _build_forced_grid_bld(_player_forced_grid)
+	inner.add_child(_player_forced_gc)
 
-	inner.add_child(_make_lbl("AI Forced Cells (card / row / col)"))
-	_ai_forced_vbox = VBoxContainer.new()
-	_ai_forced_vbox.add_theme_constant_override("separation", 4)
-	inner.add_child(_ai_forced_vbox)
-	var add_ai_btn := Button.new()
-	add_ai_btn.text = "+ Add AI Cell"
-	add_ai_btn.pressed.connect(func() -> void:
-		_bld_add_forced_cell_row(_ai_forced_vbox, _ai_forced_rows))
-	inner.add_child(add_ai_btn)
+	inner.add_child(_make_lbl("AI Forced Cells  (click cell to assign card)"))
+	_ai_forced_gc = _build_forced_grid_bld(_ai_forced_grid)
+	inner.add_child(_ai_forced_gc)
 
 	inner.add_child(_make_sep())
 
@@ -606,6 +658,12 @@ func _build_prop_panel(parent: Control) -> void:
 	inner.add_child(_make_sep())
 
 	# ── Dungeon meta ──
+	inner.add_child(_make_lbl("Dungeon Mode"))
+	_dungeon_mode_opt = OptionButton.new()
+	_dungeon_mode_opt.add_item("Daily Dungeon")
+	_dungeon_mode_opt.add_item("Story Mode")
+	inner.add_child(_dungeon_mode_opt)
+
 	inner.add_child(_make_lbl("Dungeon name"))
 	_dungeon_name_edit = LineEdit.new()
 	inner.add_child(_dungeon_name_edit)
@@ -626,11 +684,56 @@ func _build_prop_panel(parent: Control) -> void:
 		_open_file_dialog(func(p: String) -> void: _bg_edit.text = p))
 	bg_row.add_child(bg_browse)
 
+	inner.add_child(_make_lbl("Dungeon BGM"))
+	var bgm_meta_row := HBoxContainer.new()
+	bgm_meta_row.add_theme_constant_override("separation", 4)
+	inner.add_child(bgm_meta_row)
+	_dungeon_bgm_edit = LineEdit.new()
+	_dungeon_bgm_edit.placeholder_text = "res://assets/audio/..."
+	_dungeon_bgm_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	bgm_meta_row.add_child(_dungeon_bgm_edit)
+	var bgm_meta_browse := Button.new()
+	bgm_meta_browse.text = "..."
+	bgm_meta_browse.custom_minimum_size = Vector2(36, 0)
+	bgm_meta_browse.tooltip_text = "Browse for BGM"
+	bgm_meta_browse.pressed.connect(func() -> void:
+		_open_file_dialog_audio(func(p: String) -> void: _dungeon_bgm_edit.text = p))
+	bgm_meta_row.add_child(bgm_meta_browse)
+	var bgm_preview_btn := Button.new()
+	bgm_preview_btn.text = "▶"
+	bgm_preview_btn.custom_minimum_size = Vector2(36, 0)
+	bgm_preview_btn.tooltip_text = "Preview BGM"
+	bgm_preview_btn.pressed.connect(func() -> void:
+		var path: String = _dungeon_bgm_edit.text.strip_edges()
+		if path.is_empty() or not ResourceLoader.exists(path):
+			_set_status("BGM not found: %s" % path)
+			return
+		if _dungeon_bgm_player == null:
+			_dungeon_bgm_player = AudioStreamPlayer.new()
+			add_child(_dungeon_bgm_player)
+		_dungeon_bgm_player.stream = load(path)
+		if _dungeon_bgm_player.stream is AudioStreamMP3:
+			(_dungeon_bgm_player.stream as AudioStreamMP3).loop = true
+		_dungeon_bgm_player.play()
+		_set_status("Previewing: %s" % path.get_file()))
+	bgm_meta_row.add_child(bgm_preview_btn)
+	var bgm_stop_btn := Button.new()
+	bgm_stop_btn.text = "■"
+	bgm_stop_btn.custom_minimum_size = Vector2(36, 0)
+	bgm_stop_btn.tooltip_text = "Stop BGM"
+	bgm_stop_btn.pressed.connect(func() -> void:
+		if _dungeon_bgm_player != null:
+			_dungeon_bgm_player.stop()
+		_set_status("BGM stopped"))
+	bgm_meta_row.add_child(bgm_stop_btn)
+
 	var meta_apply := Button.new()
 	meta_apply.text = "Apply Dungeon Meta"
 	meta_apply.pressed.connect(func() -> void:
-		_layout["name"] = _dungeon_name_edit.text
+		_layout["name"]       = _dungeon_name_edit.text
 		_layout["background"] = _bg_edit.text
+		_layout["dungeon_bgm"] = _dungeon_bgm_edit.text.strip_edges()
+		_layout["mode"]       = "story_mode" if _dungeon_mode_opt.selected == 1 else "daily_dungeon"
 		_set_status("Meta updated"))
 	inner.add_child(meta_apply)
 
@@ -885,6 +988,10 @@ func _update_prop_panel() -> void:
 	_prop_entry_chk.button_pressed = nd.get("is_entry", false)
 	_prop_pack_edit.text = nd.get("pack_reward", "")
 	_prop_img_edit.text  = nd.get("image", "")
+	if _prop_pre_msg_edit != null:
+		_prop_pre_msg_edit.text  = str(nd.get("pre_battle_message", ""))
+	if _prop_post_msg_edit != null:
+		_prop_post_msg_edit.text = str(nd.get("post_battle_message", ""))
 	var deck: Dictionary = nd.get("ai_deck", {})
 	_prop_chars_edit.text = "\n".join(PackedStringArray(deck.get("characters", [])))
 	_prop_traps_edit.text = "\n".join(PackedStringArray(deck.get("traps", [])))
@@ -912,9 +1019,9 @@ func _update_prop_panel() -> void:
 		_opt_select(_prop_ai_pers_soc, str(bs.get("ai_personality_social",    "")))
 		var raw_pfc: Variant = bs.get("player_forced_cells", [])
 		var raw_afc: Variant = bs.get("ai_forced_cells", [])
-		_bld_rebuild_forced_cell_rows(_player_forced_vbox, _player_forced_rows,
+		_rebuild_forced_grid_bld(_player_forced_grid, _player_forced_gc,
 			raw_pfc if raw_pfc is Array else [])
-		_bld_rebuild_forced_cell_rows(_ai_forced_vbox, _ai_forced_rows,
+		_rebuild_forced_grid_bld(_ai_forced_grid, _ai_forced_gc,
 			raw_afc if raw_afc is Array else [])
 
 func _apply_node_changes() -> void:
@@ -929,6 +1036,10 @@ func _apply_node_changes() -> void:
 	nd["is_entry"] = _prop_entry_chk.button_pressed
 	nd["pack_reward"] = _prop_pack_edit.text.strip_edges()
 	nd["image"]       = _prop_img_edit.text.strip_edges()
+	if _prop_pre_msg_edit != null:
+		nd["pre_battle_message"]  = _prop_pre_msg_edit.text.strip_edges()
+	if _prop_post_msg_edit != null:
+		nd["post_battle_message"] = _prop_post_msg_edit.text.strip_edges()
 	# Parse AI deck
 	var chars: Array = []
 	for line: String in _prop_chars_edit.text.split("\n"):
@@ -948,8 +1059,8 @@ func _apply_node_changes() -> void:
 	nd["ai_deck"] = {"characters": chars, "traps": traps, "tech": techs}
 	# Collect battle settings
 	if _prop_p1_name != null:
-		var pfc: Array = _bld_collect_forced_cells(_player_forced_rows)
-		var afc: Array = _bld_collect_forced_cells(_ai_forced_rows)
+		var pfc: Array = _collect_forced_cells_from_grid_bld(_player_forced_grid)
+		var afc: Array = _collect_forced_cells_from_grid_bld(_ai_forced_grid)
 		nd["battle_settings"] = {
 			"player1_name":         _prop_p1_name.text.strip_edges(),
 			"player2_name":         _prop_p2_name.text.strip_edges(),
@@ -1060,15 +1171,117 @@ func _delete_selected_node() -> void:
 # ─────────────────────────────────────────────────────────────
 # Dungeon picker
 # ─────────────────────────────────────────────────────────────
+func _copy_battle_data() -> void:
+	if _selected_id.is_empty():
+		_set_status("No node selected — nothing to copy")
+		return
+	# Collect AI deck from text fields
+	var chars: Array = []
+	for line: String in _prop_chars_edit.text.split("\n"):
+		var s: String = line.strip_edges()
+		if not s.is_empty(): chars.append(s)
+	var traps: Array = []
+	for line: String in _prop_traps_edit.text.split("\n"):
+		var s: String = line.strip_edges()
+		if not s.is_empty(): traps.append(s)
+	var techs: Array = []
+	for line: String in _prop_tech_edit.text.split("\n"):
+		var s: String = line.strip_edges()
+		if not s.is_empty(): techs.append(s)
+	# Collect forced cells from grids
+	var pfc: Array = _collect_forced_cells_from_grid_bld(_player_forced_grid)
+	var afc: Array = _collect_forced_cells_from_grid_bld(_ai_forced_grid)
+	_battle_clipboard = {
+		"ai_deck": {"characters": chars, "traps": traps, "tech": techs},
+		"battle_settings": {
+			"player1_name":              _prop_p1_name.text.strip_edges(),
+			"player2_name":              _prop_p2_name.text.strip_edges(),
+			"portrait_p1":               _prop_portrait_p1.text.strip_edges(),
+			"portrait_p1_offset_x":      _prop_p1_offset_x.value,
+			"portrait_p1_offset_y":      _prop_p1_offset_y.value,
+			"portrait_p1_size":          _prop_p1_size.value,
+			"portrait_p2":               _prop_portrait_p2.text.strip_edges(),
+			"portrait_p2_offset_x":      _prop_p2_offset_x.value,
+			"portrait_p2_offset_y":      _prop_p2_offset_y.value,
+			"portrait_p2_size":          _prop_p2_size.value,
+			"battle_bgm":                _prop_battle_bgm.text.strip_edges(),
+			"battle_bgm_volume":         _prop_bgm_vol.value,
+			"ai_union_enabled":          _prop_ai_union_chk.button_pressed,
+			"player_union_enabled":      _prop_plr_union_chk.button_pressed,
+			"ai_personality_defensive":  _prop_ai_pers_def.get_item_text(_prop_ai_pers_def.selected) if _prop_ai_pers_def.selected > 0 else "",
+			"ai_personality_offensive":  _prop_ai_pers_off.get_item_text(_prop_ai_pers_off.selected) if _prop_ai_pers_off.selected > 0 else "",
+			"ai_personality_social":     _prop_ai_pers_soc.get_item_text(_prop_ai_pers_soc.selected) if _prop_ai_pers_soc.selected > 0 else "",
+			"player_forced_cells":       pfc,
+			"ai_forced_cells":           afc,
+		}
+	}
+	_set_status("Battle data copied from: %s" % _selected_id)
+
+func _paste_battle_data() -> void:
+	if _selected_id.is_empty():
+		_set_status("No node selected — nothing to paste into")
+		return
+	if _battle_clipboard.is_empty():
+		_set_status("Clipboard is empty — copy from a node first")
+		return
+	# Restore AI deck
+	var deck: Dictionary = _battle_clipboard.get("ai_deck", {})
+	_prop_chars_edit.text = "\n".join(PackedStringArray(deck.get("characters", [])))
+	_prop_traps_edit.text = "\n".join(PackedStringArray(deck.get("traps", [])))
+	_prop_tech_edit.text  = "\n".join(PackedStringArray(deck.get("tech", [])))
+	# Restore battle settings
+	var bs: Dictionary = _battle_clipboard.get("battle_settings", {})
+	_prop_p1_name.text       = str(bs.get("player1_name", ""))
+	_prop_p2_name.text       = str(bs.get("player2_name", ""))
+	_prop_portrait_p1.text   = str(bs.get("portrait_p1", ""))
+	_prop_p1_offset_x.value  = float(bs.get("portrait_p1_offset_x", 0.0))
+	_prop_p1_offset_y.value  = float(bs.get("portrait_p1_offset_y", 0.0))
+	_prop_p1_size.value      = float(bs.get("portrait_p1_size", 1.0))
+	_prop_portrait_p2.text   = str(bs.get("portrait_p2", ""))
+	_prop_p2_offset_x.value  = float(bs.get("portrait_p2_offset_x", 0.0))
+	_prop_p2_offset_y.value  = float(bs.get("portrait_p2_offset_y", 0.0))
+	_prop_p2_size.value      = float(bs.get("portrait_p2_size", 1.0))
+	_prop_battle_bgm.text    = str(bs.get("battle_bgm", ""))
+	_prop_bgm_vol.value      = float(bs.get("battle_bgm_volume", 100.0))
+	_prop_ai_union_chk.button_pressed  = bool(bs.get("ai_union_enabled", true))
+	_prop_plr_union_chk.button_pressed = bool(bs.get("player_union_enabled", true))
+	_opt_select(_prop_ai_pers_def, str(bs.get("ai_personality_defensive", "")))
+	_opt_select(_prop_ai_pers_off, str(bs.get("ai_personality_offensive", "")))
+	_opt_select(_prop_ai_pers_soc, str(bs.get("ai_personality_social",    "")))
+	# Restore forced cells into grids
+	var raw_pfc: Variant = bs.get("player_forced_cells", [])
+	var raw_afc: Variant = bs.get("ai_forced_cells", [])
+	_rebuild_forced_grid_bld(_player_forced_grid, _player_forced_gc,
+		raw_pfc if raw_pfc is Array else [])
+	_rebuild_forced_grid_bld(_ai_forced_grid, _ai_forced_gc,
+		raw_afc if raw_afc is Array else [])
+	# Auto-apply so the node data is saved immediately
+	_apply_node_changes()
+	_set_status("Battle data pasted to: %s" % _selected_id)
+
 func _populate_dungeon_picker() -> void:
 	_dungeon_picker.clear()
+	_filtered_ids.clear()
+	var filter_mode: String = ""
+	if _mode_filter_opt != null:
+		match _mode_filter_opt.selected:
+			1: filter_mode = "daily_dungeon"
+			2: filter_mode = "story_mode"
 	for did: String in _all_ids:
+		if filter_mode != "":
+			var layout_data: Variant = DailyDungeonManager.get_layout(did)
+			var lm: String = (layout_data as Dictionary).get("mode", "daily_dungeon")
+			if lm != filter_mode:
+				continue
+		_filtered_ids.append(did)
 		_dungeon_picker.add_item(did)
+	if not _filtered_ids.is_empty():
+		_load_dungeon(_filtered_ids[0])
 
 func _on_dungeon_selected(idx: int) -> void:
-	if idx < 0 or idx >= _all_ids.size():
+	if idx < 0 or idx >= _filtered_ids.size():
 		return
-	_load_dungeon(_all_ids[idx])
+	_load_dungeon(_filtered_ids[idx])
 
 func _on_new_layout() -> void:
 	# Prompt via a small popup
@@ -1097,7 +1310,7 @@ func _on_new_layout() -> void:
 		if did not in _all_ids:
 			_all_ids.append(did)
 		_populate_dungeon_picker()
-		_dungeon_picker.selected = _all_ids.find(did)
+		_dungeon_picker.selected = _filtered_ids.find(did)
 		_set_status("New layout: %s  (not yet saved)" % did)
 		popup.queue_free())
 	popup.popup_centered()
@@ -1147,73 +1360,174 @@ func _open_file_dialog_audio(on_selected: Callable) -> void:
 	fd.popup_centered_ratio(0.6)
 
 # ─────────────────────────────────────────────────────────────
-# Forced-cell row helpers
+# Forced-cell visual grid helpers (5×5, same style as VNEditor)
 # ─────────────────────────────────────────────────────────────
-func _bld_add_forced_cell_row(vbox: VBoxContainer, rows_arr: Array,
-		card: String = "", row_v: int = 0, col_v: int = 0) -> void:
-	var hbox := HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 4)
+func _build_forced_grid_bld(grid_dict: Dictionary) -> GridContainer:
+	var gc := GridContainer.new()
+	gc.columns = 5
+	gc.add_theme_constant_override("h_separation", 4)
+	gc.add_theme_constant_override("v_separation", 4)
+	for r: int in range(5):
+		for c: int in range(5):
+			var btn := Button.new()
+			btn.custom_minimum_size = Vector2(60, 42)
+			btn.clip_text = true
+			btn.add_theme_font_size_override("font_size", 10)
+			var r_cap := r
+			var c_cap := c
+			btn.pressed.connect(func() -> void:
+				if _selected_id.is_empty():
+					return
+				_open_forced_cell_picker_bld(grid_dict, gc, r_cap, c_cap))
+			gc.add_child(btn)
+	_refresh_forced_grid_bld(grid_dict, gc)
+	return gc
 
-	var card_le := LineEdit.new()
-	card_le.placeholder_text = "Card name"
-	card_le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	card_le.text = card
-	hbox.add_child(card_le)
+func _refresh_forced_grid_bld(grid_dict: Dictionary, gc: GridContainer) -> void:
+	if gc == null:
+		return
+	var children: Array = gc.get_children()
+	for r: int in range(5):
+		for c: int in range(5):
+			var btn: Button = children[r * 5 + c] as Button
+			var key: String = str(r) + "," + str(c)
+			if grid_dict.has(key):
+				btn.text = grid_dict[key] as String
+				btn.modulate = Color(0.55, 1.0, 0.55)
+			else:
+				btn.text = "%d,%d" % [r, c]
+				btn.modulate = Color(1.0, 1.0, 1.0, 0.45)
 
-	var row_lbl := Label.new()
-	row_lbl.text = "R"
-	row_lbl.add_theme_font_size_override("font_size", 11)
-	hbox.add_child(row_lbl)
-	var row_sb := SpinBox.new()
-	row_sb.min_value = 0; row_sb.max_value = 4; row_sb.step = 1
-	row_sb.value = row_v
-	row_sb.custom_minimum_size = Vector2(60, 0)
-	hbox.add_child(row_sb)
+func _open_forced_cell_picker_bld(grid_dict: Dictionary, gc: GridContainer, r: int, c: int) -> void:
+	var overlay := ColorRect.new()
+	overlay.color = Color(0.0, 0.0, 0.0, 0.55)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.z_index = 70
+	add_child(overlay)
 
-	var col_lbl := Label.new()
-	col_lbl.text = "C"
-	col_lbl.add_theme_font_size_override("font_size", 11)
-	hbox.add_child(col_lbl)
-	var col_sb := SpinBox.new()
-	col_sb.min_value = 0; col_sb.max_value = 4; col_sb.step = 1
-	col_sb.value = col_v
-	col_sb.custom_minimum_size = Vector2(60, 0)
-	hbox.add_child(col_sb)
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
 
-	var del_btn := Button.new()
-	del_btn.text = "X"
-	del_btn.custom_minimum_size = Vector2(28, 0)
-	var row_ref: Dictionary = {"card_le": card_le, "row_sb": row_sb, "col_sb": col_sb, "hbox": hbox}
-	del_btn.pressed.connect(func() -> void:
-		rows_arr.erase(row_ref)
-		hbox.queue_free())
-	hbox.add_child(del_btn)
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(360, 0)
+	center.add_child(panel)
 
-	rows_arr.append(row_ref)
-	vbox.add_child(hbox)
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 8)
+	panel.add_child(vb)
 
-func _bld_collect_forced_cells(rows_arr: Array) -> Array:
+	var title := Label.new()
+	title.text = "Cell [row %d, col %d]" % [r, c]
+	title.add_theme_font_size_override("font_size", 15)
+	vb.add_child(title)
+
+	var key: String = str(r) + "," + str(c)
+	var current: String = str(grid_dict.get(key, ""))
+
+	var le := LineEdit.new()
+	le.placeholder_text = "Character card name..."
+	le.text = current
+	le.add_theme_font_size_override("font_size", 14)
+	le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vb.add_child(le)
+
+	var sug_scroll := ScrollContainer.new()
+	sug_scroll.custom_minimum_size = Vector2(0, 120)
+	sug_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vb.add_child(sug_scroll)
+	var sug_vb := VBoxContainer.new()
+	sug_vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sug_scroll.add_child(sug_vb)
+
+	var refresh_sug := func(query: String) -> void:
+		for child: Node in sug_vb.get_children():
+			child.queue_free()
+		var q: String = query.strip_edges().to_lower()
+		var names: Array = []
+		for n: String in CardDatabase.characters:
+			if q.is_empty() or n.to_lower().contains(q):
+				names.append(n)
+		names.sort()
+		var shown: int = 0
+		for n: String in names:
+			if shown >= 25:
+				break
+			var sb := Button.new()
+			sb.text = n
+			sb.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			sb.add_theme_font_size_override("font_size", 12)
+			sb.pressed.connect(func() -> void: le.text = n)
+			sug_vb.add_child(sb)
+			shown += 1
+
+	le.text_changed.connect(refresh_sug)
+	refresh_sug.call(current)
+
+	var btn_hb := HBoxContainer.new()
+	btn_hb.add_theme_constant_override("separation", 6)
+	vb.add_child(btn_hb)
+
+	var set_btn := Button.new()
+	set_btn.text = "Set"
+	set_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_hb.add_child(set_btn)
+
+	var clear_btn := Button.new()
+	clear_btn.text = "Clear"
+	clear_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_hb.add_child(clear_btn)
+
+	var cancel_btn := Button.new()
+	cancel_btn.text = "Cancel"
+	cancel_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_hb.add_child(cancel_btn)
+
+	set_btn.pressed.connect(func() -> void:
+		var cname: String = le.text.strip_edges()
+		if not cname.is_empty():
+			grid_dict[key] = cname
+		else:
+			grid_dict.erase(key)
+		_refresh_forced_grid_bld(grid_dict, gc)
+		overlay.queue_free())
+
+	clear_btn.pressed.connect(func() -> void:
+		grid_dict.erase(key)
+		_refresh_forced_grid_bld(grid_dict, gc)
+		overlay.queue_free())
+
+	cancel_btn.pressed.connect(func() -> void:
+		overlay.queue_free())
+
+	overlay.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+			if not panel.get_global_rect().has_point((event as InputEventMouseButton).global_position):
+				overlay.queue_free())
+
+	le.grab_focus()
+	le.select_all()
+
+func _collect_forced_cells_from_grid_bld(grid_dict: Dictionary) -> Array:
 	var result: Array = []
-	for row_ref: Dictionary in rows_arr:
-		var card_le: LineEdit = row_ref.get("card_le") as LineEdit
-		var row_sb:  SpinBox  = row_ref.get("row_sb") as SpinBox
-		var col_sb:  SpinBox  = row_ref.get("col_sb") as SpinBox
-		if card_le == null or not is_instance_valid(card_le):
-			continue
-		var card_name: String = card_le.text.strip_edges()
-		if card_name.is_empty():
-			continue
-		result.append({"card_name": card_name, "row": int(row_sb.value), "col": int(col_sb.value)})
+	for key: String in grid_dict:
+		var parts: PackedStringArray = key.split(",")
+		if parts.size() == 2:
+			result.append({
+				"card_name": grid_dict[key],
+				"row": int(parts[0]),
+				"col": int(parts[1]),
+			})
 	return result
 
-func _bld_rebuild_forced_cell_rows(vbox: VBoxContainer, rows_arr: Array, data: Array) -> void:
-	for row_ref: Dictionary in rows_arr:
-		var hbox: HBoxContainer = row_ref.get("hbox") as HBoxContainer
-		if hbox and is_instance_valid(hbox):
-			hbox.queue_free()
-	rows_arr.clear()
-	for cell: Dictionary in data:
-		_bld_add_forced_cell_row(vbox, rows_arr,
-			str(cell.get("card_name", "")),
-			int(cell.get("row", 0)),
-			int(cell.get("col", 0)))
+func _rebuild_forced_grid_bld(grid_dict: Dictionary, gc: GridContainer, data: Array) -> void:
+	grid_dict.clear()
+	for fc: Variant in data:
+		if fc is Dictionary:
+			var r: int = int((fc as Dictionary).get("row", 0))
+			var c: int = int((fc as Dictionary).get("col", 0))
+			var cname: Variant = (fc as Dictionary).get("card_name", "")
+			if cname is String and not (cname as String).is_empty():
+				grid_dict[str(r) + "," + str(c)] = cname as String
+	_refresh_forced_grid_bld(grid_dict, gc)

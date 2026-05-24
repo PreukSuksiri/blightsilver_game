@@ -67,8 +67,20 @@ var _doubt_tween:   Tween = null
 # ─────────────────────────────────────────────────────────────
 
 func _ready() -> void:
-	_layout = DailyDungeonManager.get_current_layout()
+	if DailyDungeonManager.vn_dungeon_id != "":
+		_layout = DailyDungeonManager.get_layout(DailyDungeonManager.vn_dungeon_id)
+	else:
+		_layout = DailyDungeonManager.get_current_layout()
 	_build_ui()
+	# Play dungeon BGM if set in the layout
+	var bgm_path: String = str(_layout.get("dungeon_bgm", ""))
+	if not bgm_path.is_empty() and ResourceLoader.exists(bgm_path):
+		var bgm_player := AudioStreamPlayer.new()
+		bgm_player.stream = load(bgm_path)
+		if bgm_player.stream is AudioStreamMP3:
+			(bgm_player.stream as AudioStreamMP3).loop = true
+		add_child(bgm_player)
+		bgm_player.play()
 	_create_player_sprite()
 	var start_node: String = _find_player_start_node()
 	_place_player_on_node(start_node)
@@ -167,7 +179,9 @@ func _build_header() -> void:
 	close_btn.text = "CLOSE"
 	close_btn.custom_minimum_size = Vector2(110, 36)
 	close_btn.add_theme_font_size_override("font_size", 13)
-	close_btn.pressed.connect(func() -> void: queue_free())
+	close_btn.pressed.connect(func() -> void:
+		SaveManager.save_data()
+		queue_free())
 	hbox.add_child(close_btn)
 
 # ─────────────────────────────────────────────────────────────
@@ -587,11 +601,27 @@ func _show_deck_warning() -> void:
 func _check_pending_result() -> void:
 	var result: Dictionary = DailyDungeonManager.pending_battle_result
 	if result.is_empty():
+		# Fresh map open — show pre-battle message for starting node if present
+		var start_nd: Dictionary = _find_node(_player_node_id)
+		var pre_msg: String = str(start_nd.get("pre_battle_message", ""))
+		if not pre_msg.is_empty():
+			_show_message_dialog(pre_msg, Callable())
 		return
 	DailyDungeonManager.pending_battle_result = {}
 
 	var node_id: String = result.get("node_id", "")
 	var won: bool       = result.get("won", false)
+
+	# VN dungeon loss → play vn_on_lose immediately (or stay for retry if not set)
+	if not won and DailyDungeonManager.vn_dungeon_on_lose != "":
+		var path: String = DailyDungeonManager.vn_dungeon_on_lose
+		_clear_vn_dungeon_state()
+		_play_vn_then_close(path)
+		return
+
+	# Capture VN state before any further state changes
+	var vid: String = DailyDungeonManager.vn_dungeon_id
+	var vow: String = DailyDungeonManager.vn_dungeon_on_win
 
 	# The sprite should walk FROM where the player was BEFORE the battle
 	_pending_walk_from = DailyDungeonManager.player_map_node_id
@@ -602,9 +632,20 @@ func _check_pending_result() -> void:
 		_selected_node_id = node_id
 		_update_detail()
 
-	_show_result_banner(won, node_id)
+	# VN dungeon win: check if dungeon is cleared → fire callback on Continue
+	var on_continue_extra: Callable = Callable()
+	if won and vid != "" and DailyDungeonManager.is_dungeon_cleared(vid):
+		on_continue_extra = func() -> void:
+			_clear_vn_dungeon_state()
+			if vow != "":
+				_play_vn_then_close(vow)
+			else:
+				queue_free()
+				get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
 
-func _show_result_banner(won: bool, node_id: String) -> void:
+	_show_result_banner(won, node_id, on_continue_extra)
+
+func _show_result_banner(won: bool, node_id: String, on_continue_extra: Callable = Callable()) -> void:
 	if get_node_or_null("ResultBanner") != null:
 		return
 
@@ -656,14 +697,93 @@ func _show_result_banner(won: bool, node_id: String) -> void:
 	cont_btn.add_theme_font_size_override("font_size", 15)
 	cont_btn.pressed.connect(func() -> void:
 		panel.queue_free()
-		if won and not _pending_walk_to.is_empty():
-			_walk_is_post_win = true
-			_begin_walk(_pending_walk_from, _pending_walk_to))
+		var nd: Dictionary = _find_node(node_id)
+		var post_msg: String = str(nd.get("post_battle_message", ""))
+		var do_proceed := func() -> void:
+			if on_continue_extra.is_valid():
+				on_continue_extra.call()
+			elif won and not _pending_walk_to.is_empty():
+				_walk_is_post_win = true
+				_begin_walk(_pending_walk_from, _pending_walk_to)
+		if not post_msg.is_empty():
+			_show_message_dialog(post_msg, do_proceed)
+		else:
+			do_proceed.call())
 	vbox.add_child(cont_btn)
 
 	panel.modulate.a = 0.0
 	var tw := create_tween()
 	tw.tween_property(panel, "modulate:a", 1.0, 0.28)
+
+# ─────────────────────────────────────────────────────────────
+# VN dungeon helpers
+# ─────────────────────────────────────────────────────────────
+
+func _clear_vn_dungeon_state() -> void:
+	DailyDungeonManager.vn_dungeon_id      = ""
+	DailyDungeonManager.vn_dungeon_on_win  = ""
+	DailyDungeonManager.vn_dungeon_on_lose = ""
+	SaveManager.save_data()
+
+func _play_vn_then_close(vn_path: String) -> void:
+	var vn: Node = load("res://scenes/vn_player.tscn").instantiate()
+	add_child(vn)
+	vn.play_scene(vn_path, func() -> void:
+		vn.queue_free()
+		queue_free())
+
+# ─────────────────────────────────────────────────────────────
+# Message dialog
+# ─────────────────────────────────────────────────────────────
+
+func _show_message_dialog(message: String, on_close: Callable) -> void:
+	var blocker := ColorRect.new()
+	blocker.color = Color(0.0, 0.0, 0.0, 0.50)
+	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	blocker.z_index = 65
+	add_child(blocker)
+
+	var panel := PanelContainer.new()
+	panel.anchor_left   = 0.15
+	panel.anchor_right  = 0.85
+	panel.anchor_top    = 0.0
+	panel.anchor_bottom = 0.0
+	panel.offset_top    = 20.0
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.04, 0.06, 0.13, 0.97)
+	sb.border_color = Color(0.60, 0.82, 1.0, 0.65)
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(8)
+	sb.set_content_margin_all(18.0)
+	panel.add_theme_stylebox_override("panel", sb)
+	blocker.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 14)
+	panel.add_child(vbox)
+
+	var lbl := Label.new()
+	lbl.text = message
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.add_theme_font_size_override("font_size", 15)
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(lbl)
+
+	var ok_btn := Button.new()
+	ok_btn.text = "OK"
+	ok_btn.custom_minimum_size = Vector2(110, 36)
+	ok_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	ok_btn.add_theme_font_size_override("font_size", 14)
+	ok_btn.pressed.connect(func() -> void:
+		blocker.queue_free()
+		if on_close.is_valid():
+			on_close.call())
+	vbox.add_child(ok_btn)
+
+	panel.modulate.a = 0.0
+	var tw := create_tween()
+	tw.tween_property(panel, "modulate:a", 1.0, 0.20)
 
 # ─────────────────────────────────────────────────────────────
 # Helpers
@@ -877,12 +997,20 @@ func _on_walk_arrived(node_id: String) -> void:
 		_battle_btn.disabled = false
 	var post_win := _walk_is_post_win
 	_walk_is_post_win = false
-	_idle_face(node_id, post_win)
 
-	# Highlight branching choices
-	var next_nodes: Array = _get_connected_nodes(node_id)
-	if next_nodes.size() > 1:
-		_start_branch_highlight(next_nodes)
+	var nd: Dictionary = _find_node(node_id)
+	var pre_msg: String = str(nd.get("pre_battle_message", ""))
+	if not pre_msg.is_empty():
+		_show_message_dialog(pre_msg, func() -> void:
+			_idle_face(node_id, post_win)
+			var next_nodes: Array = _get_connected_nodes(node_id)
+			if next_nodes.size() > 1:
+				_start_branch_highlight(next_nodes))
+	else:
+		_idle_face(node_id, post_win)
+		var next_nodes: Array = _get_connected_nodes(node_id)
+		if next_nodes.size() > 1:
+			_start_branch_highlight(next_nodes)
 
 func _idle_face(node_id: String, allow_doubt: bool = false) -> void:
 	_stop_doubt_cycle()

@@ -15,6 +15,7 @@ var _selected_slot: int = -1   # index into DailyDungeonManager.playlist
 
 # Right-panel widgets (rebuilt on slot selection)
 var _dungeon_option:     OptionButton
+var _mode_filter_opt:    OptionButton
 var _mod_checks:         Dictionary = {}  # modifier_key → CheckBox
 var _apply_btn:          Button
 var _slot_label:         Label
@@ -202,6 +203,21 @@ func _build_right_panel(parent: Control) -> void:
 	var sep0 := HSeparator.new()
 	vbox.add_child(sep0)
 
+	# Mode filter
+	var mf_lbl := Label.new()
+	mf_lbl.text = "Filter by Mode:"
+	mf_lbl.add_theme_font_size_override("font_size", 12)
+	mf_lbl.add_theme_color_override("font_color", Color(0.65, 0.75, 0.65))
+	vbox.add_child(mf_lbl)
+
+	_mode_filter_opt = OptionButton.new()
+	_mode_filter_opt.custom_minimum_size = Vector2(200, 30)
+	_mode_filter_opt.add_item("All")
+	_mode_filter_opt.add_item("Daily Dungeon")
+	_mode_filter_opt.add_item("Story Mode")
+	_mode_filter_opt.item_selected.connect(func(_i: int) -> void: _populate_dungeon_options())
+	vbox.add_child(_mode_filter_opt)
+
 	# Dungeon picker
 	var dg_lbl := Label.new()
 	dg_lbl.text = "Dungeon Layout:"
@@ -337,6 +353,11 @@ func _select_slot(idx: int) -> void:
 		_clear_right_panel()
 		return
 
+	# Reset mode filter to All so the slot's dungeon is always visible
+	if _mode_filter_opt != null:
+		_mode_filter_opt.selected = 0
+	_populate_dungeon_options()
+
 	var slot: Dictionary = playlist[idx]
 	var is_active: bool  = (idx == DailyDungeonManager.playlist_index)
 	_slot_label.text = "Editing slot %d — %s%s" % [
@@ -361,9 +382,19 @@ func _clear_right_panel() -> void:
 
 func _populate_dungeon_options() -> void:
 	_dungeon_option.clear()
-	var ids: Array = DailyDungeonManager.get_all_layout_ids()
-	ids.sort()
-	for id: String in ids:
+	var all_ids: Array = DailyDungeonManager.get_all_layout_ids()
+	all_ids.sort()
+	var filter_mode: String = ""
+	if _mode_filter_opt != null:
+		match _mode_filter_opt.selected:
+			1: filter_mode = "daily_dungeon"
+			2: filter_mode = "story_mode"
+	for id: String in all_ids:
+		if filter_mode != "":
+			var layout_data: Variant = DailyDungeonManager.get_layout(id)
+			var lm: String = (layout_data as Dictionary).get("mode", "daily_dungeon")
+			if lm != filter_mode:
+				continue
 		_dungeon_option.add_item(id)
 	if _dungeon_option.item_count == 0:
 		_dungeon_option.add_item("(no layouts found)")

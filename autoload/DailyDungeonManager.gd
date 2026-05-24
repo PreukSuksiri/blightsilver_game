@@ -120,6 +120,12 @@ var pending_battle_result: Dictionary = {}
 ## sprite walks from the correct position after returning from a battle.
 var player_map_node_id: String = ""
 
+## Set by VNPlayer when a dungeon_call beat fires.
+## Non-empty = player is in a VN-launched dungeon session.
+var vn_dungeon_id:      String = ""
+var vn_dungeon_on_win:  String = ""
+var vn_dungeon_on_lose: String = ""
+
 # ─────────────────────────────────────────────────────────────
 # Layout cache
 # ─────────────────────────────────────────────────────────────
@@ -269,12 +275,12 @@ func credit_multiplier() -> float:
 ## but only after arriving — i.e., the player can pick any node. We mark "locked"
 ## only when the dungeon hasn't started yet (no node cleared). Entry node is always available.
 func get_node_status(node_id: String) -> String:
-	var dungeon_id: String = get_current_dungeon_id()
+	var dungeon_id: String = _get_active_dungeon_id()
 	var progress: Dictionary = node_progress.get(dungeon_id, {})
 	if progress.has(node_id) and progress[node_id].get("cleared", false):
 		return "cleared"
 	# Entry node is always available
-	var layout: Dictionary = get_current_layout()
+	var layout: Dictionary = get_layout(dungeon_id)
 	for node: Dictionary in layout.get("nodes", []):
 		if node.get("id", "") == node_id and node.get("is_entry", false):
 			return "available"
@@ -296,8 +302,32 @@ func get_node_status(node_id: String) -> String:
 func _node_is_cleared(dungeon_id: String, node_id: String) -> bool:
 	return node_progress.get(dungeon_id, {}).get(node_id, {}).get("cleared", false)
 
+## Routes progress tracking to the VN dungeon when active, otherwise to the playlist dungeon.
+func _get_active_dungeon_id() -> String:
+	if vn_dungeon_id != "":
+		return vn_dungeon_id
+	return get_current_dungeon_id()
+
+## Returns true when the dungeon's win condition is met.
+## Win = all boss nodes cleared; if no boss nodes, all nodes cleared.
+func is_dungeon_cleared(dungeon_id: String) -> bool:
+	var layout: Dictionary = get_layout(dungeon_id)
+	var nodes: Array = layout.get("nodes", [])
+	var check: Array = []
+	for nd: Dictionary in nodes:
+		if nd.get("type", "normal") == "boss":
+			check.append(nd)
+	if check.is_empty():
+		check = nodes
+	if check.is_empty():
+		return false
+	for nd: Dictionary in check:
+		if not _node_is_cleared(dungeon_id, nd.get("id", "")):
+			return false
+	return true
+
 func is_first_clear(node_id: String) -> bool:
-	var dungeon_id: String = get_current_dungeon_id()
+	var dungeon_id: String = _get_active_dungeon_id()
 	return not node_progress.get(dungeon_id, {}).get(node_id, {}).get("first_clear_done", false)
 
 # ─────────────────────────────────────────────────────────────
@@ -392,7 +422,7 @@ func complete_node(node_id: String, won: bool) -> void:
 		# No reward on loss; progress not recorded
 		return
 
-	var dungeon_id: String = get_current_dungeon_id()
+	var dungeon_id: String = _get_active_dungeon_id()
 	if not node_progress.has(dungeon_id):
 		node_progress[dungeon_id] = {}
 
@@ -524,6 +554,9 @@ func to_dict() -> Dictionary:
 		"affinity_day_affinity": affinity_day_affinity,
 		"affinity_day_stat":     affinity_day_stat,
 		"node_progress":         node_progress.duplicate(true),
+		"vn_dungeon_id":         vn_dungeon_id,
+		"vn_dungeon_on_win":     vn_dungeon_on_win,
+		"vn_dungeon_on_lose":    vn_dungeon_on_lose,
 	}
 
 func load_from_dict(d: Dictionary) -> void:
@@ -537,5 +570,8 @@ func load_from_dict(d: Dictionary) -> void:
 	affinity_day_stat     = str(d.get("affinity_day_stat", ""))
 	var raw_np: Variant   = d.get("node_progress", {})
 	node_progress = raw_np if raw_np is Dictionary else {}
+	vn_dungeon_id      = str(d.get("vn_dungeon_id",      ""))
+	vn_dungeon_on_win  = str(d.get("vn_dungeon_on_win",  ""))
+	vn_dungeon_on_lose = str(d.get("vn_dungeon_on_lose", ""))
 	if playlist.is_empty():
 		_seed_default_playlist()

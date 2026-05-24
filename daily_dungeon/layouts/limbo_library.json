@@ -1,0 +1,227 @@
+{
+	"background": "res://assets/textures/daily_dungeon/background/background_limbo_library.png",
+	"connections": [
+		[
+			"node_01",
+			"node_02"
+		],
+		[
+			"node_02",
+			"node_03"
+		],
+		[
+			"node_03",
+			"node_04"
+		],
+		[
+			"node_04",
+			"node_05"
+		]
+	],
+	"dungeon_bgm": "",
+	"id": "limbo_library",
+	"mode": "story_mode",
+	"name": "University Library",
+	"nodes": [
+		{
+			"ai_deck": {
+				"characters": [
+					"Chaotic Wisp",
+					"Doom Wisp",
+					"Foul Wisp",
+					"Skeleton Grappler",
+					"Skeleton Archer",
+					"Stinky Insect",
+					"Shredder Doll",
+					"Cursed Well"
+				],
+				"tech": [
+					"Spy",
+					"War Supply",
+					"Bribe"
+				],
+				"traps": [
+					"Trap Hole",
+					"Foul Gas",
+					"Pepper Spray",
+					"Hard Scale"
+				]
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_personality_defensive": "",
+				"ai_personality_offensive": "",
+				"ai_personality_social": "",
+				"ai_union_enabled": false,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "Wisp",
+				"player_forced_cells": [],
+				"player_union_enabled": false,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "node_01",
+			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_normal.png",
+			"is_entry": true,
+			"label": "node_01",
+			"pack_reward": "",
+			"post_battle_message": "",
+			"pre_battle_message": "",
+			"type": "normal",
+			"x": 821,
+			"y": 449
+		},
+		{
+			"ai_deck": {
+				"characters": [],
+				"tech": [],
+				"traps": []
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_personality_defensive": "",
+				"ai_personality_offensive": "",
+				"ai_personality_social": "",
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "node_02",
+			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_normal.png",
+			"is_entry": false,
+			"label": "node_02",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 605,
+			"y": 653
+		},
+		{
+			"ai_deck": {
+				"characters": [],
+				"tech": [],
+				"traps": []
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_personality_defensive": "",
+				"ai_personality_offensive": "",
+				"ai_personality_social": "",
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "node_03",
+			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_normal.png",
+			"is_entry": false,
+			"label": "node_03",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 241,
+			"y": 533
+		},
+		{
+			"ai_deck": {
+				"characters": [],
+				"tech": [],
+				"traps": []
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_personality_defensive": "",
+				"ai_personality_offensive": "",
+				"ai_personality_social": "",
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "node_04",
+			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_normal.png",
+			"is_entry": false,
+			"label": "node_04",
+			"pack_reward": "",
+			"type": "normal",
+			"x": 412,
+			"y": 350
+		},
+		{
+			"ai_deck": {
+				"characters": [],
+				"tech": [],
+				"traps": []
+			},
+			"battle_settings": {
+				"ai_forced_cells": [],
+				"ai_personality_defensive": "",
+				"ai_personality_offensive": "",
+				"ai_personality_social": "",
+				"ai_union_enabled": true,
+				"battle_bgm": "",
+				"battle_bgm_volume": 100.0,
+				"player1_name": "",
+				"player2_name": "",
+				"player_forced_cells": [],
+				"player_union_enabled": true,
+				"portrait_p1": "",
+				"portrait_p1_offset_x": 0.0,
+				"portrait_p1_offset_y": 0.0,
+				"portrait_p1_size": 1.0,
+				"portrait_p2": "",
+				"portrait_p2_offset_x": 0.0,
+				"portrait_p2_offset_y": 0.0,
+				"portrait_p2_size": 1.0
+			},
+			"id": "node_05",
+			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_boss.png",
+			"is_entry": false,
+			"label": "node_05",
+			"pack_reward": "",
+			"type": "boss",
+			"x": 257,
+			"y": 137
+		}
+	]
+}
