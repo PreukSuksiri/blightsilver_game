@@ -428,7 +428,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	if not _skip_mark:
 		attacker.attacked_this_turn = true
 
-	GameState.attacks_remaining = GameState.attacks_remaining - 1 + _pb_extra
+	GameState.attacks_remaining = maxi(0, GameState.attacks_remaining - 1 + _pb_extra)
 
 	# Check Pit Lord one_use_def_boost mark
 	if defender.ability_type == CharacterData.AbilityType.ONE_USE_DEF_BOOST:

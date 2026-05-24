@@ -497,17 +497,16 @@ func _show_union_face_up() -> void:
 		ability_label.text = u.ability_description
 		var _snake: String = card_data.card_name.to_lower() \
 			.replace(" ", "_").replace("'", "").replace("-", "_")
-		var _union_path: String = "res://assets/textures/cards/union/" + _snake + ".png"
-		var _full_path: String = "res://assets/textures/cards/full_cards/" + _snake + ".png"
-		var _full_path_legacy: String = "res://assets/textures/cards/full_cards/union_" + _snake + ".png"
-		if ResourceLoader.exists(_union_path):
-			_load_artwork(_union_path, card_data.card_name, "unions")
-		elif ResourceLoader.exists(_full_path):
-			_load_artwork(_full_path, card_data.card_name, "unions")
-		elif ResourceLoader.exists(_full_path_legacy):
-			_load_artwork(_full_path_legacy, card_data.card_name, "unions")
-		else:
-			_load_artwork(u.artwork_path, card_data.card_name, "unions")
+		var _found_path: String = ""
+		for _p: String in [
+			"res://assets/textures/cards/full_cards/" + _snake + ".png",
+			"res://assets/textures/cards/full_cards/union_" + _snake + ".png",
+			"res://assets/textures/cards/union/" + _snake + ".png",
+		]:
+			if ResourceLoader.exists(_p):
+				_found_path = _p
+				break
+		_load_artwork(_found_path if _found_path != "" else u.artwork_path, card_data.card_name, "unions")
 	else:
 		ability_label.text = ""
 		_clear_art()

@@ -163,10 +163,16 @@ func _build_ui() -> void:
 			img.modulate = Color(0.5, 0.5, 0.5, 0.8)
 		var snake: String = u.card_name.to_lower() \
 			.replace(" ", "_").replace("'", "").replace("-", "_")
-		var path: String = "res://assets/textures/cards/full_cards/union_" + snake + ".png"
-		if not ResourceLoader.exists(path):
-			path = "res://assets/textures/cards/full_cards/" + snake + ".png"
-		if ResourceLoader.exists(path):
+		var path: String = ""
+		for _p: String in [
+			"res://assets/textures/cards/full_cards/" + snake + ".png",
+			"res://assets/textures/cards/full_cards/union_" + snake + ".png",
+			"res://assets/textures/cards/union/" + snake + ".png",
+		]:
+			if ResourceLoader.exists(_p):
+				path = _p
+				break
+		if path != "":
 			img.texture = load(path)
 		col.add_child(img)
 

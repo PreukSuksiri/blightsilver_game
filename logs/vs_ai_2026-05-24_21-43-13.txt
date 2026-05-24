@@ -1,0 +1,79 @@
+=== VS AI Match ===
+Started: 2026-05-24 21:43:13
+===
+
+[01:14.586] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[01:35.103] Mode selected P1: ATTACK
+[01:35.104] MSG: Player 2: tap a character to attack.
+[01:37.486] Revealed: P1 (2,0) "Skeleton Lancer"
+[01:37.486] Revealed: P0 (1,4) "Mana Drain"
+[01:37.486] Dice rolled: 2
+[01:38.761] MSG: Trap triggered: Mana Drain!
+[01:48.889] Card destroyed  P0 (1,4) "Mana Drain"
+[01:48.889] Crystals: P0 5000 → 4500 (-500)  [trap cost]
+[01:54.125] Crystals: P1 5000 → 4200 (-800)  [trap]
+[01:55.315] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:59.272] MSG: Mana Drain: Player 2 loses 800 Crystals!
+[01:59.273] Trap: "Mana Drain" triggered  P1(2,0)→P0(1,4)
+[02:01.537] Mode selected P1: ATTACK
+[02:01.538] MSG: Player 2: tap a character to attack.
+[02:03.935] Revealed: P1 (3,0) "Sonic Seraph"
+[02:03.935] Revealed: P0 (0,2) "Lightbringer"
+[02:03.935] Dice rolled: 3
+[02:04.011] MSG: Sonic Seraph wins!
+[02:16.328] Crystals: P0 4500 → 3500 (-1000)  [battle]
+[02:21.552] Card destroyed  P0 (0,2) "Lightbringer"
+[02:21.553] Attack P1(3,0)"Sonic Seraph" → P0(0,2)"(dead-end)"  Dice=3  ATK=45 vs DEF=40  → WIN
+[02:23.848] Turn ended  P1  |  Crystals P0=3500 P1=4200
+
+--- Turn 2  |  Player 0  |  Crystals P0=3500 P1=4200 ---
+[02:47.127] Revealed: P0 (1,1) "Canyon Warg"
+[02:47.127] Dice rolled: 5
+[02:47.134] MSG: Canyon Warg wins!
+[02:59.602] Crystals: P1 4200 → 3650 (-550)  [battle]
+[03:04.848] Card destroyed  P1 (3,0) "Sonic Seraph"
+[03:04.851] Attack P0(1,1)"Canyon Warg" → P1(3,0)"(dead-end)"  Dice=5  ATK=70 vs DEF=50  → WIN
+[03:13.868] Revealed: P0 (1,2) "Angel Gatekeeper"
+[03:13.868] Revealed: P1 (2,2) "Explosive Barrels"
+[03:13.868] Dice rolled: 5
+[03:15.007] MSG: Trap triggered: Explosive Barrels!
+[03:29.406] Crystals: P0 3500 → 2540 (-960)  [card lost]
+[03:34.565] Card destroyed  P0 (1,2) "Angel Gatekeeper"
+[03:37.026] Card destroyed  P1 (2,2) "Explosive Barrels"
+[03:37.026] Crystals: P1 3650 → 2690 (-960)  [trap]
+[03:42.271] MSG: Explosive Barrels: Angel Gatekeeper destroyed! Defender loses 960 Crystals.
+[03:42.274] Trap: "Explosive Barrels" triggered  P0(1,2)→P1(2,2)
+[03:44.938] Turn ended  P0  |  Crystals P0=2540 P1=2690
+
+--- Turn 3  |  Player 1  |  Crystals P0=2540 P1=2690 ---
+[03:47.166] Mode selected P1: ATTACK
+[03:47.167] MSG: Player 2: tap a character to attack.
+[03:49.583] Dice rolled: 4
+[03:49.586] MSG: Skeleton Lancer wins!
+[04:01.837] Crystals: P0 2540 → 1990 (-550)  [battle]
+[04:07.168] Card destroyed  P0 (1,1) "Canyon Warg"
+[04:07.170] Attack P1(2,0)"Skeleton Lancer" → P0(1,1)"(dead-end)"  Dice=4  ATK=45 vs DEF=30  → WIN
+[04:09.439] Mode selected P1: ATTACK
+[04:09.441] MSG: Player 2: tap a character to attack.
+[04:11.825] Revealed: P1 (1,0) "Raijin"
+[04:11.825] Dice rolled: 5
+[04:11.886] MSG: Nothing happens — Dead End.
+[04:19.196] Dead-end placed  P0 (0,0)
+[04:19.197] Attack P1(1,0)"Raijin" → P0(0,0)"(dead-end)"  Dice=5  ATK=0 vs DEF=0  → TIE
+[04:21.470] Turn ended  P1  |  Crystals P0=1990 P1=2690
+
+--- Turn 4  |  Player 0  |  Crystals P0=1990 P1=2690 ---
+[04:37.683] MSG: Tap 2 material card(s) on the field.
+[04:41.475] MSG: 1 more material(s) needed.
+[04:42.988] Union summoned P0: [Armored Dino] from Lazy Troll, Armored Rhino
+[04:42.988] Crystals: P0 1990 → 990 (-1000)  [union]
+[04:42.988] Revealed: P0 (3,3) "Armored Dino"
+[04:42.988] MSG: Player 1 summoned [Armored Dino] using: Lazy Troll, Armored Rhino
+[05:11.305] Revealed: P1 (0,0) "Nuki the Tanuki"
+[05:11.305] Dice rolled: 3
+[05:11.376] MSG: Armored Dino wins!
+[05:23.628] Crystals: P1 2690 → 2590 (-100)  [battle]
+[05:28.838] Card destroyed  P1 (0,0) "Nuki the Tanuki"
+[05:28.840] Attack P0(3,3)"Armored Dino" → P1(0,0)"(dead-end)"  Dice=3  ATK=100 vs DEF=10  → WIN
