@@ -42,7 +42,8 @@ var _cmd_input: LineEdit = null
 # UI refs
 # ─────────────────────────────────────────────────────────────
 var _stage: Control = null          # all visuals live here; shaken for screen shake
-var _bg_rect: TextureRect = null
+var _bg_rect:  TextureRect = null
+var _bg_base:  ColorRect   = null   # solid-colour base behind the background image
 var _char_slots: Dictionary = {}    # slot_name -> TextureRect
 var _dialog_panel: Panel = null
 var _speaker_panel: PanelContainer = null
@@ -122,12 +123,12 @@ func _build_ui() -> void:
 	_stage.size     = Vector2(1600.0, 900.0)
 	add_child(_stage)
 
-	# Dark base background
-	var base := ColorRect.new()
-	base.position = Vector2(0.0, 0.0)
-	base.size     = Vector2(1600.0, 900.0)
-	base.color    = Color(0.04, 0.06, 0.14, 1.0)
-	_stage.add_child(base)
+	# Dark base background (colour controllable via bg_color beat field)
+	_bg_base = ColorRect.new()
+	_bg_base.position = Vector2(0.0, 0.0)
+	_bg_base.size     = Vector2(1600.0, 900.0)
+	_bg_base.color    = Color(0.04, 0.06, 0.14, 1.0)
+	_stage.add_child(_bg_base)
 
 	# Full-screen background image
 	_bg_rect = TextureRect.new()
@@ -336,6 +337,9 @@ func _show_beat() -> void:
 			_show_beat()
 			return
 
+	# Restore dialog panel for all non-video beats
+	_dialog_panel.visible = true
+
 	# ── Fade out (before visuals update) ──
 	if beat.has("fade_out"):
 		var dur: float = maxf(float(beat.get("fade_out", 0.5)), 0.01)
@@ -368,6 +372,10 @@ func _show_beat() -> void:
 					_bg_rect.modulate = Color(1.0, 1.0, 1.0, 1.0)
 				else:
 					push_warning("VNPlayer: failed to load background '%s'" % bg_path)
+
+	# ── Background colour ──
+	if beat.has("bg_color"):
+		_bg_base.color = Color.html(str(beat.get("bg_color", "#000000")))
 
 	# ── Ken Burns (slow zoom/pan on background) ──
 	if beat.has("bg_ken_burns"):
@@ -448,6 +456,10 @@ func _show_beat() -> void:
 	# ── Dialog text ──
 	_dialog_lbl.text = ""
 	_dialog_lbl.append_text(_loc(beat.get("text", "")))
+
+	# ── Hide messagebox ──
+	if beat.get("hide_dialog", false):
+		_dialog_panel.visible = false
 
 	# ── Music ──
 	if beat.has("music"):
@@ -534,6 +546,40 @@ func _show_beat() -> void:
 		_show_beat()
 		return
 
+	# ── Center text (title-card with fade in/hold/fade out) ──
+	var center_txt: String = str(beat.get("center_text", ""))
+	if center_txt != "":
+		_dialog_panel.visible = false
+		_accepting_input = false
+		_hide_hint_icon()
+		var lbl := Label.new()
+		lbl.text = center_txt
+		lbl.add_theme_font_size_override("font_size", int(beat.get("center_text_size", 48)))
+		lbl.add_theme_color_override("font_color", Color.WHITE)
+		lbl.add_theme_constant_override("shadow_offset_x", 2)
+		lbl.add_theme_constant_override("shadow_offset_y", 2)
+		lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+		lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
+		lbl.position             = Vector2(0.0, 0.0)
+		lbl.size                 = Vector2(1600.0, 900.0)
+		lbl.modulate.a = 0.0
+		lbl.z_index    = 15    # above _fade_rect (z_index 10) so it always shows
+		add_child(lbl)
+		var fi: float = maxf(float(beat.get("center_text_fade_in",  0.8)), 0.01)
+		var ho: float = maxf(float(beat.get("center_text_hold",     1.5)), 0.0)
+		var fo: float = maxf(float(beat.get("center_text_fade_out", 0.8)), 0.01)
+		var tw := create_tween()
+		tw.tween_property(lbl, "modulate:a", 1.0, fi)
+		tw.tween_interval(ho)
+		tw.tween_property(lbl, "modulate:a", 0.0, fo)
+		await tw.finished
+		lbl.queue_free()
+		_accepting_input = true
+		_show_beat()
+		return
+
 	# ── Battle portraits (set before optional start_battle) ──
 	if beat.has("portrait_p1"):
 		GameState.player_portraits[0] = str(beat["portrait_p1"])
@@ -605,6 +651,20 @@ func _show_beat() -> void:
 		SaveManager.save_data()
 		CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		return
+
+	# ── Credits ──
+	if beat.get("go_to_credits", false):
+		_set_music("", 0.0, 0.0)
+		_accepting_input = false
+		_fade_rect.color = Color(0.0, 0.0, 0.0, 0.0)
+		var cred_tw := create_tween()
+		cred_tw.tween_property(_fade_rect, "color:a", 1.0, 1.0)
+		await cred_tw.finished
+		var cred_scene: String = "res://scenes/credit_demo.tscn" \
+			if str(beat.get("credits_target", "")) == "demo" \
+			else "res://scenes/credits.tscn"
+		get_tree().change_scene_to_file(cred_scene)
 		return
 
 	# ── Continue hint icon ──

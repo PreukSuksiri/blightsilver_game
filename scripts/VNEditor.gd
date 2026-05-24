@@ -119,7 +119,16 @@ var _f_portrait_p2_offset_y: SpinBox = null
 var _f_portrait_p2_size:     SpinBox = null
 var _f_battle_bgm: LineEdit = null
 var _f_battle_bgm_vol: SpinBox = null
-var _f_start_battle: CheckBox = null
+var _f_start_battle:  CheckBox = null
+var _f_go_to_credits:    CheckBox     = null
+var _f_credits_target:   OptionButton = null
+var _f_hide_dialog:      CheckBox     = null
+var _f_bg_color:       LineEdit = null
+var _f_center_text:          LineEdit = null
+var _f_center_text_size:     SpinBox  = null
+var _f_center_text_fade_in:  SpinBox  = null
+var _f_center_text_hold:     SpinBox  = null
+var _f_center_text_fade_out: SpinBox  = null
 var _f_on_win: LineEdit = null
 var _f_on_lose: LineEdit = null
 var _f_nsfw: OptionButton = null
@@ -508,6 +517,29 @@ func _build_fields() -> void:
 		"res://assets/textures/vn/backgrounds/")
 	_add_image_preview(_f_background)
 
+	var bgc_row := HBoxContainer.new()
+	bgc_row.add_theme_constant_override("separation", 6)
+	v.add_child(bgc_row)
+	var bgc_lbl := Label.new()
+	bgc_lbl.text = "BG Colour"
+	bgc_lbl.custom_minimum_size.x = 140.0
+	bgc_lbl.add_theme_font_size_override("font_size", 14)
+	bgc_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.9))
+	bgc_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	bgc_row.add_child(bgc_lbl)
+	_f_bg_color = LineEdit.new()
+	_f_bg_color.placeholder_text = "#000000  (hex — applied when background is cleared)"
+	_f_bg_color.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_f_bg_color.add_theme_font_size_override("font_size", 14)
+	bgc_row.add_child(_f_bg_color)
+	var bgc_black_btn := Button.new()
+	bgc_black_btn.text = "⬛ Black"
+	bgc_black_btn.custom_minimum_size = Vector2(80, 0)
+	bgc_black_btn.pressed.connect(func() -> void:
+		_f_bg_color.text = "#000000"
+		_on_field_changed())
+	bgc_row.add_child(bgc_black_btn)
+
 	_f_video = _row_le(v, "Video", "res://path/to/clip.mp4  |  empty = none")
 	_add_browse(_f_video,
 		PackedStringArray(["*.mp4 ; Video Files"]),
@@ -552,7 +584,8 @@ func _build_fields() -> void:
 	_chars_vbox.add_theme_constant_override("separation", 3)
 	v.add_child(_chars_vbox)
 
-	_f_dim_others = _row_cb(v, "Dim others", "Dim characters not listed in this beat")
+	_f_dim_others   = _row_cb(v, "Dim others",   "Dim characters not listed in this beat")
+	_f_hide_dialog  = _row_cb(v, "Hide dialog",  "Hide the message box panel for this beat (player still clicks to advance)")
 
 	# ── NSFW flag ─────────────────────────────────────────────
 	var nsfw_hbox := HBoxContainer.new()
@@ -738,6 +771,24 @@ func _build_fields() -> void:
 	_section(v, "UNION CARD REFERENCE  (tap to highlight zone on grids above)")
 	_build_union_gallery_section(v)
 
+	# ── Center Text ───────────────────────────────────────────
+	_section(v, "CENTER TEXT  (auto-advances after fade; hides dialog)")
+	_f_center_text = _row_le(v, "Center text", "White text centered on screen; auto fade-in → hold → fade-out → next beat")
+	_f_center_text.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+	_f_center_text_size     = _row_sb(v, "Font size",    8.0, 200.0, 1.0, "")
+	_f_center_text_size.value = 48.0
+	_f_center_text_fade_in  = _row_sb(v, "Fade in (s)",  0.0,  10.0, 0.1, "")
+	_f_center_text_fade_in.value = 0.8
+	_f_center_text_hold     = _row_sb(v, "Hold (s)",     0.0,  30.0, 0.1, "")
+	_f_center_text_hold.value = 1.5
+	_f_center_text_fade_out = _row_sb(v, "Fade out (s)", 0.0,  10.0, 0.1, "")
+	_f_center_text_fade_out.value = 0.8
+
+	# ── Credits ───────────────────────────────────────────────
+	_section(v, "CREDITS")
+	_f_go_to_credits  = _row_cb(v, "Go to Credits", "Transition to the credits scene after this beat")
+	_f_credits_target = _row_opt(v, "Credits scene", ["Normal", "Demo"], "which credits scene to play")
+
 	# ── Battle Reward ─────────────────────────────────────────
 	_section(v, "BATTLE REWARD  (on win)")
 	var rwd_hint := Label.new()
@@ -804,9 +855,13 @@ func _connect_static_signals() -> void:
 	_f_shake.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_hidden.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_dim_others.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_hide_dialog.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_bg_color.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_nsfw.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_animation.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_start_battle.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_go_to_credits.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_credits_target.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_ai_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_player_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_ai_pers_def.item_selected.connect(func(_i: int) -> void: ch.call())
@@ -832,6 +887,7 @@ func _connect_static_signals() -> void:
 		_f_flash_count, _f_flash_duration, _f_flash_delay,
 		_f_shake_magnitude, _f_shake_screen,
 		_f_kb_zoom, _f_kb_pan_x, _f_kb_pan_y, _f_kb_duration,
+		_f_center_text_size, _f_center_text_fade_in, _f_center_text_hold, _f_center_text_fade_out,
 	]:
 		sp.value_changed.connect(func(_v: float) -> void: ch.call())
 
@@ -1518,7 +1574,16 @@ func _populate_fields() -> void:
 			_f_animation.selected = ai
 			break
 
-	_f_start_battle.button_pressed = b.get("start_battle", false)
+	_f_hide_dialog.button_pressed   = bool(b.get("hide_dialog",  false))
+	_f_bg_color.text                = str(b.get("bg_color",     ""))
+	_f_center_text.text             = str(b.get("center_text",  ""))
+	_f_center_text_size.value       = float(b.get("center_text_size",     48.0))
+	_f_center_text_fade_in.value    = float(b.get("center_text_fade_in",  0.8))
+	_f_center_text_hold.value       = float(b.get("center_text_hold",     1.5))
+	_f_center_text_fade_out.value   = float(b.get("center_text_fade_out", 0.8))
+	_f_start_battle.button_pressed  = b.get("start_battle",  false)
+	_f_go_to_credits.button_pressed = b.get("go_to_credits", false)
+	_f_credits_target.selected = 1 if str(b.get("credits_target", "")) == "demo" else 0
 	_f_player1_name.text = str(b.get("player1_name", ""))
 	_f_player2_name.text = str(b.get("player2_name", ""))
 	_f_portrait_p1.text = str(b.get("portrait_p1", ""))
@@ -1695,6 +1760,22 @@ func _collect_beat() -> Dictionary:
 
 	if _f_dim_others.button_pressed:
 		b["dim_others"] = true
+	if _f_hide_dialog.button_pressed:
+		b["hide_dialog"] = true
+	var bgc: String = _f_bg_color.text.strip_edges()
+	if not bgc.is_empty():
+		b["bg_color"] = bgc
+	var ct: String = _f_center_text.text.strip_edges()
+	if not ct.is_empty():
+		b["center_text"] = ct
+		if _f_center_text_size.value != 48.0:
+			b["center_text_size"] = _f_center_text_size.value
+		if _f_center_text_fade_in.value != 0.8:
+			b["center_text_fade_in"] = _f_center_text_fade_in.value
+		if _f_center_text_hold.value != 1.5:
+			b["center_text_hold"] = _f_center_text_hold.value
+		if _f_center_text_fade_out.value != 0.8:
+			b["center_text_fade_out"] = _f_center_text_fade_out.value
 	match _f_nsfw.selected:
 		1: b["nsfw"] = "safe"
 		2: b["nsfw"] = "nsfw"
@@ -1762,6 +1843,10 @@ func _collect_beat() -> Dictionary:
 
 	if _f_start_battle.button_pressed:
 		b["start_battle"] = true
+	if _f_go_to_credits.button_pressed:
+		b["go_to_credits"] = true
+		if _f_credits_target.selected == 1:
+			b["credits_target"] = "demo"
 	var p1n: String = _f_player1_name.text.strip_edges()
 	if not p1n.is_empty():
 		b["player1_name"] = p1n
