@@ -1218,7 +1218,8 @@ func _load_tech_cards() -> void:
 		["Corrupted Spy", 0, TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE_RISKY,
 			{"count": 3, "cost_per_card": 700}, "",
 			"Reveal 3 squares on opponent's field. Pay 700 Crystals for each Trap or Character found.",
-			CharacterData.Rarity.COMMON],
+			CharacterData.Rarity.COMMON,
+			true],
 
 		["Diplomacy Party", 500, TechCardData.TechEffectType.REVEAL_OWN_AND_OPPONENT_REVEALS,
 			{}, "",

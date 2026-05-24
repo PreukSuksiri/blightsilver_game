@@ -479,7 +479,9 @@ func _populate_card_node(card_name: String, card_type: String) -> void:
 			_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
 			_art.position = _art_base_pos
 			var _snake_u: String = _card_name_to_snake(card_name)
-			var _art_u: String = OUTPUT_DIR + "union_" + _snake_u + ".png"
+			var _art_u: String = "res://assets/textures/cards/union/" + _snake_u + ".png"
+			if not ResourceLoader.exists(_art_u):
+				_art_u = OUTPUT_DIR + _snake_u + ".png"
 			if not ResourceLoader.exists(_art_u):
 				_art_u = u.artwork_path
 			_load_art(_art_u)
@@ -615,14 +617,13 @@ func _output_path_nsfw(card_name: String) -> String:
 	var res_path := OUTPUT_DIR + snake + "_nsfw.png"
 	return ProjectSettings.globalize_path(res_path)
 
-func _output_path(card_name: String, card_type: String) -> String:
+func _output_path(card_name: String, _card_type: String) -> String:
 	var snake    := _card_name_to_snake(card_name)
-	var prefix   := "union_" if card_type == "union" else ""
-	var res_path := OUTPUT_DIR + prefix + snake + ".png"
+	var res_path := OUTPUT_DIR + snake + ".png"
 	return ProjectSettings.globalize_path(res_path)
 
 func _output_path_union_locked(card_name: String) -> String:
-	var res_path := OUTPUT_DIR + "union_" + _card_name_to_snake(card_name) + "_locked.png"
+	var res_path := OUTPUT_DIR + _card_name_to_snake(card_name) + "_locked.png"
 	return ProjectSettings.globalize_path(res_path)
 
 func _render_and_save_union_locked(card_name: String) -> void:
@@ -655,9 +656,13 @@ func _render_and_save_union_locked(card_name: String) -> void:
 	_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
 	_art.position = _art_base_pos
 	var _snake_l: String = _card_name_to_snake(card_name)
-	var _art_l: String = OUTPUT_DIR + "union_" + _snake_l + "_locked.png"
+	var _art_l: String = "res://assets/textures/cards/union/" + _snake_l + ".png"
 	if not ResourceLoader.exists(_art_l):
-		_art_l = u.artwork_path  # fallback to same artwork
+		_art_l = OUTPUT_DIR + _snake_l + ".png"
+	if not ResourceLoader.exists(_art_l):
+		_art_l = OUTPUT_DIR + "union_" + _snake_l + ".png"
+	if not ResourceLoader.exists(_art_l):
+		_art_l = u.artwork_path
 	_load_art(_art_l)
 	_set_rarity(u.rarity)
 	var uz_set: Dictionary = {}

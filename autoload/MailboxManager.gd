@@ -446,7 +446,10 @@ func admin_command(raw: String) -> String:
 			var cap: Node = load("res://scripts/UIHideCapture.gd").new()
 			cap.name = "UIHideCapture"
 			scene.add_child(cap)
-			return "UI hidden. Press any key or click to restore."
+			var console: Node = scene.get_node_or_null("AdminConsoleOverlay")
+			if console and console.has_method("_on_close"):
+				console._on_close()
+			return ""
 
 		"animation_vellum_card_commence_flip":
 			var scene: Node = get_tree().current_scene
@@ -788,7 +791,7 @@ func admin_command(raw: String) -> String:
 		# ── ai_trailer — set / clear trailer AI personalities ───────────────
 		"ai_trailer":
 			# Usage: ai_trailer [on|off]   (default: on)
-			var sub: String = args.strip_edges().to_lower()
+			var sub: String = (parts[1].to_lower() if parts.size() > 1 else "")
 			if sub == "off" or sub == "clear":
 				GameState.campaign_enemy_config.erase("ai_personality_defensive")
 				GameState.campaign_enemy_config.erase("ai_personality_offensive")

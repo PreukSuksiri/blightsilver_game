@@ -129,10 +129,10 @@ func get_pack(pack_id: String) -> Dictionary:
 
 func get_pack_by_name(pack_name: String) -> Dictionary:
 	for p: Dictionary in PACKS:
-		if p["name"] == pack_name:
+		if p["name"] == pack_name or p.get("id", "") == pack_name:
 			return p
 	for p: Dictionary in _custom_packs:
-		if p.get("name", "") == pack_name:
+		if p.get("name", "") == pack_name or p.get("id", "") == pack_name:
 			return p
 	return {}
 

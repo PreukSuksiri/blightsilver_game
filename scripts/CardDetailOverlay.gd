@@ -502,14 +502,27 @@ func _populate(card_name: String, card_type: String) -> void:
 			_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
 			_mod_label.visible      = false
 			_cost_mod_label.visible = false
-			# Art: locked vs unlocked version in full_cards/
+			# Art: locked vs unlocked version
 			var _snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
-			var _art_path: String
+			var _art_path: String = ""
 			if is_unlocked:
-				_art_path = "res://assets/textures/cards/full_cards/union_" + _snake + ".png"
+				for _p: String in [
+					"res://assets/textures/cards/union/" + _snake + ".png",
+					"res://assets/textures/cards/full_cards/" + _snake + ".png",
+					"res://assets/textures/cards/full_cards/union_" + _snake + ".png",
+				]:
+					if ResourceLoader.exists(_p):
+						_art_path = _p
+						break
 			else:
-				_art_path = "res://assets/textures/cards/full_cards/union_" + _snake + "_locked.png"
-			if not ResourceLoader.exists(_art_path):
+				for _p: String in [
+					"res://assets/textures/cards/full_cards/" + _snake + "_locked.png",
+					"res://assets/textures/cards/full_cards/union_" + _snake + "_locked.png",
+				]:
+					if ResourceLoader.exists(_p):
+						_art_path = _p
+						break
+			if _art_path.is_empty():
 				_art_path = CardDatabase.find_artwork(card_name, "unions", SaveManager.nsfw_enabled)
 			_load_art(_art_path)
 			_set_rarity(int(u.rarity))
