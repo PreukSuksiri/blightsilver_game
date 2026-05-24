@@ -31,6 +31,10 @@ func _execute(raw: String) -> void:
 		# Escape BBCode in result except colour tags we add ourselves
 		var safe := result.replace("[", "[lb]")
 		_print("[color=#bdf]%s[/color]" % safe)
+	# Close the console after triggering a pack opening animation
+	var cmd: String = trimmed.split(" ")[0].to_lower()
+	if cmd == "animation_pack_opening" and not result.begins_with("Usage:"):
+		_on_close()
 
 func _print(bbtext: String) -> void:
 	output.append_text(bbtext + "\n")

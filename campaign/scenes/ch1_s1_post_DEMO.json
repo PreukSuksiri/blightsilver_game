@@ -416,20 +416,20 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_kelly_car_drive_university.png",
-		"characters": [],
 		"fade_color": "#000000",
 		"fade_in": 3.0,
+		"hide_dialog": true,
 		"wait": 0.01
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch1_1/vn_cut_kelly_car_drive_university.png",
 		"fade_color": "#000000",
-		"hide_dialog": true,
 		"text": "The black sedan glide swiftly on an empty university road, toward the hospital."
 	},
 	{
 		"fade_color": "#000000",
 		"fade_out": 3.0,
+		"hide_dialog": true,
 		"music_fade_out": 3.0,
 		"wait": 0.001
 	},
@@ -437,8 +437,10 @@
 		"background": null,
 		"bg_color": "#000000",
 		"fade_in": 0.001,
+		"hide_dialog": true,
 		"linger_characters": true,
-		"music_fade_out": 5.0
+		"music_fade_out": 5.0,
+		"wait": 2.0
 	},
 	{
 		"center_text": "And so their fateful story begins",
@@ -446,12 +448,14 @@
 		"center_text_fade_out": 3.0,
 		"center_text_hold": 3.0,
 		"comment": "And so their fateful story begins",
-		"linger_characters": true,
-		"wait": 2.0
+		"hide_dialog": true,
+		"linger_characters": true
 	},
 	{
 		"comment": "Credit",
+		"credits_target": "demo",
 		"go_to_credits": true,
+		"hide_dialog": true,
 		"linger_characters": true
 	}
 ]

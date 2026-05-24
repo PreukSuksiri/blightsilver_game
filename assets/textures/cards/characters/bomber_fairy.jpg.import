@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://sx3ivu1aigpu"
-path="res://.godot/imported/choir_singer_abigail.jpg-64d56c755c6c5da725a519fa5d61f528.ctex"
+uid="uid://e21uvmn7t85s"
+path="res://.godot/imported/bomber_fairy.jpg-8df72cc0789ad78f805645fe1cffb463.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/choir_singer_abigail.jpg"
-dest_files=["res://.godot/imported/choir_singer_abigail.jpg-64d56c755c6c5da725a519fa5d61f528.ctex"]
+source_file="res://assets/textures/cards/characters/bomber_fairy.jpg"
+dest_files=["res://.godot/imported/bomber_fairy.jpg-8df72cc0789ad78f805645fe1cffb463.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bf7ghugkb0uq1"
-path="res://.godot/imported/fairy_bomber.jpg-8d9ed7bf6270da5e06712e62e07520a0.ctex"
+uid="uid://d4hevvkqyyyeh"
+path="res://.godot/imported/wild_west_raccoon.jpg-1514f24db98177c28496ec50e866f252.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/fairy_bomber.jpg"
-dest_files=["res://.godot/imported/fairy_bomber.jpg-8d9ed7bf6270da5e06712e62e07520a0.ctex"]
+source_file="res://assets/textures/cards/characters/wild_west_raccoon.jpg"
+dest_files=["res://.godot/imported/wild_west_raccoon.jpg-1514f24db98177c28496ec50e866f252.ctex"]
 
 [params]
 

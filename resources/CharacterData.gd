@@ -173,7 +173,8 @@ enum AbilityType {
 @export var rarity: Rarity = Rarity.COMMON
 @export var artwork_path: String = ""
 @export var artwork_offset: Vector2 = Vector2.ZERO
-@export var include_in_demo: bool = false
+@export var include_in_demo:  bool = false
+@export var placeholder_art:  bool = false   # true = still using temp art, needs real illustration
 
 func get_affinity_name() -> String:
 	return Affinity.keys()[affinity]

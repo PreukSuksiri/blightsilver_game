@@ -31,6 +31,11 @@ var _ai_turn_count: int = 0   # incremented at start of each decide_turn call
 var _union_used:    bool = false
 var _pending_death_bluff: Vector2i = Vector2i(-1, -1)  # set when AI card dies; flushed on next AI turn
 
+# Trailer personality flags (set by admin console; excluded from random pool)
+var _trailer_offensive: bool = false
+var _trailer_defensive: bool = false
+var _trailer_social:    bool = false
+
 # Personality names selected for this game (set by _pick_personalities; readable by AIvsAIManager)
 var personality_defensive: String = ""
 var personality_offensive: String = ""
@@ -66,7 +71,7 @@ func decide_turn() -> void:
 
 	# Rule 2: Union summon — hesitation eases over successive AI turns.
 	# Turn 1: 10%, Turn 2: 35%, Turn 3: 60%, Turn 4+: 85%
-	if not _union_used and GameState.battle_ai_union_enabled:
+	if not _trailer_offensive and not _union_used and GameState.battle_ai_union_enabled:
 		var chance: float = minf(0.85, 0.10 + (_ai_turn_count - 1) * 0.25)
 		if randf() < chance:
 			var unions: Array = _get_available_unions()
@@ -259,7 +264,11 @@ func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 	var opp_emoji: String = GameState.get_bluff(opponent_index, target_pos.x, target_pos.y)
 	if opp_emoji == "💩":   # normalize NSFW variant to canonical key
 		opp_emoji = "🖕"
-	if opp_emoji != "" and _emoji_reactions.has(opp_emoji):
+	if _trailer_offensive:
+		# Always attack 💩/🖕 cells first — massive priority override
+		if opp_emoji == "🖕":
+			base += 999
+	elif opp_emoji != "" and _emoji_reactions.has(opp_emoji):
 		base += (_emoji_reactions[opp_emoji] as int) * 15
 
 	return base
@@ -310,6 +319,17 @@ func _has_useful_tech() -> bool:
 func _score_tech(tech_name: String, snap: Dictionary) -> int:
 	var data: TechCardData = CardDatabase.get_tech(tech_name)
 	if data == null or data.effect_type == TechCardData.TechEffectType.NOT_IMPLEMENTED:
+		return 0
+
+	# Trailer Offensive: only play ATK-boosting techs; ignore everything else
+	if _trailer_offensive:
+		var atk_types: Array = [
+			TechCardData.TechEffectType.PERM_ATK_BOOST_ONE,
+			TechCardData.TechEffectType.TEMP_ATK_BOOST_ATTACK_NOW,
+			TechCardData.TechEffectType.PERM_BOOST_ALL_FACEUP,
+		]
+		if data.effect_type in atk_types and snap["ai_faceup"] > 0:
+			return 999
 		return 0
 
 	var ai_faceup: int  = snap["ai_faceup"]
@@ -938,6 +958,118 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 			"card_name": trap_pool[i % trap_pool.size()]})
 		pos_idx += 1
 
+	if _trailer_defensive:
+		placements = _trailer_defensive_post_process(placements, trap_pool)
+
+	return placements
+
+## Post-process placements for Trailer Defensive:
+##  1. Force a trap (Explosive Barrels if available, else any trap) into the centre cell (2,2).
+##  2. Move the strongest characters to border cells.
+func _trailer_defensive_post_process(placements: Array, trap_pool: Array) -> Array:
+	const CENTRE: Vector2i = Vector2i(2, 2)
+
+	# ── Step 1: ensure a trap is at the centre ──────────────────────────────
+	var centre_idx: int = -1
+	var has_centre_trap: bool = false
+	for i: int in range(placements.size()):
+		var p: Dictionary = placements[i] as Dictionary
+		if (p["pos"] as Vector2i) == CENTRE:
+			centre_idx = i
+			if (p["card_type"] as String) == "trap":
+				has_centre_trap = true
+			break
+
+	if not has_centre_trap:
+		# Find "Explosive Barrels" in the trap pool, else pick the first available trap
+		var trap_name: String = ""
+		for tname: String in trap_pool:
+			if tname.to_lower().contains("explosive") and tname.to_lower().contains("barrel"):
+				trap_name = tname
+				break
+		if trap_name == "" and not trap_pool.is_empty():
+			trap_name = trap_pool[0]
+
+		if trap_name != "":
+			# Find a spare trap placement elsewhere to swap with centre
+			var spare_trap_idx: int = -1
+			for i: int in range(placements.size()):
+				var p: Dictionary = placements[i] as Dictionary
+				if (p["card_type"] as String) == "trap" and (p["pos"] as Vector2i) != CENTRE:
+					spare_trap_idx = i
+					break
+
+			if centre_idx >= 0:
+				# centre occupied by a non-trap — swap that card with a spare trap
+				if spare_trap_idx >= 0:
+					var centre_card: Dictionary = placements[centre_idx].duplicate()
+					var spare_trap: Dictionary = placements[spare_trap_idx].duplicate()
+					placements[centre_idx] = {"pos": CENTRE, "card_type": "trap", "card_name": trap_name}
+					placements[spare_trap_idx] = {"pos": centre_card["pos"], "card_type": centre_card["card_type"], "card_name": centre_card["card_name"]}
+				else:
+					placements[centre_idx] = {"pos": CENTRE, "card_type": "trap", "card_name": trap_name}
+			else:
+				# centre is empty (dead_end slot) — add the trap there
+				placements.append({"pos": CENTRE, "card_type": "trap", "card_name": trap_name})
+
+	# ── Step 2: move strongest characters to border cells ────────────────────
+	# Collect character placement indices, separate border vs inner positions
+	var char_indices: Array = []
+	for i: int in range(placements.size()):
+		var p: Dictionary = placements[i] as Dictionary
+		if (p["card_type"] as String) == "character":
+			char_indices.append(i)
+
+	if char_indices.size() < 2:
+		return placements  # not enough chars to bother
+
+	# Score each char by ATK+DEF (needs the card to be placed so GameState has it, but during
+	# setup the cards aren't on the board yet — use CardDatabase instead)
+	var char_scores: Array = []
+	for i: int in char_indices:
+		var p: Dictionary = placements[i] as Dictionary
+		var cname: String = p["card_name"] as String
+		var cd: CharacterData = CardDatabase.get_character(cname)
+		var score: int = (cd.base_atk + cd.base_def) if cd != null else 0
+		char_scores.append({"idx": i, "score": score, "pos": p["pos"] as Vector2i})
+
+	# Sort by score descending (strongest first)
+	char_scores.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return (a["score"] as int) > (b["score"] as int))
+
+	# Separate positions into border vs inner
+	var border_positions: Array = []
+	var inner_positions: Array = []
+	for entry: Dictionary in char_scores:
+		var pos: Vector2i = entry["pos"] as Vector2i
+		if pos.x == 0 or pos.x == 4 or pos.y == 0 or pos.y == 4:
+			border_positions.append(entry)
+		else:
+			inner_positions.append(entry)
+
+	# We want the strongest chars at border positions.
+	# Collect all positions and all card names, then assign strongest to border.
+	var all_positions: Array = []
+	var all_names: Array = []
+	for entry: Dictionary in char_scores:
+		all_positions.append(entry["pos"])
+		all_names.append((placements[entry["idx"] as int] as Dictionary)["card_name"])
+
+	# Sort positions: border first
+	all_positions.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		var a_border: bool = (a.x == 0 or a.x == 4 or a.y == 0 or a.y == 4)
+		var b_border: bool = (b.x == 0 or b.x == 4 or b.y == 0 or b.y == 4)
+		return a_border and not b_border)
+
+	# Reassign: strongest char → first (border) position, etc.
+	for j: int in range(char_scores.size()):
+		var target_idx: int = char_scores[j]["idx"] as int
+		placements[target_idx] = {
+			"pos": all_positions[j] as Vector2i,
+			"card_type": "character",
+			"card_name": all_names[j] as String,
+		}
+
 	return placements
 
 ## Finds the highest-scoring union (ATK+DEF) whose material conditions can all be
@@ -1189,9 +1321,13 @@ func decide_death_bluff(row: int, col: int) -> void:
 
 ## Called when AI destroys a strong (100+ ATK/DEF) or union opponent card.
 ## Places a taunting emoji on the attacker's cell after a short delay.
+## For Trailer Social: called on ANY character kill and always uses 🤣.
 func decide_kill_taunt(attacker_pos: Vector2i) -> void:
 	_ai_kill_count += 1   # track kills for kill_triggered expose mode
 	await get_tree().create_timer(randf_range(0.3, 0.9)).timeout
+	if _trailer_social:
+		emit_signal("ai_bluff", player_index, attacker_pos.x, attacker_pos.y, "🤣")
+		return
 	var use_poop: bool = SaveManager.nsfw_enabled
 	var emojis: Array = ["🤣", "💩" if use_poop else "🖕"]
 	emit_signal("ai_bluff", player_index, attacker_pos.x, attacker_pos.y, emojis[randi() % emojis.size()])
@@ -1237,17 +1373,27 @@ const DEF_PERSONALITY_NAMES: Array = [
 	"Diagonal Shield","Cluster Defender","Checker","Straightforward","Midwit",
 	"Symmetric Defender","Random Defender","Religious","Zoro","Helios",
 	"Helios 2","Zoro 2","Tomb Trap (Hard)","Frontline (Hard)",
+	# ── Trailer (not in random pool) ──
+	"Trailer Defensive",
 ]
 const OFF_PERSONALITY_NAMES: Array = [
 	"Center Hoarder","Border Guard","Corner Assassin","Melee Fighter","Sniper",
 	"Leftist","Rightist","X Sabre","Crusader","Column Crusher","Row Ripper",
 	"Revealed Hunter","Explorer","Tinkerer","Berserker","Shadow Lurker",
 	"Sleeping Dragon","Rambo","Spy","X Alien","Technophobia","Witchhunter",
+	# ── Trailer (not in random pool) ──
+	"Trailer Offensive",
 ]
 const SOC_PERSONALITY_NAMES: Array = [
 	"Degen","Talkative","Fiddly","Flirty","Bully","Fun Guy","Daredevil",
 	"Vengeful","Paranoid","Skeptical","Ungrateful","Monk","Eager","Introvert",
+	# ── Trailer (not in random pool) ──
+	"Trailer Social",
 ]
+# Number of entries before the trailer entries (keeps them out of the random pool)
+const DEF_RANDOM_COUNT: int = 20
+const OFF_RANDOM_COUNT: int = 22
+const SOC_RANDOM_COUNT: int = 14
 
 ## Pick one random personality per dimension and cache derived trait values.
 ## Call once at the start of each game (from decide_setup).
@@ -1348,28 +1494,88 @@ func _pick_personalities() -> void:
 		 "reactions": {"😎":-1,"🤣":-1,"🤝":0,"👍":0,"🥺":0,"🧨":-1,"🖕":0,"😃":-1,"❤️":0,"☠️":-1}},
 	]
 
+	# Reset trailer flags
+	_trailer_offensive = false
+	_trailer_defensive = false
+	_trailer_social    = false
+
 	# If campaign/dungeon config overrides a personality, use it; otherwise pick randomly.
+	# Random range is limited to *_RANDOM_COUNT so trailer entries never appear by chance.
 	var _cfg: Dictionary = GameState.campaign_enemy_config
-	var def_idx: int = randi() % def_list.size()
+	var def_idx: int = randi() % DEF_RANDOM_COUNT
 	var cfg_def: String = str(_cfg.get("ai_personality_defensive", ""))
 	if cfg_def != "":
 		var oi: int = DEF_PERSONALITY_NAMES.find(cfg_def)
 		if oi >= 0:
 			def_idx = oi
 
-	var off_idx: int = randi() % off_list.size()
+	var off_idx: int = randi() % OFF_RANDOM_COUNT
 	var cfg_off: String = str(_cfg.get("ai_personality_offensive", ""))
 	if cfg_off != "":
 		var oi: int = OFF_PERSONALITY_NAMES.find(cfg_off)
 		if oi >= 0:
 			off_idx = oi
 
-	var soc_idx: int = randi() % soc_list.size()
+	var soc_idx: int = randi() % SOC_RANDOM_COUNT
 	var cfg_soc: String = str(_cfg.get("ai_personality_social", ""))
 	if cfg_soc != "":
 		var oi: int = SOC_PERSONALITY_NAMES.find(cfg_soc)
 		if oi >= 0:
 			soc_idx = oi
+
+	# ── Handle Trailer personalities ──
+	if cfg_def == "Trailer Defensive":
+		_trailer_defensive = true
+		personality_defensive = "Trailer Defensive"
+		_def_zone      = "border"
+		_union_concern = "none"
+	if cfg_off == "Trailer Offensive":
+		_trailer_offensive = true
+		personality_offensive = "Trailer Offensive"
+		_attack_zone  = "random_off"
+		_expose_mode  = "all"
+		_skip_turns   = 0
+		_union_concern = "none"
+	if cfg_soc == "Trailer Social":
+		_trailer_social = true
+		personality_social = "Trailer Social"
+		_bluff_freq   = 0.0   # suppress random bluffs; laughs are triggered by kills only
+		_bluff_pool   = ["🤣"]
+
+	# If any trailer personality was set, apply its traits and skip normal trait application
+	if _trailer_offensive or _trailer_defensive or _trailer_social:
+		# Fill any un-overridden dimensions with normal random picks
+		if not _trailer_defensive:
+			var def_pick: Dictionary = def_list[def_idx]
+			_def_zone      = def_pick["zone"] as String
+			_union_concern = def_pick["union"] as String
+			personality_defensive = DEF_PERSONALITY_NAMES[def_idx] as String
+			if _def_zone == "cluster":
+				_cluster_origin = Vector2i(randi() % 3, randi() % 3)
+			elif _def_zone == "line":
+				_line_axis = randi() % 2
+				_line_idx  = randi() % GameState.GRID_SIZE
+		if not _trailer_offensive:
+			var off_pick: Dictionary = off_list[off_idx]
+			_attack_zone  = off_pick["zone"] as String
+			_expose_mode  = off_pick["expose"] as String
+			_skip_turns   = off_pick["skip"] as int
+			personality_offensive = OFF_PERSONALITY_NAMES[off_idx] as String
+			match _attack_zone:
+				"top_sweep":    _zone_axis = 0; _zone_dir = 1
+				"bot_sweep":    _zone_axis = GameState.GRID_SIZE - 1; _zone_dir = -1
+				"left_sweep":   _zone_axis = 0; _zone_dir = 1
+				"right_sweep":  _zone_axis = GameState.GRID_SIZE - 1; _zone_dir = -1
+				"col_focus":    _zone_axis = randi() % GameState.GRID_SIZE; _zone_dir = 1
+				"row_focus":    _zone_axis = randi() % GameState.GRID_SIZE; _zone_dir = 1
+				_:              _zone_axis = 0; _zone_dir = 1
+		if not _trailer_social:
+			var soc_pick: Dictionary = soc_list[soc_idx]
+			_bluff_freq      = soc_pick["freq"] as float
+			_emoji_reactions = soc_pick["reactions"] as Dictionary
+			_bluff_pool      = _build_bluff_pool(soc_pick["prefer"] as Array, soc_pick["avoid_emoji"] as Array)
+			personality_social = SOC_PERSONALITY_NAMES[soc_idx] as String
+		return   # skip normal trait application below
 
 	var def_pick: Dictionary = def_list[def_idx]
 	var off_pick: Dictionary = off_list[off_idx]

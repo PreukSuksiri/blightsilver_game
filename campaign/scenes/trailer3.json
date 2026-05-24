@@ -1,0 +1,118 @@
+[
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bn_vn_hospital_elevator_1st_floor.png",
+		"fade_color": "#000000",
+		"fade_in": 0.5,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bn_vn_hospital_elevator_1st_floor.png",
+		"text": "(The distinct squeaking noise got even louder as the elevator arrived at the first floor)"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bn_vn_hospital_elevator_1st_floor.png",
+		"shake_screen": 32.0,
+		"wait": 0.5
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bn_vn_hospital_elevator_1st_floor.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_worried.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": "What exactly is that noise...!?"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bn_vn_hospital_elevator_1st_floor.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_worried.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": "I'm scared... Nex..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bn_vn_hospital_elevator_1st_floor.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_worried.png"
+			}
+		],
+		"text": "(She clamped Nex's arm tight, not knowing what's beyond the elevator door)"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bn_vn_hospital_elevator_1st_floor.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_worried.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_confidence.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Whatever that noise is, you will be safe with me."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_2/bn_vn_hospital_elevator_1st_floor.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_embarrassed.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": "Really...? You promise...?"
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.5,
+		"wait": 0.001
+	},
+	{
+		"linger_characters": true,
+		"wait": 5.0
+	}
+]

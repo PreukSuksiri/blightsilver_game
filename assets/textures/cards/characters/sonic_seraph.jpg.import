@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccs24gdpldc0n"
-path="res://.godot/imported/jirayu_the_rebellious_rince.jpg-b8d03741bf46c96135a9bc9425785960.ctex"
+uid="uid://chqxhqxxkgdps"
+path="res://.godot/imported/sonic_seraph.jpg-110e18110329d569389ba7d3605697d5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/jirayu_the_rebellious_rince.jpg"
-dest_files=["res://.godot/imported/jirayu_the_rebellious_rince.jpg-b8d03741bf46c96135a9bc9425785960.ctex"]
+source_file="res://assets/textures/cards/characters/sonic_seraph.jpg"
+dest_files=["res://.godot/imported/sonic_seraph.jpg-110e18110329d569389ba7d3605697d5.ctex"]
 
 [params]
 

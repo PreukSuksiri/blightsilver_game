@@ -456,6 +456,16 @@ func _start_glow_pulse(idx: int) -> void:
 func _load_card_tex(card_name: String) -> Texture2D:
 	if card_name == null or card_name == "":
 		return load(FALLBACK_CARD_PATH) as Texture2D
+	# Always hide cards that still use placeholder art
+	var cd: CharacterData = CardDatabase.get_character(card_name)
+	if cd != null and cd.placeholder_art:
+		return load(FALLBACK_CARD_PATH) as Texture2D
+	var td: TrapData = CardDatabase.get_trap(card_name)
+	if td != null and td.placeholder_art:
+		return load(FALLBACK_CARD_PATH) as Texture2D
+	var ed: TechCardData = CardDatabase.get_tech(card_name)
+	if ed != null and ed.placeholder_art:
+		return load(FALLBACK_CARD_PATH) as Texture2D
 	var snake: String = card_name.to_lower() \
 		.replace(" ", "_").replace("'", "").replace("-", "_")
 	var path: String = FULL_CARDS_DIR + snake + ".png"
