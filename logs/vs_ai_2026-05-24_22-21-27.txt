@@ -1,0 +1,19 @@
+=== VS AI Match ===
+Started: 2026-05-24 22:21:27
+===
+
+[00:31.458] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[01:01.970] Revealed: P0 (1,1) "Canyon Warg"
+[01:01.970] Revealed: P1 (3,0) "Self-destruct"
+[01:01.971] Dice rolled: 5
+[01:03.128] MSG: Trap triggered: Self-destruct!
+[01:13.199] Card destroyed  P1 (3,0) "Self-destruct"
+[01:13.263] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[01:13.266] Trap: "Self-destruct" triggered  P0(1,1)→P1(3,0)
+[01:30.174] Revealed: P0 (2,4) "War Genie"
+[01:30.174] Revealed: P1 (2,2) "Explosive Barrels"
+[01:30.175] Dice rolled: 4
+[01:31.314] MSG: Trap triggered: Explosive Barrels!
+[01:45.697] Crystals: P0 5000 → 4000 (-1000)  [card lost]

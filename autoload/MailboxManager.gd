@@ -807,6 +807,14 @@ func admin_command(raw: String) -> String:
 					+ "  Social:    Trailer Social (laugh 🤣 on every character kill)\n"
 					+ "Start a VS AI game to apply. Use 'ai_trailer off' to revert.")
 
+		"ai_no_placeholder":
+			SaveManager.ai_exclude_placeholder = true
+			return "AI deck pool will exclude placeholder-art cards this session."
+
+		"ai_no_placeholder_off":
+			SaveManager.ai_exclude_placeholder = false
+			return "AI deck pool restored to full card pool."
+
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd
 

@@ -229,9 +229,9 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	if inst.is_union:
 		var _snake: String = inst.card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
 		for _p: String in [
+			"res://assets/textures/cards/union/" + _snake + ".png",
 			"res://assets/textures/cards/full_cards/" + _snake + ".png",
 			"res://assets/textures/cards/full_cards/union_" + _snake + ".png",
-			"res://assets/textures/cards/union/" + _snake + ".png",
 		]:
 			if ResourceLoader.exists(_p):
 				art_path = _p
@@ -341,17 +341,31 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	match inst.card_type:
 		"character":
 			var data: CharacterData = CardDatabase.get_character(inst.card_name)
-			type_lbl.text = "CHARACTER"
-			type_lbl.add_theme_color_override("font_color", TYPE_COLOR_CHARACTER)
 			cost_lbl.text = "%d◆" % inst.crystal_cost
 			name_lbl.text = inst.card_name
-			if data:
-				atk_lbl.text = "ATK %d" % inst.get_effective_atk()
-				def_lbl.text = "DEF %d" % inst.get_effective_def()
-				var aff_name: String = CharacterData.Affinity.keys()[inst.affinity].capitalize()
-				aff_lbl.text = aff_name
-				aff_lbl.add_theme_color_override("font_color", TYPE_COLOR_CHARACTER)
-				desc_lbl.text = data.get_ability_description()
+			if inst.is_union:
+				const UNION_CYAN: Color = Color(0.25, 0.90, 1.00)
+				type_lbl.text = "UNION"
+				type_lbl.add_theme_color_override("font_color", UNION_CYAN)
+				var u: UnionData = UnionDatabase.get_union(inst.card_name)
+				if u:
+					atk_lbl.text = "ATK %d" % inst.get_effective_atk()
+					def_lbl.text = "DEF %d" % inst.get_effective_def()
+					var aff_keys: Array = CharacterData.Affinity.keys()
+					var aff_idx: int = int(u.affinity)
+					aff_lbl.text = aff_keys[aff_idx].capitalize() if aff_idx < aff_keys.size() else ""
+					aff_lbl.add_theme_color_override("font_color", UNION_CYAN)
+					desc_lbl.text = u.ability_description
+			else:
+				type_lbl.text = "CHARACTER"
+				type_lbl.add_theme_color_override("font_color", TYPE_COLOR_CHARACTER)
+				if data:
+					atk_lbl.text = "ATK %d" % inst.get_effective_atk()
+					def_lbl.text = "DEF %d" % inst.get_effective_def()
+					var aff_name: String = CharacterData.Affinity.keys()[inst.affinity].capitalize()
+					aff_lbl.text = aff_name
+					aff_lbl.add_theme_color_override("font_color", TYPE_COLOR_CHARACTER)
+					desc_lbl.text = data.get_ability_description()
 			_style_pill(atk_lbl, Color(0.75, 0.28, 0.05), Color(1.0, 0.55, 0.28))
 			_style_pill(def_lbl, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
 		"trap":
