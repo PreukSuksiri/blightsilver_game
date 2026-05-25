@@ -1,0 +1,99 @@
+[
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_3/nex_car_noti.png",
+		"fade_color": "#000000",
+		"fade_in": 0.5,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_3/nex_car_noti.png",
+		"text": "(A notification appeared on Nex's phone)"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_3/nex_car_noti.png",
+		"speaker": "Nex",
+		"text": "Did someone sent me a message...?"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_3/nex_car_noti.png",
+		"speaker": "Nex",
+		"text": "......?"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_3/nex_car_noti.png",
+		"speaker": "Nex",
+		"text": "h e l p ...?"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_3/nex_car_noti.png",
+		"speaker": "Nex",
+		"text": "Is this another of your prank, Kelly?"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_3/nex_car_noti.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "That sounds like me, but no..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_3/nex_car_noti.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Who sent that?"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch1_3/nex_car_noti.png",
+		"speaker": "Nex",
+		"text": "An unknown user... It seems hacked... I can't even delete it..."
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.5,
+		"wait": 0.001
+	},
+	{
+		"linger_characters": true,
+		"wait": 5.0
+	}
+]
