@@ -28,19 +28,24 @@ var _tab_btns:       Dictionary = {}   # tab_key -> Button
 
 var _name_lbl:       Label
 var _badge_lbl:      Label
-var _desc_lbl:       Label
+var _edit_desc:      TextEdit
 var _fields_vbox:    VBoxContainer
 var _status_lbl:     Label
 var _apply_btn:      Button
 var _reset_btn:      Button
 
 # Input nodes (nullable – only present when a card is selected)
-var _spin_atk:         SpinBox      = null
-var _spin_def:         SpinBox      = null
-var _spin_cost:        SpinBox      = null
-var _opt_rarity:       OptionButton = null
-var _opt_affinity:     OptionButton = null
-var _check_demo:       CheckBox     = null
+var _spin_atk:              SpinBox      = null
+var _spin_def:              SpinBox      = null
+var _spin_cost:             SpinBox      = null
+var _opt_rarity:            OptionButton = null
+var _opt_affinity:          OptionButton = null
+var _check_demo:            CheckBox     = null
+var _edit_ability_desc:     TextEdit     = null
+var _edit_partial_ability:  TextEdit     = null
+var _edit_formula:          TextEdit     = null
+var _edit_partial_formula:  TextEdit     = null
+var _line_display_name:     LineEdit     = null
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -118,10 +123,10 @@ func _build_ui() -> void:
 	# Tab buttons
 	const TAB_Y: float  = TOP + 42.0
 	const TAB_H: float  = 32.0
-	var tab_labels: Array = ["CHARS", "TRAPS", "TECH"]
-	var tab_keys:   Array = ["characters", "traps", "tech"]
-	var tab_w: float = LEFT_W / 3.0
-	for i: int in range(3):
+	var tab_labels: Array = ["CHARS", "TRAPS", "TECH", "UNIONS"]
+	var tab_keys:   Array = ["characters", "traps", "tech", "unions"]
+	var tab_w: float = LEFT_W / 4.0
+	for i: int in range(4):
 		var tb := Button.new()
 		tb.text     = tab_labels[i]
 		tb.position = Vector2(LX + i * tab_w, TAB_Y)
@@ -171,13 +176,12 @@ func _build_ui() -> void:
 	_badge_lbl.add_theme_color_override("font_color", Color(0.50, 0.80, 1.0))
 	panel.add_child(_badge_lbl)
 
-	_desc_lbl = Label.new()
-	_desc_lbl.position    = Vector2(RX, TOP + 68.0)
-	_desc_lbl.size        = Vector2(RW, 72.0)
-	_desc_lbl.add_theme_font_size_override("font_size", 13)
-	_desc_lbl.add_theme_color_override("font_color", Color(0.72, 0.72, 0.72))
-	_desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	panel.add_child(_desc_lbl)
+	_edit_desc = TextEdit.new()
+	_edit_desc.position  = Vector2(RX, TOP + 68.0)
+	_edit_desc.size      = Vector2(RW, 72.0)
+	_edit_desc.add_theme_font_size_override("font_size", 13)
+	_edit_desc.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+	panel.add_child(_edit_desc)
 
 	# Divider under description
 	var fdiv := ColorRect.new()
@@ -186,11 +190,16 @@ func _build_ui() -> void:
 	fdiv.color    = Color(0.40, 0.70, 1.00, 0.20)
 	panel.add_child(fdiv)
 
+	var fields_scroll := ScrollContainer.new()
+	fields_scroll.position = Vector2(RX, TOP + 154.0)
+	fields_scroll.size     = Vector2(RW, 440.0)
+	fields_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	panel.add_child(fields_scroll)
+
 	_fields_vbox = VBoxContainer.new()
-	_fields_vbox.position = Vector2(RX, TOP + 154.0)
-	_fields_vbox.size     = Vector2(RW, 440.0)
+	_fields_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_fields_vbox.add_theme_constant_override("separation", 10)
-	panel.add_child(_fields_vbox)
+	fields_scroll.add_child(_fields_vbox)
 
 	# Status + buttons at bottom
 	_status_lbl = Label.new()
@@ -233,6 +242,9 @@ func _populate_list(filter: String = "") -> void:
 		"characters": names = CardDatabase.get_all_character_names()
 		"traps":      names = CardDatabase.get_all_trap_names()
 		"tech":       names = CardDatabase.get_all_tech_names()
+		"unions":
+			for u: UnionData in UnionDatabase.get_all_unions():
+				names.append(u.card_name)
 	names.sort()
 
 	var q: String = filter.strip_edges().to_lower()
@@ -298,11 +310,14 @@ func _select_card(card_name: String, btn: Button) -> void:
 func _clear_detail() -> void:
 	_name_lbl.text   = "Select a card from the list"
 	_badge_lbl.text  = ""
-	_desc_lbl.text   = ""
+	_edit_desc.text  = ""
 	for child in _fields_vbox.get_children():
 		child.queue_free()
 	_spin_atk = null; _spin_def = null; _spin_cost = null
 	_opt_rarity = null; _opt_affinity = null; _check_demo = null
+	_edit_ability_desc = null; _edit_partial_ability = null
+	_edit_formula = null; _edit_partial_formula = null
+	_line_display_name = null
 	_apply_btn.disabled = true
 	_reset_btn.disabled = true
 	_status_lbl.text = ""
@@ -312,6 +327,9 @@ func _build_detail(card_name: String) -> void:
 		child.queue_free()
 	_spin_atk = null; _spin_def = null; _spin_cost = null
 	_opt_rarity = null; _opt_affinity = null; _check_demo = null
+	_edit_ability_desc = null; _edit_partial_ability = null
+	_edit_formula = null; _edit_partial_formula = null
+	_line_display_name = null
 	_orig.clear()
 
 	match _current_tab:
@@ -322,16 +340,19 @@ func _build_detail(card_name: String) -> void:
 			_badge_lbl.text = "CHARACTER  ·  %s  ·  %s" % [
 				AFFINITY_NAMES[d.affinity],
 				RARITY_NAMES[d.rarity]]
-			_desc_lbl.text  = d.ability_description
+			_edit_desc.text = d.ability_description
 
 			_orig = {
-				"base_atk":      d.base_atk,
-				"base_def":      d.base_def,
-				"crystal_cost":  d.crystal_cost,
-				"rarity":        d.rarity,
-				"affinity":      d.affinity,
+				"base_atk":        d.base_atk,
+				"base_def":        d.base_def,
+				"crystal_cost":    d.crystal_cost,
+				"rarity":          d.rarity,
+				"affinity":        d.affinity,
 				"include_in_demo": d.include_in_demo,
+				"description":     d.ability_description,
+				"display_name":    d.display_name,
 			}
+			_line_display_name = _add_line_field("Display Name", d.display_name)
 			_spin_atk      = _add_spin_field("ATK",      d.base_atk,     0, 9999)
 			_spin_def      = _add_spin_field("DEF",      d.base_def,     0, 9999)
 			_spin_cost     = _add_spin_field("Cost",     d.crystal_cost, 0, 99999)
@@ -344,13 +365,16 @@ func _build_detail(card_name: String) -> void:
 			if d == null: return
 			_name_lbl.text  = d.card_name
 			_badge_lbl.text = "TRAP  ·  %s" % RARITY_NAMES[d.rarity]
-			_desc_lbl.text  = d.effect_description
+			_edit_desc.text = d.effect_description
 
 			_orig = {
 				"crystal_cost":    d.crystal_cost,
 				"rarity":          d.rarity,
 				"include_in_demo": d.include_in_demo,
+				"description":     d.effect_description,
+				"display_name":    d.display_name,
 			}
+			_line_display_name = _add_line_field("Display Name", d.display_name)
 			_spin_cost  = _add_spin_field("Cost",   d.crystal_cost, 0, 99999)
 			_opt_rarity = _add_option_field("Rarity", RARITY_NAMES,   d.rarity)
 			_check_demo = _add_check_field("Include in Demo", d.include_in_demo)
@@ -362,16 +386,53 @@ func _build_detail(card_name: String) -> void:
 			var chain: String = ("Chain: requires '%s'" % d.required_prior_card) \
 				if d.required_prior_card != "" else ""
 			_badge_lbl.text = "TECH  ·  %s  %s" % [RARITY_NAMES[d.rarity], chain]
-			_desc_lbl.text  = d.effect_description
+			_edit_desc.text = d.effect_description
 
 			_orig = {
 				"crystal_cost":    d.crystal_cost,
 				"rarity":          d.rarity,
 				"include_in_demo": d.include_in_demo,
+				"description":     d.effect_description,
+				"display_name":    d.display_name,
 			}
+			_line_display_name = _add_line_field("Display Name", d.display_name)
 			_spin_cost  = _add_spin_field("Cost",   d.crystal_cost, 0, 99999)
 			_opt_rarity = _add_option_field("Rarity", RARITY_NAMES,   d.rarity)
 			_check_demo = _add_check_field("Include in Demo", d.include_in_demo)
+
+		"unions":
+			var u: UnionData = UnionDatabase.get_union(card_name)
+			if u == null: return
+			_name_lbl.text  = u.card_name
+			_badge_lbl.text = "UNION  ·  %s  ·  %s" % [
+				AFFINITY_NAMES[u.affinity], RARITY_NAMES[u.rarity]]
+			_edit_desc.text = ""
+
+			_orig = {
+				"base_atk":               u.base_atk,
+				"base_def":               u.base_def,
+				"crystal_cost":           u.summon_cost,
+				"rarity":                 u.rarity,
+				"affinity":               u.affinity,
+				"include_in_demo":        u.include_in_demo,
+				"description":            u.ability_description,
+				"display_name":           u.display_name,
+				"ability_desc":           u.ability_description,
+				"partial_ability_desc":   u.partial_ability_description,
+				"formula_desc":           u.formula_description,
+				"partial_formula_desc":   u.partial_formula_description,
+			}
+			_line_display_name = _add_line_field("Display Name", u.display_name)
+			_spin_atk     = _add_spin_field("ATK",      u.base_atk,   0, 9999)
+			_spin_def     = _add_spin_field("DEF",      u.base_def,   0, 9999)
+			_spin_cost    = _add_spin_field("Cost",     u.summon_cost, 0, 99999)
+			_opt_rarity   = _add_option_field("Rarity",   RARITY_NAMES,   u.rarity)
+			_opt_affinity = _add_option_field("Affinity", AFFINITY_NAMES, u.affinity)
+			_check_demo   = _add_check_field("Include in Demo", u.include_in_demo)
+			_edit_ability_desc    = _add_text_field("Ability (unlocked)", u.ability_description)
+			_edit_partial_ability = _add_text_field("Ability (locked)",   u.partial_ability_description)
+			_edit_formula         = _add_text_field("Formula (unlocked)", u.formula_description)
+			_edit_partial_formula = _add_text_field("Formula (locked)",   u.partial_formula_description)
 
 	_apply_btn.disabled = false
 	_reset_btn.disabled = false
@@ -444,6 +505,49 @@ func _add_option_field(label_text: String, options: Array, selected_idx: int) ->
 
 	return opt
 
+func _add_line_field(label_text: String, value: String) -> LineEdit:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	_fields_vbox.add_child(row)
+
+	var lbl := Label.new()
+	lbl.text                = label_text
+	lbl.custom_minimum_size = Vector2(120.0, 0.0)
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.add_theme_color_override("font_color", Color(0.78, 0.78, 0.78))
+	lbl.vertical_alignment  = VERTICAL_ALIGNMENT_CENTER
+	row.add_child(lbl)
+
+	var le := LineEdit.new()
+	le.text              = value
+	le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	le.custom_minimum_size   = Vector2(0.0, 34.0)
+	le.add_theme_font_size_override("font_size", 14)
+	row.add_child(le)
+
+	return le
+
+func _add_text_field(label_text: String, value: String) -> TextEdit:
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 4)
+	_fields_vbox.add_child(col)
+
+	var lbl := Label.new()
+	lbl.text = label_text
+	lbl.add_theme_font_size_override("font_size", 13)
+	lbl.add_theme_color_override("font_color", Color(0.78, 0.78, 0.78))
+	col.add_child(lbl)
+
+	var te := TextEdit.new()
+	te.text = value
+	te.custom_minimum_size = Vector2(0.0, 54.0)
+	te.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	te.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+	te.add_theme_font_size_override("font_size", 13)
+	col.add_child(te)
+
+	return te
+
 # ─────────────────────────────────────────────────────────────
 # Apply / Reset
 # ─────────────────────────────────────────────────────────────
@@ -455,12 +559,14 @@ func _on_apply() -> void:
 		"characters":
 			var d: CharacterData = CardDatabase.get_character(_selected_name)
 			if d == null: return
-			if _spin_atk:     d.base_atk        = int(_spin_atk.value)
-			if _spin_def:     d.base_def        = int(_spin_def.value)
-			if _spin_cost:    d.crystal_cost    = int(_spin_cost.value)
-			if _opt_rarity:   d.rarity          = _opt_rarity.selected
-			if _opt_affinity: d.affinity        = _opt_affinity.selected
-			if _check_demo:   d.include_in_demo = _check_demo.button_pressed
+			if _spin_atk:     d.base_atk           = int(_spin_atk.value)
+			if _spin_def:     d.base_def           = int(_spin_def.value)
+			if _spin_cost:    d.crystal_cost       = int(_spin_cost.value)
+			if _opt_rarity:   d.rarity             = _opt_rarity.selected
+			if _opt_affinity: d.affinity           = _opt_affinity.selected
+			if _check_demo:   d.include_in_demo    = _check_demo.button_pressed
+			d.ability_description = _edit_desc.text
+			if _line_display_name: d.display_name = _line_display_name.text
 			_badge_lbl.text = "CHARACTER  ·  %s  ·  %s" % [
 				AFFINITY_NAMES[d.affinity], RARITY_NAMES[d.rarity]]
 
@@ -470,6 +576,8 @@ func _on_apply() -> void:
 			if _spin_cost:  d.crystal_cost    = int(_spin_cost.value)
 			if _opt_rarity: d.rarity          = _opt_rarity.selected
 			if _check_demo: d.include_in_demo = _check_demo.button_pressed
+			d.effect_description = _edit_desc.text
+			if _line_display_name: d.display_name = _line_display_name.text
 			_badge_lbl.text = "TRAP  ·  %s" % RARITY_NAMES[d.rarity]
 
 		"tech":
@@ -478,9 +586,28 @@ func _on_apply() -> void:
 			if _spin_cost:  d.crystal_cost    = int(_spin_cost.value)
 			if _opt_rarity: d.rarity          = _opt_rarity.selected
 			if _check_demo: d.include_in_demo = _check_demo.button_pressed
+			d.effect_description = _edit_desc.text
+			if _line_display_name: d.display_name = _line_display_name.text
 			var chain: String = ("Chain: requires '%s'" % d.required_prior_card) \
 				if d.required_prior_card != "" else ""
 			_badge_lbl.text = "TECH  ·  %s  %s" % [RARITY_NAMES[d.rarity], chain]
+
+		"unions":
+			var u: UnionData = UnionDatabase.get_union(_selected_name)
+			if u == null: return
+			if _spin_atk:     u.base_atk        = int(_spin_atk.value)
+			if _spin_def:     u.base_def        = int(_spin_def.value)
+			if _spin_cost:    u.summon_cost      = int(_spin_cost.value)
+			if _opt_rarity:   u.rarity           = _opt_rarity.selected
+			if _opt_affinity: u.affinity         = _opt_affinity.selected
+			if _check_demo:   u.include_in_demo  = _check_demo.button_pressed
+			if _edit_ability_desc:    u.ability_description         = _edit_ability_desc.text
+			if _edit_partial_ability: u.partial_ability_description = _edit_partial_ability.text
+			if _edit_formula:         u.formula_description         = _edit_formula.text
+			if _edit_partial_formula: u.partial_formula_description = _edit_partial_formula.text
+			if _line_display_name:    u.display_name                = _line_display_name.text
+			_badge_lbl.text = "UNION  ·  %s  ·  %s" % [
+				AFFINITY_NAMES[u.affinity], RARITY_NAMES[u.rarity]]
 
 	CardDatabase.save_demo_flags()
 	_status_lbl.text = "✓ Changes applied to %s" % _selected_name
@@ -491,12 +618,23 @@ func _on_apply() -> void:
 func _on_reset() -> void:
 	if _orig.is_empty():
 		return
-	if _spin_atk and     _orig.has("base_atk"):        _spin_atk.value         = _orig["base_atk"]
-	if _spin_def and     _orig.has("base_def"):        _spin_def.value         = _orig["base_def"]
-	if _spin_cost and    _orig.has("crystal_cost"):    _spin_cost.value        = _orig["crystal_cost"]
+	if _spin_atk and     _orig.has("base_atk"):        _spin_atk.value            = _orig["base_atk"]
+	if _spin_def and     _orig.has("base_def"):        _spin_def.value            = _orig["base_def"]
+	if _spin_cost and    _orig.has("crystal_cost"):    _spin_cost.value           = _orig["crystal_cost"]
 	if _opt_rarity and   _orig.has("rarity"):          _opt_rarity.select(_orig["rarity"])
 	if _opt_affinity and _orig.has("affinity"):        _opt_affinity.select(_orig["affinity"])
 	if _check_demo and   _orig.has("include_in_demo"): _check_demo.button_pressed = _orig["include_in_demo"]
+	if _orig.has("description"):        _edit_desc.text              = _orig["description"]
+	if _orig.has("display_name") and _line_display_name:
+		_line_display_name.text = _orig["display_name"]
+	if _orig.has("ability_desc") and _edit_ability_desc:
+		_edit_ability_desc.text    = _orig["ability_desc"]
+	if _orig.has("partial_ability_desc") and _edit_partial_ability:
+		_edit_partial_ability.text = _orig["partial_ability_desc"]
+	if _orig.has("formula_desc") and _edit_formula:
+		_edit_formula.text         = _orig["formula_desc"]
+	if _orig.has("partial_formula_desc") and _edit_partial_formula:
+		_edit_partial_formula.text = _orig["partial_formula_desc"]
 	_status_lbl.text = "Reset to original values."
 
 func _sync_orig_from_inputs() -> void:
@@ -506,6 +644,12 @@ func _sync_orig_from_inputs() -> void:
 	if _opt_rarity:   _orig["rarity"]          = _opt_rarity.selected
 	if _opt_affinity: _orig["affinity"]        = _opt_affinity.selected
 	if _check_demo:   _orig["include_in_demo"] = _check_demo.button_pressed
+	_orig["description"] = _edit_desc.text
+	if _line_display_name: _orig["display_name"] = _line_display_name.text
+	if _edit_ability_desc:    _orig["ability_desc"]          = _edit_ability_desc.text
+	if _edit_partial_ability: _orig["partial_ability_desc"]  = _edit_partial_ability.text
+	if _edit_formula:         _orig["formula_desc"]          = _edit_formula.text
+	if _edit_partial_formula: _orig["partial_formula_desc"]  = _edit_partial_formula.text
 
 # ─────────────────────────────────────────────────────────────
 # Close on Escape

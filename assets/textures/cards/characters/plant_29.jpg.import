@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1whqco7wf6wp"
-path="res://.godot/imported/moon_tribe_twin_blader.jpg-6092b0312d421860d45ee56f13c4044e.ctex"
+uid="uid://dc84ff25yy5k2"
+path="res://.godot/imported/plant_29.jpg-6687c74fdf9354db04a273cec422281c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/moon_tribe_twin_blader.jpg"
-dest_files=["res://.godot/imported/moon_tribe_twin_blader.jpg-6092b0312d421860d45ee56f13c4044e.ctex"]
+source_file="res://assets/textures/cards/characters/plant_29.jpg"
+dest_files=["res://.godot/imported/plant_29.jpg-6687c74fdf9354db04a273cec422281c.ctex"]
 
 [params]
 

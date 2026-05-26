@@ -405,7 +405,7 @@ func _populate_card_node(card_name: String, card_type: String) -> void:
 			_type.add_theme_color_override("font_color", TYPE_COLOR_CHARACTER)
 			_frame.modulate = Color(1.0, 1.0, 1.0)
 			_cost_num.text = str(data.crystal_cost)
-			_name.text = card_name
+			_name.text = data.display_name if not data.display_name.is_empty() else card_name
 			_atk.text  = "ATK %d" % data.base_atk
 			_def.text  = "DEF %d" % data.base_def
 			_aff.text  = aff_name
@@ -425,7 +425,7 @@ func _populate_card_node(card_name: String, card_type: String) -> void:
 			_type.add_theme_color_override("font_color", TYPE_COLOR_TRAP)
 			_frame.modulate = Color(1.0, 0.65, 0.65)
 			_cost_num.text = str(data.crystal_cost)
-			_name.text = card_name
+			_name.text = data.display_name if not data.display_name.is_empty() else card_name
 			_atk.text  = ""
 			_def.text  = ""
 			#_aff.text  = "Trap"
@@ -445,7 +445,7 @@ func _populate_card_node(card_name: String, card_type: String) -> void:
 			_type.add_theme_color_override("font_color", TYPE_COLOR_TECH)
 			_frame.modulate = Color(0.65, 1.0, 0.65)
 			_cost_num.text = str(data.crystal_cost)
-			_name.text = card_name
+			_name.text = data.display_name if not data.display_name.is_empty() else card_name
 			_atk.text  = ""
 			_def.text  = ""
 			#_aff.text  = "Tech"
@@ -468,8 +468,8 @@ func _populate_card_node(card_name: String, card_type: String) -> void:
 			_type.text = "UNION"
 			_type.add_theme_color_override("font_color", UNION_CYAN)
 			_frame.modulate = Color(1.0, 1.0, 1.0)
-			_cost_num.text = str(u.summon_cost)
-			_name.text = card_name
+			_cost_num.text = "0"
+			_name.text = u.display_name if not u.display_name.is_empty() else card_name
 			_atk.text  = "ATK %d" % u.base_atk
 			_def.text  = "DEF %d" % u.base_def
 			_aff.text  = aff_name
@@ -479,10 +479,7 @@ func _populate_card_node(card_name: String, card_type: String) -> void:
 			_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
 			_art.position = _art_base_pos
 			var _snake_u: String = _card_name_to_snake(card_name)
-			var _art_u: String = "res://assets/textures/cards/union/" + _snake_u + ".png"
-			if not ResourceLoader.exists(_art_u):
-				_art_u = u.artwork_path
-			_load_art(_art_u)
+			_load_art("res://assets/textures/cards/union/" + _snake_u + ".png")
 			_set_rarity(u.rarity)
 			# Zone grid
 			var uz_set: Dictionary = {}
@@ -643,8 +640,8 @@ func _render_and_save_union_locked(card_name: String) -> void:
 	_type.text = "UNION  🔒"
 	_type.add_theme_color_override("font_color", UNION_CYAN)
 	_frame.modulate = Color(1.0, 1.0, 1.0)
-	_cost_num.text = str(u.summon_cost)
-	_name.text = card_name
+	_cost_num.text = "0"
+	_name.text = u.display_name if not u.display_name.is_empty() else card_name
 	_atk.text  = "ATK %d" % u.base_atk
 	_def.text  = "DEF %d" % u.base_def
 	_aff.text  = aff_name
@@ -654,10 +651,7 @@ func _render_and_save_union_locked(card_name: String) -> void:
 	_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
 	_art.position = _art_base_pos
 	var _snake_l: String = _card_name_to_snake(card_name)
-	var _art_l: String = "res://assets/textures/cards/union/" + _snake_l + ".png"
-	if not ResourceLoader.exists(_art_l):
-		_art_l = u.artwork_path
-	_load_art(_art_l)
+	_load_art("res://assets/textures/cards/union/" + _snake_l + ".png")
 	_set_rarity(u.rarity)
 	var uz_set: Dictionary = {}
 	for uzv: Vector2i in u.union_zone:

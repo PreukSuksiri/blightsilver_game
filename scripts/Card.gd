@@ -407,7 +407,7 @@ func _show_character_face_up() -> void:
 	affinity_label.text = AFFINITY_SYMBOLS.get(card_data.affinity, "?")
 	affinity_label.add_theme_color_override("font_color", aff_color)
 
-	name_label.text = card_data.card_name
+	name_label.text = card_data.display_name if not card_data.display_name.is_empty() else card_data.card_name
 
 	var char_data: CharacterData = CardDatabase.get_character(card_data.card_name)
 
@@ -475,7 +475,7 @@ func _show_union_face_up() -> void:
 	affinity_label.text = "⊕"
 	affinity_label.add_theme_color_override("font_color", UNION_CYAN)
 
-	name_label.text = card_data.card_name
+	name_label.text = card_data.display_name if not card_data.display_name.is_empty() else card_data.card_name
 
 	var eff_atk: int = card_data.get_effective_atk()
 	var eff_def: int = card_data.get_effective_def()
@@ -489,7 +489,7 @@ func _show_union_face_up() -> void:
 	affinity_stat_label.text = aff_keys[aff_idx].capitalize() if aff_idx < aff_keys.size() else ""
 	affinity_stat_label.add_theme_color_override("font_color", Color(UNION_CYAN.r, UNION_CYAN.g, UNION_CYAN.b, 0.7))
 
-	cost_label.text = "%d◆" % card_data.crystal_cost
+	cost_label.text = "0◆"
 	cost_label.add_theme_color_override("font_color", Color(1.0, 0.90, 0.30))
 
 	var u: UnionData = UnionDatabase.get_union(card_data.card_name)
@@ -541,7 +541,7 @@ func _show_trap_face_up() -> void:
 	affinity_label.text = "⚠"
 	affinity_label.add_theme_color_override("font_color", Color(1, 0.5, 0))
 
-	name_label.text = card_data.card_name
+	name_label.text = card_data.display_name if not card_data.display_name.is_empty() else card_data.card_name
 	atk_label.text = ""
 	def_label.text = ""
 	affinity_stat_label.text = ""
@@ -579,7 +579,7 @@ func _show_tech_face_up() -> void:
 	affinity_label.text = "⚙"
 	affinity_label.add_theme_color_override("font_color", TECH_COLOR)
 
-	name_label.text = card_data.card_name
+	name_label.text = card_data.display_name if not card_data.display_name.is_empty() else card_data.card_name
 	atk_label.text = ""
 	def_label.text = ""
 	affinity_stat_label.text = ""

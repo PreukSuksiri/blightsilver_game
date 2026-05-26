@@ -648,13 +648,14 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 	var tex: Texture2D = _load_card_tex(card_name, card_type)
 	_info_img.texture = tex
 
-	_info_name.text = card_name
-
 	match card_type:
 		"character":
 			_info_name.add_theme_color_override("font_color", Color(1.0, 0.82, 0.3))
 			_info_stats.add_theme_color_override("font_color", Color(1.0, 0.82, 0.3))
 			var data: Variant = CardDatabase.get_character(card_name)
+			_info_name.text = (data as CharacterData).display_name \
+				if data != null and not (data as CharacterData).display_name.is_empty() \
+				else card_name
 			if data != null:
 				var cd := data as CharacterData
 				_info_stats.text = "[%s]  ATK %d  DEF %d  %d◆" % [
@@ -667,6 +668,9 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 			_info_name.add_theme_color_override("font_color", Color(1.0, 0.38, 0.38))
 			_info_stats.add_theme_color_override("font_color", Color(1.0, 0.38, 0.38))
 			var data: Variant = CardDatabase.get_trap(card_name)
+			_info_name.text = (data as TrapData).display_name \
+				if data != null and not (data as TrapData).display_name.is_empty() \
+				else card_name
 			if data != null:
 				var td := data as TrapData
 				_info_stats.text = "Trap  %d◆" % td.crystal_cost
@@ -678,6 +682,9 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 			_info_name.add_theme_color_override("font_color", Color(0.3, 1.0, 0.65))
 			_info_stats.add_theme_color_override("font_color", Color(0.3, 1.0, 0.65))
 			var data: Variant = CardDatabase.get_tech(card_name)
+			_info_name.text = (data as TechCardData).display_name \
+				if data != null and not (data as TechCardData).display_name.is_empty() \
+				else card_name
 			if data != null:
 				var tc := data as TechCardData
 				_info_stats.text = "Tech  %d◆" % tc.crystal_cost
@@ -690,6 +697,9 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 			_info_name.add_theme_color_override("font_color", UNION_CYAN)
 			_info_stats.add_theme_color_override("font_color", UNION_CYAN)
 			var u: UnionData = UnionDatabase.get_union(card_name)
+			_info_name.text = u.display_name \
+				if u != null and not u.display_name.is_empty() \
+				else card_name
 			if u != null:
 				var aff_keys: Array = CharacterData.Affinity.keys()
 				var aff_name: String = aff_keys[int(u.affinity)].capitalize() \

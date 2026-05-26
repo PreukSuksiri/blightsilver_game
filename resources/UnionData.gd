@@ -23,6 +23,7 @@ extends Resource
 ##   Empty dict {} = any character card (no special requirement).
 
 @export var card_name: String = ""
+@export var display_name: String = ""   # Editable display name; falls back to card_name if empty
 @export var affinity: CharacterData.Affinity = CharacterData.Affinity.DIVINE
 @export var base_atk: int = 0
 @export var base_def: int = 0

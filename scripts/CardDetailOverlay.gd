@@ -70,15 +70,146 @@ static func open(parent: Node, card_name: String, card_type: String,
 	var card_h := minf(vp.y * 0.94, vp.x * 0.94 / FRAME_ASPECT)
 	var card_w := card_h * FRAME_ASPECT
 
-	overlay._build_ui(card_w, card_h)
-	overlay._populate(card_name, card_type)
+	# Try to load a pre-rendered full card image from full_cards/
+	var snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
+	var full_card_path: String = ""
+	var _is_union: bool = card_type == "union" or (card_inst != null and card_inst.is_union)
+	if _is_union:
+		var _force_unlocked_check: bool = card_inst != null and card_inst.is_union
+		var _is_unlocked: bool = _force_unlocked_check or SaveManager.is_union_unlocked(card_name)
+		if _is_unlocked:
+			for _p: String in [
+				"res://assets/textures/cards/full_cards/" + snake + ".png",
+				"res://assets/textures/cards/full_cards/" + snake + ".jpg",
+			]:
+				if ResourceLoader.exists(_p):
+					full_card_path = _p
+					break
+		else:
+			for _p: String in [
+				"res://assets/textures/cards/full_cards/" + snake + "_locked.png",
+				"res://assets/textures/cards/full_cards/" + snake + "_locked.jpg",
+			]:
+				if ResourceLoader.exists(_p):
+					full_card_path = _p
+					break
+	else:
+		for _p: String in [
+			"res://assets/textures/cards/full_cards/" + snake + ".png",
+			"res://assets/textures/cards/full_cards/" + snake + ".jpg",
+		]:
+			if ResourceLoader.exists(_p):
+				full_card_path = _p
+				break
+
+	if not full_card_path.is_empty():
+		overlay._build_static_ui(card_w, card_h, full_card_path)
+	else:
+		overlay._build_ui(card_w, card_h)
+		overlay._populate(card_name, card_type)
+
 	if show_quantity:
 		overlay._add_quantity_label(card_name, card_w, card_h)
 		if card_type in ["character", "trap", "tech"]:
 			overlay._add_gallery_buttons(card_name, card_type, card_w, card_h)
 
 # ─────────────────────────────────────────────────────────────
-# UI construction
+# UI construction — static image path (full_cards/ PNG/JPG)
+# ─────────────────────────────────────────────────────────────
+func _build_static_ui(card_w: float, card_h: float, full_card_path: String) -> void:
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	mouse_filter = MOUSE_FILTER_STOP
+
+	# Dimmer – click outside card to close
+	var dimmer := ColorRect.new()
+	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dimmer.color = Color(0.0, 0.0, 0.0, 0.82)
+	dimmer.mouse_filter = MOUSE_FILTER_STOP
+	dimmer.gui_input.connect(func(e: InputEvent) -> void:
+		if e is InputEventMouseButton and e.pressed:
+			_close())
+	add_child(dimmer)
+
+	# Card container – centred
+	var card := Control.new()
+	card.set_anchors_preset(Control.PRESET_CENTER)
+	card.offset_left   = -card_w * 0.5
+	card.offset_top    = -card_h * 0.5
+	card.offset_right  =  card_w * 0.5
+	card.offset_bottom =  card_h * 0.5
+	card.mouse_filter  = MOUSE_FILTER_STOP
+	card.gui_input.connect(func(e: InputEvent) -> void:
+		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
+			_close())
+	add_child(card)
+
+	# Full pre-rendered card image
+	var img := TextureRect.new()
+	img.position     = Vector2.ZERO
+	img.size         = Vector2(card_w, card_h)
+	img.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	img.texture      = load(full_card_path) as Texture2D
+	img.mouse_filter = MOUSE_FILTER_IGNORE
+	card.add_child(img)
+
+	# Close button – top-right, outside card frame
+	var close_btn := Button.new()
+	var cb_size   := 38.0
+	close_btn.text = "✕"
+	close_btn.set_anchors_preset(Control.PRESET_CENTER)
+	close_btn.offset_left   = card_w * 0.5 + 8.0
+	close_btn.offset_top    = -card_h * 0.5
+	close_btn.offset_right  = card_w * 0.5 + 8.0 + cb_size
+	close_btn.offset_bottom = -card_h * 0.5 + cb_size
+	close_btn.add_theme_font_size_override("font_size", 20)
+	close_btn.pressed.connect(_close)
+	add_child(close_btn)
+
+	# Store layout helpers (used by _add_quantity_label / _add_gallery_buttons)
+	_card_w = card_w
+	_info_y = INFO_TOP_PCT * card_h
+	_info_h = card_h - _info_y
+	_pad_x  = ART_L_PCT * card_w + 15.0
+
+	# ATK/DEF modifier overlay for live battle stats
+	if _card_inst != null and _card_inst.card_type == "character":
+		var fsz_stat: int = maxi(int(card_w * 0.035), 3)
+		var stats_y: float   = _info_y + _info_h * 0.67
+		var stats_h: float   = _info_h * 0.07
+		var pill_w: float    = card_w * 0.16
+		var pill_gap: float  = card_w * 0.01
+		var def_right_x: float = _pad_x + 2.0 * pill_w + pill_gap + 4.0 + 8.0
+		var mod_w: float = card_w - def_right_x - _pad_x * 0.5
+		_mod_label = Label.new()
+		_mod_label.position           = Vector2(def_right_x, stats_y)
+		_mod_label.size               = Vector2(mod_w, stats_h)
+		_mod_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		_mod_label.add_theme_font_size_override("font_size", fsz_stat)
+		_mod_label.add_theme_font_override("font", CHIVO_FONT)
+		_mod_label.mouse_filter = MOUSE_FILTER_IGNORE
+		_mod_label.visible = false
+		card.add_child(_mod_label)
+		var data: CharacterData = CardDatabase.get_character(_card_inst.card_name)
+		if data:
+			var eff_atk: int = _card_inst.get_effective_atk()
+			var eff_def: int = _card_inst.get_effective_def()
+			if eff_atk != data.base_atk or eff_def != data.base_def:
+				_mod_label.text = "▶  ATK=%d / DEF=%d" % [eff_atk, eff_def]
+				var atk_up: bool = eff_atk > data.base_atk
+				var def_up: bool = eff_def > data.base_def
+				var mod_col: Color
+				if atk_up and def_up:
+					mod_col = Color(0.35, 1.0, 0.45)
+				elif not atk_up and not def_up:
+					mod_col = Color(1.0, 0.38, 0.38)
+				else:
+					mod_col = Color(1.0, 0.88, 0.35)
+				_mod_label.add_theme_color_override("font_color", mod_col)
+				_mod_label.visible = true
+
+# ─────────────────────────────────────────────────────────────
+# UI construction — programmatic card (fallback when no full_cards/ image)
 # ─────────────────────────────────────────────────────────────
 func _build_ui(card_w: float, card_h: float) -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -395,7 +526,7 @@ func _populate(card_name: String, card_type: String) -> void:
 			_type.add_theme_color_override("font_color", TYPE_COLOR_CHARACTER)
 			_frame.modulate = Color(1.0, 1.0, 1.0)
 			_cost_num.text = str(data.crystal_cost)
-			_name.text = card_name
+			_name.text = data.display_name if not data.display_name.is_empty() else card_name
 			_atk.text  = "ATK %d" % data.base_atk
 			_def.text  = "DEF %d" % data.base_def
 			_aff.text  = aff_name
@@ -445,7 +576,7 @@ func _populate(card_name: String, card_type: String) -> void:
 			_type.add_theme_color_override("font_color", TYPE_COLOR_TRAP)
 			_frame.modulate = Color(1.0, 0.65, 0.65)
 			_cost_num.text = str(data.crystal_cost)
-			_name.text = card_name
+			_name.text = data.display_name if not data.display_name.is_empty() else card_name
 			_atk.text  = ""
 			_def.text  = ""
 			_aff.text  = ""
@@ -467,7 +598,7 @@ func _populate(card_name: String, card_type: String) -> void:
 			_type.add_theme_color_override("font_color", TYPE_COLOR_TECH)
 			_frame.modulate = Color(0.65, 1.0, 0.65)
 			_cost_num.text = str(data.crystal_cost)
-			_name.text = card_name
+			_name.text = data.display_name if not data.display_name.is_empty() else card_name
 			_atk.text  = ""
 			_def.text  = ""
 			_aff.text  = ""
@@ -491,8 +622,8 @@ func _populate(card_name: String, card_type: String) -> void:
 			_type.text = "UNION" + ("" if is_unlocked else "  🔒")
 			_type.add_theme_color_override("font_color", TYPE_COLOR_UNION)
 			_frame.modulate = Color(0.55, 0.95, 1.0)
-			_cost_num.text = str(u.summon_cost)
-			_name.text = card_name
+			_cost_num.text = "0"
+			_name.text = u.display_name if not u.display_name.is_empty() else card_name
 			_atk.text  = "ATK %d" % u.base_atk
 			_def.text  = "DEF %d" % u.base_def
 			_aff.text  = aff_name

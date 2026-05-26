@@ -1,0 +1,353 @@
+=== AI vs AI Match ===
+Started:  2026-05-26 17:55:48
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Force Shield, Prayer, Diplomacy Party
+P1 Tech hand: War Supply, Harsh Training, Ceasefire
+P0:   [C:Aeri][  — ][C:Heav][  — ][C:Leop]
+      [  — ][C:Flam][  — ][C:Cany][  — ]
+      [C:Silv][T:Spik][C:Witc][  — ][C:Scou]
+      [T:Deco][T:Snar][T:Curs][C:Gran][  — ]
+      [C:Fera][  — ][C:Gree][T:Bunk][T:Host]
+P1:   [T:Hard][T:Red ][C:Stri][  — ][  — ]
+      [  — ][T:Deco][C:Flam][  — ][C:Anci]
+      [C:Hand][C:Dark][C:Big ][C:Jaco][C:Skel]
+      [T:Pepp][  — ][C:Myst][T:Echo][T:Snar]
+      [  — ][C:Moon][C:War ][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[00:05.299] Mode selected P0: TECH
+[00:05.600] Crystals: P0 5000 → 4500 (-500)  [tech cost]
+[00:06.983] Tech played  P0: "Diplomacy Party"
+[00:08.876] Target prompt: "Diplomacy Party: Choose 1 of your face-down characters."  filter=own_facedown_character
+[00:09.170] AI0 target chosen: (0,4)
+[00:09.171] Revealed: P0 (0,4) "Leopard Jailer"
+[00:09.171] MSG: Diplomacy Party: Revealed Leopard Jailer — opponent must reveal 1.
+[00:09.662] Revealed: P1 (1,2) "Flame Seraph"
+[00:09.662] MSG: Diplomacy Party: Opponent revealed Flame Seraph.
+[00:09.703] Tech resolved  P0
+[00:10.575] Mode selected P0: ATTACK
+[00:10.580] Attack phase P0: 2 attack(s) available
+[00:10.580] MSG: Player 1: tap a character to attack.
+[00:10.874] AI0 attack decision: (0,4)"Leopard Jailer" [ATK=30] → (1,2) "Flame Seraph" [DEF=10]
+[00:11.174] Dice rolled: 4
+[00:11.187] MSG: Leopard Jailer wins!
+[00:15.853] Crystals: P1 5000 → 4500 (-500)  [battle]
+[00:17.247] Card destroyed  P1 (1,2) "Flame Seraph"
+[00:17.250] Attack P0(0,4)"Leopard Jailer" → P1(1,2)"Flame Seraph"  Dice=4  ATK=30 vs DEF=10  → WIN
+[00:17.250] Anim: 3A  △ P1(1,2)
+[00:19.758] Turn ended  P0  |  Crystals P0=4500 P1=4500
+
+--- Turn 2  |  Player 1  |  Crystals P0=4500 P1=4500 ---
+P0:   [  ? ][  — ][  ? ][  — ][Leop]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[00:20.370] Mode selected P1: TECH
+[00:20.681] Tech played  P1: "Ceasefire"
+[00:22.216] MSG: Ceasefire! Both players skip their next turn.
+[00:22.220] Turn ended  P1  |  Crystals P0=4500 P1=4500
+
+--- Turn 3  |  Player 0  |  Crystals P0=4500 P1=4500 ---
+P0:   [  ? ][  — ][  ? ][  — ][Leop]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[00:22.221] MSG: Player 1's turn is skipped!
+[00:22.223] Turn ended  P0  |  Crystals P0=4500 P1=4500
+
+--- Turn 4  |  Player 1  |  Crystals P0=4500 P1=4500 ---
+P0:   [  ? ][  — ][  ? ][  — ][Leop]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[00:22.223] MSG: Player 2's turn is skipped!
+[00:22.225] Turn ended  P1  |  Crystals P0=4500 P1=4500
+
+--- Turn 5  |  Player 0  |  Crystals P0=4500 P1=4500 ---
+P0:   [  ? ][  — ][  ? ][  — ][Leop]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[00:22.823] Mode selected P0: TECH
+[00:23.125] Crystals: P0 4500 → 3900 (-600)  [tech cost]
+[00:24.501] Tech played  P0: "Force Shield"
+[00:26.037] Target prompt: "Force Shield: Choose 1 of your cards to protect."  filter=own_any_card
+[00:26.437] AI0 target chosen: (0,4)
+[00:26.438] MSG: Force Shield: Leopard Jailer is shielded until opponent's next turn!
+[00:26.444] Tech resolved  P0
+[00:29.345] Crystals: P0 3900 → 3850 (-50)  [skip tax]
+[00:29.346] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:30.733] Turn ended  P0  |  Crystals P0=3850 P1=4500
+
+--- Turn 6  |  Player 1  |  Crystals P0=3850 P1=4500 ---
+P0:   [  ? ][  — ][  ? ][  — ][Leop]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[00:31.347] Mode selected P1: ATTACK
+[00:31.352] Attack phase P1: 2 attack(s) available
+[00:31.352] MSG: Player 2: tap a character to attack.
+[00:31.645] AI1 attack decision: (2,1)"Dark Blob" [ATK=20] → (1,1) "Flame Lizard" [DEF=40]
+[00:31.946] Revealed: P1 (2,1) "Dark Blob"
+[00:31.946] Revealed: P0 (1,1) "Flame Lizard"
+[00:31.946] Dice rolled: 5
+[00:36.741] Crystals: P1 4500 → 4000 (-500)  [battle]
+[00:38.135] Card destroyed  P1 (2,1) "Dark Blob"
+[00:38.140] Attack P1(2,1)"Dark Blob" → P0(1,1)"Flame Lizard"  Dice=5  ATK=20 vs DEF=40  → LOSE
+[00:38.140] Anim: 3B  △ P1(2,1)
+[00:38.750] Mode selected P1: ATTACK
+[00:38.756] Attack phase P1: 1 attack(s) available
+[00:38.757] MSG: Player 2: tap a character to attack.
+[00:39.041] AI1 attack decision: (2,3)"Jacob the Ski Mask" [ATK=15] → (1,0) "(dead-end)"
+[00:39.349] Revealed: P1 (2,3) "Jacob the Ski Mask"
+[00:39.349] Dice rolled: 3
+[00:39.444] MSG: Nothing happens — Dead End.
+[00:42.743] Dead-end placed  P0 (1,0)
+[00:42.747] Attack P1(2,3)"Jacob the Ski Mask" → P0(1,0)(empty)  Dice=3  → DEAD_END
+[00:42.747] Anim: 3F  (blank slot)
+[00:43.341] Mode selected P1: TECH
+[00:43.641] Crystals: P1 4000 → 3500 (-500)  [tech cost]
+[00:45.029] Tech played  P1: "Harsh Training"
+[00:46.574] Target prompt: "Choose 1 face-up character to boost."  filter=own_faceup_character
+[00:46.974] AI1 target chosen: (2,3)
+[00:46.975] MSG: Harsh Training: Jacob the Ski Mask permanently gains +50 ATK.
+[00:46.983] Tech resolved  P1
+[00:47.878] Turn ended  P1  |  Crystals P0=3850 P1=3500
+
+--- Turn 7  |  Player 0  |  Crystals P0=3850 P1=3500 ---
+P0:   [  ? ][  — ][  ? ][  — ][Leop]
+      [  — ][Flam][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][Jaco][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[00:49.966] Union summoned P0: [Barros the Collossol] from Flame Lizard, Canyon Warg
+[00:49.966] Crystals: P0 3850 → 2350 (-1500)  [union]
+[00:49.966] Revealed: P0 (1,1) "Barros the Collossol"
+[00:49.967] MSG: Player 1 summoned [Barros the Collossol] using: Flame Lizard, Canyon Warg
+[00:53.395] Mode selected P0: ATTACK
+[00:53.402] Attack phase P0: 2 attack(s) available
+[00:53.403] MSG: Player 1: tap a character to attack.
+[00:53.695] AI0 attack decision: (1,1)"Barros the Collossol" [ATK=150] → (2,3) "Jacob the Ski Mask" [DEF=20]
+[00:53.996] Dice rolled: 4
+[00:54.049] MSG: Barros the Collossol wins!
+[00:58.679] Crystals: P1 3500 → 3150 (-350)  [battle]
+[01:00.073] Card destroyed  P1 (2,3) "Jacob the Ski Mask"
+[01:00.077] Attack P0(1,1)"Barros the Collossol" → P1(2,3)"Jacob the Ski Mask"  Dice=4  ATK=150 vs DEF=20  → WIN
+[01:00.077] Anim: 3A  △ P1(2,3)
+[01:00.679] Mode selected P0: ATTACK
+[01:00.685] Attack phase P0: 1 attack(s) available
+[01:00.686] MSG: Player 1: tap a character to attack.
+[01:00.978] AI0 attack decision: (0,4)"Leopard Jailer" [ATK=30] → (1,3) "(dead-end)"
+[01:01.279] Dice rolled: 1
+[01:01.304] MSG: Nothing happens — Dead End.
+[01:04.663] Dead-end placed  P1 (1,3)
+[01:04.668] Attack P0(0,4)"Leopard Jailer" → P1(1,3)(empty)  Dice=1  → DEAD_END
+[01:04.668] Anim: 3F  (blank slot)
+[01:05.265] Turn ended  P0  |  Crystals P0=2350 P1=3150
+
+--- Turn 8  |  Player 1  |  Crystals P0=2350 P1=3150 ---
+P0:   [  ? ][  — ][  ? ][  — ][Leop]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[01:05.890] Mode selected P1: ATTACK
+[01:05.896] Attack phase P1: 2 attack(s) available
+[01:05.896] MSG: Player 2: tap a character to attack.
+[01:06.178] AI1 attack decision: (2,4)"Skeleton Grappler" [ATK=20] → (1,3) "(dead-end)"
+[01:06.487] Revealed: P1 (2,4) "Skeleton Grappler"
+[01:06.487] Dice rolled: 4
+[01:06.570] MSG: Nothing happens — Dead End.
+[01:09.880] Dead-end placed  P0 (1,3)
+[01:09.885] Attack P1(2,4)"Skeleton Grappler" → P0(1,3)(empty)  Dice=4  → DEAD_END
+[01:09.885] Anim: 3F  (blank slot)
+[01:10.479] Mode selected P1: ATTACK
+[01:10.486] Attack phase P1: 1 attack(s) available
+[01:10.488] MSG: Player 2: tap a character to attack.
+[01:10.779] AI1 attack decision: (1,4)"Ancient Lich" [ATK=60] → (0,4) "Leopard Jailer" [DEF=45]
+[01:11.078] Revealed: P1 (1,4) "Ancient Lich"
+[01:11.078] Dice rolled: 3
+[01:11.139] MSG: Ancient Lich wins!
+[01:15.767] Crystals: P0 2350 → 1900 (-450)  [battle]
+[01:17.160] Card destroyed  P0 (0,4) "Leopard Jailer"
+[01:17.165] Attack P1(1,4)"Ancient Lich" → P0(0,4)"Leopard Jailer"  Dice=3  ATK=60 vs DEF=45  → WIN
+[01:17.165] Anim: 3A  △ P0(0,4)
+[01:17.775] Turn ended  P1  |  Crystals P0=1900 P1=3150
+
+--- Turn 9  |  Player 0  |  Crystals P0=1900 P1=3150 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][Anci]
+      [  ? ][  — ][  ? ][  — ][Skel]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[01:18.358] Mode selected P0: ATTACK
+[01:18.365] Attack phase P0: 2 attack(s) available
+[01:18.365] MSG: Player 1: tap a character to attack.
+[01:18.658] AI0 attack decision: (1,1)"Barros the Collossol" [ATK=150] → (1,4) "Ancient Lich" [DEF=60]
+[01:18.958] Dice rolled: 2
+[01:18.968] MSG: Barros the Collossol wins!
+[01:23.642] Crystals: P1 3150 → 2250 (-900)  [battle]
+[01:25.034] Card destroyed  P1 (1,4) "Ancient Lich"
+[01:25.039] Attack P0(1,1)"Barros the Collossol" → P1(1,4)"Ancient Lich"  Dice=2  ATK=150 vs DEF=60  → WIN
+[01:25.039] Anim: 3A  △ P1(1,4)
+[01:27.647] Turn ended  P0  |  Crystals P0=1900 P1=2250
+
+--- Turn 10  |  Player 1  |  Crystals P0=1900 P1=2250 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][Skel]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[01:28.272] Mode selected P1: ATTACK
+[01:28.278] Attack phase P1: 2 attack(s) available
+[01:28.279] MSG: Player 2: tap a character to attack.
+[01:28.561] AI1 attack decision: (2,4)"Skeleton Grappler" [ATK=20] → (3,2) "Cursed Reflection" [DEF=0]
+[01:28.870] Revealed: P0 (3,2) "Cursed Reflection"
+[01:28.870] Dice rolled: 4
+[01:29.186] MSG: Trap triggered: Cursed Reflection!
+[01:33.264] Card destroyed  P0 (3,2) "Cursed Reflection"
+[01:33.264] Crystals: P0 1900 → 1400 (-500)  [trap cost]
+[01:34.653] MSG: Cursed Reflection: Skeleton Grappler's ATK and DEF swapped until end of turn!
+[01:34.658] Trap: "Cursed Reflection" triggered  P1(2,4)→P0(3,2)
+[01:34.658] Anim: 3D  (attacker survives)
+[01:35.263] Mode selected P1: ATTACK
+[01:35.269] Attack phase P1: 1 attack(s) available
+[01:35.270] MSG: Player 2: tap a character to attack.
+[01:35.553] AI1 attack decision: (0,2)"Striker Comet" [ATK=25] → (0,0) "Aerial the Battlemage" [DEF=45]
+[01:35.853] Revealed: P1 (0,2) "Striker Comet"
+[01:35.853] Revealed: P0 (0,0) "Aerial the Battlemage"
+[01:35.853] Dice rolled: 4
+[01:40.662] Crystals: P1 2250 → 2050 (-200)  [battle]
+[01:42.056] Card destroyed  P1 (0,2) "Striker Comet"
+[01:42.061] Attack P1(0,2)"Striker Comet" → P0(0,0)"Aerial the Battlemage"  Dice=4  ATK=25 vs DEF=45  → LOSE
+[01:42.061] Anim: 3B  △ P1(0,2)
+[01:42.665] Turn ended  P1  |  Crystals P0=1400 P1=2050
+
+--- Turn 11  |  Player 0  |  Crystals P0=1400 P1=2050 ---
+P0:   [Aeri][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][Skel]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[01:43.274] Mode selected P0: ATTACK
+[01:43.282] Attack phase P0: 2 attack(s) available
+[01:43.282] MSG: Player 1: tap a character to attack.
+[01:43.573] AI0 attack decision: (1,1)"Barros the Collossol" [ATK=150] → (2,4) "Skeleton Grappler" [DEF=5]
+[01:43.874] Dice rolled: 4
+[01:43.882] MSG: Barros the Collossol wins!
+[01:48.549] Crystals: P1 2050 → 1900 (-150)  [battle]
+[01:49.943] Card destroyed  P1 (2,4) "Skeleton Grappler"
+[01:49.946] Attack P0(1,1)"Barros the Collossol" → P1(2,4)"Skeleton Grappler"  Dice=4  ATK=150 vs DEF=5  → WIN
+[01:49.946] Anim: 3A  △ P1(2,4)
+[01:50.542] Mode selected P0: ATTACK
+[01:50.548] Attack phase P0: 1 attack(s) available
+[01:50.549] MSG: Player 1: tap a character to attack.
+[01:50.840] AI0 attack decision: (0,0)"Aerial the Battlemage" [ATK=50] → (3,3) "Echo Barrier" [DEF=0]
+[01:51.141] Revealed: P1 (3,3) "Echo Barrier"
+[01:51.141] Dice rolled: 3
+[01:51.463] MSG: Trap triggered: Echo Barrier!
+[01:55.542] Card destroyed  P1 (3,3) "Echo Barrier"
+[01:55.542] Crystals: P1 1900 → 400 (-1500)  [trap cost]
+[01:56.932] MSG: Echo Barrier: Attacking player cannot attack again this turn!
+[01:56.937] Trap: "Echo Barrier" triggered  P0(0,0)→P1(3,3)
+[01:56.937] Anim: 3D  (attacker survives)
+[01:57.536] Turn ended  P0  |  Crystals P0=1400 P1=400
+
+--- Turn 12  |  Player 1  |  Crystals P0=1400 P1=400 ---
+P0:   [Aeri][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[01:58.155] Mode selected P1: ATTACK
+[01:58.161] Attack phase P1: 2 attack(s) available
+[01:58.161] MSG: Player 2: tap a character to attack.
+[01:58.445] AI1 attack decision: (3,2)"Mysterious Miner" [ATK=25] → (2,1) "Spike Trap" [DEF=0]
+[01:58.745] Revealed: P1 (3,2) "Mysterious Miner"
+[01:58.745] Revealed: P0 (2,1) "Spike Trap"
+[01:58.745] Dice rolled: 5
+[01:59.061] MSG: Trap triggered: Spike Trap!
+[02:04.271] Crystals: P0 1400 → 0 (-1400)  [trap cost]
+
+=== GAME OVER ===
+[02:04.276] AI Player 1 wins
+[02:04.276] Final crystals — P0: 0  P1: 400  |  Turns: 12
+[02:04.276] Log saved to: res://logs/ai_vs_ai_2026-05-26_17-55-48.txt

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://btduc6n4aiade"
-path="res://.godot/imported/plant-29.jpg-558dc4a9dc1ae9150f42706a7d5e3b97.ctex"
+uid="uid://dmvnqgy4se4m7"
+path="res://.godot/imported/armored_money.jpg-d46c0f23b082eeb321f8ac46479f595a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/plant-29.jpg"
-dest_files=["res://.godot/imported/plant-29.jpg-558dc4a9dc1ae9150f42706a7d5e3b97.ctex"]
+source_file="res://assets/textures/cards/characters/armored_money.jpg"
+dest_files=["res://.godot/imported/armored_money.jpg-d46c0f23b082eeb321f8ac46479f595a.ctex"]
 
 [params]
 
