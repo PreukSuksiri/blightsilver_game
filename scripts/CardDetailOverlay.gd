@@ -508,7 +508,6 @@ func _populate(card_name: String, card_type: String) -> void:
 			if is_unlocked:
 				for _p: String in [
 					"res://assets/textures/cards/full_cards/" + _snake + ".png",
-					"res://assets/textures/cards/full_cards/union_" + _snake + ".png",
 					"res://assets/textures/cards/union/" + _snake + ".png",
 				]:
 					if ResourceLoader.exists(_p):
@@ -517,7 +516,6 @@ func _populate(card_name: String, card_type: String) -> void:
 			else:
 				for _p: String in [
 					"res://assets/textures/cards/full_cards/" + _snake + "_locked.png",
-					"res://assets/textures/cards/full_cards/union_" + _snake + "_locked.png",
 				]:
 					if ResourceLoader.exists(_p):
 						_art_path = _p

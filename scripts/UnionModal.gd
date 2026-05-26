@@ -166,7 +166,6 @@ func _build_ui() -> void:
 		var path: String = ""
 		for _p: String in [
 			"res://assets/textures/cards/full_cards/" + snake + ".png",
-			"res://assets/textures/cards/full_cards/union_" + snake + ".png",
 			"res://assets/textures/cards/union/" + snake + ".png",
 		]:
 			if ResourceLoader.exists(_p):

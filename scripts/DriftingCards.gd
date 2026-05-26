@@ -73,15 +73,6 @@ func _scan_front_textures() -> void:
 		var stem: String = f.get_basename()
 		if stem.ends_with("_nsfw"):
 			continue
-		# Skip type-prefixed files (union_, character_, trap_, tech_)
-		const SKIP_PREFIXES: Array = ["union_", "character_", "trap_", "tech_"]
-		var has_prefix: bool = false
-		for pfx: String in SKIP_PREFIXES:
-			if stem.begins_with(pfx):
-				has_prefix = true
-				break
-		if has_prefix:
-			continue
 		# Old-style file: safe pool = this file; nsfw pool = _nsfw variant if it exists
 		_safe_paths.append(FULL_CARDS_DIR + f)
 		_nsfw_paths.append(nsfw_map.get(stem, FULL_CARDS_DIR + f) as String)

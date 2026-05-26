@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cnu6vbjkth3mt"
-path="res://.godot/imported/grand_fort_foot_soldier.jpg-f900cbf78be6da7f14ecb69ac19800f7.ctex"
+uid="uid://ipenlt287qse"
+path="res://.godot/imported/gamma_emitter.jpg-b39e753e5280c44998b63ef6ba583c3c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/grand_fort_foot_soldier.jpg"
-dest_files=["res://.godot/imported/grand_fort_foot_soldier.jpg-f900cbf78be6da7f14ecb69ac19800f7.ctex"]
+source_file="res://assets/textures/cards/characters/gamma_emitter.jpg"
+dest_files=["res://.godot/imported/gamma_emitter.jpg-b39e753e5280c44998b63ef6ba583c3c.ctex"]
 
 [params]
 

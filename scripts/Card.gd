@@ -500,7 +500,6 @@ func _show_union_face_up() -> void:
 		var _found_path: String = ""
 		for _p: String in [
 			"res://assets/textures/cards/full_cards/" + _snake + ".png",
-			"res://assets/textures/cards/full_cards/union_" + _snake + ".png",
 			"res://assets/textures/cards/union/" + _snake + ".png",
 		]:
 			if ResourceLoader.exists(_p):
