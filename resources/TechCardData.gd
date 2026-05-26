@@ -37,6 +37,7 @@ enum TechEffectType {
 }
 
 @export var card_name: String = ""
+@export var display_name: String = ""   # Editable display name; falls back to card_name if empty
 @export var crystal_cost: int = 0
 @export var rarity: CharacterData.Rarity = CharacterData.Rarity.COMMON
 @export var effect_type: TechEffectType = TechEffectType.REVEAL_OPPONENT_SQUARE

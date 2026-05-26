@@ -11,6 +11,22 @@ func _ready() -> void:
 	_load_traps()
 	_load_tech_cards()
 	_apply_demo_flags()
+	_init_display_names()
+
+## Seeds display_name from card_name for any card that doesn't have one set yet.
+func _init_display_names() -> void:
+	for d: CharacterData in characters.values():
+		if d.display_name.is_empty():
+			d.display_name = d.card_name
+	for d: TrapData in traps.values():
+		if d.display_name.is_empty():
+			d.display_name = d.card_name
+	for d: TechCardData in tech_cards.values():
+		if d.display_name.is_empty():
+			d.display_name = d.card_name
+	for u: UnionData in UnionDatabase.get_all_unions():
+		if u.display_name.is_empty():
+			u.display_name = u.card_name
 
 func _apply_demo_flags() -> void:
 	var path := "res://data/demo_flags.json"
@@ -1382,7 +1398,7 @@ func find_artwork(card_name: String, subfolder: String, prefer_nsfw: bool = fals
 
 func _find_artwork_by_snake(snake: String, subfolder: String) -> String:
 	var key: String = subfolder + "/" + snake
-	if _art_cache.has(key):
+	if _art_cache.has(key) and _art_cache[key] != "":
 		return _art_cache[key]
 
 	var dir_path: String = "res://assets/textures/cards/%s/" % subfolder
@@ -1401,5 +1417,4 @@ func _find_artwork_by_snake(snake: String, subfolder: String) -> String:
 			file_name = dir.get_next()
 		dir.list_dir_end()
 
-	_art_cache[key] = ""
 	return ""

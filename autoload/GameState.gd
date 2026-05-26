@@ -65,6 +65,7 @@ class CardInstance:
 	var card_type: String = ""       # "character", "trap", "dead_end"
 	var was_destroyed: bool = false  # true when this slot was cleared by destroy_card
 	var card_name: String = ""
+	var display_name: String = ""    # Human-readable name; use this for all UI/messages
 	var rarity: int = 0  # CharacterData.Rarity.COMMON
 	var face_up: bool = false
 	var current_atk: int = 0
@@ -323,6 +324,7 @@ func place_character(player_index: int, row: int, col: int, char_name: String) -
 	var inst := CardInstance.new()
 	inst.card_type = "character"
 	inst.card_name = char_name
+	inst.display_name = data.display_name
 	inst.face_up = false
 	inst.current_atk = data.base_atk
 	inst.current_def = data.base_def
@@ -343,6 +345,7 @@ func place_trap(player_index: int, row: int, col: int, trap_name: String) -> voi
 	var inst := CardInstance.new()
 	inst.card_type = "trap"
 	inst.card_name = trap_name
+	inst.display_name = data.display_name
 	inst.face_up = false
 	inst.crystal_cost = data.crystal_cost
 	inst.rarity = data.rarity
@@ -422,6 +425,7 @@ func place_union_card(player_index: int, row: int, col: int, u: UnionData) -> vo
 	inst.card_type    = "character"
 	inst.is_union     = true
 	inst.card_name    = u.card_name
+	inst.display_name = u.display_name
 	inst.affinity     = int(u.affinity)
 	inst.base_atk     = u.base_atk
 	inst.base_def     = u.base_def

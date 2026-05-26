@@ -5664,7 +5664,18 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			var _rc_col: int = pos.y
 			var _rc_choice: int = 0
 			if _is_ai_turn():
-				_rc_choice = randi() % 2
+				# Pick whichever option (row or column) destroys more face-up cards
+				var _ai_row_c: int = 0
+				var _ai_col_c: int = 0
+				for _ai_p: int in range(2):
+					for _ai_i: int in range(GameState.GRID_SIZE):
+						var _ai_ri: GameState.CardInstance = GameState.get_card(_ai_p, _rc_row, _ai_i)
+						if _ai_ri.face_up and _ai_ri.card_type != "dead_end":
+							_ai_row_c += 1
+						var _ai_ci: GameState.CardInstance = GameState.get_card(_ai_p, _ai_i, _rc_col)
+						if _ai_ci.face_up and _ai_ci.card_type != "dead_end":
+							_ai_col_c += 1
+				_rc_choice = 0 if _ai_row_c >= _ai_col_c else 1
 			else:
 				# Order choices by hover direction: row first if moving horizontally
 				var _choice_a: String = "Row %d" % (_rc_row + 1)
@@ -7182,10 +7193,18 @@ func _session_on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 			tname, atk_player, attacker_pos.x, attacker_pos.y,
 			def_player, target_pos.x, target_pos.y])
 		return
-	var atk_card: GameState.CardInstance = GameState.get_card(atk_player, attacker_pos.x, attacker_pos.y)
-	var def_card: GameState.CardInstance = GameState.get_card(def_player, target_pos.x, target_pos.y)
-	var a_name: String = atk_card.card_name if atk_card != null and not atk_card.card_name.is_empty() else "?"
-	var d_name: String = def_card.card_name if def_card != null and not def_card.card_name.is_empty() else "(dead-end)"
+	# Use names captured before destruction — reading from GameState here sees dead_end slots.
+	var a_name: String = result.attacker_name
+	if a_name.is_empty():
+		a_name = "(self-destroyed)" if result.attacker_destroyed else "?"
+	var d_name: String = result.defender_name
+	if d_name.is_empty() and not result.defender_destroyed:
+		_session_log("Attack P%d(%d,%d)\"%s\" → P%d(%d,%d)(empty)  Dice=%d  → DEAD_END" % [
+			atk_player, attacker_pos.x, attacker_pos.y, a_name,
+			def_player, target_pos.x, target_pos.y, GameState.dice_result])
+		return
+	if d_name.is_empty():
+		d_name = "(destroyed)"
 	var outcome: String = "WIN" if result.defender_destroyed and not result.attacker_destroyed \
 		else "LOSE" if result.attacker_destroyed and not result.defender_destroyed else "TIE"
 	_session_log("Attack P%d(%d,%d)\"%s\" → P%d(%d,%d)\"%s\"  Dice=%d  ATK=%d vs DEF=%d  → %s" % [

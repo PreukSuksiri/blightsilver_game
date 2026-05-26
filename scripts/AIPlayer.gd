@@ -488,8 +488,10 @@ func decide_target(filter: String) -> Vector2i:
 		"opponent_squares_1", "opponent_squares_2", "opponent_squares_3", \
 				"opponent_squares_3_risky":
 			return _random_facedown_opponent()
-		"opponent_any_hidden", "lock_opponent_monster", "row_or_column":
+		"opponent_any_hidden", "lock_opponent_monster":
 			return _random_unrevealed_opponent()
+		"row_or_column":
+			return _best_rift_strike_cell()
 		"opponent_faceup_zero_stats":
 			return _random_faceup_opponent()
 		"own_faceup_character", "own_faceup_character_berserk", "own_character_for_swap", \
@@ -497,6 +499,8 @@ func decide_target(filter: String) -> Vector2i:
 				"lock_own_monster", "own_faceup_character_source", "own_faceup_character_target", \
 				"self_faceup_for_copy", "own_armored_nature":
 			return _best_own_faceup()
+		"own_bio_character":
+			return _best_own_faceup_bio()
 		"self_squares_1_opponent_turn", "self_reveal_choice", "own_facedown_character", \
 				"opponent_facedown_forced":
 			return _random_unrevealed_self()
@@ -733,6 +737,47 @@ func _best_own_faceup() -> Vector2i:
 					best_atk = card.get_effective_atk()
 					best_pos = Vector2i(r, c)
 	return best_pos
+
+func _best_own_faceup_bio() -> Vector2i:
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_atk: int = -1
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type == "character" and card.face_up \
+					and card.affinity == CharacterData.Affinity.BIO:
+				if card.get_effective_atk() > best_atk:
+					best_atk = card.get_effective_atk()
+					best_pos = Vector2i(r, c)
+	return best_pos
+
+## Returns the intersection of the opponent's best row and best column for Rift Strike.
+## GameBoard picks whichever (row or col) destroys more after receiving this cell.
+func _best_rift_strike_cell() -> Vector2i:
+	var opp: int = GameState.get_opponent(player_index)
+	var best_row: int = 0
+	var best_row_count: int = -1
+	var best_col: int = 0
+	var best_col_count: int = -1
+	for r: int in range(GameState.GRID_SIZE):
+		var count: int = 0
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(opp, r, c)
+			if card.face_up and card.card_type != "dead_end":
+				count += 1
+		if count > best_row_count:
+			best_row_count = count
+			best_row = r
+	for c: int in range(GameState.GRID_SIZE):
+		var count: int = 0
+		for r: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(opp, r, c)
+			if card.face_up and card.card_type != "dead_end":
+				count += 1
+		if count > best_col_count:
+			best_col_count = count
+			best_col = c
+	return Vector2i(best_row, best_col)
 
 # ─────────────────────────────────────────────────────────────
 # Union awareness

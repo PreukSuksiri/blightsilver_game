@@ -554,7 +554,7 @@ func _show_preview(card_type: String, card_name: String) -> void:
 			info_bg = Color(0.067, 0.051, 0.0)
 			var data: CharacterData = CardDatabase.get_character(card_name)
 			if data:
-				preview_name.text  = card_name
+				preview_name.text  = data.display_name if not data.display_name.is_empty() else card_name
 				preview_stats.text = "[%s]  ATK %d  DEF %d  %d◆" % [
 					data.get_affinity_name(), data.base_atk, data.base_def, data.crystal_cost]
 				preview_desc.text  = data.ability_description
@@ -565,7 +565,7 @@ func _show_preview(card_type: String, card_name: String) -> void:
 			info_bg = Color(0.067, 0.0, 0.028)
 			var data: TrapData = CardDatabase.get_trap(card_name)
 			if data:
-				preview_name.text  = card_name
+				preview_name.text  = data.display_name if not data.display_name.is_empty() else card_name
 				preview_stats.text = "Trap  %d◆" % data.crystal_cost
 				preview_desc.text  = data.effect_description
 			preview_frame.texture = null
@@ -575,7 +575,7 @@ func _show_preview(card_type: String, card_name: String) -> void:
 			info_bg = Color(0.024, 0.059, 0.035)
 			var data: TechCardData = CardDatabase.get_tech(card_name)
 			if data:
-				preview_name.text  = card_name
+				preview_name.text  = data.display_name if not data.display_name.is_empty() else card_name
 				preview_stats.text = "Tech  %d◆" % data.crystal_cost
 				preview_desc.text  = data.get_effect_description()
 			preview_frame.texture = null
@@ -586,7 +586,7 @@ func _show_preview(card_type: String, card_name: String) -> void:
 			info_bg = Color(0.02, 0.07, 0.10)
 			var data: UnionData = UnionDatabase.get_union(card_name)
 			if data:
-				preview_name.text  = card_name
+				preview_name.text  = data.display_name if not data.display_name.is_empty() else card_name
 				preview_stats.text = "[%s]  ATK %d  DEF %d  %d◆" % [
 					CharacterData.Affinity.keys()[int(data.affinity)].capitalize(),
 					data.base_atk, data.base_def, data.summon_cost]

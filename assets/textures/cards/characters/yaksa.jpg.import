@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://del8tus4gfbgg"
-path="res://.godot/imported/satellite cannon.jpg-61b535e6ca191c92e6f8c20a923822c9.ctex"
+uid="uid://dwyf8mqssa1in"
+path="res://.godot/imported/yaksa.jpg-16b23c195ed0095822980e3ac8f83dac.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/satellite cannon.jpg"
-dest_files=["res://.godot/imported/satellite cannon.jpg-61b535e6ca191c92e6f8c20a923822c9.ctex"]
+source_file="res://assets/textures/cards/characters/yaksa.jpg"
+dest_files=["res://.godot/imported/yaksa.jpg-16b23c195ed0095822980e3ac8f83dac.ctex"]
 
 [params]
 

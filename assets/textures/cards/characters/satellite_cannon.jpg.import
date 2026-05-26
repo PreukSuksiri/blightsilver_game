@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://didg50u4k2obm"
-path="res://.godot/imported/armored_monkey.jpg-0d776e3af4a152ac6a538310ccabd46d.ctex"
+uid="uid://d7ukub80spqd"
+path="res://.godot/imported/satellite_cannon.jpg-6587c3a62109ef11da1dde8c34131d90.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/armored_monkey.jpg"
-dest_files=["res://.godot/imported/armored_monkey.jpg-0d776e3af4a152ac6a538310ccabd46d.ctex"]
+source_file="res://assets/textures/cards/characters/satellite_cannon.jpg"
+dest_files=["res://.godot/imported/satellite_cannon.jpg-6587c3a62109ef11da1dde8c34131d90.ctex"]
 
 [params]
 
