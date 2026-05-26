@@ -299,11 +299,15 @@ func _end_credits() -> void:
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
 
 func _build_shader_logo(vp_size: Vector2) -> void:
-	# Root container — horizontally centered, Y tracked by _logo_y
+	# Root container — anchor-based horizontal centering, Y tracked by _logo_y
 	_logo_node = Control.new()
-	_logo_node.size         = Vector2(LOGO_W, LOGO_H)
-	_logo_node.position     = Vector2((vp_size.x - LOGO_W) * 0.5, _logo_y)
-	_logo_node.mouse_filter = MOUSE_FILTER_IGNORE
+	_logo_node.size          = Vector2(LOGO_W, LOGO_H)
+	_logo_node.anchor_left   = 0.5
+	_logo_node.anchor_right  = 0.5
+	_logo_node.offset_left   = -LOGO_W * 0.5
+	_logo_node.offset_right  =  LOGO_W * 0.5
+	_logo_node.position.y    = _logo_y
+	_logo_node.mouse_filter  = MOUSE_FILTER_IGNORE
 	add_child(_logo_node)
 
 	# ── BgGlow: radial lantern bloom behind logo ───────────────

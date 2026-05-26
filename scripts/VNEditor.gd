@@ -2023,7 +2023,8 @@ func _add_char_row_from(ci: Dictionary) -> void:
 	pos_btn.add_theme_font_size_override("font_size", 14)
 	for slot: String in SLOT_OPTIONS:
 		pos_btn.add_item(slot)
-	pos_btn.select(maxi(SLOT_OPTIONS.find(str(ci.get("position", "right"))), 0))
+	var _pos_default: String = "right" if ci.is_empty() else "center"
+	pos_btn.select(maxi(SLOT_OPTIONS.find(str(ci.get("position", _pos_default))), 0))
 	pos_btn.item_selected.connect(func(_i: int) -> void: _on_field_changed())
 	hbox.add_child(pos_btn)
 
@@ -2060,7 +2061,7 @@ func _add_char_row_from(ci: Dictionary) -> void:
 
 	var crop_sb := SpinBox.new()
 	crop_sb.min_value = 0.0; crop_sb.max_value = 99.0; crop_sb.step = 1.0
-	crop_sb.value = float(ci.get("crop_bottom", 30.0))
+	crop_sb.value = float(ci.get("crop_bottom", 30.0 if ci.is_empty() else 0.0))
 	crop_sb.suffix = "%crop"
 	crop_sb.custom_minimum_size.x = 100
 	crop_sb.add_theme_font_size_override("font_size", 11)
@@ -2069,7 +2070,7 @@ func _add_char_row_from(ci: Dictionary) -> void:
 
 	var scale_sb := SpinBox.new()
 	scale_sb.min_value = 10.0; scale_sb.max_value = 500.0; scale_sb.step = 5.0
-	scale_sb.value = float(ci.get("scale", 175.0))
+	scale_sb.value = float(ci.get("scale", 175.0 if ci.is_empty() else 100.0))
 	scale_sb.suffix = "%sc"
 	scale_sb.custom_minimum_size.x = 100
 	scale_sb.add_theme_font_size_override("font_size", 11)

@@ -97,7 +97,7 @@
 			}
 		],
 		"fade_color": "#000000",
-		"speaker": "The dark entity",
+		"speaker": "Kelly",
 		"text": "There it is!! It's Midnight Shadow!!"
 	},
 	{
@@ -200,6 +200,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
+				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "far_left",
 				"scale": 200.0,
@@ -220,7 +221,7 @@
 			}
 		],
 		"fade_color": "#000000",
-		"text": "It turned back and tried to escape."
+		"text": "It turned away and tried to escape."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
@@ -441,8 +442,7 @@
 		"fade_in": 0.001,
 		"hide_dialog": true,
 		"linger_characters": true,
-		"music_fade_out": 5.0,
-		"wait": 2.0
+		"wait": 1.0
 	},
 	{
 		"center_text": "And so their fateful story on this flawed world begins",
@@ -456,6 +456,7 @@
 	{
 		"background": null,
 		"hide_dialog": true,
+		"music_fade_out": 10.0,
 		"wait": 0.5
 	},
 	{
