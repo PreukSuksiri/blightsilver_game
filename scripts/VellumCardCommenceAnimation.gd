@@ -328,11 +328,7 @@ func _resolve_face_tex(card_name: String, card_type: String) -> Texture2D:
 	var nsfw: bool = SaveManager.nsfw_enabled
 	var candidates: Array[String] = []
 	if nsfw:
-		if card_type == "character":
-			candidates.append(_FULL_CARDS_DIR + "character_" + snake + "_nsfw.png")
 		candidates.append(_FULL_CARDS_DIR + snake + "_nsfw.png")
-	if card_type == "character":
-		candidates.append(_FULL_CARDS_DIR + "character_" + snake + ".png")
 	candidates.append(_FULL_CARDS_DIR + snake + ".png")
 	for path: String in candidates:
 		if ResourceLoader.exists(path):

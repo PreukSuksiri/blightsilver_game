@@ -6403,14 +6403,9 @@ func _show_union_summon_reveal(union_name: String) -> void:
 	# ── Load card texture ──────────────────────────────────────
 	var snake: String = union_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
 	var card_tex: Texture2D = null
-	if SaveManager.nsfw_enabled:
-		var nsfw: String = FULL_CARDS_DIR + "union_" + snake + "_nsfw.png"
-		if ResourceLoader.exists(nsfw):
-			card_tex = load(nsfw) as Texture2D
 	if card_tex == null:
 		for _p: String in [
 			FULL_CARDS_DIR + snake + ".png",
-			FULL_CARDS_DIR + "union_" + snake + ".png",
 			"res://assets/textures/cards/union/" + snake + ".png",
 		]:
 			if ResourceLoader.exists(_p):

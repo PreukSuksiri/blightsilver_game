@@ -660,8 +660,6 @@ func _render_and_save_union_locked(card_name: String) -> void:
 	if not ResourceLoader.exists(_art_l):
 		_art_l = OUTPUT_DIR + _snake_l + ".png"
 	if not ResourceLoader.exists(_art_l):
-		_art_l = OUTPUT_DIR + "union_" + _snake_l + ".png"
-	if not ResourceLoader.exists(_art_l):
 		_art_l = u.artwork_path
 	_load_art(_art_l)
 	_set_rarity(u.rarity)
