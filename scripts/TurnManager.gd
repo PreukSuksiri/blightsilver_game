@@ -70,6 +70,13 @@ func start_turn(player_index: int) -> void:
 	# Clear per-turn state
 	_clear_turn_state(player_index)
 
+	# Clear Force Shield on this player's own cards.
+	# Shield granted during player X's turn lasts through the opponent's next turn
+	# and expires at the start of player X's following turn.
+	for _fs_r: int in range(GameState.GRID_SIZE):
+		for _fs_c: int in range(GameState.GRID_SIZE):
+			GameState.get_card(player_index, _fs_r, _fs_c).force_shielded = false
+
 	# Turn-start per-card effects
 	for _ts_r: int in range(GameState.GRID_SIZE):
 		for _ts_c: int in range(GameState.GRID_SIZE):
@@ -136,7 +143,7 @@ func select_mode(mode: GameState.TurnMode) -> void:
 # ─────────────────────────────────────────────────────────────
 func _start_attack_mode(player: int) -> void:
 	GameState.set_phase(GameState.Phase.ATTACK)
-	emit_signal("attack_phase_started", player, 0)
+	emit_signal("attack_phase_started", player, GameState.attacks_remaining)
 	GameState.post_message("Player %d: tap a character to attack." % (player + 1))
 
 func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
@@ -291,9 +298,10 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	if defender.card_type == "trap":
 		await get_tree().create_timer(0.30).timeout
 
-	# Compute a preview result (without optional crystal boosts) for the battle overlay display
+	# Compute a preview result (without optional crystal boosts) for the battle overlay display.
+	# silent=true prevents ability messages from firing twice (they fire again on the real resolve).
 	var preview_result := BattleResolver.resolve_battle(
-		attacker, defender, GameState.dice_result, player, opponent, defender_was_exposed, target_pos
+		attacker, defender, GameState.dice_result, player, opponent, defender_was_exposed, target_pos, true
 	)
 
 	# Show the battle overlay — optional prompts will appear on top of it
@@ -335,8 +343,18 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	var result := BattleResolver.resolve_battle(
 		attacker, defender, GameState.dice_result, player, opponent, defender_was_exposed, target_pos
 	)
+	# Capture card names before any destruction so loggers that fire after destroy_card() can use them
+	result.attacker_name = attacker.card_name
+	result.defender_name = defender.card_name
 	for msg in result.messages:
 		GameState.post_message(msg)
+
+	# Force Shield: if the defender would be destroyed but is shielded, block the destruction
+	if result.defender_destroyed and defender.card_type == "character" and defender.force_shielded:
+		result.defender_destroyed = false
+		result.defender_crystal_loss = 0
+		defender.force_shielded = false
+		GameState.post_message("Force Shield: %s blocked the attack!" % defender.card_name)
 
 	# Show coin flip visual for any flips that happened inside BattleResolver
 	if not result.coin_flip_results.is_empty():
@@ -575,7 +593,9 @@ func play_tech_card(tech_name: String) -> void:
 			emit_signal("awaiting_target_selection", "Choose 1 face-up character to boost.", "own_faceup_character")
 
 		TechCardData.TechEffectType.TEMP_DEF_BOOST_ALL:
-			_temp_boost_all(player, 0, data.effect_params.get("def", 0))
+			var _garrison_def: int = data.effect_params.get("def", 0)
+			_temp_boost_all(player, 0, _garrison_def, true)
+			GameState.post_message("%s: All face-up characters gain +%d DEF until end of next turn." % [data.card_name, _garrison_def])
 			after_tech_resolved(player)
 			return
 
@@ -682,13 +702,16 @@ func _boost_all_faceup(player: int, atk_bonus: int, def_bonus: int) -> void:
 				card.perm_atk_bonus += atk_bonus
 				card.perm_def_bonus += def_bonus
 
-func _temp_boost_all(player: int, atk_bonus: int, def_bonus: int) -> void:
+func _temp_boost_all(player: int, atk_bonus: int, def_bonus: int, carry: bool = false) -> void:
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
 			var card: GameState.CardInstance = GameState.get_card(player, r, c)
 			if card.card_type == "character" and card.face_up:
 				card.temp_atk_bonus += atk_bonus
-				card.temp_def_bonus += def_bonus
+				if carry:
+					card.carry_def_bonus += def_bonus
+				else:
+					card.temp_def_bonus += def_bonus
 
 # ─────────────────────────────────────────────────────────────
 # Apply battle results to game state
@@ -918,7 +941,7 @@ func _handle_trap_effect(
 			var amount: int = trap_data.effect_params.get("amount", 800)
 			GameState.lose_crystals(player, amount, "trap")
 			await crystal_animation_done
-			GameState.post_message("Mana Drain: Player %d loses %d Crystals!" % [player + 1, amount])
+			GameState.post_message("%s: Player %d loses %d Crystals!" % [trap_data.card_name, player + 1, amount])
 
 		TrapData.TrapEffectType.SWAP_ARMORED_NATURE:
 			emit_signal("awaiting_target_selection",
@@ -1141,6 +1164,10 @@ func _clear_turn_state(player: int) -> void:
 			var card: GameState.CardInstance = GameState.get_card(player, r, c)
 			if card.card_type == "character":
 				card.attacked_this_turn = false
+				# Clear carry_def_bonus (Garrison-type: "until end of next turn")
+				# This runs at the START of the player's OWN turn, so the bonus
+				# persisted through the entire opponent turn as intended.
+				card.carry_def_bonus = 0
 				# Clear per-turn "once per turn" ability flags
 				card.flags.erase("extra_vs_revealed_used")
 				card.flags.erase("extra_deadend_turn")

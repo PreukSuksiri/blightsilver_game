@@ -30,12 +30,20 @@ class BattleResult:
 	var pending_coin_flip_swap_position: bool = false  # attacker should coin-flip swap position
 	# Coin results accumulated during this battle resolution (for visual display in GameBoard)
 	var coin_flip_results: Array = []  # Array of bool — true=heads, false=tails
+	# Card names captured before destruction — used by loggers that fire after destroy_card()
+	var attacker_name: String = ""
+	var defender_name: String = ""
 
 # ─────────────────────────────────────────────────────────────
 # Coin-flip accumulator — reset at start of each resolve_battle call
 # so _get_effective_atk helpers can append without carrying a result ref.
 # ─────────────────────────────────────────────────────────────
 static var _battle_coin_results: Array = []
+
+# When true, suppress inline GameState.post_message() calls inside helpers.
+# Used by the preview (first) resolve_battle call in perform_attack() so that
+# ability messages only fire once — during the real resolution.
+static var _silent_mode: bool = false
 
 # ─────────────────────────────────────────────────────────────
 # Main Resolution
@@ -47,8 +55,10 @@ static func resolve_battle(
 		attacker_player: int,
 		defender_player: int,
 		defender_was_exposed: bool = false,
-		target_pos: Vector2i = Vector2i(-1, -1)
+		target_pos: Vector2i = Vector2i(-1, -1),
+		silent: bool = false
 ) -> BattleResult:
+	_silent_mode = silent
 	_battle_coin_results = []
 	var result := BattleResult.new()
 	result.defender_was_exposed = defender_was_exposed
@@ -457,7 +467,8 @@ static func _get_effective_atk(
 		if defender.effect_nullified_until == 0 or defender.effect_nullified_until < GameState.turn_number:
 			var debuff_amount: int = defender.ability_params.get("atk", defender.ability_params.get("amount", 0))
 			atk = max(0, atk - debuff_amount)
-			GameState.post_message("%s: Attacker loses %d ATK!" % [defender.card_name, debuff_amount])
+			if not BattleResolver._silent_mode:
+				GameState.post_message("%s: Attacker loses %d ATK!" % [defender.card_name, debuff_amount])
 
 	# Nullified effect — restore base ATK
 	if attacker.effect_nullified_until >= GameState.turn_number:
@@ -549,10 +560,11 @@ static func _apply_post_attack_effects(
 		attacker: GameState.CardInstance,
 		_result: BattleResult
 ) -> void:
-	# Pit Lord halves stats after attacking
-	var also_halve: bool = attacker.ability_params.get("also_halve_after_attack", false)
-	if attacker.ability_type == CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE or also_halve:
-		attacker.halve_stats()
+	# Pit Lord halves stats after attacking (skip during silent preview — avoids permanent mutation)
+	if not BattleResolver._silent_mode:
+		var also_halve: bool = attacker.ability_params.get("also_halve_after_attack", false)
+		if attacker.ability_type == CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE or also_halve:
+			attacker.halve_stats()
 
 static func _apply_defend_effects(
 		defender: GameState.CardInstance,

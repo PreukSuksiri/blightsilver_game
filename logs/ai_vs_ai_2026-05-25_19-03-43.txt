@@ -1,0 +1,215 @@
+=== AI vs AI Match ===
+Started:  2026-05-25 19:03:43
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Illegal Steroid, Garrison, Time Travel
+P1 Tech hand: Lucky Day, Bulletproof Vest, Bribe
+P0:   [C:Lab ][  — ][C:Silv][  — ][C:Kiyo]
+      [C:Pyro][  — ][  — ][  — ][C:Anci]
+      [T:Mana][  — ][C:Moon][  — ][C:Heav]
+      [C:Gamm][  — ][C:Vile][  — ][T:Chec]
+      [T:Host][  — ][T:Curs][  — ][C:Snip]
+P1:   [C:Gran][T:Chec][C:Doom][C:Stri][T:Brai]
+      [  — ][  — ][C:Jaco][C:Big ][T:Blac]
+      [  — ][  — ][C:Deat][  — ][  — ]
+      [  — ][C:Aste][T:Red ][  — ][  — ]
+      [T:Flam][C:Spac][C:Ange][C:Heav][C:Gran]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.268] Mode selected P1: TECH
+[00:05.586] Tech played  P1: "Bribe"
+[00:07.118] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:07.618] MSG: Bribe: AI passed.
+[00:07.622] Tech resolved  P1
+[00:08.526] Mode selected P1: ATTACK
+[00:08.528] Attack phase P1: 2 attack(s) available
+[00:08.528] MSG: Player 2: tap a character to attack.
+[00:08.825] AI1 attack decision: (0,3)"Striker Comet" [ATK=25] → (1,3) "(dead-end)"
+[00:09.127] Revealed: P1 (0,3) "Striker Comet"
+[00:09.128] Dice rolled: 4
+[00:09.241] MSG: Nothing happens — Dead End.
+[00:12.528] Dead-end placed  P0 (1,3)
+[00:12.532] Attack P1(0,3)"Striker Comet" → P0(1,3)(empty)  Dice=4  → DEAD_END
+[00:12.532] Anim: 3F  (blank slot)
+[00:13.027] Mode selected P1: ATTACK
+[00:13.030] Attack phase P1: 1 attack(s) available
+[00:13.030] MSG: Player 2: tap a character to attack.
+[00:13.334] AI1 attack decision: (0,2)"Doom Wisp" [ATK=15] → (1,1) "(dead-end)"
+[00:13.635] Revealed: P1 (0,2) "Doom Wisp"
+[00:13.635] Dice rolled: 4
+[00:13.743] MSG: Nothing happens — Dead End.
+[00:17.033] Dead-end placed  P0 (1,1)
+[00:17.037] Attack P1(0,2)"Doom Wisp" → P0(1,1)(empty)  Dice=4  → DEAD_END
+[00:17.037] Anim: 3F  (blank slot)
+[00:17.532] MSG: Striker Comet self-destructs at end of turn!
+[00:17.533] Crystals: P1 5000 → 4800 (-200)  [card lost]
+[00:17.535] Card destroyed  P1 (0,3) "Striker Comet"
+[00:17.538] Turn ended  P1  |  Crystals P0=5000 P1=4800
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4800 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][Doom][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:18.149] Mode selected P0: ATTACK
+[00:18.155] Attack phase P0: 2 attack(s) available
+[00:18.156] MSG: Player 1: tap a character to attack.
+[00:18.447] AI0 attack decision: (3,0)"Gamma Emitter" [ATK=20] → (0,2) "Doom Wisp" [DEF=15]
+[00:18.748] Revealed: P0 (3,0) "Gamma Emitter"
+[00:18.748] Dice rolled: 5
+[00:18.802] MSG: Gamma Emitter wins!
+[00:23.431] Crystals: P1 4800 → 4700 (-100)  [battle]
+[00:24.825] Card destroyed  P1 (0,2) "Doom Wisp"
+[00:24.830] Attack P0(3,0)"Gamma Emitter" → P1(0,2)"Doom Wisp"  Dice=5  ATK=20 vs DEF=15  → WIN
+[00:24.830] Anim: 3A  △ P1(0,2)
+[00:25.423] Mode selected P0: TECH
+[00:25.723] Crystals: P0 5000 → 3000 (-2000)  [tech cost]
+[00:27.109] Tech played  P0: "Illegal Steroid"
+[00:28.657] Target prompt: "Choose 1 face-up character to boost."  filter=own_faceup_character
+[00:29.055] AI0 target chosen: (3,0)
+[00:29.063] Tech resolved  P0
+[00:29.956] Mode selected P0: ATTACK
+[00:29.962] Attack phase P0: 1 attack(s) available
+[00:29.962] MSG: Player 1: tap a character to attack.
+[00:30.255] AI0 attack decision: (1,4)"Ancient Lich" [ATK=60] → (0,0) "Grand Fort Footsoldier" [DEF=25]
+[00:30.556] Revealed: P0 (1,4) "Ancient Lich"
+[00:30.556] Revealed: P1 (0,0) "Grand Fort Footsoldier"
+[00:30.556] Dice rolled: 4
+[00:30.654] MSG: Ancient Lich wins!
+[00:35.239] Crystals: P1 4700 → 4400 (-300)  [battle]
+[00:36.633] Card destroyed  P1 (0,0) "Grand Fort Footsoldier"
+[00:36.638] Attack P0(1,4)"Ancient Lich" → P1(0,0)"Grand Fort Footsoldier"  Dice=4  ATK=60 vs DEF=25  → WIN
+[00:36.638] Anim: 3A  △ P1(0,0)
+[00:37.136] Turn ended  P0  |  Crystals P0=3000 P1=4400
+
+--- Turn 3  |  Player 1  |  Crystals P0=3000 P1=4400 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Anci]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Gamm][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:37.748] Mode selected P1: TECH
+[00:38.049] Crystals: P1 4400 → 3900 (-500)  [tech cost]
+[00:39.436] Tech played  P1: "Lucky Day"
+[00:40.973] MSG: Lucky Break: You may re-roll the dice once before your next attack.
+[00:40.977] Tech resolved  P1
+[00:41.873] Mode selected P1: ATTACK
+[00:41.880] Attack phase P1: 2 attack(s) available
+[00:41.880] MSG: Player 2: tap a character to attack.
+[00:42.172] AI1 attack decision: (3,1)"Asteroid Trooper" [ATK=30] → (3,0) "Gamma Emitter" [DEF=15]
+[00:42.472] Revealed: P1 (3,1) "Asteroid Trooper"
+[00:42.472] Dice rolled: 4
+[00:42.474] Prompt: "Lucky Break: Re-roll dice? (current: 4)"  [Re-roll / Keep 4]
+[00:43.081] Ability choice resolved: 1 (No)
+[00:43.093] MSG: Asteroid Trooper wins!
+[00:47.748] Crystals: P0 3000 → 2780 (-220)  [battle]
+[00:49.142] Card destroyed  P0 (3,0) "Gamma Emitter"
+[00:49.146] Attack P1(3,1)"Asteroid Trooper" → P0(3,0)"Gamma Emitter"  Dice=4  ATK=30 vs DEF=15  → WIN
+[00:49.146] Anim: 3A  △ P0(3,0)
+[00:49.640] Mode selected P1: ATTACK
+[00:49.648] Attack phase P1: 1 attack(s) available
+[00:49.650] MSG: Player 2: tap a character to attack.
+[00:49.939] AI1 attack decision: (4,1)"Space Boy" [ATK=75] → (1,4) "Ancient Lich" [DEF=60]
+[00:50.239] Revealed: P1 (4,1) "Space Boy"
+[00:50.240] Dice rolled: 2
+[00:50.301] MSG: Space Boy wins!
+[00:54.928] Crystals: P0 2780 → 1880 (-900)  [battle]
+[00:56.322] Card destroyed  P0 (1,4) "Ancient Lich"
+[00:56.327] Attack P1(4,1)"Space Boy" → P0(1,4)"Ancient Lich"  Dice=2  ATK=75 vs DEF=60  → WIN
+[00:56.327] Anim: 3A  △ P0(1,4)
+[00:56.831] Turn ended  P1  |  Crystals P0=1880 P1=3900
+
+--- Turn 4  |  Player 0  |  Crystals P0=1880 P1=3900 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Aste][  ? ][  — ][  — ]
+      [  ? ][Spac][  ? ][  ? ][  ? ]
+[00:58.919] Union summoned P0: [Rocket Tyrant] from Lab Crawler, Silver Spearman
+[00:58.920] Crystals: P0 1880 → 880 (-1000)  [union]
+[00:58.920] Revealed: P0 (0,0) "Rocket Tyrant"
+[00:58.922] MSG: Player 1 summoned [Rocket Tyrant] using: Lab Crawler, Silver Spearman
+[01:02.353] Mode selected P0: ATTACK
+[01:02.360] Attack phase P0: 2 attack(s) available
+[01:02.360] MSG: Player 1: tap a character to attack.
+[01:02.652] AI0 attack decision: (0,0)"Rocket Tyrant" [ATK=130] → (4,1) "Space Boy" [DEF=65]
+[01:02.951] Dice rolled: 3
+[01:03.002] MSG: Rocket Tyrant wins!
+[01:07.644] Crystals: P1 3900 → 3150 (-750)  [battle]
+[01:09.037] Card destroyed  P1 (4,1) "Space Boy"
+[01:09.042] Attack P0(0,0)"Rocket Tyrant" → P1(4,1)"Space Boy"  Dice=3  ATK=130 vs DEF=65  → WIN
+[01:09.042] Anim: 3A  △ P1(4,1)
+[01:09.643] Mode selected P0: TECH
+[01:09.943] Crystals: P0 880 → 480 (-400)  [tech cost]
+[01:11.327] Tech played  P0: "Garrison"
+[01:12.865] Tech resolved  P0
+[01:13.760] Mode selected P0: ATTACK
+[01:13.767] Attack phase P0: 1 attack(s) available
+[01:13.767] MSG: Player 1: tap a character to attack.
+[01:14.068] AI0 attack decision: (1,0)"Pyromancer" [ATK=80] → (3,1) "Asteroid Trooper" [DEF=10]
+[01:14.377] Revealed: P0 (1,0) "Pyromancer"
+[01:14.377] Dice rolled: 5
+[01:14.425] MSG: Pyromancer wins!
+[01:19.074] Crystals: P1 3150 → 2900 (-250)  [battle]
+[01:20.468] Card destroyed  P1 (3,1) "Asteroid Trooper"
+[01:20.474] Attack P0(1,0)"Pyromancer" → P1(3,1)"Asteroid Trooper"  Dice=5  ATK=80 vs DEF=10  → WIN
+[01:20.474] Anim: 3A  △ P1(3,1)
+[01:20.971] Turn ended  P0  |  Crystals P0=480 P1=2900
+
+--- Turn 5  |  Player 1  |  Crystals P0=480 P1=2900 ---
+P0:   [Rock][  — ][  — ][  — ][  ? ]
+      [Pyro][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[01:21.595] Mode selected P1: ATTACK
+[01:21.601] Attack phase P1: 2 attack(s) available
+[01:21.601] MSG: Player 2: tap a character to attack.
+[01:21.872] AI1 attack decision: (4,2)"Angel Gatekeeper" [ATK=40] → (1,0) "Pyromancer" [DEF=0]
+[01:22.172] Revealed: P1 (4,2) "Angel Gatekeeper"
+[01:22.173] Dice rolled: 1
+[01:22.258] MSG: Angel Gatekeeper wins!
+[01:26.861] Crystals: P0 480 → 0 (-480)  [battle]
+
+=== GAME OVER ===
+[01:26.866] AI Player 1 wins
+[01:26.866] Final crystals — P0: 0  P1: 2900  |  Turns: 5
+[01:26.866] Log saved to: res://logs/ai_vs_ai_2026-05-25_19-03-43.txt

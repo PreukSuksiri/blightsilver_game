@@ -138,6 +138,7 @@ var _f_player_union_enabled: CheckBox = null
 var _f_ai_pers_def: OptionButton = null
 var _f_ai_pers_off: OptionButton = null
 var _f_ai_pers_soc: OptionButton = null
+var _f_call_scene:  OptionButton = null
 
 # Enemy deck builder (for start_battle beats)
 var _enemy_deck_chars: Array = []
@@ -789,6 +790,12 @@ func _build_fields() -> void:
 	_f_go_to_credits  = _row_cb(v, "Go to Credits", "Transition to the credits scene after this beat")
 	_f_credits_target = _row_opt(v, "Credits scene", ["Normal", "Demo"], "which credits scene to play")
 
+	# ── Special Command ───────────────────────────────────────
+	_section(v, "SPECIAL COMMAND")
+	_f_call_scene = _row_opt(v, "Call scene",
+			["(none)", "Credits", "Credits Demo", "Photo Scatter"],
+			"Change to this scene after the beat completes")
+
 	# ── Battle Reward ─────────────────────────────────────────
 	_section(v, "BATTLE REWARD  (on win)")
 	var rwd_hint := Label.new()
@@ -862,6 +869,7 @@ func _connect_static_signals() -> void:
 	_f_start_battle.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_go_to_credits.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_credits_target.item_selected.connect(func(_i: int) -> void: ch.call())
+	_f_call_scene.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_ai_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_player_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_ai_pers_def.item_selected.connect(func(_i: int) -> void: ch.call())
@@ -1584,6 +1592,9 @@ func _populate_fields() -> void:
 	_f_start_battle.button_pressed  = b.get("start_battle",  false)
 	_f_go_to_credits.button_pressed = b.get("go_to_credits", false)
 	_f_credits_target.selected = 1 if str(b.get("credits_target", "")) == "demo" else 0
+	var _cs_map: Array = ["", "credit", "credit_demo", "photo_scatter"]
+	var _cs_val: String = str(b.get("call_scene", ""))
+	_f_call_scene.selected = max(0, _cs_map.find(_cs_val))
 	_f_player1_name.text = str(b.get("player1_name", ""))
 	_f_player2_name.text = str(b.get("player2_name", ""))
 	_f_portrait_p1.text = str(b.get("portrait_p1", ""))
@@ -1847,6 +1858,10 @@ func _collect_beat() -> Dictionary:
 		b["go_to_credits"] = true
 		if _f_credits_target.selected == 1:
 			b["credits_target"] = "demo"
+	var _cs_save_map: Array = ["", "credit", "credit_demo", "photo_scatter"]
+	var _cs_idx: int = _f_call_scene.selected
+	if _cs_idx > 0:
+		b["call_scene"] = _cs_save_map[_cs_idx]
 	var p1n: String = _f_player1_name.text.strip_edges()
 	if not p1n.is_empty():
 		b["player1_name"] = p1n

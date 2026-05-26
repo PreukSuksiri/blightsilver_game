@@ -668,6 +668,26 @@ func _show_beat() -> void:
 		get_tree().change_scene_to_file(cred_scene)
 		return
 
+	# ── Special Command / Call Scene ──
+	var _call_scene: String = str(beat.get("call_scene", ""))
+	if _call_scene != "":
+		_set_music("", 0.0, 0.0)
+		_accepting_input = false
+		_fade_rect.color = Color(0.0, 0.0, 0.0, 0.0)
+		var _sc_tw := create_tween()
+		_sc_tw.tween_property(_fade_rect, "color:a", 1.0, 1.0)
+		await _sc_tw.finished
+		var _scene_map: Dictionary = {
+			"credit":        "res://scenes/credits.tscn",
+			"credit_demo":   "res://scenes/credit_demo.tscn",
+			"photo_scatter": "res://scenes/photo_scatter.tscn",
+		}
+		var _target: String = _scene_map.get(_call_scene, "")
+		if _target != "":
+			queue_free()
+			get_tree().change_scene_to_file(_target)
+		return
+
 	# ── Continue hint icon ──
 	_show_hint_icon()
 
