@@ -488,9 +488,10 @@ func decide_target(filter: String) -> Vector2i:
 		"opponent_squares_1", "opponent_squares_2", "opponent_squares_3", \
 				"opponent_squares_3_risky":
 			return _random_facedown_opponent()
-		"opponent_any_hidden", "lock_opponent_monster", \
-				"opponent_faceup_zero_stats", "row_or_column":
+		"opponent_any_hidden", "lock_opponent_monster", "row_or_column":
 			return _random_unrevealed_opponent()
+		"opponent_faceup_zero_stats":
+			return _random_faceup_opponent()
 		"own_faceup_character", "own_faceup_character_berserk", "own_character_for_swap", \
 				"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct", \
 				"lock_own_monster", "own_faceup_character_source", "own_faceup_character_target", \
@@ -705,6 +706,17 @@ func _random_facedown_opponent() -> Vector2i:
 		for c in range(GameState.GRID_SIZE):
 			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			if not card.face_up:
+				options.append(Vector2i(r, c))
+	if options.is_empty():
+		return Vector2i(0, 0)
+	return options[randi() % options.size()]
+
+func _random_faceup_opponent() -> Vector2i:
+	var options: Array = []
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
+			if card.card_type == "character" and card.face_up:
 				options.append(Vector2i(r, c))
 	if options.is_empty():
 		return Vector2i(0, 0)

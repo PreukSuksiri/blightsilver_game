@@ -361,33 +361,22 @@ func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 			log_event("Anim: 3D  (attacker survives)")
 		return
 
-	var atk_card: GameState.CardInstance = GameState.get_card(atk_player, attacker_pos.x, attacker_pos.y)
-	var def_card: GameState.CardInstance = GameState.get_card(def_player, target_pos.x, target_pos.y)
-	# Card name may be empty if the card was destroyed during battle (slot became dead_end).
-	# Use the result flags to produce a meaningful fallback.
-	var a_name: String
-	if atk_card != null and not atk_card.card_name.is_empty():
-		a_name = atk_card.card_name
-	elif result.attacker_destroyed:
-		a_name = "(self-destroyed)"
-	else:
-		a_name = "?"
-	# Dead-end attack: no real defender — log as MISS, not TIE
-	if def_card != null and def_card.card_type == "dead_end":
-		log_event("Attack P%d(%d,%d)\"%s\" → P%d(%d,%d)(empty)  Dice=%d  → MISS" % [
+	# Use names captured in BattleResult before destruction — reading from GameState here would
+	# see a dead_end slot for any card that was destroyed during battle resolution.
+	var a_name: String = result.attacker_name
+	if a_name.is_empty():
+		a_name = "(self-destroyed)" if result.attacker_destroyed else "?"
+	var d_name: String = result.defender_name
+	# Dead-end attack: defender had no card — log as DEAD_END
+	if d_name.is_empty() and not result.defender_destroyed:
+		log_event("Attack P%d(%d,%d)\"%s\" → P%d(%d,%d)(empty)  Dice=%d  → DEAD_END" % [
 			atk_player, attacker_pos.x, attacker_pos.y, a_name,
 			def_player, target_pos.x, target_pos.y,
 			GameState.dice_result])
 		log_event("Anim: 3F  (blank slot)")
 		return
-
-	var d_name: String
-	if def_card != null and not def_card.card_name.is_empty():
-		d_name = def_card.card_name
-	elif result.defender_destroyed:
+	if d_name.is_empty():
 		d_name = "(destroyed)"
-	else:
-		d_name = "(dead-end)"
 	var outcome: String
 	if result.defender_destroyed and not result.attacker_destroyed:
 		outcome = "WIN"
@@ -413,7 +402,7 @@ func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 		anim_line = "3A  △ P%d(%d,%d)" % [def_player, target_pos.x, target_pos.y]
 	elif result.attacker_destroyed:
 		anim_line = "3B  △ P%d(%d,%d)" % [atk_player, attacker_pos.x, attacker_pos.y]
-	elif def_card != null and def_card.card_type == "dead_end":
+	elif result.defender_name.is_empty():
 		anim_line = "3F  (blank slot)"
 	else:
 		anim_line = "exchange  (no destruction)"

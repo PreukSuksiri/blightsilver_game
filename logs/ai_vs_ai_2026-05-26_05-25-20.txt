@@ -1,0 +1,408 @@
+=== AI vs AI Match ===
+Started:  2026-05-26 05:25:20
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Bulletproof Vest, Great Diplomacy
+P1 Tech hand: War Supply, Lucky Day, Make Friend
+P0:   [  — ][  — ][C:Aste][  — ][T:Trap]
+      [  — ][C:Horn][C:Witc][C:Anci][  — ]
+      [  — ][C:Rott][C:Blad][C:Swar][T:Pepp]
+      [T:Brai][C:Meli][C:Ligh][C:Stre][  — ]
+      [T:Chec][  — ][C:War ][T:Foul][T:Hypn]
+P1:   [T:Bait][T:Echo][C:Foul][T:Host][  — ]
+      [  — ][  — ][C:Skel][  — ][  — ]
+      [C:Ecto][T:Self][C:Rott][C:Slim][C:Shot]
+      [T:Pepp][  — ][C:Lase][C:Skel][C:Lab ]
+      [  — ][  — ][C:Yaks][C:Iron][C:Godd]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:05.310] Mode selected P1: TECH
+[00:05.611] Crystals: P1 5000 → 4500 (-500)  [tech cost]
+[00:06.994] Tech played  P1: "Lucky Day"
+[00:08.535] MSG: Lucky Break: You may re-roll the dice once before your next attack.
+[00:08.538] Tech resolved  P1
+[00:09.444] Mode selected P1: ATTACK
+[00:09.449] Attack phase P1: 2 attack(s) available
+[00:09.449] MSG: Player 2: tap a character to attack.
+[00:09.744] AI1 attack decision: (2,4)"Shotgun Shark" [ATK=75] → (3,2) "Lightbringer" [DEF=40]
+[00:10.044] Revealed: P1 (2,4) "Shotgun Shark"
+[00:10.044] Revealed: P0 (3,2) "Lightbringer"
+[00:10.044] Dice rolled: 3
+[00:10.046] Prompt: "Lucky Break: Re-roll dice? (current: 3)"  [Re-roll / Keep 3]
+[00:10.660] Ability choice resolved: 1 (No)
+[00:10.674] MSG: Shotgun Shark wins!
+[00:15.346] Crystals: P0 5000 → 4000 (-1000)  [battle]
+[00:16.735] Card destroyed  P0 (3,2) "Lightbringer"
+[00:16.748] Attack P1(2,4)"Shotgun Shark" → P0(3,2)"Lightbringer"  Dice=3  ATK=75 vs DEF=40  → WIN
+[00:16.748] Anim: 3A  △ P0(3,2)
+[00:17.232] Mode selected P1: ATTACK
+[00:17.238] Attack phase P1: 1 attack(s) available
+[00:17.239] MSG: Player 2: tap a character to attack.
+[00:17.531] AI1 attack decision: (2,3)"Slim Gray Trooper" [ATK=50] → (2,0) "(dead-end)"
+[00:17.832] Revealed: P1 (2,3) "Slim Gray Trooper"
+[00:17.832] Dice rolled: 3
+[00:17.933] MSG: Nothing happens — Dead End.
+[00:21.236] Dead-end placed  P0 (2,0)
+[00:21.240] Attack P1(2,3)"Slim Gray Trooper" → P0(2,0)(empty)  Dice=3  → DEAD_END
+[00:21.240] Anim: 3F  (blank slot)
+[00:21.737] Turn ended  P1  |  Crystals P0=4000 P1=4500
+
+--- Turn 2  |  Player 0  |  Crystals P0=4000 P1=4500 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][Slim][Shot]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:22.335] Mode selected P0: TECH
+[00:22.635] Crystals: P0 4000 → 3400 (-600)  [tech cost]
+[00:24.026] Tech played  P0: "Radar"
+[00:25.566] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:25.964] AI0 target chosen: (1,2)
+[00:25.965] Revealed: P1 (1,2) "Skeleton Lancer"
+[00:26.380] AI0 target chosen: (0,3)
+[00:26.381] Revealed: P1 (0,3) "Hostage"
+[00:26.780] AI0 target chosen: (4,1)
+[00:26.791] Tech resolved  P0
+[00:27.673] Mode selected P0: ATTACK
+[00:27.679] Attack phase P0: 2 attack(s) available
+[00:27.679] MSG: Player 1: tap a character to attack.
+[00:27.972] AI0 attack decision: (3,1)"Melissa the Healer" [ATK=0] → (1,3) "(dead-end)"
+[00:28.272] Revealed: P0 (3,1) "Melissa the Healer"
+[00:28.273] Dice rolled: 3
+[00:28.340] MSG: Nothing happens — Dead End.
+[00:31.675] Dead-end placed  P1 (1,3)
+[00:31.683] Attack P0(3,1)"Melissa the Healer" → P1(1,3)(empty)  Dice=3  → DEAD_END
+[00:31.683] Anim: 3F  (blank slot)
+[00:32.182] Mode selected P0: ATTACK
+[00:32.187] Attack phase P0: 1 attack(s) available
+[00:32.187] MSG: Player 1: tap a character to attack.
+[00:32.482] AI0 attack decision: (2,1)"Rotten Shrieker" [ATK=50] → (2,3) "Slim Gray Trooper" [DEF=45]
+[00:32.781] Revealed: P0 (2,1) "Rotten Shrieker"
+[00:32.782] Dice rolled: 3
+[00:32.870] MSG: Rotten Shrieker wins!
+[00:37.464] Crystals: P1 4500 → 3800 (-700)  [battle]
+[00:38.857] Card destroyed  P1 (2,3) "Slim Gray Trooper"
+[00:38.861] Attack P0(2,1)"Rotten Shrieker" → P1(2,3)"Slim Gray Trooper"  Dice=3  ATK=50 vs DEF=45  → WIN
+[00:38.861] Anim: 3A  △ P1(2,3)
+[00:39.364] Turn ended  P0  |  Crystals P0=3400 P1=3800
+
+--- Turn 3  |  Player 1  |  Crystals P0=3400 P1=3800 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Rott][  ? ][  ? ][  ? ]
+      [  ? ][Meli][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][Skel][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][Shot]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:39.963] Mode selected P1: TECH
+[00:40.277] Tech played  P1: "Make Friend"
+[00:41.819] Target prompt: "Make Friend: Choose 1 of your monsters to lock."  filter=lock_own_monster
+[00:42.218] AI1 target chosen: (2,4)
+[00:42.219] MSG: Make Friend: Shotgun Shark is locked from attacking.
+[01:00.270] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:00.270] [TIMEOUT] Player 1 AI watchdog expired — ending turn.
+[01:00.281] Turn ended  P1  |  Crystals P0=3400 P1=3800
+
+--- Turn 4  |  Player 0  |  Crystals P0=3400 P1=3800 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Rott][  ? ][  ? ][  ? ]
+      [  ? ][Meli][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][Skel][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][Shot]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:00.869] Mode selected P0: TECH
+[01:01.170] Crystals: P0 3400 → 2400 (-1000)  [tech cost]
+[01:01.170] Crystals: P0 2400 → 2700 (+300)  [recovery]
+[01:01.170] MSG: Melissa the Healer: Recovered 300 Crystals!
+[01:01.181] Tech played  P0: "Great Diplomacy"
+[01:02.714] Revealed: P0 (0,2) "Asteroid Trooper"
+[01:02.714] Revealed: P0 (1,1) "Horn Face"
+[01:02.714] Revealed: P0 (1,2) "Witchhunter"
+[01:02.715] Revealed: P0 (1,3) "Ancient Lich"
+[01:02.715] Revealed: P0 (2,2) "Bladeshifter"
+[01:02.715] Revealed: P0 (2,3) "Swarmcaller"
+[01:02.715] Revealed: P0 (3,3) "Street Rogue"
+[01:02.715] Revealed: P0 (4,2) "War Genie"
+[01:02.994] Tech resolved  P0
+[01:03.774] Mode selected P0: ATTACK
+[01:03.783] Attack phase P0: 2 attack(s) available
+[01:03.783] MSG: Player 1: tap a character to attack.
+[01:04.072] AI0 attack decision: (4,2)"War Genie" [ATK=100] → (2,4) "Shotgun Shark" [DEF=25]
+[01:04.374] Dice rolled: 3
+[01:04.384] MSG: War Genie wins!
+[01:09.052] Crystals: P1 3800 → 2950 (-850)  [battle]
+[01:10.445] Card destroyed  P1 (2,4) "Shotgun Shark"
+[01:10.453] Attack P0(4,2)"War Genie" → P1(2,4)"Shotgun Shark"  Dice=3  ATK=100 vs DEF=25  → WIN
+[01:10.453] Anim: 3A  △ P1(2,4)
+[01:10.952] Mode selected P0: ATTACK
+[01:10.962] Attack phase P0: 1 attack(s) available
+[01:10.963] MSG: Player 1: tap a character to attack.
+[01:11.251] AI0 attack decision: (1,1)"Horn Face" [ATK=75] → (1,2) "Skeleton Lancer" [DEF=5]
+[01:11.551] Dice rolled: 5
+[01:11.560] MSG: Horn Face wins!
+[01:16.222] Crystals: P1 2950 → 2650 (-300)  [battle]
+[01:17.616] Card destroyed  P1 (1,2) "Skeleton Lancer"
+[01:17.625] Attack P0(1,1)"Horn Face" → P1(1,2)"Skeleton Lancer"  Dice=5  ATK=75 vs DEF=5  → WIN
+[01:17.625] Anim: 3A  △ P1(1,2)
+[01:18.130] Turn ended  P0  |  Crystals P0=2700 P1=2650
+
+--- Turn 5  |  Player 1  |  Crystals P0=2700 P1=2650 ---
+P0:   [  — ][  — ][Aste][  — ][  ? ]
+      [  — ][Horn][Witc][Anci][  — ]
+      [  — ][Rott][Blad][Swar][  ? ]
+      [  ? ][Meli][  — ][Stre][  — ]
+      [  ? ][  — ][War ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:20.218] Union summoned P1: [Lord of Terror] from Foul Wisp, Skeleton Grappler
+[01:20.219] Crystals: P1 2650 → 1650 (-1000)  [union]
+[01:20.219] Revealed: P1 (0,2) "Lord of Terror"
+[01:20.220] MSG: Player 2 summoned [Lord of Terror] using: Foul Wisp, Skeleton Grappler
+[01:23.653] Mode selected P1: ATTACK
+[01:23.669] Attack phase P1: 2 attack(s) available
+[01:23.669] MSG: Player 2: tap a character to attack.
+[01:23.951] AI1 attack decision: (0,2)"Lord of Terror" [ATK=200] → (4,2) "War Genie" [DEF=80]
+[01:24.253] Dice rolled: 3
+[01:24.300] MSG: Lord of Terror wins!
+[01:28.944] Crystals: P0 2700 → 1700 (-1000)  [battle]
+[01:28.944] Crystals: P0 1700 → 2000 (+300)  [recovery]
+[01:28.944] MSG: Melissa the Healer: Recovered 300 Crystals!
+[01:28.954] Card destroyed  P0 (4,2) "War Genie"
+[01:28.961] Attack P1(0,2)"Lord of Terror" → P0(4,2)"War Genie"  Dice=3  ATK=200 vs DEF=80  → WIN
+[01:28.961] Anim: 3A  △ P0(4,2)
+[01:31.561] Turn ended  P1  |  Crystals P0=2000 P1=1650
+
+--- Turn 6  |  Player 0  |  Crystals P0=2000 P1=1650 ---
+P0:   [  — ][  — ][Aste][  — ][  ? ]
+      [  — ][Horn][Witc][Anci][  — ]
+      [  — ][Rott][Blad][Swar][  ? ]
+      [  ? ][Meli][  — ][Stre][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][Lord][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:32.160] Mode selected P0: TECH
+[01:32.460] Crystals: P0 2000 → 1600 (-400)  [tech cost]
+[01:33.843] Tech played  P0: "Bulletproof Vest"
+[01:35.379] Target prompt: "Choose 1 face-up character to boost."  filter=own_faceup_character
+[01:35.777] AI0 target chosen: (1,1)
+[01:35.793] Tech resolved  P0
+[01:36.677] Mode selected P0: ATTACK
+[01:36.688] Attack phase P0: 2 attack(s) available
+[01:36.688] MSG: Player 1: tap a character to attack.
+[01:36.977] AI0 attack decision: (1,1)"Horn Face" [ATK=75] → (3,3) "(dead-end)"
+[01:37.277] Dice rolled: 5
+[01:37.310] MSG: Nothing happens — Dead End.
+[01:40.670] Dead-end placed  P1 (3,3)
+[01:40.679] Attack P0(1,1)"Horn Face" → P1(3,3)(empty)  Dice=5  → DEAD_END
+[01:40.679] Anim: 3F  (blank slot)
+[01:41.174] Mode selected P0: ATTACK
+[01:41.186] Attack phase P0: 1 attack(s) available
+[01:41.187] MSG: Player 1: tap a character to attack.
+[01:41.472] AI0 attack decision: (1,3)"Ancient Lich" [ATK=60] → (4,1) "(dead-end)"
+[01:41.773] Dice rolled: 3
+[01:41.805] MSG: Nothing happens — Dead End.
+[01:45.174] Dead-end placed  P1 (4,1)
+[01:45.181] Attack P0(1,3)"Ancient Lich" → P1(4,1)(empty)  Dice=3  → DEAD_END
+[01:45.181] Anim: 3F  (blank slot)
+[01:45.693] Turn ended  P0  |  Crystals P0=1600 P1=1650
+
+--- Turn 7  |  Player 1  |  Crystals P0=1600 P1=1650 ---
+P0:   [  — ][  — ][Aste][  — ][  ? ]
+      [  — ][Horn][Witc][Anci][  — ]
+      [  — ][Rott][Blad][Swar][  ? ]
+      [  ? ][Meli][  — ][Stre][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][Lord][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:46.282] Mode selected P1: ATTACK
+[01:46.297] Attack phase P1: 2 attack(s) available
+[01:46.297] MSG: Player 2: tap a character to attack.
+[01:46.590] AI1 attack decision: (0,2)"Lord of Terror" [ATK=200] → (2,3) "Swarmcaller" [DEF=45]
+[01:46.890] Dice rolled: 5
+[01:46.905] MSG: Lord of Terror wins!
+[01:51.562] Crystals: P0 1600 → 700 (-900)  [battle]
+[01:51.562] Crystals: P0 700 → 1000 (+300)  [recovery]
+[01:51.562] MSG: Melissa the Healer: Recovered 300 Crystals!
+[01:51.573] Card destroyed  P0 (2,3) "Swarmcaller"
+[01:51.579] Attack P1(0,2)"Lord of Terror" → P0(2,3)"Swarmcaller"  Dice=5  ATK=200 vs DEF=45  → WIN
+[01:51.579] Anim: 3A  △ P0(2,3)
+[01:52.161] Mode selected P1: ATTACK
+[01:52.174] Attack phase P1: 1 attack(s) available
+[01:52.175] MSG: Player 2: tap a character to attack.
+[01:52.460] AI1 attack decision: (2,2)"Rotten Shrieker" [ATK=50] → (2,1) "Rotten Shrieker" [DEF=30]
+[01:52.761] Revealed: P1 (2,2) "Rotten Shrieker"
+[01:52.761] Dice rolled: 2
+[01:52.775] MSG: Rotten Shrieker wins!
+[01:57.451] Crystals: P0 1000 → 550 (-450)  [battle]
+[01:58.847] Card destroyed  P0 (2,1) "Rotten Shrieker"
+[01:58.855] Attack P1(2,2)"Rotten Shrieker" → P0(2,1)"Rotten Shrieker"  Dice=2  ATK=50 vs DEF=30  → WIN
+[01:58.855] Anim: 3A  △ P0(2,1)
+[01:59.460] Turn ended  P1  |  Crystals P0=550 P1=1650
+
+--- Turn 8  |  Player 0  |  Crystals P0=550 P1=1650 ---
+P0:   [  — ][  — ][Aste][  — ][  ? ]
+      [  — ][Horn][Witc][Anci][  — ]
+      [  — ][  — ][Blad][  — ][  ? ]
+      [  ? ][Meli][  — ][Stre][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][Lord][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][Rott][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[02:00.071] Mode selected P0: ATTACK
+[02:00.080] Attack phase P0: 2 attack(s) available
+[02:00.080] MSG: Player 1: tap a character to attack.
+[02:00.348] AI0 attack decision: (1,1)"Horn Face" [ATK=75] → (2,2) "Rotten Shrieker" [DEF=30]
+[02:00.648] Dice rolled: 4
+[02:00.662] MSG: Horn Face wins!
+[02:05.336] Crystals: P1 1650 → 1200 (-450)  [battle]
+[02:06.728] Card destroyed  P1 (2,2) "Rotten Shrieker"
+[02:06.733] Attack P0(1,1)"Horn Face" → P1(2,2)"Rotten Shrieker"  Dice=4  ATK=75 vs DEF=30  → WIN
+[02:06.733] Anim: 3A  △ P1(2,2)
+[02:07.343] Mode selected P0: ATTACK
+[02:07.354] Attack phase P0: 1 attack(s) available
+[02:07.355] MSG: Player 1: tap a character to attack.
+[02:07.635] AI0 attack decision: (1,3)"Ancient Lich" [ATK=60] → (3,1) "(dead-end)"
+[02:07.936] Dice rolled: 3
+[02:07.967] MSG: Nothing happens — Dead End.
+[02:11.324] Dead-end placed  P1 (3,1)
+[02:11.331] Attack P0(1,3)"Ancient Lich" → P1(3,1)(empty)  Dice=3  → DEAD_END
+[02:11.331] Anim: 3F  (blank slot)
+[02:11.928] Turn ended  P0  |  Crystals P0=550 P1=1200
+
+--- Turn 9  |  Player 1  |  Crystals P0=550 P1=1200 ---
+P0:   [  — ][  — ][Aste][  — ][  ? ]
+      [  — ][Horn][Witc][Anci][  — ]
+      [  — ][  — ][Blad][  — ][  ? ]
+      [  ? ][Meli][  — ][Stre][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][Lord][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[02:12.524] Mode selected P1: ATTACK
+[02:12.533] Attack phase P1: 2 attack(s) available
+[02:12.533] MSG: Player 2: tap a character to attack.
+[02:12.822] AI1 attack decision: (0,2)"Lord of Terror" [ATK=200] → (1,3) "Ancient Lich" [DEF=60]
+[02:13.124] Dice rolled: 2
+[02:13.137] MSG: Lord of Terror wins!
+[02:17.802] Crystals: P0 550 → 0 (-550)  [battle]
+[02:17.802] Crystals: P0 0 → 300 (+300)  [recovery]
+[02:17.802] MSG: Melissa the Healer: Recovered 300 Crystals!
+[02:17.810] Card destroyed  P0 (1,3) "Ancient Lich"
+[02:17.813] Attack P1(0,2)"Lord of Terror" → P0(1,3)"Ancient Lich"  Dice=2  ATK=200 vs DEF=60  → WIN
+[02:17.813] Anim: 3A  △ P0(1,3)
+[02:18.403] Mode selected P1: ATTACK
+[02:18.408] Attack phase P1: 1 attack(s) available
+[02:18.408] MSG: Player 2: tap a character to attack.
+[02:18.702] AI1 attack decision: (4,2)"Yaksa" [ATK=30] → (3,1) "Melissa the Healer" [DEF=25]
+[02:19.007] Revealed: P1 (4,2) "Yaksa"
+[02:19.007] Dice rolled: 1
+[02:19.056] MSG: Yaksa wins!
+[02:23.697] Crystals: P0 300 → 0 (-300)  [battle]
+[02:23.697] Crystals: P0 0 → 300 (+300)  [recovery]
+[02:23.698] MSG: Melissa the Healer: Recovered 300 Crystals!
+[02:23.711] Card destroyed  P0 (3,1) "Melissa the Healer"
+[02:23.718] Attack P1(4,2)"Yaksa" → P0(3,1)"Melissa the Healer"  Dice=1  ATK=30 vs DEF=25  → WIN
+[02:23.718] Anim: 3A  △ P0(3,1)
+[02:24.306] Turn ended  P1  |  Crystals P0=300 P1=1200
+
+--- Turn 10  |  Player 0  |  Crystals P0=300 P1=1200 ---
+P0:   [  — ][  — ][Aste][  — ][  ? ]
+      [  — ][Horn][Witc][  — ][  — ]
+      [  — ][  — ][Blad][  — ][  ? ]
+      [  ? ][  — ][  — ][Stre][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][Lord][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][Yaks][  ? ][  ? ]
+[02:24.918] Mode selected P0: ATTACK
+[02:24.928] Attack phase P0: 2 attack(s) available
+[02:24.928] MSG: Player 1: tap a character to attack.
+[02:25.206] AI0 attack decision: (1,1)"Horn Face" [ATK=75] → (4,2) "Yaksa" [DEF=30]
+[02:25.507] Dice rolled: 2
+[02:25.519] MSG: Horn Face wins!
+[02:30.185] Crystals: P1 1200 → 700 (-500)  [battle]
+[02:31.579] Card destroyed  P1 (4,2) "Yaksa"
+[02:31.587] Attack P0(1,1)"Horn Face" → P1(4,2)"Yaksa"  Dice=2  ATK=75 vs DEF=30  → WIN
+[02:31.588] Anim: 3A  △ P1(4,2)
+[02:32.204] Mode selected P0: ATTACK
+[02:32.216] Attack phase P0: 1 attack(s) available
+[02:32.216] MSG: Player 1: tap a character to attack.
+[02:32.481] AI0 attack decision: (0,2)"Asteroid Trooper" [ATK=30] → (2,1) "Self-destruct" [DEF=0]
+[02:32.789] Revealed: P1 (2,1) "Self-destruct"
+[02:32.789] Dice rolled: 5
+[02:33.107] MSG: Trap triggered: Self-destruct!
+[02:37.200] Card destroyed  P1 (2,1) "Self-destruct"
+[02:37.209] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[02:37.214] Trap: "Self-destruct" triggered  P0(0,2)→P1(2,1)
+[02:37.214] Anim: 3D  (attacker survives)
+[02:37.597] AI1 target chosen: (0,2)
+[02:37.598] MSG: Lord of Terror: +10 ATK until end of next turn, then destroyed.
+[02:37.810] Turn ended  P0  |  Crystals P0=300 P1=700
+
+--- Turn 11  |  Player 1  |  Crystals P0=300 P1=700 ---
+P0:   [  — ][  — ][Aste][  — ][  ? ]
+      [  — ][Horn][Witc][  — ][  — ]
+      [  — ][  — ][Blad][  — ][  ? ]
+      [  ? ][  — ][  — ][Stre][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][Lord][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:38.406] Mode selected P1: ATTACK
+[02:38.414] Attack phase P1: 2 attack(s) available
+[02:38.414] MSG: Player 2: tap a character to attack.
+[02:38.706] AI1 attack decision: (0,2)"Lord of Terror" [ATK=210] → (1,1) "Horn Face" [DEF=100]
+[02:39.006] Dice rolled: 5
+[02:39.017] MSG: Lord of Terror wins!
+[02:43.681] Crystals: P0 300 → 0 (-300)  [battle]
+
+=== GAME OVER ===
+[02:43.688] AI Player 1 wins
+[02:43.688] Final crystals — P0: 0  P1: 700  |  Turns: 11
+[02:43.688] Log saved to: res://logs/ai_vs_ai_2026-05-26_05-25-20.txt

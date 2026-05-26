@@ -18,9 +18,9 @@ var _lp_filter: AudioEffectLowPassFilter  = null
 var _filter_tween: Tween = null
 
 const _HP_NEUTRAL: float = 1.0       # effectively off (let all through)
-const _HP_ACTIVE:  float = 500.0     # cuts bass — music sounds thin/focused
+const _HP_ACTIVE:  float = 80.0 #500.0     # cuts bass — music sounds thin/focused
 const _LP_NEUTRAL: float = 20500.0   # effectively off (let all through)
-const _LP_ACTIVE:  float = 800.0     # cuts treble — music sounds muffled
+const _LP_ACTIVE:  float = 10000 #800.0     # cuts treble — music sounds muffled
 const _FILTER_FADE: float = 0.5      # seconds for gradual transition
 
 func _ready() -> void:

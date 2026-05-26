@@ -5304,13 +5304,20 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			if data:
 				match data.effect_type:
 					TechCardData.TechEffectType.PERM_ATK_BOOST_ONE:
-						card.perm_atk_bonus += data.effect_params.get("atk", 0)
+						var _boost_atk: int = data.effect_params.get("atk", 0)
+						card.perm_atk_bonus += _boost_atk
+						GameState.post_message("%s: %s permanently gains +%d ATK." % [data.card_name, card.card_name, _boost_atk])
 					TechCardData.TechEffectType.PERM_DEF_BOOST_ONE:
-						card.perm_def_bonus += data.effect_params.get("def", 0)
+						var _boost_def: int = data.effect_params.get("def", 0)
+						card.perm_def_bonus += _boost_def
+						GameState.post_message("%s: %s permanently gains +%d DEF." % [data.card_name, card.card_name, _boost_def])
 					TechCardData.TechEffectType.TEMP_ATK_BOOST_ATTACK_NOW:
-						card.temp_atk_bonus += data.effect_params.get("atk", 0)
+						var _boost_tmp: int = data.effect_params.get("atk", 0)
+						card.temp_atk_bonus += _boost_tmp
+						GameState.post_message("%s: %s gains +%d ATK this attack." % [data.card_name, card.card_name, _boost_tmp])
 					TechCardData.TechEffectType.MULTI_ATTACK_ONE:
 						GameState.berserk_active[current_player] = card
+						GameState.post_message("%s: %s can attack multiple times this turn." % [data.card_name, card.card_name])
 					TechCardData.TechEffectType.CLONE_CHARACTER_AS_TOKEN:
 						# Find a blank slot to place the clone
 						var _clone_placed: bool = false
@@ -5349,7 +5356,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == current_player and card.card_type == "character" and card.affinity == CharacterData.Affinity.BIO:
 			card.has_mutagen_flag = true
 			GameState.reveal_card(player, pos.x, pos.y)
-			_finish_tech_action(current_player)
+		# Always finish — if target failed the filter, tech completes with no effect rather than hanging
+		_finish_tech_action(current_player)
 		return
 
 	if pending_tech_filter in ["any_faceup_card", "opponent_faceup_no_cost"]:
@@ -5429,12 +5437,14 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			# In VS_AI: if AI played, human picks (no auto); if human played, AI auto-picks
 			if GameState.game_mode == GameState.GameMode.AI_VS_AI:
 				await get_tree().create_timer(0.5).timeout
-				var ai_target := _get_defending_ai().decide_target("lock_opponent_monster")
+				# Defending AI picks from its OWN field — use "own_faceup_character" so
+				# the defending AI's decide_target returns a position on its own grid
+				var ai_target := _get_defending_ai().decide_target("own_faceup_character")
 				_handle_tech_target(opponent, ai_target)
 			elif GameState.game_mode == GameState.GameMode.VS_AI and not _is_ai_turn():
-				# Human locked own; AI picks theirs
+				# Human locked own; AI picks theirs (AI picks from its own field)
 				await get_tree().create_timer(0.5).timeout
-				var ai_target := ai_player.decide_target("lock_opponent_monster")
+				var ai_target := ai_player.decide_target("own_faceup_character")
 				_handle_tech_target(opponent, ai_target)
 		return
 
@@ -5442,7 +5452,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == opponent and card.card_type == "character" and card.face_up:
 			card.cannot_attack_until = GameState.turn_number + 2
 			GameState.post_message("Make Friend: %s is also locked from attacking." % card.card_name)
-			_finish_tech_action(current_player)
+		else:
+			GameState.post_message("Make Friend: Opponent has no face-up monster to lock.")
+		_finish_tech_action(current_player)
 		return
 
 	if pending_tech_filter == "own_facedown_character":
@@ -5547,6 +5559,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			GameState.post_message("Blood Ritual: %s's ATK and DEF set to 0!" % card.card_name)
 			_tech_sacrifice_player = -1
 			_finish_tech_action(current_player)
+			return
+		# Invalid target (face-down or not a character) — still finish to avoid hang
+		_finish_tech_action(current_player)
 		return
 
 	if pending_tech_filter == "graveyard":

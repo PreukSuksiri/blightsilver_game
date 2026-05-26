@@ -188,6 +188,8 @@ End Stage Story:  (to be continue)
 
 -Unresolved plot : Who was the cult and what do they want / Where did Benedict escaped and what more business will he want from Nex and the order / Why did grandmaster disbanded the order
 
+-Mayu Senpai : Nex is vindicated from vandalism. But now he need to restart this year's university course all over again. So Mayu is now one study-year older than him. Mayu now often tease Nex to call her "Mayu-senpai".
+
 
 
 ## Backup / unused / do not read this, I've scrapped it

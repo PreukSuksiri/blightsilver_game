@@ -107,6 +107,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
+				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "far_left",
 				"scale": 300.0,
@@ -182,6 +183,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
+				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "far_left",
 				"scale": 200.0,
@@ -211,6 +213,7 @@
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
+				"crop_bottom": 30.0,
 				"position": "far_left",
 				"scale": 200.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_midnight_shadow_mini.png"
@@ -430,7 +433,6 @@
 		"fade_color": "#000000",
 		"fade_out": 3.0,
 		"hide_dialog": true,
-		"music_fade_out": 3.0,
 		"wait": 0.001
 	},
 	{
@@ -443,18 +445,22 @@
 		"wait": 2.0
 	},
 	{
-		"center_text": "And so their fateful story begins",
+		"center_text": "And so their fateful story on this flawed world begins",
 		"center_text_fade_in": 3.0,
 		"center_text_fade_out": 3.0,
 		"center_text_hold": 3.0,
-		"comment": "And so their fateful story begins",
+		"comment": "And so their fateful story on this flawed world begins",
 		"hide_dialog": true,
 		"linger_characters": true
 	},
 	{
+		"background": null,
+		"hide_dialog": true,
+		"wait": 0.5
+	},
+	{
+		"call_scene": "photo_scatter",
 		"comment": "Credit",
-		"credits_target": "demo",
-		"go_to_credits": true,
 		"hide_dialog": true,
 		"linger_characters": true
 	}

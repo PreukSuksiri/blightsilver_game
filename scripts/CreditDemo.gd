@@ -223,12 +223,20 @@ func _ready() -> void:
 	_build_shader_logo(vp_size)
 
 	# ── BGM ───────────────────────────────────────────────────────
-	_bgm = AudioStreamPlayer.new()
-	_bgm.stream = BGM_STREAM
-	_bgm.bus = &"Music"
-	(_bgm.stream as AudioStreamMP3).loop = true
-	add_child(_bgm)
-	_bgm.play()
+	# If PhotoScatter carried its BGM across the scene change, adopt it
+	var carried: Node = get_tree().root.get_node_or_null("PhotoScatterBGM")
+	if carried is AudioStreamPlayer:
+		_bgm = carried as AudioStreamPlayer
+		_bgm.reparent(self)
+		_bgm.bus = &"Music"
+		(_bgm.stream as AudioStreamMP3).loop = true
+	else:
+		_bgm = AudioStreamPlayer.new()
+		_bgm.stream = BGM_STREAM
+		_bgm.bus = &"Music"
+		(_bgm.stream as AudioStreamMP3).loop = true
+		add_child(_bgm)
+		_bgm.play()
 
 	var tween := create_tween()
 	tween.tween_property(_fade, "color:a", 0.0, FADE_DURATION).set_trans(Tween.TRANS_SINE)

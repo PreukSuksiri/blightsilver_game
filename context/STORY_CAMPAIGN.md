@@ -151,4 +151,69 @@ The cards are forbidden artifacts created by fusing Gold (from the original Blue
 They are the only objects that can create temporary stable neutral zones where the Gold Accord does not instantly collapse supernatural phenomena. In other words, they let humans and glitches interact without the system immediately correcting itself.
 
 
+
+The current world is actually a 'staging' environment
+
+People would do good deeds or 'pray' upon the god so their 'data' could get migrated to the real environment (production environment), although it's impossible.
+
+This world is a flawed world, full of glitchs that the order of highgate have to keep debugging forever.
+
+
+
 ## Additional Lore - Mayu's Cross
+
+Mayu's Cross is a tool that create gateway to a "backup" of production environment, which is good and free of glitch.
+
+Any glitch from the staging environment transferred to the "backup" environment would get 'unindexed' and disappear for eternity. (the glitches get created after all living souls so they get very last number of index.)
+
+That why it also contained 'exorcism' effect.
+
+But the exorcism isn't the 'comparing with the blueprint' ... it's rather copying to the real environment, just to be 'unindexed'
+
+
+The living things all have their index there somewhere. But might not be the same person. The person migrated there might become another person (but never an animal because they use another table). The migrated self might be an old man, a baby, a billionaire, or anyone.
+
+
+In the end of the story, Nex, Mayu, Kelly, and the whole order of high gate has find a way to the back up environment through Mayu's cross decryption. 
+
+Although the production environment is a utopia, guaranteeing happiness and good life, Mayu, Nex, and Kelly decided to continue staying in this flawed world, because the will not remember each other and they will lose life. The rest of the order bid a farewell and proceeded to the backup environment to get their new life.
+
+
+##Additional Lore - Silver
+
+1.) Silver is alchemically react with mercury to reach a temporary 'gold' element state and connected directly to the blueprint. It has nothing to do with backup 
+
+
+##Additional Lore - Staging environment & Cloned environment & Production environment
+Staging environment is a mocked data. At the end cycle of software development, we wipe data from staging server and start a new database (production database) ... the production database create new index for new entry .... but the number of souls is the same (the product requirement that god is working on requires equal amount of soul on both staging and production env ... but no need to be the same data ... just number) ..... the backup is just another production env that dev clone for fun and leave it there. so the clone index = production index. ...... if the staging data get migrated to the clone env... the still get index ... but the field value is something else ....... if glitch get migrated to the clone env the don't get index number because they have higher incremental number of index ... for example : original data index end at 5,000,000 .... the glitch created will have index 5,000,001 . The first 5 million data is safely migrated. The 5,000,001 and later will get unindexed.
+
+
+## Grok lore interpretion
+
+Unified Cosmology (Current Version)
+The Architect’s Design
+The Architect created a perfect Golden Blueprint — the ideal version of reality.
+To bring life into existence, the Architect used three mortal materials:
+Mercury (fluidity / possibility), Sulfur (will / transformation), and Salt (form / memory).
+However, the current world we live in is not the real thing.
+It is the Staging Environment — a mocked, test version of reality full of glitches and imperfections.
+At the end of each development cycle, the staging data is wiped clean. A new Production Environment is then created from the Golden Blueprint. In this new Production database, every soul receives a fresh index. The Architect’s requirement is strict: the number of souls in Staging and Production must always remain equal — but they do not have to be the same souls.
+Silver’s True Function
+Silver has no connection to the Backup.
+Instead, when Silver is alchemically reacted with Mercury, it temporarily reaches a “Gold-like” state. In this state, Silver can directly touch and connect to the original Golden Blueprint. This is why silver weapons and artifacts can force glitches back toward the Blueprint — they briefly align the error with the perfect design, causing the glitch to collapse and disappear.
+The Backup Environment
+The Backup is simply an abandoned clone of the Production Environment that the developers created for testing and then left behind.
+Because it is a clone, it shares the same index range as the real Production.
+
+Normal souls sent to the Backup can still be indexed, but they receive new field values (they are reborn as entirely different people — a baby, an old man, a rich person, etc.). They lose all memory of their previous life.
+Glitches (supernatural entities) were never part of the original design. They were created later and were assigned higher incremental indices (e.g. if the original soul data ends at 5,000,000, glitches start at 5,000,001 and above). When a glitch is sent to the Backup, it has no matching index and becomes unindexed — it disappears for eternity.
+
+Mayu’s Cross
+Mayu’s Cross is the only known tool that can open a gateway to this abandoned Backup clone.
+When a glitch passes through it, the glitch is unindexed and erased forever. This is why the Cross has an exorcism effect — it is not comparing the glitch to the Blueprint, but rather forcibly migrating it to a place where it cannot exist.
+
+
+
+
+
+

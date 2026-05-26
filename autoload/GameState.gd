@@ -88,6 +88,7 @@ class CardInstance:
 	var perm_def_bonus: int = 0
 	var temp_atk_bonus: int = 0
 	var temp_def_bonus: int = 0
+	var carry_def_bonus: int = 0   # DEF bonus that survives end-of-turn clear; wiped at start of player's own next turn
 	var force_shielded: bool = false
 	var halved: bool = false
 	var mutagen_attacked: bool = false # Mutagen immediate attack used
@@ -110,7 +111,7 @@ class CardInstance:
 		return base
 
 	func get_effective_def() -> int:
-		var base: int = max(0, current_def + perm_def_bonus + temp_def_bonus)
+		var base: int = max(0, current_def + perm_def_bonus + temp_def_bonus + carry_def_bonus)
 		if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 			var mods: Array = GameState.active_dungeon_modifiers
 			if "monster_overload" in mods:
