@@ -398,13 +398,7 @@ func _load_full_card_tex(card_name: String, card_type: String) -> Texture2D:
 		var nsfw_path: String = FULL_CARDS_DIR + snake + "_nsfw.png"
 		if ResourceLoader.exists(nsfw_path):
 			return load(nsfw_path) as Texture2D
-		nsfw_path = FULL_CARDS_DIR + card_type + "_" + snake + "_nsfw.png"
-		if ResourceLoader.exists(nsfw_path):
-			return load(nsfw_path) as Texture2D
 	var path: String = FULL_CARDS_DIR + snake + ".png"
-	if ResourceLoader.exists(path):
-		return load(path) as Texture2D
-	path = FULL_CARDS_DIR + card_type + "_" + snake + ".png"
 	if ResourceLoader.exists(path):
 		return load(path) as Texture2D
 	return null
