@@ -507,7 +507,6 @@ func _populate(card_name: String, card_type: String) -> void:
 			var _art_path: String = ""
 			if is_unlocked:
 				for _p: String in [
-					"res://assets/textures/cards/full_cards/" + _snake + ".png",
 					"res://assets/textures/cards/union/" + _snake + ".png",
 				]:
 					if ResourceLoader.exists(_p):

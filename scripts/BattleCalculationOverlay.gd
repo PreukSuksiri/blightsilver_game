@@ -230,7 +230,6 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 		var _snake: String = inst.card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
 		for _p: String in [
 			"res://assets/textures/cards/union/" + _snake + ".png",
-			"res://assets/textures/cards/full_cards/" + _snake + ".png",
 		]:
 			if ResourceLoader.exists(_p):
 				art_path = _p

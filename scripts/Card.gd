@@ -499,7 +499,6 @@ func _show_union_face_up() -> void:
 			.replace(" ", "_").replace("'", "").replace("-", "_")
 		var _found_path: String = ""
 		for _p: String in [
-			"res://assets/textures/cards/full_cards/" + _snake + ".png",
 			"res://assets/textures/cards/union/" + _snake + ".png",
 		]:
 			if ResourceLoader.exists(_p):

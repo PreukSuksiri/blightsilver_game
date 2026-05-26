@@ -715,15 +715,9 @@ func _reset_grid() -> void:
 
 func _load_card_tex(card_name: String, card_type: String = "") -> Texture2D:
 	var snake: String = _card_name_to_snake(card_name)
-	# 1. Canonical name
 	var path: String = FULL_CARDS_DIR + snake + ".png"
 	if ResourceLoader.exists(path):
 		return load(path) as Texture2D
-	# 2. Type-prefixed name (CardExporter collision-guard output)
-	if card_type != "":
-		path = FULL_CARDS_DIR + card_type + "_" + snake + ".png"
-		if ResourceLoader.exists(path):
-			return load(path) as Texture2D
 	return null
 
 # ─────────────────────────────────────────────────────────────

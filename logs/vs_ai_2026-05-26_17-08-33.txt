@@ -1,0 +1,74 @@
+=== VS AI Match ===
+Started: 2026-05-26 17:08:33
+===
+
+[01:12.582] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[02:29.892] MSG: Tap 2 material card(s) on the field.
+[02:30.750] MSG: 1 more material(s) needed.
+[02:31.257] Union summoned P0: [Barros the Collossol] from Lazy Troll, Canyon Warg
+[02:31.257] Crystals: P0 5000 → 3500 (-1500)  [union]
+[02:31.258] Revealed: P0 (2,2) "Barros the Collossol"
+[02:31.258] MSG: Player 1 summoned [Barros the Collossol] using: Lazy Troll, Canyon Warg
+[02:37.440] Revealed: P1 (1,1) "Sniping Fairy"
+[02:37.440] Dice rolled: 4
+[02:37.552] MSG: Barros the Collossol wins!
+[02:42.120] Crystals: P1 5000 → 4650 (-350)  [battle]
+[02:43.514] Card destroyed  P1 (1,1) "Sniping Fairy"
+[02:43.523] Attack P0(2,2)"Barros the Collossol" → P1(1,1)"(dead-end)"  Dice=4  ATK=150 vs DEF=20  → WIN
+[02:45.289] Turn ended  P0  |  Crystals P0=3500 P1=4650
+
+--- Turn 2  |  Player 1  |  Crystals P0=3500 P1=4650 ---
+[02:45.891] Mode selected P1: ATTACK
+[02:45.897] MSG: Player 2: tap a character to attack.
+[02:46.490] Revealed: P1 (0,2) "Immortal Vampire"
+[02:46.490] Dice rolled: 2
+[02:46.558] MSG: Nothing happens — Dead End.
+[02:49.890] Dead-end placed  P0 (3,3)
+[02:49.892] Attack P1(0,2)"Immortal Vampire" → P0(3,3)"(dead-end)"  Dice=2  ATK=0 vs DEF=0  → TIE
+[02:50.490] Mode selected P1: ATTACK
+[02:50.494] MSG: Player 2: tap a character to attack.
+[02:51.090] Revealed: P1 (1,2) "Cursed Well"
+[02:51.090] Dice rolled: 4
+[02:51.145] MSG: Nothing happens — Dead End.
+[02:54.482] Dead-end placed  P0 (0,2)
+[02:54.485] Attack P1(1,2)"Cursed Well" → P0(0,2)"(dead-end)"  Dice=4  ATK=0 vs DEF=0  → TIE
+[02:55.079] Turn ended  P1  |  Crystals P0=3500 P1=4650
+
+--- Turn 3  |  Player 0  |  Crystals P0=3500 P1=4650 ---
+[03:17.690] Crystals: P0 3500 → 3450 (-50)  [skip tax]
+[03:17.691] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[03:19.083] Turn ended  P0  |  Crystals P0=3450 P1=4650
+
+--- Turn 4  |  Player 1  |  Crystals P0=3450 P1=4650 ---
+[03:21.169] Union summoned P1: [Lord of Terror] from Immortal Vampire, Cursed Well
+[03:21.170] Crystals: P1 4650 → 3650 (-1000)  [union]
+[03:21.170] Revealed: P1 (0,2) "Lord of Terror"
+[03:21.170] MSG: Player 2 summoned [Lord of Terror] using: Immortal Vampire, Cursed Well
+[03:24.602] Mode selected P1: ATTACK
+[03:24.609] MSG: Player 2: tap a character to attack.
+[03:25.203] Dice rolled: 1
+[03:25.259] MSG: Lord of Terror wins!
+[03:29.890] Crystals: P0 3450 → 1950 (-1500)  [battle]
+[03:29.917] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:31.283] Card destroyed  P0 (2,2) "Barros the Collossol"
+[03:31.287] Attack P1(0,2)"Lord of Terror" → P0(2,2)"(dead-end)"  Dice=1  ATK=200 vs DEF=130  → WIN
+[03:31.882] Mode selected P1: ATTACK
+[03:31.888] MSG: Player 2: tap a character to attack.
+[03:32.481] Revealed: P1 (0,0) "Lab Zombie"
+[03:32.481] Dice rolled: 5
+[03:32.575] MSG: Nothing happens — Dead End.
+[03:35.882] Dead-end placed  P0 (2,4)
+[03:35.885] Attack P1(0,0)"Lab Zombie" → P0(2,4)"(dead-end)"  Dice=5  ATK=0 vs DEF=0  → TIE
+[03:36.480] Mode selected P1: TECH
+[03:36.794] Tech played  P1: "Release Mutagen"
+[03:38.342] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[03:38.748] Tech resolved  P1
+[03:39.645] Turn ended  P1  |  Crystals P0=1950 P1=3650
+
+--- Turn 5  |  Player 0  |  Crystals P0=1950 P1=3650 ---
+[03:55.361] Crystals: P0 1950 → 1150 (-800)  [tech cost]
+[03:56.756] Tech played  P0: "War Supply"
+[03:58.281] MSG: Ability not implemented: War Supply
+[03:58.287] Tech resolved  P0

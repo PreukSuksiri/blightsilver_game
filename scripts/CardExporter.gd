@@ -481,8 +481,6 @@ func _populate_card_node(card_name: String, card_type: String) -> void:
 			var _snake_u: String = _card_name_to_snake(card_name)
 			var _art_u: String = "res://assets/textures/cards/union/" + _snake_u + ".png"
 			if not ResourceLoader.exists(_art_u):
-				_art_u = OUTPUT_DIR + _snake_u + ".png"
-			if not ResourceLoader.exists(_art_u):
 				_art_u = u.artwork_path
 			_load_art(_art_u)
 			_set_rarity(u.rarity)
@@ -657,8 +655,6 @@ func _render_and_save_union_locked(card_name: String) -> void:
 	_art.position = _art_base_pos
 	var _snake_l: String = _card_name_to_snake(card_name)
 	var _art_l: String = "res://assets/textures/cards/union/" + _snake_l + ".png"
-	if not ResourceLoader.exists(_art_l):
-		_art_l = OUTPUT_DIR + _snake_l + ".png"
 	if not ResourceLoader.exists(_art_l):
 		_art_l = u.artwork_path
 	_load_art(_art_l)
