@@ -140,6 +140,10 @@ func admin_command(raw: String) -> String:
 				+ "  dungeon_activator\n"
 				+ "  dungeon_reset\n"
 				+ "  clear_campaign_progress\n"
+				+ "  campaign_progress_list\n"
+				+ "  campaign_progress_complete <node_id>\n"
+				+ "  campaign_progress_uncomplete <node_id>\n"
+				+ "  campaign_progress_complete_all\n"
 				+ "  list_packs\n"
 				+ "  open_pack <pack_id_or_name>\n"
 				+ "  grant_pack <pack_id_or_name>\n"
@@ -153,7 +157,8 @@ func admin_command(raw: String) -> String:
 				+ "  demo_off\n"
 				+ "  demo_status\n"
 				+ "  hide_ui\n"
-				+ "  ai_trailer [on|off]"
+				+ "  ai_trailer [on|off]\n"
+				+ "  gallery_editor"
 			)
 
 		"tts":
@@ -648,6 +653,44 @@ func admin_command(raw: String) -> String:
 			SaveManager.save_data()
 			return "Campaign progress cleared (%d nodes were completed)." % count
 
+		"campaign_progress_list":
+			if CampaignManager.completed.is_empty():
+				return "No campaign nodes completed yet."
+			var completed_ids: Array = CampaignManager.completed.keys()
+			completed_ids.sort()
+			return "Completed (%d/%d):\n  " % [completed_ids.size(), CampaignManager.count_total()] \
+				+ "\n  ".join(PackedStringArray(completed_ids))
+
+		"campaign_progress_complete":
+			if parts.size() < 2:
+				return "Usage: campaign_progress_complete <node_id>"
+			var node_id: String = parts[1]
+			if CampaignManager.get_node_data(node_id) == null:
+				return "Unknown node id '%s'. Use campaign_progress_list to see valid ids." % node_id
+			CampaignManager.completed[node_id] = true
+			SaveManager.save_data()
+			return "Marked '%s' as completed." % node_id
+
+		"campaign_progress_uncomplete":
+			if parts.size() < 2:
+				return "Usage: campaign_progress_uncomplete <node_id>"
+			var node_id: String = parts[1]
+			if not CampaignManager.completed.has(node_id):
+				return "'%s' is not in the completed list." % node_id
+			CampaignManager.completed.erase(node_id)
+			SaveManager.save_data()
+			return "Removed '%s' from completed." % node_id
+
+		"campaign_progress_complete_all":
+			var added: int = 0
+			for node in CampaignManager.all_nodes:
+				if not CampaignManager.completed.has(node.id):
+					CampaignManager.completed[node.id] = true
+					added += 1
+			SaveManager.save_data()
+			return "All %d nodes marked as completed (%d were already done)." % \
+				[CampaignManager.count_total(), CampaignManager.count_total() - added]
+
 		"list_packs":
 			var lines: Array = []
 			for p: Dictionary in ShopManager.get_all_packs():
@@ -815,8 +858,40 @@ func admin_command(raw: String) -> String:
 			SaveManager.ai_exclude_placeholder = false
 			return "AI deck pool restored to full card pool."
 
+		# ── Gallery Campaign Editor ──────────────────────────────
+		"gallery_editor":
+			var scene := get_tree().current_scene
+			if scene.get_node_or_null("CampaignGalleryEditorOverlay") != null:
+				return "Gallery Editor is already open."
+			var ed: Node = load("res://scripts/CampaignGalleryEditor.gd").new()
+			ed.name = "CampaignGalleryEditorOverlay"
+			scene.add_child(ed)
+			return "Campaign Gallery Editor opened."
+
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd
+
+# ─────────────────────────────────────────────────────────────
+# Gallery helpers
+# ─────────────────────────────────────────────────────────────
+const _GALLERY_PATH := "res://campaign/gallery_data.json"
+
+func _gallery_load() -> Array:
+	if not FileAccess.file_exists(_GALLERY_PATH):
+		return []
+	var f := FileAccess.open(_GALLERY_PATH, FileAccess.READ)
+	if f == null:
+		return []
+	var parsed: Variant = JSON.parse_string(f.get_as_text())
+	f.close()
+	return parsed as Array if parsed is Array else []
+
+func _gallery_save(data: Array) -> void:
+	var f := FileAccess.open(_GALLERY_PATH, FileAccess.WRITE)
+	if f == null:
+		return
+	f.store_string(JSON.stringify(data, "\t"))
+	f.close()
 
 # ─────────────────────────────────────────────────────────────
 # Serialisation — called by SaveManager

@@ -34,7 +34,6 @@ const PAD_BOTTOM: float = 84.0   # thick bottom footer
 const DROP_STAGGER: float   = 0.55   # delay between each photo drop
 const DROP_DURATION: float  = 0.60   # flight time per photo
 
-const BGM_FADE_IN: float    = 2.0    # BGM volume ramp-up duration
 const HOLD_DURATION: float  = 3.5    # pause after all photos land
 const FADE_OUT: float       = 1.8    # screen + BGM fade-out duration
 
@@ -93,21 +92,16 @@ func _start_zoom_out() -> void:
 		.set_trans(Tween.TRANS_QUAD)
 
 
-# ── BGM: start silent, fade in ────────────────────────────────
+# ── BGM: play immediately at full volume ──────────────────────
 func _start_bgm() -> void:
 	var stream: Variant = load(BGM_PATH)
 	_bgm = AudioStreamPlayer.new()
-	_bgm.name       = "PhotoScatterBGM"
-	_bgm.stream     = stream
-	_bgm.volume_db  = -60.0
-	_bgm.autoplay   = false
+	_bgm.name      = "PhotoScatterBGM"
+	_bgm.stream    = stream
+	_bgm.volume_db = 0.0
+	_bgm.autoplay  = false
 	add_child(_bgm)
 	_bgm.play()
-
-	var tw := create_tween()
-	tw.tween_property(_bgm, "volume_db", 0.0, BGM_FADE_IN) \
-		.set_ease(Tween.EASE_OUT) \
-		.set_trans(Tween.TRANS_QUAD)
 
 
 # ── Spawn and animate all 5 Polaroids ─────────────────────────

@@ -9,6 +9,7 @@ const CardGalleryScene  = preload("res://scenes/card_gallery.tscn")
 const DeckBuilderScene  = preload("res://scenes/deck_builder.tscn")
 const SettingsMenuScene  = preload("res://scenes/settings_menu.tscn")
 const CampaignMapScene      = preload("res://scenes/campaign_map.tscn")
+const CampaignGalleryScene  = preload("res://scenes/campaign_gallery.tscn")
 const DailyDungeonMapScene  = preload("res://scenes/daily_dungeon_map.tscn")
 
 @onready var local_2p_btn:      Button = $NewGameBtn
@@ -343,10 +344,10 @@ func _on_credits() -> void:
 	get_tree().change_scene_to_file("res://scenes/credits.tscn")
 
 func _on_campaign() -> void:
-	if get_node_or_null("CampaignMapOverlay") != null:
+	if get_node_or_null("CampaignGalleryOverlay") != null:
 		return
-	var overlay := CampaignMapScene.instantiate()
-	overlay.name = "CampaignMapOverlay"
+	var overlay := CampaignGalleryScene.instantiate()
+	overlay.name = "CampaignGalleryOverlay"
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index = 10
 	add_child(overlay)
