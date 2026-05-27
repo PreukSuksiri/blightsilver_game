@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dejxrlb36rxds"
-path="res://.godot/imported/profile_big_thug.png-0f913f2a6906bee8db860ad08079ec19.ctex"
+uid="uid://bimtdtegpmvja"
+path="res://.godot/imported/battler_green_wisp.png-51a9a36780df01a83f1d030177350d72.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/battle_illustrations/monsters/profile_big_thug.png"
-dest_files=["res://.godot/imported/profile_big_thug.png-0f913f2a6906bee8db860ad08079ec19.ctex"]
+source_file="res://assets/textures/profile/battle_illustrations/monsters/battler_green_wisp.png"
+dest_files=["res://.godot/imported/battler_green_wisp.png-51a9a36780df01a83f1d030177350d72.ctex"]
 
 [params]
 

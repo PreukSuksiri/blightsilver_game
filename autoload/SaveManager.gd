@@ -19,6 +19,7 @@ var unlocked_unions: Array = []  # union card names the player has ever summoned
 var union_mechanism_unlocked: bool = false  # true = union system visible to player
 var demo_mode: bool = false
 var ai_exclude_placeholder: bool = false  # exclude placeholder_art cards from AI random deck pool
+var bugged_cards: Dictionary = {}  # card_name → bug message string
 
 func _ready() -> void:
 	_load_demo_config()
@@ -119,6 +120,7 @@ func save_data() -> void:
 		"nsfw_enabled": nsfw_enabled,
 		"unlocked_unions": unlocked_unions,
 		"union_mechanism_unlocked": union_mechanism_unlocked,
+		"bugged_cards": bugged_cards,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -168,3 +170,30 @@ func load_data() -> void:
 	if ul is Array:
 		unlocked_unions = ul
 	union_mechanism_unlocked = bool(parsed.get("union_mechanism_unlocked", false))
+
+	var bc: Variant = parsed.get("bugged_cards", {})
+	if bc is Dictionary:
+		bugged_cards = bc
+	elif bc is Array:
+		# Migrate old Array format (no messages) to Dictionary
+		for item: Variant in bc:
+			if item is String:
+				bugged_cards[item] = ""
+
+# ─────────────────────────────────────────────────────────────
+# Bug tagging
+# ─────────────────────────────────────────────────────────────
+func tag_bug(card_name: String, message: String = "") -> void:
+	bugged_cards[card_name] = message
+	save_data()
+
+func resolve_bug(card_name: String) -> void:
+	if bugged_cards.has(card_name):
+		bugged_cards.erase(card_name)
+		save_data()
+
+func is_bugged(card_name: String) -> bool:
+	return bugged_cards.has(card_name)
+
+func get_bug_message(card_name: String) -> String:
+	return bugged_cards.get(card_name, "") as String

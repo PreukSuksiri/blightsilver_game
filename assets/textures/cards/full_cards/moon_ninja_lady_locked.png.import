@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxikx14li3d3j"
-path="res://.godot/imported/profile_canyon_warg.png-31922d8b931f71561cd5215052c3e7ad.ctex"
+uid="uid://6d0d156mb7v4"
+path="res://.godot/imported/moon_ninja_lady_locked.png-d0869452c9bf8a3a58d658ba59667ca0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/battle_illustrations/monsters/profile_canyon_warg.png"
-dest_files=["res://.godot/imported/profile_canyon_warg.png-31922d8b931f71561cd5215052c3e7ad.ctex"]
+source_file="res://assets/textures/cards/full_cards/moon_ninja_lady_locked.png"
+dest_files=["res://.godot/imported/moon_ninja_lady_locked.png-d0869452c9bf8a3a58d658ba59667ca0.ctex"]
 
 [params]
 

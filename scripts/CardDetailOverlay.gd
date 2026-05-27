@@ -47,6 +47,7 @@ var _mat_formula_lbl:  Label
 var _card_inst: Variant = null  # GameState.CardInstance or null
 var _force_unlocked: bool = false  # true when viewing a union placed on the board
 var _show_quantity: bool = false  # true when opened from gallery
+var _card_name_for_bug: String = ""  # stored for TAG BUG button
 
 var _info_y: float
 var _info_h: float
@@ -60,8 +61,9 @@ var _art_base_pos: Vector2
 static func open(parent: Node, card_name: String, card_type: String,
 		card_inst: Variant = null, show_quantity: bool = false) -> void:
 	var overlay := CardDetailOverlay.new()
-	overlay._card_inst     = card_inst
-	overlay._show_quantity = show_quantity
+	overlay._card_inst          = card_inst
+	overlay._show_quantity      = show_quantity
+	overlay._card_name_for_bug  = card_name
 	overlay.z_index = 100
 	parent.add_child(overlay)
 
@@ -112,6 +114,8 @@ static func open(parent: Node, card_name: String, card_type: String,
 		overlay._add_quantity_label(card_name, card_w, card_h)
 		if card_type in ["character", "trap", "tech"]:
 			overlay._add_gallery_buttons(card_name, card_type, card_w, card_h)
+
+	overlay._add_bug_button(card_name, card_w, card_h)
 
 # ─────────────────────────────────────────────────────────────
 # UI construction — static image path (full_cards/ PNG/JPG)
@@ -906,6 +910,133 @@ func _style_gallery_btn(btn: Button, accent: Color) -> void:
 		btn.add_theme_stylebox_override(state, bsb)
 	btn.add_theme_color_override("font_color", Color(0.95, 0.95, 1.0))
 	btn.add_theme_font_size_override("font_size", 15)
+
+func _add_bug_button(card_name: String, card_w: float, card_h: float) -> void:
+	var bug_btn := Button.new()
+	bug_btn.set_anchors_preset(Control.PRESET_CENTER)
+	var cb_size := 38.0
+	var btn_w   := 150.0
+	var btn_h   := 34.0
+	bug_btn.offset_left   = card_w * 0.5 + 8.0
+	bug_btn.offset_top    = -card_h * 0.5 + cb_size + 10.0
+	bug_btn.offset_right  = card_w * 0.5 + 8.0 + btn_w
+	bug_btn.offset_bottom = -card_h * 0.5 + cb_size + 10.0 + btn_h
+	bug_btn.add_theme_font_size_override("font_size", 14)
+	_refresh_bug_btn(bug_btn, card_name)
+	bug_btn.pressed.connect(func() -> void:
+		_open_bug_input(card_name, bug_btn))
+	add_child(bug_btn)
+
+func _refresh_bug_btn(btn: Button, card_name: String) -> void:
+	if SaveManager.is_bugged(card_name):
+		btn.text = "🐛 EDIT BUG"
+		btn.add_theme_color_override("font_color", Color(1.0, 0.70, 0.20))
+	else:
+		btn.text = "🐛 TAG BUG"
+		btn.add_theme_color_override("font_color", Color(1.0, 0.50, 0.20))
+
+func _open_bug_input(card_name: String, bug_btn: Button) -> void:
+	# Remove any existing input panel
+	var existing: Node = get_node_or_null("BugInputPanel")
+	if existing:
+		existing.queue_free()
+		return
+
+	var is_already_bugged: bool = SaveManager.is_bugged(card_name)
+	var existing_msg: String    = SaveManager.get_bug_message(card_name)
+
+	# Panel background
+	var panel := PanelContainer.new()
+	panel.name = "BugInputPanel"
+	var psb := StyleBoxFlat.new()
+	psb.bg_color          = Color(0.06, 0.06, 0.12, 0.97)
+	psb.border_color      = Color(1.0, 0.55, 0.15, 0.85)
+	psb.border_width_left = 2; psb.border_width_top    = 2
+	psb.border_width_right= 2; psb.border_width_bottom = 2
+	psb.corner_radius_top_left = 6; psb.corner_radius_top_right    = 6
+	psb.corner_radius_bottom_right = 6; psb.corner_radius_bottom_left  = 6
+	panel.add_theme_stylebox_override("panel", psb)
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	var pw: float = 360.0
+	var ph: float = 130.0
+	panel.offset_left   = -pw * 0.5
+	panel.offset_top    = -ph * 0.5
+	panel.offset_right  =  pw * 0.5
+	panel.offset_bottom =  ph * 0.5
+	add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 8)
+	panel.add_child(vbox)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left",  12)
+	margin.add_theme_constant_override("margin_right", 12)
+	margin.add_theme_constant_override("margin_top",   10)
+	margin.add_theme_constant_override("margin_bottom",10)
+	vbox.add_child(margin)
+
+	var inner := VBoxContainer.new()
+	inner.add_theme_constant_override("separation", 8)
+	margin.add_child(inner)
+
+	var title_lbl := Label.new()
+	title_lbl.text = ("Edit bug note — %s" % card_name) if is_already_bugged \
+		else ("Tag bug — %s" % card_name)
+	title_lbl.add_theme_font_size_override("font_size", 13)
+	title_lbl.add_theme_color_override("font_color", Color(1.0, 0.78, 0.40))
+	inner.add_child(title_lbl)
+
+	var msg_edit := LineEdit.new()
+	msg_edit.placeholder_text = "Short bug note…"
+	msg_edit.text             = existing_msg
+	msg_edit.custom_minimum_size = Vector2(0.0, 34.0)
+	msg_edit.add_theme_font_size_override("font_size", 14)
+	inner.add_child(msg_edit)
+	msg_edit.grab_focus()
+
+	var btn_row := HBoxContainer.new()
+	btn_row.add_theme_constant_override("separation", 8)
+	inner.add_child(btn_row)
+
+	var submit_btn := Button.new()
+	submit_btn.text = "✓ SUBMIT" if not is_already_bugged else "✓ UPDATE"
+	submit_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	submit_btn.add_theme_font_size_override("font_size", 13)
+	submit_btn.add_theme_color_override("font_color", Color(0.35, 1.0, 0.55))
+	btn_row.add_child(submit_btn)
+
+	var resolve_row_btn: Button = null
+	if is_already_bugged:
+		resolve_row_btn = Button.new()
+		resolve_row_btn.text = "✗ RESOLVE"
+		resolve_row_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		resolve_row_btn.add_theme_font_size_override("font_size", 13)
+		resolve_row_btn.add_theme_color_override("font_color", Color(0.55, 0.85, 1.0))
+		btn_row.add_child(resolve_row_btn)
+
+	var cancel_btn := Button.new()
+	cancel_btn.text = "CANCEL"
+	cancel_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cancel_btn.add_theme_font_size_override("font_size", 13)
+	btn_row.add_child(cancel_btn)
+
+	# Callbacks
+	var do_submit := func() -> void:
+		SaveManager.tag_bug(card_name, msg_edit.text.strip_edges())
+		_refresh_bug_btn(bug_btn, card_name)
+		panel.queue_free()
+
+	var do_resolve := func() -> void:
+		SaveManager.resolve_bug(card_name)
+		_refresh_bug_btn(bug_btn, card_name)
+		panel.queue_free()
+
+	submit_btn.pressed.connect(do_submit)
+	msg_edit.text_submitted.connect(func(_t: String) -> void: do_submit.call())
+	cancel_btn.pressed.connect(panel.queue_free)
+	if resolve_row_btn:
+		resolve_row_btn.pressed.connect(do_resolve)
 
 func _close() -> void:
 	AudioManager.tts_stop()

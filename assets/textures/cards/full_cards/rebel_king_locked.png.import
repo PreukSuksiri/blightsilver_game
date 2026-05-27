@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dw2d3p4hd1guu"
-path="res://.godot/imported/profile_midnight_shadow.png-c5718a6127e8057c63c4ea3232ff884f.ctex"
+uid="uid://bauwrf3voueu5"
+path="res://.godot/imported/rebel_king_locked.png-1878bdd0018fc8afc8f05d46688ba128.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/battle_illustrations/monsters/profile_midnight_shadow.png"
-dest_files=["res://.godot/imported/profile_midnight_shadow.png-c5718a6127e8057c63c4ea3232ff884f.ctex"]
+source_file="res://assets/textures/cards/full_cards/rebel_king_locked.png"
+dest_files=["res://.godot/imported/rebel_king_locked.png-1878bdd0018fc8afc8f05d46688ba128.ctex"]
 
 [params]
 

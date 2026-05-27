@@ -189,7 +189,7 @@ End Stage Story:  (to be continue)
 -Unresolved plot : Who was the cult and what do they want / Where did Benedict escaped and what more business will he want from Nex and the order / Why did grandmaster disbanded the order
 
 -Mayu Senpai : Nex is vindicated from vandalism. But now he need to restart this year's university course all over again. So Mayu is now one study-year older than him. Mayu now often tease Nex to call her "Mayu-senpai".
-
+-Mayu hesitation of using the cross : After using the cross. She will have a dream living as another person. She try to go back home. When she come home, open the door, there is another Mayu there acting like stranger. Then she woke up. That's because the cross show vision for when she is migrated to the cloned environment. (A simulation before real migration -- but she cancelled it)
 
 
 ## Backup / unused / do not read this, I've scrapped it
