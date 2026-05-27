@@ -3,6 +3,8 @@ extends Control
 ## Damage calculation phase overlay.
 ## Shows both cards side-by-side with animated battle outcome.
 ## Usage: await overlay.start(...) — the coroutine handles everything including queue_free.
+## NOTE: This phase is displayed to players as "Reckoning" (cosmetic rename from "Battle Calculation").
+##       Class name and internal identifiers retain the original name.
 
 const VELLUM_FRAME    := preload("res://assets/textures/cards/frames/vellum_card_frame_transparent.png")
 const ART_PLACEHOLDER := preload("res://assets/textures/cards/placeholder.png")

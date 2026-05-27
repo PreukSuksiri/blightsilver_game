@@ -158,7 +158,10 @@ func admin_command(raw: String) -> String:
 				+ "  demo_status\n"
 				+ "  hide_ui\n"
 				+ "  ai_trailer [on|off]\n"
-				+ "  gallery_editor"
+				+ "  gallery_editor\n"
+				+ "  tag_bug <card_name> | <message>\n"
+				+ "  resolve_bug <card_name>\n"
+				+ "  list_bugs"
 			)
 
 		"tts":
@@ -867,6 +870,42 @@ func admin_command(raw: String) -> String:
 			ed.name = "CampaignGalleryEditorOverlay"
 			scene.add_child(ed)
 			return "Campaign Gallery Editor opened."
+
+		"tag_bug":
+			var rest_tag: String = line.substr(cmd.length()).strip_edges()
+			if rest_tag.is_empty():
+				return "Usage: tag_bug <card_name> | <message>"
+			var sep_tag: int = rest_tag.find("|")
+			var cname_tag: String
+			var msg_tag: String = ""
+			if sep_tag >= 0:
+				cname_tag = rest_tag.substr(0, sep_tag).strip_edges()
+				msg_tag   = rest_tag.substr(sep_tag + 1).strip_edges()
+			else:
+				cname_tag = rest_tag
+			if cname_tag.is_empty():
+				return "Usage: tag_bug <card_name> | <message>"
+			SaveManager.tag_bug(cname_tag, msg_tag)
+			return "Bugged: %s" % cname_tag if msg_tag.is_empty() \
+				else "Bugged: %s — %s" % [cname_tag, msg_tag]
+
+		"resolve_bug":
+			var cname_res: String = line.substr(cmd.length()).strip_edges()
+			if cname_res.is_empty():
+				return "Usage: resolve_bug <card_name>"
+			if not SaveManager.is_bugged(cname_res):
+				return "'%s' is not tagged as bugged." % cname_res
+			SaveManager.resolve_bug(cname_res)
+			return "Bug resolved: %s" % cname_res
+
+		"list_bugs":
+			if SaveManager.bugged_cards.is_empty():
+				return "No bugged cards."
+			var lines: Array = []
+			for cname: String in SaveManager.bugged_cards:
+				var msg: String = SaveManager.bugged_cards[cname] as String
+				lines.append(("  %s — %s" % [cname, msg]) if msg != "" else ("  %s" % cname))
+			return "Bugged cards:\n" + "\n".join(lines)
 
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd

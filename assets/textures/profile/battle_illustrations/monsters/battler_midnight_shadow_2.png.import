@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bc7b822e0ap3u"
-path="res://.godot/imported/profile_big_thug_2.png-239c6786ee184e8a502db4b182608da3.ctex"
+uid="uid://dx275my255yv6"
+path="res://.godot/imported/battler_midnight_shadow_2.png-7aad3f9d609e6b96f0f697609b9d787d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/battle_illustrations/monsters/profile_big_thug_2.png"
-dest_files=["res://.godot/imported/profile_big_thug_2.png-239c6786ee184e8a502db4b182608da3.ctex"]
+source_file="res://assets/textures/profile/battle_illustrations/monsters/battler_midnight_shadow_2.png"
+dest_files=["res://.godot/imported/battler_midnight_shadow_2.png-7aad3f9d609e6b96f0f697609b9d787d.ctex"]
 
 [params]
 

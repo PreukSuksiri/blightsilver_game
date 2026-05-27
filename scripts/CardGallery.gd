@@ -54,6 +54,10 @@ var _filter_ability:  String = ""
 var _filter_count: String = "all"   # "all" | "owned" | "unowned"
 var _count_filter_btns: Dictionary = {}
 
+# Threaded texture loading
+var _pending_tex: Dictionary = {}   # tex_path -> TextureRect
+var _badge_font: FontVariation = null  # shared badge font — created once in _ready
+
 # Advanced filter control refs
 var _adv_affinity_btn: OptionButton
 var _adv_cost_min:  SpinBox
@@ -65,6 +69,9 @@ var _adv_def_max:   SpinBox
 var _adv_ability:   LineEdit
 
 func _ready() -> void:
+	_badge_font = FontVariation.new()
+	_badge_font.base_font = preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
+	_badge_font.variation_opentype = {"wght": 1200}
 	Collection.collection_changed.connect(_on_collection_changed)
 	$Panel/VBox/Header/CloseBtn.pressed.connect(_on_close)
 	_build_filter_bar()
@@ -202,10 +209,29 @@ func _update_stats() -> void:
 # ─────────────────────────────────────────────────────────────
 # Build all card tiles
 # ─────────────────────────────────────────────────────────────
+func _process(_delta: float) -> void:
+	if _pending_tex.is_empty():
+		return
+	var done: Array[String] = []
+	for path: String in _pending_tex:
+		var progress: Array = []
+		var status: int = ResourceLoader.load_threaded_get_status(path, progress)
+		if status == ResourceLoader.THREAD_LOAD_LOADED:
+			var tex: Texture2D = ResourceLoader.load_threaded_get(path) as Texture2D
+			var art: TextureRect = _pending_tex[path]
+			if is_instance_valid(art) and tex != null:
+				art.texture = tex
+			done.append(path)
+		elif status == ResourceLoader.THREAD_LOAD_FAILED:
+			done.append(path)
+	for path: String in done:
+		_pending_tex.erase(path)
+
 func _build_all_cards() -> void:
 	for child in card_flow.get_children():
 		child.queue_free()
 	_tiles.clear()
+	_pending_tex.clear()
 
 	var char_names: Array = CardDatabase.get_all_character_names()
 	char_names.sort()
@@ -273,9 +299,6 @@ func _wrap_card_tile(card_node: Control, card_name: String, card_type: String) -
 
 	var badge := Label.new()
 	badge.text = "×%d" % count
-	var _badge_font := FontVariation.new()
-	_badge_font.base_font = preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
-	_badge_font.variation_opentype = {"wght": 1200}
 	badge.add_theme_font_override("font", _badge_font)
 	badge.add_theme_font_size_override("font_size", 12)
 	badge.add_theme_color_override("font_color",
@@ -348,15 +371,15 @@ func _make_simple_tile(card_name: String, card_type: String) -> Control:
 	tile.custom_minimum_size = Vector2(110, 150)
 	tile.mouse_filter = Control.MOUSE_FILTER_STOP
 
-	var tex: Texture2D = _load_full_card_tex(card_name, card_type)
-	if tex != null:
+	var tex_path: String = _get_card_tex_path(card_name)
+	if tex_path != "":
 		var art := TextureRect.new()
 		art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		art.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		art.texture = tex
 		tile.add_child(art)
+		_request_tex(tex_path, art)
 	else:
 		var is_union: bool = card_type == "union"
 		var bg := ColorRect.new()
@@ -392,16 +415,28 @@ func _make_simple_tile(card_name: String, card_type: String) -> Control:
 
 	return _wrap_card_tile(tile, card_name, card_type)
 
-func _load_full_card_tex(card_name: String, card_type: String) -> Texture2D:
+func _get_card_tex_path(card_name: String) -> String:
 	var snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
 	if SaveManager.nsfw_enabled:
 		var nsfw_path: String = FULL_CARDS_DIR + snake + "_nsfw.png"
 		if ResourceLoader.exists(nsfw_path):
-			return load(nsfw_path) as Texture2D
+			return nsfw_path
 	var path: String = FULL_CARDS_DIR + snake + ".png"
 	if ResourceLoader.exists(path):
-		return load(path) as Texture2D
-	return null
+		return path
+	return ""
+
+func _request_tex(path: String, art: TextureRect) -> void:
+	var status: int = ResourceLoader.load_threaded_get_status(path)
+	if status == ResourceLoader.THREAD_LOAD_LOADED:
+		# Already cached — assign immediately
+		art.texture = ResourceLoader.load_threaded_get(path) as Texture2D
+	elif status == ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+		# Already loading from a previous build — just wait for it
+		_pending_tex[path] = art
+	else:
+		if ResourceLoader.load_threaded_request(path) == OK:
+			_pending_tex[path] = art
 
 
 # ─────────────────────────────────────────────────────────────

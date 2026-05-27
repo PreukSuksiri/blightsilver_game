@@ -95,17 +95,17 @@ func _load_unions() -> void:
 
 	# ── Divine ────────────────────────────────────────────────
 
-	_add("Gryphon Rider", A.DIVINE, 150, 95, 1000, R.RARE,
-		AB.NONE, {}, "No ability.", "None",
+	_add("Gryphon Rider", A.DIVINE, 125,  90, 1000, R.RARE,
+		AB.NONE, {}, "None", "None",
 		"Gryphon + 1 Divine + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
 		_z([[0,0],[1,1],[2,2],[3,3],[4,4]]),
 		_conds([{"name_contains": "gryphon"}, {"affinity": A.DIVINE}], 5))
 
 	_add("Seraphim Fistmaster", A.DIVINE, 120, 120, 1500, R.LEGENDARY,
-		AB.DOUBLE_STATS_VS_AFFINITY, {"affinity": A.CHAOS}, "Double ATK and DEF against Chaos.",
-		"Double ATK and DEF against ??? Affinity",
-		"1 Seraph monster + 1 Divine monster with at least 1000 crystal cost + 1500 crystals",
+		AB.DOUBLE_STATS_VS_AFFINITY, {"affinity": A.CHAOS}, "Double ATK&DEF against Chaos",
+		"Double ATK&DEF against ??? Affinity",
+		"1 ‘Seraph’ name + 1 Divine (≥ 800 cost) + 1500 crystals",
 		"1 ??? + 1 ??? + 1500 crystals",
 		_z([[0,0],[0,1],[0,3],[0,4],[1,0],[1,4],[3,0],[3,4],[4,0],[4,1],[4,3],[4,4]]),
 		_conds([{"name_contains": "seraph"}, {"affinity": A.DIVINE, "min_cost": 1000}], 12))
@@ -121,9 +121,9 @@ func _load_unions() -> void:
 
 	_add("Pixie Queen", A.DIVINE, 30, 30, 1000, R.UNCOMMON,
 		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"atk_bonus": 5, "def_bonus": 0, "affinity": A.DIVINE},
-		"+5 ATK for each Divine card on own field.",
+		"+5 ATK for each Divine cards on their own field",
 		"+5 ATK for each ????",
-		"1 Tiny Pixie + 1 Divine card + 1000 crystals",
+		"1 Tiny Pixie + 1 Divine card + 1000 crystal",
 		"1 ??? + 1 ??? + 1000 crystal",
 		_z([[0,2],[1,2],[2,0],[2,4],[3,0],[3,2],[3,4],[4,1],[4,3]]),
 		_conds([{"card_name": "Tiny Pixie"}, {"affinity": A.DIVINE}], 9))
@@ -138,7 +138,7 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "ponycorn"}, {"affinity": A.DIVINE}], 8))
 
 	_add("Choir Lead Amber", A.DIVINE, 35, 35, 1000, R.RARE,
-		AB.FIELD_ATK_BOOST_OWN_AFFINITY, {"affinity": A.DIVINE, "atk": 20}, "+20 ATK to all Divine characters on own field.",
+		AB.FIELD_ATK_BOOST_OWN_AFFINITY, {"affinity": A.DIVINE, "atk": 20}, "+20 ATK to all Divine characters on their own field",
 		"+20 ATK to all ?????",
 		"3 Choir Lady cards + 1000 crystals",
 		"3 ??? + 1000 crystals",
@@ -187,7 +187,7 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "lucky statue"}, {"affinity": A.DIVINE}], 5))
 
 	_add("Raijin and Fujin", A.DIVINE, 80, 80, 1000, R.RARE,
-		AB.NONE, {}, "No ability.", "None",
+		AB.NONE, {}, "None", "None",
 		"Raijin + Fujin + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
 		_z([[0,0],[0,4],[1,0],[1,4],[2,0],[2,4],[3,0],[3,4],[4,0],[4,4]]),
@@ -203,7 +203,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Bloom Fairy"}, {"affinity": A.NATURE}], 12))
 
 	_add("Sky Protector", A.DIVINE, 0, 0, 1000, R.RARE,
-		AB.STANCE_FIXED_STATS, {"atk_atk": 50, "atk_def": 0, "def_atk": 0, "def_def": 50}, "If this card defends, DEF becomes 50, ATK becomes 0. If this card attacks, ATK becomes 50, DEF becomes 0.",
+		AB.STANCE_FIXED_STATS, {"atk_atk": 50, "atk_def": 0, "def_atk": 0, "def_def": 50}, "If this card defends, DEF becomes 50, ATK becomes 0. If this card performs attack, ATK becomes 50, DEF becomes 0.",
 		"If this card defends, DEF becomes ???, ATK becomes ???. If this card performs attack, ATK becomes ???, DEF becomes ???.",
 		"Sunrise Lady + Moonrise Gentleman + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
@@ -219,7 +219,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Lady of the Sacred Pond"}, {"affinity": A.ANIMA}], 10))
 
 	_add("Blast Beam Seraph", A.DIVINE, 100, 50, 1500, R.LEGENDARY,
-		AB.NONE, {}, "No ability.", "None",
+		AB.NONE, {}, "None", "None",
 		"Gerald of the Heavenly Light + 1 Divine + 1500 crystals",
 		"1 ??? + 1 ??? + 1500 crystals",
 		_z([[0,0],[0,1],[0,2],[0,3],[0,4],[1,2],[2,0],[2,1],[2,2],[2,3],[2,4],[3,2]]),
@@ -234,29 +234,85 @@ func _load_unions() -> void:
 		_z([[0,2],[1,0],[1,1],[1,2],[1,3],[1,4],[2,2],[3,2],[4,2]]),
 		_conds([{"affinity": A.DIVINE, "min_cost": 1000}, {"affinity": A.DIVINE, "min_cost": 1000}], 9))
 
+	_add("False Prophet", A.DIVINE, 20, 40, 1000, R.RARE,
+		AB.NOT_IMPLEMENTED, {}, "Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.",
+		"Start of your turn: Reveal ???. If it was a Dead End, destroy this card. Otherwise, gain ???",
+		"2 Divine cards + 1000 crystals",
+		"",
+		_z([[0,2],[1,1],[1,3],[2,2]]),
+		_conds([{"affinity": A.DIVINE}, {"affinity": A.DIVINE}], 4))
+
 	# ── Nature ────────────────────────────────────────────────
 
 	_add("Gaia Turtle", A.NATURE, 0, 220, 2000, R.LEGENDARY,
-		AB.NONE, {}, "No ability.", "None",
-		"2 characters with at least 100 DEF + 2000 crystals",
+		AB.NONE, {}, "None", "None",
+		"2 cards (≥100 DEF) + 2000 crystals",
 		"2 ??? + 2000 crystals",
 		_z([[1,1],[1,3],[2,1],[2,2],[2,3],[3,1],[3,2],[3,3]]),
 		_conds([{"min_def": 100}, {"min_def": 100}], 8))
 
-	_add("Barros the Collossol", A.NATURE, 150, 130, 1500, R.RARE,
-		AB.NONE, {}, "No ability.", "None",
-		"2 Nature + 1500 crystals",
+	_add("Barros the Colossol", A.NATURE, 150, 130, 1500, R.RARE,
+		AB.NONE, {}, "None", "None",
+		"2 Nature (≥ 800 cost) + 1500 crystals",
 		"2 ???+ 1500 crystals",
 		_z([[1,1],[1,3],[2,2],[3,1],[3,3]]),
-		_conds([{"affinity": A.NATURE}, {"affinity": A.NATURE}], 5))
+		_conds([{"affinity": A.NATURE, "min_cost": 800}, {"affinity": A.NATURE, "min_cost": 800}], 5))
 
-	_add("Armored Dino", A.NATURE, 100, 60, 1000, R.UNCOMMON,
-		AB.OPTIONAL_CRYSTAL_PAY_DEF_BOOST, {"cost": 1000, "def": 60}, "During battle calculation, pay 1000 crystal cost to +60 DEF.",
-		"During battle calculation, pay ??? crystal cost to +??DEF",
-		"1 Armored Nature card + 1 Nature + 1000 crystals",
+	_add("Armored Dino", A.NATURE, 95, 60, 1000, R.UNCOMMON,
+		AB.OPTIONAL_CRYSTAL_PAY_DEF_BOOST, {"cost": 1000, "def": 60}, "In Reckoning, pay 1000 crystal cost to +60 DEF",
+		"In Reckoning, pay ??? crystal cost to +??DEF",
+		"1 Armored Nature card + 1 Nature (≥ 800 cost) + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
 		_z([[1,0],[1,1],[1,2],[1,3],[1,4],[2,0],[2,1],[2,2],[2,3],[2,4]]),
 		_conds([{"name_contains": "armored", "affinity": A.NATURE}, {"affinity": A.NATURE}], 10))
+
+	_add("Ancient Lizard", A.NATURE, 75, 75, 1000, R.UNCOMMON,
+		AB.NONE, {}, "None", "None",
+		"1 Flame Lizard + 1 Nature + 1000 crystals",
+		"1 ??? + 1 ???+ 1000 crystals",
+		_z([[1,2],[2,1],[2,2],[2,3],[3,2]]),
+		_conds([{"card_name": "Flame Lizard"}, {"affinity": A.NATURE}], 5))
+
+	_add("Berserk Hyena", A.NATURE, 40, 0, 1000, R.UNCOMMON,
+		AB.NONE, {}, "None", "None",
+		"2 Nature + 1000 crystals",
+		"2 ???+ 1000 crystals",
+		_z([[1,0],[1,1],[1,2],[1,3],[1,4],[2,0],[2,2],[2,4],[3,0],[3,2],[3,4]]),
+		_conds([{"affinity": A.NATURE}, {"affinity": A.NATURE}], 11))
+
+	_add("Rocket Peacock", A.NATURE, 150, 100, 1500, R.LEGENDARY,
+		AB.NOT_IMPLEMENTED, {}, "After this card battles, select 1 foe's card, flip a coin. Head : destroy that card",
+		"After this card battles, select 1 foe's card, flip a coin. Head : ???",
+		"Ostrich Cannon + 1 Nature + 1500 crystals",
+		"1 ??? + 1 ??? + 1500 crystals",
+		_z([[0,0],[0,4],[1,0],[1,4],[2,0],[2,4],[4,2]]),
+		_conds([{"card_name": "Ostrich Cannon"}, {"affinity": A.NATURE}], 7))
+
+	_add("Scarlet Shroom", A.NATURE, 0, 80, 1000, R.RARE,
+		AB.NOT_IMPLEMENTED, {}, "Once Union, put venom flag on all foe’s face-up card",
+		"If ???, put venom flag on all ???. ",
+		"2 Nature cards + 1000 crystals",
+		"2 ??? + 1000 crystals",
+		_z([[0,0],[0,1],[0,2],[0,3],[0,4],[1,2],[2,2],[3,2]]),
+		_conds([{"affinity": A.NATURE}, {"affinity": A.NATURE}], 8))
+
+	# ── Arcane ────────────────────────────────────────────────
+
+	_add("Burning Phoenix", A.ARCANE, 125, 50, 1000, R.LEGENDARY,
+		AB.NOT_IMPLEMENTED, {}, "Cannot be destroyed by non-union cards. If targeted by tech, destroy this card.",
+		"Cannot be destroyed by ???. If targeted by tech, ???",
+		"1 Arcane (≥ 500 cost) + 1 Nature (≥ 500 cost) + 1 Divine (≥ 500 cost) + 1000 crystals",
+		"1 ??? + 1 ??? + 1 ??? + 1000 crystals",
+		_z([[0,2],[1,1],[1,2],[1,3],[2,0],[2,2],[2,4]]),
+		_conds([{"affinity": A.ARCANE, "min_cost": 500}, {"affinity": A.NATURE, "min_cost": 500}, {"affinity": A.DIVINE, "min_cost": 500}], 7))
+
+	_add("Colorful Mage", A.ARCANE, 55, 40, 1000, R.RARE,
+		AB.NOT_IMPLEMENTED, {}, "-10 ATK&DEF permanently if battles against non-Arcane card.",
+		"-??? ATK&DEF permanently if battles against non-Arcane card.",
+		"Red Mage + Green Mage + Blue Mage + 1000 crystals",
+		"",
+		_z([[0,4],[1,3],[2,1],[2,2],[3,1],[3,2],[3,3],[4,0]]),
+		_conds([{"card_name": "Red Mage"}, {"card_name": "Green Mage"}, {"card_name": "Blue Mage"}], 8))
 
 	# ── Bio ───────────────────────────────────────────────────
 
@@ -276,12 +332,28 @@ func _load_unions() -> void:
 		_z([[0,0],[0,4],[1,1],[1,3],[3,1],[3,3],[4,0],[4,4]]),
 		_conds([{"affinity": A.BIO}, {"affinity": A.BIO}], 8))
 
-	_add("Rocket Tyrant", A.BIO, 130, 110, 1000, R.RARE,
-		AB.NONE, {}, "No ability.", "None",
-		"1 Bio + 1 Anima + 1000 crystals",
+	_add("Rocket Tyrant", A.BIO, 125,  105, 1000, R.RARE,
+		AB.NONE, {}, "None", "None",
+		"1 Bio (≥ 800 cost) + 1 Anima (≥ 800 cost) + 1000 crystal",
 		"1 ??? + 1 ??? + 1000 crystal",
-		_z([[0,0],[0,2],[0,4],[1,1],[1,3],[2,0],[2,2],[2,4],[3,1],[3,3],[4,0],[4,2],[4,4]]),
+		_z([[3,1],[3,3],[4,0],[4,2],[4,4]]),
 		_conds([{"affinity": A.BIO}, {"affinity": A.ANIMA}], 13))
+
+	_add("Gamma Mermaid", A.BIO, 30, 20, 1000, R.UNCOMMON,
+		AB.NOT_IMPLEMENTED, {}, "-20 DEF to non-Bio defender",
+		"-20 DEF to ???",
+		"1 Gamma cards + 1 Bio card + 1000",
+		"",
+		_z([[1,1],[1,2],[1,3],[2,1],[2,3],[3,1],[3,2],[3,3]]),
+		_conds([{"name_contains": "gamma"}, {"affinity": A.BIO}], 8))
+
+	_add("Volatile Slasher", A.BIO, 50, 45, 1000, R.RARE,
+		AB.NOT_IMPLEMENTED, {}, "While this card attacking, it gain +50 ATK bonus vs target's affinity permanently, once per affinity.",
+		"While this card attacking, it gain +??? ATK bonus vs target’s affinity ???",
+		"1 Bladeshifter + 1 Bio card + 1000 crystals",
+		"",
+		_z([[0,0],[1,1],[1,2],[2,1],[2,2],[3,1],[3,2],[4,0]]),
+		_conds([{"card_name": "Bladeshifter"}, {"affinity": A.BIO}], 8))
 
 	# ── Cosmic ────────────────────────────────────────────────
 
@@ -311,58 +383,120 @@ func _load_unions() -> void:
 		_conds([{"affinity": A.COSMIC}, {"affinity": A.COSMIC}], 12))
 
 	_add("Giant Mining Pod", A.COSMIC, 20, 80, 1000, R.UNCOMMON,
-		AB.CRYSTAL_GAIN_ON_DEAD_END_ATTACK, {"amount": 200}, "If this card attacks a dead end card, you receive 200 crystals.",
+		AB.CRYSTAL_GAIN_ON_DEAD_END_ATTACK, {"amount": 200}, "If this card attacks a dead end card, you receive 200 crystals",
 		"If this card attacks a dead end card, you receive ???crystals",
-		"1 Miner Probe + 1 Cosmic + 1000 crystals",
+		"1 Miner probe + 1 Cosmic + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
 		_z([[0,0],[0,1],[0,2],[0,3],[0,4],[1,1],[1,2],[1,3],[2,1],[2,2],[2,3],[3,2],[4,2]]),
 		_conds([{"name_contains": "miner probe"}, {"affinity": A.COSMIC}], 13))
 
+	_add("Blood-hungry Mutant", A.COSMIC, 55, 40, 1000, R.RARE,
+		AB.NOT_IMPLEMENTED, {}, "After destroying foe's card: +80 crystals",
+		"After destroying foe’s card: ???",
+		"2 Mutant cards + 1000 crystals",
+		"",
+		_z([[1,1],[1,3],[2,0],[2,2],[2,4],[3,1],[3,3]]),
+		_conds([{"name_contains": "mutant"}, {"name_contains": "mutant"}], 7))
+
+	_add("Giant Meteor Vergaia", A.COSMIC, 60, 0, 2000, R.LEGENDARY,
+		AB.NOT_IMPLEMENTED, {}, "Destroy it at turn's end, then select all face-up foe's card in adjacent cells, destroy them.",
+		"Destroy it at turn’s end, then select all face-up ???.",
+		"Striker Comet + 2 Cosmic card + 2000",
+		"",
+		_z([[0,0],[1,1],[3,2],[3,3],[3,4],[4,2],[4,3],[4,4]]),
+		_conds([{"card_name": "Striker Comet"}, {"affinity": A.COSMIC}, {"affinity": A.COSMIC}], 8))
+
+	_add("Imperial Frame", A.COSMIC, 45, 30, 1000, R.UNCOMMON,
+		AB.NONE, {}, "None", "None",
+		"Laser Walker + 1 Cosmic card + 1000",
+		"",
+		_z([[1,2],[1,3],[1,4],[2,3],[2,4],[3,0],[4,0],[4,1],[4,2]]),
+		_conds([{"card_name": "Laser Walker"}, {"affinity": A.COSMIC}], 9))
+
+	_add("Moon Tribe Shaman", A.COSMIC, 25, 55, 1000, R.RARE,
+		AB.NOT_IMPLEMENTED, {}, "Upon union, revive 1 Moon non-Union card. Double its cost.",
+		"Upon union, revive 1 ???. Double its cost.",
+		"1 Moon card+ 1 Cosmic card + 1000 crystals",
+		"",
+		_z([[0,0],[0,4],[1,1],[1,3],[2,2],[3,2],[4,2]]),
+		_conds([{"name_contains": "moon"}, {"affinity": A.COSMIC}], 7))
+
 	# ── Anima ─────────────────────────────────────────────────
 
 	_add("X-Death Squad", A.ANIMA, 50, 50, 1000, R.LEGENDARY,
-		AB.OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT, {"cost": 1000}, "Pay 1000 crystals: destroy opponent character during damage calculation. Opponent does not lose crystals under this effect.",
-		"Pay ????, destroy opponent character during damage calculation. Opponent do not ????",
-		"1 Anima with at least 800 crystal cost + 2 Anima cards + 1000 crystals",
-		"1 ??? + ??? + 1000 crystals",
+		AB.OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT, {"cost": 1000}, "In Reckoning, pay 1000, destroy foe’s character. They pay no cost.",
+		"In Reckoning, pay ???, destroy foe’s character. They pay ???.",
+		"1 Anima (≥ 800 cost) + 2 Anima + 1000 crystals",
+		"1 ??? + 2 ??? + 1000 crystals",
 		_z([[0,0],[0,2],[0,4],[2,0],[2,2],[2,4],[4,0],[4,2],[4,4]]),
 		_conds([{"affinity": A.ANIMA, "min_cost": 800}, {"affinity": A.ANIMA}, {"affinity": A.ANIMA}], 9))
+
+	_add("Grand Fort Captain", A.ANIMA, 45, 40, 1000, R.UNCOMMON,
+		AB.NONE, {}, "None", "None",
+		"2 Grand Fort card + 1000 crystals",
+		"",
+		_z([[1,2],[2,1],[2,2],[2,3],[3,2]]),
+		_conds([{"name_contains": "grand fort"}, {"name_contains": "grand fort"}], 5))
+
+	_add("Kiba the Giant Slayer", A.ANIMA, 80, 55, 1000, R.RARE,
+		AB.ATK_BONUS_VS_UNION, {"bonus": 30}, "+30 ATK vs Union",
+		"+??? vs Union",
+		"Kiyoko the Death Whisper + Silver Spearman + 1000",
+		"",
+		_z([[0,1],[0,3],[1,1],[1,3],[2,1],[2,3],[3,1],[3,3],[4,1],[4,3]]),
+		_conds([{"card_name": "Kiyoko the Death Whisper"}, {"card_name": "Silver Spearman"}], 10))
+
+	_add("Moon Ninja Lady", A.ANIMA, 65, 50, 1000, R.RARE,
+		AB.ONE_USE_SURVIVE_DESTRUCTION, {}, "Once, this card is not destroyed.",
+		"Once, this card is not ???.",
+		"Kiyoko the Death Whisper + 1 Anima card + 1000",
+		"",
+		_z([[0,2],[1,2],[2,1],[2,2],[2,3],[3,2],[4,2]]),
+		_conds([{"card_name": "Kiyoko the Death Whisper"}, {"affinity": A.ANIMA}], 7))
+
+	_add("Rebel King", A.ANIMA, 60, 40, 1000, R.RARE,
+		AB.NOT_IMPLEMENTED, {}, "At foe's turn ends: foe select 1 own face-up card and swap ATK&DEF",
+		"At foe’s turn ends: foe select ??? card and swap ATK&DEF",
+		"Jirayu the Rebellious Prince + 1 Anima card (≥ 500 cost) + 1000 crystals",
+		"",
+		_z([[0,2],[2,0],[2,2],[2,4],[3,2],[4,2]]),
+		_conds([{"card_name": "Jirayu the Rebellious Prince"}, {"affinity": A.ANIMA, "min_cost": 500}], 6))
 
 	# ── Chaos ─────────────────────────────────────────────────
 
 	_add("Lord of Terror", A.CHAOS, 200, 100, 1000, R.LEGENDARY,
-		AB.ATK_PENALTY_VS_DEAD_END, {"penalty": 50}, "-50 ATK if attacks dead end card.",
+		AB.ATK_PENALTY_VS_DEAD_END, {"penalty": 50}, "-50 ATK if attacks dead end card",
 		"-50 ATK if ???",
-		"2 Chaos + 1000 crystals",
+		"2 Chaos (≥ 800 cost) + 1000 crystal",
 		"2 ??? + 1000 crystal",
-		_z([[0,2],[1,2],[2,2],[3,0],[3,1],[3,2],[3,3],[3,4],[4,2]]),
+		_z([[1,2],[2,2],[3,1],[3,2],[3,3],[4,2]]),
 		_conds([{"affinity": A.CHAOS}, {"affinity": A.CHAOS}], 9))
 
 	_add("Greater Succubus", A.CHAOS, 30, 50, 1000, R.RARE,
-		AB.GAIN_HALF_STATS_ON_SURVIVE, {}, "If this card survived a battle, gain half of ATK and DEF equal to the card it battled.",
-		"If this card survived a battle, gain ????",
-		"1 Succubus + 1 Chaos card + 1000 crystals",
+		AB.GAIN_HALF_STATS_ON_SURVIVE, {}, "Once, after Reckoning: +ATK&DEF equal to half of that foe’s card",
+		"Once, after Reckoning: +ATK&DEF equal to ???",
+		"1 Succubus + 1 Chaos + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
 		_z([[0,2],[1,0],[1,1],[1,2],[1,3],[1,4],[2,0],[2,4],[3,0],[3,4]]),
 		_conds([{"name_contains": "succubus"}, {"affinity": A.CHAOS}], 10))
 
 	_add("Kitsune", A.CHAOS, 35, 35, 1000, R.UNCOMMON,
-		AB.NONE, {}, "No ability.", "None",
+		AB.NONE, {}, "None", "None",
 		"Dark Monk + 1 Chaos + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
 		_z([[0,1],[0,2],[1,2],[1,3],[2,1],[2,2],[3,2],[3,3],[4,1],[4,2]]),
 		_conds([{"card_name": "Dark Monk"}, {"affinity": A.CHAOS}], 10))
 
 	_add("Ten Arms Yaksa", A.CHAOS, 45, 30, 1000, R.RARE,
-		AB.MULTI_ATTACK_ANY_WITH_ATK_LOSS, {"max_attacks": 3, "atk_loss": 5}, "This card can attack 3 times. -5 ATK for each successful attack.",
-		"This card can attack ??? times. -?? ATK for each successful attack.",
+		AB.MULTI_ATTACK_ANY_WITH_ATK_LOSS, {"max_attacks": 3, "atk_loss": 5}, "This card can choose two attack targets. -5 ATK for each successful attack.",
+		"This card can choose ?? attack targets. -?? ATK for each successful attack.",
 		"Yaksa + 1 Chaos + 1000 crystals",
 		"1 ??? + 1 ??? + 1000 crystals",
 		_z([[0,0],[0,1],[0,3],[0,4],[1,2],[2,2],[3,0],[3,1],[3,2],[3,3],[3,4],[4,0],[4,2],[4,4]]),
 		_conds([{"card_name": "Yaksa"}, {"affinity": A.CHAOS}], 14))
 
 	_add("Skeleton Overlord", A.CHAOS, 50, 5, 1000, R.RARE,
-		AB.NONE, {}, "No ability.", "None",
+		AB.NONE, {}, "None", "None",
 		"3 Skeleton cards + 1000 crystals",
 		"3 ??? + 1000 crystals",
 		_z([[0,1],[0,2],[0,3],[2,0],[2,1],[2,2],[2,3],[2,4],[4,1],[4,2],[4,3]]),
@@ -383,9 +517,9 @@ func _load_unions() -> void:
 
 	# ── No affinity ───────────────────────────────────────────
 
-	_add("Katana Shark", A.DIVINE, 75, 50, 0, R.UNCOMMON,
-		AB.NONE, {}, "No ability.", "None",
-		"3 Shark cards",
+	_add("Katana Shark", A.NATURE, 75, 50, 0, R.UNCOMMON,
+		AB.NONE, {}, "None", "None",
+		"3 ‘Sharks’ name + 1000 crystals",
 		"3 ??? + 1000 crystals",
 		_z([[0,0],[0,1],[1,2],[2,3],[3,3],[4,4]]),
 		_conds([{"name_contains": "shark"}, {"name_contains": "shark"}, {"name_contains": "shark"}], 6))
