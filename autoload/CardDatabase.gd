@@ -905,7 +905,7 @@ func _load_characters() -> void:
 			CharacterData.Rarity.RARE],
 
 		["Champion of the Valley", CharacterData.Affinity.ANIMA, 35, 45, 400,
-			CharacterData.AbilityType.NOT_IMPLEMENTED, {},
+			CharacterData.AbilityType.PERM_ATK_BOOST_ON_KILL_CAPPED, {"atk": 10, "max_bonus": 30},
 			"+10 ATK permanently if it destroyed a character. This bonus does not exceed maximum of 30.",
 			CharacterData.Rarity.UNCOMMON],
 
@@ -914,7 +914,7 @@ func _load_characters() -> void:
 			CharacterData.Rarity.UNCOMMON],
 
 		["Ectoplasm", CharacterData.Affinity.BIO, 20, 0, 800,
-			CharacterData.AbilityType.NOT_IMPLEMENTED, {},
+			CharacterData.AbilityType.COPY_ALLY_STATS_ON_DESTROY, {},
 			"When your character card is destroyed, you can copy ATK, DEF, Crystal Cost of the destroyed card to this card instead. Can be triggered face-down.",
 			CharacterData.Rarity.EXOTIC],
 
@@ -925,12 +925,12 @@ func _load_characters() -> void:
 			CharacterData.Rarity.RARE],
 
 		["Giant Mosquito", CharacterData.Affinity.NATURE, 30, 20, 800,
-			CharacterData.AbilityType.NOT_IMPLEMENTED, {},
+			CharacterData.AbilityType.TEMP_ATK_HALF_TARGET, {},
 			"If this card performs an attack, +ATK equal to half of target's ATK until the end of this turn.",
 			CharacterData.Rarity.EXOTIC],
 
 		["Grand Wizard", CharacterData.Affinity.ARCANE, 90, 70, 1100,
-			CharacterData.AbilityType.NOT_IMPLEMENTED, {},
+			CharacterData.AbilityType.COIN_FLIP_ATK_DEF_BOOST, {"bonus": 30},
 			"In battle calculation, flip a coin. If head, +30 ATK and DEF until the end of this turn.",
 			CharacterData.Rarity.LEGENDARY],
 
@@ -1197,8 +1197,8 @@ func _load_tech_cards() -> void:
 			"Your foe choose and reveal 1 of their cell",
 			CharacterData.Rarity.UNCOMMON],
 
-		["War Supply", 1000, TechCardData.TechEffectType.NOT_IMPLEMENTED,
-			{}, "",
+		["War Supply", 1000, TechCardData.TechEffectType.TEMP_ATK_DEF_BOOST_ALL,
+			{"atk": 10, "def": 10}, "",
 			"+10 ATK&DEF for all face up characters until the end of this turn.",
 			CharacterData.Rarity.RARE],
 

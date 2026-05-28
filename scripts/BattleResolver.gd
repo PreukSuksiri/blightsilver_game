@@ -405,6 +405,23 @@ static func _get_effective_atk(
 			else:
 				GameState.post_message("%s coin flip: tails — no bonus." % attacker.card_name)
 
+		CharacterData.AbilityType.COIN_FLIP_ATK_DEF_BOOST:
+			var _cfadb_heads: bool = randf() >= 0.5
+			_battle_coin_results.append(_cfadb_heads)
+			var _cfadb_bonus: int = attacker.ability_params.get("bonus", 0)
+			if _cfadb_heads:
+				atk += _cfadb_bonus
+				if not _silent_mode:
+					attacker.temp_def_bonus += _cfadb_bonus
+				GameState.post_message("%s coin flip: heads! +%d ATK & DEF this turn!" % [attacker.card_name, _cfadb_bonus])
+			else:
+				GameState.post_message("%s coin flip: tails — no bonus." % attacker.card_name)
+
+		CharacterData.AbilityType.TEMP_ATK_HALF_TARGET:
+			var _half_atk: int = int(defender.get_effective_atk() / 2)
+			atk += _half_atk
+			GameState.post_message("%s: +%d ATK (half of %s's ATK)" % [attacker.card_name, _half_atk, defender.card_name])
+
 		CharacterData.AbilityType.SWAP_ATK_DEF_WHEN_ATTACKING:
 			atk = attacker.get_effective_def()  # use DEF as ATK
 

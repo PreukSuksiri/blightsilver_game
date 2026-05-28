@@ -229,13 +229,9 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 		"trap":      art_path = CardDatabase.find_artwork(inst.card_name, "traps")
 		"tech":      art_path = CardDatabase.find_artwork(inst.card_name, "tech")
 	if inst.is_union:
-		var _snake: String = inst.card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
-		for _p: String in [
-			"res://assets/textures/cards/union/" + _snake + ".png",
-		]:
-			if ResourceLoader.exists(_p):
-				art_path = _p
-				break
+		var _union_path: String = CardDatabase.find_artwork(inst.card_name, "union")
+		if _union_path != "":
+			art_path = _union_path
 	if art_path != "" and ResourceLoader.exists(art_path):
 		art.texture = load(art_path)
 	else:
@@ -357,7 +353,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 					aff_lbl.add_theme_color_override("font_color", UNION_CYAN)
 					desc_lbl.text = u.ability_description
 			else:
-				type_lbl.text = "CHARACTER"
+				type_lbl.text = "UNIT"
 				type_lbl.add_theme_color_override("font_color", TYPE_COLOR_CHARACTER)
 				if data:
 					atk_lbl.text = "ATK %d" % inst.get_effective_atk()

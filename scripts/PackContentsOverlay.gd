@@ -182,7 +182,7 @@ func _add_card_row(parent: VBoxContainer, entry: Dictionary, alt_bg: bool) -> vo
 	hbox.add_child(name_lbl)
 
 	var type_lbl := Label.new()
-	type_lbl.text = card_type.capitalize()
+	type_lbl.text = "Unit" if card_type == "character" else card_type.capitalize()
 	type_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	type_lbl.size_flags_stretch_ratio = 0.2
 	type_lbl.add_theme_font_size_override("font_size", 13)

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c6krxc3aoh3r7"
-path="res://.godot/imported/needle_porcupine.jpg-d6b8742348c817bc77c2f48d7234b4f1.ctex"
+uid="uid://dqw1vtfd7fsf2"
+path="res://.godot/imported/diamond_unicorn.jpg-a25b60c716fec6da52b22d914e8ed6d7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/needle_porcupine.jpg"
-dest_files=["res://.godot/imported/needle_porcupine.jpg-d6b8742348c817bc77c2f48d7234b4f1.ctex"]
+source_file="res://assets/textures/cards/union/diamond_unicorn.jpg"
+dest_files=["res://.godot/imported/diamond_unicorn.jpg-a25b60c716fec6da52b22d914e8ed6d7.ctex"]
 
 [params]
 

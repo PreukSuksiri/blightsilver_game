@@ -526,7 +526,7 @@ func _populate(card_name: String, card_type: String) -> void:
 			if not data:
 				return
 			var aff_name: String = CharacterData.Affinity.keys()[data.affinity].capitalize()
-			_type.text = "CHARACTER"
+			_type.text = "UNIT"
 			_type.add_theme_color_override("font_color", TYPE_COLOR_CHARACTER)
 			_frame.modulate = Color(1.0, 1.0, 1.0)
 			_cost_num.text = str(data.crystal_cost)

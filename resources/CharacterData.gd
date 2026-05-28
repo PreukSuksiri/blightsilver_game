@@ -158,6 +158,12 @@ enum AbilityType {
 	GAIN_HALF_STATS_ON_SURVIVE,          # After surviving a battle, gain half of opponent's ATK/DEF permanently
 	MULTI_ATTACK_ANY_WITH_ATK_LOSS,      # Can attack up to N times; lose M ATK permanently per attack
 	HALVE_ATK_ADD_TO_DEF_ON_DEFEND,      # When this card defends (and survives), halve own ATK permanently and add that to DEF
+
+	# ── Newly implemented ──
+	PERM_ATK_BOOST_ON_KILL_CAPPED,       # +N ATK permanently when this card destroys a character; capped at max_bonus total
+	COPY_ALLY_STATS_ON_DESTROY,          # When an ally character is destroyed, optionally copy its ATK/DEF/Cost (works face-down)
+	TEMP_ATK_HALF_TARGET,                # When attacking, +ATK equal to half of target's effective ATK (temp, this battle)
+	COIN_FLIP_ATK_DEF_BOOST,             # Flip coin; heads → +N ATK and +N DEF until end of this turn
 }
 
 @export var card_name: String = ""

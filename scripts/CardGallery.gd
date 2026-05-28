@@ -89,7 +89,7 @@ func _ready() -> void:
 func _build_filter_bar() -> void:
 	var defs: Array = [
 		["all",       "ALL"],
-		["character", "CHARACTERS"],
+		["character", "UNITS"],
 		["trap",      "TRAPS"],
 		["tech",      "TECH"],
 		["union",     "UNION"],
@@ -278,7 +278,8 @@ func _build_all_cards() -> void:
 		_tiles.append({"node": tile, "card_name": u.card_name, "card_type": "union",
 			"affinity": int(u.affinity), "cost": u.summon_cost,
 			"atk": u.base_atk, "def": u.base_def,
-			"desc": u.ability_description if is_unlocked else u.partial_ability_description})
+			"desc": u.ability_description if is_unlocked else u.partial_ability_description,
+			"include_in_demo": u.include_in_demo})
 
 	_apply_filter()
 

@@ -3843,7 +3843,7 @@ func _show_hover_info(card_name: String, card_type: String) -> void:
 			if not data:
 				return
 			_hover_name_lbl.text = card_name
-			_hover_type_lbl.text = "CHARACTER  %d◆" % data.crystal_cost
+			_hover_type_lbl.text = "UNIT  %d◆" % data.crystal_cost
 			_hover_type_lbl.add_theme_color_override("font_color", Color(1.0, 0.71, 0.2))
 			_hover_atk_lbl.text = "ATK %d" % data.base_atk
 			_hover_def_lbl.text = "DEF %d" % data.base_def

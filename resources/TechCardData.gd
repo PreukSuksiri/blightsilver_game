@@ -33,6 +33,7 @@ enum TechEffectType {
 	FORCE_SHIELD_ONE_CARD,            # 1 card on your field is not destroyed until end of opponent's turn
 	DESTROY_WISPS_REVEAL_OPPONENT,    # Destroy all wisps on your field; reveal that many opponent squares
 	TEMP_REROLL_DICE,                 # Until end of your next turn, you may re-roll the dice once
+	TEMP_ATK_DEF_BOOST_ALL,          # +N ATK and +N DEF (temp) to all face-up characters until end of this turn
 	NOT_IMPLEMENTED,                 # Effect exists but has no engine implementation yet
 }
 

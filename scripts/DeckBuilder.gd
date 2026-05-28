@@ -389,7 +389,7 @@ func _add_card_to_deck(card_type: String, card_name: String) -> void:
 				status_label.text = "Duplicate: %s is already in the deck." % card_name
 				return
 			if current_deck.characters.size() >= DeckData.MAX_CHARACTERS:
-				status_label.text = "Character limit reached (%d max)." % DeckData.MAX_CHARACTERS
+				status_label.text = "Unit limit reached (%d max)." % DeckData.MAX_CHARACTERS
 				return
 			if grid_cards >= DeckData.TOTAL_SLOTS:
 				status_label.text = "Grid deck is full (25 cards max)."
@@ -487,7 +487,7 @@ func _rebuild_deck_lists() -> void:
 	var ntech: int = current_deck.techs.size()
 	var nb: int = current_deck.dead_end_count()
 
-	char_count_label.text  = "Characters: %d / %d  (min %d)" % [nc, DeckData.MAX_CHARACTERS, DeckData.MIN_CHARACTERS]
+	char_count_label.text  = "Units: %d / %d  (min %d)" % [nc, DeckData.MAX_CHARACTERS, DeckData.MIN_CHARACTERS]
 	trap_count_label.text  = "Traps: %d / %d  (min %d)" % [nt, DeckData.MAX_TRAPS, DeckData.MIN_TRAPS]
 	tech_count_label.text  = "Tech Cards: %d / %d" % [ntech, DeckData.TECH_COUNT]
 	blank_count_label.text = "Dead End Areas (auto-fill): %d" % nb
@@ -735,7 +735,7 @@ func _add_union_materials_to_deck(union_name: String) -> void:
 		if cname in current_deck.characters:
 			continue
 		if current_deck.characters.size() >= DeckData.MAX_CHARACTERS:
-			status_label.text = "Character limit reached; some union materials could not be added."
+			status_label.text = "Unit limit reached; some union materials could not be added."
 			break
 		var grid_cards: int = current_deck.characters.size() + current_deck.traps.size()
 		if grid_cards >= DeckData.TOTAL_SLOTS:

@@ -350,7 +350,7 @@ func _make_result_row(card: Dictionary) -> Control:
 
 	# Type tag
 	var type_lbl := Label.new()
-	type_lbl.text = c_type.to_upper()
+	type_lbl.text = "UNIT" if c_type == "character" else c_type.to_upper()
 	type_lbl.custom_minimum_size = Vector2(88, 0)
 	type_lbl.add_theme_font_size_override("font_size", 10)
 	type_lbl.add_theme_color_override("font_color", Color(type_color.r, type_color.g, type_color.b, 0.75))
