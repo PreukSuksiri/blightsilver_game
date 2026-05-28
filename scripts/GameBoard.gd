@@ -74,7 +74,7 @@ var _union_suggest_btn:   TextureButton = null
 var _union_suggest_glow:  TextureRect   = null
 var _union_suggest_tween: Tween         = null
 # Once-per-duel summon tracking (index = player)
-var _union_summoned_this_duel: Array[bool] = [false, false]
+var _union_summoned_this_duel: Array[int] = [0, 0]
 
 # Setup-phase BGM player (started when placement begins, stopped at _begin_game)
 var _setup_music: AudioStreamPlayer = null
@@ -383,14 +383,33 @@ func _get_ai_for_player(pi: int) -> AIPlayer:
 		return ai_player_0
 	return ai_player
 
+## Max union summons allowed per duel (1 normally; 2 with Reunion modifier).
+func _max_unions_per_duel() -> int:
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "reunion" in GameState.active_dungeon_modifiers:
+		return 2
+	return 1
+
+## Effective union summon cost after applying dungeon modifiers.
+func _effective_union_cost(base_cost: int) -> int:
+	if GameState.game_mode != GameState.GameMode.DAILY_DUNGEON:
+		return base_cost
+	var _um: Array = GameState.active_dungeon_modifiers
+	if "dimensional_fissure" in _um:  return int(base_cost * 0.2)
+	if "dimensional_gate"    in _um:  return int(base_cost * 0.5)
+	if "dimensional_slippage" in _um: return int(base_cost * 0.8)
+	if "sealing_talisman"    in _um:  return int(base_cost * 1.2)
+	if "sealing_ceremony"    in _um:  return int(base_cost * 1.5)
+	return base_cost
+
 func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: Array) -> void:
 	var cp: int = GameState.current_player
-	if _union_summoned_this_duel[cp]:
+	if _union_summoned_this_duel[cp] >= _max_unions_per_duel():
 		await get_tree().create_timer(0.3).timeout
 		_active_ai.continue_after_union()
 		return
 	var u: UnionData = UnionDatabase.get_union(union_name)
-	if u == null or material_cells.is_empty() or GameState.crystals[cp] < u.summon_cost:
+	if u == null or material_cells.is_empty() or GameState.crystals[cp] < _effective_union_cost(u.summon_cost):
 		await get_tree().create_timer(0.3).timeout
 		_active_ai.continue_after_union()
 		return
@@ -964,7 +983,7 @@ func _on_handoff_ready() -> void:
 	_handoff_callback = Callable()
 
 func _start_game() -> void:
-	_union_summoned_this_duel = [false, false]
+	_union_summoned_this_duel = [0, 0]
 	GameState.new_game(GameState.game_mode)
 	# Apply campaign-supplied player names if VNPlayer set them
 	if GameState.campaign_player_names.size() == 2:
@@ -2084,7 +2103,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	var _available_unions: Array = []
 	if ctx_player == current_player and card.card_type == "character" and _union_phase_ok \
 			and SaveManager.union_mechanism_unlocked and GameState.battle_player_union_enabled \
-			and not _union_summoned_this_duel[ctx_player]:
+			and _union_summoned_this_duel[ctx_player] < _max_unions_per_duel():
 		var _ctx_seen: Dictionary = {}
 		for _entry: Dictionary in UnionDatabase.find_available_unions(ctx_player, row, col):
 			var _u: UnionData = _entry["union"]
@@ -2420,7 +2439,7 @@ func _on_union_selected(player: int, union_name: String, zone_cells: Array) -> v
 	if u == null:
 		push_error("Union not found: " + union_name)
 		return
-	if GameState.crystals[player] < u.summon_cost:
+	if GameState.crystals[player] < _effective_union_cost(u.summon_cost):
 		GameState.post_message("Not enough crystals.")
 		return
 	_enter_union_material_selection(player, u, zone_cells)
@@ -2547,13 +2566,8 @@ func _perform_pending_union() -> void:
 		material_names.append(_card.card_name if _card else "?")
 	# Announce union before cost is paid so log order is: summon → cost → reveal
 	GameState.union_summoned.emit(player, u.card_name, material_names)
-	# Pay crystal cost (Dimensional Gate: unions cost 0 and are destroyed next turn start)
-	var _union_cost: int = u.summon_cost
-	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
-			and "dimensional_gate" in GameState.active_dungeon_modifiers:
-		_union_cost = 0
-		DailyDungeonManager.register_dimensional_gate_union(player, first_cell.x, first_cell.y)
-	GameState.lose_crystals(player, _union_cost, "union")
+	# Pay crystal cost (apply dungeon modifiers via _effective_union_cost)
+	GameState.lose_crystals(player, _effective_union_cost(u.summon_cost), "union")
 	# Remove selected material cards (except the first which becomes the union)
 	for i: int in range(1, _pending_union_selected_materials.size()):
 		var cell: Vector2i = _pending_union_selected_materials[i]
@@ -2565,7 +2579,7 @@ func _perform_pending_union() -> void:
 	if human_player:
 		SaveManager.unlock_union(u.card_name)
 	# Mark once-per-duel flag and hide suggestion button
-	_union_summoned_this_duel[player] = true
+	_union_summoned_this_duel[player] += 1
 	_update_union_suggest_button()
 	# Battle log entry
 	var mat_list: String = ", ".join(material_names)
@@ -3230,7 +3244,7 @@ func _build_union_suggest_button() -> void:
 	_union_suggest_btn = btn
 
 func _collect_all_available_unions(player: int) -> Array:
-	if _union_summoned_this_duel[player]:
+	if _union_summoned_this_duel[player] >= _max_unions_per_duel():
 		return []
 	if player == 0 and not GameState.battle_player_union_enabled:
 		return []
@@ -3243,7 +3257,7 @@ func _collect_all_available_unions(player: int) -> Array:
 				continue
 			for entry: Dictionary in UnionDatabase.find_available_unions(player, r, c):
 				var u: UnionData = entry["union"]
-				if GameState.crystals[player] < u.summon_cost:
+				if GameState.crystals[player] < _effective_union_cost(u.summon_cost):
 					continue
 				if seen.has(u.card_name):
 					continue

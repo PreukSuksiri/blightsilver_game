@@ -1,0 +1,499 @@
+[
+	{
+		"key": "frenzy_strike",
+		"label": "Frenzy Wind",
+		"description": "+1 attack per turn for both players.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "divine_day",
+		"label": "Divine Day",
+		"description": "Divine units get +20% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "chaos_day",
+		"label": "Chaos Day",
+		"description": "Chaos units get +20% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "bio_day",
+		"label": "Bio Day",
+		"description": "Bio units get +20% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "cosmic_day",
+		"label": "Cosmic Day",
+		"description": "Cosmic units get +20% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "nature_day",
+		"label": "Nature Day",
+		"description": "Nature units get +20% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "arcane_day",
+		"label": "Arcane Day",
+		"description": "Arcane units get +20% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "anima_day",
+		"label": "Anima Day",
+		"description": "Anima units get +20% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "great_divine_day",
+		"label": "Great Divine Day",
+		"description": "Divine units get +50% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "great_chaos_day",
+		"label": "Great Chaos Day",
+		"description": "Chaos units get +50% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "great_bio_day",
+		"label": "Great Bio Day",
+		"description": "Bio units get +50% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "great_cosmic_day",
+		"label": "Great Cosmic Day",
+		"description": "Cosmic units get +50% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "great_nature_day",
+		"label": "Great Nature Day",
+		"description": "Nature units get +50% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "great_arcane_day",
+		"label": "Great Arcane Day",
+		"description": "Arcane units get +50% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "great_anima_day",
+		"label": "Great Anima Day",
+		"description": "Anima units get +50% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "divine_tragedy",
+		"label": "Divine Tragedy",
+		"description": "Divine units get -20% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "chaos_tragedy",
+		"label": "Chaos Tragedy",
+		"description": "Chaos units get -20% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "bio_tragedy",
+		"label": "Bio Tragedy",
+		"description": "Bio units get -20% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "cosmic_tragedy",
+		"label": "Cosmic Tragedy",
+		"description": "Cosmic units get -20% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "nature_tragedy",
+		"label": "Nature Tragedy",
+		"description": "Nature units get -20% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "arcane_tragedy",
+		"label": "Arcane Tragedy",
+		"description": "Arcane units get -20% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "anima_tragedy",
+		"label": "Anima Tragedy",
+		"description": "Anima units get -20% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "great_divine_tragedy",
+		"label": "Great Divine Tragedy",
+		"description": "Divine units get -50% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "great_chaos_tragedy",
+		"label": "Great Chaos Tragedy",
+		"description": "Chaos units get -50% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "great_bio_tragedy",
+		"label": "Great Bio Tragedy",
+		"description": "Bio units get -50% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "great_cosmic_tragedy",
+		"label": "Great Cosmic Tragedy",
+		"description": "Cosmic units get -50% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "great_nature_tragedy",
+		"label": "Great Nature Tragedy",
+		"description": "Nature units get -50% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "great_arcane_tragedy",
+		"label": "Great Arcane Tragedy",
+		"description": "Arcane units get -50% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "great_anima_tragedy",
+		"label": "Great Anima Tragedy",
+		"description": "Anima units get -50% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "risk_and_reward",
+		"label": "Risk & Reward",
+		"description": "+75% credit reward, but crystal loss x1.25.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "crystal_sparkle",
+		"label": "Crystal Sparkle",
+		"description": "+20% credit reward from all nodes.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "lighthouse",
+		"label": "Lighthouse",
+		"description": "End of each turn: 1 random hidden opponent cell is revealed.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "dimensional_gate",
+		"label": "Dimensional Gate",
+		"description": "Union summons cost -50% crystals.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "tax_free_zone",
+		"label": "Tax Free Zone",
+		"description": "No crystal tax increase when skipping your attack turn.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "tech_royale",
+		"label": "Tech Royale",
+		"description": "Multiple Tech cards can be played per turn. Each is still discarded after use.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "stone_age",
+		"label": "Stone Age",
+		"description": "Tech cards are disabled for all players.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "sudden_death",
+		"label": "Sudden Death",
+		"description": "Both players start with only 3,000 crystals.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "monster_overload",
+		"label": "Monster Overload",
+		"description": "All character cards have +50% ATK and +50% DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "bare_hands_brawling",
+		"label": "Bar Brawlers",
+		"description": "All character card abilities are cancelled.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "honored_duel",
+		"label": "Honored Duel",
+		"description": "All trap card effects are cancelled.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "mining_tax",
+		"label": "Mining Tax",
+		"description": "Hitting a dead end costs 500 crystal tax.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "reunion",
+		"label": "Reunion",
+		"description": "Allow two union summons per turn.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "frenzy_madness",
+		"label": "Frenzy Madness",
+		"description": "+3 attacks per turn for both players. Each attack costs 200 crystals.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "weapon_tax",
+		"label": "Weapon Tax",
+		"description": "Each attack costs 100 crystal tax.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "intelligence_tax",
+		"label": "Intelligence Tax",
+		"description": "Playing a Tech card costs 500 additional crystals.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "offensive_game",
+		"label": "Offensive Game",
+		"description": "Attackers gain +5 ATK during Reckoning.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "defensive_game",
+		"label": "Defensive Game",
+		"description": "Defenders gain +5 ATK during Reckoning.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "absolute_monarchy",
+		"label": "Absolute Monarchy",
+		"description": "The unit in the very center cell gains +100% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "great_wall",
+		"label": "Great Wall",
+		"description": "Units in border cells gain +20% DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "mixed_monarchy",
+		"label": "Mixed Monarchy",
+		"description": "Units in the 3x3 center cells gain +20% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "broken_wall",
+		"label": "Broken Wall",
+		"description": "Units in border cells get -20% DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "corrupted_nobles",
+		"label": "Corrupted Nobles",
+		"description": "Units in the 3x3 center cells get -20% ATK & DEF.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "divine_triumph",
+		"label": "Divine Triumph",
+		"description": "Divine units always win against Chaos in Reckoning.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "chaos_triumph",
+		"label": "Chaos Triumph",
+		"description": "Chaos units always win against Divine in Reckoning.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "bio_triumph",
+		"label": "Bio Triumph",
+		"description": "Bio units receive a free Mutagen flag upon being revealed.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "cosmic_triumph",
+		"label": "Cosmic Triumph",
+		"description": "Cosmic units' successful Reckoning grants 200 crystals to their player.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "nature_triumph",
+		"label": "Nature Triumph",
+		"description": "Nature units receive a free Venom flag upon being revealed.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "arcane_triumph",
+		"label": "Arcane Triumph",
+		"description": "Arcane units get +20% ATK & DEF against non-Arcane units.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "anima_triumph",
+		"label": "Anima Triumph",
+		"description": "Anima units' successful attack grants up to 1 additional attack per turn.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "kaiju_fight",
+		"label": "Kaiju Fight",
+		"description": "All Union cards get +200% ATK & DEF.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "dimensional_fissure",
+		"label": "Dimensional Fissure",
+		"description": "Union summons cost -80% crystals.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "dimensional_slippage",
+		"label": "Dimensional Slippage",
+		"description": "Union summons cost -20% crystals.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "sealing_talisman",
+		"label": "Sealing Talisman",
+		"description": "Union summons cost +20% crystals.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "sealing_ceremony",
+		"label": "Sealing Ceremony",
+		"description": "Union summons cost +50% crystals.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "hard_bang",
+		"label": "Hard Bang",
+		"description": "Units that hit a dead end lose -20% ATK permanently.",
+		"positive": false,
+		"implemented": true
+	},
+	{
+		"key": "trap_broker",
+		"label": "Trap Broker",
+		"description": "All Trap cards cost 0 crystals.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "tech_broker",
+		"label": "Tech Broker",
+		"description": "All Tech cards cost 0 crystals.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "coffin_broker",
+		"label": "Coffin Broker",
+		"description": "All Unit summon costs are free.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "trap_dealer",
+		"label": "Trap Dealer",
+		"description": "All Trap card costs are reduced by 50%.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "tech_dealer",
+		"label": "Tech Dealer",
+		"description": "All Tech card costs are reduced by 50%.",
+		"positive": true,
+		"implemented": true
+	},
+	{
+		"key": "coffin_dealer",
+		"label": "Coffin Dealer",
+		"description": "All Unit summon costs are reduced by 50%.",
+		"positive": true,
+		"implemented": true
+	}
+]

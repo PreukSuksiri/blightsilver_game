@@ -58,14 +58,10 @@ func start_turn(player_index: int) -> void:
 			and "frenzy_strike" in GameState.active_dungeon_modifiers:
 		GameState.attacks_remaining = 3
 
-	# Dimensional Gate: destroy all pending unions at turn start
+	# Frenzy Madness: +3 attacks per turn for both players (stacks with Frenzy Strike)
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
-			and "dimensional_gate" in GameState.active_dungeon_modifiers:
-		for entry: Dictionary in DailyDungeonManager.pop_dimensional_gate_pending():
-			var p: int = int(entry.get("player", 0))
-			var r: int = int(entry.get("row", 0))
-			var c: int = int(entry.get("col", 0))
-			GameState.destroy_card(p, r, c)
+			and "frenzy_madness" in GameState.active_dungeon_modifiers:
+		GameState.attacks_remaining += 3
 
 	# Clear per-turn state
 	_clear_turn_state(player_index)
@@ -231,6 +227,15 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 						_ic_found = true
 						break
 
+	# Dungeon: Weapon Tax (100) and Frenzy Madness (200) per-attack crystal cost
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+		var _mods_tax: Array = GameState.active_dungeon_modifiers
+		var _atk_tax: int = 0
+		if "weapon_tax" in _mods_tax: _atk_tax += 100
+		if "frenzy_madness" in _mods_tax: _atk_tax += 200
+		if _atk_tax > 0:
+			GameState.lose_crystals(player, _atk_tax, "attack tax")
+
 	GameState.attacker_card = attacker
 	GameState.attacker_pos = attacker_pos
 
@@ -377,6 +382,16 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 		if defender.card_type == "dead_end":
 			# Blank slot hit — destroy directly, skip battle resolution (nothing to resolve)
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
+			# Dungeon: Mining Tax and Hard Bang on dead-end attacks
+			if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+				var _de_mods: Array = GameState.active_dungeon_modifiers
+				if "mining_tax" in _de_mods:
+					GameState.lose_crystals(player, 500, "mining tax")
+					GameState.post_message("Mining Tax: lost 500 Crystals hitting a dead end.")
+				if "hard_bang" in _de_mods:
+					var _hb_loss: int = max(1, int(attacker.current_atk * 0.2))
+					attacker.current_atk = max(0, attacker.current_atk - _hb_loss)
+					GameState.post_message("Hard Bang: %s loses %d ATK permanently." % [attacker.display_name, _hb_loss])
 			CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_ATTACK_DEAD_END_DONE,
 				{"source_player": player, "source_card": attacker, "attacker": attacker})
 		else:
@@ -494,7 +509,15 @@ func play_tech_card(tech_name: String) -> void:
 		GameState.post_message("You don't have %s." % tech_name)
 		return
 
-	if GameState.crystals[player] < data.crystal_cost:
+	# Compute effective tech cost (dungeon modifiers)
+	var _eff_tech_cost: int = data.crystal_cost
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+		var _tm: Array = GameState.active_dungeon_modifiers
+		if "tech_broker" in _tm: _eff_tech_cost = 0
+		elif "tech_dealer" in _tm: _eff_tech_cost = int(_eff_tech_cost * 0.5)
+		if "intelligence_tax" in _tm: _eff_tech_cost += 500
+
+	if GameState.crystals[player] < _eff_tech_cost:
 		GameState.post_message("Not enough Crystals to play %s." % tech_name)
 		return
 
@@ -505,7 +528,7 @@ func play_tech_card(tech_name: String) -> void:
 			return
 
 	# Pay cost
-	GameState.lose_crystals(player, data.crystal_cost, "tech cost")
+	GameState.lose_crystals(player, _eff_tech_cost, "tech cost")
 	await crystal_animation_done
 	GameState.tech_hands[player].erase(tech_name)
 	GameState.tech_cards_played_this_game[player].append(tech_name)
@@ -849,7 +872,12 @@ func _handle_trap_effect(
 	# For attacker-destroying traps this is deferred to after the character is gone.
 	if not _destroys_attacker:
 		GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
-	GameState.lose_crystals(opponent, trap_data.crystal_cost, "trap cost")
+	var _eff_trap_cost: int = trap_data.crystal_cost
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+		var _trap_mods: Array = GameState.active_dungeon_modifiers
+		if "trap_broker" in _trap_mods: _eff_trap_cost = 0
+		elif "trap_dealer" in _trap_mods: _eff_trap_cost = int(_eff_trap_cost * 0.5)
+	GameState.lose_crystals(opponent, _eff_trap_cost, "trap cost")
 	await crystal_animation_done
 
 	# Honored Duel: trap is consumed but its effect is cancelled
@@ -1389,6 +1417,24 @@ func _apply_post_battle_effects(
 		if defender.ability_type == CharacterData.AbilityType.LOCK_ATTACKER_ON_DESTROYED:
 			GameState.attacks_remaining = 0
 			GameState.post_message("%s: Attacker cannot attack again this turn!" % defender.card_name)
+
+	# Dungeon: Anima Triumph — winning Anima attacker gets one extra attack per turn
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "anima_triumph" in GameState.active_dungeon_modifiers:
+		if result.defender_destroyed and not result.attacker_destroyed \
+				and attacker.affinity == CharacterData.Affinity.ANIMA \
+				and "anima_triumph_extra_used" not in attacker.flags:
+			attacker.flags.append("anima_triumph_extra_used")
+			extra += 1
+			GameState.post_message("Anima Triumph: %s earns an extra attack!" % attacker.display_name)
+
+	# Dungeon: Cosmic Triumph — winning Cosmic attacker grants 200 Crystals
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "cosmic_triumph" in GameState.active_dungeon_modifiers:
+		if result.defender_destroyed and not result.attacker_destroyed \
+				and attacker.affinity == CharacterData.Affinity.COSMIC:
+			GameState.gain_crystals(player, 200, "cosmic triumph")
+			GameState.post_message("Cosmic Triumph: %s wins — gain 200 Crystals!" % attacker.display_name)
 
 	return extra
 

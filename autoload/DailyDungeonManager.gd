@@ -6,68 +6,78 @@ extends Node
 #   • Check and apply the daily reset (advance playlist, roll modifiers)
 #   • Track per-node progress (first clear vs revisit)
 #   • Provide API used by DailyDungeonMap, Builder, Activator, GameBoard
-#   • Handle Dimensional Gate cross-battle destruction list
 
 # ─────────────────────────────────────────────────────────────
-# Modifier catalogue
+# Modifier catalogue  (loaded from data/dungeon_modifiers.json)
 # ─────────────────────────────────────────────────────────────
 
-const ALL_MODIFIER_KEYS: Array = [
-	"frenzy_strike",       # +1 attack per turn (both players)
-	"affinity_day",        # 1 random affinity gets +20% ATK or DEF today
-	"risk_and_reward",     # +75% credit reward; crystal loss ×1.25
-	"crystal_sparkle",     # +20% credit reward
-	"lighthouse",          # end of turn: reveal 1 random hidden opponent cell
-	"dimensional_gate",    # union costs 0 crystals; union destroyed at next turn start
-	"tax_free_zone",       # no crystal tax increase when skipping attack
-	"tech_royale",         # multiple Tech cards allowed per turn (still discard after use)
-	"sudden_death",        # starting crystals = 3000 instead of default
-	"monster_overload",    # all characters +50% ATK and +50% DEF
-	"stone_age",           # Tech cards disabled for all players
-	"bare_hands_brawling", # character abilities cancelled
-	"honored_duel",        # trap effects cancelled
-]
+const MODIFIER_CATALOG_PATH: String = "res://data/dungeon_modifiers.json"
 
-const MODIFIER_LABEL: Dictionary = {
-	"frenzy_strike":       "Frenzy Strike",
-	"affinity_day":        "Affinity Day",
-	"risk_and_reward":     "Risk & Reward",
-	"crystal_sparkle":     "Crystal Sparkle",
-	"lighthouse":          "Lighthouse",
-	"dimensional_gate":    "Dimensional Gate",
-	"tax_free_zone":       "Tax Free Zone",
-	"tech_royale":         "Tech Royale",
-	"sudden_death":        "Sudden Death",
-	"monster_overload":    "Monster Overload",
-	"stone_age":           "Stone Age",
-	"bare_hands_brawling": "Bare Hands Brawling",
-	"honored_duel":        "Honored Duel",
-}
+## Array of Dictionaries, each: { key, label, description, positive, implemented }
+var _modifier_catalog: Array = []
 
-const MODIFIER_DESC: Dictionary = {
-	"frenzy_strike":       "+1 attack per turn for both players.",
-	"affinity_day":        "A random affinity gets +20% ATK or DEF today.",
-	"risk_and_reward":     "+75% credit reward, but losing cards costs 25% more crystals.",
-	"crystal_sparkle":     "+20% credit reward from all nodes.",
-	"lighthouse":          "End of each turn: 1 random hidden opponent cell is revealed.",
-	"dimensional_gate":    "Union summons cost 0 crystals. Union is destroyed at the start of next turn.",
-	"tax_free_zone":       "No crystal tax increase when skipping your attack turn.",
-	"tech_royale":         "Multiple Tech cards can be played per turn. Each is still discarded after use.",
-	"sudden_death":        "Both players start with only 3,000 crystals.",
-	"monster_overload":    "All character cards have +50% ATK and +50% DEF.",
-	"stone_age":           "Tech cards are disabled for all players.",
-	"bare_hands_brawling": "All character card abilities are cancelled.",
-	"honored_duel":        "All trap card effects are cancelled.",
-}
+## Fast lookup: key → catalog entry
+var _modifier_by_key: Dictionary = {}
 
-# Modifier is positive (shown in green) or negative (shown in red) — for UI colouring
-const MODIFIER_POSITIVE: Dictionary = {
-	"frenzy_strike": true, "affinity_day": true, "risk_and_reward": true,
-	"crystal_sparkle": true, "lighthouse": true, "dimensional_gate": true,
-	"tax_free_zone": true, "tech_royale": true,
-	"sudden_death": false, "monster_overload": false,
-	"stone_age": false, "bare_hands_brawling": false, "honored_duel": false,
-}
+func _load_modifier_catalog() -> void:
+	if not FileAccess.file_exists(MODIFIER_CATALOG_PATH):
+		push_error("DailyDungeonManager: modifier catalog not found at %s" % MODIFIER_CATALOG_PATH)
+		return
+	var file := FileAccess.open(MODIFIER_CATALOG_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	file.close()
+	if not parsed is Array:
+		push_error("DailyDungeonManager: modifier catalog is not a JSON array")
+		return
+	_modifier_catalog = parsed
+	_modifier_by_key.clear()
+	for entry: Variant in _modifier_catalog:
+		if entry is Dictionary:
+			var k: String = str(entry.get("key", ""))
+			if k != "":
+				_modifier_by_key[k] = entry
+
+## All modifier keys (from catalog).
+func get_all_modifier_keys() -> Array:
+	var keys: Array = []
+	for entry: Variant in _modifier_catalog:
+		if entry is Dictionary:
+			keys.append(str(entry.get("key", "")))
+	return keys
+
+## Human-readable label for a modifier key.
+func get_modifier_label(key: String) -> String:
+	var entry: Variant = _modifier_by_key.get(key, null)
+	if entry is Dictionary:
+		return str(entry.get("label", key))
+	return key
+
+## Description text for a modifier key.
+func get_modifier_desc(key: String) -> String:
+	var entry: Variant = _modifier_by_key.get(key, null)
+	if entry is Dictionary:
+		return str(entry.get("description", ""))
+	return ""
+
+## True = positive (green), False = negative (red).
+func is_modifier_positive(key: String) -> bool:
+	var entry: Variant = _modifier_by_key.get(key, null)
+	if entry is Dictionary:
+		return bool(entry.get("positive", true))
+	return true
+
+## True if the modifier has engine implementation.
+func is_modifier_implemented(key: String) -> bool:
+	var entry: Variant = _modifier_by_key.get(key, null)
+	if entry is Dictionary:
+		return bool(entry.get("implemented", false))
+	return false
+
+## Full catalog array (for Builder/Editor UI).
+func get_modifier_catalog() -> Array:
+	return _modifier_catalog.duplicate()
 
 # ─────────────────────────────────────────────────────────────
 # Rewards
@@ -126,6 +136,9 @@ var vn_dungeon_id:      String = ""
 var vn_dungeon_on_win:  String = ""
 var vn_dungeon_on_lose: String = ""
 
+## Spinning Wheel — how many spins the player has left this run (resets to 1 each new day / Start Over).
+var spin_wheel_remaining: int = 1
+
 # ─────────────────────────────────────────────────────────────
 # Layout cache
 # ─────────────────────────────────────────────────────────────
@@ -139,6 +152,7 @@ const LAYOUTS_DIR: String = "res://daily_dungeon/layouts/"
 # ─────────────────────────────────────────────────────────────
 
 func _ready() -> void:
+	_load_modifier_catalog()
 	# State is populated by SaveManager.load_data() calling our load_from_dict().
 	# Seed the default playlist if none exists yet (first run).
 	if playlist.is_empty():
@@ -222,18 +236,12 @@ func _advance_to_next_day() -> void:
 	# Pull modifiers from current slot
 	var slot: Dictionary = playlist[playlist_index]
 	active_modifiers = slot.get("modifiers", []).duplicate()
-	# Roll affinity_day fresh each day
-	if "affinity_day" in active_modifiers:
-		_roll_affinity_day()
+	# Reset spin wheel each new day
+	spin_wheel_remaining = 1
 	# Clear today's node progress (fresh dungeon each day)
 	var dungeon_id: String = slot.get("dungeon_id", "")
 	if dungeon_id != "":
 		node_progress[dungeon_id] = {}
-
-func _roll_affinity_day() -> void:
-	var affinities: Array = ["ARCANE", "DIVINE", "NATURE", "ANIMA", "CHAOS", "COSMIC", "BIO"]
-	affinity_day_affinity = affinities[randi() % affinities.size()]
-	affinity_day_stat = "atk" if randf() > 0.5 else "def"
 
 # ─────────────────────────────────────────────────────────────
 # Current dungeon queries
@@ -469,6 +477,32 @@ func complete_node(node_id: String, won: bool) -> void:
 	SaveManager.save_data()
 
 # ─────────────────────────────────────────────────────────────
+# Start Over
+# ─────────────────────────────────────────────────────────────
+
+## Resets all node progress for the current dungeon and restores the spin wheel.
+## Cannot be used when the player is already at the entry node.
+## Returns true on success, false if the player is already at the entry node.
+func start_over() -> bool:
+	var dungeon_id: String = _get_active_dungeon_id()
+	var layout: Dictionary = get_layout(dungeon_id)
+	# Locate the entry node id
+	var entry_id: String = ""
+	for nd: Dictionary in layout.get("nodes", []):
+		if nd.get("is_entry", false):
+			entry_id = nd.get("id", "")
+			break
+	# Block start-over when already at the entry node
+	if player_map_node_id == entry_id:
+		return false
+	# Reset progress and spin wheel
+	node_progress[dungeon_id] = {}
+	player_map_node_id = entry_id
+	spin_wheel_remaining = 1
+	SaveManager.save_data()
+	return true
+
+# ─────────────────────────────────────────────────────────────
 # Playlist management (used by Activator)
 # ─────────────────────────────────────────────────────────────
 
@@ -483,8 +517,6 @@ func set_playlist_index(idx: int) -> void:
 	playlist_index = clampi(idx, 0, playlist.size() - 1)
 	var slot: Dictionary = playlist[playlist_index]
 	active_modifiers = slot.get("modifiers", []).duplicate()
-	if "affinity_day" in active_modifiers:
-		_roll_affinity_day()
 	SaveManager.save_data()
 
 func set_slot_modifiers(slot_idx: int, mods: Array) -> void:
@@ -554,6 +586,7 @@ func to_dict() -> Dictionary:
 		"affinity_day_affinity": affinity_day_affinity,
 		"affinity_day_stat":     affinity_day_stat,
 		"node_progress":         node_progress.duplicate(true),
+		"spin_wheel_remaining":  spin_wheel_remaining,
 		"vn_dungeon_id":         vn_dungeon_id,
 		"vn_dungeon_on_win":     vn_dungeon_on_win,
 		"vn_dungeon_on_lose":    vn_dungeon_on_lose,
@@ -570,6 +603,7 @@ func load_from_dict(d: Dictionary) -> void:
 	affinity_day_stat     = str(d.get("affinity_day_stat", ""))
 	var raw_np: Variant   = d.get("node_progress", {})
 	node_progress = raw_np if raw_np is Dictionary else {}
+	spin_wheel_remaining  = int(d.get("spin_wheel_remaining", 1))
 	vn_dungeon_id      = str(d.get("vn_dungeon_id",      ""))
 	vn_dungeon_on_win  = str(d.get("vn_dungeon_on_win",  ""))
 	vn_dungeon_on_lose = str(d.get("vn_dungeon_on_lose", ""))
