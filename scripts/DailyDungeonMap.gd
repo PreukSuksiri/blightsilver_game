@@ -166,9 +166,9 @@ func _build_header() -> void:
 
 	# Active modifier badges
 	for mod_key: String in DailyDungeonManager.active_modifiers:
-		var is_pos: bool = DailyDungeonManager.MODIFIER_POSITIVE.get(mod_key, true)
+		var is_pos: bool = DailyDungeonManager.is_modifier_positive(mod_key)
 		var badge := Label.new()
-		badge.text = "  " + DailyDungeonManager.MODIFIER_LABEL.get(mod_key, mod_key) + "  "
+		badge.text = "  " + DailyDungeonManager.get_modifier_label(mod_key) + "  "
 		badge.add_theme_font_size_override("font_size", 11)
 		badge.add_theme_color_override("font_color",
 			Color(0.25, 1.0, 0.50, 1.0) if is_pos else Color(1.0, 0.40, 0.30, 1.0))
@@ -436,9 +436,9 @@ func _build_detail_panel(parent: Control) -> void:
 		vbox.add_child(mod_title)
 
 		for mod_key: String in DailyDungeonManager.active_modifiers:
-			var is_pos: bool = DailyDungeonManager.MODIFIER_POSITIVE.get(mod_key, true)
-			var label: String = DailyDungeonManager.MODIFIER_LABEL.get(mod_key, mod_key)
-			var desc:  String = DailyDungeonManager.MODIFIER_DESC.get(mod_key, "")
+			var is_pos: bool = DailyDungeonManager.is_modifier_positive(mod_key)
+			var label: String = DailyDungeonManager.get_modifier_label(mod_key)
+			var desc:  String = DailyDungeonManager.get_modifier_desc(mod_key)
 			var mod_lbl := Label.new()
 			mod_lbl.text = "• %s: %s" % [label, desc]
 			mod_lbl.add_theme_font_size_override("font_size", 11)
@@ -541,7 +541,80 @@ func _on_battle_pressed() -> void:
 		_walk_to_then_battle(_player_node_id, _selected_node_id)
 	else:
 		DailyDungeonManager.player_map_node_id = _player_node_id
-		DailyDungeonManager.start_node_battle(nd, self)
+		_launch_battle(nd)
+
+## Central launch point. When spin_wheel_remaining == 0 and modifiers are active,
+## dims the screen and shows a coloured modifier list before starting the battle.
+func _launch_battle(nd: Dictionary) -> void:
+	if DailyDungeonManager.spin_wheel_remaining == 0 \
+			and not DailyDungeonManager.active_modifiers.is_empty():
+		await _show_modifier_preview()
+	DailyDungeonManager.start_node_battle(nd, self)
+
+## Full-screen dim + coloured modifier list → fades out → resolves.
+func _show_modifier_preview() -> void:
+	# Dim backdrop
+	var dim := ColorRect.new()
+	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.0, 0.0, 0.0, 0.0)
+	dim.z_index = 80
+	add_child(dim)
+
+	# Container for modifier labels
+	var vbox := VBoxContainer.new()
+	vbox.set_anchors_preset(Control.PRESET_CENTER)
+	vbox.offset_left   = -340.0
+	vbox.offset_right  =  340.0
+	vbox.offset_top    = -200.0
+	vbox.offset_bottom =  200.0
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_theme_constant_override("separation", 6)
+	vbox.z_index = 81
+	add_child(vbox)
+
+	var title := Label.new()
+	title.text = "ACTIVE MODIFIERS"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 15)
+	title.add_theme_color_override("font_color", Color(1.0, 0.85, 0.40, 0.0))
+	vbox.add_child(title)
+
+	var mod_labels: Array = [title]
+	for mod_key: String in DailyDungeonManager.active_modifiers:
+		var lbl := Label.new()
+		var is_pos: bool = DailyDungeonManager.is_modifier_positive(mod_key)
+		lbl.text = "%s — %s" % [
+			DailyDungeonManager.get_modifier_label(mod_key),
+			DailyDungeonManager.get_modifier_desc(mod_key)]
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lbl.add_theme_font_size_override("font_size", 13)
+		lbl.add_theme_color_override("font_color",
+			Color(0.30, 1.0, 0.45, 0.0) if is_pos else Color(1.0, 0.38, 0.28, 0.0))
+		vbox.add_child(lbl)
+		mod_labels.append(lbl)
+
+	# Fade in dim + labels
+	var tw_in := create_tween()
+	tw_in.set_parallel(true)
+	tw_in.tween_property(dim, "color:a", 0.72, 0.4)
+	for lbl_in: Label in mod_labels:
+		tw_in.tween_property(lbl_in, "modulate:a", 1.0, 0.45)
+	await tw_in.finished
+
+	# Hold for 2 seconds
+	await get_tree().create_timer(2.0).timeout
+
+	# Fade out
+	var tw_out := create_tween()
+	tw_out.set_parallel(true)
+	tw_out.tween_property(dim, "color:a", 0.0, 0.4)
+	for lbl_out: Label in mod_labels:
+		tw_out.tween_property(lbl_out, "modulate:a", 0.0, 0.35)
+	await tw_out.finished
+
+	dim.queue_free()
+	vbox.queue_free()
 
 func _walk_to_then_battle(from_id: String, to_id: String) -> void:
 	_stop_doubt_cycle()
@@ -571,7 +644,7 @@ func _walk_to_then_battle(from_id: String, to_id: String) -> void:
 		_is_walking = false
 		var nd: Dictionary = _find_node(to_id)
 		DailyDungeonManager.player_map_node_id = to_id
-		DailyDungeonManager.start_node_battle(nd, self))
+		_launch_battle(nd))
 
 func _show_deck_warning() -> void:
 	if get_node_or_null("DeckWarning") != null:

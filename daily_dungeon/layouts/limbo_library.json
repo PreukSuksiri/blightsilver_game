@@ -49,10 +49,10 @@
 			},
 			"battle_settings": {
 				"ai_forced_cells": [],
-				"ai_personality_defensive": "",
-				"ai_personality_offensive": "",
-				"ai_personality_social": "",
-				"ai_union_enabled": false,
+				"ai_personality_defensive": "Fortress",
+				"ai_personality_offensive": "Center Hoarder",
+				"ai_personality_social": "Daredevil",
+				"ai_union_enabled": true,
 				"battle_bgm": "",
 				"battle_bgm_volume": 100.0,
 				"player1_name": "",
@@ -63,7 +63,7 @@
 				"portrait_p1_offset_x": 0.0,
 				"portrait_p1_offset_y": 0.0,
 				"portrait_p1_size": 1.0,
-				"portrait_p2": "",
+				"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_green_wisp.png",
 				"portrait_p2_offset_x": 0.0,
 				"portrait_p2_offset_y": 0.0,
 				"portrait_p2_size": 1.0
@@ -108,7 +108,7 @@
 				"ai_personality_defensive": "",
 				"ai_personality_offensive": "",
 				"ai_personality_social": "",
-				"ai_union_enabled": false,
+				"ai_union_enabled": true,
 				"battle_bgm": "",
 				"battle_bgm_volume": 100.0,
 				"player1_name": "",
@@ -119,7 +119,7 @@
 				"portrait_p1_offset_x": 0.0,
 				"portrait_p1_offset_y": 0.0,
 				"portrait_p1_size": 1.0,
-				"portrait_p2": "",
+				"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_library_puppet.png",
 				"portrait_p2_offset_x": 0.0,
 				"portrait_p2_offset_y": 0.0,
 				"portrait_p2_size": 1.0
@@ -133,7 +133,7 @@
 			"pre_battle_message": "",
 			"type": "normal",
 			"x": 605,
-			"y": 653
+			"y": 652
 		},
 		{
 			"ai_deck": {
@@ -175,7 +175,7 @@
 				"portrait_p1_offset_x": 0.0,
 				"portrait_p1_offset_y": 0.0,
 				"portrait_p1_size": 1.0,
-				"portrait_p2": "",
+				"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_dusty_roach.png",
 				"portrait_p2_offset_x": 0.0,
 				"portrait_p2_offset_y": 0.0,
 				"portrait_p2_size": 1.0
@@ -232,7 +232,7 @@
 				"portrait_p1_offset_x": 0.0,
 				"portrait_p1_offset_y": 0.0,
 				"portrait_p1_size": 1.0,
-				"portrait_p2": "",
+				"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_night_whisperer.png",
 				"portrait_p2_offset_x": 0.0,
 				"portrait_p2_offset_y": 0.0,
 				"portrait_p2_size": 1.0
@@ -295,7 +295,7 @@
 				"portrait_p1_offset_x": 0.0,
 				"portrait_p1_offset_y": 0.0,
 				"portrait_p1_size": 1.0,
-				"portrait_p2": "",
+				"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_midnight_shadow_2.png",
 				"portrait_p2_offset_x": 0.0,
 				"portrait_p2_offset_y": 0.0,
 				"portrait_p2_size": 1.0
@@ -309,7 +309,7 @@
 			"pre_battle_message": "",
 			"type": "boss",
 			"x": 257,
-			"y": 137
+			"y": 136
 		}
 	]
 }

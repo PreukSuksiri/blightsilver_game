@@ -85,6 +85,12 @@ var _ai_forced_grid:     Dictionary    = {}
 var _player_forced_gc:   GridContainer = null
 var _ai_forced_gc:       GridContainer = null
 
+# Spinning wheel fields
+var _prop_wheel_chk:            CheckBox      = null
+var _prop_wheel_outcome_picker: OptionButton  = null
+var _prop_wheel_outcomes_vbox:  VBoxContainer = null
+var _wheel_outcomes_list:       Array         = []   # Array[String]
+
 # Message fields
 var _prop_pre_msg_edit:  LineEdit = null
 var _prop_post_msg_edit: LineEdit = null
@@ -379,6 +385,42 @@ func _build_prop_panel(parent: Control) -> void:
 	_prop_entry_chk = CheckBox.new()
 	_prop_entry_chk.text = "Is entry node"
 	inner.add_child(_prop_entry_chk)
+
+	# ── Spinning Wheel ──
+	_prop_wheel_chk = CheckBox.new()
+	_prop_wheel_chk.text = "Is wheel node  (player spins here)"
+	inner.add_child(_prop_wheel_chk)
+
+	inner.add_child(_make_lbl("Wheel outcomes  (empty = random from full pool; duplicates = higher weight)"))
+	var wheel_add_row := HBoxContainer.new()
+	wheel_add_row.add_theme_constant_override("separation", 4)
+	inner.add_child(wheel_add_row)
+	_prop_wheel_outcome_picker = OptionButton.new()
+	_prop_wheel_outcome_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_prop_wheel_outcome_picker.add_item("no_effect")
+	for _wk: String in DailyDungeonManager.get_all_modifier_keys():
+		_prop_wheel_outcome_picker.add_item(_wk)
+	wheel_add_row.add_child(_prop_wheel_outcome_picker)
+	var wheel_add_btn := Button.new()
+	wheel_add_btn.text = "+ Add"
+	wheel_add_btn.custom_minimum_size = Vector2(60, 0)
+	wheel_add_btn.pressed.connect(func() -> void:
+		var picked: String = _prop_wheel_outcome_picker.get_item_text(
+			_prop_wheel_outcome_picker.selected)
+		_wheel_outcomes_list.append(picked)
+		_refresh_wheel_outcomes_ui())
+	wheel_add_row.add_child(wheel_add_btn)
+	var wheel_clear_btn := Button.new()
+	wheel_clear_btn.text = "Clear"
+	wheel_clear_btn.custom_minimum_size = Vector2(52, 0)
+	wheel_clear_btn.pressed.connect(func() -> void:
+		_wheel_outcomes_list.clear()
+		_refresh_wheel_outcomes_ui())
+	wheel_add_row.add_child(wheel_clear_btn)
+
+	_prop_wheel_outcomes_vbox = VBoxContainer.new()
+	_prop_wheel_outcomes_vbox.add_theme_constant_override("separation", 2)
+	inner.add_child(_prop_wheel_outcomes_vbox)
 
 	# ── Pack reward ──
 	inner.add_child(_make_lbl("Boss pack reward (boss only)"))
@@ -986,6 +1028,11 @@ func _update_prop_panel() -> void:
 	_prop_label_edit.text = nd.get("label", "")
 	_prop_type_opt.selected = 1 if nd.get("type", "normal") == "boss" else 0
 	_prop_entry_chk.button_pressed = nd.get("is_entry", false)
+	if _prop_wheel_chk != null:
+		_prop_wheel_chk.button_pressed = bool(nd.get("is_wheel_node", false))
+	var _raw_wo: Variant = nd.get("wheel_outcomes", [])
+	_wheel_outcomes_list = (_raw_wo as Array).duplicate() if _raw_wo is Array else []
+	_refresh_wheel_outcomes_ui()
 	_prop_pack_edit.text = nd.get("pack_reward", "")
 	_prop_img_edit.text  = nd.get("image", "")
 	if _prop_pre_msg_edit != null:
@@ -1034,6 +1081,8 @@ func _apply_node_changes() -> void:
 	nd["label"]    = _prop_label_edit.text.strip_edges()
 	nd["type"]     = "boss" if _prop_type_opt.selected == 1 else "normal"
 	nd["is_entry"] = _prop_entry_chk.button_pressed
+	nd["is_wheel_node"]  = _prop_wheel_chk.button_pressed if _prop_wheel_chk != null else false
+	nd["wheel_outcomes"] = _wheel_outcomes_list.duplicate()
 	nd["pack_reward"] = _prop_pack_edit.text.strip_edges()
 	nd["image"]       = _prop_img_edit.text.strip_edges()
 	if _prop_pre_msg_edit != null:
@@ -1318,6 +1367,33 @@ func _on_new_layout() -> void:
 # ─────────────────────────────────────────────────────────────
 # Helpers
 # ─────────────────────────────────────────────────────────────
+func _refresh_wheel_outcomes_ui() -> void:
+	if _prop_wheel_outcomes_vbox == null:
+		return
+	for ch: Node in _prop_wheel_outcomes_vbox.get_children():
+		ch.queue_free()
+	for i: int in range(_wheel_outcomes_list.size()):
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 4)
+		var lbl := Label.new()
+		lbl.text = _wheel_outcomes_list[i]
+		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		lbl.add_theme_font_size_override("font_size", 11)
+		lbl.add_theme_color_override("font_color",
+			Color(0.5, 0.7, 0.5) if _wheel_outcomes_list[i] == "no_effect"
+			else Color(0.85, 0.92, 1.0, 0.9))
+		row.add_child(lbl)
+		var rm_btn := Button.new()
+		rm_btn.text = "✕"
+		rm_btn.custom_minimum_size = Vector2(30, 0)
+		rm_btn.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35))
+		var i_cap := i
+		rm_btn.pressed.connect(func() -> void:
+			_wheel_outcomes_list.remove_at(i_cap)
+			_refresh_wheel_outcomes_ui())
+		row.add_child(rm_btn)
+		_prop_wheel_outcomes_vbox.add_child(row)
+
 func _find_node(node_id: String) -> Dictionary:
 	for nd: Dictionary in _layout.get("nodes", []):
 		if nd.get("id", "") == node_id:

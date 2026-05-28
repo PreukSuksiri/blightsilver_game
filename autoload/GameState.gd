@@ -97,6 +97,22 @@ class CardInstance:
 	var revealed_on_turn: int = -1       # set to turn_number when flipped face-up; -1 = never
 	var flags: Array[String] = []        # string tags: "bio", "cosmic", "mutagen", etc.
 	var active_rules: Array = []         # Array of CardRule — populated by CardRuleEngine
+	var grid_row: int = -1  # updated by GameState when placed; used for position modifiers
+	var grid_col: int = -1
+
+	# Affinity-index → day/great-day/tragedy/great-tragedy modifier key
+	# Order mirrors CharacterData.Affinity: DIVINE=0,CHAOS=1,NATURE=2,ARCANE=3,COSMIC=4,BIO=5,ANIMA=6
+	const _AFF_DAY: Array = [
+		"divine_day","chaos_day","nature_day","arcane_day","cosmic_day","bio_day","anima_day"]
+	const _AFF_GREAT_DAY: Array = [
+		"great_divine_day","great_chaos_day","great_nature_day","great_arcane_day",
+		"great_cosmic_day","great_bio_day","great_anima_day"]
+	const _AFF_TRAG: Array = [
+		"divine_tragedy","chaos_tragedy","nature_tragedy","arcane_tragedy",
+		"cosmic_tragedy","bio_tragedy","anima_tragedy"]
+	const _AFF_GREAT_TRAG: Array = [
+		"great_divine_tragedy","great_chaos_tragedy","great_nature_tragedy","great_arcane_tragedy",
+		"great_cosmic_tragedy","great_bio_tragedy","great_anima_tragedy"]
 
 	func get_effective_atk() -> int:
 		var base: int = max(0, current_atk + perm_atk_bonus + temp_atk_bonus - atk_debuff)
@@ -104,11 +120,21 @@ class CardInstance:
 			var mods: Array = GameState.active_dungeon_modifiers
 			if "monster_overload" in mods:
 				base = int(base * 1.5)
-			if "affinity_day" in mods and GameState.dungeon_affinity_day_stat == "atk":
-				var aff_int: int = GameState.DUNGEON_AFFINITY_TO_INT.get(
-					GameState.dungeon_affinity_day_affinity, -99)
-				if affinity == aff_int:
-					base = int(base * 1.2)
+			if "kaiju_fight" in mods and is_union:
+				base = int(base * 3.0)   # +200% = ×3
+			if affinity >= 0 and affinity <= 6:
+				if _AFF_DAY[affinity] in mods:       base = int(base * 1.2)
+				if _AFF_GREAT_DAY[affinity] in mods: base = int(base * 1.5)
+				if _AFF_TRAG[affinity] in mods:      base = int(base * 0.8)
+				if _AFF_GREAT_TRAG[affinity] in mods: base = int(base * 0.5)
+			# Position-based modifiers (require grid_row/grid_col to be set)
+			if grid_row >= 0 and grid_col >= 0:
+				var _is_border: bool = (grid_row == 0 or grid_row == 4 or grid_col == 0 or grid_col == 4)
+				var _is_c3: bool = (grid_row in [1,2,3] and grid_col in [1,2,3])
+				var _is_center: bool = (grid_row == 2 and grid_col == 2)
+				if _is_center and "absolute_monarchy" in mods:   base = int(base * 2.0)
+				if _is_c3   and "mixed_monarchy" in mods:        base = int(base * 1.2)
+				if _is_c3   and "corrupted_nobles" in mods:      base = int(base * 0.8)
 		return base
 
 	func get_effective_def() -> int:
@@ -117,11 +143,22 @@ class CardInstance:
 			var mods: Array = GameState.active_dungeon_modifiers
 			if "monster_overload" in mods:
 				base = int(base * 1.5)
-			if "affinity_day" in mods and GameState.dungeon_affinity_day_stat == "def":
-				var aff_int: int = GameState.DUNGEON_AFFINITY_TO_INT.get(
-					GameState.dungeon_affinity_day_affinity, -99)
-				if affinity == aff_int:
-					base = int(base * 1.2)
+			if "kaiju_fight" in mods and is_union:
+				base = int(base * 3.0)
+			if affinity >= 0 and affinity <= 6:
+				if _AFF_DAY[affinity] in mods:       base = int(base * 1.2)
+				if _AFF_GREAT_DAY[affinity] in mods: base = int(base * 1.5)
+				if _AFF_TRAG[affinity] in mods:      base = int(base * 0.8)
+				if _AFF_GREAT_TRAG[affinity] in mods: base = int(base * 0.5)
+			if grid_row >= 0 and grid_col >= 0:
+				var _is_border: bool = (grid_row == 0 or grid_row == 4 or grid_col == 0 or grid_col == 4)
+				var _is_c3: bool = (grid_row in [1,2,3] and grid_col in [1,2,3])
+				var _is_center: bool = (grid_row == 2 and grid_col == 2)
+				if _is_center and "absolute_monarchy" in mods:   base = int(base * 2.0)
+				if _is_border and "great_wall"        in mods:   base = int(base * 1.2)
+				if _is_border and "broken_wall"       in mods:   base = int(base * 0.8)
+				if _is_c3   and "mixed_monarchy" in mods:        base = int(base * 1.2)
+				if _is_c3   and "corrupted_nobles" in mods:      base = int(base * 0.8)
 		return base
 
 	func clear_temp_buffs() -> void:
@@ -315,6 +352,8 @@ func get_card(player_index: int, row: int, col: int) -> CardInstance:
 	return grids[player_index][row][col]
 
 func set_card(player_index: int, row: int, col: int, card: CardInstance) -> void:
+	card.grid_row = row
+	card.grid_col = col
 	grids[player_index][row][col] = card
 
 func place_character(player_index: int, row: int, col: int, char_name: String) -> void:
@@ -335,6 +374,8 @@ func place_character(player_index: int, row: int, col: int, char_name: String) -
 	inst.ability_type = data.ability_type
 	inst.ability_params = data.ability_params.duplicate()
 	inst.rarity = data.rarity
+	inst.grid_row = row
+	inst.grid_col = col
 	grids[player_index][row][col] = inst
 	emit_signal("card_placed", player_index, row, col)
 
@@ -349,12 +390,16 @@ func place_trap(player_index: int, row: int, col: int, trap_name: String) -> voi
 	inst.face_up = false
 	inst.crystal_cost = data.crystal_cost
 	inst.rarity = data.rarity
+	inst.grid_row = row
+	inst.grid_col = col
 	grids[player_index][row][col] = inst
 	emit_signal("card_placed", player_index, row, col)
 
 func place_dead_end(player_index: int, row: int, col: int) -> void:
 	var inst := CardInstance.new()
 	inst.card_type = "dead_end"
+	inst.grid_row = row
+	inst.grid_col = col
 	grids[player_index][row][col] = inst
 
 func reveal_card(player_index: int, row: int, col: int) -> void:
@@ -374,6 +419,20 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 						var amt: int = opp_card.ability_params.get("amount", 40)
 						gain_crystals(opponent_idx, amt, "ability")
 						post_message("%s: Gained %d Crystals from reveal!" % [opp_card.card_name, amt])
+
+		# Dungeon: Bio Triumph — Bio characters receive Mutagen flag on reveal
+		# Dungeon: Nature Triumph — Nature characters receive Venom flag on reveal
+		if card.card_type == "character" and game_mode == GameMode.DAILY_DUNGEON:
+			if "bio_triumph" in active_dungeon_modifiers \
+					and card.affinity == CharacterData.Affinity.BIO \
+					and "mutagen" not in card.flags:
+				card.flags.append("mutagen")
+				post_message("Bio Triumph: %s receives Mutagen flag!" % card.display_name)
+			if "nature_triumph" in active_dungeon_modifiers \
+					and card.affinity == CharacterData.Affinity.NATURE \
+					and "venom" not in card.flags:
+				card.flags.append("venom")
+				post_message("Nature Triumph: %s receives Venom flag!" % card.display_name)
 
 		# HALVE_DEF_ON_FIRST_EXPOSE: halve DEF when this card first becomes face-up
 		if card.card_type == "character":
@@ -397,7 +456,11 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 		# Track destroyed characters in graveyard
 		graveyards[player_index].append(card)
 	if pay_cost and card.card_type != "dead_end":
-		lose_crystals(player_index, card.crystal_cost, "card lost")
+		var _dc_cost: int = card.crystal_cost
+		if game_mode == GameMode.DAILY_DUNGEON:
+			if "coffin_broker" in active_dungeon_modifiers: _dc_cost = 0
+			elif "coffin_dealer" in active_dungeon_modifiers: _dc_cost = int(_dc_cost * 0.5)
+		lose_crystals(player_index, _dc_cost, "card lost")
 	emit_signal("card_destroyed", player_index, row, col)
 	place_dead_end(player_index, row, col)
 	# Mark the resulting slot as revealed and destroyed so it can't be re-targeted
@@ -437,6 +500,8 @@ func place_union_card(player_index: int, row: int, col: int, u: UnionData) -> vo
 	inst.ability_params = u.ability_params
 	inst.face_up      = true
 	inst.revealed_on_turn = turn_number
+	inst.grid_row = row
+	inst.grid_col = col
 	grids[player_index][row][col] = inst
 	emit_signal("card_revealed", player_index, row, col)
 

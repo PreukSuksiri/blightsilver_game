@@ -240,15 +240,15 @@ func _build_right_panel(parent: Control) -> void:
 	mod_lbl.add_theme_color_override("font_color", Color(0.75, 0.85, 0.75))
 	vbox.add_child(mod_lbl)
 
-	for key: String in DailyDungeonManager.ALL_MODIFIER_KEYS:
+	for key: String in DailyDungeonManager.get_all_modifier_keys():
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
 		vbox.add_child(row)
 
 		var cb := CheckBox.new()
-		cb.text = DailyDungeonManager.MODIFIER_LABEL[key]
+		cb.text = DailyDungeonManager.get_modifier_label(key)
 		cb.add_theme_font_size_override("font_size", 13)
-		var is_positive: bool = DailyDungeonManager.MODIFIER_POSITIVE.get(key, true)
+		var is_positive: bool = DailyDungeonManager.is_modifier_positive(key)
 		cb.add_theme_color_override("font_color",
 			Color(0.55, 1.0, 0.65) if is_positive else Color(1.0, 0.55, 0.45))
 		cb.custom_minimum_size = Vector2(200, 0)
@@ -256,7 +256,7 @@ func _build_right_panel(parent: Control) -> void:
 		row.add_child(cb)
 
 		var desc := Label.new()
-		desc.text = DailyDungeonManager.MODIFIER_DESC.get(key, "")
+		desc.text = DailyDungeonManager.get_modifier_desc(key)
 		desc.add_theme_font_size_override("font_size", 11)
 		desc.add_theme_color_override("font_color", Color(0.55, 0.55, 0.65))
 		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -314,7 +314,7 @@ func _refresh_list() -> void:
 		# Bottom line: modifiers summary
 		var mod_text: String = "No modifiers" if mods.is_empty() else \
 			", ".join(PackedStringArray(mods.map(
-				func(k: String) -> String: return DailyDungeonManager.MODIFIER_LABEL.get(k, k))))
+				func(k: String) -> String: return DailyDungeonManager.get_modifier_label(k))))
 		var mod_lbl := Label.new()
 		mod_lbl.text = mod_text
 		mod_lbl.add_theme_font_size_override("font_size", 11)
@@ -335,7 +335,7 @@ func _refresh_status() -> void:
 	var mods: Array = DailyDungeonManager.active_modifiers
 	var mod_str: String = "none" if mods.is_empty() else \
 		", ".join(PackedStringArray(mods.map(
-			func(k: String) -> String: return DailyDungeonManager.MODIFIER_LABEL.get(k, k))))
+			func(k: String) -> String: return DailyDungeonManager.get_modifier_label(k))))
 	_status_label.text = "Today: %s  |  Modifiers: %s  |  Playlist size: %d" % [
 		current_id, mod_str, DailyDungeonManager.playlist.size()]
 
@@ -412,8 +412,8 @@ func _on_apply_to_slot() -> void:
 		dungeon_id = _dungeon_option.get_item_text(_dungeon_option.selected)
 	# Collect modifiers
 	var mods: Array = []
-	for key: String in DailyDungeonManager.ALL_MODIFIER_KEYS:
-		if _mod_checks[key].button_pressed:
+	for key: String in DailyDungeonManager.get_all_modifier_keys():
+		if _mod_checks.has(key) and _mod_checks[key].button_pressed:
 			mods.append(key)
 	# Write dungeon_id directly
 	DailyDungeonManager.playlist[_selected_slot]["dungeon_id"] = dungeon_id

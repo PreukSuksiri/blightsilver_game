@@ -138,6 +138,7 @@ func admin_command(raw: String) -> String:
 				+ "  grant_all_cards\n"
 				+ "  dungeon_builder [dungeon_id]\n"
 				+ "  dungeon_activator\n"
+				+ "  modifier_editor\n"
 				+ "  dungeon_reset\n"
 				+ "  clear_campaign_progress\n"
 				+ "  campaign_progress_list\n"
@@ -638,6 +639,15 @@ func admin_command(raw: String) -> String:
 			activator.name = "DungeonActivatorOverlay"
 			scene.add_child(activator)
 			return "Daily Dungeon Activator opened."
+
+		"modifier_editor":
+			var scene: Node = get_tree().current_scene
+			if scene.get_node_or_null("ModifierEditorOverlay") != null:
+				return "Modifier Editor is already open."
+			var editor: Node = load("res://scripts/ModifierEditorOverlay.gd").new()
+			editor.name = "ModifierEditorOverlay"
+			scene.add_child(editor)
+			return "Modifier Editor opened."
 
 		"dungeon_reset":
 			var dungeon_id: String = DailyDungeonManager.get_current_dungeon_id()

@@ -201,6 +201,42 @@ static func _resolve_character_vs_character(
 		else:
 			result.messages.append("%s coin flip: tails — attack proceeds normally." % defender.card_name)
 
+	# Dungeon: Divine Triumph / Chaos Triumph — force outcome between Divine and Chaos
+	# If both are active simultaneously they cancel out.
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+		var _tri_mods: Array = GameState.active_dungeon_modifiers
+		var _has_div_tri: bool = "divine_triumph" in _tri_mods
+		var _has_chao_tri: bool = "chaos_triumph" in _tri_mods
+		if _has_div_tri != _has_chao_tri:
+			const _DIVINE_AFF: int = 0
+			const _CHAOS_AFF: int  = 1
+			if _has_div_tri:
+				if attacker.affinity == _DIVINE_AFF and defender.affinity == _CHAOS_AFF:
+					result.defender_destroyed = true
+					result.defender_crystal_loss = defender.crystal_cost
+					result.messages.append("Divine Triumph: %s conquers Chaos!" % attacker.card_name)
+					_apply_post_attack_effects(attacker, result)
+					return
+				elif attacker.affinity == _CHAOS_AFF and defender.affinity == _DIVINE_AFF:
+					result.attacker_destroyed = true
+					result.attacker_crystal_loss = attacker.crystal_cost
+					result.messages.append("Divine Triumph: Divine resists Chaos!")
+					_apply_defend_effects(defender, attacker, result, defender_player)
+					return
+			if _has_chao_tri:
+				if attacker.affinity == _CHAOS_AFF and defender.affinity == _DIVINE_AFF:
+					result.defender_destroyed = true
+					result.defender_crystal_loss = defender.crystal_cost
+					result.messages.append("Chaos Triumph: %s conquers Divine!" % attacker.card_name)
+					_apply_post_attack_effects(attacker, result)
+					return
+				elif attacker.affinity == _DIVINE_AFF and defender.affinity == _CHAOS_AFF:
+					result.attacker_destroyed = true
+					result.attacker_crystal_loss = attacker.crystal_cost
+					result.messages.append("Chaos Triumph: Chaos resists Divine!")
+					_apply_defend_effects(defender, attacker, result, defender_player)
+					return
+
 	# Normal ATK vs DEF comparison
 	if eff_atk > eff_def:
 		result.defender_destroyed = true
@@ -291,8 +327,13 @@ static func _resolve_trap(
 		result.special_trigger = "trap_nullified"
 		return
 
-	# Trap crystal loss to trap owner (defender pays trap cost)
-	result.defender_crystal_loss = trap_data.crystal_cost
+	# Trap crystal loss to trap owner (defender pays trap cost); apply dungeon discounts
+	var _tc_eff: int = trap_data.crystal_cost
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+		var _tc_mods: Array = GameState.active_dungeon_modifiers
+		if "trap_broker" in _tc_mods: _tc_eff = 0
+		elif "trap_dealer" in _tc_mods: _tc_eff = int(_tc_eff * 0.5)
+	result.defender_crystal_loss = _tc_eff
 	result.special_trigger = "trap_effect"
 	result.special_params = {"trap_name": trap.card_name, "trap_data": trap_data,
 		"attacker_player": attacker_player}
@@ -312,7 +353,20 @@ static func _get_effective_atk(
 	# Bare Hands Brawling: character abilities are cancelled
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
+		# Still apply dungeon modifiers that aren't card-ability based
+		var _bhb_mods: Array = GameState.active_dungeon_modifiers
+		if "offensive_game" in _bhb_mods: atk += 5
 		return atk
+
+	# Dungeon: Offensive Game (+5 ATK for attacker) and Arcane Triumph (+20% vs non-Arcane)
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+		var _dm: Array = GameState.active_dungeon_modifiers
+		if "offensive_game" in _dm:
+			atk += 5
+		if "arcane_triumph" in _dm \
+				and attacker.affinity == CharacterData.Affinity.ARCANE \
+				and defender.affinity != CharacterData.Affinity.ARCANE:
+			atk = int(atk * 1.2)
 
 	# DEF_ZERO_WHEN_EXPOSED: attacker's DEF = 0 when face-up (doesn't affect ATK, skip)
 	# ATK_PENALTY_WHEN_EXPOSED: attacker's own ATK is penalised when face-up
@@ -503,7 +557,19 @@ static func _get_effective_def(
 	# Bare Hands Brawling: character abilities are cancelled
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
+		var _bhb_mods2: Array = GameState.active_dungeon_modifiers
+		if "defensive_game" in _bhb_mods2: def_val += 5
 		return def_val
+
+	# Dungeon: Defensive Game (+5 DEF for defender) and Arcane Triumph (+20% DEF vs non-Arcane)
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+		var _dm2: Array = GameState.active_dungeon_modifiers
+		if "defensive_game" in _dm2:
+			def_val += 5
+		if "arcane_triumph" in _dm2 \
+				and defender.affinity == CharacterData.Affinity.ARCANE \
+				and attacker.affinity != CharacterData.Affinity.ARCANE:
+			def_val = int(def_val * 1.2)
 
 	# DEF_ZERO_WHEN_EXPOSED: DEF = 0 when face-up
 	if defender.face_up and defender.ability_type == CharacterData.AbilityType.DEF_ZERO_WHEN_EXPOSED:
