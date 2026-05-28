@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cvh2shcexlrly"
-path="res://.godot/imported/mad_raccoon.jpg-6fb13541418c2e4dd247538052bce970.ctex"
+uid="uid://c6dvouuxylgwe"
+path="res://.godot/imported/pixie_queen.jpg-a4034e3a42a2dd956781c0250c7b4978.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/mad_raccoon.jpg"
-dest_files=["res://.godot/imported/mad_raccoon.jpg-6fb13541418c2e4dd247538052bce970.ctex"]
+source_file="res://assets/textures/cards/union/pixie_queen.jpg"
+dest_files=["res://.godot/imported/pixie_queen.jpg-a4034e3a42a2dd956781c0250c7b4978.ctex"]
 
 [params]
 

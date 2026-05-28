@@ -1,0 +1,136 @@
+=== VS AI Match ===
+Started: 2026-05-27 18:35:50
+===
+
+[01:29.852] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[02:06.004] Revealed: P0 (0,4) "Canyon Warg"
+[02:06.005] Revealed: P1 (4,2) "Hostage"
+[02:06.005] Dice rolled: 4
+[02:07.167] MSG: Trap triggered: Hostage!
+[02:17.169] Card destroyed  P1 (4,2) "Hostage"
+[02:17.169] Crystals: P1 5000 → 4800 (-200)  [trap cost]
+[02:22.379] MSG: Hostage: Adjacent squares revealed and locked.
+[02:22.381] Trap: "Hostage" triggered  P0(0,4)→P1(4,2)
+[02:33.935] Revealed: P0 (2,2) "Golden Senju"
+[02:33.935] Revealed: P1 (2,2) "Vampire Servant"
+[02:33.935] Dice rolled: 1
+[02:46.683] Crystals: P0 5000 → 4800 (-200)  [battle]
+[02:51.969] Card destroyed  P0 (2,2) "Golden Senju"
+[02:51.972] Attack P0(2,2)"Golden Senju" → P1(2,2)"Vampire Servant"  Dice=1  ATK=15 vs DEF=20  → LOSE
+[02:54.826] Turn ended  P0  |  Crystals P0=4800 P1=4800
+
+--- Turn 2  |  Player 1  |  Crystals P0=4800 P1=4800 ---
+[02:57.045] Mode selected P1: TECH
+[02:58.229] Crystals: P1 4800 → 3300 (-1500)  [tech cost]
+[03:03.497] Tech played  P1: "Rift Strike"
+[03:09.295] Target prompt: "Rift Strike: Choose a row or column."  filter=row_or_column
+[03:10.873] Crystals: P0 4800 → 4050 (-750)  [card lost]
+[03:10.874] Card destroyed  P0 (0,4) "Canyon Warg"
+[03:10.874] MSG: Rift Strike: Row 1 destroyed!
+[03:13.135] Tech resolved  P1
+[03:16.633] Mode selected P1: ATTACK
+[03:16.634] MSG: Player 2: tap a character to attack.
+[03:19.007] Dice rolled: 5
+[03:19.019] MSG: Nothing happens — Dead End.
+[03:26.322] Dead-end placed  P0 (1,2)
+[03:26.323] Attack P1(2,2)"Vampire Servant" → P0(1,2)(empty)  Dice=5  → DEAD_END
+[03:35.866] Turn ended  P1  |  Crystals P0=4050 P1=3300
+
+--- Turn 3  |  Player 0  |  Crystals P0=4050 P1=3300 ---
+[04:09.861] MSG: Tap 2 material card(s) on the field.
+[04:10.620] MSG: 1 more material(s) needed.
+[04:12.974] Union summoned P0: [Lord of Terror] from Cursed Well, Skeleton Lancer
+[04:12.974] Crystals: P0 4050 → 3050 (-1000)  [union]
+[04:12.974] Revealed: P0 (2,0) "Lord of Terror"
+[04:12.975] MSG: Player 1 summoned [Lord of Terror] using: Cursed Well, Skeleton Lancer
+[04:48.259] Dice rolled: 1
+[04:48.300] MSG: Lord of Terror wins!
+[05:00.419] Crystals: P1 3300 → 2800 (-500)  [battle]
+[05:05.689] Card destroyed  P1 (2,2) "Vampire Servant"
+[05:05.692] Attack P0(2,0)"Lord of Terror" → P1(2,2)"Vampire Servant"  Dice=1  ATK=200 vs DEF=20  → WIN
+[05:16.547] Revealed: P0 (1,1) "Joan the Faithful Warrior"
+[05:16.547] Dice rolled: 5
+[05:16.559] MSG: Nothing happens — Dead End.
+[05:23.829] Dead-end placed  P1 (1,1)
+[05:23.832] Attack P0(1,1)"Joan the Faithful Warrior" → P1(1,1)(empty)  Dice=5  → DEAD_END
+[05:35.458] Turn ended  P0  |  Crystals P0=3050 P1=2800
+
+--- Turn 4  |  Player 1  |  Crystals P0=3050 P1=2800 ---
+[05:37.675] Mode selected P1: ATTACK
+[05:37.678] MSG: Player 2: tap a character to attack.
+[05:40.021] Revealed: P1 (1,4) "Red Mage"
+[05:40.021] Dice rolled: 2
+[05:40.057] MSG: Red Mage wins!
+[05:52.242] Crystals: P0 3050 → 2770 (-280)  [battle]
+[05:57.431] Card destroyed  P0 (1,1) "Joan the Faithful Warrior"
+[05:57.433] Attack P1(1,4)"Red Mage" → P0(1,1)"Joan the Faithful Warrior"  Dice=2  ATK=20 vs DEF=5  → WIN
+[05:59.686] Mode selected P1: TECH
+[06:00.876] Crystals: P1 2800 → 2400 (-400)  [tech cost]
+[06:06.023] Tech played  P1: "Bulletproof Vest"
+[06:11.840] Target prompt: "Choose 1 face-up character to boost."  filter=own_faceup_character
+[06:13.393] MSG: Bulletproof Vest: Red Mage permanently gains +40 DEF.
+[06:13.396] Tech resolved  P1
+[06:16.896] Mode selected P1: ATTACK
+[06:16.900] MSG: Player 2: tap a character to attack.
+[06:19.283] Revealed: P1 (0,4) "Aerial the Battlemage"
+[06:19.283] Dice rolled: 1
+[06:19.324] MSG: Nothing happens — Dead End.
+[06:26.604] Dead-end placed  P0 (0,1)
+[06:26.606] Attack P1(0,4)"Aerial the Battlemage" → P0(0,1)(empty)  Dice=1  → DEAD_END
+[06:28.544] Turn ended  P1  |  Crystals P0=2770 P1=2400
+
+--- Turn 5  |  Player 0  |  Crystals P0=2770 P1=2400 ---
+[07:09.261] Revealed: P0 (4,0) "Lab Crawler"
+[07:09.261] Dice rolled: 1
+[07:09.267] MSG: Lab Crawler wins!
+[07:21.697] Crystals: P1 2400 → 2000 (-400)  [battle]
+[07:26.897] Card destroyed  P1 (1,4) "Red Mage"
+[07:26.900] Attack P0(4,0)"Lab Crawler" → P1(1,4)"Red Mage"  Dice=1  ATK=90 vs DEF=60  → WIN
+[07:51.392] Revealed: P0 (2,4) "Lazy Troll"
+[07:52.562] Coin flip: Heads
+[08:03.189] Dice rolled: 3
+[08:03.194] MSG: Lazy Troll wins!
+[08:15.514] Crystals: P1 2000 → 1250 (-750)  [battle]
+[08:20.679] Card destroyed  P1 (0,4) "Aerial the Battlemage"
+[08:20.682] Attack P0(2,4)"Lazy Troll" → P1(0,4)"Aerial the Battlemage"  Dice=3  ATK=120 vs DEF=45  → WIN
+[08:24.829] Turn ended  P0  |  Crystals P0=2770 P1=1250
+
+--- Turn 6  |  Player 1  |  Crystals P0=2770 P1=1250 ---
+[08:27.048] Mode selected P1: ATTACK
+[08:27.051] MSG: Player 2: tap a character to attack.
+[08:29.413] Revealed: P1 (3,4) "Blue Mage"
+[08:29.413] Revealed: P0 (0,2) "Heavy Tome Preacher"
+[08:29.413] Dice rolled: 3
+[08:29.492] MSG: Blue Mage: Coin flip missed — normal battle.
+[08:29.492] MSG: Blue Mage wins!
+[08:29.524] Coin flip: Tails, Tails
+[08:47.051] MSG: [DEBUG] Bot Player timed out — ending turn.
+[08:47.681] Crystals: P0 2770 → 2470 (-300)  [battle]
+[08:52.860] Card destroyed  P0 (0,2) "Heavy Tome Preacher"
+[08:52.864] Attack P1(3,4)"Blue Mage" → P0(0,2)"Heavy Tome Preacher"  Dice=3  ATK=45 vs DEF=20  → WIN
+[08:55.110] Mode selected P1: ATTACK
+[08:55.114] MSG: Player 2: tap a character to attack.
+[08:57.476] Revealed: P1 (2,4) "Echo Bringer"
+[08:57.476] Dice rolled: 3
+[08:57.502] MSG: Echo Bringer wins!
+[09:09.745] Crystals: P0 2470 → 1270 (-1200)  [battle]
+[09:14.925] Card destroyed  P0 (4,0) "Lab Crawler"
+[09:14.926] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[09:14.930] Attack P1(2,4)"Echo Bringer" → P0(4,0)"Lab Crawler"  Dice=3  ATK=55 vs DEF=45  → WIN
+[09:24.720] Turn ended  P1  |  Crystals P0=1270 P1=1250
+
+--- Turn 7  |  Player 0  |  Crystals P0=1270 P1=1250 ---
+[09:34.071] Dice rolled: 3
+[09:34.114] MSG: Lord of Terror wins!
+[09:46.340] Crystals: P1 1250 → 400 (-850)  [battle]
+[09:51.460] Card destroyed  P1 (2,4) "Echo Bringer"
+[09:51.463] Attack P0(2,0)"Lord of Terror" → P1(2,4)"Echo Bringer"  Dice=3  ATK=200 vs DEF=40  → WIN
+[10:00.988] Revealed: P0 (0,3) "Pyromancer"
+[10:00.988] Dice rolled: 3
+[10:00.993] MSG: Pyromancer wins!
+[10:13.296] Crystals: P1 400 → 0 (-400)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1270  P1: 0  |  Turns: 7

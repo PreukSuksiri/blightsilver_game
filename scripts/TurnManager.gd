@@ -599,6 +599,14 @@ func play_tech_card(tech_name: String) -> void:
 			after_tech_resolved(player)
 			return
 
+		TechCardData.TechEffectType.TEMP_ATK_DEF_BOOST_ALL:
+			var _ws_atk: int = data.effect_params.get("atk", 0)
+			var _ws_def: int = data.effect_params.get("def", 0)
+			_temp_boost_all(player, _ws_atk, _ws_def, false)
+			GameState.post_message("%s: All face-up units gain +%d ATK & DEF until end of turn." % [data.card_name, _ws_atk])
+			after_tech_resolved(player)
+			return
+
 		TechCardData.TechEffectType.OPPONENT_NEXT_DEFENDER_DESTROYED:
 			GameState.siege_cannon_active[player] = true
 			GameState.post_message("Siege Cannon active!")
@@ -1328,6 +1336,40 @@ func _apply_post_battle_effects(
 				var _ded_pen: int = attacker.ability_params.get("penalty", 50)
 				attacker.current_atk = max(0, attacker.current_atk - _ded_pen)
 				GameState.post_message("%s: -%d ATK permanently from dead-end attack!" % [attacker.card_name, _ded_pen])
+
+		CharacterData.AbilityType.PERM_ATK_BOOST_ON_KILL_CAPPED:
+			if result.defender_destroyed and defender.card_type == "character":
+				var _cov_gain: int = attacker.ability_params.get("atk", 10)
+				var _cov_max: int = attacker.ability_params.get("max_bonus", 30)
+				var _cov_new: int = min(attacker.perm_atk_bonus + _cov_gain, _cov_max)
+				var _cov_actual: int = _cov_new - attacker.perm_atk_bonus
+				if _cov_actual > 0:
+					attacker.perm_atk_bonus = _cov_new
+					GameState.post_message("%s: +%d ATK permanently! (bonus: %d/%d)" % [
+						attacker.card_name, _cov_actual, _cov_new, _cov_max])
+
+	# COPY_ALLY_STATS_ON_DESTROY: Ectoplasm — triggered when an ally is destroyed in battle
+	if result.defender_destroyed and defender.card_type == "character" \
+			and defender.ability_type != CharacterData.AbilityType.COPY_ALLY_STATS_ON_DESTROY:
+		for _ecr: int in range(GameState.GRID_SIZE):
+			for _ecc: int in range(GameState.GRID_SIZE):
+				var _ecto: GameState.CardInstance = GameState.get_card(opponent, _ecr, _ecc)
+				if _ecto.card_type == "character" \
+						and _ecto.ability_type == CharacterData.AbilityType.COPY_ALLY_STATS_ON_DESTROY \
+						and not _ecto.was_destroyed:
+					emit_signal("awaiting_trap_choice",
+						"Ectoplasm: Absorb %s's stats? (ATK %d / DEF %d / Cost %d)" % [
+							defender.card_name, defender.current_atk, defender.current_def, defender.crystal_cost],
+						["Absorb", "Decline"])
+					var _ec_choice: int = await ability_choice_resolved
+					if _ec_choice == 0:
+						_ecto.current_atk = defender.current_atk
+						_ecto.perm_atk_bonus = 0
+						_ecto.current_def = defender.current_def
+						_ecto.perm_def_bonus = 0
+						_ecto.crystal_cost = defender.crystal_cost
+						GameState.post_message("Ectoplasm absorbs %s's stats!" % defender.card_name)
+					break
 
 	# MULTI_ATTACK_ANY: Twin Axe Saintess / Tendrill Tyrant — grant extra attacks up to max
 	if attacker.ability_type in [

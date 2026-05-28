@@ -445,7 +445,7 @@ func _add_pool_row(card_name: String = "", card_type: String = "", weight: float
 	type_lbl.add_theme_font_size_override("font_size", 11)
 	type_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	if card_type != "":
-		type_lbl.text = card_type
+		type_lbl.text = "unit" if card_type == "character" else card_type
 		type_lbl.add_theme_color_override("font_color", _type_color(card_type))
 	else:
 		_auto_type(card_le, card_name, hbox)
@@ -486,7 +486,7 @@ func _auto_type(card_le: LineEdit, name: String, hbox: HBoxContainer) -> void:
 	elif CardDatabase.get_tech(name) != null:
 		detected = "tech"
 	if detected != "":
-		type_lbl.text = detected
+		type_lbl.text = "unit" if detected == "character" else detected
 		type_lbl.add_theme_color_override("font_color", _type_color(detected))
 	else:
 		type_lbl.text = "" if name.is_empty() else "?"

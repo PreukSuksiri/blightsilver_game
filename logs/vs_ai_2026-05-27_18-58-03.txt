@@ -1,0 +1,104 @@
+=== VS AI Match ===
+Started: 2026-05-27 18:58:03
+===
+
+[00:59.043] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[01:33.930] Revealed: P0 (1,3) "Golden Senju"
+[01:33.930] Revealed: P1 (1,1) "Mine Guard"
+[01:33.930] Dice rolled: 1
+[01:33.986] MSG: Both cards are destroyed!
+[01:45.771] Crystals: P0 5000 → 4800 (-200)  [battle]
+[01:51.017] Crystals: P1 5000 → 4700 (-300)  [battle]
+[01:56.111] Card destroyed  P0 (1,3) "Golden Senju"
+[01:56.111] Card destroyed  P1 (1,1) "Mine Guard"
+[01:56.113] Attack P0(1,3)"Golden Senju" → P1(1,1)"Mine Guard"  Dice=1  ATK=15 vs DEF=15  → TIE
+[02:23.234] Revealed: P0 (1,0) "Canyon Warg"
+[02:23.234] Revealed: P1 (2,2) "Dark Tengu"
+[02:23.234] Dice rolled: 1
+[02:23.285] MSG: Canyon Warg wins!
+[02:35.468] Crystals: P1 4700 → 4450 (-250)  [battle]
+[02:40.615] Card destroyed  P1 (2,2) "Dark Tengu"
+[02:40.617] Attack P0(1,0)"Canyon Warg" → P1(2,2)"Dark Tengu"  Dice=1  ATK=70 vs DEF=25  → WIN
+[02:44.204] Turn ended  P0  |  Crystals P0=4800 P1=4450
+
+--- Turn 2  |  Player 1  |  Crystals P0=4800 P1=4450 ---
+[02:46.422] Mode selected P1: TECH
+[02:47.604] Crystals: P1 4450 → 3850 (-600)  [tech cost]
+[02:52.739] Tech played  P1: "Radar"
+[02:58.653] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[03:03.323] Tech resolved  P1
+[03:06.795] Mode selected P1: ATTACK
+[03:06.797] MSG: Player 2: tap a character to attack.
+[03:09.155] Revealed: P1 (0,1) "Moonrise Gentleman"
+[03:09.155] Dice rolled: 2
+[03:09.204] MSG: Moonrise Gentleman wins!
+[03:21.287] Crystals: P0 4800 → 4050 (-750)  [battle]
+[03:26.445] Card destroyed  P0 (1,0) "Canyon Warg"
+[03:26.446] Attack P1(0,1)"Moonrise Gentleman" → P0(1,0)"Canyon Warg"  Dice=2  ATK=40 vs DEF=30  → WIN
+[03:28.375] Mode selected P1: ATTACK
+[03:28.376] MSG: Player 2: tap a character to attack.
+[03:30.725] Revealed: P1 (0,2) "Striker Comet"
+[03:30.725] Dice rolled: 2
+[03:30.765] MSG: Nothing happens — Dead End.
+[03:38.054] Dead-end placed  P0 (2,3)
+[03:38.055] Attack P1(0,2)"Striker Comet" → P0(2,3)(empty)  Dice=2  → DEAD_END
+[03:39.989] MSG: Striker Comet self-destructs at end of turn!
+[03:39.989] Crystals: P1 3850 → 3650 (-200)  [card lost]
+[03:39.989] Card destroyed  P1 (0,2) "Striker Comet"
+[03:39.990] Turn ended  P1  |  Crystals P0=4050 P1=3650
+
+--- Turn 3  |  Player 0  |  Crystals P0=4050 P1=3650 ---
+[04:23.720] Crystals: P0 4050 → 3650 (-400)  [tech cost]
+[04:28.895] Tech played  P0: "Garrison"
+[04:34.694] MSG: Garrison: All face-up characters gain +50 DEF until end of next turn.
+[04:34.696] Tech resolved  P0
+[05:01.050] Revealed: P0 (3,1) "Skeleton Lancer"
+[05:01.050] Dice rolled: 1
+[05:01.055] MSG: Skeleton Lancer wins!
+[05:19.050] Crystals: P1 3650 → 3250 (-400)  [battle]
+[05:24.205] Card destroyed  P1 (0,1) "Moonrise Gentleman"
+[05:24.207] Attack P0(3,1)"Skeleton Lancer" → P1(0,1)"Moonrise Gentleman"  Dice=1  ATK=45 vs DEF=40  → WIN
+[05:35.494] Revealed: P0 (4,0) "Lab Crawler"
+[05:35.494] Revealed: P1 (3,1) "Flame Lizard"
+[05:35.494] Dice rolled: 4
+[05:35.544] MSG: Lab Crawler wins!
+[05:47.692] Crystals: P1 3250 → 2850 (-400)  [battle]
+[05:52.896] Card destroyed  P1 (3,1) "Flame Lizard"
+[05:52.898] Attack P0(4,0)"Lab Crawler" → P1(3,1)"Flame Lizard"  Dice=4  ATK=90 vs DEF=40  → WIN
+[06:04.131] Turn ended  P0  |  Crystals P0=3650 P1=2850
+
+--- Turn 4  |  Player 1  |  Crystals P0=3650 P1=2850 ---
+[06:06.356] Mode selected P1: TECH
+[06:07.540] Crystals: P1 2850 → 850 (-2000)  [tech cost]
+[06:12.619] Tech played  P1: "Arcane Nova"
+[06:18.364] Crystals: P0 3650 → 3350 (-300)  [card lost]
+[06:18.365] Card destroyed  P0 (3,1) "Skeleton Lancer"
+[06:23.534] Crystals: P0 3350 → 2150 (-1200)  [card lost]
+[06:23.535] Card destroyed  P0 (4,0) "Lab Crawler"
+[06:26.365] MSG: [DEBUG] Bot Player timed out — ending turn.
+[06:26.365] Turn ended  P1  |  Crystals P0=2150 P1=850
+
+--- Turn 5  |  Player 0  |  Crystals P0=2150 P1=850 ---
+[06:28.979] MSG: Arcane Nova! All revealed opponent characters destroyed. Your Tech Cards discarded.
+[06:28.981] Tech resolved  P1
+[06:57.883] MSG: Tap 2 material card(s) on the field.
+[06:59.463] MSG: 1 more material(s) needed.
+[07:01.481] Union summoned P0: [False Prophet] from Joan the Faithful Warrior, Heavy Tome Preacher
+[07:01.482] Crystals: P0 2150 → 1150 (-1000)  [union]
+[07:01.482] Revealed: P0 (0,2) "False Prophet"
+[07:01.485] MSG: Player 1 summoned [False Prophet] using: Joan the Faithful Warrior, Heavy Tome Preacher
+[07:18.538] Crystals: P0 1150 → 150 (-1000)  [tech cost]
+[07:23.656] Tech played  P0: "War Supply"
+[07:29.436] MSG: Ability not implemented: War Supply
+[07:29.438] Tech resolved  P0
+[07:35.953] Revealed: P1 (1,3) "Aether Warden"
+[07:35.953] Dice rolled: 2
+[07:36.004] MSG: Ability not implemented: False Prophet
+[07:36.032] MSG: Ability not implemented: False Prophet
+[07:36.032] MSG: Aether Warden drains 300 Crystals from attacker!
+[07:54.535] Crystals: P0 150 → 0 (-150)  [battle]
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 0  P1: 850  |  Turns: 5

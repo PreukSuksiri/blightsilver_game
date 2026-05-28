@@ -662,7 +662,7 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 					cd.get_affinity_name(), cd.base_atk, cd.base_def, cd.crystal_cost]
 				_info_desc.text = cd.ability_description
 			else:
-				_info_stats.text = "Character"
+				_info_stats.text = "Unit"
 				_info_desc.text  = ""
 		"trap":
 			_info_name.add_theme_color_override("font_color", Color(1.0, 0.38, 0.38))
@@ -753,7 +753,7 @@ func _refresh_union_panel() -> void:
 func _find_possible_unions(char_names: Array) -> Array:
 	var result: Array = []
 	for u: UnionData in UnionDatabase.get_all_unions():
-		if _union_feasible(u, char_names):
+		if SaveManager.is_union_unlocked(u.card_name) and _union_feasible(u, char_names):
 			result.append(u)
 	return result
 
@@ -1032,7 +1032,7 @@ func _on_random_formation() -> void:
 # ─────────────────────────────────────────────────────────────
 func _on_confirm() -> void:
 	if not _chars_remaining.is_empty():
-		_instr_lbl.text = "Place all Characters first (%d left)." % _chars_remaining.size()
+		_instr_lbl.text = "Place all Units first (%d left)." % _chars_remaining.size()
 		return
 	if not _traps_remaining.is_empty():
 		_instr_lbl.text = "Place all Traps first (%d left)." % _traps_remaining.size()
@@ -1099,7 +1099,7 @@ func _refresh_confirm() -> void:
 	if all_placed:
 		_instr_lbl.text = "All cards placed! Press CONFIRM to begin."
 	else:
-		_instr_lbl.text = "Drag cards onto the grid  |  right-click a placed card to retrieve  |  %d chars  %d traps remaining" % [
+		_instr_lbl.text = "Drag cards onto the grid  |  right-click a placed card to retrieve  |  %d units  %d traps remaining" % [
 			_chars_remaining.size(), _traps_remaining.size()
 		]
 
