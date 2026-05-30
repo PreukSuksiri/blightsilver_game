@@ -72,10 +72,8 @@ var _is_open: bool = false
 # ─────────────────────────────────────────────────────────────────────────────
 
 func _ready() -> void:
-	_open()
-	_init_schema()
-	_migrate_from_json_if_needed()
-	_touch_last_played()
+	# Demo builds use SaveManager (JSON). SQLite migration deferred until post-demo.
+	return
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_EXIT_TREE:

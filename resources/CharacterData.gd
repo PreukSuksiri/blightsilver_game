@@ -164,6 +164,19 @@ enum AbilityType {
 	COPY_ALLY_STATS_ON_DESTROY,          # When an ally character is destroyed, optionally copy its ATK/DEF/Cost (works face-down)
 	TEMP_ATK_HALF_TARGET,                # When attacking, +ATK equal to half of target's effective ATK (temp, this battle)
 	COIN_FLIP_ATK_DEF_BOOST,             # Flip coin; heads → +N ATK and +N DEF until end of this turn
+
+	# ── Union abilities (card_data_demo.xlsx) ──
+	TURN_START_REVEAL_OPPONENT_CELL,     # Start of turn: reveal 1 foe cell; dead end → self destroy; else gain crystals
+	POST_BATTLE_COIN_FLIP_DESTROY,       # After battle: coin flip; heads → destroy 1 foe character
+	UNION_SUMMON_VENOM_ALL_FOE,          # On union summon: venom flag on all foe face-up characters
+	IMMUNE_DESTROY_BY_NON_UNION,         # Cannot be destroyed unless attacker is a union card
+	PERM_STAT_PENALTY_VS_NON_AFFINITY,   # Permanent -N ATK&DEF when battling non-matching affinity
+	DEF_PENALTY_VS_NON_AFFINITY,         # Defender: -N DEF when attacked by non-matching affinity
+	PERM_ATK_BOOST_ONCE_PER_AFFINITY,    # After battle vs non-affinity: +N ATK once per defender affinity
+	CRYSTAL_GAIN_ON_DESTROY,             # After destroying a foe character: gain N crystals
+	DESTROY_END_TURN_BLAST_ADJACENT,     # Destroy self at turn end; destroy adjacent foe face-up characters
+	UNION_SUMMON_REVIVE_MATCH,           # On union summon: revive 1 matching graveyard card (doubled cost)
+	OPPONENT_TURN_END_SWAP_ATK_DEF,      # When opponent ends turn: they swap ATK/DEF on 1 own face-up card
 }
 
 @export var card_name: String = ""

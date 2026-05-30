@@ -24,7 +24,7 @@ def load_union_demo_from_excel() -> dict[str, dict]:
     """Excel Demo=Yes unions — includes cards not yet in UnionDatabase.gd."""
     import openpyxl
     wb = openpyxl.load_workbook(ROOT / "context/card_data_demo.xlsx", data_only=True)
-    ws = wb["Union"]
+    ws = wb["Union"] if "Union" in wb.sheetnames else wb["Character"]
     rows = list(ws.iter_rows(values_only=True))
     headers = [str(h).strip() if h else "" for h in rows[1]]
     idx = {h: i for i, h in enumerate(headers) if h}

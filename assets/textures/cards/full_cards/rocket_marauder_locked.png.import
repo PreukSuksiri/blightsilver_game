@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bosghlh8ufhfk"
-path="res://.godot/imported/blood-hungry_mutant.png-e29af259920e61c0bda77b69a512e5ca.ctex"
+uid="uid://dlq0m67afxugw"
+path="res://.godot/imported/rocket_marauder_locked.png-0575e4ee71bfbf94a42fa6634985dbb7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/union/blood-hungry_mutant.png"
-dest_files=["res://.godot/imported/blood-hungry_mutant.png-e29af259920e61c0bda77b69a512e5ca.ctex"]
+source_file="res://assets/textures/cards/full_cards/rocket_marauder_locked.png"
+dest_files=["res://.godot/imported/rocket_marauder_locked.png-0575e4ee71bfbf94a42fa6634985dbb7.ctex"]
 
 [params]
 

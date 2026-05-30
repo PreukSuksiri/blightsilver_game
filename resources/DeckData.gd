@@ -1,5 +1,6 @@
-# No class_name — callers access via: const DeckData = preload("res://resources/DeckData.gd")
+class_name DeckData
 extends Resource
+# Callers may also use: const DeckData = preload("res://resources/DeckData.gd")
 
 const TOTAL_SLOTS:    int = 25   # grid cards (characters + traps + dead ends)
 const MIN_CHARACTERS: int = 8

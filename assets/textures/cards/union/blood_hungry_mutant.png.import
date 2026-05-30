@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqe5sa8371lgg"
-path="res://.godot/imported/rocket_tyrant.jpg-46b21f975137578a617d42514aa6135c.ctex"
+uid="uid://dusj2hueioi1c"
+path="res://.godot/imported/blood_hungry_mutant.png-288c97bad3307067ed89dad0a2623660.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/union/rocket_tyrant.jpg"
-dest_files=["res://.godot/imported/rocket_tyrant.jpg-46b21f975137578a617d42514aa6135c.ctex"]
+source_file="res://assets/textures/cards/union/blood_hungry_mutant.png"
+dest_files=["res://.godot/imported/blood_hungry_mutant.png-288c97bad3307067ed89dad0a2623660.ctex"]
 
 [params]
 

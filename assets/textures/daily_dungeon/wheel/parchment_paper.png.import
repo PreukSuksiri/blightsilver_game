@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://didlb6pomj8m6"
-path="res://.godot/imported/champion_of_the_valley.png-13b2706bf943c6e987c2d27f00e96681.ctex"
+uid="uid://ceee8c1gvngod"
+path="res://.godot/imported/parchment_paper.png-c093676b6e2b58f86afe79db903bf3d9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/characters/champion_of_the_valley.png"
-dest_files=["res://.godot/imported/champion_of_the_valley.png-13b2706bf943c6e987c2d27f00e96681.ctex"]
+source_file="res://assets/textures/daily_dungeon/wheel/parchment_paper.png"
+dest_files=["res://.godot/imported/parchment_paper.png-c093676b6e2b58f86afe79db903bf3d9.ctex"]
 
 [params]
 

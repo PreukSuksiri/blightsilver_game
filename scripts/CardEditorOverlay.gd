@@ -773,7 +773,12 @@ func _on_apply() -> void:
 				AFFINITY_NAMES[u.affinity], RARITY_NAMES[u.rarity]]
 
 	CardDatabase.save_demo_flags()
-	_status_lbl.text = "✓ Changes applied to %s" % _selected_name
+	var saved: bool = CardDatabase.save_card_editor_snapshot(_current_tab, _selected_name)
+	_status_lbl.text = (
+		"✓ Saved %s to card_editor_overrides.json" % _selected_name
+		if saved else
+		"✓ Applied in memory (failed to save overrides file)"
+	)
 
 	# Update orig so a subsequent reset goes back to newly applied values
 	_sync_orig_from_inputs()

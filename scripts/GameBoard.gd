@@ -77,10 +77,6 @@ var _union_suggest_tween: Tween         = null
 var _union_summoned_this_duel: Array[int] = [0, 0]
 
 # Setup-phase BGM player (started when placement begins, stopped at _begin_game)
-var _setup_music: AudioStreamPlayer = null
-# Battle BGM player (started at _begin_game, stopped at game over)
-var _battle_music: AudioStreamPlayer = null
-
 # Tech card fan (bottom of screen, active player only)
 var _tech_fan: Control = null
 
@@ -128,6 +124,7 @@ var _reveal_preview: Array[bool] = [false, false]
 var _enemy_view_active: bool = false
 var _tech_used_this_turn: Array[bool] = [false, false]
 var _tech_reset_turn: int = -1   # turn_number when _tech_used_this_turn was last cleared
+var _ai_turn_action_started: Array[bool] = [false, false]  # AI already began this player's turn
 
 # Hover info panel (center column, battle phase only)
 var _hover_panel: Control = null
@@ -184,6 +181,7 @@ var _blink_tween: Tween = null
 var _end_turn_blink_tween: Tween = null
 var _attack_confirm_panel: Control = null
 var _end_turn_btn: TextureButton = null
+var _dungeon_mod_panel: PanelContainer = null
 var _last_banner_turn: int = -1
 
 # Card context menu (tap-to-open popup)
@@ -193,6 +191,8 @@ var _last_click_pos: Vector2 = Vector2.ZERO  # updated on every press, used for 
 var _context_card_player: int = -1
 var _context_card_pos: Vector2i = Vector2i(-1, -1)
 var pending_tech_filter: String = ""
+var _pending_ability_destroy_pos: Vector2i = Vector2i(-1, -1)
+var _pending_ability_destroy_player: int = -1
 var pending_tech_name: String = ""
 var _tech_reveals_remaining: int = 0   # for multi-reveal effects (e.g. Radar)
 
@@ -201,6 +201,7 @@ var _rift_hover_cell: Vector2i = Vector2i(-1, -1)
 var _rift_last_hover: Vector2i = Vector2i(-1, -1)
 var _rift_direction: String = "row"    # "row" or "col", updated by mouse motion
 var _tech_reveals_total: int = 0
+var _tech_reveal_picked: Array = []   # Radar multi-reveal: cells already chosen this sequence
 var _tech_buff_move_source: Vector2i = Vector2i(-1, -1)   # MOVE_BUFFS_BETWEEN_CHARACTERS: source card pos
 var _tech_sacrifice_player: int = -1                       # DESTROY_OWN_BASE_ZERO_OPPONENT: which player to zero
 
@@ -288,6 +289,7 @@ func _ready() -> void:
 	_build_void_stacks()
 	_build_reveal_buttons()
 	_build_end_turn_button()
+	_build_dungeon_modifier_panel()
 	_build_attack_confirm_panel()
 
 	_build_card_name_lookup()
@@ -403,15 +405,20 @@ func _effective_union_cost(base_cost: int) -> int:
 	return base_cost
 
 func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: Array) -> void:
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
 	var cp: int = GameState.current_player
 	if _union_summoned_this_duel[cp] >= _max_unions_per_duel():
 		await get_tree().create_timer(0.3).timeout
-		_active_ai.continue_after_union()
+		if GameState.current_phase != GameState.Phase.GAME_OVER:
+			_active_ai.continue_after_union()
 		return
 	var u: UnionData = UnionDatabase.get_union(union_name)
-	if u == null or material_cells.is_empty() or GameState.crystals[cp] < _effective_union_cost(u.summon_cost):
+	if u == null or not UnionDatabase.is_playable_in_demo(u) \
+			or material_cells.is_empty() or GameState.crystals[cp] < _effective_union_cost(u.summon_cost):
 		await get_tree().create_timer(0.3).timeout
-		_active_ai.continue_after_union()
+		if GameState.current_phase != GameState.Phase.GAME_OVER:
+			_active_ai.continue_after_union()
 		return
 	_pending_union_player = cp
 	_pending_union_data = u
@@ -420,7 +427,8 @@ func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: 
 	_pending_union_selected_materials = material_cells.duplicate()
 	await _play_union_zone_preview(cp, zone_cells)
 	await _perform_pending_union()
-	_active_ai.continue_after_union()
+	if GameState.current_phase != GameState.Phase.GAME_OVER:
+		_active_ai.continue_after_union()
 
 func _on_ai_watchdog_timeout() -> void:
 	print("[AI WATCHDOG] Bot Player went idle — forcing turn end.")
@@ -1246,42 +1254,19 @@ func _begin_game() -> void:
 # Battle music
 # ─────────────────────────────────────────────────────────────
 func _start_setup_music() -> void:
-	if _setup_music != null:
-		return
-	var stream := load("res://assets/audio/bgm_placement_1.mp3") as AudioStream
-	if stream == null:
-		push_warning("GameBoard: failed to load setup BGM")
-		return
-	_setup_music = AudioStreamPlayer.new()
-	_setup_music.stream = stream
-	_setup_music.bus    = &"Music"
-	_setup_music.finished.connect(func() -> void: _setup_music.play())  # loop
-	add_child(_setup_music)
-	_setup_music.play()
+	BGMManager.play_context(BGMManager.CONTEXT_PLACEMENT, 0.8, 0.8)
+
 
 func _stop_setup_music() -> void:
-	if _setup_music == null:
-		return
-	_setup_music.stop()
-	_setup_music.queue_free()
-	_setup_music = null
+	pass
+
 
 func _start_battle_music() -> void:
 	var path: String = GameState.battle_bgm_path
 	if path.is_empty():
-		return
-	var stream := load(path) as AudioStream
-	if stream == null:
-		push_warning("GameBoard: failed to load battle BGM '%s'" % path)
-		return
-	_battle_music = AudioStreamPlayer.new()
-	_battle_music.stream    = stream
-	_battle_music.bus       = &"Music"
-	_battle_music.volume_db = -80.0 if GameState.battle_bgm_volume <= 0.0 \
-		else linear_to_db(GameState.battle_bgm_volume / 100.0)
-	_battle_music.finished.connect(func() -> void: _battle_music.play())  # loop
-	add_child(_battle_music)
-	_battle_music.play()
+		path = BGMManager.get_default_path(BGMManager.CONTEXT_BATTLE)
+	BGMManager.play_path(
+		path, 0.8, 0.8, GameState.battle_bgm_volume, BGMManager.CONTEXT_BATTLE)
 
 # ─────────────────────────────────────────────────────────────
 # Tech card fan
@@ -1975,6 +1960,160 @@ func _build_end_turn_button() -> void:
 	_end_turn_btn.pressed.connect(_on_end_turn_requested)
 	add_child(_end_turn_btn)
 
+func _build_dungeon_modifier_panel() -> void:
+	if GameState.game_mode != GameState.GameMode.DAILY_DUNGEON:
+		return
+	if GameState.active_dungeon_modifiers.is_empty():
+		return
+
+	const PANEL_HALF_W: float = 76.0  # matches center column / end-turn width (~152 px)
+
+	_dungeon_mod_panel = PanelContainer.new()
+	_dungeon_mod_panel.layout_mode = 1
+	_dungeon_mod_panel.anchor_left   = 0.5
+	_dungeon_mod_panel.anchor_top    = 0.0
+	_dungeon_mod_panel.anchor_right  = 0.5
+	_dungeon_mod_panel.anchor_bottom = 0.0
+	_dungeon_mod_panel.offset_left   = -PANEL_HALF_W
+	_dungeon_mod_panel.offset_top    = 194.0
+	_dungeon_mod_panel.offset_right  =  PANEL_HALF_W
+	_dungeon_mod_panel.offset_bottom = 194.0
+	_dungeon_mod_panel.z_index = 4
+	_dungeon_mod_panel.visible = false
+	_dungeon_mod_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.04, 0.06, 0.14, 1.0)
+	sb.border_width_left = 2
+	sb.border_width_top = 2
+	sb.border_width_right = 2
+	sb.border_width_bottom = 2
+	sb.border_color = Color(0.494, 0.839, 1.0, 1.0)
+	sb.corner_radius_top_left = 8
+	sb.corner_radius_top_right = 8
+	sb.corner_radius_bottom_left = 8
+	sb.corner_radius_bottom_right = 8
+	sb.content_margin_left = 6
+	sb.content_margin_top = 5
+	sb.content_margin_right = 6
+	sb.content_margin_bottom = 5
+	_dungeon_mod_panel.add_theme_stylebox_override("panel", sb)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 5)
+	_dungeon_mod_panel.add_child(vbox)
+
+	for i: int in range(GameState.active_dungeon_modifiers.size()):
+		var mod_key: String = GameState.active_dungeon_modifiers[i]
+		var is_pos: bool = DailyDungeonManager.is_modifier_positive(mod_key)
+		var accent: Color = Color(0.30, 1.0, 0.45, 1.0) if is_pos else Color(1.0, 0.38, 0.28, 1.0)
+
+		var mod_box := VBoxContainer.new()
+		mod_box.add_theme_constant_override("separation", 1)
+		vbox.add_child(mod_box)
+
+		var name_lbl := Label.new()
+		name_lbl.text = DailyDungeonManager.get_modifier_label(mod_key)
+		name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		name_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		name_lbl.add_theme_font_size_override("font_size", 10)
+		name_lbl.add_theme_color_override("font_color", accent)
+		name_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+		name_lbl.add_theme_constant_override("shadow_offset_x", 1)
+		name_lbl.add_theme_constant_override("shadow_offset_y", 1)
+		name_lbl.add_theme_constant_override("shadow_outline_size", 3)
+		mod_box.add_child(name_lbl)
+
+		var desc_text: String = DailyDungeonManager.get_modifier_desc(mod_key)
+		if not desc_text.is_empty():
+			var desc_lbl := Label.new()
+			desc_lbl.text = desc_text
+			desc_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			desc_lbl.add_theme_font_size_override("font_size", 9)
+			desc_lbl.add_theme_color_override("font_color", Color(0.82, 0.90, 0.98, 1.0))
+			desc_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+			desc_lbl.add_theme_constant_override("shadow_offset_x", 1)
+			desc_lbl.add_theme_constant_override("shadow_offset_y", 1)
+			desc_lbl.add_theme_constant_override("shadow_outline_size", 2)
+			mod_box.add_child(desc_lbl)
+
+		if i < GameState.active_dungeon_modifiers.size() - 1:
+			var sep := HSeparator.new()
+			sep.add_theme_constant_override("separation", 4)
+			vbox.add_child(sep)
+
+	add_child(_dungeon_mod_panel)
+	call_deferred("_resize_dungeon_modifier_panel")
+
+func _apply_dungeon_mod_label_widths(node: Node, inner_w: float) -> void:
+	for child in node.get_children():
+		if child is Label:
+			(child as Label).custom_minimum_size.x = inner_w
+		elif child is Container:
+			_apply_dungeon_mod_label_widths(child, inner_w)
+
+func _measure_dungeon_mod_label_height(lbl: Label, inner_w: float) -> float:
+	var font: Font = lbl.get_theme_font("font")
+	var fs: int = lbl.get_theme_font_size("font_size")
+	if font == null:
+		return float(fs) + 2.0
+	return font.get_multiline_string_size(
+		lbl.text, HORIZONTAL_ALIGNMENT_CENTER, inner_w, fs).y
+
+func _measure_dungeon_mod_box_height(box: VBoxContainer, inner_w: float) -> float:
+	var total: float = 0.0
+	var sep: float = float(box.get_theme_constant("separation"))
+	var children: Array = box.get_children()
+	for i in children.size():
+		var child: Node = children[i]
+		if child is Label:
+			total += _measure_dungeon_mod_label_height(child as Label, inner_w)
+		if i < children.size() - 1:
+			total += sep
+	return total
+
+func _measure_dungeon_mod_vbox_height(vbox: VBoxContainer, inner_w: float) -> float:
+	var total: float = 0.0
+	var sep: float = float(vbox.get_theme_constant("separation"))
+	var children: Array = vbox.get_children()
+	for i in children.size():
+		var child: Node = children[i]
+		if child is VBoxContainer:
+			total += _measure_dungeon_mod_box_height(child as VBoxContainer, inner_w)
+		elif child is HSeparator:
+			total += (child as HSeparator).get_combined_minimum_size().y
+		if i < children.size() - 1:
+			total += sep
+	return total
+
+func _resize_dungeon_modifier_panel() -> void:
+	if _dungeon_mod_panel == null:
+		return
+	var vbox: VBoxContainer = _dungeon_mod_panel.get_child(0) as VBoxContainer
+	if vbox == null:
+		return
+	var sb := _dungeon_mod_panel.get_theme_stylebox("panel") as StyleBoxFlat
+	var panel_w: float = _dungeon_mod_panel.offset_right - _dungeon_mod_panel.offset_left
+	var inner_w: float = panel_w
+	var margin_v: float = 0.0
+	if sb:
+		inner_w = panel_w - sb.content_margin_left - sb.content_margin_right
+		margin_v = sb.content_margin_top + sb.content_margin_bottom
+	_apply_dungeon_mod_label_widths(vbox, inner_w)
+	var content_h: float = _measure_dungeon_mod_vbox_height(vbox, inner_w) + margin_v
+	_dungeon_mod_panel.offset_bottom = _dungeon_mod_panel.offset_top + content_h
+
+func _update_dungeon_modifier_panel_visibility() -> void:
+	if _dungeon_mod_panel == null:
+		return
+	var in_battle: bool = GameState.current_phase in [
+		GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK, GameState.Phase.TECH]
+	var show: bool = in_battle and not _is_ai_turn()
+	if show:
+		call_deferred("_resize_dungeon_modifier_panel")
+	_dungeon_mod_panel.visible = show
+
 # ─────────────────────────────────────────────────────────────
 # Attack Confirm Panel (floating, shown during CONFIRMING_ATTACK)
 # ─────────────────────────────────────────────────────────────
@@ -2177,7 +2316,6 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 		var col_snap: int = col
 		var btn := _make_context_icon_btn(CTX_ICON_INFO)
 		btn.pressed.connect(func() -> void:
-			SFXManager.play(SFXManager.SFX_CARD_DETAIL)
 			_hide_card_context()
 			var inst_snap: Variant = GameState.get_card(player_snap, row_snap, col_snap)
 			CardDetailOverlay.open(self, card_name_snap, card_type_snap, inst_snap)
@@ -2553,11 +2691,77 @@ func _on_union_material_tapped(pos: Vector2i) -> void:
 		_refresh_union_flash_cells()
 		GameState.post_message("%d more material(s) needed." % _pending_union_conditions_remaining.size())
 
+func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) -> void:
+	match u.ability_type:
+		CharacterData.AbilityType.UNION_SUMMON_VENOM_ALL_FOE:
+			var foe: int = GameState.get_opponent(player)
+			for r: int in range(GameState.GRID_SIZE):
+				for c: int in range(GameState.GRID_SIZE):
+					var card: GameState.CardInstance = GameState.get_card(foe, r, c)
+					if card.card_type == "character" and card.face_up:
+						if "venom" not in card.flags:
+							card.flags.append("venom")
+			GameState.post_message("%s: Venom on all opponent face-up characters!" % u.card_name)
+		CharacterData.AbilityType.UNION_SUMMON_REVIVE_MATCH:
+			var _nc: String = str(u.ability_params.get("name_contains", ""))
+			var _ex_union: bool = bool(u.ability_params.get("exclude_union", true))
+			var revived: GameState.CardInstance = null
+			for g: GameState.CardInstance in GameState.graveyards[player]:
+				if g.card_type != "character":
+					continue
+				if _ex_union and g.is_union:
+					continue
+				if _nc != "" and not g.card_name.to_lower().contains(_nc.to_lower()):
+					continue
+				revived = g
+				break
+			if revived == null:
+				GameState.post_message("%s: No matching card in graveyard to revive." % u.card_name)
+				return
+			for r: int in range(GameState.GRID_SIZE):
+				for c: int in range(GameState.GRID_SIZE):
+					var slot: GameState.CardInstance = GameState.get_card(player, r, c)
+					if slot.card_type != "dead_end" or slot.was_destroyed:
+						continue
+					var copy: GameState.CardInstance = GameState.CardInstance.new()
+					copy.card_type = "character"
+					copy.card_name = revived.card_name
+					copy.display_name = revived.display_name
+					copy.affinity = revived.affinity
+					copy.base_atk = revived.base_atk
+					copy.base_def = revived.base_def
+					copy.current_atk = revived.current_atk
+					copy.current_def = revived.current_def
+					copy.crystal_cost = revived.crystal_cost * 2
+					copy.rarity = revived.rarity
+					copy.ability_type = revived.ability_type
+					copy.ability_params = revived.ability_params.duplicate(true)
+					copy.face_up = true
+					copy.revealed_on_turn = GameState.turn_number
+					GameState.grids[player][r][c] = copy
+					for _gi: int in range(GameState.graveyards[player].size()):
+						if GameState.graveyards[player][_gi] == revived:
+							GameState.graveyards[player].remove_at(_gi)
+							break
+					GameState.emit_signal("card_revealed", player, r, c)
+					GameState.post_message("%s revived %s (cost doubled to %d)!" % [
+						u.card_name, copy.card_name, copy.crystal_cost])
+					return
+			GameState.post_message("%s: No empty cell to revive %s." % [u.card_name, revived.card_name])
+
+
 func _perform_pending_union() -> void:
 	_clear_union_flash_nodes()
 	_set_selection_state(SelectionState.SELECTING_ATTACKER)
 	var player: int = _pending_union_player
 	var u: UnionData = _pending_union_data
+	if u == null or not UnionDatabase.is_playable_in_demo(u):
+		_pending_union_data = null
+		_pending_union_player = -1
+		_pending_union_zone_cells.clear()
+		_pending_union_conditions_remaining.clear()
+		_pending_union_selected_materials.clear()
+		return
 	var first_cell: Vector2i = _pending_union_selected_materials[0]
 	# Collect material names BEFORE removal for the battle log
 	var material_names: Array[String] = []
@@ -2574,6 +2778,10 @@ func _perform_pending_union() -> void:
 		GameState.remove_union_material(player, cell.x, cell.y)
 	# Place union at first selected cell
 	GameState.place_union_card(player, first_cell.x, first_cell.y, u)
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "dimensional_gate" in GameState.active_dungeon_modifiers:
+		DailyDungeonManager.register_dimensional_gate_union(player, first_cell.x, first_cell.y)
+	_apply_union_summon_ability(player, first_cell, u)
 	# Record unlock (human players only)
 	var human_player: bool = GameState.game_mode not in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON] or player == 0
 	if human_player:
@@ -3501,20 +3709,9 @@ func _show_change_music_panel() -> void:
 	_add_back_btn(vbox, overlay["dimmer"])
 
 func _change_battle_music(path: String) -> void:
-	var stream := load(path) as AudioStream
-	if stream == null:
-		return
-	if _battle_music != null:
-		var fade := create_tween()
-		fade.tween_property(_battle_music, "volume_db", -80.0, 0.5)
-		await fade.finished
-		_battle_music.stop()
-		_battle_music.stream = stream
-		_battle_music.play()
-		var unfade := create_tween()
-		unfade.tween_property(_battle_music, "volume_db",
-			linear_to_db(GameState.battle_bgm_volume / 100.0), 0.5)
 	GameState.battle_bgm_path = path
+	BGMManager.play_path(
+		path, 0.5, 0.5, GameState.battle_bgm_volume, BGMManager.CONTEXT_BATTLE)
 
 # ─────────────────────────────────────────────────────────────
 # Battle Log sub-panel
@@ -3839,10 +4036,7 @@ func _on_grid_card_hovered(player: int, row: int, col: int) -> void:
 	# Dead-end slots have no info to show
 	if inst.card_type == "dead_end":
 		return
-	var is_own := (player == GameState.current_player)
-	if not (is_own or inst.face_up):
-		return
-	_show_hover_info(inst.card_name, inst.card_type)
+	# Mini card info panel disabled during battle.
 
 func _show_hover_info(card_name: String, card_type: String) -> void:
 	if _hover_panel == null:
@@ -3912,10 +4106,7 @@ func _set_attack_hover_node(node: Control) -> void:
 		_attack_hover_node.set_attack_hover(true)
 
 func _stop_battle_music() -> void:
-	if _battle_music != null:
-		_battle_music.stop()
-		_battle_music.queue_free()
-		_battle_music = null
+	BGMManager.stop(0.0)
 
 # ─────────────────────────────────────────────────────────────
 # Compact card-effect coin flip overlay (1–3 coins, auto-dismiss)
@@ -4611,6 +4802,8 @@ func _current_skip_tax() -> int:
 
 ## AI end-turn handler — mirrors _on_end_turn_requested but auto-pays the skip tax.
 func _on_ai_end_turn() -> void:
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
 	_hide_thinking_bubble()
 	var player := GameState.current_player
 	var has_attacked := GameState.attacks_remaining < 2
@@ -4811,7 +5004,7 @@ func _enter_mode_select() -> void:
 		_reset_reveal_previews()
 	elif not _reveal_preview[cp]:
 		_toggle_reveal_preview(cp)
-	if _is_ai_turn():
+	if _is_ai_turn() and GameState.current_phase != GameState.Phase.GAME_OVER:
 		if _end_turn_btn:
 			_end_turn_btn.visible = false
 		if _options_btn:
@@ -4824,14 +5017,17 @@ func _enter_mode_select() -> void:
 			and GameState.current_player == 0) else ai_player
 		_active_ai.decide_bluff()   # fire-and-forget; runs in background
 		_start_ai_thinking()        # show thinking bubble after 0.5s if still processing
-		if _tech_used_this_turn[GameState.current_player] and not _tech_royale_ai:
-			_active_ai.continue_after_union()  # tech already played this turn — skip to attack
+		if (_tech_used_this_turn[GameState.current_player] and not _tech_royale_ai) \
+				or _ai_turn_action_started[GameState.current_player]:
+			_active_ai.continue_after_union()  # tech already played or mid-turn attack continue
 		else:
+			_ai_turn_action_started[GameState.current_player] = true
 			_active_ai.decide_turn()
 		return
 	_set_selection_state(SelectionState.SELECTING_ATTACKER)
 	_highlight_attackable_chars()
 	_update_end_turn_blink()
+	_update_dungeon_modifier_panel_visibility()
 
 func _on_phase_changed(phase: GameState.Phase) -> void:
 	_refresh_all_grids()
@@ -4844,11 +5040,13 @@ func _on_phase_changed(phase: GameState.Phase) -> void:
 		if GameState.turn_number != _tech_reset_turn:
 			_tech_reset_turn = GameState.turn_number
 			_tech_used_this_turn[GameState.current_player] = false
+			_ai_turn_action_started[GameState.current_player] = false
 	_update_tech_stacks()
 	_update_void_stacks()
 	_update_crystal_visibility()
 	_update_reveal_buttons()
 	_update_union_suggest_button()
+	_update_dungeon_modifier_panel_visibility()
 	if _tech_overlay_panel != null and _tech_overlay_panel.visible:
 		_rebuild_tech_overlay_content(_tech_overlay_player)
 	match phase:
@@ -4928,8 +5126,10 @@ func _on_attack_aborted() -> void:
 	_refresh_attack_labels()
 	# If AI aborted its own attack (e.g. attacks_remaining ran out, coin-flip cancel),
 	# re-trigger the AI decision loop instead of showing human UI.
-	if _is_ai_turn():
+	if _is_ai_turn() and GameState.current_phase != GameState.Phase.GAME_OVER:
 		await get_tree().create_timer(0.4).timeout
+		if GameState.current_phase == GameState.Phase.GAME_OVER:
+			return
 		_ai_watchdog.start()
 		_active_ai.continue_after_union()
 		return
@@ -4964,9 +5164,12 @@ func _on_tech_resolved(_player: int) -> void:
 	end_attack_btn.visible = false
 	_clear_selection()
 	_refresh_all_grids()
-	if _is_ai_turn():
+	if _is_ai_turn() and GameState.current_phase != GameState.Phase.GAME_OVER:
 		# Go straight to attack — do NOT call decide_turn() again (would replay tech check)
+		_ai_turn_action_started[GameState.current_player] = true
 		await get_tree().create_timer(0.4).timeout
+		if GameState.current_phase == GameState.Phase.GAME_OVER:
+			return
 		_ai_watchdog.start()
 		_active_ai.continue_after_union()
 	else:
@@ -5029,7 +5232,6 @@ func _show_turn_banner(player: int) -> void:
 # Card Click Handling
 # ─────────────────────────────────────────────────────────────
 func _on_card_detail_requested(card_name: String, card_type: String, owner_player: int, row: int, col: int) -> void:
-	SFXManager.play(SFXManager.SFX_CARD_DETAIL)
 	var inst: Variant = null
 	if row >= 0 and col >= 0:
 		inst = GameState.get_card(owner_player, row, col)
@@ -5195,6 +5397,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		var parts := filter.split("_")
 		_tech_reveals_remaining = int(parts[-1]) if parts[-1].is_valid_int() else 1
 		_tech_reveals_total = _tech_reveals_remaining
+		_tech_reveal_picked.clear()
 	else:
 		_tech_reveals_total = 0
 	_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
@@ -5233,6 +5436,22 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		"self_squares_1_opponent_turn", "own_divine_character_redirect"
 	]
 
+	if filter in ["ability_false_prophet_reveal", "opponent_character_ability_destroy", "ability_rebel_king_swap"]:
+		var _ai_responds: bool = _is_ai_turn()
+		if filter == "ability_rebel_king_swap" and GameState.game_mode == GameState.GameMode.VS_AI \
+				and GameState.current_player == ai_player.player_index:
+			_ai_responds = true
+		if _ai_responds:
+			await get_tree().create_timer(0.4).timeout
+			var _ab_target: Vector2i = _active_ai.decide_target(filter)
+			if filter == "ability_rebel_king_swap":
+				_handle_tech_target(GameState.current_player, _ab_target)
+			elif filter == "ability_false_prophet_reveal":
+				_handle_tech_target(GameState.get_opponent(GameState.current_player), _ab_target)
+			else:
+				_handle_tech_target(GameState.get_opponent(GameState.current_player), _ab_target)
+		return
+
 	# If AI turn (AI is attacker), auto-resolve — but skip defender-response filters
 	if _is_ai_turn() and filter not in _defender_response_filters:
 		await get_tree().create_timer(0.4).timeout
@@ -5240,12 +5459,21 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		if "opponent_squares" in filter and _count_opponent_facedown(GameState.get_opponent(GameState.current_player)) == 0:
 			_finish_tech_action(GameState.current_player)
 			return
+		if "opponent_squares" in filter:
+			_prompt_ai_radar_pick()
+			return
 		var ai_target := _active_ai.decide_target(filter)
 		_active_ai.ai_target_chosen.emit(ai_target)  # log AI tech/trap target choice
 		# "row_or_column" targets a cell on the opponent's grid even though the word
 		# "opponent" doesn't appear in the filter string — handle it explicitly.
-		var _targets_opponent: bool = "opponent" in filter or filter == "row_or_column"
-		var target_player: int = GameState.get_opponent(GameState.current_player) if _targets_opponent else GameState.current_player
+		var target_player: int = GameState.current_player
+		if filter == "any_faceup_card":
+			var opp_idx: int = GameState.get_opponent(GameState.current_player)
+			var opp_card: GameState.CardInstance = GameState.get_card(opp_idx, ai_target.x, ai_target.y)
+			if opp_card.face_up and opp_card.card_type != "dead_end":
+				target_player = opp_idx
+		elif "opponent" in filter or filter == "row_or_column":
+			target_player = GameState.get_opponent(GameState.current_player)
 		_handle_tech_target(target_player, ai_target)
 	# Trap/tech effects where AI is the DEFENDING player (not AI's turn, but AI must self-select)
 	elif filter in _defender_response_filters \
@@ -5265,6 +5493,56 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var current_player := GameState.current_player
 	var opponent := GameState.get_opponent(current_player)
 	var card: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
+
+	if pending_tech_filter == "ability_false_prophet_reveal":
+		if player == opponent and not card.face_up:
+			GameState.reveal_card(player, pos.x, pos.y)
+			card = GameState.get_card(player, pos.x, pos.y)
+			var _fp_pos: Vector2i = _find_own_card_pos(current_player, "False Prophet")
+			if card.card_type == "dead_end":
+				GameState.post_message("False Prophet: Dead End revealed — self-destructs!")
+				if _fp_pos != Vector2i(-1, -1):
+					GameState.destroy_card(current_player, _fp_pos.x, _fp_pos.y, false)
+			else:
+				var _gain: int = 200
+				for _fp_r: int in range(GameState.GRID_SIZE):
+					for _fp_c: int in range(GameState.GRID_SIZE):
+						var _fp: GameState.CardInstance = GameState.get_card(current_player, _fp_r, _fp_c)
+						if _fp.is_union and _fp.card_name == "False Prophet" \
+								and _fp.ability_type == CharacterData.AbilityType.TURN_START_REVEAL_OPPONENT_CELL:
+							_gain = _fp.ability_params.get("gain", 200)
+							break
+				GameState.gain_crystals(current_player, _gain, "ability")
+				GameState.post_message("False Prophet: +%d Crystals!" % _gain)
+		_clear_after_ability()
+		return
+
+	if pending_tech_filter == "opponent_character_ability_destroy":
+		if _pending_ability_destroy_pos == Vector2i(-1, -1):
+			if player == opponent and card.card_type == "character" and card.face_up:
+				_pending_ability_destroy_pos = pos
+				_pending_ability_destroy_player = player
+				var _cf: Array = await turn_manager._do_coin_flips(1)
+				if _cf[0]:
+					GameState.destroy_card(player, pos.x, pos.y, true)
+					GameState.post_message("Rocket Peacock: Heads — %s destroyed!" % card.card_name)
+				else:
+					GameState.post_message("Rocket Peacock: Tails — %s survives." % card.card_name)
+				_pending_ability_destroy_pos = Vector2i(-1, -1)
+				_pending_ability_destroy_player = -1
+		_clear_after_ability()
+		return
+
+	if pending_tech_filter == "ability_rebel_king_swap":
+		if player == current_player and card.card_type == "character" and card.face_up:
+			var _tmp_atk: int = card.current_atk
+			card.current_atk = card.current_def
+			card.current_def = _tmp_atk
+			GameState.post_message("Rebel King: %s swapped ATK (%d) and DEF (%d)." % [
+				card.card_name, card.current_atk, card.current_def])
+		_clear_after_ability()
+		return
+
 	var data: TechCardData = CardDatabase.get_tech(pending_tech_name)
 
 	# Emit signals for CardRuleEngine CARD_TARGETED_BY_TECH / PLAYER_SELECT_TECH_TARGET
@@ -5277,15 +5555,22 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if "opponent_squares" in pending_tech_filter:
 		if player == opponent:
-			# Ignore already-revealed cells — dead_end slots are valid targets
+			# Ignore already-revealed cells — retry for AI instead of silently stalling Radar.
 			if card.face_up:
+				if _is_ai_turn() and _tech_reveals_remaining > 0:
+					await get_tree().create_timer(0.2).timeout
+					_prompt_ai_radar_pick()
 				return
 			GameState.reveal_card(player, pos.x, pos.y)
+			if not _tech_reveal_picked.has(pos):
+				_tech_reveal_picked.append(pos)
 			# _on_card_revealed handles trap auto-void when a trap is found
 			# Risky reveal: pay 700 crystals for each character found
-			if "risky" in pending_tech_filter and card.card_type == "character":
-				GameState.lose_crystals(current_player, 700, "ability")
-				GameState.post_message("Corrupted Spy: Found a character — lost 700 Crystals!")
+			if "risky" in pending_tech_filter and card.card_type in ["character", "trap"]:
+				var _cs_cost: int = 700
+				GameState.lose_crystals(current_player, _cs_cost, "ability")
+				GameState.post_message(
+					"Corrupted Spy: Found %s — lost %d Crystals!" % [card.card_type, _cs_cost])
 			_tech_reveals_remaining -= 1
 			if _tech_reveals_remaining <= 0:
 				_finish_tech_action(current_player)
@@ -5299,9 +5584,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				_highlight_tech_targets(pending_tech_filter)
 				if _is_ai_turn():
 					await get_tree().create_timer(0.4).timeout
-					var ai_target := _active_ai.decide_target(pending_tech_filter)
-					_active_ai.ai_target_chosen.emit(ai_target)
-					_handle_tech_target(opponent, ai_target)
+					_prompt_ai_radar_pick()
 		return
 
 	if pending_tech_filter == "bribe_reveal":
@@ -5314,7 +5597,13 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "own_faceup_character" or pending_tech_filter == "own_faceup_character_berserk":
-		if player == current_player and card.card_type == "character" and card.face_up:
+		var _allow_fd: bool = data != null and (
+			data.effect_params.get("allow_facedown", false)
+			or data.effect_type == TechCardData.TechEffectType.PERM_DEF_BOOST_ONE)
+		if player == current_player and card.card_type == "character" \
+				and (card.face_up or _allow_fd):
+			if not card.face_up:
+				GameState.reveal_card(player, pos.x, pos.y)
 			if data:
 				match data.effect_type:
 					TechCardData.TechEffectType.PERM_ATK_BOOST_ONE:
@@ -5331,7 +5620,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 						GameState.post_message("%s: %s gains +%d ATK this attack." % [data.card_name, card.card_name, _boost_tmp])
 					TechCardData.TechEffectType.MULTI_ATTACK_ONE:
 						GameState.berserk_active[current_player] = card
-						GameState.post_message("%s: %s can attack multiple times this turn." % [data.card_name, card.card_name])
+						GameState.attacks_remaining = 1
+						GameState.post_message("%s: %s gets 1 attack this turn (Berserk)." % [data.card_name, card.card_name])
 					TechCardData.TechEffectType.CLONE_CHARACTER_AS_TOKEN:
 						# Find a blank slot to place the clone
 						var _clone_placed: bool = false
@@ -5352,6 +5642,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 									_clone.ability_type = int(CharacterData.AbilityType.NONE)
 									_clone.ability_params = {}
 									_clone.is_token = true
+									if data.effect_params.get("destroy_at_turn_end", false):
+										_clone.flags.append("destroy_at_turn_end")
 									_clone.face_up = true
 									_clone.revealed_on_turn = GameState.turn_number
 									GameState.grids[current_player][_cl_r][_cl_c] = _clone
@@ -5369,6 +5661,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	if pending_tech_filter == "own_bio_character":
 		if player == current_player and card.card_type == "character" and card.affinity == CharacterData.Affinity.BIO:
 			card.has_mutagen_flag = true
+			GameState.apply_mutagen_flag(card)
 			GameState.reveal_card(player, pos.x, pos.y)
 		# Always finish — if target failed the filter, tech completes with no effect rather than hanging
 		_finish_tech_action(current_player)
@@ -5379,6 +5672,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			var pay_cost := pending_tech_name != "Accident" and pending_tech_filter != "opponent_faceup_no_cost"
 			GameState.destroy_card(player, pos.x, pos.y, pay_cost)
 			_finish_tech_action(current_player)
+		else:
+			GameState.post_message("No valid target — effect cancelled.")
+			_finish_tech_action(current_player)
 		return
 
 	if pending_tech_filter == "own_divine_character_redirect":
@@ -5388,6 +5684,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				and card.ability_type != int(CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY):
 			GameState.destroy_card(opponent, pos.x, pos.y)
 			GameState.post_message("Archbishop redirected destruction to %s." % card.card_name)
+			turn_manager.complete_archbishop_redirect()
 			_clear_after_tech()
 		return
 
@@ -5439,8 +5736,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "lock_own_monster":
-		# BOTH_LOCK_CHOSEN_MONSTER: lock own chosen monster from attacking
-		if player == current_player and card.card_type == "character" and card.face_up:
+		if player == current_player and card.card_type == "character":
+			if not card.face_up:
+				GameState.reveal_card(player, pos.x, pos.y)
 			card.cannot_attack_until = GameState.turn_number + 2
 			GameState.post_message("Make Friend: %s is locked from attacking." % card.card_name)
 			# Opponent also picks a monster to lock — transition to opponent lock
@@ -5463,7 +5761,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "lock_opponent_monster":
-		if player == opponent and card.card_type == "character" and card.face_up:
+		if player == opponent and card.card_type == "character":
+			if not card.face_up:
+				GameState.reveal_card(player, pos.x, pos.y)
 			card.cannot_attack_until = GameState.turn_number + 2
 			GameState.post_message("Make Friend: %s is also locked from attacking." % card.card_name)
 		else:
@@ -5613,10 +5913,13 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			if data and data.effect_type == TechCardData.TechEffectType.REVIVE_CHARACTER_NO_ATK:
 				revived.current_atk = 0
 				revived.ability_type = int(CharacterData.AbilityType.NONE)
+			if data and data.effect_params.get("double_cost", false):
+				revived.crystal_cost *= 2
 			revived.face_up = true
 			revived.revealed_on_turn = GameState.turn_number
 			revived.attacked_this_turn = false
 			GameState.grids[current_player][empty_pos.x][empty_pos.y] = revived
+			_refresh_card_node(current_player, empty_pos.x, empty_pos.y)
 			GameState.emit_signal("card_revealed", current_player, empty_pos.x, empty_pos.y)
 			GameState.post_message("Revived %s at [%d,%d]!" % [revived.card_name, empty_pos.x, empty_pos.y])
 			_finish_tech_action(current_player)
@@ -5628,8 +5931,30 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if opp_hand.is_empty():
 			GameState.post_message("Tech Copy: Opponent has no Tech Cards.")
 		else:
-			GameState.post_message("Tech Copy: Opponent holds: %s" % ", ".join(opp_hand))
+			var picked: String = str(opp_hand[0])
+			if data and data.effect_params.get("copy_to_hand", false):
+				if not picked in GameState.tech_hands[current_player]:
+					GameState.tech_hands[current_player].append(picked)
+				GameState.post_message("Tech Copy: Copied %s into your Tech Stack." % picked)
+			else:
+				GameState.post_message("Tech Copy: Opponent holds: %s" % ", ".join(opp_hand))
 		_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter == "rift_strike_anchor":
+		if player == opponent and card.card_type == "character" and card.face_up:
+			var _rs_row: int = pos.x
+			var _rs_destroyed: int = 0
+			for _rs_c: int in range(GameState.GRID_SIZE):
+				if _rs_c == pos.y:
+					continue
+				var _rs_cell: GameState.CardInstance = GameState.get_card(opponent, _rs_row, _rs_c)
+				if _rs_cell.face_up and _rs_cell.card_type == "character":
+					GameState.destroy_card(opponent, _rs_row, _rs_c, false)
+					_rs_destroyed += 1
+			GameState.post_message(
+				"Rift Strike: %d other face-up card(s) on Row %d destroyed." % [_rs_destroyed, _rs_row + 1])
+			_finish_tech_action(current_player)
 		return
 
 	if pending_tech_filter == "own_any_card":
@@ -5746,6 +6071,20 @@ func _finish_tech_action(player: int) -> void:
 	_clear_after_tech()
 	turn_manager.after_tech_resolved(player)
 
+func _clear_after_ability() -> void:
+	_clear_after_tech()
+	turn_manager.ability_selection_done.emit()
+
+
+func _find_own_card_pos(player: int, card_name: String) -> Vector2i:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var inst: GameState.CardInstance = GameState.get_card(player, r, c)
+			if inst.card_type == "character" and inst.card_name == card_name:
+				return Vector2i(r, c)
+	return Vector2i(-1, -1)
+
+
 func _clear_after_tech() -> void:
 	_set_own_facedown_char_peek(false)   # safety net — always clear peek on tech end
 	action_panel.visible = false
@@ -5753,6 +6092,7 @@ func _clear_after_tech() -> void:
 	pending_tech_name = ""
 	_tech_reveals_remaining = 0
 	_tech_reveals_total = 0
+	_tech_reveal_picked.clear()
 	_rift_hover_cell = Vector2i(-1, -1)
 	_rift_last_hover = Vector2i(-1, -1)
 	_hide_guide()
@@ -5760,6 +6100,16 @@ func _clear_after_tech() -> void:
 	_clear_selection()
 	_set_selection_state(SelectionState.NONE)
 	_refresh_all_grids()
+
+## AI Radar / multi-reveal: pick a unique face-down opponent cell.
+func _prompt_ai_radar_pick() -> void:
+	var opponent: int = GameState.get_opponent(GameState.current_player)
+	var ai_target: Vector2i = _active_ai.decide_facedown_opponent_excluding(_tech_reveal_picked)
+	if ai_target.x < 0:
+		_finish_tech_action(GameState.current_player)
+		return
+	_active_ai.ai_target_chosen.emit(ai_target)
+	_handle_tech_target(opponent, ai_target)
 
 ## Temporarily show face-down character cards as face-up (visual peek only).
 ## Does NOT change card.face_up in GameState — purely cosmetic.
@@ -5881,10 +6231,14 @@ func _highlight_tech_targets(filter: String) -> void:
 				grid_nodes[opponent][r][c].set_highlighted(not opp_card.face_up)
 
 	elif "own_faceup_character" in filter or "own_bio_character" in filter:
+		var _tech_data: TechCardData = CardDatabase.get_tech(pending_tech_name) if pending_tech_name != "" else null
+		var _fd_ok: bool = _tech_data != null and (
+			_tech_data.effect_params.get("allow_facedown", false)
+			or _tech_data.effect_type == TechCardData.TechEffectType.PERM_DEF_BOOST_ONE)
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(player, r, c)
-				var ok := card.card_type == "character" and card.face_up
+				var ok := card.card_type == "character" and (card.face_up or _fd_ok)
 				if "own_bio_character" in filter:
 					ok = ok and card.affinity == CharacterData.Affinity.BIO
 				grid_nodes[player][r][c].set_highlighted(ok)
@@ -5913,12 +6267,26 @@ func _highlight_tech_targets(filter: String) -> void:
 					and card.affinity == CharacterData.Affinity.DIVINE
 					and card.ability_type != int(CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY))
 
-	elif filter == "opponent_any_hidden":
+	elif filter == "opponent_any_hidden" or filter == "ability_false_prophet_reveal":
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 				grid_nodes[opponent][r][c].set_highlighted(
 					card.card_type != "dead_end" and not card.face_up)
+
+	elif filter == "opponent_character_ability_destroy":
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(
+					card.card_type == "character" and card.face_up)
+
+	elif filter == "ability_rebel_king_swap":
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(player, r, c)
+				grid_nodes[player][r][c].set_highlighted(
+					card.card_type == "character" and card.face_up)
 
 	elif filter == "own_character_for_swap":
 		# ATTACKER picks one of their own characters to swap positions with
@@ -5950,6 +6318,13 @@ func _highlight_tech_targets(filter: String) -> void:
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 				grid_nodes[opponent][r][c].set_highlighted(card.card_type != "dead_end" and not card.face_up)
 
+	elif filter == "rift_strike_anchor":
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(
+					card.card_type == "character" and card.face_up)
+
 	elif filter in ["lock_own_monster", "own_faceup_character_source", "own_faceup_character_target",
 			"own_faceup_card_sacrifice", "own_any_card", "own_facedown_character"]:
 		for r in range(GameState.GRID_SIZE):
@@ -5957,7 +6332,9 @@ func _highlight_tech_targets(filter: String) -> void:
 				var card: GameState.CardInstance = GameState.get_card(player, r, c)
 				var ok: bool = false
 				match filter:
-					"lock_own_monster", "own_faceup_character_source", "own_faceup_character_target":
+					"lock_own_monster":
+						ok = card.card_type == "character"
+					"own_faceup_character_source", "own_faceup_character_target":
 						ok = card.card_type == "character" and card.face_up
 					"own_faceup_card_sacrifice":
 						ok = card.face_up and card.card_type != "dead_end"
@@ -5974,7 +6351,9 @@ func _highlight_tech_targets(filter: String) -> void:
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 				var ok: bool = false
 				match filter:
-					"lock_opponent_monster", "opponent_faceup_zero_stats":
+					"lock_opponent_monster":
+						ok = card.card_type == "character"
+					"opponent_faceup_zero_stats":
 						ok = card.card_type == "character" and card.face_up
 					"self_faceup_for_copy":
 						ok = card.card_type == "character" and card.face_up
@@ -6098,6 +6477,7 @@ func _hide_guide() -> void:
 # ─────────────────────────────────────────────────────────────
 func _on_card_revealed(player: int, row: int, col: int) -> void:
 	var node: Control = grid_nodes[player][row][col]
+	_refresh_card_node(player, row, col)
 	var inst := GameState.get_card(player, row, col)
 	node.play_reveal_animation()
 	# Dead-end reveal plays a 0.5s hold before disappearing — wait for that to finish
@@ -6277,7 +6657,11 @@ func _on_ai_mode_chosen(mode: GameState.TurnMode) -> void:
 	turn_manager.select_mode(mode)
 
 func _on_ai_attack_chosen(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
 	await get_tree().create_timer(0.3).timeout
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
 	turn_manager.perform_attack(attacker_pos, target_pos)
 
 func _on_ai_tech_chosen(tech_name: String) -> void:
@@ -6678,23 +7062,21 @@ func _on_game_over(winner: int) -> void:
 		_attack_confirm_panel.visible = false
 
 	# ── 0. Brief pause so the crystal-hit-zero moment lands before the chaos ──
+	_stop_battle_music()
 	await get_tree().create_timer(1.2).timeout
 
 	# ── 1. Flip-reveal all face-down cards (with screen shake) ───────────────
 	var ml: Control = get_node("MainLayout")
 	_shake_origin = ml.position
 	_shake_active = true
-	# Fade battle music out; start result music immediately at shake
-	_fade_out_battle_music(0.5)
-	var result_music := AudioStreamPlayer.new()
-	result_music.stream = load("res://assets/audio/bgm_ost_even_if_everything_flips.mp3") as AudioStream
-	result_music.bus = &"Music"
-	result_music.volume_db = -80.0
-	result_music.finished.connect(func() -> void: result_music.play(68.0))
-	add_child(result_music)
-	result_music.play(68.0)
-	var result_fade := create_tween()
-	result_fade.tween_property(result_music, "volume_db", 0.0, 1.5).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+	# Result sting on loss; victory track on win (start at 0s so playback is reliable)
+	var _go_ctx: String = BGMManager.CONTEXT_VICTORY if player_won else BGMManager.CONTEXT_DEFEAT
+	var _go_path: String = BGMManager.get_default_path(_go_ctx)
+	if _go_path.is_empty():
+		_go_ctx = BGMManager.CONTEXT_RESULT
+		_go_path = BGMManager.get_default_path(_go_ctx)
+	if not _go_path.is_empty():
+		BGMManager.play_path(_go_path, 1.5, 0.0, 100.0, _go_ctx, 0.0)
 	await _flip_reveal_all_cards()
 	_shake_active = false
 	ml.position = _shake_origin
@@ -6710,6 +7092,11 @@ func _on_game_over(winner: int) -> void:
 	t_reveal.tween_property(white_overlay, "color:a", 0.0, 0.8).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 	await t_reveal.finished
 	white_overlay.queue_free()
+
+	if player_won and GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+		var combat_rewards: Array = DailyDungeonManager.take_pending_combat_rewards()
+		if not combat_rewards.is_empty():
+			await CombatRewardOverlay.present(self, combat_rewards)
 
 # ─────────────────────────────────────────────────────────────
 # Game-over helpers
@@ -6751,12 +7138,7 @@ func _fade_to_white() -> ColorRect:
 	return overlay
 
 func _fade_out_battle_music(duration: float) -> void:
-	if _battle_music == null:
-		return
-	var t := create_tween()
-	t.tween_property(_battle_music, "volume_db", -80.0, duration)
-	await t.finished
-	_stop_battle_music()
+	await BGMManager.fade_out_and_stop(duration)
 
 func _show_endgame_screen(winner: int) -> void:
 	_hide_card_context()
@@ -6961,7 +7343,7 @@ func _show_endgame_screen(winner: int) -> void:
 
 	var dest: String = "res://scenes/campaign_map.tscn" \
 		if mode == GameState.GameMode.CAMPAIGN \
-		else "res://scenes/main_menu.tscn"
+		else DailyDungeonManager.get_post_battle_scene()
 
 	var _clicked := [false]
 	overlay.gui_input.connect(func(ev: InputEvent) -> void:
@@ -7006,11 +7388,9 @@ func _show_endgame_screen(winner: int) -> void:
 
 func _open_session_log() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://logs"))
-	var dt: Dictionary = Time.get_datetime_dict_from_system()
 	var mode_tag: String = "vs_ai" if GameState.game_mode == GameState.GameMode.VS_AI else "hot_seat"
-	var path: String = "res://logs/%s_%04d-%02d-%02d_%02d-%02d-%02d.txt" % [
-		mode_tag, dt["year"], dt["month"], dt["day"],
-		dt["hour"], dt["minute"], dt["second"]]
+	var log_info: Dictionary = SessionLogNaming.begin_battle_log(mode_tag)
+	var path: String = log_info["path"]
 	_session_log_file = FileAccess.open(path, FileAccess.WRITE)
 	_session_log_start_msec = Time.get_ticks_msec()
 	_session_log_prev_crystals = [GameState.crystals[0], GameState.crystals[1]]
@@ -7018,9 +7398,8 @@ func _open_session_log() -> void:
 	if _session_log_file == null:
 		return
 
+	SessionLogNaming.write_battle_header(_session_log_file, log_info)
 	_session_log_file.store_line("=== %s Match ===" % mode_tag.to_upper().replace("_", " "))
-	_session_log_file.store_line("Started: %04d-%02d-%02d %02d:%02d:%02d" % [
-		dt["year"], dt["month"], dt["day"], dt["hour"], dt["minute"], dt["second"]])
 	_session_log_file.store_line("===")
 	_session_log_file.store_line("")
 

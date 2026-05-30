@@ -44,6 +44,7 @@ var _selected_node_id: String = ""
 # Lifecycle
 # ─────────────────────────────────────────────────────────────
 func _ready() -> void:
+	BGMManager.play_context(BGMManager.CONTEXT_CAMPAIGN_MAP, 0.8, 0.8)
 	_build_ui()
 	_check_pending_result()
 	CampaignManager.progress_changed.connect(_on_progress_changed)
@@ -414,9 +415,7 @@ func _launch_battle(node: CampaignManager.CampaignNode) -> void:
 	GameState.game_mode                = GameState.GameMode.CAMPAIGN
 	GameState.campaign_node_id         = node.id
 	GameState.campaign_enemy_config    = CampaignManager.get_enemy_config(diff)
-	var bgm_node := get_parent().get_node_or_null("BGM") as AudioStreamPlayer
-	if bgm_node != null:
-		bgm_node.stop()
+	BGMManager.stop(0.0)
 	CheckerTransition.fade_out_to_battle(func() -> void:
 		get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 
@@ -428,9 +427,7 @@ func _claim_reward(node: CampaignManager.CampaignNode) -> void:
 # Visual Novel scenes
 # ─────────────────────────────────────────────────────────────
 func _show_vn_scene(json_path: String, on_complete: Callable) -> void:
-	var bgm_node := get_parent().get_node_or_null("BGM") as AudioStreamPlayer
-	if bgm_node != null:
-		bgm_node.stop()
+	BGMManager.stop(0.0)
 	if json_path == "":
 		on_complete.call()
 		return

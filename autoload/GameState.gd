@@ -58,6 +58,11 @@ const MAX_CHARACTERS: int = 12
 const MIN_TRAPS: int = 4
 const MAX_TRAPS: int = 6
 
+# Decoy Puppet / Guerrilla Tactics battle flow (declared before inner class)
+var attack_cost_block_max: int = -1
+var attack_cost_block_player: int = -1
+var guerrilla_tactics_owner: int = -1
+
 # ─────────────────────────────────────────────────────────────
 # CardInstance – Runtime card state on the grid
 # ─────────────────────────────────────────────────────────────
@@ -194,8 +199,6 @@ var campaign_player_names: Array[String] = []   # [p1_name, p2_name] — set by 
 # Daily Dungeon state (only meaningful when game_mode == DAILY_DUNGEON)
 var active_dungeon_node_id: String = ""
 var active_dungeon_modifiers: Array = []
-var dungeon_affinity_day_affinity: String = ""
-var dungeon_affinity_day_stat: String = ""
 
 var crystals: Array = [STARTING_CRYSTALS, STARTING_CRYSTALS]
 var grids: Array = []           # grids[player][row][col] -> CardInstance
@@ -425,8 +428,8 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 		if card.card_type == "character" and game_mode == GameMode.DAILY_DUNGEON:
 			if "bio_triumph" in active_dungeon_modifiers \
 					and card.affinity == CharacterData.Affinity.BIO \
-					and "mutagen" not in card.flags:
-				card.flags.append("mutagen")
+					and not card.has_mutagen_flag:
+				apply_mutagen_flag(card)
 				post_message("Bio Triumph: %s receives Mutagen flag!" % card.display_name)
 			if "nature_triumph" in active_dungeon_modifiers \
 					and card.affinity == CharacterData.Affinity.NATURE \
@@ -494,7 +497,7 @@ func place_union_card(player_index: int, row: int, col: int, u: UnionData) -> vo
 	inst.base_def     = u.base_def
 	inst.current_atk  = u.base_atk
 	inst.current_def  = u.base_def
-	inst.crystal_cost = u.summon_cost   # crystal loss = summon cost if destroyed
+	inst.crystal_cost = 0   # summon cost paid at summon time; no extra loss on destroy
 	inst.rarity       = int(u.rarity)
 	inst.ability_type = int(u.ability_type)
 	inst.ability_params = u.ability_params
@@ -632,6 +635,9 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	reroll_dice_available = [false, false]
 	graveyards = [[], []]
 	locked_attack_positions = []
+	attack_cost_block_max = -1
+	attack_cost_block_player = -1
+	guerrilla_tactics_owner = -1
 	if not _vn_battle_pending:
 		battle_ai_union_enabled = true
 		battle_player_union_enabled = true
@@ -643,6 +649,13 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	game_over_reason = ""
 	_init_grids()
 	set_phase(Phase.SETUP_P1)
+
+func apply_mutagen_flag(card: CardInstance) -> void:
+	if card == null or card.card_type != "character":
+		return
+	card.has_mutagen_flag = true
+	if "mutagen" not in card.flags:
+		card.flags.append("mutagen")
 
 func add_flag(player_index: int, row: int, col: int, flag: String) -> void:
 	var card: CardInstance = get_card(player_index, row, col)

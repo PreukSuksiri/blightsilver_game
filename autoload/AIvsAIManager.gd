@@ -5,12 +5,19 @@ extends Node
 signal log_written(line: String)
 
 const DeckData = preload("res://resources/DeckData.gd")
+const MAX_BATCH_ITERATIONS: int = 20
 
 # ── Config (set by AIvsAIConfig before launching the game board) ──────────────
 var deck0: Variant = null                 # player 0's deck (DeckData or null)
 var deck1: Variant = null                 # player 1's deck (DeckData or null)
 var forced_cells_0: Array = []            # Array[Dictionary{card_name, row, col}]
 var forced_cells_1: Array = []            # Array[Dictionary{card_name, row, col}]
+
+# ── Batch run (auto-iterate AI vs AI) ─────────────────────────────────────────
+var batch_total: int = 1
+var batch_completed: int = 0
+var batch_running: bool = false
+var _batch_summary_lines: Array[String] = []
 
 # ── Log state ─────────────────────────────────────────────────────────────────
 var _log_lines: Array[String] = []
@@ -33,6 +40,30 @@ func configure(d0: Variant, fc0: Array, d1: Variant, fc1: Array) -> void:
 	forced_cells_0 = fc0.duplicate(true)
 	forced_cells_1 = fc1.duplicate(true)
 
+
+func start_batch(iterations: int) -> void:
+	batch_total = clampi(iterations, 1, MAX_BATCH_ITERATIONS)
+	batch_completed = 0
+	batch_running = batch_total > 1
+	_batch_summary_lines.clear()
+	if batch_total > 1:
+		_log_lines.clear()
+
+
+func get_batch_progress_text() -> String:
+	if batch_total <= 1:
+		return ""
+	return "Batch %d / %d" % [mini(batch_completed + 1, batch_total), batch_total]
+
+
+func launch_battle() -> void:
+	GameState.game_mode                  = GameState.GameMode.AI_VS_AI
+	GameState.battle_player_forced_cells = forced_cells_0.duplicate(true)
+	GameState.battle_ai_forced_cells     = forced_cells_1.duplicate(true)
+	GameState.battle_player_deck         = deck0
+	GameState.battle_ai_deck             = deck1
+	get_tree().change_scene_to_file("res://scenes/game_board.tscn")
+
 func get_log_text() -> String:
 	return "\n".join(PackedStringArray(_log_lines))
 
@@ -46,13 +77,13 @@ func start_logging(board: Node) -> void:
 	_active    = true
 	_match_start_msec = Time.get_ticks_msec()
 
+	if batch_running and batch_completed > 0:
+		_log_lines.clear()
+
 	# Open log file
 	_ensure_log_dir()
-	var dt: Dictionary = Time.get_datetime_dict_from_system()
-	_file_path = "res://logs/ai_vs_ai_%04d-%02d-%02d_%02d-%02d-%02d.txt" % [
-		dt["year"], dt["month"], dt["day"],
-		dt["hour"], dt["minute"], dt["second"]
-	]
+	var log_info: Dictionary = SessionLogNaming.begin_battle_log("ai_vs_ai")
+	_file_path = log_info["path"]
 	_file = FileAccess.open(_file_path, FileAccess.WRITE)
 
 	# Write header
@@ -60,10 +91,12 @@ func start_logging(board: Node) -> void:
 	var d1_name: String = deck1.deck_name if deck1 != null else "(random pool)"
 	var fc0_str: String = _format_forced(forced_cells_0)
 	var fc1_str: String = _format_forced(forced_cells_1)
+	_raw("=== %s ===" % log_info["battle_display_name"])
+	_raw("Battle started: %s" % log_info["battle_started_at"])
+	_raw("%s (started %s)" % [log_info["session_display_name"], log_info["session_started_at"]])
 	_raw("=== AI vs AI Match ===")
-	_raw("Started:  %04d-%02d-%02d %02d:%02d:%02d" % [
-		dt["year"], dt["month"], dt["day"],
-		dt["hour"], dt["minute"], dt["second"]])
+	if batch_total > 1:
+		_raw("Batch iteration: %d / %d" % [batch_completed + 1, batch_total])
 	_raw("AI-0 Deck:    " + d0_name)
 	_raw("AI-1 Deck:    " + d1_name)
 	_raw("AI-0 Forced:  " + fc0_str)
@@ -133,8 +166,32 @@ func on_game_over(winner: int) -> void:
 	var c1: int = GameState.crystals[1]
 	log_event("Final crystals — P0: %d  P1: %d  |  Turns: %d" % [c0, c1, GameState.turn_number])
 	log_event("Log saved to: " + _file_path)
+
+	batch_completed += 1
+	if batch_total > 1:
+		_batch_summary_lines.append("Battle %d/%d: %s  |  P0=%d P1=%d  |  %d turns" % [
+			batch_completed, batch_total, result_str, c0, c1, GameState.turn_number])
+
 	_cleanup()
-	# Return to config scene
+
+	if batch_running and batch_completed < batch_total:
+		# Chain next battle without returning to config.
+		call_deferred("launch_battle")
+		return
+
+	batch_running = false
+	if batch_total > 1 and not _batch_summary_lines.is_empty():
+		_write_batch_summary_file()
+		var summary_header: PackedStringArray = PackedStringArray([
+			"",
+			"=== BATCH COMPLETE (%d battles) ===" % batch_completed,
+		])
+		summary_header.append_array(_batch_summary_lines)
+		summary_header.append("===")
+		summary_header.append("")
+		for line: String in summary_header:
+			_log_lines.append(line)
+
 	get_tree().change_scene_to_file("res://scenes/ai_vs_ai_config.tscn")
 
 func log_event(msg: String) -> void:
@@ -157,6 +214,18 @@ func _raw(text: String) -> void:
 
 func _ensure_log_dir() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://logs"))
+
+
+func _write_batch_summary_file() -> void:
+	var path: String = "%s/batch_summary.txt" % SessionLogNaming.session_folder_path
+	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		return
+	file.store_line("=== AI vs AI Batch (%d battles) ===" % batch_completed)
+	file.store_line("Completed: %s" % SessionLogNaming.session_started_at)
+	for line: String in _batch_summary_lines:
+		file.store_line(line)
+	file.close()
 
 func _format_forced(fc: Array) -> String:
 	if fc.is_empty():
@@ -440,7 +509,9 @@ func _on_card_placed(player: int, row: int, col: int) -> void:
 func _on_card_revealed(player: int, row: int, col: int) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player, row, col)
 	if card.card_name.is_empty():
-		return  # dead-end or blank slot — not a real reveal
+		if card.card_type == "dead_end":
+			log_event("Revealed: P%d (%d,%d) (blank slot)" % [player, row, col])
+		return
 	log_event("Revealed: P%d (%d,%d) \"%s\"" % [player, row, col, card.card_name])
 
 # ── Prompt / choice logging ───────────────────────────────────────────────────

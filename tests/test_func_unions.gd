@@ -293,7 +293,7 @@ func _run_none_smoke_tests(A: Dictionary, AB: Dictionary) -> void:
 
 	# TC-FUNC-Rocket-Tyrant-001 — ATK=130, DEF=110, BIO, NONE
 	print("-- TC-FUNC-Rocket-Tyrant-001")
-	var rocket := _make_char("Rocket Tyrant", 130, 110, 1000, A.BIO)
+	var rocket := _make_char("Rocket Marauder", 125, 105, 1000, A.BIO)
 	var def7 := _make_char("Dummy", 0, 100, 100, A.ANIMA)
 	var r7 := BattleResolver.resolve_battle(rocket, def7, 3, 0, 1)
 	assert_eq(r7.attacker_atk_used, 130, "TC-FUNC-Rocket-Tyrant-001: ATK=130 correct")

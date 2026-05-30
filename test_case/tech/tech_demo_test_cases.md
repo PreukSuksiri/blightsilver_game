@@ -9,7 +9,7 @@ Ordered by complexity/priority (most complex first).
 Card Name: Release Mutagen
 Type: Tech
 Cost: 0
-Ability: Select and reveal (if face-down) 1 of your Bio Character on the field. Add Mutagen Flag to it.
+Ability: Select and reveal (if face-down) 1 of your Bio Unit on the field. Add Mutagen Flag to it.
 Test Cases:
 
 
@@ -26,7 +26,7 @@ Steps:
 Step 1: Enter tech play phase; select Release Mutagen from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Select and reveal (if face-down) 1 of your Bio Character on the field. Add Mutagen Flag to it.
+- Effect resolves: Select and reveal (if face-down) 1 of your Bio Unit on the field. Add Mutagen Flag to it.
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Release-Mutagen-002
@@ -87,7 +87,7 @@ Expected Result:
 Card Name: Resurrection
 Type: Tech
 Cost: 1500
-Ability: Once only, revive 1 character to any unoccupied or empty cell in face-up position. The ability is None and the attack becomes 0
+Ability: Once, revive 1 unit. It has no ATK,DEF, or ability.
 Test Cases:
 
 
@@ -104,7 +104,7 @@ Steps:
 Step 1: Enter tech play phase; select Resurrection from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Once only, revive 1 character to any unoccupied or empty cell in face-up position. The ability is None and the attack becomes 0
+- Effect resolves: Once, revive 1 unit. It has no ATK,DEF, or ability.
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Resurrection-002
@@ -139,7 +139,7 @@ Expected Result:
 Card Name: Siege Cannon
 Type: Tech
 Cost: 1000
-Ability: Until the end of this turn, once, the opponent’s defending character is destroyed.
+Ability: Until the end of this turn, once, foe’s defending unit is destroyed.
 Test Cases:
 
 
@@ -156,7 +156,7 @@ Steps:
 Step 1: Enter tech play phase; select Siege Cannon from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Until the end of this turn, once, the opponent’s defending character is destroyed.
+- Effect resolves: Until the end of this turn, once, foe’s defending unit is destroyed.
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Siege-Cannon-002
@@ -187,19 +187,6 @@ Expected Result:
 
 Test Case ID: TC-Siege-Cannon-004
 Description:
-Opponent choice — Siege Cannon decision branch.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Siege Cannon' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Opponent has face-down and face-up options.
-Steps:
-Step 1: Player 0 plays Siege Cannon; opponent chooses branch.
-Expected Result:
-- Each branch resolves correctly (reveal+crystals vs do nothing).
-
-Test Case ID: TC-Siege-Cannon-005
-Description:
 Edge — Siege Cannon with full board.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
@@ -216,7 +203,7 @@ Expected Result:
 Card Name: Accident
 Type: Tech
 Cost: 1000
-Ability: Destroy 1 face-up card. If there is no face-up card, the opponent chooses the target by themselves. The owner of that card does not lose Crystal for the destroyed card.
+Ability: Destroy 1 of foe’s face-up card. If there is no face-up card, foe must chooses the target. Foe pay no cost.
 Test Cases:
 
 
@@ -233,7 +220,7 @@ Steps:
 Step 1: Enter tech play phase; select Accident from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Destroy 1 face-up card. If there is no face-up card, the opponent chooses the target by themselves. The owner of that card does not lose Crystal for the destroyed card.
+- Effect resolves: Destroy 1 of foe’s face-up card. If there is no face-up card, foe must chooses the target. Foe pay no cost.
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Accident-002
@@ -280,7 +267,7 @@ Expected Result:
 Card Name: Prayer
 Type: Tech
 Cost: 0
-Ability: Until your opponent’s turn end, once, if a Divine Character on your side of the field will get destroyed, it is not destroyed.
+Ability: Once, until foe’s turn ends: prevent Divine card from being destroyed
 Test Cases:
 
 
@@ -297,7 +284,7 @@ Steps:
 Step 1: Enter tech play phase; select Prayer from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Until your opponent’s turn end, once, if a Divine Character on your side of the field will get destroyed, it is not destroyed.
+- Effect resolves: Once, until foe’s turn ends: prevent Divine card from being destroyed
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Prayer-002
@@ -341,19 +328,6 @@ Expected Result:
 
 Test Case ID: TC-Prayer-005
 Description:
-Opponent choice — Prayer decision branch.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Prayer' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Opponent has face-down and face-up options.
-Steps:
-Step 1: Player 0 plays Prayer; opponent chooses branch.
-Expected Result:
-- Each branch resolves correctly (reveal+crystals vs do nothing).
-
-Test Case ID: TC-Prayer-006
-Description:
 Edge — Prayer with full board.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
@@ -370,7 +344,7 @@ Expected Result:
 Card Name: Bribe
 Type: Tech
 Cost: 0
-Ability: Your opponent can choose to reveal a creature and receive 700 Crystals or do nothing
+Ability: Your foe can choose to reveal a unit card and receive 700 crystals or do nothing
 Test Cases:
 
 
@@ -387,7 +361,7 @@ Steps:
 Step 1: Enter tech play phase; select Bribe from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Your opponent can choose to reveal a creature and receive 700 Crystals or do nothing
+- Effect resolves: Your foe can choose to reveal a unit card and receive 700 crystals or do nothing
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Bribe-002
@@ -447,7 +421,7 @@ Expected Result:
 Card Name: Great Diplomacy
 Type: Tech
 Cost: 1000
-Ability: Turn all characters on your field face up
+Ability: Turn all units on your field face up
 Test Cases:
 
 
@@ -464,7 +438,7 @@ Steps:
 Step 1: Enter tech play phase; select Great Diplomacy from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Turn all characters on your field face up
+- Effect resolves: Turn all units on your field face up
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Great-Diplomacy-002
@@ -497,8 +471,8 @@ Expected Result:
 
 Card Name: War Supply
 Type: Tech
-Cost: 800
-Ability: +10 ATK and DEF for all face up characters until the end of this turn.
+Cost: 1000
+Ability: Your units get +10 ATK&DEF in Reckoning until turn’s end
 Test Cases:
 
 
@@ -510,12 +484,12 @@ Preconditions:
 - Ensure 'War Supply' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - War Supply in Player 0 hand.
-- Player 0 has ≥ 800 crystals.
+- Player 0 has ≥ 1000 crystals.
 Steps:
 Step 1: Enter tech play phase; select War Supply from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: +10 ATK and DEF for all face up characters until the end of this turn.
+- Effect resolves: Your units get +10 ATK&DEF in Reckoning until turn’s end
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-War-Supply-002
@@ -549,7 +523,7 @@ Expected Result:
 Card Name: Spy
 Type: Tech
 Cost: 0
-Ability: Choose and reveal 1 square on opponent's side of the field
+Ability: Reveal 1 of foe’s cell
 Test Cases:
 
 
@@ -566,7 +540,7 @@ Steps:
 Step 1: Enter tech play phase; select Spy from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Choose and reveal 1 square on opponent's side of the field
+- Effect resolves: Reveal 1 of foe’s cell
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Spy-002
@@ -597,19 +571,6 @@ Expected Result:
 
 Test Case ID: TC-Spy-004
 Description:
-Opponent choice — Spy decision branch.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Spy' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Opponent has face-down and face-up options.
-Steps:
-Step 1: Player 0 plays Spy; opponent chooses branch.
-Expected Result:
-- Each branch resolves correctly (reveal+crystals vs do nothing).
-
-Test Case ID: TC-Spy-005
-Description:
 Edge — Spy with full board.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
@@ -626,7 +587,7 @@ Expected Result:
 Card Name: Radar
 Type: Tech
 Cost: 600
-Ability: Reveal 3 square on opponent's side of the field
+Ability: Reveal 3 of foe’s cell
 Test Cases:
 
 
@@ -643,7 +604,7 @@ Steps:
 Step 1: Enter tech play phase; select Radar from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Reveal 3 square on opponent's side of the field
+- Effect resolves: Reveal 3 of foe’s cell
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Radar-002
@@ -661,19 +622,6 @@ Expected Result:
 
 Test Case ID: TC-Radar-003
 Description:
-Opponent choice — Radar decision branch.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Radar' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Opponent has face-down and face-up options.
-Steps:
-Step 1: Player 0 plays Radar; opponent chooses branch.
-Expected Result:
-- Each branch resolves correctly (reveal+crystals vs do nothing).
-
-Test Case ID: TC-Radar-004
-Description:
 Edge — Radar with full board.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
@@ -690,7 +638,7 @@ Expected Result:
 Card Name: Tease
 Type: Tech
 Cost: 0
-Ability: Your opponent choose and reveal 1 of their square
+Ability: Your foe choose and reveal 1 of their cell
 Test Cases:
 
 
@@ -707,7 +655,7 @@ Steps:
 Step 1: Enter tech play phase; select Tease from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Your opponent choose and reveal 1 of their square
+- Effect resolves: Your foe choose and reveal 1 of their cell
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Tease-002

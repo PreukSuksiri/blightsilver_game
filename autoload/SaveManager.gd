@@ -54,7 +54,7 @@ func set_demo_mode(enabled: bool) -> void:
 func get_active_deck() -> DeckData:
 	if decks.is_empty():
 		return null
-	return decks[clampi(active_deck_index, 0, decks.size() - 1)]
+	return decks[clampi(active_deck_index, 0, decks.size() - 1)] as DeckData
 
 func set_active_deck_index(index: int) -> void:
 	active_deck_index = clampi(index, 0, decks.size() - 1)

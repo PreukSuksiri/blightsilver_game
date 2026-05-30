@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ceoewukflyn0n"
-path="res://.godot/imported/x-death_squad.jpg-30bf026e1c59822fdcca8abd5ce7248f.ctex"
+uid="uid://b41e14t5lo6g8"
+path="res://.godot/imported/champion_of_the_valley.jpg-d819cd7974a868420e7bc9595210da7a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/union/x-death_squad.jpg"
-dest_files=["res://.godot/imported/x-death_squad.jpg-30bf026e1c59822fdcca8abd5ce7248f.ctex"]
+source_file="res://assets/textures/cards/characters/champion_of_the_valley.jpg"
+dest_files=["res://.godot/imported/champion_of_the_valley.jpg-d819cd7974a868420e7bc9595210da7a.ctex"]
 
 [params]
 

@@ -20,9 +20,10 @@ config/icon="res://icon.svg"
 [autoload]
 
 AudioManager="*res://autoload/AudioManager.gd"
+BGMManager="*res://autoload/BGMManager.gd"
 CardDatabase="*res://autoload/CardDatabase.gd"
+UnionDatabase="*res://autoload/UnionDatabase.gd"
 GameState="*res://autoload/GameState.gd"
-DatabaseManager="*res://autoload/DatabaseManager.gd"
 SaveManager="*res://autoload/SaveManager.gd"
 MailboxManager="*res://autoload/MailboxManager.gd"
 Collection="*res://autoload/Collection.gd"
@@ -31,8 +32,8 @@ CampaignManager="*res://autoload/CampaignManager.gd"
 DailyDungeonManager="*res://autoload/DailyDungeonManager.gd"
 CheckerTransition="*res://autoload/CheckerTransition.gd"
 CardRuleEngine="*res://autoload/CardRuleEngine.gd"
-UnionDatabase="*res://autoload/UnionDatabase.gd"
 AIvsAIManager="*res://autoload/AIvsAIManager.gd"
+SessionLogNaming="*res://autoload/SessionLogNaming.gd"
 SFXManager="*res://autoload/SFXManager.gd"
 
 [display]

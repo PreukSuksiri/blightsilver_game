@@ -506,6 +506,12 @@
 		"wait": 5.8
 	},
 	{
+		"comment": "Call Dungeon",
+		"dungeon_call": "limbo_library",
+		"dungeon_on_win": "res://campaign/scenes/ch1_s1_post_DEMO.json",
+		"linger_characters": true
+	},
+	{
 		"ai_union_enabled": false,
 		"battle_bgm": "res://assets/audio/bgm_battle_2.mp3",
 		"comment": "Battle - Midnight Shadow",
@@ -525,11 +531,12 @@
 			],
 			"traps": [
 				"Trap Hole",
-				"Checkpoint",
+				"Trap Hole",
 				"Hypnosis",
 				"Mana Drain"
 			]
 		},
+		"hidden": true,
 		"on_lose": "game_over",
 		"on_win": "res://campaign/scenes/ch1_s1_post.json",
 		"player1_name": "Nex Crowmont",

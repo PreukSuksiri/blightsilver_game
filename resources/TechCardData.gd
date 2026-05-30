@@ -13,6 +13,7 @@ enum TechEffectType {
 	DIVINE_PROTECTION,                # If a Divine on your field would be destroyed, it is not (once)
 	DESTROY_ALL_REVEALED_OPPONENT,    # Destroy all revealed opponent Characters; discard all your Tech
 	DESTROY_ROW_OR_COLUMN,            # Destroy all revealed cards in one row or column
+	DESTROY_ROW_AROUND_TARGET,        # Destroy other face-up cards on anchor's row (anchor survives)
 	REVEAL_ALL_OWN_CHARACTERS,        # Turn all your characters face-up
 	PERM_BOOST_ALL_FACEUP,            # +N ATK and DEF permanently to all face-up characters
 	PERM_ATK_BOOST_ONE,               # +N ATK permanently to 1 face-up character
@@ -34,6 +35,7 @@ enum TechEffectType {
 	DESTROY_WISPS_REVEAL_OPPONENT,    # Destroy all wisps on your field; reveal that many opponent squares
 	TEMP_REROLL_DICE,                 # Until end of your next turn, you may re-roll the dice once
 	TEMP_ATK_DEF_BOOST_ALL,          # +N ATK and +N DEF (temp) to all face-up characters until end of this turn
+	GUERRILLA_TACTICS,               # Until opponent turn ends: coin flip when they attack your dead end
 	NOT_IMPLEMENTED,                 # Effect exists but has no engine implementation yet
 }
 

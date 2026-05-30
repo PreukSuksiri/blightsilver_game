@@ -48,7 +48,7 @@
 				"traps": [
 					"Trap Hole",
 					"Bait",
-					"Checkpoint"
+					"Trap Hole"
 				]
 			},
 			"battle_settings": {
@@ -96,7 +96,7 @@
 					"Snare Trap",
 					"Spike Trap",
 					"Mana Drain",
-					"Checkpoint"
+					"Trap Hole"
 				]
 			},
 			"battle_settings": {
@@ -241,7 +241,7 @@
 					"Brainwash",
 					"Echo Barrier",
 					"Mana Drain",
-					"Checkpoint",
+					"Trap Hole",
 					"Trap Hole"
 				]
 			},

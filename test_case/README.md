@@ -57,7 +57,7 @@ Derived from `CardDatabase.gd`, `UnionDatabase.gd`, `BattleResolver.gd`, `TurnMa
 - Araya the Eerie Dancer
 - Archbishop
 - Armored Bee
-- Armored Money
+- Armored Monkey
 - Armored Rhino
 - Asteroid Trooper
 - Bat Swarm
@@ -133,18 +133,18 @@ Derived from `CardDatabase.gd`, `UnionDatabase.gd`, `BattleResolver.gd`, `TurnMa
 - Miner Probe
 - Moon Rover
 - Moon Tribe Marksman
-- Moon Tribe Twin Blades
+- Moon Tribe Twin Blader
 - Moonrise Gentleman
 - Mysterious Miner
 - Needle Porcupine
 - Neptune Diver
-- Night Whisperor
+- Night Whisperer
 - Nuki the Tanuki
 - Ostrich Cannon
 - Ox Patrol
 - Parom the Smuggler
 - Pit Lord
-- Plant 29
+- Plant-29
 - Poltergeist
 - Ponycorn
 - Pyromancer
@@ -228,7 +228,7 @@ Derived from `CardDatabase.gd`, `UnionDatabase.gd`, `BattleResolver.gd`, `TurnMa
 ### Union
 - Ancient Lizard
 - Armored Dino
-- Barros the Collossol
+- Barros the Colossol
 - Berserk Hyena
 - Blood-hungry Mutant
 - Burning Phoenix
@@ -253,8 +253,8 @@ Derived from `CardDatabase.gd`, `UnionDatabase.gd`, `BattleResolver.gd`, `TurnMa
 - Pixie Queen
 - Raijin and Fujin
 - Rebel King
+- Rocket Marauder
 - Rocket Peacock
-- Rocket Tyrant
 - Scarlet Shroom
 - Seraphim Fistmaster
 - Skeleton Overlord

@@ -52,8 +52,6 @@ var _dialog_lbl: RichTextLabel = null
 var _hint_icon: TextureRect = null
 var _hint_tween: Tween = null
 var _video_player: VideoStreamPlayer = null
-var _music_player: AudioStreamPlayer = null
-var _music_fade_tween: Tween = null
 var _current_music_path: String = ""
 var _fade_rect: ColorRect = null
 var _kb_tween: Tween = null      # Ken Burns background animation
@@ -646,12 +644,14 @@ func _show_beat() -> void:
 	var dungeon_id: String = str(beat.get("dungeon_call", ""))
 	if dungeon_id != "":
 		_set_music("", 0.0, 0.0)
-		DailyDungeonManager.vn_dungeon_id      = dungeon_id
-		DailyDungeonManager.vn_dungeon_on_win  = str(beat.get("dungeon_on_win",  ""))
-		DailyDungeonManager.vn_dungeon_on_lose = str(beat.get("dungeon_on_lose", ""))
+		DailyDungeonManager.begin_story_session(
+			dungeon_id,
+			str(beat.get("dungeon_on_win", "")),
+			str(beat.get("dungeon_on_lose", "")),
+			_scene_path)
 		SaveManager.save_data()
 		CheckerTransition.fade_out_to_battle(func() -> void:
-			get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+			get_tree().change_scene_to_file(DailyDungeonManager.DUNGEON_MAP_SCENE))
 		return
 
 	# ── Credits ──
@@ -794,49 +794,16 @@ func _play_sfx(path: String, vol_db: float = 0.0) -> void:
 # Music — looping BGM, one track at a time, with fade in/out
 # ─────────────────────────────────────────────────────────────
 func _set_music(path: String, fade_out: float = 0.0, fade_in: float = 0.0) -> void:
-	if path == _current_music_path:
+	var normalized := path.strip_edges()
+	if normalized == BGMManager.get_current_path():
 		return
-	_current_music_path = path
+	_current_music_path = normalized
 
-	# Kill any in-progress fade tween
-	if _music_fade_tween != null:
-		_music_fade_tween.kill()
-		_music_fade_tween = null
-
-	# Fade out or stop the current track
-	if _music_player != null:
-		if fade_out > 0.0:
-			var old_player := _music_player
-			_music_player = null
-			var tw := create_tween()
-			tw.tween_property(old_player, "volume_db", -80.0, fade_out)
-			tw.tween_callback(old_player.queue_free)
-		else:
-			_music_player.stop()
-			_music_player.queue_free()
-			_music_player = null
-
-	if path == "":
+	if normalized.is_empty():
+		BGMManager.stop(fade_out)
 		return
 
-	var stream := load(path) as AudioStream
-	if stream == null:
-		push_warning("VNPlayer: failed to load music '%s'" % path)
-		return
-
-	_music_player = AudioStreamPlayer.new()
-	_music_player.stream = stream
-	_music_player.bus    = &"Music"
-	add_child(_music_player)
-
-	if fade_in > 0.0:
-		_music_player.volume_db = -80.0
-		_music_player.play()
-		_music_fade_tween = create_tween()
-		_music_fade_tween.tween_property(_music_player, "volume_db", 0.0, fade_in)
-	else:
-		_music_player.volume_db = 0.0
-		_music_player.play()
+	BGMManager.play_path(normalized, fade_in, fade_out, 100.0, BGMManager.CONTEXT_VN)
 
 # ─────────────────────────────────────────────────────────────
 # Character shake — damped horizontal oscillation

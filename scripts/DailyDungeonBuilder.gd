@@ -42,6 +42,7 @@ var _status_lbl:  Label      = null
 var _dungeon_picker: OptionButton = null
 var _mode_filter_opt: OptionButton = null   # header filter: All / Daily Dungeon / Story Mode
 var _dungeon_mode_opt: OptionButton = null  # meta panel: this layout's mode
+var _clear_modifiers_on_spin_chk: CheckBox = null
 var _all_ids: Array = []
 var _filtered_ids: Array = []  # subset of _all_ids shown in picker after mode filter
 
@@ -87,6 +88,7 @@ var _ai_forced_gc:       GridContainer = null
 
 # Spinning wheel fields
 var _prop_wheel_chk:            CheckBox      = null
+var _prop_wheel_count:          SpinBox       = null
 var _prop_wheel_outcome_picker: OptionButton  = null
 var _prop_wheel_outcomes_vbox:  VBoxContainer = null
 var _wheel_outcomes_list:       Array         = []   # Array[String]
@@ -140,6 +142,8 @@ func _load_dungeon(dungeon_id: String) -> void:
 		_bg_edit.text = _layout.get("background", "")
 	if _dungeon_bgm_edit:
 		_dungeon_bgm_edit.text = str(_layout.get("dungeon_bgm", ""))
+	if _clear_modifiers_on_spin_chk:
+		_clear_modifiers_on_spin_chk.button_pressed = bool(_layout.get("clear_modifiers_on_spin", false))
 	_set_status("Loaded: %s  (%d nodes)" % [dungeon_id, _positions.size()])
 
 func _save_layout() -> void:
@@ -149,6 +153,8 @@ func _save_layout() -> void:
 	_layout["name"]       = _dungeon_name_edit.text
 	_layout["background"] = _bg_edit.text
 	_layout["dungeon_bgm"] = _dungeon_bgm_edit.text.strip_edges() if _dungeon_bgm_edit != null else ""
+	_layout["clear_modifiers_on_spin"] = _clear_modifiers_on_spin_chk.button_pressed \
+			if _clear_modifiers_on_spin_chk != null else false
 	# Write positions back to node data
 	for nd: Dictionary in _layout.get("nodes", []):
 		var nid: String = nd.get("id", "")
@@ -391,7 +397,15 @@ func _build_prop_panel(parent: Control) -> void:
 	_prop_wheel_chk.text = "Is wheel node  (player spins here)"
 	inner.add_child(_prop_wheel_chk)
 
-	inner.add_child(_make_lbl("Wheel outcomes  (empty = random from full pool; duplicates = higher weight)"))
+	inner.add_child(_make_lbl("Number of outcomes  (used when custom list below is empty; 0 = full catalog pool)"))
+	_prop_wheel_count = SpinBox.new()
+	_prop_wheel_count.min_value = 0
+	_prop_wheel_count.max_value = 99
+	_prop_wheel_count.step = 1
+	_prop_wheel_count.value = 8
+	inner.add_child(_prop_wheel_count)
+
+	inner.add_child(_make_lbl("Custom wheel outcomes  (optional — overrides count; duplicates = higher weight)"))
 	var wheel_add_row := HBoxContainer.new()
 	wheel_add_row.add_theme_constant_override("separation", 4)
 	inner.add_child(wheel_add_row)
@@ -769,6 +783,10 @@ func _build_prop_panel(parent: Control) -> void:
 		_set_status("BGM stopped"))
 	bgm_meta_row.add_child(bgm_stop_btn)
 
+	_clear_modifiers_on_spin_chk = CheckBox.new()
+	_clear_modifiers_on_spin_chk.text = "Clear modifiers on spin  (replace old wheel modifiers each spin)"
+	inner.add_child(_clear_modifiers_on_spin_chk)
+
 	var meta_apply := Button.new()
 	meta_apply.text = "Apply Dungeon Meta"
 	meta_apply.pressed.connect(func() -> void:
@@ -776,6 +794,7 @@ func _build_prop_panel(parent: Control) -> void:
 		_layout["background"] = _bg_edit.text
 		_layout["dungeon_bgm"] = _dungeon_bgm_edit.text.strip_edges()
 		_layout["mode"]       = "story_mode" if _dungeon_mode_opt.selected == 1 else "daily_dungeon"
+		_layout["clear_modifiers_on_spin"] = _clear_modifiers_on_spin_chk.button_pressed
 		_set_status("Meta updated"))
 	inner.add_child(meta_apply)
 
@@ -1030,6 +1049,8 @@ func _update_prop_panel() -> void:
 	_prop_entry_chk.button_pressed = nd.get("is_entry", false)
 	if _prop_wheel_chk != null:
 		_prop_wheel_chk.button_pressed = bool(nd.get("is_wheel_node", false))
+	if _prop_wheel_count != null:
+		_prop_wheel_count.value = int(nd.get("wheel_outcome_count", 8))
 	var _raw_wo: Variant = nd.get("wheel_outcomes", [])
 	_wheel_outcomes_list = (_raw_wo as Array).duplicate() if _raw_wo is Array else []
 	_refresh_wheel_outcomes_ui()
@@ -1082,6 +1103,7 @@ func _apply_node_changes() -> void:
 	nd["type"]     = "boss" if _prop_type_opt.selected == 1 else "normal"
 	nd["is_entry"] = _prop_entry_chk.button_pressed
 	nd["is_wheel_node"]  = _prop_wheel_chk.button_pressed if _prop_wheel_chk != null else false
+	nd["wheel_outcome_count"] = int(_prop_wheel_count.value) if _prop_wheel_count != null else 0
 	nd["wheel_outcomes"] = _wheel_outcomes_list.duplicate()
 	nd["pack_reward"] = _prop_pack_edit.text.strip_edges()
 	nd["image"]       = _prop_img_edit.text.strip_edges()

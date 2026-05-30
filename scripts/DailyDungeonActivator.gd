@@ -470,9 +470,8 @@ func _on_force_refresh() -> void:
 	var slot: Dictionary = DailyDungeonManager.playlist[idx]
 	var mods: Array = slot.get("modifiers", [])
 	DailyDungeonManager.set_slot_modifiers(idx, mods)
-	GameState.active_dungeon_modifiers = DailyDungeonManager.active_modifiers.duplicate()
-	GameState.dungeon_affinity_day_affinity = DailyDungeonManager.affinity_day_affinity
-	GameState.dungeon_affinity_day_stat     = DailyDungeonManager.affinity_day_stat
+	GameState.active_dungeon_modifiers = DailyDungeonManager.get_dungeon_modifiers(
+		DailyDungeonManager.get_current_dungeon_id()).duplicate()
 	_refresh_status()
 
 # ─────────────────────────────────────────────────────────────

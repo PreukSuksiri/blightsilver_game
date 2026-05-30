@@ -38,7 +38,7 @@ extends Resource
 @export var artwork_path: String = ""
 
 ## Whether this union card is included in the demo build.
-@export var include_in_demo: bool = true
+@export var include_in_demo: bool = false
 
 ## Zone cell offsets from anchor (row, col).
 @export var union_zone: Array = []  # Array[Vector2i]

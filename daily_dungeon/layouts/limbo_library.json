@@ -1,5 +1,6 @@
 {
 	"background": "res://assets/textures/daily_dungeon/background/background_limbo_library.png",
+	"clear_modifiers_on_spin": true,
 	"connections": [
 		[
 			"node_01",
@@ -18,7 +19,7 @@
 			"node_05"
 		]
 	],
-	"dungeon_bgm": "",
+	"dungeon_bgm": "res://assets/audio/bgm_placement_1.mp3",
 	"id": "limbo_library",
 	"mode": "story_mode",
 	"name": "University Library",
@@ -71,11 +72,14 @@
 			"id": "node_01",
 			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_normal.png",
 			"is_entry": true,
+			"is_wheel_node": true,
 			"label": "node_01",
 			"pack_reward": "",
 			"post_battle_message": "",
-			"pre_battle_message": "You are in a \"Limbo\". A decrypted layer of the world. Please proceed your way to the last node you expel the stage boss",
+			"pre_battle_message": "You are in a \"Limbo\". A decrypted layer of the world. Please proceed your way to the last node you expel the stage boss.",
 			"type": "normal",
+			"wheel_outcome_count": 8,
+			"wheel_outcomes": [],
 			"x": 821,
 			"y": 449
 		},
@@ -303,11 +307,13 @@
 			"id": "node_05",
 			"image": "res://assets/textures/daily_dungeon/nodes/ui_campaign_platform_boss.png",
 			"is_entry": false,
+			"is_wheel_node": false,
 			"label": "node_05",
 			"pack_reward": "",
 			"post_battle_message": "",
 			"pre_battle_message": "",
 			"type": "boss",
+			"wheel_outcomes": [],
 			"x": 257,
 			"y": 136
 		}

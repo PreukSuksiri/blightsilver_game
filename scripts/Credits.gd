@@ -1,7 +1,6 @@
 extends Control
 
 const BG_TEXTURE      := preload("res://assets/textures/ui/backgrounds/bg_ending_1.png")
-const BGM_STREAM      := preload("res://assets/audio/bgm_ost_blind_cross.mp3")
 const CHIVO_FONT      := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 const MPLUS_FONT      := preload("res://assets/fonts/MPLUS1p-ExtraBold.ttf")
 const LOGO_TEXTURE    := preload("res://assets/textures/ui/decorations/ui_logo_quiet_eve.png")
@@ -153,7 +152,6 @@ Quiet Eve Studio Presents
 var _scroll_label: RichTextLabel
 var _logo_node: Control
 var _logo_y:    float = 0.0
-var _bgm: AudioStreamPlayer
 var _fade: ColorRect
 var _is_ending: bool = false
 
@@ -237,12 +235,7 @@ func _ready() -> void:
 	_build_shader_logo(vp_size)
 
 	# ── BGM ───────────────────────────────────────────────────────
-	_bgm = AudioStreamPlayer.new()
-	_bgm.stream = BGM_STREAM
-	_bgm.bus = &"Music"
-	(_bgm.stream as AudioStreamMP3).loop = true
-	add_child(_bgm)
-	_bgm.play()
+	BGMManager.play_context(BGMManager.CONTEXT_CREDITS, 0.0, 0.8)
 
 	var tween := create_tween()
 	tween.tween_property(_fade, "color:a", 0.0, FADE_DURATION).set_trans(Tween.TRANS_SINE)
@@ -296,9 +289,7 @@ func _end_credits() -> void:
 	if _is_ending:
 		return
 	_is_ending = true
-	if _bgm:
-		var btween := create_tween()
-		btween.tween_property(_bgm, "volume_db", -40.0, FADE_DURATION)
+	BGMManager.stop(FADE_DURATION)
 	var tween := create_tween()
 	tween.tween_property(_fade, "color:a", 1.0, FADE_DURATION).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(func() -> void:

@@ -57,8 +57,14 @@ var _zone_axis:      int     = 0             # current row/col for sweep zones
 var _zone_dir:       int     = 1             # sweep direction (+1 or -1)
 var _ai_kill_count:  int     = 0             # kills scored this game
 
+func _game_is_over() -> bool:
+	return GameState.current_phase == GameState.Phase.GAME_OVER
+
+
 # Called at the start of each AI action opportunity (start of turn, after each attack, after tech).
 func decide_turn() -> void:
+	if _game_is_over():
+		return
 	_ai_turn_count += 1
 	await get_tree().create_timer(0.6).timeout
 
@@ -87,10 +93,16 @@ func decide_turn() -> void:
 ## Continuation called by GameBoard after union summon resolves, so the AI
 ## can still attack in the same turn without re-incrementing the turn counter.
 func continue_after_union() -> void:
+	if _game_is_over():
+		return
 	await get_tree().create_timer(0.5).timeout
+	if _game_is_over():
+		return
 	_do_attack_decision()
 
 func _do_attack_decision() -> void:
+	if _game_is_over():
+		return
 	# No attacks remaining — end turn immediately (already attacked, no tax)
 	if GameState.attacks_remaining <= 0:
 		emit_signal("ai_end_turn")
@@ -298,7 +310,8 @@ func _choose_tech() -> void:
 			best_name = tech_name
 
 	if best_name == "":
-		return   # nothing worth playing
+		_do_attack_decision()
+		return
 
 	emit_signal("ai_tech_chosen", best_name)
 
@@ -487,9 +500,13 @@ func decide_target(filter: String) -> Vector2i:
 		# opponent_squares: Radar/spy techs — can target dead_end slots too
 		"opponent_squares_1", "opponent_squares_2", "opponent_squares_3", \
 				"opponent_squares_3_risky":
-			return _random_facedown_opponent()
-		"opponent_any_hidden", "lock_opponent_monster":
+			return decide_facedown_opponent_excluding([])
+		"opponent_any_hidden", "ability_false_prophet_reveal", "lock_opponent_monster":
 			return _random_unrevealed_opponent()
+		"opponent_character_ability_destroy":
+			return _random_faceup_opponent()
+		"ability_rebel_king_swap":
+			return _best_own_faceup()
 		"row_or_column":
 			return _best_rift_strike_cell()
 		"opponent_faceup_zero_stats":
@@ -596,8 +613,8 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 			return 0  # sacrifice weaker card to save the target
 		return 1
 
-	# NULLIFY_ATTACK_CHOICE (Checkpoint trap) — choices: [lose crystals, destroy attacker]
-	if "Checkpoint" in prompt:
+	# NULLIFY_ATTACK_CHOICE — legacy trap removed from demo roster
+	if "Lose 500 Crystals" in prompt or "NULLIFY_ATTACK_CHOICE" in prompt:
 		var att: GameState.CardInstance = _get_current_attacker()
 		if att != null and GameState.crystals[player_index] >= 500:
 			# Pay crystals if attacker is high-value (ATK+DEF >= 40)
@@ -704,16 +721,22 @@ func _random_unrevealed_opponent() -> Vector2i:
 	return options[randi() % options.size()]
 
 # Like _random_unrevealed_opponent but includes dead_end slots — for Radar targeting
-func _random_facedown_opponent() -> Vector2i:
+func decide_facedown_opponent_excluding(exclude: Array) -> Vector2i:
 	var options: Array = []
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
+			var pos := Vector2i(r, c)
+			if pos in exclude:
+				continue
 			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
 			if not card.face_up:
-				options.append(Vector2i(r, c))
+				options.append(pos)
 	if options.is_empty():
-		return Vector2i(0, 0)
+		return Vector2i(-1, -1)
 	return options[randi() % options.size()]
+
+func _random_facedown_opponent() -> Vector2i:
+	return decide_facedown_opponent_excluding([])
 
 func _random_faceup_opponent() -> Vector2i:
 	var options: Array = []
@@ -1149,6 +1172,8 @@ func _find_best_setup_union(char_pool: Array, num_chars: int) -> Dictionary:
 	all_unions.shuffle()   # randomise tie-breaking
 
 	for u: UnionData in all_unions:
+		if not UnionDatabase.is_playable_in_demo(u):
+			continue
 		if u.material_conditions.is_empty():
 			continue
 		var assignment: Dictionary = _try_assign_setup_union(u, available)

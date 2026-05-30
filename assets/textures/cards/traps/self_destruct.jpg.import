@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://l4wdibtr6nl2"
-path="res://.godot/imported/moon_lady_ninja.png-8eb3b8278b46180def9f06f0fa8df31f.ctex"
+uid="uid://dcrcivoowm8cw"
+path="res://.godot/imported/self_destruct.jpg-0651d74066d6b025054449d9f44f8f05.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/union/moon_lady_ninja.png"
-dest_files=["res://.godot/imported/moon_lady_ninja.png-8eb3b8278b46180def9f06f0fa8df31f.ctex"]
+source_file="res://assets/textures/cards/traps/self_destruct.jpg"
+dest_files=["res://.godot/imported/self_destruct.jpg-0651d74066d6b025054449d9f44f8f05.ctex"]
 
 [params]
 

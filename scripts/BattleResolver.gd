@@ -256,6 +256,14 @@ static func _resolve_character_vs_character(
 		result.defender_crystal_loss = defender.crystal_cost
 		result.messages.append("Both cards are destroyed!")
 
+	# IMMUNE_DESTROY_BY_NON_UNION: only union attackers can destroy this defender
+	if result.defender_destroyed and defender.is_union \
+			and defender.ability_type == CharacterData.AbilityType.IMMUNE_DESTROY_BY_NON_UNION \
+			and not attacker.is_union:
+		result.defender_destroyed = false
+		result.defender_crystal_loss = 0
+		result.messages.append("%s: only a Union card can destroy %s!" % [attacker.card_name, defender.card_name])
+
 	# IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP: Helios — cannot be destroyed while another own card of same affinity is face-up
 	if result.defender_destroyed and defender.ability_type == CharacterData.AbilityType.IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP:
 		var _immune_aff: int = defender.ability_params.get("affinity", -1)
@@ -291,7 +299,7 @@ static func _resolve_trap(
 		_defender_player: int,
 		result: BattleResult
 ) -> void:
-	var trap_data: TrapData = CardDatabase.get_trap(trap.card_name)
+	var trap_data = CardDatabase.get_trap(trap.card_name) as TrapData
 	if trap_data == null:
 		result.messages.append("Unknown trap: %s" % trap.card_name)
 		return
@@ -633,6 +641,15 @@ static func _get_effective_def(
 		CharacterData.AbilityType.COIN_FLIP_NULLIFY_ON_DEFEND:
 			# Handled directly in _resolve_character_vs_character before ATK vs DEF comparison
 			pass
+
+		CharacterData.AbilityType.DEF_PENALTY_VS_NON_AFFINITY:
+			var _dp_aff: int = defender.ability_params.get("affinity", -1)
+			if _dp_aff == -1 or attacker.affinity != _dp_aff:
+				var _dp_amt: int = defender.ability_params.get("def", 20)
+				def_val = max(0, def_val - _dp_amt)
+				if not BattleResolver._silent_mode:
+					GameState.post_message("%s: -%d DEF vs non-%s attacker!" % [
+						defender.card_name, _dp_amt, CharacterData.Affinity.keys()[_dp_aff]])
 
 		CharacterData.AbilityType.NOT_IMPLEMENTED:
 			GameState.show_center_message("Ability not implemented: " + defender.card_name)
