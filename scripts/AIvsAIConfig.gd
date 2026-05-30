@@ -15,6 +15,7 @@ var _forced_dict_1: Dictionary = {}
 var _log_label: RichTextLabel = null
 var _start_btn: Button = null
 var _status_lbl: Label = null
+var _iter_spin: SpinBox = null
 
 # Union zone highlight (shared pattern from VNEditor)
 var _union_highlighted_name: String = ""
@@ -26,12 +27,15 @@ func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_STOP
 	_build_ui()
 	_populate_decks()
+	_on_iterations_changed(float(_iter_spin.value))
 	# Show previous match log if any
 	var prev_log: String = AIvsAIManager.get_log_text()
 	if not prev_log.is_empty():
 		_log_label.text = prev_log
 		await get_tree().process_frame
 		_log_label.scroll_to_line(_log_label.get_line_count())
+	if AIvsAIManager.batch_completed > 0 and AIvsAIManager.batch_total > 1:
+		_status_lbl.text = "Last batch finished: %d battle(s)." % AIvsAIManager.batch_completed
 
 # ─────────────────────────────────────────────────────────────────────────────
 # UI Construction
@@ -63,6 +67,13 @@ func _build_ui() -> void:
 	title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title_hb.add_child(title_lbl)
 
+	var session_lbl := Label.new()
+	session_lbl.text = SessionLogNaming.session_display_name
+	session_lbl.add_theme_font_size_override("font_size", 12)
+	session_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.45))
+	session_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	title_hb.add_child(session_lbl)
+
 	var back_btn := Button.new()
 	back_btn.text = "← Back to Main Menu"
 	back_btn.add_theme_font_size_override("font_size", 14)
@@ -83,6 +94,34 @@ func _build_ui() -> void:
 
 	_build_ai_column(cols, 1)
 
+	# ── Batch iteration row ───────────────────────────────────────────────────
+	var batch_row := HBoxContainer.new()
+	batch_row.add_theme_constant_override("separation", 10)
+	root.add_child(batch_row)
+
+	var batch_lbl := Label.new()
+	batch_lbl.text = "Auto-run battles:"
+	batch_lbl.add_theme_font_size_override("font_size", 14)
+	batch_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	batch_row.add_child(batch_lbl)
+
+	_iter_spin = SpinBox.new()
+	_iter_spin.min_value = 1
+	_iter_spin.max_value = AIvsAIManager.MAX_BATCH_ITERATIONS
+	_iter_spin.value = 1
+	_iter_spin.step = 1
+	_iter_spin.custom_minimum_size = Vector2(72, 0)
+	_iter_spin.add_theme_font_size_override("font_size", 14)
+	_iter_spin.value_changed.connect(_on_iterations_changed)
+	batch_row.add_child(_iter_spin)
+
+	var batch_hint := Label.new()
+	batch_hint.text = "(max %d — runs back-to-back, one log file per battle)" % AIvsAIManager.MAX_BATCH_ITERATIONS
+	batch_hint.add_theme_font_size_override("font_size", 12)
+	batch_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.45))
+	batch_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	batch_row.add_child(batch_hint)
+
 	# ── Start + status row ───────────────────────────────────────────────────
 	var action_hb := HBoxContainer.new()
 	action_hb.add_theme_constant_override("separation", 12)
@@ -96,11 +135,10 @@ func _build_ui() -> void:
 	action_hb.add_child(_start_btn)
 
 	var save_log_btn := Button.new()
-	save_log_btn.text = "Open Log Folder"
+	save_log_btn.text = "Open Session Folder"
 	save_log_btn.add_theme_font_size_override("font_size", 14)
 	save_log_btn.pressed.connect(func() -> void:
-		var path: String = ProjectSettings.globalize_path("res://logs/")
-		OS.shell_open(path))
+		OS.shell_open(SessionLogNaming.get_session_folder_global_path()))
 	action_hb.add_child(save_log_btn)
 
 	_status_lbl = Label.new()
@@ -217,16 +255,25 @@ func _on_start_battle() -> void:
 	var fc1: Array = _collect_forced_cells_from_grid(_forced_dict_1)
 
 	AIvsAIManager.configure(d0, fc0, d1, fc1)
-
-	# Store config in GameState for GameBoard to read
-	GameState.game_mode                  = GameState.GameMode.AI_VS_AI
-	GameState.battle_player_forced_cells = fc0
-	GameState.battle_ai_forced_cells     = fc1
-	GameState.battle_player_deck         = d0
-	GameState.battle_ai_deck             = d1
+	var iterations: int = clampi(int(_iter_spin.value), 1, AIvsAIManager.MAX_BATCH_ITERATIONS)
+	AIvsAIManager.start_batch(iterations)
 
 	_log_label.text = ""
-	get_tree().change_scene_to_file("res://scenes/game_board.tscn")
+	if iterations > 1:
+		_status_lbl.text = "Running batch: %d battles..." % iterations
+	else:
+		_status_lbl.text = ""
+
+	AIvsAIManager.launch_battle()
+
+func _on_iterations_changed(value: float) -> void:
+	var clamped: int = clampi(int(value), 1, AIvsAIManager.MAX_BATCH_ITERATIONS)
+	if clamped != int(value):
+		_iter_spin.set_value_no_signal(clamped)
+	if clamped > 1:
+		_start_btn.text = "  START %d BATTLES  " % clamped
+	else:
+		_start_btn.text = "  START BATTLE  "
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Forced cell grid helpers (identical pattern to VNEditor)

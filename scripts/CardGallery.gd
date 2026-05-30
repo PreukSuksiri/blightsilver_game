@@ -165,10 +165,11 @@ func _apply_filter() -> void:
 	for entry: Dictionary in _tiles:
 		if not is_instance_valid(entry["node"]):
 			continue
-		# Hide union tiles entirely when mechanism is locked
+		# Hide union tiles when mechanism is locked (demo-flagged unions still show in demo mode)
 		if entry["card_type"] == "union" and not SaveManager.union_mechanism_unlocked:
-			entry["node"].visible = false
-			continue
+			if not (SaveManager.demo_mode and entry.get("include_in_demo", false)):
+				entry["node"].visible = false
+				continue
 		# In demo mode, hide cards not flagged for demo
 		if SaveManager.demo_mode and not entry.get("include_in_demo", false):
 			entry["node"].visible = false
@@ -341,16 +342,13 @@ func _wrap_card_tile(card_node: Control, card_name: String, card_type: String) -
 	if card_node.has_signal("card_clicked"):
 		card_node.card_clicked.connect(
 			func(_n: Control) -> void:
-				SFXManager.play(SFXManager.SFX_CARD_INFO)
 				CardDetailOverlay.open(self, card_name, card_type, null, true))
 	else:
 		card_node.gui_input.connect(func(ev: InputEvent) -> void:
 			if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed \
 					and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
-				SFXManager.play(SFXManager.SFX_CARD_INFO)
 				CardDetailOverlay.open(self, card_name, card_type)
 			elif ev is InputEventScreenTouch and (ev as InputEventScreenTouch).pressed:
-				SFXManager.play(SFXManager.SFX_CARD_INFO)
 				CardDetailOverlay.open(self, card_name, card_type, null, true))
 
 	return wrapper
@@ -449,8 +447,8 @@ func _on_collection_changed() -> void:
 
 func _on_union_mechanism_changed(unlocked: bool) -> void:
 	if _filter_btns.has("union"):
-		_filter_btns["union"].visible = unlocked
-	if not unlocked and _active_filter == "union":
+		_filter_btns["union"].visible = unlocked or SaveManager.demo_mode
+	if not unlocked and not SaveManager.demo_mode and _active_filter == "union":
 		_set_filter("all")
 		return
 	_apply_filter()

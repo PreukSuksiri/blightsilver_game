@@ -30,6 +30,11 @@
 		"wait": 9.0
 	},
 	{
+		"dungeon_call": "limbo_library",
+		"dungeon_on_win": "res://campaign/scenes/ch1_s1_post.json",
+		"linger_characters": true
+	},
+	{
 		"animation": "animation_vellum_card_commence_facedown",
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
@@ -71,11 +76,12 @@
 			],
 			"traps": [
 				"Trap Hole",
-				"Checkpoint",
+				"Trap Hole",
 				"Hypnosis",
 				"Mana Drain"
 			]
 		},
+		"hidden": true,
 		"on_lose": "game_over",
 		"on_win": "res://campaign/scenes/ch1_s1_post.json",
 		"player1_name": "Nex Crowmont",

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://baovnxhypal0f"
-path="res://.godot/imported/rocket_tyrant.png-fa35bbce28820d77418219165a610dab.ctex"
+uid="uid://dvggmpvvkg2af"
+path="res://.godot/imported/x_death_squad.jpg-5792bc85e7f2c642211cfd27ca995519.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/full_cards/rocket_tyrant.png"
-dest_files=["res://.godot/imported/rocket_tyrant.png-fa35bbce28820d77418219165a610dab.ctex"]
+source_file="res://assets/textures/cards/union/x_death_squad.jpg"
+dest_files=["res://.godot/imported/x_death_squad.jpg-5792bc85e7f2c642211cfd27ca995519.ctex"]
 
 [params]
 

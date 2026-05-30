@@ -45,7 +45,7 @@ def slug(name: str) -> str:
 def load_demo_cards():
     wb = openpyxl.load_workbook(XLSX, data_only=True)
     cards = []
-    for sheet in ["Character", "Tech", "Trap", "Union"]:
+    for sheet in ["Unit", "Tech", "Trap", "Union"]:
         ws = wb[sheet]
         rows = list(ws.iter_rows(values_only=True))
         headers = [str(h).strip() if h else "" for h in rows[1]]
@@ -56,9 +56,16 @@ def load_demo_cards():
             if not row[demo_idx] or str(row[demo_idx]).strip().lower() != "yes":
                 continue
             card = {h: row[i] for i, h in enumerate(headers) if h and i < len(row) and row[i] is not None}
-            card["_sheet"] = sheet
+            card["_sheet"] = "Character" if sheet == "Unit" else sheet
             cards.append(card)
     return cards
+
+
+def card_type_key(card: dict) -> str:
+    t = str(card.get("Card Type", card["_sheet"])).strip()
+    if t == "Unit":
+        return "Character"
+    return t
 
 
 def ability_text(card: dict) -> str:
@@ -108,7 +115,7 @@ def fmt_case(case_id: str, desc: str, pre: list, steps: list, expected: list) ->
 
 
 def base_preconditions(card: dict, extra: list | None = None) -> list:
-    ctype = card.get("Card Type", card["_sheet"])
+    ctype = card_type_key(card)
     pre = [
         "Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.",
         f"Ensure '{card.get('Card Name')}' is in the active player's deck/hand and loaded in CardDatabase.",
@@ -747,7 +754,7 @@ def write_type_file(card_type: str, cards: list[dict]) -> None:
 def write_index(all_cards: list[dict]) -> None:
     by_type = {}
     for c in all_cards:
-        t = c.get("Card Type", c["_sheet"])
+        t = card_type_key(c)
         by_type.setdefault(t, []).append(c["Card Name"])
 
     lines = [
@@ -947,7 +954,7 @@ def main():
     cards = load_demo_cards()
     by_type = {}
     for c in cards:
-        t = c.get("Card Type", c["_sheet"])
+        t = card_type_key(c)
         by_type.setdefault(t, []).append(c)
     write_framework()
     write_index(cards)

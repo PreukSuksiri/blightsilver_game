@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://hwp2ljioetjb"
-path="res://.godot/imported/self-destruct.jpg-54e90f9ad241a3c927b38674db543e21.ctex"
+uid="uid://dofvnheakgwiv"
+path="res://.godot/imported/rocket_marauder.png-35088dfb7f84a0bcddec0288465c91a3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/traps/self-destruct.jpg"
-dest_files=["res://.godot/imported/self-destruct.jpg-54e90f9ad241a3c927b38674db543e21.ctex"]
+source_file="res://assets/textures/cards/full_cards/rocket_marauder.png"
+dest_files=["res://.godot/imported/rocket_marauder.png-35088dfb7f84a0bcddec0288465c91a3.ctex"]
 
 [params]
 

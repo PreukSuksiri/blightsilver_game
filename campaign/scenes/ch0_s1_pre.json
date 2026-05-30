@@ -639,7 +639,7 @@
 		],
 		"speaker": "Nex",
 		"text": {
-			"en": "A lightout?"
+			"en": "A blackout?"
 		}
 	},
 	{
@@ -766,7 +766,7 @@
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex__neutral.png"
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
 			}
 		],
 		"speaker": "Nex",
@@ -1158,14 +1158,12 @@
 				"crop_bottom": 30.0,
 				"flip": true,
 				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_crossed_arm.png"
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_crossed_arm_FIX.png"
 			}
 		],
 		"speaker": "Silver-haired woman",
-		"text": {
-			"en": "Watch where you're going!"
-		}
+		"text": "Watch where you're going!"
 	},
 	{
 		"wait": 0.5

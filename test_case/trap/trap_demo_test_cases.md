@@ -9,7 +9,7 @@ Ordered by complexity/priority (most complex first).
 Card Name: Brainwash
 Type: Trap
 Cost: 1500
-Ability: The attacking player chooses their own ally as an attack target
+Ability: Foe choose their own ally as an attack target
 Test Cases:
 
 
@@ -24,7 +24,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and The attacking player chooses their own ally as an attack target resolves.
+Step 2: Trap reveals and Foe choose their own ally as an attack target resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -61,7 +61,7 @@ Expected Result:
 Card Name: Explosive Barrels
 Type: Trap
 Cost: 0
-Ability: Destroy the attacking character. Defending player also lose crystal equal to the attacking monster's cost.
+Ability: Destroy the attacker. You also pay the same cost as foe.
 Test Cases:
 
 
@@ -76,7 +76,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Destroy the attacking character. Defending player also lose crystal equal to the attacking monster's cost. resolves.
+Step 2: Trap reveals and Destroy the attacker. You also pay the same cost as foe. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -111,19 +111,6 @@ Expected Result:
 
 Test Case ID: TC-Explosive-Barrels-004
 Description:
-Crystal drain — Explosive Barrels reduces attacker crystals.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Explosive Barrels' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Record Player 0 crystals before trap trigger.
-Steps:
-Step 1: Attack trap; resolve drain.
-Expected Result:
-- Crystal total decreases by stated amount (20/50/etc.).
-
-Test Case ID: TC-Explosive-Barrels-005
-Description:
 Destroy attacker — Explosive Barrels kills attacker.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
@@ -135,7 +122,7 @@ Step 1: Attack trap.
 Expected Result:
 - Attacker destroyed; defender crystal loss rules per Explosive Barrels/Spike Trap text.
 
-Test Case ID: TC-Explosive-Barrels-006
+Test Case ID: TC-Explosive-Barrels-005
 Description:
 Edge — Explosive Barrels attacked by face-up vs face-down attacker path.
 Preconditions:
@@ -153,7 +140,7 @@ Expected Result:
 Card Name: Spike Trap
 Type: Trap
 Cost: 1500
-Ability: Destroy the attacking character
+Ability: Destroy the attacking unit
 Test Cases:
 
 
@@ -168,7 +155,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Destroy the attacking character resolves.
+Step 2: Trap reveals and Destroy the attacking unit resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -218,7 +205,7 @@ Expected Result:
 Card Name: Snare Trap
 Type: Trap
 Cost: 500
-Ability: The attacker's effect becomes None until the end of their next turn
+Ability: The attacker's effect becomes None until foe’s next turn ends
 Test Cases:
 
 
@@ -233,7 +220,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and The attacker's effect becomes None until the end of their next turn resolves.
+Step 2: Trap reveals and The attacker's effect becomes None until foe’s next turn ends resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -270,7 +257,7 @@ Expected Result:
 Card Name: Self-destruct
 Type: Trap
 Cost: 0
-Ability: Select 1 of your character card. Until the end of next turn, that card gain +10 ATK, but destroy it at the end of next turn. You do not lose crystal from card destroyed under this effect
+Ability: Select 1 of your unit. +10 ATK until your next turn’s end, but also destroy it. You pay no cost.
 Test Cases:
 
 
@@ -285,7 +272,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Select 1 of your character card. Until the end of next turn, that card gain +10 ATK, but destroy it at the end of next turn. You do not lose crystal from card destroyed under this effect resolves.
+Step 2: Trap reveals and Select 1 of your unit. +10 ATK until your next turn’s end, but also destroy it. You pay no cost. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -320,19 +307,6 @@ Expected Result:
 
 Test Case ID: TC-Self-destruct-004
 Description:
-Crystal drain — Self-destruct reduces attacker crystals.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Self-destruct' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Record Player 0 crystals before trap trigger.
-Steps:
-Step 1: Attack trap; resolve drain.
-Expected Result:
-- Crystal total decreases by stated amount (20/50/etc.).
-
-Test Case ID: TC-Self-destruct-005
-Description:
 Edge — Self-destruct attacked by face-up vs face-down attacker path.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
@@ -348,8 +322,8 @@ Expected Result:
 
 Card Name: Decoy Puppet
 Type: Trap
-Cost: 500
-Ability: Can be triggered whenever your card battles, 1 attacker’s attack is cancelled
+Cost: 100
+Ability: This turn, foe cannot perform any more attack using unit with 400 or less cost.
 Test Cases:
 
 
@@ -364,7 +338,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Can be triggered whenever your card battles, 1 attacker’s attack is cancelled resolves.
+Step 2: Trap reveals and This turn, foe cannot perform any more attack using unit with 400 or less cost. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -479,8 +453,8 @@ Expected Result:
 
 Card Name: Echo Barrier
 Type: Trap
-Cost: 1500
-Ability: All attacker’s characters cannot attack until the end of this turn
+Cost: 1000
+Ability: This turn, foe cannot perform any more attack.
 Test Cases:
 
 
@@ -495,7 +469,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and All attacker’s characters cannot attack until the end of this turn resolves.
+Step 2: Trap reveals and This turn, foe cannot perform any more attack. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -515,19 +489,6 @@ Expected Result:
 - Zero-cost trap nullified if applicable; attacker not destroyed by trap effect.
 
 Test Case ID: TC-Echo-Barrier-003
-Description:
-Turn control — Echo Barrier attack/turn restriction.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Echo Barrier' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Trigger trap mid-turn with attacks remaining.
-Steps:
-Step 1: Verify turn ends or next-turn attack lock on attacker.
-Expected Result:
-- Attacker cannot attack next turn OR turn ends immediately per Blackmail choice.
-
-Test Case ID: TC-Echo-Barrier-004
 Description:
 Edge — Echo Barrier attacked by face-up vs face-down attacker path.
 Preconditions:
@@ -596,8 +557,8 @@ Expected Result:
 
 Card Name: Hostage
 Type: Trap
-Cost: 0
-Ability: Reveal all adjacent cells. Until the end of this turn, these square cannot be selected as attack target until the end of this turn
+Cost: 200
+Ability: Reveal 1 of your own cell. Until the foe’s turn ends, foe cannot target than cell.
 Test Cases:
 
 
@@ -612,7 +573,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Reveal all adjacent cells. Until the end of this turn, these square cannot be selected as attack target until the end of this turn resolves.
+Step 2: Trap reveals and Reveal 1 of your own cell. Until the foe’s turn ends, foe cannot target than cell. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -633,20 +594,6 @@ Expected Result:
 
 Test Case ID: TC-Hostage-003
 Description:
-Zero-cost — Electrogazer negates Hostage on field.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Hostage' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Player 1 has Electrogazer face-up.
-- Hostage face-down on Player 1 field.
-Steps:
-Step 1: Player 0 attacks another target; verify negation state.
-Expected Result:
-- Zero-cost trap on both fields negated while Electrogazer is active.
-
-Test Case ID: TC-Hostage-004
-Description:
 Reveal — Hostage reveals cells.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
@@ -658,7 +605,7 @@ Step 1: Trigger trap via attack.
 Expected Result:
 - Correct cells revealed; Hostage/Bait selection flows work.
 
-Test Case ID: TC-Hostage-005
+Test Case ID: TC-Hostage-004
 Description:
 Edge — Hostage attacked by face-up vs face-down attacker path.
 Preconditions:
@@ -728,7 +675,7 @@ Expected Result:
 Card Name: Cursed Reflection
 Type: Trap
 Cost: 500
-Ability: Swap the attacker's ATK and DEF until the end of this turn
+Ability: Swap the attacker's ATK&DEF until the end of this turn
 Test Cases:
 
 
@@ -743,7 +690,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Swap the attacker's ATK and DEF until the end of this turn resolves.
+Step 2: Trap reveals and Swap the attacker's ATK&DEF until the end of this turn resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -856,62 +803,10 @@ Expected Result:
 
 ---
 
-Card Name: Hard Scale
-Type: Trap
-Cost: 700
-Ability: Can be triggered whenever your card battles,. +5 DEF to 1 of your card until the end of this turn
-Test Cases:
-
-
-Test Case ID: TC-Hard-Scale-001
-Description:
-Happy path — opponent attacks Hard Scale.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Hard Scale' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Hard Scale face-down on Player 1 field.
-- Player 0 has an attacker ready.
-Steps:
-Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Can be triggered whenever your card battles,. +5 DEF to 1 of your card until the end of this turn resolves.
-Expected Result:
-- Trap effect applies to attacker/active player as described.
-- Trap is consumed/destroyed after activation unless otherwise stated.
-
-Test Case ID: TC-Hard-Scale-002
-Description:
-Immunity — Huntress of Green Glade / Laser Walker / Electrogazer vs Hard Scale.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Hard Scale' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Player 0 has trap-immune character.
-- Hard Scale face-down on opponent field.
-Steps:
-Step 1: Attack trap with immune character.
-Expected Result:
-- Zero-cost trap nullified if applicable; attacker not destroyed by trap effect.
-
-Test Case ID: TC-Hard-Scale-003
-Description:
-Edge — Hard Scale attacked by face-up vs face-down attacker path.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Hard Scale' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Repeat with attacker revealed before combat.
-Steps:
-Step 1: Attack trap.
-Expected Result:
-- Trap activates identically regardless of attacker exposure state.
-
----
-
 Card Name: Pepper Spray
 Type: Trap
 Cost: 0
-Ability: Flip 2 coin, if head, the attacking character lose -5 ATK until the end of their next turn.
+Ability: Flip 2 coin, if head, the attacking unit lose -5 ATK until the end of their next turn.
 Test Cases:
 
 
@@ -926,7 +821,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Flip 2 coin, if head, the attacking character lose -5 ATK until the end of their next turn. resolves.
+Step 2: Trap reveals and Flip 2 coin, if head, the attacking unit lose -5 ATK until the end of their next turn. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -991,7 +886,7 @@ Expected Result:
 Card Name: Foul Gas
 Type: Trap
 Cost: 0
-Ability: -5 ATK to all the attacking player’s characters until the end of this turn
+Ability: -5 ATK to all the attacking player’s units until the end of this turn
 Test Cases:
 
 
@@ -1006,7 +901,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and -5 ATK to all the attacking player’s characters until the end of this turn resolves.
+Step 2: Trap reveals and -5 ATK to all the attacking player’s units until the end of this turn resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -1199,10 +1094,62 @@ Expected Result:
 
 ---
 
+Card Name: Hard Scale
+Type: Trap
+Cost: 700
+Ability: All of your unit gain +5 DEF in Reckoning until this turn’s end
+Test Cases:
+
+
+Test Case ID: TC-Hard-Scale-001
+Description:
+Happy path — opponent attacks Hard Scale.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Hard Scale' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Hard Scale face-down on Player 1 field.
+- Player 0 has an attacker ready.
+Steps:
+Step 1: Player 0 attacks the trap cell.
+Step 2: Trap reveals and All of your unit gain +5 DEF in Reckoning until this turn’s end resolves.
+Expected Result:
+- Trap effect applies to attacker/active player as described.
+- Trap is consumed/destroyed after activation unless otherwise stated.
+
+Test Case ID: TC-Hard-Scale-002
+Description:
+Immunity — Huntress of Green Glade / Laser Walker / Electrogazer vs Hard Scale.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Hard Scale' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Player 0 has trap-immune character.
+- Hard Scale face-down on opponent field.
+Steps:
+Step 1: Attack trap with immune character.
+Expected Result:
+- Zero-cost trap nullified if applicable; attacker not destroyed by trap effect.
+
+Test Case ID: TC-Hard-Scale-003
+Description:
+Edge — Hard Scale attacked by face-up vs face-down attacker path.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Hard Scale' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Repeat with attacker revealed before combat.
+Steps:
+Step 1: Attack trap.
+Expected Result:
+- Trap activates identically regardless of attacker exposure state.
+
+---
+
 Card Name: Hypnosis 
 Type: Trap
 Cost: 800
-Ability: The attacking character cannot attack during their next turn
+Ability: The attacking unit cannot attack during their next turn
 Test Cases:
 
 
@@ -1217,7 +1164,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and The attacking character cannot attack during their next turn resolves.
+Step 2: Trap reveals and The attacking unit cannot attack during their next turn resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -1267,7 +1214,7 @@ Expected Result:
 Card Name: Red Card
 Type: Trap
 Cost: 0
-Ability: Flip 2 coin, if head, that character cannot attack next turn
+Ability: Flip 2 coin, if head, that unit cannot attack next turn
 Test Cases:
 
 
@@ -1282,7 +1229,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Flip 2 coin, if head, that character cannot attack next turn resolves.
+Step 2: Trap reveals and Flip 2 coin, if head, that unit cannot attack next turn resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -1348,58 +1295,6 @@ Edge — Red Card attacked by face-up vs face-down attacker path.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
 - Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Repeat with attacker revealed before combat.
-Steps:
-Step 1: Attack trap.
-Expected Result:
-- Trap activates identically regardless of attacker exposure state.
-
----
-
-Card Name: Flame Trap
-Type: Trap
-Cost: 250
-Ability: Permanently -10 ATK to the Attacking character
-Test Cases:
-
-
-Test Case ID: TC-Flame-Trap-001
-Description:
-Happy path — opponent attacks Flame Trap.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Flame Trap' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Flame Trap face-down on Player 1 field.
-- Player 0 has an attacker ready.
-Steps:
-Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Permanently -10 ATK to the Attacking character resolves.
-Expected Result:
-- Trap effect applies to attacker/active player as described.
-- Trap is consumed/destroyed after activation unless otherwise stated.
-
-Test Case ID: TC-Flame-Trap-002
-Description:
-Immunity — Huntress of Green Glade / Laser Walker / Electrogazer vs Flame Trap.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Flame Trap' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Player 0 has trap-immune character.
-- Flame Trap face-down on opponent field.
-Steps:
-Step 1: Attack trap with immune character.
-Expected Result:
-- Zero-cost trap nullified if applicable; attacker not destroyed by trap effect.
-
-Test Case ID: TC-Flame-Trap-003
-Description:
-Edge — Flame Trap attacked by face-up vs face-down attacker path.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Flame Trap' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Repeat with attacker revealed before combat.
 Steps:
@@ -1492,6 +1387,58 @@ Edge — Street Joke attacked by face-up vs face-down attacker path.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
 - Ensure 'Street Joke' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Repeat with attacker revealed before combat.
+Steps:
+Step 1: Attack trap.
+Expected Result:
+- Trap activates identically regardless of attacker exposure state.
+
+---
+
+Card Name: Flame Trap
+Type: Trap
+Cost: 250
+Ability: Permanently -10 ATK to the Attacking unit
+Test Cases:
+
+
+Test Case ID: TC-Flame-Trap-001
+Description:
+Happy path — opponent attacks Flame Trap.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Flame Trap' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Flame Trap face-down on Player 1 field.
+- Player 0 has an attacker ready.
+Steps:
+Step 1: Player 0 attacks the trap cell.
+Step 2: Trap reveals and Permanently -10 ATK to the Attacking unit resolves.
+Expected Result:
+- Trap effect applies to attacker/active player as described.
+- Trap is consumed/destroyed after activation unless otherwise stated.
+
+Test Case ID: TC-Flame-Trap-002
+Description:
+Immunity — Huntress of Green Glade / Laser Walker / Electrogazer vs Flame Trap.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Flame Trap' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Player 0 has trap-immune character.
+- Flame Trap face-down on opponent field.
+Steps:
+Step 1: Attack trap with immune character.
+Expected Result:
+- Zero-cost trap nullified if applicable; attacker not destroyed by trap effect.
+
+Test Case ID: TC-Flame-Trap-003
+Description:
+Edge — Flame Trap attacked by face-up vs face-down attacker path.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Flame Trap' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Repeat with attacker revealed before combat.
 Steps:

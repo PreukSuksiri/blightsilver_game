@@ -90,7 +90,7 @@
 				],
 				"traps": [
 					"Spike Trap",
-					"Checkpoint",
+					"Trap Hole",
 					"Snare Trap",
 					"Mana Drain"
 				]
@@ -140,7 +140,7 @@
 					"Echo Barrier",
 					"Mana Drain",
 					"Cursed Reflection",
-					"Checkpoint"
+					"Trap Hole"
 				]
 			},
 			"battle_settings": {

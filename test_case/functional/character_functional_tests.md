@@ -3,11 +3,11 @@
 Derived from Godot `CardDatabase.gd` / `UnionDatabase.gd` implementation.
 Each case references the exact handler function and enum type.
 
-**Cards:** 134
+**Cards:** 148
 
 ---
 
-Card Name: Armored Money
+Card Name: Armored Monkey
 Type: Character
 Stats: ATK=10 DEF=20 Cost=170 Affinity=NATURE
 AbilityType: ATK_BONUS_IF_AFFINITY_ON_FIELD
@@ -15,9 +15,9 @@ ability_params: {'affinity': 'NATURE', 'bonus': 10}
 Description: +10 ATK if there is face-up Nature card
 Test Cases:
 
-Test Case ID: TC-FUNC-Armored-Money-001
+Test Case ID: TC-FUNC-Armored-Monkey-001
 Description:
-Armored Money: +10 ATK when face-up NATURE ally on field
+Armored Monkey: +10 ATK when face-up NATURE ally on field
 Implementation Reference:
 - BattleResolver._get_effective_atk() scans GameState.grids
 - AbilityType.ATK_BONUS_IF_AFFINITY_ON_FIELD
@@ -26,7 +26,7 @@ Preconditions:
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
 - Place another face-up NATURE character on attacker's grid.
-- Armored Money attacks (does not need to target NATURE).
+- Armored Monkey attacks (does not need to target NATURE).
 Steps:
 Step 1: Run calculate_field_bonuses if needed; resolve battle.
 Expected Result:
@@ -36,7 +36,7 @@ Expected Result:
 
 Card Name: Angel Gatekeeper
 Type: Character
-Stats: ATK=40 DEF=90 Cost=960 Affinity=DIVINE
+Stats: ATK=40 DEF=90 Cost=1000 Affinity=DIVINE
 AbilityType: ATK_BONUS_VS_AFFINITY
 ability_params: {'affinity': 'CHAOS', 'bonus': 50}
 Description: +50 ATK vs Chaos Affinity
@@ -195,7 +195,7 @@ Verification (automated):
 
 Card Name: Pyromancer
 Type: Character
-Stats: ATK=80 DEF=0 Cost=800 Affinity=ARCANE
+Stats: ATK=80 DEF=0 Cost=900 Affinity=ARCANE
 AbilityType: ATK_BONUS_VS_AFFINITY
 ability_params: {'affinity': 'NATURE', 'bonus': 30}
 Description: +30 ATK vs Nature Affinity
@@ -407,7 +407,7 @@ Verification (automated):
 
 Card Name: Satellite Cannon
 Type: Character
-Stats: ATK=90 DEF=80 Cost=1100 Affinity=COSMIC
+Stats: ATK=100 DEF=80 Cost=1100 Affinity=COSMIC
 AbilityType: ATK_BONUS_VS_CENTER_ZONE
 ability_params: {'bonus': 20, 'center_bonus': 40}
 Description: +20 ATK if attacking the 3x3 center zone. +40 more ATK if attacking the very center cell.
@@ -427,9 +427,9 @@ Preconditions:
 Steps:
 Step 1: Pass target_pos to resolve_battle; compare attacker_atk_used each time.
 Expected Result:
-- Edge target: attacker_atk_used == 90.
-- Center zone (not 2,2): attacker_atk_used == 110.
-- Cell (2,2): attacker_atk_used == 150.
+- Edge target: attacker_atk_used == 100.
+- Center zone (not 2,2): attacker_atk_used == 120.
+- Cell (2,2): attacker_atk_used == 160.
 
 ---
 
@@ -539,7 +539,7 @@ Expected Result:
 
 Card Name: Void Stalker
 Type: Character
-Stats: ATK=65 DEF=25 Cost=600 Affinity=CHAOS
+Stats: ATK=65 DEF=25 Cost=720 Affinity=CHAOS
 AbilityType: ATK_BOOST_VS_REVEALED
 ability_params: {'bonus': 20}
 Description: +20 ATK if it attack an exposed card
@@ -563,12 +563,38 @@ Expected Result:
 
 ---
 
+Card Name: Slim Gray Trooper
+Type: Character
+Stats: ATK=45 DEF=45 Cost=750 Affinity=COSMIC
+AbilityType: ATK_DEF_BONUS_IF_OWN_REVEALED_GTE
+ability_params: {'min_revealed': 10, 'atk': 30, 'def': 30}
+Description: +30 ATK and DEF if 10 or more cells on your side is revealed
+Test Cases:
+
+Test Case ID: TC-FUNC-Slim-Gray-Trooper-001
+Description:
+Slim Gray Trooper: +30/+30 if ≥10 own cells revealed
+Implementation Reference:
+- BattleResolver ATK_DEF_BONUS_IF_OWN_REVEALED_GTE
+- AbilityType.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Reveal ≥10 cells on own grid (including dead_ends face-up).
+Steps:
+Step 1: Battle with card.
+Expected Result:
+- Stats include +30 ATK / +30 DEF when threshold met.
+
+---
+
 Card Name: Aerial the Battlemage
 Type: Character
-Stats: ATK=50 DEF=45 Cost=700 Affinity=ARCANE
+Stats: ATK=50 DEF=45 Cost=750 Affinity=ARCANE
 AbilityType: ATK_DEF_BONUS_IF_UNION_ON_FIELD
 ability_params: {'atk': 20, 'def': 20}
-Description: +20 ATK and DEF if there is Union card on your field
+Description: +20 ATK&DEF if there is Union card on your field
 Test Cases:
 
 Test Case ID: TC-FUNC-Aerial-the-Battlemage-001
@@ -591,10 +617,10 @@ Expected Result:
 
 Card Name: Book with Fangs
 Type: Character
-Stats: ATK=45 DEF=55 Cost=700 Affinity=ARCANE
+Stats: ATK=45 DEF=55 Cost=800 Affinity=ARCANE
 AbilityType: ATK_DEF_BONUS_VS_AFFINITY
 ability_params: {'affinity': 'ARCANE', 'atk': 30, 'def': 30}
-Description: +30 ATK and DEF vs Arcane
+Description: +30 ATK&DEF vs Arcane
 Test Cases:
 
 Test Case ID: TC-FUNC-Book-with-Fangs-001
@@ -621,7 +647,7 @@ Type: Character
 Stats: ATK=25 DEF=40 Cost=400 Affinity=NATURE
 AbilityType: ATK_DEF_BONUS_VS_AFFINITY
 ability_params: {'affinity': 'NATURE', 'atk': 20, 'def': 20}
-Description: +20 ATK and DEF vs Nature
+Description: +20 ATK&DEF vs Nature
 Test Cases:
 
 Test Case ID: TC-FUNC-Flame-Lizard-001
@@ -648,7 +674,7 @@ Type: Character
 Stats: ATK=20 DEF=15 Cost=220 Affinity=BIO
 AbilityType: ATK_DEF_BONUS_VS_AFFINITY
 ability_params: {'affinity': 'NATURE', 'atk': 10, 'def': 10}
-Description: +10 ATK and DEF vs Nature
+Description: +10 ATK&DEF vs Nature
 Test Cases:
 
 Test Case ID: TC-FUNC-Gamma-Emitter-001
@@ -672,10 +698,10 @@ Expected Result:
 
 Card Name: Mind Flayer
 Type: Character
-Stats: ATK=100 DEF=70 Cost=1200 Affinity=ARCANE
+Stats: ATK=100 DEF=70 Cost=1500 Affinity=ARCANE
 AbilityType: ATK_DEF_BONUS_VS_AFFINITY
 ability_params: {'affinity': 'ANIMA', 'atk': 50, 'def': 50}
-Description: +50 ATK and DEF against Anima
+Description: +50 ATK&DEF against Anima
 Test Cases:
 
 Test Case ID: TC-FUNC-Mind-Flayer-001
@@ -702,7 +728,7 @@ Type: Character
 Stats: ATK=20 DEF=20 Cost=250 Affinity=ANIMA
 AbilityType: ATK_DEF_BONUS_VS_AFFINITY
 ability_params: {'affinity': 'ARCANE', 'atk': 5, 'def': 5}
-Description: +5 ATK and DEF vs Arcane
+Description: +5 ATK&DEF vs Arcane
 Test Cases:
 
 Test Case ID: TC-FUNC-Witchhunter-001
@@ -729,7 +755,7 @@ Type: Character
 Stats: ATK=35 DEF=35 Cost=420 Affinity=ANIMA
 AbilityType: ATK_DEF_BONUS_VS_NON_AFFINITY
 ability_params: {'affinity': 'ANIMA', 'atk': 5, 'def': 5}
-Description: +5 ATK and DEF vs Non-Anima
+Description: +5 ATK&DEF vs Non-Anima
 Test Cases:
 
 Test Case ID: TC-FUNC-Ox-Patrol-001
@@ -781,7 +807,7 @@ Type: Character
 Stats: ATK=40 DEF=20 Cost=350 Affinity=DIVINE
 AbilityType: ATK_PENALTY_WHEN_EXPOSED
 ability_params: {'penalty': 20}
-Description: -20 ATK while face-up
+Description: -20 ATK if exposed
 Test Cases:
 
 Test Case ID: TC-FUNC-Sniping-Fairy-001
@@ -804,10 +830,10 @@ Expected Result:
 
 Card Name: Mephisto the Fallen
 Type: Character
-Stats: ATK=75 DEF=0 Cost=750 Affinity=DIVINE
+Stats: ATK=75 DEF=0 Cost=860 Affinity=DIVINE
 AbilityType: ATK_ZERO_AFTER_WIN
 ability_params: {}
-Description: After this card wins a battle, its ATK becomes 0 permanently
+Description: After this card attacked successfully, its ATK becomes 0 permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Mephisto-the-Fallen-001
@@ -833,7 +859,7 @@ Type: Character
 Stats: ATK=40 DEF=25 Cost=450 Affinity=NATURE
 AbilityType: ATTACKER_ATK_DEBUFF
 ability_params: {'amount': 15}
-Description: At battle calculation, -15 ATK to the attacker
+Description: In Reckoning, -15 ATK to the attacker
 Test Cases:
 
 Test Case ID: TC-FUNC-White-Tiger-001
@@ -860,7 +886,7 @@ Type: Character
 Stats: ATK=20 DEF=25 Cost=300 Affinity=DIVINE
 AbilityType: ATTACK_STANCE_BOOST
 ability_params: {'atk': 10}
-Description: +10 ATK and -10 DEF while performing attack.
+Description: If it attacks: +10 ATK,-10 DEF permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Sunrise-Lady-001
@@ -883,10 +909,10 @@ Expected Result:
 
 Card Name: Leorudus the Warlord
 Type: Character
-Stats: ATK=80 DEF=80 Cost=1400 Affinity=ANIMA
+Stats: ATK=80 DEF=80 Cost=1150 Affinity=ANIMA
 AbilityType: BOOST_PER_ANIMA_ON_FIELD
 ability_params: {'atk_bonus': 20, 'def_bonus': 20}
-Description: +20 ATK and DEF for each other face-up Anima card on their own field
+Description: +20 ATK&DEF for each other face-up Anima card on their own field
 Test Cases:
 
 Test Case ID: TC-FUNC-Leorudus-the-Warlord-001
@@ -909,7 +935,7 @@ Expected Result:
 
 Card Name: Death Knight
 Type: Character
-Stats: ATK=65 DEF=65 Cost=780 Affinity=CHAOS
+Stats: ATK=65 DEF=65 Cost=850 Affinity=CHAOS
 AbilityType: BOOST_PER_TYPED_CARD_ON_FIELD
 ability_params: {'atk_bonus': 5, 'def_bonus': 0, 'affinity': 'CHAOS'}
 Description: +5 ATK per Chaos card on your side of the field
@@ -972,7 +998,7 @@ Type: Character
 Stats: ATK=30 DEF=30 Cost=900 Affinity=CHAOS
 AbilityType: BOOST_PER_TYPED_CARD_ON_FIELD
 ability_params: {'atk_bonus': 30, 'def_bonus': 30, 'card_name_contains': 'wisp'}
-Description: +30 ATK and DEF for each face-up ‘wisp’ card on their own field
+Description: +30 ATK&DEF for each face-up ‘wisp’ card on their own field
 Test Cases:
 
 Test Case ID: TC-FUNC-Night-Whisperer-001
@@ -1059,7 +1085,7 @@ Expected Result:
 
 Card Name: Shotgun Shark
 Type: Character
-Stats: ATK=75 DEF=25 Cost=850 Affinity=NATURE
+Stats: ATK=75 DEF=25 Cost=900 Affinity=NATURE
 AbilityType: BOOST_PER_TYPED_CARD_ON_FIELD
 ability_params: {'atk_bonus': 10, 'def_bonus': 0, 'card_name_contains': 'shark'}
 Description: +10 ATK per shark card on the field
@@ -1119,10 +1145,10 @@ Expected Result:
 
 Card Name: Swarmcaller
 Type: Character
-Stats: ATK=45 DEF=45 Cost=900 Affinity=NATURE
+Stats: ATK=45 DEF=45 Cost=950 Affinity=NATURE
 AbilityType: BOOST_PER_TYPED_CARD_ON_FIELD
 ability_params: {'atk_bonus': 15, 'def_bonus': 15, 'affinity': 'NATURE'}
-Description: +15 ATK and DEF for each other face-up Nature card on your field
+Description: +15 ATK&DEF for each other face-up Nature card on your field
 Test Cases:
 
 Test Case ID: TC-FUNC-Swarmcaller-001
@@ -1152,7 +1178,7 @@ Type: Character
 Stats: ATK=45 DEF=45 Cost=800 Affinity=ARCANE
 AbilityType: COIN_FLIP_2_DESTROY_NON_AFFINITY
 ability_params: {'affinity': 'ARCANE'}
-Description: If this card battles non-Arcane card, flip 2 coins. If both are heads, destroy defender.
+Description: If this card battles non-Arcane card, flip a coins. If both are head, destroy it.
 Test Cases:
 
 Test Case ID: TC-FUNC-Blue-Mage-001
@@ -1181,7 +1207,7 @@ Type: Character
 Stats: ATK=60 DEF=25 Cost=600 Affinity=DIVINE
 AbilityType: COIN_FLIP_ATK_BOOST
 ability_params: {'bonus': 10}
-Description: At battle calculation, flip a coin, if head, +10 ATK
+Description: In Reckoning, flip a coin. If head, +10 ATK
 Test Cases:
 
 Test Case ID: TC-FUNC-Joseph-the-Battle-Priest-001
@@ -1202,9 +1228,35 @@ Expected Result:
 
 ---
 
+Card Name: Grand Wizard
+Type: Character
+Stats: ATK=90 DEF=70 Cost=1100 Affinity=ARCANE
+AbilityType: COIN_FLIP_ATK_DEF_BOOST
+ability_params: {'bonus': 30}
+Description: In reckoning, flip a coin, if head, +30 ATK and DEF until this turn’s end
+Test Cases:
+
+Test Case ID: TC-FUNC-Grand-Wizard-001
+Description:
+Grand Wizard: ability COIN_FLIP_ATK_DEF_BOOST functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.COIN_FLIP_ATK_DEF_BOOST
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={'bonus': 30}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: In reckoning, flip a coin, if head, +30 ATK and DEF until this turn’s end
+
+---
+
 Card Name: Lazy Troll
 Type: Character
-Stats: ATK=120 DEF=60 Cost=900 Affinity=NATURE
+Stats: ATK=120 DEF=60 Cost=1000 Affinity=NATURE
 AbilityType: COIN_FLIP_CANCEL_ATTACK
 ability_params: {}
 Description: If this card performs an attack, flip a coin, if tail, it stops attacking.
@@ -1228,17 +1280,17 @@ Expected Result:
 
 ---
 
-Card Name: Moon Tribe Twin Blades
+Card Name: Horn Face
 Type: Character
-Stats: ATK=30 DEF=20 Cost=300 Affinity=COSMIC
+Stats: ATK=85 DEF=60 Cost=1350 Affinity=COSMIC
 AbilityType: COIN_FLIP_EXTRA_ATTACK
-ability_params: {}
-Description: If this card attacks, flip a coin. If head, this card can attack twice.
+ability_params: {'max_attacks': 3}
+Description: After successfully attack, flip a coin, if head, it can attack again. Can do up to 3 times.
 Test Cases:
 
-Test Case ID: TC-FUNC-Moon-Tribe-Twin-Blades-001
+Test Case ID: TC-FUNC-Horn-Face-001
 Description:
-Moon Tribe Twin Blades: coin flip extra attack after battle
+Horn Face: coin flip extra attack after battle
 Implementation Reference:
 - TurnManager._apply_post_battle_effects randi()%2
 - AbilityType.COIN_FLIP_EXTRA_ATTACK
@@ -1246,7 +1298,33 @@ Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Moon Tribe Twin Blades completes an attack.
+- Horn Face completes an attack.
+Steps:
+Step 1: Check attacks_remaining after battle.
+Expected Result:
+- Heads: attacks_remaining incremented by 1; Tails: no extra.
+
+---
+
+Card Name: Moon Tribe Twin Blader
+Type: Character
+Stats: ATK=30 DEF=20 Cost=300 Affinity=COSMIC
+AbilityType: COIN_FLIP_EXTRA_ATTACK
+ability_params: {}
+Description: If this card attacks, flip a coin. If head, this card can attack twice.
+Test Cases:
+
+Test Case ID: TC-FUNC-Moon-Tribe-Twin-Blader-001
+Description:
+Moon Tribe Twin Blader: coin flip extra attack after battle
+Implementation Reference:
+- TurnManager._apply_post_battle_effects randi()%2
+- AbilityType.COIN_FLIP_EXTRA_ATTACK
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Moon Tribe Twin Blader completes an attack.
 Steps:
 Step 1: Check attacks_remaining after battle.
 Expected Result:
@@ -1259,7 +1337,7 @@ Type: Character
 Stats: ATK=10 DEF=10 Cost=100 Affinity=NATURE
 AbilityType: COIN_FLIP_SWAP_POSITION
 ability_params: {}
-Description: At battle calculation, flip a coin, if head, swap this card’s position with any of character card on their own field
+Description: Before Reckoning, flip a coin. If head, swap position with any of your card
 Test Cases:
 
 Test Case ID: TC-FUNC-Nuki-the-Tanuki-001
@@ -1280,12 +1358,38 @@ Expected Result:
 
 ---
 
+Card Name: Ectoplasm
+Type: Character
+Stats: ATK=20 DEF=0 Cost=800 Affinity=BIO
+AbilityType: COPY_ALLY_STATS_ON_DESTROY
+ability_params: {}
+Description: When your unit card is destroy, you can copy ATK, DEF, Crystal Cost of the destroyed card to this card instead. Can be triggered face-down.
+Test Cases:
+
+Test Case ID: TC-FUNC-Ectoplasm-001
+Description:
+Ectoplasm: ability COPY_ALLY_STATS_ON_DESTROY functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.COPY_ALLY_STATS_ON_DESTROY
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: When your unit card is destroy, you can copy ATK, DEF, Crystal Cost of the destroyed card to this card instead. Can be triggered face-down.
+
+---
+
 Card Name: Miner Probe
 Type: Character
 Stats: ATK=10 DEF=10 Cost=200 Affinity=COSMIC
 AbilityType: CRYSTAL_GAIN_ON_DEAD_END_ATTACK
 ability_params: {'amount': 20}
-Description: If this card attacks a dead end card, you receive 20 crystals
+Description: Gain 20 crystals upon hitting dead end card
 Test Cases:
 
 Test Case ID: TC-FUNC-Miner-Probe-001
@@ -1306,12 +1410,38 @@ Expected Result:
 
 ---
 
+Card Name: Fierce Gladiator
+Type: Character
+Stats: ATK=70 DEF=90 Cost=1000 Affinity=ANIMA
+AbilityType: CRYSTAL_GAIN_ON_DEFEND
+ability_params: {'amount': 500}
+Description: +500 Crystal on successful defend
+Test Cases:
+
+Test Case ID: TC-FUNC-Fierce-Gladiator-001
+Description:
+Fierce Gladiator: ability CRYSTAL_GAIN_ON_DEFEND functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.CRYSTAL_GAIN_ON_DEFEND
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={'amount': 500}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: +500 Crystal on successful defend
+
+---
+
 Card Name: Parom the Smuggler
 Type: Character
 Stats: ATK=30 DEF=20 Cost=300 Affinity=COSMIC
 AbilityType: CRYSTAL_GAIN_ON_OPP_REVEAL
 ability_params: {'amount': 40}
-Description: Gain 40 crystals each time opponent’s grid is revealed
+Description: Each time foe’s cell got revealed: gain 40 crystals.
 Test Cases:
 
 Test Case ID: TC-FUNC-Parom-the-Smuggler-001
@@ -1358,12 +1488,38 @@ Expected Result:
 
 ---
 
+Card Name: Aether Warden
+Type: Character
+Stats: ATK=30 DEF=110 Cost=800 Affinity=DIVINE
+AbilityType: DEFEND_DRAIN_ATTACKER
+ability_params: {'drain_amount': 300}
+Description: Attacking player loses 300 Crystals
+Test Cases:
+
+Test Case ID: TC-FUNC-Aether-Warden-001
+Description:
+Aether Warden: drain 300 crystals from attacker on defend
+Implementation Reference:
+- BattleResolver._apply_defend_effects
+- AbilityType.DEFEND_DRAIN_ATTACKER
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Opponent attacks; Aether Warden wins defense.
+Steps:
+Step 1: Resolve battle.
+Expected Result:
+- result.attacker_crystal_loss includes +300 (or separate drain message).
+
+---
+
 Card Name: Green Mage
 Type: Character
 Stats: ATK=15 DEF=15 Cost=400 Affinity=ARCANE
 AbilityType: DEFEND_PERM_DEBUFF_ATTACKER_ATK_DEF
 ability_params: {'atk': 10, 'def': 10}
-Description: When this card defends, the attacker permanently loses 10 ATK and DEF.
+Description: When this card defends, the attacker permanently loses 10 ATK&DEF.
 Test Cases:
 
 Test Case ID: TC-FUNC-Green-Mage-001
@@ -1389,7 +1545,7 @@ Type: Character
 Stats: ATK=40 DEF=30 Cost=400 Affinity=DIVINE
 AbilityType: DEFENSE_STANCE_BOOST
 ability_params: {'def': 10}
-Description: +10 DEF while performing defense.
+Description: If it defends: +10 DEF,-10 ATK
 Test Cases:
 
 Test Case ID: TC-FUNC-Moonrise-Gentleman-001
@@ -1436,6 +1592,32 @@ Expected Result:
 
 ---
 
+Card Name: Lightbringer
+Type: Character
+Stats: ATK=80 DEF=40 Cost=1200 Affinity=DIVINE
+AbilityType: DEF_BONUS_VS_AFFINITY
+ability_params: {'affinity': 'CHAOS', 'bonus': 100}
+Description: +100 DEF vs Chaos Affinity
+Test Cases:
+
+Test Case ID: TC-FUNC-Lightbringer-001
+Description:
+Lightbringer: ability DEF_BONUS_VS_AFFINITY functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.DEF_BONUS_VS_AFFINITY
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={'affinity': 'CHAOS', 'bonus': 100}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: +100 DEF vs Chaos Affinity
+
+---
+
 Card Name: Mafia Associates
 Type: Character
 Stats: ATK=45 DEF=40 Cost=500 Affinity=ANIMA
@@ -1469,7 +1651,7 @@ Type: Character
 Stats: ATK=30 DEF=80 Cost=1200 Affinity=CHAOS
 AbilityType: DESTROYED_IF_BATTLES_DIVINE
 ability_params: {}
-Description: +50 ATK for each other face-up Chaos card on their own field. If it battles with Divine Character, destroy this card.
+Description: +50 ATK for each other face-up Chaos card on their own field. In Reckoning with Divine, destroy this card.
 Test Cases:
 
 Test Case ID: TC-FUNC-Immortal-Vampire-001
@@ -1495,10 +1677,10 @@ Expected Result:
 
 Card Name: Pit Lord
 Type: Character
-Stats: ATK=120 DEF=100 Cost=1200 Affinity=CHAOS
+Stats: ATK=120 DEF=100 Cost=1250 Affinity=CHAOS
 AbilityType: DESTROYED_IF_BATTLES_DIVINE
 ability_params: {}
-Description: his card is destroyed if battle with Divine Character. After this card attacked, halve its ATK and DEF permanently
+Description: his card is destroyed if battle with Divine Unit. After this card attacked, halve its ATK&DEF permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Pit-Lord-001
@@ -1517,7 +1699,7 @@ Steps:
 Step 1: Pit Lord attacks Divine character.
 Expected Result:
 - result.attacker_destroyed == true.
-- result.attacker_crystal_loss == 1200.
+- result.attacker_crystal_loss == 1250.
 - After any successful attack: current_atk and current_def halved permanently.
 
 ---
@@ -1527,7 +1709,7 @@ Type: Character
 Stats: ATK=50 DEF=50 Cost=800 Affinity=CHAOS
 AbilityType: DESTROYED_IF_BATTLES_DIVINE
 ability_params: {}
-Description: Destroy is card when battling with Divine card. At battle calculation, -5 ATK and DEF to the defender permanently. Also +ATK and DEF to this card permamently
+Description: In Reckoning with Divine, destroy this card. In Reckoning with non-Divine, Drain 5 ATK&DEF permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Vampire-Duchess-001
@@ -1556,7 +1738,7 @@ Type: Character
 Stats: ATK=80 DEF=100 Cost=1400 Affinity=DIVINE
 AbilityType: DESTROY_IF_OPPONENT_AFFINITY
 ability_params: {'affinity': 'CHAOS'}
-Description: At battle calculation, destroy Chaos card
+Description: In Reckoning, destroy Chaos
 Test Cases:
 
 Test Case ID: TC-FUNC-Goddess-of-Virtue-001
@@ -1612,7 +1794,7 @@ Type: Character
 Stats: ATK=40 DEF=25 Cost=400 Affinity=CHAOS
 AbilityType: DESTROY_SELF_VS_DIVINE_BOTH
 ability_params: {}
-Description: Destroy this card when battling with Divine card
+Description: In Reckoning with Divine, destroy this card
 Test Cases:
 
 Test Case ID: TC-FUNC-Feral-Vampire-001
@@ -1630,6 +1812,32 @@ Steps:
 Step 1: Battle Feral Vampire vs Divine.
 Expected Result:
 - Feral Vampire result.attacker_destroyed == true.
+
+---
+
+Card Name: Mountain Sage
+Type: Character
+Stats: ATK=50 DEF=30 Cost=600 Affinity=ARCANE
+AbilityType: DOUBLE_TECH_EFFECT
+ability_params: {}
+Description: Double effect of Tech card apply to this unit
+Test Cases:
+
+Test Case ID: TC-FUNC-Mountain-Sage-001
+Description:
+Mountain Sage: ability DOUBLE_TECH_EFFECT functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.DOUBLE_TECH_EFFECT
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: Double effect of Tech card apply to this unit
 
 ---
 
@@ -1661,7 +1869,7 @@ Expected Result:
 
 Card Name: Echo Bringer
 Type: Character
-Stats: ATK=55 DEF=40 Cost=500 Affinity=COSMIC
+Stats: ATK=70 DEF=40 Cost=900 Affinity=COSMIC
 AbilityType: EXTRA_ATTACK_VS_REVEALED
 ability_params: {}
 Description: When this card attacks a revealed card, it can attack a second time this turn (once per turn).
@@ -1690,7 +1898,7 @@ Type: Character
 Stats: ATK=25 DEF=40 Cost=300 Affinity=CHAOS
 AbilityType: HALVE_DEF_ON_FIRST_EXPOSE
 ability_params: {}
-Description: Half its DEF permanently when first revealed
+Description: Half its DEF permanently at the end of that turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Magenta-the-Nightbloom-001
@@ -1708,6 +1916,32 @@ Steps:
 Step 1: Reveal Magenta the Nightbloom.
 Expected Result:
 - current_def = 20 (half of 40, permanent).
+
+---
+
+Card Name: Ancient Lich
+Type: Character
+Stats: ATK=60 DEF=60 Cost=750 Affinity=CHAOS
+AbilityType: IMMUNE_TO_TECH_CARDS
+ability_params: {}
+Description: This card is unaffected by Tech cards.
+Test Cases:
+
+Test Case ID: TC-FUNC-Ancient-Lich-001
+Description:
+Ancient Lich: unaffected by Tech
+Implementation Reference:
+- GameBoard tech target filters skip IMMUNE cards
+- AbilityType.IMMUNE_TO_TECH_CARDS
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Opponent plays Accident targeting Ancient Lich.
+Steps:
+Step 1: Select Ancient Lich if UI allows.
+Expected Result:
+- Ancient Lich not destroyed; no stat change from Tech.
 
 ---
 
@@ -1737,12 +1971,38 @@ Expected Result:
 
 ---
 
+Card Name: Ironclad Sentinel
+Type: Character
+Stats: ATK=55 DEF=95 Cost=1100 Affinity=ANIMA
+AbilityType: IMMUNE_TO_TECH_DESTRUCTION
+ability_params: {}
+Description: Immune to 0-cost Traps. This Unit cannot be destroyed by Tech Cards.
+Test Cases:
+
+Test Case ID: TC-FUNC-Ironclad-Sentinel-001
+Description:
+Ironclad Sentinel: ability IMMUNE_TO_TECH_DESTRUCTION functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.IMMUNE_TO_TECH_DESTRUCTION
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: Immune to 0-cost Traps. This Unit cannot be destroyed by Tech Cards.
+
+---
+
 Card Name: Tomb Bandit
 Type: Character
-Stats: ATK=75 DEF=60 Cost=900 Affinity=ANIMA
+Stats: ATK=75 DEF=60 Cost=1000 Affinity=ANIMA
 AbilityType: IMMUNE_TO_TRAPS
 ability_params: {}
-Description: This Character cannot be destroyed by Traps.
+Description: This Unit cannot be destroyed by Traps.
 Test Cases:
 
 Test Case ID: TC-FUNC-Tomb-Bandit-001
@@ -1883,7 +2143,7 @@ Type: Character
 Stats: ATK=10 DEF=10 Cost=400 Affinity=NATURE
 AbilityType: LOCK_ATTACKER_ON_DEFEND
 ability_params: {}
-Description: If this card defended, the attacker card cannot attack until end of their next turn.
+Description: If this card defended, the attacker must wait until foe’s turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Stinky-Insect-001
@@ -1909,7 +2169,7 @@ Type: Character
 Stats: ATK=20 DEF=5 Cost=150 Affinity=CHAOS
 AbilityType: LOCK_ATTACKER_ON_DESTROYED
 ability_params: {}
-Description: Character that destroyed this card cannot attack until the end of your opponent’s turn.
+Description: After Reckoning: foe card must wait until foe’s turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Skeleton-Grappler-001
@@ -1955,12 +2215,38 @@ Expected Result:
 
 ---
 
+Card Name: Railgun Tank
+Type: Character
+Stats: ATK=150 DEF=95 Cost=1500 Affinity=ANIMA
+AbilityType: LOCK_SELF_AFTER_ATTACK
+ability_params: {}
+Description: After successfully attack, this card cannot attack on the next of your turn.
+Test Cases:
+
+Test Case ID: TC-FUNC-Railgun-Tank-001
+Description:
+Railgun Tank: cannot attack next turn after attacking
+Implementation Reference:
+- cannot_attack_until = turn_number+2
+- AbilityType.LOCK_SELF_AFTER_ATTACK
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Railgun Tank attacks.
+Steps:
+Step 1: End turn; next own turn try to attack with Railgun Tank.
+Expected Result:
+- Railgun Tank not selectable as attacker next turn.
+
+---
+
 Card Name: Leopard Jailer
 Type: Character
 Stats: ATK=30 DEF=45 Cost=450 Affinity=ANIMA
 AbilityType: LOCK_TARGET_ON_ATTACK
 ability_params: {}
-Description: If this card attacks a character card, the target is unable to attack until the end of their turn.
+Description: If this card attacks a unit card, the target is unable to attack until the end of their turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Leopard-Jailer-001
@@ -1986,7 +2272,7 @@ Type: Character
 Stats: ATK=15 DEF=0 Cost=200 Affinity=DIVINE
 AbilityType: MULTI_ATTACK_VS_NON_CHARACTER
 ability_params: {'max_attacks': 3}
-Description: If this card attacked non-character card, this card can attack again, up to 3 times.
+Description: Once per turn, if attacked non-unit card, this card : can attack 1 more times
 Test Cases:
 
 Test Case ID: TC-FUNC-Golden-Senju-001
@@ -2039,7 +2325,7 @@ Type: Character
 Stats: ATK=55 DEF=40 Cost=700 Affinity=BIO
 AbilityType: MUTAGEN_ATK_BOOST_VS_AFFINITIES
 ability_params: {'bonus': 25, 'affinities': ['NATURE']}
-Description: With Mutagen Flag, this card gain +25 ATK against Nature or Anima Characters.
+Description: With Mutagen Flag: +25 ATK vs Nature or Anima.
 Test Cases:
 
 Test Case ID: TC-FUNC-Lab-Zombie-001
@@ -2066,7 +2352,7 @@ Type: Character
 Stats: ATK=20 DEF=85 Cost=800 Affinity=BIO
 AbilityType: MUTAGEN_DESTROY_ATTACKER
 ability_params: {}
-Description: With Mutagen Flag, destroy the attacker after this card has been attacked. Also, the owner of this card does not pay Crystal Cost when it is destroyed.
+Description: With Mutagen Flag: you can destroy both units in Reckoning. No cost is paid.
 Test Cases:
 
 Test Case ID: TC-FUNC-Lab-Bloater-001
@@ -2093,10 +2379,10 @@ Expected Result:
 
 Card Name: Lab Crawler
 Type: Character
-Stats: ATK=90 DEF=45 Cost=1300 Affinity=BIO
+Stats: ATK=95 DEF=60 Cost=1200 Affinity=BIO
 AbilityType: MUTAGEN_IMMEDIATE_ATTACK
 ability_params: {}
-Description: With Mutagen Flag, this card can attack twice
+Description: With Mutagen Flag: this card can target 3 cards
 Test Cases:
 
 Test Case ID: TC-FUNC-Lab-Crawler-001
@@ -2119,7 +2405,7 @@ Expected Result:
 
 Card Name: Electrogazer
 Type: Character
-Stats: ATK=45 DEF=45 Cost=600 Affinity=COSMIC
+Stats: ATK=80 DEF=45 Cost=1000 Affinity=COSMIC
 AbilityType: NEGATE_ZERO_COST_TRAPS_BOTH
 ability_params: {}
 Description: Negate all zero cost trap on both player’s field
@@ -2146,7 +2432,7 @@ Expected Result:
 
 Card Name: Armored Rhino
 Type: Character
-Stats: ATK=60 DEF=85 Cost=700 Affinity=NATURE
+Stats: ATK=60 DEF=85 Cost=720 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
 Description: No ability.
@@ -2224,7 +2510,7 @@ Expected Result:
 
 Card Name: Canyon Warg
 Type: Character
-Stats: ATK=70 DEF=30 Cost=550 Affinity=NATURE
+Stats: ATK=70 DEF=30 Cost=750 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
 Description: No ability.
@@ -2614,7 +2900,7 @@ Expected Result:
 
 Card Name: Gryphon
 Type: Character
-Stats: ATK=100 DEF=85 Cost=1200 Affinity=NATURE
+Stats: ATK=100 DEF=85 Cost=1150 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
 Description: No ability.
@@ -2848,7 +3134,7 @@ Expected Result:
 
 Card Name: Space Boy
 Type: Character
-Stats: ATK=75 DEF=65 Cost=750 Affinity=COSMIC
+Stats: ATK=75 DEF=65 Cost=800 Affinity=COSMIC
 AbilityType: NONE
 ability_params: {}
 Description: No ability.
@@ -2980,10 +3266,10 @@ Expected Result:
 
 Card Name: Succubus
 Type: Character
-Stats: ATK=10 DEF=30 Cost=400 Affinity=CHAOS
+Stats: ATK=10 DEF=30 Cost=600 Affinity=CHAOS
 AbilityType: ONE_USE_COPY_STATS_ON_SURVIVE
 ability_params: {}
-Description: Once, if this card survive battle, gain ATK and DEF equal to the card it battled
+Description: Once, if survived Reckoning: +ATK&DEF equal to half of that foe’s card
 Test Cases:
 
 Test Case ID: TC-FUNC-Succubus-001
@@ -3009,7 +3295,7 @@ Type: Character
 Stats: ATK=0 DEF=50 Cost=420 Affinity=BIO
 AbilityType: ONE_USE_DEFEND_MORPH
 ability_params: {'atk': 40, 'def': 40}
-Description: Once, after this card defended successfully, it permanently lose -40 DEF and permanently gain +40 ATK against attacker’s affinity
+Description: Once, after defended: -40 DEF,+40 ATK permanently.
 Test Cases:
 
 Test Case ID: TC-FUNC-Bladeshifter-001
@@ -3063,7 +3349,7 @@ Type: Character
 Stats: ATK=20 DEF=5 Cost=150 Affinity=CHAOS
 AbilityType: ONE_USE_EXTRA_ATTACK_ON_DEAD_END
 ability_params: {}
-Description: Once, attack again if this card attacked dead end card
+Description: Once, if hitting dead end: attack again
 Test Cases:
 
 Test Case ID: TC-FUNC-Skeleton-Scout-001
@@ -3195,7 +3481,7 @@ Type: Character
 Stats: ATK=15 DEF=30 Cost=250 Affinity=CHAOS
 AbilityType: OPPONENT_EXTRA_CRYSTAL_LOSS
 ability_params: {'amount': 20}
-Description: Whenever your opponent lose crystal, they lose 20 more crystals
+Description: Each time foe lose crystal: foe lose 20 more crystals
 Test Cases:
 
 Test Case ID: TC-FUNC-Grave-Worm-001
@@ -3221,7 +3507,7 @@ Type: Character
 Stats: ATK=25 DEF=15 Cost=300 Affinity=ANIMA
 AbilityType: OPTIONAL_CRYSTAL_PAY_ATK_BOOST
 ability_params: {'cost': 100, 'atk': 10}
-Description: At battle calculation, you can pay 100 crystal for +10 ATK
+Description: In Reckoning, you can pay 100 crystal for +10 ATK bonus
 Test Cases:
 
 Test Case ID: TC-FUNC-Hairpin-Assassin-001
@@ -3243,12 +3529,38 @@ Expected Result:
 
 ---
 
+Card Name: Champion of the Valley
+Type: Character
+Stats: ATK=35 DEF=45 Cost=400 Affinity=ANIMA
+AbilityType: PERM_ATK_BOOST_ON_KILL_CAPPED
+ability_params: {'atk': 10, 'max_bonus': 30}
+Description: +10 ATK permanently if it destroyed a unit. This bonus do not exceed maximum of 30
+Test Cases:
+
+Test Case ID: TC-FUNC-Champion-of-the-Valley-001
+Description:
+Champion of the Valley: ability PERM_ATK_BOOST_ON_KILL_CAPPED functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.PERM_ATK_BOOST_ON_KILL_CAPPED
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={'atk': 10, 'max_bonus': 30}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: +10 ATK permanently if it destroyed a unit. This bonus do not exceed maximum of 30
+
+---
+
 Card Name: Dark Blob
 Type: Character
 Stats: ATK=20 DEF=50 Cost=500 Affinity=CHAOS
 AbilityType: PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN
 ability_params: {'atk': 5}
-Description: +5 ATK permanently at the end of each opponent’s turn this card survives.
+Description: After reckoning: +5 ATK at foe’s turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Dark-Blob-001
@@ -3271,7 +3583,7 @@ Expected Result:
 
 Card Name: War Genie
 Type: Character
-Stats: ATK=100 DEF=80 Cost=1000 Affinity=ARCANE
+Stats: ATK=100 DEF=80 Cost=1150 Affinity=ARCANE
 AbilityType: PERM_ATK_LOSS_PER_ATTACK
 ability_params: {'amount': 10}
 Description: -10 ATK permanently after it attacked
@@ -3300,7 +3612,7 @@ Type: Character
 Stats: ATK=50 DEF=30 Cost=450 Affinity=BIO
 AbilityType: PERM_ATK_LOSS_PER_OWN_TURN
 ability_params: {'amount': 10}
-Description: -10 ATK permanently at the end of your turn
+Description: Without Mutagen Flag : -10 ATK permanently at your turn’s end
 Test Cases:
 
 Test Case ID: TC-FUNC-Rotten-Shrieker-001
@@ -3318,6 +3630,49 @@ Steps:
 Step 1: End turn.
 Expected Result:
 - current_atk -= 10.
+
+---
+
+Card Name: Hyperspeed Saucer
+Type: Character
+Stats: ATK=80 DEF=40 Cost=850 Affinity=COSMIC
+AbilityType: PERM_BOOST_END_OF_TURN
+ability_params: {'atk': 10, 'def': 10}
+Description: Permanently increase this card's ATK and DEF by 10 at the end of each of your turn
+Test Cases:
+
+Test Case ID: TC-FUNC-Hyperspeed-Saucer-001
+Description:
+Hyperspeed Saucer: +10/+10 permanent at end of turn
+Implementation Reference:
+- TurnManager._apply_end_of_turn_boosts PERM_BOOST_END_OF_TURN
+- AbilityType.PERM_BOOST_END_OF_TURN
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Hyperspeed Saucer face-up.
+Steps:
+Step 1: End own turn.
+Expected Result:
+- current_atk += 10; current_def += 10.
+
+Test Case ID: TC-FUNC-Hyperspeed-Saucer-002
+Description:
+Hyperspeed Saucer: standard ATK vs DEF (no ability)
+Implementation Reference:
+- BattleResolver standard comparison only
+- AbilityType.NONE
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Hyperspeed Saucer ATK=80 DEF=40.
+Steps:
+Step 1: Attack Wandering Swordsman (60/60) or suitable target.
+Expected Result:
+- Pure stat comparison; no ability_triggered flags.
+- Crystal loss equals destroyed card's cost.
 
 ---
 
@@ -3349,10 +3704,10 @@ Expected Result:
 
 Card Name: Leech Man
 Type: Character
-Stats: ATK=60 DEF=40 Cost=850 Affinity=BIO
+Stats: ATK=60 DEF=40 Cost=880 Affinity=BIO
 AbilityType: PERM_DEF_BOOST_PER_ATTACK_SURVIVE
 ability_params: {'def': 20}
-Description: +20 DEF permanently each time it performed attack and survive
+Description: +20 DEF permanently each time it performed attack and survive. With mutagen flag : +45 ATK
 Test Cases:
 
 Test Case ID: TC-FUNC-Leech-Man-001
@@ -3375,7 +3730,7 @@ Expected Result:
 
 Card Name: Archbishop
 Type: Character
-Stats: ATK=70 DEF=90 Cost=850 Affinity=DIVINE
+Stats: ATK=70 DEF=90 Cost=1200 Affinity=DIVINE
 AbilityType: REDIRECT_DESTRUCTION_TO_ALLY
 ability_params: {'affinity': 'DIVINE'}
 Description: If this card would be destroyed, you can destroy 1 other Divine card on their own field instead
@@ -3432,7 +3787,7 @@ Type: Character
 Stats: ATK=40 DEF=25 Cost=400 Affinity=ANIMA
 AbilityType: REVEAL_ON_ANY_ATTACK
 ability_params: {}
-Description: After this card attacks, reveal 1 of your opponent’s cell
+Description: After attack: reveal 1 foe’s cell
 Test Cases:
 
 Test Case ID: TC-FUNC-Shepherd-Detective-001
@@ -3458,7 +3813,7 @@ Type: Character
 Stats: ATK=15 DEF=20 Cost=200 Affinity=COSMIC
 AbilityType: REVEAL_ON_DEAD_END_ATTACK
 ability_params: {}
-Description: When this card attacks dead end, reveal 1 of your opponent’s cell
+Description: After hitting a dead end : reveal 1 foe’s cell
 Test Cases:
 
 Test Case ID: TC-FUNC-Moon-Rover-001
@@ -3484,7 +3839,7 @@ Type: Character
 Stats: ATK=20 DEF=10 Cost=200 Affinity=COSMIC
 AbilityType: REVEAL_ON_TRAP_ATTACK
 ability_params: {}
-Description: When this card attacks a trap, reveal 1 of your opponent’s cell
+Description: After hitting a trap : reveal 1 foe’s cell
 Test Cases:
 
 Test Case ID: TC-FUNC-Neptune-Diver-001
@@ -3510,7 +3865,7 @@ Type: Character
 Stats: ATK=25 DEF=15 Cost=250 Affinity=CHAOS
 AbilityType: REVEAL_ON_WIN
 ability_params: {}
-Description: When it successfully attacked, reveal 1 cell on your opponent’s field
+Description: After attacked: reveal 1 foe’s cell
 Test Cases:
 
 Test Case ID: TC-FUNC-Mysterious-Miner-001
@@ -3536,7 +3891,7 @@ Type: Character
 Stats: ATK=20 DEF=15 Cost=300 Affinity=COSMIC
 AbilityType: SACRIFICE_FOR_CARD_TYPE
 ability_params: {'name_contains': 'Miner'}
-Description: If a Miner card will be destroyed, you can destroy this card instead.
+Description: Prevent ‘Miner’ or ‘Mining’ card from being destroyed, but destroy this card instead. Usable face-down
 Test Cases:
 
 Test Case ID: TC-FUNC-Mine-Guard-001
@@ -3560,10 +3915,10 @@ Expected Result:
 
 Card Name: Vampire Servant
 Type: Character
-Stats: ATK=20 DEF=20 Cost=500 Affinity=CHAOS
+Stats: ATK=20 DEF=20 Cost=800 Affinity=CHAOS
 AbilityType: SACRIFICE_FOR_CARD_TYPE
 ability_params: {'name_contains': 'Vampire'}
-Description: If a 'Vampire' card will be destroyed, destroy this card instead. Can be triggered face-down.
+Description: If a 'Vampire' card will be destroyed, destroy this card instead. Usable face-down.
 Test Cases:
 
 Test Case ID: TC-FUNC-Vampire-Servant-001
@@ -3616,7 +3971,7 @@ Type: Character
 Stats: ATK=10 DEF=30 Cost=200 Affinity=BIO
 AbilityType: SWAP_ATK_DEF_PER_OPP_TURN
 ability_params: {}
-Description: While this card is face-up, at the end of your opponent’s turn, swap its ATK and DEF
+Description: While this card is face-up, at foe’s turn ends, swap its ATK&DEF
 Test Cases:
 
 Test Case ID: TC-FUNC-Vile-Creeper-001
@@ -3668,7 +4023,7 @@ Type: Character
 Stats: ATK=20 DEF=20 Cost=300 Affinity=CHAOS
 AbilityType: TEMP_ATK_BOOST_OWN_TURN_START
 ability_params: {'atk': 10}
-Description: +10 ATK at the start of your turn (temp, cleared at end of turn).
+Description: +10 ATK until Reckoning ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Hands-in-the-Attic-001
@@ -3689,12 +4044,38 @@ Expected Result:
 
 ---
 
+Card Name: Giant Mosquito
+Type: Character
+Stats: ATK=30 DEF=20 Cost=800 Affinity=NATURE
+AbilityType: TEMP_ATK_HALF_TARGET
+ability_params: {}
+Description: If this card performs an attack, +ATK equal to half of target’s ATK until the end of this turn
+Test Cases:
+
+Test Case ID: TC-FUNC-Giant-Mosquito-001
+Description:
+Giant Mosquito: ability TEMP_ATK_HALF_TARGET functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.TEMP_ATK_HALF_TARGET
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: If this card performs an attack, +ATK equal to half of target’s ATK until the end of this turn
+
+---
+
 Card Name: Magical Butterfly
 Type: Character
 Stats: ATK=15 DEF=15 Cost=180 Affinity=NATURE
 AbilityType: TEMP_BOOST_ON_OPP_TECH
 ability_params: {'atk': 10, 'def': 10}
-Description: Whenever opponent’s tech card is activated, +10 ATK and DEF until the start of your next turn
+Description: Whenever foe’s tech card is activated, +10 ATK&DEF until the start of your next turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Magical-Butterfly-001
@@ -3717,10 +4098,10 @@ Expected Result:
 
 Card Name: Plant 29
 Type: Character
-Stats: ATK=45 DEF=75 Cost=800 Affinity=BIO
+Stats: ATK=45 DEF=85 Cost=900 Affinity=BIO
 AbilityType: TURN_START_COIN_FLIP_FLAG
 ability_params: {}
-Description: At the start of your turn, a random face-up opponent card gets a venom flag (heads) or mutagen flag (tails).
+Description: Start of your turn: select 1 face-up foe’s card, flip a coin. Head: put Venom Flag on it. Tail: put Mutagen Flag on it.
 Test Cases:
 
 Test Case ID: TC-FUNC-Plant-29-001
@@ -3744,10 +4125,10 @@ Expected Result:
 
 Card Name: Death Cobra
 Type: Character
-Stats: ATK=85 DEF=50 Cost=850 Affinity=NATURE
+Stats: ATK=85 DEF=50 Cost=900 Affinity=NATURE
 AbilityType: VENOM_FLAG_END_OF_TURN
 ability_params: {}
-Description: At the end of this turn, a venom flag is placed on a random face-up opponent card.
+Description: At the end of this turn, select 1 face-up foe’s card. Put 1 venom flag on it.
 Test Cases:
 
 Test Case ID: TC-FUNC-Death-Cobra-001

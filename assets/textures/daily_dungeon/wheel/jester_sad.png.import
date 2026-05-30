@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://knd2f2simoc0"
-path="res://.godot/imported/anti-virus.jpg-e741b3444c21efda3c45824cf2c3c3ff.ctex"
+uid="uid://cx0l17311taoo"
+path="res://.godot/imported/jester_sad.png-9f90ddbe11c736cbb05fbfdc8037b62e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/traps/anti-virus.jpg"
-dest_files=["res://.godot/imported/anti-virus.jpg-e741b3444c21efda3c45824cf2c3c3ff.ctex"]
+source_file="res://assets/textures/daily_dungeon/wheel/jester_sad.png"
+dest_files=["res://.godot/imported/jester_sad.png-9f90ddbe11c736cbb05fbfdc8037b62e.ctex"]
 
 [params]
 

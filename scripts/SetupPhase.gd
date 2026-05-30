@@ -633,11 +633,9 @@ func _build_info_panel(parent: Control) -> void:
 # ─────────────────────────────────────────────────────────────
 func _on_preview_btn() -> void:
 	if _info_card_name != "":
-		SFXManager.play(SFXManager.SFX_CARD_INFO)
 		CardDetailOverlay.open(self, _info_card_name, _info_card_type)
 
 func _open_card_detail(card_name: String, card_type: String) -> void:
-	SFXManager.play(SFXManager.SFX_CARD_INFO)
 	CardDetailOverlay.open(self, card_name, card_type)
 
 func _show_card_info(card_name: String, card_type: String) -> void:
@@ -753,6 +751,8 @@ func _refresh_union_panel() -> void:
 func _find_possible_unions(char_names: Array) -> Array:
 	var result: Array = []
 	for u: UnionData in UnionDatabase.get_all_unions():
+		if not UnionDatabase.is_playable_in_demo(u):
+			continue
 		if SaveManager.is_union_unlocked(u.card_name) and _union_feasible(u, char_names):
 			result.append(u)
 	return result
@@ -804,7 +804,6 @@ func _make_union_tile(u: UnionData) -> Control:
 			var mbe := ev as InputEventMouseButton
 			if mbe.button_index == MOUSE_BUTTON_LEFT and mbe.pressed:
 				if mbe.double_click:
-					SFXManager.play(SFXManager.SFX_CARD_INFO)
 					CardDetailOverlay.open(self, captured_u.card_name, "union")
 				else:
 					_start_zone_flash(captured_u))

@@ -183,13 +183,15 @@ End Stage Story:  (to be continue)
 - Nex has killed a human (to protect Mayu in a desparate situation. Kelly said that Next must join the trailer of atonement to atone the sins due to order's rule prohibited killing a human.
 - Anna is not a psychic. But she is actually a techno mage. She can communicate with anyone with Vellum card or any silver technology with logic gate. Mayu has one from Nex as a souvenior so they can receive psychic message from Anna at the mall.
 - Mayu is descendant of the first bishop (the mother's side)
-- Kelly joined the order because she tried to suicide and jump off a room. Then she see a car accident. She see a woman being hurt by group of armed men. She grabbed a steel pipe and went down the elevetor and rescue her without any fear.
+- Kelly joined the order because she tried to suicide and jump off a room. Then she see a woman being hurt by group of armed men. She grabbed a steel pipe and went down the elevetor and rescue her without any fear. 
 
 
 -Unresolved plot : Who was the cult and what do they want / Where did Benedict escaped and what more business will he want from Nex and the order / Why did grandmaster disbanded the order
 
 -Mayu Senpai : Nex is vindicated from vandalism. But now he need to restart this year's university course all over again. So Mayu is now one study-year older than him. Mayu now often tease Nex to call her "Mayu-senpai".
 -Mayu hesitation of using the cross : After using the cross. She will have a dream living as another person. She try to go back home. When she come home, open the door, there is another Mayu there acting like stranger. Then she woke up. That's because the cross show vision for when she is migrated to the cloned environment. (A simulation before real migration -- but she cancelled it)
+
+-Anna's mother has so many boyfriend. She force Anna to call every of her boyfriend 'Daddy' Anna is sick of it. But there is one 'Daddy' Anna loves so much. It's the first 'Daddy' for her. However, Anna's mother already broke up with him. One day around 7 years old, Anna use her mother's phone to talk to him and asked him to sneak her out of 'tutorial school' and take her to play at game center. Her mother showed up angrily and call mall security guard to capture him. He is now in prison. She blamed herself so much. She avoid every of her new 'Daddy'. On the event of Blightsilver game, when Anna knows that Mayu's dad is her new 'Daddy', Anna confess everything and expressed that she doesn't like this relationship, because she will have to avoid Mayu and Nex eventually. At some point of the game, Anna asked Nex to take her to see 'Daddy'.
 
 
 ## Backup / unused / do not read this, I've scrapped it

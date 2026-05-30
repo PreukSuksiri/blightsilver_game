@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jd6b7sbldxiy"
-path="res://.godot/imported/imperial_mech.jpg-31d30d59ed22b161b2b7ed0ad724c2a9.ctex"
+uid="uid://dqnuqy16503gq"
+path="res://.godot/imported/alarm.jpg-3adc8db58828af8303b3168f127d6d04.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/union/imperial_mech.jpg"
-dest_files=["res://.godot/imported/imperial_mech.jpg-31d30d59ed22b161b2b7ed0ad724c2a9.ctex"]
+source_file="res://assets/textures/cards/traps/alarm.jpg"
+dest_files=["res://.godot/imported/alarm.jpg-3adc8db58828af8303b3168f127d6d04.ctex"]
 
 [params]
 

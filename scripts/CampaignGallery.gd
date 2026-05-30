@@ -11,6 +11,7 @@ const CARD_IMG_W: float = 180.0
 const CARD_IMG_H: float = 260.0
 const CARD_GAP:   float = 20.0
 const ROW_GAP:    float = 36.0
+const DUNGEON_MAP_SCENE := DailyDungeonManager.DUNGEON_MAP_SCENE
 
 var _data: Array = []
 
@@ -185,7 +186,7 @@ func _build_card(d: Dictionary) -> Control:
 			if ev is InputEventMouseButton \
 					and (ev as InputEventMouseButton).pressed \
 					and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
-				_play_vn(vn_path))
+				_on_chapter_pressed(d))
 
 	# ── Line 1 (chapter) ──────────────────────────────────────
 	var l1 := Label.new()
@@ -208,6 +209,200 @@ func _build_card(d: Dictionary) -> Control:
 	card.add_child(l2)
 
 	return card
+
+
+func _on_chapter_pressed(card: Dictionary) -> void:
+	var vn_path: String = str(card.get("vn_scene", "")).strip_edges()
+	if vn_path.is_empty():
+		return
+	var dungeon_info: Dictionary = _resolve_chapter_dungeon(card, vn_path)
+	var dungeon_id: String = str(dungeon_info.get("dungeon_id", "")).strip_edges()
+	if dungeon_id != "" and DailyDungeonManager.has_story_dungeon_save(dungeon_id):
+		_show_continue_or_restart_dialog(card, vn_path, dungeon_id)
+	else:
+		_play_vn(vn_path)
+
+
+func _resolve_chapter_dungeon(card: Dictionary, vn_path: String) -> Dictionary:
+	var dungeon_id: String = str(card.get("dungeon_id", "")).strip_edges()
+	if dungeon_id != "":
+		return {
+			"dungeon_id": dungeon_id,
+			"dungeon_on_win": str(card.get("dungeon_on_win", "")),
+			"dungeon_on_lose": str(card.get("dungeon_on_lose", "")),
+		}
+	return DailyDungeonManager.find_dungeon_call_in_vn(vn_path)
+
+
+func _show_continue_or_restart_dialog(card: Dictionary, vn_path: String, dungeon_id: String) -> void:
+	if get_node_or_null("ChapterResumeDialog") != null:
+		return
+	var chapter_label: String = str(card.get("line2", card.get("line1", "this chapter")))
+
+	var blocker := ColorRect.new()
+	blocker.name = "ChapterResumeDialog"
+	blocker.color = Color(0.0, 0.0, 0.0, 0.72)
+	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	blocker.z_index = 30
+	add_child(blocker)
+
+	var panel := PanelContainer.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.offset_left = -260.0
+	panel.offset_right = 260.0
+	panel.offset_top = -130.0
+	panel.offset_bottom = 130.0
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.08, 0.09, 0.12, 0.98)
+	sb.border_color = Color(0.55, 0.72, 0.95, 0.75)
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(10)
+	sb.set_content_margin_all(22)
+	panel.add_theme_stylebox_override("panel", sb)
+	blocker.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 14)
+	panel.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "Saved Progress Found"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", CHIVO_FONT)
+	title.add_theme_font_size_override("font_size", 20)
+	title.add_theme_color_override("font_color", Color(0.92, 0.94, 1.0))
+	vbox.add_child(title)
+
+	var body := Label.new()
+	body.text = (
+		"You have saved progress in %s.\n\n"
+		% chapter_label
+		+ "Continue from where you left off, or restart the chapter from the beginning.")
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_theme_font_override("font", CHIVO_FONT)
+	body.add_theme_font_size_override("font_size", 14)
+	body.add_theme_color_override("font_color", Color(0.78, 0.80, 0.86))
+	vbox.add_child(body)
+
+	var btn_row := HBoxContainer.new()
+	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	btn_row.add_theme_constant_override("separation", 10)
+	vbox.add_child(btn_row)
+
+	var continue_btn := Button.new()
+	continue_btn.text = "Continue Saved Progress"
+	continue_btn.custom_minimum_size = Vector2(0, 40)
+	continue_btn.add_theme_font_override("font", CHIVO_FONT)
+	continue_btn.add_theme_font_size_override("font_size", 13)
+	continue_btn.pressed.connect(func() -> void:
+		blocker.queue_free()
+		_resume_story_dungeon(dungeon_id))
+	btn_row.add_child(continue_btn)
+
+	var restart_btn := Button.new()
+	restart_btn.text = "Restart Chapter"
+	restart_btn.custom_minimum_size = Vector2(0, 40)
+	restart_btn.add_theme_font_override("font", CHIVO_FONT)
+	restart_btn.add_theme_font_size_override("font_size", 13)
+	restart_btn.pressed.connect(func() -> void:
+		blocker.queue_free()
+		_show_restart_warning_dialog(card, vn_path, dungeon_id, chapter_label))
+	btn_row.add_child(restart_btn)
+
+	var cancel_btn := Button.new()
+	cancel_btn.text = "Cancel"
+	cancel_btn.custom_minimum_size = Vector2(90, 40)
+	cancel_btn.add_theme_font_override("font", CHIVO_FONT)
+	cancel_btn.add_theme_font_size_override("font_size", 13)
+	cancel_btn.pressed.connect(func() -> void: blocker.queue_free())
+	btn_row.add_child(cancel_btn)
+
+
+func _show_restart_warning_dialog(
+		card: Dictionary,
+		vn_path: String,
+		dungeon_id: String,
+		chapter_label: String) -> void:
+	if get_node_or_null("ChapterRestartDialog") != null:
+		return
+
+	var blocker := ColorRect.new()
+	blocker.name = "ChapterRestartDialog"
+	blocker.color = Color(0.0, 0.0, 0.0, 0.72)
+	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	blocker.z_index = 30
+	add_child(blocker)
+
+	var panel := PanelContainer.new()
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.offset_left = -250.0
+	panel.offset_right = 250.0
+	panel.offset_top = -110.0
+	panel.offset_bottom = 110.0
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.12, 0.06, 0.06, 0.98)
+	sb.border_color = Color(1.0, 0.45, 0.35, 0.85)
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(10)
+	sb.set_content_margin_all(22)
+	panel.add_theme_stylebox_override("panel", sb)
+	blocker.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 14)
+	panel.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "Restart Chapter?"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", CHIVO_FONT)
+	title.add_theme_font_size_override("font_size", 20)
+	title.add_theme_color_override("font_color", Color(1.0, 0.55, 0.45))
+	vbox.add_child(title)
+
+	var body := Label.new()
+	body.text = (
+		"Restarting %s will erase all saved dungeon progress,\n"
+		% chapter_label
+		+ "wheel modifiers, and map position for this chapter.")
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body.add_theme_font_override("font", CHIVO_FONT)
+	body.add_theme_font_size_override("font_size", 14)
+	body.add_theme_color_override("font_color", Color(0.88, 0.78, 0.74))
+	vbox.add_child(body)
+
+	var btn_row := HBoxContainer.new()
+	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	btn_row.add_theme_constant_override("separation", 10)
+	vbox.add_child(btn_row)
+
+	var confirm_btn := Button.new()
+	confirm_btn.text = "Restart Chapter"
+	confirm_btn.custom_minimum_size = Vector2(0, 40)
+	confirm_btn.add_theme_font_override("font", CHIVO_FONT)
+	confirm_btn.add_theme_font_size_override("font_size", 13)
+	confirm_btn.pressed.connect(func() -> void:
+		blocker.queue_free()
+		DailyDungeonManager.reset_story_dungeon_chapter(dungeon_id)
+		_play_vn(vn_path))
+	btn_row.add_child(confirm_btn)
+
+	var cancel_btn := Button.new()
+	cancel_btn.text = "Cancel"
+	cancel_btn.custom_minimum_size = Vector2(90, 40)
+	cancel_btn.add_theme_font_override("font", CHIVO_FONT)
+	cancel_btn.add_theme_font_size_override("font_size", 13)
+	cancel_btn.pressed.connect(func() -> void: blocker.queue_free())
+	btn_row.add_child(cancel_btn)
+
+
+func _resume_story_dungeon(dungeon_id: String) -> void:
+	DailyDungeonManager.resume_story_dungeon(dungeon_id)
+	get_tree().change_scene_to_file(DUNGEON_MAP_SCENE)
 
 
 func _play_vn(json_path: String) -> void:

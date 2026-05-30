@@ -35,7 +35,11 @@ func fade_out_to_battle(on_black: Callable) -> void:
 	await _animate(true)
 	on_black.call()
 
-## Uncover the screen (call this from GameBoard._ready).
+## True while checker tiles from fade_out_to_battle are still covering the screen.
+func is_screen_covered() -> bool:
+	return not _tiles.is_empty()
+
+## Uncover the screen (call after fade_out_to_battle when the target is not GameBoard).
 ## If tiles don't exist yet (no prior fade_out was run), builds them visible first.
 func fade_in() -> void:
 	if _tiles.is_empty():

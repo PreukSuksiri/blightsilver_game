@@ -61,8 +61,10 @@ func get_modifier_desc(key: String) -> String:
 		return str(entry.get("description", ""))
 	return ""
 
-## True = positive (green), False = negative (red).
+## True = positive (green), False = negative (red). no_effect is treated as positive/neutral.
 func is_modifier_positive(key: String) -> bool:
+	if key.strip_edges() == WHEEL_NO_EFFECT:
+		return true
 	var entry: Variant = _modifier_by_key.get(key, null)
 	if entry is Dictionary:
 		return bool(entry.get("positive", true))
@@ -104,12 +106,6 @@ var last_reset_date: String = ""
 
 ## Active modifiers for today (derived from playlist[playlist_index].modifiers).
 var active_modifiers: Array = []
-
-## For Affinity Day: which affinity and which stat are boosted today.
-var affinity_day_affinity: String = ""  # e.g. "ARCANE"
-var affinity_day_stat:     String = ""  # "atk" or "def"
-
-## Progress: dungeon_id → { node_id → { "cleared": bool, "first_clear_done": bool } }
 var node_progress: Dictionary = {}
 
 ## Set to true after a dungeon battle ends so MainMenu re-opens the map overlay.
@@ -126,18 +122,24 @@ var dimensional_gate_pending: Array = []
 ## Format: { "node_id": String, "won": bool }  —  cleared by the map after reading.
 var pending_battle_result: Dictionary = {}
 
-## Player's current node on the dungeon map — persisted across scene changes so the
-## sprite walks from the correct position after returning from a battle.
-var player_map_node_id: String = ""
+## Rewards earned in the last won dungeon battle; shown on GameBoard before map return.
+var pending_combat_rewards: Array = []
 
-## Set by VNPlayer when a dungeon_call beat fires.
-## Non-empty = player is in a VN-launched dungeon session.
+## Player map position, wheel spin count, and wheel-acquired modifiers are stored per dungeon
+## in dungeon_runs (see ensure_dungeon_run). Use get/set helpers below — not globals.
+
+## Set by VNPlayer when a dungeon_call beat fires (runtime session only).
 var vn_dungeon_id:      String = ""
 var vn_dungeon_on_win:  String = ""
 var vn_dungeon_on_lose: String = ""
 
-## Spinning Wheel — how many spins the player has left this run (resets to 1 each new day / Start Over).
-var spin_wheel_remaining: int = 1
+## Per-dungeon run state. dungeon_id → {
+##   spin_remaining, wheel_modifiers, player_map_node_id,
+##   source_vn_scene, dungeon_on_win, dungeon_on_lose }
+var dungeon_runs: Dictionary = {}
+
+const WHEEL_NO_EFFECT: String = "no_effect"
+const DEFAULT_SPIN_REMAINING: int = 1
 
 # ─────────────────────────────────────────────────────────────
 # Layout cache
@@ -146,6 +148,13 @@ var spin_wheel_remaining: int = 1
 var _layout_cache: Dictionary = {}  # dungeon_id → parsed layout Dictionary
 
 const LAYOUTS_DIR: String = "res://daily_dungeon/layouts/"
+const DUNGEON_MAP_SCENE: String = "res://scenes/daily_dungeon_map.tscn"
+
+const SESSION_DAILY: String = "daily"
+const SESSION_STORY: String = "story"
+
+## "daily" = main-menu overlay session, "story" = VN-launched full scene, "" = none.
+var dungeon_session_kind: String = ""
 
 # ─────────────────────────────────────────────────────────────
 # _ready
@@ -233,15 +242,14 @@ func _advance_to_next_day() -> void:
 	# Advance playlist index (loop)
 	if last_reset_date != "":  # don't advance on very first launch
 		playlist_index = (playlist_index + 1) % playlist.size()
-	# Pull modifiers from current slot
+	# Pull playlist slot modifiers (daily schedule — not wheel-acquired)
 	var slot: Dictionary = playlist[playlist_index]
 	active_modifiers = slot.get("modifiers", []).duplicate()
-	# Reset spin wheel each new day
-	spin_wheel_remaining = 1
-	# Clear today's node progress (fresh dungeon each day)
+	# Reset today's dungeon run (progress + wheel state)
 	var dungeon_id: String = slot.get("dungeon_id", "")
 	if dungeon_id != "":
 		node_progress[dungeon_id] = {}
+		reset_dungeon_run_wheel_state(dungeon_id)
 
 # ─────────────────────────────────────────────────────────────
 # Current dungeon queries
@@ -261,9 +269,226 @@ func get_next_dungeon_id() -> String:
 func get_current_layout() -> Dictionary:
 	return get_layout(get_current_dungeon_id())
 
-## True if the modifier key is active today.
+# ─────────────────────────────────────────────────────────────
+# Per-dungeon run state (wheel, map position, campaign resume)
+# ─────────────────────────────────────────────────────────────
+
+func _default_dungeon_run() -> Dictionary:
+	return {
+		"spin_remaining": DEFAULT_SPIN_REMAINING,
+		"wheel_modifiers": [],
+		"player_map_node_id": "",
+		"source_vn_scene": "",
+		"dungeon_on_win": "",
+		"dungeon_on_lose": "",
+	}
+
+func ensure_dungeon_run(dungeon_id: String) -> Dictionary:
+	if dungeon_id.is_empty():
+		return _default_dungeon_run()
+	if not dungeon_runs.has(dungeon_id):
+		dungeon_runs[dungeon_id] = _default_dungeon_run()
+	return dungeon_runs[dungeon_id]
+
+func get_spin_remaining(dungeon_id: String) -> int:
+	if dungeon_id.is_empty():
+		return DEFAULT_SPIN_REMAINING
+	return int(ensure_dungeon_run(dungeon_id).get("spin_remaining", DEFAULT_SPIN_REMAINING))
+
+func get_active_spin_remaining() -> int:
+	return get_spin_remaining(_get_active_dungeon_id())
+
+func get_player_map_node(dungeon_id: String) -> String:
+	if dungeon_id.is_empty():
+		return ""
+	return str(ensure_dungeon_run(dungeon_id).get("player_map_node_id", ""))
+
+func get_active_player_map_node() -> String:
+	return get_player_map_node(_get_active_dungeon_id())
+
+func set_player_map_node(dungeon_id: String, node_id: String) -> void:
+	if dungeon_id.is_empty():
+		return
+	var run: Dictionary = ensure_dungeon_run(dungeon_id)
+	run["player_map_node_id"] = node_id
+	dungeon_runs[dungeon_id] = run
+
+func set_active_player_map_node(node_id: String) -> void:
+	set_player_map_node(_get_active_dungeon_id(), node_id)
+
+func get_wheel_modifiers(dungeon_id: String) -> Array:
+	if dungeon_id.is_empty():
+		return []
+	var raw: Variant = ensure_dungeon_run(dungeon_id).get("wheel_modifiers", [])
+	return (raw as Array).duplicate() if raw is Array else []
+
+func get_playlist_modifiers() -> Array:
+	return active_modifiers.duplicate()
+
+## Playlist slot modifiers (daily) + wheel-acquired modifiers for this dungeon.
+func get_dungeon_modifiers(dungeon_id: String) -> Array:
+	var merged: Array = []
+	if dungeon_id == get_current_dungeon_id() and not is_story_session():
+		for key: String in active_modifiers:
+			if key not in merged:
+				merged.append(key)
+	for key: String in get_wheel_modifiers(dungeon_id):
+		if key not in merged:
+			merged.append(key)
+	return merged
+
+func reset_dungeon_run_wheel_state(dungeon_id: String) -> void:
+	if dungeon_id.is_empty():
+		return
+	var run: Dictionary = ensure_dungeon_run(dungeon_id)
+	run["spin_remaining"] = DEFAULT_SPIN_REMAINING
+	run["wheel_modifiers"] = []
+	run["player_map_node_id"] = ""
+	dungeon_runs[dungeon_id] = run
+
+func reset_all_dungeon_spin_remaining() -> int:
+	var count: int = 0
+	for dungeon_id: String in dungeon_runs.keys():
+		var run: Dictionary = ensure_dungeon_run(dungeon_id)
+		run["spin_remaining"] = DEFAULT_SPIN_REMAINING
+		dungeon_runs[dungeon_id] = run
+		count += 1
+	return count
+
+func persist_dungeon_run(dungeon_id: String) -> void:
+	if dungeon_id.is_empty():
+		return
+	var run: Dictionary = ensure_dungeon_run(dungeon_id)
+	if vn_dungeon_id == dungeon_id:
+		if vn_dungeon_on_win != "":
+			run["dungeon_on_win"] = vn_dungeon_on_win
+		if vn_dungeon_on_lose != "":
+			run["dungeon_on_lose"] = vn_dungeon_on_lose
+	dungeon_runs[dungeon_id] = run
+	SaveManager.save_data()
+
+func _import_legacy_run(dungeon_id: String, data: Dictionary) -> void:
+	if dungeon_id.is_empty():
+		return
+	var run: Dictionary = ensure_dungeon_run(dungeon_id)
+	if data.has("source_vn_scene"):
+		run["source_vn_scene"] = str(data.get("source_vn_scene", ""))
+	if data.has("dungeon_on_win"):
+		run["dungeon_on_win"] = str(data.get("dungeon_on_win", ""))
+	if data.has("dungeon_on_lose"):
+		run["dungeon_on_lose"] = str(data.get("dungeon_on_lose", ""))
+	if data.has("player_map_node_id"):
+		run["player_map_node_id"] = str(data.get("player_map_node_id", ""))
+	if data.has("spin_wheel_remaining"):
+		run["spin_remaining"] = int(data.get("spin_wheel_remaining", DEFAULT_SPIN_REMAINING))
+	elif data.has("spin_remaining"):
+		run["spin_remaining"] = int(data.get("spin_remaining", DEFAULT_SPIN_REMAINING))
+	var raw_mods: Variant = data.get("wheel_modifiers", data.get("active_modifiers", null))
+	if raw_mods is Array:
+		run["wheel_modifiers"] = (raw_mods as Array).duplicate()
+	dungeon_runs[dungeon_id] = run
+
+func _migrate_legacy_save_state(legacy: Dictionary) -> void:
+	var raw_sds: Variant = legacy.get("story_dungeon_saves", {})
+	if raw_sds is Dictionary:
+		for dungeon_id: String in (raw_sds as Dictionary):
+			_import_legacy_run(dungeon_id, (raw_sds as Dictionary)[dungeon_id])
+
+	var legacy_spin: int = int(legacy.get("spin_wheel_remaining", DEFAULT_SPIN_REMAINING))
+	var legacy_player: String = str(legacy.get("player_map_node_id", ""))
+	var legacy_vn: String = str(legacy.get("vn_dungeon_id", ""))
+	if legacy_spin != DEFAULT_SPIN_REMAINING or legacy_player != "" or legacy_vn != "":
+		var target_id: String = legacy_vn
+		if target_id.is_empty():
+			for did: String in node_progress:
+				if not (node_progress[did] as Dictionary).is_empty():
+					target_id = did
+					break
+		if target_id.is_empty():
+			target_id = get_current_dungeon_id()
+		if target_id != "":
+			var run: Dictionary = ensure_dungeon_run(target_id)
+			if legacy_player != "":
+				run["player_map_node_id"] = legacy_player
+			if legacy_spin != DEFAULT_SPIN_REMAINING:
+				run["spin_remaining"] = legacy_spin
+			dungeon_runs[target_id] = run
+	if not playlist.is_empty():
+		var slot: Dictionary = playlist[playlist_index]
+		active_modifiers = slot.get("modifiers", []).duplicate()
+
+## True if the modifier key is active for the current dungeon run.
 func has_modifier(key: String) -> bool:
-	return key in active_modifiers
+	return key in get_dungeon_modifiers(_get_active_dungeon_id())
+
+## Outcome pool for a wheel node.
+## Priority: custom wheel_outcomes list → wheel_outcome_count sample → full catalog pool.
+func get_wheel_outcome_pool(node: Dictionary) -> Array:
+	var raw: Variant = node.get("wheel_outcomes", [])
+	if raw is Array and not raw.is_empty():
+		return raw.duplicate()
+	var count: int = int(node.get("wheel_outcome_count", 0))
+	if count > 0:
+		return _build_counted_wheel_pool(node, count)
+	return _full_wheel_pool()
+
+func _full_wheel_pool() -> Array:
+	var pool: Array = [WHEEL_NO_EFFECT]
+	for key: String in _enabled_modifier_keys():
+		pool.append(key)
+	return pool
+
+func _enabled_modifier_keys() -> Array:
+	var keys: Array = []
+	for key: String in get_all_modifier_keys():
+		if key.is_empty():
+			continue
+		var entry: Variant = _modifier_by_key.get(key, null)
+		if entry is Dictionary and not bool(entry.get("enabled", true)):
+			continue
+		keys.append(key)
+	return keys
+
+## Picks [count] segments: always includes no_effect, rest are distinct modifiers
+## (deterministic per dungeon + node id so the wheel layout stays stable).
+func _build_counted_wheel_pool(node: Dictionary, count: int) -> Array:
+	count = maxi(1, count)
+	var pool: Array = [WHEEL_NO_EFFECT]
+	if count == 1:
+		return pool
+	var keys: Array = _enabled_modifier_keys()
+	if keys.is_empty():
+		return pool
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("%s:%s:wheel" % [_get_active_dungeon_id(), str(node.get("id", ""))])
+	var shuffled: Array = keys.duplicate()
+	for i: int in range(shuffled.size() - 1, 0, -1):
+		var j: int = rng.randi_range(0, i)
+		var tmp: String = shuffled[i]
+		shuffled[i] = shuffled[j]
+		shuffled[j] = tmp
+	var need: int = mini(count - 1, shuffled.size())
+	for i: int in range(need):
+		pool.append(shuffled[i])
+	return pool
+
+## Apply a wheel spin result for the current run.
+## When the active layout has clear_modifiers_on_spin, replaces all prior modifiers first.
+func apply_wheel_outcome(outcome_key: String) -> void:
+	var dungeon_id: String = _get_active_dungeon_id()
+	if dungeon_id.is_empty():
+		return
+	var run: Dictionary = ensure_dungeon_run(dungeon_id)
+	run["spin_remaining"] = maxi(0, int(run.get("spin_remaining", DEFAULT_SPIN_REMAINING)) - 1)
+	var layout: Dictionary = get_layout(dungeon_id)
+	var wheel_mods: Array = get_wheel_modifiers(dungeon_id)
+	if bool(layout.get("clear_modifiers_on_spin", false)):
+		wheel_mods.clear()
+	if outcome_key != WHEEL_NO_EFFECT and outcome_key not in wheel_mods:
+		wheel_mods.append(outcome_key)
+	run["wheel_modifiers"] = wheel_mods
+	dungeon_runs[dungeon_id] = run
+	SaveManager.save_data()
 
 ## Return credit reward multiplier from Crystal Sparkle / Risk & Reward.
 func credit_multiplier() -> float:
@@ -339,6 +564,130 @@ func is_first_clear(node_id: String) -> bool:
 	return not node_progress.get(dungeon_id, {}).get(node_id, {}).get("first_clear_done", false)
 
 # ─────────────────────────────────────────────────────────────
+# Session (daily overlay vs story scene)
+# ─────────────────────────────────────────────────────────────
+
+func is_story_session() -> bool:
+	return dungeon_session_kind == SESSION_STORY
+
+func is_daily_session() -> bool:
+	return dungeon_session_kind == SESSION_DAILY
+
+func begin_story_session(
+		dungeon_id: String,
+		on_win: String,
+		on_lose: String,
+		source_vn: String = "") -> void:
+	dungeon_session_kind = SESSION_STORY
+	vn_dungeon_id = dungeon_id
+	vn_dungeon_on_win = on_win
+	vn_dungeon_on_lose = on_lose
+	var run: Dictionary = ensure_dungeon_run(dungeon_id)
+	if source_vn != "":
+		run["source_vn_scene"] = source_vn
+	run["dungeon_on_win"] = on_win
+	run["dungeon_on_lose"] = on_lose
+	dungeon_runs[dungeon_id] = run
+	persist_dungeon_run(dungeon_id)
+
+func begin_daily_session() -> void:
+	dungeon_session_kind = SESSION_DAILY
+	vn_dungeon_id = ""
+	vn_dungeon_on_win = ""
+	vn_dungeon_on_lose = ""
+
+func end_daily_session() -> void:
+	if dungeon_session_kind == SESSION_DAILY:
+		dungeon_session_kind = ""
+
+func end_story_session() -> void:
+	vn_dungeon_id = ""
+	vn_dungeon_on_win = ""
+	vn_dungeon_on_lose = ""
+	if dungeon_session_kind == SESSION_STORY:
+		dungeon_session_kind = ""
+	SaveManager.save_data()
+
+## Save story dungeon progress and leave the active story session (map position kept).
+func exit_story_to_main_menu(from_node_id: String = "") -> void:
+	if not from_node_id.is_empty() and vn_dungeon_id != "":
+		set_player_map_node(vn_dungeon_id, from_node_id)
+	if vn_dungeon_id != "":
+		persist_dungeon_run(vn_dungeon_id)
+	end_story_session()
+
+func has_story_dungeon_save(dungeon_id: String) -> bool:
+	if dungeon_id.is_empty():
+		return false
+	var progress: Dictionary = node_progress.get(dungeon_id, {})
+	if not progress.is_empty():
+		return true
+	if not dungeon_runs.has(dungeon_id):
+		return false
+	var run: Dictionary = dungeon_runs[dungeon_id]
+	if not str(run.get("player_map_node_id", "")).is_empty():
+		return true
+	var mods: Variant = run.get("wheel_modifiers", [])
+	if mods is Array and not (mods as Array).is_empty():
+		return true
+	if int(run.get("spin_remaining", DEFAULT_SPIN_REMAINING)) == 0:
+		return true
+	return false
+
+func resume_story_dungeon(dungeon_id: String) -> void:
+	var run: Dictionary = dungeon_runs.get(dungeon_id, {})
+	if run.is_empty():
+		return
+	begin_story_session(
+		dungeon_id,
+		str(run.get("dungeon_on_win", "")),
+		str(run.get("dungeon_on_lose", "")),
+		str(run.get("source_vn_scene", "")))
+	SaveManager.save_data()
+
+func reset_story_dungeon_chapter(dungeon_id: String) -> void:
+	node_progress.erase(dungeon_id)
+	dungeon_runs.erase(dungeon_id)
+	SaveManager.save_data()
+
+func clear_story_dungeon_save(dungeon_id: String) -> void:
+	dungeon_runs.erase(dungeon_id)
+	SaveManager.save_data()
+
+## Scan a VN JSON for the first dungeon_call beat (used by campaign chapter picker).
+func find_dungeon_call_in_vn(vn_path: String) -> Dictionary:
+	var path: String = vn_path.strip_edges()
+	if path.is_empty() or not FileAccess.file_exists(path):
+		return {}
+	var f := FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(f.get_as_text())
+	f.close()
+	if not parsed is Array:
+		return {}
+	for beat: Variant in parsed:
+		if not beat is Dictionary:
+			continue
+		var dungeon_id: String = str((beat as Dictionary).get("dungeon_call", "")).strip_edges()
+		if dungeon_id == "":
+			continue
+		return {
+			"dungeon_id": dungeon_id,
+			"dungeon_on_win": str((beat as Dictionary).get("dungeon_on_win", "")),
+			"dungeon_on_lose": str((beat as Dictionary).get("dungeon_on_lose", "")),
+		}
+	return {}
+
+func get_active_dungeon_id() -> String:
+	return _get_active_dungeon_id()
+
+func get_post_battle_scene() -> String:
+	if is_story_session():
+		return DUNGEON_MAP_SCENE
+	return "res://scenes/main_menu.tscn"
+
+# ─────────────────────────────────────────────────────────────
 # Battle launch
 # ─────────────────────────────────────────────────────────────
 
@@ -407,11 +756,8 @@ func start_node_battle(node: Dictionary, parent_node: Node) -> void:
 	GameState.battle_ai_forced_cells     = raw_afc if raw_afc is Array else []
 
 	# Pass today's active modifiers to GameState so GameBoard/TurnManager can read them
-	GameState.active_dungeon_modifiers = active_modifiers.duplicate()
-
-	# Affinity Day state
-	GameState.dungeon_affinity_day_affinity = affinity_day_affinity
-	GameState.dungeon_affinity_day_stat     = affinity_day_stat
+	GameState.active_dungeon_modifiers = get_dungeon_modifiers(_get_active_dungeon_id()).duplicate()
+	dimensional_gate_pending.clear()
 
 	# Launch the game board
 	return_to_dungeon_map = true
@@ -424,8 +770,17 @@ func start_node_battle(node: Dictionary, parent_node: Node) -> void:
 
 ## Called by GameBoard._on_game_over() when a daily dungeon battle ends.
 ## node_id: the node that was fought. won: true = player won.
+
+## Returns rewards earned in the last won battle and clears the pending list.
+func take_pending_combat_rewards() -> Array:
+	var result: Array = pending_combat_rewards.duplicate()
+	pending_combat_rewards.clear()
+	return result
+
+
 func complete_node(node_id: String, won: bool) -> void:
 	pending_battle_result = {"node_id": node_id, "won": won}
+	pending_combat_rewards.clear()
 	if not won:
 		# No reward on loss; progress not recorded
 		return
@@ -461,12 +816,15 @@ func complete_node(node_id: String, won: bool) -> void:
 	var credits: int = int(base_credits * credit_multiplier())
 
 	Collection.add_credits(credits)
+	if credits > 0:
+		pending_combat_rewards.append({"type": "credits", "amount": credits})
 
 	# Booster pack for boss first-clear
 	if node_type == "boss" and was_first:
 		var pack_name: String = node_data.get("pack_reward", "Starter Pack")
 		if pack_name.is_empty():
 			pack_name = "Starter Pack"
+		pending_combat_rewards.append({"type": "booster_pack", "pack_name": pack_name})
 		MailboxManager.send_mail(
 			"Daily Dungeon",
 			"Boss Clear Reward — %s" % label,
@@ -475,6 +833,9 @@ func complete_node(node_id: String, won: bool) -> void:
 		)
 
 	SaveManager.save_data()
+
+	if dungeon_session_kind == SESSION_STORY and vn_dungeon_id != "":
+		persist_dungeon_run(vn_dungeon_id)
 
 # ─────────────────────────────────────────────────────────────
 # Start Over
@@ -493,12 +854,14 @@ func start_over() -> bool:
 			entry_id = nd.get("id", "")
 			break
 	# Block start-over when already at the entry node
-	if player_map_node_id == entry_id:
+	if get_player_map_node(dungeon_id) == entry_id:
 		return false
-	# Reset progress and spin wheel
+	# Reset progress and spin wheel for this dungeon only
 	node_progress[dungeon_id] = {}
-	player_map_node_id = entry_id
-	spin_wheel_remaining = 1
+	set_player_map_node(dungeon_id, entry_id)
+	var run: Dictionary = ensure_dungeon_run(dungeon_id)
+	run["spin_remaining"] = DEFAULT_SPIN_REMAINING
+	dungeon_runs[dungeon_id] = run
 	SaveManager.save_data()
 	return true
 
@@ -583,10 +946,8 @@ func to_dict() -> Dictionary:
 		"playlist_index":        playlist_index,
 		"last_reset_date":       last_reset_date,
 		"active_modifiers":      active_modifiers.duplicate(),
-		"affinity_day_affinity": affinity_day_affinity,
-		"affinity_day_stat":     affinity_day_stat,
 		"node_progress":         node_progress.duplicate(true),
-		"spin_wheel_remaining":  spin_wheel_remaining,
+		"dungeon_runs":          dungeon_runs.duplicate(true),
 		"vn_dungeon_id":         vn_dungeon_id,
 		"vn_dungeon_on_win":     vn_dungeon_on_win,
 		"vn_dungeon_on_lose":    vn_dungeon_on_lose,
@@ -599,13 +960,20 @@ func load_from_dict(d: Dictionary) -> void:
 	last_reset_date       = str(d.get("last_reset_date", ""))
 	var raw_mods: Variant = d.get("active_modifiers", [])
 	active_modifiers = raw_mods if raw_mods is Array else []
-	affinity_day_affinity = str(d.get("affinity_day_affinity", ""))
-	affinity_day_stat     = str(d.get("affinity_day_stat", ""))
 	var raw_np: Variant   = d.get("node_progress", {})
 	node_progress = raw_np if raw_np is Dictionary else {}
-	spin_wheel_remaining  = int(d.get("spin_wheel_remaining", 1))
+	var raw_runs: Variant = d.get("dungeon_runs", {})
+	dungeon_runs = raw_runs if raw_runs is Dictionary else {}
 	vn_dungeon_id      = str(d.get("vn_dungeon_id",      ""))
 	vn_dungeon_on_win  = str(d.get("vn_dungeon_on_win",  ""))
 	vn_dungeon_on_lose = str(d.get("vn_dungeon_on_lose", ""))
 	if playlist.is_empty():
 		_seed_default_playlist()
+	if dungeon_runs.is_empty():
+		_migrate_legacy_save_state(d)
+	else:
+		# One-time merge if an old save still has story_dungeon_saves only
+		var raw_sds: Variant = d.get("story_dungeon_saves", {})
+		if raw_sds is Dictionary and not (raw_sds as Dictionary).is_empty():
+			for dungeon_id: String in (raw_sds as Dictionary):
+				_import_legacy_run(dungeon_id, (raw_sds as Dictionary)[dungeon_id])

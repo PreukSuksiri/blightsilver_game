@@ -7,12 +7,56 @@ Each case references the exact handler function and enum type.
 
 ---
 
+Card Name: Kiba the Giant Slayer
+Type: Union
+Stats: ATK=80 DEF=55 summon_cost=1000 Affinity=ANIMA
+AbilityType: ATK_BONUS_VS_UNION
+ability_params: {'bonus': 30}
+Description: +30 ATK vs Union
+Test Cases:
+
+Test Case ID: TC-FUNC-Kiba-the-Giant-Slayer-000
+Description:
+Union summon: Kiba the Giant Slayer
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=1000 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 1000 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Kiba-the-Giant-Slayer-001
+Description:
+Kiba the Giant Slayer: +30 ATK vs Union
+Implementation Reference:
+- BattleResolver._get_effective_atk() checks defender.is_union
+- AbilityType.ATK_BONUS_VS_UNION
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Opponent has face-up Union (e.g. Gryphon Rider).
+Steps:
+Step 1: Attack Union with Kiba the Giant Slayer.
+Expected Result:
+- attacker_atk_used == 110.
+
+---
+
 Card Name: Lord of Terror
 Type: Union
 Stats: ATK=200 DEF=100 summon_cost=1000 Affinity=CHAOS
 AbilityType: ATK_PENALTY_VS_DEAD_END
 ability_params: {'penalty': 50}
-Description: -50 ATK if attacks dead end card.
+Description: -50 ATK if attacks dead end card
 Test Cases:
 
 Test Case ID: TC-FUNC-Lord-of-Terror-000
@@ -53,10 +97,10 @@ Expected Result:
 
 Card Name: Pixie Queen
 Type: Union
-Stats: ATK=30 DEF=30 summon_cost=1000 Affinity=DIVINE
+Stats: ATK=30 DEF=30 summon_cost=300 Affinity=DIVINE
 AbilityType: BOOST_PER_TYPED_CARD_ON_FIELD
 ability_params: {'atk_bonus': 5, 'def_bonus': 0, 'affinity': 'A.DIVINE'}
-Description: +5 ATK for each Divine card on own field.
+Description: +5 ATK for each Divine cards on their own field
 Test Cases:
 
 Test Case ID: TC-FUNC-Pixie-Queen-000
@@ -67,11 +111,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=300 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 300 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -101,10 +145,10 @@ Expected Result:
 
 Card Name: Giant Mining Pod
 Type: Union
-Stats: ATK=20 DEF=80 summon_cost=1000 Affinity=COSMIC
+Stats: ATK=20 DEF=80 summon_cost=500 Affinity=COSMIC
 AbilityType: CRYSTAL_GAIN_ON_DEAD_END_ATTACK
 ability_params: {'amount': 200}
-Description: If this card attacks a dead end card, you receive 200 crystals.
+Description: If this card attacks a dead end card, you receive 200 crystals
 Test Cases:
 
 Test Case ID: TC-FUNC-Giant-Mining-Pod-000
@@ -115,11 +159,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=500 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 500 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -143,12 +187,144 @@ Expected Result:
 
 ---
 
+Card Name: Blood-hungry Mutant
+Type: Union
+Stats: ATK=55 DEF=40 summon_cost=600 Affinity=COSMIC
+AbilityType: CRYSTAL_GAIN_ON_DESTROY
+ability_params: {'amount': 80}
+Description: After destroying foe’s card: +80 crystals
+Test Cases:
+
+Test Case ID: TC-FUNC-Blood-hungry-Mutant-000
+Description:
+Union summon: Blood-hungry Mutant
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=600 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 600 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Blood-hungry-Mutant-001
+Description:
+Blood-hungry Mutant: ability CRYSTAL_GAIN_ON_DESTROY functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.CRYSTAL_GAIN_ON_DESTROY
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={'amount': 80}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: After destroying foe’s card: +80 crystals
+
+---
+
+Card Name: Gamma Mermaid
+Type: Union
+Stats: ATK=30 DEF=20 summon_cost=500 Affinity=BIO
+AbilityType: DEF_PENALTY_VS_NON_AFFINITY
+ability_params: {'affinity': 'A.BIO', 'def': 20}
+Description: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all your Bio units
+Test Cases:
+
+Test Case ID: TC-FUNC-Gamma-Mermaid-000
+Description:
+Union summon: Gamma Mermaid
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=500 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 500 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Gamma-Mermaid-001
+Description:
+Gamma Mermaid: ability DEF_PENALTY_VS_NON_AFFINITY functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.DEF_PENALTY_VS_NON_AFFINITY
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={'affinity': 'A.BIO', 'def': 20}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all your Bio units
+
+---
+
+Card Name: Giant Meteor Vergaia
+Type: Union
+Stats: ATK=60 DEF=0 summon_cost=1000 Affinity=COSMIC
+AbilityType: DESTROY_END_TURN_BLAST_ADJACENT
+ability_params: {}
+Description: Destroy it at turn's end, then destroy all face-up foe units sharing a border with this card.
+Test Cases:
+
+Test Case ID: TC-FUNC-Giant-Meteor-Vergaia-000
+Description:
+Union summon: Giant Meteor Vergaia
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=1000 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 1000 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Giant-Meteor-Vergaia-001
+Description:
+Giant Meteor Vergaia: ability DESTROY_END_TURN_BLAST_ADJACENT functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.DESTROY_END_TURN_BLAST_ADJACENT
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: Destroy it at turn's end, then destroy all face-up foe units sharing a border with this card.
+
+---
+
 Card Name: Seraphim Fistmaster
 Type: Union
 Stats: ATK=120 DEF=120 summon_cost=1500 Affinity=DIVINE
 AbilityType: DOUBLE_STATS_VS_AFFINITY
 ability_params: {'affinity': 'A.CHAOS'}
-Description: Double ATK and DEF against Chaos.
+Description: Double ATK&DEF against Chaos
 Test Cases:
 
 Test Case ID: TC-FUNC-Seraphim-Fistmaster-000
@@ -188,505 +364,12 @@ Expected Result:
 
 ---
 
-Card Name: Ancient Lizard
-Type: Union
-Stats: ATK=75 DEF=75 summon_cost=None Affinity=Nature
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: None
-Test Cases:
-
-Test Case ID: TC-FUNC-Ancient-Lizard-001
-Description:
-Ancient Lizard: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: 1 Flame Lizard + 1 Nature card + 1000 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: None
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Berserk Hyena
-Type: Union
-Stats: ATK=40 DEF=0 summon_cost=None Affinity=Nature
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: None
-Test Cases:
-
-Test Case ID: TC-FUNC-Berserk-Hyena-001
-Description:
-Berserk Hyena: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: 2 Nature + 1000 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: None
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Blood-hungry Mutant
-Type: Union
-Stats: ATK=55 DEF=40 summon_cost=None Affinity=Cosmic
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: If this card destroyed opponent’s card, +80 crystals
-Test Cases:
-
-Test Case ID: TC-FUNC-Blood-hungry-Mutant-001
-Description:
-Blood-hungry Mutant: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: 2 Mutant cards + 1000 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: If this card destroyed opponent’s card, +80 crystals
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Burning Phoenix
-Type: Union
-Stats: ATK=110 DEF=50 summon_cost=None Affinity=Arcane
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: This card cannot be destroyed by non-union cards. When this card is targeted by tech, destroy it immediately.
-Test Cases:
-
-Test Case ID: TC-FUNC-Burning-Phoenix-001
-Description:
-Burning Phoenix: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: 1 Arcane (≥ 1000 cost) + 1 Nature (≥ 1000 cost) + 1 Divine (≥ 1000 cost) + 2000 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: This card cannot be destroyed by non-union cards. When this card is targeted by tech, destroy it immediately.
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Colorful Mage
-Type: Union
-Stats: ATK=55 DEF=40 summon_cost=None Affinity=Arcane
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: -10 ATK and DEF permanently if battles against non-Arcane card.
-Test Cases:
-
-Test Case ID: TC-FUNC-Colorful-Mage-001
-Description:
-Colorful Mage: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: Red Mage + Green Mage + Blue Mage + 1000 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: -10 ATK and DEF permanently if battles against non-Arcane card.
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: False Prophet
-Type: Union
-Stats: ATK=20 DEF=40 summon_cost=None Affinity=Divine
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: At the start of your turn, you may flip one of your opponent face-down cards face-up. If it was a Dead End, destroy this card. If it was character or trap, gain 200 crystal
-Test Cases:
-
-Test Case ID: TC-FUNC-False-Prophet-001
-Description:
-False Prophet: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: 2 Divine cards + 1000 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: At the start of your turn, you may flip one of your opponent face-down cards face-up. If it was a Dead End, destroy this card. If it was character or trap, gain 200 crystal
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Gamma Mermaid
-Type: Union
-Stats: ATK=30 DEF=20 summon_cost=None Affinity=Bio
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: -20 DEF to non-Bio defender
-Test Cases:
-
-Test Case ID: TC-FUNC-Gamma-Mermaid-001
-Description:
-Gamma Mermaid: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: 1 Gamma cards + 1 Bio card + 1000
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: -20 DEF to non-Bio defender
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Giant Meteor Vergaia
-Type: Union
-Stats: ATK=60 DEF=0 summon_cost=None Affinity=Cosmic
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: Once face-up, destroy it and the end of this turn. Select all face-up opponent’s card in adjacent of target cell with 60 DEF or less, destroy them.
-Test Cases:
-
-Test Case ID: TC-FUNC-Giant-Meteor-Vergaia-001
-Description:
-Giant Meteor Vergaia: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: Striker Comet + 2 Cosmic card + 2000
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: Once face-up, destroy it and the end of this turn. Select all face-up opponent’s card in adjacent of target cell with 60 DEF or less, destroy them.
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Grand Fort Captain
-Type: Union
-Stats: ATK=45 DEF=40 summon_cost=None Affinity=Anima
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: None
-Test Cases:
-
-Test Case ID: TC-FUNC-Grand-Fort-Captain-001
-Description:
-Grand Fort Captain: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: 2 Grand Fort card + 1000 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: None
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Imperial Frame
-Type: Union
-Stats: ATK=45 DEF=30 summon_cost=None Affinity=Cosmic
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: None
-Test Cases:
-
-Test Case ID: TC-FUNC-Imperial-Frame-001
-Description:
-Imperial Frame: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: Laser Walker + 1 Cosmic card + 1000
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: None
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Kiba the Giant Slayer
-Type: Union
-Stats: ATK=80 DEF=55 summon_cost=None Affinity=Anima
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: +30 ATK vs Union
-Test Cases:
-
-Test Case ID: TC-FUNC-Kiba-the-Giant-Slayer-001
-Description:
-Kiba the Giant Slayer: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: Kiyoko the Death Whisper + Silver Spearman + 1500
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: +30 ATK vs Union
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Moon Ninja Lady
-Type: Union
-Stats: ATK=65 DEF=50 summon_cost=None Affinity=Anima
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: Once, this card is not destroyed.
-Test Cases:
-
-Test Case ID: TC-FUNC-Moon-Ninja-Lady-001
-Description:
-Moon Ninja Lady: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: Kiyoko the Death Whisper + 1 Anima card + 1000
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: Once, this card is not destroyed.
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Moon Tribe Shaman
-Type: Union
-Stats: ATK=25 DEF=55 summon_cost=None Affinity=Cosmic
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: Upon union, revive 1 Moon card on your empty cell. Double its cost.
-Test Cases:
-
-Test Case ID: TC-FUNC-Moon-Tribe-Shaman-001
-Description:
-Moon Tribe Shaman: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: 1 Moon card+ 1 Cosmic card + 1000 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: Upon union, revive 1 Moon card on your empty cell. Double its cost.
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Rebel King
-Type: Union
-Stats: ATK=60 DEF=40 summon_cost=None Affinity=Anima
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: At the end of your opponent’s turn, your opponent select 1 of their face-up card (if any) and swap ATK and DEF
-Test Cases:
-
-Test Case ID: TC-FUNC-Rebel-King-001
-Description:
-Rebel King: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: Jirayu the Rebellious Prince + 1 Anima card + 1000 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: At the end of your opponent’s turn, your opponent select 1 of their face-up card (if any) and swap ATK and DEF
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Rocket Peacock
-Type: Union
-Stats: ATK=150 DEF=100 summon_cost=None Affinity=Nature
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: After this card battles, select 1 card on your opponent’s field, flip a coin. If head, destroy that card
-Test Cases:
-
-Test Case ID: TC-FUNC-Rocket-Peacock-001
-Description:
-Rocket Peacock: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: Ostrich Cannon + 1 Nature card + 1500 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: After this card battles, select 1 card on your opponent’s field, flip a coin. If head, destroy that card
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Scarlet Shroom
-Type: Union
-Stats: ATK=0 DEF=80 summon_cost=None Affinity=Nature
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: If this card is union summoned, put venom flag on ???
-Test Cases:
-
-Test Case ID: TC-FUNC-Scarlet-Shroom-001
-Description:
-Scarlet Shroom: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: 2 Nature cards + 1000 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: If this card is union summoned, put venom flag on ???
-- Engine test blocked until _add() entry exists.
-
----
-
-Card Name: Volatile Slasher
-Type: Union
-Stats: ATK=50 DEF=45 summon_cost=None Affinity=Bio
-AbilityType: EXCEL_ONLY_NOT_IN_UNION_DATABASE
-ability_params: {}
-Description: While this card attacking, it gain +50 ATK bonus vs target’s affinity permanently, once per affinity.
-Test Cases:
-
-Test Case ID: TC-FUNC-Volatile-Slasher-001
-Description:
-Volatile Slasher: pending UnionDatabase implementation
-Implementation Reference:
-- UnionDatabase.gd — NOT YET REGISTERED
-- Excel Demo=Yes with planned ability text
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card listed in card_data_demo.xlsx Union sheet.
-- Planned formula: 1 Bladeshifter + 1 Bio card + 1000 crystals
-Steps:
-Step 1: Verify card appears in design spreadsheet.
-Step 2: When added to UnionDatabase.gd, replace with code-derived functional tests.
-Expected Result:
-- Excel ability: While this card attacking, it gain +50 ATK bonus vs target’s affinity permanently, once per affinity.
-- Engine test blocked until _add() entry exists.
-
----
-
 Card Name: Choir Lead Amber
 Type: Union
-Stats: ATK=35 DEF=35 summon_cost=1000 Affinity=DIVINE
+Stats: ATK=35 DEF=35 summon_cost=500 Affinity=DIVINE
 AbilityType: FIELD_ATK_BOOST_OWN_AFFINITY
 ability_params: {'affinity': 'A.DIVINE', 'atk': 20}
-Description: +20 ATK to all Divine characters on own field.
+Description: +20 ATK to all Divine units on their own field
 Test Cases:
 
 Test Case ID: TC-FUNC-Choir-Lead-Amber-000
@@ -697,11 +380,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=500 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 500 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -728,10 +411,10 @@ Expected Result:
 
 Card Name: Greater Succubus
 Type: Union
-Stats: ATK=30 DEF=50 summon_cost=1000 Affinity=CHAOS
+Stats: ATK=30 DEF=50 summon_cost=800 Affinity=CHAOS
 AbilityType: GAIN_HALF_STATS_ON_SURVIVE
 ability_params: {}
-Description: If this card survived a battle, gain half of ATK and DEF equal to the card it battled.
+Description: Once, after Reckoning: +ATK&DEF equal to half of that foe’s card
 Test Cases:
 
 Test Case ID: TC-FUNC-Greater-Succubus-000
@@ -742,11 +425,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=800 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 800 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -770,12 +453,56 @@ Expected Result:
 
 ---
 
+Card Name: Burning Phoenix
+Type: Union
+Stats: ATK=125 DEF=50 summon_cost=800 Affinity=ARCANE
+AbilityType: IMMUNE_DESTROY_BY_NON_UNION
+ability_params: {}
+Description: Cannot be destroyed by non-union cards. If targeted by tech, destroy this card.
+Test Cases:
+
+Test Case ID: TC-FUNC-Burning-Phoenix-000
+Description:
+Union summon: Burning Phoenix
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=800 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 800 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Burning-Phoenix-001
+Description:
+Burning Phoenix: ability IMMUNE_DESTROY_BY_NON_UNION functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.IMMUNE_DESTROY_BY_NON_UNION
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: Cannot be destroyed by non-union cards. If targeted by tech, destroy this card.
+
+---
+
 Card Name: Ten Arms Yaksa
 Type: Union
-Stats: ATK=45 DEF=30 summon_cost=1000 Affinity=CHAOS
+Stats: ATK=45 DEF=30 summon_cost=600 Affinity=CHAOS
 AbilityType: MULTI_ATTACK_ANY_WITH_ATK_LOSS
 ability_params: {'max_attacks': 3, 'atk_loss': 5}
-Description: This card can attack 3 times. -5 ATK for each successful attack.
+Description: This card can choose two attack targets. -5 ATK for each successful attack.
 Test Cases:
 
 Test Case ID: TC-FUNC-Ten-Arms-Yaksa-000
@@ -786,11 +513,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=600 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 600 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -814,17 +541,61 @@ Expected Result:
 
 ---
 
-Card Name: Barros the Collossol
+Card Name: Ancient Lizard
+Type: Union
+Stats: ATK=75 DEF=75 summon_cost=800 Affinity=NATURE
+AbilityType: NONE
+ability_params: {}
+Description: None
+Test Cases:
+
+Test Case ID: TC-FUNC-Ancient-Lizard-000
+Description:
+Union summon: Ancient Lizard
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=800 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 800 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Ancient-Lizard-001
+Description:
+Ancient Lizard: ability NONE functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.NONE
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: None
+
+---
+
+Card Name: Barros the Colossol
 Type: Union
 Stats: ATK=150 DEF=130 summon_cost=1500 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
-Test Case ID: TC-FUNC-Barros-the-Collossol-000
+Test Case ID: TC-FUNC-Barros-the-Colossol-000
 Description:
-Union summon: Barros the Collossol
+Union summon: Barros the Colossol
 Implementation Reference:
 - GameBoard._perform_pending_union
 - UnionDatabase.find_available_unions validation
@@ -840,9 +611,9 @@ Expected Result:
 - Materials removed pay_cost=false.
 - _union_summoned_this_duel[player]=true blocks second union.
 
-Test Case ID: TC-FUNC-Barros-the-Collossol-001
+Test Case ID: TC-FUNC-Barros-the-Colossol-001
 Description:
-Barros the Collossol: ability NONE functional smoke test
+Barros the Colossol: ability NONE functional smoke test
 Implementation Reference:
 - CharacterData.AbilityType.NONE
 - See BattleResolver.gd / TurnManager.gd
@@ -854,7 +625,51 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
+
+---
+
+Card Name: Berserk Hyena
+Type: Union
+Stats: ATK=40 DEF=0 summon_cost=500 Affinity=NATURE
+AbilityType: NONE
+ability_params: {}
+Description: None
+Test Cases:
+
+Test Case ID: TC-FUNC-Berserk-Hyena-000
+Description:
+Union summon: Berserk Hyena
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=500 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 500 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Berserk-Hyena-001
+Description:
+Berserk Hyena: ability NONE functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.NONE
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -863,7 +678,7 @@ Type: Union
 Stats: ATK=0 DEF=220 summon_cost=2000 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Gaia-Turtle-000
@@ -898,16 +713,60 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
+
+---
+
+Card Name: Grand Fort Captain
+Type: Union
+Stats: ATK=45 DEF=40 summon_cost=500 Affinity=ANIMA
+AbilityType: NONE
+ability_params: {}
+Description: None
+Test Cases:
+
+Test Case ID: TC-FUNC-Grand-Fort-Captain-000
+Description:
+Union summon: Grand Fort Captain
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=500 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 500 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Grand-Fort-Captain-001
+Description:
+Grand Fort Captain: ability NONE functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.NONE
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: None
 
 ---
 
 Card Name: Gryphon Rider
 Type: Union
-Stats: ATK=150 DEF=95 summon_cost=1000 Affinity=DIVINE
+Stats: ATK=125 DEF=90 summon_cost=1000 Affinity=DIVINE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Gryphon-Rider-000
@@ -942,16 +801,60 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
+
+---
+
+Card Name: Imperial Frame
+Type: Union
+Stats: ATK=45 DEF=30 summon_cost=1000 Affinity=COSMIC
+AbilityType: NONE
+ability_params: {}
+Description: None
+Test Cases:
+
+Test Case ID: TC-FUNC-Imperial-Frame-000
+Description:
+Union summon: Imperial Frame
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=1000 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 1000 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Imperial-Frame-001
+Description:
+Imperial Frame: ability NONE functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.NONE
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: None
 
 ---
 
 Card Name: Katana Shark
 Type: Union
-Stats: ATK=75 DEF=50 summon_cost=0 Affinity=DIVINE
+Stats: ATK=75 DEF=50 summon_cost=800 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Katana-Shark-000
@@ -962,11 +865,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=0 crystals available.
+- summon_cost=800 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 0 crystals; place at anchor cell.
+Step 2: Pay 800 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -986,16 +889,16 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
 Card Name: Kitsune
 Type: Union
-Stats: ATK=35 DEF=35 summon_cost=1000 Affinity=CHAOS
+Stats: ATK=35 DEF=35 summon_cost=300 Affinity=CHAOS
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Kitsune-000
@@ -1006,11 +909,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=300 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 300 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -1030,16 +933,16 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
 Card Name: Raijin and Fujin
 Type: Union
-Stats: ATK=80 DEF=80 summon_cost=1000 Affinity=DIVINE
+Stats: ATK=80 DEF=80 summon_cost=800 Affinity=DIVINE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Raijin-and-Fujin-000
@@ -1050,11 +953,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=800 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 800 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -1074,21 +977,21 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
-Card Name: Rocket Tyrant
+Card Name: Rocket Marauder
 Type: Union
-Stats: ATK=130 DEF=110 summon_cost=1000 Affinity=BIO
+Stats: ATK=125 DEF=105 summon_cost=1000 Affinity=BIO
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
-Test Case ID: TC-FUNC-Rocket-Tyrant-000
+Test Case ID: TC-FUNC-Rocket-Marauder-000
 Description:
-Union summon: Rocket Tyrant
+Union summon: Rocket Marauder
 Implementation Reference:
 - GameBoard._perform_pending_union
 - UnionDatabase.find_available_unions validation
@@ -1104,9 +1007,9 @@ Expected Result:
 - Materials removed pay_cost=false.
 - _union_summoned_this_duel[player]=true blocks second union.
 
-Test Case ID: TC-FUNC-Rocket-Tyrant-001
+Test Case ID: TC-FUNC-Rocket-Marauder-001
 Description:
-Rocket Tyrant: ability NONE functional smoke test
+Rocket Marauder: ability NONE functional smoke test
 Implementation Reference:
 - CharacterData.AbilityType.NONE
 - See BattleResolver.gd / TurnManager.gd
@@ -1118,16 +1021,16 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
 Card Name: Skeleton Overlord
 Type: Union
-Stats: ATK=50 DEF=5 summon_cost=1000 Affinity=CHAOS
+Stats: ATK=50 DEF=5 summon_cost=400 Affinity=CHAOS
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Skeleton-Overlord-000
@@ -1138,11 +1041,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=400 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 400 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -1162,13 +1065,13 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
 Card Name: Diamond Unicorn
 Type: Union
-Stats: ATK=50 DEF=35 summon_cost=1000 Affinity=DIVINE
+Stats: ATK=50 DEF=35 summon_cost=500 Affinity=DIVINE
 AbilityType: ONE_USE_DEF_BOOST
 ability_params: {'bonus': 15}
 Description: +15 ATK until the end of this turn, once.
@@ -1182,11 +1085,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=500 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 500 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -1212,12 +1115,100 @@ Expected Result:
 
 ---
 
+Card Name: Moon Ninja Lady
+Type: Union
+Stats: ATK=65 DEF=50 summon_cost=800 Affinity=ANIMA
+AbilityType: ONE_USE_SURVIVE_DESTRUCTION
+ability_params: {}
+Description: Once, this card is not destroyed.
+Test Cases:
+
+Test Case ID: TC-FUNC-Moon-Ninja-Lady-000
+Description:
+Union summon: Moon Ninja Lady
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=800 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 800 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Moon-Ninja-Lady-001
+Description:
+Moon Ninja Lady: once per card, survive destruction
+Implementation Reference:
+- TurnManager/GameState destruction intercept
+- AbilityType.ONE_USE_SURVIVE_DESTRUCTION
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Moon Ninja Lady would be destroyed first time.
+Steps:
+Step 1: Trigger destruction.
+Expected Result:
+- Card remains; one-use flag consumed.
+
+---
+
+Card Name: Rebel King
+Type: Union
+Stats: ATK=60 DEF=40 summon_cost=800 Affinity=ANIMA
+AbilityType: OPPONENT_TURN_END_SWAP_ATK_DEF
+ability_params: {}
+Description: At foe’s turn ends: foe select 1 own unit and swap ATK&DEF
+Test Cases:
+
+Test Case ID: TC-FUNC-Rebel-King-000
+Description:
+Union summon: Rebel King
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=800 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 800 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Rebel-King-001
+Description:
+Rebel King: ability OPPONENT_TURN_END_SWAP_ATK_DEF functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.OPPONENT_TURN_END_SWAP_ATK_DEF
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: At foe’s turn ends: foe select 1 own unit and swap ATK&DEF
+
+---
+
 Card Name: Armored Dino
 Type: Union
-Stats: ATK=100 DEF=60 summon_cost=1000 Affinity=NATURE
+Stats: ATK=95 DEF=60 summon_cost=800 Affinity=NATURE
 AbilityType: OPTIONAL_CRYSTAL_PAY_DEF_BOOST
 ability_params: {'cost': 1000, 'def': 60}
-Description: During battle calculation, pay 1000 crystal cost to +60 DEF.
+Description: In Reckoning, pay 1000 crystal cost to +60 DEF
 Test Cases:
 
 Test Case ID: TC-FUNC-Armored-Dino-000
@@ -1228,11 +1219,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=800 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 800 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -1258,10 +1249,10 @@ Expected Result:
 
 Card Name: X-Death Squad
 Type: Union
-Stats: ATK=50 DEF=50 summon_cost=1000 Affinity=ANIMA
+Stats: ATK=50 DEF=50 summon_cost=800 Affinity=ANIMA
 AbilityType: OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT
 ability_params: {'cost': 1000}
-Description: Pay 1000 crystals: destroy opponent character during damage calculation. Opponent does not lose crystals under this effect.
+Description: In Reckoning, pay 1000, destroy foe’s unit. They pay no cost.
 Test Cases:
 
 Test Case ID: TC-FUNC-X-Death-Squad-000
@@ -1272,11 +1263,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=800 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 800 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -1303,17 +1294,17 @@ Expected Result:
 
 ---
 
-Card Name: Sky Protector
+Card Name: Volatile Slasher
 Type: Union
-Stats: ATK=0 DEF=0 summon_cost=1000 Affinity=DIVINE
-AbilityType: STANCE_FIXED_STATS
-ability_params: {'atk_atk': 50, 'atk_def': 0, 'def_atk': 0, 'def_def': 50}
-Description: If this card defends, DEF becomes 50, ATK becomes 0. If this card attacks, ATK becomes 50, DEF becomes 0.
+Stats: ATK=50 DEF=45 summon_cost=1000 Affinity=BIO
+AbilityType: PERM_ATK_BOOST_ONCE_PER_AFFINITY
+ability_params: {'affinity': 'A.BIO', 'atk': 50}
+Description: After Reckoning with non-Bio, it gain +50 ATK permanently.
 Test Cases:
 
-Test Case ID: TC-FUNC-Sky-Protector-000
+Test Case ID: TC-FUNC-Volatile-Slasher-000
 Description:
-Union summon: Sky Protector
+Union summon: Volatile Slasher
 Implementation Reference:
 - GameBoard._perform_pending_union
 - UnionDatabase.find_available_unions validation
@@ -1324,6 +1315,138 @@ Preconditions:
 Steps:
 Step 1: Enter union mode; select valid materials.
 Step 2: Pay 1000 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Volatile-Slasher-001
+Description:
+Volatile Slasher: ability PERM_ATK_BOOST_ONCE_PER_AFFINITY functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.PERM_ATK_BOOST_ONCE_PER_AFFINITY
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={'affinity': 'A.BIO', 'atk': 50}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: After Reckoning with non-Bio, it gain +50 ATK permanently.
+
+---
+
+Card Name: Colorful Mage
+Type: Union
+Stats: ATK=55 DEF=40 summon_cost=500 Affinity=ARCANE
+AbilityType: PERM_STAT_PENALTY_VS_NON_AFFINITY
+ability_params: {'affinity': 'A.ARCANE', 'atk': 10, 'def': 10}
+Description: Foe’s non-Arcane get -10 ATK&DEF permanently in Reckoning with this card
+Test Cases:
+
+Test Case ID: TC-FUNC-Colorful-Mage-000
+Description:
+Union summon: Colorful Mage
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=500 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 500 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Colorful-Mage-001
+Description:
+Colorful Mage: ability PERM_STAT_PENALTY_VS_NON_AFFINITY functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.PERM_STAT_PENALTY_VS_NON_AFFINITY
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={'affinity': 'A.ARCANE', 'atk': 10, 'def': 10}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: Foe’s non-Arcane get -10 ATK&DEF permanently in Reckoning with this card
+
+---
+
+Card Name: Rocket Peacock
+Type: Union
+Stats: ATK=150 DEF=100 summon_cost=1500 Affinity=NATURE
+AbilityType: POST_BATTLE_COIN_FLIP_DESTROY
+ability_params: {}
+Description: After this card battles, select 1 foe’s card, flip a coin. Head : destroy that card
+Test Cases:
+
+Test Case ID: TC-FUNC-Rocket-Peacock-000
+Description:
+Union summon: Rocket Peacock
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=1500 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 1500 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Rocket-Peacock-001
+Description:
+Rocket Peacock: ability POST_BATTLE_COIN_FLIP_DESTROY functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.POST_BATTLE_COIN_FLIP_DESTROY
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: After this card battles, select 1 foe’s card, flip a coin. Head : destroy that card
+
+---
+
+Card Name: Sky Protector
+Type: Union
+Stats: ATK=0 DEF=0 summon_cost=400 Affinity=DIVINE
+AbilityType: STANCE_FIXED_STATS
+ability_params: {'atk_atk': 50, 'atk_def': 0, 'def_atk': 0, 'def_def': 50}
+Description: If this card defends, DEF becomes 50, ATK becomes 0. If this card performs attack, ATK becomes 50, DEF becomes 0.
+Test Cases:
+
+Test Case ID: TC-FUNC-Sky-Protector-000
+Description:
+Union summon: Sky Protector
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=400 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 400 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -1344,5 +1467,137 @@ Steps:
 Step 1: Resolve each battle.
 Expected Result:
 - Attacking uses atk_atk/def_atk params; defending uses def_def params from ability_params.
+
+---
+
+Card Name: False Prophet
+Type: Union
+Stats: ATK=20 DEF=40 summon_cost=300 Affinity=DIVINE
+AbilityType: TURN_START_REVEAL_OPPONENT_CELL
+ability_params: {'gain': 200}
+Description: Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.
+Test Cases:
+
+Test Case ID: TC-FUNC-False-Prophet-000
+Description:
+Union summon: False Prophet
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=300 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 300 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-False-Prophet-001
+Description:
+False Prophet: ability TURN_START_REVEAL_OPPONENT_CELL functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.TURN_START_REVEAL_OPPONENT_CELL
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={'gain': 200}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.
+
+---
+
+Card Name: Moon Tribe Shaman
+Type: Union
+Stats: ATK=25 DEF=55 summon_cost=500 Affinity=COSMIC
+AbilityType: UNION_SUMMON_REVIVE_MATCH
+ability_params: {'name_contains': 'moon', 'exclude_union': True}
+Description: Upon union, revive 1 Moon non-Union card. Double its cost.
+Test Cases:
+
+Test Case ID: TC-FUNC-Moon-Tribe-Shaman-000
+Description:
+Union summon: Moon Tribe Shaman
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=500 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 500 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Moon-Tribe-Shaman-001
+Description:
+Moon Tribe Shaman: ability UNION_SUMMON_REVIVE_MATCH functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.UNION_SUMMON_REVIVE_MATCH
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={'name_contains': 'moon', 'exclude_union': True}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: Upon union, revive 1 Moon non-Union card. Double its cost.
+
+---
+
+Card Name: Scarlet Shroom
+Type: Union
+Stats: ATK=0 DEF=80 summon_cost=500 Affinity=NATURE
+AbilityType: UNION_SUMMON_VENOM_ALL_FOE
+ability_params: {}
+Description: Once Union, put venom flag on all foe’s face-up card
+Test Cases:
+
+Test Case ID: TC-FUNC-Scarlet-Shroom-000
+Description:
+Union summon: Scarlet Shroom
+Implementation Reference:
+- GameBoard._perform_pending_union
+- UnionDatabase.find_available_unions validation
+- Once per duel per player
+Preconditions:
+- summon_cost=500 crystals available.
+- Material cells satisfy UnionDatabase material_conditions.
+Steps:
+Step 1: Enter union mode; select valid materials.
+Step 2: Pay 500 crystals; place at anchor cell.
+Expected Result:
+- is_union=true; face_up=true at anchor.
+- Materials removed pay_cost=false.
+- _union_summoned_this_duel[player]=true blocks second union.
+
+Test Case ID: TC-FUNC-Scarlet-Shroom-001
+Description:
+Scarlet Shroom: ability UNION_SUMMON_VENOM_ALL_FOE functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.UNION_SUMMON_VENOM_ALL_FOE
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: Once Union, put venom flag on all foe’s face-up card
 
 ---

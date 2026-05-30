@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsy56iar8ao33"
-path="res://.godot/imported/talisman of light.jpg-0422060842c65efac636a80f3a5f7fd6.ctex"
+uid="uid://c82ryb4w8ye40"
+path="res://.godot/imported/spin_hand.png-18f67785a3cfee9b16dd9f5f34bfd650.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/traps/talisman of light.jpg"
-dest_files=["res://.godot/imported/talisman of light.jpg-0422060842c65efac636a80f3a5f7fd6.ctex"]
+source_file="res://assets/textures/daily_dungeon/wheel/spin_hand.png"
+dest_files=["res://.godot/imported/spin_hand.png-18f67785a3cfee9b16dd9f5f34bfd650.ctex"]
 
 [params]
 

@@ -85,6 +85,7 @@ func delete_claimed() -> void:
 #   list
 #   clear_claimed
 #   clear_all
+#   manage_bgm
 
 func admin_command(raw: String) -> String:
 	var line := raw.strip_edges()
@@ -140,6 +141,8 @@ func admin_command(raw: String) -> String:
 				+ "  dungeon_activator\n"
 				+ "  modifier_editor\n"
 				+ "  dungeon_reset\n"
+				+ "  dungeon_reset_wheel\n"
+				+ "  dungeon_reset_all_wheels\n"
 				+ "  clear_campaign_progress\n"
 				+ "  campaign_progress_list\n"
 				+ "  campaign_progress_complete <node_id>\n"
@@ -157,6 +160,7 @@ func admin_command(raw: String) -> String:
 				+ "  demo_on\n"
 				+ "  demo_off\n"
 				+ "  demo_status\n"
+				+ "  manage_bgm\n"
 				+ "  hide_ui\n"
 				+ "  ai_trailer [on|off]\n"
 				+ "  gallery_editor\n"
@@ -178,6 +182,15 @@ func admin_command(raw: String) -> String:
 					return "Narrator OFF"
 				_:
 					return "Usage: tts on|off"
+
+		"manage_bgm":
+			var bgm_scene: Node = get_tree().current_scene
+			if bgm_scene.get_node_or_null("BGMManagerOverlay") != null:
+				return "BGM Manager is already open."
+			var bgm_overlay: Node = load("res://scripts/BGMManagerOverlay.gd").new()
+			bgm_overlay.name = "BGMManagerOverlay"
+			bgm_scene.add_child(bgm_overlay)
+			return "BGM Manager opened."
 
 		"send":
 			var rest := line.substr(5)   # everything after "send "
@@ -654,9 +667,26 @@ func admin_command(raw: String) -> String:
 			if dungeon_id.is_empty():
 				return "No active dungeon to reset."
 			DailyDungeonManager.node_progress.erase(dungeon_id)
-			DailyDungeonManager.player_map_node_id = ""
+			DailyDungeonManager.reset_dungeon_run_wheel_state(dungeon_id)
 			SaveManager.save_data()
-			return "Daily dungeon progress reset: %s" % dungeon_id
+			return "Daily dungeon progress reset: %s (spin wheel restored)" % dungeon_id
+
+		"dungeon_reset_wheel":
+			var wheel_id: String = DailyDungeonManager.get_current_dungeon_id()
+			if wheel_id.is_empty():
+				return "No active dungeon."
+			var run: Dictionary = DailyDungeonManager.ensure_dungeon_run(wheel_id)
+			run["spin_remaining"] = DailyDungeonManager.DEFAULT_SPIN_REMAINING
+			DailyDungeonManager.dungeon_runs[wheel_id] = run
+			SaveManager.save_data()
+			return "Spin wheel limit reset to 1 for %s." % wheel_id
+
+		"dungeon_reset_all_wheels":
+			var reset_count: int = DailyDungeonManager.reset_all_dungeon_spin_remaining()
+			SaveManager.save_data()
+			if reset_count == 0:
+				return "No dungeon runs found — nothing to reset."
+			return "Spin wheel limit reset to 1 for %d dungeon(s)." % reset_count
 
 		"clear_campaign_progress":
 			var count: int = CampaignManager.completed.size()

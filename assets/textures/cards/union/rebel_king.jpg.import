@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dgxtibxux64xs"
-path="res://.godot/imported/gamma_emitter.png-493793cb93e16ba53558ea9e405b9595.ctex"
+uid="uid://dau13x4q7g882"
+path="res://.godot/imported/rebel_king.jpg-5e23f678b3c13a48abdd501293f55c4c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/union/gamma_emitter.png"
-dest_files=["res://.godot/imported/gamma_emitter.png-493793cb93e16ba53558ea9e405b9595.ctex"]
+source_file="res://assets/textures/cards/union/rebel_king.jpg"
+dest_files=["res://.godot/imported/rebel_king.jpg-5e23f678b3c13a48abdd501293f55c4c.ctex"]
 
 [params]
 

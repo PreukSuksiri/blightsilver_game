@@ -20,7 +20,6 @@ const DailyDungeonMapScene  = preload("res://scenes/daily_dungeon_map.tscn")
 @onready var credits_btn:       Button = $CreditsBtn
 @onready var campaign_btn:      Button = $SettingsBtn
 @onready var version_label:     Label  = $VersionLabel
-@onready var bgm:               AudioStreamPlayer = $BGM
 @onready var fade_overlay:      ColorRect         = $FadeOverlay
 @onready var deck_status_label: Label  = $DeckStatusBg/DeckStatusLabel
 @onready var settings_icon_btn: Button = $SettingsIconBtn
@@ -43,18 +42,24 @@ func _ready() -> void:
 		get_tree().quit())
 	exit_icon_btn.tooltip_text = "Exit Game"
 	version_label.text = "v0.1 Prototype"
-	(bgm.stream as AudioStreamMP3).loop = true
-	bgm.play()
+	if has_node("BGM"):
+		$BGM.stop()
+	BGMManager.play_context(BGMManager.CONTEXT_MAIN_MENU, 0.0, 0.0)
 	var tween := create_tween()	
 	tween.tween_property(fade_overlay, "color:a", 0.0, 1.2) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_refresh_deck_status()
 	_refresh_inventory_badge()
 	MailboxManager.mailbox_changed.connect(_refresh_inventory_badge)
-	# Re-open dungeon map if returning from a dungeon battle or VN dungeon session
-	if DailyDungeonManager.return_to_dungeon_map or DailyDungeonManager.vn_dungeon_id != "":
+	# Re-open daily dungeon overlay when returning from a daily dungeon battle.
+	if DailyDungeonManager.return_to_dungeon_map:
 		DailyDungeonManager.return_to_dungeon_map = false
-		_on_daily_dungeon()
+		if DailyDungeonManager.is_daily_session():
+			_on_daily_dungeon()
+	elif DailyDungeonManager.vn_dungeon_id != "" \
+			and not DailyDungeonManager.is_story_session():
+		# Orphaned story save from an abandoned session — don't auto-open anything.
+		DailyDungeonManager.end_story_session()
 
 func _refresh_deck_status() -> void:
 	var deck: DeckData = SaveManager.get_active_deck()
@@ -215,7 +220,7 @@ func _on_single_player() -> void:
 		if not _is_deck_ready():
 			_show_deck_warning()
 			return
-		bgm.stop()
+		BGMManager.stop(0.0)
 		GameState.game_mode = GameState.GameMode.VS_AI
 		CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn")))
@@ -283,14 +288,14 @@ func _on_multiplayer() -> void:
 
 	_add_btn.call("MATCHMAKING", func() -> void:
 		picker.queue_free()
-		bgm.stop()
+		BGMManager.stop(0.0)
 		GameState.game_mode = GameState.GameMode.LOCAL_2P
 		CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn")))
 
 	_add_btn.call("PRIVATE", func() -> void:
 		picker.queue_free()
-		bgm.stop()
+		BGMManager.stop(0.0)
 		GameState.game_mode = GameState.GameMode.LOCAL_2P
 		CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn")))
@@ -300,7 +305,7 @@ func _on_multiplayer() -> void:
 		if not _is_deck_ready():
 			_show_deck_warning()
 			return
-		bgm.stop()
+		BGMManager.stop(0.0)
 		GameState.game_mode = GameState.GameMode.HOT_SEAT
 		CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn")))
@@ -355,6 +360,7 @@ func _on_campaign() -> void:
 func _on_daily_dungeon() -> void:
 	if get_node_or_null("DailyDungeonMapOverlay") != null:
 		return
+	DailyDungeonManager.begin_daily_session()
 	var overlay := DailyDungeonMapScene.instantiate()
 	overlay.name = "DailyDungeonMapOverlay"
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

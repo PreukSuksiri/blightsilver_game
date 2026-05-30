@@ -3,7 +3,7 @@
 Derived from Godot `CardDatabase.gd` / `UnionDatabase.gd` implementation.
 Each case references the exact handler function and enum type.
 
-**Cards:** 23
+**Cards:** 24
 
 ---
 
@@ -55,10 +55,10 @@ Expected Result:
 
 Card Name: Decoy Puppet
 Type: Trap
-Trap Cost: 500
+Trap Cost: 100
 TrapEffectType: CANCEL_ATTACKER_ATTACK
-effect_params: {}
-Description: Can be triggered face-down. 1 attacker’s attack is cancelled
+effect_params: {'max_attack_cost': 400}
+Description: This turn, foe cannot perform any more attack using unit with 400 or less cost.
 Test Cases:
 
 Test Case ID: TC-FUNC-Decoy-Puppet-001
@@ -84,7 +84,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: COIN_FLIP_2_ATK_DEBUFF
 effect_params: {'amount': 5}
-Description: Flip 2 coin, if head, the attacking character lose -5 ATK until the end of their next turn.
+Description: Flip 2 coin, if head, the attacking unit lose -5 ATK until the end of their next turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Pepper-Spray-001
@@ -128,7 +128,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: COIN_FLIP_2_LOCK_ATTACKER
 effect_params: {}
-Description: Flip 2 coin, if head, that character cannot attack next turn
+Description: Flip 2 coin, if head, that unit cannot attack next turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Red-Card-001
@@ -172,7 +172,7 @@ Type: Trap
 Trap Cost: 1500
 TrapEffectType: DESTROY_ATTACKER
 effect_params: {}
-Description: Destroy the attacking character
+Description: Destroy the attacking unit
 Test Cases:
 
 Test Case ID: TC-FUNC-Spike-Trap-001
@@ -200,7 +200,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: DESTROY_ATTACKER_DEFENDER_PAYS
 effect_params: {}
-Description: Destroy the attacking character. Defending player also lose crystal equal to the attacking monster's cost.
+Description: Destroy the attacker. You also pay the same cost as foe.
 Test Cases:
 
 Test Case ID: TC-FUNC-Explosive-Barrels-001
@@ -285,6 +285,36 @@ Step 1: Attack trap under each immunity scenario.
 Expected Result:
 - special_trigger=='trap_nullified'.
 - Attacker not destroyed; crystal drain from DRAIN may still be skipped.
+
+---
+
+Card Name: Mana Drain
+Type: Trap
+Trap Cost: 200
+TrapEffectType: DRAIN_ATTACKER_CRYSTALS
+effect_params: {'amount': 300, 'transfer_to_defender': True}
+Description: Attacking player loses 300 crystals. Increase your crystal by that amount
+Test Cases:
+
+Test Case ID: TC-FUNC-Mana-Drain-001
+Description:
+Attacker loses 300 crystals
+Implementation Reference:
+- TurnManager._handle_trap_effect DRAIN_ATTACKER_CRYSTALS
+- TrapEffectType.DRAIN_ATTACKER_CRYSTALS
+- effect_params: {'amount': 300, 'transfer_to_defender': True}
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Trap Mana Drain face-down cost=200.
+- Attacker player crystals tracked (start 5000).
+Steps:
+Step 1: Attack trap cell.
+Expected Result:
+- Attacker crystals -= 300 via GameState.lose_crystals.
+- Trap owner pays trap cost 200 (defender_crystal_loss in resolver).
+- Trap cell becomes dead_end.
 
 ---
 
@@ -385,7 +415,7 @@ Type: Trap
 Trap Cost: 1500
 TrapEffectType: FORCE_FRIENDLY_FIRE
 effect_params: {}
-Description: The attacking player chooses their own ally as an attack target
+Description: Foe choose their own ally as an attack target
 Test Cases:
 
 Test Case ID: TC-FUNC-Brainwash-001
@@ -412,7 +442,7 @@ Type: Trap
 Trap Cost: 800
 TrapEffectType: HYPNOTIZE_ATTACKER
 effect_params: {}
-Description: The attacking character cannot attack during their next turn
+Description: The attacking unit cannot attack during their next turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Hypnosis-001
@@ -435,10 +465,10 @@ Expected Result:
 
 Card Name: Echo Barrier
 Type: Trap
-Trap Cost: 1500
+Trap Cost: 1000
 TrapEffectType: LOCK_ATTACKER_REMAINING_ATTACKS
 effect_params: {}
-Description: All attacker’s characters cannot attack until the end of this turn
+Description: This turn, foe cannot perform any more attack.
 Test Cases:
 
 Test Case ID: TC-FUNC-Echo-Barrier-001
@@ -465,7 +495,7 @@ Type: Trap
 Trap Cost: 500
 TrapEffectType: NULLIFY_ATTACKER_EFFECT
 effect_params: {}
-Description: The attacker's effect becomes None until the end of their next turn
+Description: The attacker's effect becomes None until foe’s next turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Snare-Trap-001
@@ -489,10 +519,10 @@ Expected Result:
 
 Card Name: Hostage
 Type: Trap
-Trap Cost: 0
+Trap Cost: 200
 TrapEffectType: NULLIFY_ATTACK_REVEAL_ADJACENT
 effect_params: {'directions': [], 'lock_revealed': True}
-Description: Reveal all adjacent cells. Until the end of this turn, these square cannot be selected as attack target until the end of this turn
+Description: Reveal 1 of your own cell. Until the foe’s turn ends, foe cannot target than cell.
 Test Cases:
 
 Test Case ID: TC-FUNC-Hostage-001
@@ -512,24 +542,6 @@ Step 1: Attack trap.
 Expected Result:
 - All adjacent opponent cells revealed.
 - Positions added to GameState.locked_attack_positions until turn end.
-
-Test Case ID: TC-FUNC-Hostage-002
-Description:
-Hostage: nullified by Huntress/Laser Walker/Electrogazer
-Implementation Reference:
-- BattleResolver._resolve_trap immunity + NEGATE_ZERO_COST_TRAPS_BOTH
-- Zero-cost trap cost=0
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Case A: Huntress of Green Glade attacks trap.
-- Case B: Electrogazer face-up on either field.
-Steps:
-Step 1: Attack trap under each immunity scenario.
-Expected Result:
-- special_trigger=='trap_nullified'.
-- Attacker not destroyed; crystal drain from DRAIN may still be skipped.
 
 ---
 
@@ -564,7 +576,7 @@ Type: Trap
 Trap Cost: 250
 TrapEffectType: PERMANENT_ATK_DEBUFF
 effect_params: {'amount': 10}
-Description: Permanently -10 ATK to the Attacking character
+Description: Permanently -10 ATK to the Attacking unit
 Test Cases:
 
 Test Case ID: TC-FUNC-Flame-Trap-001
@@ -678,7 +690,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: SELF_DESTROY_TEMP_ATK_BOOST
 effect_params: {'atk': 10}
-Description: Select 1 of your character card. Until the end of next turn, that card gain +10 ATK, but destroy it at the end of next turn. You do not lose crystal from card destroyed under this effect
+Description: Select 1 of your unit. +10 ATK until your next turn’s end, but also destroy it. You pay no cost.
 Test Cases:
 
 Test Case ID: TC-FUNC-Self-destruct-001
@@ -749,7 +761,7 @@ Type: Trap
 Trap Cost: 500
 TrapEffectType: SWAP_ATTACKER_ATK_DEF_TEMP
 effect_params: {}
-Description: Swap the attacker's ATK and DEF until the end of this turn
+Description: Swap the attacker's ATK&DEF until the end of this turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Cursed-Reflection-001
@@ -776,7 +788,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: TEMP_DEBUFF_ALL_ATTACKER_CHARS
 effect_params: {'amount': 5}
-Description: -5 ATK to all the attacking player’s characters until the end of this turn
+Description: -5 ATK to all the attacking player’s units until the end of this turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Foul-Gas-001
@@ -793,7 +805,7 @@ Preconditions:
 Steps:
 Step 1: Attack trap.
 Expected Result:
-- -5 ATK to all the attacking player’s characters until the end of this turn
+- -5 ATK to all the attacking player’s units until the end of this turn
 
 Test Case ID: TC-FUNC-Foul-Gas-002
 Description:
@@ -819,8 +831,8 @@ Card Name: Hard Scale
 Type: Trap
 Trap Cost: 700
 TrapEffectType: TEMP_DEF_BOOST_ONE_OWN
-effect_params: {'def': 5}
-Description: Can be triggered face-down. +5 DEF to 1 of your card until the end of this turn
+effect_params: {'def': 5, 'all_own_units': True}
+Description: All of your unit gain +5 DEF in Reckoning until this turn’s end
 Test Cases:
 
 Test Case ID: TC-FUNC-Hard-Scale-001

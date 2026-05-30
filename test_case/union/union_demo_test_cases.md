@@ -9,9 +9,9 @@ Ordered by complexity/priority (most complex first).
 Card Name: X-Death Squad
 Type: Union
 Stats: ATK=50 DEF=50 Affinity=Anima
-Partial Ability: Pay ????, destroy opponent character during damage calculation. Opponent do not ????
-Full Ability: Pay 1000, destroy opponent character during damage calculation. Opponent do not lose crystal under this effect.
-Summon Formula: 1 Anima (≥ 1000 cost) + 2 Anima cards + 1000 crystals
+Partial Ability: In Reckoning, pay ???, destroy foe’s unit. They pay ???.
+Full Ability: In Reckoning, pay 1000, destroy foe’s unit. They pay no cost.
+Summon Formula: 1 Anima (≥ 800 cost) + 2 Anima + 800 cost
 Test Cases:
 
 
@@ -23,7 +23,7 @@ Preconditions:
 - Ensure 'X-Death Squad' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Anima (≥ 1000 cost) + 2 Anima cards + 1000 crystals
+- Gather material cards per formula: 1 Anima (≥ 800 cost) + 2 Anima + 800 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -74,25 +74,11 @@ Preconditions:
 - X-Death Squad summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with X-Death Squad; verify: Pay 1000, destroy opponent character during damage calculation. Opponent do not lose crystal under this effect.
+Step 1: Attack or defend with X-Death Squad; verify: In Reckoning, pay 1000, destroy foe’s unit. They pay no cost.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
 Test Case ID: TC-X-Death-Squad-005
-Description:
-Optional pay — X-Death Squad battle calculation prompt.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'X-Death Squad' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Crystals above and below pay threshold.
-Steps:
-Step 1: Enter battle with X-Death Squad; accept/decline pay prompt.
-Expected Result:
-- Paid branch grants stat bonus; unpaid branch uses base stats.
-
-Test Case ID: TC-X-Death-Squad-006
 Description:
 Destruction — X-Death Squad destroy effects.
 Preconditions:
@@ -106,7 +92,7 @@ Step 1: Trigger destroy via battle or tech targeting X-Death Squad.
 Expected Result:
 - Destroy immunity or destroy-on-tech behavior matches full ability.
 
-Test Case ID: TC-X-Death-Squad-007
+Test Case ID: TC-X-Death-Squad-006
 Description:
 Battle — X-Death Squad as defender vs character.
 Preconditions:
@@ -124,10 +110,10 @@ Expected Result:
 
 Card Name: Burning Phoenix
 Type: Union
-Stats: ATK=110 DEF=50 Affinity=Arcane
-Partial Ability: This card cannot be destroyed by ???. When this card is targeted by tech, ???
-Full Ability: This card cannot be destroyed by non-union cards. When this card is targeted by tech, destroy it immediately.
-Summon Formula: 1 Arcane (≥ 1000 cost) + 1 Nature (≥ 1000 cost) + 1 Divine (≥ 1000 cost) + 2000 crystals
+Stats: ATK=125 DEF=50 Affinity=Arcane
+Partial Ability: Cannot be destroyed by ???. If targeted by tech, ???
+Full Ability: Cannot be destroyed by non-union cards. If targeted by tech, destroy this card.
+Summon Formula: 1 Arcane (≥ 500 cost) + 1 Nature (≥ 500 cost) + 1 Divine (≥ 500 cost) + 800 cost
 Test Cases:
 
 
@@ -139,7 +125,7 @@ Preconditions:
 - Ensure 'Burning Phoenix' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Arcane (≥ 1000 cost) + 1 Nature (≥ 1000 cost) + 1 Divine (≥ 1000 cost) + 2000 crystals
+- Gather material cards per formula: 1 Arcane (≥ 500 cost) + 1 Nature (≥ 500 cost) + 1 Divine (≥ 500 cost) + 800 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -190,7 +176,7 @@ Preconditions:
 - Burning Phoenix summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Burning Phoenix; verify: This card cannot be destroyed by non-union cards. When this card is targeted by tech, destroy it immediately.
+Step 1: Attack or defend with Burning Phoenix; verify: Cannot be destroyed by non-union cards. If targeted by tech, destroy this card.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -227,9 +213,9 @@ Expected Result:
 Card Name: Giant Meteor Vergaia
 Type: Union
 Stats: ATK=60 DEF=0 Affinity=Cosmic
-Partial Ability: None
-Full Ability: Once face-up, destroy it and the end of this turn. Select all face-up opponent’s card in adjacent of target cell with 60 DEF or less, destroy them.
-Summon Formula: Striker Comet + 2 Cosmic card + 2000
+Partial Ability: Destroy it at turn’s end, then select all face-up ???.
+Full Ability: Destroy it at turn's end, then destroy all face-up foe units sharing a border with this card.
+Summon Formula: Striker Comet + 2 Cosmic card + 1000 cost
 Test Cases:
 
 
@@ -241,7 +227,7 @@ Preconditions:
 - Ensure 'Giant Meteor Vergaia' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Striker Comet + 2 Cosmic card + 2000
+- Gather material cards per formula: Striker Comet + 2 Cosmic card + 1000 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -292,7 +278,7 @@ Preconditions:
 - Giant Meteor Vergaia summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Giant Meteor Vergaia; verify: Once face-up, destroy it and the end of this turn. Select all face-up opponent’s card in adjacent of target cell with 60 DEF or less, destroy them.
+Step 1: Attack or defend with Giant Meteor Vergaia; verify: Destroy it at turn's end, then destroy all face-up foe units sharing a border with this card.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -329,9 +315,9 @@ Expected Result:
 Card Name: Seraphim Fistmaster
 Type: Union
 Stats: ATK=120 DEF=120 Affinity=Divine
-Partial Ability: Double ATK and DEF against ??? Affinity
-Full Ability: Double ATK and DEF against Chaos
-Summon Formula: 1 card including ‘Seraph’ name + 1 Divine characters with at least 1000 crystal cost + 1500 crystals
+Partial Ability: Double ATK&DEF against ??? Affinity
+Full Ability: Double ATK&DEF against Chaos
+Summon Formula: 1 ‘Seraph’ unit + 1 Divine (≥ 800 cost) + 1500 cost
 Test Cases:
 
 
@@ -343,7 +329,7 @@ Preconditions:
 - Ensure 'Seraphim Fistmaster' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 card including ‘Seraph’ name + 1 Divine characters with at least 1000 crystal cost + 1500 crystals
+- Gather material cards per formula: 1 ‘Seraph’ unit + 1 Divine (≥ 800 cost) + 1500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -394,7 +380,7 @@ Preconditions:
 - Seraphim Fistmaster summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Seraphim Fistmaster; verify: Double ATK and DEF against Chaos
+Step 1: Attack or defend with Seraphim Fistmaster; verify: Double ATK&DEF against Chaos
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -416,10 +402,10 @@ Expected Result:
 
 Card Name: Armored Dino
 Type: Union
-Stats: ATK=100 DEF=60 Affinity=Nature
-Partial Ability: During battle calculation, pay ??? crystal cost to +??DEF
-Full Ability: During battle calculation, pay 1000 crystal cost to +60 DEF
-Summon Formula: 1 Armored Nature card + 1 Nature (≥ 1000 cost) + 1000 crystals
+Stats: ATK=95 DEF=60 Affinity=Nature
+Partial Ability: In Reckoning, pay ??? crystal cost to +??DEF
+Full Ability: In Reckoning, pay 1000 crystal cost to +60 DEF
+Summon Formula: 1 Armored Nature card + 1 Nature (≥ 800 cost) + 800 cost
 Test Cases:
 
 
@@ -431,7 +417,7 @@ Preconditions:
 - Ensure 'Armored Dino' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Armored Nature card + 1 Nature (≥ 1000 cost) + 1000 crystals
+- Gather material cards per formula: 1 Armored Nature card + 1 Nature (≥ 800 cost) + 800 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -482,7 +468,7 @@ Preconditions:
 - Armored Dino summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Armored Dino; verify: During battle calculation, pay 1000 crystal cost to +60 DEF
+Step 1: Attack or defend with Armored Dino; verify: In Reckoning, pay 1000 crystal cost to +60 DEF
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -519,9 +505,9 @@ Expected Result:
 Card Name: Rocket Peacock
 Type: Union
 Stats: ATK=150 DEF=100 Affinity=Nature
-Partial Ability: After this card battles, select 1 card on your opponent’s field, flip a coin. If head, ???
-Full Ability: After this card battles, select 1 card on your opponent’s field, flip a coin. If head, destroy that card
-Summon Formula: Ostrich Cannon + 1 Nature card + 1500 crystals
+Partial Ability: After this card battles, select 1 foe’s card, flip a coin. Head : ???
+Full Ability: After this card battles, select 1 foe’s card, flip a coin. Head : destroy that card
+Summon Formula: Ostrich Cannon + 1 Nature + 1500 cost
 Test Cases:
 
 
@@ -533,7 +519,7 @@ Preconditions:
 - Ensure 'Rocket Peacock' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Ostrich Cannon + 1 Nature card + 1500 crystals
+- Gather material cards per formula: Ostrich Cannon + 1 Nature + 1500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -584,7 +570,7 @@ Preconditions:
 - Rocket Peacock summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Rocket Peacock; verify: After this card battles, select 1 card on your opponent’s field, flip a coin. If head, destroy that card
+Step 1: Attack or defend with Rocket Peacock; verify: After this card battles, select 1 foe’s card, flip a coin. Head : destroy that card
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -635,9 +621,9 @@ Expected Result:
 Card Name: False Prophet
 Type: Union
 Stats: ATK=20 DEF=40 Affinity=Divine
-Partial Ability: At the start of your turn, you may flip ???. If it was a ???, destroy this card. If it was character or trap, ???.
-Full Ability: At the start of your turn, you may flip one of your opponent face-down cards face-up. If it was a Dead End, destroy this card. If it was character or trap, gain 200 crystal
-Summon Formula: 2 Divine cards + 1000 crystals
+Partial Ability: Start of your turn: Reveal ???. If it was a Dead End, destroy this card. Otherwise, gain ???
+Full Ability: Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.
+Summon Formula: 2 Divine cards + 300 cost
 Test Cases:
 
 
@@ -649,7 +635,7 @@ Preconditions:
 - Ensure 'False Prophet' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 2 Divine cards + 1000 crystals
+- Gather material cards per formula: 2 Divine cards + 300 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -700,7 +686,7 @@ Preconditions:
 - False Prophet summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with False Prophet; verify: At the start of your turn, you may flip one of your opponent face-down cards face-up. If it was a Dead End, destroy this card. If it was character or trap, gain 200 crystal
+Step 1: Attack or defend with False Prophet; verify: Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -737,9 +723,9 @@ Expected Result:
 Card Name: Moon Tribe Shaman
 Type: Union
 Stats: ATK=25 DEF=55 Affinity=Cosmic
-Partial Ability: None
-Full Ability: Upon union, revive 1 Moon card on your empty cell. Double its cost.
-Summon Formula: 1 Moon card+ 1 Cosmic card + 1000 crystals
+Partial Ability: Upon union, revive 1 ???. Double its cost.
+Full Ability: Upon union, revive 1 Moon non-Union card. Double its cost.
+Summon Formula: 1 Moon card+ 1 Cosmic card + 500 cost
 Test Cases:
 
 
@@ -751,7 +737,7 @@ Preconditions:
 - Ensure 'Moon Tribe Shaman' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Moon card+ 1 Cosmic card + 1000 crystals
+- Gather material cards per formula: 1 Moon card+ 1 Cosmic card + 500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -802,7 +788,7 @@ Preconditions:
 - Moon Tribe Shaman summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Moon Tribe Shaman; verify: Upon union, revive 1 Moon card on your empty cell. Double its cost.
+Step 1: Attack or defend with Moon Tribe Shaman; verify: Upon union, revive 1 Moon non-Union card. Double its cost.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -839,9 +825,9 @@ Expected Result:
 Card Name: Blood-hungry Mutant
 Type: Union
 Stats: ATK=55 DEF=40 Affinity=Cosmic
-Partial Ability: None
-Full Ability: If this card destroyed opponent’s card, +80 crystals
-Summon Formula: 2 Mutant cards + 1000 crystals
+Partial Ability: After destroying foe’s card: ???
+Full Ability: After destroying foe’s card: +80 crystals
+Summon Formula: 2 Mutant cards + 600 cost
 Test Cases:
 
 
@@ -853,7 +839,7 @@ Preconditions:
 - Ensure 'Blood-hungry Mutant' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 2 Mutant cards + 1000 crystals
+- Gather material cards per formula: 2 Mutant cards + 600 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -904,7 +890,7 @@ Preconditions:
 - Blood-hungry Mutant summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Blood-hungry Mutant; verify: If this card destroyed opponent’s card, +80 crystals
+Step 1: Attack or defend with Blood-hungry Mutant; verify: After destroying foe’s card: +80 crystals
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -941,9 +927,9 @@ Expected Result:
 Card Name: Volatile Slasher
 Type: Union
 Stats: ATK=50 DEF=45 Affinity=Bio
-Partial Ability: None
-Full Ability: While this card attacking, it gain +50 ATK bonus vs target’s affinity permanently, once per affinity.
-Summon Formula: 1 Bladeshifter + 1 Bio card + 1000 crystals
+Partial Ability: After Reckoning with non-Bio, it gain ???.
+Full Ability: After Reckoning with non-Bio, it gain +50 ATK permanently.
+Summon Formula: 1 Bladeshifter + 1 Bio card + 1000 cost
 Test Cases:
 
 
@@ -955,7 +941,7 @@ Preconditions:
 - Ensure 'Volatile Slasher' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Bladeshifter + 1 Bio card + 1000 crystals
+- Gather material cards per formula: 1 Bladeshifter + 1 Bio card + 1000 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1006,7 +992,7 @@ Preconditions:
 - Volatile Slasher summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Volatile Slasher; verify: While this card attacking, it gain +50 ATK bonus vs target’s affinity permanently, once per affinity.
+Step 1: Attack or defend with Volatile Slasher; verify: After Reckoning with non-Bio, it gain +50 ATK permanently.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1029,9 +1015,9 @@ Expected Result:
 Card Name: Ten Arms Yaksa
 Type: Union
 Stats: ATK=45 DEF=30 Affinity=Chaos
-Partial Ability: This card can attack ??? times. -?? ATK for each successful attack.
-Full Ability: This card can attack 3 times. -5 ATK for each successful attack.
-Summon Formula: Yaksa + 1 Chaos + 1000 crystals
+Partial Ability: This card can choose ?? attack targets. -?? ATK for each successful attack.
+Full Ability: This card can choose two attack targets. -5 ATK for each successful attack.
+Summon Formula: Yaksa + 1 Chaos + 600 cost
 Test Cases:
 
 
@@ -1043,7 +1029,7 @@ Preconditions:
 - Ensure 'Ten Arms Yaksa' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Yaksa + 1 Chaos + 1000 crystals
+- Gather material cards per formula: Yaksa + 1 Chaos + 600 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1094,7 +1080,7 @@ Preconditions:
 - Ten Arms Yaksa summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Ten Arms Yaksa; verify: This card can attack 3 times. -5 ATK for each successful attack.
+Step 1: Attack or defend with Ten Arms Yaksa; verify: This card can choose two attack targets. -5 ATK for each successful attack.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1119,7 +1105,7 @@ Type: Union
 Stats: ATK=0 DEF=0 Affinity=Divine
 Partial Ability: If this card defends, DEF becomes ???, ATK becomes ???. If this card performs attack, ATK becomes ???, DEF becomes ???.
 Full Ability: If this card defends, DEF becomes 50, ATK becomes 0. If this card performs attack, ATK becomes 50, DEF becomes 0.
-Summon Formula: Sunrise Lady + Moonrise Gentleman + 1000 crystals
+Summon Formula: Sunrise Lady + Moonrise Gentleman + 400 cost
 Test Cases:
 
 
@@ -1131,7 +1117,7 @@ Preconditions:
 - Ensure 'Sky Protector' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Sunrise Lady + Moonrise Gentleman + 1000 crystals
+- Gather material cards per formula: Sunrise Lady + Moonrise Gentleman + 400 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1206,8 +1192,8 @@ Card Name: Scarlet Shroom
 Type: Union
 Stats: ATK=0 DEF=80 Affinity=Nature
 Partial Ability: If ???, put venom flag on all ???. 
-Full Ability: If this card is union summoned, put venom flag on ???
-Summon Formula: 2 Nature cards + 1000 crystals
+Full Ability: Once Union, put venom flag on all foe’s face-up card
+Summon Formula: 2 Nature cards + 500 cost
 Test Cases:
 
 
@@ -1219,7 +1205,7 @@ Preconditions:
 - Ensure 'Scarlet Shroom' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 2 Nature cards + 1000 crystals
+- Gather material cards per formula: 2 Nature cards + 500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1270,7 +1256,7 @@ Preconditions:
 - Scarlet Shroom summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Scarlet Shroom; verify: If this card is union summoned, put venom flag on ???
+Step 1: Attack or defend with Scarlet Shroom; verify: Once Union, put venom flag on all foe’s face-up card
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1293,9 +1279,9 @@ Expected Result:
 Card Name: Rebel King
 Type: Union
 Stats: ATK=60 DEF=40 Affinity=Anima
-Partial Ability: None
-Full Ability: At the end of your opponent’s turn, your opponent select 1 of their face-up card (if any) and swap ATK and DEF
-Summon Formula: Jirayu the Rebellious Prince + 1 Anima card + 1000 crystals
+Partial Ability: At foe’s turn ends: ??? and swap ATK&DEF
+Full Ability: At foe’s turn ends: foe select 1 own unit and swap ATK&DEF
+Summon Formula: Jirayu the Rebellious Prince + 1 Anima card (≥ 500 cost) + 800 cost
 Test Cases:
 
 
@@ -1307,7 +1293,7 @@ Preconditions:
 - Ensure 'Rebel King' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Jirayu the Rebellious Prince + 1 Anima card + 1000 crystals
+- Gather material cards per formula: Jirayu the Rebellious Prince + 1 Anima card (≥ 500 cost) + 800 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1358,7 +1344,7 @@ Preconditions:
 - Rebel King summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Rebel King; verify: At the end of your opponent’s turn, your opponent select 1 of their face-up card (if any) and swap ATK and DEF
+Step 1: Attack or defend with Rebel King; verify: At foe’s turn ends: foe select 1 own unit and swap ATK&DEF
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1383,7 +1369,7 @@ Type: Union
 Stats: ATK=200 DEF=100 Affinity=Chaos
 Partial Ability: -50 ATK if ???
 Full Ability: -50 ATK if attacks dead end card
-Summon Formula: 2 Chaos (≥ 1000 cost) + 1000 crystal
+Summon Formula: 1 Chaos (≥ 1000 cost) + 1 Chaos (≥ 800 cost) + 1000 cost
 Test Cases:
 
 
@@ -1395,7 +1381,7 @@ Preconditions:
 - Ensure 'Lord of Terror' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 2 Chaos (≥ 1000 cost) + 1000 crystal
+- Gather material cards per formula: 1 Chaos (≥ 1000 cost) + 1 Chaos (≥ 800 cost) + 1000 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1469,9 +1455,9 @@ Expected Result:
 Card Name: Colorful Mage
 Type: Union
 Stats: ATK=55 DEF=40 Affinity=Arcane
-Partial Ability: None
-Full Ability: -10 ATK and DEF permanently if battles against non-Arcane card.
-Summon Formula: Red Mage + Green Mage + Blue Mage + 1000 crystals
+Partial Ability: Foe’s non-Arcane get ??? in Reckoning with this card
+Full Ability: Foe’s non-Arcane get -10 ATK&DEF permanently in Reckoning with this card
+Summon Formula: Red Mage + Green Mage + Blue Mage + 500 cost
 Test Cases:
 
 
@@ -1483,7 +1469,7 @@ Preconditions:
 - Ensure 'Colorful Mage' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Red Mage + Green Mage + Blue Mage + 1000 crystals
+- Gather material cards per formula: Red Mage + Green Mage + Blue Mage + 500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1534,7 +1520,7 @@ Preconditions:
 - Colorful Mage summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Colorful Mage; verify: -10 ATK and DEF permanently if battles against non-Arcane card.
+Step 1: Attack or defend with Colorful Mage; verify: Foe’s non-Arcane get -10 ATK&DEF permanently in Reckoning with this card
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1557,9 +1543,9 @@ Expected Result:
 Card Name: Greater Succubus
 Type: Union
 Stats: ATK=30 DEF=50 Affinity=Chaos
-Partial Ability: If this card survived a battle, gain ????
-Full Ability: If this card survived a battle, gain half of ATK and DEF equal to card it battled
-Summon Formula: 1 Succubus + 1 Chaos card + 1000 crystals
+Partial Ability: Once, after Reckoning: +ATK&DEF equal to ???
+Full Ability: Once, after Reckoning: +ATK&DEF equal to half of that foe’s card
+Summon Formula: 1 Succubus + 1 Chaos + 800 cost
 Test Cases:
 
 
@@ -1571,7 +1557,7 @@ Preconditions:
 - Ensure 'Greater Succubus' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Succubus + 1 Chaos card + 1000 crystals
+- Gather material cards per formula: 1 Succubus + 1 Chaos + 800 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1622,7 +1608,7 @@ Preconditions:
 - Greater Succubus summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Greater Succubus; verify: If this card survived a battle, gain half of ATK and DEF equal to card it battled
+Step 1: Attack or defend with Greater Succubus; verify: Once, after Reckoning: +ATK&DEF equal to half of that foe’s card
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1645,9 +1631,9 @@ Expected Result:
 Card Name: Kiba the Giant Slayer
 Type: Union
 Stats: ATK=80 DEF=55 Affinity=Anima
-Partial Ability: None
+Partial Ability: +??? vs Union
 Full Ability: +30 ATK vs Union
-Summon Formula: Kiyoko the Death Whisper + Silver Spearman + 1500
+Summon Formula: Kiyoko the Death Whisper + Silver Spearman + 1000 cost
 Test Cases:
 
 
@@ -1659,7 +1645,7 @@ Preconditions:
 - Ensure 'Kiba the Giant Slayer' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Kiyoko the Death Whisper + Silver Spearman + 1500
+- Gather material cards per formula: Kiyoko the Death Whisper + Silver Spearman + 1000 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1734,8 +1720,8 @@ Card Name: Choir Lead Amber
 Type: Union
 Stats: ATK=35 DEF=35 Affinity=Divine
 Partial Ability: +20 ATK to all ?????
-Full Ability: +20 ATK to all Divine characters on their own field
-Summon Formula: 3 Choir Lady cards + 1000 crystals
+Full Ability: +20 ATK to all Divine units on their own field
+Summon Formula: 3 Choir Lady cards + 500 cost
 Test Cases:
 
 
@@ -1747,7 +1733,7 @@ Preconditions:
 - Ensure 'Choir Lead Amber' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 3 Choir Lady cards + 1000 crystals
+- Gather material cards per formula: 3 Choir Lady cards + 500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1798,7 +1784,7 @@ Preconditions:
 - Choir Lead Amber summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Choir Lead Amber; verify: +20 ATK to all Divine characters on their own field
+Step 1: Attack or defend with Choir Lead Amber; verify: +20 ATK to all Divine units on their own field
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1823,7 +1809,7 @@ Type: Union
 Stats: ATK=30 DEF=30 Affinity=Divine
 Partial Ability: +5 ATK for each ????
 Full Ability: +5 ATK for each Divine cards on their own field
-Summon Formula: 1 Tiny Pixie + 1 Divine card + 1000 crystal
+Summon Formula: 1 Tiny Pixie + 1 Divine+ 300 cost
 Test Cases:
 
 
@@ -1835,7 +1821,7 @@ Preconditions:
 - Ensure 'Pixie Queen' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Tiny Pixie + 1 Divine card + 1000 crystal
+- Gather material cards per formula: 1 Tiny Pixie + 1 Divine+ 300 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1906,12 +1892,100 @@ Expected Result:
 
 ---
 
+Card Name: Gamma Mermaid
+Type: Union
+Stats: ATK=30 DEF=20 Affinity=Bio
+Partial Ability: Non-Bio defender get ???. With Mutagen Flag: +20 ???
+Full Ability: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all your Bio units
+Summon Formula: 1 Gamma cards + 1 Bio card + 500 cost
+Test Cases:
+
+
+Test Case ID: TC-Gamma-Mermaid-001
+Description:
+Summon happy path — Gamma Mermaid union placement.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gamma Mermaid' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gather material cards per formula: 1 Gamma cards + 1 Bio card + 500 cost
+- Player 0 has sufficient crystals for summon cost.
+- Material cells marked in union zone pattern (5×5 bitmask).
+Steps:
+Step 1: Enter union summon mode; select materials matching formula.
+Step 2: Pay crystal cost; place Gamma Mermaid face-up at anchor cell.
+Expected Result:
+- Gamma Mermaid appears as is_union=true, face-up.
+- Material cards removed from grid without crystal loss.
+- Union summon consumed for this duel (cannot summon second union).
+
+Test Case ID: TC-Gamma-Mermaid-002
+Description:
+Edge — insufficient crystals for Gamma Mermaid.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gamma Mermaid' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Set crystals below required summon cost.
+- Valid materials on field.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Summon blocked; materials remain; no partial state.
+
+Test Case ID: TC-Gamma-Mermaid-003
+Description:
+Edge — wrong materials for Gamma Mermaid.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gamma Mermaid' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Place non-qualifying characters in zone.
+Steps:
+Step 1: Attempt union summon.
+Expected Result:
+- Formula validation fails; summon does not proceed.
+
+Test Case ID: TC-Gamma-Mermaid-004
+Description:
+Ability — Gamma Mermaid full ability in battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gamma Mermaid' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Gamma Mermaid summoned and face-up.
+- Opponent has valid battle target.
+Steps:
+Step 1: Attack or defend with Gamma Mermaid; verify: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all your Bio units
+Expected Result:
+- Full (not partial) ability text applies after union summon.
+
+Test Case ID: TC-Gamma-Mermaid-005
+Description:
+Battle — Gamma Mermaid as defender vs character.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Gamma Mermaid' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
+- Opponent character attacks union.
+Steps:
+Step 1: Resolve battle with union stats.
+Expected Result:
+- Union uses character battle rules; is_union flag preserved.
+
+---
+
 Card Name: Giant Mining Pod
 Type: Union
 Stats: ATK=20 DEF=80 Affinity=Cosmic
 Partial Ability: If this card attacks a dead end card, you receive ???crystals
 Full Ability: If this card attacks a dead end card, you receive 200 crystals
-Summon Formula: 1 Miner probe + 1 Cosmic + 1000 crystals
+Summon Formula: 1 Miner probe + 1 Cosmic + 500 cost
 Test Cases:
 
 
@@ -1923,7 +1997,7 @@ Preconditions:
 - Ensure 'Giant Mining Pod' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Miner probe + 1 Cosmic + 1000 crystals
+- Gather material cards per formula: 1 Miner probe + 1 Cosmic + 500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1999,7 +2073,7 @@ Type: Union
 Stats: ATK=50 DEF=35 Affinity=Divine
 Partial Ability: +15 ATK until ????
 Full Ability: +15 ATK until the end of this turn, once.
-Summon Formula: 1 Ponycorn + 1 Divine card + 1000 crystals
+Summon Formula: 1 Ponycorn + 1 Divine card + 500 cost
 Test Cases:
 
 
@@ -2011,7 +2085,7 @@ Preconditions:
 - Ensure 'Diamond Unicorn' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Ponycorn + 1 Divine card + 1000 crystals
+- Gather material cards per formula: 1 Ponycorn + 1 Divine card + 500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -2085,9 +2159,9 @@ Expected Result:
 Card Name: Moon Ninja Lady
 Type: Union
 Stats: ATK=65 DEF=50 Affinity=Anima
-Partial Ability: None
+Partial Ability: Once, this card is ???.
 Full Ability: Once, this card is not destroyed.
-Summon Formula: Kiyoko the Death Whisper + 1 Anima card + 1000
+Summon Formula: Kiyoko the Death Whisper + 1 Anima card + 800 cost
 Test Cases:
 
 
@@ -2099,7 +2173,7 @@ Preconditions:
 - Ensure 'Moon Ninja Lady' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Kiyoko the Death Whisper + 1 Anima card + 1000
+- Gather material cards per formula: Kiyoko the Death Whisper + 1 Anima card + 800 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -2184,100 +2258,12 @@ Expected Result:
 
 ---
 
-Card Name: Gamma Mermaid
-Type: Union
-Stats: ATK=30 DEF=20 Affinity=Bio
-Partial Ability: None
-Full Ability: -20 DEF to non-Bio defender
-Summon Formula: 1 Gamma cards + 1 Bio card + 1000
-Test Cases:
-
-
-Test Case ID: TC-Gamma-Mermaid-001
-Description:
-Summon happy path — Gamma Mermaid union placement.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Gamma Mermaid' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Gamma cards + 1 Bio card + 1000
-- Player 0 has sufficient crystals for summon cost.
-- Material cells marked in union zone pattern (5×5 bitmask).
-Steps:
-Step 1: Enter union summon mode; select materials matching formula.
-Step 2: Pay crystal cost; place Gamma Mermaid face-up at anchor cell.
-Expected Result:
-- Gamma Mermaid appears as is_union=true, face-up.
-- Material cards removed from grid without crystal loss.
-- Union summon consumed for this duel (cannot summon second union).
-
-Test Case ID: TC-Gamma-Mermaid-002
-Description:
-Edge — insufficient crystals for Gamma Mermaid.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Gamma Mermaid' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Set crystals below required summon cost.
-- Valid materials on field.
-Steps:
-Step 1: Attempt union summon.
-Expected Result:
-- Summon blocked; materials remain; no partial state.
-
-Test Case ID: TC-Gamma-Mermaid-003
-Description:
-Edge — wrong materials for Gamma Mermaid.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Gamma Mermaid' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Place non-qualifying characters in zone.
-Steps:
-Step 1: Attempt union summon.
-Expected Result:
-- Formula validation fails; summon does not proceed.
-
-Test Case ID: TC-Gamma-Mermaid-004
-Description:
-Ability — Gamma Mermaid full ability in battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Gamma Mermaid' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gamma Mermaid summoned and face-up.
-- Opponent has valid battle target.
-Steps:
-Step 1: Attack or defend with Gamma Mermaid; verify: -20 DEF to non-Bio defender
-Expected Result:
-- Full (not partial) ability text applies after union summon.
-
-Test Case ID: TC-Gamma-Mermaid-005
-Description:
-Battle — Gamma Mermaid as defender vs character.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Gamma Mermaid' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Opponent character attacks union.
-Steps:
-Step 1: Resolve battle with union stats.
-Expected Result:
-- Union uses character battle rules; is_union flag preserved.
-
----
-
 Card Name: Ancient Lizard
 Type: Union
 Stats: ATK=75 DEF=75 Affinity=Nature
 Partial Ability: None
 Full Ability: None
-Summon Formula: 1 Flame Lizard + 1 Nature card + 1000 crystals
+Summon Formula: 1 Flame Lizard + 1 Nature + 800 cost
 Test Cases:
 
 
@@ -2289,7 +2275,7 @@ Preconditions:
 - Ensure 'Ancient Lizard' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Flame Lizard + 1 Nature card + 1000 crystals
+- Gather material cards per formula: 1 Flame Lizard + 1 Nature + 800 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -2345,40 +2331,40 @@ Expected Result:
 
 ---
 
-Card Name: Barros the Collossol
+Card Name: Barros the Colossol
 Type: Union
 Stats: ATK=150 DEF=130 Affinity=Nature
 Partial Ability: None
 Full Ability: None
-Summon Formula: 2 Nature (≥ 1000 cost) + 1500 crystals
+Summon Formula: 2 Nature (≥ 800 cost) + 1500 cost
 Test Cases:
 
 
-Test Case ID: TC-Barros-the-Collossol-001
+Test Case ID: TC-Barros-the-Colossol-001
 Description:
-Summon happy path — Barros the Collossol union placement.
+Summon happy path — Barros the Colossol union placement.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Barros the Collossol' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Barros the Colossol' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 2 Nature (≥ 1000 cost) + 1500 crystals
+- Gather material cards per formula: 2 Nature (≥ 800 cost) + 1500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
 Step 1: Enter union summon mode; select materials matching formula.
-Step 2: Pay crystal cost; place Barros the Collossol face-up at anchor cell.
+Step 2: Pay crystal cost; place Barros the Colossol face-up at anchor cell.
 Expected Result:
-- Barros the Collossol appears as is_union=true, face-up.
+- Barros the Colossol appears as is_union=true, face-up.
 - Material cards removed from grid without crystal loss.
 - Union summon consumed for this duel (cannot summon second union).
 
-Test Case ID: TC-Barros-the-Collossol-002
+Test Case ID: TC-Barros-the-Colossol-002
 Description:
-Edge — insufficient crystals for Barros the Collossol.
+Edge — insufficient crystals for Barros the Colossol.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Barros the Collossol' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Barros the Colossol' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Set crystals below required summon cost.
@@ -2388,12 +2374,12 @@ Step 1: Attempt union summon.
 Expected Result:
 - Summon blocked; materials remain; no partial state.
 
-Test Case ID: TC-Barros-the-Collossol-003
+Test Case ID: TC-Barros-the-Colossol-003
 Description:
-Edge — wrong materials for Barros the Collossol.
+Edge — wrong materials for Barros the Colossol.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Barros the Collossol' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Barros the Colossol' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Place non-qualifying characters in zone.
@@ -2402,12 +2388,12 @@ Step 1: Attempt union summon.
 Expected Result:
 - Formula validation fails; summon does not proceed.
 
-Test Case ID: TC-Barros-the-Collossol-004
+Test Case ID: TC-Barros-the-Colossol-004
 Description:
-Battle — Barros the Collossol as defender vs character.
+Battle — Barros the Colossol as defender vs character.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Barros the Collossol' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Barros the Colossol' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Opponent character attacks union.
@@ -2423,7 +2409,7 @@ Type: Union
 Stats: ATK=40 DEF=0 Affinity=Nature
 Partial Ability: None
 Full Ability: None
-Summon Formula: 2 Nature + 1000 crystals
+Summon Formula: 2 Nature + 500 cost
 Test Cases:
 
 
@@ -2435,7 +2421,7 @@ Preconditions:
 - Ensure 'Berserk Hyena' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 2 Nature + 1000 crystals
+- Gather material cards per formula: 2 Nature + 500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -2496,7 +2482,7 @@ Type: Union
 Stats: ATK=0 DEF=220 Affinity=Nature
 Partial Ability: None
 Full Ability: None
-Summon Formula: 2 characters with at least 100 DEF + 2000 crystals
+Summon Formula: 2 any units (≥100 DEF) + 2000 cost
 Test Cases:
 
 
@@ -2508,7 +2494,7 @@ Preconditions:
 - Ensure 'Gaia Turtle' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 2 characters with at least 100 DEF + 2000 crystals
+- Gather material cards per formula: 2 any units (≥100 DEF) + 2000 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -2569,7 +2555,7 @@ Type: Union
 Stats: ATK=45 DEF=40 Affinity=Anima
 Partial Ability: None
 Full Ability: None
-Summon Formula: 2 Grand Fort card + 1000 crystals
+Summon Formula: 2 Grand Fort card + 500 cost
 Test Cases:
 
 
@@ -2581,7 +2567,7 @@ Preconditions:
 - Ensure 'Grand Fort Captain' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 2 Grand Fort card + 1000 crystals
+- Gather material cards per formula: 2 Grand Fort card + 500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -2642,7 +2628,7 @@ Type: Union
 Stats: ATK=125 DEF=90 Affinity=Divine
 Partial Ability: None
 Full Ability: None
-Summon Formula: Gryphon + 1 Divine + 1000 crystals
+Summon Formula: Gryphon + 1 Divine + 1000 cost
 Test Cases:
 
 
@@ -2654,7 +2640,7 @@ Preconditions:
 - Ensure 'Gryphon Rider' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Gryphon + 1 Divine + 1000 crystals
+- Gather material cards per formula: Gryphon + 1 Divine + 1000 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -2715,7 +2701,7 @@ Type: Union
 Stats: ATK=45 DEF=30 Affinity=Cosmic
 Partial Ability: None
 Full Ability: None
-Summon Formula: Laser Walker + 1 Cosmic card + 1000
+Summon Formula: Laser Walker + 1 Cosmic card + 1000 cost
 Test Cases:
 
 
@@ -2727,7 +2713,7 @@ Preconditions:
 - Ensure 'Imperial Frame' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Laser Walker + 1 Cosmic card + 1000
+- Gather material cards per formula: Laser Walker + 1 Cosmic card + 1000 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -2788,7 +2774,7 @@ Type: Union
 Stats: ATK=75 DEF=50 Affinity=Nature
 Partial Ability: None
 Full Ability: None
-Summon Formula: 3 sharks card + 1000 crystals
+Summon Formula: 3 ‘Sharks’ name + 800 cost
 Test Cases:
 
 
@@ -2800,7 +2786,7 @@ Preconditions:
 - Ensure 'Katana Shark' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 3 sharks card + 1000 crystals
+- Gather material cards per formula: 3 ‘Sharks’ name + 800 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -2861,7 +2847,7 @@ Type: Union
 Stats: ATK=35 DEF=35 Affinity=Chaos
 Partial Ability: None
 Full Ability: None
-Summon Formula: Dark Monk + 1 Chaos + 1000 crystals
+Summon Formula: Dark Monk + 1 Chaos + 300 cost
 Test Cases:
 
 
@@ -2873,7 +2859,7 @@ Preconditions:
 - Ensure 'Kitsune' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Dark Monk + 1 Chaos + 1000 crystals
+- Gather material cards per formula: Dark Monk + 1 Chaos + 300 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -2934,7 +2920,7 @@ Type: Union
 Stats: ATK=80 DEF=80 Affinity=Divine
 Partial Ability: None
 Full Ability: None
-Summon Formula: Raijin + Fujin + 1000 crystals
+Summon Formula: Raijin + Fujin + 800 cost
 Test Cases:
 
 
@@ -2946,7 +2932,7 @@ Preconditions:
 - Ensure 'Raijin and Fujin' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Raijin + Fujin + 1000 crystals
+- Gather material cards per formula: Raijin + Fujin + 800 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -3002,40 +2988,40 @@ Expected Result:
 
 ---
 
-Card Name: Rocket Tyrant
+Card Name: Rocket Marauder
 Type: Union
-Stats: ATK=130 DEF=110 Affinity=Bio
+Stats: ATK=125 DEF=105 Affinity=Bio
 Partial Ability: None
 Full Ability: None
-Summon Formula: 1 Bio (≥ 1000 cost) + 1 Anima (≥ 1000 cost) + 1000 crystal
+Summon Formula: 1 Bio (≥ 800 cost) + 1 Anima (≥ 800 cost) + 1000 cost
 Test Cases:
 
 
-Test Case ID: TC-Rocket-Tyrant-001
+Test Case ID: TC-Rocket-Marauder-001
 Description:
-Summon happy path — Rocket Tyrant union placement.
+Summon happy path — Rocket Marauder union placement.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rocket Tyrant' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Rocket Marauder' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Bio (≥ 1000 cost) + 1 Anima (≥ 1000 cost) + 1000 crystal
+- Gather material cards per formula: 1 Bio (≥ 800 cost) + 1 Anima (≥ 800 cost) + 1000 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
 Step 1: Enter union summon mode; select materials matching formula.
-Step 2: Pay crystal cost; place Rocket Tyrant face-up at anchor cell.
+Step 2: Pay crystal cost; place Rocket Marauder face-up at anchor cell.
 Expected Result:
-- Rocket Tyrant appears as is_union=true, face-up.
+- Rocket Marauder appears as is_union=true, face-up.
 - Material cards removed from grid without crystal loss.
 - Union summon consumed for this duel (cannot summon second union).
 
-Test Case ID: TC-Rocket-Tyrant-002
+Test Case ID: TC-Rocket-Marauder-002
 Description:
-Edge — insufficient crystals for Rocket Tyrant.
+Edge — insufficient crystals for Rocket Marauder.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rocket Tyrant' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Rocket Marauder' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Set crystals below required summon cost.
@@ -3045,12 +3031,12 @@ Step 1: Attempt union summon.
 Expected Result:
 - Summon blocked; materials remain; no partial state.
 
-Test Case ID: TC-Rocket-Tyrant-003
+Test Case ID: TC-Rocket-Marauder-003
 Description:
-Edge — wrong materials for Rocket Tyrant.
+Edge — wrong materials for Rocket Marauder.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rocket Tyrant' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Rocket Marauder' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Place non-qualifying characters in zone.
@@ -3059,12 +3045,12 @@ Step 1: Attempt union summon.
 Expected Result:
 - Formula validation fails; summon does not proceed.
 
-Test Case ID: TC-Rocket-Tyrant-004
+Test Case ID: TC-Rocket-Marauder-004
 Description:
-Battle — Rocket Tyrant as defender vs character.
+Battle — Rocket Marauder as defender vs character.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Rocket Tyrant' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Rocket Marauder' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Opponent character attacks union.
@@ -3080,7 +3066,7 @@ Type: Union
 Stats: ATK=50 DEF=5 Affinity=Chaos
 Partial Ability: None
 Full Ability: None
-Summon Formula: 3 Skeleton cards + 1000 crystals
+Summon Formula: 3 Skeleton cards + 400 cost
 Test Cases:
 
 
@@ -3092,7 +3078,7 @@ Preconditions:
 - Ensure 'Skeleton Overlord' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 3 Skeleton cards + 1000 crystals
+- Gather material cards per formula: 3 Skeleton cards + 400 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:

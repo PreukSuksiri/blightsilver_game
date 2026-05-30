@@ -1,7 +1,7 @@
 extends Control
-# DailyDungeonMap — full-screen overlay for the current daily dungeon.
-# Shows dungeon background, connection lines, node icons, and a detail panel.
-# Opened as a child of MainMenu; closed by queue_free().
+# DailyDungeonMap — shared dungeon map UI for daily (main-menu overlay) and story (root scene).
+# Daily: opened as DailyDungeonMapOverlay on MainMenu; closed with queue_free().
+# Story: opened via change_scene from VN dungeon_call; exits via VN callbacks or main menu.
 
 # ─────────────────────────────────────────────────────────────
 # Constants
@@ -29,6 +29,9 @@ const SPRITE_WALK_FPS: float        = 8.0
 const PLAYER_WALK_PX_PER_SEC: float = 190.0
 const DOUBT_LOOK_SEC: float         = 1.3   # seconds to hold each direction when undecided
 
+const _SpinWheelOverlayScript: Script = preload("res://scripts/DungeonSpinWheelOverlay.gd")
+const JESTER_HAPPY_TEX: Texture2D = preload("res://assets/textures/daily_dungeon/wheel/jester_happy.png")
+
 # ─────────────────────────────────────────────────────────────
 # UI refs
 # ─────────────────────────────────────────────────────────────
@@ -39,6 +42,7 @@ var _node_btns: Dictionary = {}  # node_id → Control wrapper
 var _detail_title_lbl:  Label  = null
 var _detail_type_lbl:   Label  = null
 var _detail_body_lbl:   Label  = null
+var _detail_modifier_box: VBoxContainer = null
 var _detail_reward_lbl: Label  = null
 var _battle_btn:        Button = null
 
@@ -62,28 +66,32 @@ var _doubt_targets: Array = []   # node_ids to glance between
 var _doubt_index:   int   = 0
 var _doubt_tween:   Tween = null
 
+var _modifier_reveal_dismiss: Array = []  # non-empty while waiting for tap/key on wheel reveal
+
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
 # ─────────────────────────────────────────────────────────────
 
 func _ready() -> void:
-	if DailyDungeonManager.vn_dungeon_id != "":
+	# VN dungeon_call (and similar) fade out via CheckerTransition but skip GameBoard,
+	# so uncover the screen here before building the map UI.
+	if CheckerTransition.is_screen_covered():
+		await CheckerTransition.fade_in()
+	if DailyDungeonManager.is_story_session():
 		_layout = DailyDungeonManager.get_layout(DailyDungeonManager.vn_dungeon_id)
 	else:
 		_layout = DailyDungeonManager.get_current_layout()
 	_build_ui()
 	# Play dungeon BGM if set in the layout
 	var bgm_path: String = str(_layout.get("dungeon_bgm", ""))
-	if not bgm_path.is_empty() and ResourceLoader.exists(bgm_path):
-		var bgm_player := AudioStreamPlayer.new()
-		bgm_player.stream = load(bgm_path)
-		if bgm_player.stream is AudioStreamMP3:
-			(bgm_player.stream as AudioStreamMP3).loop = true
-		add_child(bgm_player)
-		bgm_player.play()
+	if bgm_path.is_empty():
+		BGMManager.play_context(BGMManager.CONTEXT_DAILY_DUNGEON, 0.8, 0.8)
+	elif ResourceLoader.exists(bgm_path):
+		BGMManager.play_path(bgm_path, 0.8, 0.8, 100.0, BGMManager.CONTEXT_DAILY_DUNGEON)
 	_create_player_sprite()
 	var start_node: String = _find_player_start_node()
 	_place_player_on_node(start_node)
+	_select_node(start_node)
 	# Fade the overlay in, then check battle result
 	modulate.a = 0.0
 	var tw := create_tween()
@@ -97,10 +105,13 @@ func _ready() -> void:
 func _build_ui() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
-	# Semi-opaque dark overlay so main menu is dimmed behind
+	# Backdrop — dim main menu for daily overlay; solid fill for story root scene.
 	var backdrop := ColorRect.new()
 	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
-	backdrop.color = Color(0.0, 0.0, 0.0, 0.88)
+	if DailyDungeonManager.is_story_session():
+		backdrop.color = Color(0.04, 0.06, 0.12, 1.0)
+	else:
+		backdrop.color = Color(0.0, 0.0, 0.0, 0.88)
 	backdrop.mouse_filter = MOUSE_FILTER_IGNORE
 	add_child(backdrop)
 
@@ -143,10 +154,13 @@ func _build_header() -> void:
 	hbox.add_theme_constant_override("separation", 14)
 	header.add_child(hbox)
 
+	var is_story: bool = DailyDungeonManager.is_story_session()
+
 	var title_lbl := Label.new()
-	title_lbl.text = "DAILY DUNGEON"
+	title_lbl.text = "LIMBO" if is_story else "DAILY DUNGEON"
 	title_lbl.add_theme_font_size_override("font_size", 20)
-	title_lbl.add_theme_color_override("font_color", Color(1.0, 0.78, 0.30, 1.0))
+	title_lbl.add_theme_color_override("font_color",
+		Color(0.75, 0.85, 1.0, 1.0) if is_story else Color(1.0, 0.78, 0.30, 1.0))
 	title_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hbox.add_child(title_lbl)
 
@@ -164,25 +178,31 @@ func _build_header() -> void:
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	hbox.add_child(spacer)
 
-	# Active modifier badges
-	for mod_key: String in DailyDungeonManager.active_modifiers:
-		var is_pos: bool = DailyDungeonManager.is_modifier_positive(mod_key)
-		var badge := Label.new()
-		badge.text = "  " + DailyDungeonManager.get_modifier_label(mod_key) + "  "
-		badge.add_theme_font_size_override("font_size", 11)
-		badge.add_theme_color_override("font_color",
-			Color(0.25, 1.0, 0.50, 1.0) if is_pos else Color(1.0, 0.40, 0.30, 1.0))
-		badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		hbox.add_child(badge)
+	if is_story:
+		var exit_btn := Button.new()
+		exit_btn.text = "EXIT TO MAIN MENU"
+		exit_btn.custom_minimum_size = Vector2(170, 36)
+		exit_btn.add_theme_font_size_override("font_size", 12)
+		exit_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		exit_btn.pressed.connect(_on_exit_to_main_menu)
+		hbox.add_child(exit_btn)
+	elif not is_story:
+		var close_btn := Button.new()
+		close_btn.text = "CLOSE"
+		close_btn.custom_minimum_size = Vector2(110, 36)
+		close_btn.add_theme_font_size_override("font_size", 13)
+		close_btn.pressed.connect(func() -> void:
+			DailyDungeonManager.end_daily_session()
+			SaveManager.save_data()
+			BGMManager.play_context(BGMManager.CONTEXT_MAIN_MENU, 0.6, 0.6)
+			queue_free())
+		hbox.add_child(close_btn)
 
-	var close_btn := Button.new()
-	close_btn.text = "CLOSE"
-	close_btn.custom_minimum_size = Vector2(110, 36)
-	close_btn.add_theme_font_size_override("font_size", 13)
-	close_btn.pressed.connect(func() -> void:
-		SaveManager.save_data()
-		queue_free())
-	hbox.add_child(close_btn)
+func _on_exit_to_main_menu() -> void:
+	if _is_walking:
+		return
+	DailyDungeonManager.exit_story_to_main_menu(_player_node_id)
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 # ─────────────────────────────────────────────────────────────
 # Map canvas
@@ -417,13 +437,19 @@ func _build_detail_panel(parent: Control) -> void:
 	_detail_body_lbl.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	vbox.add_child(_detail_body_lbl)
 
+	_detail_modifier_box = VBoxContainer.new()
+	_detail_modifier_box.add_theme_constant_override("separation", 4)
+	_detail_modifier_box.visible = false
+	vbox.add_child(_detail_modifier_box)
+
 	_detail_reward_lbl = Label.new()
 	_detail_reward_lbl.add_theme_font_size_override("font_size", 14)
 	_detail_reward_lbl.add_theme_color_override("font_color", Color(1.0, 0.82, 0.30, 0.90))
 	vbox.add_child(_detail_reward_lbl)
 
-	# Active modifier list
-	if not DailyDungeonManager.active_modifiers.is_empty():
+	# Active modifier list (daily playlist summary only)
+	if not DailyDungeonManager.is_story_session() \
+			and not DailyDungeonManager.active_modifiers.is_empty():
 		var mod_div := ColorRect.new()
 		mod_div.custom_minimum_size = Vector2(0.0, 1.0)
 		mod_div.color = Color(1.0, 0.72, 0.22, 0.12)
@@ -462,6 +488,11 @@ func _on_node_clicked(node_id: String) -> void:
 	if _is_walking:
 		return
 	_stop_branch_highlight()
+	_select_node(node_id)
+
+func _select_node(node_id: String) -> void:
+	if node_id.is_empty() or _find_node(node_id).is_empty():
+		return
 	_selected_node_id = node_id
 	_update_detail()
 
@@ -520,7 +551,73 @@ func _update_detail() -> void:
 
 	_battle_btn.visible  = (status != "locked")
 	_battle_btn.disabled = false
-	_battle_btn.text     = "BATTLE"
+	_battle_btn.text = "BATTLE"
+	_refresh_detail_modifier_section(status)
+
+
+func _refresh_detail_modifier_section(status: String) -> void:
+	if _detail_modifier_box == null:
+		return
+	for child: Node in _detail_modifier_box.get_children():
+		_detail_modifier_box.remove_child(child)
+		child.queue_free()
+
+	if status == "locked":
+		_detail_modifier_box.visible = false
+		return
+
+	var mods: Array = DailyDungeonManager.get_dungeon_modifiers(
+		DailyDungeonManager.get_active_dungeon_id())
+	if not _has_displayable_modifiers(mods):
+		_detail_modifier_box.visible = false
+		return
+
+	_detail_modifier_box.visible = true
+
+	var header := Label.new()
+	header.text = "Dungeon Modifier"
+	header.add_theme_font_size_override("font_size", 11)
+	header.add_theme_color_override("font_color", Color(1.0, 0.78, 0.30, 0.72))
+	_detail_modifier_box.add_child(header)
+
+	for i: int in range(mods.size()):
+		var mod_key: String = str(mods[i])
+		if mod_key.strip_edges() == DailyDungeonManager.WHEEL_NO_EFFECT:
+			continue
+		var is_pos: bool = DailyDungeonManager.is_modifier_positive(mod_key)
+
+		var name_lbl := Label.new()
+		name_lbl.text = DailyDungeonManager.get_modifier_label(mod_key)
+		name_lbl.add_theme_font_size_override("font_size", 15)
+		name_lbl.add_theme_color_override("font_color",
+			Color(0.35, 1.0, 0.55, 0.90) if is_pos else Color(1.0, 0.45, 0.35, 0.90))
+		name_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
+		_detail_modifier_box.add_child(name_lbl)
+
+		var desc_lbl := Label.new()
+		desc_lbl.text = DailyDungeonManager.get_modifier_desc(mod_key)
+		desc_lbl.add_theme_font_size_override("font_size", 12)
+		desc_lbl.add_theme_color_override("font_color", Color(0.72, 0.68, 0.60, 0.82))
+		desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
+		_detail_modifier_box.add_child(desc_lbl)
+
+		var has_later: bool = false
+		for j: int in range(i + 1, mods.size()):
+			if str(mods[j]).strip_edges() != DailyDungeonManager.WHEEL_NO_EFFECT:
+				has_later = true
+				break
+		if has_later:
+			var gap := Control.new()
+			gap.custom_minimum_size = Vector2(0.0, 6.0)
+			_detail_modifier_box.add_child(gap)
+
+
+func _has_displayable_modifiers(mods: Array) -> bool:
+	for key: Variant in mods:
+		if str(key).strip_edges() != DailyDungeonManager.WHEEL_NO_EFFECT:
+			return true
+	return false
+
 
 # ─────────────────────────────────────────────────────────────
 # Battle
@@ -540,81 +637,164 @@ func _on_battle_pressed() -> void:
 	if _player_node_id != _selected_node_id:
 		_walk_to_then_battle(_player_node_id, _selected_node_id)
 	else:
-		DailyDungeonManager.player_map_node_id = _player_node_id
+		DailyDungeonManager.set_active_player_map_node(_player_node_id)
 		_launch_battle(nd)
 
-## Central launch point. When spin_wheel_remaining == 0 and modifiers are active,
-## dims the screen and shows a coloured modifier list before starting the battle.
+## Central launch point. Wheel nodes spin first; result reveal → battle.
 func _launch_battle(nd: Dictionary) -> void:
-	if DailyDungeonManager.spin_wheel_remaining == 0 \
-			and not DailyDungeonManager.active_modifiers.is_empty():
-		await _show_modifier_preview()
+	var spin_remaining: int = DailyDungeonManager.get_active_spin_remaining()
+	var needs_spin: bool = bool(nd.get("is_wheel_node", false)) and spin_remaining > 0
+	if needs_spin:
+		var outcome: String = await _run_spin_wheel(nd)
+		DailyDungeonManager.apply_wheel_outcome(outcome)
+		await _show_modifier_reveal(outcome)
+	elif spin_remaining == 0:
+		await _show_dungeon_modifiers_reveal()
 	DailyDungeonManager.start_node_battle(nd, self)
 
-## Full-screen dim + coloured modifier list → fades out → resolves.
-func _show_modifier_preview() -> void:
-	# Dim backdrop
+func _run_spin_wheel(nd: Dictionary) -> String:
+	var overlay: Control = _SpinWheelOverlayScript.new()
+	overlay.setup(DailyDungeonManager.get_wheel_outcome_pool(nd))
+	add_child(overlay)
+	return await overlay.finished
+
+## Reminder overlay when spin limit is spent — same presentation as post-spin reveal.
+func _show_dungeon_modifiers_reveal() -> void:
+	var mods: Array = DailyDungeonManager.get_dungeon_modifiers(
+		DailyDungeonManager.get_active_dungeon_id())
+	if mods.is_empty():
+		await _show_modifier_reveal(DailyDungeonManager.WHEEL_NO_EFFECT)
+		return
+	for mod_key: String in mods:
+		await _show_modifier_reveal(mod_key)
+
+## Full-screen dim + centred modifier text → tap to dismiss → fades out.
+func _show_modifier_reveal(mod_key: String) -> void:
 	var dim := ColorRect.new()
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.color = Color(0.0, 0.0, 0.0, 0.0)
 	dim.z_index = 80
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dim)
 
-	# Container for modifier labels
 	var vbox := VBoxContainer.new()
 	vbox.set_anchors_preset(Control.PRESET_CENTER)
-	vbox.offset_left   = -340.0
-	vbox.offset_right  =  340.0
-	vbox.offset_top    = -200.0
-	vbox.offset_bottom =  200.0
+	vbox.offset_left   = -440.0
+	vbox.offset_right  =  440.0
+	vbox.offset_top    = -160.0
+	vbox.offset_bottom =  160.0
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	vbox.add_theme_constant_override("separation", 6)
+	vbox.add_theme_constant_override("separation", 16)
 	vbox.z_index = 81
+	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(vbox)
 
-	var title := Label.new()
-	title.text = "ACTIVE MODIFIERS"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 15)
-	title.add_theme_color_override("font_color", Color(1.0, 0.85, 0.40, 0.0))
-	vbox.add_child(title)
+	var is_no_effect: bool = mod_key.strip_edges() == DailyDungeonManager.WHEEL_NO_EFFECT
 
-	var mod_labels: Array = [title]
-	for mod_key: String in DailyDungeonManager.active_modifiers:
-		var lbl := Label.new()
-		var is_pos: bool = DailyDungeonManager.is_modifier_positive(mod_key)
-		lbl.text = "%s — %s" % [
-			DailyDungeonManager.get_modifier_label(mod_key),
-			DailyDungeonManager.get_modifier_desc(mod_key)]
-		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		lbl.add_theme_font_size_override("font_size", 13)
-		lbl.add_theme_color_override("font_color",
-			Color(0.30, 1.0, 0.45, 0.0) if is_pos else Color(1.0, 0.38, 0.28, 0.0))
-		vbox.add_child(lbl)
-		mod_labels.append(lbl)
+	var header := Label.new()
+	header.text = "Dungeon Modifier"
+	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	header.add_theme_font_size_override("font_size", 26)
+	header.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+	header.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+	header.add_theme_constant_override("shadow_offset_x", 2)
+	header.add_theme_constant_override("shadow_offset_y", 2)
+	header.add_theme_constant_override("shadow_outline_size", 4)
+	header.modulate.a = 0.0
+	vbox.add_child(header)
 
-	# Fade in dim + labels
-	var tw_in := create_tween()
-	tw_in.set_parallel(true)
-	tw_in.tween_property(dim, "color:a", 0.72, 0.4)
-	for lbl_in: Label in mod_labels:
-		tw_in.tween_property(lbl_in, "modulate:a", 1.0, 0.45)
-	await tw_in.finished
+	var reveal_items: Array = [header]
+	if is_no_effect:
+		var face := TextureRect.new()
+		face.texture = JESTER_HAPPY_TEX
+		face.custom_minimum_size = Vector2(120.0, 120.0)
+		face.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		face.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		face.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		face.modulate.a = 0.0
+		vbox.add_child(face)
+		reveal_items.append(face)
+	else:
+		var title := Label.new()
+		title.text = DailyDungeonManager.get_modifier_label(mod_key)
+		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		title.add_theme_font_size_override("font_size", 40)
+		title.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+		title.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+		title.add_theme_constant_override("shadow_offset_x", 3)
+		title.add_theme_constant_override("shadow_offset_y", 3)
+		title.add_theme_constant_override("shadow_outline_size", 6)
+		title.modulate.a = 0.0
+		vbox.add_child(title)
+		reveal_items.append(title)
 
-	# Hold for 2 seconds
-	await get_tree().create_timer(2.0).timeout
+		var desc := Label.new()
+		desc.text = DailyDungeonManager.get_modifier_desc(mod_key)
+		desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		desc.add_theme_font_size_override("font_size", 22)
+		desc.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+		desc.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+		desc.add_theme_constant_override("shadow_offset_x", 2)
+		desc.add_theme_constant_override("shadow_offset_y", 2)
+		desc.add_theme_constant_override("shadow_outline_size", 4)
+		desc.modulate.a = 0.0
+		vbox.add_child(desc)
+		reveal_items.append(desc)
 
-	# Fade out
+	# 1) Dim + "Dungeon Modifier" header
+	var tw_header := create_tween()
+	tw_header.set_parallel(true)
+	tw_header.tween_property(dim, "color:a", 0.72, 0.4)
+	tw_header.tween_property(header, "modulate:a", 1.0, 0.45)
+	await tw_header.finished
+
+	# 2) Modifier name (+ description) fade in
+	var body_items: Array = reveal_items.slice(1)
+	if not body_items.is_empty():
+		SFXManager.play(SFXManager.SFX_MODIFIER_REVEAL)
+		var tw_body := create_tween()
+		tw_body.set_parallel(true)
+		for item: CanvasItem in body_items:
+			tw_body.tween_property(item, "modulate:a", 1.0, 0.45)
+		await tw_body.finished
+
+	# 3) Wait for click or any key, then fade everything out together
+	await _await_modifier_reveal_dismiss(dim)
+
 	var tw_out := create_tween()
 	tw_out.set_parallel(true)
-	tw_out.tween_property(dim, "color:a", 0.0, 0.4)
-	for lbl_out: Label in mod_labels:
-		tw_out.tween_property(lbl_out, "modulate:a", 0.0, 0.35)
+	tw_out.tween_property(dim, "color:a", 0.0, 0.35)
+	for item_out: CanvasItem in reveal_items:
+		tw_out.tween_property(item_out, "modulate:a", 0.0, 0.30)
 	await tw_out.finished
 
 	dim.queue_free()
 	vbox.queue_free()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if _modifier_reveal_dismiss.is_empty():
+		return
+	if event is InputEventKey and event.pressed and not event.echo:
+		_modifier_reveal_dismiss[0] = true
+
+func _await_modifier_reveal_dismiss(blocker: Control) -> void:
+	var dismissed := [false]
+	_modifier_reveal_dismiss = dismissed
+	blocker.gui_input.connect(func(ev: InputEvent) -> void:
+		if dismissed[0]:
+			return
+		var is_press: bool = (
+			(ev is InputEventMouseButton
+				and (ev as InputEventMouseButton).pressed
+				and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT)
+			or (ev is InputEventScreenTouch and (ev as InputEventScreenTouch).pressed))
+		if is_press:
+			dismissed[0] = true)
+	while not dismissed[0]:
+		await get_tree().process_frame
+	_modifier_reveal_dismiss = []
 
 func _walk_to_then_battle(from_id: String, to_id: String) -> void:
 	_stop_doubt_cycle()
@@ -643,7 +823,8 @@ func _walk_to_then_battle(from_id: String, to_id: String) -> void:
 		_player_node_id = to_id
 		_is_walking = false
 		var nd: Dictionary = _find_node(to_id)
-		DailyDungeonManager.player_map_node_id = to_id
+		DailyDungeonManager.set_player_map_node(
+			DailyDungeonManager.get_active_dungeon_id(), to_id)
 		_launch_battle(nd))
 
 func _show_deck_warning() -> void:
@@ -685,36 +866,36 @@ func _check_pending_result() -> void:
 	var node_id: String = result.get("node_id", "")
 	var won: bool       = result.get("won", false)
 
-	# VN dungeon loss → play vn_on_lose immediately (or stay for retry if not set)
-	if not won and DailyDungeonManager.vn_dungeon_on_lose != "":
-		var path: String = DailyDungeonManager.vn_dungeon_on_lose
-		_clear_vn_dungeon_state()
-		_play_vn_then_close(path)
-		return
+	# VN story dungeon loss → play on_lose VN, then leave the dungeon scene.
+	if not won and DailyDungeonManager.is_story_session():
+		var lose_path: String = DailyDungeonManager.vn_dungeon_on_lose
+		if lose_path != "":
+			DailyDungeonManager.end_story_session()
+			_play_vn_then_exit(lose_path)
+			return
 
-	# Capture VN state before any further state changes
-	var vid: String = DailyDungeonManager.vn_dungeon_id
-	var vow: String = DailyDungeonManager.vn_dungeon_on_win
+	# Capture story callbacks before any further state changes.
+	var vid: String = DailyDungeonManager.vn_dungeon_id if DailyDungeonManager.is_story_session() else ""
+	var vow: String = DailyDungeonManager.vn_dungeon_on_win if DailyDungeonManager.is_story_session() else ""
 
 	# The sprite should walk FROM where the player was BEFORE the battle
-	_pending_walk_from = DailyDungeonManager.player_map_node_id
+	_pending_walk_from = DailyDungeonManager.get_active_player_map_node()
 	_pending_walk_to   = node_id if won else ""
 
 	_populate_map_canvas()
 	if node_id != "":
-		_selected_node_id = node_id
-		_update_detail()
+		_select_node(node_id)
 
-	# VN dungeon win: check if dungeon is cleared → fire callback on Continue
+	# Story dungeon cleared → continue into win VN or main menu.
 	var on_continue_extra: Callable = Callable()
 	if won and vid != "" and DailyDungeonManager.is_dungeon_cleared(vid):
 		on_continue_extra = func() -> void:
-			_clear_vn_dungeon_state()
+			DailyDungeonManager.clear_story_dungeon_save(vid)
+			DailyDungeonManager.end_story_session()
 			if vow != "":
-				_play_vn_then_close(vow)
+				_play_vn_then_exit(vow)
 			else:
-				queue_free()
-				get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
+				get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 	_show_result_banner(won, node_id, on_continue_extra)
 
@@ -789,40 +970,36 @@ func _show_result_banner(won: bool, node_id: String, on_continue_extra: Callable
 	tw.tween_property(panel, "modulate:a", 1.0, 0.28)
 
 # ─────────────────────────────────────────────────────────────
-# VN dungeon helpers
+# Story session helpers
 # ─────────────────────────────────────────────────────────────
 
-func _clear_vn_dungeon_state() -> void:
-	DailyDungeonManager.vn_dungeon_id      = ""
-	DailyDungeonManager.vn_dungeon_on_win  = ""
-	DailyDungeonManager.vn_dungeon_on_lose = ""
-	SaveManager.save_data()
-
-func _play_vn_then_close(vn_path: String) -> void:
+func _play_vn_then_exit(vn_path: String) -> void:
 	var vn: Node = load("res://scenes/vn_player.tscn").instantiate()
-	add_child(vn)
+	get_tree().root.add_child(vn)
 	vn.play_scene(vn_path, func() -> void:
 		vn.queue_free()
-		queue_free())
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
 
 # ─────────────────────────────────────────────────────────────
 # Message dialog
 # ─────────────────────────────────────────────────────────────
 
+## Centred dim overlay + panel — shared by pre-battle and post-battle node messages.
 func _show_message_dialog(message: String, on_close: Callable) -> void:
 	var blocker := ColorRect.new()
-	blocker.color = Color(0.0, 0.0, 0.0, 0.50)
+	blocker.color = Color(0.0, 0.0, 0.0, 0.0)
 	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
 	blocker.z_index = 65
 	add_child(blocker)
 
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	blocker.add_child(center)
+
 	var panel := PanelContainer.new()
-	panel.anchor_left   = 0.15
-	panel.anchor_right  = 0.85
-	panel.anchor_top    = 0.0
-	panel.anchor_bottom = 0.0
-	panel.offset_top    = 20.0
+	panel.custom_minimum_size = Vector2(680.0, 0.0)
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.04, 0.06, 0.13, 0.97)
 	sb.border_color = Color(0.60, 0.82, 1.0, 0.65)
@@ -830,7 +1007,8 @@ func _show_message_dialog(message: String, on_close: Callable) -> void:
 	sb.set_corner_radius_all(8)
 	sb.set_content_margin_all(18.0)
 	panel.add_theme_stylebox_override("panel", sb)
-	blocker.add_child(panel)
+	panel.modulate.a = 0.0
+	center.add_child(panel)
 
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 14)
@@ -849,14 +1027,21 @@ func _show_message_dialog(message: String, on_close: Callable) -> void:
 	ok_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	ok_btn.add_theme_font_size_override("font_size", 14)
 	ok_btn.pressed.connect(func() -> void:
-		blocker.queue_free()
-		if on_close.is_valid():
-			on_close.call())
+		var tw_out := create_tween()
+		tw_out.set_parallel(true)
+		tw_out.tween_property(blocker, "color:a", 0.0, 0.22)
+		tw_out.tween_property(panel, "modulate:a", 0.0, 0.20)
+		tw_out.finished.connect(func() -> void:
+			blocker.queue_free()
+			if on_close.is_valid():
+				on_close.call()))
 	vbox.add_child(ok_btn)
 
-	panel.modulate.a = 0.0
-	var tw := create_tween()
-	tw.tween_property(panel, "modulate:a", 1.0, 0.20)
+	await get_tree().process_frame
+	var tw_in := create_tween()
+	tw_in.set_parallel(true)
+	tw_in.tween_property(blocker, "color:a", 0.50, 0.25)
+	tw_in.tween_property(panel, "modulate:a", 1.0, 0.22)
 
 # ─────────────────────────────────────────────────────────────
 # Helpers
@@ -970,7 +1155,7 @@ func _place_player_on_node(node_id: String) -> void:
 	if node_id.is_empty():
 		return
 	_player_node_id = node_id
-	DailyDungeonManager.player_map_node_id = node_id
+	DailyDungeonManager.set_active_player_map_node(node_id)
 	var np: Vector2 = _node_canvas_pos(node_id)
 	# Sprite anchor is centre; position sprite so feet touch the node centre
 	_player_sprite.position = np + Vector2(0.0, -_sprite_foot_y)
@@ -985,7 +1170,7 @@ func _update_shadow_pos(sprite_pos: Vector2) -> void:
 # Determines where the player starts when the map first opens.
 func _find_player_start_node() -> String:
 	# Prefer the persisted position from the last session / battle launch
-	var persisted: String = DailyDungeonManager.player_map_node_id
+	var persisted: String = DailyDungeonManager.get_active_player_map_node()
 	if not persisted.is_empty() and not _find_node(persisted).is_empty():
 		return persisted
 
@@ -1003,7 +1188,7 @@ func _find_player_start_node() -> String:
 		entry_id = nodes[0].get("id", "")
 
 	# BFS from entry — find the deepest cleared node (player's progress frontier)
-	var dungeon_id: String = DailyDungeonManager.get_current_dungeon_id()
+	var dungeon_id: String = DailyDungeonManager.get_active_dungeon_id()
 	var progress: Dictionary = DailyDungeonManager.node_progress.get(dungeon_id, {})
 	if progress.is_empty():
 		return entry_id
@@ -1064,7 +1249,7 @@ func _move_player_to(sprite_pos: Vector2) -> void:
 
 func _on_walk_arrived(node_id: String) -> void:
 	_player_node_id = node_id
-	DailyDungeonManager.player_map_node_id = node_id
+	DailyDungeonManager.set_active_player_map_node(node_id)
 	_is_walking = false
 	if _battle_btn:
 		_battle_btn.disabled = false

@@ -20,6 +20,8 @@ signal ability_choice_resolved(choice_index: int)
 signal awaiting_defender_choice(prompt: String, choices: Array)
 signal coin_flip_visual_requested(results: Array)
 signal coin_flip_visual_done
+signal ability_selection_done
+signal archbishop_redirect_resolved
 
 # Pending choices for async UI flows
 var _pending_trap_resolve: Callable
@@ -66,6 +68,26 @@ func start_turn(player_index: int) -> void:
 	# Clear per-turn state
 	_clear_turn_state(player_index)
 
+	# Dimensional Gate: destroy unions summoned under this modifier on the next turn start.
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "dimensional_gate" in GameState.active_dungeon_modifiers:
+		var _dg_pending: Array = DailyDungeonManager.pop_dimensional_gate_pending()
+		for _dg_entry: Variant in _dg_pending:
+			if _dg_entry is not Dictionary:
+				continue
+			var _dg_p: int = int((_dg_entry as Dictionary).get("player", -1))
+			var _dg_r: int = int((_dg_entry as Dictionary).get("row", -1))
+			var _dg_c: int = int((_dg_entry as Dictionary).get("col", -1))
+			if _dg_p < 0 or _dg_r < 0 or _dg_c < 0:
+				continue
+			var _dg_card: GameState.CardInstance = GameState.get_card(_dg_p, _dg_r, _dg_c)
+			if _dg_card.card_type != "character" or not _dg_card.is_union:
+				continue
+			GameState.post_message(
+				"Dimensional Gate: %s is pulled back through the gate!" % _dg_card.display_name)
+			CardRuleEngine.deactivate_rules_for(_dg_card)
+			GameState.destroy_card(_dg_p, _dg_r, _dg_c, false)
+
 	# Clear Force Shield on this player's own cards.
 	# Shield granted during player X's turn lasts through the opponent's next turn
 	# and expires at the start of player X's following turn.
@@ -82,6 +104,10 @@ func start_turn(player_index: int) -> void:
 			match _ts_card.ability_type:
 				CharacterData.AbilityType.TEMP_ATK_BOOST_OWN_TURN_START:
 					_ts_card.temp_atk_bonus += _ts_card.ability_params.get("atk", 5)
+				CharacterData.AbilityType.TURN_START_REVEAL_OPPONENT_CELL:
+					emit_signal("awaiting_target_selection",
+						"%s: Choose 1 opponent cell to reveal." % _ts_card.card_name,
+						"ability_false_prophet_reveal")
 				CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG:
 					# Plant 29: automatically select random face-up opponent card, coin flip → venom/mutagen
 					var _ts_opp: int = GameState.get_opponent(player_index)
@@ -95,8 +121,7 @@ func start_turn(player_index: int) -> void:
 								_ts_target.flags.append("venom")
 							GameState.post_message("%s: Heads! Venom on %s." % [_ts_card.card_name, _ts_target.card_name])
 						else:
-							if "mutagen" not in _ts_target.flags:
-								_ts_target.flags.append("mutagen")
+							GameState.apply_mutagen_flag(_ts_target)
 							GameState.post_message("%s: Tails! Mutagen on %s." % [_ts_card.card_name, _ts_target.card_name])
 
 	# Handle skip turn (Ceasefire)
@@ -142,7 +167,13 @@ func _start_attack_mode(player: int) -> void:
 	emit_signal("attack_phase_started", player, GameState.attacks_remaining)
 	GameState.post_message("Player %d: tap a character to attack." % (player + 1))
 
+func _battle_aborted() -> bool:
+	return GameState.current_phase == GameState.Phase.GAME_OVER
+
+
 func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
+	if _battle_aborted():
+		return
 	var player := GameState.current_player
 	var opponent := GameState.get_opponent(player)
 
@@ -166,6 +197,14 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 		return
 	if attacker.cannot_attack_until >= GameState.turn_number:
 		GameState.post_message("%s cannot attack yet." % attacker.card_name)
+		emit_signal("attack_aborted")
+		return
+
+	if GameState.attack_cost_block_player == player \
+			and GameState.attack_cost_block_max >= 0 \
+			and attacker.crystal_cost <= GameState.attack_cost_block_max:
+		GameState.post_message(
+			"Decoy Puppet: Units costing %d or less cannot attack this turn." % GameState.attack_cost_block_max)
 		emit_signal("attack_aborted")
 		return
 
@@ -365,10 +404,14 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	if not result.coin_flip_results.is_empty():
 		emit_signal("coin_flip_visual_requested", result.coin_flip_results)
 		await coin_flip_visual_done
+		if _battle_aborted():
+			return
 
 	# Signal the overlay to update its animation to match the final result, then resume
 	emit_signal("battle_result_finalized", result)
 	await battle_preview_done
+	if _battle_aborted():
+		return
 
 	# Handle trap special triggers
 	if result.special_trigger == "trap_effect":
@@ -380,6 +423,17 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 		GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 	else:
 		if defender.card_type == "dead_end":
+			if GameState.guerrilla_tactics_owner == opponent:
+				var _gt_cf: Array = await _do_coin_flips(1)
+				GameState.post_message("Guerrilla Tactics: %s." % ("Heads" if _gt_cf[0] else "Tails"))
+				if _gt_cf[0]:
+					GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
+					await crystal_animation_done
+					GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
+					GameState.post_message("Guerrilla Tactics: %s destroyed!" % attacker.card_name)
+					if not _battle_aborted():
+						GameState.set_phase(GameState.Phase.MODE_SELECT)
+					return
 			# Blank slot hit — destroy directly, skip battle resolution (nothing to resolve)
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
 			# Dungeon: Mining Tax and Hard Bang on dead-end attacks
@@ -403,6 +457,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 				{"source_player": player, "attacker": attacker, "defender": defender})
 
 			await _apply_battle_result(result, player, opponent, attacker_pos, target_pos, attacker, defender)
+			if _battle_aborted():
+				return
 
 			# Fire exposed-card trigger if defender was already revealed
 			if result.defender_was_exposed:
@@ -438,6 +494,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 
 	# Post-battle ability effects — must run before modifying attacked_this_turn
 	var _pb_extra: int = await _apply_post_battle_effects(result, player, opponent, attacker, defender, attacker_pos, target_pos)
+	if _battle_aborted():
+		return
 
 	emit_signal("attack_completed", attacker_pos, target_pos, result)
 
@@ -481,9 +539,12 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 			GameState.post_message("Siege Cannon: Defender destroyed!")
 
 	# Return to active turn — player may continue attacking with other characters
-	GameState.set_phase(GameState.Phase.MODE_SELECT)
+	if not _battle_aborted():
+		GameState.set_phase(GameState.Phase.MODE_SELECT)
 
 func end_attacks_early() -> void:
+	if _battle_aborted():
+		return
 	var player := GameState.current_player
 	if GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]:
 		GameState.post_message("Player %d ends their turn." % (player + 1))
@@ -500,7 +561,7 @@ func play_tech_card(tech_name: String) -> void:
 	if GameState.current_phase != GameState.Phase.MODE_SELECT:
 		return
 
-	var data: TechCardData = CardDatabase.get_tech(tech_name)
+	var data = CardDatabase.get_tech(tech_name) as TechCardData
 	if data == null:
 		GameState.post_message("Unknown Tech Card: %s" % tech_name)
 		return
@@ -577,7 +638,9 @@ func play_tech_card(tech_name: String) -> void:
 		TechCardData.TechEffectType.BOTH_SKIP_TURN:
 			GameState.skip_next_turn[0] = true
 			GameState.skip_next_turn[1] = true
-			GameState.post_message("Ceasefire! Both players skip their next turn.")
+			GameState.skip_counts[0] += 1
+			GameState.skip_counts[1] += 1
+			GameState.post_message("Ceasefire! Both players skip their next turn (attack tax applies).")
 			_end_turn(player)
 			return
 
@@ -599,6 +662,17 @@ func play_tech_card(tech_name: String) -> void:
 
 		TechCardData.TechEffectType.DESTROY_ROW_OR_COLUMN:
 			emit_signal("awaiting_target_selection", "Rift Strike: Choose a row or column.", "row_or_column")
+
+		TechCardData.TechEffectType.DESTROY_ROW_AROUND_TARGET:
+			emit_signal("awaiting_target_selection",
+				"Rift Strike: Choose 1 face-up opponent character.", "rift_strike_anchor")
+
+		TechCardData.TechEffectType.GUERRILLA_TACTICS:
+			GameState.guerrilla_tactics_owner = player
+			GameState.post_message(
+				"Guerrilla Tactics active until end of opponent's turn — dead-end attacks may backfire.")
+			after_tech_resolved(player)
+			return
 
 		TechCardData.TechEffectType.REVEAL_ALL_OWN_CHARACTERS:
 			_reveal_all_own(player)
@@ -644,7 +718,7 @@ func play_tech_card(tech_name: String) -> void:
 			emit_signal("awaiting_target_selection", "Berserk: Choose 1 face-up character.", "own_faceup_character_berserk")
 
 		TechCardData.TechEffectType.REVEAL_OWN_AND_OPPONENT_REVEALS:
-			emit_signal("awaiting_target_selection", "Diplomacy Party: Choose 1 of your face-down characters.", "own_facedown_character")
+			emit_signal("awaiting_target_selection", "Choose 1 of your face-down characters.", "own_facedown_character")
 
 		TechCardData.TechEffectType.MOVE_BUFFS_BETWEEN_CHARACTERS:
 			emit_signal("awaiting_target_selection", "Essence Transfer: Choose source character.", "own_faceup_character_source")
@@ -693,8 +767,17 @@ func play_tech_card(tech_name: String) -> void:
 			return
 
 		TechCardData.TechEffectType.TEMP_REROLL_DICE:
-			GameState.reroll_dice_available[player] = true
-			GameState.post_message("Lucky Break: You may re-roll the dice once before your next attack.")
+			if data.effect_params.has("coin_reward"):
+				var _ld_r: Array = await _do_coin_flips(1)
+				if _ld_r[0]:
+					var _reward: int = int(data.effect_params.get("coin_reward", 600))
+					GameState.gain_crystals(player, _reward, "tech")
+					GameState.post_message("%s: Heads! Gained %d Crystals." % [data.card_name, _reward])
+				else:
+					GameState.post_message("%s: Tails — no Crystals gained." % data.card_name)
+			else:
+				GameState.reroll_dice_available[player] = true
+				GameState.post_message("Lucky Break: You may re-roll the dice once before your next attack.")
 			after_tech_resolved(player)
 			return
 
@@ -707,15 +790,23 @@ func play_tech_card(tech_name: String) -> void:
 # ─────────────────────────────────────────────────────────────
 func _resolve_arcane_nova(player: int) -> void:
 	var opponent := GameState.get_opponent(player)
+	var limit: int = int(CardDatabase.get_tech("Arcane Nova").effect_params.get("count", 5)) \
+		if CardDatabase.get_tech("Arcane Nova") else 5
+	var destroyed: int = 0
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
+			if destroyed >= limit:
+				break
 			var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 			if card.card_type == "character" and card.face_up:
-				GameState.destroy_card(opponent, r, c)
+				GameState.destroy_card(opponent, r, c, false)
+				destroyed += 1
 				await crystal_animation_done
-	# Discard all own tech
+		if destroyed >= limit:
+			break
 	GameState.tech_hands[player].clear()
-	GameState.post_message("Arcane Nova! All revealed opponent characters destroyed. Your Tech Cards discarded.")
+	GameState.post_message(
+		"Arcane Nova! %d opponent unit(s) destroyed. Your Tech Cards discarded." % destroyed)
 	after_tech_resolved(player)
 
 func _reveal_all_own(player: int) -> void:
@@ -756,9 +847,26 @@ func _apply_battle_result(
 		attacker: GameState.CardInstance,
 		defender: GameState.CardInstance
 ) -> void:
+	if _battle_aborted():
+		return
 	if result.attacker_crystal_loss > 0:
 		GameState.lose_crystals(player, result.attacker_crystal_loss, "battle")
 		await crystal_animation_done
+		if _battle_aborted():
+			return
+
+	# Archbishop redirect — defer defender crystal loss; redirect target pays on destroy.
+	if result.defender_destroyed and defender.card_type == "character" \
+			and defender.ability_type == CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY \
+			and _has_archbishop_redirect_target(opponent, target_pos):
+		emit_signal("awaiting_target_selection",
+			"Archbishop: Destroy 1 other Divine Character instead?",
+			"own_divine_character_redirect")
+		await archbishop_redirect_resolved
+		result.defender_destroyed = false
+		result.defender_crystal_loss = 0
+		return
+
 	if result.defender_crystal_loss > 0:
 		# Divine Protection
 		if defender.card_type == "character" and GameState.divine_protection_active[opponent]:
@@ -773,6 +881,8 @@ func _apply_battle_result(
 		else:
 			GameState.lose_crystals(opponent, result.defender_crystal_loss, "battle")
 			await crystal_animation_done
+		if _battle_aborted():
+			return
 
 	if result.attacker_crystal_gain > 0:
 		GameState.gain_crystals(player, result.attacker_crystal_gain, "battle")
@@ -805,14 +915,6 @@ func _apply_battle_result(
 						_sac_found = true
 						break
 
-	# Archbishop redirect
-	if result.defender_destroyed:
-		if defender.ability_type == CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY:
-			emit_signal("awaiting_target_selection",
-				"Archbishop: Destroy 1 other Divine Character instead?",
-				"own_divine_character_redirect")
-			return  # Will be resolved by UI callback
-
 	if result.attacker_destroyed:
 		GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 	if result.defender_destroyed:
@@ -838,12 +940,28 @@ func resolve_trap_self_destruct(player: int, target_pos: Vector2i) -> void:
 	_pending_trap_self_destruct_boost = 0
 	_pending_trap_self_destruct_player = -1
 
+func complete_archbishop_redirect() -> void:
+	emit_signal("archbishop_redirect_resolved")
+
+static func _has_archbishop_redirect_target(opponent: int, exclude_pos: Vector2i) -> bool:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			if Vector2i(r, c) == exclude_pos:
+				continue
+			var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+			if card.card_type == "character" and card.face_up \
+					and card.affinity == CharacterData.Affinity.DIVINE \
+					and card.ability_type != CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY:
+				return true
+	return false
+
 func resolve_archbishop_redirect(player: int, redirect_pos: Vector2i, original_defender_pos: Vector2i) -> void:
 	# Player chose to destroy another Divine instead
 	GameState.destroy_card(player, redirect_pos.x, redirect_pos.y)
 	await crystal_animation_done
 	# Defender (Archbishop) survives, so no blank placed at original_defender_pos
 	GameState.post_message("Archbishop redirected destruction to another card.")
+	complete_archbishop_redirect()
 
 # ─────────────────────────────────────────────────────────────
 # Trap effect resolution (async)
@@ -856,7 +974,7 @@ func _handle_trap_effect(
 		player: int,
 		opponent: int
 ) -> void:
-	var trap_data: TrapData = params.get("trap_data", null)
+	var trap_data = params.get("trap_data") as TrapData
 	if trap_data == null:
 		return
 
@@ -977,7 +1095,23 @@ func _handle_trap_effect(
 			var amount: int = trap_data.effect_params.get("amount", 800)
 			GameState.lose_crystals(player, amount, "trap")
 			await crystal_animation_done
-			GameState.post_message("%s: Player %d loses %d Crystals!" % [trap_data.card_name, player + 1, amount])
+			if trap_data.effect_params.get("transfer_to_defender", false):
+				GameState.gain_crystals(opponent, amount, "trap")
+				GameState.post_message(
+					"%s: Player %d loses %d Crystals; defender gains %d!" % [
+						trap_data.card_name, player + 1, amount, amount])
+			else:
+				GameState.post_message("%s: Player %d loses %d Crystals!" % [trap_data.card_name, player + 1, amount])
+
+		TrapData.TrapEffectType.CANCEL_ATTACKER_ATTACK:
+			var _dp_max: int = int(trap_data.effect_params.get("max_attack_cost", -1))
+			if _dp_max >= 0:
+				GameState.attack_cost_block_player = player
+				GameState.attack_cost_block_max = _dp_max
+				GameState.post_message(
+					"%s: Foe cannot attack with units costing %d or less this turn!" % [trap_data.card_name, _dp_max])
+			else:
+				GameState.post_message("%s: %s's attack is cancelled!" % [trap_data.card_name, attacker.card_name])
 
 		TrapData.TrapEffectType.SWAP_ARMORED_NATURE:
 			emit_signal("awaiting_target_selection",
@@ -1025,9 +1159,6 @@ func _handle_trap_effect(
 			attacker.temp_def_bonus = _sw_eff_atk - attacker.current_def
 			GameState.post_message("%s: %s's ATK and DEF swapped until end of turn!" % [trap_data.card_name, attacker.card_name])
 
-		TrapData.TrapEffectType.CANCEL_ATTACKER_ATTACK:
-			GameState.post_message("%s: %s's attack is cancelled!" % [trap_data.card_name, attacker.card_name])
-
 		TrapData.TrapEffectType.DESTROY_ATTACKER_DEFENDER_PAYS:
 			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await crystal_animation_done
@@ -1049,10 +1180,20 @@ func _handle_trap_effect(
 			GameState.post_message("%s: All of Player %d's characters -%d ATK this turn!" % [trap_data.card_name, player + 1, _tda_amount])
 
 		TrapData.TrapEffectType.TEMP_DEF_BOOST_ONE_OWN:
-			_pending_trap_def_boost = trap_data.effect_params.get("def", 10)
-			emit_signal("awaiting_target_selection",
-				"%s: Choose 1 of your characters for +%d DEF this turn." % [trap_data.card_name, _pending_trap_def_boost],
-				"own_faceup_for_trap_temp_def_boost")
+			var _td_def: int = trap_data.effect_params.get("def", 10)
+			if trap_data.effect_params.get("all_own_units", false):
+				for _td_r: int in range(GameState.GRID_SIZE):
+					for _td_c: int in range(GameState.GRID_SIZE):
+						var _td_card: GameState.CardInstance = GameState.get_card(opponent, _td_r, _td_c)
+						if _td_card.card_type == "character":
+							_td_card.temp_def_bonus += _td_def
+				GameState.post_message(
+					"%s: All your units gain +%d DEF in Reckoning this turn!" % [trap_data.card_name, _td_def])
+			else:
+				_pending_trap_def_boost = _td_def
+				emit_signal("awaiting_target_selection",
+					"%s: Choose 1 of your characters for +%d DEF this turn." % [trap_data.card_name, _pending_trap_def_boost],
+					"own_faceup_for_trap_temp_def_boost")
 
 		TrapData.TrapEffectType.COIN_FLIP_2_ATK_DEBUFF:
 			var _cf2d_amount: int = trap_data.effect_params.get("amount", 10)
@@ -1105,11 +1246,40 @@ func _handle_trap_effect(
 # ─────────────────────────────────────────────────────────────
 # End Turn
 # ─────────────────────────────────────────────────────────────
+func _blast_adjacent_foe_faceup(opponent: int, row: int, col: int) -> void:
+	var deltas: Array = [Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(0, 1)]
+	for d: Vector2i in deltas:
+		var ar: int = row + d.x
+		var ac: int = col + d.y
+		if ar < 0 or ar >= GameState.GRID_SIZE or ac < 0 or ac >= GameState.GRID_SIZE:
+			continue
+		var foe: GameState.CardInstance = GameState.get_card(opponent, ar, ac)
+		if foe.card_type == "character" and foe.face_up:
+			GameState.destroy_card(opponent, ar, ac, true)
+			GameState.post_message("Adjacent blast destroyed %s!" % foe.card_name)
+
+
 func end_turn(player: int) -> void:
 	_end_turn(player)
 
 func _end_turn(player: int) -> void:
-	# Fire TURN_END triggers before clearing state
+	# Clear Guerrilla Tactics after the opponent's turn ends.
+	var _gt_owner: int = GameState.guerrilla_tactics_owner
+	if _gt_owner >= 0 and player == GameState.get_opponent(_gt_owner):
+		GameState.guerrilla_tactics_owner = -1
+
+	# Clear Decoy Puppet attack-cost block at end of blocked player's turn.
+	if GameState.attack_cost_block_player == player:
+		GameState.attack_cost_block_player = -1
+		GameState.attack_cost_block_max = -1
+	# Destroy Arcane Duplication tokens flagged for end-of-turn cleanup.
+	for _tok_p: int in range(2):
+		for _tok_r: int in range(GameState.GRID_SIZE):
+			for _tok_c: int in range(GameState.GRID_SIZE):
+				var _tok: GameState.CardInstance = GameState.get_card(_tok_p, _tok_r, _tok_c)
+				if _tok.is_token and "destroy_at_turn_end" in _tok.flags:
+					GameState.destroy_card(_tok_p, _tok_r, _tok_c, false)
+					GameState.post_message("Arcane Duplication token fades away.")
 	CardRuleEngine.emit_trigger(CardRule.TriggerType.TURN_END_OWNER,
 		{"source_player": player})
 	CardRuleEngine.emit_trigger(CardRule.TriggerType.TURN_END_OPPONENT,
@@ -1119,6 +1289,24 @@ func _end_turn(player: int) -> void:
 	CardRuleEngine.emit_trigger(CardRule.TriggerType.TURN_END_OPPONENT_NTH,
 		{"source_player": GameState.get_opponent(player)})
 	CardRuleEngine.tick_turn_end(player)
+
+	# Rebel King: when this player ends their turn, they swap ATK/DEF on one own card
+	var _rk_opp: int = GameState.get_opponent(player)
+	var _rebel_king_active: bool = false
+	for _rk_r: int in range(GameState.GRID_SIZE):
+		for _rk_c: int in range(GameState.GRID_SIZE):
+			var _rk: GameState.CardInstance = GameState.get_card(_rk_opp, _rk_r, _rk_c)
+			if _rk.card_type == "character" and _rk.face_up and _rk.is_union \
+					and _rk.ability_type == CharacterData.AbilityType.OPPONENT_TURN_END_SWAP_ATK_DEF:
+				_rebel_king_active = true
+				break
+		if _rebel_king_active:
+			break
+	if _rebel_king_active:
+		emit_signal("awaiting_target_selection",
+			"Rebel King: Choose 1 of your face-up characters to swap ATK & DEF.",
+			"ability_rebel_king_swap")
+		await ability_selection_done
 
 	# Turn-end per-card effects (current player's cards)
 	var _opp_end: int = GameState.get_opponent(player)
@@ -1140,6 +1328,10 @@ func _end_turn(player: int) -> void:
 						var _cf_def: int = _te_card.ability_params.get("def", 10)
 						_te_card.current_def += _cf_def
 						GameState.post_message("%s: Tails! +%d DEF permanently." % [_te_card.card_name, _cf_def])
+				CharacterData.AbilityType.DESTROY_END_TURN_BLAST_ADJACENT:
+					_blast_adjacent_foe_faceup(_opp_end, _te_r, _te_c)
+					GameState.post_message("%s self-destructs at end of turn!" % _te_card.card_name)
+					GameState.destroy_card(player, _te_r, _te_c, false)
 				CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN:
 					# Automatically pick a random face-up opponent card and apply venom
 					var _venom_targets: Array = GameState.get_all_face_up_characters(_opp_end)
@@ -1350,6 +1542,43 @@ func _apply_post_battle_effects(
 			if not result.attacker_destroyed:
 				GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 				GameState.post_message("%s: self-destroyed after battle (no crystal loss)!" % attacker.card_name)
+
+		CharacterData.AbilityType.CRYSTAL_GAIN_ON_DESTROY:
+			if result.defender_destroyed and defender.card_type == "character":
+				var _cgd: int = attacker.ability_params.get("amount", 80)
+				GameState.gain_crystals(player, _cgd, "ability")
+				GameState.post_message("%s: +%d Crystals for destroying %s!" % [
+					attacker.card_name, _cgd, defender.card_name])
+
+		CharacterData.AbilityType.PERM_ATK_BOOST_ONCE_PER_AFFINITY:
+			if not result.attacker_destroyed and defender.card_type == "character":
+				var _req_aff: int = attacker.ability_params.get("affinity", -1)
+				if _req_aff == -1 or defender.affinity != _req_aff:
+					var _aff_key: String = "perm_atk_aff_%d" % defender.affinity
+					if _aff_key not in attacker.flags:
+						attacker.flags.append(_aff_key)
+						var _pa_gain: int = attacker.ability_params.get("atk", 50)
+						attacker.current_atk += _pa_gain
+						GameState.post_message("%s: +%d ATK permanently vs %s!" % [
+							attacker.card_name, _pa_gain,
+							CharacterData.Affinity.keys()[defender.affinity]])
+
+		CharacterData.AbilityType.PERM_STAT_PENALTY_VS_NON_AFFINITY:
+			if defender.card_type == "character":
+				var _pen_aff: int = attacker.ability_params.get("affinity", -1)
+				if _pen_aff == -1 or defender.affinity != _pen_aff:
+					var _patk: int = attacker.ability_params.get("atk", 10)
+					var _pdef: int = attacker.ability_params.get("def", 10)
+					attacker.current_atk = max(0, attacker.current_atk - _patk)
+					attacker.current_def = max(0, attacker.current_def - _pdef)
+					GameState.post_message("%s: -%d ATK & -%d DEF permanently (non-%s battle)." % [
+						attacker.card_name, _patk, _pdef, CharacterData.Affinity.keys()[_pen_aff]])
+
+		CharacterData.AbilityType.POST_BATTLE_COIN_FLIP_DESTROY:
+			if not result.attacker_destroyed:
+				emit_signal("awaiting_target_selection",
+					"%s: Choose 1 opponent character to flip a coin on." % attacker.card_name,
+					"opponent_character_ability_destroy")
 
 		CharacterData.AbilityType.GAIN_HALF_STATS_ON_SURVIVE:
 			if not result.attacker_destroyed and defender.card_type == "character":

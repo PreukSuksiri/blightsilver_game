@@ -226,7 +226,7 @@
 	{
 		"key": "dimensional_gate",
 		"label": "Dimensional Gate",
-		"description": "Union summons cost -50% crystals.",
+		"description": "Union summons cost -50% crystals. Summoned unions are destroyed at the start of the next turn.",
 		"positive": true,
 		"implemented": true
 	},
