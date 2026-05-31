@@ -1,0 +1,294 @@
+=== Battle of Roundabout Third Exit ===
+Battle started: 2026-05-31 16:04:06.777
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Big Thug
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Big Thug
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Accident, Release Mutagen
+P1 Tech hand: War Supply, Bribe, Spy
+P0:   [C:Vile][  — ][C:Void][  — ][T:Red ]
+      [C:Foul][C:Swar][C:Flam][C:Gian][C:Echo]
+      [T:Deco][  — ][C:Big ][  — ][C:Pit ]
+      [C:Tomb][  — ][C:Ostr][  — ][T:Host]
+      [T:Self][  — ][C:Aray][T:Stre][C:Scar]
+P1:   [C:Meph][C:Flam][T:Host][C:Fuji][C:Dark]
+      [C:Soni][  — ][T:Red ][  — ][T:Blac]
+      [C:Pony][  — ][C:Chao][  — ][T:Flam]
+      [C:Deat][  — ][  — ][  — ][T:Echo]
+      [C:Saw ][C:Stre][C:Claw][C:Nept][C:Ice ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:07.307] Crystals: P0 5000 → 4950 (-50)  [skip tax]
+[00:07.309] MSG: AI Player 0 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:08.690] Turn ended  P0  |  Crystals P0=4950 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4950 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:09.287] Mode selected P1: TECH
+[00:09.596] Tech played  P1: "Spy"
+[00:11.158] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:11.562] AI1 target chosen: (2,4)
+[00:11.609] Revealed: P0 (2,4) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:11.616] Tech resolved  P1
+[00:12.497] Mode selected P1: ATTACK
+[00:12.502] Attack phase P1: 2 attack(s) available
+[00:12.503] MSG: Player 2: tap a character to attack.
+[00:12.795] AI1 attack decision: (0,0)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down} → (0,4) "Red Card" {cost 0}
+[00:13.129] Revealed: P1 (0,0) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[00:13.152] Revealed: P0 (0,4) "Red Card" {cost 0}
+[00:13.152] Dice rolled: 2
+[00:13.379] MSG: Trap triggered: Red Card!
+[00:17.527] Coin flip: Heads, Heads
+[00:20.287] MSG: Red Card: Heads, Heads.
+[00:20.287] MSG: Both heads! Mephisto the Fallen cannot attack next turn!
+[00:20.295] Trap: "Red Card" triggered  P1(0,0)→P0(0,4)
+[00:20.296] Anim: 3D  (attacker survives)
+[00:20.788] Mode selected P1: ATTACK
+[00:20.792] Attack phase P1: 1 attack(s) available
+[00:20.792] MSG: Player 2: tap a character to attack.
+[00:21.087] AI1 attack decision: (0,1)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down} → (3,1) (dead-end)
+[00:21.420] Revealed: P1 (0,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:21.421] Dice rolled: 2
+[00:21.432] MSG: Nothing happens — Dead End.
+[00:24.780] Attack P1(0,1)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P0(3,1)(empty)  Dice=2  → DEAD_END
+[00:24.780] Anim: 3F  (blank slot)
+[00:25.283] Turn ended  P1  |  Crystals P0=4950 P1=5000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4950 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][Pit ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Meph][Flam][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:25.882] Mode selected P0: TECH
+[00:26.176] Crystals: P0 4950 → 3950 (-1000)  [tech cost]
+[00:27.539] Tech played  P0: "Accident"
+[00:29.100] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:29.507] AI0 target chosen: (0,0)
+[00:29.511] Card destroyed  P1 (0,0) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | cannot-atk≤T3}
+[00:29.516] Tech resolved  P0
+[00:30.426] Mode selected P0: ATTACK
+[00:30.432] Attack phase P0: 2 attack(s) available
+[00:30.432] MSG: Player 1: tap a character to attack.
+[00:30.732] AI0 attack decision: (2,4)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → (0,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:31.041] Dice rolled: 2
+[00:31.052] MSG: Pit Lord is destroyed by Divine!
+[00:36.656] Crystals: P0 3950 → 2700 (-1250)  [battle]
+[00:38.045] Crystals: P1 5000 → 4500 (-500)  [battle]
+[00:39.439] Attack P0(2,4)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → P1(0,1)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=2  ATK=120 vs DEF=10  → TIE
+[00:39.439] Anim: 3C  △ P0(2,4) + △ P1(0,1)
+[00:39.439] Card destroyed  P0 (2,4) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:39.439] Card destroyed  P1 (0,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:41.939] Turn ended  P0  |  Crystals P0=2700 P1=4500
+
+--- Turn 4  |  Player 1  |  Crystals P0=2700 P1=4500 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:42.537] Mode selected P1: TECH
+[00:42.846] Tech played  P1: "Bribe"
+[00:44.394] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:44.895] MSG: Bribe: AI passed.
+[00:44.897] Tech resolved  P1
+[00:45.794] Mode selected P1: ATTACK
+[00:45.800] Attack phase P1: 2 attack(s) available
+[00:45.800] MSG: Player 2: tap a character to attack.
+[00:46.090] AI1 attack decision: (0,3)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down} → (0,0) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio | face-down}
+[00:46.436] Revealed: P1 (0,3) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:46.460] Revealed: P0 (0,0) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[00:46.460] Dice rolled: 5
+[00:46.464] MSG: Fujin wins!
+[00:51.132] Crystals: P0 2700 → 2500 (-200)  [battle]
+[00:52.530] Attack P1(0,3)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P0(0,0)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=5  ATK=35 vs DEF=30  → WIN
+[00:52.530] Anim: 3A  △ P0(0,0)
+[00:52.530] Card destroyed  P0 (0,0) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[00:53.024] Mode selected P1: ATTACK
+[00:53.033] Attack phase P1: 1 attack(s) available
+[00:53.033] MSG: Player 2: tap a character to attack.
+[00:53.324] AI1 attack decision: (0,4)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down} → (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down}
+[00:53.675] Revealed: P1 (0,4) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[00:53.703] Revealed: P0 (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:53.704] Dice rolled: 4
+[00:58.420] Crystals: P1 4500 → 4250 (-250)  [battle]
+[00:59.829] Attack P1(0,4)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos} → P0(2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=4  ATK=25 vs DEF=35  → LOSE
+[00:59.829] Anim: 3B  △ P1(0,4)
+[00:59.829] Card destroyed  P1 (0,4) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[00:59.830] MSG: Dark Tengu: Self ATK debuff applied.
+[01:00.319] Turn ended  P1  |  Crystals P0=2500 P1=4250
+
+--- Turn 5  |  Player 0  |  Crystals P0=2500 P1=4250 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][Big ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][Fuji][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:00.920] Mode selected P0: ATTACK
+[01:00.926] Attack phase P0: 2 attack(s) available
+[01:00.926] MSG: Player 1: tap a character to attack.
+[01:01.216] AI0 attack decision: (2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → (0,3) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[01:01.516] Dice rolled: 3
+[01:01.526] MSG: Both cards are destroyed!
+[01:06.125] Crystals: P0 2500 → 2100 (-400)  [battle]
+[01:07.515] Crystals: P1 4250 → 3800 (-450)  [battle]
+[01:08.906] Attack P0(2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(0,3)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=3  ATK=40 vs DEF=40  → TIE
+[01:08.906] Anim: 3C  △ P0(2,2) + △ P1(0,3)
+[01:08.906] Card destroyed  P0 (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:08.906] Card destroyed  P1 (0,3) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[01:09.407] Mode selected P0: ATTACK
+[01:09.409] Attack phase P0: 1 attack(s) available
+[01:09.409] MSG: Player 1: tap a character to attack.
+[01:09.700] AI0 attack decision: (1,3)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down} → (0,2) "Hostage" {cost 200}
+[01:10.038] Revealed: P0 (1,3) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[01:10.055] Revealed: P1 (0,2) "Hostage" {cost 200}
+[01:10.056] Dice rolled: 1
+[01:10.325] MSG: Trap triggered: Hostage!
+[01:14.409] Crystals: P1 3800 → 3600 (-200)  [trap cost]
+[01:15.800] MSG: Hostage: Adjacent squares revealed and locked.
+[01:15.804] Revealed: P1 (1,2) "Red Card" {cost 0}
+[01:15.810] Trap: "Hostage" triggered  P0(1,3)→P1(0,2)
+[01:15.810] Anim: 3D  (attacker survives)
+[01:16.300] Turn ended  P0  |  Crystals P0=2100 P1=3600
+
+--- Turn 6  |  Player 1  |  Crystals P0=2100 P1=3600 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][Gian][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:16.906] Mode selected P1: ATTACK
+[01:16.911] Attack phase P1: 2 attack(s) available
+[01:16.911] MSG: Player 2: tap a character to attack.
+[01:17.212] AI1 attack decision: (4,4)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down} → (1,3) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[01:17.570] Revealed: P1 (4,4) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:17.570] Dice rolled: 5
+[01:17.573] MSG: Ice Mage wins!
+[01:22.195] Crystals: P0 2100 → 600 (-1500)  [battle]
+[01:23.596] Attack P1(4,4)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P0(1,3)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}  Dice=5  ATK=50 vs DEF=20  → WIN
+[01:23.596] Anim: 3A  △ P0(1,3)
+[01:23.596] Card destroyed  P0 (1,3) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[01:24.086] Mode selected P1: ATTACK
+[01:24.089] Attack phase P1: 1 attack(s) available
+[01:24.090] MSG: Player 2: tap a character to attack.
+[01:24.375] AI1 attack decision: (4,3)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | face-down} → (4,4) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down}
+[01:24.715] Revealed: P1 (4,3) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[01:24.733] Revealed: P0 (4,4) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:24.733] Dice rolled: 2
+[01:29.474] Crystals: P1 3600 → 3400 (-200)  [battle]
+[01:30.875] Attack P1(4,3)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} → P0(4,4)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=2  ATK=20 vs DEF=30  → LOSE
+[01:30.875] Anim: 3B  △ P1(4,3)
+[01:30.875] Card destroyed  P1 (4,3) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[01:31.379] Turn ended  P1  |  Crystals P0=600 P1=3400
+
+--- Turn 7  |  Player 0  |  Crystals P0=600 P1=3400 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][Scar]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][Ice ]
+[01:31.982] Mode selected P0: TECH
+[01:32.301] Tech played  P0: "Release Mutagen"
+[01:33.876] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[01:34.283] AI0 target chosen: (4,4)
+[01:34.295] Tech resolved  P0
+[01:35.205] Mode selected P0: ATTACK
+[01:35.212] Attack phase P0: 2 attack(s) available
+[01:35.212] MSG: Player 1: tap a character to attack.
+[01:35.507] AI0 attack decision: (4,4)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | flags:mutagen} → (4,4) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:35.816] Dice rolled: 2
+[01:35.827] MSG: Scarlet Mutant wins!
+[01:40.516] Crystals: P1 3400 → 3000 (-400)  [battle]
+[01:41.915] Attack P0(4,4)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | flags:mutagen} → P1(4,4)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=2  ATK=35 vs DEF=0  → WIN
+[01:41.915] Anim: 3A  △ P1(4,4)
+[01:41.915] Card destroyed  P1 (4,4) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:42.422] Mode selected P0: ATTACK
+[01:42.427] Attack phase P0: 1 attack(s) available
+[01:42.428] MSG: Player 1: tap a character to attack.
+[01:42.724] AI0 attack decision: (0,2)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos | face-down} → (1,1) (dead-end)
+[01:43.072] Revealed: P0 (0,2) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:43.072] Dice rolled: 3
+[01:43.084] MSG: Nothing happens — Dead End.
+[01:46.430] Attack P0(0,2)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} → P1(1,1)(empty)  Dice=3  → DEAD_END
+[01:46.430] Anim: 3F  (blank slot)
+[01:46.928] Turn ended  P0  |  Crystals P0=600 P1=3000
+
+--- Turn 8  |  Player 1  |  Crystals P0=600 P1=3000 ---
+P0:   [  — ][  — ][Void][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][Scar]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:47.535] Mode selected P1: ATTACK
+[01:47.540] Attack phase P1: 2 attack(s) available
+[01:47.540] MSG: Player 2: tap a character to attack.
+[01:47.824] AI1 attack decision: (2,0)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (0,2) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:48.169] Revealed: P1 (2,0) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:48.169] Dice rolled: 5
+[01:48.172] MSG: Both cards are destroyed!
+[01:52.734] Crystals: P1 3000 → 2700 (-300)  [battle]
+[01:54.126] Crystals: P0 600 → 0 (-600)  [battle]
+
+=== GAME OVER ===
+[01:54.141] AI Player 1 wins
+[01:54.141] Reason: crystals
+[01:54.141] Final crystals — P0: 0  P1: 2700  |  Turns: 8
+[01:54.141] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_roundabout_third_exit_2026-05-31_16-04-06_777.txt

@@ -1,0 +1,155 @@
+=== Battle of Grandpa's Hard Candy ===
+Battle started: 2026-05-31 16:52:47.757
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Foul Wisp
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Foul Wisp
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, War Supply, Great Diplomacy
+P1 Tech hand: Siege Cannon, Great Diplomacy, Prayer
+P0:   [C:Gran][  — ][  — ][T:Bunk][C:Blad]
+      [T:Brai][C:Skel][  — ][C:Tomb][  — ]
+      [  — ][C:Ange][C:Foul][T:Stre][T:Echo]
+      [  — ][C:Mage][T:Deco][C:Vile][  — ]
+      [C:Raij][  — ][T:Host][  — ][C:Arch]
+P1:   [  — ][C:Red ][  — ][  — ][T:Bait]
+      [T:Host][C:Foul][C:Armo][C:Pit ][  — ]
+      [T:Echo][C:Ange][C:Chao][C:Fuji][  — ]
+      [T:Hypn][C:Skel][C:Plan][C:Echo][T:Expl]
+      [  — ][T:Flam][  — ][  — ][C:Aeri]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:05.238] Mode selected P1: TECH
+[00:05.538] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:06.921] Tech played  P1: "Great Diplomacy"
+[00:08.523] Revealed: P1 (0,1) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:08.540] Revealed: P1 (1,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[00:08.562] Revealed: P1 (1,2) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[00:08.588] Revealed: P1 (1,3) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:08.611] Revealed: P1 (2,1) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[00:08.631] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:08.653] Revealed: P1 (2,3) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:08.672] Revealed: P1 (3,1) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:08.696] Revealed: P1 (3,2) "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[00:08.716] Revealed: P1 (3,3) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[00:08.739] Revealed: P1 (4,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:08.742] Tech resolved  P1
+[00:09.426] Mode selected P1: ATTACK
+[00:09.443] Attack phase P1: 2 attack(s) available
+[00:09.443] MSG: Player 2: tap a character to attack.
+[00:09.721] AI1 attack decision: (0,1)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → (3,4) (dead-end)
+[00:10.021] Dice rolled: 2
+[00:10.050] MSG: Nothing happens — Dead End.
+[00:13.460] Attack P1(0,1)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P0(3,4)(empty)  Dice=2  → DEAD_END
+[00:13.460] Anim: 3F  (blank slot)
+[00:13.975] Mode selected P1: ATTACK
+[00:13.981] Attack phase P1: 1 attack(s) available
+[00:13.981] MSG: Player 2: tap a character to attack.
+[00:14.267] AI1 attack decision: (1,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → (0,4) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}
+[00:14.598] Revealed: P0 (0,4) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:14.598] Dice rolled: 1
+[00:14.606] MSG: Bladeshifter morphs: -40 DEF, +40 ATK permanently!
+[00:20.378] Crystals: P1 4000 → 3900 (-100)  [battle]
+[00:21.779] Attack P1(1,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → P0(0,4)"Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used}  Dice=1  ATK=0 vs DEF=50  → LOSE
+[00:21.779] Anim: 3B  △ P1(1,1)
+[00:21.779] Card destroyed  P1 (1,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[00:22.272] Turn ended  P1  |  Crystals P0=5000 P1=3900
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=3900 ---
+P0:   [  ? ][  — ][  — ][  ? ][Blad]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][Red ][  — ][  — ][  ? ]
+      [  ? ][  — ][Armo][Pit ][  — ]
+      [  ? ][Ange][Chao][Fuji][  — ]
+      [  ? ][Skel][Plan][Echo][  ? ]
+      [  — ][  ? ][  — ][  — ][Aeri]
+[00:22.863] Mode selected P0: TECH
+[00:23.163] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:24.556] Tech played  P0: "Great Diplomacy"
+[00:26.129] Revealed: P0 (0,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:26.147] Revealed: P0 (1,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:26.169] Revealed: P0 (1,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:26.170] Revealed: P0 (2,1) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[00:26.171] Revealed: P0 (2,2) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[00:26.204] Revealed: P0 (3,1) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos}
+[00:26.204] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[00:26.230] Revealed: P0 (3,3) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[00:26.254] Revealed: P0 (4,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:26.277] Revealed: P0 (4,4) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[00:26.304] Tech resolved  P0
+[00:26.956] Mode selected P0: ATTACK
+[00:26.977] Attack phase P0: 2 attack(s) available
+[00:26.977] MSG: Player 1: tap a character to attack.
+[00:27.254] AI0 attack decision: (0,4)"Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used} → (3,3) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[00:27.555] Dice rolled: 1
+[00:27.581] MSG: Both cards are destroyed!
+[00:32.163] Crystals: P0 4000 → 3580 (-420)  [battle]
+[00:33.554] Crystals: P1 3900 → 3000 (-900)  [battle]
+[00:34.961] Attack P0(0,4)"Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used} → P1(3,3)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}  Dice=1  ATK=40 vs DEF=40  → TIE
+[00:34.961] Anim: 3C  △ P0(0,4) + △ P1(3,3)
+[00:34.961] Card destroyed  P0 (0,4) "Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used}
+[00:34.961] Card destroyed  P1 (3,3) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[00:35.439] Mode selected P0: ATTACK
+[00:35.456] Attack phase P0: 1 attack(s) available
+[00:35.456] MSG: Player 1: tap a character to attack.
+[00:35.738] AI0 attack decision: (1,3)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → (4,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:36.037] Dice rolled: 3
+[00:36.051] MSG: Tomb Bandit wins!
+[00:40.729] Crystals: P1 3000 → 2250 (-750)  [battle]
+[00:42.140] Attack P0(1,3)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P1(4,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=3  ATK=75 vs DEF=45  → WIN
+[00:42.140] Anim: 3A  △ P1(4,4)
+[00:42.140] Card destroyed  P1 (4,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:42.630] Turn ended  P0  |  Crystals P0=3580 P1=2250
+
+--- Turn 3  |  Player 1  |  Crystals P0=3580 P1=2250 ---
+P0:   [Gran][  — ][  — ][  ? ][  — ]
+      [  ? ][Skel][  — ][Tomb][  — ]
+      [  — ][Ange][Foul][  ? ][  ? ]
+      [  — ][Mage][  ? ][Vile][  — ]
+      [Raij][  — ][  ? ][  — ][Arch]
+P1:   [  — ][Red ][  — ][  — ][  ? ]
+      [  ? ][  — ][Armo][Pit ][  — ]
+      [  ? ][Ange][Chao][Fuji][  — ]
+      [  ? ][Skel][Plan][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:42.676] Coin flip: Heads
+[00:45.412] MSG: Plant 29: Heads! Venom on Archbishop.
+[00:46.013] Mode selected P1: TECH
+[00:46.313] Crystals: P1 2250 → 1250 (-1000)  [tech cost]
+[00:47.711] Tech played  P1: "Siege Cannon"
+[00:49.246] MSG: Siege Cannon active!
+[00:49.258] Tech resolved  P1
+[00:50.147] Mode selected P1: ATTACK
+[00:50.164] Attack phase P1: 2 attack(s) available
+[00:50.164] MSG: Player 2: tap a character to attack.
+[00:50.446] AI1 attack decision: (1,3)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → (4,4) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | flags:venom}
+[00:50.745] Dice rolled: 4
+[00:50.763] MSG: Pit Lord is destroyed by Divine!
+[00:56.354] Crystals: P1 1250 → 0 (-1250)  [battle]
+
+=== GAME OVER ===
+[00:56.371] AI Player 0 wins
+[00:56.371] Reason: crystals
+[00:56.371] Final crystals — P0: 3580  P1: 0  |  Turns: 3
+[00:56.371] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_grandpas_hard_candy_2026-05-31_16-52-47_757.txt

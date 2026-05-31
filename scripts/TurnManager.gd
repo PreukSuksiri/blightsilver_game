@@ -22,6 +22,7 @@ signal coin_flip_visual_requested(results: Array)
 signal coin_flip_visual_done
 signal ability_selection_done
 signal archbishop_redirect_resolved
+signal brainwash_redirect_resolved
 
 # Pending choices for async UI flows
 var _pending_trap_resolve: Callable
@@ -114,8 +115,10 @@ func start_turn(player_index: int) -> void:
 					var _ts_targets: Array = GameState.get_all_face_up_characters(_ts_opp)
 					if not _ts_targets.is_empty():
 						_ts_targets.shuffle()
-						var _ts_target: GameState.CardInstance = _ts_targets[0]
+						var _ts_target: GameState.CardInstance = (_ts_targets[0] as Dictionary)["card"]
 						var _ts_cf: Array = await _do_coin_flips(1)
+						if _battle_aborted():
+							return
 						if _ts_cf[0]:  # heads
 							if "venom" not in _ts_target.flags:
 								_ts_target.flags.append("venom")
@@ -151,6 +154,10 @@ func start_turn(player_index: int) -> void:
 func select_mode(mode: GameState.TurnMode) -> void:
 	var player := GameState.current_player
 	if GameState.current_phase != GameState.Phase.MODE_SELECT:
+		return
+
+	if mode == GameState.TurnMode.ATTACK and not GameState.can_player_attack(player):
+		GameState.post_message("Player %d has no characters that can attack." % (player + 1))
 		return
 
 	GameState.current_mode = mode
@@ -390,6 +397,9 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	# Capture card names before any destruction so loggers that fire after destroy_card() can use them
 	result.attacker_name = attacker.card_name
 	result.defender_name = defender.card_name
+	result.attacker_log_label = BattleLogFormat.format_unit(attacker)
+	if defender.card_type == "character":
+		result.defender_log_label = BattleLogFormat.format_unit(defender)
 	for msg in result.messages:
 		GameState.post_message(msg)
 
@@ -412,6 +422,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	await battle_preview_done
 	if _battle_aborted():
 		return
+
+	var _attack_completed_emitted := false
 
 	# Handle trap special triggers
 	if result.special_trigger == "trap_effect":
@@ -458,6 +470,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 
 			await _apply_battle_result(result, player, opponent, attacker_pos, target_pos, attacker, defender)
 			if _battle_aborted():
+				emit_signal("attack_completed", attacker_pos, target_pos, result)
+				_attack_completed_emitted = true
 				return
 
 			# Fire exposed-card trigger if defender was already revealed
@@ -492,12 +506,17 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 				CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_WIN_ANY_OWNER,
 					{"source_player": opponent, "attacker": attacker, "defender": defender})
 
+	if not _attack_completed_emitted:
+		emit_signal("attack_completed", attacker_pos, target_pos, result)
+
 	# Post-battle ability effects — must run before modifying attacked_this_turn
 	var _pb_extra: int = await _apply_post_battle_effects(result, player, opponent, attacker, defender, attacker_pos, target_pos)
 	if _battle_aborted():
 		return
 
-	emit_signal("attack_completed", attacker_pos, target_pos, result)
+	# Return to mode select before Siege Cannon / follow-ups so non-attack destroys still log.
+	if not _battle_aborted():
+		GameState.set_phase(GameState.Phase.MODE_SELECT)
 
 	# MULTI_ATTACK_VS_NON_CHARACTER: allow this card to keep attacking non-char cells within limit
 	# MULTI_ATTACK_ANY / MULTI_ATTACK_ANY_WITH_ATK_LOSS: allow multiple attacks any target
@@ -533,14 +552,12 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	# Check Siege Cannon
 	if GameState.siege_cannon_active[player]:
 		if defender.card_type == "character" and not result.defender_destroyed:
+			GameState.post_message(
+				"Siege Cannon: %s at (%d,%d) destroyed after surviving the attack!" % [
+					defender.card_name, target_pos.x, target_pos.y])
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y)
 			await crystal_animation_done
 			GameState.siege_cannon_active[player] = false
-			GameState.post_message("Siege Cannon: Defender destroyed!")
-
-	# Return to active turn — player may continue attacking with other characters
-	if not _battle_aborted():
-		GameState.set_phase(GameState.Phase.MODE_SELECT)
 
 func end_attacks_early() -> void:
 	if _battle_aborted():
@@ -652,7 +669,7 @@ func play_tech_card(tech_name: String) -> void:
 
 		TechCardData.TechEffectType.DIVINE_PROTECTION:
 			GameState.divine_protection_active[player] = true
-			GameState.post_message("Prayer: Divine Characters protected until your next turn.")
+			GameState.post_message("Prayer: Divine Characters protected until opponent's turn ends.")
 			after_tech_resolved(player)
 			return
 
@@ -675,8 +692,10 @@ func play_tech_card(tech_name: String) -> void:
 			return
 
 		TechCardData.TechEffectType.REVEAL_ALL_OWN_CHARACTERS:
-			_reveal_all_own(player)
-			after_tech_resolved(player)
+			var _gd_count: int = maxi(1, int(data.effect_params.get("count", 5)))
+			emit_signal("awaiting_target_selection",
+				"Select up to %d of your units and reveal them." % _gd_count,
+				"own_units_up_to_%d" % _gd_count)
 			return
 
 		TechCardData.TechEffectType.PERM_BOOST_ALL_FACEUP:
@@ -809,13 +828,6 @@ func _resolve_arcane_nova(player: int) -> void:
 		"Arcane Nova! %d opponent unit(s) destroyed. Your Tech Cards discarded." % destroyed)
 	after_tech_resolved(player)
 
-func _reveal_all_own(player: int) -> void:
-	for r in range(GameState.GRID_SIZE):
-		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(player, r, c)
-			if card.card_type == "character" and not card.face_up:
-				GameState.reveal_card(player, r, c)
-
 func _boost_all_faceup(player: int, atk_bonus: int, def_bonus: int) -> void:
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
@@ -942,6 +954,104 @@ func resolve_trap_self_destruct(player: int, target_pos: Vector2i) -> void:
 
 func complete_archbishop_redirect() -> void:
 	emit_signal("archbishop_redirect_resolved")
+
+func complete_brainwash_redirect() -> void:
+	emit_signal("brainwash_redirect_resolved")
+
+static func _has_brainwash_target(player: int, exclude_pos: Vector2i) -> bool:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			if Vector2i(r, c) == exclude_pos:
+				continue
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if card.card_type == "character" and card.face_up:
+				return true
+	return false
+
+func resolve_brainwash_friendly_fire(attacker_player: int, friendly_pos: Vector2i) -> void:
+	var attacker_pos: Vector2i = GameState.attacker_pos
+	var attacker: GameState.CardInstance = GameState.attacker_card
+	if attacker == null:
+		complete_brainwash_redirect()
+		return
+	var ally: GameState.CardInstance = GameState.get_card(attacker_player, friendly_pos.x, friendly_pos.y)
+	if ally.card_type != "character" or not ally.face_up or friendly_pos == attacker_pos:
+		GameState.post_message("Brainwash: Invalid target — effect fizzles.")
+		complete_brainwash_redirect()
+		return
+
+	GameState.post_message("Brainwash: %s attacks %s!" % [attacker.card_name, ally.card_name])
+	GameState.defender_pos = friendly_pos
+
+	var defender_was_exposed: bool = ally.face_up
+	BattleResolver.calculate_field_bonuses(attacker_player)
+
+	var preview_result := BattleResolver.resolve_battle(
+		attacker, ally, GameState.dice_result, attacker_player, attacker_player,
+		defender_was_exposed, friendly_pos, true)
+	emit_signal("battle_preview_needed", attacker_player, attacker, ally, preview_result)
+
+	var result := BattleResolver.resolve_battle(
+		attacker, ally, GameState.dice_result, attacker_player, attacker_player,
+		defender_was_exposed, friendly_pos)
+	result.attacker_name = attacker.card_name
+	result.defender_name = ally.card_name
+	result.attacker_log_label = BattleLogFormat.format_unit(attacker)
+	result.defender_log_label = BattleLogFormat.format_unit(ally)
+	for msg in result.messages:
+		GameState.post_message(msg)
+
+	if result.defender_destroyed and ally.force_shielded:
+		result.defender_destroyed = false
+		result.defender_crystal_loss = 0
+		ally.force_shielded = false
+		GameState.post_message("Force Shield: %s blocked the attack!" % ally.card_name)
+
+	if not result.coin_flip_results.is_empty():
+		emit_signal("coin_flip_visual_requested", result.coin_flip_results)
+		await coin_flip_visual_done
+		if _battle_aborted():
+			complete_brainwash_redirect()
+			return
+
+	emit_signal("battle_result_finalized", result)
+	await battle_preview_done
+	if _battle_aborted():
+		complete_brainwash_redirect()
+		return
+
+	await _apply_friendly_fire_battle_result(
+		result, attacker_player, attacker_pos, friendly_pos, attacker, ally)
+	complete_brainwash_redirect()
+
+func _apply_friendly_fire_battle_result(
+		result: BattleResolver.BattleResult,
+		player: int,
+		attacker_pos: Vector2i,
+		friendly_pos: Vector2i,
+		attacker: GameState.CardInstance,
+		ally: GameState.CardInstance
+) -> void:
+	if _battle_aborted():
+		return
+	if result.attacker_crystal_loss > 0:
+		GameState.lose_crystals(player, result.attacker_crystal_loss, "battle")
+		await crystal_animation_done
+		if _battle_aborted():
+			return
+	if result.defender_crystal_loss > 0:
+		GameState.lose_crystals(player, result.defender_crystal_loss, "battle")
+		await crystal_animation_done
+		if _battle_aborted():
+			return
+	if result.attacker_crystal_gain > 0:
+		GameState.gain_crystals(player, result.attacker_crystal_gain, "battle")
+	if result.defender_crystal_gain > 0:
+		GameState.gain_crystals(player, result.defender_crystal_gain, "battle")
+	if result.attacker_destroyed:
+		GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
+	if result.defender_destroyed:
+		GameState.destroy_card(player, friendly_pos.x, friendly_pos.y, false)
 
 static func _has_archbishop_redirect_target(opponent: int, exclude_pos: Vector2i) -> bool:
 	for r: int in range(GameState.GRID_SIZE):
@@ -1128,9 +1238,13 @@ func _handle_trap_effect(
 			GameState.post_message("Snare Trap: %s's effect nullified until end of next turn!" % attacker.card_name)
 
 		TrapData.TrapEffectType.FORCE_FRIENDLY_FIRE:
+			if not _has_brainwash_target(player, attacker_pos):
+				GameState.post_message("Brainwash: No ally to redirect — effect fizzles.")
+				return
 			emit_signal("awaiting_target_selection",
-				"Brainwash: Choose one of your own cards as the attack target.",
+				"Brainwash: Choose one of your own allies as the attack target.",
 				"own_any_as_target")
+			await brainwash_redirect_resolved
 
 		TrapData.TrapEffectType.NULLIFY_BLOCK_ADJACENT:
 			GameState.post_message("Bunker: Adjacent squares cannot be targeted this turn.")
@@ -1337,7 +1451,7 @@ func _end_turn(player: int) -> void:
 					var _venom_targets: Array = GameState.get_all_face_up_characters(_opp_end)
 					if not _venom_targets.is_empty():
 						_venom_targets.shuffle()
-						var _venom_tgt: GameState.CardInstance = _venom_targets[0]
+						var _venom_tgt: GameState.CardInstance = (_venom_targets[0] as Dictionary)["card"]
 						if "venom" not in _venom_tgt.flags:
 							_venom_tgt.flags.append("venom")
 						GameState.post_message("%s: Venom applied to %s." % [_te_card.card_name, _venom_tgt.card_name])
@@ -1369,8 +1483,8 @@ func _end_turn(player: int) -> void:
 				card.attacked_this_turn = false
 				card.clear_temp_buffs()
 
-	# Clear divine protection if it was this player's turn
-	GameState.divine_protection_active[player] = false
+	# Prayer: protection for the opponent of this player expires when this turn ends.
+	GameState.expire_divine_protection_at_turn_end(player)
 	# Clear berserk if it's now ending
 	if GameState.berserk_active[player] != null:
 		GameState.berserk_active[player] = null

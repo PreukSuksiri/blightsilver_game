@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bfy6jba1ukgfe"
-path="res://.godot/imported/barros_the_colossol.png-afc145422303232342ed54f535a6cd2c.ctex"
+path="res://.godot/imported/barros_the_colossol.png-929136af9ee6aa920a5288285bfb30cc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/union/barros_the_colossol.png"
-dest_files=["res://.godot/imported/barros_the_colossol.png-afc145422303232342ed54f535a6cd2c.ctex"]
+source_file="res://trash/assets/textures/cards/union/barros_the_colossol.png"
+dest_files=["res://.godot/imported/barros_the_colossol.png-929136af9ee6aa920a5288285bfb30cc.ctex"]
 
 [params]
 

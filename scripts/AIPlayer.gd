@@ -30,6 +30,8 @@ signal ai_bluff(player: int, row: int, col: int, emoticon: String)
 var _ai_turn_count: int = 0   # incremented at start of each decide_turn call
 var _union_used:    bool = false
 var _pending_death_bluff: Vector2i = Vector2i(-1, -1)  # set when AI card dies; flushed on next AI turn
+var _aborted_attackers_this_turn: Array = []  # positions excluded after attack_aborted this turn
+var _last_chosen_attacker_pos: Vector2i = Vector2i(-1, -1)
 
 # Trailer personality flags (set by admin console; excluded from random pool)
 var _trailer_offensive: bool = false
@@ -66,6 +68,7 @@ func decide_turn() -> void:
 	if _game_is_over():
 		return
 	_ai_turn_count += 1
+	_aborted_attackers_this_turn.clear()
 	await get_tree().create_timer(0.6).timeout
 
 	# Rule 1: Tech priority — only enter TECH mode if a card actually scores > 0.
@@ -90,6 +93,15 @@ func decide_turn() -> void:
 
 	_do_attack_decision()
 
+## Called when TurnManager aborts an attack the AI just attempted.
+func register_attack_aborted(attacker_pos: Vector2i = Vector2i(-1, -1)) -> void:
+	var pos: Vector2i = attacker_pos if attacker_pos.x >= 0 else _last_chosen_attacker_pos
+	if pos.x < 0:
+		return
+	if pos not in _aborted_attackers_this_turn:
+		_aborted_attackers_this_turn.append(pos)
+
+
 ## Continuation called by GameBoard after union summon resolves, so the AI
 ## can still attack in the same turn without re-incrementing the turn counter.
 func continue_after_union() -> void:
@@ -103,6 +115,9 @@ func continue_after_union() -> void:
 func _do_attack_decision() -> void:
 	if _game_is_over():
 		return
+	if not GameState.can_player_attack(player_index):
+		emit_signal("ai_end_turn")
+		return
 	# No attacks remaining — end turn immediately (already attacked, no tax)
 	if GameState.attacks_remaining <= 0:
 		emit_signal("ai_end_turn")
@@ -114,27 +129,120 @@ func _do_attack_decision() -> void:
 		return
 	# Personality: advance sweep/focus axis if current one is exhausted or blocked
 	_maybe_advance_sweep_axis()
-	var attacker_pos: Vector2i = _choose_attacker()
-	if attacker_pos.x == -1:
+	var attack: Dictionary = _choose_best_attack()
+	var attacker_pos: Vector2i = attack.get("attacker_pos", Vector2i(-1, -1))
+	var target_pos: Vector2i = attack.get("target_pos", Vector2i(-1, -1))
+	if attacker_pos.x == -1 or target_pos.x == -1:
 		await get_tree().create_timer(2.0).timeout
 		emit_signal("ai_end_turn")
 		return
-	var target_pos: Vector2i = _choose_target_for(attacker_pos)
-	if target_pos.x == -1:
-		await get_tree().create_timer(2.0).timeout
-		emit_signal("ai_end_turn")
-		return
+	_last_chosen_attacker_pos = attacker_pos
 	emit_signal("ai_mode_chosen", GameState.TurnMode.ATTACK)
 	await get_tree().create_timer(0.3).timeout
 	emit_signal("ai_attack_chosen", attacker_pos, target_pos)
 
 # ─────────────────────────────────────────────────────────────
-# Attacker selection (Training rules)
+# Attack selection — pick the best (attacker, target) pair jointly
 # ─────────────────────────────────────────────────────────────
-func _choose_attacker() -> Vector2i:
+const _REVEAL_ATTACKER_PENALTY: int = 12  # cost of revealing a face-down attacker
+const _EXPECTED_ATTACK_DICE: int = 3      # d6 re-roll-on-6 → uniform 1–5, mean 3
+
+
+func _choose_best_attack() -> Dictionary:
+	var none: Dictionary = {"attacker_pos": Vector2i(-1, -1), "target_pos": Vector2i(-1, -1)}
+	var eligible: Array = _get_eligible_attackers()
+	if eligible.is_empty():
+		return none
+
+	var best_attacker: Vector2i = Vector2i(-1, -1)
+	var best_target: Vector2i = Vector2i(-1, -1)
+	var best_score: int = -9999
+
+	for entry: Dictionary in eligible:
+		var attacker_pos: Vector2i = entry["pos"]
+		var reveal_penalty: int = _REVEAL_ATTACKER_PENALTY if entry.get("needs_reveal", false) else 0
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var target_pos: Vector2i = Vector2i(r, c)
+				if target_pos in GameState.locked_attack_positions:
+					continue
+				var target: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
+				if target.was_destroyed:
+					continue
+				var sc: int = _score_attack(attacker_pos, target_pos) + randi() % 3 - reveal_penalty
+				if sc > best_score:
+					best_score = sc
+					best_attacker = attacker_pos
+					best_target = target_pos
+
+	if best_attacker.x == -1:
+		return none
+	# Skip hopeless attacks when a better attacker exists but wasn't chosen due to noise —
+	# and when every option is clearly bad (no kill, no worthwhile scout).
+	if best_score < 0 and not _has_positive_attack_option(eligible):
+		return none
+	return {"attacker_pos": best_attacker, "target_pos": best_target}
+
+
+## True if any eligible attacker has a non-negative target worth taking.
+func _has_positive_attack_option(eligible: Array) -> bool:
+	for entry: Dictionary in eligible:
+		var attacker_pos: Vector2i = entry["pos"]
+		var reveal_penalty: int = _REVEAL_ATTACKER_PENALTY if entry.get("needs_reveal", false) else 0
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var target_pos: Vector2i = Vector2i(r, c)
+				if target_pos in GameState.locked_attack_positions:
+					continue
+				var target: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
+				if target.was_destroyed:
+					continue
+				var attacker: GameState.CardInstance = GameState.get_card(
+						player_index, attacker_pos.x, attacker_pos.y)
+				if _score_attack(attacker_pos, target_pos) - reveal_penalty \
+						- _attacker_quality_penalty_for_card(attacker) >= 0:
+					return true
+	return false
+
+
+## Deprioritize 0-ATK walls and other units that cannot meaningfully fight.
+func _attacker_quality_penalty(attacker_pos: Vector2i) -> int:
+	var attacker: GameState.CardInstance = GameState.get_card(
+			player_index, attacker_pos.x, attacker_pos.y)
+	return _attacker_quality_penalty_for_card(attacker)
+
+
+func _attacker_quality_penalty_for_card(attacker: GameState.CardInstance) -> int:
+	var atk: int = attacker.get_effective_atk()
+	if atk <= 0:
+		return 40
+	if atk < 20:
+		return 15
+	return 0
+
+
+## Mirrors TurnManager pre-attack gates so the AI does not retry blocked units.
+func _can_unit_attack(card: GameState.CardInstance) -> bool:
+	if GameState.attack_cost_block_player == player_index \
+			and GameState.attack_cost_block_max >= 0 \
+			and card.crystal_cost <= GameState.attack_cost_block_max:
+		return false
+	if card.ability_type == CharacterData.AbilityType.CANNOT_ATTACK_IF_NON_AFFINITY_ON_FIELD:
+		var allowed: Array = card.ability_params.get("allowed", [])
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var ally: GameState.CardInstance = GameState.get_card(player_index, r, c)
+				if ally == card or ally.card_type != "character" or not ally.face_up:
+					continue
+				if ally.affinity not in allowed:
+					return false
+	return true
+
+
+## All characters that can attack this turn, respecting reveal limits.
+func _get_eligible_attackers() -> Array:
 	var opponent_faceup: int = _count_faceup(opponent_index)
 	var ai_faceup: int = _count_faceup(player_index)
-
 	var faceup_attackers: Array = []
 	var facedown_attackers: Array = []
 
@@ -147,69 +255,67 @@ func _choose_attacker() -> Vector2i:
 				continue
 			if card.cannot_attack_until >= GameState.turn_number:
 				continue
-			# Berserk constraint: only the berserk card may attack.
 			if GameState.berserk_active[player_index] != null:
 				if GameState.berserk_active[player_index] != card:
 					continue
+			var pos: Vector2i = Vector2i(r, c)
+			if pos in _aborted_attackers_this_turn:
+				continue
+			if not _can_unit_attack(card):
+				continue
 			if card.face_up:
-				faceup_attackers.append(Vector2i(r, c))
+				faceup_attackers.append(pos)
 			else:
-				facedown_attackers.append(Vector2i(r, c))
+				facedown_attackers.append(pos)
 
-	# Rule 5: always use face-up characters first (pick highest ATK).
-	if not faceup_attackers.is_empty():
-		var best_pos: Vector2i = faceup_attackers[0]
-		var best_atk: int = GameState.get_card(player_index, best_pos.x, best_pos.y).get_effective_atk()
-		for pos in faceup_attackers:
-			var atk: int = GameState.get_card(player_index, pos.x, pos.y).get_effective_atk()
-			if atk > best_atk:
-				best_atk = atk
-				best_pos = pos
-		return best_pos
+	var eligible: Array = []
+	for pos_v in faceup_attackers:
+		eligible.append({"pos": pos_v, "needs_reveal": false})
 
-	# No face-up attackers — consider revealing a face-down card.
 	if facedown_attackers.is_empty():
-		return Vector2i(-1, -1)
+		return eligible
 
-	# Rules 2 & 3: Revelation control.
-	# When opponent has nothing revealed: only reveal 1-2 chars in total.
-	# When opponent has revealed chars: reveal at most as many as they have.
-	var max_ai_faceup: int
-	match _expose_mode:
-		"all":
-			max_ai_faceup = 25
-		"cautious":
-			max_ai_faceup = randi_range(1, 2)
-		"kill_triggered":
-			max_ai_faceup = 25 if _ai_kill_count >= 1 else randi_range(1, 2)
-		_:  # "normal"
-			if opponent_faceup == 0:
-				max_ai_faceup = randi_range(1, 2)
-			else:
-				max_ai_faceup = opponent_faceup
-
+	var max_ai_faceup: int = _max_allowed_faceup(opponent_faceup)
 	if ai_faceup >= max_ai_faceup:
-		return Vector2i(-1, -1)
+		return eligible
 
-	# Rule 6: prefer face-down attackers adjacent to already-revealed AI characters.
+	# Prefer adjacent face-down attackers when several can be revealed (same as before).
 	var adjacent: Array = []
 	for pos_v in facedown_attackers:
 		var pos: Vector2i = pos_v
-		var adj: Array = GameState.get_adjacent_positions(pos.x, pos.y)
-		for ap_v in adj:
+		for ap_v in GameState.get_adjacent_positions(pos.x, pos.y):
 			var ap: Vector2i = ap_v
 			var neighbor: GameState.CardInstance = GameState.get_card(player_index, ap.x, ap.y)
 			if neighbor.card_type == "character" and neighbor.face_up:
 				adjacent.append(pos)
 				break
 
-	if not adjacent.is_empty():
-		return adjacent[randi() % adjacent.size()]
-	return facedown_attackers[randi() % facedown_attackers.size()]
+	var reveal_pool: Array = adjacent if not adjacent.is_empty() else facedown_attackers
+	for pos_v in reveal_pool:
+		eligible.append({"pos": pos_v, "needs_reveal": true})
+	return eligible
 
-# ─────────────────────────────────────────────────────────────
-# Target selection (Training rules)
-# ─────────────────────────────────────────────────────────────
+
+func _max_allowed_faceup(opponent_faceup: int) -> int:
+	match _expose_mode:
+		"all":
+			return 25
+		"cautious":
+			return randi_range(1, 2)
+		"kill_triggered":
+			return 25 if _ai_kill_count >= 1 else randi_range(1, 2)
+		_:
+			if opponent_faceup == 0:
+				return randi_range(1, 2)
+			return opponent_faceup
+
+
+# Legacy helpers kept for readability in other code paths if needed.
+func _choose_attacker() -> Vector2i:
+	var attack: Dictionary = _choose_best_attack()
+	return attack.get("attacker_pos", Vector2i(-1, -1))
+
+
 func _choose_target_for(attacker_pos: Vector2i) -> Vector2i:
 	var best_pos: Vector2i = Vector2i(-1, -1)
 	var best_score: int = -9999
@@ -245,7 +351,7 @@ func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 		base = 15   # hitting a trap is risky but better than nothing
 	else:
 		# Revealed character — estimate outcome with ability-aware ATK
-		var eff_atk: int = attacker.get_effective_atk()
+		var eff_atk: int = attacker.get_effective_atk() + _EXPECTED_ATTACK_DICE
 		match attacker.ability_type:
 			CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY:
 				if target.affinity == attacker.ability_params.get("affinity", -1):
@@ -462,7 +568,10 @@ func _score_tech(tech_name: String, snap: Dictionary) -> int:
 			var ai_hidden: int = _count_hidden(player_index)
 			if ai_hidden == 0:
 				return 0
-			return 25 + ai_hidden * 5
+			var cap: int = int(data.effect_params.get("count", ai_hidden))
+			if cap <= 0:
+				cap = ai_hidden
+			return 25 + mini(ai_hidden, cap) * 5
 
 		TechCardData.TechEffectType.REVEAL_OWN_AND_OPPONENT_REVEALS:
 			if opp_hidden == 0:
@@ -524,7 +633,7 @@ func decide_target(filter: String) -> Vector2i:
 		"own_faceup_card_sacrifice", "own_any_card":
 			return _best_own_faceup()
 		"own_any_as_target":
-			return _worst_own_faceup()
+			return _worst_own_faceup_excluding(GameState.attacker_pos)
 		"graveyard":
 			return _first_own_empty_slot()
 		"own_divine_character_redirect":
@@ -655,15 +764,21 @@ func _random_unrevealed_self() -> Vector2i:
 	return options[randi() % options.size()]
 
 func _worst_own_faceup() -> Vector2i:
+	return _worst_own_faceup_excluding(Vector2i(-1, -1))
+
+func _worst_own_faceup_excluding(exclude_pos: Vector2i) -> Vector2i:
 	# Pick the weakest own face-up card to sacrifice
 	var worst_pos: Vector2i = Vector2i(-1, -1)
 	var worst_atk: int = 99999
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
+			var pos := Vector2i(r, c)
+			if pos == exclude_pos:
+				continue
 			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if card.card_type == "character" and card.face_up and card.current_atk < worst_atk:
 				worst_atk = card.current_atk
-				worst_pos = Vector2i(r, c)
+				worst_pos = pos
 	if worst_pos == Vector2i(-1, -1):
 		return Vector2i(0, 0)
 	return worst_pos
@@ -734,6 +849,23 @@ func decide_facedown_opponent_excluding(exclude: Array) -> Vector2i:
 	if options.is_empty():
 		return Vector2i(-1, -1)
 	return options[randi() % options.size()]
+
+## Great Diplomacy — pick own face-down units (prefer higher ATK for synergy reveals).
+func decide_facedown_own_excluding(exclude: Array) -> Vector2i:
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_atk: int = -1
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var pos := Vector2i(r, c)
+			if pos in exclude:
+				continue
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type == "character" and not card.face_up:
+				var atk: int = card.current_atk
+				if atk > best_atk:
+					best_atk = atk
+					best_pos = pos
+	return best_pos
 
 func _random_facedown_opponent() -> Vector2i:
 	return decide_facedown_opponent_excluding([])

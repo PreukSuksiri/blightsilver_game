@@ -1,0 +1,277 @@
+=== Battle of Costco Sample Stampede ===
+Battle started: 2026-05-31 18:08:05.853
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Melissa the Healer
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Melissa the Healer
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Release Mutagen, Resurrection
+P1 Tech hand: Accident, Prayer, Release Mutagen
+P0:   [T:Defe][C:Bat ][T:Bunk][C:Silv][C:Witc]
+      [  — ][  — ][C:Flam][C:Book][  — ]
+      [  — ][C:Need][C:Meli][  — ][  — ]
+      [  — ][T:Acid][  — ][  — ][  — ]
+      [T:Foul][C:Skel][T:Pepp][C:Fuji][C:Cany]
+P1:   [T:Self][  — ][C:Choi][  — ][  — ]
+      [T:Expl][C:Armo][C:Jose][C:Choi][  — ]
+      [T:Deco][C:Mind][C:Chao][C:Big ][  — ]
+      [C:Silv][C:Skel][C:Spea][C:Flam][  — ]
+      [  — ][  — ][T:Snar][T:Bait][T:Red ]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:05.330] Mode selected P1: ATTACK
+[00:05.335] Attack phase P1: 2 attack(s) available
+[00:05.335] MSG: Player 2: tap a character to attack.
+[00:05.628] AI1 attack decision: (1,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down} → (0,4) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima | face-down}
+[00:05.964] Revealed: P1 (1,1) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[00:05.986] Revealed: P0 (0,4) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[00:05.986] Dice rolled: 4
+[00:05.989] MSG: Armored Bee wins!
+[00:10.591] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:11.995] Attack P1(1,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P0(0,4)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}  Dice=4  ATK=30 vs DEF=20  → WIN
+[00:11.995] Anim: 3A  △ P0(0,4)
+[00:11.995] Card destroyed  P0 (0,4) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[00:12.480] Mode selected P1: ATTACK
+[00:12.483] Attack phase P1: 1 attack(s) available
+[00:12.484] MSG: Player 2: tap a character to attack.
+[00:12.781] AI1 attack decision: (1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (1,4) (dead-end)
+[00:13.119] Revealed: P1 (1,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:13.119] Dice rolled: 2
+[00:13.130] MSG: Nothing happens — Dead End.
+[00:16.501] Attack P1(1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(1,4)(empty)  Dice=2  → DEAD_END
+[00:16.501] Anim: 3F  (blank slot)
+[00:16.999] Turn ended  P1  |  Crystals P0=4750 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4750 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][Armo][Jose][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:17.565] Mode selected P0: TECH
+[00:17.872] Crystals: P0 4750 → 4150 (-600)  [tech cost]
+[00:19.264] Tech played  P0: "Radar"
+[00:20.814] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:21.221] AI0 target chosen: (3,2)
+[00:21.261] Revealed: P1 (3,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:21.654] AI0 target chosen: (0,1)
+[00:21.654] Revealed: P1 (0,1) (blank slot)
+[00:22.056] AI0 target chosen: (2,1)
+[00:22.087] Revealed: P1 (2,1) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:22.090] Tech resolved  P0
+[00:22.974] Mode selected P0: ATTACK
+[00:22.980] Attack phase P0: 2 attack(s) available
+[00:22.980] MSG: Player 1: tap a character to attack.
+[00:23.281] AI0 attack decision: (1,3)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (2,1) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:23.622] Revealed: P0 (1,3) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:23.622] Dice rolled: 3
+[00:23.626] MSG: Book with Fangs wins!
+[00:29.282] Crystals: P1 5000 → 3500 (-1500)  [battle]
+[00:30.686] Attack P0(1,3)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(2,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}  Dice=3  ATK=75 vs DEF=70  → WIN
+[00:30.686] Reckoning overlay: P0 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} +ATK 30
+[00:30.686] Anim: 3A  △ P1(2,1)
+[00:30.686] Card destroyed  P1 (2,1) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:33.184] Turn ended  P0  |  Crystals P0=4150 P1=3500
+
+--- Turn 3  |  Player 1  |  Crystals P0=4150 P1=3500 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][Book][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][Armo][Jose][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Spea][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:33.782] Mode selected P1: TECH
+[00:34.081] Crystals: P1 3500 → 2500 (-1000)  [tech cost]
+[00:35.468] Tech played  P1: "Accident"
+[00:37.013] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:37.415] AI1 target chosen: (1,3)
+[00:37.418] Card destroyed  P0 (1,3) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:37.425] Tech resolved  P1
+[00:38.315] Mode selected P1: ATTACK
+[00:38.320] Attack phase P1: 2 attack(s) available
+[00:38.320] MSG: Player 2: tap a character to attack.
+[00:38.614] AI1 attack decision: (1,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → (2,4) (dead-end)
+[00:38.915] Dice rolled: 3
+[00:38.937] MSG: Nothing happens — Dead End.
+[00:42.317] Attack P1(1,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P0(2,4)(empty)  Dice=3  → DEAD_END
+[00:42.318] Anim: 3F  (blank slot)
+[00:42.806] Mode selected P1: ATTACK
+[00:42.813] Attack phase P1: 1 attack(s) available
+[00:42.813] MSG: Player 2: tap a character to attack.
+[00:43.105] AI1 attack decision: (1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → (3,4) (dead-end)
+[00:43.406] Dice rolled: 3
+[00:43.443] MSG: Nothing happens — Dead End.
+[00:46.805] Attack P1(1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(3,4)(empty)  Dice=3  → DEAD_END
+[00:46.806] Anim: 3F  (blank slot)
+[00:47.302] Turn ended  P1  |  Crystals P0=4150 P1=2500
+
+--- Turn 4  |  Player 0  |  Crystals P0=4150 P1=2500 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][Armo][Jose][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Spea][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:47.898] Mode selected P0: TECH
+[00:48.197] Crystals: P0 4150 → 2650 (-1500)  [tech cost]
+[00:49.584] Tech played  P0: "Resurrection"
+[00:51.140] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:51.547] AI0 target chosen: (1,0)
+[00:51.552] Revealed: P0 (1,0) "Book with Fangs" {Unit ATK0 DEF0 | cost 800 | affinity Arcane | base 0/0}
+[00:51.554] MSG: Revived Book with Fangs at [1,0]!
+[00:51.564] Tech resolved  P0
+[00:52.465] Mode selected P0: ATTACK
+[00:52.470] Attack phase P0: 2 attack(s) available
+[00:52.471] MSG: Player 1: tap a character to attack.
+[00:52.773] AI0 attack decision: (1,0)"Book with Fangs" {Unit ATK0 DEF0 | cost 800 | affinity Arcane | base 0/0} → (1,1) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[00:53.081] Dice rolled: 3
+[00:58.885] Crystals: P0 2650 → 1850 (-800)  [battle]
+[01:00.294] Attack P0(1,0)"Book with Fangs" {Unit ATK0 DEF0 | cost 800 | affinity Arcane | base 0/0} → P1(1,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=3  ATK=0 vs DEF=60  → LOSE
+[01:00.294] Reckoning overlay: P1 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} +DEF 60
+[01:00.294] Anim: 3B  △ P0(1,0)
+[01:00.294] Card destroyed  P0 (1,0) "Book with Fangs" {Unit ATK0 DEF0 | cost 800 | affinity Arcane | base 0/0}
+[01:00.777] Mode selected P0: ATTACK
+[01:00.782] Attack phase P0: 1 attack(s) available
+[01:00.783] MSG: Player 1: tap a character to attack.
+[01:01.063] AI0 attack decision: (0,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down} → (1,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:01.402] Revealed: P0 (0,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:01.403] Dice rolled: 3
+[01:01.406] MSG: Both cards are destroyed!
+[01:05.973] Crystals: P0 1850 → 1600 (-250)  [battle]
+[01:07.364] Crystals: P1 2500 → 1900 (-600)  [battle]
+[01:08.758] Attack P0(0,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=3  ATK=25 vs DEF=25  → TIE
+[01:08.758] Anim: 3C  △ P0(0,3) + △ P1(1,2)
+[01:08.758] Card destroyed  P0 (0,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:08.758] Card destroyed  P1 (1,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:09.250] Turn ended  P0  |  Crystals P0=1600 P1=1900
+
+--- Turn 5  |  Player 1  |  Crystals P0=1600 P1=1900 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][Armo][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Spea][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:11.331] Crystals: P1 1900 → 1600 (-300)  [union]
+[01:11.367] Revealed: P1 (0,2) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[01:11.367] Union summoned P1: "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}
+[01:11.368] MSG: Player 2 summoned [False Prophet] using: "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}
+[01:14.748] Mode selected P1: ATTACK
+[01:14.759] Attack phase P1: 2 attack(s) available
+[01:14.760] MSG: Player 2: tap a character to attack.
+[01:15.056] AI1 attack decision: (3,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → (4,4) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}
+[01:15.402] Revealed: P0 (4,4) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:15.403] Dice rolled: 4
+[01:15.407] MSG: Spear Shark wins!
+[01:20.063] Crystals: P0 1600 → 850 (-750)  [battle]
+[01:21.468] Attack P1(3,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P0(4,4)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=4  ATK=50 vs DEF=30  → WIN
+[01:21.468] Anim: 3A  △ P0(4,4)
+[01:21.468] Card destroyed  P0 (4,4) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:21.964] Mode selected P1: ATTACK
+[01:21.967] Attack phase P1: 1 attack(s) available
+[01:21.968] MSG: Player 2: tap a character to attack.
+[01:22.279] AI1 attack decision: (0,2)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → (4,3) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down}
+[01:22.633] Revealed: P0 (4,3) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[01:22.633] Dice rolled: 1
+[01:27.426] Attack P1(0,2)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P0(4,3)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=1  ATK=20 vs DEF=40  → LOSE
+[01:27.426] Anim: 3B  △ P1(0,2)
+[01:27.426] Card destroyed  P1 (0,2) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[01:27.920] Turn ended  P1  |  Crystals P0=850 P1=1600
+
+--- Turn 6  |  Player 0  |  Crystals P0=850 P1=1600 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][Fuji][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][Armo][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Spea][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:30.003] Crystals: P0 850 → 50 (-800)  [union]
+[01:30.051] Revealed: P0 (1,2) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[01:30.051] Union summoned P0: "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down}
+[01:30.052] MSG: Player 1 summoned [Ancient Lizard] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down}
+[01:33.381] Mode selected P0: ATTACK
+[01:33.389] Attack phase P0: 2 attack(s) available
+[01:33.389] MSG: Player 1: tap a character to attack.
+[01:33.675] AI0 attack decision: (1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (1,1) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[01:33.978] Dice rolled: 3
+[01:34.038] MSG: Ancient Lizard wins!
+[01:38.665] Crystals: P1 1600 → 1120 (-480)  [battle]
+[01:40.066] Attack P0(1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P1(1,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=3  ATK=75 vs DEF=0  → WIN
+[01:40.066] Anim: 3A  △ P1(1,1)
+[01:40.066] Card destroyed  P1 (1,1) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[01:40.557] Mode selected P0: ATTACK
+[01:40.566] Attack phase P0: 1 attack(s) available
+[01:40.566] MSG: Player 1: tap a character to attack.
+[01:40.855] AI0 attack decision: (4,3)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → (3,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[01:41.156] Dice rolled: 2
+[01:41.169] MSG: Fujin wins!
+[01:45.847] Crystals: P1 1120 → 640 (-480)  [battle]
+[01:47.247] Attack P0(4,3)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(3,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=2  ATK=35 vs DEF=20  → WIN
+[01:47.247] Anim: 3A  △ P1(3,2)
+[01:47.247] Card destroyed  P1 (3,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[01:47.744] Turn ended  P0  |  Crystals P0=50 P1=640
+
+--- Turn 7  |  Player 1  |  Crystals P0=50 P1=640 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][Anci][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][Fuji][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:48.339] Mode selected P1: ATTACK
+[01:48.348] Attack phase P1: 2 attack(s) available
+[01:48.349] MSG: Player 2: tap a character to attack.
+[01:48.640] AI1 attack decision: (3,3)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down} → (4,3) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[01:48.979] Revealed: P1 (3,3) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:48.979] Dice rolled: 3
+[01:48.984] MSG: Flame Seraph wins!
+[01:53.639] Crystals: P0 50 → 0 (-50)  [battle]
+
+=== GAME OVER ===
+[01:53.648] AI Player 1 wins
+[01:53.648] Reason: crystals
+[01:53.648] Final crystals — P0: 0  P1: 640  |  Turns: 7
+[01:53.648] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_costco_sample_stampede_2026-05-31_18-08-05_853.txt

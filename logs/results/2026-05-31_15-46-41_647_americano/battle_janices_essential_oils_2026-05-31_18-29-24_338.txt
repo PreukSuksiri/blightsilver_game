@@ -1,0 +1,259 @@
+=== Battle of Janice's Essential Oils ===
+Battle started: 2026-05-31 18:29:24.338
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Mysterious Miner
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Mysterious Miner
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Siege Cannon, Accident, Resurrection
+P1 Tech hand: Great Diplomacy, Radar, Prayer
+P0:   [  — ][  — ][C:Pony][T:Expl][T:Spik]
+      [C:Scar][C:Tiny][C:Sunr][C:Lab ][  — ]
+      [  — ][C:Skel][C:Myst][C:Gree][T:Pepp]
+      [T:Alar][C:Jira][C:Immo][C:Mad ][T:Snar]
+      [C:Leop][T:Echo][  — ][  — ][  — ]
+P1:   [C:Moon][  — ][  — ][  — ][C:Lase]
+      [C:Gamm][  — ][T:Deco][  — ][C:Choi]
+      [C:Gran][C:Nigh][C:Chao][C:Lazy][C:Fera]
+      [C:Blue][  — ][  — ][  — ][C:Tomb]
+      [T:Stre][T:Self][T:Spik][T:Defe][C:Moon]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.264] Mode selected P1: TECH
+[00:05.564] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:06.946] Tech played  P1: "Radar"
+[00:08.477] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.870] AI1 target chosen: (2,3)
+[00:08.919] Revealed: P0 (2,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:09.257] AI1 target chosen: (2,4)
+[00:09.288] Revealed: P0 (2,4) "Pepper Spray" {cost 0}
+[00:09.667] AI1 target chosen: (3,3)
+[00:09.702] Revealed: P0 (3,3) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:09.705] Tech resolved  P1
+[00:10.600] Mode selected P1: ATTACK
+[00:10.605] Attack phase P1: 2 attack(s) available
+[00:10.605] MSG: Player 2: tap a character to attack.
+[00:10.899] AI1 attack decision: (1,0)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down} → (2,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:11.251] Revealed: P1 (1,0) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:11.251] Dice rolled: 3
+[00:11.256] MSG: Gamma Emitter wins!
+[00:15.909] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:17.310] Attack P1(1,0)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P0(2,3)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}  Dice=3  ATK=20 vs DEF=15  → WIN
+[00:17.311] Anim: 3A  △ P0(2,3)
+[00:17.311] Card destroyed  P0 (2,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:19.823] Turn ended  P1  |  Crystals P0=4600 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4600 P1=4400 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][Mad ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [Gamm][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:20.426] Mode selected P0: TECH
+[00:20.738] Crystals: P0 4600 → 3600 (-1000)  [tech cost]
+[00:22.121] Tech played  P0: "Accident"
+[00:23.692] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:24.091] AI0 target chosen: (1,0)
+[00:24.094] Card destroyed  P1 (1,0) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:24.098] Tech resolved  P0
+[00:24.995] Mode selected P0: ATTACK
+[00:25.003] Attack phase P0: 2 attack(s) available
+[00:25.004] MSG: Player 1: tap a character to attack.
+[00:25.293] AI0 attack decision: (3,3)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → (0,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}
+[00:25.638] Revealed: P1 (0,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:25.638] Dice rolled: 1
+[00:25.642] MSG: Mad Raccoon wins!
+[00:30.291] Crystals: P1 4400 → 4100 (-300)  [battle]
+[00:31.688] Attack P0(3,3)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P1(0,0)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=1  ATK=30 vs DEF=20  → WIN
+[00:31.688] Anim: 3A  △ P1(0,0)
+[00:31.688] Card destroyed  P1 (0,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:34.192] Turn ended  P0  |  Crystals P0=3600 P1=4100
+
+--- Turn 3  |  Player 1  |  Crystals P0=3600 P1=4100 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][Mad ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:34.783] Mode selected P1: TECH
+[00:35.085] Crystals: P1 4100 → 3100 (-1000)  [tech cost]
+[00:36.478] Tech played  P1: "Great Diplomacy"
+[00:38.045] Revealed: P1 (0,4) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[00:38.069] Revealed: P1 (1,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:38.089] Revealed: P1 (2,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:38.109] Revealed: P1 (2,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:38.130] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:38.149] Revealed: P1 (2,3) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:38.170] Revealed: P1 (2,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:38.191] Revealed: P1 (3,0) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[00:38.210] Revealed: P1 (3,4) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:38.231] Revealed: P1 (4,4) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:38.233] Tech resolved  P1
+[00:38.935] Mode selected P1: ATTACK
+[00:38.946] Attack phase P1: 2 attack(s) available
+[00:38.946] MSG: Player 2: tap a character to attack.
+[00:39.228] AI1 attack decision: (1,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → (3,3) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:39.535] Dice rolled: 5
+[00:39.551] MSG: Choir Lady Abigail wins!
+[00:44.227] Crystals: P0 3600 → 3340 (-260)  [battle]
+[00:45.631] Attack P1(1,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P0(3,3)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=5  ATK=25 vs DEF=15  → WIN
+[00:45.631] Anim: 3A  △ P0(3,3)
+[00:45.632] Card destroyed  P0 (3,3) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:46.123] Mode selected P1: ATTACK
+[00:46.133] Attack phase P1: 1 attack(s) available
+[00:46.134] MSG: Player 2: tap a character to attack.
+[00:46.422] AI1 attack decision: (0,4)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} → (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}
+[00:46.760] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:46.760] Dice rolled: 4
+[00:46.766] MSG: Both cards are destroyed!
+[00:51.330] Crystals: P1 3100 → 2850 (-250)  [battle]
+[00:52.722] Crystals: P0 3340 → 3040 (-300)  [battle]
+[00:54.128] Attack P1(0,4)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=4  ATK=20 vs DEF=20  → TIE
+[00:54.128] Anim: 3C  △ P1(0,4) + △ P0(0,2)
+[00:54.128] Card destroyed  P1 (0,4) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[00:54.128] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:54.610] Turn ended  P1  |  Crystals P0=3040 P1=2850
+
+--- Turn 4  |  Player 0  |  Crystals P0=3040 P1=2850 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][Choi]
+      [Gran][Nigh][Chao][Lazy][Fera]
+      [Blue][  — ][  — ][  — ][Tomb]
+      [  ? ][  ? ][  ? ][  ? ][Moon]
+[00:55.205] Mode selected P0: TECH
+[00:55.504] Crystals: P0 3040 → 1540 (-1500)  [tech cost]
+[00:56.899] Tech played  P0: "Resurrection"
+[00:58.438] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:58.838] AI0 target chosen: (0,0)
+[00:58.840] Revealed: P0 (0,0) "Ponycorn" {Unit ATK0 DEF0 | cost 300 | affinity Divine | base 0/0}
+[00:58.842] MSG: Revived Ponycorn at [0,0]!
+[00:58.852] Tech resolved  P0
+[00:59.739] Mode selected P0: ATTACK
+[00:59.752] Attack phase P0: 2 attack(s) available
+[00:59.752] MSG: Player 1: tap a character to attack.
+[01:00.038] AI0 attack decision: (0,0)"Ponycorn" {Unit ATK0 DEF0 | cost 300 | affinity Divine | base 0/0} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:00.338] Dice rolled: 4
+[01:00.349] MSG: Both cards are destroyed!
+[01:04.946] Crystals: P0 1540 → 1240 (-300)  [battle]
+[01:06.339] Crystals: P1 2850 → 2750 (-100)  [battle]
+[01:07.744] Attack P0(0,0)"Ponycorn" {Unit ATK0 DEF0 | cost 300 | affinity Divine | base 0/0} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=4  ATK=0 vs DEF=0  → TIE
+[01:07.744] Anim: 3C  △ P0(0,0) + △ P1(2,2)
+[01:07.744] Card destroyed  P0 (0,0) "Ponycorn" {Unit ATK0 DEF0 | cost 300 | affinity Divine | base 0/0}
+[01:07.744] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:08.230] Mode selected P0: ATTACK
+[01:08.239] Attack phase P0: 1 attack(s) available
+[01:08.240] MSG: Player 1: tap a character to attack.
+[01:08.518] AI0 attack decision: (2,1)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos | face-down} → (2,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:08.864] Revealed: P0 (2,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[01:08.864] Dice rolled: 5
+[01:08.871] MSG: Skeleton Archer wins!
+[01:13.507] Crystals: P1 2750 → 2350 (-400)  [battle]
+[01:14.908] Attack P0(2,1)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} → P1(2,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=5  ATK=35 vs DEF=25  → WIN
+[01:14.908] Anim: 3A  △ P1(2,4)
+[01:14.908] Card destroyed  P1 (2,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:15.401] Turn ended  P0  |  Crystals P0=1240 P1=2350
+
+--- Turn 5  |  Player 1  |  Crystals P0=1240 P1=2350 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Skel][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][Choi]
+      [Gran][Nigh][  — ][Lazy][  — ]
+      [Blue][  — ][  — ][  — ][Tomb]
+      [  ? ][  ? ][  ? ][  ? ][Moon]
+[01:15.997] Mode selected P1: TECH
+[01:16.314] Tech played  P1: "Prayer"
+[01:17.862] MSG: Prayer: Divine Characters protected until opponent's turn ends.
+[01:17.872] Tech resolved  P1
+[01:18.790] Mode selected P1: ATTACK
+[01:18.801] Attack phase P1: 2 attack(s) available
+[01:18.801] MSG: Player 2: tap a character to attack.
+[01:19.089] AI1 attack decision: (1,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → (2,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[01:19.395] Dice rolled: 2
+[01:19.405] MSG: Choir Lady Abigail wins!
+[01:24.091] Crystals: P0 1240 → 940 (-300)  [battle]
+[01:25.490] Attack P1(1,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P0(2,1)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=2  ATK=25 vs DEF=5  → WIN
+[01:25.490] Anim: 3A  △ P0(2,1)
+[01:25.490] Card destroyed  P0 (2,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[01:25.991] Mode selected P1: ATTACK
+[01:26.000] Attack phase P1: 1 attack(s) available
+[01:26.000] MSG: Player 2: tap a character to attack.
+[01:26.296] AI1 attack decision: (2,0)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → (0,1) (dead-end)
+[01:26.605] Dice rolled: 2
+[01:26.639] MSG: Nothing happens — Dead End.
+[01:30.015] Attack P1(2,0)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(0,1)(empty)  Dice=2  → DEAD_END
+[01:30.015] Anim: 3F  (blank slot)
+[01:30.514] Turn ended  P1  |  Crystals P0=940 P1=2350
+
+--- Turn 6  |  Player 0  |  Crystals P0=940 P1=2350 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][Choi]
+      [Gran][Nigh][  — ][Lazy][  — ]
+      [Blue][  — ][  — ][  — ][Tomb]
+      [  ? ][  ? ][  ? ][  ? ][Moon]
+[01:31.134] Mode selected P0: ATTACK
+[01:31.140] Attack phase P0: 2 attack(s) available
+[01:31.140] MSG: Player 1: tap a character to attack.
+[01:31.428] AI0 attack decision: (3,1)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (2,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:31.767] Revealed: P0 (3,1) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:31.767] Dice rolled: 1
+[01:31.771] MSG: Jirayu the Rebellious Prince wins!
+[01:36.439] Crystals: P1 2350 → 1450 (-900)  [battle]
+[01:37.840] Attack P0(3,1)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(2,1)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=1  ATK=40 vs DEF=30  → WIN
+[01:37.840] Anim: 3A  △ P1(2,1)
+[01:37.840] Card destroyed  P1 (2,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:38.338] Mode selected P0: ATTACK
+[01:38.346] Attack phase P0: 1 attack(s) available
+[01:38.348] MSG: Player 1: tap a character to attack.
+[01:38.641] AI0 attack decision: (3,2)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos | face-down} → (4,4) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[01:38.983] Revealed: P0 (3,2) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[01:38.983] Dice rolled: 4
+[01:38.987] MSG: Immortal Vampire is destroyed by Divine!
+[01:44.767] Crystals: P0 940 → 0 (-940)  [battle]
+
+=== GAME OVER ===
+[01:44.786] AI Player 1 wins
+[01:44.786] Reason: crystals
+[01:44.786] Final crystals — P0: 0  P1: 1450  |  Turns: 6
+[01:44.786] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_janices_essential_oils_2026-05-31_18-29-24_338.txt

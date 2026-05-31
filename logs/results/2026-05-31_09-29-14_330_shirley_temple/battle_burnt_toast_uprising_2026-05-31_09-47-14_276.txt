@@ -1,0 +1,409 @@
+=== Battle of Burnt Toast Uprising ===
+Battle started: 2026-05-31 09:47:14.276
+Game Session of Shirley Temple (started 2026-05-31 09:29:14.330)
+=== AI vs AI Match ===
+Batch iteration: 8 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Tease, Siege Cannon
+P1 Tech hand: Resurrection, Spy, Release Mutagen
+P0:   [C:Grav][C:Flam][C:Kiyo][T:Blac][C:Pyro]
+      [T:Deco][  — ][C:Shep][T:Hypn][  — ]
+      [  — ][  — ][C:Jaco][  — ][  — ]
+      [  — ][C:Nept][  — ][T:Spik][  — ]
+      [C:Armo][C:Moon][T:Flam][C:Fera][C:Echo]
+P1:   [C:Gryp][  — ][  — ][  — ][C:Stai]
+      [T:Brai][C:Chur][  — ][  — ][C:Aeri]
+      [C:Echo][  — ][C:Gamm][C:Ox P][T:Trap]
+      [T:Echo][  — ][  — ][  — ][C:Jaco]
+      [C:Moon][  — ][  — ][  — ][T:Deco]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.326] Mode selected P1: TECH
+[00:05.636] Tech played  P1: "Spy"
+[00:07.169] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.567] AI1 target chosen: (1,4)
+[00:07.567] Revealed: P0 (1,4) (blank slot)
+[00:07.572] Tech resolved  P1
+[00:08.468] Mode selected P1: ATTACK
+[00:08.470] Attack phase P1: 2 attack(s) available
+[00:08.470] MSG: Player 2: tap a character to attack.
+[00:08.767] AI1 attack decision: (0,0)"Gryphon" [ATK=100] → (1,4) "(dead-end)"
+[00:09.099] Revealed: P1 (0,0) "Gryphon"
+[00:09.099] Dice rolled: 3
+[00:09.112] MSG: Nothing happens — Dead End.
+[00:12.434] Dead-end placed  P0 (1,4)
+[00:12.437] Attack P1(0,0)"Gryphon" → P0(1,4)(empty)  Dice=3  → DEAD_END
+[00:12.437] Anim: 3F  (blank slot)
+[00:12.944] Mode selected P1: ATTACK
+[00:12.948] Attack phase P1: 1 attack(s) available
+[00:12.948] MSG: Player 2: tap a character to attack.
+[00:13.250] AI1 attack decision: (4,0)"Moon Tribe Marksman" [ATK=35] → (2,4) "(dead-end)"
+[00:13.606] Revealed: P1 (4,0) "Moon Tribe Marksman"
+[00:13.606] Dice rolled: 1
+[00:13.616] MSG: Nothing happens — Dead End.
+[00:16.998] Dead-end placed  P0 (2,4)
+[00:17.002] Attack P1(4,0)"Moon Tribe Marksman" → P0(2,4)(empty)  Dice=1  → DEAD_END
+[00:17.002] Anim: 3F  (blank slot)
+[00:17.501] Turn ended  P1  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [Gryp][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Moon][  — ][  — ][  — ][  ? ]
+[00:18.089] Mode selected P0: TECH
+[00:18.389] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:19.774] Tech played  P0: "Siege Cannon"
+[00:21.312] MSG: Siege Cannon active!
+[00:21.315] Tech resolved  P0
+[00:22.214] Mode selected P0: ATTACK
+[00:22.220] Attack phase P0: 2 attack(s) available
+[00:22.221] MSG: Player 1: tap a character to attack.
+[00:22.512] AI0 attack decision: (4,3)"Feral Vampire" [ATK=40] → (4,0) "Moon Tribe Marksman" [DEF=25]
+[00:22.846] Revealed: P0 (4,3) "Feral Vampire"
+[00:22.846] Dice rolled: 1
+[00:22.849] MSG: Feral Vampire wins!
+[00:27.521] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:28.915] Card destroyed  P1 (4,0) "Moon Tribe Marksman"
+[00:28.918] Attack P0(4,3)"Feral Vampire" → P1(4,0)"Moon Tribe Marksman"  Dice=1  ATK=40 vs DEF=25  → WIN
+[00:28.918] Anim: 3A  △ P1(4,0)
+[00:29.422] Mode selected P0: ATTACK
+[00:29.426] Attack phase P0: 1 attack(s) available
+[00:29.426] MSG: Player 1: tap a character to attack.
+[00:29.729] AI0 attack decision: (4,4)"Echo Bringer" [ATK=70] → (2,1) "(dead-end)"
+[00:30.070] Revealed: P0 (4,4) "Echo Bringer"
+[00:30.070] Dice rolled: 5
+[00:30.081] MSG: Nothing happens — Dead End.
+[00:33.439] Dead-end placed  P1 (2,1)
+[00:33.443] Attack P0(4,4)"Echo Bringer" → P1(2,1)(empty)  Dice=5  → DEAD_END
+[00:33.443] Anim: 3F  (blank slot)
+[00:33.950] Turn ended  P0  |  Crystals P0=4000 P1=4700
+
+--- Turn 3  |  Player 1  |  Crystals P0=4000 P1=4700 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][Fera][Echo]
+P1:   [Gryp][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:34.555] Mode selected P1: TECH
+[00:34.864] Crystals: P1 4700 → 3200 (-1500)  [tech cost]
+[00:36.251] Tech played  P1: "Resurrection"
+[00:37.780] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:38.179] AI1 target chosen: (0,1)
+[00:38.181] Revealed: P1 (0,1) "Moon Tribe Marksman"
+[00:38.181] MSG: Revived Moon Tribe Marksman at [0,1]!
+[00:38.187] Tech resolved  P1
+[00:39.081] Mode selected P1: ATTACK
+[00:39.089] Attack phase P1: 2 attack(s) available
+[00:39.089] MSG: Player 2: tap a character to attack.
+[00:39.379] AI1 attack decision: (0,0)"Gryphon" [ATK=100] → (4,4) "Echo Bringer" [DEF=40]
+[00:39.680] Dice rolled: 4
+[00:39.687] MSG: Gryphon wins!
+[00:44.372] Crystals: P0 4000 → 3100 (-900)  [battle]
+[00:45.764] Card destroyed  P0 (4,4) "Echo Bringer"
+[00:45.769] Attack P1(0,0)"Gryphon" → P0(4,4)"Echo Bringer"  Dice=4  ATK=100 vs DEF=40  → WIN
+[00:45.770] Anim: 3A  △ P0(4,4)
+[00:46.265] Mode selected P1: ATTACK
+[00:46.275] Attack phase P1: 1 attack(s) available
+[00:46.275] MSG: Player 2: tap a character to attack.
+[00:46.562] AI1 attack decision: (0,1)"Moon Tribe Marksman" [ATK=0] → (0,2) "Kiyoko the Death Whisper" [DEF=35]
+[00:46.917] Revealed: P0 (0,2) "Kiyoko the Death Whisper"
+[00:46.918] Dice rolled: 1
+[00:51.634] Crystals: P1 3200 → 2900 (-300)  [battle]
+[00:53.027] Card destroyed  P1 (0,1) "Moon Tribe Marksman"
+[00:53.031] Attack P1(0,1)"Moon Tribe Marksman" → P0(0,2)"Kiyoko the Death Whisper"  Dice=1  ATK=0 vs DEF=35  → LOSE
+[00:53.031] Anim: 3B  △ P1(0,1)
+[00:53.540] Turn ended  P1  |  Crystals P0=3100 P1=2900
+
+--- Turn 4  |  Player 0  |  Crystals P0=3100 P1=2900 ---
+P0:   [  ? ][  ? ][Kiyo][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][Fera][  — ]
+P1:   [Gryp][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:54.143] Mode selected P0: TECH
+[00:54.464] Tech played  P0: "Tease"
+[00:56.018] MSG: Opponent must choose and reveal 1 of their squares.
+[00:56.018] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:56.425] AI1 target chosen: (2,2)
+[00:56.464] Revealed: P1 (2,2) "Gamma Emitter"
+[00:56.464] MSG: Tease: Opponent revealed Gamma Emitter.
+[00:56.466] Tech resolved  P0
+[00:57.368] Mode selected P0: ATTACK
+[00:57.377] Attack phase P0: 2 attack(s) available
+[00:57.377] MSG: Player 1: tap a character to attack.
+[00:57.667] AI0 attack decision: (0,2)"Kiyoko the Death Whisper" [ATK=40] → (2,2) "Gamma Emitter" [DEF=15]
+[00:57.968] Dice rolled: 4
+[00:57.980] MSG: Kiyoko the Death Whisper wins!
+[01:02.660] Crystals: P1 2900 → 2680 (-220)  [battle]
+[01:04.053] Card destroyed  P1 (2,2) "Gamma Emitter"
+[01:04.056] Attack P0(0,2)"Kiyoko the Death Whisper" → P1(2,2)"Gamma Emitter"  Dice=4  ATK=40 vs DEF=15  → WIN
+[01:04.056] Anim: 3A  △ P1(2,2)
+[01:04.551] Mode selected P0: ATTACK
+[01:04.555] Attack phase P0: 1 attack(s) available
+[01:04.560] MSG: Player 1: tap a character to attack.
+[01:04.851] AI0 attack decision: (4,3)"Feral Vampire" [ATK=40] → (1,3) "(dead-end)"
+[01:05.151] Dice rolled: 1
+[01:05.172] MSG: Nothing happens — Dead End.
+[01:08.537] Dead-end placed  P1 (1,3)
+[01:08.546] Attack P0(4,3)"Feral Vampire" → P1(1,3)(empty)  Dice=1  → DEAD_END
+[01:08.546] Anim: 3F  (blank slot)
+[01:09.036] Turn ended  P0  |  Crystals P0=3100 P1=2680
+
+--- Turn 5  |  Player 1  |  Crystals P0=3100 P1=2680 ---
+P0:   [  ? ][  ? ][Kiyo][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][Fera][  — ]
+P1:   [Gryp][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:09.634] Mode selected P1: ATTACK
+[01:09.639] Attack phase P1: 2 attack(s) available
+[01:09.640] MSG: Player 2: tap a character to attack.
+[01:09.934] AI1 attack decision: (0,0)"Gryphon" [ATK=100] → (0,2) "Kiyoko the Death Whisper" [DEF=35]
+[01:10.235] Dice rolled: 5
+[01:10.246] MSG: Gryphon wins!
+[01:14.927] Crystals: P0 3100 → 2300 (-800)  [battle]
+[01:16.321] Card destroyed  P0 (0,2) "Kiyoko the Death Whisper"
+[01:16.328] Attack P1(0,0)"Gryphon" → P0(0,2)"Kiyoko the Death Whisper"  Dice=5  ATK=100 vs DEF=35  → WIN
+[01:16.328] Anim: 3A  △ P0(0,2)
+[01:16.820] Mode selected P1: ATTACK
+[01:16.826] Attack phase P1: 1 attack(s) available
+[01:16.827] MSG: Player 2: tap a character to attack.
+[01:17.118] AI1 attack decision: (2,0)"Echo Bringer" [ATK=70] → (4,3) "Feral Vampire" [DEF=25]
+[01:17.420] Revealed: P1 (2,0) "Echo Bringer"
+[01:17.420] Dice rolled: 5
+[01:17.429] MSG: Echo Bringer wins!
+[01:22.110] Crystals: P0 2300 → 1900 (-400)  [battle]
+[01:23.502] Card destroyed  P0 (4,3) "Feral Vampire"
+[01:23.503] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[01:23.505] Attack P1(2,0)"Echo Bringer" → P0(4,3)"Feral Vampire"  Dice=5  ATK=70 vs DEF=25  → WIN
+[01:23.505] Anim: 3A  △ P0(4,3)
+[01:26.012] Turn ended  P1  |  Crystals P0=1900 P1=2680
+
+--- Turn 6  |  Player 0  |  Crystals P0=1900 P1=2680 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [Gryp][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [Echo][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:26.619] Mode selected P0: ATTACK
+[01:26.627] Attack phase P0: 2 attack(s) available
+[01:26.627] MSG: Player 1: tap a character to attack.
+[01:26.926] AI0 attack decision: (0,4)"Pyromancer" [ATK=80] → (0,0) "Gryphon" [DEF=85]
+[01:27.265] Revealed: P0 (0,4) "Pyromancer"
+[01:27.266] Dice rolled: 1
+[01:27.270] MSG: Pyromancer wins!
+[01:33.547] Crystals: P1 2680 → 1530 (-1150)  [battle]
+[01:34.940] Card destroyed  P1 (0,0) "Gryphon"
+[01:34.943] Attack P0(0,4)"Pyromancer" → P1(0,0)"Gryphon"  Dice=1  ATK=110 vs DEF=85  → WIN
+[01:34.943] Anim: 3A  △ P1(0,0)
+[01:35.448] Mode selected P0: ATTACK
+[01:35.454] Attack phase P0: 1 attack(s) available
+[01:35.456] MSG: Player 1: tap a character to attack.
+[01:35.755] AI0 attack decision: (3,1)"Neptune Diver" [ATK=20] → (1,2) "(dead-end)"
+[01:36.118] Revealed: P0 (3,1) "Neptune Diver"
+[01:36.118] Dice rolled: 1
+[01:36.129] MSG: Nothing happens — Dead End.
+[01:39.474] Dead-end placed  P1 (1,2)
+[01:39.481] Attack P0(3,1)"Neptune Diver" → P1(1,2)(empty)  Dice=1  → DEAD_END
+[01:39.481] Anim: 3F  (blank slot)
+[01:39.975] Turn ended  P0  |  Crystals P0=1900 P1=1530
+
+--- Turn 7  |  Player 1  |  Crystals P0=1900 P1=1530 ---
+P0:   [  ? ][  ? ][  — ][  ? ][Pyro]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Nept][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [Echo][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:40.574] Mode selected P1: ATTACK
+[01:40.583] Attack phase P1: 2 attack(s) available
+[01:40.583] MSG: Player 2: tap a character to attack.
+[01:40.871] AI1 attack decision: (2,0)"Echo Bringer" [ATK=70] → (0,4) "Pyromancer" [DEF=0]
+[01:41.172] Dice rolled: 2
+[01:41.180] MSG: Echo Bringer wins!
+[01:45.864] Crystals: P0 1900 → 1000 (-900)  [battle]
+[01:47.258] Card destroyed  P0 (0,4) "Pyromancer"
+[01:47.259] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[01:47.263] Attack P1(2,0)"Echo Bringer" → P0(0,4)"Pyromancer"  Dice=2  ATK=70 vs DEF=0  → WIN
+[01:47.263] Anim: 3A  △ P0(0,4)
+[01:49.765] Turn ended  P1  |  Crystals P0=1000 P1=1530
+
+--- Turn 8  |  Player 0  |  Crystals P0=1000 P1=1530 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Nept][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [Echo][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:50.356] Mode selected P0: ATTACK
+[01:50.360] Attack phase P0: 2 attack(s) available
+[01:50.361] MSG: Player 1: tap a character to attack.
+[01:50.642] AI0 attack decision: (3,1)"Neptune Diver" [ATK=20] → (1,1) "Church Guard" [DEF=35]
+[01:50.978] Revealed: P1 (1,1) "Church Guard"
+[01:50.978] Dice rolled: 1
+[01:55.751] Crystals: P0 1000 → 800 (-200)  [battle]
+[01:57.146] Card destroyed  P0 (3,1) "Neptune Diver"
+[01:57.149] Attack P0(3,1)"Neptune Diver" → P1(1,1)"Church Guard"  Dice=1  ATK=20 vs DEF=35  → LOSE
+[01:57.149] Anim: 3B  △ P0(3,1)
+[01:57.149] MSG: Siege Cannon: Church Guard at (1,1) destroyed after surviving the attack!
+[01:57.150] Crystals: P1 1530 → 1380 (-150)  [card lost]
+[01:57.151] Card destroyed  P1 (1,1) "Church Guard"
+[01:59.022] Mode selected P0: ATTACK
+[01:59.028] Attack phase P0: 1 attack(s) available
+[01:59.028] MSG: Player 1: tap a character to attack.
+[01:59.321] AI0 attack decision: (4,1)"Moon Tribe Marksman" [ATK=35] → (3,1) "(dead-end)"
+[01:59.625] Revealed: P0 (4,1) "Moon Tribe Marksman"
+[01:59.625] Dice rolled: 5
+[01:59.650] MSG: Nothing happens — Dead End.
+[02:03.013] Dead-end placed  P1 (3,1)
+[02:03.016] Attack P0(4,1)"Moon Tribe Marksman" → P1(3,1)(empty)  Dice=5  → DEAD_END
+[02:03.016] Anim: 3F  (blank slot)
+[02:03.516] Turn ended  P0  |  Crystals P0=800 P1=1380
+
+--- Turn 9  |  Player 1  |  Crystals P0=800 P1=1380 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Moon][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Echo][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:04.115] Mode selected P1: ATTACK
+[02:04.120] Attack phase P1: 2 attack(s) available
+[02:04.120] MSG: Player 2: tap a character to attack.
+[02:04.409] AI1 attack decision: (2,0)"Echo Bringer" [ATK=70] → (4,1) "Moon Tribe Marksman" [DEF=25]
+[02:04.708] Dice rolled: 1
+[02:04.718] MSG: Echo Bringer wins!
+[02:09.402] Crystals: P0 800 → 500 (-300)  [battle]
+[02:10.793] Card destroyed  P0 (4,1) "Moon Tribe Marksman"
+[02:10.794] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[02:10.796] Attack P1(2,0)"Echo Bringer" → P0(4,1)"Moon Tribe Marksman"  Dice=1  ATK=70 vs DEF=25  → WIN
+[02:10.796] Anim: 3A  △ P0(4,1)
+[02:11.289] Mode selected P1: ATTACK
+[02:11.293] Attack phase P1: 2 attack(s) available
+[02:11.293] MSG: Player 2: tap a character to attack.
+[02:11.588] AI1 attack decision: (3,4)"Jacob the Ski Mask" [ATK=15] → (2,0) "(dead-end)"
+[02:11.965] Revealed: P1 (3,4) "Jacob the Ski Mask"
+[02:11.966] Dice rolled: 5
+[02:11.983] MSG: Nothing happens — Dead End.
+[02:15.320] Dead-end placed  P0 (2,0)
+[02:15.326] Attack P1(3,4)"Jacob the Ski Mask" → P0(2,0)(empty)  Dice=5  → DEAD_END
+[02:15.326] Anim: 3F  (blank slot)
+[02:17.835] Turn ended  P1  |  Crystals P0=500 P1=1380
+
+--- Turn 10  |  Player 0  |  Crystals P0=500 P1=1380 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Echo][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][Jaco]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:18.401] Mode selected P0: ATTACK
+[02:18.407] Attack phase P0: 2 attack(s) available
+[02:18.407] MSG: Player 1: tap a character to attack.
+[02:18.700] AI0 attack decision: (0,1)"Flame Seraph" [ATK=50] → (2,0) "Echo Bringer" [DEF=40]
+[02:19.052] Revealed: P0 (0,1) "Flame Seraph"
+[02:19.052] Dice rolled: 4
+[02:19.055] MSG: Flame Seraph wins!
+[02:23.718] Crystals: P1 1380 → 480 (-900)  [battle]
+[02:25.113] Card destroyed  P1 (2,0) "Echo Bringer"
+[02:25.125] Attack P0(0,1)"Flame Seraph" → P1(2,0)"Echo Bringer"  Dice=4  ATK=50 vs DEF=40  → WIN
+[02:25.125] Anim: 3A  △ P1(2,0)
+[02:25.618] Mode selected P0: ATTACK
+[02:25.625] Attack phase P0: 1 attack(s) available
+[02:25.626] MSG: Player 1: tap a character to attack.
+[02:25.930] AI0 attack decision: (0,0)"Grave Worm" [ATK=15] → (3,3) "(dead-end)"
+[02:26.279] Revealed: P0 (0,0) "Grave Worm"
+[02:26.279] Dice rolled: 4
+[02:26.294] MSG: Nothing happens — Dead End.
+[02:29.598] Dead-end placed  P1 (3,3)
+[02:29.603] Attack P0(0,0)"Grave Worm" → P1(3,3)(empty)  Dice=4  → DEAD_END
+[02:29.603] Anim: 3F  (blank slot)
+[02:30.111] Turn ended  P0  |  Crystals P0=500 P1=480
+
+--- Turn 11  |  Player 1  |  Crystals P0=500 P1=480 ---
+P0:   [Grav][Flam][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][Jaco]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:30.721] Mode selected P1: ATTACK
+[02:30.727] Attack phase P1: 2 attack(s) available
+[02:30.727] MSG: Player 2: tap a character to attack.
+[02:31.021] AI1 attack decision: (3,4)"Jacob the Ski Mask" [ATK=15] → (0,1) "Flame Seraph" [DEF=10]
+[02:31.330] Dice rolled: 5
+[02:31.337] MSG: Jacob the Ski Mask wins!
+[02:36.031] Crystals: P0 500 → 0 (-500)  [battle]
+
+=== GAME OVER ===
+[02:36.040] AI Player 1 wins
+[02:36.040] Reason: crystals
+[02:36.040] Final crystals — P0: 0  P1: 480  |  Turns: 11
+[02:36.040] Log saved to: res://logs/results/2026-05-31_09-29-14_330_shirley_temple/battle_burnt_toast_uprising_2026-05-31_09-47-14_276.txt

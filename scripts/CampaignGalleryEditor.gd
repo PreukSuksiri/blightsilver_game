@@ -18,7 +18,8 @@ var _f_line2:     LineEdit  = null
 var _f_image:     LineEdit  = null
 var _f_vn:        LineEdit  = null
 var _f_newline:        CheckBox  = null
-var _f_unlock:         LineEdit  = null
+var _f_prerequisite:   OptionButton = null
+var _prerequisite_values: Array = []
 var _f_custom_text_on: CheckBox  = null
 var _f_custom_text:    LineEdit  = null
 var _fields_root: Control   = null
@@ -238,9 +239,21 @@ func _build_ui() -> void:
 	_f_vn = _field.call(row_vn)
 	_browse_btn.call(row_vn, _f_vn)
 
-	var row_unlock: HBoxContainer = _row.call("Unlock Req.")
-	_f_unlock = _field.call(row_unlock)
-	_f_unlock.placeholder_text = "campaign node ID  (e.g. ch0_s1)  — empty = always unlocked"
+	var row_prereq: HBoxContainer = _row.call("Prerequisite")
+	_f_prerequisite = OptionButton.new()
+	_f_prerequisite.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_f_prerequisite.add_theme_font_override("font", CHIVO_FONT)
+	_f_prerequisite.add_theme_font_size_override("font_size", 13)
+	_f_prerequisite.item_selected.connect(func(_i: int) -> void: _mark_dirty())
+	row_prereq.add_child(_f_prerequisite)
+	var prereq_hint := Label.new()
+	prereq_hint.text = "Finish this chapter first to unlock"
+	prereq_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	prereq_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	prereq_hint.add_theme_font_override("font", CHIVO_FONT)
+	prereq_hint.add_theme_font_size_override("font_size", 11)
+	prereq_hint.add_theme_color_override("font_color", Color(0.45, 0.48, 0.55))
+	_fields_root.add_child(prereq_hint)
 
 	var row_nl: HBoxContainer = _row.call("New Line")
 	_f_newline = CheckBox.new()
@@ -297,8 +310,16 @@ func _rebuild_list() -> void:
 		var d: Dictionary = _data[i] as Dictionary
 		var nl: String    = "⏎ " if bool(d.get("new_line_before", false)) else "   "
 		var has_vn: String = "▶ " if str(d.get("vn_scene", "")).strip_edges() != "" else "○ "
-		var label: String = "%s%s%s  /  %s" % [
-			nl, has_vn, str(d.get("line1", "")), str(d.get("line2", ""))
+		var lock_mark: String = ""
+		var prereq_vn: String = str(d.get("prerequisite_chapter", "")).strip_edges()
+		if prereq_vn == "":
+			var legacy: String = str(d.get("unlock_requires", "")).strip_edges()
+			if legacy != "":
+				prereq_vn = CampaignManager.get_vn_scene_for_node(legacy)
+		if prereq_vn != "":
+			lock_mark = "🔒 "
+		var label: String = "%s%s%s%s  /  %s" % [
+			nl, lock_mark, has_vn, str(d.get("line1", "")), str(d.get("line2", ""))
 		]
 		_entry_list.add_item(label)
 	if _selected_idx >= 0 and _selected_idx < _entry_list.item_count:
@@ -322,7 +343,14 @@ func _load_fields() -> void:
 	_f_line2.text   = str(d.get("line2", ""))
 	_f_image.text   = str(d.get("image", ""))
 	_f_vn.text      = str(d.get("vn_scene", ""))
-	_f_unlock.text  = str(d.get("unlock_requires", ""))
+	_rebuild_prerequisite_options()
+	var prereq_vn: String = str(d.get("prerequisite_chapter", "")).strip_edges()
+	if prereq_vn == "":
+		var legacy_id: String = str(d.get("unlock_requires", "")).strip_edges()
+		if legacy_id != "":
+			prereq_vn = CampaignManager.get_vn_scene_for_node(legacy_id)
+	var sel_idx: int = _prerequisite_values.find(prereq_vn)
+	_f_prerequisite.select(maxi(0, sel_idx))
 	_f_newline.button_pressed = bool(d.get("new_line_before", false))
 	var _ct: String = str(d.get("custom_text", "")).strip_edges()
 	_f_custom_text_on.button_pressed = _ct != ""
@@ -339,7 +367,15 @@ func _flush_fields() -> void:
 	d["line2"]          = _f_line2.text.strip_edges()
 	d["image"]          = _f_image.text.strip_edges()
 	d["vn_scene"]        = _f_vn.text.strip_edges()
-	d["unlock_requires"] = _f_unlock.text.strip_edges()
+	var pre_idx: int = _f_prerequisite.selected
+	var pre_vn: String = ""
+	if pre_idx >= 0 and pre_idx < _prerequisite_values.size():
+		pre_vn = str(_prerequisite_values[pre_idx]).strip_edges()
+	if pre_vn != "":
+		d["prerequisite_chapter"] = pre_vn
+	else:
+		d.erase("prerequisite_chapter")
+	d.erase("unlock_requires")
 	d["new_line_before"] = _f_newline.button_pressed
 	if _f_custom_text_on.button_pressed:
 		d["custom_text"] = _f_custom_text.text.strip_edges()
@@ -357,7 +393,8 @@ func _on_add() -> void:
 		"line2": "Stage ?",
 		"image": "",
 		"vn_scene": "",
-		"new_line_before": false
+		"new_line_before": false,
+		"prerequisite_chapter": "",
 	})
 	_selected_idx = _data.size() - 1
 	_rebuild_list()
@@ -400,6 +437,24 @@ func _on_move_down() -> void:
 	_rebuild_list()
 	_load_fields()
 	_mark_dirty()
+
+
+func _rebuild_prerequisite_options() -> void:
+	if _f_prerequisite == null:
+		return
+	_f_prerequisite.clear()
+	_prerequisite_values = [""]
+	_f_prerequisite.add_item("(none — always unlocked)")
+	for i: int in range(_data.size()):
+		if i == _selected_idx:
+			continue
+		var d: Dictionary = _data[i] as Dictionary
+		var vn: String = str(d.get("vn_scene", "")).strip_edges()
+		if vn == "":
+			continue
+		var label: String = "%s / %s" % [str(d.get("line1", "")), str(d.get("line2", ""))]
+		_f_prerequisite.add_item(label)
+		_prerequisite_values.append(vn)
 
 
 # ─────────────────────────────────────────────────────────────

@@ -1,0 +1,498 @@
+=== Battle of Haunted Break Room ===
+Battle started: 2026-05-31 09:37:28.161
+Game Session of Shirley Temple (started 2026-05-31 09:29:14.330)
+=== AI vs AI Match ===
+Batch iteration: 4 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Resurrection, Tease
+P1 Tech hand: Prayer, Bribe, Radar
+P0:   [  — ][  — ][T:Pepp][T:Hard][  — ]
+      [  — ][C:Swar][C:Tiny][C:Lazy][  — ]
+      [  — ][C:Godd][C:Pyro][C:War ][  — ]
+      [  — ][C:Shep][C:Bat ][C:Lab ][  — ]
+      [T:Bunk][  — ][T:Hypn][  — ][T:Bait]
+P1:   [T:Red ][C:Choi][T:Deco][C:Nigh][C:Whit]
+      [C:Scar][  — ][  — ][  — ][C:Echo]
+      [T:Brai][  — ][  — ][  — ][T:Flam]
+      [C:Snip][  — ][  — ][  — ][C:Skel]
+      [C:Hamm][C:Armo][C:Meli][C:Laug][T:Host]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.308] Mode selected P0: TECH
+[00:05.615] Tech played  P0: "Spy"
+[00:07.185] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.590] AI0 target chosen: (2,2)
+[00:07.590] Revealed: P1 (2,2) (blank slot)
+[00:07.593] Tech resolved  P0
+[00:10.517] Crystals: P0 5000 → 4950 (-50)  [skip tax]
+[00:10.517] MSG: AI Player 0 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:11.901] Turn ended  P0  |  Crystals P0=4950 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4950 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:12.509] Mode selected P1: TECH
+[00:12.817] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:14.201] Tech played  P1: "Radar"
+[00:15.734] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:16.131] AI1 target chosen: (3,4)
+[00:16.132] Revealed: P0 (3,4) (blank slot)
+[00:16.531] AI1 target chosen: (0,3)
+[00:16.578] Revealed: P0 (0,3) "Hard Scale"
+[00:16.908] AI1 target chosen: (4,3)
+[00:16.909] Revealed: P0 (4,3) (blank slot)
+[00:16.912] Tech resolved  P1
+[00:17.825] Mode selected P1: ATTACK
+[00:17.826] Attack phase P1: 2 attack(s) available
+[00:17.827] MSG: Player 2: tap a character to attack.
+[00:18.133] AI1 attack decision: (3,4)"Skeleton Scout" [ATK=20] → (3,4) "(dead-end)"
+[00:18.495] Revealed: P1 (3,4) "Skeleton Scout"
+[00:18.495] Dice rolled: 1
+[00:18.512] MSG: Nothing happens — Dead End.
+[00:21.853] Dead-end placed  P0 (3,4)
+[00:21.853] MSG: Skeleton Scout: Bonus attack for hitting dead end!
+[00:21.855] Attack P1(3,4)"Skeleton Scout" → P0(3,4)(empty)  Dice=1  → DEAD_END
+[00:21.855] Anim: 3F  (blank slot)
+[00:24.364] Turn ended  P1  |  Crystals P0=4950 P1=4400
+
+--- Turn 3  |  Player 0  |  Crystals P0=4950 P1=4400 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Skel]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:24.963] Mode selected P0: TECH
+[00:25.273] Tech played  P0: "Tease"
+[00:26.827] MSG: Opponent must choose and reveal 1 of their squares.
+[00:26.828] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:27.237] AI1 target chosen: (0,2)
+[00:27.267] Revealed: P1 (0,2) "Decoy Puppet"
+[00:27.267] MSG: Tease: Opponent revealed Decoy Puppet.
+[00:27.270] Tech resolved  P0
+[00:28.155] Mode selected P0: ATTACK
+[00:28.161] Attack phase P0: 2 attack(s) available
+[00:28.161] MSG: Player 1: tap a character to attack.
+[00:28.460] AI0 attack decision: (2,1)"Goddess of Virtue" [ATK=80] → (3,4) "Skeleton Scout" [DEF=5]
+[00:28.812] Revealed: P0 (2,1) "Goddess of Virtue"
+[00:28.812] Dice rolled: 5
+[00:28.816] MSG: Goddess of Virtue destroys Skeleton Scout by affinity!
+[00:35.045] Crystals: P1 4400 → 4250 (-150)  [battle]
+[00:36.440] Card destroyed  P1 (3,4) "Skeleton Scout"
+[00:36.445] Attack P0(2,1)"Goddess of Virtue" → P1(3,4)"Skeleton Scout"  Dice=5  ATK=80 vs DEF=5  → WIN
+[00:36.445] Anim: 3A  △ P1(3,4)
+[00:38.959] Turn ended  P0  |  Crystals P0=4950 P1=4250
+
+--- Turn 4  |  Player 1  |  Crystals P0=4950 P1=4250 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:39.562] Mode selected P1: TECH
+[00:39.880] Tech played  P1: "Bribe"
+[00:41.437] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:41.946] MSG: Bribe: AI passed.
+[00:41.953] Tech resolved  P1
+[00:42.862] Mode selected P1: ATTACK
+[00:42.868] Attack phase P1: 2 attack(s) available
+[00:42.868] MSG: Player 2: tap a character to attack.
+[00:43.169] AI1 attack decision: (4,2)"Melissa the Healer" [ATK=0] → (1,0) "(dead-end)"
+[00:43.520] Revealed: P1 (4,2) "Melissa the Healer"
+[00:43.520] Dice rolled: 3
+[00:43.531] MSG: Nothing happens — Dead End.
+[00:46.905] Dead-end placed  P0 (1,0)
+[00:46.911] Attack P1(4,2)"Melissa the Healer" → P0(1,0)(empty)  Dice=3  → DEAD_END
+[00:46.911] Anim: 3F  (blank slot)
+[00:49.415] Turn ended  P1  |  Crystals P0=4950 P1=4250
+
+--- Turn 5  |  Player 0  |  Crystals P0=4950 P1=4250 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][Meli][  ? ][  ? ]
+[00:51.515] Union summoned P0: [Barros the Colossal] from Swarmcaller, Lazy Troll
+[00:51.515] Crystals: P0 4950 → 3450 (-1500)  [union]
+[00:51.530] Revealed: P0 (1,1) "Barros the Colossal"
+[00:51.531] MSG: Player 1 summoned [Barros the Colossal] using: Swarmcaller, Lazy Troll
+[00:54.952] Mode selected P0: ATTACK
+[00:54.988] Attack phase P0: 2 attack(s) available
+[00:54.988] MSG: Player 1: tap a character to attack.
+[00:55.249] AI0 attack decision: (1,1)"Barros the Colossal" [ATK=150] → (4,2) "Melissa the Healer" [DEF=25]
+[00:55.548] Dice rolled: 2
+[00:55.596] MSG: Barros the Colossal wins!
+[01:00.241] Crystals: P1 4250 → 3550 (-700)  [battle]
+[01:00.241] Crystals: P1 3550 → 3850 (+300)  [recovery]
+[01:00.243] MSG: Melissa the Healer: Recovered 300 Crystals!
+[01:00.254] Card destroyed  P1 (4,2) "Melissa the Healer"
+[01:00.275] Attack P0(1,1)"Barros the Colossal" → P1(4,2)"Melissa the Healer"  Dice=2  ATK=150 vs DEF=25  → WIN
+[01:00.275] Anim: 3A  △ P1(4,2)
+[01:00.714] Mode selected P0: ATTACK
+[01:00.751] Attack phase P0: 1 attack(s) available
+[01:00.751] MSG: Player 1: tap a character to attack.
+[01:01.019] AI0 attack decision: (2,1)"Goddess of Virtue" [ATK=80] → (2,2) "(dead-end)"
+[01:01.329] Dice rolled: 1
+[01:01.357] MSG: Nothing happens — Dead End.
+[01:04.755] Dead-end placed  P1 (2,2)
+[01:04.779] Attack P0(2,1)"Goddess of Virtue" → P1(2,2)(empty)  Dice=1  → DEAD_END
+[01:04.779] Anim: 3F  (blank slot)
+[01:05.243] Turn ended  P0  |  Crystals P0=3450 P1=3850
+
+--- Turn 6  |  Player 1  |  Crystals P0=3450 P1=3850 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  ? ][  — ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:05.832] Mode selected P1: ATTACK
+[01:05.856] Attack phase P1: 2 attack(s) available
+[01:05.856] MSG: Player 2: tap a character to attack.
+[01:06.166] AI1 attack decision: (0,4)"White Tiger" [ATK=40] → (1,3) "(dead-end)"
+[01:06.534] Revealed: P1 (0,4) "White Tiger"
+[01:06.534] Dice rolled: 4
+[01:06.559] MSG: Nothing happens — Dead End.
+[01:09.885] Dead-end placed  P0 (1,3)
+[01:09.904] Attack P1(0,4)"White Tiger" → P0(1,3)(empty)  Dice=4  → DEAD_END
+[01:09.904] Anim: 3F  (blank slot)
+[01:10.340] Mode selected P1: ATTACK
+[01:10.375] Attack phase P1: 1 attack(s) available
+[01:10.376] MSG: Player 2: tap a character to attack.
+[01:10.650] AI1 attack decision: (1,4)"Echo Bringer" [ATK=70] → (4,3) "(dead-end)"
+[01:10.998] Revealed: P1 (1,4) "Echo Bringer"
+[01:10.998] Dice rolled: 5
+[01:11.032] MSG: Nothing happens — Dead End.
+[01:14.343] Dead-end placed  P0 (4,3)
+[01:14.344] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[01:14.363] Attack P1(1,4)"Echo Bringer" → P0(4,3)(empty)  Dice=5  → DEAD_END
+[01:14.363] Anim: 3F  (blank slot)
+[01:16.871] Turn ended  P1  |  Crystals P0=3450 P1=3850
+
+--- Turn 7  |  Player 0  |  Crystals P0=3450 P1=3850 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  ? ][  — ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][Whit]
+      [  ? ][  — ][  — ][  — ][Echo]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:17.508] Mode selected P0: ATTACK
+[01:17.536] Attack phase P0: 2 attack(s) available
+[01:17.537] MSG: Player 1: tap a character to attack.
+[01:17.824] AI0 attack decision: (1,1)"Barros the Colossal" [ATK=150] → (1,4) "Echo Bringer" [DEF=40]
+[01:18.134] Dice rolled: 2
+[01:18.221] MSG: Barros the Colossal wins!
+[01:22.734] Crystals: P1 3850 → 2950 (-900)  [battle]
+[01:24.127] Card destroyed  P1 (1,4) "Echo Bringer"
+[01:24.147] Attack P0(1,1)"Barros the Colossal" → P1(1,4)"Echo Bringer"  Dice=2  ATK=150 vs DEF=40  → WIN
+[01:24.147] Anim: 3A  △ P1(1,4)
+[01:24.629] Mode selected P0: ATTACK
+[01:24.692] Attack phase P0: 1 attack(s) available
+[01:24.692] MSG: Player 1: tap a character to attack.
+[01:25.014] AI0 attack decision: (2,1)"Goddess of Virtue" [ATK=80] → (0,4) "White Tiger" [DEF=25]
+[01:25.316] Dice rolled: 5
+[01:25.336] MSG: White Tiger: Attacker loses 15 ATK!
+[01:25.336] MSG: Goddess of Virtue wins!
+[01:31.587] Crystals: P1 2950 → 2500 (-450)  [battle]
+[01:32.981] Card destroyed  P1 (0,4) "White Tiger"
+[01:33.006] Attack P0(2,1)"Goddess of Virtue" → P1(0,4)"White Tiger"  Dice=5  ATK=65 vs DEF=25  → WIN
+[01:33.006] Anim: 3A  △ P1(0,4)
+[01:33.495] Turn ended  P0  |  Crystals P0=3450 P1=2500
+
+--- Turn 8  |  Player 1  |  Crystals P0=3450 P1=2500 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  ? ][  — ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:34.075] Mode selected P1: ATTACK
+[01:34.119] Attack phase P1: 2 attack(s) available
+[01:34.119] MSG: Player 2: tap a character to attack.
+[01:34.406] AI1 attack decision: (4,3)"Laughing Granny" [ATK=15] → (3,0) "(dead-end)"
+[01:34.758] Revealed: P1 (4,3) "Laughing Granny"
+[01:34.758] Dice rolled: 1
+[01:34.797] MSG: Nothing happens — Dead End.
+[01:38.118] Dead-end placed  P0 (3,0)
+[01:38.146] Attack P1(4,3)"Laughing Granny" → P0(3,0)(empty)  Dice=1  → DEAD_END
+[01:38.146] Anim: 3F  (blank slot)
+[01:38.573] Mode selected P1: ATTACK
+[01:38.604] Attack phase P1: 1 attack(s) available
+[01:38.604] MSG: Player 2: tap a character to attack.
+[01:38.882] AI1 attack decision: (0,3)"Night Whisperer" [ATK=30] → (2,0) "(dead-end)"
+[01:39.248] Revealed: P1 (0,3) "Night Whisperer"
+[01:39.248] Dice rolled: 4
+[01:39.264] MSG: Nothing happens — Dead End.
+[01:42.642] Dead-end placed  P0 (2,0)
+[01:42.667] Attack P1(0,3)"Night Whisperer" → P0(2,0)(empty)  Dice=4  → DEAD_END
+[01:42.667] Anim: 3F  (blank slot)
+[01:43.086] Turn ended  P1  |  Crystals P0=3450 P1=2500
+
+--- Turn 9  |  Player 0  |  Crystals P0=3450 P1=2500 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  ? ][  — ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][Nigh][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][Laug][  ? ]
+[01:43.678] Mode selected P0: ATTACK
+[01:43.712] Attack phase P0: 2 attack(s) available
+[01:43.712] MSG: Player 1: tap a character to attack.
+[01:44.020] AI0 attack decision: (1,1)"Barros the Colossal" [ATK=150] → (0,3) "Night Whisperer" [DEF=30]
+[01:44.321] Dice rolled: 2
+[01:44.403] MSG: Barros the Colossal wins!
+[01:49.062] Crystals: P1 2500 → 1600 (-900)  [battle]
+[01:50.455] Card destroyed  P1 (0,3) "Night Whisperer"
+[01:50.475] Attack P0(1,1)"Barros the Colossal" → P1(0,3)"Night Whisperer"  Dice=2  ATK=150 vs DEF=30  → WIN
+[01:50.475] Anim: 3A  △ P1(0,3)
+[01:50.895] Mode selected P0: ATTACK
+[01:50.930] Attack phase P0: 1 attack(s) available
+[01:50.932] MSG: Player 1: tap a character to attack.
+[01:51.199] AI0 attack decision: (2,1)"Goddess of Virtue" [ATK=80] → (4,3) "Laughing Granny" [DEF=20]
+[01:51.507] Dice rolled: 1
+[01:51.527] MSG: Goddess of Virtue destroys Laughing Granny by affinity!
+[01:57.820] Crystals: P1 1600 → 1250 (-350)  [battle]
+[01:59.214] Card destroyed  P1 (4,3) "Laughing Granny"
+[01:59.234] Attack P0(2,1)"Goddess of Virtue" → P1(4,3)"Laughing Granny"  Dice=1  ATK=80 vs DEF=30  → WIN
+[01:59.234] Anim: 3A  △ P1(4,3)
+[01:59.748] Turn ended  P0  |  Crystals P0=3450 P1=1250
+
+--- Turn 10  |  Player 1  |  Crystals P0=3450 P1=1250 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  ? ][  — ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:00.400] Mode selected P1: ATTACK
+[02:00.427] Attack phase P1: 2 attack(s) available
+[02:00.427] MSG: Player 2: tap a character to attack.
+[02:00.703] AI1 attack decision: (4,1)"Armored Bee" [ATK=30] → (0,0) "(dead-end)"
+[02:01.038] Revealed: P1 (4,1) "Armored Bee"
+[02:01.038] Dice rolled: 5
+[02:01.059] MSG: Nothing happens — Dead End.
+[02:04.371] Dead-end placed  P0 (0,0)
+[02:04.418] Attack P1(4,1)"Armored Bee" → P0(0,0)(empty)  Dice=5  → DEAD_END
+[02:04.418] Anim: 3F  (blank slot)
+[02:06.908] Turn ended  P1  |  Crystals P0=3450 P1=1250
+
+--- Turn 11  |  Player 0  |  Crystals P0=3450 P1=1250 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  ? ][  — ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][Armo][  — ][  — ][  ? ]
+[02:07.495] Mode selected P0: ATTACK
+[02:07.500] Attack phase P0: 2 attack(s) available
+[02:07.500] MSG: Player 1: tap a character to attack.
+[02:07.794] AI0 attack decision: (1,1)"Barros the Colossal" [ATK=150] → (4,1) "Armored Bee" [DEF=0]
+[02:08.094] Dice rolled: 3
+[02:08.135] MSG: Barros the Colossal wins!
+[02:14.404] Crystals: P1 1250 → 770 (-480)  [battle]
+[02:15.796] Card destroyed  P1 (4,1) "Armored Bee"
+[02:15.799] Attack P0(1,1)"Barros the Colossal" → P1(4,1)"Armored Bee"  Dice=3  ATK=150 vs DEF=60  → WIN
+[02:15.799] Anim: 3A  △ P1(4,1)
+[02:16.303] Mode selected P0: ATTACK
+[02:16.310] Attack phase P0: 1 attack(s) available
+[02:16.310] MSG: Player 1: tap a character to attack.
+[02:16.610] AI0 attack decision: (2,1)"Goddess of Virtue" [ATK=80] → (0,2) "(dead-end)"
+[02:16.920] Dice rolled: 2
+[02:16.952] MSG: Nothing happens — Dead End.
+[02:20.296] Dead-end placed  P1 (0,2)
+[02:20.301] Attack P0(2,1)"Goddess of Virtue" → P1(0,2)(empty)  Dice=2  → DEAD_END
+[02:20.301] Anim: 3F  (blank slot)
+[02:20.797] Turn ended  P0  |  Crystals P0=3450 P1=770
+
+--- Turn 12  |  Player 1  |  Crystals P0=3450 P1=770 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  ? ][  — ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[02:21.400] Mode selected P1: ATTACK
+[02:21.404] Attack phase P1: 2 attack(s) available
+[02:21.405] MSG: Player 2: tap a character to attack.
+[02:21.694] AI1 attack decision: (4,0)"Hammer Shark" [ATK=20] → (4,0) "Bunker" [DEF=0]
+[02:22.034] Revealed: P1 (4,0) "Hammer Shark"
+[02:22.073] Revealed: P0 (4,0) "Bunker"
+[02:22.073] Dice rolled: 4
+[02:22.325] MSG: Trap triggered: Bunker!
+[02:26.412] Card destroyed  P0 (4,0) "Bunker"
+[02:26.413] Crystals: P0 3450 → 2550 (-900)  [trap cost]
+[02:27.803] MSG: Bunker: Adjacent squares cannot be targeted this turn.
+[02:27.806] Trap: "Bunker" triggered  P1(4,0)→P0(4,0)
+[02:27.806] Anim: 3D  (attacker survives)
+[02:28.304] Mode selected P1: ATTACK
+[02:28.311] Attack phase P1: 1 attack(s) available
+[02:28.311] MSG: Player 2: tap a character to attack.
+[02:28.602] AI1 attack decision: (3,0)"Sniping Fairy" [ATK=40] → (0,1) "(dead-end)"
+[02:28.951] Revealed: P1 (3,0) "Sniping Fairy"
+[02:28.951] Dice rolled: 3
+[02:28.974] MSG: Nothing happens — Dead End.
+[02:32.301] Dead-end placed  P0 (0,1)
+[02:32.307] Attack P1(3,0)"Sniping Fairy" → P0(0,1)(empty)  Dice=3  → DEAD_END
+[02:32.307] Anim: 3F  (blank slot)
+[02:32.804] Turn ended  P1  |  Crystals P0=2550 P1=770
+
+--- Turn 13  |  Player 0  |  Crystals P0=2550 P1=770 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  ? ][  — ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Snip][  — ][  — ][  — ][  — ]
+      [Hamm][  — ][  — ][  — ][  ? ]
+[02:33.400] Mode selected P0: ATTACK
+[02:33.407] Attack phase P0: 2 attack(s) available
+[02:33.409] MSG: Player 1: tap a character to attack.
+[02:33.699] AI0 attack decision: (1,1)"Barros the Colossal" [ATK=150] → (3,0) "Sniping Fairy" [DEF=20]
+[02:33.998] Dice rolled: 1
+[02:34.045] MSG: Barros the Colossal wins!
+[02:38.678] Crystals: P1 770 → 420 (-350)  [battle]
+[02:40.068] Card destroyed  P1 (3,0) "Sniping Fairy"
+[02:40.076] Attack P0(1,1)"Barros the Colossal" → P1(3,0)"Sniping Fairy"  Dice=1  ATK=150 vs DEF=20  → WIN
+[02:40.076] Anim: 3A  △ P1(3,0)
+[02:40.566] Mode selected P0: ATTACK
+[02:40.571] Attack phase P0: 1 attack(s) available
+[02:40.575] MSG: Player 1: tap a character to attack.
+[02:40.864] AI0 attack decision: (2,1)"Goddess of Virtue" [ATK=80] → (4,0) "Hammer Shark" [DEF=20]
+[02:41.166] Dice rolled: 4
+[02:41.176] MSG: Goddess of Virtue wins!
+[02:45.858] Crystals: P1 420 → 170 (-250)  [battle]
+[02:47.251] Card destroyed  P1 (4,0) "Hammer Shark"
+[02:47.253] Attack P0(2,1)"Goddess of Virtue" → P1(4,0)"Hammer Shark"  Dice=4  ATK=80 vs DEF=20  → WIN
+[02:47.253] Anim: 3A  △ P1(4,0)
+[02:47.753] Turn ended  P0  |  Crystals P0=2550 P1=170
+
+--- Turn 14  |  Player 1  |  Crystals P0=2550 P1=170 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  ? ][  — ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:48.356] Mode selected P1: ATTACK
+[02:48.361] Attack phase P1: 2 attack(s) available
+[02:48.361] MSG: Player 2: tap a character to attack.
+[02:48.652] AI1 attack decision: (1,0)"Scarlet Mutant" [ATK=35] → (3,1) "Shepherd Detective" [DEF=25]
+[02:49.019] Revealed: P1 (1,0) "Scarlet Mutant"
+[02:49.049] Revealed: P0 (3,1) "Shepherd Detective"
+[02:49.049] Dice rolled: 3
+[02:49.052] MSG: Scarlet Mutant wins!
+[02:53.637] Crystals: P0 2550 → 2150 (-400)  [battle]
+[02:55.032] Card destroyed  P0 (3,1) "Shepherd Detective"
+[02:55.038] Attack P1(1,0)"Scarlet Mutant" → P0(3,1)"Shepherd Detective"  Dice=3  ATK=35 vs DEF=25  → WIN
+[02:55.038] Anim: 3A  △ P0(3,1)
+[02:57.541] Turn ended  P1  |  Crystals P0=2150 P1=170
+
+--- Turn 15  |  Player 0  |  Crystals P0=2150 P1=170 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Barr][  ? ][  — ][  — ]
+      [  — ][Godd][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [Scar][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:58.135] Mode selected P0: TECH
+[02:58.437] Crystals: P0 2150 → 650 (-1500)  [tech cost]
+[02:59.821] Tech played  P0: "Resurrection"
+[03:01.388] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[03:01.786] AI0 target chosen: (0,3)
+[03:01.791] Revealed: P0 (0,3) "Shepherd Detective"
+[03:01.792] MSG: Revived Shepherd Detective at [0,3]!
+[03:01.802] Tech resolved  P0
+[03:02.703] Mode selected P0: ATTACK
+[03:02.710] Attack phase P0: 2 attack(s) available
+[03:02.712] MSG: Player 1: tap a character to attack.
+[03:03.003] AI0 attack decision: (1,1)"Barros the Colossal" [ATK=150] → (1,0) "Scarlet Mutant" [DEF=30]
+[03:03.303] Dice rolled: 3
+[03:03.350] MSG: Barros the Colossal wins!
+[03:07.979] Crystals: P1 170 → 0 (-170)  [battle]
+
+=== GAME OVER ===
+[03:07.987] AI Player 0 wins
+[03:07.987] Reason: crystals
+[03:07.987] Final crystals — P0: 650  P1: 0  |  Turns: 15
+[03:07.987] Log saved to: res://logs/results/2026-05-31_09-29-14_330_shirley_temple/battle_haunted_break_room_2026-05-31_09-37-28_161.txt

@@ -1,0 +1,228 @@
+=== Battle of Discount Lasagna ===
+Battle started: 2026-05-31 05:08:27.720
+Game Session of Mojito (started 2026-05-31 05:05:27.657)
+=== AI vs AI Match ===
+Batch iteration: 2 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Tease, Release Mutagen
+P1 Tech hand: Bribe, Release Mutagen, Prayer
+P0:   [T:Acid][C:Vile][C:Shot][C:Gran][C:Fuji]
+      [C:Flam][  — ][C:Pit ][  — ][T:Brai]
+      [  — ][  — ][C:Vamp][  — ][C:Heav]
+      [T:Defe][  — ][  — ][  — ][T:Trap]
+      [T:Alar][C:Pony][T:Spik][C:Armo][C:Succ]
+P1:   [C:Moon][  — ][C:Bomb][  — ][C:Scou]
+      [T:Bunk][  — ][T:Curs][T:Flam][C:Aray]
+      [C:Blad][  — ][T:Blac][  — ][C:Curs]
+      [C:Flam][T:Echo][C:Gold][  — ][T:Spik]
+      [C:Pyro][  — ][C:Demo][  — ][C:Mind]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.253] Mode selected P0: TECH
+[00:05.564] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:06.948] Tech played  P0: "Great Diplomacy"
+[00:08.584] Revealed: P0 (0,1) "Vile Creeper"
+[00:08.617] Revealed: P0 (0,2) "Shotgun Shark"
+[00:08.656] Revealed: P0 (0,3) "Grand Fort Archer"
+[00:08.702] Revealed: P0 (0,4) "Fujin"
+[00:08.722] Revealed: P0 (1,0) "Flame Seraph"
+[00:08.761] Revealed: P0 (1,2) "Pit Lord"
+[00:08.798] Revealed: P0 (2,2) "Vampire Duchess"
+[00:08.836] Revealed: P0 (2,4) "Heavy Tome Preacher"
+[00:08.861] Revealed: P0 (4,1) "Ponycorn"
+[00:08.890] Revealed: P0 (4,3) "Armored Bee"
+[00:08.924] Revealed: P0 (4,4) "Succubus"
+[00:08.927] Tech resolved  P0
+[00:11.346] Crystals: P0 4000 → 3950 (-50)  [skip tax]
+[00:11.346] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:12.738] Turn ended  P0  |  Crystals P0=3950 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=3950 P1=5000 ---
+P0:   [  ? ][Vile][Shot][Gran][Fuji]
+      [Flam][  — ][Pit ][  — ][  ? ]
+      [  — ][  — ][Vamp][  — ][Heav]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Pony][  ? ][Armo][Succ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:13.330] Mode selected P1: TECH
+[00:13.645] Tech played  P1: "Bribe"
+[00:15.188] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:15.687] MSG: Bribe: AI passed.
+[00:15.703] Tech resolved  P1
+[00:16.587] Mode selected P1: ATTACK
+[00:16.602] Attack phase P1: 2 attack(s) available
+[00:16.602] MSG: Player 2: tap a character to attack.
+[00:16.887] AI1 attack decision: (4,2)"Demon Spawn" [ATK=40] → (1,0) "Flame Seraph" [DEF=10]
+[00:17.240] Revealed: P1 (4,2) "Demon Spawn"
+[00:17.240] Dice rolled: 4
+[00:17.247] MSG: Demon Spawn wins!
+[00:21.879] Crystals: P0 3950 → 3450 (-500)  [battle]
+[00:23.273] Card destroyed  P0 (1,0) "Flame Seraph"
+[00:23.283] Attack P1(4,2)"Demon Spawn" → P0(1,0)"Flame Seraph"  Dice=4  ATK=40 vs DEF=10  → WIN
+[00:23.283] Anim: 3A  △ P0(1,0)
+[00:25.791] Turn ended  P1  |  Crystals P0=3450 P1=5000
+
+--- Turn 3  |  Player 0  |  Crystals P0=3450 P1=5000 ---
+P0:   [  ? ][Vile][Shot][Gran][Fuji]
+      [  — ][  — ][Pit ][  — ][  ? ]
+      [  — ][  — ][Vamp][  — ][Heav]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Pony][  ? ][Armo][Succ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Demo][  — ][  ? ]
+[00:26.379] Mode selected P0: TECH
+[00:26.696] Tech played  P0: "Release Mutagen"
+[00:28.247] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[00:28.654] AI0 target chosen: (0,1)
+[00:28.672] Tech resolved  P0
+[00:29.572] Mode selected P0: ATTACK
+[00:29.589] Attack phase P0: 2 attack(s) available
+[00:29.589] MSG: Player 1: tap a character to attack.
+[00:29.879] AI0 attack decision: (1,2)"Pit Lord" [ATK=120] → (4,2) "Demon Spawn" [DEF=30]
+[00:30.187] Dice rolled: 3
+[00:30.195] MSG: Pit Lord wins!
+[00:34.887] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:36.281] Card destroyed  P1 (4,2) "Demon Spawn"
+[00:36.289] Attack P0(1,2)"Pit Lord" → P1(4,2)"Demon Spawn"  Dice=3  ATK=120 vs DEF=30  → WIN
+[00:36.289] Anim: 3A  △ P1(4,2)
+[00:38.803] Turn ended  P0  |  Crystals P0=3450 P1=4600
+
+--- Turn 4  |  Player 1  |  Crystals P0=3450 P1=4600 ---
+P0:   [  ? ][Vile][Shot][Gran][Fuji]
+      [  — ][  — ][Pit ][  — ][  ? ]
+      [  — ][  — ][Vamp][  — ][Heav]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Pony][  ? ][Armo][Succ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:39.404] Mode selected P1: ATTACK
+[00:39.422] Attack phase P1: 2 attack(s) available
+[00:39.422] MSG: Player 2: tap a character to attack.
+[00:39.712] AI1 attack decision: (2,0)"Bladeshifter" [ATK=0] → (0,0) "Acid Trap Hole" [DEF=0]
+[00:40.096] Revealed: P1 (2,0) "Bladeshifter"
+[00:40.124] Revealed: P0 (0,0) "Acid Trap Hole"
+[00:40.124] Dice rolled: 2
+[00:40.331] MSG: Trap triggered: Acid Trap Hole!
+[00:44.446] Card destroyed  P0 (0,0) "Acid Trap Hole"
+[00:44.454] Crystals: P1 4600 → 4550 (-50)  [trap]
+[00:45.837] MSG: Acid Trap Hole: Player 2 loses 50 Crystals!
+[00:45.843] Trap: "Acid Trap Hole" triggered  P1(2,0)→P0(0,0)
+[00:45.843] Anim: 3D  (attacker survives)
+[00:46.346] Mode selected P1: ATTACK
+[00:46.361] Attack phase P1: 1 attack(s) available
+[00:46.361] MSG: Player 2: tap a character to attack.
+[00:46.654] AI1 attack decision: (3,0)"Flame Seraph" [ATK=50] → (0,2) "Shotgun Shark" [DEF=25]
+[00:46.963] Revealed: P1 (3,0) "Flame Seraph"
+[00:46.964] Dice rolled: 2
+[00:46.974] MSG: Flame Seraph wins!
+[00:51.663] Crystals: P0 3450 → 2550 (-900)  [battle]
+[00:53.057] Card destroyed  P0 (0,2) "Shotgun Shark"
+[00:53.066] Attack P1(3,0)"Flame Seraph" → P0(0,2)"Shotgun Shark"  Dice=2  ATK=50 vs DEF=25  → WIN
+[00:53.066] Anim: 3A  △ P0(0,2)
+[00:53.570] Turn ended  P1  |  Crystals P0=2550 P1=4550
+
+--- Turn 5  |  Player 0  |  Crystals P0=2550 P1=4550 ---
+P0:   [  — ][Vile][  — ][Gran][Fuji]
+      [  — ][  — ][Pit ][  — ][  ? ]
+      [  — ][  — ][Vamp][  — ][Heav]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Pony][  ? ][Armo][Succ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [Blad][  — ][  ? ][  — ][  ? ]
+      [Flam][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:54.171] Mode selected P0: TECH
+[00:54.495] Tech played  P0: "Tease"
+[00:56.046] MSG: Opponent must choose and reveal 1 of their squares.
+[00:56.047] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:56.454] AI1 target chosen: (3,4)
+[00:56.507] Revealed: P1 (3,4) "Spike Trap"
+[00:56.507] MSG: Tease: Opponent revealed Spike Trap.
+[00:56.513] Tech resolved  P0
+[00:57.371] Mode selected P0: ATTACK
+[00:57.387] Attack phase P0: 2 attack(s) available
+[00:57.387] MSG: Player 1: tap a character to attack.
+[00:57.678] AI0 attack decision: (1,2)"Pit Lord" [ATK=60] → (3,0) "Flame Seraph" [DEF=10]
+[00:57.983] Dice rolled: 4
+[00:58.004] MSG: Pit Lord is destroyed by Divine!
+[01:04.216] Crystals: P0 2550 → 1300 (-1250)  [battle]
+[01:05.609] Crystals: P1 4550 → 4050 (-500)  [battle]
+[01:06.992] Card destroyed  P0 (1,2) "Pit Lord"
+[01:06.995] Card destroyed  P1 (3,0) "Flame Seraph"
+[01:07.000] Attack P0(1,2)"Pit Lord" → P1(3,0)"Flame Seraph"  Dice=4  ATK=60 vs DEF=10  → TIE
+[01:07.000] Anim: 3C  △ P0(1,2) + △ P1(3,0)
+[01:07.500] Mode selected P0: ATTACK
+[01:07.511] Attack phase P0: 1 attack(s) available
+[01:07.511] MSG: Player 1: tap a character to attack.
+[01:07.808] AI0 attack decision: (2,2)"Vampire Duchess" [ATK=50] → (0,2) "Bomber Fairy" [DEF=15]
+[01:08.152] Revealed: P1 (0,2) "Bomber Fairy"
+[01:08.152] Dice rolled: 4
+[01:08.157] MSG: Vampire Duchess is destroyed by Divine!
+[01:14.351] Crystals: P0 1300 → 500 (-800)  [battle]
+[01:15.741] Crystals: P1 4050 → 3550 (-500)  [battle]
+[01:17.129] Card destroyed  P0 (2,2) "Vampire Duchess"
+[01:17.131] Card destroyed  P1 (0,2) "Bomber Fairy"
+[01:17.138] Attack P0(2,2)"Vampire Duchess" → P1(0,2)"Bomber Fairy"  Dice=4  ATK=50 vs DEF=15  → TIE
+[01:17.138] Anim: 3C  △ P0(2,2) + △ P1(0,2)
+[01:17.641] Turn ended  P0  |  Crystals P0=500 P1=3550
+
+--- Turn 6  |  Player 1  |  Crystals P0=500 P1=3550 ---
+P0:   [  — ][Vile][  — ][Gran][Fuji]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Heav]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Pony][  ? ][Armo][Succ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [Blad][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:18.242] Mode selected P1: TECH
+[01:18.567] Tech played  P1: "Release Mutagen"
+[01:20.118] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[01:20.525] AI1 target chosen: (2,0)
+[01:20.540] Tech resolved  P1
+[01:21.441] Mode selected P1: ATTACK
+[01:21.450] Attack phase P1: 2 attack(s) available
+[01:21.450] MSG: Player 2: tap a character to attack.
+[01:21.750] AI1 attack decision: (2,0)"Bladeshifter" [ATK=0] → (3,0) "Defensive Pheromone" [DEF=0]
+[01:22.112] Revealed: P0 (3,0) "Defensive Pheromone"
+[01:22.113] Dice rolled: 3
+[01:22.370] MSG: Trap triggered: Defensive Pheromone!
+[01:26.473] Card destroyed  P0 (3,0) "Defensive Pheromone"
+[01:26.473] Crystals: P0 500 → 0 (-500)  [trap cost]
+
+=== GAME OVER ===
+[01:26.481] AI Player 1 wins
+[01:26.481] Reason: crystals
+[01:26.481] Final crystals — P0: 0  P1: 3550  |  Turns: 6
+[01:26.481] Log saved to: res://logs/results/2026-05-31_05-05-27_657_mojito/battle_discount_lasagna_2026-05-31_05-08-27_720.txt

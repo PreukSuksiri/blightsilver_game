@@ -1,0 +1,279 @@
+=== Battle of Greasy Keyboard ===
+Battle started: 2026-05-31 03:12:00.143
+Game Session of Root Beer Float (started 2026-05-31 03:11:44.569)
+=== AI vs AI Match ===
+Batch iteration: 1 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, War Supply, Prayer
+P1 Tech hand: Accident, Release Mutagen, Great Diplomacy
+P0:   [C:Laug][  — ][T:Expl][T:Host][  — ]
+      [  — ][C:Deat][C:Doom][C:Gian][  — ]
+      [T:Snar][C:Pyro][C:Swar][C:Book][  — ]
+      [  — ][C:Mind][C:Hunt][C:War ][C:Grav]
+      [  — ][  — ][T:Bait][T:Flam][  — ]
+P1:   [T:Spik][  — ][C:Godd][  — ][T:Curs]
+      [T:Stre][C:Choi][  — ][  — ][C:Elec]
+      [T:Bait][C:War ][T:Brai][C:Stai][C:Mars]
+      [C:Leec][  — ][  — ][  — ][C:Curs]
+      [C:Need][  — ][  — ][  — ][T:Snar]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.288] Mode selected P1: TECH
+[00:05.588] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:06.972] Tech played  P1: "Great Diplomacy"
+[00:08.628] Revealed: P1 (0,2) "Goddess of Virtue"
+[00:08.666] Revealed: P1 (1,1) "Choir Lady Alice"
+[00:08.690] Revealed: P1 (1,4) "Electrogazer"
+[00:08.726] Revealed: P1 (2,1) "War Genie"
+[00:08.775] Revealed: P1 (2,3) "Staircase Lady"
+[00:08.804] Revealed: P1 (2,4) "Mars Drill"
+[00:08.839] Revealed: P1 (3,0) "Leech Man"
+[00:08.875] Revealed: P1 (3,4) "Cursed Well"
+[00:08.915] Revealed: P1 (4,0) "Needle Porcupine"
+[00:08.916] Tech resolved  P1
+[00:09.708] Mode selected P1: ATTACK
+[00:09.723] Attack phase P1: 2 attack(s) available
+[00:09.723] MSG: Player 2: tap a character to attack.
+[00:10.008] AI1 attack decision: (2,1)"War Genie" [ATK=100] → (3,3) "War Genie" [DEF=80]
+[00:10.309] Revealed: P0 (3,3) "War Genie"
+[00:10.310] Dice rolled: 3
+[00:10.322] MSG: War Genie wins!
+[00:15.005] Crystals: P0 5000 → 3850 (-1150)  [battle]
+[00:16.397] Card destroyed  P0 (3,3) "War Genie"
+[00:16.403] Attack P1(2,1)"War Genie" → P0(3,3)"War Genie"  Dice=3  ATK=100 vs DEF=80  → WIN
+[00:16.403] Anim: 3A  △ P0(3,3)
+[00:16.897] Mode selected P1: ATTACK
+[00:16.911] Attack phase P1: 1 attack(s) available
+[00:16.911] MSG: Player 2: tap a character to attack.
+[00:17.195] AI1 attack decision: (0,2)"Goddess of Virtue" [ATK=80] → (0,1) "(dead-end)"
+[00:17.499] Dice rolled: 1
+[00:17.520] MSG: Nothing happens — Dead End.
+[00:20.905] Dead-end placed  P0 (0,1)
+[00:20.910] Attack P1(0,2)"Goddess of Virtue" → P0(0,1)(empty)  Dice=1  → DEAD_END
+[00:20.910] Anim: 3F  (blank slot)
+[00:21.427] Turn ended  P1  |  Crystals P0=3850 P1=4000
+
+--- Turn 2  |  Player 0  |  Crystals P0=3850 P1=4000 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][Godd][  — ][  ? ]
+      [  ? ][Choi][  — ][  — ][Elec]
+      [  ? ][War ][  ? ][Stai][Mars]
+      [Leec][  — ][  — ][  — ][Curs]
+      [Need][  — ][  — ][  — ][  ? ]
+[00:22.017] Mode selected P0: TECH
+[00:22.318] Crystals: P0 3850 → 3250 (-600)  [tech cost]
+[00:23.708] Tech played  P0: "Radar"
+[00:25.247] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:25.645] AI0 target chosen: (3,3)
+[00:25.646] Revealed: P1 (3,3) (blank slot)
+[00:26.045] AI0 target chosen: (0,4)
+[00:26.101] Revealed: P1 (0,4) "Cursed Reflection"
+[00:26.450] AI0 target chosen: (2,0)
+[00:26.502] Revealed: P1 (2,0) "Bait"
+[00:26.508] Tech resolved  P0
+[00:27.351] Mode selected P0: ATTACK
+[00:27.364] Attack phase P0: 2 attack(s) available
+[00:27.365] MSG: Player 1: tap a character to attack.
+[00:27.642] AI0 attack decision: (2,1)"Pyromancer" [ATK=80] → (1,4) "Electrogazer" [DEF=45]
+[00:28.007] Revealed: P0 (2,1) "Pyromancer"
+[00:28.007] Dice rolled: 5
+[00:28.013] MSG: Pyromancer wins!
+[00:32.633] Crystals: P1 4000 → 3000 (-1000)  [battle]
+[00:34.026] Card destroyed  P1 (1,4) "Electrogazer"
+[00:34.034] Attack P0(2,1)"Pyromancer" → P1(1,4)"Electrogazer"  Dice=5  ATK=80 vs DEF=45  → WIN
+[00:34.034] Anim: 3A  △ P1(1,4)
+[00:36.541] Turn ended  P0  |  Crystals P0=3250 P1=3000
+
+--- Turn 3  |  Player 1  |  Crystals P0=3250 P1=3000 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][Pyro][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][Godd][  — ][  — ]
+      [  ? ][Choi][  — ][  — ][  — ]
+      [  — ][War ][  ? ][Stai][Mars]
+      [Leec][  — ][  — ][  — ][Curs]
+      [Need][  — ][  — ][  — ][  ? ]
+[00:37.133] Mode selected P1: TECH
+[00:37.434] Crystals: P1 3000 → 2000 (-1000)  [tech cost]
+[00:38.832] Tech played  P1: "Accident"
+[00:40.359] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:40.758] AI1 target chosen: (2,1)
+[00:40.759] Card destroyed  P0 (2,1) "Pyromancer"
+[00:40.767] Tech resolved  P1
+[00:41.659] Mode selected P1: ATTACK
+[00:41.672] Attack phase P1: 2 attack(s) available
+[00:41.673] MSG: Player 2: tap a character to attack.
+[00:41.953] AI1 attack decision: (2,1)"War Genie" [ATK=90] → (0,3) "Hostage" [DEF=0]
+[00:42.300] Revealed: P0 (0,3) "Hostage"
+[00:42.300] Dice rolled: 4
+[00:42.578] MSG: Trap triggered: Hostage!
+[00:46.647] Card destroyed  P0 (0,3) "Hostage"
+[00:46.647] Crystals: P0 3250 → 3050 (-200)  [trap cost]
+[00:48.029] MSG: Hostage: Adjacent squares revealed and locked.
+[00:48.106] Revealed: P0 (1,3) "Giant Centipede"
+[00:48.134] Revealed: P0 (0,2) "Explosive Barrels"
+[00:48.134] Revealed: P0 (0,4) (blank slot)
+[00:48.137] Trap: "Hostage" triggered  P1(2,1)→P0(0,3)
+[00:48.137] Anim: 3D  (attacker survives)
+[00:48.543] Mode selected P1: ATTACK
+[00:48.555] Attack phase P1: 1 attack(s) available
+[00:48.555] MSG: Player 2: tap a character to attack.
+[00:48.842] AI1 attack decision: (0,2)"Goddess of Virtue" [ATK=80] → (1,2) "Doom Wisp" [DEF=15]
+[00:49.196] Revealed: P0 (1,2) "Doom Wisp"
+[00:49.196] Dice rolled: 4
+[00:49.199] MSG: Goddess of Virtue destroys Doom Wisp by affinity!
+[00:55.426] Crystals: P0 3050 → 2950 (-100)  [battle]
+[00:56.819] Card destroyed  P0 (1,2) "Doom Wisp"
+[00:56.826] Attack P1(0,2)"Goddess of Virtue" → P0(1,2)"Doom Wisp"  Dice=4  ATK=80 vs DEF=15  → WIN
+[00:56.826] Anim: 3A  △ P0(1,2)
+[00:57.325] Turn ended  P1  |  Crystals P0=2950 P1=2000
+
+--- Turn 4  |  Player 0  |  Crystals P0=2950 P1=2000 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][Gian][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][Godd][  — ][  — ]
+      [  ? ][Choi][  — ][  — ][  — ]
+      [  — ][War ][  ? ][Stai][Mars]
+      [Leec][  — ][  — ][  — ][Curs]
+      [Need][  — ][  — ][  — ][  ? ]
+[00:57.935] Mode selected P0: ATTACK
+[00:57.948] Attack phase P0: 2 attack(s) available
+[00:57.948] MSG: Player 1: tap a character to attack.
+[00:58.225] AI0 attack decision: (1,3)"Giant Centipede" [ATK=20] → (4,0) "Needle Porcupine" [DEF=10]
+[00:58.526] Dice rolled: 2
+[00:58.539] MSG: Giant Centipede wins!
+[01:03.213] Crystals: P1 2000 → 1800 (-200)  [battle]
+[01:04.602] Card destroyed  P1 (4,0) "Needle Porcupine"
+[01:04.611] Attack P0(1,3)"Giant Centipede" → P1(4,0)"Needle Porcupine"  Dice=2  ATK=20 vs DEF=10  → WIN
+[01:04.611] Anim: 3A  △ P1(4,0)
+[01:05.108] Mode selected P0: ATTACK
+[01:05.122] Attack phase P0: 1 attack(s) available
+[01:05.123] MSG: Player 1: tap a character to attack.
+[01:05.416] AI0 attack decision: (2,3)"Book with Fangs" [ATK=45] → (3,0) "Leech Man" [DEF=40]
+[01:05.763] Revealed: P0 (2,3) "Book with Fangs"
+[01:05.764] Dice rolled: 1
+[01:05.767] MSG: Book with Fangs wins!
+[01:10.392] Crystals: P1 1800 → 920 (-880)  [battle]
+[01:11.787] Card destroyed  P1 (3,0) "Leech Man"
+[01:11.795] Attack P0(2,3)"Book with Fangs" → P1(3,0)"Leech Man"  Dice=1  ATK=45 vs DEF=40  → WIN
+[01:11.795] Anim: 3A  △ P1(3,0)
+[01:12.290] Turn ended  P0  |  Crystals P0=2950 P1=920
+
+--- Turn 5  |  Player 1  |  Crystals P0=2950 P1=920 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][Gian][  — ]
+      [  ? ][  — ][  ? ][Book][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][Godd][  — ][  — ]
+      [  ? ][Choi][  — ][  — ][  — ]
+      [  — ][War ][  ? ][Stai][Mars]
+      [  — ][  — ][  — ][  — ][Curs]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:14.384] Union summoned P1: [False Prophet] from Goddess of Virtue, Choir Lady Alice
+[01:14.384] Crystals: P1 920 → 620 (-300)  [union]
+[01:14.449] Revealed: P1 (0,2) "False Prophet"
+[01:14.449] MSG: Player 2 summoned [False Prophet] using: Goddess of Virtue, Choir Lady Alice
+[01:17.805] Mode selected P1: ATTACK
+[01:17.815] Attack phase P1: 2 attack(s) available
+[01:17.815] MSG: Player 2: tap a character to attack.
+[01:18.103] AI1 attack decision: (2,1)"War Genie" [ATK=80] → (1,3) "Giant Centipede" [DEF=20]
+[01:18.404] Dice rolled: 5
+[01:18.412] MSG: War Genie wins!
+[01:23.079] Crystals: P0 2950 → 1450 (-1500)  [battle]
+[01:24.473] Card destroyed  P0 (1,3) "Giant Centipede"
+[01:24.480] Attack P1(2,1)"War Genie" → P0(1,3)"Giant Centipede"  Dice=5  ATK=80 vs DEF=20  → WIN
+[01:24.480] Anim: 3A  △ P0(1,3)
+[01:24.981] Mode selected P1: ATTACK
+[01:24.989] Attack phase P1: 1 attack(s) available
+[01:24.989] MSG: Player 2: tap a character to attack.
+[01:25.279] AI1 attack decision: (2,4)"Mars Drill" [ATK=40] → (0,4) "(dead-end)"
+[01:25.580] Dice rolled: 2
+[01:25.612] MSG: Nothing happens — Dead End.
+[01:28.973] Dead-end placed  P0 (0,4)
+[01:28.980] Attack P1(2,4)"Mars Drill" → P0(0,4)(empty)  Dice=2  → DEAD_END
+[01:28.980] Anim: 3F  (blank slot)
+[01:29.475] Turn ended  P1  |  Crystals P0=1450 P1=620
+
+--- Turn 6  |  Player 0  |  Crystals P0=1450 P1=620 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][Book][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][Fals][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][War ][  ? ][Stai][Mars]
+      [  — ][  — ][  — ][  — ][Curs]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:30.080] Mode selected P0: ATTACK
+[01:30.088] Attack phase P0: 2 attack(s) available
+[01:30.088] MSG: Player 1: tap a character to attack.
+[01:30.387] AI0 attack decision: (2,3)"Book with Fangs" [ATK=45] → (0,2) "False Prophet" [DEF=40]
+[01:30.687] Dice rolled: 3
+[01:30.737] MSG: Book with Fangs wins!
+[01:35.378] Card destroyed  P1 (0,2) "False Prophet"
+[01:35.387] Attack P0(2,3)"Book with Fangs" → P1(0,2)"False Prophet"  Dice=3  ATK=45 vs DEF=40  → WIN
+[01:35.387] Anim: 3A  △ P1(0,2)
+[01:35.875] Mode selected P0: ATTACK
+[01:35.881] Attack phase P0: 1 attack(s) available
+[01:35.881] MSG: Player 1: tap a character to attack.
+[01:36.175] AI0 attack decision: (2,2)"Swarmcaller" [ATK=45] → (2,4) "Mars Drill" [DEF=30]
+[01:36.544] Revealed: P0 (2,2) "Swarmcaller"
+[01:36.544] Dice rolled: 3
+[01:36.547] MSG: Swarmcaller wins!
+[01:41.176] Crystals: P1 620 → 220 (-400)  [battle]
+[01:42.570] Card destroyed  P1 (2,4) "Mars Drill"
+[01:42.577] Attack P0(2,2)"Swarmcaller" → P1(2,4)"Mars Drill"  Dice=3  ATK=45 vs DEF=30  → WIN
+[01:42.577] Anim: 3A  △ P1(2,4)
+[01:43.072] Turn ended  P0  |  Crystals P0=1450 P1=220
+
+--- Turn 7  |  Player 1  |  Crystals P0=1450 P1=220 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Swar][Book][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][War ][  ? ][Stai][  — ]
+      [  — ][  — ][  — ][  — ][Curs]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:43.676] Mode selected P1: ATTACK
+[01:43.685] Attack phase P1: 2 attack(s) available
+[01:43.685] MSG: Player 2: tap a character to attack.
+[01:43.975] AI1 attack decision: (2,1)"War Genie" [ATK=70] → (2,3) "Book with Fangs" [DEF=55]
+[01:44.275] Dice rolled: 4
+[01:50.664] Crystals: P1 220 → 0 (-220)  [battle]
+
+=== GAME OVER ===
+[01:50.674] AI Player 0 wins
+[01:50.674] Final crystals — P0: 1450  P1: 0  |  Turns: 7
+[01:50.674] Log saved to: res://logs/results/2026-05-31_03-11-44_569_root_beer_float/battle_greasy_keyboard_2026-05-31_03-12-00_143.txt

@@ -1,0 +1,211 @@
+=== Battle of Keyboard Crumb Archaeology ===
+Battle started: 2026-05-31 17:07:25.234
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Grand Fort Mauler
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Grand Fort Mauler
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Resurrection, Accident
+P1 Tech hand: Bribe, Prayer, Release Mutagen
+P0:   [T:Brai][  — ][  — ][  — ][T:Bait]
+      [C:Skel][T:Self][  — ][T:Deco][C:Hand]
+      [T:Echo][C:Spac][C:Gran][C:Stai][C:Nigh]
+      [C:Big ][  — ][  — ][  — ][T:Alar]
+      [C:Jose][  — ][  — ][  — ][C:Blea]
+P1:   [  — ][  — ][C:Aeri][  — ][  — ]
+      [  — ][C:Deat][C:Arch][  — ][T:Bunk]
+      [  — ][  — ][C:Chao][C:Aray][T:Deco]
+      [T:Foul][T:Echo][C:Mine][C:Choi][T:Acid]
+      [  — ][  — ][C:Gran][C:Dark][C:Stai]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:05.362] Mode selected P0: TECH
+[00:05.671] Tech played  P0: "Tease"
+[00:07.237] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.239] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:07.644] AI1 target chosen: (1,1)
+[00:07.678] Revealed: P1 (1,1) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:07.678] MSG: Tease: Opponent revealed Death Cobra.
+[00:07.680] Tech resolved  P0
+[00:08.571] Mode selected P0: ATTACK
+[00:08.574] Attack phase P0: 2 attack(s) available
+[00:08.574] MSG: Player 1: tap a character to attack.
+[00:08.878] AI0 attack decision: (4,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (1,1) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:09.218] Revealed: P0 (4,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:09.218] Dice rolled: 2
+[00:09.219] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[00:09.224] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[00:09.224] MSG: Joseph the Battle Priest wins!
+[00:09.264] Coin flip: Tails
+[00:14.887] Crystals: P1 5000 → 4100 (-900)  [battle]
+[00:16.285] Attack P0(4,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(1,1)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}  Dice=2  ATK=60 vs DEF=50  → WIN
+[00:16.285] Anim: 3A  △ P1(1,1)
+[00:16.285] Card destroyed  P1 (1,1) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:18.790] Turn ended  P0  |  Crystals P0=5000 P1=4100
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4100 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Jose][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:19.391] Mode selected P1: TECH
+[00:19.701] Tech played  P1: "Bribe"
+[00:21.248] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:21.749] MSG: Bribe: AI passed.
+[00:21.754] Tech resolved  P1
+[00:22.650] Mode selected P1: ATTACK
+[00:22.654] Attack phase P1: 2 attack(s) available
+[00:22.654] MSG: Player 2: tap a character to attack.
+[00:22.949] AI1 attack decision: (0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | face-down} → (4,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:23.280] Revealed: P1 (0,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:23.280] Dice rolled: 4
+[00:23.283] MSG: Aerial the Battlemage wins!
+[00:27.949] Crystals: P0 5000 → 4400 (-600)  [battle]
+[00:29.346] Attack P1(0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P0(4,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=4  ATK=50 vs DEF=25  → WIN
+[00:29.346] Anim: 3A  △ P0(4,0)
+[00:29.346] Card destroyed  P0 (4,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:29.849] Mode selected P1: ATTACK
+[00:29.852] Attack phase P1: 1 attack(s) available
+[00:29.853] MSG: Player 2: tap a character to attack.
+[00:30.157] AI1 attack decision: (1,2)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | face-down} → (1,3) "Decoy Puppet" {cost 100}
+[00:30.498] Revealed: P1 (1,2) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[00:30.517] Revealed: P0 (1,3) "Decoy Puppet" {cost 100}
+[00:30.518] Dice rolled: 5
+[00:30.780] MSG: Trap triggered: Decoy Puppet!
+[00:34.876] Crystals: P0 4400 → 4300 (-100)  [trap cost]
+[00:36.267] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[00:36.280] Trap: "Decoy Puppet" triggered  P1(1,2)→P0(1,3)
+[00:36.280] Anim: 3D  (attacker survives)
+[00:36.773] Turn ended  P1  |  Crystals P0=4300 P1=4100
+
+--- Turn 3  |  Player 0  |  Crystals P0=4300 P1=4100 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Aeri][  — ][  — ]
+      [  — ][  — ][Arch][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:37.369] Mode selected P0: TECH
+[00:37.670] Crystals: P0 4300 → 3300 (-1000)  [tech cost]
+[00:39.056] Tech played  P0: "Accident"
+[00:40.588] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:40.986] AI0 target chosen: (1,2)
+[00:40.990] Card destroyed  P1 (1,2) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[00:40.996] Tech resolved  P0
+[00:41.889] Mode selected P0: ATTACK
+[00:41.895] Attack phase P0: 2 attack(s) available
+[00:41.896] MSG: Player 1: tap a character to attack.
+[00:42.186] AI0 attack decision: (2,1)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic | face-down} → (0,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:42.526] Revealed: P0 (2,1) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:42.527] Dice rolled: 2
+[00:42.530] MSG: Space Boy wins!
+[00:47.153] Crystals: P1 4100 → 3350 (-750)  [battle]
+[00:48.549] Attack P0(2,1)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P1(0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=2  ATK=75 vs DEF=45  → WIN
+[00:48.549] Anim: 3A  △ P1(0,2)
+[00:48.549] Card destroyed  P1 (0,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:51.057] Turn ended  P0  |  Crystals P0=3300 P1=3350
+
+--- Turn 4  |  Player 1  |  Crystals P0=3300 P1=3350 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Spac][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:51.650] Mode selected P1: ATTACK
+[00:51.654] Attack phase P1: 2 attack(s) available
+[00:51.654] MSG: Player 2: tap a character to attack.
+[00:51.948] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (0,0) "Brainwash" {cost 1500}
+[00:52.283] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:52.301] Revealed: P0 (0,0) "Brainwash" {cost 1500}
+[00:52.301] Dice rolled: 1
+[00:52.593] MSG: Trap triggered: Brainwash!
+[00:56.680] Crystals: P0 3300 → 1800 (-1500)  [trap cost]
+[00:58.070] MSG: Brainwash: No ally to redirect — effect fizzles.
+[00:58.074] Trap: "Brainwash" triggered  P1(2,2)→P0(0,0)
+[00:58.074] Anim: 3D  (attacker survives)
+[00:58.537] Mode selected P1: ATTACK
+[00:58.548] Attack phase P1: 1 attack(s) available
+[00:58.549] MSG: Player 2: tap a character to attack.
+[00:58.845] AI1 attack decision: (2,3)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos | face-down} → (3,1) (dead-end)
+[00:59.187] Revealed: P1 (2,3) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[00:59.188] Dice rolled: 1
+[00:59.200] MSG: Nothing happens — Dead End.
+[01:02.582] Attack P1(2,3)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos} → P0(3,1)(empty)  Dice=1  → DEAD_END
+[01:02.582] Anim: 3F  (blank slot)
+[01:03.083] Turn ended  P1  |  Crystals P0=1800 P1=3350
+
+--- Turn 5  |  Player 0  |  Crystals P0=1800 P1=3350 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Spac][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Chao][Aray][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:03.673] Mode selected P0: TECH
+[01:03.974] Crystals: P0 1800 → 300 (-1500)  [tech cost]
+[01:05.362] Tech played  P0: "Resurrection"
+[01:06.916] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[01:07.324] AI0 target chosen: (0,1)
+[01:07.327] Revealed: P0 (0,1) "Joseph the Battle Priest" {Unit ATK0 DEF0 | cost 600 | affinity Divine | base 0/0}
+[01:07.328] MSG: Revived Joseph the Battle Priest at [0,1]!
+[01:07.335] Tech resolved  P0
+[01:08.241] Mode selected P0: ATTACK
+[01:08.251] Attack phase P0: 2 attack(s) available
+[01:08.251] MSG: Player 1: tap a character to attack.
+[01:08.549] AI0 attack decision: (2,1)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → (2,3) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[01:08.857] Dice rolled: 1
+[01:08.869] MSG: Space Boy wins!
+[01:13.559] Crystals: P1 3350 → 2950 (-400)  [battle]
+[01:14.964] Attack P0(2,1)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P1(2,3)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}  Dice=1  ATK=75 vs DEF=20  → WIN
+[01:14.964] Anim: 3A  △ P1(2,3)
+[01:14.964] Card destroyed  P1 (2,3) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[01:15.449] Mode selected P0: ATTACK
+[01:15.454] Attack phase P0: 1 attack(s) available
+[01:15.455] MSG: Player 1: tap a character to attack.
+[01:15.744] AI0 attack decision: (0,1)"Joseph the Battle Priest" {Unit ATK0 DEF0 | cost 600 | affinity Divine | base 0/0} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:16.044] Dice rolled: 4
+[01:16.055] MSG: Both cards are destroyed!
+[01:20.655] Crystals: P0 300 → 0 (-300)  [battle]
+
+=== GAME OVER ===
+[01:20.671] AI Player 1 wins
+[01:20.671] Reason: crystals
+[01:20.671] Final crystals — P0: 0  P1: 2950  |  Turns: 5
+[01:20.671] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_keyboard_crumb_archaeology_2026-05-31_17-07-25_234.txt

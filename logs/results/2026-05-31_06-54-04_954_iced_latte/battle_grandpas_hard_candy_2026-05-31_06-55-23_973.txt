@@ -1,0 +1,336 @@
+=== Battle of Grandpa's Hard Candy ===
+Battle started: 2026-05-31 06:55:23.973
+Game Session of Iced Latte (started 2026-05-31 06:54:04.954)
+=== AI vs AI Match ===
+Batch iteration: 2 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    Great Diplomacy
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Resurrection, Radar
+P1 Tech hand: Resurrection, War Supply, Prayer
+P0:   [C:Stin][C:Armo][T:Trap][  — ][T:Bunk]
+      [  — ][C:Scyt][C:Claw][C:Flam][  — ]
+      [  — ][C:Myst][  — ][C:Elec][T:Alar]
+      [  — ][C:Yaks][C:Mage][C:Witc][  — ]
+      [  — ][  — ][  — ][T:Flam][T:Pepp]
+P1:   [C:Skel][  — ][  — ][  — ][C:Pony]
+      [T:Blac][  — ][C:Flam][  — ][C:Laug]
+      [T:Alar][C:Lazy][C:Stin][C:Plan][T:Flam]
+      [T:Bait][  — ][  — ][  — ][T:Foul]
+      [C:Moon][  — ][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:05.346] Mode selected P0: TECH
+[00:05.647] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:07.033] Tech played  P0: "Radar"
+[00:08.560] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.958] AI0 target chosen: (4,1)
+[00:08.959] Revealed: P1 (4,1) (blank slot)
+[00:09.358] AI0 target chosen: (0,0)
+[00:09.409] Revealed: P1 (0,0) "Skeleton Scout"
+[00:09.776] AI0 target chosen: (4,0)
+[00:09.821] Revealed: P1 (4,0) "Moon Tribe Marksman"
+[00:09.823] Tech resolved  P0
+[00:10.681] Mode selected P0: ATTACK
+[00:10.688] Attack phase P0: 2 attack(s) available
+[00:10.691] MSG: Player 1: tap a character to attack.
+[00:10.971] AI0 attack decision: (3,2)"Magenta the Nightbloom" [ATK=25] → (0,0) "Skeleton Scout" [DEF=5]
+[00:11.349] Revealed: P0 (3,2) "Magenta the Nightbloom"
+[00:11.349] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[00:11.349] Dice rolled: 2
+[00:11.356] MSG: Magenta the Nightbloom wins!
+[00:15.954] Crystals: P1 5000 → 4850 (-150)  [battle]
+[00:17.348] Card destroyed  P1 (0,0) "Skeleton Scout"
+[00:17.352] Attack P0(3,2)"Magenta the Nightbloom" → P1(0,0)"Skeleton Scout"  Dice=2  ATK=25 vs DEF=5  → WIN
+[00:17.352] Anim: 3A  △ P1(0,0)
+[00:17.846] Mode selected P0: ATTACK
+[00:17.852] Attack phase P0: 1 attack(s) available
+[00:17.853] MSG: Player 1: tap a character to attack.
+[00:18.146] AI0 attack decision: (3,3)"Witchhunter" [ATK=20] → (4,1) "(dead-end)"
+[00:18.501] Revealed: P0 (3,3) "Witchhunter"
+[00:18.501] Dice rolled: 1
+[00:18.521] MSG: Nothing happens — Dead End.
+[00:21.847] Dead-end placed  P1 (4,1)
+[00:21.849] Attack P0(3,3)"Witchhunter" → P1(4,1)(empty)  Dice=1  → DEAD_END
+[00:21.849] Anim: 3F  (blank slot)
+[00:22.348] Turn ended  P0  |  Crystals P0=4400 P1=4850
+
+--- Turn 2  |  Player 1  |  Crystals P0=4400 P1=4850 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][Mage][Witc][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Moon][  — ][  — ][  — ][  — ]
+[00:22.959] Mode selected P1: TECH
+[00:23.259] Crystals: P1 4850 → 3350 (-1500)  [tech cost]
+[00:24.646] Tech played  P1: "Resurrection"
+[00:26.185] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:26.583] AI1 target chosen: (0,1)
+[00:26.586] Revealed: P1 (0,1) "Skeleton Scout"
+[00:26.587] MSG: Revived Skeleton Scout at [0,1]!
+[00:26.595] Tech resolved  P1
+[00:27.485] Mode selected P1: ATTACK
+[00:27.494] Attack phase P1: 2 attack(s) available
+[00:27.494] MSG: Player 2: tap a character to attack.
+[00:27.783] AI1 attack decision: (4,0)"Moon Tribe Marksman" [ATK=35] → (3,2) "Magenta the Nightbloom" [DEF=20]
+[00:28.084] Dice rolled: 1
+[00:28.096] MSG: Moon Tribe Marksman wins!
+[00:34.354] Crystals: P0 4400 → 4100 (-300)  [battle]
+[00:35.748] Card destroyed  P0 (3,2) "Magenta the Nightbloom"
+[00:35.753] Attack P1(4,0)"Moon Tribe Marksman" → P0(3,2)"Magenta the Nightbloom"  Dice=1  ATK=25 vs DEF=20  → WIN
+[00:35.753] Anim: 3A  △ P0(3,2)
+[00:36.248] Mode selected P1: ATTACK
+[00:36.255] Attack phase P1: 1 attack(s) available
+[00:36.255] MSG: Player 2: tap a character to attack.
+[00:36.546] AI1 attack decision: (0,1)"Skeleton Scout" [ATK=0] → (3,4) "(dead-end)"
+[00:36.854] Dice rolled: 4
+[00:36.885] MSG: Nothing happens — Dead End.
+[00:40.260] Dead-end placed  P0 (3,4)
+[00:40.264] Attack P1(0,1)"Skeleton Scout" → P0(3,4)(empty)  Dice=4  → DEAD_END
+[00:40.264] Anim: 3F  (blank slot)
+[00:40.755] Turn ended  P1  |  Crystals P0=4100 P1=3350
+
+--- Turn 3  |  Player 0  |  Crystals P0=4100 P1=3350 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][Witc][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][Skel][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Moon][  — ][  — ][  — ][  — ]
+[00:41.367] Mode selected P0: TECH
+[00:41.668] Crystals: P0 4100 → 2600 (-1500)  [tech cost]
+[00:43.054] Tech played  P0: "Resurrection"
+[00:44.589] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:44.988] AI0 target chosen: (0,3)
+[00:44.991] Revealed: P0 (0,3) "Magenta the Nightbloom"
+[00:44.991] MSG: Revived Magenta the Nightbloom at [0,3]!
+[00:44.999] Tech resolved  P0
+[00:45.880] Mode selected P0: ATTACK
+[00:45.888] Attack phase P0: 2 attack(s) available
+[00:45.889] MSG: Player 1: tap a character to attack.
+[00:46.180] AI0 attack decision: (3,3)"Witchhunter" [ATK=20] → (0,1) "Skeleton Scout" [DEF=5]
+[00:46.480] Dice rolled: 5
+[00:46.491] MSG: Witchhunter wins!
+[00:51.171] Crystals: P1 3350 → 3200 (-150)  [battle]
+[00:52.565] Card destroyed  P1 (0,1) "Skeleton Scout"
+[00:52.571] Attack P0(3,3)"Witchhunter" → P1(0,1)"Skeleton Scout"  Dice=5  ATK=20 vs DEF=5  → WIN
+[00:52.571] Anim: 3A  △ P1(0,1)
+[00:53.063] Mode selected P0: ATTACK
+[00:53.070] Attack phase P0: 1 attack(s) available
+[00:53.071] MSG: Player 1: tap a character to attack.
+[00:53.371] AI0 attack decision: (0,3)"Magenta the Nightbloom" [ATK=0] → (0,2) "(dead-end)"
+[00:53.672] Dice rolled: 1
+[00:53.699] MSG: Nothing happens — Dead End.
+[00:57.060] Dead-end placed  P1 (0,2)
+[00:57.065] Attack P0(0,3)"Magenta the Nightbloom" → P1(0,2)(empty)  Dice=1  → DEAD_END
+[00:57.065] Anim: 3F  (blank slot)
+[00:57.564] Turn ended  P0  |  Crystals P0=2600 P1=3200
+
+--- Turn 4  |  Player 1  |  Crystals P0=2600 P1=3200 ---
+P0:   [  ? ][  ? ][  ? ][Mage][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][Witc][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Moon][  — ][  — ][  — ][  — ]
+[00:58.180] Mode selected P1: ATTACK
+[00:58.187] Attack phase P1: 2 attack(s) available
+[00:58.187] MSG: Player 2: tap a character to attack.
+[00:58.479] AI1 attack decision: (4,0)"Moon Tribe Marksman" [ATK=35] → (0,3) "Magenta the Nightbloom" [DEF=20]
+[00:58.779] Dice rolled: 4
+[00:58.785] MSG: Moon Tribe Marksman wins!
+[01:05.063] Crystals: P0 2600 → 2300 (-300)  [battle]
+[01:06.457] Card destroyed  P0 (0,3) "Magenta the Nightbloom"
+[01:06.461] Attack P1(4,0)"Moon Tribe Marksman" → P0(0,3)"Magenta the Nightbloom"  Dice=4  ATK=25 vs DEF=20  → WIN
+[01:06.461] Anim: 3A  △ P0(0,3)
+[01:06.955] Mode selected P1: ATTACK
+[01:06.959] Attack phase P1: 1 attack(s) available
+[01:06.959] MSG: Player 2: tap a character to attack.
+[01:07.254] AI1 attack decision: (2,1)"Lazy Troll" [ATK=120] → (3,3) "Witchhunter" [DEF=20]
+[01:07.592] Revealed: P1 (2,1) "Lazy Troll"
+[01:07.942] Coin flip: Heads
+[01:10.693] Dice rolled: 5
+[01:10.704] MSG: Lazy Troll wins!
+[01:15.376] Crystals: P0 2300 → 2050 (-250)  [battle]
+[01:16.768] Card destroyed  P0 (3,3) "Witchhunter"
+[01:16.773] Attack P1(2,1)"Lazy Troll" → P0(3,3)"Witchhunter"  Dice=5  ATK=120 vs DEF=20  → WIN
+[01:16.773] Anim: 3A  △ P0(3,3)
+[01:17.270] Turn ended  P1  |  Crystals P0=2050 P1=3200
+
+--- Turn 5  |  Player 0  |  Crystals P0=2050 P1=3200 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][Lazy][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Moon][  — ][  — ][  — ][  — ]
+[01:17.888] Mode selected P0: TECH
+[01:18.188] Crystals: P0 2050 → 1050 (-1000)  [tech cost]
+[01:19.567] Tech played  P0: "Great Diplomacy"
+[01:21.414] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[01:21.688] AI0 target chosen: (2,3)
+[01:21.689] Revealed: P0 (2,3) "Electrogazer"
+[01:22.088] AI0 target chosen: (0,1)
+[01:22.090] Revealed: P0 (0,1) "Armored Rhino"
+[01:22.488] AI0 target chosen: (1,3)
+[01:22.490] Revealed: P0 (1,3) "Flame Seraph"
+[01:22.888] AI0 target chosen: (1,1)
+[01:22.889] Revealed: P0 (1,1) "Scythe Shark"
+[01:23.288] AI0 target chosen: (3,1)
+[01:23.290] Revealed: P0 (3,1) "Yaksa"
+[01:23.290] MSG: Great Diplomacy: revealed 5 unit(s).
+[01:23.297] Tech resolved  P0
+[01:24.188] Mode selected P0: ATTACK
+[01:24.204] Attack phase P0: 2 attack(s) available
+[01:24.204] MSG: Player 1: tap a character to attack.
+[01:24.488] AI0 attack decision: (2,3)"Electrogazer" [ATK=80] → (2,1) "Lazy Troll" [DEF=60]
+[01:24.801] Dice rolled: 2
+[01:24.849] MSG: Electrogazer wins!
+[01:29.472] Crystals: P1 3200 → 2200 (-1000)  [battle]
+[01:30.865] Card destroyed  P1 (2,1) "Lazy Troll"
+[01:30.871] Attack P0(2,3)"Electrogazer" → P1(2,1)"Lazy Troll"  Dice=2  ATK=80 vs DEF=60  → WIN
+[01:30.871] Anim: 3A  △ P1(2,1)
+[01:31.376] Mode selected P0: ATTACK
+[01:31.384] Attack phase P0: 1 attack(s) available
+[01:31.385] MSG: Player 1: tap a character to attack.
+[01:31.675] AI0 attack decision: (0,1)"Armored Rhino" [ATK=60] → (4,0) "Moon Tribe Marksman" [DEF=25]
+[01:31.976] Dice rolled: 5
+[01:31.987] MSG: Armored Rhino wins!
+[01:36.651] Crystals: P1 2200 → 1900 (-300)  [battle]
+[01:38.045] Card destroyed  P1 (4,0) "Moon Tribe Marksman"
+[01:38.053] Attack P0(0,1)"Armored Rhino" → P1(4,0)"Moon Tribe Marksman"  Dice=5  ATK=60 vs DEF=25  → WIN
+[01:38.053] Anim: 3A  △ P1(4,0)
+[01:38.550] Turn ended  P0  |  Crystals P0=1050 P1=1900
+
+--- Turn 6  |  Player 1  |  Crystals P0=1050 P1=1900 ---
+P0:   [  ? ][Armo][  ? ][  — ][  ? ]
+      [  — ][Scyt][  ? ][Flam][  — ]
+      [  — ][  ? ][  — ][Elec][  ? ]
+      [  — ][Yaks][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:39.164] Mode selected P1: ATTACK
+[01:39.172] Attack phase P1: 2 attack(s) available
+[01:39.172] MSG: Player 2: tap a character to attack.
+[01:39.463] AI1 attack decision: (0,4)"Ponycorn" [ATK=25] → (1,3) "Flame Seraph" [DEF=10]
+[01:39.826] Revealed: P1 (0,4) "Ponycorn"
+[01:39.827] Dice rolled: 4
+[01:39.831] MSG: Ponycorn wins!
+[01:44.442] Crystals: P0 1050 → 550 (-500)  [battle]
+[01:45.835] Card destroyed  P0 (1,3) "Flame Seraph"
+[01:45.841] Attack P1(0,4)"Ponycorn" → P0(1,3)"Flame Seraph"  Dice=4  ATK=25 vs DEF=10  → WIN
+[01:45.841] Anim: 3A  △ P0(1,3)
+[01:46.335] Mode selected P1: ATTACK
+[01:46.342] Attack phase P1: 1 attack(s) available
+[01:46.343] MSG: Player 2: tap a character to attack.
+[01:46.633] AI1 attack decision: (1,4)"Laughing Granny" [ATK=15] → (0,0) "Stinky Insect" [DEF=10]
+[01:46.995] Revealed: P1 (1,4) "Laughing Granny"
+[01:47.023] Revealed: P0 (0,0) "Stinky Insect"
+[01:47.024] Dice rolled: 5
+[01:47.028] MSG: Laughing Granny wins!
+[01:51.617] Crystals: P0 550 → 150 (-400)  [battle]
+[01:53.010] Card destroyed  P0 (0,0) "Stinky Insect"
+[01:53.017] Attack P1(1,4)"Laughing Granny" → P0(0,0)"Stinky Insect"  Dice=5  ATK=15 vs DEF=10  → WIN
+[01:53.017] Anim: 3A  △ P0(0,0)
+[01:53.518] Turn ended  P1  |  Crystals P0=150 P1=1900
+
+--- Turn 7  |  Player 0  |  Crystals P0=150 P1=1900 ---
+P0:   [  — ][Armo][  ? ][  — ][  ? ]
+      [  — ][Scyt][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][Elec][  ? ]
+      [  — ][Yaks][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][Pony]
+      [  ? ][  — ][  ? ][  — ][Laug]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:54.135] Mode selected P0: ATTACK
+[01:54.144] Attack phase P0: 2 attack(s) available
+[01:54.145] MSG: Player 1: tap a character to attack.
+[01:54.416] AI0 attack decision: (2,3)"Electrogazer" [ATK=80] → (0,4) "Ponycorn" [DEF=20]
+[01:54.718] Dice rolled: 5
+[01:54.730] MSG: Electrogazer wins!
+[01:59.400] Crystals: P1 1900 → 1600 (-300)  [battle]
+[02:00.794] Card destroyed  P1 (0,4) "Ponycorn"
+[02:00.798] Attack P0(2,3)"Electrogazer" → P1(0,4)"Ponycorn"  Dice=5  ATK=80 vs DEF=20  → WIN
+[02:00.798] Anim: 3A  △ P1(0,4)
+[02:01.292] Mode selected P0: ATTACK
+[02:01.301] Attack phase P0: 1 attack(s) available
+[02:01.303] MSG: Player 1: tap a character to attack.
+[02:01.600] AI0 attack decision: (0,1)"Armored Rhino" [ATK=60] → (1,4) "Laughing Granny" [DEF=20]
+[02:01.901] Dice rolled: 5
+[02:01.912] MSG: Armored Rhino wins!
+[02:06.585] Crystals: P1 1600 → 1250 (-350)  [battle]
+[02:07.977] Card destroyed  P1 (1,4) "Laughing Granny"
+[02:07.980] Attack P0(0,1)"Armored Rhino" → P1(1,4)"Laughing Granny"  Dice=5  ATK=60 vs DEF=20  → WIN
+[02:07.980] Anim: 3A  △ P1(1,4)
+[02:08.487] Turn ended  P0  |  Crystals P0=150 P1=1250
+
+--- Turn 8  |  Player 1  |  Crystals P0=150 P1=1250 ---
+P0:   [  — ][Armo][  ? ][  — ][  ? ]
+      [  — ][Scyt][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][Elec][  ? ]
+      [  — ][Yaks][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:10.587] Union summoned P1: [Ancient Lizard] from Flame Lizard, Stinky Insect
+[02:10.587] Crystals: P1 1250 → 450 (-800)  [union]
+[02:10.652] Revealed: P1 (1,2) "Ancient Lizard"
+[02:10.657] MSG: Player 2 summoned [Ancient Lizard] using: Flame Lizard, Stinky Insect
+[02:14.013] Mode selected P1: ATTACK
+[02:14.025] Attack phase P1: 2 attack(s) available
+[02:14.025] MSG: Player 2: tap a character to attack.
+[02:14.312] AI1 attack decision: (1,2)"Ancient Lizard" [ATK=75] → (2,3) "Electrogazer" [DEF=45]
+[02:14.612] Dice rolled: 2
+[02:14.664] MSG: Ancient Lizard wins!
+[02:19.305] Crystals: P0 150 → 0 (-150)  [battle]
+
+=== GAME OVER ===
+[02:19.311] AI Player 1 wins
+[02:19.311] Reason: crystals
+[02:19.311] Final crystals — P0: 0  P1: 450  |  Turns: 8
+[02:19.311] Log saved to: res://logs/results/2026-05-31_06-54-04_954_iced_latte/battle_grandpas_hard_candy_2026-05-31_06-55-23_973.txt

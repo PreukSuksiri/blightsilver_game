@@ -1,0 +1,318 @@
+=== Battle of PTA Bake Sale Brawl ===
+Battle started: 2026-05-31 18:16:16.046
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Mine Guard
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Mine Guard
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Siege Cannon, Tease
+P1 Tech hand: Resurrection, Tease, Accident
+P0:   [T:Bunk][  — ][  — ][C:Blad][C:Moon]
+      [T:Hard][  — ][  — ][C:Ox P][T:Pepp]
+      [C:Stre][  — ][C:Mine][C:Jaco][C:Pit ]
+      [C:Gamm][  — ][T:Spik][C:Mine][T:Trap]
+      [C:Yaks][C:Demo][T:Snar][C:Raij][C:Gran]
+P1:   [C:Shre][T:Brai][  — ][  — ][C:Scyt]
+      [C:Jira][  — ][  — ][  — ][T:Deco]
+      [C:Elec][C:Saw ][C:Chao][C:Cany][C:Bat ]
+      [T:Trap][C:Lab ][T:Bunk][C:Kiyo][C:Leop]
+      [C:Gian][  — ][T:Alar][  — ][C:Hunt]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.287] Mode selected P0: TECH
+[00:05.587] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:06.970] Tech played  P0: "Radar"
+[00:08.520] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.919] AI0 target chosen: (4,1)
+[00:08.919] Revealed: P1 (4,1) (blank slot)
+[00:09.319] AI0 target chosen: (1,3)
+[00:09.319] Revealed: P1 (1,3) (blank slot)
+[00:09.719] AI0 target chosen: (3,2)
+[00:09.750] Revealed: P1 (3,2) "Bunker" {cost 900}
+[00:09.751] Tech resolved  P0
+[00:10.654] Mode selected P0: ATTACK
+[00:10.656] Attack phase P0: 2 attack(s) available
+[00:10.656] MSG: Player 1: tap a character to attack.
+[00:10.952] AI0 attack decision: (0,4)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down} → (1,3) (dead-end)
+[00:11.283] Revealed: P0 (0,4) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:11.283] Dice rolled: 5
+[00:11.294] MSG: Nothing happens — Dead End.
+[00:14.658] Attack P0(0,4)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(1,3)(empty)  Dice=5  → DEAD_END
+[00:14.658] Anim: 3F  (blank slot)
+[00:17.174] Turn ended  P0  |  Crystals P0=4400 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4400 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][Moon]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:17.773] Mode selected P1: TECH
+[00:18.081] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:19.469] Tech played  P1: "Accident"
+[00:21.028] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:21.435] AI1 target chosen: (0,4)
+[00:21.440] Card destroyed  P0 (0,4) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:21.442] Tech resolved  P1
+[00:22.359] Mode selected P1: ATTACK
+[00:22.362] Attack phase P1: 2 attack(s) available
+[00:22.362] MSG: Player 2: tap a character to attack.
+[00:22.657] AI1 attack decision: (0,0)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down} → (0,0) "Bunker" {cost 900}
+[00:23.003] Revealed: P1 (0,0) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:23.025] Revealed: P0 (0,0) "Bunker" {cost 900}
+[00:23.026] Dice rolled: 1
+[00:23.287] MSG: Trap triggered: Bunker!
+[00:27.375] Crystals: P0 4400 → 3500 (-900)  [trap cost]
+[00:28.765] MSG: Bunker: Adjacent squares cannot be targeted this turn.
+[00:28.769] Trap: "Bunker" triggered  P1(0,0)→P0(0,0)
+[00:28.769] Anim: 3D  (attacker survives)
+[00:29.268] Mode selected P1: ATTACK
+[00:29.274] Attack phase P1: 1 attack(s) available
+[00:29.275] MSG: Player 2: tap a character to attack.
+[00:29.565] AI1 attack decision: (1,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (1,1) (dead-end)
+[00:29.927] Revealed: P1 (1,0) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[00:29.928] Dice rolled: 4
+[00:29.951] MSG: Nothing happens — Dead End.
+[00:33.265] Attack P1(1,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P0(1,1)(empty)  Dice=4  → DEAD_END
+[00:33.265] Anim: 3F  (blank slot)
+[00:33.763] Turn ended  P1  |  Crystals P0=3500 P1=4000
+
+--- Turn 3  |  Player 0  |  Crystals P0=3500 P1=4000 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [Shre][  ? ][  — ][  — ][  ? ]
+      [Jira][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:34.361] Mode selected P0: TECH
+[00:34.661] Crystals: P0 3500 → 2500 (-1000)  [tech cost]
+[00:36.048] Tech played  P0: "Siege Cannon"
+[00:37.592] MSG: Siege Cannon active!
+[00:37.596] Tech resolved  P0
+[00:38.513] Mode selected P0: ATTACK
+[00:38.522] Attack phase P0: 2 attack(s) available
+[00:38.522] MSG: Player 1: tap a character to attack.
+[00:38.819] AI0 attack decision: (4,1)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | face-down} → (1,0) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[00:39.168] Revealed: P0 (4,1) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:39.168] Dice rolled: 3
+[00:39.175] MSG: Both cards are destroyed!
+[00:43.698] Crystals: P0 2500 → 2100 (-400)  [battle]
+[00:45.089] Crystals: P1 4000 → 3400 (-600)  [battle]
+[00:46.488] Attack P0(4,1)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P1(1,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}  Dice=3  ATK=40 vs DEF=40  → TIE
+[00:46.488] Anim: 3C  △ P0(4,1) + △ P1(1,0)
+[00:46.488] Card destroyed  P0 (4,1) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:46.488] Card destroyed  P1 (1,0) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[00:46.975] Mode selected P0: ATTACK
+[00:46.979] Attack phase P0: 1 attack(s) available
+[00:46.980] MSG: Player 1: tap a character to attack.
+[00:47.267] AI0 attack decision: (2,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima | face-down} → (0,0) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:47.602] Revealed: P0 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:47.602] Dice rolled: 3
+[00:47.610] MSG: Street Rogue wins!
+[00:52.262] Crystals: P1 3400 → 3150 (-250)  [battle]
+[00:53.667] Attack P0(2,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P1(0,0)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=3  ATK=25 vs DEF=5  → WIN
+[00:53.667] Anim: 3A  △ P1(0,0)
+[00:53.667] Card destroyed  P1 (0,0) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:54.157] Turn ended  P0  |  Crystals P0=2100 P1=3150
+
+--- Turn 4  |  Player 1  |  Crystals P0=2100 P1=3150 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [Stre][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:54.760] Mode selected P1: TECH
+[00:55.068] Crystals: P1 3150 → 1650 (-1500)  [tech cost]
+[00:56.453] Tech played  P1: "Resurrection"
+[00:58.018] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:58.425] AI1 target chosen: (0,2)
+[00:58.428] Revealed: P1 (0,2) "Shredder Doll" {Unit ATK0 DEF0 | cost 250 | affinity Chaos | base 0/0}
+[00:58.428] MSG: Revived Shredder Doll at [0,2]!
+[00:58.433] Tech resolved  P1
+[00:59.355] Mode selected P1: ATTACK
+[00:59.360] Attack phase P1: 2 attack(s) available
+[00:59.360] MSG: Player 2: tap a character to attack.
+[00:59.651] AI1 attack decision: (2,1)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down} → (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:59.994] Revealed: P1 (2,1) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[00:59.994] Dice rolled: 4
+[00:59.999] MSG: Saw Shark wins!
+[01:04.680] Crystals: P0 2100 → 1750 (-350)  [battle]
+[01:06.060] Attack P1(2,1)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} → P0(2,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=4  ATK=25 vs DEF=20  → WIN
+[01:06.060] Anim: 3A  △ P0(2,0)
+[01:06.060] Card destroyed  P0 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:06.561] Mode selected P1: ATTACK
+[01:06.565] Attack phase P1: 1 attack(s) available
+[01:06.566] MSG: Player 2: tap a character to attack.
+[01:06.847] AI1 attack decision: (0,2)"Shredder Doll" {Unit ATK0 DEF0 | cost 250 | affinity Chaos | base 0/0} → (0,2) (dead-end)
+[01:07.156] Dice rolled: 3
+[01:07.187] MSG: Nothing happens — Dead End.
+[01:10.546] Attack P1(0,2)"Shredder Doll" {Unit ATK0 DEF0 | cost 250 | affinity Chaos | base 0/0} → P0(0,2)(empty)  Dice=3  → DEAD_END
+[01:10.546] Anim: 3F  (blank slot)
+[01:11.042] Turn ended  P1  |  Crystals P0=1750 P1=1650
+
+--- Turn 5  |  Player 0  |  Crystals P0=1750 P1=1650 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][Shre][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Saw ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:11.639] Mode selected P0: TECH
+[01:11.956] Tech played  P0: "Tease"
+[01:13.486] MSG: Opponent must choose and reveal 1 of their squares.
+[01:13.487] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:13.885] AI1 target chosen: (2,3)
+[01:13.914] Revealed: P1 (2,3) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:13.914] MSG: Tease: Opponent revealed Canyon Warg.
+[01:13.917] Tech resolved  P0
+[01:14.787] Mode selected P0: ATTACK
+[01:14.794] Attack phase P0: 2 attack(s) available
+[01:14.795] MSG: Player 1: tap a character to attack.
+[01:15.086] AI0 attack decision: (2,2)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic | face-down} → (0,2) "Shredder Doll" {Unit ATK0 DEF0 | cost 250 | affinity Chaos | base 0/0}
+[01:15.430] Revealed: P0 (2,2) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[01:15.430] Dice rolled: 2
+[01:15.443] MSG: Mine Guard wins!
+[01:20.120] Crystals: P1 1650 → 1400 (-250)  [battle]
+[01:21.517] Attack P0(2,2)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → P1(0,2)"Shredder Doll" {Unit ATK0 DEF0 | cost 250 | affinity Chaos | base 0/0}  Dice=2  ATK=20 vs DEF=0  → WIN
+[01:21.518] Anim: 3A  △ P1(0,2)
+[01:21.518] Card destroyed  P1 (0,2) "Shredder Doll" {Unit ATK0 DEF0 | cost 250 | affinity Chaos | base 0/0}
+[01:24.026] Turn ended  P0  |  Crystals P0=1750 P1=1400
+
+--- Turn 6  |  Player 1  |  Crystals P0=1750 P1=1400 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][Mine][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Saw ][  ? ][Cany][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:24.626] Mode selected P1: TECH
+[01:24.938] Tech played  P1: "Tease"
+[01:26.476] MSG: Opponent must choose and reveal 1 of their squares.
+[01:26.477] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:26.877] AI0 target chosen: (0,3)
+[01:26.909] Revealed: P0 (0,3) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[01:26.909] MSG: Tease: Opponent revealed Bladeshifter.
+[01:26.913] Tech resolved  P1
+[01:27.780] Mode selected P1: ATTACK
+[01:27.791] Attack phase P1: 2 attack(s) available
+[01:27.792] MSG: Player 2: tap a character to attack.
+[01:28.085] AI1 attack decision: (2,3)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → (0,3) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[01:28.395] Dice rolled: 2
+[01:28.408] MSG: Canyon Warg wins!
+[01:33.093] Crystals: P0 1750 → 1330 (-420)  [battle]
+[01:34.493] Attack P1(2,3)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(0,3)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}  Dice=2  ATK=70 vs DEF=50  → WIN
+[01:34.493] Anim: 3A  △ P0(0,3)
+[01:34.493] Card destroyed  P0 (0,3) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[01:34.993] Mode selected P1: ATTACK
+[01:34.999] Attack phase P1: 1 attack(s) available
+[01:35.000] MSG: Player 2: tap a character to attack.
+[01:35.294] AI1 attack decision: (2,1)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} → (2,2) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[01:35.603] Dice rolled: 2
+[01:35.616] MSG: Saw Shark wins!
+[01:40.303] Crystals: P0 1330 → 1030 (-300)  [battle]
+[01:41.703] Attack P1(2,1)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} → P0(2,2)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}  Dice=2  ATK=25 vs DEF=15  → WIN
+[01:41.703] Anim: 3A  △ P0(2,2)
+[01:41.703] Card destroyed  P0 (2,2) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[01:42.205] Turn ended  P1  |  Crystals P0=1030 P1=1400
+
+--- Turn 7  |  Player 0  |  Crystals P0=1030 P1=1400 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Saw ][  ? ][Cany][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:42.830] Mode selected P0: ATTACK
+[01:42.834] Attack phase P0: 2 attack(s) available
+[01:42.834] MSG: Player 1: tap a character to attack.
+[01:43.118] AI0 attack decision: (2,4)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (2,3) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:43.477] Revealed: P0 (2,4) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:43.478] Dice rolled: 3
+[01:43.485] MSG: Pit Lord wins!
+[01:48.082] Crystals: P1 1400 → 650 (-750)  [battle]
+[01:49.488] Attack P0(2,4)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(2,3)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=3  ATK=120 vs DEF=30  → WIN
+[01:49.488] Anim: 3A  △ P1(2,3)
+[01:49.488] Card destroyed  P1 (2,3) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:51.992] Turn ended  P0  |  Crystals P0=1030 P1=650
+
+--- Turn 8  |  Player 1  |  Crystals P0=1030 P1=650 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][Pit ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Saw ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:52.619] Mode selected P1: ATTACK
+[01:52.621] Attack phase P1: 2 attack(s) available
+[01:52.621] MSG: Player 2: tap a character to attack.
+[01:52.931] AI1 attack decision: (2,1)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} → (1,4) "Pepper Spray" {cost 0}
+[01:53.294] Revealed: P0 (1,4) "Pepper Spray" {cost 0}
+[01:53.296] Dice rolled: 1
+[01:53.558] MSG: Trap triggered: Pepper Spray!
+[01:57.701] Coin flip: Tails, Heads
+[02:00.465] MSG: Pepper Spray: Tails, Heads.
+[02:00.465] MSG: Not both heads — no effect.
+[02:00.470] Trap: "Pepper Spray" triggered  P1(2,1)→P0(1,4)
+[02:00.470] Anim: 3D  (attacker survives)
+[02:00.976] Mode selected P1: ATTACK
+[02:00.984] Attack phase P1: 1 attack(s) available
+[02:00.984] MSG: Player 2: tap a character to attack.
+[02:01.271] AI1 attack decision: (2,0)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic | face-down} → (2,4) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[02:01.616] Revealed: P1 (2,0) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[02:01.616] Dice rolled: 5
+[02:01.621] MSG: Electrogazer wins!
+[02:06.268] Crystals: P0 1030 → 0 (-1030)  [battle]
+
+=== GAME OVER ===
+[02:06.285] AI Player 1 wins
+[02:06.285] Reason: crystals
+[02:06.285] Final crystals — P0: 0  P1: 650  |  Turns: 8
+[02:06.285] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_pta_bake_sale_brawl_2026-05-31_18-16-16_046.txt

@@ -18,7 +18,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_warning.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_warning.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -51,7 +51,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_sigh.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_akimbo_sigh.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -68,7 +68,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -82,7 +82,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"speaker": "Kelly",

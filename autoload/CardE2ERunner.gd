@@ -26,6 +26,69 @@ func is_active() -> bool:
 	return _active
 
 
+func get_current_scenario() -> Dictionary:
+	return _current.duplicate(true)
+
+
+func build_scenario_log_header(scenario: Dictionary = {}) -> PackedStringArray:
+	if scenario.is_empty():
+		scenario = _current
+	if scenario.is_empty():
+		return PackedStringArray()
+
+	var lines: PackedStringArray = PackedStringArray()
+	var sid: String = str(scenario.get("id", ""))
+	var card_name: String = str(scenario.get("card_name", ""))
+	var card_type: String = str(scenario.get("card_type", ""))
+	var tier: int = int(scenario.get("tier", 1))
+	var ability: String = str(scenario.get("ability_type", ""))
+	var ability_desc: String = str(scenario.get("ability_description", ""))
+	var role: String = str(scenario.get("role", ""))
+	var notes: String = str(scenario.get("notes", ""))
+
+	lines.append("=== Card E2E Test ===")
+	lines.append("Scenario ID:  %s" % sid)
+	lines.append("Tier:         %s" % _tier_label(tier))
+	lines.append("Scenario def: res://test_case/e2e/scenarios.json")
+	if card_name != "":
+		lines.append("Related spec: %s  (%s)" % [
+			_functional_test_id(card_name),
+			_functional_test_doc(card_type),
+		])
+	lines.append("Highlight:    %s" % _format_highlight(scenario))
+	if ability != "" and ability != "NONE":
+		var ability_line := "Ability:      %s" % ability
+		if ability_desc != "":
+			ability_line += " — %s" % ability_desc
+		lines.append(ability_line)
+	if role != "":
+		lines.append("Setup role:   %s" % role)
+	lines.append("Verifies:")
+	for bullet: String in _verification_bullets(scenario):
+		lines.append("  - %s" % bullet)
+	if notes != "":
+		lines.append("Notes:        %s" % notes)
+	lines.append("===")
+	return lines
+
+
+func build_scenario_log_footer(scenario: Dictionary, score: Dictionary) -> PackedStringArray:
+	var lines: PackedStringArray = PackedStringArray([
+		"",
+		"=== Card E2E Result ===",
+		"Scenario:  %s" % str(scenario.get("id", "")),
+		"Highlight: %s" % _format_highlight(scenario),
+		"Result:    %s" % ("PASS" if score.get("passed", false) else "FAIL"),
+		"Detail:    %s" % str(score.get("reason", "")),
+		"Turns:     %d  |  AI timeouts: %d" % [
+			int(score.get("turns", 0)),
+			int(score.get("timeouts", 0)),
+		],
+		"===",
+	])
+	return lines
+
+
 func get_summary_text() -> String:
 	return _summary_text
 
@@ -124,6 +187,7 @@ func on_battle_finished(log_path: String, log_lines: PackedStringArray) -> void:
 	score["scenario_id"] = str(_current.get("id", ""))
 	score["card_name"] = str(_current.get("card_name", ""))
 	score["tier"] = int(_current.get("tier", 1))
+	_append_lines_to_log(log_path, build_scenario_log_footer(_current, score))
 	_results.append(score)
 
 	var passed: bool = bool(score.get("passed", false))
@@ -308,7 +372,7 @@ func _score_log(log_text: String, scenario: Dictionary) -> Dictionary:
 	var max_turns: int = int(scenario.get("max_turns", 50))
 	var turns := _parse_turn_count(log_text)
 	if turns > max_turns:
-		reasons.append("Exceeded max turns (%d > %d)" % [turns, max_turns))
+		reasons.append("Exceeded max turns (%d > %d)" % [turns, max_turns])
 
 	if "GAME OVER" not in log_text:
 		reasons.append("Battle did not reach GAME OVER")
@@ -379,3 +443,114 @@ func _write_session_summary(summary: Dictionary) -> void:
 	if f:
 		f.store_string(JSON.stringify(payload, "\t"))
 		f.close()
+
+
+func _tier_label(tier: int) -> String:
+	match tier:
+		1: return "1 — Smoke (battle completes, card in log, no crashes)"
+		2: return "2 — Ability (forced setup + log assertions)"
+		_: return str(tier)
+
+
+func _functional_test_id(card_name: String) -> String:
+	return "TC-FUNC-%s-001" % card_name.replace(" ", "-")
+
+
+func _functional_test_doc(card_type: String) -> String:
+	match card_type.to_lower():
+		"character": return "test_case/functional/character_functional_tests.md"
+		"trap": return "test_case/functional/trap_functional_tests.md"
+		"tech": return "test_case/functional/tech_functional_tests.md"
+		"union": return "test_case/functional/union_functional_tests.md"
+		_: return "test_case/functional/"
+
+
+func _format_highlight(scenario: Dictionary) -> String:
+	var card_name: String = str(scenario.get("card_name", ""))
+	var card_type: String = str(scenario.get("card_type", ""))
+	if card_name == "":
+		return "(unknown)"
+	var setup: Array[String] = []
+	for name: String in _setup_card_names(scenario):
+		if name != card_name and name not in setup:
+			setup.append(name)
+	if setup.is_empty():
+		return "%s (%s)" % [card_name, card_type]
+	return "%s (%s)  [setup: %s]" % [card_name, card_type, ", ".join(PackedStringArray(setup))]
+
+
+func _setup_card_names(scenario: Dictionary) -> Array[String]:
+	var names: Array[String] = []
+	for key: String in ["forced_cells_0", "forced_cells_1", "forced_tech_0", "forced_tech_1"]:
+		for entry: Variant in scenario.get(key, []):
+			if entry is Dictionary:
+				var n: String = str((entry as Dictionary).get("card_name", "")).strip_edges()
+				if n != "" and n not in names:
+					names.append(n)
+			else:
+				var n2: String = str(entry).strip_edges()
+				if n2 != "" and n2 not in names:
+					names.append(n2)
+	return names
+
+
+func _verification_bullets(scenario: Dictionary) -> Array[String]:
+	var bullets: Array[String] = []
+	var tier: int = int(scenario.get("tier", 1))
+	var card_name: String = str(scenario.get("card_name", ""))
+	if tier == 1:
+		bullets.append(
+			"Smoke: \"%s\" appears in the battle log and the match reaches GAME OVER" % card_name)
+		bullets.append("No script errors, invalid calls, or stack traces in log")
+	else:
+		bullets.append(
+			"Ability: \"%s\" is exercised via forced board/tech setup (%s)" % [
+				card_name, str(scenario.get("role", "t2"))])
+		bullets.append("Full battle reaches GAME OVER without script errors")
+
+	for needle: Variant in scenario.get("expect_log_contains", []):
+		var text := str(needle)
+		if text != "":
+			bullets.append("Log must contain: %s" % text)
+
+	for pattern: Variant in scenario.get("expect_log_regex", []):
+		var pat := str(pattern)
+		if pat != "":
+			bullets.append("Log must match regex: %s" % pat)
+
+	var any_list: Array = scenario.get("expect_log_any", [])
+	if not any_list.is_empty():
+		var any_parts: PackedStringArray = PackedStringArray()
+		for opt: Variant in any_list:
+			any_parts.append(str(opt))
+		bullets.append("Log must contain at least one of: %s" % ", ".join(any_parts))
+
+	for bad: Variant in scenario.get("expect_log_not_contains", []):
+		var text := str(bad)
+		if text != "":
+			bullets.append("Log must NOT contain: %s" % text)
+
+	if card_name != "":
+		var role: String = str(scenario.get("role", ""))
+		if role not in ["union_summon", "t1_union", "t2_union"]:
+			bullets.append("Highlight card name must appear somewhere in log")
+
+	bullets.append("Within %d turns and <= %d AI watchdog timeouts" % [
+		int(scenario.get("max_turns", 50)),
+		int(scenario.get("max_watchdog_timeouts", 5)),
+	])
+	return bullets
+
+
+func _append_lines_to_log(log_path: String, lines: PackedStringArray) -> void:
+	if log_path.is_empty() or lines.is_empty():
+		return
+	var f := FileAccess.open(log_path, FileAccess.READ_WRITE)
+	if f == null:
+		return
+	f.seek_end()
+	if f.get_length() > 0:
+		f.store_line("")
+	for line: String in lines:
+		f.store_line(line)
+	f.close()

@@ -1,0 +1,194 @@
+=== Battle of Grandma Fart ===
+Battle started: 2026-05-31 18:46:14.018
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Plant 29
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Plant 29
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Great Diplomacy, Siege Cannon
+P1 Tech hand: Great Diplomacy, Radar, War Supply
+P0:   [C:Whit][C:Stin][  — ][  — ][T:Flam]
+      [C:Void][  — ][  — ][  — ][T:Defe]
+      [T:Host][C:Flam][C:Plan][T:Expl][C:Immo]
+      [T:Alar][  — ][  — ][  — ][C:Skel]
+      [C:Fuji][  — ][  — ][  — ][C:Need]
+P1:   [  — ][  — ][  — ][T:Self][  — ]
+      [  — ][C:Laug][C:Scar][C:Ox P][  — ]
+      [  — ][C:Skel][C:Chao][C:Mine][  — ]
+      [  — ][C:Stai][C:Godd][C:Saw ][T:Alar]
+      [T:Deco][T:Curs][  — ][T:Stre][  — ]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+[00:05.323] Mode selected P1: TECH
+[00:05.623] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:07.008] Tech played  P1: "Radar"
+[00:08.575] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.978] AI1 target chosen: (3,3)
+[00:08.979] Revealed: P0 (3,3) (blank slot)
+[00:09.388] AI1 target chosen: (0,1)
+[00:09.422] Revealed: P0 (0,1) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[00:09.778] AI1 target chosen: (3,4)
+[00:09.806] Revealed: P0 (3,4) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:09.807] Tech resolved  P1
+[00:10.710] Mode selected P1: ATTACK
+[00:10.714] Attack phase P1: 2 attack(s) available
+[00:10.714] MSG: Player 2: tap a character to attack.
+[00:11.013] AI1 attack decision: (1,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down} → (0,1) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[00:11.348] Revealed: P1 (1,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[00:11.348] Dice rolled: 1
+[00:11.353] MSG: Scarlet Mutant wins!
+[00:15.996] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:17.402] Attack P1(1,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(0,1)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}  Dice=1  ATK=35 vs DEF=10  → WIN
+[00:17.403] Anim: 3A  △ P0(0,1)
+[00:17.403] Card destroyed  P0 (0,1) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[00:17.890] Mode selected P1: ATTACK
+[00:17.898] Attack phase P1: 1 attack(s) available
+[00:17.899] MSG: Player 2: tap a character to attack.
+[00:18.187] AI1 attack decision: (1,1)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down} → (3,4) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:18.526] Revealed: P1 (1,1) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[00:18.526] Dice rolled: 2
+[00:18.531] MSG: Laughing Granny wins!
+[00:24.162] Crystals: P0 4600 → 4300 (-300)  [battle]
+[00:25.561] Attack P1(1,1)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P0(3,4)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=2  ATK=25 vs DEF=5  → WIN
+[00:25.561] Reckoning overlay: P1 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} +ATK 10
+[00:25.561] Anim: 3A  △ P0(3,4)
+[00:25.561] Card destroyed  P0 (3,4) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:26.058] Turn ended  P1  |  Crystals P0=4300 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4300 P1=4400 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][Laug][Scar][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+[00:26.651] Mode selected P0: TECH
+[00:26.951] Crystals: P0 4300 → 3300 (-1000)  [tech cost]
+[00:28.336] Tech played  P0: "Great Diplomacy"
+[00:29.919] Revealed: P0 (0,0) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[00:29.941] Revealed: P0 (1,0) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:29.962] Revealed: P0 (2,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:29.983] Revealed: P0 (2,2) "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[00:30.003] Revealed: P0 (2,4) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[00:30.025] Revealed: P0 (4,0) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:30.052] Revealed: P0 (4,4) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[00:30.055] Tech resolved  P0
+[00:30.816] Mode selected P0: ATTACK
+[00:30.827] Attack phase P0: 2 attack(s) available
+[00:30.827] MSG: Player 1: tap a character to attack.
+[00:31.113] AI0 attack decision: (0,0)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature} → (1,1) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used}
+[00:31.413] Dice rolled: 1
+[00:31.424] MSG: White Tiger wins!
+[00:37.104] Crystals: P1 4400 → 4050 (-350)  [battle]
+[00:38.519] Attack P0(0,0)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature} → P1(1,1)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used}  Dice=1  ATK=40 vs DEF=30  → WIN
+[00:38.519] Reckoning overlay: P1 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used} +DEF 10
+[00:38.519] Anim: 3A  △ P1(1,1)
+[00:38.519] Card destroyed  P1 (1,1) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used}
+[00:38.999] Mode selected P0: ATTACK
+[00:39.008] Attack phase P0: 1 attack(s) available
+[00:39.009] MSG: Player 1: tap a character to attack.
+[00:39.296] AI0 attack decision: (2,1)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → (1,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[00:39.596] Dice rolled: 5
+[00:39.611] MSG: Flame Seraph wins!
+[00:44.289] Crystals: P1 4050 → 3700 (-350)  [battle]
+[00:45.706] Attack P0(2,1)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P1(1,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=5  ATK=50 vs DEF=30  → WIN
+[00:45.706] Anim: 3A  △ P1(1,2)
+[00:45.706] Card destroyed  P1 (1,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[00:46.189] Turn ended  P0  |  Crystals P0=3300 P1=3700
+
+--- Turn 3  |  Player 1  |  Crystals P0=3300 P1=3700 ---
+P0:   [Whit][  — ][  — ][  — ][  ? ]
+      [Void][  — ][  — ][  — ][  ? ]
+      [  ? ][Flam][Plan][  ? ][Immo]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [Fuji][  — ][  — ][  — ][Need]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+[00:46.770] Mode selected P1: TECH
+[00:47.071] Crystals: P1 3700 → 2700 (-1000)  [tech cost]
+[00:48.462] Tech played  P1: "Great Diplomacy"
+[00:50.049] Revealed: P1 (1,3) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:50.076] Revealed: P1 (2,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:50.099] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:50.122] Revealed: P1 (2,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[00:50.142] Revealed: P1 (3,1) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[00:50.166] Revealed: P1 (3,2) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[00:50.185] Revealed: P1 (3,3) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[00:50.189] Tech resolved  P1
+[00:50.918] Mode selected P1: ATTACK
+[00:50.928] Attack phase P1: 2 attack(s) available
+[00:50.928] MSG: Player 2: tap a character to attack.
+[00:51.209] AI1 attack decision: (3,2)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (2,4) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[00:51.509] Dice rolled: 1
+[00:51.519] MSG: Goddess of Virtue destroys Immortal Vampire by affinity!
+[00:57.201] Crystals: P0 3300 → 2100 (-1200)  [battle]
+[00:58.608] Attack P1(3,2)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P0(2,4)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}  Dice=1  ATK=80 vs DEF=80  → WIN
+[00:58.608] Anim: 3A  △ P0(2,4)
+[00:58.608] Card destroyed  P0 (2,4) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[00:59.097] Mode selected P1: ATTACK
+[00:59.110] Attack phase P1: 1 attack(s) available
+[00:59.111] MSG: Player 2: tap a character to attack.
+[00:59.386] AI1 attack decision: (2,1)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} → (1,0) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:59.687] Dice rolled: 3
+[00:59.700] MSG: Skeleton Archer wins!
+[01:04.381] Crystals: P0 2100 → 1380 (-720)  [battle]
+[01:05.782] Attack P1(2,1)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} → P0(1,0)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}  Dice=3  ATK=35 vs DEF=25  → WIN
+[01:05.782] Anim: 3A  △ P0(1,0)
+[01:05.782] Card destroyed  P0 (1,0) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:06.275] Turn ended  P1  |  Crystals P0=1380 P1=2700
+
+--- Turn 4  |  Player 0  |  Crystals P0=1380 P1=2700 ---
+P0:   [Whit][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Flam][Plan][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [Fuji][  — ][  — ][  — ][Need]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Ox P][  — ]
+      [  — ][Skel][Chao][Mine][  — ]
+      [  — ][Stai][Godd][Saw ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+[01:06.367] Coin flip: Heads
+[01:09.108] MSG: Plant 29: Heads! Venom on Staircase Lady.
+[01:09.708] Mode selected P0: TECH
+[01:10.007] Crystals: P0 1380 → 380 (-1000)  [tech cost]
+[01:11.409] Tech played  P0: "Siege Cannon"
+[01:12.959] MSG: Siege Cannon active!
+[01:12.968] Tech resolved  P0
+[01:13.879] Mode selected P0: ATTACK
+[01:13.893] Attack phase P0: 2 attack(s) available
+[01:13.893] MSG: Player 1: tap a character to attack.
+[01:14.184] AI0 attack decision: (4,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → (1,3) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:14.493] Dice rolled: 5
+[01:20.309] Crystals: P0 380 → 0 (-380)  [battle]
+
+=== GAME OVER ===
+[01:20.324] AI Player 1 wins
+[01:20.324] Reason: crystals
+[01:20.324] Final crystals — P0: 0  P1: 2700  |  Turns: 4
+[01:20.324] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_grandma_fart_2026-05-31_18-46-14_019.txt

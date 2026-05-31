@@ -1,0 +1,223 @@
+=== Battle of Leftover Pizza Politics ===
+Battle started: 2026-05-31 17:55:45.283
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Leorudus the Warlord
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Leorudus the Warlord, (2,1) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Prayer, Siege Cannon, Release Mutagen
+P1 Tech hand: Resurrection, Tease, Bribe
+P0:   [C:Moon][  — ][C:Flam][  — ][C:Nept]
+      [  — ][C:Void][  — ][T:Foul][  — ]
+      [T:Trap][C:Ox P][C:Leor][  — ][C:Big ]
+      [  — ][T:Hard][  — ][C:Jose][  — ]
+      [C:Spea][  — ][C:Armo][  — ][T:Self]
+P1:   [C:Grav][  — ][T:Curs][  — ][C:Shot]
+      [C:Void][  — ][  — ][  — ][T:Flam]
+      [T:Acid][C:Heav][C:Chao][C:Curs][C:Laug]
+      [C:Red ][C:Leec][  — ][C:Hunt][C:Ange]
+      [C:Stai][  — ][T:Brai][  — ][C:Wand]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.328] Mode selected P1: TECH
+[00:05.635] Tech played  P1: "Tease"
+[00:07.193] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.197] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:07.601] AI0 target chosen: (2,0)
+[00:07.645] Revealed: P0 (2,0) "Trap Hole" {cost 0}
+[00:07.645] MSG: Tease: Opponent revealed Trap Hole.
+[00:07.648] Tech resolved  P1
+[00:08.498] Mode selected P1: ATTACK
+[00:08.505] Attack phase P1: 2 attack(s) available
+[00:08.505] MSG: Player 2: tap a character to attack.
+[00:08.802] AI1 attack decision: (0,0)"Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos | face-down} → (4,2) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down}
+[00:09.161] Revealed: P1 (0,0) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[00:09.197] Revealed: P0 (4,2) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[00:09.198] Dice rolled: 2
+[00:13.925] Crystals: P1 5000 → 4750 (-250)  [battle]
+[00:15.324] Attack P1(0,0)"Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos} → P0(4,2)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}  Dice=2  ATK=15 vs DEF=20  → LOSE
+[00:15.324] Anim: 3B  △ P1(0,0)
+[00:15.324] Card destroyed  P1 (0,0) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[00:15.818] Mode selected P1: ATTACK
+[00:15.823] Attack phase P1: 1 attack(s) available
+[00:15.824] MSG: Player 2: tap a character to attack.
+[00:16.114] AI1 attack decision: (3,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio | face-down} → (4,2) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[00:16.453] Revealed: P1 (3,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:16.453] Dice rolled: 5
+[00:16.461] MSG: Leech Man wins!
+[00:21.082] Crystals: P0 5000 → 4830 (-170)  [battle]
+[00:22.488] Attack P1(3,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P0(4,2)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}  Dice=5  ATK=60 vs DEF=20  → WIN
+[00:22.488] Anim: 3A  △ P0(4,2)
+[00:22.488] Card destroyed  P0 (4,2) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[00:22.986] Turn ended  P1  |  Crystals P0=4830 P1=4750
+
+--- Turn 2  |  Player 0  |  Crystals P0=4830 P1=4750 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Leec][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:23.589] Mode selected P0: TECH
+[00:23.897] Crystals: P0 4830 → 3830 (-1000)  [tech cost]
+[00:25.285] Tech played  P0: "Siege Cannon"
+[00:26.847] MSG: Siege Cannon active!
+[00:26.849] Tech resolved  P0
+[00:27.772] Mode selected P0: ATTACK
+[00:27.777] Attack phase P0: 2 attack(s) available
+[00:27.777] MSG: Player 1: tap a character to attack.
+[00:28.074] AI0 attack decision: (2,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima | face-down} → (3,1) "Leech Man" {Unit ATK60 DEF60 | cost 880 | affinity Bio | buff +permDEF20}
+[00:28.428] Revealed: P0 (2,2) "Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima}
+[00:28.428] Dice rolled: 1
+[00:28.442] MSG: Leorudus the Warlord wins!
+[00:33.075] Crystals: P1 4750 → 3870 (-880)  [battle]
+[00:34.477] Attack P0(2,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(3,1)"Leech Man" {Unit ATK60 DEF60 | cost 880 | affinity Bio | buff +permDEF20}  Dice=1  ATK=80 vs DEF=60  → WIN
+[00:34.477] Anim: 3A  △ P1(3,1)
+[00:34.477] Card destroyed  P1 (3,1) "Leech Man" {Unit ATK60 DEF60 | cost 880 | affinity Bio | buff +permDEF20}
+[00:34.966] Mode selected P0: ATTACK
+[00:34.972] Attack phase P0: 1 attack(s) available
+[00:34.973] MSG: Player 1: tap a character to attack.
+[00:35.263] AI0 attack decision: (2,1)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (0,2) "Cursed Reflection" {cost 500}
+[00:35.605] Revealed: P0 (2,1) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:35.630] Revealed: P1 (0,2) "Cursed Reflection" {cost 500}
+[00:35.631] Dice rolled: 4
+[00:35.882] MSG: Trap triggered: Cursed Reflection!
+[00:39.971] Crystals: P1 3870 → 3370 (-500)  [trap cost]
+[00:41.361] MSG: Cursed Reflection: Ox Patrol's ATK and DEF swapped until end of turn!
+[00:41.370] Trap: "Cursed Reflection" triggered  P0(2,1)→P1(0,2)
+[00:41.370] Anim: 3D  (attacker survives)
+[00:41.864] Turn ended  P0  |  Crystals P0=3830 P1=3370
+
+--- Turn 3  |  Player 1  |  Crystals P0=3830 P1=3370 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][Ox P][Leor][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:42.461] Mode selected P1: TECH
+[00:42.760] Crystals: P1 3370 → 1870 (-1500)  [tech cost]
+[00:44.152] Tech played  P1: "Resurrection"
+[00:45.677] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:46.076] AI1 target chosen: (0,1)
+[00:46.084] Revealed: P1 (0,1) "Leech Man" {Unit ATK0 DEF20 | cost 880 | affinity Bio | base 0/0 | buff +permDEF20}
+[00:46.084] MSG: Revived Leech Man at [0,1]!
+[00:46.091] Tech resolved  P1
+[00:46.978] Mode selected P1: ATTACK
+[00:46.985] Attack phase P1: 2 attack(s) available
+[00:46.986] MSG: Player 2: tap a character to attack.
+[00:47.276] AI1 attack decision: (0,4)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down} → (2,1) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:47.615] Revealed: P1 (0,4) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:47.615] Dice rolled: 5
+[00:47.620] MSG: Shotgun Shark wins!
+[00:53.259] Crystals: P0 3830 → 3410 (-420)  [battle]
+[00:54.663] Attack P1(0,4)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → P0(2,1)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=5  ATK=75 vs DEF=40  → WIN
+[00:54.664] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 5
+[00:54.664] Anim: 3A  △ P0(2,1)
+[00:54.664] Card destroyed  P0 (2,1) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:55.147] Mode selected P1: ATTACK
+[00:55.153] Attack phase P1: 1 attack(s) available
+[00:55.153] MSG: Player 2: tap a character to attack.
+[00:55.447] AI1 attack decision: (0,1)"Leech Man" {Unit ATK0 DEF20 | cost 880 | affinity Bio | base 0/0 | buff +permDEF20} → (4,4) "Self-destruct" {cost 0}
+[00:55.801] Revealed: P0 (4,4) "Self-destruct" {cost 0}
+[00:55.801] Dice rolled: 4
+[00:56.031] MSG: Trap triggered: Self-destruct!
+[01:00.154] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[01:00.163] Trap: "Self-destruct" triggered  P1(0,1)→P0(4,4)
+[01:00.163] Anim: 3D  (attacker survives)
+[01:00.547] AI0 target chosen: (2,2)
+[01:00.547] MSG: Leorudus the Warlord: +10 ATK until end of next turn, then destroyed.
+[01:00.660] Turn ended  P1  |  Crystals P0=3410 P1=1870
+
+--- Turn 4  |  Player 0  |  Crystals P0=3410 P1=1870 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][Leor][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][Leec][  — ][  — ][Shot]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:01.268] Mode selected P0: ATTACK
+[01:01.273] Attack phase P0: 2 attack(s) available
+[01:01.273] MSG: Player 1: tap a character to attack.
+[01:01.572] AI0 attack decision: (2,2)"Leorudus the Warlord" {Unit ATK90 DEF80 | cost 1150 | affinity Anima | base 80/80 | buff +tempATK10 | flags:self_destruct_next_turn} → (0,1) "Leech Man" {Unit ATK0 DEF20 | cost 880 | affinity Bio | base 0/0 | buff +permDEF20}
+[01:01.880] Dice rolled: 1
+[01:01.890] MSG: Leorudus the Warlord wins!
+[01:06.582] Crystals: P1 1870 → 990 (-880)  [battle]
+[01:07.991] Attack P0(2,2)"Leorudus the Warlord" {Unit ATK90 DEF80 | cost 1150 | affinity Anima | base 80/80 | buff +tempATK10 | flags:self_destruct_next_turn} → P1(0,1)"Leech Man" {Unit ATK0 DEF20 | cost 880 | affinity Bio | base 0/0 | buff +permDEF20}  Dice=1  ATK=90 vs DEF=20  → WIN
+[01:07.991] Anim: 3A  △ P1(0,1)
+[01:07.991] Card destroyed  P1 (0,1) "Leech Man" {Unit ATK0 DEF20 | cost 880 | affinity Bio | base 0/0 | buff +permDEF20}
+[01:08.485] Mode selected P0: ATTACK
+[01:08.489] Attack phase P0: 1 attack(s) available
+[01:08.490] MSG: Player 1: tap a character to attack.
+[01:08.788] AI0 attack decision: (0,0)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down} → (0,4) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:09.141] Revealed: P0 (0,0) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[01:09.142] Dice rolled: 3
+[01:09.151] MSG: Moonrise Gentleman wins!
+[01:13.785] Crystals: P1 990 → 90 (-900)  [battle]
+[01:15.187] Attack P0(0,0)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(0,4)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}  Dice=3  ATK=40 vs DEF=25  → WIN
+[01:15.187] Anim: 3A  △ P1(0,4)
+[01:15.187] Card destroyed  P1 (0,4) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:15.688] MSG: Leorudus the Warlord is destroyed by self-destruct trap!
+[01:15.688] Crystals: P0 3410 → 2260 (-1150)  [card lost]
+[01:15.690] Card destroyed  P0 (2,2) "Leorudus the Warlord" {Unit ATK90 DEF80 | cost 1150 | affinity Anima | base 80/80 | buff +tempATK10 | attacked}
+[01:15.692] Turn ended  P0  |  Crystals P0=2260 P1=90
+
+--- Turn 5  |  Player 1  |  Crystals P0=2260 P1=90 ---
+P0:   [Moon][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:16.285] Mode selected P1: TECH
+[01:16.603] Tech played  P1: "Bribe"
+[01:18.169] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:18.675] MSG: Bribe: AI passed.
+[01:18.683] Tech resolved  P1
+[01:19.594] Mode selected P1: ATTACK
+[01:19.599] Attack phase P1: 2 attack(s) available
+[01:19.599] MSG: Player 2: tap a character to attack.
+[01:19.901] AI1 attack decision: (4,0)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos | face-down} → (0,0) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[01:20.247] Revealed: P1 (4,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:20.248] Dice rolled: 3
+[01:26.028] Crystals: P1 90 → 0 (-90)  [battle]
+
+=== GAME OVER ===
+[01:26.048] AI Player 0 wins
+[01:26.048] Reason: crystals
+[01:26.048] Final crystals — P0: 2260  P1: 0  |  Turns: 5
+[01:26.048] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_leftover_pizza_politics_2026-05-31_17-55-45_283.txt

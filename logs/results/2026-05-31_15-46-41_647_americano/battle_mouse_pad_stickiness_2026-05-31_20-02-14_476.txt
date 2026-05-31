@@ -1,0 +1,354 @@
+=== Battle of Mouse Pad Stickiness ===
+Battle started: 2026-05-31 20:02:14.476
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Void Stalker
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Void Stalker
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Spy, Bribe
+P1 Tech hand: Prayer, Tease, Bribe
+P0:   [C:Gold][C:Bomb][  — ][T:Deco][  — ]
+      [T:Stre][C:Mage][T:Hypn][  — ][  — ]
+      [  — ][C:Skel][C:Void][  — ][T:Expl]
+      [  — ][C:Jira][  — ][T:Echo][C:Moon]
+      [  — ][C:Lab ][C:Hamm][T:Acid][  — ]
+P1:   [T:Trap][  — ][T:Bunk][T:Brai][C:Moon]
+      [C:Skel][  — ][C:Pit ][  — ][C:Raij]
+      [C:Magi][C:Grav][C:Chao][C:Vamp][C:Mine]
+      [C:Gold][T:Defe][T:Expl][  — ][C:Myst]
+      [C:Hunt][  — ][  — ][  — ][C:Shot]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.302] Mode selected P0: TECH
+[00:05.612] Tech played  P0: "Spy"
+[00:07.156] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.551] AI0 target chosen: (2,2)
+[00:07.589] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:07.593] Tech resolved  P0
+[00:08.483] Mode selected P0: ATTACK
+[00:08.487] Attack phase P0: 2 attack(s) available
+[00:08.487] MSG: Player 1: tap a character to attack.
+[00:08.786] AI0 attack decision: (0,0)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:09.129] Revealed: P0 (0,0) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[00:09.129] Dice rolled: 3
+[00:09.133] MSG: Golden Senju wins!
+[00:13.771] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:15.166] Attack P0(0,0)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=3  ATK=15 vs DEF=0  → WIN
+[00:15.166] Anim: 3A  △ P1(2,2)
+[00:15.166] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:15.663] Mode selected P0: ATTACK
+[00:15.670] Attack phase P0: 1 attack(s) available
+[00:15.670] MSG: Player 1: tap a character to attack.
+[00:15.960] AI0 attack decision: (0,1)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down} → (0,0) "Trap Hole" {cost 0}
+[00:16.307] Revealed: P0 (0,1) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[00:16.340] Revealed: P1 (0,0) "Trap Hole" {cost 0}
+[00:16.340] Dice rolled: 5
+[00:16.535] MSG: Trap triggered: Trap Hole!
+[00:20.629] Crystals: P0 5000 → 4980 (-20)  [trap]
+[00:22.010] MSG: Trap Hole: Player 1 loses 20 Crystals!
+[00:22.024] Trap: "Trap Hole" triggered  P0(0,1)→P1(0,0)
+[00:22.024] Anim: 3D  (attacker survives)
+[00:22.514] Turn ended  P0  |  Crystals P0=4980 P1=4900
+
+--- Turn 2  |  Player 1  |  Crystals P0=4980 P1=4900 ---
+P0:   [Gold][Bomb][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:23.110] Mode selected P1: TECH
+[00:23.421] Tech played  P1: "Bribe"
+[00:24.976] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:25.485] MSG: Bribe: AI passed.
+[00:25.491] Tech resolved  P1
+[00:26.403] Mode selected P1: ATTACK
+[00:26.408] Attack phase P1: 2 attack(s) available
+[00:26.408] MSG: Player 2: tap a character to attack.
+[00:26.710] AI1 attack decision: (1,0)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos | face-down} → (0,1) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[00:27.049] Revealed: P1 (1,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:27.049] Dice rolled: 1
+[00:27.054] MSG: Skeleton Archer wins!
+[00:31.728] Crystals: P0 4980 → 4480 (-500)  [battle]
+[00:33.162] Attack P1(1,0)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} → P0(0,1)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}  Dice=1  ATK=35 vs DEF=15  → WIN
+[00:33.162] Anim: 3A  △ P0(0,1)
+[00:33.162] Card destroyed  P0 (0,1) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[00:35.635] Turn ended  P1  |  Crystals P0=4480 P1=4900
+
+--- Turn 3  |  Player 0  |  Crystals P0=4480 P1=4900 ---
+P0:   [Gold][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [Skel][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:36.236] Mode selected P0: TECH
+[00:36.560] Tech played  P0: "Bribe"
+[00:38.105] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:38.613] MSG: Bribe: AI passed.
+[00:38.619] Tech resolved  P0
+[00:39.539] Mode selected P0: ATTACK
+[00:39.548] Attack phase P0: 2 attack(s) available
+[00:39.548] MSG: Player 1: tap a character to attack.
+[00:39.838] AI0 attack decision: (0,0)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} → (1,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:40.148] Dice rolled: 5
+[00:40.157] MSG: Golden Senju wins!
+[00:44.848] Crystals: P1 4900 → 4600 (-300)  [battle]
+[00:46.248] Attack P0(0,0)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} → P1(1,0)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=5  ATK=15 vs DEF=5  → WIN
+[00:46.248] Anim: 3A  △ P1(1,0)
+[00:46.248] Card destroyed  P1 (1,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:46.754] Mode selected P0: ATTACK
+[00:46.757] Attack phase P0: 1 attack(s) available
+[00:46.758] MSG: Player 1: tap a character to attack.
+[00:47.057] AI0 attack decision: (1,1)"Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos | face-down} → (0,2) "Bunker" {cost 900}
+[00:47.404] Revealed: P0 (1,1) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos}
+[00:47.404] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[00:47.425] Revealed: P1 (0,2) "Bunker" {cost 900}
+[00:47.426] Dice rolled: 2
+[00:47.696] MSG: Trap triggered: Bunker!
+[00:51.786] Crystals: P1 4600 → 3700 (-900)  [trap cost]
+[00:53.168] MSG: Bunker: Adjacent squares cannot be targeted this turn.
+[00:53.181] Trap: "Bunker" triggered  P0(1,1)→P1(0,2)
+[00:53.181] Anim: 3D  (attacker survives)
+[00:53.671] Turn ended  P0  |  Crystals P0=4480 P1=3700
+
+--- Turn 4  |  Player 1  |  Crystals P0=4480 P1=3700 ---
+P0:   [Gold][  — ][  — ][  ? ][  — ]
+      [  ? ][Mage][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:54.264] Mode selected P1: TECH
+[00:54.575] Tech played  P1: "Tease"
+[00:56.148] MSG: Opponent must choose and reveal 1 of their squares.
+[00:56.150] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:56.556] AI0 target chosen: (1,0)
+[00:56.599] Revealed: P0 (1,0) "Street Joke" {cost 0}
+[00:56.599] MSG: Tease: Opponent revealed Street Joke.
+[00:56.605] Tech resolved  P1
+[00:57.449] Mode selected P1: ATTACK
+[00:57.454] Attack phase P1: 2 attack(s) available
+[00:57.455] MSG: Player 2: tap a character to attack.
+[00:57.748] AI1 attack decision: (4,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down} → (1,1) "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}
+[00:58.085] Revealed: P1 (4,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[00:58.085] Dice rolled: 2
+[00:58.089] MSG: Huntress of Green Glade wins!
+[01:02.747] Crystals: P0 4480 → 4180 (-300)  [battle]
+[01:04.153] Attack P1(4,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(1,1)"Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}  Dice=2  ATK=50 vs DEF=20  → WIN
+[01:04.153] Anim: 3A  △ P0(1,1)
+[01:04.153] Card destroyed  P0 (1,1) "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}
+[01:06.666] Turn ended  P1  |  Crystals P0=4180 P1=3700
+
+--- Turn 5  |  Player 0  |  Crystals P0=4180 P1=3700 ---
+P0:   [Gold][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [Hunt][  — ][  — ][  — ][  ? ]
+[01:07.235] Mode selected P0: ATTACK
+[01:07.248] Attack phase P0: 2 attack(s) available
+[01:07.248] MSG: Player 1: tap a character to attack.
+[01:07.539] AI0 attack decision: (2,2)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos | face-down} → (4,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:07.886] Revealed: P0 (2,2) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:07.886] Dice rolled: 2
+[01:07.892] MSG: Void Stalker wins!
+[01:13.548] Crystals: P1 3700 → 2900 (-800)  [battle]
+[01:14.952] Attack P0(2,2)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} → P1(4,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=2  ATK=85 vs DEF=50  → WIN
+[01:14.952] Reckoning overlay: P0 "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} +ATK 20
+[01:14.952] Anim: 3A  △ P1(4,0)
+[01:14.952] Card destroyed  P1 (4,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:15.448] Mode selected P0: ATTACK
+[01:15.453] Attack phase P0: 1 attack(s) available
+[01:15.454] MSG: Player 1: tap a character to attack.
+[01:15.755] AI0 attack decision: (0,0)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} → (0,3) "Brainwash" {cost 1500}
+[01:16.105] Revealed: P1 (0,3) "Brainwash" {cost 1500}
+[01:16.105] Dice rolled: 3
+[01:16.389] MSG: Trap triggered: Brainwash!
+[01:20.484] Crystals: P1 2900 → 1400 (-1500)  [trap cost]
+[01:21.873] Target prompt: "Brainwash: Choose one of your own allies as the attack target."  filter=own_any_as_target
+[01:22.281] AI0 target chosen: (2,2)
+[01:22.282] MSG: Brainwash: Golden Senju attacks Void Stalker!
+[01:27.103] Crystals: P0 4180 → 3980 (-200)  [battle]
+[01:28.507] Trap: "Brainwash" triggered  P0(0,0)→P1(0,3)
+[01:28.507] Anim: 3D  (attacker survives)
+[01:29.004] Turn ended  P0  |  Crystals P0=3980 P1=1400
+
+--- Turn 6  |  Player 1  |  Crystals P0=3980 P1=1400 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][Void][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:29.627] Mode selected P1: ATTACK
+[01:29.628] Attack phase P1: 2 attack(s) available
+[01:29.629] MSG: Player 2: tap a character to attack.
+[01:29.926] AI1 attack decision: (0,4)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down} → (2,2) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:30.268] Revealed: P1 (0,4) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[01:30.269] Dice rolled: 3
+[01:30.272] MSG: Both cards are destroyed!
+[01:35.863] Crystals: P1 1400 → 1100 (-300)  [battle]
+[01:37.256] Crystals: P0 3980 → 3260 (-720)  [battle]
+[01:38.654] Attack P1(0,4)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} → P0(2,2)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}  Dice=3  ATK=25 vs DEF=25  → TIE
+[01:38.654] Reckoning overlay: P1 "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} ATK -10
+[01:38.654] Anim: 3C  △ P1(0,4) + △ P0(2,2)
+[01:38.654] Card destroyed  P1 (0,4) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[01:38.654] Card destroyed  P0 (2,2) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:39.137] Mode selected P1: ATTACK
+[01:39.140] Attack phase P1: 1 attack(s) available
+[01:39.141] MSG: Player 2: tap a character to attack.
+[01:39.436] AI1 attack decision: (1,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (3,3) "Echo Barrier" {cost 1000}
+[01:39.775] Revealed: P1 (1,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:39.796] Revealed: P0 (3,3) "Echo Barrier" {cost 1000}
+[01:39.796] Dice rolled: 1
+[01:40.024] MSG: Trap triggered: Echo Barrier!
+[01:44.123] Crystals: P0 3260 → 2260 (-1000)  [trap cost]
+[01:45.510] MSG: Echo Barrier: Attacking player cannot attack again this turn!
+[01:45.520] Trap: "Echo Barrier" triggered  P1(1,2)→P0(3,3)
+[01:45.520] Anim: 3D  (attacker survives)
+[01:46.013] Turn ended  P1  |  Crystals P0=2260 P1=1100
+
+--- Turn 7  |  Player 0  |  Crystals P0=2260 P1=1100 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Pit ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:46.620] Mode selected P0: ATTACK
+[01:46.636] Attack phase P0: 2 attack(s) available
+[01:46.636] MSG: Player 1: tap a character to attack.
+[01:46.902] AI0 attack decision: (2,1)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down} → (1,3) (dead-end)
+[01:47.236] Revealed: P0 (2,1) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:47.236] Dice rolled: 4
+[01:47.249] MSG: Nothing happens — Dead End.
+[01:50.631] Attack P0(2,1)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P1(1,3)(empty)  Dice=4  → DEAD_END
+[01:50.631] Anim: 3F  (blank slot)
+[01:51.124] Mode selected P0: ATTACK
+[01:51.130] Attack phase P0: 1 attack(s) available
+[01:51.130] MSG: Player 1: tap a character to attack.
+[01:51.422] AI0 attack decision: (3,1)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (1,1) (dead-end)
+[01:51.765] Revealed: P0 (3,1) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:51.766] Dice rolled: 2
+[01:51.776] MSG: Nothing happens — Dead End.
+[01:55.093] Attack P0(3,1)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[01:55.093] Anim: 3F  (blank slot)
+[01:55.596] Turn ended  P0  |  Crystals P0=2260 P1=1100
+
+--- Turn 8  |  Player 1  |  Crystals P0=2260 P1=1100 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Skel][  — ][  — ][  ? ]
+      [  — ][Jira][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Pit ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:56.198] Mode selected P1: ATTACK
+[01:56.204] Attack phase P1: 2 attack(s) available
+[01:56.204] MSG: Player 2: tap a character to attack.
+[01:56.506] AI1 attack decision: (1,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → (3,1) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:56.815] Dice rolled: 1
+[01:56.827] MSG: Pit Lord wins!
+[02:01.517] Crystals: P0 2260 → 1660 (-600)  [battle]
+[02:02.919] Attack P1(1,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P0(3,1)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}  Dice=1  ATK=120 vs DEF=40  → WIN
+[02:02.919] Anim: 3A  △ P0(3,1)
+[02:02.919] Card destroyed  P0 (3,1) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[02:03.415] Mode selected P1: ATTACK
+[02:03.419] Attack phase P1: 1 attack(s) available
+[02:03.420] MSG: Player 2: tap a character to attack.
+[02:03.726] AI1 attack decision: (1,4)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine | face-down} → (2,1) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[02:04.084] Revealed: P1 (1,4) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[02:04.084] Dice rolled: 4
+[02:04.088] MSG: Raijin wins!
+[02:08.743] Crystals: P0 1660 → 1510 (-150)  [battle]
+[02:10.146] Attack P1(1,4)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P0(2,1)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=4  ATK=60 vs DEF=5  → WIN
+[02:10.146] Anim: 3A  △ P0(2,1)
+[02:10.146] Card destroyed  P0 (2,1) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[02:10.643] Turn ended  P1  |  Crystals P0=1510 P1=1100
+
+--- Turn 9  |  Player 0  |  Crystals P0=1510 P1=1100 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Pit ][  — ][Raij]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:11.254] Mode selected P0: ATTACK
+[02:11.267] Attack phase P0: 2 attack(s) available
+[02:11.268] MSG: Player 1: tap a character to attack.
+[02:11.560] AI0 attack decision: (3,4)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down} → (1,4) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[02:11.869] Revealed: P0 (3,4) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[02:11.870] Dice rolled: 5
+[02:11.876] MSG: Moon Tribe Marksman wins!
+[02:17.570] Crystals: P1 1100 → 550 (-550)  [battle]
+[02:18.976] Attack P0(3,4)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} → P1(1,4)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=5  ATK=25 vs DEF=0  → WIN
+[02:18.976] Reckoning overlay: P0 "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} ATK -10
+[02:18.976] Anim: 3A  △ P1(1,4)
+[02:18.976] Card destroyed  P1 (1,4) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[02:19.469] Mode selected P0: ATTACK
+[02:19.475] Attack phase P0: 1 attack(s) available
+[02:19.476] MSG: Player 1: tap a character to attack.
+[02:19.777] AI0 attack decision: (4,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down} → (3,2) "Explosive Barrels" {cost 0}
+[02:20.143] Revealed: P0 (4,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[02:20.177] Revealed: P1 (3,2) "Explosive Barrels" {cost 0}
+[02:20.177] Dice rolled: 3
+[02:20.408] MSG: Trap triggered: Explosive Barrels!
+[02:25.636] Crystals: P0 1510 → 710 (-800)  [card lost]
+[02:27.678] Crystals: P1 550 → 0 (-550)  [trap]
+
+=== GAME OVER ===
+[02:27.688] AI Player 0 wins
+[02:27.688] Reason: crystals
+[02:27.688] Final crystals — P0: 710  P1: 0  |  Turns: 9
+[02:27.688] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_mouse_pad_stickiness_2026-05-31_20-02-14_476.txt

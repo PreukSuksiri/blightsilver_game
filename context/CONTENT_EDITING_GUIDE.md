@@ -617,7 +617,7 @@ ADD_MUTAGEN_FLAG                   {}
 DIVINE_PROTECTION                  {}
 DESTROY_ALL_REVEALED_OPPONENT      {}
 DESTROY_ROW_OR_COLUMN              {}
-REVEAL_ALL_OWN_CHARACTERS          {}
+REVEAL_ALL_OWN_CHARACTERS          {"count": N}  # e.g. Great Diplomacy count=5
 PERM_BOOST_ALL_FACEUP              {"atk": N, "def": N}
 PERM_ATK_BOOST_ONE                 {"atk": N}
 TEMP_ATK_BOOST_ATTACK_NOW          {"atk": N}

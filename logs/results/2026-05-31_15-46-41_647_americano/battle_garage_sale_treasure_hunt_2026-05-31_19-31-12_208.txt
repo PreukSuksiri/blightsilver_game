@@ -1,0 +1,208 @@
+=== Battle of Garage Sale Treasure Hunt ===
+Battle started: 2026-05-31 19:31:12.208
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Space Boy
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Space Boy
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Siege Cannon, Tease
+P1 Tech hand: Radar, Release Mutagen, Prayer
+P0:   [  — ][C:Sunr][  — ][T:Expl][  — ]
+      [T:Bunk][C:Deat][T:Echo][C:Gian][  — ]
+      [C:Skel][C:Hamm][C:Spac][C:Stre][  — ]
+      [T:Deco][C:Pyro][C:Witc][C:Fuji][  — ]
+      [  — ][C:Moon][C:Chur][C:Aeri][  — ]
+P1:   [C:Arch][C:Soni][C:Scar][C:Ange][C:Gran]
+      [  — ][  — ][  — ][C:Nept][  — ]
+      [  — ][T:Trap][C:Chao][T:Pepp][  — ]
+      [T:Expl][C:Foul][  — ][  — ][  — ]
+      [C:Jose][C:Skel][C:Immo][T:Bunk][C:Skel]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.315] Mode selected P1: TECH
+[00:05.625] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:07.009] Tech played  P1: "Radar"
+[00:08.563] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.956] AI1 target chosen: (4,3)
+[00:08.992] Revealed: P0 (4,3) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:09.356] AI1 target chosen: (2,3)
+[00:09.393] Revealed: P0 (2,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:09.791] AI1 target chosen: (0,0)
+[00:09.791] Revealed: P0 (0,0) (blank slot)
+[00:09.796] Tech resolved  P1
+[00:10.691] Mode selected P1: ATTACK
+[00:10.696] Attack phase P1: 2 attack(s) available
+[00:10.696] MSG: Player 2: tap a character to attack.
+[00:10.933] AI1 attack decision: (0,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down} → (4,3) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:11.279] Revealed: P1 (0,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:11.280] Dice rolled: 3
+[00:11.288] MSG: Both cards are destroyed!
+[00:15.858] Crystals: P1 4400 → 3850 (-550)  [battle]
+[00:17.250] Crystals: P0 5000 → 4250 (-750)  [battle]
+[00:18.643] Attack P1(0,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P0(4,3)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=3  ATK=45 vs DEF=45  → TIE
+[00:18.643] Anim: 3C  △ P1(0,1) + △ P0(4,3)
+[00:18.643] Card destroyed  P1 (0,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:18.643] Card destroyed  P0 (4,3) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:19.141] Mode selected P1: ATTACK
+[00:19.144] Attack phase P1: 1 attack(s) available
+[00:19.145] MSG: Player 2: tap a character to attack.
+[00:19.454] AI1 attack decision: (0,4)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima | face-down} → (0,0) (dead-end)
+[00:19.813] Revealed: P1 (0,4) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:19.814] Dice rolled: 3
+[00:19.832] MSG: Nothing happens — Dead End.
+[00:23.171] Attack P1(0,4)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P0(0,0)(empty)  Dice=3  → DEAD_END
+[00:23.171] Anim: 3F  (blank slot)
+[00:23.663] Turn ended  P1  |  Crystals P0=4250 P1=3850
+
+--- Turn 2  |  Player 0  |  Crystals P0=4250 P1=3850 ---
+P0:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][Stre][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  ? ][  — ][  ? ][  ? ][Gran]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:24.262] Mode selected P0: TECH
+[00:24.562] Crystals: P0 4250 → 3250 (-1000)  [tech cost]
+[00:25.948] Tech played  P0: "Great Diplomacy"
+[00:27.528] Revealed: P0 (0,1) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[00:27.553] Revealed: P0 (1,1) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:27.574] Revealed: P0 (1,3) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:27.593] Revealed: P0 (2,0) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:27.612] Revealed: P0 (2,1) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[00:27.635] Revealed: P0 (2,2) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:27.655] Revealed: P0 (3,1) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:27.674] Revealed: P0 (3,2) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[00:27.699] Revealed: P0 (3,3) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:27.719] Revealed: P0 (4,1) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:27.738] Revealed: P0 (4,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:27.741] Tech resolved  P0
+[00:28.378] Mode selected P0: ATTACK
+[00:28.394] Attack phase P0: 2 attack(s) available
+[00:28.394] MSG: Player 1: tap a character to attack.
+[00:28.677] AI0 attack decision: (3,1)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → (0,4) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:28.978] Dice rolled: 1
+[00:28.989] MSG: Pyromancer wins!
+[00:33.671] Crystals: P1 3850 → 3550 (-300)  [battle]
+[00:35.070] Attack P0(3,1)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P1(0,4)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=1  ATK=80 vs DEF=25  → WIN
+[00:35.070] Anim: 3A  △ P1(0,4)
+[00:35.070] Card destroyed  P1 (0,4) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:37.581] Turn ended  P0  |  Crystals P0=3250 P1=3550
+
+--- Turn 3  |  Player 1  |  Crystals P0=3250 P1=3550 ---
+P0:   [  — ][Sunr][  — ][  ? ][  — ]
+      [  ? ][Deat][  ? ][Gian][  — ]
+      [Skel][Hamm][Spac][Stre][  — ]
+      [  ? ][Pyro][Witc][Fuji][  — ]
+      [  — ][Moon][Chur][  — ][  — ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:38.184] Mode selected P1: ATTACK
+[00:38.197] Attack phase P1: 2 attack(s) available
+[00:38.197] MSG: Player 2: tap a character to attack.
+[00:38.469] AI1 attack decision: (0,3)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down} → (1,3) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:38.810] Revealed: P1 (0,3) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[00:38.811] Dice rolled: 5
+[00:38.818] MSG: Angel Gatekeeper wins!
+[00:43.461] Crystals: P0 3250 → 1750 (-1500)  [battle]
+[00:44.867] Attack P1(0,3)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P0(1,3)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}  Dice=5  ATK=40 vs DEF=20  → WIN
+[00:44.867] Anim: 3A  △ P0(1,3)
+[00:44.867] Card destroyed  P0 (1,3) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:47.380] Turn ended  P1  |  Crystals P0=1750 P1=3550
+
+--- Turn 4  |  Player 0  |  Crystals P0=1750 P1=3550 ---
+P0:   [  — ][Sunr][  — ][  ? ][  — ]
+      [  ? ][Deat][  ? ][  — ][  — ]
+      [Skel][Hamm][Spac][Stre][  — ]
+      [  ? ][Pyro][Witc][Fuji][  — ]
+      [  — ][Moon][Chur][  — ][  — ]
+P1:   [  ? ][  — ][  ? ][Ange][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:47.963] Mode selected P0: TECH
+[00:48.263] Crystals: P0 1750 → 750 (-1000)  [tech cost]
+[00:49.657] Tech played  P0: "Siege Cannon"
+[00:51.203] MSG: Siege Cannon active!
+[00:51.210] Tech resolved  P0
+[00:52.122] Mode selected P0: ATTACK
+[00:52.139] Attack phase P0: 2 attack(s) available
+[00:52.139] MSG: Player 1: tap a character to attack.
+[00:52.428] AI0 attack decision: (0,1)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → (4,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down}
+[00:52.773] Revealed: P1 (4,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:52.773] Dice rolled: 5
+[00:52.779] MSG: Sunrise Lady wins!
+[00:58.437] Crystals: P1 3550 → 2950 (-600)  [battle]
+[00:59.851] Attack P0(0,1)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → P1(4,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=5  ATK=30 vs DEF=25  → WIN
+[00:59.851] Reckoning overlay: P0 "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} +ATK 10
+[00:59.851] Anim: 3A  △ P1(4,0)
+[00:59.851] Card destroyed  P1 (4,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:00.338] Mode selected P0: ATTACK
+[01:00.348] Attack phase P0: 1 attack(s) available
+[01:00.348] MSG: Player 1: tap a character to attack.
+[01:00.645] AI0 attack decision: (2,0)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → (0,0) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | face-down}
+[01:00.990] Revealed: P1 (0,0) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[01:00.990] Dice rolled: 3
+[01:05.769] Crystals: P0 750 → 600 (-150)  [battle]
+[01:07.179] Attack P0(2,0)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P1(0,0)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}  Dice=3  ATK=20 vs DEF=90  → LOSE
+[01:07.180] Anim: 3B  △ P0(2,0)
+[01:07.180] Card destroyed  P0 (2,0) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:07.192] MSG: Siege Cannon: Archbishop at (0,0) destroyed after surviving the attack!
+[01:07.193] Crystals: P1 2950 → 1750 (-1200)  [card lost]
+[01:07.194] Card destroyed  P1 (0,0) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[01:07.671] MSG: Death Cobra: Venom applied to Angel Gatekeeper.
+[01:07.677] Turn ended  P0  |  Crystals P0=600 P1=1750
+
+--- Turn 5  |  Player 1  |  Crystals P0=600 P1=1750 ---
+P0:   [  — ][Sunr][  — ][  ? ][  — ]
+      [  ? ][Deat][  ? ][  — ][  — ]
+      [  — ][Hamm][Spac][Stre][  — ]
+      [  ? ][Pyro][Witc][Fuji][  — ]
+      [  — ][Moon][Chur][  — ][  — ]
+P1:   [  — ][  — ][  ? ][Ange][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[01:08.278] Mode selected P1: TECH
+[01:08.605] Tech played  P1: "Prayer"
+[01:10.152] MSG: Prayer: Divine Characters protected until opponent's turn ends.
+[01:10.158] Tech resolved  P1
+[01:11.069] Mode selected P1: ATTACK
+[01:11.087] Attack phase P1: 2 attack(s) available
+[01:11.087] MSG: Player 2: tap a character to attack.
+[01:11.377] AI1 attack decision: (0,3)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | flags:venom} → (3,1) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[01:11.687] Dice rolled: 3
+[01:11.702] MSG: Angel Gatekeeper wins!
+[01:16.389] Crystals: P0 600 → 0 (-600)  [battle]
+
+=== GAME OVER ===
+[01:16.405] AI Player 1 wins
+[01:16.405] Reason: crystals
+[01:16.405] Final crystals — P0: 0  P1: 1750  |  Turns: 5
+[01:16.405] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_garage_sale_treasure_hunt_2026-05-31_19-31-12_208.txt

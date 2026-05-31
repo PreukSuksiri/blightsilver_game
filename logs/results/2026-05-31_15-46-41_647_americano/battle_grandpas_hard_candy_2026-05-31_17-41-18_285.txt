@@ -1,0 +1,209 @@
+=== Battle of Grandpa's Hard Candy ===
+Battle started: 2026-05-31 17:41:18.285
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Lab Crawler
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Release Mutagen, Radar, Spy
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Radar, Spy
+P1 Tech hand: Resurrection, War Supply, Great Diplomacy
+P0:   [C:Ostr][  — ][  — ][  — ][C:Stin]
+      [T:Echo][C:Mars][  — ][C:Polt][  — ]
+      [T:Deco][T:Alar][C:Lab ][  — ][T:Defe]
+      [  — ][C:Vile][  — ][C:Bomb][  — ]
+      [C:Elec][C:Mine][  — ][  — ][C:Gree]
+P1:   [  — ][  — ][  — ][T:Flam][T:Self]
+      [T:Stre][C:Tomb][C:Skel][C:Gran][C:Soni]
+      [  — ][C:Blad][C:Chao][C:Shot][C:Dark]
+      [  — ][C:Demo][C:Snip][C:Spac][C:Myst]
+      [  — ][T:Spik][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:05.302] Mode selected P0: TECH
+[00:05.610] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:06.994] Tech played  P0: "Radar"
+[00:08.544] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.942] AI0 target chosen: (1,0)
+[00:08.979] Revealed: P1 (1,0) "Street Joke" {cost 0}
+[00:09.368] AI0 target chosen: (3,4)
+[00:09.403] Revealed: P1 (3,4) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[00:09.775] AI0 target chosen: (2,0)
+[00:09.775] Revealed: P1 (2,0) (blank slot)
+[00:09.779] Tech resolved  P0
+[00:10.683] Mode selected P0: ATTACK
+[00:10.686] Attack phase P0: 2 attack(s) available
+[00:10.687] MSG: Player 1: tap a character to attack.
+[00:10.975] AI0 attack decision: (0,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down} → (3,4) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[00:11.306] Revealed: P0 (0,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:11.307] Dice rolled: 5
+[00:11.310] MSG: Ostrich Cannon wins!
+[00:15.951] Crystals: P1 5000 → 4750 (-250)  [battle]
+[00:17.348] Attack P0(0,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(3,4)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}  Dice=5  ATK=60 vs DEF=15  → WIN
+[00:17.348] Anim: 3A  △ P1(3,4)
+[00:17.348] Card destroyed  P1 (3,4) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[00:17.348] MSG: Ostrich Cannon locks itself until next turn.
+[00:19.863] Turn ended  P0  |  Crystals P0=4400 P1=4750
+
+--- Turn 2  |  Player 1  |  Crystals P0=4400 P1=4750 ---
+P0:   [Ostr][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:20.460] Mode selected P1: TECH
+[00:20.761] Crystals: P1 4750 → 3750 (-1000)  [tech cost]
+[00:22.144] Tech played  P1: "Great Diplomacy"
+[00:23.735] Revealed: P1 (1,1) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:23.758] Revealed: P1 (1,2) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:23.783] Revealed: P1 (1,3) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:23.812] Revealed: P1 (1,4) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:23.831] Revealed: P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:23.852] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:23.872] Revealed: P1 (2,3) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:23.899] Revealed: P1 (2,4) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:23.920] Revealed: P1 (3,1) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:23.941] Revealed: P1 (3,2) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:23.963] Revealed: P1 (3,3) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:23.967] Tech resolved  P1
+[00:24.711] Mode selected P1: ATTACK
+[00:24.723] Attack phase P1: 2 attack(s) available
+[00:24.723] MSG: Player 2: tap a character to attack.
+[00:25.000] AI1 attack decision: (1,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → (0,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3}
+[00:25.301] Dice rolled: 2
+[00:25.312] MSG: Skeleton Lancer wins!
+[00:29.989] Crystals: P0 4400 → 3600 (-800)  [battle]
+[00:31.390] Attack P1(1,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P0(0,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3}  Dice=2  ATK=45 vs DEF=30  → WIN
+[00:31.390] Anim: 3A  △ P0(0,0)
+[00:31.390] Card destroyed  P0 (0,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3}
+[00:33.901] Turn ended  P1  |  Crystals P0=3600 P1=3750
+
+--- Turn 3  |  Player 0  |  Crystals P0=3600 P1=3750 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Tomb][Skel][Gran][Soni]
+      [  — ][Blad][Chao][Shot][Dark]
+      [  — ][Demo][Snip][Spac][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:34.468] Mode selected P0: TECH
+[00:34.791] Tech played  P0: "Spy"
+[00:36.360] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:36.759] AI0 target chosen: (0,4)
+[00:36.795] Revealed: P1 (0,4) "Self-destruct" {cost 0}
+[00:36.800] Tech resolved  P0
+[00:37.662] Mode selected P0: ATTACK
+[00:37.676] Attack phase P0: 2 attack(s) available
+[00:37.676] MSG: Player 1: tap a character to attack.
+[00:37.956] AI0 attack decision: (2,2)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | face-down} → (1,1) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:38.304] Revealed: P0 (2,2) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:38.305] Dice rolled: 4
+[00:38.318] MSG: Lab Crawler wins!
+[00:42.914] Crystals: P1 3750 → 2750 (-1000)  [battle]
+[00:44.329] Attack P0(2,2)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P1(1,1)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=4  ATK=95 vs DEF=60  → WIN
+[00:44.330] Anim: 3A  △ P1(1,1)
+[00:44.330] Card destroyed  P1 (1,1) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:44.821] Mode selected P0: ATTACK
+[00:44.831] Attack phase P0: 1 attack(s) available
+[00:44.832] MSG: Player 1: tap a character to attack.
+[00:45.114] AI0 attack decision: (1,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic | face-down} → (2,3) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:45.452] Revealed: P0 (1,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:45.452] Dice rolled: 2
+[00:45.458] MSG: Mars Drill wins!
+[00:50.123] Crystals: P1 2750 → 1850 (-900)  [battle]
+[00:51.532] Attack P0(1,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P1(2,3)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}  Dice=2  ATK=40 vs DEF=25  → WIN
+[00:51.532] Anim: 3A  △ P1(2,3)
+[00:51.532] Card destroyed  P1 (2,3) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:52.029] Turn ended  P0  |  Crystals P0=3600 P1=1850
+
+--- Turn 4  |  Player 1  |  Crystals P0=3600 P1=1850 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Mars][  — ][  ? ][  — ]
+      [  ? ][  ? ][Lab ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Skel][Gran][Soni]
+      [  — ][Blad][Chao][  — ][Dark]
+      [  — ][Demo][Snip][Spac][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:52.631] Mode selected P1: TECH
+[00:52.941] Crystals: P1 1850 → 350 (-1500)  [tech cost]
+[00:54.331] Tech played  P1: "Resurrection"
+[00:55.881] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:56.288] AI1 target chosen: (0,0)
+[00:56.297] Revealed: P1 (0,0) "Shotgun Shark" {Unit ATK0 DEF0 | cost 900 | affinity Nature | base 0/0}
+[00:56.298] MSG: Revived Shotgun Shark at [0,0]!
+[00:56.311] Tech resolved  P1
+[00:57.208] Mode selected P1: ATTACK
+[00:57.223] Attack phase P1: 2 attack(s) available
+[00:57.224] MSG: Player 2: tap a character to attack.
+[00:57.513] AI1 attack decision: (3,3)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → (2,2) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:57.822] Dice rolled: 4
+[00:57.835] MSG: Space Boy wins!
+[01:02.523] Crystals: P0 3600 → 2400 (-1200)  [battle]
+[01:03.936] Attack P1(3,3)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P0(2,2)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=4  ATK=75 vs DEF=60  → WIN
+[01:03.936] Anim: 3A  △ P0(2,2)
+[01:03.936] Card destroyed  P0 (2,2) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:04.423] Mode selected P1: ATTACK
+[01:04.435] Attack phase P1: 1 attack(s) available
+[01:04.435] MSG: Player 2: tap a character to attack.
+[01:04.726] AI1 attack decision: (1,4)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → (1,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:05.035] Dice rolled: 2
+[01:05.047] MSG: Sonic Seraph wins!
+[01:09.729] Crystals: P0 2400 → 2000 (-400)  [battle]
+[01:11.144] Attack P1(1,4)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P0(1,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=2  ATK=45 vs DEF=30  → WIN
+[01:11.144] Anim: 3A  △ P0(1,1)
+[01:11.144] Card destroyed  P0 (1,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:11.633] Turn ended  P1  |  Crystals P0=2000 P1=350
+
+--- Turn 5  |  Player 0  |  Crystals P0=2000 P1=350 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [Shot][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Skel][Gran][Soni]
+      [  — ][Blad][Chao][  — ][Dark]
+      [  — ][Demo][Snip][Spac][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:12.237] Mode selected P0: ATTACK
+[01:12.250] Attack phase P0: 2 attack(s) available
+[01:12.250] MSG: Player 1: tap a character to attack.
+[01:12.539] AI0 attack decision: (0,4)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down} → (0,0) "Shotgun Shark" {Unit ATK0 DEF0 | cost 900 | affinity Nature | base 0/0}
+[01:12.887] Revealed: P0 (0,4) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[01:12.888] Dice rolled: 4
+[01:12.901] MSG: Stinky Insect wins!
+[01:17.548] Crystals: P1 350 → 0 (-350)  [battle]
+
+=== GAME OVER ===
+[01:17.564] AI Player 0 wins
+[01:17.564] Reason: crystals
+[01:17.564] Final crystals — P0: 2000  P1: 0  |  Turns: 5
+[01:17.564] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_grandpas_hard_candy_2026-05-31_17-41-18_285.txt

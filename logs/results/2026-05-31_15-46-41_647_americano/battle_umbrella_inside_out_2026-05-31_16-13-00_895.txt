@@ -1,0 +1,278 @@
+=== Battle of Umbrella Inside Out ===
+Battle started: 2026-05-31 16:13:00.895
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Bomber Fairy
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Bomber Fairy
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Prayer, Great Diplomacy
+P1 Tech hand: War Supply, Spy, Resurrection
+P0:   [C:Snip][  — ][T:Flam][T:Host][C:Tiny]
+      [  — ][  — ][T:Pepp][T:Bait][  — ]
+      [  — ][C:Nigh][C:Bomb][  — ][  — ]
+      [C:Need][T:Echo][C:Paro][  — ][  — ]
+      [C:Joan][C:Elec][C:Myst][  — ][C:Stin]
+P1:   [C:Stre][  — ][T:Brai][T:Bunk][C:Scar]
+      [  — ][C:Stri][  — ][C:Ange][  — ]
+      [C:Shot][C:Arch][C:Chao][  — ][C:Vamp]
+      [T:Spik][C:Magi][  — ][C:Raij][  — ]
+      [C:Gree][  — ][C:Blad][T:Pepp][T:Self]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:05.323] Mode selected P0: TECH
+[00:05.624] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:07.003] Tech played  P0: "Great Diplomacy"
+[00:08.569] Revealed: P0 (0,0) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:08.592] Revealed: P0 (0,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[00:08.613] Revealed: P0 (2,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:08.652] Revealed: P0 (2,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[00:08.691] Revealed: P0 (3,0) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[00:08.716] Revealed: P0 (3,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:08.738] Revealed: P0 (4,0) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[00:08.782] Revealed: P0 (4,1) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:08.816] Revealed: P0 (4,2) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[00:08.835] Revealed: P0 (4,4) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[00:08.838] Tech resolved  P0
+[00:09.613] Mode selected P0: ATTACK
+[00:09.622] Attack phase P0: 2 attack(s) available
+[00:09.622] MSG: Player 1: tap a character to attack.
+[00:09.902] AI0 attack decision: (0,0)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → (0,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima | face-down}
+[00:10.231] Revealed: P1 (0,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:10.231] Crystals: P0 4000 → 4040 (+40)  [ability]
+[00:10.231] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:10.231] Dice rolled: 4
+[00:10.235] MSG: Both cards are destroyed!
+[00:15.794] Crystals: P0 4040 → 3690 (-350)  [battle]
+[00:17.184] Crystals: P1 5000 → 4650 (-350)  [battle]
+[00:18.583] Attack P0(0,0)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(0,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=4  ATK=20 vs DEF=20  → TIE
+[00:18.583] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} ATK -20
+[00:18.583] Anim: 3C  △ P0(0,0) + △ P1(0,0)
+[00:18.583] Card destroyed  P0 (0,0) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:18.583] Card destroyed  P1 (0,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:19.079] Mode selected P0: ATTACK
+[00:19.088] Attack phase P0: 1 attack(s) available
+[00:19.089] MSG: Player 1: tap a character to attack.
+[00:19.365] AI0 attack decision: (0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} → (0,3) "Bunker" {cost 900}
+[00:19.711] Revealed: P1 (0,3) "Bunker" {cost 900}
+[00:19.712] Crystals: P0 3690 → 3730 (+40)  [ability]
+[00:19.712] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:19.712] Dice rolled: 1
+[00:19.973] MSG: Trap triggered: Bunker!
+[00:24.057] Crystals: P1 4650 → 3750 (-900)  [trap cost]
+[00:25.446] MSG: Bunker: Adjacent squares cannot be targeted this turn.
+[00:25.455] Trap: "Bunker" triggered  P0(0,4)→P1(0,3)
+[00:25.455] Anim: 3D  (attacker survives)
+[00:25.964] Turn ended  P0  |  Crystals P0=3730 P1=3750
+
+--- Turn 2  |  Player 1  |  Crystals P0=3730 P1=3750 ---
+P0:   [  — ][  — ][  ? ][  ? ][Tiny]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][Nigh][Bomb][  — ][  — ]
+      [Need][  ? ][Paro][  — ][  — ]
+      [Joan][Elec][Myst][  — ][Stin]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:26.551] Mode selected P1: TECH
+[00:26.864] Tech played  P1: "Spy"
+[00:28.426] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:28.835] AI1 target chosen: (0,3)
+[00:28.860] Revealed: P0 (0,3) "Hostage" {cost 200}
+[00:28.867] Tech resolved  P1
+[00:29.752] Mode selected P1: ATTACK
+[00:29.762] Attack phase P1: 2 attack(s) available
+[00:29.762] MSG: Player 2: tap a character to attack.
+[00:30.060] AI1 attack decision: (2,0)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down} → (4,1) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:30.403] Revealed: P1 (2,0) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:30.403] Crystals: P0 3730 → 3770 (+40)  [ability]
+[00:30.403] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:30.403] Dice rolled: 2
+[00:30.407] MSG: Shotgun Shark wins!
+[00:35.042] Crystals: P0 3770 → 2770 (-1000)  [battle]
+[00:36.458] Attack P1(2,0)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → P0(4,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}  Dice=2  ATK=75 vs DEF=45  → WIN
+[00:36.458] Anim: 3A  △ P0(4,1)
+[00:36.459] Card destroyed  P0 (4,1) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:36.935] Mode selected P1: ATTACK
+[00:36.946] Attack phase P1: 1 attack(s) available
+[00:36.947] MSG: Player 2: tap a character to attack.
+[00:37.239] AI1 attack decision: (2,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | face-down} → (2,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:37.585] Revealed: P1 (2,1) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[00:37.585] Crystals: P0 2770 → 2810 (+40)  [ability]
+[00:37.585] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:37.586] Dice rolled: 3
+[00:37.593] MSG: Archbishop wins!
+[00:42.207] Crystals: P0 2810 → 1910 (-900)  [battle]
+[00:43.608] Attack P1(2,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P0(2,1)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=3  ATK=70 vs DEF=30  → WIN
+[00:43.608] Anim: 3A  △ P0(2,1)
+[00:43.608] Card destroyed  P0 (2,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:44.110] Turn ended  P1  |  Crystals P0=1910 P1=3750
+
+--- Turn 3  |  Player 0  |  Crystals P0=1910 P1=3750 ---
+P0:   [  — ][  — ][  ? ][  — ][Tiny]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][Bomb][  — ][  — ]
+      [Need][  ? ][Paro][  — ][  — ]
+      [Joan][  — ][Myst][  — ][Stin]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [Shot][Arch][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:44.714] Mode selected P0: TECH
+[00:45.023] Crystals: P0 1910 → 910 (-1000)  [tech cost]
+[00:46.410] Tech played  P0: "Accident"
+[00:47.964] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:48.371] AI0 target chosen: (2,1)
+[00:48.375] Card destroyed  P1 (2,1) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[00:48.390] Tech resolved  P0
+[00:49.293] Mode selected P0: ATTACK
+[00:49.303] Attack phase P0: 2 attack(s) available
+[00:49.303] MSG: Player 1: tap a character to attack.
+[00:49.597] AI0 attack decision: (3,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → (2,0) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:49.906] Dice rolled: 5
+[00:49.919] MSG: Parom the Smuggler wins!
+[00:54.607] Crystals: P1 3750 → 2850 (-900)  [battle]
+[00:56.005] Attack P0(3,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(2,0)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}  Dice=5  ATK=30 vs DEF=25  → WIN
+[00:56.005] Anim: 3A  △ P1(2,0)
+[00:56.005] Card destroyed  P1 (2,0) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:56.508] Mode selected P0: ATTACK
+[00:56.516] Attack phase P0: 1 attack(s) available
+[00:56.517] MSG: Player 1: tap a character to attack.
+[00:56.809] AI0 attack decision: (0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} → (1,0) (dead-end)
+[00:57.118] Dice rolled: 5
+[00:57.148] MSG: Nothing happens — Dead End.
+[01:00.535] Attack P0(0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} → P1(1,0)(empty)  Dice=5  → DEAD_END
+[01:00.535] Anim: 3F  (blank slot)
+[01:01.040] Turn ended  P0  |  Crystals P0=910 P1=2850
+
+--- Turn 4  |  Player 1  |  Crystals P0=910 P1=2850 ---
+P0:   [  — ][  — ][  ? ][  — ][Tiny]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][Bomb][  — ][  — ]
+      [Need][  ? ][Paro][  — ][  — ]
+      [Joan][  — ][Myst][  — ][Stin]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[01:01.644] Mode selected P1: TECH
+[01:01.951] Crystals: P1 2850 → 1350 (-1500)  [tech cost]
+[01:03.337] Tech played  P1: "Resurrection"
+[01:04.902] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[01:05.310] AI1 target chosen: (0,1)
+[01:05.314] Revealed: P1 (0,1) "Shotgun Shark" {Unit ATK0 DEF0 | cost 900 | affinity Nature | base 0/0}
+[01:05.314] MSG: Revived Shotgun Shark at [0,1]!
+[01:05.326] Tech resolved  P1
+[01:06.228] Mode selected P1: ATTACK
+[01:06.239] Attack phase P1: 2 attack(s) available
+[01:06.239] MSG: Player 2: tap a character to attack.
+[01:06.533] AI1 attack decision: (1,1)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down} → (2,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[01:06.886] Revealed: P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[01:06.886] Crystals: P0 910 → 950 (+40)  [ability]
+[01:06.889] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:06.889] Dice rolled: 5
+[01:06.899] MSG: Striker Comet wins!
+[01:11.517] Crystals: P0 950 → 450 (-500)  [battle]
+[01:12.923] Attack P1(1,1)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} → P0(2,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}  Dice=5  ATK=25 vs DEF=15  → WIN
+[01:12.923] Anim: 3A  △ P0(2,2)
+[01:12.923] Card destroyed  P0 (2,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[01:13.411] Mode selected P1: ATTACK
+[01:13.425] Attack phase P1: 1 attack(s) available
+[01:13.427] MSG: Player 2: tap a character to attack.
+[01:13.711] AI1 attack decision: (0,1)"Shotgun Shark" {Unit ATK0 DEF0 | cost 900 | affinity Nature | base 0/0} → (0,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[01:14.005] Dice rolled: 4
+[01:14.018] MSG: Both cards are destroyed!
+[01:18.613] Crystals: P1 1350 → 450 (-900)  [battle]
+[01:20.006] Crystals: P0 450 → 350 (-100)  [battle]
+[01:21.393] MSG: Tiny Pixie survives destruction!
+[01:21.401] Attack P1(0,1)"Shotgun Shark" {Unit ATK0 DEF0 | cost 900 | affinity Nature | base 0/0} → P0(0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}  Dice=4  ATK=0 vs DEF=0  → TIE
+[01:21.401] Anim: 3C  △ P1(0,1) + △ P0(0,4)
+[01:21.401] Card destroyed  P1 (0,1) "Shotgun Shark" {Unit ATK0 DEF0 | cost 900 | affinity Nature | base 0/0}
+[01:21.401] Card destroyed  P0 (0,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[01:21.894] MSG: Striker Comet self-destructs at end of turn!
+[01:21.894] Crystals: P1 450 → 250 (-200)  [card lost]
+[01:21.896] Card destroyed  P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending | attacked}
+[01:21.900] Turn ended  P1  |  Crystals P0=350 P1=250
+
+--- Turn 5  |  Player 0  |  Crystals P0=350 P1=250 ---
+P0:   [  — ][  — ][  ? ][  — ][Tiny]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Need][  ? ][Paro][  — ][  — ]
+      [Joan][  — ][Myst][  — ][Stin]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[01:22.494] Mode selected P0: TECH
+[01:22.804] Tech played  P0: "Prayer"
+[01:24.350] MSG: Prayer: Divine Characters protected until opponent's turn ends.
+[01:24.357] Tech resolved  P0
+[01:25.253] Mode selected P0: ATTACK
+[01:25.260] Attack phase P0: 2 attack(s) available
+[01:25.260] MSG: Player 1: tap a character to attack.
+[01:25.552] AI0 attack decision: (0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used} → (1,4) (dead-end)
+[01:25.853] Dice rolled: 5
+[01:25.880] MSG: Nothing happens — Dead End.
+[01:29.253] Attack P0(0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used} → P1(1,4)(empty)  Dice=5  → DEAD_END
+[01:29.253] Anim: 3F  (blank slot)
+[01:29.744] Mode selected P0: ATTACK
+[01:29.751] Attack phase P0: 1 attack(s) available
+[01:29.752] MSG: Player 1: tap a character to attack.
+[01:30.043] AI0 attack decision: (3,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} → (0,4) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down}
+[01:30.371] Revealed: P1 (0,4) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:30.372] Crystals: P0 350 → 390 (+40)  [ability]
+[01:30.372] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:30.372] Dice rolled: 4
+[01:35.169] Crystals: P0 390 → 190 (-200)  [battle]
+[01:36.567] Attack P0(3,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} → P1(0,4)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=4  ATK=10 vs DEF=30  → LOSE
+[01:36.568] Anim: 3B  △ P0(3,0)
+[01:36.568] Card destroyed  P0 (3,0) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[01:37.072] Turn ended  P0  |  Crystals P0=190 P1=250
+
+--- Turn 6  |  Player 1  |  Crystals P0=190 P1=250 ---
+P0:   [  — ][  — ][  ? ][  — ][Tiny]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][Paro][  — ][  — ]
+      [Joan][  — ][Myst][  — ][Stin]
+P1:   [  — ][  — ][  ? ][  — ][Scar]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[01:37.694] Mode selected P1: ATTACK
+[01:37.706] Attack phase P1: 2 attack(s) available
+[01:37.706] MSG: Player 2: tap a character to attack.
+[01:37.989] AI1 attack decision: (0,4)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → (4,4) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[01:38.296] Dice rolled: 4
+[01:38.309] MSG: Scarlet Mutant wins!
+[01:42.998] Crystals: P0 190 → 0 (-190)  [battle]
+
+=== GAME OVER ===
+[01:43.006] AI Player 1 wins
+[01:43.006] Reason: crystals
+[01:43.006] Final crystals — P0: 0  P1: 250  |  Turns: 6
+[01:43.006] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_umbrella_inside_out_2026-05-31_16-13-00_895.txt

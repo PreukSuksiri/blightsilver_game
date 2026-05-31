@@ -1,0 +1,422 @@
+=== Battle of Grandpa's Hard Candy ===
+Battle started: 2026-05-31 11:49:39.807
+Game Session of Apple Juice (started 2026-05-31 11:43:33.341)
+=== AI vs AI Match ===
+Batch iteration: 3 / 5
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Accident, Siege Cannon
+P1 Tech hand: Radar, Accident, War Supply
+P0:   [  — ][  — ][C:Spea][C:Cany][  — ]
+      [  — ][T:Bait][T:Stre][T:Curs][  — ]
+      [C:Bat ][C:Lase][C:Jaco][C:Arch][C:Immo]
+      [  — ][C:Blad][C:Scyt][T:Alar][  — ]
+      [C:Elec][  — ][  — ][C:Choi][  — ]
+P1:   [C:Deat][  — ][T:Defe][  — ][C:Gree]
+      [T:Hypn][  — ][C:Vamp][  — ][C:Mafi]
+      [C:Doom][  — ][  — ][  — ][T:Deco]
+      [  — ][  — ][C:Dark][  — ][T:Flam]
+      [C:Mars][  — ][C:Chur][  — ][  — ]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:05.286] Mode selected P1: TECH
+[00:05.594] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:06.978] Tech played  P1: "Radar"
+[00:08.545] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.952] AI1 target chosen: (2,0)
+[00:09.027] Revealed: P0 (2,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:09.377] AI1 target chosen: (0,2)
+[00:09.413] Revealed: P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:09.768] AI1 target chosen: (4,0)
+[00:09.818] Revealed: P0 (4,0) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:09.820] Tech resolved  P1
+[00:10.710] Mode selected P1: ATTACK
+[00:10.715] Attack phase P1: 2 attack(s) available
+[00:10.715] MSG: Player 2: tap a character to attack.
+[00:11.010] AI1 attack decision: (3,2)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down} → (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:11.365] Revealed: P1 (3,2) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[00:11.365] Dice rolled: 5
+[00:11.371] MSG: Dark Tengu wins!
+[00:15.961] Crystals: P0 5000 → 4520 (-480)  [battle]
+[00:17.360] Attack P1(3,2)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos} → P0(0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=5  ATK=25 vs DEF=20  → WIN
+[00:17.360] Anim: 3A  △ P0(0,2)
+[00:17.360] Card destroyed  P0 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:17.361] MSG: Dark Tengu: Self ATK debuff applied.
+[00:19.866] Turn ended  P1  |  Crystals P0=4520 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4520 P1=4400 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [Bat ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [Elec][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Dark][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:20.460] Mode selected P0: TECH
+[00:20.761] Crystals: P0 4520 → 3520 (-1000)  [tech cost]
+[00:22.148] Tech played  P0: "Accident"
+[00:23.694] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:24.093] AI0 target chosen: (3,2)
+[00:24.097] Card destroyed  P1 (3,2) "Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}
+[00:24.103] Tech resolved  P0
+[00:24.994] Mode selected P0: ATTACK
+[00:24.998] Attack phase P0: 2 attack(s) available
+[00:24.998] MSG: Player 1: tap a character to attack.
+[00:25.293] AI0 attack decision: (4,0)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → (2,4) "Decoy Puppet" {cost 100}
+[00:25.628] Revealed: P1 (2,4) "Decoy Puppet" {cost 100}
+[00:25.629] Dice rolled: 4
+[00:25.916] MSG: Trap triggered: Decoy Puppet!
+[00:30.019] Crystals: P1 4400 → 4300 (-100)  [trap cost]
+[00:31.411] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[00:31.424] Trap: "Decoy Puppet" triggered  P0(4,0)→P1(2,4)
+[00:31.424] Anim: 3D  (attacker survives)
+[00:31.904] Mode selected P0: ATTACK
+[00:31.909] Attack phase P0: 1 attack(s) available
+[00:31.910] MSG: Player 1: tap a character to attack.
+[00:32.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (2,2) (dead-end)
+[00:32.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:32.505] Attack aborted
+[00:33.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:34.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:34.005] Attack aborted
+[00:35.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[00:35.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:35.504] Attack aborted
+[00:36.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[00:37.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:37.005] Attack aborted
+[00:38.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,4) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down}
+[00:38.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:38.506] Attack aborted
+[00:39.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:40.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:40.006] Attack aborted
+[00:41.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[00:41.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:41.505] Attack aborted
+[00:42.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:43.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:43.011] Attack aborted
+[00:44.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[00:44.503] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:44.508] Attack aborted
+[00:45.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:46.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:46.004] Attack aborted
+[00:47.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[00:47.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:47.504] Attack aborted
+[00:48.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[00:49.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:49.005] Attack aborted
+[00:50.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:50.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:50.506] Attack aborted
+[00:51.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[00:52.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:52.004] Attack aborted
+[00:53.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (2,2) (dead-end)
+[00:53.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:53.506] Attack aborted
+[00:54.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,0) "Hypnosis" {cost 800}
+[00:55.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:55.005] Attack aborted
+[00:56.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[00:56.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:56.504] Attack aborted
+[00:57.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:58.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:58.005] Attack aborted
+[00:59.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[00:59.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[00:59.505] Attack aborted
+[01:00.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[01:01.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:01.004] Attack aborted
+[01:02.203] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:02.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:02.508] Attack aborted
+[01:03.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,3) (dead-end)
+[01:04.006] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:04.012] Attack aborted
+[01:05.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[01:05.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:05.509] Attack aborted
+[01:06.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (2,1) (dead-end)
+[01:07.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:07.006] Attack aborted
+[01:08.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:08.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:08.504] Attack aborted
+[01:09.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[01:10.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:10.005] Attack aborted
+[01:11.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,4) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down}
+[01:11.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:11.505] Attack aborted
+[01:12.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:13.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:13.006] Attack aborted
+[01:14.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[01:14.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:14.505] Attack aborted
+[01:15.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[01:16.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:16.004] Attack aborted
+[01:17.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (2,2) (dead-end)
+[01:17.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:17.504] Attack aborted
+[01:18.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[01:19.003] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:19.012] Attack aborted
+[01:20.203] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down}
+[01:20.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:20.506] Attack aborted
+[01:21.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[01:22.003] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:22.007] Attack aborted
+[01:23.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[01:23.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:23.506] Attack aborted
+[01:24.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:25.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:25.006] Attack aborted
+[01:26.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,4) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down}
+[01:26.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:26.505] Attack aborted
+[01:27.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:28.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:28.006] Attack aborted
+[01:29.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,3) (dead-end)
+[01:29.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:29.506] Attack aborted
+[01:30.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,4) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down}
+[01:31.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:31.005] Attack aborted
+[01:32.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,3) (dead-end)
+[01:32.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:32.503] Attack aborted
+[01:33.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,0) "Hypnosis" {cost 800}
+[01:34.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:34.006] Attack aborted
+[01:35.203] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[01:35.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:35.509] Attack aborted
+[01:36.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[01:37.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:37.003] Attack aborted
+[01:38.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:38.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:38.507] Attack aborted
+[01:39.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,1) (dead-end)
+[01:40.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:40.005] Attack aborted
+[01:41.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:41.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:41.504] Attack aborted
+[01:42.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:43.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:43.006] Attack aborted
+[01:44.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:44.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:44.506] Attack aborted
+[01:45.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,3) (dead-end)
+[01:46.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:46.005] Attack aborted
+[01:47.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:47.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:47.511] Attack aborted
+[01:48.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[01:49.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:49.003] Attack aborted
+[01:50.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (2,0) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down}
+[01:50.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:50.512] Attack aborted
+[01:51.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:52.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:52.006] Attack aborted
+[01:53.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[01:53.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:53.506] Attack aborted
+[01:54.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,1) (dead-end)
+[01:55.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:55.005] Attack aborted
+[01:56.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:56.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:56.503] Attack aborted
+[01:57.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[01:58.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:58.006] Attack aborted
+[01:59.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[01:59.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[01:59.513] Attack aborted
+[02:00.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,3) (dead-end)
+[02:01.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:01.006] Attack aborted
+[02:02.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:02.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:02.505] Attack aborted
+[02:03.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[02:04.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:04.006] Attack aborted
+[02:05.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:05.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:05.506] Attack aborted
+[02:06.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,3) (dead-end)
+[02:07.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:07.004] Attack aborted
+[02:08.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[02:08.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:08.506] Attack aborted
+[02:09.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:10.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:10.004] Attack aborted
+[02:11.200] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[02:11.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:11.505] Attack aborted
+[02:12.703] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:13.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:13.019] Attack aborted
+[02:14.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,0) "Hypnosis" {cost 800}
+[02:14.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:14.504] Attack aborted
+[02:15.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:16.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:16.006] Attack aborted
+[02:17.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:17.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:17.504] Attack aborted
+[02:18.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:19.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:19.005] Attack aborted
+[02:20.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:20.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:20.507] Attack aborted
+[02:21.702] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[02:22.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:22.007] Attack aborted
+[02:23.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:23.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:23.505] Attack aborted
+[02:24.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[02:25.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:25.005] Attack aborted
+[02:26.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:26.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:26.507] Attack aborted
+[02:27.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[02:28.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:28.003] Attack aborted
+[02:29.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:29.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:29.504] Attack aborted
+[02:30.700] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,3) (dead-end)
+[02:31.001] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:31.005] Attack aborted
+[02:32.202] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:32.501] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:32.505] Attack aborted
+[02:33.701] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:34.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:34.005] Attack aborted
+[02:35.201] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:35.502] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:35.506] Attack aborted
+[02:36.703] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:37.002] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:37.005] Attack aborted
+[02:38.199] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:38.498] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:38.511] Attack aborted
+[02:39.697] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,3) (dead-end)
+[02:39.998] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:40.000] Attack aborted
+[02:41.197] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,3) (dead-end)
+[02:41.497] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:41.503] Attack aborted
+[02:42.696] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:42.997] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:43.000] Attack aborted
+[02:44.197] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:44.497] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:44.500] Attack aborted
+[02:45.697] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[02:45.998] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:46.000] Attack aborted
+[02:47.197] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:47.496] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:47.499] Attack aborted
+[02:48.697] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:48.997] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:49.002] Attack aborted
+[02:50.196] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:50.498] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:50.504] Attack aborted
+[02:51.697] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[02:51.997] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:52.000] Attack aborted
+[02:53.197] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[02:53.498] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:53.501] Attack aborted
+[02:54.697] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,4) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down}
+[02:54.997] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:55.000] Attack aborted
+[02:56.197] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[02:56.497] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:56.501] Attack aborted
+[02:57.696] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[02:57.996] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:57.999] Attack aborted
+[02:59.197] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,3) (dead-end)
+[02:59.497] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[02:59.502] Attack aborted
+[03:00.697] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,2) "Defensive Pheromone" {cost 500}
+[03:00.997] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[03:01.002] Attack aborted
+[03:02.197] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,0) "Hypnosis" {cost 800}
+[03:02.497] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[03:02.501] Attack aborted
+[03:03.696] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[03:03.997] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[03:04.000] Attack aborted
+[03:05.197] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,1) (dead-end)
+[03:05.496] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[03:05.499] Attack aborted
+[03:06.697] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[03:06.997] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[03:07.000] Attack aborted
+[03:08.197] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,4) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down}
+[03:08.498] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[03:08.503] Attack aborted
+[03:09.697] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,3) (dead-end)
+[03:09.997] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[03:10.000] Attack aborted
+[03:11.197] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (1,1) (dead-end)
+[03:11.496] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[03:11.499] Attack aborted
+[03:12.697] AI0 attack decision: (2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[03:12.997] MSG: Decoy Puppet: Units costing 400 or less cannot attack this turn.
+[03:13.000] Attack aborted
+[03:14.197] AI0 attack decision: (

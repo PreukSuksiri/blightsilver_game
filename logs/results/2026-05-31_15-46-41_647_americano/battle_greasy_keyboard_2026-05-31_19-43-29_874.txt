@@ -1,0 +1,397 @@
+=== Battle of Greasy Keyboard ===
+Battle started: 2026-05-31 19:43:29.874
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Striker Comet
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Striker Comet
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Siege Cannon, War Supply
+P1 Tech hand: Release Mutagen, Radar, Prayer
+P0:   [  — ][  — ][T:Stre][  — ][C:Armo]
+      [T:Flam][  — ][C:Red ][C:Raij][C:Rott]
+      [T:Curs][  — ][C:Stri][C:Nuki][C:Tiny]
+      [  — ][  — ][C:Lab ][  — ][C:Blue]
+      [  — ][T:Defe][C:Lab ][  — ][C:Armo]
+P1:   [C:Shot][C:Cany][C:Gamm][C:Meph][C:Choi]
+      [T:Echo][  — ][T:Foul][C:Wand][T:Blac]
+      [  — ][  — ][C:Chao][  — ][  — ]
+      [  — ][T:Hard][T:Bait][  — ][  — ]
+      [C:Vile][T:Spik][C:Heav][C:Mafi][C:Moon]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.307] Mode selected P0: TECH
+[00:05.607] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:06.990] Tech played  P0: "Radar"
+[00:08.566] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.964] AI0 target chosen: (3,1)
+[00:09.009] Revealed: P1 (3,1) "Hard Scale" {cost 700}
+[00:09.321] AI0 target chosen: (1,4)
+[00:09.358] Revealed: P1 (1,4) "Blackmail" {cost 0}
+[00:09.731] AI0 target chosen: (4,4)
+[00:09.760] Revealed: P1 (4,4) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:09.762] Tech resolved  P0
+[00:10.659] Mode selected P0: ATTACK
+[00:10.664] Attack phase P0: 2 attack(s) available
+[00:10.664] MSG: Player 1: tap a character to attack.
+[00:10.955] AI0 attack decision: (1,3)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine | face-down} → (4,4) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:11.300] Revealed: P0 (1,3) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:11.300] Dice rolled: 3
+[00:11.305] MSG: Raijin wins!
+[00:16.983] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:18.384] Attack P0(1,3)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(4,4)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}  Dice=3  ATK=60 vs DEF=40  → WIN
+[00:18.385] Reckoning overlay: P1 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} +DEF 10
+[00:18.385] Anim: 3A  △ P1(4,4)
+[00:18.385] Card destroyed  P1 (4,4) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:18.874] Mode selected P0: ATTACK
+[00:18.877] Attack phase P0: 1 attack(s) available
+[00:18.878] MSG: Player 1: tap a character to attack.
+[00:19.172] AI0 attack decision: (1,2)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane | face-down} → (0,2) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}
+[00:19.513] Revealed: P0 (1,2) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:19.536] Revealed: P1 (0,2) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:19.537] Dice rolled: 2
+[00:19.544] MSG: Red Mage wins!
+[00:24.120] Crystals: P1 4600 → 4380 (-220)  [battle]
+[00:25.525] Attack P0(1,2)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P1(0,2)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}  Dice=2  ATK=20 vs DEF=15  → WIN
+[00:25.525] Anim: 3A  △ P1(0,2)
+[00:25.525] Card destroyed  P1 (0,2) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:26.019] Turn ended  P0  |  Crystals P0=4400 P1=4380
+
+--- Turn 2  |  Player 1  |  Crystals P0=4400 P1=4380 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Red ][Raij][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:26.614] Mode selected P1: TECH
+[00:26.923] Crystals: P1 4380 → 3780 (-600)  [tech cost]
+[00:28.312] Tech played  P1: "Radar"
+[00:29.860] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:30.268] AI1 target chosen: (2,0)
+[00:30.301] Revealed: P0 (2,0) "Cursed Reflection" {cost 500}
+[00:30.676] AI1 target chosen: (4,1)
+[00:30.709] Revealed: P0 (4,1) "Defensive Pheromone" {cost 500}
+[00:31.083] AI1 target chosen: (0,4)
+[00:31.121] Revealed: P0 (0,4) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[00:31.125] Tech resolved  P1
+[00:32.020] Mode selected P1: ATTACK
+[00:32.027] Attack phase P1: 2 attack(s) available
+[00:32.027] MSG: Player 2: tap a character to attack.
+[00:32.323] AI1 attack decision: (0,0)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down} → (1,3) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:32.656] Revealed: P1 (0,0) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:32.657] Dice rolled: 1
+[00:32.662] MSG: Shotgun Shark wins!
+[00:37.290] Crystals: P0 4400 → 3850 (-550)  [battle]
+[00:38.696] Attack P1(0,0)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → P0(1,3)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=1  ATK=75 vs DEF=0  → WIN
+[00:38.696] Anim: 3A  △ P0(1,3)
+[00:38.696] Card destroyed  P0 (1,3) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:39.191] Mode selected P1: ATTACK
+[00:39.201] Attack phase P1: 1 attack(s) available
+[00:39.202] MSG: Player 2: tap a character to attack.
+[00:39.502] AI1 attack decision: (0,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down} → (1,2) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:39.854] Revealed: P1 (0,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:39.859] Dice rolled: 2
+[00:39.865] MSG: Canyon Warg wins!
+[00:44.486] Crystals: P0 3850 → 3450 (-400)  [battle]
+[00:45.889] Attack P1(0,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(1,2)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}  Dice=2  ATK=70 vs DEF=20  → WIN
+[00:45.889] Anim: 3A  △ P0(1,2)
+[00:45.889] Card destroyed  P0 (1,2) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:46.380] Turn ended  P1  |  Crystals P0=3450 P1=3780
+
+--- Turn 3  |  Player 0  |  Crystals P0=3450 P1=3780 ---
+P0:   [  — ][  — ][  ? ][  — ][Armo]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [Shot][Cany][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:46.986] Mode selected P0: TECH
+[00:47.285] Crystals: P0 3450 → 2450 (-1000)  [tech cost]
+[00:48.675] Tech played  P0: "Siege Cannon"
+[00:50.226] MSG: Siege Cannon active!
+[00:50.231] Tech resolved  P0
+[00:51.145] Mode selected P0: ATTACK
+[00:51.163] Attack phase P0: 2 attack(s) available
+[00:51.163] MSG: Player 1: tap a character to attack.
+[00:51.453] AI0 attack decision: (1,4)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio | face-down} → (0,0) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:51.799] Revealed: P0 (1,4) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[00:51.800] Dice rolled: 2
+[00:51.808] MSG: Rotten Shrieker wins!
+[00:56.450] Crystals: P1 3780 → 2880 (-900)  [battle]
+[00:57.848] Attack P0(1,4)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} → P1(0,0)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}  Dice=2  ATK=50 vs DEF=25  → WIN
+[00:57.849] Anim: 3A  △ P1(0,0)
+[00:57.849] Card destroyed  P1 (0,0) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:58.341] Mode selected P0: ATTACK
+[00:58.347] Attack phase P0: 1 attack(s) available
+[00:58.348] MSG: Player 1: tap a character to attack.
+[00:58.638] AI0 attack decision: (0,4)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → (2,0) (dead-end)
+[00:58.940] Dice rolled: 1
+[00:58.969] MSG: Nothing happens — Dead End.
+[01:02.365] Attack P0(0,4)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P1(2,0)(empty)  Dice=1  → DEAD_END
+[01:02.365] Anim: 3F  (blank slot)
+[01:02.869] Turn ended  P0  |  Crystals P0=2450 P1=2880
+
+--- Turn 4  |  Player 1  |  Crystals P0=2450 P1=2880 ---
+P0:   [  — ][  — ][  ? ][  — ][Armo]
+      [  ? ][  — ][  — ][  — ][Rott]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][Cany][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:03.480] Mode selected P1: ATTACK
+[01:03.483] Attack phase P1: 2 attack(s) available
+[01:03.483] MSG: Player 2: tap a character to attack.
+[01:03.781] AI1 attack decision: (0,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → (1,4) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}
+[01:04.089] Dice rolled: 1
+[01:04.097] MSG: Canyon Warg wins!
+[01:08.790] Crystals: P0 2450 → 2000 (-450)  [battle]
+[01:10.190] Attack P1(0,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(1,4)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}  Dice=1  ATK=70 vs DEF=30  → WIN
+[01:10.190] Anim: 3A  △ P0(1,4)
+[01:10.190] Card destroyed  P0 (1,4) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}
+[01:12.702] Turn ended  P1  |  Crystals P0=2000 P1=2880
+
+--- Turn 5  |  Player 0  |  Crystals P0=2000 P1=2880 ---
+P0:   [  — ][  — ][  ? ][  — ][Armo]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][Cany][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:13.310] Mode selected P0: ATTACK
+[01:13.314] Attack phase P0: 2 attack(s) available
+[01:13.314] MSG: Player 1: tap a character to attack.
+[01:13.596] AI0 attack decision: (0,4)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → (2,4) (dead-end)
+[01:13.896] Dice rolled: 1
+[01:13.923] MSG: Nothing happens — Dead End.
+[01:17.295] Attack P0(0,4)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P1(2,4)(empty)  Dice=1  → DEAD_END
+[01:17.295] Anim: 3F  (blank slot)
+[01:19.801] Turn ended  P0  |  Crystals P0=2000 P1=2880
+
+--- Turn 6  |  Player 1  |  Crystals P0=2000 P1=2880 ---
+P0:   [  — ][  — ][  ? ][  — ][Armo]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][Cany][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:20.442] Mode selected P1: ATTACK
+[01:20.448] Attack phase P1: 2 attack(s) available
+[01:20.448] MSG: Player 2: tap a character to attack.
+[01:20.722] AI1 attack decision: (0,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → (0,4) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[01:21.024] Dice rolled: 2
+[01:21.040] MSG: Canyon Warg wins!
+[01:25.707] Crystals: P0 2000 → 1830 (-170)  [battle]
+[01:27.111] Attack P1(0,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(0,4)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}  Dice=2  ATK=70 vs DEF=20  → WIN
+[01:27.111] Anim: 3A  △ P0(0,4)
+[01:27.111] Card destroyed  P0 (0,4) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[01:29.608] Turn ended  P1  |  Crystals P0=1830 P1=2880
+
+--- Turn 7  |  Player 0  |  Crystals P0=1830 P1=2880 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][Cany][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:30.222] Mode selected P0: ATTACK
+[01:30.225] Attack phase P0: 2 attack(s) available
+[01:30.226] MSG: Player 1: tap a character to attack.
+[01:30.515] AI0 attack decision: (3,2)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | face-down} → (0,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:30.866] Revealed: P0 (3,2) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:30.866] Dice rolled: 5
+[01:30.870] MSG: Lab Crawler wins!
+[01:35.520] Crystals: P1 2880 → 2130 (-750)  [battle]
+[01:36.920] Attack P0(3,2)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P1(0,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=5  ATK=95 vs DEF=30  → WIN
+[01:36.920] Anim: 3A  △ P1(0,1)
+[01:36.920] Card destroyed  P1 (0,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:37.413] Mode selected P0: ATTACK
+[01:37.418] Attack phase P0: 1 attack(s) available
+[01:37.418] MSG: Player 1: tap a character to attack.
+[01:37.713] AI0 attack decision: (2,2)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[01:38.050] Revealed: P0 (2,2) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[01:38.073] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:38.073] Dice rolled: 5
+[01:38.082] MSG: Striker Comet wins!
+[01:42.698] Crystals: P1 2130 → 2030 (-100)  [battle]
+[01:44.101] Attack P0(2,2)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=25 vs DEF=0  → WIN
+[01:44.101] Anim: 3A  △ P1(2,2)
+[01:44.102] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:44.591] MSG: Striker Comet self-destructs at end of turn!
+[01:44.592] Crystals: P0 1830 → 1630 (-200)  [card lost]
+[01:44.595] Card destroyed  P0 (2,2) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending | attacked}
+[01:44.597] Turn ended  P0  |  Crystals P0=1630 P1=2030
+
+--- Turn 8  |  Player 1  |  Crystals P0=1630 P1=2030 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][Lab ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:45.174] Mode selected P1: ATTACK
+[01:45.177] Attack phase P1: 2 attack(s) available
+[01:45.177] MSG: Player 2: tap a character to attack.
+[01:45.472] AI1 attack decision: (0,3)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down} → (3,2) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:45.817] Revealed: P1 (0,3) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[01:45.818] Dice rolled: 4
+[01:45.821] MSG: Mephisto the Fallen wins!
+[01:50.482] Crystals: P0 1630 → 430 (-1200)  [battle]
+[01:51.890] Attack P1(0,3)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P0(3,2)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=4  ATK=75 vs DEF=60  → WIN
+[01:51.890] Anim: 3A  △ P0(3,2)
+[01:51.891] Card destroyed  P0 (3,2) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:54.394] Turn ended  P1  |  Crystals P0=430 P1=2030
+
+--- Turn 9  |  Player 0  |  Crystals P0=430 P1=2030 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][Meph][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:55.002] Mode selected P0: ATTACK
+[01:55.006] Attack phase P0: 2 attack(s) available
+[01:55.007] MSG: Player 1: tap a character to attack.
+[01:55.302] AI0 attack decision: (2,3)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature | face-down} → (0,3) "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}
+[01:55.652] Revealed: P0 (2,3) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[01:55.652] Dice rolled: 5
+[01:55.655] MSG: Nuki the Tanuki wins!
+[02:00.317] Crystals: P1 2030 → 1170 (-860)  [battle]
+[02:01.716] Attack P0(2,3)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} → P1(0,3)"Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}  Dice=5  ATK=10 vs DEF=0  → WIN
+[02:01.716] Anim: 3A  △ P1(0,3)
+[02:01.716] Card destroyed  P1 (0,3) "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}
+[02:04.232] Turn ended  P0  |  Crystals P0=430 P1=1170
+
+--- Turn 10  |  Player 1  |  Crystals P0=430 P1=1170 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Nuki][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[02:04.845] Mode selected P1: ATTACK
+[02:04.848] Attack phase P1: 2 attack(s) available
+[02:04.848] MSG: Player 2: tap a character to attack.
+[02:05.148] AI1 attack decision: (0,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down} → (2,3) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[02:05.493] Revealed: P1 (0,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[02:05.493] Dice rolled: 4
+[02:05.497] MSG: Choir Lady Abigail wins!
+[02:10.148] Crystals: P0 430 → 330 (-100)  [battle]
+[02:11.555] Attack P1(0,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P0(2,3)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}  Dice=4  ATK=25 vs DEF=10  → WIN
+[02:11.555] Anim: 3A  △ P0(2,3)
+[02:11.555] Card destroyed  P0 (2,3) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[02:14.051] Turn ended  P1  |  Crystals P0=330 P1=1170
+
+--- Turn 11  |  Player 0  |  Crystals P0=330 P1=1170 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][Choi]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[02:14.642] Mode selected P0: ATTACK
+[02:14.645] Attack phase P0: 2 attack(s) available
+[02:14.645] MSG: Player 1: tap a character to attack.
+[02:14.930] AI0 attack decision: (4,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature | face-down} → (0,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[02:15.271] Revealed: P0 (4,4) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[02:15.272] Dice rolled: 2
+[02:15.276] MSG: Armored Rhino wins!
+[02:19.923] Crystals: P1 1170 → 920 (-250)  [battle]
+[02:21.320] Attack P0(4,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(0,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=2  ATK=60 vs DEF=15  → WIN
+[02:21.321] Anim: 3A  △ P1(0,4)
+[02:21.321] Card destroyed  P1 (0,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[02:21.816] Mode selected P0: ATTACK
+[02:21.822] Attack phase P0: 1 attack(s) available
+[02:21.823] MSG: Player 1: tap a character to attack.
+[02:22.115] AI0 attack decision: (3,4)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane | face-down} → (1,2) "Foul Gas" {cost 0}
+[02:22.454] Revealed: P0 (3,4) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[02:22.484] Revealed: P1 (1,2) "Foul Gas" {cost 0}
+[02:22.484] Dice rolled: 2
+[02:22.754] MSG: Trap triggered: Foul Gas!
+[02:26.844] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[02:26.850] Trap: "Foul Gas" triggered  P0(3,4)→P1(1,2)
+[02:26.850] Anim: 3D  (attacker survives)
+[02:27.334] Turn ended  P0  |  Crystals P0=330 P1=920
+
+--- Turn 12  |  Player 1  |  Crystals P0=330 P1=920 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Blue]
+      [  — ][  — ][  ? ][  — ][Armo]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[02:27.943] Mode selected P1: ATTACK
+[02:27.948] Attack phase P1: 2 attack(s) available
+[02:27.948] MSG: Player 2: tap a character to attack.
+[02:28.230] AI1 attack decision: (1,3)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima | face-down} → (3,4) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[02:28.594] Revealed: P1 (1,3) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[02:28.595] Dice rolled: 1
+[02:28.603] MSG: Wandering Swordsman wins!
+[02:33.177] Crystals: P0 330 → 0 (-330)  [battle]
+
+=== GAME OVER ===
+[02:33.190] AI Player 1 wins
+[02:33.190] Reason: crystals
+[02:33.190] Final crystals — P0: 0  P1: 920  |  Turns: 12
+[02:33.190] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_greasy_keyboard_2026-05-31_19-43-29_874.txt

@@ -1,0 +1,363 @@
+=== Battle of Keyboard Crumb Archaeology ===
+Battle started: 2026-05-31 19:05:38.233
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Scout Probe
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Scout Probe
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Bribe, Siege Cannon
+P1 Tech hand: Spy, Radar, Resurrection
+P0:   [  — ][  — ][  — ][  — ][T:Snar]
+      [T:Trap][T:Hard][T:Hypn][T:Bunk][  — ]
+      [  — ][T:Pepp][C:Scou][C:Spac][C:Magi]
+      [  — ][C:Lab ][C:Paro][C:Kiyo][C:Gran]
+      [  — ][C:Myst][C:Meli][C:Pyro][C:Godd]
+P1:   [T:Defe][C:Fera][C:Choi][T:Pepp][C:Hand]
+      [C:Bomb][C:Meph][  — ][  — ][C:Scar]
+      [  — ][  — ][C:Chao][  — ][T:Spik]
+      [C:Paro][  — ][  — ][  — ][C:Big ]
+      [T:Bait][C:Hunt][C:Blea][C:Mage][C:Mine]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.319] Mode selected P1: TECH
+[00:05.620] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:07.006] Tech played  P1: "Radar"
+[00:08.559] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.956] AI1 target chosen: (3,0)
+[00:08.956] Revealed: P0 (3,0) (blank slot)
+[00:09.357] AI1 target chosen: (0,2)
+[00:09.358] Revealed: P0 (0,2) (blank slot)
+[00:09.756] AI1 target chosen: (1,0)
+[00:09.796] Revealed: P0 (1,0) "Trap Hole" {cost 0}
+[00:09.801] Tech resolved  P1
+[00:10.650] Mode selected P1: ATTACK
+[00:10.652] Attack phase P1: 2 attack(s) available
+[00:10.652] MSG: Player 2: tap a character to attack.
+[00:10.961] AI1 attack decision: (0,1)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos | face-down} → (3,0) (dead-end)
+[00:11.309] Revealed: P1 (0,1) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:11.309] Dice rolled: 1
+[00:11.326] MSG: Nothing happens — Dead End.
+[00:14.672] Attack P1(0,1)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P0(3,0)(empty)  Dice=1  → DEAD_END
+[00:14.672] Anim: 3F  (blank slot)
+[00:17.189] Turn ended  P1  |  Crystals P0=5000 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4400 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][Fera][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:17.792] Mode selected P0: TECH
+[00:18.099] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:19.488] Tech played  P0: "Siege Cannon"
+[00:21.040] MSG: Siege Cannon active!
+[00:21.043] Tech resolved  P0
+[00:21.959] Mode selected P0: ATTACK
+[00:21.974] Attack phase P0: 2 attack(s) available
+[00:21.974] MSG: Player 1: tap a character to attack.
+[00:22.265] AI0 attack decision: (2,3)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic | face-down} → (0,1) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:22.615] Revealed: P0 (2,3) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:22.615] Dice rolled: 2
+[00:22.621] MSG: Space Boy wins!
+[00:27.232] Crystals: P1 4400 → 4000 (-400)  [battle]
+[00:28.637] Attack P0(2,3)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P1(0,1)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=2  ATK=75 vs DEF=25  → WIN
+[00:28.637] Anim: 3A  △ P1(0,1)
+[00:28.637] Card destroyed  P1 (0,1) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:29.133] Mode selected P0: ATTACK
+[00:29.136] Attack phase P0: 1 attack(s) available
+[00:29.137] MSG: Player 1: tap a character to attack.
+[00:29.445] AI0 attack decision: (2,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down} → (1,2) (dead-end)
+[00:29.785] Revealed: P0 (2,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:29.785] Dice rolled: 5
+[00:29.798] MSG: Nothing happens — Dead End.
+[00:33.178] Attack P0(2,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[00:33.178] Anim: 3F  (blank slot)
+[00:33.184] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[00:33.568] AI0 target chosen: (2,2)
+[00:33.594] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:33.594] MSG: Scout Probe: adjacent cell revealed.
+[00:33.595] Ability target resolved  P0
+[00:33.670] Turn ended  P0  |  Crystals P0=4000 P1=4000
+
+--- Turn 3  |  Player 1  |  Crystals P0=4000 P1=4000 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Scou][Spac][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][Chao][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:34.261] Mode selected P1: TECH
+[00:34.572] Tech played  P1: "Spy"
+[00:36.120] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:36.519] AI1 target chosen: (4,3)
+[00:36.559] Revealed: P0 (4,3) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:36.561] Tech resolved  P1
+[00:37.463] Mode selected P1: ATTACK
+[00:37.470] Attack phase P1: 2 attack(s) available
+[00:37.470] MSG: Player 2: tap a character to attack.
+[00:37.762] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → (4,3) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:38.062] Dice rolled: 5
+[00:38.077] MSG: Chaotic Wisp wins!
+[00:42.739] Crystals: P0 4000 → 3100 (-900)  [battle]
+[00:44.141] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(4,3)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=5  ATK=20 vs DEF=0  → WIN
+[00:44.141] Anim: 3A  △ P0(4,3)
+[00:44.141] Card destroyed  P0 (4,3) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:44.629] Mode selected P1: ATTACK
+[00:44.637] Attack phase P1: 1 attack(s) available
+[00:44.638] MSG: Player 2: tap a character to attack.
+[00:44.902] AI1 attack decision: (1,1)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down} → (2,3) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:45.246] Revealed: P1 (1,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[00:45.246] Dice rolled: 4
+[00:45.250] MSG: Mephisto the Fallen wins!
+[00:49.928] Crystals: P0 3100 → 2300 (-800)  [battle]
+[00:51.331] Attack P1(1,1)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P0(2,3)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}  Dice=4  ATK=75 vs DEF=65  → WIN
+[00:51.332] Anim: 3A  △ P0(2,3)
+[00:51.332] Card destroyed  P0 (2,3) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:51.827] Turn ended  P1  |  Crystals P0=2300 P1=4000
+
+--- Turn 4  |  Player 0  |  Crystals P0=2300 P1=4000 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Scou][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][Meph][  — ][  — ][  ? ]
+      [  — ][  — ][Chao][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:52.425] Mode selected P0: TECH
+[00:52.735] Tech played  P0: "Bribe"
+[00:54.232] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:54.740] MSG: Bribe: AI passed.
+[00:54.747] Tech resolved  P0
+[00:55.658] Mode selected P0: ATTACK
+[00:55.668] Attack phase P0: 2 attack(s) available
+[00:55.668] MSG: Player 1: tap a character to attack.
+[00:55.966] AI0 attack decision: (2,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → (1,1) "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}
+[00:56.273] Dice rolled: 4
+[00:56.287] MSG: Scout Probe wins!
+[01:00.975] Crystals: P1 4000 → 3140 (-860)  [battle]
+[01:02.371] Attack P0(2,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,1)"Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}  Dice=4  ATK=40 vs DEF=0  → WIN
+[01:02.371] Anim: 3A  △ P1(1,1)
+[01:02.371] Card destroyed  P1 (1,1) "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}
+[01:02.377] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:02.774] AI0 target chosen: (2,1)
+[01:02.780] Ability target resolved  P0
+[01:02.874] Mode selected P0: ATTACK
+[01:02.883] Attack phase P0: 1 attack(s) available
+[01:02.883] MSG: Player 1: tap a character to attack.
+[01:03.181] AI0 attack decision: (3,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:03.532] Revealed: P0 (3,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:03.532] Dice rolled: 5
+[01:03.537] MSG: Parom the Smuggler wins!
+[01:08.192] Crystals: P1 3140 → 3040 (-100)  [battle]
+[01:09.586] Attack P0(3,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=30 vs DEF=0  → WIN
+[01:09.586] Anim: 3A  △ P1(2,2)
+[01:09.586] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:10.094] Turn ended  P0  |  Crystals P0=2300 P1=3040
+
+--- Turn 5  |  Player 1  |  Crystals P0=2300 P1=3040 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Scou][  — ][  ? ]
+      [  — ][  ? ][Paro][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:10.704] Mode selected P1: TECH
+[01:11.010] Crystals: P1 3040 → 1540 (-1500)  [tech cost]
+[01:12.399] Tech played  P1: "Resurrection"
+[01:13.963] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[01:14.368] AI1 target chosen: (1,3)
+[01:14.374] Revealed: P1 (1,3) "Chaotic Wisp" {Unit ATK0 DEF0 | cost 100 | affinity Chaos | base 0/0}
+[01:14.374] MSG: Revived Chaotic Wisp at [1,3]!
+[01:14.382] Tech resolved  P1
+[01:15.287] Mode selected P1: ATTACK
+[01:15.295] Attack phase P1: 2 attack(s) available
+[01:15.296] MSG: Player 2: tap a character to attack.
+[01:15.595] AI1 attack decision: (1,3)"Chaotic Wisp" {Unit ATK0 DEF0 | cost 100 | affinity Chaos | base 0/0} → (0,2) (dead-end)
+[01:15.903] Dice rolled: 3
+[01:15.929] MSG: Nothing happens — Dead End.
+[01:19.322] Attack P1(1,3)"Chaotic Wisp" {Unit ATK0 DEF0 | cost 100 | affinity Chaos | base 0/0} → P0(0,2)(empty)  Dice=3  → DEAD_END
+[01:19.322] Anim: 3F  (blank slot)
+[01:19.811] Mode selected P1: ATTACK
+[01:19.816] Attack phase P1: 1 attack(s) available
+[01:19.817] MSG: Player 2: tap a character to attack.
+[01:20.116] AI1 attack decision: (1,4)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down} → (3,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:20.451] Revealed: P1 (1,4) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:20.452] Crystals: P0 2300 → 2340 (+40)  [ability]
+[01:20.452] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:20.452] Dice rolled: 4
+[01:20.457] MSG: Scarlet Mutant wins!
+[01:25.125] Crystals: P0 2340 → 2040 (-300)  [battle]
+[01:26.527] Attack P1(1,4)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(3,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=4  ATK=35 vs DEF=20  → WIN
+[01:26.527] Anim: 3A  △ P0(3,2)
+[01:26.527] Card destroyed  P0 (3,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:27.028] Turn ended  P1  |  Crystals P0=2040 P1=1540
+
+--- Turn 6  |  Player 0  |  Crystals P0=2040 P1=1540 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Scou][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][Chao][Scar]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:27.634] Mode selected P0: ATTACK
+[01:27.639] Attack phase P0: 2 attack(s) available
+[01:27.639] MSG: Player 1: tap a character to attack.
+[01:27.941] AI0 attack decision: (2,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → (1,4) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:28.248] Dice rolled: 5
+[01:28.262] MSG: Scout Probe wins!
+[01:32.949] Crystals: P1 1540 → 1190 (-350)  [battle]
+[01:34.347] Attack P0(2,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,4)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=5  ATK=40 vs DEF=30  → WIN
+[01:34.347] Anim: 3A  △ P1(1,4)
+[01:34.347] Card destroyed  P1 (1,4) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:34.353] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:34.749] AI0 target chosen: (0,4)
+[01:34.785] Revealed: P1 (0,4) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[01:34.786] MSG: Scout Probe: adjacent cell revealed.
+[01:34.787] Ability target resolved  P0
+[01:34.849] Mode selected P0: ATTACK
+[01:34.851] Attack phase P0: 1 attack(s) available
+[01:34.852] MSG: Player 1: tap a character to attack.
+[01:35.155] AI0 attack decision: (3,3)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down} → (0,4) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[01:35.498] Revealed: P0 (3,3) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[01:35.498] Dice rolled: 4
+[01:35.506] MSG: Kiyoko the Death Whisper wins!
+[01:40.166] Crystals: P1 1190 → 890 (-300)  [battle]
+[01:41.563] Attack P0(3,3)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P1(0,4)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}  Dice=4  ATK=40 vs DEF=20  → WIN
+[01:41.563] Anim: 3A  △ P1(0,4)
+[01:41.563] Card destroyed  P1 (0,4) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[01:42.072] Turn ended  P0  |  Crystals P0=2040 P1=890
+
+--- Turn 7  |  Player 1  |  Crystals P0=2040 P1=890 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Scou][  — ][  ? ]
+      [  — ][  ? ][  — ][Kiyo][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][Chao][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:42.685] Mode selected P1: ATTACK
+[01:42.696] Attack phase P1: 2 attack(s) available
+[01:42.696] MSG: Player 2: tap a character to attack.
+[01:42.973] AI1 attack decision: (3,4)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (3,3) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[01:43.316] Revealed: P1 (3,4) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:43.317] Dice rolled: 2
+[01:43.322] MSG: Big Thug wins!
+[01:47.949] Crystals: P0 2040 → 1240 (-800)  [battle]
+[01:49.357] Attack P1(3,4)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(3,3)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}  Dice=2  ATK=40 vs DEF=35  → WIN
+[01:49.357] Anim: 3A  △ P0(3,3)
+[01:49.357] Card destroyed  P0 (3,3) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[01:49.841] Mode selected P1: ATTACK
+[01:49.846] Attack phase P1: 1 attack(s) available
+[01:49.847] MSG: Player 2: tap a character to attack.
+[01:50.140] AI1 attack decision: (1,3)"Chaotic Wisp" {Unit ATK0 DEF0 | cost 100 | affinity Chaos | base 0/0} → (4,0) (dead-end)
+[01:50.439] Dice rolled: 3
+[01:50.471] MSG: Nothing happens — Dead End.
+[01:53.846] Attack P1(1,3)"Chaotic Wisp" {Unit ATK0 DEF0 | cost 100 | affinity Chaos | base 0/0} → P0(4,0)(empty)  Dice=3  → DEAD_END
+[01:53.846] Anim: 3F  (blank slot)
+[01:54.337] Turn ended  P1  |  Crystals P0=1240 P1=890
+
+--- Turn 8  |  Player 0  |  Crystals P0=1240 P1=890 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Scou][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][Chao][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Big ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:54.943] Mode selected P0: ATTACK
+[01:54.946] Attack phase P0: 2 attack(s) available
+[01:54.947] MSG: Player 1: tap a character to attack.
+[01:55.231] AI0 attack decision: (2,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → (3,4) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:55.531] Dice rolled: 4
+[01:55.540] MSG: Scout Probe wins!
+[02:00.224] Crystals: P1 890 → 490 (-400)  [battle]
+[02:01.633] Attack P0(2,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(3,4)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=4  ATK=40 vs DEF=35  → WIN
+[02:01.633] Anim: 3A  △ P1(3,4)
+[02:01.633] Card destroyed  P1 (3,4) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:01.638] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[02:02.014] AI0 target chosen: (2,4)
+[02:02.051] Revealed: P1 (2,4) "Spike Trap" {cost 1500}
+[02:02.051] MSG: Scout Probe: adjacent cell revealed.
+[02:02.053] Ability target resolved  P0
+[02:02.140] Mode selected P0: ATTACK
+[02:02.143] Attack phase P0: 1 attack(s) available
+[02:02.143] MSG: Player 1: tap a character to attack.
+[02:02.416] AI0 attack decision: (2,4)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down} → (1,3) "Chaotic Wisp" {Unit ATK0 DEF0 | cost 100 | affinity Chaos | base 0/0}
+[02:02.745] Revealed: P0 (2,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[02:02.745] Dice rolled: 1
+[02:02.754] MSG: Magical Butterfly wins!
+[02:07.409] Crystals: P1 490 → 390 (-100)  [battle]
+[02:08.802] Attack P0(2,4)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature} → P1(1,3)"Chaotic Wisp" {Unit ATK0 DEF0 | cost 100 | affinity Chaos | base 0/0}  Dice=1  ATK=15 vs DEF=0  → WIN
+[02:08.802] Anim: 3A  △ P1(1,3)
+[02:08.802] Card destroyed  P1 (1,3) "Chaotic Wisp" {Unit ATK0 DEF0 | cost 100 | affinity Chaos | base 0/0}
+[02:09.300] Turn ended  P0  |  Crystals P0=1240 P1=390
+
+--- Turn 9  |  Player 1  |  Crystals P0=1240 P1=390 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Scou][  — ][Magi]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[02:09.901] Mode selected P1: ATTACK
+[02:09.910] Attack phase P1: 2 attack(s) available
+[02:09.910] MSG: Player 2: tap a character to attack.
+[02:10.197] AI1 attack decision: (4,1)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down} → (2,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:10.549] Revealed: P1 (4,1) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[02:10.550] Dice rolled: 5
+[02:10.554] MSG: Both cards are destroyed!
+[02:15.136] Crystals: P1 390 → 0 (-390)  [battle]
+
+=== GAME OVER ===
+[02:15.147] AI Player 0 wins
+[02:15.147] Reason: crystals
+[02:15.147] Final crystals — P0: 1240  P1: 0  |  Turns: 9
+[02:15.147] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_keyboard_crumb_archaeology_2026-05-31_19-05-38_233.txt

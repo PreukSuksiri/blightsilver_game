@@ -1,0 +1,278 @@
+=== Battle of Junk Drawer Charger Hunt ===
+Battle started: 2026-05-31 09:32:50.144
+Game Session of Shirley Temple (started 2026-05-31 09:29:14.330)
+=== AI vs AI Match ===
+Batch iteration: 2 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Siege Cannon, Spy
+P1 Tech hand: Radar, Prayer, Siege Cannon
+P0:   [C:Blad][  — ][  — ][  — ][C:Echo]
+      [T:Acid][C:Gamm][  — ][T:Blac][C:Ostr]
+      [C:Gree][T:Flam][C:Vamp][C:Book][C:Void]
+      [T:Snar][  — ][  — ][  — ][T:Stre]
+      [T:Bunk][  — ][  — ][  — ][C:Mafi]
+P1:   [C:Gryp][C:Gran][  — ][T:Curs][T:Brai]
+      [  — ][C:Jose][C:Lase][C:Vile][T:Stre]
+      [  — ][C:Lab ][C:Dark][T:Pepp][C:Stre]
+      [  — ][  — ][C:Raij][T:Acid][T:Deco]
+      [  — ][C:Void][C:Laug][  — ][C:Chao]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+[00:05.317] Mode selected P1: TECH
+[00:05.618] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:07.001] Tech played  P1: "Radar"
+[00:08.553] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.950] AI1 target chosen: (2,1)
+[00:09.005] Revealed: P0 (2,1) "Flame Trap"
+[00:09.333] AI1 target chosen: (2,4)
+[00:09.377] Revealed: P0 (2,4) "Void Stalker"
+[00:09.759] AI1 target chosen: (3,0)
+[00:09.788] Revealed: P0 (3,0) "Snare Trap"
+[00:09.789] Tech resolved  P1
+[00:10.684] Mode selected P1: ATTACK
+[00:10.693] Attack phase P1: 2 attack(s) available
+[00:10.693] MSG: Player 2: tap a character to attack.
+[00:10.984] AI1 attack decision: (2,1)"Lab Zombie" [ATK=55] → (2,4) "Void Stalker" [DEF=25]
+[00:11.339] Revealed: P1 (2,1) "Lab Zombie"
+[00:11.340] Dice rolled: 3
+[00:11.343] MSG: Lab Zombie wins!
+[00:15.909] Crystals: P0 5000 → 4280 (-720)  [battle]
+[00:17.303] Card destroyed  P0 (2,4) "Void Stalker"
+[00:17.306] Attack P1(2,1)"Lab Zombie" → P0(2,4)"Void Stalker"  Dice=3  ATK=55 vs DEF=25  → WIN
+[00:17.306] Anim: 3A  △ P0(2,4)
+[00:19.819] Turn ended  P1  |  Crystals P0=4280 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4280 P1=4400 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][Lab ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+[00:20.434] Mode selected P0: TECH
+[00:20.753] Tech played  P0: "Spy"
+[00:22.310] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:22.717] AI0 target chosen: (0,3)
+[00:22.753] Revealed: P1 (0,3) "Cursed Reflection"
+[00:22.755] Tech resolved  P0
+[00:23.634] Mode selected P0: ATTACK
+[00:23.637] Attack phase P0: 2 attack(s) available
+[00:23.637] MSG: Player 1: tap a character to attack.
+[00:23.942] AI0 attack decision: (0,4)"Echo Bringer" [ATK=70] → (2,1) "Lab Zombie" [DEF=40]
+[00:24.294] Revealed: P0 (0,4) "Echo Bringer"
+[00:24.294] Dice rolled: 5
+[00:24.300] MSG: Echo Bringer wins!
+[00:28.952] Crystals: P1 4400 → 3700 (-700)  [battle]
+[00:30.345] Card destroyed  P1 (2,1) "Lab Zombie"
+[00:30.347] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[00:30.351] Attack P0(0,4)"Echo Bringer" → P1(2,1)"Lab Zombie"  Dice=5  ATK=70 vs DEF=40  → WIN
+[00:30.351] Anim: 3A  △ P1(2,1)
+[00:30.851] Mode selected P0: ATTACK
+[00:30.856] Attack phase P0: 2 attack(s) available
+[00:30.857] MSG: Player 1: tap a character to attack.
+[00:31.158] AI0 attack decision: (1,4)"Ostrich Cannon" [ATK=60] → (1,3) "Vile Creeper" [DEF=30]
+[00:31.497] Revealed: P0 (1,4) "Ostrich Cannon"
+[00:31.535] Revealed: P1 (1,3) "Vile Creeper"
+[00:31.535] Dice rolled: 2
+[00:31.538] MSG: Ostrich Cannon wins!
+[00:36.201] Crystals: P1 3700 → 3500 (-200)  [battle]
+[00:37.593] Card destroyed  P1 (1,3) "Vile Creeper"
+[00:37.593] MSG: Ostrich Cannon locks itself until next turn.
+[00:37.596] Attack P0(1,4)"Ostrich Cannon" → P1(1,3)"Vile Creeper"  Dice=2  ATK=60 vs DEF=30  → WIN
+[00:37.596] Anim: 3A  △ P1(1,3)
+[00:38.093] Mode selected P0: ATTACK
+[00:38.100] Attack phase P0: 1 attack(s) available
+[00:38.100] MSG: Player 1: tap a character to attack.
+[00:38.392] AI0 attack decision: (2,0)"Green Mage" [ATK=15] → (0,4) "Brainwash" [DEF=0]
+[00:38.736] Revealed: P0 (2,0) "Green Mage"
+[00:38.762] Revealed: P1 (0,4) "Brainwash"
+[00:38.762] Dice rolled: 5
+[00:39.008] MSG: Trap triggered: Brainwash!
+[00:43.094] Card destroyed  P1 (0,4) "Brainwash"
+[00:43.095] Crystals: P1 3500 → 2000 (-1500)  [trap cost]
+[00:44.485] Target prompt: "Brainwash: Choose one of your own allies as the attack target."  filter=own_any_as_target
+[00:44.884] AI0 target chosen: (1,4)
+[00:44.885] MSG: Brainwash: Green Mage attacks Ostrich Cannon!
+[00:49.693] Crystals: P0 4280 → 3880 (-400)  [battle]
+[00:51.086] Card destroyed  P0 (2,0) "Green Mage"
+[00:51.091] Trap: "Brainwash" triggered  P0(2,0)→P1(0,4)
+[00:51.091] Anim: 3D  (attacker survives)
+[00:51.586] Turn ended  P0  |  Crystals P0=3880 P1=2000
+
+--- Turn 3  |  Player 1  |  Crystals P0=3880 P1=2000 ---
+P0:   [  ? ][  — ][  — ][  — ][Echo]
+      [  ? ][  ? ][  — ][  ? ][Ostr]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+[00:52.168] Mode selected P1: TECH
+[00:52.467] Crystals: P1 2000 → 1000 (-1000)  [tech cost]
+[00:53.852] Tech played  P1: "Siege Cannon"
+[00:55.417] MSG: Siege Cannon active!
+[00:55.419] Tech resolved  P1
+[00:56.334] Mode selected P1: ATTACK
+[00:56.346] Attack phase P1: 2 attack(s) available
+[00:56.346] MSG: Player 2: tap a character to attack.
+[00:56.642] AI1 attack decision: (1,2)"Laser Walker" [ATK=20] → (0,0) "Bladeshifter" [DEF=50]
+[00:57.000] Revealed: P1 (1,2) "Laser Walker"
+[00:57.063] Revealed: P0 (0,0) "Bladeshifter"
+[00:57.063] Dice rolled: 5
+[00:57.067] MSG: Laser Walker wins!
+[01:01.609] Crystals: P0 3880 → 3460 (-420)  [battle]
+[01:03.004] Card destroyed  P0 (0,0) "Bladeshifter"
+[01:03.010] Attack P1(1,2)"Laser Walker" → P0(0,0)"Bladeshifter"  Dice=5  ATK=20 vs DEF=10  → WIN
+[01:03.010] Anim: 3A  △ P0(0,0)
+[01:03.501] Mode selected P1: ATTACK
+[01:03.506] Attack phase P1: 1 attack(s) available
+[01:03.506] MSG: Player 2: tap a character to attack.
+[01:03.799] AI1 attack decision: (2,2)"Dark Tengu" [ATK=25] → (4,0) "Bunker" [DEF=0]
+[01:04.164] Revealed: P1 (2,2) "Dark Tengu"
+[01:04.195] Revealed: P0 (4,0) "Bunker"
+[01:04.195] Dice rolled: 5
+[01:04.422] MSG: Trap triggered: Bunker!
+[01:08.511] Card destroyed  P0 (4,0) "Bunker"
+[01:08.511] Crystals: P0 3460 → 2560 (-900)  [trap cost]
+[01:09.904] MSG: Bunker: Adjacent squares cannot be targeted this turn.
+[01:09.905] MSG: Dark Tengu: Self ATK debuff applied.
+[01:09.909] Trap: "Bunker" triggered  P1(2,2)→P0(4,0)
+[01:09.909] Anim: 3D  (attacker survives)
+[01:10.408] Turn ended  P1  |  Crystals P0=2560 P1=1000
+
+--- Turn 4  |  Player 0  |  Crystals P0=2560 P1=1000 ---
+P0:   [  — ][  — ][  — ][  — ][Echo]
+      [  ? ][  ? ][  — ][  ? ][Ostr]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][Lase][  — ][  ? ]
+      [  — ][  — ][Dark][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+[01:11.001] Mode selected P0: TECH
+[01:11.301] Crystals: P0 2560 → 1560 (-1000)  [tech cost]
+[01:12.689] Tech played  P0: "Siege Cannon"
+[01:14.218] MSG: Siege Cannon active!
+[01:14.224] Tech resolved  P0
+[01:15.119] Mode selected P0: ATTACK
+[01:15.128] Attack phase P0: 2 attack(s) available
+[01:15.128] MSG: Player 1: tap a character to attack.
+[01:15.416] AI0 attack decision: (0,4)"Echo Bringer" [ATK=70] → (2,2) "Dark Tengu" [DEF=25]
+[01:15.717] Dice rolled: 4
+[01:15.725] MSG: Echo Bringer wins!
+[01:20.409] Crystals: P1 1000 → 750 (-250)  [battle]
+[01:21.802] Card destroyed  P1 (2,2) "Dark Tengu"
+[01:21.802] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[01:21.805] Attack P0(0,4)"Echo Bringer" → P1(2,2)"Dark Tengu"  Dice=4  ATK=70 vs DEF=25  → WIN
+[01:21.805] Anim: 3A  △ P1(2,2)
+[01:22.302] Mode selected P0: ATTACK
+[01:22.310] Attack phase P0: 2 attack(s) available
+[01:22.310] MSG: Player 1: tap a character to attack.
+[01:22.600] AI0 attack decision: (2,3)"Book with Fangs" [ATK=45] → (1,2) "Laser Walker" [DEF=10]
+[01:22.968] Revealed: P0 (2,3) "Book with Fangs"
+[01:22.968] Dice rolled: 2
+[01:22.972] MSG: Book with Fangs wins!
+[01:27.584] Crystals: P1 750 → 500 (-250)  [battle]
+[01:28.977] Card destroyed  P1 (1,2) "Laser Walker"
+[01:28.982] Attack P0(2,3)"Book with Fangs" → P1(1,2)"Laser Walker"  Dice=2  ATK=45 vs DEF=10  → WIN
+[01:28.982] Anim: 3A  △ P1(1,2)
+[01:29.476] Mode selected P0: ATTACK
+[01:29.481] Attack phase P0: 1 attack(s) available
+[01:29.481] MSG: Player 1: tap a character to attack.
+[01:29.775] AI0 attack decision: (2,2)"Vampire Servant" [ATK=20] → (1,0) "(dead-end)"
+[01:30.156] Revealed: P0 (2,2) "Vampire Servant"
+[01:30.156] Dice rolled: 4
+[01:30.169] MSG: Nothing happens — Dead End.
+[01:33.484] Dead-end placed  P1 (1,0)
+[01:33.488] Attack P0(2,2)"Vampire Servant" → P1(1,0)(empty)  Dice=4  → DEAD_END
+[01:33.488] Anim: 3F  (blank slot)
+[01:33.987] Turn ended  P0  |  Crystals P0=1560 P1=500
+
+--- Turn 5  |  Player 1  |  Crystals P0=1560 P1=500 ---
+P0:   [  — ][  — ][  — ][  — ][Echo]
+      [  ? ][  ? ][  — ][  ? ][Ostr]
+      [  — ][  — ][Vamp][Book][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+[01:34.592] Mode selected P1: ATTACK
+[01:34.596] Attack phase P1: 2 attack(s) available
+[01:34.596] MSG: Player 2: tap a character to attack.
+[01:34.884] AI1 attack decision: (0,1)"Grand Fort Mauler" [ATK=40] → (1,4) "Ostrich Cannon" [DEF=30]
+[01:35.242] Revealed: P1 (0,1) "Grand Fort Mauler"
+[01:35.242] Dice rolled: 3
+[01:35.247] MSG: Grand Fort Mauler wins!
+[01:39.875] Crystals: P0 1560 → 760 (-800)  [battle]
+[01:41.270] Card destroyed  P0 (1,4) "Ostrich Cannon"
+[01:41.277] Attack P1(0,1)"Grand Fort Mauler" → P0(1,4)"Ostrich Cannon"  Dice=3  ATK=40 vs DEF=30  → WIN
+[01:41.277] Anim: 3A  △ P0(1,4)
+[01:43.779] Turn ended  P1  |  Crystals P0=760 P1=500
+
+--- Turn 6  |  Player 0  |  Crystals P0=760 P1=500 ---
+P0:   [  — ][  — ][  — ][  — ][Echo]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][Vamp][Book][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][Gran][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+[01:44.383] Mode selected P0: ATTACK
+[01:44.395] Attack phase P0: 2 attack(s) available
+[01:44.396] MSG: Player 1: tap a character to attack.
+[01:44.679] AI0 attack decision: (0,4)"Echo Bringer" [ATK=70] → (0,1) "Grand Fort Mauler" [DEF=10]
+[01:44.979] Dice rolled: 3
+[01:44.988] MSG: Echo Bringer wins!
+[01:49.671] Crystals: P1 500 → 150 (-350)  [battle]
+[01:51.068] Card destroyed  P1 (0,1) "Grand Fort Mauler"
+[01:51.069] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[01:51.075] Attack P0(0,4)"Echo Bringer" → P1(0,1)"Grand Fort Mauler"  Dice=3  ATK=70 vs DEF=10  → WIN
+[01:51.075] Anim: 3A  △ P1(0,1)
+[01:51.563] Mode selected P0: ATTACK
+[01:51.568] Attack phase P0: 2 attack(s) available
+[01:51.568] MSG: Player 1: tap a character to attack.
+[01:51.863] AI0 attack decision: (2,3)"Book with Fangs" [ATK=45] → (0,0) "Gryphon" [DEF=85]
+[01:52.215] Revealed: P1 (0,0) "Gryphon"
+[01:52.215] Dice rolled: 5
+[01:56.931] Crystals: P0 760 → 0 (-760)  [battle]
+
+=== GAME OVER ===
+[01:56.937] AI Player 1 wins
+[01:56.937] Reason: crystals
+[01:56.937] Final crystals — P0: 0  P1: 150  |  Turns: 6
+[01:56.937] Log saved to: res://logs/results/2026-05-31_09-29-14_330_shirley_temple/battle_junk_drawer_charger_hunt_2026-05-31_09-32-50_144.txt

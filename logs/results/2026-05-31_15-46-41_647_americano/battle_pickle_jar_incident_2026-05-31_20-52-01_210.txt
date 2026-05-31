@@ -1,0 +1,501 @@
+=== Battle of Pickle Jar Incident ===
+Battle started: 2026-05-31 20:52:01.210
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Decoy Puppet
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Release Mutagen, Bribe
+P1 Tech hand: Tease, War Supply, Prayer
+P0:   [  — ][  — ][  — ][  — ][C:Stin]
+      [  — ][C:Polt][  — ][T:Echo][  — ]
+      [  — ][  — ][C:Ox P][T:Curs][C:Ange]
+      [  — ][  — ][  — ][T:Alar][T:Expl]
+      [C:Dark][C:Dark][C:Nigh][C:Tiny][C:Chao]
+P1:   [C:Stin][C:Hamm][C:Stai][  — ][C:Book]
+      [T:Brai][T:Self][T:Bait][  — ][C:Myst]
+      [C:Doom][  — ][T:Deco][  — ][C:War ]
+      [C:Blue][  — ][T:Blac][  — ][T:Echo]
+      [C:Ice ][  — ][C:Scou][  — ][C:Pony]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.288] Mode selected P1: TECH
+[00:05.596] Tech played  P1: "Tease"
+[00:07.154] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.156] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:07.562] AI0 target chosen: (2,3)
+[00:07.593] Revealed: P0 (2,3) "Cursed Reflection" {cost 500}
+[00:07.593] MSG: Tease: Opponent revealed Cursed Reflection.
+[00:07.595] Tech resolved  P1
+[00:10.488] Crystals: P1 5000 → 4950 (-50)  [skip tax]
+[00:10.489] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:11.875] Turn ended  P1  |  Crystals P0=5000 P1=4950
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4950 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:12.480] Mode selected P0: TECH
+[00:12.796] Tech played  P0: "Bribe"
+[00:14.361] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:14.870] MSG: Bribe: AI passed.
+[00:14.872] Tech resolved  P0
+[00:15.791] Mode selected P0: ATTACK
+[00:15.796] Attack phase P0: 2 attack(s) available
+[00:15.797] MSG: Player 1: tap a character to attack.
+[00:16.094] AI0 attack decision: (0,4)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down} → (1,1) "Self-destruct" {cost 0}
+[00:16.441] Revealed: P0 (0,4) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[00:16.464] Revealed: P1 (1,1) "Self-destruct" {cost 0}
+[00:16.464] Dice rolled: 5
+[00:16.719] MSG: Trap triggered: Self-destruct!
+[00:20.819] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[00:20.824] Trap: "Self-destruct" triggered  P0(0,4)→P1(1,1)
+[00:20.824] Anim: 3D  (attacker survives)
+[00:21.204] AI1 target chosen: (-1,-1)
+[00:21.205] MSG: Ponycorn: +10 ATK until end of next turn, then destroyed.
+[00:21.307] Mode selected P0: ATTACK
+[00:21.310] Attack phase P0: 1 attack(s) available
+[00:21.310] MSG: Player 1: tap a character to attack.
+[00:21.604] AI0 attack decision: (1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos | face-down} → (1,3) (dead-end)
+[00:21.949] Revealed: P0 (1,1) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[00:21.949] Dice rolled: 5
+[00:21.974] MSG: Nothing happens — Dead End.
+[00:25.263] Attack P0(1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(1,3)(empty)  Dice=5  → DEAD_END
+[00:25.263] Anim: 3F  (blank slot)
+[00:25.769] Turn ended  P0  |  Crystals P0=5000 P1=4950
+
+--- Turn 3  |  Player 1  |  Crystals P0=5000 P1=4950 ---
+P0:   [  — ][  — ][  — ][  — ][Stin]
+      [  — ][Polt][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:27.880] Crystals: P1 4950 → 4450 (-500)  [union]
+[00:27.917] Revealed: P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:27.917] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down}, "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down}
+[00:27.917] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:27.917] MSG: Player 2 summoned [Scarlet Shroom] using: "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down}, "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down}
+[00:31.337] Mode selected P1: ATTACK
+[00:31.349] Attack phase P1: 2 attack(s) available
+[00:31.349] MSG: Player 2: tap a character to attack.
+[00:31.637] AI1 attack decision: (2,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down} → (1,1) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos | flags:venom}
+[00:31.976] Revealed: P1 (2,4) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:31.976] Dice rolled: 5
+[00:31.980] MSG: War Genie wins!
+[00:36.647] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:38.046] Attack P1(2,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P0(1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos | flags:venom}  Dice=5  ATK=100 vs DEF=70  → WIN
+[00:38.046] Anim: 3A  △ P0(1,1)
+[00:38.046] Card destroyed  P0 (1,1) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos | flags:venom}
+[00:38.546] Mode selected P1: ATTACK
+[00:38.552] Attack phase P1: 1 attack(s) available
+[00:38.553] MSG: Player 2: tap a character to attack.
+[00:38.858] AI1 attack decision: (0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (0,0) (dead-end)
+[00:39.167] Dice rolled: 5
+[00:39.218] MSG: Nothing happens — Dead End.
+[00:42.612] Attack P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P0(0,0)(empty)  Dice=5  → DEAD_END
+[00:42.613] Anim: 3F  (blank slot)
+[00:43.100] MSG: Ponycorn is destroyed by self-destruct trap!
+[00:43.101] Crystals: P1 4450 → 4150 (-300)  [card lost]
+[00:43.103] Card destroyed  P1 (4,4) "Ponycorn" {Unit ATK35 DEF20 | cost 300 | affinity Divine | base 25/20 | buff +tempATK10 | face-down}
+[00:43.106] Turn ended  P1  |  Crystals P0=4300 P1=4150
+
+--- Turn 4  |  Player 0  |  Crystals P0=4300 P1=4150 ---
+P0:   [  — ][  — ][  — ][  — ][Stin]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [Scar][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:43.698] Mode selected P0: TECH
+[00:44.000] Crystals: P0 4300 → 3300 (-1000)  [tech cost]
+[00:44.485] Tech played  P0: "Accident"
+[00:46.016] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:46.415] AI0 target chosen: (2,4)
+[00:46.417] Card destroyed  P1 (2,4) "War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80}
+[00:46.422] Tech resolved  P0
+[00:47.318] Mode selected P0: ATTACK
+[00:47.322] Attack phase P0: 2 attack(s) available
+[00:47.322] MSG: Player 1: tap a character to attack.
+[00:47.616] AI0 attack decision: (0,4)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | flags:venom} → (0,1) (dead-end)
+[00:47.916] Dice rolled: 1
+[00:47.938] MSG: Nothing happens — Dead End.
+[00:51.306] Attack P0(0,4)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | flags:venom} → P1(0,1)(empty)  Dice=1  → DEAD_END
+[00:51.306] Anim: 3F  (blank slot)
+[00:51.801] Mode selected P0: ATTACK
+[00:51.805] Attack phase P0: 1 attack(s) available
+[00:51.805] MSG: Player 1: tap a character to attack.
+[00:52.099] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Decoy Puppet" {cost 100}
+[00:52.429] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:52.449] Revealed: P1 (2,2) "Decoy Puppet" {cost 100}
+[00:52.449] Dice rolled: 5
+[00:52.707] MSG: Trap triggered: Decoy Puppet!
+[00:56.799] Crystals: P1 4150 → 4050 (-100)  [trap cost]
+[00:58.204] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[00:58.248] Trap: "Decoy Puppet" triggered  P0(2,2)→P1(2,2)
+[00:58.248] Anim: 3D  (attacker survives)
+[00:58.636] Turn ended  P0  |  Crystals P0=3300 P1=4050
+
+--- Turn 5  |  Player 1  |  Crystals P0=3300 P1=4050 ---
+P0:   [  — ][  — ][  — ][  — ][Stin]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Ox P][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [Scar][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:59.250] Mode selected P1: ATTACK
+[00:59.257] Attack phase P1: 2 attack(s) available
+[00:59.257] MSG: Player 2: tap a character to attack.
+[00:59.554] AI1 attack decision: (0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (0,2) (dead-end)
+[00:59.863] Dice rolled: 1
+[00:59.914] MSG: Nothing happens — Dead End.
+[01:03.285] Attack P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P0(0,2)(empty)  Dice=1  → DEAD_END
+[01:03.285] Anim: 3F  (blank slot)
+[01:03.783] Mode selected P1: ATTACK
+[01:03.788] Attack phase P1: 1 attack(s) available
+[01:03.789] MSG: Player 2: tap a character to attack.
+[01:04.079] AI1 attack decision: (4,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:04.413] Revealed: P1 (4,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:04.413] Dice rolled: 2
+[01:04.418] MSG: Ice Mage wins!
+[01:10.072] Crystals: P0 3300 → 2880 (-420)  [battle]
+[01:11.469] Attack P1(4,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=2  ATK=50 vs DEF=40  → WIN
+[01:11.469] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 5
+[01:11.469] Anim: 3A  △ P0(2,2)
+[01:11.469] Card destroyed  P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:11.967] Turn ended  P1  |  Crystals P0=2880 P1=4050
+
+--- Turn 6  |  Player 0  |  Crystals P0=2880 P1=4050 ---
+P0:   [  — ][  — ][  — ][  — ][Stin]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [Scar][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Ice ][  — ][  ? ][  — ][  — ]
+[01:14.046] Crystals: P0 2880 → 2580 (-300)  [union]
+[01:14.090] Revealed: P0 (4,3) "Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[01:14.090] Union summoned P0: "Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down}, "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down}
+[01:14.090] MSG: Player 1 summoned [Pixie Queen] using: "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down}, "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down}
+[01:17.488] Mode selected P0: ATTACK
+[01:17.495] Attack phase P0: 2 attack(s) available
+[01:17.495] MSG: Player 1: tap a character to attack.
+[01:17.787] AI0 attack decision: (4,3)"Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine} → (4,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:18.087] Dice rolled: 5
+[01:18.158] MSG: Pixie Queen wins!
+[01:22.797] Crystals: P1 4050 → 3650 (-400)  [battle]
+[01:24.197] Attack P0(4,3)"Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P1(4,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=5  ATK=30 vs DEF=0  → WIN
+[01:24.197] Anim: 3A  △ P1(4,0)
+[01:24.197] Card destroyed  P1 (4,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:24.689] Mode selected P0: ATTACK
+[01:24.695] Attack phase P0: 1 attack(s) available
+[01:24.695] MSG: Player 1: tap a character to attack.
+[01:24.988] AI0 attack decision: (0,4)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | flags:venom} → (1,2) "Bait" {cost 0}
+[01:25.320] Revealed: P1 (1,2) "Bait" {cost 0}
+[01:25.320] Dice rolled: 4
+[01:25.585] MSG: Trap triggered: Bait!
+[01:29.681] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[01:29.688] Trap: "Bait" triggered  P0(0,4)→P1(1,2)
+[01:29.688] Anim: 3D  (attacker survives)
+[01:30.069] AI1 target chosen: (0,2)
+[01:30.099] Revealed: P1 (0,2) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:30.099] MSG: Bait: Defender revealed Staircase Lady.
+[01:30.175] Turn ended  P0  |  Crystals P0=2580 P1=3650
+
+--- Turn 7  |  Player 1  |  Crystals P0=2580 P1=3650 ---
+P0:   [  — ][  — ][  — ][  — ][Stin]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][Pixi][  ? ]
+P1:   [Scar][  — ][Stai][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:30.764] Mode selected P1: ATTACK
+[01:30.771] Attack phase P1: 2 attack(s) available
+[01:30.771] MSG: Player 2: tap a character to attack.
+[01:31.062] AI1 attack decision: (0,2)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → (0,4) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | flags:venom}
+[01:31.362] Dice rolled: 5
+[01:31.373] MSG: Staircase Lady wins!
+[01:36.053] Crystals: P0 2580 → 2180 (-400)  [battle]
+[01:37.454] Attack P1(0,2)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P0(0,4)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | flags:venom}  Dice=5  ATK=30 vs DEF=10  → WIN
+[01:37.454] Anim: 3A  △ P0(0,4)
+[01:37.455] Card destroyed  P0 (0,4) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | flags:venom}
+[01:37.946] Mode selected P1: ATTACK
+[01:37.951] Attack phase P1: 1 attack(s) available
+[01:37.952] MSG: Player 2: tap a character to attack.
+[01:38.246] AI1 attack decision: (0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (2,4) (dead-end)
+[01:38.546] Dice rolled: 4
+[01:38.617] MSG: Nothing happens — Dead End.
+[01:41.946] Attack P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P0(2,4)(empty)  Dice=4  → DEAD_END
+[01:41.946] Anim: 3F  (blank slot)
+[01:42.443] Turn ended  P1  |  Crystals P0=2180 P1=3650
+
+--- Turn 8  |  Player 0  |  Crystals P0=2180 P1=3650 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][Pixi][  ? ]
+P1:   [Scar][  — ][Stai][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:43.042] Mode selected P0: ATTACK
+[01:43.051] Attack phase P0: 2 attack(s) available
+[01:43.051] MSG: Player 1: tap a character to attack.
+[01:43.341] AI0 attack decision: (4,3)"Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine} → (0,2) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:43.641] Dice rolled: 1
+[01:43.684] MSG: Pixie Queen wins!
+[01:48.348] Crystals: P1 3650 → 3470 (-180)  [battle]
+[01:49.749] Attack P0(4,3)"Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P1(0,2)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}  Dice=1  ATK=30 vs DEF=0  → WIN
+[01:49.750] Anim: 3A  △ P1(0,2)
+[01:49.750] Card destroyed  P1 (0,2) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:50.249] Mode selected P0: ATTACK
+[01:50.253] Attack phase P0: 1 attack(s) available
+[01:50.253] MSG: Player 1: tap a character to attack.
+[01:50.558] AI0 attack decision: (4,4)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (3,3) (dead-end)
+[01:50.910] Revealed: P0 (4,4) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:50.910] Dice rolled: 4
+[01:50.938] MSG: Nothing happens — Dead End.
+[01:54.233] Attack P0(4,4)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P1(3,3)(empty)  Dice=4  → DEAD_END
+[01:54.233] Anim: 3F  (blank slot)
+[01:54.731] Turn ended  P0  |  Crystals P0=2180 P1=3470
+
+--- Turn 9  |  Player 1  |  Crystals P0=2180 P1=3470 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][Pixi][Chao]
+P1:   [Scar][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:55.331] Mode selected P1: ATTACK
+[01:55.343] Attack phase P1: 2 attack(s) available
+[01:55.343] MSG: Player 2: tap a character to attack.
+[01:55.630] AI1 attack decision: (0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (4,4) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:55.928] Dice rolled: 3
+[01:56.001] MSG: Both cards are destroyed!
+[02:00.534] Crystals: P0 2180 → 2080 (-100)  [battle]
+[02:01.935] Attack P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P0(4,4)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=3  ATK=0 vs DEF=0  → TIE
+[02:01.936] Anim: 3C  △ P1(0,0) + △ P0(4,4)
+[02:01.936] Card destroyed  P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[02:01.936] Card destroyed  P0 (4,4) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:02.427] Mode selected P1: ATTACK
+[02:02.430] Attack phase P1: 1 attack(s) available
+[02:02.430] MSG: Player 2: tap a character to attack.
+[02:02.725] AI1 attack decision: (0,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (4,3) "Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[02:03.066] Revealed: P1 (0,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[02:03.066] Dice rolled: 3
+[02:03.109] MSG: Book with Fangs wins!
+[02:07.760] Attack P1(0,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(4,3)"Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine}  Dice=3  ATK=45 vs DEF=30  → WIN
+[02:07.760] Anim: 3A  △ P0(4,3)
+[02:07.761] Card destroyed  P0 (4,3) "Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[02:08.247] Turn ended  P1  |  Crystals P0=2080 P1=3470
+
+--- Turn 10  |  Player 0  |  Crystals P0=2080 P1=3470 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][Book]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:08.846] Mode selected P0: ATTACK
+[02:08.850] Attack phase P0: 2 attack(s) available
+[02:08.851] MSG: Player 1: tap a character to attack.
+[02:09.145] AI0 attack decision: (4,0)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down} → (2,1) (dead-end)
+[02:09.477] Revealed: P0 (4,0) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[02:09.477] Dice rolled: 3
+[02:09.488] MSG: Nothing happens — Dead End.
+[02:12.853] Attack P0(4,0)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos} → P1(2,1)(empty)  Dice=3  → DEAD_END
+[02:12.853] Anim: 3F  (blank slot)
+[02:12.854] MSG: Dark Tengu: Self ATK debuff applied.
+[02:13.350] Mode selected P0: ATTACK
+[02:13.354] Attack phase P0: 1 attack(s) available
+[02:13.354] MSG: Player 1: tap a character to attack.
+[02:13.656] AI0 attack decision: (4,1)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (3,2) "Blackmail" {cost 0}
+[02:14.005] Revealed: P0 (4,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[02:14.032] Revealed: P1 (3,2) "Blackmail" {cost 0}
+[02:14.032] Dice rolled: 3
+[02:14.276] MSG: Trap triggered: Blackmail!
+[02:18.392] Prompt: "Blackmail"  [Discard 1 Tech Card / End your turn]
+[02:18.991] Ability choice resolved: 0 (Yes)
+[02:18.992] MSG: Blackmail: Discarded 1 Tech Card.
+[02:19.000] Trap: "Blackmail" triggered  P0(4,1)→P1(3,2)
+[02:19.000] Anim: 3D  (attacker survives)
+[02:19.507] Turn ended  P0  |  Crystals P0=2080 P1=3470
+
+--- Turn 11  |  Player 1  |  Crystals P0=2080 P1=3470 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [Dark][Dark][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][Book]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:20.109] Mode selected P1: ATTACK
+[02:20.115] Attack phase P1: 2 attack(s) available
+[02:20.115] MSG: Player 2: tap a character to attack.
+[02:20.415] AI1 attack decision: (0,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (4,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[02:20.724] Dice rolled: 1
+[02:20.737] MSG: Book with Fangs wins!
+[02:25.425] Crystals: P0 2080 → 1780 (-300)  [battle]
+[02:26.822] Attack P1(0,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(4,1)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}  Dice=1  ATK=45 vs DEF=25  → WIN
+[02:26.823] Anim: 3A  △ P0(4,1)
+[02:26.823] Card destroyed  P0 (4,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[02:29.337] Turn ended  P1  |  Crystals P0=1780 P1=3470
+
+--- Turn 12  |  Player 0  |  Crystals P0=1780 P1=3470 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [Dark][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][Book]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:29.941] Mode selected P0: ATTACK
+[02:29.945] Attack phase P0: 2 attack(s) available
+[02:29.945] MSG: Player 1: tap a character to attack.
+[02:30.250] AI0 attack decision: (4,0)"Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used} → (2,3) (dead-end)
+[02:30.554] Dice rolled: 5
+[02:30.580] MSG: Nothing happens — Dead End.
+[02:33.970] Attack P0(4,0)"Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used} → P1(2,3)(empty)  Dice=5  → DEAD_END
+[02:33.970] Anim: 3F  (blank slot)
+[02:34.471] Mode selected P0: ATTACK
+[02:34.475] Attack phase P0: 1 attack(s) available
+[02:34.476] MSG: Player 1: tap a character to attack.
+[02:34.778] AI0 attack decision: (4,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos | face-down} → (3,1) (dead-end)
+[02:35.119] Revealed: P0 (4,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[02:35.119] Dice rolled: 3
+[02:35.131] MSG: Nothing happens — Dead End.
+[02:38.503] Attack P0(4,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} → P1(3,1)(empty)  Dice=3  → DEAD_END
+[02:38.503] Anim: 3F  (blank slot)
+[02:39.005] Turn ended  P0  |  Crystals P0=1780 P1=3470
+
+--- Turn 13  |  Player 1  |  Crystals P0=1780 P1=3470 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [Dark][  — ][Nigh][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][Book]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:39.613] Mode selected P1: ATTACK
+[02:39.622] Attack phase P1: 2 attack(s) available
+[02:39.622] MSG: Player 2: tap a character to attack.
+[02:39.920] AI1 attack decision: (0,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (4,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[02:40.229] Dice rolled: 4
+[02:40.239] MSG: Book with Fangs wins!
+[02:44.930] Crystals: P0 1780 → 880 (-900)  [battle]
+[02:46.329] Attack P1(0,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(4,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=4  ATK=45 vs DEF=30  → WIN
+[02:46.329] Anim: 3A  △ P0(4,2)
+[02:46.329] Card destroyed  P0 (4,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[02:48.839] Turn ended  P1  |  Crystals P0=880 P1=3470
+
+--- Turn 14  |  Player 0  |  Crystals P0=880 P1=3470 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [Dark][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][Book]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:49.446] Mode selected P0: ATTACK
+[02:49.453] Attack phase P0: 2 attack(s) available
+[02:49.453] MSG: Player 1: tap a character to attack.
+[02:49.754] AI0 attack decision: (4,0)"Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used} → (0,3) (dead-end)
+[02:50.062] Dice rolled: 2
+[02:50.095] MSG: Nothing happens — Dead End.
+[02:53.470] Attack P0(4,0)"Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used} → P1(0,3)(empty)  Dice=2  → DEAD_END
+[02:53.470] Anim: 3F  (blank slot)
+[02:53.972] Turn ended  P0  |  Crystals P0=880 P1=3470
+
+--- Turn 15  |  Player 1  |  Crystals P0=880 P1=3470 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [Dark][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][Book]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:54.578] Mode selected P1: ATTACK
+[02:54.582] Attack phase P1: 2 attack(s) available
+[02:54.582] MSG: Player 2: tap a character to attack.
+[02:54.886] AI1 attack decision: (0,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (4,0) "Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}
+[02:55.194] Dice rolled: 1
+[02:55.203] MSG: Book with Fangs wins!
+[02:59.897] Crystals: P0 880 → 630 (-250)  [battle]
+[03:01.297] Attack P1(0,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(4,0)"Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}  Dice=1  ATK=45 vs DEF=25  → WIN
+[03:01.297] Anim: 3A  △ P0(4,0)
+[03:01.297] Card destroyed  P0 (4,0) "Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}
+
+=== GAME OVER ===
+[03:01.298] AI Player 1 wins
+[03:01.298] Reason: all_destroyed
+[03:01.298] Final crystals — P0: 630  P1: 3470  |  Turns: 15
+[03:01.298] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_pickle_jar_incident_2026-05-31_20-52-01_210.txt

@@ -277,6 +277,25 @@ theme_override_styles/hover = SubResource("SBF_btn_h")
 theme_override_styles/focus = SubResource("SBF_btn_n")
 text = "CREDITS"
 
+[node name="ExitGameBtn" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -190.0
+offset_top = 828.0
+offset_right = 190.0
+offset_bottom = 888.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.910, 0.957, 1.0, 1.0)
+theme_override_fonts/font = ExtResource("9")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("SBF_btn_n")
+theme_override_styles/pressed = SubResource("SBF_btn_p")
+theme_override_styles/hover = SubResource("SBF_btn_h")
+theme_override_styles/focus = SubResource("SBF_btn_n")
+text = "EXIT GAME"
+
 [node name="DeckStatusBg" type="Panel" parent="." unique_id=124443022]
 layout_mode = 1
 anchors_preset = 5

@@ -1,0 +1,349 @@
+=== Battle of Cat Hair Tornado ===
+Battle started: 2026-05-31 07:39:35.477
+Game Session of Strawberry Smoothie (started 2026-05-31 07:30:42.708)
+=== AI vs AI Match ===
+Batch iteration: 5 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, War Supply, Great Diplomacy
+P1 Tech hand: Bribe, Tease, Great Diplomacy
+P0:   [C:Cany][C:Gian][T:Blac][C:Dark][T:Echo]
+      [C:Dark][  — ][  — ][  — ][C:Hunt]
+      [T:Alar][  — ][  — ][  — ][C:Mage]
+      [T:Flam][  — ][  — ][  — ][C:Ice ]
+      [T:Snar][C:Mafi][  — ][C:Bomb][T:Hypn]
+P1:   [T:Spik][  — ][C:Book][  — ][T:Foul]
+      [C:Ice ][C:Deat][C:Ange][C:Jira][  — ]
+      [  — ][C:Moon][C:Moon][C:Void][  — ]
+      [  — ][C:Red ][C:Hand][C:Moon][  — ]
+      [C:Immo][T:Alar][T:Trap][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:05.145] Mode selected P0: TECH
+[00:05.446] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:06.829] Tech played  P0: "Great Diplomacy"
+[00:08.694] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:08.827] AI0 target chosen: (0,0)
+[00:08.828] Revealed: P0 (0,0) "Canyon Warg"
+[00:09.228] AI0 target chosen: (1,4)
+[00:09.229] Revealed: P0 (1,4) "Huntress of Green Glade"
+[00:09.629] AI0 target chosen: (3,4)
+[00:09.630] Revealed: P0 (3,4) "Ice Mage"
+[00:10.028] AI0 target chosen: (4,1)
+[00:10.030] Revealed: P0 (4,1) "Mafia Associates"
+[00:10.428] AI0 target chosen: (4,3)
+[00:10.430] Revealed: P0 (4,3) "Bomber Fairy"
+[00:10.430] MSG: Great Diplomacy: revealed 5 unit(s).
+[00:10.439] Tech resolved  P0
+[00:11.329] Mode selected P0: ATTACK
+[00:11.338] Attack phase P0: 2 attack(s) available
+[00:11.338] MSG: Player 1: tap a character to attack.
+[00:11.628] AI0 attack decision: (0,0)"Canyon Warg" [ATK=70] → (2,0) "(dead-end)"
+[00:11.929] Dice rolled: 5
+[00:11.960] MSG: Nothing happens — Dead End.
+[00:15.330] Dead-end placed  P1 (2,0)
+[00:15.334] Attack P0(0,0)"Canyon Warg" → P1(2,0)(empty)  Dice=5  → DEAD_END
+[00:15.334] Anim: 3F  (blank slot)
+[00:15.829] Mode selected P0: ATTACK
+[00:15.836] Attack phase P0: 1 attack(s) available
+[00:15.836] MSG: Player 1: tap a character to attack.
+[00:16.128] AI0 attack decision: (1,4)"Huntress of Green Glade" [ATK=50] → (0,2) "Book with Fangs" [DEF=55]
+[00:16.480] Revealed: P1 (0,2) "Book with Fangs"
+[00:16.481] Dice rolled: 5
+[00:21.237] Crystals: P0 4000 → 3200 (-800)  [battle]
+[00:22.630] Card destroyed  P0 (1,4) "Huntress of Green Glade"
+[00:22.634] Attack P0(1,4)"Huntress of Green Glade" → P1(0,2)"Book with Fangs"  Dice=5  ATK=50 vs DEF=55  → LOSE
+[00:22.634] Anim: 3B  △ P0(1,4)
+[00:23.137] Turn ended  P0  |  Crystals P0=3200 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=3200 P1=5000 ---
+P0:   [Cany][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Ice ]
+      [  ? ][Mafi][  — ][Bomb][  ? ]
+P1:   [  ? ][  — ][Book][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:23.746] Mode selected P1: TECH
+[00:24.053] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:25.445] Tech played  P1: "Great Diplomacy"
+[00:27.323] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:27.385] AI1 target chosen: (1,1)
+[00:27.385] Revealed: P1 (1,1) "Death Cobra"
+[00:27.802] AI1 target chosen: (2,3)
+[00:27.804] Revealed: P1 (2,3) "Void Stalker"
+[00:28.203] AI1 target chosen: (1,0)
+[00:28.205] Revealed: P1 (1,0) "Ice Mage"
+[00:28.604] AI1 target chosen: (1,2)
+[00:28.605] Revealed: P1 (1,2) "Angel Gatekeeper"
+[00:29.002] AI1 target chosen: (1,3)
+[00:29.003] Revealed: P1 (1,3) "Jirayu the Rebellious Prince"
+[00:29.004] MSG: Great Diplomacy: revealed 5 unit(s).
+[00:29.017] Tech resolved  P1
+[00:29.904] Mode selected P1: ATTACK
+[00:29.918] Attack phase P1: 2 attack(s) available
+[00:29.919] MSG: Player 2: tap a character to attack.
+[00:30.202] AI1 attack decision: (1,1)"Death Cobra" [ATK=85] → (0,0) "Canyon Warg" [DEF=30]
+[00:30.503] Dice rolled: 5
+[00:30.514] MSG: Death Cobra wins!
+[00:35.196] Crystals: P0 3200 → 2450 (-750)  [battle]
+[00:36.587] Card destroyed  P0 (0,0) "Canyon Warg"
+[00:36.592] Attack P1(1,1)"Death Cobra" → P0(0,0)"Canyon Warg"  Dice=5  ATK=85 vs DEF=30  → WIN
+[00:36.592] Anim: 3A  △ P0(0,0)
+[00:37.087] Mode selected P1: ATTACK
+[00:37.097] Attack phase P1: 1 attack(s) available
+[00:37.097] MSG: Player 2: tap a character to attack.
+[00:37.387] AI1 attack decision: (2,3)"Void Stalker" [ATK=65] → (4,1) "Mafia Associates" [DEF=40]
+[00:37.687] Dice rolled: 5
+[00:37.702] MSG: Void Stalker wins!
+[00:43.979] Crystals: P0 2450 → 1950 (-500)  [battle]
+[00:45.373] Card destroyed  P0 (4,1) "Mafia Associates"
+[00:45.377] Attack P1(2,3)"Void Stalker" → P0(4,1)"Mafia Associates"  Dice=5  ATK=85 vs DEF=0  → WIN
+[00:45.377] Anim: 3A  △ P0(4,1)
+[00:45.870] MSG: Death Cobra: Venom applied to Ice Mage.
+[00:45.878] Turn ended  P1  |  Crystals P0=1950 P1=4000
+
+--- Turn 3  |  Player 0  |  Crystals P0=1950 P1=4000 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Ice ]
+      [  ? ][  — ][  — ][Bomb][  ? ]
+P1:   [  ? ][  — ][Book][  — ][  ? ]
+      [Ice ][Deat][Ange][Jira][  — ]
+      [  — ][  ? ][  ? ][Void][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:46.471] Mode selected P0: TECH
+[00:46.786] Tech played  P0: "Tease"
+[00:48.328] MSG: Opponent must choose and reveal 1 of their squares.
+[00:48.329] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:48.729] AI1 target chosen: (3,3)
+[00:48.773] Revealed: P1 (3,3) "Moon Tribe Marksman"
+[00:48.773] MSG: Tease: Opponent revealed Moon Tribe Marksman.
+[00:48.779] Tech resolved  P0
+[00:49.629] Mode selected P0: ATTACK
+[00:49.643] Attack phase P0: 2 attack(s) available
+[00:49.644] MSG: Player 1: tap a character to attack.
+[00:49.929] AI0 attack decision: (3,4)"Ice Mage" [ATK=50] → (2,3) "Void Stalker" [DEF=25]
+[00:50.228] Dice rolled: 5
+[00:50.241] MSG: Ice Mage wins!
+[00:54.920] Crystals: P1 4000 → 3280 (-720)  [battle]
+[00:56.315] Card destroyed  P1 (2,3) "Void Stalker"
+[00:56.322] Attack P0(3,4)"Ice Mage" → P1(2,3)"Void Stalker"  Dice=5  ATK=50 vs DEF=25  → WIN
+[00:56.322] Anim: 3A  △ P1(2,3)
+[00:56.811] Mode selected P0: ATTACK
+[00:56.822] Attack phase P0: 1 attack(s) available
+[00:56.824] MSG: Player 1: tap a character to attack.
+[00:57.111] AI0 attack decision: (4,3)"Bomber Fairy" [ATK=30] → (1,0) "Ice Mage" [DEF=0]
+[00:57.412] Dice rolled: 2
+[00:57.427] MSG: Bomber Fairy wins!
+[01:02.104] Crystals: P1 3280 → 2880 (-400)  [battle]
+[01:03.498] Card destroyed  P1 (1,0) "Ice Mage"
+[01:03.499] MSG: Bomber Fairy: Kill bonus — extra attack!
+[01:03.507] Attack P0(4,3)"Bomber Fairy" → P1(1,0)"Ice Mage"  Dice=2  ATK=30 vs DEF=0  → WIN
+[01:03.507] Anim: 3A  △ P1(1,0)
+[01:03.996] Mode selected P0: ATTACK
+[01:04.005] Attack phase P0: 1 attack(s) available
+[01:04.005] MSG: Player 1: tap a character to attack.
+[01:04.295] AI0 attack decision: (2,4)"Magenta the Nightbloom" [ATK=25] → (0,0) "Spike Trap" [DEF=0]
+[01:04.636] Revealed: P0 (2,4) "Magenta the Nightbloom"
+[01:04.637] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[01:04.671] Revealed: P1 (0,0) "Spike Trap"
+[01:04.672] Dice rolled: 3
+[01:04.905] MSG: Trap triggered: Spike Trap!
+[01:10.151] Crystals: P1 2880 → 1380 (-1500)  [trap cost]
+[01:11.542] Crystals: P0 1950 → 1650 (-300)  [card lost]
+[01:12.928] Card destroyed  P0 (2,4) "Magenta the Nightbloom"
+[01:13.585] Card destroyed  P1 (0,0) "Spike Trap"
+[01:13.586] MSG: Flame Trap: Magenta the Nightbloom destroyed!
+[01:13.593] Trap: "Spike Trap" triggered  P0(2,4)→P1(0,0)
+[01:13.593] Anim: 3E  △ P0(2,4)
+[01:14.096] Turn ended  P0  |  Crystals P0=1650 P1=1380
+
+--- Turn 4  |  Player 1  |  Crystals P0=1650 P1=1380 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][Ice ]
+      [  ? ][  — ][  — ][Bomb][  ? ]
+P1:   [  — ][  — ][Book][  — ][  ? ]
+      [  — ][Deat][Ange][Jira][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][Moon][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:14.699] Mode selected P1: TECH
+[01:15.022] Tech played  P1: "Tease"
+[01:16.574] MSG: Opponent must choose and reveal 1 of their squares.
+[01:16.574] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:16.983] AI0 target chosen: (1,0)
+[01:17.023] Revealed: P0 (1,0) "Dark Tengu"
+[01:17.024] MSG: Tease: Opponent revealed Dark Tengu.
+[01:17.031] Tech resolved  P1
+[01:17.895] Mode selected P1: ATTACK
+[01:17.910] Attack phase P1: 2 attack(s) available
+[01:17.911] MSG: Player 2: tap a character to attack.
+[01:18.204] AI1 attack decision: (1,1)"Death Cobra" [ATK=85] → (4,3) "Bomber Fairy" [DEF=15]
+[01:18.512] Dice rolled: 4
+[01:18.526] MSG: Death Cobra wins!
+[01:23.212] Crystals: P0 1650 → 1150 (-500)  [battle]
+[01:24.606] Card destroyed  P0 (4,3) "Bomber Fairy"
+[01:24.615] Attack P1(1,1)"Death Cobra" → P0(4,3)"Bomber Fairy"  Dice=4  ATK=85 vs DEF=15  → WIN
+[01:24.615] Anim: 3A  △ P0(4,3)
+[01:25.112] Mode selected P1: ATTACK
+[01:25.124] Attack phase P1: 1 attack(s) available
+[01:25.124] MSG: Player 2: tap a character to attack.
+[01:25.420] AI1 attack decision: (0,2)"Book with Fangs" [ATK=45] → (3,4) "Ice Mage" [DEF=0]
+[01:25.729] Dice rolled: 4
+[01:25.741] MSG: Book with Fangs wins!
+[01:32.045] Crystals: P0 1150 → 750 (-400)  [battle]
+[01:33.439] Card destroyed  P0 (3,4) "Ice Mage"
+[01:33.446] Attack P1(0,2)"Book with Fangs" → P0(3,4)"Ice Mage"  Dice=4  ATK=75 vs DEF=0  → WIN
+[01:33.446] Anim: 3A  △ P0(3,4)
+[01:33.945] MSG: Death Cobra: Venom applied to Dark Tengu.
+[01:33.950] Turn ended  P1  |  Crystals P0=750 P1=1380
+
+--- Turn 5  |  Player 0  |  Crystals P0=750 P1=1380 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [Dark][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Book][  — ][  ? ]
+      [  — ][Deat][Ange][Jira][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][Moon][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:34.556] Mode selected P0: ATTACK
+[01:34.567] Attack phase P0: 2 attack(s) available
+[01:34.567] MSG: Player 1: tap a character to attack.
+[01:34.862] AI0 attack decision: (1,0)"Dark Tengu" [ATK=25] → (0,3) "(dead-end)"
+[01:35.171] Dice rolled: 4
+[01:35.204] MSG: Nothing happens — Dead End.
+[01:38.572] Dead-end placed  P1 (0,3)
+[01:38.572] MSG: Dark Tengu: Self ATK debuff applied.
+[01:38.577] Attack P0(1,0)"Dark Tengu" → P1(0,3)(empty)  Dice=4  → DEAD_END
+[01:38.577] Anim: 3F  (blank slot)
+[01:39.078] Mode selected P0: ATTACK
+[01:39.082] Attack phase P0: 1 attack(s) available
+[01:39.082] MSG: Player 1: tap a character to attack.
+[01:39.386] AI0 attack decision: (0,3)"Dark Monk" [ATK=15] → (1,4) "(dead-end)"
+[01:39.721] Revealed: P0 (0,3) "Dark Monk"
+[01:39.721] Dice rolled: 3
+[01:39.733] MSG: Nothing happens — Dead End.
+[01:43.104] Dead-end placed  P1 (1,4)
+[01:43.113] Attack P0(0,3)"Dark Monk" → P1(1,4)(empty)  Dice=3  → DEAD_END
+[01:43.113] Anim: 3F  (blank slot)
+[01:43.619] Turn ended  P0  |  Crystals P0=750 P1=1380
+
+--- Turn 6  |  Player 1  |  Crystals P0=750 P1=1380 ---
+P0:   [  — ][  ? ][  ? ][Dark][  ? ]
+      [Dark][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Book][  — ][  ? ]
+      [  — ][Deat][Ange][Jira][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][Moon][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:44.220] Mode selected P1: TECH
+[01:44.544] Tech played  P1: "Bribe"
+[01:46.094] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:46.604] MSG: Bribe: AI passed.
+[01:46.616] Tech resolved  P1
+[01:47.522] Mode selected P1: ATTACK
+[01:47.533] Attack phase P1: 2 attack(s) available
+[01:47.533] MSG: Player 2: tap a character to attack.
+[01:47.828] AI1 attack decision: (1,1)"Death Cobra" [ATK=85] → (0,3) "Dark Monk" [DEF=25]
+[01:48.137] Dice rolled: 1
+[01:48.153] MSG: Death Cobra wins!
+[01:52.838] Crystals: P0 750 → 450 (-300)  [battle]
+[01:54.232] Card destroyed  P0 (0,3) "Dark Monk"
+[01:54.239] Attack P1(1,1)"Death Cobra" → P0(0,3)"Dark Monk"  Dice=1  ATK=85 vs DEF=25  → WIN
+[01:54.239] Anim: 3A  △ P0(0,3)
+[01:54.738] Mode selected P1: ATTACK
+[01:54.748] Attack phase P1: 1 attack(s) available
+[01:54.749] MSG: Player 2: tap a character to attack.
+[01:55.045] AI1 attack decision: (0,2)"Book with Fangs" [ATK=45] → (1,0) "Dark Tengu" [DEF=25]
+[01:55.353] Dice rolled: 4
+[01:55.368] MSG: Book with Fangs wins!
+[02:00.053] Crystals: P0 450 → 200 (-250)  [battle]
+[02:01.447] Card destroyed  P0 (1,0) "Dark Tengu"
+[02:01.452] Attack P1(0,2)"Book with Fangs" → P0(1,0)"Dark Tengu"  Dice=4  ATK=45 vs DEF=25  → WIN
+[02:01.452] Anim: 3A  △ P0(1,0)
+[02:01.955] Turn ended  P1  |  Crystals P0=200 P1=1380
+
+--- Turn 7  |  Player 0  |  Crystals P0=200 P1=1380 ---
+P0:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Book][  — ][  ? ]
+      [  — ][Deat][Ange][Jira][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][Moon][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[02:02.561] Mode selected P0: ATTACK
+[02:02.572] Attack phase P0: 2 attack(s) available
+[02:02.572] MSG: Player 1: tap a character to attack.
+[02:02.870] AI0 attack decision: (0,1)"Giant Centipede" [ATK=20] → (0,1) "(dead-end)"
+[02:03.217] Revealed: P0 (0,1) "Giant Centipede"
+[02:03.217] Dice rolled: 2
+[02:03.231] MSG: Nothing happens — Dead End.
+[02:06.579] Dead-end placed  P1 (0,1)
+[02:06.582] Attack P0(0,1)"Giant Centipede" → P1(0,1)(empty)  Dice=2  → DEAD_END
+[02:06.582] Anim: 3F  (blank slot)
+[02:07.092] Turn ended  P0  |  Crystals P0=200 P1=1380
+
+--- Turn 8  |  Player 1  |  Crystals P0=200 P1=1380 ---
+P0:   [  — ][Gian][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Book][  — ][  ? ]
+      [  — ][Deat][Ange][Jira][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][Moon][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[02:09.204] Union summoned P1: [Burning Phoenix] from Book with Fangs, Death Cobra, Angel Gatekeeper
+[02:09.205] Crystals: P1 1380 → 580 (-800)  [union]
+[02:09.270] Revealed: P1 (0,2) "Burning Phoenix"
+[02:09.273] MSG: Player 2 summoned [Burning Phoenix] using: Book with Fangs, Death Cobra, Angel Gatekeeper
+[02:12.654] Mode selected P1: ATTACK
+[02:12.663] Attack phase P1: 2 attack(s) available
+[02:12.664] MSG: Player 2: tap a character to attack.
+[02:12.962] AI1 attack decision: (0,2)"Burning Phoenix" [ATK=125] → (0,1) "Giant Centipede" [DEF=20]
+[02:13.269] Dice rolled: 1
+[02:13.327] MSG: Burning Phoenix wins!
+[02:17.970] Crystals: P0 200 → 0 (-200)  [battle]
+
+=== GAME OVER ===
+[02:17.975] AI Player 1 wins
+[02:17.976] Reason: crystals
+[02:17.976] Final crystals — P0: 0  P1: 580  |  Turns: 8
+[02:17.976] Log saved to: res://logs/results/2026-05-31_07-30-42_709_strawberry_smoothie/battle_cat_hair_tornado_2026-05-31_07-39-35_477.txt

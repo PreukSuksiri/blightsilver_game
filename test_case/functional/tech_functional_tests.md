@@ -607,15 +607,16 @@ Card Name: Great Diplomacy
 Type: Tech
 Tech Cost: 1000
 TechEffectType: REVEAL_ALL_OWN_CHARACTERS
-effect_params: {}
+effect_params: {'count': 5}
 Description: Select up to 5 of your units and reveal them.
 Test Cases:
 
 Test Case ID: TC-FUNC-Great-Diplomacy-001
 Description:
-Great Diplomacy: all own characters face-up
+Great Diplomacy: select up to 5 own units to reveal
 Implementation Reference:
-- TurnManager._reveal_all_own
+- GameBoard own_units_up_to filter
+- TurnManager awaiting_target_selection
 - TechEffectType.REVEAL_ALL_OWN_CHARACTERS
 Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
@@ -624,9 +625,9 @@ Preconditions:
 - Multiple own face-down characters.
 - crystals>=1000.
 Steps:
-Step 1: Play Great Diplomacy.
+Step 1: Play Great Diplomacy; choose up to 5 face-down units (CLOSE to finish early).
 Expected Result:
-- All own character cells face_up=true.
+- At most 5 own character cells face_up=true; unselected units stay face-down.
 
 ---
 

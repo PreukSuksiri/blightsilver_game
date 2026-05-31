@@ -1,0 +1,366 @@
+=== Battle of Greasy Keyboard ===
+Battle started: 2026-05-31 07:05:54.165
+Game Session of Iced Latte (started 2026-05-31 06:54:04.954)
+=== AI vs AI Match ===
+Batch iteration: 7 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    Great Diplomacy
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, War Supply, Radar
+P1 Tech hand: Release Mutagen, Resurrection, War Supply
+P0:   [C:Moon][  — ][T:Spik][  — ][C:Sate]
+      [C:Snip][  — ][C:Blea][  — ][C:Meph]
+      [T:Bait][  — ][T:Acid][  — ][  — ]
+      [C:Stre][  — ][T:Red ][  — ][C:Gobl]
+      [C:Elec][  — ][C:Skel][  — ][C:Deat]
+P1:   [C:Fuji][  — ][C:Pyro][  — ][C:Skel]
+      [T:Deco][C:Cany][C:Flam][  — ][T:Bunk]
+      [C:Doom][  — ][C:Soni][  — ][C:Mars]
+      [T:Trap][  — ][T:Curs][  — ][T:Brai]
+      [T:Pepp][  — ][C:Bomb][  — ][C:Need]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.351] Mode selected P1: ATTACK
+[00:05.353] Attack phase P1: 2 attack(s) available
+[00:05.354] MSG: Player 2: tap a character to attack.
+[00:05.650] AI1 attack decision: (1,2)"Flame Seraph" [ATK=50] → (4,3) "(dead-end)"
+[00:05.992] Revealed: P1 (1,2) "Flame Seraph"
+[00:05.992] Dice rolled: 5
+[00:06.013] MSG: Nothing happens — Dead End.
+[00:09.342] Dead-end placed  P0 (4,3)
+[00:09.345] Attack P1(1,2)"Flame Seraph" → P0(4,3)(empty)  Dice=5  → DEAD_END
+[00:09.345] Anim: 3F  (blank slot)
+[00:11.854] Turn ended  P1  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Flam][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:12.455] Mode selected P0: TECH
+[00:12.756] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:14.141] Tech played  P0: "Radar"
+[00:15.669] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:16.067] AI0 target chosen: (1,1)
+[00:16.132] Revealed: P1 (1,1) "Canyon Warg"
+[00:16.483] AI0 target chosen: (3,4)
+[00:16.521] Revealed: P1 (3,4) "Brainwash"
+[00:16.887] AI0 target chosen: (2,2)
+[00:16.932] Revealed: P1 (2,2) "Sonic Seraph"
+[00:16.935] Tech resolved  P0
+[00:17.793] Mode selected P0: ATTACK
+[00:17.800] Attack phase P0: 2 attack(s) available
+[00:17.800] MSG: Player 1: tap a character to attack.
+[00:18.091] AI0 attack decision: (4,2)"Skeleton Lancer" [ATK=45] → (1,1) "Canyon Warg" [DEF=30]
+[00:18.449] Revealed: P0 (4,2) "Skeleton Lancer"
+[00:18.449] Dice rolled: 3
+[00:18.454] MSG: Skeleton Lancer wins!
+[00:23.088] Crystals: P1 5000 → 4250 (-750)  [battle]
+[00:24.482] Card destroyed  P1 (1,1) "Canyon Warg"
+[00:24.489] Attack P0(4,2)"Skeleton Lancer" → P1(1,1)"Canyon Warg"  Dice=3  ATK=45 vs DEF=30  → WIN
+[00:24.489] Anim: 3A  △ P1(1,1)
+[00:24.980] Mode selected P0: ATTACK
+[00:24.987] Attack phase P0: 1 attack(s) available
+[00:24.989] MSG: Player 1: tap a character to attack.
+[00:25.279] AI0 attack decision: (4,4)"Death Cobra" [ATK=85] → (2,2) "Sonic Seraph" [DEF=50]
+[00:25.624] Revealed: P0 (4,4) "Death Cobra"
+[00:25.624] Dice rolled: 4
+[00:25.628] MSG: Death Cobra wins!
+[00:30.264] Crystals: P1 4250 → 3700 (-550)  [battle]
+[00:31.657] Card destroyed  P1 (2,2) "Sonic Seraph"
+[00:31.663] Attack P0(4,4)"Death Cobra" → P1(2,2)"Sonic Seraph"  Dice=4  ATK=85 vs DEF=50  → WIN
+[00:31.663] Anim: 3A  △ P1(2,2)
+[00:32.164] MSG: Death Cobra: Venom applied to Flame Seraph.
+[00:32.167] Turn ended  P0  |  Crystals P0=4400 P1=3700
+
+--- Turn 3  |  Player 1  |  Crystals P0=4400 P1=3700 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Skel][  — ][Deat]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Flam][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:32.772] Mode selected P1: TECH
+[00:33.071] Crystals: P1 3700 → 2200 (-1500)  [tech cost]
+[00:34.457] Tech played  P1: "Resurrection"
+[00:35.996] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:36.396] AI1 target chosen: (0,1)
+[00:36.398] Revealed: P1 (0,1) "Sonic Seraph"
+[00:36.399] MSG: Revived Sonic Seraph at [0,1]!
+[00:36.406] Tech resolved  P1
+[00:37.297] Mode selected P1: ATTACK
+[00:37.306] Attack phase P1: 2 attack(s) available
+[00:37.307] MSG: Player 2: tap a character to attack.
+[00:37.596] AI1 attack decision: (1,2)"Flame Seraph" [ATK=50] → (4,2) "Skeleton Lancer" [DEF=5]
+[00:37.896] Dice rolled: 1
+[00:37.909] MSG: Flame Seraph wins!
+[00:42.580] Crystals: P0 4400 → 4100 (-300)  [battle]
+[00:43.976] Card destroyed  P0 (4,2) "Skeleton Lancer"
+[00:43.981] Attack P1(1,2)"Flame Seraph" → P0(4,2)"Skeleton Lancer"  Dice=1  ATK=50 vs DEF=5  → WIN
+[00:43.981] Anim: 3A  △ P0(4,2)
+[00:44.480] Mode selected P1: ATTACK
+[00:44.488] Attack phase P1: 1 attack(s) available
+[00:44.488] MSG: Player 2: tap a character to attack.
+[00:44.780] AI1 attack decision: (0,1)"Sonic Seraph" [ATK=0] → (4,0) "Electrogazer" [DEF=45]
+[00:45.115] Revealed: P0 (4,0) "Electrogazer"
+[00:45.115] Dice rolled: 3
+[00:49.871] Crystals: P1 2200 → 1650 (-550)  [battle]
+[00:51.264] Card destroyed  P1 (0,1) "Sonic Seraph"
+[00:51.269] Attack P1(0,1)"Sonic Seraph" → P0(4,0)"Electrogazer"  Dice=3  ATK=0 vs DEF=45  → LOSE
+[00:51.269] Anim: 3B  △ P1(0,1)
+[00:51.771] Turn ended  P1  |  Crystals P0=4100 P1=1650
+
+--- Turn 4  |  Player 0  |  Crystals P0=4100 P1=1650 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Elec][  — ][  — ][  — ][Deat]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Flam][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:52.379] Mode selected P0: TECH
+[00:52.679] Crystals: P0 4100 → 3100 (-1000)  [tech cost]
+[00:54.052] Tech played  P0: "Great Diplomacy"
+[00:55.863] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:56.153] AI0 target chosen: (0,4)
+[00:56.155] Revealed: P0 (0,4) "Satellite Cannon"
+[00:56.555] AI0 target chosen: (1,4)
+[00:56.556] Revealed: P0 (1,4) "Mephisto the Fallen"
+[00:56.954] AI0 target chosen: (1,0)
+[00:56.957] Revealed: P0 (1,0) "Sniping Fairy"
+[00:57.354] AI0 target chosen: (0,0)
+[00:57.356] Revealed: P0 (0,0) "Moon Tribe Twin Blader"
+[00:57.754] AI0 target chosen: (3,4)
+[00:57.756] Revealed: P0 (3,4) "Goblin Poacher"
+[00:57.756] MSG: Great Diplomacy: revealed 5 unit(s).
+[00:57.770] Tech resolved  P0
+[00:58.649] Mode selected P0: ATTACK
+[00:58.666] Attack phase P0: 2 attack(s) available
+[00:58.666] MSG: Player 1: tap a character to attack.
+[00:58.945] AI0 attack decision: (0,4)"Satellite Cannon" [ATK=100] → (1,2) "Flame Seraph" [DEF=10]
+[00:59.245] Dice rolled: 1
+[00:59.260] MSG: Satellite Cannon wins!
+[01:05.530] Crystals: P1 1650 → 1150 (-500)  [battle]
+[01:06.924] Card destroyed  P1 (1,2) "Flame Seraph"
+[01:06.932] Attack P0(0,4)"Satellite Cannon" → P1(1,2)"Flame Seraph"  Dice=1  ATK=120 vs DEF=10  → WIN
+[01:06.932] Anim: 3A  △ P1(1,2)
+[01:09.447] Turn ended  P0  |  Crystals P0=3100 P1=1150
+
+--- Turn 5  |  Player 1  |  Crystals P0=3100 P1=1150 ---
+P0:   [Moon][  — ][  ? ][  — ][Sate]
+      [Snip][  — ][  ? ][  — ][Meph]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][Gobl]
+      [Elec][  — ][  — ][  — ][Deat]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:10.047] Mode selected P1: ATTACK
+[01:10.059] Attack phase P1: 2 attack(s) available
+[01:10.060] MSG: Player 2: tap a character to attack.
+[01:10.346] AI1 attack decision: (2,0)"Doom Wisp" [ATK=15] → (1,4) "Mephisto the Fallen" [DEF=0]
+[01:10.724] Revealed: P1 (2,0) "Doom Wisp"
+[01:10.724] Dice rolled: 2
+[01:10.733] MSG: Doom Wisp wins!
+[01:15.329] Crystals: P0 3100 → 2240 (-860)  [battle]
+[01:16.723] Card destroyed  P0 (1,4) "Mephisto the Fallen"
+[01:16.729] Attack P1(2,0)"Doom Wisp" → P0(1,4)"Mephisto the Fallen"  Dice=2  ATK=15 vs DEF=0  → WIN
+[01:16.729] Anim: 3A  △ P0(1,4)
+[01:17.238] Mode selected P1: ATTACK
+[01:17.251] Attack phase P1: 1 attack(s) available
+[01:17.251] MSG: Player 2: tap a character to attack.
+[01:17.530] AI1 attack decision: (2,4)"Mars Drill" [ATK=40] → (3,4) "Goblin Poacher" [DEF=10]
+[01:17.850] Revealed: P1 (2,4) "Mars Drill"
+[01:17.850] Dice rolled: 4
+[01:17.853] MSG: Mars Drill wins!
+[01:22.513] Crystals: P0 2240 → 1990 (-250)  [battle]
+[01:23.907] Card destroyed  P0 (3,4) "Goblin Poacher"
+[01:23.915] Attack P1(2,4)"Mars Drill" → P0(3,4)"Goblin Poacher"  Dice=4  ATK=40 vs DEF=10  → WIN
+[01:23.915] Anim: 3A  △ P0(3,4)
+[01:24.419] Turn ended  P1  |  Crystals P0=1990 P1=1150
+
+--- Turn 6  |  Player 0  |  Crystals P0=1990 P1=1150 ---
+P0:   [Moon][  — ][  ? ][  — ][Sate]
+      [Snip][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [Elec][  — ][  — ][  — ][Deat]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Doom][  — ][  — ][  — ][Mars]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:26.503] Union summoned P0: [Moon Tribe Shaman] from Moon Tribe Twin Blader, Satellite Cannon
+[01:26.504] Crystals: P0 1990 → 1490 (-500)  [union]
+[01:26.537] Revealed: P0 (0,0) "Moon Tribe Shaman"
+[01:26.538] MSG: Moon Tribe Shaman: No matching card in graveyard to revive.
+[01:26.540] MSG: Player 1 summoned [Moon Tribe Shaman] using: Moon Tribe Twin Blader, Satellite Cannon
+[01:29.933] Mode selected P0: ATTACK
+[01:29.957] Attack phase P0: 2 attack(s) available
+[01:29.958] MSG: Player 1: tap a character to attack.
+[01:30.233] AI0 attack decision: (4,4)"Death Cobra" [ATK=85] → (2,4) "Mars Drill" [DEF=30]
+[01:30.533] Dice rolled: 5
+[01:30.548] MSG: Death Cobra wins!
+[01:35.200] Crystals: P1 1150 → 750 (-400)  [battle]
+[01:36.595] Card destroyed  P1 (2,4) "Mars Drill"
+[01:36.600] Attack P0(4,4)"Death Cobra" → P1(2,4)"Mars Drill"  Dice=5  ATK=85 vs DEF=30  → WIN
+[01:36.600] Anim: 3A  △ P1(2,4)
+[01:37.101] Mode selected P0: ATTACK
+[01:37.110] Attack phase P0: 1 attack(s) available
+[01:37.111] MSG: Player 1: tap a character to attack.
+[01:37.403] AI0 attack decision: (4,0)"Electrogazer" [ATK=80] → (2,0) "Doom Wisp" [DEF=15]
+[01:37.713] Dice rolled: 5
+[01:37.723] MSG: Electrogazer wins!
+[01:42.397] Crystals: P1 750 → 650 (-100)  [battle]
+[01:43.794] Card destroyed  P1 (2,0) "Doom Wisp"
+[01:43.803] Attack P0(4,0)"Electrogazer" → P1(2,0)"Doom Wisp"  Dice=5  ATK=80 vs DEF=15  → WIN
+[01:43.803] Anim: 3A  △ P1(2,0)
+[01:44.299] Turn ended  P0  |  Crystals P0=1490 P1=650
+
+--- Turn 7  |  Player 1  |  Crystals P0=1490 P1=650 ---
+P0:   [Moon][  — ][  ? ][  — ][  — ]
+      [Snip][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [Elec][  — ][  — ][  — ][Deat]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:44.906] Mode selected P1: ATTACK
+[01:44.912] Attack phase P1: 2 attack(s) available
+[01:44.912] MSG: Player 2: tap a character to attack.
+[01:45.196] AI1 attack decision: (0,0)"Fujin" [ATK=35] → (1,0) "Sniping Fairy" [DEF=20]
+[01:45.543] Revealed: P1 (0,0) "Fujin"
+[01:45.544] Dice rolled: 4
+[01:45.550] MSG: Fujin wins!
+[01:50.188] Crystals: P0 1490 → 1140 (-350)  [battle]
+[01:51.580] Card destroyed  P0 (1,0) "Sniping Fairy"
+[01:51.584] Attack P1(0,0)"Fujin" → P0(1,0)"Sniping Fairy"  Dice=4  ATK=35 vs DEF=20  → WIN
+[01:51.584] Anim: 3A  △ P0(1,0)
+[01:54.103] Turn ended  P1  |  Crystals P0=1140 P1=650
+
+--- Turn 8  |  Player 0  |  Crystals P0=1140 P1=650 ---
+P0:   [Moon][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [Elec][  — ][  — ][  — ][Deat]
+P1:   [Fuji][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:54.693] Mode selected P0: ATTACK
+[01:54.696] Attack phase P0: 2 attack(s) available
+[01:54.696] MSG: Player 1: tap a character to attack.
+[01:54.991] AI0 attack decision: (4,4)"Death Cobra" [ATK=85] → (0,0) "Fujin" [DEF=40]
+[01:55.293] Dice rolled: 3
+[01:55.302] MSG: Death Cobra wins!
+[01:59.984] Crystals: P1 650 → 200 (-450)  [battle]
+[02:01.376] Card destroyed  P1 (0,0) "Fujin"
+[02:01.379] Attack P0(4,4)"Death Cobra" → P1(0,0)"Fujin"  Dice=3  ATK=85 vs DEF=40  → WIN
+[02:01.379] Anim: 3A  △ P1(0,0)
+[02:01.877] Mode selected P0: ATTACK
+[02:01.883] Attack phase P0: 1 attack(s) available
+[02:01.883] MSG: Player 1: tap a character to attack.
+[02:02.175] AI0 attack decision: (4,0)"Electrogazer" [ATK=80] → (2,1) "(dead-end)"
+[02:02.476] Dice rolled: 1
+[02:02.505] MSG: Nothing happens — Dead End.
+[02:05.866] Dead-end placed  P1 (2,1)
+[02:05.879] Attack P0(4,0)"Electrogazer" → P1(2,1)(empty)  Dice=1  → DEAD_END
+[02:05.879] Anim: 3F  (blank slot)
+[02:06.363] Turn ended  P0  |  Crystals P0=1140 P1=200
+
+--- Turn 9  |  Player 1  |  Crystals P0=1140 P1=200 ---
+P0:   [Moon][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [Elec][  — ][  — ][  — ][Deat]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:06.964] Mode selected P1: ATTACK
+[02:06.970] Attack phase P1: 2 attack(s) available
+[02:06.970] MSG: Player 2: tap a character to attack.
+[02:07.266] AI1 attack decision: (4,2)"Bomber Fairy" [ATK=30] → (0,4) "(dead-end)"
+[02:07.624] Revealed: P1 (4,2) "Bomber Fairy"
+[02:07.624] Dice rolled: 4
+[02:07.635] MSG: Nothing happens — Dead End.
+[02:10.975] Dead-end placed  P0 (0,4)
+[02:10.979] Attack P1(4,2)"Bomber Fairy" → P0(0,4)(empty)  Dice=4  → DEAD_END
+[02:10.979] Anim: 3F  (blank slot)
+[02:11.483] Mode selected P1: ATTACK
+[02:11.489] Attack phase P1: 1 attack(s) available
+[02:11.489] MSG: Player 2: tap a character to attack.
+[02:11.791] AI1 attack decision: (0,2)"Pyromancer" [ATK=80] → (4,0) "Electrogazer" [DEF=45]
+[02:12.121] Revealed: P1 (0,2) "Pyromancer"
+[02:12.121] Dice rolled: 2
+[02:12.124] MSG: Pyromancer wins!
+[02:16.767] Crystals: P0 1140 → 140 (-1000)  [battle]
+[02:18.160] Card destroyed  P0 (4,0) "Electrogazer"
+[02:18.165] Attack P1(0,2)"Pyromancer" → P0(4,0)"Electrogazer"  Dice=2  ATK=80 vs DEF=45  → WIN
+[02:18.165] Anim: 3A  △ P0(4,0)
+[02:18.670] Turn ended  P1  |  Crystals P0=140 P1=200
+
+--- Turn 10  |  Player 0  |  Crystals P0=140 P1=200 ---
+P0:   [Moon][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Deat]
+P1:   [  — ][  — ][Pyro][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][Bomb][  — ][  ? ]
+[02:19.276] Mode selected P0: ATTACK
+[02:19.283] Attack phase P0: 2 attack(s) available
+[02:19.284] MSG: Player 1: tap a character to attack.
+[02:19.574] AI0 attack decision: (4,4)"Death Cobra" [ATK=85] → (0,2) "Pyromancer" [DEF=0]
+[02:19.876] Dice rolled: 5
+[02:19.881] MSG: Death Cobra wins!
+[02:24.558] Crystals: P1 200 → 0 (-200)  [battle]
+
+=== GAME OVER ===
+[02:24.562] AI Player 0 wins
+[02:24.562] Reason: crystals
+[02:24.562] Final crystals — P0: 140  P1: 0  |  Turns: 10
+[02:24.562] Log saved to: res://logs/results/2026-05-31_06-54-04_954_iced_latte/battle_greasy_keyboard_2026-05-31_07-05-54_165.txt

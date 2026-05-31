@@ -1,0 +1,457 @@
+=== Battle of Terms and Conditions Marathon ===
+Battle started: 2026-05-31 16:47:25.160
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Flame Lizard
+AI-1 Deck:    E2E T2 solo Flame Lizard
+AI-0 Forced:  (2,2) Flame Lizard
+AI-1 Forced:  (2,2) Flame Lizard
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Prayer, Accident
+P1 Tech hand: Accident, Spy, War Supply
+P0:   [C:Blea][  — ][T:Host][  — ][C:Raij]
+      [C:Jaco][C:Shot][T:Foul][C:Gryp][T:Curs]
+      [C:Deat][  — ][C:Flam][  — ][C:Silv]
+      [  — ][  — ][T:Echo][  — ][C:Jose]
+      [T:Snar][  — ][C:Stre][  — ][T:Bunk]
+P1:   [C:Nuki][  — ][  — ][  — ][T:Expl]
+      [  — ][C:Vamp][C:Pit ][C:Pony][  — ]
+      [  — ][T:Bait][C:Flam][T:Acid][  — ]
+      [  — ][C:Bat ][  — ][C:Skel][T:Flam]
+      [C:Stai][  — ][  — ][  — ][C:Hunt]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.316] Mode selected P1: TECH
+[00:05.625] Tech played  P1: "Spy"
+[00:07.168] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.573] AI1 target chosen: (1,3)
+[00:07.617] Revealed: P0 (1,3) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:07.619] Tech resolved  P1
+[00:08.496] Mode selected P1: ATTACK
+[00:08.501] Attack phase P1: 2 attack(s) available
+[00:08.501] MSG: Player 2: tap a character to attack.
+[00:08.798] AI1 attack decision: (1,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (1,3) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:09.151] Revealed: P1 (1,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:09.151] Dice rolled: 3
+[00:09.162] MSG: Pit Lord wins!
+[00:13.800] Crystals: P0 5000 → 3850 (-1150)  [battle]
+[00:15.201] Attack P1(1,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P0(1,3)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}  Dice=3  ATK=120 vs DEF=85  → WIN
+[00:15.201] Anim: 3A  △ P0(1,3)
+[00:15.201] Card destroyed  P0 (1,3) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:17.711] Turn ended  P1  |  Crystals P0=3850 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=3850 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][Pit ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:18.311] Mode selected P0: TECH
+[00:18.619] Crystals: P0 3850 → 3250 (-600)  [tech cost]
+[00:20.004] Tech played  P0: "Radar"
+[00:21.569] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:21.977] AI0 target chosen: (4,4)
+[00:22.013] Revealed: P1 (4,4) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[00:22.394] AI0 target chosen: (4,2)
+[00:22.394] Revealed: P1 (4,2) (blank slot)
+[00:22.802] AI0 target chosen: (1,4)
+[00:22.802] Revealed: P1 (1,4) (blank slot)
+[00:22.808] Tech resolved  P0
+[00:23.723] Mode selected P0: ATTACK
+[00:23.730] Attack phase P0: 2 attack(s) available
+[00:23.731] MSG: Player 1: tap a character to attack.
+[00:24.019] AI0 attack decision: (0,4)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine | face-down} → (1,2) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[00:24.358] Revealed: P0 (0,4) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:24.358] Dice rolled: 2
+[00:24.367] MSG: Raijin wins!
+[00:28.970] Crystals: P1 5000 → 3750 (-1250)  [battle]
+[00:30.369] Attack P0(0,4)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(1,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}  Dice=2  ATK=60 vs DEF=50  → WIN
+[00:30.369] Anim: 3A  △ P1(1,2)
+[00:30.369] Card destroyed  P1 (1,2) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[00:32.881] Turn ended  P0  |  Crystals P0=3250 P1=3750
+
+--- Turn 3  |  Player 1  |  Crystals P0=3250 P1=3750 ---
+P0:   [  ? ][  — ][  ? ][  — ][Raij]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][Hunt]
+[00:33.490] Mode selected P1: TECH
+[00:33.799] Crystals: P1 3750 → 2750 (-1000)  [tech cost]
+[00:35.190] Tech played  P1: "Accident"
+[00:36.736] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:37.145] AI1 target chosen: (0,4)
+[00:37.149] Card destroyed  P0 (0,4) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:37.155] Tech resolved  P1
+[00:40.071] Crystals: P1 2750 → 2700 (-50)  [skip tax]
+[00:40.072] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:41.454] Turn ended  P1  |  Crystals P0=3250 P1=2700
+
+--- Turn 4  |  Player 0  |  Crystals P0=3250 P1=2700 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][Hunt]
+[00:42.060] Mode selected P0: TECH
+[00:42.365] Crystals: P0 3250 → 2250 (-1000)  [tech cost]
+[00:43.751] Tech played  P0: "Accident"
+[00:45.307] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:45.714] AI0 target chosen: (4,4)
+[00:45.718] Card destroyed  P1 (4,4) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[00:45.721] Tech resolved  P0
+[00:46.633] Mode selected P0: ATTACK
+[00:46.635] Attack phase P0: 2 attack(s) available
+[00:46.635] MSG: Player 1: tap a character to attack.
+[00:46.940] AI0 attack decision: (2,2)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down} → (1,4) (dead-end)
+[00:47.284] Revealed: P0 (2,2) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:47.284] Dice rolled: 3
+[00:47.299] MSG: Nothing happens — Dead End.
+[00:50.640] Attack P0(2,2)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(1,4)(empty)  Dice=3  → DEAD_END
+[00:50.640] Anim: 3F  (blank slot)
+[00:53.145] Turn ended  P0  |  Crystals P0=2250 P1=2700
+
+--- Turn 5  |  Player 1  |  Crystals P0=2250 P1=2700 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Flam][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:53.749] Mode selected P1: ATTACK
+[00:53.755] Attack phase P1: 2 attack(s) available
+[00:53.755] MSG: Player 2: tap a character to attack.
+[00:54.040] AI1 attack decision: (1,1)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down} → (2,2) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:54.395] Revealed: P1 (1,1) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:54.395] Dice rolled: 4
+[00:54.407] MSG: Vampire Duchess wins!
+[00:58.996] Crystals: P0 2250 → 1850 (-400)  [battle]
+[01:00.394] Attack P1(1,1)"Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved} → P0(2,2)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=4  ATK=50 vs DEF=40  → WIN
+[01:00.394] Anim: 3A  △ P0(2,2)
+[01:00.394] Card destroyed  P0 (2,2) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:02.911] Turn ended  P1  |  Crystals P0=1850 P1=2700
+
+--- Turn 6  |  Player 0  |  Crystals P0=1850 P1=2700 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Vamp][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:03.519] Mode selected P0: ATTACK
+[01:03.522] Attack phase P0: 2 attack(s) available
+[01:03.523] MSG: Player 1: tap a character to attack.
+[01:03.819] AI0 attack decision: (1,1)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down} → (1,1) "Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved}
+[01:04.166] Revealed: P0 (1,1) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:04.167] Dice rolled: 1
+[01:04.171] MSG: Shotgun Shark wins!
+[01:08.848] Crystals: P1 2700 → 1900 (-800)  [battle]
+[01:10.242] Attack P0(1,1)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → P1(1,1)"Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved}  Dice=1  ATK=75 vs DEF=25  → WIN
+[01:10.242] Anim: 3A  △ P1(1,1)
+[01:10.242] Card destroyed  P1 (1,1) "Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved}
+[01:12.737] Turn ended  P0  |  Crystals P0=1850 P1=1900
+
+--- Turn 7  |  Player 1  |  Crystals P0=1850 P1=1900 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][Shot][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:13.345] Mode selected P1: ATTACK
+[01:13.353] Attack phase P1: 2 attack(s) available
+[01:13.353] MSG: Player 2: tap a character to attack.
+[01:13.644] AI1 attack decision: (2,2)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down} → (1,1) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:13.957] Revealed: P1 (2,2) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:13.957] Dice rolled: 3
+[01:13.969] MSG: Flame Lizard wins!
+[01:19.653] Crystals: P0 1850 → 950 (-900)  [battle]
+[01:21.048] Attack P1(2,2)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P0(1,1)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}  Dice=3  ATK=45 vs DEF=25  → WIN
+[01:21.048] Reckoning overlay: P1 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} +ATK 20
+[01:21.048] Anim: 3A  △ P0(1,1)
+[01:21.048] Card destroyed  P0 (1,1) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:23.564] Turn ended  P1  |  Crystals P0=950 P1=1900
+
+--- Turn 8  |  Player 0  |  Crystals P0=950 P1=1900 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Flam][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:24.187] Mode selected P0: ATTACK
+[01:24.191] Attack phase P0: 2 attack(s) available
+[01:24.191] MSG: Player 1: tap a character to attack.
+[01:24.482] AI0 attack decision: (2,0)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos | face-down} → (2,2) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:24.826] Revealed: P0 (2,0) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[01:24.826] Dice rolled: 5
+[01:24.829] MSG: Death Knight wins!
+[01:29.481] Crystals: P1 1900 → 1500 (-400)  [battle]
+[01:30.878] Attack P0(2,0)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → P1(2,2)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=5  ATK=65 vs DEF=40  → WIN
+[01:30.878] Anim: 3A  △ P1(2,2)
+[01:30.878] Card destroyed  P1 (2,2) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:33.385] Turn ended  P0  |  Crystals P0=950 P1=1500
+
+--- Turn 9  |  Player 1  |  Crystals P0=950 P1=1500 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Deat][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:33.990] Mode selected P1: ATTACK
+[01:33.997] Attack phase P1: 2 attack(s) available
+[01:33.997] MSG: Player 2: tap a character to attack.
+[01:34.277] AI1 attack decision: (0,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature | face-down} → (0,1) (dead-end)
+[01:34.612] Revealed: P1 (0,0) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[01:34.612] Dice rolled: 5
+[01:34.626] MSG: Nothing happens — Dead End.
+[01:37.994] Attack P1(0,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} → P0(0,1)(empty)  Dice=5  → DEAD_END
+[01:37.994] Anim: 3F  (blank slot)
+[01:40.509] Turn ended  P1  |  Crystals P0=950 P1=1500
+
+--- Turn 10  |  Player 0  |  Crystals P0=950 P1=1500 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Deat][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [Nuki][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:41.106] Mode selected P0: ATTACK
+[01:41.114] Attack phase P0: 2 attack(s) available
+[01:41.114] MSG: Player 1: tap a character to attack.
+[01:41.398] AI0 attack decision: (2,0)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → (0,0) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[01:41.705] Dice rolled: 2
+[01:41.715] MSG: Death Knight wins!
+[01:46.406] Crystals: P1 1500 → 1400 (-100)  [battle]
+[01:47.802] Attack P0(2,0)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → P1(0,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}  Dice=2  ATK=65 vs DEF=10  → WIN
+[01:47.802] Anim: 3A  △ P1(0,0)
+[01:47.802] Card destroyed  P1 (0,0) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[01:48.306] Mode selected P0: ATTACK
+[01:48.310] Attack phase P0: 1 attack(s) available
+[01:48.318] MSG: Player 1: tap a character to attack.
+[01:48.610] AI0 attack decision: (1,0)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down} → (4,2) (dead-end)
+[01:48.957] Revealed: P0 (1,0) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:48.957] Dice rolled: 5
+[01:48.969] MSG: Nothing happens — Dead End.
+[01:52.323] Attack P0(1,0)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P1(4,2)(empty)  Dice=5  → DEAD_END
+[01:52.323] Anim: 3F  (blank slot)
+[01:52.822] Turn ended  P0  |  Crystals P0=950 P1=1400
+
+--- Turn 11  |  Player 1  |  Crystals P0=950 P1=1400 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [Jaco][  — ][  ? ][  — ][  ? ]
+      [Deat][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:53.427] Mode selected P1: ATTACK
+[01:53.432] Attack phase P1: 2 attack(s) available
+[01:53.432] MSG: Player 2: tap a character to attack.
+[01:53.719] AI1 attack decision: (3,3)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (1,0) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:54.049] Revealed: P1 (3,3) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:54.049] Dice rolled: 3
+[01:54.055] MSG: Skeleton Lancer wins!
+[01:58.702] Crystals: P0 950 → 600 (-350)  [battle]
+[02:00.107] Attack P1(3,3)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P0(1,0)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}  Dice=3  ATK=45 vs DEF=20  → WIN
+[02:00.107] Anim: 3A  △ P0(1,0)
+[02:00.107] Card destroyed  P0 (1,0) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[02:02.607] Turn ended  P1  |  Crystals P0=600 P1=1400
+
+--- Turn 12  |  Player 0  |  Crystals P0=600 P1=1400 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Deat][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][Skel][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:03.215] Mode selected P0: ATTACK
+[02:03.221] Attack phase P0: 2 attack(s) available
+[02:03.221] MSG: Player 1: tap a character to attack.
+[02:03.510] AI0 attack decision: (2,0)"Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5} → (3,3) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[02:03.818] Dice rolled: 4
+[02:03.825] MSG: Death Knight wins!
+[02:08.515] Crystals: P1 1400 → 1100 (-300)  [battle]
+[02:09.911] Attack P0(2,0)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → P1(3,3)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=4  ATK=65 vs DEF=5  → WIN
+[02:09.911] Anim: 3A  △ P1(3,3)
+[02:09.911] Card destroyed  P1 (3,3) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[02:12.425] Turn ended  P0  |  Crystals P0=600 P1=1100
+
+--- Turn 13  |  Player 1  |  Crystals P0=600 P1=1100 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Deat][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:13.041] Mode selected P1: ATTACK
+[02:13.045] Attack phase P1: 2 attack(s) available
+[02:13.046] MSG: Player 2: tap a character to attack.
+[02:13.339] AI1 attack decision: (1,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (2,3) (dead-end)
+[02:13.678] Revealed: P1 (1,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:13.678] Dice rolled: 4
+[02:13.688] MSG: Nothing happens — Dead End.
+[02:17.053] Attack P1(1,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P0(2,3)(empty)  Dice=4  → DEAD_END
+[02:17.053] Anim: 3F  (blank slot)
+[02:17.555] Mode selected P1: ATTACK
+[02:17.557] Attack phase P1: 1 attack(s) available
+[02:17.557] MSG: Player 2: tap a character to attack.
+[02:17.864] AI1 attack decision: (3,1)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down} → (0,3) (dead-end)
+[02:18.206] Revealed: P1 (3,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[02:18.206] Dice rolled: 4
+[02:18.221] MSG: Nothing happens — Dead End.
+[02:21.552] Attack P1(3,1)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P0(0,3)(empty)  Dice=4  → DEAD_END
+[02:21.552] Anim: 3F  (blank slot)
+[02:22.059] Turn ended  P1  |  Crystals P0=600 P1=1100
+
+--- Turn 14  |  Player 0  |  Crystals P0=600 P1=1100 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Deat][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][Pony][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][Bat ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:22.674] Mode selected P0: ATTACK
+[02:22.679] Attack phase P0: 2 attack(s) available
+[02:22.679] MSG: Player 1: tap a character to attack.
+[02:22.973] AI0 attack decision: (2,0)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → (1,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:23.282] Dice rolled: 2
+[02:23.291] MSG: Death Knight wins!
+[02:27.978] Crystals: P1 1100 → 800 (-300)  [battle]
+[02:29.376] Attack P0(2,0)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → P1(1,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=2  ATK=65 vs DEF=20  → WIN
+[02:29.376] Anim: 3A  △ P1(1,3)
+[02:29.376] Card destroyed  P1 (1,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:31.889] Turn ended  P0  |  Crystals P0=600 P1=800
+
+--- Turn 15  |  Player 1  |  Crystals P0=600 P1=800 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Deat][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][Bat ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:32.495] Mode selected P1: ATTACK
+[02:32.499] Attack phase P1: 2 attack(s) available
+[02:32.499] MSG: Player 2: tap a character to attack.
+[02:32.802] AI1 attack decision: (3,1)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (0,0) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio | face-down}
+[02:33.142] Revealed: P0 (0,0) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[02:33.142] Dice rolled: 3
+[02:37.928] Crystals: P1 800 → 600 (-200)  [battle]
+[02:39.327] Attack P1(3,1)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P0(0,0)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}  Dice=3  ATK=15 vs DEF=20  → LOSE
+[02:39.327] Anim: 3B  △ P1(3,1)
+[02:39.327] Card destroyed  P1 (3,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[02:39.828] Mode selected P1: ATTACK
+[02:39.832] Attack phase P1: 1 attack(s) available
+[02:39.833] MSG: Player 2: tap a character to attack.
+[02:40.135] AI1 attack decision: (4,0)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos | face-down} → (0,0) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[02:40.490] Revealed: P1 (4,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[02:40.490] Dice rolled: 5
+[02:40.493] MSG: Staircase Lady wins!
+[02:45.144] Crystals: P0 600 → 280 (-320)  [battle]
+[02:46.541] Attack P1(4,0)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P0(0,0)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}  Dice=5  ATK=30 vs DEF=20  → WIN
+[02:46.541] Anim: 3A  △ P0(0,0)
+[02:46.541] Card destroyed  P0 (0,0) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[02:47.046] Turn ended  P1  |  Crystals P0=280 P1=600
+
+--- Turn 16  |  Player 0  |  Crystals P0=280 P1=600 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Deat][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Stai][  — ][  — ][  — ][  — ]
+[02:47.657] Mode selected P0: ATTACK
+[02:47.662] Attack phase P0: 2 attack(s) available
+[02:47.662] MSG: Player 1: tap a character to attack.
+[02:47.960] AI0 attack decision: (2,0)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → (4,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[02:48.268] Dice rolled: 4
+[02:48.279] MSG: Death Knight wins!
+[02:52.968] Crystals: P1 600 → 420 (-180)  [battle]
+[02:54.366] Attack P0(2,0)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → P1(4,0)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}  Dice=4  ATK=65 vs DEF=0  → WIN
+[02:54.366] Anim: 3A  △ P1(4,0)
+[02:54.366] Card destroyed  P1 (4,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+
+=== GAME OVER ===
+[02:54.368] AI Player 0 wins
+[02:54.368] Reason: all_destroyed
+[02:54.368] Final crystals — P0: 280  P1: 420  |  Turns: 16
+[02:54.368] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_terms_and_conditions_marathon_2026-05-31_16-47-25_160.txt

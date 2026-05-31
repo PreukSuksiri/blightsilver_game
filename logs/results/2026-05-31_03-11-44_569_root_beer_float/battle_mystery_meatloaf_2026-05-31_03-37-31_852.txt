@@ -1,0 +1,310 @@
+=== Battle of Mystery Meatloaf ===
+Battle started: 2026-05-31 03:37:31.852
+Game Session of Root Beer Float (started 2026-05-31 03:11:44.569)
+=== AI vs AI Match ===
+Batch iteration: 10 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Radar, Bribe
+P1 Tech hand: Prayer, Siege Cannon, Accident
+P0:   [C:Blad][  — ][T:Foul][  — ][  — ]
+      [T:Hard][C:Gamm][T:Bunk][C:Hair][  — ]
+      [  — ][C:Bat ][C:Moon][C:Vile][  — ]
+      [  — ][T:Curs][C:Swar][C:Nept][  — ]
+      [T:Hypn][T:Alar][  — ][  — ][  — ]
+P1:   [T:Deco][  — ][C:Mind][  — ][C:Jira]
+      [  — ][C:Shot][C:Arch][C:Skel][  — ]
+      [T:Pepp][C:Spea][C:Immo][C:Ice ][T:Hard]
+      [  — ][C:Myst][C:Dark][C:Polt][T:Foul]
+      [  — ][T:Spik][  — ][T:Bait][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[00:05.310] Mode selected P0: TECH
+[00:05.619] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:07.003] Tech played  P0: "Radar"
+[00:08.555] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.963] AI0 target chosen: (2,3)
+[00:09.015] Revealed: P1 (2,3) "Ice Mage"
+[00:09.362] AI0 target chosen: (4,1)
+[00:09.418] Revealed: P1 (4,1) "Spike Trap"
+[00:09.801] AI0 target chosen: (0,2)
+[00:09.842] Revealed: P1 (0,2) "Mind Flayer"
+[00:09.845] Tech resolved  P0
+[00:10.705] Mode selected P0: ATTACK
+[00:10.709] Attack phase P0: 2 attack(s) available
+[00:10.709] MSG: Player 1: tap a character to attack.
+[00:11.004] AI0 attack decision: (3,3)"Neptune Diver" [ATK=20] → (2,3) "Ice Mage" [DEF=0]
+[00:11.339] Revealed: P0 (3,3) "Neptune Diver"
+[00:11.340] Dice rolled: 5
+[00:11.342] MSG: Neptune Diver wins!
+[00:15.976] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:17.371] Card destroyed  P1 (2,3) "Ice Mage"
+[00:17.377] Attack P0(3,3)"Neptune Diver" → P1(2,3)"Ice Mage"  Dice=5  ATK=20 vs DEF=0  → WIN
+[00:17.377] Anim: 3A  △ P1(2,3)
+[00:19.889] Turn ended  P0  |  Crystals P0=4400 P1=4600
+
+--- Turn 2  |  Player 1  |  Crystals P0=4400 P1=4600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][Nept][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][Mind][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:20.485] Mode selected P1: TECH
+[00:20.784] Crystals: P1 4600 → 3600 (-1000)  [tech cost]
+[00:22.171] Tech played  P1: "Accident"
+[00:23.717] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:24.117] AI1 target chosen: (3,3)
+[00:24.121] Card destroyed  P0 (3,3) "Neptune Diver"
+[00:24.127] Tech resolved  P1
+[00:25.018] Mode selected P1: ATTACK
+[00:25.023] Attack phase P1: 2 attack(s) available
+[00:25.024] MSG: Player 2: tap a character to attack.
+[00:25.317] AI1 attack decision: (0,2)"Mind Flayer" [ATK=100] → (1,2) "Bunker" [DEF=0]
+[00:25.664] Revealed: P0 (1,2) "Bunker"
+[00:25.665] Dice rolled: 3
+[00:25.923] MSG: Trap triggered: Bunker!
+[00:30.012] Card destroyed  P0 (1,2) "Bunker"
+[00:30.012] Crystals: P0 4400 → 3500 (-900)  [trap cost]
+[00:31.400] MSG: Bunker: Adjacent squares cannot be targeted this turn.
+[00:31.403] Trap: "Bunker" triggered  P1(0,2)→P0(1,2)
+[00:31.403] Anim: 3D  (attacker survives)
+[00:31.902] Mode selected P1: ATTACK
+[00:31.907] Attack phase P1: 1 attack(s) available
+[00:31.907] MSG: Player 2: tap a character to attack.
+[00:32.201] AI1 attack decision: (1,2)"Archbishop" [ATK=70] → (2,4) "(dead-end)"
+[00:32.543] Revealed: P1 (1,2) "Archbishop"
+[00:32.543] Dice rolled: 5
+[00:32.558] MSG: Nothing happens — Dead End.
+[00:35.889] Dead-end placed  P0 (2,4)
+[00:35.893] Attack P1(1,2)"Archbishop" → P0(2,4)(empty)  Dice=5  → DEAD_END
+[00:35.893] Anim: 3F  (blank slot)
+[00:36.391] Turn ended  P1  |  Crystals P0=3500 P1=3600
+
+--- Turn 3  |  Player 0  |  Crystals P0=3500 P1=3600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][Mind][  — ][  ? ]
+      [  — ][  ? ][Arch][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:36.981] Mode selected P0: TECH
+[00:37.280] Crystals: P0 3500 → 2000 (-1500)  [tech cost]
+[00:38.667] Tech played  P0: "Resurrection"
+[00:40.218] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:40.618] AI0 target chosen: (0,1)
+[00:40.621] Revealed: P0 (0,1) "Neptune Diver"
+[00:40.622] MSG: Revived Neptune Diver at [0,1]!
+[00:40.630] Tech resolved  P0
+[00:41.517] Mode selected P0: ATTACK
+[00:41.525] Attack phase P0: 2 attack(s) available
+[00:41.525] MSG: Player 1: tap a character to attack.
+[00:41.817] AI0 attack decision: (0,1)"Neptune Diver" [ATK=0] → (0,3) "(dead-end)"
+[00:42.118] Dice rolled: 2
+[00:42.144] MSG: Nothing happens — Dead End.
+[00:45.506] Dead-end placed  P1 (0,3)
+[00:45.512] Attack P0(0,1)"Neptune Diver" → P1(0,3)(empty)  Dice=2  → DEAD_END
+[00:45.512] Anim: 3F  (blank slot)
+[00:46.005] Mode selected P0: ATTACK
+[00:46.010] Attack phase P0: 1 attack(s) available
+[00:46.010] MSG: Player 1: tap a character to attack.
+[00:46.305] AI0 attack decision: (1,1)"Gamma Emitter" [ATK=20] → (1,4) "(dead-end)"
+[00:46.654] Revealed: P0 (1,1) "Gamma Emitter"
+[00:46.654] Dice rolled: 1
+[00:46.671] MSG: Nothing happens — Dead End.
+[00:49.991] Dead-end placed  P1 (1,4)
+[00:49.996] Attack P0(1,1)"Gamma Emitter" → P1(1,4)(empty)  Dice=1  → DEAD_END
+[00:49.996] Anim: 3F  (blank slot)
+[00:50.496] Turn ended  P0  |  Crystals P0=2000 P1=3600
+
+--- Turn 4  |  Player 1  |  Crystals P0=2000 P1=3600 ---
+P0:   [  ? ][Nept][  ? ][  — ][  — ]
+      [  ? ][Gamm][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][Mind][  — ][  ? ]
+      [  — ][  ? ][Arch][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:51.084] Mode selected P1: TECH
+[00:51.385] Crystals: P1 3600 → 2600 (-1000)  [tech cost]
+[00:52.771] Tech played  P1: "Siege Cannon"
+[00:54.317] MSG: Siege Cannon active!
+[00:54.322] Tech resolved  P1
+[00:55.218] Mode selected P1: ATTACK
+[00:55.223] Attack phase P1: 2 attack(s) available
+[00:55.224] MSG: Player 2: tap a character to attack.
+[00:55.517] AI1 attack decision: (0,2)"Mind Flayer" [ATK=100] → (1,1) "Gamma Emitter" [DEF=15]
+[00:55.818] Dice rolled: 4
+[00:55.829] MSG: Mind Flayer wins!
+[01:00.508] Crystals: P0 2000 → 1780 (-220)  [battle]
+[01:01.902] Card destroyed  P0 (1,1) "Gamma Emitter"
+[01:01.908] Attack P1(0,2)"Mind Flayer" → P0(1,1)"Gamma Emitter"  Dice=4  ATK=100 vs DEF=15  → WIN
+[01:01.908] Anim: 3A  △ P0(1,1)
+[01:02.401] Mode selected P1: ATTACK
+[01:02.409] Attack phase P1: 1 attack(s) available
+[01:02.410] MSG: Player 2: tap a character to attack.
+[01:02.700] AI1 attack decision: (1,2)"Archbishop" [ATK=70] → (0,1) "Neptune Diver" [DEF=10]
+[01:03.001] Dice rolled: 1
+[01:03.008] MSG: Archbishop wins!
+[01:07.693] Crystals: P0 1780 → 1580 (-200)  [battle]
+[01:09.087] Card destroyed  P0 (0,1) "Neptune Diver"
+[01:09.091] Attack P1(1,2)"Archbishop" → P0(0,1)"Neptune Diver"  Dice=1  ATK=70 vs DEF=10  → WIN
+[01:09.091] Anim: 3A  △ P0(0,1)
+[01:09.590] Turn ended  P1  |  Crystals P0=1580 P1=2600
+
+--- Turn 5  |  Player 0  |  Crystals P0=1580 P1=2600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][Mind][  — ][  ? ]
+      [  — ][  ? ][Arch][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:10.179] Mode selected P0: TECH
+[01:10.491] Tech played  P0: "Bribe"
+[01:12.038] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:12.539] MSG: Bribe: AI passed.
+[01:12.546] Tech resolved  P0
+[01:13.439] Mode selected P0: ATTACK
+[01:13.445] Attack phase P0: 2 attack(s) available
+[01:13.445] MSG: Player 1: tap a character to attack.
+[01:13.738] AI0 attack decision: (2,1)"Bat Swarm" [ATK=15] → (3,0) "(dead-end)"
+[01:14.079] Revealed: P0 (2,1) "Bat Swarm"
+[01:14.079] Dice rolled: 4
+[01:14.097] MSG: Nothing happens — Dead End.
+[01:17.444] Dead-end placed  P1 (3,0)
+[01:17.450] Attack P0(2,1)"Bat Swarm" → P1(3,0)(empty)  Dice=4  → DEAD_END
+[01:17.450] Anim: 3F  (blank slot)
+[01:19.955] Turn ended  P0  |  Crystals P0=1580 P1=2600
+
+--- Turn 6  |  Player 1  |  Crystals P0=1580 P1=2600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][Bat ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][Mind][  — ][  ? ]
+      [  — ][  ? ][Arch][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:20.550] Mode selected P1: TECH
+[01:20.863] Tech played  P1: "Prayer"
+[01:22.405] MSG: Prayer: Divine Characters protected until your next turn.
+[01:22.410] Tech resolved  P1
+[01:23.305] Mode selected P1: ATTACK
+[01:23.314] Attack phase P1: 2 attack(s) available
+[01:23.314] MSG: Player 2: tap a character to attack.
+[01:23.605] AI1 attack decision: (0,2)"Mind Flayer" [ATK=100] → (2,1) "Bat Swarm" [DEF=15]
+[01:23.905] Dice rolled: 4
+[01:23.916] MSG: Mind Flayer wins!
+[01:28.044] Crystals: P0 1580 → 1380 (-200)  [battle]
+[01:29.437] Card destroyed  P0 (2,1) "Bat Swarm"
+[01:29.443] Attack P1(0,2)"Mind Flayer" → P0(2,1)"Bat Swarm"  Dice=4  ATK=100 vs DEF=15  → WIN
+[01:29.443] Anim: 3A  △ P0(2,1)
+[01:29.936] Mode selected P1: ATTACK
+[01:29.942] Attack phase P1: 1 attack(s) available
+[01:29.942] MSG: Player 2: tap a character to attack.
+[01:30.234] AI1 attack decision: (1,2)"Archbishop" [ATK=70] → (2,3) "Vile Creeper" [DEF=30]
+[01:30.571] Revealed: P0 (2,3) "Vile Creeper"
+[01:30.572] Dice rolled: 4
+[01:30.576] MSG: Archbishop wins!
+[01:35.226] Crystals: P0 1380 → 1180 (-200)  [battle]
+[01:36.619] Card destroyed  P0 (2,3) "Vile Creeper"
+[01:36.622] Attack P1(1,2)"Archbishop" → P0(2,3)"Vile Creeper"  Dice=4  ATK=70 vs DEF=30  → WIN
+[01:36.622] Anim: 3A  △ P0(2,3)
+[01:37.121] Turn ended  P1  |  Crystals P0=1180 P1=2600
+
+--- Turn 7  |  Player 0  |  Crystals P0=1180 P1=2600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][Mind][  — ][  ? ]
+      [  — ][  ? ][Arch][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:37.727] Mode selected P0: ATTACK
+[01:37.732] Attack phase P0: 2 attack(s) available
+[01:37.732] MSG: Player 1: tap a character to attack.
+[01:38.016] AI0 attack decision: (3,2)"Swarmcaller" [ATK=45] → (1,1) "Shotgun Shark" [DEF=25]
+[01:38.353] Revealed: P0 (3,2) "Swarmcaller"
+[01:38.375] Revealed: P1 (1,1) "Shotgun Shark"
+[01:38.375] Dice rolled: 1
+[01:38.378] MSG: Swarmcaller wins!
+[01:43.009] Crystals: P1 2600 → 1700 (-900)  [battle]
+[01:44.403] Card destroyed  P1 (1,1) "Shotgun Shark"
+[01:44.408] Attack P0(3,2)"Swarmcaller" → P1(1,1)"Shotgun Shark"  Dice=1  ATK=45 vs DEF=25  → WIN
+[01:44.408] Anim: 3A  △ P1(1,1)
+[01:44.900] Mode selected P0: ATTACK
+[01:44.906] Attack phase P0: 1 attack(s) available
+[01:44.906] MSG: Player 1: tap a character to attack.
+[01:45.200] AI0 attack decision: (2,2)"Moon Tribe Twin Blader" [ATK=30] → (0,4) "Jirayu the Rebellious Prince" [DEF=40]
+[01:45.537] Revealed: P0 (2,2) "Moon Tribe Twin Blader"
+[01:45.562] Revealed: P1 (0,4) "Jirayu the Rebellious Prince"
+[01:45.562] Dice rolled: 5
+[01:45.566] MSG: Jirayu the Rebellious Prince gains +10 DEF permanently!
+[01:51.918] Crystals: P0 1180 → 880 (-300)  [battle]
+[01:53.311] Card destroyed  P0 (2,2) "Moon Tribe Twin Blader"
+[01:53.363] Coin flip: Tails
+[01:56.109] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[01:56.118] Attack P0(2,2)"Moon Tribe Twin Blader" → P1(0,4)"Jirayu the Rebellious Prince"  Dice=5  ATK=30 vs DEF=50  → LOSE
+[01:56.118] Anim: 3B  △ P0(2,2)
+[01:56.621] Turn ended  P0  |  Crystals P0=880 P1=1700
+
+--- Turn 8  |  Player 1  |  Crystals P0=880 P1=1700 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][Swar][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][Mind][  — ][Jira]
+      [  — ][  — ][Arch][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:57.253] Mode selected P1: ATTACK
+[01:57.259] Attack phase P1: 2 attack(s) available
+[01:57.259] MSG: Player 2: tap a character to attack.
+[01:57.551] AI1 attack decision: (0,2)"Mind Flayer" [ATK=100] → (3,2) "Swarmcaller" [DEF=45]
+[01:57.859] Dice rolled: 3
+[01:57.868] MSG: Mind Flayer wins!
+[02:02.559] Crystals: P0 880 → 0 (-880)  [battle]
+
+=== GAME OVER ===
+[02:02.563] AI Player 1 wins
+[02:02.564] Final crystals — P0: 0  P1: 1700  |  Turns: 8
+[02:02.564] Log saved to: res://logs/results/2026-05-31_03-11-44_569_root_beer_float/battle_mystery_meatloaf_2026-05-31_03-37-31_852.txt

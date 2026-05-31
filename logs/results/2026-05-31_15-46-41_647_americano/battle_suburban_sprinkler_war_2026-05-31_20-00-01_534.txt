@@ -1,0 +1,322 @@
+=== Battle of Suburban Sprinkler War ===
+Battle started: 2026-05-31 20:00:01.533
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Vile Creeper
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Vile Creeper
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Bribe, Tease
+P1 Tech hand: Accident, Release Mutagen, Spy
+P0:   [C:Laug][C:Armo][C:Scou][C:Vamp][C:Joan]
+      [  — ][  — ][C:Immo][C:Rott][T:Hard]
+      [T:Bunk][T:Trap][C:Vile][  — ][  — ]
+      [  — ][C:Sate][  — ][  — ][  — ]
+      [C:Shot][C:Moon][C:Kiyo][T:Acid][C:Gran]
+P1:   [  — ][  — ][C:Witc][T:Host][T:Blac]
+      [T:Flam][  — ][C:Lab ][  — ][T:Defe]
+      [C:Big ][C:Lab ][C:Chao][C:Flam][C:Hamm]
+      [  — ][  — ][C:Mine][T:Spik][T:Expl]
+      [  — ][  — ][C:Moon][  — ][  — ]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:05.282] Mode selected P1: TECH
+[00:05.590] Tech played  P1: "Spy"
+[00:07.157] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.564] AI1 target chosen: (4,3)
+[00:07.597] Revealed: P0 (4,3) "Acid Trap Hole" {cost 0}
+[00:07.598] Tech resolved  P1
+[00:10.498] Crystals: P1 5000 → 4950 (-50)  [skip tax]
+[00:10.498] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:11.884] Turn ended  P1  |  Crystals P0=5000 P1=4950
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4950 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:12.489] Mode selected P0: TECH
+[00:12.798] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:14.183] Tech played  P0: "Radar"
+[00:15.749] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:16.155] AI0 target chosen: (2,1)
+[00:16.193] Revealed: P1 (2,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:16.565] AI0 target chosen: (0,2)
+[00:16.594] Revealed: P1 (0,2) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[00:16.965] AI0 target chosen: (2,4)
+[00:16.999] Revealed: P1 (2,4) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[00:17.002] Tech resolved  P0
+[00:17.860] Mode selected P0: ATTACK
+[00:17.868] Attack phase P0: 2 attack(s) available
+[00:17.869] MSG: Player 1: tap a character to attack.
+[00:18.157] AI0 attack decision: (3,1)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down} → (2,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:18.494] Revealed: P0 (3,1) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:18.494] Dice rolled: 2
+[00:18.500] MSG: Satellite Cannon wins!
+[00:24.133] Crystals: P1 4950 → 4150 (-800)  [battle]
+[00:25.532] Attack P0(3,1)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(2,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}  Dice=2  ATK=120 vs DEF=85  → WIN
+[00:25.532] Reckoning overlay: P0 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} +ATK 20
+[00:25.532] Anim: 3A  △ P1(2,1)
+[00:25.532] Card destroyed  P1 (2,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:26.023] Mode selected P0: ATTACK
+[00:26.028] Attack phase P0: 1 attack(s) available
+[00:26.029] MSG: Player 1: tap a character to attack.
+[00:26.318] AI0 attack decision: (4,1)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (0,2) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[00:26.660] Revealed: P0 (4,1) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:26.660] Dice rolled: 1
+[00:26.663] MSG: Moon Tribe Twin Blader wins!
+[00:31.318] Crystals: P1 4150 → 3900 (-250)  [battle]
+[00:32.721] Attack P0(4,1)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(0,2)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}  Dice=1  ATK=30 vs DEF=20  → WIN
+[00:32.721] Anim: 3A  △ P1(0,2)
+[00:32.721] Card destroyed  P1 (0,2) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[00:32.775] Coin flip: Tails
+[00:35.499] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[00:36.011] Turn ended  P0  |  Crystals P0=4400 P1=3900
+
+--- Turn 3  |  Player 1  |  Crystals P0=4400 P1=3900 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][Sate][  — ][  — ][  — ]
+      [  ? ][Moon][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][Hamm]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:36.615] Mode selected P1: TECH
+[00:36.924] Crystals: P1 3900 → 2900 (-1000)  [tech cost]
+[00:38.308] Tech played  P1: "Accident"
+[00:39.866] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:40.272] AI1 target chosen: (3,1)
+[00:40.275] Card destroyed  P0 (3,1) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:40.281] Tech resolved  P1
+[00:41.191] Mode selected P1: ATTACK
+[00:41.200] Attack phase P1: 2 attack(s) available
+[00:41.200] MSG: Player 2: tap a character to attack.
+[00:41.497] AI1 attack decision: (2,4)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → (4,1) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:41.806] Dice rolled: 3
+[00:41.818] MSG: Both cards are destroyed!
+[00:46.423] Crystals: P1 2900 → 2650 (-250)  [battle]
+[00:47.816] Crystals: P0 4400 → 4100 (-300)  [battle]
+[00:49.204] Attack P1(2,4)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P0(4,1)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=3  ATK=20 vs DEF=20  → TIE
+[00:49.204] Anim: 3C  △ P1(2,4) + △ P0(4,1)
+[00:49.204] Card destroyed  P1 (2,4) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[00:49.204] Card destroyed  P0 (4,1) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:51.717] Turn ended  P1  |  Crystals P0=4100 P1=2650
+
+--- Turn 4  |  Player 0  |  Crystals P0=4100 P1=2650 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:52.328] Mode selected P0: TECH
+[00:52.646] Tech played  P0: "Tease"
+[00:54.228] MSG: Opponent must choose and reveal 1 of their squares.
+[00:54.230] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:54.628] AI1 target chosen: (2,0)
+[00:54.662] Revealed: P1 (2,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:54.662] MSG: Tease: Opponent revealed Big Thug.
+[00:54.664] Tech resolved  P0
+[00:55.521] Mode selected P0: ATTACK
+[00:55.525] Attack phase P0: 2 attack(s) available
+[00:55.525] MSG: Player 1: tap a character to attack.
+[00:55.818] AI0 attack decision: (1,3)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio | face-down} → (2,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:56.158] Revealed: P0 (1,3) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[00:56.159] Dice rolled: 3
+[00:56.164] MSG: Rotten Shrieker wins!
+[01:00.795] Crystals: P1 2650 → 2250 (-400)  [battle]
+[01:02.200] Attack P0(1,3)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} → P1(2,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=3  ATK=50 vs DEF=35  → WIN
+[01:02.200] Anim: 3A  △ P1(2,0)
+[01:02.200] Card destroyed  P1 (2,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:02.687] Mode selected P0: ATTACK
+[01:02.690] Attack phase P0: 1 attack(s) available
+[01:02.690] MSG: Player 1: tap a character to attack.
+[01:02.986] AI0 attack decision: (0,3)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos | face-down} → (4,1) (dead-end)
+[01:03.328] Revealed: P0 (0,3) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:03.328] Dice rolled: 3
+[01:03.340] MSG: Nothing happens — Dead End.
+[01:06.696] Attack P0(0,3)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} → P1(4,1)(empty)  Dice=3  → DEAD_END
+[01:06.696] Anim: 3F  (blank slot)
+[01:07.203] Turn ended  P0  |  Crystals P0=4100 P1=2250
+
+--- Turn 5  |  Player 1  |  Crystals P0=4100 P1=2250 ---
+P0:   [  ? ][  ? ][  ? ][Vamp][  ? ]
+      [  — ][  — ][  ? ][Rott][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:09.316] Crystals: P1 2250 → 1750 (-500)  [union]
+[01:09.356] Revealed: P1 (4,2) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[01:09.356] Union summoned P1: "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} from "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}, "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic | face-down}
+[01:09.356] MSG: Moon Tribe Shaman: No matching card in graveyard to revive.
+[01:09.356] MSG: Player 2 summoned [Moon Tribe Shaman] using: "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}, "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic | face-down}
+[01:12.732] Mode selected P1: ATTACK
+[01:12.740] Attack phase P1: 2 attack(s) available
+[01:12.740] MSG: Player 2: tap a character to attack.
+[01:13.032] AI1 attack decision: (4,2)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → (0,3) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:13.331] Dice rolled: 2
+[01:13.368] MSG: Moon Tribe Shaman wins!
+[01:18.031] Crystals: P0 4100 → 3300 (-800)  [battle]
+[01:19.434] Attack P1(4,2)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(0,3)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=2  ATK=25 vs DEF=20  → WIN
+[01:19.434] Anim: 3A  △ P0(0,3)
+[01:19.434] Card destroyed  P0 (0,3) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:19.938] Mode selected P1: ATTACK
+[01:19.945] Attack phase P1: 1 attack(s) available
+[01:19.946] MSG: Player 2: tap a character to attack.
+[01:20.247] AI1 attack decision: (2,3)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down} → (1,3) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}
+[01:20.597] Revealed: P1 (2,3) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:20.598] Dice rolled: 4
+[01:20.603] MSG: Flame Seraph wins!
+[01:25.232] Crystals: P0 3300 → 2850 (-450)  [battle]
+[01:26.628] Attack P1(2,3)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P0(1,3)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}  Dice=4  ATK=50 vs DEF=30  → WIN
+[01:26.628] Anim: 3A  △ P0(1,3)
+[01:26.628] Card destroyed  P0 (1,3) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}
+[01:27.131] Turn ended  P1  |  Crystals P0=2850 P1=1750
+
+--- Turn 6  |  Player 0  |  Crystals P0=2850 P1=1750 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][Flam][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][Moon][  — ][  — ]
+[01:27.720] Mode selected P0: TECH
+[01:28.033] Tech played  P0: "Bribe"
+[01:29.577] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:30.078] MSG: Bribe: AI passed.
+[01:30.093] Tech resolved  P0
+[01:30.978] Mode selected P0: ATTACK
+[01:30.985] Attack phase P0: 2 attack(s) available
+[01:30.985] MSG: Player 1: tap a character to attack.
+[01:31.278] AI0 attack decision: (0,0)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down} → (2,3) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:31.610] Revealed: P0 (0,0) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:31.610] Dice rolled: 5
+[01:31.614] MSG: Laughing Granny wins!
+[01:37.285] Crystals: P1 1750 → 1250 (-500)  [battle]
+[01:38.683] Attack P0(0,0)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P1(2,3)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=5  ATK=25 vs DEF=10  → WIN
+[01:38.683] Reckoning overlay: P0 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} +ATK 10
+[01:38.683] Anim: 3A  △ P1(2,3)
+[01:38.683] Card destroyed  P1 (2,3) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:39.186] Mode selected P0: ATTACK
+[01:39.196] Attack phase P0: 1 attack(s) available
+[01:39.197] MSG: Player 1: tap a character to attack.
+[01:39.474] AI0 attack decision: (0,1)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature | face-down} → (4,2) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[01:39.815] Revealed: P0 (0,1) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[01:39.815] Dice rolled: 2
+[01:39.865] MSG: Armored Rhino wins!
+[01:44.514] Attack P0(0,1)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(4,2)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}  Dice=2  ATK=60 vs DEF=55  → WIN
+[01:44.514] Anim: 3A  △ P1(4,2)
+[01:44.514] Card destroyed  P1 (4,2) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[01:45.010] Turn ended  P0  |  Crystals P0=2850 P1=1250
+
+--- Turn 7  |  Player 1  |  Crystals P0=2850 P1=1250 ---
+P0:   [Laug][Armo][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:45.598] Mode selected P1: ATTACK
+[01:45.606] Attack phase P1: 2 attack(s) available
+[01:45.607] MSG: Player 2: tap a character to attack.
+[01:45.898] AI1 attack decision: (1,2)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio | face-down} → (0,0) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used}
+[01:46.232] Revealed: P1 (1,2) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:46.232] Dice rolled: 1
+[01:46.236] MSG: Lab Zombie wins!
+[01:51.889] Crystals: P0 2850 → 2500 (-350)  [battle]
+[01:53.292] Attack P1(1,2)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P0(0,0)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used}  Dice=1  ATK=55 vs DEF=30  → WIN
+[01:53.292] Reckoning overlay: P0 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used} +DEF 10
+[01:53.292] Anim: 3A  △ P0(0,0)
+[01:53.292] Card destroyed  P0 (0,0) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used}
+[01:53.782] Mode selected P1: ATTACK
+[01:53.786] Attack phase P1: 1 attack(s) available
+[01:53.786] MSG: Player 2: tap a character to attack.
+[01:54.073] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (3,3) (dead-end)
+[01:54.420] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:54.421] Dice rolled: 2
+[01:54.437] MSG: Nothing happens — Dead End.
+[01:57.770] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(3,3)(empty)  Dice=2  → DEAD_END
+[01:57.770] Anim: 3F  (blank slot)
+[01:58.264] Turn ended  P1  |  Crystals P0=2500 P1=1250
+
+--- Turn 8  |  Player 0  |  Crystals P0=2500 P1=1250 ---
+P0:   [  — ][Armo][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][Lab ][  — ][  ? ]
+      [  — ][  — ][Chao][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:58.891] Mode selected P0: ATTACK
+[01:58.898] Attack phase P0: 2 attack(s) available
+[01:58.899] MSG: Player 1: tap a character to attack.
+[01:59.160] AI0 attack decision: (0,1)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (1,2) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:59.460] Dice rolled: 2
+[01:59.471] MSG: Armored Rhino wins!
+[02:04.153] Crystals: P1 1250 → 550 (-700)  [battle]
+[02:05.550] Attack P0(0,1)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(1,2)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}  Dice=2  ATK=60 vs DEF=40  → WIN
+[02:05.550] Anim: 3A  △ P1(1,2)
+[02:05.550] Card destroyed  P1 (1,2) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[02:06.045] Mode selected P0: ATTACK
+[02:06.053] Attack phase P0: 1 attack(s) available
+[02:06.054] MSG: Player 1: tap a character to attack.
+[02:06.338] AI0 attack decision: (0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:06.684] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:06.684] Dice rolled: 5
+[02:06.691] MSG: Scout Probe wins!
+[02:11.314] Crystals: P1 550 → 450 (-100)  [battle]
+[02:12.722] Attack P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=40 vs DEF=0  → WIN
+[02:12.722] Anim: 3A  △ P1(2,2)
+[02:12.722] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[02:12.724] AI Player 0 wins
+[02:12.724] Reason: all_destroyed
+[02:12.724] Final crystals — P0: 2500  P1: 450  |  Turns: 8
+[02:12.724] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_suburban_sprinkler_war_2026-05-31_20-00-01_534.txt

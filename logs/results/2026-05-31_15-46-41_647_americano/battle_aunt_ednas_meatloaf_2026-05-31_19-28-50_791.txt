@@ -1,0 +1,342 @@
+=== Battle of Aunt Edna's Meatloaf ===
+Battle started: 2026-05-31 19:28:50.791
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Sonic Seraph
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Sonic Seraph
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Spy, War Supply
+P1 Tech hand: Release Mutagen, Resurrection, Radar
+P0:   [  — ][  — ][T:Hypn][T:Pepp][C:Magi]
+      [  — ][  — ][T:Self][  — ][C:Hunt]
+      [C:Moon][T:Snar][C:Soni][  — ][C:Hamm]
+      [  — ][T:Spik][  — ][  — ][C:Sunr]
+      [C:Cany][C:Immo][  — ][T:Brai][C:Paro]
+P1:   [C:Pony][T:Deco][T:Defe][C:Fera][C:Magi]
+      [  — ][  — ][  — ][C:Bomb][C:Leec]
+      [T:Snar][  — ][C:Chao][C:Gamm][C:Gian]
+      [  — ][C:Lazy][C:Mars][T:Blac][  — ]
+      [C:Spac][C:Pyro][  — ][  — ][C:Heav]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:05.322] Mode selected P0: TECH
+[00:05.639] Tech played  P0: "Spy"
+[00:07.199] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.603] AI0 target chosen: (2,3)
+[00:07.637] Revealed: P1 (2,3) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:07.639] Tech resolved  P0
+[00:08.498] Mode selected P0: ATTACK
+[00:08.502] Attack phase P0: 2 attack(s) available
+[00:08.502] MSG: Player 1: tap a character to attack.
+[00:08.792] AI0 attack decision: (0,4)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down} → (2,3) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:09.131] Revealed: P0 (0,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:09.131] Dice rolled: 3
+[00:14.882] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:16.279] Attack P0(0,4)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature} → P1(2,3)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}  Dice=3  ATK=15 vs DEF=25  → LOSE
+[00:16.279] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} +DEF 10
+[00:16.279] Anim: 3B  △ P0(0,4)
+[00:16.279] Card destroyed  P0 (0,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:16.781] Mode selected P0: ATTACK
+[00:16.785] Attack phase P0: 1 attack(s) available
+[00:16.785] MSG: Player 1: tap a character to attack.
+[00:17.087] AI0 attack decision: (2,2)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down} → (2,3) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:17.435] Revealed: P0 (2,2) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:17.435] Dice rolled: 3
+[00:17.438] MSG: Sonic Seraph wins!
+[00:22.098] Crystals: P1 5000 → 4780 (-220)  [battle]
+[00:23.493] Attack P0(2,2)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(2,3)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}  Dice=3  ATK=45 vs DEF=15  → WIN
+[00:23.493] Anim: 3A  △ P1(2,3)
+[00:23.493] Card destroyed  P1 (2,3) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:23.999] Turn ended  P0  |  Crystals P0=4820 P1=4780
+
+--- Turn 2  |  Player 1  |  Crystals P0=4820 P1=4780 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Soni][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:24.604] Mode selected P1: TECH
+[00:24.913] Crystals: P1 4780 → 4180 (-600)  [tech cost]
+[00:26.299] Tech played  P1: "Radar"
+[00:27.856] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:28.263] AI1 target chosen: (4,0)
+[00:28.294] Revealed: P0 (4,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:28.670] AI1 target chosen: (3,4)
+[00:28.704] Revealed: P0 (3,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[00:29.080] AI1 target chosen: (3,1)
+[00:29.110] Revealed: P0 (3,1) "Spike Trap" {cost 1500}
+[00:29.112] Tech resolved  P1
+[00:30.006] Mode selected P1: ATTACK
+[00:30.012] Attack phase P1: 2 attack(s) available
+[00:30.013] MSG: Player 2: tap a character to attack.
+[00:30.312] AI1 attack decision: (3,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down} → (4,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:30.650] Revealed: P1 (3,1) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:30.983] Coin flip: Tails
+[00:33.724] MSG: Lazy Troll flips tails — too lazy to attack! It has to wait.
+[00:33.729] Attack aborted
+[00:34.925] AI1 attack decision: (3,2)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic | face-down} → (4,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:35.268] Revealed: P1 (3,2) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:35.269] Dice rolled: 4
+[00:35.278] MSG: Mars Drill wins!
+[00:39.902] Crystals: P0 4820 → 4070 (-750)  [battle]
+[00:41.302] Attack P1(3,2)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(4,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=4  ATK=40 vs DEF=30  → WIN
+[00:41.302] Anim: 3A  △ P0(4,0)
+[00:41.302] Card destroyed  P0 (4,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:41.796] Turn ended  P1  |  Crystals P0=4070 P1=4180
+
+--- Turn 3  |  Player 0  |  Crystals P0=4070 P1=4180 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Soni][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Sunr]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][Lazy][Mars][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:42.393] Mode selected P0: TECH
+[00:42.694] Crystals: P0 4070 → 2570 (-1500)  [tech cost]
+[00:44.087] Tech played  P0: "Resurrection"
+[00:45.643] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:46.049] AI0 target chosen: (0,0)
+[00:46.051] Revealed: P0 (0,0) "Canyon Warg" {Unit ATK0 DEF0 | cost 750 | affinity Nature | base 0/0}
+[00:46.052] MSG: Revived Canyon Warg at [0,0]!
+[00:46.059] Tech resolved  P0
+[00:46.968] Mode selected P0: ATTACK
+[00:46.978] Attack phase P0: 2 attack(s) available
+[00:46.978] MSG: Player 1: tap a character to attack.
+[00:47.276] AI0 attack decision: (2,2)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → (3,2) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:47.585] Dice rolled: 1
+[00:47.601] MSG: Sonic Seraph wins!
+[00:52.287] Crystals: P1 4180 → 3780 (-400)  [battle]
+[00:53.689] Attack P0(2,2)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(3,2)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=1  ATK=45 vs DEF=30  → WIN
+[00:53.689] Anim: 3A  △ P1(3,2)
+[00:53.689] Card destroyed  P1 (3,2) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:54.184] Mode selected P0: ATTACK
+[00:54.193] Attack phase P0: 1 attack(s) available
+[00:54.194] MSG: Player 1: tap a character to attack.
+[00:54.471] AI0 attack decision: (0,0)"Canyon Warg" {Unit ATK0 DEF0 | cost 750 | affinity Nature | base 0/0} → (1,4) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio | face-down}
+[00:54.796] Revealed: P1 (1,4) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:54.796] Dice rolled: 4
+[00:59.579] Crystals: P0 2570 → 1820 (-750)  [battle]
+[01:00.977] Attack P0(0,0)"Canyon Warg" {Unit ATK0 DEF0 | cost 750 | affinity Nature | base 0/0} → P1(1,4)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}  Dice=4  ATK=0 vs DEF=40  → LOSE
+[01:00.977] Anim: 3B  △ P0(0,0)
+[01:00.977] Card destroyed  P0 (0,0) "Canyon Warg" {Unit ATK0 DEF0 | cost 750 | affinity Nature | base 0/0}
+[01:01.475] Turn ended  P0  |  Crystals P0=1820 P1=3780
+
+--- Turn 4  |  Player 1  |  Crystals P0=1820 P1=3780 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Soni][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Sunr]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][Leec]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][Lazy][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:02.067] Mode selected P1: TECH
+[01:02.367] Crystals: P1 3780 → 2280 (-1500)  [tech cost]
+[01:03.760] Tech played  P1: "Resurrection"
+[01:05.299] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[01:05.700] AI1 target chosen: (1,0)
+[01:05.703] Revealed: P1 (1,0) "Mars Drill" {Unit ATK0 DEF0 | cost 400 | affinity Cosmic | base 0/0}
+[01:05.703] MSG: Revived Mars Drill at [1,0]!
+[01:05.709] Tech resolved  P1
+[01:06.603] Mode selected P1: ATTACK
+[01:06.613] Attack phase P1: 2 attack(s) available
+[01:06.613] MSG: Player 2: tap a character to attack.
+[01:06.900] AI1 attack decision: (1,4)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → (2,2) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:07.201] Dice rolled: 5
+[01:07.210] MSG: Leech Man wins!
+[01:11.892] Crystals: P0 1820 → 1270 (-550)  [battle]
+[01:13.300] Attack P1(1,4)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P0(2,2)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}  Dice=5  ATK=60 vs DEF=50  → WIN
+[01:13.300] Anim: 3A  △ P0(2,2)
+[01:13.300] Card destroyed  P0 (2,2) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:13.786] Mode selected P1: ATTACK
+[01:13.793] Attack phase P1: 1 attack(s) available
+[01:13.794] MSG: Player 2: tap a character to attack.
+[01:14.087] AI1 attack decision: (3,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → (3,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:14.438] Coin flip: Tails
+[01:17.214] MSG: Lazy Troll flips tails — too lazy to attack! It has to wait.
+[01:17.232] Attack aborted
+[01:18.118] Turn ended  P1  |  Crystals P0=1270 P1=2280
+
+--- Turn 5  |  Player 0  |  Crystals P0=1270 P1=2280 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Sunr]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [Mars][  — ][  — ][  ? ][Leec]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][Lazy][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:18.711] Mode selected P0: ATTACK
+[01:18.717] Attack phase P0: 2 attack(s) available
+[01:18.717] MSG: Player 1: tap a character to attack.
+[01:19.005] AI0 attack decision: (3,4)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → (1,0) "Mars Drill" {Unit ATK0 DEF0 | cost 400 | affinity Cosmic | base 0/0}
+[01:19.305] Dice rolled: 4
+[01:19.316] MSG: Sunrise Lady wins!
+[01:24.997] Crystals: P1 2280 → 1880 (-400)  [battle]
+[01:26.397] Attack P0(3,4)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → P1(1,0)"Mars Drill" {Unit ATK0 DEF0 | cost 400 | affinity Cosmic | base 0/0}  Dice=4  ATK=30 vs DEF=0  → WIN
+[01:26.397] Reckoning overlay: P0 "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} +ATK 10
+[01:26.397] Anim: 3A  △ P1(1,0)
+[01:26.397] Card destroyed  P1 (1,0) "Mars Drill" {Unit ATK0 DEF0 | cost 400 | affinity Cosmic | base 0/0}
+[01:28.899] Turn ended  P0  |  Crystals P0=1270 P1=1880
+
+--- Turn 6  |  Player 1  |  Crystals P0=1270 P1=1880 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Sunr]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][Leec]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][Lazy][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:29.496] Mode selected P1: TECH
+[01:29.811] Tech played  P1: "Release Mutagen"
+[01:31.379] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[01:31.780] AI1 target chosen: (1,4)
+[01:31.789] Tech resolved  P1
+[01:32.680] Mode selected P1: ATTACK
+[01:32.689] Attack phase P1: 2 attack(s) available
+[01:32.689] MSG: Player 2: tap a character to attack.
+[01:32.981] AI1 attack decision: (1,4)"Leech Man" {Unit ATK60 DEF60 | cost 880 | affinity Bio | buff +permDEF20 | flags:mutagen} → (3,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:33.279] Dice rolled: 3
+[01:33.296] MSG: Leech Man wins!
+[01:37.956] Crystals: P0 1270 → 970 (-300)  [battle]
+[01:39.352] Attack P1(1,4)"Leech Man" {Unit ATK60 DEF60 | cost 880 | affinity Bio | buff +permDEF20 | flags:mutagen} → P0(3,4)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}  Dice=3  ATK=60 vs DEF=25  → WIN
+[01:39.352] Anim: 3A  △ P0(3,4)
+[01:39.352] Card destroyed  P0 (3,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:39.846] Mode selected P1: ATTACK
+[01:39.851] Attack phase P1: 1 attack(s) available
+[01:39.851] MSG: Player 2: tap a character to attack.
+[01:40.146] AI1 attack decision: (3,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → (1,3) (dead-end)
+[01:40.496] Coin flip: Tails
+[01:43.231] MSG: Lazy Troll flips tails — too lazy to attack! It has to wait.
+[01:43.239] Attack aborted
+[01:44.127] Turn ended  P1  |  Crystals P0=970 P1=1880
+
+--- Turn 7  |  Player 0  |  Crystals P0=970 P1=1880 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][Leec]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][Lazy][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:44.740] Mode selected P0: ATTACK
+[01:44.745] Attack phase P0: 2 attack(s) available
+[01:44.745] MSG: Player 1: tap a character to attack.
+[01:45.041] AI0 attack decision: (1,4)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down} → (2,4) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down}
+[01:45.392] Revealed: P0 (1,4) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:45.414] Revealed: P1 (2,4) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[01:45.414] Dice rolled: 4
+[01:45.418] MSG: Huntress of Green Glade wins!
+[01:50.076] Crystals: P1 1880 → 380 (-1500)  [battle]
+[01:51.479] Attack P0(1,4)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(2,4)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}  Dice=4  ATK=50 vs DEF=20  → WIN
+[01:51.479] Anim: 3A  △ P1(2,4)
+[01:51.479] Card destroyed  P1 (2,4) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[01:53.981] Turn ended  P0  |  Crystals P0=970 P1=380
+
+--- Turn 8  |  Player 1  |  Crystals P0=970 P1=380 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][Hunt]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][Leec]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][Lazy][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:54.600] Mode selected P1: ATTACK
+[01:54.608] Attack phase P1: 2 attack(s) available
+[01:54.608] MSG: Player 2: tap a character to attack.
+[01:54.880] AI1 attack decision: (1,4)"Leech Man" {Unit ATK60 DEF80 | cost 880 | affinity Bio | buff +permDEF40 | flags:mutagen} → (1,4) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:55.180] Dice rolled: 1
+[01:55.196] MSG: Leech Man wins!
+[01:59.870] Crystals: P0 970 → 170 (-800)  [battle]
+[02:01.277] Attack P1(1,4)"Leech Man" {Unit ATK60 DEF80 | cost 880 | affinity Bio | buff +permDEF40 | flags:mutagen} → P0(1,4)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=1  ATK=60 vs DEF=50  → WIN
+[02:01.277] Anim: 3A  △ P0(1,4)
+[02:01.277] Card destroyed  P0 (1,4) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[02:01.765] Mode selected P1: ATTACK
+[02:01.774] Attack phase P1: 1 attack(s) available
+[02:01.775] MSG: Player 2: tap a character to attack.
+[02:02.059] AI1 attack decision: (3,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → (1,3) (dead-end)
+[02:02.426] Coin flip: Heads
+[02:05.111] Dice rolled: 5
+[02:05.134] MSG: Nothing happens — Dead End.
+[02:08.537] Attack P1(3,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → P0(1,3)(empty)  Dice=5  → DEAD_END
+[02:08.537] Anim: 3F  (blank slot)
+[02:09.038] Turn ended  P1  |  Crystals P0=170 P1=380
+
+--- Turn 9  |  Player 0  |  Crystals P0=170 P1=380 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][Leec]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][Lazy][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:09.655] Mode selected P0: ATTACK
+[02:09.663] Attack phase P0: 2 attack(s) available
+[02:09.663] MSG: Player 1: tap a character to attack.
+[02:09.953] AI0 attack decision: (2,4)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down} → (0,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down}
+[02:10.309] Revealed: P0 (2,4) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[02:10.310] Revealed: P1 (0,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[02:10.310] Dice rolled: 1
+[02:10.315] MSG: Hammer Shark wins!
+[02:14.976] Crystals: P1 380 → 200 (-180)  [battle]
+[02:16.370] Attack P0(2,4)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P1(0,4)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}  Dice=1  ATK=20 vs DEF=15  → WIN
+[02:16.370] Anim: 3A  △ P1(0,4)
+[02:16.370] Card destroyed  P1 (0,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[02:16.862] Mode selected P0: ATTACK
+[02:16.868] Attack phase P0: 1 attack(s) available
+[02:16.868] MSG: Player 1: tap a character to attack.
+[02:17.168] AI0 attack decision: (2,0)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down} → (4,4) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}
+[02:17.509] Revealed: P0 (2,0) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[02:17.528] Revealed: P1 (4,4) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:17.528] Dice rolled: 4
+[02:17.533] MSG: Moonrise Gentleman wins!
+[02:22.159] Crystals: P1 200 → 0 (-200)  [battle]
+
+=== GAME OVER ===
+[02:22.170] AI Player 0 wins
+[02:22.170] Reason: crystals
+[02:22.170] Final crystals — P0: 170  P1: 0  |  Turns: 9
+[02:22.170] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_aunt_ednas_meatloaf_2026-05-31_19-28-50_791.txt

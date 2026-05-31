@@ -1,0 +1,591 @@
+=== Battle of Windshield Bug Stare-Down ===
+Battle started: 2026-05-31 21:14:10.760
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Pepper Spray
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, War Supply, Siege Cannon
+P1 Tech hand: War Supply, Bribe, Accident
+P0:   [C:Saw ][C:Need][T:Deco][  — ][T:Blac]
+      [  — ][C:Silv][C:Leor][C:Moon][T:Red ]
+      [  — ][C:Hand][C:Ox P][C:Immo][  — ]
+      [C:Stin][C:Bat ][C:Ice ][C:Meli][T:Expl]
+      [  — ][  — ][T:Flam][  — ][  — ]
+P1:   [  — ][C:Dark][C:Vamp][T:Blac][  — ]
+      [T:Trap][C:Red ][C:Magi][C:Meli][T:Acid]
+      [C:Gran][C:Mars][T:Pepp][C:Shep][  — ]
+      [  — ][C:Blue][C:Wand][C:Grav][  — ]
+      [T:Bait][  — ][T:Spik][  — ][  — ]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:05.313] Mode selected P1: TECH
+[00:05.622] Tech played  P1: "Bribe"
+[00:07.170] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:07.672] MSG: Bribe: AI passed.
+[00:07.678] Tech resolved  P1
+[00:08.572] Mode selected P1: ATTACK
+[00:08.575] Attack phase P1: 2 attack(s) available
+[00:08.575] MSG: Player 2: tap a character to attack.
+[00:08.871] AI1 attack decision: (0,1)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (0,4) "Blackmail" {cost 0}
+[00:09.211] Revealed: P1 (0,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:09.234] Revealed: P0 (0,4) "Blackmail" {cost 0}
+[00:09.234] Dice rolled: 4
+[00:09.473] MSG: Trap triggered: Blackmail!
+[00:13.573] Prompt: "Blackmail"  [Discard 1 Tech Card / End your turn]
+[00:14.163] Ability choice resolved: 0 (Yes)
+[00:14.164] MSG: Blackmail: Discarded 1 Tech Card.
+[00:14.169] Trap: "Blackmail" triggered  P1(0,1)→P0(0,4)
+[00:14.169] Anim: 3D  (attacker survives)
+[00:14.659] Mode selected P1: ATTACK
+[00:14.663] Attack phase P1: 1 attack(s) available
+[00:14.663] MSG: Player 2: tap a character to attack.
+[00:14.958] AI1 attack decision: (0,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down} → (1,1) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down}
+[00:15.318] Revealed: P1 (0,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:15.341] Revealed: P0 (1,1) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:15.341] Dice rolled: 5
+[00:15.349] MSG: Vampire Duchess wins!
+[00:19.938] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:21.338] Attack P1(0,2)"Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved} → P0(1,1)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=5  ATK=50 vs DEF=20  → WIN
+[00:21.339] Anim: 3A  △ P0(1,1)
+[00:21.339] Card destroyed  P0 (1,1) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:21.832] Turn ended  P1  |  Crystals P0=4750 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4750 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Dark][Vamp][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:22.430] Mode selected P0: TECH
+[00:22.729] Crystals: P0 4750 → 3750 (-1000)  [tech cost]
+[00:24.116] Tech played  P0: "Siege Cannon"
+[00:25.612] MSG: Siege Cannon active!
+[00:25.621] Tech resolved  P0
+[00:26.530] Mode selected P0: ATTACK
+[00:26.536] Attack phase P0: 2 attack(s) available
+[00:26.536] MSG: Player 1: tap a character to attack.
+[00:26.820] AI0 attack decision: (2,3)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos | face-down} → (0,2) "Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved}
+[00:27.157] Revealed: P0 (2,3) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[00:27.158] Dice rolled: 4
+[00:27.162] MSG: Immortal Vampire wins!
+[00:31.838] Crystals: P1 5000 → 4200 (-800)  [battle]
+[00:33.242] Attack P0(2,3)"Immortal Vampire" {Unit ATK15 DEF40 | cost 1200 | affinity Chaos | base 15/40 | halved} → P1(0,2)"Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved}  Dice=4  ATK=30 vs DEF=25  → WIN
+[00:33.242] Anim: 3A  △ P1(0,2)
+[00:33.242] Card destroyed  P1 (0,2) "Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved}
+[00:35.740] Turn ended  P0  |  Crystals P0=3750 P1=4200
+
+--- Turn 3  |  Player 1  |  Crystals P0=3750 P1=4200 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][Immo][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Dark][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:36.338] Mode selected P1: ATTACK
+[00:36.347] Attack phase P1: 2 attack(s) available
+[00:36.348] MSG: Player 2: tap a character to attack.
+[00:36.638] AI1 attack decision: (0,1)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → (0,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down}
+[00:36.968] Revealed: P0 (0,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[00:36.968] Dice rolled: 5
+[00:36.972] MSG: Dark Monk wins!
+[00:41.633] Crystals: P0 3750 → 3470 (-280)  [battle]
+[00:43.032] Attack P1(0,1)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P0(0,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}  Dice=5  ATK=15 vs DEF=10  → WIN
+[00:43.032] Anim: 3A  △ P0(0,0)
+[00:43.032] Card destroyed  P0 (0,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[00:43.518] Mode selected P1: ATTACK
+[00:43.522] Attack phase P1: 1 attack(s) available
+[00:43.523] MSG: Player 2: tap a character to attack.
+[00:43.820] AI1 attack decision: (1,1)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane | face-down} → (4,4) (dead-end)
+[00:44.161] Revealed: P1 (1,1) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:44.161] Dice rolled: 4
+[00:44.173] MSG: Nothing happens — Dead End.
+[00:47.561] Attack P1(1,1)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P0(4,4)(empty)  Dice=4  → DEAD_END
+[00:47.561] Anim: 3F  (blank slot)
+[00:48.053] Turn ended  P1  |  Crystals P0=3470 P1=4200
+
+--- Turn 4  |  Player 0  |  Crystals P0=3470 P1=4200 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][Immo][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Dark][  — ][  ? ][  — ]
+      [  ? ][Red ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:48.650] Mode selected P0: TECH
+[00:48.962] Tech played  P0: "Tease"
+[00:50.491] MSG: Opponent must choose and reveal 1 of their squares.
+[00:50.494] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:50.892] AI1 target chosen: (4,2)
+[00:50.933] Revealed: P1 (4,2) "Spike Trap" {cost 1500}
+[00:50.933] MSG: Tease: Opponent revealed Spike Trap.
+[00:50.939] Tech resolved  P0
+[00:51.815] Mode selected P0: ATTACK
+[00:51.824] Attack phase P0: 2 attack(s) available
+[00:51.824] MSG: Player 1: tap a character to attack.
+[00:52.117] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (1,1) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:52.458] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:52.458] Dice rolled: 2
+[00:52.463] MSG: Ox Patrol wins!
+[00:58.115] Crystals: P1 4200 → 3800 (-400)  [battle]
+[00:59.519] Attack P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P1(1,1)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}  Dice=2  ATK=35 vs DEF=20  → WIN
+[00:59.519] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +ATK 5
+[00:59.519] Anim: 3A  △ P1(1,1)
+[00:59.519] Card destroyed  P1 (1,1) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[01:00.005] Mode selected P0: ATTACK
+[01:00.010] Attack phase P0: 1 attack(s) available
+[01:00.011] MSG: Player 1: tap a character to attack.
+[01:00.314] AI0 attack decision: (2,3)"Immortal Vampire" {Unit ATK15 DEF40 | cost 1200 | affinity Chaos | base 15/40 | halved} → (4,4) (dead-end)
+[01:00.612] Dice rolled: 4
+[01:00.662] MSG: Nothing happens — Dead End.
+[01:04.003] Attack P0(2,3)"Immortal Vampire" {Unit ATK15 DEF40 | cost 1200 | affinity Chaos | base 15/40 | halved} → P1(4,4)(empty)  Dice=4  → DEAD_END
+[01:04.003] Anim: 3F  (blank slot)
+[01:04.493] Turn ended  P0  |  Crystals P0=3470 P1=3800
+
+--- Turn 5  |  Player 1  |  Crystals P0=3470 P1=3800 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][Ox P][Immo][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Dark][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:05.106] Mode selected P1: ATTACK
+[01:05.112] Attack phase P1: 2 attack(s) available
+[01:05.113] MSG: Player 2: tap a character to attack.
+[01:05.412] AI1 attack decision: (3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima | face-down} → (2,3) "Immortal Vampire" {Unit ATK15 DEF40 | cost 1200 | affinity Chaos | base 15/40 | halved}
+[01:05.758] Revealed: P1 (3,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[01:05.758] Dice rolled: 1
+[01:05.763] MSG: Wandering Swordsman wins!
+[01:10.425] Crystals: P0 3470 → 2270 (-1200)  [battle]
+[01:11.836] Attack P1(3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P0(2,3)"Immortal Vampire" {Unit ATK15 DEF40 | cost 1200 | affinity Chaos | base 15/40 | halved}  Dice=1  ATK=60 vs DEF=40  → WIN
+[01:11.836] Anim: 3A  △ P0(2,3)
+[01:11.836] Card destroyed  P0 (2,3) "Immortal Vampire" {Unit ATK15 DEF40 | cost 1200 | affinity Chaos | base 15/40 | halved}
+[01:12.325] Mode selected P1: ATTACK
+[01:12.330] Attack phase P1: 1 attack(s) available
+[01:12.331] MSG: Player 2: tap a character to attack.
+[01:12.633] AI1 attack decision: (3,1)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane | face-down} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:12.985] Revealed: P1 (3,1) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[01:12.985] Dice rolled: 4
+[01:12.993] MSG: Blue Mage: Coin flip missed — normal battle.
+[01:12.993] MSG: Blue Mage wins!
+[01:13.049] Coin flip: Tails, Tails
+[01:18.575] Crystals: P0 2270 → 1850 (-420)  [battle]
+[01:19.979] Attack P1(3,1)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane} → P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=4  ATK=45 vs DEF=40  → WIN
+[01:19.979] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 5
+[01:19.979] Anim: 3A  △ P0(2,2)
+[01:19.979] Card destroyed  P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:20.477] Turn ended  P1  |  Crystals P0=1850 P1=3800
+
+--- Turn 6  |  Player 0  |  Crystals P0=1850 P1=3800 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Dark][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Blue][Wand][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:21.090] Mode selected P0: ATTACK
+[01:21.096] Attack phase P0: 2 attack(s) available
+[01:21.096] MSG: Player 1: tap a character to attack.
+[01:21.391] AI0 attack decision: (3,2)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down} → (3,1) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[01:21.734] Revealed: P0 (3,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:21.734] Dice rolled: 1
+[01:21.739] MSG: Ice Mage wins!
+[01:26.402] Crystals: P1 3800 → 3000 (-800)  [battle]
+[01:27.802] Attack P0(3,2)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P1(3,1)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}  Dice=1  ATK=50 vs DEF=45  → WIN
+[01:27.802] Anim: 3A  △ P1(3,1)
+[01:27.802] Card destroyed  P1 (3,1) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[01:28.301] Mode selected P0: ATTACK
+[01:28.305] Attack phase P0: 1 attack(s) available
+[01:28.306] MSG: Player 1: tap a character to attack.
+[01:28.613] AI0 attack decision: (3,1)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down} → (0,3) "Blackmail" {cost 0}
+[01:28.961] Revealed: P0 (3,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:28.961] Revealed: P1 (0,3) "Blackmail" {cost 0}
+[01:28.961] Dice rolled: 4
+[01:29.252] MSG: Trap triggered: Blackmail!
+[01:33.377] Prompt: "Blackmail"  [Discard 1 Tech Card / End your turn]
+[01:33.971] Ability choice resolved: 0 (Yes)
+[01:33.971] MSG: Blackmail: Discarded 1 Tech Card.
+[01:33.978] Trap: "Blackmail" triggered  P0(3,1)→P1(0,3)
+[01:33.978] Anim: 3D  (attacker survives)
+[01:34.485] Turn ended  P0  |  Crystals P0=1850 P1=3000
+
+--- Turn 7  |  Player 1  |  Crystals P0=1850 P1=3000 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][Bat ][Ice ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Dark][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][Wand][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:36.596] Crystals: P1 3000 → 2700 (-300)  [union]
+[01:36.624] Revealed: P1 (0,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[01:36.624] Union summoned P1: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}, "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos | face-down}
+[01:36.624] MSG: Player 2 summoned [Kitsune] using: "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}, "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos | face-down}
+[01:40.063] Mode selected P1: ATTACK
+[01:40.070] Attack phase P1: 2 attack(s) available
+[01:40.073] MSG: Player 2: tap a character to attack.
+[01:40.362] AI1 attack decision: (0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (3,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:40.662] Dice rolled: 5
+[01:40.691] MSG: Kitsune wins!
+[01:45.355] Crystals: P0 1850 → 1650 (-200)  [battle]
+[01:46.759] Attack P1(0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P0(3,1)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=5  ATK=35 vs DEF=15  → WIN
+[01:46.759] Anim: 3A  △ P0(3,1)
+[01:46.759] Card destroyed  P0 (3,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:47.247] Mode selected P1: ATTACK
+[01:47.252] Attack phase P1: 1 attack(s) available
+[01:47.253] MSG: Player 2: tap a character to attack.
+[01:47.546] AI1 attack decision: (3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → (3,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:47.846] Dice rolled: 5
+[01:47.855] MSG: Wandering Swordsman wins!
+[01:52.527] Crystals: P0 1650 → 1250 (-400)  [battle]
+[01:53.952] Attack P1(3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P0(3,2)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=5  ATK=60 vs DEF=0  → WIN
+[01:53.952] Anim: 3A  △ P0(3,2)
+[01:53.952] Card destroyed  P0 (3,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:54.420] Turn ended  P1  |  Crystals P0=1250 P1=2700
+
+--- Turn 8  |  Player 0  |  Crystals P0=1250 P1=2700 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Kits][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][Wand][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:55.027] Mode selected P0: ATTACK
+[01:55.031] Attack phase P0: 2 attack(s) available
+[01:55.031] MSG: Player 1: tap a character to attack.
+[01:55.315] AI0 attack decision: (1,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima | face-down} → (3,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[01:55.651] Revealed: P0 (1,2) "Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima}
+[01:55.651] Dice rolled: 2
+[01:55.656] MSG: Leorudus the Warlord wins!
+[02:00.307] Crystals: P1 2700 → 2100 (-600)  [battle]
+[02:01.721] Attack P0(1,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}  Dice=2  ATK=80 vs DEF=60  → WIN
+[02:01.721] Anim: 3A  △ P1(3,2)
+[02:01.721] Card destroyed  P1 (3,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[02:04.232] Turn ended  P0  |  Crystals P0=1250 P1=2100
+
+--- Turn 9  |  Player 1  |  Crystals P0=1250 P1=2100 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][Leor][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Kits][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:04.830] Mode selected P1: ATTACK
+[02:04.834] Attack phase P1: 2 attack(s) available
+[02:04.834] MSG: Player 2: tap a character to attack.
+[02:05.138] AI1 attack decision: (0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (1,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}
+[02:05.497] Revealed: P0 (1,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:05.497] Dice rolled: 3
+[02:05.514] MSG: Kitsune wins!
+[02:10.135] Crystals: P0 1250 → 950 (-300)  [battle]
+[02:11.550] Attack P1(0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P0(1,3)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=3  ATK=35 vs DEF=20  → WIN
+[02:11.550] Anim: 3A  △ P0(1,3)
+[02:11.550] Card destroyed  P0 (1,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:12.024] Mode selected P1: ATTACK
+[02:12.029] Attack phase P1: 1 attack(s) available
+[02:12.029] MSG: Player 2: tap a character to attack.
+[02:12.321] AI1 attack decision: (1,2)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down} → (3,3) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}
+[02:12.666] Revealed: P1 (1,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[02:12.694] Revealed: P0 (3,3) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[02:12.694] Dice rolled: 5
+[02:17.420] Crystals: P1 2100 → 1920 (-180)  [battle]
+[02:18.820] Attack P1(1,2)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature} → P0(3,3)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}  Dice=5  ATK=15 vs DEF=25  → LOSE
+[02:18.820] Anim: 3B  △ P1(1,2)
+[02:18.820] Card destroyed  P1 (1,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[02:19.320] Turn ended  P1  |  Crystals P0=950 P1=1920
+
+--- Turn 10  |  Player 0  |  Crystals P0=950 P1=1920 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][Leor][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Meli][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Kits][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:19.946] Mode selected P0: ATTACK
+[02:19.951] Attack phase P0: 2 attack(s) available
+[02:19.951] MSG: Player 1: tap a character to attack.
+[02:20.246] AI0 attack decision: (1,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (3,3) (dead-end)
+[02:20.553] Dice rolled: 4
+[02:20.593] MSG: Nothing happens — Dead End.
+[02:23.976] Attack P0(1,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(3,3)(empty)  Dice=4  → DEAD_END
+[02:23.976] Anim: 3F  (blank slot)
+[02:24.471] Mode selected P0: ATTACK
+[02:24.477] Attack phase P0: 1 attack(s) available
+[02:24.477] MSG: Player 1: tap a character to attack.
+[02:24.774] AI0 attack decision: (3,3)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} → (4,0) "Bait" {cost 0}
+[02:25.118] Revealed: P1 (4,0) "Bait" {cost 0}
+[02:25.119] Dice rolled: 1
+[02:25.391] MSG: Trap triggered: Bait!
+[02:29.502] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[02:29.509] Trap: "Bait" triggered  P0(3,3)→P1(4,0)
+[02:29.509] Anim: 3D  (attacker survives)
+[02:29.874] AI1 target chosen: (2,0)
+[02:29.903] Revealed: P1 (2,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[02:29.903] MSG: Bait: Defender revealed Grand Fort Archer.
+[02:29.985] Turn ended  P0  |  Crystals P0=950 P1=1920
+
+--- Turn 11  |  Player 1  |  Crystals P0=950 P1=1920 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][Leor][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Meli][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Kits][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [Gran][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:30.575] Mode selected P1: ATTACK
+[02:30.582] Attack phase P1: 2 attack(s) available
+[02:30.582] MSG: Player 2: tap a character to attack.
+[02:30.875] AI1 attack decision: (0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (3,3) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[02:31.174] Dice rolled: 2
+[02:31.220] MSG: Kitsune wins!
+[02:35.850] Crystals: P0 950 → 250 (-700)  [battle]
+[02:35.850] Crystals: P0 250 → 550 (+300)  [recovery]
+[02:35.851] MSG: Melissa the Healer: Recovered 300 Crystals!
+[02:35.869] Attack P1(0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P0(3,3)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}  Dice=2  ATK=35 vs DEF=25  → WIN
+[02:35.869] Anim: 3A  △ P0(3,3)
+[02:35.869] Card destroyed  P0 (3,3) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[02:36.354] Mode selected P1: ATTACK
+[02:36.359] Attack phase P1: 1 attack(s) available
+[02:36.359] MSG: Player 2: tap a character to attack.
+[02:36.654] AI1 attack decision: (2,0)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → (4,0) (dead-end)
+[02:36.953] Dice rolled: 5
+[02:36.980] MSG: Nothing happens — Dead End.
+[02:40.371] Attack P1(2,0)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(4,0)(empty)  Dice=5  → DEAD_END
+[02:40.371] Anim: 3F  (blank slot)
+[02:40.859] Turn ended  P1  |  Crystals P0=550 P1=1920
+
+--- Turn 12  |  Player 0  |  Crystals P0=550 P1=1920 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][Leor][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Kits][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [Gran][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:41.328] Mode selected P0: ATTACK
+[02:41.332] Attack phase P0: 2 attack(s) available
+[02:41.332] MSG: Player 1: tap a character to attack.
+[02:41.633] AI0 attack decision: (1,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (2,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[02:41.942] Dice rolled: 2
+[02:41.956] MSG: Leorudus the Warlord wins!
+[02:46.643] Crystals: P1 1920 → 1640 (-280)  [battle]
+[02:48.043] Attack P0(1,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(2,0)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=2  ATK=80 vs DEF=20  → WIN
+[02:48.043] Anim: 3A  △ P1(2,0)
+[02:48.043] Card destroyed  P1 (2,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[02:50.560] Turn ended  P0  |  Crystals P0=550 P1=1640
+
+--- Turn 13  |  Player 1  |  Crystals P0=550 P1=1640 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][Leor][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Kits][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:51.158] Mode selected P1: ATTACK
+[02:51.162] Attack phase P1: 2 attack(s) available
+[02:51.163] MSG: Player 2: tap a character to attack.
+[02:51.465] AI1 attack decision: (0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (0,2) "Decoy Puppet" {cost 100}
+[02:51.812] Revealed: P0 (0,2) "Decoy Puppet" {cost 100}
+[02:51.812] Dice rolled: 1
+[02:52.133] MSG: Trap triggered: Decoy Puppet!
+[02:56.220] Crystals: P0 550 → 450 (-100)  [trap cost]
+[02:57.608] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[02:57.619] Trap: "Decoy Puppet" triggered  P1(0,1)→P0(0,2)
+[02:57.619] Anim: 3D  (attacker survives)
+[02:58.113] Mode selected P1: ATTACK
+[02:58.119] Attack phase P1: 1 attack(s) available
+[02:58.119] MSG: Player 2: tap a character to attack.
+[02:58.408] AI1 attack decision: (1,3)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down} → (1,4) "Red Card" {cost 0}
+[02:58.709] Revealed: P1 (1,3) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[02:58.743] Revealed: P0 (1,4) "Red Card" {cost 0}
+[02:58.743] Dice rolled: 1
+[02:59.016] MSG: Trap triggered: Red Card!
+[03:03.162] Coin flip: Heads, Heads
+[03:05.907] MSG: Red Card: Heads, Heads.
+[03:05.907] MSG: Both heads! Melissa the Healer cannot attack next turn!
+[03:05.912] Trap: "Red Card" triggered  P1(1,3)→P0(1,4)
+[03:05.912] Anim: 3D  (attacker survives)
+[03:06.412] Turn ended  P1  |  Crystals P0=450 P1=1640
+
+--- Turn 14  |  Player 0  |  Crystals P0=450 P1=1640 ---
+P0:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][Leor][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Kits][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Meli][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[03:07.011] Mode selected P0: ATTACK
+[03:07.017] Attack phase P0: 2 attack(s) available
+[03:07.017] MSG: Player 1: tap a character to attack.
+[03:07.304] AI0 attack decision: (1,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (1,3) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | cannot-atk≤T14}
+[03:07.604] Dice rolled: 2
+[03:07.615] MSG: Leorudus the Warlord wins!
+[03:12.296] Crystals: P1 1640 → 940 (-700)  [battle]
+[03:12.297] Crystals: P1 940 → 1240 (+300)  [recovery]
+[03:12.298] MSG: Melissa the Healer: Recovered 300 Crystals!
+[03:12.323] Attack P0(1,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(1,3)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | cannot-atk≤T14}  Dice=2  ATK=80 vs DEF=25  → WIN
+[03:12.323] Anim: 3A  △ P1(1,3)
+[03:12.323] Card destroyed  P1 (1,3) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | cannot-atk≤T14}
+[03:12.797] Mode selected P0: ATTACK
+[03:12.801] Attack phase P0: 1 attack(s) available
+[03:12.802] MSG: Player 1: tap a character to attack.
+[03:13.094] AI0 attack decision: (0,1)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down} → (1,0) "Trap Hole" {cost 0}
+[03:13.439] Revealed: P0 (0,1) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[03:13.462] Revealed: P1 (1,0) "Trap Hole" {cost 0}
+[03:13.462] Dice rolled: 4
+[03:13.718] MSG: Trap triggered: Trap Hole!
+[03:17.831] Crystals: P0 450 → 430 (-20)  [trap]
+[03:19.211] MSG: Trap Hole: Player 1 loses 20 Crystals!
+[03:19.219] Trap: "Trap Hole" triggered  P0(0,1)→P1(1,0)
+[03:19.219] Anim: 3D  (attacker survives)
+[03:19.733] Turn ended  P0  |  Crystals P0=430 P1=1240
+
+--- Turn 15  |  Player 1  |  Crystals P0=430 P1=1240 ---
+P0:   [  — ][Need][  — ][  — ][  — ]
+      [  — ][  — ][Leor][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Kits][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[03:20.334] Mode selected P1: ATTACK
+[03:20.339] Attack phase P1: 2 attack(s) available
+[03:20.339] MSG: Player 2: tap a character to attack.
+[03:20.641] AI1 attack decision: (0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (0,1) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[03:20.948] Dice rolled: 5
+[03:20.988] MSG: Kitsune wins!
+[03:25.650] Crystals: P0 430 → 230 (-200)  [battle]
+[03:27.056] Attack P1(0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P0(0,1)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}  Dice=5  ATK=35 vs DEF=10  → WIN
+[03:27.056] Anim: 3A  △ P0(0,1)
+[03:27.056] Card destroyed  P0 (0,1) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[03:27.550] Mode selected P1: ATTACK
+[03:27.554] Attack phase P1: 1 attack(s) available
+[03:27.554] MSG: Player 2: tap a character to attack.
+[03:27.860] AI1 attack decision: (2,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic | face-down} → (3,4) "Explosive Barrels" {cost 0}
+[03:28.203] Revealed: P1 (2,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[03:28.223] Revealed: P0 (3,4) "Explosive Barrels" {cost 0}
+[03:28.223] Dice rolled: 4
+[03:28.501] MSG: Trap triggered: Explosive Barrels!
+[03:28.501] MSG: Mars Drill is immune to 0-cost Traps!
+[03:32.597] Attack P1(2,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(3,4)"Explosive Barrels"  Dice=4  ATK=0 vs DEF=0  → TIE
+[03:32.597] Anim: exchange  (no destruction)
+[03:33.093] Turn ended  P1  |  Crystals P0=230 P1=1240
+
+--- Turn 16  |  Player 0  |  Crystals P0=230 P1=1240 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Leor][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Kits][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Mars][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[03:33.693] Mode selected P0: ATTACK
+[03:33.698] Attack phase P0: 2 attack(s) available
+[03:33.699] MSG: Player 1: tap a character to attack.
+[03:33.987] AI0 attack decision: (1,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (2,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[03:34.286] Dice rolled: 4
+[03:34.301] MSG: Leorudus the Warlord wins!
+[03:38.980] Crystals: P1 1240 → 840 (-400)  [battle]
+[03:40.392] Attack P0(1,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(2,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=4  ATK=80 vs DEF=30  → WIN
+[03:40.392] Anim: 3A  △ P1(2,1)
+[03:40.392] Card destroyed  P1 (2,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[03:42.882] Turn ended  P0  |  Crystals P0=230 P1=840
+
+--- Turn 17  |  Player 1  |  Crystals P0=230 P1=840 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Leor][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][Kits][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[03:43.476] Mode selected P1: ATTACK
+[03:43.484] Attack phase P1: 2 attack(s) available
+[03:43.484] MSG: Player 2: tap a character to attack.
+[03:43.777] AI1 attack decision: (0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (3,0) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down}
+[03:44.112] Revealed: P0 (3,0) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[03:44.113] Dice rolled: 2
+[03:44.146] MSG: Kitsune wins!
+[03:48.813] Crystals: P0 230 → 0 (-230)  [battle]
+
+=== GAME OVER ===
+[03:48.838] AI Player 1 wins
+[03:48.838] Reason: crystals
+[03:48.838] Final crystals — P0: 0  P1: 840  |  Turns: 17
+[03:48.838] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_windshield_bug_stare_down_2026-05-31_21-14-10_760.txt

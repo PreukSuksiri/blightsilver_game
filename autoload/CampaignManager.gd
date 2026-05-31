@@ -282,6 +282,25 @@ func get_node_data(id: String) -> CampaignNode:
 func is_completed(id: String) -> bool:
 	return completed.get(id, false)
 
+## True if any campaign node using this VN (pre or post) is marked complete.
+func is_vn_scene_completed(vn_scene: String) -> bool:
+	var key: String = vn_scene.strip_edges()
+	if key.is_empty():
+		return false
+	for node: CampaignNode in all_nodes:
+		var pre: String = str(node.data.get("vn_scene", "")).strip_edges()
+		var post: String = str(node.data.get("vn_scene_post", "")).strip_edges()
+		if (pre == key or post == key) and is_completed(node.id):
+			return true
+	return false
+
+## Campaign map node id → pre-battle vn_scene path (empty if unknown).
+func get_vn_scene_for_node(node_id: String) -> String:
+	var node: CampaignNode = get_node_data(node_id.strip_edges())
+	if node == null:
+		return ""
+	return str(node.data.get("vn_scene", "")).strip_edges()
+
 func is_unlocked(id: String) -> bool:
 	if id == "ch0_s1":
 		return true
@@ -311,6 +330,9 @@ func complete_node(id: String) -> void:
 	completed[id] = true
 	var node := get_node_data(id)
 	if node:
+		var vn: String = str(node.data.get("vn_scene", "")).strip_edges()
+		if vn != "":
+			SaveManager.mark_gallery_chapter_completed(vn)
 		var credits: int = node.data.get("reward_credits", node.data.get("credits", 0))
 		if credits > 0:
 			Collection.add_credits(credits)

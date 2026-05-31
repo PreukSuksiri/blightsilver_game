@@ -1,0 +1,12 @@
+=== AI vs AI Batch (10 battles) ===
+Completed: 2026-05-31 07:30:42.708
+Battle 1/10: AI Player 1 wins  |  P0=0 P1=280  |  10 turns
+Battle 2/10: AI Player 1 wins  |  P0=0 P1=420  |  8 turns
+Battle 3/10: AI Player 1 wins  |  P0=0 P1=1450  |  9 turns
+Battle 4/10: AI Player 1 wins  |  P0=0 P1=3700  |  6 turns
+Battle 5/10: AI Player 1 wins  |  P0=0 P1=580  |  8 turns
+Battle 6/10: AI Player 1 wins  |  P0=0 P1=2400  |  11 turns
+Battle 7/10: AI Player 1 wins  |  P0=0 P1=2480  |  7 turns
+Battle 8/10: AI Player 1 wins  |  P0=550 P1=150  |  12 turns
+Battle 9/10: AI Player 1 wins  |  P0=0 P1=3600  |  9 turns
+Battle 10/10: AI Player 0 wins  |  P0=2800 P1=0  |  6 turns

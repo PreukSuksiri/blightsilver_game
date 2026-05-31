@@ -1,0 +1,394 @@
+=== Battle of Neighbor's Leaf Blower ===
+Battle started: 2026-05-31 19:18:16.464
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Skeleton Archer
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Skeleton Archer
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Prayer, Siege Cannon
+P1 Tech hand: Resurrection, Prayer, Release Mutagen
+P0:   [  — ][  — ][C:Joan][T:Red ][  — ]
+      [  — ][C:Soni][C:Immo][C:Leor][T:Brai]
+      [  — ][C:Demo][C:Skel][T:Self][  — ]
+      [  — ][C:Shre][C:Myst][C:Curs][  — ]
+      [  — ][  — ][  — ][  — ][T:Host]
+P1:   [C:Mad ][C:Wand][  — ][C:Armo][C:Leec]
+      [  — ][  — ][  — ][  — ][C:Skel]
+      [T:Spik][T:Blac][C:Chao][  — ][T:Host]
+      [T:Defe][T:Echo][C:Tomb][  — ][C:Shep]
+      [C:Dark][C:Hunt][  — ][  — ][C:Stai]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:05.273] Mode selected P1: ATTACK
+[00:05.278] Attack phase P1: 2 attack(s) available
+[00:05.278] MSG: Player 2: tap a character to attack.
+[00:05.570] AI1 attack decision: (0,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down} → (1,0) (dead-end)
+[00:05.925] Revealed: P1 (0,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:05.926] Dice rolled: 2
+[00:05.940] MSG: Nothing happens — Dead End.
+[00:09.290] Attack P1(0,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P0(1,0)(empty)  Dice=2  → DEAD_END
+[00:09.290] Anim: 3F  (blank slot)
+[00:11.793] Turn ended  P1  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [Mad ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:12.390] Mode selected P0: TECH
+[00:12.693] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:14.078] Tech played  P0: "Siege Cannon"
+[00:15.623] MSG: Siege Cannon active!
+[00:15.627] Tech resolved  P0
+[00:16.529] Mode selected P0: ATTACK
+[00:16.533] Attack phase P0: 2 attack(s) available
+[00:16.533] MSG: Player 1: tap a character to attack.
+[00:16.823] AI0 attack decision: (1,3)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima | face-down} → (0,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:17.157] Revealed: P0 (1,3) "Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima}
+[00:17.157] Dice rolled: 2
+[00:17.164] MSG: Leorudus the Warlord wins!
+[00:21.841] Crystals: P1 5000 → 4740 (-260)  [battle]
+[00:23.240] Attack P0(1,3)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(0,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=2  ATK=80 vs DEF=15  → WIN
+[00:23.240] Anim: 3A  △ P1(0,0)
+[00:23.240] Card destroyed  P1 (0,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:25.753] Turn ended  P0  |  Crystals P0=4000 P1=4740
+
+--- Turn 3  |  Player 1  |  Crystals P0=4000 P1=4740 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][Leor][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:26.349] Mode selected P1: TECH
+[00:26.649] Crystals: P1 4740 → 3240 (-1500)  [tech cost]
+[00:28.034] Tech played  P1: "Resurrection"
+[00:29.568] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:29.966] AI1 target chosen: (0,2)
+[00:29.969] Revealed: P1 (0,2) "Mad Raccoon" {Unit ATK0 DEF0 | cost 260 | affinity Nature | base 0/0}
+[00:29.970] MSG: Revived Mad Raccoon at [0,2]!
+[00:29.980] Tech resolved  P1
+[00:30.866] Mode selected P1: ATTACK
+[00:30.870] Attack phase P1: 2 attack(s) available
+[00:30.871] MSG: Player 2: tap a character to attack.
+[00:31.166] AI1 attack decision: (0,2)"Mad Raccoon" {Unit ATK0 DEF0 | cost 260 | affinity Nature | base 0/0} → (0,0) (dead-end)
+[00:31.467] Dice rolled: 1
+[00:31.493] MSG: Nothing happens — Dead End.
+[00:34.870] Attack P1(0,2)"Mad Raccoon" {Unit ATK0 DEF0 | cost 260 | affinity Nature | base 0/0} → P0(0,0)(empty)  Dice=1  → DEAD_END
+[00:34.870] Anim: 3F  (blank slot)
+[00:37.370] Turn ended  P1  |  Crystals P0=4000 P1=3240
+
+--- Turn 4  |  Player 0  |  Crystals P0=4000 P1=3240 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][Leor][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][Mad ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:39.449] Crystals: P0 4000 → 3700 (-300)  [union]
+[00:39.493] Revealed: P0 (0,2) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:39.493] Union summoned P0: "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down}, "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down}
+[00:39.494] MSG: Player 1 summoned [False Prophet] using: "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down}, "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down}
+[00:42.846] Mode selected P0: ATTACK
+[00:42.856] Attack phase P0: 2 attack(s) available
+[00:42.856] MSG: Player 1: tap a character to attack.
+[00:43.140] AI0 attack decision: (0,2)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → (0,2) "Mad Raccoon" {Unit ATK0 DEF0 | cost 260 | affinity Nature | base 0/0}
+[00:43.450] Dice rolled: 4
+[00:43.528] MSG: False Prophet wins!
+[00:48.184] Crystals: P1 3240 → 2980 (-260)  [battle]
+[00:49.585] Attack P0(0,2)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P1(0,2)"Mad Raccoon" {Unit ATK0 DEF0 | cost 260 | affinity Nature | base 0/0}  Dice=4  ATK=20 vs DEF=0  → WIN
+[00:49.585] Anim: 3A  △ P1(0,2)
+[00:49.585] Card destroyed  P1 (0,2) "Mad Raccoon" {Unit ATK0 DEF0 | cost 260 | affinity Nature | base 0/0}
+[00:50.075] Mode selected P0: ATTACK
+[00:50.079] Attack phase P0: 1 attack(s) available
+[00:50.081] MSG: Player 1: tap a character to attack.
+[00:50.375] AI0 attack decision: (1,3)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (0,1) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima | face-down}
+[00:50.711] Revealed: P1 (0,1) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[00:50.711] Dice rolled: 5
+[00:50.714] MSG: Leorudus the Warlord wins!
+[00:55.367] Crystals: P1 2980 → 2380 (-600)  [battle]
+[00:56.772] Attack P0(1,3)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(0,1)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}  Dice=5  ATK=80 vs DEF=60  → WIN
+[00:56.772] Anim: 3A  △ P1(0,1)
+[00:56.772] Card destroyed  P1 (0,1) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[00:57.264] Turn ended  P0  |  Crystals P0=3700 P1=2380
+
+--- Turn 5  |  Player 1  |  Crystals P0=3700 P1=2380 ---
+P0:   [  — ][  — ][Fals][  ? ][  — ]
+      [  — ][  — ][  ? ][Leor][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:57.870] Mode selected P1: ATTACK
+[00:57.874] Attack phase P1: 2 attack(s) available
+[00:57.874] MSG: Player 2: tap a character to attack.
+[00:58.153] AI1 attack decision: (0,4)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio | face-down} → (1,1) (dead-end)
+[00:58.492] Revealed: P1 (0,4) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:58.492] Dice rolled: 4
+[00:58.504] MSG: Nothing happens — Dead End.
+[01:01.838] Attack P1(0,4)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P0(1,1)(empty)  Dice=4  → DEAD_END
+[01:01.839] Anim: 3F  (blank slot)
+[01:04.341] Turn ended  P1  |  Crystals P0=3700 P1=2380
+
+--- Turn 6  |  Player 0  |  Crystals P0=3700 P1=2380 ---
+P0:   [  — ][  — ][Fals][  ? ][  — ]
+      [  — ][  — ][  ? ][Leor][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][Leec]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:04.342] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[01:04.733] Revealed: P1 (2,3) (blank slot)
+[01:04.733] MSG: False Prophet: Dead End revealed — self-destructs!
+[01:04.739] Card destroyed  P0 (0,2) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[01:04.744] Ability target resolved  P0
+[01:04.931] Mode selected P0: TECH
+[01:05.233] Crystals: P0 3700 → 2200 (-1500)  [tech cost]
+[01:06.624] Tech played  P0: "Resurrection"
+[01:08.166] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[01:08.566] AI0 target chosen: (0,1)
+[01:08.570] Revealed: P0 (0,1) "False Prophet" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 300 | affinity Divine | base 0/0}
+[01:08.570] MSG: Revived False Prophet at [0,1]!
+[01:08.577] Tech resolved  P0
+[01:09.466] Mode selected P0: ATTACK
+[01:09.471] Attack phase P0: 2 attack(s) available
+[01:09.471] MSG: Player 1: tap a character to attack.
+[01:09.767] AI0 attack decision: (1,3)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (0,4) "Leech Man" {Unit ATK60 DEF60 | cost 880 | affinity Bio | buff +permDEF20}
+[01:10.065] Dice rolled: 4
+[01:10.080] MSG: Leorudus the Warlord wins!
+[01:14.757] Crystals: P1 2380 → 1500 (-880)  [battle]
+[01:16.157] Attack P0(1,3)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(0,4)"Leech Man" {Unit ATK60 DEF60 | cost 880 | affinity Bio | buff +permDEF20}  Dice=4  ATK=80 vs DEF=60  → WIN
+[01:16.157] Anim: 3A  △ P1(0,4)
+[01:16.158] Card destroyed  P1 (0,4) "Leech Man" {Unit ATK60 DEF60 | cost 880 | affinity Bio | buff +permDEF20}
+[01:16.648] Mode selected P0: ATTACK
+[01:16.652] Attack phase P0: 1 attack(s) available
+[01:16.653] MSG: Player 1: tap a character to attack.
+[01:16.949] AI0 attack decision: (0,1)"False Prophet" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 300 | affinity Divine | base 0/0} → (2,3) (dead-end)
+[01:17.249] Dice rolled: 4
+[01:17.297] MSG: Nothing happens — Dead End.
+[01:20.684] Attack P0(0,1)"False Prophet" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 300 | affinity Divine | base 0/0} → P1(2,3)(empty)  Dice=4  → DEAD_END
+[01:20.684] Anim: 3F  (blank slot)
+[01:21.176] Turn ended  P0  |  Crystals P0=2200 P1=1500
+
+--- Turn 7  |  Player 1  |  Crystals P0=2200 P1=1500 ---
+P0:   [  — ][Fals][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][Leor][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:21.780] Mode selected P1: ATTACK
+[01:21.782] Attack phase P1: 2 attack(s) available
+[01:21.782] MSG: Player 2: tap a character to attack.
+[01:22.070] AI1 attack decision: (1,4)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down} → (0,1) "False Prophet" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 300 | affinity Divine | base 0/0}
+[01:22.401] Revealed: P1 (1,4) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:22.404] Dice rolled: 3
+[01:22.427] MSG: Skeleton Grappler wins!
+[01:27.099] Attack P1(1,4)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P0(0,1)"False Prophet" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 300 | affinity Divine | base 0/0}  Dice=3  ATK=20 vs DEF=0  → WIN
+[01:27.099] Anim: 3A  △ P0(0,1)
+[01:27.099] Card destroyed  P0 (0,1) "False Prophet" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 300 | affinity Divine | base 0/0}
+[01:27.582] Mode selected P1: ATTACK
+[01:27.589] Attack phase P1: 1 attack(s) available
+[01:27.589] MSG: Player 2: tap a character to attack.
+[01:27.870] AI1 attack decision: (0,3)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down} → (2,0) (dead-end)
+[01:28.201] Revealed: P1 (0,3) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[01:28.201] Dice rolled: 2
+[01:28.212] MSG: Nothing happens — Dead End.
+[01:31.554] Attack P1(0,3)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P0(2,0)(empty)  Dice=2  → DEAD_END
+[01:31.554] Anim: 3F  (blank slot)
+[01:32.048] Turn ended  P1  |  Crystals P0=2200 P1=1500
+
+--- Turn 8  |  Player 0  |  Crystals P0=2200 P1=1500 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][Leor][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][Armo][  — ]
+      [  — ][  — ][  — ][  — ][Skel]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:32.649] Mode selected P0: ATTACK
+[01:32.655] Attack phase P0: 2 attack(s) available
+[01:32.655] MSG: Player 1: tap a character to attack.
+[01:32.948] AI0 attack decision: (1,3)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (0,3) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[01:33.249] Dice rolled: 2
+[01:33.262] MSG: Leorudus the Warlord wins!
+[01:37.949] Crystals: P1 1500 → 1330 (-170)  [battle]
+[01:39.356] Attack P0(1,3)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(0,3)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}  Dice=2  ATK=80 vs DEF=20  → WIN
+[01:39.356] Anim: 3A  △ P1(0,3)
+[01:39.356] Card destroyed  P1 (0,3) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[01:39.850] Mode selected P0: ATTACK
+[01:39.857] Attack phase P0: 1 attack(s) available
+[01:39.859] MSG: Player 1: tap a character to attack.
+[01:40.116] AI0 attack decision: (1,2)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos | face-down} → (1,4) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:40.456] Revealed: P0 (1,2) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[01:40.457] Dice rolled: 2
+[01:40.460] MSG: Immortal Vampire wins!
+[01:45.144] Crystals: P1 1330 → 1180 (-150)  [battle]
+[01:46.540] Attack P0(1,2)"Immortal Vampire" {Unit ATK15 DEF40 | cost 1200 | affinity Chaos | base 15/40 | halved} → P1(1,4)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=2  ATK=30 vs DEF=5  → WIN
+[01:46.540] Anim: 3A  △ P1(1,4)
+[01:46.541] Card destroyed  P1 (1,4) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:47.034] Turn ended  P0  |  Crystals P0=2200 P1=1180
+
+--- Turn 9  |  Player 1  |  Crystals P0=2200 P1=1180 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Immo][Leor][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:47.649] Mode selected P1: ATTACK
+[01:47.653] Attack phase P1: 2 attack(s) available
+[01:47.653] MSG: Player 2: tap a character to attack.
+[01:47.940] AI1 attack decision: (3,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down} → (1,2) "Immortal Vampire" {Unit ATK15 DEF40 | cost 1200 | affinity Chaos | base 15/40 | halved}
+[01:48.280] Revealed: P1 (3,2) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:48.280] Dice rolled: 4
+[01:48.283] MSG: Tomb Bandit wins!
+[01:52.960] Crystals: P0 2200 → 1000 (-1200)  [battle]
+[01:54.359] Attack P1(3,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(1,2)"Immortal Vampire" {Unit ATK15 DEF40 | cost 1200 | affinity Chaos | base 15/40 | halved}  Dice=4  ATK=75 vs DEF=40  → WIN
+[01:54.359] Anim: 3A  △ P0(1,2)
+[01:54.359] Card destroyed  P0 (1,2) "Immortal Vampire" {Unit ATK15 DEF40 | cost 1200 | affinity Chaos | base 15/40 | halved}
+[01:54.858] Mode selected P1: ATTACK
+[01:54.862] Attack phase P1: 1 attack(s) available
+[01:54.864] MSG: Player 2: tap a character to attack.
+[01:55.166] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (3,0) (dead-end)
+[01:55.497] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:55.498] Dice rolled: 5
+[01:55.512] MSG: Nothing happens — Dead End.
+[01:58.861] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(3,0)(empty)  Dice=5  → DEAD_END
+[01:58.861] Anim: 3F  (blank slot)
+[01:59.352] Turn ended  P1  |  Crystals P0=1000 P1=1180
+
+--- Turn 10  |  Player 0  |  Crystals P0=1000 P1=1180 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Leor][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][Chao][  — ][  ? ]
+      [  ? ][  ? ][Tomb][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:59.949] Mode selected P0: ATTACK
+[01:59.956] Attack phase P0: 2 attack(s) available
+[01:59.956] MSG: Player 1: tap a character to attack.
+[02:00.248] AI0 attack decision: (1,3)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (3,2) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[02:00.550] Dice rolled: 4
+[02:00.574] MSG: Leorudus the Warlord wins!
+[02:05.238] Crystals: P1 1180 → 180 (-1000)  [battle]
+[02:06.649] Attack P0(1,3)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(3,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=4  ATK=80 vs DEF=60  → WIN
+[02:06.649] Anim: 3A  △ P1(3,2)
+[02:06.649] Card destroyed  P1 (3,2) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[02:07.130] Mode selected P0: ATTACK
+[02:07.134] Attack phase P0: 1 attack(s) available
+[02:07.135] MSG: Player 1: tap a character to attack.
+[02:07.422] AI0 attack decision: (3,3)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:07.763] Revealed: P0 (3,3) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[02:07.763] Dice rolled: 2
+[02:07.767] MSG: Cursed Well wins!
+[02:13.392] Crystals: P1 180 → 80 (-100)  [battle]
+[02:14.799] Attack P0(3,3)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=15 vs DEF=0  → WIN
+[02:14.799] Reckoning overlay: P0 "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} +ATK 15
+[02:14.799] Anim: 3A  △ P1(2,2)
+[02:14.799] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:15.286] Turn ended  P0  |  Crystals P0=1000 P1=80
+
+--- Turn 11  |  Player 1  |  Crystals P0=1000 P1=80 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Leor][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][Curs][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:15.886] Mode selected P1: ATTACK
+[02:15.891] Attack phase P1: 2 attack(s) available
+[02:15.891] MSG: Player 2: tap a character to attack.
+[02:16.183] AI1 attack decision: (4,4)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos | face-down} → (3,3) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[02:16.523] Revealed: P1 (4,4) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[02:16.523] Dice rolled: 4
+[02:16.529] MSG: Staircase Lady wins!
+[02:21.166] Crystals: P0 1000 → 700 (-300)  [battle]
+[02:22.569] Attack P1(4,4)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P0(3,3)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}  Dice=4  ATK=30 vs DEF=25  → WIN
+[02:22.569] Anim: 3A  △ P0(3,3)
+[02:22.569] Card destroyed  P0 (3,3) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[02:25.078] Turn ended  P1  |  Crystals P0=700 P1=80
+
+--- Turn 12  |  Player 0  |  Crystals P0=700 P1=80 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Leor][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][Stai]
+[02:25.676] Mode selected P0: ATTACK
+[02:25.684] Attack phase P0: 2 attack(s) available
+[02:25.684] MSG: Player 1: tap a character to attack.
+[02:25.971] AI0 attack decision: (1,3)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (4,4) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[02:26.270] Dice rolled: 1
+[02:26.278] MSG: Leorudus the Warlord wins!
+[02:30.964] Crystals: P1 80 → 0 (-80)  [battle]
+
+=== GAME OVER ===
+[02:30.979] AI Player 0 wins
+[02:30.979] Reason: crystals
+[02:30.979] Final crystals — P0: 700  P1: 0  |  Turns: 12
+[02:30.979] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_neighbors_leaf_blower_2026-05-31_19-18-16_464.txt

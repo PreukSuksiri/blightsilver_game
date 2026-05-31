@@ -91,7 +91,8 @@ func start_logging(board: Node) -> void:
 
 	# Open log file
 	_ensure_log_dir()
-	var log_info: Dictionary = SessionLogNaming.begin_battle_log("ai_vs_ai")
+	var mode_tag: String = "card_e2e" if CardE2ERunner.is_active() else "ai_vs_ai"
+	var log_info: Dictionary = SessionLogNaming.begin_battle_log(mode_tag)
 	_file_path = log_info["path"]
 	_file = FileAccess.open(_file_path, FileAccess.WRITE)
 
@@ -105,6 +106,10 @@ func start_logging(board: Node) -> void:
 	_raw("=== %s ===" % log_info["battle_display_name"])
 	_raw("Battle started: %s" % log_info["battle_started_at"])
 	_raw("%s (started %s)" % [log_info["session_display_name"], log_info["session_started_at"]])
+	if CardE2ERunner.is_active():
+		for line: String in CardE2ERunner.build_scenario_log_header():
+			_raw(line)
+		_raw("")
 	_raw("=== AI vs AI Match ===")
 	if batch_total > 1:
 		_raw("Batch iteration: %d / %d" % [batch_completed + 1, batch_total])

@@ -1,0 +1,389 @@
+=== Battle of Spilled Iced Coffee ===
+Battle started: 2026-05-31 05:05:53.451
+Game Session of Mojito (started 2026-05-31 05:05:27.657)
+=== AI vs AI Match ===
+Batch iteration: 1 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Accident, Spy
+P1 Tech hand: Accident, Release Mutagen, Siege Cannon
+P0:   [T:Flam][  — ][C:Tiny][  — ][C:Flam]
+      [T:Expl][  — ][C:Choi][T:Bunk][T:Curs]
+      [T:Hypn][C:Paro][C:Myst][C:Claw][C:Gran]
+      [C:Jira][  — ][T:Trap][  — ][C:Mind]
+      [C:Plan][  — ][  — ][  — ][C:Book]
+P1:   [C:Skel][C:Kiyo][  — ][C:Silv][C:Mine]
+      [  — ][T:Hard][  — ][C:Wand][  — ]
+      [  — ][T:Red ][C:Ox P][  — ][  — ]
+      [  — ][C:Vile][T:Blac][C:Mars][  — ]
+      [C:Echo][  — ][  — ][T:Pepp][C:Godd]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:05.108] Mode selected P0: TECH
+[00:05.416] Tech played  P0: "Spy"
+[00:06.993] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.397] AI0 target chosen: (1,0)
+[00:07.398] Revealed: P1 (1,0) (blank slot)
+[00:07.400] Tech resolved  P0
+[00:10.324] Crystals: P0 5000 → 4950 (-50)  [skip tax]
+[00:10.324] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:11.711] Turn ended  P0  |  Crystals P0=4950 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4950 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:14.320] Crystals: P1 5000 → 4950 (-50)  [skip tax]
+[00:14.320] MSG: Player 2 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:15.703] Turn ended  P1  |  Crystals P0=4950 P1=4950
+
+--- Turn 3  |  Player 0  |  Crystals P0=4950 P1=4950 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:18.320] Crystals: P0 4950 → 4850 (-100)  [skip tax]
+[00:18.320] MSG: Player 1 skips without attacking — 100◆ tax (skip #2 this duel)
+[00:19.704] Turn ended  P0  |  Crystals P0=4850 P1=4950
+
+--- Turn 4  |  Player 1  |  Crystals P0=4850 P1=4950 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:21.819] Union summoned P1: [Kiba the Giant Slayer] from Kiyoko the Death Whisper, Silver Spearman
+[00:21.820] Crystals: P1 4950 → 3950 (-1000)  [union]
+[00:21.896] Revealed: P1 (0,1) "Kiba the Giant Slayer"
+[00:21.898] MSG: Player 2 summoned [Kiba the Giant Slayer] using: Kiyoko the Death Whisper, Silver Spearman
+[00:27.304] Crystals: P1 3950 → 3850 (-100)  [skip tax]
+[00:27.305] MSG: Player 2 skips without attacking — 100◆ tax (skip #2 this duel)
+[00:28.690] Turn ended  P1  |  Crystals P0=4850 P1=3850
+
+--- Turn 5  |  Player 0  |  Crystals P0=4850 P1=3850 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][Kiba][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:29.303] Mode selected P0: TECH
+[00:29.612] Crystals: P0 4850 → 3850 (-1000)  [tech cost]
+[00:31.001] Tech played  P0: "Accident"
+[00:32.553] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:32.961] AI0 target chosen: (0,1)
+[00:32.965] Card destroyed  P1 (0,1) "Kiba the Giant Slayer"
+[00:32.968] Tech resolved  P0
+[00:33.881] Mode selected P0: ATTACK
+[00:33.884] Attack phase P0: 2 attack(s) available
+[00:33.884] MSG: Player 1: tap a character to attack.
+[00:34.190] AI0 attack decision: (0,2)"Tiny Pixie" [ATK=0] → (0,4) "Miner Probe" [DEF=10]
+[00:34.568] Revealed: P0 (0,2) "Tiny Pixie"
+[00:34.625] Revealed: P1 (0,4) "Miner Probe"
+[00:34.625] Dice rolled: 3
+[00:39.258] Crystals: P0 3850 → 3750 (-100)  [battle]
+[00:40.649] MSG: Tiny Pixie survives destruction!
+[00:40.654] Attack P0(0,2)"Tiny Pixie" → P1(0,4)"Miner Probe"  Dice=3  ATK=0 vs DEF=10  → LOSE
+[00:40.654] Anim: 3B  △ P0(0,2)
+[00:41.157] Mode selected P0: ATTACK
+[00:41.165] Attack phase P0: 1 attack(s) available
+[00:41.165] MSG: Player 1: tap a character to attack.
+[00:41.465] AI0 attack decision: (1,2)"Choir Lady Abigail" [ATK=25] → (0,4) "Miner Probe" [DEF=10]
+[00:41.846] Revealed: P0 (1,2) "Choir Lady Abigail"
+[00:41.846] Dice rolled: 5
+[00:41.851] MSG: Choir Lady Abigail wins!
+[00:46.473] Crystals: P1 3850 → 3650 (-200)  [battle]
+[00:47.867] Card destroyed  P1 (0,4) "Miner Probe"
+[00:47.870] Attack P0(1,2)"Choir Lady Abigail" → P1(0,4)"Miner Probe"  Dice=5  ATK=25 vs DEF=10  → WIN
+[00:47.870] Anim: 3A  △ P1(0,4)
+[00:48.379] Turn ended  P0  |  Crystals P0=3750 P1=3650
+
+--- Turn 6  |  Player 1  |  Crystals P0=3750 P1=3650 ---
+P0:   [  ? ][  — ][Tiny][  — ][  ? ]
+      [  ? ][  — ][Choi][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:48.981] Mode selected P1: TECH
+[00:49.290] Crystals: P1 3650 → 2650 (-1000)  [tech cost]
+[00:50.677] Tech played  P1: "Accident"
+[00:52.232] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:52.639] AI1 target chosen: (1,2)
+[00:52.641] Card destroyed  P0 (1,2) "Choir Lady Abigail"
+[00:52.644] Tech resolved  P1
+[00:53.556] Mode selected P1: ATTACK
+[00:53.559] Attack phase P1: 2 attack(s) available
+[00:53.559] MSG: Player 2: tap a character to attack.
+[00:53.864] AI1 attack decision: (1,3)"Wandering Swordsman" [ATK=60] → (0,2) "Tiny Pixie" [DEF=0]
+[00:54.251] Revealed: P1 (1,3) "Wandering Swordsman"
+[00:54.251] Dice rolled: 1
+[00:54.255] MSG: Wandering Swordsman wins!
+[00:58.863] Crystals: P0 3750 → 3650 (-100)  [battle]
+[01:00.258] Card destroyed  P0 (0,2) "Tiny Pixie"
+[01:00.262] Attack P1(1,3)"Wandering Swordsman" → P0(0,2)"Tiny Pixie"  Dice=1  ATK=60 vs DEF=0  → WIN
+[01:00.262] Anim: 3A  △ P0(0,2)
+[01:00.763] Mode selected P1: ATTACK
+[01:00.765] Attack phase P1: 1 attack(s) available
+[01:00.766] MSG: Player 2: tap a character to attack.
+[01:01.069] AI1 attack decision: (4,0)"Echo Bringer" [ATK=70] → (0,4) "Flame Seraph" [DEF=10]
+[01:01.427] Revealed: P1 (4,0) "Echo Bringer"
+[01:01.462] Revealed: P0 (0,4) "Flame Seraph"
+[01:01.462] Dice rolled: 4
+[01:01.466] MSG: Echo Bringer wins!
+[01:06.169] Crystals: P0 3650 → 3150 (-500)  [battle]
+[01:07.562] Card destroyed  P0 (0,4) "Flame Seraph"
+[01:07.565] Attack P1(4,0)"Echo Bringer" → P0(0,4)"Flame Seraph"  Dice=4  ATK=70 vs DEF=10  → WIN
+[01:07.565] Anim: 3A  △ P0(0,4)
+[01:08.063] Turn ended  P1  |  Crystals P0=3150 P1=2650
+
+--- Turn 7  |  Player 0  |  Crystals P0=3150 P1=2650 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][Wand][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [Echo][  — ][  — ][  ? ][  ? ]
+[01:08.660] Mode selected P0: TECH
+[01:08.961] Crystals: P0 3150 → 1650 (-1500)  [tech cost]
+[01:10.348] Tech played  P0: "Resurrection"
+[01:11.894] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[01:12.294] AI0 target chosen: (0,1)
+[01:12.297] Revealed: P0 (0,1) "Flame Seraph"
+[01:12.298] MSG: Revived Flame Seraph at [0,1]!
+[01:12.304] Tech resolved  P0
+[01:13.194] Mode selected P0: ATTACK
+[01:13.204] Attack phase P0: 2 attack(s) available
+[01:13.204] MSG: Player 1: tap a character to attack.
+[01:13.494] AI0 attack decision: (0,1)"Flame Seraph" [ATK=0] → (1,1) "Hard Scale" [DEF=0]
+[01:13.863] Revealed: P1 (1,1) "Hard Scale"
+[01:13.863] Dice rolled: 1
+[01:14.089] MSG: Trap triggered: Hard Scale!
+[01:18.175] Card destroyed  P1 (1,1) "Hard Scale"
+[01:18.176] Crystals: P1 2650 → 1950 (-700)  [trap cost]
+[01:19.566] MSG: Hard Scale: All your units gain +5 DEF in Reckoning this turn!
+[01:19.570] Trap: "Hard Scale" triggered  P0(0,1)→P1(1,1)
+[01:19.570] Anim: 3D  (attacker survives)
+[01:22.092] Turn ended  P0  |  Crystals P0=1650 P1=1950
+
+--- Turn 8  |  Player 1  |  Crystals P0=1650 P1=1950 ---
+P0:   [  ? ][Flam][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Wand][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [Echo][  — ][  — ][  ? ][  ? ]
+[01:22.699] Mode selected P1: TECH
+[01:23.007] Crystals: P1 1950 → 950 (-1000)  [tech cost]
+[01:24.395] Tech played  P1: "Siege Cannon"
+[01:25.948] MSG: Siege Cannon active!
+[01:25.954] Tech resolved  P1
+[01:26.865] Mode selected P1: ATTACK
+[01:26.871] Attack phase P1: 2 attack(s) available
+[01:26.871] MSG: Player 2: tap a character to attack.
+[01:27.172] AI1 attack decision: (4,0)"Echo Bringer" [ATK=70] → (0,1) "Flame Seraph" [DEF=10]
+[01:27.481] Dice rolled: 2
+[01:27.492] MSG: Echo Bringer wins!
+[01:32.182] Crystals: P0 1650 → 1150 (-500)  [battle]
+[01:33.575] Card destroyed  P0 (0,1) "Flame Seraph"
+[01:33.576] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[01:33.579] Attack P1(4,0)"Echo Bringer" → P0(0,1)"Flame Seraph"  Dice=2  ATK=70 vs DEF=10  → WIN
+[01:33.579] Anim: 3A  △ P0(0,1)
+[01:34.082] Mode selected P1: ATTACK
+[01:34.087] Attack phase P1: 2 attack(s) available
+[01:34.087] MSG: Player 2: tap a character to attack.
+[01:34.390] AI1 attack decision: (1,3)"Wandering Swordsman" [ATK=60] → (0,0) "Flame Trap" [DEF=0]
+[01:34.766] Revealed: P0 (0,0) "Flame Trap"
+[01:34.766] Dice rolled: 5
+[01:34.997] MSG: Trap triggered: Flame Trap!
+[01:39.081] Card destroyed  P0 (0,0) "Flame Trap"
+[01:39.082] Crystals: P0 1150 → 900 (-250)  [trap cost]
+[01:40.473] MSG: Spike Trap: Wandering Swordsman permanently loses 10 ATK!
+[01:40.475] Trap: "Flame Trap" triggered  P1(1,3)→P0(0,0)
+[01:40.475] Anim: 3D  (attacker survives)
+[01:42.985] Turn ended  P1  |  Crystals P0=900 P1=950
+
+--- Turn 9  |  Player 0  |  Crystals P0=900 P1=950 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Wand][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [Echo][  — ][  — ][  ? ][  ? ]
+[01:43.609] Mode selected P0: ATTACK
+[01:43.613] Attack phase P0: 2 attack(s) available
+[01:43.613] MSG: Player 1: tap a character to attack.
+[01:43.889] AI0 attack decision: (2,2)"Mysterious Miner" [ATK=25] → (0,3) "(dead-end)"
+[01:44.231] Revealed: P0 (2,2) "Mysterious Miner"
+[01:44.232] Dice rolled: 4
+[01:44.242] MSG: Nothing happens — Dead End.
+[01:47.601] Dead-end placed  P1 (0,3)
+[01:47.606] Attack P0(2,2)"Mysterious Miner" → P1(0,3)(empty)  Dice=4  → DEAD_END
+[01:47.606] Anim: 3F  (blank slot)
+[01:48.106] Mode selected P0: ATTACK
+[01:48.112] Attack phase P0: 1 attack(s) available
+[01:48.112] MSG: Player 1: tap a character to attack.
+[01:48.411] AI0 attack decision: (2,3)"Claw Mutant" [ATK=15] → (1,0) "(dead-end)"
+[01:48.770] Revealed: P0 (2,3) "Claw Mutant"
+[01:48.770] Dice rolled: 3
+[01:48.785] MSG: Nothing happens — Dead End.
+[01:52.123] Dead-end placed  P1 (1,0)
+[01:52.130] Attack P0(2,3)"Claw Mutant" → P1(1,0)(empty)  Dice=3  → DEAD_END
+[01:52.130] Anim: 3F  (blank slot)
+[01:52.631] Turn ended  P0  |  Crystals P0=900 P1=950
+
+--- Turn 10  |  Player 1  |  Crystals P0=900 P1=950 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][Myst][Claw][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Wand][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [Echo][  — ][  — ][  ? ][  ? ]
+[01:53.236] Mode selected P1: ATTACK
+[01:53.245] Attack phase P1: 2 attack(s) available
+[01:53.245] MSG: Player 2: tap a character to attack.
+[01:53.544] AI1 attack decision: (4,0)"Echo Bringer" [ATK=70] → (2,3) "Claw Mutant" [DEF=10]
+[01:53.852] Dice rolled: 4
+[01:53.865] MSG: Echo Bringer wins!
+[01:58.554] Crystals: P0 900 → 720 (-180)  [battle]
+[01:59.947] Card destroyed  P0 (2,3) "Claw Mutant"
+[01:59.948] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[01:59.953] Attack P1(4,0)"Echo Bringer" → P0(2,3)"Claw Mutant"  Dice=4  ATK=70 vs DEF=10  → WIN
+[01:59.953] Anim: 3A  △ P0(2,3)
+[02:00.453] Mode selected P1: ATTACK
+[02:00.460] Attack phase P1: 2 attack(s) available
+[02:00.460] MSG: Player 2: tap a character to attack.
+[02:00.760] AI1 attack decision: (1,3)"Wandering Swordsman" [ATK=50] → (2,2) "Mysterious Miner" [DEF=15]
+[02:01.069] Dice rolled: 5
+[02:01.078] MSG: Wandering Swordsman wins!
+[02:05.769] Crystals: P0 720 → 470 (-250)  [battle]
+[02:07.163] Card destroyed  P0 (2,2) "Mysterious Miner"
+[02:07.168] Attack P1(1,3)"Wandering Swordsman" → P0(2,2)"Mysterious Miner"  Dice=5  ATK=50 vs DEF=15  → WIN
+[02:07.168] Anim: 3A  △ P0(2,2)
+[02:09.684] Turn ended  P1  |  Crystals P0=470 P1=950
+
+--- Turn 11  |  Player 0  |  Crystals P0=470 P1=950 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Wand][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [Echo][  — ][  — ][  ? ][  ? ]
+[02:10.286] Mode selected P0: ATTACK
+[02:10.292] Attack phase P0: 2 attack(s) available
+[02:10.293] MSG: Player 1: tap a character to attack.
+[02:10.585] AI0 attack decision: (2,1)"Parom the Smuggler" [ATK=30] → (0,0) "Skeleton Grappler" [DEF=5]
+[02:10.955] Revealed: P0 (2,1) "Parom the Smuggler"
+[02:11.001] Revealed: P1 (0,0) "Skeleton Grappler"
+[02:11.001] Crystals: P0 470 → 510 (+40)  [ability]
+[02:11.001] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[02:11.001] Dice rolled: 5
+[02:11.004] MSG: Parom the Smuggler wins!
+[02:15.561] Crystals: P1 950 → 800 (-150)  [battle]
+[02:16.953] Card destroyed  P1 (0,0) "Skeleton Grappler"
+[02:16.956] Attack P0(2,1)"Parom the Smuggler" → P1(0,0)"Skeleton Grappler"  Dice=5  ATK=30 vs DEF=5  → WIN
+[02:16.956] Anim: 3A  △ P1(0,0)
+[02:19.464] Turn ended  P0  |  Crystals P0=510 P1=800
+
+--- Turn 12  |  Player 1  |  Crystals P0=510 P1=800 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][Paro][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Wand][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [Echo][  — ][  — ][  ? ][  ? ]
+[02:20.050] Mode selected P1: ATTACK
+[02:20.060] Attack phase P1: 2 attack(s) available
+[02:20.060] MSG: Player 2: tap a character to attack.
+[02:20.348] AI1 attack decision: (4,0)"Echo Bringer" [ATK=70] → (2,1) "Parom the Smuggler" [DEF=20]
+[02:20.647] Dice rolled: 1
+[02:20.659] MSG: Echo Bringer wins!
+[02:25.340] Crystals: P0 510 → 210 (-300)  [battle]
+[02:26.735] Card destroyed  P0 (2,1) "Parom the Smuggler"
+[02:26.736] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[02:26.741] Attack P1(4,0)"Echo Bringer" → P0(2,1)"Parom the Smuggler"  Dice=1  ATK=70 vs DEF=20  → WIN
+[02:26.741] Anim: 3A  △ P0(2,1)
+[02:27.232] Mode selected P1: ATTACK
+[02:27.237] Attack phase P1: 2 attack(s) available
+[02:27.237] MSG: Player 2: tap a character to attack.
+[02:27.531] AI1 attack decision: (1,3)"Wandering Swordsman" [ATK=50] → (4,0) "Plant 29" [DEF=85]
+[02:27.894] Revealed: P0 (4,0) "Plant 29"
+[02:27.894] Dice rolled: 4
+[02:32.639] Crystals: P1 800 → 200 (-600)  [battle]
+[02:34.035] Card destroyed  P1 (1,3) "Wandering Swordsman"
+[02:34.040] Attack P1(1,3)"Wandering Swordsman" → P0(4,0)"Plant 29"  Dice=4  ATK=50 vs DEF=85  → LOSE
+[02:34.040] Anim: 3B  △ P1(1,3)
+[02:34.040] Crystals: P0 210 → 0 (-210)  [card lost]
+
+=== GAME OVER ===
+[02:34.044] AI Player 1 wins
+[02:34.044] Reason: crystals
+[02:34.044] Final crystals — P0: 0  P1: 200  |  Turns: 12
+[02:34.044] Log saved to: res://logs/results/2026-05-31_05-05-27_657_mojito/battle_spilled_iced_coffee_2026-05-31_05-05-53_452.txt

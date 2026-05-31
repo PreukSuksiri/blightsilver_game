@@ -1,0 +1,307 @@
+=== Battle of New Shoe Blister March ===
+Battle started: 2026-05-31 17:28:53.953
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Immortal Vampire
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Immortal Vampire
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, Prayer, Resurrection
+P1 Tech hand: Siege Cannon, Resurrection, Prayer
+P0:   [C:Snip][  — ][C:Dark][  — ][C:Flam]
+      [T:Alar][C:Ostr][T:Self][C:Lazy][T:Blac]
+      [C:Chao][  — ][C:Immo][  — ][C:Sate]
+      [  — ][C:Silv][T:Bunk][C:Spac][  — ]
+      [C:Stai][  — ][C:Gran][T:Stre][C:Leec]
+P1:   [C:Blad][T:Flam][  — ][  — ][  — ]
+      [  — ][C:Vile][C:Gran][C:Doom][  — ]
+      [C:Skel][C:Ice ][C:Chao][C:Gold][T:Acid]
+      [  — ][C:War ][C:Stre][C:Moon][  — ]
+      [  — ][  — ][  — ][T:Snar][T:Bunk]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:07.389] Crystals: P1 5000 → 4950 (-50)  [skip tax]
+[00:07.390] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:08.782] Turn ended  P1  |  Crystals P0=5000 P1=4950
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4950 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:09.381] Mode selected P0: TECH
+[00:09.697] Tech played  P0: "Bribe"
+[00:11.265] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:11.772] MSG: Bribe: AI passed.
+[00:11.776] Tech resolved  P0
+[00:12.692] Mode selected P0: ATTACK
+[00:12.697] Attack phase P0: 2 attack(s) available
+[00:12.698] MSG: Player 1: tap a character to attack.
+[00:12.999] AI0 attack decision: (0,0)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine | face-down} → (2,0) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down}
+[00:13.361] Revealed: P0 (0,0) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:13.387] Revealed: P1 (2,0) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:13.388] Dice rolled: 3
+[00:13.396] MSG: Sniping Fairy wins!
+[00:18.937] Crystals: P1 4950 → 4650 (-300)  [battle]
+[00:20.338] Attack P0(0,0)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(2,0)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=3  ATK=20 vs DEF=5  → WIN
+[00:20.338] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} ATK -20
+[00:20.338] Anim: 3A  △ P1(2,0)
+[00:20.338] Card destroyed  P1 (2,0) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:20.837] Mode selected P0: ATTACK
+[00:20.841] Attack phase P0: 1 attack(s) available
+[00:20.841] MSG: Player 1: tap a character to attack.
+[00:21.138] AI0 attack decision: (0,2)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | face-down} → (0,2) (dead-end)
+[00:21.488] Revealed: P0 (0,2) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:21.488] Dice rolled: 3
+[00:21.504] MSG: Nothing happens — Dead End.
+[00:24.872] Attack P0(0,2)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} → P1(0,2)(empty)  Dice=3  → DEAD_END
+[00:24.872] Anim: 3F  (blank slot)
+[00:25.376] Turn ended  P0  |  Crystals P0=5000 P1=4650
+
+--- Turn 3  |  Player 1  |  Crystals P0=5000 P1=4650 ---
+P0:   [Snip][  — ][Dark][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:25.982] Mode selected P1: TECH
+[00:26.290] Crystals: P1 4650 → 3150 (-1500)  [tech cost]
+[00:27.679] Tech played  P1: "Resurrection"
+[00:29.249] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:29.647] AI1 target chosen: (0,3)
+[00:29.649] Revealed: P1 (0,3) "Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0}
+[00:29.649] MSG: Revived Skeleton Lancer at [0,3]!
+[00:29.654] Tech resolved  P1
+[00:30.547] Mode selected P1: ATTACK
+[00:30.550] Attack phase P1: 2 attack(s) available
+[00:30.550] MSG: Player 2: tap a character to attack.
+[00:30.848] AI1 attack decision: (0,3)"Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0} → (0,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[00:31.223] Revealed: P0 (0,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:31.224] Dice rolled: 2
+[00:35.915] Crystals: P1 3150 → 2850 (-300)  [battle]
+[00:37.313] Attack P1(0,3)"Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0} → P0(0,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=2  ATK=0 vs DEF=40  → LOSE
+[00:37.313] Anim: 3B  △ P1(0,3)
+[00:37.313] Card destroyed  P1 (0,3) "Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0}
+[00:37.815] Mode selected P1: ATTACK
+[00:37.820] Attack phase P1: 1 attack(s) available
+[00:37.820] MSG: Player 2: tap a character to attack.
+[00:38.127] AI1 attack decision: (2,1)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down} → (0,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:38.494] Revealed: P1 (2,1) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:38.494] Dice rolled: 1
+[00:38.501] MSG: Ice Mage wins!
+[00:43.128] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:44.538] Attack P1(2,1)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P0(0,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=1  ATK=50 vs DEF=40  → WIN
+[00:44.538] Anim: 3A  △ P0(0,4)
+[00:44.538] Card destroyed  P0 (0,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:45.031] Turn ended  P1  |  Crystals P0=4600 P1=2850
+
+--- Turn 4  |  Player 0  |  Crystals P0=4600 P1=2850 ---
+P0:   [Snip][  — ][Dark][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Ice ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:45.665] Mode selected P0: TECH
+[00:45.966] Crystals: P0 4600 → 3100 (-1500)  [tech cost]
+[00:47.362] Tech played  P0: "Resurrection"
+[00:48.899] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:49.298] AI0 target chosen: (0,1)
+[00:49.308] Revealed: P0 (0,1) "Flame Lizard" {Unit ATK0 DEF0 | cost 400 | affinity Nature | base 0/0}
+[00:49.308] MSG: Revived Flame Lizard at [0,1]!
+[00:49.323] Tech resolved  P0
+[00:50.199] Mode selected P0: ATTACK
+[00:50.205] Attack phase P0: 2 attack(s) available
+[00:50.205] MSG: Player 1: tap a character to attack.
+[00:50.497] AI0 attack decision: (0,1)"Flame Lizard" {Unit ATK0 DEF0 | cost 400 | affinity Nature | base 0/0} → (2,1) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:50.798] Dice rolled: 2
+[00:50.809] MSG: Both cards are destroyed!
+[00:55.422] Crystals: P0 3100 → 2700 (-400)  [battle]
+[00:56.806] Crystals: P1 2850 → 2450 (-400)  [battle]
+[00:58.209] Attack P0(0,1)"Flame Lizard" {Unit ATK0 DEF0 | cost 400 | affinity Nature | base 0/0} → P1(2,1)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=2  ATK=0 vs DEF=0  → TIE
+[00:58.209] Anim: 3C  △ P0(0,1) + △ P1(2,1)
+[00:58.209] Card destroyed  P0 (0,1) "Flame Lizard" {Unit ATK0 DEF0 | cost 400 | affinity Nature | base 0/0}
+[00:58.209] Card destroyed  P1 (2,1) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:58.691] Mode selected P0: ATTACK
+[00:58.695] Attack phase P0: 1 attack(s) available
+[00:58.696] MSG: Player 1: tap a character to attack.
+[00:58.989] AI0 attack decision: (0,0)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima | face-down}
+[00:59.335] Revealed: P1 (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:59.335] Dice rolled: 5
+[00:59.339] MSG: Sniping Fairy wins!
+[01:04.998] Crystals: P1 2450 → 2100 (-350)  [battle]
+[01:06.400] Attack P0(0,0)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(1,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=5  ATK=20 vs DEF=10  → WIN
+[01:06.400] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} ATK -20
+[01:06.400] Anim: 3A  △ P1(1,2)
+[01:06.400] Card destroyed  P1 (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[01:06.905] Turn ended  P0  |  Crystals P0=2700 P1=2100
+
+--- Turn 5  |  Player 1  |  Crystals P0=2700 P1=2100 ---
+P0:   [Snip][  — ][Dark][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[01:07.511] Mode selected P1: TECH
+[01:07.819] Crystals: P1 2100 → 1100 (-1000)  [tech cost]
+[01:09.208] Tech played  P1: "Siege Cannon"
+[01:10.770] MSG: Siege Cannon active!
+[01:10.773] Tech resolved  P1
+[01:11.692] Mode selected P1: ATTACK
+[01:11.716] Attack phase P1: 2 attack(s) available
+[01:11.717] MSG: Player 2: tap a character to attack.
+[01:11.998] AI1 attack decision: (3,3)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (0,0) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:12.353] Revealed: P1 (3,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:12.353] Dice rolled: 2
+[01:12.360] MSG: Moon Tribe Twin Blader wins!
+[01:16.960] Crystals: P0 2700 → 2350 (-350)  [battle]
+[01:18.357] Attack P1(3,3)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(0,0)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}  Dice=2  ATK=30 vs DEF=20  → WIN
+[01:18.357] Anim: 3A  △ P0(0,0)
+[01:18.357] Card destroyed  P0 (0,0) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:18.405] Coin flip: Tails
+[01:21.144] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[01:21.653] Mode selected P1: ATTACK
+[01:21.659] Attack phase P1: 1 attack(s) available
+[01:21.660] MSG: Player 2: tap a character to attack.
+[01:21.960] AI1 attack decision: (3,2)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima | face-down} → (4,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos | face-down}
+[01:22.322] Revealed: P1 (3,2) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:22.354] Revealed: P0 (4,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:22.354] Dice rolled: 2
+[01:22.358] MSG: Street Rogue wins!
+[01:26.982] Crystals: P0 2350 → 2170 (-180)  [battle]
+[01:28.380] Attack P1(3,2)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P0(4,0)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}  Dice=2  ATK=25 vs DEF=0  → WIN
+[01:28.380] Anim: 3A  △ P0(4,0)
+[01:28.380] Card destroyed  P0 (4,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:28.877] Turn ended  P1  |  Crystals P0=2170 P1=1100
+
+--- Turn 6  |  Player 0  |  Crystals P0=2170 P1=1100 ---
+P0:   [  — ][  — ][Dark][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][Stre][Moon][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[01:30.952] Crystals: P0 2170 → 670 (-1500)  [union]
+[01:30.995] Revealed: P0 (1,1) "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[01:30.995] Union summoned P0: "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down}
+[01:30.995] MSG: Player 1 summoned [Barros the Colossal] using: "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down}
+[01:34.428] Mode selected P0: ATTACK
+[01:34.438] Attack phase P0: 2 attack(s) available
+[01:34.438] MSG: Player 1: tap a character to attack.
+[01:34.721] AI0 attack decision: (0,2)"Dark Blob" {Unit ATK30 DEF50 | cost 500 | affinity Chaos | base 30/50} → (3,2) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:35.023] Dice rolled: 1
+[01:35.032] MSG: Dark Blob wins!
+[01:39.715] Crystals: P1 1100 → 750 (-350)  [battle]
+[01:41.123] Attack P0(0,2)"Dark Blob" {Unit ATK30 DEF50 | cost 500 | affinity Chaos | base 30/50} → P1(3,2)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=1  ATK=30 vs DEF=20  → WIN
+[01:41.123] Anim: 3A  △ P1(3,2)
+[01:41.123] Card destroyed  P1 (3,2) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:41.599] Mode selected P0: ATTACK
+[01:41.606] Attack phase P0: 1 attack(s) available
+[01:41.606] MSG: Player 1: tap a character to attack.
+[01:41.892] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (3,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:42.194] Dice rolled: 2
+[01:42.244] MSG: Barros the Colossal wins!
+[01:46.886] Crystals: P1 750 → 450 (-300)  [battle]
+[01:48.300] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(3,3)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=2  ATK=150 vs DEF=20  → WIN
+[01:48.300] Anim: 3A  △ P1(3,3)
+[01:48.300] Card destroyed  P1 (3,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:48.780] Turn ended  P0  |  Crystals P0=670 P1=450
+
+--- Turn 7  |  Player 1  |  Crystals P0=670 P1=450 ---
+P0:   [  — ][  — ][Dark][  — ][  — ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[01:49.389] Mode selected P1: ATTACK
+[01:49.395] Attack phase P1: 2 attack(s) available
+[01:49.395] MSG: Player 2: tap a character to attack.
+[01:49.677] AI1 attack decision: (3,1)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down} → (0,2) "Dark Blob" {Unit ATK30 DEF50 | cost 500 | affinity Chaos | base 30/50}
+[01:50.018] Revealed: P1 (3,1) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[01:50.018] Dice rolled: 2
+[01:50.023] MSG: War Genie wins!
+[01:54.669] Crystals: P0 670 → 170 (-500)  [battle]
+[01:56.070] Attack P1(3,1)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P0(0,2)"Dark Blob" {Unit ATK30 DEF50 | cost 500 | affinity Chaos | base 30/50}  Dice=2  ATK=100 vs DEF=50  → WIN
+[01:56.070] Anim: 3A  △ P0(0,2)
+[01:56.070] Card destroyed  P0 (0,2) "Dark Blob" {Unit ATK30 DEF50 | cost 500 | affinity Chaos | base 30/50}
+[01:56.561] Mode selected P1: ATTACK
+[01:56.565] Attack phase P1: 1 attack(s) available
+[01:56.565] MSG: Player 2: tap a character to attack.
+[01:56.859] AI1 attack decision: (1,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down} → (1,3) (dead-end)
+[01:57.201] Revealed: P1 (1,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:57.201] Dice rolled: 1
+[01:57.214] MSG: Nothing happens — Dead End.
+[02:00.552] Attack P1(1,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P0(1,3)(empty)  Dice=1  → DEAD_END
+[02:00.552] Anim: 3F  (blank slot)
+[02:01.046] Turn ended  P1  |  Crystals P0=170 P1=450
+
+--- Turn 8  |  Player 0  |  Crystals P0=170 P1=450 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][Doom][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][War ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:01.649] Mode selected P0: ATTACK
+[02:01.663] Attack phase P0: 2 attack(s) available
+[02:01.663] MSG: Player 1: tap a character to attack.
+[02:01.956] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (3,1) "War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80}
+[02:02.264] Dice rolled: 4
+[02:02.306] MSG: Barros the Colossal wins!
+[02:06.973] Crystals: P1 450 → 0 (-450)  [battle]
+
+=== GAME OVER ===
+[02:06.985] AI Player 0 wins
+[02:06.985] Reason: crystals
+[02:06.985] Final crystals — P0: 170  P1: 0  |  Turns: 8
+[02:06.985] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_new_shoe_blister_march_2026-05-31_17-28-53_953.txt

@@ -1,0 +1,374 @@
+=== Battle of Gary's Fish Stick Legacy ===
+Battle started: 2026-05-31 20:39:40.594
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Alarm
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Bribe, Spy
+P1 Tech hand: Resurrection, War Supply, Bribe
+P0:   [  — ][C:Dark][C:Bat ][T:Bunk][  — ]
+      [  — ][C:Hair][C:Skel][C:Sate][  — ]
+      [T:Acid][C:Magi][C:Ox P][C:Wand][  — ]
+      [T:Curs][C:Choi][C:Paro][C:Mine][  — ]
+      [T:Trap][T:Self][  — ][T:Spik][  — ]
+P1:   [C:Dark][T:Blac][C:Blue][C:Pony][C:Gold]
+      [T:Flam][C:Cany][C:Meph][C:Blad][  — ]
+      [T:Echo][  — ][T:Alar][  — ][  — ]
+      [  — ][T:Host][  — ][  — ][T:Expl]
+      [C:Lab ][T:Bunk][C:Demo][C:Mad ][C:Fera]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.320] Mode selected P0: TECH
+[00:05.628] Tech played  P0: "Spy"
+[00:07.181] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.579] AI0 target chosen: (2,4)
+[00:07.579] Revealed: P1 (2,4) (blank slot)
+[00:07.582] Tech resolved  P0
+[00:08.480] Mode selected P0: ATTACK
+[00:08.482] Attack phase P0: 2 attack(s) available
+[00:08.483] MSG: Player 1: tap a character to attack.
+[00:08.857] AI0 attack decision: (0,2)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down} → (2,4) (dead-end)
+[00:09.166] Revealed: P0 (0,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:09.166] Dice rolled: 5
+[00:09.187] MSG: Nothing happens — Dead End.
+[00:12.530] Attack P0(0,2)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P1(2,4)(empty)  Dice=5  → DEAD_END
+[00:12.530] Anim: 3F  (blank slot)
+[00:13.021] Mode selected P0: ATTACK
+[00:13.025] Attack phase P0: 1 attack(s) available
+[00:13.025] MSG: Player 1: tap a character to attack.
+[00:13.320] AI0 attack decision: (0,1)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (0,2) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane | face-down}
+[00:13.654] Revealed: P0 (0,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:13.678] Revealed: P1 (0,2) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[00:13.678] Dice rolled: 1
+[00:18.430] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:19.876] Attack P0(0,1)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P1(0,2)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}  Dice=1  ATK=15 vs DEF=45  → LOSE
+[00:19.876] Anim: 3B  △ P0(0,1)
+[00:19.876] Card destroyed  P0 (0,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:20.281] Turn ended  P0  |  Crystals P0=4700 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4700 P1=5000 ---
+P0:   [  — ][  — ][Bat ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  ? ][Blue][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:20.944] Mode selected P1: TECH
+[00:21.257] Tech played  P1: "Bribe"
+[00:22.803] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:23.303] MSG: Bribe: AI passed.
+[00:23.312] Tech resolved  P1
+[00:24.206] Mode selected P1: ATTACK
+[00:24.210] Attack phase P1: 2 attack(s) available
+[00:24.210] MSG: Player 2: tap a character to attack.
+[00:24.504] AI1 attack decision: (0,2)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane} → (0,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:24.802] Dice rolled: 3
+[00:24.811] MSG: Blue Mage: Coin flip missed — normal battle.
+[00:24.811] MSG: Blue Mage wins!
+[00:24.856] Coin flip: Heads, Tails
+[00:30.453] Crystals: P0 4700 → 4500 (-200)  [battle]
+[00:31.864] Attack P1(0,2)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane} → P0(0,2)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=3  ATK=45 vs DEF=15  → WIN
+[00:31.864] Anim: 3A  △ P0(0,2)
+[00:31.864] Card destroyed  P0 (0,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:32.354] Mode selected P1: ATTACK
+[00:32.358] Attack phase P1: 1 attack(s) available
+[00:32.358] MSG: Player 2: tap a character to attack.
+[00:32.662] AI1 attack decision: (0,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (1,2) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos | face-down}
+[00:33.018] Revealed: P1 (0,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:33.052] Revealed: P0 (1,2) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:33.052] Dice rolled: 2
+[00:33.060] MSG: Ponycorn wins!
+[00:37.643] Crystals: P0 4500 → 4200 (-300)  [battle]
+[00:39.049] Attack P1(0,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P0(1,2)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=2  ATK=25 vs DEF=5  → WIN
+[00:39.049] Anim: 3A  △ P0(1,2)
+[00:39.049] Card destroyed  P0 (1,2) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:39.536] Turn ended  P1  |  Crystals P0=4200 P1=5000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4200 P1=5000 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  ? ][Blue][Pony][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:40.127] Mode selected P0: TECH
+[00:40.432] Crystals: P0 4200 → 3200 (-1000)  [tech cost]
+[00:41.823] Tech played  P0: "Great Diplomacy"
+[00:43.412] Revealed: P0 (1,1) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:43.432] Revealed: P0 (1,3) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:43.452] Revealed: P0 (2,1) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:43.478] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:43.498] Revealed: P0 (2,3) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[00:43.526] Revealed: P0 (3,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:43.547] Revealed: P0 (3,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:43.571] Revealed: P0 (3,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[00:43.574] Tech resolved  P0
+[00:44.132] Mode selected P0: ATTACK
+[00:44.144] Attack phase P0: 2 attack(s) available
+[00:44.144] MSG: Player 1: tap a character to attack.
+[00:44.432] AI0 attack decision: (1,3)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (0,2) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[00:44.740] Dice rolled: 1
+[00:44.752] MSG: Satellite Cannon wins!
+[00:49.426] Crystals: P1 5000 → 4200 (-800)  [battle]
+[00:50.831] Attack P0(1,3)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(0,2)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}  Dice=1  ATK=100 vs DEF=45  → WIN
+[00:50.831] Anim: 3A  △ P1(0,2)
+[00:50.831] Card destroyed  P1 (0,2) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[00:51.318] Mode selected P0: ATTACK
+[00:51.329] Attack phase P0: 1 attack(s) available
+[00:51.330] MSG: Player 1: tap a character to attack.
+[00:51.614] AI0 attack decision: (3,1)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → (0,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:51.916] Dice rolled: 2
+[00:51.930] MSG: Both cards are destroyed!
+[00:56.523] Crystals: P0 3200 → 2950 (-250)  [battle]
+[00:57.914] Crystals: P1 4200 → 3900 (-300)  [battle]
+[00:59.312] Attack P0(3,1)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → P1(0,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=2  ATK=20 vs DEF=20  → TIE
+[00:59.312] Anim: 3C  △ P0(3,1) + △ P1(0,3)
+[00:59.312] Card destroyed  P0 (3,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:59.312] Card destroyed  P1 (0,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:59.806] Turn ended  P0  |  Crystals P0=2950 P1=3900
+
+--- Turn 4  |  Player 1  |  Crystals P0=2950 P1=3900 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][Hair][  — ][Sate][  — ]
+      [  ? ][Magi][Ox P][Wand][  — ]
+      [  ? ][  — ][Paro][Mine][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:00.402] Mode selected P1: TECH
+[01:00.704] Crystals: P1 3900 → 2400 (-1500)  [tech cost]
+[01:02.099] Tech played  P1: "Resurrection"
+[01:03.643] MSG: Magical Butterfly: Tech boost — +10 ATK/DEF this turn!
+[01:03.644] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[01:04.054] AI1 target chosen: (1,4)
+[01:04.057] Revealed: P1 (1,4) "Ponycorn" {Unit ATK0 DEF0 | cost 300 | affinity Divine | base 0/0}
+[01:04.058] MSG: Revived Ponycorn at [1,4]!
+[01:04.067] Tech resolved  P1
+[01:04.972] Mode selected P1: ATTACK
+[01:04.982] Attack phase P1: 2 attack(s) available
+[01:04.982] MSG: Player 2: tap a character to attack.
+[01:05.277] AI1 attack decision: (0,4)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down} → (1,1) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[01:05.619] Revealed: P1 (0,4) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[01:05.619] Crystals: P0 2950 → 2990 (+40)  [ability]
+[01:05.619] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:05.619] Dice rolled: 1
+[01:05.623] MSG: Both cards are destroyed!
+[01:10.212] Crystals: P1 2400 → 2200 (-200)  [battle]
+[01:11.596] Crystals: P0 2990 → 2690 (-300)  [battle]
+[01:12.991] Attack P1(0,4)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} → P0(1,1)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=1  ATK=15 vs DEF=15  → TIE
+[01:12.991] Anim: 3C  △ P1(0,4) + △ P0(1,1)
+[01:12.991] Card destroyed  P1 (0,4) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[01:12.991] Card destroyed  P0 (1,1) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[01:13.483] Mode selected P1: ATTACK
+[01:13.491] Attack phase P1: 1 attack(s) available
+[01:13.492] MSG: Player 2: tap a character to attack.
+[01:13.791] AI1 attack decision: (1,4)"Ponycorn" {Unit ATK0 DEF0 | cost 300 | affinity Divine | base 0/0} → (1,4) (dead-end)
+[01:14.098] Dice rolled: 4
+[01:14.128] MSG: Nothing happens — Dead End.
+[01:17.513] Attack P1(1,4)"Ponycorn" {Unit ATK0 DEF0 | cost 300 | affinity Divine | base 0/0} → P0(1,4)(empty)  Dice=4  → DEAD_END
+[01:17.513] Anim: 3F  (blank slot)
+[01:18.011] Turn ended  P1  |  Crystals P0=2690 P1=2200
+
+--- Turn 5  |  Player 0  |  Crystals P0=2690 P1=2200 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Sate][  — ]
+      [  ? ][Magi][Ox P][Wand][  — ]
+      [  ? ][  — ][Paro][Mine][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][Pony]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:18.619] Mode selected P0: TECH
+[01:18.941] Tech played  P0: "Bribe"
+[01:20.494] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:21.004] MSG: Bribe: AI passed.
+[01:21.015] Tech resolved  P0
+[01:21.920] Mode selected P0: ATTACK
+[01:21.933] Attack phase P0: 2 attack(s) available
+[01:21.933] MSG: Player 1: tap a character to attack.
+[01:22.228] AI0 attack decision: (1,3)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (1,4) "Ponycorn" {Unit ATK0 DEF0 | cost 300 | affinity Divine | base 0/0}
+[01:22.558] Dice rolled: 4
+[01:22.577] MSG: Satellite Cannon wins!
+[01:27.242] Crystals: P1 2200 → 1900 (-300)  [battle]
+[01:28.645] Attack P0(1,3)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(1,4)"Ponycorn" {Unit ATK0 DEF0 | cost 300 | affinity Divine | base 0/0}  Dice=4  ATK=100 vs DEF=0  → WIN
+[01:28.645] Anim: 3A  △ P1(1,4)
+[01:28.645] Card destroyed  P1 (1,4) "Ponycorn" {Unit ATK0 DEF0 | cost 300 | affinity Divine | base 0/0}
+[01:29.142] Mode selected P0: ATTACK
+[01:29.149] Attack phase P0: 1 attack(s) available
+[01:29.151] MSG: Player 1: tap a character to attack.
+[01:29.450] AI0 attack decision: (2,1)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +tempATK10, +tempDEF10} → (2,1) (dead-end)
+[01:29.757] Dice rolled: 4
+[01:29.784] MSG: Nothing happens — Dead End.
+[01:33.182] Attack P0(2,1)"Magical Butterfly" {Unit ATK25 DEF25 | cost 180 | affinity Nature | base 15/15 | buff +tempATK10, +tempDEF10} → P1(2,1)(empty)  Dice=4  → DEAD_END
+[01:33.182] Anim: 3F  (blank slot)
+[01:33.673] Turn ended  P0  |  Crystals P0=2690 P1=1900
+
+--- Turn 6  |  Player 1  |  Crystals P0=2690 P1=1900 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Sate][  — ]
+      [  ? ][Magi][Ox P][Wand][  — ]
+      [  ? ][  — ][Paro][Mine][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:34.284] Mode selected P1: ATTACK
+[01:34.293] Attack phase P1: 2 attack(s) available
+[01:34.293] MSG: Player 2: tap a character to attack.
+[01:34.587] AI1 attack decision: (4,0)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | face-down} → (1,3) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[01:34.929] Revealed: P1 (4,0) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:34.929] Crystals: P0 2690 → 2730 (+40)  [ability]
+[01:34.929] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:34.930] Dice rolled: 1
+[01:34.940] MSG: Lab Crawler wins!
+[01:39.588] Crystals: P0 2730 → 1630 (-1100)  [battle]
+[01:41.014] Attack P1(4,0)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P0(1,3)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}  Dice=1  ATK=95 vs DEF=80  → WIN
+[01:41.014] Anim: 3A  △ P0(1,3)
+[01:41.014] Card destroyed  P0 (1,3) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[01:41.483] Mode selected P1: ATTACK
+[01:41.490] Attack phase P1: 1 attack(s) available
+[01:41.491] MSG: Player 2: tap a character to attack.
+[01:41.783] AI1 attack decision: (1,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down} → (2,3) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[01:42.114] Revealed: P1 (1,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:42.114] Crystals: P0 1630 → 1670 (+40)  [ability]
+[01:42.114] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:42.114] Dice rolled: 1
+[01:42.117] MSG: Canyon Warg wins!
+[01:46.780] Crystals: P0 1670 → 1070 (-600)  [battle]
+[01:48.182] Attack P1(1,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(2,3)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}  Dice=1  ATK=70 vs DEF=60  → WIN
+[01:48.182] Anim: 3A  △ P0(2,3)
+[01:48.182] Card destroyed  P0 (2,3) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[01:48.675] Turn ended  P1  |  Crystals P0=1070 P1=1900
+
+--- Turn 7  |  Player 0  |  Crystals P0=1070 P1=1900 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Magi][Ox P][  — ][  — ]
+      [  ? ][  — ][Paro][Mine][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][Cany][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [Lab ][  ? ][  ? ][  ? ][  ? ]
+[01:49.278] Mode selected P0: ATTACK
+[01:49.286] Attack phase P0: 2 attack(s) available
+[01:49.287] MSG: Player 1: tap a character to attack.
+[01:49.568] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → (1,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:49.871] Dice rolled: 2
+[01:49.882] MSG: Ox Patrol wins!
+[01:55.562] Crystals: P1 1900 → 1150 (-750)  [battle]
+[01:56.970] Attack P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P1(1,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=2  ATK=35 vs DEF=30  → WIN
+[01:56.970] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +ATK 5
+[01:56.970] Anim: 3A  △ P1(1,1)
+[01:56.970] Card destroyed  P1 (1,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:57.454] Mode selected P0: ATTACK
+[01:57.461] Attack phase P0: 1 attack(s) available
+[01:57.461] MSG: Player 1: tap a character to attack.
+[01:57.749] AI0 attack decision: (2,1)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature} → (2,0) "Echo Barrier" {cost 1000}
+[01:58.083] Revealed: P1 (2,0) "Echo Barrier" {cost 1000}
+[01:58.084] Crystals: P0 1070 → 1110 (+40)  [ability]
+[01:58.084] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:58.084] Dice rolled: 2
+[01:58.362] MSG: Trap triggered: Echo Barrier!
+[02:02.469] Crystals: P1 1150 → 150 (-1000)  [trap cost]
+[02:03.858] MSG: Echo Barrier: Attacking player cannot attack again this turn!
+[02:03.867] Trap: "Echo Barrier" triggered  P0(2,1)→P1(2,0)
+[02:03.867] Anim: 3D  (attacker survives)
+[02:04.371] Turn ended  P0  |  Crystals P0=1110 P1=150
+
+--- Turn 8  |  Player 1  |  Crystals P0=1110 P1=150 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Magi][Ox P][  — ][  — ]
+      [  ? ][  — ][Paro][Mine][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [Lab ][  ? ][  ? ][  ? ][  ? ]
+[02:05.043] Mode selected P1: ATTACK
+[02:05.050] Attack phase P1: 2 attack(s) available
+[02:05.050] MSG: Player 2: tap a character to attack.
+[02:05.333] AI1 attack decision: (4,0)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[02:05.633] Dice rolled: 3
+[02:05.654] MSG: Lab Crawler wins!
+[02:11.325] Crystals: P0 1110 → 690 (-420)  [battle]
+[02:12.728] Attack P1(4,0)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=3  ATK=95 vs DEF=40  → WIN
+[02:12.728] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 5
+[02:12.728] Anim: 3A  △ P0(2,2)
+[02:12.728] Card destroyed  P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[02:13.218] Mode selected P1: ATTACK
+[02:13.226] Attack phase P1: 1 attack(s) available
+[02:13.227] MSG: Player 2: tap a character to attack.
+[02:13.516] AI1 attack decision: (1,2)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down} → (3,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:13.856] Revealed: P1 (1,2) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[02:13.856] Crystals: P0 690 → 730 (+40)  [ability]
+[02:13.856] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[02:13.856] Dice rolled: 5
+[02:13.860] MSG: Mephisto the Fallen wins!
+[02:18.543] Crystals: P0 730 → 430 (-300)  [battle]
+[02:19.972] Attack P1(1,2)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P0(3,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=5  ATK=75 vs DEF=20  → WIN
+[02:19.972] Anim: 3A  △ P0(3,2)
+[02:19.972] Card destroyed  P0 (3,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:20.436] Turn ended  P1  |  Crystals P0=430 P1=150
+
+--- Turn 9  |  Player 0  |  Crystals P0=430 P1=150 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Magi][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Mine][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Meph][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [Lab ][  ? ][  ? ][  ? ][  ? ]
+[02:21.040] Mode selected P0: ATTACK
+[02:21.055] Attack phase P0: 2 attack(s) available
+[02:21.056] MSG: Player 1: tap a character to attack.
+[02:21.344] AI0 attack decision: (3,3)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → (1,2) "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}
+[02:21.653] Dice rolled: 5
+[02:21.667] MSG: Mine Guard wins!
+[02:26.362] Crystals: P1 150 → 0 (-150)  [battle]
+
+=== GAME OVER ===
+[02:26.373] AI Player 0 wins
+[02:26.373] Reason: crystals
+[02:26.373] Final crystals — P0: 430  P1: 0  |  Turns: 9
+[02:26.373] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_garys_fish_stick_legacy_2026-05-31_20-39-40_594.txt

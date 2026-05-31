@@ -1,0 +1,555 @@
+=== Battle of Suspicious Meatball ===
+Battle started: 2026-05-31 03:13:51.020
+Game Session of Root Beer Float (started 2026-05-31 03:11:44.569)
+=== AI vs AI Match ===
+Batch iteration: 2 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Spy, War Supply
+P1 Tech hand: Radar, Siege Cannon, Tease
+P0:   [  — ][T:Snar][C:Gold][  — ][  — ]
+      [  — ][C:Jose][  — ][T:Bunk][  — ]
+      [  — ][C:Armo][C:Skel][C:Flam][T:Blac]
+      [  — ][T:Trap][C:Blea][C:Shep][  — ]
+      [  — ][C:Aeri][T:Stre][C:Mine][  — ]
+P1:   [C:Vamp][C:Leop][T:Host][C:Skel][C:Chur]
+      [  — ][  — ][T:Deco][C:Whit][  — ]
+      [  — ][  — ][C:Nept][  — ][  — ]
+      [  — ][T:Brai][  — ][  — ][  — ]
+      [C:Dark][T:Blac][C:Vile][T:Acid][T:Hypn]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.352] Mode selected P1: TECH
+[00:05.652] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:07.036] Tech played  P1: "Radar"
+[00:08.571] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.968] AI1 target chosen: (3,1)
+[00:09.014] Revealed: P0 (3,1) "Trap Hole"
+[00:09.379] AI1 target chosen: (1,4)
+[00:09.380] Revealed: P0 (1,4) (blank slot)
+[00:09.780] AI1 target chosen: (3,3)
+[00:09.838] Revealed: P0 (3,3) "Shepherd Detective"
+[00:09.840] Tech resolved  P1
+[00:10.682] Mode selected P1: ATTACK
+[00:10.689] Attack phase P1: 2 attack(s) available
+[00:10.689] MSG: Player 2: tap a character to attack.
+[00:10.980] AI1 attack decision: (0,4)"Church Guard" [ATK=0] → (0,1) "Snare Trap" [DEF=0]
+[00:11.316] Revealed: P1 (0,4) "Church Guard"
+[00:11.343] Revealed: P0 (0,1) "Snare Trap"
+[00:11.343] Dice rolled: 3
+[00:11.598] MSG: Trap triggered: Snare Trap!
+[00:15.675] Card destroyed  P0 (0,1) "Snare Trap"
+[00:15.675] Crystals: P0 5000 → 4500 (-500)  [trap cost]
+[00:17.064] MSG: Snare Trap: Church Guard's effect nullified until end of next turn!
+[00:17.071] Trap: "Snare Trap" triggered  P1(0,4)→P0(0,1)
+[00:17.071] Anim: 3D  (attacker survives)
+[00:19.583] Turn ended  P1  |  Crystals P0=4500 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4500 P1=4400 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][Shep][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][Chur]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:20.189] Mode selected P0: TECH
+[00:20.500] Tech played  P0: "Spy"
+[00:22.036] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:22.435] AI0 target chosen: (4,4)
+[00:22.491] Revealed: P1 (4,4) "Hypnosis"
+[00:22.494] Tech resolved  P0
+[00:23.344] Mode selected P0: ATTACK
+[00:23.350] Attack phase P0: 2 attack(s) available
+[00:23.350] MSG: Player 1: tap a character to attack.
+[00:23.643] AI0 attack decision: (3,3)"Shepherd Detective" [ATK=40] → (0,4) "Church Guard" [DEF=35]
+[00:23.944] Dice rolled: 3
+[00:23.959] MSG: Shepherd Detective wins!
+[00:28.632] Crystals: P1 4400 → 4250 (-150)  [battle]
+[00:30.029] Card destroyed  P1 (0,4) "Church Guard"
+[00:30.031] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:30.035] Attack P0(3,3)"Shepherd Detective" → P1(0,4)"Church Guard"  Dice=3  ATK=40 vs DEF=35  → WIN
+[00:30.035] Anim: 3A  △ P1(0,4)
+[00:30.430] AI0 target chosen: (4,4)
+[00:30.531] Mode selected P0: ATTACK
+[00:30.536] Attack phase P0: 1 attack(s) available
+[00:30.537] MSG: Player 1: tap a character to attack.
+[00:30.830] AI0 attack decision: (2,3)"Flame Seraph" [ATK=50] → (1,3) "White Tiger" [DEF=25]
+[00:31.169] Revealed: P0 (2,3) "Flame Seraph"
+[00:31.230] Revealed: P1 (1,3) "White Tiger"
+[00:31.230] Dice rolled: 4
+[00:31.236] MSG: White Tiger: Attacker loses 15 ATK!
+[00:31.236] MSG: Flame Seraph wins!
+[00:37.398] Crystals: P1 4250 → 3800 (-450)  [battle]
+[00:38.793] Card destroyed  P1 (1,3) "White Tiger"
+[00:38.797] Attack P0(2,3)"Flame Seraph" → P1(1,3)"White Tiger"  Dice=4  ATK=35 vs DEF=25  → WIN
+[00:38.797] Anim: 3A  △ P1(1,3)
+[00:39.294] Turn ended  P0  |  Crystals P0=4500 P1=3800
+
+--- Turn 3  |  Player 1  |  Crystals P0=4500 P1=3800 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][Flam][  ? ]
+      [  — ][  — ][  ? ][Shep][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:39.898] Mode selected P1: TECH
+[00:40.197] Crystals: P1 3800 → 2800 (-1000)  [tech cost]
+[00:41.575] Tech played  P1: "Siege Cannon"
+[00:43.113] MSG: Siege Cannon active!
+[00:43.116] Tech resolved  P1
+[00:44.015] Mode selected P1: ATTACK
+[00:44.019] Attack phase P1: 2 attack(s) available
+[00:44.019] MSG: Player 2: tap a character to attack.
+[00:44.314] AI1 attack decision: (2,2)"Neptune Diver" [ATK=20] → (2,3) "Flame Seraph" [DEF=10]
+[00:44.677] Revealed: P1 (2,2) "Neptune Diver"
+[00:44.677] Dice rolled: 1
+[00:44.681] MSG: Neptune Diver wins!
+[00:49.293] Crystals: P0 4500 → 4000 (-500)  [battle]
+[00:50.688] Card destroyed  P0 (2,3) "Flame Seraph"
+[00:50.693] Attack P1(2,2)"Neptune Diver" → P0(2,3)"Flame Seraph"  Dice=1  ATK=20 vs DEF=10  → WIN
+[00:50.693] Anim: 3A  △ P0(2,3)
+[00:53.207] Turn ended  P1  |  Crystals P0=4000 P1=2800
+
+--- Turn 4  |  Player 0  |  Crystals P0=4000 P1=2800 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][Shep][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][Nept][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:53.810] Mode selected P0: TECH
+[00:54.110] Crystals: P0 4000 → 2500 (-1500)  [tech cost]
+[00:55.495] Tech played  P0: "Resurrection"
+[00:57.031] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:57.429] AI0 target chosen: (0,0)
+[00:57.432] Revealed: P0 (0,0) "Flame Seraph"
+[00:57.432] MSG: Revived Flame Seraph at [0,0]!
+[00:57.436] Tech resolved  P0
+[00:58.331] Mode selected P0: ATTACK
+[00:58.338] Attack phase P0: 2 attack(s) available
+[00:58.338] MSG: Player 1: tap a character to attack.
+[00:58.630] AI0 attack decision: (3,3)"Shepherd Detective" [ATK=40] → (2,2) "Neptune Diver" [DEF=10]
+[00:58.930] Dice rolled: 2
+[00:58.941] MSG: Shepherd Detective wins!
+[01:03.614] Crystals: P1 2800 → 2600 (-200)  [battle]
+[01:05.007] Card destroyed  P1 (2,2) "Neptune Diver"
+[01:05.008] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:05.012] Attack P0(3,3)"Shepherd Detective" → P1(2,2)"Neptune Diver"  Dice=2  ATK=40 vs DEF=10  → WIN
+[01:05.012] Anim: 3A  △ P1(2,2)
+[01:05.406] AI0 target chosen: (4,4)
+[01:05.506] Mode selected P0: ATTACK
+[01:05.512] Attack phase P0: 1 attack(s) available
+[01:05.513] MSG: Player 1: tap a character to attack.
+[01:05.806] AI0 attack decision: (0,0)"Flame Seraph" [ATK=0] → (1,2) "Decoy Puppet" [DEF=0]
+[01:06.150] Revealed: P1 (1,2) "Decoy Puppet"
+[01:06.150] Dice rolled: 5
+[01:06.424] MSG: Trap triggered: Decoy Puppet!
+[01:10.510] Card destroyed  P1 (1,2) "Decoy Puppet"
+[01:10.511] Crystals: P1 2600 → 2500 (-100)  [trap cost]
+[01:11.892] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[01:11.896] Trap: "Decoy Puppet" triggered  P0(0,0)→P1(1,2)
+[01:11.896] Anim: 3D  (attacker survives)
+[01:12.399] Turn ended  P0  |  Crystals P0=2500 P1=2500
+
+--- Turn 5  |  Player 1  |  Crystals P0=2500 P1=2500 ---
+P0:   [Flam][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][Shep][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:13.006] Mode selected P1: TECH
+[01:13.317] Tech played  P1: "Tease"
+[01:14.851] MSG: Opponent must choose and reveal 1 of their squares.
+[01:14.851] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:15.250] AI0 target chosen: (2,4)
+[01:15.293] Revealed: P0 (2,4) "Blackmail"
+[01:15.293] MSG: Tease: Opponent revealed Blackmail.
+[01:15.296] Tech resolved  P1
+[01:16.155] Mode selected P1: ATTACK
+[01:16.159] Attack phase P1: 2 attack(s) available
+[01:16.159] MSG: Player 2: tap a character to attack.
+[01:16.456] AI1 attack decision: (0,3)"Skeleton Grappler" [ATK=20] → (0,0) "Flame Seraph" [DEF=10]
+[01:16.827] Revealed: P1 (0,3) "Skeleton Grappler"
+[01:16.827] Dice rolled: 4
+[01:16.831] MSG: Skeleton Grappler wins!
+[01:21.438] Crystals: P0 2500 → 2000 (-500)  [battle]
+[01:22.833] Card destroyed  P0 (0,0) "Flame Seraph"
+[01:22.837] Attack P1(0,3)"Skeleton Grappler" → P0(0,0)"Flame Seraph"  Dice=4  ATK=20 vs DEF=10  → WIN
+[01:22.837] Anim: 3A  △ P0(0,0)
+[01:25.345] Turn ended  P1  |  Crystals P0=2000 P1=2500
+
+--- Turn 6  |  Player 0  |  Crystals P0=2000 P1=2500 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][Shep][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][Skel][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:27.422] Union summoned P0: [False Prophet] from Golden Senju, Joseph the Battle Priest
+[01:27.423] Crystals: P0 2000 → 1700 (-300)  [union]
+[01:27.472] Revealed: P0 (0,2) "False Prophet"
+[01:27.473] MSG: Player 1 summoned [False Prophet] using: Golden Senju, Joseph the Battle Priest
+[01:30.847] Mode selected P0: ATTACK
+[01:30.856] Attack phase P0: 2 attack(s) available
+[01:30.856] MSG: Player 1: tap a character to attack.
+[01:31.146] AI0 attack decision: (3,3)"Shepherd Detective" [ATK=40] → (0,3) "Skeleton Grappler" [DEF=5]
+[01:31.446] Dice rolled: 1
+[01:31.456] MSG: Shepherd Detective wins!
+[01:36.123] Crystals: P1 2500 → 2350 (-150)  [battle]
+[01:37.515] Card destroyed  P1 (0,3) "Skeleton Grappler"
+[01:37.516] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:37.521] Attack P0(3,3)"Shepherd Detective" → P1(0,3)"Skeleton Grappler"  Dice=1  ATK=40 vs DEF=5  → WIN
+[01:37.521] Anim: 3A  △ P1(0,3)
+[01:37.913] AI0 target chosen: (2,1)
+[01:38.014] Mode selected P0: ATTACK
+[01:38.020] Attack phase P0: 1 attack(s) available
+[01:38.022] MSG: Player 1: tap a character to attack.
+[01:38.322] AI0 attack decision: (0,2)"False Prophet" [ATK=20] → (2,1) "(dead-end)"
+[01:38.622] Dice rolled: 4
+[01:38.704] MSG: Nothing happens — Dead End.
+[01:42.032] Dead-end placed  P1 (2,1)
+[01:42.037] Attack P0(0,2)"False Prophet" → P1(2,1)(empty)  Dice=4  → DEAD_END
+[01:42.037] Anim: 3F  (blank slot)
+[01:42.536] Turn ended  P0  |  Crystals P0=1700 P1=2350
+
+--- Turn 7  |  Player 1  |  Crystals P0=1700 P1=2350 ---
+P0:   [  — ][  — ][Fals][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][Shep][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:43.145] Mode selected P1: ATTACK
+[01:43.152] Attack phase P1: 2 attack(s) available
+[01:43.152] MSG: Player 2: tap a character to attack.
+[01:43.430] AI1 attack decision: (4,2)"Vile Creeper" [ATK=10] → (1,1) "(dead-end)"
+[01:43.804] Revealed: P1 (4,2) "Vile Creeper"
+[01:43.804] Dice rolled: 1
+[01:43.816] MSG: Nothing happens — Dead End.
+[01:47.126] Dead-end placed  P0 (1,1)
+[01:47.129] Attack P1(4,2)"Vile Creeper" → P0(1,1)(empty)  Dice=1  → DEAD_END
+[01:47.129] Anim: 3F  (blank slot)
+[01:47.627] Mode selected P1: ATTACK
+[01:47.634] Attack phase P1: 1 attack(s) available
+[01:47.634] MSG: Player 2: tap a character to attack.
+[01:47.926] AI1 attack decision: (4,0)"Dark Blob" [ATK=20] → (1,4) "(dead-end)"
+[01:48.285] Revealed: P1 (4,0) "Dark Blob"
+[01:48.285] Dice rolled: 5
+[01:48.297] MSG: Nothing happens — Dead End.
+[01:51.623] Dead-end placed  P0 (1,4)
+[01:51.628] Attack P1(4,0)"Dark Blob" → P0(1,4)(empty)  Dice=5  → DEAD_END
+[01:51.628] Anim: 3F  (blank slot)
+[01:52.120] Turn ended  P1  |  Crystals P0=1700 P1=2350
+
+--- Turn 8  |  Player 0  |  Crystals P0=1700 P1=2350 ---
+P0:   [  — ][  — ][Fals][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][Shep][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Dark][  ? ][Vile][  ? ][  — ]
+[01:52.120] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[01:52.534] Revealed: P1 (1,1) (blank slot)
+[01:52.535] MSG: False Prophet: Dead End revealed — self-destructs!
+[01:52.536] Card destroyed  P0 (0,2) "False Prophet"
+[01:52.726] Mode selected P0: ATTACK
+[01:52.735] Attack phase P0: 2 attack(s) available
+[01:52.735] MSG: Player 1: tap a character to attack.
+[01:53.026] AI0 attack decision: (3,3)"Shepherd Detective" [ATK=40] → (1,1) "(dead-end)"
+[01:53.326] Dice rolled: 4
+[01:53.347] MSG: Nothing happens — Dead End.
+[01:55.719] Dead-end placed  P1 (1,1)
+[01:55.721] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:55.724] Attack P0(3,3)"Shepherd Detective" → P1(1,1)(empty)  Dice=4  → DEAD_END
+[01:55.724] Anim: 3F  (blank slot)
+[01:56.118] AI0 target chosen: (2,0)
+[01:56.217] Mode selected P0: ATTACK
+[01:56.221] Attack phase P0: 1 attack(s) available
+[01:56.222] MSG: Player 1: tap a character to attack.
+[01:56.526] AI0 attack decision: (4,3)"Mine Guard" [ATK=20] → (2,3) "(dead-end)"
+[01:56.906] Revealed: P0 (4,3) "Mine Guard"
+[01:56.906] Dice rolled: 5
+[01:56.921] MSG: Nothing happens — Dead End.
+[02:00.218] Dead-end placed  P1 (2,3)
+[02:00.221] Attack P0(4,3)"Mine Guard" → P1(2,3)(empty)  Dice=5  → DEAD_END
+[02:00.221] Anim: 3F  (blank slot)
+[02:00.716] Turn ended  P0  |  Crystals P0=1700 P1=2350
+
+--- Turn 9  |  Player 1  |  Crystals P0=1700 P1=2350 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][Shep][  — ]
+      [  — ][  ? ][  ? ][Mine][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Dark][  ? ][Vile][  ? ][  — ]
+[02:01.327] Mode selected P1: ATTACK
+[02:01.333] Attack phase P1: 2 attack(s) available
+[02:01.333] MSG: Player 2: tap a character to attack.
+[02:01.621] AI1 attack decision: (4,2)"Vile Creeper" [ATK=30] → (3,3) "Shepherd Detective" [DEF=25]
+[02:01.922] Dice rolled: 2
+[02:01.933] MSG: Vile Creeper wins!
+[02:06.597] Crystals: P0 1700 → 1300 (-400)  [battle]
+[02:07.991] Card destroyed  P0 (3,3) "Shepherd Detective"
+[02:07.996] Attack P1(4,2)"Vile Creeper" → P0(3,3)"Shepherd Detective"  Dice=2  ATK=30 vs DEF=25  → WIN
+[02:07.996] Anim: 3A  △ P0(3,3)
+[02:08.498] Mode selected P1: ATTACK
+[02:08.507] Attack phase P1: 1 attack(s) available
+[02:08.507] MSG: Player 2: tap a character to attack.
+[02:08.796] AI1 attack decision: (4,0)"Dark Blob" [ATK=25] → (4,3) "Mine Guard" [DEF=15]
+[02:09.097] Dice rolled: 3
+[02:09.108] MSG: Dark Blob wins!
+[02:13.790] Crystals: P0 1300 → 1000 (-300)  [battle]
+[02:15.184] Card destroyed  P0 (4,3) "Mine Guard"
+[02:15.188] Attack P1(4,0)"Dark Blob" → P0(4,3)"Mine Guard"  Dice=3  ATK=25 vs DEF=15  → WIN
+[02:15.188] Anim: 3A  △ P0(4,3)
+[02:15.682] Turn ended  P1  |  Crystals P0=1000 P1=2350
+
+--- Turn 10  |  Player 0  |  Crystals P0=1000 P1=2350 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Dark][  ? ][Vile][  ? ][  — ]
+[02:16.293] Mode selected P0: ATTACK
+[02:16.298] Attack phase P0: 2 attack(s) available
+[02:16.298] MSG: Player 1: tap a character to attack.
+[02:16.593] AI0 attack decision: (2,1)"Armored Monkey" [ATK=10] → (3,3) "(dead-end)"
+[02:16.948] Revealed: P0 (2,1) "Armored Monkey"
+[02:16.948] Dice rolled: 4
+[02:16.964] MSG: Nothing happens — Dead End.
+[02:20.298] Dead-end placed  P1 (3,3)
+[02:20.302] Attack P0(2,1)"Armored Monkey" → P1(3,3)(empty)  Dice=4  → DEAD_END
+[02:20.302] Anim: 3F  (blank slot)
+[02:20.797] Mode selected P0: ATTACK
+[02:20.802] Attack phase P0: 1 attack(s) available
+[02:20.802] MSG: Player 1: tap a character to attack.
+[02:21.096] AI0 attack decision: (2,2)"Skeleton Scout" [ATK=20] → (4,2) "Vile Creeper" [DEF=10]
+[02:21.450] Revealed: P0 (2,2) "Skeleton Scout"
+[02:21.450] Dice rolled: 4
+[02:21.454] MSG: Skeleton Scout wins!
+[02:26.085] Crystals: P1 2350 → 2150 (-200)  [battle]
+[02:27.477] Card destroyed  P1 (4,2) "Vile Creeper"
+[02:27.483] Attack P0(2,2)"Skeleton Scout" → P1(4,2)"Vile Creeper"  Dice=4  ATK=20 vs DEF=10  → WIN
+[02:27.483] Anim: 3A  △ P1(4,2)
+[02:27.982] Turn ended  P0  |  Crystals P0=1000 P1=2150
+
+--- Turn 11  |  Player 1  |  Crystals P0=1000 P1=2150 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][Armo][Skel][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Dark][  ? ][  — ][  ? ][  — ]
+[02:28.601] Mode selected P1: ATTACK
+[02:28.608] Attack phase P1: 2 attack(s) available
+[02:28.608] MSG: Player 2: tap a character to attack.
+[02:28.896] AI1 attack decision: (4,0)"Dark Blob" [ATK=30] → (2,1) "Armored Monkey" [DEF=20]
+[02:29.197] Dice rolled: 3
+[02:29.207] MSG: Dark Blob wins!
+[02:33.880] Crystals: P0 1000 → 830 (-170)  [battle]
+[02:35.274] Card destroyed  P0 (2,1) "Armored Monkey"
+[02:35.278] Attack P1(4,0)"Dark Blob" → P0(2,1)"Armored Monkey"  Dice=3  ATK=30 vs DEF=20  → WIN
+[02:35.278] Anim: 3A  △ P0(2,1)
+[02:37.782] Turn ended  P1  |  Crystals P0=830 P1=2150
+
+--- Turn 12  |  Player 0  |  Crystals P0=830 P1=2150 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Skel][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Dark][  ? ][  — ][  ? ][  — ]
+[02:38.401] Mode selected P0: ATTACK
+[02:38.408] Attack phase P0: 2 attack(s) available
+[02:38.408] MSG: Player 1: tap a character to attack.
+[02:38.701] AI0 attack decision: (2,2)"Skeleton Scout" [ATK=20] → (3,1) "Brainwash" [DEF=0]
+[02:39.039] Revealed: P1 (3,1) "Brainwash"
+[02:39.039] Dice rolled: 5
+[02:39.315] MSG: Trap triggered: Brainwash!
+[02:43.385] Card destroyed  P1 (3,1) "Brainwash"
+[02:43.385] Crystals: P1 2150 → 650 (-1500)  [trap cost]
+[02:44.769] Target prompt: "Brainwash: Choose one of your own cards as the attack target."  filter=own_any_as_target
+[02:44.773] Trap: "Brainwash" triggered  P0(2,2)→P1(3,1)
+[02:44.774] Anim: 3D  (attacker survives)
+[02:45.167] AI0 target chosen: (2,2)
+[02:45.170] Card destroyed  P0 (2,2) "Skeleton Scout"
+[02:45.170] MSG: Brainwash: Skeleton Scout forced to destroy own ally Skeleton Scout!
+[02:45.269] Mode selected P0: ATTACK
+[02:45.274] Attack phase P0: 1 attack(s) available
+[02:45.275] MSG: Player 1: tap a character to attack.
+[02:45.567] AI0 attack decision: (3,2)"Bleacher Squad" [ATK=20] → (3,2) "(dead-end)"
+[02:45.943] Revealed: P0 (3,2) "Bleacher Squad"
+[02:45.943] Dice rolled: 3
+[02:45.957] MSG: Nothing happens — Dead End.
+[02:49.274] Dead-end placed  P1 (3,2)
+[02:49.278] Attack P0(3,2)"Bleacher Squad" → P1(3,2)(empty)  Dice=3  → DEAD_END
+[02:49.278] Anim: 3F  (blank slot)
+[02:49.766] Turn ended  P0  |  Crystals P0=830 P1=650
+
+--- Turn 13  |  Player 1  |  Crystals P0=830 P1=650 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Blea][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Dark][  ? ][  — ][  ? ][  — ]
+[02:50.375] Mode selected P1: ATTACK
+[02:50.381] Attack phase P1: 2 attack(s) available
+[02:50.381] MSG: Player 2: tap a character to attack.
+[02:50.672] AI1 attack decision: (4,0)"Dark Blob" [ATK=35] → (3,2) "Bleacher Squad" [DEF=20]
+[02:50.972] Dice rolled: 2
+[02:50.981] MSG: Dark Blob wins!
+[02:55.647] Crystals: P0 830 → 510 (-320)  [battle]
+[02:57.042] Card destroyed  P0 (3,2) "Bleacher Squad"
+[02:57.046] Attack P1(4,0)"Dark Blob" → P0(3,2)"Bleacher Squad"  Dice=2  ATK=35 vs DEF=20  → WIN
+[02:57.046] Anim: 3A  △ P0(3,2)
+[02:59.552] Turn ended  P1  |  Crystals P0=510 P1=650
+
+--- Turn 14  |  Player 0  |  Crystals P0=510 P1=650 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Dark][  ? ][  — ][  ? ][  — ]
+[03:00.156] Mode selected P0: ATTACK
+[03:00.161] Attack phase P0: 2 attack(s) available
+[03:00.161] MSG: Player 1: tap a character to attack.
+[03:00.456] AI0 attack decision: (4,1)"Aerial the Battlemage" [ATK=50] → (0,2) "Hostage" [DEF=0]
+[03:00.806] Revealed: P0 (4,1) "Aerial the Battlemage"
+[03:00.832] Revealed: P1 (0,2) "Hostage"
+[03:00.832] Dice rolled: 5
+[03:01.071] MSG: Trap triggered: Hostage!
+[03:05.156] Card destroyed  P1 (0,2) "Hostage"
+[03:05.157] Crystals: P1 650 → 450 (-200)  [trap cost]
+[03:06.547] MSG: Hostage: Adjacent squares revealed and locked.
+[03:06.594] Revealed: P1 (0,1) "Leopard Jailer"
+[03:06.597] Trap: "Hostage" triggered  P0(4,1)→P1(0,2)
+[03:06.597] Anim: 3D  (attacker survives)
+[03:09.060] Turn ended  P0  |  Crystals P0=510 P1=450
+
+--- Turn 15  |  Player 1  |  Crystals P0=510 P1=450 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Aeri][  ? ][  — ][  — ]
+P1:   [  ? ][Leop][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Dark][  ? ][  — ][  ? ][  — ]
+[03:09.663] Mode selected P1: ATTACK
+[03:09.671] Attack phase P1: 2 attack(s) available
+[03:09.671] MSG: Player 2: tap a character to attack.
+[03:09.951] AI1 attack decision: (4,0)"Dark Blob" [ATK=40] → (1,0) "(dead-end)"
+[03:10.252] Dice rolled: 4
+[03:10.279] MSG: Nothing happens — Dead End.
+[03:13.583] Dead-end placed  P0 (1,0)
+[03:13.587] Attack P1(4,0)"Dark Blob" → P0(1,0)(empty)  Dice=4  → DEAD_END
+[03:13.587] Anim: 3F  (blank slot)
+[03:14.081] Mode selected P1: ATTACK
+[03:14.089] Attack phase P1: 1 attack(s) available
+[03:14.089] MSG: Player 2: tap a character to attack.
+[03:14.379] AI1 attack decision: (0,1)"Leopard Jailer" [ATK=30] → (0,3) "(dead-end)"
+[03:14.680] Dice rolled: 4
+[03:14.706] MSG: Nothing happens — Dead End.
+[03:18.061] Dead-end placed  P0 (0,3)
+[03:18.066] Attack P1(0,1)"Leopard Jailer" → P0(0,3)(empty)  Dice=4  → DEAD_END
+[03:18.066] Anim: 3F  (blank slot)
+[03:18.573] Turn ended  P1  |  Crystals P0=510 P1=450
+
+--- Turn 16  |  Player 0  |  Crystals P0=510 P1=450 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Aeri][  ? ][  — ][  — ]
+P1:   [  ? ][Leop][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Dark][  ? ][  — ][  ? ][  — ]
+[03:19.176] Mode selected P0: ATTACK
+[03:19.184] Attack phase P0: 2 attack(s) available
+[03:19.184] MSG: Player 1: tap a character to attack.
+[03:19.476] AI0 attack decision: (4,1)"Aerial the Battlemage" [ATK=50] → (0,1) "Leopard Jailer" [DEF=45]
+[03:19.776] Dice rolled: 5
+[03:19.787] MSG: Aerial the Battlemage wins!
+[03:24.459] Crystals: P1 450 → 0 (-450)  [battle]
+
+=== GAME OVER ===
+[03:24.465] AI Player 0 wins
+[03:24.465] Final crystals — P0: 510  P1: 0  |  Turns: 16
+[03:24.465] Log saved to: res://logs/results/2026-05-31_03-11-44_569_root_beer_float/battle_suspicious_meatball_2026-05-31_03-13-51_020.txt

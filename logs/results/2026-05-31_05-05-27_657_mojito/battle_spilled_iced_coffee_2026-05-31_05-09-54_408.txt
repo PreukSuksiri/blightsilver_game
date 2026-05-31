@@ -1,0 +1,432 @@
+=== Battle of Spilled Iced Coffee ===
+Battle started: 2026-05-31 05:09:54.408
+Game Session of Mojito (started 2026-05-31 05:05:27.657)
+=== AI vs AI Match ===
+Batch iteration: 3 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Great Diplomacy, Tease
+P1 Tech hand: Great Diplomacy, Tease, Spy
+P0:   [C:Saw ][C:Whit][  — ][C:Mine][  — ]
+      [  — ][C:Jira][C:Sunr][C:Deat][T:Expl]
+      [  — ][C:Bat ][C:Polt][C:Choi][T:Spik]
+      [  — ][C:Chao][C:Jose][C:Big ][T:Pepp]
+      [  — ][  — ][  — ][T:Snar][  — ]
+P1:   [C:Hamm][  — ][  — ][  — ][C:Lab ]
+      [C:Armo][C:Shot][  — ][C:Red ][  — ]
+      [  — ][  — ][C:Skel][  — ][  — ]
+      [T:Trap][T:Host][  — ][C:Godd][  — ]
+      [C:Paro][  — ][T:Snar][T:Hypn][T:Curs]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:05.185] Mode selected P1: TECH
+[00:05.502] Tech played  P1: "Spy"
+[00:07.060] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.466] AI1 target chosen: (1,2)
+[00:07.533] Revealed: P0 (1,2) "Sunrise Lady"
+[00:07.535] Tech resolved  P1
+[00:08.400] Mode selected P1: ATTACK
+[00:08.403] Attack phase P1: 2 attack(s) available
+[00:08.403] MSG: Player 2: tap a character to attack.
+[00:08.709] AI1 attack decision: (0,4)"Lab Bloater" [ATK=20] → (4,1) "(dead-end)"
+[00:09.073] Revealed: P1 (0,4) "Lab Bloater"
+[00:09.074] Dice rolled: 1
+[00:09.088] MSG: Nothing happens — Dead End.
+[00:12.418] Dead-end placed  P0 (4,1)
+[00:12.423] Attack P1(0,4)"Lab Bloater" → P0(4,1)(empty)  Dice=1  → DEAD_END
+[00:12.423] Anim: 3F  (blank slot)
+[00:14.937] Turn ended  P1  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][Sunr][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][Lab ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:15.543] Mode selected P0: TECH
+[00:15.850] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:17.237] Tech played  P0: "Great Diplomacy"
+[00:18.828] Revealed: P0 (0,0) "Saw Shark"
+[00:18.868] Revealed: P0 (0,1) "White Tiger"
+[00:18.887] Revealed: P0 (0,3) "Miner Probe"
+[00:18.934] Revealed: P0 (1,1) "Jirayu the Rebellious Prince"
+[00:18.961] Revealed: P0 (1,3) "Death Knight"
+[00:19.003] Revealed: P0 (2,1) "Bat Swarm"
+[00:19.023] Revealed: P0 (2,2) "Poltergeist"
+[00:19.043] Revealed: P0 (2,3) "Choir Lady Abigail"
+[00:19.079] Revealed: P0 (3,1) "Chaotic Wisp"
+[00:19.113] Revealed: P0 (3,2) "Joseph the Battle Priest"
+[00:19.141] Revealed: P0 (3,3) "Big Thug"
+[00:19.144] Tech resolved  P0
+[00:19.809] Mode selected P0: ATTACK
+[00:19.820] Attack phase P0: 2 attack(s) available
+[00:19.820] MSG: Player 1: tap a character to attack.
+[00:20.108] AI0 attack decision: (1,3)"Death Knight" [ATK=65] → (1,4) "(dead-end)"
+[00:20.408] Dice rolled: 3
+[00:20.440] MSG: Nothing happens — Dead End.
+[00:23.801] Dead-end placed  P1 (1,4)
+[00:23.805] Attack P0(1,3)"Death Knight" → P1(1,4)(empty)  Dice=3  → DEAD_END
+[00:23.805] Anim: 3F  (blank slot)
+[00:24.301] Mode selected P0: ATTACK
+[00:24.315] Attack phase P0: 1 attack(s) available
+[00:24.316] MSG: Player 1: tap a character to attack.
+[00:24.600] AI0 attack decision: (3,2)"Joseph the Battle Priest" [ATK=60] → (0,3) "(dead-end)"
+[00:24.900] Dice rolled: 2
+[00:24.934] MSG: Nothing happens — Dead End.
+[00:28.301] Dead-end placed  P1 (0,3)
+[00:28.310] Attack P0(3,2)"Joseph the Battle Priest" → P1(0,3)(empty)  Dice=2  → DEAD_END
+[00:28.310] Anim: 3F  (blank slot)
+[00:28.807] Turn ended  P0  |  Crystals P0=4000 P1=5000
+
+--- Turn 3  |  Player 1  |  Crystals P0=4000 P1=5000 ---
+P0:   [Saw ][Whit][  — ][Mine][  — ]
+      [  — ][Jira][Sunr][Deat][  ? ]
+      [  — ][Bat ][Polt][Choi][  ? ]
+      [  — ][Chao][Jose][Big ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][Lab ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:29.400] Mode selected P1: TECH
+[00:29.700] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:31.093] Tech played  P1: "Great Diplomacy"
+[00:32.707] Revealed: P1 (0,0) "Hammer Shark"
+[00:32.737] Revealed: P1 (1,0) "Armored Bee"
+[00:32.757] Revealed: P1 (1,1) "Shotgun Shark"
+[00:32.789] Revealed: P1 (1,3) "Red Mage"
+[00:32.831] Revealed: P1 (2,2) "Skeleton Archer"
+[00:32.872] Revealed: P1 (3,3) "Goddess of Virtue"
+[00:32.889] Revealed: P1 (4,0) "Parom the Smuggler"
+[00:32.892] Tech resolved  P1
+[00:33.721] Mode selected P1: ATTACK
+[00:33.736] Attack phase P1: 2 attack(s) available
+[00:33.736] MSG: Player 2: tap a character to attack.
+[00:34.021] AI1 attack decision: (3,3)"Goddess of Virtue" [ATK=80] → (1,3) "Death Knight" [DEF=65]
+[00:34.322] Prompt: "Bat Swarm can intercept for Death Knight!"  [Intercept / Don't Intercept]
+[00:34.925] Ability choice resolved: 0 (Yes)
+[00:34.926] Dice rolled: 1
+[00:34.943] MSG: Goddess of Virtue destroys Bat Swarm by affinity!
+[00:41.201] Crystals: P0 4000 → 3800 (-200)  [battle]
+[00:42.595] Card destroyed  P0 (2,1) "Bat Swarm"
+[00:42.606] Attack P1(3,3)"Goddess of Virtue" → P0(2,1)"Bat Swarm"  Dice=1  ATK=80 vs DEF=15  → WIN
+[00:42.606] Anim: 3A  △ P0(2,1)
+[00:43.092] Mode selected P1: ATTACK
+[00:43.109] Attack phase P1: 1 attack(s) available
+[00:43.110] MSG: Player 2: tap a character to attack.
+[00:43.392] AI1 attack decision: (1,1)"Shotgun Shark" [ATK=85] → (1,3) "Death Knight" [DEF=65]
+[00:43.693] Dice rolled: 5
+[00:43.709] MSG: Shotgun Shark wins!
+[00:48.384] Crystals: P0 3800 → 2950 (-850)  [battle]
+[00:49.777] Card destroyed  P0 (1,3) "Death Knight"
+[00:49.787] Attack P1(1,1)"Shotgun Shark" → P0(1,3)"Death Knight"  Dice=5  ATK=85 vs DEF=65  → WIN
+[00:49.787] Anim: 3A  △ P0(1,3)
+[00:50.287] Turn ended  P1  |  Crystals P0=2950 P1=4000
+
+--- Turn 4  |  Player 0  |  Crystals P0=2950 P1=4000 ---
+P0:   [Saw ][Whit][  — ][Mine][  — ]
+      [  — ][Jira][Sunr][  — ][  ? ]
+      [  — ][  — ][Polt][Choi][  ? ]
+      [  — ][Chao][Jose][Big ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Hamm][  — ][  — ][  — ][Lab ]
+      [Armo][Shot][  — ][Red ][  — ]
+      [  — ][  — ][Skel][  — ][  — ]
+      [  ? ][  ? ][  — ][Godd][  — ]
+      [Paro][  — ][  ? ][  ? ][  ? ]
+[00:50.875] Mode selected P0: TECH
+[00:51.193] Tech played  P0: "Tease"
+[00:52.722] MSG: Opponent must choose and reveal 1 of their squares.
+[00:52.723] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:53.121] AI1 target chosen: (4,2)
+[00:53.153] Revealed: P1 (4,2) "Snare Trap"
+[00:53.153] MSG: Tease: Opponent revealed Snare Trap.
+[00:53.161] Tech resolved  P0
+[00:54.022] Mode selected P0: ATTACK
+[00:54.038] Attack phase P0: 2 attack(s) available
+[00:54.038] MSG: Player 1: tap a character to attack.
+[00:54.321] AI0 attack decision: (3,2)"Joseph the Battle Priest" [ATK=60] → (1,1) "Shotgun Shark" [DEF=25]
+[00:54.621] Dice rolled: 5
+[00:54.628] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[00:54.631] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[00:54.631] MSG: Joseph the Battle Priest wins!
+[00:54.702] Coin flip: Tails
+[00:59.288] Crystals: P1 4000 → 3100 (-900)  [battle]
+[01:00.681] Card destroyed  P1 (1,1) "Shotgun Shark"
+[01:00.690] Attack P0(3,2)"Joseph the Battle Priest" → P1(1,1)"Shotgun Shark"  Dice=5  ATK=60 vs DEF=25  → WIN
+[01:00.690] Anim: 3A  △ P1(1,1)
+[01:01.189] Mode selected P0: ATTACK
+[01:01.207] Attack phase P0: 1 attack(s) available
+[01:01.208] MSG: Player 1: tap a character to attack.
+[01:01.496] AI0 attack decision: (0,1)"White Tiger" [ATK=40] → (1,0) "Armored Bee" [DEF=0]
+[01:01.805] Dice rolled: 1
+[01:01.820] MSG: White Tiger wins!
+[01:06.505] Crystals: P1 3100 → 2620 (-480)  [battle]
+[01:07.899] Card destroyed  P1 (1,0) "Armored Bee"
+[01:07.910] Attack P0(0,1)"White Tiger" → P1(1,0)"Armored Bee"  Dice=1  ATK=40 vs DEF=0  → WIN
+[01:07.910] Anim: 3A  △ P1(1,0)
+[01:08.411] Turn ended  P0  |  Crystals P0=2950 P1=2620
+
+--- Turn 5  |  Player 1  |  Crystals P0=2950 P1=2620 ---
+P0:   [Saw ][Whit][  — ][Mine][  — ]
+      [  — ][Jira][Sunr][  — ][  ? ]
+      [  — ][  — ][Polt][Choi][  ? ]
+      [  — ][Chao][Jose][Big ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Hamm][  — ][  — ][  — ][Lab ]
+      [  — ][  — ][  — ][Red ][  — ]
+      [  — ][  — ][Skel][  — ][  — ]
+      [  ? ][  ? ][  — ][Godd][  — ]
+      [Paro][  — ][  — ][  ? ][  ? ]
+[01:09.008] Mode selected P1: TECH
+[01:09.332] Tech played  P1: "Tease"
+[01:10.891] MSG: Opponent must choose and reveal 1 of their squares.
+[01:10.892] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:11.299] AI0 target chosen: (3,4)
+[01:11.342] Revealed: P0 (3,4) "Pepper Spray"
+[01:11.342] Crystals: P1 2620 → 2660 (+40)  [ability]
+[01:11.342] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:11.342] MSG: Tease: Opponent revealed Pepper Spray.
+[01:11.352] Tech resolved  P1
+[01:12.216] Mode selected P1: ATTACK
+[01:12.233] Attack phase P1: 2 attack(s) available
+[01:12.233] MSG: Player 2: tap a character to attack.
+[01:12.525] AI1 attack decision: (3,3)"Goddess of Virtue" [ATK=80] → (3,2) "Joseph the Battle Priest" [DEF=25]
+[01:12.833] Dice rolled: 4
+[01:12.845] MSG: Goddess of Virtue wins!
+[01:17.535] Crystals: P0 2950 → 2350 (-600)  [battle]
+[01:18.927] Card destroyed  P0 (3,2) "Joseph the Battle Priest"
+[01:18.934] Attack P1(3,3)"Goddess of Virtue" → P0(3,2)"Joseph the Battle Priest"  Dice=4  ATK=80 vs DEF=25  → WIN
+[01:18.934] Anim: 3A  △ P0(3,2)
+[01:19.433] Mode selected P1: ATTACK
+[01:19.444] Attack phase P1: 1 attack(s) available
+[01:19.445] MSG: Player 2: tap a character to attack.
+[01:19.742] AI1 attack decision: (2,2)"Skeleton Archer" [ATK=35] → (0,1) "White Tiger" [DEF=25]
+[01:20.051] Dice rolled: 3
+[01:20.065] MSG: White Tiger: Attacker loses 15 ATK!
+[01:26.484] Crystals: P1 2660 → 2360 (-300)  [battle]
+[01:27.877] Card destroyed  P1 (2,2) "Skeleton Archer"
+[01:27.888] Attack P1(2,2)"Skeleton Archer" → P0(0,1)"White Tiger"  Dice=3  ATK=20 vs DEF=25  → LOSE
+[01:27.888] Anim: 3B  △ P1(2,2)
+[01:28.390] Turn ended  P1  |  Crystals P0=2350 P1=2360
+
+--- Turn 6  |  Player 0  |  Crystals P0=2350 P1=2360 ---
+P0:   [Saw ][Whit][  — ][Mine][  — ]
+      [  — ][Jira][Sunr][  — ][  ? ]
+      [  — ][  — ][Polt][Choi][  ? ]
+      [  — ][Chao][  — ][Big ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Hamm][  — ][  — ][  — ][Lab ]
+      [  — ][  — ][  — ][Red ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][Godd][  — ]
+      [Paro][  — ][  — ][  ? ][  ? ]
+[01:28.980] Mode selected P0: ATTACK
+[01:28.996] Attack phase P0: 2 attack(s) available
+[01:28.997] MSG: Player 1: tap a character to attack.
+[01:29.287] AI0 attack decision: (0,1)"White Tiger" [ATK=40] → (1,3) "Red Mage" [DEF=20]
+[01:29.596] Dice rolled: 4
+[01:29.609] MSG: White Tiger wins!
+[01:34.295] Crystals: P1 2360 → 1960 (-400)  [battle]
+[01:35.690] Card destroyed  P1 (1,3) "Red Mage"
+[01:35.701] Attack P0(0,1)"White Tiger" → P1(1,3)"Red Mage"  Dice=4  ATK=40 vs DEF=20  → WIN
+[01:35.701] Anim: 3A  △ P1(1,3)
+[01:36.197] Mode selected P0: ATTACK
+[01:36.209] Attack phase P0: 1 attack(s) available
+[01:36.209] MSG: Player 1: tap a character to attack.
+[01:36.503] AI0 attack decision: (1,1)"Jirayu the Rebellious Prince" [ATK=40] → (4,0) "Parom the Smuggler" [DEF=20]
+[01:36.813] Dice rolled: 5
+[01:36.825] MSG: Jirayu the Rebellious Prince wins!
+[01:41.515] Crystals: P1 1960 → 1660 (-300)  [battle]
+[01:42.910] Card destroyed  P1 (4,0) "Parom the Smuggler"
+[01:42.928] Attack P0(1,1)"Jirayu the Rebellious Prince" → P1(4,0)"Parom the Smuggler"  Dice=5  ATK=40 vs DEF=20  → WIN
+[01:42.928] Anim: 3A  △ P1(4,0)
+[01:43.423] Turn ended  P0  |  Crystals P0=2350 P1=1660
+
+--- Turn 7  |  Player 1  |  Crystals P0=2350 P1=1660 ---
+P0:   [Saw ][Whit][  — ][Mine][  — ]
+      [  — ][Jira][Sunr][  — ][  ? ]
+      [  — ][  — ][Polt][Choi][  ? ]
+      [  — ][Chao][  — ][Big ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Hamm][  — ][  — ][  — ][Lab ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][Godd][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[01:44.007] Mode selected P1: ATTACK
+[01:44.017] Attack phase P1: 2 attack(s) available
+[01:44.017] MSG: Player 2: tap a character to attack.
+[01:44.313] AI1 attack decision: (3,3)"Goddess of Virtue" [ATK=80] → (2,2) "Poltergeist" [DEF=70]
+[01:44.622] Dice rolled: 4
+[01:44.636] MSG: Goddess of Virtue destroys Poltergeist by affinity!
+[01:50.939] Crystals: P0 2350 → 1650 (-700)  [battle]
+[01:52.333] Card destroyed  P0 (2,2) "Poltergeist"
+[01:52.343] Attack P1(3,3)"Goddess of Virtue" → P0(2,2)"Poltergeist"  Dice=4  ATK=80 vs DEF=70  → WIN
+[01:52.343] Anim: 3A  △ P0(2,2)
+[01:52.838] Mode selected P1: ATTACK
+[01:52.853] Attack phase P1: 1 attack(s) available
+[01:52.854] MSG: Player 2: tap a character to attack.
+[01:53.150] AI1 attack decision: (0,0)"Hammer Shark" [ATK=20] → (0,0) "Saw Shark" [DEF=10]
+[01:53.460] Dice rolled: 1
+[01:53.471] MSG: Hammer Shark wins!
+[01:58.160] Crystals: P0 1650 → 1370 (-280)  [battle]
+[01:59.552] Card destroyed  P0 (0,0) "Saw Shark"
+[01:59.559] Attack P1(0,0)"Hammer Shark" → P0(0,0)"Saw Shark"  Dice=1  ATK=20 vs DEF=10  → WIN
+[01:59.559] Anim: 3A  △ P0(0,0)
+[02:00.065] Turn ended  P1  |  Crystals P0=1370 P1=1660
+
+--- Turn 8  |  Player 0  |  Crystals P0=1370 P1=1660 ---
+P0:   [  — ][Whit][  — ][Mine][  — ]
+      [  — ][Jira][Sunr][  — ][  ? ]
+      [  — ][  — ][  — ][Choi][  ? ]
+      [  — ][Chao][  — ][Big ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Hamm][  — ][  — ][  — ][Lab ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][Godd][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:02.195] Union summoned P0: [False Prophet] from Sunrise Lady, Choir Lady Abigail
+[02:02.196] Crystals: P0 1370 → 1070 (-300)  [union]
+[02:02.241] Revealed: P0 (1,2) "False Prophet"
+[02:02.242] MSG: Player 1 summoned [False Prophet] using: Sunrise Lady, Choir Lady Abigail
+[02:05.696] Mode selected P0: ATTACK
+[02:05.706] Attack phase P0: 2 attack(s) available
+[02:05.707] MSG: Player 1: tap a character to attack.
+[02:05.988] AI0 attack decision: (0,1)"White Tiger" [ATK=40] → (0,0) "Hammer Shark" [DEF=20]
+[02:06.289] Dice rolled: 4
+[02:06.300] MSG: White Tiger wins!
+[02:10.964] Crystals: P1 1660 → 1410 (-250)  [battle]
+[02:12.356] Card destroyed  P1 (0,0) "Hammer Shark"
+[02:12.364] Attack P0(0,1)"White Tiger" → P1(0,0)"Hammer Shark"  Dice=4  ATK=40 vs DEF=20  → WIN
+[02:12.364] Anim: 3A  △ P1(0,0)
+[02:12.856] Mode selected P0: ATTACK
+[02:12.867] Attack phase P0: 1 attack(s) available
+[02:12.867] MSG: Player 1: tap a character to attack.
+[02:13.155] AI0 attack decision: (1,1)"Jirayu the Rebellious Prince" [ATK=40] → (3,4) "(dead-end)"
+[02:13.455] Dice rolled: 3
+[02:13.481] MSG: Nothing happens — Dead End.
+[02:16.847] Dead-end placed  P1 (3,4)
+[02:16.854] Attack P0(1,1)"Jirayu the Rebellious Prince" → P1(3,4)(empty)  Dice=3  → DEAD_END
+[02:16.854] Anim: 3F  (blank slot)
+[02:17.349] Turn ended  P0  |  Crystals P0=1070 P1=1410
+
+--- Turn 9  |  Player 1  |  Crystals P0=1070 P1=1410 ---
+P0:   [  — ][Whit][  — ][Mine][  — ]
+      [  — ][Jira][Fals][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Chao][  — ][Big ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][Lab ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][Godd][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:17.949] Mode selected P1: ATTACK
+[02:17.956] Attack phase P1: 2 attack(s) available
+[02:17.956] MSG: Player 2: tap a character to attack.
+[02:18.245] AI1 attack decision: (3,3)"Goddess of Virtue" [ATK=80] → (3,3) "Big Thug" [DEF=35]
+[02:18.546] Dice rolled: 1
+[02:18.557] MSG: Goddess of Virtue wins!
+[02:23.238] Crystals: P0 1070 → 670 (-400)  [battle]
+[02:24.631] Card destroyed  P0 (3,3) "Big Thug"
+[02:24.636] Attack P1(3,3)"Goddess of Virtue" → P0(3,3)"Big Thug"  Dice=1  ATK=80 vs DEF=35  → WIN
+[02:24.637] Anim: 3A  △ P0(3,3)
+[02:25.129] Mode selected P1: ATTACK
+[02:25.140] Attack phase P1: 1 attack(s) available
+[02:25.140] MSG: Player 2: tap a character to attack.
+[02:25.429] AI1 attack decision: (0,4)"Lab Bloater" [ATK=20] → (3,1) "Chaotic Wisp" [DEF=0]
+[02:25.729] Dice rolled: 4
+[02:25.740] MSG: Lab Bloater wins!
+[02:30.421] Crystals: P0 670 → 570 (-100)  [battle]
+[02:31.816] Card destroyed  P0 (3,1) "Chaotic Wisp"
+[02:31.822] Attack P1(0,4)"Lab Bloater" → P0(3,1)"Chaotic Wisp"  Dice=4  ATK=20 vs DEF=0  → WIN
+[02:31.822] Anim: 3A  △ P0(3,1)
+[02:32.318] Turn ended  P1  |  Crystals P0=570 P1=1410
+
+--- Turn 10  |  Player 0  |  Crystals P0=570 P1=1410 ---
+P0:   [  — ][Whit][  — ][Mine][  — ]
+      [  — ][Jira][Fals][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][Lab ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][Godd][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:32.319] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[02:32.713] Revealed: P1 (2,4) (blank slot)
+[02:32.713] MSG: False Prophet: Dead End revealed — self-destructs!
+[02:32.715] Card destroyed  P0 (1,2) "False Prophet"
+[02:32.914] Mode selected P0: ATTACK
+[02:32.923] Attack phase P0: 2 attack(s) available
+[02:32.923] MSG: Player 1: tap a character to attack.
+[02:33.212] AI0 attack decision: (0,1)"White Tiger" [ATK=40] → (2,4) "(dead-end)"
+[02:33.514] Dice rolled: 1
+[02:33.546] MSG: Nothing happens — Dead End.
+[02:36.906] Dead-end placed  P1 (2,4)
+[02:36.913] Attack P0(0,1)"White Tiger" → P1(2,4)(empty)  Dice=1  → DEAD_END
+[02:36.913] Anim: 3F  (blank slot)
+[02:37.405] Mode selected P0: ATTACK
+[02:37.411] Attack phase P0: 1 attack(s) available
+[02:37.411] MSG: Player 1: tap a character to attack.
+[02:37.703] AI0 attack decision: (1,1)"Jirayu the Rebellious Prince" [ATK=40] → (4,3) "Hypnosis" [DEF=0]
+[02:38.053] Revealed: P1 (4,3) "Hypnosis"
+[02:38.053] Dice rolled: 1
+[02:38.310] MSG: Trap triggered: Hypnosis!
+[02:42.399] Card destroyed  P1 (4,3) "Hypnosis"
+[02:42.399] Crystals: P1 1410 → 610 (-800)  [trap cost]
+[02:43.788] MSG: Hypnosis: Jirayu the Rebellious Prince cannot attack until end of next turn.
+[02:43.794] Trap: "Hypnosis" triggered  P0(1,1)→P1(4,3)
+[02:43.794] Anim: 3D  (attacker survives)
+[02:44.294] Turn ended  P0  |  Crystals P0=570 P1=610
+
+--- Turn 11  |  Player 1  |  Crystals P0=570 P1=610 ---
+P0:   [  — ][Whit][  — ][Mine][  — ]
+      [  — ][Jira][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][Lab ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][Godd][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:44.893] Mode selected P1: ATTACK
+[02:44.902] Attack phase P1: 2 attack(s) available
+[02:44.903] MSG: Player 2: tap a character to attack.
+[02:45.188] AI1 attack decision: (3,3)"Goddess of Virtue" [ATK=80] → (1,1) "Jirayu the Rebellious Prince" [DEF=40]
+[02:45.487] Dice rolled: 5
+[02:45.493] MSG: Goddess of Virtue wins!
+[02:50.180] Crystals: P0 570 → 0 (-570)  [battle]
+
+=== GAME OVER ===
+[02:50.184] AI Player 1 wins
+[02:50.184] Reason: crystals
+[02:50.184] Final crystals — P0: 0  P1: 610  |  Turns: 11
+[02:50.184] Log saved to: res://logs/results/2026-05-31_05-05-27_657_mojito/battle_spilled_iced_coffee_2026-05-31_05-09-54_408.txt

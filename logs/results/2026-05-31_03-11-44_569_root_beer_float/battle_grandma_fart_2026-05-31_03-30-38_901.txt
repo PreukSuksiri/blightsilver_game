@@ -1,0 +1,866 @@
+=== Battle of Grandma Fart ===
+Battle started: 2026-05-31 03:30:38.901
+Game Session of Root Beer Float (started 2026-05-31 03:11:44.569)
+=== AI vs AI Match ===
+Batch iteration: 8 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Prayer, Great Diplomacy
+P1 Tech hand: Accident, Release Mutagen, Spy
+P0:   [C:Armo][C:Need][  — ][  — ][T:Flam]
+      [  — ][C:Mafi][C:Sate][T:Acid][T:Self]
+      [  — ][C:Grav][  — ][C:Elec][T:Red ]
+      [  — ][C:Dark][C:Skel][T:Stre][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [C:Mad ][C:Armo][  — ][T:Curs][  — ]
+      [  — ][C:Gran][C:Witc][C:Mafi][  — ]
+      [  — ][C:Aeri][T:Trap][C:Snip][  — ]
+      [  — ][T:Red ][C:Dark][T:Flam][  — ]
+      [T:Hypn][  — ][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:05.350] Mode selected P0: TECH
+[00:05.650] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:07.026] Tech played  P0: "Great Diplomacy"
+[00:08.620] Revealed: P0 (0,0) "Armored Rhino"
+[00:08.647] Revealed: P0 (0,1) "Needle Porcupine"
+[00:08.675] Revealed: P0 (1,1) "Mafia Associates"
+[00:08.719] Revealed: P0 (1,2) "Satellite Cannon"
+[00:08.766] Revealed: P0 (2,1) "Grave Worm"
+[00:08.785] Revealed: P0 (2,3) "Electrogazer"
+[00:08.826] Revealed: P0 (3,1) "Dark Tengu"
+[00:08.856] Revealed: P0 (3,2) "Skeleton Lancer"
+[00:08.858] Tech resolved  P0
+[00:09.641] Mode selected P0: ATTACK
+[00:09.657] Attack phase P0: 2 attack(s) available
+[00:09.657] MSG: Player 1: tap a character to attack.
+[00:09.933] AI0 attack decision: (1,2)"Satellite Cannon" [ATK=100] → (0,3) "Cursed Reflection" [DEF=0]
+[00:10.266] Revealed: P1 (0,3) "Cursed Reflection"
+[00:10.266] Dice rolled: 2
+[00:10.557] MSG: Trap triggered: Cursed Reflection!
+[00:14.634] Card destroyed  P1 (0,3) "Cursed Reflection"
+[00:14.634] Crystals: P1 5000 → 4480 (-520)  [trap cost]
+[00:16.025] MSG: Cursed Reflection: Satellite Cannon's ATK and DEF swapped until end of turn!
+[00:16.031] Trap: "Cursed Reflection" triggered  P0(1,2)→P1(0,3)
+[00:16.031] Anim: 3D  (attacker survives)
+[00:16.516] Mode selected P0: ATTACK
+[00:16.526] Attack phase P0: 1 attack(s) available
+[00:16.526] MSG: Player 1: tap a character to attack.
+[00:16.816] AI0 attack decision: (2,3)"Electrogazer" [ATK=80] → (0,4) "(dead-end)"
+[00:17.116] Dice rolled: 5
+[00:17.144] MSG: Nothing happens — Dead End.
+[00:20.509] Dead-end placed  P1 (0,4)
+[00:20.515] Attack P0(2,3)"Electrogazer" → P1(0,4)(empty)  Dice=5  → DEAD_END
+[00:20.515] Anim: 3F  (blank slot)
+[00:21.010] Turn ended  P0  |  Crystals P0=4000 P1=4480
+
+--- Turn 2  |  Player 1  |  Crystals P0=4000 P1=4480 ---
+P0:   [Armo][Need][  — ][  — ][  ? ]
+      [  — ][Mafi][Sate][  ? ][  ? ]
+      [  — ][Grav][  — ][Elec][  ? ]
+      [  — ][Dark][Skel][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:21.616] Mode selected P1: TECH
+[00:21.916] Crystals: P1 4480 → 4460 (-20)  [tech cost]
+[00:23.309] Tech played  P1: "Spy"
+[00:24.846] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:25.245] AI1 target chosen: (0,4)
+[00:25.289] Revealed: P0 (0,4) "Flame Trap"
+[00:25.292] Tech resolved  P1
+[00:26.150] Mode selected P1: ATTACK
+[00:26.160] Attack phase P1: 2 attack(s) available
+[00:26.160] MSG: Player 2: tap a character to attack.
+[00:26.449] AI1 attack decision: (1,3)"Mafia Associates" [ATK=45] → (1,1) "Mafia Associates" [DEF=40]
+[00:26.751] Revealed: P1 (1,3) "Mafia Associates"
+[00:26.751] Dice rolled: 5
+[00:26.759] MSG: Mafia Associates wins!
+[00:33.033] Crystals: P0 4000 → 3500 (-500)  [battle]
+[00:34.427] Card destroyed  P0 (1,1) "Mafia Associates"
+[00:34.435] Attack P1(1,3)"Mafia Associates" → P0(1,1)"Mafia Associates"  Dice=5  ATK=45 vs DEF=0  → WIN
+[00:34.435] Anim: 3A  △ P0(1,1)
+[00:36.939] Turn ended  P1  |  Crystals P0=3500 P1=4460
+
+--- Turn 3  |  Player 0  |  Crystals P0=3500 P1=4460 ---
+P0:   [Armo][Need][  — ][  — ][  — ]
+      [  — ][  — ][Sate][  ? ][  ? ]
+      [  — ][Grav][  — ][Elec][  ? ]
+      [  — ][Dark][Skel][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][Mafi][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:37.543] Mode selected P0: TECH
+[00:37.842] Crystals: P0 3500 → 2500 (-1000)  [tech cost]
+[00:39.231] Tech played  P0: "Accident"
+[00:40.766] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:41.165] AI0 target chosen: (1,3)
+[00:41.167] Card destroyed  P1 (1,3) "Mafia Associates"
+[00:41.175] Tech resolved  P0
+[00:42.066] Mode selected P0: ATTACK
+[00:42.078] Attack phase P0: 2 attack(s) available
+[00:42.078] MSG: Player 1: tap a character to attack.
+[00:42.366] AI0 attack decision: (1,2)"Satellite Cannon" [ATK=100] → (0,0) "Mad Raccoon" [DEF=15]
+[00:42.723] Revealed: P1 (0,0) "Mad Raccoon"
+[00:42.723] Dice rolled: 3
+[00:42.728] MSG: Satellite Cannon wins!
+[00:47.354] Crystals: P1 4460 → 4180 (-280)  [battle]
+[00:48.746] Card destroyed  P1 (0,0) "Mad Raccoon"
+[00:48.752] Attack P0(1,2)"Satellite Cannon" → P1(0,0)"Mad Raccoon"  Dice=3  ATK=100 vs DEF=15  → WIN
+[00:48.752] Anim: 3A  △ P1(0,0)
+[00:49.254] Mode selected P0: ATTACK
+[00:49.266] Attack phase P0: 1 attack(s) available
+[00:49.266] MSG: Player 1: tap a character to attack.
+[00:49.544] AI0 attack decision: (2,3)"Electrogazer" [ATK=80] → (0,2) "(dead-end)"
+[00:49.845] Dice rolled: 5
+[00:49.876] MSG: Nothing happens — Dead End.
+[00:53.243] Dead-end placed  P1 (0,2)
+[00:53.250] Attack P0(2,3)"Electrogazer" → P1(0,2)(empty)  Dice=5  → DEAD_END
+[00:53.251] Anim: 3F  (blank slot)
+[00:53.745] Turn ended  P0  |  Crystals P0=2500 P1=4180
+
+--- Turn 4  |  Player 1  |  Crystals P0=2500 P1=4180 ---
+P0:   [Armo][Need][  — ][  — ][  — ]
+      [  — ][  — ][Sate][  ? ][  ? ]
+      [  — ][Grav][  — ][Elec][  ? ]
+      [  — ][Dark][Skel][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:54.349] Mode selected P1: TECH
+[00:54.650] Crystals: P1 4180 → 3160 (-1020)  [tech cost]
+[00:56.036] Tech played  P1: "Accident"
+[00:57.566] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:57.965] AI1 target chosen: (1,2)
+[00:57.967] Card destroyed  P0 (1,2) "Satellite Cannon"
+[00:57.971] Tech resolved  P1
+[00:58.865] Mode selected P1: ATTACK
+[00:58.874] Attack phase P1: 2 attack(s) available
+[00:58.874] MSG: Player 2: tap a character to attack.
+[00:59.165] AI1 attack decision: (1,1)"Grand Fort Mauler" [ATK=40] → (3,2) "Skeleton Lancer" [DEF=5]
+[00:59.503] Revealed: P1 (1,1) "Grand Fort Mauler"
+[00:59.503] Dice rolled: 5
+[00:59.507] MSG: Grand Fort Mauler wins!
+[01:04.150] Crystals: P0 2500 → 2200 (-300)  [battle]
+[01:05.543] Card destroyed  P0 (3,2) "Skeleton Lancer"
+[01:05.548] Attack P1(1,1)"Grand Fort Mauler" → P0(3,2)"Skeleton Lancer"  Dice=5  ATK=40 vs DEF=5  → WIN
+[01:05.548] Anim: 3A  △ P0(3,2)
+[01:06.032] Mode selected P1: ATTACK
+[01:06.041] Attack phase P1: 1 attack(s) available
+[01:06.041] MSG: Player 2: tap a character to attack.
+[01:06.332] AI1 attack decision: (0,1)"Armored Bee" [ATK=30] → (3,1) "Dark Tengu" [DEF=25]
+[01:06.674] Revealed: P1 (0,1) "Armored Bee"
+[01:06.674] Dice rolled: 3
+[01:06.678] MSG: Armored Bee wins!
+[01:11.325] Crystals: P0 2200 → 1950 (-250)  [battle]
+[01:12.711] Card destroyed  P0 (3,1) "Dark Tengu"
+[01:12.719] Attack P1(0,1)"Armored Bee" → P0(3,1)"Dark Tengu"  Dice=3  ATK=30 vs DEF=25  → WIN
+[01:12.719] Anim: 3A  △ P0(3,1)
+[01:13.215] Turn ended  P1  |  Crystals P0=1950 P1=3160
+
+--- Turn 5  |  Player 0  |  Crystals P0=1950 P1=3160 ---
+P0:   [Armo][Need][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Grav][  — ][Elec][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][Armo][  — ][  — ][  — ]
+      [  — ][Gran][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:15.307] Union summoned P0: [Scarlet Shroom] from Armored Rhino, Needle Porcupine
+[01:15.308] Crystals: P0 1950 → 1450 (-500)  [union]
+[01:15.345] Revealed: P0 (0,0) "Scarlet Shroom"
+[01:15.345] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[01:15.347] MSG: Player 1 summoned [Scarlet Shroom] using: Armored Rhino, Needle Porcupine
+[01:18.741] Mode selected P0: ATTACK
+[01:18.750] Attack phase P0: 2 attack(s) available
+[01:18.750] MSG: Player 1: tap a character to attack.
+[01:19.040] AI0 attack decision: (2,3)"Electrogazer" [ATK=80] → (0,1) "Armored Bee" [DEF=0]
+[01:19.340] Dice rolled: 5
+[01:19.353] MSG: Electrogazer wins!
+[01:25.637] Crystals: P1 3160 → 2660 (-500)  [battle]
+[01:27.032] Card destroyed  P1 (0,1) "Armored Bee"
+[01:27.039] Attack P0(2,3)"Electrogazer" → P1(0,1)"Armored Bee"  Dice=5  ATK=80 vs DEF=60  → WIN
+[01:27.039] Anim: 3A  △ P1(0,1)
+[01:27.537] Mode selected P0: ATTACK
+[01:27.543] Attack phase P0: 1 attack(s) available
+[01:27.544] MSG: Player 1: tap a character to attack.
+[01:27.836] AI0 attack decision: (2,1)"Grave Worm" [ATK=15] → (1,1) "Grand Fort Mauler" [DEF=10]
+[01:28.137] Dice rolled: 5
+[01:28.146] MSG: Grave Worm wins!
+[01:32.821] Crystals: P1 2660 → 2290 (-370)  [battle]
+[01:34.216] Card destroyed  P1 (1,1) "Grand Fort Mauler"
+[01:34.222] Attack P0(2,1)"Grave Worm" → P1(1,1)"Grand Fort Mauler"  Dice=5  ATK=15 vs DEF=10  → WIN
+[01:34.222] Anim: 3A  △ P1(1,1)
+[01:34.726] Turn ended  P0  |  Crystals P0=1450 P1=2290
+
+--- Turn 6  |  Player 1  |  Crystals P0=1450 P1=2290 ---
+P0:   [Scar][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Grav][  — ][Elec][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:35.340] Mode selected P1: ATTACK
+[01:35.348] Attack phase P1: 2 attack(s) available
+[01:35.348] MSG: Player 2: tap a character to attack.
+[01:35.632] AI1 attack decision: (2,1)"Aerial the Battlemage" [ATK=50] → (2,3) "Electrogazer" [DEF=45]
+[01:35.978] Revealed: P1 (2,1) "Aerial the Battlemage"
+[01:35.978] Dice rolled: 2
+[01:35.983] MSG: Aerial the Battlemage wins!
+[01:40.616] Crystals: P0 1450 → 450 (-1000)  [battle]
+[01:42.009] Card destroyed  P0 (2,3) "Electrogazer"
+[01:42.013] Attack P1(2,1)"Aerial the Battlemage" → P0(2,3)"Electrogazer"  Dice=2  ATK=50 vs DEF=45  → WIN
+[01:42.013] Anim: 3A  △ P0(2,3)
+[01:42.507] Mode selected P1: ATTACK
+[01:42.511] Attack phase P1: 1 attack(s) available
+[01:42.511] MSG: Player 2: tap a character to attack.
+[01:42.807] AI1 attack decision: (1,2)"Witchhunter" [ATK=20] → (0,1) "(dead-end)"
+[01:43.163] Revealed: P1 (1,2) "Witchhunter"
+[01:43.163] Dice rolled: 1
+[01:43.183] MSG: Nothing happens — Dead End.
+[01:46.517] Dead-end placed  P0 (0,1)
+[01:46.520] Attack P1(1,2)"Witchhunter" → P0(0,1)(empty)  Dice=1  → DEAD_END
+[01:46.520] Anim: 3F  (blank slot)
+[01:47.014] Turn ended  P1  |  Crystals P0=450 P1=2290
+
+--- Turn 7  |  Player 0  |  Crystals P0=450 P1=2290 ---
+P0:   [Scar][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Grav][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:47.628] Mode selected P0: ATTACK
+[01:47.633] Attack phase P0: 2 attack(s) available
+[01:47.633] MSG: Player 1: tap a character to attack.
+[01:47.928] AI0 attack decision: (2,1)"Grave Worm" [ATK=15] → (1,0) "(dead-end)"
+[01:48.228] Dice rolled: 1
+[01:48.254] MSG: Nothing happens — Dead End.
+[01:51.621] Dead-end placed  P1 (1,0)
+[01:51.624] Attack P0(2,1)"Grave Worm" → P1(1,0)(empty)  Dice=1  → DEAD_END
+[01:51.624] Anim: 3F  (blank slot)
+[01:52.113] Mode selected P0: ATTACK
+[01:52.120] Attack phase P0: 1 attack(s) available
+[01:52.120] MSG: Player 1: tap a character to attack.
+[01:52.411] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (1,4) "(dead-end)"
+[01:52.712] Dice rolled: 2
+[01:52.779] MSG: Nothing happens — Dead End.
+[01:56.112] Dead-end placed  P1 (1,4)
+[01:56.118] Attack P0(0,0)"Scarlet Shroom" → P1(1,4)(empty)  Dice=2  → DEAD_END
+[01:56.118] Anim: 3F  (blank slot)
+[01:56.615] Turn ended  P0  |  Crystals P0=450 P1=2290
+
+--- Turn 8  |  Player 1  |  Crystals P0=450 P1=2290 ---
+P0:   [Scar][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Grav][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:57.222] Mode selected P1: ATTACK
+[01:57.230] Attack phase P1: 2 attack(s) available
+[01:57.231] MSG: Player 2: tap a character to attack.
+[01:57.516] AI1 attack decision: (2,1)"Aerial the Battlemage" [ATK=50] → (2,1) "Grave Worm" [DEF=30]
+[01:57.817] Dice rolled: 1
+[01:57.830] MSG: Aerial the Battlemage wins!
+[02:00.999] Crystals: P0 450 → 200 (-250)  [battle]
+[02:02.386] Card destroyed  P0 (2,1) "Grave Worm"
+[02:02.390] Attack P1(2,1)"Aerial the Battlemage" → P0(2,1)"Grave Worm"  Dice=1  ATK=50 vs DEF=30  → WIN
+[02:02.391] Anim: 3A  △ P0(2,1)
+[02:02.899] Mode selected P1: ATTACK
+[02:02.903] Attack phase P1: 1 attack(s) available
+[02:02.904] MSG: Player 2: tap a character to attack.
+[02:03.199] AI1 attack decision: (1,2)"Witchhunter" [ATK=20] → (0,4) "(dead-end)"
+[02:03.498] Dice rolled: 3
+[02:03.526] MSG: Nothing happens — Dead End.
+[02:05.429] Dead-end placed  P0 (0,4)
+[02:05.431] Attack P1(1,2)"Witchhunter" → P0(0,4)(empty)  Dice=3  → DEAD_END
+[02:05.431] Anim: 3F  (blank slot)
+[02:05.931] Turn ended  P1  |  Crystals P0=200 P1=2290
+
+--- Turn 9  |  Player 0  |  Crystals P0=200 P1=2290 ---
+P0:   [Scar][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:06.541] Mode selected P0: ATTACK
+[02:06.549] Attack phase P0: 2 attack(s) available
+[02:06.549] MSG: Player 1: tap a character to attack.
+[02:06.840] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (2,2) "Trap Hole" [DEF=0]
+[02:07.185] Revealed: P1 (2,2) "Trap Hole"
+[02:07.185] Dice rolled: 1
+[02:07.531] MSG: Trap triggered: Trap Hole!
+[02:11.556] Card destroyed  P1 (2,2) "Trap Hole"
+[02:11.565] Crystals: P0 200 → 180 (-20)  [trap]
+[02:12.944] MSG: Trap Hole: Player 1 loses 20 Crystals!
+[02:12.951] Trap: "Trap Hole" triggered  P0(0,0)→P1(2,2)
+[02:12.951] Anim: 3D  (attacker survives)
+[02:15.461] Turn ended  P0  |  Crystals P0=180 P1=2290
+
+--- Turn 10  |  Player 1  |  Crystals P0=180 P1=2290 ---
+P0:   [Scar][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:16.065] Mode selected P1: ATTACK
+[02:16.070] Attack phase P1: 2 attack(s) available
+[02:16.070] MSG: Player 2: tap a character to attack.
+[02:16.349] AI1 attack decision: (2,1)"Aerial the Battlemage" [ATK=50] → (4,0) "(dead-end)"
+[02:16.650] Dice rolled: 5
+[02:16.678] MSG: Nothing happens — Dead End.
+[02:20.033] Dead-end placed  P0 (4,0)
+[02:20.037] Attack P1(2,1)"Aerial the Battlemage" → P0(4,0)(empty)  Dice=5  → DEAD_END
+[02:20.037] Anim: 3F  (blank slot)
+[02:20.532] Mode selected P1: ATTACK
+[02:20.538] Attack phase P1: 1 attack(s) available
+[02:20.538] MSG: Player 2: tap a character to attack.
+[02:20.833] AI1 attack decision: (1,2)"Witchhunter" [ATK=20] → (4,4) "(dead-end)"
+[02:21.141] Dice rolled: 1
+[02:21.165] MSG: Nothing happens — Dead End.
+[02:24.534] Dead-end placed  P0 (4,4)
+[02:24.539] Attack P1(1,2)"Witchhunter" → P0(4,4)(empty)  Dice=1  → DEAD_END
+[02:24.539] Anim: 3F  (blank slot)
+[02:25.029] Turn ended  P1  |  Crystals P0=180 P1=2290
+
+--- Turn 11  |  Player 0  |  Crystals P0=180 P1=2290 ---
+P0:   [Scar][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:25.633] Mode selected P0: ATTACK
+[02:25.640] Attack phase P0: 2 attack(s) available
+[02:25.640] MSG: Player 1: tap a character to attack.
+[02:25.931] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (2,0) "(dead-end)"
+[02:26.232] Dice rolled: 1
+[02:26.288] MSG: Nothing happens — Dead End.
+[02:29.624] Dead-end placed  P1 (2,0)
+[02:29.627] Attack P0(0,0)"Scarlet Shroom" → P1(2,0)(empty)  Dice=1  → DEAD_END
+[02:29.627] Anim: 3F  (blank slot)
+[02:32.128] Turn ended  P0  |  Crystals P0=180 P1=2290
+
+--- Turn 12  |  Player 1  |  Crystals P0=180 P1=2290 ---
+P0:   [Scar][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:32.741] Mode selected P1: ATTACK
+[02:32.750] Attack phase P1: 2 attack(s) available
+[02:32.750] MSG: Player 2: tap a character to attack.
+[02:33.041] AI1 attack decision: (2,1)"Aerial the Battlemage" [ATK=50] → (2,2) "(dead-end)"
+[02:33.340] Dice rolled: 4
+[02:33.364] MSG: Nothing happens — Dead End.
+[02:36.733] Dead-end placed  P0 (2,2)
+[02:36.736] Attack P1(2,1)"Aerial the Battlemage" → P0(2,2)(empty)  Dice=4  → DEAD_END
+[02:36.736] Anim: 3F  (blank slot)
+[02:37.232] Mode selected P1: ATTACK
+[02:37.239] Attack phase P1: 1 attack(s) available
+[02:37.240] MSG: Player 2: tap a character to attack.
+[02:37.540] AI1 attack decision: (1,2)"Witchhunter" [ATK=20] → (0,3) "(dead-end)"
+[02:37.849] Dice rolled: 4
+[02:37.874] MSG: Nothing happens — Dead End.
+[02:41.257] Dead-end placed  P0 (0,3)
+[02:41.260] Attack P1(1,2)"Witchhunter" → P0(0,3)(empty)  Dice=4  → DEAD_END
+[02:41.260] Anim: 3F  (blank slot)
+[02:41.757] Turn ended  P1  |  Crystals P0=180 P1=2290
+
+--- Turn 13  |  Player 0  |  Crystals P0=180 P1=2290 ---
+P0:   [Scar][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:42.361] Mode selected P0: ATTACK
+[02:42.367] Attack phase P0: 2 attack(s) available
+[02:42.367] MSG: Player 1: tap a character to attack.
+[02:42.670] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (2,3) "Sniping Fairy" [DEF=20]
+[02:43.039] Revealed: P1 (2,3) "Sniping Fairy"
+[02:43.039] Dice rolled: 1
+[02:47.774] Card destroyed  P0 (0,0) "Scarlet Shroom"
+[02:47.778] Attack P0(0,0)"Scarlet Shroom" → P1(2,3)"Sniping Fairy"  Dice=1  ATK=0 vs DEF=20  → LOSE
+[02:47.778] Anim: 3B  △ P0(0,0)
+[02:50.288] Turn ended  P0  |  Crystals P0=180 P1=2290
+
+--- Turn 14  |  Player 1  |  Crystals P0=180 P1=2290 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:50.907] Mode selected P1: ATTACK
+[02:50.913] Attack phase P1: 2 attack(s) available
+[02:50.913] MSG: Player 2: tap a character to attack.
+[02:51.199] AI1 attack decision: (2,1)"Aerial the Battlemage" [ATK=50] → (1,3) "Acid Trap Hole" [DEF=0]
+[02:51.540] Revealed: P0 (1,3) "Acid Trap Hole"
+[02:51.540] Dice rolled: 2
+[02:51.814] MSG: Trap triggered: Acid Trap Hole!
+[02:55.893] Card destroyed  P0 (1,3) "Acid Trap Hole"
+[02:55.901] Crystals: P1 2290 → 2240 (-50)  [trap]
+[02:57.282] MSG: Acid Trap Hole: Player 2 loses 50 Crystals!
+[02:57.288] Trap: "Acid Trap Hole" triggered  P1(2,1)→P0(1,3)
+[02:57.288] Anim: 3D  (attacker survives)
+[02:57.774] Mode selected P1: ATTACK
+[02:57.781] Attack phase P1: 1 attack(s) available
+[02:57.781] MSG: Player 2: tap a character to attack.
+[02:58.074] AI1 attack decision: (2,3)"Sniping Fairy" [ATK=40] → (1,4) "Self-destruct" [DEF=0]
+[02:58.421] Revealed: P0 (1,4) "Self-destruct"
+[02:58.421] Dice rolled: 1
+[02:58.697] MSG: Trap triggered: Self-destruct!
+[03:02.776] Card destroyed  P0 (1,4) "Self-destruct"
+[03:02.784] MSG: No valid target — effect cancelled.
+[03:02.792] Tech resolved  P1
+[03:02.792] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[03:02.796] Trap: "Self-destruct" triggered  P1(2,3)→P0(1,4)
+[03:02.796] Anim: 3D  (attacker survives)
+[03:03.268] Turn ended  P1  |  Crystals P0=180 P1=2240
+
+--- Turn 15  |  Player 0  |  Crystals P0=180 P1=2240 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:03.669] Mode selected P0: ATTACK
+[03:03.675] Attack phase P0: 2 attack(s) available
+[03:03.675] MSG: Player 1: tap a character to attack.
+[03:03.970] AI1 attack decision: (2,1)"Aerial the Battlemage" [ATK=50] → (1,0) "(dead-end)"
+[03:04.270] MSG: You must attack with a Character.
+[03:04.273] Attack aborted
+[03:05.881] Turn ended  P0  |  Crystals P0=180 P1=2240
+
+--- Turn 16  |  Player 1  |  Crystals P0=180 P1=2240 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:06.499] Mode selected P1: ATTACK
+[03:06.505] Attack phase P1: 2 attack(s) available
+[03:06.505] MSG: Player 2: tap a character to attack.
+[03:06.786] AI1 attack decision: (2,1)"Aerial the Battlemage" [ATK=50] → (2,0) "(dead-end)"
+[03:07.087] Dice rolled: 3
+[03:07.117] MSG: Nothing happens — Dead End.
+[03:07.170] Crystals: P1 2240 → 2190 (-50)  [skip tax]
+[03:07.170] MSG: Player 2 skips without attacking — 50◆ tax (skip #1 this duel)
+[03:10.479] Dead-end placed  P0 (2,0)
+[03:10.484] Attack P1(2,1)"Aerial the Battlemage" → P0(2,0)(empty)  Dice=3  → DEAD_END
+[03:10.484] Anim: 3F  (blank slot)
+[03:10.978] Mode selected P1: ATTACK
+[03:10.984] Attack phase P1: 1 attack(s) available
+[03:10.985] MSG: Player 2: tap a character to attack.
+[03:11.277] AI1 attack decision: (2,3)"Sniping Fairy" [ATK=40] → (1,0) "(dead-end)"
+[03:11.578] Dice rolled: 4
+[03:11.607] MSG: Nothing happens — Dead End.
+[03:14.965] Dead-end placed  P0 (1,0)
+[03:14.968] Attack P1(2,3)"Sniping Fairy" → P0(1,0)(empty)  Dice=4  → DEAD_END
+[03:14.968] Anim: 3F  (blank slot)
+[03:15.457] Turn ended  P1  |  Crystals P0=180 P1=2190
+
+--- Turn 17  |  Player 0  |  Crystals P0=180 P1=2190 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:18.074] Turn ended  P0  |  Crystals P0=180 P1=2190
+
+--- Turn 18  |  Player 1  |  Crystals P0=180 P1=2190 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:18.687] Mode selected P1: ATTACK
+[03:18.692] Attack phase P1: 2 attack(s) available
+[03:18.692] MSG: Player 2: tap a character to attack.
+[03:18.969] AI1 attack decision: (2,1)"Aerial the Battlemage" [ATK=50] → (0,2) "(dead-end)"
+[03:19.271] Dice rolled: 4
+[03:19.294] MSG: Nothing happens — Dead End.
+[03:22.655] Dead-end placed  P0 (0,2)
+[03:22.660] Attack P1(2,1)"Aerial the Battlemage" → P0(0,2)(empty)  Dice=4  → DEAD_END
+[03:22.660] Anim: 3F  (blank slot)
+[03:23.162] Mode selected P1: ATTACK
+[03:23.166] Attack phase P1: 1 attack(s) available
+[03:23.167] MSG: Player 2: tap a character to attack.
+[03:23.469] AI1 attack decision: (2,3)"Sniping Fairy" [ATK=40] → (2,4) "Red Card" [DEF=0]
+[03:23.808] Revealed: P0 (2,4) "Red Card"
+[03:23.808] Dice rolled: 2
+[03:24.083] MSG: Trap triggered: Red Card!
+[03:28.172] Card destroyed  P0 (2,4) "Red Card"
+[03:28.227] Coin flip: Tails, Heads
+[03:30.962] MSG: Red Card: Tails, Heads.
+[03:30.962] MSG: Not both heads — no effect.
+[03:30.972] Trap: "Red Card" triggered  P1(2,3)→P0(2,4)
+[03:30.972] Anim: 3D  (attacker survives)
+[03:31.457] Turn ended  P1  |  Crystals P0=180 P1=2190
+
+--- Turn 19  |  Player 0  |  Crystals P0=180 P1=2190 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:34.079] Turn ended  P0  |  Crystals P0=180 P1=2190
+
+--- Turn 20  |  Player 1  |  Crystals P0=180 P1=2190 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:34.681] Mode selected P1: ATTACK
+[03:34.687] Attack phase P1: 2 attack(s) available
+[03:34.687] MSG: Player 2: tap a character to attack.
+[03:34.961] AI1 attack decision: (2,1)"Aerial the Battlemage" [ATK=50] → (3,0) "(dead-end)"
+[03:35.261] Dice rolled: 1
+[03:35.289] MSG: Nothing happens — Dead End.
+[03:38.655] Dead-end placed  P0 (3,0)
+[03:38.658] Attack P1(2,1)"Aerial the Battlemage" → P0(3,0)(empty)  Dice=1  → DEAD_END
+[03:38.658] Anim: 3F  (blank slot)
+[03:39.155] Mode selected P1: ATTACK
+[03:39.159] Attack phase P1: 1 attack(s) available
+[03:39.160] MSG: Player 2: tap a character to attack.
+[03:39.453] AI1 attack decision: (2,3)"Sniping Fairy" [ATK=40] → (3,3) "Street Joke" [DEF=0]
+[03:39.802] Revealed: P0 (3,3) "Street Joke"
+[03:39.802] Dice rolled: 2
+[03:40.075] MSG: Trap triggered: Street Joke!
+[03:44.155] Card destroyed  P0 (3,3) "Street Joke"
+[03:44.162] MSG: Street Joke: No hidden cards to reveal.
+[03:44.166] Trap: "Street Joke" triggered  P1(2,3)→P0(3,3)
+[03:44.166] Anim: 3D  (attacker survives)
+[03:44.656] Turn ended  P1  |  Crystals P0=180 P1=2190
+
+--- Turn 21  |  Player 0  |  Crystals P0=180 P1=2190 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:47.274] Turn ended  P0  |  Crystals P0=180 P1=2190
+
+--- Turn 22  |  Player 1  |  Crystals P0=180 P1=2190 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:47.885] Mode selected P1: ATTACK
+[03:47.890] Attack phase P1: 2 attack(s) available
+[03:47.890] MSG: Player 2: tap a character to attack.
+[03:48.170] AI1 attack decision: (2,1)"Aerial the Battlemage" [ATK=50] → (4,3) "(dead-end)"
+[03:48.471] Dice rolled: 1
+[03:48.498] MSG: Nothing happens — Dead End.
+[03:51.854] Dead-end placed  P0 (4,3)
+[03:51.857] Attack P1(2,1)"Aerial the Battlemage" → P0(4,3)(empty)  Dice=1  → DEAD_END
+[03:51.857] Anim: 3F  (blank slot)
+[03:52.354] Mode selected P1: ATTACK
+[03:52.359] Attack phase P1: 1 attack(s) available
+[03:52.359] MSG: Player 2: tap a character to attack.
+[03:52.652] AI1 attack decision: (2,3)"Sniping Fairy" [ATK=40] → (3,4) "(dead-end)"
+[03:52.954] Dice rolled: 2
+[03:52.987] MSG: Nothing happens — Dead End.
+[03:56.356] Dead-end placed  P0 (3,4)
+[03:56.364] Attack P1(2,3)"Sniping Fairy" → P0(3,4)(empty)  Dice=2  → DEAD_END
+[03:56.364] Anim: 3F  (blank slot)
+[03:56.857] Turn ended  P1  |  Crystals P0=180 P1=2190
+
+--- Turn 23  |  Player 0  |  Crystals P0=180 P1=2190 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:59.477] Turn ended  P0  |  Crystals P0=180 P1=2190
+
+--- Turn 24  |  Player 1  |  Crystals P0=180 P1=2190 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[04:00.090] Mode selected P1: ATTACK
+[04:00.095] Attack phase P1: 2 attack(s) available
+[04:00.095] MSG: Player 2: tap a character to attack.
+[04:00.369] AI1 attack decision: (2,1)"Aerial the Battlemage" [ATK=50] → (4,1) "(dead-end)"
+[04:00.671] Dice rolled: 4
+[04:00.695] MSG: Nothing happens — Dead End.
+[04:04.063] Dead-end placed  P0 (4,1)
+[04:04.067] Attack P1(2,1)"Aerial the Battlemage" → P0(4,1)(empty)  Dice=4  → DEAD_END
+[04:04.067] Anim: 3F  (blank slot)
+[04:04.569] Mode selected P1: ATTACK
+[04:04.575] Attack phase P1: 1 attack(s) available
+[04:04.575] MSG: Player 2: tap a character to attack.
+[04:04.878] AI1 attack decision: (2,3)"Sniping Fairy" [ATK=40] → (4,2) "(dead-end)"
+[04:05.178] Dice rolled: 3
+[04:05.207] MSG: Nothing happens — Dead End.
+[04:08.556] Dead-end placed  P0 (4,2)
+[04:08.562] Attack P1(2,3)"Sniping Fairy" → P0(4,2)(empty)  Dice=3  → DEAD_END
+[04:08.562] Anim: 3F  (blank slot)
+[04:09.056] Turn ended  P1  |  Crystals P0=180 P1=2190
+
+--- Turn 25  |  Player 0  |  Crystals P0=180 P1=2190 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[04:11.673] Turn ended  P0  |  Crystals P0=180 P1=2190
+
+--- Turn 26  |  Player 1  |  Crystals P0=180 P1=2190 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[04:14.279] Crystals: P1 2190 → 2090 (-100)  [skip tax]
+[04:14.279] MSG: Player 2 skips without attacking — 100◆ tax (skip #2 this duel)
+[04:15.666] Turn ended  P1  |  Crystals P0=180 P1=2090
+
+--- Turn 27  |  Player 0  |  Crystals P0=180 P1=2090 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[04:18.285] Turn ended  P0  |  Crystals P0=180 P1=2090
+
+--- Turn 28  |  Player 1  |  Crystals P0=180 P1=2090 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[04:20.869] Crystals: P1 2090 → 1890 (-200)  [skip tax]
+[04:20.870] MSG: Player 2 skips without attacking — 200◆ tax (skip #3 this duel)
+[04:22.251] Turn ended  P1  |  Crystals P0=180 P1=1890
+
+--- Turn 29  |  Player 0  |  Crystals P0=180 P1=1890 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[04:24.866] Turn ended  P0  |  Crystals P0=180 P1=1890
+
+--- Turn 30  |  Player 1  |  Crystals P0=180 P1=1890 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[04:27.470] Crystals: P1 1890 → 1490 (-400)  [skip tax]
+[04:27.470] MSG: Player 2 skips without attacking — 400◆ tax (skip #4 this duel)
+[04:28.855] Turn ended  P1  |  Crystals P0=180 P1=1490
+
+--- Turn 31  |  Player 0  |  Crystals P0=180 P1=1490 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[04:31.467] Turn ended  P0  |  Crystals P0=180 P1=1490
+
+--- Turn 32  |  Player 1  |  Crystals P0=180 P1=1490 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[04:34.070] Crystals: P1 1490 → 690 (-800)  [skip tax]
+[04:34.071] MSG: Player 2 skips without attacking — 800◆ tax (skip #5 this duel)
+[04:35.464] Turn ended  P1  |  Crystals P0=180 P1=690
+
+--- Turn 33  |  Player 0  |  Crystals P0=180 P1=690 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[04:38.066] Turn ended  P0  |  Crystals P0=180 P1=690
+
+--- Turn 34  |  Player 1  |  Crystals P0=180 P1=690 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Witc][  — ][  — ]
+      [  — ][Aeri][  — ][Snip][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[04:40.661] Crystals: P1 690 → 0 (-690)  [skip tax]
+
+=== GAME OVER ===
+[04:40.666] AI Player 0 wins
+[04:40.666] Final crystals — P0: 180  P1: 0  |  Turns: 34
+[04:40.667] Log saved to: res://logs/results/2026-05-31_03-11-44_569_root_beer_float/battle_grandma_fart_2026-05-31_03-30-38_901.txt

@@ -1,0 +1,426 @@
+=== Battle of Cat Hair Tornado ===
+Battle started: 2026-05-31 07:30:51.485
+Game Session of Strawberry Smoothie (started 2026-05-31 07:30:42.708)
+=== AI vs AI Match ===
+Batch iteration: 1 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Resurrection, Great Diplomacy
+P1 Tech hand: Release Mutagen, Siege Cannon, Tease
+P0:   [C:Jaco][C:Lase][C:Tomb][C:Fera][T:Deco]
+      [  — ][T:Bunk][  — ][T:Red ][  — ]
+      [C:Jira][  — ][C:Aeri][  — ][T:Expl]
+      [  — ][C:Pit ][T:Alar][  — ][  — ]
+      [C:Blea][C:Dark][C:Gran][C:Foul][C:Saw ]
+P1:   [C:Ox P][  — ][C:Laug][  — ][C:Lab ]
+      [T:Trap][  — ][C:Pyro][T:Brai][  — ]
+      [C:Moon][  — ][  — ][C:Godd][C:Skel]
+      [  — ][  — ][C:Chur][T:Foul][  — ]
+      [C:Dark][  — ][T:Deco][  — ][C:Skel]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.192] Mode selected P1: TECH
+[00:05.508] Tech played  P1: "Tease"
+[00:07.076] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.077] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:07.483] AI0 target chosen: (4,3)
+[00:07.575] Revealed: P0 (4,3) "Foul Wisp"
+[00:07.575] MSG: Tease: Opponent revealed Foul Wisp.
+[00:07.577] Tech resolved  P1
+[00:08.412] Mode selected P1: ATTACK
+[00:08.416] Attack phase P1: 2 attack(s) available
+[00:08.416] MSG: Player 2: tap a character to attack.
+[00:08.716] AI1 attack decision: (0,0)"Ox Patrol" [ATK=35] → (4,3) "Foul Wisp" [DEF=25]
+[00:09.074] Revealed: P1 (0,0) "Ox Patrol"
+[00:09.074] Dice rolled: 3
+[00:09.097] MSG: Ox Patrol wins!
+[00:15.325] Crystals: P0 5000 → 4900 (-100)  [battle]
+[00:16.720] Card destroyed  P0 (4,3) "Foul Wisp"
+[00:16.726] Attack P1(0,0)"Ox Patrol" → P0(4,3)"Foul Wisp"  Dice=3  ATK=40 vs DEF=25  → WIN
+[00:16.726] Anim: 3A  △ P0(4,3)
+[00:17.226] Mode selected P1: ATTACK
+[00:17.233] Attack phase P1: 1 attack(s) available
+[00:17.233] MSG: Player 2: tap a character to attack.
+[00:17.534] AI1 attack decision: (4,0)"Dark Monk" [ATK=15] → (0,0) "Jacob the Ski Mask" [DEF=20]
+[00:17.911] Revealed: P1 (4,0) "Dark Monk"
+[00:17.970] Revealed: P0 (0,0) "Jacob the Ski Mask"
+[00:17.970] Dice rolled: 5
+[00:22.621] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:24.013] Card destroyed  P1 (4,0) "Dark Monk"
+[00:24.016] Attack P1(4,0)"Dark Monk" → P0(0,0)"Jacob the Ski Mask"  Dice=5  ATK=15 vs DEF=20  → LOSE
+[00:24.016] Anim: 3B  △ P1(4,0)
+[00:24.514] Turn ended  P1  |  Crystals P0=4900 P1=4700
+
+--- Turn 2  |  Player 0  |  Crystals P0=4900 P1=4700 ---
+P0:   [Jaco][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [Ox P][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:25.120] Mode selected P0: TECH
+[00:25.429] Crystals: P0 4900 → 3400 (-1500)  [tech cost]
+[00:26.818] Tech played  P0: "Resurrection"
+[00:28.358] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:28.766] AI0 target chosen: (1,0)
+[00:28.769] Revealed: P0 (1,0) "Foul Wisp"
+[00:28.769] MSG: Revived Foul Wisp at [1,0]!
+[00:28.774] Tech resolved  P0
+[00:29.684] Mode selected P0: ATTACK
+[00:29.690] Attack phase P0: 2 attack(s) available
+[00:29.691] MSG: Player 1: tap a character to attack.
+[00:29.991] AI0 attack decision: (0,0)"Jacob the Ski Mask" [ATK=15] → (1,2) "Pyromancer" [DEF=0]
+[00:30.353] Revealed: P1 (1,2) "Pyromancer"
+[00:30.353] Dice rolled: 2
+[00:30.356] MSG: Jacob the Ski Mask wins!
+[00:35.001] Crystals: P1 4700 → 3800 (-900)  [battle]
+[00:36.393] Card destroyed  P1 (1,2) "Pyromancer"
+[00:36.396] Attack P0(0,0)"Jacob the Ski Mask" → P1(1,2)"Pyromancer"  Dice=2  ATK=15 vs DEF=0  → WIN
+[00:36.396] Anim: 3A  △ P1(1,2)
+[00:36.900] Mode selected P0: ATTACK
+[00:36.905] Attack phase P0: 1 attack(s) available
+[00:36.906] MSG: Player 1: tap a character to attack.
+[00:37.199] AI0 attack decision: (1,0)"Foul Wisp" [ATK=0] → (0,3) "(dead-end)"
+[00:37.508] Dice rolled: 3
+[00:37.534] MSG: Nothing happens — Dead End.
+[00:40.905] Dead-end placed  P1 (0,3)
+[00:40.909] Attack P0(1,0)"Foul Wisp" → P1(0,3)(empty)  Dice=3  → DEAD_END
+[00:40.909] Anim: 3F  (blank slot)
+[00:41.415] Turn ended  P0  |  Crystals P0=3400 P1=3800
+
+--- Turn 3  |  Player 1  |  Crystals P0=3400 P1=3800 ---
+P0:   [Jaco][  ? ][  ? ][  ? ][  ? ]
+      [Foul][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [Ox P][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:42.021] Mode selected P1: TECH
+[00:42.329] Crystals: P1 3800 → 2800 (-1000)  [tech cost]
+[00:43.711] Tech played  P1: "Siege Cannon"
+[00:45.250] MSG: Siege Cannon active!
+[00:45.253] Tech resolved  P1
+[00:46.167] Mode selected P1: ATTACK
+[00:46.176] Attack phase P1: 2 attack(s) available
+[00:46.176] MSG: Player 2: tap a character to attack.
+[00:46.474] AI1 attack decision: (0,0)"Ox Patrol" [ATK=35] → (0,0) "Jacob the Ski Mask" [DEF=20]
+[00:46.784] Dice rolled: 4
+[00:46.796] MSG: Ox Patrol wins!
+[00:53.092] Crystals: P0 3400 → 3050 (-350)  [battle]
+[00:54.485] Card destroyed  P0 (0,0) "Jacob the Ski Mask"
+[00:54.488] Attack P1(0,0)"Ox Patrol" → P0(0,0)"Jacob the Ski Mask"  Dice=4  ATK=40 vs DEF=20  → WIN
+[00:54.488] Anim: 3A  △ P0(0,0)
+[00:54.992] Mode selected P1: ATTACK
+[00:54.996] Attack phase P1: 1 attack(s) available
+[00:54.996] MSG: Player 2: tap a character to attack.
+[00:55.300] AI1 attack decision: (0,4)"Lab Bloater" [ATK=20] → (0,1) "Laser Walker" [DEF=10]
+[00:55.681] Revealed: P1 (0,4) "Lab Bloater"
+[00:55.719] Revealed: P0 (0,1) "Laser Walker"
+[00:55.719] Dice rolled: 2
+[00:55.724] MSG: Lab Bloater wins!
+[01:00.323] Crystals: P0 3050 → 2800 (-250)  [battle]
+[01:01.715] Card destroyed  P0 (0,1) "Laser Walker"
+[01:01.721] Attack P1(0,4)"Lab Bloater" → P0(0,1)"Laser Walker"  Dice=2  ATK=20 vs DEF=10  → WIN
+[01:01.721] Anim: 3A  △ P0(0,1)
+[01:02.216] Turn ended  P1  |  Crystals P0=2800 P1=2800
+
+--- Turn 4  |  Player 0  |  Crystals P0=2800 P1=2800 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [Foul][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [Ox P][  — ][  ? ][  — ][Lab ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[01:02.845] Mode selected P0: TECH
+[01:03.146] Crystals: P0 2800 → 1800 (-1000)  [tech cost]
+[01:04.532] Tech played  P0: "Great Diplomacy"
+[01:06.410] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[01:06.465] AI0 target chosen: (3,1)
+[01:06.465] Revealed: P0 (3,1) "Pit Lord"
+[01:06.846] AI0 target chosen: (0,2)
+[01:06.847] Revealed: P0 (0,2) "Tomb Bandit"
+[01:07.245] AI0 target chosen: (2,2)
+[01:07.247] Revealed: P0 (2,2) "Aerial the Battlemage"
+[01:07.645] AI0 target chosen: (0,3)
+[01:07.647] Revealed: P0 (0,3) "Feral Vampire"
+[01:08.045] AI0 target chosen: (2,0)
+[01:08.046] Revealed: P0 (2,0) "Jirayu the Rebellious Prince"
+[01:08.047] MSG: Great Diplomacy: revealed 5 unit(s).
+[01:08.063] Tech resolved  P0
+[01:08.947] Mode selected P0: ATTACK
+[01:08.960] Attack phase P0: 2 attack(s) available
+[01:08.960] MSG: Player 1: tap a character to attack.
+[01:09.245] AI0 attack decision: (3,1)"Pit Lord" [ATK=120] → (0,4) "Lab Bloater" [DEF=85]
+[01:09.546] Dice rolled: 5
+[01:09.561] MSG: Pit Lord wins!
+[01:14.221] Crystals: P1 2800 → 2000 (-800)  [battle]
+[01:15.615] Card destroyed  P1 (0,4) "Lab Bloater"
+[01:15.624] Attack P0(3,1)"Pit Lord" → P1(0,4)"Lab Bloater"  Dice=5  ATK=120 vs DEF=85  → WIN
+[01:15.624] Anim: 3A  △ P1(0,4)
+[01:16.113] Mode selected P0: ATTACK
+[01:16.122] Attack phase P0: 1 attack(s) available
+[01:16.123] MSG: Player 1: tap a character to attack.
+[01:16.412] AI0 attack decision: (0,2)"Tomb Bandit" [ATK=75] → (0,0) "Ox Patrol" [DEF=35]
+[01:16.712] Dice rolled: 5
+[01:16.719] MSG: Tomb Bandit wins!
+[01:21.400] Crystals: P1 2000 → 1580 (-420)  [battle]
+[01:22.795] Card destroyed  P1 (0,0) "Ox Patrol"
+[01:22.801] Attack P0(0,2)"Tomb Bandit" → P1(0,0)"Ox Patrol"  Dice=5  ATK=75 vs DEF=35  → WIN
+[01:22.801] Anim: 3A  △ P1(0,0)
+[01:23.297] Turn ended  P0  |  Crystals P0=1800 P1=1580
+
+--- Turn 5  |  Player 1  |  Crystals P0=1800 P1=1580 ---
+P0:   [  — ][  — ][Tomb][Fera][  ? ]
+      [Foul][  ? ][  — ][  ? ][  — ]
+      [Jira][  — ][Aeri][  — ][  ? ]
+      [  — ][Pit ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[01:23.892] Mode selected P1: ATTACK
+[01:23.900] Attack phase P1: 2 attack(s) available
+[01:23.900] MSG: Player 2: tap a character to attack.
+[01:24.191] AI1 attack decision: (2,0)"Moonrise Gentleman" [ATK=40] → (0,3) "Feral Vampire" [DEF=25]
+[01:24.556] Revealed: P1 (2,0) "Moonrise Gentleman"
+[01:24.556] Dice rolled: 3
+[01:24.561] MSG: Feral Vampire is destroyed battling Divine!
+[01:30.783] Crystals: P0 1800 → 1400 (-400)  [battle]
+[01:32.178] Card destroyed  P0 (0,3) "Feral Vampire"
+[01:32.185] Attack P1(2,0)"Moonrise Gentleman" → P0(0,3)"Feral Vampire"  Dice=3  ATK=40 vs DEF=25  → WIN
+[01:32.185] Anim: 3A  △ P0(0,3)
+[01:32.675] Mode selected P1: ATTACK
+[01:32.683] Attack phase P1: 1 attack(s) available
+[01:32.684] MSG: Player 2: tap a character to attack.
+[01:32.974] AI1 attack decision: (4,4)"Skeleton Scout" [ATK=20] → (0,4) "Decoy Puppet" [DEF=0]
+[01:33.324] Revealed: P1 (4,4) "Skeleton Scout"
+[01:33.360] Revealed: P0 (0,4) "Decoy Puppet"
+[01:33.360] Dice rolled: 5
+[01:33.578] MSG: Trap triggered: Decoy Puppet!
+[01:37.672] Card destroyed  P0 (0,4) "Decoy Puppet"
+[01:37.672] Crystals: P0 1400 → 1300 (-100)  [trap cost]
+[01:39.062] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[01:39.068] Trap: "Decoy Puppet" triggered  P1(4,4)→P0(0,4)
+[01:39.068] Anim: 3D  (attacker survives)
+[01:39.577] Turn ended  P1  |  Crystals P0=1300 P1=1580
+
+--- Turn 6  |  Player 0  |  Crystals P0=1300 P1=1580 ---
+P0:   [  — ][  — ][Tomb][  — ][  — ]
+      [Foul][  ? ][  — ][  ? ][  — ]
+      [Jira][  — ][Aeri][  — ][  ? ]
+      [  — ][Pit ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [Moon][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][Skel]
+[01:41.649] Union summoned P0: [Rebel King] from Tomb Bandit, Jirayu the Rebellious Prince
+[01:41.649] Crystals: P0 1300 → 500 (-800)  [union]
+[01:41.711] Revealed: P0 (0,2) "Rebel King"
+[01:41.714] MSG: Player 1 summoned [Rebel King] using: Tomb Bandit, Jirayu the Rebellious Prince
+[01:45.150] Mode selected P0: ATTACK
+[01:45.158] Attack phase P0: 2 attack(s) available
+[01:45.159] MSG: Player 1: tap a character to attack.
+[01:45.449] AI0 attack decision: (0,2)"Rebel King" [ATK=60] → (2,0) "Moonrise Gentleman" [DEF=30]
+[01:45.750] Dice rolled: 3
+[01:45.806] MSG: Rebel King wins!
+[01:52.042] Crystals: P1 1580 → 1180 (-400)  [battle]
+[01:53.436] Card destroyed  P1 (2,0) "Moonrise Gentleman"
+[01:53.442] Attack P0(0,2)"Rebel King" → P1(2,0)"Moonrise Gentleman"  Dice=3  ATK=60 vs DEF=40  → WIN
+[01:53.442] Anim: 3A  △ P1(2,0)
+[01:53.934] Mode selected P0: ATTACK
+[01:53.944] Attack phase P0: 1 attack(s) available
+[01:53.945] MSG: Player 1: tap a character to attack.
+[01:54.233] AI0 attack decision: (3,1)"Pit Lord" [ATK=60] → (4,4) "Skeleton Scout" [DEF=5]
+[01:54.534] Dice rolled: 3
+[01:54.543] MSG: Pit Lord wins!
+[01:59.226] Crystals: P1 1180 → 1030 (-150)  [battle]
+[02:00.620] Card destroyed  P1 (4,4) "Skeleton Scout"
+[02:00.629] Attack P0(3,1)"Pit Lord" → P1(4,4)"Skeleton Scout"  Dice=3  ATK=60 vs DEF=5  → WIN
+[02:00.629] Anim: 3A  △ P1(4,4)
+[02:01.121] Turn ended  P0  |  Crystals P0=500 P1=1030
+
+--- Turn 7  |  Player 1  |  Crystals P0=500 P1=1030 ---
+P0:   [  — ][  — ][Rebe][  — ][  — ]
+      [Foul][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][Aeri][  — ][  ? ]
+      [  — ][Pit ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:03.199] Union summoned P1: [False Prophet] from Goddess of Virtue, Church Guard
+[02:03.199] Crystals: P1 1030 → 730 (-300)  [union]
+[02:03.244] Revealed: P1 (2,3) "False Prophet"
+[02:03.244] MSG: Player 2 summoned [False Prophet] using: Goddess of Virtue, Church Guard
+[02:06.649] Mode selected P1: ATTACK
+[02:06.658] Attack phase P1: 2 attack(s) available
+[02:06.658] MSG: Player 2: tap a character to attack.
+[02:06.958] AI1 attack decision: (2,3)"False Prophet" [ATK=20] → (2,0) "(dead-end)"
+[02:07.266] Dice rolled: 5
+[02:07.329] MSG: Nothing happens — Dead End.
+[02:10.734] Dead-end placed  P0 (2,0)
+[02:10.737] Attack P1(2,3)"False Prophet" → P0(2,0)(empty)  Dice=5  → DEAD_END
+[02:10.737] Anim: 3F  (blank slot)
+[02:11.233] Mode selected P1: ATTACK
+[02:11.239] Attack phase P1: 1 attack(s) available
+[02:11.240] MSG: Player 2: tap a character to attack.
+[02:11.533] AI1 attack decision: (2,4)"Skeleton Lancer" [ATK=45] → (1,0) "Foul Wisp" [DEF=25]
+[02:11.871] Revealed: P1 (2,4) "Skeleton Lancer"
+[02:11.871] Dice rolled: 2
+[02:11.875] MSG: Skeleton Lancer wins!
+[02:16.533] Crystals: P0 500 → 400 (-100)  [battle]
+[02:17.926] Card destroyed  P0 (1,0) "Foul Wisp"
+[02:17.932] Attack P1(2,4)"Skeleton Lancer" → P0(1,0)"Foul Wisp"  Dice=2  ATK=45 vs DEF=25  → WIN
+[02:17.932] Anim: 3A  △ P0(1,0)
+[02:18.437] Target prompt: "Rebel King: Choose 1 of your face-up characters to swap ATK & DEF."  filter=ability_rebel_king_swap
+[02:18.841] MSG: Rebel King: Skeleton Lancer swapped ATK (5) and DEF (45).
+[02:18.845] Ability target resolved  P1
+[02:18.849] Turn ended  P1  |  Crystals P0=400 P1=730
+
+--- Turn 8  |  Player 0  |  Crystals P0=400 P1=730 ---
+P0:   [  — ][  — ][Rebe][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][Aeri][  — ][  ? ]
+      [  — ][Pit ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Fals][Skel]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:19.449] Mode selected P0: ATTACK
+[02:19.454] Attack phase P0: 2 attack(s) available
+[02:19.454] MSG: Player 1: tap a character to attack.
+[02:19.757] AI0 attack decision: (0,2)"Rebel King" [ATK=60] → (2,4) "Skeleton Lancer" [DEF=45]
+[02:20.066] Dice rolled: 4
+[02:20.119] MSG: Rebel King wins!
+[02:24.808] Crystals: P1 730 → 430 (-300)  [battle]
+[02:26.201] Card destroyed  P1 (2,4) "Skeleton Lancer"
+[02:26.206] Attack P0(0,2)"Rebel King" → P1(2,4)"Skeleton Lancer"  Dice=4  ATK=60 vs DEF=45  → WIN
+[02:26.206] Anim: 3A  △ P1(2,4)
+[02:26.702] Mode selected P0: ATTACK
+[02:26.714] Attack phase P0: 1 attack(s) available
+[02:26.715] MSG: Player 1: tap a character to attack.
+[02:26.999] AI0 attack decision: (3,1)"Pit Lord" [ATK=60] → (3,2) "(dead-end)"
+[02:27.300] Dice rolled: 2
+[02:27.325] MSG: Nothing happens — Dead End.
+[02:30.693] Dead-end placed  P1 (3,2)
+[02:30.701] Attack P0(3,1)"Pit Lord" → P1(3,2)(empty)  Dice=2  → DEAD_END
+[02:30.701] Anim: 3F  (blank slot)
+[02:31.195] Turn ended  P0  |  Crystals P0=400 P1=430
+
+--- Turn 9  |  Player 1  |  Crystals P0=400 P1=430 ---
+P0:   [  — ][  — ][Rebe][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][Aeri][  — ][  ? ]
+      [  — ][Pit ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Fals][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:31.195] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[02:31.652] Revealed: P0 (1,1) "Bunker"
+[02:31.652] Crystals: P1 430 → 630 (+200)  [ability]
+[02:31.652] MSG: False Prophet: +200 Crystals!
+[02:31.653] Ability target resolved  P1
+[02:31.809] Mode selected P1: ATTACK
+[02:31.819] Attack phase P1: 2 attack(s) available
+[02:31.819] MSG: Player 2: tap a character to attack.
+[02:32.116] AI1 attack decision: (2,3)"False Prophet" [ATK=20] → (1,3) "Red Card" [DEF=0]
+[02:32.462] Revealed: P0 (1,3) "Red Card"
+[02:32.462] Dice rolled: 5
+[02:32.791] MSG: Trap triggered: Red Card!
+[02:36.842] Card destroyed  P0 (1,3) "Red Card"
+[02:36.899] Coin flip: Heads, Tails
+[02:39.650] MSG: Red Card: Heads, Tails.
+[02:39.650] MSG: Not both heads — no effect.
+[02:39.654] Trap: "Red Card" triggered  P1(2,3)→P0(1,3)
+[02:39.654] Anim: 3D  (attacker survives)
+[02:40.158] Mode selected P1: ATTACK
+[02:40.166] Attack phase P1: 1 attack(s) available
+[02:40.166] MSG: Player 2: tap a character to attack.
+[02:40.466] AI1 attack decision: (0,2)"Laughing Granny" [ATK=15] → (1,2) "(dead-end)"
+[02:40.816] Revealed: P1 (0,2) "Laughing Granny"
+[02:40.816] Dice rolled: 5
+[02:40.827] MSG: Nothing happens — Dead End.
+[02:44.176] Dead-end placed  P0 (1,2)
+[02:44.180] Attack P1(0,2)"Laughing Granny" → P0(1,2)(empty)  Dice=5  → DEAD_END
+[02:44.180] Anim: 3F  (blank slot)
+[02:44.684] Target prompt: "Rebel King: Choose 1 of your face-up characters to swap ATK & DEF."  filter=ability_rebel_king_swap
+[02:45.091] MSG: Rebel King: False Prophet swapped ATK (40) and DEF (20).
+[02:45.095] Ability target resolved  P1
+[02:45.098] Turn ended  P1  |  Crystals P0=400 P1=630
+
+--- Turn 10  |  Player 0  |  Crystals P0=400 P1=630 ---
+P0:   [  — ][  — ][Rebe][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Aeri][  — ][  ? ]
+      [  — ][Pit ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][Laug][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Fals][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:45.699] Mode selected P0: ATTACK
+[02:45.709] Attack phase P0: 2 attack(s) available
+[02:45.709] MSG: Player 1: tap a character to attack.
+[02:46.007] AI0 attack decision: (0,2)"Rebel King" [ATK=60] → (0,2) "Laughing Granny" [DEF=20]
+[02:46.316] Dice rolled: 2
+[02:46.378] MSG: Rebel King wins!
+[02:52.591] Crystals: P1 630 → 280 (-350)  [battle]
+[02:53.984] Card destroyed  P1 (0,2) "Laughing Granny"
+[02:53.988] Attack P0(0,2)"Rebel King" → P1(0,2)"Laughing Granny"  Dice=2  ATK=60 vs DEF=30  → WIN
+[02:53.988] Anim: 3A  △ P1(0,2)
+[02:54.483] Mode selected P0: ATTACK
+[02:54.488] Attack phase P0: 1 attack(s) available
+[02:54.488] MSG: Player 1: tap a character to attack.
+[02:54.783] AI0 attack decision: (3,1)"Pit Lord" [ATK=60] → (2,3) "False Prophet" [DEF=20]
+[02:55.083] Dice rolled: 4
+[02:55.128] MSG: Pit Lord is destroyed by Divine!
+[03:01.292] Crystals: P0 400 → 0 (-400)  [battle]
+
+=== GAME OVER ===
+[03:01.299] AI Player 1 wins
+[03:01.299] Reason: crystals
+[03:01.299] Final crystals — P0: 0  P1: 280  |  Turns: 10
+[03:01.299] Log saved to: res://logs/results/2026-05-31_07-30-42_709_strawberry_smoothie/battle_cat_hair_tornado_2026-05-31_07-30-51_485.txt

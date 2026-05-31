@@ -381,7 +381,7 @@ func _on_start_battle() -> void:
 	AIvsAIManager.launch_battle()
 
 func _on_start_e2e_suite(tier_filter: int = 0) -> void:
-	var msg := CardE2ERunner.start_suite(true, tier_filter)
+	var msg: String = CardE2ERunner.start_suite(true, tier_filter)
 	_status_lbl.text = msg
 	if msg.begins_with("Started E2E"):
 		_log_label.text = ""

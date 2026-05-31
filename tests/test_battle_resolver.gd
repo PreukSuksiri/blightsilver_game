@@ -18,6 +18,7 @@ func run_all_tests() -> void:
 	test_affinity_bonus_applied()
 	test_defend_crystal_gain()
 	test_defend_drain_attacker()
+	test_armored_bee_preview_silent()
 
 func _make_char(name: String, atk: int, def_val: int, cost: int,
 		affinity: int = CharacterData.Affinity.ANIMA,
@@ -149,3 +150,22 @@ func test_defend_drain_attacker() -> void:
 	# ATK 20 < DEF 110 → defender wins, attacker drained
 	assert_true(result.attacker_destroyed, "Attacker destroyed")
 	assert_eq(result.attacker_crystal_loss, 300 + 300, "Attacker loses own cost + 300 drain")
+
+func test_armored_bee_preview_silent() -> void:
+	print("-- test_armored_bee_preview_silent")
+	var attacker := _make_char("Shepherd Detective", 40, 25, 400)
+	var defender := _make_char("Armored Bee", 30, 0, 480,
+		CharacterData.Affinity.NATURE,
+		CharacterData.AbilityType.ONE_USE_DEF_BOOST,
+		{"bonus": 60})
+	defender.one_use_def_boost_used = false
+	var preview := BattleResolver.resolve_battle(
+		attacker, defender, 5, 0, 1, false, Vector2i(-1, -1), true)
+	assert_eq(preview.defender_def_used, 60, "Preview shows +60 DEF")
+	assert_true(not preview.defender_destroyed, "Preview: Armored Bee survives 45 vs 60")
+	assert_true(not defender.one_use_def_boost_used, "Preview must not spend one-use DEF boost")
+	var real := BattleResolver.resolve_battle(attacker, defender, 5, 0, 1)
+	assert_eq(real.defender_def_used, 60, "Real battle uses +60 DEF")
+	assert_true(not real.defender_destroyed, "Real battle: Shepherd Detective loses 45 vs 60")
+	assert_true(real.attacker_destroyed, "Real battle: attacker destroyed")
+	assert_true(defender.one_use_def_boost_used, "One-use DEF boost spent after real battle")

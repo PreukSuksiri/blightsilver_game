@@ -1,0 +1,340 @@
+=== Battle of Grandpa's Hard Candy ===
+Battle started: 2026-05-31 18:57:41.831
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Rotten Shrieker
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Rotten Shrieker
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Tease, Release Mutagen
+P1 Tech hand: Accident, Resurrection, War Supply
+P0:   [C:Hamm][C:Mad ][T:Host][T:Acid][  — ]
+      [T:Red ][  — ][  — ][  — ][T:Bait]
+      [T:Foul][  — ][C:Rott][  — ][  — ]
+      [C:Stai][  — ][  — ][  — ][T:Deco]
+      [C:Gran][C:Shep][C:Vamp][C:Choi][C:Plan]
+P1:   [C:Blad][T:Spik][T:Flam][C:Succ][T:Curs]
+      [C:Cany][C:Lab ][  — ][  — ][C:Bat ]
+      [C:Moon][  — ][C:Chao][  — ][  — ]
+      [T:Red ][  — ][  — ][  — ][C:Spac]
+      [  — ][  — ][  — ][C:Saw ][C:Stre]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:05.331] Mode selected P0: TECH
+[00:05.647] Tech played  P0: "Tease"
+[00:07.179] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.183] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:07.579] AI1 target chosen: (4,3)
+[00:07.621] Revealed: P1 (4,3) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[00:07.621] MSG: Tease: Opponent revealed Saw Shark.
+[00:07.625] Tech resolved  P0
+[00:08.455] Mode selected P0: ATTACK
+[00:08.462] Attack phase P0: 2 attack(s) available
+[00:08.462] MSG: Player 1: tap a character to attack.
+[00:08.761] AI0 attack decision: (2,2)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio | face-down} → (4,3) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[00:09.103] Revealed: P0 (2,2) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[00:09.103] Dice rolled: 2
+[00:09.106] MSG: Rotten Shrieker wins!
+[00:13.778] Crystals: P1 5000 → 4720 (-280)  [battle]
+[00:15.182] Attack P0(2,2)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} → P1(4,3)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}  Dice=2  ATK=50 vs DEF=10  → WIN
+[00:15.182] Anim: 3A  △ P1(4,3)
+[00:15.182] Card destroyed  P1 (4,3) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[00:15.679] Mode selected P0: ATTACK
+[00:15.683] Attack phase P0: 1 attack(s) available
+[00:15.684] MSG: Player 1: tap a character to attack.
+[00:15.985] AI0 attack decision: (0,0)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down} → (0,1) "Spike Trap" {cost 1500}
+[00:16.336] Revealed: P0 (0,0) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[00:16.356] Revealed: P1 (0,1) "Spike Trap" {cost 1500}
+[00:16.357] Dice rolled: 4
+[00:16.600] MSG: Trap triggered: Spike Trap!
+[00:21.840] Crystals: P1 4720 → 3220 (-1500)  [trap cost]
+[00:23.233] Crystals: P0 5000 → 4750 (-250)  [card lost]
+[00:25.275] MSG: Flame Trap: Hammer Shark destroyed!
+[00:25.284] Trap: "Spike Trap" triggered  P0(0,0)→P1(0,1)
+[00:25.284] Anim: 3E  △ P0(0,0)
+[00:25.786] Turn ended  P0  |  Crystals P0=4750 P1=3220
+
+--- Turn 2  |  Player 1  |  Crystals P0=4750 P1=3220 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Rott][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:26.392] Mode selected P1: TECH
+[00:26.699] Crystals: P1 3220 → 2220 (-1000)  [tech cost]
+[00:28.086] Tech played  P1: "Accident"
+[00:29.662] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:30.057] AI1 target chosen: (2,2)
+[00:30.060] Card destroyed  P0 (2,2) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}
+[00:30.062] Tech resolved  P1
+[00:30.959] Mode selected P1: ATTACK
+[00:30.961] Attack phase P1: 2 attack(s) available
+[00:30.961] MSG: Player 2: tap a character to attack.
+[00:31.257] AI1 attack decision: (0,0)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down} → (3,2) (dead-end)
+[00:31.589] Revealed: P1 (0,0) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:31.589] Dice rolled: 1
+[00:31.600] MSG: Nothing happens — Dead End.
+[00:34.927] Attack P1(0,0)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} → P0(3,2)(empty)  Dice=1  → DEAD_END
+[00:34.927] Anim: 3F  (blank slot)
+[00:37.448] Turn ended  P1  |  Crystals P0=4750 P1=2220
+
+--- Turn 3  |  Player 0  |  Crystals P0=4750 P1=2220 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [Blad][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:38.039] Mode selected P0: TECH
+[00:38.342] Crystals: P0 4750 → 3750 (-1000)  [tech cost]
+[00:39.729] Tech played  P0: "Accident"
+[00:41.292] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:41.698] AI0 target chosen: (0,0)
+[00:41.704] Card destroyed  P1 (0,0) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:41.707] Tech resolved  P0
+[00:42.617] Mode selected P0: ATTACK
+[00:42.621] Attack phase P0: 2 attack(s) available
+[00:42.621] MSG: Player 1: tap a character to attack.
+[00:42.924] AI0 attack decision: (3,0)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos | face-down} → (0,3) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}
+[00:43.277] Revealed: P0 (3,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[00:43.303] Revealed: P1 (0,3) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[00:43.303] Dice rolled: 5
+[00:43.308] MSG: Both cards are destroyed!
+[00:47.813] Crystals: P0 3750 → 3570 (-180)  [battle]
+[00:49.205] Crystals: P1 2220 → 1620 (-600)  [battle]
+[00:50.600] Attack P0(3,0)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P1(0,3)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}  Dice=5  ATK=30 vs DEF=30  → TIE
+[00:50.600] Anim: 3C  △ P0(3,0) + △ P1(0,3)
+[00:50.600] Card destroyed  P0 (3,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[00:50.600] Card destroyed  P1 (0,3) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[00:51.087] Mode selected P0: ATTACK
+[00:51.090] Attack phase P0: 1 attack(s) available
+[00:51.091] MSG: Player 1: tap a character to attack.
+[00:51.384] AI0 attack decision: (0,1)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down} → (0,2) "Flame Trap" {cost 250}
+[00:51.722] Revealed: P0 (0,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:51.751] Revealed: P1 (0,2) "Flame Trap" {cost 250}
+[00:51.751] Dice rolled: 1
+[00:52.047] MSG: Trap triggered: Flame Trap!
+[00:56.136] Crystals: P1 1620 → 1370 (-250)  [trap cost]
+[00:57.518] MSG: Spike Trap: Mad Raccoon permanently loses 10 ATK!
+[00:57.524] Trap: "Flame Trap" triggered  P0(0,1)→P1(0,2)
+[00:57.524] Anim: 3D  (attacker survives)
+[00:58.024] Turn ended  P0  |  Crystals P0=3570 P1=1370
+
+--- Turn 4  |  Player 1  |  Crystals P0=3570 P1=1370 ---
+P0:   [  — ][Mad ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:58.621] Mode selected P1: ATTACK
+[00:58.626] Attack phase P1: 2 attack(s) available
+[00:58.626] MSG: Player 2: tap a character to attack.
+[00:58.919] AI1 attack decision: (1,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down} → (0,1) "Mad Raccoon" {Unit ATK20 DEF15 | cost 260 | affinity Nature | base 20/15}
+[00:59.271] Revealed: P1 (1,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:59.273] Dice rolled: 1
+[00:59.276] MSG: Canyon Warg wins!
+[01:03.905] Crystals: P0 3570 → 3310 (-260)  [battle]
+[01:05.310] Attack P1(1,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(0,1)"Mad Raccoon" {Unit ATK20 DEF15 | cost 260 | affinity Nature | base 20/15}  Dice=1  ATK=70 vs DEF=15  → WIN
+[01:05.311] Anim: 3A  △ P0(0,1)
+[01:05.311] Card destroyed  P0 (0,1) "Mad Raccoon" {Unit ATK20 DEF15 | cost 260 | affinity Nature | base 20/15}
+[01:05.794] Mode selected P1: ATTACK
+[01:05.797] Attack phase P1: 1 attack(s) available
+[01:05.798] MSG: Player 2: tap a character to attack.
+[01:06.095] AI1 attack decision: (1,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down} → (3,3) (dead-end)
+[01:06.439] Revealed: P1 (1,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[01:06.439] Dice rolled: 3
+[01:06.453] MSG: Nothing happens — Dead End.
+[01:09.762] Attack P1(1,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(3,3)(empty)  Dice=3  → DEAD_END
+[01:09.762] Anim: 3F  (blank slot)
+[01:10.262] Turn ended  P1  |  Crystals P0=3310 P1=1370
+
+--- Turn 5  |  Player 0  |  Crystals P0=3310 P1=1370 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [Cany][Lab ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:10.859] Mode selected P0: ATTACK
+[01:10.864] Attack phase P0: 2 attack(s) available
+[01:10.864] MSG: Player 1: tap a character to attack.
+[01:11.156] AI0 attack decision: (4,0)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima | face-down} → (1,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:11.501] Revealed: P0 (4,0) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[01:11.501] Dice rolled: 2
+[01:11.509] MSG: Grand Fort Mauler wins!
+[01:16.149] Crystals: P1 1370 → 620 (-750)  [battle]
+[01:17.547] Attack P0(4,0)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(1,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=2  ATK=40 vs DEF=30  → WIN
+[01:17.547] Anim: 3A  △ P1(1,0)
+[01:17.547] Card destroyed  P1 (1,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:20.055] Turn ended  P0  |  Crystals P0=3310 P1=620
+
+--- Turn 6  |  Player 1  |  Crystals P0=3310 P1=620 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Gran][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Lab ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:20.654] Mode selected P1: ATTACK
+[01:20.658] Attack phase P1: 2 attack(s) available
+[01:20.658] MSG: Player 2: tap a character to attack.
+[01:20.944] AI1 attack decision: (1,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → (4,0) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[01:21.245] Dice rolled: 3
+[01:21.261] MSG: Lab Bloater wins!
+[01:25.935] Crystals: P0 3310 → 2960 (-350)  [battle]
+[01:27.339] Attack P1(1,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(4,0)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=3  ATK=20 vs DEF=10  → WIN
+[01:27.340] Anim: 3A  △ P0(4,0)
+[01:27.340] Card destroyed  P0 (4,0) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[01:27.827] Mode selected P1: ATTACK
+[01:27.831] Attack phase P1: 1 attack(s) available
+[01:27.832] MSG: Player 2: tap a character to attack.
+[01:28.129] AI1 attack decision: (2,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down} → (3,4) "Decoy Puppet" {cost 100}
+[01:28.465] Revealed: P1 (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:28.486] Revealed: P0 (3,4) "Decoy Puppet" {cost 100}
+[01:28.486] Dice rolled: 4
+[01:28.763] MSG: Trap triggered: Decoy Puppet!
+[01:32.850] Crystals: P0 2960 → 2860 (-100)  [trap cost]
+[01:34.238] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[01:34.244] Trap: "Decoy Puppet" triggered  P1(2,0)→P0(3,4)
+[01:34.244] Anim: 3D  (attacker survives)
+[01:34.738] Turn ended  P1  |  Crystals P0=2860 P1=620
+
+--- Turn 7  |  Player 0  |  Crystals P0=2860 P1=620 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Lab ][  — ][  — ][  ? ]
+      [Moon][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:35.340] Mode selected P0: ATTACK
+[01:35.345] Attack phase P0: 2 attack(s) available
+[01:35.345] MSG: Player 1: tap a character to attack.
+[01:35.631] AI0 attack decision: (4,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima | face-down} → (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:35.965] Revealed: P0 (4,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:35.965] Dice rolled: 1
+[01:35.974] MSG: Shepherd Detective wins!
+[01:40.591] Crystals: P1 620 → 420 (-200)  [battle]
+[01:41.994] Attack P0(4,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=1  ATK=40 vs DEF=20  → WIN
+[01:41.994] Anim: 3A  △ P1(2,0)
+[01:41.994] Card destroyed  P1 (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:41.996] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:42.382] AI0 target chosen: (1,4)
+[01:42.425] Revealed: P1 (1,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:42.426] MSG: Revealed: Bat Swarm
+[01:44.514] Turn ended  P0  |  Crystals P0=2860 P1=420
+
+--- Turn 8  |  Player 1  |  Crystals P0=2860 P1=420 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Shep][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Lab ][  — ][  — ][Bat ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:45.135] Mode selected P1: ATTACK
+[01:45.143] Attack phase P1: 2 attack(s) available
+[01:45.143] MSG: Player 2: tap a character to attack.
+[01:45.433] AI1 attack decision: (1,4)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → (3,1) (dead-end)
+[01:45.740] Dice rolled: 4
+[01:45.768] MSG: Nothing happens — Dead End.
+[01:49.148] Attack P1(1,4)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P0(3,1)(empty)  Dice=4  → DEAD_END
+[01:49.148] Anim: 3F  (blank slot)
+[01:49.641] Mode selected P1: ATTACK
+[01:49.647] Attack phase P1: 1 attack(s) available
+[01:49.648] MSG: Player 2: tap a character to attack.
+[01:49.933] AI1 attack decision: (1,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → (0,2) "Hostage" {cost 200}
+[01:50.262] Revealed: P0 (0,2) "Hostage" {cost 200}
+[01:50.262] Dice rolled: 3
+[01:50.540] MSG: Trap triggered: Hostage!
+[01:54.645] Crystals: P0 2860 → 2660 (-200)  [trap cost]
+[01:56.023] MSG: Hostage: Adjacent squares revealed and locked.
+[01:56.023] Revealed: P0 (1,2) (blank slot)
+[01:56.057] Revealed: P0 (0,3) "Acid Trap Hole" {cost 0}
+[01:56.061] Trap: "Hostage" triggered  P1(1,1)→P0(0,2)
+[01:56.061] Anim: 3D  (attacker survives)
+[01:56.549] Turn ended  P1  |  Crystals P0=2660 P1=420
+
+--- Turn 9  |  Player 0  |  Crystals P0=2660 P1=420 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Shep][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Lab ][  — ][  — ][Bat ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:57.160] Mode selected P0: ATTACK
+[01:57.166] Attack phase P0: 2 attack(s) available
+[01:57.166] MSG: Player 1: tap a character to attack.
+[01:57.457] AI0 attack decision: (4,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → (1,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:57.765] Dice rolled: 1
+[01:57.778] MSG: Shepherd Detective wins!
+[02:02.464] Crystals: P1 420 → 220 (-200)  [battle]
+[02:03.865] Attack P0(4,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(1,4)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=1  ATK=40 vs DEF=15  → WIN
+[02:03.865] Anim: 3A  △ P1(1,4)
+[02:03.865] Card destroyed  P1 (1,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[02:03.865] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[02:04.264] AI0 target chosen: (2,1)
+[02:04.366] Mode selected P0: ATTACK
+[02:04.370] Attack phase P0: 1 attack(s) available
+[02:04.370] MSG: Player 1: tap a character to attack.
+[02:04.673] AI0 attack decision: (4,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down} → (0,4) "Cursed Reflection" {cost 500}
+[02:05.029] Revealed: P0 (4,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[02:05.052] Revealed: P1 (0,4) "Cursed Reflection" {cost 500}
+[02:05.052] Dice rolled: 4
+[02:05.281] MSG: Trap triggered: Cursed Reflection!
+[02:09.366] Crystals: P1 220 → 0 (-220)  [trap cost]
+
+=== GAME OVER ===
+[02:09.376] AI Player 0 wins
+[02:09.376] Reason: crystals
+[02:09.376] Final crystals — P0: 2660  P1: 0  |  Turns: 9
+[02:09.376] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_grandpas_hard_candy_2026-05-31_18-57-41_831.txt
