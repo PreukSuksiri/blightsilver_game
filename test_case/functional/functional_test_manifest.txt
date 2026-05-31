@@ -22,8 +22,8 @@ TC-FUNC-Armored-Rhino-001
 TC-FUNC-Asteroid-Trooper-001
 TC-FUNC-Bait-001
 TC-FUNC-Bait-002
-TC-FUNC-Barros-the-Colossol-000
-TC-FUNC-Barros-the-Colossol-001
+TC-FUNC-Barros-the-Colossal-000
+TC-FUNC-Barros-the-Colossal-001
 TC-FUNC-Bat-Swarm-001
 TC-FUNC-Berserk-001
 TC-FUNC-Berserk-Hyena-000
@@ -185,8 +185,8 @@ TC-FUNC-Mephisto-the-Fallen-001
 TC-FUNC-Mind-Flayer-001
 TC-FUNC-Mine-Guard-001
 TC-FUNC-Miner-Probe-001
-TC-FUNC-Moon-Ninja-Lady-000
-TC-FUNC-Moon-Ninja-Lady-001
+TC-FUNC-Moon-Lady-Ninja-000
+TC-FUNC-Moon-Lady-Ninja-001
 TC-FUNC-Moon-Rover-001
 TC-FUNC-Moon-Tribe-Marksman-001
 TC-FUNC-Moon-Tribe-Shaman-000

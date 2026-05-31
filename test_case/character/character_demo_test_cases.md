@@ -1,6 +1,6 @@
 # Character Card Test Cases (Demo = Yes)
 
-Total cards: 134
+Total cards: 133
 
 Ordered by complexity/priority (most complex first).
 
@@ -2689,6 +2689,75 @@ Expected Result:
 
 ---
 
+Card Name: Ostrich Cannon
+Type: Character
+Stats: Cost=800 ATK=60 DEF=30 Affinity=Nature
+Ability: After performed an attack, this card cannot attack during your next turn.
+Test Cases:
+
+
+Test Case ID: TC-Ostrich-Cannon-001
+Description:
+Happy path — Ostrich Cannon attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Ostrich Cannon' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Ostrich Cannon face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Ostrich Cannon as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Ostrich Cannon participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Ostrich-Cannon-002
+Description:
+Edge — Ostrich Cannon placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Ostrich Cannon' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Ostrich Cannon face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Ostrich Cannon via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Ostrich Cannon.
+Expected Result:
+- Ostrich Cannon reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Ostrich-Cannon-003
+Description:
+Attack lock — Ostrich Cannon or target attack restriction.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Ostrich Cannon' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Trigger the lock condition via battle.
+Steps:
+Step 1: Attempt additional attack on locked unit next turn.
+Expected Result:
+- Locked character cannot be selected as attacker until restriction expires.
+
+Test Case ID: TC-Ostrich-Cannon-004
+Description:
+Edge — low crystals during Ostrich Cannon battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Ostrich Cannon' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Ostrich Cannon and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Moon Tribe Twin Blader
 Type: Character
 Stats: Cost=300 ATK=30 DEF=20 Affinity=Cosmic
@@ -4428,75 +4497,6 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Moon Rover and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
-Card Name: Ostrich Cannon
-Type: Character
-Stats: Cost=800 ATK=60 DEF=30 Affinity=Nature
-Ability: This card cannot attack during your next turn.
-Test Cases:
-
-
-Test Case ID: TC-Ostrich-Cannon-001
-Description:
-Happy path — Ostrich Cannon attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Ostrich Cannon' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Ostrich Cannon face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Ostrich Cannon as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Ostrich Cannon participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Ostrich-Cannon-002
-Description:
-Edge — Ostrich Cannon placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Ostrich Cannon' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Ostrich Cannon face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Ostrich Cannon via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Ostrich Cannon.
-Expected Result:
-- Ostrich Cannon reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Ostrich-Cannon-003
-Description:
-Attack lock — Ostrich Cannon or target attack restriction.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Ostrich Cannon' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Trigger the lock condition via battle.
-Steps:
-Step 1: Attempt additional attack on locked unit next turn.
-Expected Result:
-- Locked character cannot be selected as attacker until restriction expires.
-
-Test Case ID: TC-Ostrich-Cannon-004
-Description:
-Edge — low crystals during Ostrich Cannon battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Ostrich Cannon' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Ostrich Cannon and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -6315,8 +6315,8 @@ Expected Result:
 
 Card Name: Ox Patrol
 Type: Character
-Stats: Cost=420 ATK=35 DEF=35 Affinity=Anima
-Ability: +5 ATK&DEF vs Non-Anima
+Stats: Cost=420 ATK=30 DEF=35 Affinity=Anima
+Ability: +10 ATK&DEF vs Non-Anima
 Test Cases:
 
 
@@ -7080,64 +7080,6 @@ Step 1: Opponent attacks Armored Rhino.
 Step 2: Resolve defense.
 Expected Result:
 - Armored Rhino survives if DEF (85) exceeds attacker ATK.
-- No special post-battle effects fire.
-
----
-
-Card Name: Asteroid Trooper
-Type: Character
-Stats: Cost=250 ATK=30 DEF=10 Affinity=Cosmic
-Ability: None
-Test Cases:
-
-
-Test Case ID: TC-Asteroid-Trooper-001
-Description:
-Happy path — Asteroid Trooper attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Asteroid Trooper' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Asteroid Trooper face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Asteroid Trooper as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Asteroid Trooper participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Asteroid-Trooper-002
-Description:
-Edge — Asteroid Trooper placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Asteroid Trooper' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Asteroid Trooper face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Asteroid Trooper via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Asteroid Trooper.
-Expected Result:
-- Asteroid Trooper reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Asteroid-Trooper-003
-Description:
-Baseline — Asteroid Trooper defends successfully.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Asteroid Trooper' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Opponent has a weak attacker (Chaotic Wisp 20 ATK).
-Steps:
-Step 1: Opponent attacks Asteroid Trooper.
-Step 2: Resolve defense.
-Expected Result:
-- Asteroid Trooper survives if DEF (10) exceeds attacker ATK.
 - No special post-battle effects fire.
 
 ---

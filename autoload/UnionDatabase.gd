@@ -142,7 +142,7 @@ func _load_unions() -> void:
 
 	_add("One Winged Angel", A.DIVINE, 120, 120, 1500, R.LEGENDARY,
 		AB.PERM_BOOST_END_OF_TURN, {"atk": 30, "def": 0},
-		"+30 ATK permanently at the end of your turn",
+		"Once, +30 ATK permanently at the end of your turn",
 		"+??? ATK permanently at ???",
 		"1 Cleaver Saint + 1 Divine card + 1500 cost",
 		"1 ??? + 1 ??? + 1500 cost",
@@ -204,7 +204,7 @@ func _load_unions() -> void:
 		"+20 ATK vs Chaos and Arcane",
 		"+??? ATK vs ?? and ??",
 		"2 Sphinx units + 1000 cost",
-		"2 ???+ 2000 cost",
+		"2 ???+ 1000 cost",
 		_z([[0,0], [0,4], [1,1], [1,3], [2,2], [3,1], [3,3], [4,0], [4,4]]),
 		_conds([{"card_name": "2 Sphinx units"}], 9))
 
@@ -240,10 +240,10 @@ func _load_unions() -> void:
 		_z([[0,0], [0,1], [0,2], [0,3], [0,4]]),
 		_conds([{"card_name": "Sunrise Lady"}, {"card_name": "Moonrise Gentleman"}], 5))
 
-	_add("Twin Axe Saintess", A.DIVINE, 40, 30, 1000, R.RARE,
+	_add("Twin Axe Saintess", A.DIVINE, 40, 30, 600, R.RARE,
 		AB.MULTI_ATTACK_ANY, {"max_attacks": 2}, "This card can attack twice per turn",
 		"This card can ??? per turn",
-		"Lady of the Sacred Pond + 1 Anima + 1000 cost",
+		"Lady of the Sacred Pond + 1 Anima + 600 cost",
 		"1??? + 1 ??? + 1000 cost",
 		_z([[0,0], [0,1], [0,3], [0,4], [1,1], [1,3], [2,1], [2,3], [3,1], [3,3]]),
 		_conds([{"card_name": "Lady of the Sacred Pond"}, {"affinity": A.ANIMA}], 10))
@@ -259,7 +259,7 @@ func _load_unions() -> void:
 		AB.BOOST_PER_ANIMA_ON_FIELD, {"atk_bonus": 50, "def_bonus": 50},
 		"+50 ATK and DEF for each Divine cards on the field. This bonus does not exceed maximum of 100",
 		"+??? ATK and DEF for each ???cards on the field. This bonus does not exceed maximum of 1???",
-		"2 Divine (800 cost) + 1500 cost",
+		"2 Divine (≥800 cost) + 1500 cost",
 		"2 ??? + 1500 cost",
 		_z([[0,2], [1,0], [1,1], [1,2], [1,3], [1,4], [2,2], [3,2], [4,2]]),
 		_conds([{"affinity": A.DIVINE, "min_cost": 800}, {"affinity": A.DIVINE, "min_cost": 800}], 9))
@@ -274,14 +274,14 @@ func _load_unions() -> void:
 
 	# ── Nature ────────────────────────────────────────────────
 
-	_add("Gaia Turtle", A.NATURE, 0, 220, 2000, R.LEGENDARY,
+	_add("Gaia Turtle", A.NATURE, 0, 205, 2000, R.LEGENDARY,
 		AB.NONE, {}, "None", "None",
-		"2 any units (≥100 DEF) + 2000 cost",
+		"2 any units (≥90 DEF) + 2000 cost",
 		"2 ??? + 2000 cost",
-		_z([[1,1], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
-		_conds([{"min_def": 100}, {"min_def": 100}], 8))
+		_z([[2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
+		_conds([{"min_def": 90}, {"min_def": 90}], 6))
 
-	_add("Barros the Colossol", A.NATURE, 150, 130, 1500, R.RARE,
+	_add("Barros the Colossal", A.NATURE, 150, 130, 1500, R.RARE,
 		AB.NONE, {}, "None", "None",
 		"2 Nature (≥ 800 cost) + 1500 cost",
 		"2 ???+ 1500 cost",
@@ -293,8 +293,8 @@ func _load_unions() -> void:
 		"In Reckoning, pay ??? crystal cost to +??DEF",
 		"1 Armored Nature card + 1 Nature (≥ 800 cost) + 800 cost",
 		"1 ??? + 1 ??? + 800 cost",
-		_z([[1,0], [1,1], [1,2], [1,3], [1,4], [2,0], [2,1], [2,2], [2,3], [2,4]]),
-		_conds([{"affinity": A.NATURE, "name_contains": "armored"}, {"affinity": A.NATURE, "min_cost": 800}], 10))
+		_z([[1,1], [1,2], [1,3], [2,0], [2,1], [2,2], [2,3], [2,4]]),
+		_conds([{"affinity": A.NATURE, "name_contains": "armored"}, {"affinity": A.NATURE, "min_cost": 800}], 8))
 
 	_add("Ancient Lizard", A.NATURE, 75, 75, 800, R.UNCOMMON,
 		AB.NONE, {}, "None", "None",
@@ -341,18 +341,18 @@ func _load_unions() -> void:
 		"Foe’s non-Arcane get ??? in Reckoning with this card",
 		"Red Mage + Green Mage + Blue Mage + 500 cost",
 		"??? + ???+ ??? + 500 cost",
-		_z([[0,4], [1,3], [2,1], [2,2], [3,1], [3,2], [3,3], [4,0]]),
-		_conds([{"card_name": "Red Mage"}, {"card_name": "Green Mage"}, {"card_name": "Blue Mage"}], 8))
+		_z([[0,4], [1,3], [2,1], [2,2], [3,1], [3,2], [4,0]]),
+		_conds([{"card_name": "Red Mage"}, {"card_name": "Green Mage"}, {"card_name": "Blue Mage"}], 7))
 
 	# ── Bio ───────────────────────────────────────────────────
 
 	_add("Tendrill Tyrant", A.BIO, 90, 110, 1500, R.LEGENDARY,
 		AB.MULTI_ATTACK_ANY, {"max_attacks": 3}, "Can attack 3 times per turn",
 		"Can attack ? times per turn",
-		"1 Bio with mutagen flag + 2 Bio + 1500 cost",
+		"1 Bio with mutagen flag + 2 Bio (≥ 800 cost) + 1500 cost",
 		"1 ??? + 2 ??? + 1500 cost",
 		_z([[0,2], [1,2], [2,0], [2,1], [2,2], [2,3], [2,4], [3,2], [4,2]]),
-		_conds([{"affinity": A.BIO, "has_flag": "mutagen"}, {"card_name": "2 Bio"}], 9))
+		_conds([{"affinity": A.BIO, "has_flag": "mutagen"}, {"affinity": A.BIO, "min_cost": 800}, {"affinity": A.BIO, "min_cost": 800}], 9))
 
 	_add("Bioterrorist", A.BIO, 150, 0, 1000, R.RARE,
 		AB.DESTROY_SELF_AFTER_BATTLE, {}, "Destroy this card after battle calculation",
@@ -378,8 +378,8 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "gamma"}, {"affinity": A.BIO}], 8))
 
 	_add("Volatile Slasher", A.BIO, 50, 45, 1000, R.RARE,
-		AB.PERM_ATK_BOOST_ONCE_PER_AFFINITY, {"affinity": A.BIO, "atk": 50}, "After Reckoning with non-Bio, it gain +50 ATK permanently.",
-		"After Reckoning with non-Bio, it gain ???.",
+		AB.PERM_ATK_BOOST_ONCE_PER_AFFINITY, {"affinity": A.BIO, "atk": 50}, "Once, after Reckoning with non-Bio, it gain +50 ATK permanently.",
+		"Once, after Reckoning with non-Bio, it gain ???.",
 		"1 Bladeshifter + 1 Bio card + 1000 cost",
 		"1 ??? + 1 ??? + 1000 cost",
 		_z([[0,0], [1,1], [1,2], [2,1], [2,2], [3,1], [3,2], [4,0]]),
@@ -417,8 +417,8 @@ func _load_unions() -> void:
 		"If this card attacks a dead end card, you receive ???crystals",
 		"1 Miner probe + 1 Cosmic + 500 cost",
 		"1 ??? + 1 ??? + 500 cost",
-		_z([[0,0], [0,1], [0,2], [0,3], [0,4], [1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,2], [4,2]]),
-		_conds([{"card_name": "Miner probe"}, {"affinity": A.COSMIC}], 13))
+		_z([[0,0], [0,1], [0,2], [0,3], [0,4], [1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,2]]),
+		_conds([{"card_name": "Miner probe"}, {"affinity": A.COSMIC}], 12))
 
 	_add("Blood-hungry Mutant", A.COSMIC, 55, 40, 600, R.RARE,
 		AB.CRYSTAL_GAIN_ON_DESTROY, {"amount": 80}, "After destroying foe’s card: +80 crystals",
@@ -440,8 +440,8 @@ func _load_unions() -> void:
 		AB.NONE, {}, "None", "None",
 		"Laser Walker + 1 Cosmic card + 1000 cost",
 		"??? + ??? + 1000 cost",
-		_z([[1,2], [1,3], [1,4], [2,3], [2,4], [3,0], [4,0], [4,1], [4,2]]),
-		_conds([{"card_name": "Laser Walker"}, {"affinity": A.COSMIC}], 9))
+		_z([[0,2], [0,3], [0,4], [1,4], [2,0], [2,4], [3,0], [4,0], [4,1], [4,2]]),
+		_conds([{"card_name": "Laser Walker"}, {"affinity": A.COSMIC}], 10))
 
 	_add("Moon Tribe Shaman", A.COSMIC, 25, 55, 500, R.RARE,
 		AB.UNION_SUMMON_REVIVE_MATCH, {"name_contains": "moon", "exclude_union": true}, "Upon union, revive 1 Moon non-Union card. Double its cost.",
@@ -476,7 +476,7 @@ func _load_unions() -> void:
 		_z([[0,1], [0,3], [1,1], [1,3], [2,1], [2,3], [3,1], [3,3], [4,1], [4,3]]),
 		_conds([{"card_name": "Kiyoko the Death Whisper"}, {"card_name": "Silver Spearman"}], 10))
 
-	_add("Moon Ninja Lady", A.ANIMA, 65, 50, 800, R.RARE,
+	_add("Moon Lady Ninja", A.ANIMA, 65, 50, 800, R.RARE,
 		AB.ONE_USE_SURVIVE_DESTRUCTION, {}, "Once, this card is not destroyed.",
 		"Once, this card is ???.",
 		"Kiyoko the Death Whisper + 1 Anima card + 800 cost",
@@ -494,21 +494,21 @@ func _load_unions() -> void:
 
 	# ── Chaos ─────────────────────────────────────────────────
 
-	_add("Lord of Terror", A.CHAOS, 200, 100, 1000, R.LEGENDARY,
+	_add("Lord of Terror", A.CHAOS, 150, 100, 1500, R.LEGENDARY,
 		AB.ATK_PENALTY_VS_DEAD_END, {"penalty": 50}, "-50 ATK if attacks dead end card",
 		"-50 ATK if ???",
-		"1 Chaos (≥ 1000 cost) + 1 Chaos (≥ 800 cost) + 1000 cost",
-		"1 ??? + 1 ??? + 1000 cost",
+		"2 Chaos (≥ 800 cost) + 1500 cost",
+		"2 ??? + 1500 cost",
 		_z([[1,2], [2,2], [3,1], [3,2], [3,3], [4,2]]),
-		_conds([{"affinity": A.CHAOS, "min_cost": 1000}, {"affinity": A.CHAOS, "min_cost": 800}], 6))
+		_conds([{"affinity": A.CHAOS, "min_cost": 800}, {"affinity": A.CHAOS, "min_cost": 800}], 6))
 
 	_add("Greater Succubus", A.CHAOS, 30, 50, 800, R.RARE,
 		AB.GAIN_HALF_STATS_ON_SURVIVE, {}, "Once, after Reckoning: +ATK&DEF equal to half of that foe’s card",
 		"Once, after Reckoning: +ATK&DEF equal to ???",
 		"1 Succubus + 1 Chaos + 800 cost",
 		"1 ??? + 1 ??? + 800 cost",
-		_z([[0,2], [1,0], [1,1], [1,2], [1,3], [1,4], [2,0], [2,4], [3,0], [3,4]]),
-		_conds([{"name_contains": "succubus"}, {"affinity": A.CHAOS}], 10))
+		_z([[0,2], [1,0], [1,1], [1,2], [1,3], [1,4], [2,0], [2,4]]),
+		_conds([{"name_contains": "succubus"}, {"affinity": A.CHAOS}], 8))
 
 	_add("Kitsune", A.CHAOS, 35, 35, 300, R.UNCOMMON,
 		AB.NONE, {}, "None", "None",
@@ -522,8 +522,8 @@ func _load_unions() -> void:
 		"This card can choose ?? attack targets. -?? ATK for each successful attack.",
 		"Yaksa + 1 Chaos + 600 cost",
 		"1 ??? + 1 ??? + 600 cost",
-		_z([[0,0], [0,1], [0,3], [0,4], [1,2], [2,2], [3,0], [3,1], [3,2], [3,3], [3,4], [4,0], [4,2], [4,4]]),
-		_conds([{"name_contains": "yaksa"}, {"affinity": A.CHAOS}], 14))
+		_z([[0,0], [0,1], [0,3], [0,4], [1,2], [2,2], [3,1], [3,2], [3,3], [4,1], [4,3]]),
+		_conds([{"name_contains": "yaksa"}, {"affinity": A.CHAOS}], 11))
 
 	_add("Skeleton Overlord", A.CHAOS, 50, 5, 400, R.RARE,
 		AB.NONE, {}, "None", "None",
@@ -535,7 +535,7 @@ func _load_unions() -> void:
 	_add("Oblivion Dragon", A.CHAOS, 200, 0, 2000, R.LEGENDARY,
 		AB.HALVE_ATK_ADD_TO_DEF_ON_DEFEND, {}, "When this card defends, halve its attack and increase DEF by that amount  permanently",
 		"When this card defends, halve its ??? an???",
-		"4 Chaos card (500 cost) + 2000 cost",
+		"4 Chaos card (≥500 cost) + 2000 cost",
 		"4 ??? + 2000 cost",
 		_z([[0,0], [0,4], [4,0], [4,4]]),
 		_conds([{"affinity": A.CHAOS, "min_cost": 500}, {"affinity": A.CHAOS, "min_cost": 500}, {"affinity": A.CHAOS, "min_cost": 500}, {"affinity": A.CHAOS, "min_cost": 500}], 4))

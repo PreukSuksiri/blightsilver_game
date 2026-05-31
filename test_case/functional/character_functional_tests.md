@@ -752,10 +752,10 @@ Expected Result:
 
 Card Name: Ox Patrol
 Type: Character
-Stats: ATK=35 DEF=35 Cost=420 Affinity=ANIMA
+Stats: ATK=30 DEF=35 Cost=420 Affinity=ANIMA
 AbilityType: ATK_DEF_BONUS_VS_NON_AFFINITY
 ability_params: {'affinity': 'ANIMA', 'atk': 5, 'def': 5}
-Description: +5 ATK&DEF vs Non-Anima
+Description: +10 ATK&DEF vs Non-Anima
 Test Cases:
 
 Test Case ID: TC-FUNC-Ox-Patrol-001
@@ -2194,7 +2194,7 @@ Type: Character
 Stats: ATK=60 DEF=30 Cost=800 Affinity=NATURE
 AbilityType: LOCK_SELF_AFTER_ATTACK
 ability_params: {}
-Description: This card cannot attack during your next turn.
+Description: After performed an attack, this card cannot attack during your next turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Ostrich-Cannon-001

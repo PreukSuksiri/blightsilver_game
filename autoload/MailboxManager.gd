@@ -117,6 +117,7 @@ func admin_command(raw: String) -> String:
 				+ "  map_editor\n"
 				+ "  vn_editor [filename]\n"
 				+ "  ai_vs_ai\n"
+				+ "  card_e2e [t1|t2|reset [t1|t2]]\n"
 				+ "  card_info <card_name>\n"
 				+ "  card_find <query>\n"
 				+ "  list_chars\n"
@@ -161,6 +162,7 @@ func admin_command(raw: String) -> String:
 				+ "  demo_off\n"
 				+ "  demo_status\n"
 				+ "  manage_bgm\n"
+				+ "  manage_menu_buttons\n"
 				+ "  hide_ui\n"
 				+ "  ai_trailer [on|off]\n"
 				+ "  gallery_editor\n"
@@ -191,6 +193,18 @@ func admin_command(raw: String) -> String:
 			bgm_overlay.name = "BGMManagerOverlay"
 			bgm_scene.add_child(bgm_overlay)
 			return "BGM Manager opened."
+
+		"manage_menu_buttons", "manage_menu_butons":
+			var menu_scene: Node = get_tree().current_scene
+			if menu_scene.get_node_or_null("MenuButtonManagerOverlay") != null:
+				return "Menu Button Manager is already open."
+			var admin_overlay: Node = menu_scene.get_node_or_null("AdminConsoleOverlay")
+			if admin_overlay != null:
+				admin_overlay.queue_free()
+			var menu_overlay: Node = load("res://scripts/MenuButtonManagerOverlay.gd").new()
+			menu_overlay.name = "MenuButtonManagerOverlay"
+			menu_scene.add_child(menu_overlay)
+			return "Menu Button Manager opened."
 
 		"send":
 			var rest := line.substr(5)   # everything after "send "
@@ -379,6 +393,31 @@ func admin_command(raw: String) -> String:
 			get_tree().change_scene_to_file("res://scenes/ai_vs_ai_config.tscn")
 			return "Opening AI vs AI config..."
 
+		"card_e2e":
+			if get_tree().current_scene.name == "GameBoard":
+				return "Cannot start Card E2E while a match is in progress."
+			var tier_filter := 0
+			if parts.size() >= 2:
+				var arg := parts[1].to_lower()
+				if arg == "reset":
+					var rt := 0
+					if parts.size() >= 3:
+						if parts[2].to_lower() in ["t1", "tier1", "1"]:
+							rt = 1
+						elif parts[2].to_lower() in ["t2", "tier2", "2"]:
+							rt = 2
+					CardE2ERunner.reset_progress(rt)
+					return "Card E2E progress reset (tier=%d)." % rt
+				if arg in ["t1", "tier1", "1"]:
+					tier_filter = 1
+				elif arg in ["t2", "tier2", "2"]:
+					tier_filter = 2
+			var e2e_msg := CardE2ERunner.start_suite(true, tier_filter)
+			if e2e_msg.begins_with("Started E2E"):
+				return e2e_msg
+			get_tree().change_scene_to_file("res://scenes/ai_vs_ai_config.tscn")
+			return e2e_msg + " Open AI vs AI config to start manually."
+
 		"card_info":
 			if parts.size() < 2:
 				return "Usage: card_info <card_name>"
@@ -461,17 +500,27 @@ func admin_command(raw: String) -> String:
 
 		"hide_ui":
 			var scene: Node = get_tree().current_scene
-			if scene.name != "MainMenu":
-				return "hide_ui only works on the Main Menu."
-			if scene.get_node_or_null("UIHideCapture") != null:
-				return "UI is already hidden. Press any key or click to restore."
-			var cap: Node = load("res://scripts/UIHideCapture.gd").new()
-			cap.name = "UIHideCapture"
-			scene.add_child(cap)
-			var console: Node = scene.get_node_or_null("AdminConsoleOverlay")
-			if console and console.has_method("_on_close"):
-				console._on_close()
-			return ""
+			if scene.name == "MainMenu":
+				if scene.get_node_or_null("UIHideCapture") != null:
+					return "UI is already hidden. Press any key or click to restore."
+				var cap_menu: Node = load("res://scripts/UIHideCapture.gd").new()
+				cap_menu.name = "UIHideCapture"
+				scene.add_child(cap_menu)
+				var console_menu: Node = scene.get_node_or_null("AdminConsoleOverlay")
+				if console_menu and console_menu.has_method("_on_close"):
+					console_menu._on_close()
+				return ""
+			if scene.name == "GameBoard":
+				if scene.get_node_or_null("BattleUIHideCapture") != null:
+					return "Battle UI is already hidden. Press any key or click to restore."
+				var cap_battle: Node = load("res://scripts/BattleUIHideCapture.gd").new()
+				cap_battle.name = "BattleUIHideCapture"
+				scene.add_child(cap_battle)
+				var console_battle: Node = scene.get_node_or_null("AdminConsoleOverlay")
+				if console_battle and console_battle.has_method("_on_close"):
+					console_battle._on_close()
+				return "Battle UI hidden — grids and cards only. Click or press any key to restore."
+			return "hide_ui only works on the Main Menu or in battle."
 
 		"animation_vellum_card_commence_flip":
 			var scene: Node = get_tree().current_scene

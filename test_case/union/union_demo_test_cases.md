@@ -927,8 +927,8 @@ Expected Result:
 Card Name: Volatile Slasher
 Type: Union
 Stats: ATK=50 DEF=45 Affinity=Bio
-Partial Ability: After Reckoning with non-Bio, it gain ???.
-Full Ability: After Reckoning with non-Bio, it gain +50 ATK permanently.
+Partial Ability: Once, after Reckoning with non-Bio, it gain ???.
+Full Ability: Once, after Reckoning with non-Bio, it gain +50 ATK permanently.
 Summon Formula: 1 Bladeshifter + 1 Bio card + 1000 cost
 Test Cases:
 
@@ -992,7 +992,7 @@ Preconditions:
 - Volatile Slasher summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Volatile Slasher; verify: After Reckoning with non-Bio, it gain +50 ATK permanently.
+Step 1: Attack or defend with Volatile Slasher; verify: Once, after Reckoning with non-Bio, it gain +50 ATK permanently.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1366,10 +1366,10 @@ Expected Result:
 
 Card Name: Lord of Terror
 Type: Union
-Stats: ATK=200 DEF=100 Affinity=Chaos
+Stats: ATK=150 DEF=100 Affinity=Chaos
 Partial Ability: -50 ATK if ???
 Full Ability: -50 ATK if attacks dead end card
-Summon Formula: 1 Chaos (≥ 1000 cost) + 1 Chaos (≥ 800 cost) + 1000 cost
+Summon Formula: 2 Chaos (≥ 800 cost) + 1500 cost
 Test Cases:
 
 
@@ -1381,7 +1381,7 @@ Preconditions:
 - Ensure 'Lord of Terror' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Chaos (≥ 1000 cost) + 1 Chaos (≥ 800 cost) + 1000 cost
+- Gather material cards per formula: 2 Chaos (≥ 800 cost) + 1500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -2156,7 +2156,7 @@ Expected Result:
 
 ---
 
-Card Name: Moon Ninja Lady
+Card Name: Moon Lady Ninja
 Type: Union
 Stats: ATK=65 DEF=50 Affinity=Anima
 Partial Ability: Once, this card is ???.
@@ -2165,12 +2165,12 @@ Summon Formula: Kiyoko the Death Whisper + 1 Anima card + 800 cost
 Test Cases:
 
 
-Test Case ID: TC-Moon-Ninja-Lady-001
+Test Case ID: TC-Moon-Lady-Ninja-001
 Description:
-Summon happy path — Moon Ninja Lady union placement.
+Summon happy path — Moon Lady Ninja union placement.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Moon Ninja Lady' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Moon Lady Ninja' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Gather material cards per formula: Kiyoko the Death Whisper + 1 Anima card + 800 cost
@@ -2178,18 +2178,18 @@ Preconditions:
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
 Step 1: Enter union summon mode; select materials matching formula.
-Step 2: Pay crystal cost; place Moon Ninja Lady face-up at anchor cell.
+Step 2: Pay crystal cost; place Moon Lady Ninja face-up at anchor cell.
 Expected Result:
-- Moon Ninja Lady appears as is_union=true, face-up.
+- Moon Lady Ninja appears as is_union=true, face-up.
 - Material cards removed from grid without crystal loss.
 - Union summon consumed for this duel (cannot summon second union).
 
-Test Case ID: TC-Moon-Ninja-Lady-002
+Test Case ID: TC-Moon-Lady-Ninja-002
 Description:
-Edge — insufficient crystals for Moon Ninja Lady.
+Edge — insufficient crystals for Moon Lady Ninja.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Moon Ninja Lady' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Moon Lady Ninja' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Set crystals below required summon cost.
@@ -2199,12 +2199,12 @@ Step 1: Attempt union summon.
 Expected Result:
 - Summon blocked; materials remain; no partial state.
 
-Test Case ID: TC-Moon-Ninja-Lady-003
+Test Case ID: TC-Moon-Lady-Ninja-003
 Description:
-Edge — wrong materials for Moon Ninja Lady.
+Edge — wrong materials for Moon Lady Ninja.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Moon Ninja Lady' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Moon Lady Ninja' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Place non-qualifying characters in zone.
@@ -2213,41 +2213,41 @@ Step 1: Attempt union summon.
 Expected Result:
 - Formula validation fails; summon does not proceed.
 
-Test Case ID: TC-Moon-Ninja-Lady-004
+Test Case ID: TC-Moon-Lady-Ninja-004
 Description:
-Ability — Moon Ninja Lady full ability in battle.
+Ability — Moon Lady Ninja full ability in battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Moon Ninja Lady' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Moon Lady Ninja' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Moon Ninja Lady summoned and face-up.
+- Moon Lady Ninja summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Moon Ninja Lady; verify: Once, this card is not destroyed.
+Step 1: Attack or defend with Moon Lady Ninja; verify: Once, this card is not destroyed.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
-Test Case ID: TC-Moon-Ninja-Lady-005
+Test Case ID: TC-Moon-Lady-Ninja-005
 Description:
-Destruction — Moon Ninja Lady destroy effects.
+Destruction — Moon Lady Ninja destroy effects.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Moon Ninja Lady' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Moon Lady Ninja' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Set up valid destroy targets per ability.
 Steps:
-Step 1: Trigger destroy via battle or tech targeting Moon Ninja Lady.
+Step 1: Trigger destroy via battle or tech targeting Moon Lady Ninja.
 Expected Result:
 - Destroy immunity or destroy-on-tech behavior matches full ability.
 
-Test Case ID: TC-Moon-Ninja-Lady-006
+Test Case ID: TC-Moon-Lady-Ninja-006
 Description:
-Battle — Moon Ninja Lady as defender vs character.
+Battle — Moon Lady Ninja as defender vs character.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Moon Ninja Lady' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Moon Lady Ninja' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Opponent character attacks union.
@@ -2331,7 +2331,7 @@ Expected Result:
 
 ---
 
-Card Name: Barros the Colossol
+Card Name: Barros the Colossal
 Type: Union
 Stats: ATK=150 DEF=130 Affinity=Nature
 Partial Ability: None
@@ -2340,12 +2340,12 @@ Summon Formula: 2 Nature (≥ 800 cost) + 1500 cost
 Test Cases:
 
 
-Test Case ID: TC-Barros-the-Colossol-001
+Test Case ID: TC-Barros-the-Colossal-001
 Description:
-Summon happy path — Barros the Colossol union placement.
+Summon happy path — Barros the Colossal union placement.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Barros the Colossol' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Barros the Colossal' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Gather material cards per formula: 2 Nature (≥ 800 cost) + 1500 cost
@@ -2353,18 +2353,18 @@ Preconditions:
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
 Step 1: Enter union summon mode; select materials matching formula.
-Step 2: Pay crystal cost; place Barros the Colossol face-up at anchor cell.
+Step 2: Pay crystal cost; place Barros the Colossal face-up at anchor cell.
 Expected Result:
-- Barros the Colossol appears as is_union=true, face-up.
+- Barros the Colossal appears as is_union=true, face-up.
 - Material cards removed from grid without crystal loss.
 - Union summon consumed for this duel (cannot summon second union).
 
-Test Case ID: TC-Barros-the-Colossol-002
+Test Case ID: TC-Barros-the-Colossal-002
 Description:
-Edge — insufficient crystals for Barros the Colossol.
+Edge — insufficient crystals for Barros the Colossal.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Barros the Colossol' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Barros the Colossal' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Set crystals below required summon cost.
@@ -2374,12 +2374,12 @@ Step 1: Attempt union summon.
 Expected Result:
 - Summon blocked; materials remain; no partial state.
 
-Test Case ID: TC-Barros-the-Colossol-003
+Test Case ID: TC-Barros-the-Colossal-003
 Description:
-Edge — wrong materials for Barros the Colossol.
+Edge — wrong materials for Barros the Colossal.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Barros the Colossol' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Barros the Colossal' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Place non-qualifying characters in zone.
@@ -2388,12 +2388,12 @@ Step 1: Attempt union summon.
 Expected Result:
 - Formula validation fails; summon does not proceed.
 
-Test Case ID: TC-Barros-the-Colossol-004
+Test Case ID: TC-Barros-the-Colossal-004
 Description:
-Battle — Barros the Colossol as defender vs character.
+Battle — Barros the Colossal as defender vs character.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Barros the Colossol' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Barros the Colossal' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
 - Opponent character attacks union.
@@ -2479,10 +2479,10 @@ Expected Result:
 
 Card Name: Gaia Turtle
 Type: Union
-Stats: ATK=0 DEF=220 Affinity=Nature
+Stats: ATK=0 DEF=205 Affinity=Nature
 Partial Ability: None
 Full Ability: None
-Summon Formula: 2 any units (≥100 DEF) + 2000 cost
+Summon Formula: 2 any units (≥90 DEF) + 2000 cost
 Test Cases:
 
 
@@ -2494,7 +2494,7 @@ Preconditions:
 - Ensure 'Gaia Turtle' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 2 any units (≥100 DEF) + 2000 cost
+- Gather material cards per formula: 2 any units (≥90 DEF) + 2000 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:

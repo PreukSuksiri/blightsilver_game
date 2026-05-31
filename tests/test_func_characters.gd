@@ -103,7 +103,7 @@ func run_all_tests() -> void:
 	_ox_patrol(A, AB)
 
 	# ATK_BONUS_IF_AFFINITY_ON_FIELD (Pattern B)
-	_armored_money(A, AB)
+	_armored_monkey(A, AB)
 
 	# ATK_PENALTY_IF_NO_NAME_ALLY (Pattern B)
 	_moon_tribe_marksman(A, AB)
@@ -235,8 +235,8 @@ func run_all_tests() -> void:
 	# ONE_USE_SURVIVE_DESTRUCTION — MANUAL (TurnManager destruction intercept)
 	_manual("TC-FUNC-Tiny-Pixie-001")
 
-	# ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND — MANUAL (TurnManager)
-	_manual("TC-FUNC-Laughing-Granny-001")
+	# ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND (Pattern A)
+	_laughing_granny(A, AB)
 
 	# OPPONENT_EXTRA_CRYSTAL_LOSS — MANUAL (GameState lose_crystals hook)
 	_manual("TC-FUNC-Grave-Worm-001")
@@ -367,15 +367,15 @@ func _street_rogue(A, AB) -> void:
 # ═══════════════════════════════════════════════════════════════════════════════
 func _satellite_cannon(A, AB) -> void:
 	print("-- TC-FUNC-Satellite-Cannon-001")
-	var att := _make_char("Satellite Cannon", 90, 80, 1100, A.COSMIC,
+	var att := _make_char("Satellite Cannon", 100, 80, 1100, A.COSMIC,
 		AB.ATK_BONUS_VS_CENTER_ZONE, {"bonus": 20, "center_bonus": 40})
 	var def_ := _make_char("Dummy", 0, 200, 100, A.ANIMA)  # high DEF so not destroyed
 	var r_edge := BattleResolver.resolve_battle(att, def_, 3, 0, 1, false, Vector2i(0, 0))
-	assert_eq(r_edge.attacker_atk_used, 90, "TC-FUNC-Satellite-Cannon-001: edge → ATK 90")
+	assert_eq(r_edge.attacker_atk_used, 100, "TC-FUNC-Satellite-Cannon-001: edge → ATK 100")
 	var r_zone := BattleResolver.resolve_battle(att, def_, 3, 0, 1, false, Vector2i(1, 1))
-	assert_eq(r_zone.attacker_atk_used, 110, "TC-FUNC-Satellite-Cannon-001: zone(1,1) → ATK 110")
+	assert_eq(r_zone.attacker_atk_used, 120, "TC-FUNC-Satellite-Cannon-001: zone(1,1) → ATK 120")
 	var r_center := BattleResolver.resolve_battle(att, def_, 3, 0, 1, false, Vector2i(2, 2))
-	assert_eq(r_center.attacker_atk_used, 150, "TC-FUNC-Satellite-Cannon-001: (2,2) → ATK 150")
+	assert_eq(r_center.attacker_atk_used, 160, "TC-FUNC-Satellite-Cannon-001: (2,2) → ATK 160")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ATK_BONUS_VS_FACEDOWN
@@ -400,7 +400,7 @@ func _kiyoko(A, AB) -> void:
 	print("-- TC-FUNC-Kiyoko-the-Death-Whisper-001")
 	var att := _make_char("Kiyoko the Death Whisper", 40, 35, 800, A.ANIMA,
 		AB.ATK_BONUS_VS_UNION, {"bonus": 50})
-	var def_union := _make_char("Gryphon Rider", 150, 95, 1000, A.DIVINE)
+	var def_union := _make_char("Gryphon Rider", 125, 90, 1000, A.DIVINE)
 	def_union.is_union = true
 	var r1 := BattleResolver.resolve_battle(att, def_union, 3, 0, 1)
 	assert_eq(r1.attacker_atk_used, 90, "TC-FUNC-Kiyoko-001: ATK 40+50=90 vs union")
@@ -453,7 +453,7 @@ func _void_stalker(A, AB) -> void:
 func _aerial(A, AB) -> void:
 	print("-- TC-FUNC-Aerial-the-Battlemage-001 [Pattern B]")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
-	var union_card := _make_char("Gryphon Rider", 150, 95, 1000, A.DIVINE)
+	var union_card := _make_char("Gryphon Rider", 125, 90, 1000, A.DIVINE)
 	union_card.is_union = true
 	union_card.face_up = true
 	GameState.grids[0][0][1] = union_card
@@ -514,38 +514,38 @@ func _witchhunter(A, AB) -> void:
 # ═══════════════════════════════════════════════════════════════════════════════
 func _ox_patrol(A, AB) -> void:
 	print("-- TC-FUNC-Ox-Patrol-001")
-	var att := _make_char("Ox Patrol", 35, 35, 400, A.ANIMA,
+	var att := _make_char("Ox Patrol", 30, 35, 420, A.ANIMA,
 		AB.ATK_DEF_BONUS_VS_NON_AFFINITY, {"affinity": A.ANIMA, "atk": 5, "def": 5})
 	# vs non-ANIMA: +5 ATK
 	var r1 := BattleResolver.resolve_battle(att, _make_char("Chaos", 0, 10, 100, A.CHAOS), 3, 0, 1)
-	assert_eq(r1.attacker_atk_used, 40, "TC-FUNC-Ox-Patrol-001: ATK 35+5=40 vs non-ANIMA")
+	assert_eq(r1.attacker_atk_used, 35, "TC-FUNC-Ox-Patrol-001: ATK 30+5=35 vs non-ANIMA")
 	# vs ANIMA: no bonus
 	var r2 := BattleResolver.resolve_battle(att, _make_char("Anima", 0, 10, 100, A.ANIMA), 3, 0, 1)
-	assert_eq(r2.attacker_atk_used, 35, "TC-FUNC-Ox-Patrol-001b: no bonus vs ANIMA")
+	assert_eq(r2.attacker_atk_used, 30, "TC-FUNC-Ox-Patrol-001b: no bonus vs ANIMA")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ATK_BONUS_IF_AFFINITY_ON_FIELD (Pattern B)
 # ═══════════════════════════════════════════════════════════════════════════════
-func _armored_money(A, AB) -> void:
-	print("-- TC-FUNC-Armored-Money-001 [Pattern B]")
+func _armored_monkey(A, AB) -> void:
+	print("-- TC-FUNC-Armored-Monkey-001 [Pattern B]")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
-	var att := _make_char("Armored Money", 10, 10, 100, A.NATURE,
+	var att := _make_char("Armored Monkey", 10, 20, 170, A.NATURE,
 		AB.ATK_BONUS_IF_AFFINITY_ON_FIELD, {"affinity": A.NATURE, "atk": 10})
 	att.face_up = true
 	GameState.grids[0][0][0] = att
-	var ally := _make_char("Canyon Warg", 70, 30, 550, A.NATURE)
+	var ally := _make_char("Canyon Warg", 70, 30, 750, A.NATURE)
 	ally.face_up = true
 	GameState.grids[0][0][1] = ally
 	var def_ := _make_char("Dummy", 0, 5, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 20, "TC-FUNC-Armored-Money-001: ATK 10+10=20 with NATURE ally")
+	assert_eq(r.attacker_atk_used, 20, "TC-FUNC-Armored-Monkey-001: ATK 10+10=20 with NATURE ally")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ATK_PENALTY_IF_NO_NAME_ALLY (Pattern B)
 # ═══════════════════════════════════════════════════════════════════════════════
 func _moon_tribe_marksman(A, AB) -> void:
 	print("-- TC-FUNC-Moon-Tribe-Marksman-001 [Pattern B]")
-	var att := _make_char("Moon Tribe Marksman", 35, 10, 350, A.COSMIC,
+	var att := _make_char("Moon Tribe Marksman", 35, 25, 300, A.COSMIC,
 		AB.ATK_PENALTY_IF_NO_NAME_ALLY, {"name": "Moon", "penalty": 10})
 	var def_ := _make_char("Dummy", 0, 20, 100, A.ANIMA)
 	# Without Moon ally: penalty
@@ -569,7 +569,7 @@ func _moon_tribe_marksman(A, AB) -> void:
 # ═══════════════════════════════════════════════════════════════════════════════
 func _sniping_fairy(A, AB) -> void:
 	print("-- TC-FUNC-Sniping-Fairy-001")
-	var att := _make_char("Sniping Fairy", 40, 10, 400, A.ANIMA,
+	var att := _make_char("Sniping Fairy", 40, 20, 350, A.DIVINE,
 		AB.ATK_PENALTY_WHEN_EXPOSED, {"penalty": 20})
 	att.face_up = true  # exposed — penalty applies
 	var def_ := _make_char("Dummy", 0, 200, 100, A.ANIMA)
@@ -619,77 +619,77 @@ func _leorudus(A, AB) -> void:
 # ═══════════════════════════════════════════════════════════════════════════════
 func _death_knight(A, AB) -> void:
 	print("-- TC-FUNC-Death-Knight-001 [Pattern B, perm bonus direct]")
-	var att := _make_char("Death Knight", 30, 10, 400, A.CHAOS,
+	var att := _make_char("Death Knight", 65, 65, 850, A.CHAOS,
 		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"affinity": A.CHAOS, "atk_bonus": 5, "def_bonus": 0})
 	att.perm_atk_bonus = 10  # 2 CHAOS allies × 5
 	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 40, "TC-FUNC-Death-Knight-001: 30+10=40 ATK with 2 CHAOS allies")
+	assert_eq(r.attacker_atk_used, 75, "TC-FUNC-Death-Knight-001: 65+10=75 ATK with 2 CHAOS allies")
 
 func _hammer_shark(A, AB) -> void:
 	print("-- TC-FUNC-Hammer-Shark-001 [Pattern B, perm bonus direct]")
-	var att := _make_char("Hammer Shark", 30, 20, 400, A.BIO,
+	var att := _make_char("Hammer Shark", 20, 20, 250, A.NATURE,
 		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"name": "Shark", "atk_bonus": 10, "def_bonus": 0})
 	att.perm_atk_bonus = 20  # 2 Shark allies × 10
 	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 50, "TC-FUNC-Hammer-Shark-001: 30+20=50 with 2 Shark allies")
+	assert_eq(r.attacker_atk_used, 40, "TC-FUNC-Hammer-Shark-001: 20+20=40 with 2 Shark allies")
 
 func _night_whisperer(A, AB) -> void:
 	print("-- TC-FUNC-Night-Whisperer-001 [Pattern B, perm bonus direct]")
-	var att := _make_char("Night Whisperer", 40, 25, 500, A.CHAOS,
+	var att := _make_char("Night Whisperer", 30, 30, 900, A.CHAOS,
 		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"name": "Wisp", "atk_bonus": 30, "def_bonus": 30})
 	att.perm_atk_bonus = 30  # 1 Wisp ally × 30
 	att.perm_def_bonus = 30
 	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 70, "TC-FUNC-Night-Whisperer-001: 40+30=70 ATK with 1 Wisp ally")
+	assert_eq(r.attacker_atk_used, 60, "TC-FUNC-Night-Whisperer-001: 30+30=60 ATK with 1 Wisp ally")
 
 func _saw_shark(A, AB) -> void:
 	print("-- TC-FUNC-Saw-Shark-001 [Pattern B, perm bonus direct]")
-	var att := _make_char("Saw Shark", 35, 20, 420, A.BIO,
+	var att := _make_char("Saw Shark", 25, 10, 280, A.NATURE,
 		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"name": "Shark", "atk_bonus": 10, "def_bonus": 0})
 	att.perm_atk_bonus = 10  # 1 Shark ally
 	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 45, "TC-FUNC-Saw-Shark-001: 35+10=45 with 1 Shark ally")
+	assert_eq(r.attacker_atk_used, 35, "TC-FUNC-Saw-Shark-001: 25+10=35 with 1 Shark ally")
 
 func _scythe_shark(A, AB) -> void:
 	print("-- TC-FUNC-Scythe-Shark-001 [Pattern B, perm bonus direct]")
-	var att := _make_char("Scythe Shark", 40, 20, 440, A.BIO,
+	var att := _make_char("Scythe Shark", 35, 35, 550, A.NATURE,
 		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"name": "Shark", "atk_bonus": 10, "def_bonus": 0})
 	att.perm_atk_bonus = 10
 	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 50, "TC-FUNC-Scythe-Shark-001: 40+10=50 with 1 Shark ally")
+	assert_eq(r.attacker_atk_used, 45, "TC-FUNC-Scythe-Shark-001: 35+10=45 with 1 Shark ally")
 
 func _shotgun_shark(A, AB) -> void:
 	print("-- TC-FUNC-Shotgun-Shark-001 [Pattern B, perm bonus direct]")
-	var att := _make_char("Shotgun Shark", 45, 25, 460, A.BIO,
+	var att := _make_char("Shotgun Shark", 75, 25, 900, A.NATURE,
 		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"name": "Shark", "atk_bonus": 10, "def_bonus": 0})
 	att.perm_atk_bonus = 10
 	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 55, "TC-FUNC-Shotgun-Shark-001: 45+10=55 with 1 Shark ally")
+	assert_eq(r.attacker_atk_used, 85, "TC-FUNC-Shotgun-Shark-001: 75+10=85 with 1 Shark ally")
 
 func _spear_shark(A, AB) -> void:
 	print("-- TC-FUNC-Spear-Shark-001 [Pattern B, perm bonus direct]")
-	var att := _make_char("Spear Shark", 35, 25, 380, A.BIO,
+	var att := _make_char("Spear Shark", 50, 20, 480, A.NATURE,
 		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"name": "Shark", "atk_bonus": 10, "def_bonus": 0})
 	att.perm_atk_bonus = 10
 	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 45, "TC-FUNC-Spear-Shark-001: 35+10=45 with 1 Shark ally")
+	assert_eq(r.attacker_atk_used, 60, "TC-FUNC-Spear-Shark-001: 50+10=60 with 1 Shark ally")
 
 func _swarmcaller(A, AB) -> void:
 	print("-- TC-FUNC-Swarmcaller-001 [Pattern B, perm bonus direct]")
-	var att := _make_char("Swarmcaller", 20, 15, 400, A.NATURE,
+	var att := _make_char("Swarmcaller", 45, 45, 950, A.NATURE,
 		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"affinity": A.NATURE, "atk_bonus": 15, "def_bonus": 15})
 	att.perm_atk_bonus = 15  # 1 NATURE ally
 	att.perm_def_bonus = 15
 	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 35, "TC-FUNC-Swarmcaller-001: 20+15=35 with 1 NATURE ally")
+	assert_eq(r.attacker_atk_used, 60, "TC-FUNC-Swarmcaller-001: 45+15=60 with 1 NATURE ally")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # DEFEND_PERM_DEBUFF_ATTACKER_ATK_DEF
@@ -903,7 +903,7 @@ func _lab_bloater(A, AB) -> void:
 func _electrogazer(A, AB) -> void:
 	print("-- TC-FUNC-Electrogazer-001 [Pattern B]")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
-	var electrogazer := _make_char("Electrogazer", 45, 45, 600, A.COSMIC,
+	var electrogazer := _make_char("Electrogazer", 80, 45, 1000, A.COSMIC,
 		AB.NEGATE_ZERO_COST_TRAPS_BOTH, {})
 	electrogazer.face_up = true
 	GameState.grids[0][0][0] = electrogazer
@@ -918,37 +918,36 @@ func _electrogazer(A, AB) -> void:
 # ═══════════════════════════════════════════════════════════════════════════════
 func _none_smoke_tests(A, AB) -> void:
 	var smoke_cards: Array = [
-		["Armored-Rhino",        "Armored Rhino",        60, 85, 700,  A.NATURE],
-		["Asteroid-Trooper",     "Asteroid Trooper",     30, 10, 250,  A.COSMIC],
-		["Big-Thug",             "Big Thug",             40, 35, 400,  A.ANIMA],
-		["Canyon-Warg",          "Canyon Warg",          70, 30, 550,  A.NATURE],
-		["Chaotic-Wisp",         "Chaotic Wisp",         20, 0,  100,  A.CHAOS],
-		["Choir-Lady-Abigail",   "Choir Lady Abigail",   25, 15, 250,  A.DIVINE],
-		["Choir-Lady-Alice",     "Choir Lady Alice",     20, 25, 250,  A.DIVINE],
-		["Choir-Lady-Anna",      "Choir Lady Anna",      20, 20, 250,  A.DIVINE],
-		["Church-Guard",         "Church Guard",         0,  35, 150,  A.DIVINE],
-		["Dark-Monk",            "Dark Monk",            15, 25, 300,  A.CHAOS],
-		["Demon-Spawn",          "Demon Spawn",          40, 30, 400,  A.CHAOS],
-		["Doom-Wisp",            "Doom Wisp",            15, 15, 100,  A.CHAOS],
-		["Flame-Seraph",         "Flame Seraph",         50, 50, 600,  A.DIVINE],
-		["Foul-Wisp",            "Foul Wisp",            5,  5,  50,   A.CHAOS],
-		["Fujin",                "Fujin",                40, 40, 500,  A.ARCANE],
-		["Goblin-Poacher",       "Goblin Poacher",       30, 20, 300,  A.NATURE],
-		["Grand-Fort-Footsoldier","Grand Fort Footsoldier",15,20,200, A.ANIMA],
-		["Grand-Fort-Mauler",    "Grand Fort Mauler",    25, 15, 250,  A.ANIMA],
-		["Gryphon",              "Gryphon",              70, 50, 700,  A.DIVINE],
-		["Heavy-Tome-Preacher",  "Heavy Tome Preacher",  30, 30, 400,  A.ARCANE],
-		["Ice-Mage",             "Ice Mage",             20, 15, 350,  A.ARCANE],
-		["Mad-Raccoon",          "Mad Raccoon",          25, 10, 300,  A.ANIMA],
-		["Ponycorn",             "Ponycorn",             10, 20, 200,  A.DIVINE],
-		["Raijin",               "Raijin",               40, 35, 500,  A.ARCANE],
-		["Scarlet-Mutant",       "Scarlet Mutant",       30, 20, 350,  A.BIO],
-		["Shredder-Doll",        "Shredder Doll",        10, 10, 150,  A.CHAOS],
-		["Skeleton-Lancer",      "Skeleton Lancer",      25, 10, 200,  A.CHAOS],
-		["Space-Boy",            "Space Boy",            15, 15, 200,  A.COSMIC],
-		["Staircase-Lady",       "Staircase Lady",       10, 25, 250,  A.ANIMA],
-		["Wandering-Swordsman",  "Wandering Swordsman",  50, 30, 500,  A.ANIMA],
-		["Yaksa",                "Yaksa",                55, 45, 600,  A.ANIMA],
+		["Armored-Rhino", "Armored Rhino", 60, 85, 720, A.NATURE],
+		["Big-Thug", "Big Thug", 40, 35, 400, A.ANIMA],
+		["Canyon-Warg", "Canyon Warg", 70, 30, 750, A.NATURE],
+		["Chaotic-Wisp", "Chaotic Wisp", 20, 0, 100, A.CHAOS],
+		["Choir-Lady-Abigail", "Choir Lady Abigail", 25, 15, 250, A.DIVINE],
+		["Choir-Lady-Alice", "Choir Lady Alice", 20, 25, 250, A.DIVINE],
+		["Choir-Lady-Anna", "Choir Lady Anna", 20, 20, 250, A.DIVINE],
+		["Church-Guard", "Church Guard", 0, 35, 150, A.DIVINE],
+		["Dark-Monk", "Dark Monk", 15, 25, 300, A.CHAOS],
+		["Demon-Spawn", "Demon Spawn", 40, 30, 400, A.CHAOS],
+		["Doom-Wisp", "Doom Wisp", 15, 15, 100, A.CHAOS],
+		["Flame-Seraph", "Flame Seraph", 50, 10, 500, A.DIVINE],
+		["Foul-Wisp", "Foul Wisp", 0, 25, 100, A.CHAOS],
+		["Fujin", "Fujin", 35, 40, 450, A.DIVINE],
+		["Goblin-Poacher", "Goblin Poacher", 30, 10, 250, A.NATURE],
+		["Grand-Fort-Footsoldier", "Grand Fort Footsoldier", 25, 25, 300, A.ANIMA],
+		["Grand-Fort-Mauler", "Grand Fort Mauler", 40, 10, 350, A.ANIMA],
+		["Gryphon", "Gryphon", 100, 85, 1150, A.NATURE],
+		["Heavy-Tome-Preacher", "Heavy Tome Preacher", 25, 20, 300, A.DIVINE],
+		["Ice-Mage", "Ice Mage", 50, 0, 400, A.ARCANE],
+		["Mad-Raccoon", "Mad Raccoon", 30, 15, 260, A.NATURE],
+		["Ponycorn", "Ponycorn", 25, 20, 300, A.DIVINE],
+		["Raijin", "Raijin", 60, 0, 550, A.DIVINE],
+		["Scarlet-Mutant", "Scarlet Mutant", 35, 30, 350, A.BIO],
+		["Shredder-Doll", "Shredder Doll", 25, 5, 250, A.CHAOS],
+		["Skeleton-Lancer", "Skeleton Lancer", 45, 5, 300, A.CHAOS],
+		["Space-Boy", "Space Boy", 75, 65, 800, A.COSMIC],
+		["Staircase-Lady", "Staircase Lady", 30, 0, 180, A.CHAOS],
+		["Wandering-Swordsman", "Wandering Swordsman", 60, 60, 600, A.ANIMA],
+		["Yaksa", "Yaksa", 30, 30, 500, A.CHAOS],
 	]
 	var def_dummy := _make_char("Dummy", 0, 5, 50, A.ANIMA)
 	for d in smoke_cards:
@@ -974,6 +973,24 @@ func _grand_fort_archer(A, AB) -> void:
 	att.one_use_atk_boost_used = true
 	var r2 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
 	assert_eq(r2.attacker_atk_used, 20, "TC-FUNC-Grand-Fort-Archer-001: second ATK 20 (no bonus)")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND
+# ═══════════════════════════════════════════════════════════════════════════════
+func _laughing_granny(A, AB) -> void:
+	print("-- TC-FUNC-Laughing-Granny-001")
+	var att := _make_char("Laughing Granny", 15, 20, 350, A.CHAOS,
+		AB.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND, {"atk": 10, "def": 10})
+	att.one_use_atk_boost_used = false
+	var def_ := _make_char("Grand Fort Footsoldier", 25, 25, 300, A.ANIMA)
+	var r1 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_eq(r1.attacker_atk_used, 25, "TC-FUNC-Laughing-Granny-001: first ATK 15+10=25")
+	assert_true(r1.attacker_destroyed and r1.defender_destroyed,
+		"TC-FUNC-Laughing-Granny-001: 25 vs 25 tie destroys both")
+	att.one_use_atk_boost_used = true
+	def_.one_use_def_boost_used = false
+	var r2 := BattleResolver.resolve_battle(def_, att, 3, 1, 0)
+	assert_eq(r2.defender_def_used, 30, "TC-FUNC-Laughing-Granny-001: first DEF 20+10=30")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ONE_USE_DEF_BOOST
