@@ -1,0 +1,331 @@
+=== Battle of Haunted Break Room ===
+Battle started: 2026-05-31 07:12:35.592
+Game Session of Iced Latte (started 2026-05-31 06:54:04.954)
+=== AI vs AI Match ===
+Batch iteration: 10 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    Great Diplomacy
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Spy, Tease
+P1 Tech hand: Great Diplomacy, Prayer, War Supply
+P0:   [C:Ostr][  — ][  — ][  — ][C:Hamm]
+      [C:Moon][T:Flam][  — ][T:Blac][C:Jira]
+      [T:Foul][C:Vile][C:Yaks][C:Scou][C:Lab ]
+      [T:Bunk][  — ][  — ][  — ][C:Skel]
+      [C:Fuji][  — ][T:Pepp][T:Alar][C:Deat]
+P1:   [C:Blue][  — ][  — ][T:Bunk][C:Fuji]
+      [T:Trap][  — ][C:Gran][C:Witc][C:Gian]
+      [  — ][T:Hypn][T:Foul][  — ][C:Lase]
+      [  — ][  — ][  — ][  — ][C:Leor]
+      [C:Snip][  — ][  — ][C:Magi][C:Tomb]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:05.348] Mode selected P1: TECH
+[00:05.649] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:07.034] Tech played  P1: "Great Diplomacy"
+[00:08.888] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:09.173] AI1 target chosen: (3,4)
+[00:09.175] Revealed: P1 (3,4) "Leorudus the Warlord"
+[00:09.565] AI1 target chosen: (4,4)
+[00:09.567] Revealed: P1 (4,4) "Tomb Bandit"
+[00:09.964] AI1 target chosen: (0,0)
+[00:09.965] Revealed: P1 (0,0) "Blue Mage"
+[00:10.363] AI1 target chosen: (4,0)
+[00:10.365] Revealed: P1 (4,0) "Sniping Fairy"
+[00:10.764] AI1 target chosen: (0,4)
+[00:10.765] Revealed: P1 (0,4) "Fujin"
+[00:10.765] MSG: Great Diplomacy: revealed 5 unit(s).
+[00:10.772] Tech resolved  P1
+[00:13.674] Crystals: P1 4000 → 3950 (-50)  [skip tax]
+[00:13.675] MSG: Player 2 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:15.059] Turn ended  P1  |  Crystals P0=5000 P1=3950
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=3950 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Blue][  — ][  — ][  ? ][Fuji]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Leor]
+      [Snip][  — ][  — ][  ? ][Tomb]
+[00:15.669] Mode selected P0: TECH
+[00:15.981] Tech played  P0: "Spy"
+[00:17.519] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:17.918] AI0 target chosen: (2,3)
+[00:17.919] Revealed: P1 (2,3) (blank slot)
+[00:17.925] Tech resolved  P0
+[00:18.818] Mode selected P0: ATTACK
+[00:18.828] Attack phase P0: 2 attack(s) available
+[00:18.829] MSG: Player 1: tap a character to attack.
+[00:19.110] AI0 attack decision: (2,4)"Lab Zombie" [ATK=55] → (4,0) "Sniping Fairy" [DEF=20]
+[00:19.493] Revealed: P0 (2,4) "Lab Zombie"
+[00:19.493] Dice rolled: 2
+[00:19.498] MSG: Lab Zombie wins!
+[00:24.093] Crystals: P1 3950 → 3600 (-350)  [battle]
+[00:25.487] Card destroyed  P1 (4,0) "Sniping Fairy"
+[00:25.491] Attack P0(2,4)"Lab Zombie" → P1(4,0)"Sniping Fairy"  Dice=2  ATK=55 vs DEF=20  → WIN
+[00:25.491] Anim: 3A  △ P1(4,0)
+[00:25.986] Mode selected P0: ATTACK
+[00:25.997] Attack phase P0: 1 attack(s) available
+[00:25.998] MSG: Player 1: tap a character to attack.
+[00:26.285] AI0 attack decision: (1,4)"Jirayu the Rebellious Prince" [ATK=40] → (2,3) "(dead-end)"
+[00:26.643] Revealed: P0 (1,4) "Jirayu the Rebellious Prince"
+[00:26.643] Dice rolled: 2
+[00:26.657] MSG: Nothing happens — Dead End.
+[00:29.987] Dead-end placed  P1 (2,3)
+[00:29.995] Attack P0(1,4)"Jirayu the Rebellious Prince" → P1(2,3)(empty)  Dice=2  → DEAD_END
+[00:29.995] Anim: 3F  (blank slot)
+[00:30.497] Turn ended  P0  |  Crystals P0=5000 P1=3600
+
+--- Turn 3  |  Player 1  |  Crystals P0=5000 P1=3600 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][Jira]
+      [  ? ][  ? ][  ? ][  ? ][Lab ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Blue][  — ][  — ][  ? ][Fuji]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Leor]
+      [  — ][  — ][  — ][  ? ][Tomb]
+[00:31.101] Mode selected P1: TECH
+[00:31.413] Tech played  P1: "Prayer"
+[00:32.952] MSG: Prayer: Divine Characters protected until your next turn.
+[00:32.957] Tech resolved  P1
+[00:33.852] Mode selected P1: ATTACK
+[00:33.863] Attack phase P1: 2 attack(s) available
+[00:33.863] MSG: Player 2: tap a character to attack.
+[00:34.142] AI1 attack decision: (3,4)"Leorudus the Warlord" [ATK=100] → (2,4) "Lab Zombie" [DEF=40]
+[00:34.443] Dice rolled: 4
+[00:34.454] MSG: Leorudus the Warlord wins!
+[00:39.127] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:40.525] Card destroyed  P0 (2,4) "Lab Zombie"
+[00:40.530] Attack P1(3,4)"Leorudus the Warlord" → P0(2,4)"Lab Zombie"  Dice=4  ATK=100 vs DEF=40  → WIN
+[00:40.530] Anim: 3A  △ P0(2,4)
+[00:41.023] Mode selected P1: ATTACK
+[00:41.031] Attack phase P1: 1 attack(s) available
+[00:41.032] MSG: Player 2: tap a character to attack.
+[00:41.326] AI1 attack decision: (4,4)"Tomb Bandit" [ATK=75] → (1,4) "Jirayu the Rebellious Prince" [DEF=40]
+[00:41.636] Dice rolled: 5
+[00:41.646] MSG: Tomb Bandit wins!
+[00:46.319] Crystals: P0 4300 → 3700 (-600)  [battle]
+[00:47.713] Card destroyed  P0 (1,4) "Jirayu the Rebellious Prince"
+[00:47.718] Attack P1(4,4)"Tomb Bandit" → P0(1,4)"Jirayu the Rebellious Prince"  Dice=5  ATK=75 vs DEF=40  → WIN
+[00:47.718] Anim: 3A  △ P0(1,4)
+[00:48.214] Turn ended  P1  |  Crystals P0=3700 P1=3600
+
+--- Turn 4  |  Player 0  |  Crystals P0=3700 P1=3600 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Blue][  — ][  — ][  ? ][Fuji]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Leor]
+      [  — ][  — ][  — ][  ? ][Tomb]
+[00:48.832] Mode selected P0: TECH
+[00:49.132] Crystals: P0 3700 → 2700 (-1000)  [tech cost]
+[00:50.500] Tech played  P0: "Great Diplomacy"
+[00:52.233] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:52.509] AI0 target chosen: (4,4)
+[00:52.510] Revealed: P0 (4,4) "Death Knight"
+[00:52.910] AI0 target chosen: (0,0)
+[00:52.911] Revealed: P0 (0,0) "Ostrich Cannon"
+[00:53.309] AI0 target chosen: (2,3)
+[00:53.311] Revealed: P0 (2,3) "Scout Probe"
+[00:53.709] AI0 target chosen: (1,0)
+[00:53.711] Revealed: P0 (1,0) "Moon Tribe Marksman"
+[00:54.110] AI0 target chosen: (4,0)
+[00:54.111] Revealed: P0 (4,0) "Fujin"
+[00:54.111] MSG: Great Diplomacy: revealed 5 unit(s).
+[00:54.124] Tech resolved  P0
+[00:55.001] Mode selected P0: ATTACK
+[00:55.014] Attack phase P0: 2 attack(s) available
+[00:55.014] MSG: Player 1: tap a character to attack.
+[00:55.302] AI0 attack decision: (4,4)"Death Knight" [ATK=65] → (4,4) "Tomb Bandit" [DEF=60]
+[00:55.601] Dice rolled: 4
+[00:55.612] MSG: Death Knight wins!
+[01:00.292] Crystals: P1 3600 → 2600 (-1000)  [battle]
+[01:01.678] Card destroyed  P1 (4,4) "Tomb Bandit"
+[01:01.692] Attack P0(4,4)"Death Knight" → P1(4,4)"Tomb Bandit"  Dice=4  ATK=65 vs DEF=60  → WIN
+[01:01.692] Anim: 3A  △ P1(4,4)
+[01:02.181] Mode selected P0: ATTACK
+[01:02.192] Attack phase P0: 1 attack(s) available
+[01:02.193] MSG: Player 1: tap a character to attack.
+[01:02.472] AI0 attack decision: (0,0)"Ostrich Cannon" [ATK=60] → (0,0) "Blue Mage" [DEF=45]
+[01:02.773] Dice rolled: 4
+[01:02.784] MSG: Ostrich Cannon wins!
+[01:07.456] Crystals: P1 2600 → 1800 (-800)  [battle]
+[01:08.850] Card destroyed  P1 (0,0) "Blue Mage"
+[01:08.850] MSG: Ostrich Cannon locks itself until next turn.
+[01:08.859] Attack P0(0,0)"Ostrich Cannon" → P1(0,0)"Blue Mage"  Dice=4  ATK=60 vs DEF=45  → WIN
+[01:08.859] Anim: 3A  △ P1(0,0)
+[01:09.360] Turn ended  P0  |  Crystals P0=2700 P1=1800
+
+--- Turn 5  |  Player 1  |  Crystals P0=2700 P1=1800 ---
+P0:   [Ostr][  — ][  — ][  — ][  ? ]
+      [Moon][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][Scou][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Fuji][  — ][  ? ][  ? ][Deat]
+P1:   [  — ][  — ][  — ][  ? ][Fuji]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Leor]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:09.973] Mode selected P1: ATTACK
+[01:09.981] Attack phase P1: 2 attack(s) available
+[01:09.981] MSG: Player 2: tap a character to attack.
+[01:10.256] AI1 attack decision: (3,4)"Leorudus the Warlord" [ATK=80] → (4,4) "Death Knight" [DEF=65]
+[01:10.564] Dice rolled: 5
+[01:10.573] MSG: Leorudus the Warlord wins!
+[01:15.265] Crystals: P0 2700 → 1850 (-850)  [battle]
+[01:16.657] Card destroyed  P0 (4,4) "Death Knight"
+[01:16.662] Attack P1(3,4)"Leorudus the Warlord" → P0(4,4)"Death Knight"  Dice=5  ATK=80 vs DEF=65  → WIN
+[01:16.662] Anim: 3A  △ P0(4,4)
+[01:17.148] Mode selected P1: ATTACK
+[01:17.156] Attack phase P1: 1 attack(s) available
+[01:17.156] MSG: Player 2: tap a character to attack.
+[01:17.455] AI1 attack decision: (0,4)"Fujin" [ATK=35] → (0,0) "Ostrich Cannon" [DEF=30]
+[01:17.755] Dice rolled: 3
+[01:17.764] MSG: Fujin wins!
+[01:22.439] Crystals: P0 1850 → 1050 (-800)  [battle]
+[01:23.831] Card destroyed  P0 (0,0) "Ostrich Cannon"
+[01:23.835] Attack P1(0,4)"Fujin" → P0(0,0)"Ostrich Cannon"  Dice=3  ATK=35 vs DEF=30  → WIN
+[01:23.835] Anim: 3A  △ P0(0,0)
+[01:24.345] Turn ended  P1  |  Crystals P0=1050 P1=1800
+
+--- Turn 6  |  Player 0  |  Crystals P0=1050 P1=1800 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [Moon][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][Scou][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Fuji][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][Fuji]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Leor]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:24.952] Mode selected P0: TECH
+[01:25.266] Tech played  P0: "Tease"
+[01:26.804] MSG: Opponent must choose and reveal 1 of their squares.
+[01:26.805] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:27.202] AI1 target chosen: (4,3)
+[01:27.240] Revealed: P1 (4,3) "Magical Butterfly"
+[01:27.240] MSG: Tease: Opponent revealed Magical Butterfly.
+[01:27.245] Tech resolved  P0
+[01:28.110] Mode selected P0: ATTACK
+[01:28.117] Attack phase P0: 2 attack(s) available
+[01:28.118] MSG: Player 1: tap a character to attack.
+[01:28.410] AI0 attack decision: (2,3)"Scout Probe" [ATK=40] → (4,3) "Magical Butterfly" [DEF=15]
+[01:28.710] Dice rolled: 4
+[01:28.719] MSG: Scout Probe wins!
+[01:33.385] Crystals: P1 1800 → 1620 (-180)  [battle]
+[01:34.780] Card destroyed  P1 (4,3) "Magical Butterfly"
+[01:34.785] Attack P0(2,3)"Scout Probe" → P1(4,3)"Magical Butterfly"  Dice=4  ATK=40 vs DEF=15  → WIN
+[01:34.785] Anim: 3A  △ P1(4,3)
+[01:34.786] MSG: No valid target — effect cancelled.
+[01:34.796] Tech resolved  P0
+[01:34.796] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:35.285] Mode selected P0: ATTACK
+[01:35.292] Attack phase P0: 1 attack(s) available
+[01:35.292] MSG: Player 1: tap a character to attack.
+[01:35.584] AI0 attack decision: (1,0)"Moon Tribe Marksman" [ATK=35] → (4,1) "(dead-end)"
+[01:35.884] Dice rolled: 3
+[01:35.900] MSG: Nothing happens — Dead End.
+[01:35.985] AI0 attack decision: (1,0)"Moon Tribe Marksman" [ATK=35] → (4,2) "(dead-end)"
+[01:39.270] Dead-end placed  P1 (4,1)
+[01:39.277] Attack P0(1,0)"Moon Tribe Marksman" → P1(4,1)(empty)  Dice=3  → DEAD_END
+[01:39.277] Anim: 3F  (blank slot)
+[01:39.773] Turn ended  P0  |  Crystals P0=1050 P1=1620
+
+--- Turn 7  |  Player 1  |  Crystals P0=1050 P1=1620 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [Moon][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][Scou][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Fuji][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][Fuji]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Leor]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:40.377] Mode selected P1: ATTACK
+[01:40.385] Attack phase P1: 2 attack(s) available
+[01:40.386] MSG: Player 2: tap a character to attack.
+[01:40.676] AI1 attack decision: (3,4)"Leorudus the Warlord" [ATK=80] → (2,3) "Scout Probe" [DEF=50]
+[01:40.976] Dice rolled: 2
+[01:40.986] MSG: Leorudus the Warlord wins!
+[01:45.668] Crystals: P0 1050 → 350 (-700)  [battle]
+[01:47.062] Card destroyed  P0 (2,3) "Scout Probe"
+[01:47.067] Attack P1(3,4)"Leorudus the Warlord" → P0(2,3)"Scout Probe"  Dice=2  ATK=80 vs DEF=50  → WIN
+[01:47.067] Anim: 3A  △ P0(2,3)
+[01:47.561] Mode selected P1: ATTACK
+[01:47.570] Attack phase P1: 1 attack(s) available
+[01:47.571] MSG: Player 2: tap a character to attack.
+[01:47.860] AI1 attack decision: (0,4)"Fujin" [ATK=35] → (1,0) "Moon Tribe Marksman" [DEF=25]
+[01:48.160] Dice rolled: 3
+[01:48.171] MSG: Fujin wins!
+[01:52.854] Crystals: P0 350 → 50 (-300)  [battle]
+[01:54.246] Card destroyed  P0 (1,0) "Moon Tribe Marksman"
+[01:54.255] Attack P1(0,4)"Fujin" → P0(1,0)"Moon Tribe Marksman"  Dice=3  ATK=35 vs DEF=25  → WIN
+[01:54.255] Anim: 3A  △ P0(1,0)
+[01:54.752] Turn ended  P1  |  Crystals P0=50 P1=1620
+
+--- Turn 8  |  Player 0  |  Crystals P0=50 P1=1620 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Fuji][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][Fuji]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Leor]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:55.358] Mode selected P0: ATTACK
+[01:55.366] Attack phase P0: 2 attack(s) available
+[01:55.366] MSG: Player 1: tap a character to attack.
+[01:55.638] AI0 attack decision: (4,0)"Fujin" [ATK=35] → (4,2) "(dead-end)"
+[01:55.939] Dice rolled: 2
+[01:55.966] MSG: Nothing happens — Dead End.
+[01:59.333] Dead-end placed  P1 (4,2)
+[01:59.338] Attack P0(4,0)"Fujin" → P1(4,2)(empty)  Dice=2  → DEAD_END
+[01:59.338] Anim: 3F  (blank slot)
+[01:59.831] Mode selected P0: ATTACK
+[01:59.836] Attack phase P0: 1 attack(s) available
+[01:59.836] MSG: Player 1: tap a character to attack.
+[02:00.138] AI0 attack decision: (2,1)"Vile Creeper" [ATK=10] → (1,4) "Giant Centipede" [DEF=20]
+[02:00.478] Revealed: P0 (2,1) "Vile Creeper"
+[02:00.511] Revealed: P1 (1,4) "Giant Centipede"
+[02:00.511] Dice rolled: 1
+[02:05.239] Crystals: P0 50 → 0 (-50)  [battle]
+
+=== GAME OVER ===
+[02:05.244] AI Player 1 wins
+[02:05.244] Reason: crystals
+[02:05.244] Final crystals — P0: 0  P1: 1620  |  Turns: 8
+[02:05.244] Log saved to: res://logs/results/2026-05-31_06-54-04_954_iced_latte/battle_haunted_break_room_2026-05-31_07-12-35_592.txt

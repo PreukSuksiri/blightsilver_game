@@ -1,0 +1,642 @@
+=== Battle of Angry Supermarket Clerk ===
+Battle started: 2026-05-31 21:04:30.148
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Foul Gas
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, Radar, Accident
+P1 Tech hand: War Supply, Siege Cannon, Radar
+P0:   [C:Magi][C:Hamm][C:Book][  — ][C:Jose]
+      [  — ][  — ][T:Red ][T:Defe][  — ]
+      [C:Joan][  — ][C:Ox P][C:Choi][  — ]
+      [  — ][T:Trap][  — ][C:Blea][T:Curs]
+      [C:Skel][T:Deco][T:Brai][  — ][C:Rott]
+P1:   [C:Whit][C:Shot][  — ][C:Mafi][C:Tiny]
+      [C:Skel][  — ][  — ][  — ][T:Pepp]
+      [  — ][  — ][T:Foul][  — ][C:Jira]
+      [T:Brai][  — ][  — ][  — ][C:Bomb]
+      [T:Trap][C:Rott][C:Plan][T:Curs][C:Polt]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.315] Mode selected P1: TECH
+[00:05.623] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:07.006] Tech played  P1: "Radar"
+[00:08.582] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.980] AI1 target chosen: (1,1)
+[00:08.981] Revealed: P0 (1,1) (blank slot)
+[00:09.387] AI1 target chosen: (2,1)
+[00:09.388] Revealed: P0 (2,1) (blank slot)
+[00:09.797] AI1 target chosen: (4,0)
+[00:09.836] Revealed: P0 (4,0) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:09.844] Tech resolved  P1
+[00:10.679] Mode selected P1: ATTACK
+[00:10.684] Attack phase P1: 2 attack(s) available
+[00:10.684] MSG: Player 2: tap a character to attack.
+[00:10.980] AI1 attack decision: (0,3)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down} → (4,0) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:11.326] Revealed: P1 (0,3) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:11.327] Dice rolled: 4
+[00:11.331] MSG: Mafia Associates wins!
+[00:16.006] Crystals: P0 5000 → 4850 (-150)  [battle]
+[00:17.407] Attack P1(0,3)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P0(4,0)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=4  ATK=45 vs DEF=5  → WIN
+[00:17.407] Anim: 3A  △ P0(4,0)
+[00:17.407] Card destroyed  P0 (4,0) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:19.916] Turn ended  P1  |  Crystals P0=4850 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4850 P1=4400 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][Mafi][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:20.522] Mode selected P0: TECH
+[00:20.833] Crystals: P0 4850 → 4250 (-600)  [tech cost]
+[00:22.222] Tech played  P0: "Radar"
+[00:23.790] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:24.197] AI0 target chosen: (1,3)
+[00:24.197] Revealed: P1 (1,3) (blank slot)
+[00:24.604] AI0 target chosen: (3,3)
+[00:24.604] Revealed: P1 (3,3) (blank slot)
+[00:25.013] AI0 target chosen: (2,3)
+[00:25.013] Revealed: P1 (2,3) (blank slot)
+[00:25.017] Tech resolved  P0
+[00:25.936] Mode selected P0: ATTACK
+[00:25.941] Attack phase P0: 2 attack(s) available
+[00:25.941] MSG: Player 1: tap a character to attack.
+[00:26.237] AI0 attack decision: (0,4)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (0,3) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:26.578] Revealed: P0 (0,4) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:26.578] Dice rolled: 3
+[00:26.580] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[00:26.583] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[00:26.583] MSG: Joseph the Battle Priest wins!
+[00:26.622] Coin flip: Heads
+[00:32.212] Crystals: P1 4400 → 3900 (-500)  [battle]
+[00:33.613] Attack P0(0,4)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(0,3)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}  Dice=3  ATK=70 vs DEF=0  → WIN
+[00:33.613] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} +ATK 10
+[00:33.613] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} DEF -40
+[00:33.613] Anim: 3A  △ P1(0,3)
+[00:33.613] Card destroyed  P1 (0,3) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:36.114] Turn ended  P0  |  Crystals P0=4250 P1=3900
+
+--- Turn 3  |  Player 1  |  Crystals P0=4250 P1=3900 ---
+P0:   [  ? ][  ? ][  ? ][  — ][Jose]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:36.714] Mode selected P1: TECH
+[00:37.013] Crystals: P1 3900 → 2900 (-1000)  [tech cost]
+[00:38.401] Tech played  P1: "Siege Cannon"
+[00:39.947] MSG: Siege Cannon active!
+[00:39.950] Tech resolved  P1
+[00:40.854] Mode selected P1: ATTACK
+[00:40.868] Attack phase P1: 2 attack(s) available
+[00:40.868] MSG: Player 2: tap a character to attack.
+[00:41.146] AI1 attack decision: (1,0)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (0,4) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:41.490] Revealed: P1 (1,0) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:41.490] Dice rolled: 4
+[00:41.497] MSG: Skeleton Lancer wins!
+[00:46.141] Crystals: P0 4250 → 3650 (-600)  [battle]
+[00:47.541] Attack P1(1,0)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P0(0,4)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=4  ATK=45 vs DEF=25  → WIN
+[00:47.541] Anim: 3A  △ P0(0,4)
+[00:47.541] Card destroyed  P0 (0,4) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:50.051] Turn ended  P1  |  Crystals P0=3650 P1=2900
+
+--- Turn 4  |  Player 0  |  Crystals P0=3650 P1=2900 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [Skel][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:50.652] Mode selected P0: TECH
+[00:50.959] Crystals: P0 3650 → 2650 (-1000)  [tech cost]
+[00:52.348] Tech played  P0: "Accident"
+[00:53.902] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:54.309] AI0 target chosen: (1,0)
+[00:54.314] Card destroyed  P1 (1,0) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:54.317] Tech resolved  P0
+[00:55.231] Mode selected P0: ATTACK
+[00:55.232] Attack phase P0: 2 attack(s) available
+[00:55.233] MSG: Player 1: tap a character to attack.
+[00:55.534] AI0 attack decision: (0,0)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down} → (3,3) (dead-end)
+[00:55.873] Revealed: P0 (0,0) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:55.874] Dice rolled: 5
+[00:55.888] MSG: Nothing happens — Dead End.
+[00:59.251] Attack P0(0,0)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature} → P1(3,3)(empty)  Dice=5  → DEAD_END
+[00:59.251] Anim: 3F  (blank slot)
+[01:01.769] Turn ended  P0  |  Crystals P0=2650 P1=2900
+
+--- Turn 5  |  Player 1  |  Crystals P0=2650 P1=2900 ---
+P0:   [Magi][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:03.847] Crystals: P1 2900 → 2400 (-500)  [union]
+[01:03.889] Revealed: P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[01:03.889] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature | face-down}, "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down}
+[01:03.889] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[01:03.889] MSG: Player 2 summoned [Scarlet Shroom] using: "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature | face-down}, "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down}
+[01:07.277] Mode selected P1: ATTACK
+[01:07.286] Attack phase P1: 2 attack(s) available
+[01:07.288] MSG: Player 2: tap a character to attack.
+[01:07.567] AI1 attack decision: (2,4)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (0,0) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | flags:venom}
+[01:07.901] Revealed: P1 (2,4) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:07.901] Dice rolled: 2
+[01:07.912] MSG: Jirayu the Rebellious Prince wins!
+[01:12.535] Crystals: P0 2650 → 2470 (-180)  [battle]
+[01:13.936] Attack P1(2,4)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P0(0,0)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | flags:venom}  Dice=2  ATK=40 vs DEF=15  → WIN
+[01:13.936] Anim: 3A  △ P0(0,0)
+[01:13.936] Card destroyed  P0 (0,0) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | flags:venom}
+[01:14.434] Mode selected P1: ATTACK
+[01:14.439] Attack phase P1: 1 attack(s) available
+[01:14.439] MSG: Player 2: tap a character to attack.
+[01:14.741] AI1 attack decision: (0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (1,1) (dead-end)
+[01:15.052] Dice rolled: 5
+[01:15.218] MSG: Nothing happens — Dead End.
+[01:18.411] Attack P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P0(1,1)(empty)  Dice=5  → DEAD_END
+[01:18.411] Anim: 3F  (blank slot)
+[01:18.909] Turn ended  P1  |  Crystals P0=2470 P1=2400
+
+--- Turn 6  |  Player 0  |  Crystals P0=2470 P1=2400 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][Jira]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:19.506] Mode selected P0: TECH
+[01:19.817] Tech played  P0: "Bribe"
+[01:21.380] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:21.889] MSG: Bribe: AI passed.
+[01:21.897] Tech resolved  P0
+[01:22.808] Mode selected P0: ATTACK
+[01:22.814] Attack phase P0: 2 attack(s) available
+[01:22.814] MSG: Player 1: tap a character to attack.
+[01:23.113] AI0 attack decision: (0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (2,4) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:23.456] Revealed: P0 (0,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:23.456] Dice rolled: 2
+[01:23.460] MSG: Book with Fangs wins!
+[01:28.122] Crystals: P1 2400 → 1800 (-600)  [battle]
+[01:29.536] Attack P0(0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(2,4)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}  Dice=2  ATK=45 vs DEF=40  → WIN
+[01:29.536] Anim: 3A  △ P1(2,4)
+[01:29.536] Card destroyed  P1 (2,4) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:32.036] Turn ended  P0  |  Crystals P0=2470 P1=1800
+
+--- Turn 7  |  Player 1  |  Crystals P0=2470 P1=1800 ---
+P0:   [  — ][  ? ][Book][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:32.642] Mode selected P1: ATTACK
+[01:32.652] Attack phase P1: 2 attack(s) available
+[01:32.652] MSG: Player 2: tap a character to attack.
+[01:32.946] AI1 attack decision: (0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (2,1) (dead-end)
+[01:33.254] Dice rolled: 2
+[01:33.305] MSG: Nothing happens — Dead End.
+[01:36.686] Attack P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P0(2,1)(empty)  Dice=2  → DEAD_END
+[01:36.686] Anim: 3F  (blank slot)
+[01:37.182] Mode selected P1: ATTACK
+[01:37.187] Attack phase P1: 1 attack(s) available
+[01:37.187] MSG: Player 2: tap a character to attack.
+[01:37.485] AI1 attack decision: (4,1)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio | face-down} → (0,3) (dead-end)
+[01:37.821] Revealed: P1 (4,1) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[01:37.821] Dice rolled: 3
+[01:37.834] MSG: Nothing happens — Dead End.
+[01:41.168] Attack P1(4,1)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} → P0(0,3)(empty)  Dice=3  → DEAD_END
+[01:41.168] Anim: 3F  (blank slot)
+[01:41.659] Turn ended  P1  |  Crystals P0=2470 P1=1800
+
+--- Turn 8  |  Player 0  |  Crystals P0=2470 P1=1800 ---
+P0:   [  — ][  ? ][Book][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Rott][  ? ][  ? ][  ? ]
+[01:42.269] Mode selected P0: ATTACK
+[01:42.274] Attack phase P0: 2 attack(s) available
+[01:42.274] MSG: Player 1: tap a character to attack.
+[01:42.559] AI0 attack decision: (0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (4,1) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}
+[01:42.860] Dice rolled: 3
+[01:42.871] MSG: Book with Fangs wins!
+[01:47.551] Crystals: P1 1800 → 1350 (-450)  [battle]
+[01:48.953] Attack P0(0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(4,1)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}  Dice=3  ATK=45 vs DEF=30  → WIN
+[01:48.953] Anim: 3A  △ P1(4,1)
+[01:48.953] Card destroyed  P1 (4,1) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}
+[01:49.458] Mode selected P0: ATTACK
+[01:49.463] Attack phase P0: 1 attack(s) available
+[01:49.463] MSG: Player 1: tap a character to attack.
+[01:49.740] AI0 attack decision: (0,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down} → (1,3) (dead-end)
+[01:50.076] Revealed: P0 (0,1) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[01:50.076] Dice rolled: 4
+[01:50.089] MSG: Nothing happens — Dead End.
+[01:53.427] Attack P0(0,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P1(1,3)(empty)  Dice=4  → DEAD_END
+[01:53.427] Anim: 3F  (blank slot)
+[01:53.926] Turn ended  P0  |  Crystals P0=2470 P1=1350
+
+--- Turn 9  |  Player 1  |  Crystals P0=2470 P1=1350 ---
+P0:   [  — ][Hamm][Book][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[01:54.521] Mode selected P1: ATTACK
+[01:54.526] Attack phase P1: 2 attack(s) available
+[01:54.529] MSG: Player 2: tap a character to attack.
+[01:54.817] AI1 attack decision: (4,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down} → (0,1) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[01:55.150] Revealed: P1 (4,2) "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[01:55.150] Dice rolled: 3
+[01:55.154] MSG: Plant 29 wins!
+[01:59.818] Crystals: P0 2470 → 2220 (-250)  [battle]
+[02:01.219] Attack P1(4,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(0,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}  Dice=3  ATK=45 vs DEF=20  → WIN
+[02:01.219] Anim: 3A  △ P0(0,1)
+[02:01.219] Card destroyed  P0 (0,1) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[02:01.719] Mode selected P1: ATTACK
+[02:01.725] Attack phase P1: 1 attack(s) available
+[02:01.725] MSG: Player 2: tap a character to attack.
+[02:02.026] AI1 attack decision: (0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (1,2) "Red Card" {cost 0}
+[02:02.374] Revealed: P0 (1,2) "Red Card" {cost 0}
+[02:02.374] Dice rolled: 3
+[02:02.713] MSG: Trap triggered: Red Card!
+[02:06.814] Coin flip: Tails, Tails
+[02:09.534] MSG: Red Card: Tails, Tails.
+[02:09.534] MSG: Not both heads — no effect.
+[02:09.544] Trap: "Red Card" triggered  P1(0,0)→P0(1,2)
+[02:09.544] Anim: 3D  (attacker survives)
+[02:10.046] Turn ended  P1  |  Crystals P0=2220 P1=1350
+
+--- Turn 10  |  Player 0  |  Crystals P0=2220 P1=1350 ---
+P0:   [  — ][  — ][Book][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Plan][  ? ][  ? ]
+[02:10.663] Mode selected P0: ATTACK
+[02:10.668] Attack phase P0: 2 attack(s) available
+[02:10.668] MSG: Player 1: tap a character to attack.
+[02:10.958] AI0 attack decision: (0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (2,3) (dead-end)
+[02:11.268] Dice rolled: 3
+[02:11.302] MSG: Nothing happens — Dead End.
+[02:14.684] Attack P0(0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(2,3)(empty)  Dice=3  → DEAD_END
+[02:14.684] Anim: 3F  (blank slot)
+[02:15.189] Mode selected P0: ATTACK
+[02:15.196] Attack phase P0: 1 attack(s) available
+[02:15.197] MSG: Player 1: tap a character to attack.
+[02:15.493] AI0 attack decision: (3,3)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio | face-down} → (0,1) (dead-end)
+[02:15.831] Revealed: P0 (3,3) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[02:15.831] Dice rolled: 2
+[02:15.843] MSG: Nothing happens — Dead End.
+[02:19.234] Attack P0(3,3)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} → P1(0,1)(empty)  Dice=2  → DEAD_END
+[02:19.234] Anim: 3F  (blank slot)
+[02:19.730] Turn ended  P0  |  Crystals P0=2220 P1=1350
+
+--- Turn 11  |  Player 1  |  Crystals P0=2220 P1=1350 ---
+P0:   [  — ][  — ][Book][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][Blea][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Plan][  ? ][  ? ]
+[02:19.775] Coin flip: Heads
+[02:22.488] MSG: Plant 29: Heads! Venom on Bleacher Squad.
+[02:23.100] Mode selected P1: ATTACK
+[02:23.106] Attack phase P1: 2 attack(s) available
+[02:23.106] MSG: Player 2: tap a character to attack.
+[02:23.404] AI1 attack decision: (4,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → (3,3) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio | flags:venom}
+[02:23.712] Dice rolled: 2
+[02:23.727] MSG: Plant 29 wins!
+[02:28.415] Crystals: P0 2220 → 1900 (-320)  [battle]
+[02:29.826] Attack P1(4,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(3,3)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio | flags:venom}  Dice=2  ATK=45 vs DEF=20  → WIN
+[02:29.826] Anim: 3A  △ P0(3,3)
+[02:29.826] Card destroyed  P0 (3,3) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio | flags:venom}
+[02:30.316] Mode selected P1: ATTACK
+[02:30.321] Attack phase P1: 1 attack(s) available
+[02:30.321] MSG: Player 2: tap a character to attack.
+[02:30.623] AI1 attack decision: (0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down}
+[02:30.962] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[02:30.962] Dice rolled: 3
+[02:36.703] Attack P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=3  ATK=0 vs DEF=40  → LOSE
+[02:36.703] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 5
+[02:36.703] Anim: 3B  △ P1(0,0)
+[02:36.703] Card destroyed  P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[02:36.711] MSG: Siege Cannon: Ox Patrol at (2,2) destroyed after surviving the attack!
+[02:36.711] Crystals: P0 1900 → 1480 (-420)  [card lost]
+[02:36.715] Card destroyed  P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[02:37.209] Turn ended  P1  |  Crystals P0=1480 P1=1350
+
+--- Turn 12  |  Player 0  |  Crystals P0=1480 P1=1350 ---
+P0:   [  — ][  — ][Book][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Plan][  ? ][  ? ]
+[02:37.813] Mode selected P0: ATTACK
+[02:37.817] Attack phase P0: 2 attack(s) available
+[02:37.817] MSG: Player 1: tap a character to attack.
+[02:38.116] AI0 attack decision: (0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (0,2) (dead-end)
+[02:38.428] Dice rolled: 3
+[02:38.474] MSG: Nothing happens — Dead End.
+[02:41.827] Attack P0(0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(0,2)(empty)  Dice=3  → DEAD_END
+[02:41.827] Anim: 3F  (blank slot)
+[02:42.332] Mode selected P0: ATTACK
+[02:42.337] Attack phase P0: 1 attack(s) available
+[02:42.338] MSG: Player 1: tap a character to attack.
+[02:42.642] AI0 attack decision: (2,0)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down} → (1,2) (dead-end)
+[02:42.993] Revealed: P0 (2,0) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[02:42.993] Dice rolled: 5
+[02:43.004] MSG: Nothing happens — Dead End.
+[02:46.379] Attack P0(2,0)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[02:46.379] Anim: 3F  (blank slot)
+[02:46.886] Turn ended  P0  |  Crystals P0=1480 P1=1350
+
+--- Turn 13  |  Player 1  |  Crystals P0=1480 P1=1350 ---
+P0:   [  — ][  — ][Book][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [Joan][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Plan][  ? ][  ? ]
+[02:46.945] Coin flip: Heads
+[02:49.685] MSG: Plant 29: Heads! Venom on Joan the Faithful Warrior.
+[02:50.299] Mode selected P1: ATTACK
+[02:50.304] Attack phase P1: 2 attack(s) available
+[02:50.304] MSG: Player 2: tap a character to attack.
+[02:50.605] AI1 attack decision: (4,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → (2,0) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | flags:venom}
+[02:50.914] Dice rolled: 4
+[02:50.929] MSG: Plant 29 wins!
+[02:55.615] Crystals: P0 1480 → 1200 (-280)  [battle]
+[02:57.015] Attack P1(4,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(2,0)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | flags:venom}  Dice=4  ATK=45 vs DEF=5  → WIN
+[02:57.015] Anim: 3A  △ P0(2,0)
+[02:57.015] Card destroyed  P0 (2,0) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | flags:venom}
+[02:57.514] Mode selected P1: ATTACK
+[02:57.518] Attack phase P1: 1 attack(s) available
+[02:57.520] MSG: Player 2: tap a character to attack.
+[02:57.822] AI1 attack decision: (0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down} → (1,3) "Defensive Pheromone" {cost 500}
+[02:58.167] Revealed: P1 (0,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[02:58.189] Revealed: P0 (1,3) "Defensive Pheromone" {cost 500}
+[02:58.189] Dice rolled: 4
+[02:58.484] MSG: Trap triggered: Defensive Pheromone!
+[03:02.584] Crystals: P0 1200 → 700 (-500)  [trap cost]
+[03:03.972] MSG: No valid target — effect cancelled.
+[03:03.981] Tech resolved  P1
+[03:03.981] Target prompt: "Defensive Pheromone: Choose an 'Armored' Nature card to swap."  filter=own_armored_nature
+[03:03.984] Trap: "Defensive Pheromone" triggered  P1(0,4)→P0(1,3)
+[03:03.984] Anim: 3D  (attacker survives)
+[03:04.478] Turn ended  P1  |  Crystals P0=700 P1=1350
+
+--- Turn 14  |  Player 0  |  Crystals P0=700 P1=1350 ---
+P0:   [  — ][  — ][Book][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][Tiny]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Plan][  ? ][  ? ]
+[03:04.859] Mode selected P0: ATTACK
+[03:04.871] Attack phase P0: 2 attack(s) available
+[03:04.871] MSG: Player 1: tap a character to attack.
+[03:05.354] AI0 attack decision: (0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (0,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[03:05.656] Dice rolled: 2
+[03:05.674] MSG: Book with Fangs wins!
+[03:10.346] Crystals: P1 1350 → 1250 (-100)  [battle]
+[03:11.738] MSG: Tiny Pixie survives destruction!
+[03:11.743] Attack P0(0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}  Dice=2  ATK=45 vs DEF=0  → WIN
+[03:11.743] Anim: 3A  △ P1(0,4)
+[03:11.743] Card destroyed  P1 (0,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[03:14.254] Turn ended  P0  |  Crystals P0=700 P1=1250
+
+--- Turn 15  |  Player 1  |  Crystals P0=700 P1=1250 ---
+P0:   [  — ][  — ][Book][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][Tiny]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Plan][  ? ][  ? ]
+[03:14.320] Coin flip: Tails
+[03:17.047] MSG: Plant 29: Tails! Mutagen on Book with Fangs.
+[03:17.636] Mode selected P1: ATTACK
+[03:17.645] Attack phase P1: 2 attack(s) available
+[03:17.645] MSG: Player 2: tap a character to attack.
+[03:17.934] AI1 attack decision: (0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used} → (1,0) (dead-end)
+[03:18.234] Dice rolled: 3
+[03:18.261] MSG: Nothing happens — Dead End.
+[03:21.637] Attack P1(0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used} → P0(1,0)(empty)  Dice=3  → DEAD_END
+[03:21.637] Anim: 3F  (blank slot)
+[03:22.126] Mode selected P1: ATTACK
+[03:22.132] Attack phase P1: 1 attack(s) available
+[03:22.133] MSG: Player 2: tap a character to attack.
+[03:22.430] AI1 attack decision: (4,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → (3,2) (dead-end)
+[03:22.728] Dice rolled: 5
+[03:22.759] MSG: Nothing happens — Dead End.
+[03:26.159] Attack P1(4,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(3,2)(empty)  Dice=5  → DEAD_END
+[03:26.159] Anim: 3F  (blank slot)
+[03:26.644] Turn ended  P1  |  Crystals P0=700 P1=1250
+
+--- Turn 16  |  Player 0  |  Crystals P0=700 P1=1250 ---
+P0:   [  — ][  — ][Book][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][Tiny]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Plan][  ? ][  ? ]
+[03:27.248] Mode selected P0: ATTACK
+[03:27.258] Attack phase P0: 2 attack(s) available
+[03:27.258] MSG: Player 1: tap a character to attack.
+[03:27.537] AI0 attack decision: (0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | flags:mutagen} → (0,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used}
+[03:27.837] Dice rolled: 1
+[03:27.853] MSG: Book with Fangs wins!
+[03:32.529] Crystals: P1 1250 → 1150 (-100)  [battle]
+[03:33.932] Attack P0(0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | flags:mutagen} → P1(0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used}  Dice=1  ATK=45 vs DEF=0  → WIN
+[03:33.932] Anim: 3A  △ P1(0,4)
+[03:36.434] Turn ended  P0  |  Crystals P0=700 P1=1150
+
+--- Turn 17  |  Player 1  |  Crystals P0=700 P1=1150 ---
+P0:   [  — ][  — ][Book][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Plan][  ? ][  ? ]
+[03:36.482] Coin flip: Heads
+[03:39.213] MSG: Plant 29: Heads! Venom on Book with Fangs.
+[03:39.822] Mode selected P1: ATTACK
+[03:39.828] Attack phase P1: 2 attack(s) available
+[03:39.828] MSG: Player 2: tap a character to attack.
+[03:40.128] AI1 attack decision: (4,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → (1,4) (dead-end)
+[03:40.438] Dice rolled: 4
+[03:40.465] MSG: Nothing happens — Dead End.
+[03:43.856] Attack P1(4,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(1,4)(empty)  Dice=4  → DEAD_END
+[03:43.856] Anim: 3F  (blank slot)
+[03:44.356] Mode selected P1: ATTACK
+[03:44.362] Attack phase P1: 1 attack(s) available
+[03:44.364] MSG: Player 2: tap a character to attack.
+[03:44.659] AI1 attack decision: (3,4)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down} → (2,3) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}
+[03:45.004] Revealed: P1 (3,4) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[03:45.028] Revealed: P0 (2,3) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[03:45.028] Dice rolled: 5
+[03:45.032] MSG: Bomber Fairy wins!
+[03:49.667] Crystals: P0 700 → 450 (-250)  [battle]
+[03:51.071] Attack P1(3,4)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} → P0(2,3)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}  Dice=5  ATK=30 vs DEF=20  → WIN
+[03:51.071] Anim: 3A  △ P0(2,3)
+[03:51.071] Card destroyed  P0 (2,3) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[03:51.073] MSG: Bomber Fairy: Kill bonus — extra attack!
+[03:51.567] Mode selected P1: ATTACK
+[03:51.573] Attack phase P1: 1 attack(s) available
+[03:51.574] MSG: Player 2: tap a character to attack.
+[03:51.876] AI1 attack decision: (4,4)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos | face-down} → (2,4) (dead-end)
+[03:52.228] Revealed: P1 (4,4) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[03:52.228] Dice rolled: 4
+[03:52.250] MSG: Nothing happens — Dead End.
+[03:55.567] Attack P1(4,4)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P0(2,4)(empty)  Dice=4  → DEAD_END
+[03:55.567] Anim: 3F  (blank slot)
+[03:56.068] Turn ended  P1  |  Crystals P0=450 P1=1150
+
+--- Turn 18  |  Player 0  |  Crystals P0=450 P1=1150 ---
+P0:   [  — ][  — ][Book][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][Bomb]
+      [  ? ][  — ][Plan][  ? ][Polt]
+[03:56.666] Mode selected P0: ATTACK
+[03:56.673] Attack phase P0: 2 attack(s) available
+[03:56.673] MSG: Player 1: tap a character to attack.
+[03:56.970] AI0 attack decision: (0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | flags:mutagen,venom} → (3,4) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used}
+[03:57.279] Dice rolled: 4
+[03:57.290] MSG: Book with Fangs wins!
+[04:01.982] Crystals: P1 1150 → 650 (-500)  [battle]
+[04:03.383] Attack P0(0,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | flags:mutagen,venom} → P1(3,4)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used}  Dice=4  ATK=45 vs DEF=15  → WIN
+[04:03.383] Anim: 3A  △ P1(3,4)
+[04:03.384] Card destroyed  P1 (3,4) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used}
+[04:03.881] Mode selected P0: ATTACK
+[04:03.886] Attack phase P0: 1 attack(s) available
+[04:03.888] MSG: Player 1: tap a character to attack.
+[04:04.189] AI0 attack decision: (4,4)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio | face-down} → (2,1) (dead-end)
+[04:04.501] Revealed: P0 (4,4) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[04:04.501] Dice rolled: 5
+[04:04.528] MSG: Nothing happens — Dead End.
+[04:07.910] Attack P0(4,4)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} → P1(2,1)(empty)  Dice=5  → DEAD_END
+[04:07.911] Anim: 3F  (blank slot)
+[04:08.408] Turn ended  P0  |  Crystals P0=450 P1=650
+
+--- Turn 19  |  Player 1  |  Crystals P0=450 P1=650 ---
+P0:   [  — ][  — ][Book][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][Rott]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][Plan][  ? ][Polt]
+[04:08.467] Coin flip: Heads
+[04:11.208] MSG: Plant 29: Heads! Venom on Rotten Shrieker.
+[04:11.816] Mode selected P1: ATTACK
+[04:11.823] Attack phase P1: 2 attack(s) available
+[04:11.824] MSG: Player 2: tap a character to attack.
+[04:12.125] AI1 attack decision: (4,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → (4,4) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30 | flags:venom}
+[04:12.433] Dice rolled: 4
+[04:12.445] MSG: Plant 29 wins!
+[04:17.135] Crystals: P0 450 → 0 (-450)  [battle]
+
+=== GAME OVER ===
+[04:17.143] AI Player 1 wins
+[04:17.143] Reason: crystals
+[04:17.143] Final crystals — P0: 0  P1: 650  |  Turns: 19
+[04:17.143] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_angry_supermarket_clerk_2026-05-31_21-04-30_148.txt

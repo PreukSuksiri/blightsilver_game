@@ -6,6 +6,8 @@ signal closed()
 @onready var input_line: LineEdit      = $Panel/VBox/InputRow/InputLine
 
 func _ready() -> void:
+	z_index = 200
+	mouse_filter = MOUSE_FILTER_STOP
 	$Panel/VBox/Header/CloseBtn.pressed.connect(_on_close)
 	$Panel/VBox/InputRow/SendBtn.pressed.connect(_on_send)
 	input_line.text_submitted.connect(_on_text_submitted)

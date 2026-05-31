@@ -1,0 +1,283 @@
+=== Battle of Clippy's Revenge ===
+Battle started: 2026-05-31 20:34:19.500
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Tease
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Siege Cannon, War Supply
+P1 Tech hand: Great Diplomacy, Spy, Resurrection
+P0:   [C:Moon][  — ][  — ][  — ][C:Vamp]
+      [C:Dark][C:Leor][C:Flam][T:Stre][  — ]
+      [  — ][C:Swar][C:Ox P][  — ][  — ]
+      [  — ][  — ][T:Echo][  — ][  — ]
+      [C:Paro][T:Spik][T:Foul][  — ][C:Ange]
+P1:   [C:Blad][  — ][  — ][  — ][C:Gian]
+      [C:Dark][C:Lab ][  — ][  — ][T:Blac]
+      [C:Meli][C:Paro][C:Chao][C:Grav][C:Skel]
+      [C:Aray][T:Acid][T:Red ][  — ][C:Need]
+      [C:Vile][T:Bait][T:Brai][T:Alar][C:Demo]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.318] Mode selected P0: TECH
+[00:05.636] Tech played  P0: "Tease"
+[00:07.162] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.165] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:07.570] AI1 target chosen: (2,0)
+[00:07.605] Revealed: P1 (2,0) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:07.606] MSG: Tease: Opponent revealed Melissa the Healer.
+[00:07.608] Tech resolved  P0
+[00:08.511] Mode selected P0: ATTACK
+[00:08.514] Attack phase P0: 2 attack(s) available
+[00:08.515] MSG: Player 1: tap a character to attack.
+[00:08.811] AI0 attack decision: (1,1)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima | face-down} → (2,0) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:09.159] Revealed: P0 (1,1) "Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima}
+[00:09.160] Dice rolled: 1
+[00:09.167] MSG: Leorudus the Warlord wins!
+[00:13.815] Crystals: P1 5000 → 4300 (-700)  [battle]
+[00:13.815] Crystals: P1 4300 → 4600 (+300)  [recovery]
+[00:13.816] MSG: Melissa the Healer: Recovered 300 Crystals!
+[00:13.830] Attack P0(1,1)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(2,0)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}  Dice=1  ATK=80 vs DEF=25  → WIN
+[00:13.830] Anim: 3A  △ P1(2,0)
+[00:13.830] Card destroyed  P1 (2,0) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:16.336] Turn ended  P0  |  Crystals P0=5000 P1=4600
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4600 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Leor][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:16.940] Mode selected P1: TECH
+[00:17.257] Tech played  P1: "Spy"
+[00:18.825] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:19.232] AI1 target chosen: (2,2)
+[00:19.265] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:19.267] Tech resolved  P1
+[00:20.129] Mode selected P1: ATTACK
+[00:20.134] Attack phase P1: 2 attack(s) available
+[00:20.135] MSG: Player 2: tap a character to attack.
+[00:20.423] AI1 attack decision: (4,4)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | face-down} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:20.757] Revealed: P1 (4,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:20.758] Dice rolled: 5
+[00:20.765] MSG: Both cards are destroyed!
+[00:26.312] Crystals: P1 4600 → 4200 (-400)  [battle]
+[00:27.703] Crystals: P0 5000 → 4580 (-420)  [battle]
+[00:29.095] Attack P1(4,4)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=5  ATK=40 vs DEF=40  → TIE
+[00:29.095] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 5
+[00:29.096] Anim: 3C  △ P1(4,4) + △ P0(2,2)
+[00:29.096] Card destroyed  P1 (4,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:29.096] Card destroyed  P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:29.608] Mode selected P1: ATTACK
+[00:29.612] Attack phase P1: 1 attack(s) available
+[00:29.613] MSG: Player 2: tap a character to attack.
+[00:29.903] AI1 attack decision: (0,0)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down} → (4,2) "Foul Gas" {cost 0}
+[00:30.239] Revealed: P1 (0,0) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:30.257] Revealed: P0 (4,2) "Foul Gas" {cost 0}
+[00:30.257] Dice rolled: 2
+[00:30.552] MSG: Trap triggered: Foul Gas!
+[00:34.649] MSG: Foul Gas: All of Player 2's characters -5 ATK this turn!
+[00:34.655] Trap: "Foul Gas" triggered  P1(0,0)→P0(4,2)
+[00:34.655] Anim: 3D  (attacker survives)
+[00:35.130] Turn ended  P1  |  Crystals P0=4580 P1=4200
+
+--- Turn 3  |  Player 0  |  Crystals P0=4580 P1=4200 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Leor][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [Blad][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:35.727] Mode selected P0: TECH
+[00:36.028] Crystals: P0 4580 → 3580 (-1000)  [tech cost]
+[00:37.414] Tech played  P0: "Siege Cannon"
+[00:38.952] MSG: Siege Cannon active!
+[00:38.957] Tech resolved  P0
+[00:39.854] Mode selected P0: ATTACK
+[00:39.858] Attack phase P0: 2 attack(s) available
+[00:39.858] MSG: Player 1: tap a character to attack.
+[00:40.152] AI0 attack decision: (1,1)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (0,0) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:40.453] Dice rolled: 3
+[00:40.463] MSG: Leorudus the Warlord wins!
+[00:45.144] Crystals: P1 4200 → 3780 (-420)  [battle]
+[00:46.544] Attack P0(1,1)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(0,0)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}  Dice=3  ATK=80 vs DEF=50  → WIN
+[00:46.544] Anim: 3A  △ P1(0,0)
+[00:46.545] Card destroyed  P1 (0,0) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:49.014] Turn ended  P0  |  Crystals P0=3580 P1=3780
+
+--- Turn 4  |  Player 1  |  Crystals P0=3580 P1=3780 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Leor][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:49.610] Mode selected P1: TECH
+[00:49.911] Crystals: P1 3780 → 2780 (-1000)  [tech cost]
+[00:51.300] Tech played  P1: "Great Diplomacy"
+[00:52.894] Revealed: P1 (0,4) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:52.917] Revealed: P1 (1,0) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[00:52.940] Revealed: P1 (1,1) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[00:52.960] Revealed: P1 (2,1) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:52.985] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:53.012] Revealed: P1 (2,3) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[00:53.033] Revealed: P1 (2,4) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:53.053] Revealed: P1 (3,0) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[00:53.087] Revealed: P1 (3,4) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[00:53.109] Revealed: P1 (4,0) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[00:53.118] Tech resolved  P1
+[00:53.879] Mode selected P1: ATTACK
+[00:53.890] Attack phase P1: 2 attack(s) available
+[00:53.891] MSG: Player 2: tap a character to attack.
+[00:54.181] AI1 attack decision: (0,4)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature} → (0,3) (dead-end)
+[00:54.490] Dice rolled: 2
+[00:54.523] MSG: Nothing happens — Dead End.
+[00:57.905] Attack P1(0,4)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature} → P0(0,3)(empty)  Dice=2  → DEAD_END
+[00:57.905] Anim: 3F  (blank slot)
+[00:58.394] Mode selected P1: ATTACK
+[00:58.405] Attack phase P1: 1 attack(s) available
+[00:58.405] MSG: Player 2: tap a character to attack.
+[00:58.690] AI1 attack decision: (1,0)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos} → (1,4) (dead-end)
+[00:58.989] Dice rolled: 1
+[00:59.016] MSG: Nothing happens — Dead End.
+[01:02.415] Attack P1(1,0)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos} → P0(1,4)(empty)  Dice=1  → DEAD_END
+[01:02.415] Anim: 3F  (blank slot)
+[01:02.417] MSG: Dark Tengu: Self ATK debuff applied.
+[01:02.857] Turn ended  P1  |  Crystals P0=3580 P1=2780
+
+--- Turn 5  |  Player 0  |  Crystals P0=3580 P1=2780 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Leor][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][Gian]
+      [Dark][Lab ][  — ][  — ][  ? ]
+      [  — ][Paro][Chao][Grav][Skel]
+      [Aray][  ? ][  ? ][  — ][Need]
+      [Vile][  ? ][  ? ][  ? ][  — ]
+[01:04.969] Crystals: P0 3580 → 2760 (-820)  [union]
+[01:05.008] Revealed: P0 (1,2) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[01:05.008] Union summoned P0: "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down}
+[01:05.009] MSG: Player 1 summoned [Ancient Lizard] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down}
+[01:08.383] Mode selected P0: ATTACK
+[01:08.405] Attack phase P0: 2 attack(s) available
+[01:08.406] MSG: Player 1: tap a character to attack.
+[01:08.678] AI0 attack decision: (1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (0,4) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[01:08.977] Dice rolled: 5
+[01:09.037] MSG: Ancient Lizard wins!
+[01:13.671] Crystals: P1 2780 → 1280 (-1500)  [battle]
+[01:15.074] Attack P0(1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P1(0,4)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}  Dice=5  ATK=75 vs DEF=20  → WIN
+[01:15.074] Anim: 3A  △ P1(0,4)
+[01:15.074] Card destroyed  P1 (0,4) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[01:15.562] Mode selected P0: ATTACK
+[01:15.575] Attack phase P0: 1 attack(s) available
+[01:15.575] MSG: Player 1: tap a character to attack.
+[01:15.859] AI0 attack decision: (1,1)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (1,1) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:16.161] Dice rolled: 5
+[01:16.174] MSG: Leorudus the Warlord wins!
+[01:20.855] Crystals: P1 1280 → 580 (-700)  [battle]
+[01:22.262] Attack P0(1,1)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(1,1)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}  Dice=5  ATK=80 vs DEF=40  → WIN
+[01:22.263] Anim: 3A  △ P1(1,1)
+[01:22.263] Card destroyed  P1 (1,1) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:22.751] Turn ended  P0  |  Crystals P0=2760 P1=580
+
+--- Turn 6  |  Player 1  |  Crystals P0=2760 P1=580 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Leor][Anci][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [Dark][  — ][  — ][  — ][  ? ]
+      [  — ][Paro][Chao][Grav][Skel]
+      [Aray][  ? ][  ? ][  — ][Need]
+      [Vile][  ? ][  ? ][  ? ][  — ]
+[01:23.381] Mode selected P1: ATTACK
+[01:23.392] Attack phase P1: 2 attack(s) available
+[01:23.393] MSG: Player 2: tap a character to attack.
+[01:23.668] AI1 attack decision: (1,0)"Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used} → (2,1) (dead-end)
+[01:23.969] Dice rolled: 1
+[01:23.997] MSG: Nothing happens — Dead End.
+[01:27.373] Attack P1(1,0)"Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used} → P0(2,1)(empty)  Dice=1  → DEAD_END
+[01:27.373] Anim: 3F  (blank slot)
+[01:27.868] Mode selected P1: ATTACK
+[01:27.880] Attack phase P1: 1 attack(s) available
+[01:27.880] MSG: Player 2: tap a character to attack.
+[01:28.169] AI1 attack decision: (2,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → (0,4) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos | face-down}
+[01:28.516] Revealed: P0 (0,4) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:28.517] Crystals: P1 580 → 620 (+40)  [ability]
+[01:28.518] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:28.519] Dice rolled: 4
+[01:28.540] MSG: Parom the Smuggler wins!
+[01:33.166] Crystals: P0 2760 → 1940 (-820)  [battle]
+[01:34.569] Attack P1(2,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(0,4)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=4  ATK=30 vs DEF=20  → WIN
+[01:34.569] Anim: 3A  △ P0(0,4)
+[01:34.569] Card destroyed  P0 (0,4) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:35.062] Turn ended  P1  |  Crystals P0=1940 P1=620
+
+--- Turn 7  |  Player 0  |  Crystals P0=1940 P1=620 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][Leor][Anci][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [Dark][  — ][  — ][  — ][  ? ]
+      [  — ][Paro][Chao][Grav][Skel]
+      [Aray][  ? ][  ? ][  — ][Need]
+      [Vile][  ? ][  ? ][  ? ][  — ]
+[01:35.654] Mode selected P0: ATTACK
+[01:35.665] Attack phase P0: 2 attack(s) available
+[01:35.665] MSG: Player 1: tap a character to attack.
+[01:35.951] AI0 attack decision: (1,1)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (3,0) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[01:36.253] Dice rolled: 1
+[01:36.268] MSG: Leorudus the Warlord wins!
+[01:40.947] Crystals: P1 620 → 220 (-400)  [battle]
+[01:42.351] Attack P0(1,1)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(3,0)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}  Dice=1  ATK=80 vs DEF=20  → WIN
+[01:42.351] Anim: 3A  △ P1(3,0)
+[01:42.351] Card destroyed  P1 (3,0) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[01:42.836] Mode selected P0: ATTACK
+[01:42.849] Attack phase P0: 1 attack(s) available
+[01:42.850] MSG: Player 1: tap a character to attack.
+[01:43.135] AI0 attack decision: (1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (2,4) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[01:43.436] Dice rolled: 5
+[01:43.495] MSG: Ancient Lizard wins!
+[01:48.120] Crystals: P1 220 → 0 (-220)  [battle]
+
+=== GAME OVER ===
+[01:48.137] AI Player 0 wins
+[01:48.137] Reason: crystals
+[01:48.137] Final crystals — P0: 1940  P1: 0  |  Turns: 7
+[01:48.137] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_clippys_revenge_2026-05-31_20-34-19_500.txt

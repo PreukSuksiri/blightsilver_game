@@ -1,0 +1,291 @@
+=== Battle of Umbrella Inside Out ===
+Battle started: 2026-05-31 21:12:15.102
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Hypnosis
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Tease, Resurrection
+P1 Tech hand: Great Diplomacy, Spy, War Supply
+P0:   [T:Deco][  — ][T:Hypn][  — ][  — ]
+      [  — ][C:Armo][C:Gian][C:Skel][  — ]
+      [T:Blac][C:Skel][C:Ox P][C:Moon][  — ]
+      [  — ][C:Fuji][C:Yaks][C:War ][  — ]
+      [  — ][T:Bunk][T:Brai][  — ][  — ]
+P1:   [  — ][  — ][C:Kiyo][C:Blad][  — ]
+      [  — ][C:Scyt][C:Wand][C:Dark][  — ]
+      [T:Snar][C:Whit][T:Hypn][C:Gran][C:Gobl]
+      [  — ][C:Laug][C:Armo][C:Jaco][  — ]
+      [T:Stre][  — ][  — ][T:Self][T:Alar]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:05.264] Mode selected P1: TECH
+[00:05.572] Tech played  P1: "Spy"
+[00:07.097] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.504] AI1 target chosen: (1,2)
+[00:07.547] Revealed: P0 (1,2) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:07.549] Tech resolved  P1
+[00:08.429] Mode selected P1: ATTACK
+[00:08.434] Attack phase P1: 2 attack(s) available
+[00:08.434] MSG: Player 2: tap a character to attack.
+[00:08.735] AI1 attack decision: (0,2)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down} → (1,2) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:09.072] Revealed: P1 (0,2) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:09.073] Dice rolled: 1
+[00:09.083] MSG: Kiyoko the Death Whisper wins!
+[00:13.761] Crystals: P0 5000 → 3500 (-1500)  [battle]
+[00:15.158] Attack P1(0,2)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P0(1,2)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}  Dice=1  ATK=40 vs DEF=20  → WIN
+[00:15.158] Anim: 3A  △ P0(1,2)
+[00:15.158] Card destroyed  P0 (1,2) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:17.663] Turn ended  P1  |  Crystals P0=3500 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=3500 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][Kiyo][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:18.263] Mode selected P0: TECH
+[00:18.574] Tech played  P0: "Spy"
+[00:20.105] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:20.504] AI0 target chosen: (0,1)
+[00:20.505] Revealed: P1 (0,1) (blank slot)
+[00:20.509] Tech resolved  P0
+[00:21.405] Mode selected P0: ATTACK
+[00:21.409] Attack phase P0: 2 attack(s) available
+[00:21.409] MSG: Player 1: tap a character to attack.
+[00:21.711] AI0 attack decision: (1,3)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (0,2) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:22.044] Revealed: P0 (1,3) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:22.044] Dice rolled: 3
+[00:22.049] MSG: Skeleton Lancer wins!
+[00:26.693] Crystals: P1 5000 → 4200 (-800)  [battle]
+[00:28.090] Attack P0(1,3)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P1(0,2)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}  Dice=3  ATK=45 vs DEF=35  → WIN
+[00:28.090] Anim: 3A  △ P1(0,2)
+[00:28.090] Card destroyed  P1 (0,2) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:30.595] Turn ended  P0  |  Crystals P0=3500 P1=4200
+
+--- Turn 3  |  Player 1  |  Crystals P0=3500 P1=4200 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][Skel][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:31.196] Mode selected P1: TECH
+[00:31.497] Crystals: P1 4200 → 3200 (-1000)  [tech cost]
+[00:32.885] Tech played  P1: "Great Diplomacy"
+[00:34.445] Revealed: P1 (0,3) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:34.505] Revealed: P1 (1,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:34.531] Revealed: P1 (1,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[00:34.557] Revealed: P1 (1,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:34.577] Revealed: P1 (2,1) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[00:34.604] Revealed: P1 (2,3) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:34.630] Revealed: P1 (2,4) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:34.676] Revealed: P1 (3,1) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[00:34.696] Revealed: P1 (3,2) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[00:34.719] Revealed: P1 (3,3) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[00:34.722] Tech resolved  P1
+[00:35.421] Mode selected P1: ATTACK
+[00:35.434] Attack phase P1: 2 attack(s) available
+[00:35.434] MSG: Player 2: tap a character to attack.
+[00:35.716] AI1 attack decision: (1,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → (1,3) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:36.012] Dice rolled: 1
+[00:36.029] MSG: Scythe Shark wins!
+[00:40.704] Crystals: P0 3500 → 3200 (-300)  [battle]
+[00:42.108] Attack P1(1,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P0(1,3)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=1  ATK=35 vs DEF=5  → WIN
+[00:42.108] Anim: 3A  △ P0(1,3)
+[00:42.108] Card destroyed  P0 (1,3) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:44.613] Turn ended  P1  |  Crystals P0=3200 P1=3200
+
+--- Turn 4  |  Player 0  |  Crystals P0=3200 P1=3200 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][Blad][  — ]
+      [  — ][Scyt][Wand][Dark][  — ]
+      [  ? ][Whit][  ? ][Gran][Gobl]
+      [  — ][Laug][Armo][Jaco][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:45.201] Mode selected P0: TECH
+[00:45.501] Crystals: P0 3200 → 1700 (-1500)  [tech cost]
+[00:46.891] Tech played  P0: "Resurrection"
+[00:48.442] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:48.850] AI0 target chosen: (0,1)
+[00:48.855] Revealed: P0 (0,1) "Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0}
+[00:48.855] MSG: Revived Skeleton Lancer at [0,1]!
+[00:48.868] Tech resolved  P0
+[00:49.766] Mode selected P0: ATTACK
+[00:49.785] Attack phase P0: 2 attack(s) available
+[00:49.785] MSG: Player 1: tap a character to attack.
+[00:50.074] AI0 attack decision: (1,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down} → (3,3) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[00:50.426] Revealed: P0 (1,1) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[00:50.427] Dice rolled: 5
+[00:50.441] MSG: Armored Bee wins!
+[00:55.076] Crystals: P1 3200 → 2850 (-350)  [battle]
+[00:56.481] Attack P0(1,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P1(3,3)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}  Dice=5  ATK=30 vs DEF=20  → WIN
+[00:56.481] Anim: 3A  △ P1(3,3)
+[00:56.481] Card destroyed  P1 (3,3) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[00:56.976] Mode selected P0: ATTACK
+[00:56.987] Attack phase P0: 1 attack(s) available
+[00:56.988] MSG: Player 1: tap a character to attack.
+[00:57.282] AI0 attack decision: (0,1)"Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0} → (0,1) (dead-end)
+[00:57.591] Dice rolled: 1
+[00:57.629] MSG: Nothing happens — Dead End.
+[01:01.007] Attack P0(0,1)"Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0} → P1(0,1)(empty)  Dice=1  → DEAD_END
+[01:01.007] Anim: 3F  (blank slot)
+[01:01.501] Turn ended  P0  |  Crystals P0=1700 P1=2850
+
+--- Turn 5  |  Player 1  |  Crystals P0=1700 P1=2850 ---
+P0:   [  ? ][Skel][  ? ][  — ][  — ]
+      [  — ][Armo][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][Blad][  — ]
+      [  — ][Scyt][Wand][Dark][  — ]
+      [  ? ][Whit][  ? ][Gran][Gobl]
+      [  — ][Laug][Armo][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[01:02.107] Mode selected P1: ATTACK
+[01:02.118] Attack phase P1: 2 attack(s) available
+[01:02.118] MSG: Player 2: tap a character to attack.
+[01:02.408] AI1 attack decision: (1,3)"Dark Blob" {Unit ATK25 DEF50 | cost 500 | affinity Chaos | base 25/50} → (1,1) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[01:02.717] Dice rolled: 1
+[01:08.535] Crystals: P1 2850 → 2350 (-500)  [battle]
+[01:09.939] Attack P1(1,3)"Dark Blob" {Unit ATK25 DEF50 | cost 500 | affinity Chaos | base 25/50} → P0(1,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=1  ATK=25 vs DEF=60  → LOSE
+[01:09.939] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} +DEF 60
+[01:09.939] Anim: 3B  △ P1(1,3)
+[01:09.939] Card destroyed  P1 (1,3) "Dark Blob" {Unit ATK25 DEF50 | cost 500 | affinity Chaos | base 25/50}
+[01:10.438] Mode selected P1: ATTACK
+[01:10.449] Attack phase P1: 1 attack(s) available
+[01:10.449] MSG: Player 2: tap a character to attack.
+[01:10.738] AI1 attack decision: (1,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → (1,1) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[01:11.048] Dice rolled: 5
+[01:11.065] MSG: Scythe Shark wins!
+[01:15.747] Crystals: P0 1700 → 1220 (-480)  [battle]
+[01:17.154] Attack P1(1,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P0(1,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=5  ATK=35 vs DEF=0  → WIN
+[01:17.154] Anim: 3A  △ P0(1,1)
+[01:17.154] Card destroyed  P0 (1,1) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[01:17.652] Turn ended  P1  |  Crystals P0=1220 P1=2350
+
+--- Turn 6  |  Player 0  |  Crystals P0=1220 P1=2350 ---
+P0:   [  ? ][Skel][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][Blad][  — ]
+      [  — ][Scyt][Wand][  — ][  — ]
+      [  ? ][Whit][  ? ][Gran][Gobl]
+      [  — ][Laug][Armo][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[01:18.254] Mode selected P0: TECH
+[01:18.576] Tech played  P0: "Tease"
+[01:20.131] MSG: Opponent must choose and reveal 1 of their squares.
+[01:20.139] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:20.538] AI1 target chosen: (2,2)
+[01:20.580] Revealed: P1 (2,2) "Hypnosis" {cost 800}
+[01:20.580] MSG: Tease: Opponent revealed Hypnosis.
+[01:20.593] Tech resolved  P0
+[01:21.467] Mode selected P0: ATTACK
+[01:21.479] Attack phase P0: 2 attack(s) available
+[01:21.479] MSG: Player 1: tap a character to attack.
+[01:21.767] AI0 attack decision: (0,1)"Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0} → (0,0) (dead-end)
+[01:22.066] Dice rolled: 4
+[01:22.092] MSG: Nothing happens — Dead End.
+[01:25.474] Attack P0(0,1)"Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0} → P1(0,0)(empty)  Dice=4  → DEAD_END
+[01:25.475] Anim: 3F  (blank slot)
+[01:27.973] Turn ended  P0  |  Crystals P0=1220 P1=2350
+
+--- Turn 7  |  Player 1  |  Crystals P0=1220 P1=2350 ---
+P0:   [  ? ][Skel][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][Blad][  — ]
+      [  — ][Scyt][Wand][  — ][  — ]
+      [  ? ][Whit][  — ][Gran][Gobl]
+      [  — ][Laug][Armo][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[01:30.050] Crystals: P1 2350 → 1850 (-500)  [union]
+[01:30.093] Revealed: P1 (1,1) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[01:30.093] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}, "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[01:30.093] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[01:30.093] MSG: Player 2 summoned [Scarlet Shroom] using: "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}, "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[01:33.520] Mode selected P1: ATTACK
+[01:33.533] Attack phase P1: 2 attack(s) available
+[01:33.534] MSG: Player 2: tap a character to attack.
+[01:33.813] AI1 attack decision: (2,3)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → (0,1) "Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0 | flags:venom}
+[01:34.112] Dice rolled: 4
+[01:34.123] MSG: Grand Fort Footsoldier wins!
+[01:38.806] Crystals: P0 1220 → 920 (-300)  [battle]
+[01:40.208] Attack P1(2,3)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P0(0,1)"Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0 | flags:venom}  Dice=4  ATK=25 vs DEF=0  → WIN
+[01:40.208] Anim: 3A  △ P0(0,1)
+[01:40.208] Card destroyed  P0 (0,1) "Skeleton Lancer" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0 | flags:venom}
+[01:40.700] Mode selected P1: ATTACK
+[01:40.708] Attack phase P1: 1 attack(s) available
+[01:40.709] MSG: Player 2: tap a character to attack.
+[01:40.990] AI1 attack decision: (0,3)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} → (0,2) "Hypnosis" {cost 800}
+[01:41.328] Revealed: P0 (0,2) "Hypnosis" {cost 800}
+[01:41.328] Dice rolled: 4
+[01:41.598] MSG: Trap triggered: Hypnosis!
+[01:45.696] Crystals: P0 920 → 120 (-800)  [trap cost]
+[01:47.083] MSG: Hypnosis: Bladeshifter cannot attack until end of next turn.
+[01:47.092] Trap: "Hypnosis" triggered  P1(0,3)→P0(0,2)
+[01:47.092] Anim: 3D  (attacker survives)
+[01:47.592] Turn ended  P1  |  Crystals P0=120 P1=1850
+
+--- Turn 8  |  Player 0  |  Crystals P0=120 P1=1850 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][Blad][  — ]
+      [  — ][Scar][Wand][  — ][  — ]
+      [  ? ][Whit][  — ][Gran][Gobl]
+      [  — ][Laug][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[01:48.210] Mode selected P0: ATTACK
+[01:48.222] Attack phase P0: 2 attack(s) available
+[01:48.222] MSG: Player 1: tap a character to attack.
+[01:48.494] AI0 attack decision: (2,3)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (3,1) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:48.830] Revealed: P0 (2,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:48.830] Dice rolled: 2
+[01:48.836] MSG: Both cards are destroyed!
+[01:54.388] Crystals: P0 120 → 0 (-120)  [battle]
+
+=== GAME OVER ===
+[01:54.410] AI Player 1 wins
+[01:54.410] Reason: crystals
+[01:54.410] Final crystals — P0: 0  P1: 1850  |  Turns: 8
+[01:54.410] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_umbrella_inside_out_2026-05-31_21-12-15_102.txt

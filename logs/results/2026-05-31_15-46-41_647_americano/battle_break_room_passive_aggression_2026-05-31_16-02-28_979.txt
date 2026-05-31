@@ -1,0 +1,254 @@
+=== Battle of Break Room Passive Aggression ===
+Battle started: 2026-05-31 16:02:28.979
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Bat Swarm
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Bat Swarm
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Spy, Resurrection
+P1 Tech hand: Spy, Great Diplomacy, Siege Cannon
+P0:   [C:Mind][  — ][C:Mine][C:Gian][C:Stai]
+      [T:Curs][  — ][  — ][  — ][C:War ]
+      [C:Rott][  — ][C:Bat ][  — ][C:Flam]
+      [C:Pony][  — ][  — ][  — ][T:Snar]
+      [T:Acid][C:Scyt][C:Grav][  — ][T:Echo]
+P1:   [  — ][  — ][C:Lase][C:Echo][  — ]
+      [  — ][C:Bat ][C:Vamp][C:Curs][T:Foul]
+      [  — ][C:Choi][C:Chao][C:Aray][C:Polt]
+      [T:Flam][C:Flam][C:Void][C:Mine][T:Stre]
+      [  — ][T:Spik][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:05.305] Mode selected P0: TECH
+[00:05.614] Tech played  P0: "Spy"
+[00:07.174] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.580] AI0 target chosen: (0,1)
+[00:07.580] Revealed: P1 (0,1) (blank slot)
+[00:07.582] Tech resolved  P0
+[00:08.504] Mode selected P0: ATTACK
+[00:08.508] Attack phase P0: 2 attack(s) available
+[00:08.508] MSG: Player 1: tap a character to attack.
+[00:08.805] AI0 attack decision: (0,4)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos | face-down} → (0,1) (dead-end)
+[00:09.152] Revealed: P0 (0,4) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[00:09.153] Dice rolled: 4
+[00:09.165] MSG: Nothing happens — Dead End.
+[00:12.501] Attack P0(0,4)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P1(0,1)(empty)  Dice=4  → DEAD_END
+[00:12.501] Anim: 3F  (blank slot)
+[00:15.007] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  ? ][Stai]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:15.607] Mode selected P1: TECH
+[00:15.912] Tech played  P1: "Spy"
+[00:17.431] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:17.830] AI1 target chosen: (0,1)
+[00:17.833] Revealed: P0 (0,1) (blank slot)
+[00:17.842] Tech resolved  P1
+[00:18.740] Mode selected P1: ATTACK
+[00:18.746] Attack phase P1: 2 attack(s) available
+[00:18.746] MSG: Player 2: tap a character to attack.
+[00:19.028] AI1 attack decision: (1,1)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down} → (0,4) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[00:19.409] Revealed: P1 (1,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:19.409] Dice rolled: 5
+[00:19.412] MSG: Bat Swarm wins!
+[00:24.086] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:25.486] Attack P1(1,1)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P0(0,4)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}  Dice=5  ATK=15 vs DEF=0  → WIN
+[00:25.486] Anim: 3A  △ P0(0,4)
+[00:25.486] Card destroyed  P0 (0,4) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[00:27.979] Turn ended  P1  |  Crystals P0=4820 P1=5000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4820 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][Bat ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:28.572] Mode selected P0: TECH
+[00:28.874] Crystals: P0 4820 → 3820 (-1000)  [tech cost]
+[00:30.267] Tech played  P0: "Accident"
+[00:31.795] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:32.193] AI0 target chosen: (1,1)
+[00:32.198] Card destroyed  P1 (1,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:32.201] Tech resolved  P0
+[00:33.099] Mode selected P0: ATTACK
+[00:33.101] Attack phase P0: 2 attack(s) available
+[00:33.102] MSG: Player 1: tap a character to attack.
+[00:33.393] AI0 attack decision: (0,0)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | face-down} → (1,4) "Foul Gas" {cost 0}
+[00:33.718] Revealed: P0 (0,0) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:33.741] Revealed: P1 (1,4) "Foul Gas" {cost 0}
+[00:33.742] Dice rolled: 1
+[00:34.040] MSG: Trap triggered: Foul Gas!
+[00:38.136] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[00:38.151] Trap: "Foul Gas" triggered  P0(0,0)→P1(1,4)
+[00:38.151] Anim: 3D  (attacker survives)
+[00:38.623] Mode selected P0: ATTACK
+[00:38.626] Attack phase P0: 1 attack(s) available
+[00:38.627] MSG: Player 1: tap a character to attack.
+[00:38.919] AI0 attack decision: (0,3)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down} → (4,3) (dead-end)
+[00:39.255] Revealed: P0 (0,3) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:39.255] Dice rolled: 2
+[00:39.266] MSG: Nothing happens — Dead End.
+[00:42.624] Attack P0(0,3)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature} → P1(4,3)(empty)  Dice=2  → DEAD_END
+[00:42.624] Anim: 3F  (blank slot)
+[00:43.110] Turn ended  P0  |  Crystals P0=3820 P1=5000
+
+--- Turn 4  |  Player 1  |  Crystals P0=3820 P1=5000 ---
+P0:   [Mind][  — ][  ? ][Gian][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:43.706] Mode selected P1: TECH
+[00:44.005] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:45.391] Tech played  P1: "Great Diplomacy"
+[00:46.954] Revealed: P1 (0,2) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[00:46.978] Revealed: P1 (0,3) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[00:47.029] Revealed: P1 (1,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:47.062] Revealed: P1 (1,3) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[00:47.083] Revealed: P1 (2,1) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:47.102] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:47.134] Revealed: P1 (2,3) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[00:47.155] Revealed: P1 (2,4) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[00:47.194] Revealed: P1 (3,1) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:47.215] Revealed: P1 (3,2) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:47.253] Revealed: P1 (3,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[00:47.261] Tech resolved  P1
+[00:47.964] Mode selected P1: ATTACK
+[00:47.980] Attack phase P1: 2 attack(s) available
+[00:47.981] MSG: Player 2: tap a character to attack.
+[00:48.264] AI1 attack decision: (0,2)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} → (0,3) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:48.564] Dice rolled: 3
+[00:48.582] MSG: Both cards are destroyed!
+[00:53.163] Crystals: P1 4000 → 3750 (-250)  [battle]
+[00:54.553] Crystals: P0 3820 → 2320 (-1500)  [battle]
+[00:55.953] Attack P1(0,2)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} → P0(0,3)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}  Dice=3  ATK=20 vs DEF=20  → TIE
+[00:55.953] Anim: 3C  △ P1(0,2) + △ P0(0,3)
+[00:55.953] Card destroyed  P1 (0,2) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[00:55.953] Card destroyed  P0 (0,3) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:56.438] Mode selected P1: ATTACK
+[00:56.443] Attack phase P1: 1 attack(s) available
+[00:56.444] MSG: Player 2: tap a character to attack.
+[00:56.730] AI1 attack decision: (0,3)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic} → (0,0) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:57.031] Dice rolled: 3
+[00:57.043] MSG: Both cards are destroyed!
+[01:01.640] Crystals: P1 3750 → 2850 (-900)  [battle]
+[01:03.031] Crystals: P0 2320 → 820 (-1500)  [battle]
+[01:04.435] Attack P1(0,3)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic} → P0(0,0)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}  Dice=3  ATK=70 vs DEF=70  → TIE
+[01:04.435] Anim: 3C  △ P1(0,3) + △ P0(0,0)
+[01:04.435] Card destroyed  P1 (0,3) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[01:04.435] Card destroyed  P0 (0,0) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[01:04.435] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[01:06.923] Turn ended  P1  |  Crystals P0=820 P1=2850
+
+--- Turn 5  |  Player 0  |  Crystals P0=820 P1=2850 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Vamp][Curs][  — ]
+      [  — ][Choi][Chao][Aray][Polt]
+      [  ? ][Flam][Void][Mine][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:07.530] Mode selected P0: ATTACK
+[01:07.538] Attack phase P0: 2 attack(s) available
+[01:07.538] MSG: Player 1: tap a character to attack.
+[01:07.813] AI0 attack decision: (1,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down} → (1,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:08.183] Revealed: P0 (1,4) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[01:08.183] Dice rolled: 2
+[01:08.189] MSG: War Genie wins!
+[01:12.811] Crystals: P1 2850 → 2050 (-800)  [battle]
+[01:14.213] Attack P0(1,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P1(1,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=2  ATK=100 vs DEF=20  → WIN
+[01:14.213] Anim: 3A  △ P1(1,2)
+[01:14.213] Card destroyed  P1 (1,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:14.710] Mode selected P0: ATTACK
+[01:14.721] Attack phase P0: 1 attack(s) available
+[01:14.723] MSG: Player 1: tap a character to attack.
+[01:15.017] AI0 attack decision: (2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down} → (3,2) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:15.328] Revealed: P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:15.328] Dice rolled: 1
+[01:15.339] MSG: Both cards are destroyed!
+[01:19.944] Crystals: P0 820 → 420 (-400)  [battle]
+[01:21.335] Crystals: P1 2050 → 1330 (-720)  [battle]
+[01:22.731] Attack P0(2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(3,2)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}  Dice=1  ATK=25 vs DEF=25  → TIE
+[01:22.731] Anim: 3C  △ P0(2,4) + △ P1(3,2)
+[01:22.731] Card destroyed  P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:22.731] Card destroyed  P1 (3,2) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:23.233] Turn ended  P0  |  Crystals P0=420 P1=1330
+
+--- Turn 6  |  Player 1  |  Crystals P0=420 P1=1330 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Curs][  — ]
+      [  — ][Choi][Chao][Aray][Polt]
+      [  ? ][Flam][  — ][Mine][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:23.834] Mode selected P1: TECH
+[01:24.140] Crystals: P1 1330 → 330 (-1000)  [tech cost]
+[01:25.535] Tech played  P1: "Siege Cannon"
+[01:27.081] MSG: Siege Cannon active!
+[01:27.087] Tech resolved  P1
+[01:28.004] Mode selected P1: ATTACK
+[01:28.015] Attack phase P1: 2 attack(s) available
+[01:28.015] MSG: Player 2: tap a character to attack.
+[01:28.305] AI1 attack decision: (2,4)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (0,1) (dead-end)
+[01:28.614] Dice rolled: 4
+[01:28.639] MSG: Nothing happens — Dead End.
+[01:32.039] Attack P1(2,4)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P0(0,1)(empty)  Dice=4  → DEAD_END
+[01:32.039] Anim: 3F  (blank slot)
+[01:32.535] Mode selected P1: ATTACK
+[01:32.540] Attack phase P1: 1 attack(s) available
+[01:32.540] MSG: Player 2: tap a character to attack.
+[01:32.839] AI1 attack decision: (2,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → (3,4) "Snare Trap" {cost 500}
+[01:33.189] Revealed: P0 (3,4) "Snare Trap" {cost 500}
+[01:33.190] Dice rolled: 3
+[01:33.463] MSG: Trap triggered: Snare Trap!
+[01:37.570] Crystals: P0 420 → 0 (-420)  [trap cost]
+
+=== GAME OVER ===
+[01:37.587] AI Player 1 wins
+[01:37.587] Reason: crystals
+[01:37.587] Final crystals — P0: 0  P1: 330  |  Turns: 6
+[01:37.587] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_break_room_passive_aggression_2026-05-31_16-02-28_979.txt

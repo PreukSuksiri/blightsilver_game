@@ -33,6 +33,9 @@ class BattleResult:
 	# Card names captured before destruction — used by loggers that fire after destroy_card()
 	var attacker_name: String = ""
 	var defender_name: String = ""
+	# Full unit/union labels with buffs, debuffs, flags, and status (also captured pre-destruction)
+	var attacker_log_label: String = ""
+	var defender_log_label: String = ""
 
 # ─────────────────────────────────────────────────────────────
 # Coin-flip accumulator — reset at start of each resolve_battle call
@@ -108,6 +111,10 @@ static func _resolve_character_vs_character(
 	result.attacker_atk_delta = eff_atk - base_atk
 	result.defender_def_delta = eff_def - base_def
 
+	# One-time defense boosts apply whenever this card is attacked — spend before outcome.
+	if not _silent_mode:
+		_spend_one_use_defense_boosts(defender, result)
+
 	result.messages.append("%s ATK %d vs %s DEF %d" % [attacker.card_name, eff_atk, defender.card_name, eff_def])
 
 	# DESTROY_SELF_VS_DIVINE_BOTH: Feral Vampire destroyed when battling Divine (either role)
@@ -182,7 +189,8 @@ static func _resolve_character_vs_character(
 		var _a1: int = attacker.ability_params.get("aff1", -1)
 		var _a2: int = attacker.ability_params.get("aff2", -1)
 		if defender.affinity == _a1 or defender.affinity == _a2:
-			attacker.one_use_atk_boost_used = true
+			if not _silent_mode:
+				attacker.one_use_atk_boost_used = true
 			result.ability_triggered_attacker = true
 			result.defender_destroyed = true
 			result.defender_crystal_loss = 0  # no crystal loss to defender
@@ -493,7 +501,7 @@ static func _get_effective_atk(
 
 		CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND:
 			if not attacker.one_use_atk_boost_used:
-				atk += attacker.ability_params.get("atk_bonus", 0)
+				atk += attacker.ability_params.get("atk_bonus", attacker.ability_params.get("atk", 0))
 
 		CharacterData.AbilityType.MUTAGEN_ATK_BOOST_VS_AFFINITIES:
 			if attacker.has_mutagen_flag:
@@ -603,7 +611,7 @@ static func _get_effective_def(
 
 		CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND:
 			if not defender.one_use_def_boost_used:
-				def_val += defender.ability_params.get("def_bonus", 0)
+				def_val += defender.ability_params.get("def_bonus", defender.ability_params.get("def", 0))
 
 		CharacterData.AbilityType.DEFENSE_STANCE_BOOST:
 			def_val += defender.ability_params.get("def", defender.ability_params.get("def_bonus", 0))
@@ -660,11 +668,26 @@ static func _apply_post_attack_effects(
 		attacker: GameState.CardInstance,
 		_result: BattleResult
 ) -> void:
+	if _silent_mode:
+		return
 	# Pit Lord halves stats after attacking (skip during silent preview — avoids permanent mutation)
-	if not BattleResolver._silent_mode:
-		var also_halve: bool = attacker.ability_params.get("also_halve_after_attack", false)
-		if attacker.ability_type == CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE or also_halve:
-			attacker.halve_stats()
+	var also_halve: bool = attacker.ability_params.get("also_halve_after_attack", false)
+	if attacker.ability_type == CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE or also_halve:
+		attacker.halve_stats()
+
+
+static func _spend_one_use_defense_boosts(
+		defender: GameState.CardInstance,
+		result: BattleResult
+) -> void:
+	if defender.one_use_def_boost_used:
+		return
+	match defender.ability_type:
+		CharacterData.AbilityType.ONE_USE_DEF_BOOST, \
+		CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND:
+			defender.one_use_def_boost_used = true
+			result.ability_triggered_defender = true
+
 
 static func _apply_defend_effects(
 		defender: GameState.CardInstance,
@@ -676,6 +699,7 @@ static func _apply_defend_effects(
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
 		return
+	var mutate: bool = not _silent_mode
 	match defender.ability_type:
 		CharacterData.AbilityType.CRYSTAL_GAIN_ON_DEFEND:
 			result.ability_triggered_defender = true
@@ -691,65 +715,65 @@ static func _apply_defend_effects(
 				defender.card_name,
 				defender.ability_params.get("drain_amount", 0)
 			])
-		CharacterData.AbilityType.ONE_USE_DEF_BOOST:
-			if not defender.one_use_def_boost_used:
-				result.ability_triggered_defender = true
-				defender.one_use_def_boost_used = true
-
+		CharacterData.AbilityType.ONE_USE_DEF_BOOST, \
 		CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND:
-			if not defender.one_use_def_boost_used:
-				result.ability_triggered_defender = true
-				defender.one_use_def_boost_used = true
+			pass  # spent in _spend_one_use_defense_boosts when attacked
 
 		CharacterData.AbilityType.PERM_DEF_BOOST_ON_DEFEND:
 			result.ability_triggered_defender = true
 			var _perm_def: int = defender.ability_params.get("def", defender.ability_params.get("bonus", 0))
-			defender.current_def += _perm_def
+			if mutate:
+				defender.current_def += _perm_def
 			result.messages.append("%s gains +%d DEF permanently!" % [defender.card_name, _perm_def])
 
 		CharacterData.AbilityType.ONE_USE_PERM_DEBUFF_ATTACKER_ATK:
 			if not defender.one_use_def_boost_used:
 				result.ability_triggered_defender = true
-				defender.one_use_def_boost_used = true
-				var _debuff_atk: int = defender.ability_params.get("atk", defender.ability_params.get("amount", 0))
-				attacker.current_atk = max(0, attacker.current_atk - _debuff_atk)
-				result.messages.append("%s: %s permanently loses %d ATK!" % [
-					defender.card_name, attacker.card_name, _debuff_atk])
+				if mutate:
+					defender.one_use_def_boost_used = true
+					var _debuff_atk: int = defender.ability_params.get("atk", defender.ability_params.get("amount", 0))
+					attacker.current_atk = max(0, attacker.current_atk - _debuff_atk)
+					result.messages.append("%s: %s permanently loses %d ATK!" % [
+						defender.card_name, attacker.card_name, _debuff_atk])
 
 		CharacterData.AbilityType.DEFEND_PERM_DEBUFF_ATTACKER_ATK_DEF:
 			result.ability_triggered_defender = true
 			var _debuff_a: int = defender.ability_params.get("atk", defender.ability_params.get("amount", 0))
 			var _debuff_d: int = defender.ability_params.get("def", _debuff_a)
-			attacker.current_atk = max(0, attacker.current_atk - _debuff_a)
-			attacker.current_def = max(0, attacker.current_def - _debuff_d)
+			if mutate:
+				attacker.current_atk = max(0, attacker.current_atk - _debuff_a)
+				attacker.current_def = max(0, attacker.current_def - _debuff_d)
 			result.messages.append("%s: %s permanently loses %d ATK and DEF!" % [
 				defender.card_name, attacker.card_name, _debuff_a])
 
 		CharacterData.AbilityType.ONE_USE_DEFEND_MORPH:
 			if not defender.one_use_def_boost_used:
 				result.ability_triggered_defender = true
-				defender.one_use_def_boost_used = true
-				var def_loss: int = defender.ability_params.get("def_loss", 40)
-				var atk_gain: int = defender.ability_params.get("atk_gain", 40)
-				defender.current_def = max(0, defender.current_def - def_loss)
-				defender.current_atk += atk_gain
-				result.messages.append("%s morphs: -%d DEF, +%d ATK permanently!" % [
-					defender.card_name, def_loss, atk_gain])
+				if mutate:
+					defender.one_use_def_boost_used = true
+					var def_loss: int = defender.ability_params.get("def_loss", 40)
+					var atk_gain: int = defender.ability_params.get("atk_gain", 40)
+					defender.current_def = max(0, defender.current_def - def_loss)
+					defender.current_atk += atk_gain
+					result.messages.append("%s morphs: -%d DEF, +%d ATK permanently!" % [
+						defender.card_name, def_loss, atk_gain])
 
 		CharacterData.AbilityType.SELF_DEBUFF_ON_ATTACK_AND_DEFEND:
 			if not defender.one_use_def_boost_used:
 				result.ability_triggered_defender = true
-				defender.one_use_def_boost_used = true
-				var def_debuff: int = defender.ability_params.get("def_amount", 5)
-				defender.current_def = max(0, defender.current_def - def_debuff)
-				result.messages.append("%s: permanently -%d DEF from defending." % [
-					defender.card_name, def_debuff])
+				if mutate:
+					defender.one_use_def_boost_used = true
+					var def_debuff: int = defender.ability_params.get("def_amount", 5)
+					defender.current_def = max(0, defender.current_def - def_debuff)
+					result.messages.append("%s: permanently -%d DEF from defending." % [
+						defender.card_name, def_debuff])
 
 		CharacterData.AbilityType.HALVE_ATK_ADD_TO_DEF_ON_DEFEND:
 			result.ability_triggered_defender = true
 			var _halved: int = defender.current_atk / 2
-			defender.current_atk = max(0, defender.current_atk - _halved)
-			defender.current_def += _halved
+			if mutate:
+				defender.current_atk = max(0, defender.current_atk - _halved)
+				defender.current_def += _halved
 			result.messages.append("%s: halved ATK, -%d ATK +%d DEF permanently!" % [
 				defender.card_name, _halved, _halved])
 
@@ -808,3 +832,38 @@ static func _count_anima_cards(player_index: int, source_card: GameState.CardIns
 				if card.affinity == CharacterData.Affinity.ANIMA:
 					count += 1
 	return count
+
+
+static func reckoning_overlay_log_lines(
+		attacker_player: int,
+		defender_player: int,
+		result: BattleResult
+) -> PackedStringArray:
+	var lines: PackedStringArray = []
+	_append_reckoning_stat_line(
+		lines, attacker_player, BattleLogFormat.attack_side_label(result, true),
+		result.attacker_atk_delta, "ATK")
+	_append_reckoning_stat_line(
+		lines, attacker_player, BattleLogFormat.attack_side_label(result, true),
+		result.attacker_def_delta, "DEF")
+	_append_reckoning_stat_line(
+		lines, defender_player, BattleLogFormat.attack_side_label(result, false),
+		result.defender_atk_delta, "ATK")
+	_append_reckoning_stat_line(
+		lines, defender_player, BattleLogFormat.attack_side_label(result, false),
+		result.defender_def_delta, "DEF")
+	return lines
+
+
+static func _append_reckoning_stat_line(
+		lines: PackedStringArray,
+		player: int,
+		card_label: String,
+		delta: int,
+		stat: String
+) -> void:
+	if delta == 0:
+		return
+	var name_str: String = card_label if not card_label.is_empty() else "?"
+	var stat_label: String = ("%s %d" % [stat, delta]) if delta < 0 else ("+%s %d" % [stat, delta])
+	lines.append("Reckoning overlay: P%d %s %s" % [player, name_str, stat_label])

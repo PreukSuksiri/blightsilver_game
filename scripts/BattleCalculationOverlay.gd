@@ -509,15 +509,13 @@ func _run_async(
 	var bounce_dx: float = _card_w * 0.28 * (1.0 if attacker_player == 0 else -1.0)
 
 	# Card effect flash — trap or character ability (use _live_result for final outcome)
-	var att_rest_x: float = _left_rest_x if attacker_player == 0 else _right_rest_x
-	var def_rest_x: float = _right_rest_x if attacker_player == 0 else _left_rest_x
 	# Skip ability flash for trap encounters — the burst is embedded inside the scenario
 	# animation (fires after the bounce), so running it here would move the attacker twice.
 	if _live_result.special_trigger not in ["trap_effect", "trap_nullified"]:
 		if _live_result.ability_triggered_attacker:
-			await _animate_card_effect_flash(att_ctrl, att_rest_x)
+			await _animate_card_effect_flash(att_ctrl)
 		elif _live_result.ability_triggered_defender:
-			await _animate_card_effect_flash(def_ctrl, def_rest_x)
+			await _animate_card_effect_flash(def_ctrl)
 
 	# Run scenario animation using the final (possibly boosted) result
 	var scenario := _get_scenario(defender, _live_result)
@@ -582,24 +580,12 @@ func _play_sfx(stream: AudioStream) -> void:
 	asp.play()
 	asp.finished.connect(asp.queue_free)
 
-func _animate_card_effect_flash(ctrl: Control, rest_x: float) -> void:
+func _animate_card_effect_flash(ctrl: Control) -> void:
 	_play_sfx(SFX_SPELL)
-	var vp_size := get_viewport().get_visible_rect().size
-	var center_x := (vp_size.x - _card_w) * 0.5
-	# Move card to center
-	var t_in := create_tween()
-	t_in.tween_property(ctrl, "position:x", center_x, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	await t_in.finished
-	# Burst ring + flash
 	_play_burst_ring(ctrl)
 	_flash_white(ctrl)
 	_flash_screen_white()
-	# Linger
 	await get_tree().create_timer(1.0).timeout
-	# Move back
-	var t_out := create_tween()
-	t_out.tween_property(ctrl, "position:x", rest_x, 0.3).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	await t_out.finished
 
 func _animate_trap_flash(ctrl: Control) -> void:
 	_play_sfx(SFX_SPELL)

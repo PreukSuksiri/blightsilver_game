@@ -1,0 +1,339 @@
+=== Battle of The Missing Sock ===
+Battle started: 2026-05-31 20:57:31.699
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Echo Barrier
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Accident, Radar
+P1 Tech hand: Release Mutagen, Resurrection, Spy
+P0:   [  — ][  — ][C:Pony][T:Snar][  — ]
+      [T:Host][C:Sunr][C:Moon][C:Stre][  — ]
+      [T:Acid][C:Dark][C:Ox P][C:Blea][  — ]
+      [  — ][C:Aeri][C:Immo][C:Chao][T:Red ]
+      [  — ][  — ][  — ][T:Deco][T:Flam]
+P1:   [T:Acid][C:Deat][C:Dark][T:Pepp][  — ]
+      [C:Soni][C:Gian][  — ][C:Lazy][  — ]
+      [C:Tiny][  — ][T:Echo][  — ][T:Flam]
+      [C:Scyt][  — ][  — ][  — ][C:Skel]
+      [T:Deco][T:Bait][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[00:05.319] Mode selected P1: TECH
+[00:05.628] Tech played  P1: "Spy"
+[00:07.162] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.559] AI1 target chosen: (1,0)
+[00:07.587] Revealed: P0 (1,0) "Hostage" {cost 200}
+[00:07.588] Tech resolved  P1
+[00:08.461] Mode selected P1: ATTACK
+[00:08.464] Attack phase P1: 2 attack(s) available
+[00:08.464] MSG: Player 2: tap a character to attack.
+[00:08.760] AI1 attack decision: (0,1)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down} → (1,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}
+[00:09.090] Revealed: P1 (0,1) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:09.114] Revealed: P0 (1,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:09.114] Dice rolled: 2
+[00:09.117] MSG: Death Cobra wins!
+[00:13.748] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:15.147] Attack P1(0,1)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P0(1,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=2  ATK=85 vs DEF=20  → WIN
+[00:15.147] Anim: 3A  △ P0(1,2)
+[00:15.147] Card destroyed  P0 (1,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:15.640] Mode selected P1: ATTACK
+[00:15.643] Attack phase P1: 1 attack(s) available
+[00:15.644] MSG: Player 2: tap a character to attack.
+[00:15.934] AI1 attack decision: (0,2)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down}
+[00:16.277] Revealed: P1 (0,2) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:16.305] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:16.306] Dice rolled: 2
+[00:22.040] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:23.439] Attack P1(0,2)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=2  ATK=15 vs DEF=40  → LOSE
+[00:23.439] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 5
+[00:23.439] Anim: 3B  △ P1(0,2)
+[00:23.439] Card destroyed  P1 (0,2) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:23.932] MSG: Death Cobra: Venom applied to Ox Patrol.
+[00:23.934] Turn ended  P1  |  Crystals P0=4700 P1=4700
+
+--- Turn 2  |  Player 0  |  Crystals P0=4700 P1=4700 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Ox P][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][Deat][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[00:24.527] Mode selected P0: TECH
+[00:24.827] Crystals: P0 4700 → 4100 (-600)  [tech cost]
+[00:26.216] Tech played  P0: "Radar"
+[00:27.761] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:28.159] AI0 target chosen: (2,0)
+[00:28.189] Revealed: P1 (2,0) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[00:28.560] AI0 target chosen: (0,4)
+[00:28.560] Revealed: P1 (0,4) (blank slot)
+[00:28.958] AI0 target chosen: (2,2)
+[00:28.989] Revealed: P1 (2,2) "Echo Barrier" {cost 1000}
+[00:28.992] Tech resolved  P0
+[00:29.861] Mode selected P0: ATTACK
+[00:29.867] Attack phase P0: 2 attack(s) available
+[00:29.867] MSG: Player 1: tap a character to attack.
+[00:30.160] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | flags:venom} → (0,4) (dead-end)
+[00:30.459] Dice rolled: 4
+[00:30.484] MSG: Nothing happens — Dead End.
+[00:33.861] Attack P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | flags:venom} → P1(0,4)(empty)  Dice=4  → DEAD_END
+[00:33.861] Anim: 3F  (blank slot)
+[00:36.363] Turn ended  P0  |  Crystals P0=4100 P1=4700
+
+--- Turn 3  |  Player 1  |  Crystals P0=4100 P1=4700 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Ox P][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][Deat][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [Tiny][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[00:36.967] Mode selected P1: TECH
+[00:37.276] Crystals: P1 4700 → 3200 (-1500)  [tech cost]
+[00:38.666] Tech played  P1: "Resurrection"
+[00:40.226] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:40.626] AI1 target chosen: (1,2)
+[00:40.629] Revealed: P1 (1,2) "Dark Monk" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0}
+[00:40.629] MSG: Revived Dark Monk at [1,2]!
+[00:40.635] Tech resolved  P1
+[00:41.528] Mode selected P1: ATTACK
+[00:41.536] Attack phase P1: 2 attack(s) available
+[00:41.536] MSG: Player 2: tap a character to attack.
+[00:41.825] AI1 attack decision: (0,1)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | flags:venom}
+[00:42.127] Dice rolled: 2
+[00:42.137] MSG: Death Cobra wins!
+[00:47.818] Crystals: P0 4100 → 3680 (-420)  [battle]
+[00:49.225] Attack P1(0,1)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | flags:venom}  Dice=2  ATK=85 vs DEF=40  → WIN
+[00:49.225] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | flags:venom} +DEF 5
+[00:49.225] Anim: 3A  △ P0(2,2)
+[00:49.225] Card destroyed  P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | flags:venom}
+[00:49.702] Mode selected P1: ATTACK
+[00:49.707] Attack phase P1: 1 attack(s) available
+[00:49.707] MSG: Player 2: tap a character to attack.
+[00:50.002] AI1 attack decision: (1,2)"Dark Monk" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0} → (3,1) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | face-down}
+[00:50.351] Revealed: P0 (3,1) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:50.352] Dice rolled: 5
+[00:55.088] Crystals: P1 3200 → 2900 (-300)  [battle]
+[00:56.490] Attack P1(1,2)"Dark Monk" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0} → P0(3,1)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=5  ATK=0 vs DEF=45  → LOSE
+[00:56.490] Anim: 3B  △ P1(1,2)
+[00:56.490] Card destroyed  P1 (1,2) "Dark Monk" {Unit ATK0 DEF0 | cost 300 | affinity Chaos | base 0/0}
+[00:56.982] MSG: Death Cobra: Venom applied to Aerial the Battlemage.
+[00:56.986] Turn ended  P1  |  Crystals P0=3680 P1=2900
+
+--- Turn 4  |  Player 0  |  Crystals P0=3680 P1=2900 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][Aeri][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][Deat][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [Tiny][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[00:57.576] Mode selected P0: TECH
+[00:57.877] Crystals: P0 3680 → 2680 (-1000)  [tech cost]
+[00:59.263] Tech played  P0: "Accident"
+[01:00.808] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[01:01.204] AI0 target chosen: (0,1)
+[01:01.208] Card destroyed  P1 (0,1) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[01:01.216] Tech resolved  P0
+[01:02.107] Mode selected P0: ATTACK
+[01:02.112] Attack phase P0: 2 attack(s) available
+[01:02.113] MSG: Player 1: tap a character to attack.
+[01:02.405] AI0 attack decision: (3,1)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | flags:venom} → (2,0) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[01:02.706] Dice rolled: 3
+[01:02.715] MSG: Aerial the Battlemage wins!
+[01:07.397] Crystals: P1 2900 → 2800 (-100)  [battle]
+[01:08.788] MSG: Tiny Pixie survives destruction!
+[01:08.795] Attack P0(3,1)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | flags:venom} → P1(2,0)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}  Dice=3  ATK=50 vs DEF=0  → WIN
+[01:08.795] Anim: 3A  △ P1(2,0)
+[01:08.795] Card destroyed  P1 (2,0) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[01:09.290] Mode selected P0: ATTACK
+[01:09.295] Attack phase P0: 1 attack(s) available
+[01:09.295] MSG: Player 1: tap a character to attack.
+[01:09.589] AI0 attack decision: (3,2)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos | face-down} → (2,0) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used}
+[01:09.920] Revealed: P0 (3,2) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[01:09.920] Dice rolled: 3
+[01:09.924] MSG: Immortal Vampire is destroyed by Divine!
+[01:15.505] Crystals: P0 2680 → 1480 (-1200)  [battle]
+[01:16.896] Crystals: P1 2800 → 2700 (-100)  [battle]
+[01:18.289] Attack P0(3,2)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos} → P1(2,0)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used}  Dice=3  ATK=30 vs DEF=0  → TIE
+[01:18.289] Anim: 3C  △ P0(3,2) + △ P1(2,0)
+[01:18.289] Card destroyed  P0 (3,2) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[01:18.790] Turn ended  P0  |  Crystals P0=1480 P1=2700
+
+--- Turn 5  |  Player 1  |  Crystals P0=1480 P1=2700 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][Aeri][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[01:19.395] Mode selected P1: ATTACK
+[01:19.398] Attack phase P1: 2 attack(s) available
+[01:19.398] MSG: Player 2: tap a character to attack.
+[01:19.703] AI1 attack decision: (1,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down} → (3,1) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | flags:venom}
+[01:20.051] Revealed: P1 (1,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:20.051] Dice rolled: 4
+[01:20.055] MSG: Both cards are destroyed!
+[01:24.648] Crystals: P1 2700 → 2150 (-550)  [battle]
+[01:26.040] Crystals: P0 1480 → 730 (-750)  [battle]
+[01:27.429] Attack P1(1,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P0(3,1)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | flags:venom}  Dice=4  ATK=45 vs DEF=45  → TIE
+[01:27.429] Anim: 3C  △ P1(1,0) + △ P0(3,1)
+[01:27.429] Card destroyed  P1 (1,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:27.429] Card destroyed  P0 (3,1) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | flags:venom}
+[01:27.931] Mode selected P1: ATTACK
+[01:27.933] Attack phase P1: 1 attack(s) available
+[01:27.934] MSG: Player 2: tap a character to attack.
+[01:28.239] AI1 attack decision: (1,3)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down} → (3,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[01:28.584] Revealed: P1 (1,3) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[01:28.904] Coin flip: Tails
+[01:31.631] MSG: Lazy Troll flips tails — too lazy to attack! It has to wait.
+[01:31.641] Attack aborted
+[01:32.533] Turn ended  P1  |  Crystals P0=730 P1=2150
+
+--- Turn 6  |  Player 0  |  Crystals P0=730 P1=2150 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][Lazy][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[01:34.613] Crystals: P0 730 → 230 (-500)  [union]
+[01:34.646] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[01:34.646] Union summoned P0: "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}
+[01:34.646] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}
+[01:38.046] Mode selected P0: ATTACK
+[01:38.052] Attack phase P0: 2 attack(s) available
+[01:38.052] MSG: Player 1: tap a character to attack.
+[01:38.348] AI0 attack decision: (0,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} → (1,4) (dead-end)
+[01:38.648] Dice rolled: 5
+[01:38.704] MSG: Nothing happens — Dead End.
+[01:42.099] Attack P0(0,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} → P1(1,4)(empty)  Dice=5  → DEAD_END
+[01:42.099] Anim: 3F  (blank slot)
+[01:44.583] Turn ended  P0  |  Crystals P0=230 P1=2150
+
+--- Turn 7  |  Player 1  |  Crystals P0=230 P1=2150 ---
+P0:   [  — ][  — ][Diam][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][Lazy][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[01:46.664] Crystals: P1 2150 → 650 (-1500)  [union]
+[01:46.701] Revealed: P1 (1,1) "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[01:46.701] Union summoned P1: "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[01:46.701] MSG: Player 2 summoned [Barros the Colossal] using: "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[01:50.090] Mode selected P1: ATTACK
+[01:50.095] Attack phase P1: 2 attack(s) available
+[01:50.095] MSG: Player 2: tap a character to attack.
+[01:50.392] AI1 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (1,1) (dead-end)
+[01:50.694] Dice rolled: 4
+[01:50.765] MSG: Nothing happens — Dead End.
+[01:54.084] Attack P1(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(1,1)(empty)  Dice=4  → DEAD_END
+[01:54.084] Anim: 3F  (blank slot)
+[01:54.585] Mode selected P1: ATTACK
+[01:54.589] Attack phase P1: 1 attack(s) available
+[01:54.590] MSG: Player 2: tap a character to attack.
+[01:54.889] AI1 attack decision: (3,0)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature | face-down} → (0,2) "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[01:55.230] Revealed: P1 (3,0) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[01:55.230] Dice rolled: 2
+[02:01.023] Crystals: P1 650 → 100 (-550)  [battle]
+[02:02.422] Attack P1(3,0)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P0(0,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used}  Dice=2  ATK=35 vs DEF=50  → LOSE
+[02:02.422] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used} +DEF 15
+[02:02.422] Anim: 3B  △ P1(3,0)
+[02:02.422] Card destroyed  P1 (3,0) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[02:02.924] Turn ended  P1  |  Crystals P0=230 P1=100
+
+--- Turn 8  |  Player 0  |  Crystals P0=230 P1=100 ---
+P0:   [  — ][  — ][Diam][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[02:03.528] Mode selected P0: ATTACK
+[02:03.532] Attack phase P0: 2 attack(s) available
+[02:03.532] MSG: Player 1: tap a character to attack.
+[02:03.835] AI0 attack decision: (0,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used} → (1,3) (dead-end)
+[02:04.144] Dice rolled: 5
+[02:04.205] MSG: Nothing happens — Dead End.
+[02:07.535] Attack P0(0,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used} → P1(1,3)(empty)  Dice=5  → DEAD_END
+[02:07.536] Anim: 3F  (blank slot)
+[02:08.030] Mode selected P0: ATTACK
+[02:08.034] Attack phase P0: 1 attack(s) available
+[02:08.034] MSG: Player 1: tap a character to attack.
+[02:08.330] AI0 attack decision: (1,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima | face-down} → (4,4) (dead-end)
+[02:08.671] Revealed: P0 (1,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[02:08.671] Dice rolled: 2
+[02:08.681] MSG: Nothing happens — Dead End.
+[02:12.038] Attack P0(1,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P1(4,4)(empty)  Dice=2  → DEAD_END
+[02:12.038] Anim: 3F  (blank slot)
+[02:12.542] Turn ended  P0  |  Crystals P0=230 P1=100
+
+--- Turn 9  |  Player 1  |  Crystals P0=230 P1=100 ---
+P0:   [  — ][  — ][Diam][  ? ][  — ]
+      [  — ][  — ][  — ][Stre][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[02:13.148] Mode selected P1: ATTACK
+[02:13.153] Attack phase P1: 2 attack(s) available
+[02:13.153] MSG: Player 2: tap a character to attack.
+[02:13.454] AI1 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (1,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[02:13.764] Dice rolled: 5
+[02:13.802] MSG: Barros the Colossal wins!
+[02:18.457] Crystals: P0 230 → 0 (-230)  [battle]
+
+=== GAME OVER ===
+[02:18.468] AI Player 1 wins
+[02:18.468] Reason: crystals
+[02:18.468] Final crystals — P0: 0  P1: 100  |  Turns: 9
+[02:18.468] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_the_missing_sock_2026-05-31_20-57-31_699.txt

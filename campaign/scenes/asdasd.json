@@ -1,5 +1,19 @@
 [
 	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "These cards looks like an ordinary cards. But they're actually a device that channel spiritual influence into a card battle. The stronger the duelist, the better the exorcism power, without relying on a heavy weapon."
+	},
+	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{

@@ -94,8 +94,8 @@ func _build_ui() -> void:
 func _build_card(d: Dictionary) -> Control:
 	var vn_path:    String = str(d.get("vn_scene", "")).strip_edges()
 	var has_vn:    bool   = vn_path != ""
-	var req_node:  String = str(d.get("unlock_requires", "")).strip_edges()
-	var is_locked: bool   = req_node != "" and not CampaignManager.completed.has(req_node)
+	var is_locked: bool   = _is_chapter_locked(d)
+	var prereq_vn: String = _get_prerequisite_vn(d)
 
 	# ── Card root ─────────────────────────────────────────────
 	var card := VBoxContainer.new()
@@ -142,7 +142,11 @@ func _build_card(d: Dictionary) -> Control:
 		frame.add_child(dim)
 
 		var lbl_lock := Label.new()
-		lbl_lock.text = "🔒\nLOCKED"
+		var prereq_label: String = _prerequisite_display_name(prereq_vn)
+		if prereq_label != "":
+			lbl_lock.text = "🔒\nFinish\n%s" % prereq_label
+		else:
+			lbl_lock.text = "🔒\nLOCKED"
 		lbl_lock.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl_lock.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 		lbl_lock.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -212,6 +216,8 @@ func _build_card(d: Dictionary) -> Control:
 
 
 func _on_chapter_pressed(card: Dictionary) -> void:
+	if _is_chapter_locked(card):
+		return
 	var vn_path: String = str(card.get("vn_scene", "")).strip_edges()
 	if vn_path.is_empty():
 		return
@@ -409,4 +415,40 @@ func _play_vn(json_path: String) -> void:
 	var vn_scene: Variant = load(VN_PLAYER_SCENE)
 	var vn := (vn_scene as PackedScene).instantiate()
 	add_child(vn)
-	vn.play_scene(json_path, func() -> void: pass)
+	vn.play_scene(json_path, func() -> void:
+		SaveManager.mark_gallery_chapter_completed(json_path))
+
+
+func _get_prerequisite_vn(d: Dictionary) -> String:
+	var prereq: String = str(d.get("prerequisite_chapter", "")).strip_edges()
+	if prereq != "":
+		return prereq
+	# Legacy: campaign map node id (e.g. ch0_s1)
+	var legacy_id: String = str(d.get("unlock_requires", "")).strip_edges()
+	if legacy_id == "":
+		return ""
+	return CampaignManager.get_vn_scene_for_node(legacy_id)
+
+
+func _is_chapter_locked(d: Dictionary) -> bool:
+	var prereq_vn: String = _get_prerequisite_vn(d)
+	if prereq_vn == "":
+		return false
+	return not SaveManager.is_gallery_chapter_completed(prereq_vn)
+
+
+func _prerequisite_display_name(prereq_vn: String) -> String:
+	if prereq_vn.is_empty():
+		return ""
+	for raw: Variant in _data:
+		if not raw is Dictionary:
+			continue
+		var entry: Dictionary = raw as Dictionary
+		if str(entry.get("vn_scene", "")).strip_edges() == prereq_vn:
+			var line2: String = str(entry.get("line2", "")).strip_edges()
+			if line2 != "":
+				return line2
+			return str(entry.get("line1", "prior chapter")).strip_edges()
+	if ResourceLoader.exists(prereq_vn):
+		return prereq_vn.get_file().get_basename()
+	return prereq_vn

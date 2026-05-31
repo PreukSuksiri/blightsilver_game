@@ -38,6 +38,73 @@ func run_all_tests() -> void:
 	test_get_adjacent_positions_corner()
 	test_get_opponent()
 	test_reveal_card_sets_face_up()
+	test_character_wipe_ends_game_immediately()
+	test_character_wipe_ignores_playable_tech()
+	test_stuck_without_characters_ends_game_at_turn_start()
+	test_stuck_with_characters_but_no_attack_is_no_moves()
+	test_divine_protection_turn_timing()
+
+func _start_play_phase() -> void:
+	GameState.set_phase(GameState.Phase.MODE_SELECT)
+
+func test_character_wipe_ends_game_immediately() -> void:
+	print("-- test_character_wipe_ends_game_immediately")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 0, 0, "Wandering Swordsman")
+	GameState.place_character(1, 1, 1, "Canyon Warg")
+	_start_play_phase()
+	var winner := -999
+	GameState.game_over.connect(func(w): winner = w, CONNECT_ONE_SHOT)
+	GameState.destroy_card(0, 0, 0, false)
+	assert_eq(GameState.current_phase, GameState.Phase.GAME_OVER, "Board wipe triggers game over")
+	assert_eq(winner, 1, "Opponent wins when all characters destroyed")
+	assert_eq(GameState.game_over_reason, "all_destroyed", "Reason is all_destroyed")
+
+func test_character_wipe_ignores_playable_tech() -> void:
+	print("-- test_character_wipe_ignores_playable_tech")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 0, 0, "Wandering Swordsman")
+	GameState.place_character(1, 1, 1, "Canyon Warg")
+	GameState.tech_hands[0] = ["Prayer"]
+	_start_play_phase()
+	GameState.destroy_card(0, 0, 0, false)
+	assert_eq(GameState.current_phase, GameState.Phase.GAME_OVER, "0-cost tech does not prevent wipe loss")
+	assert_eq(GameState.game_over_reason, "all_destroyed", "Reason is all_destroyed")
+
+func test_stuck_without_characters_ends_game_at_turn_start() -> void:
+	print("-- test_stuck_without_characters_ends_game_at_turn_start")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(1, 1, 1, "Canyon Warg")
+	GameState.tech_hands[0] = ["Prayer"]
+	GameState.set_phase(GameState.Phase.MODE_SELECT)
+	GameState.check_stuck_win_condition()
+	assert_eq(GameState.current_phase, GameState.Phase.GAME_OVER, "No characters means loss even with tech")
+	assert_eq(GameState.game_over_reason, "all_destroyed", "Reason is all_destroyed")
+
+func test_stuck_with_characters_but_no_attack_is_no_moves() -> void:
+	print("-- test_stuck_with_characters_but_no_attack_is_no_moves")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 0, 0, "Wandering Swordsman")
+	GameState.place_character(1, 1, 1, "Canyon Warg")
+	GameState.get_card(0, 0, 0).cannot_attack_until = 99
+	GameState.get_card(1, 1, 1).cannot_attack_until = 99
+	GameState.tech_hands[0] = ["Prayer"]
+	GameState.tech_hands[1] = ["Prayer"]
+	GameState.set_phase(GameState.Phase.MODE_SELECT)
+	GameState.check_stuck_win_condition()
+	assert_eq(GameState.current_phase, GameState.Phase.GAME_OVER, "Both unable to attack ends game")
+	assert_eq(GameState.game_over_reason, "no_moves", "Reason is no_moves when units remain")
+
+func test_divine_protection_turn_timing() -> void:
+	print("-- test_divine_protection_turn_timing")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.divine_protection_active[0] = true
+	GameState.expire_divine_protection_at_turn_end(0)
+	assert_true(GameState.divine_protection_active[0],
+		"Prayer protection survives through the caster's turn end")
+	GameState.expire_divine_protection_at_turn_end(1)
+	assert_false(GameState.divine_protection_active[0],
+		"Prayer protection clears when opponent's turn ends")
 
 func test_new_game_initial_state() -> void:
 	print("-- test_new_game_initial_state")
@@ -108,6 +175,8 @@ func test_destroy_card_pays_cost() -> void:
 	print("-- test_destroy_card_pays_cost")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	GameState.place_character(0, 0, 0, "Canyon Warg")  # cost 500
+	GameState.place_character(1, 1, 1, "Wandering Swordsman")
+	_start_play_phase()
 	GameState.destroy_card(0, 0, 0, true)
 	assert_eq(GameState.crystals[0], 2500, "Player 0 loses 500 crystals on destroy")
 	var card := GameState.get_card(0, 0, 0)
@@ -117,6 +186,8 @@ func test_destroy_card_no_cost() -> void:
 	print("-- test_destroy_card_no_cost")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	GameState.place_character(0, 0, 0, "Canyon Warg")  # cost 500
+	GameState.place_character(1, 1, 1, "Wandering Swordsman")
+	_start_play_phase()
 	GameState.destroy_card(0, 0, 0, false)
 	assert_eq(GameState.crystals[0], 3000, "No crystal loss when pay_cost=false")
 

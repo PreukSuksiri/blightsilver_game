@@ -1,0 +1,204 @@
+=== Battle of Group Chat Meltdown ===
+Battle started: 2026-05-31 16:18:36.898
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Choir Lady Abigail
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Choir Lady Abigail
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Accident, Bribe
+P1 Tech hand: Resurrection, Great Diplomacy, Siege Cannon
+P0:   [  — ][C:Dark][C:Skel][  — ][  — ]
+      [  — ][C:Curs][C:Nuki][C:Choi][T:Deco]
+      [T:Bunk][C:Jose][C:Choi][C:Nept][  — ]
+      [  — ][C:Witc][C:Fuji][C:Tomb][  — ]
+      [  — ][  — ][T:Foul][  — ][T:Defe]
+P1:   [C:Choi][  — ][T:Stre][T:Hard][C:Arch]
+      [T:Flam][C:Chur][C:Pit ][C:Deat][  — ]
+      [  — ][  — ][C:Chao][T:Bait][  — ]
+      [T:Expl][C:Spea][T:Hypn][C:Mage][  — ]
+      [C:Polt][  — ][  — ][  — ][C:Doom]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.316] Mode selected P1: TECH
+[00:05.615] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:06.999] Tech played  P1: "Great Diplomacy"
+[00:08.595] Revealed: P1 (0,0) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:08.628] Revealed: P1 (0,4) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[00:08.653] Revealed: P1 (1,1) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:08.676] Revealed: P1 (1,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:08.695] Revealed: P1 (1,3) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[00:08.715] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:08.774] Revealed: P1 (3,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:08.798] Revealed: P1 (3,3) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos}
+[00:08.798] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[00:08.819] Revealed: P1 (4,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[00:08.840] Revealed: P1 (4,4) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[00:08.842] Tech resolved  P1
+[00:09.464] Mode selected P1: ATTACK
+[00:09.476] Attack phase P1: 2 attack(s) available
+[00:09.476] MSG: Player 2: tap a character to attack.
+[00:09.764] AI1 attack decision: (0,0)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → (0,4) (dead-end)
+[00:10.064] Dice rolled: 5
+[00:10.084] MSG: Nothing happens — Dead End.
+[00:13.481] Attack P1(0,0)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → P0(0,4)(empty)  Dice=5  → DEAD_END
+[00:13.481] Anim: 3F  (blank slot)
+[00:13.964] Mode selected P1: ATTACK
+[00:13.975] Attack phase P1: 1 attack(s) available
+[00:13.975] MSG: Player 2: tap a character to attack.
+[00:14.260] AI1 attack decision: (0,4)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → (3,4) (dead-end)
+[00:14.560] Dice rolled: 4
+[00:14.584] MSG: Nothing happens — Dead End.
+[00:17.964] Attack P1(0,4)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P0(3,4)(empty)  Dice=4  → DEAD_END
+[00:17.964] Anim: 3F  (blank slot)
+[00:18.459] Turn ended  P1  |  Crystals P0=5000 P1=4000
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4000 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [Choi][  — ][  ? ][  ? ][Arch]
+      [  ? ][Chur][Pit ][Deat][  — ]
+      [  — ][  — ][Chao][  ? ][  — ]
+      [  ? ][Spea][  ? ][Mage][  — ]
+      [Polt][  — ][  — ][  — ][Doom]
+[00:19.057] Mode selected P0: TECH
+[00:19.357] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:20.748] Tech played  P0: "Radar"
+[00:22.292] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:22.688] AI0 target chosen: (2,0)
+[00:22.689] Revealed: P1 (2,0) (blank slot)
+[00:23.089] AI0 target chosen: (1,0)
+[00:23.121] Revealed: P1 (1,0) "Flame Trap" {cost 250}
+[00:23.488] AI0 target chosen: (1,4)
+[00:23.488] Revealed: P1 (1,4) (blank slot)
+[00:23.500] Tech resolved  P0
+[00:24.390] Mode selected P0: ATTACK
+[00:24.402] Attack phase P0: 2 attack(s) available
+[00:24.402] MSG: Player 1: tap a character to attack.
+[00:24.685] AI0 attack decision: (3,3)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down} → (4,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[00:25.018] Revealed: P0 (3,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:25.018] Dice rolled: 2
+[00:25.023] MSG: Tomb Bandit wins!
+[00:29.677] Crystals: P1 4000 → 3300 (-700)  [battle]
+[00:31.091] Attack P0(3,3)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P1(4,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}  Dice=2  ATK=75 vs DEF=70  → WIN
+[00:31.091] Anim: 3A  △ P1(4,0)
+[00:31.091] Card destroyed  P1 (4,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[00:31.571] Mode selected P0: ATTACK
+[00:31.586] Attack phase P0: 1 attack(s) available
+[00:31.587] MSG: Player 1: tap a character to attack.
+[00:31.869] AI0 attack decision: (3,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down} → (0,0) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:32.204] Revealed: P0 (3,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:32.204] Dice rolled: 1
+[00:32.210] MSG: Fujin wins!
+[00:36.861] Crystals: P1 3300 → 3050 (-250)  [battle]
+[00:38.258] Attack P0(3,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(0,0)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}  Dice=1  ATK=35 vs DEF=20  → WIN
+[00:38.258] Anim: 3A  △ P1(0,0)
+[00:38.258] Card destroyed  P1 (0,0) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:38.756] Turn ended  P0  |  Crystals P0=4400 P1=3050
+
+--- Turn 3  |  Player 1  |  Crystals P0=4400 P1=3050 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Fuji][Tomb][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][Arch]
+      [  — ][Chur][Pit ][Deat][  — ]
+      [  — ][  — ][Chao][  ? ][  — ]
+      [  ? ][Spea][  ? ][Mage][  — ]
+      [  — ][  — ][  — ][  — ][Doom]
+[00:39.344] Mode selected P1: TECH
+[00:39.643] Crystals: P1 3050 → 1550 (-1500)  [tech cost]
+[00:41.037] Tech played  P1: "Resurrection"
+[00:42.578] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:42.976] AI1 target chosen: (0,1)
+[00:42.979] Revealed: P1 (0,1) "Choir Lady Anna" {Unit ATK0 DEF0 | cost 250 | affinity Divine | base 0/0}
+[00:42.980] MSG: Revived Choir Lady Anna at [0,1]!
+[00:42.994] Tech resolved  P1
+[00:43.879] Mode selected P1: ATTACK
+[00:43.891] Attack phase P1: 2 attack(s) available
+[00:43.892] MSG: Player 2: tap a character to attack.
+[00:44.175] AI1 attack decision: (0,4)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → (3,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:44.476] Dice rolled: 4
+[00:44.503] MSG: Archbishop wins!
+[00:49.168] Crystals: P0 4400 → 3400 (-1000)  [battle]
+[00:50.572] Attack P1(0,4)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P0(3,3)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=4  ATK=70 vs DEF=60  → WIN
+[00:50.572] Anim: 3A  △ P0(3,3)
+[00:50.572] Card destroyed  P0 (3,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:51.061] Mode selected P1: ATTACK
+[00:51.072] Attack phase P1: 1 attack(s) available
+[00:51.073] MSG: Player 2: tap a character to attack.
+[00:51.359] AI1 attack decision: (1,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → (3,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:51.661] Dice rolled: 1
+[00:51.684] MSG: Pit Lord is destroyed by Divine!
+[00:57.268] Crystals: P1 1550 → 300 (-1250)  [battle]
+[00:58.660] Crystals: P0 3400 → 2950 (-450)  [battle]
+[01:00.051] Attack P1(1,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → P0(3,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=1  ATK=120 vs DEF=40  → TIE
+[01:00.051] Anim: 3C  △ P1(1,2) + △ P0(3,2)
+[01:00.051] Card destroyed  P1 (1,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:00.051] Card destroyed  P0 (3,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[01:00.548] Turn ended  P1  |  Crystals P0=2950 P1=300
+
+--- Turn 4  |  Player 0  |  Crystals P0=2950 P1=300 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][Choi][  ? ][  ? ][Arch]
+      [  — ][Chur][  — ][Deat][  — ]
+      [  — ][  — ][Chao][  ? ][  — ]
+      [  ? ][Spea][  ? ][Mage][  — ]
+      [  — ][  — ][  — ][  — ][Doom]
+[01:01.143] Mode selected P0: TECH
+[01:01.451] Crystals: P0 2950 → 1950 (-1000)  [tech cost]
+[01:02.841] Tech played  P0: "Accident"
+[01:04.403] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[01:04.810] AI0 target chosen: (0,4)
+[01:04.814] Card destroyed  P1 (0,4) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[01:04.827] Tech resolved  P0
+[01:05.728] Mode selected P0: ATTACK
+[01:05.736] Attack phase P0: 2 attack(s) available
+[01:05.736] MSG: Player 1: tap a character to attack.
+[01:06.035] AI0 attack decision: (0,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (4,4) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:06.374] Revealed: P0 (0,2) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:06.374] Dice rolled: 5
+[01:06.378] MSG: Skeleton Lancer wins!
+[01:11.043] Crystals: P1 300 → 200 (-100)  [battle]
+[01:12.450] Attack P0(0,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P1(4,4)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}  Dice=5  ATK=45 vs DEF=15  → WIN
+[01:12.450] Anim: 3A  △ P1(4,4)
+[01:12.450] Card destroyed  P1 (4,4) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:12.943] Mode selected P0: ATTACK
+[01:12.955] Attack phase P0: 1 attack(s) available
+[01:12.956] MSG: Player 1: tap a character to attack.
+[01:13.243] AI0 attack decision: (1,2)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature | face-down} → (0,1) "Choir Lady Anna" {Unit ATK0 DEF0 | cost 250 | affinity Divine | base 0/0}
+[01:13.596] Revealed: P0 (1,2) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[01:13.597] Dice rolled: 3
+[01:13.612] MSG: Nuki the Tanuki wins!
+[01:18.311] Crystals: P1 200 → 0 (-200)  [battle]
+
+=== GAME OVER ===
+[01:18.324] AI Player 0 wins
+[01:18.324] Reason: crystals
+[01:18.324] Final crystals — P0: 1950  P1: 0  |  Turns: 4
+[01:18.324] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_group_chat_meltdown_2026-05-31_16-18-36_898.txt

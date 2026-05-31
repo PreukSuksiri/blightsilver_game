@@ -412,7 +412,7 @@ func admin_command(raw: String) -> String:
 					tier_filter = 1
 				elif arg in ["t2", "tier2", "2"]:
 					tier_filter = 2
-			var e2e_msg := CardE2ERunner.start_suite(true, tier_filter)
+			var e2e_msg: String = CardE2ERunner.start_suite(true, tier_filter)
 			if e2e_msg.begins_with("Started E2E"):
 				return e2e_msg
 			get_tree().change_scene_to_file("res://scenes/ai_vs_ai_config.tscn")

@@ -1,0 +1,322 @@
+=== Battle of Wet Sock Avalanche ===
+Battle started: 2026-05-31 18:32:23.378
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Neptune Diver
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Neptune Diver
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, War Supply, Radar
+P1 Tech hand: Spy, Resurrection, Tease
+P0:   [C:Need][  — ][C:Pony][T:Flam][C:Lab ]
+      [T:Deco][C:Jose][  — ][C:Mad ][  — ]
+      [T:Blac][  — ][C:Nept][  — ][C:Moon]
+      [  — ][C:Stin][  — ][C:Scar][  — ]
+      [T:Bunk][  — ][C:Bomb][  — ][T:Curs]
+P1:   [T:Echo][  — ][  — ][  — ][C:Deat]
+      [T:Foul][C:Gamm][C:Leec][C:Mine][  — ]
+      [T:Hard][  — ][C:Chao][  — ][  — ]
+      [  — ][C:Void][  — ][C:Stri][  — ]
+      [C:Pyro][T:Snar][T:Blac][T:Spik][C:Polt]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.314] Mode selected P0: TECH
+[00:05.622] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:07.006] Tech played  P0: "Radar"
+[00:08.581] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.979] AI0 target chosen: (2,4)
+[00:08.980] Revealed: P1 (2,4) (blank slot)
+[00:09.387] AI0 target chosen: (3,0)
+[00:09.387] Revealed: P1 (3,0) (blank slot)
+[00:09.795] AI0 target chosen: (0,1)
+[00:09.795] Revealed: P1 (0,1) (blank slot)
+[00:09.799] Tech resolved  P0
+[00:10.725] Mode selected P0: ATTACK
+[00:10.728] Attack phase P0: 2 attack(s) available
+[00:10.729] MSG: Player 1: tap a character to attack.
+[00:11.017] AI0 attack decision: (0,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down} → (2,4) (dead-end)
+[00:11.358] Revealed: P0 (0,0) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[00:11.358] Dice rolled: 5
+[00:11.370] MSG: Nothing happens — Dead End.
+[00:14.689] Attack P0(0,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} → P1(2,4)(empty)  Dice=5  → DEAD_END
+[00:14.689] Anim: 3F  (blank slot)
+[00:15.193] Mode selected P0: ATTACK
+[00:15.196] Attack phase P0: 1 attack(s) available
+[00:15.196] MSG: Player 1: tap a character to attack.
+[00:15.496] AI0 attack decision: (0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (3,0) (dead-end)
+[00:15.840] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:15.840] Dice rolled: 4
+[00:15.851] MSG: Nothing happens — Dead End.
+[00:19.242] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(3,0)(empty)  Dice=4  → DEAD_END
+[00:19.242] Anim: 3F  (blank slot)
+[00:19.742] Turn ended  P0  |  Crystals P0=4400 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4400 P1=5000 ---
+P0:   [Need][  — ][Pony][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:20.330] Mode selected P1: TECH
+[00:20.646] Tech played  P1: "Spy"
+[00:22.189] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:22.587] AI1 target chosen: (2,4)
+[00:22.628] Revealed: P0 (2,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:22.631] Tech resolved  P1
+[00:23.505] Mode selected P1: ATTACK
+[00:23.514] Attack phase P1: 2 attack(s) available
+[00:23.515] MSG: Player 2: tap a character to attack.
+[00:23.814] AI1 attack decision: (0,4)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down} → (2,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:24.155] Revealed: P1 (0,4) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:24.155] Dice rolled: 4
+[00:24.161] MSG: Death Cobra wins!
+[00:28.814] Crystals: P0 4400 → 4100 (-300)  [battle]
+[00:30.218] Attack P1(0,4)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P0(2,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=4  ATK=85 vs DEF=20  → WIN
+[00:30.218] Anim: 3A  △ P0(2,4)
+[00:30.218] Card destroyed  P0 (2,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:32.713] MSG: Death Cobra: Venom applied to Ponycorn.
+[00:32.720] Turn ended  P1  |  Crystals P0=4100 P1=5000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4100 P1=5000 ---
+P0:   [Need][  — ][Pony][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][Deat]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:33.317] Mode selected P0: TECH
+[00:33.629] Tech played  P0: "Tease"
+[00:35.170] MSG: Opponent must choose and reveal 1 of their squares.
+[00:35.177] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:35.568] AI1 target chosen: (4,3)
+[00:35.615] Revealed: P1 (4,3) "Spike Trap" {cost 1500}
+[00:35.616] MSG: Tease: Opponent revealed Spike Trap.
+[00:35.627] Tech resolved  P0
+[00:36.447] Mode selected P0: ATTACK
+[00:36.452] Attack phase P0: 2 attack(s) available
+[00:36.452] MSG: Player 1: tap a character to attack.
+[00:36.755] AI0 attack decision: (0,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} → (0,1) (dead-end)
+[00:37.065] Dice rolled: 4
+[00:37.099] MSG: Nothing happens — Dead End.
+[00:40.481] Attack P0(0,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} → P1(0,1)(empty)  Dice=4  → DEAD_END
+[00:40.481] Anim: 3F  (blank slot)
+[00:40.980] Mode selected P0: ATTACK
+[00:40.985] Attack phase P0: 1 attack(s) available
+[00:40.985] MSG: Player 1: tap a character to attack.
+[00:41.288] AI0 attack decision: (0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | flags:venom} → (0,2) (dead-end)
+[00:41.597] Dice rolled: 1
+[00:41.628] MSG: Nothing happens — Dead End.
+[00:45.002] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | flags:venom} → P1(0,2)(empty)  Dice=1  → DEAD_END
+[00:45.002] Anim: 3F  (blank slot)
+[00:45.508] Turn ended  P0  |  Crystals P0=4100 P1=5000
+
+--- Turn 4  |  Player 1  |  Crystals P0=4100 P1=5000 ---
+P0:   [Need][  — ][Pony][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][Deat]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:46.115] Mode selected P1: TECH
+[00:46.431] Tech played  P1: "Tease"
+[00:47.980] MSG: Opponent must choose and reveal 1 of their squares.
+[00:47.981] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:48.379] AI0 target chosen: (0,4)
+[00:48.421] Revealed: P0 (0,4) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:48.421] MSG: Tease: Opponent revealed Lab Crawler.
+[00:48.425] Tech resolved  P1
+[00:49.282] Mode selected P1: ATTACK
+[00:49.288] Attack phase P1: 2 attack(s) available
+[00:49.288] MSG: Player 2: tap a character to attack.
+[00:49.580] AI1 attack decision: (0,4)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → (0,4) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:49.881] Dice rolled: 2
+[00:49.889] MSG: Death Cobra wins!
+[00:54.573] Crystals: P0 4100 → 2900 (-1200)  [battle]
+[00:55.972] Attack P1(0,4)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P0(0,4)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=2  ATK=85 vs DEF=60  → WIN
+[00:55.972] Anim: 3A  △ P0(0,4)
+[00:55.972] Card destroyed  P0 (0,4) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:58.473] MSG: Death Cobra: Venom applied to Ponycorn.
+[00:58.476] Turn ended  P1  |  Crystals P0=2900 P1=5000
+
+--- Turn 5  |  Player 0  |  Crystals P0=2900 P1=5000 ---
+P0:   [Need][  — ][Pony][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][Deat]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:59.072] Mode selected P0: ATTACK
+[00:59.077] Attack phase P0: 2 attack(s) available
+[00:59.077] MSG: Player 1: tap a character to attack.
+[00:59.370] AI0 attack decision: (0,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} → (0,0) "Echo Barrier" {cost 1000}
+[00:59.701] Revealed: P1 (0,0) "Echo Barrier" {cost 1000}
+[00:59.701] Dice rolled: 5
+[00:59.994] MSG: Trap triggered: Echo Barrier!
+[01:04.089] Crystals: P1 5000 → 4000 (-1000)  [trap cost]
+[01:05.480] MSG: Echo Barrier: Attacking player cannot attack again this turn!
+[01:05.484] Trap: "Echo Barrier" triggered  P0(0,0)→P1(0,0)
+[01:05.484] Anim: 3D  (attacker survives)
+[01:05.999] Turn ended  P0  |  Crystals P0=2900 P1=4000
+
+--- Turn 6  |  Player 1  |  Crystals P0=2900 P1=4000 ---
+P0:   [Need][  — ][Pony][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][Deat]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[01:06.603] Mode selected P1: ATTACK
+[01:06.608] Attack phase P1: 2 attack(s) available
+[01:06.608] MSG: Player 2: tap a character to attack.
+[01:06.909] AI1 attack decision: (0,4)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | flags:venom}
+[01:07.218] Dice rolled: 4
+[01:07.233] MSG: Death Cobra wins!
+[01:11.918] Crystals: P0 2900 → 2600 (-300)  [battle]
+[01:13.321] Attack P1(0,4)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | flags:venom}  Dice=4  ATK=85 vs DEF=20  → WIN
+[01:13.321] Anim: 3A  △ P0(0,2)
+[01:13.321] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | flags:venom}
+[01:15.827] MSG: Death Cobra: Venom applied to Needle Porcupine.
+[01:15.829] Turn ended  P1  |  Crystals P0=2600 P1=4000
+
+--- Turn 7  |  Player 0  |  Crystals P0=2600 P1=4000 ---
+P0:   [Need][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][Deat]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[01:16.433] Mode selected P0: ATTACK
+[01:16.438] Attack phase P0: 2 attack(s) available
+[01:16.438] MSG: Player 1: tap a character to attack.
+[01:16.737] AI0 attack decision: (1,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (0,4) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[01:17.091] Revealed: P0 (1,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:17.092] Dice rolled: 2
+[01:17.096] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[01:17.103] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[01:17.104] MSG: Joseph the Battle Priest wins!
+[01:17.143] Coin flip: Tails
+[01:21.701] Crystals: P1 4000 → 3100 (-900)  [battle]
+[01:23.096] Attack P0(1,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(0,4)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}  Dice=2  ATK=60 vs DEF=50  → WIN
+[01:23.096] Anim: 3A  △ P1(0,4)
+[01:23.096] Card destroyed  P1 (0,4) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[01:23.593] Mode selected P0: ATTACK
+[01:23.597] Attack phase P0: 1 attack(s) available
+[01:23.598] MSG: Player 1: tap a character to attack.
+[01:23.892] AI0 attack decision: (0,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | flags:venom} → (1,0) "Foul Gas" {cost 0}
+[01:24.245] Revealed: P1 (1,0) "Foul Gas" {cost 0}
+[01:24.245] Dice rolled: 5
+[01:24.501] MSG: Trap triggered: Foul Gas!
+[01:28.601] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[01:28.606] Trap: "Foul Gas" triggered  P0(0,0)→P1(1,0)
+[01:28.606] Anim: 3D  (attacker survives)
+[01:29.096] Turn ended  P0  |  Crystals P0=2600 P1=3100
+
+--- Turn 8  |  Player 1  |  Crystals P0=2600 P1=3100 ---
+P0:   [Need][  — ][  — ][  ? ][  — ]
+      [  ? ][Jose][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[01:29.694] Mode selected P1: TECH
+[01:29.994] Crystals: P1 3100 → 1600 (-1500)  [tech cost]
+[01:31.378] Tech played  P1: "Resurrection"
+[01:32.934] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[01:33.342] AI1 target chosen: (0,3)
+[01:33.346] Revealed: P1 (0,3) "Death Cobra" {Unit ATK0 DEF0 | cost 900 | affinity Nature | base 0/0}
+[01:33.347] MSG: Revived Death Cobra at [0,3]!
+[01:33.355] Tech resolved  P1
+[01:34.260] Mode selected P1: ATTACK
+[01:34.265] Attack phase P1: 2 attack(s) available
+[01:34.265] MSG: Player 2: tap a character to attack.
+[01:34.566] AI1 attack decision: (0,3)"Death Cobra" {Unit ATK0 DEF0 | cost 900 | affinity Nature | base 0/0} → (4,4) "Cursed Reflection" {cost 500}
+[01:34.907] Revealed: P0 (4,4) "Cursed Reflection" {cost 500}
+[01:34.907] Dice rolled: 4
+[01:35.193] MSG: Trap triggered: Cursed Reflection!
+[01:39.303] Crystals: P0 2600 → 2100 (-500)  [trap cost]
+[01:40.693] MSG: Cursed Reflection: Death Cobra's ATK and DEF swapped until end of turn!
+[01:40.702] Trap: "Cursed Reflection" triggered  P1(0,3)→P0(4,4)
+[01:40.702] Anim: 3D  (attacker survives)
+[01:43.212] Turn ended  P1  |  Crystals P0=2100 P1=1600
+
+--- Turn 9  |  Player 0  |  Crystals P0=2100 P1=1600 ---
+P0:   [Need][  — ][  — ][  ? ][  — ]
+      [  ? ][Jose][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][Deat][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[01:43.818] Mode selected P0: ATTACK
+[01:43.823] Attack phase P0: 2 attack(s) available
+[01:43.823] MSG: Player 1: tap a character to attack.
+[01:44.126] AI0 attack decision: (0,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | flags:venom} → (0,3) "Death Cobra" {Unit ATK0 DEF0 | cost 900 | affinity Nature | base 0/0}
+[01:44.433] Dice rolled: 4
+[01:44.444] MSG: Needle Porcupine wins!
+[01:49.135] Crystals: P1 1600 → 700 (-900)  [battle]
+[01:50.540] Attack P0(0,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | flags:venom} → P1(0,3)"Death Cobra" {Unit ATK0 DEF0 | cost 900 | affinity Nature | base 0/0}  Dice=4  ATK=10 vs DEF=0  → WIN
+[01:50.540] Anim: 3A  △ P1(0,3)
+[01:50.540] Card destroyed  P1 (0,3) "Death Cobra" {Unit ATK0 DEF0 | cost 900 | affinity Nature | base 0/0}
+[01:51.036] Mode selected P0: ATTACK
+[01:51.043] Attack phase P0: 1 attack(s) available
+[01:51.044] MSG: Player 1: tap a character to attack.
+[01:51.342] AI0 attack decision: (1,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → (2,0) "Hard Scale" {cost 700}
+[01:51.699] Revealed: P1 (2,0) "Hard Scale" {cost 700}
+[01:51.699] Dice rolled: 3
+[01:51.976] MSG: Trap triggered: Hard Scale!
+[01:56.079] Crystals: P1 700 → 0 (-700)  [trap cost]
+
+=== GAME OVER ===
+[01:56.098] AI Player 0 wins
+[01:56.098] Reason: crystals
+[01:56.099] Final crystals — P0: 2100  P1: 0  |  Turns: 9
+[01:56.099] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_wet_sock_avalanche_2026-05-31_18-32-23_378.txt

@@ -6,7 +6,7 @@ extends CanvasLayer
 const _UI_PATHS: Array = [
 	"TitleLogo", "DecoLine",
 	"SettingsBtn", "NewGameBtn", "DeckBuilderBtn",
-	"MailboxBtn", "ShopBtn", "GalleryBtn", "CreditsBtn",
+	"MailboxBtn", "ShopBtn", "GalleryBtn", "CreditsBtn", "ExitGameBtn",
 	"DeckStatusBg", "VersionLabel",
 	"SettingsIconShadow", "SettingsIconBtn",
 	"ExitIconShadow", "ExitIconBtn",

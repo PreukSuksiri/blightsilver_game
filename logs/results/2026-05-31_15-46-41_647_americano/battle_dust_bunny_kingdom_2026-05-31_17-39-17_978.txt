@@ -1,0 +1,306 @@
+=== Battle of Dust Bunny Kingdom ===
+Battle started: 2026-05-31 17:39:17.978
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Lab Bloater
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Release Mutagen, Radar, Spy
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Radar, Spy
+P1 Tech hand: Bribe, Siege Cannon, Resurrection
+P0:   [C:Magi][C:Spea][  — ][  — ][  — ]
+      [  — ][T:Alar][C:Fuji][T:Red ][  — ]
+      [  — ][C:Choi][C:Lab ][C:Scou][  — ]
+      [T:Foul][C:Myst][C:Mars][C:Mage][  — ]
+      [  — ][T:Expl][T:Trap][  — ][T:Snar]
+P1:   [C:Moon][T:Curs][  — ][T:Host][C:Scou]
+      [  — ][C:Claw][C:Vamp][C:Bat ][  — ]
+      [T:Blac][C:Dark][C:Chao][C:Dark][  — ]
+      [  — ][C:Blue][C:Deat][C:Nept][T:Expl]
+      [  — ][  — ][  — ][T:Hypn][T:Brai]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:05.281] Mode selected P0: TECH
+[00:05.585] Tech played  P0: "Spy"
+[00:07.147] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.551] AI0 target chosen: (3,3)
+[00:07.597] Revealed: P1 (3,3) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[00:07.599] Tech resolved  P0
+[00:08.495] Mode selected P0: ATTACK
+[00:08.500] Attack phase P0: 2 attack(s) available
+[00:08.500] MSG: Player 1: tap a character to attack.
+[00:08.793] AI0 attack decision: (0,1)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature | face-down} → (3,3) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[00:09.132] Revealed: P0 (0,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:09.132] Dice rolled: 3
+[00:09.139] MSG: Spear Shark wins!
+[00:13.760] Crystals: P1 5000 → 4800 (-200)  [battle]
+[00:15.160] Attack P0(0,1)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P1(3,3)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}  Dice=3  ATK=50 vs DEF=10  → WIN
+[00:15.160] Anim: 3A  △ P1(3,3)
+[00:15.160] Card destroyed  P1 (3,3) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[00:15.660] Mode selected P0: ATTACK
+[00:15.663] Attack phase P0: 1 attack(s) available
+[00:15.664] MSG: Player 1: tap a character to attack.
+[00:15.972] AI0 attack decision: (0,0)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down} → (0,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down}
+[00:16.319] Revealed: P0 (0,0) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:16.341] Revealed: P1 (0,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:16.341] Dice rolled: 2
+[00:21.073] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:22.474] Attack P0(0,0)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature} → P1(0,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=2  ATK=15 vs DEF=50  → LOSE
+[00:22.474] Anim: 3B  △ P0(0,0)
+[00:22.474] Card destroyed  P0 (0,0) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:22.967] Turn ended  P0  |  Crystals P0=4820 P1=4800
+
+--- Turn 2  |  Player 1  |  Crystals P0=4820 P1=4800 ---
+P0:   [  — ][Spea][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][Scou]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:23.563] Mode selected P1: TECH
+[00:23.863] Crystals: P1 4800 → 3800 (-1000)  [tech cost]
+[00:25.250] Tech played  P1: "Siege Cannon"
+[00:26.822] MSG: Siege Cannon active!
+[00:26.825] Tech resolved  P1
+[00:27.743] Mode selected P1: ATTACK
+[00:27.761] Attack phase P1: 2 attack(s) available
+[00:27.761] MSG: Player 2: tap a character to attack.
+[00:28.051] AI1 attack decision: (0,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → (0,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:28.360] Dice rolled: 5
+[00:28.372] MSG: Scout Probe wins!
+[00:33.060] Crystals: P0 4820 → 4340 (-480)  [battle]
+[00:34.459] Attack P1(0,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P0(0,1)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=5  ATK=40 vs DEF=20  → WIN
+[00:34.459] Anim: 3A  △ P0(0,1)
+[00:34.459] Card destroyed  P0 (0,1) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:34.464] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[00:34.859] AI1 target chosen: (0,2)
+[00:34.862] Ability target resolved  P1
+[00:36.968] Turn ended  P1  |  Crystals P0=4340 P1=3800
+
+--- Turn 3  |  Player 0  |  Crystals P0=4340 P1=3800 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][Scou]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:37.572] Mode selected P0: TECH
+[00:37.881] Crystals: P0 4340 → 3740 (-600)  [tech cost]
+[00:39.266] Tech played  P0: "Radar"
+[00:40.835] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:41.239] AI0 target chosen: (3,2)
+[00:41.278] Revealed: P1 (3,2) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:41.630] AI0 target chosen: (0,1)
+[00:41.668] Revealed: P1 (0,1) "Cursed Reflection" {cost 500}
+[00:42.030] AI0 target chosen: (3,1)
+[00:42.081] Revealed: P1 (3,1) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[00:42.087] Tech resolved  P0
+[00:42.914] Mode selected P0: ATTACK
+[00:42.919] Attack phase P0: 2 attack(s) available
+[00:42.920] MSG: Player 1: tap a character to attack.
+[00:43.222] AI0 attack decision: (2,1)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down} → (1,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down}
+[00:43.599] Revealed: P0 (2,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:43.630] Revealed: P1 (1,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[00:43.630] Dice rolled: 4
+[00:43.647] MSG: Choir Lady Anna wins!
+[00:48.180] Crystals: P1 3800 → 3620 (-180)  [battle]
+[00:49.581] Attack P0(2,1)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → P1(1,1)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=4  ATK=20 vs DEF=10  → WIN
+[00:49.581] Anim: 3A  △ P1(1,1)
+[00:49.581] Card destroyed  P1 (1,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[00:50.069] Mode selected P0: ATTACK
+[00:50.074] Attack phase P0: 1 attack(s) available
+[00:50.075] MSG: Player 1: tap a character to attack.
+[00:50.368] AI0 attack decision: (2,2)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down} → (0,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}
+[00:50.705] Revealed: P0 (2,2) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:50.729] Revealed: P1 (0,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:50.729] Dice rolled: 1
+[00:50.733] MSG: Both cards are destroyed!
+[00:55.298] Crystals: P0 3740 → 2940 (-800)  [battle]
+[00:56.689] Crystals: P1 3620 → 3320 (-300)  [battle]
+[00:58.085] Attack P0(2,2)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P1(0,0)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=1  ATK=20 vs DEF=20  → TIE
+[00:58.086] Anim: 3C  △ P0(2,2) + △ P1(0,0)
+[00:58.086] Card destroyed  P0 (2,2) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:58.086] Card destroyed  P1 (0,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:58.585] Turn ended  P0  |  Crystals P0=2940 P1=3320
+
+--- Turn 4  |  Player 1  |  Crystals P0=2940 P1=3320 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Choi][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][Scou]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Blue][Deat][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:59.189] Mode selected P1: TECH
+[00:59.498] Crystals: P1 3320 → 1820 (-1500)  [tech cost]
+[01:00.892] Tech played  P1: "Resurrection"
+[01:02.441] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[01:02.847] AI1 target chosen: (0,1)
+[01:02.850] Revealed: P1 (0,1) "Moon Tribe Twin Blader" {Unit ATK0 DEF0 | cost 300 | affinity Cosmic | base 0/0}
+[01:02.850] MSG: Revived Moon Tribe Twin Blader at [0,1]!
+[01:02.859] Tech resolved  P1
+[01:03.765] Mode selected P1: ATTACK
+[01:03.775] Attack phase P1: 2 attack(s) available
+[01:03.775] MSG: Player 2: tap a character to attack.
+[01:04.072] AI1 attack decision: (3,1)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane} → (2,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[01:04.380] Dice rolled: 5
+[01:04.394] MSG: Blue Mage: Coin flip missed — normal battle.
+[01:04.395] MSG: Blue Mage wins!
+[01:04.458] Coin flip: Tails, Heads
+[01:10.064] Crystals: P0 2940 → 2690 (-250)  [battle]
+[01:11.474] Attack P1(3,1)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane} → P0(2,1)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}  Dice=5  ATK=45 vs DEF=20  → WIN
+[01:11.474] Anim: 3A  △ P0(2,1)
+[01:11.474] Card destroyed  P0 (2,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[01:13.975] Turn ended  P1  |  Crystals P0=2690 P1=1820
+
+--- Turn 5  |  Player 0  |  Crystals P0=2690 P1=1820 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][Moon][  — ][  ? ][Scou]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Blue][Deat][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[01:14.577] Mode selected P0: ATTACK
+[01:14.585] Attack phase P0: 2 attack(s) available
+[01:14.586] MSG: Player 1: tap a character to attack.
+[01:14.885] AI0 attack decision: (3,1)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos | face-down} → (0,1) "Moon Tribe Twin Blader" {Unit ATK0 DEF0 | cost 300 | affinity Cosmic | base 0/0}
+[01:15.232] Revealed: P0 (3,1) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[01:15.232] Dice rolled: 3
+[01:15.239] MSG: Mysterious Miner wins!
+[01:19.894] Crystals: P1 1820 → 1520 (-300)  [battle]
+[01:21.313] Attack P0(3,1)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos} → P1(0,1)"Moon Tribe Twin Blader" {Unit ATK0 DEF0 | cost 300 | affinity Cosmic | base 0/0}  Dice=3  ATK=25 vs DEF=0  → WIN
+[01:21.316] Anim: 3A  △ P1(0,1)
+[01:21.316] Card destroyed  P1 (0,1) "Moon Tribe Twin Blader" {Unit ATK0 DEF0 | cost 300 | affinity Cosmic | base 0/0}
+[01:21.318] Target prompt: "Mysterious Miner: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:21.687] AI0 target chosen: (4,3)
+[01:21.724] Revealed: P1 (4,3) "Hypnosis" {cost 800}
+[01:21.725] MSG: Revealed: Hypnosis
+[01:21.789] Mode selected P0: ATTACK
+[01:21.795] Attack phase P0: 1 attack(s) available
+[01:21.795] MSG: Player 1: tap a character to attack.
+[01:22.096] AI0 attack decision: (3,2)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[01:22.437] Revealed: P0 (3,2) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:22.458] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:22.458] Dice rolled: 1
+[01:22.462] MSG: Mars Drill wins!
+[01:27.108] Crystals: P1 1520 → 1420 (-100)  [battle]
+[01:28.513] Attack P0(3,2)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=40 vs DEF=0  → WIN
+[01:28.513] Anim: 3A  △ P1(2,2)
+[01:28.513] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:29.011] Turn ended  P0  |  Crystals P0=2690 P1=1420
+
+--- Turn 6  |  Player 1  |  Crystals P0=2690 P1=1420 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Myst][Mars][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][Scou]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][Blue][Deat][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:29.613] Mode selected P1: TECH
+[01:29.933] Tech played  P1: "Bribe"
+[01:31.488] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:31.997] MSG: Bribe: AI passed.
+[01:32.010] Tech resolved  P1
+[01:32.913] Mode selected P1: ATTACK
+[01:32.920] Attack phase P1: 2 attack(s) available
+[01:32.920] MSG: Player 2: tap a character to attack.
+[01:33.222] AI1 attack decision: (0,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → (3,1) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[01:33.530] Dice rolled: 4
+[01:33.543] MSG: Scout Probe wins!
+[01:38.231] Crystals: P0 2690 → 2440 (-250)  [battle]
+[01:39.634] Attack P1(0,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P0(3,1)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}  Dice=4  ATK=40 vs DEF=15  → WIN
+[01:39.634] Anim: 3A  △ P0(3,1)
+[01:39.634] Card destroyed  P0 (3,1) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[01:39.643] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:40.030] AI1 target chosen: (4,1)
+[01:40.059] Revealed: P0 (4,1) "Explosive Barrels" {cost 0}
+[01:40.060] MSG: Scout Probe: adjacent cell revealed.
+[01:40.061] Ability target resolved  P1
+[01:40.131] Mode selected P1: ATTACK
+[01:40.137] Attack phase P1: 1 attack(s) available
+[01:40.138] MSG: Player 2: tap a character to attack.
+[01:40.442] AI1 attack decision: (3,1)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane} → (3,2) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:40.751] Dice rolled: 1
+[01:40.764] MSG: Blue Mage: Two heads — Mars Drill is destroyed!
+[01:40.824] Coin flip: Heads, Heads
+[01:46.418] Crystals: P0 2440 → 2040 (-400)  [battle]
+[01:47.825] Attack P1(3,1)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane} → P0(3,2)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=1  ATK=45 vs DEF=30  → WIN
+[01:47.825] Anim: 3A  △ P0(3,2)
+[01:47.825] Card destroyed  P0 (3,2) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:48.317] Turn ended  P1  |  Crystals P0=2040 P1=1420
+
+--- Turn 7  |  Player 0  |  Crystals P0=2040 P1=1420 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][Scou]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][Blue][Deat][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:48.916] Mode selected P0: ATTACK
+[01:48.921] Attack phase P0: 2 attack(s) available
+[01:48.921] MSG: Player 1: tap a character to attack.
+[01:49.209] AI0 attack decision: (3,3)"Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos | face-down} → (1,3) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down}
+[01:49.545] Revealed: P0 (3,3) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos}
+[01:49.545] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[01:49.571] Revealed: P1 (1,3) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:49.571] Dice rolled: 4
+[01:49.574] MSG: Magenta the Nightbloom wins!
+[01:54.195] Crystals: P1 1420 → 1220 (-200)  [battle]
+[01:55.591] Attack P0(3,3)"Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20} → P1(1,3)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=4  ATK=25 vs DEF=15  → WIN
+[01:55.591] Anim: 3A  △ P1(1,3)
+[01:55.591] Card destroyed  P1 (1,3) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:56.084] Mode selected P0: ATTACK
+[01:56.090] Attack phase P0: 1 attack(s) available
+[01:56.090] MSG: Player 1: tap a character to attack.
+[01:56.385] AI0 attack decision: (2,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down} → (4,4) "Brainwash" {cost 1500}
+[01:56.687] Revealed: P0 (2,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:56.723] Revealed: P1 (4,4) "Brainwash" {cost 1500}
+[01:56.724] Dice rolled: 1
+[01:56.993] MSG: Trap triggered: Brainwash!
+[02:01.085] Crystals: P1 1220 → 0 (-1220)  [trap cost]
+
+=== GAME OVER ===
+[02:01.092] AI Player 0 wins
+[02:01.092] Reason: crystals
+[02:01.092] Final crystals — P0: 2040  P1: 0  |  Turns: 7
+[02:01.092] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_dust_bunny_kingdom_2026-05-31_17-39-17_978.txt

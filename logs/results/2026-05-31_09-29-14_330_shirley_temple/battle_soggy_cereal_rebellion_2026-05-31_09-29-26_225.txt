@@ -1,0 +1,529 @@
+=== Battle of Soggy Cereal Rebellion ===
+Battle started: 2026-05-31 09:29:26.225
+Game Session of Shirley Temple (started 2026-05-31 09:29:14.330)
+=== AI vs AI Match ===
+Batch iteration: 1 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, Tease, War Supply
+P1 Tech hand: Prayer, Great Diplomacy, Release Mutagen
+P0:   [C:Moon][  — ][C:Armo][  — ][C:Spac]
+      [T:Hypn][  — ][C:Bomb][  — ][C:Claw]
+      [C:Hamm][  — ][C:Wand][  — ][T:Alar]
+      [C:Soni][  — ][T:Snar][  — ][C:Bat ]
+      [T:Red ][  — ][  — ][  — ][  — ]
+P1:   [T:Hard][T:Blac][C:Godd][  — ][C:Choi]
+      [  — ][C:Ostr][  — ][C:Gian][T:Acid]
+      [C:Jose][  — ][C:Rott][  — ][C:Fuji]
+      [  — ][T:Alar][  — ][C:Grav][  — ]
+      [C:Gold][T:Curs][C:Blea][  — ][T:Foul]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:05.252] Mode selected P1: TECH
+[00:05.561] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:06.945] Tech played  P1: "Great Diplomacy"
+[00:08.904] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:09.136] AI1 target chosen: (0,2)
+[00:09.136] Revealed: P1 (0,2) "Goddess of Virtue"
+[00:09.536] AI1 target chosen: (1,1)
+[00:09.537] Revealed: P1 (1,1) "Ostrich Cannon"
+[00:09.936] AI1 target chosen: (2,0)
+[00:09.937] Revealed: P1 (2,0) "Joseph the Battle Priest"
+[00:10.336] AI1 target chosen: (2,2)
+[00:10.338] Revealed: P1 (2,2) "Rotten Shrieker"
+[00:10.735] AI1 target chosen: (2,4)
+[00:10.737] Revealed: P1 (2,4) "Fujin"
+[00:10.737] MSG: Great Diplomacy: revealed 5 unit(s).
+[00:10.747] Tech resolved  P1
+[00:11.636] Mode selected P1: ATTACK
+[00:11.643] Attack phase P1: 2 attack(s) available
+[00:11.643] MSG: Player 2: tap a character to attack.
+[00:11.935] AI1 attack decision: (0,2)"Goddess of Virtue" [ATK=80] → (1,1) "(dead-end)"
+[00:12.237] Dice rolled: 2
+[00:12.267] MSG: Nothing happens — Dead End.
+[00:15.629] Dead-end placed  P0 (1,1)
+[00:15.635] Attack P1(0,2)"Goddess of Virtue" → P0(1,1)(empty)  Dice=2  → DEAD_END
+[00:15.635] Anim: 3F  (blank slot)
+[00:16.129] Mode selected P1: ATTACK
+[00:16.138] Attack phase P1: 1 attack(s) available
+[00:16.138] MSG: Player 2: tap a character to attack.
+[00:16.427] AI1 attack decision: (1,1)"Ostrich Cannon" [ATK=60] → (3,1) "(dead-end)"
+[00:16.727] Dice rolled: 4
+[00:16.746] MSG: Nothing happens — Dead End.
+[00:20.128] Dead-end placed  P0 (3,1)
+[00:20.129] MSG: Ostrich Cannon locks itself until next turn.
+[00:20.131] Attack P1(1,1)"Ostrich Cannon" → P0(3,1)(empty)  Dice=4  → DEAD_END
+[00:20.131] Anim: 3F  (blank slot)
+[00:20.629] Turn ended  P1  |  Crystals P0=5000 P1=4000
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][Godd][  — ][  ? ]
+      [  — ][Ostr][  — ][  ? ][  ? ]
+      [Jose][  — ][Rott][  — ][Fuji]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:21.228] Mode selected P0: TECH
+[00:21.539] Tech played  P0: "Tease"
+[00:23.094] MSG: Opponent must choose and reveal 1 of their squares.
+[00:23.096] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:23.502] AI1 target chosen: (4,1)
+[00:23.540] Revealed: P1 (4,1) "Cursed Reflection"
+[00:23.540] MSG: Tease: Opponent revealed Cursed Reflection.
+[00:23.543] Tech resolved  P0
+[00:24.429] Mode selected P0: ATTACK
+[00:24.440] Attack phase P0: 2 attack(s) available
+[00:24.440] MSG: Player 1: tap a character to attack.
+[00:24.736] AI0 attack decision: (1,2)"Bomber Fairy" [ATK=30] → (2,0) "Joseph the Battle Priest" [DEF=25]
+[00:25.099] Revealed: P0 (1,2) "Bomber Fairy"
+[00:25.099] Dice rolled: 5
+[00:25.104] MSG: Bomber Fairy wins!
+[00:29.690] Crystals: P1 4000 → 3400 (-600)  [battle]
+[00:31.083] Card destroyed  P1 (2,0) "Joseph the Battle Priest"
+[00:31.085] MSG: Bomber Fairy: Kill bonus — extra attack!
+[00:31.088] Attack P0(1,2)"Bomber Fairy" → P1(2,0)"Joseph the Battle Priest"  Dice=5  ATK=30 vs DEF=25  → WIN
+[00:31.088] Anim: 3A  △ P1(2,0)
+[00:31.590] Mode selected P0: ATTACK
+[00:31.595] Attack phase P0: 2 attack(s) available
+[00:31.595] MSG: Player 1: tap a character to attack.
+[00:31.899] AI0 attack decision: (0,2)"Armored Bee" [ATK=30] → (0,4) "Choir Lady Anna" [DEF=20]
+[00:32.257] Revealed: P0 (0,2) "Armored Bee"
+[00:32.284] Revealed: P1 (0,4) "Choir Lady Anna"
+[00:32.284] Dice rolled: 2
+[00:32.288] MSG: Armored Bee wins!
+[00:36.974] Crystals: P1 3400 → 3150 (-250)  [battle]
+[00:38.368] Card destroyed  P1 (0,4) "Choir Lady Anna"
+[00:38.374] Attack P0(0,2)"Armored Bee" → P1(0,4)"Choir Lady Anna"  Dice=2  ATK=30 vs DEF=20  → WIN
+[00:38.374] Anim: 3A  △ P1(0,4)
+[00:40.873] Turn ended  P0  |  Crystals P0=5000 P1=3150
+
+--- Turn 3  |  Player 1  |  Crystals P0=5000 P1=3150 ---
+P0:   [  ? ][  — ][Armo][  — ][  ? ]
+      [  ? ][  — ][Bomb][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][Godd][  — ][  — ]
+      [  — ][Ostr][  — ][  ? ][  ? ]
+      [  — ][  — ][Rott][  — ][Fuji]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:41.461] Mode selected P1: TECH
+[00:41.772] Tech played  P1: "Prayer"
+[00:43.320] MSG: Prayer: Divine Characters protected until your next turn.
+[00:43.324] Tech resolved  P1
+[00:44.219] Mode selected P1: ATTACK
+[00:44.231] Attack phase P1: 2 attack(s) available
+[00:44.231] MSG: Player 2: tap a character to attack.
+[00:44.520] AI1 attack decision: (0,2)"Goddess of Virtue" [ATK=80] → (1,2) "Bomber Fairy" [DEF=15]
+[00:44.819] Dice rolled: 4
+[00:44.830] MSG: Goddess of Virtue wins!
+[00:49.511] Crystals: P0 5000 → 4500 (-500)  [battle]
+[00:50.906] Card destroyed  P0 (1,2) "Bomber Fairy"
+[00:50.912] Attack P1(0,2)"Goddess of Virtue" → P0(1,2)"Bomber Fairy"  Dice=4  ATK=80 vs DEF=15  → WIN
+[00:50.912] Anim: 3A  △ P0(1,2)
+[00:51.403] Mode selected P1: ATTACK
+[00:51.409] Attack phase P1: 1 attack(s) available
+[00:51.409] MSG: Player 2: tap a character to attack.
+[00:51.703] AI1 attack decision: (2,2)"Rotten Shrieker" [ATK=40] → (0,2) "Armored Bee" [DEF=0]
+[00:52.003] Dice rolled: 2
+[00:52.016] MSG: Rotten Shrieker wins!
+[00:56.695] Crystals: P0 4500 → 4020 (-480)  [battle]
+[00:58.089] Card destroyed  P0 (0,2) "Armored Bee"
+[00:58.095] Attack P1(2,2)"Rotten Shrieker" → P0(0,2)"Armored Bee"  Dice=2  ATK=40 vs DEF=0  → WIN
+[00:58.095] Anim: 3A  △ P0(0,2)
+[00:58.594] Turn ended  P1  |  Crystals P0=4020 P1=3150
+
+--- Turn 4  |  Player 0  |  Crystals P0=4020 P1=3150 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][Godd][  — ][  — ]
+      [  — ][Ostr][  — ][  ? ][  ? ]
+      [  — ][  — ][Rott][  — ][Fuji]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:59.187] Mode selected P0: TECH
+[00:59.497] Tech played  P0: "Bribe"
+[01:01.061] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:01.569] MSG: Bribe: AI passed.
+[01:01.576] Tech resolved  P0
+[01:02.487] Mode selected P0: ATTACK
+[01:02.497] Attack phase P0: 2 attack(s) available
+[01:02.497] MSG: Player 1: tap a character to attack.
+[01:02.795] AI0 attack decision: (3,4)"Bat Swarm" [ATK=15] → (0,0) "Hard Scale" [DEF=0]
+[01:03.172] Revealed: P0 (3,4) "Bat Swarm"
+[01:03.207] Revealed: P1 (0,0) "Hard Scale"
+[01:03.208] Dice rolled: 2
+[01:03.413] MSG: Trap triggered: Hard Scale!
+[01:07.495] Card destroyed  P1 (0,0) "Hard Scale"
+[01:07.496] Crystals: P1 3150 → 2450 (-700)  [trap cost]
+[01:08.887] MSG: Hard Scale: All your units gain +5 DEF in Reckoning this turn!
+[01:08.893] Trap: "Hard Scale" triggered  P0(3,4)→P1(0,0)
+[01:08.893] Anim: 3D  (attacker survives)
+[01:09.386] Mode selected P0: ATTACK
+[01:09.393] Attack phase P0: 1 attack(s) available
+[01:09.393] MSG: Player 1: tap a character to attack.
+[01:09.685] AI0 attack decision: (0,4)"Space Boy" [ATK=75] → (1,1) "Ostrich Cannon" [DEF=35]
+[01:10.030] Revealed: P0 (0,4) "Space Boy"
+[01:10.030] Dice rolled: 5
+[01:10.035] MSG: Space Boy wins!
+[01:14.637] Crystals: P1 2450 → 1650 (-800)  [battle]
+[01:16.032] Card destroyed  P1 (1,1) "Ostrich Cannon"
+[01:16.040] Attack P0(0,4)"Space Boy" → P1(1,1)"Ostrich Cannon"  Dice=5  ATK=75 vs DEF=35  → WIN
+[01:16.040] Anim: 3A  △ P1(1,1)
+[01:16.543] Turn ended  P0  |  Crystals P0=4020 P1=1650
+
+--- Turn 5  |  Player 1  |  Crystals P0=4020 P1=1650 ---
+P0:   [  ? ][  — ][  — ][  — ][Spac]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][Bat ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  ? ][Godd][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][Rott][  — ][Fuji]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:17.145] Mode selected P1: TECH
+[01:17.464] Tech played  P1: "Release Mutagen"
+[01:19.028] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[01:19.436] AI1 target chosen: (2,2)
+[01:19.445] Tech resolved  P1
+[01:20.352] Mode selected P1: ATTACK
+[01:20.359] Attack phase P1: 2 attack(s) available
+[01:20.359] MSG: Player 2: tap a character to attack.
+[01:20.661] AI1 attack decision: (0,2)"Goddess of Virtue" [ATK=80] → (0,4) "Space Boy" [DEF=65]
+[01:20.970] Dice rolled: 4
+[01:20.982] MSG: Goddess of Virtue wins!
+[01:25.670] Crystals: P0 4020 → 3220 (-800)  [battle]
+[01:27.064] Card destroyed  P0 (0,4) "Space Boy"
+[01:27.072] Attack P1(0,2)"Goddess of Virtue" → P0(0,4)"Space Boy"  Dice=4  ATK=80 vs DEF=65  → WIN
+[01:27.072] Anim: 3A  △ P0(0,4)
+[01:27.570] Mode selected P1: ATTACK
+[01:27.580] Attack phase P1: 1 attack(s) available
+[01:27.580] MSG: Player 2: tap a character to attack.
+[01:27.877] AI1 attack decision: (2,4)"Fujin" [ATK=35] → (3,4) "Bat Swarm" [DEF=15]
+[01:28.186] Dice rolled: 2
+[01:28.198] MSG: Fujin wins!
+[01:32.886] Crystals: P0 3220 → 3020 (-200)  [battle]
+[01:34.285] Card destroyed  P0 (3,4) "Bat Swarm"
+[01:34.291] Attack P1(2,4)"Fujin" → P0(3,4)"Bat Swarm"  Dice=2  ATK=35 vs DEF=15  → WIN
+[01:34.291] Anim: 3A  △ P0(3,4)
+[01:34.796] Turn ended  P1  |  Crystals P0=3020 P1=1650
+
+--- Turn 6  |  Player 0  |  Crystals P0=3020 P1=1650 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  ? ][Godd][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][Rott][  — ][Fuji]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:35.405] Mode selected P0: ATTACK
+[01:35.410] Attack phase P0: 2 attack(s) available
+[01:35.410] MSG: Player 1: tap a character to attack.
+[01:35.707] AI0 attack decision: (2,2)"Wandering Swordsman" [ATK=60] → (2,4) "Fujin" [DEF=40]
+[01:36.079] Revealed: P0 (2,2) "Wandering Swordsman"
+[01:36.079] Dice rolled: 3
+[01:36.083] MSG: Wandering Swordsman wins!
+[01:40.708] Crystals: P1 1650 → 1200 (-450)  [battle]
+[01:42.103] Card destroyed  P1 (2,4) "Fujin"
+[01:42.110] Attack P0(2,2)"Wandering Swordsman" → P1(2,4)"Fujin"  Dice=3  ATK=60 vs DEF=40  → WIN
+[01:42.110] Anim: 3A  △ P1(2,4)
+[01:44.615] Turn ended  P0  |  Crystals P0=3020 P1=1200
+
+--- Turn 7  |  Player 1  |  Crystals P0=3020 P1=1200 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Wand][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  ? ][Godd][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][Rott][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:45.211] Mode selected P1: ATTACK
+[01:45.217] Attack phase P1: 2 attack(s) available
+[01:45.217] MSG: Player 2: tap a character to attack.
+[01:45.503] AI1 attack decision: (0,2)"Goddess of Virtue" [ATK=80] → (2,2) "Wandering Swordsman" [DEF=60]
+[01:45.803] Dice rolled: 1
+[01:45.810] MSG: Goddess of Virtue wins!
+[01:50.487] Crystals: P0 3020 → 2420 (-600)  [battle]
+[01:51.879] Card destroyed  P0 (2,2) "Wandering Swordsman"
+[01:51.882] Attack P1(0,2)"Goddess of Virtue" → P0(2,2)"Wandering Swordsman"  Dice=1  ATK=80 vs DEF=60  → WIN
+[01:51.882] Anim: 3A  △ P0(2,2)
+[01:52.377] Mode selected P1: ATTACK
+[01:52.385] Attack phase P1: 1 attack(s) available
+[01:52.386] MSG: Player 2: tap a character to attack.
+[01:52.678] AI1 attack decision: (2,2)"Rotten Shrieker" [ATK=20] → (3,3) "(dead-end)"
+[01:52.978] Dice rolled: 5
+[01:53.007] MSG: Nothing happens — Dead End.
+[01:56.370] Dead-end placed  P0 (3,3)
+[01:56.375] Attack P1(2,2)"Rotten Shrieker" → P0(3,3)(empty)  Dice=5  → DEAD_END
+[01:56.375] Anim: 3F  (blank slot)
+[01:56.875] Turn ended  P1  |  Crystals P0=2420 P1=1200
+
+--- Turn 8  |  Player 0  |  Crystals P0=2420 P1=1200 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  ? ][Godd][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][Rott][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:57.473] Mode selected P0: ATTACK
+[01:57.478] Attack phase P0: 2 attack(s) available
+[01:57.478] MSG: Player 1: tap a character to attack.
+[01:57.769] AI0 attack decision: (1,4)"Claw Mutant" [ATK=15] → (0,3) "(dead-end)"
+[01:58.125] Revealed: P0 (1,4) "Claw Mutant"
+[01:58.125] Dice rolled: 5
+[01:58.141] MSG: Nothing happens — Dead End.
+[02:01.486] Dead-end placed  P1 (0,3)
+[02:01.489] Attack P0(1,4)"Claw Mutant" → P1(0,3)(empty)  Dice=5  → DEAD_END
+[02:01.489] Anim: 3F  (blank slot)
+[02:04.002] Turn ended  P0  |  Crystals P0=2420 P1=1200
+
+--- Turn 9  |  Player 1  |  Crystals P0=2420 P1=1200 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][Claw]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  ? ][Godd][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][Rott][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:04.606] Mode selected P1: ATTACK
+[02:04.612] Attack phase P1: 2 attack(s) available
+[02:04.612] MSG: Player 2: tap a character to attack.
+[02:04.894] AI1 attack decision: (0,2)"Goddess of Virtue" [ATK=80] → (1,4) "Claw Mutant" [DEF=10]
+[02:05.195] Dice rolled: 1
+[02:05.205] MSG: Goddess of Virtue wins!
+[02:09.879] Crystals: P0 2420 → 2240 (-180)  [battle]
+[02:11.271] Card destroyed  P0 (1,4) "Claw Mutant"
+[02:11.279] Attack P1(0,2)"Goddess of Virtue" → P0(1,4)"Claw Mutant"  Dice=1  ATK=80 vs DEF=10  → WIN
+[02:11.279] Anim: 3A  △ P0(1,4)
+[02:11.769] Mode selected P1: ATTACK
+[02:11.774] Attack phase P1: 1 attack(s) available
+[02:11.774] MSG: Player 2: tap a character to attack.
+[02:12.069] AI1 attack decision: (2,2)"Rotten Shrieker" [ATK=10] → (2,1) "(dead-end)"
+[02:12.370] Dice rolled: 1
+[02:12.398] MSG: Nothing happens — Dead End.
+[02:15.754] Dead-end placed  P0 (2,1)
+[02:15.756] Attack P1(2,2)"Rotten Shrieker" → P0(2,1)(empty)  Dice=1  → DEAD_END
+[02:15.757] Anim: 3F  (blank slot)
+[02:16.256] Turn ended  P1  |  Crystals P0=2240 P1=1200
+
+--- Turn 10  |  Player 0  |  Crystals P0=2240 P1=1200 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  ? ][Godd][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][Rott][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:16.858] Mode selected P0: ATTACK
+[02:16.865] Attack phase P0: 2 attack(s) available
+[02:16.865] MSG: Player 1: tap a character to attack.
+[02:17.152] AI0 attack decision: (2,0)"Hammer Shark" [ATK=20] → (0,1) "Blackmail" [DEF=0]
+[02:17.500] Revealed: P0 (2,0) "Hammer Shark"
+[02:17.520] Revealed: P1 (0,1) "Blackmail"
+[02:17.520] Dice rolled: 4
+[02:17.791] MSG: Trap triggered: Blackmail!
+[02:21.880] Card destroyed  P1 (0,1) "Blackmail"
+[02:21.890] Prompt: "Blackmail"  [Discard 1 Tech Card / End your turn]
+[02:22.478] Ability choice resolved: 0 (Yes)
+[02:22.478] MSG: Blackmail: Discarded 1 Tech Card.
+[02:22.484] Trap: "Blackmail" triggered  P0(2,0)→P1(0,1)
+[02:22.484] Anim: 3D  (attacker survives)
+[02:24.994] Turn ended  P0  |  Crystals P0=2240 P1=1200
+
+--- Turn 11  |  Player 1  |  Crystals P0=2240 P1=1200 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [Hamm][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Godd][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][Rott][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:25.560] Mode selected P1: ATTACK
+[02:25.566] Attack phase P1: 2 attack(s) available
+[02:25.566] MSG: Player 2: tap a character to attack.
+[02:25.860] AI1 attack decision: (0,2)"Goddess of Virtue" [ATK=80] → (2,0) "Hammer Shark" [DEF=20]
+[02:26.169] Dice rolled: 5
+[02:26.180] MSG: Goddess of Virtue wins!
+[02:30.871] Crystals: P0 2240 → 1990 (-250)  [battle]
+[02:32.264] Card destroyed  P0 (2,0) "Hammer Shark"
+[02:32.269] Attack P1(0,2)"Goddess of Virtue" → P0(2,0)"Hammer Shark"  Dice=5  ATK=80 vs DEF=20  → WIN
+[02:32.269] Anim: 3A  △ P0(2,0)
+[02:32.769] Mode selected P1: ATTACK
+[02:32.772] Attack phase P1: 1 attack(s) available
+[02:32.772] MSG: Player 2: tap a character to attack.
+[02:33.078] AI1 attack decision: (2,2)"Rotten Shrieker" [ATK=0] → (2,3) "(dead-end)"
+[02:33.386] Dice rolled: 2
+[02:33.406] MSG: Nothing happens — Dead End.
+[02:36.797] Dead-end placed  P0 (2,3)
+[02:36.806] Attack P1(2,2)"Rotten Shrieker" → P0(2,3)(empty)  Dice=2  → DEAD_END
+[02:36.806] Anim: 3F  (blank slot)
+[02:37.306] Turn ended  P1  |  Crystals P0=1990 P1=1200
+
+--- Turn 12  |  Player 0  |  Crystals P0=1990 P1=1200 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Godd][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][Rott][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:37.914] Mode selected P0: ATTACK
+[02:37.921] Attack phase P0: 2 attack(s) available
+[02:37.921] MSG: Player 1: tap a character to attack.
+[02:38.219] AI0 attack decision: (3,0)"Sonic Seraph" [ATK=45] → (2,2) "Rotten Shrieker" [DEF=30]
+[02:38.583] Revealed: P0 (3,0) "Sonic Seraph"
+[02:38.583] Dice rolled: 1
+[02:38.587] MSG: Sonic Seraph wins!
+[02:43.204] Crystals: P1 1200 → 750 (-450)  [battle]
+[02:44.598] Card destroyed  P1 (2,2) "Rotten Shrieker"
+[02:44.604] Attack P0(3,0)"Sonic Seraph" → P1(2,2)"Rotten Shrieker"  Dice=1  ATK=45 vs DEF=30  → WIN
+[02:44.604] Anim: 3A  △ P1(2,2)
+[02:45.095] Mode selected P0: ATTACK
+[02:45.102] Attack phase P0: 1 attack(s) available
+[02:45.106] MSG: Player 1: tap a character to attack.
+[02:45.389] AI0 attack decision: (0,0)"Moonrise Gentleman" [ATK=40] → (4,2) "Bleacher Squad" [DEF=20]
+[02:45.734] Revealed: P0 (0,0) "Moonrise Gentleman"
+[02:45.753] Revealed: P1 (4,2) "Bleacher Squad"
+[02:45.753] Dice rolled: 4
+[02:45.756] MSG: Moonrise Gentleman wins!
+[02:50.419] Crystals: P1 750 → 430 (-320)  [battle]
+[02:51.813] Card destroyed  P1 (4,2) "Bleacher Squad"
+[02:51.816] Attack P0(0,0)"Moonrise Gentleman" → P1(4,2)"Bleacher Squad"  Dice=4  ATK=40 vs DEF=20  → WIN
+[02:51.816] Anim: 3A  △ P1(4,2)
+[02:52.319] Turn ended  P0  |  Crystals P0=1990 P1=430
+
+--- Turn 13  |  Player 1  |  Crystals P0=1990 P1=430 ---
+P0:   [Moon][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Soni][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Godd][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[02:52.919] Mode selected P1: ATTACK
+[02:52.927] Attack phase P1: 2 attack(s) available
+[02:52.927] MSG: Player 2: tap a character to attack.
+[02:53.211] AI1 attack decision: (0,2)"Goddess of Virtue" [ATK=80] → (3,0) "Sonic Seraph" [DEF=50]
+[02:53.511] Dice rolled: 1
+[02:53.518] MSG: Goddess of Virtue wins!
+[02:58.203] Crystals: P0 1990 → 1440 (-550)  [battle]
+[02:59.596] Card destroyed  P0 (3,0) "Sonic Seraph"
+[02:59.599] Attack P1(0,2)"Goddess of Virtue" → P0(3,0)"Sonic Seraph"  Dice=1  ATK=80 vs DEF=50  → WIN
+[02:59.599] Anim: 3A  △ P0(3,0)
+[03:00.094] Mode selected P1: ATTACK
+[03:00.100] Attack phase P1: 1 attack(s) available
+[03:00.100] MSG: Player 2: tap a character to attack.
+[03:00.395] AI1 attack decision: (4,0)"Golden Senju" [ATK=15] → (3,2) "Snare Trap" [DEF=0]
+[03:00.735] Revealed: P1 (4,0) "Golden Senju"
+[03:00.768] Revealed: P0 (3,2) "Snare Trap"
+[03:00.768] Dice rolled: 2
+[03:00.960] MSG: Trap triggered: Snare Trap!
+[03:05.071] Card destroyed  P0 (3,2) "Snare Trap"
+[03:05.072] Crystals: P0 1440 → 940 (-500)  [trap cost]
+[03:06.461] MSG: Snare Trap: Golden Senju's effect nullified until end of next turn!
+[03:06.468] Trap: "Snare Trap" triggered  P1(4,0)→P0(3,2)
+[03:06.468] Anim: 3D  (attacker survives)
+[03:06.976] Turn ended  P1  |  Crystals P0=940 P1=430
+
+--- Turn 14  |  Player 0  |  Crystals P0=940 P1=430 ---
+P0:   [Moon][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Godd][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [Gold][  — ][  — ][  — ][  ? ]
+[03:07.579] Mode selected P0: ATTACK
+[03:07.583] Attack phase P0: 2 attack(s) available
+[03:07.583] MSG: Player 1: tap a character to attack.
+[03:07.886] AI0 attack decision: (0,0)"Moonrise Gentleman" [ATK=40] → (4,0) "Golden Senju" [DEF=0]
+[03:08.194] Dice rolled: 1
+[03:08.204] MSG: Moonrise Gentleman wins!
+[03:12.895] Crystals: P1 430 → 230 (-200)  [battle]
+[03:14.289] Card destroyed  P1 (4,0) "Golden Senju"
+[03:14.293] Attack P0(0,0)"Moonrise Gentleman" → P1(4,0)"Golden Senju"  Dice=1  ATK=40 vs DEF=0  → WIN
+[03:14.293] Anim: 3A  △ P1(4,0)
+[03:14.798] Turn ended  P0  |  Crystals P0=940 P1=230
+
+--- Turn 15  |  Player 1  |  Crystals P0=940 P1=230 ---
+P0:   [Moon][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Godd][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[03:15.402] Mode selected P1: ATTACK
+[03:15.405] Attack phase P1: 2 attack(s) available
+[03:15.405] MSG: Player 2: tap a character to attack.
+[03:15.706] AI1 attack decision: (0,2)"Goddess of Virtue" [ATK=80] → (0,0) "Moonrise Gentleman" [DEF=30]
+[03:16.015] Dice rolled: 2
+[03:16.026] MSG: Goddess of Virtue wins!
+[03:22.333] Crystals: P0 940 → 540 (-400)  [battle]
+[03:23.724] Card destroyed  P0 (0,0) "Moonrise Gentleman"
+
+=== GAME OVER ===
+[03:23.727] AI Player 1 wins
+[03:23.727] Reason: all_destroyed
+[03:23.727] Final crystals — P0: 540  P1: 230  |  Turns: 15
+[03:23.727] Log saved to: res://logs/results/2026-05-31_09-29-14_330_shirley_temple/battle_soggy_cereal_rebellion_2026-05-31_09-29-26_225.txt

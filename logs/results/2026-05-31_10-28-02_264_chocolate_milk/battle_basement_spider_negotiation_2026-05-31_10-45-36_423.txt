@@ -1,0 +1,440 @@
+=== Battle of Basement Spider Negotiation ===
+Battle started: 2026-05-31 10:45:36.423
+Game Session of Chocolate Milk (started 2026-05-31 10:28:02.264)
+=== AI vs AI Match ===
+Batch iteration: 9 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, Release Mutagen, Great Diplomacy
+P1 Tech hand: Tease, Release Mutagen, Siege Cannon
+P0:   [  — ][  — ][T:Red ][T:Brai][C:Mad ]
+      [  — ][C:Flam][C:Whit][C:Tiny][  — ]
+      [  — ][C:Pyro][C:Mafi][C:Hunt][  — ]
+      [  — ][C:Laug][C:Gamm][C:Stin][  — ]
+      [T:Foul][  — ][  — ][T:Hypn][T:Host]
+P1:   [C:Ange][T:Deco][C:Pyro][T:Host][  — ]
+      [T:Defe][C:Scyt][C:Jose][C:Lab ][  — ]
+      [  — ][C:Lase][  — ][C:Mafi][C:Void]
+      [  — ][C:Silv][C:Witc][C:Jira][  — ]
+      [C:Mad ][  — ][  — ][T:Red ][T:Spik]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:05.323] Mode selected P1: TECH
+[00:05.633] Tech played  P1: "Tease"
+[00:07.172] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.174] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:07.572] AI0 target chosen: (0,4)
+[00:07.618] Revealed: P0 (0,4) "Mad Raccoon"
+[00:07.618] MSG: Tease: Opponent revealed Mad Raccoon.
+[00:07.619] Tech resolved  P1
+[00:08.473] Mode selected P1: ATTACK
+[00:08.478] Attack phase P1: 2 attack(s) available
+[00:08.478] MSG: Player 2: tap a character to attack.
+[00:08.780] AI1 attack decision: (0,2)"Pyromancer" [ATK=80] → (0,4) "Mad Raccoon" [DEF=15]
+[00:09.119] Revealed: P1 (0,2) "Pyromancer"
+[00:09.119] Dice rolled: 1
+[00:09.122] MSG: Pyromancer wins!
+[00:14.781] Crystals: P0 5000 → 4740 (-260)  [battle]
+[00:16.174] Card destroyed  P0 (0,4) "Mad Raccoon"
+[00:16.176] Attack P1(0,2)"Pyromancer" → P0(0,4)"Mad Raccoon"  Dice=1  ATK=110 vs DEF=15  → WIN
+[00:16.176] Anim: 3A  △ P0(0,4)
+[00:16.673] Mode selected P1: ATTACK
+[00:16.678] Attack phase P1: 1 attack(s) available
+[00:16.679] MSG: Player 2: tap a character to attack.
+[00:16.972] AI1 attack decision: (1,2)"Joseph the Battle Priest" [ATK=60] → (0,2) "Red Card" [DEF=0]
+[00:17.306] Revealed: P1 (1,2) "Joseph the Battle Priest"
+[00:17.330] Revealed: P0 (0,2) "Red Card"
+[00:17.330] Dice rolled: 4
+[00:17.581] MSG: Trap triggered: Red Card!
+[00:21.664] Card destroyed  P0 (0,2) "Red Card"
+[00:21.729] Coin flip: Tails, Heads
+[00:24.440] MSG: Red Card: Tails, Heads.
+[00:24.440] MSG: Not both heads — no effect.
+[00:24.446] Trap: "Red Card" triggered  P1(1,2)→P0(0,2)
+[00:24.446] Anim: 3D  (attacker survives)
+[00:24.950] Turn ended  P1  |  Crystals P0=4740 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4740 P1=5000 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][Pyro][  ? ][  — ]
+      [  ? ][  ? ][Jose][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:25.555] Mode selected P0: TECH
+[00:25.865] Crystals: P0 4740 → 3740 (-1000)  [tech cost]
+[00:27.251] Tech played  P0: "Great Diplomacy"
+[00:29.002] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:29.272] AI0 target chosen: (2,1)
+[00:29.273] Revealed: P0 (2,1) "Pyromancer"
+[00:29.672] AI0 target chosen: (1,1)
+[00:29.674] Revealed: P0 (1,1) "Flame Seraph"
+[00:30.072] AI0 target chosen: (2,3)
+[00:30.073] Revealed: P0 (2,3) "Huntress of Green Glade"
+[00:30.472] AI0 target chosen: (2,2)
+[00:30.474] Revealed: P0 (2,2) "Mafia Associates"
+[00:30.872] AI0 target chosen: (1,2)
+[00:30.874] Revealed: P0 (1,2) "White Tiger"
+[00:30.875] MSG: Great Diplomacy: revealed 5 unit(s).
+[00:30.887] Tech resolved  P0
+[00:31.747] Mode selected P0: ATTACK
+[00:31.762] Attack phase P0: 2 attack(s) available
+[00:31.762] MSG: Player 1: tap a character to attack.
+[00:32.047] AI0 attack decision: (2,1)"Pyromancer" [ATK=80] → (0,2) "Pyromancer" [DEF=0]
+[00:32.347] Dice rolled: 2
+[00:32.360] MSG: Pyromancer wins!
+[00:37.039] Crystals: P1 5000 → 4100 (-900)  [battle]
+[00:38.434] Card destroyed  P1 (0,2) "Pyromancer"
+[00:38.443] Attack P0(2,1)"Pyromancer" → P1(0,2)"Pyromancer"  Dice=2  ATK=80 vs DEF=0  → WIN
+[00:38.443] Anim: 3A  △ P1(0,2)
+[00:38.931] Mode selected P0: ATTACK
+[00:38.937] Attack phase P0: 1 attack(s) available
+[00:38.937] MSG: Player 1: tap a character to attack.
+[00:39.230] AI0 attack decision: (1,1)"Flame Seraph" [ATK=50] → (1,2) "Joseph the Battle Priest" [DEF=25]
+[00:39.531] Dice rolled: 3
+[00:39.544] MSG: Flame Seraph wins!
+[00:44.222] Crystals: P1 4100 → 3500 (-600)  [battle]
+[00:45.614] Card destroyed  P1 (1,2) "Joseph the Battle Priest"
+[00:45.619] Attack P0(1,1)"Flame Seraph" → P1(1,2)"Joseph the Battle Priest"  Dice=3  ATK=50 vs DEF=25  → WIN
+[00:45.619] Anim: 3A  △ P1(1,2)
+[00:46.119] Turn ended  P0  |  Crystals P0=3740 P1=3500
+
+--- Turn 3  |  Player 1  |  Crystals P0=3740 P1=3500 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][Flam][Whit][  ? ][  — ]
+      [  — ][Pyro][Mafi][Hunt][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:46.714] Mode selected P1: TECH
+[00:47.014] Crystals: P1 3500 → 2500 (-1000)  [tech cost]
+[00:48.404] Tech played  P1: "Siege Cannon"
+[00:49.946] MSG: Siege Cannon active!
+[00:49.952] Tech resolved  P1
+[00:50.847] Mode selected P1: ATTACK
+[00:50.856] Attack phase P1: 2 attack(s) available
+[00:50.856] MSG: Player 2: tap a character to attack.
+[00:51.147] AI1 attack decision: (3,3)"Jirayu the Rebellious Prince" [ATK=40] → (2,1) "Pyromancer" [DEF=0]
+[00:51.500] Revealed: P1 (3,3) "Jirayu the Rebellious Prince"
+[00:51.500] Dice rolled: 2
+[00:51.505] MSG: Jirayu the Rebellious Prince wins!
+[00:56.105] Crystals: P0 3740 → 2840 (-900)  [battle]
+[00:57.499] Card destroyed  P0 (2,1) "Pyromancer"
+[00:57.505] Attack P1(3,3)"Jirayu the Rebellious Prince" → P0(2,1)"Pyromancer"  Dice=2  ATK=40 vs DEF=0  → WIN
+[00:57.505] Anim: 3A  △ P0(2,1)
+[00:58.006] Mode selected P1: ATTACK
+[00:58.012] Attack phase P1: 1 attack(s) available
+[00:58.013] MSG: Player 2: tap a character to attack.
+[00:58.313] AI1 attack decision: (3,2)"Witchhunter" [ATK=20] → (1,1) "Flame Seraph" [DEF=10]
+[00:58.657] Revealed: P1 (3,2) "Witchhunter"
+[00:58.657] Dice rolled: 3
+[00:58.660] MSG: Witchhunter wins!
+[01:03.322] Crystals: P0 2840 → 2340 (-500)  [battle]
+[01:04.715] Card destroyed  P0 (1,1) "Flame Seraph"
+[01:04.721] Attack P1(3,2)"Witchhunter" → P0(1,1)"Flame Seraph"  Dice=3  ATK=20 vs DEF=10  → WIN
+[01:04.721] Anim: 3A  △ P0(1,1)
+[01:05.227] Turn ended  P1  |  Crystals P0=2340 P1=2500
+
+--- Turn 4  |  Player 0  |  Crystals P0=2340 P1=2500 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Whit][  ? ][  — ]
+      [  — ][  — ][Mafi][Hunt][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][Witc][Jira][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[01:05.830] Mode selected P0: TECH
+[01:06.152] Tech played  P0: "Bribe"
+[01:07.721] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:08.221] MSG: Bribe: AI passed.
+[01:08.228] Tech resolved  P0
+[01:09.122] Mode selected P0: ATTACK
+[01:09.133] Attack phase P0: 2 attack(s) available
+[01:09.134] MSG: Player 1: tap a character to attack.
+[01:09.421] AI0 attack decision: (2,3)"Huntress of Green Glade" [ATK=50] → (3,3) "Jirayu the Rebellious Prince" [DEF=40]
+[01:09.723] Dice rolled: 2
+[01:09.736] MSG: Huntress of Green Glade wins!
+[01:14.414] Crystals: P1 2500 → 1900 (-600)  [battle]
+[01:15.807] Card destroyed  P1 (3,3) "Jirayu the Rebellious Prince"
+[01:15.812] Attack P0(2,3)"Huntress of Green Glade" → P1(3,3)"Jirayu the Rebellious Prince"  Dice=2  ATK=50 vs DEF=40  → WIN
+[01:15.812] Anim: 3A  △ P1(3,3)
+[01:16.305] Mode selected P0: ATTACK
+[01:16.311] Attack phase P0: 1 attack(s) available
+[01:16.312] MSG: Player 1: tap a character to attack.
+[01:16.610] AI0 attack decision: (2,2)"Mafia Associates" [ATK=45] → (3,2) "Witchhunter" [DEF=20]
+[01:16.910] Dice rolled: 2
+[01:16.919] MSG: Mafia Associates wins!
+[01:21.601] Crystals: P1 1900 → 1650 (-250)  [battle]
+[01:22.995] Card destroyed  P1 (3,2) "Witchhunter"
+[01:22.998] Attack P0(2,2)"Mafia Associates" → P1(3,2)"Witchhunter"  Dice=2  ATK=45 vs DEF=20  → WIN
+[01:22.998] Anim: 3A  △ P1(3,2)
+[01:23.499] Turn ended  P0  |  Crystals P0=2340 P1=1650
+
+--- Turn 5  |  Player 1  |  Crystals P0=2340 P1=1650 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Whit][  ? ][  — ]
+      [  — ][  — ][Mafi][Hunt][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[01:24.112] Mode selected P1: ATTACK
+[01:24.116] Attack phase P1: 2 attack(s) available
+[01:24.116] MSG: Player 2: tap a character to attack.
+[01:24.401] AI1 attack decision: (4,0)"Mad Raccoon" [ATK=30] → (1,2) "White Tiger" [DEF=25]
+[01:24.714] Revealed: P1 (4,0) "Mad Raccoon"
+[01:24.714] Dice rolled: 3
+[01:24.727] MSG: White Tiger: Attacker loses 15 ATK!
+[01:30.526] Crystals: P1 1650 → 1390 (-260)  [battle]
+[01:31.920] Card destroyed  P1 (4,0) "Mad Raccoon"
+[01:31.924] Attack P1(4,0)"Mad Raccoon" → P0(1,2)"White Tiger"  Dice=3  ATK=15 vs DEF=25  → LOSE
+[01:31.924] Anim: 3B  △ P1(4,0)
+[01:31.924] MSG: Siege Cannon: White Tiger at (1,2) destroyed after surviving the attack!
+[01:31.924] Crystals: P0 2340 → 1890 (-450)  [card lost]
+[01:31.926] Card destroyed  P0 (1,2) "White Tiger"
+[01:33.810] Mode selected P1: ATTACK
+[01:33.813] Attack phase P1: 1 attack(s) available
+[01:33.813] MSG: Player 2: tap a character to attack.
+[01:34.117] AI1 attack decision: (1,3)"Lab Crawler" [ATK=95] → (2,2) "Mafia Associates" [DEF=40]
+[01:34.461] Revealed: P1 (1,3) "Lab Crawler"
+[01:34.461] Dice rolled: 3
+[01:34.463] MSG: Lab Crawler wins!
+[01:40.115] Crystals: P0 1890 → 1390 (-500)  [battle]
+[01:41.503] Card destroyed  P0 (2,2) "Mafia Associates"
+[01:41.511] Attack P1(1,3)"Lab Crawler" → P0(2,2)"Mafia Associates"  Dice=3  ATK=95 vs DEF=0  → WIN
+[01:41.511] Anim: 3A  △ P0(2,2)
+[01:42.005] Turn ended  P1  |  Crystals P0=1390 P1=1390
+
+--- Turn 6  |  Player 0  |  Crystals P0=1390 P1=1390 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Hunt][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][Lab ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[01:42.602] Mode selected P0: ATTACK
+[01:42.608] Attack phase P0: 2 attack(s) available
+[01:42.608] MSG: Player 1: tap a character to attack.
+[01:42.900] AI0 attack decision: (2,3)"Huntress of Green Glade" [ATK=50] → (4,1) "(dead-end)"
+[01:43.201] Dice rolled: 2
+[01:43.229] MSG: Nothing happens — Dead End.
+[01:46.603] Dead-end placed  P1 (4,1)
+[01:46.607] Attack P0(2,3)"Huntress of Green Glade" → P1(4,1)(empty)  Dice=2  → DEAD_END
+[01:46.608] Anim: 3F  (blank slot)
+[01:49.114] Turn ended  P0  |  Crystals P0=1390 P1=1390
+
+--- Turn 7  |  Player 1  |  Crystals P0=1390 P1=1390 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Hunt][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][Lab ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[01:49.709] Mode selected P1: TECH
+[01:50.021] Tech played  P1: "Release Mutagen"
+[01:51.568] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[01:51.967] AI1 target chosen: (1,3)
+[01:51.973] Tech resolved  P1
+[01:52.868] Mode selected P1: ATTACK
+[01:52.875] Attack phase P1: 2 attack(s) available
+[01:52.875] MSG: Player 2: tap a character to attack.
+[01:53.168] AI1 attack decision: (1,3)"Lab Crawler" [ATK=95] → (2,3) "Huntress of Green Glade" [DEF=50]
+[01:53.468] Dice rolled: 3
+[01:53.478] MSG: Lab Crawler wins!
+[01:58.161] Crystals: P0 1390 → 590 (-800)  [battle]
+[01:59.554] Card destroyed  P0 (2,3) "Huntress of Green Glade"
+[01:59.560] Attack P1(1,3)"Lab Crawler" → P0(2,3)"Huntress of Green Glade"  Dice=3  ATK=95 vs DEF=50  → WIN
+[01:59.560] Anim: 3A  △ P0(2,3)
+[02:00.060] Mode selected P1: ATTACK
+[02:00.067] Attack phase P1: 1 attack(s) available
+[02:00.068] MSG: Player 2: tap a character to attack.
+[02:00.368] AI1 attack decision: (2,3)"Mafia Associates" [ATK=45] → (4,2) "(dead-end)"
+[02:00.678] Revealed: P1 (2,3) "Mafia Associates"
+[02:00.678] Dice rolled: 4
+[02:00.700] MSG: Nothing happens — Dead End.
+[02:04.077] Dead-end placed  P0 (4,2)
+[02:04.083] Attack P1(2,3)"Mafia Associates" → P0(4,2)(empty)  Dice=4  → DEAD_END
+[02:04.083] Anim: 3F  (blank slot)
+[02:04.586] Turn ended  P1  |  Crystals P0=590 P1=1390
+
+--- Turn 8  |  Player 0  |  Crystals P0=590 P1=1390 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][Lab ][  — ]
+      [  — ][  ? ][  — ][Mafi][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:05.200] Mode selected P0: ATTACK
+[02:05.205] Attack phase P0: 2 attack(s) available
+[02:05.206] MSG: Player 1: tap a character to attack.
+[02:05.501] AI0 attack decision: (3,2)"Gamma Emitter" [ATK=20] → (4,2) "(dead-end)"
+[02:05.851] Revealed: P0 (3,2) "Gamma Emitter"
+[02:05.851] Dice rolled: 4
+[02:05.864] MSG: Nothing happens — Dead End.
+[02:09.187] Dead-end placed  P1 (4,2)
+[02:09.195] Attack P0(3,2)"Gamma Emitter" → P1(4,2)(empty)  Dice=4  → DEAD_END
+[02:09.195] Anim: 3F  (blank slot)
+[02:11.697] Turn ended  P0  |  Crystals P0=590 P1=1390
+
+--- Turn 9  |  Player 1  |  Crystals P0=590 P1=1390 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][Gamm][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][Lab ][  — ]
+      [  — ][  ? ][  — ][Mafi][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:12.304] Mode selected P1: ATTACK
+[02:12.310] Attack phase P1: 2 attack(s) available
+[02:12.310] MSG: Player 2: tap a character to attack.
+[02:12.592] AI1 attack decision: (1,3)"Lab Crawler" [ATK=95] → (3,2) "Gamma Emitter" [DEF=15]
+[02:12.893] Dice rolled: 5
+[02:12.909] MSG: Lab Crawler wins!
+[02:17.587] Crystals: P0 590 → 370 (-220)  [battle]
+[02:18.978] Card destroyed  P0 (3,2) "Gamma Emitter"
+[02:18.986] Attack P1(1,3)"Lab Crawler" → P0(3,2)"Gamma Emitter"  Dice=5  ATK=95 vs DEF=15  → WIN
+[02:18.986] Anim: 3A  △ P0(3,2)
+[02:19.475] Mode selected P1: ATTACK
+[02:19.480] Attack phase P1: 1 attack(s) available
+[02:19.481] MSG: Player 2: tap a character to attack.
+[02:19.775] AI1 attack decision: (2,3)"Mafia Associates" [ATK=45] → (2,0) "(dead-end)"
+[02:20.076] Dice rolled: 2
+[02:20.107] MSG: Nothing happens — Dead End.
+[02:23.468] Dead-end placed  P0 (2,0)
+[02:23.472] Attack P1(2,3)"Mafia Associates" → P0(2,0)(empty)  Dice=2  → DEAD_END
+[02:23.472] Anim: 3F  (blank slot)
+[02:23.971] Turn ended  P1  |  Crystals P0=370 P1=1390
+
+--- Turn 10  |  Player 0  |  Crystals P0=370 P1=1390 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][Lab ][  — ]
+      [  — ][  ? ][  — ][Mafi][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:24.573] Mode selected P0: ATTACK
+[02:24.579] Attack phase P0: 2 attack(s) available
+[02:24.579] MSG: Player 1: tap a character to attack.
+[02:24.863] AI0 attack decision: (3,1)"Laughing Granny" [ATK=15] → (4,3) "Red Card" [DEF=0]
+[02:25.199] Revealed: P0 (3,1) "Laughing Granny"
+[02:25.199] Revealed: P1 (4,3) "Red Card"
+[02:25.199] Dice rolled: 2
+[02:25.477] MSG: Trap triggered: Red Card!
+[02:29.591] Card destroyed  P1 (4,3) "Red Card"
+[02:29.646] Coin flip: Tails, Tails
+[02:32.372] MSG: Red Card: Tails, Tails.
+[02:32.372] MSG: Not both heads — no effect.
+[02:32.375] Trap: "Red Card" triggered  P0(3,1)→P1(4,3)
+[02:32.375] Anim: 3D  (attacker survives)
+[02:34.892] Turn ended  P0  |  Crystals P0=370 P1=1390
+
+--- Turn 11  |  Player 1  |  Crystals P0=370 P1=1390 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Laug][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][Lab ][  — ]
+      [  — ][  ? ][  — ][Mafi][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:35.514] Mode selected P1: ATTACK
+[02:35.522] Attack phase P1: 2 attack(s) available
+[02:35.522] MSG: Player 2: tap a character to attack.
+[02:35.813] AI1 attack decision: (1,3)"Lab Crawler" [ATK=95] → (3,1) "Laughing Granny" [DEF=20]
+[02:36.122] Dice rolled: 1
+[02:36.132] MSG: Lab Crawler wins!
+[02:41.823] Crystals: P0 370 → 20 (-350)  [battle]
+[02:43.215] Card destroyed  P0 (3,1) "Laughing Granny"
+[02:43.221] Attack P1(1,3)"Lab Crawler" → P0(3,1)"Laughing Granny"  Dice=1  ATK=95 vs DEF=30  → WIN
+[02:43.221] Anim: 3A  △ P0(3,1)
+[02:43.722] Mode selected P1: ATTACK
+[02:43.727] Attack phase P1: 1 attack(s) available
+[02:43.728] MSG: Player 2: tap a character to attack.
+[02:44.029] AI1 attack decision: (2,3)"Mafia Associates" [ATK=45] → (2,4) "(dead-end)"
+[02:44.339] Dice rolled: 3
+[02:44.365] MSG: Nothing happens — Dead End.
+[02:47.741] Dead-end placed  P0 (2,4)
+[02:47.751] Attack P1(2,3)"Mafia Associates" → P0(2,4)(empty)  Dice=3  → DEAD_END
+[02:47.751] Anim: 3F  (blank slot)
+[02:48.252] Turn ended  P1  |  Crystals P0=20 P1=1390
+
+--- Turn 12  |  Player 0  |  Crystals P0=20 P1=1390 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][Lab ][  — ]
+      [  — ][  ? ][  — ][Mafi][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:48.863] Mode selected P0: ATTACK
+[02:48.870] Attack phase P0: 2 attack(s) available
+[02:48.870] MSG: Player 1: tap a character to attack.
+[02:49.168] AI0 attack decision: (3,3)"Stinky Insect" [ATK=10] → (4,4) "Spike Trap" [DEF=0]
+[02:49.510] Revealed: P0 (3,3) "Stinky Insect"
+[02:49.531] Revealed: P1 (4,4) "Spike Trap"
+[02:49.531] Dice rolled: 5
+[02:49.809] MSG: Trap triggered: Spike Trap!
+[02:55.035] Crystals: P1 1390 → 0 (-1390)  [trap cost]
+
+=== GAME OVER ===
+[02:55.045] AI Player 0 wins
+[02:55.045] Reason: crystals
+[02:55.045] Final crystals — P0: 20  P1: 0  |  Turns: 12
+[02:55.045] Log saved to: res://logs/results/2026-05-31_10-28-02_264_chocolate_milk/battle_basement_spider_negotiation_2026-05-31_10-45-36_423.txt

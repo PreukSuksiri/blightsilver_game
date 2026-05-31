@@ -1801,11 +1801,15 @@ def build_tech_tests(card: dict) -> list[str]:
             ],
         ),
         "REVEAL_ALL_OWN_CHARACTERS": (
-            "Great Diplomacy: all own characters face-up",
-            ["TurnManager._reveal_all_own", f"TechEffectType.{eff}"],
+            "Great Diplomacy: select up to 5 own units to reveal",
+            [
+                "GameBoard own_units_up_to filter",
+                "TurnManager awaiting_target_selection",
+                f"TechEffectType.{eff}",
+            ],
             ["Multiple own face-down characters.", f"crystals>={cost}."],
-            [f"Play {name}."],
-            ["All own character cells face_up=true."],
+            [f"Play {name}; choose up to 5 face-down units (CLOSE to finish early)."],
+            ["At most 5 own character cells face_up=true; unselected units stay face-down."],
         ),
         "OPPONENT_NEXT_DEFENDER_DESTROYED": (
             "Siege Cannon: next defender auto-destroyed after battle",

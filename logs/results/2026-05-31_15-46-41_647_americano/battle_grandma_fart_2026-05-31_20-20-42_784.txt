@@ -1,0 +1,296 @@
+=== Battle of Grandma Fart ===
+Battle started: 2026-05-31 20:20:42.784
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Prayer
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Prayer, Release Mutagen, Tease
+P1 Tech hand: Spy, Prayer, War Supply
+P0:   [  — ][  — ][C:Blue][  — ][T:Expl]
+      [T:Alar][C:Deat][C:Bomb][C:Jira][C:Dark]
+      [T:Pepp][C:Magi][C:Ox P][C:Sunr][T:Defe]
+      [  — ][C:Nuki][C:Pit ][C:Mine][T:Trap]
+      [  — ][  — ][T:Snar][  — ][  — ]
+P1:   [T:Flam][T:Red ][C:Moon][C:Sate][C:Swar]
+      [T:Trap][  — ][  — ][T:Curs][  — ]
+      [  — ][  — ][C:Chao][  — ][  — ]
+      [  — ][C:Lab ][  — ][C:Kiyo][  — ]
+      [C:Tomb][C:Armo][C:Mine][C:Skel][C:Pony]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.322] Mode selected P0: TECH
+[00:05.633] Tech played  P0: "Tease"
+[00:07.189] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.191] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:07.598] AI1 target chosen: (4,2)
+[00:07.630] Revealed: P1 (4,2) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:07.630] MSG: Tease: Opponent revealed Miner Probe.
+[00:07.632] Tech resolved  P0
+[00:08.525] Mode selected P0: ATTACK
+[00:08.528] Attack phase P0: 2 attack(s) available
+[00:08.528] MSG: Player 1: tap a character to attack.
+[00:08.832] AI0 attack decision: (1,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down} → (4,2) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:09.175] Revealed: P0 (1,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[00:09.176] Dice rolled: 5
+[00:09.186] MSG: Bomber Fairy wins!
+[00:13.790] Crystals: P1 5000 → 4800 (-200)  [battle]
+[00:15.189] Attack P0(1,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} → P1(4,2)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}  Dice=5  ATK=30 vs DEF=10  → WIN
+[00:15.189] Anim: 3A  △ P1(4,2)
+[00:15.189] Card destroyed  P1 (4,2) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:15.189] MSG: Bomber Fairy: Kill bonus — extra attack!
+[00:15.685] Mode selected P0: ATTACK
+[00:15.689] Attack phase P0: 2 attack(s) available
+[00:15.689] MSG: Player 1: tap a character to attack.
+[00:15.994] AI0 attack decision: (0,2)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane | face-down} → (0,0) "Flame Trap" {cost 250}
+[00:16.343] Revealed: P0 (0,2) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[00:16.373] Revealed: P1 (0,0) "Flame Trap" {cost 250}
+[00:16.373] Dice rolled: 5
+[00:16.596] MSG: Trap triggered: Flame Trap!
+[00:20.701] Crystals: P1 4800 → 4550 (-250)  [trap cost]
+[00:22.091] MSG: Spike Trap: Blue Mage permanently loses 10 ATK!
+[00:22.102] Trap: "Flame Trap" triggered  P0(0,2)→P1(0,0)
+[00:22.102] Anim: 3D  (attacker survives)
+[00:22.599] Mode selected P0: ATTACK
+[00:22.603] Attack phase P0: 1 attack(s) available
+[00:22.603] MSG: Player 1: tap a character to attack.
+[00:22.907] AI0 attack decision: (1,1)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down} → (0,4) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down}
+[00:23.262] Revealed: P0 (1,1) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:23.294] Revealed: P1 (0,4) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[00:23.295] Dice rolled: 1
+[00:23.300] MSG: Death Cobra wins!
+[00:27.899] Crystals: P1 4550 → 3600 (-950)  [battle]
+[00:29.303] Attack P0(1,1)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P1(0,4)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}  Dice=1  ATK=85 vs DEF=45  → WIN
+[00:29.303] Anim: 3A  △ P1(0,4)
+[00:29.303] Card destroyed  P1 (0,4) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[00:29.802] Turn ended  P0  |  Crystals P0=5000 P1=3600
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=3600 ---
+P0:   [  — ][  — ][Blue][  — ][  ? ]
+      [  ? ][Deat][Bomb][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:30.407] Mode selected P1: TECH
+[00:30.726] Tech played  P1: "Spy"
+[00:32.299] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:32.697] AI1 target chosen: (2,3)
+[00:32.732] Revealed: P0 (2,3) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[00:32.734] Tech resolved  P1
+[00:33.617] Mode selected P1: ATTACK
+[00:33.624] Attack phase P1: 2 attack(s) available
+[00:33.624] MSG: Player 2: tap a character to attack.
+[00:33.921] AI1 attack decision: (0,3)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down} → (1,1) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:34.267] Revealed: P1 (0,3) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:34.267] Dice rolled: 5
+[00:34.271] MSG: Satellite Cannon wins!
+[00:39.933] Crystals: P0 5000 → 4100 (-900)  [battle]
+[00:41.334] Attack P1(0,3)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P0(1,1)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}  Dice=5  ATK=120 vs DEF=50  → WIN
+[00:41.335] Reckoning overlay: P1 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} +ATK 20
+[00:41.335] Anim: 3A  △ P0(1,1)
+[00:41.335] Card destroyed  P0 (1,1) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:41.837] Mode selected P1: ATTACK
+[00:41.845] Attack phase P1: 1 attack(s) available
+[00:41.846] MSG: Player 2: tap a character to attack.
+[00:42.144] AI1 attack decision: (0,2)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down} → (1,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used}
+[00:42.496] Revealed: P1 (0,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:42.496] Dice rolled: 2
+[00:42.500] MSG: Moon Tribe Marksman wins!
+[00:48.152] Crystals: P0 4100 → 3600 (-500)  [battle]
+[00:49.554] Attack P1(0,2)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} → P0(1,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used}  Dice=2  ATK=25 vs DEF=15  → WIN
+[00:49.554] Reckoning overlay: P1 "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} ATK -10
+[00:49.554] Anim: 3A  △ P0(1,2)
+[00:49.554] Card destroyed  P0 (1,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used}
+[00:50.056] Turn ended  P1  |  Crystals P0=3600 P1=3600
+
+--- Turn 3  |  Player 0  |  Crystals P0=3600 P1=3600 ---
+P0:   [  — ][  — ][Blue][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][Sunr][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][Moon][Sate][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:50.661] Mode selected P0: TECH
+[00:50.979] Tech played  P0: "Prayer"
+[00:52.536] MSG: Prayer: Divine Characters protected until opponent's turn ends.
+[00:52.540] Tech resolved  P0
+[00:53.451] Mode selected P0: ATTACK
+[00:53.457] Attack phase P0: 2 attack(s) available
+[00:53.457] MSG: Player 1: tap a character to attack.
+[00:53.761] AI0 attack decision: (0,2)"Blue Mage" {Unit ATK35 DEF45 | cost 800 | affinity Arcane | base 35/45} → (0,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:54.068] Dice rolled: 5
+[00:54.078] MSG: Blue Mage: Coin flip missed — normal battle.
+[00:54.078] MSG: Blue Mage wins!
+[00:54.122] Coin flip: Heads, Tails
+[00:59.741] Crystals: P1 3600 → 3300 (-300)  [battle]
+[01:01.141] Attack P0(0,2)"Blue Mage" {Unit ATK35 DEF45 | cost 800 | affinity Arcane | base 35/45} → P1(0,2)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=5  ATK=35 vs DEF=25  → WIN
+[01:01.141] Anim: 3A  △ P1(0,2)
+[01:01.141] Card destroyed  P1 (0,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[01:01.631] Mode selected P0: ATTACK
+[01:01.635] Attack phase P0: 1 attack(s) available
+[01:01.636] MSG: Player 1: tap a character to attack.
+[01:01.932] AI0 attack decision: (2,3)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → (1,1) (dead-end)
+[01:02.230] Dice rolled: 2
+[01:02.258] MSG: Nothing happens — Dead End.
+[01:05.646] Attack P0(2,3)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[01:05.646] Anim: 3F  (blank slot)
+[01:06.150] Turn ended  P0  |  Crystals P0=3600 P1=3300
+
+--- Turn 4  |  Player 1  |  Crystals P0=3600 P1=3300 ---
+P0:   [  — ][  — ][Blue][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][Sunr][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  — ][Sate][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:06.757] Mode selected P1: ATTACK
+[01:06.762] Attack phase P1: 2 attack(s) available
+[01:06.762] MSG: Player 2: tap a character to attack.
+[01:07.063] AI1 attack decision: (0,3)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (0,2) "Blue Mage" {Unit ATK35 DEF45 | cost 800 | affinity Arcane | base 35/45}
+[01:07.374] Dice rolled: 1
+[01:07.383] MSG: Satellite Cannon wins!
+[01:12.073] Crystals: P0 3600 → 2800 (-800)  [battle]
+[01:13.474] Attack P1(0,3)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P0(0,2)"Blue Mage" {Unit ATK35 DEF45 | cost 800 | affinity Arcane | base 35/45}  Dice=1  ATK=100 vs DEF=45  → WIN
+[01:13.474] Anim: 3A  △ P0(0,2)
+[01:13.474] Card destroyed  P0 (0,2) "Blue Mage" {Unit ATK35 DEF45 | cost 800 | affinity Arcane | base 35/45}
+[01:13.973] Mode selected P1: ATTACK
+[01:13.977] Attack phase P1: 1 attack(s) available
+[01:13.979] MSG: Player 2: tap a character to attack.
+[01:14.278] AI1 attack decision: (3,3)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down} → (2,3) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:14.645] Revealed: P1 (3,3) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[01:14.645] Dice rolled: 2
+[01:14.657] MSG: Kiyoko the Death Whisper wins!
+[01:19.253] MSG: Prayer protected Sunrise Lady!
+[01:19.263] Attack P1(3,3)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P0(2,3)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}  Dice=2  ATK=40 vs DEF=25  → TIE
+[01:19.263] Anim: exchange  (no destruction)
+[01:19.764] Turn ended  P1  |  Crystals P0=2800 P1=3300
+
+--- Turn 5  |  Player 0  |  Crystals P0=2800 P1=3300 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][Sunr][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  — ][Sate][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][Kiyo][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:20.368] Mode selected P0: ATTACK
+[01:20.373] Attack phase P0: 2 attack(s) available
+[01:20.373] MSG: Player 1: tap a character to attack.
+[01:20.677] AI0 attack decision: (1,3)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (3,3) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[01:21.016] Revealed: P0 (1,3) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:21.016] Dice rolled: 4
+[01:21.020] MSG: Jirayu the Rebellious Prince wins!
+[01:25.687] Crystals: P1 3300 → 2500 (-800)  [battle]
+[01:27.086] Attack P0(1,3)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(3,3)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}  Dice=4  ATK=40 vs DEF=35  → WIN
+[01:27.086] Anim: 3A  △ P1(3,3)
+[01:27.086] Card destroyed  P1 (3,3) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[01:27.587] Mode selected P0: ATTACK
+[01:27.592] Attack phase P0: 1 attack(s) available
+[01:27.593] MSG: Player 1: tap a character to attack.
+[01:27.890] AI0 attack decision: (2,3)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → (1,3) "Cursed Reflection" {cost 500}
+[01:28.241] Revealed: P1 (1,3) "Cursed Reflection" {cost 500}
+[01:28.242] Dice rolled: 5
+[01:28.513] MSG: Trap triggered: Cursed Reflection!
+[01:32.621] Crystals: P1 2500 → 2000 (-500)  [trap cost]
+[01:34.011] MSG: Cursed Reflection: Sunrise Lady's ATK and DEF swapped until end of turn!
+[01:34.022] Trap: "Cursed Reflection" triggered  P0(2,3)→P1(1,3)
+[01:34.022] Anim: 3D  (attacker survives)
+[01:34.521] Turn ended  P0  |  Crystals P0=2800 P1=2000
+
+--- Turn 6  |  Player 1  |  Crystals P0=2800 P1=2000 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][Jira][  ? ]
+      [  ? ][  ? ][  ? ][Sunr][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  — ][Sate][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:36.638] Crystals: P1 2000 → 1000 (-1000)  [union]
+[01:36.679] Revealed: P1 (3,1) "Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[01:36.679] Union summoned P1: "Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down}, "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down}
+[01:36.679] MSG: Player 2 summoned [Rocket Marauder] using: "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down}, "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down}
+[01:40.073] Mode selected P1: ATTACK
+[01:40.091] Attack phase P1: 2 attack(s) available
+[01:40.092] MSG: Player 2: tap a character to attack.
+[01:40.376] AI1 attack decision: (3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → (1,3) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:40.686] Dice rolled: 3
+[01:40.724] MSG: Rocket Marauder wins!
+[01:45.385] Crystals: P0 2800 → 2200 (-600)  [battle]
+[01:46.790] Attack P1(3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(1,3)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}  Dice=3  ATK=125 vs DEF=40  → WIN
+[01:46.790] Anim: 3A  △ P0(1,3)
+[01:46.790] Card destroyed  P0 (1,3) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:47.284] Mode selected P1: ATTACK
+[01:47.289] Attack phase P1: 1 attack(s) available
+[01:47.290] MSG: Player 2: tap a character to attack.
+[01:47.594] AI1 attack decision: (0,3)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (2,3) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:47.903] Dice rolled: 4
+[01:47.914] MSG: Satellite Cannon wins!
+[01:53.606] Crystals: P0 2200 → 1900 (-300)  [battle]
+[01:55.018] Attack P1(0,3)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P0(2,3)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}  Dice=4  ATK=120 vs DEF=25  → WIN
+[01:55.018] Reckoning overlay: P1 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} +ATK 20
+[01:55.018] Anim: 3A  △ P0(2,3)
+[01:55.018] Card destroyed  P0 (2,3) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:55.509] Turn ended  P1  |  Crystals P0=1900 P1=1000
+
+--- Turn 7  |  Player 0  |  Crystals P0=1900 P1=1000 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  — ][Sate][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Rock][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+[01:56.134] Mode selected P0: ATTACK
+[01:56.139] Attack phase P0: 2 attack(s) available
+[01:56.139] MSG: Player 1: tap a character to attack.
+[01:56.432] AI0 attack decision: (3,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (0,3) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[01:56.771] Revealed: P0 (3,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:56.771] Dice rolled: 2
+[01:56.775] MSG: Pit Lord wins!
+[02:01.439] Crystals: P1 1000 → 0 (-1000)  [battle]
+
+=== GAME OVER ===
+[02:01.454] AI Player 0 wins
+[02:01.454] Reason: crystals
+[02:01.454] Final crystals — P0: 1900  P1: 0  |  Turns: 7
+[02:01.454] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_grandma_fart_2026-05-31_20-20-42_784.txt

@@ -1,0 +1,419 @@
+=== Battle of Autocorrect Apology Tour ===
+Battle started: 2026-05-31 10:43:03.295
+Game Session of Chocolate Milk (started 2026-05-31 10:28:02.264)
+=== AI vs AI Match ===
+Batch iteration: 8 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Release Mutagen, Great Diplomacy
+P1 Tech hand: Spy, Prayer, Resurrection
+P0:   [C:Stin][C:Whit][C:Shep][C:Bomb][T:Bait]
+      [  — ][  — ][  — ][T:Red ][  — ]
+      [  — ][  — ][T:Hypn][  — ][T:Stre]
+      [  — ][C:Polt][  — ][  — ][T:Expl]
+      [C:Foul][C:Fera][C:Gobl][C:Mine][T:Defe]
+P1:   [C:Pyro][T:Bunk][C:Succ][C:Choi][C:Gold]
+      [C:Bat ][  — ][  — ][  — ][T:Curs]
+      [T:Foul][  — ][  — ][  — ][T:Trap]
+      [  — ][  — ][  — ][  — ][T:Host]
+      [C:Armo][  — ][C:Foul][C:Grav][C:Skel]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:05.320] Mode selected P1: TECH
+[00:05.630] Tech played  P1: "Spy"
+[00:07.182] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.580] AI1 target chosen: (3,2)
+[00:07.580] Revealed: P0 (3,2) (blank slot)
+[00:07.585] Tech resolved  P1
+[00:10.488] Crystals: P1 5000 → 4950 (-50)  [skip tax]
+[00:10.489] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:11.872] Turn ended  P1  |  Crystals P0=5000 P1=4950
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4950 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:12.471] Mode selected P0: TECH
+[00:12.771] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:14.155] Tech played  P0: "Great Diplomacy"
+[00:15.967] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:16.175] AI0 target chosen: (0,1)
+[00:16.175] Revealed: P0 (0,1) "White Tiger"
+[00:16.575] AI0 target chosen: (0,2)
+[00:16.576] Revealed: P0 (0,2) "Shepherd Detective"
+[00:16.975] AI0 target chosen: (4,1)
+[00:16.977] Revealed: P0 (4,1) "Feral Vampire"
+[00:17.375] AI0 target chosen: (0,3)
+[00:17.377] Revealed: P0 (0,3) "Bomber Fairy"
+[00:17.775] AI0 target chosen: (4,2)
+[00:17.776] Revealed: P0 (4,2) "Goblin Poacher"
+[00:17.776] MSG: Great Diplomacy: revealed 5 unit(s).
+[00:17.784] Tech resolved  P0
+[00:18.676] Mode selected P0: ATTACK
+[00:18.687] Attack phase P0: 2 attack(s) available
+[00:18.689] MSG: Player 1: tap a character to attack.
+[00:18.976] AI0 attack decision: (0,1)"White Tiger" [ATK=40] → (4,2) "Foul Wisp" [DEF=25]
+[00:19.300] Revealed: P1 (4,2) "Foul Wisp"
+[00:19.300] Dice rolled: 4
+[00:19.305] MSG: White Tiger wins!
+[00:23.966] Crystals: P1 4950 → 4850 (-100)  [battle]
+[00:25.361] Card destroyed  P1 (4,2) "Foul Wisp"
+[00:25.367] Attack P0(0,1)"White Tiger" → P1(4,2)"Foul Wisp"  Dice=4  ATK=40 vs DEF=25  → WIN
+[00:25.367] Anim: 3A  △ P1(4,2)
+[00:25.859] Mode selected P0: ATTACK
+[00:25.865] Attack phase P0: 1 attack(s) available
+[00:25.866] MSG: Player 1: tap a character to attack.
+[00:26.159] AI0 attack decision: (0,2)"Shepherd Detective" [ATK=40] → (4,0) "Armored Bee" [DEF=0]
+[00:26.493] Revealed: P1 (4,0) "Armored Bee"
+[00:26.493] Dice rolled: 5
+[00:26.497] MSG: Shepherd Detective wins!
+[00:31.151] Crystals: P1 4850 → 4370 (-480)  [battle]
+[00:32.545] Card destroyed  P1 (4,0) "Armored Bee"
+[00:32.551] Attack P0(0,2)"Shepherd Detective" → P1(4,0)"Armored Bee"  Dice=5  ATK=40 vs DEF=0  → WIN
+[00:32.551] Anim: 3A  △ P1(4,0)
+[00:32.552] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:32.942] AI0 target chosen: (1,4)
+[00:32.974] Revealed: P1 (1,4) "Cursed Reflection"
+[00:32.975] MSG: Revealed: Cursed Reflection
+[00:33.044] Turn ended  P0  |  Crystals P0=4000 P1=4370
+
+--- Turn 3  |  Player 1  |  Crystals P0=4000 P1=4370 ---
+P0:   [  ? ][Whit][Shep][Bomb][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Fera][Gobl][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][Curs]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:33.641] Mode selected P1: TECH
+[00:33.942] Crystals: P1 4370 → 2870 (-1500)  [tech cost]
+[00:35.331] Tech played  P1: "Resurrection"
+[00:36.876] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:37.275] AI1 target chosen: (1,1)
+[00:37.277] Revealed: P1 (1,1) "Armored Bee"
+[00:37.278] MSG: Revived Armored Bee at [1,1]!
+[00:37.285] Tech resolved  P1
+[00:38.175] Mode selected P1: ATTACK
+[00:38.182] Attack phase P1: 2 attack(s) available
+[00:38.182] MSG: Player 2: tap a character to attack.
+[00:38.475] AI1 attack decision: (1,1)"Armored Bee" [ATK=0] → (1,1) "(dead-end)"
+[00:38.776] Dice rolled: 5
+[00:38.797] MSG: Nothing happens — Dead End.
+[00:42.176] Dead-end placed  P0 (1,1)
+[00:42.180] Attack P1(1,1)"Armored Bee" → P0(1,1)(empty)  Dice=5  → DEAD_END
+[00:42.180] Anim: 3F  (blank slot)
+[00:44.692] Turn ended  P1  |  Crystals P0=4000 P1=2870
+
+--- Turn 4  |  Player 0  |  Crystals P0=4000 P1=2870 ---
+P0:   [  ? ][Whit][Shep][Bomb][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Fera][Gobl][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Armo][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:45.284] Mode selected P0: TECH
+[00:45.598] Tech played  P0: "Tease"
+[00:47.150] MSG: Opponent must choose and reveal 1 of their squares.
+[00:47.151] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:47.558] AI1 target chosen: (1,0)
+[00:47.593] Revealed: P1 (1,0) "Bat Swarm"
+[00:47.593] MSG: Tease: Opponent revealed Bat Swarm.
+[00:47.598] Tech resolved  P0
+[00:48.476] Mode selected P0: ATTACK
+[00:48.489] Attack phase P0: 2 attack(s) available
+[00:48.490] MSG: Player 1: tap a character to attack.
+[00:48.784] AI0 attack decision: (0,1)"White Tiger" [ATK=40] → (1,1) "Armored Bee" [DEF=0]
+[00:49.092] Dice rolled: 2
+[00:49.105] MSG: White Tiger wins!
+[00:53.792] Crystals: P1 2870 → 2390 (-480)  [battle]
+[00:55.186] Card destroyed  P1 (1,1) "Armored Bee"
+[00:55.193] Attack P0(0,1)"White Tiger" → P1(1,1)"Armored Bee"  Dice=2  ATK=40 vs DEF=0  → WIN
+[00:55.193] Anim: 3A  △ P1(1,1)
+[00:55.692] Mode selected P0: ATTACK
+[00:55.700] Attack phase P0: 1 attack(s) available
+[00:55.700] MSG: Player 1: tap a character to attack.
+[00:56.000] AI0 attack decision: (0,2)"Shepherd Detective" [ATK=40] → (1,0) "Bat Swarm" [DEF=15]
+[00:56.309] Dice rolled: 3
+[00:56.317] MSG: Shepherd Detective wins!
+[01:01.009] Crystals: P1 2390 → 2190 (-200)  [battle]
+[01:02.402] Card destroyed  P1 (1,0) "Bat Swarm"
+[01:02.409] Attack P0(0,2)"Shepherd Detective" → P1(1,0)"Bat Swarm"  Dice=3  ATK=40 vs DEF=15  → WIN
+[01:02.409] Anim: 3A  △ P1(1,0)
+[01:02.409] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:02.809] AI0 target chosen: (0,1)
+[01:02.856] Revealed: P1 (0,1) "Bunker"
+[01:02.857] MSG: Revealed: Bunker
+[01:02.910] Turn ended  P0  |  Crystals P0=4000 P1=2190
+
+--- Turn 5  |  Player 1  |  Crystals P0=4000 P1=2190 ---
+P0:   [  ? ][Whit][Shep][Bomb][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Fera][Gobl][  ? ][  ? ]
+P1:   [  ? ][Bunk][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[01:03.521] Mode selected P1: ATTACK
+[01:03.527] Attack phase P1: 2 attack(s) available
+[01:03.527] MSG: Player 2: tap a character to attack.
+[01:03.821] AI1 attack decision: (0,3)"Choir Lady Abigail" [ATK=25] → (0,3) "Bomber Fairy" [DEF=15]
+[01:04.173] Revealed: P1 (0,3) "Choir Lady Abigail"
+[01:04.173] Dice rolled: 2
+[01:04.176] MSG: Choir Lady Abigail wins!
+[01:08.838] Crystals: P0 4000 → 3500 (-500)  [battle]
+[01:10.230] Card destroyed  P0 (0,3) "Bomber Fairy"
+[01:10.234] Attack P1(0,3)"Choir Lady Abigail" → P0(0,3)"Bomber Fairy"  Dice=2  ATK=25 vs DEF=15  → WIN
+[01:10.234] Anim: 3A  △ P0(0,3)
+[01:10.738] Mode selected P1: ATTACK
+[01:10.745] Attack phase P1: 1 attack(s) available
+[01:10.746] MSG: Player 2: tap a character to attack.
+[01:11.046] AI1 attack decision: (0,4)"Golden Senju" [ATK=15] → (4,2) "Goblin Poacher" [DEF=10]
+[01:11.391] Revealed: P1 (0,4) "Golden Senju"
+[01:11.391] Dice rolled: 3
+[01:11.394] MSG: Golden Senju wins!
+[01:16.056] Crystals: P0 3500 → 3250 (-250)  [battle]
+[01:17.450] Card destroyed  P0 (4,2) "Goblin Poacher"
+[01:17.457] Attack P1(0,4)"Golden Senju" → P0(4,2)"Goblin Poacher"  Dice=3  ATK=15 vs DEF=10  → WIN
+[01:17.457] Anim: 3A  △ P0(4,2)
+[01:17.958] Turn ended  P1  |  Crystals P0=3250 P1=2190
+
+--- Turn 6  |  Player 0  |  Crystals P0=3250 P1=2190 ---
+P0:   [  ? ][Whit][Shep][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Fera][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][Choi][Gold]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[01:18.563] Mode selected P0: ATTACK
+[01:18.572] Attack phase P0: 2 attack(s) available
+[01:18.572] MSG: Player 1: tap a character to attack.
+[01:18.870] AI0 attack decision: (0,1)"White Tiger" [ATK=40] → (0,3) "Choir Lady Abigail" [DEF=15]
+[01:19.180] Dice rolled: 5
+[01:19.191] MSG: White Tiger wins!
+[01:23.889] Crystals: P1 2190 → 1940 (-250)  [battle]
+[01:25.282] Card destroyed  P1 (0,3) "Choir Lady Abigail"
+[01:25.286] Attack P0(0,1)"White Tiger" → P1(0,3)"Choir Lady Abigail"  Dice=5  ATK=40 vs DEF=15  → WIN
+[01:25.286] Anim: 3A  △ P1(0,3)
+[01:25.788] Mode selected P0: ATTACK
+[01:25.794] Attack phase P0: 1 attack(s) available
+[01:25.794] MSG: Player 1: tap a character to attack.
+[01:26.096] AI0 attack decision: (0,2)"Shepherd Detective" [ATK=40] → (0,4) "Golden Senju" [DEF=0]
+[01:26.404] Dice rolled: 1
+[01:26.414] MSG: Shepherd Detective wins!
+[01:31.106] Crystals: P1 1940 → 1740 (-200)  [battle]
+[01:32.501] Card destroyed  P1 (0,4) "Golden Senju"
+[01:32.506] Attack P0(0,2)"Shepherd Detective" → P1(0,4)"Golden Senju"  Dice=1  ATK=40 vs DEF=0  → WIN
+[01:32.506] Anim: 3A  △ P1(0,4)
+[01:32.507] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:32.904] AI0 target chosen: (2,3)
+[01:33.009] Turn ended  P0  |  Crystals P0=3250 P1=1740
+
+--- Turn 7  |  Player 1  |  Crystals P0=3250 P1=1740 ---
+P0:   [  ? ][Whit][Shep][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Fera][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[01:33.619] Mode selected P1: ATTACK
+[01:33.626] Attack phase P1: 2 attack(s) available
+[01:33.626] MSG: Player 2: tap a character to attack.
+[01:33.921] AI1 attack decision: (4,4)"Skeleton Lancer" [ATK=45] → (0,1) "White Tiger" [DEF=25]
+[01:34.260] Revealed: P1 (4,4) "Skeleton Lancer"
+[01:34.260] Dice rolled: 3
+[01:34.262] MSG: White Tiger: Attacker loses 15 ATK!
+[01:34.263] MSG: Skeleton Lancer wins!
+[01:39.935] Crystals: P0 3250 → 2800 (-450)  [battle]
+[01:41.327] Card destroyed  P0 (0,1) "White Tiger"
+[01:41.334] Attack P1(4,4)"Skeleton Lancer" → P0(0,1)"White Tiger"  Dice=3  ATK=30 vs DEF=25  → WIN
+[01:41.334] Anim: 3A  △ P0(0,1)
+[01:43.847] Turn ended  P1  |  Crystals P0=2800 P1=1740
+
+--- Turn 8  |  Player 0  |  Crystals P0=2800 P1=1740 ---
+P0:   [  ? ][  — ][Shep][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Fera][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][Skel]
+[01:44.456] Mode selected P0: ATTACK
+[01:44.463] Attack phase P0: 2 attack(s) available
+[01:44.463] MSG: Player 1: tap a character to attack.
+[01:44.753] AI0 attack decision: (0,2)"Shepherd Detective" [ATK=40] → (4,4) "Skeleton Lancer" [DEF=5]
+[01:45.063] Dice rolled: 2
+[01:45.070] MSG: Shepherd Detective wins!
+[01:49.759] Crystals: P1 1740 → 1440 (-300)  [battle]
+[01:51.154] Card destroyed  P1 (4,4) "Skeleton Lancer"
+[01:51.163] Attack P0(0,2)"Shepherd Detective" → P1(4,4)"Skeleton Lancer"  Dice=2  ATK=40 vs DEF=5  → WIN
+[01:51.163] Anim: 3A  △ P1(4,4)
+[01:51.164] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:51.558] AI0 target chosen: (0,1)
+[01:51.659] Mode selected P0: ATTACK
+[01:51.663] Attack phase P0: 1 attack(s) available
+[01:51.663] MSG: Player 1: tap a character to attack.
+[01:51.966] AI0 attack decision: (4,1)"Feral Vampire" [ATK=40] → (4,3) "Grave Worm" [DEF=30]
+[01:52.322] Revealed: P1 (4,3) "Grave Worm"
+[01:52.322] Dice rolled: 3
+[01:52.326] MSG: Feral Vampire wins!
+[01:56.950] Crystals: P1 1440 → 1190 (-250)  [battle]
+[01:58.344] Card destroyed  P1 (4,3) "Grave Worm"
+[01:58.347] Attack P0(4,1)"Feral Vampire" → P1(4,3)"Grave Worm"  Dice=3  ATK=40 vs DEF=30  → WIN
+[01:58.347] Anim: 3A  △ P1(4,3)
+[01:58.849] Turn ended  P0  |  Crystals P0=2800 P1=1190
+
+--- Turn 9  |  Player 1  |  Crystals P0=2800 P1=1190 ---
+P0:   [  ? ][  — ][Shep][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Fera][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:59.444] Mode selected P1: ATTACK
+[01:59.449] Attack phase P1: 2 attack(s) available
+[01:59.449] MSG: Player 2: tap a character to attack.
+[01:59.741] AI1 attack decision: (0,2)"Succubus" [ATK=10] → (3,2) "(dead-end)"
+[02:00.078] Revealed: P1 (0,2) "Succubus"
+[02:00.078] Dice rolled: 2
+[02:00.092] MSG: Nothing happens — Dead End.
+[02:03.443] Dead-end placed  P0 (3,2)
+[02:03.446] Attack P1(0,2)"Succubus" → P0(3,2)(empty)  Dice=2  → DEAD_END
+[02:03.446] Anim: 3F  (blank slot)
+[02:03.942] Mode selected P1: ATTACK
+[02:03.947] Attack phase P1: 1 attack(s) available
+[02:03.947] MSG: Player 2: tap a character to attack.
+[02:04.241] AI1 attack decision: (0,0)"Pyromancer" [ATK=80] → (0,2) "Shepherd Detective" [DEF=25]
+[02:04.572] Revealed: P1 (0,0) "Pyromancer"
+[02:04.572] Dice rolled: 2
+[02:04.576] MSG: Pyromancer wins!
+[02:09.234] Crystals: P0 2800 → 2400 (-400)  [battle]
+[02:10.627] Card destroyed  P0 (0,2) "Shepherd Detective"
+[02:10.632] Attack P1(0,0)"Pyromancer" → P0(0,2)"Shepherd Detective"  Dice=2  ATK=80 vs DEF=25  → WIN
+[02:10.632] Anim: 3A  △ P0(0,2)
+[02:11.128] Turn ended  P1  |  Crystals P0=2400 P1=1190
+
+--- Turn 10  |  Player 0  |  Crystals P0=2400 P1=1190 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Fera][  — ][  ? ][  ? ]
+P1:   [Pyro][  — ][Succ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:11.736] Mode selected P0: ATTACK
+[02:11.743] Attack phase P0: 2 attack(s) available
+[02:11.743] MSG: Player 1: tap a character to attack.
+[02:12.024] AI0 attack decision: (4,1)"Feral Vampire" [ATK=40] → (0,0) "Pyromancer" [DEF=0]
+[02:12.325] Dice rolled: 2
+[02:12.334] MSG: Feral Vampire wins!
+[02:17.022] Crystals: P1 1190 → 290 (-900)  [battle]
+[02:18.415] Card destroyed  P1 (0,0) "Pyromancer"
+[02:18.420] Attack P0(4,1)"Feral Vampire" → P1(0,0)"Pyromancer"  Dice=2  ATK=40 vs DEF=0  → WIN
+[02:18.420] Anim: 3A  △ P1(0,0)
+[02:20.926] Turn ended  P0  |  Crystals P0=2400 P1=290
+
+--- Turn 11  |  Player 1  |  Crystals P0=2400 P1=290 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Fera][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Succ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:21.520] Mode selected P1: ATTACK
+[02:21.526] Attack phase P1: 2 attack(s) available
+[02:21.526] MSG: Player 2: tap a character to attack.
+[02:21.816] AI1 attack decision: (0,2)"Succubus" [ATK=10] → (0,4) "Bait" [DEF=0]
+[02:22.156] Revealed: P0 (0,4) "Bait"
+[02:22.156] Dice rolled: 2
+[02:22.424] MSG: Trap triggered: Bait!
+[02:26.509] Card destroyed  P0 (0,4) "Bait"
+[02:26.517] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[02:26.519] Trap: "Bait" triggered  P1(0,2)→P0(0,4)
+[02:26.519] Anim: 3D  (attacker survives)
+[02:26.908] AI0 target chosen: (4,4)
+[02:26.938] Revealed: P0 (4,4) "Defensive Pheromone"
+[02:26.939] MSG: Bait: Defender revealed Defensive Pheromone.
+[02:27.009] Turn ended  P1  |  Crystals P0=2400 P1=290
+
+--- Turn 12  |  Player 0  |  Crystals P0=2400 P1=290 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Fera][  — ][  ? ][Defe]
+P1:   [  — ][  — ][Succ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:27.619] Mode selected P0: ATTACK
+[02:27.624] Attack phase P0: 2 attack(s) available
+[02:27.624] MSG: Player 1: tap a character to attack.
+[02:27.908] AI0 attack decision: (4,1)"Feral Vampire" [ATK=40] → (0,2) "Succubus" [DEF=30]
+[02:28.208] Dice rolled: 3
+[02:28.214] MSG: Feral Vampire wins!
+[02:32.901] Crystals: P1 290 → 0 (-290)  [battle]
+
+=== GAME OVER ===
+[02:32.912] AI Player 0 wins
+[02:32.912] Reason: crystals
+[02:32.912] Final crystals — P0: 2400  P1: 0  |  Turns: 12
+[02:32.912] Log saved to: res://logs/results/2026-05-31_10-28-02_264_chocolate_milk/battle_autocorrect_apology_tour_2026-05-31_10-43-03_295.txt

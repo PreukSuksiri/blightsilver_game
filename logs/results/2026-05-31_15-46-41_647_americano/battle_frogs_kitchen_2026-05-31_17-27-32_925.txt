@@ -1,0 +1,209 @@
+=== Battle of Frog's Kitchen ===
+Battle started: 2026-05-31 17:27:32.925
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ice Mage
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ice Mage
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Prayer, Bribe
+P1 Tech hand: Great Diplomacy, Release Mutagen, Resurrection
+P0:   [C:Yaks][C:Hand][T:Foul][T:Host][T:Spik]
+      [C:Mine][  — ][  — ][  — ][C:Armo]
+      [C:Moon][C:Lab ][C:Ice ][T:Bunk][C:Meli]
+      [C:Spac][  — ][  — ][  — ][T:Blac]
+      [T:Defe][  — ][  — ][  — ][C:Blea]
+P1:   [C:Joan][  — ][C:Void][  — ][C:Cany]
+      [  — ][C:Swar][  — ][C:Gryp][  — ]
+      [T:Alar][  — ][C:Chao][T:Echo][C:Laug]
+      [  — ][C:Sunr][T:Spik][C:Mafi][T:Red ]
+      [C:Dark][T:Pepp][C:Dark][T:Expl][C:Tomb]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.310] Mode selected P0: TECH
+[00:05.619] Tech played  P0: "Bribe"
+[00:07.169] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:07.668] MSG: Bribe: AI passed.
+[00:07.680] Tech resolved  P0
+[00:10.578] Crystals: P0 5000 → 4950 (-50)  [skip tax]
+[00:10.578] MSG: AI Player 0 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:11.964] Turn ended  P0  |  Crystals P0=4950 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4950 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:12.560] Mode selected P1: TECH
+[00:12.860] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:14.244] Tech played  P1: "Great Diplomacy"
+[00:15.847] Revealed: P1 (0,0) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[00:15.870] Revealed: P1 (0,2) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:15.890] Revealed: P1 (0,4) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:15.910] Revealed: P1 (1,1) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[00:15.931] Revealed: P1 (1,3) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:15.955] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:15.980] Revealed: P1 (2,4) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[00:16.003] Revealed: P1 (3,1) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[00:16.027] Revealed: P1 (3,3) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:16.049] Revealed: P1 (4,0) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:16.076] Revealed: P1 (4,2) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[00:16.102] Revealed: P1 (4,4) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:16.108] Tech resolved  P1
+[00:16.602] Mode selected P1: ATTACK
+[00:16.615] Attack phase P1: 2 attack(s) available
+[00:16.615] MSG: Player 2: tap a character to attack.
+[00:16.901] AI1 attack decision: (0,0)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → (0,2) "Foul Gas" {cost 0}
+[00:17.239] Revealed: P0 (0,2) "Foul Gas" {cost 0}
+[00:17.239] Dice rolled: 3
+[00:17.523] MSG: Trap triggered: Foul Gas!
+[00:21.641] MSG: Foul Gas: All of Player 2's characters -5 ATK this turn!
+[00:21.651] Trap: "Foul Gas" triggered  P1(0,0)→P0(0,2)
+[00:21.652] Anim: 3D  (attacker survives)
+[00:22.143] Mode selected P1: ATTACK
+[00:22.150] Attack phase P1: 1 attack(s) available
+[00:22.150] MSG: Player 2: tap a character to attack.
+[00:22.443] AI1 attack decision: (0,2)"Void Stalker" {Unit ATK60 DEF25 | cost 720 | affinity Chaos | base 65/25 | buff -tempATK5} → (2,0) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down}
+[00:22.783] Revealed: P0 (2,0) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:22.784] Dice rolled: 5
+[00:22.791] MSG: Void Stalker wins!
+[00:28.453] Crystals: P0 4950 → 4650 (-300)  [battle]
+[00:29.861] Attack P1(0,2)"Void Stalker" {Unit ATK60 DEF25 | cost 720 | affinity Chaos | base 65/25 | buff -tempATK5} → P0(2,0)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=5  ATK=80 vs DEF=25  → WIN
+[00:29.862] Reckoning overlay: P1 "Void Stalker" {Unit ATK60 DEF25 | cost 720 | affinity Chaos | base 65/25 | buff -tempATK5} +ATK 20
+[00:29.862] Anim: 3A  △ P0(2,0)
+[00:29.862] Card destroyed  P0 (2,0) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:30.362] Turn ended  P1  |  Crystals P0=4650 P1=4000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4650 P1=4000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [Joan][  — ][Void][  — ][Cany]
+      [  — ][Swar][  — ][Gryp][  — ]
+      [  ? ][  — ][Chao][  ? ][Laug]
+      [  — ][Sunr][  ? ][Mafi][  ? ]
+      [Dark][  ? ][Dark][  ? ][Tomb]
+[00:30.959] Mode selected P0: TECH
+[00:31.269] Crystals: P0 4650 → 3650 (-1000)  [tech cost]
+[00:32.658] Tech played  P0: "Accident"
+[00:34.212] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:34.618] AI0 target chosen: (1,3)
+[00:34.622] Card destroyed  P1 (1,3) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:34.638] Tech resolved  P0
+[00:35.536] Mode selected P0: ATTACK
+[00:35.549] Attack phase P0: 2 attack(s) available
+[00:35.550] MSG: Player 1: tap a character to attack.
+[00:35.843] AI0 attack decision: (3,0)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic | face-down} → (4,4) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:36.189] Revealed: P0 (3,0) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:36.189] Dice rolled: 3
+[00:36.193] MSG: Space Boy wins!
+[00:40.853] Crystals: P1 4000 → 3000 (-1000)  [battle]
+[00:42.267] Attack P0(3,0)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P1(4,4)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=3  ATK=75 vs DEF=60  → WIN
+[00:42.267] Anim: 3A  △ P1(4,4)
+[00:42.267] Card destroyed  P1 (4,4) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:44.770] Turn ended  P0  |  Crystals P0=3650 P1=3000
+
+--- Turn 4  |  Player 1  |  Crystals P0=3650 P1=3000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [Spac][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [Joan][  — ][Void][  — ][Cany]
+      [  — ][Swar][  — ][  — ][  — ]
+      [  ? ][  — ][Chao][  ? ][Laug]
+      [  — ][Sunr][  ? ][Mafi][  ? ]
+      [Dark][  ? ][Dark][  ? ][  — ]
+[00:45.373] Mode selected P1: TECH
+[00:45.682] Crystals: P1 3000 → 1500 (-1500)  [tech cost]
+[00:47.072] Tech played  P1: "Resurrection"
+[00:48.634] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:49.031] AI1 target chosen: (0,1)
+[00:49.037] Revealed: P1 (0,1) "Tomb Bandit" {Unit ATK0 DEF0 | cost 1000 | affinity Anima | base 0/0}
+[00:49.039] MSG: Revived Tomb Bandit at [0,1]!
+[00:49.055] Tech resolved  P1
+[00:49.956] Mode selected P1: ATTACK
+[00:49.969] Attack phase P1: 2 attack(s) available
+[00:49.970] MSG: Player 2: tap a character to attack.
+[00:50.255] AI1 attack decision: (0,2)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} → (3,0) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:50.564] Dice rolled: 2
+[00:50.580] MSG: Void Stalker wins!
+[00:56.261] Crystals: P0 3650 → 2850 (-800)  [battle]
+[00:57.672] Attack P1(0,2)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} → P0(3,0)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}  Dice=2  ATK=85 vs DEF=65  → WIN
+[00:57.672] Reckoning overlay: P1 "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} +ATK 20
+[00:57.672] Anim: 3A  △ P0(3,0)
+[00:57.672] Card destroyed  P0 (3,0) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:58.168] Mode selected P1: ATTACK
+[00:58.191] Attack phase P1: 1 attack(s) available
+[00:58.194] MSG: Player 2: tap a character to attack.
+[00:58.468] AI1 attack decision: (0,0)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → (4,2) (dead-end)
+[00:58.779] Dice rolled: 4
+[00:58.818] MSG: Nothing happens — Dead End.
+[01:02.194] Attack P1(0,0)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → P0(4,2)(empty)  Dice=4  → DEAD_END
+[01:02.195] Anim: 3F  (blank slot)
+[01:02.692] Turn ended  P1  |  Crystals P0=2850 P1=1500
+
+--- Turn 5  |  Player 0  |  Crystals P0=2850 P1=1500 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [Joan][Tomb][Void][  — ][Cany]
+      [  — ][Swar][  — ][  — ][  — ]
+      [  ? ][  — ][Chao][  ? ][Laug]
+      [  — ][Sunr][  ? ][Mafi][  ? ]
+      [Dark][  ? ][Dark][  ? ][  — ]
+[01:04.804] Crystals: P0 2850 → 2250 (-600)  [union]
+[01:04.855] Revealed: P0 (0,0) "Ten Arms Yaksa" {Union ATK45 DEF30 | destroy-cost 0 | summon-cost 600 | affinity Chaos}
+[01:04.856] Union summoned P0: "Ten Arms Yaksa" {Union ATK45 DEF30 | destroy-cost 0 | summon-cost 600 | affinity Chaos} from "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos | face-down}, "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | face-down}
+[01:04.857] MSG: Player 1 summoned [Ten Arms Yaksa] using: "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos | face-down}, "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | face-down}
+[01:08.253] Mode selected P0: ATTACK
+[01:08.274] Attack phase P0: 2 attack(s) available
+[01:08.275] MSG: Player 1: tap a character to attack.
+[01:08.561] AI0 attack decision: (0,0)"Ten Arms Yaksa" {Union ATK45 DEF30 | destroy-cost 0 | summon-cost 600 | affinity Chaos} → (0,1) "Tomb Bandit" {Unit ATK0 DEF0 | cost 1000 | affinity Anima | base 0/0}
+[01:08.868] Dice rolled: 1
+[01:08.924] MSG: Ten Arms Yaksa wins!
+[01:13.568] Crystals: P1 1500 → 500 (-1000)  [battle]
+[01:14.967] Attack P0(0,0)"Ten Arms Yaksa" {Union ATK45 DEF30 | destroy-cost 0 | summon-cost 600 | affinity Chaos} → P1(0,1)"Tomb Bandit" {Unit ATK0 DEF0 | cost 1000 | affinity Anima | base 0/0}  Dice=1  ATK=45 vs DEF=0  → WIN
+[01:14.967] Anim: 3A  △ P1(0,1)
+[01:14.967] Card destroyed  P1 (0,1) "Tomb Bandit" {Unit ATK0 DEF0 | cost 1000 | affinity Anima | base 0/0}
+[01:14.968] MSG: Ten Arms Yaksa: -5 ATK after attack.
+[01:15.460] Mode selected P0: ATTACK
+[01:15.472] Attack phase P0: 2 attack(s) available
+[01:15.472] MSG: Player 1: tap a character to attack.
+[01:15.768] AI0 attack decision: (0,0)"Ten Arms Yaksa" {Union ATK40 DEF30 | destroy-cost 0 | summon-cost 600 | affinity Chaos | base 40/30 | multi-atk:1} → (0,4) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:16.076] Dice rolled: 3
+[01:16.129] MSG: Ten Arms Yaksa wins!
+[01:20.780] Crystals: P1 500 → 0 (-500)  [battle]
+
+=== GAME OVER ===
+[01:20.807] AI Player 0 wins
+[01:20.807] Reason: crystals
+[01:20.807] Final crystals — P0: 2250  P1: 0  |  Turns: 5
+[01:20.807] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_frogs_kitchen_2026-05-31_17-27-32_925.txt

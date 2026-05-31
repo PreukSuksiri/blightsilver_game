@@ -1,0 +1,285 @@
+=== Battle of Sticky Vending Machine ===
+Battle started: 2026-05-31 10:37:31.305
+Game Session of Chocolate Milk (started 2026-05-31 10:28:02.264)
+=== AI vs AI Match ===
+Batch iteration: 5 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Great Diplomacy, Release Mutagen
+P1 Tech hand: Accident, Prayer, Tease
+P0:   [C:Hunt][T:Curs][T:Spik][C:Leop][C:Bomb]
+      [C:Stri][T:Self][  — ][  — ][C:Jose]
+      [T:Stre][  — ][  — ][T:Blac][C:Stre]
+      [T:Bait][  — ][  — ][  — ][C:Arch]
+      [C:Chao][C:Bat ][C:Pit ][C:Cany][C:Succ]
+P1:   [  — ][  — ][  — ][  — ][T:Alar]
+      [  — ][C:Flam][C:Red ][C:Stri][  — ]
+      [  — ][C:Mafi][T:Hypn][C:Stin][T:Acid]
+      [  — ][C:Yaks][C:Silv][C:Paro][T:Spik]
+      [  — ][T:Expl][  — ][T:Curs][  — ]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[00:05.320] Mode selected P1: TECH
+[00:05.630] Tech played  P1: "Tease"
+[00:07.188] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.189] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:07.595] AI0 target chosen: (3,0)
+[00:07.636] Revealed: P0 (3,0) "Bait"
+[00:07.636] MSG: Tease: Opponent revealed Bait.
+[00:07.637] Tech resolved  P1
+[00:08.489] Mode selected P1: ATTACK
+[00:08.492] Attack phase P1: 2 attack(s) available
+[00:08.492] MSG: Player 2: tap a character to attack.
+[00:08.788] AI1 attack decision: (1,3)"Striker Comet" [ATK=25] → (1,1) "Self-destruct" [DEF=0]
+[00:09.135] Revealed: P1 (1,3) "Striker Comet"
+[00:09.160] Revealed: P0 (1,1) "Self-destruct"
+[00:09.160] Dice rolled: 4
+[00:09.409] MSG: Trap triggered: Self-destruct!
+[00:13.505] Card destroyed  P0 (1,1) "Self-destruct"
+[00:13.514] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[00:13.517] Trap: "Self-destruct" triggered  P1(1,3)→P0(1,1)
+[00:13.517] Anim: 3D  (attacker survives)
+[00:13.903] AI0 target chosen: (-1,-1)
+[00:13.904] MSG: Succubus: +10 ATK until end of next turn, then destroyed.
+[00:14.004] Mode selected P1: ATTACK
+[00:14.008] Attack phase P1: 1 attack(s) available
+[00:14.008] MSG: Player 2: tap a character to attack.
+[00:14.304] AI1 attack decision: (1,2)"Red Mage" [ATK=20] → (0,0) "Huntress of Green Glade" [DEF=50]
+[00:14.645] Revealed: P1 (1,2) "Red Mage"
+[00:14.670] Revealed: P0 (0,0) "Huntress of Green Glade"
+[00:14.670] Dice rolled: 5
+[00:19.380] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:20.773] Card destroyed  P1 (1,2) "Red Mage"
+[00:20.778] Attack P1(1,2)"Red Mage" → P0(0,0)"Huntress of Green Glade"  Dice=5  ATK=20 vs DEF=50  → LOSE
+[00:20.778] Anim: 3B  △ P1(1,2)
+[00:21.281] MSG: Striker Comet self-destructs at end of turn!
+[00:21.282] Crystals: P1 4600 → 4400 (-200)  [card lost]
+[00:21.283] Card destroyed  P1 (1,3) "Striker Comet"
+[00:21.285] Turn ended  P1  |  Crystals P0=5000 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4400 ---
+P0:   [Hunt][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[00:21.886] Mode selected P0: TECH
+[00:22.195] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:22.665] Tech played  P0: "Great Diplomacy"
+[00:24.569] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:24.786] AI0 target chosen: (4,2)
+[00:24.786] Revealed: P0 (4,2) "Pit Lord"
+[00:25.187] AI0 target chosen: (3,4)
+[00:25.188] Revealed: P0 (3,4) "Archbishop"
+[00:25.588] AI0 target chosen: (4,3)
+[00:25.590] Revealed: P0 (4,3) "Canyon Warg"
+[00:25.986] AI0 target chosen: (1,4)
+[00:25.988] Revealed: P0 (1,4) "Joseph the Battle Priest"
+[00:26.388] AI0 target chosen: (0,3)
+[00:26.389] Revealed: P0 (0,3) "Leopard Jailer"
+[00:26.389] MSG: Great Diplomacy: revealed 5 unit(s).
+[00:26.396] Tech resolved  P0
+[00:27.287] Mode selected P0: ATTACK
+[00:27.300] Attack phase P0: 2 attack(s) available
+[00:27.300] MSG: Player 1: tap a character to attack.
+[00:27.587] AI0 attack decision: (4,2)"Pit Lord" [ATK=120] → (2,3) "Stinky Insect" [DEF=10]
+[00:27.922] Revealed: P1 (2,3) "Stinky Insect"
+[00:27.922] Dice rolled: 5
+[00:27.925] MSG: Pit Lord wins!
+[00:32.588] Crystals: P1 4400 → 4000 (-400)  [battle]
+[00:33.980] Card destroyed  P1 (2,3) "Stinky Insect"
+[00:33.985] Attack P0(4,2)"Pit Lord" → P1(2,3)"Stinky Insect"  Dice=5  ATK=120 vs DEF=10  → WIN
+[00:33.985] Anim: 3A  △ P1(2,3)
+[00:34.488] Mode selected P0: ATTACK
+[00:34.495] Attack phase P0: 1 attack(s) available
+[00:34.495] MSG: Player 1: tap a character to attack.
+[00:34.796] AI0 attack decision: (3,4)"Archbishop" [ATK=70] → (1,1) "Flame Seraph" [DEF=10]
+[00:35.145] Revealed: P1 (1,1) "Flame Seraph"
+[00:35.145] Dice rolled: 3
+[00:35.149] MSG: Archbishop wins!
+[00:39.805] Crystals: P1 4000 → 3500 (-500)  [battle]
+[00:41.197] Card destroyed  P1 (1,1) "Flame Seraph"
+[00:41.201] Attack P0(3,4)"Archbishop" → P1(1,1)"Flame Seraph"  Dice=3  ATK=70 vs DEF=10  → WIN
+[00:41.201] Anim: 3A  △ P1(1,1)
+[00:41.709] MSG: Succubus is destroyed by self-destruct trap!
+[00:41.709] Crystals: P0 4000 → 3400 (-600)  [card lost]
+[00:41.711] Card destroyed  P0 (4,4) "Succubus"
+[00:41.714] Turn ended  P0  |  Crystals P0=3400 P1=3500
+
+--- Turn 3  |  Player 1  |  Crystals P0=3400 P1=3500 ---
+P0:   [Hunt][  ? ][  ? ][Leop][  ? ]
+      [  ? ][  — ][  — ][  — ][Jose]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][Arch]
+      [  ? ][  ? ][Pit ][Cany][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[00:42.312] Mode selected P1: TECH
+[00:42.621] Crystals: P1 3500 → 2500 (-1000)  [tech cost]
+[00:43.090] Tech played  P1: "Accident"
+[00:44.647] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:45.053] AI1 target chosen: (3,4)
+[00:45.055] Card destroyed  P0 (3,4) "Archbishop"
+[00:45.063] Tech resolved  P1
+[00:45.970] Mode selected P1: ATTACK
+[00:45.976] Attack phase P1: 2 attack(s) available
+[00:45.977] MSG: Player 2: tap a character to attack.
+[00:46.279] AI1 attack decision: (3,3)"Parom the Smuggler" [ATK=30] → (1,4) "Joseph the Battle Priest" [DEF=25]
+[00:46.652] Revealed: P1 (3,3) "Parom the Smuggler"
+[00:46.652] Dice rolled: 3
+[00:46.658] MSG: Parom the Smuggler wins!
+[00:51.238] Crystals: P0 3400 → 2800 (-600)  [battle]
+[00:52.631] Card destroyed  P0 (1,4) "Joseph the Battle Priest"
+[00:52.635] Attack P1(3,3)"Parom the Smuggler" → P0(1,4)"Joseph the Battle Priest"  Dice=3  ATK=30 vs DEF=25  → WIN
+[00:52.635] Anim: 3A  △ P0(1,4)
+[00:53.138] Mode selected P1: ATTACK
+[00:53.146] Attack phase P1: 1 attack(s) available
+[00:53.147] MSG: Player 2: tap a character to attack.
+[00:53.436] AI1 attack decision: (3,2)"Silver Spearman" [ATK=25] → (0,1) "Cursed Reflection" [DEF=0]
+[00:53.781] Revealed: P1 (3,2) "Silver Spearman"
+[00:53.807] Revealed: P0 (0,1) "Cursed Reflection"
+[00:53.807] Crystals: P1 2500 → 2540 (+40)  [ability]
+[00:53.807] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:53.807] Dice rolled: 1
+[00:54.069] MSG: Trap triggered: Cursed Reflection!
+[00:58.148] Card destroyed  P0 (0,1) "Cursed Reflection"
+[00:58.148] Crystals: P0 2800 → 2300 (-500)  [trap cost]
+[00:59.537] MSG: Cursed Reflection: Silver Spearman's ATK and DEF swapped until end of turn!
+[00:59.544] Trap: "Cursed Reflection" triggered  P1(3,2)→P0(0,1)
+[00:59.544] Anim: 3D  (attacker survives)
+[01:00.038] Turn ended  P1  |  Crystals P0=2300 P1=2540
+
+--- Turn 4  |  Player 0  |  Crystals P0=2300 P1=2540 ---
+P0:   [Hunt][  — ][  ? ][Leop][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][Pit ][Cany][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][Silv][Paro][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[01:00.643] Mode selected P0: TECH
+[01:00.963] Tech played  P0: "Tease"
+[01:02.516] MSG: Opponent must choose and reveal 1 of their squares.
+[01:02.517] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:02.925] AI1 target chosen: (4,3)
+[01:02.926] Revealed: P1 (4,3) "Cursed Reflection"
+[01:02.927] MSG: Tease: Opponent revealed Cursed Reflection.
+[01:02.936] Tech resolved  P0
+[01:03.842] Mode selected P0: ATTACK
+[01:03.850] Attack phase P0: 2 attack(s) available
+[01:03.850] MSG: Player 1: tap a character to attack.
+[01:04.150] AI0 attack decision: (4,3)"Canyon Warg" [ATK=70] → (3,3) "Parom the Smuggler" [DEF=20]
+[01:04.459] Dice rolled: 1
+[01:04.473] MSG: Canyon Warg wins!
+[01:09.157] Crystals: P1 2540 → 2240 (-300)  [battle]
+[01:10.551] Card destroyed  P1 (3,3) "Parom the Smuggler"
+[01:10.555] Attack P0(4,3)"Canyon Warg" → P1(3,3)"Parom the Smuggler"  Dice=1  ATK=70 vs DEF=20  → WIN
+[01:10.555] Anim: 3A  △ P1(3,3)
+[01:11.057] Mode selected P0: ATTACK
+[01:11.067] Attack phase P0: 1 attack(s) available
+[01:11.068] MSG: Player 1: tap a character to attack.
+[01:11.367] AI0 attack decision: (4,2)"Pit Lord" [ATK=60] → (3,2) "Silver Spearman" [DEF=20]
+[01:11.674] Dice rolled: 3
+[01:11.681] MSG: Pit Lord wins!
+[01:16.376] Crystals: P1 2240 → 1990 (-250)  [battle]
+[01:17.768] Card destroyed  P1 (3,2) "Silver Spearman"
+[01:17.774] Attack P0(4,2)"Pit Lord" → P1(3,2)"Silver Spearman"  Dice=3  ATK=60 vs DEF=20  → WIN
+[01:17.774] Anim: 3A  △ P1(3,2)
+[01:18.278] Turn ended  P0  |  Crystals P0=2300 P1=1990
+
+--- Turn 5  |  Player 1  |  Crystals P0=2300 P1=1990 ---
+P0:   [Hunt][  — ][  ? ][Leop][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][Pit ][Cany][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:18.888] Mode selected P1: ATTACK
+[01:18.898] Attack phase P1: 2 attack(s) available
+[01:18.898] MSG: Player 2: tap a character to attack.
+[01:19.191] AI1 attack decision: (3,1)"Yaksa" [ATK=30] → (0,2) "Spike Trap" [DEF=0]
+[01:19.552] Revealed: P1 (3,1) "Yaksa"
+[01:19.581] Revealed: P0 (0,2) "Spike Trap"
+[01:19.581] Dice rolled: 2
+[01:19.874] MSG: Trap triggered: Spike Trap!
+[01:25.096] Crystals: P0 2300 → 800 (-1500)  [trap cost]
+[01:26.488] Crystals: P1 1990 → 1490 (-500)  [card lost]
+[01:27.874] Card destroyed  P1 (3,1) "Yaksa"
+[01:28.521] Card destroyed  P0 (0,2) "Spike Trap"
+[01:28.522] MSG: Flame Trap: Yaksa destroyed!
+[01:28.525] Trap: "Spike Trap" triggered  P1(3,1)→P0(0,2)
+[01:28.525] Anim: 3E  △ P1(3,1)
+[01:29.021] Mode selected P1: ATTACK
+[01:29.027] Attack phase P1: 1 attack(s) available
+[01:29.027] MSG: Player 2: tap a character to attack.
+[01:29.321] AI1 attack decision: (2,1)"Mafia Associates" [ATK=45] → (4,3) "Canyon Warg" [DEF=30]
+[01:29.681] Revealed: P1 (2,1) "Mafia Associates"
+[01:29.681] Dice rolled: 5
+[01:29.685] MSG: Mafia Associates wins!
+[01:34.267] Crystals: P0 800 → 50 (-750)  [battle]
+[01:35.660] Card destroyed  P0 (4,3) "Canyon Warg"
+[01:35.663] Attack P1(2,1)"Mafia Associates" → P0(4,3)"Canyon Warg"  Dice=5  ATK=45 vs DEF=30  → WIN
+[01:35.663] Anim: 3A  △ P0(4,3)
+[01:36.173] Turn ended  P1  |  Crystals P0=50 P1=1490
+
+--- Turn 6  |  Player 0  |  Crystals P0=50 P1=1490 ---
+P0:   [Hunt][  — ][  — ][Leop][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][Pit ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Mafi][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:36.770] Mode selected P0: ATTACK
+[01:36.779] Attack phase P0: 2 attack(s) available
+[01:36.779] MSG: Player 1: tap a character to attack.
+[01:37.079] AI0 attack decision: (4,2)"Pit Lord" [ATK=60] → (2,1) "Mafia Associates" [DEF=40]
+[01:37.386] Dice rolled: 5
+[01:37.394] MSG: Pit Lord wins!
+[01:43.086] Crystals: P1 1490 → 990 (-500)  [battle]
+[01:44.481] Card destroyed  P1 (2,1) "Mafia Associates"
+[01:44.486] Attack P0(4,2)"Pit Lord" → P1(2,1)"Mafia Associates"  Dice=5  ATK=60 vs DEF=0  → WIN
+[01:44.486] Anim: 3A  △ P1(2,1)
+
+=== GAME OVER ===
+[01:44.487] AI Player 0 wins
+[01:44.487] Reason: all_destroyed
+[01:44.487] Final crystals — P0: 50  P1: 990  |  Turns: 6
+[01:44.487] Log saved to: res://logs/results/2026-05-31_10-28-02_264_chocolate_milk/battle_sticky_vending_machine_2026-05-31_10-37-31_305.txt

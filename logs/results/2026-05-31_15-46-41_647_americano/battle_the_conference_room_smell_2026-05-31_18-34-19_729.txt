@@ -1,0 +1,405 @@
+=== Battle of The Conference Room Smell ===
+Battle started: 2026-05-31 18:34:19.729
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Night Whisperer
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Night Whisperer, (2,1) Chaotic Wisp
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Spy, Tease
+P1 Tech hand: Prayer, Bribe, Spy
+P0:   [  — ][T:Echo][C:Aeri][  — ][  — ]
+      [  — ][C:Gian][C:Jose][C:Skel][T:Deco]
+      [  — ][C:Chao][C:Nigh][C:Choi][  — ]
+      [  — ][C:Arch][C:Leor][C:Void][T:Red ]
+      [T:Acid][T:Expl][  — ][  — ][  — ]
+P1:   [C:Curs][  — ][C:Vamp][  — ][T:Expl]
+      [  — ][C:Gian][  — ][C:Gryp][  — ]
+      [C:Moon][  — ][C:Chao][T:Curs][C:Polt]
+      [  — ][C:Heav][  — ][C:Shre][T:Pepp]
+      [T:Hard][  — ][C:Pony][  — ][C:Choi]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.326] Mode selected P0: TECH
+[00:05.635] Tech played  P0: "Spy"
+[00:07.150] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.558] AI0 target chosen: (3,0)
+[00:07.559] Revealed: P1 (3,0) (blank slot)
+[00:07.562] Tech resolved  P0
+[00:08.479] Mode selected P0: ATTACK
+[00:08.484] Attack phase P0: 2 attack(s) available
+[00:08.485] MSG: Player 1: tap a character to attack.
+[00:08.784] AI0 attack decision: (1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (3,0) (dead-end)
+[00:09.128] Revealed: P0 (1,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:09.128] Dice rolled: 4
+[00:09.139] MSG: Nothing happens — Dead End.
+[00:12.534] Attack P0(1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(3,0)(empty)  Dice=4  → DEAD_END
+[00:12.534] Anim: 3F  (blank slot)
+[00:13.030] Mode selected P0: ATTACK
+[00:13.033] Attack phase P0: 1 attack(s) available
+[00:13.034] MSG: Player 1: tap a character to attack.
+[00:13.329] AI0 attack decision: (0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | face-down} → (1,1) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down}
+[00:13.679] Revealed: P0 (0,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:13.710] Revealed: P1 (1,1) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:13.710] Dice rolled: 4
+[00:13.715] MSG: Aerial the Battlemage wins!
+[00:18.273] Crystals: P1 5000 → 3500 (-1500)  [battle]
+[00:19.670] Attack P0(0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(1,1)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}  Dice=4  ATK=50 vs DEF=20  → WIN
+[00:19.670] Anim: 3A  △ P1(1,1)
+[00:19.670] Card destroyed  P1 (1,1) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:20.167] Turn ended  P0  |  Crystals P0=5000 P1=3500
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=3500 ---
+P0:   [  — ][  ? ][Aeri][  — ][  — ]
+      [  — ][  ? ][Jose][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:20.759] Mode selected P1: TECH
+[00:21.072] Tech played  P1: "Spy"
+[00:22.618] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:23.016] AI1 target chosen: (0,1)
+[00:23.045] Revealed: P0 (0,1) "Echo Barrier" {cost 1000}
+[00:23.047] Tech resolved  P1
+[00:23.938] Mode selected P1: ATTACK
+[00:23.944] Attack phase P1: 2 attack(s) available
+[00:23.944] MSG: Player 2: tap a character to attack.
+[00:24.241] AI1 attack decision: (1,3)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down} → (0,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:24.595] Revealed: P1 (1,3) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:24.595] Dice rolled: 1
+[00:24.603] MSG: Gryphon wins!
+[00:29.248] Crystals: P0 5000 → 4250 (-750)  [battle]
+[00:30.656] Attack P1(1,3)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P0(0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=1  ATK=100 vs DEF=45  → WIN
+[00:30.656] Anim: 3A  △ P0(0,2)
+[00:30.656] Card destroyed  P0 (0,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:31.148] Mode selected P1: ATTACK
+[00:31.152] Attack phase P1: 1 attack(s) available
+[00:31.153] MSG: Player 2: tap a character to attack.
+[00:31.449] AI1 attack decision: (3,1)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (1,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:31.791] Revealed: P1 (3,1) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:31.791] Dice rolled: 5
+[00:31.803] MSG: Both cards are destroyed!
+[00:36.377] Crystals: P1 3500 → 3200 (-300)  [battle]
+[00:37.768] Crystals: P0 4250 → 3650 (-600)  [battle]
+[00:39.167] Attack P1(3,1)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P0(1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=5  ATK=25 vs DEF=25  → TIE
+[00:39.168] Anim: 3C  △ P1(3,1) + △ P0(1,2)
+[00:39.168] Card destroyed  P1 (3,1) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:39.168] Card destroyed  P0 (1,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:39.664] Turn ended  P1  |  Crystals P0=3650 P1=3200
+
+--- Turn 3  |  Player 0  |  Crystals P0=3650 P1=3200 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][Gryp][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:40.267] Mode selected P0: TECH
+[00:40.586] Tech played  P0: "Tease"
+[00:42.141] MSG: Opponent must choose and reveal 1 of their squares.
+[00:42.145] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:42.551] AI1 target chosen: (4,2)
+[00:42.594] Revealed: P1 (4,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:42.594] MSG: Tease: Opponent revealed Ponycorn.
+[00:42.603] Tech resolved  P0
+[00:43.464] Mode selected P0: ATTACK
+[00:43.469] Attack phase P0: 2 attack(s) available
+[00:43.469] MSG: Player 1: tap a character to attack.
+[00:43.772] AI0 attack decision: (3,3)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos | face-down} → (1,3) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:44.113] Revealed: P0 (3,3) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:44.113] Dice rolled: 1
+[00:44.119] MSG: Both cards are destroyed!
+[00:49.698] Crystals: P0 3650 → 2930 (-720)  [battle]
+[00:51.089] Crystals: P1 3200 → 2050 (-1150)  [battle]
+[00:52.487] Attack P0(3,3)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} → P1(1,3)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}  Dice=1  ATK=85 vs DEF=85  → TIE
+[00:52.487] Reckoning overlay: P0 "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} +ATK 20
+[00:52.487] Anim: 3C  △ P0(3,3) + △ P1(1,3)
+[00:52.487] Card destroyed  P0 (3,3) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:52.487] Card destroyed  P1 (1,3) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:52.983] Mode selected P0: ATTACK
+[00:52.988] Attack phase P0: 1 attack(s) available
+[00:52.989] MSG: Player 1: tap a character to attack.
+[00:53.284] AI0 attack decision: (1,1)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down} → (4,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:53.595] Revealed: P0 (1,1) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:53.595] Dice rolled: 4
+[00:53.603] MSG: Both cards are destroyed!
+[00:58.209] Crystals: P0 2930 → 1430 (-1500)  [battle]
+[00:59.599] Crystals: P1 2050 → 1750 (-300)  [battle]
+[01:01.001] Attack P0(1,1)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature} → P1(4,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=4  ATK=20 vs DEF=20  → TIE
+[01:01.001] Anim: 3C  △ P0(1,1) + △ P1(4,2)
+[01:01.001] Card destroyed  P0 (1,1) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[01:01.001] Card destroyed  P1 (4,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:01.493] Turn ended  P0  |  Crystals P0=1430 P1=1750
+
+--- Turn 4  |  Player 1  |  Crystals P0=1430 P1=1750 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:02.096] Mode selected P1: TECH
+[01:02.414] Tech played  P1: "Bribe"
+[01:03.980] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:04.487] MSG: Bribe: AI passed.
+[01:04.492] Tech resolved  P1
+[01:07.413] Crystals: P1 1750 → 1700 (-50)  [skip tax]
+[01:07.413] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[01:08.807] Turn ended  P1  |  Crystals P0=1430 P1=1700
+
+--- Turn 5  |  Player 0  |  Crystals P0=1430 P1=1700 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:09.420] Mode selected P0: ATTACK
+[01:09.422] Attack phase P0: 2 attack(s) available
+[01:09.423] MSG: Player 1: tap a character to attack.
+[01:09.713] AI0 attack decision: (1,3)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (2,1) (dead-end)
+[01:10.053] Revealed: P0 (1,3) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:10.053] Dice rolled: 2
+[01:10.065] MSG: Nothing happens — Dead End.
+[01:13.446] Attack P0(1,3)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P1(2,1)(empty)  Dice=2  → DEAD_END
+[01:13.446] Anim: 3F  (blank slot)
+[01:13.947] Mode selected P0: ATTACK
+[01:13.951] Attack phase P0: 1 attack(s) available
+[01:13.951] MSG: Player 1: tap a character to attack.
+[01:14.241] AI0 attack decision: (2,3)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down} → (1,2) (dead-end)
+[01:14.593] Revealed: P0 (2,3) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[01:14.594] Dice rolled: 4
+[01:14.606] MSG: Nothing happens — Dead End.
+[01:17.935] Attack P0(2,3)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(1,2)(empty)  Dice=4  → DEAD_END
+[01:17.935] Anim: 3F  (blank slot)
+[01:18.429] Turn ended  P0  |  Crystals P0=1430 P1=1700
+
+--- Turn 6  |  Player 1  |  Crystals P0=1430 P1=1700 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Skel][  ? ]
+      [  — ][  ? ][  ? ][Choi][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:19.044] Mode selected P1: ATTACK
+[01:19.048] Attack phase P1: 2 attack(s) available
+[01:19.049] MSG: Player 2: tap a character to attack.
+[01:19.325] AI1 attack decision: (3,3)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down} → (1,3) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:19.659] Revealed: P1 (3,3) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[01:19.659] Dice rolled: 2
+[01:19.662] MSG: Shredder Doll wins!
+[01:24.318] Crystals: P0 1430 → 1130 (-300)  [battle]
+[01:25.720] Attack P1(3,3)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → P0(1,3)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=2  ATK=25 vs DEF=5  → WIN
+[01:25.721] Anim: 3A  △ P0(1,3)
+[01:25.721] Card destroyed  P0 (1,3) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:26.211] Mode selected P1: ATTACK
+[01:26.217] Attack phase P1: 1 attack(s) available
+[01:26.218] MSG: Player 2: tap a character to attack.
+[01:26.514] AI1 attack decision: (0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos | face-down} → (2,3) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[01:26.853] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:26.853] Dice rolled: 4
+[01:26.858] MSG: Vampire Servant wins!
+[01:31.513] Crystals: P0 1130 → 880 (-250)  [battle]
+[01:32.908] Attack P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} → P0(2,3)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=4  ATK=20 vs DEF=15  → WIN
+[01:32.908] Anim: 3A  △ P0(2,3)
+[01:32.908] Card destroyed  P0 (2,3) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[01:33.415] Turn ended  P1  |  Crystals P0=880 P1=1700
+
+--- Turn 7  |  Player 0  |  Crystals P0=880 P1=1700 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][Vamp][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][Shre][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:34.037] Mode selected P0: ATTACK
+[01:34.042] Attack phase P0: 2 attack(s) available
+[01:34.042] MSG: Player 1: tap a character to attack.
+[01:34.333] AI0 attack decision: (2,1)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:34.673] Revealed: P0 (2,1) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:34.673] Dice rolled: 4
+[01:34.676] MSG: Both cards are destroyed!
+[01:39.277] Crystals: P0 880 → 780 (-100)  [battle]
+[01:40.668] Crystals: P1 1700 → 900 (-800)  [battle]
+[01:42.069] Attack P0(2,1)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=4  ATK=20 vs DEF=20  → TIE
+[01:42.069] Anim: 3C  △ P0(2,1) + △ P1(0,2)
+[01:42.069] Card destroyed  P0 (2,1) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:42.069] Card destroyed  P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:42.555] Mode selected P0: ATTACK
+[01:42.559] Attack phase P0: 1 attack(s) available
+[01:42.560] MSG: Player 1: tap a character to attack.
+[01:42.845] AI0 attack decision: (3,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima | face-down} → (3,3) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[01:43.188] Revealed: P0 (3,2) "Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima}
+[01:43.188] Dice rolled: 4
+[01:43.194] MSG: Leorudus the Warlord wins!
+[01:47.827] Crystals: P1 900 → 650 (-250)  [battle]
+[01:49.222] Attack P0(3,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(3,3)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=4  ATK=80 vs DEF=5  → WIN
+[01:49.223] Anim: 3A  △ P1(3,3)
+[01:49.223] Card destroyed  P1 (3,3) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[01:49.720] Turn ended  P0  |  Crystals P0=780 P1=650
+
+--- Turn 8  |  Player 1  |  Crystals P0=780 P1=650 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][Leor][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:50.332] Mode selected P1: ATTACK
+[01:50.335] Attack phase P1: 2 attack(s) available
+[01:50.335] MSG: Player 2: tap a character to attack.
+[01:50.622] AI1 attack decision: (0,0)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos | face-down} → (0,0) (dead-end)
+[01:50.955] Revealed: P1 (0,0) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[01:50.956] Dice rolled: 3
+[01:50.967] MSG: Nothing happens — Dead End.
+[01:54.334] Attack P1(0,0)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} → P0(0,0)(empty)  Dice=3  → DEAD_END
+[01:54.334] Anim: 3F  (blank slot)
+[01:54.838] Mode selected P1: ATTACK
+[01:54.843] Attack phase P1: 1 attack(s) available
+[01:54.844] MSG: Player 2: tap a character to attack.
+[01:55.147] AI1 attack decision: (2,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down} → (4,0) "Acid Trap Hole" {cost 0}
+[01:55.498] Revealed: P1 (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:55.535] Revealed: P0 (4,0) "Acid Trap Hole" {cost 0}
+[01:55.535] Dice rolled: 1
+[01:55.757] MSG: Trap triggered: Acid Trap Hole!
+[01:59.847] Crystals: P1 650 → 600 (-50)  [trap]
+[02:01.230] MSG: Acid Trap Hole: Player 2 loses 50 Crystals!
+[02:01.238] Trap: "Acid Trap Hole" triggered  P1(2,0)→P0(4,0)
+[02:01.238] Anim: 3D  (attacker survives)
+[02:01.732] Turn ended  P1  |  Crystals P0=780 P1=600
+
+--- Turn 9  |  Player 0  |  Crystals P0=780 P1=600 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][Leor][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [Curs][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Moon][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[02:02.352] Mode selected P0: ATTACK
+[02:02.359] Attack phase P0: 2 attack(s) available
+[02:02.359] MSG: Player 1: tap a character to attack.
+[02:02.645] AI0 attack decision: (3,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (0,0) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[02:02.955] Dice rolled: 4
+[02:02.968] MSG: Leorudus the Warlord wins!
+[02:07.655] Crystals: P1 600 → 300 (-300)  [battle]
+[02:09.050] Attack P0(3,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(0,0)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}  Dice=4  ATK=80 vs DEF=25  → WIN
+[02:09.050] Anim: 3A  △ P1(0,0)
+[02:09.050] Card destroyed  P1 (0,0) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[02:09.553] Mode selected P0: ATTACK
+[02:09.557] Attack phase P0: 1 attack(s) available
+[02:09.558] MSG: Player 1: tap a character to attack.
+[02:09.861] AI0 attack decision: (2,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos | face-down} → (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[02:10.203] Revealed: P0 (2,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[02:10.203] Dice rolled: 3
+[02:10.208] MSG: Night Whisperer wins!
+[02:14.872] Crystals: P1 300 → 100 (-200)  [battle]
+[02:16.271] Attack P0(2,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} → P1(2,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=3  ATK=30 vs DEF=20  → WIN
+[02:16.271] Anim: 3A  △ P1(2,0)
+[02:16.271] Card destroyed  P1 (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[02:16.777] Turn ended  P0  |  Crystals P0=780 P1=100
+
+--- Turn 10  |  Player 1  |  Crystals P0=780 P1=100 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Nigh][  — ][  — ]
+      [  — ][  ? ][Leor][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[02:17.348] Mode selected P1: ATTACK
+[02:17.353] Attack phase P1: 2 attack(s) available
+[02:17.354] MSG: Player 2: tap a character to attack.
+[02:17.651] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (4,4) (dead-end)
+[02:17.960] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:17.961] Dice rolled: 3
+[02:17.988] MSG: Nothing happens — Dead End.
+[02:21.373] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(4,4)(empty)  Dice=3  → DEAD_END
+[02:21.373] Anim: 3F  (blank slot)
+[02:21.874] Mode selected P1: ATTACK
+[02:21.877] Attack phase P1: 1 attack(s) available
+[02:21.877] MSG: Player 2: tap a character to attack.
+[02:22.182] AI1 attack decision: (4,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down} → (0,4) (dead-end)
+[02:22.494] Revealed: P1 (4,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[02:22.494] Dice rolled: 2
+[02:22.514] MSG: Nothing happens — Dead End.
+[02:25.899] Attack P1(4,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P0(0,4)(empty)  Dice=2  → DEAD_END
+[02:25.899] Anim: 3F  (blank slot)
+[02:26.407] Turn ended  P1  |  Crystals P0=780 P1=100
+
+--- Turn 11  |  Player 0  |  Crystals P0=780 P1=100 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Nigh][  — ][  — ]
+      [  — ][  ? ][Leor][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Chao][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Choi]
+[02:27.016] Mode selected P0: ATTACK
+[02:27.024] Attack phase P0: 2 attack(s) available
+[02:27.024] MSG: Player 1: tap a character to attack.
+[02:27.316] AI0 attack decision: (3,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:27.627] Dice rolled: 2
+[02:27.637] MSG: Leorudus the Warlord wins!
+[02:32.326] Crystals: P1 100 → 0 (-100)  [battle]
+
+=== GAME OVER ===
+[02:32.337] AI Player 0 wins
+[02:32.337] Reason: crystals
+[02:32.337] Final crystals — P0: 780  P1: 0  |  Turns: 11
+[02:32.337] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_the_conference_room_smell_2026-05-31_18-34-19_729.txt

@@ -20,6 +20,7 @@ var union_mechanism_unlocked: bool = false  # true = union system visible to pla
 var demo_mode: bool = false
 var ai_exclude_placeholder: bool = false  # exclude placeholder_art cards from AI random deck pool
 var bugged_cards: Dictionary = {}  # card_name → bug message string
+var gallery_chapters_completed: Dictionary = {}  # vn_scene path → true
 
 func _ready() -> void:
 	_load_demo_config()
@@ -121,6 +122,7 @@ func save_data() -> void:
 		"unlocked_unions": unlocked_unions,
 		"union_mechanism_unlocked": union_mechanism_unlocked,
 		"bugged_cards": bugged_cards,
+		"gallery_chapters_completed": gallery_chapters_completed,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -179,6 +181,34 @@ func load_data() -> void:
 		for item: Variant in bc:
 			if item is String:
 				bugged_cards[item] = ""
+
+	var gcc: Variant = parsed.get("gallery_chapters_completed", {})
+	if gcc is Dictionary:
+		gallery_chapters_completed = gcc as Dictionary
+	elif gcc is Array:
+		for vn_key: Variant in gcc:
+			if vn_key is String and (vn_key as String) != "":
+				gallery_chapters_completed[vn_key] = true
+
+# ─────────────────────────────────────────────────────────────
+# Campaign gallery chapter progress
+# ─────────────────────────────────────────────────────────────
+func mark_gallery_chapter_completed(vn_scene: String) -> void:
+	var key: String = vn_scene.strip_edges()
+	if key.is_empty():
+		return
+	if gallery_chapters_completed.get(key, false):
+		return
+	gallery_chapters_completed[key] = true
+	save_data()
+
+func is_gallery_chapter_completed(vn_scene: String) -> bool:
+	var key: String = vn_scene.strip_edges()
+	if key.is_empty():
+		return false
+	if gallery_chapters_completed.get(key, false):
+		return true
+	return CampaignManager.is_vn_scene_completed(key)
 
 # ─────────────────────────────────────────────────────────────
 # Bug tagging

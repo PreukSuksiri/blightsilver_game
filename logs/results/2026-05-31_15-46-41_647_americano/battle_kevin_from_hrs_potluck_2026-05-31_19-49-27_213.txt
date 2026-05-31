@@ -1,0 +1,230 @@
+=== Battle of Kevin from HR's Potluck ===
+Battle started: 2026-05-31 19:49:27.213
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Swarmcaller
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Swarmcaller, (2,1) Flame Lizard
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Prayer, Siege Cannon
+P1 Tech hand: Release Mutagen, Resurrection, Bribe
+P0:   [C:Ox P][  — ][T:Deco][  — ][C:Scou]
+      [C:Immo][C:Plan][C:Pit ][C:Ice ][  — ]
+      [  — ][C:Flam][C:Swar][C:Lase][  — ]
+      [  — ][C:Laug][T:Defe][C:Blue][T:Foul]
+      [C:Mage][C:Succ][T:Alar][  — ][C:Fera]
+P1:   [  — ][  — ][C:Bomb][  — ][  — ]
+      [  — ][C:Heav][C:Gran][C:Snip][T:Spik]
+      [  — ][C:Plan][C:Chao][C:Mars][T:Hard]
+      [T:Self][C:Lab ][C:Armo][C:Leop][  — ]
+      [  — ][T:Acid][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:05.329] Mode selected P1: TECH
+[00:05.637] Tech played  P1: "Bribe"
+[00:07.161] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:07.670] MSG: Bribe: AI passed.
+[00:07.672] Tech resolved  P1
+[00:08.591] Mode selected P1: ATTACK
+[00:08.595] Attack phase P1: 2 attack(s) available
+[00:08.595] MSG: Player 2: tap a character to attack.
+[00:08.894] AI1 attack decision: (1,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima | face-down} → (0,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down}
+[00:09.244] Revealed: P1 (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:09.266] Revealed: P0 (0,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:09.266] Dice rolled: 4
+[00:13.980] Crystals: P1 5000 → 4650 (-350)  [battle]
+[00:15.379] Attack P1(1,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P0(0,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=4  ATK=40 vs DEF=50  → LOSE
+[00:15.379] Anim: 3B  △ P1(1,2)
+[00:15.379] Card destroyed  P1 (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:15.879] Mode selected P1: ATTACK
+[00:15.882] Attack phase P1: 1 attack(s) available
+[00:15.882] MSG: Player 2: tap a character to attack.
+[00:16.186] AI1 attack decision: (3,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | face-down} → (0,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:16.539] Revealed: P1 (3,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:16.539] Dice rolled: 5
+[00:16.543] MSG: Lab Crawler wins!
+[00:21.203] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:22.600] Attack P1(3,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P0(0,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=5  ATK=95 vs DEF=50  → WIN
+[00:22.600] Anim: 3A  △ P0(0,4)
+[00:22.600] Card destroyed  P0 (0,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:23.109] Turn ended  P1  |  Crystals P0=4300 P1=4650
+
+--- Turn 2  |  Player 0  |  Crystals P0=4300 P1=4650 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Lab ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:23.714] Mode selected P0: TECH
+[00:24.023] Crystals: P0 4300 → 3300 (-1000)  [tech cost]
+[00:25.406] Tech played  P0: "Siege Cannon"
+[00:26.962] MSG: Siege Cannon active!
+[00:26.967] Tech resolved  P0
+[00:27.886] Mode selected P0: ATTACK
+[00:27.889] Attack phase P0: 2 attack(s) available
+[00:27.890] MSG: Player 1: tap a character to attack.
+[00:28.186] AI0 attack decision: (1,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (3,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:28.529] Revealed: P0 (1,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:28.529] Dice rolled: 3
+[00:28.532] MSG: Pit Lord wins!
+[00:33.205] Crystals: P1 4650 → 3450 (-1200)  [battle]
+[00:34.609] Attack P0(1,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(3,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=3  ATK=120 vs DEF=60  → WIN
+[00:34.609] Anim: 3A  △ P1(3,1)
+[00:34.609] Card destroyed  P1 (3,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:37.114] Turn ended  P0  |  Crystals P0=3300 P1=3450
+
+--- Turn 3  |  Player 1  |  Crystals P0=3300 P1=3450 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][Pit ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:37.725] Mode selected P1: TECH
+[00:38.034] Crystals: P1 3450 → 1950 (-1500)  [tech cost]
+[00:39.417] Tech played  P1: "Resurrection"
+[00:40.983] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:41.391] AI1 target chosen: (0,0)
+[00:41.393] Revealed: P1 (0,0) "Lab Crawler" {Unit ATK0 DEF0 | cost 1200 | affinity Bio | base 0/0}
+[00:41.395] MSG: Revived Lab Crawler at [0,0]!
+[00:41.400] Tech resolved  P1
+[00:42.307] Mode selected P1: ATTACK
+[00:42.311] Attack phase P1: 2 attack(s) available
+[00:42.311] MSG: Player 2: tap a character to attack.
+[00:42.616] AI1 attack decision: (0,0)"Lab Crawler" {Unit ATK0 DEF0 | cost 1200 | affinity Bio | base 0/0} → (1,4) (dead-end)
+[00:42.925] Dice rolled: 3
+[00:42.950] MSG: Nothing happens — Dead End.
+[00:46.329] Attack P1(0,0)"Lab Crawler" {Unit ATK0 DEF0 | cost 1200 | affinity Bio | base 0/0} → P0(1,4)(empty)  Dice=3  → DEAD_END
+[00:46.329] Anim: 3F  (blank slot)
+[00:46.833] Mode selected P1: ATTACK
+[00:46.838] Attack phase P1: 1 attack(s) available
+[00:46.838] MSG: Player 2: tap a character to attack.
+[00:47.140] AI1 attack decision: (0,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down} → (3,4) "Foul Gas" {cost 0}
+[00:47.493] Revealed: P1 (0,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[00:47.523] Revealed: P0 (3,4) "Foul Gas" {cost 0}
+[00:47.524] Dice rolled: 1
+[00:47.771] MSG: Trap triggered: Foul Gas!
+[00:51.863] MSG: Foul Gas: All of Player 2's characters -5 ATK this turn!
+[00:51.867] Trap: "Foul Gas" triggered  P1(0,2)→P0(3,4)
+[00:51.867] Anim: 3D  (attacker survives)
+[00:52.375] Turn ended  P1  |  Crystals P0=3300 P1=1950
+
+--- Turn 4  |  Player 0  |  Crystals P0=3300 P1=1950 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][Pit ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [Lab ][  — ][Bomb][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:54.429] Crystals: P0 3300 → 2500 (-800)  [union]
+[00:54.470] Revealed: P0 (2,1) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[00:54.470] Union summoned P0: "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down}
+[00:54.470] MSG: Player 1 summoned [Ancient Lizard] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down}
+[00:57.869] Mode selected P0: ATTACK
+[00:57.880] Attack phase P0: 2 attack(s) available
+[00:57.880] MSG: Player 1: tap a character to attack.
+[00:58.174] AI0 attack decision: (1,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → (0,0) "Lab Crawler" {Unit ATK0 DEF0 | cost 1200 | affinity Bio | base 0/0}
+[00:58.483] Dice rolled: 4
+[00:58.497] MSG: Pit Lord wins!
+[01:03.184] Crystals: P1 1950 → 750 (-1200)  [battle]
+[01:04.580] Attack P0(1,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(0,0)"Lab Crawler" {Unit ATK0 DEF0 | cost 1200 | affinity Bio | base 0/0}  Dice=4  ATK=60 vs DEF=0  → WIN
+[01:04.580] Anim: 3A  △ P1(0,0)
+[01:04.580] Card destroyed  P1 (0,0) "Lab Crawler" {Unit ATK0 DEF0 | cost 1200 | affinity Bio | base 0/0}
+[01:05.084] Mode selected P0: ATTACK
+[01:05.088] Attack phase P0: 1 attack(s) available
+[01:05.089] MSG: Player 1: tap a character to attack.
+[01:05.390] AI0 attack decision: (2,1)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (0,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[01:05.701] Dice rolled: 2
+[01:05.757] MSG: Ancient Lizard wins!
+[01:10.400] Crystals: P1 750 → 250 (-500)  [battle]
+[01:11.801] Attack P0(2,1)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P1(0,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}  Dice=2  ATK=75 vs DEF=15  → WIN
+[01:11.801] Anim: 3A  △ P1(0,2)
+[01:11.801] Card destroyed  P1 (0,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[01:12.306] Turn ended  P0  |  Crystals P0=2500 P1=250
+
+--- Turn 5  |  Player 1  |  Crystals P0=2500 P1=250 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][Pit ][  ? ][  — ]
+      [  — ][Anci][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:12.921] Mode selected P1: ATTACK
+[01:12.927] Attack phase P1: 2 attack(s) available
+[01:12.927] MSG: Player 2: tap a character to attack.
+[01:13.216] AI1 attack decision: (2,1)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down} → (2,2) (dead-end)
+[01:13.564] Revealed: P1 (2,1) "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[01:13.564] Dice rolled: 3
+[01:13.576] MSG: Nothing happens — Dead End.
+[01:16.965] Attack P1(2,1)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(2,2)(empty)  Dice=3  → DEAD_END
+[01:16.965] Anim: 3F  (blank slot)
+[01:17.461] Mode selected P1: ATTACK
+[01:17.467] Attack phase P1: 1 attack(s) available
+[01:17.468] MSG: Player 2: tap a character to attack.
+[01:17.762] AI1 attack decision: (1,1)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (2,4) (dead-end)
+[01:18.102] Revealed: P1 (1,1) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:18.102] Dice rolled: 4
+[01:18.116] MSG: Nothing happens — Dead End.
+[01:21.446] Attack P1(1,1)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P0(2,4)(empty)  Dice=4  → DEAD_END
+[01:21.446] Anim: 3F  (blank slot)
+[01:21.942] Turn ended  P1  |  Crystals P0=2500 P1=250
+
+--- Turn 6  |  Player 0  |  Crystals P0=2500 P1=250 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][Pit ][  ? ][  — ]
+      [  — ][Anci][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Heav][  — ][  ? ][  ? ]
+      [  — ][Plan][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:22.545] Mode selected P0: ATTACK
+[01:22.551] Attack phase P0: 2 attack(s) available
+[01:22.551] MSG: Player 1: tap a character to attack.
+[01:22.854] AI0 attack decision: (1,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → (1,1) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:23.163] Dice rolled: 1
+[01:23.177] MSG: Pit Lord is destroyed by Divine!
+[01:28.778] Crystals: P0 2500 → 1250 (-1250)  [battle]
+[01:30.170] Crystals: P1 250 → 0 (-250)  [battle]
+
+=== GAME OVER ===
+[01:30.178] AI Player 0 wins
+[01:30.178] Reason: crystals
+[01:30.178] Final crystals — P0: 1250  P1: 0  |  Turns: 6
+[01:30.178] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_kevin_from_hrs_potluck_2026-05-31_19-49-27_213.txt

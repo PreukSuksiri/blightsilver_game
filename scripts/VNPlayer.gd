@@ -612,11 +612,25 @@ func _show_beat() -> void:
 			GameState.campaign_player_names = []
 		# Enemy deck — override what cards the AI places this battle
 		var enemy_deck: Variant = beat.get("enemy_deck", null)
+		var deck_chars: Array = []
+		var deck_traps: Array = []
+		var deck_tech: Array = []
 		if enemy_deck is Dictionary:
+			deck_chars = (enemy_deck as Dictionary).get("characters", [])
+			deck_traps = (enemy_deck as Dictionary).get("traps", [])
+			deck_tech = (enemy_deck as Dictionary).get("tech", [])
+		var merged_tech: Array = DailyDungeonManager.resolve_enemy_forced_tech(
+			beat.get("ai_forced_tech", []), deck_tech)
+		var has_tech: bool = false
+		for t: Variant in merged_tech:
+			if str(t).strip_edges() != "":
+				has_tech = true
+				break
+		if not deck_chars.is_empty() or not deck_traps.is_empty() or has_tech:
 			GameState.campaign_enemy_config = {
-				"forced_characters": (enemy_deck as Dictionary).get("characters", []),
-				"forced_traps":      (enemy_deck as Dictionary).get("traps", []),
-				"forced_tech":       (enemy_deck as Dictionary).get("tech", []),
+				"forced_characters": deck_chars,
+				"forced_traps":      deck_traps,
+				"forced_tech":       merged_tech,
 			}
 		else:
 			GameState.campaign_enemy_config = {}

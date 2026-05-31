@@ -691,6 +691,21 @@ func get_post_battle_scene() -> String:
 # Battle launch
 # ─────────────────────────────────────────────────────────────
 
+const ENEMY_TECH_SLOTS: int = 3
+
+## Merge battle-settings tech slots with ai_deck / enemy_deck fallback (empty slot = random at deal).
+func resolve_enemy_forced_tech(slots: Variant, deck_tech: Array) -> Array:
+	var out: Array = []
+	var slot_arr: Array = slots if slots is Array else []
+	for i: int in range(ENEMY_TECH_SLOTS):
+		var n: String = ""
+		if i < slot_arr.size():
+			n = str(slot_arr[i]).strip_edges()
+		if n.is_empty() and i < deck_tech.size():
+			n = str(deck_tech[i]).strip_edges()
+		out.append(n)
+	return out
+
 ## Called by DailyDungeonMap when the player taps a node.
 ## Sets up GameState and changes to game_board.tscn.
 func start_node_battle(node: Dictionary, parent_node: Node) -> void:
@@ -703,10 +718,13 @@ func start_node_battle(node: Dictionary, parent_node: Node) -> void:
 
 	# Configure AI deck via campaign_enemy_config pattern
 	var deck: Dictionary = node.get("ai_deck", {})
+	var bs: Dictionary = node.get("battle_settings", {})
+	var deck_tech: Array = deck.get("tech", [])
+	var merged_tech: Array = resolve_enemy_forced_tech(bs.get("ai_forced_tech", []), deck_tech)
 	GameState.campaign_enemy_config = {
 		"forced_characters": deck.get("characters", []),
 		"forced_traps":      deck.get("traps", []),
-		"forced_tech":       deck.get("tech", []),
+		"forced_tech":       merged_tech,
 	}
 
 	# No VN for dungeon battles — but we want _vn_battle_pending so new_game()
@@ -714,7 +732,6 @@ func start_node_battle(node: Dictionary, parent_node: Node) -> void:
 	GameState._vn_battle_pending = true
 
 	# Apply per-node battle settings
-	var bs: Dictionary = node.get("battle_settings", {})
 
 	var p1n: String = str(bs.get("player1_name", ""))
 	var p2n: String = str(bs.get("player2_name", ""))

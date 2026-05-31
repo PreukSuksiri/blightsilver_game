@@ -1151,7 +1151,7 @@ func _load_tech_cards() -> void:
 			CharacterData.Rarity.RARE],
 
 		["Great Diplomacy", 1000, TechCardData.TechEffectType.REVEAL_ALL_OWN_CHARACTERS,
-			{}, "",
+			{"count": 5}, "",
 			"Select up to 5 of your units and reveal them.",
 			CharacterData.Rarity.LEGENDARY],
 

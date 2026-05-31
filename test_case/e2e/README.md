@@ -83,6 +83,8 @@ CardE2ERunner.gd (autoload)
 Progress: `user://card_e2e_progress.json`  
 Session summary: `logs/results/<session>/card_e2e_summary.json`
 
+Each E2E battle log includes a **Card E2E Test** header (scenario ID, highlight card, related `TC-FUNC-*` spec, verification checklist) and a **Card E2E Result** footer (PASS/FAIL + reason) appended at game over.
+
 ## Scenario ID format
 
 `E2E-{CardNameSlug}-001` — Tier 1 smoke  

@@ -1,0 +1,374 @@
+=== Battle of Uncle Barry's Basement ===
+Battle started: 2026-05-31 06:57:43.486
+Game Session of Iced Latte (started 2026-05-31 06:54:04.954)
+=== AI vs AI Match ===
+Batch iteration: 3 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    Great Diplomacy
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Radar, Bribe
+P1 Tech hand: Resurrection, War Supply, Siege Cannon
+P0:   [C:Stre][  — ][  — ][  — ][T:Alar]
+      [C:Moon][C:Deat][  — ][C:Swar][C:Nuki]
+      [T:Flam][C:Spac][C:Choi][C:Vamp][C:Gamm]
+      [T:Snar][  — ][  — ][  — ][C:Gran]
+      [T:Pepp][T:Expl][  — ][T:Defe][C:Flam]
+P1:   [C:Scyt][C:Cany][  — ][  — ][T:Blac]
+      [  — ][C:Foul][C:Echo][T:Brai][  — ]
+      [  — ][C:Ox P][  — ][C:Skel][  — ]
+      [  — ][C:Armo][C:Plan][C:Flam][  — ]
+      [T:Hard][T:Acid][T:Spik][  — ][  — ]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:05.338] Mode selected P1: ATTACK
+[00:05.342] Attack phase P1: 2 attack(s) available
+[00:05.342] MSG: Player 2: tap a character to attack.
+[00:05.638] AI1 attack decision: (2,3)"Skeleton Archer" [ATK=35] → (2,0) "Flame Trap" [DEF=0]
+[00:06.002] Revealed: P1 (2,3) "Skeleton Archer"
+[00:06.041] Revealed: P0 (2,0) "Flame Trap"
+[00:06.041] Dice rolled: 1
+[00:06.244] MSG: Trap triggered: Flame Trap!
+[00:10.327] Card destroyed  P0 (2,0) "Flame Trap"
+[00:10.328] Crystals: P0 5000 → 4750 (-250)  [trap cost]
+[00:11.716] MSG: Spike Trap: Skeleton Archer permanently loses 10 ATK!
+[00:11.720] Trap: "Flame Trap" triggered  P1(2,3)→P0(2,0)
+[00:11.720] Anim: 3D  (attacker survives)
+[00:12.217] Mode selected P1: ATTACK
+[00:12.223] Attack phase P1: 1 attack(s) available
+[00:12.224] MSG: Player 2: tap a character to attack.
+[00:12.516] AI1 attack decision: (3,3)"Flame Seraph" [ATK=50] → (2,1) "Space Boy" [DEF=65]
+[00:12.863] Revealed: P1 (3,3) "Flame Seraph"
+[00:12.901] Revealed: P0 (2,1) "Space Boy"
+[00:12.902] Dice rolled: 2
+[00:17.609] Crystals: P1 5000 → 4500 (-500)  [battle]
+[00:19.002] Card destroyed  P1 (3,3) "Flame Seraph"
+[00:19.007] Attack P1(3,3)"Flame Seraph" → P0(2,1)"Space Boy"  Dice=2  ATK=50 vs DEF=65  → LOSE
+[00:19.007] Anim: 3B  △ P1(3,3)
+[00:19.504] Turn ended  P1  |  Crystals P0=4750 P1=4500
+
+--- Turn 2  |  Player 0  |  Crystals P0=4750 P1=4500 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][Spac][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][Skel][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:20.113] Mode selected P0: TECH
+[00:20.414] Crystals: P0 4750 → 4150 (-600)  [tech cost]
+[00:21.800] Tech played  P0: "Radar"
+[00:23.335] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:23.733] AI0 target chosen: (1,0)
+[00:23.734] Revealed: P1 (1,0) (blank slot)
+[00:24.133] AI0 target chosen: (1,4)
+[00:24.134] Revealed: P1 (1,4) (blank slot)
+[00:24.533] AI0 target chosen: (3,1)
+[00:24.584] Revealed: P1 (3,1) "Armored Bee"
+[00:24.587] Tech resolved  P0
+[00:25.441] Mode selected P0: ATTACK
+[00:25.449] Attack phase P0: 2 attack(s) available
+[00:25.450] MSG: Player 1: tap a character to attack.
+[00:25.732] AI0 attack decision: (2,1)"Space Boy" [ATK=75] → (3,1) "Armored Bee" [DEF=0]
+[00:26.033] Dice rolled: 1
+[00:26.044] MSG: Space Boy wins!
+[00:32.316] Crystals: P1 4500 → 4020 (-480)  [battle]
+[00:33.711] Card destroyed  P1 (3,1) "Armored Bee"
+[00:33.715] Attack P0(2,1)"Space Boy" → P1(3,1)"Armored Bee"  Dice=1  ATK=75 vs DEF=60  → WIN
+[00:33.715] Anim: 3A  △ P1(3,1)
+[00:34.216] Mode selected P0: ATTACK
+[00:34.220] Attack phase P0: 1 attack(s) available
+[00:34.221] MSG: Player 1: tap a character to attack.
+[00:34.516] AI0 attack decision: (1,1)"Death Cobra" [ATK=85] → (1,0) "(dead-end)"
+[00:34.862] Revealed: P0 (1,1) "Death Cobra"
+[00:34.862] Dice rolled: 3
+[00:34.879] MSG: Nothing happens — Dead End.
+[00:38.217] Dead-end placed  P1 (1,0)
+[00:38.218] Attack P0(1,1)"Death Cobra" → P1(1,0)(empty)  Dice=3  → DEAD_END
+[00:38.218] Anim: 3F  (blank slot)
+[00:38.717] MSG: Death Cobra: Venom applied to Skeleton Archer.
+[00:38.721] Turn ended  P0  |  Crystals P0=4150 P1=4020
+
+--- Turn 3  |  Player 1  |  Crystals P0=4150 P1=4020 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Deat][  — ][  ? ][  ? ]
+      [  — ][Spac][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][Skel][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:39.324] Mode selected P1: TECH
+[00:39.625] Crystals: P1 4020 → 2520 (-1500)  [tech cost]
+[00:41.011] Tech played  P1: "Resurrection"
+[00:42.546] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:42.945] AI1 target chosen: (0,2)
+[00:42.947] Revealed: P1 (0,2) "Armored Bee"
+[00:42.948] MSG: Revived Armored Bee at [0,2]!
+[00:42.955] Tech resolved  P1
+[00:43.846] Mode selected P1: ATTACK
+[00:43.854] Attack phase P1: 2 attack(s) available
+[00:43.854] MSG: Player 2: tap a character to attack.
+[00:44.145] AI1 attack decision: (2,3)"Skeleton Archer" [ATK=25] → (2,2) "Choir Lady Abigail" [DEF=15]
+[00:44.501] Revealed: P0 (2,2) "Choir Lady Abigail"
+[00:44.501] Dice rolled: 4
+[00:44.506] MSG: Skeleton Archer wins!
+[00:49.124] Crystals: P0 4150 → 3900 (-250)  [battle]
+[00:50.518] Card destroyed  P0 (2,2) "Choir Lady Abigail"
+[00:50.521] Attack P1(2,3)"Skeleton Archer" → P0(2,2)"Choir Lady Abigail"  Dice=4  ATK=25 vs DEF=15  → WIN
+[00:50.521] Anim: 3A  △ P0(2,2)
+[00:51.017] Mode selected P1: ATTACK
+[00:51.024] Attack phase P1: 1 attack(s) available
+[00:51.024] MSG: Player 2: tap a character to attack.
+[00:51.316] AI1 attack decision: (0,2)"Armored Bee" [ATK=0] → (2,3) "Vampire Servant" [DEF=20]
+[00:51.707] Revealed: P0 (2,3) "Vampire Servant"
+[00:51.707] Dice rolled: 1
+[00:56.416] Crystals: P1 2520 → 2040 (-480)  [battle]
+[00:57.801] Card destroyed  P1 (0,2) "Armored Bee"
+[00:57.805] Attack P1(0,2)"Armored Bee" → P0(2,3)"Vampire Servant"  Dice=1  ATK=0 vs DEF=20  → LOSE
+[00:57.805] Anim: 3B  △ P1(0,2)
+[00:58.304] Turn ended  P1  |  Crystals P0=3900 P1=2040
+
+--- Turn 4  |  Player 0  |  Crystals P0=3900 P1=2040 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Deat][  — ][  ? ][  ? ]
+      [  — ][Spac][  — ][Vamp][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][Skel][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:58.912] Mode selected P0: TECH
+[00:59.212] Crystals: P0 3900 → 2900 (-1000)  [tech cost]
+[01:00.598] Tech played  P0: "Great Diplomacy"
+[01:02.412] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[01:02.687] AI0 target chosen: (1,3)
+[01:02.689] Revealed: P0 (1,3) "Swarmcaller"
+[01:03.087] AI0 target chosen: (0,0)
+[01:03.088] Revealed: P0 (0,0) "Street Rogue"
+[01:03.487] AI0 target chosen: (4,4)
+[01:03.489] Revealed: P0 (4,4) "Flame Lizard"
+[01:03.887] AI0 target chosen: (2,4)
+[01:03.888] Revealed: P0 (2,4) "Gamma Emitter"
+[01:04.287] AI0 target chosen: (3,4)
+[01:04.288] Revealed: P0 (3,4) "Grand Fort Archer"
+[01:04.289] MSG: Great Diplomacy: revealed 5 unit(s).
+[01:04.304] Tech resolved  P0
+[01:05.196] Mode selected P0: ATTACK
+[01:05.209] Attack phase P0: 2 attack(s) available
+[01:05.210] MSG: Player 1: tap a character to attack.
+[01:05.496] AI0 attack decision: (1,1)"Death Cobra" [ATK=85] → (2,3) "Skeleton Archer" [DEF=5]
+[01:05.804] Dice rolled: 2
+[01:05.810] MSG: Death Cobra wins!
+[01:10.504] Crystals: P1 2040 → 1740 (-300)  [battle]
+[01:11.897] Card destroyed  P1 (2,3) "Skeleton Archer"
+[01:11.902] Attack P0(1,1)"Death Cobra" → P1(2,3)"Skeleton Archer"  Dice=2  ATK=85 vs DEF=5  → WIN
+[01:11.902] Anim: 3A  △ P1(2,3)
+[01:12.388] Mode selected P0: ATTACK
+[01:12.400] Attack phase P0: 1 attack(s) available
+[01:12.401] MSG: Player 1: tap a character to attack.
+[01:12.687] AI0 attack decision: (1,3)"Swarmcaller" [ATK=75] → (1,4) "(dead-end)"
+[01:12.988] Dice rolled: 1
+[01:13.021] MSG: Nothing happens — Dead End.
+[01:16.393] Dead-end placed  P1 (1,4)
+[01:16.400] Attack P0(1,3)"Swarmcaller" → P1(1,4)(empty)  Dice=1  → DEAD_END
+[01:16.400] Anim: 3F  (blank slot)
+[01:16.906] Turn ended  P0  |  Crystals P0=2900 P1=1740
+
+--- Turn 5  |  Player 1  |  Crystals P0=2900 P1=1740 ---
+P0:   [Stre][  — ][  — ][  — ][  ? ]
+      [  ? ][Deat][  — ][Swar][  ? ]
+      [  — ][Spac][  — ][Vamp][Gamm]
+      [  ? ][  — ][  — ][  — ][Gran]
+      [  ? ][  ? ][  — ][  ? ][Flam]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:17.496] Mode selected P1: TECH
+[01:17.796] Crystals: P1 1740 → 740 (-1000)  [tech cost]
+[01:19.178] Tech played  P1: "Siege Cannon"
+[01:20.720] MSG: Siege Cannon active!
+[01:20.726] Tech resolved  P1
+[01:21.621] Mode selected P1: ATTACK
+[01:21.629] Attack phase P1: 2 attack(s) available
+[01:21.630] MSG: Player 2: tap a character to attack.
+[01:21.920] AI1 attack decision: (0,0)"Scythe Shark" [ATK=35] → (2,3) "Vampire Servant" [DEF=20]
+[01:22.258] Revealed: P1 (0,0) "Scythe Shark"
+[01:22.258] Dice rolled: 1
+[01:22.262] MSG: Scythe Shark wins!
+[01:26.904] Crystals: P0 2900 → 2100 (-800)  [battle]
+[01:28.297] Card destroyed  P0 (2,3) "Vampire Servant"
+[01:28.302] Attack P1(0,0)"Scythe Shark" → P0(2,3)"Vampire Servant"  Dice=1  ATK=35 vs DEF=20  → WIN
+[01:28.303] Anim: 3A  △ P0(2,3)
+[01:30.800] Turn ended  P1  |  Crystals P0=2100 P1=740
+
+--- Turn 6  |  Player 0  |  Crystals P0=2100 P1=740 ---
+P0:   [Stre][  — ][  — ][  — ][  ? ]
+      [  ? ][Deat][  — ][Swar][  ? ]
+      [  — ][Spac][  — ][  — ][Gamm]
+      [  ? ][  — ][  — ][  — ][Gran]
+      [  ? ][  ? ][  — ][  ? ][Flam]
+P1:   [Scyt][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:31.412] Mode selected P0: TECH
+[01:31.729] Tech played  P0: "Bribe"
+[01:33.262] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:33.762] MSG: Bribe: AI passed.
+[01:33.776] Tech resolved  P0
+[01:34.654] Mode selected P0: ATTACK
+[01:34.665] Attack phase P0: 2 attack(s) available
+[01:34.665] MSG: Player 1: tap a character to attack.
+[01:34.953] AI0 attack decision: (1,1)"Death Cobra" [ATK=85] → (0,0) "Scythe Shark" [DEF=35]
+[01:35.254] Dice rolled: 1
+[01:35.264] MSG: Death Cobra wins!
+[01:39.928] Crystals: P1 740 → 190 (-550)  [battle]
+[01:41.323] Card destroyed  P1 (0,0) "Scythe Shark"
+[01:41.330] Attack P0(1,1)"Death Cobra" → P1(0,0)"Scythe Shark"  Dice=1  ATK=85 vs DEF=35  → WIN
+[01:41.330] Anim: 3A  △ P1(0,0)
+[01:41.829] Mode selected P0: ATTACK
+[01:41.839] Attack phase P0: 1 attack(s) available
+[01:41.840] MSG: Player 1: tap a character to attack.
+[01:42.137] AI0 attack decision: (1,3)"Swarmcaller" [ATK=75] → (2,0) "(dead-end)"
+[01:42.446] Dice rolled: 2
+[01:42.471] MSG: Nothing happens — Dead End.
+[01:45.822] Dead-end placed  P1 (2,0)
+[01:45.828] Attack P0(1,3)"Swarmcaller" → P1(2,0)(empty)  Dice=2  → DEAD_END
+[01:45.828] Anim: 3F  (blank slot)
+[01:46.325] Turn ended  P0  |  Crystals P0=2100 P1=190
+
+--- Turn 7  |  Player 1  |  Crystals P0=2100 P1=190 ---
+P0:   [Stre][  — ][  — ][  — ][  ? ]
+      [  ? ][Deat][  — ][Swar][  ? ]
+      [  — ][Spac][  — ][  — ][Gamm]
+      [  ? ][  — ][  — ][  — ][Gran]
+      [  ? ][  ? ][  — ][  ? ][Flam]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:46.948] Mode selected P1: ATTACK
+[01:46.957] Attack phase P1: 2 attack(s) available
+[01:46.957] MSG: Player 2: tap a character to attack.
+[01:47.241] AI1 attack decision: (1,1)"Foul Wisp" [ATK=0] → (3,3) "(dead-end)"
+[01:47.573] Revealed: P1 (1,1) "Foul Wisp"
+[01:47.573] Dice rolled: 3
+[01:47.583] MSG: Nothing happens — Dead End.
+[01:50.934] Dead-end placed  P0 (3,3)
+[01:50.940] Attack P1(1,1)"Foul Wisp" → P0(3,3)(empty)  Dice=3  → DEAD_END
+[01:50.940] Anim: 3F  (blank slot)
+[01:53.440] Turn ended  P1  |  Crystals P0=2100 P1=190
+
+--- Turn 8  |  Player 0  |  Crystals P0=2100 P1=190 ---
+P0:   [Stre][  — ][  — ][  — ][  ? ]
+      [  ? ][Deat][  — ][Swar][  ? ]
+      [  — ][Spac][  — ][  — ][Gamm]
+      [  ? ][  — ][  — ][  — ][Gran]
+      [  ? ][  ? ][  — ][  ? ][Flam]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][Foul][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:55.520] Union summoned P0: [Barros the Colossal] from Death Cobra, Swarmcaller
+[01:55.521] Crystals: P0 2100 → 600 (-1500)  [union]
+[01:55.541] Revealed: P0 (1,1) "Barros the Colossal"
+[01:55.548] MSG: Player 1 summoned [Barros the Colossal] using: Death Cobra, Swarmcaller
+[01:58.949] Mode selected P0: ATTACK
+[01:58.982] Attack phase P0: 2 attack(s) available
+[01:58.982] MSG: Player 1: tap a character to attack.
+[01:59.262] AI0 attack decision: (1,1)"Barros the Colossal" [ATK=150] → (1,1) "Foul Wisp" [DEF=25]
+[01:59.571] Dice rolled: 2
+[01:59.635] MSG: Barros the Colossal wins!
+[02:04.259] Crystals: P1 190 → 90 (-100)  [battle]
+[02:05.651] Card destroyed  P1 (1,1) "Foul Wisp"
+[02:05.674] Attack P0(1,1)"Barros the Colossal" → P1(1,1)"Foul Wisp"  Dice=2  ATK=150 vs DEF=25  → WIN
+[02:05.674] Anim: 3A  △ P1(1,1)
+[02:06.154] Mode selected P0: ATTACK
+[02:06.194] Attack phase P0: 1 attack(s) available
+[02:06.194] MSG: Player 1: tap a character to attack.
+[02:06.467] AI0 attack decision: (2,1)"Space Boy" [ATK=75] → (3,0) "(dead-end)"
+[02:06.768] Dice rolled: 5
+[02:06.822] MSG: Nothing happens — Dead End.
+[02:10.166] Dead-end placed  P1 (3,0)
+[02:10.193] Attack P0(2,1)"Space Boy" → P1(3,0)(empty)  Dice=5  → DEAD_END
+[02:10.193] Anim: 3F  (blank slot)
+[02:10.685] Turn ended  P0  |  Crystals P0=600 P1=90
+
+--- Turn 9  |  Player 1  |  Crystals P0=600 P1=90 ---
+P0:   [Stre][  — ][  — ][  — ][  ? ]
+      [  ? ][Barr][  — ][  — ][  ? ]
+      [  — ][Spac][  — ][  — ][Gamm]
+      [  ? ][  — ][  — ][  — ][Gran]
+      [  ? ][  ? ][  — ][  ? ][Flam]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[02:11.280] Mode selected P1: ATTACK
+[02:11.315] Attack phase P1: 2 attack(s) available
+[02:11.315] MSG: Player 2: tap a character to attack.
+[02:11.584] AI1 attack decision: (3,2)"Plant 29" [ATK=45] → (2,4) "Gamma Emitter" [DEF=15]
+[02:11.966] Revealed: P1 (3,2) "Plant 29"
+[02:11.966] Dice rolled: 4
+[02:11.985] MSG: Plant 29 wins!
+[02:16.559] Crystals: P0 600 → 380 (-220)  [battle]
+[02:17.955] Card destroyed  P0 (2,4) "Gamma Emitter"
+[02:17.977] Attack P1(3,2)"Plant 29" → P0(2,4)"Gamma Emitter"  Dice=4  ATK=45 vs DEF=15  → WIN
+[02:17.977] Anim: 3A  △ P0(2,4)
+[02:20.491] Turn ended  P1  |  Crystals P0=380 P1=90
+
+--- Turn 10  |  Player 0  |  Crystals P0=380 P1=90 ---
+P0:   [Stre][  — ][  — ][  — ][  ? ]
+      [  ? ][Barr][  — ][  — ][  ? ]
+      [  — ][Spac][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][Gran]
+      [  ? ][  ? ][  — ][  ? ][Flam]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][Plan][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[02:21.070] Mode selected P0: ATTACK
+[02:21.113] Attack phase P0: 2 attack(s) available
+[02:21.114] MSG: Player 1: tap a character to attack.
+[02:21.375] AI0 attack decision: (1,1)"Barros the Colossal" [ATK=150] → (3,2) "Plant 29" [DEF=85]
+[02:21.676] Dice rolled: 3
+[02:21.741] MSG: Barros the Colossal wins!
+[02:26.360] Crystals: P1 90 → 0 (-90)  [battle]
+
+=== GAME OVER ===
+[02:26.385] AI Player 0 wins
+[02:26.385] Reason: crystals
+[02:26.385] Final crystals — P0: 380  P1: 0  |  Turns: 10
+[02:26.385] Log saved to: res://logs/results/2026-05-31_06-54-04_954_iced_latte/battle_uncle_barrys_basement_2026-05-31_06-57-43_487.txt

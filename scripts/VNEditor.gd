@@ -153,6 +153,9 @@ var _player_forced_grid: Dictionary = {}   # key="r,c"  value=card_name String
 var _ai_forced_grid:     Dictionary = {}
 var _player_forced_gc:   GridContainer = null
 var _ai_forced_gc:       GridContainer = null
+const ENEMY_TECH_SLOTS: int = 3
+var _ai_forced_tech: Array = ["", "", ""]
+var _ai_forced_tech_btns: Array[Button] = []
 
 # Union zone highlight (for union card reference gallery)
 var _union_highlighted_name: String = ""
@@ -767,6 +770,23 @@ func _build_fields() -> void:
 	_section(v, "AI FORCED CELLS  (tap a cell to assign / remove a card)")
 	_ai_forced_gc = _build_forced_grid(_ai_forced_grid)
 	v.add_child(_ai_forced_gc)
+
+	_section(v, "AI FORCED TECH HAND  (tap slot — empty = random)")
+	var ai_tech_row := HBoxContainer.new()
+	ai_tech_row.add_theme_constant_override("separation", 6)
+	v.add_child(ai_tech_row)
+	_ai_forced_tech_btns.clear()
+	for slot: int in range(ENEMY_TECH_SLOTS):
+		var tbtn := Button.new()
+		tbtn.custom_minimum_size = Vector2(0, 36)
+		tbtn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tbtn.clip_text = true
+		tbtn.add_theme_font_size_override("font_size", 11)
+		var slot_cap := slot
+		tbtn.pressed.connect(func() -> void: _open_ai_forced_tech_picker(slot_cap))
+		ai_tech_row.add_child(tbtn)
+		_ai_forced_tech_btns.append(tbtn)
+	_refresh_ai_forced_tech_row()
 
 	# ── Union Card Reference ───────────────────────────────────
 	_section(v, "UNION CARD REFERENCE  (tap to highlight zone on grids above)")
@@ -1625,6 +1645,7 @@ func _populate_fields() -> void:
 	_rebuild_enemy_chips("character", _enemy_chars_chips)
 	_rebuild_enemy_chips("trap", _enemy_traps_chips)
 	_rebuild_enemy_chips("tech", _enemy_tech_chips)
+	_load_ai_forced_tech_from_beat(b)
 
 	# Union flags
 	_f_ai_union_enabled.button_pressed     = bool(b.get("ai_union_enabled",     true))
@@ -1933,6 +1954,10 @@ func _collect_beat() -> Dictionary:
 	var afc: Array = _collect_forced_cells_from_grid(_ai_forced_grid)
 	if not afc.is_empty():
 		b["ai_forced_cells"] = afc
+
+	var aft: Array = _collect_ai_forced_tech()
+	if _ai_forced_tech_has_any(aft):
+		b["ai_forced_tech"] = aft
 
 	# Battle reward
 	var rewards: Array = []
@@ -2454,6 +2479,154 @@ func _rebuild_enemy_chips(card_type: String, chips: HBoxContainer) -> void:
 			_on_field_changed()
 		)
 		chips.add_child(btn)
+
+func _collect_ai_forced_tech() -> Array:
+	var result: Array = []
+	for i: int in range(ENEMY_TECH_SLOTS):
+		result.append(str(_ai_forced_tech[i] if i < _ai_forced_tech.size() else "").strip_edges())
+	return result
+
+func _ai_forced_tech_has_any(slots: Array) -> bool:
+	for t: Variant in slots:
+		if str(t).strip_edges() != "":
+			return true
+	return false
+
+func _load_ai_forced_tech_from_beat(b: Dictionary) -> void:
+	for i: int in range(ENEMY_TECH_SLOTS):
+		_ai_forced_tech[i] = ""
+	var saved: Variant = b.get("ai_forced_tech", [])
+	var has_saved: bool = false
+	if saved is Array:
+		for i: int in range(mini(ENEMY_TECH_SLOTS, (saved as Array).size())):
+			var n: String = str((saved as Array)[i]).strip_edges()
+			_ai_forced_tech[i] = n
+			if not n.is_empty():
+				has_saved = true
+	if not has_saved:
+		for i: int in range(mini(ENEMY_TECH_SLOTS, _enemy_deck_tech.size())):
+			_ai_forced_tech[i] = str(_enemy_deck_tech[i]).strip_edges()
+	_refresh_ai_forced_tech_row()
+
+func _refresh_ai_forced_tech_row() -> void:
+	for i: int in range(_ai_forced_tech_btns.size()):
+		var btn: Button = _ai_forced_tech_btns[i] as Button
+		var n: String = str(_ai_forced_tech[i] if i < _ai_forced_tech.size() else "").strip_edges()
+		if n.is_empty():
+			btn.text = "Tech %d\n(random)" % (i + 1)
+			btn.modulate = Color(1.0, 1.0, 1.0, 0.45)
+		else:
+			btn.text = n
+			btn.modulate = Color(0.55, 0.85, 1.0)
+
+func _open_ai_forced_tech_picker(slot: int) -> void:
+	var current: String = str(_ai_forced_tech[slot] if slot < _ai_forced_tech.size() else "")
+
+	var overlay := ColorRect.new()
+	overlay.color = Color(0.0, 0.0, 0.0, 0.55)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.z_index = 70
+	add_child(overlay)
+
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(360, 0)
+	center.add_child(panel)
+
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 8)
+	panel.add_child(vb)
+
+	var title := Label.new()
+	title.text = "AI Tech slot %d" % (slot + 1)
+	title.add_theme_font_size_override("font_size", 15)
+	vb.add_child(title)
+
+	var le := LineEdit.new()
+	le.placeholder_text = "Tech card name..."
+	le.text = current
+	le.add_theme_font_size_override("font_size", 14)
+	le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vb.add_child(le)
+
+	var sug_scroll := ScrollContainer.new()
+	sug_scroll.custom_minimum_size = Vector2(0, 160)
+	sug_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vb.add_child(sug_scroll)
+	var sug_vb := VBoxContainer.new()
+	sug_vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sug_scroll.add_child(sug_vb)
+
+	var refresh_sug := func(query: String) -> void:
+		for child: Node in sug_vb.get_children():
+			child.queue_free()
+		var q: String = query.strip_edges().to_lower()
+		var names: Array = CardDatabase.get_all_tech_names()
+		names.sort()
+		var shown: int = 0
+		for n: String in names:
+			if SaveManager.demo_mode:
+				var tc: TechCardData = CardDatabase.get_tech(n)
+				if tc == null or not tc.include_in_demo:
+					continue
+			if not q.is_empty() and not n.to_lower().contains(q):
+				continue
+			if shown >= 30:
+				break
+			var sb := Button.new()
+			sb.text = n
+			sb.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			sb.add_theme_font_size_override("font_size", 12)
+			sb.pressed.connect(func() -> void: le.text = n)
+			sug_vb.add_child(sb)
+			shown += 1
+
+	le.text_changed.connect(refresh_sug)
+	refresh_sug.call(current)
+
+	var btn_hb := HBoxContainer.new()
+	btn_hb.add_theme_constant_override("separation", 6)
+	vb.add_child(btn_hb)
+
+	var set_btn := Button.new()
+	set_btn.text = "Set"
+	set_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_hb.add_child(set_btn)
+	var clear_btn := Button.new()
+	clear_btn.text = "Clear"
+	clear_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_hb.add_child(clear_btn)
+	var cancel_btn := Button.new()
+	cancel_btn.text = "Cancel"
+	cancel_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_hb.add_child(cancel_btn)
+
+	set_btn.pressed.connect(func() -> void:
+		_ai_forced_tech[slot] = le.text.strip_edges()
+		_refresh_ai_forced_tech_row()
+		_on_field_changed()
+		overlay.queue_free())
+
+	clear_btn.pressed.connect(func() -> void:
+		_ai_forced_tech[slot] = ""
+		_refresh_ai_forced_tech_row()
+		_on_field_changed()
+		overlay.queue_free())
+
+	cancel_btn.pressed.connect(func() -> void: overlay.queue_free())
+
+	overlay.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+			if not panel.get_global_rect().has_point(
+					(event as InputEventMouseButton).global_position):
+				overlay.queue_free())
+
+	le.grab_focus()
+	le.select_all()
 
 # ─────────────────────────────────────────────────────────────
 # Forced cell grid helpers

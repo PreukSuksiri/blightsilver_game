@@ -1,0 +1,362 @@
+=== Battle of Slippery Banana Peel Protocol ===
+Battle started: 2026-05-31 17:46:51.285
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Laughing Granny
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Laughing Granny
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Prayer, Siege Cannon, Bribe
+P1 Tech hand: Spy, Bribe, Radar
+P0:   [C:Mine][C:Shep][C:Choi][C:Silv][T:Trap]
+      [  — ][C:Snip][  — ][  — ][C:Gamm]
+      [C:Spea][  — ][C:Laug][  — ][T:Echo]
+      [T:Stre][  — ][  — ][  — ][C:Book]
+      [C:Skel][T:Bunk][T:Curs][C:Pyro][C:Plan]
+P1:   [C:Skel][  — ][  — ][T:Bunk][C:Armo]
+      [  — ][C:Curs][C:Nigh][C:Moon][  — ]
+      [  — ][C:Vamp][C:Chao][C:Mind][  — ]
+      [  — ][C:Scou][C:Plan][C:Dark][T:Hard]
+      [  — ][  — ][  — ][T:Foul][T:Bait]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:05.326] Mode selected P1: TECH
+[00:05.636] Tech played  P1: "Spy"
+[00:07.185] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.583] AI1 target chosen: (2,1)
+[00:07.584] Revealed: P0 (2,1) (blank slot)
+[00:07.586] Tech resolved  P1
+[00:08.487] Mode selected P1: ATTACK
+[00:08.489] Attack phase P1: 2 attack(s) available
+[00:08.489] MSG: Player 2: tap a character to attack.
+[00:08.785] AI1 attack decision: (0,4)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down} → (2,1) (dead-end)
+[00:09.127] Revealed: P1 (0,4) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[00:09.127] Dice rolled: 5
+[00:09.144] MSG: Nothing happens — Dead End.
+[00:12.446] Attack P1(0,4)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P0(2,1)(empty)  Dice=5  → DEAD_END
+[00:12.446] Anim: 3F  (blank slot)
+[00:12.951] Mode selected P1: ATTACK
+[00:12.955] Attack phase P1: 1 attack(s) available
+[00:12.955] MSG: Player 2: tap a character to attack.
+[00:13.259] AI1 attack decision: (0,0)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos | face-down} → (1,0) (dead-end)
+[00:13.599] Revealed: P1 (0,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:13.600] Dice rolled: 2
+[00:13.611] MSG: Nothing happens — Dead End.
+[00:16.998] Attack P1(0,0)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} → P0(1,0)(empty)  Dice=2  → DEAD_END
+[00:16.998] Anim: 3F  (blank slot)
+[00:17.487] Turn ended  P1  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [Skel][  — ][  — ][  ? ][Armo]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:18.080] Mode selected P0: TECH
+[00:18.380] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:19.772] Tech played  P0: "Siege Cannon"
+[00:21.333] MSG: Siege Cannon active!
+[00:21.338] Tech resolved  P0
+[00:22.252] Mode selected P0: ATTACK
+[00:22.258] Attack phase P0: 2 attack(s) available
+[00:22.258] MSG: Player 1: tap a character to attack.
+[00:22.560] AI0 attack decision: (0,0)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic | face-down} → (0,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:22.909] Revealed: P0 (0,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:22.909] Dice rolled: 1
+[00:22.914] MSG: Miner Probe wins!
+[00:27.517] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:28.921] Attack P0(0,0)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} → P1(0,0)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=1  ATK=10 vs DEF=5  → WIN
+[00:28.921] Anim: 3A  △ P1(0,0)
+[00:28.921] Card destroyed  P1 (0,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:31.419] Turn ended  P0  |  Crystals P0=4000 P1=4700
+
+--- Turn 3  |  Player 1  |  Crystals P0=4000 P1=4700 ---
+P0:   [Mine][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][Armo]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:32.055] Mode selected P1: TECH
+[00:32.358] Crystals: P1 4700 → 4100 (-600)  [tech cost]
+[00:33.744] Tech played  P1: "Radar"
+[00:35.283] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:35.680] AI1 target chosen: (3,3)
+[00:35.680] Revealed: P0 (3,3) (blank slot)
+[00:36.079] AI1 target chosen: (2,2)
+[00:36.117] Revealed: P0 (2,2) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[00:36.495] AI1 target chosen: (4,0)
+[00:36.526] Revealed: P0 (4,0) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:36.529] Tech resolved  P1
+[00:37.414] Mode selected P1: ATTACK
+[00:37.420] Attack phase P1: 2 attack(s) available
+[00:37.421] MSG: Player 2: tap a character to attack.
+[00:37.721] AI1 attack decision: (0,4)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → (0,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:38.029] Dice rolled: 2
+[00:38.039] MSG: Both cards are destroyed!
+[00:42.639] Crystals: P1 4100 → 3930 (-170)  [battle]
+[00:44.031] Crystals: P0 4000 → 3800 (-200)  [battle]
+[00:45.442] Attack P1(0,4)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P0(0,0)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}  Dice=2  ATK=10 vs DEF=10  → TIE
+[00:45.442] Anim: 3C  △ P1(0,4) + △ P0(0,0)
+[00:45.442] Card destroyed  P1 (0,4) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[00:45.443] Card destroyed  P0 (0,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:45.889] Mode selected P1: ATTACK
+[00:45.894] Attack phase P1: 1 attack(s) available
+[00:45.895] MSG: Player 2: tap a character to attack.
+[00:46.196] AI1 attack decision: (1,3)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down} → (4,0) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:46.544] Revealed: P1 (1,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:46.544] Dice rolled: 5
+[00:46.549] MSG: Moon Tribe Marksman wins!
+[00:52.208] Crystals: P0 3800 → 3650 (-150)  [battle]
+[00:53.607] Attack P1(1,3)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} → P0(4,0)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=5  ATK=25 vs DEF=5  → WIN
+[00:53.607] Reckoning overlay: P1 "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} ATK -10
+[00:53.608] Anim: 3A  △ P0(4,0)
+[00:53.608] Card destroyed  P0 (4,0) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:54.109] Turn ended  P1  |  Crystals P0=3650 P1=3930
+
+--- Turn 4  |  Player 0  |  Crystals P0=3650 P1=3930 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][Laug][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][Moon][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[00:54.713] Mode selected P0: TECH
+[00:55.031] Tech played  P0: "Bribe"
+[00:56.588] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:57.096] MSG: Bribe: AI passed.
+[00:57.108] Tech resolved  P0
+[00:58.014] Mode selected P0: ATTACK
+[00:58.019] Attack phase P0: 2 attack(s) available
+[00:58.019] MSG: Player 1: tap a character to attack.
+[00:58.321] AI0 attack decision: (0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima | face-down} → (1,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:58.663] Revealed: P0 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:58.663] Dice rolled: 3
+[00:58.669] MSG: Shepherd Detective wins!
+[01:03.333] Crystals: P1 3930 → 3630 (-300)  [battle]
+[01:04.735] Attack P0(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(1,3)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=3  ATK=40 vs DEF=25  → WIN
+[01:04.735] Anim: 3A  △ P1(1,3)
+[01:04.736] Card destroyed  P1 (1,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[01:04.736] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:05.129] AI0 target chosen: (4,3)
+[01:05.187] Revealed: P1 (4,3) "Foul Gas" {cost 0}
+[01:05.187] MSG: Revealed: Foul Gas
+[01:07.224] Turn ended  P0  |  Crystals P0=3650 P1=3630
+
+--- Turn 5  |  Player 1  |  Crystals P0=3650 P1=3630 ---
+P0:   [  — ][Shep][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][Laug][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:07.834] Mode selected P1: TECH
+[01:08.147] Tech played  P1: "Bribe"
+[01:09.685] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:10.183] MSG: Bribe: AI passed.
+[01:10.202] Tech resolved  P1
+[01:11.085] Mode selected P1: ATTACK
+[01:11.091] Attack phase P1: 2 attack(s) available
+[01:11.091] MSG: Player 2: tap a character to attack.
+[01:11.384] AI1 attack decision: (2,3)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | face-down} → (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:11.733] Revealed: P1 (2,3) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[01:11.733] Dice rolled: 3
+[01:11.742] MSG: Mind Flayer wins!
+[01:17.384] Crystals: P0 3650 → 3250 (-400)  [battle]
+[01:18.784] Attack P1(2,3)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=3  ATK=150 vs DEF=25  → WIN
+[01:18.784] Reckoning overlay: P1 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} +ATK 50
+[01:18.784] Anim: 3A  △ P0(0,1)
+[01:18.784] Card destroyed  P0 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:19.283] Mode selected P1: ATTACK
+[01:19.287] Attack phase P1: 1 attack(s) available
+[01:19.288] MSG: Player 2: tap a character to attack.
+[01:19.591] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (2,2) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:19.935] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:19.935] Dice rolled: 2
+[01:25.721] Crystals: P1 3630 → 3530 (-100)  [battle]
+[01:27.118] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(2,2)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xDEF-used}  Dice=2  ATK=20 vs DEF=30  → LOSE
+[01:27.118] Reckoning overlay: P0 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xDEF-used} +DEF 10
+[01:27.118] Anim: 3B  △ P1(2,2)
+[01:27.118] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:27.624] Turn ended  P1  |  Crystals P0=3250 P1=3530
+
+--- Turn 6  |  Player 0  |  Crystals P0=3250 P1=3530 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][Laug][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][Mind][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:28.231] Mode selected P0: ATTACK
+[01:28.237] Attack phase P0: 2 attack(s) available
+[01:28.238] MSG: Player 1: tap a character to attack.
+[01:28.539] AI0 attack decision: (3,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (2,3) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[01:28.880] Revealed: P0 (3,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:28.880] Dice rolled: 1
+[01:28.884] MSG: Book with Fangs wins!
+[01:34.546] Crystals: P1 3530 → 2030 (-1500)  [battle]
+[01:35.946] Attack P0(3,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(2,3)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}  Dice=1  ATK=75 vs DEF=70  → WIN
+[01:35.946] Reckoning overlay: P0 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} +ATK 30
+[01:35.946] Anim: 3A  △ P1(2,3)
+[01:35.947] Card destroyed  P1 (2,3) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[01:36.446] Mode selected P0: ATTACK
+[01:36.451] Attack phase P0: 1 attack(s) available
+[01:36.451] MSG: Player 1: tap a character to attack.
+[01:36.755] AI0 attack decision: (2,2)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xDEF-used} → (4,4) "Bait" {cost 0}
+[01:37.097] Revealed: P1 (4,4) "Bait" {cost 0}
+[01:37.098] Dice rolled: 4
+[01:37.378] MSG: Trap triggered: Bait!
+[01:41.489] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[01:41.493] Trap: "Bait" triggered  P0(2,2)→P1(4,4)
+[01:41.493] Anim: 3D  (attacker survives)
+[01:41.887] AI1 target chosen: (3,1)
+[01:41.920] Revealed: P1 (3,1) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:41.921] MSG: Bait: Defender revealed Scout Probe.
+[01:41.989] Turn ended  P0  |  Crystals P0=3250 P1=2030
+
+--- Turn 7  |  Player 1  |  Crystals P0=3250 P1=2030 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][Laug][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Book]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][Scou][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:44.072] Crystals: P1 2030 → 530 (-1500)  [union]
+[01:44.114] Revealed: P1 (1,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[01:44.114] Union summoned P1: "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} from "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos | face-down}, "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down}
+[01:44.115] MSG: Player 2 summoned [Lord of Terror] using: "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos | face-down}, "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down}
+[01:47.513] Mode selected P1: ATTACK
+[01:47.519] Attack phase P1: 2 attack(s) available
+[01:47.520] MSG: Player 2: tap a character to attack.
+[01:47.812] AI1 attack decision: (1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → (3,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:48.112] Dice rolled: 3
+[01:48.169] MSG: Lord of Terror wins!
+[01:52.795] Crystals: P0 3250 → 2450 (-800)  [battle]
+[01:54.195] Attack P1(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(3,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=3  ATK=150 vs DEF=55  → WIN
+[01:54.195] Anim: 3A  △ P0(3,4)
+[01:54.195] Card destroyed  P0 (3,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:54.688] Mode selected P1: ATTACK
+[01:54.694] Attack phase P1: 1 attack(s) available
+[01:54.694] MSG: Player 2: tap a character to attack.
+[01:54.987] AI1 attack decision: (3,1)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → (2,2) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used}
+[01:55.293] Dice rolled: 5
+[01:55.305] MSG: Scout Probe wins!
+[01:59.984] Crystals: P0 2450 → 2100 (-350)  [battle]
+[02:01.384] Attack P1(3,1)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P0(2,2)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used}  Dice=5  ATK=40 vs DEF=20  → WIN
+[02:01.384] Anim: 3A  △ P0(2,2)
+[02:01.384] Card destroyed  P0 (2,2) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used}
+[02:01.390] MSG: No valid target — effect cancelled.
+[02:01.392] Ability target resolved  P1
+[02:01.392] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[02:01.874] Turn ended  P1  |  Crystals P0=2100 P1=530
+
+--- Turn 8  |  Player 0  |  Crystals P0=2100 P1=530 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Lord][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Scou][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:03.956] Crystals: P0 2100 → 1800 (-300)  [union]
+[02:04.008] Revealed: P0 (0,2) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[02:04.008] Union summoned P0: "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}, "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine | face-down}
+[02:04.010] MSG: Player 1 summoned [False Prophet] using: "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}, "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine | face-down}
+[02:07.333] Mode selected P0: ATTACK
+[02:07.353] Attack phase P0: 2 attack(s) available
+[02:07.354] MSG: Player 1: tap a character to attack.
+[02:07.638] AI0 attack decision: (0,2)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → (2,1) (dead-end)
+[02:07.946] Dice rolled: 5
+[02:08.123] MSG: Nothing happens — Dead End.
+[02:11.338] Attack P0(0,2)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P1(2,1)(empty)  Dice=5  → DEAD_END
+[02:11.338] Anim: 3F  (blank slot)
+[02:11.829] Mode selected P0: ATTACK
+[02:11.835] Attack phase P0: 1 attack(s) available
+[02:11.835] MSG: Player 1: tap a character to attack.
+[02:12.134] AI0 attack decision: (0,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down} → (4,0) (dead-end)
+[02:12.489] Revealed: P0 (0,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:12.490] Dice rolled: 3
+[02:12.530] MSG: Nothing happens — Dead End.
+[02:15.863] Attack P0(0,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(4,0)(empty)  Dice=3  → DEAD_END
+[02:15.863] Anim: 3F  (blank slot)
+[02:16.362] Turn ended  P0  |  Crystals P0=1800 P1=530
+
+--- Turn 9  |  Player 1  |  Crystals P0=1800 P1=530 ---
+P0:   [  — ][  — ][Fals][Silv][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Lord][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Scou][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:16.954] Mode selected P1: ATTACK
+[02:16.965] Attack phase P1: 2 attack(s) available
+[02:16.965] MSG: Player 2: tap a character to attack.
+[02:17.254] AI1 attack decision: (1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → (0,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:17.554] Dice rolled: 2
+[02:17.706] MSG: Lord of Terror wins!
+[02:22.310] Crystals: P0 1800 → 1550 (-250)  [battle]
+[02:23.711] Attack P1(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(0,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=2  ATK=150 vs DEF=20  → WIN
+[02:23.711] Anim: 3A  △ P0(0,3)
+[02:23.711] Card destroyed  P0 (0,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:24.206] Mode selected P1: ATTACK
+[02:24.212] Attack phase P1: 1 attack(s) available
+[02:24.212] MSG: Player 2: tap a character to attack.
+[02:24.500] AI1 attack decision: (3,1)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → (0,2) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[02:24.800] Dice rolled: 2
+[02:24.850] MSG: Both cards are destroyed!
+[02:29.409] Crystals: P1 530 → 0 (-530)  [battle]
+
+=== GAME OVER ===
+[02:29.421] AI Player 0 wins
+[02:29.421] Reason: crystals
+[02:29.421] Final crystals — P0: 1550  P1: 0  |  Turns: 9
+[02:29.421] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_slippery_banana_peel_protocol_2026-05-31_17-46-51_285.txt

@@ -1,0 +1,487 @@
+=== Battle of Haunted Break Room ===
+Battle started: 2026-05-31 18:52:45.792
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Raijin
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Raijin
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Bribe, Tease
+P1 Tech hand: Accident, Spy, Prayer
+P0:   [C:Armo][C:Gobl][C:Magi][T:Trap][C:Moon]
+      [  — ][C:Meli][T:Bait][C:Vile][  — ]
+      [C:Bat ][  — ][C:Raij][  — ][T:Hypn]
+      [  — ][C:Fuji][  — ][C:Lab ][  — ]
+      [C:Ange][  — ][C:Skel][  — ][T:Acid]
+P1:   [C:Blad][T:Bait][  — ][T:Deco][  — ]
+      [  — ][C:Scar][  — ][  — ][C:Mafi]
+      [C:Curs][  — ][C:Chao][  — ][C:Shot]
+      [T:Blac][  — ][  — ][  — ][C:Sate]
+      [C:Jose][C:Moon][T:Snar][C:Dark][  — ]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:05.343] Mode selected P1: TECH
+[00:05.652] Tech played  P1: "Spy"
+[00:07.185] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.584] AI1 target chosen: (0,3)
+[00:07.615] Revealed: P0 (0,3) "Trap Hole" {cost 0}
+[00:07.617] Tech resolved  P1
+[00:08.514] Mode selected P1: ATTACK
+[00:08.518] Attack phase P1: 2 attack(s) available
+[00:08.518] MSG: Player 2: tap a character to attack.
+[00:08.799] AI1 attack decision: (0,0)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down} → (0,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down}
+[00:09.126] Revealed: P1 (0,0) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:09.149] Revealed: P0 (0,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:09.149] Dice rolled: 2
+[00:13.887] Crystals: P1 5000 → 4580 (-420)  [battle]
+[00:15.291] Attack P1(0,0)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} → P0(0,2)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}  Dice=2  ATK=0 vs DEF=15  → LOSE
+[00:15.291] Anim: 3B  △ P1(0,0)
+[00:15.291] Card destroyed  P1 (0,0) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:15.785] Mode selected P1: ATTACK
+[00:15.789] Attack phase P1: 1 attack(s) available
+[00:15.789] MSG: Player 2: tap a character to attack.
+[00:16.080] AI1 attack decision: (1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down} → (0,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:16.418] Revealed: P1 (1,4) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:16.418] Dice rolled: 3
+[00:16.421] MSG: Mafia Associates wins!
+[00:21.054] Crystals: P0 5000 → 4820 (-180)  [battle]
+[00:22.452] Attack P1(1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P0(0,2)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}  Dice=3  ATK=45 vs DEF=15  → WIN
+[00:22.452] Anim: 3A  △ P0(0,2)
+[00:22.452] Card destroyed  P0 (0,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:22.948] Turn ended  P1  |  Crystals P0=4820 P1=4580
+
+--- Turn 2  |  Player 0  |  Crystals P0=4820 P1=4580 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][Mafi]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:23.547] Mode selected P0: TECH
+[00:23.846] Crystals: P0 4820 → 3320 (-1500)  [tech cost]
+[00:25.237] Tech played  P0: "Resurrection"
+[00:26.805] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:27.205] AI0 target chosen: (0,3)
+[00:27.209] Revealed: P0 (0,3) "Magical Butterfly" {Unit ATK0 DEF0 | cost 180 | affinity Nature | base 0/0}
+[00:27.209] MSG: Revived Magical Butterfly at [0,3]!
+[00:27.215] Tech resolved  P0
+[00:28.105] Mode selected P0: ATTACK
+[00:28.109] Attack phase P0: 2 attack(s) available
+[00:28.109] MSG: Player 1: tap a character to attack.
+[00:28.403] AI0 attack decision: (0,3)"Magical Butterfly" {Unit ATK0 DEF0 | cost 180 | affinity Nature | base 0/0} → (2,3) (dead-end)
+[00:28.705] Dice rolled: 2
+[00:28.726] MSG: Nothing happens — Dead End.
+[00:32.087] Attack P0(0,3)"Magical Butterfly" {Unit ATK0 DEF0 | cost 180 | affinity Nature | base 0/0} → P1(2,3)(empty)  Dice=2  → DEAD_END
+[00:32.087] Anim: 3F  (blank slot)
+[00:32.581] Mode selected P0: ATTACK
+[00:32.588] Attack phase P0: 1 attack(s) available
+[00:32.588] MSG: Player 1: tap a character to attack.
+[00:32.878] AI0 attack decision: (0,4)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down} → (3,4) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down}
+[00:33.206] Revealed: P0 (0,4) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[00:33.225] Revealed: P1 (3,4) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:33.225] Dice rolled: 4
+[00:37.966] Crystals: P0 3320 → 3120 (-200)  [battle]
+[00:39.366] Attack P0(0,4)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → P1(3,4)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}  Dice=4  ATK=15 vs DEF=80  → LOSE
+[00:39.367] Anim: 3B  △ P0(0,4)
+[00:39.367] Card destroyed  P0 (0,4) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[00:39.866] Turn ended  P0  |  Crystals P0=3120 P1=4580
+
+--- Turn 3  |  Player 1  |  Crystals P0=3120 P1=4580 ---
+P0:   [  ? ][  ? ][  — ][Magi][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][Mafi]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Sate]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:40.476] Mode selected P1: TECH
+[00:40.783] Crystals: P1 4580 → 3580 (-1000)  [tech cost]
+[00:42.169] Tech played  P1: "Accident"
+[00:43.741] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:44.140] AI1 target chosen: (0,3)
+[00:44.143] Card destroyed  P0 (0,3) "Magical Butterfly" {Unit ATK0 DEF0 | cost 180 | affinity Nature | base 0/0}
+[00:44.147] Tech resolved  P1
+[00:45.042] Mode selected P1: ATTACK
+[00:45.047] Attack phase P1: 2 attack(s) available
+[00:45.047] MSG: Player 2: tap a character to attack.
+[00:45.342] AI1 attack decision: (1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → (2,1) (dead-end)
+[00:45.640] Dice rolled: 5
+[00:45.663] MSG: Nothing happens — Dead End.
+[00:49.039] Attack P1(1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P0(2,1)(empty)  Dice=5  → DEAD_END
+[00:49.039] Anim: 3F  (blank slot)
+[00:49.533] Mode selected P1: ATTACK
+[00:49.537] Attack phase P1: 1 attack(s) available
+[00:49.537] MSG: Player 2: tap a character to attack.
+[00:49.832] AI1 attack decision: (3,4)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (3,2) (dead-end)
+[00:50.134] Dice rolled: 3
+[00:50.154] MSG: Nothing happens — Dead End.
+[00:53.538] Attack P1(3,4)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P0(3,2)(empty)  Dice=3  → DEAD_END
+[00:53.538] Anim: 3F  (blank slot)
+[00:54.040] Turn ended  P1  |  Crystals P0=3120 P1=3580
+
+--- Turn 4  |  Player 0  |  Crystals P0=3120 P1=3580 ---
+P0:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][Mafi]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Sate]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:54.633] Mode selected P0: TECH
+[00:54.942] Tech played  P0: "Tease"
+[00:56.500] MSG: Opponent must choose and reveal 1 of their squares.
+[00:56.501] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:56.907] AI1 target chosen: (2,4)
+[00:56.942] Revealed: P1 (2,4) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:56.942] MSG: Tease: Opponent revealed Shotgun Shark.
+[00:56.944] Tech resolved  P0
+[00:57.793] Mode selected P0: ATTACK
+[00:57.800] Attack phase P0: 2 attack(s) available
+[00:57.800] MSG: Player 1: tap a character to attack.
+[00:58.100] AI0 attack decision: (3,3)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | face-down} → (3,4) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:58.436] Revealed: P0 (3,3) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:58.436] Dice rolled: 5
+[00:58.439] MSG: Lab Crawler wins!
+[01:03.116] Crystals: P1 3580 → 2480 (-1100)  [battle]
+[01:04.521] Attack P0(3,3)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P1(3,4)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}  Dice=5  ATK=95 vs DEF=80  → WIN
+[01:04.521] Anim: 3A  △ P1(3,4)
+[01:04.521] Card destroyed  P1 (3,4) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[01:07.033] Turn ended  P0  |  Crystals P0=3120 P1=2480
+
+--- Turn 5  |  Player 1  |  Crystals P0=3120 P1=2480 ---
+P0:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][Lab ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][Mafi]
+      [  ? ][  — ][  ? ][  — ][Shot]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:09.116] Crystals: P1 2480 → 2180 (-300)  [union]
+[01:09.147] Revealed: P1 (4,3) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[01:09.148] Union summoned P1: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[01:09.148] MSG: Player 2 summoned [Kitsune] using: "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[01:12.552] Mode selected P1: ATTACK
+[01:12.561] Attack phase P1: 2 attack(s) available
+[01:12.561] MSG: Player 2: tap a character to attack.
+[01:12.849] AI1 attack decision: (2,4)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → (3,3) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:13.150] Dice rolled: 2
+[01:13.165] MSG: Shotgun Shark wins!
+[01:17.842] Crystals: P0 3120 → 1920 (-1200)  [battle]
+[01:19.246] Attack P1(2,4)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → P0(3,3)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=2  ATK=75 vs DEF=60  → WIN
+[01:19.246] Anim: 3A  △ P0(3,3)
+[01:19.246] Card destroyed  P0 (3,3) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:19.734] Mode selected P1: ATTACK
+[01:19.740] Attack phase P1: 1 attack(s) available
+[01:19.740] MSG: Player 2: tap a character to attack.
+[01:20.033] AI1 attack decision: (1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → (2,2) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine | face-down}
+[01:20.376] Revealed: P0 (2,2) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[01:20.376] Dice rolled: 4
+[01:20.379] MSG: Mafia Associates wins!
+[01:25.017] Crystals: P0 1920 → 1370 (-550)  [battle]
+[01:26.414] Attack P1(1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P0(2,2)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=4  ATK=45 vs DEF=0  → WIN
+[01:26.414] Anim: 3A  △ P0(2,2)
+[01:26.414] Card destroyed  P0 (2,2) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[01:26.912] Turn ended  P1  |  Crystals P0=1370 P1=2180
+
+--- Turn 6  |  Player 0  |  Crystals P0=1370 P1=2180 ---
+P0:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][Mafi]
+      [  ? ][  — ][  — ][  — ][Shot]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][Kits][  — ]
+[01:27.505] Mode selected P0: TECH
+[01:27.818] Tech played  P0: "Bribe"
+[01:29.378] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:29.888] MSG: Bribe: AI passed.
+[01:29.895] Tech resolved  P0
+[01:30.806] Mode selected P0: ATTACK
+[01:30.810] Attack phase P0: 2 attack(s) available
+[01:30.810] MSG: Player 1: tap a character to attack.
+[01:31.113] AI0 attack decision: (0,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down} → (2,4) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:31.454] Revealed: P0 (0,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[01:31.454] Dice rolled: 4
+[01:31.460] MSG: Goblin Poacher wins!
+[01:36.114] Crystals: P1 2180 → 1280 (-900)  [battle]
+[01:37.519] Attack P0(0,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P1(2,4)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}  Dice=4  ATK=30 vs DEF=25  → WIN
+[01:37.519] Anim: 3A  △ P1(2,4)
+[01:37.519] Card destroyed  P1 (2,4) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:40.019] Turn ended  P0  |  Crystals P0=1370 P1=1280
+
+--- Turn 7  |  Player 1  |  Crystals P0=1370 P1=1280 ---
+P0:   [  ? ][Gobl][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][Mafi]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][Kits][  — ]
+[01:40.615] Mode selected P1: ATTACK
+[01:40.624] Attack phase P1: 2 attack(s) available
+[01:40.625] MSG: Player 2: tap a character to attack.
+[01:40.914] AI1 attack decision: (4,3)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (0,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[01:41.214] Dice rolled: 3
+[01:41.274] MSG: Kitsune wins!
+[01:45.909] Crystals: P0 1370 → 1120 (-250)  [battle]
+[01:47.308] Attack P1(4,3)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P0(0,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=3  ATK=35 vs DEF=10  → WIN
+[01:47.308] Anim: 3A  △ P0(0,1)
+[01:47.308] Card destroyed  P0 (0,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[01:47.801] Mode selected P1: ATTACK
+[01:47.805] Attack phase P1: 1 attack(s) available
+[01:47.805] MSG: Player 2: tap a character to attack.
+[01:48.099] AI1 attack decision: (1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → (2,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down}
+[01:48.442] Revealed: P0 (2,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:48.442] Dice rolled: 3
+[01:48.447] MSG: Mafia Associates wins!
+[01:53.066] Crystals: P0 1120 → 920 (-200)  [battle]
+[01:54.465] Attack P1(1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P0(2,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=3  ATK=45 vs DEF=15  → WIN
+[01:54.465] Anim: 3A  △ P0(2,0)
+[01:54.465] Card destroyed  P0 (2,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:54.974] Turn ended  P1  |  Crystals P0=920 P1=1280
+
+--- Turn 8  |  Player 0  |  Crystals P0=920 P1=1280 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][Mafi]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][Kits][  — ]
+[01:57.074] Crystals: P0 920 → 620 (-300)  [union]
+[01:57.121] Revealed: P0 (1,1) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[01:57.121] Union summoned P0: "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}, "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down}
+[01:57.121] MSG: Player 1 summoned [False Prophet] using: "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}, "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down}
+[02:00.531] Mode selected P0: ATTACK
+[02:00.542] Attack phase P0: 2 attack(s) available
+[02:00.542] MSG: Player 1: tap a character to attack.
+[02:00.837] AI0 attack decision: (4,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down} → (1,4) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[02:01.183] Revealed: P0 (4,0) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[02:01.183] Dice rolled: 3
+[02:01.187] MSG: Angel Gatekeeper wins!
+[02:06.847] Crystals: P1 1280 → 780 (-500)  [battle]
+[02:08.245] Attack P0(4,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P1(1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}  Dice=3  ATK=40 vs DEF=0  → WIN
+[02:08.245] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} DEF -40
+[02:08.245] Anim: 3A  △ P1(1,4)
+[02:08.245] Card destroyed  P1 (1,4) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[02:08.747] Mode selected P0: ATTACK
+[02:08.751] Attack phase P0: 1 attack(s) available
+[02:08.752] MSG: Player 1: tap a character to attack.
+[02:09.050] AI0 attack decision: (1,1)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → (2,2) (dead-end)
+[02:09.358] Dice rolled: 3
+[02:09.431] MSG: Nothing happens — Dead End.
+[02:12.755] Attack P0(1,1)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P1(2,2)(empty)  Dice=3  → DEAD_END
+[02:12.755] Anim: 3F  (blank slot)
+[02:13.249] Turn ended  P0  |  Crystals P0=620 P1=780
+
+--- Turn 9  |  Player 1  |  Crystals P0=620 P1=780 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Fals][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Ange][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][Kits][  — ]
+[02:13.845] Mode selected P1: ATTACK
+[02:13.850] Attack phase P1: 2 attack(s) available
+[02:13.851] MSG: Player 2: tap a character to attack.
+[02:14.145] AI1 attack decision: (4,3)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (3,1) (dead-end)
+[02:14.445] Dice rolled: 3
+[02:14.507] MSG: Nothing happens — Dead End.
+[02:17.880] Attack P1(4,3)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P0(3,1)(empty)  Dice=3  → DEAD_END
+[02:17.880] Anim: 3F  (blank slot)
+[02:18.380] Mode selected P1: ATTACK
+[02:18.385] Attack phase P1: 1 attack(s) available
+[02:18.385] MSG: Player 2: tap a character to attack.
+[02:18.687] AI1 attack decision: (4,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (1,1) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[02:19.035] Revealed: P1 (4,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[02:19.035] Dice rolled: 2
+[02:19.036] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[02:19.071] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[02:19.071] MSG: Joseph the Battle Priest wins!
+[02:19.156] Coin flip: Heads
+[02:24.666] Attack P1(4,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(1,1)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}  Dice=2  ATK=70 vs DEF=40  → WIN
+[02:24.666] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} +ATK 10
+[02:24.666] Anim: 3A  △ P0(1,1)
+[02:24.667] Card destroyed  P0 (1,1) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[02:25.158] Turn ended  P1  |  Crystals P0=620 P1=780
+
+--- Turn 10  |  Player 0  |  Crystals P0=620 P1=780 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Ange][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [Jose][  ? ][  ? ][Kits][  — ]
+[02:25.756] Mode selected P0: ATTACK
+[02:25.762] Attack phase P0: 2 attack(s) available
+[02:25.763] MSG: Player 1: tap a character to attack.
+[02:26.054] AI0 attack decision: (4,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → (4,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[02:26.353] Dice rolled: 1
+[02:26.361] MSG: Angel Gatekeeper wins!
+[02:31.046] Crystals: P1 780 → 180 (-600)  [battle]
+[02:32.446] Attack P0(4,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P1(4,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=1  ATK=40 vs DEF=25  → WIN
+[02:32.446] Anim: 3A  △ P1(4,0)
+[02:32.446] Card destroyed  P1 (4,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[02:34.951] Turn ended  P0  |  Crystals P0=620 P1=180
+
+--- Turn 11  |  Player 1  |  Crystals P0=620 P1=180 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Ange][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][Kits][  — ]
+[02:35.546] Mode selected P1: ATTACK
+[02:35.553] Attack phase P1: 2 attack(s) available
+[02:35.553] MSG: Player 2: tap a character to attack.
+[02:35.846] AI1 attack decision: (4,3)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (2,3) (dead-end)
+[02:36.147] Dice rolled: 3
+[02:36.201] MSG: Nothing happens — Dead End.
+[02:39.551] Attack P1(4,3)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P0(2,3)(empty)  Dice=3  → DEAD_END
+[02:39.551] Anim: 3F  (blank slot)
+[02:42.063] Turn ended  P1  |  Crystals P0=620 P1=180
+
+--- Turn 12  |  Player 0  |  Crystals P0=620 P1=180 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Ange][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][Kits][  — ]
+[02:42.667] Mode selected P0: ATTACK
+[02:42.674] Attack phase P0: 2 attack(s) available
+[02:42.674] MSG: Player 1: tap a character to attack.
+[02:42.975] AI0 attack decision: (4,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → (4,3) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[02:43.282] Dice rolled: 5
+[02:43.341] MSG: Angel Gatekeeper wins!
+[02:48.995] Attack P0(4,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P1(4,3)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}  Dice=5  ATK=90 vs DEF=35  → WIN
+[02:48.995] Reckoning overlay: P0 "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} +ATK 50
+[02:48.995] Anim: 3A  △ P1(4,3)
+[02:48.995] Card destroyed  P1 (4,3) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[02:49.483] Mode selected P0: ATTACK
+[02:49.486] Attack phase P0: 1 attack(s) available
+[02:49.486] MSG: Player 1: tap a character to attack.
+[02:49.791] AI0 attack decision: (0,0)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down} → (0,4) (dead-end)
+[02:50.137] Revealed: P0 (0,0) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[02:50.137] Dice rolled: 2
+[02:50.148] MSG: Nothing happens — Dead End.
+[02:53.513] Attack P0(0,0)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P1(0,4)(empty)  Dice=2  → DEAD_END
+[02:53.513] Anim: 3F  (blank slot)
+[02:54.009] Turn ended  P0  |  Crystals P0=620 P1=180
+
+--- Turn 13  |  Player 1  |  Crystals P0=620 P1=180 ---
+P0:   [Armo][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Ange][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[02:54.618] Mode selected P1: ATTACK
+[02:54.625] Attack phase P1: 2 attack(s) available
+[02:54.625] MSG: Player 2: tap a character to attack.
+[02:54.925] AI1 attack decision: (1,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down} → (0,0) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[02:55.264] Revealed: P1 (1,1) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[02:55.264] Dice rolled: 5
+[02:55.268] MSG: Scarlet Mutant wins!
+[02:59.933] Crystals: P0 620 → 450 (-170)  [battle]
+[03:01.333] Attack P1(1,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(0,0)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}  Dice=5  ATK=35 vs DEF=20  → WIN
+[03:01.333] Anim: 3A  △ P0(0,0)
+[03:01.333] Card destroyed  P0 (0,0) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[03:01.836] Mode selected P1: ATTACK
+[03:01.843] Attack phase P1: 1 attack(s) available
+[03:01.844] MSG: Player 2: tap a character to attack.
+[03:02.142] AI1 attack decision: (2,0)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos | face-down} → (4,2) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down}
+[03:02.495] Revealed: P1 (2,0) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[03:02.523] Revealed: P0 (4,2) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[03:02.523] Dice rolled: 4
+[03:02.529] MSG: Cursed Well wins!
+[03:08.177] Crystals: P0 450 → 300 (-150)  [battle]
+[03:09.580] Attack P1(2,0)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} → P0(4,2)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=4  ATK=15 vs DEF=5  → WIN
+[03:09.580] Reckoning overlay: P1 "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} +ATK 15
+[03:09.580] Anim: 3A  △ P0(4,2)
+[03:09.580] Card destroyed  P0 (4,2) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[03:10.071] Turn ended  P1  |  Crystals P0=300 P1=180
+
+--- Turn 14  |  Player 0  |  Crystals P0=300 P1=180 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Ange][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][Scar][  — ][  — ][  — ]
+      [Curs][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[03:10.662] Mode selected P0: ATTACK
+[03:10.667] Attack phase P0: 2 attack(s) available
+[03:10.668] MSG: Player 1: tap a character to attack.
+[03:10.961] AI0 attack decision: (4,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → (1,1) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[03:11.262] Dice rolled: 4
+[03:11.274] MSG: Angel Gatekeeper wins!
+[03:15.959] Crystals: P1 180 → 0 (-180)  [battle]
+
+=== GAME OVER ===
+[03:15.969] AI Player 0 wins
+[03:15.969] Reason: crystals
+[03:15.969] Final crystals — P0: 300  P1: 0  |  Turns: 14
+[03:15.969] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_haunted_break_room_2026-05-31_18-52-45_792.txt

@@ -1,0 +1,574 @@
+=== Battle of Suspicious Meatball ===
+Battle started: 2026-05-31 03:25:32.943
+Game Session of Root Beer Float (started 2026-05-31 03:11:44.569)
+=== AI vs AI Match ===
+Batch iteration: 6 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Radar, Bribe
+P1 Tech hand: Spy, Great Diplomacy, Prayer
+P0:   [C:Scyt][C:Hamm][  — ][  — ][C:Nept]
+      [C:Shep][  — ][  — ][  — ][C:Gamm]
+      [T:Self][C:Bomb][C:Stri][T:Curs][C:Laug]
+      [C:Claw][  — ][  — ][  — ][T:Flam]
+      [C:Deat][  — ][  — ][  — ][T:Deco]
+P1:   [  — ][  — ][C:War ][T:Snar][  — ]
+      [T:Trap][C:Shot][C:Raij][C:Laug][T:Host]
+      [  — ][C:Hunt][C:Vamp][C:Need][T:Pepp]
+      [  — ][C:Armo][C:Chao][C:Mine][T:Expl]
+      [  — ][  — ][T:Acid][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:05.335] Mode selected P0: TECH
+[00:05.635] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:07.019] Tech played  P0: "Radar"
+[00:08.559] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.958] AI0 target chosen: (2,4)
+[00:09.009] Revealed: P1 (2,4) "Pepper Spray"
+[00:09.359] AI0 target chosen: (3,1)
+[00:09.412] Revealed: P1 (3,1) "Armored Bee"
+[00:09.767] AI0 target chosen: (4,1)
+[00:09.767] Revealed: P1 (4,1) (blank slot)
+[00:09.771] Tech resolved  P0
+[00:10.668] Mode selected P0: ATTACK
+[00:10.673] Attack phase P0: 2 attack(s) available
+[00:10.673] MSG: Player 1: tap a character to attack.
+[00:10.967] AI0 attack decision: (4,0)"Death Knight" [ATK=65] → (3,1) "Armored Bee" [DEF=0]
+[00:11.312] Revealed: P0 (4,0) "Death Knight"
+[00:11.313] Dice rolled: 4
+[00:11.319] MSG: Death Knight wins!
+[00:17.543] Crystals: P1 5000 → 4520 (-480)  [battle]
+[00:18.931] Card destroyed  P1 (3,1) "Armored Bee"
+[00:18.934] Attack P0(4,0)"Death Knight" → P1(3,1)"Armored Bee"  Dice=4  ATK=65 vs DEF=60  → WIN
+[00:18.934] Anim: 3A  △ P1(3,1)
+[00:21.450] Turn ended  P0  |  Crystals P0=4400 P1=4520
+
+--- Turn 2  |  Player 1  |  Crystals P0=4400 P1=4520 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Deat][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:22.064] Mode selected P1: TECH
+[00:22.374] Tech played  P1: "Spy"
+[00:23.913] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:24.313] AI1 target chosen: (1,2)
+[00:24.313] Revealed: P0 (1,2) (blank slot)
+[00:24.319] Tech resolved  P1
+[00:25.213] Mode selected P1: ATTACK
+[00:25.217] Attack phase P1: 2 attack(s) available
+[00:25.217] MSG: Player 2: tap a character to attack.
+[00:25.513] AI1 attack decision: (1,3)"Laughing Granny" [ATK=15] → (1,2) "(dead-end)"
+[00:25.862] Revealed: P1 (1,3) "Laughing Granny"
+[00:25.862] Dice rolled: 2
+[00:25.880] MSG: Nothing happens — Dead End.
+[00:29.204] Dead-end placed  P0 (1,2)
+[00:29.207] Attack P1(1,3)"Laughing Granny" → P0(1,2)(empty)  Dice=2  → DEAD_END
+[00:29.207] Anim: 3F  (blank slot)
+[00:31.715] Turn ended  P1  |  Crystals P0=4400 P1=4520
+
+--- Turn 3  |  Player 0  |  Crystals P0=4400 P1=4520 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Deat][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][Laug][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:32.322] Mode selected P0: TECH
+[00:32.622] Crystals: P0 4400 → 3400 (-1000)  [tech cost]
+[00:34.007] Tech played  P0: "Accident"
+[00:35.547] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:35.946] AI0 target chosen: (1,3)
+[00:35.949] Card destroyed  P1 (1,3) "Laughing Granny"
+[00:35.953] Tech resolved  P0
+[00:36.846] Mode selected P0: ATTACK
+[00:36.851] Attack phase P0: 2 attack(s) available
+[00:36.851] MSG: Player 1: tap a character to attack.
+[00:37.145] AI0 attack decision: (4,0)"Death Knight" [ATK=65] → (4,1) "(dead-end)"
+[00:37.446] Dice rolled: 2
+[00:37.479] MSG: Nothing happens — Dead End.
+[00:40.839] Dead-end placed  P1 (4,1)
+[00:40.842] Attack P0(4,0)"Death Knight" → P1(4,1)(empty)  Dice=2  → DEAD_END
+[00:40.842] Anim: 3F  (blank slot)
+[00:41.329] Mode selected P0: ATTACK
+[00:41.332] Attack phase P0: 1 attack(s) available
+[00:41.332] MSG: Player 1: tap a character to attack.
+[00:41.629] AI0 attack decision: (3,0)"Claw Mutant" [ATK=15] → (0,0) "(dead-end)"
+[00:41.975] Revealed: P0 (3,0) "Claw Mutant"
+[00:41.975] Dice rolled: 2
+[00:41.989] MSG: Nothing happens — Dead End.
+[00:45.326] Dead-end placed  P1 (0,0)
+[00:45.331] Attack P0(3,0)"Claw Mutant" → P1(0,0)(empty)  Dice=2  → DEAD_END
+[00:45.331] Anim: 3F  (blank slot)
+[00:45.828] Turn ended  P0  |  Crystals P0=3400 P1=4520
+
+--- Turn 4  |  Player 1  |  Crystals P0=3400 P1=4520 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [Claw][  — ][  — ][  — ][  ? ]
+      [Deat][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:46.425] Mode selected P1: TECH
+[00:46.733] Crystals: P1 4520 → 3520 (-1000)  [tech cost]
+[00:48.121] Tech played  P1: "Great Diplomacy"
+[00:49.696] Revealed: P1 (0,2) "War Genie"
+[00:49.734] Revealed: P1 (1,1) "Shotgun Shark"
+[00:49.791] Revealed: P1 (1,2) "Raijin"
+[00:49.814] Revealed: P1 (2,1) "Huntress of Green Glade"
+[00:49.862] Revealed: P1 (2,2) "Vampire Servant"
+[00:49.887] Revealed: P1 (2,3) "Needle Porcupine"
+[00:49.905] Revealed: P1 (3,2) "Chaotic Wisp"
+[00:49.924] Revealed: P1 (3,3) "Miner Probe"
+[00:49.926] Tech resolved  P1
+[00:50.716] Mode selected P1: ATTACK
+[00:50.730] Attack phase P1: 2 attack(s) available
+[00:50.731] MSG: Player 2: tap a character to attack.
+[00:51.008] AI1 attack decision: (0,2)"War Genie" [ATK=100] → (4,0) "Death Knight" [DEF=65]
+[00:51.309] Dice rolled: 2
+[00:51.322] MSG: War Genie wins!
+[00:55.984] Crystals: P0 3400 → 2550 (-850)  [battle]
+[00:57.379] Card destroyed  P0 (4,0) "Death Knight"
+[00:57.388] Attack P1(0,2)"War Genie" → P0(4,0)"Death Knight"  Dice=2  ATK=100 vs DEF=65  → WIN
+[00:57.388] Anim: 3A  △ P0(4,0)
+[00:57.884] Mode selected P1: ATTACK
+[00:57.896] Attack phase P1: 1 attack(s) available
+[00:57.896] MSG: Player 2: tap a character to attack.
+[00:58.182] AI1 attack decision: (1,1)"Shotgun Shark" [ATK=75] → (3,0) "Claw Mutant" [DEF=10]
+[00:58.492] Dice rolled: 1
+[00:58.503] MSG: Shotgun Shark wins!
+[01:03.175] Crystals: P0 2550 → 2370 (-180)  [battle]
+[01:04.569] Card destroyed  P0 (3,0) "Claw Mutant"
+[01:04.575] Attack P1(1,1)"Shotgun Shark" → P0(3,0)"Claw Mutant"  Dice=1  ATK=75 vs DEF=10  → WIN
+[01:04.575] Anim: 3A  △ P0(3,0)
+[01:05.073] Turn ended  P1  |  Crystals P0=2370 P1=3520
+
+--- Turn 5  |  Player 0  |  Crystals P0=2370 P1=3520 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][War ][  ? ][  — ]
+      [  ? ][Shot][Raij][  — ][  ? ]
+      [  — ][Hunt][Vamp][Need][  — ]
+      [  — ][  — ][Chao][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:05.675] Mode selected P0: TECH
+[01:05.991] Tech played  P0: "Bribe"
+[01:07.517] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:08.017] MSG: Bribe: AI passed.
+[01:08.028] Tech resolved  P0
+[01:08.909] Mode selected P0: ATTACK
+[01:08.922] Attack phase P0: 2 attack(s) available
+[01:08.922] MSG: Player 1: tap a character to attack.
+[01:09.209] AI0 attack decision: (1,4)"Gamma Emitter" [ATK=20] → (1,1) "Shotgun Shark" [DEF=25]
+[01:09.541] Revealed: P0 (1,4) "Gamma Emitter"
+[01:09.541] Dice rolled: 4
+[01:09.545] MSG: Gamma Emitter wins!
+[01:15.792] Crystals: P1 3520 → 2620 (-900)  [battle]
+[01:17.185] Card destroyed  P1 (1,1) "Shotgun Shark"
+[01:17.190] Attack P0(1,4)"Gamma Emitter" → P1(1,1)"Shotgun Shark"  Dice=4  ATK=30 vs DEF=25  → WIN
+[01:17.190] Anim: 3A  △ P1(1,1)
+[01:17.684] Mode selected P0: ATTACK
+[01:17.695] Attack phase P0: 1 attack(s) available
+[01:17.696] MSG: Player 1: tap a character to attack.
+[01:17.996] AI0 attack decision: (2,4)"Laughing Granny" [ATK=15] → (1,2) "Raijin" [DEF=0]
+[01:18.308] Revealed: P0 (2,4) "Laughing Granny"
+[01:18.308] Dice rolled: 2
+[01:18.320] MSG: Laughing Granny wins!
+[01:22.989] Crystals: P1 2620 → 2070 (-550)  [battle]
+[01:24.382] Card destroyed  P1 (1,2) "Raijin"
+[01:24.391] Attack P0(2,4)"Laughing Granny" → P1(1,2)"Raijin"  Dice=2  ATK=15 vs DEF=0  → WIN
+[01:24.391] Anim: 3A  △ P1(1,2)
+[01:24.880] Turn ended  P0  |  Crystals P0=2370 P1=2070
+
+--- Turn 6  |  Player 1  |  Crystals P0=2370 P1=2070 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Gamm]
+      [  ? ][  ? ][  ? ][  ? ][Laug]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][War ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Hunt][Vamp][Need][  — ]
+      [  — ][  — ][Chao][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:25.502] Mode selected P1: ATTACK
+[01:25.507] Attack phase P1: 2 attack(s) available
+[01:25.507] MSG: Player 2: tap a character to attack.
+[01:25.779] AI1 attack decision: (0,2)"War Genie" [ATK=90] → (2,4) "Laughing Granny" [DEF=20]
+[01:26.080] Dice rolled: 2
+[01:26.092] MSG: War Genie wins!
+[01:30.746] Crystals: P0 2370 → 2020 (-350)  [battle]
+[01:32.141] Card destroyed  P0 (2,4) "Laughing Granny"
+[01:32.148] Attack P1(0,2)"War Genie" → P0(2,4)"Laughing Granny"  Dice=2  ATK=90 vs DEF=20  → WIN
+[01:32.148] Anim: 3A  △ P0(2,4)
+[01:32.646] Mode selected P1: ATTACK
+[01:32.650] Attack phase P1: 1 attack(s) available
+[01:32.650] MSG: Player 2: tap a character to attack.
+[01:32.954] AI1 attack decision: (2,1)"Huntress of Green Glade" [ATK=50] → (1,4) "Gamma Emitter" [DEF=15]
+[01:33.263] Dice rolled: 2
+[01:33.271] MSG: Huntress of Green Glade wins!
+[01:37.946] Crystals: P0 2020 → 1800 (-220)  [battle]
+[01:39.339] Card destroyed  P0 (1,4) "Gamma Emitter"
+[01:39.345] Attack P1(2,1)"Huntress of Green Glade" → P0(1,4)"Gamma Emitter"  Dice=2  ATK=50 vs DEF=15  → WIN
+[01:39.345] Anim: 3A  △ P0(1,4)
+[01:39.843] Turn ended  P1  |  Crystals P0=1800 P1=2070
+
+--- Turn 7  |  Player 0  |  Crystals P0=1800 P1=2070 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][War ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Hunt][Vamp][Need][  — ]
+      [  — ][  — ][Chao][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:41.929] Union summoned P0: [Scarlet Shroom] from Scythe Shark, Hammer Shark
+[01:41.930] Crystals: P0 1800 → 1300 (-500)  [union]
+[01:41.979] Revealed: P0 (0,0) "Scarlet Shroom"
+[01:41.979] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[01:41.979] MSG: Player 1 summoned [Scarlet Shroom] using: Scythe Shark, Hammer Shark
+[01:45.349] Mode selected P0: ATTACK
+[01:45.355] Attack phase P0: 2 attack(s) available
+[01:45.355] MSG: Player 1: tap a character to attack.
+[01:45.650] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (0,3) "Snare Trap" [DEF=0]
+[01:45.987] Revealed: P1 (0,3) "Snare Trap"
+[01:45.987] Dice rolled: 1
+[01:46.301] MSG: Trap triggered: Snare Trap!
+[01:50.352] Card destroyed  P1 (0,3) "Snare Trap"
+[01:50.353] Crystals: P1 2070 → 1570 (-500)  [trap cost]
+[01:51.742] MSG: Snare Trap: Scarlet Shroom's effect nullified until end of next turn!
+[01:51.748] Trap: "Snare Trap" triggered  P0(0,0)→P1(0,3)
+[01:51.748] Anim: 3D  (attacker survives)
+[01:52.242] Mode selected P0: ATTACK
+[01:52.255] Attack phase P0: 1 attack(s) available
+[01:52.256] MSG: Player 1: tap a character to attack.
+[01:52.542] AI0 attack decision: (1,0)"Shepherd Detective" [ATK=40] → (2,2) "Vampire Servant" [DEF=20]
+[01:52.880] Revealed: P0 (1,0) "Shepherd Detective"
+[01:52.880] Dice rolled: 3
+[01:52.883] MSG: Shepherd Detective wins!
+[01:57.534] Crystals: P1 1570 → 770 (-800)  [battle]
+[01:58.927] Card destroyed  P1 (2,2) "Vampire Servant"
+[01:58.929] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:58.937] Attack P0(1,0)"Shepherd Detective" → P1(2,2)"Vampire Servant"  Dice=3  ATK=40 vs DEF=20  → WIN
+[01:58.937] Anim: 3A  △ P1(2,2)
+[01:59.325] AI0 target chosen: (2,4)
+[01:59.432] Turn ended  P0  |  Crystals P0=1300 P1=770
+
+--- Turn 8  |  Player 1  |  Crystals P0=1300 P1=770 ---
+P0:   [Scar][  — ][  — ][  — ][  ? ]
+      [Shep][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][War ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Hunt][  — ][Need][  — ]
+      [  — ][  — ][Chao][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:00.056] Mode selected P1: ATTACK
+[02:00.064] Attack phase P1: 2 attack(s) available
+[02:00.064] MSG: Player 2: tap a character to attack.
+[02:00.334] AI1 attack decision: (0,2)"War Genie" [ATK=80] → (1,0) "Shepherd Detective" [DEF=25]
+[02:00.634] Dice rolled: 2
+[02:00.644] MSG: War Genie wins!
+[02:05.318] Crystals: P0 1300 → 900 (-400)  [battle]
+[02:06.711] Card destroyed  P0 (1,0) "Shepherd Detective"
+[02:06.715] Attack P1(0,2)"War Genie" → P0(1,0)"Shepherd Detective"  Dice=2  ATK=80 vs DEF=25  → WIN
+[02:06.715] Anim: 3A  △ P0(1,0)
+[02:07.208] Mode selected P1: ATTACK
+[02:07.220] Attack phase P1: 1 attack(s) available
+[02:07.220] MSG: Player 2: tap a character to attack.
+[02:07.517] AI1 attack decision: (2,1)"Huntress of Green Glade" [ATK=50] → (0,1) "(dead-end)"
+[02:07.817] Dice rolled: 1
+[02:07.841] MSG: Nothing happens — Dead End.
+[02:11.211] Dead-end placed  P0 (0,1)
+[02:11.219] Attack P1(2,1)"Huntress of Green Glade" → P0(0,1)(empty)  Dice=1  → DEAD_END
+[02:11.219] Anim: 3F  (blank slot)
+[02:11.713] Turn ended  P1  |  Crystals P0=900 P1=770
+
+--- Turn 9  |  Player 0  |  Crystals P0=900 P1=770 ---
+P0:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][War ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Hunt][  — ][Need][  — ]
+      [  — ][  — ][Chao][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:12.309] Mode selected P0: ATTACK
+[02:12.313] Attack phase P0: 2 attack(s) available
+[02:12.313] MSG: Player 1: tap a character to attack.
+[02:12.608] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (0,1) "(dead-end)"
+[02:12.909] Dice rolled: 2
+[02:12.965] MSG: Nothing happens — Dead End.
+[02:16.310] Dead-end placed  P1 (0,1)
+[02:16.314] Attack P0(0,0)"Scarlet Shroom" → P1(0,1)(empty)  Dice=2  → DEAD_END
+[02:16.314] Anim: 3F  (blank slot)
+[02:18.829] Turn ended  P0  |  Crystals P0=900 P1=770
+
+--- Turn 10  |  Player 1  |  Crystals P0=900 P1=770 ---
+P0:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][War ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Hunt][  — ][Need][  — ]
+      [  — ][  — ][Chao][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:19.443] Mode selected P1: ATTACK
+[02:19.452] Attack phase P1: 2 attack(s) available
+[02:19.452] MSG: Player 2: tap a character to attack.
+[02:19.729] AI1 attack decision: (0,2)"War Genie" [ATK=70] → (4,1) "(dead-end)"
+[02:20.038] Dice rolled: 5
+[02:20.062] MSG: Nothing happens — Dead End.
+[02:23.431] Dead-end placed  P0 (4,1)
+[02:23.435] Attack P1(0,2)"War Genie" → P0(4,1)(empty)  Dice=5  → DEAD_END
+[02:23.435] Anim: 3F  (blank slot)
+[02:23.930] Mode selected P1: ATTACK
+[02:23.939] Attack phase P1: 1 attack(s) available
+[02:23.939] MSG: Player 2: tap a character to attack.
+[02:24.238] AI1 attack decision: (2,1)"Huntress of Green Glade" [ATK=50] → (4,4) "Decoy Puppet" [DEF=0]
+[02:24.569] Revealed: P0 (4,4) "Decoy Puppet"
+[02:24.569] Dice rolled: 5
+[02:24.852] MSG: Trap triggered: Decoy Puppet!
+[02:28.930] Card destroyed  P0 (4,4) "Decoy Puppet"
+[02:28.931] Crystals: P0 900 → 800 (-100)  [trap cost]
+[02:30.321] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[02:30.328] Trap: "Decoy Puppet" triggered  P1(2,1)→P0(4,4)
+[02:30.328] Anim: 3D  (attacker survives)
+[02:30.815] Turn ended  P1  |  Crystals P0=800 P1=770
+
+--- Turn 11  |  Player 0  |  Crystals P0=800 P1=770 ---
+P0:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][War ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Hunt][  — ][Need][  — ]
+      [  — ][  — ][Chao][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:31.430] Mode selected P0: ATTACK
+[02:31.440] Attack phase P0: 2 attack(s) available
+[02:31.441] MSG: Player 1: tap a character to attack.
+[02:31.729] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (0,4) "(dead-end)"
+[02:32.030] Dice rolled: 4
+[02:32.095] MSG: Nothing happens — Dead End.
+[02:35.428] Dead-end placed  P1 (0,4)
+[02:35.434] Attack P0(0,0)"Scarlet Shroom" → P1(0,4)(empty)  Dice=4  → DEAD_END
+[02:35.434] Anim: 3F  (blank slot)
+[02:37.941] Turn ended  P0  |  Crystals P0=800 P1=770
+
+--- Turn 12  |  Player 1  |  Crystals P0=800 P1=770 ---
+P0:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][War ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Hunt][  — ][Need][  — ]
+      [  — ][  — ][Chao][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:38.552] Mode selected P1: ATTACK
+[02:38.560] Attack phase P1: 2 attack(s) available
+[02:38.561] MSG: Player 2: tap a character to attack.
+[02:38.833] AI1 attack decision: (0,2)"War Genie" [ATK=60] → (4,2) "(dead-end)"
+[02:39.134] Dice rolled: 3
+[02:39.163] MSG: Nothing happens — Dead End.
+[02:42.534] Dead-end placed  P0 (4,2)
+[02:42.538] Attack P1(0,2)"War Genie" → P0(4,2)(empty)  Dice=3  → DEAD_END
+[02:42.538] Anim: 3F  (blank slot)
+[02:43.025] Mode selected P1: ATTACK
+[02:43.034] Attack phase P1: 1 attack(s) available
+[02:43.034] MSG: Player 2: tap a character to attack.
+[02:43.325] AI1 attack decision: (2,1)"Huntress of Green Glade" [ATK=50] → (4,3) "(dead-end)"
+[02:43.625] Dice rolled: 4
+[02:43.647] MSG: Nothing happens — Dead End.
+[02:47.010] Dead-end placed  P0 (4,3)
+[02:47.017] Attack P1(2,1)"Huntress of Green Glade" → P0(4,3)(empty)  Dice=4  → DEAD_END
+[02:47.017] Anim: 3F  (blank slot)
+[02:47.514] Turn ended  P1  |  Crystals P0=800 P1=770
+
+--- Turn 13  |  Player 0  |  Crystals P0=800 P1=770 ---
+P0:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][War ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Hunt][  — ][Need][  — ]
+      [  — ][  — ][Chao][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:48.117] Mode selected P0: ATTACK
+[02:48.128] Attack phase P0: 2 attack(s) available
+[02:48.128] MSG: Player 1: tap a character to attack.
+[02:48.417] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (1,0) "Trap Hole" [DEF=0]
+[02:48.752] Revealed: P1 (1,0) "Trap Hole"
+[02:48.752] Dice rolled: 5
+[02:49.068] MSG: Trap triggered: Trap Hole!
+[02:53.119] Card destroyed  P1 (1,0) "Trap Hole"
+[02:53.130] Crystals: P0 800 → 780 (-20)  [trap]
+[02:54.509] MSG: Trap Hole: Player 1 loses 20 Crystals!
+[02:54.515] Trap: "Trap Hole" triggered  P0(0,0)→P1(1,0)
+[02:54.515] Anim: 3D  (attacker survives)
+[02:55.009] Mode selected P0: ATTACK
+[02:55.021] Attack phase P0: 1 attack(s) available
+[02:55.021] MSG: Player 1: tap a character to attack.
+[02:55.316] AI0 attack decision: (2,1)"Bomber Fairy" [ATK=30] → (2,3) "Needle Porcupine" [DEF=10]
+[02:55.655] Revealed: P0 (2,1) "Bomber Fairy"
+[02:55.655] Dice rolled: 3
+[02:55.658] MSG: Bomber Fairy wins!
+[03:00.300] Crystals: P1 770 → 570 (-200)  [battle]
+[03:01.687] Card destroyed  P1 (2,3) "Needle Porcupine"
+[03:01.688] MSG: Bomber Fairy: Kill bonus — extra attack!
+[03:01.694] Attack P0(2,1)"Bomber Fairy" → P1(2,3)"Needle Porcupine"  Dice=3  ATK=30 vs DEF=10  → WIN
+[03:01.694] Anim: 3A  △ P1(2,3)
+[03:04.200] Turn ended  P0  |  Crystals P0=780 P1=570
+
+--- Turn 14  |  Player 1  |  Crystals P0=780 P1=570 ---
+P0:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Bomb][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][War ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Hunt][  — ][  — ][  — ]
+      [  — ][  — ][Chao][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[03:04.820] Mode selected P1: ATTACK
+[03:04.829] Attack phase P1: 2 attack(s) available
+[03:04.829] MSG: Player 2: tap a character to attack.
+[03:05.109] AI1 attack decision: (0,2)"War Genie" [ATK=50] → (2,1) "Bomber Fairy" [DEF=15]
+[03:05.409] Dice rolled: 2
+[03:05.417] MSG: War Genie wins!
+[03:10.092] Crystals: P0 780 → 280 (-500)  [battle]
+[03:11.486] Card destroyed  P0 (2,1) "Bomber Fairy"
+[03:11.494] Attack P1(0,2)"War Genie" → P0(2,1)"Bomber Fairy"  Dice=2  ATK=50 vs DEF=15  → WIN
+[03:11.494] Anim: 3A  △ P0(2,1)
+[03:11.994] Mode selected P1: ATTACK
+[03:11.997] Attack phase P1: 1 attack(s) available
+[03:11.997] MSG: Player 2: tap a character to attack.
+[03:12.291] AI1 attack decision: (2,1)"Huntress of Green Glade" [ATK=50] → (3,1) "(dead-end)"
+[03:12.592] Dice rolled: 3
+[03:12.621] MSG: Nothing happens — Dead End.
+[03:15.977] Dead-end placed  P0 (3,1)
+[03:15.982] Attack P1(2,1)"Huntress of Green Glade" → P0(3,1)(empty)  Dice=3  → DEAD_END
+[03:15.982] Anim: 3F  (blank slot)
+[03:16.480] Turn ended  P1  |  Crystals P0=280 P1=570
+
+--- Turn 15  |  Player 0  |  Crystals P0=280 P1=570 ---
+P0:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][War ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Hunt][  — ][  — ][  — ]
+      [  — ][  — ][Chao][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[03:17.087] Mode selected P0: ATTACK
+[03:17.098] Attack phase P0: 2 attack(s) available
+[03:17.098] MSG: Player 1: tap a character to attack.
+[03:17.395] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (1,4) "Hostage" [DEF=0]
+[03:17.729] Revealed: P1 (1,4) "Hostage"
+[03:17.729] Dice rolled: 2
+[03:18.043] MSG: Trap triggered: Hostage!
+[03:22.089] Card destroyed  P1 (1,4) "Hostage"
+[03:22.089] Crystals: P1 570 → 370 (-200)  [trap cost]
+[03:23.479] MSG: Hostage: Adjacent squares revealed and locked.
+[03:23.480] Revealed: P1 (2,4) (blank slot)
+[03:23.486] Trap: "Hostage" triggered  P0(0,0)→P1(1,4)
+[03:23.486] Anim: 3D  (attacker survives)
+[03:23.980] Mode selected P0: ATTACK
+[03:23.991] Attack phase P0: 1 attack(s) available
+[03:23.991] MSG: Player 1: tap a character to attack.
+[03:24.279] AI0 attack decision: (2,2)"Striker Comet" [ATK=25] → (3,3) "Miner Probe" [DEF=10]
+[03:24.631] Revealed: P0 (2,2) "Striker Comet"
+[03:24.631] Dice rolled: 2
+[03:24.634] MSG: Striker Comet wins!
+[03:29.259] Crystals: P1 370 → 170 (-200)  [battle]
+[03:30.652] Card destroyed  P1 (3,3) "Miner Probe"
+[03:30.656] Attack P0(2,2)"Striker Comet" → P1(3,3)"Miner Probe"  Dice=2  ATK=25 vs DEF=10  → WIN
+[03:30.656] Anim: 3A  △ P1(3,3)
+[03:31.151] MSG: Striker Comet self-destructs at end of turn!
+[03:31.152] Crystals: P0 280 → 80 (-200)  [card lost]
+[03:31.154] Card destroyed  P0 (2,2) "Striker Comet"
+[03:31.160] Turn ended  P0  |  Crystals P0=80 P1=170
+
+--- Turn 16  |  Player 1  |  Crystals P0=80 P1=170 ---
+P0:   [Scar][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][War ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Hunt][  — ][  — ][  — ]
+      [  — ][  — ][Chao][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[03:31.776] Mode selected P1: ATTACK
+[03:31.783] Attack phase P1: 2 attack(s) available
+[03:31.783] MSG: Player 2: tap a character to attack.
+[03:32.058] AI1 attack decision: (2,1)"Huntress of Green Glade" [ATK=50] → (0,2) "(dead-end)"
+[03:32.359] Dice rolled: 1
+[03:32.384] MSG: Nothing happens — Dead End.
+[03:35.742] Dead-end placed  P0 (0,2)
+[03:35.743] Attack P1(2,1)"Huntress of Green Glade" → P0(0,2)(empty)  Dice=1  → DEAD_END
+[03:35.743] Anim: 3F  (blank slot)
+[03:36.241] Mode selected P1: ATTACK
+[03:36.247] Attack phase P1: 1 attack(s) available
+[03:36.247] MSG: Player 2: tap a character to attack.
+[03:36.542] AI1 attack decision: (0,2)"War Genie" [ATK=40] → (0,4) "Neptune Diver" [DEF=10]
+[03:36.874] Revealed: P0 (0,4) "Neptune Diver"
+[03:36.874] Dice rolled: 3
+[03:36.877] MSG: War Genie wins!
+[03:41.526] Crystals: P0 80 → 0 (-80)  [battle]
+
+=== GAME OVER ===
+[03:41.531] AI Player 1 wins
+[03:41.531] Final crystals — P0: 0  P1: 170  |  Turns: 16
+[03:41.531] Log saved to: res://logs/results/2026-05-31_03-11-44_569_root_beer_float/battle_suspicious_meatball_2026-05-31_03-25-32_943.txt

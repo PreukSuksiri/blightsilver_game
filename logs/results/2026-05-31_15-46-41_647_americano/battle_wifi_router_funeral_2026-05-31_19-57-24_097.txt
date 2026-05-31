@@ -1,0 +1,406 @@
+=== Battle of WiFi Router Funeral ===
+Battle started: 2026-05-31 19:57:24.097
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Vampire Servant
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Vampire Servant
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, Radar, Tease
+P1 Tech hand: Prayer, Tease, Spy
+P0:   [C:Sunr][  — ][  — ][T:Flam][C:Tiny]
+      [C:Pyro][  — ][  — ][  — ][C:Gryp]
+      [T:Alar][  — ][C:Vamp][  — ][C:Jira]
+      [T:Defe][  — ][  — ][  — ][C:Moon]
+      [T:Hypn][C:Vamp][C:Stin][C:Moon][C:Chur]
+P1:   [  — ][T:Brai][  — ][T:Spik][  — ]
+      [  — ][C:Stre][C:Fera][C:Mine][T:Acid]
+      [T:Self][C:Lab ][C:Chao][C:Meph][T:Red ]
+      [  — ][C:Jira][C:Mad ][C:Dark][  — ]
+      [  — ][  — ][  — ][  — ][T:Stre]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:05.328] Mode selected P0: TECH
+[00:05.628] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:07.011] Tech played  P0: "Radar"
+[00:08.580] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.985] AI0 target chosen: (1,3)
+[00:09.022] Revealed: P1 (1,3) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:09.369] AI0 target chosen: (2,3)
+[00:09.404] Revealed: P1 (2,3) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[00:09.778] AI0 target chosen: (1,2)
+[00:09.826] Revealed: P1 (1,2) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:09.830] Tech resolved  P0
+[00:10.663] Mode selected P0: ATTACK
+[00:10.668] Attack phase P0: 2 attack(s) available
+[00:10.669] MSG: Player 1: tap a character to attack.
+[00:10.965] AI0 attack decision: (0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down} → (2,3) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[00:11.307] Revealed: P0 (0,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[00:11.307] Dice rolled: 4
+[00:11.313] MSG: Both cards are destroyed!
+[00:15.907] Crystals: P0 4400 → 4300 (-100)  [battle]
+[00:17.300] Crystals: P1 5000 → 4140 (-860)  [battle]
+[00:18.682] MSG: Tiny Pixie survives destruction!
+[00:18.689] Attack P0(0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} → P1(2,3)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}  Dice=4  ATK=0 vs DEF=0  → TIE
+[00:18.689] Anim: 3C  △ P0(0,4) + △ P1(2,3)
+[00:18.689] Card destroyed  P0 (0,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[00:18.689] Card destroyed  P1 (2,3) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[00:19.184] Mode selected P0: ATTACK
+[00:19.201] Attack phase P0: 1 attack(s) available
+[00:19.201] MSG: Player 1: tap a character to attack.
+[00:19.482] AI0 attack decision: (1,4)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down} → (1,2) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:19.811] Revealed: P0 (1,4) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:19.811] Dice rolled: 2
+[00:19.817] MSG: Gryphon wins!
+[00:24.474] Crystals: P1 4140 → 3740 (-400)  [battle]
+[00:25.887] Attack P0(1,4)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P1(1,2)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=2  ATK=100 vs DEF=25  → WIN
+[00:25.887] Anim: 3A  △ P1(1,2)
+[00:25.887] Card destroyed  P1 (1,2) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:26.368] Turn ended  P0  |  Crystals P0=4300 P1=3740
+
+--- Turn 2  |  Player 1  |  Crystals P0=4300 P1=3740 ---
+P0:   [  ? ][  — ][  — ][  ? ][Tiny]
+      [  ? ][  — ][  — ][  — ][Gryp]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][Mine][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:26.964] Mode selected P1: TECH
+[00:27.275] Tech played  P1: "Spy"
+[00:28.833] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:29.239] AI1 target chosen: (1,3)
+[00:29.239] Revealed: P0 (1,3) (blank slot)
+[00:29.246] Tech resolved  P1
+[00:30.165] Mode selected P1: ATTACK
+[00:30.171] Attack phase P1: 2 attack(s) available
+[00:30.171] MSG: Player 2: tap a character to attack.
+[00:30.464] AI1 attack decision: (1,3)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} → (0,4) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used}
+[00:30.774] Dice rolled: 3
+[00:30.783] MSG: Miner Probe wins!
+[00:35.477] Crystals: P0 4300 → 4200 (-100)  [battle]
+[00:36.878] Attack P1(1,3)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} → P0(0,4)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used}  Dice=3  ATK=10 vs DEF=0  → WIN
+[00:36.878] Anim: 3A  △ P0(0,4)
+[00:37.377] Mode selected P1: ATTACK
+[00:37.379] Attack phase P1: 1 attack(s) available
+[00:37.381] MSG: Player 2: tap a character to attack.
+[00:37.686] AI1 attack decision: (2,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down} → (1,3) (dead-end)
+[00:38.039] Revealed: P1 (2,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:38.039] Dice rolled: 1
+[00:38.056] MSG: Nothing happens — Dead End.
+[00:41.382] Attack P1(2,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(1,3)(empty)  Dice=1  → DEAD_END
+[00:41.382] Anim: 3F  (blank slot)
+[00:41.866] Turn ended  P1  |  Crystals P0=4200 P1=3740
+
+--- Turn 3  |  Player 0  |  Crystals P0=4200 P1=3740 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][Gryp]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][Mine][  ? ]
+      [  ? ][Lab ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:42.461] Mode selected P0: TECH
+[00:42.772] Tech played  P0: "Bribe"
+[00:44.319] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:44.820] MSG: Bribe: AI passed.
+[00:44.835] Tech resolved  P0
+[00:45.720] Mode selected P0: ATTACK
+[00:45.725] Attack phase P0: 2 attack(s) available
+[00:45.725] MSG: Player 1: tap a character to attack.
+[00:46.020] AI0 attack decision: (1,4)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → (2,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:46.319] Dice rolled: 2
+[00:46.329] MSG: Gryphon wins!
+[00:51.011] Crystals: P1 3740 → 2940 (-800)  [battle]
+[00:52.419] Attack P0(1,4)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P1(2,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}  Dice=2  ATK=100 vs DEF=85  → WIN
+[00:52.419] Anim: 3A  △ P1(2,1)
+[00:52.419] Card destroyed  P1 (2,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:52.903] Mode selected P0: ATTACK
+[00:52.911] Attack phase P0: 1 attack(s) available
+[00:52.911] MSG: Player 1: tap a character to attack.
+[00:53.206] AI0 attack decision: (2,4)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (1,3) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:53.544] Revealed: P0 (2,4) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[00:53.544] Dice rolled: 3
+[00:53.549] MSG: Jirayu the Rebellious Prince wins!
+[00:58.193] Crystals: P1 2940 → 2740 (-200)  [battle]
+[00:59.594] Attack P0(2,4)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(1,3)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}  Dice=3  ATK=40 vs DEF=10  → WIN
+[00:59.594] Anim: 3A  △ P1(1,3)
+[00:59.594] Card destroyed  P1 (1,3) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[01:00.087] Turn ended  P0  |  Crystals P0=4200 P1=2740
+
+--- Turn 4  |  Player 1  |  Crystals P0=4200 P1=2740 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][Gryp]
+      [  ? ][  — ][  ? ][  — ][Jira]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:00.681] Mode selected P1: TECH
+[01:00.993] Tech played  P1: "Tease"
+[01:02.541] MSG: Opponent must choose and reveal 1 of their squares.
+[01:02.544] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:02.938] AI0 target chosen: (2,0)
+[01:02.964] Revealed: P0 (2,0) "Alarm" {cost 0}
+[01:02.964] MSG: Tease: Opponent revealed Alarm.
+[01:02.967] Tech resolved  P1
+[01:03.846] Mode selected P1: ATTACK
+[01:03.853] Attack phase P1: 2 attack(s) available
+[01:03.853] MSG: Player 2: tap a character to attack.
+[01:04.139] AI1 attack decision: (3,1)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (2,4) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:04.445] Revealed: P1 (3,1) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:04.445] Dice rolled: 5
+[01:04.456] MSG: Both cards are destroyed!
+[01:09.049] Crystals: P1 2740 → 2140 (-600)  [battle]
+[01:10.439] Crystals: P0 4200 → 3600 (-600)  [battle]
+[01:11.834] Attack P1(3,1)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P0(2,4)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}  Dice=5  ATK=40 vs DEF=40  → TIE
+[01:11.834] Anim: 3C  △ P1(3,1) + △ P0(2,4)
+[01:11.834] Card destroyed  P1 (3,1) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:11.834] Card destroyed  P0 (2,4) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:12.329] Mode selected P1: ATTACK
+[01:12.334] Attack phase P1: 1 attack(s) available
+[01:12.334] MSG: Player 2: tap a character to attack.
+[01:12.627] AI1 attack decision: (1,1)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima | face-down} → (2,0) (dead-end)
+[01:12.975] Revealed: P1 (1,1) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:12.975] Dice rolled: 3
+[01:13.001] MSG: Nothing happens — Dead End.
+[01:16.343] Attack P1(1,1)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P0(2,0)(empty)  Dice=3  → DEAD_END
+[01:16.343] Anim: 3F  (blank slot)
+[01:16.821] Turn ended  P1  |  Crystals P0=3600 P1=2140
+
+--- Turn 5  |  Player 0  |  Crystals P0=3600 P1=2140 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][Gryp]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][Stre][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:17.421] Mode selected P0: TECH
+[01:17.736] Tech played  P0: "Tease"
+[01:19.251] MSG: Opponent must choose and reveal 1 of their squares.
+[01:19.251] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:19.659] AI1 target chosen: (2,0)
+[01:19.692] Revealed: P1 (2,0) "Self-destruct" {cost 0}
+[01:19.692] MSG: Tease: Opponent revealed Self-destruct.
+[01:19.693] Tech resolved  P0
+[01:20.586] Mode selected P0: ATTACK
+[01:20.594] Attack phase P0: 2 attack(s) available
+[01:20.594] MSG: Player 1: tap a character to attack.
+[01:20.886] AI0 attack decision: (1,4)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → (1,1) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:21.196] Dice rolled: 1
+[01:21.210] MSG: Gryphon wins!
+[01:25.894] Crystals: P1 2140 → 1790 (-350)  [battle]
+[01:27.295] Attack P0(1,4)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P1(1,1)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=1  ATK=100 vs DEF=20  → WIN
+[01:27.295] Anim: 3A  △ P1(1,1)
+[01:27.295] Card destroyed  P1 (1,1) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:27.800] Mode selected P0: ATTACK
+[01:27.803] Attack phase P0: 1 attack(s) available
+[01:27.803] MSG: Player 1: tap a character to attack.
+[01:28.103] AI0 attack decision: (0,0)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down} → (0,4) (dead-end)
+[01:28.455] Revealed: P0 (0,0) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:28.455] Dice rolled: 5
+[01:28.472] MSG: Nothing happens — Dead End.
+[01:31.823] Attack P0(0,0)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → P1(0,4)(empty)  Dice=5  → DEAD_END
+[01:31.823] Anim: 3F  (blank slot)
+[01:32.328] Turn ended  P0  |  Crystals P0=3600 P1=1790
+
+--- Turn 6  |  Player 1  |  Crystals P0=3600 P1=1790 ---
+P0:   [Sunr][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][Gryp]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:32.940] Mode selected P1: ATTACK
+[01:32.945] Attack phase P1: 2 attack(s) available
+[01:32.945] MSG: Player 2: tap a character to attack.
+[01:33.240] AI1 attack decision: (3,2)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down} → (0,0) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:33.591] Revealed: P1 (3,2) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:33.591] Dice rolled: 3
+[01:33.596] MSG: Mad Raccoon wins!
+[01:38.251] Crystals: P0 3600 → 3300 (-300)  [battle]
+[01:39.655] Attack P1(3,2)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P0(0,0)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}  Dice=3  ATK=30 vs DEF=25  → WIN
+[01:39.655] Anim: 3A  △ P0(0,0)
+[01:39.655] Card destroyed  P0 (0,0) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:42.163] Turn ended  P1  |  Crystals P0=3300 P1=1790
+
+--- Turn 7  |  Player 0  |  Crystals P0=3300 P1=1790 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][Gryp]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][Mad ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:44.276] Crystals: P0 3300 → 2800 (-500)  [union]
+[01:44.320] Revealed: P0 (1,4) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[01:44.320] Union summoned P0: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}, "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down}
+[01:44.321] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[01:44.321] MSG: Player 1 summoned [Scarlet Shroom] using: "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}, "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down}
+[01:47.701] Mode selected P0: ATTACK
+[01:47.711] Attack phase P0: 2 attack(s) available
+[01:47.712] MSG: Player 1: tap a character to attack.
+[01:47.994] AI0 attack decision: (1,4)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (4,2) (dead-end)
+[01:48.296] Dice rolled: 3
+[01:48.375] MSG: Nothing happens — Dead End.
+[01:51.716] Attack P0(1,4)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P1(4,2)(empty)  Dice=3  → DEAD_END
+[01:51.716] Anim: 3F  (blank slot)
+[01:54.218] Turn ended  P0  |  Crystals P0=2800 P1=1790
+
+--- Turn 8  |  Player 1  |  Crystals P0=2800 P1=1790 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][Scar]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][Mad ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:54.820] Mode selected P1: ATTACK
+[01:54.825] Attack phase P1: 2 attack(s) available
+[01:54.825] MSG: Player 2: tap a character to attack.
+[01:55.113] AI1 attack decision: (3,2)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | flags:venom} → (4,2) (dead-end)
+[01:55.410] Dice rolled: 1
+[01:55.451] MSG: Nothing happens — Dead End.
+[01:58.819] Attack P1(3,2)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | flags:venom} → P0(4,2)(empty)  Dice=1  → DEAD_END
+[01:58.819] Anim: 3F  (blank slot)
+[01:59.304] Mode selected P1: ATTACK
+[01:59.309] Attack phase P1: 1 attack(s) available
+[01:59.309] MSG: Player 2: tap a character to attack.
+[01:59.602] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (0,2) (dead-end)
+[01:59.943] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:59.943] Dice rolled: 5
+[01:59.954] MSG: Nothing happens — Dead End.
+[02:03.327] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(0,2)(empty)  Dice=5  → DEAD_END
+[02:03.327] Anim: 3F  (blank slot)
+[02:03.838] Turn ended  P1  |  Crystals P0=2800 P1=1790
+
+--- Turn 9  |  Player 0  |  Crystals P0=2800 P1=1790 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][Scar]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Chao][  — ][  ? ]
+      [  — ][  — ][Mad ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:04.444] Mode selected P0: ATTACK
+[02:04.450] Attack phase P0: 2 attack(s) available
+[02:04.452] MSG: Player 1: tap a character to attack.
+[02:04.748] AI0 attack decision: (1,4)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:05.056] Dice rolled: 3
+[02:05.095] MSG: Both cards are destroyed!
+[02:09.657] Crystals: P1 1790 → 1690 (-100)  [battle]
+[02:11.055] Attack P0(1,4)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=3  ATK=0 vs DEF=0  → TIE
+[02:11.055] Anim: 3C  △ P0(1,4) + △ P1(2,2)
+[02:11.055] Card destroyed  P0 (1,4) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[02:11.055] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:11.554] Mode selected P0: ATTACK
+[02:11.559] Attack phase P0: 1 attack(s) available
+[02:11.560] MSG: Player 1: tap a character to attack.
+[02:11.847] AI0 attack decision: (1,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | face-down} → (3,2) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | flags:venom}
+[02:12.189] Revealed: P0 (1,0) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[02:12.189] Dice rolled: 5
+[02:12.192] MSG: Pyromancer wins!
+[02:17.850] Crystals: P1 1690 → 1430 (-260)  [battle]
+[02:19.253] Attack P0(1,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P1(3,2)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | flags:venom}  Dice=5  ATK=110 vs DEF=15  → WIN
+[02:19.253] Reckoning overlay: P0 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} +ATK 30
+[02:19.253] Anim: 3A  △ P1(3,2)
+[02:19.253] Card destroyed  P1 (3,2) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | flags:venom}
+[02:19.750] Turn ended  P0  |  Crystals P0=2800 P1=1430
+
+--- Turn 10  |  Player 1  |  Crystals P0=2800 P1=1430 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [Pyro][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:20.353] Mode selected P1: ATTACK
+[02:20.357] Attack phase P1: 2 attack(s) available
+[02:20.357] MSG: Player 2: tap a character to attack.
+[02:20.651] AI1 attack decision: (3,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | face-down} → (1,0) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[02:20.994] Revealed: P1 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[02:20.994] Dice rolled: 1
+[02:20.997] MSG: Dark Blob wins!
+[02:25.651] Crystals: P0 2800 → 1900 (-900)  [battle]
+[02:27.053] Attack P1(3,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} → P0(1,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=1  ATK=20 vs DEF=0  → WIN
+[02:27.053] Anim: 3A  △ P0(1,0)
+[02:27.053] Card destroyed  P0 (1,0) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[02:27.554] Turn ended  P1  |  Crystals P0=1900 P1=1430
+
+--- Turn 11  |  Player 0  |  Crystals P0=1900 P1=1430 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][Dark][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:28.164] Mode selected P0: ATTACK
+[02:28.168] Attack phase P0: 2 attack(s) available
+[02:28.168] MSG: Player 1: tap a character to attack.
+[02:28.469] AI0 attack decision: (4,1)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down} → (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[02:28.811] Revealed: P0 (4,1) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[02:28.811] Dice rolled: 1
+[02:28.815] MSG: Both cards are destroyed!
+[02:33.395] Crystals: P0 1900 → 1100 (-800)  [battle]
+[02:34.785] Crystals: P1 1430 → 930 (-500)  [battle]
+[02:36.176] Attack P0(4,1)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} → P1(3,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}  Dice=1  ATK=50 vs DEF=50  → TIE
+[02:36.176] Anim: 3C  △ P0(4,1) + △ P1(3,3)
+[02:36.176] Card destroyed  P0 (4,1) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[02:36.176] Card destroyed  P1 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+
+=== GAME OVER ===
+[02:36.178] AI Player 0 wins
+[02:36.178] Reason: all_destroyed
+[02:36.178] Final crystals — P0: 1100  P1: 930  |  Turns: 11
+[02:36.178] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_wifi_router_funeral_2026-05-31_19-57-24_097.txt

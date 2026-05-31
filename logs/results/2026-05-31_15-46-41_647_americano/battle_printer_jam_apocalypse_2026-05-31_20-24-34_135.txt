@@ -1,0 +1,346 @@
+=== Battle of Printer Jam Apocalypse ===
+Battle started: 2026-05-31 20:24:34.135
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Release Mutagen
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Radar, Great Diplomacy
+P1 Tech hand: Great Diplomacy, Resurrection, Prayer
+P0:   [C:Leop][C:Dark][C:Moon][C:Choi][C:Skel]
+      [  — ][  — ][  — ][  — ][T:Curs]
+      [T:Flam][  — ][C:Ox P][  — ][C:Scou]
+      [T:Hard][  — ][  — ][  — ][  — ]
+      [C:Jira][T:Expl][T:Trap][  — ][C:Sunr]
+P1:   [C:Tomb][  — ][C:Aeri][  — ][C:Pit ]
+      [  — ][C:Scyt][C:Meli][T:Spik][  — ]
+      [C:Moon][  — ][C:Chao][T:Red ][T:Bait]
+      [  — ][C:Blad][  — ][  — ][  — ]
+      [C:Joan][C:Jira][T:Echo][  — ][C:Mind]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:05.359] Mode selected P1: TECH
+[00:05.669] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:07.051] Tech played  P1: "Great Diplomacy"
+[00:08.639] Revealed: P1 (0,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:08.661] Revealed: P1 (0,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:08.687] Revealed: P1 (0,4) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:08.723] Revealed: P1 (1,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:08.745] Revealed: P1 (1,2) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:08.763] Revealed: P1 (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[00:08.783] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:08.800] Revealed: P1 (3,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:08.823] Revealed: P1 (4,0) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[00:08.843] Revealed: P1 (4,1) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[00:08.862] Revealed: P1 (4,4) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:08.865] Tech resolved  P1
+[00:09.577] Mode selected P1: ATTACK
+[00:09.589] Attack phase P1: 2 attack(s) available
+[00:09.589] MSG: Player 2: tap a character to attack.
+[00:09.870] AI1 attack decision: (0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → (1,0) (dead-end)
+[00:10.172] Dice rolled: 4
+[00:10.207] MSG: Nothing happens — Dead End.
+[00:13.582] Attack P1(0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(1,0)(empty)  Dice=4  → DEAD_END
+[00:13.582] Anim: 3F  (blank slot)
+[00:14.085] Mode selected P1: ATTACK
+[00:14.093] Attack phase P1: 1 attack(s) available
+[00:14.093] MSG: Player 2: tap a character to attack.
+[00:14.393] AI1 attack decision: (0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → (0,0) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima | face-down}
+[00:14.730] Revealed: P0 (0,0) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[00:14.730] Dice rolled: 2
+[00:14.735] MSG: Aerial the Battlemage wins!
+[00:19.402] Crystals: P0 5000 → 4550 (-450)  [battle]
+[00:20.805] Attack P1(0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P0(0,0)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}  Dice=2  ATK=50 vs DEF=45  → WIN
+[00:20.805] Anim: 3A  △ P0(0,0)
+[00:20.805] Card destroyed  P0 (0,0) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[00:21.305] Turn ended  P1  |  Crystals P0=4550 P1=4000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4550 P1=4000 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [Tomb][  — ][Aeri][  — ][Pit ]
+      [  — ][Scyt][Meli][  ? ][  — ]
+      [Moon][  — ][Chao][  ? ][  ? ]
+      [  — ][Blad][  — ][  — ][  — ]
+      [Joan][Jira][  ? ][  — ][Mind]
+[00:21.908] Mode selected P0: TECH
+[00:22.217] Crystals: P0 4550 → 3950 (-600)  [tech cost]
+[00:23.604] Tech played  P0: "Radar"
+[00:25.170] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:25.568] AI0 target chosen: (2,1)
+[00:25.570] Revealed: P1 (2,1) (blank slot)
+[00:25.975] AI0 target chosen: (4,2)
+[00:26.006] Revealed: P1 (4,2) "Echo Barrier" {cost 1000}
+[00:26.383] AI0 target chosen: (1,4)
+[00:26.383] Revealed: P1 (1,4) (blank slot)
+[00:26.406] Tech resolved  P0
+[00:27.301] Mode selected P0: ATTACK
+[00:27.314] Attack phase P0: 2 attack(s) available
+[00:27.314] MSG: Player 1: tap a character to attack.
+[00:27.608] AI0 attack decision: (4,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (1,2) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:27.920] Revealed: P0 (4,0) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[00:27.920] Dice rolled: 4
+[00:27.932] MSG: Jirayu the Rebellious Prince wins!
+[00:32.617] Crystals: P1 4000 → 3300 (-700)  [battle]
+[00:32.617] Crystals: P1 3300 → 3600 (+300)  [recovery]
+[00:32.618] MSG: Melissa the Healer: Recovered 300 Crystals!
+[00:32.639] Attack P0(4,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(1,2)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}  Dice=4  ATK=40 vs DEF=25  → WIN
+[00:32.639] Anim: 3A  △ P1(1,2)
+[00:32.639] Card destroyed  P1 (1,2) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:35.141] Turn ended  P0  |  Crystals P0=3950 P1=3600
+
+--- Turn 3  |  Player 1  |  Crystals P0=3950 P1=3600 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [Jira][  ? ][  ? ][  — ][  ? ]
+P1:   [Tomb][  — ][Aeri][  — ][Pit ]
+      [  — ][Scyt][  — ][  ? ][  — ]
+      [Moon][  — ][Chao][  ? ][  ? ]
+      [  — ][Blad][  — ][  — ][  — ]
+      [Joan][Jira][  — ][  — ][Mind]
+[00:35.737] Mode selected P1: TECH
+[00:36.047] Crystals: P1 3600 → 2100 (-1500)  [tech cost]
+[00:37.436] Tech played  P1: "Resurrection"
+[00:38.989] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:39.396] AI1 target chosen: (0,1)
+[00:39.399] Revealed: P1 (0,1) "Melissa the Healer" {Unit ATK0 DEF0 | cost 700 | affinity Divine | base 0/0}
+[00:39.399] MSG: Revived Melissa the Healer at [0,1]!
+[00:39.415] Tech resolved  P1
+[00:40.316] Mode selected P1: ATTACK
+[00:40.331] Attack phase P1: 2 attack(s) available
+[00:40.332] MSG: Player 2: tap a character to attack.
+[00:40.617] AI1 attack decision: (0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → (4,0) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[00:40.925] Dice rolled: 2
+[00:40.937] MSG: Tomb Bandit wins!
+[00:45.626] Crystals: P0 3950 → 3350 (-600)  [battle]
+[00:47.031] Attack P1(0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(4,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}  Dice=2  ATK=75 vs DEF=40  → WIN
+[00:47.031] Anim: 3A  △ P0(4,0)
+[00:47.031] Card destroyed  P0 (4,0) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[00:47.532] Mode selected P1: ATTACK
+[00:47.543] Attack phase P1: 1 attack(s) available
+[00:47.544] MSG: Player 2: tap a character to attack.
+[00:47.828] AI1 attack decision: (0,1)"Melissa the Healer" {Unit ATK0 DEF0 | cost 700 | affinity Divine | base 0/0} → (0,3) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}
+[00:48.173] Revealed: P0 (0,3) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:48.174] Dice rolled: 1
+[00:52.955] Crystals: P1 2100 → 1400 (-700)  [battle]
+[00:54.364] Attack P1(0,1)"Melissa the Healer" {Unit ATK0 DEF0 | cost 700 | affinity Divine | base 0/0} → P0(0,3)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}  Dice=1  ATK=0 vs DEF=20  → LOSE
+[00:54.364] Anim: 3B  △ P1(0,1)
+[00:54.364] Card destroyed  P1 (0,1) "Melissa the Healer" {Unit ATK0 DEF0 | cost 700 | affinity Divine | base 0/0}
+[00:54.862] Turn ended  P1  |  Crystals P0=3350 P1=1400
+
+--- Turn 4  |  Player 0  |  Crystals P0=3350 P1=1400 ---
+P0:   [  — ][  ? ][  ? ][Choi][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [Tomb][  — ][Aeri][  — ][Pit ]
+      [  — ][Scyt][  — ][  ? ][  — ]
+      [Moon][  — ][Chao][  ? ][  ? ]
+      [  — ][Blad][  — ][  — ][  — ]
+      [Joan][Jira][  — ][  — ][Mind]
+[00:55.460] Mode selected P0: TECH
+[00:55.767] Crystals: P0 3350 → 2350 (-1000)  [tech cost]
+[00:57.159] Tech played  P0: "Great Diplomacy"
+[00:58.737] Revealed: P0 (0,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:58.763] Revealed: P0 (0,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:58.783] Revealed: P0 (0,4) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:58.802] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:58.824] Revealed: P0 (2,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:58.846] Revealed: P0 (4,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[00:58.849] Tech resolved  P0
+[00:59.590] Mode selected P0: ATTACK
+[00:59.610] Attack phase P0: 2 attack(s) available
+[00:59.610] MSG: Player 1: tap a character to attack.
+[00:59.901] AI0 attack decision: (2,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → (4,1) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:00.200] Dice rolled: 5
+[01:00.215] MSG: Both cards are destroyed!
+[01:04.813] Crystals: P0 2350 → 1650 (-700)  [battle]
+[01:06.205] Crystals: P1 1400 → 800 (-600)  [battle]
+[01:07.604] Attack P0(2,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(4,1)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}  Dice=5  ATK=40 vs DEF=40  → TIE
+[01:07.604] Anim: 3C  △ P0(2,4) + △ P1(4,1)
+[01:07.604] Card destroyed  P0 (2,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:07.604] Card destroyed  P1 (4,1) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:08.089] Mode selected P0: ATTACK
+[01:08.105] Attack phase P0: 1 attack(s) available
+[01:08.105] MSG: Player 1: tap a character to attack.
+[01:08.383] AI0 attack decision: (0,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → (4,0) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[01:08.683] Dice rolled: 1
+[01:08.694] MSG: Moon Tribe Twin Blader wins!
+[01:13.375] Crystals: P1 800 → 520 (-280)  [battle]
+[01:14.785] Attack P0(0,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(4,0)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}  Dice=1  ATK=30 vs DEF=5  → WIN
+[01:14.785] Anim: 3A  △ P1(4,0)
+[01:14.785] Card destroyed  P1 (4,0) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[01:14.823] Coin flip: Tails
+[01:17.555] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[01:18.066] Turn ended  P0  |  Crystals P0=1650 P1=520
+
+--- Turn 5  |  Player 1  |  Crystals P0=1650 P1=520 ---
+P0:   [  — ][Dark][Moon][Choi][Skel]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Ox P][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][Sunr]
+P1:   [Tomb][  — ][Aeri][  — ][Pit ]
+      [  — ][Scyt][  — ][  ? ][  — ]
+      [Moon][  — ][Chao][  ? ][  ? ]
+      [  — ][Blad][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Mind]
+[01:18.685] Mode selected P1: ATTACK
+[01:18.690] Attack phase P1: 2 attack(s) available
+[01:18.690] MSG: Player 2: tap a character to attack.
+[01:18.975] AI1 attack decision: (0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:19.284] Dice rolled: 1
+[01:19.296] MSG: Tomb Bandit wins!
+[01:23.986] Crystals: P0 1650 → 1230 (-420)  [battle]
+[01:25.395] Attack P1(0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=1  ATK=75 vs DEF=35  → WIN
+[01:25.395] Anim: 3A  △ P0(2,2)
+[01:25.395] Card destroyed  P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:25.889] Mode selected P1: ATTACK
+[01:25.902] Attack phase P1: 1 attack(s) available
+[01:25.902] MSG: Player 2: tap a character to attack.
+[01:26.187] AI1 attack decision: (0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → (0,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:26.496] Dice rolled: 5
+[01:26.514] MSG: Aerial the Battlemage wins!
+[01:31.200] Crystals: P0 1230 → 930 (-300)  [battle]
+[01:32.609] Attack P1(0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P0(0,1)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}  Dice=5  ATK=50 vs DEF=25  → WIN
+[01:32.609] Anim: 3A  △ P0(0,1)
+[01:32.609] Card destroyed  P0 (0,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:33.107] Turn ended  P1  |  Crystals P0=930 P1=520
+
+--- Turn 6  |  Player 0  |  Crystals P0=930 P1=520 ---
+P0:   [  — ][  — ][Moon][Choi][Skel]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][Sunr]
+P1:   [Tomb][  — ][Aeri][  — ][Pit ]
+      [  — ][Scyt][  — ][  ? ][  — ]
+      [Moon][  — ][Chao][  ? ][  ? ]
+      [  — ][Blad][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Mind]
+[01:33.709] Mode selected P0: ATTACK
+[01:33.723] Attack phase P0: 2 attack(s) available
+[01:33.723] MSG: Player 1: tap a character to attack.
+[01:34.013] AI0 attack decision: (0,4)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:34.322] Dice rolled: 4
+[01:34.337] MSG: Both cards are destroyed!
+[01:38.939] Crystals: P0 930 → 780 (-150)  [battle]
+[01:40.330] Crystals: P1 520 → 320 (-200)  [battle]
+[01:41.731] Attack P0(0,4)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P1(2,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=4  ATK=20 vs DEF=20  → TIE
+[01:41.731] Anim: 3C  △ P0(0,4) + △ P1(2,0)
+[01:41.731] Card destroyed  P0 (0,4) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:41.731] Card destroyed  P1 (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:42.223] Mode selected P0: ATTACK
+[01:42.233] Attack phase P0: 1 attack(s) available
+[01:42.234] MSG: Player 1: tap a character to attack.
+[01:42.530] AI0 attack decision: (0,3)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:42.837] Dice rolled: 4
+[01:42.849] MSG: Choir Lady Anna wins!
+[01:47.539] Crystals: P1 320 → 220 (-100)  [battle]
+[01:48.949] Attack P0(0,3)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=4  ATK=20 vs DEF=0  → WIN
+[01:48.949] Anim: 3A  △ P1(2,2)
+[01:48.949] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:49.447] Turn ended  P0  |  Crystals P0=780 P1=220
+
+--- Turn 7  |  Player 1  |  Crystals P0=780 P1=220 ---
+P0:   [  — ][  — ][Moon][Choi][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][Sunr]
+P1:   [Tomb][  — ][Aeri][  — ][Pit ]
+      [  — ][Scyt][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Blad][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Mind]
+[01:50.056] Mode selected P1: ATTACK
+[01:50.066] Attack phase P1: 2 attack(s) available
+[01:50.066] MSG: Player 2: tap a character to attack.
+[01:50.353] AI1 attack decision: (0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → (4,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:50.662] Dice rolled: 2
+[01:50.673] MSG: Tomb Bandit wins!
+[01:55.362] Crystals: P0 780 → 480 (-300)  [battle]
+[01:56.766] Attack P1(0,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(4,4)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}  Dice=2  ATK=75 vs DEF=25  → WIN
+[01:56.766] Anim: 3A  △ P0(4,4)
+[01:56.766] Card destroyed  P0 (4,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:57.266] Mode selected P1: ATTACK
+[01:57.275] Attack phase P1: 1 attack(s) available
+[01:57.276] MSG: Player 2: tap a character to attack.
+[01:57.567] AI1 attack decision: (0,4)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → (0,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:57.874] Dice rolled: 4
+[01:57.884] MSG: Pit Lord wins!
+[02:02.576] Crystals: P0 480 → 180 (-300)  [battle]
+[02:03.991] Attack P1(0,4)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P0(0,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=4  ATK=120 vs DEF=20  → WIN
+[02:03.991] Anim: 3A  △ P0(0,2)
+[02:03.991] Card destroyed  P0 (0,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:04.480] Turn ended  P1  |  Crystals P0=180 P1=220
+
+--- Turn 8  |  Player 0  |  Crystals P0=180 P1=220 ---
+P0:   [  — ][  — ][  — ][Choi][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [Tomb][  — ][Aeri][  — ][Pit ]
+      [  — ][Scyt][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Blad][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Mind]
+[02:05.092] Mode selected P0: ATTACK
+[02:05.103] Attack phase P0: 2 attack(s) available
+[02:05.103] MSG: Player 1: tap a character to attack.
+[02:05.391] AI0 attack decision: (0,3)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → (1,4) (dead-end)
+[02:05.701] Dice rolled: 4
+[02:05.731] MSG: Nothing happens — Dead End.
+[02:09.122] Attack P0(0,3)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → P1(1,4)(empty)  Dice=4  → DEAD_END
+[02:09.122] Anim: 3F  (blank slot)
+[02:09.622] Turn ended  P0  |  Crystals P0=180 P1=220
+
+--- Turn 9  |  Player 1  |  Crystals P0=180 P1=220 ---
+P0:   [  — ][  — ][  — ][Choi][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [Tomb][  — ][Aeri][  — ][Pit ]
+      [  — ][Scyt][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Blad][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Mind]
+[02:10.234] Mode selected P1: ATTACK
+[02:10.246] Attack phase P1: 2 attack(s) available
+[02:10.247] MSG: Player 2: tap a character to attack.
+[02:10.532] AI1 attack decision: (0,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → (0,3) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[02:10.842] Dice rolled: 4
+[02:10.854] MSG: Aerial the Battlemage wins!
+[02:15.544] Crystals: P0 180 → 0 (-180)  [battle]
+
+=== GAME OVER ===
+[02:15.568] AI Player 1 wins
+[02:15.568] Reason: crystals
+[02:15.568] Final crystals — P0: 0  P1: 220  |  Turns: 9
+[02:15.568] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_printer_jam_apocalypse_2026-05-31_20-24-34_135.txt

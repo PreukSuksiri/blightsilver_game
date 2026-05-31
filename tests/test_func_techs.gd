@@ -41,8 +41,8 @@ func _run_manual_tests() -> void:
 	_manual("TC-FUNC-Tease-001")           # opponent reveals own square
 	_manual("TC-FUNC-Tease-002")           # playable at 0 crystals
 
-	# Great Diplomacy — REVEAL_ALL_OWN_CHARACTERS
-	_manual("TC-FUNC-Great-Diplomacy-001") # all own characters become face-up
+	# Great Diplomacy — REVEAL_ALL_OWN_CHARACTERS (count=5)
+	_manual("TC-FUNC-Great-Diplomacy-001") # select up to 5 own units to reveal
 
 	# Radar — REVEAL_OPPONENT_SQUARE (count=3)
 	_manual("TC-FUNC-Radar-001")           # reveal 3 opponent squares; crystals -= 600

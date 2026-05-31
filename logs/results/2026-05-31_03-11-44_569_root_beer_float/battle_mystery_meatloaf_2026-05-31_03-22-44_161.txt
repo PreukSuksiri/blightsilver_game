@@ -1,0 +1,483 @@
+=== Battle of Mystery Meatloaf ===
+Battle started: 2026-05-31 03:22:44.161
+Game Session of Root Beer Float (started 2026-05-31 03:11:44.569)
+=== AI vs AI Match ===
+Batch iteration: 5 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Siege Cannon, Spy, Accident
+P1 Tech hand: Siege Cannon, Prayer, Release Mutagen
+P0:   [C:Need][C:Mad ][T:Pepp][T:Curs][T:Expl]
+      [  — ][C:Soni][T:Bunk][C:Moon][  — ]
+      [  — ][C:Scou][C:Nigh][C:Leop][  — ]
+      [  — ][C:Chao][T:Foul][C:Saw ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [C:Stin][  — ][  — ][  — ][C:Witc]
+      [C:Armo][C:Swar][  — ][  — ][C:Jira]
+      [C:Moon][C:Leop][C:Scar][C:Scyt][T:Snar]
+      [C:Elec][  — ][T:Self][T:Trap][C:Moon]
+      [T:Bait][  — ][  — ][  — ][C:Mind]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.353] Mode selected P0: TECH
+[00:05.662] Tech played  P0: "Spy"
+[00:07.199] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.598] AI0 target chosen: (1,2)
+[00:07.599] Revealed: P1 (1,2) (blank slot)
+[00:07.603] Tech resolved  P0
+[00:10.507] Crystals: P0 5000 → 4950 (-50)  [skip tax]
+[00:10.507] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:11.892] Turn ended  P0  |  Crystals P0=4950 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4950 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:12.495] Mode selected P1: ATTACK
+[00:12.499] Attack phase P1: 2 attack(s) available
+[00:12.499] MSG: Player 2: tap a character to attack.
+[00:12.794] AI1 attack decision: (3,0)"Electrogazer" [ATK=80] → (0,4) "Explosive Barrels" [DEF=0]
+[00:13.122] Revealed: P1 (3,0) "Electrogazer"
+[00:13.154] Revealed: P0 (0,4) "Explosive Barrels"
+[00:13.154] Dice rolled: 4
+[00:13.416] MSG: Trap triggered: Explosive Barrels!
+[00:13.416] MSG: Electrogazer negates zero-cost traps!
+[00:17.490] Card destroyed  P0 (0,4) "Explosive Barrels"
+[00:17.493] Attack P1(3,0)"Electrogazer" → P0(0,4)"Explosive Barrels"  Dice=4  ATK=0 vs DEF=0  → TIE
+[00:17.493] Anim: exchange  (no destruction)
+[00:20.002] Turn ended  P1  |  Crystals P0=4950 P1=5000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4950 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [Elec][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:20.605] Mode selected P0: TECH
+[00:20.905] Crystals: P0 4950 → 3950 (-1000)  [tech cost]
+[00:22.284] Tech played  P0: "Accident"
+[00:23.820] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:24.219] AI0 target chosen: (3,0)
+[00:24.224] Card destroyed  P1 (3,0) "Electrogazer"
+[00:24.227] Tech resolved  P0
+[00:27.128] Crystals: P0 3950 → 3850 (-100)  [skip tax]
+[00:27.128] MSG: Player 1 skips without attacking — 100◆ tax (skip #2 this duel)
+[00:28.504] Turn ended  P0  |  Crystals P0=3850 P1=5000
+
+--- Turn 4  |  Player 1  |  Crystals P0=3850 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:29.121] Mode selected P1: ATTACK
+[00:29.124] Attack phase P1: 2 attack(s) available
+[00:29.124] MSG: Player 2: tap a character to attack.
+[00:29.419] AI1 attack decision: (2,2)"Scarlet Mutant" [ATK=35] → (1,4) "(dead-end)"
+[00:29.782] Revealed: P1 (2,2) "Scarlet Mutant"
+[00:29.782] Dice rolled: 2
+[00:29.793] MSG: Nothing happens — Dead End.
+[00:33.120] Dead-end placed  P0 (1,4)
+[00:33.123] Attack P1(2,2)"Scarlet Mutant" → P0(1,4)(empty)  Dice=2  → DEAD_END
+[00:33.123] Anim: 3F  (blank slot)
+[00:33.629] Mode selected P1: ATTACK
+[00:33.632] Attack phase P1: 1 attack(s) available
+[00:33.633] MSG: Player 2: tap a character to attack.
+[00:33.935] AI1 attack decision: (2,1)"Leopard Jailer" [ATK=30] → (2,4) "(dead-end)"
+[00:34.263] Revealed: P1 (2,1) "Leopard Jailer"
+[00:34.263] Dice rolled: 3
+[00:34.273] MSG: Nothing happens — Dead End.
+[00:37.620] Dead-end placed  P0 (2,4)
+[00:37.624] Attack P1(2,1)"Leopard Jailer" → P0(2,4)(empty)  Dice=3  → DEAD_END
+[00:37.624] Anim: 3F  (blank slot)
+[00:38.130] Turn ended  P1  |  Crystals P0=3850 P1=5000
+
+--- Turn 5  |  Player 0  |  Crystals P0=3850 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Leop][Scar][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:38.728] Mode selected P0: TECH
+[00:39.028] Crystals: P0 3850 → 2850 (-1000)  [tech cost]
+[00:40.413] Tech played  P0: "Siege Cannon"
+[00:41.951] MSG: Siege Cannon active!
+[00:41.954] Tech resolved  P0
+[00:42.854] Mode selected P0: ATTACK
+[00:42.862] Attack phase P0: 2 attack(s) available
+[00:42.863] MSG: Player 1: tap a character to attack.
+[00:43.152] AI0 attack decision: (3,3)"Saw Shark" [ATK=25] → (1,2) "(dead-end)"
+[00:43.507] Revealed: P0 (3,3) "Saw Shark"
+[00:43.507] Dice rolled: 5
+[00:43.521] MSG: Nothing happens — Dead End.
+[00:46.861] Dead-end placed  P1 (1,2)
+[00:46.865] Attack P0(3,3)"Saw Shark" → P1(1,2)(empty)  Dice=5  → DEAD_END
+[00:46.865] Anim: 3F  (blank slot)
+[00:47.361] Mode selected P0: ATTACK
+[00:47.363] Attack phase P0: 1 attack(s) available
+[00:47.363] MSG: Player 1: tap a character to attack.
+[00:47.660] AI0 attack decision: (2,3)"Leopard Jailer" [ATK=30] → (4,2) "(dead-end)"
+[00:47.964] Revealed: P0 (2,3) "Leopard Jailer"
+[00:47.964] Dice rolled: 2
+[00:47.983] MSG: Nothing happens — Dead End.
+[00:51.354] Dead-end placed  P1 (4,2)
+[00:51.358] Attack P0(2,3)"Leopard Jailer" → P1(4,2)(empty)  Dice=2  → DEAD_END
+[00:51.358] Anim: 3F  (blank slot)
+[00:51.857] Turn ended  P0  |  Crystals P0=2850 P1=5000
+
+--- Turn 6  |  Player 1  |  Crystals P0=2850 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][Leop][  — ]
+      [  — ][  ? ][  ? ][Saw ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Leop][Scar][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:52.461] Mode selected P1: TECH
+[00:52.770] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:54.156] Tech played  P1: "Siege Cannon"
+[00:55.694] MSG: Siege Cannon active!
+[00:55.699] Tech resolved  P1
+[00:56.594] Mode selected P1: ATTACK
+[00:56.603] Attack phase P1: 2 attack(s) available
+[00:56.603] MSG: Player 2: tap a character to attack.
+[00:56.894] AI1 attack decision: (2,2)"Scarlet Mutant" [ATK=35] → (3,3) "Saw Shark" [DEF=10]
+[00:57.194] Dice rolled: 1
+[00:57.205] MSG: Scarlet Mutant wins!
+[01:01.878] Crystals: P0 2850 → 2570 (-280)  [battle]
+[01:03.270] Card destroyed  P0 (3,3) "Saw Shark"
+[01:03.274] Attack P1(2,2)"Scarlet Mutant" → P0(3,3)"Saw Shark"  Dice=1  ATK=35 vs DEF=10  → WIN
+[01:03.274] Anim: 3A  △ P0(3,3)
+[01:03.769] Mode selected P1: ATTACK
+[01:03.777] Attack phase P1: 1 attack(s) available
+[01:03.778] MSG: Player 2: tap a character to attack.
+[01:04.069] AI1 attack decision: (2,1)"Leopard Jailer" [ATK=30] → (3,4) "(dead-end)"
+[01:04.370] Dice rolled: 3
+[01:04.395] MSG: Nothing happens — Dead End.
+[01:07.762] Dead-end placed  P0 (3,4)
+[01:07.765] Attack P1(2,1)"Leopard Jailer" → P0(3,4)(empty)  Dice=3  → DEAD_END
+[01:07.765] Anim: 3F  (blank slot)
+[01:08.261] Turn ended  P1  |  Crystals P0=2570 P1=4000
+
+--- Turn 7  |  Player 0  |  Crystals P0=2570 P1=4000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][Leop][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Leop][Scar][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:10.344] Union summoned P0: [Scarlet Shroom] from Needle Porcupine, Mad Raccoon
+[01:10.344] Crystals: P0 2570 → 2070 (-500)  [union]
+[01:10.401] Revealed: P0 (0,0) "Scarlet Shroom"
+[01:10.401] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[01:10.403] MSG: Player 1 summoned [Scarlet Shroom] using: Needle Porcupine, Mad Raccoon
+[01:13.786] Mode selected P0: ATTACK
+[01:13.793] Attack phase P0: 2 attack(s) available
+[01:13.793] MSG: Player 1: tap a character to attack.
+[01:14.086] AI0 attack decision: (2,3)"Leopard Jailer" [ATK=30] → (1,1) "Swarmcaller" [DEF=45]
+[01:14.426] Revealed: P1 (1,1) "Swarmcaller"
+[01:14.426] Dice rolled: 4
+[01:19.200] Crystals: P0 2070 → 1620 (-450)  [battle]
+[01:20.592] Card destroyed  P0 (2,3) "Leopard Jailer"
+[01:20.593] MSG: Swarmcaller locked — cannot attack until end of next turn.
+[01:20.604] Attack P0(2,3)"Leopard Jailer" → P1(1,1)"Swarmcaller"  Dice=4  ATK=30 vs DEF=45  → LOSE
+[01:20.604] Anim: 3B  △ P0(2,3)
+[01:20.605] Crystals: P1 4000 → 3050 (-950)  [card lost]
+[01:20.607] Card destroyed  P1 (1,1) "Swarmcaller"
+[01:21.972] MSG: Siege Cannon: Defender destroyed!
+[01:22.474] Mode selected P0: ATTACK
+[01:22.480] Attack phase P0: 1 attack(s) available
+[01:22.480] MSG: Player 1: tap a character to attack.
+[01:22.781] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (3,2) "Self-destruct" [DEF=0]
+[01:23.127] Revealed: P1 (3,2) "Self-destruct"
+[01:23.128] Dice rolled: 3
+[01:23.458] MSG: Trap triggered: Self-destruct!
+[01:27.489] Card destroyed  P1 (3,2) "Self-destruct"
+[01:27.498] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[01:27.499] Trap: "Self-destruct" triggered  P0(0,0)→P1(3,2)
+[01:27.499] Anim: 3D  (attacker survives)
+[01:27.889] AI1 target chosen: (2,2)
+[01:27.890] MSG: Scarlet Mutant: +10 ATK until end of next turn, then destroyed.
+[01:27.994] Turn ended  P0  |  Crystals P0=1620 P1=3050
+
+--- Turn 8  |  Player 1  |  Crystals P0=1620 P1=3050 ---
+P0:   [Scar][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Leop][Scar][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:28.590] Mode selected P1: TECH
+[01:28.903] Tech played  P1: "Release Mutagen"
+[01:30.440] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[01:30.840] AI1 target chosen: (2,2)
+[01:30.850] Tech resolved  P1
+[01:31.741] Mode selected P1: ATTACK
+[01:31.748] Attack phase P1: 2 attack(s) available
+[01:31.749] MSG: Player 2: tap a character to attack.
+[01:32.040] AI1 attack decision: (2,2)"Scarlet Mutant" [ATK=45] → (0,1) "(dead-end)"
+[01:32.340] Dice rolled: 3
+[01:32.371] MSG: Nothing happens — Dead End.
+[01:35.742] Dead-end placed  P0 (0,1)
+[01:35.750] Attack P1(2,2)"Scarlet Mutant" → P0(0,1)(empty)  Dice=3  → DEAD_END
+[01:35.750] Anim: 3F  (blank slot)
+[01:36.240] Mode selected P1: ATTACK
+[01:36.248] Attack phase P1: 1 attack(s) available
+[01:36.248] MSG: Player 2: tap a character to attack.
+[01:36.548] AI1 attack decision: (2,1)"Leopard Jailer" [ATK=30] → (4,4) "(dead-end)"
+[01:36.849] Dice rolled: 3
+[01:36.872] MSG: Nothing happens — Dead End.
+[01:40.233] Dead-end placed  P0 (4,4)
+[01:40.238] Attack P1(2,1)"Leopard Jailer" → P0(4,4)(empty)  Dice=3  → DEAD_END
+[01:40.238] Anim: 3F  (blank slot)
+[01:40.740] MSG: Scarlet Mutant is destroyed by self-destruct trap!
+[01:40.741] Crystals: P1 3050 → 2700 (-350)  [card lost]
+[01:40.743] Card destroyed  P1 (2,2) "Scarlet Mutant"
+[01:40.746] Turn ended  P1  |  Crystals P0=1620 P1=2700
+
+--- Turn 9  |  Player 0  |  Crystals P0=1620 P1=2700 ---
+P0:   [Scar][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Leop][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:41.341] Mode selected P0: ATTACK
+[01:41.347] Attack phase P0: 2 attack(s) available
+[01:41.347] MSG: Player 1: tap a character to attack.
+[01:41.640] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (4,0) "Bait" [DEF=0]
+[01:41.972] Revealed: P1 (4,0) "Bait"
+[01:41.973] Dice rolled: 5
+[01:42.296] MSG: Trap triggered: Bait!
+[01:46.342] Card destroyed  P1 (4,0) "Bait"
+[01:46.351] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[01:46.355] Trap: "Bait" triggered  P0(0,0)→P1(4,0)
+[01:46.355] Anim: 3D  (attacker survives)
+[01:46.731] AI1 target chosen: (4,4)
+[01:46.779] Revealed: P1 (4,4) "Mind Flayer"
+[01:46.779] MSG: Bait: Defender revealed Mind Flayer.
+[01:46.849] Mode selected P0: ATTACK
+[01:46.852] Attack phase P0: 1 attack(s) available
+[01:46.852] MSG: Player 1: tap a character to attack.
+[01:47.151] AI0 attack decision: (2,1)"Scout Probe" [ATK=40] → (2,0) "Moon Tribe Marksman" [DEF=25]
+[01:47.488] Revealed: P0 (2,1) "Scout Probe"
+[01:47.510] Revealed: P1 (2,0) "Moon Tribe Marksman"
+[01:47.510] Dice rolled: 4
+[01:47.513] MSG: Scout Probe wins!
+[01:52.128] Crystals: P1 2700 → 2400 (-300)  [battle]
+[01:53.523] Card destroyed  P1 (2,0) "Moon Tribe Marksman"
+[01:53.529] Attack P0(2,1)"Scout Probe" → P1(2,0)"Moon Tribe Marksman"  Dice=4  ATK=40 vs DEF=25  → WIN
+[01:53.529] Anim: 3A  △ P1(2,0)
+[01:53.530] MSG: No valid target — effect cancelled.
+[01:53.537] Tech resolved  P0
+[01:53.537] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:54.033] Turn ended  P0  |  Crystals P0=1620 P1=2400
+
+--- Turn 10  |  Player 1  |  Crystals P0=1620 P1=2400 ---
+P0:   [Scar][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Scou][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Leop][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][Mind]
+[01:54.437] Mode selected P1: ATTACK
+[01:54.446] Attack phase P1: 2 attack(s) available
+[01:54.447] MSG: Player 2: tap a character to attack.
+[01:54.727] AI0 attack decision: (2,1)"Scout Probe" [ATK=40] → (3,4) "Moon Tribe Twin Blader" [DEF=20]
+[01:54.927] AI1 attack decision: (4,4)"Mind Flayer" [ATK=100] → (2,1) "Scout Probe" [DEF=50]
+[01:55.028] Dice rolled: 2
+[01:55.062] MSG: Nothing happens — Dead End.
+[01:58.429] Dead-end placed  P0 (3,4)
+[01:58.434] Attack P1(2,1)"Leopard Jailer" → P0(3,4)(empty)  Dice=2  → DEAD_END
+[01:58.434] Anim: 3F  (blank slot)
+[01:58.927] Mode selected P1: ATTACK
+[01:58.933] Attack phase P1: 1 attack(s) available
+[01:58.933] MSG: Player 2: tap a character to attack.
+[01:59.227] AI1 attack decision: (4,4)"Mind Flayer" [ATK=100] → (2,1) "Scout Probe" [DEF=50]
+[01:59.527] Dice rolled: 4
+[01:59.540] MSG: Mind Flayer wins!
+[02:04.202] Crystals: P0 1620 → 920 (-700)  [battle]
+[02:05.595] Card destroyed  P0 (2,1) "Scout Probe"
+[02:05.599] Attack P1(4,4)"Mind Flayer" → P0(2,1)"Scout Probe"  Dice=4  ATK=100 vs DEF=50  → WIN
+[02:05.599] Anim: 3A  △ P0(2,1)
+[02:06.099] Turn ended  P1  |  Crystals P0=920 P1=2400
+
+--- Turn 11  |  Player 0  |  Crystals P0=920 P1=2400 ---
+P0:   [Scar][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Leop][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][Mind]
+[02:06.711] Mode selected P0: ATTACK
+[02:06.720] Attack phase P0: 2 attack(s) available
+[02:06.720] MSG: Player 1: tap a character to attack.
+[02:07.011] AI0 attack decision: (0,0)"Scarlet Shroom" [ATK=0] → (3,1) "(dead-end)"
+[02:07.311] Dice rolled: 1
+[02:07.375] MSG: Nothing happens — Dead End.
+[02:10.700] Dead-end placed  P1 (3,1)
+[02:10.704] Attack P0(0,0)"Scarlet Shroom" → P1(3,1)(empty)  Dice=1  → DEAD_END
+[02:10.704] Anim: 3F  (blank slot)
+[02:11.190] Mode selected P0: ATTACK
+[02:11.196] Attack phase P0: 1 attack(s) available
+[02:11.196] MSG: Player 1: tap a character to attack.
+[02:11.489] AI0 attack decision: (1,3)"Moon Rover" [ATK=15] → (3,4) "Moon Tribe Twin Blader" [DEF=20]
+[02:11.836] Revealed: P0 (1,3) "Moon Rover"
+[02:11.871] Revealed: P1 (3,4) "Moon Tribe Twin Blader"
+[02:11.871] Dice rolled: 5
+[02:16.590] Crystals: P0 920 → 720 (-200)  [battle]
+[02:17.984] Card destroyed  P0 (1,3) "Moon Rover"
+[02:17.989] Attack P0(1,3)"Moon Rover" → P1(3,4)"Moon Tribe Twin Blader"  Dice=5  ATK=15 vs DEF=20  → LOSE
+[02:17.989] Anim: 3B  △ P0(1,3)
+[02:18.485] Turn ended  P0  |  Crystals P0=720 P1=2400
+
+--- Turn 12  |  Player 1  |  Crystals P0=720 P1=2400 ---
+P0:   [Scar][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Leop][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][Moon]
+      [  — ][  — ][  — ][  — ][Mind]
+[02:19.105] Mode selected P1: ATTACK
+[02:19.110] Attack phase P1: 2 attack(s) available
+[02:19.110] MSG: Player 2: tap a character to attack.
+[02:19.390] AI1 attack decision: (4,4)"Mind Flayer" [ATK=100] → (0,0) "Scarlet Shroom" [DEF=80]
+[02:19.690] Dice rolled: 2
+[02:19.736] MSG: Mind Flayer wins!
+[02:24.378] Card destroyed  P0 (0,0) "Scarlet Shroom"
+[02:24.384] Attack P1(4,4)"Mind Flayer" → P0(0,0)"Scarlet Shroom"  Dice=2  ATK=100 vs DEF=80  → WIN
+[02:24.384] Anim: 3A  △ P0(0,0)
+[02:24.874] Mode selected P1: ATTACK
+[02:24.878] Attack phase P1: 1 attack(s) available
+[02:24.878] MSG: Player 2: tap a character to attack.
+[02:25.173] AI1 attack decision: (2,1)"Leopard Jailer" [ATK=30] → (4,2) "(dead-end)"
+[02:25.473] Dice rolled: 1
+[02:25.502] MSG: Nothing happens — Dead End.
+[02:28.874] Dead-end placed  P0 (4,2)
+[02:28.879] Attack P1(2,1)"Leopard Jailer" → P0(4,2)(empty)  Dice=1  → DEAD_END
+[02:28.879] Anim: 3F  (blank slot)
+[02:29.379] Turn ended  P1  |  Crystals P0=720 P1=2400
+
+--- Turn 13  |  Player 0  |  Crystals P0=720 P1=2400 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Leop][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][Moon]
+      [  — ][  — ][  — ][  — ][Mind]
+[02:29.990] Mode selected P0: ATTACK
+[02:29.996] Attack phase P0: 2 attack(s) available
+[02:29.996] MSG: Player 1: tap a character to attack.
+[02:30.289] AI0 attack decision: (2,2)"Night Whisperer" [ATK=30] → (3,4) "Moon Tribe Twin Blader" [DEF=20]
+[02:30.655] Revealed: P0 (2,2) "Night Whisperer"
+[02:30.655] Dice rolled: 1
+[02:30.660] MSG: Night Whisperer wins!
+[02:35.273] Crystals: P1 2400 → 2100 (-300)  [battle]
+[02:36.669] Card destroyed  P1 (3,4) "Moon Tribe Twin Blader"
+[02:36.673] Attack P0(2,2)"Night Whisperer" → P1(3,4)"Moon Tribe Twin Blader"  Dice=1  ATK=30 vs DEF=20  → WIN
+[02:36.673] Anim: 3A  △ P1(3,4)
+[02:37.166] Mode selected P0: ATTACK
+[02:37.173] Attack phase P0: 1 attack(s) available
+[02:37.174] MSG: Player 1: tap a character to attack.
+[02:37.465] AI0 attack decision: (3,1)"Chaotic Wisp" [ATK=20] → (4,3) "(dead-end)"
+[02:37.823] Revealed: P0 (3,1) "Chaotic Wisp"
+[02:37.823] Dice rolled: 4
+[02:37.836] MSG: Nothing happens — Dead End.
+[02:41.166] Dead-end placed  P1 (4,3)
+[02:41.171] Attack P0(3,1)"Chaotic Wisp" → P1(4,3)(empty)  Dice=4  → DEAD_END
+[02:41.171] Anim: 3F  (blank slot)
+[02:41.660] Turn ended  P0  |  Crystals P0=720 P1=2100
+
+--- Turn 14  |  Player 1  |  Crystals P0=720 P1=2100 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][Nigh][  — ][  — ]
+      [  — ][Chao][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Leop][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][Mind]
+[02:42.274] Mode selected P1: ATTACK
+[02:42.281] Attack phase P1: 2 attack(s) available
+[02:42.281] MSG: Player 2: tap a character to attack.
+[02:42.572] AI1 attack decision: (4,4)"Mind Flayer" [ATK=100] → (2,2) "Night Whisperer" [DEF=60]
+[02:42.874] Dice rolled: 1
+[02:42.888] MSG: Mind Flayer wins!
+[02:47.557] Crystals: P0 720 → 0 (-720)  [battle]
+
+=== GAME OVER ===
+[02:47.563] AI Player 1 wins
+[02:47.563] Final crystals — P0: 0  P1: 2100  |  Turns: 14
+[02:47.563] Log saved to: res://logs/results/2026-05-31_03-11-44_569_root_beer_float/battle_mystery_meatloaf_2026-05-31_03-22-44_161.txt

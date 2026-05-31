@@ -40,7 +40,7 @@ signal card_def_changed(player_index: int, row: int, col: int, old_val: int, new
 signal bluff_changed(player_index: int, row: int, col: int, emoticon: String)
 signal attack_target_selected(attacker_player: int, target_player: int, row: int, col: int)
 signal tech_target_selected(user_player: int, target_player: int, row: int, col: int)
-signal union_summoned(player: int, union_name: String, material_names: Array)
+signal union_summoned(player: int, union_label: String, material_labels: Array)
 
 # ─────────────────────────────────────────────────────────────
 # Constants
@@ -449,8 +449,9 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 
 func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) -> void:
 	var card: CardInstance = get_card(player_index, row, col)
+	var was_character: bool = card.card_type == "character"
 	# ONE_USE_SURVIVE_DESTRUCTION: card survives once
-	if card.card_type == "character":
+	if was_character:
 		if card.ability_type == CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION:
 			if "indestructible_used" not in card.flags:
 				card.flags.append("indestructible_used")
@@ -469,6 +470,8 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 	# Mark the resulting slot as revealed and destroyed so it can't be re-targeted
 	grids[player_index][row][col].face_up = true
 	grids[player_index][row][col].was_destroyed = true
+	if was_character:
+		check_character_wipe_win_condition()
 
 ## Remove a trap card silently when revealed (no crystal cost, no was_destroyed flag).
 ## The slot becomes a plain blank dead_end — completely empty, re-targetable.
@@ -549,6 +552,16 @@ func get_all_characters(player_index: int) -> Array:
 func get_opponent(player_index: int) -> int:
 	return 1 - player_index
 
+## Prayer (DIVINE_PROTECTION): clears when the protected player's opponent finishes a turn.
+func expire_divine_protection_at_turn_end(turn_ending_player: int) -> void:
+	divine_protection_active[get_opponent(turn_ending_player)] = false
+
+## Human-facing label: "AI Player 0/1" in AI vs AI logs, "Player 1/2" elsewhere.
+func format_player_label(player_index: int) -> String:
+	if game_mode == GameMode.AI_VS_AI:
+		return "AI Player %d" % player_index
+	return "Player %d" % (player_index + 1)
+
 func can_player_attack(player_index: int) -> bool:
 	for r in range(GRID_SIZE):
 		for c in range(GRID_SIZE):
@@ -575,8 +588,10 @@ func has_playable_tech(player_index: int) -> bool:
 func tech_name_played_this_game(player_index: int, tech_name: String) -> bool:
 	return tech_name in tech_cards_played_this_game[player_index]
 
+## True when the player has no character that can attack this turn.
+## Playable tech no longer prevents a stuck loss — only attack capability matters.
 func is_stuck(player_index: int) -> bool:
-	return not can_player_attack(player_index) and not has_playable_tech(player_index)
+	return not can_player_attack(player_index)
 
 func _end_game(winner: int) -> void:
 	set_phase(Phase.GAME_OVER)
@@ -594,17 +609,40 @@ func has_any_character(player_index: int) -> bool:
 				return true
 	return false
 
+## Ends the duel when either side has zero characters on the board.
+func check_character_wipe_win_condition() -> void:
+	if current_phase == Phase.GAME_OVER:
+		return
+	var p0_has: bool = has_any_character(0)
+	var p1_has: bool = has_any_character(1)
+	if p0_has and p1_has:
+		return
+	if not p0_has and not p1_has:
+		game_over_reason = "all_destroyed"
+		_end_game(-1)
+	elif not p0_has:
+		game_over_reason = "all_destroyed"
+		_end_game(1)
+	else:
+		game_over_reason = "all_destroyed"
+		_end_game(0)
+
 func check_stuck_win_condition() -> void:
+	if current_phase == Phase.GAME_OVER:
+		return
+	check_character_wipe_win_condition()
+	if current_phase == Phase.GAME_OVER:
+		return
 	var p0_stuck := is_stuck(0)
 	var p1_stuck := is_stuck(1)
 	if p0_stuck and p1_stuck:
 		game_over_reason = "no_moves"
 		_end_game(-1)  # tie
 	elif p0_stuck:
-		game_over_reason = "all_destroyed" if not has_any_character(0) else "no_moves"
+		game_over_reason = "no_moves"
 		_end_game(1)
 	elif p1_stuck:
-		game_over_reason = "all_destroyed" if not has_any_character(1) else "no_moves"
+		game_over_reason = "no_moves"
 		_end_game(0)
 
 # ─────────────────────────────────────────────────────────────

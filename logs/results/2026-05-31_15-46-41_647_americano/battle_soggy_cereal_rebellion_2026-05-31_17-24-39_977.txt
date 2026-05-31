@@ -1,0 +1,255 @@
+=== Battle of Soggy Cereal Rebellion ===
+Battle started: 2026-05-31 17:24:39.977
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Heavy Tome Preacher
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Heavy Tome Preacher
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Tease, Prayer
+P1 Tech hand: Radar, Bribe, Accident
+P0:   [  — ][C:Dark][C:Grav][  — ][C:Shot]
+      [T:Deco][C:Choi][C:Shre][C:Nigh][  — ]
+      [T:Host][C:Gree][C:Heav][C:Jira][T:Self]
+      [  — ][C:Gran][C:Witc][C:Stri][  — ]
+      [  — ][T:Foul][T:Brai][  — ][  — ]
+P1:   [C:Bat ][T:Self][C:Pyro][  — ][C:Jaco]
+      [T:Spik][C:Ostr][C:Godd][C:Mage][  — ]
+      [  — ][  — ][C:Chao][  — ][C:Laug]
+      [  — ][C:Doom][C:Void][C:Tiny][T:Pepp]
+      [C:Foul][  — ][T:Alar][  — ][C:Deat]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.337] Mode selected P1: TECH
+[00:05.645] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:07.035] Tech played  P1: "Radar"
+[00:08.572] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.962] AI1 target chosen: (4,2)
+[00:08.993] Revealed: P0 (4,2) "Brainwash" {cost 1500}
+[00:09.361] AI1 target chosen: (2,1)
+[00:09.395] Revealed: P0 (2,1) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:09.761] AI1 target chosen: (4,3)
+[00:09.761] Revealed: P0 (4,3) (blank slot)
+[00:09.771] Tech resolved  P1
+[00:10.665] Mode selected P1: ATTACK
+[00:10.669] Attack phase P1: 2 attack(s) available
+[00:10.669] MSG: Player 2: tap a character to attack.
+[00:10.962] AI1 attack decision: (1,2)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down} → (2,1) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:11.307] Revealed: P1 (1,2) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[00:11.308] Dice rolled: 2
+[00:11.312] MSG: Goddess of Virtue wins!
+[00:15.954] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:17.351] Attack P1(1,2)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P0(2,1)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}  Dice=2  ATK=80 vs DEF=15  → WIN
+[00:17.351] Anim: 3A  △ P0(2,1)
+[00:17.351] Card destroyed  P0 (2,1) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:17.846] Mode selected P1: ATTACK
+[00:17.852] Attack phase P1: 1 attack(s) available
+[00:17.853] MSG: Player 2: tap a character to attack.
+[00:18.146] AI1 attack decision: (0,2)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | face-down} → (4,3) (dead-end)
+[00:18.505] Revealed: P1 (0,2) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:18.515] Dice rolled: 3
+[00:18.563] MSG: Nothing happens — Dead End.
+[00:21.838] Attack P1(0,2)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(4,3)(empty)  Dice=3  → DEAD_END
+[00:21.838] Anim: 3F  (blank slot)
+[00:22.331] Turn ended  P1  |  Crystals P0=4600 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4600 P1=4400 ---
+P0:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][Pyro][  — ][  ? ]
+      [  ? ][  ? ][Godd][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:22.924] Mode selected P0: TECH
+[00:23.235] Tech played  P0: "Tease"
+[00:24.783] MSG: Opponent must choose and reveal 1 of their squares.
+[00:24.784] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:25.182] AI1 target chosen: (4,4)
+[00:25.216] Revealed: P1 (4,4) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[00:25.216] MSG: Tease: Opponent revealed Death Knight.
+[00:25.222] Tech resolved  P0
+[00:26.110] Mode selected P0: ATTACK
+[00:26.117] Attack phase P0: 2 attack(s) available
+[00:26.117] MSG: Player 1: tap a character to attack.
+[00:26.407] AI0 attack decision: (1,3)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos | face-down} → (0,2) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:26.757] Revealed: P0 (1,3) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:26.757] Dice rolled: 3
+[00:26.765] MSG: Night Whisperer wins!
+[00:31.419] Crystals: P1 4400 → 3500 (-900)  [battle]
+[00:32.814] Attack P0(1,3)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} → P1(0,2)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=3  ATK=30 vs DEF=0  → WIN
+[00:32.814] Anim: 3A  △ P1(0,2)
+[00:32.814] Card destroyed  P1 (0,2) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:33.305] Mode selected P0: ATTACK
+[00:33.310] Attack phase P0: 1 attack(s) available
+[00:33.311] MSG: Player 1: tap a character to attack.
+[00:33.599] AI0 attack decision: (2,3)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (0,1) "Self-destruct" {cost 0}
+[00:33.937] Revealed: P0 (2,3) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[00:33.971] Revealed: P1 (0,1) "Self-destruct" {cost 0}
+[00:33.971] Dice rolled: 5
+[00:34.185] MSG: Trap triggered: Self-destruct!
+[00:38.287] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[00:38.298] Trap: "Self-destruct" triggered  P0(2,3)→P1(0,1)
+[00:38.298] Anim: 3D  (attacker survives)
+[00:38.666] AI1 target chosen: (1,2)
+[00:38.667] MSG: Goddess of Virtue: +10 ATK until end of next turn, then destroyed.
+[00:38.783] Turn ended  P0  |  Crystals P0=4600 P1=3500
+
+--- Turn 3  |  Player 1  |  Crystals P0=4600 P1=3500 ---
+P0:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][Nigh][  — ]
+      [  ? ][  — ][  ? ][Jira][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Godd][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][Deat]
+[00:39.374] Mode selected P1: TECH
+[00:39.675] Crystals: P1 3500 → 2500 (-1000)  [tech cost]
+[00:41.068] Tech played  P1: "Accident"
+[00:42.616] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:43.020] AI1 target chosen: (2,3)
+[00:43.025] Card destroyed  P0 (2,3) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[00:43.033] Tech resolved  P1
+[00:43.938] Mode selected P1: ATTACK
+[00:43.948] Attack phase P1: 2 attack(s) available
+[00:43.949] MSG: Player 2: tap a character to attack.
+[00:44.245] AI1 attack decision: (4,4)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → (1,3) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:44.555] Dice rolled: 2
+[00:44.564] MSG: Death Knight wins!
+[00:49.255] Crystals: P0 4600 → 3700 (-900)  [battle]
+[00:50.657] Attack P1(4,4)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → P0(1,3)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=2  ATK=65 vs DEF=30  → WIN
+[00:50.658] Anim: 3A  △ P0(1,3)
+[00:50.658] Card destroyed  P0 (1,3) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:51.154] Mode selected P1: ATTACK
+[00:51.158] Attack phase P1: 1 attack(s) available
+[00:51.159] MSG: Player 2: tap a character to attack.
+[00:51.462] AI1 attack decision: (1,2)"Goddess of Virtue" {Unit ATK90 DEF100 | cost 1400 | affinity Divine | base 80/100 | buff +tempATK10 | flags:self_destruct_next_turn} → (1,2) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down}
+[00:51.804] Revealed: P0 (1,2) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:51.804] Dice rolled: 3
+[00:51.807] MSG: Goddess of Virtue destroys Shredder Doll by affinity!
+[00:57.488] Crystals: P0 3700 → 3450 (-250)  [battle]
+[00:58.888] Attack P1(1,2)"Goddess of Virtue" {Unit ATK90 DEF100 | cost 1400 | affinity Divine | base 80/100 | buff +tempATK10 | flags:self_destruct_next_turn} → P0(1,2)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=3  ATK=90 vs DEF=5  → WIN
+[00:58.888] Anim: 3A  △ P0(1,2)
+[00:58.888] Card destroyed  P0 (1,2) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:59.390] MSG: Goddess of Virtue is destroyed by self-destruct trap!
+[00:59.390] Crystals: P1 2500 → 1100 (-1400)  [card lost]
+[00:59.394] Card destroyed  P1 (1,2) "Goddess of Virtue" {Unit ATK90 DEF100 | cost 1400 | affinity Divine | base 80/100 | buff +tempATK10 | attacked}
+[00:59.398] Turn ended  P1  |  Crystals P0=3450 P1=1100
+
+--- Turn 4  |  Player 0  |  Crystals P0=3450 P1=1100 ---
+P0:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][Deat]
+[00:59.987] Mode selected P0: ATTACK
+[00:59.991] Attack phase P0: 2 attack(s) available
+[00:59.991] MSG: Player 1: tap a character to attack.
+[01:00.282] AI0 attack decision: (0,4)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down} → (4,4) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[01:00.617] Revealed: P0 (0,4) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:00.618] Dice rolled: 1
+[01:00.621] MSG: Shotgun Shark wins!
+[01:05.275] Crystals: P1 1100 → 250 (-850)  [battle]
+[01:06.676] Attack P0(0,4)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → P1(4,4)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}  Dice=1  ATK=75 vs DEF=65  → WIN
+[01:06.677] Anim: 3A  △ P1(4,4)
+[01:06.677] Card destroyed  P1 (4,4) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[01:09.180] Turn ended  P0  |  Crystals P0=3450 P1=250
+
+--- Turn 5  |  Player 1  |  Crystals P0=3450 P1=250 ---
+P0:   [  — ][  ? ][  ? ][  — ][Shot]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[01:09.775] Mode selected P1: TECH
+[01:10.087] Tech played  P1: "Bribe"
+[01:11.654] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:12.154] MSG: Bribe: AI passed.
+[01:12.165] Tech resolved  P1
+[01:13.055] Mode selected P1: ATTACK
+[01:13.059] Attack phase P1: 2 attack(s) available
+[01:13.060] MSG: Player 2: tap a character to attack.
+[01:13.353] AI1 attack decision: (1,1)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down} → (0,4) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:13.707] Revealed: P1 (1,1) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[01:13.707] Dice rolled: 4
+[01:13.714] MSG: Ostrich Cannon wins!
+[01:18.304] Crystals: P0 3450 → 2550 (-900)  [battle]
+[01:19.710] Attack P1(1,1)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P0(0,4)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}  Dice=4  ATK=60 vs DEF=25  → WIN
+[01:19.710] Anim: 3A  △ P0(0,4)
+[01:19.710] Card destroyed  P0 (0,4) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:19.710] MSG: Ostrich Cannon locks itself until next turn.
+[01:20.210] Mode selected P1: ATTACK
+[01:20.214] Attack phase P1: 1 attack(s) available
+[01:20.214] MSG: Player 2: tap a character to attack.
+[01:20.517] AI1 attack decision: (0,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down} → (2,4) "Self-destruct" {cost 0}
+[01:20.867] Revealed: P1 (0,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:20.868] Revealed: P0 (2,4) "Self-destruct" {cost 0}
+[01:20.869] Dice rolled: 3
+[01:21.152] MSG: Trap triggered: Self-destruct!
+[01:25.271] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[01:25.276] Trap: "Self-destruct" triggered  P1(0,0)→P0(2,4)
+[01:25.276] Anim: 3D  (attacker survives)
+[01:25.666] AI0 target chosen: (-1,-1)
+[01:25.769] Turn ended  P1  |  Crystals P0=2550 P1=250
+
+--- Turn 6  |  Player 0  |  Crystals P0=2550 P1=250 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [Bat ][  — ][  — ][  — ][  ? ]
+      [  ? ][Ostr][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[01:27.871] Crystals: P0 2550 → 2250 (-300)  [union]
+[01:27.909] Revealed: P0 (0,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[01:27.909] Union summoned P0: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos | face-down}
+[01:27.910] MSG: Player 1 summoned [Kitsune] using: "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos | face-down}
+[01:31.338] Mode selected P0: ATTACK
+[01:31.344] Attack phase P0: 2 attack(s) available
+[01:31.344] MSG: Player 1: tap a character to attack.
+[01:31.636] AI0 attack decision: (0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (1,1) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T7}
+[01:31.937] Dice rolled: 2
+[01:31.979] MSG: Kitsune wins!
+[01:36.631] Crystals: P1 250 → 0 (-250)  [battle]
+
+=== GAME OVER ===
+[01:36.647] AI Player 0 wins
+[01:36.647] Reason: crystals
+[01:36.647] Final crystals — P0: 2250  P1: 0  |  Turns: 6
+[01:36.647] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_soggy_cereal_rebellion_2026-05-31_17-24-39_977.txt

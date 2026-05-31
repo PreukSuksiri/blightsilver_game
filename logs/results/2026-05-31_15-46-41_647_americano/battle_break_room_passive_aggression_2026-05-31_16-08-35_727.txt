@@ -1,0 +1,363 @@
+=== Battle of Break Room Passive Aggression ===
+Battle started: 2026-05-31 16:08:35.727
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Bleacher Squad
+AI-1 Deck:    E2E T2 solo Scarlet Mutant
+AI-0 Forced:  (2,2) Bleacher Squad
+AI-1 Forced:  (2,2) Scarlet Mutant
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Prayer, Bribe
+P1 Tech hand: Tease, Accident, Prayer
+P0:   [C:Gobl][C:Whit][  — ][T:Flam][C:Nigh]
+      [T:Expl][C:Paro][  — ][C:Book][  — ]
+      [  — ][  — ][C:Blea][T:Foul][  — ]
+      [T:Blac][C:Sate][T:Acid][C:Hand][T:Hard]
+      [C:Skel][  — ][  — ][  — ][C:Scou]
+P1:   [C:Chao][C:Mafi][  — ][T:Red ][  — ]
+      [T:Self][  — ][  — ][  — ][T:Spik]
+      [C:Hunt][  — ][C:Scar][  — ][C:Void]
+      [  — ][  — ][  — ][  — ][C:Flam]
+      [  — ][C:Gran][C:Gran][T:Bunk][C:Pyro]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[00:05.324] Mode selected P0: TECH
+[00:05.633] Tech played  P0: "Spy"
+[00:07.192] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.599] AI0 target chosen: (2,4)
+[00:07.632] Revealed: P1 (2,4) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:07.634] Tech resolved  P0
+[00:08.491] Mode selected P0: ATTACK
+[00:08.495] Attack phase P0: 2 attack(s) available
+[00:08.495] MSG: Player 1: tap a character to attack.
+[00:08.789] AI0 attack decision: (0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down} → (2,4) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:09.145] Revealed: P0 (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:09.145] Dice rolled: 3
+[00:09.148] MSG: Goblin Poacher wins!
+[00:13.774] Crystals: P1 5000 → 4280 (-720)  [battle]
+[00:15.169] Attack P0(0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P1(2,4)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}  Dice=3  ATK=30 vs DEF=25  → WIN
+[00:15.169] Anim: 3A  △ P1(2,4)
+[00:15.169] Card destroyed  P1 (2,4) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:15.665] Mode selected P0: ATTACK
+[00:15.668] Attack phase P0: 1 attack(s) available
+[00:15.669] MSG: Player 1: tap a character to attack.
+[00:15.960] AI0 attack decision: (0,1)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature | face-down} → (0,2) (dead-end)
+[00:16.300] Revealed: P0 (0,1) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[00:16.300] Dice rolled: 1
+[00:16.311] MSG: Nothing happens — Dead End.
+[00:19.658] Attack P0(0,1)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature} → P1(0,2)(empty)  Dice=1  → DEAD_END
+[00:19.658] Anim: 3F  (blank slot)
+[00:20.164] Turn ended  P0  |  Crystals P0=5000 P1=4280
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4280 ---
+P0:   [Gobl][Whit][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[00:20.770] Mode selected P1: TECH
+[00:21.078] Crystals: P1 4280 → 3280 (-1000)  [tech cost]
+[00:22.464] Tech played  P1: "Accident"
+[00:24.037] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:24.435] AI1 target chosen: (0,1)
+[00:24.437] Card destroyed  P0 (0,1) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[00:24.441] Tech resolved  P1
+[00:25.339] Mode selected P1: ATTACK
+[00:25.345] Attack phase P1: 2 attack(s) available
+[00:25.345] MSG: Player 2: tap a character to attack.
+[00:25.637] AI1 attack decision: (0,0)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:25.979] Revealed: P1 (0,0) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:25.979] Dice rolled: 1
+[00:25.983] MSG: Chaotic Wisp wins!
+[00:30.586] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:31.984] Attack P1(0,0)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=1  ATK=20 vs DEF=10  → WIN
+[00:31.984] Anim: 3A  △ P0(0,0)
+[00:31.984] Card destroyed  P0 (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:34.490] Turn ended  P1  |  Crystals P0=4750 P1=3280
+
+--- Turn 3  |  Player 0  |  Crystals P0=4750 P1=3280 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [Chao][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[00:35.083] Mode selected P0: TECH
+[00:35.392] Tech played  P0: "Bribe"
+[00:36.940] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:37.439] MSG: Bribe: AI passed.
+[00:37.443] Tech resolved  P0
+[00:38.341] Mode selected P0: ATTACK
+[00:38.345] Attack phase P0: 2 attack(s) available
+[00:38.345] MSG: Player 1: tap a character to attack.
+[00:38.640] AI0 attack decision: (0,4)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos | face-down} → (0,0) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:38.987] Revealed: P0 (0,4) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:38.987] Dice rolled: 1
+[00:38.991] MSG: Night Whisperer wins!
+[00:43.615] Crystals: P1 3280 → 3180 (-100)  [battle]
+[00:45.015] Attack P0(0,4)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} → P1(0,0)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=30 vs DEF=0  → WIN
+[00:45.015] Anim: 3A  △ P1(0,0)
+[00:45.015] Card destroyed  P1 (0,0) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:45.510] Mode selected P0: ATTACK
+[00:45.516] Attack phase P0: 1 attack(s) available
+[00:45.517] MSG: Player 1: tap a character to attack.
+[00:45.802] AI0 attack decision: (1,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (0,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down}
+[00:46.181] Revealed: P0 (1,1) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:46.220] Revealed: P1 (0,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:46.224] Crystals: P0 4750 → 4790 (+40)  [ability]
+[00:46.224] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:46.224] Dice rolled: 2
+[00:46.227] MSG: Parom the Smuggler wins!
+[00:51.787] Crystals: P1 3180 → 2680 (-500)  [battle]
+[00:53.183] Attack P0(1,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(0,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}  Dice=2  ATK=30 vs DEF=0  → WIN
+[00:53.183] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} DEF -40
+[00:53.183] Anim: 3A  △ P1(0,1)
+[00:53.183] Card destroyed  P1 (0,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:53.680] Turn ended  P0  |  Crystals P0=4790 P1=2680
+
+--- Turn 4  |  Player 1  |  Crystals P0=4790 P1=2680 ---
+P0:   [  — ][  — ][  — ][  ? ][Nigh]
+      [  ? ][Paro][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[00:54.273] Mode selected P1: TECH
+[00:54.587] Tech played  P1: "Tease"
+[00:56.140] MSG: Opponent must choose and reveal 1 of their squares.
+[00:56.141] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:56.548] AI0 target chosen: (3,3)
+[00:56.583] Revealed: P0 (3,3) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[00:56.583] MSG: Tease: Opponent revealed Hands in the Attic.
+[00:56.585] Tech resolved  P1
+[00:57.483] Mode selected P1: ATTACK
+[00:57.488] Attack phase P1: 2 attack(s) available
+[00:57.488] MSG: Player 2: tap a character to attack.
+[00:57.782] AI1 attack decision: (2,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down} → (0,4) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:58.118] Revealed: P1 (2,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[00:58.118] Crystals: P0 4790 → 4830 (+40)  [ability]
+[00:58.118] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:58.118] Dice rolled: 2
+[00:58.122] MSG: Huntress of Green Glade wins!
+[01:02.758] Crystals: P0 4830 → 3930 (-900)  [battle]
+[01:04.156] Attack P1(2,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(0,4)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=2  ATK=50 vs DEF=30  → WIN
+[01:04.156] Anim: 3A  △ P0(0,4)
+[01:04.157] Card destroyed  P0 (0,4) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:06.660] Turn ended  P1  |  Crystals P0=3930 P1=2680
+
+--- Turn 5  |  Player 0  |  Crystals P0=3930 P1=2680 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Paro][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][Hand][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Hunt][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[01:07.276] Mode selected P0: ATTACK
+[01:07.281] Attack phase P0: 2 attack(s) available
+[01:07.281] MSG: Player 1: tap a character to attack.
+[01:07.557] AI0 attack decision: (3,1)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down} → (2,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:07.897] Revealed: P0 (3,1) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[01:07.897] Dice rolled: 3
+[01:07.904] MSG: Satellite Cannon wins!
+[01:12.532] Crystals: P1 2680 → 1880 (-800)  [battle]
+[01:13.930] Attack P0(3,1)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(2,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=3  ATK=100 vs DEF=50  → WIN
+[01:13.930] Anim: 3A  △ P1(2,0)
+[01:13.930] Card destroyed  P1 (2,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:14.424] Mode selected P0: ATTACK
+[01:14.429] Attack phase P0: 1 attack(s) available
+[01:14.430] MSG: Player 1: tap a character to attack.
+[01:14.723] AI0 attack decision: (1,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → (0,3) "Red Card" {cost 0}
+[01:15.057] Revealed: P1 (0,3) "Red Card" {cost 0}
+[01:15.057] Crystals: P0 3930 → 3970 (+40)  [ability]
+[01:15.057] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:15.057] Dice rolled: 4
+[01:15.337] MSG: Trap triggered: Red Card!
+[01:19.504] Coin flip: Tails, Tails
+[01:22.231] MSG: Red Card: Tails, Tails.
+[01:22.231] MSG: Not both heads — no effect.
+[01:22.239] Trap: "Red Card" triggered  P0(1,1)→P1(0,3)
+[01:22.239] Anim: 3D  (attacker survives)
+[01:22.741] Turn ended  P0  |  Crystals P0=3970 P1=1880
+
+--- Turn 6  |  Player 1  |  Crystals P0=3970 P1=1880 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Paro][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Sate][  ? ][Hand][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[01:23.354] Mode selected P1: ATTACK
+[01:23.361] Attack phase P1: 2 attack(s) available
+[01:23.362] MSG: Player 2: tap a character to attack.
+[01:23.636] AI1 attack decision: (4,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | face-down} → (3,1) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[01:23.967] Revealed: P1 (4,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[01:23.967] Crystals: P0 3970 → 4010 (+40)  [ability]
+[01:23.967] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:23.967] Dice rolled: 4
+[01:23.975] MSG: Both cards are destroyed!
+[01:28.545] Crystals: P1 1880 → 980 (-900)  [battle]
+[01:29.936] Crystals: P0 4010 → 2910 (-1100)  [battle]
+[01:31.331] Attack P1(4,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(3,1)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}  Dice=4  ATK=80 vs DEF=80  → TIE
+[01:31.331] Anim: 3C  △ P1(4,4) + △ P0(3,1)
+[01:31.331] Card destroyed  P1 (4,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[01:31.331] Card destroyed  P0 (3,1) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[01:31.819] Mode selected P1: ATTACK
+[01:31.823] Attack phase P1: 1 attack(s) available
+[01:31.824] MSG: Player 2: tap a character to attack.
+[01:32.120] AI1 attack decision: (4,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima | face-down} → (3,3) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[01:32.492] Revealed: P1 (4,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[01:32.492] Crystals: P0 2910 → 2950 (+40)  [ability]
+[01:32.492] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:32.492] Dice rolled: 2
+[01:32.498] MSG: Grand Fort Mauler wins!
+[01:37.141] Crystals: P0 2950 → 2650 (-300)  [battle]
+[01:38.537] Attack P1(4,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P0(3,3)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}  Dice=2  ATK=40 vs DEF=20  → WIN
+[01:38.537] Anim: 3A  △ P0(3,3)
+[01:38.537] Card destroyed  P0 (3,3) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[01:39.038] Turn ended  P1  |  Crystals P0=2650 P1=980
+
+--- Turn 7  |  Player 0  |  Crystals P0=2650 P1=980 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Paro][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Gran][  ? ][  ? ][  — ]
+[01:39.617] Mode selected P0: ATTACK
+[01:39.621] Attack phase P0: 2 attack(s) available
+[01:39.621] MSG: Player 1: tap a character to attack.
+[01:39.915] AI0 attack decision: (1,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → (4,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[01:40.225] Dice rolled: 1
+[01:40.234] MSG: Parom the Smuggler wins!
+[01:44.919] Crystals: P1 980 → 630 (-350)  [battle]
+[01:46.322] Attack P0(1,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(4,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=1  ATK=30 vs DEF=10  → WIN
+[01:46.322] Anim: 3A  △ P1(4,1)
+[01:46.322] Card destroyed  P1 (4,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[01:46.821] Mode selected P0: ATTACK
+[01:46.824] Attack phase P0: 1 attack(s) available
+[01:46.824] MSG: Player 1: tap a character to attack.
+[01:47.123] AI0 attack decision: (4,0)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (3,3) (dead-end)
+[01:47.467] Revealed: P0 (4,0) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:47.467] Dice rolled: 1
+[01:47.478] MSG: Nothing happens — Dead End.
+[01:50.827] Attack P0(4,0)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P1(3,3)(empty)  Dice=1  → DEAD_END
+[01:50.827] Anim: 3F  (blank slot)
+[01:51.329] Turn ended  P0  |  Crystals P0=2650 P1=630
+
+--- Turn 8  |  Player 1  |  Crystals P0=2650 P1=630 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Paro][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Skel][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+[01:51.929] Mode selected P1: ATTACK
+[01:51.934] Attack phase P1: 2 attack(s) available
+[01:51.934] MSG: Player 2: tap a character to attack.
+[01:52.221] AI1 attack decision: (3,4)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down} → (4,0) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:52.560] Revealed: P1 (3,4) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:52.560] Crystals: P0 2650 → 2690 (+40)  [ability]
+[01:52.561] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:52.561] Dice rolled: 4
+[01:52.567] MSG: Flame Seraph wins!
+[01:57.202] Crystals: P0 2690 → 2390 (-300)  [battle]
+[01:58.603] Attack P1(3,4)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P0(4,0)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=4  ATK=50 vs DEF=5  → WIN
+[01:58.603] Anim: 3A  △ P0(4,0)
+[01:58.603] Card destroyed  P0 (4,0) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:59.095] Mode selected P1: ATTACK
+[01:59.099] Attack phase P1: 1 attack(s) available
+[01:59.100] MSG: Player 2: tap a character to attack.
+[01:59.394] AI1 attack decision: (4,2)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | face-down} → (1,1) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:59.725] Revealed: P1 (4,2) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:59.725] Crystals: P0 2390 → 2430 (+40)  [ability]
+[01:59.726] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:59.726] Dice rolled: 2
+[01:59.731] MSG: Grand Fort Archer wins!
+[02:05.381] Crystals: P0 2430 → 2130 (-300)  [battle]
+[02:06.779] Attack P1(4,2)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(1,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=2  ATK=30 vs DEF=20  → WIN
+[02:06.780] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} +ATK 10
+[02:06.780] Anim: 3A  △ P0(1,1)
+[02:06.780] Card destroyed  P0 (1,1) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:07.278] Turn ended  P1  |  Crystals P0=2130 P1=630
+
+--- Turn 9  |  Player 0  |  Crystals P0=2130 P1=630 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Flam]
+      [  — ][  — ][Gran][  ? ][  — ]
+[02:07.879] Mode selected P0: ATTACK
+[02:07.884] Attack phase P0: 2 attack(s) available
+[02:07.884] MSG: Player 1: tap a character to attack.
+[02:08.173] AI0 attack decision: (2,2)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio | face-down} → (3,4) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[02:08.530] Revealed: P0 (2,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[02:08.530] Dice rolled: 3
+[02:08.533] MSG: Bleacher Squad wins!
+[02:13.213] Crystals: P1 630 → 130 (-500)  [battle]
+[02:14.605] Attack P0(2,2)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} → P1(3,4)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=3  ATK=20 vs DEF=10  → WIN
+[02:14.605] Anim: 3A  △ P1(3,4)
+[02:14.606] Card destroyed  P1 (3,4) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[02:15.100] Mode selected P0: ATTACK
+[02:15.104] Attack phase P0: 1 attack(s) available
+[02:15.105] MSG: Player 1: tap a character to attack.
+[02:15.395] AI0 attack decision: (1,3)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (4,2) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[02:15.728] Revealed: P0 (1,3) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[02:15.728] Dice rolled: 5
+[02:15.734] MSG: Book with Fangs wins!
+[02:20.371] Crystals: P1 130 → 0 (-130)  [battle]
+
+=== GAME OVER ===
+[02:20.382] AI Player 0 wins
+[02:20.382] Reason: crystals
+[02:20.382] Final crystals — P0: 2130  P1: 0  |  Turns: 9
+[02:20.382] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_break_room_passive_aggression_2026-05-31_16-08-35_727.txt

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dmvxlgtturc2r"
-path="res://.godot/imported/moon_ninja_lady.png-b13d9800c2f171c2c36197cce0601c85.ctex"
+path="res://.godot/imported/moon_ninja_lady.png-77b90f62c79e6cfe9b63a02fa7fbd385.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/union/moon_ninja_lady.png"
-dest_files=["res://.godot/imported/moon_ninja_lady.png-b13d9800c2f171c2c36197cce0601c85.ctex"]
+source_file="res://trash/assets/textures/cards/union/moon_ninja_lady.png"
+dest_files=["res://.godot/imported/moon_ninja_lady.png-77b90f62c79e6cfe9b63a02fa7fbd385.ctex"]
 
 [params]
 

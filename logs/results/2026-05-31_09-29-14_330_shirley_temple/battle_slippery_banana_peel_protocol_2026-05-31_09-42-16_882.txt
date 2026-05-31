@@ -1,0 +1,454 @@
+=== Battle of Slippery Banana Peel Protocol ===
+Battle started: 2026-05-31 09:42:16.882
+Game Session of Shirley Temple (started 2026-05-31 09:29:14.330)
+=== AI vs AI Match ===
+Batch iteration: 6 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Siege Cannon, War Supply, Release Mutagen
+P1 Tech hand: Bribe, Spy, Tease
+P0:   [C:Pyro][C:Plan][T:Hypn][  — ][T:Red ]
+      [  — ][C:Gree][C:Mind][C:Dark][  — ]
+      [  — ][C:Nuki][C:Red ][C:Jira][  — ]
+      [T:Acid][C:Lab ][C:Arch][C:Hunt][  — ]
+      [T:Stre][  — ][C:Skel][T:Deco][  — ]
+P1:   [  — ][  — ][C:Soni][  — ][  — ]
+      [  — ][C:Snip][C:Dark][C:Spea][  — ]
+      [  — ][C:Skel][C:Leec][C:Scou][T:Acid]
+      [T:Flam][C:Big ][C:Bat ][C:Elec][T:Foul]
+      [  — ][T:Blac][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:05.316] Mode selected P0: ATTACK
+[00:05.318] Attack phase P0: 2 attack(s) available
+[00:05.321] MSG: Player 1: tap a character to attack.
+[00:05.616] AI0 attack decision: (3,3)"Huntress of Green Glade" [ATK=50] → (0,1) "(dead-end)"
+[00:05.983] Revealed: P0 (3,3) "Huntress of Green Glade"
+[00:05.983] Dice rolled: 5
+[00:05.997] MSG: Nothing happens — Dead End.
+[00:09.309] Dead-end placed  P1 (0,1)
+[00:09.311] Attack P0(3,3)"Huntress of Green Glade" → P1(0,1)(empty)  Dice=5  → DEAD_END
+[00:09.311] Anim: 3F  (blank slot)
+[00:09.808] Mode selected P0: ATTACK
+[00:09.812] Attack phase P0: 1 attack(s) available
+[00:09.812] MSG: Player 1: tap a character to attack.
+[00:10.108] AI0 attack decision: (3,2)"Archbishop" [ATK=70] → (1,1) "Sniping Fairy" [DEF=20]
+[00:10.453] Revealed: P0 (3,2) "Archbishop"
+[00:10.474] Revealed: P1 (1,1) "Sniping Fairy"
+[00:10.475] Dice rolled: 2
+[00:10.477] MSG: Archbishop wins!
+[00:15.101] Crystals: P1 5000 → 4650 (-350)  [battle]
+[00:16.496] Card destroyed  P1 (1,1) "Sniping Fairy"
+[00:16.506] Attack P0(3,2)"Archbishop" → P1(1,1)"Sniping Fairy"  Dice=2  ATK=70 vs DEF=20  → WIN
+[00:16.506] Anim: 3A  △ P1(1,1)
+[00:16.995] Turn ended  P0  |  Crystals P0=5000 P1=4650
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4650 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Arch][Hunt][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:17.587] Mode selected P1: TECH
+[00:17.899] Tech played  P1: "Spy"
+[00:19.447] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:19.845] AI1 target chosen: (4,2)
+[00:19.881] Revealed: P0 (4,2) "Skeleton Archer"
+[00:19.882] Tech resolved  P1
+[00:20.771] Mode selected P1: ATTACK
+[00:20.777] Attack phase P1: 2 attack(s) available
+[00:20.777] MSG: Player 2: tap a character to attack.
+[00:21.079] AI1 attack decision: (3,1)"Big Thug" [ATK=40] → (4,2) "Skeleton Archer" [DEF=5]
+[00:21.431] Revealed: P1 (3,1) "Big Thug"
+[00:21.431] Dice rolled: 4
+[00:21.434] MSG: Big Thug wins!
+[00:26.079] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:27.472] Card destroyed  P0 (4,2) "Skeleton Archer"
+[00:27.475] Attack P1(3,1)"Big Thug" → P0(4,2)"Skeleton Archer"  Dice=4  ATK=40 vs DEF=5  → WIN
+[00:27.475] Anim: 3A  △ P0(4,2)
+[00:29.982] Turn ended  P1  |  Crystals P0=4700 P1=4650
+
+--- Turn 3  |  Player 0  |  Crystals P0=4700 P1=4650 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Arch][Hunt][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Big ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:30.566] Mode selected P0: TECH
+[00:30.867] Crystals: P0 4700 → 3700 (-1000)  [tech cost]
+[00:32.253] Tech played  P0: "Siege Cannon"
+[00:33.791] MSG: Siege Cannon active!
+[00:33.794] Tech resolved  P0
+[00:34.691] Mode selected P0: ATTACK
+[00:34.699] Attack phase P0: 2 attack(s) available
+[00:34.699] MSG: Player 1: tap a character to attack.
+[00:34.991] AI0 attack decision: (3,2)"Archbishop" [ATK=70] → (3,1) "Big Thug" [DEF=35]
+[00:35.290] Dice rolled: 3
+[00:35.298] MSG: Archbishop wins!
+[00:39.983] Crystals: P1 4650 → 4250 (-400)  [battle]
+[00:41.377] Card destroyed  P1 (3,1) "Big Thug"
+[00:41.382] Attack P0(3,2)"Archbishop" → P1(3,1)"Big Thug"  Dice=3  ATK=70 vs DEF=35  → WIN
+[00:41.382] Anim: 3A  △ P1(3,1)
+[00:41.874] Mode selected P0: ATTACK
+[00:41.879] Attack phase P0: 1 attack(s) available
+[00:41.882] MSG: Player 1: tap a character to attack.
+[00:42.174] AI0 attack decision: (3,3)"Huntress of Green Glade" [ATK=50] → (0,0) "(dead-end)"
+[00:42.475] Dice rolled: 4
+[00:42.503] MSG: Nothing happens — Dead End.
+[00:45.867] Dead-end placed  P1 (0,0)
+[00:45.870] Attack P0(3,3)"Huntress of Green Glade" → P1(0,0)(empty)  Dice=4  → DEAD_END
+[00:45.870] Anim: 3F  (blank slot)
+[00:46.369] Turn ended  P0  |  Crystals P0=3700 P1=4250
+
+--- Turn 4  |  Player 1  |  Crystals P0=3700 P1=4250 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Arch][Hunt][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:46.965] Mode selected P1: TECH
+[00:47.276] Tech played  P1: "Bribe"
+[00:48.841] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:49.349] MSG: Bribe: AI passed.
+[00:49.354] Tech resolved  P1
+[00:50.268] Mode selected P1: ATTACK
+[00:50.274] Attack phase P1: 2 attack(s) available
+[00:50.274] MSG: Player 2: tap a character to attack.
+[00:50.574] AI1 attack decision: (1,3)"Spear Shark" [ATK=50] → (3,4) "(dead-end)"
+[00:50.947] Revealed: P1 (1,3) "Spear Shark"
+[00:50.947] Dice rolled: 4
+[00:50.957] MSG: Nothing happens — Dead End.
+[00:54.263] Dead-end placed  P0 (3,4)
+[00:54.267] Attack P1(1,3)"Spear Shark" → P0(3,4)(empty)  Dice=4  → DEAD_END
+[00:54.267] Anim: 3F  (blank slot)
+[00:56.774] Turn ended  P1  |  Crystals P0=3700 P1=4250
+
+--- Turn 5  |  Player 0  |  Crystals P0=3700 P1=4250 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Arch][Hunt][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][Spea][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:58.853] Union summoned P0: [Rocket Marauder] from Lab Bloater, Huntress of Green Glade
+[00:58.854] Crystals: P0 3700 → 2700 (-1000)  [union]
+[00:58.888] Revealed: P0 (3,1) "Rocket Marauder"
+[00:58.889] MSG: Player 1 summoned [Rocket Marauder] using: Lab Bloater, Huntress of Green Glade
+[01:02.291] Mode selected P0: ATTACK
+[01:02.298] Attack phase P0: 2 attack(s) available
+[01:02.298] MSG: Player 1: tap a character to attack.
+[01:02.590] AI0 attack decision: (3,1)"Rocket Marauder" [ATK=125] → (1,3) "Spear Shark" [DEF=20]
+[01:02.891] Dice rolled: 3
+[01:02.927] MSG: Rocket Marauder wins!
+[01:07.562] Crystals: P1 4250 → 3770 (-480)  [battle]
+[01:08.956] Card destroyed  P1 (1,3) "Spear Shark"
+[01:08.961] Attack P0(3,1)"Rocket Marauder" → P1(1,3)"Spear Shark"  Dice=3  ATK=125 vs DEF=20  → WIN
+[01:08.961] Anim: 3A  △ P1(1,3)
+[01:09.454] Mode selected P0: ATTACK
+[01:09.457] Attack phase P0: 1 attack(s) available
+[01:09.461] MSG: Player 1: tap a character to attack.
+[01:09.749] AI0 attack decision: (3,2)"Archbishop" [ATK=70] → (1,0) "(dead-end)"
+[01:10.050] Dice rolled: 4
+[01:10.077] MSG: Nothing happens — Dead End.
+[01:13.451] Dead-end placed  P1 (1,0)
+[01:13.457] Attack P0(3,2)"Archbishop" → P1(1,0)(empty)  Dice=4  → DEAD_END
+[01:13.457] Anim: 3F  (blank slot)
+[01:13.960] Turn ended  P0  |  Crystals P0=2700 P1=3770
+
+--- Turn 6  |  Player 1  |  Crystals P0=2700 P1=3770 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][Rock][Arch][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:14.566] Mode selected P1: TECH
+[01:14.885] Tech played  P1: "Tease"
+[01:16.434] MSG: Opponent must choose and reveal 1 of their squares.
+[01:16.435] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:16.833] AI0 target chosen: (4,0)
+[01:16.880] Revealed: P0 (4,0) "Street Joke"
+[01:16.880] MSG: Tease: Opponent revealed Street Joke.
+[01:16.882] Tech resolved  P1
+[01:17.725] Mode selected P1: ATTACK
+[01:17.729] Attack phase P1: 2 attack(s) available
+[01:17.729] MSG: Player 2: tap a character to attack.
+[01:18.024] AI1 attack decision: (3,2)"Bat Swarm" [ATK=15] → (3,3) "(dead-end)"
+[01:18.365] Revealed: P1 (3,2) "Bat Swarm"
+[01:18.365] Dice rolled: 1
+[01:18.377] MSG: Nothing happens — Dead End.
+[01:21.742] Dead-end placed  P0 (3,3)
+[01:21.745] Attack P1(3,2)"Bat Swarm" → P0(3,3)(empty)  Dice=1  → DEAD_END
+[01:21.745] Anim: 3F  (blank slot)
+[01:24.252] Turn ended  P1  |  Crystals P0=2700 P1=3770
+
+--- Turn 7  |  Player 0  |  Crystals P0=2700 P1=3770 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][Rock][Arch][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][Bat ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:24.849] Mode selected P0: TECH
+[01:25.161] Tech played  P0: "Release Mutagen"
+[01:26.708] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[01:27.108] AI0 target chosen: (3,1)
+[01:27.120] Tech resolved  P0
+[01:28.007] Mode selected P0: ATTACK
+[01:28.013] Attack phase P0: 2 attack(s) available
+[01:28.013] MSG: Player 1: tap a character to attack.
+[01:28.307] AI0 attack decision: (3,1)"Rocket Marauder" [ATK=125] → (3,2) "Bat Swarm" [DEF=15]
+[01:28.607] Dice rolled: 5
+[01:28.652] MSG: Rocket Marauder wins!
+[01:33.284] Crystals: P1 3770 → 3570 (-200)  [battle]
+[01:34.677] Card destroyed  P1 (3,2) "Bat Swarm"
+[01:34.687] Attack P0(3,1)"Rocket Marauder" → P1(3,2)"Bat Swarm"  Dice=5  ATK=125 vs DEF=15  → WIN
+[01:34.687] Anim: 3A  △ P1(3,2)
+[01:35.175] Mode selected P0: ATTACK
+[01:35.183] Attack phase P0: 1 attack(s) available
+[01:35.184] MSG: Player 1: tap a character to attack.
+[01:35.474] AI0 attack decision: (3,2)"Archbishop" [ATK=70] → (3,3) "Electrogazer" [DEF=45]
+[01:35.826] Revealed: P1 (3,3) "Electrogazer"
+[01:35.826] Dice rolled: 5
+[01:35.830] MSG: Archbishop wins!
+[01:40.475] Crystals: P1 3570 → 2570 (-1000)  [battle]
+[01:41.868] Card destroyed  P1 (3,3) "Electrogazer"
+[01:41.872] Attack P0(3,2)"Archbishop" → P1(3,3)"Electrogazer"  Dice=5  ATK=70 vs DEF=45  → WIN
+[01:41.872] Anim: 3A  △ P1(3,3)
+[01:42.372] Turn ended  P0  |  Crystals P0=2700 P1=2570
+
+--- Turn 8  |  Player 1  |  Crystals P0=2700 P1=2570 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][Rock][Arch][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:42.975] Mode selected P1: ATTACK
+[01:42.980] Attack phase P1: 2 attack(s) available
+[01:42.980] MSG: Player 2: tap a character to attack.
+[01:43.265] AI1 attack decision: (0,2)"Sonic Seraph" [ATK=45] → (2,2) "Red Mage" [DEF=20]
+[01:43.604] Revealed: P1 (0,2) "Sonic Seraph"
+[01:43.634] Revealed: P0 (2,2) "Red Mage"
+[01:43.634] Dice rolled: 2
+[01:43.637] MSG: Sonic Seraph wins!
+[01:48.258] Crystals: P0 2700 → 2300 (-400)  [battle]
+[01:49.650] Card destroyed  P0 (2,2) "Red Mage"
+[01:49.654] Attack P1(0,2)"Sonic Seraph" → P0(2,2)"Red Mage"  Dice=2  ATK=45 vs DEF=20  → WIN
+[01:49.654] Anim: 3A  △ P0(2,2)
+[01:52.162] Turn ended  P1  |  Crystals P0=2300 P1=2570
+
+--- Turn 9  |  Player 0  |  Crystals P0=2300 P1=2570 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][Rock][Arch][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][Soni][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:52.758] Mode selected P0: ATTACK
+[01:52.769] Attack phase P0: 2 attack(s) available
+[01:52.769] MSG: Player 1: tap a character to attack.
+[01:53.057] AI0 attack decision: (3,1)"Rocket Marauder" [ATK=125] → (0,2) "Sonic Seraph" [DEF=50]
+[01:53.358] Dice rolled: 1
+[01:53.393] MSG: Rocket Marauder wins!
+[01:58.042] Crystals: P1 2570 → 2020 (-550)  [battle]
+[01:59.433] Card destroyed  P1 (0,2) "Sonic Seraph"
+[01:59.436] Attack P0(3,1)"Rocket Marauder" → P1(0,2)"Sonic Seraph"  Dice=1  ATK=125 vs DEF=50  → WIN
+[01:59.436] Anim: 3A  △ P1(0,2)
+[01:59.933] Mode selected P0: ATTACK
+[01:59.939] Attack phase P0: 1 attack(s) available
+[01:59.939] MSG: Player 1: tap a character to attack.
+[02:00.232] AI0 attack decision: (3,2)"Archbishop" [ATK=70] → (0,4) "(dead-end)"
+[02:00.533] Dice rolled: 1
+[02:00.558] MSG: Nothing happens — Dead End.
+[02:03.925] Dead-end placed  P1 (0,4)
+[02:03.929] Attack P0(3,2)"Archbishop" → P1(0,4)(empty)  Dice=1  → DEAD_END
+[02:03.929] Anim: 3F  (blank slot)
+[02:04.427] Turn ended  P0  |  Crystals P0=2300 P1=2020
+
+--- Turn 10  |  Player 1  |  Crystals P0=2300 P1=2020 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][Rock][Arch][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:05.036] Mode selected P1: ATTACK
+[02:05.042] Attack phase P1: 2 attack(s) available
+[02:05.042] MSG: Player 2: tap a character to attack.
+[02:05.324] AI1 attack decision: (2,1)"Skeleton Scout" [ATK=20] → (2,1) "Nuki the Tanuki" [DEF=10]
+[02:05.654] Revealed: P1 (2,1) "Skeleton Scout"
+[02:05.674] Revealed: P0 (2,1) "Nuki the Tanuki"
+[02:05.675] Dice rolled: 1
+[02:05.681] MSG: Skeleton Scout wins!
+[02:10.338] Crystals: P0 2300 → 2200 (-100)  [battle]
+[02:11.730] Card destroyed  P0 (2,1) "Nuki the Tanuki"
+[02:11.734] Attack P1(2,1)"Skeleton Scout" → P0(2,1)"Nuki the Tanuki"  Dice=1  ATK=20 vs DEF=10  → WIN
+[02:11.734] Anim: 3A  △ P0(2,1)
+[02:14.237] Turn ended  P1  |  Crystals P0=2200 P1=2020
+
+--- Turn 11  |  Player 0  |  Crystals P0=2200 P1=2020 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Rock][Arch][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Skel][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:14.825] Mode selected P0: ATTACK
+[02:14.830] Attack phase P0: 2 attack(s) available
+[02:14.830] MSG: Player 1: tap a character to attack.
+[02:15.124] AI0 attack decision: (3,1)"Rocket Marauder" [ATK=125] → (2,1) "Skeleton Scout" [DEF=5]
+[02:15.425] Dice rolled: 1
+[02:15.471] MSG: Rocket Marauder wins!
+[02:20.090] Crystals: P1 2020 → 1870 (-150)  [battle]
+[02:21.484] Card destroyed  P1 (2,1) "Skeleton Scout"
+[02:21.487] Attack P0(3,1)"Rocket Marauder" → P1(2,1)"Skeleton Scout"  Dice=1  ATK=125 vs DEF=5  → WIN
+[02:21.487] Anim: 3A  △ P1(2,1)
+[02:21.983] Mode selected P0: ATTACK
+[02:21.989] Attack phase P0: 1 attack(s) available
+[02:21.990] MSG: Player 1: tap a character to attack.
+[02:22.282] AI0 attack decision: (3,2)"Archbishop" [ATK=70] → (1,2) "Dark Blob" [DEF=50]
+[02:22.634] Revealed: P1 (1,2) "Dark Blob"
+[02:22.634] Dice rolled: 2
+[02:22.636] MSG: Archbishop wins!
+[02:27.300] Crystals: P1 1870 → 1370 (-500)  [battle]
+[02:28.692] Card destroyed  P1 (1,2) "Dark Blob"
+[02:28.696] Attack P0(3,2)"Archbishop" → P1(1,2)"Dark Blob"  Dice=2  ATK=70 vs DEF=50  → WIN
+[02:28.696] Anim: 3A  △ P1(1,2)
+[02:29.204] Turn ended  P0  |  Crystals P0=2200 P1=1370
+
+--- Turn 12  |  Player 1  |  Crystals P0=2200 P1=1370 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Rock][Arch][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:29.817] Mode selected P1: ATTACK
+[02:29.823] Attack phase P1: 2 attack(s) available
+[02:29.823] MSG: Player 2: tap a character to attack.
+[02:30.124] AI1 attack decision: (2,2)"Leech Man" [ATK=60] → (3,0) "Acid Trap Hole" [DEF=0]
+[02:30.486] Revealed: P1 (2,2) "Leech Man"
+[02:30.510] Revealed: P0 (3,0) "Acid Trap Hole"
+[02:30.510] Dice rolled: 5
+[02:30.746] MSG: Trap triggered: Acid Trap Hole!
+[02:34.833] Card destroyed  P0 (3,0) "Acid Trap Hole"
+[02:34.841] Crystals: P1 1370 → 1320 (-50)  [trap]
+[02:36.224] MSG: Acid Trap Hole: Player 2 loses 50 Crystals!
+[02:36.230] Trap: "Acid Trap Hole" triggered  P1(2,2)→P0(3,0)
+[02:36.230] Anim: 3D  (attacker survives)
+[02:36.725] Mode selected P1: ATTACK
+[02:36.732] Attack phase P1: 1 attack(s) available
+[02:36.732] MSG: Player 2: tap a character to attack.
+[02:37.023] AI1 attack decision: (2,3)"Scout Probe" [ATK=40] → (4,1) "(dead-end)"
+[02:37.384] Revealed: P1 (2,3) "Scout Probe"
+[02:37.384] Dice rolled: 4
+[02:37.400] MSG: Nothing happens — Dead End.
+[02:40.666] Dead-end placed  P0 (4,1)
+[02:40.670] Attack P1(2,3)"Scout Probe" → P0(4,1)(empty)  Dice=4  → DEAD_END
+[02:40.670] Anim: 3F  (blank slot)
+[02:40.670] MSG: No valid target — effect cancelled.
+[02:40.674] Ability target resolved  P1
+[02:40.674] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[02:41.171] Turn ended  P1  |  Crystals P0=2200 P1=1320
+
+--- Turn 13  |  Player 0  |  Crystals P0=2200 P1=1320 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][Rock][Arch][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Leec][Scou][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:41.766] Mode selected P0: ATTACK
+[02:41.774] Attack phase P0: 2 attack(s) available
+[02:41.775] MSG: Player 1: tap a character to attack.
+[02:42.066] AI0 attack decision: (3,1)"Rocket Marauder" [ATK=125] → (2,2) "Leech Man" [DEF=60]
+[02:42.366] Dice rolled: 2
+[02:42.403] MSG: Rocket Marauder wins!
+[02:47.066] Crystals: P1 1320 → 440 (-880)  [battle]
+[02:48.459] Card destroyed  P1 (2,2) "Leech Man"
+[02:48.463] Attack P0(3,1)"Rocket Marauder" → P1(2,2)"Leech Man"  Dice=2  ATK=125 vs DEF=60  → WIN
+[02:48.463] Anim: 3A  △ P1(2,2)
+[02:48.966] Mode selected P0: ATTACK
+[02:48.971] Attack phase P0: 1 attack(s) available
+[02:48.974] MSG: Player 1: tap a character to attack.
+[02:49.279] AI0 attack decision: (3,2)"Archbishop" [ATK=70] → (2,3) "Scout Probe" [DEF=50]
+[02:49.587] Dice rolled: 2
+[02:49.600] MSG: Archbishop wins!
+[02:54.286] Crystals: P1 440 → 0 (-440)  [battle]
+
+=== GAME OVER ===
+[02:54.289] AI Player 0 wins
+[02:54.289] Reason: crystals
+[02:54.289] Final crystals — P0: 2200  P1: 0  |  Turns: 13
+[02:54.289] Log saved to: res://logs/results/2026-05-31_09-29-14_330_shirley_temple/battle_slippery_banana_peel_protocol_2026-05-31_09-42-16_882.txt

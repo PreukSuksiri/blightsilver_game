@@ -1537,20 +1537,6 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"flip": true,
-				"position": "left",
-				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
-			}
-		],
-		"speaker": "Kelly",
-		"text": "My name is Kelly. I'm from [color=#7EC8F4]The Order of High Gate[/color]. You may have not heard of it. But we are working on what you might have faced last night."
-	},
-	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
-		"characters": [
-			{
-				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 175.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
@@ -1774,7 +1760,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -1788,7 +1774,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -1802,7 +1788,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -1816,7 +1802,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -1830,7 +1816,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -1850,7 +1836,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			},
 			{
 				"crop_bottom": 30.0,

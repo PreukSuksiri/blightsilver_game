@@ -1,0 +1,230 @@
+=== Battle of Bird Droppings ===
+Battle started: 2026-05-31 20:36:07.874
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    War Supply
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Bribe, Tease
+P1 Tech hand: Prayer, Accident, Resurrection
+P0:   [C:Armo][C:Hamm][  — ][T:Spik][C:Mind]
+      [C:Pony][  — ][  — ][  — ][  — ]
+      [C:Gran][T:Curs][C:Ox P][T:Hypn][  — ]
+      [T:Echo][C:Stri][  — ][  — ][T:Snar]
+      [C:Hair][T:Blac][  — ][C:Blea][C:Vamp]
+P1:   [C:Lab ][T:Blac][  — ][  — ][T:Bunk]
+      [C:Stin][  — ][C:Flam][T:Acid][C:Lazy]
+      [C:Leop][C:Mad ][C:Chao][C:Need][C:Meph]
+      [C:Polt][  — ][  — ][  — ][C:Scyt]
+      [C:Leec][T:Pepp][  — ][  — ][C:Vamp]
+
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:07.310] Crystals: P1 5000 → 4950 (-50)  [skip tax]
+[00:07.310] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:08.701] Turn ended  P1  |  Crystals P0=5000 P1=4950
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4950 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:09.301] Mode selected P0: TECH
+[00:09.618] Tech played  P0: "Tease"
+[00:11.193] MSG: Opponent must choose and reveal 1 of their squares.
+[00:11.195] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:11.594] AI1 target chosen: (3,0)
+[00:11.629] Revealed: P1 (3,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[00:11.630] MSG: Tease: Opponent revealed Poltergeist.
+[00:11.632] Tech resolved  P0
+[00:12.493] Mode selected P0: ATTACK
+[00:12.499] Attack phase P0: 2 attack(s) available
+[00:12.499] MSG: Player 1: tap a character to attack.
+[00:12.793] AI0 attack decision: (0,4)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | face-down} → (3,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[00:13.145] Revealed: P0 (0,4) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:13.146] Dice rolled: 5
+[00:13.157] MSG: Mind Flayer wins!
+[00:17.787] Crystals: P1 4950 → 4250 (-700)  [battle]
+[00:19.185] Attack P0(0,4)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P1(3,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}  Dice=5  ATK=100 vs DEF=70  → WIN
+[00:19.185] Anim: 3A  △ P1(3,0)
+[00:19.185] Card destroyed  P1 (3,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[00:21.697] Turn ended  P0  |  Crystals P0=5000 P1=4250
+
+--- Turn 3  |  Player 1  |  Crystals P0=5000 P1=4250 ---
+P0:   [  ? ][  ? ][  — ][  ? ][Mind]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:22.302] Mode selected P1: TECH
+[00:22.612] Crystals: P1 4250 → 3250 (-1000)  [tech cost]
+[00:24.000] Tech played  P1: "Accident"
+[00:25.553] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:25.960] AI1 target chosen: (0,4)
+[00:25.963] Card destroyed  P0 (0,4) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:25.965] Tech resolved  P1
+[00:28.885] Crystals: P1 3250 → 3150 (-100)  [skip tax]
+[00:28.886] MSG: AI Player 1 skips without attacking — 100◆ tax (skip #2 this duel)
+[00:30.274] Turn ended  P1  |  Crystals P0=5000 P1=3150
+
+--- Turn 4  |  Player 0  |  Crystals P0=5000 P1=3150 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:30.878] Mode selected P0: TECH
+[00:31.195] Tech played  P0: "Bribe"
+[00:32.760] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:33.269] MSG: Bribe: AI passed.
+[00:33.271] Tech resolved  P0
+[00:36.193] Crystals: P0 5000 → 4950 (-50)  [skip tax]
+[00:36.194] MSG: AI Player 0 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:37.580] Turn ended  P0  |  Crystals P0=4950 P1=3150
+
+--- Turn 5  |  Player 1  |  Crystals P0=4950 P1=3150 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:38.176] Mode selected P1: TECH
+[00:38.477] Crystals: P1 3150 → 1650 (-1500)  [tech cost]
+[00:39.861] Tech played  P1: "Resurrection"
+[00:41.395] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:41.793] AI1 target chosen: (0,2)
+[00:41.796] Revealed: P1 (0,2) "Poltergeist" {Unit ATK0 DEF0 | cost 700 | affinity Chaos | base 0/0}
+[00:41.797] MSG: Revived Poltergeist at [0,2]!
+[00:41.800] Tech resolved  P1
+[00:42.694] Mode selected P1: ATTACK
+[00:42.698] Attack phase P1: 2 attack(s) available
+[00:42.698] MSG: Player 2: tap a character to attack.
+[00:42.994] AI1 attack decision: (0,2)"Poltergeist" {Unit ATK0 DEF0 | cost 700 | affinity Chaos | base 0/0} → (4,0) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima | face-down}
+[00:43.329] Revealed: P0 (4,0) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:43.330] Dice rolled: 5
+[00:48.095] Crystals: P1 1650 → 950 (-700)  [battle]
+[00:49.495] Attack P1(0,2)"Poltergeist" {Unit ATK0 DEF0 | cost 700 | affinity Chaos | base 0/0} → P0(4,0)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=5  ATK=0 vs DEF=15  → LOSE
+[00:49.495] Anim: 3B  △ P1(0,2)
+[00:49.495] Card destroyed  P1 (0,2) "Poltergeist" {Unit ATK0 DEF0 | cost 700 | affinity Chaos | base 0/0}
+[00:49.988] Mode selected P1: ATTACK
+[00:49.991] Attack phase P1: 1 attack(s) available
+[00:49.992] MSG: Player 2: tap a character to attack.
+[00:50.285] AI1 attack decision: (0,0)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down} → (4,0) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:50.622] Revealed: P1 (0,0) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:50.622] Dice rolled: 2
+[00:50.625] MSG: Lab Bloater wins!
+[00:55.270] Crystals: P0 4950 → 4650 (-300)  [battle]
+[00:56.676] Attack P1(0,0)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(4,0)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=2  ATK=20 vs DEF=15  → WIN
+[00:56.677] Anim: 3A  △ P0(4,0)
+[00:56.677] Card destroyed  P0 (4,0) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:57.163] Turn ended  P1  |  Crystals P0=4650 P1=950
+
+--- Turn 6  |  Player 0  |  Crystals P0=4650 P1=950 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [Lab ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:59.242] Crystals: P0 4650 → 4150 (-500)  [union]
+[00:59.289] Revealed: P0 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:59.289] Union summoned P0: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down}, "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down}
+[00:59.289] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:59.290] MSG: Player 1 summoned [Scarlet Shroom] using: "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down}, "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down}
+[01:02.667] Mode selected P0: ATTACK
+[01:02.673] Attack phase P0: 2 attack(s) available
+[01:02.674] MSG: Player 1: tap a character to attack.
+[01:02.968] AI0 attack decision: (0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (0,1) "Blackmail" {cost 0}
+[01:03.321] Revealed: P1 (0,1) "Blackmail" {cost 0}
+[01:03.323] Dice rolled: 3
+[01:03.655] MSG: Trap triggered: Blackmail!
+[01:07.709] Prompt: "Blackmail"  [Discard 1 Tech Card / End your turn]
+[01:08.297] Ability choice resolved: 0 (Yes)
+[01:08.297] MSG: Blackmail: Discarded 1 Tech Card.
+[01:08.304] Trap: "Blackmail" triggered  P0(0,0)→P1(0,1)
+[01:08.304] Anim: 3D  (attacker survives)
+[01:08.802] Mode selected P0: ATTACK
+[01:08.807] Attack phase P0: 1 attack(s) available
+[01:08.807] MSG: Player 1: tap a character to attack.
+[01:09.102] AI0 attack decision: (1,0)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (1,0) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down}
+[01:09.433] Revealed: P0 (1,0) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:09.453] Revealed: P1 (1,0) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[01:09.453] Dice rolled: 5
+[01:09.457] MSG: Ponycorn wins!
+[01:14.073] Crystals: P1 950 → 550 (-400)  [battle]
+[01:15.474] Attack P0(1,0)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(1,0)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}  Dice=5  ATK=25 vs DEF=10  → WIN
+[01:15.474] Anim: 3A  △ P1(1,0)
+[01:15.474] Card destroyed  P1 (1,0) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[01:15.983] Turn ended  P0  |  Crystals P0=4150 P1=550
+
+--- Turn 7  |  Player 1  |  Crystals P0=4150 P1=550 ---
+P0:   [Scar][  — ][  — ][  ? ][  — ]
+      [Pony][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [Lab ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:18.086] Crystals: P1 550 → 50 (-500)  [union]
+[01:18.088] Revealed: P1 (1,2) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[01:18.088] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down}
+[01:18.088] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[01:18.089] MSG: Player 2 summoned [Scarlet Shroom] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down}
+[01:21.545] Mode selected P1: ATTACK
+[01:21.556] Attack phase P1: 2 attack(s) available
+[01:21.557] MSG: Player 2: tap a character to attack.
+[01:21.847] AI1 attack decision: (0,0)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | flags:venom} → (1,0) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | flags:venom}
+[01:22.156] Dice rolled: 1
+[01:22.175] MSG: Both cards are destroyed!
+[01:26.777] Crystals: P1 50 → 0 (-50)  [battle]
+
+=== GAME OVER ===
+[01:26.789] AI Player 0 wins
+[01:26.789] Reason: crystals
+[01:26.789] Final crystals — P0: 4150  P1: 0  |  Turns: 7
+[01:26.789] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_bird_droppings_2026-05-31_20-36-07_874.txt

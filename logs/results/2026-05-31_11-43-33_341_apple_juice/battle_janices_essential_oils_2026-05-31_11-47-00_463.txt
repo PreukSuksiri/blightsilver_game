@@ -1,0 +1,395 @@
+=== Battle of Janice's Essential Oils ===
+Battle started: 2026-05-31 11:47:00.463
+Game Session of Apple Juice (started 2026-05-31 11:43:33.341)
+=== AI vs AI Match ===
+Batch iteration: 2 / 5
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Tease, Prayer
+P1 Tech hand: Tease, Great Diplomacy, Prayer
+P0:   [  — ][C:Gree][  — ][  — ][T:Flam]
+      [  — ][C:Swar][C:Moon][C:Deat][  — ]
+      [T:Red ][C:Soni][C:Gamm][C:Stai][  — ]
+      [  — ][C:Lab ][C:Gian][C:Armo][  — ]
+      [T:Bait][  — ][T:Defe][T:Expl][  — ]
+P1:   [C:Yaks][C:Skel][  — ][  — ][  — ]
+      [C:Grav][  — ][  — ][  — ][C:Curs]
+      [T:Bunk][C:Joan][C:Hamm][T:Alar][  — ]
+      [T:Red ][  — ][  — ][  — ][T:Hard]
+      [C:Mine][  — ][  — ][  — ][C:Fera]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.352] Mode selected P0: TECH
+[00:05.660] Tech played  P0: "Spy"
+[00:07.203] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.600] AI0 target chosen: (3,3)
+[00:07.601] Revealed: P1 (3,3) (blank slot)
+[00:07.604] Tech resolved  P0
+[00:08.501] Mode selected P0: ATTACK
+[00:08.504] Attack phase P0: 2 attack(s) available
+[00:08.505] MSG: Player 1: tap a character to attack.
+[00:08.800] AI0 attack decision: (3,2)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down} → (3,3) (dead-end)
+[00:09.164] Revealed: P0 (3,2) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:09.164] Dice rolled: 4
+[00:09.174] MSG: Nothing happens — Dead End.
+[00:12.495] Attack P0(3,2)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature} → P1(3,3)(empty)  Dice=4  → DEAD_END
+[00:12.495] Anim: 3F  (blank slot)
+[00:15.002] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Gian][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:15.600] Mode selected P1: TECH
+[00:15.901] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:17.286] Tech played  P1: "Great Diplomacy"
+[00:19.093] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:19.357] AI1 target chosen: (0,1)
+[00:19.358] Revealed: P1 (0,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:19.758] AI1 target chosen: (4,4)
+[00:19.761] Revealed: P1 (4,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:20.158] AI1 target chosen: (0,0)
+[00:20.161] Revealed: P1 (0,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[00:20.558] AI1 target chosen: (2,1)
+[00:20.559] Revealed: P1 (2,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[00:20.958] AI1 target chosen: (2,2)
+[00:20.959] Revealed: P1 (2,2) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[00:20.960] MSG: Great Diplomacy: revealed 5 unit(s).
+[00:20.968] Tech resolved  P1
+[00:21.859] Mode selected P1: ATTACK
+[00:21.870] Attack phase P1: 2 attack(s) available
+[00:21.870] MSG: Player 2: tap a character to attack.
+[00:22.159] AI1 attack decision: (0,1)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → (3,2) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:22.458] Dice rolled: 5
+[00:22.465] MSG: Skeleton Lancer wins!
+[00:27.134] Crystals: P0 5000 → 3500 (-1500)  [battle]
+[00:28.530] Attack P1(0,1)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P0(3,2)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}  Dice=5  ATK=45 vs DEF=20  → WIN
+[00:28.530] Anim: 3A  △ P0(3,2)
+[00:28.530] Card destroyed  P0 (3,2) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[00:31.054] Turn ended  P1  |  Crystals P0=3500 P1=4000
+
+--- Turn 3  |  Player 0  |  Crystals P0=3500 P1=4000 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [Yaks][Skel][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Joan][Hamm][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Fera]
+[00:31.646] Mode selected P0: TECH
+[00:31.958] Tech played  P0: "Tease"
+[00:33.495] MSG: Opponent must choose and reveal 1 of their squares.
+[00:33.496] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:33.896] AI1 target chosen: (4,0)
+[00:33.930] Revealed: P1 (4,0) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[00:33.930] MSG: Tease: Opponent revealed Mine Guard.
+[00:33.933] Tech resolved  P0
+[00:34.805] Mode selected P0: ATTACK
+[00:34.817] Attack phase P0: 2 attack(s) available
+[00:34.817] MSG: Player 1: tap a character to attack.
+[00:35.103] AI0 attack decision: (0,1)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down} → (0,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:35.449] Revealed: P0 (0,1) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:35.449] Dice rolled: 5
+[00:35.453] MSG: Green Mage wins!
+[00:40.097] Crystals: P1 4000 → 3700 (-300)  [battle]
+[00:41.498] Attack P0(0,1)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane} → P1(0,1)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=5  ATK=15 vs DEF=5  → WIN
+[00:41.498] Anim: 3A  △ P1(0,1)
+[00:41.498] Card destroyed  P1 (0,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:44.010] Turn ended  P0  |  Crystals P0=3500 P1=3700
+
+--- Turn 4  |  Player 1  |  Crystals P0=3500 P1=3700 ---
+P0:   [  — ][Gree][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [Yaks][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Joan][Hamm][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Mine][  — ][  — ][  — ][Fera]
+[00:44.603] Mode selected P1: TECH
+[00:44.917] Tech played  P1: "Prayer"
+[00:46.462] MSG: Prayer: Divine Characters protected until opponent's turn ends.
+[00:46.467] Tech resolved  P1
+[00:47.362] Mode selected P1: ATTACK
+[00:47.369] Attack phase P1: 2 attack(s) available
+[00:47.369] MSG: Player 2: tap a character to attack.
+[00:47.662] AI1 attack decision: (4,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → (0,1) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:47.963] Dice rolled: 5
+[00:47.974] MSG: Feral Vampire wins!
+[00:52.639] Crystals: P0 3500 → 3100 (-400)  [battle]
+[00:54.037] Attack P1(4,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P0(0,1)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}  Dice=5  ATK=40 vs DEF=15  → WIN
+[00:54.037] Anim: 3A  △ P0(0,1)
+[00:54.037] Card destroyed  P0 (0,1) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:56.553] Turn ended  P1  |  Crystals P0=3100 P1=3700
+
+--- Turn 5  |  Player 0  |  Crystals P0=3100 P1=3700 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [Yaks][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Joan][Hamm][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Mine][  — ][  — ][  — ][Fera]
+[00:58.638] Crystals: P0 3100 → 1600 (-1500)  [union]
+[00:58.687] Revealed: P0 (1,1) "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[00:58.687] Union summoned P0: "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down}, "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:58.687] MSG: Player 1 summoned [Barros the Colossal] using: "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down}, "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[01:02.058] Mode selected P0: ATTACK
+[01:02.066] Attack phase P0: 2 attack(s) available
+[01:02.066] MSG: Player 1: tap a character to attack.
+[01:02.362] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (0,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[01:02.672] Dice rolled: 4
+[01:02.717] MSG: Barros the Colossal wins!
+[01:07.355] Crystals: P1 3700 → 3200 (-500)  [battle]
+[01:08.752] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(0,0)"Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}  Dice=4  ATK=150 vs DEF=30  → WIN
+[01:08.752] Anim: 3A  △ P1(0,0)
+[01:08.752] Card destroyed  P1 (0,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[01:11.258] Turn ended  P0  |  Crystals P0=1600 P1=3200
+
+--- Turn 6  |  Player 1  |  Crystals P0=1600 P1=3200 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Barr][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Joan][Hamm][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Mine][  — ][  — ][  — ][Fera]
+[01:11.858] Mode selected P1: TECH
+[01:12.171] Tech played  P1: "Tease"
+[01:13.708] MSG: Opponent must choose and reveal 1 of their squares.
+[01:13.709] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[01:14.108] AI0 target chosen: (1,2)
+[01:14.141] Revealed: P0 (1,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[01:14.141] MSG: Tease: Opponent revealed Moon Tribe Marksman.
+[01:14.144] Tech resolved  P1
+[01:15.024] Mode selected P1: ATTACK
+[01:15.033] Attack phase P1: 2 attack(s) available
+[01:15.033] MSG: Player 2: tap a character to attack.
+[01:15.332] AI1 attack decision: (4,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → (1,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[01:15.634] Dice rolled: 5
+[01:15.644] MSG: Feral Vampire wins!
+[01:20.317] Crystals: P0 1600 → 1300 (-300)  [battle]
+[01:21.712] Attack P1(4,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P0(1,2)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=5  ATK=40 vs DEF=25  → WIN
+[01:21.712] Anim: 3A  △ P0(1,2)
+[01:21.712] Card destroyed  P0 (1,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[01:22.208] Mode selected P1: ATTACK
+[01:22.215] Attack phase P1: 1 attack(s) available
+[01:22.216] MSG: Player 2: tap a character to attack.
+[01:22.508] AI1 attack decision: (2,1)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → (1,3) (dead-end)
+[01:22.808] Dice rolled: 4
+[01:22.831] MSG: Nothing happens — Dead End.
+[01:26.198] Attack P1(2,1)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → P0(1,3)(empty)  Dice=4  → DEAD_END
+[01:26.198] Anim: 3F  (blank slot)
+[01:26.704] Turn ended  P1  |  Crystals P0=1300 P1=3200
+
+--- Turn 7  |  Player 0  |  Crystals P0=1300 P1=3200 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Joan][Hamm][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Mine][  — ][  — ][  — ][Fera]
+[01:27.301] Mode selected P0: ATTACK
+[01:27.314] Attack phase P0: 2 attack(s) available
+[01:27.314] MSG: Player 1: tap a character to attack.
+[01:27.599] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (4,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:27.900] Dice rolled: 2
+[01:27.941] MSG: Barros the Colossal wins!
+[01:32.583] Crystals: P1 3200 → 2800 (-400)  [battle]
+[01:33.980] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(4,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=2  ATK=150 vs DEF=25  → WIN
+[01:33.980] Anim: 3A  △ P1(4,4)
+[01:33.980] Card destroyed  P1 (4,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:34.476] Mode selected P0: ATTACK
+[01:34.482] Attack phase P0: 1 attack(s) available
+[01:34.483] MSG: Player 1: tap a character to attack.
+[01:34.796] AI0 attack decision: (2,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down} → (2,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[01:35.134] Revealed: P0 (2,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:35.134] Dice rolled: 1
+[01:35.137] MSG: Sonic Seraph wins!
+[01:39.771] Crystals: P1 2800 → 2520 (-280)  [battle]
+[01:41.168] Attack P0(2,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(2,1)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}  Dice=1  ATK=45 vs DEF=5  → WIN
+[01:41.168] Anim: 3A  △ P1(2,1)
+[01:41.168] Card destroyed  P1 (2,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[01:41.670] Turn ended  P0  |  Crystals P0=1300 P1=2520
+
+--- Turn 8  |  Player 1  |  Crystals P0=1300 P1=2520 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  ? ][Soni][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Hamm][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Mine][  — ][  — ][  — ][  — ]
+[01:42.271] Mode selected P1: ATTACK
+[01:42.281] Attack phase P1: 2 attack(s) available
+[01:42.281] MSG: Player 2: tap a character to attack.
+[01:42.571] AI1 attack decision: (2,2)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → (2,3) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos | face-down}
+[01:42.914] Revealed: P0 (2,3) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:42.914] Dice rolled: 2
+[01:42.917] MSG: Hammer Shark wins!
+[01:47.563] Crystals: P0 1300 → 1120 (-180)  [battle]
+[01:48.949] Attack P1(2,2)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P0(2,3)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}  Dice=2  ATK=20 vs DEF=0  → WIN
+[01:48.949] Anim: 3A  △ P0(2,3)
+[01:48.949] Card destroyed  P0 (2,3) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:49.446] Mode selected P1: ATTACK
+[01:49.456] Attack phase P1: 1 attack(s) available
+[01:49.457] MSG: Player 2: tap a character to attack.
+[01:49.746] AI1 attack decision: (4,0)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → (0,4) "Flame Trap" {cost 250}
+[01:50.089] Revealed: P0 (0,4) "Flame Trap" {cost 250}
+[01:50.089] Dice rolled: 1
+[01:50.371] MSG: Trap triggered: Flame Trap!
+[01:54.439] Crystals: P0 1120 → 870 (-250)  [trap cost]
+[01:55.830] MSG: Spike Trap: Mine Guard permanently loses 10 ATK!
+[01:55.836] Trap: "Flame Trap" triggered  P1(4,0)→P0(0,4)
+[01:55.836] Anim: 3D  (attacker survives)
+[01:56.332] Turn ended  P1  |  Crystals P0=870 P1=2520
+
+--- Turn 9  |  Player 0  |  Crystals P0=870 P1=2520 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  ? ][Soni][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Hamm][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Mine][  — ][  — ][  — ][  — ]
+[01:56.938] Mode selected P0: TECH
+[01:57.257] Tech played  P0: "Prayer"
+[01:58.796] MSG: Prayer: Divine Characters protected until opponent's turn ends.
+[01:58.800] Tech resolved  P0
+[01:59.696] Mode selected P0: ATTACK
+[01:59.705] Attack phase P0: 2 attack(s) available
+[01:59.705] MSG: Player 1: tap a character to attack.
+[01:59.988] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (4,0) "Mine Guard" {Unit ATK10 DEF15 | cost 300 | affinity Cosmic | base 10/15}
+[02:00.288] Dice rolled: 1
+[02:00.326] MSG: Barros the Colossal wins!
+[02:04.971] Crystals: P1 2520 → 2220 (-300)  [battle]
+[02:06.368] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(4,0)"Mine Guard" {Unit ATK10 DEF15 | cost 300 | affinity Cosmic | base 10/15}  Dice=1  ATK=150 vs DEF=15  → WIN
+[02:06.368] Anim: 3A  △ P1(4,0)
+[02:06.368] Card destroyed  P1 (4,0) "Mine Guard" {Unit ATK10 DEF15 | cost 300 | affinity Cosmic | base 10/15}
+[02:06.863] Mode selected P0: ATTACK
+[02:06.868] Attack phase P0: 1 attack(s) available
+[02:06.869] MSG: Player 1: tap a character to attack.
+[02:07.162] AI0 attack decision: (2,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → (2,2) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[02:07.463] Dice rolled: 2
+[02:07.471] MSG: Sonic Seraph wins!
+[02:12.148] Crystals: P1 2220 → 1970 (-250)  [battle]
+[02:13.554] Attack P0(2,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(2,2)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}  Dice=2  ATK=45 vs DEF=20  → WIN
+[02:13.554] Anim: 3A  △ P1(2,2)
+[02:13.554] Card destroyed  P1 (2,2) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[02:14.038] Turn ended  P0  |  Crystals P0=870 P1=1970
+
+--- Turn 10  |  Player 1  |  Crystals P0=870 P1=1970 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  ? ][Soni][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:14.637] Mode selected P1: ATTACK
+[02:14.643] Attack phase P1: 2 attack(s) available
+[02:14.643] MSG: Player 2: tap a character to attack.
+[02:14.933] AI1 attack decision: (1,0)"Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos | face-down} → (3,0) (dead-end)
+[02:15.267] Revealed: P1 (1,0) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[02:15.267] Dice rolled: 5
+[02:15.278] MSG: Nothing happens — Dead End.
+[02:18.637] Attack P1(1,0)"Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos} → P0(3,0)(empty)  Dice=5  → DEAD_END
+[02:18.637] Anim: 3F  (blank slot)
+[02:19.133] Mode selected P1: ATTACK
+[02:19.138] Attack phase P1: 1 attack(s) available
+[02:19.138] MSG: Player 2: tap a character to attack.
+[02:19.433] AI1 attack decision: (1,4)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos | face-down} → (1,4) (dead-end)
+[02:19.767] Revealed: P1 (1,4) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[02:19.768] Dice rolled: 5
+[02:19.779] MSG: Nothing happens — Dead End.
+[02:23.112] Attack P1(1,4)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} → P0(1,4)(empty)  Dice=5  → DEAD_END
+[02:23.112] Anim: 3F  (blank slot)
+[02:23.621] Turn ended  P1  |  Crystals P0=870 P1=1970
+
+--- Turn 11  |  Player 0  |  Crystals P0=870 P1=1970 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Barr][  — ][  — ][  — ]
+      [  ? ][Soni][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [Grav][  — ][  — ][  — ][Curs]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:24.225] Mode selected P0: ATTACK
+[02:24.233] Attack phase P0: 2 attack(s) available
+[02:24.233] MSG: Player 1: tap a character to attack.
+[02:24.532] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (1,4) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[02:24.842] Dice rolled: 4
+[02:24.888] MSG: Barros the Colossal wins!
+[02:29.550] Crystals: P1 1970 → 1670 (-300)  [battle]
+[02:30.947] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(1,4)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}  Dice=4  ATK=150 vs DEF=25  → WIN
+[02:30.947] Anim: 3A  △ P1(1,4)
+[02:30.947] Card destroyed  P1 (1,4) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[02:31.449] Mode selected P0: ATTACK
+[02:31.454] Attack phase P0: 1 attack(s) available
+[02:31.455] MSG: Player 1: tap a character to attack.
+[02:31.742] AI0 attack decision: (2,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → (1,0) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[02:32.042] Dice rolled: 5
+[02:32.052] MSG: Sonic Seraph wins!
+[02:36.734] Crystals: P1 1670 → 1420 (-250)  [battle]
+[02:38.132] Attack P0(2,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(1,0)"Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}  Dice=5  ATK=45 vs DEF=30  → WIN
+[02:38.132] Anim: 3A  △ P1(1,0)
+[02:38.132] Card destroyed  P1 (1,0) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+
+=== GAME OVER ===
+[02:38.133] AI Player 0 wins
+[02:38.133] Reason: all_destroyed
+[02:38.133] Final crystals — P0: 870  P1: 1420  |  Turns: 11
+[02:38.133] Log saved to: res://logs/results/2026-05-31_11-43-33_341_apple_juice/battle_janices_essential_oils_2026-05-31_11-47-00_463.txt

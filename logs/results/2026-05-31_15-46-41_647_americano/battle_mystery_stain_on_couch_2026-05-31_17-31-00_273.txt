@@ -1,0 +1,280 @@
+=== Battle of Mystery Stain on Couch ===
+Battle started: 2026-05-31 17:31:00.273
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Jacob the Ski Mask
+AI-1 Deck:    E2E T2 solo Ox Patrol
+AI-0 Forced:  (2,2) Jacob the Ski Mask
+AI-1 Forced:  (2,2) Ox Patrol
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, Great Diplomacy, Tease
+P1 Tech hand: Release Mutagen, Siege Cannon, Great Diplomacy
+P0:   [C:Book][  — ][  — ][  — ][C:Meli]
+      [  — ][C:Dark][T:Hard][C:Pit ][  — ]
+      [T:Expl][T:Alar][C:Jaco][  — ][T:Bait]
+      [  — ][C:Hand][  — ][C:Big ][T:Bunk]
+      [C:Hair][T:Red ][  — ][  — ][C:Hamm]
+P1:   [  — ][  — ][  — ][C:Pony][  — ]
+      [  — ][C:Paro][C:Immo][C:Blad][T:Brai]
+      [  — ][C:Skel][C:Ox P][C:Skel][  — ]
+      [T:Self][C:Pit ][C:Nigh][C:Grav][  — ]
+      [T:Alar][  — ][  — ][T:Foul][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[00:05.312] Mode selected P0: TECH
+[00:05.621] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:07.004] Tech played  P0: "Great Diplomacy"
+[00:08.602] Revealed: P0 (0,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:08.635] Revealed: P0 (0,4) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:08.662] Revealed: P0 (1,1) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:08.685] Revealed: P0 (1,3) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:08.708] Revealed: P0 (2,2) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[00:08.729] Revealed: P0 (3,1) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[00:08.751] Revealed: P0 (3,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:08.774] Revealed: P0 (4,0) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:08.795] Revealed: P0 (4,4) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[00:08.801] Tech resolved  P0
+[00:09.525] Mode selected P0: ATTACK
+[00:09.536] Attack phase P0: 2 attack(s) available
+[00:09.536] MSG: Player 1: tap a character to attack.
+[00:09.824] AI0 attack decision: (0,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (4,0) "Alarm" {cost 0}
+[00:10.150] Revealed: P1 (4,0) "Alarm" {cost 0}
+[00:10.151] Dice rolled: 5
+[00:10.434] MSG: Trap triggered: Alarm!
+[00:14.526] MSG: Alarm: +5 DEF to all ANIMA characters this turn!
+[00:14.538] Trap: "Alarm" triggered  P0(0,0)→P1(4,0)
+[00:14.538] Anim: 3D  (attacker survives)
+[00:15.017] Mode selected P0: ATTACK
+[00:15.027] Attack phase P0: 1 attack(s) available
+[00:15.027] MSG: Player 1: tap a character to attack.
+[00:15.316] AI0 attack decision: (0,4)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} → (0,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}
+[00:15.652] Revealed: P1 (0,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:15.654] Dice rolled: 2
+[00:20.425] Crystals: P0 4000 → 3300 (-700)  [battle]
+[00:20.425] Crystals: P0 3300 → 3600 (+300)  [recovery]
+[00:20.426] MSG: Melissa the Healer: Recovered 300 Crystals!
+[00:20.455] Attack P0(0,4)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} → P1(0,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=2  ATK=0 vs DEF=20  → LOSE
+[00:20.455] Anim: 3B  △ P0(0,4)
+[00:20.455] Card destroyed  P0 (0,4) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:20.927] Turn ended  P0  |  Crystals P0=3600 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=3600 P1=5000 ---
+P0:   [Book][  — ][  — ][  — ][  — ]
+      [  — ][Dark][  ? ][Pit ][  — ]
+      [  ? ][  ? ][Jaco][  — ][  ? ]
+      [  — ][Hand][  — ][Big ][  ? ]
+      [Hair][  ? ][  — ][  — ][Hamm]
+P1:   [  — ][  — ][  — ][Pony][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:21.520] Mode selected P1: TECH
+[00:21.820] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[00:23.219] Tech played  P1: "Great Diplomacy"
+[00:24.792] Revealed: P1 (1,1) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:24.816] Revealed: P1 (1,2) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[00:24.833] Revealed: P1 (1,3) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[00:24.853] Revealed: P1 (2,1) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:24.872] Revealed: P1 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:24.892] Revealed: P1 (2,3) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:24.892] Revealed: P1 (3,1) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:24.912] Revealed: P1 (3,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:24.937] Revealed: P1 (3,3) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[00:24.943] Tech resolved  P1
+[00:25.646] Mode selected P1: ATTACK
+[00:25.664] Attack phase P1: 2 attack(s) available
+[00:25.665] MSG: Player 2: tap a character to attack.
+[00:25.952] AI1 attack decision: (3,1)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → (1,3) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:26.253] Dice rolled: 5
+[00:26.268] MSG: Pit Lord wins!
+[00:30.945] Crystals: P0 3600 → 2330 (-1270)  [battle]
+[00:32.352] Attack P1(3,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P0(1,3)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}  Dice=5  ATK=120 vs DEF=100  → WIN
+[00:32.352] Anim: 3A  △ P0(1,3)
+[00:32.352] Card destroyed  P0 (1,3) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:32.838] Mode selected P1: ATTACK
+[00:32.854] Attack phase P1: 1 attack(s) available
+[00:32.854] MSG: Player 2: tap a character to attack.
+[00:33.137] AI1 attack decision: (2,3)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} → (3,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:33.437] Dice rolled: 2
+[00:33.451] MSG: Both cards are destroyed!
+[00:38.049] Crystals: P1 4000 → 3700 (-300)  [battle]
+[00:39.437] Crystals: P0 2330 → 1910 (-420)  [battle]
+[00:40.844] Attack P1(2,3)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} → P0(3,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=2  ATK=35 vs DEF=35  → TIE
+[00:40.844] Anim: 3C  △ P1(2,3) + △ P0(3,3)
+[00:40.844] Card destroyed  P1 (2,3) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:40.844] Card destroyed  P0 (3,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:41.327] Turn ended  P1  |  Crystals P0=1910 P1=3700
+
+--- Turn 3  |  Player 0  |  Crystals P0=1910 P1=3700 ---
+P0:   [Book][  — ][  — ][  — ][  — ]
+      [  — ][Dark][  ? ][  — ][  — ]
+      [  ? ][  ? ][Jaco][  — ][  ? ]
+      [  — ][Hand][  — ][  — ][  ? ]
+      [Hair][  ? ][  — ][  — ][Hamm]
+P1:   [  — ][  — ][  — ][Pony][  — ]
+      [  — ][Paro][Immo][Blad][  ? ]
+      [  — ][Skel][Ox P][  — ][  — ]
+      [  ? ][Pit ][Nigh][Grav][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:41.920] Mode selected P0: TECH
+[00:42.220] Crystals: P0 1910 → 1890 (-20)  [tech cost]
+[00:43.631] Tech played  P0: "Tease"
+[00:45.153] MSG: Opponent must choose and reveal 1 of their squares.
+[00:45.158] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+[00:45.553] AI1 target chosen: (4,3)
+[00:45.584] Revealed: P1 (4,3) "Foul Gas" {cost 0}
+[00:45.584] MSG: Tease: Opponent revealed Foul Gas.
+[00:45.593] Tech resolved  P0
+[00:46.454] Mode selected P0: ATTACK
+[00:46.470] Attack phase P0: 2 attack(s) available
+[00:46.470] MSG: Player 1: tap a character to attack.
+[00:46.754] AI0 attack decision: (3,1)"Hands in the Attic" {Unit ATK30 DEF20 | cost 300 | affinity Chaos | base 20/20 | buff +tempATK10} → (3,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:47.054] Dice rolled: 2
+[00:47.065] MSG: Both cards are destroyed!
+[00:51.662] Crystals: P0 1890 → 1570 (-320)  [battle]
+[00:53.053] Crystals: P1 3700 → 2800 (-900)  [battle]
+[00:54.458] Attack P0(3,1)"Hands in the Attic" {Unit ATK30 DEF20 | cost 300 | affinity Chaos | base 20/20 | buff +tempATK10} → P1(3,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=2  ATK=30 vs DEF=30  → TIE
+[00:54.458] Anim: 3C  △ P0(3,1) + △ P1(3,2)
+[00:54.458] Card destroyed  P0 (3,1) "Hands in the Attic" {Unit ATK30 DEF20 | cost 300 | affinity Chaos | base 20/20 | buff +tempATK10}
+[00:54.458] Card destroyed  P1 (3,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:54.938] Mode selected P0: ATTACK
+[00:54.951] Attack phase P0: 1 attack(s) available
+[00:54.951] MSG: Player 1: tap a character to attack.
+[00:55.236] AI0 attack decision: (4,0)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → (0,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:55.536] Dice rolled: 4
+[00:55.548] Prompt: "Pay 100 Crystals for +10 ATK this battle?"  [Pay 100 Crystals / Skip]
+[00:56.144] Ability choice resolved: 1 (No)
+[00:56.144] MSG: Hairpin Assassin wins!
+[01:00.589] Crystals: P1 2800 → 2500 (-300)  [battle]
+[01:01.992] Attack P0(4,0)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → P1(0,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=4  ATK=25 vs DEF=20  → WIN
+[01:01.992] Anim: 3A  △ P1(0,3)
+[01:01.992] Card destroyed  P1 (0,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:02.485] Turn ended  P0  |  Crystals P0=1570 P1=2500
+
+--- Turn 4  |  Player 1  |  Crystals P0=1570 P1=2500 ---
+P0:   [Book][  — ][  — ][  — ][  — ]
+      [  — ][Dark][  ? ][  — ][  — ]
+      [  ? ][  ? ][Jaco][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Hair][  ? ][  — ][  — ][Hamm]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Paro][Immo][Blad][  ? ]
+      [  — ][Skel][Ox P][  — ][  — ]
+      [  ? ][Pit ][  — ][Grav][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:03.078] Mode selected P1: TECH
+[01:03.378] Crystals: P1 2500 → 1500 (-1000)  [tech cost]
+[01:04.768] Tech played  P1: "Siege Cannon"
+[01:06.320] MSG: Siege Cannon active!
+[01:06.329] Tech resolved  P1
+[01:07.239] Mode selected P1: ATTACK
+[01:07.253] Attack phase P1: 2 attack(s) available
+[01:07.256] MSG: Player 2: tap a character to attack.
+[01:07.545] AI1 attack decision: (3,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → (1,1) "Dark Blob" {Unit ATK25 DEF50 | cost 500 | affinity Chaos | base 25/50}
+[01:07.853] Dice rolled: 3
+[01:07.864] MSG: Pit Lord wins!
+[01:12.554] Crystals: P0 1570 → 1050 (-520)  [battle]
+[01:13.958] Attack P1(3,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P0(1,1)"Dark Blob" {Unit ATK25 DEF50 | cost 500 | affinity Chaos | base 25/50}  Dice=3  ATK=60 vs DEF=50  → WIN
+[01:13.958] Anim: 3A  △ P0(1,1)
+[01:13.958] Card destroyed  P0 (1,1) "Dark Blob" {Unit ATK25 DEF50 | cost 500 | affinity Chaos | base 25/50}
+[01:14.454] Mode selected P1: ATTACK
+[01:14.465] Attack phase P1: 1 attack(s) available
+[01:14.466] MSG: Player 2: tap a character to attack.
+[01:14.762] AI1 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → (2,2) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:15.069] Dice rolled: 4
+[01:15.081] MSG: Ox Patrol wins!
+[01:20.770] Crystals: P0 1050 → 680 (-370)  [battle]
+[01:22.173] Attack P1(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P0(2,2)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}  Dice=4  ATK=35 vs DEF=20  → WIN
+[01:22.174] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +ATK 5
+[01:22.174] Anim: 3A  △ P0(2,2)
+[01:22.174] Card destroyed  P0 (2,2) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:22.680] Turn ended  P1  |  Crystals P0=680 P1=1500
+
+--- Turn 5  |  Player 0  |  Crystals P0=680 P1=1500 ---
+P0:   [Book][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Hair][  ? ][  — ][  — ][Hamm]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Paro][Immo][Blad][  ? ]
+      [  — ][Skel][Ox P][  — ][  — ]
+      [  ? ][Pit ][  — ][Grav][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:23.278] Mode selected P0: TECH
+[01:23.588] Crystals: P0 680 → 660 (-20)  [tech cost]
+[01:24.984] Tech played  P0: "Bribe"
+[01:26.529] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:27.037] MSG: Bribe: AI passed.
+[01:27.056] Tech resolved  P0
+[01:27.954] Mode selected P0: ATTACK
+[01:27.966] Attack phase P0: 2 attack(s) available
+[01:27.966] MSG: Player 1: tap a character to attack.
+[01:28.261] AI0 attack decision: (0,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:28.569] Dice rolled: 3
+[01:28.585] MSG: Book with Fangs wins!
+[01:34.267] Crystals: P1 1500 → 1080 (-420)  [battle]
+[01:35.681] Attack P0(0,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=3  ATK=45 vs DEF=40  → WIN
+[01:35.681] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 5
+[01:35.681] Anim: 3A  △ P1(2,2)
+[01:35.681] Card destroyed  P1 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:36.166] Mode selected P0: ATTACK
+[01:36.177] Attack phase P0: 1 attack(s) available
+[01:36.178] MSG: Player 1: tap a character to attack.
+[01:36.474] AI0 attack decision: (4,0)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → (1,1) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:36.782] Dice rolled: 5
+[01:36.793] Prompt: "Pay 100 Crystals for +10 ATK this battle?"  [Pay 100 Crystals / Skip]
+[01:37.390] Ability choice resolved: 1 (No)
+[01:37.391] MSG: Hairpin Assassin wins!
+[01:41.849] Crystals: P1 1080 → 780 (-300)  [battle]
+[01:43.260] Attack P0(4,0)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → P1(1,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=5  ATK=25 vs DEF=20  → WIN
+[01:43.260] Anim: 3A  △ P1(1,1)
+[01:43.260] Card destroyed  P1 (1,1) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:43.750] Turn ended  P0  |  Crystals P0=660 P1=780
+
+--- Turn 6  |  Player 1  |  Crystals P0=660 P1=780 ---
+P0:   [Book][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Hair][  ? ][  — ][  — ][Hamm]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Immo][Blad][  ? ]
+      [  — ][Skel][  — ][  — ][  — ]
+      [  ? ][Pit ][  — ][Grav][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:44.361] Mode selected P1: TECH
+[01:44.682] Tech played  P1: "Release Mutagen"
+[01:46.254] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[01:46.660] AI1 target chosen: (1,3)
+[01:46.674] Tech resolved  P1
+[01:47.578] Mode selected P1: ATTACK
+[01:47.588] Attack phase P1: 2 attack(s) available
+[01:47.588] MSG: Player 2: tap a character to attack.
+[01:47.886] AI1 attack decision: (3,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → (0,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:48.194] Dice rolled: 2
+[01:48.207] MSG: Pit Lord wins!
+[01:52.899] Crystals: P0 660 → 0 (-660)  [battle]
+
+=== GAME OVER ===
+[01:52.920] AI Player 1 wins
+[01:52.920] Reason: crystals
+[01:52.920] Final crystals — P0: 0  P1: 780  |  Turns: 6
+[01:52.920] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_mystery_stain_on_couch_2026-05-31_17-31-00_273.txt

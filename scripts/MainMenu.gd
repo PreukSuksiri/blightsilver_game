@@ -18,22 +18,33 @@ const DailyDungeonMapScene  = preload("res://scenes/daily_dungeon_map.tscn")
 @onready var gallery_btn:       Button = $GalleryBtn
 @onready var mailbox_btn:       Button = $MailboxBtn
 @onready var credits_btn:       Button = $CreditsBtn
+@onready var exit_game_btn:     Button = $ExitGameBtn
 @onready var campaign_btn:      Button = $SettingsBtn
 @onready var version_label:     Label  = $VersionLabel
 @onready var fade_overlay:      ColorRect         = $FadeOverlay
 @onready var deck_status_label: Label  = $DeckStatusBg/DeckStatusLabel
 @onready var settings_icon_btn: Button = $SettingsIconBtn
+@onready var settings_icon_shadow: Control = $SettingsIconShadow
 @onready var exit_icon_btn:     Button = $ExitIconBtn
+@onready var exit_icon_shadow:  Control = $ExitIconShadow
+@onready var deck_status_bg:    Panel  = $DeckStatusBg
+
+const MENU_BTN_Z := 1
+const MENU_OVERLAY_Z := 25
+const MENU_DROPDOWN_BACKDROP_Z := 40
+const MENU_DROPDOWN_Z := 41
+const MENU_STACK_GAP := 14.0
+
+var _overlay_obscure_depth: int = 0
 
 func _ready() -> void:
-	local_2p_btn.text = "SINGLE PLAYER"
-	local_2p_btn.pressed.connect(_on_single_player)
+	local_2p_btn.pressed.connect(_on_campaign)
 	deck_build_btn.pressed.connect(_on_deck_builder)
 	shop_btn.pressed.connect(_on_shop)
 	gallery_btn.pressed.connect(_on_gallery)
 	mailbox_btn.pressed.connect(_on_inventory)
 	credits_btn.pressed.connect(_on_credits)
-	campaign_btn.text = "MULTIPLAYER"
+	exit_game_btn.pressed.connect(_on_exit_game)
 	campaign_btn.pressed.connect(_on_multiplayer)
 	settings_icon_btn.pressed.connect(_on_settings)
 	settings_icon_btn.tooltip_text = "Settings"
@@ -51,6 +62,9 @@ func _ready() -> void:
 	_refresh_deck_status()
 	_refresh_inventory_badge()
 	MailboxManager.mailbox_changed.connect(_refresh_inventory_badge)
+	MenuButtonConfig.load_config()
+	MenuButtonConfig.visibility_changed.connect(_apply_menu_button_state)
+	_apply_menu_button_state()
 	# Re-open daily dungeon overlay when returning from a daily dungeon battle.
 	if DailyDungeonManager.return_to_dungeon_map:
 		DailyDungeonManager.return_to_dungeon_map = false
@@ -133,21 +147,221 @@ func _show_deck_warning() -> void:
 
 func _refresh_inventory_badge() -> void:
 	var count := MailboxManager.get_unclaimed_count()
+	var label := MenuButtonConfig.get_label("inventory").to_upper()
 	if count > 0:
-		mailbox_btn.text = "INVENTORY  [%d]" % count
+		mailbox_btn.text = "%s  [%d]" % [label, count]
 		mailbox_btn.add_theme_color_override("font_color", Color(0.3, 1.0, 0.65, 1.0))
 	else:
-		mailbox_btn.text = "INVENTORY"
+		mailbox_btn.text = label
 		mailbox_btn.add_theme_color_override("font_color", Color(0.95, 0.8, 0.3, 0.85))
+
+func _stack_button_for_key(key: String) -> Button:
+	match key:
+		"campaign": return local_2p_btn
+		"single_player": return local_2p_btn
+		"multiplayer": return campaign_btn
+		"deck_builder": return deck_build_btn
+		"inventory": return mailbox_btn
+		"shop": return shop_btn
+		"gallery": return gallery_btn
+		"credits": return credits_btn
+		"exit": return exit_game_btn
+	return null
+
+
+func _apply_menu_button_state() -> void:
+	_set_main_menu_btn(local_2p_btn, "campaign")
+	_set_main_menu_btn(deck_build_btn, "deck_builder")
+	_set_main_menu_btn(shop_btn, "shop")
+	_set_main_menu_btn(gallery_btn, "gallery")
+	_set_main_menu_btn(mailbox_btn, "inventory")
+	_set_main_menu_btn(credits_btn, "credits")
+	_set_main_menu_btn(exit_game_btn, "exit")
+	_set_main_menu_btn(campaign_btn, "multiplayer")
+	_sync_corner_icon(settings_icon_btn, settings_icon_shadow, "settings")
+	_sync_corner_icon(exit_icon_btn, exit_icon_shadow, "exit_icon")
+	_apply_menu_button_labels()
+	_apply_menu_button_positions()
+
+
+func _set_main_menu_btn(btn: BaseButton, key: String) -> void:
+	btn.visible = MenuButtonConfig.is_main_visible(key)
+	btn.disabled = not MenuButtonConfig.is_main_enabled(key)
+
+
+func _sync_corner_icon(btn: BaseButton, shadow: Control, key: String,
+		obscured: bool = false) -> void:
+	var visible := not obscured and MenuButtonConfig.is_main_visible(key)
+	btn.visible = visible
+	btn.disabled = not MenuButtonConfig.is_main_enabled(key)
+	if shadow != null:
+		shadow.visible = visible
+
+
+func _apply_menu_button_labels() -> void:
+	local_2p_btn.text = MenuButtonConfig.get_label("campaign").to_upper()
+	campaign_btn.text = MenuButtonConfig.get_label("multiplayer").to_upper()
+	deck_build_btn.text = MenuButtonConfig.get_label("deck_builder").to_upper()
+	mailbox_btn.text = MenuButtonConfig.get_label("inventory").to_upper()
+	shop_btn.text = MenuButtonConfig.get_label("shop").to_upper()
+	gallery_btn.text = MenuButtonConfig.get_label("gallery").to_upper()
+	credits_btn.text = MenuButtonConfig.get_label("credits").to_upper()
+	exit_game_btn.text = MenuButtonConfig.get_label("exit").to_upper()
+
+
+func _trailing_stack_button_y(visual_slot: int) -> float:
+	if visual_slot <= MenuButtonConfig.SLOT_COUNT:
+		return float(MenuButtonConfig.SLOT_TOP_Y[visual_slot])
+	var overflow: int = visual_slot - MenuButtonConfig.SLOT_COUNT
+	return float(MenuButtonConfig.SLOT_TOP_Y[MenuButtonConfig.SLOT_COUNT]) \
+		+ overflow * (MenuButtonConfig.SLOT_BTN_HEIGHT + MENU_STACK_GAP)
+
+
+func _apply_trailing_stack_button(btn: Button, key: String, visual_slot: int) -> int:
+	if not MenuButtonConfig.is_main_visible(key):
+		return visual_slot
+	var top_y: float = _trailing_stack_button_y(visual_slot)
+	_apply_stack_button_rect(btn, Vector4(
+		MenuButtonConfig.SLOT_BTN_LEFT, top_y,
+		MenuButtonConfig.SLOT_BTN_RIGHT,
+		top_y + MenuButtonConfig.SLOT_BTN_HEIGHT))
+	btn.z_index = MENU_BTN_Z
+	return visual_slot + 1
+
+
+func _apply_menu_button_positions() -> void:
+	if _overlay_obscure_depth > 0:
+		return
+	var entries: Array = []
+	for key: String in [
+			"campaign", "multiplayer", "deck_builder",
+			"inventory", "shop", "gallery"]:
+		if not MenuButtonConfig.is_main_visible(key):
+			continue
+		if not MenuButtonConfig.uses_stack_slot(key):
+			continue
+		var btn: Button = _stack_button_for_key(key)
+		if btn == null:
+			continue
+		entries.append({
+			"sort_slot": MenuButtonConfig.get_sort_slot(key),
+			"btn": btn,
+		})
+	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return int(a["sort_slot"]) < int(b["sort_slot"]))
+	var visual_slot: int = 1
+	for entry: Dictionary in entries:
+		_apply_stack_button_rect(
+			entry["btn"], MenuButtonConfig.get_slot_offsets(visual_slot))
+		entry["btn"].z_index = MENU_BTN_Z
+		visual_slot += 1
+	visual_slot = _apply_trailing_stack_button(credits_btn, "credits", visual_slot)
+	_apply_trailing_stack_button(exit_game_btn, "exit", visual_slot)
+
+
+func _apply_stack_button_rect(btn: Control, rect: Vector4) -> void:
+	btn.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	btn.offset_left = rect.x
+	btn.offset_top = rect.y
+	btn.offset_right = rect.z
+	btn.offset_bottom = rect.w
+	btn.grow_horizontal = Control.GROW_DIRECTION_BOTH
+
+
+func _position_dropdown_panel(panel: Panel, anchor: Control, panel_height: float) -> void:
+	panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	var anchor_rect := anchor.get_global_rect()
+	panel.global_position = anchor_rect.position + Vector2(0.0, anchor_rect.size.y + 4.0)
+	panel.size = Vector2(anchor_rect.size.x, panel_height)
+	panel.z_index = MENU_DROPDOWN_Z
+	panel.move_to_front()
+
+
+func _close_menu_dropdowns() -> void:
+	for node_name: String in [
+			"ModeChoicePanel", "MultiplayerChoicePanel",
+			"ModeChoiceBackdrop", "MultiplayerChoiceBackdrop"]:
+		var node: Node = get_node_or_null(node_name)
+		if node != null:
+			node.queue_free()
+
+
+func _push_main_menu_obscured() -> void:
+	_overlay_obscure_depth += 1
+	if _overlay_obscure_depth == 1:
+		_set_main_menu_obscured(true)
+
+
+func _pop_main_menu_obscured() -> void:
+	_overlay_obscure_depth = maxi(0, _overlay_obscure_depth - 1)
+	if _overlay_obscure_depth == 0:
+		_set_main_menu_obscured(false)
+		_apply_menu_button_state()
+
+
+func _set_main_menu_obscured(obscured: bool) -> void:
+	for key: String in [
+			"campaign", "multiplayer", "deck_builder",
+			"inventory", "shop", "gallery", "credits", "exit"]:
+		var btn: Button = _stack_button_for_key(key)
+		if btn == null:
+			continue
+		btn.visible = false if obscured else MenuButtonConfig.is_main_visible(key)
+	_sync_corner_icon(settings_icon_btn, settings_icon_shadow, "settings", obscured)
+	_sync_corner_icon(exit_icon_btn, exit_icon_shadow, "exit_icon", obscured)
+	if deck_status_bg != null:
+		deck_status_bg.visible = not obscured
+
+
+func _on_menu_overlay_closed() -> void:
+	_pop_main_menu_obscured()
+
+
+func _open_menu_overlay(overlay: Control, overlay_name: String,
+		on_closed: Callable = Callable()) -> Control:
+	if get_node_or_null(overlay_name) != null:
+		return null
+	_close_menu_dropdowns()
+	overlay.name = overlay_name
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = MENU_OVERLAY_Z
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	if overlay.has_signal("closed"):
+		overlay.closed.connect(_on_menu_overlay_closed)
+		if on_closed.is_valid():
+			overlay.closed.connect(on_closed)
+	else:
+		overlay.tree_exiting.connect(_on_menu_overlay_closed)
+		if on_closed.is_valid():
+			overlay.tree_exiting.connect(on_closed)
+	_push_main_menu_obscured()
+	add_child(overlay)
+	overlay.move_to_front()
+	return overlay
+
+
+func _apply_menu_button_visibility() -> void:
+	_apply_menu_button_state()
 
 func _on_single_player() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
+	if not MenuButtonConfig.is_main_visible("single_player") \
+			or not MenuButtonConfig.is_main_enabled("single_player"):
+		return
 	if get_node_or_null("ModeChoicePanel") != null:
 		get_node("ModeChoicePanel").queue_free()
 		return
 
-	var picker := Panel.new()
-	picker.name = "ModeChoicePanel"
+	var visible_sub_count := 0
+	if MenuButtonConfig.is_sub_visible("single_player", "campaign"):
+		visible_sub_count += 1
+	if MenuButtonConfig.is_sub_visible("single_player", "daily_dungeon"):
+		visible_sub_count += 1
+	if MenuButtonConfig.is_sub_visible("single_player", "vs_ai"):
+		visible_sub_count += 1
+	if visible_sub_count == 0:
+		return
+
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.059, 0.078, 0.145, 0.98)
 	sb.border_width_left   = 2
@@ -159,18 +373,20 @@ func _on_single_player() -> void:
 	sb.corner_radius_top_right    = 6
 	sb.corner_radius_bottom_right = 6
 	sb.corner_radius_bottom_left  = 6
-	picker.add_theme_stylebox_override("panel", sb)
-	picker.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	picker.position = Vector2(local_2p_btn.position.x, local_2p_btn.position.y + local_2p_btn.size.y + 4)
-	picker.size = Vector2(local_2p_btn.size.x, 168)
-	picker.z_index = 3
 
 	var backdrop := Control.new()
+	backdrop.name = "ModeChoiceBackdrop"
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
-	backdrop.z_index = 2
+	backdrop.z_index = MENU_DROPDOWN_BACKDROP_Z
 	add_child(backdrop)
+	backdrop.move_to_front()
+
+	var picker := Panel.new()
+	picker.name = "ModeChoicePanel"
+	picker.add_theme_stylebox_override("panel", sb)
 	add_child(picker)
+	_position_dropdown_panel(picker, local_2p_btn, visible_sub_count * 52 + 12)
 
 	backdrop.gui_input.connect(func(ev: InputEvent) -> void:
 		if (ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed
@@ -191,48 +407,65 @@ func _on_single_player() -> void:
 	vbox.add_theme_constant_override("separation", 6)
 	picker.add_child(vbox)
 
-	var _add_btn := func(label: String, cb: Callable) -> void:
+	var _add_btn := func(label: String, cb: Callable, enabled: bool = true) -> void:
 		var btn := Button.new()
 		btn.text = label
+		btn.disabled = not enabled
 		btn.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		btn.add_theme_font_override("font", CHIVO_FONT)
 		btn.add_theme_font_size_override("font_size", 18)
-		btn.pressed.connect(cb)
+		if enabled:
+			btn.pressed.connect(cb)
 		_apply_menu_btn_style(btn, false)
 		vbox.add_child(btn)
 
-	_add_btn.call("CAMPAIGN", func() -> void:
-		picker.queue_free()
-		if not _is_deck_ready():
-			_show_deck_warning()
-			return
-		_on_campaign())
+	if MenuButtonConfig.is_sub_visible("single_player", "campaign"):
+		_add_btn.call("CAMPAIGN", func() -> void:
+			picker.queue_free()
+			if not _is_deck_ready():
+				_show_deck_warning()
+				return
+			_on_campaign(), MenuButtonConfig.is_sub_enabled("single_player", "campaign"))
 
-	_add_btn.call("DAILY DUNGEON", func() -> void:
-		picker.queue_free()
-		if not _is_deck_ready():
-			_show_deck_warning()
-			return
-		_on_daily_dungeon())
+	if MenuButtonConfig.is_sub_visible("single_player", "daily_dungeon"):
+		_add_btn.call("DAILY DUNGEON", func() -> void:
+			picker.queue_free()
+			if not _is_deck_ready():
+				_show_deck_warning()
+				return
+			_on_daily_dungeon(), MenuButtonConfig.is_sub_enabled("single_player", "daily_dungeon"))
 
-	_add_btn.call("VS AI", func() -> void:
-		picker.queue_free()
-		if not _is_deck_ready():
-			_show_deck_warning()
-			return
-		BGMManager.stop(0.0)
-		GameState.game_mode = GameState.GameMode.VS_AI
-		CheckerTransition.fade_out_to_battle(func() -> void:
-			get_tree().change_scene_to_file("res://scenes/game_board.tscn")))
+	if MenuButtonConfig.is_sub_visible("single_player", "vs_ai"):
+		_add_btn.call("VS AI", func() -> void:
+			picker.queue_free()
+			if not _is_deck_ready():
+				_show_deck_warning()
+				return
+			BGMManager.stop(0.0)
+			GameState.game_mode = GameState.GameMode.VS_AI
+			CheckerTransition.fade_out_to_battle(func() -> void:
+				get_tree().change_scene_to_file("res://scenes/game_board.tscn")),
+			MenuButtonConfig.is_sub_enabled("single_player", "vs_ai"))
 
 func _on_multiplayer() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
+	if not MenuButtonConfig.is_main_visible("multiplayer") \
+			or not MenuButtonConfig.is_main_enabled("multiplayer"):
+		return
 	if get_node_or_null("MultiplayerChoicePanel") != null:
 		get_node("MultiplayerChoicePanel").queue_free()
 		return
 
-	var picker := Panel.new()
-	picker.name = "MultiplayerChoicePanel"
+	var visible_sub_count := 0
+	if MenuButtonConfig.is_sub_visible("multiplayer", "matchmaking"):
+		visible_sub_count += 1
+	if MenuButtonConfig.is_sub_visible("multiplayer", "private"):
+		visible_sub_count += 1
+	if MenuButtonConfig.is_sub_visible("multiplayer", "hot_seat"):
+		visible_sub_count += 1
+	if visible_sub_count == 0:
+		return
+
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.059, 0.078, 0.145, 0.98)
 	sb.border_width_left   = 2
@@ -244,18 +477,20 @@ func _on_multiplayer() -> void:
 	sb.corner_radius_top_right    = 6
 	sb.corner_radius_bottom_right = 6
 	sb.corner_radius_bottom_left  = 6
-	picker.add_theme_stylebox_override("panel", sb)
-	picker.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	picker.position = Vector2(campaign_btn.position.x, campaign_btn.position.y + campaign_btn.size.y + 4)
-	picker.size = Vector2(campaign_btn.size.x, 186)
-	picker.z_index = 3
 
 	var backdrop := Control.new()
+	backdrop.name = "MultiplayerChoiceBackdrop"
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
-	backdrop.z_index = 2
+	backdrop.z_index = MENU_DROPDOWN_BACKDROP_Z
 	add_child(backdrop)
+	backdrop.move_to_front()
+
+	var picker := Panel.new()
+	picker.name = "MultiplayerChoicePanel"
+	picker.add_theme_stylebox_override("panel", sb)
 	add_child(picker)
+	_position_dropdown_panel(picker, campaign_btn, visible_sub_count * 52 + 12)
 
 	backdrop.gui_input.connect(func(ev: InputEvent) -> void:
 		if (ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed
@@ -276,104 +511,85 @@ func _on_multiplayer() -> void:
 	vbox.add_theme_constant_override("separation", 6)
 	picker.add_child(vbox)
 
-	var _add_btn := func(label: String, cb: Callable) -> void:
+	var _add_btn := func(label: String, cb: Callable, enabled: bool = true) -> void:
 		var btn := Button.new()
 		btn.text = label
+		btn.disabled = not enabled
 		btn.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		btn.add_theme_font_override("font", CHIVO_FONT)
 		btn.add_theme_font_size_override("font_size", 18)
-		btn.pressed.connect(cb)
+		if enabled:
+			btn.pressed.connect(cb)
 		_apply_menu_btn_style(btn, false)
 		vbox.add_child(btn)
 
-	_add_btn.call("MATCHMAKING", func() -> void:
-		picker.queue_free()
-		BGMManager.stop(0.0)
-		GameState.game_mode = GameState.GameMode.LOCAL_2P
-		CheckerTransition.fade_out_to_battle(func() -> void:
-			get_tree().change_scene_to_file("res://scenes/game_board.tscn")))
+	if MenuButtonConfig.is_sub_visible("multiplayer", "matchmaking"):
+		_add_btn.call("MATCHMAKING", func() -> void:
+			picker.queue_free()
+			BGMManager.stop(0.0)
+			GameState.game_mode = GameState.GameMode.LOCAL_2P
+			CheckerTransition.fade_out_to_battle(func() -> void:
+				get_tree().change_scene_to_file("res://scenes/game_board.tscn")),
+			MenuButtonConfig.is_sub_enabled("multiplayer", "matchmaking"))
 
-	_add_btn.call("PRIVATE", func() -> void:
-		picker.queue_free()
-		BGMManager.stop(0.0)
-		GameState.game_mode = GameState.GameMode.LOCAL_2P
-		CheckerTransition.fade_out_to_battle(func() -> void:
-			get_tree().change_scene_to_file("res://scenes/game_board.tscn")))
+	if MenuButtonConfig.is_sub_visible("multiplayer", "private"):
+		_add_btn.call("PRIVATE", func() -> void:
+			picker.queue_free()
+			BGMManager.stop(0.0)
+			GameState.game_mode = GameState.GameMode.LOCAL_2P
+			CheckerTransition.fade_out_to_battle(func() -> void:
+				get_tree().change_scene_to_file("res://scenes/game_board.tscn")),
+			MenuButtonConfig.is_sub_enabled("multiplayer", "private"))
 
-	_add_btn.call("HOT SEAT", func() -> void:
-		picker.queue_free()
-		if not _is_deck_ready():
-			_show_deck_warning()
-			return
-		BGMManager.stop(0.0)
-		GameState.game_mode = GameState.GameMode.HOT_SEAT
-		CheckerTransition.fade_out_to_battle(func() -> void:
-			get_tree().change_scene_to_file("res://scenes/game_board.tscn")))
+	if MenuButtonConfig.is_sub_visible("multiplayer", "hot_seat"):
+		_add_btn.call("HOT SEAT", func() -> void:
+			picker.queue_free()
+			if not _is_deck_ready():
+				_show_deck_warning()
+				return
+			BGMManager.stop(0.0)
+			GameState.game_mode = GameState.GameMode.HOT_SEAT
+			CheckerTransition.fade_out_to_battle(func() -> void:
+				get_tree().change_scene_to_file("res://scenes/game_board.tscn")),
+			MenuButtonConfig.is_sub_enabled("multiplayer", "hot_seat"))
 
 func _on_deck_builder() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
-	if get_node_or_null("DeckBuilderOverlay") != null:
-		return
-	var overlay := DeckBuilderScene.instantiate()
-	overlay.name = "DeckBuilderOverlay"
-	overlay.closed.connect(_refresh_deck_status)
-	add_child(overlay)
+	_open_menu_overlay(DeckBuilderScene.instantiate(), "DeckBuilderOverlay",
+		_refresh_deck_status)
 
 func _on_shop() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
-	if get_node_or_null("ShopMenuOverlay") != null:
-		return
-	var overlay := ShopMenuScene.instantiate()
-	overlay.name = "ShopMenuOverlay"
-	add_child(overlay)
+	_open_menu_overlay(ShopMenuScene.instantiate(), "ShopMenuOverlay")
 
 func _on_gallery() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
-	if get_node_or_null("CardGalleryOverlay") != null:
-		return
-	var overlay := CardGalleryScene.instantiate()
-	overlay.name = "CardGalleryOverlay"
-	add_child(overlay)
+	_open_menu_overlay(CardGalleryScene.instantiate(), "CardGalleryOverlay")
 
 func _on_inventory() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
-	if get_node_or_null("InventoryMenuOverlay") != null:
-		return
-	var overlay := InventoryMenuScene.instantiate()
-	overlay.name = "InventoryMenuOverlay"
-	overlay.closed.connect(func() -> void: pass)
-	add_child(overlay)
+	_open_menu_overlay(InventoryMenuScene.instantiate(), "InventoryMenuOverlay")
 
 func _on_credits() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
 	get_tree().change_scene_to_file("res://scenes/credits.tscn")
 
+func _on_exit_game() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
+	get_tree().quit()
+
 func _on_campaign() -> void:
-	if get_node_or_null("CampaignGalleryOverlay") != null:
-		return
-	var overlay := CampaignGalleryScene.instantiate()
-	overlay.name = "CampaignGalleryOverlay"
-	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	overlay.z_index = 10
-	add_child(overlay)
+	_open_menu_overlay(CampaignGalleryScene.instantiate(), "CampaignGalleryOverlay")
 
 func _on_daily_dungeon() -> void:
 	if get_node_or_null("DailyDungeonMapOverlay") != null:
 		return
 	DailyDungeonManager.begin_daily_session()
-	var overlay := DailyDungeonMapScene.instantiate()
-	overlay.name = "DailyDungeonMapOverlay"
-	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	overlay.z_index = 10
-	add_child(overlay)
+	_open_menu_overlay(DailyDungeonMapScene.instantiate(), "DailyDungeonMapOverlay")
 
 func _on_settings() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
-	if get_node_or_null("SettingsMenuOverlay") != null:
-		return
-	var overlay := SettingsMenuScene.instantiate()
-	overlay.name = "SettingsMenuOverlay"
-	add_child(overlay)
+	_open_menu_overlay(SettingsMenuScene.instantiate(), "SettingsMenuOverlay")
 
 func _open_admin_console() -> void:
 	if get_node_or_null("AdminConsoleOverlay") != null:

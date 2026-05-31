@@ -1,0 +1,239 @@
+=== Battle of Notification Avalanche ===
+Battle started: 2026-05-31 10:30:34.996
+Game Session of Chocolate Milk (started 2026-05-31 10:28:02.264)
+=== AI vs AI Match ===
+Batch iteration: 2 / 10
+AI-0 Deck:    (random pool)
+AI-1 Deck:    (random pool)
+AI-0 Forced:  none
+AI-1 Forced:  none
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Prayer, Siege Cannon, Radar
+P1 Tech hand: Resurrection, Great Diplomacy, Tease
+P0:   [  — ][C:Gryp][C:Deat][T:Defe][T:Foul]
+      [C:Dark][C:Flam][C:Mine][C:Magi][  — ]
+      [  — ][C:Mind][C:Curs][C:Gran][T:Bait]
+      [  — ][C:Lab ][C:Echo][C:Tomb][T:Brai]
+      [  — ][T:Trap][  — ][  — ][  — ]
+P1:   [T:Expl][C:Blea][C:Big ][T:Deco][  — ]
+      [C:Pyro][  — ][  — ][  — ][C:Mind]
+      [C:Immo][  — ][  — ][  — ][C:Raij]
+      [C:Pony][  — ][  — ][  — ][C:Witc]
+      [C:Choi][T:Hypn][C:Shot][C:Scou][T:Bunk]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.317] Mode selected P0: TECH
+[00:05.619] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:07.002] Tech played  P0: "Radar"
+[00:08.562] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.968] AI0 target chosen: (1,2)
+[00:08.968] Revealed: P1 (1,2) (blank slot)
+[00:09.375] AI0 target chosen: (2,4)
+[00:09.447] Revealed: P1 (2,4) "Raijin"
+[00:09.722] AI0 target chosen: (1,0)
+[00:09.762] Revealed: P1 (1,0) "Pyromancer"
+[00:09.764] Tech resolved  P0
+[00:10.639] Mode selected P0: ATTACK
+[00:10.645] Attack phase P0: 2 attack(s) available
+[00:10.645] MSG: Player 1: tap a character to attack.
+[00:10.947] AI0 attack decision: (1,3)"Magical Butterfly" [ATK=15] → (1,0) "Pyromancer" [DEF=0]
+[00:11.308] Revealed: P0 (1,3) "Magical Butterfly"
+[00:11.308] Dice rolled: 2
+[00:11.312] MSG: Magical Butterfly wins!
+[00:15.982] Crystals: P1 5000 → 4100 (-900)  [battle]
+[00:17.373] Card destroyed  P1 (1,0) "Pyromancer"
+[00:17.384] Attack P0(1,3)"Magical Butterfly" → P1(1,0)"Pyromancer"  Dice=2  ATK=15 vs DEF=0  → WIN
+[00:17.384] Anim: 3A  △ P1(1,0)
+[00:17.867] Mode selected P0: ATTACK
+[00:17.872] Attack phase P0: 1 attack(s) available
+[00:17.875] MSG: Player 1: tap a character to attack.
+[00:18.167] AI0 attack decision: (2,3)"Grand Fort Archer" [ATK=20] → (2,4) "Raijin" [DEF=0]
+[00:18.522] Revealed: P0 (2,3) "Grand Fort Archer"
+[00:18.522] Dice rolled: 5
+[00:18.524] MSG: Grand Fort Archer wins!
+[00:24.177] Crystals: P1 4100 → 3550 (-550)  [battle]
+[00:25.571] Card destroyed  P1 (2,4) "Raijin"
+[00:25.594] Attack P0(2,3)"Grand Fort Archer" → P1(2,4)"Raijin"  Dice=5  ATK=30 vs DEF=0  → WIN
+[00:25.594] Anim: 3A  △ P1(2,4)
+[00:26.063] Turn ended  P0  |  Crystals P0=4400 P1=3550
+
+--- Turn 2  |  Player 1  |  Crystals P0=4400 P1=3550 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][Magi][  — ]
+      [  — ][  ? ][  ? ][Gran][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:26.664] Mode selected P1: TECH
+[00:26.965] Crystals: P1 3550 → 2050 (-1500)  [tech cost]
+[00:28.350] Tech played  P1: "Resurrection"
+[00:29.897] MSG: Magical Butterfly: Tech boost — +10 ATK/DEF this turn!
+[00:29.899] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:30.297] AI1 target chosen: (0,4)
+[00:30.301] Revealed: P1 (0,4) "Raijin"
+[00:30.301] MSG: Revived Raijin at [0,4]!
+[00:30.309] Tech resolved  P1
+[00:31.199] Mode selected P1: ATTACK
+[00:31.207] Attack phase P1: 2 attack(s) available
+[00:31.207] MSG: Player 2: tap a character to attack.
+[00:31.497] AI1 attack decision: (0,4)"Raijin" [ATK=0] → (0,3) "Defensive Pheromone" [DEF=0]
+[00:31.842] Revealed: P0 (0,3) "Defensive Pheromone"
+[00:31.842] Dice rolled: 4
+[00:32.130] MSG: Trap triggered: Defensive Pheromone!
+[00:36.240] Card destroyed  P0 (0,3) "Defensive Pheromone"
+[00:36.241] Crystals: P0 4400 → 3900 (-500)  [trap cost]
+[00:37.632] MSG: No valid target — effect cancelled.
+[00:37.640] Tech resolved  P1
+[00:37.640] Target prompt: "Defensive Pheromone: Choose an 'Armored' Nature card to swap."  filter=own_armored_nature
+[00:37.643] Trap: "Defensive Pheromone" triggered  P1(0,4)→P0(0,3)
+[00:37.643] Anim: 3D  (attacker survives)
+[00:38.140] Mode selected P1: ATTACK
+[00:38.145] Attack phase P1: 1 attack(s) available
+[00:38.145] MSG: Player 2: tap a character to attack.
+[00:38.447] AI1 attack decision: (1,4)"Mind Flayer" [ATK=100] → (2,3) "Grand Fort Archer" [DEF=20]
+[00:38.804] Revealed: P1 (1,4) "Mind Flayer"
+[00:38.805] Dice rolled: 5
+[00:38.807] MSG: Mind Flayer wins!
+[00:38.821] AI1 attack decision: (1,4)"Mind Flayer" [ATK=100] → (2,3) "Grand Fort Archer" [DEF=20]
+[00:44.431] Crystals: P0 3900 → 3620 (-280)  [battle]
+[00:45.826] Card destroyed  P0 (2,3) "Grand Fort Archer"
+[00:45.831] Attack P1(1,4)"Mind Flayer" → P0(2,3)"Grand Fort Archer"  Dice=5  ATK=150 vs DEF=20  → WIN
+[00:45.831] Anim: 3A  △ P0(2,3)
+[00:46.335] Turn ended  P1  |  Crystals P0=3620 P1=2050
+
+--- Turn 3  |  Player 0  |  Crystals P0=3620 P1=2050 ---
+P0:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][Magi][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][Raij]
+      [  — ][  — ][  — ][  — ][Mind]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:46.940] Mode selected P0: TECH
+[00:47.247] Crystals: P0 3620 → 2620 (-1000)  [tech cost]
+[00:48.635] Tech played  P0: "Siege Cannon"
+[00:50.189] MSG: Siege Cannon active!
+[00:50.193] Tech resolved  P0
+[00:51.105] Mode selected P0: ATTACK
+[00:51.112] Attack phase P0: 2 attack(s) available
+[00:51.112] MSG: Player 1: tap a character to attack.
+[00:51.413] AI0 attack decision: (1,3)"Magical Butterfly" [ATK=25] → (0,4) "Raijin" [DEF=0]
+[00:51.722] Dice rolled: 1
+[00:51.730] MSG: Magical Butterfly wins!
+[00:56.423] Crystals: P1 2050 → 1500 (-550)  [battle]
+[00:57.817] Card destroyed  P1 (0,4) "Raijin"
+[00:57.822] Attack P0(1,3)"Magical Butterfly" → P1(0,4)"Raijin"  Dice=1  ATK=25 vs DEF=0  → WIN
+[00:57.822] Anim: 3A  △ P1(0,4)
+[00:58.322] Mode selected P0: ATTACK
+[00:58.329] Attack phase P0: 1 attack(s) available
+[00:58.330] MSG: Player 1: tap a character to attack.
+[00:58.626] AI0 attack decision: (1,2)"Mine Guard" [ATK=20] → (1,2) "(dead-end)"
+[00:58.976] Revealed: P0 (1,2) "Mine Guard"
+[00:58.976] Dice rolled: 4
+[00:58.991] MSG: Nothing happens — Dead End.
+[01:02.315] Dead-end placed  P1 (1,2)
+[01:02.322] Attack P0(1,2)"Mine Guard" → P1(1,2)(empty)  Dice=4  → DEAD_END
+[01:02.322] Anim: 3F  (blank slot)
+[01:02.818] Turn ended  P0  |  Crystals P0=2620 P1=1500
+
+--- Turn 4  |  Player 1  |  Crystals P0=2620 P1=1500 ---
+P0:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Mine][Magi][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][Mind]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:03.414] Mode selected P1: TECH
+[01:03.722] Crystals: P1 1500 → 500 (-1000)  [tech cost]
+[01:05.108] Tech played  P1: "Great Diplomacy"
+[01:06.663] MSG: Magical Butterfly: Tech boost — +10 ATK/DEF this turn!
+[01:06.932] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[01:07.121] AI1 target chosen: (4,2)
+[01:07.122] Revealed: P1 (4,2) "Shotgun Shark"
+[01:07.521] AI1 target chosen: (0,2)
+[01:07.522] Revealed: P1 (0,2) "Big Thug"
+[01:07.921] AI1 target chosen: (4,3)
+[01:07.923] Revealed: P1 (4,3) "Scout Probe"
+[01:08.322] AI1 target chosen: (2,0)
+[01:08.324] Revealed: P1 (2,0) "Immortal Vampire"
+[01:08.722] AI1 target chosen: (3,0)
+[01:08.723] Revealed: P1 (3,0) "Ponycorn"
+[01:08.723] MSG: Great Diplomacy: revealed 5 unit(s).
+[01:08.734] Tech resolved  P1
+[01:09.623] Mode selected P1: ATTACK
+[01:09.636] Attack phase P1: 2 attack(s) available
+[01:09.636] MSG: Player 2: tap a character to attack.
+[01:09.922] AI1 attack decision: (1,4)"Mind Flayer" [ATK=100] → (1,2) "Mine Guard" [DEF=15]
+[01:10.222] Dice rolled: 4
+[01:10.233] MSG: Mind Flayer wins!
+[01:14.913] Crystals: P0 2620 → 2320 (-300)  [battle]
+[01:16.308] Card destroyed  P0 (1,2) "Mine Guard"
+[01:16.317] Attack P1(1,4)"Mind Flayer" → P0(1,2)"Mine Guard"  Dice=4  ATK=100 vs DEF=15  → WIN
+[01:16.317] Anim: 3A  △ P0(1,2)
+[01:16.806] Mode selected P1: ATTACK
+[01:16.818] Attack phase P1: 1 attack(s) available
+[01:16.819] MSG: Player 2: tap a character to attack.
+[01:17.105] AI1 attack decision: (4,2)"Shotgun Shark" [ATK=75] → (1,3) "Magical Butterfly" [DEF=25]
+[01:17.406] Dice rolled: 1
+[01:17.420] MSG: Shotgun Shark wins!
+[01:22.097] Crystals: P0 2320 → 2140 (-180)  [battle]
+[01:23.490] Card destroyed  P0 (1,3) "Magical Butterfly"
+[01:23.494] Attack P1(4,2)"Shotgun Shark" → P0(1,3)"Magical Butterfly"  Dice=1  ATK=75 vs DEF=25  → WIN
+[01:23.494] Anim: 3A  △ P0(1,3)
+[01:23.995] Turn ended  P1  |  Crystals P0=2140 P1=500
+
+--- Turn 5  |  Player 0  |  Crystals P0=2140 P1=500 ---
+P0:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  ? ][Big ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][Mind]
+      [Immo][  — ][  — ][  — ][  — ]
+      [Pony][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Shot][Scou][  ? ]
+[01:26.076] Union summoned P0: [Rocket Marauder] from Lab Crawler, Tomb Bandit
+[01:26.077] Crystals: P0 2140 → 1140 (-1000)  [union]
+[01:26.116] Revealed: P0 (3,1) "Rocket Marauder"
+[01:26.116] MSG: Player 1 summoned [Rocket Marauder] using: Lab Crawler, Tomb Bandit
+[01:29.530] Mode selected P0: ATTACK
+[01:29.540] Attack phase P0: 2 attack(s) available
+[01:29.540] MSG: Player 1: tap a character to attack.
+[01:29.838] AI0 attack decision: (3,1)"Rocket Marauder" [ATK=125] → (1,4) "Mind Flayer" [DEF=70]
+[01:30.147] Dice rolled: 2
+[01:30.186] MSG: Rocket Marauder wins!
+[01:34.848] Crystals: P1 500 → 0 (-500)  [battle]
+
+=== GAME OVER ===
+[01:34.866] AI Player 0 wins
+[01:34.866] Reason: crystals
+[01:34.866] Final crystals — P0: 1140  P1: 0  |  Turns: 5
+[01:34.866] Log saved to: res://logs/results/2026-05-31_10-28-02_264_chocolate_milk/battle_notification_avalanche_2026-05-31_10-30-34_997.txt

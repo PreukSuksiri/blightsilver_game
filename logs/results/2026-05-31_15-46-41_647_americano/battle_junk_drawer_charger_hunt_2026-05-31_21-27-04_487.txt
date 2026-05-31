@@ -1,0 +1,264 @@
+=== Battle of Junk Drawer Charger Hunt ===
+Battle started: 2026-05-31 21:27:04.487
+Game Session of Americano (started 2026-05-31 15:46:41.647)
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Street Joke
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Prayer, Resurrection, Accident
+P1 Tech hand: War Supply, Bribe, Siege Cannon
+P0:   [C:Gian][C:Stre][C:Pit ][  — ][T:Hypn]
+      [  — ][C:Mad ][C:Deat][C:Blue][  — ]
+      [T:Deco][C:Flam][C:Ox P][C:Gran][  — ]
+      [  — ][C:Choi][C:Spac][C:Aeri][T:Flam]
+      [  — ][  — ][  — ][C:Gran][T:Brai]
+P1:   [T:Snar][  — ][C:Spea][  — ][T:Echo]
+      [C:Ange][C:Jose][C:Dark][C:Dark][C:Elec]
+      [  — ][  — ][T:Stre][  — ][C:Moon]
+      [  — ][  — ][  — ][T:Blac][  — ]
+      [  — ][T:Stre][  — ][C:Scar][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[00:07.310] Crystals: P0 5000 → 4950 (-50)  [skip tax]
+[00:07.311] MSG: AI Player 0 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:08.704] Turn ended  P0  |  Crystals P0=4950 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4950 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[00:09.298] Mode selected P1: TECH
+[00:09.607] Tech played  P1: "Bribe"
+[00:11.164] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:11.672] MSG: Bribe: AI passed.
+[00:11.677] Tech resolved  P1
+[00:12.593] Mode selected P1: ATTACK
+[00:12.599] Attack phase P1: 2 attack(s) available
+[00:12.599] MSG: Player 2: tap a character to attack.
+[00:12.898] AI1 attack decision: (0,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature | face-down} → (2,0) "Decoy Puppet" {cost 100}
+[00:13.242] Revealed: P1 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:13.262] Revealed: P0 (2,0) "Decoy Puppet" {cost 100}
+[00:13.262] Dice rolled: 3
+[00:13.529] MSG: Trap triggered: Decoy Puppet!
+[00:17.618] Crystals: P0 4950 → 4850 (-100)  [trap cost]
+[00:19.006] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[00:19.016] Trap: "Decoy Puppet" triggered  P1(0,2)→P0(2,0)
+[00:19.016] Anim: 3D  (attacker survives)
+[00:21.521] Turn ended  P1  |  Crystals P0=4850 P1=5000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4850 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][Spea][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[00:22.109] Mode selected P0: TECH
+[00:22.411] Crystals: P0 4850 → 3850 (-1000)  [tech cost]
+[00:23.798] Tech played  P0: "Accident"
+[00:25.340] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:25.739] AI0 target chosen: (0,2)
+[00:25.744] Card destroyed  P1 (0,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[00:25.749] Tech resolved  P0
+[00:28.654] Crystals: P0 3850 → 3750 (-100)  [skip tax]
+[00:28.656] MSG: AI Player 0 skips without attacking — 100◆ tax (skip #2 this duel)
+[00:30.033] Turn ended  P0  |  Crystals P0=3750 P1=5000
+
+--- Turn 4  |  Player 1  |  Crystals P0=3750 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[00:32.114] Crystals: P1 5000 → 4700 (-300)  [union]
+[00:32.144] Revealed: P1 (1,3) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[00:32.144] Union summoned P1: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down}
+[00:32.144] MSG: Player 2 summoned [Kitsune] using: "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down}
+[00:35.566] Mode selected P1: ATTACK
+[00:35.573] Attack phase P1: 2 attack(s) available
+[00:35.574] MSG: Player 2: tap a character to attack.
+[00:35.864] AI1 attack decision: (1,3)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (3,2) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic | face-down}
+[00:36.205] Revealed: P0 (3,2) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:36.206] Dice rolled: 4
+[00:40.956] Attack P1(1,3)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P0(3,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}  Dice=4  ATK=35 vs DEF=65  → LOSE
+[00:40.956] Anim: 3B  △ P1(1,3)
+[00:40.956] Card destroyed  P1 (1,3) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[00:41.449] Mode selected P1: ATTACK
+[00:41.452] Attack phase P1: 1 attack(s) available
+[00:41.453] MSG: Player 2: tap a character to attack.
+[00:41.747] AI1 attack decision: (1,4)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic | face-down} → (3,2) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:42.082] Revealed: P1 (1,4) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:42.083] Dice rolled: 3
+[00:42.086] MSG: Electrogazer wins!
+[00:46.750] Crystals: P0 3750 → 2950 (-800)  [battle]
+[00:48.149] Attack P1(1,4)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P0(3,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}  Dice=3  ATK=80 vs DEF=65  → WIN
+[00:48.149] Anim: 3A  △ P0(3,2)
+[00:48.149] Card destroyed  P0 (3,2) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:48.636] Turn ended  P1  |  Crystals P0=2950 P1=4700
+
+--- Turn 5  |  Player 0  |  Crystals P0=2950 P1=4700 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][Elec]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[00:49.233] Mode selected P0: TECH
+[00:49.535] Crystals: P0 2950 → 1450 (-1500)  [tech cost]
+[00:50.922] Tech played  P0: "Resurrection"
+[00:52.476] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[00:52.884] AI0 target chosen: (0,3)
+[00:52.886] Revealed: P0 (0,3) "Space Boy" {Unit ATK0 DEF0 | cost 800 | affinity Cosmic | base 0/0}
+[00:52.887] MSG: Revived Space Boy at [0,3]!
+[00:52.892] Tech resolved  P0
+[00:53.801] Mode selected P0: ATTACK
+[00:53.821] Attack phase P0: 2 attack(s) available
+[00:53.821] MSG: Player 1: tap a character to attack.
+[00:54.100] AI0 attack decision: (0,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (1,4) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:54.446] Revealed: P0 (0,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:54.447] Dice rolled: 2
+[00:54.454] MSG: Pit Lord wins!
+[00:59.073] Crystals: P1 4700 → 3700 (-1000)  [battle]
+[01:00.479] Attack P0(0,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(1,4)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}  Dice=2  ATK=120 vs DEF=45  → WIN
+[01:00.479] Anim: 3A  △ P1(1,4)
+[01:00.480] Card destroyed  P1 (1,4) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[01:00.963] Mode selected P0: ATTACK
+[01:00.968] Attack phase P0: 1 attack(s) available
+[01:00.969] MSG: Player 1: tap a character to attack.
+[01:01.264] AI0 attack decision: (0,3)"Space Boy" {Unit ATK0 DEF0 | cost 800 | affinity Cosmic | base 0/0} → (1,2) (dead-end)
+[01:01.555] Dice rolled: 2
+[01:01.585] MSG: Nothing happens — Dead End.
+[01:04.961] Attack P0(0,3)"Space Boy" {Unit ATK0 DEF0 | cost 800 | affinity Cosmic | base 0/0} → P1(1,2)(empty)  Dice=2  → DEAD_END
+[01:04.961] Anim: 3F  (blank slot)
+[01:05.454] Turn ended  P0  |  Crystals P0=1450 P1=3700
+
+--- Turn 6  |  Player 1  |  Crystals P0=1450 P1=3700 ---
+P0:   [  ? ][  ? ][Pit ][Spac][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[01:06.051] Mode selected P1: TECH
+[01:06.351] Crystals: P1 3700 → 2700 (-1000)  [tech cost]
+[01:07.742] Tech played  P1: "Siege Cannon"
+[01:09.290] MSG: Siege Cannon active!
+[01:09.302] Tech resolved  P1
+[01:10.192] Mode selected P1: ATTACK
+[01:10.197] Attack phase P1: 2 attack(s) available
+[01:10.197] MSG: Player 2: tap a character to attack.
+[01:10.488] AI1 attack decision: (1,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (0,2) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[01:10.827] Revealed: P1 (1,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:10.827] Dice rolled: 3
+[01:10.830] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[01:10.837] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[01:10.837] MSG: Joseph the Battle Priest wins!
+[01:10.882] Coin flip: Heads
+[01:16.473] Crystals: P0 1450 → 200 (-1250)  [battle]
+[01:17.875] Attack P1(1,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(0,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}  Dice=3  ATK=70 vs DEF=50  → WIN
+[01:17.875] Reckoning overlay: P1 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} +ATK 10
+[01:17.875] Anim: 3A  △ P0(0,2)
+[01:17.875] Card destroyed  P0 (0,2) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[01:20.379] Turn ended  P1  |  Crystals P0=200 P1=2700
+
+--- Turn 7  |  Player 0  |  Crystals P0=200 P1=2700 ---
+P0:   [  ? ][  ? ][  — ][Spac][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Jose][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[01:20.972] Mode selected P0: ATTACK
+[01:20.977] Attack phase P0: 2 attack(s) available
+[01:20.977] MSG: Player 1: tap a character to attack.
+[01:21.271] AI0 attack decision: (1,3)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane | face-down} → (1,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:21.619] Revealed: P0 (1,3) "Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane}
+[01:21.620] Dice rolled: 2
+[01:21.630] MSG: Blue Mage: Coin flip missed — normal battle.
+[01:21.630] MSG: Blue Mage wins!
+[01:21.667] Coin flip: Heads, Tails
+[01:27.248] Crystals: P1 2700 → 2100 (-600)  [battle]
+[01:28.649] Attack P0(1,3)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane} → P1(1,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=2  ATK=45 vs DEF=25  → WIN
+[01:28.649] Anim: 3A  △ P1(1,1)
+[01:28.649] Card destroyed  P1 (1,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:29.138] Mode selected P0: ATTACK
+[01:29.142] Attack phase P0: 1 attack(s) available
+[01:29.143] MSG: Player 1: tap a character to attack.
+[01:29.433] AI0 attack decision: (0,3)"Space Boy" {Unit ATK0 DEF0 | cost 800 | affinity Cosmic | base 0/0} → (2,1) (dead-end)
+[01:29.733] Dice rolled: 2
+[01:29.772] MSG: Nothing happens — Dead End.
+[01:33.138] Attack P0(0,3)"Space Boy" {Unit ATK0 DEF0 | cost 800 | affinity Cosmic | base 0/0} → P1(2,1)(empty)  Dice=2  → DEAD_END
+[01:33.138] Anim: 3F  (blank slot)
+[01:33.628] Turn ended  P0  |  Crystals P0=200 P1=2100
+
+--- Turn 8  |  Player 1  |  Crystals P0=200 P1=2100 ---
+P0:   [  ? ][  ? ][  — ][Spac][  ? ]
+      [  — ][  ? ][  ? ][Blue][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[01:34.232] Mode selected P1: ATTACK
+[01:34.236] Attack phase P1: 2 attack(s) available
+[01:34.237] MSG: Player 2: tap a character to attack.
+[01:34.531] AI1 attack decision: (2,4)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down} → (0,3) "Space Boy" {Unit ATK0 DEF0 | cost 800 | affinity Cosmic | base 0/0}
+[01:34.878] Revealed: P1 (2,4) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[01:34.879] Dice rolled: 1
+[01:34.891] MSG: Moonrise Gentleman wins!
+[01:39.535] Crystals: P0 200 → 0 (-200)  [battle]
+
+=== GAME OVER ===
+[01:39.563] AI Player 1 wins
+[01:39.563] Reason: crystals
+[01:39.563] Final crystals — P0: 0  P1: 2100  |  Turns: 8
+[01:39.563] Log saved to: res://logs/results/2026-05-31_15-46-41_647_americano/battle_junk_drawer_charger_hunt_2026-05-31_21-27-04_487.txt
