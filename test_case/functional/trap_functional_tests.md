@@ -84,7 +84,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: COIN_FLIP_2_ATK_DEBUFF
 effect_params: {'amount': 5}
-Description: Flip 2 coin, if head, the attacking unit lose -5 ATK until the end of their next turn.
+Description: Flip 2 coin, if head, the attacking unit lose -5 ATK for each head(s) until the end of their next turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Pepper-Spray-001
@@ -245,7 +245,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: DRAIN_ATTACKER_CRYSTALS
 effect_params: {'amount': 50}
-Description: Attacking player loses 50 Crystals
+Description: Flip 2 coin, attacking player loses 50 Crystals per each head(s).
 Test Cases:
 
 Test Case ID: TC-FUNC-Acid-Trap-Hole-001
@@ -323,7 +323,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: DRAIN_ATTACKER_CRYSTALS
 effect_params: {'amount': 20}
-Description: Attacking player loses 20 Crystals
+Description: Flip 3 coin, attacking player loses 20 Crystals per each head(s).
 Test Cases:
 
 Test Case ID: TC-FUNC-Trap-Hole-001
@@ -371,7 +371,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: FIELD_BOOST_AFFINITY_DEF
 effect_params: {'affinity': 'ANIMA', 'def': 5}
-Description: Unil the end of this urn, All face-up Anima monster gain +5 DEF
+Description: Unil the end of this urn, All face-up Anima monster gain +10 DEF
 Test Cases:
 
 Test Case ID: TC-FUNC-Alarm-001

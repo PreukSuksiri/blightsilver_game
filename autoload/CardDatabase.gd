@@ -606,13 +606,13 @@ func _load_characters() -> void:
 		["Ostrich Cannon", CharacterData.Affinity.NATURE, 60, 30, 800,
 			CharacterData.AbilityType.LOCK_SELF_AFTER_ATTACK,
 			{},
-			"This card cannot attack during your next turn.",
+			"After performed an attack, this card cannot attack during your next turn.",
 			CharacterData.Rarity.UNCOMMON],
 
-		["Ox Patrol", CharacterData.Affinity.ANIMA, 35, 35, 420,
+		["Ox Patrol", CharacterData.Affinity.ANIMA, 30, 35, 420,
 			CharacterData.AbilityType.ATK_DEF_BONUS_VS_NON_AFFINITY,
 			{"affinity": CharacterData.Affinity.ANIMA, "atk": 5, "def": 5},
-			"+5 ATK&DEF vs Non-Anima",
+			"+10 ATK&DEF vs Non-Anima",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 
@@ -992,12 +992,12 @@ func _load_traps() -> void:
 		# Name, Cost, EffectType, Params, Description, Rarity
 		["Acid Trap Hole", 0, TrapData.TrapEffectType.DRAIN_ATTACKER_CRYSTALS,
 			{"amount": 50},
-			"Attacking player loses 50 Crystals",
+			"Flip 2 coin, attacking player loses 50 Crystals per each head(s).",
 			CharacterData.Rarity.COMMON],
 
 		["Alarm", 0, TrapData.TrapEffectType.FIELD_BOOST_AFFINITY_DEF,
 			{"affinity": CharacterData.Affinity.ANIMA, "def": 5},
-			"Unil the end of this urn, All face-up Anima monster gain +5 DEF",
+			"Unil the end of this urn, All face-up Anima monster gain +10 DEF",
 			CharacterData.Rarity.COMMON,
 			true],
 
@@ -1075,7 +1075,7 @@ func _load_traps() -> void:
 
 		["Pepper Spray", 0, TrapData.TrapEffectType.COIN_FLIP_2_ATK_DEBUFF,
 			{"amount": 5},
-			"Flip 2 coin, if head, the attacking unit lose -5 ATK until the end of their next turn.",
+			"Flip 2 coin, if head, the attacking unit lose -5 ATK for each head(s) until the end of their next turn.",
 			CharacterData.Rarity.COMMON,
 			true],
 
@@ -1109,7 +1109,7 @@ func _load_traps() -> void:
 
 		["Trap Hole", 0, TrapData.TrapEffectType.DRAIN_ATTACKER_CRYSTALS,
 			{"amount": 20},
-			"Attacking player loses 20 Crystals",
+			"Flip 3 coin, attacking player loses 20 Crystals per each head(s).",
 			CharacterData.Rarity.COMMON],
 
 		["Mana Drain", 200, TrapData.TrapEffectType.DRAIN_ATTACKER_CRYSTALS,
@@ -1152,7 +1152,7 @@ func _load_tech_cards() -> void:
 
 		["Great Diplomacy", 1000, TechCardData.TechEffectType.REVEAL_ALL_OWN_CHARACTERS,
 			{}, "",
-			"Turn all units on your field face up",
+			"Select up to 5 of your units and reveal them.",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Prayer", 0, TechCardData.TechEffectType.DIVINE_PROTECTION,
@@ -1202,7 +1202,7 @@ func _load_tech_cards() -> void:
 
 		["Arcane Nova", 3000, TechCardData.TechEffectType.DESTROY_ALL_REVEALED_OPPONENT,
 			{"count": 5}, "",
-			"Destroy 5 face-up opponent Units. You opponent do not lose crystals under this effect. Discard all of your Tech afterward.",
+			"Destroy 5 face-up foe Units. You foe do not lose crystals under this effect. Discard all of your Tech afterward.",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Berserk", 2000, TechCardData.TechEffectType.MULTI_ATTACK_ONE,
@@ -1212,7 +1212,7 @@ func _load_tech_cards() -> void:
 
 		["Blood Ritual", 1200, TechCardData.TechEffectType.DESTROY_OWN_BASE_ZERO_OPPONENT,
 			{}, "",
-			"Destroy 1 face-up card on the your field. You don't pay Crystal cost for the destroyed card. Choose 1 of your opponent's face-up unit. Its ATK and DEF becomes 0 permanently",
+			"Destroy 1 face-up card on the your field. You don't pay Crystal cost for the destroyed card. Choose 1 of your foe's face-up unit. Its ATK and DEF becomes 0 permanently",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Bulletproof Vest", 850, TechCardData.TechEffectType.PERM_DEF_BOOST_ONE,
@@ -1222,18 +1222,18 @@ func _load_tech_cards() -> void:
 
 		["Ceasefire", 0, TechCardData.TechEffectType.BOTH_SKIP_TURN,
 			{}, "",
-			"Both you and your opponent skip 1 turn (tax is forced to apply)",
+			"Both you and your foe skip 1 turn (tax is forced to apply)",
 			CharacterData.Rarity.COMMON],
 
 		["Corrupted Spy", 0, TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE_RISKY,
 			{"count": 3, "cost_per_card": 700}, "",
-			"Reveal 3 square on opponent's side of the field. If you found any trap or Unit, you pay 700 Crystal or each card found.",
+			"Reveal 3 square on foe's side of the field. If you found any trap or Unit, you pay 700 Crystal or each card found.",
 			CharacterData.Rarity.COMMON,
 			true],
 
 		["Double Spy", 0, TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE_CHAIN,
 			{"count": 2}, "Spy",
-			"This card only trigger if you have Spy card in your void. Reveal 2 square on opponent's side of the field.",
+			"This card only trigger if you have Spy card in your void. Reveal 2 square on foe's side of the field.",
 			CharacterData.Rarity.RARE],
 
 		["Essence Transfer", 700, TechCardData.TechEffectType.MOVE_BUFFS_BETWEEN_CHARACTERS,
@@ -1243,7 +1243,7 @@ func _load_tech_cards() -> void:
 
 		["Force Shield", 600, TechCardData.TechEffectType.FORCE_SHIELD_ONE_CARD,
 			{}, "",
-			"Select 1 card on your field. It is not destroyed until the end of your opponent's turn",
+			"Select 1 card on your field. It is not destroyed until the end of your foe's turn",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 
@@ -1254,7 +1254,7 @@ func _load_tech_cards() -> void:
 
 		["Guerrilla Tactics", 1500, TechCardData.TechEffectType.GUERRILLA_TACTICS,
 			{}, "",
-			"Until the end of your opponent's turn. Whenever your opponent attack your dead end card, flip a coin. If head, destroy it.",
+			"Until the end of your foe's turn. Whenever your foe attack your dead end card, flip a coin. If head, destroy it.",
 			CharacterData.Rarity.COMMON,
 			true],
 
@@ -1270,7 +1270,7 @@ func _load_tech_cards() -> void:
 
 		["Invisible Spy", 0, TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE_CHAIN,
 			{"count": 2}, "Double Spy",
-			"This card only trigger if you have Double Spy card in your void. Reveal 2 square on opponent's side of the field.",
+			"This card only trigger if you have Double Spy card in your void. Reveal 2 square on foe's side of the field.",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Lucky Day", 300, TechCardData.TechEffectType.TEMP_REROLL_DICE,
@@ -1281,17 +1281,17 @@ func _load_tech_cards() -> void:
 
 		["Make Friend", 0, TechCardData.TechEffectType.BOTH_LOCK_CHOSEN_MONSTER,
 			{"allow_facedown": true}, "",
-			"Both you and your opponent select 1 monster from own's field (can reveal face-down card for this effect). Those monster cannot attack until the end of your next turn.",
+			"Both you and your foe select 1 monster from own's field (can reveal face-down card for this effect). Those monster cannot attack until the end of your next turn.",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Rift Strike", 2000, TechCardData.TechEffectType.DESTROY_ROW_AROUND_TARGET,
 			{}, "",
-			"Select 1 face-up opponent’s card. Destroy other face-up cards on that same rows as the selected cell. Your opponent don’t pay crystal cost.",
+			"Select 1 face-up foe’s card. Destroy other face-up units on that same rows. Your foe don’t pay cost.",
 			CharacterData.Rarity.COMMON],
 
 		["Tech Copy", 1000, TechCardData.TechEffectType.VIEW_OPPONENT_TECH,
 			{"copy_to_hand": true}, "",
-			"Your opponent show 1 tech card in their hand. Add a copy of that card into your Tech Stack.",
+			"Your foe show 1 tech card in their hand. Add a copy of that card into your Tech Stack.",
 			CharacterData.Rarity.COMMON,
 			true],
 
@@ -1302,7 +1302,7 @@ func _load_tech_cards() -> void:
 
 		["Wisp Light", 250, TechCardData.TechEffectType.DESTROY_WISPS_REVEAL_OPPONENT,
 			{}, "",
-			"Destroy as many wisp on your side of the field  as you can. Reveal that much square on opponent's field.",
+			"Destroy as many wisp on your side of the field  as you can. Reveal that much square on foe's field.",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 	]

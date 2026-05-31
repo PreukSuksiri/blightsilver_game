@@ -57,7 +57,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: BOTH_LOCK_CHOSEN_MONSTER
 effect_params: {'allow_facedown': True}
-Description: Both you and your opponent select 1 monster from own's field (can reveal face-down card for this effect). Those monster cannot attack until the end of your next turn.
+Description: Both you and your foe select 1 monster from own's field (can reveal face-down card for this effect). Those monster cannot attack until the end of your next turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Make-Friend-001
@@ -74,7 +74,7 @@ Preconditions:
 Steps:
 Step 1: Play Make Friend.
 Expected Result:
-- Both you and your opponent select 1 monster from own's field (can reveal face-down card for this effect). Those monster cannot attack until the end of your next turn.
+- Both you and your foe select 1 monster from own's field (can reveal face-down card for this effect). Those monster cannot attack until the end of your next turn.
 
 Test Case ID: TC-FUNC-Make-Friend-002
 Description:
@@ -98,7 +98,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: BOTH_SKIP_TURN
 effect_params: {}
-Description: Both you and your opponent skip 1 turn (tax is forced to apply)
+Description: Both you and your foe skip 1 turn (tax is forced to apply)
 Test Cases:
 
 Test Case ID: TC-FUNC-Ceasefire-001
@@ -115,7 +115,7 @@ Preconditions:
 Steps:
 Step 1: Play Ceasefire.
 Expected Result:
-- Both you and your opponent skip 1 turn (tax is forced to apply)
+- Both you and your foe skip 1 turn (tax is forced to apply)
 
 Test Case ID: TC-FUNC-Ceasefire-002
 Description:
@@ -165,7 +165,7 @@ Type: Tech
 Tech Cost: 3000
 TechEffectType: DESTROY_ALL_REVEALED_OPPONENT
 effect_params: {'count': 5}
-Description: Destroy 5 face-up opponent Units. You opponent do not lose crystals under this effect. Discard all of your Tech afterward.
+Description: Destroy 5 face-up foe Units. You foe do not lose crystals under this effect. Discard all of your Tech afterward.
 Test Cases:
 
 Test Case ID: TC-FUNC-Arcane-Nova-001
@@ -182,7 +182,7 @@ Preconditions:
 Steps:
 Step 1: Play Arcane Nova.
 Expected Result:
-- Destroy 5 face-up opponent Units. You opponent do not lose crystals under this effect. Discard all of your Tech afterward.
+- Destroy 5 face-up foe Units. You foe do not lose crystals under this effect. Discard all of your Tech afterward.
 
 ---
 
@@ -218,7 +218,7 @@ Type: Tech
 Tech Cost: 1200
 TechEffectType: DESTROY_OWN_BASE_ZERO_OPPONENT
 effect_params: {}
-Description: Destroy 1 face-up card on the your field. You don't pay Crystal cost for the destroyed card. Choose 1 of your opponent's face-up unit. Its ATK and DEF becomes 0 permanently
+Description: Destroy 1 face-up card on the your field. You don't pay Crystal cost for the destroyed card. Choose 1 of your foe's face-up unit. Its ATK and DEF becomes 0 permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Blood-Ritual-001
@@ -235,7 +235,7 @@ Preconditions:
 Steps:
 Step 1: Play Blood Ritual.
 Expected Result:
-- Destroy 1 face-up card on the your field. You don't pay Crystal cost for the destroyed card. Choose 1 of your opponent's face-up unit. Its ATK and DEF becomes 0 permanently
+- Destroy 1 face-up card on the your field. You don't pay Crystal cost for the destroyed card. Choose 1 of your foe's face-up unit. Its ATK and DEF becomes 0 permanently
 
 ---
 
@@ -244,7 +244,7 @@ Type: Tech
 Tech Cost: 2000
 TechEffectType: DESTROY_ROW_AROUND_TARGET
 effect_params: {}
-Description: Select 1 face-up opponent’s card. Destroy other face-up cards on that same rows as the selected cell. Your opponent don’t pay crystal cost.
+Description: Select 1 face-up foe’s card. Destroy other face-up units on that same rows. Your foe don’t pay cost.
 Test Cases:
 
 Test Case ID: TC-FUNC-Rift-Strike-001
@@ -261,7 +261,7 @@ Preconditions:
 Steps:
 Step 1: Play Rift Strike.
 Expected Result:
-- Select 1 face-up opponent’s card. Destroy other face-up cards on that same rows as the selected cell. Your opponent don’t pay crystal cost.
+- Select 1 face-up foe’s card. Destroy other face-up units on that same rows. Your foe don’t pay cost.
 
 ---
 
@@ -270,7 +270,7 @@ Type: Tech
 Tech Cost: 250
 TechEffectType: DESTROY_WISPS_REVEAL_OPPONENT
 effect_params: {}
-Description: Destroy as many wisp on your side of the field  as you can. Reveal that much square on opponent's field.
+Description: Destroy as many wisp on your side of the field  as you can. Reveal that much square on foe's field.
 Test Cases:
 
 Test Case ID: TC-FUNC-Wisp-Light-001
@@ -287,7 +287,7 @@ Preconditions:
 Steps:
 Step 1: Play Wisp Light.
 Expected Result:
-- Destroy as many wisp on your side of the field  as you can. Reveal that much square on opponent's field.
+- Destroy as many wisp on your side of the field  as you can. Reveal that much square on foe's field.
 
 ---
 
@@ -340,7 +340,7 @@ Type: Tech
 Tech Cost: 600
 TechEffectType: FORCE_SHIELD_ONE_CARD
 effect_params: {}
-Description: Select 1 card on your field. It is not destroyed until the end of your opponent's turn
+Description: Select 1 card on your field. It is not destroyed until the end of your foe's turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Force-Shield-001
@@ -357,7 +357,7 @@ Preconditions:
 Steps:
 Step 1: Play Force Shield.
 Expected Result:
-- Select 1 card on your field. It is not destroyed until the end of your opponent's turn
+- Select 1 card on your field. It is not destroyed until the end of your foe's turn
 
 ---
 
@@ -366,7 +366,7 @@ Type: Tech
 Tech Cost: 1500
 TechEffectType: GUERRILLA_TACTICS
 effect_params: {}
-Description: Until the end of your opponent's turn. Whenever your opponent attack your dead end card, flip a coin. If head, destroy it.
+Description: Until the end of your foe's turn. Whenever your foe attack your dead end card, flip a coin. If head, destroy it.
 Test Cases:
 
 Test Case ID: TC-FUNC-Guerrilla-Tactics-001
@@ -383,7 +383,7 @@ Preconditions:
 Steps:
 Step 1: Play Guerrilla Tactics.
 Expected Result:
-- Until the end of your opponent's turn. Whenever your opponent attack your dead end card, flip a coin. If head, destroy it.
+- Until the end of your foe's turn. Whenever your foe attack your dead end card, flip a coin. If head, destroy it.
 
 ---
 
@@ -608,7 +608,7 @@ Type: Tech
 Tech Cost: 1000
 TechEffectType: REVEAL_ALL_OWN_CHARACTERS
 effect_params: {}
-Description: Turn all units on your field face up
+Description: Select up to 5 of your units and reveal them.
 Test Cases:
 
 Test Case ID: TC-FUNC-Great-Diplomacy-001
@@ -706,7 +706,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: REVEAL_OPPONENT_SQUARE_CHAIN
 effect_params: {'count': 2}
-Description: This card only trigger if you have Spy card in your void. Reveal 2 square on opponent's side of the field.
+Description: This card only trigger if you have Spy card in your void. Reveal 2 square on foe's side of the field.
 Test Cases:
 
 Test Case ID: TC-FUNC-Double-Spy-001
@@ -723,7 +723,7 @@ Preconditions:
 Steps:
 Step 1: Play Double Spy.
 Expected Result:
-- This card only trigger if you have Spy card in your void. Reveal 2 square on opponent's side of the field.
+- This card only trigger if you have Spy card in your void. Reveal 2 square on foe's side of the field.
 
 Test Case ID: TC-FUNC-Double-Spy-002
 Description:
@@ -747,7 +747,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: REVEAL_OPPONENT_SQUARE_CHAIN
 effect_params: {'count': 2}
-Description: This card only trigger if you have Double Spy card in your void. Reveal 2 square on opponent's side of the field.
+Description: This card only trigger if you have Double Spy card in your void. Reveal 2 square on foe's side of the field.
 Test Cases:
 
 Test Case ID: TC-FUNC-Invisible-Spy-001
@@ -764,7 +764,7 @@ Preconditions:
 Steps:
 Step 1: Play Invisible Spy.
 Expected Result:
-- This card only trigger if you have Double Spy card in your void. Reveal 2 square on opponent's side of the field.
+- This card only trigger if you have Double Spy card in your void. Reveal 2 square on foe's side of the field.
 
 Test Case ID: TC-FUNC-Invisible-Spy-002
 Description:
@@ -788,7 +788,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: REVEAL_OPPONENT_SQUARE_RISKY
 effect_params: {'count': 3, 'cost_per_card': 700}
-Description: Reveal 3 square on opponent's side of the field. If you found any trap or Unit, you pay 700 Crystal or each card found.
+Description: Reveal 3 square on foe's side of the field. If you found any trap or Unit, you pay 700 Crystal or each card found.
 Test Cases:
 
 Test Case ID: TC-FUNC-Corrupted-Spy-001
@@ -805,7 +805,7 @@ Preconditions:
 Steps:
 Step 1: Play Corrupted Spy.
 Expected Result:
-- Reveal 3 square on opponent's side of the field. If you found any trap or Unit, you pay 700 Crystal or each card found.
+- Reveal 3 square on foe's side of the field. If you found any trap or Unit, you pay 700 Crystal or each card found.
 
 Test Case ID: TC-FUNC-Corrupted-Spy-002
 Description:
@@ -989,7 +989,7 @@ Type: Tech
 Tech Cost: 1000
 TechEffectType: VIEW_OPPONENT_TECH
 effect_params: {'copy_to_hand': True}
-Description: Your opponent show 1 tech card in their hand. Add a copy of that card into your Tech Stack.
+Description: Your foe show 1 tech card in their hand. Add a copy of that card into your Tech Stack.
 Test Cases:
 
 Test Case ID: TC-FUNC-Tech-Copy-001
@@ -1006,6 +1006,6 @@ Preconditions:
 Steps:
 Step 1: Play Tech Copy.
 Expected Result:
-- Your opponent show 1 tech card in their hand. Add a copy of that card into your Tech Stack.
+- Your foe show 1 tech card in their hand. Add a copy of that card into your Tech Stack.
 
 ---

@@ -33,8 +33,10 @@ DailyDungeonManager="*res://autoload/DailyDungeonManager.gd"
 CheckerTransition="*res://autoload/CheckerTransition.gd"
 CardRuleEngine="*res://autoload/CardRuleEngine.gd"
 AIvsAIManager="*res://autoload/AIvsAIManager.gd"
+CardE2ERunner="*res://autoload/CardE2ERunner.gd"
 SessionLogNaming="*res://autoload/SessionLogNaming.gd"
 SFXManager="*res://autoload/SFXManager.gd"
+MenuButtonConfig="*res://autoload/MenuButtonConfig.gd"
 
 [display]
 

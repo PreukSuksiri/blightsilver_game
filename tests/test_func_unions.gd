@@ -66,7 +66,7 @@ func _manual(tc_id: String) -> void:
 
 func _run_summon_manual_tests() -> void:
 	_manual("TC-FUNC-Armored-Dino-000")
-	_manual("TC-FUNC-Barros-the-Collossol-000")
+	_manual("TC-FUNC-Barros-the-Colossal-000")
 	_manual("TC-FUNC-Choir-Lead-Amber-000")
 	_manual("TC-FUNC-Diamond-Unicorn-000")
 	_manual("TC-FUNC-Gaia-Turtle-000")
@@ -78,7 +78,7 @@ func _run_summon_manual_tests() -> void:
 	_manual("TC-FUNC-Lord-of-Terror-000")
 	_manual("TC-FUNC-Pixie-Queen-000")
 	_manual("TC-FUNC-Raijin-and-Fujin-000")
-	_manual("TC-FUNC-Rocket-Tyrant-000")
+	_manual("TC-FUNC-Rocket-Marauder-000")
 	_manual("TC-FUNC-Seraphim-Fistmaster-000")
 	_manual("TC-FUNC-Skeleton-Overlord-000")
 	_manual("TC-FUNC-Sky-Protector-000")
@@ -101,7 +101,7 @@ func _run_excel_only_manual_tests() -> void:
 	_manual("TC-FUNC-Grand-Fort-Captain-001")
 	_manual("TC-FUNC-Imperial-Frame-001")
 	_manual("TC-FUNC-Kiba-the-Giant-Slayer-001")
-	_manual("TC-FUNC-Moon-Ninja-Lady-001")
+	_manual("TC-FUNC-Moon-Lady-Ninja-001")
 	_manual("TC-FUNC-Moon-Tribe-Shaman-001")
 	_manual("TC-FUNC-Rebel-King-001")
 	_manual("TC-FUNC-Rocket-Peacock-001")
@@ -206,12 +206,12 @@ func _choir_lead_amber(A: Dictionary, AB: Dictionary) -> void:
 	print("-- TC-FUNC-Choir-Lead-Amber-001")
 	# Amber herself is a DIVINE union with FIELD_ATK_BOOST_OWN_AFFINITY
 	# Another DIVINE attacker benefits from her field passive (perm_atk_bonus shortcut)
-	var divine_attacker := _make_char("Choir Lady Abigail", 15, 10, 280, A.DIVINE)
+	var divine_attacker := _make_char("Choir Lady Abigail", 25, 15, 250, A.DIVINE)
 	divine_attacker.perm_atk_bonus = 20  # Amber's +20 DIVINE field boost
 	var def_ := _make_char("Dummy", 0, 30, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(divine_attacker, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 35, "TC-FUNC-Choir-Lead-Amber-001: DIVINE attacker ATK 15+20=35 with Amber on field")
-	assert_true(r.defender_destroyed, "TC-FUNC-Choir-Lead-Amber-001: dummy DEF 30 beaten by ATK 35")
+	assert_eq(r.attacker_atk_used, 45, "TC-FUNC-Choir-Lead-Amber-001: DIVINE attacker ATK 25+20=45 with Amber on field")
+	assert_true(r.defender_destroyed, "TC-FUNC-Choir-Lead-Amber-001: dummy DEF 30 beaten by ATK 45")
 	# Amber stats smoke check: ATK=35, DEF=35
 	var amber := _make_char("Choir Lead Amber", 35, 35, 1000, A.DIVINE,
 			AB.FIELD_ATK_BOOST_OWN_AFFINITY,
@@ -243,28 +243,28 @@ func _x_death_squad_manual() -> void:
 # ---------------------------------------------------------------------------
 
 func _run_none_smoke_tests(A: Dictionary, AB: Dictionary) -> void:
-	# TC-FUNC-Barros-the-Collossol-001 — ATK=150, DEF=130, NATURE, NONE
-	print("-- TC-FUNC-Barros-the-Collossol-001")
-	var barros := _make_char("Barros the Collossol", 150, 130, 1500, A.NATURE)
+	# TC-FUNC-Barros-the-Colossal-001 — ATK=150, DEF=130, NATURE, NONE
+	print("-- TC-FUNC-Barros-the-Colossal-001")
+	var barros := _make_char("Barros the Colossal", 150, 130, 1500, A.NATURE)
 	var def1 := _make_char("Dummy", 0, 100, 100, A.ANIMA)
 	var r1 := BattleResolver.resolve_battle(barros, def1, 3, 0, 1)
-	assert_eq(r1.attacker_atk_used, 150, "TC-FUNC-Barros-the-Collossol-001: ATK=150 correct")
-	assert_true(r1.defender_destroyed, "TC-FUNC-Barros-the-Collossol-001: defender destroyed by ATK 150")
+	assert_eq(r1.attacker_atk_used, 150, "TC-FUNC-Barros-the-Colossal-001: ATK=150 correct")
+	assert_true(r1.defender_destroyed, "TC-FUNC-Barros-the-Colossal-001: defender destroyed by ATK 150")
 
-	# TC-FUNC-Gaia-Turtle-001 — ATK=0, DEF=220, NATURE, NONE
+	# TC-FUNC-Gaia-Turtle-001 — ATK=0, DEF=205, NATURE, NONE
 	print("-- TC-FUNC-Gaia-Turtle-001")
-	var gaia := _make_char("Gaia Turtle", 0, 220, 2000, A.NATURE)
+	var gaia := _make_char("Gaia Turtle", 0, 205, 2000, A.NATURE)
 	var att_w := _make_char("Strong", 200, 0, 500, A.ANIMA)
 	var r2 := BattleResolver.resolve_battle(att_w, gaia, 3, 0, 1)
-	assert_eq(r2.defender_def_used, 220, "TC-FUNC-Gaia-Turtle-001: DEF=220 correct")
-	assert_true(r2.attacker_destroyed, "TC-FUNC-Gaia-Turtle-001: attacker ATK 200 < DEF 220; attacker destroyed")
+	assert_eq(r2.defender_def_used, 205, "TC-FUNC-Gaia-Turtle-001: DEF=205 correct")
+	assert_true(r2.attacker_destroyed, "TC-FUNC-Gaia-Turtle-001: attacker ATK 200 < DEF 205; attacker destroyed")
 
-	# TC-FUNC-Gryphon-Rider-001 — ATK=150, DEF=95, DIVINE, NONE
+	# TC-FUNC-Gryphon-Rider-001 — ATK=125, DEF=90, DIVINE, NONE
 	print("-- TC-FUNC-Gryphon-Rider-001")
-	var gryphon := _make_char("Gryphon Rider", 150, 95, 1000, A.DIVINE)
+	var gryphon := _make_char("Gryphon Rider", 125, 90, 1000, A.DIVINE)
 	var def3 := _make_char("Dummy", 0, 80, 100, A.ANIMA)
 	var r3 := BattleResolver.resolve_battle(gryphon, def3, 3, 0, 1)
-	assert_eq(r3.attacker_atk_used, 150, "TC-FUNC-Gryphon-Rider-001: ATK=150 correct")
+	assert_eq(r3.attacker_atk_used, 125, "TC-FUNC-Gryphon-Rider-001: ATK=125 correct")
 	assert_true(r3.defender_destroyed, "TC-FUNC-Gryphon-Rider-001: defender destroyed")
 
 	# TC-FUNC-Katana-Shark-001 — ATK=75, DEF=50, DIVINE, NONE
@@ -291,13 +291,13 @@ func _run_none_smoke_tests(A: Dictionary, AB: Dictionary) -> void:
 	assert_eq(r6.attacker_atk_used, 80, "TC-FUNC-Raijin-and-Fujin-001: ATK=80 correct")
 	assert_true(r6.defender_destroyed, "TC-FUNC-Raijin-and-Fujin-001: defender destroyed")
 
-	# TC-FUNC-Rocket-Tyrant-001 — ATK=130, DEF=110, BIO, NONE
-	print("-- TC-FUNC-Rocket-Tyrant-001")
+	# TC-FUNC-Rocket-Marauder-001 — ATK=125, DEF=105, BIO, NONE
+	print("-- TC-FUNC-Rocket-Marauder-001")
 	var rocket := _make_char("Rocket Marauder", 125, 105, 1000, A.BIO)
 	var def7 := _make_char("Dummy", 0, 100, 100, A.ANIMA)
 	var r7 := BattleResolver.resolve_battle(rocket, def7, 3, 0, 1)
-	assert_eq(r7.attacker_atk_used, 130, "TC-FUNC-Rocket-Tyrant-001: ATK=130 correct")
-	assert_true(r7.defender_destroyed, "TC-FUNC-Rocket-Tyrant-001: defender destroyed")
+	assert_eq(r7.attacker_atk_used, 125, "TC-FUNC-Rocket-Marauder-001: ATK=125 correct")
+	assert_true(r7.defender_destroyed, "TC-FUNC-Rocket-Marauder-001: defender destroyed")
 
 	# TC-FUNC-Skeleton-Overlord-001 — ATK=50, DEF=5, CHAOS, NONE
 	print("-- TC-FUNC-Skeleton-Overlord-001")

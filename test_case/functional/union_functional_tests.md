@@ -53,7 +53,7 @@ Expected Result:
 
 Card Name: Lord of Terror
 Type: Union
-Stats: ATK=200 DEF=100 summon_cost=1000 Affinity=CHAOS
+Stats: ATK=150 DEF=100 summon_cost=1500 Affinity=CHAOS
 AbilityType: ATK_PENALTY_VS_DEAD_END
 ability_params: {'penalty': 50}
 Description: -50 ATK if attacks dead end card
@@ -67,11 +67,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=1500 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 1500 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -585,7 +585,7 @@ Expected Result:
 
 ---
 
-Card Name: Barros the Colossol
+Card Name: Barros the Colossal
 Type: Union
 Stats: ATK=150 DEF=130 summon_cost=1500 Affinity=NATURE
 AbilityType: NONE
@@ -593,9 +593,9 @@ ability_params: {}
 Description: None
 Test Cases:
 
-Test Case ID: TC-FUNC-Barros-the-Colossol-000
+Test Case ID: TC-FUNC-Barros-the-Colossal-000
 Description:
-Union summon: Barros the Colossol
+Union summon: Barros the Colossal
 Implementation Reference:
 - GameBoard._perform_pending_union
 - UnionDatabase.find_available_unions validation
@@ -611,9 +611,9 @@ Expected Result:
 - Materials removed pay_cost=false.
 - _union_summoned_this_duel[player]=true blocks second union.
 
-Test Case ID: TC-FUNC-Barros-the-Colossol-001
+Test Case ID: TC-FUNC-Barros-the-Colossal-001
 Description:
-Barros the Colossol: ability NONE functional smoke test
+Barros the Colossal: ability NONE functional smoke test
 Implementation Reference:
 - CharacterData.AbilityType.NONE
 - See BattleResolver.gd / TurnManager.gd
@@ -675,7 +675,7 @@ Expected Result:
 
 Card Name: Gaia Turtle
 Type: Union
-Stats: ATK=0 DEF=220 summon_cost=2000 Affinity=NATURE
+Stats: ATK=0 DEF=205 summon_cost=2000 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
 Description: None
@@ -1115,7 +1115,7 @@ Expected Result:
 
 ---
 
-Card Name: Moon Ninja Lady
+Card Name: Moon Lady Ninja
 Type: Union
 Stats: ATK=65 DEF=50 summon_cost=800 Affinity=ANIMA
 AbilityType: ONE_USE_SURVIVE_DESTRUCTION
@@ -1123,9 +1123,9 @@ ability_params: {}
 Description: Once, this card is not destroyed.
 Test Cases:
 
-Test Case ID: TC-FUNC-Moon-Ninja-Lady-000
+Test Case ID: TC-FUNC-Moon-Lady-Ninja-000
 Description:
-Union summon: Moon Ninja Lady
+Union summon: Moon Lady Ninja
 Implementation Reference:
 - GameBoard._perform_pending_union
 - UnionDatabase.find_available_unions validation
@@ -1141,9 +1141,9 @@ Expected Result:
 - Materials removed pay_cost=false.
 - _union_summoned_this_duel[player]=true blocks second union.
 
-Test Case ID: TC-FUNC-Moon-Ninja-Lady-001
+Test Case ID: TC-FUNC-Moon-Lady-Ninja-001
 Description:
-Moon Ninja Lady: once per card, survive destruction
+Moon Lady Ninja: once per card, survive destruction
 Implementation Reference:
 - TurnManager/GameState destruction intercept
 - AbilityType.ONE_USE_SURVIVE_DESTRUCTION
@@ -1151,7 +1151,7 @@ Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Moon Ninja Lady would be destroyed first time.
+- Moon Lady Ninja would be destroyed first time.
 Steps:
 Step 1: Trigger destruction.
 Expected Result:
@@ -1299,7 +1299,7 @@ Type: Union
 Stats: ATK=50 DEF=45 summon_cost=1000 Affinity=BIO
 AbilityType: PERM_ATK_BOOST_ONCE_PER_AFFINITY
 ability_params: {'affinity': 'A.BIO', 'atk': 50}
-Description: After Reckoning with non-Bio, it gain +50 ATK permanently.
+Description: Once, after Reckoning with non-Bio, it gain +50 ATK permanently.
 Test Cases:
 
 Test Case ID: TC-FUNC-Volatile-Slasher-000
@@ -1334,7 +1334,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: After Reckoning with non-Bio, it gain +50 ATK permanently.
+- Behavior matches CardDatabase description: Once, after Reckoning with non-Bio, it gain +50 ATK permanently.
 
 ---
 

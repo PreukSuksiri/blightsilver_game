@@ -12,6 +12,8 @@ var deck0: Variant = null                 # player 0's deck (DeckData or null)
 var deck1: Variant = null                 # player 1's deck (DeckData or null)
 var forced_cells_0: Array = []            # Array[Dictionary{card_name, row, col}]
 var forced_cells_1: Array = []            # Array[Dictionary{card_name, row, col}]
+var forced_tech_0: Array = []             # Array[String] — up to 3 tech names (empty = random fill)
+var forced_tech_1: Array = []             # Array[String]
 
 # ── Batch run (auto-iterate AI vs AI) ─────────────────────────────────────────
 var batch_total: int = 1
@@ -26,6 +28,8 @@ var _match_start_msec: int = 0
 var _file_path: String = ""
 var _active: bool = false                 # true while a match is in progress
 var _prev_crystals: Array[int] = [0, 0]  # snapshot for delta computation
+var _logged_destroy_slots: Dictionary = {}  # "p:r:c" keys — avoids duplicate destroy lines
+var _pending_game_over_winner: int = -999  # deferred until attack log flushes
 
 # ── Internal: connections to game signals ─────────────────────────────────────
 var _board_ref: Node = null
@@ -34,11 +38,14 @@ var _ai0_ref: Node = null                 # AIPlayer for player 0 (AI_VS_AI only
 var _ai1_ref: Node = null                 # AIPlayer for player 1
 
 # ─────────────────────────────────────────────────────────────────────────────
-func configure(d0: Variant, fc0: Array, d1: Variant, fc1: Array) -> void:
+func configure(d0: Variant, fc0: Array, d1: Variant, fc1: Array,
+		ft0: Array = [], ft1: Array = []) -> void:
 	deck0 = d0
 	deck1 = d1
 	forced_cells_0 = fc0.duplicate(true)
 	forced_cells_1 = fc1.duplicate(true)
+	forced_tech_0 = ft0.duplicate(true)
+	forced_tech_1 = ft1.duplicate(true)
 
 
 func start_batch(iterations: int) -> void:
@@ -76,6 +83,8 @@ func start_logging(board: Node) -> void:
 	_tm_ref    = board.turn_manager
 	_active    = true
 	_match_start_msec = Time.get_ticks_msec()
+	_logged_destroy_slots.clear()
+	_pending_game_over_winner = -999
 
 	if batch_running and batch_completed > 0:
 		_log_lines.clear()
@@ -91,6 +100,8 @@ func start_logging(board: Node) -> void:
 	var d1_name: String = deck1.deck_name if deck1 != null else "(random pool)"
 	var fc0_str: String = _format_forced(forced_cells_0)
 	var fc1_str: String = _format_forced(forced_cells_1)
+	var ft0_str: String = _format_forced_tech(forced_tech_0)
+	var ft1_str: String = _format_forced_tech(forced_tech_1)
 	_raw("=== %s ===" % log_info["battle_display_name"])
 	_raw("Battle started: %s" % log_info["battle_started_at"])
 	_raw("%s (started %s)" % [log_info["session_display_name"], log_info["session_started_at"]])
@@ -101,6 +112,8 @@ func start_logging(board: Node) -> void:
 	_raw("AI-1 Deck:    " + d1_name)
 	_raw("AI-0 Forced:  " + fc0_str)
 	_raw("AI-1 Forced:  " + fc1_str)
+	_raw("AI-0 Tech:    " + ft0_str)
+	_raw("AI-1 Tech:    " + ft1_str)
 	_raw("===")
 	_raw("")
 
@@ -137,6 +150,7 @@ func start_logging(board: Node) -> void:
 	_tm_ref.mode_selected.connect(_on_mode_selected)
 	_tm_ref.attack_aborted.connect(_on_attack_aborted)
 	_tm_ref.tech_resolved.connect(_on_tech_resolved)
+	_tm_ref.ability_selection_done.connect(_on_ability_selection_done)
 	_tm_ref.attack_phase_started.connect(_on_attack_phase_started)
 
 	# AI player signals (decisions made before execution)
@@ -152,7 +166,18 @@ func start_logging(board: Node) -> void:
 		_ai1_ref.ai_trap_choice.connect(_on_ai1_trap_choice)
 
 func on_game_over(winner: int) -> void:
-	# Called by GameBoard._on_game_over() in AI_VS_AI mode
+	# Defer so TurnManager can emit attack_completed / card_destroyed for the killing blow.
+	_pending_game_over_winner = winner
+	call_deferred("_finish_game_over_log")
+
+func _finish_game_over_log() -> void:
+	if _pending_game_over_winner == -999:
+		return
+	var winner: int = _pending_game_over_winner
+	_pending_game_over_winner = -999
+	_write_game_over_log(winner)
+
+func _write_game_over_log(winner: int) -> void:
 	var result_str: String
 	match winner:
 		-1: result_str = "Tie"
@@ -162,6 +187,8 @@ func on_game_over(winner: int) -> void:
 	_raw("")
 	_raw("=== GAME OVER ===")
 	log_event(result_str)
+	if GameState.game_over_reason != "":
+		log_event("Reason: %s" % GameState.game_over_reason)
 	var c0: int = GameState.crystals[0]
 	var c1: int = GameState.crystals[1]
 	log_event("Final crystals — P0: %d  P1: %d  |  Turns: %d" % [c0, c1, GameState.turn_number])
@@ -173,6 +200,10 @@ func on_game_over(winner: int) -> void:
 			batch_completed, batch_total, result_str, c0, c1, GameState.turn_number])
 
 	_cleanup()
+
+	if CardE2ERunner.is_active():
+		CardE2ERunner.on_battle_finished(_file_path, PackedStringArray(_log_lines))
+		return
 
 	if batch_running and batch_completed < batch_total:
 		# Chain next battle without returning to config.
@@ -236,6 +267,18 @@ func _format_forced(fc: Array) -> String:
 			parts.append("(%d,%d) %s" % [int(d.get("row", 0)), int(d.get("col", 0)), str(d.get("card_name", "?"))])
 	return ", ".join(PackedStringArray(parts))
 
+func _format_forced_tech(ft: Array) -> String:
+	if ft.is_empty():
+		return "random"
+	var names: Array[String] = []
+	for t: Variant in ft:
+		var n: String = str(t).strip_edges()
+		if not n.is_empty():
+			names.append(n)
+	if names.is_empty():
+		return "random"
+	return ", ".join(PackedStringArray(names))
+
 func _cleanup() -> void:
 	_active = false
 	if _file != null:
@@ -295,6 +338,8 @@ func _disconnect_all() -> void:
 			_tm_ref.attack_aborted.disconnect(_on_attack_aborted)
 		if _tm_ref.tech_resolved.is_connected(_on_tech_resolved):
 			_tm_ref.tech_resolved.disconnect(_on_tech_resolved)
+		if _tm_ref.ability_selection_done.is_connected(_on_ability_selection_done):
+			_tm_ref.ability_selection_done.disconnect(_on_ability_selection_done)
 		if _tm_ref.attack_phase_started.is_connected(_on_attack_phase_started):
 			_tm_ref.attack_phase_started.disconnect(_on_attack_phase_started)
 	if _ai0_ref != null:
@@ -402,7 +447,21 @@ func _on_crystals_changed(player: int, new_amount: int, reason: String = "") -> 
 func _on_phase_changed(_phase: GameState.Phase) -> void:
 	pass  # Turn header is now handled by _on_turn_changed; nothing else needs logging here.
 
-func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
+func _destroy_slot_key(player_index: int, row: int, col: int) -> String:
+	return "%d:%d:%d" % [player_index, row, col]
+
+
+func _log_card_destroyed_if_needed(player_index: int, row: int, col: int, card_label: String) -> void:
+	if card_label.is_empty():
+		return
+	var key: String = _destroy_slot_key(player_index, row, col)
+	if _logged_destroy_slots.has(key):
+		return
+	_logged_destroy_slots[key] = true
+	log_event("Card destroyed  P%d (%d,%d) %s" % [player_index, row, col, card_label])
+
+
+func _log_attack_resolution(attacker_pos: Vector2i, target_pos: Vector2i,
 		result: BattleResolver.BattleResult) -> void:
 	var atk_player: int = GameState.current_player
 	var def_player: int = GameState.get_opponent(atk_player)
@@ -432,20 +491,16 @@ func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 
 	# Use names captured in BattleResult before destruction — reading from GameState here would
 	# see a dead_end slot for any card that was destroyed during battle resolution.
-	var a_name: String = result.attacker_name
-	if a_name.is_empty():
-		a_name = "(self-destroyed)" if result.attacker_destroyed else "?"
-	var d_name: String = result.defender_name
+	var a_name: String = BattleLogFormat.attack_side_label(result, true)
+	var d_name: String = BattleLogFormat.attack_side_label(result, false)
 	# Dead-end attack: defender had no card — log as DEAD_END
-	if d_name.is_empty() and not result.defender_destroyed:
-		log_event("Attack P%d(%d,%d)\"%s\" → P%d(%d,%d)(empty)  Dice=%d  → DEAD_END" % [
+	if result.defender_name.is_empty() and not result.defender_destroyed:
+		log_event("Attack P%d(%d,%d)%s → P%d(%d,%d)(empty)  Dice=%d  → DEAD_END" % [
 			atk_player, attacker_pos.x, attacker_pos.y, a_name,
 			def_player, target_pos.x, target_pos.y,
 			GameState.dice_result])
 		log_event("Anim: 3F  (blank slot)")
 		return
-	if d_name.is_empty():
-		d_name = "(destroyed)"
 	var outcome: String
 	if result.defender_destroyed and not result.attacker_destroyed:
 		outcome = "WIN"
@@ -453,7 +508,7 @@ func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 		outcome = "LOSE"
 	else:
 		outcome = "TIE"
-	log_event("Attack P%d(%d,%d)\"%s\" → P%d(%d,%d)\"%s\"  Dice=%d  ATK=%d vs DEF=%d  → %s" % [
+	log_event("Attack P%d(%d,%d)%s → P%d(%d,%d)%s  Dice=%d  ATK=%d vs DEF=%d  → %s" % [
 		atk_player, attacker_pos.x, attacker_pos.y, a_name,
 		def_player, target_pos.x, target_pos.y, d_name,
 		GameState.dice_result,
@@ -461,6 +516,9 @@ func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 		result.defender_def_used,
 		outcome
 	])
+	for overlay_line: String in BattleResolver.reckoning_overlay_log_lines(
+			atk_player, def_player, result):
+		log_event(overlay_line)
 	# Animation scenario line — lets you audit which overlay animation fired
 	var anim_line: String
 	if result.attacker_destroyed and result.defender_destroyed:
@@ -477,6 +535,18 @@ func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 		anim_line = "exchange  (no destruction)"
 	log_event("Anim: " + anim_line)
 
+	if result.attacker_destroyed:
+		_log_card_destroyed_if_needed(
+			atk_player, attacker_pos.x, attacker_pos.y, a_name)
+	if result.defender_destroyed:
+		_log_card_destroyed_if_needed(
+			def_player, target_pos.x, target_pos.y, d_name)
+
+
+func _on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
+		result: BattleResolver.BattleResult) -> void:
+	_log_attack_resolution(attacker_pos, target_pos, result)
+
 func _on_tech_played(player_index: int, tech_name: String) -> void:
 	log_event("Tech played  P%d: \"%s\"" % [player_index, tech_name])
 
@@ -485,12 +555,20 @@ func _on_turn_ended(player_index: int) -> void:
 		player_index, GameState.crystals[0], GameState.crystals[1]])
 
 func _on_card_destroyed(player_index: int, row: int, col: int) -> void:
+	# During battle, attack_completed logs destroys in order after the attack line.
+	if GameState.current_phase == GameState.Phase.BATTLE:
+		return
 	# Signal fires before place_dead_end() clears the slot, so card name is still readable.
 	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
 	if card == null or card.card_type == "dead_end" or card.card_name.is_empty():
 		log_event("Dead-end placed  P%d (%d,%d)" % [player_index, row, col])
 	else:
-		log_event("Card destroyed  P%d (%d,%d) \"%s\"" % [player_index, row, col, card.card_name])
+		var key: String = _destroy_slot_key(player_index, row, col)
+		if _logged_destroy_slots.has(key):
+			return
+		_logged_destroy_slots[key] = true
+		log_event("Card destroyed  P%d (%d,%d) %s" % [
+			player_index, row, col, BattleLogFormat.format_card(card)])
 
 func _on_coin_flip(results: Array) -> void:
 	var strs: Array[String] = []
@@ -504,7 +582,8 @@ func _on_game_over_signal(_winner: int) -> void:
 
 func _on_card_placed(player: int, row: int, col: int) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player, row, col)
-	log_event("Placed: P%d (%d,%d) \"%s\" [%s]" % [player, row, col, card.card_name, card.card_type])
+	log_event("Placed: P%d (%d,%d) %s [%s]" % [
+		player, row, col, BattleLogFormat.format_card(card), card.card_type])
 
 func _on_card_revealed(player: int, row: int, col: int) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player, row, col)
@@ -512,7 +591,7 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 		if card.card_type == "dead_end":
 			log_event("Revealed: P%d (%d,%d) (blank slot)" % [player, row, col])
 		return
-	log_event("Revealed: P%d (%d,%d) \"%s\"" % [player, row, col, card.card_name])
+	log_event("Revealed: P%d (%d,%d) %s" % [player, row, col, BattleLogFormat.format_card(card)])
 
 # ── Prompt / choice logging ───────────────────────────────────────────────────
 
@@ -530,21 +609,29 @@ func _on_target_prompt(prompt: String, filter: String) -> void:
 # ── AI decision logging ───────────────────────────────────────────────────────
 
 func _on_ai0_attack_chosen(attacker: Vector2i, target: Vector2i) -> void:
+	if GameState.current_player != 0:
+		return
 	var a_card: GameState.CardInstance = GameState.get_card(0, attacker.x, attacker.y)
+	if a_card.card_type != "character":
+		return
 	var t_card: GameState.CardInstance = GameState.get_card(1, target.x, target.y)
-	var t_info: String = "\"%s\" [DEF=%d]" % [t_card.card_name, t_card.get_effective_def()] \
-		if t_card.card_type != "dead_end" else "\"(dead-end)\""
-	log_event("AI0 attack decision: (%d,%d)\"%s\" [ATK=%d] → (%d,%d) %s" % [
-		attacker.x, attacker.y, a_card.card_name, a_card.get_effective_atk(),
+	var t_info: String = BattleLogFormat.format_card(t_card) \
+		if t_card.card_type != "dead_end" else "(dead-end)"
+	log_event("AI0 attack decision: (%d,%d)%s → (%d,%d) %s" % [
+		attacker.x, attacker.y, BattleLogFormat.format_unit(a_card),
 		target.x, target.y, t_info])
 
 func _on_ai1_attack_chosen(attacker: Vector2i, target: Vector2i) -> void:
+	if GameState.current_player != 1:
+		return
 	var a_card: GameState.CardInstance = GameState.get_card(1, attacker.x, attacker.y)
+	if a_card.card_type != "character":
+		return
 	var t_card: GameState.CardInstance = GameState.get_card(0, target.x, target.y)
-	var t_info: String = "\"%s\" [DEF=%d]" % [t_card.card_name, t_card.get_effective_def()] \
-		if t_card.card_type != "dead_end" else "\"(dead-end)\""
-	log_event("AI1 attack decision: (%d,%d)\"%s\" [ATK=%d] → (%d,%d) %s" % [
-		attacker.x, attacker.y, a_card.card_name, a_card.get_effective_atk(),
+	var t_info: String = BattleLogFormat.format_card(t_card) \
+		if t_card.card_type != "dead_end" else "(dead-end)"
+	log_event("AI1 attack decision: (%d,%d)%s → (%d,%d) %s" % [
+		attacker.x, attacker.y, BattleLogFormat.format_unit(a_card),
 		target.x, target.y, t_info])
 
 func _on_ai0_target_chosen(pos: Vector2i) -> void:
@@ -588,14 +675,14 @@ func _on_dice_rolled(result: int) -> void:
 ## ATK stat changed on a card (buff/debuff, ability effect, etc.).
 func _on_card_atk_changed(player_index: int, row: int, col: int, old_val: int, new_val: int) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
-	var name_str: String = card.card_name if card != null else "?"
-	log_event("ATK changed P%d(%d,%d)\"%s\": %d → %d" % [player_index, row, col, name_str, old_val, new_val])
+	log_event("ATK changed P%d(%d,%d)%s: %d → %d" % [
+		player_index, row, col, BattleLogFormat.format_card(card), old_val, new_val])
 
 ## DEF stat changed on a card.
 func _on_card_def_changed(player_index: int, row: int, col: int, old_val: int, new_val: int) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
-	var name_str: String = card.card_name if card != null else "?"
-	log_event("DEF changed P%d(%d,%d)\"%s\": %d → %d" % [player_index, row, col, name_str, old_val, new_val])
+	log_event("DEF changed P%d(%d,%d)%s: %d → %d" % [
+		player_index, row, col, BattleLogFormat.format_card(card), old_val, new_val])
 
 ## Yes/No ability choice resolved (Armored Dino, etc.).
 func _on_ability_choice_resolved(choice_index: int) -> void:
@@ -611,22 +698,25 @@ func _on_attack_aborted() -> void:
 func _on_tech_resolved(player_index: int) -> void:
 	log_event("Tech resolved  P%d" % player_index)
 
+func _on_ability_selection_done() -> void:
+	log_event("Ability target resolved  P%d" % GameState.current_player)
+
 ## Card flag added (mutagen, venom, berserk, etc.).
 func _on_card_flag_added(player_index: int, row: int, col: int, flag: String) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
-	var name_str: String = card.card_name if card != null and not card.card_name.is_empty() else "?"
-	log_event("Flag+ P%d(%d,%d)\"%s\": %s" % [player_index, row, col, name_str, flag])
+	log_event("Flag+ P%d(%d,%d)%s: %s" % [
+		player_index, row, col, BattleLogFormat.format_card(card), flag])
 
 ## Card flag removed.
 func _on_card_flag_removed(player_index: int, row: int, col: int, flag: String) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
-	var name_str: String = card.card_name if card != null and not card.card_name.is_empty() else "?"
-	log_event("Flag- P%d(%d,%d)\"%s\": %s" % [player_index, row, col, name_str, flag])
+	log_event("Flag- P%d(%d,%d)%s: %s" % [
+		player_index, row, col, BattleLogFormat.format_card(card), flag])
 
 ## Union summoned — fires before crystal cost is paid.
-func _on_union_summoned(player: int, union_name: String, material_names: Array) -> void:
-	log_event("Union summoned P%d: [%s] from %s" % [
-		player, union_name, ", ".join(PackedStringArray(material_names))])
+func _on_union_summoned(player: int, union_label: String, material_labels: Array) -> void:
+	log_event("Union summoned P%d: %s from %s" % [
+		player, union_label, ", ".join(PackedStringArray(material_labels))])
 
 ## Attack phase started — shows how many attacks this player has this turn.
 func _on_attack_phase_started(player_index: int, max_attacks: int) -> void:

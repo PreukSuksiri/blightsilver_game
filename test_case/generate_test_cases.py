@@ -751,7 +751,32 @@ def write_type_file(card_type: str, cards: list[dict]) -> None:
     print(f"Wrote {out_path} ({len(sorted_cards)} cards)")
 
 
-def write_index(all_cards: list[dict]) -> None:
+TYPE_FILES = {
+    "Character": "character/character_demo_test_cases.md",
+    "Tech": "tech/tech_demo_test_cases.md",
+    "Trap": "trap/trap_demo_test_cases.md",
+    "Union": "union/union_demo_test_cases.md",
+}
+
+
+def collect_manifest_ids() -> list[str]:
+    manifest: list[str] = []
+    for rel in TYPE_FILES.values():
+        text = (OUT / rel).read_text(encoding="utf-8")
+        for m in re.finditer(r"Test Case ID: (TC-[^\n]+)", text):
+            tc_id = m.group(1)
+            if tc_id.startswith("TC-FUNC-"):
+                continue
+            manifest.append(tc_id)
+    return manifest
+
+
+def write_manifest(ids: list[str]) -> None:
+    (OUT / "test_case_manifest.txt").write_text("\n".join(ids) + "\n", encoding="utf-8")
+    print(f"Wrote test_case_manifest.txt ({len(ids)} IDs)")
+
+
+def write_index(all_cards: list[dict], total_tc_count: int) -> None:
     by_type = {}
     for c in all_cards:
         t = card_type_key(c)
@@ -776,11 +801,15 @@ def write_index(all_cards: list[dict]) -> None:
         "| File | Description |",
         "|------|-------------|",
         "| [test_framework.md](./test_framework.md) | Shared setup, Godot execution guide, verification checklist |",
-        "| [character/character_demo_test_cases.md](./character/character_demo_test_cases.md) | 134 character cards |",
-        "| [tech/tech_demo_test_cases.md](./tech/tech_demo_test_cases.md) | 11 tech cards |",
-        "| [trap/trap_demo_test_cases.md](./trap/trap_demo_test_cases.md) | 23 trap cards |",
-        "| [union/union_demo_test_cases.md](./union/union_demo_test_cases.md) | 36 union cards |",
-        "| [test_case_manifest.txt](./test_case_manifest.txt) | Flat list of all 826 test case IDs for progress tracking |",
+    ])
+    for t in sorted(TYPE_FILES):
+        if t in by_type:
+            rel = TYPE_FILES[t]
+            lines.append(
+                f"| [{rel}](./{rel}) | {len(by_type[t])} {t.lower()} cards |"
+            )
+    lines.extend([
+        f"| [test_case_manifest.txt](./test_case_manifest.txt) | Flat list of all {total_tc_count} test case IDs for progress tracking |",
         "| [generate_test_cases.py](./generate_test_cases.py) | Regenerator script (re-run after Excel updates) |",
         "",
         "## Functional tests (code-accurate)",
@@ -796,6 +825,52 @@ def write_index(all_cards: list[dict]) -> None:
         "| [functional/union_functional_tests.md](./functional/union_functional_tests.md) | Union summon + ability tests |",
         "| [functional/functional_test_manifest.txt](./functional/functional_test_manifest.txt) | All TC-FUNC-* IDs |",
         "| [generate_functional_tests.py](./generate_functional_tests.py) | Regenerate functional suite |",
+        "",
+        "## Automated unit tests (Godot headless)",
+        "",
+        "From the **repository root**, run:",
+        "",
+        "```bash",
+        "godot --headless --script tests/test_runner.gd",
+        "```",
+        "",
+        "**What it does:** Starts Godot without a window, loads `tests/test_runner.gd`, and runs every unit test suite in order. Each suite prints `PASS` / `FAIL` lines to the terminal. When all suites finish, the process exits automatically.",
+        "",
+        "**Suites executed:**",
+        "",
+        "1. `tests/test_dice_roller.gd`",
+        "2. `tests/test_card_database.gd`",
+        "3. `tests/test_game_state.gd`",
+        "4. `tests/test_battle_resolver.gd`",
+        "5. `tests/test_func_characters.gd` — character `TC-FUNC-*` ability tests",
+        "6. `tests/test_func_traps.gd`",
+        "7. `tests/test_func_techs.gd`",
+        "8. `tests/test_func_unions.gd`",
+        "",
+        "**Use this when:** You changed card data, battle logic, or functional tests and want a quick check that core rules still pass.",
+        "",
+        "**Not covered:** Full UI battle flow, union summon UI, coin-flip RNG, and other manual cases in the markdown suites above. Those still require live sessions or agent UI testing per `test_framework.md`.",
+        "",
+        "**Requires:** Godot 4.x on your `PATH` (or substitute the full path to your Godot binary).",
+        "",
+        "## Card E2E (full UI / AI vs AI)",
+        "",
+        "Two tiers per demo card — see [e2e/README.md](./e2e/README.md) for full docs.",
+        "",
+        "| Tier | ID | Checks |",
+        "|------|-----|--------|",
+        "| 1 | `E2E-*-001` | Smoke: battle completes, card in log |",
+        "| 2 | `E2E-*-002` | Ability: forced setup + ATK/trap/tech/union log assertions |",
+        "",
+        "```bash",
+        "python3 test_case/e2e/generate_e2e_scenarios.py   # regenerate 406 scenarios",
+        "```",
+        "",
+        "**In-game:** AI vs AI → Run All / Tier 1 Smoke / Tier 2 Ability",
+        "",
+        "**Admin:** `card_e2e` | `card_e2e t1` | `card_e2e t2` | `card_e2e reset`",
+        "",
+        "Progress: `user://card_e2e_progress.json` (resume supported).",
         "",
         "## Execution order (recommended)",
         "",
@@ -957,10 +1032,12 @@ def main():
         t = card_type_key(c)
         by_type.setdefault(t, []).append(c)
     write_framework()
-    write_index(cards)
     for t in ["Union", "Trap", "Tech", "Character"]:
         if t in by_type:
             write_type_file(t, by_type[t])
+    manifest_ids = collect_manifest_ids()
+    write_manifest(manifest_ids)
+    write_index(cards, len(manifest_ids))
     print(f"\nDone. {len(cards)} demo cards → test_case/")
 
 

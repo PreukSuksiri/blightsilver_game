@@ -2,11 +2,11 @@
 
 Generated from `context/card_data_demo.xlsx` filtering **Demo = Yes** only.
 
-**Total demo cards:** 204
+**Total demo cards:** 203
 
 ## Card counts
 
-- **Character**: 134
+- **Character**: 133
 - **Tech**: 11
 - **Trap**: 23
 - **Union**: 36
@@ -16,11 +16,11 @@ Generated from `context/card_data_demo.xlsx` filtering **Demo = Yes** only.
 | File | Description |
 |------|-------------|
 | [test_framework.md](./test_framework.md) | Shared setup, Godot execution guide, verification checklist |
-| [character/character_demo_test_cases.md](./character/character_demo_test_cases.md) | 134 character cards |
+| [character/character_demo_test_cases.md](./character/character_demo_test_cases.md) | 133 character cards |
 | [tech/tech_demo_test_cases.md](./tech/tech_demo_test_cases.md) | 11 tech cards |
 | [trap/trap_demo_test_cases.md](./trap/trap_demo_test_cases.md) | 23 trap cards |
 | [union/union_demo_test_cases.md](./union/union_demo_test_cases.md) | 36 union cards |
-| [test_case_manifest.txt](./test_case_manifest.txt) | Flat list of all 826 test case IDs for progress tracking |
+| [test_case_manifest.txt](./test_case_manifest.txt) | Flat list of all 809 test case IDs for progress tracking |
 | [generate_test_cases.py](./generate_test_cases.py) | Regenerator script (re-run after Excel updates) |
 
 ## Functional tests (code-accurate)
@@ -36,6 +36,52 @@ Derived from `CardDatabase.gd`, `UnionDatabase.gd`, `BattleResolver.gd`, `TurnMa
 | [functional/union_functional_tests.md](./functional/union_functional_tests.md) | Union summon + ability tests |
 | [functional/functional_test_manifest.txt](./functional/functional_test_manifest.txt) | All TC-FUNC-* IDs |
 | [generate_functional_tests.py](./generate_functional_tests.py) | Regenerate functional suite |
+
+## Automated unit tests (Godot headless)
+
+From the **repository root**, run:
+
+```bash
+godot --headless --script tests/test_runner.gd
+```
+
+**What it does:** Starts Godot without a window, loads `tests/test_runner.gd`, and runs every unit test suite in order. Each suite prints `PASS` / `FAIL` lines to the terminal. When all suites finish, the process exits automatically.
+
+**Suites executed:**
+
+1. `tests/test_dice_roller.gd`
+2. `tests/test_card_database.gd`
+3. `tests/test_game_state.gd`
+4. `tests/test_battle_resolver.gd`
+5. `tests/test_func_characters.gd` — character `TC-FUNC-*` ability tests
+6. `tests/test_func_traps.gd`
+7. `tests/test_func_techs.gd`
+8. `tests/test_func_unions.gd`
+
+**Use this when:** You changed card data, battle logic, or functional tests and want a quick check that core rules still pass.
+
+**Not covered:** Full UI battle flow, union summon UI, coin-flip RNG, and other manual cases in the markdown suites above. Those still require live sessions or agent UI testing per `test_framework.md`.
+
+**Requires:** Godot 4.x on your `PATH` (or substitute the full path to your Godot binary).
+
+## Card E2E (full UI / AI vs AI)
+
+Two tiers per demo card — see [e2e/README.md](./e2e/README.md) for full docs.
+
+| Tier | ID | Checks |
+|------|-----|--------|
+| 1 | `E2E-*-001` | Smoke: battle completes, card in log |
+| 2 | `E2E-*-002` | Ability: forced setup + ATK/trap/tech/union log assertions |
+
+```bash
+python3 test_case/e2e/generate_e2e_scenarios.py   # regenerate 406 scenarios
+```
+
+**In-game:** AI vs AI → Run All / Tier 1 Smoke / Tier 2 Ability
+
+**Admin:** `card_e2e` | `card_e2e t1` | `card_e2e t2` | `card_e2e reset`
+
+Progress: `user://card_e2e_progress.json` (resume supported).
 
 ## Execution order (recommended)
 
@@ -59,7 +105,6 @@ Derived from `CardDatabase.gd`, `UnionDatabase.gd`, `BattleResolver.gd`, `TurnMa
 - Armored Bee
 - Armored Monkey
 - Armored Rhino
-- Asteroid Trooper
 - Bat Swarm
 - Big Thug
 - Bladeshifter
@@ -228,7 +273,7 @@ Derived from `CardDatabase.gd`, `UnionDatabase.gd`, `BattleResolver.gd`, `TurnMa
 ### Union
 - Ancient Lizard
 - Armored Dino
-- Barros the Colossol
+- Barros the Colossal
 - Berserk Hyena
 - Blood-hungry Mutant
 - Burning Phoenix
@@ -248,7 +293,7 @@ Derived from `CardDatabase.gd`, `UnionDatabase.gd`, `BattleResolver.gd`, `TurnMa
 - Kiba the Giant Slayer
 - Kitsune
 - Lord of Terror
-- Moon Ninja Lady
+- Moon Lady Ninja
 - Moon Tribe Shaman
 - Pixie Queen
 - Raijin and Fujin

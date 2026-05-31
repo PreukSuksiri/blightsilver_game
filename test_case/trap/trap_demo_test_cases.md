@@ -727,7 +727,7 @@ Expected Result:
 Card Name: Trap Hole
 Type: Trap
 Cost: 0
-Ability: Attacking player loses 20 Crystals
+Ability: Flip 3 coin, attacking player loses 20 Crystals per each head(s).
 Test Cases:
 
 
@@ -742,7 +742,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Attacking player loses 20 Crystals resolves.
+Step 2: Trap reveals and Flip 3 coin, attacking player loses 20 Crystals per each head(s). resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -790,6 +790,20 @@ Expected Result:
 
 Test Case ID: TC-Trap-Hole-005
 Description:
+Coin flip — Trap Hole probabilistic debuff.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run multiple trap activations.
+Steps:
+Step 1: Observe heads/tails branches for ATK debuff or attack lock.
+Expected Result:
+- Heads branch applies debuff or attack lock per card text.
+- Tails branch applies alternate or no effect.
+
+Test Case ID: TC-Trap-Hole-006
+Description:
 Edge — Trap Hole attacked by face-up vs face-down attacker path.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
@@ -806,7 +820,7 @@ Expected Result:
 Card Name: Pepper Spray
 Type: Trap
 Cost: 0
-Ability: Flip 2 coin, if head, the attacking unit lose -5 ATK until the end of their next turn.
+Ability: Flip 2 coin, if head, the attacking unit lose -5 ATK for each head(s) until the end of their next turn.
 Test Cases:
 
 
@@ -821,7 +835,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Flip 2 coin, if head, the attacking unit lose -5 ATK until the end of their next turn. resolves.
+Step 2: Trap reveals and Flip 2 coin, if head, the attacking unit lose -5 ATK for each head(s) until the end of their next turn. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -1028,10 +1042,103 @@ Expected Result:
 
 ---
 
+Card Name: Acid Trap Hole
+Type: Trap
+Cost: 0
+Ability: Flip 2 coin, attacking player loses 50 Crystals per each head(s).
+Test Cases:
+
+
+Test Case ID: TC-Acid-Trap-Hole-001
+Description:
+Happy path — opponent attacks Acid Trap Hole.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Acid Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Acid Trap Hole face-down on Player 1 field.
+- Player 0 has an attacker ready.
+Steps:
+Step 1: Player 0 attacks the trap cell.
+Step 2: Trap reveals and Flip 2 coin, attacking player loses 50 Crystals per each head(s). resolves.
+Expected Result:
+- Trap effect applies to attacker/active player as described.
+- Trap is consumed/destroyed after activation unless otherwise stated.
+
+Test Case ID: TC-Acid-Trap-Hole-002
+Description:
+Immunity — Huntress of Green Glade / Laser Walker / Electrogazer vs Acid Trap Hole.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Acid Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Player 0 has trap-immune character.
+- Acid Trap Hole face-down on opponent field.
+Steps:
+Step 1: Attack trap with immune character.
+Expected Result:
+- Zero-cost trap nullified if applicable; attacker not destroyed by trap effect.
+
+Test Case ID: TC-Acid-Trap-Hole-003
+Description:
+Zero-cost — Electrogazer negates Acid Trap Hole on field.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Acid Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Player 1 has Electrogazer face-up.
+- Acid Trap Hole face-down on Player 1 field.
+Steps:
+Step 1: Player 0 attacks another target; verify negation state.
+Expected Result:
+- Zero-cost trap on both fields negated while Electrogazer is active.
+
+Test Case ID: TC-Acid-Trap-Hole-004
+Description:
+Crystal drain — Acid Trap Hole reduces attacker crystals.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Acid Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Record Player 0 crystals before trap trigger.
+Steps:
+Step 1: Attack trap; resolve drain.
+Expected Result:
+- Crystal total decreases by stated amount (20/50/etc.).
+
+Test Case ID: TC-Acid-Trap-Hole-005
+Description:
+Coin flip — Acid Trap Hole probabilistic debuff.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Acid Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run multiple trap activations.
+Steps:
+Step 1: Observe heads/tails branches for ATK debuff or attack lock.
+Expected Result:
+- Heads branch applies debuff or attack lock per card text.
+- Tails branch applies alternate or no effect.
+
+Test Case ID: TC-Acid-Trap-Hole-006
+Description:
+Edge — Acid Trap Hole attacked by face-up vs face-down attacker path.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Acid Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Repeat with attacker revealed before combat.
+Steps:
+Step 1: Attack trap.
+Expected Result:
+- Trap activates identically regardless of attacker exposure state.
+
+---
+
 Card Name: Alarm
 Type: Trap
 Cost: 0
-Ability: Unil the end of this urn, All face-up Anima monster gain +5 DEF
+Ability: Unil the end of this urn, All face-up Anima monster gain +10 DEF
 Test Cases:
 
 
@@ -1046,7 +1153,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Unil the end of this urn, All face-up Anima monster gain +5 DEF resolves.
+Step 2: Trap reveals and Unil the end of this urn, All face-up Anima monster gain +10 DEF resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -1439,85 +1546,6 @@ Edge — Flame Trap attacked by face-up vs face-down attacker path.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
 - Ensure 'Flame Trap' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Repeat with attacker revealed before combat.
-Steps:
-Step 1: Attack trap.
-Expected Result:
-- Trap activates identically regardless of attacker exposure state.
-
----
-
-Card Name: Acid Trap Hole
-Type: Trap
-Cost: 0
-Ability: Attacking player loses 50 Crystals
-Test Cases:
-
-
-Test Case ID: TC-Acid-Trap-Hole-001
-Description:
-Happy path — opponent attacks Acid Trap Hole.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Acid Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Acid Trap Hole face-down on Player 1 field.
-- Player 0 has an attacker ready.
-Steps:
-Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Attacking player loses 50 Crystals resolves.
-Expected Result:
-- Trap effect applies to attacker/active player as described.
-- Trap is consumed/destroyed after activation unless otherwise stated.
-
-Test Case ID: TC-Acid-Trap-Hole-002
-Description:
-Immunity — Huntress of Green Glade / Laser Walker / Electrogazer vs Acid Trap Hole.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Acid Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Player 0 has trap-immune character.
-- Acid Trap Hole face-down on opponent field.
-Steps:
-Step 1: Attack trap with immune character.
-Expected Result:
-- Zero-cost trap nullified if applicable; attacker not destroyed by trap effect.
-
-Test Case ID: TC-Acid-Trap-Hole-003
-Description:
-Zero-cost — Electrogazer negates Acid Trap Hole on field.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Acid Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Player 1 has Electrogazer face-up.
-- Acid Trap Hole face-down on Player 1 field.
-Steps:
-Step 1: Player 0 attacks another target; verify negation state.
-Expected Result:
-- Zero-cost trap on both fields negated while Electrogazer is active.
-
-Test Case ID: TC-Acid-Trap-Hole-004
-Description:
-Crystal drain — Acid Trap Hole reduces attacker crystals.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Acid Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Record Player 0 crystals before trap trigger.
-Steps:
-Step 1: Attack trap; resolve drain.
-Expected Result:
-- Crystal total decreases by stated amount (20/50/etc.).
-
-Test Case ID: TC-Acid-Trap-Hole-005
-Description:
-Edge — Acid Trap Hole attacked by face-up vs face-down attacker path.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Acid Trap Hole' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Repeat with attacker revealed before combat.
 Steps:

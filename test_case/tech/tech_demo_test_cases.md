@@ -421,7 +421,7 @@ Expected Result:
 Card Name: Great Diplomacy
 Type: Tech
 Cost: 1000
-Ability: Turn all units on your field face up
+Ability: Select up to 5 of your units and reveal them.
 Test Cases:
 
 
@@ -438,21 +438,21 @@ Steps:
 Step 1: Enter tech play phase; select Great Diplomacy from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Turn all units on your field face up
+- Effect resolves: Select up to 5 of your units and reveal them.
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Great-Diplomacy-002
 Description:
-Turn skip — Great Diplomacy tax interaction.
+Reveal — Great Diplomacy target selection.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
 - Ensure 'Great Diplomacy' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Player has not attacked this turn.
+- Opponent has ≥3 face-down cells.
 Steps:
-Step 1: Play Great Diplomacy.
+Step 1: Play Great Diplomacy; select valid target cell(s).
 Expected Result:
-- Both players skip turns; crystal tax still applies on subsequent skipped attacks.
+- Selected cell(s) become face-up; hidden info updates for both players.
 
 Test Case ID: TC-Great-Diplomacy-003
 Description:
