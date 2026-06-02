@@ -1,0 +1,88 @@
+=== Battle of PTA Bake Sale Brawl ===
+Battle started: 2026-06-01 23:08:38.935
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Green-Mage-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Green-Mage-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Green Mage (Character)  [setup: Church Guard]
+Ability:      DEFEND_PERM_DEBUFF_ATTACKER_ATK_DEF — When this card defends, the attacker permanently loses 10 ATK&DEF.
+Setup role:   t2_defender
+Verifies:
+  - Ability: "Green Mage" is exercised via forced board/tech setup (t2_defender)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Green Mage
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Green\ Mage".*ATK=|→ P\d\(\d+,\d+\)"Green\ Mage")
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: defender survive debuff (best-effort combat contact).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Church Guard
+AI-1 Deck:    E2E T2 solo Green Mage
+AI-0 Forced:  (2,2) Church Guard
+AI-1 Forced:  (2,2) Green Mage
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, War Supply, Tease
+P1 Tech hand: Radar, Accident, Spy
+P0:   [T:Host][  — ][  — ][  — ][C:Joan]
+      [  — ][T:Hard][  — ][T:Hypn][C:Vile]
+      [  — ][C:Polt][C:Chur][  — ][C:Meli]
+      [C:Hamm][T:Red ][  — ][  — ][C:Skel]
+      [  — ][T:Curs][  — ][C:Choi][C:Lab ]
+P1:   [  — ][T:Alar][C:Armo][T:Curs][  — ]
+      [  — ][  — ][C:Gobl][  — ][  — ]
+      [C:Hunt][C:Shep][C:Gree][C:Chao][C:Meli]
+      [T:Self][C:Leop][C:Choi][  — ][  — ]
+      [T:Brai][C:Jaco][C:Choi][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:05.314] Mode selected P0: ATTACK
+[00:05.318] Attack phase P0: 2 attack(s) available
+[00:05.318] MSG: Player 1: tap a character to attack.
+[00:05.623] AI0 attack decision: (2,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (2,2) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down}
+[00:05.969] Revealed: P0 (2,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:06.003] Revealed: P1 (2,2) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:06.003] Dice rolled: 4
+[00:06.007] MSG: Green Mage: Church Guard permanently loses 10 ATK and DEF!
+[00:11.747] Crystals: P0 5000 → 4850 (-150)  [battle]
+[00:13.145] Attack P0(2,2)"Church Guard" {Unit ATK0 DEF25 | cost 150 | affinity Divine | base 0/25} → P1(2,2)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}  Dice=4  ATK=0 vs DEF=15  → LOSE
+[00:13.145] E2E: ability goal reached — ending battle early.
+[00:13.146] Anim: 3B  △ P0(2,2)
+[00:13.146] Card destroyed  P0 (2,2) "Church Guard" {Unit ATK0 DEF25 | cost 150 | affinity Divine | base 0/25}
+
+=== GAME OVER ===
+[00:13.153] AI Player 0 wins
+[00:13.153] Final crystals — P0: 4850  P1: 5000  |  Turns: 1
+[00:13.153] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_pta_bake_sale_brawl_2026-06-01_23-08-38_935.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Green-Mage-002
+Highlight: Green Mage (Character)  [setup: Church Guard]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

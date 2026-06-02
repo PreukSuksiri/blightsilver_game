@@ -1,0 +1,90 @@
+=== Battle of Black Friday Cart Collision ===
+Battle started: 2026-06-01 23:07:48.991
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Grand-Fort-Archer-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Grand-Fort-Archer-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Grand Fort Archer (Character)  [setup: Chaotic Wisp]
+Ability:      ONE_USE_ATK_BOOST — Once, +10 ATK when attack
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Grand Fort Archer" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Grand Fort Archer
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Grand\ Fort\ Archer".*ATK=|→ P\d\(\d+,\d+\)"Grand\ Fort\ Archer")
+  - Log must match regex: Attack P0\(2,2\)"Grand\ Fort\ Archer".*ATK=30\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: one-use ability ONE_USE_ATK_BOOST.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Grand Fort Archer
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Grand Fort Archer
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, Spy, Siege Cannon
+P1 Tech hand: Bribe, Spy, Siege Cannon
+P0:   [C:Succ][T:Deco][  — ][  — ][  — ]
+      [T:Expl][C:Mine][C:Aray][C:Lab ][T:Hard]
+      [  — ][C:Hair][C:Gran][C:Gold][  — ]
+      [T:Foul][C:Lab ][C:Yaks][C:Polt][  — ]
+      [  — ][T:Bait][T:Alar][C:Meph][  — ]
+P1:   [C:Nigh][C:Spea][C:Nuki][T:Hypn][C:Mafi]
+      [T:Echo][  — ][C:Vamp][C:Bomb][  — ]
+      [T:Trap][  — ][C:Chao][T:Snar][  — ]
+      [T:Expl][C:Witc][  — ][  — ][  — ]
+      [C:Pyro][C:Magi][C:Armo][C:Lab ][C:War ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.313] Mode selected P0: ATTACK
+[00:05.316] Attack phase P0: 2 attack(s) available
+[00:05.317] MSG: Player 1: tap a character to attack.
+[00:05.623] AI0 attack decision: (2,2)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.987] Revealed: P0 (2,2) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:06.012] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:06.012] Dice rolled: 5
+[00:06.016] MSG: Grand Fort Archer wins!
+[00:11.627] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:13.026] Attack P0(2,2)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=30 vs DEF=0  → WIN
+[00:13.026] E2E: ability goal reached — ending battle early.
+[00:13.026] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} +ATK 10
+[00:13.026] Anim: 3A  △ P1(2,2)
+[00:13.026] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[00:13.034] AI Player 0 wins
+[00:13.034] Final crystals — P0: 5000  P1: 4900  |  Turns: 1
+[00:13.034] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_black_friday_cart_collision_2026-06-01_23-07-48_991.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Grand-Fort-Archer-002
+Highlight: Grand Fort Archer (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

@@ -1,0 +1,318 @@
+=== Battle of Zoom Cat Filter Forever ===
+Battle started: 2026-06-01 10:14:39.237
+Game Session of Mint Julep (started 2026-06-01 09:37:04.903)
+=== Card E2E Test ===
+Scenario ID:  E2E-Canyon-Warg-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Canyon-Warg-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Canyon Warg (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Canyon Warg" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Canyon Warg
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Canyon\ Warg".*ATK=70\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=70 when Canyon Warg attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Canyon Warg
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Canyon Warg
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Tease, Bribe
+P1 Tech hand: Prayer, War Supply, Accident
+P0:   [C:Fuji][C:Dark][C:Chao][  — ][T:Blac]
+      [T:Deco][  — ][T:Foul][  — ][C:Book]
+      [C:Tiny][  — ][C:Cany][  — ][C:Shot]
+      [T:Pepp][  — ][T:Curs][  — ][C:Nigh]
+      [C:Lab ][  — ][C:Silv][  — ][C:Myst]
+P1:   [T:Acid][T:Spik][C:Pony][  — ][T:Hard]
+      [  — ][C:Bomb][C:War ][C:Moon][  — ]
+      [  — ][C:Leop][C:Chao][C:Mars][T:Echo]
+      [T:Curs][C:Jose][C:Blue][C:Gree][C:Arch]
+      [C:Spea][C:Gobl][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[00:06.818] Crystals: P0 5000 → 4700 (-300)  [union]
+[00:06.854] Revealed: P0 (0,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[00:06.854] Union summoned P0: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:06.854] MSG: Player 1 summoned [Kitsune] using: "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:10.236] Mode selected P0: ATTACK
+[00:10.242] Attack phase P0: 2 attack(s) available
+[00:10.243] MSG: Player 1: tap a character to attack.
+[00:10.542] AI0 attack decision: (0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (0,0) "Acid Trap Hole" {cost 0}
+[00:10.890] Revealed: P1 (0,0) "Acid Trap Hole" {cost 0}
+[00:10.890] Dice rolled: 4
+[00:11.208] MSG: Trap triggered: Acid Trap Hole!
+[00:15.279] Crystals: P0 4700 → 4650 (-50)  [trap]
+[00:16.659] MSG: Acid Trap Hole: Player 1 loses 50 Crystals!
+[00:16.663] Trap: "Acid Trap Hole" triggered  P0(0,1)→P1(0,0)
+[00:16.663] Anim: 3D  (attacker survives)
+[00:17.168] Mode selected P0: ATTACK
+[00:17.174] Attack phase P0: 1 attack(s) available
+[00:17.174] MSG: Player 1: tap a character to attack.
+[00:17.475] AI0 attack decision: (0,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down} → (1,2) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down}
+[00:17.853] Revealed: P0 (0,0) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:17.893] Revealed: P1 (1,2) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:17.893] Dice rolled: 4
+[00:22.622] Crystals: P0 4650 → 4200 (-450)  [battle]
+[00:24.022] Attack P0(0,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(1,2)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}  Dice=4  ATK=35 vs DEF=80  → LOSE
+[00:24.022] Anim: 3B  △ P0(0,0)
+[00:24.022] Card destroyed  P0 (0,0) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:24.518] Turn ended  P0  |  Crystals P0=4200 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4200 P1=5000 ---
+P0:   [  — ][Kits][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][War ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[00:26.596] Crystals: P1 5000 → 4500 (-500)  [union]
+[00:26.647] Revealed: P1 (0,2) "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[00:26.647] Union summoned P1: "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down}
+[00:26.647] MSG: Player 2 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down}
+[00:29.817] Crystals: P1 4500 → 4450 (-50)  [skip tax]
+[00:29.817] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:31.206] Turn ended  P1  |  Crystals P0=4200 P1=4450
+
+--- Turn 3  |  Player 0  |  Crystals P0=4200 P1=4450 ---
+P0:   [  — ][Kits][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][Diam][  — ][  ? ]
+      [  — ][  — ][War ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[00:31.810] Mode selected P0: ATTACK
+[00:31.818] Attack phase P0: 2 attack(s) available
+[00:31.818] MSG: Player 1: tap a character to attack.
+[00:32.100] AI0 attack decision: (2,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down} → (0,2) "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[00:32.436] Revealed: P0 (2,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:32.436] Dice rolled: 2
+[00:32.480] MSG: Canyon Warg wins!
+[00:38.065] Attack P0(2,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P1(0,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used}  Dice=2  ATK=70 vs DEF=50  → WIN
+[00:38.065] Reckoning overlay: P1 "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used} +DEF 15
+[00:38.065] Anim: 3A  △ P1(0,2)
+[00:38.065] Card destroyed  P1 (0,2) "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used}
+[00:38.577] Mode selected P0: ATTACK
+[00:38.583] Attack phase P0: 1 attack(s) available
+[00:38.583] MSG: Player 1: tap a character to attack.
+[00:38.873] AI0 attack decision: (4,0)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | face-down} → (1,2) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:39.214] Revealed: P0 (4,0) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:39.214] Dice rolled: 1
+[00:39.219] MSG: Lab Crawler wins!
+[00:43.880] Crystals: P1 4450 → 3300 (-1150)  [battle]
+[00:45.280] Attack P0(4,0)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P1(1,2)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}  Dice=1  ATK=95 vs DEF=80  → WIN
+[00:45.280] Anim: 3A  △ P1(1,2)
+[00:45.282] Card destroyed  P1 (1,2) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:45.784] Turn ended  P0  |  Crystals P0=4200 P1=3300
+
+--- Turn 4  |  Player 1  |  Crystals P0=4200 P1=3300 ---
+P0:   [  — ][Kits][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Cany][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Lab ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[00:46.389] Mode selected P1: ATTACK
+[00:46.394] Attack phase P1: 2 attack(s) available
+[00:46.394] MSG: Player 2: tap a character to attack.
+[00:46.696] AI1 attack decision: (3,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (4,0) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:47.045] Revealed: P1 (3,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:47.045] Dice rolled: 4
+[00:47.047] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[00:47.050] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[00:47.050] MSG: Both cards are destroyed!
+[00:47.101] Coin flip: Tails
+[00:52.604] Crystals: P1 3300 → 2700 (-600)  [battle]
+[00:53.996] Crystals: P0 4200 → 3000 (-1200)  [battle]
+[00:55.389] Attack P1(3,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(4,0)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=4  ATK=60 vs DEF=60  → TIE
+[00:55.390] Anim: 3C  △ P1(3,1) + △ P0(4,0)
+[00:55.390] Card destroyed  P1 (3,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:55.390] Card destroyed  P0 (4,0) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:55.684] Turn ended  P1  |  Crystals P0=3000 P1=2700
+
+--- Turn 5  |  Player 0  |  Crystals P0=3000 P1=2700 ---
+P0:   [  — ][Kits][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Cany][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[00:56.288] Mode selected P0: ATTACK
+[00:56.295] Attack phase P0: 2 attack(s) available
+[00:56.296] MSG: Player 1: tap a character to attack.
+[00:56.579] AI0 attack decision: (2,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → (1,1) (dead-end)
+[00:56.879] Dice rolled: 5
+[00:56.907] MSG: Nothing happens — Dead End.
+[01:00.278] Attack P0(2,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P1(1,1)(empty)  Dice=5  → DEAD_END
+[01:00.278] Anim: 3F  (blank slot)
+[01:00.777] Mode selected P0: ATTACK
+[01:00.780] Attack phase P0: 1 attack(s) available
+[01:00.780] MSG: Player 1: tap a character to attack.
+[01:01.070] AI0 attack decision: (0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (3,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down}
+[01:01.419] Revealed: P1 (3,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[01:01.420] Dice rolled: 4
+[01:01.467] MSG: Kitsune wins!
+[01:06.122] Crystals: P1 2700 → 2300 (-400)  [battle]
+[01:07.521] Attack P0(0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P1(3,3)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}  Dice=4  ATK=35 vs DEF=15  → WIN
+[01:07.521] Anim: 3A  △ P1(3,3)
+[01:07.521] Card destroyed  P1 (3,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[01:08.019] Turn ended  P0  |  Crystals P0=3000 P1=2300
+
+--- Turn 6  |  Player 1  |  Crystals P0=3000 P1=2300 ---
+P0:   [  — ][Kits][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Cany][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[01:08.614] Mode selected P1: ATTACK
+[01:08.622] Attack phase P1: 2 attack(s) available
+[01:08.622] MSG: Player 2: tap a character to attack.
+[01:08.912] AI1 attack decision: (4,0)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature | face-down} → (2,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:09.254] Revealed: P1 (4,0) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[01:09.254] Dice rolled: 5
+[01:09.258] MSG: Spear Shark wins!
+[01:13.905] Crystals: P0 3000 → 2250 (-750)  [battle]
+[01:15.300] Attack P1(4,0)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P0(2,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=5  ATK=50 vs DEF=30  → WIN
+[01:15.300] Anim: 3A  △ P0(2,2)
+[01:15.300] Card destroyed  P0 (2,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:15.600] Turn ended  P1  |  Crystals P0=2250 P1=2300
+
+--- Turn 7  |  Player 0  |  Crystals P0=2250 P1=2300 ---
+P0:   [  — ][Kits][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Spea][  ? ][  — ][  — ][  — ]
+[01:16.203] Mode selected P0: ATTACK
+[01:16.208] Attack phase P0: 2 attack(s) available
+[01:16.208] MSG: Player 1: tap a character to attack.
+[01:16.496] AI0 attack decision: (0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (4,0) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[01:16.795] Dice rolled: 1
+[01:16.845] MSG: Kitsune wins!
+[01:21.488] Crystals: P1 2300 → 1820 (-480)  [battle]
+[01:22.886] Attack P0(0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P1(4,0)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}  Dice=1  ATK=35 vs DEF=20  → WIN
+[01:22.886] Anim: 3A  △ P1(4,0)
+[01:22.886] Card destroyed  P1 (4,0) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[01:23.385] Mode selected P0: ATTACK
+[01:23.388] Attack phase P0: 1 attack(s) available
+[01:23.391] MSG: Player 1: tap a character to attack.
+[01:23.679] AI0 attack decision: (1,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (0,1) "Spike Trap" {cost 1500}
+[01:24.017] Revealed: P0 (1,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:24.044] Revealed: P1 (0,1) "Spike Trap" {cost 1500}
+[01:24.044] Dice rolled: 5
+[01:24.303] MSG: Trap triggered: Spike Trap!
+[01:29.529] Crystals: P1 1820 → 320 (-1500)  [trap cost]
+[01:30.921] Crystals: P0 2250 → 1450 (-800)  [card lost]
+[01:32.956] MSG: Flame Trap: Book with Fangs destroyed!
+[01:32.960] Trap: "Spike Trap" triggered  P0(1,4)→P1(0,1)
+[01:32.960] Anim: 3E  △ P0(1,4)
+[01:33.459] Turn ended  P0  |  Crystals P0=1450 P1=320
+
+--- Turn 8  |  Player 1  |  Crystals P0=1450 P1=320 ---
+P0:   [  — ][Kits][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:34.055] Mode selected P1: ATTACK
+[01:34.060] Attack phase P1: 2 attack(s) available
+[01:34.060] MSG: Player 2: tap a character to attack.
+[01:34.353] AI1 attack decision: (2,3)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic | face-down} → (0,2) (dead-end)
+[01:34.690] Revealed: P1 (2,3) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:34.691] Dice rolled: 1
+[01:34.706] MSG: Nothing happens — Dead End.
+[01:38.044] Attack P1(2,3)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(0,2)(empty)  Dice=1  → DEAD_END
+[01:38.044] Anim: 3F  (blank slot)
+[01:38.340] Turn ended  P1  |  Crystals P0=1450 P1=320
+
+--- Turn 9  |  Player 0  |  Crystals P0=1450 P1=320 ---
+P0:   [  — ][Kits][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][Mars][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:38.943] Mode selected P0: ATTACK
+[01:38.948] Attack phase P0: 2 attack(s) available
+[01:38.948] MSG: Player 1: tap a character to attack.
+[01:39.237] AI0 attack decision: (0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (2,3) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:39.538] Dice rolled: 4
+[01:39.591] MSG: Kitsune wins!
+[01:44.214] Crystals: P1 320 → 0 (-320)  [battle]
+
+=== GAME OVER ===
+[01:44.225] AI Player 0 wins
+[01:44.225] Reason: crystals
+[01:44.225] Final crystals — P0: 1450  P1: 0  |  Turns: 9
+[01:44.225] Log saved to: res://logs/results/2026-06-01_09-37-04_903_mint_julep/battle_zoom_cat_filter_forever_2026-06-01_10-14-39_237.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Canyon-Warg-002
+Highlight: Canyon Warg (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     9  |  AI timeouts: 0
+===

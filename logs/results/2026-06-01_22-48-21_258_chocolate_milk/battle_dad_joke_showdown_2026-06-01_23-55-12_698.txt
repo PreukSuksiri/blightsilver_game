@@ -1,0 +1,85 @@
+=== Battle of Dad Joke Showdown ===
+Battle started: 2026-06-01 23:55:12.698
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Foul-Gas-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Foul-Gas-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Foul Gas (Trap)  [setup: Ox Patrol]
+Ability:      TEMP_DEBUFF_ALL_ATTACKER_CHARS — -5 ATK to all the attacking player’s units until the end of this turn
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Foul Gas" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Foul Gas
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Foul\ Gas"
+  - Log must contain at least one of: Trap triggered, "Foul Gas" triggered, Trap triggered: Foul Gas, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Foul Gas revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Foul Gas
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Bribe, Resurrection
+P1 Tech hand: Radar, Resurrection, Accident
+P0:   [C:Raij][C:Armo][C:Aray][C:Big ][C:Nigh]
+      [C:Skel][T:Host][  — ][T:Expl][  — ]
+      [T:Bunk][C:Dark][C:Ox P][T:Deco][  — ]
+      [  — ][C:Moon][  — ][  — ][  — ]
+      [  — ][T:Bait][T:Defe][  — ][C:Ostr]
+P1:   [C:Moon][  — ][C:Succ][  — ][T:Self]
+      [C:Nigh][  — ][  — ][C:Meph][C:Jose]
+      [  — ][  — ][T:Foul][  — ][C:Demo]
+      [C:Choi][  — ][  — ][  — ][T:Foul]
+      [T:Brai][C:Jira][  — ][  — ][T:Echo]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:05.335] Mode selected P0: ATTACK
+[00:05.339] Attack phase P0: 2 attack(s) available
+[00:05.339] MSG: Player 1: tap a character to attack.
+[00:05.633] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Foul Gas" {cost 0}
+[00:05.965] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:05.991] Revealed: P1 (2,2) "Foul Gas" {cost 0}
+[00:05.991] Dice rolled: 3
+[00:06.247] MSG: Trap triggered: Foul Gas!
+[00:06.248] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.252] AI Player 0 wins
+[00:06.252] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:06.252] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_dad_joke_showdown_2026-06-01_23-55-12_698.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Foul-Gas-002
+Highlight: Foul Gas (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

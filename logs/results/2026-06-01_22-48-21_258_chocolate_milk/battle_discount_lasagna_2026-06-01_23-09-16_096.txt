@@ -1,0 +1,102 @@
+=== Battle of Discount Lasagna ===
+Battle started: 2026-06-01 23:09:16.096
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Hammer-Shark-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Hammer-Shark-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Hammer Shark (Character)  [setup: Scythe Shark, Chaotic Wisp]
+Ability:      BOOST_PER_TYPED_CARD_ON_FIELD — +10 ATK per shark card on the field
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Hammer Shark" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Hammer Shark
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Hammer\ Shark".*ATK=30\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +10 ATK per shark. Companion Scythe Shark starts face-up so boost counts on Turn 1. ATK=30.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Hammer Shark
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Hammer Shark, (2,1) Scythe Shark
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Prayer, Great Diplomacy, Tease
+P1 Tech hand: Prayer, Tease, Resurrection
+P0:   [C:Hamm][C:Gobl][C:Chao][C:Claw][C:Ox P]
+      [  — ][  — ][  — ][T:Acid][  — ]
+      [  — ][C:Scyt][C:Hamm][  — ][  — ]
+      [  — ][C:Moon][  — ][  — ][T:Expl]
+      [C:Mine][T:Brai][T:Flam][C:Meli][C:Grav]
+P1:   [C:Cany][C:Mad ][T:Brai][C:Elec][C:Laug]
+      [  — ][  — ][  — ][T:Red ][T:Snar]
+      [  — ][  — ][C:Chao][  — ][  — ]
+      [  — ][C:Vile][T:Echo][  — ][  — ]
+      [T:Pepp][T:Curs][C:Mage][C:Jaco][C:Stin]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.323] Mode selected P0: ATTACK
+[00:05.328] Attack phase P0: 2 attack(s) available
+[00:05.328] MSG: Player 1: tap a character to attack.
+[00:05.631] AI0 attack decision: (0,0)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.976] Revealed: P0 (0,0) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[00:06.000] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:06.000] Dice rolled: 2
+[00:06.004] MSG: Hammer Shark wins!
+[00:10.658] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.055] Attack P0(0,0)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=20 vs DEF=0  → WIN
+[00:12.055] Anim: 3A  △ P1(2,2)
+[00:12.055] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.551] Mode selected P0: ATTACK
+[00:12.557] Attack phase P0: 1 attack(s) available
+[00:12.557] MSG: Player 1: tap a character to attack.
+[00:12.850] AI0 attack decision: (2,2)"Hammer Shark" {Unit ATK30 DEF20 | cost 250 | affinity Nature | base 20/20 | buff +permATK10 | face-down} → (0,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}
+[00:13.152] Revealed: P0 (2,2) "Hammer Shark" {Unit ATK30 DEF20 | cost 250 | affinity Nature | base 20/20 | buff +permATK10}
+[00:13.186] Revealed: P1 (0,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:13.186] Dice rolled: 4
+[00:13.190] MSG: Both cards are destroyed!
+[00:17.725] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:19.118] Crystals: P1 4900 → 4150 (-750)  [battle]
+[00:20.507] Attack P0(2,2)"Hammer Shark" {Unit ATK30 DEF20 | cost 250 | affinity Nature | base 20/20 | buff +permATK10} → P1(0,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=4  ATK=30 vs DEF=30  → TIE
+[00:20.508] E2E: ability goal reached — ending battle early.
+[00:20.508] Anim: 3C  △ P0(2,2) + △ P1(0,0)
+[00:20.508] Card destroyed  P0 (2,2) "Hammer Shark" {Unit ATK30 DEF20 | cost 250 | affinity Nature | base 20/20 | buff +permATK10}
+[00:20.508] Card destroyed  P1 (0,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+
+=== GAME OVER ===
+[00:20.516] AI Player 0 wins
+[00:20.516] Final crystals — P0: 4750  P1: 4150  |  Turns: 1
+[00:20.516] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_discount_lasagna_2026-06-01_23-09-16_096.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Hammer-Shark-002
+Highlight: Hammer Shark (Character)  [setup: Scythe Shark, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

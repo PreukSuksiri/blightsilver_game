@@ -1,0 +1,135 @@
+=== Battle of Static Electricity Handshake ===
+Battle started: 2026-06-01 23:53:01.735
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Siege-Cannon-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Siege-Cannon-001  (test_case/functional/tech_functional_tests.md)
+Highlight:    Siege Cannon (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Ability:      OPPONENT_NEXT_DEFENDER_DESTROYED — Until the end of this turn, once, foe’s defending unit is destroyed.
+Setup role:   t2_tech_play
+Verifies:
+  - Ability: "Siege Cannon" is exercised via forced board/tech setup (t2_tech_play)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must match regex: Tech played\s+P0: "Siege\ Cannon"
+  - Log must contain at least one of: Siege Cannon, Siege Cannon, Tech resolved, Revealed:, Card destroyed
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: tech Siege Cannon played (OPPONENT_NEXT_DEFENDER_DESTROYED).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Siege Cannon
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Siege Cannon, Resurrection, Release Mutagen
+P1 Tech hand: Great Diplomacy, Bribe, Tease
+P0:   [T:Pepp][T:Defe][  — ][  — ][  — ]
+      [C:Stri][C:Leec][C:Immo][C:Gian][T:Foul]
+      [T:Snar][C:Elec][C:Ox P][C:Soni][T:Blac]
+      [  — ][C:Dark][C:Gran][C:Skel][  — ]
+      [  — ][  — ][C:Pit ][  — ][T:Host]
+P1:   [  — ][T:Hypn][  — ][  — ][T:Snar]
+      [  — ][C:Whit][C:Doom][C:Immo][T:Trap]
+      [T:Flam][C:Mage][C:Chao][C:Saw ][  — ]
+      [T:Bunk][C:Leec][C:Silv][C:Leor][  — ]
+      [  — ][  — ][T:Defe][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:05.304] Mode selected P0: ATTACK
+[00:05.308] Attack phase P0: 2 attack(s) available
+[00:05.308] MSG: Player 1: tap a character to attack.
+[00:05.604] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.939] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:05.965] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.965] Dice rolled: 1
+[00:05.969] MSG: Ox Patrol wins!
+[00:11.562] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.961] Attack P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=35 vs DEF=0  → WIN
+[00:12.961] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +ATK 5
+[00:12.961] Anim: 3A  △ P1(2,2)
+[00:12.961] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:13.463] Mode selected P0: ATTACK
+[00:13.468] Attack phase P0: 1 attack(s) available
+[00:13.468] MSG: Player 1: tap a character to attack.
+[00:13.771] AI0 attack decision: (1,2)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos | face-down} → (4,1) (dead-end)
+[00:14.114] Revealed: P0 (1,2) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[00:14.115] Dice rolled: 4
+[00:14.129] MSG: Nothing happens — Dead End.
+[00:17.486] Attack P0(1,2)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos} → P1(4,1)(empty)  Dice=4  → DEAD_END
+[00:17.487] Anim: 3F  (blank slot)
+[00:17.994] Turn ended  P0  |  Crystals P0=5000 P1=4900
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4900 ---
+P0:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][Immo][  ? ][  ? ]
+      [  ? ][  ? ][Ox P][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:20.095] Crystals: P1 4900 → 3900 (-1000)  [union]
+[00:20.138] Revealed: P1 (3,1) "Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[00:20.138] Union summoned P1: "Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio | face-down}, "Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima | face-down}
+[00:20.138] MSG: Player 2 summoned [Rocket Marauder] using: "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio | face-down}, "Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima | face-down}
+[00:23.362] Crystals: P1 3900 → 3850 (-50)  [skip tax]
+[00:23.362] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:24.751] Turn ended  P1  |  Crystals P0=5000 P1=3850
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3850 ---
+P0:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][Immo][  ? ][  ? ]
+      [  ? ][  ? ][Ox P][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][Rock][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:25.351] Mode selected P0: TECH
+[00:25.658] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:27.047] Tech played  P0: "Siege Cannon"
+[00:28.600] MSG: Siege Cannon active!
+[00:28.600] E2E: ability goal reached — ending battle early.
+[00:28.606] Tech resolved  P0
+
+=== GAME OVER ===
+[00:28.612] AI Player 0 wins
+[00:28.612] Final crystals — P0: 4000  P1: 3850  |  Turns: 3
+[00:28.612] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_static_electricity_handshake_2026-06-01_23-53-01_735.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Siege-Cannon-002
+Highlight: Siege Cannon (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     3  |  AI timeouts: 0
+===

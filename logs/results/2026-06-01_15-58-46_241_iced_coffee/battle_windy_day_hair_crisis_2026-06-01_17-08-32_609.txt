@@ -1,0 +1,497 @@
+=== Battle of Windy Day Hair Crisis ===
+Battle started: 2026-06-01 17:08:32.609
+Game Session of Iced Coffee (started 2026-06-01 15:58:46.241)
+=== Card E2E Test ===
+Scenario ID:  E2E-Death-Cobra-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Death-Cobra-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Death Cobra (Character)  [setup: Chaotic Wisp]
+Ability:      VENOM_FLAG_END_OF_TURN — At the end of this turn, select 1 face-up foe’s card. Put 1 venom flag on it.
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Death Cobra" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Death Cobra
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Death\ Cobra".*ATK=|→ P\d\(\d+,\d+\)"Death\ Cobra")
+  - Log must match regex: ("Death\ Cobra".*ATK=|→ P\d\(\d+,\d+\)"Death\ Cobra")
+  - Log must contain at least one of: Death Cobra, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2 best-effort: VENOM_FLAG_END_OF_TURN — combat + MSG/card presence.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Death Cobra
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Death Cobra
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Prayer, Resurrection, War Supply
+P1 Tech hand: Radar, Release Mutagen, Great Diplomacy
+P0:   [  — ][T:Pepp][C:Skel][C:Sunr][T:Curs]
+      [  — ][C:Need][C:Skel][T:Trap][T:Alar]
+      [C:Book][C:Polt][C:Deat][C:Demo][C:Meph]
+      [  — ][  — ][C:Paro][  — ][  — ]
+      [  — ][C:Ostr][C:Sate][T:Brai][  — ]
+P1:   [T:Deco][C:Flam][C:Immo][C:Lab ][C:Vile]
+      [  — ][  — ][C:Pit ][C:Dark][  — ]
+      [  — ][T:Alar][C:Chao][  — ][T:Stre]
+      [  — ][T:Echo][  — ][T:Defe][  — ]
+      [C:Mad ][C:Gree][C:Book][T:Flam][C:Grav]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.285] Mode selected P0: ATTACK
+[00:05.289] Attack phase P0: 2 attack(s) available
+[00:05.289] MSG: Player 1: tap a character to attack.
+[00:05.585] AI0 attack decision: (2,2)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.924] Revealed: P0 (2,2) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:05.950] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.950] Dice rolled: 2
+[00:05.954] MSG: Death Cobra wins!
+[00:10.607] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.003] Attack P0(2,2)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=85 vs DEF=0  → WIN
+[00:12.003] Anim: 3A  △ P1(2,2)
+[00:12.003] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.502] Mode selected P0: ATTACK
+[00:12.507] Attack phase P0: 1 attack(s) available
+[00:12.508] MSG: Player 1: tap a character to attack.
+[00:12.798] AI0 attack decision: (1,2)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down} → (0,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}
+[00:13.158] Revealed: P0 (1,2) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:13.185] Revealed: P1 (0,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:13.185] Dice rolled: 5
+[00:13.189] MSG: Skeleton Grappler wins!
+[00:17.766] Crystals: P1 4900 → 4400 (-500)  [battle]
+[00:19.164] Attack P0(1,2)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P1(0,1)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=5  ATK=20 vs DEF=10  → WIN
+[00:19.164] Anim: 3A  △ P1(0,1)
+[00:19.164] Card destroyed  P1 (0,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:19.661] Turn ended  P0  |  Crystals P0=5000 P1=4400
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4400 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][Skel][  ? ][  ? ]
+      [  ? ][  ? ][Deat][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:21.740] Crystals: P1 4400 → 2900 (-1500)  [union]
+[00:21.777] Revealed: P1 (0,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[00:21.777] Union summoned P1: "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} from "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos | face-down}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}
+[00:21.777] MSG: Player 2 summoned [Lord of Terror] using: "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos | face-down}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}
+[00:24.977] Crystals: P1 2900 → 2850 (-50)  [skip tax]
+[00:24.978] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:26.367] Turn ended  P1  |  Crystals P0=5000 P1=2850
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=2850 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][Skel][  ? ][  ? ]
+      [  ? ][  ? ][Deat][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][Lord][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:26.967] Mode selected P0: ATTACK
+[00:26.975] Attack phase P0: 2 attack(s) available
+[00:26.975] MSG: Player 1: tap a character to attack.
+[00:27.260] AI0 attack decision: (1,2)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → (1,2) (dead-end)
+[00:27.561] Dice rolled: 5
+[00:27.590] MSG: Nothing happens — Dead End.
+[00:30.961] Attack P0(1,2)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[00:30.961] Anim: 3F  (blank slot)
+[00:31.455] Mode selected P0: ATTACK
+[00:31.459] Attack phase P0: 1 attack(s) available
+[00:31.460] MSG: Player 1: tap a character to attack.
+[00:31.752] AI0 attack decision: (2,2)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → (2,0) (dead-end)
+[00:32.052] Dice rolled: 1
+[00:32.077] MSG: Nothing happens — Dead End.
+[00:35.449] Attack P0(2,2)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P1(2,0)(empty)  Dice=1  → DEAD_END
+[00:35.449] Anim: 3F  (blank slot)
+[00:35.944] MSG: Death Cobra: Venom applied to Lord of Terror.
+[00:35.948] Turn ended  P0  |  Crystals P0=5000 P1=2850
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=2850 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][Skel][  ? ][  ? ]
+      [  ? ][  ? ][Deat][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][Lord][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:36.544] Mode selected P1: ATTACK
+[00:36.552] Attack phase P1: 2 attack(s) available
+[00:36.552] MSG: Player 2: tap a character to attack.
+[00:36.842] AI1 attack decision: (0,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → (2,2) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:37.143] Dice rolled: 2
+[00:37.192] MSG: Lord of Terror wins!
+[00:41.797] Crystals: P0 5000 → 4100 (-900)  [battle]
+[00:43.197] Attack P1(0,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → P0(2,2)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}  Dice=2  ATK=150 vs DEF=50  → WIN
+[00:43.197] Anim: 3A  △ P0(2,2)
+[00:43.197] Card destroyed  P0 (2,2) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:43.503] Turn ended  P1  |  Crystals P0=4100 P1=2850
+
+--- Turn 5  |  Player 0  |  Crystals P0=4100 P1=2850 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][Skel][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][Lord][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:44.107] Mode selected P0: ATTACK
+[00:44.114] Attack phase P0: 2 attack(s) available
+[00:44.114] MSG: Player 1: tap a character to attack.
+[00:44.415] AI0 attack decision: (1,2)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → (0,0) "Decoy Puppet" {cost 100}
+[00:44.756] Revealed: P1 (0,0) "Decoy Puppet" {cost 100}
+[00:44.756] Dice rolled: 1
+[00:45.046] MSG: Trap triggered: Decoy Puppet!
+[00:49.150] Crystals: P1 2850 → 2750 (-100)  [trap cost]
+[00:50.540] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[00:50.545] Trap: "Decoy Puppet" triggered  P0(1,2)→P1(0,0)
+[00:50.545] Anim: 3D  (attacker survives)
+[00:51.050] Mode selected P0: ATTACK
+[00:51.057] Attack phase P0: 1 attack(s) available
+[00:51.058] MSG: Player 1: tap a character to attack.
+[00:51.356] AI0 attack decision: (4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down} → (0,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom}
+[00:51.699] Revealed: P0 (4,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:51.699] Dice rolled: 3
+[00:51.739] MSG: Both cards are destroyed!
+[00:56.272] Crystals: P0 4100 → 3000 (-1100)  [battle]
+[00:57.673] Attack P0(4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(0,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom}  Dice=3  ATK=100 vs DEF=100  → TIE
+[00:57.673] Anim: 3C  △ P0(4,2) + △ P1(0,2)
+[00:57.673] Card destroyed  P0 (4,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:57.673] Card destroyed  P1 (0,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom}
+[00:58.168] Turn ended  P0  |  Crystals P0=3000 P1=2750
+
+--- Turn 6  |  Player 1  |  Crystals P0=3000 P1=2750 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][Skel][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:58.766] Mode selected P1: ATTACK
+[00:58.771] Attack phase P1: 2 attack(s) available
+[00:58.772] MSG: Player 2: tap a character to attack.
+[00:59.065] AI1 attack decision: (0,3)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio | face-down} → (1,2) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:59.401] Revealed: P1 (0,3) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[00:59.402] Dice rolled: 4
+[00:59.405] MSG: Lab Zombie wins!
+[01:04.055] Crystals: P0 3000 → 2850 (-150)  [battle]
+[01:05.455] Attack P1(0,3)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P0(1,2)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=4  ATK=55 vs DEF=5  → WIN
+[01:05.455] Anim: 3A  △ P0(1,2)
+[01:05.455] Card destroyed  P0 (1,2) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:05.751] Turn ended  P1  |  Crystals P0=2850 P1=2750
+
+--- Turn 7  |  Player 0  |  Crystals P0=2850 P1=2750 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][Lab ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:06.351] Mode selected P0: ATTACK
+[01:06.357] Attack phase P0: 2 attack(s) available
+[01:06.357] MSG: Player 1: tap a character to attack.
+[01:06.648] AI0 attack decision: (4,1)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down} → (0,3) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:06.982] Revealed: P0 (4,1) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[01:06.983] Dice rolled: 5
+[01:06.986] MSG: Ostrich Cannon wins!
+[01:11.640] Crystals: P1 2750 → 2050 (-700)  [battle]
+[01:13.036] Attack P0(4,1)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(0,3)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}  Dice=5  ATK=60 vs DEF=40  → WIN
+[01:13.036] Anim: 3A  △ P1(0,3)
+[01:13.036] Card destroyed  P1 (0,3) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:13.036] MSG: Ostrich Cannon locks itself until next turn.
+[01:13.537] Mode selected P0: ATTACK
+[01:13.543] Attack phase P0: 1 attack(s) available
+[01:13.543] MSG: Player 1: tap a character to attack.
+[01:13.831] AI0 attack decision: (0,2)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down} → (1,0) (dead-end)
+[01:14.166] Revealed: P0 (0,2) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:14.167] Dice rolled: 4
+[01:14.181] MSG: Nothing happens — Dead End.
+[01:17.512] Attack P0(0,2)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P1(1,0)(empty)  Dice=4  → DEAD_END
+[01:17.512] Anim: 3F  (blank slot)
+[01:17.513] MSG: Skeleton Scout: Bonus attack for hitting dead end!
+[01:18.006] Mode selected P0: ATTACK
+[01:18.011] Attack phase P0: 1 attack(s) available
+[01:18.011] MSG: Player 1: tap a character to attack.
+[01:18.306] AI0 attack decision: (0,3)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down} → (2,4) "Street Joke" {cost 0}
+[01:18.643] Revealed: P0 (0,3) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:18.677] Revealed: P1 (2,4) "Street Joke" {cost 0}
+[01:18.677] Dice rolled: 2
+[01:18.949] MSG: Trap triggered: Street Joke!
+[01:23.091] Revealed: P1 (0,4) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[01:23.091] Crystals: P1 2050 → 2150 (+100)  [trap]
+[01:23.091] MSG: Street Joke: Revealed own card, gained 100 Crystals!
+[01:23.094] Trap: "Street Joke" triggered  P0(0,3)→P1(2,4)
+[01:23.094] Anim: 3D  (attacker survives)
+[01:23.512] Turn ended  P0  |  Crystals P0=2850 P1=2150
+
+--- Turn 8  |  Player 1  |  Crystals P0=2850 P1=2150 ---
+P0:   [  — ][  ? ][Skel][Sunr][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Ostr][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][Vile]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:24.120] Mode selected P1: ATTACK
+[01:24.128] Attack phase P1: 2 attack(s) available
+[01:24.129] MSG: Player 2: tap a character to attack.
+[01:24.427] AI1 attack decision: (0,4)"Vile Creeper" {Unit ATK30 DEF10 | cost 200 | affinity Bio | base 30/10} → (4,1) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T9}
+[01:24.736] Dice rolled: 1
+[01:24.748] MSG: Both cards are destroyed!
+[01:29.351] Crystals: P1 2150 → 1950 (-200)  [battle]
+[01:30.742] Crystals: P0 2850 → 2050 (-800)  [battle]
+[01:32.136] Attack P1(0,4)"Vile Creeper" {Unit ATK30 DEF10 | cost 200 | affinity Bio | base 30/10} → P0(4,1)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T9}  Dice=1  ATK=30 vs DEF=30  → TIE
+[01:32.136] Anim: 3C  △ P1(0,4) + △ P0(4,1)
+[01:32.136] Card destroyed  P1 (0,4) "Vile Creeper" {Unit ATK30 DEF10 | cost 200 | affinity Bio | base 30/10}
+[01:32.136] Card destroyed  P0 (4,1) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T9}
+[01:32.439] Turn ended  P1  |  Crystals P0=2050 P1=1950
+
+--- Turn 9  |  Player 0  |  Crystals P0=2050 P1=1950 ---
+P0:   [  — ][  ? ][Skel][Sunr][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:33.044] Mode selected P0: ATTACK
+[01:33.050] Attack phase P0: 2 attack(s) available
+[01:33.051] MSG: Player 1: tap a character to attack.
+[01:33.348] AI0 attack decision: (0,2)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used} → (1,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | face-down}
+[01:33.697] Revealed: P1 (1,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[01:33.697] Dice rolled: 5
+[01:38.473] Crystals: P0 2050 → 1900 (-150)  [battle]
+[01:39.871] Attack P0(0,2)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used} → P1(1,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}  Dice=5  ATK=20 vs DEF=50  → LOSE
+[01:39.872] Anim: 3B  △ P0(0,2)
+[01:39.872] Card destroyed  P0 (0,2) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used}
+[01:40.375] Mode selected P0: ATTACK
+[01:40.382] Attack phase P0: 1 attack(s) available
+[01:40.382] MSG: Player 1: tap a character to attack.
+[01:40.679] AI0 attack decision: (2,4)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down} → (1,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[01:41.029] Revealed: P0 (2,4) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[01:41.029] Dice rolled: 5
+[01:41.033] MSG: Mephisto the Fallen wins!
+[01:45.688] Crystals: P1 1950 → 1450 (-500)  [battle]
+[01:47.088] Attack P0(2,4)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P1(1,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}  Dice=5  ATK=75 vs DEF=50  → WIN
+[01:47.089] Anim: 3A  △ P1(1,3)
+[01:47.089] Card destroyed  P1 (1,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[01:47.595] Turn ended  P0  |  Crystals P0=1900 P1=1450
+
+--- Turn 10  |  Player 1  |  Crystals P0=1900 P1=1450 ---
+P0:   [  — ][  ? ][  — ][Sunr][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][Meph]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:48.198] Mode selected P1: ATTACK
+[01:48.206] Attack phase P1: 2 attack(s) available
+[01:48.206] MSG: Player 2: tap a character to attack.
+[01:48.506] AI1 attack decision: (4,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down} → (2,4) "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}
+[01:48.854] Revealed: P1 (4,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:48.854] Dice rolled: 4
+[01:48.859] MSG: Mad Raccoon wins!
+[01:53.522] Crystals: P0 1900 → 1040 (-860)  [battle]
+[01:54.921] Attack P1(4,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P0(2,4)"Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}  Dice=4  ATK=30 vs DEF=0  → WIN
+[01:54.921] Anim: 3A  △ P0(2,4)
+[01:54.921] Card destroyed  P0 (2,4) "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}
+[01:55.225] Turn ended  P1  |  Crystals P0=1040 P1=1450
+
+--- Turn 11  |  Player 0  |  Crystals P0=1040 P1=1450 ---
+P0:   [  — ][  ? ][  — ][Sunr][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [Mad ][  ? ][  ? ][  ? ][  ? ]
+[01:55.834] Mode selected P0: ATTACK
+[01:55.841] Attack phase P0: 2 attack(s) available
+[01:55.841] MSG: Player 1: tap a character to attack.
+[01:56.139] AI0 attack decision: (0,3)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → (4,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:56.447] Dice rolled: 5
+[01:56.458] MSG: Sunrise Lady wins!
+[02:02.147] Crystals: P1 1450 → 1190 (-260)  [battle]
+[02:03.546] Attack P0(0,3)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → P1(4,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=5  ATK=30 vs DEF=15  → WIN
+[02:03.546] Reckoning overlay: P0 "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} +ATK 10
+[02:03.546] Anim: 3A  △ P1(4,0)
+[02:03.546] Card destroyed  P1 (4,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[02:04.048] Mode selected P0: ATTACK
+[02:04.051] Attack phase P0: 1 attack(s) available
+[02:04.052] MSG: Player 1: tap a character to attack.
+[02:04.354] AI0 attack decision: (1,1)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down} → (1,1) (dead-end)
+[02:04.703] Revealed: P0 (1,1) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[02:04.703] Dice rolled: 2
+[02:04.714] MSG: Nothing happens — Dead End.
+[02:08.070] Attack P0(1,1)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[02:08.071] Anim: 3F  (blank slot)
+[02:08.576] Turn ended  P0  |  Crystals P0=1040 P1=1190
+
+--- Turn 12  |  Player 1  |  Crystals P0=1040 P1=1190 ---
+P0:   [  — ][  ? ][  — ][Sunr][  ? ]
+      [  — ][Need][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[02:09.180] Mode selected P1: ATTACK
+[02:09.184] Attack phase P1: 2 attack(s) available
+[02:09.184] MSG: Player 2: tap a character to attack.
+[02:09.487] AI1 attack decision: (4,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (0,3) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[02:09.827] Revealed: P1 (4,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[02:09.827] Dice rolled: 4
+[02:09.830] MSG: Book with Fangs wins!
+[02:14.506] Crystals: P0 1040 → 740 (-300)  [battle]
+[02:15.904] Attack P1(4,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(0,3)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}  Dice=4  ATK=45 vs DEF=25  → WIN
+[02:15.904] Anim: 3A  △ P0(0,3)
+[02:15.904] Card destroyed  P0 (0,3) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[02:16.210] Turn ended  P1  |  Crystals P0=740 P1=1190
+
+--- Turn 13  |  Player 0  |  Crystals P0=740 P1=1190 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][Need][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][Book][  ? ][  ? ]
+[02:16.810] Mode selected P0: ATTACK
+[02:16.818] Attack phase P0: 2 attack(s) available
+[02:16.818] MSG: Player 1: tap a character to attack.
+[02:17.118] AI0 attack decision: (1,1)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} → (2,1) "Alarm" {cost 0}
+[02:17.457] Revealed: P1 (2,1) "Alarm" {cost 0}
+[02:17.457] Dice rolled: 1
+[02:17.730] MSG: Trap triggered: Alarm!
+[02:21.826] MSG: Alarm: +5 DEF to all ANIMA characters this turn!
+[02:21.830] Trap: "Alarm" triggered  P0(1,1)→P1(2,1)
+[02:21.830] Anim: 3D  (attacker survives)
+[02:22.317] Mode selected P0: ATTACK
+[02:22.323] Attack phase P0: 1 attack(s) available
+[02:22.323] MSG: Player 1: tap a character to attack.
+[02:22.617] AI0 attack decision: (2,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos | face-down} → (3,0) (dead-end)
+[02:22.952] Revealed: P0 (2,1) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[02:22.952] Dice rolled: 4
+[02:22.966] MSG: Nothing happens — Dead End.
+[02:26.282] Attack P0(2,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(3,0)(empty)  Dice=4  → DEAD_END
+[02:26.283] Anim: 3F  (blank slot)
+[02:26.788] Turn ended  P0  |  Crystals P0=740 P1=1190
+
+--- Turn 14  |  Player 1  |  Crystals P0=740 P1=1190 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][Need][  — ][  ? ][  ? ]
+      [  ? ][Polt][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][Book][  ? ][  ? ]
+[02:27.393] Mode selected P1: ATTACK
+[02:27.403] Attack phase P1: 2 attack(s) available
+[02:27.403] MSG: Player 2: tap a character to attack.
+[02:27.701] AI1 attack decision: (4,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (1,1) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[02:28.009] Dice rolled: 4
+[02:28.018] MSG: Book with Fangs wins!
+[02:32.710] Crystals: P0 740 → 540 (-200)  [battle]
+[02:34.108] Attack P1(4,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(1,1)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}  Dice=4  ATK=45 vs DEF=10  → WIN
+[02:34.108] Anim: 3A  △ P0(1,1)
+[02:34.108] Card destroyed  P0 (1,1) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[02:34.412] Turn ended  P1  |  Crystals P0=540 P1=1190
+
+--- Turn 15  |  Player 0  |  Crystals P0=540 P1=1190 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][Polt][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][Book][  ? ][  ? ]
+[02:35.019] Mode selected P0: ATTACK
+[02:35.025] Attack phase P0: 2 attack(s) available
+[02:35.025] MSG: Player 1: tap a character to attack.
+[02:35.326] AI0 attack decision: (2,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (4,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[02:35.636] Revealed: P0 (2,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[02:35.636] Dice rolled: 1
+[02:41.452] Crystals: P0 540 → 0 (-540)  [battle]
+
+=== GAME OVER ===
+[02:41.463] AI Player 1 wins
+[02:41.463] Reason: crystals
+[02:41.463] Final crystals — P0: 0  P1: 1190  |  Turns: 15
+[02:41.464] Log saved to: res://logs/results/2026-06-01_15-58-46_241_iced_coffee/battle_windy_day_hair_crisis_2026-06-01_17-08-32_609.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Death-Cobra-002
+Highlight: Death Cobra (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     15  |  AI timeouts: 0
+===

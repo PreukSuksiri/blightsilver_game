@@ -1,0 +1,516 @@
+=== Battle of Mystery Stain on Couch ===
+Battle started: 2026-06-01 11:00:04.823
+Game Session of Mint Julep (started 2026-06-01 09:37:04.903)
+=== Card E2E Test ===
+Scenario ID:  E2E-Flame-Seraph-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Flame-Seraph-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Flame Seraph (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Flame Seraph" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Flame Seraph
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Flame\ Seraph".*ATK=50\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=50 when Flame Seraph attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Flame Seraph
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Flame Seraph
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, War Supply, Great Diplomacy
+P1 Tech hand: Tease, Bribe, Spy
+P0:   [C:Swar][C:Cany][  — ][T:Bait][  — ]
+      [T:Red ][C:Pit ][  — ][  — ][C:Mafi]
+      [  — ][  — ][C:Flam][C:Hair][T:Curs]
+      [C:Paro][T:Foul][C:Lase][C:Skel][  — ]
+      [  — ][  — ][  — ][C:Shre][  — ]
+P1:   [C:Skel][  — ][C:Deat][  — ][T:Bunk]
+      [T:Hypn][  — ][C:Pit ][  — ][T:Alar]
+      [C:Witc][  — ][C:Chao][  — ][T:Flam]
+      [C:Nuki][  — ][C:Dark][  — ][C:Magi]
+      [C:Myst][  — ][T:Self][  — ][C:Demo]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:06.808] Crystals: P0 5000 → 4500 (-500)  [union]
+[00:06.847] Revealed: P0 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:06.847] Union summoned P0: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down}, "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}
+[00:06.847] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:06.847] MSG: Player 1 summoned [Scarlet Shroom] using: "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down}, "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}
+[00:10.212] Mode selected P0: ATTACK
+[00:10.217] Attack phase P0: 2 attack(s) available
+[00:10.218] MSG: Player 1: tap a character to attack.
+[00:10.516] AI0 attack decision: (2,2)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down} → (4,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | face-down}
+[00:10.861] Revealed: P0 (2,2) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:10.888] Revealed: P1 (4,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:10.889] Dice rolled: 5
+[00:10.893] MSG: Flame Seraph wins!
+[00:15.541] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:16.939] Attack P0(2,2)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P1(4,4)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}  Dice=5  ATK=50 vs DEF=30  → WIN
+[00:16.939] Anim: 3A  △ P1(4,4)
+[00:16.939] Card destroyed  P1 (4,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:17.433] Mode selected P0: ATTACK
+[00:17.440] Attack phase P0: 1 attack(s) available
+[00:17.442] MSG: Player 1: tap a character to attack.
+[00:17.732] AI0 attack decision: (0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (4,0) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos | face-down}
+[00:18.072] Revealed: P1 (4,0) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[00:18.072] Dice rolled: 4
+[00:22.878] Attack P0(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P1(4,0)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}  Dice=4  ATK=0 vs DEF=15  → LOSE
+[00:22.878] Anim: 3B  △ P0(0,0)
+[00:22.878] Card destroyed  P0 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:23.375] Turn ended  P0  |  Crystals P0=4500 P1=4600
+
+--- Turn 2  |  Player 1  |  Crystals P0=4500 P1=4600 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][Flam][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Myst][  — ][  ? ][  — ][  — ]
+[00:25.453] Crystals: P1 4600 → 3100 (-1500)  [union]
+[00:25.484] Revealed: P1 (0,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[00:25.484] Union summoned P1: "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} from "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5 | face-down}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}
+[00:25.484] MSG: Player 2 summoned [Lord of Terror] using: "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5 | face-down}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}
+[00:28.687] Crystals: P1 3100 → 3050 (-50)  [skip tax]
+[00:28.687] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:30.074] Turn ended  P1  |  Crystals P0=4500 P1=3050
+
+--- Turn 3  |  Player 0  |  Crystals P0=4500 P1=3050 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][Flam][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][Lord][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Myst][  — ][  ? ][  — ][  — ]
+[00:30.671] Mode selected P0: ATTACK
+[00:30.678] Attack phase P0: 2 attack(s) available
+[00:30.679] MSG: Player 1: tap a character to attack.
+[00:30.970] AI0 attack decision: (2,2)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → (4,0) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[00:31.270] Dice rolled: 4
+[00:31.281] MSG: Flame Seraph wins!
+[00:35.961] Crystals: P1 3050 → 2800 (-250)  [battle]
+[00:37.360] Attack P0(2,2)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P1(4,0)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}  Dice=4  ATK=50 vs DEF=15  → WIN
+[00:37.360] Anim: 3A  △ P1(4,0)
+[00:37.360] Card destroyed  P1 (4,0) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[00:37.855] Mode selected P0: ATTACK
+[00:37.862] Attack phase P0: 1 attack(s) available
+[00:37.862] MSG: Player 1: tap a character to attack.
+[00:38.153] AI0 attack decision: (2,3)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima | face-down} → (1,2) (dead-end)
+[00:38.497] Revealed: P0 (2,3) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:38.497] Dice rolled: 4
+[00:38.513] Prompt: "Pay 100 Crystals for +10 ATK this battle?"  [Pay 100 Crystals / Skip]
+[00:39.021] Ability choice resolved: 1 (No)
+[00:39.022] MSG: Nothing happens — Dead End.
+[00:42.185] Attack P0(2,3)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → P1(1,2)(empty)  Dice=4  → DEAD_END
+[00:42.185] Anim: 3F  (blank slot)
+[00:42.689] Turn ended  P0  |  Crystals P0=4500 P1=2800
+
+--- Turn 4  |  Player 1  |  Crystals P0=4500 P1=2800 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][Flam][Hair][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][Lord][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:43.295] Mode selected P1: ATTACK
+[00:43.303] Attack phase P1: 2 attack(s) available
+[00:43.303] MSG: Player 2: tap a character to attack.
+[00:43.603] AI1 attack decision: (0,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → (2,2) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:43.912] Dice rolled: 1
+[00:43.958] MSG: Lord of Terror wins!
+[00:48.612] Crystals: P0 4500 → 4000 (-500)  [battle]
+[00:50.010] Attack P1(0,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(2,2)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=1  ATK=150 vs DEF=10  → WIN
+[00:50.010] Anim: 3A  △ P0(2,2)
+[00:50.010] Card destroyed  P0 (2,2) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:50.313] Turn ended  P1  |  Crystals P0=4000 P1=2800
+
+--- Turn 5  |  Player 0  |  Crystals P0=4000 P1=2800 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][Hair][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][Lord][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:50.920] Mode selected P0: ATTACK
+[00:50.924] Attack phase P0: 2 attack(s) available
+[00:50.924] MSG: Player 1: tap a character to attack.
+[00:51.228] AI0 attack decision: (2,3)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → (4,1) (dead-end)
+[00:51.535] Dice rolled: 1
+[00:51.558] Prompt: "Pay 100 Crystals for +10 ATK this battle?"  [Pay 100 Crystals / Skip]
+[00:52.145] Ability choice resolved: 1 (No)
+[00:52.145] MSG: Nothing happens — Dead End.
+[00:55.306] Attack P0(2,3)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → P1(4,1)(empty)  Dice=1  → DEAD_END
+[00:55.306] Anim: 3F  (blank slot)
+[00:57.825] Turn ended  P0  |  Crystals P0=4000 P1=2800
+
+--- Turn 6  |  Player 1  |  Crystals P0=4000 P1=2800 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][Hair][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][Lord][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:58.425] Mode selected P1: ATTACK
+[00:58.431] Attack phase P1: 2 attack(s) available
+[00:58.431] MSG: Player 2: tap a character to attack.
+[00:58.731] AI1 attack decision: (0,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → (2,3) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:59.041] Dice rolled: 4
+[00:59.092] MSG: Lord of Terror wins!
+[01:03.741] Crystals: P0 4000 → 3700 (-300)  [battle]
+[01:05.138] Attack P1(0,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(2,3)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=4  ATK=150 vs DEF=15  → WIN
+[01:05.138] Anim: 3A  △ P0(2,3)
+[01:05.138] Card destroyed  P0 (2,3) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[01:05.445] Turn ended  P1  |  Crystals P0=3700 P1=2800
+
+--- Turn 7  |  Player 0  |  Crystals P0=3700 P1=2800 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][Lord][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:06.052] Mode selected P0: ATTACK
+[01:06.057] Attack phase P0: 2 attack(s) available
+[01:06.057] MSG: Player 1: tap a character to attack.
+[01:06.357] AI0 attack decision: (1,1)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (0,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[01:06.706] Revealed: P0 (1,1) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:06.706] Dice rolled: 1
+[01:06.745] MSG: Pit Lord wins!
+[01:11.331] Attack P0(1,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(0,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}  Dice=1  ATK=120 vs DEF=100  → WIN
+[01:11.331] Anim: 3A  △ P1(0,2)
+[01:11.331] Card destroyed  P1 (0,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[01:13.846] Turn ended  P0  |  Crystals P0=3700 P1=2800
+
+--- Turn 8  |  Player 1  |  Crystals P0=3700 P1=2800 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Pit ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:14.450] Mode selected P1: ATTACK
+[01:14.455] Attack phase P1: 2 attack(s) available
+[01:14.456] MSG: Player 2: tap a character to attack.
+[01:14.757] AI1 attack decision: (2,0)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima | face-down} → (0,1) (dead-end)
+[01:15.103] Revealed: P1 (2,0) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:15.103] Dice rolled: 4
+[01:15.117] MSG: Nothing happens — Dead End.
+[01:18.480] Attack P1(2,0)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P0(0,1)(empty)  Dice=4  → DEAD_END
+[01:18.480] Anim: 3F  (blank slot)
+[01:18.788] Turn ended  P1  |  Crystals P0=3700 P1=2800
+
+--- Turn 9  |  Player 0  |  Crystals P0=3700 P1=2800 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Pit ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Witc][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:19.391] Mode selected P0: ATTACK
+[01:19.398] Attack phase P0: 2 attack(s) available
+[01:19.398] MSG: Player 1: tap a character to attack.
+[01:19.699] AI0 attack decision: (1,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → (2,0) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:20.007] Dice rolled: 4
+[01:20.016] MSG: Pit Lord wins!
+[01:24.708] Crystals: P1 2800 → 2550 (-250)  [battle]
+[01:26.106] Attack P0(1,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(2,0)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}  Dice=4  ATK=60 vs DEF=20  → WIN
+[01:26.106] Anim: 3A  △ P1(2,0)
+[01:26.106] Card destroyed  P1 (2,0) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:26.610] Mode selected P0: ATTACK
+[01:26.615] Attack phase P0: 1 attack(s) available
+[01:26.617] MSG: Player 1: tap a character to attack.
+[01:26.916] AI0 attack decision: (1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down} → (4,2) "Self-destruct" {cost 0}
+[01:27.264] Revealed: P0 (1,4) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[01:27.296] Revealed: P1 (4,2) "Self-destruct" {cost 0}
+[01:27.296] Dice rolled: 1
+[01:27.564] MSG: Trap triggered: Self-destruct!
+[01:31.660] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[01:31.664] Trap: "Self-destruct" triggered  P0(1,4)→P1(4,2)
+[01:31.664] Anim: 3D  (attacker survives)
+[01:32.048] AI1 target chosen: (-1,-1)
+[01:32.155] Turn ended  P0  |  Crystals P0=3700 P1=2550
+
+--- Turn 10  |  Player 1  |  Crystals P0=3700 P1=2550 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Pit ][  — ][  — ][Mafi]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:32.749] Mode selected P1: ATTACK
+[01:32.755] Attack phase P1: 2 attack(s) available
+[01:32.755] MSG: Player 2: tap a character to attack.
+[01:33.049] AI1 attack decision: (0,0)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down} → (0,4) (dead-end)
+[01:33.388] Revealed: P1 (0,0) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:33.388] Dice rolled: 4
+[01:33.402] MSG: Nothing happens — Dead End.
+[01:36.756] Attack P1(0,0)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P0(0,4)(empty)  Dice=4  → DEAD_END
+[01:36.756] Anim: 3F  (blank slot)
+[01:36.757] MSG: Skeleton Scout: Bonus attack for hitting dead end!
+[01:37.059] Turn ended  P1  |  Crystals P0=3700 P1=2550
+
+--- Turn 11  |  Player 0  |  Crystals P0=3700 P1=2550 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Pit ][  — ][  — ][Mafi]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Skel][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:37.667] Mode selected P0: ATTACK
+[01:37.674] Attack phase P0: 2 attack(s) available
+[01:37.674] MSG: Player 1: tap a character to attack.
+[01:37.974] AI0 attack decision: (1,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → (0,0) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used}
+[01:38.282] Dice rolled: 2
+[01:38.292] MSG: Pit Lord wins!
+[01:42.982] Crystals: P1 2550 → 2400 (-150)  [battle]
+[01:44.382] Attack P0(1,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(0,0)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used}  Dice=2  ATK=60 vs DEF=5  → WIN
+[01:44.382] Anim: 3A  △ P1(0,0)
+[01:44.382] Card destroyed  P1 (0,0) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used}
+[01:44.882] Mode selected P0: ATTACK
+[01:44.889] Attack phase P0: 1 attack(s) available
+[01:44.889] MSG: Player 1: tap a character to attack.
+[01:45.190] AI0 attack decision: (1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → (4,3) (dead-end)
+[01:45.499] Dice rolled: 2
+[01:45.524] MSG: Nothing happens — Dead End.
+[01:48.904] Attack P0(1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P1(4,3)(empty)  Dice=2  → DEAD_END
+[01:48.904] Anim: 3F  (blank slot)
+[01:49.411] Turn ended  P0  |  Crystals P0=3700 P1=2400
+
+--- Turn 12  |  Player 1  |  Crystals P0=3700 P1=2400 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Pit ][  — ][  — ][Mafi]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:50.016] Mode selected P1: ATTACK
+[01:50.022] Attack phase P1: 2 attack(s) available
+[01:50.022] MSG: Player 2: tap a character to attack.
+[01:50.324] AI1 attack decision: (3,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature | face-down} → (3,1) "Foul Gas" {cost 0}
+[01:50.670] Revealed: P1 (3,0) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[01:50.695] Revealed: P0 (3,1) "Foul Gas" {cost 0}
+[01:50.695] Dice rolled: 5
+[01:50.955] MSG: Trap triggered: Foul Gas!
+[01:55.051] MSG: Foul Gas: All of Player 2's characters -5 ATK this turn!
+[01:55.056] Trap: "Foul Gas" triggered  P1(3,0)→P0(3,1)
+[01:55.056] Anim: 3D  (attacker survives)
+[01:55.345] Turn ended  P1  |  Crystals P0=3700 P1=2400
+
+--- Turn 13  |  Player 0  |  Crystals P0=3700 P1=2400 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Pit ][  — ][  — ][Mafi]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Nuki][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:55.941] Mode selected P0: ATTACK
+[01:55.948] Attack phase P0: 2 attack(s) available
+[01:55.948] MSG: Player 1: tap a character to attack.
+[01:56.240] AI0 attack decision: (1,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → (3,0) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[01:56.541] Dice rolled: 4
+[01:56.549] MSG: Pit Lord wins!
+[02:01.233] Crystals: P1 2400 → 2300 (-100)  [battle]
+[02:02.630] Attack P0(1,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(3,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}  Dice=4  ATK=60 vs DEF=10  → WIN
+[02:02.630] Anim: 3A  △ P1(3,0)
+[02:02.630] Card destroyed  P1 (3,0) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[02:03.125] Mode selected P0: ATTACK
+[02:03.131] Attack phase P0: 1 attack(s) available
+[02:03.131] MSG: Player 1: tap a character to attack.
+[02:03.424] AI0 attack decision: (1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → (3,2) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}
+[02:03.759] Revealed: P1 (3,2) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[02:03.759] Dice rolled: 5
+[02:03.763] MSG: Mafia Associates wins!
+[02:08.399] Crystals: P1 2300 → 2000 (-300)  [battle]
+[02:09.796] Attack P0(1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P1(3,2)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}  Dice=5  ATK=45 vs DEF=25  → WIN
+[02:09.796] Anim: 3A  △ P1(3,2)
+[02:09.796] Card destroyed  P1 (3,2) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[02:10.296] Turn ended  P0  |  Crystals P0=3700 P1=2000
+
+--- Turn 14  |  Player 1  |  Crystals P0=3700 P1=2000 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Pit ][  — ][  — ][Mafi]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:10.891] Mode selected P1: ATTACK
+[02:10.898] Attack phase P1: 2 attack(s) available
+[02:10.898] MSG: Player 2: tap a character to attack.
+[02:11.190] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (1,3) (dead-end)
+[02:11.526] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:11.527] Dice rolled: 4
+[02:11.542] MSG: Nothing happens — Dead End.
+[02:14.862] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(1,3)(empty)  Dice=4  → DEAD_END
+[02:14.862] Anim: 3F  (blank slot)
+[02:15.160] Turn ended  P1  |  Crystals P0=3700 P1=2000
+
+--- Turn 15  |  Player 0  |  Crystals P0=3700 P1=2000 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Pit ][  — ][  — ][Mafi]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Chao][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:15.758] Mode selected P0: ATTACK
+[02:15.762] Attack phase P0: 2 attack(s) available
+[02:15.762] MSG: Player 1: tap a character to attack.
+[02:16.057] AI0 attack decision: (1,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:16.356] Dice rolled: 5
+[02:16.363] MSG: Pit Lord wins!
+[02:21.049] Crystals: P1 2000 → 1900 (-100)  [battle]
+[02:22.448] Attack P0(1,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=60 vs DEF=0  → WIN
+[02:22.449] Anim: 3A  △ P1(2,2)
+[02:22.449] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:22.942] Mode selected P0: ATTACK
+[02:22.948] Attack phase P0: 1 attack(s) available
+[02:22.948] MSG: Player 1: tap a character to attack.
+[02:23.240] AI0 attack decision: (1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → (3,1) (dead-end)
+[02:23.540] Dice rolled: 3
+[02:23.566] MSG: Nothing happens — Dead End.
+[02:26.939] Attack P0(1,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P1(3,1)(empty)  Dice=3  → DEAD_END
+[02:26.939] Anim: 3F  (blank slot)
+[02:27.437] Turn ended  P0  |  Crystals P0=3700 P1=1900
+
+--- Turn 16  |  Player 1  |  Crystals P0=3700 P1=1900 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Pit ][  — ][  — ][Mafi]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:28.033] Mode selected P1: ATTACK
+[02:28.039] Attack phase P1: 2 attack(s) available
+[02:28.039] MSG: Player 2: tap a character to attack.
+[02:28.332] AI1 attack decision: (3,4)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down} → (3,3) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down}
+[02:28.667] Revealed: P1 (3,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[02:28.668] Revealed: P0 (3,3) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[02:28.668] Dice rolled: 2
+[02:28.673] MSG: Magical Butterfly wins!
+[02:33.320] Crystals: P0 3700 → 3550 (-150)  [battle]
+[02:34.719] Attack P1(3,4)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature} → P0(3,3)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=2  ATK=15 vs DEF=5  → WIN
+[02:34.719] Anim: 3A  △ P0(3,3)
+[02:34.719] Card destroyed  P0 (3,3) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[02:35.017] Turn ended  P1  |  Crystals P0=3550 P1=1900
+
+--- Turn 17  |  Player 0  |  Crystals P0=3550 P1=1900 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Pit ][  — ][  — ][Mafi]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Magi]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:35.612] Mode selected P0: ATTACK
+[02:35.620] Attack phase P0: 2 attack(s) available
+[02:35.621] MSG: Player 1: tap a character to attack.
+[02:35.911] AI0 attack decision: (1,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → (3,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[02:36.212] Dice rolled: 3
+[02:36.223] MSG: Pit Lord wins!
+[02:40.903] Crystals: P1 1900 → 1720 (-180)  [battle]
+[02:42.304] Attack P0(1,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(3,4)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}  Dice=3  ATK=60 vs DEF=15  → WIN
+[02:42.304] Anim: 3A  △ P1(3,4)
+[02:42.304] Card destroyed  P1 (3,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+
+=== GAME OVER ===
+[02:42.306] AI Player 0 wins
+[02:42.306] Reason: all_destroyed
+[02:42.306] Final crystals — P0: 3550  P1: 1720  |  Turns: 17
+[02:42.306] Log saved to: res://logs/results/2026-06-01_09-37-04_903_mint_julep/battle_mystery_stain_on_couch_2026-06-01_11-00-04_823.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Flame-Seraph-002
+Highlight: Flame Seraph (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     17  |  AI timeouts: 0
+===

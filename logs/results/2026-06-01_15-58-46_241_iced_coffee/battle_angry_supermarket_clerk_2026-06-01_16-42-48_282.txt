@@ -1,0 +1,532 @@
+=== Battle of Angry Supermarket Clerk ===
+Battle started: 2026-06-01 16:42:48.282
+Game Session of Iced Coffee (started 2026-06-01 15:58:46.241)
+=== Card E2E Test ===
+Scenario ID:  E2E-Choir-Lady-Abigail-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Choir-Lady-Abigail-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Choir Lady Abigail (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Choir Lady Abigail" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Choir Lady Abigail
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Choir\ Lady\ Abigail".*ATK=25\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=25 when Choir Lady Abigail attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Choir Lady Abigail
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Choir Lady Abigail
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Bribe, War Supply
+P1 Tech hand: Bribe, Release Mutagen, Tease
+P0:   [T:Alar][  — ][  — ][C:Dark][T:Defe]
+      [T:Blac][C:Blad][  — ][C:Moon][  — ]
+      [T:Brai][C:Void][C:Choi][C:Mine][  — ]
+      [T:Acid][T:Host][  — ][C:Foul][  — ]
+      [  — ][C:Gian][  — ][C:Book][C:Echo]
+P1:   [C:Cany][C:Scyt][T:Expl][C:Elec][T:Hard]
+      [C:Pit ][  — ][  — ][T:Foul][C:Fera]
+      [C:Wand][  — ][C:Chao][  — ][C:Swar]
+      [T:Blac][  — ][  — ][  — ][C:Jaco]
+      [C:Doom][T:Curs][C:Bat ][T:Spik][C:Laug]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.309] Mode selected P0: ATTACK
+[00:05.313] Attack phase P0: 2 attack(s) available
+[00:05.313] MSG: Player 1: tap a character to attack.
+[00:05.617] AI0 attack decision: (2,2)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.965] Revealed: P0 (2,2) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:05.991] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.991] Dice rolled: 4
+[00:05.995] MSG: Choir Lady Abigail wins!
+[00:10.619] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.016] Attack P0(2,2)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=4  ATK=25 vs DEF=0  → WIN
+[00:12.016] Anim: 3A  △ P1(2,2)
+[00:12.016] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:14.523] Turn ended  P0  |  Crystals P0=5000 P1=4900
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4900 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Choi][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:16.602] Crystals: P1 4900 → 4400 (-500)  [union]
+[00:16.646] Revealed: P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:16.646] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}, "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature | face-down}
+[00:16.646] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:16.647] MSG: Player 2 summoned [Scarlet Shroom] using: "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}, "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature | face-down}
+[00:19.835] Crystals: P1 4400 → 4350 (-50)  [skip tax]
+[00:19.835] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:21.222] Turn ended  P1  |  Crystals P0=5000 P1=4350
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=4350 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Choi][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [Scar][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:21.819] Mode selected P0: ATTACK
+[00:21.825] Attack phase P0: 2 attack(s) available
+[00:21.826] MSG: Player 1: tap a character to attack.
+[00:22.117] AI0 attack decision: (2,2)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | flags:venom} → (0,1) (dead-end)
+[00:22.418] Dice rolled: 5
+[00:22.444] MSG: Nothing happens — Dead End.
+[00:25.823] Attack P0(2,2)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | flags:venom} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[00:25.823] Anim: 3F  (blank slot)
+[00:28.332] Turn ended  P0  |  Crystals P0=5000 P1=4350
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=4350 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Choi][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [Scar][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:28.924] Mode selected P1: ATTACK
+[00:28.932] Attack phase P1: 2 attack(s) available
+[00:28.932] MSG: Player 2: tap a character to attack.
+[00:29.222] AI1 attack decision: (1,0)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (2,2) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | flags:venom}
+[00:29.563] Revealed: P1 (1,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:29.563] Dice rolled: 1
+[00:29.567] MSG: Pit Lord is destroyed by Divine!
+[00:35.132] Crystals: P1 4350 → 3100 (-1250)  [battle]
+[00:36.523] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:37.913] Attack P1(1,0)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → P0(2,2)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | flags:venom}  Dice=1  ATK=120 vs DEF=15  → TIE
+[00:37.913] Anim: 3C  △ P1(1,0) + △ P0(2,2)
+[00:37.913] Card destroyed  P1 (1,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:37.913] Card destroyed  P0 (2,2) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | flags:venom}
+[00:38.210] Turn ended  P1  |  Crystals P0=4750 P1=3100
+
+--- Turn 5  |  Player 0  |  Crystals P0=4750 P1=3100 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [Scar][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:38.807] Mode selected P0: ATTACK
+[00:38.812] Attack phase P0: 2 attack(s) available
+[00:38.813] MSG: Player 1: tap a character to attack.
+[00:39.105] AI0 attack decision: (2,1)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos | face-down} → (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:39.465] Revealed: P0 (2,1) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:39.465] Dice rolled: 5
+[00:39.502] MSG: Void Stalker wins!
+[00:45.096] Attack P0(2,1)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} → P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}  Dice=5  ATK=85 vs DEF=80  → WIN
+[00:45.096] Reckoning overlay: P0 "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} +ATK 20
+[00:45.096] Anim: 3A  △ P1(0,0)
+[00:45.096] Card destroyed  P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:47.602] Turn ended  P0  |  Crystals P0=4750 P1=3100
+
+--- Turn 6  |  Player 1  |  Crystals P0=4750 P1=3100 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][Void][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:48.190] Mode selected P1: ATTACK
+[00:48.196] Attack phase P1: 2 attack(s) available
+[00:48.196] MSG: Player 2: tap a character to attack.
+[00:48.484] AI1 attack decision: (0,3)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic | face-down} → (2,1) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:48.828] Revealed: P1 (0,3) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:48.828] Dice rolled: 4
+[00:48.832] MSG: Electrogazer wins!
+[00:53.461] Crystals: P0 4750 → 4030 (-720)  [battle]
+[00:54.859] Attack P1(0,3)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P0(2,1)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}  Dice=4  ATK=80 vs DEF=25  → WIN
+[00:54.859] Anim: 3A  △ P0(2,1)
+[00:54.859] Card destroyed  P0 (2,1) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:55.156] Turn ended  P1  |  Crystals P0=4030 P1=3100
+
+--- Turn 7  |  Player 0  |  Crystals P0=4030 P1=3100 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][Elec][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:55.750] Mode selected P0: ATTACK
+[00:55.756] Attack phase P0: 2 attack(s) available
+[00:55.756] MSG: Player 1: tap a character to attack.
+[00:56.047] AI0 attack decision: (4,3)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (0,3) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:56.385] Revealed: P0 (4,3) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:56.385] Dice rolled: 5
+[00:56.389] MSG: Both cards are destroyed!
+[01:00.955] Crystals: P0 4030 → 3230 (-800)  [battle]
+[01:02.347] Crystals: P1 3100 → 2100 (-1000)  [battle]
+[01:03.738] Attack P0(4,3)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(0,3)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}  Dice=5  ATK=45 vs DEF=45  → TIE
+[01:03.738] Anim: 3C  △ P0(4,3) + △ P1(0,3)
+[01:03.738] Card destroyed  P0 (4,3) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:03.738] Card destroyed  P1 (0,3) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[01:04.232] Mode selected P0: ATTACK
+[01:04.235] Attack phase P0: 1 attack(s) available
+[01:04.236] MSG: Player 1: tap a character to attack.
+[01:04.529] AI0 attack decision: (0,3)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down} → (1,2) (dead-end)
+[01:04.869] Revealed: P0 (0,3) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[01:04.869] Dice rolled: 2
+[01:04.884] MSG: Nothing happens — Dead End.
+[01:08.242] Attack P0(0,3)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos} → P1(1,2)(empty)  Dice=2  → DEAD_END
+[01:08.242] Anim: 3F  (blank slot)
+[01:08.242] MSG: Dark Tengu: Self ATK debuff applied.
+[01:08.748] Turn ended  P0  |  Crystals P0=3230 P1=2100
+
+--- Turn 8  |  Player 1  |  Crystals P0=3230 P1=2100 ---
+P0:   [  ? ][  — ][  — ][Dark][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:09.357] Mode selected P1: ATTACK
+[01:09.362] Attack phase P1: 2 attack(s) available
+[01:09.363] MSG: Player 2: tap a character to attack.
+[01:09.660] AI1 attack decision: (1,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos | face-down} → (0,3) "Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}
+[01:10.021] Revealed: P1 (1,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:10.022] Dice rolled: 1
+[01:10.025] MSG: Feral Vampire wins!
+[01:14.644] Crystals: P0 3230 → 2980 (-250)  [battle]
+[01:16.042] Attack P1(1,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P0(0,3)"Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}  Dice=1  ATK=40 vs DEF=25  → WIN
+[01:16.042] Anim: 3A  △ P0(0,3)
+[01:16.042] Card destroyed  P0 (0,3) "Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}
+[01:16.340] Turn ended  P1  |  Crystals P0=2980 P1=2100
+
+--- Turn 9  |  Player 0  |  Crystals P0=2980 P1=2100 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][Fera]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:16.941] Mode selected P0: ATTACK
+[01:16.947] Attack phase P0: 2 attack(s) available
+[01:16.947] MSG: Player 1: tap a character to attack.
+[01:17.239] AI0 attack decision: (4,4)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | face-down} → (1,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:17.580] Revealed: P0 (4,4) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[01:17.580] Dice rolled: 1
+[01:17.587] MSG: Echo Bringer wins!
+[01:22.230] Crystals: P1 2100 → 1700 (-400)  [battle]
+[01:23.630] Attack P0(4,4)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic} → P1(1,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=1  ATK=70 vs DEF=25  → WIN
+[01:23.630] Anim: 3A  △ P1(1,4)
+[01:23.630] Card destroyed  P1 (1,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:23.631] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[01:24.124] Mode selected P0: ATTACK
+[01:24.129] Attack phase P0: 2 attack(s) available
+[01:24.129] MSG: Player 1: tap a character to attack.
+[01:24.423] AI0 attack decision: (1,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down} → (1,1) (dead-end)
+[01:24.756] Revealed: P0 (1,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[01:24.757] Dice rolled: 3
+[01:24.771] MSG: Nothing happens — Dead End.
+[01:28.120] Attack P0(1,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} → P1(1,1)(empty)  Dice=3  → DEAD_END
+[01:28.120] Anim: 3F  (blank slot)
+[01:30.629] Turn ended  P0  |  Crystals P0=2980 P1=1700
+
+--- Turn 10  |  Player 1  |  Crystals P0=2980 P1=1700 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Blad][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][Echo]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:31.226] Mode selected P1: ATTACK
+[01:31.233] Attack phase P1: 2 attack(s) available
+[01:31.234] MSG: Player 2: tap a character to attack.
+[01:31.521] AI1 attack decision: (2,0)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima | face-down} → (4,4) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used}
+[01:31.859] Revealed: P1 (2,0) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[01:31.859] Dice rolled: 4
+[01:31.863] MSG: Wandering Swordsman wins!
+[01:36.514] Crystals: P0 2980 → 2080 (-900)  [battle]
+[01:37.913] Attack P1(2,0)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P0(4,4)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used}  Dice=4  ATK=60 vs DEF=40  → WIN
+[01:37.914] Anim: 3A  △ P0(4,4)
+[01:37.914] Card destroyed  P0 (4,4) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used}
+[01:38.211] Turn ended  P1  |  Crystals P0=2080 P1=1700
+
+--- Turn 11  |  Player 0  |  Crystals P0=2080 P1=1700 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Blad][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [Wand][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:38.810] Mode selected P0: ATTACK
+[01:38.817] Attack phase P0: 2 attack(s) available
+[01:38.818] MSG: Player 1: tap a character to attack.
+[01:39.110] AI0 attack decision: (1,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} → (1,3) "Foul Gas" {cost 0}
+[01:39.444] Revealed: P1 (1,3) "Foul Gas" {cost 0}
+[01:39.444] Dice rolled: 5
+[01:39.723] MSG: Trap triggered: Foul Gas!
+[01:43.842] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[01:43.846] Trap: "Foul Gas" triggered  P0(1,1)→P1(1,3)
+[01:43.846] Anim: 3D  (attacker survives)
+[01:46.353] Turn ended  P0  |  Crystals P0=2080 P1=1700
+
+--- Turn 12  |  Player 1  |  Crystals P0=2080 P1=1700 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Blad][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Wand][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:46.960] Mode selected P1: ATTACK
+[01:46.967] Attack phase P1: 2 attack(s) available
+[01:46.968] MSG: Player 2: tap a character to attack.
+[01:47.264] AI1 attack decision: (2,0)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → (1,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[01:47.571] Dice rolled: 3
+[01:47.582] MSG: Wandering Swordsman wins!
+[01:52.273] Crystals: P0 2080 → 1660 (-420)  [battle]
+[01:53.671] Attack P1(2,0)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P0(1,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}  Dice=3  ATK=60 vs DEF=50  → WIN
+[01:53.671] Anim: 3A  △ P0(1,1)
+[01:53.671] Card destroyed  P0 (1,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[01:53.976] Turn ended  P1  |  Crystals P0=1660 P1=1700
+
+--- Turn 13  |  Player 0  |  Crystals P0=1660 P1=1700 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Wand][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:54.582] Mode selected P0: ATTACK
+[01:54.586] Attack phase P0: 2 attack(s) available
+[01:54.587] MSG: Player 1: tap a character to attack.
+[01:54.889] AI0 attack decision: (1,3)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down} → (2,1) (dead-end)
+[01:55.231] Revealed: P0 (1,3) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:55.231] Dice rolled: 2
+[01:55.245] MSG: Nothing happens — Dead End.
+[01:58.611] Attack P0(1,3)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → P1(2,1)(empty)  Dice=2  → DEAD_END
+[01:58.611] Anim: 3F  (blank slot)
+[01:58.612] Target prompt: "Moon Rover: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:59.013] AI0 target chosen: (4,3)
+[01:59.058] Revealed: P1 (4,3) "Spike Trap" {cost 1500}
+[01:59.058] MSG: Revealed: Spike Trap
+[01:59.097] Mode selected P0: ATTACK
+[01:59.099] Attack phase P0: 1 attack(s) available
+[01:59.100] MSG: Player 1: tap a character to attack.
+[01:59.397] AI0 attack decision: (2,3)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic | face-down} → (3,1) (dead-end)
+[01:59.730] Revealed: P0 (2,3) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[01:59.730] Dice rolled: 1
+[01:59.744] MSG: Nothing happens — Dead End.
+[02:03.121] Attack P0(2,3)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} → P1(3,1)(empty)  Dice=1  → DEAD_END
+[02:03.121] Anim: 3F  (blank slot)
+[02:03.121] Crystals: P0 1660 → 1680 (+20)  [ability]
+[02:03.123] MSG: Miner Probe: Gained 20 Crystals!
+[02:03.628] Turn ended  P0  |  Crystals P0=1680 P1=1700
+
+--- Turn 14  |  Player 1  |  Crystals P0=1680 P1=1700 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][Moon][  — ]
+      [  ? ][  — ][  — ][Mine][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Wand][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[02:04.234] Mode selected P1: ATTACK
+[02:04.242] Attack phase P1: 2 attack(s) available
+[02:04.242] MSG: Player 2: tap a character to attack.
+[02:04.538] AI1 attack decision: (2,0)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → (2,3) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[02:04.847] Dice rolled: 1
+[02:04.857] MSG: Wandering Swordsman wins!
+[02:09.547] Crystals: P0 1680 → 1480 (-200)  [battle]
+[02:10.947] Attack P1(2,0)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P0(2,3)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}  Dice=1  ATK=60 vs DEF=10  → WIN
+[02:10.947] Anim: 3A  △ P0(2,3)
+[02:10.947] Card destroyed  P0 (2,3) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[02:11.253] Turn ended  P1  |  Crystals P0=1480 P1=1700
+
+--- Turn 15  |  Player 0  |  Crystals P0=1480 P1=1700 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][Moon][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Wand][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[02:11.857] Mode selected P0: ATTACK
+[02:11.862] Attack phase P0: 2 attack(s) available
+[02:11.863] MSG: Player 1: tap a character to attack.
+[02:12.163] AI0 attack decision: (1,3)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → (0,2) "Explosive Barrels" {cost 0}
+[02:12.512] Revealed: P1 (0,2) "Explosive Barrels" {cost 0}
+[02:12.512] Dice rolled: 5
+[02:12.771] MSG: Trap triggered: Explosive Barrels!
+[02:18.007] Crystals: P0 1480 → 1280 (-200)  [card lost]
+[02:20.041] Crystals: P1 1700 → 1500 (-200)  [trap]
+[02:21.423] MSG: Explosive Barrels: Moon Rover destroyed! Defender loses 200 Crystals.
+[02:21.427] Trap: "Explosive Barrels" triggered  P0(1,3)→P1(0,2)
+[02:21.427] Anim: 3E  △ P0(1,3)
+[02:21.922] Mode selected P0: ATTACK
+[02:21.929] Attack phase P0: 1 attack(s) available
+[02:21.929] MSG: Player 1: tap a character to attack.
+[02:22.222] AI0 attack decision: (3,3)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos | face-down} → (0,4) "Hard Scale" {cost 700}
+[02:22.590] Revealed: P0 (3,3) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[02:22.628] Revealed: P1 (0,4) "Hard Scale" {cost 700}
+[02:22.628] Dice rolled: 1
+[02:22.866] MSG: Trap triggered: Hard Scale!
+[02:26.953] Crystals: P1 1500 → 800 (-700)  [trap cost]
+[02:28.343] MSG: Hard Scale: All your units gain +5 DEF in Reckoning this turn!
+[02:28.348] Trap: "Hard Scale" triggered  P0(3,3)→P1(0,4)
+[02:28.348] Anim: 3D  (attacker survives)
+[02:28.849] Turn ended  P0  |  Crystals P0=1280 P1=800
+
+--- Turn 16  |  Player 1  |  Crystals P0=1280 P1=800 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][Foul][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Wand][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[02:29.422] Mode selected P1: ATTACK
+[02:29.429] Attack phase P1: 2 attack(s) available
+[02:29.429] MSG: Player 2: tap a character to attack.
+[02:29.726] AI1 attack decision: (2,0)"Wandering Swordsman" {Unit ATK60 DEF65 | cost 600 | affinity Anima | buff +tempDEF5} → (3,3) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[02:30.035] Dice rolled: 4
+[02:30.045] MSG: Wandering Swordsman wins!
+[02:34.735] Crystals: P0 1280 → 1180 (-100)  [battle]
+[02:36.133] Attack P1(2,0)"Wandering Swordsman" {Unit ATK60 DEF65 | cost 600 | affinity Anima | buff +tempDEF5} → P0(3,3)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=4  ATK=60 vs DEF=25  → WIN
+[02:36.133] Anim: 3A  △ P0(3,3)
+[02:36.133] Card destroyed  P0 (3,3) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[02:36.439] Turn ended  P1  |  Crystals P0=1180 P1=800
+
+--- Turn 17  |  Player 0  |  Crystals P0=1180 P1=800 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Wand][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[02:37.035] Mode selected P0: ATTACK
+[02:37.040] Attack phase P0: 2 attack(s) available
+[02:37.041] MSG: Player 1: tap a character to attack.
+[02:37.343] AI0 attack decision: (4,1)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down} → (3,0) "Blackmail" {cost 0}
+[02:37.723] Revealed: P0 (4,1) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[02:37.748] Revealed: P1 (3,0) "Blackmail" {cost 0}
+[02:37.748] Dice rolled: 1
+[02:37.999] MSG: Trap triggered: Blackmail!
+[02:42.104] Prompt: "Blackmail"  [Discard 1 Tech Card / End your turn]
+[02:42.692] Ability choice resolved: 0 (Yes)
+[02:42.693] MSG: Blackmail: Discarded 1 Tech Card.
+[02:42.697] Trap: "Blackmail" triggered  P0(4,1)→P1(3,0)
+[02:42.697] Anim: 3D  (attacker survives)
+[02:43.199] Turn ended  P0  |  Crystals P0=1180 P1=800
+
+--- Turn 18  |  Player 1  |  Crystals P0=1180 P1=800 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][Gian][  — ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Wand][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[02:43.797] Mode selected P1: ATTACK
+[02:43.805] Attack phase P1: 2 attack(s) available
+[02:43.806] MSG: Player 2: tap a character to attack.
+[02:44.093] AI1 attack decision: (2,0)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → (4,1) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[02:44.394] Dice rolled: 3
+[02:44.403] MSG: Wandering Swordsman wins!
+[02:49.085] Crystals: P0 1180 → 0 (-1180)  [battle]
+
+=== GAME OVER ===
+[02:49.094] AI Player 1 wins
+[02:49.094] Reason: crystals
+[02:49.095] Final crystals — P0: 0  P1: 800  |  Turns: 18
+[02:49.095] Log saved to: res://logs/results/2026-06-01_15-58-46_241_iced_coffee/battle_angry_supermarket_clerk_2026-06-01_16-42-48_282.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Choir-Lady-Abigail-002
+Highlight: Choir Lady Abigail (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     18  |  AI timeouts: 0
+===

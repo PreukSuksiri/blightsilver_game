@@ -1,0 +1,80 @@
+=== Battle of Basement Spider Negotiation ===
+Battle started: 2026-06-01 23:53:39.229
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Tease-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Tease-001  (test_case/functional/tech_functional_tests.md)
+Highlight:    Tease (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Ability:      OPPONENT_REVEALS_SQUARE — Your foe choose and reveal 1 of their cell
+Setup role:   t2_tech_play
+Verifies:
+  - Ability: "Tease" is exercised via forced board/tech setup (t2_tech_play)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must match regex: Tech played\s+P0: "Tease"
+  - Log must contain at least one of: Tease, Tease, Tech resolved, Revealed:, Card destroyed
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: tech Tease played (OPPONENT_REVEALS_SQUARE).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Tease
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Great Diplomacy, Spy
+P1 Tech hand: Radar, Resurrection, Prayer
+P0:   [T:Brai][T:Self][C:Pony][T:Foul][  — ]
+      [  — ][C:Arch][C:Witc][C:Void][T:Trap]
+      [  — ][C:Gian][C:Ox P][C:Wand][T:Hypn]
+      [  — ][C:Chao][C:Grav][C:Lab ][  — ]
+      [T:Bunk][  — ][  — ][  — ][  — ]
+P1:   [  — ][C:Ange][C:Shep][C:Armo][T:Acid]
+      [C:Laug][  — ][  — ][  — ][T:Flam]
+      [T:Host][  — ][C:Chao][  — ][C:Blea]
+      [T:Stre][  — ][  — ][  — ][C:Choi]
+      [  — ][C:Meli][C:Raij][C:Leop][T:Blac]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[00:05.332] Mode selected P0: TECH
+[00:05.639] Tech played  P0: "Tease"
+[00:07.172] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.172] E2E: ability goal reached — ending battle early.
+[00:07.174] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+
+=== GAME OVER ===
+[00:07.178] AI Player 0 wins
+[00:07.178] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:07.178] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_basement_spider_negotiation_2026-06-01_23-53-39_229.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Tease-002
+Highlight: Tease (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

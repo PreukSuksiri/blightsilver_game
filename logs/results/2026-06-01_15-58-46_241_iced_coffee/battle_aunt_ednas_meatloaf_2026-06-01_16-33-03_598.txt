@@ -1,0 +1,496 @@
+=== Battle of Aunt Edna's Meatloaf ===
+Battle started: 2026-06-01 16:33:03.598
+Game Session of Iced Coffee (started 2026-06-01 15:58:46.241)
+=== Card E2E Test ===
+Scenario ID:  E2E-Bomber-Fairy-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Bomber-Fairy-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Bomber Fairy (Character)  [setup: Chaotic Wisp]
+Ability:      ONE_USE_EXTRA_ATTACK_ON_KILL — Once, if destroyed a card, this card can attack 1 more time
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Bomber Fairy" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Bomber Fairy
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Bomber\ Fairy".*ATK=|→ P\d\(\d+,\d+\)"Bomber\ Fairy")
+  - Log must match regex: ("Bomber\ Fairy".*ATK=|→ P\d\(\d+,\d+\)"Bomber\ Fairy")
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: one-use ability ONE_USE_EXTRA_ATTACK_ON_KILL.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Bomber Fairy
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Bomber Fairy
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Siege Cannon, Prayer
+P1 Tech hand: Resurrection, Prayer, Bribe
+P0:   [  — ][  — ][C:Joan][  — ][  — ]
+      [T:Pepp][C:Dark][C:War ][C:Godd][  — ]
+      [T:Snar][C:Silv][C:Bomb][C:Gobl][  — ]
+      [T:Stre][C:Swar][C:Sunr][C:Foul][T:Trap]
+      [  — ][T:Spik][  — ][  — ][T:Expl]
+P1:   [T:Snar][C:Flam][C:Whit][T:Acid][  — ]
+      [  — ][T:Stre][C:Scyt][T:Bait][  — ]
+      [C:Moon][C:Skel][C:Chao][C:Demo][C:Lazy]
+      [  — ][T:Hard][C:Cany][  — ][  — ]
+      [  — ][  — ][C:Myst][T:Trap][C:Jose]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:05.310] Mode selected P0: ATTACK
+[00:05.314] Attack phase P0: 2 attack(s) available
+[00:05.314] MSG: Player 1: tap a character to attack.
+[00:05.618] AI0 attack decision: (2,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.965] Revealed: P0 (2,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[00:05.992] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.992] Dice rolled: 3
+[00:05.995] MSG: Bomber Fairy wins!
+[00:10.594] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:11.991] Attack P0(2,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=3  ATK=30 vs DEF=0  → WIN
+[00:11.992] Anim: 3A  △ P1(2,2)
+[00:11.992] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:11.992] MSG: Bomber Fairy: Kill bonus — extra attack!
+[00:12.494] Mode selected P0: ATTACK
+[00:12.500] Attack phase P0: 2 attack(s) available
+[00:12.500] MSG: Player 1: tap a character to attack.
+[00:12.801] AI0 attack decision: (1,2)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down} → (0,2) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature | face-down}
+[00:13.146] Revealed: P0 (1,2) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:13.171] Revealed: P1 (0,2) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[00:13.171] Dice rolled: 5
+[00:13.175] MSG: White Tiger: Attacker loses 15 ATK!
+[00:13.175] MSG: War Genie wins!
+[00:18.826] Crystals: P1 4900 → 4450 (-450)  [battle]
+[00:20.226] Attack P0(1,2)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P1(0,2)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}  Dice=5  ATK=85 vs DEF=25  → WIN
+[00:20.226] Reckoning overlay: P0 "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} ATK -15
+[00:20.226] Anim: 3A  △ P1(0,2)
+[00:20.226] Card destroyed  P1 (0,2) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[00:20.728] Mode selected P0: ATTACK
+[00:20.734] Attack phase P0: 1 attack(s) available
+[00:20.735] MSG: Player 1: tap a character to attack.
+[00:21.035] AI0 attack decision: (0,2)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down} → (0,0) "Snare Trap" {cost 500}
+[00:21.385] Revealed: P0 (0,2) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[00:21.411] Revealed: P1 (0,0) "Snare Trap" {cost 500}
+[00:21.411] Dice rolled: 2
+[00:21.683] MSG: Trap triggered: Snare Trap!
+[00:25.778] Crystals: P1 4450 → 3950 (-500)  [trap cost]
+[00:27.168] MSG: Snare Trap: Joan the Faithful Warrior's effect nullified until end of next turn!
+[00:27.174] Trap: "Snare Trap" triggered  P0(0,2)→P1(0,0)
+[00:27.174] Anim: 3D  (attacker survives)
+[00:27.674] Turn ended  P0  |  Crystals P0=5000 P1=3950
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=3950 ---
+P0:   [  — ][  — ][Joan][  — ][  — ]
+      [  ? ][  ? ][War ][  ? ][  — ]
+      [  ? ][  ? ][Bomb][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:29.751] Crystals: P1 3950 → 3450 (-500)  [union]
+[00:29.793] Revealed: P1 (1,2) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:29.793] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature | face-down}, "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}
+[00:29.793] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:29.794] MSG: Player 2 summoned [Scarlet Shroom] using: "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature | face-down}, "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}
+[00:32.944] Crystals: P1 3450 → 3400 (-50)  [skip tax]
+[00:32.944] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:34.334] Turn ended  P1  |  Crystals P0=5000 P1=3400
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3400 ---
+P0:   [  — ][  — ][Joan][  — ][  — ]
+      [  ? ][  ? ][War ][  ? ][  — ]
+      [  ? ][  ? ][Bomb][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][Scar][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:34.936] Mode selected P0: ATTACK
+[00:34.945] Attack phase P0: 2 attack(s) available
+[00:34.945] MSG: Player 1: tap a character to attack.
+[00:35.243] AI0 attack decision: (1,2)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80 | flags:venom} → (1,2) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:35.552] Dice rolled: 4
+[00:35.605] MSG: War Genie wins!
+[00:40.280] Attack P0(1,2)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80 | flags:venom} → P1(1,2)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}  Dice=4  ATK=90 vs DEF=80  → WIN
+[00:40.280] Anim: 3A  △ P1(1,2)
+[00:40.280] Card destroyed  P1 (1,2) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:40.774] Mode selected P0: ATTACK
+[00:40.781] Attack phase P0: 1 attack(s) available
+[00:40.782] MSG: Player 1: tap a character to attack.
+[00:41.073] AI0 attack decision: (2,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used,venom} → (3,2) (dead-end)
+[00:41.372] Dice rolled: 4
+[00:41.399] MSG: Nothing happens — Dead End.
+[00:44.774] Attack P0(2,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used,venom} → P1(3,2)(empty)  Dice=4  → DEAD_END
+[00:44.774] Anim: 3F  (blank slot)
+[00:45.274] Turn ended  P0  |  Crystals P0=5000 P1=3400
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=3400 ---
+P0:   [  — ][  — ][Joan][  — ][  — ]
+      [  ? ][  ? ][War ][  ? ][  — ]
+      [  ? ][  ? ][Bomb][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:45.878] Mode selected P1: ATTACK
+[00:45.886] Attack phase P1: 2 attack(s) available
+[00:45.887] MSG: Player 2: tap a character to attack.
+[00:46.173] AI1 attack decision: (2,4)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down} → (1,2) "War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80 | flags:venom}
+[00:46.539] Revealed: P1 (2,4) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:46.833] Coin flip: Tails
+[00:49.610] MSG: Lazy Troll flips tails — too lazy to attack! It has to wait.
+[00:49.616] Attack aborted
+[00:50.308] Turn ended  P1  |  Crystals P0=5000 P1=3400
+
+--- Turn 5  |  Player 0  |  Crystals P0=5000 P1=3400 ---
+P0:   [  — ][  — ][Joan][  — ][  — ]
+      [  ? ][  ? ][War ][  ? ][  — ]
+      [  ? ][  ? ][Bomb][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][Lazy]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:50.895] Mode selected P0: ATTACK
+[00:50.904] Attack phase P0: 2 attack(s) available
+[00:50.905] MSG: Player 1: tap a character to attack.
+[00:51.194] AI0 attack decision: (1,2)"War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80 | flags:venom} → (2,4) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:51.494] Dice rolled: 4
+[00:51.504] MSG: War Genie wins!
+[00:56.185] Crystals: P1 3400 → 2400 (-1000)  [battle]
+[00:57.585] Attack P0(1,2)"War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80 | flags:venom} → P1(2,4)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}  Dice=4  ATK=80 vs DEF=60  → WIN
+[00:57.586] Anim: 3A  △ P1(2,4)
+[00:57.586] Card destroyed  P1 (2,4) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:58.078] Mode selected P0: ATTACK
+[00:58.085] Attack phase P0: 1 attack(s) available
+[00:58.086] MSG: Player 1: tap a character to attack.
+[00:58.377] AI0 attack decision: (0,2)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | flags:venom | nullified≤T2} → (0,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}
+[00:58.713] Revealed: P1 (0,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:58.714] Dice rolled: 1
+[00:58.718] MSG: Joan the Faithful Warrior wins!
+[01:03.353] Crystals: P1 2400 → 1900 (-500)  [battle]
+[01:04.752] Attack P0(0,2)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | flags:venom | nullified≤T2} → P1(0,1)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=1  ATK=25 vs DEF=10  → WIN
+[01:04.752] Anim: 3A  △ P1(0,1)
+[01:04.752] Card destroyed  P1 (0,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:05.248] Turn ended  P0  |  Crystals P0=5000 P1=1900
+
+--- Turn 6  |  Player 1  |  Crystals P0=5000 P1=1900 ---
+P0:   [  — ][  — ][Joan][  — ][  — ]
+      [  ? ][  ? ][War ][  ? ][  — ]
+      [  ? ][  ? ][Bomb][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:05.847] Mode selected P1: ATTACK
+[01:05.856] Attack phase P1: 2 attack(s) available
+[01:05.856] MSG: Player 2: tap a character to attack.
+[01:06.143] AI1 attack decision: (2,3)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | face-down} → (2,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used,venom}
+[01:06.485] Revealed: P1 (2,3) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:06.485] Dice rolled: 5
+[01:06.490] MSG: Demon Spawn wins!
+[01:11.127] Crystals: P0 5000 → 4500 (-500)  [battle]
+[01:12.526] Attack P1(2,3)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P0(2,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used,venom}  Dice=5  ATK=40 vs DEF=15  → WIN
+[01:12.526] Anim: 3A  △ P0(2,2)
+[01:12.527] Card destroyed  P0 (2,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used,venom}
+[01:12.823] Turn ended  P1  |  Crystals P0=4500 P1=1900
+
+--- Turn 7  |  Player 0  |  Crystals P0=4500 P1=1900 ---
+P0:   [  — ][  — ][Joan][  — ][  — ]
+      [  ? ][  ? ][War ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][Demo][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:13.419] Mode selected P0: ATTACK
+[01:13.426] Attack phase P0: 2 attack(s) available
+[01:13.427] MSG: Player 1: tap a character to attack.
+[01:13.718] AI0 attack decision: (1,2)"War Genie" {Unit ATK70 DEF80 | cost 1150 | affinity Arcane | base 70/80 | flags:venom} → (2,3) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:14.018] Dice rolled: 1
+[01:14.028] MSG: War Genie wins!
+[01:18.710] Crystals: P1 1900 → 1500 (-400)  [battle]
+[01:20.109] Attack P0(1,2)"War Genie" {Unit ATK70 DEF80 | cost 1150 | affinity Arcane | base 70/80 | flags:venom} → P1(2,3)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}  Dice=1  ATK=70 vs DEF=30  → WIN
+[01:20.109] Anim: 3A  △ P1(2,3)
+[01:20.109] Card destroyed  P1 (2,3) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:20.602] Mode selected P0: ATTACK
+[01:20.608] Attack phase P0: 1 attack(s) available
+[01:20.608] MSG: Player 1: tap a character to attack.
+[01:20.901] AI0 attack decision: (0,2)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | flags:venom | nullified≤T2} → (0,4) (dead-end)
+[01:21.202] Dice rolled: 4
+[01:21.231] MSG: Nothing happens — Dead End.
+[01:24.599] Attack P0(0,2)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | flags:venom | nullified≤T2} → P1(0,4)(empty)  Dice=4  → DEAD_END
+[01:24.600] Anim: 3F  (blank slot)
+[01:25.098] Turn ended  P0  |  Crystals P0=4500 P1=1500
+
+--- Turn 8  |  Player 1  |  Crystals P0=4500 P1=1500 ---
+P0:   [  — ][  — ][Joan][  — ][  — ]
+      [  ? ][  ? ][War ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:25.696] Mode selected P1: ATTACK
+[01:25.703] Attack phase P1: 2 attack(s) available
+[01:25.704] MSG: Player 2: tap a character to attack.
+[01:25.994] AI1 attack decision: (2,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down} → (0,2) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | flags:venom | nullified≤T2}
+[01:26.327] Revealed: P1 (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:26.327] Dice rolled: 3
+[01:26.331] MSG: Moon Rover wins!
+[01:31.002] Crystals: P0 4500 → 4220 (-280)  [battle]
+[01:32.399] Attack P1(2,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → P0(0,2)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | flags:venom | nullified≤T2}  Dice=3  ATK=15 vs DEF=5  → WIN
+[01:32.400] Anim: 3A  △ P0(0,2)
+[01:32.400] Card destroyed  P0 (0,2) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | flags:venom | nullified≤T2}
+[01:32.707] Turn ended  P1  |  Crystals P0=4220 P1=1500
+
+--- Turn 9  |  Player 0  |  Crystals P0=4220 P1=1500 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][War ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [Moon][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:33.311] Mode selected P0: ATTACK
+[01:33.318] Attack phase P0: 2 attack(s) available
+[01:33.319] MSG: Player 1: tap a character to attack.
+[01:33.618] AI0 attack decision: (1,2)"War Genie" {Unit ATK60 DEF80 | cost 1150 | affinity Arcane | base 60/80 | flags:venom} → (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:33.927] Dice rolled: 1
+[01:33.936] MSG: War Genie wins!
+[01:38.627] Crystals: P1 1500 → 1300 (-200)  [battle]
+[01:40.024] Attack P0(1,2)"War Genie" {Unit ATK60 DEF80 | cost 1150 | affinity Arcane | base 60/80 | flags:venom} → P1(2,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=1  ATK=60 vs DEF=20  → WIN
+[01:40.025] Anim: 3A  △ P1(2,0)
+[01:40.025] Card destroyed  P1 (2,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:40.528] Mode selected P0: ATTACK
+[01:40.533] Attack phase P0: 1 attack(s) available
+[01:40.533] MSG: Player 1: tap a character to attack.
+[01:40.835] AI0 attack decision: (1,1)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (1,0) (dead-end)
+[01:41.180] Revealed: P0 (1,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:41.180] Dice rolled: 2
+[01:41.195] MSG: Nothing happens — Dead End.
+[01:44.516] Attack P0(1,1)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P1(1,0)(empty)  Dice=2  → DEAD_END
+[01:44.517] Anim: 3F  (blank slot)
+[01:45.015] Turn ended  P0  |  Crystals P0=4220 P1=1300
+
+--- Turn 10  |  Player 1  |  Crystals P0=4220 P1=1300 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Dark][War ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:45.612] Mode selected P1: ATTACK
+[01:45.619] Attack phase P1: 2 attack(s) available
+[01:45.620] MSG: Player 2: tap a character to attack.
+[01:45.909] AI1 attack decision: (4,2)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos | face-down} → (1,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:46.249] Revealed: P1 (4,2) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[01:46.249] Dice rolled: 3
+[01:46.253] MSG: Both cards are destroyed!
+[01:50.819] Crystals: P1 1300 → 1050 (-250)  [battle]
+[01:52.210] Crystals: P0 4220 → 3920 (-300)  [battle]
+[01:53.602] Attack P1(4,2)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos} → P0(1,1)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}  Dice=3  ATK=25 vs DEF=25  → TIE
+[01:53.603] Anim: 3C  △ P1(4,2) + △ P0(1,1)
+[01:53.603] Card destroyed  P1 (4,2) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[01:53.603] Card destroyed  P0 (1,1) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:53.604] Target prompt: "Mysterious Miner: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:53.898] Turn ended  P1  |  Crystals P0=3920 P1=1050
+
+--- Turn 11  |  Player 0  |  Crystals P0=3920 P1=1050 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][War ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[01:53.993] AI0 target chosen: (3,3)
+[01:54.494] Mode selected P0: ATTACK
+[01:54.499] Attack phase P0: 2 attack(s) available
+[01:54.499] MSG: Player 1: tap a character to attack.
+[01:54.793] AI0 attack decision: (1,2)"War Genie" {Unit ATK50 DEF80 | cost 1150 | affinity Arcane | base 50/80 | flags:venom} → (1,3) "Bait" {cost 0}
+[01:55.131] Revealed: P1 (1,3) "Bait" {cost 0}
+[01:55.131] Dice rolled: 1
+[01:55.442] MSG: Trap triggered: Bait!
+[01:59.537] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[01:59.541] Trap: "Bait" triggered  P0(1,2)→P1(1,3)
+[01:59.541] Anim: 3D  (attacker survives)
+[01:59.927] AI1 target chosen: (1,1)
+[01:59.962] Revealed: P1 (1,1) "Street Joke" {cost 0}
+[01:59.962] MSG: Bait: Defender revealed Street Joke.
+[02:00.018] Mode selected P0: ATTACK
+[02:00.021] Attack phase P0: 1 attack(s) available
+[02:00.021] MSG: Player 1: tap a character to attack.
+[02:00.318] AI0 attack decision: (1,3)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down} → (1,4) (dead-end)
+[02:00.656] Revealed: P0 (1,3) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[02:00.656] Dice rolled: 4
+[02:00.670] MSG: Nothing happens — Dead End.
+[02:04.000] Attack P0(1,3)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P1(1,4)(empty)  Dice=4  → DEAD_END
+[02:04.000] Anim: 3F  (blank slot)
+[02:04.495] Turn ended  P0  |  Crystals P0=3920 P1=1050
+
+--- Turn 12  |  Player 1  |  Crystals P0=3920 P1=1050 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][War ][Godd][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:05.095] Mode selected P1: ATTACK
+[02:05.101] Attack phase P1: 2 attack(s) available
+[02:05.101] MSG: Player 2: tap a character to attack.
+[02:05.393] AI1 attack decision: (2,1)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (2,0) "Snare Trap" {cost 500}
+[02:05.728] Revealed: P1 (2,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[02:05.728] Revealed: P0 (2,0) "Snare Trap" {cost 500}
+[02:05.729] Dice rolled: 1
+[02:06.001] MSG: Trap triggered: Snare Trap!
+[02:10.085] Crystals: P0 3920 → 3420 (-500)  [trap cost]
+[02:11.478] MSG: Snare Trap: Skeleton Lancer's effect nullified until end of next turn!
+[02:11.483] Trap: "Snare Trap" triggered  P1(2,1)→P0(2,0)
+[02:11.483] Anim: 3D  (attacker survives)
+[02:11.783] Turn ended  P1  |  Crystals P0=3420 P1=1050
+
+--- Turn 13  |  Player 0  |  Crystals P0=3420 P1=1050 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][War ][Godd][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Skel][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:12.384] Mode selected P0: ATTACK
+[02:12.391] Attack phase P0: 2 attack(s) available
+[02:12.391] MSG: Player 1: tap a character to attack.
+[02:12.693] AI0 attack decision: (1,2)"War Genie" {Unit ATK40 DEF80 | cost 1150 | affinity Arcane | base 40/80 | flags:venom} → (2,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | nullified≤T13}
+[02:13.001] Dice rolled: 5
+[02:13.009] MSG: War Genie wins!
+[02:17.702] Crystals: P1 1050 → 750 (-300)  [battle]
+[02:19.101] Attack P0(1,2)"War Genie" {Unit ATK40 DEF80 | cost 1150 | affinity Arcane | base 40/80 | flags:venom} → P1(2,1)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | nullified≤T13}  Dice=5  ATK=40 vs DEF=5  → WIN
+[02:19.101] Anim: 3A  △ P1(2,1)
+[02:19.101] Card destroyed  P1 (2,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | nullified≤T13}
+[02:19.602] Mode selected P0: ATTACK
+[02:19.607] Attack phase P0: 1 attack(s) available
+[02:19.609] MSG: Player 1: tap a character to attack.
+[02:19.910] AI0 attack decision: (1,3)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (3,1) "Hard Scale" {cost 700}
+[02:20.260] Revealed: P1 (3,1) "Hard Scale" {cost 700}
+[02:20.260] Dice rolled: 3
+[02:20.524] MSG: Trap triggered: Hard Scale!
+[02:24.620] Crystals: P1 750 → 50 (-700)  [trap cost]
+[02:26.011] MSG: Hard Scale: All your units gain +5 DEF in Reckoning this turn!
+[02:26.016] Trap: "Hard Scale" triggered  P0(1,3)→P1(3,1)
+[02:26.016] Anim: 3D  (attacker survives)
+[02:26.515] Turn ended  P0  |  Crystals P0=3420 P1=50
+
+--- Turn 14  |  Player 1  |  Crystals P0=3420 P1=50 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][War ][Godd][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:27.127] Mode selected P1: ATTACK
+[02:27.134] Attack phase P1: 2 attack(s) available
+[02:27.134] MSG: Player 2: tap a character to attack.
+[02:27.434] AI1 attack decision: (4,4)"Joseph the Battle Priest" {Unit ATK60 DEF30 | cost 600 | affinity Divine | buff +tempDEF5 | face-down} → (0,4) (dead-end)
+[02:27.784] Revealed: P1 (4,4) "Joseph the Battle Priest" {Unit ATK60 DEF30 | cost 600 | affinity Divine | buff +tempDEF5}
+[02:27.784] Dice rolled: 4
+[02:27.798] MSG: Nothing happens — Dead End.
+[02:31.116] Attack P1(4,4)"Joseph the Battle Priest" {Unit ATK60 DEF30 | cost 600 | affinity Divine | buff +tempDEF5} → P0(0,4)(empty)  Dice=4  → DEAD_END
+[02:31.116] Anim: 3F  (blank slot)
+[02:31.422] Turn ended  P1  |  Crystals P0=3420 P1=50
+
+--- Turn 15  |  Player 0  |  Crystals P0=3420 P1=50 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][War ][Godd][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][Jose]
+[02:32.026] Mode selected P0: ATTACK
+[02:32.033] Attack phase P0: 2 attack(s) available
+[02:32.033] MSG: Player 1: tap a character to attack.
+[02:32.334] AI0 attack decision: (1,2)"War Genie" {Unit ATK30 DEF80 | cost 1150 | affinity Arcane | base 30/80 | flags:venom} → (4,4) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[02:32.643] Dice rolled: 4
+[02:32.655] MSG: War Genie wins!
+[02:37.344] Crystals: P1 50 → 0 (-50)  [battle]
+
+=== GAME OVER ===
+[02:37.355] AI Player 0 wins
+[02:37.355] Reason: crystals
+[02:37.355] Final crystals — P0: 3420  P1: 0  |  Turns: 15
+[02:37.355] Log saved to: res://logs/results/2026-06-01_15-58-46_241_iced_coffee/battle_aunt_ednas_meatloaf_2026-06-01_16-33-03_598.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Bomber-Fairy-002
+Highlight: Bomber Fairy (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     15  |  AI timeouts: 0
+===

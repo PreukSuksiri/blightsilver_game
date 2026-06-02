@@ -1,0 +1,376 @@
+=== Battle of Printer Jam Apocalypse ===
+Battle started: 2026-06-02 01:22:22.679
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Sky-Protector-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Sky-Protector-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Sky Protector (Union)  [setup: Sunrise Lady, Moonrise Gentleman, Chaotic Wisp]
+Ability:      STANCE_FIXED_STATS — If this card defends, DEF becomes 50, ATK becomes 0. If this card performs attack, ATK becomes 50, DEF becomes 0.
+Setup role:   t2_union
+Verifies:
+  - Ability: "Sky Protector" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Sky Protector, Attack P\d\(\d+,\d+\)"Sky\ Protector", MSG:.*Sky
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Sky Protector — summon logged and/or union attacks with ATK=0.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Sky Protector
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (0,0) Sunrise Lady, (0,1) Moonrise Gentleman
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Accident, Radar
+P1 Tech hand: Accident, Prayer, Spy
+P0:   [C:Sunr][C:Moon][  — ][T:Self][C:Book]
+      [C:Ange][C:Shot][  — ][C:Ostr][  — ]
+      [C:Big ][  — ][  — ][  — ][C:Blue]
+      [T:Alar][  — ][  — ][  — ][T:Echo]
+      [C:Hair][T:Red ][T:Snar][C:Stai][C:Deat]
+P1:   [  — ][C:Leec][T:Red ][  — ][C:Ice ]
+      [  — ][C:Meli][  — ][  — ][C:Swar]
+      [T:Defe][C:Paro][C:Chao][C:Vamp][C:Stin]
+      [C:Spac][C:Deat][  — ][  — ][T:Echo]
+      [T:Hypn][C:Fuji][T:Snar][T:Pepp][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:06.818] Crystals: P0 5000 → 4600 (-400)  [union]
+[00:06.863] Revealed: P0 (0,0) "Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine}
+[00:06.863] Union summoned P0: "Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} from "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}, "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down}
+[00:06.866] MSG: Player 1 summoned [Sky Protector] using: "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}, "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down}
+[00:10.235] Mode selected P0: ATTACK
+[00:10.241] Attack phase P0: 2 attack(s) available
+[00:10.241] MSG: Player 1: tap a character to attack.
+[00:10.531] AI0 attack decision: (0,0)"Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} → (0,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio | face-down}
+[00:10.866] Revealed: P1 (0,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:10.866] Dice rolled: 2
+[00:10.907] MSG: Sky Protector wins!
+[00:16.517] Crystals: P1 5000 → 4120 (-880)  [battle]
+[00:17.913] Attack P0(0,0)"Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} → P1(0,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}  Dice=2  ATK=50 vs DEF=40  → WIN
+[00:17.913] Reckoning overlay: P0 "Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} +ATK 50
+[00:17.913] Anim: 3A  △ P1(0,1)
+[00:17.914] Card destroyed  P1 (0,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:18.410] Mode selected P0: ATTACK
+[00:18.415] Attack phase P0: 1 attack(s) available
+[00:18.417] MSG: Player 1: tap a character to attack.
+[00:18.706] AI0 attack decision: (1,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down} → (0,2) "Red Card" {cost 0}
+[00:19.043] Revealed: P0 (1,0) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[00:19.074] Revealed: P1 (0,2) "Red Card" {cost 0}
+[00:19.074] Dice rolled: 2
+[00:19.347] MSG: Trap triggered: Red Card!
+[00:23.499] Coin flip: Heads, Heads
+[00:26.216] MSG: Red Card: Heads, Heads.
+[00:26.217] MSG: Both heads! Angel Gatekeeper cannot attack next turn!
+[00:26.222] Trap: "Red Card" triggered  P0(1,0)→P1(0,2)
+[00:26.222] Anim: 3D  (attacker survives)
+[00:26.731] Turn ended  P0  |  Crystals P0=4600 P1=4120
+
+--- Turn 2  |  Player 1  |  Crystals P0=4600 P1=4120 ---
+P0:   [Sky ][  — ][  — ][  ? ][  ? ]
+      [Ange][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:27.350] Mode selected P1: ATTACK
+[00:27.356] Attack phase P1: 2 attack(s) available
+[00:27.356] MSG: Player 2: tap a character to attack.
+[00:27.648] AI1 attack decision: (1,1)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down} → (0,0) "Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine}
+[00:27.994] Revealed: P1 (1,1) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:27.995] Dice rolled: 5
+[00:33.734] Crystals: P1 4120 → 3420 (-700)  [battle]
+[00:33.735] Crystals: P1 3420 → 3720 (+300)  [recovery]
+[00:33.735] MSG: Melissa the Healer: Recovered 300 Crystals!
+[00:33.756] Attack P1(1,1)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} → P0(0,0)"Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine}  Dice=5  ATK=0 vs DEF=50  → LOSE
+[00:33.756] Reckoning overlay: P0 "Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} +DEF 50
+[00:33.756] Anim: 3B  △ P1(1,1)
+[00:33.756] Card destroyed  P1 (1,1) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:34.043] Turn ended  P1  |  Crystals P0=4600 P1=3720
+
+--- Turn 3  |  Player 0  |  Crystals P0=4600 P1=3720 ---
+P0:   [Sky ][  — ][  — ][  ? ][  ? ]
+      [Ange][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:34.649] Mode selected P0: ATTACK
+[00:34.656] Attack phase P0: 2 attack(s) available
+[00:34.656] MSG: Player 1: tap a character to attack.
+[00:34.954] AI0 attack decision: (0,0)"Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} → (0,4) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down}
+[00:35.298] Revealed: P1 (0,4) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:35.298] Dice rolled: 2
+[00:35.339] MSG: Sky Protector wins!
+[00:41.013] Crystals: P1 3720 → 3320 (-400)  [battle]
+[00:42.411] Attack P0(0,0)"Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} → P1(0,4)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=2  ATK=50 vs DEF=0  → WIN
+[00:42.411] Reckoning overlay: P0 "Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} +ATK 50
+[00:42.411] Anim: 3A  △ P1(0,4)
+[00:42.411] Card destroyed  P1 (0,4) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:42.907] Mode selected P0: ATTACK
+[00:42.913] Attack phase P0: 1 attack(s) available
+[00:42.914] MSG: Player 1: tap a character to attack.
+[00:43.203] AI0 attack decision: (1,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | cannot-atk≤T2} → (2,0) "Defensive Pheromone" {cost 500}
+[00:43.544] Revealed: P1 (2,0) "Defensive Pheromone" {cost 500}
+[00:43.545] Dice rolled: 4
+[00:43.785] MSG: Trap triggered: Defensive Pheromone!
+[00:47.890] Crystals: P1 3320 → 2820 (-500)  [trap cost]
+[00:49.278] MSG: No valid target — effect cancelled.
+[00:49.285] Tech resolved  P0
+[00:49.285] Target prompt: "Defensive Pheromone: Choose an 'Armored' Nature card to swap."  filter=own_armored_nature
+[00:49.288] Trap: "Defensive Pheromone" triggered  P0(1,0)→P1(2,0)
+[00:49.288] Anim: 3D  (attacker survives)
+[00:49.791] Turn ended  P0  |  Crystals P0=4600 P1=2820
+
+--- Turn 4  |  Player 1  |  Crystals P0=4600 P1=2820 ---
+P0:   [Sky ][  — ][  — ][  ? ][  ? ]
+      [Ange][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:50.196] Mode selected P1: ATTACK
+[00:50.204] Attack phase P1: 2 attack(s) available
+[00:50.204] MSG: Player 2: tap a character to attack.
+[00:50.704] AI1 attack decision: (1,4)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down} → (0,0) "Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine}
+[00:51.048] Revealed: P1 (1,4) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[00:51.048] Dice rolled: 5
+[00:56.837] Crystals: P1 2820 → 1870 (-950)  [battle]
+[00:58.235] Attack P1(1,4)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature} → P0(0,0)"Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine}  Dice=5  ATK=45 vs DEF=50  → LOSE
+[00:58.236] Reckoning overlay: P0 "Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} +DEF 50
+[00:58.236] Anim: 3B  △ P1(1,4)
+[00:58.236] Card destroyed  P1 (1,4) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[00:58.534] Turn ended  P1  |  Crystals P0=4600 P1=1870
+
+--- Turn 5  |  Player 0  |  Crystals P0=4600 P1=1870 ---
+P0:   [Sky ][  — ][  — ][  ? ][  ? ]
+      [Ange][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:59.128] Mode selected P0: ATTACK
+[00:59.134] Attack phase P0: 2 attack(s) available
+[00:59.134] MSG: Player 1: tap a character to attack.
+[00:59.425] AI0 attack decision: (0,0)"Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} → (1,0) (dead-end)
+[00:59.725] Dice rolled: 3
+[00:59.784] MSG: Nothing happens — Dead End.
+[01:03.112] Attack P0(0,0)"Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} → P1(1,0)(empty)  Dice=3  → DEAD_END
+[01:03.112] Anim: 3F  (blank slot)
+[01:03.618] Mode selected P0: ATTACK
+[01:03.625] Attack phase P0: 1 attack(s) available
+[01:03.625] MSG: Player 1: tap a character to attack.
+[01:03.924] AI0 attack decision: (1,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | cannot-atk≤T2} → (0,3) (dead-end)
+[01:04.234] Dice rolled: 1
+[01:04.258] MSG: Nothing happens — Dead End.
+[01:07.648] Attack P0(1,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | cannot-atk≤T2} → P1(0,3)(empty)  Dice=1  → DEAD_END
+[01:07.648] Anim: 3F  (blank slot)
+[01:08.153] Turn ended  P0  |  Crystals P0=4600 P1=1870
+
+--- Turn 6  |  Player 1  |  Crystals P0=4600 P1=1870 ---
+P0:   [Sky ][  — ][  — ][  ? ][  ? ]
+      [Ange][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:08.765] Mode selected P1: ATTACK
+[01:08.772] Attack phase P1: 2 attack(s) available
+[01:08.772] MSG: Player 2: tap a character to attack.
+[01:09.063] AI1 attack decision: (3,0)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic | face-down} → (0,0) "Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine}
+[01:09.410] Revealed: P1 (3,0) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:09.410] Dice rolled: 4
+[01:09.449] MSG: Space Boy wins!
+[01:15.095] Attack P1(3,0)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P0(0,0)"Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine}  Dice=4  ATK=75 vs DEF=50  → WIN
+[01:15.096] Reckoning overlay: P0 "Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine} +DEF 50
+[01:15.096] Anim: 3A  △ P0(0,0)
+[01:15.096] Card destroyed  P0 (0,0) "Sky Protector" {Union ATK0 DEF0 | destroy-cost 0 | summon-cost 400 | affinity Divine}
+[01:15.392] Turn ended  P1  |  Crystals P0=4600 P1=1870
+
+--- Turn 7  |  Player 0  |  Crystals P0=4600 P1=1870 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [Ange][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [Spac][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:15.988] Mode selected P0: ATTACK
+[01:15.997] Attack phase P0: 2 attack(s) available
+[01:15.997] MSG: Player 1: tap a character to attack.
+[01:16.288] AI0 attack decision: (1,1)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down} → (3,0) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:16.623] Revealed: P0 (1,1) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:16.623] Dice rolled: 2
+[01:16.628] MSG: Shotgun Shark wins!
+[01:21.279] Crystals: P1 1870 → 1070 (-800)  [battle]
+[01:22.675] Attack P0(1,1)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → P1(3,0)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}  Dice=2  ATK=75 vs DEF=65  → WIN
+[01:22.675] Anim: 3A  △ P1(3,0)
+[01:22.675] Card destroyed  P1 (3,0) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:23.164] Mode selected P0: ATTACK
+[01:23.171] Attack phase P0: 1 attack(s) available
+[01:23.171] MSG: Player 1: tap a character to attack.
+[01:23.462] AI0 attack decision: (1,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | cannot-atk≤T2} → (0,0) (dead-end)
+[01:23.762] Dice rolled: 4
+[01:23.794] MSG: Nothing happens — Dead End.
+[01:27.160] Attack P0(1,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | cannot-atk≤T2} → P1(0,0)(empty)  Dice=4  → DEAD_END
+[01:27.160] Anim: 3F  (blank slot)
+[01:27.657] Turn ended  P0  |  Crystals P0=4600 P1=1070
+
+--- Turn 8  |  Player 1  |  Crystals P0=4600 P1=1070 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [Ange][Shot][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:28.261] Mode selected P1: ATTACK
+[01:28.267] Attack phase P1: 2 attack(s) available
+[01:28.267] MSG: Player 2: tap a character to attack.
+[01:28.550] AI1 attack decision: (2,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (1,1) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:28.883] Revealed: P1 (2,1) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:28.883] Dice rolled: 3
+[01:28.887] MSG: Parom the Smuggler wins!
+[01:33.542] Crystals: P0 4600 → 3700 (-900)  [battle]
+[01:34.941] Attack P1(2,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(1,1)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}  Dice=3  ATK=30 vs DEF=25  → WIN
+[01:34.941] Anim: 3A  △ P0(1,1)
+[01:34.941] Card destroyed  P0 (1,1) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:35.239] Turn ended  P1  |  Crystals P0=3700 P1=1070
+
+--- Turn 9  |  Player 0  |  Crystals P0=3700 P1=1070 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [Ange][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Paro][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:35.834] Mode selected P0: ATTACK
+[01:35.840] Attack phase P0: 2 attack(s) available
+[01:35.841] MSG: Player 1: tap a character to attack.
+[01:36.133] AI0 attack decision: (1,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | cannot-atk≤T2} → (2,1) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:36.433] Dice rolled: 5
+[01:36.443] MSG: Angel Gatekeeper wins!
+[01:41.124] Crystals: P1 1070 → 770 (-300)  [battle]
+[01:42.524] Attack P0(1,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | cannot-atk≤T2} → P1(2,1)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=5  ATK=40 vs DEF=20  → WIN
+[01:42.525] Anim: 3A  △ P1(2,1)
+[01:42.525] Card destroyed  P1 (2,1) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:43.017] Mode selected P0: ATTACK
+[01:43.023] Attack phase P0: 1 attack(s) available
+[01:43.026] MSG: Player 1: tap a character to attack.
+[01:43.311] AI0 attack decision: (2,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (1,2) (dead-end)
+[01:43.650] Revealed: P0 (2,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:43.650] Dice rolled: 5
+[01:43.665] MSG: Nothing happens — Dead End.
+[01:47.026] Attack P0(2,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[01:47.026] Anim: 3F  (blank slot)
+[01:47.532] Turn ended  P0  |  Crystals P0=3700 P1=770
+
+--- Turn 10  |  Player 1  |  Crystals P0=3700 P1=770 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [Ange][  — ][  — ][  ? ][  — ]
+      [Big ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:48.144] Mode selected P1: ATTACK
+[01:48.148] Attack phase P1: 2 attack(s) available
+[01:48.148] MSG: Player 2: tap a character to attack.
+[01:48.445] AI1 attack decision: (3,1)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos | face-down} → (2,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:48.791] Revealed: P1 (3,1) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[01:48.791] Dice rolled: 4
+[01:48.796] MSG: Death Knight wins!
+[01:53.444] Crystals: P0 3700 → 3300 (-400)  [battle]
+[01:54.845] Attack P1(3,1)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → P0(2,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=4  ATK=65 vs DEF=35  → WIN
+[01:54.846] Anim: 3A  △ P0(2,0)
+[01:54.846] Card destroyed  P0 (2,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:55.143] Turn ended  P1  |  Crystals P0=3300 P1=770
+
+--- Turn 11  |  Player 0  |  Crystals P0=3300 P1=770 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [Ange][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][Deat][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:55.740] Mode selected P0: ATTACK
+[01:55.748] Attack phase P0: 2 attack(s) available
+[01:55.748] MSG: Player 1: tap a character to attack.
+[01:56.037] AI0 attack decision: (1,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | cannot-atk≤T2} → (3,1) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[01:56.337] Dice rolled: 3
+[01:56.348] MSG: Angel Gatekeeper wins!
+[02:02.029] Crystals: P1 770 → 0 (-770)  [battle]
+
+=== GAME OVER ===
+[02:02.041] AI Player 0 wins
+[02:02.041] Reason: crystals
+[02:02.041] Final crystals — P0: 3300  P1: 0  |  Turns: 11
+[02:02.041] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_printer_jam_apocalypse_2026-06-02_01-22-22_679.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Sky-Protector-002
+Highlight: Sky Protector (Union)  [setup: Sunrise Lady, Moonrise Gentleman, Chaotic Wisp]
+Result:    FAIL
+Detail:    None of expect_log_any matched: ["Union summoned P0: Sky Protector", "Attack P\\d\\(\\d+,\\d+\\)\"Sky\\ Protector\"", "MSG:.*Sky"]
+Turns:     11  |  AI timeouts: 0
+===

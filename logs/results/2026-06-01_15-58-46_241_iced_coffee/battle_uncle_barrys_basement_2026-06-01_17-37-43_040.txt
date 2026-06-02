@@ -1,0 +1,503 @@
+=== Battle of Uncle Barry's Basement ===
+Battle started: 2026-06-01 17:37:43.040
+Game Session of Iced Coffee (started 2026-06-01 15:58:46.241)
+=== Card E2E Test ===
+Scenario ID:  E2E-Fujin-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Fujin-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Fujin (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Fujin" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Fujin
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Fujin".*ATK=35\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=35 when Fujin attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Fujin
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Fujin
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Tease, Spy
+P1 Tech hand: Bribe, Great Diplomacy, Tease
+P0:   [C:Swar][C:Nuki][  — ][T:Defe][C:Big ]
+      [C:Hamm][C:Vamp][T:Alar][C:Scar][  — ]
+      [T:Brai][  — ][C:Fuji][T:Pepp][C:Shep]
+      [C:Gree][C:Gobl][  — ][  — ][C:Joan]
+      [C:Ox P][  — ][T:Spik][T:Bunk][C:Moon]
+P1:   [C:Moon][T:Red ][  — ][  — ][C:Scou]
+      [T:Flam][C:Elec][C:Gold][C:Skel][  — ]
+      [T:Alar][C:Shre][C:Chao][C:Dark][  — ]
+      [  — ][C:Meph][C:Polt][C:Cany][  — ]
+      [  — ][  — ][  — ][  — ][T:Curs]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:05.328] Mode selected P0: ATTACK
+[00:05.332] Attack phase P0: 2 attack(s) available
+[00:05.332] MSG: Player 1: tap a character to attack.
+[00:05.627] AI0 attack decision: (2,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.964] Revealed: P0 (2,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:05.990] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.990] Dice rolled: 4
+[00:05.994] MSG: Fujin wins!
+[00:10.619] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.016] Attack P0(2,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=4  ATK=35 vs DEF=0  → WIN
+[00:12.016] Anim: 3A  △ P1(2,2)
+[00:12.016] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.512] Mode selected P0: ATTACK
+[00:12.517] Attack phase P0: 1 attack(s) available
+[00:12.517] MSG: Player 1: tap a character to attack.
+[00:12.809] AI0 attack decision: (0,0)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down} → (0,2) (dead-end)
+[00:13.146] Revealed: P0 (0,0) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[00:13.146] Dice rolled: 2
+[00:13.160] MSG: Nothing happens — Dead End.
+[00:16.479] Attack P0(0,0)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature} → P1(0,2)(empty)  Dice=2  → DEAD_END
+[00:16.479] Anim: 3F  (blank slot)
+[00:16.987] Turn ended  P0  |  Crystals P0=5000 P1=4900
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4900 ---
+P0:   [Swar][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][Fuji][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:19.098] Crystals: P1 4900 → 4400 (-500)  [union]
+[00:19.141] Revealed: P1 (0,0) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[00:19.141] Union summoned P1: "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} from "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down}, "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down}
+[00:19.141] MSG: Moon Tribe Shaman: No matching card in graveyard to revive.
+[00:19.141] MSG: Player 2 summoned [Moon Tribe Shaman] using: "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down}, "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down}
+[00:22.355] Crystals: P1 4400 → 4350 (-50)  [skip tax]
+[00:22.356] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:23.745] Turn ended  P1  |  Crystals P0=5000 P1=4350
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=4350 ---
+P0:   [Swar][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][Fuji][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Moon][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:24.340] Mode selected P0: ATTACK
+[00:24.348] Attack phase P0: 2 attack(s) available
+[00:24.348] MSG: Player 1: tap a character to attack.
+[00:24.639] AI0 attack decision: (0,0)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature} → (0,4) (dead-end)
+[00:24.940] Dice rolled: 5
+[00:24.966] MSG: Nothing happens — Dead End.
+[00:28.336] Attack P0(0,0)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature} → P1(0,4)(empty)  Dice=5  → DEAD_END
+[00:28.336] Anim: 3F  (blank slot)
+[00:28.832] Mode selected P0: ATTACK
+[00:28.839] Attack phase P0: 1 attack(s) available
+[00:28.840] MSG: Player 1: tap a character to attack.
+[00:29.130] AI0 attack decision: (2,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → (0,1) "Red Card" {cost 0}
+[00:29.467] Revealed: P1 (0,1) "Red Card" {cost 0}
+[00:29.467] Dice rolled: 5
+[00:29.737] MSG: Trap triggered: Red Card!
+[00:33.893] Coin flip: Heads, Heads
+[00:36.628] MSG: Red Card: Heads, Heads.
+[00:36.628] MSG: Both heads! Fujin cannot attack next turn!
+[00:36.633] Trap: "Red Card" triggered  P0(2,2)→P1(0,1)
+[00:36.633] Anim: 3D  (attacker survives)
+[00:37.125] Turn ended  P0  |  Crystals P0=5000 P1=4350
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=4350 ---
+P0:   [Swar][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][Fuji][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Moon][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:37.719] Mode selected P1: ATTACK
+[00:37.726] Attack phase P1: 2 attack(s) available
+[00:37.726] MSG: Player 2: tap a character to attack.
+[00:38.019] AI1 attack decision: (0,0)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → (0,4) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down}
+[00:38.355] Revealed: P0 (0,4) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:38.356] Dice rolled: 4
+[00:43.161] Attack P1(0,0)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(0,4)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=4  ATK=25 vs DEF=35  → LOSE
+[00:43.161] Anim: 3B  △ P1(0,0)
+[00:43.161] Card destroyed  P1 (0,0) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[00:43.456] Turn ended  P1  |  Crystals P0=5000 P1=4350
+
+--- Turn 5  |  Player 0  |  Crystals P0=5000 P1=4350 ---
+P0:   [Swar][  ? ][  — ][  ? ][Big ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][Fuji][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:44.053] Mode selected P0: ATTACK
+[00:44.061] Attack phase P0: 2 attack(s) available
+[00:44.061] MSG: Player 1: tap a character to attack.
+[00:44.351] AI0 attack decision: (0,0)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature} → (1,2) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down}
+[00:44.687] Revealed: P1 (1,2) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[00:44.687] Dice rolled: 3
+[00:44.691] MSG: Swarmcaller wins!
+[00:49.343] Crystals: P1 4350 → 4150 (-200)  [battle]
+[00:50.743] Attack P0(0,0)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature} → P1(1,2)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}  Dice=3  ATK=45 vs DEF=0  → WIN
+[00:50.744] Anim: 3A  △ P1(1,2)
+[00:50.744] Card destroyed  P1 (1,2) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[00:51.236] Mode selected P0: ATTACK
+[00:51.243] Attack phase P0: 1 attack(s) available
+[00:51.243] MSG: Player 1: tap a character to attack.
+[00:51.534] AI0 attack decision: (0,4)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → (1,3) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down}
+[00:51.874] Revealed: P1 (1,3) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:51.875] Dice rolled: 5
+[00:51.880] MSG: Big Thug wins!
+[00:56.510] Crystals: P1 4150 → 4000 (-150)  [battle]
+[00:57.910] Attack P0(0,4)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(1,3)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=5  ATK=40 vs DEF=5  → WIN
+[00:57.910] Anim: 3A  △ P1(1,3)
+[00:57.910] Card destroyed  P1 (1,3) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:58.407] Turn ended  P0  |  Crystals P0=5000 P1=4000
+
+--- Turn 6  |  Player 1  |  Crystals P0=5000 P1=4000 ---
+P0:   [Swar][  ? ][  — ][  ? ][Big ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][Fuji][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:58.999] Mode selected P1: ATTACK
+[00:59.007] Attack phase P1: 2 attack(s) available
+[00:59.007] MSG: Player 2: tap a character to attack.
+[00:59.298] AI1 attack decision: (1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic | face-down} → (0,0) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[00:59.635] Revealed: P1 (1,1) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:59.635] Dice rolled: 4
+[00:59.640] MSG: Electrogazer wins!
+[01:04.289] Crystals: P0 5000 → 4050 (-950)  [battle]
+[01:05.689] Attack P1(1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P0(0,0)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}  Dice=4  ATK=80 vs DEF=45  → WIN
+[01:05.689] Anim: 3A  △ P0(0,0)
+[01:05.689] Card destroyed  P0 (0,0) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[01:05.987] Turn ended  P1  |  Crystals P0=4050 P1=4000
+
+--- Turn 7  |  Player 0  |  Crystals P0=4050 P1=4000 ---
+P0:   [  — ][  ? ][  — ][  ? ][Big ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][Fuji][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Elec][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:06.581] Mode selected P0: ATTACK
+[01:06.589] Attack phase P0: 2 attack(s) available
+[01:06.590] MSG: Player 1: tap a character to attack.
+[01:06.880] AI0 attack decision: (0,4)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → (1,4) (dead-end)
+[01:07.181] Dice rolled: 1
+[01:07.212] MSG: Nothing happens — Dead End.
+[01:10.588] Attack P0(0,4)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(1,4)(empty)  Dice=1  → DEAD_END
+[01:10.588] Anim: 3F  (blank slot)
+[01:11.080] Mode selected P0: ATTACK
+[01:11.083] Attack phase P0: 1 attack(s) available
+[01:11.084] MSG: Player 1: tap a character to attack.
+[01:11.380] AI0 attack decision: (2,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | cannot-atk≤T4} → (0,3) (dead-end)
+[01:11.680] Dice rolled: 4
+[01:11.699] MSG: Nothing happens — Dead End.
+[01:15.078] Attack P0(2,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | cannot-atk≤T4} → P1(0,3)(empty)  Dice=4  → DEAD_END
+[01:15.078] Anim: 3F  (blank slot)
+[01:15.577] Turn ended  P0  |  Crystals P0=4050 P1=4000
+
+--- Turn 8  |  Player 1  |  Crystals P0=4050 P1=4000 ---
+P0:   [  — ][  ? ][  — ][  ? ][Big ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][Fuji][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Elec][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:16.173] Mode selected P1: ATTACK
+[01:16.181] Attack phase P1: 2 attack(s) available
+[01:16.181] MSG: Player 2: tap a character to attack.
+[01:16.473] AI1 attack decision: (1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → (0,4) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:16.773] Dice rolled: 2
+[01:16.783] MSG: Electrogazer wins!
+[01:21.464] Crystals: P0 4050 → 3650 (-400)  [battle]
+[01:22.862] Attack P1(1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P0(0,4)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=2  ATK=80 vs DEF=35  → WIN
+[01:22.862] Anim: 3A  △ P0(0,4)
+[01:22.862] Card destroyed  P0 (0,4) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:23.161] Turn ended  P1  |  Crystals P0=3650 P1=4000
+
+--- Turn 9  |  Player 0  |  Crystals P0=3650 P1=4000 ---
+P0:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][Fuji][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Elec][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:23.756] Mode selected P0: ATTACK
+[01:23.762] Attack phase P0: 2 attack(s) available
+[01:23.762] MSG: Player 1: tap a character to attack.
+[01:24.056] AI0 attack decision: (2,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | cannot-atk≤T4} → (2,1) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down}
+[01:24.396] Revealed: P1 (2,1) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[01:24.396] Dice rolled: 3
+[01:24.400] MSG: Fujin wins!
+[01:29.056] Crystals: P1 4000 → 3750 (-250)  [battle]
+[01:30.454] Attack P0(2,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | cannot-atk≤T4} → P1(2,1)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=3  ATK=35 vs DEF=5  → WIN
+[01:30.454] Anim: 3A  △ P1(2,1)
+[01:30.454] Card destroyed  P1 (2,1) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[01:30.958] Mode selected P0: ATTACK
+[01:30.964] Attack phase P0: 1 attack(s) available
+[01:30.964] MSG: Player 1: tap a character to attack.
+[01:31.264] AI0 attack decision: (0,1)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature | face-down} → (2,0) "Alarm" {cost 0}
+[01:31.609] Revealed: P0 (0,1) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[01:31.630] Revealed: P1 (2,0) "Alarm" {cost 0}
+[01:31.630] Dice rolled: 4
+[01:31.905] MSG: Trap triggered: Alarm!
+[01:31.905] MSG: Electrogazer negates zero-cost traps!
+[01:35.996] Attack P0(0,1)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} → P1(2,0)"Alarm"  Dice=4  ATK=0 vs DEF=0  → TIE
+[01:35.996] Anim: exchange  (no destruction)
+[01:36.494] Turn ended  P0  |  Crystals P0=3650 P1=3750
+
+--- Turn 10  |  Player 1  |  Crystals P0=3650 P1=3750 ---
+P0:   [  — ][Nuki][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][Fuji][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Elec][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:37.090] Mode selected P1: ATTACK
+[01:37.097] Attack phase P1: 2 attack(s) available
+[01:37.097] MSG: Player 2: tap a character to attack.
+[01:37.389] AI1 attack decision: (1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → (2,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | cannot-atk≤T4}
+[01:37.690] Dice rolled: 2
+[01:37.701] MSG: Electrogazer wins!
+[01:42.382] Crystals: P0 3650 → 3200 (-450)  [battle]
+[01:43.779] Attack P1(1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P0(2,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | cannot-atk≤T4}  Dice=2  ATK=80 vs DEF=40  → WIN
+[01:43.779] Anim: 3A  △ P0(2,2)
+[01:43.779] Card destroyed  P0 (2,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | cannot-atk≤T4}
+[01:44.078] Turn ended  P1  |  Crystals P0=3200 P1=3750
+
+--- Turn 11  |  Player 0  |  Crystals P0=3200 P1=3750 ---
+P0:   [  — ][Nuki][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Elec][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:44.672] Mode selected P0: ATTACK
+[01:44.676] Attack phase P0: 2 attack(s) available
+[01:44.676] MSG: Player 1: tap a character to attack.
+[01:44.972] AI0 attack decision: (0,1)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} → (1,0) "Flame Trap" {cost 250}
+[01:45.305] Revealed: P1 (1,0) "Flame Trap" {cost 250}
+[01:45.305] Dice rolled: 2
+[01:45.584] MSG: Trap triggered: Flame Trap!
+[01:49.691] Crystals: P1 3750 → 3500 (-250)  [trap cost]
+[01:51.081] MSG: Spike Trap: Nuki the Tanuki permanently loses 10 ATK!
+[01:51.086] Trap: "Flame Trap" triggered  P0(0,1)→P1(1,0)
+[01:51.086] Anim: 3D  (attacker survives)
+[01:51.590] Mode selected P0: ATTACK
+[01:51.596] Attack phase P0: 1 attack(s) available
+[01:51.596] MSG: Player 1: tap a character to attack.
+[01:51.897] AI0 attack decision: (1,1)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos | face-down} → (3,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down}
+[01:52.281] Revealed: P0 (1,1) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:52.308] Revealed: P1 (3,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[01:52.308] Dice rolled: 3
+[01:52.312] MSG: Vampire Servant wins!
+[01:56.890] Crystals: P1 3500 → 2640 (-860)  [battle]
+[01:58.291] Attack P0(1,1)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} → P1(3,1)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}  Dice=3  ATK=20 vs DEF=0  → WIN
+[01:58.292] Anim: 3A  △ P1(3,1)
+[01:58.292] Card destroyed  P1 (3,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[01:58.787] Turn ended  P0  |  Crystals P0=3200 P1=2640
+
+--- Turn 12  |  Player 1  |  Crystals P0=3200 P1=2640 ---
+P0:   [  — ][Nuki][  — ][  ? ][  — ]
+      [  ? ][Vamp][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Elec][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:59.381] Mode selected P1: ATTACK
+[01:59.390] Attack phase P1: 2 attack(s) available
+[01:59.390] MSG: Player 2: tap a character to attack.
+[01:59.681] AI1 attack decision: (1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → (1,1) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:59.981] Dice rolled: 3
+[01:59.991] MSG: Electrogazer wins!
+[02:04.673] Crystals: P0 3200 → 2400 (-800)  [battle]
+[02:06.071] Attack P1(1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P0(1,1)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=3  ATK=80 vs DEF=20  → WIN
+[02:06.071] Anim: 3A  △ P0(1,1)
+[02:06.071] Card destroyed  P0 (1,1) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[02:06.366] Turn ended  P1  |  Crystals P0=2400 P1=2640
+
+--- Turn 13  |  Player 0  |  Crystals P0=2400 P1=2640 ---
+P0:   [  — ][Nuki][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Elec][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:06.965] Mode selected P0: ATTACK
+[02:06.970] Attack phase P0: 2 attack(s) available
+[02:06.970] MSG: Player 1: tap a character to attack.
+[02:07.264] AI0 attack decision: (0,1)"Nuki the Tanuki" {Unit ATK0 DEF10 | cost 100 | affinity Nature | base 0/10} → (2,4) (dead-end)
+[02:07.564] Dice rolled: 4
+[02:07.587] MSG: Nothing happens — Dead End.
+[02:10.960] Attack P0(0,1)"Nuki the Tanuki" {Unit ATK0 DEF10 | cost 100 | affinity Nature | base 0/10} → P1(2,4)(empty)  Dice=4  → DEAD_END
+[02:10.960] Anim: 3F  (blank slot)
+[02:13.469] Turn ended  P0  |  Crystals P0=2400 P1=2640
+
+--- Turn 14  |  Player 1  |  Crystals P0=2400 P1=2640 ---
+P0:   [  — ][Nuki][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Elec][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:14.056] Mode selected P1: ATTACK
+[02:14.062] Attack phase P1: 2 attack(s) available
+[02:14.063] MSG: Player 2: tap a character to attack.
+[02:14.356] AI1 attack decision: (1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → (0,1) "Nuki the Tanuki" {Unit ATK0 DEF10 | cost 100 | affinity Nature | base 0/10}
+[02:14.655] Dice rolled: 2
+[02:14.666] MSG: Electrogazer wins!
+[02:19.348] Crystals: P0 2400 → 2300 (-100)  [battle]
+[02:20.745] Attack P1(1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P0(0,1)"Nuki the Tanuki" {Unit ATK0 DEF10 | cost 100 | affinity Nature | base 0/10}  Dice=2  ATK=80 vs DEF=10  → WIN
+[02:20.745] Anim: 3A  △ P0(0,1)
+[02:20.745] Card destroyed  P0 (0,1) "Nuki the Tanuki" {Unit ATK0 DEF10 | cost 100 | affinity Nature | base 0/10}
+[02:21.044] Turn ended  P1  |  Crystals P0=2300 P1=2640
+
+--- Turn 15  |  Player 0  |  Crystals P0=2300 P1=2640 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Elec][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:21.641] Mode selected P0: ATTACK
+[02:21.646] Attack phase P0: 2 attack(s) available
+[02:21.646] MSG: Player 1: tap a character to attack.
+[02:21.939] AI0 attack decision: (1,0)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down} → (2,3) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down}
+[02:22.276] Revealed: P0 (1,0) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[02:22.310] Revealed: P1 (2,3) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[02:22.310] Dice rolled: 4
+[02:22.314] MSG: Dark Tengu: permanently -5 DEF from defending.
+[02:28.039] Crystals: P0 2300 → 2050 (-250)  [battle]
+[02:29.439] Attack P0(1,0)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P1(2,3)"Dark Tengu" {Unit ATK25 DEF20 | cost 250 | affinity Chaos | base 25/20 | 1xDEF-used}  Dice=4  ATK=20 vs DEF=25  → LOSE
+[02:29.439] Anim: 3B  △ P0(1,0)
+[02:29.439] Card destroyed  P0 (1,0) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[02:29.932] Mode selected P0: ATTACK
+[02:29.938] Attack phase P0: 1 attack(s) available
+[02:29.939] MSG: Player 1: tap a character to attack.
+[02:30.231] AI0 attack decision: (1,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down} → (2,3) "Dark Tengu" {Unit ATK25 DEF20 | cost 250 | affinity Chaos | base 25/20 | 1xDEF-used}
+[02:30.565] Revealed: P0 (1,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[02:30.565] Dice rolled: 5
+[02:30.569] MSG: Scarlet Mutant wins!
+[02:35.223] Crystals: P1 2640 → 2390 (-250)  [battle]
+[02:36.622] Attack P0(1,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P1(2,3)"Dark Tengu" {Unit ATK25 DEF20 | cost 250 | affinity Chaos | base 25/20 | 1xDEF-used}  Dice=5  ATK=35 vs DEF=20  → WIN
+[02:36.622] Anim: 3A  △ P1(2,3)
+[02:36.622] Card destroyed  P1 (2,3) "Dark Tengu" {Unit ATK25 DEF20 | cost 250 | affinity Chaos | base 25/20 | 1xDEF-used}
+[02:37.120] Turn ended  P0  |  Crystals P0=2050 P1=2390
+
+--- Turn 16  |  Player 1  |  Crystals P0=2050 P1=2390 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][Scar][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Elec][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:37.715] Mode selected P1: ATTACK
+[02:37.723] Attack phase P1: 2 attack(s) available
+[02:37.723] MSG: Player 2: tap a character to attack.
+[02:38.015] AI1 attack decision: (1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → (1,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[02:38.314] Dice rolled: 2
+[02:38.328] MSG: Electrogazer wins!
+[02:43.006] Crystals: P0 2050 → 1700 (-350)  [battle]
+[02:44.404] Attack P1(1,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P0(1,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=2  ATK=80 vs DEF=30  → WIN
+[02:44.405] Anim: 3A  △ P0(1,3)
+[02:44.405] Card destroyed  P0 (1,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[02:44.702] Turn ended  P1  |  Crystals P0=1700 P1=2390
+
+--- Turn 17  |  Player 0  |  Crystals P0=1700 P1=2390 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Elec][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:45.295] Mode selected P0: ATTACK
+[02:45.300] Attack phase P0: 2 attack(s) available
+[02:45.30

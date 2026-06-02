@@ -1022,6 +1022,9 @@ func resolve_brainwash_friendly_fire(attacker_player: int, friendly_pos: Vector2
 
 	await _apply_friendly_fire_battle_result(
 		result, attacker_player, attacker_pos, friendly_pos, attacker, ally)
+	# Log the redirected combat in standard Attack format (the original Brainwash trap
+	# hit was already logged as "Trap: triggered"; this adds the friendly-fire resolution).
+	emit_signal("attack_completed", attacker_pos, friendly_pos, result)
 	complete_brainwash_redirect()
 
 func _apply_friendly_fire_battle_result(

@@ -86,8 +86,9 @@ func start_logging(board: Node) -> void:
 	_logged_destroy_slots.clear()
 	_pending_game_over_winner = -999
 
-	if batch_running and batch_completed > 0:
-		_log_lines.clear()
+	# Always reset per-battle so E2E scenarios don't accumulate into one another.
+	# (batch mode also needs this — each iteration should start with a clean slate.)
+	_log_lines.clear()
 
 	# Open log file
 	_ensure_log_dir()

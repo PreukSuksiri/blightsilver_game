@@ -1,0 +1,558 @@
+=== Battle of Rogue Roomba Rampage ===
+Battle started: 2026-06-01 16:22:36.455
+Game Session of Iced Coffee (started 2026-06-01 15:58:46.241)
+=== Card E2E Test ===
+Scenario ID:  E2E-Big-Thug-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Big-Thug-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Big Thug (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Big Thug" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Big Thug
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Big\ Thug".*ATK=40\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=40 when Big Thug attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Big Thug
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Big Thug
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Prayer, Accident
+P1 Tech hand: War Supply, Spy, Bribe
+P0:   [C:Moon][  — ][  — ][C:Need][C:Lase]
+      [C:Dark][C:Tomb][T:Pepp][C:Dark][  — ]
+      [  — ][T:Expl][C:Big ][  — ][T:Defe]
+      [T:Alar][C:Scar][  — ][C:Armo][  — ]
+      [C:Choi][T:Snar][  — ][  — ][C:Vamp]
+P1:   [C:Skel][  — ][C:War ][C:Whit][  — ]
+      [  — ][C:Lazy][C:Flam][C:Shre][T:Foul]
+      [  — ][C:Curs][C:Chao][C:Lab ][  — ]
+      [T:Flam][C:Dark][C:Doom][C:Nept][  — ]
+      [T:Red ][T:Host][C:Need][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:05.328] Mode selected P0: ATTACK
+[00:05.333] Attack phase P0: 2 attack(s) available
+[00:05.333] MSG: Player 1: tap a character to attack.
+[00:05.629] AI0 attack decision: (2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.981] Revealed: P0 (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:06.009] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:06.009] Dice rolled: 1
+[00:06.012] MSG: Big Thug wins!
+[00:10.596] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:11.994] Attack P0(2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=40 vs DEF=0  → WIN
+[00:11.994] Anim: 3A  △ P1(2,2)
+[00:11.994] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.495] Mode selected P0: ATTACK
+[00:12.498] Attack phase P0: 1 attack(s) available
+[00:12.498] MSG: Player 1: tap a character to attack.
+[00:12.787] AI0 attack decision: (0,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down} → (0,0) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down}
+[00:13.140] Revealed: P0 (0,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[00:13.164] Revealed: P1 (0,0) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:13.164] Dice rolled: 5
+[00:13.168] MSG: Moon Rover wins!
+[00:17.771] Crystals: P1 4900 → 4600 (-300)  [battle]
+[00:19.169] Attack P0(0,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → P1(0,0)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=5  ATK=15 vs DEF=5  → WIN
+[00:19.169] Anim: 3A  △ P1(0,0)
+[00:19.169] Card destroyed  P1 (0,0) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:19.667] Turn ended  P0  |  Crystals P0=5000 P1=4600
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4600 ---
+P0:   [Moon][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Big ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:21.745] Crystals: P1 4600 → 3800 (-800)  [union]
+[00:21.795] Revealed: P1 (0,2) "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}
+[00:21.795] Union summoned P1: "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} from "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down}, "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}
+[00:21.796] MSG: Player 2 summoned [Burning Phoenix] using: "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down}, "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}
+[00:24.991] Crystals: P1 3800 → 3750 (-50)  [skip tax]
+[00:24.992] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:26.377] Turn ended  P1  |  Crystals P0=5000 P1=3750
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3750 ---
+P0:   [Moon][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Big ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Burn][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:26.973] Mode selected P0: ATTACK
+[00:26.982] Attack phase P0: 2 attack(s) available
+[00:26.982] MSG: Player 1: tap a character to attack.
+[00:27.270] AI0 attack decision: (0,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → (1,1) (dead-end)
+[00:27.571] Dice rolled: 4
+[00:27.598] MSG: Nothing happens — Dead End.
+[00:30.970] Attack P0(0,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[00:30.970] Anim: 3F  (blank slot)
+[00:30.971] Target prompt: "Moon Rover: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:31.361] AI0 target chosen: (4,4)
+[00:31.461] Mode selected P0: ATTACK
+[00:31.464] Attack phase P0: 1 attack(s) available
+[00:31.465] MSG: Player 1: tap a character to attack.
+[00:31.762] AI0 attack decision: (2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → (1,2) (dead-end)
+[00:32.062] Dice rolled: 2
+[00:32.085] MSG: Nothing happens — Dead End.
+[00:35.460] Attack P0(2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(1,2)(empty)  Dice=2  → DEAD_END
+[00:35.460] Anim: 3F  (blank slot)
+[00:35.959] Turn ended  P0  |  Crystals P0=5000 P1=3750
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=3750 ---
+P0:   [Moon][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Big ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Burn][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:36.554] Mode selected P1: ATTACK
+[00:36.562] Attack phase P1: 2 attack(s) available
+[00:36.562] MSG: Player 2: tap a character to attack.
+[00:36.854] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:37.154] Dice rolled: 2
+[00:37.202] MSG: Burning Phoenix wins!
+[00:41.829] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:43.227] Attack P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P0(2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=2  ATK=125 vs DEF=35  → WIN
+[00:43.228] Anim: 3A  △ P0(2,2)
+[00:43.228] Card destroyed  P0 (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:43.526] Turn ended  P1  |  Crystals P0=4600 P1=3750
+
+--- Turn 5  |  Player 0  |  Crystals P0=4600 P1=3750 ---
+P0:   [Moon][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Burn][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:44.122] Mode selected P0: ATTACK
+[00:44.124] Attack phase P0: 2 attack(s) available
+[00:44.124] MSG: Player 1: tap a character to attack.
+[00:44.420] AI0 attack decision: (0,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → (0,1) (dead-end)
+[00:44.720] Dice rolled: 5
+[00:44.747] MSG: Nothing happens — Dead End.
+[00:48.119] Attack P0(0,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[00:48.119] Anim: 3F  (blank slot)
+[00:48.119] Target prompt: "Moon Rover: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:48.511] AI0 target chosen: (2,0)
+[00:48.612] Mode selected P0: ATTACK
+[00:48.615] Attack phase P0: 1 attack(s) available
+[00:48.615] MSG: Player 1: tap a character to attack.
+[00:48.912] AI0 attack decision: (1,0)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (1,3) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down}
+[00:49.244] Revealed: P0 (1,0) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:49.274] Revealed: P1 (1,3) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:49.275] Dice rolled: 5
+[00:49.279] MSG: Dark Monk wins!
+[00:53.888] Crystals: P1 3750 → 3500 (-250)  [battle]
+[00:55.282] Attack P0(1,0)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P1(1,3)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=5  ATK=15 vs DEF=5  → WIN
+[00:55.283] Anim: 3A  △ P1(1,3)
+[00:55.283] Card destroyed  P1 (1,3) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:55.781] Turn ended  P0  |  Crystals P0=4600 P1=3500
+
+--- Turn 6  |  Player 1  |  Crystals P0=4600 P1=3500 ---
+P0:   [Moon][  — ][  — ][  ? ][  ? ]
+      [Dark][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Burn][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:56.375] Mode selected P1: ATTACK
+[00:56.383] Attack phase P1: 2 attack(s) available
+[00:56.383] MSG: Player 2: tap a character to attack.
+[00:56.674] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (0,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[00:56.975] Dice rolled: 3
+[00:57.027] MSG: Burning Phoenix wins!
+[01:01.666] Crystals: P0 4600 → 4400 (-200)  [battle]
+[01:03.064] Attack P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P0(0,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=3  ATK=125 vs DEF=20  → WIN
+[01:03.064] Anim: 3A  △ P0(0,0)
+[01:03.064] Card destroyed  P0 (0,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:03.363] Turn ended  P1  |  Crystals P0=4400 P1=3500
+
+--- Turn 7  |  Player 0  |  Crystals P0=4400 P1=3500 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [Dark][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Burn][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:03.960] Mode selected P0: ATTACK
+[01:03.968] Attack phase P0: 2 attack(s) available
+[01:03.968] MSG: Player 1: tap a character to attack.
+[01:04.258] AI0 attack decision: (1,0)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → (2,1) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos | face-down}
+[01:04.600] Revealed: P1 (2,1) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[01:04.600] Dice rolled: 4
+[01:09.367] Crystals: P0 4400 → 4100 (-300)  [battle]
+[01:10.764] Attack P0(1,0)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P1(2,1)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}  Dice=4  ATK=15 vs DEF=25  → LOSE
+[01:10.764] Anim: 3B  △ P0(1,0)
+[01:10.764] Card destroyed  P0 (1,0) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:11.263] Mode selected P0: ATTACK
+[01:11.270] Attack phase P0: 1 attack(s) available
+[01:11.271] MSG: Player 1: tap a character to attack.
+[01:11.561] AI0 attack decision: (1,1)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down} → (2,1) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[01:11.905] Revealed: P0 (1,1) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:11.906] Dice rolled: 1
+[01:11.909] MSG: Tomb Bandit wins!
+[01:16.613] Crystals: P1 3500 → 3200 (-300)  [battle]
+[01:18.011] Attack P0(1,1)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P1(2,1)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}  Dice=1  ATK=75 vs DEF=25  → WIN
+[01:18.011] Anim: 3A  △ P1(2,1)
+[01:18.011] Card destroyed  P1 (2,1) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[01:18.500] Turn ended  P0  |  Crystals P0=4100 P1=3200
+
+--- Turn 8  |  Player 1  |  Crystals P0=4100 P1=3200 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Tomb][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Burn][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:19.095] Mode selected P1: ATTACK
+[01:19.102] Attack phase P1: 2 attack(s) available
+[01:19.102] MSG: Player 2: tap a character to attack.
+[01:19.395] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (1,1) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:19.694] Dice rolled: 1
+[01:19.757] MSG: Burning Phoenix wins!
+[01:24.345] Crystals: P0 4100 → 3100 (-1000)  [battle]
+[01:25.744] Attack P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P0(1,1)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=1  ATK=125 vs DEF=60  → WIN
+[01:25.745] Anim: 3A  △ P0(1,1)
+[01:25.745] Card destroyed  P0 (1,1) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:26.050] Turn ended  P1  |  Crystals P0=3100 P1=3200
+
+--- Turn 9  |  Player 0  |  Crystals P0=3100 P1=3200 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Burn][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:26.658] Mode selected P0: ATTACK
+[01:26.664] Attack phase P0: 2 attack(s) available
+[01:26.665] MSG: Player 1: tap a character to attack.
+[01:26.962] AI0 attack decision: (4,4)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down} → (0,2) "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}
+[01:27.332] Revealed: P0 (4,4) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:27.333] Dice rolled: 5
+[01:27.369] MSG: Both cards are destroyed!
+[01:27.370] MSG: Vampire Duchess: only a Union card can destroy Burning Phoenix!
+[01:32.130] Crystals: P0 3100 → 2300 (-800)  [battle]
+[01:33.528] Attack P0(4,4)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} → P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}  Dice=5  ATK=50 vs DEF=50  → LOSE
+[01:33.528] Anim: 3B  △ P0(4,4)
+[01:33.528] Card destroyed  P0 (4,4) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:34.024] Mode selected P0: ATTACK
+[01:34.027] Attack phase P0: 1 attack(s) available
+[01:34.027] MSG: Player 1: tap a character to attack.
+[01:34.320] AI0 attack decision: (0,3)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down} → (0,3) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature | face-down}
+[01:34.662] Revealed: P0 (0,3) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[01:34.686] Revealed: P1 (0,3) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[01:34.686] Dice rolled: 3
+[01:34.691] MSG: White Tiger: Attacker loses 15 ATK!
+[01:40.409] Crystals: P0 2300 → 2100 (-200)  [battle]
+[01:41.809] Attack P0(0,3)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} → P1(0,3)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}  Dice=3  ATK=0 vs DEF=25  → LOSE
+[01:41.809] Reckoning overlay: P0 "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} ATK -10
+[01:41.809] Anim: 3B  △ P0(0,3)
+[01:41.809] Card destroyed  P0 (0,3) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[01:42.305] Turn ended  P0  |  Crystals P0=2100 P1=3200
+
+--- Turn 10  |  Player 1  |  Crystals P0=2100 P1=3200 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Burn][Whit][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:42.900] Mode selected P1: ATTACK
+[01:42.908] Attack phase P1: 2 attack(s) available
+[01:42.908] MSG: Player 2: tap a character to attack.
+[01:43.200] AI1 attack decision: (0,3)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature} → (4,1) "Snare Trap" {cost 500}
+[01:43.538] Revealed: P0 (4,1) "Snare Trap" {cost 500}
+[01:43.538] Dice rolled: 4
+[01:43.797] MSG: Trap triggered: Snare Trap!
+[01:47.886] Crystals: P0 2100 → 1600 (-500)  [trap cost]
+[01:49.276] MSG: Snare Trap: White Tiger's effect nullified until end of next turn!
+[01:49.284] Trap: "Snare Trap" triggered  P1(0,3)→P0(4,1)
+[01:49.284] Anim: 3D  (attacker survives)
+[01:49.579] Turn ended  P1  |  Crystals P0=1600 P1=3200
+
+--- Turn 11  |  Player 0  |  Crystals P0=1600 P1=3200 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Burn][Whit][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[01:50.177] Mode selected P0: ATTACK
+[01:50.184] Attack phase P0: 2 attack(s) available
+[01:50.185] MSG: Player 1: tap a character to attack.
+[01:50.474] AI0 attack decision: (3,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down} → (0,3) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature | nullified≤T11}
+[01:50.814] Revealed: P0 (3,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[01:50.814] Dice rolled: 3
+[01:50.819] MSG: Armored Bee wins!
+[01:55.450] Crystals: P1 3200 → 2750 (-450)  [battle]
+[01:56.848] Attack P0(3,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P1(0,3)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature | nullified≤T11}  Dice=3  ATK=30 vs DEF=25  → WIN
+[01:56.848] Anim: 3A  △ P1(0,3)
+[01:56.848] Card destroyed  P1 (0,3) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature | nullified≤T11}
+[01:57.343] Mode selected P0: ATTACK
+[01:57.349] Attack phase P0: 1 attack(s) available
+[01:57.349] MSG: Player 1: tap a character to attack.
+[01:57.641] AI0 attack decision: (0,4)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic | face-down} → (1,0) (dead-end)
+[01:57.981] Revealed: P0 (0,4) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[01:57.981] Dice rolled: 3
+[01:57.995] MSG: Nothing happens — Dead End.
+[02:01.353] Attack P0(0,4)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} → P1(1,0)(empty)  Dice=3  → DEAD_END
+[02:01.353] Anim: 3F  (blank slot)
+[02:01.850] Turn ended  P0  |  Crystals P0=1600 P1=2750
+
+--- Turn 12  |  Player 1  |  Crystals P0=1600 P1=2750 ---
+P0:   [  — ][  — ][  — ][  — ][Lase]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][Armo][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Burn][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[02:02.445] Mode selected P1: ATTACK
+[02:02.453] Attack phase P1: 2 attack(s) available
+[02:02.453] MSG: Player 2: tap a character to attack.
+[02:02.745] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (3,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[02:03.045] Dice rolled: 2
+[02:03.096] MSG: Burning Phoenix wins!
+[02:08.746] Crystals: P0 1600 → 1120 (-480)  [battle]
+[02:10.144] Attack P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P0(3,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=2  ATK=125 vs DEF=60  → WIN
+[02:10.145] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} +DEF 60
+[02:10.145] Anim: 3A  △ P0(3,3)
+[02:10.145] Card destroyed  P0 (3,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[02:10.442] Turn ended  P1  |  Crystals P0=1120 P1=2750
+
+--- Turn 13  |  Player 0  |  Crystals P0=1120 P1=2750 ---
+P0:   [  — ][  — ][  — ][  — ][Lase]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Burn][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[02:11.040] Mode selected P0: ATTACK
+[02:11.047] Attack phase P0: 2 attack(s) available
+[02:11.048] MSG: Player 1: tap a character to attack.
+[02:11.337] AI0 attack decision: (0,4)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} → (3,2) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down}
+[02:11.676] Revealed: P1 (3,2) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[02:11.676] Dice rolled: 2
+[02:11.681] MSG: Laser Walker wins!
+[02:16.304] Crystals: P1 2750 → 2650 (-100)  [battle]
+[02:17.703] Attack P0(0,4)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} → P1(3,2)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}  Dice=2  ATK=20 vs DEF=15  → WIN
+[02:17.704] Anim: 3A  △ P1(3,2)
+[02:17.704] Card destroyed  P1 (3,2) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[02:20.218] Turn ended  P0  |  Crystals P0=1120 P1=2650
+
+--- Turn 14  |  Player 1  |  Crystals P0=1120 P1=2650 ---
+P0:   [  — ][  — ][  — ][  — ][Lase]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Burn][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[02:20.821] Mode selected P1: ATTACK
+[02:20.828] Attack phase P1: 2 attack(s) available
+[02:20.828] MSG: Player 2: tap a character to attack.
+[02:21.129] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (0,4) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[02:21.437] Dice rolled: 4
+[02:21.487] MSG: Burning Phoenix wins!
+[02:26.129] Crystals: P0 1120 → 870 (-250)  [battle]
+[02:27.527] Attack P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P0(0,4)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}  Dice=4  ATK=125 vs DEF=10  → WIN
+[02:27.528] Anim: 3A  △ P0(0,4)
+[02:27.528] Card destroyed  P0 (0,4) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[02:27.822] Turn ended  P1  |  Crystals P0=870 P1=2650
+
+--- Turn 15  |  Player 0  |  Crystals P0=870 P1=2650 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Burn][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[02:28.419] Mode selected P0: ATTACK
+[02:28.424] Attack phase P0: 2 attack(s) available
+[02:28.424] MSG: Player 1: tap a character to attack.
+[02:28.716] AI0 attack decision: (1,3)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down} → (3,0) "Flame Trap" {cost 250}
+[02:29.060] Revealed: P0 (1,3) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[02:29.103] Revealed: P1 (3,0) "Flame Trap" {cost 250}
+[02:29.103] Dice rolled: 2
+[02:29.348] MSG: Trap triggered: Flame Trap!
+[02:33.434] Crystals: P1 2650 → 2400 (-250)  [trap cost]
+[02:34.824] MSG: Spike Trap: Dark Tengu permanently loses 10 ATK!
+[02:34.830] Trap: "Flame Trap" triggered  P0(1,3)→P1(3,0)
+[02:34.830] Anim: 3D  (attacker survives)
+[02:34.830] MSG: Dark Tengu: Self ATK debuff applied.
+[02:37.336] Turn ended  P0  |  Crystals P0=870 P1=2400
+
+--- Turn 16  |  Player 1  |  Crystals P0=870 P1=2400 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][Dark][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Burn][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[02:37.933] Mode selected P1: ATTACK
+[02:37.941] Attack phase P1: 2 attack(s) available
+[02:37.941] MSG: Player 2: tap a character to attack.
+[02:38.233] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (1,3) "Dark Tengu" {Unit ATK10 DEF25 | cost 250 | affinity Chaos | base 10/25 | flags:atk_debuff_used}
+[02:38.533] Dice rolled: 1
+[02:38.584] MSG: Burning Phoenix wins!
+[02:43.209] Crystals: P0 870 → 620 (-250)  [battle]
+[02:44.607] Attack P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P0(1,3)"Dark Tengu" {Unit ATK10 DEF25 | cost 250 | affinity Chaos | base 10/25 | flags:atk_debuff_used}  Dice=1  ATK=125 vs DEF=25  → WIN
+[02:44.607] Anim: 3A  △ P0(1,3)
+[02:44.608] Card destroyed  P0 (1,3) "Dark Tengu" {Unit ATK10 DEF25 | cost 250 | affinity Chaos | base 10/25 | flags:atk_debuff_used}
+[02:44.905] Turn ended  P1  |  Crystals P0=620 P1=2400
+
+--- Turn 17  |  Player 0  |  Crystals P0=620 P1=2400 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Burn][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[02:45.500] Mode selected P0: ATTACK
+[02:45.506] Attack phase P0: 2 attack(s) available
+[02:45.507] MSG: Player 1: tap a character to attack.
+[02:45.799] AI0 attack decision: (3,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down} → (0,4) (dead-end)
+[02:46.167] Revealed: P0 (3,1) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[02:46.167] Dice rolled: 2
+[02:46.181] MSG: Nothing happens — Dead End.
+[02:49.530] Attack P0(3,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P1(0,4)(empty)  Dice=2  → DEAD_END
+[02:49.531] Anim: 3F  (blank slot)
+[02:50.024] Mode selected P0: ATTACK
+[02:50.030] Attack phase P0: 1 attack(s) available
+[02:50.030] MSG: Player 1: tap a character to attack.
+[02:50.323] AI0 attack decision: (4,0)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down} → (3,1) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | face-down}
+[02:50.660] Revealed: P0 (4,0) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[02:50.690] Revealed: P1 (3,1) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[02:50.690] Dice rolled: 2
+[02:55.408] Crystals: P0 620 → 370 (-250)  [battle]
+[02:56.808] Attack P0(4,0)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(3,1)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}  Dice=2  ATK=25 vs DEF=50  → LOSE
+[02:56.808] Anim: 3B  △ P0(4,0)
+[02:56.808] Card destroyed  P0 (4,0) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[02:57.305] Turn ended  P0  |  Crystals P0=370 P1=2400
+
+--- Turn 18  |  Player 1  |  Crystals P0=370 P1=2400 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Scar][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Burn][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][Dark][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[02:57.900] Mode selected P1: ATTACK
+[02:57.908] Attack phase P1: 2 attack(s) available
+[02:57.908] MSG: Player 2: tap a character to attack.
+[02:58.199] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (3,1) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[02:58.500] Dice rolled: 2
+[02:58.549] MSG: Burning Phoenix wins!
+[03:03.166] Crystals: P0 370 → 20 (-350)  [battle]
+[03:04.568] Attack P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P0(3,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=2  ATK=125 vs DEF=30  → WIN
+[03:04.568] Anim: 3A  △ P0(3,1)
+[03:04.568] Card destroyed  P0 (3,1) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+
+=== GAME OVER ===
+[03:04.570] AI Player 1 wins
+[03:04.570] Reason: all_destroyed
+[03:04.570] Final crystals — P0: 20  P1: 2400  |  Turns: 18
+[03:04.570] Log saved to: res://logs/results/2026-06-01_15-58-46_241_iced_coffee/battle_rogue_roomba_rampage_2026-06-01_16-22-36_455.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Big-Thug-002
+Highlight: Big Thug (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     18  |  AI timeouts: 0
+===

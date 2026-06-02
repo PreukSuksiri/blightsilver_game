@@ -1,0 +1,414 @@
+=== Battle of Clippy's Revenge ===
+Battle started: 2026-06-01 23:39:51.211
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Shotgun-Shark-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Shotgun-Shark-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Shotgun Shark (Character)  [setup: Scythe Shark, Chaotic Wisp]
+Ability:      BOOST_PER_TYPED_CARD_ON_FIELD — +10 ATK per shark card on the field
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Shotgun Shark" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Shotgun Shark
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Shotgun\ Shark".*ATK=85\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +10 ATK per shark. Companion Scythe Shark starts face-up so boost counts on Turn 1. ATK=85.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Shotgun Shark
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Shotgun Shark, (2,1) Scythe Shark
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Resurrection, Great Diplomacy
+P1 Tech hand: Tease, Accident, Siege Cannon
+P0:   [T:Host][  — ][C:Heav][T:Trap][T:Hard]
+      [  — ][C:Soni][C:Tomb][C:Shep][T:Self]
+      [  — ][C:Scyt][C:Shot][C:Scou][  — ]
+      [T:Alar][C:Aray][C:Claw][C:Jira][C:Deat]
+      [C:Joan][C:Skel][C:Nept][  — ][T:Deco]
+P1:   [T:Blac][  — ][C:Mind][  — ][T:Self]
+      [  — ][C:Deat][C:Jose][T:Flam][  — ]
+      [C:Mine][  — ][C:Chao][  — ][C:Shep]
+      [  — ][C:Stai][  — ][C:Dark][  — ]
+      [C:Lab ][T:Defe][C:Mage][T:Deco][T:Expl]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.310] Mode selected P0: ATTACK
+[00:05.314] Attack phase P0: 2 attack(s) available
+[00:05.314] MSG: Player 1: tap a character to attack.
+[00:05.617] AI0 attack decision: (2,2)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.961] Revealed: P0 (2,2) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:05.986] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.987] Dice rolled: 2
+[00:05.990] MSG: Shotgun Shark wins!
+[00:10.584] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:11.982] Attack P0(2,2)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=75 vs DEF=0  → WIN
+[00:11.982] Anim: 3A  △ P1(2,2)
+[00:11.982] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.485] Mode selected P0: ATTACK
+[00:12.491] Attack phase P0: 1 attack(s) available
+[00:12.491] MSG: Player 1: tap a character to attack.
+[00:12.790] AI0 attack decision: (1,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down} → (1,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down}
+[00:13.137] Revealed: P0 (1,2) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:13.166] Revealed: P1 (1,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:13.167] Dice rolled: 4
+[00:13.170] MSG: Tomb Bandit wins!
+[00:17.847] Crystals: P1 4900 → 4300 (-600)  [battle]
+[00:19.246] Attack P0(1,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P1(1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=4  ATK=75 vs DEF=25  → WIN
+[00:19.246] Anim: 3A  △ P1(1,2)
+[00:19.246] Card destroyed  P1 (1,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:19.743] Turn ended  P0  |  Crystals P0=5000 P1=4300
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4300 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][Tomb][  ? ][  ? ]
+      [  — ][  ? ][Shot][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:20.351] Mode selected P1: ATTACK
+[00:20.357] Attack phase P1: 2 attack(s) available
+[00:20.358] MSG: Player 2: tap a character to attack.
+[00:20.638] AI1 attack decision: (0,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | face-down} → (1,2) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:20.970] Revealed: P1 (0,2) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:20.970] Dice rolled: 1
+[00:20.975] MSG: Mind Flayer wins!
+[00:26.613] Crystals: P0 5000 → 4000 (-1000)  [battle]
+[00:28.011] Attack P1(0,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(1,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=1  ATK=150 vs DEF=60  → WIN
+[00:28.011] Reckoning overlay: P1 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} +ATK 50
+[00:28.011] Anim: 3A  △ P0(1,2)
+[00:28.011] Card destroyed  P0 (1,2) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:28.309] Turn ended  P1  |  Crystals P0=4000 P1=4300
+
+--- Turn 3  |  Player 0  |  Crystals P0=4000 P1=4300 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][Shot][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][Mind][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:28.909] Mode selected P0: ATTACK
+[00:28.916] Attack phase P0: 2 attack(s) available
+[00:28.918] MSG: Player 1: tap a character to attack.
+[00:29.209] AI0 attack decision: (2,2)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → (0,2) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:29.509] Dice rolled: 4
+[00:29.518] MSG: Shotgun Shark wins!
+[00:34.201] Crystals: P1 4300 → 2800 (-1500)  [battle]
+[00:35.598] Attack P0(2,2)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → P1(0,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}  Dice=4  ATK=75 vs DEF=70  → WIN
+[00:35.599] Anim: 3A  △ P1(0,2)
+[00:35.599] Card destroyed  P1 (0,2) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:36.093] Mode selected P0: ATTACK
+[00:36.098] Attack phase P0: 1 attack(s) available
+[00:36.098] MSG: Player 1: tap a character to attack.
+[00:36.390] AI0 attack decision: (2,1)"Scythe Shark" {Unit ATK45 DEF35 | cost 550 | affinity Nature | base 35/35 | buff +permATK10 | face-down} → (2,0) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic | face-down}
+[00:36.731] Revealed: P0 (2,1) "Scythe Shark" {Unit ATK45 DEF35 | cost 550 | affinity Nature | base 35/35 | buff +permATK10}
+[00:36.759] Revealed: P1 (2,0) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[00:36.760] Dice rolled: 4
+[00:36.764] MSG: Scythe Shark wins!
+[00:41.376] Crystals: P1 2800 → 2500 (-300)  [battle]
+[00:42.775] Attack P0(2,1)"Scythe Shark" {Unit ATK45 DEF35 | cost 550 | affinity Nature | base 35/35 | buff +permATK10} → P1(2,0)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}  Dice=4  ATK=45 vs DEF=15  → WIN
+[00:42.776] Anim: 3A  △ P1(2,0)
+[00:42.776] Card destroyed  P1 (2,0) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[00:43.273] Turn ended  P0  |  Crystals P0=4000 P1=2500
+
+--- Turn 4  |  Player 1  |  Crystals P0=4000 P1=2500 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][Scyt][Shot][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:43.876] Mode selected P1: ATTACK
+[00:43.882] Attack phase P1: 2 attack(s) available
+[00:43.883] MSG: Player 2: tap a character to attack.
+[00:44.166] AI1 attack decision: (3,3)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down} → (2,2) "Shotgun Shark" {Unit ATK85 DEF25 | cost 900 | affinity Nature | base 75/25 | buff +permATK10}
+[00:44.502] Revealed: P1 (3,3) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[00:44.503] Dice rolled: 3
+[00:44.507] MSG: Both cards are destroyed!
+[00:49.076] Crystals: P1 2500 → 2250 (-250)  [battle]
+[00:50.467] Crystals: P0 4000 → 3100 (-900)  [battle]
+[00:51.857] Attack P1(3,3)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos} → P0(2,2)"Shotgun Shark" {Unit ATK85 DEF25 | cost 900 | affinity Nature | base 75/25 | buff +permATK10}  Dice=3  ATK=25 vs DEF=25  → TIE
+[00:51.857] Anim: 3C  △ P1(3,3) + △ P0(2,2)
+[00:51.857] Card destroyed  P1 (3,3) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[00:51.857] Card destroyed  P0 (2,2) "Shotgun Shark" {Unit ATK85 DEF25 | cost 900 | affinity Nature | base 75/25 | buff +permATK10}
+[00:51.858] MSG: Dark Tengu: Self ATK debuff applied.
+[00:52.152] Turn ended  P1  |  Crystals P0=3100 P1=2250
+
+--- Turn 5  |  Player 0  |  Crystals P0=3100 P1=2250 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][Scyt][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:52.751] Mode selected P0: ATTACK
+[00:52.756] Attack phase P0: 2 attack(s) available
+[00:52.757] MSG: Player 1: tap a character to attack.
+[00:53.050] AI0 attack decision: (2,1)"Scythe Shark" {Unit ATK45 DEF35 | cost 550 | affinity Nature | base 35/35 | buff +permATK10} → (2,1) (dead-end)
+[00:53.350] Dice rolled: 5
+[00:53.378] MSG: Nothing happens — Dead End.
+[00:56.746] Attack P0(2,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P1(2,1)(empty)  Dice=5  → DEAD_END
+[00:56.746] Anim: 3F  (blank slot)
+[00:57.242] Mode selected P0: ATTACK
+[00:57.248] Attack phase P0: 1 attack(s) available
+[00:57.248] MSG: Player 1: tap a character to attack.
+[00:57.541] AI0 attack decision: (1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down} → (2,4) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima | face-down}
+[00:57.879] Revealed: P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:57.902] Revealed: P1 (2,4) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:57.902] Dice rolled: 3
+[00:57.906] MSG: Sonic Seraph wins!
+[01:02.500] Crystals: P1 2250 → 1850 (-400)  [battle]
+[01:03.898] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(2,4)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=3  ATK=45 vs DEF=25  → WIN
+[01:03.899] Anim: 3A  △ P1(2,4)
+[01:03.899] Card destroyed  P1 (2,4) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:04.405] Turn ended  P0  |  Crystals P0=3100 P1=1850
+
+--- Turn 6  |  Player 1  |  Crystals P0=3100 P1=1850 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][Soni][  — ][  ? ][  ? ]
+      [  — ][Scyt][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:05.015] Mode selected P1: ATTACK
+[01:05.022] Attack phase P1: 2 attack(s) available
+[01:05.023] MSG: Player 2: tap a character to attack.
+[01:05.317] AI1 attack decision: (4,0)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio | face-down} → (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:05.663] Revealed: P1 (4,0) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:05.663] Dice rolled: 3
+[01:05.667] MSG: Lab Zombie wins!
+[01:10.322] Crystals: P0 3100 → 2550 (-550)  [battle]
+[01:11.720] Attack P1(4,0)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}  Dice=3  ATK=55 vs DEF=50  → WIN
+[01:11.721] Anim: 3A  △ P0(1,1)
+[01:11.721] Card destroyed  P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:12.026] Turn ended  P1  |  Crystals P0=2550 P1=1850
+
+--- Turn 7  |  Player 0  |  Crystals P0=2550 P1=1850 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Scyt][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Lab ][  ? ][  ? ][  ? ][  ? ]
+[01:12.617] Mode selected P0: ATTACK
+[01:12.624] Attack phase P0: 2 attack(s) available
+[01:12.625] MSG: Player 1: tap a character to attack.
+[01:12.924] AI0 attack decision: (2,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → (2,3) (dead-end)
+[01:13.234] Dice rolled: 5
+[01:13.262] MSG: Nothing happens — Dead End.
+[01:16.656] Attack P0(2,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P1(2,3)(empty)  Dice=5  → DEAD_END
+[01:16.656] Anim: 3F  (blank slot)
+[01:17.156] Mode selected P0: ATTACK
+[01:17.159] Attack phase P0: 1 attack(s) available
+[01:17.159] MSG: Player 1: tap a character to attack.
+[01:17.467] AI0 attack decision: (3,1)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos | face-down} → (3,2) (dead-end)
+[01:17.814] Revealed: P0 (3,1) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[01:17.814] Dice rolled: 2
+[01:17.827] MSG: Nothing happens — Dead End.
+[01:21.190] Attack P0(3,1)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos} → P1(3,2)(empty)  Dice=2  → DEAD_END
+[01:21.190] Anim: 3F  (blank slot)
+[01:21.697] Turn ended  P0  |  Crystals P0=2550 P1=1850
+
+--- Turn 8  |  Player 1  |  Crystals P0=2550 P1=1850 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Scyt][  — ][  ? ][  — ]
+      [  ? ][Aray][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Lab ][  ? ][  ? ][  ? ][  ? ]
+[01:22.303] Mode selected P1: ATTACK
+[01:22.311] Attack phase P1: 2 attack(s) available
+[01:22.312] MSG: Player 2: tap a character to attack.
+[01:22.609] AI1 attack decision: (4,0)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → (2,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[01:22.917] Dice rolled: 4
+[01:22.928] MSG: Lab Zombie wins!
+[01:27.617] Crystals: P0 2550 → 2000 (-550)  [battle]
+[01:29.016] Attack P1(4,0)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P0(2,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}  Dice=4  ATK=55 vs DEF=35  → WIN
+[01:29.017] Anim: 3A  △ P0(2,1)
+[01:29.017] Card destroyed  P0 (2,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[01:29.322] Turn ended  P1  |  Crystals P0=2000 P1=1850
+
+--- Turn 9  |  Player 0  |  Crystals P0=2000 P1=1850 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Aray][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Lab ][  ? ][  ? ][  ? ][  ? ]
+[01:29.922] Mode selected P0: ATTACK
+[01:29.930] Attack phase P0: 2 attack(s) available
+[01:29.930] MSG: Player 1: tap a character to attack.
+[01:30.229] AI0 attack decision: (3,1)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos} → (4,2) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos | face-down}
+[01:30.579] Revealed: P1 (4,2) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos}
+[01:30.579] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[01:30.579] Dice rolled: 1
+[01:35.370] Crystals: P0 2000 → 1600 (-400)  [battle]
+[01:36.771] Attack P0(3,1)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos} → P1(4,2)"Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}  Dice=1  ATK=15 vs DEF=20  → LOSE
+[01:36.772] Anim: 3B  △ P0(3,1)
+[01:36.772] Card destroyed  P0 (3,1) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[01:37.272] Mode selected P0: ATTACK
+[01:37.279] Attack phase P0: 1 attack(s) available
+[01:37.279] MSG: Player 1: tap a character to attack.
+[01:37.579] AI0 attack decision: (2,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down} → (4,2) "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}
+[01:37.924] Revealed: P0 (2,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:37.924] Dice rolled: 1
+[01:37.928] MSG: Scout Probe wins!
+[01:42.588] Crystals: P1 1850 → 1550 (-300)  [battle]
+[01:43.987] Attack P0(2,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(4,2)"Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}  Dice=1  ATK=40 vs DEF=20  → WIN
+[01:43.987] Anim: 3A  △ P1(4,2)
+[01:43.987] Card destroyed  P1 (4,2) "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}
+[01:43.994] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:44.388] AI0 target chosen: (4,1)
+[01:44.421] Revealed: P1 (4,1) "Defensive Pheromone" {cost 500}
+[01:44.421] MSG: Scout Probe: adjacent cell revealed.
+[01:44.424] Ability target resolved  P0
+[01:44.489] Turn ended  P0  |  Crystals P0=1600 P1=1550
+
+--- Turn 10  |  Player 1  |  Crystals P0=1600 P1=1550 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][Scou][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Lab ][Defe][  — ][  ? ][  ? ]
+[01:45.097] Mode selected P1: ATTACK
+[01:45.104] Attack phase P1: 2 attack(s) available
+[01:45.104] MSG: Player 2: tap a character to attack.
+[01:45.401] AI1 attack decision: (4,0)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → (2,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:45.708] Dice rolled: 3
+[01:45.718] MSG: Lab Zombie wins!
+[01:50.408] Crystals: P0 1600 → 900 (-700)  [battle]
+[01:51.807] Attack P1(4,0)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P0(2,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=3  ATK=55 vs DEF=50  → WIN
+[01:51.807] Anim: 3A  △ P0(2,3)
+[01:51.807] Card destroyed  P0 (2,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:52.112] Turn ended  P1  |  Crystals P0=900 P1=1550
+
+--- Turn 11  |  Player 0  |  Crystals P0=900 P1=1550 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Lab ][  — ][  — ][  ? ][  ? ]
+[01:52.714] Mode selected P0: ATTACK
+[01:52.719] Attack phase P0: 2 attack(s) available
+[01:52.720] MSG: Player 1: tap a character to attack.
+[01:53.020] AI0 attack decision: (3,4)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down} → (4,0) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:53.367] Revealed: P0 (3,4) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[01:53.367] Dice rolled: 2
+[01:53.371] MSG: Death Cobra wins!
+[01:58.030] Crystals: P1 1550 → 850 (-700)  [battle]
+[01:59.426] Attack P0(3,4)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P1(4,0)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}  Dice=2  ATK=85 vs DEF=40  → WIN
+[01:59.427] Anim: 3A  △ P1(4,0)
+[01:59.427] Card destroyed  P1 (4,0) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:59.930] Mode selected P0: ATTACK
+[01:59.935] Attack phase P0: 1 attack(s) available
+[01:59.935] MSG: Player 1: tap a character to attack.
+[02:00.237] AI0 attack decision: (3,3)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (0,1) (dead-end)
+[02:00.584] Revealed: P0 (3,3) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[02:00.584] Dice rolled: 4
+[02:00.599] MSG: Nothing happens — Dead End.
+[02:03.951] Attack P0(3,3)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(0,1)(empty)  Dice=4  → DEAD_END
+[02:03.951] Anim: 3F  (blank slot)
+[02:04.457] Turn ended  P0  |  Crystals P0=900 P1=850
+
+--- Turn 12  |  Player 1  |  Crystals P0=900 P1=850 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][Jira][Deat]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+[02:05.061] Mode selected P1: ATTACK
+[02:05.069] Attack phase P1: 2 attack(s) available
+[02:05.069] MSG: Player 2: tap a character to attack.
+[02:05.366] AI1 attack decision: (1,1)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down} → (3,4) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[02:05.676] Revealed: P1 (1,1) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[02:05.676] Dice rolled: 5
+[02:05.686] MSG: Death Cobra wins!
+[02:10.376] Crystals: P0 900 → 0 (-900)  [battle]
+
+=== GAME OVER ===
+[02:10.387] AI Player 1 wins
+[02:10.387] Reason: crystals
+[02:10.387] Final crystals — P0: 0  P1: 850  |  Turns: 12
+[02:10.387] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_clippys_revenge_2026-06-01_23-39-51_211.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Shotgun-Shark-002
+Highlight: Shotgun Shark (Character)  [setup: Scythe Shark, Chaotic Wisp]
+Result:    FAIL
+Detail:    Regex not matched: Attack P0\(2,2\)"Shotgun\ Shark".*ATK=85\s
+Turns:     12  |  AI timeouts: 0
+===

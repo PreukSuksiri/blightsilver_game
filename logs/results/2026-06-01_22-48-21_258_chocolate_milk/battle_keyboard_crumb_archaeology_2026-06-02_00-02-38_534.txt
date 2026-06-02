@@ -1,0 +1,302 @@
+=== Battle of Keyboard Crumb Archaeology ===
+Battle started: 2026-06-02 00:02:38.534
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Barros-the-Colossal-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Barros-the-Colossal-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Barros the Colossal (Union)  [setup: Chaotic Wisp]
+Setup role:   t2_union
+Verifies:
+  - Ability: "Barros the Colossal" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Barros the Colossal, Attack P\d\(\d+,\d+\)"Barros\ the\ Colossal", MSG:.*Barros
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Barros the Colossal — summon logged and/or union attacks with ATK=150.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Barros the Colossal
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Resurrection, Radar
+P1 Tech hand: Resurrection, Great Diplomacy, Bribe
+P0:   [C:Cany][C:Hamm][  — ][  — ][C:Echo]
+      [  — ][T:Self][  — ][T:Red ][C:Curs]
+      [  — ][C:Snip][  — ][T:Brai][  — ]
+      [  — ][T:Foul][  — ][T:Echo][T:Bunk]
+      [C:Ox P][C:Scyt][C:Armo][  — ][C:Heav]
+P1:   [  — ][T:Snar][C:Gold][T:Spik][T:Trap]
+      [  — ][C:Meli][C:Doom][C:Arch][  — ]
+      [  — ][C:Mafi][C:Chao][C:Gamm][T:Host]
+      [  — ][C:Curs][T:Bait][C:Cany][  — ]
+      [  — ][  — ][  — ][  — ][T:Hard]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:05.334] Mode selected P0: ATTACK
+[00:05.338] Attack phase P0: 2 attack(s) available
+[00:05.339] MSG: Player 1: tap a character to attack.
+[00:05.626] AI0 attack decision: (0,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down} → (2,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down}
+[00:05.969] Revealed: P0 (0,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:05.999] Revealed: P1 (2,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:05.999] Dice rolled: 4
+[00:06.003] MSG: Canyon Warg wins!
+[00:11.635] Crystals: P1 5000 → 4500 (-500)  [battle]
+[00:13.033] Attack P0(0,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P1(2,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}  Dice=4  ATK=70 vs DEF=0  → WIN
+[00:13.033] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} DEF -40
+[00:13.033] Anim: 3A  △ P1(2,1)
+[00:13.033] Card destroyed  P1 (2,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:13.527] Mode selected P0: ATTACK
+[00:13.533] Attack phase P0: 1 attack(s) available
+[00:13.533] MSG: Player 1: tap a character to attack.
+[00:13.826] AI0 attack decision: (0,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down} → (0,2) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down}
+[00:14.161] Revealed: P0 (0,1) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[00:14.188] Revealed: P1 (0,2) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[00:14.188] Dice rolled: 2
+[00:14.192] MSG: Hammer Shark wins!
+[00:18.826] Crystals: P1 4500 → 4300 (-200)  [battle]
+[00:20.225] Attack P0(0,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P1(0,2)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}  Dice=2  ATK=20 vs DEF=0  → WIN
+[00:20.225] Anim: 3A  △ P1(0,2)
+[00:20.225] Card destroyed  P1 (0,2) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[00:20.723] Turn ended  P0  |  Crystals P0=5000 P1=4300
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4300 ---
+P0:   [Cany][Hamm][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:22.801] Crystals: P1 4300 → 4000 (-300)  [union]
+[00:22.843] Revealed: P1 (1,1) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:22.843] Union summoned P1: "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}, "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | face-down}
+[00:22.843] MSG: Player 2 summoned [False Prophet] using: "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}, "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | face-down}
+[00:26.009] Crystals: P1 4000 → 3950 (-50)  [skip tax]
+[00:26.009] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:27.395] Turn ended  P1  |  Crystals P0=5000 P1=3950
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3950 ---
+P0:   [Cany][Hamm][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][Fals][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:28.012] Mode selected P0: ATTACK
+[00:28.016] Attack phase P0: 2 attack(s) available
+[00:28.017] MSG: Player 1: tap a character to attack.
+[00:28.309] AI0 attack decision: (0,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → (1,3) (dead-end)
+[00:28.618] Dice rolled: 2
+[00:28.644] MSG: Nothing happens — Dead End.
+[00:32.025] Attack P0(0,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P1(1,3)(empty)  Dice=2  → DEAD_END
+[00:32.025] Anim: 3F  (blank slot)
+[00:32.528] Mode selected P0: ATTACK
+[00:32.533] Attack phase P0: 1 attack(s) available
+[00:32.534] MSG: Player 1: tap a character to attack.
+[00:32.832] AI0 attack decision: (0,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → (1,1) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:33.143] Dice rolled: 2
+[00:33.195] MSG: Canyon Warg wins!
+[00:37.849] Attack P0(0,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P1(1,1)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}  Dice=2  ATK=70 vs DEF=40  → WIN
+[00:37.849] Anim: 3A  △ P1(1,1)
+[00:37.849] Card destroyed  P1 (1,1) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:38.356] Turn ended  P0  |  Crystals P0=5000 P1=3950
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=3950 ---
+P0:   [Cany][Hamm][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:38.964] Mode selected P1: ATTACK
+[00:38.971] Attack phase P1: 2 attack(s) available
+[00:38.972] MSG: Player 2: tap a character to attack.
+[00:39.268] AI1 attack decision: (3,3)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down} → (0,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:39.577] Revealed: P1 (3,3) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:39.577] Dice rolled: 4
+[00:39.586] MSG: Canyon Warg wins!
+[00:44.275] Crystals: P0 5000 → 4250 (-750)  [battle]
+[00:45.674] Attack P1(3,3)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(0,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=4  ATK=70 vs DEF=30  → WIN
+[00:45.674] Anim: 3A  △ P0(0,0)
+[00:45.674] Card destroyed  P0 (0,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:45.976] Turn ended  P1  |  Crystals P0=4250 P1=3950
+
+--- Turn 5  |  Player 0  |  Crystals P0=4250 P1=3950 ---
+P0:   [  — ][Hamm][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][Cany][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:46.592] Mode selected P0: ATTACK
+[00:46.598] Attack phase P0: 2 attack(s) available
+[00:46.598] MSG: Player 1: tap a character to attack.
+[00:46.889] AI0 attack decision: (0,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → (1,2) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down}
+[00:47.235] Revealed: P1 (1,2) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[00:47.235] Dice rolled: 3
+[00:47.239] MSG: Hammer Shark wins!
+[00:51.931] Crystals: P1 3950 → 3850 (-100)  [battle]
+[00:53.329] Attack P0(0,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P1(1,2)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}  Dice=3  ATK=20 vs DEF=15  → WIN
+[00:53.329] Anim: 3A  △ P1(1,2)
+[00:53.329] Card destroyed  P1 (1,2) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[00:53.824] Mode selected P0: ATTACK
+[00:53.829] Attack phase P0: 1 attack(s) available
+[00:53.829] MSG: Player 1: tap a character to attack.
+[00:54.122] AI0 attack decision: (4,1)"Scythe Shark" {Unit ATK45 DEF35 | cost 550 | affinity Nature | base 35/35 | buff +permATK10 | face-down} → (3,3) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:54.460] Revealed: P0 (4,1) "Scythe Shark" {Unit ATK45 DEF35 | cost 550 | affinity Nature | base 35/35 | buff +permATK10}
+[00:54.460] Dice rolled: 1
+[00:54.464] MSG: Scythe Shark wins!
+[00:59.088] Crystals: P1 3850 → 3100 (-750)  [battle]
+[01:00.487] Attack P0(4,1)"Scythe Shark" {Unit ATK45 DEF35 | cost 550 | affinity Nature | base 35/35 | buff +permATK10} → P1(3,3)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=1  ATK=45 vs DEF=30  → WIN
+[01:00.487] Anim: 3A  △ P1(3,3)
+[01:00.487] Card destroyed  P1 (3,3) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:00.995] Turn ended  P0  |  Crystals P0=4250 P1=3100
+
+--- Turn 6  |  Player 1  |  Crystals P0=4250 P1=3100 ---
+P0:   [  — ][Hamm][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Scyt][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:01.600] Mode selected P1: ATTACK
+[01:01.606] Attack phase P1: 2 attack(s) available
+[01:01.607] MSG: Player 2: tap a character to attack.
+[01:01.904] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (0,1) "Hammer Shark" {Unit ATK30 DEF20 | cost 250 | affinity Nature | base 20/20 | buff +permATK10}
+[01:02.248] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:02.249] Dice rolled: 1
+[01:02.253] MSG: Both cards are destroyed!
+[01:06.829] Crystals: P1 3100 → 3000 (-100)  [battle]
+[01:08.223] Crystals: P0 4250 → 4000 (-250)  [battle]
+[01:09.614] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(0,1)"Hammer Shark" {Unit ATK30 DEF20 | cost 250 | affinity Nature | base 20/20 | buff +permATK10}  Dice=1  ATK=20 vs DEF=20  → TIE
+[01:09.614] Anim: 3C  △ P1(2,2) + △ P0(0,1)
+[01:09.614] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:09.614] Card destroyed  P0 (0,1) "Hammer Shark" {Unit ATK30 DEF20 | cost 250 | affinity Nature | base 20/20 | buff +permATK10}
+[01:09.915] Turn ended  P1  |  Crystals P0=4000 P1=3000
+
+--- Turn 7  |  Player 0  |  Crystals P0=4000 P1=3000 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Scyt][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:10.531] Mode selected P0: ATTACK
+[01:10.536] Attack phase P0: 2 attack(s) available
+[01:10.536] MSG: Player 1: tap a character to attack.
+[01:10.830] AI0 attack decision: (4,1)"Scythe Shark" {Unit ATK45 DEF35 | cost 550 | affinity Nature | base 35/35 | buff +permATK10} → (2,3) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}
+[01:11.178] Revealed: P1 (2,3) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[01:11.178] Dice rolled: 3
+[01:11.182] MSG: Scythe Shark wins!
+[01:16.848] Crystals: P1 3000 → 2780 (-220)  [battle]
+[01:18.244] Attack P0(4,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P1(2,3)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}  Dice=3  ATK=35 vs DEF=25  → WIN
+[01:18.244] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} +DEF 10
+[01:18.244] Anim: 3A  △ P1(2,3)
+[01:18.244] Card destroyed  P1 (2,3) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[01:20.760] Turn ended  P0  |  Crystals P0=4000 P1=2780
+
+--- Turn 8  |  Player 1  |  Crystals P0=4000 P1=2780 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Scyt][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:21.364] Mode selected P1: ATTACK
+[01:21.369] Attack phase P1: 2 attack(s) available
+[01:21.369] MSG: Player 2: tap a character to attack.
+[01:21.672] AI1 attack decision: (3,1)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos | face-down} → (2,4) (dead-end)
+[01:22.014] Revealed: P1 (3,1) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[01:22.014] Dice rolled: 2
+[01:22.033] MSG: Nothing happens — Dead End.
+[01:25.362] Attack P1(3,1)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} → P0(2,4)(empty)  Dice=2  → DEAD_END
+[01:25.362] Anim: 3F  (blank slot)
+[01:25.656] Turn ended  P1  |  Crystals P0=4000 P1=2780
+
+--- Turn 9  |  Player 0  |  Crystals P0=4000 P1=2780 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Scyt][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Curs][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:26.262] Mode selected P0: ATTACK
+[01:26.265] Attack phase P0: 2 attack(s) available
+[01:26.265] MSG: Player 1: tap a character to attack.
+[01:26.554] AI0 attack decision: (4,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → (3,1) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[01:26.853] Dice rolled: 1
+[01:26.864] MSG: Scythe Shark wins!
+[01:31.548] Crystals: P1 2780 → 2480 (-300)  [battle]
+[01:32.947] Attack P0(4,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P1(3,1)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}  Dice=1  ATK=35 vs DEF=25  → WIN
+[01:32.947] Anim: 3A  △ P1(3,1)
+[01:32.947] Card destroyed  P1 (3,1) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+
+=== GAME OVER ===
+[01:32.949] AI Player 0 wins
+[01:32.949] Reason: all_destroyed
+[01:32.949] Final crystals — P0: 4000  P1: 2480  |  Turns: 9
+[01:32.949] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_keyboard_crumb_archaeology_2026-06-02_00-02-38_534.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Barros-the-Colossal-002
+Highlight: Barros the Colossal (Union)  [setup: Chaotic Wisp]
+Result:    FAIL
+Detail:    None of expect_log_any matched: ["Union summoned P0: Barros the Colossal", "Attack P\\d\\(\\d+,\\d+\\)\"Barros\\ the\\ Colossal\"", "MSG:.*Barros"]
+Turns:     9  |  AI timeouts: 0
+===

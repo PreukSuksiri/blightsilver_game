@@ -1,0 +1,77 @@
+=== Battle of Wet Sock Avalanche ===
+Battle started: 2026-06-01 20:06:06.118
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Seraphim-Fistmaster-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Seraphim-Fistmaster-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Seraphim Fistmaster (Union)  [setup: Chaotic Wisp]
+Ability:      DOUBLE_STATS_VS_AFFINITY — Double ATK&DEF against Chaos
+Setup role:   t2_union
+Verifies:
+  - Ability: "Seraphim Fistmaster" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Seraphim Fistmaster, Attack P\d\(\d+,\d+\)"Seraphim\ Fistmaster", MSG:.*Seraphim, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Seraphim Fistmaster — summon logged and/or union attacks with ATK=120.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Seraphim Fistmaster
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Bribe, Radar
+P1 Tech hand: Accident, Resurrection, Radar
+P0:   [C:Scou][C:Joan][T:Acid][C:Skel][C:Armo]
+      [T:Defe][  — ][  — ][  — ][T:Trap]
+      [  — ][  — ][  — ][  — ][  — ]
+      [C:Mad ][  — ][  — ][  — ][T:Deco]
+      [C:Gran][  — ][C:Hair][T:Curs][C:Dark]
+P1:   [C:Stai][  — ][C:Pyro][  — ][C:Succ]
+      [T:Self][C:Cany][C:Jose][C:Choi][T:Host]
+      [  — ][C:Shot][C:Chao][T:Deco][  — ]
+      [  — ][C:Lab ][T:Pepp][C:Choi][C:Nuki]
+      [C:Vamp][T:Foul][T:Stre][  — ][C:Dark]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:05.339] Mode selected P0: ATTACK
+[00:05.342] Attack phase P0: 2 attack(s) available
+[00:05.343] MSG: Player 1: tap a character to attack.
+[00:05.343] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:05.344] AI Player 0 wins
+[00:05.344] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:05.344] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_wet_sock_avalanche_2026-06-01_20-06-06_118.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Seraphim-Fistmaster-002
+Highlight: Seraphim Fistmaster (Union)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

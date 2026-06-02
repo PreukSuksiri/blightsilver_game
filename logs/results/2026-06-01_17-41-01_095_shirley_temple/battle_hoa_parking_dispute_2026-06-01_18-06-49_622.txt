@@ -1,0 +1,216 @@
+=== Battle of HOA Parking Dispute ===
+Battle started: 2026-06-01 18:06:49.622
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Lab-Zombie-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Lab-Zombie-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Lab Zombie (Character)  [setup: Chaotic Wisp, Release Mutagen, Radar, Spy]
+Ability:      MUTAGEN_ATK_BOOST_VS_AFFINITIES — With Mutagen Flag: +25 ATK vs Nature or Anima.
+Setup role:   t2_mutagen
+Verifies:
+  - Ability: "Lab Zombie" is exercised via forced board/tech setup (t2_mutagen)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Lab Zombie
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Lab\ Zombie".*ATK=|→ P\d\(\d+,\d+\)"Lab\ Zombie")
+  - Log must contain at least one of: Mutagen, mutagen, Release Mutagen, Flag+
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: mutagen ability — Release Mutagen in hand, bio card on field.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Lab Zombie
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Release Mutagen, Radar, Spy
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Radar, Spy
+P1 Tech hand: Radar, Prayer, Great Diplomacy
+P0:   [  — ][T:Hypn][T:Bait][  — ][  — ]
+      [  — ][C:Gryp][C:Skel][C:Swar][  — ]
+      [  — ][C:Snip][C:Lab ][C:Spea][  — ]
+      [T:Snar][C:Scou][C:Hand][C:Kiyo][  — ]
+      [  — ][T:Self][  — ][T:Curs][  — ]
+P1:   [C:Blad][  — ][T:Defe][T:Host][  — ]
+      [  — ][C:Rott][C:Plan][C:Immo][T:Foul]
+      [  — ][C:Spac][C:Chao][C:Book][  — ]
+      [T:Flam][C:Curs][C:Aray][C:Moon][  — ]
+      [  — ][  — ][  — ][  — ][T:Hard]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:05.322] Mode selected P0: ATTACK
+[00:05.325] Attack phase P0: 2 attack(s) available
+[00:05.326] MSG: Player 1: tap a character to attack.
+[00:05.631] AI0 attack decision: (2,2)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.975] Revealed: P0 (2,2) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[00:06.001] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:06.001] Dice rolled: 3
+[00:06.004] MSG: Lab Zombie wins!
+[00:10.616] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.013] Attack P0(2,2)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=3  ATK=55 vs DEF=0  → WIN
+[00:12.013] Anim: 3A  △ P1(2,2)
+[00:12.013] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:14.528] Turn ended  P0  |  Crystals P0=5000 P1=4900
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4900 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Lab ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:16.636] Crystals: P1 4900 → 3900 (-1000)  [union]
+[00:16.679] Revealed: P1 (0,0) "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[00:16.679] Union summoned P1: "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio | face-down}
+[00:16.679] MSG: Player 2 summoned [Volatile Slasher] using: "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio | face-down}
+[00:19.895] Crystals: P1 3900 → 3850 (-50)  [skip tax]
+[00:19.895] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:21.281] Turn ended  P1  |  Crystals P0=5000 P1=3850
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3850 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Lab ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [Vola][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:21.885] Mode selected P0: ATTACK
+[00:21.892] Attack phase P0: 2 attack(s) available
+[00:21.892] MSG: Player 1: tap a character to attack.
+[00:22.194] AI0 attack decision: (2,2)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → (0,0) "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[00:22.501] Dice rolled: 5
+[00:22.554] MSG: Lab Zombie wins!
+[00:27.207] Attack P0(2,2)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P1(0,0)"Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}  Dice=5  ATK=55 vs DEF=45  → WIN
+[00:27.208] Anim: 3A  △ P1(0,0)
+[00:27.208] Card destroyed  P1 (0,0) "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[00:27.710] Mode selected P0: ATTACK
+[00:27.715] Attack phase P0: 1 attack(s) available
+[00:27.715] MSG: Player 1: tap a character to attack.
+[00:28.019] AI0 attack decision: (3,2)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | face-down} → (1,1) (dead-end)
+[00:28.366] Revealed: P0 (3,2) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[00:28.366] Dice rolled: 4
+[00:28.380] MSG: Nothing happens — Dead End.
+[00:31.732] Attack P0(3,2)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[00:31.733] Anim: 3F  (blank slot)
+[00:32.236] Turn ended  P0  |  Crystals P0=5000 P1=3850
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=3850 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Lab ][  ? ][  — ]
+      [  ? ][  ? ][Hand][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:32.846] Mode selected P1: ATTACK
+[00:32.852] Attack phase P1: 2 attack(s) available
+[00:32.852] MSG: Player 2: tap a character to attack.
+[00:33.152] AI1 attack decision: (1,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down} → (2,2) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[00:33.497] Revealed: P1 (1,2) "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[00:33.497] Dice rolled: 1
+[00:33.502] MSG: Plant 29 wins!
+[00:38.151] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:39.550] Attack P1(1,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(2,2)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}  Dice=1  ATK=45 vs DEF=40  → WIN
+[00:39.550] Anim: 3A  △ P0(2,2)
+[00:39.550] Card destroyed  P0 (2,2) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[00:39.846] Turn ended  P1  |  Crystals P0=4300 P1=3850
+
+--- Turn 5  |  Player 0  |  Crystals P0=4300 P1=3850 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Hand][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][Plan][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:40.444] Mode selected P0: ATTACK
+[00:40.450] Attack phase P0: 2 attack(s) available
+[00:40.451] MSG: Player 1: tap a character to attack.
+[00:40.744] AI0 attack decision: (3,2)"Hands in the Attic" {Unit ATK30 DEF20 | cost 300 | affinity Chaos | base 20/20 | buff +tempATK10} → (0,2) "Defensive Pheromone" {cost 500}
+[00:41.085] Revealed: P1 (0,2) "Defensive Pheromone" {cost 500}
+[00:41.085] Dice rolled: 4
+[00:41.350] MSG: Trap triggered: Defensive Pheromone!
+[00:45.437] Crystals: P1 3850 → 3350 (-500)  [trap cost]
+[00:46.829] MSG: No valid target — effect cancelled.
+[00:46.836] Tech resolved  P0
+[00:46.836] Target prompt: "Defensive Pheromone: Choose an 'Armored' Nature card to swap."  filter=own_armored_nature
+[00:46.838] Trap: "Defensive Pheromone" triggered  P0(3,2)→P1(0,2)
+[00:46.838] Anim: 3D  (attacker survives)
+[00:47.715] Mode selected P0: ATTACK
+[00:47.722] Attack phase P0: 1 attack(s) available
+[00:47.722] MSG: Player 1: tap a character to attack.
+[00:48.014] AI0 attack decision: (3,1)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down} → (0,1) (dead-end)
+[00:48.349] Revealed: P0 (3,1) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:48.349] Dice rolled: 5
+[00:48.364] MSG: Nothing happens — Dead End.
+[00:51.746] Attack P0(3,1)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[00:51.746] Anim: 3F  (blank slot)
+[00:51.754] MSG: No valid target — effect cancelled.
+[00:51.757] Ability target resolved  P0
+[00:51.757] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[00:52.239] Turn ended  P0  |  Crystals P0=4300 P1=3350
+
+--- Turn 6  |  Player 1  |  Crystals P0=4300 P1=3350 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][Scou][Hand][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Plan][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[00:52.293] Coin flip: Tails
+[00:54.990] MSG: Plant 29: Tails! Mutagen on Hands in the Attic.
+[00:54.990] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:55.027] AI Player 0 wins
+[00:55.027] Final crystals — P0: 4300  P1: 3350  |  Turns: 6
+[00:55.027] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_hoa_parking_dispute_2026-06-01_18-06-49_622.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Lab-Zombie-002
+Highlight: Lab Zombie (Character)  [setup: Chaotic Wisp, Release Mutagen, Radar, Spy]
+Result:    PASS
+Detail:    ok
+Turns:     6  |  AI timeouts: 0
+===

@@ -1,0 +1,78 @@
+=== Battle of Pickle Jar Incident ===
+Battle started: 2026-06-01 20:08:36.608
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-X-Death-Squad-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-X-Death-Squad-001  (test_case/functional/union_functional_tests.md)
+Highlight:    X-Death Squad (Union)  [setup: Chaotic Wisp]
+Ability:      OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT — In Reckoning, pay 1000, destroy foe’s unit. They pay no cost.
+Setup role:   t2_union
+Verifies:
+  - Ability: "X-Death Squad" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: X-Death Squad, Attack P\d\(\d+,\d+\)"X\-Death\ Squad", MSG:.*X\-Death, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union X-Death Squad — summon logged and/or union attacks with ATK=50.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union X-Death Squad
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Siege Cannon, War Supply, Great Diplomacy
+P1 Tech hand: Radar, Bribe, Prayer
+P0:   [C:Myst][T:Hard][C:Claw][C:Flam][C:Leor]
+      [C:Choi][C:Shot][C:Jose][C:Ostr][C:Mine]
+      [T:Curs][  — ][  — ][  — ][  — ]
+      [  — ][T:Red ][T:Bunk][  — ][C:Armo]
+      [C:Fera][T:Echo][T:Brai][  — ][C:Grav]
+P1:   [  — ][  — ][C:Pony][  — ][T:Self]
+      [T:Red ][C:Godd][C:Jira][C:Ox P][  — ]
+      [  — ][C:Shep][C:Chao][C:Moon][  — ]
+      [C:Mafi][C:Hunt][C:Succ][C:Skel][  — ]
+      [T:Curs][T:Snar][C:Yaks][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:06.761] Crystals: P0 5000 → 3500 (-1500)  [union]
+[00:06.803] Revealed: P0 (1,1) "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[00:06.803] Union summoned P0: "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[00:06.803] MSG: Player 1 summoned [Barros the Colossal] using: "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[00:06.803] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.806] AI Player 0 wins
+[00:06.806] Final crystals — P0: 3500  P1: 5000  |  Turns: 1
+[00:06.806] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_pickle_jar_incident_2026-06-01_20-08-36_608.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-X-Death-Squad-002
+Highlight: X-Death Squad (Union)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

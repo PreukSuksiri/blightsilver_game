@@ -1199,7 +1199,10 @@ func _do_ai_setup() -> void:
 		elif CardDatabase.get_trap(fc_name) != null:
 			GameState.place_trap(1, fc_row, fc_col, fc_name)
 
-	var placements := ai_player.decide_setup(GameState.battle_ai_deck, fc_src)
+	var _deck1: Variant = AIvsAIManager.deck1 \
+		if GameState.game_mode == GameState.GameMode.AI_VS_AI \
+		else GameState.battle_ai_deck
+	var placements := ai_player.decide_setup(_deck1, fc_src)
 	for placement in placements:
 		var pos: Vector2i = placement["pos"]
 		if placement["card_type"] == "character":
@@ -1230,7 +1233,7 @@ func _do_ai_setup_p0() -> void:
 		elif CardDatabase.get_trap(fc_name) != null:
 			GameState.place_trap(0, fc_row, fc_col, fc_name)
 
-	var placements := ai_player_0.decide_setup(GameState.battle_player_deck, fc_src)
+	var placements := ai_player_0.decide_setup(AIvsAIManager.deck0, fc_src)
 	for placement in placements:
 		var pos: Vector2i = placement["pos"]
 		if placement["card_type"] == "character":
@@ -1258,7 +1261,8 @@ func _begin_game() -> void:
 	_update_void_stacks()
 	_refresh_all_grids()
 	_refresh_hud()
-	var first_player: int = DiceRoller.flip_coin_first_player()
+	# E2E tests always give Player 0 (the highlight-card side) first turn.
+	var first_player: int = 0 if CardE2ERunner.is_active() else DiceRoller.flip_coin_first_player()
 	var coin_result: String = "Heads" if first_player == 0 else "Tails"
 	GameState.post_message("Coin flip — %s! Player %d goes first!" % [coin_result, first_player + 1])
 	_show_coin_flip_and_start(first_player)

@@ -1,0 +1,742 @@
+=== Battle of Wet Jeans Commute ===
+Battle started: 2026-06-02 00:24:38.589
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Gamma-Mermaid-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Gamma-Mermaid-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Gamma Mermaid (Union)  [setup: Chaotic Wisp]
+Ability:      DEF_PENALTY_VS_NON_AFFINITY — Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all your Bio units
+Setup role:   t2_union
+Verifies:
+  - Ability: "Gamma Mermaid" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Gamma Mermaid, Attack P\d\(\d+,\d+\)"Gamma\ Mermaid", MSG:.*Gamma
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Gamma Mermaid — summon logged and/or union attacks with ATK=30.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Gamma Mermaid
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Prayer, Bribe, Resurrection
+P1 Tech hand: Prayer, Resurrection, Tease
+P0:   [T:Defe][C:Big ][C:Sate][C:Jaco][T:Alar]
+      [  — ][  — ][  — ][C:Fera][  — ]
+      [T:Stre][C:Godd][C:Pit ][  — ][  — ]
+      [  — ][T:Foul][  — ][  — ][  — ]
+      [C:Tiny][T:Hard][C:Moon][T:Curs][C:Choi]
+P1:   [T:Defe][  — ][T:Acid][  — ][C:Curs]
+      [C:Witc][  — ][  — ][  — ][C:Armo]
+      [C:Chur][C:Choi][C:Chao][C:Mars][C:Magi]
+      [C:Succ][C:Plan][  — ][C:Hunt][T:Brai]
+      [C:Dark][T:Expl][  — ][  — ][C:Skel]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:05.337] Mode selected P0: ATTACK
+[00:05.341] Attack phase P0: 2 attack(s) available
+[00:05.341] MSG: Player 1: tap a character to attack.
+[00:05.624] AI0 attack decision: (0,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (0,2) "Acid Trap Hole" {cost 0}
+[00:05.962] Revealed: P0 (0,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:05.992] Revealed: P1 (0,2) "Acid Trap Hole" {cost 0}
+[00:05.992] Dice rolled: 3
+[00:06.235] MSG: Trap triggered: Acid Trap Hole!
+[00:10.329] Crystals: P0 5000 → 4950 (-50)  [trap]
+[00:11.709] MSG: Acid Trap Hole: Player 1 loses 50 Crystals!
+[00:11.714] Trap: "Acid Trap Hole" triggered  P0(0,1)→P1(0,2)
+[00:11.714] Anim: 3D  (attacker survives)
+[00:14.222] Turn ended  P0  |  Crystals P0=4950 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4950 P1=5000 ---
+P0:   [  ? ][Big ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:16.300] Crystals: P1 5000 → 4000 (-1000)  [union]
+[00:16.336] Revealed: P1 (3,1) "Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[00:16.336] Union summoned P1: "Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down}, "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down}
+[00:16.336] MSG: Player 2 summoned [Rocket Marauder] using: "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down}, "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down}
+[00:19.543] Crystals: P1 4000 → 3950 (-50)  [skip tax]
+[00:19.543] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:20.932] Turn ended  P1  |  Crystals P0=4950 P1=3950
+
+--- Turn 3  |  Player 0  |  Crystals P0=4950 P1=3950 ---
+P0:   [  ? ][Big ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Rock][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:21.541] Mode selected P0: ATTACK
+[00:21.547] Attack phase P0: 2 attack(s) available
+[00:21.548] MSG: Player 1: tap a character to attack.
+[00:21.823] AI0 attack decision: (0,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → (3,3) (dead-end)
+[00:22.126] Dice rolled: 2
+[00:22.155] MSG: Nothing happens — Dead End.
+[00:25.514] Attack P0(0,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(3,3)(empty)  Dice=2  → DEAD_END
+[00:25.514] Anim: 3F  (blank slot)
+[00:26.007] Mode selected P0: ATTACK
+[00:26.010] Attack phase P0: 1 attack(s) available
+[00:26.010] MSG: Player 1: tap a character to attack.
+[00:26.308] AI0 attack decision: (0,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down} → (0,4) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos | face-down}
+[00:26.642] Revealed: P0 (0,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:26.675] Revealed: P1 (0,4) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[00:26.675] Dice rolled: 2
+[00:26.680] MSG: Satellite Cannon wins!
+[00:31.307] Crystals: P1 3950 → 3650 (-300)  [battle]
+[00:32.710] Attack P0(0,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(0,4)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}  Dice=2  ATK=100 vs DEF=25  → WIN
+[00:32.710] Anim: 3A  △ P1(0,4)
+[00:32.710] Card destroyed  P1 (0,4) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[00:33.206] Turn ended  P0  |  Crystals P0=4950 P1=3650
+
+--- Turn 4  |  Player 1  |  Crystals P0=4950 P1=3650 ---
+P0:   [  ? ][Big ][Sate][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Rock][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:33.801] Mode selected P1: ATTACK
+[00:33.810] Attack phase P1: 2 attack(s) available
+[00:33.810] MSG: Player 2: tap a character to attack.
+[00:34.099] AI1 attack decision: (3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → (0,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:34.401] Dice rolled: 5
+[00:34.466] MSG: Rocket Marauder wins!
+[00:39.059] Crystals: P0 4950 → 3850 (-1100)  [battle]
+[00:40.457] Attack P1(3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(0,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}  Dice=5  ATK=125 vs DEF=80  → WIN
+[00:40.457] Anim: 3A  △ P0(0,2)
+[00:40.457] Card destroyed  P0 (0,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:40.762] Turn ended  P1  |  Crystals P0=3850 P1=3650
+
+--- Turn 5  |  Player 0  |  Crystals P0=3850 P1=3650 ---
+P0:   [  ? ][Big ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Rock][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:41.380] Mode selected P0: ATTACK
+[00:41.387] Attack phase P0: 2 attack(s) available
+[00:41.387] MSG: Player 1: tap a character to attack.
+[00:41.676] AI0 attack decision: (2,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (3,1) "Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[00:42.015] Revealed: P0 (2,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:42.015] Dice rolled: 3
+[00:42.049] MSG: Pit Lord wins!
+[00:46.717] Attack P0(2,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio}  Dice=3  ATK=120 vs DEF=105  → WIN
+[00:46.717] Anim: 3A  △ P1(3,1)
+[00:46.717] Card destroyed  P1 (3,1) "Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[00:47.209] Mode selected P0: ATTACK
+[00:47.215] Attack phase P0: 1 attack(s) available
+[00:47.216] MSG: Player 1: tap a character to attack.
+[00:47.507] AI0 attack decision: (0,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → (0,0) "Defensive Pheromone" {cost 500}
+[00:47.847] Revealed: P1 (0,0) "Defensive Pheromone" {cost 500}
+[00:47.847] Dice rolled: 5
+[00:48.108] MSG: Trap triggered: Defensive Pheromone!
+[00:52.195] Crystals: P1 3650 → 3150 (-500)  [trap cost]
+[00:53.585] MSG: No valid target — effect cancelled.
+[00:53.594] Tech resolved  P0
+[00:53.594] Target prompt: "Defensive Pheromone: Choose an 'Armored' Nature card to swap."  filter=own_armored_nature
+[00:53.596] Trap: "Defensive Pheromone" triggered  P0(0,1)→P1(0,0)
+[00:53.596] Anim: 3D  (attacker survives)
+[00:54.088] Turn ended  P0  |  Crystals P0=3850 P1=3150
+
+--- Turn 6  |  Player 1  |  Crystals P0=3850 P1=3150 ---
+P0:   [  ? ][Big ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Pit ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:54.489] Mode selected P1: ATTACK
+[00:54.496] Attack phase P1: 2 attack(s) available
+[00:54.496] MSG: Player 2: tap a character to attack.
+[00:54.987] AI1 attack decision: (1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature | face-down} → (2,2) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[00:55.325] Revealed: P1 (1,4) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[00:55.325] Dice rolled: 2
+[00:55.329] MSG: Armored Rhino wins!
+[00:59.963] Crystals: P0 3850 → 2600 (-1250)  [battle]
+[01:01.362] Attack P1(1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(2,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}  Dice=2  ATK=60 vs DEF=50  → WIN
+[01:01.363] Anim: 3A  △ P0(2,2)
+[01:01.363] Card destroyed  P0 (2,2) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[01:01.656] Turn ended  P1  |  Crystals P0=2600 P1=3150
+
+--- Turn 7  |  Player 0  |  Crystals P0=2600 P1=3150 ---
+P0:   [  ? ][Big ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][Armo]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:02.266] Mode selected P0: ATTACK
+[01:02.273] Attack phase P0: 2 attack(s) available
+[01:02.273] MSG: Player 1: tap a character to attack.
+[01:02.555] AI0 attack decision: (0,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → (0,1) (dead-end)
+[01:02.855] Dice rolled: 3
+[01:02.884] MSG: Nothing happens — Dead End.
+[01:06.256] Attack P0(0,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(0,1)(empty)  Dice=3  → DEAD_END
+[01:06.256] Anim: 3F  (blank slot)
+[01:06.746] Mode selected P0: ATTACK
+[01:06.753] Attack phase P0: 1 attack(s) available
+[01:06.753] MSG: Player 1: tap a character to attack.
+[01:07.046] AI0 attack decision: (1,3)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos | face-down} → (0,3) (dead-end)
+[01:07.381] Revealed: P0 (1,3) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:07.381] Dice rolled: 2
+[01:07.396] MSG: Nothing happens — Dead End.
+[01:10.728] Attack P0(1,3)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P1(0,3)(empty)  Dice=2  → DEAD_END
+[01:10.728] Anim: 3F  (blank slot)
+[01:11.222] Turn ended  P0  |  Crystals P0=2600 P1=3150
+
+--- Turn 8  |  Player 1  |  Crystals P0=2600 P1=3150 ---
+P0:   [  ? ][Big ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][Fera][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][Armo]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:11.818] Mode selected P1: ATTACK
+[01:11.827] Attack phase P1: 2 attack(s) available
+[01:11.827] MSG: Player 2: tap a character to attack.
+[01:12.117] AI1 attack decision: (1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (1,3) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:12.417] Dice rolled: 2
+[01:12.429] MSG: Armored Rhino wins!
+[01:17.107] Crystals: P0 2600 → 2200 (-400)  [battle]
+[01:18.506] Attack P1(1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(1,3)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=2  ATK=60 vs DEF=25  → WIN
+[01:18.507] Anim: 3A  △ P0(1,3)
+[01:18.507] Card destroyed  P0 (1,3) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:18.803] Turn ended  P1  |  Crystals P0=2200 P1=3150
+
+--- Turn 9  |  Player 0  |  Crystals P0=2200 P1=3150 ---
+P0:   [  ? ][Big ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][Armo]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:19.409] Mode selected P0: ATTACK
+[01:19.416] Attack phase P0: 2 attack(s) available
+[01:19.417] MSG: Player 1: tap a character to attack.
+[01:19.698] AI0 attack decision: (0,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → (1,2) (dead-end)
+[01:20.001] Dice rolled: 5
+[01:20.029] MSG: Nothing happens — Dead End.
+[01:23.398] Attack P0(0,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[01:23.398] Anim: 3F  (blank slot)
+[01:23.893] Mode selected P0: ATTACK
+[01:23.899] Attack phase P0: 1 attack(s) available
+[01:23.899] MSG: Player 1: tap a character to attack.
+[01:24.191] AI0 attack decision: (0,3)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down} → (1,0) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima | face-down}
+[01:24.532] Revealed: P0 (0,3) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:24.560] Revealed: P1 (1,0) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:24.560] Dice rolled: 3
+[01:24.565] MSG: Both cards are destroyed!
+[01:30.116] Crystals: P0 2200 → 1850 (-350)  [battle]
+[01:31.509] Crystals: P1 3150 → 2900 (-250)  [battle]
+[01:32.902] Attack P0(0,3)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P1(1,0)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}  Dice=3  ATK=20 vs DEF=20  → TIE
+[01:32.903] Reckoning overlay: P0 "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} +ATK 5
+[01:32.903] Anim: 3C  △ P0(0,3) + △ P1(1,0)
+[01:32.903] Card destroyed  P0 (0,3) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:32.903] Card destroyed  P1 (1,0) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:33.398] Turn ended  P0  |  Crystals P0=1850 P1=2900
+
+--- Turn 10  |  Player 1  |  Crystals P0=1850 P1=2900 ---
+P0:   [  ? ][Big ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:33.989] Mode selected P1: ATTACK
+[01:33.996] Attack phase P1: 2 attack(s) available
+[01:33.997] MSG: Player 2: tap a character to attack.
+[01:34.287] AI1 attack decision: (1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (0,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:34.588] Dice rolled: 1
+[01:34.600] MSG: Armored Rhino wins!
+[01:39.280] Crystals: P0 1850 → 1450 (-400)  [battle]
+[01:40.679] Attack P1(1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(0,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=1  ATK=60 vs DEF=35  → WIN
+[01:40.679] Anim: 3A  △ P0(0,1)
+[01:40.679] Card destroyed  P0 (0,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:40.976] Turn ended  P1  |  Crystals P0=1450 P1=2900
+
+--- Turn 11  |  Player 0  |  Crystals P0=1450 P1=2900 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:41.576] Mode selected P0: ATTACK
+[01:41.582] Attack phase P0: 2 attack(s) available
+[01:41.582] MSG: Player 1: tap a character to attack.
+[01:41.869] AI0 attack decision: (2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down} → (1,1) (dead-end)
+[01:42.208] Revealed: P0 (2,1) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[01:42.208] Dice rolled: 3
+[01:42.224] MSG: Nothing happens — Dead End.
+[01:45.554] Attack P0(2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P1(1,1)(empty)  Dice=3  → DEAD_END
+[01:45.554] Anim: 3F  (blank slot)
+[01:48.058] Turn ended  P0  |  Crystals P0=1450 P1=2900
+
+--- Turn 12  |  Player 1  |  Crystals P0=1450 P1=2900 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:48.655] Mode selected P1: ATTACK
+[01:48.661] Attack phase P1: 2 attack(s) available
+[01:48.662] MSG: Player 2: tap a character to attack.
+[01:48.954] AI1 attack decision: (1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (4,4) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}
+[01:49.295] Revealed: P0 (4,4) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[01:49.295] Dice rolled: 1
+[01:49.301] MSG: Armored Rhino wins!
+[01:53.947] Crystals: P0 1450 → 1200 (-250)  [battle]
+[01:55.345] Attack P1(1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(4,4)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}  Dice=1  ATK=60 vs DEF=20  → WIN
+[01:55.346] Anim: 3A  △ P0(4,4)
+[01:55.346] Card destroyed  P0 (4,4) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[01:55.643] Turn ended  P1  |  Crystals P0=1200 P1=2900
+
+--- Turn 13  |  Player 0  |  Crystals P0=1200 P1=2900 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:56.238] Mode selected P0: ATTACK
+[01:56.244] Attack phase P0: 2 attack(s) available
+[01:56.247] MSG: Player 1: tap a character to attack.
+[01:56.532] AI0 attack decision: (2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (1,3) (dead-end)
+[01:56.834] Dice rolled: 1
+[01:56.860] MSG: Nothing happens — Dead End.
+[02:00.232] Attack P0(2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P1(1,3)(empty)  Dice=1  → DEAD_END
+[02:00.232] Anim: 3F  (blank slot)
+[02:00.726] Mode selected P0: ATTACK
+[02:00.733] Attack phase P0: 1 attack(s) available
+[02:00.733] MSG: Player 1: tap a character to attack.
+[02:01.021] AI0 attack decision: (4,2)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down} → (4,4) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down}
+[02:01.360] Revealed: P0 (4,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[02:01.384] Revealed: P1 (4,4) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[02:01.384] Dice rolled: 4
+[02:01.389] MSG: Moon Tribe Marksman wins!
+[02:07.037] Crystals: P1 2900 → 2750 (-150)  [battle]
+[02:08.438] Attack P0(4,2)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} → P1(4,4)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=4  ATK=25 vs DEF=5  → WIN
+[02:08.438] Reckoning overlay: P0 "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} ATK -10
+[02:08.438] Anim: 3A  △ P1(4,4)
+[02:08.438] Card destroyed  P1 (4,4) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[02:08.936] Turn ended  P0  |  Crystals P0=1200 P1=2750
+
+--- Turn 14  |  Player 1  |  Crystals P0=1200 P1=2750 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][Moon][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[02:09.530] Mode selected P1: ATTACK
+[02:09.539] Attack phase P1: 2 attack(s) available
+[02:09.539] MSG: Player 2: tap a character to attack.
+[02:09.829] AI1 attack decision: (1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (4,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[02:10.130] Dice rolled: 4
+[02:10.142] MSG: Armored Rhino wins!
+[02:14.822] Crystals: P0 1200 → 900 (-300)  [battle]
+[02:16.221] Attack P1(1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(4,2)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=4  ATK=60 vs DEF=25  → WIN
+[02:16.221] Anim: 3A  △ P0(4,2)
+[02:16.221] Card destroyed  P0 (4,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[02:16.518] Turn ended  P1  |  Crystals P0=900 P1=2750
+
+--- Turn 15  |  Player 0  |  Crystals P0=900 P1=2750 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[02:17.116] Mode selected P0: ATTACK
+[02:17.123] Attack phase P0: 2 attack(s) available
+[02:17.124] MSG: Player 1: tap a character to attack.
+[02:17.412] AI0 attack decision: (2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (2,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}
+[02:17.716] Revealed: P1 (2,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[02:17.716] Dice rolled: 3
+[02:17.723] MSG: Goddess of Virtue wins!
+[02:22.405] Crystals: P1 2750 → 2500 (-250)  [battle]
+[02:23.804] Attack P0(2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P1(2,1)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}  Dice=3  ATK=80 vs DEF=20  → WIN
+[02:23.805] Anim: 3A  △ P1(2,1)
+[02:23.805] Card destroyed  P1 (2,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[02:24.297] Mode selected P0: ATTACK
+[02:24.304] Attack phase P0: 1 attack(s) available
+[02:24.304] MSG: Player 1: tap a character to attack.
+[02:24.596] AI0 attack decision: (4,0)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[02:24.928] Revealed: P0 (4,0) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[02:24.954] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:24.954] Dice rolled: 1
+[02:24.959] MSG: Both cards are destroyed!
+[02:29.520] Crystals: P0 900 → 800 (-100)  [battle]
+[02:30.913] Crystals: P1 2500 → 2400 (-100)  [battle]
+[02:32.296] MSG: Tiny Pixie survives destruction!
+[02:32.303] Attack P0(4,0)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=0 vs DEF=0  → TIE
+[02:32.303] Anim: 3C  △ P0(4,0) + △ P1(2,2)
+[02:32.303] Card destroyed  P0 (4,0) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[02:32.303] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:32.801] Turn ended  P0  |  Crystals P0=800 P1=2400
+
+--- Turn 16  |  Player 1  |  Crystals P0=800 P1=2400 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Tiny][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[02:33.397] Mode selected P1: ATTACK
+[02:33.406] Attack phase P1: 2 attack(s) available
+[02:33.406] MSG: Player 2: tap a character to attack.
+[02:33.696] AI1 attack decision: (1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (4,0) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used}
+[02:33.996] Dice rolled: 4
+[02:34.004] MSG: Armored Rhino wins!
+[02:38.688] Crystals: P0 800 → 700 (-100)  [battle]
+[02:40.087] Attack P1(1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(4,0)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used}  Dice=4  ATK=60 vs DEF=0  → WIN
+[02:40.088] Anim: 3A  △ P0(4,0)
+[02:40.384] Turn ended  P1  |  Crystals P0=700 P1=2400
+
+--- Turn 17  |  Player 0  |  Crystals P0=700 P1=2400 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[02:40.982] Mode selected P0: ATTACK
+[02:40.990] Attack phase P0: 2 attack(s) available
+[02:40.990] MSG: Player 1: tap a character to attack.
+[02:41.278] AI0 attack decision: (2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (2,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[02:41.609] Revealed: P1 (2,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:41.609] Dice rolled: 3
+[02:41.614] MSG: Goddess of Virtue wins!
+[02:46.247] Crystals: P1 2400 → 2250 (-150)  [battle]
+[02:47.644] Attack P0(2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P1(2,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=3  ATK=80 vs DEF=35  → WIN
+[02:47.645] Anim: 3A  △ P1(2,0)
+[02:47.645] Card destroyed  P1 (2,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:48.152] Turn ended  P0  |  Crystals P0=700 P1=2250
+
+--- Turn 18  |  Player 1  |  Crystals P0=700 P1=2250 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[02:48.751] Mode selected P1: ATTACK
+[02:48.761] Attack phase P1: 2 attack(s) available
+[02:48.761] MSG: Player 2: tap a character to attack.
+[02:49.057] AI1 attack decision: (1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (1,4) (dead-end)
+[02:49.367] Dice rolled: 4
+[02:49.389] MSG: Nothing happens — Dead End.
+[02:52.774] Attack P1(1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(1,4)(empty)  Dice=4  → DEAD_END
+[02:52.774] Anim: 3F  (blank slot)
+[02:53.080] Turn ended  P1  |  Crystals P0=700 P1=2250
+
+--- Turn 19  |  Player 0  |  Crystals P0=700 P1=2250 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[02:53.683] Mode selected P0: ATTACK
+[02:53.689] Attack phase P0: 2 attack(s) available
+[02:53.690] MSG: Player 1: tap a character to attack.
+[02:53.991] AI0 attack decision: (2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (2,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down}
+[02:54.335] Revealed: P1 (2,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[02:54.335] Dice rolled: 4
+[02:54.339] MSG: Goddess of Virtue wins!
+[02:59.018] Crystals: P1 2250 → 2070 (-180)  [battle]
+[03:00.415] Attack P0(2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P1(2,4)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}  Dice=4  ATK=80 vs DEF=15  → WIN
+[03:00.416] Anim: 3A  △ P1(2,4)
+[03:00.416] Card destroyed  P1 (2,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[03:00.914] Turn ended  P0  |  Crystals P0=700 P1=2070
+
+--- Turn 20  |  Player 1  |  Crystals P0=700 P1=2070 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[03:01.507] Mode selected P1: ATTACK
+[03:01.515] Attack phase P1: 2 attack(s) available
+[03:01.516] MSG: Player 2: tap a character to attack.
+[03:01.807] AI1 attack decision: (1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (3,4) (dead-end)
+[03:02.109] Dice rolled: 1
+[03:02.136] MSG: Nothing happens — Dead End.
+[03:05.490] Attack P1(1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(3,4)(empty)  Dice=1  → DEAD_END
+[03:05.491] Anim: 3F  (blank slot)
+[03:05.788] Turn ended  P1  |  Crystals P0=700 P1=2070
+
+--- Turn 21  |  Player 0  |  Crystals P0=700 P1=2070 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[03:06.386] Mode selected P0: ATTACK
+[03:06.392] Attack phase P0: 2 attack(s) available
+[03:06.392] MSG: Player 1: tap a character to attack.
+[03:06.682] AI0 attack decision: (2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (4,3) (dead-end)
+[03:06.984] Dice rolled: 3
+[03:07.009] MSG: Nothing happens — Dead End.
+[03:10.372] Attack P0(2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P1(4,3)(empty)  Dice=3  → DEAD_END
+[03:10.373] Anim: 3F  (blank slot)
+[03:10.871] Turn ended  P0  |  Crystals P0=700 P1=2070
+
+--- Turn 22  |  Player 1  |  Crystals P0=700 P1=2070 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[03:11.463] Mode selected P1: ATTACK
+[03:11.470] Attack phase P1: 2 attack(s) available
+[03:11.471] MSG: Player 2: tap a character to attack.
+[03:11.762] AI1 attack decision: (1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (2,4) (dead-end)
+[03:12.063] Dice rolled: 1
+[03:12.089] MSG: Nothing happens — Dead End.
+[03:15.461] Attack P1(1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(2,4)(empty)  Dice=1  → DEAD_END
+[03:15.462] Anim: 3F  (blank slot)
+[03:15.759] Turn ended  P1  |  Crystals P0=700 P1=2070
+
+--- Turn 23  |  Player 0  |  Crystals P0=700 P1=2070 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[03:16.355] Mode selected P0: ATTACK
+[03:16.360] Attack phase P0: 2 attack(s) available
+[03:16.360] MSG: Player 1: tap a character to attack.
+[03:16.653] AI0 attack decision: (2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (3,4) "Brainwash" {cost 1500}
+[03:16.987] Revealed: P1 (3,4) "Brainwash" {cost 1500}
+[03:16.988] Dice rolled: 5
+[03:17.263] MSG: Trap triggered: Brainwash!
+[03:21.347] Crystals: P1 2070 → 570 (-1500)  [trap cost]
+[03:22.738] MSG: Brainwash: No ally to redirect — effect fizzles.
+[03:22.744] Trap: "Brainwash" triggered  P0(2,1)→P1(3,4)
+[03:22.744] Anim: 3D  (attacker survives)
+[03:23.242] Turn ended  P0  |  Crystals P0=700 P1=570
+
+--- Turn 24  |  Player 1  |  Crystals P0=700 P1=570 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[03:23.838] Mode selected P1: ATTACK
+[03:23.845] Attack phase P1: 2 attack(s) available
+[03:23.845] MSG: Player 2: tap a character to attack.
+[03:24.137] AI1 attack decision: (1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (0,4) "Alarm" {cost 0}
+[03:24.471] Revealed: P0 (0,4) "Alarm" {cost 0}
+[03:24.471] Dice rolled: 5
+[03:24.745] MSG: Trap triggered: Alarm!
+[03:28.840] MSG: Alarm: +5 DEF to all ANIMA characters this turn!
+[03:28.845] Trap: "Alarm" triggered  P1(1,4)→P0(0,4)
+[03:28.845] Anim: 3D  (attacker survives)
+[03:29.131] Turn ended  P1  |  Crystals P0=700 P1=570
+
+--- Turn 25  |  Player 0  |  Crystals P0=700 P1=570 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[03:29.732] Mode selected P0: ATTACK
+[03:29.739] Attack phase P0: 2 attack(s) available
+[03:29.739] MSG: Player 1: tap a character to attack.
+[03:30.029] AI0 attack decision: (2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (4,0) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down}
+[03:30.366] Revealed: P1 (4,0) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[03:30.366] Dice rolled: 1
+[03:30.371] MSG: Goddess of Virtue destroys Dark Tengu by affinity!
+[03:36.013] Crystals: P1 570 → 320 (-250)  [battle]
+[03:37.411] Attack P0(2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P1(4,0)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}  Dice=1  ATK=80 vs DEF=25  → WIN
+[03:37.411] Anim: 3A  △ P1(4,0)
+[03:37.411] Card destroyed  P1 (4,0) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[03:37.909] Turn ended  P0  |  Crystals P0=700 P1=320
+
+--- Turn 26  |  Player 1  |  Crystals P0=700 P1=320 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[03:38.501] Mode selected P1: ATTACK
+[03:38.508] Attack phase P1: 2 attack(s) available
+[03:38.508] MSG: Player 2: tap a character to attack.
+[03:38.800] AI1 attack decision: (1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (3,3) (dead-end)
+[03:39.100] Dice rolled: 2
+[03:39.128] MSG: Nothing happens — Dead End.
+[03:42.506] Attack P1(1,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(3,3)(empty)  Dice=2  → DEAD_END
+[03:42.508] Anim: 3F  (blank slot)
+[03:42.802] Turn ended  P1  |  Crystals P0=700 P1=320
+
+--- Turn 27  |  Player 0  |  Crystals P0=700 P1=320 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][Godd][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[03:43.402] Mode selected P0: ATTACK
+[03:43.407] Attack phase P0: 2 attack(s) available
+[03:43.407] MSG: Player 1: tap a character to attack.
+[03:43.701] AI0 attack decision: (2,1)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (3,0) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}
+[03:44.035] Revealed: P1 (3,0) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[03:44.036] Dice rolled: 4
+[03:44.040] MSG: Goddess of Virtue destroys Succubus by affinity!
+[03:49.701] Crystals: P1 320 → 0 (-320)  [battle]
+
+=== GAME OVER ===
+[03:49.713] AI Player 0 wins
+[03:49.713] Reason: crystals
+[03:49.713] Final crystals — P0: 700  P1: 0  |  Turns: 27
+[03:49.713] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_wet_jeans_commute_2026-06-02_00-24-38_589.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Gamma-Mermaid-002
+Highlight: Gamma Mermaid (Union)  [setup: Chaotic Wisp]
+Result:    FAIL
+Detail:    None of expect_log_any matched: ["Union summoned P0: Gamma Mermaid", "Attack P\\d\\(\\d+,\\d+\\)\"Gamma\\ Mermaid\"", "MSG:.*Gamma"]
+Turns:     27  |  AI timeouts: 0
+===

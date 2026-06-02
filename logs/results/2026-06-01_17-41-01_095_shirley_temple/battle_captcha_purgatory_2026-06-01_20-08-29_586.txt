@@ -1,0 +1,78 @@
+=== Battle of Captcha Purgatory ===
+Battle started: 2026-06-01 20:08:29.586
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Volatile-Slasher-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Volatile-Slasher-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Volatile Slasher (Union)  [setup: Chaotic Wisp]
+Ability:      PERM_ATK_BOOST_ONCE_PER_AFFINITY — Once, after Reckoning with non-Bio, it gain +50 ATK permanently.
+Setup role:   t2_union
+Verifies:
+  - Ability: "Volatile Slasher" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Volatile Slasher, Attack P\d\(\d+,\d+\)"Volatile\ Slasher", MSG:.*Volatile, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Volatile Slasher — summon logged and/or union attacks with ATK=50.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Volatile Slasher
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Prayer, Tease
+P1 Tech hand: Prayer, Accident, Bribe
+P0:   [C:Yaks][C:Bat ][T:Host][  — ][C:War ]
+      [T:Curs][  — ][  — ][  — ][T:Spik]
+      [C:Spac][C:Dark][C:Choi][T:Bait][T:Foul]
+      [C:Meph][  — ][  — ][  — ][C:Heav]
+      [C:Whit][  — ][  — ][  — ][T:Trap]
+P1:   [C:Moon][T:Hypn][C:Flam][  — ][C:Paro]
+      [C:Fera][  — ][  — ][  — ][C:Blea]
+      [  — ][C:Sate][C:Chao][T:Pepp][  — ]
+      [C:Claw][T:Brai][T:Alar][C:Ox P][  — ]
+      [C:Curs][C:Joan][  — ][C:Scar][T:Snar]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:06.756] Crystals: P0 5000 → 4400 (-600)  [union]
+[00:06.788] Revealed: P0 (0,0) "Ten Arms Yaksa" {Union ATK45 DEF30 | destroy-cost 0 | summon-cost 600 | affinity Chaos}
+[00:06.788] Union summoned P0: "Ten Arms Yaksa" {Union ATK45 DEF30 | destroy-cost 0 | summon-cost 600 | affinity Chaos} from "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos | face-down}, "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down}
+[00:06.788] MSG: Player 1 summoned [Ten Arms Yaksa] using: "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos | face-down}, "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down}
+[00:06.788] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.857] AI Player 0 wins
+[00:06.857] Final crystals — P0: 4400  P1: 5000  |  Turns: 1
+[00:06.857] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_captcha_purgatory_2026-06-01_20-08-29_586.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Volatile-Slasher-002
+Highlight: Volatile Slasher (Union)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

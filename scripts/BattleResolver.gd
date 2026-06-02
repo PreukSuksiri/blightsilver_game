@@ -77,7 +77,8 @@ static func resolve_battle(
 
 		"character":
 			_resolve_character_vs_character(
-				attacker, defender, dice_roll, attacker_player, defender_player, target_pos, result)
+				attacker, defender, dice_roll, attacker_player, defender_player, target_pos,
+				result, defender_was_exposed)
 			result.coin_flip_results = _battle_coin_results.duplicate()
 			return result
 
@@ -93,10 +94,12 @@ static func _resolve_character_vs_character(
 		attacker_player: int,
 		defender_player: int,
 		target_pos: Vector2i,
-		result: BattleResult
+		result: BattleResult,
+		defender_was_exposed: bool = false
 ) -> void:
 	var base_atk: int = attacker.get_effective_atk()
-	var eff_atk: int = _get_effective_atk(attacker, defender, dice_roll, attacker_player, target_pos)
+	var eff_atk: int = _get_effective_atk(
+		attacker, defender, dice_roll, attacker_player, target_pos, defender_was_exposed)
 	if eff_atk != base_atk:
 		result.ability_triggered_attacker = true
 
@@ -362,7 +365,8 @@ static func _get_effective_atk(
 		defender: GameState.CardInstance,
 		dice_roll: int,
 		attacker_player: int,
-		target_pos: Vector2i = Vector2i(-1, -1)
+		target_pos: Vector2i = Vector2i(-1, -1),
+		defender_was_exposed: bool = false
 ) -> int:
 	var atk: int = attacker.get_effective_atk()
 
@@ -424,11 +428,11 @@ static func _get_effective_atk(
 				atk += attacker.ability_params.get("bonus", 0)
 
 		CharacterData.AbilityType.ATK_BOOST_VS_REVEALED:
-			if defender.face_up:
+			if defender_was_exposed:
 				atk += attacker.ability_params.get("bonus", 0)
 
 		CharacterData.AbilityType.ATK_BONUS_VS_FACEDOWN:
-			if not defender.face_up:
+			if not defender_was_exposed:
 				atk += attacker.ability_params.get("bonus", 0)
 
 		CharacterData.AbilityType.ATK_BONUS_VS_UNION:

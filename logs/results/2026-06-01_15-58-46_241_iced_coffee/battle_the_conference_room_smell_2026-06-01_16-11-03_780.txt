@@ -1,0 +1,498 @@
+=== Battle of The Conference Room Smell ===
+Battle started: 2026-06-01 16:11:03.780
+Game Session of Iced Coffee (started 2026-06-01 15:58:46.241)
+=== Card E2E Test ===
+Scenario ID:  E2E-Armored-Bee-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Armored-Bee-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Armored Bee (Character)  [setup: Chaotic Wisp]
+Ability:      ONE_USE_DEF_BOOST — +60 DEF until the end of that turn once
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Armored Bee" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Armored Bee
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Armored\ Bee".*ATK=|→ P\d\(\d+,\d+\)"Armored\ Bee")
+  - Log must match regex: Attack P0\(2,2\)"Armored\ Bee".*ATK=30\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: one-use ability ONE_USE_DEF_BOOST. [FIXED: expected ATK=30 (base), ONE_USE_DEF_BOOST boosts DEF not ATK]
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Armored Bee
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Armored Bee
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Release Mutagen, Resurrection
+P1 Tech hand: Spy, Tease, Accident
+P0:   [C:Stai][  — ][C:Meph][  — ][T:Expl]
+      [T:Blac][C:Bomb][  — ][  — ][T:Snar]
+      [C:Dark][C:Shep][C:Armo][C:Mine][T:Spik]
+      [C:Pit ][  — ][  — ][  — ][C:Dark]
+      [C:Meli][  — ][  — ][  — ][T:Curs]
+P1:   [T:Snar][  — ][  — ][  — ][C:Moon]
+      [C:Need][C:Armo][C:Lazy][  — ][C:Hamm]
+      [C:Hunt][C:Claw][C:Chao][C:Stri][T:Echo]
+      [C:Skel][  — ][  — ][  — ][T:Stre]
+      [C:Shep][  — ][  — ][  — ][T:Blac]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.335] Mode selected P0: ATTACK
+[00:05.339] Attack phase P0: 2 attack(s) available
+[00:05.339] MSG: Player 1: tap a character to attack.
+[00:05.635] AI0 attack decision: (2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.976] Revealed: P0 (2,2) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[00:06.002] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:06.002] Dice rolled: 1
+[00:06.006] MSG: Armored Bee wins!
+[00:10.602] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:11.999] Attack P0(2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=30 vs DEF=0  → WIN
+[00:12.000] Anim: 3A  △ P1(2,2)
+[00:12.000] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.495] Mode selected P0: ATTACK
+[00:12.501] Attack phase P0: 1 attack(s) available
+[00:12.501] MSG: Player 1: tap a character to attack.
+[00:12.793] AI0 attack decision: (2,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima | face-down} → (0,4) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down}
+[00:13.129] Revealed: P0 (2,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:13.158] Revealed: P1 (0,4) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:13.158] Dice rolled: 1
+[00:13.162] MSG: Shepherd Detective wins!
+[00:17.794] Crystals: P1 4900 → 4600 (-300)  [battle]
+[00:19.192] Attack P0(2,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(0,4)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=1  ATK=40 vs DEF=25  → WIN
+[00:19.192] Anim: 3A  △ P1(0,4)
+[00:19.192] Card destroyed  P1 (0,4) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:19.193] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:19.585] AI0 target chosen: (3,0)
+[00:19.639] Revealed: P1 (3,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:19.640] MSG: Revealed: Skeleton Archer
+[00:19.703] Turn ended  P0  |  Crystals P0=5000 P1=4600
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Shep][Armo][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [Skel][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:21.794] Crystals: P1 4600 → 3800 (-800)  [union]
+[00:21.843] Revealed: P1 (1,1) "Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[00:21.843] Union summoned P1: "Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down}
+[00:21.843] MSG: Player 2 summoned [Armored Dino] using: "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down}
+[00:24.973] Crystals: P1 3800 → 3750 (-50)  [skip tax]
+[00:24.973] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:26.361] Turn ended  P1  |  Crystals P0=5000 P1=3750
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3750 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Shep][Armo][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][Armo][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [Skel][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:26.968] Mode selected P0: ATTACK
+[00:26.977] Attack phase P0: 2 attack(s) available
+[00:26.977] MSG: Player 1: tap a character to attack.
+[00:27.271] AI0 attack decision: (2,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → (3,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:27.581] Dice rolled: 4
+[00:27.593] MSG: Shepherd Detective wins!
+[00:32.281] Crystals: P1 3750 → 3450 (-300)  [battle]
+[00:33.679] Attack P0(2,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(3,0)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=4  ATK=40 vs DEF=5  → WIN
+[00:33.679] Anim: 3A  △ P1(3,0)
+[00:33.679] Card destroyed  P1 (3,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:33.680] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:34.079] AI0 target chosen: (2,4)
+[00:34.116] Revealed: P1 (2,4) "Echo Barrier" {cost 1000}
+[00:34.117] MSG: Revealed: Echo Barrier
+[00:34.181] Mode selected P0: ATTACK
+[00:34.184] Attack phase P0: 1 attack(s) available
+[00:34.185] MSG: Player 1: tap a character to attack.
+[00:34.484] AI0 attack decision: (2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → (1,2) (dead-end)
+[00:34.793] Dice rolled: 5
+[00:34.822] MSG: Nothing happens — Dead End.
+[00:38.199] Attack P0(2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[00:38.201] Anim: 3F  (blank slot)
+[00:38.703] Turn ended  P0  |  Crystals P0=5000 P1=3450
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=3450 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Shep][Armo][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][Armo][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:39.309] Mode selected P1: ATTACK
+[00:39.316] Attack phase P1: 2 attack(s) available
+[00:39.316] MSG: Player 2: tap a character to attack.
+[00:39.618] AI1 attack decision: (1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (2,2) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[00:39.926] Dice rolled: 1
+[00:39.976] MSG: Armored Dino wins!
+[00:45.626] Crystals: P0 5000 → 4520 (-480)  [battle]
+[00:47.025] Attack P1(1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P0(2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=1  ATK=95 vs DEF=60  → WIN
+[00:47.026] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} +DEF 60
+[00:47.026] Anim: 3A  △ P0(2,2)
+[00:47.026] Card destroyed  P0 (2,2) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[00:47.330] Turn ended  P1  |  Crystals P0=4520 P1=3450
+
+--- Turn 5  |  Player 0  |  Crystals P0=4520 P1=3450 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Shep][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][Armo][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:47.933] Mode selected P0: ATTACK
+[00:47.939] Attack phase P0: 2 attack(s) available
+[00:47.939] MSG: Player 1: tap a character to attack.
+[00:48.238] AI0 attack decision: (2,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → (0,1) (dead-end)
+[00:48.547] Dice rolled: 1
+[00:48.572] MSG: Nothing happens — Dead End.
+[00:51.952] Attack P0(2,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(0,1)(empty)  Dice=1  → DEAD_END
+[00:51.953] Anim: 3F  (blank slot)
+[00:51.953] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:52.355] AI0 target chosen: (0,2)
+[00:52.457] Mode selected P0: ATTACK
+[00:52.462] Attack phase P0: 1 attack(s) available
+[00:52.462] MSG: Player 1: tap a character to attack.
+[00:52.762] AI0 attack decision: (1,1)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down} → (1,0) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down}
+[00:53.107] Revealed: P0 (1,1) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[00:53.167] Revealed: P1 (1,0) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[00:53.167] Dice rolled: 4
+[00:53.170] MSG: Bomber Fairy wins!
+[00:57.810] Crystals: P1 3450 → 3250 (-200)  [battle]
+[00:59.208] Attack P0(1,1)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} → P1(1,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}  Dice=4  ATK=30 vs DEF=10  → WIN
+[00:59.208] Anim: 3A  △ P1(1,0)
+[00:59.208] Card destroyed  P1 (1,0) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[00:59.210] MSG: Bomber Fairy: Kill bonus — extra attack!
+[00:59.702] Mode selected P0: ATTACK
+[00:59.710] Attack phase P0: 1 attack(s) available
+[00:59.710] MSG: Player 1: tap a character to attack.
+[01:00.000] AI0 attack decision: (2,0)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down} → (2,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down}
+[01:00.339] Revealed: P0 (2,0) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[01:00.380] Revealed: P1 (2,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:00.380] Dice rolled: 3
+[01:00.384] MSG: Dark Tengu wins!
+[01:04.976] Crystals: P1 3250 → 3070 (-180)  [battle]
+[01:06.376] Attack P0(2,0)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos} → P1(2,1)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=3  ATK=25 vs DEF=10  → WIN
+[01:06.376] Anim: 3A  △ P1(2,1)
+[01:06.376] Card destroyed  P1 (2,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:06.377] MSG: Dark Tengu: Self ATK debuff applied.
+[01:06.874] Turn ended  P0  |  Crystals P0=4520 P1=3070
+
+--- Turn 6  |  Player 1  |  Crystals P0=4520 P1=3070 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][Bomb][  — ][  — ][  ? ]
+      [Dark][Shep][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:07.469] Mode selected P1: ATTACK
+[01:07.478] Attack phase P1: 2 attack(s) available
+[01:07.478] MSG: Player 2: tap a character to attack.
+[01:07.767] AI1 attack decision: (1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (2,0) "Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}
+[01:08.068] Dice rolled: 1
+[01:08.119] MSG: Armored Dino wins!
+[01:12.793] Crystals: P0 4520 → 4270 (-250)  [battle]
+[01:14.192] Attack P1(1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P0(2,0)"Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}  Dice=1  ATK=95 vs DEF=25  → WIN
+[01:14.192] Anim: 3A  △ P0(2,0)
+[01:14.192] Card destroyed  P0 (2,0) "Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}
+[01:14.480] Turn ended  P1  |  Crystals P0=4270 P1=3070
+
+--- Turn 7  |  Player 0  |  Crystals P0=4270 P1=3070 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][Bomb][  — ][  — ][  ? ]
+      [  — ][Shep][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:15.080] Mode selected P0: ATTACK
+[01:15.087] Attack phase P0: 2 attack(s) available
+[01:15.087] MSG: Player 1: tap a character to attack.
+[01:15.375] AI0 attack decision: (0,2)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down} → (1,1) "Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[01:15.716] Revealed: P0 (0,2) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[01:15.716] Dice rolled: 1
+[01:15.756] Defender prompt: "Armored Dino: Pay 1000 Crystals for +60 DEF this battle?"  [Pay 1000 Crystals / Skip]
+[01:16.259] Ability choice resolved: 0 (Yes)
+[01:16.260] Crystals: P1 3070 → 2070 (-1000)  [ability]
+[01:17.643] MSG: Armored Dino: Paid 1000 Crystals for +60 DEF!
+[01:22.210] Crystals: P0 4270 → 3410 (-860)  [battle]
+[01:23.609] Attack P0(0,2)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P1(1,1)"Armored Dino" {Union ATK95 DEF120 | destroy-cost 0 | summon-cost 800 | affinity Nature | buff +tempDEF60}  Dice=1  ATK=75 vs DEF=120  → LOSE
+[01:23.609] Anim: 3B  △ P0(0,2)
+[01:23.609] Card destroyed  P0 (0,2) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[01:24.105] Mode selected P0: ATTACK
+[01:24.112] Attack phase P0: 1 attack(s) available
+[01:24.113] MSG: Player 1: tap a character to attack.
+[01:24.402] AI0 attack decision: (3,0)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (1,1) "Armored Dino" {Union ATK95 DEF120 | destroy-cost 0 | summon-cost 800 | affinity Nature | buff +tempDEF60}
+[01:24.766] Revealed: P0 (3,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:24.766] Dice rolled: 1
+[01:24.803] Defender prompt: "Armored Dino: Pay 1000 Crystals for +60 DEF this battle?"  [Pay 1000 Crystals / Skip]
+[01:25.317] Ability choice resolved: 1 (No)
+[01:25.317] MSG: Both cards are destroyed!
+[01:29.684] Crystals: P0 3410 → 2160 (-1250)  [battle]
+[01:31.086] Attack P0(3,0)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → P1(1,1)"Armored Dino" {Union ATK95 DEF120 | destroy-cost 0 | summon-cost 800 | affinity Nature | buff +tempDEF60}  Dice=1  ATK=120 vs DEF=120  → TIE
+[01:31.086] Anim: 3C  △ P0(3,0) + △ P1(1,1)
+[01:31.086] Card destroyed  P0 (3,0) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:31.086] Card destroyed  P1 (1,1) "Armored Dino" {Union ATK95 DEF120 | destroy-cost 0 | summon-cost 800 | affinity Nature | buff +tempDEF60}
+[01:31.582] Turn ended  P0  |  Crystals P0=2160 P1=2070
+
+--- Turn 8  |  Player 1  |  Crystals P0=2160 P1=2070 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Bomb][  — ][  — ][  ? ]
+      [  — ][Shep][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:32.176] Mode selected P1: ATTACK
+[01:32.182] Attack phase P1: 2 attack(s) available
+[01:32.182] MSG: Player 2: tap a character to attack.
+[01:32.476] AI1 attack decision: (4,0)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima | face-down} → (1,1) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used}
+[01:32.779] Revealed: P1 (4,0) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:32.779] Dice rolled: 2
+[01:32.788] MSG: Shepherd Detective wins!
+[01:37.468] Crystals: P0 2160 → 1660 (-500)  [battle]
+[01:38.867] Attack P1(4,0)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(1,1)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used}  Dice=2  ATK=40 vs DEF=15  → WIN
+[01:38.867] Anim: 3A  △ P0(1,1)
+[01:38.867] Card destroyed  P0 (1,1) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:extra_kill_used}
+[01:38.867] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:39.164] Turn ended  P1  |  Crystals P0=1660 P1=2070
+
+--- Turn 9  |  Player 0  |  Crystals P0=1660 P1=2070 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Shep][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Shep][  — ][  — ][  — ][  ? ]
+[01:39.259] AI0 target chosen: (3,1)
+[01:39.762] Mode selected P0: ATTACK
+[01:39.769] Attack phase P0: 2 attack(s) available
+[01:39.770] MSG: Player 1: tap a character to attack.
+[01:40.059] AI0 attack decision: (2,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → (4,0) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:40.359] Dice rolled: 1
+[01:40.369] MSG: Shepherd Detective wins!
+[01:45.052] Crystals: P1 2070 → 1670 (-400)  [battle]
+[01:46.447] Attack P0(2,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(4,0)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=1  ATK=40 vs DEF=25  → WIN
+[01:46.447] Anim: 3A  △ P1(4,0)
+[01:46.447] Card destroyed  P1 (4,0) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:46.448] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:46.842] AI0 target chosen: (3,2)
+[01:46.944] Mode selected P0: ATTACK
+[01:46.949] Attack phase P0: 1 attack(s) available
+[01:46.950] MSG: Player 1: tap a character to attack.
+[01:47.242] AI0 attack decision: (0,0)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos | face-down} → (0,2) (dead-end)
+[01:47.615] Revealed: P0 (0,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:47.615] Dice rolled: 5
+[01:47.629] MSG: Nothing happens — Dead End.
+[01:50.974] Attack P0(0,0)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P1(0,2)(empty)  Dice=5  → DEAD_END
+[01:50.974] Anim: 3F  (blank slot)
+[01:51.464] Turn ended  P0  |  Crystals P0=1660 P1=1670
+
+--- Turn 10  |  Player 1  |  Crystals P0=1660 P1=1670 ---
+P0:   [Stai][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Shep][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:52.060] Mode selected P1: ATTACK
+[01:52.066] Attack phase P1: 2 attack(s) available
+[01:52.067] MSG: Player 2: tap a character to attack.
+[01:52.360] AI1 attack decision: (1,4)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down} → (0,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:52.718] Revealed: P1 (1,4) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[01:52.718] Dice rolled: 2
+[01:52.722] MSG: Hammer Shark wins!
+[01:57.348] Crystals: P0 1660 → 1480 (-180)  [battle]
+[01:58.747] Attack P1(1,4)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P0(0,0)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}  Dice=2  ATK=20 vs DEF=0  → WIN
+[01:58.747] Anim: 3A  △ P0(0,0)
+[01:58.747] Card destroyed  P0 (0,0) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:59.044] Turn ended  P1  |  Crystals P0=1480 P1=1670
+
+--- Turn 11  |  Player 0  |  Crystals P0=1480 P1=1670 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Shep][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Hamm]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[01:59.637] Mode selected P0: ATTACK
+[01:59.651] Attack phase P0: 2 attack(s) available
+[01:59.651] MSG: Player 1: tap a character to attack.
+[01:59.934] AI0 attack decision: (2,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → (1,4) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[02:00.235] Dice rolled: 2
+[02:00.245] MSG: Shepherd Detective wins!
+[02:04.926] Crystals: P1 1670 → 1420 (-250)  [battle]
+[02:06.324] Attack P0(2,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(1,4)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}  Dice=2  ATK=40 vs DEF=20  → WIN
+[02:06.325] Anim: 3A  △ P1(1,4)
+[02:06.325] Card destroyed  P1 (1,4) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[02:06.325] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[02:06.718] AI0 target chosen: (2,3)
+[02:06.764] Revealed: P1 (2,3) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[02:06.764] MSG: Revealed: Striker Comet
+[02:06.794] Mode selected P0: ATTACK
+[02:06.796] Attack phase P0: 1 attack(s) available
+[02:06.797] MSG: Player 1: tap a character to attack.
+[02:07.101] AI0 attack decision: (2,3)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic | face-down} → (1,3) (dead-end)
+[02:07.482] Revealed: P0 (2,3) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[02:07.482] Dice rolled: 2
+[02:07.496] MSG: Nothing happens — Dead End.
+[02:10.816] Attack P0(2,3)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} → P1(1,3)(empty)  Dice=2  → DEAD_END
+[02:10.816] Anim: 3F  (blank slot)
+[02:10.816] Crystals: P0 1480 → 1500 (+20)  [ability]
+[02:10.817] MSG: Miner Probe: Gained 20 Crystals!
+[02:11.309] MSG: Striker Comet self-destructs at end of turn!
+[02:11.309] Crystals: P1 1420 → 1220 (-200)  [card lost]
+[02:11.312] Card destroyed  P1 (2,3) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending}
+[02:11.314] Turn ended  P0  |  Crystals P0=1500 P1=1220
+
+--- Turn 12  |  Player 1  |  Crystals P0=1500 P1=1220 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Shep][  — ][Mine][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:11.910] Mode selected P1: ATTACK
+[02:11.916] Attack phase P1: 2 attack(s) available
+[02:11.916] MSG: Player 2: tap a character to attack.
+[02:12.209] AI1 attack decision: (2,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down} → (2,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:12.575] Revealed: P1 (2,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[02:12.576] Dice rolled: 4
+[02:12.579] MSG: Huntress of Green Glade wins!
+[02:17.160] Crystals: P0 1500 → 1100 (-400)  [battle]
+[02:18.559] Attack P1(2,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(2,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=4  ATK=50 vs DEF=25  → WIN
+[02:18.560] Anim: 3A  △ P0(2,1)
+[02:18.560] Card destroyed  P0 (2,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:18.863] Turn ended  P1  |  Crystals P0=1100 P1=1220
+
+--- Turn 13  |  Player 0  |  Crystals P0=1100 P1=1220 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][Mine][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Hunt][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:19.469] Mode selected P0: ATTACK
+[02:19.475] Attack phase P0: 2 attack(s) available
+[02:19.475] MSG: Player 1: tap a character to attack.
+[02:19.776] AI0 attack decision: (2,3)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} → (0,0) "Snare Trap" {cost 500}
+[02:20.125] Revealed: P1 (0,0) "Snare Trap" {cost 500}
+[02:20.125] Dice rolled: 2
+[02:20.398] MSG: Trap triggered: Snare Trap!
+[02:24.511] Crystals: P1 1220 → 720 (-500)  [trap cost]
+[02:25.901] MSG: Snare Trap: Miner Probe's effect nullified until end of next turn!
+[02:25.907] Trap: "Snare Trap" triggered  P0(2,3)→P1(0,0)
+[02:25.907] Anim: 3D  (attacker survives)
+[02:26.411] Mode selected P0: ATTACK
+[02:26.417] Attack phase P0: 1 attack(s) available
+[02:26.417] MSG: Player 1: tap a character to attack.
+[02:26.717] AI0 attack decision: (3,4)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | face-down} → (3,1) (dead-end)
+[02:27.093] Revealed: P0 (3,4) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[02:27.094] Dice rolled: 4
+[02:27.108] MSG: Nothing happens — Dead End.
+[02:30.483] Attack P0(3,4)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} → P1(3,1)(empty)  Dice=4  → DEAD_END
+[02:30.483] Anim: 3F  (blank slot)
+[02:30.981] Turn ended  P0  |  Crystals P0=1100 P1=720
+
+--- Turn 14  |  Player 1  |  Crystals P0=1100 P1=720 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][Mine][  ? ]
+      [  — ][  — ][  — ][  — ][Dark]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Hunt][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:31.575] Mode selected P1: ATTACK
+[02:31.583] Attack phase P1: 2 attack(s) available
+[02:31.584] MSG: Player 2: tap a character to attack.
+[02:31.876] AI1 attack decision: (2,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → (3,4) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[02:32.175] Dice rolled: 3
+[02:32.185] MSG: Both cards are destroyed!
+[02:36.784] Crystals: P1 720 → 0 (-720)  [battle]
+
+=== GAME OVER ===
+[02:36.796] AI Player 0 wins
+[02:36.796] Reason: crystals
+[02:36.796] Final crystals — P0: 1100  P1: 0  |  Turns: 14
+[02:36.796] Log saved to: res://logs/results/2026-06-01_15-58-46_241_iced_coffee/battle_the_conference_room_smell_2026-06-01_16-11-03_780.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Armored-Bee-002
+Highlight: Armored Bee (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     14  |  AI timeouts: 0
+===

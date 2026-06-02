@@ -1,0 +1,381 @@
+=== Battle of Cable Guy Time Window ===
+Battle started: 2026-06-01 18:54:45.136
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Acid-Trap-Hole-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Acid-Trap-Hole-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Acid Trap Hole (Trap)  [setup: Ox Patrol]
+Ability:      DRAIN_ATTACKER_CRYSTALS — Flip 2 coin, attacking player loses 50 Crystals per each head(s).
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Acid Trap Hole" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Acid Trap Hole
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Acid\ Trap\ Hole"
+  - Log must contain at least one of: Trap triggered, "Acid Trap Hole" triggered, Trap triggered: Acid Trap Hole, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Acid Trap Hole revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Acid Trap Hole
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Siege Cannon, Release Mutagen
+P1 Tech hand: Great Diplomacy, Prayer, Release Mutagen
+P0:   [  — ][C:Choi][T:Pepp][T:Acid][T:Self]
+      [C:Grav][T:Alar][  — ][C:Skel][  — ]
+      [C:Red ][  — ][C:Ox P][  — ][  — ]
+      [  — ][C:Shep][  — ][  — ][C:Doom]
+      [  — ][  — ][C:Pit ][C:Blea][  — ]
+P1:   [C:Godd][C:Soni][T:Trap][  — ][C:Tomb]
+      [  — ][C:Bat ][C:War ][C:Moon][  — ]
+      [  — ][  — ][T:Acid][T:Pepp][C:Leop]
+      [C:Echo][  — ][T:Hard][T:Flam][T:Expl]
+      [C:Aeri][C:Pyro][C:Dark][T:Bunk][C:Skel]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.308] Mode selected P0: ATTACK
+[00:05.312] Attack phase P0: 2 attack(s) available
+[00:05.312] MSG: Player 1: tap a character to attack.
+[00:05.610] AI0 attack decision: (0,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down} → (0,2) "Trap Hole" {cost 0}
+[00:05.958] Revealed: P0 (0,1) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:05.985] Revealed: P1 (0,2) "Trap Hole" {cost 0}
+[00:05.985] Dice rolled: 2
+[00:06.263] MSG: Trap triggered: Trap Hole!
+[00:10.340] Crystals: P0 5000 → 4980 (-20)  [trap]
+[00:11.723] MSG: Trap Hole: Player 1 loses 20 Crystals!
+[00:11.727] Trap: "Trap Hole" triggered  P0(0,1)→P1(0,2)
+[00:11.727] Anim: 3D  (attacker survives)
+[00:12.228] Mode selected P0: ATTACK
+[00:12.233] Attack phase P0: 1 attack(s) available
+[00:12.233] MSG: Player 1: tap a character to attack.
+[00:12.522] AI0 attack decision: (1,0)"Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos | face-down} → (0,0) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}
+[00:12.860] Revealed: P0 (1,0) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[00:12.889] Revealed: P1 (0,0) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[00:12.889] Dice rolled: 1
+[00:17.589] Crystals: P0 4980 → 4730 (-250)  [battle]
+[00:18.988] Attack P0(1,0)"Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos} → P1(0,0)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}  Dice=1  ATK=15 vs DEF=100  → LOSE
+[00:18.989] Anim: 3B  △ P0(1,0)
+[00:18.989] Card destroyed  P0 (1,0) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[00:19.494] Turn ended  P0  |  Crystals P0=4730 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4730 P1=5000 ---
+P0:   [  — ][Choi][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [Godd][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:21.606] Crystals: P1 5000 → 3500 (-1500)  [union]
+[00:21.654] Revealed: P1 (0,0) "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine}
+[00:21.654] Union summoned P1: "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} from "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}, "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down}
+[00:21.655] MSG: Player 2 summoned [Seraphim Fistmaster] using: "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}, "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down}
+[00:24.860] Crystals: P1 3500 → 3450 (-50)  [skip tax]
+[00:24.861] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:26.247] Turn ended  P1  |  Crystals P0=4730 P1=3450
+
+--- Turn 3  |  Player 0  |  Crystals P0=4730 P1=3450 ---
+P0:   [  — ][Choi][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [Sera][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:26.858] Mode selected P0: ATTACK
+[00:26.864] Attack phase P0: 2 attack(s) available
+[00:26.864] MSG: Player 1: tap a character to attack.
+[00:27.160] AI0 attack decision: (0,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → (0,1) (dead-end)
+[00:27.468] Dice rolled: 2
+[00:27.497] MSG: Nothing happens — Dead End.
+[00:30.875] Attack P0(0,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → P1(0,1)(empty)  Dice=2  → DEAD_END
+[00:30.875] Anim: 3F  (blank slot)
+[00:31.382] Mode selected P0: ATTACK
+[00:31.386] Attack phase P0: 1 attack(s) available
+[00:31.386] MSG: Player 1: tap a character to attack.
+[00:31.685] AI0 attack decision: (4,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (0,0) "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine}
+[00:32.033] Revealed: P0 (4,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:32.033] Dice rolled: 2
+[00:32.074] MSG: Pit Lord is destroyed by Divine!
+[00:37.828] Crystals: P0 4730 → 3480 (-1250)  [battle]
+[00:39.228] Attack P0(4,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → P1(0,0)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine}  Dice=2  ATK=120 vs DEF=240  → LOSE
+[00:39.228] Reckoning overlay: P1 "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} +DEF 120
+[00:39.228] Anim: 3B  △ P0(4,2)
+[00:39.228] Card destroyed  P0 (4,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:39.723] Turn ended  P0  |  Crystals P0=3480 P1=3450
+
+--- Turn 4  |  Player 1  |  Crystals P0=3480 P1=3450 ---
+P0:   [  — ][Choi][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Sera][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:40.320] Mode selected P1: ATTACK
+[00:40.328] Attack phase P1: 2 attack(s) available
+[00:40.328] MSG: Player 2: tap a character to attack.
+[00:40.618] AI1 attack decision: (0,0)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → (0,1) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:40.919] Dice rolled: 5
+[00:40.969] MSG: Seraphim Fistmaster wins!
+[00:45.581] Crystals: P0 3480 → 3230 (-250)  [battle]
+[00:46.977] Attack P1(0,0)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P0(0,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}  Dice=5  ATK=120 vs DEF=25  → WIN
+[00:46.977] Anim: 3A  △ P0(0,1)
+[00:46.977] Card destroyed  P0 (0,1) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:47.285] Turn ended  P1  |  Crystals P0=3230 P1=3450
+
+--- Turn 5  |  Player 0  |  Crystals P0=3230 P1=3450 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Sera][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:47.894] Mode selected P0: ATTACK
+[00:47.899] Attack phase P0: 2 attack(s) available
+[00:47.899] MSG: Player 1: tap a character to attack.
+[00:48.197] AI0 attack decision: (1,3)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down} → (1,0) (dead-end)
+[00:48.543] Revealed: P0 (1,3) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:48.544] Dice rolled: 1
+[00:48.558] MSG: Nothing happens — Dead End.
+[00:51.921] Attack P0(1,3)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P1(1,0)(empty)  Dice=1  → DEAD_END
+[00:51.922] Anim: 3F  (blank slot)
+[00:51.922] MSG: Skeleton Scout: Bonus attack for hitting dead end!
+[00:52.425] Mode selected P0: ATTACK
+[00:52.429] Attack phase P0: 2 attack(s) available
+[00:52.429] MSG: Player 1: tap a character to attack.
+[00:52.731] AI0 attack decision: (2,0)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane | face-down} → (1,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down}
+[00:53.077] Revealed: P0 (2,0) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:53.104] Revealed: P1 (1,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:53.104] Dice rolled: 5
+[00:53.108] MSG: Red Mage wins!
+[00:57.751] Crystals: P1 3450 → 3250 (-200)  [battle]
+[00:59.152] Attack P0(2,0)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P1(1,1)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=5  ATK=20 vs DEF=15  → WIN
+[00:59.152] Anim: 3A  △ P1(1,1)
+[00:59.152] Card destroyed  P1 (1,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:59.646] Mode selected P0: ATTACK
+[00:59.654] Attack phase P0: 1 attack(s) available
+[00:59.654] MSG: Player 1: tap a character to attack.
+[00:59.943] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,0) (dead-end)
+[01:00.279] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:00.279] Dice rolled: 1
+[01:00.294] MSG: Nothing happens — Dead End.
+[01:03.616] Attack P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P1(2,0)(empty)  Dice=1  → DEAD_END
+[01:03.617] Anim: 3F  (blank slot)
+[01:04.123] Turn ended  P0  |  Crystals P0=3230 P1=3250
+
+--- Turn 6  |  Player 1  |  Crystals P0=3230 P1=3250 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][Skel][  — ]
+      [Red ][  — ][Ox P][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Sera][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:04.724] Mode selected P1: ATTACK
+[01:04.732] Attack phase P1: 2 attack(s) available
+[01:04.733] MSG: Player 2: tap a character to attack.
+[01:05.031] AI1 attack decision: (0,0)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:05.340] Dice rolled: 1
+[01:05.388] MSG: Seraphim Fistmaster wins!
+[01:11.039] Crystals: P0 3230 → 2810 (-420)  [battle]
+[01:12.438] Attack P1(0,0)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=1  ATK=120 vs DEF=40  → WIN
+[01:12.439] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 5
+[01:12.439] Anim: 3A  △ P0(2,2)
+[01:12.439] Card destroyed  P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:12.744] Turn ended  P1  |  Crystals P0=2810 P1=3250
+
+--- Turn 7  |  Player 0  |  Crystals P0=2810 P1=3250 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][Skel][  — ]
+      [Red ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Sera][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:13.350] Mode selected P0: ATTACK
+[01:13.359] Attack phase P0: 2 attack(s) available
+[01:13.359] MSG: Player 1: tap a character to attack.
+[01:13.656] AI0 attack decision: (1,3)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used} → (0,4) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down}
+[01:14.000] Revealed: P1 (0,4) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:14.000] Dice rolled: 4
+[01:18.781] Crystals: P0 2810 → 2660 (-150)  [battle]
+[01:20.179] Attack P0(1,3)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used} → P1(0,4)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=4  ATK=20 vs DEF=60  → LOSE
+[01:20.180] Anim: 3B  △ P0(1,3)
+[01:20.180] Card destroyed  P0 (1,3) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used}
+[01:20.683] Mode selected P0: ATTACK
+[01:20.689] Attack phase P0: 1 attack(s) available
+[01:20.689] MSG: Player 1: tap a character to attack.
+[01:20.984] AI0 attack decision: (2,0)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → (0,3) (dead-end)
+[01:21.293] Dice rolled: 4
+[01:21.319] MSG: Nothing happens — Dead End.
+[01:24.699] Attack P0(2,0)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P1(0,3)(empty)  Dice=4  → DEAD_END
+[01:24.699] Anim: 3F  (blank slot)
+[01:25.204] Turn ended  P0  |  Crystals P0=2660 P1=3250
+
+--- Turn 8  |  Player 1  |  Crystals P0=2660 P1=3250 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Red ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Sera][  — ][  — ][  — ][Tomb]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:25.811] Mode selected P1: ATTACK
+[01:25.819] Attack phase P1: 2 attack(s) available
+[01:25.819] MSG: Player 2: tap a character to attack.
+[01:26.118] AI1 attack decision: (0,0)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → (2,0) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[01:26.427] Dice rolled: 4
+[01:26.474] MSG: Seraphim Fistmaster wins!
+[01:31.136] Crystals: P0 2660 → 2260 (-400)  [battle]
+[01:32.533] Attack P1(0,0)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P0(2,0)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}  Dice=4  ATK=120 vs DEF=20  → WIN
+[01:32.535] Anim: 3A  △ P0(2,0)
+[01:32.535] Card destroyed  P0 (2,0) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[01:32.839] Turn ended  P1  |  Crystals P0=2260 P1=3250
+
+--- Turn 9  |  Player 0  |  Crystals P0=2260 P1=3250 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+P1:   [Sera][  — ][  — ][  — ][Tomb]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:33.441] Mode selected P0: ATTACK
+[01:33.448] Attack phase P0: 2 attack(s) available
+[01:33.449] MSG: Player 1: tap a character to attack.
+[01:33.747] AI0 attack decision: (3,4)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down} → (1,4) (dead-end)
+[01:34.093] Revealed: P0 (3,4) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:34.093] Dice rolled: 5
+[01:34.107] MSG: Nothing happens — Dead End.
+[01:37.463] Attack P0(3,4)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P1(1,4)(empty)  Dice=5  → DEAD_END
+[01:37.464] Anim: 3F  (blank slot)
+[01:37.966] Mode selected P0: ATTACK
+[01:37.971] Attack phase P0: 1 attack(s) available
+[01:37.971] MSG: Player 1: tap a character to attack.
+[01:38.271] AI0 attack decision: (4,3)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio | face-down} → (1,3) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}
+[01:38.615] Revealed: P0 (4,3) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[01:38.636] Revealed: P1 (1,3) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:38.636] Dice rolled: 4
+[01:38.640] MSG: Both cards are destroyed!
+[01:43.198] Crystals: P0 2260 → 1940 (-320)  [battle]
+[01:44.589] Crystals: P1 3250 → 3050 (-200)  [battle]
+[01:45.983] Attack P0(4,3)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} → P1(1,3)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=4  ATK=20 vs DEF=20  → TIE
+[01:45.984] Anim: 3C  △ P0(4,3) + △ P1(1,3)
+[01:45.984] Card destroyed  P0 (4,3) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[01:45.984] Card destroyed  P1 (1,3) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:46.486] Turn ended  P0  |  Crystals P0=1940 P1=3050
+
+--- Turn 10  |  Player 1  |  Crystals P0=1940 P1=3050 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][Doom]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [Sera][  — ][  — ][  — ][Tomb]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:47.091] Mode selected P1: ATTACK
+[01:47.099] Attack phase P1: 2 attack(s) available
+[01:47.100] MSG: Player 2: tap a character to attack.
+[01:47.397] AI1 attack decision: (0,0)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → (3,4) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:47.706] Dice rolled: 3
+[01:47.755] MSG: Seraphim Fistmaster wins!
+[01:53.381] Crystals: P0 1940 → 1840 (-100)  [battle]
+[01:54.776] Attack P1(0,0)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P0(3,4)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}  Dice=3  ATK=240 vs DEF=15  → WIN
+[01:54.776] Reckoning overlay: P1 "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} +ATK 120
+[01:54.776] Anim: 3A  △ P0(3,4)
+[01:54.776] Card destroyed  P0 (3,4) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:55.073] Turn ended  P1  |  Crystals P0=1840 P1=3050
+
+--- Turn 11  |  Player 0  |  Crystals P0=1840 P1=3050 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [Sera][  — ][  — ][  — ][Tomb]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:55.669] Mode selected P0: ATTACK
+[01:55.676] Attack phase P0: 2 attack(s) available
+[01:55.676] MSG: Player 1: tap a character to attack.
+[01:55.967] AI0 attack decision: (3,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima | face-down} → (2,4) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima | face-down}
+[01:56.304] Revealed: P0 (3,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:56.326] Revealed: P1 (2,4) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[01:56.327] Dice rolled: 2
+[02:01.119] Crystals: P0 1840 → 1440 (-400)  [battle]
+[02:02.521] Attack P0(3,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,4)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}  Dice=2  ATK=40 vs DEF=45  → LOSE
+[02:02.522] Anim: 3B  △ P0(3,1)
+[02:02.522] Card destroyed  P0 (3,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+
+=== GAME OVER ===
+[02:02.524] AI Player 1 wins
+[02:02.524] Reason: all_destroyed
+[02:02.524] Final crystals — P0: 1440  P1: 3050  |  Turns: 11
+[02:02.524] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_cable_guy_time_window_2026-06-01_18-54-45_136.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Acid-Trap-Hole-002
+Highlight: Acid Trap Hole (Trap)  [setup: Ox Patrol]
+Result:    FAIL
+Detail:    Missing expected log text: Acid Trap Hole; Regex not matched: Revealed: P1 \(2,2\) "Acid\ Trap\ Hole"; Card name never appeared in log: Acid Trap Hole
+Turns:     11  |  AI timeouts: 0
+===

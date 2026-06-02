@@ -1,0 +1,80 @@
+=== Battle of Low Battery Panic ===
+Battle started: 2026-06-01 18:52:22.131
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Tease-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Tease-001  (test_case/functional/tech_functional_tests.md)
+Highlight:    Tease (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Ability:      OPPONENT_REVEALS_SQUARE — Your foe choose and reveal 1 of their cell
+Setup role:   t2_tech_play
+Verifies:
+  - Ability: "Tease" is exercised via forced board/tech setup (t2_tech_play)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must match regex: Tech played\s+P0: "Tease"
+  - Log must contain at least one of: Tease, Tease, Tech resolved, Revealed:, Card destroyed, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: tech Tease played (OPPONENT_REVEALS_SQUARE).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Tease
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Bribe, Release Mutagen
+P1 Tech hand: Great Diplomacy, Release Mutagen, Resurrection
+P0:   [  — ][T:Deco][C:Mind][  — ][T:Bait]
+      [  — ][C:Armo][C:Meph][C:Choi][C:Gran]
+      [T:Bunk][C:Doom][C:Ox P][C:Shep][  — ]
+      [T:Expl][C:Nept][C:Echo][C:Curs][  — ]
+      [T:Blac][  — ][T:Foul][  — ][C:Magi]
+P1:   [C:Pyro][  — ][C:Succ][  — ][C:Hamm]
+      [C:Deat][C:Gran][  — ][C:Choi][  — ]
+      [T:Expl][  — ][C:Chao][  — ][C:Ox P]
+      [  — ][C:Witc][  — ][T:Bunk][  — ]
+      [T:Defe][T:Bait][T:Hypn][  — ][C:Gamm]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:05.323] Mode selected P0: TECH
+[00:05.633] Tech played  P0: "Tease"
+[00:07.164] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.165] E2E: ability goal reached — ending battle early.
+[00:07.167] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+
+=== GAME OVER ===
+[00:07.171] AI Player 0 wins
+[00:07.171] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:07.171] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_low_battery_panic_2026-06-01_18-52-22_131.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Tease-002
+Highlight: Tease (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

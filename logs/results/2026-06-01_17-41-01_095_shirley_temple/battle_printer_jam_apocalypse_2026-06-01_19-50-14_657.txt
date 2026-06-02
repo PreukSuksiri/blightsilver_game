@@ -1,0 +1,78 @@
+=== Battle of Printer Jam Apocalypse ===
+Battle started: 2026-06-01 19:50:14.657
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Greater-Succubus-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Greater-Succubus-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Greater Succubus (Union)  [setup: Chaotic Wisp]
+Ability:      GAIN_HALF_STATS_ON_SURVIVE — Once, after Reckoning: +ATK&DEF equal to half of that foe’s card
+Setup role:   t2_union
+Verifies:
+  - Ability: "Greater Succubus" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Greater Succubus, Attack P\d\(\d+,\d+\)"Greater\ Succubus", MSG:.*Greater, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Greater Succubus — summon logged and/or union attacks with ATK=30.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Greater Succubus
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Siege Cannon, Radar, Spy
+P1 Tech hand: Prayer, Siege Cannon, Bribe
+P0:   [C:Stri][  — ][  — ][  — ][C:Mafi]
+      [T:Spik][C:Elec][  — ][  — ][C:Book]
+      [T:Pepp][C:Flam][C:Heav][C:Immo][T:Acid]
+      [T:Flam][  — ][C:Paro][  — ][C:Demo]
+      [T:Stre][  — ][  — ][  — ][T:Host]
+P1:   [T:Expl][C:Saw ][  — ][T:Foul][  — ]
+      [  — ][C:Rott][C:Scou][C:Lab ][T:Hypn]
+      [  — ][C:Grav][C:Chao][C:Hair][C:Snip]
+      [T:Host][C:Immo][C:Curs][C:Shre][C:Ice ]
+      [  — ][T:Curs][T:Acid][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[00:06.802] Crystals: P0 5000 → 4000 (-1000)  [union]
+[00:06.854] Revealed: P0 (0,0) "Giant Meteor Vergaia" {Union ATK60 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Cosmic}
+[00:06.854] Union summoned P0: "Giant Meteor Vergaia" {Union ATK60 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Cosmic} from "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down}, "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic | face-down}, "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}
+[00:06.857] MSG: Player 1 summoned [Giant Meteor Vergaia] using: "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down}, "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic | face-down}, "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}
+[00:06.857] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.884] AI Player 0 wins
+[00:06.884] Final crystals — P0: 4000  P1: 5000  |  Turns: 1
+[00:06.884] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_printer_jam_apocalypse_2026-06-01_19-50-14_657.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Greater-Succubus-002
+Highlight: Greater Succubus (Union)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

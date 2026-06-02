@@ -1,0 +1,488 @@
+=== Battle of Costco Sample Stampede ===
+Battle started: 2026-06-01 16:50:55.616
+Game Session of Iced Coffee (started 2026-06-01 15:58:46.241)
+=== Card E2E Test ===
+Scenario ID:  E2E-Church-Guard-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Church-Guard-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Church Guard (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Church Guard" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Church Guard
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Church\ Guard".*ATK=0\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=0 when Church Guard attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Church Guard
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Church Guard
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Radar, Siege Cannon
+P1 Tech hand: Accident, Release Mutagen, Resurrection
+P0:   [C:Ostr][  — ][C:Blad][  — ][  — ]
+      [T:Stre][  — ][C:Pony][  — ][  — ]
+      [C:Gobl][C:Shre][C:Chur][C:Void][C:Paro]
+      [  — ][  — ][C:Cany][T:Deco][  — ]
+      [  — ][T:Curs][C:Sate][  — ][T:Pepp]
+P1:   [C:Tiny][T:Acid][C:Succ][T:Curs][  — ]
+      [C:Vamp][  — ][  — ][T:Hypn][  — ]
+      [  — ][  — ][C:Chao][  — ][  — ]
+      [  — ][C:Flam][  — ][  — ][  — ]
+      [C:Paro][C:Joan][C:Raij][C:Gold][T:Expl]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.309] Mode selected P0: ATTACK
+[00:05.314] Attack phase P0: 2 attack(s) available
+[00:05.314] MSG: Player 1: tap a character to attack.
+[00:05.617] AI0 attack decision: (2,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.963] Revealed: P0 (2,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:05.990] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.990] Dice rolled: 2
+[00:05.994] MSG: Both cards are destroyed!
+[00:10.504] Crystals: P0 5000 → 4850 (-150)  [battle]
+[00:11.896] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:13.285] Attack P0(2,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=0 vs DEF=0  → TIE
+[00:13.285] Anim: 3C  △ P0(2,2) + △ P1(2,2)
+[00:13.285] Card destroyed  P0 (2,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:13.285] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:13.781] Mode selected P0: ATTACK
+[00:13.783] Attack phase P0: 1 attack(s) available
+[00:13.784] MSG: Player 1: tap a character to attack.
+[00:14.078] AI0 attack decision: (0,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down} → (0,3) "Cursed Reflection" {cost 500}
+[00:14.431] Revealed: P0 (0,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:14.468] Revealed: P1 (0,3) "Cursed Reflection" {cost 500}
+[00:14.468] Dice rolled: 4
+[00:14.743] MSG: Trap triggered: Cursed Reflection!
+[00:18.831] Crystals: P1 4900 → 4400 (-500)  [trap cost]
+[00:20.220] MSG: Cursed Reflection: Ostrich Cannon's ATK and DEF swapped until end of turn!
+[00:20.224] Trap: "Cursed Reflection" triggered  P0(0,0)→P1(0,3)
+[00:20.224] Anim: 3D  (attacker survives)
+[00:20.224] MSG: Ostrich Cannon locks itself until next turn.
+[00:20.725] Turn ended  P0  |  Crystals P0=4850 P1=4400
+
+--- Turn 2  |  Player 1  |  Crystals P0=4850 P1=4400 ---
+P0:   [Ostr][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:22.803] Crystals: P1 4400 → 3600 (-800)  [union]
+[00:22.845] Revealed: P1 (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:22.845] Union summoned P1: "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos} from "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down}
+[00:22.845] MSG: Player 2 summoned [Greater Succubus] using: "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down}
+[00:26.013] Crystals: P1 3600 → 3550 (-50)  [skip tax]
+[00:26.013] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:27.401] Turn ended  P1  |  Crystals P0=4850 P1=3550
+
+--- Turn 3  |  Player 0  |  Crystals P0=4850 P1=3550 ---
+P0:   [Ostr][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][Grea][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:27.996] Mode selected P0: ATTACK
+[00:28.002] Attack phase P0: 2 attack(s) available
+[00:28.002] MSG: Player 1: tap a character to attack.
+[00:28.295] AI0 attack decision: (4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down} → (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:28.631] Revealed: P0 (4,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:28.631] Dice rolled: 4
+[00:28.673] MSG: Satellite Cannon wins!
+[00:33.293] Attack P0(4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(0,2)"Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}  Dice=4  ATK=100 vs DEF=50  → WIN
+[00:33.293] Anim: 3A  △ P1(0,2)
+[00:33.293] Card destroyed  P1 (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:35.802] Turn ended  P0  |  Crystals P0=4850 P1=3550
+
+--- Turn 4  |  Player 1  |  Crystals P0=4850 P1=3550 ---
+P0:   [Ostr][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:36.397] Mode selected P1: ATTACK
+[00:36.404] Attack phase P1: 2 attack(s) available
+[00:36.404] MSG: Player 2: tap a character to attack.
+[00:36.696] AI1 attack decision: (4,2)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine | face-down} → (0,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3}
+[00:37.039] Revealed: P1 (4,2) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:37.039] Dice rolled: 1
+[00:37.043] MSG: Raijin wins!
+[00:41.687] Crystals: P0 4850 → 4050 (-800)  [battle]
+[00:43.087] Attack P1(4,2)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P0(0,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3}  Dice=1  ATK=60 vs DEF=30  → WIN
+[00:43.087] Anim: 3A  △ P0(0,0)
+[00:43.087] Card destroyed  P0 (0,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3}
+[00:43.384] Turn ended  P1  |  Crystals P0=4050 P1=3550
+
+--- Turn 5  |  Player 0  |  Crystals P0=4050 P1=3550 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][Raij][  ? ][  ? ]
+[00:43.975] Mode selected P0: ATTACK
+[00:43.981] Attack phase P0: 2 attack(s) available
+[00:43.982] MSG: Player 1: tap a character to attack.
+[00:44.275] AI0 attack decision: (4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (4,2) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:44.574] Dice rolled: 4
+[00:44.583] MSG: Satellite Cannon wins!
+[00:49.267] Crystals: P1 3550 → 3000 (-550)  [battle]
+[00:50.664] Attack P0(4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(4,2)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=4  ATK=100 vs DEF=0  → WIN
+[00:50.664] Anim: 3A  △ P1(4,2)
+[00:50.664] Card destroyed  P1 (4,2) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:51.158] Mode selected P0: ATTACK
+[00:51.164] Attack phase P0: 1 attack(s) available
+[00:51.164] MSG: Player 1: tap a character to attack.
+[00:51.458] AI0 attack decision: (3,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down} → (1,0) (dead-end)
+[00:51.792] Revealed: P0 (3,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:51.792] Dice rolled: 3
+[00:51.807] MSG: Nothing happens — Dead End.
+[00:55.163] Attack P0(3,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P1(1,0)(empty)  Dice=3  → DEAD_END
+[00:55.163] Anim: 3F  (blank slot)
+[00:55.662] Turn ended  P0  |  Crystals P0=4050 P1=3000
+
+--- Turn 6  |  Player 1  |  Crystals P0=4050 P1=3000 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][Cany][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:56.259] Mode selected P1: ATTACK
+[00:56.265] Attack phase P1: 2 attack(s) available
+[00:56.266] MSG: Player 2: tap a character to attack.
+[00:56.557] AI1 attack decision: (3,1)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down} → (3,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:56.895] Revealed: P1 (3,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:56.895] Dice rolled: 4
+[00:56.899] MSG: Flame Seraph wins!
+[01:01.550] Crystals: P0 4050 → 3300 (-750)  [battle]
+[01:02.947] Attack P1(3,1)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P0(3,2)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=4  ATK=50 vs DEF=30  → WIN
+[01:02.947] Anim: 3A  △ P0(3,2)
+[01:02.947] Card destroyed  P0 (3,2) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:03.246] Turn ended  P1  |  Crystals P0=3300 P1=3000
+
+--- Turn 7  |  Player 0  |  Crystals P0=3300 P1=3000 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Flam][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:03.842] Mode selected P0: ATTACK
+[01:03.848] Attack phase P0: 2 attack(s) available
+[01:03.849] MSG: Player 1: tap a character to attack.
+[01:04.141] AI0 attack decision: (4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (3,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:04.441] Dice rolled: 5
+[01:04.452] MSG: Satellite Cannon wins!
+[01:10.133] Crystals: P1 3000 → 2500 (-500)  [battle]
+[01:11.530] Attack P0(4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(3,1)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=5  ATK=120 vs DEF=10  → WIN
+[01:11.530] Reckoning overlay: P0 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} +ATK 20
+[01:11.530] Anim: 3A  △ P1(3,1)
+[01:11.530] Card destroyed  P1 (3,1) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:14.037] Turn ended  P0  |  Crystals P0=3300 P1=2500
+
+--- Turn 8  |  Player 1  |  Crystals P0=3300 P1=2500 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[01:14.634] Mode selected P1: ATTACK
+[01:14.639] Attack phase P1: 2 attack(s) available
+[01:14.640] MSG: Player 2: tap a character to attack.
+[01:14.932] AI1 attack decision: (4,3)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down} → (3,1) (dead-end)
+[01:15.268] Revealed: P1 (4,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[01:15.268] Dice rolled: 4
+[01:15.283] MSG: Nothing happens — Dead End.
+[01:18.634] Attack P1(4,3)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} → P0(3,1)(empty)  Dice=4  → DEAD_END
+[01:18.634] Anim: 3F  (blank slot)
+[01:18.938] Turn ended  P1  |  Crystals P0=3300 P1=2500
+
+--- Turn 9  |  Player 0  |  Crystals P0=3300 P1=2500 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][Gold][  ? ]
+[01:19.547] Mode selected P0: ATTACK
+[01:19.552] Attack phase P0: 2 attack(s) available
+[01:19.552] MSG: Player 1: tap a character to attack.
+[01:19.854] AI0 attack decision: (4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (4,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | multi-atk:1}
+[01:20.161] Dice rolled: 3
+[01:20.172] MSG: Satellite Cannon wins!
+[01:24.863] Crystals: P1 2500 → 2300 (-200)  [battle]
+[01:26.261] Attack P0(4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(4,3)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | multi-atk:1}  Dice=3  ATK=100 vs DEF=0  → WIN
+[01:26.262] Anim: 3A  △ P1(4,3)
+[01:26.262] Card destroyed  P1 (4,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | multi-atk:1}
+[01:28.775] Turn ended  P0  |  Crystals P0=3300 P1=2300
+
+--- Turn 10  |  Player 1  |  Crystals P0=3300 P1=2300 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:29.367] Mode selected P1: ATTACK
+[01:29.372] Attack phase P1: 2 attack(s) available
+[01:29.372] MSG: Player 2: tap a character to attack.
+[01:29.674] AI1 attack decision: (0,0)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down} → (1,3) (dead-end)
+[01:30.021] Revealed: P1 (0,0) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[01:30.021] Dice rolled: 3
+[01:30.035] MSG: Nothing happens — Dead End.
+[01:33.397] Attack P1(0,0)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} → P0(1,3)(empty)  Dice=3  → DEAD_END
+[01:33.398] Anim: 3F  (blank slot)
+[01:33.704] Turn ended  P1  |  Crystals P0=3300 P1=2300
+
+--- Turn 11  |  Player 0  |  Crystals P0=3300 P1=2300 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [Tiny][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:34.307] Mode selected P0: ATTACK
+[01:34.309] Attack phase P0: 2 attack(s) available
+[01:34.309] MSG: Player 1: tap a character to attack.
+[01:34.615] AI0 attack decision: (4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (0,0) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[01:34.925] Dice rolled: 5
+[01:34.935] MSG: Satellite Cannon wins!
+[01:39.624] Crystals: P1 2300 → 2200 (-100)  [battle]
+[01:41.016] MSG: Tiny Pixie survives destruction!
+[01:41.021] Attack P0(4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(0,0)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}  Dice=5  ATK=100 vs DEF=0  → WIN
+[01:41.022] Anim: 3A  △ P1(0,0)
+[01:41.022] Card destroyed  P1 (0,0) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[01:43.537] Turn ended  P0  |  Crystals P0=3300 P1=2200
+
+--- Turn 12  |  Player 1  |  Crystals P0=3300 P1=2200 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [Tiny][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:44.141] Mode selected P1: ATTACK
+[01:44.147] Attack phase P1: 2 attack(s) available
+[01:44.148] MSG: Player 2: tap a character to attack.
+[01:44.449] AI1 attack decision: (0,0)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used} → (2,1) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down}
+[01:44.797] Revealed: P0 (2,1) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[01:44.797] Dice rolled: 5
+[01:49.566] Crystals: P1 2200 → 2100 (-100)  [battle]
+[01:50.965] Attack P1(0,0)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used} → P0(2,1)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=5  ATK=0 vs DEF=5  → LOSE
+[01:50.965] Anim: 3B  △ P1(0,0)
+[01:51.262] Turn ended  P1  |  Crystals P0=3300 P1=2100
+
+--- Turn 13  |  Player 0  |  Crystals P0=3300 P1=2100 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][Shre][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:51.854] Mode selected P0: ATTACK
+[01:51.861] Attack phase P0: 2 attack(s) available
+[01:51.861] MSG: Player 1: tap a character to attack.
+[01:52.153] AI0 attack decision: (4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (0,1) "Acid Trap Hole" {cost 0}
+[01:52.493] Revealed: P1 (0,1) "Acid Trap Hole" {cost 0}
+[01:52.493] Dice rolled: 2
+[01:52.759] MSG: Trap triggered: Acid Trap Hole!
+[01:56.854] Crystals: P0 3300 → 3250 (-50)  [trap]
+[01:58.236] MSG: Acid Trap Hole: Player 1 loses 50 Crystals!
+[01:58.241] Trap: "Acid Trap Hole" triggered  P0(4,2)→P1(0,1)
+[01:58.241] Anim: 3D  (attacker survives)
+[01:58.737] Mode selected P0: ATTACK
+[01:58.744] Attack phase P0: 1 attack(s) available
+[01:58.744] MSG: Player 1: tap a character to attack.
+[01:59.037] AI0 attack decision: (2,1)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → (0,4) (dead-end)
+[01:59.337] Dice rolled: 4
+[01:59.364] MSG: Nothing happens — Dead End.
+[02:02.735] Attack P0(2,1)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → P1(0,4)(empty)  Dice=4  → DEAD_END
+[02:02.735] Anim: 3F  (blank slot)
+[02:03.233] Turn ended  P0  |  Crystals P0=3250 P1=2100
+
+--- Turn 14  |  Player 1  |  Crystals P0=3250 P1=2100 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][Shre][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:03.829] Mode selected P1: ATTACK
+[02:03.836] Attack phase P1: 2 attack(s) available
+[02:03.837] MSG: Player 2: tap a character to attack.
+[02:04.129] AI1 attack decision: (4,0)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (2,1) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[02:04.464] Revealed: P1 (4,0) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:04.465] Dice rolled: 1
+[02:04.469] MSG: Parom the Smuggler wins!
+[02:09.121] Crystals: P0 3250 → 3000 (-250)  [battle]
+[02:10.519] Attack P1(4,0)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(2,1)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=1  ATK=30 vs DEF=5  → WIN
+[02:10.520] Anim: 3A  △ P0(2,1)
+[02:10.520] Card destroyed  P0 (2,1) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[02:10.824] Turn ended  P1  |  Crystals P0=3000 P1=2100
+
+--- Turn 15  |  Player 0  |  Crystals P0=3000 P1=2100 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Paro][  ? ][  — ][  — ][  ? ]
+[02:11.424] Mode selected P0: ATTACK
+[02:11.430] Attack phase P0: 2 attack(s) available
+[02:11.430] MSG: Player 1: tap a character to attack.
+[02:11.732] AI0 attack decision: (4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (4,0) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:12.041] Dice rolled: 4
+[02:12.051] MSG: Satellite Cannon wins!
+[02:16.741] Crystals: P1 2100 → 1800 (-300)  [battle]
+[02:18.138] Attack P0(4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(4,0)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=4  ATK=100 vs DEF=20  → WIN
+[02:18.139] Anim: 3A  △ P1(4,0)
+[02:18.139] Card destroyed  P1 (4,0) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:20.653] Turn ended  P0  |  Crystals P0=3000 P1=1800
+
+--- Turn 16  |  Player 1  |  Crystals P0=3000 P1=1800 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[02:21.258] Mode selected P1: ATTACK
+[02:21.264] Attack phase P1: 2 attack(s) available
+[02:21.264] MSG: Player 2: tap a character to attack.
+[02:21.566] AI1 attack decision: (4,1)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down} → (3,3) "Decoy Puppet" {cost 100}
+[02:21.913] Revealed: P1 (4,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[02:21.939] Revealed: P0 (3,3) "Decoy Puppet" {cost 100}
+[02:21.939] Dice rolled: 1
+[02:22.177] MSG: Trap triggered: Decoy Puppet!
+[02:26.273] Crystals: P0 3000 → 2900 (-100)  [trap cost]
+[02:27.662] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[02:27.668] Trap: "Decoy Puppet" triggered  P1(4,1)→P0(3,3)
+[02:27.668] Anim: 3D  (attacker survives)
+[02:27.967] Turn ended  P1  |  Crystals P0=2900 P1=1800
+
+--- Turn 17  |  Player 0  |  Crystals P0=2900 P1=1800 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][Sate][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Joan][  — ][  — ][  ? ]
+[02:28.562] Mode selected P0: ATTACK
+[02:28.569] Attack phase P0: 2 attack(s) available
+[02:28.569] MSG: Player 1: tap a character to attack.
+[02:28.862] AI0 attack decision: (4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → (4,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[02:29.161] Dice rolled: 5
+[02:29.172] MSG: Satellite Cannon wins!
+[02:33.853] Crystals: P1 1800 → 1520 (-280)  [battle]
+[02:35.254] Attack P0(4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(4,1)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}  Dice=5  ATK=100 vs DEF=5  → WIN
+[02:35.255] Anim: 3A  △ P1(4,1)
+[02:35.255] Card destroyed  P1 (4,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+
+=== GAME OVER ===
+[02:35.256] AI Player 0 wins
+[02:35.256] Reason: all_destroyed
+[02:35.256] Final crystals — P0: 2900  P1: 1520  |  Turns: 17
+[02:35.256] Log saved to: res://logs/results/2026-06-01_15-58-46_241_iced_coffee/battle_costco_sample_stampede_2026-06-01_16-50-55_616.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Church-Guard-002
+Highlight: Church Guard (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     17  |  AI timeouts: 0
+===

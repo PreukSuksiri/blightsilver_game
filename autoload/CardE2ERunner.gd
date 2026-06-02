@@ -21,6 +21,10 @@ var _passed_ids: Dictionary = {}
 var _current: Dictionary = {}
 var _summary_text: String = ""
 
+# Early-exit tracking — reset at the start of each scenario.
+var _e2e_partial_log_lines: PackedStringArray = PackedStringArray()
+var _e2e_early_exit_triggered: bool = false
+
 
 func is_active() -> bool:
 	return _active
@@ -28,6 +32,14 @@ func is_active() -> bool:
 
 func get_current_scenario() -> Dictionary:
 	return _current.duplicate(true)
+
+
+## True when the active scenario requires a union summon (either as the card under
+## test, or because the tested ability depends on a union being on the field).
+## P0's AI should skip union summons in all other E2E scenarios.
+func is_union_test() -> bool:
+	return str(_current.get("role", "")).contains("union") \
+		or str(_current.get("ability_type", "")).contains("UNION")
 
 
 func build_scenario_log_header(scenario: Dictionary = {}) -> PackedStringArray:
@@ -126,9 +138,16 @@ func get_progress_text() -> String:
 
 
 func reset_progress(tier: int = 0) -> void:
+	# Ensure saved progress is in memory before we modify it.
+	if _passed_ids.is_empty() and FileAccess.file_exists(PROGRESS_PATH):
+		_load_progress()
 	if tier == 0:
 		_passed_ids.clear()
 	else:
+		# Ensure _all_scenarios is populated so tier filtering works even when
+		# reset_progress is called before start_suite (e.g. from MailboxManager).
+		if _all_scenarios.is_empty():
+			_load_scenarios(0)
 		var to_remove: Array[String] = []
 		for s: Variant in _all_scenarios:
 			if s is Dictionary and int(s.get("tier", 1)) == tier:
@@ -177,12 +196,22 @@ func start_suite(resume: bool = true, tier_filter: int = 0) -> String:
 
 
 func on_battle_finished(log_path: String, log_lines: PackedStringArray) -> void:
+	if AIvsAIManager.log_written.is_connected(_on_log_written):
+		AIvsAIManager.log_written.disconnect(_on_log_written)
 	if not _active:
 		get_tree().change_scene_to_file("res://scenes/ai_vs_ai_config.tscn")
 		return
 
 	var log_text := "\n".join(log_lines)
-	var score: Dictionary = _score_log(log_text, _current)
+	# Strip the scenario header (written into the same buffer) so that strings
+	# like "SCRIPT ERROR" in "Log must NOT contain: SCRIPT ERROR" don't cause
+	# false-positive forbidden-text failures.  The game log starts at the first
+	# "--- Initial Setup" block; fall back to "--- Turn 1" if that's absent.
+	var game_start := log_text.find("\n--- Initial Setup")
+	if game_start == -1:
+		game_start = log_text.find("\n--- Turn 1")
+	var log_body := log_text.substr(game_start + 1) if game_start >= 0 else log_text
+	var score: Dictionary = _score_log(log_body, _current)
 	score["log_path"] = log_path
 	score["scenario_id"] = str(_current.get("id", ""))
 	score["card_name"] = str(_current.get("card_name", ""))
@@ -235,8 +264,6 @@ func _launch_current() -> void:
 		_finish_suite()
 		return
 	_current = _scenarios[_index] as Dictionary
-	GameState.battle_player_union_enabled = bool(_current.get("union_enabled", false))
-	GameState.battle_ai_union_enabled = bool(_current.get("union_enabled", false))
 
 	var deck0 := _deck_from_dict(_current.get("deck0", {}))
 	var deck1 := _deck_from_dict(_current.get("deck1", {}))
@@ -245,9 +272,90 @@ func _launch_current() -> void:
 	var ft0: Array = _current.get("forced_tech_0", [])
 	var ft1: Array = _current.get("forced_tech_1", [])
 
+	_e2e_partial_log_lines.clear()
+	_e2e_early_exit_triggered = false
+	if not AIvsAIManager.log_written.is_connected(_on_log_written):
+		AIvsAIManager.log_written.connect(_on_log_written)
+
 	AIvsAIManager.configure(deck0, fc0, deck1, fc1, ft0, ft1)
 	AIvsAIManager.start_batch(1)
 	AIvsAIManager.launch_battle()
+
+
+func _on_log_written(line: String) -> void:
+	_e2e_partial_log_lines.append(line)
+	if _e2e_early_exit_triggered:
+		return
+	# Only check on lines that are likely to carry ability evidence.
+	if ("Attack P" not in line) and ("Turn ended" not in line) \
+			and ("MSG:" not in line) and ("GAME OVER" not in line):
+		return
+	var partial: String = "\n".join(_e2e_partial_log_lines)
+	if _check_early_exit(partial):
+		_e2e_early_exit_triggered = true
+		AIvsAIManager.log_event("E2E: ability goal reached — ending battle early.")
+		GameState.call_deferred("force_game_over", 0)
+
+
+func _check_early_exit(partial_log: String) -> bool:
+	if _current.is_empty():
+		return false
+	# Tier-1 scenarios have no ability assertions — nothing to check early.
+	var tier: int = int(_current.get("tier", 1))
+	if tier < 2:
+		return false
+
+	var regexes: Array = _current.get("expect_log_regex", [])
+	var contains: Array = (_current.get("expect_log_contains", []) as Array).filter(
+		func(x: Variant) -> bool:
+			var s: String = str(x)
+			return s != "GAME OVER" and not s.is_empty())
+	var any_list: Array = _current.get("expect_log_any", [])
+	var bad_list: Array = _current.get("expect_log_not_contains", [])
+
+	# If there are no ability-specific assertions we cannot confirm they passed.
+	if regexes.is_empty() and contains.is_empty() and any_list.is_empty():
+		return false
+
+	# Turn/setup headers are written via _raw() which does NOT emit log_written,
+	# so they never appear in the partial log. Fall back to the full partial log.
+	var game_start: int = partial_log.find("--- Initial Setup")
+	if game_start < 0:
+		game_start = partial_log.find("--- Turn ")
+	var log_body: String = partial_log.substr(max(game_start, 0))
+
+	for pattern: Variant in regexes:
+		var pat: String = str(pattern)
+		if pat.is_empty():
+			continue
+		var rx := RegEx.new()
+		if rx.compile(pat) != OK:
+			return false
+		if rx.search(log_body) == null:
+			return false
+
+	for good: Variant in _current.get("expect_log_contains", []):
+		var needle: String = str(good)
+		if needle == "GAME OVER" or needle.is_empty():
+			continue
+		if needle not in log_body:
+			return false
+
+	if not any_list.is_empty():
+		var hit: bool = false
+		for opt: Variant in any_list:
+			if str(opt) != "" and str(opt) in log_body:
+				hit = true
+				break
+		if not hit:
+			return false
+
+	for bad: Variant in bad_list:
+		var needle: String = str(bad)
+		if needle != "" and needle in log_body:
+			return false
+
+	return true
 
 
 func _deck_from_dict(d: Variant) -> DeckData:
@@ -279,9 +387,15 @@ func _load_scenarios(tier_filter: int = 0) -> String:
 		return "Missing %s — run: python3 test_case/e2e/generate_e2e_scenarios.py" % SCENARIOS_PATH
 	var text := FileAccess.get_file_as_string(SCENARIOS_PATH)
 	var parsed: Variant = JSON.parse_string(text)
-	if parsed == null or not (parsed is Dictionary):
+	if parsed == null:
 		return "Invalid JSON in scenarios file."
-	var list: Variant = parsed.get("scenarios", [])
+	var list: Variant
+	if parsed is Array:
+		list = parsed
+	elif parsed is Dictionary:
+		list = parsed.get("scenarios", [])
+	else:
+		return "Invalid JSON in scenarios file."
 	if not (list is Array) or list.is_empty():
 		return "No scenarios in file."
 	_all_scenarios = list.duplicate(true)

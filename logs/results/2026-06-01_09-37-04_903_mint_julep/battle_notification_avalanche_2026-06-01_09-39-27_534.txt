@@ -1,0 +1,598 @@
+=== Battle of Notification Avalanche ===
+Battle started: 2026-06-01 09:39:27.534
+Game Session of Mint Julep (started 2026-06-01 09:37:04.903)
+=== Card E2E Test ===
+Scenario ID:  E2E-Angel-Gatekeeper-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Angel-Gatekeeper-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Angel Gatekeeper (Character)  [setup: Chaotic Wisp]
+Ability:      ATK_BONUS_VS_AFFINITY — +50 ATK vs Chaos Affinity
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Angel Gatekeeper" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Angel Gatekeeper
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Angel\ Gatekeeper".*ATK=90\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +50 ATK vs CHAOS (Chaotic Wisp).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Angel Gatekeeper
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Angel Gatekeeper
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Tease, Accident
+P1 Tech hand: Radar, Bribe, War Supply
+P0:   [C:Nuki][C:Mad ][C:Plan][C:Skel][C:Jaco]
+      [C:Pit ][  — ][  — ][  — ][T:Hard]
+      [T:Red ][  — ][C:Ange][  — ][T:Trap]
+      [T:Self][  — ][  — ][  — ][C:Scou]
+      [C:Hair][C:Jose][  — ][C:Stai][  — ]
+P1:   [  — ][T:Defe][C:Succ][  — ][  — ]
+      [C:Yaks][  — ][T:Trap][  — ][  — ]
+      [C:Gran][C:Sunr][C:Chao][T:Bait][  — ]
+      [C:Tomb][C:Moon][C:Pyro][  — ][  — ]
+      [T:Expl][C:Aeri][C:War ][T:Hypn][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:06.810] Crystals: P0 5000 → 3000 (-2000)  [union]
+[00:06.863] Revealed: P0 (1,0) "Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature}
+[00:06.863] Union summoned P0: "Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} from "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}, "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down}
+[00:06.863] MSG: Player 1 summoned [Gaia Turtle] using: "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}, "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down}
+[00:10.207] Mode selected P0: ATTACK
+[00:10.212] Attack phase P0: 2 attack(s) available
+[00:10.213] MSG: Player 1: tap a character to attack.
+[00:10.505] AI0 attack decision: (1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → (0,4) (dead-end)
+[00:10.806] Dice rolled: 5
+[00:10.896] MSG: Nothing happens — Dead End.
+[00:14.217] Attack P0(1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → P1(0,4)(empty)  Dice=5  → DEAD_END
+[00:14.217] Anim: 3F  (blank slot)
+[00:14.714] Mode selected P0: ATTACK
+[00:14.717] Attack phase P0: 1 attack(s) available
+[00:14.718] MSG: Player 1: tap a character to attack.
+[00:15.012] AI0 attack decision: (0,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature | face-down} → (0,0) (dead-end)
+[00:15.378] Revealed: P0 (0,0) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[00:15.378] Dice rolled: 2
+[00:15.389] MSG: Nothing happens — Dead End.
+[00:18.717] Attack P0(0,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} → P1(0,0)(empty)  Dice=2  → DEAD_END
+[00:18.717] Anim: 3F  (blank slot)
+[00:19.218] Turn ended  P0  |  Crystals P0=3000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=3000 P1=5000 ---
+P0:   [Nuki][  ? ][  ? ][  ? ][  ? ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:21.298] Crystals: P1 5000 → 4200 (-800)  [union]
+[00:21.347] Revealed: P1 (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:21.348] Union summoned P1: "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos} from "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos | face-down}
+[00:21.348] MSG: Player 2 summoned [Greater Succubus] using: "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos | face-down}
+[00:24.502] Crystals: P1 4200 → 4150 (-50)  [skip tax]
+[00:24.502] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:25.892] Turn ended  P1  |  Crystals P0=3000 P1=4150
+
+--- Turn 3  |  Player 0  |  Crystals P0=3000 P1=4150 ---
+P0:   [Nuki][  ? ][  ? ][  ? ][  ? ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  ? ][Grea][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:26.495] Mode selected P0: ATTACK
+[00:26.501] Attack phase P0: 2 attack(s) available
+[00:26.501] MSG: Player 1: tap a character to attack.
+[00:26.802] AI0 attack decision: (0,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} → (1,0) (dead-end)
+[00:27.109] Dice rolled: 5
+[00:27.130] MSG: Nothing happens — Dead End.
+[00:30.516] Attack P0(0,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} → P1(1,0)(empty)  Dice=5  → DEAD_END
+[00:30.516] Anim: 3F  (blank slot)
+[00:31.017] Mode selected P0: ATTACK
+[00:31.020] Attack phase P0: 1 attack(s) available
+[00:31.020] MSG: Player 1: tap a character to attack.
+[00:31.326] AI0 attack decision: (1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → (0,3) (dead-end)
+[00:31.635] Dice rolled: 4
+[00:31.693] MSG: Nothing happens — Dead End.
+[00:35.040] Attack P0(1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → P1(0,3)(empty)  Dice=4  → DEAD_END
+[00:35.040] Anim: 3F  (blank slot)
+[00:35.547] Turn ended  P0  |  Crystals P0=3000 P1=4150
+
+--- Turn 4  |  Player 1  |  Crystals P0=3000 P1=4150 ---
+P0:   [Nuki][  ? ][  ? ][  ? ][  ? ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  ? ][Grea][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:36.153] Mode selected P1: ATTACK
+[00:36.160] Attack phase P1: 2 attack(s) available
+[00:36.160] MSG: Player 2: tap a character to attack.
+[00:36.460] AI1 attack decision: (0,2)"Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos} → (0,0) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[00:36.767] Dice rolled: 4
+[00:36.808] MSG: Greater Succubus wins!
+[00:41.485] Crystals: P0 3000 → 2900 (-100)  [battle]
+[00:42.885] Attack P1(0,2)"Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos} → P0(0,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}  Dice=4  ATK=30 vs DEF=10  → WIN
+[00:42.886] Anim: 3A  △ P0(0,0)
+[00:42.886] Card destroyed  P0 (0,0) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[00:42.886] MSG: Greater Succubus: gains +5 ATK +5 DEF from battle!
+[00:43.179] Turn ended  P1  |  Crystals P0=2900 P1=4150
+
+--- Turn 5  |  Player 0  |  Crystals P0=2900 P1=4150 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  ? ][Grea][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:43.777] Mode selected P0: ATTACK
+[00:43.782] Attack phase P0: 2 attack(s) available
+[00:43.782] MSG: Player 1: tap a character to attack.
+[00:44.076] AI0 attack decision: (1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → (0,1) "Defensive Pheromone" {cost 500}
+[00:44.415] Revealed: P1 (0,1) "Defensive Pheromone" {cost 500}
+[00:44.415] Dice rolled: 3
+[00:44.741] MSG: Trap triggered: Defensive Pheromone!
+[00:48.753] Crystals: P1 4150 → 3650 (-500)  [trap cost]
+[00:50.145] MSG: No valid target — effect cancelled.
+[00:50.154] Tech resolved  P0
+[00:50.154] Target prompt: "Defensive Pheromone: Choose an 'Armored' Nature card to swap."  filter=own_armored_nature
+[00:50.156] Trap: "Defensive Pheromone" triggered  P0(1,0)→P1(0,1)
+[00:50.156] Anim: 3D  (attacker survives)
+[00:52.656] Turn ended  P0  |  Crystals P0=2900 P1=3650
+
+--- Turn 6  |  Player 1  |  Crystals P0=2900 P1=3650 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][Grea][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:53.051] Crystals: P1 3650 → 3550 (-100)  [skip tax]
+[00:53.051] MSG: AI Player 1 skips without attacking — 100◆ tax (skip #2 this duel)
+[00:53.252] Mode selected P1: ATTACK
+[00:53.259] Attack phase P1: 2 attack(s) available
+[00:53.259] MSG: Player 2: tap a character to attack.
+[00:53.551] AI1 attack decision: (0,2)"Greater Succubus" {Union ATK35 DEF55 | destroy-cost 0 | summon-cost 800 | affinity Chaos | base 35/55} → (2,2) (dead-end)
+[00:53.851] Dice rolled: 4
+[00:53.935] MSG: Nothing happens — Dead End.
+[00:57.274] Attack P1(0,2)"Greater Succubus" {Union ATK35 DEF55 | destroy-cost 0 | summon-cost 800 | affinity Chaos | base 35/55} → P0(2,2)(empty)  Dice=4  → DEAD_END
+[00:57.274] Anim: 3F  (blank slot)
+[00:57.570] Turn ended  P1  |  Crystals P0=2900 P1=3550
+
+--- Turn 7  |  Player 0  |  Crystals P0=2900 P1=3550 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][Grea][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:58.168] Mode selected P0: ATTACK
+[00:58.174] Attack phase P0: 2 attack(s) available
+[00:58.175] MSG: Player 1: tap a character to attack.
+[00:58.468] AI0 attack decision: (1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → (1,3) (dead-end)
+[00:58.768] Dice rolled: 3
+[00:58.847] MSG: Nothing happens — Dead End.
+[01:02.132] Attack P0(1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → P1(1,3)(empty)  Dice=3  → DEAD_END
+[01:02.132] Anim: 3F  (blank slot)
+[01:04.637] Turn ended  P0  |  Crystals P0=2900 P1=3550
+
+--- Turn 8  |  Player 1  |  Crystals P0=2900 P1=3550 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][Grea][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:05.235] Mode selected P1: ATTACK
+[01:05.244] Attack phase P1: 2 attack(s) available
+[01:05.245] MSG: Player 2: tap a character to attack.
+[01:05.534] AI1 attack decision: (0,2)"Greater Succubus" {Union ATK35 DEF55 | destroy-cost 0 | summon-cost 800 | affinity Chaos | base 35/55} → (0,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}
+[01:05.892] Revealed: P0 (0,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:05.892] Dice rolled: 3
+[01:05.942] MSG: Greater Succubus wins!
+[01:10.534] Crystals: P0 2900 → 2640 (-260)  [battle]
+[01:11.936] Attack P1(0,2)"Greater Succubus" {Union ATK35 DEF55 | destroy-cost 0 | summon-cost 800 | affinity Chaos | base 35/55} → P0(0,1)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=3  ATK=35 vs DEF=15  → WIN
+[01:11.936] Anim: 3A  △ P0(0,1)
+[01:11.936] Card destroyed  P0 (0,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:11.937] MSG: Greater Succubus: gains +15 ATK +7 DEF from battle!
+[01:12.240] Turn ended  P1  |  Crystals P0=2640 P1=3550
+
+--- Turn 9  |  Player 0  |  Crystals P0=2640 P1=3550 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][Grea][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:12.850] Mode selected P0: ATTACK
+[01:12.856] Attack phase P0: 2 attack(s) available
+[01:12.857] MSG: Player 1: tap a character to attack.
+[01:13.151] AI0 attack decision: (4,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (0,2) "Greater Succubus" {Union ATK50 DEF62 | destroy-cost 0 | summon-cost 800 | affinity Chaos | base 50/62}
+[01:13.517] Revealed: P0 (4,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:13.517] Dice rolled: 5
+[01:13.519] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[01:13.564] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[01:13.564] MSG: Joseph the Battle Priest wins!
+[01:13.610] Coin flip: Heads
+[01:19.154] Attack P0(4,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(0,2)"Greater Succubus" {Union ATK50 DEF62 | destroy-cost 0 | summon-cost 800 | affinity Chaos | base 50/62}  Dice=5  ATK=70 vs DEF=62  → WIN
+[01:19.154] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} +ATK 10
+[01:19.154] Anim: 3A  △ P1(0,2)
+[01:19.154] Card destroyed  P1 (0,2) "Greater Succubus" {Union ATK50 DEF62 | destroy-cost 0 | summon-cost 800 | affinity Chaos | base 50/62}
+[01:19.648] Mode selected P0: ATTACK
+[01:19.655] Attack phase P0: 1 attack(s) available
+[01:19.656] MSG: Player 1: tap a character to attack.
+[01:19.947] AI0 attack decision: (1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → (1,4) (dead-end)
+[01:20.248] Dice rolled: 1
+[01:20.322] MSG: Nothing happens — Dead End.
+[01:23.642] Attack P0(1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → P1(1,4)(empty)  Dice=1  → DEAD_END
+[01:23.642] Anim: 3F  (blank slot)
+[01:24.140] Turn ended  P0  |  Crystals P0=2640 P1=3550
+
+--- Turn 10  |  Player 1  |  Crystals P0=2640 P1=3550 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Jose][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:24.742] Mode selected P1: ATTACK
+[01:24.747] Attack phase P1: 2 attack(s) available
+[01:24.747] MSG: Player 2: tap a character to attack.
+[01:25.038] AI1 attack decision: (3,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down} → (4,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:25.391] Revealed: P1 (3,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:25.391] Dice rolled: 1
+[01:25.395] MSG: Tomb Bandit wins!
+[01:30.018] Crystals: P0 2640 → 2040 (-600)  [battle]
+[01:31.418] Attack P1(3,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(4,1)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=1  ATK=75 vs DEF=25  → WIN
+[01:31.419] Anim: 3A  △ P0(4,1)
+[01:31.419] Card destroyed  P0 (4,1) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:31.722] Turn ended  P1  |  Crystals P0=2040 P1=3550
+
+--- Turn 11  |  Player 0  |  Crystals P0=2040 P1=3550 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [Tomb][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:32.331] Mode selected P0: ATTACK
+[01:32.338] Attack phase P0: 2 attack(s) available
+[01:32.338] MSG: Player 1: tap a character to attack.
+[01:32.634] AI0 attack decision: (1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → (1,2) "Trap Hole" {cost 0}
+[01:33.004] Revealed: P1 (1,2) "Trap Hole" {cost 0}
+[01:33.004] Dice rolled: 5
+[01:33.291] MSG: Trap triggered: Trap Hole!
+[01:37.345] Crystals: P0 2040 → 2020 (-20)  [trap]
+[01:38.726] MSG: Trap Hole: Player 1 loses 20 Crystals!
+[01:38.728] Trap: "Trap Hole" triggered  P0(1,0)→P1(1,2)
+[01:38.728] Anim: 3D  (attacker survives)
+[01:39.228] Mode selected P0: ATTACK
+[01:39.232] Attack phase P0: 1 attack(s) available
+[01:39.233] MSG: Player 1: tap a character to attack.
+[01:39.525] AI0 attack decision: (0,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down} → (1,1) (dead-end)
+[01:39.907] Revealed: P0 (0,2) "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[01:39.908] Dice rolled: 2
+[01:39.924] MSG: Nothing happens — Dead End.
+[01:43.243] Attack P0(0,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[01:43.243] Anim: 3F  (blank slot)
+[01:43.737] Turn ended  P0  |  Crystals P0=2020 P1=3550
+
+--- Turn 12  |  Player 1  |  Crystals P0=2020 P1=3550 ---
+P0:   [  — ][  — ][Plan][  ? ][  ? ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [Tomb][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:44.334] Mode selected P1: ATTACK
+[01:44.340] Attack phase P1: 2 attack(s) available
+[01:44.340] MSG: Player 2: tap a character to attack.
+[01:44.634] AI1 attack decision: (3,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → (0,4) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down}
+[01:45.029] Revealed: P0 (0,4) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:45.029] Dice rolled: 1
+[01:45.032] MSG: Tomb Bandit wins!
+[01:49.622] Crystals: P0 2020 → 1670 (-350)  [battle]
+[01:51.025] Attack P1(3,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(0,4)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}  Dice=1  ATK=75 vs DEF=20  → WIN
+[01:51.025] Anim: 3A  △ P0(0,4)
+[01:51.025] Card destroyed  P0 (0,4) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:51.317] Turn ended  P1  |  Crystals P0=1670 P1=3550
+
+--- Turn 13  |  Player 0  |  Crystals P0=1670 P1=3550 ---
+P0:   [  — ][  — ][Plan][  ? ][  — ]
+      [Gaia][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [Tomb][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:51.371] Coin flip: Tails
+[01:54.101] MSG: Plant 29: Tails! Mutagen on Tomb Bandit.
+[01:54.697] Mode selected P0: ATTACK
+[01:54.703] Attack phase P0: 2 attack(s) available
+[01:54.703] MSG: Player 1: tap a character to attack.
+[01:54.992] AI0 attack decision: (0,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → (2,1) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}
+[01:55.328] Revealed: P1 (2,1) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:55.328] Dice rolled: 4
+[01:55.336] MSG: Plant 29 wins!
+[01:59.989] Crystals: P1 3550 → 3250 (-300)  [battle]
+[02:01.389] Attack P0(0,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(2,1)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}  Dice=4  ATK=45 vs DEF=25  → WIN
+[02:01.389] Anim: 3A  △ P1(2,1)
+[02:01.389] Card destroyed  P1 (2,1) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[02:01.889] Mode selected P0: ATTACK
+[02:01.895] Attack phase P0: 1 attack(s) available
+[02:01.895] MSG: Player 1: tap a character to attack.
+[02:02.197] AI0 attack decision: (1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → (2,0) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima | face-down}
+[02:02.572] Revealed: P1 (2,0) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:02.572] Dice rolled: 5
+[02:07.311] Attack P0(1,0)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → P1(2,0)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=5  ATK=0 vs DEF=10  → LOSE
+[02:07.311] Anim: 3B  △ P0(1,0)
+[02:07.311] Card destroyed  P0 (1,0) "Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature}
+[02:07.809] Turn ended  P0  |  Crystals P0=1670 P1=3250
+
+--- Turn 14  |  Player 1  |  Crystals P0=1670 P1=3250 ---
+P0:   [  — ][  — ][Plan][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Gran][  — ][  ? ][  ? ][  — ]
+      [Tomb][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[02:08.406] Mode selected P1: ATTACK
+[02:08.412] Attack phase P1: 2 attack(s) available
+[02:08.412] MSG: Player 2: tap a character to attack.
+[02:08.705] AI1 attack decision: (2,0)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → (0,3) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down}
+[02:09.074] Revealed: P0 (0,3) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[02:09.074] Dice rolled: 3
+[02:09.077] MSG: Grand Fort Mauler wins!
+[02:13.714] Crystals: P0 1670 → 1520 (-150)  [battle]
+[02:15.110] Attack P1(2,0)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P0(0,3)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=3  ATK=40 vs DEF=5  → WIN
+[02:15.110] Anim: 3A  △ P0(0,3)
+[02:15.110] Card destroyed  P0 (0,3) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[02:15.408] Turn ended  P1  |  Crystals P0=1520 P1=3250
+
+--- Turn 15  |  Player 0  |  Crystals P0=1520 P1=3250 ---
+P0:   [  — ][  — ][Plan][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Gran][  — ][  ? ][  ? ][  — ]
+      [Tomb][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[02:15.455] Coin flip: Heads
+[02:18.187] MSG: Plant 29: Heads! Venom on Tomb Bandit.
+[02:18.789] Mode selected P0: ATTACK
+[02:18.796] Attack phase P0: 2 attack(s) available
+[02:18.796] MSG: Player 1: tap a character to attack.
+[02:19.088] AI0 attack decision: (0,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → (2,0) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:19.388] Dice rolled: 2
+[02:19.395] MSG: Plant 29 wins!
+[02:24.082] Crystals: P1 3250 → 2900 (-350)  [battle]
+[02:25.482] Attack P0(0,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(2,0)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=2  ATK=45 vs DEF=10  → WIN
+[02:25.482] Anim: 3A  △ P1(2,0)
+[02:25.482] Card destroyed  P1 (2,0) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:27.983] Turn ended  P0  |  Crystals P0=1520 P1=2900
+
+--- Turn 16  |  Player 1  |  Crystals P0=1520 P1=2900 ---
+P0:   [  — ][  — ][Plan][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [Tomb][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[02:28.580] Mode selected P1: ATTACK
+[02:28.584] Attack phase P1: 2 attack(s) available
+[02:28.584] MSG: Player 2: tap a character to attack.
+[02:28.880] AI1 attack decision: (3,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | flags:mutagen,venom} → (1,1) (dead-end)
+[02:29.180] Dice rolled: 2
+[02:29.207] MSG: Nothing happens — Dead End.
+[02:32.579] Attack P1(3,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | flags:mutagen,venom} → P0(1,1)(empty)  Dice=2  → DEAD_END
+[02:32.580] Anim: 3F  (blank slot)
+[02:32.878] Turn ended  P1  |  Crystals P0=1520 P1=2900
+
+--- Turn 17  |  Player 0  |  Crystals P0=1520 P1=2900 ---
+P0:   [  — ][  — ][Plan][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [Tomb][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[02:32.932] Coin flip: Tails
+[02:35.668] MSG: Plant 29: Tails! Mutagen on Tomb Bandit.
+[02:36.269] Mode selected P0: ATTACK
+[02:36.273] Attack phase P0: 2 attack(s) available
+[02:36.273] MSG: Player 1: tap a character to attack.
+[02:36.567] AI0 attack decision: (0,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → (2,3) "Bait" {cost 0}
+[02:36.902] Revealed: P1 (2,3) "Bait" {cost 0}
+[02:36.902] Dice rolled: 3
+[02:37.172] MSG: Trap triggered: Bait!
+[02:41.284] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[02:41.287] Trap: "Bait" triggered  P0(0,2)→P1(2,3)
+[02:41.287] Anim: 3D  (attacker survives)
+[02:41.684] AI1 target chosen: (4,1)
+[02:41.716] Revealed: P1 (4,1) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[02:41.716] MSG: Bait: Defender revealed Aerial the Battlemage.
+[02:43.799] Turn ended  P0  |  Crystals P0=1520 P1=2900
+
+--- Turn 18  |  Player 1  |  Crystals P0=1520 P1=2900 ---
+P0:   [  — ][  — ][Plan][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [Tomb][  ? ][  ? ][  — ][  — ]
+      [  ? ][Aeri][  ? ][  ? ][  — ]
+[02:44.401] Mode selected P1: ATTACK
+[02:44.406] Attack phase P1: 2 attack(s) available
+[02:44.406] MSG: Player 2: tap a character to attack.
+[02:44.710] AI1 attack decision: (3,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | flags:mutagen,venom} → (1,2) (dead-end)
+[02:45.018] Dice rolled: 5
+[02:45.048] MSG: Nothing happens — Dead End.
+[02:48.434] Attack P1(3,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | flags:mutagen,venom} → P0(1,2)(empty)  Dice=5  → DEAD_END
+[02:48.434] Anim: 3F  (blank slot)
+[02:48.736] Turn ended  P1  |  Crystals P0=1520 P1=2900
+
+--- Turn 19  |  Player 0  |  Crystals P0=1520 P1=2900 ---
+P0:   [  — ][  — ][Plan][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [Tomb][  ? ][  ? ][  — ][  — ]
+      [  ? ][Aeri][  ? ][  ? ][  — ]
+[02:48.785] Coin flip: Tails
+[02:51.526] MSG: Plant 29: Tails! Mutagen on Aerial the Battlemage.
+[02:52.126] Mode selected P0: ATTACK
+[02:52.132] Attack phase P0: 2 attack(s) available
+[02:52.132] MSG: Player 1: tap a character to attack.
+[02:52.426] AI0 attack decision: (0,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → (4,1) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | flags:mutagen}
+[02:52.726] Dice rolled: 4
+[02:52.735] MSG: Both cards are destroyed!
+[02:57.335] Crystals: P0 1520 → 620 (-900)  [battle]
+[02:58.727] Crystals: P1 2900 → 2150 (-750)  [battle]
+[03:00.123] Attack P0(0,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(4,1)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | flags:mutagen}  Dice=4  ATK=45 vs DEF=45  → TIE
+[03:00.123] Anim: 3C  △ P0(0,2) + △ P1(4,1)
+[03:00.123] Card destroyed  P0 (0,2) "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[03:00.123] Card destroyed  P1 (4,1) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | flags:mutagen}
+[03:00.611] Mode selected P0: ATTACK
+[03:00.617] Attack phase P0: 1 attack(s) available
+[03:00.617] MSG: Player 1: tap a character to attack.
+[03:00.897] AI0 attack decision: (3,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[03:01.267] Revealed: P0 (3,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[03:01.292] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[03:01.292] Dice rolled: 4
+[03:01.297] MSG: Scout Probe wins!
+[03:05.931] Crystals: P1 2150 → 2050 (-100)  [battle]
+[03:07.333] Attack P0(3,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=4  ATK=40 vs DEF=0  → WIN
+[03:07.334] Anim: 3A  △ P1(2,2)
+[03:07.334] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[03:07.341] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[03:07.722] AI0 target chosen: (3,2)
+[03:07.770] Revealed: P1 (3,2) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[03:07.771] MSG: Scout Probe: adjacent cell revealed.
+[03:07.772] Ability target resolved  P0
+[03:07.790] Turn ended  P0  |  Crystals P0=620 P1=2050
+
+--- Turn 20  |  Player 1  |  Crystals P0=620 P1=2050 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Scou]
+      [  ? ][  — ][  — ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Tomb][  ? ][Pyro][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+[03:08.405] Mode selected P1: ATTACK
+[03:08.414] Attack phase P1: 2 attack(s) available
+[03:08.414] MSG: Player 2: tap a character to attack.
+[03:08.713] AI1 attack decision: (3,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | flags:mutagen,venom} → (3,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[03:09.022] Dice rolled: 1
+[03:09.033] MSG: Tomb Bandit wins!
+[03:13.723] Crystals: P0 620 → 0 (-620)  [battle]
+
+=== GAME OVER ===
+[03:13.734] AI Player 1 wins
+[03:13.734] Reason: crystals
+[03:13.734] Final crystals — P0: 0  P1: 2050  |  Turns: 20
+[03:13.734] Log saved to: res://logs/results/2026-06-01_09-37-04_903_mint_julep/battle_notification_avalanche_2026-06-01_09-39-27_534.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Angel-Gatekeeper-002
+Highlight: Angel Gatekeeper (Character)  [setup: Chaotic Wisp]
+Result:    FAIL
+Detail:    Regex not matched: Attack P0\(2,2\)"Angel\ Gatekeeper".*ATK=90\s
+Turns:     20  |  AI timeouts: 0
+===

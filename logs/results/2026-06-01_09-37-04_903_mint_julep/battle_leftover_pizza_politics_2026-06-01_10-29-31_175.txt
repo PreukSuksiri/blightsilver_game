@@ -1,0 +1,377 @@
+=== Battle of Leftover Pizza Politics ===
+Battle started: 2026-06-01 10:29:31.175
+Game Session of Mint Julep (started 2026-06-01 09:37:04.903)
+=== Card E2E Test ===
+Scenario ID:  E2E-Claw-Mutant-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Claw-Mutant-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Claw Mutant (Character)  [setup: Chaotic Wisp, Release Mutagen, Radar, Spy]
+Ability:      MUTAGEN_ATK_BOOST_VS_AFFINITIES — +10 ATK if it has mutagen flag
+Setup role:   t2_mutagen
+Verifies:
+  - Ability: "Claw Mutant" is exercised via forced board/tech setup (t2_mutagen)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Claw Mutant
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Claw\ Mutant".*ATK=|→ P\d\(\d+,\d+\)"Claw\ Mutant")
+  - Log must contain at least one of: Mutagen, mutagen, Release Mutagen, Flag+
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: mutagen ability — Release Mutagen in hand, bio card on field.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Claw Mutant
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Release Mutagen, Radar, Spy
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Radar, Spy
+P1 Tech hand: Tease, Bribe, War Supply
+P0:   [C:Paro][  — ][  — ][  — ][T:Self]
+      [C:Scar][C:Shot][T:Trap][C:Gian][C:Godd]
+      [C:Meph][C:Moon][C:Claw][C:Soni][T:Bunk]
+      [C:Lase][  — ][  — ][  — ][T:Snar]
+      [C:Vamp][T:Alar][  — ][T:Hypn][C:Witc]
+P1:   [C:Saw ][C:Gian][  — ][T:Spik][T:Self]
+      [T:Trap][C:Fuji][C:Scar][C:Godd][  — ]
+      [  — ][T:Hard][C:Chao][C:Chur][  — ]
+      [  — ][C:Void][C:Vamp][C:Gamm][  — ]
+      [T:Curs][  — ][  — ][T:Bunk][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[00:06.811] Crystals: P0 5000 → 3500 (-1500)  [union]
+[00:06.847] Revealed: P0 (1,1) "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[00:06.847] Union summoned P0: "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down}, "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down}
+[00:06.847] MSG: Player 1 summoned [Barros the Colossal] using: "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down}, "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down}
+[00:10.261] Mode selected P0: ATTACK
+[00:10.265] Attack phase P0: 2 attack(s) available
+[00:10.265] MSG: Player 1: tap a character to attack.
+[00:10.569] AI0 attack decision: (2,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down} → (4,2) (dead-end)
+[00:10.914] Revealed: P0 (2,2) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[00:10.914] Dice rolled: 3
+[00:10.926] MSG: Nothing happens — Dead End.
+[00:14.258] Attack P0(2,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P1(4,2)(empty)  Dice=3  → DEAD_END
+[00:14.258] Anim: 3F  (blank slot)
+[00:14.753] Mode selected P0: ATTACK
+[00:14.756] Attack phase P0: 1 attack(s) available
+[00:14.757] MSG: Player 1: tap a character to attack.
+[00:15.052] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (4,3) "Bunker" {cost 900}
+[00:15.385] Revealed: P1 (4,3) "Bunker" {cost 900}
+[00:15.385] Dice rolled: 3
+[00:15.699] MSG: Trap triggered: Bunker!
+[00:19.737] Crystals: P1 5000 → 4100 (-900)  [trap cost]
+[00:21.128] MSG: Bunker: Adjacent squares cannot be targeted this turn.
+[00:21.133] Trap: "Bunker" triggered  P0(1,1)→P1(4,3)
+[00:21.133] Anim: 3D  (attacker survives)
+[00:21.631] Turn ended  P0  |  Crystals P0=3500 P1=4100
+
+--- Turn 2  |  Player 1  |  Crystals P0=3500 P1=4100 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Claw][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:23.711] Crystals: P1 4100 → 3600 (-500)  [union]
+[00:23.746] Revealed: P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:23.746] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down}, "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down}
+[00:23.746] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:23.746] MSG: Player 2 summoned [Scarlet Shroom] using: "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down}, "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down}
+[00:26.932] Crystals: P1 3600 → 3550 (-50)  [skip tax]
+[00:26.932] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:28.323] Turn ended  P1  |  Crystals P0=3500 P1=3550
+
+--- Turn 3  |  Player 0  |  Crystals P0=3500 P1=3550 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Claw][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [Scar][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:28.949] Mode selected P0: ATTACK
+[00:28.955] Attack phase P0: 2 attack(s) available
+[00:28.955] MSG: Player 1: tap a character to attack.
+[00:29.249] AI0 attack decision: (2,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:venom} → (0,1) (dead-end)
+[00:29.548] Dice rolled: 5
+[00:29.575] MSG: Nothing happens — Dead End.
+[00:32.948] Attack P0(2,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:venom} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[00:32.948] Anim: 3F  (blank slot)
+[00:33.440] Mode selected P0: ATTACK
+[00:33.446] Attack phase P0: 1 attack(s) available
+[00:33.446] MSG: Player 1: tap a character to attack.
+[00:33.740] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature | flags:venom} → (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:34.040] Dice rolled: 3
+[00:34.111] MSG: Barros the Colossal wins!
+[00:38.756] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature | flags:venom} → P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}  Dice=3  ATK=150 vs DEF=80  → WIN
+[00:38.756] Anim: 3A  △ P1(0,0)
+[00:38.756] Card destroyed  P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:39.255] Turn ended  P0  |  Crystals P0=3500 P1=3550
+
+--- Turn 4  |  Player 1  |  Crystals P0=3500 P1=3550 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Claw][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:39.850] Mode selected P1: ATTACK
+[00:39.855] Attack phase P1: 2 attack(s) available
+[00:39.856] MSG: Player 2: tap a character to attack.
+[00:40.148] AI1 attack decision: (1,1)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down} → (1,3) (dead-end)
+[00:40.487] Revealed: P1 (1,1) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:40.487] Dice rolled: 5
+[00:40.500] MSG: Nothing happens — Dead End.
+[00:43.847] Attack P1(1,1)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P0(1,3)(empty)  Dice=5  → DEAD_END
+[00:43.847] Anim: 3F  (blank slot)
+[00:44.142] Turn ended  P1  |  Crystals P0=3500 P1=3550
+
+--- Turn 5  |  Player 0  |  Crystals P0=3500 P1=3550 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Claw][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][Fuji][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:44.742] Mode selected P0: ATTACK
+[00:44.747] Attack phase P0: 2 attack(s) available
+[00:44.747] MSG: Player 1: tap a character to attack.
+[00:45.040] AI0 attack decision: (2,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:venom} → (4,1) (dead-end)
+[00:45.340] Dice rolled: 4
+[00:45.361] MSG: Nothing happens — Dead End.
+[00:48.738] Attack P0(2,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:venom} → P1(4,1)(empty)  Dice=4  → DEAD_END
+[00:48.738] Anim: 3F  (blank slot)
+[00:49.232] Mode selected P0: ATTACK
+[00:49.237] Attack phase P0: 1 attack(s) available
+[00:49.237] MSG: Player 1: tap a character to attack.
+[00:49.532] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature | flags:venom} → (1,1) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:49.832] Dice rolled: 1
+[00:49.876] MSG: Barros the Colossal wins!
+[00:54.491] Crystals: P1 3550 → 3100 (-450)  [battle]
+[00:55.889] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature | flags:venom} → P1(1,1)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=1  ATK=150 vs DEF=40  → WIN
+[00:55.889] Anim: 3A  △ P1(1,1)
+[00:55.889] Card destroyed  P1 (1,1) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:56.395] Turn ended  P0  |  Crystals P0=3500 P1=3100
+
+--- Turn 6  |  Player 1  |  Crystals P0=3500 P1=3100 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Claw][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:57.000] Mode selected P1: ATTACK
+[00:57.007] Attack phase P1: 2 attack(s) available
+[00:57.007] MSG: Player 2: tap a character to attack.
+[00:57.307] AI1 attack decision: (3,1)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos | face-down} → (2,2) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:venom}
+[00:57.648] Revealed: P1 (3,1) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:57.649] Dice rolled: 3
+[00:57.652] MSG: Void Stalker wins!
+[01:03.316] Crystals: P0 3500 → 3320 (-180)  [battle]
+[01:04.715] Attack P1(3,1)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} → P0(2,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:venom}  Dice=3  ATK=85 vs DEF=10  → WIN
+[01:04.716] Reckoning overlay: P1 "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} +ATK 20
+[01:04.716] Anim: 3A  △ P0(2,2)
+[01:04.716] Card destroyed  P0 (2,2) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:venom}
+[01:05.020] Turn ended  P1  |  Crystals P0=3320 P1=3100
+
+--- Turn 7  |  Player 0  |  Crystals P0=3320 P1=3100 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][Void][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:05.625] Mode selected P0: ATTACK
+[01:05.632] Attack phase P0: 2 attack(s) available
+[01:05.632] MSG: Player 1: tap a character to attack.
+[01:05.932] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature | flags:venom} → (3,1) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:06.240] Dice rolled: 5
+[01:06.286] MSG: Barros the Colossal wins!
+[01:10.949] Crystals: P1 3100 → 2380 (-720)  [battle]
+[01:12.347] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature | flags:venom} → P1(3,1)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}  Dice=5  ATK=150 vs DEF=25  → WIN
+[01:12.347] Anim: 3A  △ P1(3,1)
+[01:12.347] Card destroyed  P1 (3,1) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:12.850] Mode selected P0: ATTACK
+[01:12.855] Attack phase P0: 1 attack(s) available
+[01:12.855] MSG: Player 1: tap a character to attack.
+[01:13.157] AI0 attack decision: (1,0)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down} → (4,0) "Cursed Reflection" {cost 500}
+[01:13.499] Revealed: P0 (1,0) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:13.539] Revealed: P1 (4,0) "Cursed Reflection" {cost 500}
+[01:13.539] Dice rolled: 5
+[01:13.793] MSG: Trap triggered: Cursed Reflection!
+[01:17.863] Crystals: P1 2380 → 1880 (-500)  [trap cost]
+[01:19.252] MSG: Cursed Reflection: Scarlet Mutant's ATK and DEF swapped until end of turn!
+[01:19.257] Trap: "Cursed Reflection" triggered  P0(1,0)→P1(4,0)
+[01:19.257] Anim: 3D  (attacker survives)
+[01:19.759] Turn ended  P0  |  Crystals P0=3320 P1=1880
+
+--- Turn 8  |  Player 1  |  Crystals P0=3320 P1=1880 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [Scar][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:20.363] Mode selected P1: ATTACK
+[01:20.370] Attack phase P1: 2 attack(s) available
+[01:20.370] MSG: Player 2: tap a character to attack.
+[01:20.669] AI1 attack decision: (1,3)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down} → (1,0) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:21.018] Revealed: P1 (1,3) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[01:21.018] Dice rolled: 3
+[01:21.022] MSG: Goddess of Virtue wins!
+[01:25.670] Crystals: P0 3320 → 2970 (-350)  [battle]
+[01:27.068] Attack P1(1,3)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P0(1,0)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=3  ATK=80 vs DEF=30  → WIN
+[01:27.068] Anim: 3A  △ P0(1,0)
+[01:27.068] Card destroyed  P0 (1,0) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:27.367] Turn ended  P1  |  Crystals P0=2970 P1=1880
+
+--- Turn 9  |  Player 0  |  Crystals P0=2970 P1=1880 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][Godd][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:27.962] Mode selected P0: ATTACK
+[01:27.968] Attack phase P0: 2 attack(s) available
+[01:27.969] MSG: Player 1: tap a character to attack.
+[01:28.261] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature | flags:venom} → (1,3) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[01:28.561] Dice rolled: 2
+[01:28.611] MSG: Barros the Colossal wins!
+[01:33.224] Crystals: P1 1880 → 480 (-1400)  [battle]
+[01:34.622] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature | flags:venom} → P1(1,3)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}  Dice=2  ATK=150 vs DEF=100  → WIN
+[01:34.622] Anim: 3A  △ P1(1,3)
+[01:34.622] Card destroyed  P1 (1,3) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[01:37.129] Turn ended  P0  |  Crystals P0=2970 P1=480
+
+--- Turn 10  |  Player 1  |  Crystals P0=2970 P1=480 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:37.725] Mode selected P1: ATTACK
+[01:37.730] Attack phase P1: 2 attack(s) available
+[01:37.730] MSG: Player 2: tap a character to attack.
+[01:38.024] AI1 attack decision: (1,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down} → (0,1) (dead-end)
+[01:38.326] Revealed: P1 (1,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:38.327] Dice rolled: 2
+[01:38.353] MSG: Nothing happens — Dead End.
+[01:41.721] Attack P1(1,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(0,1)(empty)  Dice=2  → DEAD_END
+[01:41.722] Anim: 3F  (blank slot)
+[01:42.020] Turn ended  P1  |  Crystals P0=2970 P1=480
+
+--- Turn 11  |  Player 0  |  Crystals P0=2970 P1=480 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][Scar][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:42.616] Mode selected P0: ATTACK
+[01:42.621] Attack phase P0: 2 attack(s) available
+[01:42.621] MSG: Player 1: tap a character to attack.
+[01:42.915] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature | flags:venom} → (1,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:43.216] Dice rolled: 1
+[01:43.266] MSG: Barros the Colossal wins!
+[01:47.900] Crystals: P1 480 → 130 (-350)  [battle]
+[01:49.308] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature | flags:venom} → P1(1,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=1  ATK=150 vs DEF=30  → WIN
+[01:49.309] Anim: 3A  △ P1(1,2)
+[01:49.309] Card destroyed  P1 (1,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:51.805] Turn ended  P0  |  Crystals P0=2970 P1=130
+
+--- Turn 12  |  Player 1  |  Crystals P0=2970 P1=130 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:52.399] Mode selected P1: ATTACK
+[01:52.404] Attack phase P1: 2 attack(s) available
+[01:52.405] MSG: Player 2: tap a character to attack.
+[01:52.699] AI1 attack decision: (2,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (0,0) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}
+[01:53.035] Revealed: P1 (2,3) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:53.084] Revealed: P0 (0,0) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:53.084] Dice rolled: 1
+[01:57.829] Crystals: P1 130 → 0 (-130)  [battle]
+
+=== GAME OVER ===
+[01:57.839] AI Player 0 wins
+[01:57.839] Reason: crystals
+[01:57.839] Final crystals — P0: 2970  P1: 0  |  Turns: 12
+[01:57.839] Log saved to: res://logs/results/2026-06-01_09-37-04_903_mint_julep/battle_leftover_pizza_politics_2026-06-01_10-29-31_175.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Claw-Mutant-002
+Highlight: Claw Mutant (Character)  [setup: Chaotic Wisp, Release Mutagen, Radar, Spy]
+Result:    PASS
+Detail:    ok
+Turns:     12  |  AI timeouts: 0
+===

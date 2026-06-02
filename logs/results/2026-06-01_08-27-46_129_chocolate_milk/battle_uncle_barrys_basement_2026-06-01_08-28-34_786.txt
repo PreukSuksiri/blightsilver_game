@@ -1,0 +1,550 @@
+=== Battle of Uncle Barry's Basement ===
+Battle started: 2026-06-01 08:28:34.786
+Game Session of Chocolate Milk (started 2026-06-01 08:27:46.129)
+=== Card E2E Test ===
+Scenario ID:  E2E-Aerial-the-Battlemage-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Aerial-the-Battlemage-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Aerial the Battlemage (Character)  [setup: Gryphon, Church Guard, Chaotic Wisp]
+Ability:      ATK_DEF_BONUS_IF_UNION_ON_FIELD — +20 ATK&DEF if there is Union card on your field
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Aerial the Battlemage" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Aerial the Battlemage
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Aerial\ the\ Battlemage".*ATK=70\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +20 ATK with union on field. Gryphon Rider zone is the main diagonal (0,0)→(4,4). Gryphon at (3,3) + Church Guard at (1,1) satisfy material conditions so AI can summon Gryphon Rider. Aerial at (2,2) gains +20 ATK=70 once union is on field.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Aerial the Battlemage
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Aerial the Battlemage, (3,3) Gryphon, (1,1) Church Guard
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Resurrection, Bribe
+P1 Tech hand: Resurrection, Spy, Prayer
+P0:   [C:Gryp][  — ][  — ][  — ][C:Hunt]
+      [  — ][C:Chur][T:Red ][C:Void][T:Brai]
+      [C:Moon][C:Skel][C:Aeri][T:Echo][  — ]
+      [  — ][C:Immo][  — ][C:Gryp][  — ]
+      [C:Mage][T:Snar][T:Hard][  — ][C:Polt]
+P1:   [C:Moon][  — ][C:Kiyo][  — ][C:Void]
+      [T:Host][  — ][C:Jira][  — ][C:Meli]
+      [T:Blac][  — ][C:Chao][  — ][C:Vile]
+      [C:Book][  — ][T:Self][  — ][T:Acid]
+      [T:Flam][  — ][C:Gran][  — ][C:Blea]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:06.712] Crystals: P0 5000 → 4000 (-1000)  [union]
+[00:06.794] Revealed: P0 (0,0) "Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine}
+[00:06.794] Union summoned P0: "Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} from "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:06.795] MSG: Player 1 summoned [Gryphon Rider] using: "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:10.129] Mode selected P0: ATTACK
+[00:10.133] Attack phase P0: 2 attack(s) available
+[00:10.133] MSG: Player 1: tap a character to attack.
+[00:10.423] AI0 attack decision: (2,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | face-down} → (0,0) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down}
+[00:10.773] Revealed: P0 (2,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:10.824] Revealed: P1 (0,0) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:10.825] Dice rolled: 5
+[00:10.831] MSG: Aerial the Battlemage wins!
+[00:16.432] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:17.829] Attack P0(2,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(0,0)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=5  ATK=70 vs DEF=25  → WIN
+[00:17.830] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} +ATK 20
+[00:17.830] Anim: 3A  △ P1(0,0)
+[00:17.830] Card destroyed  P1 (0,0) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:18.325] Mode selected P0: ATTACK
+[00:18.330] Attack phase P0: 1 attack(s) available
+[00:18.331] MSG: Player 1: tap a character to attack.
+[00:18.622] AI0 attack decision: (0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → (0,2) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}
+[00:18.976] Revealed: P1 (0,2) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:18.976] Dice rolled: 4
+[00:19.021] MSG: Gryphon Rider wins!
+[00:23.640] Crystals: P1 4700 → 3900 (-800)  [battle]
+[00:25.038] Attack P0(0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(0,2)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}  Dice=4  ATK=125 vs DEF=35  → WIN
+[00:25.038] Anim: 3A  △ P1(0,2)
+[00:25.038] Card destroyed  P1 (0,2) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:25.534] Turn ended  P0  |  Crystals P0=4000 P1=3900
+
+--- Turn 2  |  Player 1  |  Crystals P0=4000 P1=3900 ---
+P0:   [Gryp][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][Aeri][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:26.148] Mode selected P1: ATTACK
+[00:26.151] Attack phase P1: 2 attack(s) available
+[00:26.151] MSG: Player 2: tap a character to attack.
+[00:26.431] AI1 attack decision: (0,4)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos | face-down} → (2,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:26.779] Revealed: P1 (0,4) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:26.779] Dice rolled: 4
+[00:26.782] MSG: Void Stalker wins!
+[00:32.431] Crystals: P0 4000 → 3250 (-750)  [battle]
+[00:33.830] Attack P1(0,4)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} → P0(2,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=4  ATK=85 vs DEF=45  → WIN
+[00:33.830] Reckoning overlay: P1 "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} +ATK 20
+[00:33.830] Anim: 3A  △ P0(2,2)
+[00:33.830] Card destroyed  P0 (2,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:34.118] Turn ended  P1  |  Crystals P0=3250 P1=3900
+
+--- Turn 3  |  Player 0  |  Crystals P0=3250 P1=3900 ---
+P0:   [Gryp][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][Void]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:34.722] Mode selected P0: ATTACK
+[00:34.728] Attack phase P0: 2 attack(s) available
+[00:34.728] MSG: Player 1: tap a character to attack.
+[00:35.014] AI0 attack decision: (0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → (0,4) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:35.314] Dice rolled: 3
+[00:35.367] MSG: Gryphon Rider wins!
+[00:39.973] Crystals: P1 3900 → 3180 (-720)  [battle]
+[00:41.369] Attack P0(0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(0,4)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}  Dice=3  ATK=125 vs DEF=25  → WIN
+[00:41.371] Anim: 3A  △ P1(0,4)
+[00:41.371] Card destroyed  P1 (0,4) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[00:41.878] Mode selected P0: ATTACK
+[00:41.882] Attack phase P0: 1 attack(s) available
+[00:41.882] MSG: Player 1: tap a character to attack.
+[00:42.181] AI0 attack decision: (2,0)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down} → (3,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down}
+[00:42.557] Revealed: P0 (2,0) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:42.603] Revealed: P1 (3,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:42.603] Dice rolled: 3
+[00:47.340] Crystals: P0 3250 → 2850 (-400)  [battle]
+[00:48.739] Attack P0(2,0)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(3,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=3  ATK=40 vs DEF=55  → LOSE
+[00:48.740] Anim: 3B  △ P0(2,0)
+[00:48.740] Card destroyed  P0 (2,0) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:49.236] Turn ended  P0  |  Crystals P0=2850 P1=3180
+
+--- Turn 4  |  Player 1  |  Crystals P0=2850 P1=3180 ---
+P0:   [Gryp][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Book][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:49.838] Mode selected P1: ATTACK
+[00:49.844] Attack phase P1: 2 attack(s) available
+[00:49.845] MSG: Player 2: tap a character to attack.
+[00:50.123] AI1 attack decision: (3,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (1,1) (dead-end)
+[00:50.423] Dice rolled: 4
+[00:50.453] MSG: Nothing happens — Dead End.
+[00:53.813] Attack P1(3,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(1,1)(empty)  Dice=4  → DEAD_END
+[00:53.813] Anim: 3F  (blank slot)
+[00:54.108] Turn ended  P1  |  Crystals P0=2850 P1=3180
+
+--- Turn 5  |  Player 0  |  Crystals P0=2850 P1=3180 ---
+P0:   [Gryp][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Book][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:54.711] Mode selected P0: ATTACK
+[00:54.715] Attack phase P0: 2 attack(s) available
+[00:54.715] MSG: Player 1: tap a character to attack.
+[00:55.007] AI0 attack decision: (0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → (3,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:55.306] Dice rolled: 4
+[00:55.361] MSG: Gryphon Rider wins!
+[01:00.040] Crystals: P1 3180 → 2380 (-800)  [battle]
+[01:01.438] Attack P0(0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(3,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=4  ATK=125 vs DEF=55  → WIN
+[01:01.439] Anim: 3A  △ P1(3,0)
+[01:01.439] Card destroyed  P1 (3,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:01.936] Mode selected P0: ATTACK
+[01:01.941] Attack phase P0: 1 attack(s) available
+[01:01.942] MSG: Player 1: tap a character to attack.
+[01:02.231] AI0 attack decision: (0,4)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down} → (2,0) "Blackmail" {cost 0}
+[01:02.611] Revealed: P0 (0,4) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:02.637] Revealed: P1 (2,0) "Blackmail" {cost 0}
+[01:02.637] Dice rolled: 2
+[01:02.836] MSG: Trap triggered: Blackmail!
+[01:02.836] MSG: Huntress of Green Glade is immune to 0-cost Traps!
+[01:06.930] Attack P0(0,4)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(2,0)"Blackmail"  Dice=2  ATK=0 vs DEF=0  → TIE
+[01:06.930] Anim: exchange  (no destruction)
+[01:07.428] Turn ended  P0  |  Crystals P0=2850 P1=2380
+
+--- Turn 6  |  Player 1  |  Crystals P0=2850 P1=2380 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:08.031] Mode selected P1: ATTACK
+[01:08.035] Attack phase P1: 2 attack(s) available
+[01:08.036] MSG: Player 2: tap a character to attack.
+[01:08.323] AI1 attack decision: (1,2)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (2,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos | face-down}
+[01:08.696] Revealed: P1 (1,2) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:08.730] Revealed: P0 (2,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[01:08.730] Dice rolled: 3
+[01:08.734] MSG: Jirayu the Rebellious Prince wins!
+[01:13.332] Crystals: P0 2850 → 2550 (-300)  [battle]
+[01:14.730] Attack P1(1,2)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P0(2,1)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=3  ATK=40 vs DEF=5  → WIN
+[01:14.731] Anim: 3A  △ P0(2,1)
+[01:14.731] Card destroyed  P0 (2,1) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[01:15.028] Turn ended  P1  |  Crystals P0=2550 P1=2380
+
+--- Turn 7  |  Player 0  |  Crystals P0=2550 P1=2380 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][Jira][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:15.619] Mode selected P0: ATTACK
+[01:15.627] Attack phase P0: 2 attack(s) available
+[01:15.627] MSG: Player 1: tap a character to attack.
+[01:15.914] AI0 attack decision: (0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → (1,2) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:16.215] Dice rolled: 1
+[01:16.271] MSG: Gryphon Rider wins!
+[01:20.873] Crystals: P1 2380 → 1780 (-600)  [battle]
+[01:22.274] Attack P0(0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(1,2)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}  Dice=1  ATK=125 vs DEF=40  → WIN
+[01:22.274] Anim: 3A  △ P1(1,2)
+[01:22.274] Card destroyed  P1 (1,2) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:22.776] Mode selected P0: ATTACK
+[01:22.782] Attack phase P0: 1 attack(s) available
+[01:22.782] MSG: Player 1: tap a character to attack.
+[01:23.077] AI0 attack decision: (0,4)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → (1,0) "Hostage" {cost 200}
+[01:23.434] Revealed: P1 (1,0) "Hostage" {cost 200}
+[01:23.434] Dice rolled: 4
+[01:23.734] MSG: Trap triggered: Hostage!
+[01:27.823] Crystals: P1 1780 → 1580 (-200)  [trap cost]
+[01:29.210] MSG: Hostage: Adjacent squares revealed and locked.
+[01:29.211] Revealed: P1 (1,1) (blank slot)
+[01:29.231] Trap: "Hostage" triggered  P0(0,4)→P1(1,0)
+[01:29.231] Anim: 3D  (attacker survives)
+[01:29.712] Turn ended  P0  |  Crystals P0=2550 P1=1580
+
+--- Turn 8  |  Player 1  |  Crystals P0=2550 P1=1580 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:30.317] Mode selected P1: ATTACK
+[01:30.319] Attack phase P1: 2 attack(s) available
+[01:30.320] MSG: Player 2: tap a character to attack.
+[01:30.606] AI1 attack decision: (1,4)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down} → (4,1) "Snare Trap" {cost 500}
+[01:30.971] Revealed: P1 (1,4) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[01:31.006] Revealed: P0 (4,1) "Snare Trap" {cost 500}
+[01:31.006] Dice rolled: 1
+[01:31.236] MSG: Trap triggered: Snare Trap!
+[01:35.333] Crystals: P0 2550 → 2050 (-500)  [trap cost]
+[01:36.723] MSG: Snare Trap: Melissa the Healer's effect nullified until end of next turn!
+[01:36.728] Trap: "Snare Trap" triggered  P1(1,4)→P0(4,1)
+[01:36.728] Anim: 3D  (attacker survives)
+[01:37.026] Turn ended  P1  |  Crystals P0=2050 P1=1580
+
+--- Turn 9  |  Player 0  |  Crystals P0=2050 P1=1580 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Meli]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:37.602] Mode selected P0: ATTACK
+[01:37.607] Attack phase P0: 2 attack(s) available
+[01:37.607] MSG: Player 1: tap a character to attack.
+[01:37.906] AI0 attack decision: (0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → (1,4) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | nullified≤T9}
+[01:38.215] Dice rolled: 3
+[01:38.264] MSG: Gryphon Rider wins!
+[01:42.906] Crystals: P1 1580 → 880 (-700)  [battle]
+[01:42.906] Crystals: P1 880 → 1180 (+300)  [recovery]
+[01:42.907] MSG: Melissa the Healer: Recovered 300 Crystals!
+[01:42.921] Attack P0(0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(1,4)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | nullified≤T9}  Dice=3  ATK=125 vs DEF=25  → WIN
+[01:42.921] Anim: 3A  △ P1(1,4)
+[01:42.921] Card destroyed  P1 (1,4) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | nullified≤T9}
+[01:43.418] Mode selected P0: ATTACK
+[01:43.424] Attack phase P0: 1 attack(s) available
+[01:43.424] MSG: Player 1: tap a character to attack.
+[01:43.723] AI0 attack decision: (0,4)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → (1,1) (dead-end)
+[01:44.033] Dice rolled: 2
+[01:44.059] MSG: Nothing happens — Dead End.
+[01:47.439] Attack P0(0,4)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[01:47.439] Anim: 3F  (blank slot)
+[01:47.942] Turn ended  P0  |  Crystals P0=2050 P1=1180
+
+--- Turn 10  |  Player 1  |  Crystals P0=2050 P1=1180 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:48.560] Mode selected P1: ATTACK
+[01:48.566] Attack phase P1: 2 attack(s) available
+[01:48.566] MSG: Player 2: tap a character to attack.
+[01:48.856] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (2,3) "Echo Barrier" {cost 1000}
+[01:49.231] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:49.261] Revealed: P0 (2,3) "Echo Barrier" {cost 1000}
+[01:49.261] Dice rolled: 4
+[01:49.498] MSG: Trap triggered: Echo Barrier!
+[01:53.574] Crystals: P0 2050 → 1050 (-1000)  [trap cost]
+[01:54.964] MSG: Echo Barrier: Attacking player cannot attack again this turn!
+[01:54.970] Trap: "Echo Barrier" triggered  P1(2,2)→P0(2,3)
+[01:54.970] Anim: 3D  (attacker survives)
+[01:55.267] Turn ended  P1  |  Crystals P0=1050 P1=1180
+
+--- Turn 11  |  Player 0  |  Crystals P0=1050 P1=1180 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Chao][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:55.866] Mode selected P0: ATTACK
+[01:55.873] Attack phase P0: 2 attack(s) available
+[01:55.873] MSG: Player 1: tap a character to attack.
+[01:56.164] AI0 attack decision: (0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:56.465] Dice rolled: 1
+[01:56.516] MSG: Gryphon Rider wins!
+[02:01.123] Crystals: P1 1180 → 1080 (-100)  [battle]
+[02:02.522] Attack P0(0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=125 vs DEF=0  → WIN
+[02:02.522] Anim: 3A  △ P1(2,2)
+[02:02.522] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:03.026] Mode selected P0: ATTACK
+[02:03.033] Attack phase P0: 1 attack(s) available
+[02:03.034] MSG: Player 1: tap a character to attack.
+[02:03.331] AI0 attack decision: (0,4)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → (4,0) "Flame Trap" {cost 250}
+[02:03.698] Revealed: P1 (4,0) "Flame Trap" {cost 250}
+[02:03.698] Dice rolled: 2
+[02:03.962] MSG: Trap triggered: Flame Trap!
+[02:08.075] Crystals: P1 1080 → 830 (-250)  [trap cost]
+[02:09.464] MSG: Spike Trap: Huntress of Green Glade permanently loses 10 ATK!
+[02:09.469] Trap: "Flame Trap" triggered  P0(0,4)→P1(4,0)
+[02:09.469] Anim: 3D  (attacker survives)
+[02:09.978] Turn ended  P0  |  Crystals P0=1050 P1=830
+
+--- Turn 12  |  Player 1  |  Crystals P0=1050 P1=830 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[02:10.588] Mode selected P1: ATTACK
+[02:10.594] Attack phase P1: 2 attack(s) available
+[02:10.594] MSG: Player 2: tap a character to attack.
+[02:10.890] AI1 attack decision: (2,4)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio | face-down} → (3,4) (dead-end)
+[02:11.270] Revealed: P1 (2,4) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[02:11.270] Dice rolled: 3
+[02:11.284] MSG: Nothing happens — Dead End.
+[02:14.639] Attack P1(2,4)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} → P0(3,4)(empty)  Dice=3  → DEAD_END
+[02:14.639] Anim: 3F  (blank slot)
+[02:14.936] Turn ended  P1  |  Crystals P0=1050 P1=830
+
+--- Turn 13  |  Player 0  |  Crystals P0=1050 P1=830 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Vile]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[02:15.533] Mode selected P0: ATTACK
+[02:15.539] Attack phase P0: 2 attack(s) available
+[02:15.540] MSG: Player 1: tap a character to attack.
+[02:15.831] AI0 attack decision: (0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → (2,4) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[02:16.132] Dice rolled: 2
+[02:16.180] MSG: Gryphon Rider wins!
+[02:20.782] Crystals: P1 830 → 630 (-200)  [battle]
+[02:22.181] Attack P0(0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(2,4)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=2  ATK=125 vs DEF=30  → WIN
+[02:22.181] Anim: 3A  △ P1(2,4)
+[02:22.181] Card destroyed  P1 (2,4) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[02:22.684] Mode selected P0: ATTACK
+[02:22.691] Attack phase P0: 1 attack(s) available
+[02:22.691] MSG: Player 1: tap a character to attack.
+[02:22.990] AI0 attack decision: (0,4)"Huntress of Green Glade" {Unit ATK40 DEF50 | cost 800 | affinity Anima | base 40/50} → (0,3) (dead-end)
+[02:23.298] Dice rolled: 2
+[02:23.328] MSG: Nothing happens — Dead End.
+[02:26.705] Attack P0(0,4)"Huntress of Green Glade" {Unit ATK40 DEF50 | cost 800 | affinity Anima | base 40/50} → P1(0,3)(empty)  Dice=2  → DEAD_END
+[02:26.705] Anim: 3F  (blank slot)
+[02:27.203] Turn ended  P0  |  Crystals P0=1050 P1=630
+
+--- Turn 14  |  Player 1  |  Crystals P0=1050 P1=630 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[02:27.786] Mode selected P1: ATTACK
+[02:27.791] Attack phase P1: 2 attack(s) available
+[02:27.791] MSG: Player 2: tap a character to attack.
+[02:28.081] AI1 attack decision: (4,2)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima | face-down} → (3,2) (dead-end)
+[02:28.449] Revealed: P1 (4,2) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[02:28.449] Dice rolled: 1
+[02:28.463] MSG: Nothing happens — Dead End.
+[02:31.791] Attack P1(4,2)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P0(3,2)(empty)  Dice=1  → DEAD_END
+[02:31.792] Anim: 3F  (blank slot)
+[02:32.090] Turn ended  P1  |  Crystals P0=1050 P1=630
+
+--- Turn 15  |  Player 0  |  Crystals P0=1050 P1=630 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][Gran][  — ][  ? ]
+[02:32.687] Mode selected P0: ATTACK
+[02:32.695] Attack phase P0: 2 attack(s) available
+[02:32.696] MSG: Player 1: tap a character to attack.
+[02:32.986] AI0 attack decision: (0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → (4,2) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[02:33.286] Dice rolled: 2
+[02:33.343] MSG: Gryphon Rider wins!
+[02:37.977] Crystals: P1 630 → 330 (-300)  [battle]
+[02:39.377] Attack P0(0,0)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(4,2)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=2  ATK=125 vs DEF=25  → WIN
+[02:39.377] Anim: 3A  △ P1(4,2)
+[02:39.377] Card destroyed  P1 (4,2) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[02:39.872] Mode selected P0: ATTACK
+[02:39.878] Attack phase P0: 1 attack(s) available
+[02:39.878] MSG: Player 1: tap a character to attack.
+[02:40.169] AI0 attack decision: (0,4)"Huntress of Green Glade" {Unit ATK40 DEF50 | cost 800 | affinity Anima | base 40/50} → (0,1) (dead-end)
+[02:40.469] Dice rolled: 4
+[02:40.496] MSG: Nothing happens — Dead End.
+[02:43.866] Attack P0(0,4)"Huntress of Green Glade" {Unit ATK40 DEF50 | cost 800 | affinity Anima | base 40/50} → P1(0,1)(empty)  Dice=4  → DEAD_END
+[02:43.867] Anim: 3F  (blank slot)
+[02:44.362] Turn ended  P0  |  Crystals P0=1050 P1=330
+
+--- Turn 16  |  Player 1  |  Crystals P0=1050 P1=330 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+[02:44.961] Mode selected P1: ATTACK
+[02:44.967] Attack phase P1: 2 attack(s) available
+[02:44.967] MSG: Player 2: tap a character to attack.
+[02:45.260] AI1 attack decision: (4,4)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio | face-down} → (1,2) "Red Card" {cost 0}
+[02:45.636] Revealed: P1 (4,4) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[02:45.667] Revealed: P0 (1,2) "Red Card" {cost 0}
+[02:45.667] Dice rolled: 4
+[02:45.918] MSG: Trap triggered: Red Card!
+[02:50.070] Coin flip: Tails, Heads
+[02:52.793] MSG: Red Card: Tails, Heads.
+[02:52.794] MSG: Not both heads — no effect.
+[02:52.801] Trap: "Red Card" triggered  P1(4,4)→P0(1,2)
+[02:52.801] Anim: 3D  (attacker survives)
+[02:53.099] Turn ended  P1  |  Crystals P0=1050 P1=330
+
+--- Turn 17  |  Player 0  |  Crystals P0=1050 P1=330 ---
+P0:   [Gryp][  — ][  — ][  — ][Hunt]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Blea]
+[02:53.696] Mode selected P0: ATTACK
+[02:53.703] Attack phase P0: 2 attack(s) available
+[02:53.703] MSG: Player 1: tap a character to attack.
+[02:53.994] AI0 attack decision: (0,4)"Huntress of Green Glade" {Unit ATK40 DEF50 | cost 800 | affinity Anima | base 40/50} → (4,4) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[02:54.294] Dice rolled: 4
+[02:54.305] MSG: Huntress of Green Glade wins!
+[02:58.985] Crystals: P1 330 → 10 (-320)  [battle]
+[03:00.389] Attack P0(0,4)"Huntress of Green Glade" {Unit ATK40 DEF50 | cost 800 | affinity Anima | base 40/50} → P1(4,4)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}  Dice=4  ATK=40 vs DEF=20  → WIN
+[03:00.389] Anim: 3A  △ P1(4,4)
+[03:00.389] Card destroyed  P1 (4,4) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+
+=== GAME OVER ===
+[03:00.391] AI Player 0 wins
+[03:00.391] Reason: all_destroyed
+[03:00.391] Final crystals — P0: 1050  P1: 10  |  Turns: 17
+[03:00.391] Log saved to: res://logs/results/2026-06-01_08-27-46_129_chocolate_milk/battle_uncle_barrys_basement_2026-06-01_08-28-34_786.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Aerial-the-Battlemage-002
+Highlight: Aerial the Battlemage (Character)  [setup: Gryphon, Church Guard, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     17  |  AI timeouts: 0
+===

@@ -181,7 +181,7 @@ func _build_ui() -> void:
 		var summary := CardE2ERunner.get_summary_text()
 		if not summary.is_empty():
 			_log_label.text = summary + "\n\n" + _log_label.text
-			_status_lbl.text = "Card E2E suite finished."
+			_status_lbl.text = "Card E2E suite finished.")
 
 	# ── Start + status row ───────────────────────────────────────────────────
 	var action_hb := HBoxContainer.new()

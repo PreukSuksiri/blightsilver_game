@@ -1,0 +1,85 @@
+=== Battle of Wet Sock Avalanche ===
+Battle started: 2026-06-01 23:55:18.150
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Hard-Scale-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Hard-Scale-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Hard Scale (Trap)  [setup: Ox Patrol]
+Ability:      TEMP_DEF_BOOST_ONE_OWN — All of your unit gain +5 DEF in Reckoning until this turn’s end
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Hard Scale" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Hard Scale
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Hard\ Scale"
+  - Log must contain at least one of: Trap triggered, "Hard Scale" triggered, Trap triggered: Hard Scale, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Hard Scale revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Hard Scale
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Siege Cannon, Bribe, Radar
+P1 Tech hand: Accident, Siege Cannon, Prayer
+P0:   [C:Skel][  — ][C:Chur][  — ][C:Doom]
+      [  — ][C:Meli][  — ][C:Shep][  — ]
+      [C:Blea][  — ][C:Ox P][  — ][C:Vile]
+      [  — ][T:Defe][  — ][T:Expl][T:Acid]
+      [C:Chao][T:Brai][C:War ][  — ][C:Echo]
+P1:   [  — ][T:Red ][T:Hard][C:Dark][  — ]
+      [T:Spik][C:Lazy][C:Scou][C:Swar][  — ]
+      [  — ][C:Demo][T:Hard][C:Fera][C:Nuki]
+      [  — ][C:Gobl][C:Gran][C:Heav][  — ]
+      [C:Blue][T:Self][  — ][T:Bait][C:Polt]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:05.343] Mode selected P0: ATTACK
+[00:05.348] Attack phase P0: 2 attack(s) available
+[00:05.348] MSG: Player 1: tap a character to attack.
+[00:05.645] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Hard Scale" {cost 700}
+[00:05.976] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:06.011] Revealed: P1 (2,2) "Hard Scale" {cost 700}
+[00:06.011] Dice rolled: 5
+[00:06.260] MSG: Trap triggered: Hard Scale!
+[00:06.260] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.265] AI Player 0 wins
+[00:06.265] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:06.265] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_wet_sock_avalanche_2026-06-01_23-55-18_150.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Hard-Scale-002
+Highlight: Hard Scale (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

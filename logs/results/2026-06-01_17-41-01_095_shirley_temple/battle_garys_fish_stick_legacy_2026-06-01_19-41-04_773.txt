@@ -1,0 +1,383 @@
+=== Battle of Gary's Fish Stick Legacy ===
+Battle started: 2026-06-01 19:41:04.773
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Berserk-Hyena-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Berserk-Hyena-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Berserk Hyena (Union)  [setup: Chaotic Wisp]
+Setup role:   t2_union
+Verifies:
+  - Ability: "Berserk Hyena" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Berserk Hyena, Attack P\d\(\d+,\d+\)"Berserk\ Hyena", MSG:.*Berserk
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Berserk Hyena — summon logged and/or union attacks with ATK=40.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Berserk Hyena
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Siege Cannon, Prayer, Bribe
+P1 Tech hand: Spy, Release Mutagen, Tease
+P0:   [C:Pyro][  — ][  — ][T:Defe][C:Swar]
+      [C:Nigh][  — ][  — ][T:Snar][C:Magi]
+      [  — ][C:Moon][T:Self][  — ][C:Flam]
+      [T:Hard][C:Joan][C:Jira][C:Chur][  — ]
+      [C:Stri][C:Mars][  — ][  — ][C:Tomb]
+P1:   [T:Host][C:Grav][C:Moon][C:Mad ][T:Red ]
+      [T:Flam][C:Swar][C:Gran][C:Ostr][T:Foul]
+      [C:Dark][C:Gree][C:Chao][C:Moon][T:Acid]
+      [  — ][C:Scou][C:Hand][C:Leor][  — ]
+      [  — ][  — ][T:Bunk][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:06.813] Crystals: P0 5000 → 4700 (-300)  [union]
+[00:06.856] Revealed: P0 (2,4) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:06.856] Union summoned P0: "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:06.856] MSG: Player 1 summoned [False Prophet] using: "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:10.213] Mode selected P0: ATTACK
+[00:10.218] Attack phase P0: 2 attack(s) available
+[00:10.219] MSG: Player 1: tap a character to attack.
+[00:10.512] AI0 attack decision: (2,4)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → (2,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down}
+[00:10.851] Revealed: P1 (2,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:10.852] Dice rolled: 1
+[00:15.654] Attack P0(2,4)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P1(2,3)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=1  ATK=20 vs DEF=25  → LOSE
+[00:15.654] Anim: 3B  △ P0(2,4)
+[00:15.654] Card destroyed  P0 (2,4) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:16.148] Mode selected P0: ATTACK
+[00:16.153] Attack phase P0: 1 attack(s) available
+[00:16.154] MSG: Player 1: tap a character to attack.
+[00:16.446] AI0 attack decision: (0,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | face-down} → (2,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:16.784] Revealed: P0 (0,0) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:16.784] Dice rolled: 3
+[00:16.789] MSG: Pyromancer wins!
+[00:21.422] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:22.819] Attack P0(0,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P1(2,3)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=3  ATK=80 vs DEF=25  → WIN
+[00:22.819] Anim: 3A  △ P1(2,3)
+[00:22.819] Card destroyed  P1 (2,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:23.316] Turn ended  P0  |  Crystals P0=4700 P1=4700
+
+--- Turn 2  |  Player 1  |  Crystals P0=4700 P1=4700 ---
+P0:   [Pyro][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:25.397] Crystals: P1 4700 → 3200 (-1500)  [union]
+[00:25.442] Revealed: P1 (1,1) "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[00:25.442] Union summoned P1: "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[00:25.442] MSG: Player 2 summoned [Barros the Colossal] using: "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[00:28.663] Crystals: P1 3200 → 3150 (-50)  [skip tax]
+[00:28.664] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:30.051] Turn ended  P1  |  Crystals P0=4700 P1=3150
+
+--- Turn 3  |  Player 0  |  Crystals P0=4700 P1=3150 ---
+P0:   [Pyro][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:30.630] Mode selected P0: ATTACK
+[00:30.636] Attack phase P0: 2 attack(s) available
+[00:30.637] MSG: Player 1: tap a character to attack.
+[00:30.938] AI0 attack decision: (0,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → (1,3) (dead-end)
+[00:31.245] Dice rolled: 5
+[00:31.272] MSG: Nothing happens — Dead End.
+[00:34.653] Attack P0(0,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P1(1,3)(empty)  Dice=5  → DEAD_END
+[00:34.653] Anim: 3F  (blank slot)
+[00:37.159] Turn ended  P0  |  Crystals P0=4700 P1=3150
+
+--- Turn 4  |  Player 1  |  Crystals P0=4700 P1=3150 ---
+P0:   [Pyro][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:37.753] Mode selected P1: ATTACK
+[00:37.759] Attack phase P1: 2 attack(s) available
+[00:37.760] MSG: Player 2: tap a character to attack.
+[00:38.049] AI1 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (0,0) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:38.350] Dice rolled: 2
+[00:38.395] MSG: Barros the Colossal wins!
+[00:43.025] Crystals: P0 4700 → 3800 (-900)  [battle]
+[00:44.422] Attack P1(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(0,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=2  ATK=150 vs DEF=0  → WIN
+[00:44.424] Anim: 3A  △ P0(0,0)
+[00:44.424] Card destroyed  P0 (0,0) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:44.721] Turn ended  P1  |  Crystals P0=3800 P1=3150
+
+--- Turn 5  |  Player 0  |  Crystals P0=3800 P1=3150 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:45.313] Mode selected P0: ATTACK
+[00:45.319] Attack phase P0: 2 attack(s) available
+[00:45.320] MSG: Player 1: tap a character to attack.
+[00:45.613] AI0 attack decision: (0,4)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down} → (2,0) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down}
+[00:45.949] Revealed: P0 (0,4) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[00:45.978] Revealed: P1 (2,0) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[00:45.978] Dice rolled: 1
+[00:45.982] MSG: Swarmcaller wins!
+[00:50.580] Crystals: P1 3150 → 2900 (-250)  [battle]
+[00:51.979] Attack P0(0,4)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature} → P1(2,0)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}  Dice=1  ATK=45 vs DEF=25  → WIN
+[00:51.979] Anim: 3A  △ P1(2,0)
+[00:51.979] Card destroyed  P1 (2,0) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[00:52.480] Mode selected P0: ATTACK
+[00:52.486] Attack phase P0: 1 attack(s) available
+[00:52.487] MSG: Player 1: tap a character to attack.
+[00:52.788] AI0 attack decision: (1,4)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down} → (2,1) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down}
+[00:53.132] Revealed: P0 (1,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:53.163] Revealed: P1 (2,1) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:53.163] Dice rolled: 2
+[00:53.168] MSG: Both cards are destroyed!
+[00:57.761] Crystals: P0 3800 → 3620 (-180)  [battle]
+[00:59.154] Crystals: P1 2900 → 2500 (-400)  [battle]
+[01:00.547] Attack P0(1,4)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature} → P1(2,1)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}  Dice=2  ATK=15 vs DEF=15  → TIE
+[01:00.547] Anim: 3C  △ P0(1,4) + △ P1(2,1)
+[01:00.547] Card destroyed  P0 (1,4) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[01:00.547] Card destroyed  P1 (2,1) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[01:01.042] Turn ended  P0  |  Crystals P0=3620 P1=2500
+
+--- Turn 6  |  Player 1  |  Crystals P0=3620 P1=2500 ---
+P0:   [  — ][  — ][  — ][  ? ][Swar]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:01.639] Mode selected P1: ATTACK
+[01:01.647] Attack phase P1: 2 attack(s) available
+[01:01.647] MSG: Player 2: tap a character to attack.
+[01:01.936] AI1 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (0,4) "Swarmcaller" {Unit ATK60 DEF60 | cost 950 | affinity Nature | base 45/45 | buff +permATK15, +permDEF15}
+[01:02.237] Dice rolled: 3
+[01:02.287] MSG: Barros the Colossal wins!
+[01:06.890] Crystals: P0 3620 → 2670 (-950)  [battle]
+[01:08.287] Attack P1(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(0,4)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}  Dice=3  ATK=150 vs DEF=45  → WIN
+[01:08.287] Anim: 3A  △ P0(0,4)
+[01:08.287] Card destroyed  P0 (0,4) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[01:08.596] Turn ended  P1  |  Crystals P0=2670 P1=2500
+
+--- Turn 7  |  Player 0  |  Crystals P0=2670 P1=2500 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:09.201] Mode selected P0: ATTACK
+[01:09.207] Attack phase P0: 2 attack(s) available
+[01:09.207] MSG: Player 1: tap a character to attack.
+[01:09.506] AI0 attack decision: (1,0)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[01:09.851] Revealed: P0 (1,0) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:09.877] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:09.877] Dice rolled: 5
+[01:09.881] MSG: Night Whisperer wins!
+[01:14.500] Crystals: P1 2500 → 2400 (-100)  [battle]
+[01:15.900] Attack P0(1,0)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=30 vs DEF=0  → WIN
+[01:15.900] Anim: 3A  △ P1(2,2)
+[01:15.900] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:18.404] Turn ended  P0  |  Crystals P0=2670 P1=2400
+
+--- Turn 8  |  Player 1  |  Crystals P0=2670 P1=2400 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [Nigh][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:18.998] Mode selected P1: ATTACK
+[01:19.004] Attack phase P1: 2 attack(s) available
+[01:19.004] MSG: Player 2: tap a character to attack.
+[01:19.294] AI1 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (1,0) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:19.596] Dice rolled: 5
+[01:19.647] MSG: Barros the Colossal wins!
+[01:24.288] Crystals: P0 2670 → 1770 (-900)  [battle]
+[01:25.686] Attack P1(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(1,0)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=5  ATK=150 vs DEF=30  → WIN
+[01:25.686] Anim: 3A  △ P0(1,0)
+[01:25.687] Card destroyed  P0 (1,0) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:25.983] Turn ended  P1  |  Crystals P0=1770 P1=2400
+
+--- Turn 9  |  Player 0  |  Crystals P0=1770 P1=2400 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:26.572] Mode selected P0: ATTACK
+[01:26.577] Attack phase P0: 2 attack(s) available
+[01:26.577] MSG: Player 1: tap a character to attack.
+[01:26.869] AI0 attack decision: (4,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic | face-down} → (2,4) "Acid Trap Hole" {cost 0}
+[01:27.207] Revealed: P0 (4,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:27.236] Revealed: P1 (2,4) "Acid Trap Hole" {cost 0}
+[01:27.237] Dice rolled: 4
+[01:27.545] MSG: Trap triggered: Acid Trap Hole!
+[01:27.545] MSG: Mars Drill is immune to 0-cost Traps!
+[01:31.626] Attack P0(4,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P1(2,4)"Acid Trap Hole"  Dice=4  ATK=0 vs DEF=0  → TIE
+[01:31.627] Anim: exchange  (no destruction)
+[01:32.122] Mode selected P0: ATTACK
+[01:32.128] Attack phase P0: 1 attack(s) available
+[01:32.128] MSG: Player 1: tap a character to attack.
+[01:32.421] AI0 attack decision: (3,1)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down} → (0,1) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos | face-down}
+[01:32.755] Revealed: P0 (3,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[01:32.783] Revealed: P1 (0,1) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[01:32.784] Dice rolled: 5
+[01:37.487] Crystals: P0 1770 → 1470 (-300)  [battle]
+[01:38.886] Attack P0(3,1)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → P1(0,1)"Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}  Dice=5  ATK=25 vs DEF=30  → LOSE
+[01:38.886] Anim: 3B  △ P0(3,1)
+[01:38.886] Card destroyed  P0 (3,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[01:39.392] Turn ended  P0  |  Crystals P0=1470 P1=2400
+
+--- Turn 10  |  Player 1  |  Crystals P0=1470 P1=2400 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][Mars][  — ][  — ][  ? ]
+P1:   [  ? ][Grav][  ? ][  ? ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:39.998] Mode selected P1: ATTACK
+[01:40.006] Attack phase P1: 2 attack(s) available
+[01:40.007] MSG: Player 2: tap a character to attack.
+[01:40.304] AI1 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (4,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:40.613] Dice rolled: 3
+[01:40.657] MSG: Barros the Colossal wins!
+[01:45.313] Crystals: P0 1470 → 1050 (-420)  [battle]
+[01:46.714] Attack P1(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(4,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=3  ATK=150 vs DEF=30  → WIN
+[01:46.714] Anim: 3A  △ P0(4,1)
+[01:46.714] Card destroyed  P0 (4,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:47.018] Turn ended  P1  |  Crystals P0=1050 P1=2400
+
+--- Turn 11  |  Player 0  |  Crystals P0=1050 P1=2400 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][Grav][  ? ][  ? ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:47.618] Mode selected P0: ATTACK
+[01:47.627] Attack phase P0: 2 attack(s) available
+[01:47.628] MSG: Player 1: tap a character to attack.
+[01:47.923] AI0 attack decision: (2,1)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down} → (0,1) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[01:48.235] Revealed: P0 (2,1) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[01:48.235] Dice rolled: 1
+[01:54.050] Crystals: P0 1050 → 730 (-320)  [battle]
+[01:55.448] Attack P0(2,1)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} → P1(0,1)"Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}  Dice=1  ATK=25 vs DEF=30  → LOSE
+[01:55.448] Reckoning overlay: P0 "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} ATK -10
+[01:55.448] Anim: 3B  △ P0(2,1)
+[01:55.449] Card destroyed  P0 (2,1) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[01:55.950] Mode selected P0: ATTACK
+[01:55.953] Attack phase P0: 1 attack(s) available
+[01:55.954] MSG: Player 1: tap a character to attack.
+[01:56.259] AI0 attack decision: (4,4)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down} → (0,1) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[01:56.608] Revealed: P0 (4,4) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:56.608] Dice rolled: 1
+[01:56.613] MSG: Tomb Bandit wins!
+[02:01.265] Crystals: P1 2400 → 2150 (-250)  [battle]
+[02:02.663] Attack P0(4,4)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P1(0,1)"Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}  Dice=1  ATK=75 vs DEF=30  → WIN
+[02:02.664] Anim: 3A  △ P1(0,1)
+[02:02.664] Card destroyed  P1 (0,1) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[02:03.162] Turn ended  P0  |  Crystals P0=730 P1=2150
+
+--- Turn 12  |  Player 1  |  Crystals P0=730 P1=2150 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][Tomb]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][Barr][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:03.755] Mode selected P1: ATTACK
+[02:03.760] Attack phase P1: 2 attack(s) available
+[02:03.760] MSG: Player 2: tap a character to attack.
+[02:04.053] AI1 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (4,4) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[02:04.355] Dice rolled: 2
+[02:04.402] MSG: Barros the Colossal wins!
+[02:09.047] Crystals: P0 730 → 0 (-730)  [battle]
+
+=== GAME OVER ===
+[02:09.056] AI Player 1 wins
+[02:09.056] Reason: crystals
+[02:09.056] Final crystals — P0: 0  P1: 2150  |  Turns: 12
+[02:09.056] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_garys_fish_stick_legacy_2026-06-01_19-41-04_773.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Berserk-Hyena-002
+Highlight: Berserk Hyena (Union)  [setup: Chaotic Wisp]
+Result:    FAIL
+Detail:    None of expect_log_any matched: ["Union summoned P0: Berserk Hyena", "Attack P\\d\\(\\d+,\\d+\\)\"Berserk\\ Hyena\"", "MSG:.*Berserk"]
+Turns:     12  |  AI timeouts: 0
+===

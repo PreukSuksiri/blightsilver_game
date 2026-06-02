@@ -1,0 +1,78 @@
+=== Battle of Low Battery Panic ===
+Battle started: 2026-06-01 20:01:37.264
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Lord-of-Terror-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Lord-of-Terror-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Lord of Terror (Union)  [setup: Chaotic Wisp]
+Ability:      ATK_PENALTY_VS_DEAD_END — -50 ATK if attacks dead end card
+Setup role:   t2_union
+Verifies:
+  - Ability: "Lord of Terror" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Lord of Terror, Attack P\d\(\d+,\d+\)"Lord\ of\ Terror", MSG:.*Lord, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Lord of Terror — summon logged and/or union attacks with ATK=150.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Lord of Terror
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, Prayer, Spy
+P1 Tech hand: Radar, Release Mutagen, Spy
+P0:   [C:Blad][T:Host][  — ][  — ][C:Magi]
+      [  — ][C:Gamm][C:Spea][C:Stri][C:Hair]
+      [T:Bunk][T:Acid][C:Ice ][C:Saw ][C:Nept]
+      [T:Flam][  — ][C:Tomb][C:War ][C:Lazy]
+      [  — ][  — ][T:Hypn][  — ][  — ]
+P1:   [C:Ostr][  — ][  — ][  — ][C:Scyt]
+      [  — ][C:Ange][  — ][C:Chur][T:Bunk]
+      [T:Defe][  — ][C:Chao][  — ][  — ]
+      [  — ][C:Hair][T:Deco][C:Jose][  — ]
+      [C:Blue][  — ][  — ][T:Host][C:Lab ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:06.817] Crystals: P0 5000 → 4000 (-1000)  [union]
+[00:06.855] Revealed: P0 (0,0) "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[00:06.855] Union summoned P0: "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}
+[00:06.855] MSG: Player 1 summoned [Volatile Slasher] using: "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}
+[00:06.855] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.881] AI Player 0 wins
+[00:06.881] Final crystals — P0: 4000  P1: 5000  |  Turns: 1
+[00:06.881] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_low_battery_panic_2026-06-01_20-01-37_264.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Lord-of-Terror-002
+Highlight: Lord of Terror (Union)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

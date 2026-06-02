@@ -1,0 +1,543 @@
+=== Battle of Moldy Lunchbox ===
+Battle started: 2026-06-01 16:59:51.369
+Game Session of Iced Coffee (started 2026-06-01 15:58:46.241)
+=== Card E2E Test ===
+Scenario ID:  E2E-Dark-Blob-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Dark-Blob-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Dark Blob (Character)  [setup: Chaotic Wisp]
+Ability:      PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN — After reckoning: +5 ATK at foe’s turn ends
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Dark Blob" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Dark Blob
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Dark\ Blob".*ATK=|→ P\d\(\d+,\d+\)"Dark\ Blob")
+  - Log must match regex: ("Dark\ Blob".*ATK=|→ P\d\(\d+,\d+\)"Dark\ Blob")
+  - Log must contain at least one of: Dark Blob, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2 best-effort: PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN — combat + MSG/card presence.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Dark Blob
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Dark Blob
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Resurrection, Siege Cannon
+P1 Tech hand: Spy, War Supply, Radar
+P0:   [C:Mad ][  — ][  — ][T:Echo][C:Dark]
+      [C:Fera][C:Gian][T:Stre][  — ][C:Doom]
+      [C:Polt][  — ][C:Dark][T:Spik][  — ]
+      [C:Stin][  — ][C:Stai][  — ][  — ]
+      [C:Kiyo][C:Bat ][C:Succ][C:Grav][T:Self]
+P1:   [  — ][  — ][C:Snip][  — ][  — ]
+      [T:Alar][C:Big ][C:Pony][C:Blue][T:Hard]
+      [C:Saw ][C:Gran][C:Chao][C:Mad ][T:Brai]
+      [C:Yaks][C:Plan][C:Lase][C:Kiyo][T:Bunk]
+      [  — ][  — ][  — ][T:Bait][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:05.318] Mode selected P0: ATTACK
+[00:05.322] Attack phase P0: 2 attack(s) available
+[00:05.323] MSG: Player 1: tap a character to attack.
+[00:05.618] AI0 attack decision: (2,2)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.959] Revealed: P0 (2,2) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:05.985] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.985] Dice rolled: 5
+[00:05.989] MSG: Dark Blob wins!
+[00:10.601] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.002] Attack P0(2,2)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=20 vs DEF=0  → WIN
+[00:12.002] Anim: 3A  △ P1(2,2)
+[00:12.002] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.495] Mode selected P0: ATTACK
+[00:12.500] Attack phase P0: 1 attack(s) available
+[00:12.501] MSG: Player 1: tap a character to attack.
+[00:12.792] AI0 attack decision: (3,2)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos | face-down} → (0,1) (dead-end)
+[00:13.132] Revealed: P0 (3,2) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[00:13.132] Dice rolled: 2
+[00:13.147] MSG: Nothing happens — Dead End.
+[00:16.499] Attack P0(3,2)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P1(0,1)(empty)  Dice=2  → DEAD_END
+[00:16.499] Anim: 3F  (blank slot)
+[00:16.997] Turn ended  P0  |  Crystals P0=5000 P1=4900
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4900 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Dark][  ? ][  — ]
+      [  ? ][  — ][Stai][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:19.077] Crystals: P1 4900 → 3900 (-1000)  [union]
+[00:19.120] Revealed: P1 (3,1) "Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[00:19.120] Union summoned P1: "Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down}, "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}
+[00:19.121] MSG: Player 2 summoned [Rocket Marauder] using: "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down}, "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down}
+[00:22.276] Crystals: P1 3900 → 3850 (-50)  [skip tax]
+[00:22.277] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:23.666] Turn ended  P1  |  Crystals P0=5000 P1=3850
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3850 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Dark][  ? ][  — ]
+      [  ? ][  — ][Stai][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:24.270] Mode selected P0: ATTACK
+[00:24.279] Attack phase P0: 2 attack(s) available
+[00:24.279] MSG: Player 1: tap a character to attack.
+[00:24.576] AI0 attack decision: (3,2)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → (3,3) (dead-end)
+[00:24.885] Dice rolled: 3
+[00:24.912] MSG: Nothing happens — Dead End.
+[00:28.290] Attack P0(3,2)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P1(3,3)(empty)  Dice=3  → DEAD_END
+[00:28.291] Anim: 3F  (blank slot)
+[00:28.793] Mode selected P0: ATTACK
+[00:28.795] Attack phase P0: 1 attack(s) available
+[00:28.795] MSG: Player 1: tap a character to attack.
+[00:29.100] AI0 attack decision: (2,2)"Dark Blob" {Unit ATK25 DEF50 | cost 500 | affinity Chaos | base 25/50} → (0,2) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine | face-down}
+[00:29.439] Revealed: P1 (0,2) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:29.439] Dice rolled: 4
+[00:29.445] MSG: Dark Blob wins!
+[00:34.110] Crystals: P1 3850 → 3500 (-350)  [battle]
+[00:35.512] Attack P0(2,2)"Dark Blob" {Unit ATK25 DEF50 | cost 500 | affinity Chaos | base 25/50} → P1(0,2)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}  Dice=4  ATK=25 vs DEF=20  → WIN
+[00:35.512] Anim: 3A  △ P1(0,2)
+[00:35.512] Card destroyed  P1 (0,2) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:36.015] Turn ended  P0  |  Crystals P0=5000 P1=3500
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=3500 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Dark][  ? ][  — ]
+      [  ? ][  — ][Stai][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:36.619] Mode selected P1: ATTACK
+[00:36.625] Attack phase P1: 2 attack(s) available
+[00:36.626] MSG: Player 2: tap a character to attack.
+[00:36.926] AI1 attack decision: (3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → (2,2) "Dark Blob" {Unit ATK25 DEF50 | cost 500 | affinity Chaos | base 25/50}
+[00:37.234] Dice rolled: 3
+[00:37.290] MSG: Rocket Marauder wins!
+[00:41.963] Crystals: P0 5000 → 4500 (-500)  [battle]
+[00:43.363] Attack P1(3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(2,2)"Dark Blob" {Unit ATK25 DEF50 | cost 500 | affinity Chaos | base 25/50}  Dice=3  ATK=125 vs DEF=50  → WIN
+[00:43.363] Anim: 3A  △ P0(2,2)
+[00:43.363] Card destroyed  P0 (2,2) "Dark Blob" {Unit ATK25 DEF50 | cost 500 | affinity Chaos | base 25/50}
+[00:43.657] Turn ended  P1  |  Crystals P0=4500 P1=3500
+
+--- Turn 5  |  Player 0  |  Crystals P0=4500 P1=3500 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][Stai][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:44.256] Mode selected P0: ATTACK
+[00:44.263] Attack phase P0: 2 attack(s) available
+[00:44.263] MSG: Player 1: tap a character to attack.
+[00:44.555] AI0 attack decision: (3,2)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → (0,0) (dead-end)
+[00:44.855] Dice rolled: 5
+[00:44.889] MSG: Nothing happens — Dead End.
+[00:48.254] Attack P0(3,2)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P1(0,0)(empty)  Dice=5  → DEAD_END
+[00:48.254] Anim: 3F  (blank slot)
+[00:50.761] Turn ended  P0  |  Crystals P0=4500 P1=3500
+
+--- Turn 6  |  Player 1  |  Crystals P0=4500 P1=3500 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][Stai][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:51.356] Mode selected P1: ATTACK
+[00:51.363] Attack phase P1: 2 attack(s) available
+[00:51.363] MSG: Player 2: tap a character to attack.
+[00:51.656] AI1 attack decision: (3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → (3,2) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[00:51.956] Dice rolled: 2
+[00:52.011] MSG: Rocket Marauder wins!
+[00:56.668] Crystals: P0 4500 → 4320 (-180)  [battle]
+[00:58.066] Attack P1(3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(3,2)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}  Dice=2  ATK=125 vs DEF=0  → WIN
+[00:58.066] Anim: 3A  △ P0(3,2)
+[00:58.066] Card destroyed  P0 (3,2) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[00:58.365] Turn ended  P1  |  Crystals P0=4320 P1=3500
+
+--- Turn 7  |  Player 0  |  Crystals P0=4320 P1=3500 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[00:58.965] Mode selected P0: ATTACK
+[00:58.970] Attack phase P0: 2 attack(s) available
+[00:58.971] MSG: Player 1: tap a character to attack.
+[00:59.259] AI0 attack decision: (0,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down} → (0,4) (dead-end)
+[00:59.602] Revealed: P0 (0,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:59.602] Dice rolled: 1
+[00:59.616] MSG: Nothing happens — Dead End.
+[01:02.928] Attack P0(0,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P1(0,4)(empty)  Dice=1  → DEAD_END
+[01:02.928] Anim: 3F  (blank slot)
+[01:03.423] Mode selected P0: ATTACK
+[01:03.428] Attack phase P0: 1 attack(s) available
+[01:03.428] MSG: Player 1: tap a character to attack.
+[01:03.722] AI0 attack decision: (1,0)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos | face-down} → (1,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down}
+[01:04.058] Revealed: P0 (1,0) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:04.084] Revealed: P1 (1,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:04.084] Dice rolled: 1
+[01:04.088] MSG: Feral Vampire wins!
+[01:08.714] Crystals: P1 3500 → 3100 (-400)  [battle]
+[01:10.114] Attack P0(1,0)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P1(1,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=1  ATK=40 vs DEF=35  → WIN
+[01:10.114] Anim: 3A  △ P1(1,1)
+[01:10.114] Card destroyed  P1 (1,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:10.598] Turn ended  P0  |  Crystals P0=4320 P1=3100
+
+--- Turn 8  |  Player 1  |  Crystals P0=4320 P1=3100 ---
+P0:   [Mad ][  — ][  — ][  ? ][  ? ]
+      [Fera][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:11.193] Mode selected P1: ATTACK
+[01:11.201] Attack phase P1: 2 attack(s) available
+[01:11.201] MSG: Player 2: tap a character to attack.
+[01:11.493] AI1 attack decision: (3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → (1,0) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:11.793] Dice rolled: 1
+[01:11.843] MSG: Rocket Marauder wins!
+[01:16.484] Crystals: P0 4320 → 3920 (-400)  [battle]
+[01:17.884] Attack P1(3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(1,0)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=1  ATK=125 vs DEF=25  → WIN
+[01:17.884] Anim: 3A  △ P0(1,0)
+[01:17.884] Card destroyed  P0 (1,0) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:18.181] Turn ended  P1  |  Crystals P0=3920 P1=3100
+
+--- Turn 9  |  Player 0  |  Crystals P0=3920 P1=3100 ---
+P0:   [Mad ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:18.780] Mode selected P0: ATTACK
+[01:18.787] Attack phase P0: 2 attack(s) available
+[01:18.788] MSG: Player 1: tap a character to attack.
+[01:19.080] AI0 attack decision: (0,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → (0,3) (dead-end)
+[01:19.380] Dice rolled: 5
+[01:19.406] MSG: Nothing happens — Dead End.
+[01:22.775] Attack P0(0,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P1(0,3)(empty)  Dice=5  → DEAD_END
+[01:22.775] Anim: 3F  (blank slot)
+[01:25.286] Turn ended  P0  |  Crystals P0=3920 P1=3100
+
+--- Turn 10  |  Player 1  |  Crystals P0=3920 P1=3100 ---
+P0:   [Mad ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:25.881] Mode selected P1: ATTACK
+[01:25.889] Attack phase P1: 2 attack(s) available
+[01:25.889] MSG: Player 2: tap a character to attack.
+[01:26.180] AI1 attack decision: (3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → (0,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:26.480] Dice rolled: 4
+[01:26.525] MSG: Rocket Marauder wins!
+[01:31.173] Crystals: P0 3920 → 3660 (-260)  [battle]
+[01:32.570] Attack P1(3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(0,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=4  ATK=125 vs DEF=15  → WIN
+[01:32.570] Anim: 3A  △ P0(0,0)
+[01:32.570] Card destroyed  P0 (0,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:32.868] Turn ended  P1  |  Crystals P0=3660 P1=3100
+
+--- Turn 11  |  Player 0  |  Crystals P0=3660 P1=3100 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:33.468] Mode selected P0: ATTACK
+[01:33.473] Attack phase P0: 2 attack(s) available
+[01:33.473] MSG: Player 1: tap a character to attack.
+[01:33.763] AI0 attack decision: (0,4)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (1,4) "Hard Scale" {cost 700}
+[01:34.095] Revealed: P0 (0,4) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:34.129] Revealed: P1 (1,4) "Hard Scale" {cost 700}
+[01:34.129] Dice rolled: 5
+[01:34.418] MSG: Trap triggered: Hard Scale!
+[01:38.495] Crystals: P1 3100 → 2400 (-700)  [trap cost]
+[01:39.885] MSG: Hard Scale: All your units gain +5 DEF in Reckoning this turn!
+[01:39.892] Trap: "Hard Scale" triggered  P0(0,4)→P1(1,4)
+[01:39.892] Anim: 3D  (attacker survives)
+[01:40.377] Mode selected P0: ATTACK
+[01:40.385] Attack phase P0: 1 attack(s) available
+[01:40.385] MSG: Player 1: tap a character to attack.
+[01:40.676] AI0 attack decision: (1,4)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down} → (1,3) "Blue Mage" {Unit ATK45 DEF50 | cost 800 | affinity Arcane | buff +tempDEF5 | face-down}
+[01:41.016] Revealed: P0 (1,4) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:41.045] Revealed: P1 (1,3) "Blue Mage" {Unit ATK45 DEF50 | cost 800 | affinity Arcane | buff +tempDEF5}
+[01:41.045] Dice rolled: 4
+[01:45.793] Crystals: P0 3660 → 3560 (-100)  [battle]
+[01:47.188] Attack P0(1,4)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P1(1,3)"Blue Mage" {Unit ATK45 DEF50 | cost 800 | affinity Arcane | buff +tempDEF5}  Dice=4  ATK=15 vs DEF=50  → LOSE
+[01:47.188] Anim: 3B  △ P0(1,4)
+[01:47.188] Card destroyed  P0 (1,4) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:47.686] Turn ended  P0  |  Crystals P0=3560 P1=2400
+
+--- Turn 12  |  Player 1  |  Crystals P0=3560 P1=2400 ---
+P0:   [  — ][  — ][  — ][  ? ][Dark]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][Blue][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:48.284] Mode selected P1: ATTACK
+[01:48.289] Attack phase P1: 2 attack(s) available
+[01:48.289] MSG: Player 2: tap a character to attack.
+[01:48.585] AI1 attack decision: (1,3)"Blue Mage" {Unit ATK45 DEF50 | cost 800 | affinity Arcane | buff +tempDEF5} → (0,4) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:48.885] Dice rolled: 2
+[01:48.896] MSG: Blue Mage: Coin flip missed — normal battle.
+[01:48.897] MSG: Blue Mage wins!
+[01:48.955] Coin flip: Tails, Heads
+[01:54.542] Crystals: P0 3560 → 3260 (-300)  [battle]
+[01:55.943] Attack P1(1,3)"Blue Mage" {Unit ATK45 DEF50 | cost 800 | affinity Arcane | buff +tempDEF5} → P0(0,4)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}  Dice=2  ATK=45 vs DEF=25  → WIN
+[01:55.944] Anim: 3A  △ P0(0,4)
+[01:55.944] Card destroyed  P0 (0,4) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:56.238] Turn ended  P1  |  Crystals P0=3260 P1=2400
+
+--- Turn 13  |  Player 0  |  Crystals P0=3260 P1=2400 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][Blue][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[01:56.839] Mode selected P0: ATTACK
+[01:56.845] Attack phase P0: 2 attack(s) available
+[01:56.846] MSG: Player 1: tap a character to attack.
+[01:57.134] AI0 attack decision: (1,1)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature | face-down} → (1,0) "Alarm" {cost 0}
+[01:57.474] Revealed: P0 (1,1) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[01:57.493] Revealed: P1 (1,0) "Alarm" {cost 0}
+[01:57.493] Dice rolled: 4
+[01:57.751] MSG: Trap triggered: Alarm!
+[02:01.862] MSG: Alarm: +5 DEF to all ANIMA characters this turn!
+[02:01.867] Trap: "Alarm" triggered  P0(1,1)→P1(1,0)
+[02:01.867] Anim: 3D  (attacker survives)
+[02:02.361] Mode selected P0: ATTACK
+[02:02.366] Attack phase P0: 1 attack(s) available
+[02:02.367] MSG: Player 1: tap a character to attack.
+[02:02.667] AI0 attack decision: (2,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos | face-down} → (2,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down}
+[02:03.020] Revealed: P0 (2,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[02:03.046] Revealed: P1 (2,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[02:03.046] Dice rolled: 4
+[02:03.051] MSG: Poltergeist wins!
+[02:08.656] Crystals: P1 2400 → 2120 (-280)  [battle]
+[02:10.055] Attack P0(2,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(2,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}  Dice=4  ATK=70 vs DEF=10  → WIN
+[02:10.055] Reckoning overlay: P0 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} +ATK 70
+[02:10.055] Anim: 3A  △ P1(2,0)
+[02:10.055] Card destroyed  P1 (2,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[02:10.553] Turn ended  P0  |  Crystals P0=3260 P1=2120
+
+--- Turn 14  |  Player 1  |  Crystals P0=3260 P1=2120 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][Gian][  ? ][  — ][  — ]
+      [Polt][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][Blue][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[02:11.144] Mode selected P1: ATTACK
+[02:11.153] Attack phase P1: 2 attack(s) available
+[02:11.153] MSG: Player 2: tap a character to attack.
+[02:11.442] AI1 attack decision: (3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → (1,1) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[02:11.742] Dice rolled: 4
+[02:11.794] MSG: Rocket Marauder wins!
+[02:16.435] Crystals: P0 3260 → 1760 (-1500)  [battle]
+[02:17.834] Attack P1(3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(1,1)"Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}  Dice=4  ATK=125 vs DEF=20  → WIN
+[02:17.834] Anim: 3A  △ P0(1,1)
+[02:17.834] Card destroyed  P0 (1,1) "Giant Centipede" {Unit ATK20 DEF20 | cost 1500 | affinity Nature}
+[02:18.133] Turn ended  P1  |  Crystals P0=1760 P1=2120
+
+--- Turn 15  |  Player 0  |  Crystals P0=1760 P1=2120 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [Polt][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][Blue][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[02:18.727] Mode selected P0: ATTACK
+[02:18.735] Attack phase P0: 2 attack(s) available
+[02:18.735] MSG: Player 1: tap a character to attack.
+[02:19.026] AI0 attack decision: (2,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (2,3) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}
+[02:19.329] Revealed: P1 (2,3) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[02:19.329] Dice rolled: 5
+[02:19.339] MSG: Poltergeist wins!
+[02:25.019] Crystals: P1 2120 → 1860 (-260)  [battle]
+[02:26.416] Attack P0(2,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(2,3)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=5  ATK=70 vs DEF=15  → WIN
+[02:26.416] Reckoning overlay: P0 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} +ATK 70
+[02:26.416] Anim: 3A  △ P1(2,3)
+[02:26.416] Card destroyed  P1 (2,3) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[02:28.933] Turn ended  P0  |  Crystals P0=1760 P1=1860
+
+--- Turn 16  |  Player 1  |  Crystals P0=1760 P1=1860 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [Polt][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][Blue][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[02:29.535] Mode selected P1: ATTACK
+[02:29.542] Attack phase P1: 2 attack(s) available
+[02:29.542] MSG: Player 2: tap a character to attack.
+[02:29.842] AI1 attack decision: (3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → (2,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[02:30.151] Dice rolled: 5
+[02:30.201] MSG: Rocket Marauder wins!
+[02:34.847] Crystals: P0 1760 → 1060 (-700)  [battle]
+[02:36.246] Attack P1(3,1)"Rocket Marauder" {Union ATK125 DEF105 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(2,0)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}  Dice=5  ATK=125 vs DEF=70  → WIN
+[02:36.246] Anim: 3A  △ P0(2,0)
+[02:36.246] Card destroyed  P0 (2,0) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[02:36.552] Turn ended  P1  |  Crystals P0=1060 P1=1860
+
+--- Turn 17  |  Player 0  |  Crystals P0=1060 P1=1860 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][Blue][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[02:37.157] Mode selected P0: ATTACK
+[02:37.164] Attack phase P0: 2 attack(s) available
+[02:37.164] MSG: Player 1: tap a character to attack.
+[02:37.464] AI0 attack decision: (3,0)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down} → (3,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos | face-down}
+[02:37.819] Revealed: P0 (3,0) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[02:37.844] Revealed: P1 (3,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[02:37.844] Dice rolled: 4
+[02:42.589] Crystals: P0 1060 → 660 (-400)  [battle]
+[02:43.988] Attack P0(3,0)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature} → P1(3,0)"Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}  Dice=4  ATK=10 vs DEF=30  → LOSE
+[02:43.988] Anim: 3B  △ P0(3,0)
+[02:43.988] Card destroyed  P0 (3,0) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[02:44.482] Mode selected P0: ATTACK
+[02:44.491] Attack phase P0: 1 attack(s) available
+[02:44.492] MSG: Player 1: tap a character to attack.
+[02:44.780] AI0 attack decision: (4,0)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down} → (3,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[02:45.127] Revealed: P0 (4,0) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[02:45.127] Dice rolled: 1
+[02:45.131] MSG: Kiyoko the Death Whisper wins!
+[02:49.772] Crystals: P1 1860 → 1360 (-500)  [battle]
+[02:51.171] Attack P0(4,0)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P1(3,0)"Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}  Dice=1  ATK=40 vs DEF=30  → WIN
+[02:51.171] Anim: 3A  △ P1(3,0)
+[02:51.171] Card destroyed  P1 (3,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[02:51.668] Turn ended  P0  |  Crystals P0=660 P1=1360
+
+--- Turn 18  |  Player 1  |  Crystals P0=660 P1=1360 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Kiyo][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][Blue][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][Rock][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+[02:52.264] Mode selected P1: ATTACK
+[02:52.272] Attack phase P1: 2 attack(s) available
+[02:52.273] MSG: Player 2: tap a character to attack.
+[02:52.564] AI1 attack decision: (1,3)"Blue Mage" {Unit ATK45 DEF45 | cost 800 | affinity Arcane} → (4,0) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[02:52.864] Dice rolled: 4
+[02:52.875] MSG: Blue Mage: Two heads — Kiyoko the Death Whisper is destroyed!
+[02:52.930] Coin flip: Heads, Heads
+[02:58.542] Crystals: P0 660 → 0 (-660)  [battle]
+
+=== GAME OVER ===
+[02:58.554] AI Player 1 wins
+[02:58.554] Reason: crystals
+[02:58.554] Final crystals — P0: 0  P1: 1360  |  Turns: 18
+[02:58.554] Log saved to: res://logs/results/2026-06-01_15-58-46_241_iced_coffee/battle_moldy_lunchbox_2026-06-01_16-59-51_369.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Dark-Blob-002
+Highlight: Dark Blob (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     18  |  AI timeouts: 0
+===

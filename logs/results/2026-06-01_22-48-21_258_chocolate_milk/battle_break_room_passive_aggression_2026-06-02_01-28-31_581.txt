@@ -1,0 +1,483 @@
+=== Battle of Break Room Passive Aggression ===
+Battle started: 2026-06-02 01:28:31.581
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-X-Death-Squad-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-X-Death-Squad-001  (test_case/functional/union_functional_tests.md)
+Highlight:    X-Death Squad (Union)  [setup: Chaotic Wisp]
+Ability:      OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT — In Reckoning, pay 1000, destroy foe’s unit. They pay no cost.
+Setup role:   t2_union
+Verifies:
+  - Ability: "X-Death Squad" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: X-Death Squad, Attack P\d\(\d+,\d+\)"X\-Death\ Squad", MSG:.*X\-Death
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union X-Death Squad — summon logged and/or union attacks with ATK=50.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union X-Death Squad
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Siege Cannon, Great Diplomacy, Radar
+P1 Tech hand: Great Diplomacy, War Supply, Radar
+P0:   [T:Bunk][C:Heav][T:Curs][C:Gryp][T:Spik]
+      [  — ][C:Armo][C:Gree][C:Shre][T:Deco]
+      [  — ][C:Nept][C:Meli][C:Scou][  — ]
+      [T:Blac][C:Lab ][C:Saw ][C:Hunt][  — ]
+      [C:Arch][  — ][  — ][  — ][T:Acid]
+P1:   [T:Blac][C:Succ][C:Hamm][  — ][T:Stre]
+      [C:Aray][  — ][  — ][  — ][C:Flam]
+      [C:Tomb][  — ][C:Chao][  — ][C:Lab ]
+      [T:Self][  — ][  — ][  — ][T:Expl]
+      [C:Gobl][C:Mind][C:Chur][C:Doom][C:Gryp]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.339] Mode selected P0: ATTACK
+[00:05.342] Attack phase P0: 2 attack(s) available
+[00:05.343] MSG: Player 1: tap a character to attack.
+[00:05.626] AI0 attack decision: (0,1)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (0,2) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down}
+[00:05.971] Revealed: P0 (0,1) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:05.998] Revealed: P1 (0,2) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[00:05.998] Dice rolled: 3
+[00:06.001] MSG: Heavy Tome Preacher wins!
+[00:10.625] Crystals: P1 5000 → 4750 (-250)  [battle]
+[00:12.024] Attack P0(0,1)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(0,2)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}  Dice=3  ATK=25 vs DEF=20  → WIN
+[00:12.024] Anim: 3A  △ P1(0,2)
+[00:12.024] Card destroyed  P1 (0,2) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[00:12.518] Mode selected P0: ATTACK
+[00:12.523] Attack phase P0: 1 attack(s) available
+[00:12.524] MSG: Player 1: tap a character to attack.
+[00:12.817] AI0 attack decision: (1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down} → (1,1) (dead-end)
+[00:13.149] Revealed: P0 (1,1) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[00:13.149] Dice rolled: 5
+[00:13.163] MSG: Nothing happens — Dead End.
+[00:16.517] Attack P0(1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P1(1,1)(empty)  Dice=5  → DEAD_END
+[00:16.517] Anim: 3F  (blank slot)
+[00:17.018] Turn ended  P0  |  Crystals P0=5000 P1=4750
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4750 ---
+P0:   [  ? ][Heav][  ? ][  ? ][  ? ]
+      [  — ][Armo][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:17.641] Mode selected P1: ATTACK
+[00:17.648] Attack phase P1: 2 attack(s) available
+[00:17.648] MSG: Player 2: tap a character to attack.
+[00:17.943] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (0,1) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:18.282] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:18.282] Dice rolled: 3
+[00:18.287] MSG: Both cards are destroyed!
+[00:22.843] Crystals: P1 4750 → 4650 (-100)  [battle]
+[00:24.234] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:25.623] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(0,1)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=3  ATK=20 vs DEF=20  → TIE
+[00:25.623] Anim: 3C  △ P1(2,2) + △ P0(0,1)
+[00:25.623] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:25.623] Card destroyed  P0 (0,1) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:25.918] Turn ended  P1  |  Crystals P0=4700 P1=4650
+
+--- Turn 3  |  Player 0  |  Crystals P0=4700 P1=4650 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][Armo][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:26.534] Mode selected P0: ATTACK
+[00:26.537] Attack phase P0: 2 attack(s) available
+[00:26.537] MSG: Player 1: tap a character to attack.
+[00:26.816] AI0 attack decision: (1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → (0,3) (dead-end)
+[00:27.116] Dice rolled: 3
+[00:27.136] MSG: Nothing happens — Dead End.
+[00:30.523] Attack P0(1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P1(0,3)(empty)  Dice=3  → DEAD_END
+[00:30.523] Anim: 3F  (blank slot)
+[00:31.026] Mode selected P0: ATTACK
+[00:31.028] Attack phase P0: 1 attack(s) available
+[00:31.028] MSG: Player 1: tap a character to attack.
+[00:31.334] AI0 attack decision: (1,2)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down} → (0,1) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}
+[00:31.678] Revealed: P0 (1,2) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:31.703] Revealed: P1 (0,1) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[00:31.703] Dice rolled: 1
+[00:36.468] Crystals: P0 4700 → 4300 (-400)  [battle]
+[00:37.868] Attack P0(1,2)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane} → P1(0,1)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}  Dice=1  ATK=15 vs DEF=30  → LOSE
+[00:37.868] Anim: 3B  △ P0(1,2)
+[00:37.868] Card destroyed  P0 (1,2) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:38.364] Turn ended  P0  |  Crystals P0=4300 P1=4650
+
+--- Turn 4  |  Player 1  |  Crystals P0=4300 P1=4650 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][Succ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:38.958] Mode selected P1: ATTACK
+[00:38.965] Attack phase P1: 2 attack(s) available
+[00:38.966] MSG: Player 2: tap a character to attack.
+[00:39.246] AI1 attack decision: (0,1)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} → (2,0) (dead-end)
+[00:39.546] Dice rolled: 2
+[00:39.569] MSG: Nothing happens — Dead End.
+[00:42.945] Attack P1(0,1)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} → P0(2,0)(empty)  Dice=2  → DEAD_END
+[00:42.945] Anim: 3F  (blank slot)
+[00:43.243] Turn ended  P1  |  Crystals P0=4300 P1=4650
+
+--- Turn 5  |  Player 0  |  Crystals P0=4300 P1=4650 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][Succ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:43.844] Mode selected P0: ATTACK
+[00:43.847] Attack phase P0: 2 attack(s) available
+[00:43.847] MSG: Player 1: tap a character to attack.
+[00:44.134] AI0 attack decision: (1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → (0,0) "Blackmail" {cost 0}
+[00:44.469] Revealed: P1 (0,0) "Blackmail" {cost 0}
+[00:44.469] Dice rolled: 1
+[00:44.750] MSG: Trap triggered: Blackmail!
+[00:48.835] Prompt: "Blackmail"  [Discard 1 Tech Card / End your turn]
+[00:49.425] Ability choice resolved: 0 (Yes)
+[00:49.425] MSG: Blackmail: Discarded 1 Tech Card.
+[00:49.428] Trap: "Blackmail" triggered  P0(1,1)→P1(0,0)
+[00:49.428] Anim: 3D  (attacker survives)
+[00:49.926] Mode selected P0: ATTACK
+[00:49.933] Attack phase P0: 1 attack(s) available
+[00:49.933] MSG: Player 1: tap a character to attack.
+[00:50.225] AI0 attack decision: (2,1)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | face-down} → (2,1) (dead-end)
+[00:50.560] Revealed: P0 (2,1) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[00:50.561] Dice rolled: 2
+[00:50.575] MSG: Nothing happens — Dead End.
+[00:53.905] Attack P0(2,1)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} → P1(2,1)(empty)  Dice=2  → DEAD_END
+[00:53.905] Anim: 3F  (blank slot)
+[00:54.402] Turn ended  P0  |  Crystals P0=4300 P1=4650
+
+--- Turn 6  |  Player 1  |  Crystals P0=4300 P1=4650 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  — ][Nept][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][Succ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:55.004] Mode selected P1: ATTACK
+[00:55.008] Attack phase P1: 2 attack(s) available
+[00:55.009] MSG: Player 2: tap a character to attack.
+[00:55.297] AI1 attack decision: (0,1)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} → (2,1) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[00:55.597] Dice rolled: 4
+[00:55.609] MSG: Both cards are destroyed!
+[01:00.205] Crystals: P1 4650 → 4050 (-600)  [battle]
+[01:01.597] Crystals: P0 4300 → 4100 (-200)  [battle]
+[01:02.988] Attack P1(0,1)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} → P0(2,1)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}  Dice=4  ATK=10 vs DEF=10  → TIE
+[01:02.988] Anim: 3C  △ P1(0,1) + △ P0(2,1)
+[01:02.988] Card destroyed  P1 (0,1) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[01:02.988] Card destroyed  P0 (2,1) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[01:03.284] Turn ended  P1  |  Crystals P0=4100 P1=4050
+
+--- Turn 7  |  Player 0  |  Crystals P0=4100 P1=4050 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:03.898] Mode selected P0: ATTACK
+[01:03.904] Attack phase P0: 2 attack(s) available
+[01:03.904] MSG: Player 1: tap a character to attack.
+[01:04.178] AI0 attack decision: (1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → (1,3) (dead-end)
+[01:04.480] Dice rolled: 2
+[01:04.507] MSG: Nothing happens — Dead End.
+[01:07.878] Attack P0(1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P1(1,3)(empty)  Dice=2  → DEAD_END
+[01:07.878] Anim: 3F  (blank slot)
+[01:08.373] Mode selected P0: ATTACK
+[01:08.379] Attack phase P0: 1 attack(s) available
+[01:08.379] MSG: Player 1: tap a character to attack.
+[01:08.672] AI0 attack decision: (0,3)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down} → (1,0) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos | face-down}
+[01:09.007] Revealed: P0 (0,3) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[01:09.034] Revealed: P1 (1,0) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[01:09.034] Dice rolled: 4
+[01:09.038] MSG: Gryphon wins!
+[01:13.672] Crystals: P1 4050 → 3650 (-400)  [battle]
+[01:15.070] Attack P0(0,3)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P1(1,0)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}  Dice=4  ATK=100 vs DEF=20  → WIN
+[01:15.071] Anim: 3A  △ P1(1,0)
+[01:15.071] Card destroyed  P1 (1,0) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[01:15.569] Turn ended  P0  |  Crystals P0=4100 P1=3650
+
+--- Turn 8  |  Player 1  |  Crystals P0=4100 P1=3650 ---
+P0:   [  ? ][  — ][  ? ][Gryp][  ? ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:16.170] Mode selected P1: ATTACK
+[01:16.177] Attack phase P1: 2 attack(s) available
+[01:16.177] MSG: Player 2: tap a character to attack.
+[01:16.459] AI1 attack decision: (4,4)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down} → (0,3) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[01:16.762] Revealed: P1 (4,4) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[01:16.762] Dice rolled: 2
+[01:16.771] MSG: Gryphon wins!
+[01:21.451] Crystals: P0 4100 → 2950 (-1150)  [battle]
+[01:22.849] Attack P1(4,4)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P0(0,3)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}  Dice=2  ATK=100 vs DEF=85  → WIN
+[01:22.850] Anim: 3A  △ P0(0,3)
+[01:22.850] Card destroyed  P0 (0,3) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[01:23.148] Turn ended  P1  |  Crystals P0=2950 P1=3650
+
+--- Turn 9  |  Player 0  |  Crystals P0=2950 P1=3650 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][Gryp]
+[01:23.758] Mode selected P0: ATTACK
+[01:23.764] Attack phase P0: 2 attack(s) available
+[01:23.765] MSG: Player 1: tap a character to attack.
+[01:24.042] AI0 attack decision: (3,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | face-down} → (4,4) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[01:24.372] Revealed: P0 (3,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:24.372] Dice rolled: 5
+[01:24.379] MSG: Lab Crawler wins!
+[01:29.034] Crystals: P1 3650 → 2500 (-1150)  [battle]
+[01:30.431] Attack P0(3,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P1(4,4)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}  Dice=5  ATK=95 vs DEF=85  → WIN
+[01:30.434] Anim: 3A  △ P1(4,4)
+[01:30.434] Card destroyed  P1 (4,4) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[01:30.925] Mode selected P0: ATTACK
+[01:30.929] Attack phase P0: 1 attack(s) available
+[01:30.930] MSG: Player 1: tap a character to attack.
+[01:31.228] AI0 attack decision: (1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → (0,4) "Street Joke" {cost 0}
+[01:31.561] Revealed: P1 (0,4) "Street Joke" {cost 0}
+[01:31.561] Dice rolled: 5
+[01:31.842] MSG: Trap triggered: Street Joke!
+[01:36.003] Revealed: P1 (3,0) "Self-destruct" {cost 0}
+[01:36.003] Crystals: P1 2500 → 2600 (+100)  [trap]
+[01:36.003] MSG: Street Joke: Revealed own card, gained 100 Crystals!
+[01:36.006] Trap: "Street Joke" triggered  P0(1,1)→P1(0,4)
+[01:36.006] Anim: 3D  (attacker survives)
+[01:36.452] Turn ended  P0  |  Crystals P0=2950 P1=2600
+
+--- Turn 10  |  Player 1  |  Crystals P0=2950 P1=2600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Lab ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:37.055] Mode selected P1: ATTACK
+[01:37.062] Attack phase P1: 2 attack(s) available
+[01:37.062] MSG: Player 2: tap a character to attack.
+[01:37.346] AI1 attack decision: (2,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down} → (3,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:37.681] Revealed: P1 (2,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:37.682] Dice rolled: 5
+[01:37.686] MSG: Tomb Bandit wins!
+[01:42.339] Crystals: P0 2950 → 1750 (-1200)  [battle]
+[01:43.737] Attack P1(2,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(3,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=5  ATK=75 vs DEF=60  → WIN
+[01:43.737] Anim: 3A  △ P0(3,1)
+[01:43.737] Card destroyed  P0 (3,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:44.034] Turn ended  P1  |  Crystals P0=1750 P1=2600
+
+--- Turn 11  |  Player 0  |  Crystals P0=1750 P1=2600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Tomb][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:44.639] Mode selected P0: ATTACK
+[01:44.646] Attack phase P0: 2 attack(s) available
+[01:44.646] MSG: Player 1: tap a character to attack.
+[01:44.926] AI0 attack decision: (4,0)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | face-down} → (2,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:45.257] Revealed: P0 (4,0) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[01:45.257] Dice rolled: 3
+[01:45.260] MSG: Archbishop wins!
+[01:49.927] Crystals: P1 2600 → 1600 (-1000)  [battle]
+[01:51.325] Attack P0(4,0)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P1(2,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=3  ATK=70 vs DEF=60  → WIN
+[01:51.325] Anim: 3A  △ P1(2,0)
+[01:51.325] Card destroyed  P1 (2,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:51.817] Mode selected P0: ATTACK
+[01:51.824] Attack phase P0: 1 attack(s) available
+[01:51.826] MSG: Player 1: tap a character to attack.
+[01:52.115] AI0 attack decision: (1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → (1,2) (dead-end)
+[01:52.418] Dice rolled: 5
+[01:52.446] MSG: Nothing happens — Dead End.
+[01:55.815] Attack P0(1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[01:55.816] Anim: 3F  (blank slot)
+[01:56.314] Turn ended  P0  |  Crystals P0=1750 P1=1600
+
+--- Turn 12  |  Player 1  |  Crystals P0=1750 P1=1600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [Arch][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:56.917] Mode selected P1: ATTACK
+[01:56.923] Attack phase P1: 2 attack(s) available
+[01:56.923] MSG: Player 2: tap a character to attack.
+[01:57.208] AI1 attack decision: (4,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | face-down} → (4,0) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[01:57.543] Revealed: P1 (4,1) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[01:57.543] Dice rolled: 4
+[01:57.547] MSG: Mind Flayer wins!
+[02:02.200] Crystals: P0 1750 → 550 (-1200)  [battle]
+[02:03.599] Attack P1(4,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(4,0)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}  Dice=4  ATK=100 vs DEF=90  → WIN
+[02:03.600] Anim: 3A  △ P0(4,0)
+[02:03.600] Card destroyed  P0 (4,0) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[02:03.895] Turn ended  P1  |  Crystals P0=550 P1=1600
+
+--- Turn 13  |  Player 0  |  Crystals P0=550 P1=1600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Mind][  ? ][  ? ][  — ]
+[02:04.505] Mode selected P0: ATTACK
+[02:04.511] Attack phase P0: 2 attack(s) available
+[02:04.511] MSG: Player 1: tap a character to attack.
+[02:04.792] AI0 attack decision: (1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → (2,3) (dead-end)
+[02:05.092] Dice rolled: 2
+[02:05.120] MSG: Nothing happens — Dead End.
+[02:08.489] Attack P0(1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P1(2,3)(empty)  Dice=2  → DEAD_END
+[02:08.490] Anim: 3F  (blank slot)
+[02:08.985] Mode selected P0: ATTACK
+[02:08.991] Attack phase P0: 1 attack(s) available
+[02:08.991] MSG: Player 1: tap a character to attack.
+[02:09.284] AI0 attack decision: (1,3)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down} → (1,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[02:09.620] Revealed: P0 (1,3) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[02:09.650] Revealed: P1 (1,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[02:09.650] Dice rolled: 3
+[02:14.410] Crystals: P0 550 → 300 (-250)  [battle]
+[02:15.809] Attack P0(1,3)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → P1(1,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=3  ATK=25 vs DEF=40  → LOSE
+[02:15.809] Anim: 3B  △ P0(1,3)
+[02:15.809] Card destroyed  P0 (1,3) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[02:16.307] Turn ended  P0  |  Crystals P0=300 P1=1600
+
+--- Turn 14  |  Player 1  |  Crystals P0=300 P1=1600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][Armo][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Flam]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Mind][  ? ][  ? ][  — ]
+[02:16.900] Mode selected P1: ATTACK
+[02:16.907] Attack phase P1: 2 attack(s) available
+[02:16.907] MSG: Player 2: tap a character to attack.
+[02:17.193] AI1 attack decision: (1,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → (1,1) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[02:17.493] Dice rolled: 3
+[02:17.504] MSG: Flame Lizard wins!
+[02:23.183] Crystals: P0 300 → 130 (-170)  [battle]
+[02:24.582] Attack P1(1,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P0(1,1)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}  Dice=3  ATK=45 vs DEF=20  → WIN
+[02:24.582] Reckoning overlay: P1 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} +ATK 20
+[02:24.582] Anim: 3A  △ P0(1,1)
+[02:24.582] Card destroyed  P0 (1,1) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[02:24.878] Turn ended  P1  |  Crystals P0=130 P1=1600
+
+--- Turn 15  |  Player 0  |  Crystals P0=130 P1=1600 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Flam]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Mind][  ? ][  ? ][  — ]
+[02:25.484] Mode selected P0: ATTACK
+[02:25.491] Attack phase P0: 2 attack(s) available
+[02:25.491] MSG: Player 1: tap a character to attack.
+[02:25.776] AI0 attack decision: (2,3)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down} → (1,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[02:26.112] Revealed: P0 (2,3) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:26.112] Dice rolled: 5
+[02:26.116] MSG: Both cards are destroyed!
+[02:30.675] Crystals: P0 130 → 0 (-130)  [battle]
+
+=== GAME OVER ===
+[02:30.690] AI Player 1 wins
+[02:30.690] Reason: crystals
+[02:30.690] Final crystals — P0: 0  P1: 1600  |  Turns: 15
+[02:30.690] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_break_room_passive_aggression_2026-06-02_01-28-31_581.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-X-Death-Squad-002
+Highlight: X-Death Squad (Union)  [setup: Chaotic Wisp]
+Result:    FAIL
+Detail:    None of expect_log_any matched: ["Union summoned P0: X-Death Squad", "Attack P\\d\\(\\d+,\\d+\\)\"X\\-Death\\ Squad\"", "MSG:.*X\\-Death"]
+Turns:     15  |  AI timeouts: 0
+===

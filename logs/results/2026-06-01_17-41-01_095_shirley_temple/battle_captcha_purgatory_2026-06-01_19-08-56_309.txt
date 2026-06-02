@@ -1,0 +1,574 @@
+=== Battle of Captcha Purgatory ===
+Battle started: 2026-06-01 19:08:56.309
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Echo-Barrier-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Echo-Barrier-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Echo Barrier (Trap)  [setup: Ox Patrol]
+Ability:      LOCK_ATTACKER_REMAINING_ATTACKS — This turn, foe cannot perform any more attack.
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Echo Barrier" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Echo Barrier
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Echo\ Barrier"
+  - Log must contain at least one of: Trap triggered, "Echo Barrier" triggered, Trap triggered: Echo Barrier, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Echo Barrier revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Echo Barrier
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Accident, Tease
+P1 Tech hand: Release Mutagen, Bribe, Tease
+P0:   [  — ][  — ][  — ][C:Meli][T:Expl]
+      [T:Bunk][T:Hypn][C:Claw][C:Bomb][  — ]
+      [C:Dark][  — ][C:Ox P][C:Choi][  — ]
+      [T:Pepp][C:Tiny][  — ][C:Lab ][  — ]
+      [C:Tomb][  — ][C:Polt][C:Blea][C:Pyro]
+P1:   [  — ][C:Stri][C:Magi][  — ][  — ]
+      [T:Curs][  — ][C:Deat][T:Self][  — ]
+      [  — ][C:Nigh][T:Echo][T:Snar][  — ]
+      [T:Alar][C:Ice ][  — ][C:Jira][T:Pepp]
+      [C:Gran][C:Hamm][C:Lab ][C:Rott][C:Mafi]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.315] Mode selected P0: ATTACK
+[00:05.320] Attack phase P0: 2 attack(s) available
+[00:05.320] MSG: Player 1: tap a character to attack.
+[00:05.612] AI0 attack decision: (0,3)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down} → (1,4) (dead-end)
+[00:05.955] Revealed: P0 (0,3) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:05.955] Dice rolled: 2
+[00:05.971] MSG: Nothing happens — Dead End.
+[00:09.284] Attack P0(0,3)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} → P1(1,4)(empty)  Dice=2  → DEAD_END
+[00:09.284] Anim: 3F  (blank slot)
+[00:09.787] Mode selected P0: ATTACK
+[00:09.790] Attack phase P0: 1 attack(s) available
+[00:09.790] MSG: Player 1: tap a character to attack.
+[00:10.096] AI0 attack decision: (1,3)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down} → (3,4) "Pepper Spray" {cost 0}
+[00:10.440] Revealed: P0 (1,3) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[00:10.474] Revealed: P1 (3,4) "Pepper Spray" {cost 0}
+[00:10.474] Dice rolled: 5
+[00:10.704] MSG: Trap triggered: Pepper Spray!
+[00:14.864] Coin flip: Tails, Tails
+[00:17.663] MSG: Pepper Spray: Tails, Tails.
+[00:17.663] MSG: Not both heads — no effect.
+[00:17.668] Trap: "Pepper Spray" triggered  P0(1,3)→P1(3,4)
+[00:17.668] Anim: 3D  (attacker survives)
+[00:18.168] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  — ][Meli][  ? ]
+      [  ? ][  ? ][  ? ][Bomb][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:20.238] Crystals: P1 5000 → 4500 (-500)  [union]
+[00:20.280] Revealed: P1 (0,2) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:20.280] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down}, "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:20.280] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:20.280] MSG: Player 2 summoned [Scarlet Shroom] using: "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature | face-down}, "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:23.455] Crystals: P1 4500 → 4450 (-50)  [skip tax]
+[00:23.455] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:24.844] Turn ended  P1  |  Crystals P0=5000 P1=4450
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=4450 ---
+P0:   [  — ][  — ][  — ][Meli][  ? ]
+      [  ? ][  ? ][  ? ][Bomb][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][Scar][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:25.445] Mode selected P0: ATTACK
+[00:25.453] Attack phase P0: 2 attack(s) available
+[00:25.453] MSG: Player 1: tap a character to attack.
+[00:25.754] AI0 attack decision: (1,3)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:venom} → (1,2) (dead-end)
+[00:26.061] Dice rolled: 2
+[00:26.089] MSG: Nothing happens — Dead End.
+[00:29.468] Attack P0(1,3)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:venom} → P1(1,2)(empty)  Dice=2  → DEAD_END
+[00:29.468] Anim: 3F  (blank slot)
+[00:29.971] Mode selected P0: ATTACK
+[00:29.977] Attack phase P0: 1 attack(s) available
+[00:29.977] MSG: Player 1: tap a character to attack.
+[00:30.280] AI0 attack decision: (0,3)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | flags:venom} → (0,4) (dead-end)
+[00:30.586] Dice rolled: 3
+[00:30.609] MSG: Nothing happens — Dead End.
+[00:34.002] Attack P0(0,3)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | flags:venom} → P1(0,4)(empty)  Dice=3  → DEAD_END
+[00:34.002] Anim: 3F  (blank slot)
+[00:34.509] Turn ended  P0  |  Crystals P0=5000 P1=4450
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=4450 ---
+P0:   [  — ][  — ][  — ][Meli][  ? ]
+      [  ? ][  ? ][  ? ][Bomb][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][Scar][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:35.104] Mode selected P1: ATTACK
+[00:35.110] Attack phase P1: 2 attack(s) available
+[00:35.110] MSG: Player 2: tap a character to attack.
+[00:35.413] AI1 attack decision: (0,2)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (1,4) (dead-end)
+[00:35.721] Dice rolled: 1
+[00:35.788] MSG: Nothing happens — Dead End.
+[00:39.128] Attack P1(0,2)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P0(1,4)(empty)  Dice=1  → DEAD_END
+[00:39.128] Anim: 3F  (blank slot)
+[00:39.434] Turn ended  P1  |  Crystals P0=5000 P1=4450
+
+--- Turn 5  |  Player 0  |  Crystals P0=5000 P1=4450 ---
+P0:   [  — ][  — ][  — ][Meli][  ? ]
+      [  ? ][  ? ][  ? ][Bomb][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][Scar][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:40.039] Mode selected P0: ATTACK
+[00:40.047] Attack phase P0: 2 attack(s) available
+[00:40.047] MSG: Player 1: tap a character to attack.
+[00:40.346] AI0 attack decision: (1,3)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:venom} → (2,4) (dead-end)
+[00:40.654] Dice rolled: 1
+[00:40.681] MSG: Nothing happens — Dead End.
+[00:44.069] Attack P0(1,3)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:venom} → P1(2,4)(empty)  Dice=1  → DEAD_END
+[00:44.069] Anim: 3F  (blank slot)
+[00:44.570] Mode selected P0: ATTACK
+[00:44.578] Attack phase P0: 1 attack(s) available
+[00:44.578] MSG: Player 1: tap a character to attack.
+[00:44.880] AI0 attack decision: (0,3)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | flags:venom} → (4,4) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down}
+[00:45.224] Revealed: P1 (4,4) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:45.224] Dice rolled: 1
+[00:45.229] MSG: Both cards are destroyed!
+[00:50.804] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:50.804] Crystals: P0 4300 → 4600 (+300)  [recovery]
+[00:50.804] MSG: Melissa the Healer: Recovered 300 Crystals!
+[00:50.815] Crystals: P1 4450 → 3950 (-500)  [battle]
+[00:52.201] Attack P0(0,3)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | flags:venom} → P1(4,4)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}  Dice=1  ATK=0 vs DEF=0  → TIE
+[00:52.201] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} DEF -40
+[00:52.201] Anim: 3C  △ P0(0,3) + △ P1(4,4)
+[00:52.201] Card destroyed  P0 (0,3) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | flags:venom}
+[00:52.201] Card destroyed  P1 (4,4) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:52.708] Turn ended  P0  |  Crystals P0=4600 P1=3950
+
+--- Turn 6  |  Player 1  |  Crystals P0=4600 P1=3950 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][Bomb][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][Scar][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:53.311] Mode selected P1: ATTACK
+[00:53.319] Attack phase P1: 2 attack(s) available
+[00:53.319] MSG: Player 2: tap a character to attack.
+[00:53.621] AI1 attack decision: (0,2)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (1,0) "Bunker" {cost 900}
+[00:53.965] Revealed: P0 (1,0) "Bunker" {cost 900}
+[00:53.965] Dice rolled: 5
+[00:54.281] MSG: Trap triggered: Bunker!
+[00:58.335] Crystals: P0 4600 → 3700 (-900)  [trap cost]
+[00:59.724] MSG: Bunker: Adjacent squares cannot be targeted this turn.
+[00:59.731] Trap: "Bunker" triggered  P1(0,2)→P0(1,0)
+[00:59.731] Anim: 3D  (attacker survives)
+[01:00.034] Turn ended  P1  |  Crystals P0=3700 P1=3950
+
+--- Turn 7  |  Player 0  |  Crystals P0=3700 P1=3950 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][Bomb][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][Scar][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:00.638] Mode selected P0: ATTACK
+[01:00.645] Attack phase P0: 2 attack(s) available
+[01:00.645] MSG: Player 1: tap a character to attack.
+[01:00.945] AI0 attack decision: (1,3)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:venom} → (1,1) (dead-end)
+[01:01.254] Dice rolled: 4
+[01:01.284] MSG: Nothing happens — Dead End.
+[01:04.661] Attack P0(1,3)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:venom} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[01:04.661] Anim: 3F  (blank slot)
+[01:05.162] Mode selected P0: ATTACK
+[01:05.167] Attack phase P0: 1 attack(s) available
+[01:05.168] MSG: Player 1: tap a character to attack.
+[01:05.470] AI0 attack decision: (1,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down} → (2,0) (dead-end)
+[01:05.812] Revealed: P0 (1,2) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:05.812] Dice rolled: 5
+[01:05.827] MSG: Nothing happens — Dead End.
+[01:09.193] Attack P0(1,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P1(2,0)(empty)  Dice=5  → DEAD_END
+[01:09.193] Anim: 3F  (blank slot)
+[01:09.697] Turn ended  P0  |  Crystals P0=3700 P1=3950
+
+--- Turn 8  |  Player 1  |  Crystals P0=3700 P1=3950 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][Claw][Bomb][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][Scar][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:10.304] Mode selected P1: ATTACK
+[01:10.312] Attack phase P1: 2 attack(s) available
+[01:10.312] MSG: Player 2: tap a character to attack.
+[01:10.611] AI1 attack decision: (0,1)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down} → (1,3) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:venom}
+[01:10.954] Revealed: P1 (0,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[01:10.954] Dice rolled: 3
+[01:10.958] MSG: Striker Comet wins!
+[01:15.621] Crystals: P0 3700 → 3200 (-500)  [battle]
+[01:17.019] Attack P1(0,1)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} → P0(1,3)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:venom}  Dice=3  ATK=25 vs DEF=15  → WIN
+[01:17.020] Anim: 3A  △ P0(1,3)
+[01:17.020] Card destroyed  P0 (1,3) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | flags:venom}
+[01:17.321] MSG: Striker Comet self-destructs at end of turn!
+[01:17.322] Crystals: P1 3950 → 3750 (-200)  [card lost]
+[01:17.324] Card destroyed  P1 (0,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending | attacked}
+[01:17.326] Turn ended  P1  |  Crystals P0=3200 P1=3750
+
+--- Turn 9  |  Player 0  |  Crystals P0=3200 P1=3750 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][Claw][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][Scar][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:17.930] Mode selected P0: ATTACK
+[01:17.936] Attack phase P0: 2 attack(s) available
+[01:17.936] MSG: Player 1: tap a character to attack.
+[01:18.237] AI0 attack decision: (1,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → (0,0) (dead-end)
+[01:18.546] Dice rolled: 3
+[01:18.571] MSG: Nothing happens — Dead End.
+[01:21.949] Attack P0(1,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P1(0,0)(empty)  Dice=3  → DEAD_END
+[01:21.949] Anim: 3F  (blank slot)
+[01:24.470] Turn ended  P0  |  Crystals P0=3200 P1=3750
+
+--- Turn 10  |  Player 1  |  Crystals P0=3200 P1=3750 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][Claw][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][Scar][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[01:25.071] Mode selected P1: ATTACK
+[01:25.079] Attack phase P1: 2 attack(s) available
+[01:25.079] MSG: Player 2: tap a character to attack.
+[01:25.379] AI1 attack decision: (4,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down} → (1,2) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:25.719] Revealed: P1 (4,1) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[01:25.719] Dice rolled: 2
+[01:25.722] MSG: Hammer Shark wins!
+[01:30.397] Crystals: P0 3200 → 3020 (-180)  [battle]
+[01:31.796] Attack P1(4,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P0(1,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=2  ATK=20 vs DEF=10  → WIN
+[01:31.797] Anim: 3A  △ P0(1,2)
+[01:31.797] Card destroyed  P0 (1,2) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:32.096] Turn ended  P1  |  Crystals P0=3020 P1=3750
+
+--- Turn 11  |  Player 0  |  Crystals P0=3020 P1=3750 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][Scar][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][Hamm][  ? ][  ? ][  — ]
+[01:32.705] Mode selected P0: ATTACK
+[01:32.710] Attack phase P0: 2 attack(s) available
+[01:32.710] MSG: Player 1: tap a character to attack.
+[01:33.012] AI0 attack decision: (2,3)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down} → (4,1) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[01:33.366] Revealed: P0 (2,3) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[01:33.366] Dice rolled: 3
+[01:33.369] MSG: Both cards are destroyed!
+[01:37.937] Crystals: P0 3020 → 2770 (-250)  [battle]
+[01:39.328] Crystals: P1 3750 → 3500 (-250)  [battle]
+[01:40.721] Attack P0(2,3)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → P1(4,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}  Dice=3  ATK=20 vs DEF=20  → TIE
+[01:40.721] Anim: 3C  △ P0(2,3) + △ P1(4,1)
+[01:40.721] Card destroyed  P0 (2,3) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[01:40.721] Card destroyed  P1 (4,1) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[01:41.221] Mode selected P0: ATTACK
+[01:41.225] Attack phase P0: 1 attack(s) available
+[01:41.226] MSG: Player 1: tap a character to attack.
+[01:41.528] AI0 attack decision: (4,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | face-down} → (0,2) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[01:41.874] Revealed: P0 (4,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[01:41.874] Dice rolled: 2
+[01:41.918] MSG: Pyromancer wins!
+[01:47.485] Attack P0(4,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P1(0,2)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}  Dice=2  ATK=110 vs DEF=80  → WIN
+[01:47.485] Reckoning overlay: P0 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} +ATK 30
+[01:47.485] Anim: 3A  △ P1(0,2)
+[01:47.485] Card destroyed  P1 (0,2) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[01:47.991] Turn ended  P0  |  Crystals P0=2770 P1=3500
+
+--- Turn 12  |  Player 1  |  Crystals P0=2770 P1=3500 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][Pyro]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+[01:48.596] Mode selected P1: ATTACK
+[01:48.602] Attack phase P1: 2 attack(s) available
+[01:48.602] MSG: Player 2: tap a character to attack.
+[01:48.904] AI1 attack decision: (2,1)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos | face-down} → (4,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[01:49.246] Revealed: P1 (2,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:49.247] Dice rolled: 4
+[01:49.250] MSG: Night Whisperer wins!
+[01:53.913] Crystals: P0 2770 → 1870 (-900)  [battle]
+[01:55.310] Attack P1(2,1)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} → P0(4,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=4  ATK=30 vs DEF=0  → WIN
+[01:55.311] Anim: 3A  △ P0(4,4)
+[01:55.311] Card destroyed  P0 (4,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[01:55.617] Turn ended  P1  |  Crystals P0=1870 P1=3500
+
+--- Turn 13  |  Player 0  |  Crystals P0=1870 P1=3500 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][Nigh][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+[01:56.221] Mode selected P0: ATTACK
+[01:56.227] Attack phase P0: 2 attack(s) available
+[01:56.228] MSG: Player 1: tap a character to attack.
+[01:56.529] AI0 attack decision: (4,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down} → (2,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:56.874] Revealed: P0 (4,0) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[01:56.874] Dice rolled: 3
+[01:56.878] MSG: Tomb Bandit wins!
+[02:01.537] Crystals: P1 3500 → 2600 (-900)  [battle]
+[02:02.934] Attack P0(4,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P1(2,1)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=3  ATK=75 vs DEF=30  → WIN
+[02:02.934] Anim: 3A  △ P1(2,1)
+[02:02.935] Card destroyed  P1 (2,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[02:05.450] Turn ended  P0  |  Crystals P0=1870 P1=2600
+
+--- Turn 14  |  Player 1  |  Crystals P0=1870 P1=2600 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [Tomb][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+[02:06.054] Mode selected P1: ATTACK
+[02:06.059] Attack phase P1: 2 attack(s) available
+[02:06.060] MSG: Player 2: tap a character to attack.
+[02:06.362] AI1 attack decision: (4,0)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | face-down} → (1,1) "Hypnosis" {cost 800}
+[02:06.705] Revealed: P1 (4,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[02:06.734] Revealed: P0 (1,1) "Hypnosis" {cost 800}
+[02:06.734] Dice rolled: 2
+[02:07.022] MSG: Trap triggered: Hypnosis!
+[02:11.110] Crystals: P0 1870 → 1070 (-800)  [trap cost]
+[02:12.500] MSG: Hypnosis: Grand Fort Archer cannot attack until end of next turn.
+[02:12.505] Trap: "Hypnosis" triggered  P1(4,0)→P0(1,1)
+[02:12.505] Anim: 3D  (attacker survives)
+[02:12.803] Turn ended  P1  |  Crystals P0=1070 P1=2600
+
+--- Turn 15  |  Player 0  |  Crystals P0=1070 P1=2600 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [Tomb][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [Gran][  — ][  ? ][  ? ][  — ]
+[02:13.400] Mode selected P0: ATTACK
+[02:13.407] Attack phase P0: 2 attack(s) available
+[02:13.407] MSG: Player 1: tap a character to attack.
+[02:13.699] AI0 attack decision: (4,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → (4,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used,cannot-atk≤T15}
+[02:13.999] Dice rolled: 2
+[02:14.009] MSG: Tomb Bandit wins!
+[02:18.692] Crystals: P1 2600 → 2320 (-280)  [battle]
+[02:20.086] Attack P0(4,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P1(4,0)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used,cannot-atk≤T15}  Dice=2  ATK=75 vs DEF=20  → WIN
+[02:20.087] Anim: 3A  △ P1(4,0)
+[02:20.087] Card destroyed  P1 (4,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used,cannot-atk≤T15}
+[02:22.596] Turn ended  P0  |  Crystals P0=1070 P1=2320
+
+--- Turn 16  |  Player 1  |  Crystals P0=1070 P1=2320 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [Tomb][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+[02:23.188] Mode selected P1: ATTACK
+[02:23.193] Attack phase P1: 2 attack(s) available
+[02:23.193] MSG: Player 2: tap a character to attack.
+[02:23.487] AI1 attack decision: (3,1)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down} → (0,0) (dead-end)
+[02:23.821] Revealed: P1 (3,1) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[02:23.821] Dice rolled: 1
+[02:23.835] MSG: Nothing happens — Dead End.
+[02:27.218] Attack P1(3,1)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P0(0,0)(empty)  Dice=1  → DEAD_END
+[02:27.219] Anim: 3F  (blank slot)
+[02:27.517] Turn ended  P1  |  Crystals P0=1070 P1=2320
+
+--- Turn 17  |  Player 0  |  Crystals P0=1070 P1=2320 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [Tomb][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Ice ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+[02:28.111] Mode selected P0: ATTACK
+[02:28.116] Attack phase P0: 2 attack(s) available
+[02:28.117] MSG: Player 1: tap a character to attack.
+[02:28.411] AI0 attack decision: (4,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → (3,1) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[02:28.712] Dice rolled: 4
+[02:28.722] MSG: Tomb Bandit wins!
+[02:33.403] Crystals: P1 2320 → 1920 (-400)  [battle]
+[02:34.801] Attack P0(4,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P1(3,1)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=4  ATK=75 vs DEF=0  → WIN
+[02:34.801] Anim: 3A  △ P1(3,1)
+[02:34.801] Card destroyed  P1 (3,1) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[02:35.295] Mode selected P0: ATTACK
+[02:35.301] Attack phase P0: 1 attack(s) available
+[02:35.302] MSG: Player 1: tap a character to attack.
+[02:35.594] AI0 attack decision: (2,0)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (0,3) (dead-end)
+[02:35.931] Revealed: P0 (2,0) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[02:35.931] Dice rolled: 1
+[02:35.946] MSG: Nothing happens — Dead End.
+[02:39.284] Attack P0(2,0)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P1(0,3)(empty)  Dice=1  → DEAD_END
+[02:39.284] Anim: 3F  (blank slot)
+[02:39.783] Turn ended  P0  |  Crystals P0=1070 P1=1920
+
+--- Turn 18  |  Player 1  |  Crystals P0=1070 P1=1920 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Dark][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [Tomb][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+[02:40.379] Mode selected P1: ATTACK
+[02:40.386] Attack phase P1: 2 attack(s) available
+[02:40.386] MSG: Player 2: tap a character to attack.
+[02:40.678] AI1 attack decision: (3,3)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (2,0) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[02:41.013] Revealed: P1 (3,3) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[02:41.013] Dice rolled: 5
+[02:41.017] MSG: Jirayu the Rebellious Prince wins!
+[02:45.654] Crystals: P0 1070 → 770 (-300)  [battle]
+[02:47.051] Attack P1(3,3)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P0(2,0)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}  Dice=5  ATK=40 vs DEF=25  → WIN
+[02:47.052] Anim: 3A  △ P0(2,0)
+[02:47.052] Card destroyed  P0 (2,0) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[02:47.350] Turn ended  P1  |  Crystals P0=770 P1=1920
+
+--- Turn 19  |  Player 0  |  Crystals P0=770 P1=1920 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [Tomb][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][Jira][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+[02:47.945] Mode selected P0: ATTACK
+[02:47.952] Attack phase P0: 2 attack(s) available
+[02:47.952] MSG: Player 1: tap a character to attack.
+[02:48.245] AI0 attack decision: (4,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → (3,3) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[02:48.544] Dice rolled: 4
+[02:48.554] MSG: Tomb Bandit wins!
+[02:53.237] Crystals: P1 1920 → 1320 (-600)  [battle]
+[02:54.635] Attack P0(4,0)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P1(3,3)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}  Dice=4  ATK=75 vs DEF=40  → WIN
+[02:54.635] Anim: 3A  △ P1(3,3)
+[02:54.635] Card destroyed  P1 (3,3) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[02:55.129] Mode selected P0: ATTACK
+[02:55.135] Attack phase P0: 1 attack(s) available
+[02:55.135] MSG: Player 1: tap a character to attack.
+[02:55.428] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Echo Barrier" {cost 1000}
+[02:55.765] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[02:55.791] Revealed: P1 (2,2) "Echo Barrier" {cost 1000}
+[02:55.791] Dice rolled: 5
+[02:56.073] MSG: Trap triggered: Echo Barrier!
+[02:56.074] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[02:56.080] AI Player 0 wins
+[02:56.080] Final crystals — P0: 770  P1: 1320  |  Turns: 19
+[02:56.080] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_captcha_purgatory_2026-06-01_19-08-56_309.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Echo-Barrier-002
+Highlight: Echo Barrier (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     19  |  AI timeouts: 0
+===

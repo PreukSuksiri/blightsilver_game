@@ -1,0 +1,272 @@
+=== Battle of Sneezing Panda ===
+Battle started: 2026-06-01 18:59:26.852
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Blackmail-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Blackmail-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Blackmail (Trap)  [setup: Ox Patrol]
+Ability:      ATTACKER_DISCARD_OR_END_TURN — The attacker choose either discarding 1 Tech Card or end the turn immediately
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Blackmail" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Blackmail
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Blackmail"
+  - Log must contain at least one of: Trap triggered, "Blackmail" triggered, Trap triggered: Blackmail, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Blackmail revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Blackmail
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Siege Cannon, Prayer, Release Mutagen
+P1 Tech hand: Resurrection, Release Mutagen, Tease
+P0:   [  — ][  — ][T:Echo][  — ][C:Foul]
+      [T:Red ][C:Lazy][C:Hamm][C:Ostr][T:Alar]
+      [C:Book][C:Mafi][C:Ox P][C:War ][  — ]
+      [  — ][C:Bomb][C:Witc][C:Pyro][T:Blac]
+      [  — ][C:Tomb][  — ][  — ][C:Skel]
+P1:   [  — ][  — ][  — ][C:Armo][T:Pepp]
+      [C:Skel][C:Gran][C:Ange][C:Fera][C:War ]
+      [  — ][C:Nuki][T:Blac][C:Hunt][  — ]
+      [T:Echo][C:Choi][C:Moon][C:Flam][  — ]
+      [  — ][  — ][T:Blac][  — ][T:Trap]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:05.332] Mode selected P0: ATTACK
+[00:05.336] Attack phase P0: 2 attack(s) available
+[00:05.337] MSG: Player 1: tap a character to attack.
+[00:05.622] AI0 attack decision: (0,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos | face-down} → (0,0) (dead-end)
+[00:05.953] Revealed: P0 (0,4) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[00:05.953] Dice rolled: 4
+[00:05.964] MSG: Nothing happens — Dead End.
+[00:09.304] Attack P0(0,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → P1(0,0)(empty)  Dice=4  → DEAD_END
+[00:09.304] Anim: 3F  (blank slot)
+[00:09.806] Mode selected P0: ATTACK
+[00:09.808] Attack phase P0: 1 attack(s) available
+[00:09.808] MSG: Player 1: tap a character to attack.
+[00:10.097] AI0 attack decision: (1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down} → (1,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos | face-down}
+[00:10.430] Revealed: P0 (1,1) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:10.759] Coin flip: Heads
+[00:13.512] Revealed: P1 (1,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:13.513] Dice rolled: 3
+[00:13.517] MSG: Lazy Troll wins!
+[00:18.193] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:19.593] Attack P0(1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → P1(1,0)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=3  ATK=120 vs DEF=5  → WIN
+[00:19.593] Anim: 3A  △ P1(1,0)
+[00:19.593] Card destroyed  P1 (1,0) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:20.095] Turn ended  P0  |  Crystals P0=5000 P1=4700
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4700 ---
+P0:   [  — ][  — ][  ? ][  — ][Foul]
+      [  ? ][Lazy][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:20.725] Mode selected P1: ATTACK
+[00:20.731] Attack phase P1: 2 attack(s) available
+[00:20.731] MSG: Player 2: tap a character to attack.
+[00:21.011] AI1 attack decision: (1,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down} → (1,1) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:21.354] Revealed: P1 (1,4) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:21.354] Dice rolled: 1
+[00:21.360] MSG: War Genie wins!
+[00:26.019] Crystals: P0 5000 → 4000 (-1000)  [battle]
+[00:27.417] Attack P1(1,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P0(1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}  Dice=1  ATK=100 vs DEF=60  → WIN
+[00:27.417] Anim: 3A  △ P0(1,1)
+[00:27.417] Card destroyed  P0 (1,1) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:27.723] Turn ended  P1  |  Crystals P0=4000 P1=4700
+
+--- Turn 3  |  Player 0  |  Crystals P0=4000 P1=4700 ---
+P0:   [  — ][  — ][  ? ][  — ][Foul]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][War ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:28.336] Mode selected P0: ATTACK
+[00:28.343] Attack phase P0: 2 attack(s) available
+[00:28.344] MSG: Player 1: tap a character to attack.
+[00:28.636] AI0 attack decision: (2,3)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down} → (1,4) "War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80}
+[00:28.946] Revealed: P0 (2,3) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:28.946] Dice rolled: 5
+[00:28.956] MSG: War Genie wins!
+[00:33.644] Crystals: P1 4700 → 3550 (-1150)  [battle]
+[00:35.043] Attack P0(2,3)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P1(1,4)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80}  Dice=5  ATK=100 vs DEF=80  → WIN
+[00:35.044] Anim: 3A  △ P1(1,4)
+[00:35.044] Card destroyed  P1 (1,4) "War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80}
+[00:35.547] Mode selected P0: ATTACK
+[00:35.553] Attack phase P0: 1 attack(s) available
+[00:35.554] MSG: Player 1: tap a character to attack.
+[00:35.848] AI0 attack decision: (0,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → (0,2) (dead-end)
+[00:36.156] Dice rolled: 5
+[00:36.193] MSG: Nothing happens — Dead End.
+[00:39.563] Attack P0(0,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → P1(0,2)(empty)  Dice=5  → DEAD_END
+[00:39.563] Anim: 3F  (blank slot)
+[00:40.066] Turn ended  P0  |  Crystals P0=4000 P1=3550
+
+--- Turn 4  |  Player 1  |  Crystals P0=4000 P1=3550 ---
+P0:   [  — ][  — ][  ? ][  — ][Foul]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][War ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:40.691] Mode selected P1: ATTACK
+[00:40.694] Attack phase P1: 2 attack(s) available
+[00:40.694] MSG: Player 2: tap a character to attack.
+[00:40.981] AI1 attack decision: (0,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down} → (0,4) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[00:41.327] Revealed: P1 (0,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[00:41.328] Dice rolled: 4
+[00:41.332] MSG: Armored Bee wins!
+[00:45.990] Crystals: P0 4000 → 3900 (-100)  [battle]
+[00:47.389] Attack P1(0,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P0(0,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=4  ATK=30 vs DEF=25  → WIN
+[00:47.389] Anim: 3A  △ P0(0,4)
+[00:47.389] Card destroyed  P0 (0,4) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[00:47.690] Turn ended  P1  |  Crystals P0=3900 P1=3550
+
+--- Turn 5  |  Player 0  |  Crystals P0=3900 P1=3550 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][War ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][Armo][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:48.300] Mode selected P0: ATTACK
+[00:48.307] Attack phase P0: 2 attack(s) available
+[00:48.307] MSG: Player 1: tap a character to attack.
+[00:48.606] AI0 attack decision: (2,3)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} → (0,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[00:48.914] Dice rolled: 1
+[00:48.924] MSG: War Genie wins!
+[00:54.615] Crystals: P1 3550 → 3070 (-480)  [battle]
+[00:56.014] Attack P0(2,3)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} → P1(0,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=1  ATK=90 vs DEF=60  → WIN
+[00:56.014] Reckoning overlay: P1 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} +DEF 60
+[00:56.014] Anim: 3A  △ P1(0,3)
+[00:56.014] Card destroyed  P1 (0,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[00:56.516] Mode selected P0: ATTACK
+[00:56.521] Attack phase P0: 1 attack(s) available
+[00:56.522] MSG: Player 1: tap a character to attack.
+[00:56.823] AI0 attack decision: (1,3)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down} → (1,3) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos | face-down}
+[00:57.168] Revealed: P0 (1,3) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:57.196] Revealed: P1 (1,3) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:57.196] Dice rolled: 1
+[00:57.200] MSG: Ostrich Cannon wins!
+[01:01.840] Crystals: P1 3070 → 2670 (-400)  [battle]
+[01:03.238] Attack P0(1,3)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(1,3)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=1  ATK=60 vs DEF=25  → WIN
+[01:03.238] Anim: 3A  △ P1(1,3)
+[01:03.238] Card destroyed  P1 (1,3) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:03.239] MSG: Ostrich Cannon locks itself until next turn.
+[01:03.736] Turn ended  P0  |  Crystals P0=3900 P1=2670
+
+--- Turn 6  |  Player 1  |  Crystals P0=3900 P1=2670 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][Ostr][  ? ]
+      [  ? ][  ? ][  ? ][War ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[01:04.349] Mode selected P1: ATTACK
+[01:04.356] Attack phase P1: 2 attack(s) available
+[01:04.356] MSG: Player 2: tap a character to attack.
+[01:04.631] AI1 attack decision: (1,2)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down} → (1,3) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T7}
+[01:04.968] Revealed: P1 (1,2) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[01:04.968] Dice rolled: 1
+[01:04.973] MSG: Angel Gatekeeper wins!
+[01:09.585] Crystals: P0 3900 → 3100 (-800)  [battle]
+[01:10.981] Attack P1(1,2)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P0(1,3)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T7}  Dice=1  ATK=40 vs DEF=30  → WIN
+[01:10.982] Anim: 3A  △ P0(1,3)
+[01:10.982] Card destroyed  P0 (1,3) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T7}
+[01:11.290] Turn ended  P1  |  Crystals P0=3100 P1=2670
+
+--- Turn 7  |  Player 0  |  Crystals P0=3100 P1=2670 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][War ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][Ange][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[01:11.897] Mode selected P0: ATTACK
+[01:11.906] Attack phase P0: 2 attack(s) available
+[01:11.906] MSG: Player 1: tap a character to attack.
+[01:12.203] AI0 attack decision: (2,3)"War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80} → (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima | face-down}
+[01:12.552] Revealed: P1 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[01:12.552] Dice rolled: 5
+[01:12.557] MSG: War Genie wins!
+[01:17.207] Crystals: P1 2670 → 2370 (-300)  [battle]
+[01:18.605] Attack P0(2,3)"War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80} → P1(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=5  ATK=80 vs DEF=25  → WIN
+[01:18.605] Anim: 3A  △ P1(1,1)
+[01:18.605] Card destroyed  P1 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[01:19.107] Mode selected P0: ATTACK
+[01:19.114] Attack phase P0: 1 attack(s) available
+[01:19.114] MSG: Player 1: tap a character to attack.
+[01:19.415] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Blackmail" {cost 0}
+[01:19.757] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:19.783] Revealed: P1 (2,2) "Blackmail" {cost 0}
+[01:19.783] Dice rolled: 2
+[01:20.030] MSG: Trap triggered: Blackmail!
+[01:20.030] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[01:20.036] AI Player 0 wins
+[01:20.036] Final crystals — P0: 3100  P1: 2370  |  Turns: 7
+[01:20.036] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_sneezing_panda_2026-06-01_18-59-26_852.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Blackmail-002
+Highlight: Blackmail (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     7  |  AI timeouts: 0
+===
