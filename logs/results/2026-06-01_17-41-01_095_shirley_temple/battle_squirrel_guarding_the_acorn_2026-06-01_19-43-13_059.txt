@@ -1,0 +1,78 @@
+=== Battle of Squirrel Guarding the Acorn ===
+Battle started: 2026-06-01 19:43:13.059
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Blood-hungry-Mutant-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Blood-hungry-Mutant-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Blood-hungry Mutant (Union)  [setup: Chaotic Wisp]
+Ability:      CRYSTAL_GAIN_ON_DESTROY — After destroying foe’s card: +80 crystals
+Setup role:   t2_union
+Verifies:
+  - Ability: "Blood-hungry Mutant" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Blood-hungry Mutant, Attack P\d\(\d+,\d+\)"Blood\-hungry\ Mutant", MSG:.*Blood\-hungry, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Blood-hungry Mutant — summon logged and/or union attacks with ATK=55.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Blood-hungry Mutant
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Bribe, Great Diplomacy
+P1 Tech hand: Siege Cannon, Radar, Prayer
+P0:   [C:Mad ][C:Spea][  — ][  — ][T:Blac]
+      [  — ][C:Need][C:Magi][C:Mine][  — ]
+      [T:Hypn][C:Dark][T:Echo][C:Armo][  — ]
+      [T:Trap][C:Cany][C:Book][C:Polt][  — ]
+      [  — ][  — ][  — ][  — ][T:Curs]
+P1:   [  — ][C:Hunt][  — ][C:Scou][C:Gran]
+      [T:Pepp][  — ][  — ][C:Foul][C:Bat ]
+      [T:Defe][  — ][C:Chao][  — ][C:Godd]
+      [T:Snar][  — ][  — ][C:Choi][C:Ice ]
+      [C:Moon][  — ][T:Bunk][T:Brai][C:Nept]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:06.803] Crystals: P0 5000 → 4700 (-300)  [union]
+[00:06.835] Revealed: P0 (2,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[00:06.835] Union summoned P0: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos | face-down}
+[00:06.835] MSG: Player 1 summoned [Kitsune] using: "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos | face-down}
+[00:06.835] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.858] AI Player 0 wins
+[00:06.858] Final crystals — P0: 4700  P1: 5000  |  Turns: 1
+[00:06.858] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_squirrel_guarding_the_acorn_2026-06-01_19-43-13_059.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Blood-hungry-Mutant-002
+Highlight: Blood-hungry Mutant (Union)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

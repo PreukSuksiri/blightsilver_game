@@ -1,0 +1,509 @@
+=== Battle of Black Friday Cart Collision ===
+Battle started: 2026-06-02 01:05:29.300
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Rebel-King-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Rebel-King-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Rebel King (Union)  [setup: Jirayu the Rebel King, Chaotic Wisp]
+Ability:      OPPONENT_TURN_END_SWAP_ATK_DEF — At foe’s turn ends: foe select 1 own unit and swap ATK&DEF
+Setup role:   t2_union
+Verifies:
+  - Ability: "Rebel King" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Rebel King, Attack P\d\(\d+,\d+\)"Rebel\ King", MSG:.*Rebel
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Rebel King — summon logged and/or union attacks with ATK=60.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Rebel King
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (0,0) Jirayu the Rebel King
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Tease, Great Diplomacy
+P1 Tech hand: Siege Cannon, Tease, Great Diplomacy
+P0:   [  — ][  — ][C:Gryp][  — ][C:Leec]
+      [C:Gran][C:Moon][T:Echo][  — ][C:Skel]
+      [C:Ice ][  — ][T:Bait][  — ][C:Curs]
+      [C:Aeri][  — ][C:Stai][  — ][T:Foul]
+      [C:Jaco][T:Blac][C:Shep][  — ][C:Joan]
+P1:   [T:Foul][T:Self][  — ][  — ][  — ]
+      [  — ][C:Moon][C:Big ][C:Stin][T:Expl]
+      [  — ][C:Skel][C:Chao][C:Stai][  — ]
+      [  — ][C:Joan][C:Laug][C:Lab ][  — ]
+      [T:Bunk][  — ][  — ][  — ][C:Choi]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.347] Mode selected P0: ATTACK
+[00:05.351] Attack phase P0: 2 attack(s) available
+[00:05.352] MSG: Player 1: tap a character to attack.
+[00:05.637] AI0 attack decision: (0,2)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down} → (1,1) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down}
+[00:05.982] Revealed: P0 (0,2) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:06.008] Revealed: P1 (1,1) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:06.008] Dice rolled: 2
+[00:06.012] MSG: Gryphon wins!
+[00:11.595] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:12.995] Attack P0(0,2)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P1(1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}  Dice=2  ATK=100 vs DEF=40  → WIN
+[00:12.995] Reckoning overlay: P1 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} +DEF 10
+[00:12.995] Anim: 3A  △ P1(1,1)
+[00:12.995] Card destroyed  P1 (1,1) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:15.508] Turn ended  P0  |  Crystals P0=5000 P1=4600
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4600 ---
+P0:   [  — ][  — ][Gryp][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:16.125] Mode selected P1: ATTACK
+[00:16.130] Attack phase P1: 2 attack(s) available
+[00:16.130] MSG: Player 2: tap a character to attack.
+[00:16.417] AI1 attack decision: (3,3)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | face-down} → (0,2) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:16.762] Revealed: P1 (3,3) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:16.762] Dice rolled: 5
+[00:16.766] MSG: Lab Crawler wins!
+[00:21.425] Crystals: P0 5000 → 3850 (-1150)  [battle]
+[00:22.824] Attack P1(3,3)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P0(0,2)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}  Dice=5  ATK=95 vs DEF=85  → WIN
+[00:22.824] Anim: 3A  △ P0(0,2)
+[00:22.824] Card destroyed  P0 (0,2) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:23.129] Turn ended  P1  |  Crystals P0=3850 P1=4600
+
+--- Turn 3  |  Player 0  |  Crystals P0=3850 P1=4600 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][Lab ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:23.750] Mode selected P0: ATTACK
+[00:23.755] Attack phase P0: 2 attack(s) available
+[00:23.755] MSG: Player 1: tap a character to attack.
+[00:24.040] AI0 attack decision: (0,4)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio | face-down} → (3,3) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:24.384] Revealed: P0 (0,4) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:24.384] Dice rolled: 3
+[00:24.388] MSG: Both cards are destroyed!
+[00:28.967] Crystals: P0 3850 → 2970 (-880)  [battle]
+[00:30.359] Crystals: P1 4600 → 3400 (-1200)  [battle]
+[00:31.748] Attack P0(0,4)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P1(3,3)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=3  ATK=60 vs DEF=60  → TIE
+[00:31.748] Anim: 3C  △ P0(0,4) + △ P1(3,3)
+[00:31.748] Card destroyed  P0 (0,4) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:31.748] Card destroyed  P1 (3,3) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:32.252] Mode selected P0: ATTACK
+[00:32.255] Attack phase P0: 1 attack(s) available
+[00:32.255] MSG: Player 1: tap a character to attack.
+[00:32.559] AI0 attack decision: (1,0)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | face-down} → (0,1) "Self-destruct" {cost 0}
+[00:32.904] Revealed: P0 (1,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:32.935] Revealed: P1 (0,1) "Self-destruct" {cost 0}
+[00:32.935] Dice rolled: 3
+[00:33.215] MSG: Trap triggered: Self-destruct!
+[00:37.311] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[00:37.315] Trap: "Self-destruct" triggered  P0(1,0)→P1(0,1)
+[00:37.315] Anim: 3D  (attacker survives)
+[00:37.700] AI1 target chosen: (-1,-1)
+[00:37.701] MSG: Choir Lady Alice: +10 ATK until end of next turn, then destroyed.
+[00:37.801] Turn ended  P0  |  Crystals P0=2970 P1=3400
+
+--- Turn 4  |  Player 1  |  Crystals P0=2970 P1=3400 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [Gran][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:38.411] Mode selected P1: ATTACK
+[00:38.414] Attack phase P1: 2 attack(s) available
+[00:38.415] MSG: Player 2: tap a character to attack.
+[00:38.700] AI1 attack decision: (1,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (1,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[00:39.036] Revealed: P1 (1,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:39.036] Dice rolled: 3
+[00:39.040] MSG: Big Thug wins!
+[00:43.666] Crystals: P0 2970 → 2690 (-280)  [battle]
+[00:45.064] Attack P1(1,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(1,0)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=3  ATK=40 vs DEF=20  → WIN
+[00:45.065] Anim: 3A  △ P0(1,0)
+[00:45.065] Card destroyed  P0 (1,0) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[00:45.367] MSG: Choir Lady Alice is destroyed by self-destruct trap!
+[00:45.367] Crystals: P1 3400 → 3150 (-250)  [card lost]
+[00:45.370] Card destroyed  P1 (4,4) "Choir Lady Alice" {Unit ATK30 DEF25 | cost 250 | affinity Divine | base 20/25 | buff +tempATK10 | face-down}
+[00:45.373] Turn ended  P1  |  Crystals P0=2690 P1=3150
+
+--- Turn 5  |  Player 0  |  Crystals P0=2690 P1=3150 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Big ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:45.984] Mode selected P0: ATTACK
+[00:45.989] Attack phase P0: 2 attack(s) available
+[00:45.989] MSG: Player 1: tap a character to attack.
+[00:46.279] AI0 attack decision: (1,4)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos | face-down} → (1,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:46.621] Revealed: P0 (1,4) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:46.621] Dice rolled: 5
+[00:46.625] MSG: Both cards are destroyed!
+[00:51.221] Crystals: P0 2690 → 2390 (-300)  [battle]
+[00:52.612] Crystals: P1 3150 → 2750 (-400)  [battle]
+[00:54.003] Attack P0(1,4)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} → P1(1,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=5  ATK=35 vs DEF=35  → TIE
+[00:54.003] Anim: 3C  △ P0(1,4) + △ P1(1,2)
+[00:54.003] Card destroyed  P0 (1,4) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[00:54.003] Card destroyed  P1 (1,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:54.498] Mode selected P0: ATTACK
+[00:54.500] Attack phase P0: 1 attack(s) available
+[00:54.501] MSG: Player 1: tap a character to attack.
+[00:54.796] AI0 attack decision: (1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down} → (4,1) (dead-end)
+[00:55.097] Revealed: P0 (1,1) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:55.097] Dice rolled: 5
+[00:55.123] MSG: Nothing happens — Dead End.
+[00:58.476] Attack P0(1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(4,1)(empty)  Dice=5  → DEAD_END
+[00:58.477] Anim: 3F  (blank slot)
+[00:58.972] Turn ended  P0  |  Crystals P0=2390 P1=2750
+
+--- Turn 6  |  Player 1  |  Crystals P0=2390 P1=2750 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:59.578] Mode selected P1: ATTACK
+[00:59.580] Attack phase P1: 2 attack(s) available
+[00:59.580] MSG: Player 2: tap a character to attack.
+[00:59.871] AI1 attack decision: (2,3)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos | face-down} → (1,1) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[01:00.207] Revealed: P1 (2,3) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:00.207] Dice rolled: 1
+[01:05.988] Crystals: P1 2750 → 2570 (-180)  [battle]
+[01:07.384] Attack P1(2,3)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P0(1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}  Dice=1  ATK=30 vs DEF=40  → LOSE
+[01:07.384] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} +DEF 10
+[01:07.384] Anim: 3B  △ P1(2,3)
+[01:07.385] Card destroyed  P1 (2,3) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:07.683] Turn ended  P1  |  Crystals P0=2390 P1=2570
+
+--- Turn 7  |  Player 0  |  Crystals P0=2390 P1=2570 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:08.292] Mode selected P0: ATTACK
+[01:08.297] Attack phase P0: 2 attack(s) available
+[01:08.298] MSG: Player 1: tap a character to attack.
+[01:08.578] AI0 attack decision: (1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → (1,0) (dead-end)
+[01:08.878] Dice rolled: 3
+[01:08.904] MSG: Nothing happens — Dead End.
+[01:12.277] Attack P0(1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(1,0)(empty)  Dice=3  → DEAD_END
+[01:12.277] Anim: 3F  (blank slot)
+[01:12.771] Mode selected P0: ATTACK
+[01:12.774] Attack phase P0: 1 attack(s) available
+[01:12.774] MSG: Player 1: tap a character to attack.
+[01:13.071] AI0 attack decision: (2,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down} → (0,4) (dead-end)
+[01:13.409] Revealed: P0 (2,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:13.410] Dice rolled: 5
+[01:13.423] MSG: Nothing happens — Dead End.
+[01:16.760] Attack P0(2,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P1(0,4)(empty)  Dice=5  → DEAD_END
+[01:16.761] Anim: 3F  (blank slot)
+[01:17.259] Turn ended  P0  |  Crystals P0=2390 P1=2570
+
+--- Turn 8  |  Player 1  |  Crystals P0=2390 P1=2570 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  ? ][  — ][  — ]
+      [Ice ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:17.865] Mode selected P1: ATTACK
+[01:17.871] Attack phase P1: 2 attack(s) available
+[01:17.871] MSG: Player 2: tap a character to attack.
+[01:18.153] AI1 attack decision: (3,2)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down} → (2,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:18.493] Revealed: P1 (3,2) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:18.493] Dice rolled: 1
+[01:18.497] MSG: Laughing Granny wins!
+[01:24.130] Crystals: P0 2390 → 1990 (-400)  [battle]
+[01:25.528] Attack P1(3,2)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P0(2,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=1  ATK=25 vs DEF=0  → WIN
+[01:25.528] Reckoning overlay: P1 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} +ATK 10
+[01:25.528] Anim: 3A  △ P0(2,0)
+[01:25.528] Card destroyed  P0 (2,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:25.826] Turn ended  P1  |  Crystals P0=1990 P1=2570
+
+--- Turn 9  |  Player 0  |  Crystals P0=1990 P1=2570 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][Laug][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:26.432] Mode selected P0: ATTACK
+[01:26.439] Attack phase P0: 2 attack(s) available
+[01:26.440] MSG: Player 1: tap a character to attack.
+[01:26.719] AI0 attack decision: (1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → (3,2) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used}
+[01:27.020] Dice rolled: 5
+[01:27.029] MSG: Moonrise Gentleman wins!
+[01:32.714] Crystals: P1 2570 → 2220 (-350)  [battle]
+[01:34.112] Attack P0(1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(3,2)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used}  Dice=5  ATK=40 vs DEF=30  → WIN
+[01:34.112] Reckoning overlay: P1 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used} +DEF 10
+[01:34.112] Anim: 3A  △ P1(3,2)
+[01:34.112] Card destroyed  P1 (3,2) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xATK-used,1xDEF-used}
+[01:36.619] Turn ended  P0  |  Crystals P0=1990 P1=2220
+
+--- Turn 10  |  Player 1  |  Crystals P0=1990 P1=2220 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:37.218] Mode selected P1: ATTACK
+[01:37.223] Attack phase P1: 2 attack(s) available
+[01:37.223] MSG: Player 2: tap a character to attack.
+[01:37.512] AI1 attack decision: (1,3)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down} → (0,0) (dead-end)
+[01:37.846] Revealed: P1 (1,3) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[01:37.846] Dice rolled: 1
+[01:37.861] MSG: Nothing happens — Dead End.
+[01:41.203] Attack P1(1,3)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature} → P0(0,0)(empty)  Dice=1  → DEAD_END
+[01:41.204] Anim: 3F  (blank slot)
+[01:41.501] Turn ended  P1  |  Crystals P0=1990 P1=2220
+
+--- Turn 11  |  Player 0  |  Crystals P0=1990 P1=2220 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Stin][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:42.098] Mode selected P0: ATTACK
+[01:42.101] Attack phase P0: 2 attack(s) available
+[01:42.101] MSG: Player 1: tap a character to attack.
+[01:42.392] AI0 attack decision: (1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → (1,3) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[01:42.692] Dice rolled: 4
+[01:42.702] MSG: Moonrise Gentleman wins!
+[01:47.384] Crystals: P1 2220 → 1820 (-400)  [battle]
+[01:48.783] Attack P0(1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(1,3)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}  Dice=4  ATK=40 vs DEF=10  → WIN
+[01:48.783] Anim: 3A  △ P1(1,3)
+[01:48.783] Card destroyed  P1 (1,3) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[01:51.286] Turn ended  P0  |  Crystals P0=1990 P1=1820
+
+--- Turn 12  |  Player 1  |  Crystals P0=1990 P1=1820 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:51.904] Mode selected P1: ATTACK
+[01:51.909] Attack phase P1: 2 attack(s) available
+[01:51.910] MSG: Player 2: tap a character to attack.
+[01:52.207] AI1 attack decision: (3,1)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down} → (1,2) "Echo Barrier" {cost 1000}
+[01:52.554] Revealed: P1 (3,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[01:52.580] Revealed: P0 (1,2) "Echo Barrier" {cost 1000}
+[01:52.580] Dice rolled: 5
+[01:52.849] MSG: Trap triggered: Echo Barrier!
+[01:56.935] Crystals: P0 1990 → 990 (-1000)  [trap cost]
+[01:58.325] MSG: Echo Barrier: Attacking player cannot attack again this turn!
+[01:58.331] Trap: "Echo Barrier" triggered  P1(3,1)→P0(1,2)
+[01:58.331] Anim: 3D  (attacker survives)
+[01:58.630] Turn ended  P1  |  Crystals P0=990 P1=1820
+
+--- Turn 13  |  Player 0  |  Crystals P0=990 P1=1820 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][Joan][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:59.235] Mode selected P0: ATTACK
+[01:59.242] Attack phase P0: 2 attack(s) available
+[01:59.242] MSG: Player 1: tap a character to attack.
+[01:59.525] AI0 attack decision: (1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → (3,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[01:59.826] Dice rolled: 5
+[01:59.836] MSG: Moonrise Gentleman wins!
+[02:04.517] Crystals: P1 1820 → 1540 (-280)  [battle]
+[02:05.915] Attack P0(1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(3,1)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}  Dice=5  ATK=40 vs DEF=5  → WIN
+[02:05.916] Anim: 3A  △ P1(3,1)
+[02:05.916] Card destroyed  P1 (3,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[02:08.422] Turn ended  P0  |  Crystals P0=990 P1=1540
+
+--- Turn 14  |  Player 1  |  Crystals P0=990 P1=1540 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:09.017] Mode selected P1: ATTACK
+[02:09.022] Attack phase P1: 2 attack(s) available
+[02:09.022] MSG: Player 2: tap a character to attack.
+[02:09.312] AI1 attack decision: (2,1)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down} → (0,1) (dead-end)
+[02:09.651] Revealed: P1 (2,1) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[02:09.651] Dice rolled: 2
+[02:09.666] MSG: Nothing happens — Dead End.
+[02:13.011] Attack P1(2,1)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P0(0,1)(empty)  Dice=2  → DEAD_END
+[02:13.011] Anim: 3F  (blank slot)
+[02:13.011] MSG: Skeleton Scout: Bonus attack for hitting dead end!
+[02:13.310] Turn ended  P1  |  Crystals P0=990 P1=1540
+
+--- Turn 15  |  Player 0  |  Crystals P0=990 P1=1540 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Skel][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:13.912] Mode selected P0: ATTACK
+[02:13.915] Attack phase P0: 2 attack(s) available
+[02:13.916] MSG: Player 1: tap a character to attack.
+[02:14.205] AI0 attack decision: (1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → (2,1) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used}
+[02:14.505] Dice rolled: 5
+[02:14.516] MSG: Moonrise Gentleman wins!
+[02:19.196] Crystals: P1 1540 → 1390 (-150)  [battle]
+[02:20.595] Attack P0(1,1)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(2,1)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used}  Dice=5  ATK=40 vs DEF=5  → WIN
+[02:20.595] Anim: 3A  △ P1(2,1)
+[02:20.595] Card destroyed  P1 (2,1) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used}
+[02:21.088] Mode selected P0: ATTACK
+[02:21.093] Attack phase P0: 1 attack(s) available
+[02:21.093] MSG: Player 1: tap a character to attack.
+[02:21.388] AI0 attack decision: (2,4)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos | face-down} → (0,3) (dead-end)
+[02:21.725] Revealed: P0 (2,4) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[02:21.725] Dice rolled: 2
+[02:21.740] MSG: Nothing happens — Dead End.
+[02:25.070] Attack P0(2,4)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} → P1(0,3)(empty)  Dice=2  → DEAD_END
+[02:25.070] Anim: 3F  (blank slot)
+[02:25.566] Turn ended  P0  |  Crystals P0=990 P1=1390
+
+--- Turn 16  |  Player 1  |  Crystals P0=990 P1=1390 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][Curs]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:26.161] Mode selected P1: ATTACK
+[02:26.167] Attack phase P1: 2 attack(s) available
+[02:26.167] MSG: Player 2: tap a character to attack.
+[02:26.457] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (0,3) (dead-end)
+[02:26.793] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:26.793] Dice rolled: 3
+[02:26.808] MSG: Nothing happens — Dead End.
+[02:30.140] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(0,3)(empty)  Dice=3  → DEAD_END
+[02:30.141] Anim: 3F  (blank slot)
+[02:30.436] Turn ended  P1  |  Crystals P0=990 P1=1390
+
+--- Turn 17  |  Player 0  |  Crystals P0=990 P1=1390 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Moon][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][Curs]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Chao][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:31.043] Mode selected P0: ATTACK
+[02:31.046] Attack phase P0: 2 attack(s) available
+[02:31.046] MSG: Player 1: tap a character to attack.
+[02:31.333] AI0 attack decision: (2,4)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:31.634] Dice rolled: 2
+[02:31.645] MSG: Cursed Well wins!
+[02:37.326] Crystals: P1 1390 → 1290 (-100)  [battle]
+[02:38.727] Attack P0(2,4)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=15 vs DEF=0  → WIN
+[02:38.727] Reckoning overlay: P0 "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} +ATK 15
+[02:38.727] Anim: 3A  △ P1(2,2)
+[02:38.727] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[02:38.729] AI Player 0 wins
+[02:38.729] Reason: all_destroyed
+[02:38.729] Final crystals — P0: 990  P1: 1290  |  Turns: 17
+[02:38.730] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_black_friday_cart_collision_2026-06-02_01-05-29_300.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Rebel-King-002
+Highlight: Rebel King (Union)  [setup: Jirayu the Rebel King, Chaotic Wisp]
+Result:    FAIL
+Detail:    None of expect_log_any matched: ["Union summoned P0: Rebel King", "Attack P\\d\\(\\d+,\\d+\\)\"Rebel\\ King\"", "MSG:.*Rebel"]
+Turns:     17  |  AI timeouts: 0
+===

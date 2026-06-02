@@ -1,0 +1,91 @@
+=== Battle of Greasy Keyboard ===
+Battle started: 2026-06-01 18:14:01.725
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Mysterious-Miner-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Mysterious-Miner-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Mysterious Miner (Character)  [setup: Chaotic Wisp]
+Ability:      REVEAL_ON_WIN — After attacked: reveal 1 foe’s cell
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Mysterious Miner" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Mysterious Miner
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Mysterious\ Miner".*ATK=|→ P\d\(\d+,\d+\)"Mysterious\ Miner")
+  - Log must match regex: ("Mysterious\ Miner".*ATK=|→ P\d\(\d+,\d+\)"Mysterious\ Miner")
+  - Log must contain at least one of: Revealed:, Reveal
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: REVEAL_ON_WIN — reveal effect during/after combat.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Mysterious Miner
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Mysterious Miner
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Prayer, Radar, Resurrection
+P1 Tech hand: Accident, Siege Cannon, Tease
+P0:   [  — ][  — ][C:Bomb][  — ][  — ]
+      [T:Trap][C:Choi][T:Self][C:Shep][  — ]
+      [  — ][C:Nigh][C:Myst][C:Gree][  — ]
+      [  — ][C:War ][C:Pyro][C:Lab ][  — ]
+      [  — ][T:Bunk][  — ][T:Echo][  — ]
+P1:   [C:Chur][  — ][C:Vamp][  — ][C:Lazy]
+      [  — ][C:Godd][C:Ice ][T:Self][T:Stre]
+      [  — ][  — ][C:Chao][  — ][T:Hypn]
+      [C:Blea][  — ][C:Grav][  — ][T:Spik]
+      [C:Succ][  — ][C:Wand][C:Spea][C:Foul]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:05.327] Mode selected P0: ATTACK
+[00:05.331] Attack phase P0: 2 attack(s) available
+[00:05.331] MSG: Player 1: tap a character to attack.
+[00:05.626] AI0 attack decision: (2,2)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.969] Revealed: P0 (2,2) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[00:05.995] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.995] Dice rolled: 4
+[00:05.999] MSG: Mysterious Miner wins!
+[00:10.620] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.016] Attack P0(2,2)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=4  ATK=25 vs DEF=0  → WIN
+[00:12.016] E2E: ability goal reached — ending battle early.
+[00:12.016] Anim: 3A  △ P1(2,2)
+[00:12.016] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.017] Target prompt: "Mysterious Miner: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+
+=== GAME OVER ===
+[00:12.024] AI Player 0 wins
+[00:12.024] Final crystals — P0: 5000  P1: 4900  |  Turns: 1
+[00:12.024] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_greasy_keyboard_2026-06-01_18-14-01_725.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Mysterious-Miner-002
+Highlight: Mysterious Miner (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

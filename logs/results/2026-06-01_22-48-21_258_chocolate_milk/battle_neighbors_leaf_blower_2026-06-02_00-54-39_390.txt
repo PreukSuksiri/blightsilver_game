@@ -1,0 +1,651 @@
+=== Battle of Neighbor's Leaf Blower ===
+Battle started: 2026-06-02 00:54:39.390
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Moon-Lady-Ninja-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Moon-Lady-Ninja-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Moon Lady Ninja (Union)  [setup: Chaotic Wisp]
+Ability:      ONE_USE_SURVIVE_DESTRUCTION — Once, this card is not destroyed.
+Setup role:   t2_union
+Verifies:
+  - Ability: "Moon Lady Ninja" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Moon Lady Ninja, Attack P\d\(\d+,\d+\)"Moon\ Lady\ Ninja", MSG:.*Moon
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Moon Lady Ninja — summon logged and/or union attacks with ATK=65.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Moon Lady Ninja
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Resurrection, Great Diplomacy
+P1 Tech hand: Siege Cannon, War Supply, Resurrection
+P0:   [C:Scyt][  — ][C:Polt][  — ][T:Stre]
+      [  — ][T:Flam][C:Vamp][C:Tiny][  — ]
+      [C:Jira][T:Hard][C:Nigh][  — ][C:Moon]
+      [  — ][C:Gobl][T:Expl][C:Stri][  — ]
+      [C:Curs][T:Self][C:Scou][  — ][C:Moon]
+P1:   [C:Laug][  — ][T:Alar][T:Host][C:Need]
+      [  — ][C:Polt][  — ][T:Hypn][  — ]
+      [C:Mine][  — ][C:Chao][  — ][T:Trap]
+      [  — ][C:Aray][T:Acid][C:Aeri][  — ]
+      [C:Red ][  — ][C:Shre][  — ][C:Bomb]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.335] Mode selected P0: ATTACK
+[00:05.339] Attack phase P0: 2 attack(s) available
+[00:05.339] MSG: Player 1: tap a character to attack.
+[00:05.624] AI0 attack decision: (0,0)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature | face-down} → (1,4) (dead-end)
+[00:05.972] Revealed: P0 (0,0) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:05.973] Dice rolled: 5
+[00:05.987] MSG: Nothing happens — Dead End.
+[00:09.355] Attack P0(0,0)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P1(1,4)(empty)  Dice=5  → DEAD_END
+[00:09.355] Anim: 3F  (blank slot)
+[00:11.861] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [Scyt][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:12.451] Mode selected P1: ATTACK
+[00:12.457] Attack phase P1: 2 attack(s) available
+[00:12.458] MSG: Player 2: tap a character to attack.
+[00:12.739] AI1 attack decision: (3,3)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane | face-down} → (0,0) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:13.084] Revealed: P1 (3,3) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:13.084] Dice rolled: 3
+[00:13.088] MSG: Aerial the Battlemage wins!
+[00:17.741] Crystals: P0 5000 → 4450 (-550)  [battle]
+[00:19.135] Attack P1(3,3)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P0(0,0)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}  Dice=3  ATK=50 vs DEF=35  → WIN
+[00:19.135] Anim: 3A  △ P0(0,0)
+[00:19.135] Card destroyed  P0 (0,0) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:19.435] Turn ended  P1  |  Crystals P0=4450 P1=5000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4450 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][Aeri][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:20.049] Mode selected P0: ATTACK
+[00:20.054] Attack phase P0: 2 attack(s) available
+[00:20.054] MSG: Player 1: tap a character to attack.
+[00:20.347] AI0 attack decision: (1,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down} → (3,3) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:20.696] Revealed: P0 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:20.696] Dice rolled: 4
+[00:20.701] MSG: Vampire Duchess wins!
+[00:25.349] Crystals: P1 5000 → 4250 (-750)  [battle]
+[00:26.748] Attack P0(1,2)"Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved} → P1(3,3)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=4  ATK=50 vs DEF=45  → WIN
+[00:26.748] Anim: 3A  △ P1(3,3)
+[00:26.748] Card destroyed  P1 (3,3) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:29.254] Turn ended  P0  |  Crystals P0=4450 P1=4250
+
+--- Turn 4  |  Player 1  |  Crystals P0=4450 P1=4250 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][Vamp][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:29.865] Mode selected P1: ATTACK
+[00:29.871] Attack phase P1: 2 attack(s) available
+[00:29.871] MSG: Player 2: tap a character to attack.
+[00:30.147] AI1 attack decision: (4,2)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down} → (1,2) "Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved}
+[00:30.487] Revealed: P1 (4,2) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:30.487] Dice rolled: 1
+[00:30.491] MSG: Both cards are destroyed!
+[00:35.048] Crystals: P1 4250 → 4000 (-250)  [battle]
+[00:36.440] Crystals: P0 4450 → 3650 (-800)  [battle]
+[00:37.831] Attack P1(4,2)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → P0(1,2)"Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved}  Dice=1  ATK=25 vs DEF=25  → TIE
+[00:37.831] Anim: 3C  △ P1(4,2) + △ P0(1,2)
+[00:37.831] Card destroyed  P1 (4,2) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:37.831] Card destroyed  P0 (1,2) "Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved}
+[00:38.124] Turn ended  P1  |  Crystals P0=3650 P1=4000
+
+--- Turn 5  |  Player 0  |  Crystals P0=3650 P1=4000 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:38.739] Mode selected P0: ATTACK
+[00:38.742] Attack phase P0: 2 attack(s) available
+[00:38.743] MSG: Player 1: tap a character to attack.
+[00:39.023] AI0 attack decision: (0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos | face-down} → (2,4) "Trap Hole" {cost 0}
+[00:39.359] Revealed: P0 (0,2) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[00:39.387] Revealed: P1 (2,4) "Trap Hole" {cost 0}
+[00:39.387] Dice rolled: 5
+[00:39.643] MSG: Trap triggered: Trap Hole!
+[00:43.728] Crystals: P0 3650 → 3630 (-20)  [trap]
+[00:45.109] MSG: Trap Hole: Player 1 loses 20 Crystals!
+[00:45.114] Trap: "Trap Hole" triggered  P0(0,2)→P1(2,4)
+[00:45.114] Anim: 3D  (attacker survives)
+[00:45.613] Mode selected P0: ATTACK
+[00:45.618] Attack phase P0: 1 attack(s) available
+[00:45.619] MSG: Player 1: tap a character to attack.
+[00:45.911] AI0 attack decision: (3,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down} → (3,4) (dead-end)
+[00:46.247] Revealed: P0 (3,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:46.247] Dice rolled: 1
+[00:46.262] MSG: Nothing happens — Dead End.
+[00:49.601] Attack P0(3,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P1(3,4)(empty)  Dice=1  → DEAD_END
+[00:49.601] Anim: 3F  (blank slot)
+[00:50.095] Turn ended  P0  |  Crystals P0=3630 P1=4000
+
+--- Turn 6  |  Player 1  |  Crystals P0=3630 P1=4000 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][Gobl][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:50.708] Mode selected P1: ATTACK
+[00:50.710] Attack phase P1: 2 attack(s) available
+[00:50.710] MSG: Player 2: tap a character to attack.
+[00:50.994] AI1 attack decision: (0,4)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down} → (3,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:51.338] Revealed: P1 (0,4) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[00:51.339] Dice rolled: 4
+[00:51.343] MSG: Both cards are destroyed!
+[00:55.895] Crystals: P1 4000 → 3800 (-200)  [battle]
+[00:57.286] Crystals: P0 3630 → 3380 (-250)  [battle]
+[00:58.678] Attack P1(0,4)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature} → P0(3,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=4  ATK=10 vs DEF=10  → TIE
+[00:58.678] Anim: 3C  △ P1(0,4) + △ P0(3,1)
+[00:58.678] Card destroyed  P1 (0,4) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[00:58.678] Card destroyed  P0 (3,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:58.970] Turn ended  P1  |  Crystals P0=3380 P1=3800
+
+--- Turn 7  |  Player 0  |  Crystals P0=3380 P1=3800 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:59.583] Mode selected P0: ATTACK
+[00:59.588] Attack phase P0: 2 attack(s) available
+[00:59.589] MSG: Player 1: tap a character to attack.
+[00:59.869] AI0 attack decision: (0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (4,4) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine | face-down}
+[01:00.208] Revealed: P1 (4,4) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[01:00.208] Dice rolled: 3
+[01:00.212] MSG: Poltergeist wins!
+[01:05.860] Crystals: P1 3800 → 3300 (-500)  [battle]
+[01:07.258] Attack P0(0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(4,4)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}  Dice=3  ATK=70 vs DEF=15  → WIN
+[01:07.259] Reckoning overlay: P0 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} +ATK 70
+[01:07.260] Anim: 3A  △ P1(4,4)
+[01:07.260] Card destroyed  P1 (4,4) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[01:07.752] Mode selected P0: ATTACK
+[01:07.758] Attack phase P0: 1 attack(s) available
+[01:07.758] MSG: Player 1: tap a character to attack.
+[01:08.052] AI0 attack decision: (1,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down} → (1,3) "Hypnosis" {cost 800}
+[01:08.389] Revealed: P0 (1,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[01:08.418] Revealed: P1 (1,3) "Hypnosis" {cost 800}
+[01:08.418] Dice rolled: 2
+[01:08.692] MSG: Trap triggered: Hypnosis!
+[01:12.789] Crystals: P1 3300 → 2500 (-800)  [trap cost]
+[01:14.178] MSG: Hypnosis: Tiny Pixie cannot attack until end of next turn.
+[01:14.182] Trap: "Hypnosis" triggered  P0(1,3)→P1(1,3)
+[01:14.182] Anim: 3D  (attacker survives)
+[01:14.680] Turn ended  P0  |  Crystals P0=3380 P1=2500
+
+--- Turn 8  |  Player 1  |  Crystals P0=3380 P1=2500 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][Tiny][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:15.288] Mode selected P1: ATTACK
+[01:15.294] Attack phase P1: 2 attack(s) available
+[01:15.295] MSG: Player 2: tap a character to attack.
+[01:15.577] AI1 attack decision: (1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos | face-down} → (1,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | cannot-atk≤T8}
+[01:15.880] Revealed: P1 (1,1) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[01:15.881] Dice rolled: 5
+[01:15.891] MSG: Poltergeist wins!
+[01:21.568] Crystals: P0 3380 → 3280 (-100)  [battle]
+[01:22.961] MSG: Tiny Pixie survives destruction!
+[01:22.967] Attack P1(1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P0(1,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | cannot-atk≤T8}  Dice=5  ATK=70 vs DEF=0  → WIN
+[01:22.967] Reckoning overlay: P1 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} +ATK 70
+[01:22.967] Anim: 3A  △ P0(1,3)
+[01:22.967] Card destroyed  P0 (1,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | cannot-atk≤T8}
+[01:23.265] Turn ended  P1  |  Crystals P0=3280 P1=2500
+
+--- Turn 9  |  Player 0  |  Crystals P0=3280 P1=2500 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][Tiny][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][Polt][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:23.874] Mode selected P0: ATTACK
+[01:23.881] Attack phase P0: 2 attack(s) available
+[01:23.881] MSG: Player 1: tap a character to attack.
+[01:24.160] AI0 attack decision: (0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (0,3) "Hostage" {cost 200}
+[01:24.495] Revealed: P1 (0,3) "Hostage" {cost 200}
+[01:24.495] Dice rolled: 3
+[01:24.759] MSG: Trap triggered: Hostage!
+[01:28.845] Crystals: P1 2500 → 2300 (-200)  [trap cost]
+[01:30.235] MSG: Hostage: Adjacent squares revealed and locked.
+[01:30.265] Revealed: P1 (0,2) "Alarm" {cost 0}
+[01:30.268] Trap: "Hostage" triggered  P0(0,2)→P1(0,3)
+[01:30.268] Anim: 3D  (attacker survives)
+[01:30.740] Mode selected P0: ATTACK
+[01:30.747] Attack phase P0: 1 attack(s) available
+[01:30.748] MSG: Player 1: tap a character to attack.
+[01:31.048] AI0 attack decision: (1,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used | cannot-atk≤T8} → (2,3) (dead-end)
+[01:31.355] Dice rolled: 1
+[01:31.383] MSG: Nothing happens — Dead End.
+[01:34.764] Attack P0(1,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used | cannot-atk≤T8} → P1(2,3)(empty)  Dice=1  → DEAD_END
+[01:34.764] Anim: 3F  (blank slot)
+[01:35.267] Turn ended  P0  |  Crystals P0=3280 P1=2300
+
+--- Turn 10  |  Player 1  |  Crystals P0=3280 P1=2300 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][Tiny][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Polt][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:35.885] Mode selected P1: ATTACK
+[01:35.892] Attack phase P1: 2 attack(s) available
+[01:35.892] MSG: Player 2: tap a character to attack.
+[01:36.182] AI1 attack decision: (1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (1,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used | cannot-atk≤T8}
+[01:36.491] Dice rolled: 5
+[01:36.503] MSG: Poltergeist wins!
+[01:42.186] Crystals: P0 3280 → 3180 (-100)  [battle]
+[01:43.584] Attack P1(1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P0(1,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | flags:indestructible_used | cannot-atk≤T8}  Dice=5  ATK=70 vs DEF=0  → WIN
+[01:43.584] Reckoning overlay: P1 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} +ATK 70
+[01:43.584] Anim: 3A  △ P0(1,3)
+[01:43.890] Turn ended  P1  |  Crystals P0=3180 P1=2300
+
+--- Turn 11  |  Player 0  |  Crystals P0=3180 P1=2300 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Polt][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:44.510] Mode selected P0: ATTACK
+[01:44.517] Attack phase P0: 2 attack(s) available
+[01:44.517] MSG: Player 1: tap a character to attack.
+[01:44.806] AI0 attack decision: (0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (4,3) (dead-end)
+[01:45.115] Dice rolled: 4
+[01:45.142] MSG: Nothing happens — Dead End.
+[01:48.527] Attack P0(0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(4,3)(empty)  Dice=4  → DEAD_END
+[01:48.528] Anim: 3F  (blank slot)
+[01:49.032] Mode selected P0: ATTACK
+[01:49.035] Attack phase P0: 1 attack(s) available
+[01:49.035] MSG: Player 1: tap a character to attack.
+[01:49.338] AI0 attack decision: (2,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down} → (3,2) "Acid Trap Hole" {cost 0}
+[01:49.683] Revealed: P0 (2,0) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[01:49.713] Revealed: P1 (3,2) "Acid Trap Hole" {cost 0}
+[01:49.713] Dice rolled: 5
+[01:49.964] MSG: Trap triggered: Acid Trap Hole!
+[01:54.066] Crystals: P0 3180 → 3130 (-50)  [trap]
+[01:55.448] MSG: Acid Trap Hole: Player 1 loses 50 Crystals!
+[01:55.454] Trap: "Acid Trap Hole" triggered  P0(2,0)→P1(3,2)
+[01:55.454] Anim: 3D  (attacker survives)
+[01:55.954] Turn ended  P0  |  Crystals P0=3130 P1=2300
+
+--- Turn 12  |  Player 1  |  Crystals P0=3130 P1=2300 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Jira][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Polt][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[01:56.559] Mode selected P1: ATTACK
+[01:56.567] Attack phase P1: 2 attack(s) available
+[01:56.567] MSG: Player 2: tap a character to attack.
+[01:56.846] AI1 attack decision: (1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (2,3) (dead-end)
+[01:57.148] Dice rolled: 3
+[01:57.177] MSG: Nothing happens — Dead End.
+[02:00.545] Attack P1(1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P0(2,3)(empty)  Dice=3  → DEAD_END
+[02:00.546] Anim: 3F  (blank slot)
+[02:00.844] Turn ended  P1  |  Crystals P0=3130 P1=2300
+
+--- Turn 13  |  Player 0  |  Crystals P0=3130 P1=2300 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Jira][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Polt][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:01.450] Mode selected P0: ATTACK
+[02:01.453] Attack phase P0: 2 attack(s) available
+[02:01.453] MSG: Player 1: tap a character to attack.
+[02:01.738] AI0 attack decision: (0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[02:02.075] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:02.075] Dice rolled: 2
+[02:02.080] MSG: Poltergeist wins!
+[02:07.728] Crystals: P1 2300 → 2200 (-100)  [battle]
+[02:09.125] Attack P0(0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=70 vs DEF=0  → WIN
+[02:09.126] Reckoning overlay: P0 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} +ATK 70
+[02:09.126] Anim: 3A  △ P1(2,2)
+[02:09.126] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:09.620] Mode selected P0: ATTACK
+[02:09.627] Attack phase P0: 1 attack(s) available
+[02:09.628] MSG: Player 1: tap a character to attack.
+[02:09.917] AI0 attack decision: (2,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → (1,2) (dead-end)
+[02:10.219] Dice rolled: 4
+[02:10.245] MSG: Nothing happens — Dead End.
+[02:13.626] Attack P0(2,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(1,2)(empty)  Dice=4  → DEAD_END
+[02:13.626] Anim: 3F  (blank slot)
+[02:14.119] Turn ended  P0  |  Crystals P0=3130 P1=2200
+
+--- Turn 14  |  Player 1  |  Crystals P0=3130 P1=2200 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Jira][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Polt][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:14.725] Mode selected P1: ATTACK
+[02:14.732] Attack phase P1: 2 attack(s) available
+[02:14.732] MSG: Player 2: tap a character to attack.
+[02:15.017] AI1 attack decision: (1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (1,4) (dead-end)
+[02:15.319] Dice rolled: 3
+[02:15.345] MSG: Nothing happens — Dead End.
+[02:18.727] Attack P1(1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P0(1,4)(empty)  Dice=3  → DEAD_END
+[02:18.727] Anim: 3F  (blank slot)
+[02:19.023] Turn ended  P1  |  Crystals P0=3130 P1=2200
+
+--- Turn 15  |  Player 0  |  Crystals P0=3130 P1=2200 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Jira][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Polt][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:19.625] Mode selected P0: ATTACK
+[02:19.628] Attack phase P0: 2 attack(s) available
+[02:19.630] MSG: Player 1: tap a character to attack.
+[02:19.913] AI0 attack decision: (0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (2,1) (dead-end)
+[02:20.215] Dice rolled: 5
+[02:20.242] MSG: Nothing happens — Dead End.
+[02:23.622] Attack P0(0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(2,1)(empty)  Dice=5  → DEAD_END
+[02:23.623] Anim: 3F  (blank slot)
+[02:24.115] Mode selected P0: ATTACK
+[02:24.122] Attack phase P0: 1 attack(s) available
+[02:24.122] MSG: Player 1: tap a character to attack.
+[02:24.415] AI0 attack decision: (2,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → (4,1) (dead-end)
+[02:24.715] Dice rolled: 3
+[02:24.741] MSG: Nothing happens — Dead End.
+[02:28.122] Attack P0(2,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(4,1)(empty)  Dice=3  → DEAD_END
+[02:28.123] Anim: 3F  (blank slot)
+[02:28.621] Turn ended  P0  |  Crystals P0=3130 P1=2200
+
+--- Turn 16  |  Player 1  |  Crystals P0=3130 P1=2200 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Jira][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Polt][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:29.221] Mode selected P1: ATTACK
+[02:29.226] Attack phase P1: 2 attack(s) available
+[02:29.226] MSG: Player 2: tap a character to attack.
+[02:29.515] AI1 attack decision: (1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (3,3) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down}
+[02:29.852] Revealed: P0 (3,3) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[02:29.852] Dice rolled: 2
+[02:29.856] MSG: Poltergeist wins!
+[02:35.505] Crystals: P0 3130 → 2930 (-200)  [battle]
+[02:36.906] Attack P1(1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P0(3,3)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending}  Dice=2  ATK=70 vs DEF=25  → WIN
+[02:36.907] Reckoning overlay: P1 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} +ATK 70
+[02:36.907] Anim: 3A  △ P0(3,3)
+[02:36.907] Card destroyed  P0 (3,3) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending}
+[02:37.203] Turn ended  P1  |  Crystals P0=2930 P1=2200
+
+--- Turn 17  |  Player 0  |  Crystals P0=2930 P1=2200 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Jira][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Polt][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:37.803] Mode selected P0: ATTACK
+[02:37.811] Attack phase P0: 2 attack(s) available
+[02:37.811] MSG: Player 1: tap a character to attack.
+[02:38.094] AI0 attack decision: (0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (3,1) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos | face-down}
+[02:38.430] Revealed: P1 (3,1) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[02:38.430] Dice rolled: 5
+[02:38.435] MSG: Poltergeist wins!
+[02:44.086] Crystals: P1 2200 → 1800 (-400)  [battle]
+[02:45.485] Attack P0(0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(3,1)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}  Dice=5  ATK=70 vs DEF=20  → WIN
+[02:45.485] Reckoning overlay: P0 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} +ATK 70
+[02:45.485] Anim: 3A  △ P1(3,1)
+[02:45.485] Card destroyed  P1 (3,1) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[02:45.977] Mode selected P0: ATTACK
+[02:45.984] Attack phase P0: 1 attack(s) available
+[02:45.984] MSG: Player 1: tap a character to attack.
+[02:46.277] AI0 attack decision: (2,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → (0,2) (dead-end)
+[02:46.576] Dice rolled: 4
+[02:46.605] MSG: Nothing happens — Dead End.
+[02:49.983] Attack P0(2,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(0,2)(empty)  Dice=4  → DEAD_END
+[02:49.983] Anim: 3F  (blank slot)
+[02:50.488] Turn ended  P0  |  Crystals P0=2930 P1=1800
+
+--- Turn 18  |  Player 1  |  Crystals P0=2930 P1=1800 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Jira][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Polt][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[02:51.095] Mode selected P1: ATTACK
+[02:51.102] Attack phase P1: 2 attack(s) available
+[02:51.102] MSG: Player 2: tap a character to attack.
+[02:51.398] AI1 attack decision: (1,1)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (3,2) "Explosive Barrels" {cost 0}
+[02:51.738] Revealed: P0 (3,2) "Explosive Barrels" {cost 0}
+[02:51.738] Dice rolled: 3
+[02:52.028] MSG: Trap triggered: Explosive Barrels!
+[02:57.280] Crystals: P1 1800 → 1100 (-700)  [card lost]
+[02:59.326] Crystals: P0 2930 → 2230 (-700)  [trap]
+[03:00.707] MSG: Explosive Barrels: Poltergeist destroyed! Defender loses 700 Crystals.
+[03:00.712] Trap: "Explosive Barrels" triggered  P1(1,1)→P0(3,2)
+[03:00.712] Anim: 3E  △ P1(1,1)
+[03:01.015] Turn ended  P1  |  Crystals P0=2230 P1=1100
+
+--- Turn 19  |  Player 0  |  Crystals P0=2230 P1=1100 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Jira][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:01.630] Mode selected P0: ATTACK
+[03:01.637] Attack phase P0: 2 attack(s) available
+[03:01.637] MSG: Player 1: tap a character to attack.
+[03:01.927] AI0 attack decision: (0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (0,0) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down}
+[03:02.274] Revealed: P1 (0,0) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[03:02.274] Dice rolled: 4
+[03:02.279] MSG: Poltergeist wins!
+[03:07.931] Crystals: P1 1100 → 750 (-350)  [battle]
+[03:09.331] Attack P0(0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(0,0)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xDEF-used}  Dice=4  ATK=70 vs DEF=30  → WIN
+[03:09.332] Reckoning overlay: P0 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} +ATK 70
+[03:09.332] Reckoning overlay: P1 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xDEF-used} +DEF 10
+[03:09.332] Anim: 3A  △ P1(0,0)
+[03:09.332] Card destroyed  P1 (0,0) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xDEF-used}
+[03:09.832] Mode selected P0: ATTACK
+[03:09.836] Attack phase P0: 1 attack(s) available
+[03:09.836] MSG: Player 1: tap a character to attack.
+[03:10.139] AI0 attack decision: (2,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → (0,1) (dead-end)
+[03:10.448] Dice rolled: 5
+[03:10.474] MSG: Nothing happens — Dead End.
+[03:13.855] Attack P0(2,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[03:13.856] Anim: 3F  (blank slot)
+[03:14.363] Turn ended  P0  |  Crystals P0=2230 P1=750
+
+--- Turn 20  |  Player 1  |  Crystals P0=2230 P1=750 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Jira][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:14.973] Mode selected P1: ATTACK
+[03:14.979] Attack phase P1: 2 attack(s) available
+[03:14.979] MSG: Player 2: tap a character to attack.
+[03:15.278] AI1 attack decision: (2,0)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic | face-down} → (4,1) "Self-destruct" {cost 0}
+[03:15.623] Revealed: P1 (2,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[03:15.654] Revealed: P0 (4,1) "Self-destruct" {cost 0}
+[03:15.654] Dice rolled: 5
+[03:15.907] MSG: Trap triggered: Self-destruct!
+[03:20.002] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[03:20.006] Trap: "Self-destruct" triggered  P1(2,0)→P0(4,1)
+[03:20.006] Anim: 3D  (attacker survives)
+[03:20.296] Turn ended  P1  |  Crystals P0=2230 P1=750
+
+--- Turn 21  |  Player 0  |  Crystals P0=2230 P1=750 ---
+P0:   [  — ][  — ][Polt][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [Jira][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Mine][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[03:20.383] AI1 target chosen: (2,0)
+[03:20.384] MSG: Miner Probe: +10 ATK until end of next turn, then destroyed.
+[03:20.888] Mode selected P0: ATTACK
+[03:20.899] Attack phase P0: 2 attack(s) available
+[03:20.899] MSG: Player 1: tap a character to attack.
+[03:21.180] AI0 attack decision: (2,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → (2,0) "Miner Probe" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | base 10/10 | buff +tempATK10 | flags:self_destruct_next_turn}
+[03:21.481] Dice rolled: 1
+[03:21.493] MSG: Jirayu the Rebellious Prince wins!
+[03:26.173] Crystals: P1 750 → 550 (-200)  [battle]
+[03:27.574] Attack P0(2,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P1(2,0)"Miner Probe" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | base 10/10 | buff +tempATK10 | flags:self_destruct_next_turn}  Dice=1  ATK=40 vs DEF=10  → WIN
+[03:27.574] Anim: 3A  △ P1(2,0)
+[03:27.574] Card destroyed  P1 (2,0) "Miner Probe" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | base 10/10 | buff +tempATK10 | flags:self_destruct_next_turn}
+[03:28.064] Mode selected P0: ATTACK
+[03:28.071] Attack phase P0: 1 attack(s) available
+[03:28.072] MSG: Player 1: tap a character to attack.
+[03:28.365] AI0 attack decision: (0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → (4,0) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane | face-down}
+[03:28.704] Revealed: P1 (4,0) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[03:28.704] Dice rolled: 1
+[03:28.709] MSG: Poltergeist wins!
+[03:34.340] Crystals: P1 550 → 150 (-400)  [battle]
+[03:35.744] Attack P0(0,2)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P1(4,0)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}  Dice=1  ATK=70 vs DEF=20  → WIN
+[03:35.745] Reckoning overlay: P0 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} +ATK 70
+[03:35.745] Anim: 3A  △ P1(4,0)
+[03:35.745] Card destroyed  P1 (4,0) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+
+=== GAME OVER ===
+[03:35.746] AI Player 0 wins
+[03:35.746] Reason: all_destroyed
+[03:35.746] Final crystals — P0: 2230  P1: 150  |  Turns: 21
+[03:35.746] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_neighbors_leaf_blower_2026-06-02_00-54-39_390.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Moon-Lady-Ninja-002
+Highlight: Moon Lady Ninja (Union)  [setup: Chaotic Wisp]
+Result:    FAIL
+Detail:    None of expect_log_any matched: ["Union summoned P0: Moon Lady Ninja", "Attack P\\d\\(\\d+,\\d+\\)\"Moon\\ Lady\\ Ninja\"", "MSG:.*Moon"]
+Turns:     21  |  AI timeouts: 0
+===

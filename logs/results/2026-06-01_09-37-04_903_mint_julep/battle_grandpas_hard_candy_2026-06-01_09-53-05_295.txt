@@ -1,0 +1,465 @@
+=== Battle of Grandpa's Hard Candy ===
+Battle started: 2026-06-01 09:53:05.295
+Game Session of Mint Julep (started 2026-06-01 09:37:04.903)
+=== Card E2E Test ===
+Scenario ID:  E2E-Armored-Rhino-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Armored-Rhino-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Armored Rhino (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Armored Rhino" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Armored Rhino
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Armored\ Rhino".*ATK=60\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=60 when Armored Rhino attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Armored Rhino
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Armored Rhino
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Resurrection, Release Mutagen
+P1 Tech hand: War Supply, Tease, Radar
+P0:   [T:Bait][C:Mafi][T:Alar][T:Pepp][  — ]
+      [T:Host][C:Shot][  — ][C:Ostr][C:Armo]
+      [  — ][  — ][C:Armo][  — ][C:Mad ]
+      [C:Saw ][  — ][  — ][  — ][T:Flam]
+      [T:Acid][  — ][C:Lab ][C:Book][C:Jira]
+P1:   [C:Pony][  — ][C:Heav][C:Vile][T:Self]
+      [C:Ice ][  — ][  — ][  — ][T:Host]
+      [T:Echo][  — ][C:Chao][  — ][C:Mage]
+      [T:Stre][  — ][  — ][  — ][C:Lazy]
+      [C:Witc][C:Pit ][C:Claw][C:Armo][C:Flam]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:06.796] Crystals: P0 5000 → 3500 (-1500)  [union]
+[00:06.838] Revealed: P0 (1,1) "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[00:06.838] Union summoned P0: "Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[00:06.838] MSG: Player 1 summoned [Barros the Colossal] using: "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[00:10.220] Mode selected P0: ATTACK
+[00:10.225] Attack phase P0: 2 attack(s) available
+[00:10.226] MSG: Player 1: tap a character to attack.
+[00:10.527] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (0,2) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}
+[00:10.906] Revealed: P1 (0,2) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:10.907] Dice rolled: 3
+[00:10.947] MSG: Barros the Colossal wins!
+[00:15.562] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:16.960] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(0,2)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=3  ATK=150 vs DEF=20  → WIN
+[00:16.960] Anim: 3A  △ P1(0,2)
+[00:16.960] Card destroyed  P1 (0,2) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:17.454] Mode selected P0: ATTACK
+[00:17.459] Attack phase P0: 1 attack(s) available
+[00:17.461] MSG: Player 1: tap a character to attack.
+[00:17.753] AI0 attack decision: (0,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down} → (0,0) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}
+[00:18.108] Revealed: P0 (0,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:18.150] Revealed: P1 (0,0) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:18.150] Dice rolled: 5
+[00:18.154] MSG: Mafia Associates wins!
+[00:22.712] Crystals: P1 4700 → 4400 (-300)  [battle]
+[00:24.109] Attack P0(0,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P1(0,0)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=5  ATK=45 vs DEF=20  → WIN
+[00:24.109] Anim: 3A  △ P1(0,0)
+[00:24.109] Card destroyed  P1 (0,0) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:24.605] Turn ended  P0  |  Crystals P0=3500 P1=4400
+
+--- Turn 2  |  Player 1  |  Crystals P0=3500 P1=4400 ---
+P0:   [  ? ][Mafi][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:25.222] Mode selected P1: ATTACK
+[00:25.225] Attack phase P1: 2 attack(s) available
+[00:25.226] MSG: Player 2: tap a character to attack.
+[00:25.502] AI1 attack decision: (3,4)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down} → (0,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:25.853] Revealed: P1 (3,4) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:26.192] Coin flip: Heads
+[00:28.937] Dice rolled: 2
+[00:28.947] MSG: Lazy Troll wins!
+[00:34.637] Crystals: P0 3500 → 3000 (-500)  [battle]
+[00:36.034] Attack P1(3,4)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → P0(0,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}  Dice=2  ATK=120 vs DEF=0  → WIN
+[00:36.034] Reckoning overlay: P0 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} DEF -40
+[00:36.034] Anim: 3A  △ P0(0,1)
+[00:36.034] Card destroyed  P0 (0,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:36.329] Turn ended  P1  |  Crystals P0=3000 P1=4400
+
+--- Turn 3  |  Player 0  |  Crystals P0=3000 P1=4400 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Lazy]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:36.932] Mode selected P0: ATTACK
+[00:36.938] Attack phase P0: 2 attack(s) available
+[00:36.938] MSG: Player 1: tap a character to attack.
+[00:37.227] AI0 attack decision: (2,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature | face-down} → (3,4) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:37.582] Revealed: P0 (2,2) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[00:37.582] Dice rolled: 4
+[00:37.587] MSG: Both cards are destroyed!
+[00:42.095] Crystals: P0 3000 → 2280 (-720)  [battle]
+[00:43.487] Crystals: P1 4400 → 3400 (-1000)  [battle]
+[00:44.877] Attack P0(2,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(3,4)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}  Dice=4  ATK=60 vs DEF=60  → TIE
+[00:44.877] Anim: 3C  △ P0(2,2) + △ P1(3,4)
+[00:44.877] Card destroyed  P0 (2,2) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[00:44.877] Card destroyed  P1 (3,4) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:45.382] Mode selected P0: ATTACK
+[00:45.387] Attack phase P0: 1 attack(s) available
+[00:45.388] MSG: Player 1: tap a character to attack.
+[00:45.686] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (0,3) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio | face-down}
+[00:46.035] Revealed: P1 (0,3) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[00:46.035] Dice rolled: 2
+[00:46.074] MSG: Barros the Colossal wins!
+[00:50.729] Crystals: P1 3400 → 3200 (-200)  [battle]
+[00:52.125] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(0,3)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=2  ATK=150 vs DEF=30  → WIN
+[00:52.125] Anim: 3A  △ P1(0,3)
+[00:52.126] Card destroyed  P1 (0,3) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[00:52.625] Turn ended  P0  |  Crystals P0=2280 P1=3200
+
+--- Turn 4  |  Player 1  |  Crystals P0=2280 P1=3200 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:53.238] Mode selected P1: ATTACK
+[00:53.242] Attack phase P1: 2 attack(s) available
+[00:53.243] MSG: Player 2: tap a character to attack.
+[00:53.520] AI1 attack decision: (1,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down} → (1,3) (dead-end)
+[00:53.860] Revealed: P1 (1,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:53.860] Dice rolled: 2
+[00:53.875] MSG: Nothing happens — Dead End.
+[00:57.183] Attack P1(1,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P0(1,3)(empty)  Dice=2  → DEAD_END
+[00:57.183] Anim: 3F  (blank slot)
+[00:57.491] Turn ended  P1  |  Crystals P0=2280 P1=3200
+
+--- Turn 5  |  Player 0  |  Crystals P0=2280 P1=3200 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [Ice ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:58.098] Mode selected P0: ATTACK
+[00:58.104] Attack phase P0: 2 attack(s) available
+[00:58.104] MSG: Player 1: tap a character to attack.
+[00:58.402] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (1,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:58.711] Dice rolled: 1
+[00:58.762] MSG: Barros the Colossal wins!
+[01:03.420] Crystals: P1 3200 → 2800 (-400)  [battle]
+[01:04.819] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(1,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=1  ATK=150 vs DEF=0  → WIN
+[01:04.819] Anim: 3A  △ P1(1,0)
+[01:04.819] Card destroyed  P1 (1,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:05.323] Mode selected P0: ATTACK
+[01:05.328] Attack phase P0: 1 attack(s) available
+[01:05.329] MSG: Player 1: tap a character to attack.
+[01:05.628] AI0 attack decision: (1,4)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down} → (1,1) (dead-end)
+[01:05.983] Revealed: P0 (1,4) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[01:05.983] Dice rolled: 3
+[01:05.997] MSG: Nothing happens — Dead End.
+[01:09.334] Attack P0(1,4)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P1(1,1)(empty)  Dice=3  → DEAD_END
+[01:09.335] Anim: 3F  (blank slot)
+[01:09.831] Turn ended  P0  |  Crystals P0=2280 P1=2800
+
+--- Turn 6  |  Player 1  |  Crystals P0=2280 P1=2800 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:10.443] Mode selected P1: ATTACK
+[01:10.449] Attack phase P1: 2 attack(s) available
+[01:10.449] MSG: Player 2: tap a character to attack.
+[01:10.728] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (1,4) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[01:11.063] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:11.063] Dice rolled: 3
+[01:16.837] Crystals: P1 2800 → 2700 (-100)  [battle]
+[01:18.232] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(1,4)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=3  ATK=20 vs DEF=60  → LOSE
+[01:18.233] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} +DEF 60
+[01:18.233] Anim: 3B  △ P1(2,2)
+[01:18.233] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:18.533] Turn ended  P1  |  Crystals P0=2280 P1=2700
+
+--- Turn 7  |  Player 0  |  Crystals P0=2280 P1=2700 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:19.129] Mode selected P0: ATTACK
+[01:19.135] Attack phase P0: 2 attack(s) available
+[01:19.136] MSG: Player 1: tap a character to attack.
+[01:19.428] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (0,1) (dead-end)
+[01:19.728] Dice rolled: 1
+[01:19.791] MSG: Nothing happens — Dead End.
+[01:23.116] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(0,1)(empty)  Dice=1  → DEAD_END
+[01:23.116] Anim: 3F  (blank slot)
+[01:23.612] Mode selected P0: ATTACK
+[01:23.617] Attack phase P0: 1 attack(s) available
+[01:23.617] MSG: Player 1: tap a character to attack.
+[01:23.892] AI0 attack decision: (1,4)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} → (1,3) (dead-end)
+[01:24.194] Dice rolled: 2
+[01:24.222] MSG: Nothing happens — Dead End.
+[01:27.590] Attack P0(1,4)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} → P1(1,3)(empty)  Dice=2  → DEAD_END
+[01:27.590] Anim: 3F  (blank slot)
+[01:28.090] Turn ended  P0  |  Crystals P0=2280 P1=2700
+
+--- Turn 8  |  Player 1  |  Crystals P0=2280 P1=2700 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][Armo]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:28.699] Mode selected P1: ATTACK
+[01:28.702] Attack phase P1: 2 attack(s) available
+[01:28.702] MSG: Player 2: tap a character to attack.
+[01:28.987] AI1 attack decision: (4,1)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (1,4) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[01:29.357] Revealed: P1 (4,1) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:29.357] Dice rolled: 3
+[01:29.361] MSG: Pit Lord wins!
+[01:33.979] Crystals: P0 2280 → 1800 (-480)  [battle]
+[01:35.378] Attack P1(4,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P0(1,4)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=3  ATK=120 vs DEF=0  → WIN
+[01:35.380] Anim: 3A  △ P0(1,4)
+[01:35.380] Card destroyed  P0 (1,4) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[01:35.674] Turn ended  P1  |  Crystals P0=1800 P1=2700
+
+--- Turn 9  |  Player 0  |  Crystals P0=1800 P1=2700 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][Pit ][  ? ][  ? ][  ? ]
+[01:36.272] Mode selected P0: ATTACK
+[01:36.279] Attack phase P0: 2 attack(s) available
+[01:36.279] MSG: Player 1: tap a character to attack.
+[01:36.570] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (4,1) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[01:36.869] Dice rolled: 5
+[01:36.924] MSG: Barros the Colossal wins!
+[01:41.562] Crystals: P1 2700 → 1450 (-1250)  [battle]
+[01:42.961] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(4,1)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}  Dice=5  ATK=150 vs DEF=50  → WIN
+[01:42.961] Anim: 3A  △ P1(4,1)
+[01:42.961] Card destroyed  P1 (4,1) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[01:43.455] Mode selected P0: ATTACK
+[01:43.459] Attack phase P0: 1 attack(s) available
+[01:43.460] MSG: Player 1: tap a character to attack.
+[01:43.752] AI0 attack decision: (2,4)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down} → (2,0) "Echo Barrier" {cost 1000}
+[01:44.110] Revealed: P0 (2,4) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:44.139] Revealed: P1 (2,0) "Echo Barrier" {cost 1000}
+[01:44.139] Dice rolled: 5
+[01:44.421] MSG: Trap triggered: Echo Barrier!
+[01:48.510] Crystals: P1 1450 → 450 (-1000)  [trap cost]
+[01:49.899] MSG: Echo Barrier: Attacking player cannot attack again this turn!
+[01:49.904] Trap: "Echo Barrier" triggered  P0(2,4)→P1(2,0)
+[01:49.904] Anim: 3D  (attacker survives)
+[01:50.403] Turn ended  P0  |  Crystals P0=1800 P1=450
+
+--- Turn 10  |  Player 1  |  Crystals P0=1800 P1=450 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Mad ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[01:51.008] Mode selected P1: ATTACK
+[01:51.014] Attack phase P1: 2 attack(s) available
+[01:51.015] MSG: Player 2: tap a character to attack.
+[01:51.298] AI1 attack decision: (4,0)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima | face-down} → (2,4) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:51.645] Revealed: P1 (4,0) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:51.645] Dice rolled: 3
+[01:51.649] MSG: Witchhunter wins!
+[01:56.266] Crystals: P0 1800 → 1540 (-260)  [battle]
+[01:57.662] Attack P1(4,0)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P0(2,4)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=3  ATK=20 vs DEF=15  → WIN
+[01:57.662] Anim: 3A  △ P0(2,4)
+[01:57.662] Card destroyed  P0 (2,4) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:57.969] Turn ended  P1  |  Crystals P0=1540 P1=450
+
+--- Turn 11  |  Player 0  |  Crystals P0=1540 P1=450 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [Witc][  — ][  ? ][  ? ][  ? ]
+[01:58.577] Mode selected P0: ATTACK
+[01:58.580] Attack phase P0: 2 attack(s) available
+[01:58.580] MSG: Player 1: tap a character to attack.
+[01:58.882] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (4,0) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:59.191] Dice rolled: 2
+[01:59.242] MSG: Barros the Colossal wins!
+[02:03.890] Crystals: P1 450 → 200 (-250)  [battle]
+[02:05.289] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(4,0)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}  Dice=2  ATK=150 vs DEF=20  → WIN
+[02:05.289] Anim: 3A  △ P1(4,0)
+[02:05.289] Card destroyed  P1 (4,0) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[02:05.792] Mode selected P0: ATTACK
+[02:05.797] Attack phase P0: 1 attack(s) available
+[02:05.797] MSG: Player 1: tap a character to attack.
+[02:06.098] AI0 attack decision: (3,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down} → (2,1) (dead-end)
+[02:06.442] Revealed: P0 (3,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[02:06.443] Dice rolled: 4
+[02:06.455] MSG: Nothing happens — Dead End.
+[02:09.830] Attack P0(3,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} → P1(2,1)(empty)  Dice=4  → DEAD_END
+[02:09.830] Anim: 3F  (blank slot)
+[02:10.330] Turn ended  P0  |  Crystals P0=1540 P1=200
+
+--- Turn 12  |  Player 1  |  Crystals P0=1540 P1=200 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Saw ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[02:10.930] Mode selected P1: ATTACK
+[02:10.934] Attack phase P1: 2 attack(s) available
+[02:10.934] MSG: Player 2: tap a character to attack.
+[02:11.223] AI1 attack decision: (4,3)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down} → (3,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[02:11.558] Revealed: P1 (4,3) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[02:11.558] Dice rolled: 4
+[02:11.562] MSG: Both cards are destroyed!
+[02:16.133] Crystals: P1 200 → 30 (-170)  [battle]
+[02:17.524] Crystals: P0 1540 → 1260 (-280)  [battle]
+[02:18.915] Attack P1(4,3)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P0(3,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}  Dice=4  ATK=10 vs DEF=10  → TIE
+[02:18.916] Anim: 3C  △ P1(4,3) + △ P0(3,0)
+[02:18.916] Card destroyed  P1 (4,3) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[02:18.916] Card destroyed  P0 (3,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[02:19.211] Turn ended  P1  |  Crystals P0=1260 P1=30
+
+--- Turn 13  |  Player 0  |  Crystals P0=1260 P1=30 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[02:19.809] Mode selected P0: ATTACK
+[02:19.815] Attack phase P0: 2 attack(s) available
+[02:19.815] MSG: Player 1: tap a character to attack.
+[02:20.107] AI0 attack decision: (1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (2,3) (dead-end)
+[02:20.407] Dice rolled: 3
+[02:20.473] MSG: Nothing happens — Dead End.
+[02:23.776] Attack P0(1,1)"Barros the Colossal" {Union ATK150 DEF130 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(2,3)(empty)  Dice=3  → DEAD_END
+[02:23.776] Anim: 3F  (blank slot)
+[02:24.278] Mode selected P0: ATTACK
+[02:24.280] Attack phase P0: 1 attack(s) available
+[02:24.280] MSG: Player 1: tap a character to attack.
+[02:24.586] AI0 attack decision: (4,2)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | face-down} → (1,2) (dead-end)
+[02:24.963] Revealed: P0 (4,2) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[02:24.963] Dice rolled: 1
+[02:24.976] MSG: Nothing happens — Dead End.
+[02:28.320] Attack P0(4,2)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P1(1,2)(empty)  Dice=1  → DEAD_END
+[02:28.321] Anim: 3F  (blank slot)
+[02:28.819] Turn ended  P0  |  Crystals P0=1260 P1=30
+
+--- Turn 14  |  Player 1  |  Crystals P0=1260 P1=30 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Barr][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Lab ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[02:29.421] Mode selected P1: ATTACK
+[02:29.426] Attack phase P1: 2 attack(s) available
+[02:29.427] MSG: Player 2: tap a character to attack.
+[02:29.715] AI1 attack decision: (2,4)"Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos | face-down} → (4,3) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down}
+[02:30.096] Revealed: P1 (2,4) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos}
+[02:30.096] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[02:30.124] Revealed: P0 (4,3) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[02:30.124] Dice rolled: 1
+[02:34.824] Crystals: P1 30 → 0 (-30)  [battle]
+
+=== GAME OVER ===
+[02:34.832] AI Player 0 wins
+[02:34.832] Reason: crystals
+[02:34.832] Final crystals — P0: 1260  P1: 0  |  Turns: 14
+[02:34.832] Log saved to: res://logs/results/2026-06-01_09-37-04_903_mint_julep/battle_grandpas_hard_candy_2026-06-01_09-53-05_295.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Armored-Rhino-002
+Highlight: Armored Rhino (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     14  |  AI timeouts: 0
+===

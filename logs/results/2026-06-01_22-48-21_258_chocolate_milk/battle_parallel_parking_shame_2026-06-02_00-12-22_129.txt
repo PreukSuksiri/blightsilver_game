@@ -1,0 +1,629 @@
+=== Battle of Parallel Parking Shame ===
+Battle started: 2026-06-02 00:12:22.129
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Choir-Lead-Amber-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Choir-Lead-Amber-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Choir Lead Amber (Union)  [setup: Choir Lady Abigail, Choir Lady Alice, Choir Lady Anna, Chaotic Wisp]
+Ability:      FIELD_ATK_BOOST_OWN_AFFINITY — +20 ATK to all Divine units on their own field
+Setup role:   t2_union
+Verifies:
+  - Ability: "Choir Lead Amber" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Choir Lead Amber, Attack P\d\(\d+,\d+\)"Choir\ Lead\ Amber", MSG:.*Choir
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Choir Lead Amber — summon logged and/or union attacks with ATK=35.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Choir Lead Amber
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (0,0) Choir Lady Abigail, (0,1) Choir Lady Alice, (0,2) Choir Lady Anna
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Bribe, Resurrection
+P1 Tech hand: Accident, Great Diplomacy, War Supply
+P0:   [C:Choi][C:Choi][C:Choi][T:Flam][C:Flam]
+      [  — ][C:Sunr][  — ][C:Armo][  — ]
+      [  — ][  — ][C:Moon][T:Expl][C:Moon]
+      [C:Hunt][C:Pony][T:Foul][C:Gran][  — ]
+      [C:Snip][  — ][  — ][T:Alar][C:Gobl]
+P1:   [C:Ostr][C:Joan][C:Tomb][C:Mind][C:Stin]
+      [  — ][T:Echo][T:Blac][C:Ice ][  — ]
+      [T:Flam][  — ][C:Chao][  — ][  — ]
+      [T:Foul][C:Stre][  — ][  — ][T:Self]
+      [C:Lab ][C:Laug][C:Jira][C:Meli][C:Fera]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.351] Mode selected P0: ATTACK
+[00:05.355] Attack phase P0: 2 attack(s) available
+[00:05.356] MSG: Player 1: tap a character to attack.
+[00:05.635] AI0 attack decision: (0,0)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.973] Revealed: P0 (0,0) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[00:05.999] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.999] Dice rolled: 3
+[00:06.003] MSG: Choir Lady Abigail wins!
+[00:10.602] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.001] Attack P0(0,0)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=3  ATK=25 vs DEF=0  → WIN
+[00:12.001] Anim: 3A  △ P1(2,2)
+[00:12.001] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.494] Mode selected P0: ATTACK
+[00:12.499] Attack phase P0: 1 attack(s) available
+[00:12.499] MSG: Player 1: tap a character to attack.
+[00:12.793] AI0 attack decision: (0,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down} → (0,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down}
+[00:13.131] Revealed: P0 (0,1) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:13.158] Revealed: P1 (0,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[00:13.159] Dice rolled: 2
+[00:13.163] MSG: Choir Lady Alice wins!
+[00:17.802] Crystals: P1 4900 → 4620 (-280)  [battle]
+[00:19.200] Attack P0(0,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → P1(0,1)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}  Dice=2  ATK=20 vs DEF=5  → WIN
+[00:19.200] Anim: 3A  △ P1(0,1)
+[00:19.200] Card destroyed  P1 (0,1) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[00:19.699] Turn ended  P0  |  Crystals P0=5000 P1=4620
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4620 ---
+P0:   [Choi][Choi][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:21.778] Crystals: P1 4620 → 3120 (-1500)  [union]
+[00:21.815] Revealed: P1 (0,0) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[00:21.815] Union summoned P1: "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down}
+[00:21.816] MSG: Player 2 summoned [Rocket Peacock] using: "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature | face-down}
+[00:24.967] Crystals: P1 3120 → 3070 (-50)  [skip tax]
+[00:24.967] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:26.357] Turn ended  P1  |  Crystals P0=5000 P1=3070
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3070 ---
+P0:   [Choi][Choi][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:26.981] Mode selected P0: ATTACK
+[00:26.984] Attack phase P0: 2 attack(s) available
+[00:26.984] MSG: Player 1: tap a character to attack.
+[00:27.275] AI0 attack decision: (0,0)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → (0,4) (dead-end)
+[00:27.585] Dice rolled: 5
+[00:27.615] MSG: Nothing happens — Dead End.
+[00:30.991] Attack P0(0,0)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(0,4)(empty)  Dice=5  → DEAD_END
+[00:30.991] Anim: 3F  (blank slot)
+[00:31.494] Mode selected P0: ATTACK
+[00:31.501] Attack phase P0: 1 attack(s) available
+[00:31.501] MSG: Player 1: tap a character to attack.
+[00:31.800] AI0 attack decision: (0,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → (1,0) (dead-end)
+[00:32.108] Dice rolled: 5
+[00:32.128] MSG: Nothing happens — Dead End.
+[00:35.515] Attack P0(0,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → P1(1,0)(empty)  Dice=5  → DEAD_END
+[00:35.515] Anim: 3F  (blank slot)
+[00:36.024] Turn ended  P0  |  Crystals P0=5000 P1=3070
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=3070 ---
+P0:   [Choi][Choi][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:36.633] Mode selected P1: ATTACK
+[00:36.636] Attack phase P1: 2 attack(s) available
+[00:36.636] MSG: Player 2: tap a character to attack.
+[00:36.933] AI1 attack decision: (0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (0,1) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:37.244] Dice rolled: 4
+[00:37.298] MSG: Rocket Peacock wins!
+[00:41.936] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:43.334] Attack P1(0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(0,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}  Dice=4  ATK=150 vs DEF=25  → WIN
+[00:43.334] Anim: 3A  △ P0(0,1)
+[00:43.335] Card destroyed  P0 (0,1) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:43.335] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[00:43.632] Turn ended  P1  |  Crystals P0=4750 P1=3070
+
+--- Turn 5  |  Player 0  |  Crystals P0=4750 P1=3070 ---
+P0:   [Choi][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:43.778] Coin flip: Tails
+[00:44.255] Mode selected P0: ATTACK
+[00:44.259] Attack phase P0: 2 attack(s) available
+[00:44.260] MSG: Player 1: tap a character to attack.
+[00:44.538] AI0 attack decision: (0,0)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → (2,0) "Flame Trap" {cost 250}
+[00:44.884] Revealed: P1 (2,0) "Flame Trap" {cost 250}
+[00:44.884] Dice rolled: 4
+[00:45.170] MSG: Trap triggered: Flame Trap!
+[00:46.538] MSG: Rocket Peacock: Tails — Rocket Peacock survives.
+[00:46.541] Ability target resolved  P0
+[00:49.282] Crystals: P1 3070 → 2820 (-250)  [trap cost]
+[00:50.671] MSG: Spike Trap: Choir Lady Abigail permanently loses 10 ATK!
+[00:50.675] Trap: "Flame Trap" triggered  P0(0,0)→P1(2,0)
+[00:50.676] Anim: 3D  (attacker survives)
+[00:51.189] Mode selected P0: ATTACK
+[00:51.195] Attack phase P0: 1 attack(s) available
+[00:51.195] MSG: Player 1: tap a character to attack.
+[00:51.489] AI0 attack decision: (1,1)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down} → (0,2) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down}
+[00:51.838] Revealed: P0 (1,1) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[00:51.863] Revealed: P1 (0,2) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:51.863] Dice rolled: 3
+[00:57.581] Crystals: P0 4750 → 4450 (-300)  [battle]
+[00:58.981] Attack P0(1,1)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → P1(0,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=3  ATK=30 vs DEF=60  → LOSE
+[00:58.981] Reckoning overlay: P0 "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} +ATK 10
+[00:58.981] Anim: 3B  △ P0(1,1)
+[00:58.981] Card destroyed  P0 (1,1) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[00:59.474] Turn ended  P0  |  Crystals P0=4450 P1=2820
+
+--- Turn 6  |  Player 1  |  Crystals P0=4450 P1=2820 ---
+P0:   [Choi][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:00.070] Mode selected P1: ATTACK
+[01:00.078] Attack phase P1: 2 attack(s) available
+[01:00.078] MSG: Player 2: tap a character to attack.
+[01:00.368] AI1 attack decision: (0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (0,0) "Choir Lady Abigail" {Unit ATK15 DEF15 | cost 250 | affinity Divine | base 15/15}
+[01:00.668] Dice rolled: 5
+[01:00.720] MSG: Rocket Peacock wins!
+[01:05.361] Crystals: P0 4450 → 4200 (-250)  [battle]
+[01:06.759] Attack P1(0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(0,0)"Choir Lady Abigail" {Unit ATK15 DEF15 | cost 250 | affinity Divine | base 15/15}  Dice=5  ATK=150 vs DEF=15  → WIN
+[01:06.759] Anim: 3A  △ P0(0,0)
+[01:06.759] Card destroyed  P0 (0,0) "Choir Lady Abigail" {Unit ATK15 DEF15 | cost 250 | affinity Divine | base 15/15}
+[01:06.760] MSG: No valid target — effect cancelled.
+[01:06.763] Ability target resolved  P1
+[01:06.763] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[01:07.056] Turn ended  P1  |  Crystals P0=4200 P1=2820
+
+--- Turn 7  |  Player 0  |  Crystals P0=4200 P1=2820 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:07.671] Mode selected P0: ATTACK
+[01:07.677] Attack phase P0: 2 attack(s) available
+[01:07.678] MSG: Player 1: tap a character to attack.
+[01:07.951] AI0 attack decision: (0,4)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down} → (1,2) "Blackmail" {cost 0}
+[01:08.290] Revealed: P0 (0,4) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:08.315] Revealed: P1 (1,2) "Blackmail" {cost 0}
+[01:08.316] Dice rolled: 1
+[01:08.580] MSG: Trap triggered: Blackmail!
+[01:12.673] Prompt: "Blackmail"  [Discard 1 Tech Card / End your turn]
+[01:13.263] Ability choice resolved: 0 (Yes)
+[01:13.263] MSG: Blackmail: Discarded 1 Tech Card.
+[01:13.265] Trap: "Blackmail" triggered  P0(0,4)→P1(1,2)
+[01:13.265] Anim: 3D  (attacker survives)
+[01:13.770] Mode selected P0: ATTACK
+[01:13.778] Attack phase P0: 1 attack(s) available
+[01:13.779] MSG: Player 1: tap a character to attack.
+[01:14.064] AI0 attack decision: (0,2)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down} → (0,3) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | face-down}
+[01:14.403] Revealed: P0 (0,2) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[01:14.429] Revealed: P1 (0,3) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[01:14.429] Dice rolled: 4
+[01:19.165] Crystals: P0 4200 → 3950 (-250)  [battle]
+[01:20.565] Attack P0(0,2)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → P1(0,3)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}  Dice=4  ATK=20 vs DEF=70  → LOSE
+[01:20.565] Anim: 3B  △ P0(0,2)
+[01:20.565] Card destroyed  P0 (0,2) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[01:21.069] Turn ended  P0  |  Crystals P0=3950 P1=2820
+
+--- Turn 8  |  Player 1  |  Crystals P0=3950 P1=2820 ---
+P0:   [  — ][  — ][  — ][  ? ][Flam]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][Mind][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:21.675] Mode selected P1: ATTACK
+[01:21.684] Attack phase P1: 2 attack(s) available
+[01:21.685] MSG: Player 2: tap a character to attack.
+[01:21.979] AI1 attack decision: (0,3)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → (0,4) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:22.290] Dice rolled: 3
+[01:22.301] MSG: Mind Flayer wins!
+[01:26.990] Crystals: P0 3950 → 3450 (-500)  [battle]
+[01:28.389] Attack P1(0,3)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(0,4)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=3  ATK=100 vs DEF=10  → WIN
+[01:28.391] Anim: 3A  △ P0(0,4)
+[01:28.391] Card destroyed  P0 (0,4) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:28.694] Turn ended  P1  |  Crystals P0=3450 P1=2820
+
+--- Turn 9  |  Player 0  |  Crystals P0=3450 P1=2820 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][Mind][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:29.314] Mode selected P0: ATTACK
+[01:29.321] Attack phase P0: 2 attack(s) available
+[01:29.322] MSG: Player 1: tap a character to attack.
+[01:29.604] AI0 attack decision: (3,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down} → (1,3) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down}
+[01:29.958] Revealed: P0 (3,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:29.986] Revealed: P1 (1,3) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:29.986] Dice rolled: 2
+[01:29.992] MSG: Huntress of Green Glade wins!
+[01:34.630] Crystals: P1 2820 → 2420 (-400)  [battle]
+[01:36.032] Attack P0(3,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(1,3)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=2  ATK=50 vs DEF=0  → WIN
+[01:36.032] Anim: 3A  △ P1(1,3)
+[01:36.032] Card destroyed  P1 (1,3) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:36.522] Mode selected P0: ATTACK
+[01:36.531] Attack phase P0: 1 attack(s) available
+[01:36.531] MSG: Player 1: tap a character to attack.
+[01:36.823] AI0 attack decision: (3,1)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (1,1) "Echo Barrier" {cost 1000}
+[01:37.161] Revealed: P0 (3,1) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:37.195] Revealed: P1 (1,1) "Echo Barrier" {cost 1000}
+[01:37.196] Dice rolled: 1
+[01:37.403] MSG: Trap triggered: Echo Barrier!
+[01:41.492] Crystals: P1 2420 → 1420 (-1000)  [trap cost]
+[01:42.880] MSG: Echo Barrier: Attacking player cannot attack again this turn!
+[01:42.886] Trap: "Echo Barrier" triggered  P0(3,1)→P1(1,1)
+[01:42.886] Anim: 3D  (attacker survives)
+[01:43.388] Turn ended  P0  |  Crystals P0=3450 P1=1420
+
+--- Turn 10  |  Player 1  |  Crystals P0=3450 P1=1420 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [Hunt][Pony][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][Mind][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:43.982] Mode selected P1: ATTACK
+[01:43.993] Attack phase P1: 2 attack(s) available
+[01:43.993] MSG: Player 2: tap a character to attack.
+[01:44.281] AI1 attack decision: (0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (3,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:44.581] Dice rolled: 3
+[01:44.636] MSG: Rocket Peacock wins!
+[01:49.273] Crystals: P0 3450 → 2650 (-800)  [battle]
+[01:50.673] Attack P1(0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(3,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=3  ATK=150 vs DEF=50  → WIN
+[01:50.674] Anim: 3A  △ P0(3,0)
+[01:50.674] Card destroyed  P0 (3,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:50.674] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[01:50.970] Turn ended  P1  |  Crystals P0=2650 P1=1420
+
+--- Turn 11  |  Player 0  |  Crystals P0=2650 P1=1420 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][Pony][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][Mind][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:51.113] Coin flip: Tails
+[01:51.590] Mode selected P0: ATTACK
+[01:51.599] Attack phase P0: 2 attack(s) available
+[01:51.599] MSG: Player 1: tap a character to attack.
+[01:51.885] AI0 attack decision: (3,1)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → (1,4) (dead-end)
+[01:52.194] Dice rolled: 4
+[01:52.221] MSG: Nothing happens — Dead End.
+[01:53.875] MSG: Rocket Peacock: Tails — Tomb Bandit survives.
+[01:53.881] Ability target resolved  P0
+[01:55.607] Attack P0(3,1)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(1,4)(empty)  Dice=4  → DEAD_END
+[01:55.608] Anim: 3F  (blank slot)
+[01:56.113] Mode selected P0: ATTACK
+[01:56.122] Attack phase P0: 1 attack(s) available
+[01:56.122] MSG: Player 1: tap a character to attack.
+[01:56.417] AI0 attack decision: (2,2)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down} → (2,3) (dead-end)
+[01:56.759] Revealed: P0 (2,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[01:56.759] Dice rolled: 2
+[01:56.774] MSG: Nothing happens — Dead End.
+[02:00.126] Attack P0(2,2)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} → P1(2,3)(empty)  Dice=2  → DEAD_END
+[02:00.127] Anim: 3F  (blank slot)
+[02:00.621] Turn ended  P0  |  Crystals P0=2650 P1=1420
+
+--- Turn 12  |  Player 1  |  Crystals P0=2650 P1=1420 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Moon][  ? ][  ? ]
+      [  — ][Pony][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][Mind][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[02:01.219] Mode selected P1: ATTACK
+[02:01.229] Attack phase P1: 2 attack(s) available
+[02:01.229] MSG: Player 2: tap a character to attack.
+[02:01.519] AI1 attack decision: (0,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → (2,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[02:01.819] Dice rolled: 3
+[02:01.831] MSG: Tomb Bandit wins!
+[02:06.511] Crystals: P0 2650 → 2350 (-300)  [battle]
+[02:07.911] Attack P1(0,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(2,2)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=3  ATK=75 vs DEF=25  → WIN
+[02:07.911] Anim: 3A  △ P0(2,2)
+[02:07.911] Card destroyed  P0 (2,2) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[02:08.203] Turn ended  P1  |  Crystals P0=2350 P1=1420
+
+--- Turn 13  |  Player 0  |  Crystals P0=2350 P1=1420 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Pony][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][Mind][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[02:08.814] Mode selected P0: ATTACK
+[02:08.823] Attack phase P0: 2 attack(s) available
+[02:08.823] MSG: Player 1: tap a character to attack.
+[02:09.100] AI0 attack decision: (3,1)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → (2,1) (dead-end)
+[02:09.401] Dice rolled: 2
+[02:09.429] MSG: Nothing happens — Dead End.
+[02:12.817] Attack P0(3,1)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(2,1)(empty)  Dice=2  → DEAD_END
+[02:12.817] Anim: 3F  (blank slot)
+[02:13.321] Mode selected P0: ATTACK
+[02:13.326] Attack phase P0: 1 attack(s) available
+[02:13.327] MSG: Player 1: tap a character to attack.
+[02:13.626] AI0 attack decision: (1,3)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down} → (3,3) (dead-end)
+[02:13.967] Revealed: P0 (1,3) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[02:13.967] Dice rolled: 3
+[02:13.982] MSG: Nothing happens — Dead End.
+[02:17.343] Attack P0(1,3)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P1(3,3)(empty)  Dice=3  → DEAD_END
+[02:17.344] Anim: 3F  (blank slot)
+[02:17.844] Turn ended  P0  |  Crystals P0=2350 P1=1420
+
+--- Turn 14  |  Player 1  |  Crystals P0=2350 P1=1420 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Armo][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][Pony][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][Mind][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[02:18.451] Mode selected P1: ATTACK
+[02:18.462] Attack phase P1: 2 attack(s) available
+[02:18.462] MSG: Player 2: tap a character to attack.
+[02:18.759] AI1 attack decision: (0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (3,1) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:19.068] Dice rolled: 4
+[02:19.118] MSG: Rocket Peacock wins!
+[02:23.744] Crystals: P0 2350 → 2050 (-300)  [battle]
+[02:25.144] Attack P1(0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(3,1)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=4  ATK=150 vs DEF=20  → WIN
+[02:25.144] Anim: 3A  △ P0(3,1)
+[02:25.144] Card destroyed  P0 (3,1) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:25.144] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[02:25.440] Turn ended  P1  |  Crystals P0=2050 P1=1420
+
+--- Turn 15  |  Player 0  |  Crystals P0=2050 P1=1420 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Armo][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][Mind][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[02:25.584] Coin flip: Tails
+[02:26.043] Mode selected P0: ATTACK
+[02:26.052] Attack phase P0: 2 attack(s) available
+[02:26.053] MSG: Player 1: tap a character to attack.
+[02:26.335] AI0 attack decision: (1,3)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → (3,0) "Foul Gas" {cost 0}
+[02:26.671] Revealed: P1 (3,0) "Foul Gas" {cost 0}
+[02:26.671] Dice rolled: 2
+[02:26.957] MSG: Trap triggered: Foul Gas!
+[02:28.343] MSG: Rocket Peacock: Tails — Mind Flayer survives.
+[02:28.349] Ability target resolved  P0
+[02:31.069] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[02:31.076] Trap: "Foul Gas" triggered  P0(1,3)→P1(3,0)
+[02:31.076] Anim: 3D  (attacker survives)
+[02:31.568] Mode selected P0: ATTACK
+[02:31.572] Attack phase P0: 1 attack(s) available
+[02:31.572] MSG: Player 1: tap a character to attack.
+[02:31.876] AI0 attack decision: (3,3)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima | face-down} → (3,2) (dead-end)
+[02:32.224] Revealed: P0 (3,3) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[02:32.224] Dice rolled: 4
+[02:32.239] MSG: Nothing happens — Dead End.
+[02:35.593] Attack P0(3,3)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(3,2)(empty)  Dice=4  → DEAD_END
+[02:35.594] Anim: 3F  (blank slot)
+[02:36.092] Turn ended  P0  |  Crystals P0=2050 P1=1420
+
+--- Turn 16  |  Player 1  |  Crystals P0=2050 P1=1420 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Armo][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][Gran][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][Mind][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[02:36.686] Mode selected P1: ATTACK
+[02:36.692] Attack phase P1: 2 attack(s) available
+[02:36.692] MSG: Player 2: tap a character to attack.
+[02:36.985] AI1 attack decision: (0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (3,3) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[02:37.285] Dice rolled: 3
+[02:37.345] MSG: Rocket Peacock wins!
+[02:41.975] Crystals: P0 2050 → 1750 (-300)  [battle]
+[02:43.376] Attack P1(0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(3,3)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=3  ATK=150 vs DEF=25  → WIN
+[02:43.377] Anim: 3A  △ P0(3,3)
+[02:43.377] Card destroyed  P0 (3,3) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[02:43.377] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[02:43.672] Turn ended  P1  |  Crystals P0=1750 P1=1420
+
+--- Turn 17  |  Player 0  |  Crystals P0=1750 P1=1420 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][Armo][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Rock][  — ][Tomb][Mind][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[02:43.815] Coin flip: Heads
+[02:44.249] Mode selected P0: ATTACK
+[02:44.255] Attack phase P0: 2 attack(s) available
+[02:44.255] MSG: Player 1: tap a character to attack.
+[02:44.552] AI0 attack decision: (1,3)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → (4,2) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima | face-down}
+[02:44.897] Revealed: P1 (4,2) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[02:44.897] Dice rolled: 5
+[02:44.902] MSG: Jirayu the Rebellious Prince gains +10 DEF permanently!
+[02:46.538] MSG: Rocket Peacock: Heads — Rocket Peacock destroyed!
+[02:46.544] Ability target resolved  P0
+[02:50.676] Crystals: P0 1750 → 1580 (-170)  [battle]
+[02:52.075] Attack P0(1,3)"Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature} → P1(4,2)"Jirayu the Rebellious Prince" {Unit ATK40 DEF50 | cost 600 | affinity Anima | base 40/50}  Dice=5  ATK=10 vs DEF=40  → LOSE
+[02:52.076] Anim: 3B  △ P0(1,3)
+[02:52.076] Card destroyed  P0 (1,3) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[02:52.578] Mode selected P0: ATTACK
+[02:52.585] Attack phase P0: 1 attack(s) available
+[02:52.586] MSG: Player 1: tap a character to attack.
+[02:52.884] AI0 attack decision: (2,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (4,0) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down}
+[02:53.233] Revealed: P0 (2,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:53.265] Revealed: P1 (4,0) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[02:53.265] Dice rolled: 5
+[02:58.034] Crystals: P0 1580 → 1280 (-300)  [battle]
+[02:59.435] Attack P0(2,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(4,0)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}  Dice=5  ATK=30 vs DEF=85  → LOSE
+[02:59.436] Anim: 3B  △ P0(2,4)
+[02:59.436] Card destroyed  P0 (2,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:59.486] Coin flip: Tails
+[03:02.176] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[03:02.688] Turn ended  P0  |  Crystals P0=1280 P1=1420
+
+--- Turn 18  |  Player 1  |  Crystals P0=1280 P1=1420 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Tomb][Mind][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [Lab ][  ? ][Jira][  ? ][  ? ]
+[03:03.291] Mode selected P1: ATTACK
+[03:03.300] Attack phase P1: 2 attack(s) available
+[03:03.300] MSG: Player 2: tap a character to attack.
+[03:03.596] AI1 attack decision: (0,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → (1,0) (dead-end)
+[03:03.906] Dice rolled: 1
+[03:03.935] MSG: Nothing happens — Dead End.
+[03:07.313] Attack P1(0,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(1,0)(empty)  Dice=1  → DEAD_END
+[03:07.314] Anim: 3F  (blank slot)
+[03:07.616] Turn ended  P1  |  Crystals P0=1280 P1=1420
+
+--- Turn 19  |  Player 0  |  Crystals P0=1280 P1=1420 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Tomb][Mind][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [Lab ][  ? ][Jira][  ? ][  ? ]
+[03:08.225] Mode selected P0: ATTACK
+[03:08.230] Attack phase P0: 2 attack(s) available
+[03:08.230] MSG: Player 1: tap a character to attack.
+[03:08.531] AI0 attack decision: (4,0)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine | face-down} → (4,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos | face-down}
+[03:08.878] Revealed: P0 (4,0) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[03:08.906] Revealed: P1 (4,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[03:08.907] Dice rolled: 4
+[03:08.911] MSG: Feral Vampire is destroyed battling Divine!
+[03:14.465] Crystals: P0 1280 → 930 (-350)  [battle]
+[03:15.856] Crystals: P1 1420 → 1020 (-400)  [battle]
+[03:17.247] Attack P0(4,0)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(4,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=4  ATK=20 vs DEF=25  → TIE
+[03:17.247] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} ATK -20
+[03:17.248] Anim: 3C  △ P0(4,0) + △ P1(4,4)
+[03:17.248] Card destroyed  P0 (4,0) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[03:17.248] Card destroyed  P1 (4,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[03:17.748] Mode selected P0: ATTACK
+[03:17.757] Attack phase P0: 1 attack(s) available
+[03:17.757] MSG: Player 1: tap a character to attack.
+[03:18.056] AI0 attack decision: (4,4)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down} → (4,1) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down}
+[03:18.402] Revealed: P0 (4,4) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[03:18.430] Revealed: P1 (4,1) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[03:18.431] Dice rolled: 5
+[03:18.435] MSG: Both cards are destroyed!
+[03:24.014] Crystals: P0 930 → 680 (-250)  [battle]
+[03:25.405] Crystals: P1 1020 → 670 (-350)  [battle]
+[03:26.799] Card destroyed  P1 (4,1) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xDEF-used}
+[03:26.803] Attack P0(4,4)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P1(4,1)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xDEF-used}  Dice=5  ATK=30 vs DEF=30  → TIE
+[03:26.804] Reckoning overlay: P1 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xDEF-used} +DEF 10
+[03:26.804] Anim: 3C  △ P0(4,4) + △ P1(4,1)
+[03:26.804] Card destroyed  P0 (4,4) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+
+=== GAME OVER ===
+[03:26.807] AI Player 1 wins
+[03:26.807] Reason: all_destroyed
+[03:26.807] Final crystals — P0: 680  P1: 670  |  Turns: 19
+[03:26.807] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_parallel_parking_shame_2026-06-02_00-12-22_129.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Choir-Lead-Amber-002
+Highlight: Choir Lead Amber (Union)  [setup: Choir Lady Abigail, Choir Lady Alice, Choir Lady Anna, Chaotic Wisp]
+Result:    FAIL
+Detail:    None of expect_log_any matched: ["Union summoned P0: Choir Lead Amber", "Attack P\\d\\(\\d+,\\d+\\)\"Choir\\ Lead\\ Amber\"", "MSG:.*Choir"]
+Turns:     19  |  AI timeouts: 0
+===

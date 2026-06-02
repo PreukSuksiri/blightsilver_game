@@ -1,0 +1,78 @@
+=== Battle of PTA Bake Sale Brawl ===
+Battle started: 2026-06-01 20:05:52.106
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Rocket-Peacock-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Rocket-Peacock-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Rocket Peacock (Union)  [setup: Chaotic Wisp]
+Ability:      POST_BATTLE_COIN_FLIP_DESTROY — After this card battles, select 1 foe’s card, flip a coin. Head : destroy that card
+Setup role:   t2_union
+Verifies:
+  - Ability: "Rocket Peacock" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Rocket Peacock, Attack P\d\(\d+,\d+\)"Rocket\ Peacock", MSG:.*Rocket, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Rocket Peacock — summon logged and/or union attacks with ATK=150.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Rocket Peacock
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Accident, Radar
+P1 Tech hand: Resurrection, Accident, Prayer
+P0:   [C:Cany][T:Hard][C:Succ][T:Bait][C:Saw ]
+      [C:Hand][  — ][  — ][T:Echo][T:Snar]
+      [T:Red ][  — ][  — ][  — ][C:Spea]
+      [C:Gree][  — ][  — ][  — ][C:Soni]
+      [T:Hypn][C:Shep][C:Gamm][C:Sate][C:Tomb]
+P1:   [C:Need][  — ][C:Kiyo][  — ][C:Foul]
+      [C:Scyt][  — ][C:Stre][  — ][C:Pyro]
+      [C:Blad][T:Brai][C:Chao][C:Joan][C:Yaks]
+      [T:Acid][T:Pepp][  — ][T:Alar][T:Blac]
+      [C:Fera][  — ][T:Bait][  — ][C:Dark]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:06.799] Crystals: P0 5000 → 4200 (-800)  [union]
+[00:06.839] Revealed: P0 (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:06.839] Union summoned P0: "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos} from "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | face-down}
+[00:06.839] MSG: Player 1 summoned [Greater Succubus] using: "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | face-down}
+[00:06.839] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.842] AI Player 0 wins
+[00:06.842] Final crystals — P0: 4200  P1: 5000  |  Turns: 1
+[00:06.842] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_pta_bake_sale_brawl_2026-06-01_20-05-52_106.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Rocket-Peacock-002
+Highlight: Rocket Peacock (Union)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

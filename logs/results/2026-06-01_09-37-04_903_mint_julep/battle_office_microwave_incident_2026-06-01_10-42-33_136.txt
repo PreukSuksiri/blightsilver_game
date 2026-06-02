@@ -1,0 +1,515 @@
+=== Battle of Office Microwave Incident ===
+Battle started: 2026-06-01 10:42:33.136
+Game Session of Mint Julep (started 2026-06-01 09:37:04.903)
+=== Card E2E Test ===
+Scenario ID:  E2E-Death-Knight-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Death-Knight-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Death Knight (Character)  [setup: Dark Blob, Chaotic Wisp]
+Ability:      BOOST_PER_TYPED_CARD_ON_FIELD — +5 ATK per Chaos card on your side of the field
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Death Knight" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Death Knight
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Death\ Knight".*ATK=70\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +5 ATK per Chaos card. Companion=Dark Blob (CHAOS, DEF=50, P1 avoids). ATK=70 on turn 2.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Death Knight
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Death Knight, (2,1) Dark Blob
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Siege Cannon, Accident
+P1 Tech hand: Great Diplomacy, Release Mutagen, Radar
+P0:   [C:Need][  — ][  — ][T:Snar][  — ]
+      [  — ][C:Moon][C:Vamp][C:Dark][  — ]
+      [T:Hard][C:Dark][C:Deat][C:Pony][T:Expl]
+      [  — ][C:Plan][C:Heav][C:Flam][C:Aeri]
+      [  — ][T:Acid][C:Immo][  — ][  — ]
+P1:   [T:Deco][C:Fera][C:Deat][C:Big ][C:Demo]
+      [T:Red ][  — ][  — ][  — ][T:Self]
+      [C:Deat][  — ][C:Chao][  — ][T:Spik]
+      [C:Moon][  — ][  — ][  — ][T:Host]
+      [T:Foul][C:Gamm][  — ][C:Stre][C:Armo]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:06.807] Crystals: P0 5000 → 3500 (-1500)  [union]
+[00:06.844] Revealed: P0 (1,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[00:06.844] Union summoned P0: "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} from "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down}, "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos | face-down}
+[00:06.844] MSG: Player 1 summoned [Lord of Terror] using: "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down}, "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos | face-down}
+[00:10.215] Mode selected P0: ATTACK
+[00:10.220] Attack phase P0: 2 attack(s) available
+[00:10.220] MSG: Player 1: tap a character to attack.
+[00:10.513] AI0 attack decision: (1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → (0,0) "Decoy Puppet" {cost 100}
+[00:10.847] Revealed: P1 (0,0) "Decoy Puppet" {cost 100}
+[00:10.847] Dice rolled: 1
+[00:11.160] MSG: Trap triggered: Decoy Puppet!
+[00:15.214] Crystals: P1 5000 → 4900 (-100)  [trap cost]
+[00:16.606] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[00:16.610] Trap: "Decoy Puppet" triggered  P0(1,2)→P1(0,0)
+[00:16.610] Anim: 3D  (attacker survives)
+[00:19.118] Turn ended  P0  |  Crystals P0=3500 P1=4900
+
+--- Turn 2  |  Player 1  |  Crystals P0=3500 P1=4900 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Lord][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:19.743] Mode selected P1: ATTACK
+[00:19.748] Attack phase P1: 2 attack(s) available
+[00:19.748] MSG: Player 2: tap a character to attack.
+[00:20.029] AI1 attack decision: (0,2)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos | face-down} → (2,2) (dead-end)
+[00:20.375] Revealed: P1 (0,2) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[00:20.375] Dice rolled: 1
+[00:20.389] MSG: Nothing happens — Dead End.
+[00:23.719] Attack P1(0,2)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos} → P0(2,2)(empty)  Dice=1  → DEAD_END
+[00:23.719] Anim: 3F  (blank slot)
+[00:24.018] Turn ended  P1  |  Crystals P0=3500 P1=4900
+
+--- Turn 3  |  Player 0  |  Crystals P0=3500 P1=4900 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][Lord][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][Deat][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:24.616] Mode selected P0: ATTACK
+[00:24.622] Attack phase P0: 2 attack(s) available
+[00:24.622] MSG: Player 1: tap a character to attack.
+[00:24.912] AI0 attack decision: (1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → (0,2) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[00:25.215] Dice rolled: 5
+[00:25.263] MSG: Lord of Terror wins!
+[00:29.906] Crystals: P1 4900 → 4050 (-850)  [battle]
+[00:31.305] Attack P0(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P1(0,2)"Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}  Dice=5  ATK=150 vs DEF=65  → WIN
+[00:31.305] Anim: 3A  △ P1(0,2)
+[00:31.305] Card destroyed  P1 (0,2) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[00:31.798] Mode selected P0: ATTACK
+[00:31.802] Attack phase P0: 1 attack(s) available
+[00:31.802] MSG: Player 1: tap a character to attack.
+[00:32.097] AI0 attack decision: (1,1)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (3,0) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic | face-down}
+[00:32.452] Revealed: P0 (1,1) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:32.500] Revealed: P1 (3,0) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:32.500] Dice rolled: 1
+[00:32.504] MSG: Moon Tribe Twin Blader wins!
+[00:37.122] Crystals: P1 4050 → 3750 (-300)  [battle]
+[00:38.520] Attack P0(1,1)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(3,0)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=1  ATK=30 vs DEF=25  → WIN
+[00:38.520] Anim: 3A  △ P1(3,0)
+[00:38.520] Card destroyed  P1 (3,0) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[00:38.576] Coin flip: Tails
+[00:41.256] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[00:41.770] Turn ended  P0  |  Crystals P0=3500 P1=3750
+
+--- Turn 4  |  Player 1  |  Crystals P0=3500 P1=3750 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][Moon][Lord][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:42.389] Mode selected P1: ATTACK
+[00:42.395] Attack phase P1: 2 attack(s) available
+[00:42.396] MSG: Player 2: tap a character to attack.
+[00:42.687] AI1 attack decision: (4,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima | face-down} → (1,1) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:43.034] Revealed: P1 (4,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:43.034] Dice rolled: 3
+[00:43.038] MSG: Street Rogue wins!
+[00:47.698] Crystals: P0 3500 → 3200 (-300)  [battle]
+[00:49.097] Attack P1(4,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P0(1,1)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=3  ATK=25 vs DEF=20  → WIN
+[00:49.097] Anim: 3A  △ P0(1,1)
+[00:49.097] Card destroyed  P0 (1,1) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:49.403] Turn ended  P1  |  Crystals P0=3200 P1=3750
+
+--- Turn 5  |  Player 0  |  Crystals P0=3200 P1=3750 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Lord][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][Stre][  ? ]
+[00:50.006] Mode selected P0: ATTACK
+[00:50.012] Attack phase P0: 2 attack(s) available
+[00:50.013] MSG: Player 1: tap a character to attack.
+[00:50.313] AI0 attack decision: (1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → (4,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:50.622] Dice rolled: 5
+[00:50.673] MSG: Lord of Terror wins!
+[00:55.322] Crystals: P1 3750 → 3400 (-350)  [battle]
+[00:56.720] Attack P0(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P1(4,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=5  ATK=150 vs DEF=20  → WIN
+[00:56.720] Anim: 3A  △ P1(4,3)
+[00:56.720] Card destroyed  P1 (4,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:57.223] Mode selected P0: ATTACK
+[00:57.228] Attack phase P0: 1 attack(s) available
+[00:57.229] MSG: Player 1: tap a character to attack.
+[00:57.531] AI0 attack decision: (1,3)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (2,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:57.874] Revealed: P0 (1,3) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:57.903] Revealed: P1 (2,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:57.903] Dice rolled: 1
+[01:02.664] Crystals: P0 3200 → 2900 (-300)  [battle]
+[01:04.063] Attack P0(1,3)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P1(2,0)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}  Dice=1  ATK=15 vs DEF=50  → LOSE
+[01:04.063] Anim: 3B  △ P0(1,3)
+[01:04.063] Card destroyed  P0 (1,3) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[01:04.561] Turn ended  P0  |  Crystals P0=2900 P1=3400
+
+--- Turn 6  |  Player 1  |  Crystals P0=2900 P1=3400 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Deat][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:05.170] Mode selected P1: ATTACK
+[01:05.177] Attack phase P1: 2 attack(s) available
+[01:05.177] MSG: Player 2: tap a character to attack.
+[01:05.456] AI1 attack decision: (2,0)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → (0,2) (dead-end)
+[01:05.755] Dice rolled: 2
+[01:05.784] MSG: Nothing happens — Dead End.
+[01:09.163] Attack P1(2,0)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P0(0,2)(empty)  Dice=2  → DEAD_END
+[01:09.163] Anim: 3F  (blank slot)
+[01:09.454] MSG: Death Cobra: Venom applied to Lord of Terror.
+[01:09.460] Turn ended  P1  |  Crystals P0=2900 P1=3400
+
+--- Turn 7  |  Player 0  |  Crystals P0=2900 P1=3400 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Deat][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:10.057] Mode selected P0: ATTACK
+[01:10.063] Attack phase P0: 2 attack(s) available
+[01:10.063] MSG: Player 1: tap a character to attack.
+[01:10.355] AI0 attack decision: (1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → (2,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[01:10.654] Dice rolled: 4
+[01:10.701] MSG: Lord of Terror wins!
+[01:15.355] Crystals: P1 3400 → 2500 (-900)  [battle]
+[01:16.753] Attack P0(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → P1(2,0)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}  Dice=4  ATK=150 vs DEF=50  → WIN
+[01:16.753] Anim: 3A  △ P1(2,0)
+[01:16.753] Card destroyed  P1 (2,0) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[01:19.268] Turn ended  P0  |  Crystals P0=2900 P1=2500
+
+--- Turn 8  |  Player 1  |  Crystals P0=2900 P1=2500 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:19.885] Mode selected P1: ATTACK
+[01:19.890] Attack phase P1: 2 attack(s) available
+[01:19.890] MSG: Player 2: tap a character to attack.
+[01:20.180] AI1 attack decision: (0,1)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos | face-down} → (0,1) (dead-end)
+[01:20.526] Revealed: P1 (0,1) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:20.526] Dice rolled: 1
+[01:20.536] MSG: Nothing happens — Dead End.
+[01:23.904] Attack P1(0,1)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P0(0,1)(empty)  Dice=1  → DEAD_END
+[01:23.904] Anim: 3F  (blank slot)
+[01:24.210] Turn ended  P1  |  Crystals P0=2900 P1=2500
+
+--- Turn 9  |  Player 0  |  Crystals P0=2900 P1=2500 ---
+P0:   [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][Fera][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:24.812] Mode selected P0: ATTACK
+[01:24.816] Attack phase P0: 2 attack(s) available
+[01:24.816] MSG: Player 1: tap a character to attack.
+[01:25.118] AI0 attack decision: (1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → (0,1) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:25.426] Dice rolled: 5
+[01:25.478] MSG: Lord of Terror wins!
+[01:30.097] Crystals: P1 2500 → 2100 (-400)  [battle]
+[01:31.497] Attack P0(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → P1(0,1)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=5  ATK=150 vs DEF=25  → WIN
+[01:31.497] Anim: 3A  △ P1(0,1)
+[01:31.497] Card destroyed  P1 (0,1) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:32.001] Mode selected P0: ATTACK
+[01:32.007] Attack phase P0: 1 attack(s) available
+[01:32.008] MSG: Player 1: tap a character to attack.
+[01:32.306] AI0 attack decision: (0,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down} → (4,0) "Foul Gas" {cost 0}
+[01:32.686] Revealed: P0 (0,0) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[01:32.709] Revealed: P1 (4,0) "Foul Gas" {cost 0}
+[01:32.709] Dice rolled: 1
+[01:32.967] MSG: Trap triggered: Foul Gas!
+[01:37.064] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[01:37.069] Trap: "Foul Gas" triggered  P0(0,0)→P1(4,0)
+[01:37.069] Anim: 3D  (attacker survives)
+[01:37.560] Turn ended  P0  |  Crystals P0=2900 P1=2100
+
+--- Turn 10  |  Player 1  |  Crystals P0=2900 P1=2100 ---
+P0:   [Need][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[01:38.155] Mode selected P1: ATTACK
+[01:38.162] Attack phase P1: 2 attack(s) available
+[01:38.162] MSG: Player 2: tap a character to attack.
+[01:38.447] AI1 attack decision: (0,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (0,0) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[01:38.782] Revealed: P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:38.782] Dice rolled: 2
+[01:38.786] MSG: Big Thug wins!
+[01:43.423] Crystals: P0 2900 → 2700 (-200)  [battle]
+[01:44.821] Attack P1(0,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(0,0)"Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}  Dice=2  ATK=40 vs DEF=10  → WIN
+[01:44.821] Anim: 3A  △ P0(0,0)
+[01:44.821] Card destroyed  P0 (0,0) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[01:45.118] Turn ended  P1  |  Crystals P0=2700 P1=2100
+
+--- Turn 11  |  Player 0  |  Crystals P0=2700 P1=2100 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][Big ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[01:45.717] Mode selected P0: ATTACK
+[01:45.723] Attack phase P0: 2 attack(s) available
+[01:45.723] MSG: Player 1: tap a character to attack.
+[01:46.014] AI0 attack decision: (1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:46.313] Dice rolled: 1
+[01:46.360] MSG: Lord of Terror wins!
+[01:51.023] Crystals: P1 2100 → 1700 (-400)  [battle]
+[01:52.422] Attack P0(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → P1(0,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=1  ATK=150 vs DEF=35  → WIN
+[01:52.422] Anim: 3A  △ P1(0,3)
+[01:52.422] Card destroyed  P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:52.917] Mode selected P0: ATTACK
+[01:52.922] Attack phase P0: 1 attack(s) available
+[01:52.923] MSG: Player 1: tap a character to attack.
+[01:53.213] AI0 attack decision: (2,1)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | face-down} → (1,0) "Red Card" {cost 0}
+[01:53.554] Revealed: P0 (2,1) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[01:53.584] Revealed: P1 (1,0) "Red Card" {cost 0}
+[01:53.584] Dice rolled: 3
+[01:53.832] MSG: Trap triggered: Red Card!
+[01:57.989] Coin flip: Heads, Heads
+[02:00.668] MSG: Red Card: Heads, Heads.
+[02:00.669] MSG: Both heads! Dark Blob cannot attack next turn!
+[02:00.673] Trap: "Red Card" triggered  P0(2,1)→P1(1,0)
+[02:00.673] Anim: 3D  (attacker survives)
+[02:01.180] Turn ended  P0  |  Crystals P0=2700 P1=1700
+
+--- Turn 12  |  Player 1  |  Crystals P0=2700 P1=1700 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][Dark][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[02:01.801] Mode selected P1: ATTACK
+[02:01.807] Attack phase P1: 2 attack(s) available
+[02:01.807] MSG: Player 2: tap a character to attack.
+[02:02.101] AI1 attack decision: (4,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature | face-down} → (2,1) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | cannot-atk≤T12}
+[02:02.449] Revealed: P1 (4,4) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[02:02.450] Dice rolled: 1
+[02:02.454] MSG: Armored Rhino wins!
+[02:07.101] Crystals: P0 2700 → 2200 (-500)  [battle]
+[02:08.501] Attack P1(4,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P0(2,1)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | cannot-atk≤T12}  Dice=1  ATK=60 vs DEF=50  → WIN
+[02:08.502] Anim: 3A  △ P0(2,1)
+[02:08.502] Card destroyed  P0 (2,1) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | cannot-atk≤T12}
+[02:08.798] Turn ended  P1  |  Crystals P0=2200 P1=1700
+
+--- Turn 13  |  Player 0  |  Crystals P0=2200 P1=1700 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][Armo]
+[02:09.392] Mode selected P0: ATTACK
+[02:09.399] Attack phase P0: 2 attack(s) available
+[02:09.399] MSG: Player 1: tap a character to attack.
+[02:09.691] AI0 attack decision: (1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → (4,4) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[02:09.992] Dice rolled: 5
+[02:10.042] MSG: Lord of Terror wins!
+[02:14.684] Crystals: P1 1700 → 980 (-720)  [battle]
+[02:16.082] Attack P0(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → P1(4,4)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}  Dice=5  ATK=150 vs DEF=85  → WIN
+[02:16.082] Anim: 3A  △ P1(4,4)
+[02:16.082] Card destroyed  P1 (4,4) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[02:18.590] Turn ended  P0  |  Crystals P0=2200 P1=980
+
+--- Turn 14  |  Player 1  |  Crystals P0=2200 P1=980 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:19.189] Mode selected P1: ATTACK
+[02:19.194] Attack phase P1: 2 attack(s) available
+[02:19.195] MSG: Player 2: tap a character to attack.
+[02:19.485] AI1 attack decision: (0,4)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | face-down} → (0,3) "Snare Trap" {cost 500}
+[02:19.825] Revealed: P1 (0,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[02:19.855] Revealed: P0 (0,3) "Snare Trap" {cost 500}
+[02:19.855] Dice rolled: 2
+[02:20.099] MSG: Trap triggered: Snare Trap!
+[02:24.193] Crystals: P0 2200 → 1700 (-500)  [trap cost]
+[02:25.584] MSG: Snare Trap: Demon Spawn's effect nullified until end of next turn!
+[02:25.589] Trap: "Snare Trap" triggered  P1(0,4)→P0(0,3)
+[02:25.590] Anim: 3D  (attacker survives)
+[02:25.890] Turn ended  P1  |  Crystals P0=1700 P1=980
+
+--- Turn 15  |  Player 0  |  Crystals P0=1700 P1=980 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][Demo]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:26.484] Mode selected P0: ATTACK
+[02:26.492] Attack phase P0: 2 attack(s) available
+[02:26.493] MSG: Player 1: tap a character to attack.
+[02:26.783] AI0 attack decision: (1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → (0,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | nullified≤T15}
+[02:27.083] Dice rolled: 3
+[02:27.131] MSG: Lord of Terror wins!
+[02:31.777] Crystals: P1 980 → 580 (-400)  [battle]
+[02:33.174] Attack P0(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → P1(0,4)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | nullified≤T15}  Dice=3  ATK=150 vs DEF=30  → WIN
+[02:33.174] Anim: 3A  △ P1(0,4)
+[02:33.174] Card destroyed  P1 (0,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | nullified≤T15}
+[02:35.681] Turn ended  P0  |  Crystals P0=1700 P1=580
+
+--- Turn 16  |  Player 1  |  Crystals P0=1700 P1=580 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:36.281] Mode selected P1: ATTACK
+[02:36.287] Attack phase P1: 2 attack(s) available
+[02:36.287] MSG: Player 2: tap a character to attack.
+[02:36.576] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (3,2) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}
+[02:36.912] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:36.938] Revealed: P0 (3,2) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:36.938] Dice rolled: 1
+[02:36.942] MSG: Both cards are destroyed!
+[02:41.477] Crystals: P1 580 → 480 (-100)  [battle]
+[02:42.868] Crystals: P0 1700 → 1400 (-300)  [battle]
+[02:44.256] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(3,2)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=1  ATK=20 vs DEF=20  → TIE
+[02:44.256] Anim: 3C  △ P1(2,2) + △ P0(3,2)
+[02:44.256] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:44.256] Card destroyed  P0 (3,2) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:44.552] Turn ended  P1  |  Crystals P0=1400 P1=480
+
+--- Turn 17  |  Player 0  |  Crystals P0=1400 P1=480 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Lord][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:45.150] Mode selected P0: ATTACK
+[02:45.156] Attack phase P0: 2 attack(s) available
+[02:45.157] MSG: Player 1: tap a character to attack.
+[02:45.451] AI0 attack decision: (1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → (4,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}
+[02:45.790] Revealed: P1 (4,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[02:45.790] Dice rolled: 5
+[02:45.829] MSG: Lord of Terror wins!
+[02:50.469] Crystals: P1 480 → 260 (-220)  [battle]
+[02:51.871] Attack P0(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos | flags:venom} → P1(4,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}  Dice=5  ATK=150 vs DEF=15  → WIN
+[02:51.871] Anim: 3A  △ P1(4,1)
+[02:51.871] Card destroyed  P1 (4,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+
+=== GAME OVER ===
+[02:51.873] AI Player 0 wins
+[02:51.873] Reason: all_destroyed
+[02:51.873] Final crystals — P0: 1400  P1: 260  |  Turns: 17
+[02:51.873] Log saved to: res://logs/results/2026-06-01_09-37-04_903_mint_julep/battle_office_microwave_incident_2026-06-01_10-42-33_136.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Death-Knight-002
+Highlight: Death Knight (Character)  [setup: Dark Blob, Chaotic Wisp]
+Result:    FAIL
+Detail:    Regex not matched: Attack P0\(2,2\)"Death\ Knight".*ATK=70\s
+Turns:     17  |  AI timeouts: 0
+===

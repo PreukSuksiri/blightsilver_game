@@ -1,0 +1,523 @@
+=== Battle of Sticky Vending Machine ===
+Battle started: 2026-06-01 19:24:15.482
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Red-Card-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Red-Card-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Red Card (Trap)  [setup: Ox Patrol]
+Ability:      COIN_FLIP_2_LOCK_ATTACKER — Flip 2 coin, if head, that unit cannot attack next turn
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Red Card" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Red Card
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Red\ Card"
+  - Log must contain at least one of: Trap triggered, "Red Card" triggered, Trap triggered: Red Card, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Red Card revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Red Card
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, War Supply, Tease
+P1 Tech hand: Release Mutagen, Accident, Tease
+P0:   [  — ][  — ][  — ][  — ][T:Curs]
+      [T:Flam][C:Lazy][C:Armo][C:Shot][  — ]
+      [  — ][C:Leec][C:Ox P][C:Snip][T:Red ]
+      [  — ][C:Tiny][C:Mine][C:Gamm][  — ]
+      [  — ][  — ][T:Bunk][  — ][T:Self]
+P1:   [  — ][T:Flam][C:Succ][  — ][T:Self]
+      [C:Bat ][C:Jaco][C:Skel][C:Claw][  — ]
+      [  — ][C:Demo][T:Red ][C:Stri][  — ]
+      [T:Bunk][C:Gran][C:Shep][C:Chao][T:Foul]
+      [  — ][T:Hypn][  — ][  — ][T:Acid]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:05.336] Mode selected P0: ATTACK
+[00:05.339] Attack phase P0: 2 attack(s) available
+[00:05.339] MSG: Player 1: tap a character to attack.
+[00:05.633] AI0 attack decision: (1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down} → (0,4) "Self-destruct" {cost 0}
+[00:05.966] Revealed: P0 (1,1) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[00:06.289] Coin flip: Heads
+[00:09.081] Revealed: P1 (0,4) "Self-destruct" {cost 0}
+[00:09.081] Dice rolled: 4
+[00:09.343] MSG: Trap triggered: Self-destruct!
+[00:13.445] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[00:13.448] Trap: "Self-destruct" triggered  P0(1,1)→P1(0,4)
+[00:13.448] Anim: 3D  (attacker survives)
+[00:13.834] AI1 target chosen: (-1,-1)
+[00:13.934] Mode selected P0: ATTACK
+[00:13.935] Attack phase P0: 1 attack(s) available
+[00:13.936] MSG: Player 1: tap a character to attack.
+[00:14.233] AI0 attack decision: (1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature | face-down} → (2,4) (dead-end)
+[00:14.572] Revealed: P0 (1,2) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[00:14.572] Dice rolled: 4
+[00:14.587] MSG: Nothing happens — Dead End.
+[00:17.903] Attack P0(1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(2,4)(empty)  Dice=4  → DEAD_END
+[00:17.903] Anim: 3F  (blank slot)
+[00:18.408] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Lazy][Armo][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:20.522] Crystals: P1 5000 → 4200 (-800)  [union]
+[00:20.561] Revealed: P1 (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:20.561] Union summoned P1: "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos} from "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down}
+[00:20.562] MSG: Player 2 summoned [Greater Succubus] using: "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down}
+[00:23.764] Crystals: P1 4200 → 4150 (-50)  [skip tax]
+[00:23.764] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:25.151] Turn ended  P1  |  Crystals P0=5000 P1=4150
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=4150 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Lazy][Armo][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][Grea][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:25.755] Mode selected P0: ATTACK
+[00:25.763] Attack phase P0: 2 attack(s) available
+[00:25.763] MSG: Player 1: tap a character to attack.
+[00:26.062] AI0 attack decision: (1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:26.425] Coin flip: Tails
+[00:29.196] MSG: Lazy Troll flips tails — too lazy to attack! It has to wait.
+[00:29.201] Attack aborted
+[00:30.396] AI0 attack decision: (1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:30.696] Dice rolled: 3
+[00:30.742] MSG: Armored Rhino wins!
+[00:35.404] Attack P0(1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(0,2)"Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}  Dice=3  ATK=60 vs DEF=50  → WIN
+[00:35.404] Anim: 3A  △ P1(0,2)
+[00:35.404] Card destroyed  P1 (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:35.910] Turn ended  P0  |  Crystals P0=5000 P1=4150
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=4150 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Lazy][Armo][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:36.514] Mode selected P1: ATTACK
+[00:36.520] Attack phase P1: 2 attack(s) available
+[00:36.520] MSG: Player 2: tap a character to attack.
+[00:36.817] AI1 attack decision: (1,1)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down} → (1,3) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down}
+[00:37.164] Revealed: P1 (1,1) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[00:37.190] Revealed: P0 (1,3) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:37.190] Dice rolled: 4
+[00:41.930] Crystals: P1 4150 → 3800 (-350)  [battle]
+[00:43.327] Attack P1(1,1)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P0(1,3)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}  Dice=4  ATK=15 vs DEF=25  → LOSE
+[00:43.328] Anim: 3B  △ P1(1,1)
+[00:43.328] Card destroyed  P1 (1,1) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[00:43.624] Turn ended  P1  |  Crystals P0=5000 P1=3800
+
+--- Turn 5  |  Player 0  |  Crystals P0=5000 P1=3800 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Lazy][Armo][Shot][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:44.222] Mode selected P0: ATTACK
+[00:44.228] Attack phase P0: 2 attack(s) available
+[00:44.228] MSG: Player 1: tap a character to attack.
+[00:44.521] AI0 attack decision: (1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → (1,0) (dead-end)
+[00:44.867] Coin flip: Tails
+[00:47.628] MSG: Lazy Troll flips tails — too lazy to attack! It has to wait.
+[00:47.632] Attack aborted
+[00:48.855] AI0 attack decision: (1,3)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → (1,0) (dead-end)
+[00:49.164] Dice rolled: 1
+[00:49.190] MSG: Nothing happens — Dead End.
+[00:52.569] Attack P0(1,3)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature} → P1(1,0)(empty)  Dice=1  → DEAD_END
+[00:52.570] Anim: 3F  (blank slot)
+[00:53.068] Turn ended  P0  |  Crystals P0=5000 P1=3800
+
+--- Turn 6  |  Player 1  |  Crystals P0=5000 P1=3800 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Lazy][Armo][Shot][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[00:53.661] Mode selected P1: ATTACK
+[00:53.664] Attack phase P1: 2 attack(s) available
+[00:53.664] MSG: Player 2: tap a character to attack.
+[00:53.959] AI1 attack decision: (1,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (1,3) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[00:54.293] Revealed: P1 (1,2) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:54.293] Dice rolled: 2
+[00:54.298] MSG: Skeleton Lancer wins!
+[00:58.934] Crystals: P0 5000 → 4100 (-900)  [battle]
+[01:00.333] Attack P1(1,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P0(1,3)"Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}  Dice=2  ATK=45 vs DEF=25  → WIN
+[01:00.333] Anim: 3A  △ P0(1,3)
+[01:00.333] Card destroyed  P0 (1,3) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[01:00.631] Turn ended  P1  |  Crystals P0=4100 P1=3800
+
+--- Turn 7  |  Player 0  |  Crystals P0=4100 P1=3800 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Lazy][Armo][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][Skel][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[01:01.222] Mode selected P0: ATTACK
+[01:01.230] Attack phase P0: 2 attack(s) available
+[01:01.230] MSG: Player 1: tap a character to attack.
+[01:01.521] AI0 attack decision: (1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → (1,2) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:01.874] Coin flip: Heads
+[01:04.625] Dice rolled: 4
+[01:04.637] MSG: Lazy Troll wins!
+[01:09.335] Crystals: P1 3800 → 3500 (-300)  [battle]
+[01:10.733] Attack P0(1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → P1(1,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=4  ATK=120 vs DEF=5  → WIN
+[01:10.734] Anim: 3A  △ P1(1,2)
+[01:10.734] Card destroyed  P1 (1,2) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:11.234] Mode selected P0: ATTACK
+[01:11.240] Attack phase P0: 1 attack(s) available
+[01:11.241] MSG: Player 1: tap a character to attack.
+[01:11.541] AI0 attack decision: (1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (1,4) (dead-end)
+[01:11.851] Dice rolled: 3
+[01:11.879] MSG: Nothing happens — Dead End.
+[01:15.262] Attack P0(1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(1,4)(empty)  Dice=3  → DEAD_END
+[01:15.262] Anim: 3F  (blank slot)
+[01:15.771] Turn ended  P0  |  Crystals P0=4100 P1=3500
+
+--- Turn 8  |  Player 1  |  Crystals P0=4100 P1=3500 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Lazy][Armo][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[01:16.375] Mode selected P1: ATTACK
+[01:16.382] Attack phase P1: 2 attack(s) available
+[01:16.382] MSG: Player 2: tap a character to attack.
+[01:16.680] AI1 attack decision: (1,3)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down} → (0,2) (dead-end)
+[01:17.027] Revealed: P1 (1,3) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:17.027] Dice rolled: 5
+[01:17.041] MSG: Nothing happens — Dead End.
+[01:20.402] Attack P1(1,3)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(0,2)(empty)  Dice=5  → DEAD_END
+[01:20.402] Anim: 3F  (blank slot)
+[01:20.708] Turn ended  P1  |  Crystals P0=4100 P1=3500
+
+--- Turn 9  |  Player 0  |  Crystals P0=4100 P1=3500 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Lazy][Armo][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Claw][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+[01:21.313] Mode selected P0: ATTACK
+[01:21.319] Attack phase P0: 2 attack(s) available
+[01:21.319] MSG: Player 1: tap a character to attack.
+[01:21.621] AI0 attack decision: (1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (1,3) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:21.930] Dice rolled: 5
+[01:21.940] MSG: Armored Rhino wins!
+[01:26.622] Crystals: P1 3500 → 3320 (-180)  [battle]
+[01:28.021] Attack P0(1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(1,3)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=5  ATK=60 vs DEF=10  → WIN
+[01:28.021] Anim: 3A  △ P1(1,3)
+[01:28.021] Card destroyed  P1 (1,3) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:28.514] Mode selected P0: ATTACK
+[01:28.520] Attack phase P0: 1 attack(s) available
+[01:28.520] MSG: Player 1: tap a character to attack.
+[01:28.813] AI0 attack decision: (1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → (4,4) "Acid Trap Hole" {cost 0}
+[01:29.167] Coin flip: Heads
+[01:31.944] Revealed: P1 (4,4) "Acid Trap Hole" {cost 0}
+[01:31.944] Dice rolled: 5
+[01:32.211] MSG: Trap triggered: Acid Trap Hole!
+[01:36.314] Crystals: P0 4100 → 4050 (-50)  [trap]
+[01:37.696] MSG: Acid Trap Hole: Player 1 loses 50 Crystals!
+[01:37.701] Trap: "Acid Trap Hole" triggered  P0(1,1)→P1(4,4)
+[01:37.702] Anim: 3D  (attacker survives)
+[01:38.201] Turn ended  P0  |  Crystals P0=4050 P1=3320
+
+--- Turn 10  |  Player 1  |  Crystals P0=4050 P1=3320 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Lazy][Armo][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:38.800] Mode selected P1: ATTACK
+[01:38.806] Attack phase P1: 2 attack(s) available
+[01:38.806] MSG: Player 2: tap a character to attack.
+[01:39.096] AI1 attack decision: (2,1)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | face-down} → (0,0) (dead-end)
+[01:39.438] Revealed: P1 (2,1) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:39.438] Dice rolled: 3
+[01:39.452] MSG: Nothing happens — Dead End.
+[01:42.828] Attack P1(2,1)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P0(0,0)(empty)  Dice=3  → DEAD_END
+[01:42.828] Anim: 3F  (blank slot)
+[01:43.118] Turn ended  P1  |  Crystals P0=4050 P1=3320
+
+--- Turn 11  |  Player 0  |  Crystals P0=4050 P1=3320 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Lazy][Armo][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Demo][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:43.710] Mode selected P0: ATTACK
+[01:43.716] Attack phase P0: 2 attack(s) available
+[01:43.716] MSG: Player 1: tap a character to attack.
+[01:44.009] AI0 attack decision: (1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → (2,1) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:44.355] Coin flip: Tails
+[01:47.096] MSG: Lazy Troll flips tails — too lazy to attack! It has to wait.
+[01:47.100] Attack aborted
+[01:48.321] AI0 attack decision: (1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (2,1) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:48.629] Dice rolled: 3
+[01:48.640] MSG: Armored Rhino wins!
+[01:53.330] Crystals: P1 3320 → 2920 (-400)  [battle]
+[01:54.728] Attack P0(1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(2,1)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}  Dice=3  ATK=60 vs DEF=30  → WIN
+[01:54.729] Anim: 3A  △ P1(2,1)
+[01:54.729] Card destroyed  P1 (2,1) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:55.236] Turn ended  P0  |  Crystals P0=4050 P1=2920
+
+--- Turn 12  |  Player 1  |  Crystals P0=4050 P1=2920 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Lazy][Armo][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[01:55.823] Mode selected P1: ATTACK
+[01:55.830] Attack phase P1: 2 attack(s) available
+[01:55.830] MSG: Player 2: tap a character to attack.
+[01:56.129] AI1 attack decision: (2,3)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down} → (1,0) "Flame Trap" {cost 250}
+[01:56.480] Revealed: P1 (2,3) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[01:56.509] Revealed: P0 (1,0) "Flame Trap" {cost 250}
+[01:56.509] Dice rolled: 5
+[01:56.796] MSG: Trap triggered: Flame Trap!
+[02:00.881] Crystals: P0 4050 → 3800 (-250)  [trap cost]
+[02:02.271] MSG: Spike Trap: Striker Comet permanently loses 10 ATK!
+[02:02.276] Trap: "Flame Trap" triggered  P1(2,3)→P0(1,0)
+[02:02.277] Anim: 3D  (attacker survives)
+[02:02.571] MSG: Striker Comet self-destructs at end of turn!
+[02:02.573] Crystals: P1 2920 → 2720 (-200)  [card lost]
+[02:02.576] Card destroyed  P1 (2,3) "Striker Comet" {Unit ATK15 DEF25 | cost 200 | affinity Cosmic | base 15/25 | flags:expose_destroy_pending | attacked}
+[02:02.580] Turn ended  P1  |  Crystals P0=3800 P1=2720
+
+--- Turn 13  |  Player 0  |  Crystals P0=3800 P1=2720 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Lazy][Armo][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:03.146] Mode selected P0: ATTACK
+[02:03.153] Attack phase P0: 2 attack(s) available
+[02:03.153] MSG: Player 1: tap a character to attack.
+[02:03.455] AI0 attack decision: (1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → (3,4) "Foul Gas" {cost 0}
+[02:03.816] Coin flip: Tails
+[02:06.580] MSG: Lazy Troll flips tails — too lazy to attack! It has to wait.
+[02:06.585] Attack aborted
+[02:07.800] AI0 attack decision: (1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (3,4) "Foul Gas" {cost 0}
+[02:08.143] Revealed: P1 (3,4) "Foul Gas" {cost 0}
+[02:08.143] Dice rolled: 2
+[02:08.424] MSG: Trap triggered: Foul Gas!
+[02:12.543] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[02:12.548] Trap: "Foul Gas" triggered  P0(1,2)→P1(3,4)
+[02:12.548] Anim: 3D  (attacker survives)
+[02:13.044] Turn ended  P0  |  Crystals P0=3800 P1=2720
+
+--- Turn 14  |  Player 1  |  Crystals P0=3800 P1=2720 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][Lazy][Armo][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:13.652] Mode selected P1: ATTACK
+[02:13.659] Attack phase P1: 2 attack(s) available
+[02:13.659] MSG: Player 2: tap a character to attack.
+[02:13.958] AI1 attack decision: (3,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima | face-down} → (0,4) "Cursed Reflection" {cost 500}
+[02:14.306] Revealed: P1 (3,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:14.335] Revealed: P0 (0,4) "Cursed Reflection" {cost 500}
+[02:14.335] Dice rolled: 2
+[02:14.582] MSG: Trap triggered: Cursed Reflection!
+[02:18.669] Crystals: P0 3800 → 3300 (-500)  [trap cost]
+[02:20.059] MSG: Cursed Reflection: Grand Fort Mauler's ATK and DEF swapped until end of turn!
+[02:20.064] Trap: "Cursed Reflection" triggered  P1(3,1)→P0(0,4)
+[02:20.064] Anim: 3D  (attacker survives)
+[02:20.364] Turn ended  P1  |  Crystals P0=3300 P1=2720
+
+--- Turn 15  |  Player 0  |  Crystals P0=3300 P1=2720 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Lazy][Armo][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][Gran][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:20.958] Mode selected P0: ATTACK
+[02:20.966] Attack phase P0: 2 attack(s) available
+[02:20.966] MSG: Player 1: tap a character to attack.
+[02:21.259] AI0 attack decision: (1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (3,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:21.558] Dice rolled: 5
+[02:21.569] MSG: Armored Rhino wins!
+[02:26.251] Crystals: P1 2720 → 2370 (-350)  [battle]
+[02:27.649] Attack P0(1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(3,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=5  ATK=60 vs DEF=10  → WIN
+[02:27.650] Anim: 3A  △ P1(3,1)
+[02:27.650] Card destroyed  P1 (3,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:28.142] Mode selected P0: ATTACK
+[02:28.148] Attack phase P0: 1 attack(s) available
+[02:28.149] MSG: Player 1: tap a character to attack.
+[02:28.442] AI0 attack decision: (1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → (3,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[02:28.795] Coin flip: Heads
+[02:31.546] Revealed: P1 (3,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:31.546] Dice rolled: 1
+[02:31.551] MSG: Lazy Troll wins!
+[02:36.217] Crystals: P1 2370 → 2270 (-100)  [battle]
+[02:37.612] Attack P0(1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → P1(3,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=120 vs DEF=0  → WIN
+[02:37.612] Anim: 3A  △ P1(3,3)
+[02:37.612] Card destroyed  P1 (3,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:38.120] Turn ended  P0  |  Crystals P0=3300 P1=2270
+
+--- Turn 16  |  Player 1  |  Crystals P0=3300 P1=2270 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Lazy][Armo][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:38.722] Mode selected P1: ATTACK
+[02:38.727] Attack phase P1: 2 attack(s) available
+[02:38.728] MSG: Player 2: tap a character to attack.
+[02:39.029] AI1 attack decision: (3,2)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima | face-down} → (0,1) (dead-end)
+[02:39.369] Revealed: P1 (3,2) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:39.369] Dice rolled: 2
+[02:39.385] MSG: Nothing happens — Dead End.
+[02:42.762] Attack P1(3,2)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(0,1)(empty)  Dice=2  → DEAD_END
+[02:42.763] Anim: 3F  (blank slot)
+[02:42.763] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[02:43.060] Turn ended  P1  |  Crystals P0=3300 P1=2270
+
+--- Turn 17  |  Player 0  |  Crystals P0=3300 P1=2270 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Lazy][Armo][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][Shep][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[02:43.152] AI0 target chosen: (0,1)
+[02:43.152] Revealed: P1 (0,1) "Flame Trap" {cost 250}
+[02:43.152] MSG: Revealed: Flame Trap
+[02:43.642] Mode selected P0: ATTACK
+[02:43.647] Attack phase P0: 2 attack(s) available
+[02:43.647] MSG: Player 1: tap a character to attack.
+[02:43.942] AI0 attack decision: (1,1)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → (3,2) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:44.305] Coin flip: Tails
+[02:47.058] MSG: Lazy Troll flips tails — too lazy to attack! It has to wait.
+[02:47.065] Attack aborted
+[02:48.279] AI0 attack decision: (1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → (3,2) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:48.588] Dice rolled: 2
+[02:48.599] MSG: Armored Rhino wins!
+[02:53.289] Crystals: P1 2270 → 1870 (-400)  [battle]
+[02:54.690] Attack P0(1,2)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(3,2)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=2  ATK=60 vs DEF=25  → WIN
+[02:54.690] Anim: 3A  △ P1(3,2)
+[02:54.690] Card destroyed  P1 (3,2) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+
+=== GAME OVER ===
+[02:54.692] AI Player 0 wins
+[02:54.692] Reason: all_destroyed
+[02:54.692] Final crystals — P0: 3300  P1: 1870  |  Turns: 17
+[02:54.692] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_sticky_vending_machine_2026-06-01_19-24-15_482.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Red-Card-002
+Highlight: Red Card (Trap)  [setup: Ox Patrol]
+Result:    FAIL
+Detail:    Missing expected log text: Red Card; Regex not matched: Revealed: P1 \(2,2\) "Red\ Card"; Card name never appeared in log: Red Card
+Turns:     17  |  AI timeouts: 0
+===

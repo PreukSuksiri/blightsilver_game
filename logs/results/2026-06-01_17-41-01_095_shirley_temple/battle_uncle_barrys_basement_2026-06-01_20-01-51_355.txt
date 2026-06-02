@@ -1,0 +1,78 @@
+=== Battle of Uncle Barry's Basement ===
+Battle started: 2026-06-01 20:01:51.355
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Moon-Tribe-Shaman-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Moon-Tribe-Shaman-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Moon Tribe Shaman (Union)  [setup: Moonrise Gentleman, Miner Probe, Chaotic Wisp]
+Ability:      UNION_SUMMON_REVIVE_MATCH — Upon union, revive 1 Moon non-Union card. Double its cost.
+Setup role:   t2_union
+Verifies:
+  - Ability: "Moon Tribe Shaman" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Moon Tribe Shaman, Attack P\d\(\d+,\d+\)"Moon\ Tribe\ Shaman", MSG:.*Moon, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Moon Tribe Shaman — summon logged and/or union attacks with ATK=25.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Moon Tribe Shaman
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (0,0) Moonrise Gentleman, (0,1) Miner Probe
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Resurrection, Spy
+P1 Tech hand: Accident, Siege Cannon, Bribe
+P0:   [C:Moon][C:Mine][  — ][  — ][  — ]
+      [  — ][C:Armo][C:Pony][C:Sunr][T:Trap]
+      [T:Curs][C:Nuki][C:Godd][C:Meli][T:Stre]
+      [  — ][C:Witc][C:Hunt][C:Flam][  — ]
+      [T:Pepp][T:Deco][C:Stai][  — ][  — ]
+P1:   [C:Vamp][T:Hypn][C:Laug][  — ][C:Choi]
+      [T:Spik][C:Deat][  — ][C:Gryp][T:Hard]
+      [C:Moon][  — ][C:Chao][  — ][C:Plan]
+      [T:Blac][C:Vamp][  — ][C:Void][  — ]
+      [C:Tiny][  — ][C:Deat][  — ][C:Stai]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:06.797] Crystals: P0 5000 → 4700 (-300)  [union]
+[00:06.842] Revealed: P0 (1,3) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:06.842] Union summoned P0: "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}, "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}
+[00:06.842] MSG: Player 1 summoned [False Prophet] using: "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}, "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}
+[00:06.842] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.870] AI Player 0 wins
+[00:06.870] Final crystals — P0: 4700  P1: 5000  |  Turns: 1
+[00:06.870] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_uncle_barrys_basement_2026-06-01_20-01-51_355.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Moon-Tribe-Shaman-002
+Highlight: Moon Tribe Shaman (Union)  [setup: Moonrise Gentleman, Miner Probe, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

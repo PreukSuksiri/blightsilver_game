@@ -1,0 +1,85 @@
+=== Battle of Shirt Tag Itchiness ===
+Battle started: 2026-06-01 23:54:20.161
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Brainwash-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Brainwash-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Brainwash (Trap)  [setup: Ox Patrol]
+Ability:      FORCE_FRIENDLY_FIRE — Foe choose their own ally as an attack target
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Brainwash" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Brainwash
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Brainwash"
+  - Log must contain at least one of: Trap triggered, "Brainwash" triggered, Trap triggered: Brainwash, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Brainwash revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Brainwash
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Siege Cannon, Accident
+P1 Tech hand: Great Diplomacy, Siege Cannon, Release Mutagen
+P0:   [C:Paro][C:Meph][C:Lase][C:Elec][C:Need]
+      [  — ][  — ][  — ][C:Hair][  — ]
+      [  — ][T:Hard][C:Ox P][  — ][  — ]
+      [  — ][T:Stre][  — ][  — ][  — ]
+      [T:Deco][C:Skel][C:Mafi][C:Gold][T:Flam]
+P1:   [  — ][  — ][C:Succ][  — ][  — ]
+      [C:Grav][C:Elec][C:Stri][C:Gran][T:Curs]
+      [  — ][C:Magi][T:Brai][C:Scou][T:Deco]
+      [  — ][C:Armo][C:Whit][C:Bat ][  — ]
+      [T:Host][  — ][T:Self][T:Defe][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+[00:05.312] Mode selected P0: ATTACK
+[00:05.315] Attack phase P0: 2 attack(s) available
+[00:05.315] MSG: Player 1: tap a character to attack.
+[00:05.611] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Brainwash" {cost 1500}
+[00:05.944] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:05.967] Revealed: P1 (2,2) "Brainwash" {cost 1500}
+[00:05.967] Dice rolled: 3
+[00:06.228] MSG: Trap triggered: Brainwash!
+[00:06.228] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.233] AI Player 0 wins
+[00:06.233] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:06.233] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_shirt_tag_itchiness_2026-06-01_23-54-20_161.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Brainwash-002
+Highlight: Brainwash (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

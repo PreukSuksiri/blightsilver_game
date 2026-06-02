@@ -1,0 +1,94 @@
+=== Battle of Low Battery Panic ===
+Battle started: 2026-06-01 23:11:15.901
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Joseph-the-Battle-Priest-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Joseph-the-Battle-Priest-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Joseph the Battle Priest (Character)  [setup: Chaotic Wisp]
+Ability:      COIN_FLIP_ATK_BOOST — In Reckoning, flip a coin. If head, +10 ATK
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Joseph the Battle Priest" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Joseph the Battle Priest
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Joseph\ the\ Battle\ Priest".*ATK=|→ P\d\(\d+,\d+\)"Joseph\ the\ Battle\ Priest")
+  - Log must match regex: ("Joseph\ the\ Battle\ Priest".*ATK=|→ P\d\(\d+,\d+\)"Joseph\ the\ Battle\ Priest")
+  - Log must contain at least one of: Coin flip:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: COIN_FLIP_ATK_BOOST — card enters combat and coin flip occurs.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Joseph the Battle Priest
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Joseph the Battle Priest
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Bribe, Radar
+P1 Tech hand: Prayer, War Supply, Accident
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [T:Alar][C:Mafi][C:Big ][C:Grav][T:Hard]
+      [  — ][C:Scou][C:Jose][C:Nept][  — ]
+      [  — ][C:Deat][C:Blue][C:Book][  — ]
+      [T:Spik][  — ][  — ][T:Hypn][C:Aray]
+P1:   [C:Ostr][  — ][C:Succ][  — ][C:Armo]
+      [C:Fera][T:Hypn][C:Paro][T:Brai][T:Acid]
+      [C:Aeri][  — ][C:Chao][  — ][T:Deco]
+      [C:Silv][  — ][T:Foul][  — ][C:Gree]
+      [C:Pit ][  — ][C:Void][  — ][C:Raij]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.304] Mode selected P0: ATTACK
+[00:05.308] Attack phase P0: 2 attack(s) available
+[00:05.308] MSG: Player 1: tap a character to attack.
+[00:05.611] AI0 attack decision: (2,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.978] Revealed: P0 (2,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:06.004] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:06.004] Dice rolled: 1
+[00:06.005] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[00:06.008] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[00:06.008] MSG: Joseph the Battle Priest wins!
+[00:06.046] Coin flip: Heads
+[00:11.604] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:13.001] Attack P0(2,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=70 vs DEF=0  → WIN
+[00:13.002] E2E: ability goal reached — ending battle early.
+[00:13.002] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} +ATK 10
+[00:13.002] Anim: 3A  △ P1(2,2)
+[00:13.002] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[00:13.010] AI Player 0 wins
+[00:13.010] Final crystals — P0: 5000  P1: 4900  |  Turns: 1
+[00:13.010] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_low_battery_panic_2026-06-01_23-11-15_901.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Joseph-the-Battle-Priest-002
+Highlight: Joseph the Battle Priest (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

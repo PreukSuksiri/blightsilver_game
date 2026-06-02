@@ -1,0 +1,493 @@
+=== Battle of Slippery Banana Peel Protocol ===
+Battle started: 2026-06-01 09:58:40.360
+Game Session of Mint Julep (started 2026-06-01 09:37:04.903)
+=== Card E2E Test ===
+Scenario ID:  E2E-Big-Thug-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Big-Thug-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Big Thug (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Big Thug" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Big Thug
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Big\ Thug".*ATK=40\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=40 when Big Thug attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Big Thug
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Big Thug
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, Tease, Great Diplomacy
+P1 Tech hand: Great Diplomacy, Radar, War Supply
+P0:   [C:Doom][T:Alar][C:Spac][C:Meph][  — ]
+      [C:Scou][  — ][  — ][  — ][T:Foul]
+      [C:Blea][  — ][C:Big ][  — ][C:Nigh]
+      [C:Nept][  — ][  — ][  — ][C:Rott]
+      [C:Dark][T:Self][T:Blac][  — ][  — ]
+P1:   [T:Curs][T:Expl][T:Red ][T:Stre][  — ]
+      [C:Yaks][  — ][  — ][  — ][C:Red ]
+      [C:Stre][  — ][C:Chao][  — ][  — ]
+      [  — ][  — ][  — ][  — ][C:Dark]
+      [C:Lab ][C:Foul][C:Choi][  — ][C:Spac]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:06.802] Crystals: P0 5000 → 4700 (-300)  [union]
+[00:06.840] Revealed: P0 (4,0) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[00:06.840] Union summoned P0: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down}
+[00:06.840] MSG: Player 1 summoned [Kitsune] using: "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down}
+[00:10.235] Mode selected P0: ATTACK
+[00:10.239] Attack phase P0: 2 attack(s) available
+[00:10.239] MSG: Player 1: tap a character to attack.
+[00:10.533] AI0 attack decision: (4,0)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (0,0) "Cursed Reflection" {cost 500}
+[00:10.883] Revealed: P1 (0,0) "Cursed Reflection" {cost 500}
+[00:10.883] Dice rolled: 5
+[00:11.195] MSG: Trap triggered: Cursed Reflection!
+[00:15.235] Crystals: P1 5000 → 4500 (-500)  [trap cost]
+[00:16.625] MSG: Cursed Reflection: Kitsune's ATK and DEF swapped until end of turn!
+[00:16.629] Trap: "Cursed Reflection" triggered  P0(4,0)→P1(0,0)
+[00:16.629] Anim: 3D  (attacker survives)
+[00:17.134] Mode selected P0: ATTACK
+[00:17.139] Attack phase P0: 1 attack(s) available
+[00:17.139] MSG: Player 1: tap a character to attack.
+[00:17.441] AI0 attack decision: (3,0)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | face-down} → (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima | face-down}
+[00:17.816] Revealed: P0 (3,0) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[00:17.843] Revealed: P1 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:17.843] Dice rolled: 1
+[00:17.847] MSG: Both cards are destroyed!
+[00:22.376] Crystals: P0 4700 → 4500 (-200)  [battle]
+[00:23.767] Crystals: P1 4500 → 4150 (-350)  [battle]
+[00:25.158] Attack P0(3,0)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} → P1(2,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=1  ATK=20 vs DEF=20  → TIE
+[00:25.158] Anim: 3C  △ P0(3,0) + △ P1(2,0)
+[00:25.158] Card destroyed  P0 (3,0) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[00:25.158] Card destroyed  P1 (2,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[00:25.655] Turn ended  P0  |  Crystals P0=4500 P1=4150
+
+--- Turn 2  |  Player 1  |  Crystals P0=4500 P1=4150 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Kits][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:26.261] Mode selected P1: ATTACK
+[00:26.266] Attack phase P1: 2 attack(s) available
+[00:26.266] MSG: Player 2: tap a character to attack.
+[00:26.550] AI1 attack decision: (1,4)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane | face-down} → (0,0) (dead-end)
+[00:26.899] Revealed: P1 (1,4) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:26.899] Dice rolled: 3
+[00:26.916] MSG: Nothing happens — Dead End.
+[00:30.227] Attack P1(1,4)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P0(0,0)(empty)  Dice=3  → DEAD_END
+[00:30.227] Anim: 3F  (blank slot)
+[00:30.534] Turn ended  P1  |  Crystals P0=4500 P1=4150
+
+--- Turn 3  |  Player 0  |  Crystals P0=4500 P1=4150 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Kits][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][Red ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:31.142] Mode selected P0: ATTACK
+[00:31.145] Attack phase P0: 2 attack(s) available
+[00:31.145] MSG: Player 1: tap a character to attack.
+[00:31.446] AI0 attack decision: (2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (1,4) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:31.803] Revealed: P0 (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:31.803] Dice rolled: 5
+[00:31.807] MSG: Big Thug wins!
+[00:36.455] Crystals: P1 4150 → 3750 (-400)  [battle]
+[00:37.852] Attack P0(2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(1,4)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}  Dice=5  ATK=40 vs DEF=20  → WIN
+[00:37.852] Anim: 3A  △ P1(1,4)
+[00:37.852] Card destroyed  P1 (1,4) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:38.358] Mode selected P0: ATTACK
+[00:38.364] Attack phase P0: 1 attack(s) available
+[00:38.364] MSG: Player 1: tap a character to attack.
+[00:38.662] AI0 attack decision: (4,0)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (0,3) "Street Joke" {cost 0}
+[00:39.022] Revealed: P1 (0,3) "Street Joke" {cost 0}
+[00:39.022] Dice rolled: 3
+[00:39.331] MSG: Trap triggered: Street Joke!
+[00:43.428] Revealed: P1 (0,1) "Explosive Barrels" {cost 0}
+[00:43.428] Crystals: P1 3750 → 3850 (+100)  [trap]
+[00:43.428] MSG: Street Joke: Revealed own card, gained 100 Crystals!
+[00:43.430] Trap: "Street Joke" triggered  P0(4,0)→P1(0,3)
+[00:43.430] Anim: 3D  (attacker survives)
+[00:43.889] Turn ended  P0  |  Crystals P0=4500 P1=3850
+
+--- Turn 4  |  Player 1  |  Crystals P0=4500 P1=3850 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Big ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Kits][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:44.498] Mode selected P1: ATTACK
+[00:44.504] Attack phase P1: 2 attack(s) available
+[00:44.504] MSG: Player 2: tap a character to attack.
+[00:44.788] AI1 attack decision: (4,0)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio | face-down} → (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:45.162] Revealed: P1 (4,0) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[00:45.162] Dice rolled: 1
+[00:45.166] MSG: Lab Zombie wins!
+[00:49.787] Crystals: P0 4500 → 4100 (-400)  [battle]
+[00:51.186] Attack P1(4,0)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P0(2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=1  ATK=55 vs DEF=35  → WIN
+[00:51.186] Anim: 3A  △ P0(2,2)
+[00:51.186] Card destroyed  P0 (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:51.484] Turn ended  P1  |  Crystals P0=4100 P1=3850
+
+--- Turn 5  |  Player 0  |  Crystals P0=4100 P1=3850 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Kits][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Lab ][  ? ][  ? ][  — ][  ? ]
+[00:52.083] Mode selected P0: ATTACK
+[00:52.087] Attack phase P0: 2 attack(s) available
+[00:52.087] MSG: Player 1: tap a character to attack.
+[00:52.379] AI0 attack decision: (1,0)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down} → (4,0) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[00:52.714] Revealed: P0 (1,0) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:52.714] Dice rolled: 5
+[00:52.718] MSG: Both cards are destroyed!
+[00:57.272] Crystals: P0 4100 → 3400 (-700)  [battle]
+[00:58.662] Crystals: P1 3850 → 3150 (-700)  [battle]
+[01:00.056] Attack P0(1,0)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(4,0)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}  Dice=5  ATK=40 vs DEF=40  → TIE
+[01:00.056] Anim: 3C  △ P0(1,0) + △ P1(4,0)
+[01:00.056] Card destroyed  P0 (1,0) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:00.056] Card destroyed  P1 (4,0) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:00.548] Mode selected P0: ATTACK
+[01:00.551] Attack phase P0: 1 attack(s) available
+[01:00.552] MSG: Player 1: tap a character to attack.
+[01:00.845] AI0 attack decision: (4,0)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → (4,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos | face-down}
+[01:01.212] Revealed: P1 (4,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[01:01.213] Dice rolled: 2
+[01:01.242] MSG: Kitsune wins!
+[01:05.855] Crystals: P1 3150 → 3050 (-100)  [battle]
+[01:07.253] Attack P0(4,0)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P1(4,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=2  ATK=35 vs DEF=25  → WIN
+[01:07.253] Anim: 3A  △ P1(4,1)
+[01:07.253] Card destroyed  P1 (4,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[01:07.752] Turn ended  P0  |  Crystals P0=3400 P1=3050
+
+--- Turn 6  |  Player 1  |  Crystals P0=3400 P1=3050 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Kits][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[01:08.353] Mode selected P1: ATTACK
+[01:08.358] Attack phase P1: 2 attack(s) available
+[01:08.359] MSG: Player 2: tap a character to attack.
+[01:08.645] AI1 attack decision: (4,4)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic | face-down} → (4,0) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[01:08.986] Revealed: P1 (4,4) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:08.987] Dice rolled: 3
+[01:09.027] MSG: Space Boy wins!
+[01:13.585] Attack P1(4,4)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P0(4,0)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}  Dice=3  ATK=75 vs DEF=35  → WIN
+[01:13.585] Anim: 3A  △ P0(4,0)
+[01:13.585] Card destroyed  P0 (4,0) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[01:13.892] Turn ended  P1  |  Crystals P0=3400 P1=3050
+
+--- Turn 7  |  Player 0  |  Crystals P0=3400 P1=3050 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][Spac]
+[01:14.498] Mode selected P0: ATTACK
+[01:14.506] Attack phase P0: 2 attack(s) available
+[01:14.506] MSG: Player 1: tap a character to attack.
+[01:14.804] AI0 attack decision: (0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic | face-down} → (4,4) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:15.115] Revealed: P0 (0,2) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:15.116] Dice rolled: 3
+[01:15.127] MSG: Space Boy wins!
+[01:19.813] Crystals: P1 3050 → 2250 (-800)  [battle]
+[01:21.212] Attack P0(0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P1(4,4)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}  Dice=3  ATK=75 vs DEF=65  → WIN
+[01:21.212] Anim: 3A  △ P1(4,4)
+[01:21.212] Card destroyed  P1 (4,4) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:21.712] Mode selected P0: ATTACK
+[01:21.715] Attack phase P0: 1 attack(s) available
+[01:21.715] MSG: Player 1: tap a character to attack.
+[01:22.021] AI0 attack decision: (0,3)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down} → (0,4) (dead-end)
+[01:22.367] Revealed: P0 (0,3) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[01:22.367] Dice rolled: 2
+[01:22.380] MSG: Nothing happens — Dead End.
+[01:25.744] Attack P0(0,3)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P1(0,4)(empty)  Dice=2  → DEAD_END
+[01:25.744] Anim: 3F  (blank slot)
+[01:26.250] Turn ended  P0  |  Crystals P0=3400 P1=2250
+
+--- Turn 8  |  Player 1  |  Crystals P0=3400 P1=2250 ---
+P0:   [  — ][  ? ][Spac][Meph][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:26.861] Mode selected P1: ATTACK
+[01:26.867] Attack phase P1: 2 attack(s) available
+[01:26.867] MSG: Player 2: tap a character to attack.
+[01:27.162] AI1 attack decision: (1,0)"Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos | face-down} → (0,3) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[01:27.550] Revealed: P1 (1,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[01:27.550] Dice rolled: 2
+[01:27.553] MSG: Yaksa wins!
+[01:32.158] Crystals: P0 3400 → 2540 (-860)  [battle]
+[01:33.557] Attack P1(1,0)"Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos} → P0(0,3)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}  Dice=2  ATK=30 vs DEF=0  → WIN
+[01:33.557] Anim: 3A  △ P0(0,3)
+[01:33.557] Card destroyed  P0 (0,3) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[01:33.854] Turn ended  P1  |  Crystals P0=2540 P1=2250
+
+--- Turn 9  |  Player 0  |  Crystals P0=2540 P1=2250 ---
+P0:   [  — ][  ? ][Spac][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [Yaks][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:34.452] Mode selected P0: ATTACK
+[01:34.458] Attack phase P0: 2 attack(s) available
+[01:34.459] MSG: Player 1: tap a character to attack.
+[01:34.750] AI0 attack decision: (0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → (1,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[01:35.050] Dice rolled: 4
+[01:35.060] MSG: Space Boy wins!
+[01:39.742] Crystals: P1 2250 → 1750 (-500)  [battle]
+[01:41.141] Attack P0(0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P1(1,0)"Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}  Dice=4  ATK=75 vs DEF=30  → WIN
+[01:41.141] Anim: 3A  △ P1(1,0)
+[01:41.141] Card destroyed  P1 (1,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[01:41.634] Mode selected P0: ATTACK
+[01:41.639] Attack phase P0: 1 attack(s) available
+[01:41.640] MSG: Player 1: tap a character to attack.
+[01:41.933] AI0 attack decision: (3,4)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio | face-down} → (0,2) "Red Card" {cost 0}
+[01:42.274] Revealed: P0 (3,4) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[01:42.308] Revealed: P1 (0,2) "Red Card" {cost 0}
+[01:42.308] Dice rolled: 2
+[01:42.549] MSG: Trap triggered: Red Card!
+[01:46.714] Coin flip: Tails, Heads
+[01:49.457] MSG: Red Card: Tails, Heads.
+[01:49.458] MSG: Not both heads — no effect.
+[01:49.463] Trap: "Red Card" triggered  P0(3,4)→P1(0,2)
+[01:49.463] Anim: 3D  (attacker survives)
+[01:49.969] Turn ended  P0  |  Crystals P0=2540 P1=1750
+
+--- Turn 10  |  Player 1  |  Crystals P0=2540 P1=1750 ---
+P0:   [  — ][  ? ][Spac][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Rott]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:50.579] Mode selected P1: ATTACK
+[01:50.582] Attack phase P1: 2 attack(s) available
+[01:50.582] MSG: Player 2: tap a character to attack.
+[01:50.883] AI1 attack decision: (2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (1,1) (dead-end)
+[01:51.222] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:51.222] Dice rolled: 4
+[01:51.233] MSG: Nothing happens — Dead End.
+[01:54.607] Attack P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(1,1)(empty)  Dice=4  → DEAD_END
+[01:54.607] Anim: 3F  (blank slot)
+[01:54.912] Turn ended  P1  |  Crystals P0=2540 P1=1750
+
+--- Turn 11  |  Player 0  |  Crystals P0=2540 P1=1750 ---
+P0:   [  — ][  ? ][Spac][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Rott]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Chao][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[01:55.518] Mode selected P0: ATTACK
+[01:55.525] Attack phase P0: 2 attack(s) available
+[01:55.525] MSG: Player 1: tap a character to attack.
+[01:55.825] AI0 attack decision: (0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:56.134] Dice rolled: 5
+[01:56.144] MSG: Space Boy wins!
+[02:00.834] Crystals: P1 1750 → 1650 (-100)  [battle]
+[02:02.231] Attack P0(0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=75 vs DEF=0  → WIN
+[02:02.231] Anim: 3A  △ P1(2,2)
+[02:02.231] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:02.734] Mode selected P0: ATTACK
+[02:02.740] Attack phase P0: 1 attack(s) available
+[02:02.742] MSG: Player 1: tap a character to attack.
+[02:03.041] AI0 attack decision: (3,4)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30} → (2,1) (dead-end)
+[02:03.350] Dice rolled: 2
+[02:03.375] MSG: Nothing happens — Dead End.
+[02:06.756] Attack P0(3,4)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30} → P1(2,1)(empty)  Dice=2  → DEAD_END
+[02:06.756] Anim: 3F  (blank slot)
+[02:07.260] Turn ended  P0  |  Crystals P0=2540 P1=1650
+
+--- Turn 12  |  Player 1  |  Crystals P0=2540 P1=1650 ---
+P0:   [  — ][  ? ][Spac][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Rott]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:07.869] Mode selected P1: ATTACK
+[02:07.875] Attack phase P1: 2 attack(s) available
+[02:07.875] MSG: Player 2: tap a character to attack.
+[02:08.175] AI1 attack decision: (3,4)"Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos | face-down} → (0,1) "Alarm" {cost 0}
+[02:08.520] Revealed: P1 (3,4) "Dark Tengu" {Unit ATK25 DEF25 | cost 250 | affinity Chaos}
+[02:08.540] Revealed: P0 (0,1) "Alarm" {cost 0}
+[02:08.540] Dice rolled: 1
+[02:08.793] MSG: Trap triggered: Alarm!
+[02:12.886] MSG: Alarm: +5 DEF to all ANIMA characters this turn!
+[02:12.892] Trap: "Alarm" triggered  P1(3,4)→P0(0,1)
+[02:12.892] Anim: 3D  (attacker survives)
+[02:12.892] MSG: Dark Tengu: Self ATK debuff applied.
+[02:13.180] Turn ended  P1  |  Crystals P0=2540 P1=1650
+
+--- Turn 13  |  Player 0  |  Crystals P0=2540 P1=1650 ---
+P0:   [  — ][  — ][Spac][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Rott]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Dark]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:13.775] Mode selected P0: ATTACK
+[02:13.781] Attack phase P0: 2 attack(s) available
+[02:13.781] MSG: Player 1: tap a character to attack.
+[02:14.075] AI0 attack decision: (0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → (3,4) "Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}
+[02:14.375] Dice rolled: 1
+[02:14.385] MSG: Space Boy wins!
+[02:19.067] Crystals: P1 1650 → 1400 (-250)  [battle]
+[02:20.467] Attack P0(0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P1(3,4)"Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}  Dice=1  ATK=75 vs DEF=25  → WIN
+[02:20.467] Anim: 3A  △ P1(3,4)
+[02:20.467] Card destroyed  P1 (3,4) "Dark Tengu" {Unit ATK20 DEF25 | cost 250 | affinity Chaos | base 20/25 | flags:atk_debuff_used}
+[02:20.959] Mode selected P0: ATTACK
+[02:20.965] Attack phase P0: 1 attack(s) available
+[02:20.966] MSG: Player 1: tap a character to attack.
+[02:21.258] AI0 attack decision: (3,4)"Rotten Shrieker" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30} → (2,4) (dead-end)
+[02:21.559] Dice rolled: 5
+[02:21.587] MSG: Nothing happens — Dead End.
+[02:24.957] Attack P0(3,4)"Rotten Shrieker" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30} → P1(2,4)(empty)  Dice=5  → DEAD_END
+[02:24.957] Anim: 3F  (blank slot)
+[02:25.452] Turn ended  P0  |  Crystals P0=2540 P1=1400
+
+--- Turn 14  |  Player 1  |  Crystals P0=2540 P1=1400 ---
+P0:   [  — ][  — ][Spac][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Rott]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[02:26.052] Mode selected P1: ATTACK
+[02:26.058] Attack phase P1: 2 attack(s) available
+[02:26.058] MSG: Player 2: tap a character to attack.
+[02:26.349] AI1 attack decision: (4,2)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down} → (1,2) (dead-end)
+[02:26.688] Revealed: P1 (4,2) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[02:26.689] Dice rolled: 2
+[02:26.702] MSG: Nothing happens — Dead End.
+[02:30.048] Attack P1(4,2)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P0(1,2)(empty)  Dice=2  → DEAD_END
+[02:30.048] Anim: 3F  (blank slot)
+[02:30.347] Turn ended  P1  |  Crystals P0=2540 P1=1400
+
+--- Turn 15  |  Player 0  |  Crystals P0=2540 P1=1400 ---
+P0:   [  — ][  — ][Spac][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Rott]
+      [  — ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Choi][  — ][  — ]
+[02:30.941] Mode selected P0: ATTACK
+[02:30.948] Attack phase P0: 2 attack(s) available
+[02:30.948] MSG: Player 1: tap a character to attack.
+[02:31.241] AI0 attack decision: (0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → (4,2) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[02:31.542] Dice rolled: 4
+[02:31.553] MSG: Space Boy wins!
+[02:36.233] Crystals: P1 1400 → 1150 (-250)  [battle]
+[02:37.633] Attack P0(0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P1(4,2)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=4  ATK=75 vs DEF=15  → WIN
+[02:37.634] Anim: 3A  △ P1(4,2)
+[02:37.634] Card destroyed  P1 (4,2) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+
+=== GAME OVER ===
+[02:37.635] AI Player 0 wins
+[02:37.635] Reason: all_destroyed
+[02:37.636] Final crystals — P0: 2540  P1: 1150  |  Turns: 15
+[02:37.636] Log saved to: res://logs/results/2026-06-01_09-37-04_903_mint_julep/battle_slippery_banana_peel_protocol_2026-06-01_09-58-40_360.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Big-Thug-002
+Highlight: Big Thug (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     15  |  AI timeouts: 0
+===

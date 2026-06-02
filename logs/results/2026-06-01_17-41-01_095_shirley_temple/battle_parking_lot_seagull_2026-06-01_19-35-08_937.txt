@@ -1,0 +1,267 @@
+=== Battle of Parking Lot Seagull ===
+Battle started: 2026-06-01 19:35:08.937
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Trap-Hole-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Trap-Hole-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Trap Hole (Trap)  [setup: Ox Patrol]
+Ability:      DRAIN_ATTACKER_CRYSTALS — Flip 3 coin, attacking player loses 20 Crystals per each head(s).
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Trap Hole" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Trap Hole
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Trap\ Hole"
+  - Log must contain at least one of: Trap triggered, "Trap Hole" triggered, Trap triggered: Trap Hole, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Trap Hole revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Trap Hole
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Great Diplomacy, War Supply
+P1 Tech hand: Resurrection, Siege Cannon, War Supply
+P0:   [  — ][T:Flam][  — ][  — ][T:Stre]
+      [  — ][C:Mafi][C:Rott][C:Hand][  — ]
+      [  — ][C:Mars][C:Ox P][C:Paro][  — ]
+      [  — ][C:Skel][C:Skel][C:Spac][  — ]
+      [T:Bait][T:Foul][  — ][  — ][T:Self]
+P1:   [  — ][  — ][T:Foul][C:Moon][  — ]
+      [  — ][C:Hair][C:Flam][C:Gran][  — ]
+      [  — ][C:Saw ][T:Trap][C:Scar][T:Alar]
+      [T:Expl][C:Ox P][C:Blue][C:Mafi][  — ]
+      [  — ][T:Echo][  — ][C:Hamm][T:Blac]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+[00:05.331] Mode selected P0: ATTACK
+[00:05.335] Attack phase P0: 2 attack(s) available
+[00:05.336] MSG: Player 1: tap a character to attack.
+[00:05.623] AI0 attack decision: (1,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down} → (1,1) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima | face-down}
+[00:05.963] Revealed: P0 (1,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:05.993] Revealed: P1 (1,1) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:05.993] Dice rolled: 3
+[00:05.997] MSG: Mafia Associates wins!
+[00:10.582] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:11.979] Attack P0(1,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P1(1,1)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=3  ATK=45 vs DEF=15  → WIN
+[00:11.979] Anim: 3A  △ P1(1,1)
+[00:11.979] Card destroyed  P1 (1,1) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:12.475] Mode selected P0: ATTACK
+[00:12.480] Attack phase P0: 1 attack(s) available
+[00:12.481] MSG: Player 1: tap a character to attack.
+[00:12.773] AI0 attack decision: (1,2)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio | face-down} → (0,0) (dead-end)
+[00:13.109] Revealed: P0 (1,2) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[00:13.109] Dice rolled: 1
+[00:13.124] MSG: Nothing happens — Dead End.
+[00:16.479] Attack P0(1,2)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} → P1(0,0)(empty)  Dice=1  → DEAD_END
+[00:16.479] Anim: 3F  (blank slot)
+[00:16.974] Turn ended  P0  |  Crystals P0=5000 P1=4700
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4700 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][Mafi][Rott][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+[00:19.056] Crystals: P1 4700 → 3900 (-800)  [union]
+[00:19.097] Revealed: P1 (1,2) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[00:19.097] Union summoned P1: "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down}
+[00:19.098] MSG: Player 2 summoned [Ancient Lizard] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down}
+[00:22.273] Crystals: P1 3900 → 3850 (-50)  [skip tax]
+[00:22.274] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:23.661] Turn ended  P1  |  Crystals P0=5000 P1=3850
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3850 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][Mafi][Rott][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][Anci][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+[00:24.259] Mode selected P0: ATTACK
+[00:24.266] Attack phase P0: 2 attack(s) available
+[00:24.266] MSG: Player 1: tap a character to attack.
+[00:24.557] AI0 attack decision: (1,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → (2,1) (dead-end)
+[00:24.857] Dice rolled: 4
+[00:24.884] MSG: Nothing happens — Dead End.
+[00:28.262] Attack P0(1,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P1(2,1)(empty)  Dice=4  → DEAD_END
+[00:28.262] Anim: 3F  (blank slot)
+[00:28.756] Mode selected P0: ATTACK
+[00:28.760] Attack phase P0: 1 attack(s) available
+[00:28.760] MSG: Player 1: tap a character to attack.
+[00:29.056] AI0 attack decision: (1,2)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30} → (0,2) "Foul Gas" {cost 0}
+[00:29.386] Revealed: P1 (0,2) "Foul Gas" {cost 0}
+[00:29.386] Dice rolled: 2
+[00:29.662] MSG: Trap triggered: Foul Gas!
+[00:33.768] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[00:33.773] Trap: "Foul Gas" triggered  P0(1,2)→P1(0,2)
+[00:33.773] Anim: 3D  (attacker survives)
+[00:34.259] Turn ended  P0  |  Crystals P0=5000 P1=3850
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=3850 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][Mafi][Rott][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Anci][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+[00:34.857] Mode selected P1: ATTACK
+[00:34.864] Attack phase P1: 2 attack(s) available
+[00:34.864] MSG: Player 2: tap a character to attack.
+[00:35.156] AI1 attack decision: (1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (1,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:35.456] Dice rolled: 1
+[00:35.511] MSG: Ancient Lizard wins!
+[00:41.165] Crystals: P0 5000 → 4500 (-500)  [battle]
+[00:42.563] Attack P1(1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P0(1,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}  Dice=1  ATK=75 vs DEF=0  → WIN
+[00:42.565] Reckoning overlay: P0 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} DEF -40
+[00:42.565] Anim: 3A  △ P0(1,1)
+[00:42.565] Card destroyed  P0 (1,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:42.871] Turn ended  P1  |  Crystals P0=4500 P1=3850
+
+--- Turn 5  |  Player 0  |  Crystals P0=4500 P1=3850 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][Rott][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Anci][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+[00:43.475] Mode selected P0: ATTACK
+[00:43.482] Attack phase P0: 2 attack(s) available
+[00:43.482] MSG: Player 1: tap a character to attack.
+[00:43.781] AI0 attack decision: (1,2)"Rotten Shrieker" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30} → (3,3) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima | face-down}
+[00:44.092] Revealed: P1 (3,3) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:44.093] Dice rolled: 2
+[00:44.102] MSG: Rotten Shrieker wins!
+[00:49.789] Crystals: P1 3850 → 3350 (-500)  [battle]
+[00:51.189] Attack P0(1,2)"Rotten Shrieker" {Unit ATK30 DEF30 | cost 450 | affinity Bio | base 30/30} → P1(3,3)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}  Dice=2  ATK=30 vs DEF=0  → WIN
+[00:51.190] Reckoning overlay: P1 "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} DEF -40
+[00:51.190] Anim: 3A  △ P1(3,3)
+[00:51.190] Card destroyed  P1 (3,3) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[00:51.691] Mode selected P0: ATTACK
+[00:51.697] Attack phase P0: 1 attack(s) available
+[00:51.697] MSG: Player 1: tap a character to attack.
+[00:51.994] AI0 attack decision: (1,3)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | face-down} → (0,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}
+[00:52.345] Revealed: P0 (1,3) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[00:52.375] Revealed: P1 (0,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:52.375] Dice rolled: 1
+[00:52.380] MSG: Both cards are destroyed!
+[00:56.886] Crystals: P0 4500 → 4200 (-300)  [battle]
+[00:58.278] Crystals: P1 3350 → 3050 (-300)  [battle]
+[00:59.673] Attack P0(1,3)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos} → P1(0,3)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=1  ATK=20 vs DEF=20  → TIE
+[00:59.674] Anim: 3C  △ P0(1,3) + △ P1(0,3)
+[00:59.674] Card destroyed  P0 (1,3) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[00:59.674] Card destroyed  P1 (0,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:00.174] Turn ended  P0  |  Crystals P0=4200 P1=3050
+
+--- Turn 6  |  Player 1  |  Crystals P0=4200 P1=3050 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][Rott][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Anci][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+[01:00.777] Mode selected P1: ATTACK
+[01:00.784] Attack phase P1: 2 attack(s) available
+[01:00.785] MSG: Player 2: tap a character to attack.
+[01:01.085] AI1 attack decision: (1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (1,2) "Rotten Shrieker" {Unit ATK20 DEF30 | cost 450 | affinity Bio | base 20/30}
+[01:01.394] Dice rolled: 4
+[01:01.447] MSG: Ancient Lizard wins!
+[01:06.082] Crystals: P0 4200 → 3750 (-450)  [battle]
+[01:07.480] Attack P1(1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P0(1,2)"Rotten Shrieker" {Unit ATK20 DEF30 | cost 450 | affinity Bio | base 20/30}  Dice=4  ATK=75 vs DEF=30  → WIN
+[01:07.480] Anim: 3A  △ P0(1,2)
+[01:07.480] Card destroyed  P0 (1,2) "Rotten Shrieker" {Unit ATK20 DEF30 | cost 450 | affinity Bio | base 20/30}
+[01:07.785] Turn ended  P1  |  Crystals P0=3750 P1=3050
+
+--- Turn 7  |  Player 0  |  Crystals P0=3750 P1=3050 ---
+P0:   [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Anci][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+[01:08.389] Mode selected P0: ATTACK
+[01:08.395] Attack phase P0: 2 attack(s) available
+[01:08.395] MSG: Player 1: tap a character to attack.
+[01:08.694] AI0 attack decision: (3,3)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic | face-down} → (1,2) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[01:09.044] Revealed: P0 (3,3) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:09.045] Dice rolled: 1
+[01:09.085] MSG: Both cards are destroyed!
+[01:13.619] Crystals: P0 3750 → 2950 (-800)  [battle]
+[01:15.017] Attack P0(3,3)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P1(1,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}  Dice=1  ATK=75 vs DEF=75  → TIE
+[01:15.018] Anim: 3C  △ P0(3,3) + △ P1(1,2)
+[01:15.018] Card destroyed  P0 (3,3) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:15.018] Card destroyed  P1 (1,2) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[01:15.520] Mode selected P0: ATTACK
+[01:15.523] Attack phase P0: 1 attack(s) available
+[01:15.524] MSG: Player 1: tap a character to attack.
+[01:15.827] AI0 attack decision: (3,1)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (2,2) "Trap Hole" {cost 0}
+[01:16.169] Revealed: P0 (3,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:16.196] Revealed: P1 (2,2) "Trap Hole" {cost 0}
+[01:16.196] Dice rolled: 3
+[01:16.459] MSG: Trap triggered: Trap Hole!
+[01:16.460] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[01:16.464] AI Player 0 wins
+[01:16.464] Final crystals — P0: 2950  P1: 3050  |  Turns: 7
+[01:16.464] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_parking_lot_seagull_2026-06-01_19-35-08_937.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Trap-Hole-002
+Highlight: Trap Hole (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     7  |  AI timeouts: 0
+===

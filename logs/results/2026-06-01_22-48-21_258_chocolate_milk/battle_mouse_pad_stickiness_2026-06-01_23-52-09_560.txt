@@ -1,0 +1,90 @@
+=== Battle of Mouse Pad Stickiness ===
+Battle started: 2026-06-01 23:52:09.560
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Radar-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Radar-001  (test_case/functional/tech_functional_tests.md)
+Highlight:    Radar (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Ability:      REVEAL_OPPONENT_SQUARE — Reveal 3 of foe’s cell
+Setup role:   t2_tech_play
+Verifies:
+  - Ability: "Radar" is exercised via forced board/tech setup (t2_tech_play)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must match regex: Tech played\s+P0: "Radar"
+  - Log must contain at least one of: Radar, Radar, Tech resolved, Revealed:, Card destroyed
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: tech Radar played (REVEAL_OPPONENT_SQUARE).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Radar
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Bribe, Spy
+P1 Tech hand: Radar, Siege Cannon, War Supply
+P0:   [C:Ange][  — ][T:Echo][  — ][  — ]
+      [T:Flam][C:Aray][C:Demo][C:Mage][T:Defe]
+      [T:Hypn][C:Claw][C:Ox P][C:Gold][  — ]
+      [  — ][C:Lab ][C:Armo][C:Kiyo][T:Stre]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [C:Gamm][  — ][C:Choi][  — ][T:Bait]
+      [C:Flam][C:Armo][C:Shot][T:Self][C:Leec]
+      [C:Sunr][  — ][C:Chao][  — ][C:Cany]
+      [T:Host][  — ][T:Acid][  — ][C:Curs]
+      [T:Curs][  — ][C:Mage][T:Flam][C:Scou]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:05.306] Mode selected P0: TECH
+[00:05.613] Crystals: P0 5000 → 4400 (-600)  [tech cost]
+[00:06.998] Tech played  P0: "Radar"
+[00:08.565] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:08.972] AI0 target chosen: (3,2)
+[00:09.013] Revealed: P1 (3,2) "Acid Trap Hole" {cost 0}
+[00:09.347] AI0 target chosen: (2,3)
+[00:09.348] Revealed: P1 (2,3) (blank slot)
+[00:09.755] AI0 target chosen: (2,2)
+[00:09.791] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:09.793] Tech resolved  P0
+[00:10.698] Mode selected P0: ATTACK
+[00:10.705] Attack phase P0: 2 attack(s) available
+[00:10.705] MSG: Player 1: tap a character to attack.
+[00:10.705] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:10.708] AI Player 0 wins
+[00:10.708] Final crystals — P0: 4400  P1: 5000  |  Turns: 1
+[00:10.708] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_mouse_pad_stickiness_2026-06-01_23-52-09_560.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Radar-002
+Highlight: Radar (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

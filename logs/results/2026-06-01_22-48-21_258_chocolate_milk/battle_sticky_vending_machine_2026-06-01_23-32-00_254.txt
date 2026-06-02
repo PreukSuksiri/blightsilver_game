@@ -1,0 +1,90 @@
+=== Battle of Sticky Vending Machine ===
+Battle started: 2026-06-01 23:32:00.254
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Plant-29-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Plant-29-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Plant 29 (Character)  [setup: Chaotic Wisp]
+Ability:      TURN_START_COIN_FLIP_FLAG — Start of your turn: select 1 face-up foe’s card, flip a coin. Head: put Venom Flag on it. Tail: put Mutagen Flag on it.
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Plant 29" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Plant 29
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Plant\ 29".*ATK=|→ P\d\(\d+,\d+\)"Plant\ 29")
+  - Log must match regex: ("Plant\ 29".*ATK=|→ P\d\(\d+,\d+\)"Plant\ 29")
+  - Log must contain at least one of: Plant 29
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2 best-effort: TURN_START_COIN_FLIP_FLAG — combat + MSG/card presence.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Plant 29
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Plant 29
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Accident, Resurrection
+P1 Tech hand: Bribe, Radar, Spy
+P0:   [C:Deat][T:Blac][C:Gree][T:Echo][T:Host]
+      [  — ][T:Pepp][  — ][C:Mafi][  — ]
+      [C:Gamm][  — ][C:Plan][  — ][C:Hand]
+      [  — ][C:Lab ][  — ][C:Kiyo][  — ]
+      [T:Red ][  — ][C:Big ][T:Deco][C:Flam]
+P1:   [  — ][  — ][T:Self][  — ][C:Leop]
+      [C:Moon][C:Aray][C:Gree][C:Nuki][  — ]
+      [T:Bait][C:Lazy][C:Chao][C:Saw ][  — ]
+      [T:Echo][C:Choi][C:Paro][C:Swar][T:Expl]
+      [  — ][T:Snar][  — ][T:Bunk][C:Doom]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+[00:05.291] Mode selected P0: ATTACK
+[00:05.295] Attack phase P0: 2 attack(s) available
+[00:05.296] MSG: Player 1: tap a character to attack.
+[00:05.591] AI0 attack decision: (2,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.962] Revealed: P0 (2,2) "Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[00:05.987] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.987] Dice rolled: 2
+[00:05.990] MSG: Plant 29 wins!
+[00:10.614] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.016] Attack P0(2,2)"Plant 29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=45 vs DEF=0  → WIN
+[00:12.016] E2E: ability goal reached — ending battle early.
+[00:12.016] Anim: 3A  △ P1(2,2)
+[00:12.016] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[00:12.025] AI Player 0 wins
+[00:12.025] Final crystals — P0: 5000  P1: 4900  |  Turns: 1
+[00:12.025] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_sticky_vending_machine_2026-06-01_23-32-00_254.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Plant-29-002
+Highlight: Plant 29 (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

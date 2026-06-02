@@ -1,0 +1,601 @@
+=== Battle of WiFi Router Funeral ===
+Battle started: 2026-06-01 10:03:40.624
+Game Session of Mint Julep (started 2026-06-01 09:37:04.903)
+=== Card E2E Test ===
+Scenario ID:  E2E-Bleacher-Squad-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Bleacher-Squad-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Bleacher Squad (Character)  [setup: Scarlet Mutant]
+Ability:      ATK_BONUS_VS_AFFINITY — +20 ATK vs Bio
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Bleacher Squad" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Bleacher Squad
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Bleacher\ Squad".*ATK=40\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +20 ATK vs BIO (Scarlet Mutant).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Bleacher Squad
+AI-1 Deck:    E2E T2 solo Scarlet Mutant
+AI-0 Forced:  (2,2) Bleacher Squad
+AI-1 Forced:  (2,2) Scarlet Mutant
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Accident, Tease, Siege Cannon
+P1 Tech hand: Accident, Spy, Great Diplomacy
+P0:   [C:Moon][T:Hypn][  — ][  — ][C:Sate]
+      [C:Mars][  — ][  — ][T:Pepp][C:Gran]
+      [C:Saw ][C:Meli][C:Blea][C:Snip][C:Heav]
+      [C:Raij][  — ][  — ][T:Hard][C:Stre]
+      [C:Echo][  — ][  — ][  — ][T:Red ]
+P1:   [C:Chao][T:Red ][  — ][T:Host][C:Fera]
+      [C:Moon][C:Armo][C:Deat][T:Self][  — ]
+      [  — ][  — ][C:Scar][T:Flam][C:Mage]
+      [C:Meph][C:Arch][  — ][  — ][  — ]
+      [C:Foul][C:Demo][  — ][  — ][C:Claw]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:06.819] Crystals: P0 5000 → 4500 (-500)  [union]
+[00:06.857] Revealed: P0 (0,0) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[00:06.857] Union summoned P0: "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} from "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}, "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down}
+[00:06.857] MSG: Moon Tribe Shaman: No matching card in graveyard to revive.
+[00:06.857] MSG: Player 1 summoned [Moon Tribe Shaman] using: "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down}, "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down}
+[00:10.219] Mode selected P0: ATTACK
+[00:10.223] Attack phase P0: 2 attack(s) available
+[00:10.223] MSG: Player 1: tap a character to attack.
+[00:10.525] AI0 attack decision: (0,0)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → (2,3) "Flame Trap" {cost 250}
+[00:10.869] Revealed: P1 (2,3) "Flame Trap" {cost 250}
+[00:10.869] Dice rolled: 3
+[00:11.195] MSG: Trap triggered: Flame Trap!
+[00:15.253] Crystals: P1 5000 → 4750 (-250)  [trap cost]
+[00:16.643] MSG: Spike Trap: Moon Tribe Shaman permanently loses 10 ATK!
+[00:16.647] Trap: "Flame Trap" triggered  P0(0,0)→P1(2,3)
+[00:16.647] Anim: 3D  (attacker survives)
+[00:17.152] Mode selected P0: ATTACK
+[00:17.157] Attack phase P0: 1 attack(s) available
+[00:17.157] MSG: Player 1: tap a character to attack.
+[00:17.460] AI0 attack decision: (1,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic | face-down} → (0,2) (dead-end)
+[00:17.804] Revealed: P0 (1,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:17.805] Dice rolled: 5
+[00:17.821] MSG: Nothing happens — Dead End.
+[00:21.173] Attack P0(1,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P1(0,2)(empty)  Dice=5  → DEAD_END
+[00:21.173] Anim: 3F  (blank slot)
+[00:21.681] Turn ended  P0  |  Crystals P0=4500 P1=4750
+
+--- Turn 2  |  Player 1  |  Crystals P0=4500 P1=4750 ---
+P0:   [Moon][  ? ][  — ][  — ][  — ]
+      [Mars][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:23.793] Crystals: P1 4750 → 3950 (-800)  [union]
+[00:23.850] Revealed: P1 (1,1) "Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[00:23.850] Union summoned P1: "Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down}, "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:23.850] MSG: Player 2 summoned [Armored Dino] using: "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down}, "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down}
+[00:27.043] Crystals: P1 3950 → 3900 (-50)  [skip tax]
+[00:27.044] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:28.432] Turn ended  P1  |  Crystals P0=4500 P1=3900
+
+--- Turn 3  |  Player 0  |  Crystals P0=4500 P1=3900 ---
+P0:   [Moon][  ? ][  — ][  — ][  — ]
+      [Mars][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Armo][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:29.036] Mode selected P0: ATTACK
+[00:29.043] Attack phase P0: 2 attack(s) available
+[00:29.043] MSG: Player 1: tap a character to attack.
+[00:29.344] AI0 attack decision: (0,0)"Moon Tribe Shaman" {Union ATK15 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | base 15/55} → (1,2) (dead-end)
+[00:29.651] Dice rolled: 3
+[00:29.720] MSG: Nothing happens — Dead End.
+[00:33.058] Attack P0(0,0)"Moon Tribe Shaman" {Union ATK15 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | base 15/55} → P1(1,2)(empty)  Dice=3  → DEAD_END
+[00:33.058] Anim: 3F  (blank slot)
+[00:33.559] Mode selected P0: ATTACK
+[00:33.562] Attack phase P0: 1 attack(s) available
+[00:33.562] MSG: Player 1: tap a character to attack.
+[00:33.867] AI0 attack decision: (1,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → (0,0) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:34.209] Revealed: P1 (0,0) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:34.209] Dice rolled: 1
+[00:34.213] MSG: Mars Drill wins!
+[00:38.877] Crystals: P1 3900 → 3800 (-100)  [battle]
+[00:40.275] Attack P0(1,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P1(0,0)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=40 vs DEF=0  → WIN
+[00:40.275] Anim: 3A  △ P1(0,0)
+[00:40.275] Card destroyed  P1 (0,0) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:40.783] Turn ended  P0  |  Crystals P0=4500 P1=3800
+
+--- Turn 4  |  Player 1  |  Crystals P0=4500 P1=3800 ---
+P0:   [Moon][  ? ][  — ][  — ][  — ]
+      [Mars][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Armo][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:41.385] Mode selected P1: ATTACK
+[00:41.394] Attack phase P1: 2 attack(s) available
+[00:41.394] MSG: Player 2: tap a character to attack.
+[00:41.692] AI1 attack decision: (1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (1,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:42.001] Dice rolled: 5
+[00:42.053] MSG: Armored Dino wins!
+[00:46.702] Crystals: P0 4500 → 4100 (-400)  [battle]
+[00:48.100] Attack P1(1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P0(1,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=5  ATK=95 vs DEF=30  → WIN
+[00:48.100] Anim: 3A  △ P0(1,0)
+[00:48.100] Card destroyed  P0 (1,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:48.405] Turn ended  P1  |  Crystals P0=4100 P1=3800
+
+--- Turn 5  |  Player 0  |  Crystals P0=4100 P1=3800 ---
+P0:   [Moon][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Armo][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:49.016] Mode selected P0: ATTACK
+[00:49.022] Attack phase P0: 2 attack(s) available
+[00:49.023] MSG: Player 1: tap a character to attack.
+[00:49.317] AI0 attack decision: (2,2)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio | face-down} → (0,1) "Red Card" {cost 0}
+[00:49.699] Revealed: P0 (2,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[00:49.732] Revealed: P1 (0,1) "Red Card" {cost 0}
+[00:49.732] Dice rolled: 2
+[00:49.973] MSG: Trap triggered: Red Card!
+[00:54.124] Coin flip: Tails, Tails
+[00:56.835] MSG: Red Card: Tails, Tails.
+[00:56.835] MSG: Not both heads — no effect.
+[00:56.840] Trap: "Red Card" triggered  P0(2,2)→P1(0,1)
+[00:56.840] Anim: 3D  (attacker survives)
+[00:57.345] Mode selected P0: ATTACK
+[00:57.353] Attack phase P0: 1 attack(s) available
+[00:57.353] MSG: Player 1: tap a character to attack.
+[00:57.651] AI0 attack decision: (0,0)"Moon Tribe Shaman" {Union ATK15 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | base 15/55} → (1,4) (dead-end)
+[00:57.960] Dice rolled: 3
+[00:58.025] MSG: Nothing happens — Dead End.
+[01:01.361] Attack P0(0,0)"Moon Tribe Shaman" {Union ATK15 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | base 15/55} → P1(1,4)(empty)  Dice=3  → DEAD_END
+[01:01.361] Anim: 3F  (blank slot)
+[01:01.856] Turn ended  P0  |  Crystals P0=4100 P1=3800
+
+--- Turn 6  |  Player 1  |  Crystals P0=4100 P1=3800 ---
+P0:   [Moon][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][Blea][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][Armo][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:02.456] Mode selected P1: ATTACK
+[01:02.461] Attack phase P1: 2 attack(s) available
+[01:02.461] MSG: Player 2: tap a character to attack.
+[01:02.754] AI1 attack decision: (1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (2,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[01:03.055] Dice rolled: 1
+[01:03.111] MSG: Armored Dino wins!
+[01:07.748] Crystals: P0 4100 → 3780 (-320)  [battle]
+[01:09.146] Attack P1(1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P0(2,2)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}  Dice=1  ATK=95 vs DEF=20  → WIN
+[01:09.147] Anim: 3A  △ P0(2,2)
+[01:09.147] Card destroyed  P0 (2,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[01:09.444] Turn ended  P1  |  Crystals P0=3780 P1=3800
+
+--- Turn 7  |  Player 0  |  Crystals P0=3780 P1=3800 ---
+P0:   [Moon][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][Armo][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:10.044] Mode selected P0: ATTACK
+[01:10.050] Attack phase P0: 2 attack(s) available
+[01:10.050] MSG: Player 1: tap a character to attack.
+[01:10.338] AI0 attack decision: (3,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine | face-down} → (1,1) "Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[01:10.718] Revealed: P0 (3,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[01:10.718] Dice rolled: 1
+[01:10.749] Defender prompt: "Armored Dino: Pay 1000 Crystals for +60 DEF this battle?"  [Pay 1000 Crystals / Skip]
+[01:11.308] Ability choice resolved: 1 (No)
+[01:11.308] MSG: Both cards are destroyed!
+[01:15.664] Crystals: P0 3780 → 3230 (-550)  [battle]
+[01:17.064] Attack P0(3,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature}  Dice=1  ATK=60 vs DEF=60  → TIE
+[01:17.064] Anim: 3C  △ P0(3,0) + △ P1(1,1)
+[01:17.064] Card destroyed  P0 (3,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[01:17.064] Card destroyed  P1 (1,1) "Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[01:17.560] Mode selected P0: ATTACK
+[01:17.565] Attack phase P0: 1 attack(s) available
+[01:17.566] MSG: Player 1: tap a character to attack.
+[01:17.855] AI0 attack decision: (0,0)"Moon Tribe Shaman" {Union ATK15 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | base 15/55} → (0,3) "Hostage" {cost 200}
+[01:18.186] Revealed: P1 (0,3) "Hostage" {cost 200}
+[01:18.186] Dice rolled: 4
+[01:18.508] MSG: Trap triggered: Hostage!
+[01:22.524] Crystals: P1 3800 → 3600 (-200)  [trap cost]
+[01:23.913] MSG: Hostage: Adjacent squares revealed and locked.
+[01:23.952] Revealed: P1 (1,3) "Self-destruct" {cost 0}
+[01:23.996] Revealed: P1 (0,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:23.998] Trap: "Hostage" triggered  P0(0,0)→P1(0,3)
+[01:23.998] Anim: 3D  (attacker survives)
+[01:24.453] Turn ended  P0  |  Crystals P0=3230 P1=3600
+
+--- Turn 8  |  Player 1  |  Crystals P0=3230 P1=3600 ---
+P0:   [Moon][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][Fera]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:25.050] Mode selected P1: ATTACK
+[01:25.056] Attack phase P1: 2 attack(s) available
+[01:25.056] MSG: Player 2: tap a character to attack.
+[01:25.346] AI1 attack decision: (0,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → (0,4) (dead-end)
+[01:25.647] Dice rolled: 4
+[01:25.670] MSG: Nothing happens — Dead End.
+[01:29.046] Attack P1(0,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P0(0,4)(empty)  Dice=4  → DEAD_END
+[01:29.046] Anim: 3F  (blank slot)
+[01:29.340] Turn ended  P1  |  Crystals P0=3230 P1=3600
+
+--- Turn 9  |  Player 0  |  Crystals P0=3230 P1=3600 ---
+P0:   [Moon][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][Fera]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:29.941] Mode selected P0: ATTACK
+[01:29.947] Attack phase P0: 2 attack(s) available
+[01:29.948] MSG: Player 1: tap a character to attack.
+[01:30.239] AI0 attack decision: (2,3)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine | face-down} → (0,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:30.600] Revealed: P0 (2,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:30.600] Dice rolled: 1
+[01:30.605] MSG: Feral Vampire is destroyed battling Divine!
+[01:36.106] Crystals: P0 3230 → 2880 (-350)  [battle]
+[01:37.496] Crystals: P1 3600 → 3200 (-400)  [battle]
+[01:38.889] Attack P0(2,3)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(0,4)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=1  ATK=20 vs DEF=25  → TIE
+[01:38.889] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} ATK -20
+[01:38.890] Anim: 3C  △ P0(2,3) + △ P1(0,4)
+[01:38.890] Card destroyed  P0 (2,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:38.890] Card destroyed  P1 (0,4) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[01:39.392] Mode selected P0: ATTACK
+[01:39.394] Attack phase P0: 1 attack(s) available
+[01:39.395] MSG: Player 1: tap a character to attack.
+[01:39.696] AI0 attack decision: (0,0)"Moon Tribe Shaman" {Union ATK15 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | base 15/55} → (1,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}
+[01:40.057] Revealed: P1 (1,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:40.057] Dice rolled: 1
+[01:44.869] Attack P0(0,0)"Moon Tribe Shaman" {Union ATK15 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | base 15/55} → P1(1,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=1  ATK=15 vs DEF=20  → LOSE
+[01:44.869] Anim: 3B  △ P0(0,0)
+[01:44.869] Card destroyed  P0 (0,0) "Moon Tribe Shaman" {Union ATK15 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | base 15/55}
+[01:45.368] Turn ended  P0  |  Crystals P0=2880 P1=3200
+
+--- Turn 10  |  Player 1  |  Crystals P0=2880 P1=3200 ---
+P0:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [Moon][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:45.964] Mode selected P1: ATTACK
+[01:45.970] Attack phase P1: 2 attack(s) available
+[01:45.970] MSG: Player 2: tap a character to attack.
+[01:46.264] AI1 attack decision: (1,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → (1,3) "Pepper Spray" {cost 0}
+[01:46.601] Revealed: P0 (1,3) "Pepper Spray" {cost 0}
+[01:46.601] Dice rolled: 5
+[01:46.862] MSG: Trap triggered: Pepper Spray!
+[01:51.008] Coin flip: Tails, Heads
+[01:53.722] MSG: Pepper Spray: Tails, Heads.
+[01:53.722] MSG: Not both heads — no effect.
+[01:53.726] Trap: "Pepper Spray" triggered  P1(1,0)→P0(1,3)
+[01:53.726] Anim: 3D  (attacker survives)
+[01:54.034] Turn ended  P1  |  Crystals P0=2880 P1=3200
+
+--- Turn 11  |  Player 0  |  Crystals P0=2880 P1=3200 ---
+P0:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [Moon][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:54.641] Mode selected P0: ATTACK
+[01:54.647] Attack phase P0: 2 attack(s) available
+[01:54.647] MSG: Player 1: tap a character to attack.
+[01:54.946] AI0 attack decision: (1,4)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima | face-down} → (1,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[01:55.294] Revealed: P0 (1,4) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[01:55.294] Dice rolled: 3
+[01:55.298] MSG: Grand Fort Mauler wins!
+[01:59.972] Crystals: P1 3200 → 3000 (-200)  [battle]
+[02:01.370] Attack P0(1,4)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(1,0)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=3  ATK=40 vs DEF=20  → WIN
+[02:01.371] Anim: 3A  △ P1(1,0)
+[02:01.371] Card destroyed  P1 (1,0) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[02:01.865] Mode selected P0: ATTACK
+[02:01.870] Attack phase P0: 1 attack(s) available
+[02:01.871] MSG: Player 1: tap a character to attack.
+[02:02.163] AI0 attack decision: (2,4)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (3,0) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down}
+[02:02.500] Revealed: P0 (2,4) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:02.529] Revealed: P1 (3,0) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[02:02.529] Dice rolled: 5
+[02:02.533] MSG: Heavy Tome Preacher wins!
+[02:07.130] Crystals: P1 3000 → 2140 (-860)  [battle]
+[02:08.529] Attack P0(2,4)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(3,0)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}  Dice=5  ATK=25 vs DEF=0  → WIN
+[02:08.529] Anim: 3A  △ P1(3,0)
+[02:08.529] Card destroyed  P1 (3,0) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[02:09.031] Turn ended  P0  |  Crystals P0=2880 P1=2140
+
+--- Turn 12  |  Player 1  |  Crystals P0=2880 P1=2140 ---
+P0:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Gran]
+      [  ? ][  ? ][  — ][  — ][Heav]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:09.639] Mode selected P1: ATTACK
+[02:09.646] Attack phase P1: 2 attack(s) available
+[02:09.646] MSG: Player 2: tap a character to attack.
+[02:09.947] AI1 attack decision: (2,4)"Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos | face-down} → (1,4) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:10.295] Revealed: P1 (2,4) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos}
+[02:10.295] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[02:10.295] Dice rolled: 2
+[02:10.299] MSG: Magenta the Nightbloom wins!
+[02:14.956] Crystals: P0 2880 → 2530 (-350)  [battle]
+[02:16.354] Attack P1(2,4)"Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20} → P0(1,4)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=2  ATK=25 vs DEF=10  → WIN
+[02:16.354] Anim: 3A  △ P0(1,4)
+[02:16.354] Card destroyed  P0 (1,4) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:16.660] Turn ended  P1  |  Crystals P0=2530 P1=2140
+
+--- Turn 13  |  Player 0  |  Crystals P0=2530 P1=2140 ---
+P0:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][Heav]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][Mage]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:17.264] Mode selected P0: ATTACK
+[02:17.270] Attack phase P0: 2 attack(s) available
+[02:17.270] MSG: Player 1: tap a character to attack.
+[02:17.572] AI0 attack decision: (2,4)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → (2,4) "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}
+[02:17.881] Dice rolled: 5
+[02:17.891] MSG: Heavy Tome Preacher wins!
+[02:22.581] Crystals: P1 2140 → 1840 (-300)  [battle]
+[02:23.978] Attack P0(2,4)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(2,4)"Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}  Dice=5  ATK=25 vs DEF=20  → WIN
+[02:23.979] Anim: 3A  △ P1(2,4)
+[02:23.979] Card destroyed  P1 (2,4) "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}
+[02:24.482] Mode selected P0: ATTACK
+[02:24.487] Attack phase P0: 1 attack(s) available
+[02:24.487] MSG: Player 1: tap a character to attack.
+[02:24.788] AI0 attack decision: (3,4)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima | face-down} → (1,3) (dead-end)
+[02:25.135] Revealed: P0 (3,4) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[02:25.136] Dice rolled: 5
+[02:25.151] MSG: Nothing happens — Dead End.
+[02:28.495] Attack P0(3,4)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P1(1,3)(empty)  Dice=5  → DEAD_END
+[02:28.495] Anim: 3F  (blank slot)
+[02:28.993] Turn ended  P0  |  Crystals P0=2530 P1=1840
+
+--- Turn 14  |  Player 1  |  Crystals P0=2530 P1=1840 ---
+P0:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][Heav]
+      [  — ][  — ][  — ][  ? ][Stre]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:29.589] Mode selected P1: ATTACK
+[02:29.596] Attack phase P1: 2 attack(s) available
+[02:29.596] MSG: Player 2: tap a character to attack.
+[02:29.888] AI1 attack decision: (2,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down} → (3,4) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[02:30.219] Revealed: P1 (2,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[02:30.219] Dice rolled: 3
+[02:30.222] MSG: Scarlet Mutant wins!
+[02:34.884] Crystals: P0 2530 → 2180 (-350)  [battle]
+[02:36.281] Attack P1(2,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(3,4)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=3  ATK=35 vs DEF=20  → WIN
+[02:36.281] Anim: 3A  △ P0(3,4)
+[02:36.281] Card destroyed  P0 (3,4) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[02:36.578] Turn ended  P1  |  Crystals P0=2180 P1=1840
+
+--- Turn 15  |  Player 0  |  Crystals P0=2180 P1=1840 ---
+P0:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][Heav]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][Scar][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:37.173] Mode selected P0: ATTACK
+[02:37.177] Attack phase P0: 2 attack(s) available
+[02:37.177] MSG: Player 1: tap a character to attack.
+[02:37.471] AI0 attack decision: (4,0)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | face-down} → (2,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[02:37.812] Revealed: P0 (4,0) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[02:37.812] Dice rolled: 3
+[02:37.816] MSG: Echo Bringer wins!
+[02:42.481] Crystals: P1 1840 → 1490 (-350)  [battle]
+[02:43.876] Attack P0(4,0)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic} → P1(2,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=3  ATK=70 vs DEF=30  → WIN
+[02:43.877] Anim: 3A  △ P1(2,2)
+[02:43.877] Card destroyed  P1 (2,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[02:43.878] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[02:44.381] Mode selected P0: ATTACK
+[02:44.388] Attack phase P0: 2 attack(s) available
+[02:44.389] MSG: Player 1: tap a character to attack.
+[02:44.689] AI0 attack decision: (2,4)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → (3,1) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | face-down}
+[02:45.035] Revealed: P1 (3,1) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[02:45.035] Dice rolled: 5
+[02:49.806] Crystals: P0 2180 → 1880 (-300)  [battle]
+[02:51.204] Attack P0(2,4)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(3,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}  Dice=5  ATK=25 vs DEF=90  → LOSE
+[02:51.204] Anim: 3B  △ P0(2,4)
+[02:51.204] Card destroyed  P0 (2,4) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:51.697] Mode selected P0: ATTACK
+[02:51.702] Attack phase P0: 1 attack(s) available
+[02:51.703] MSG: Player 1: tap a character to attack.
+[02:51.997] AI0 attack decision: (2,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down} → (4,4) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down}
+[02:52.332] Revealed: P0 (2,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[02:52.379] Revealed: P1 (4,4) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[02:52.380] Dice rolled: 3
+[02:52.383] MSG: Saw Shark wins!
+[02:56.939] Crystals: P1 1490 → 1310 (-180)  [battle]
+[02:58.336] Attack P0(2,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} → P1(4,4)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=3  ATK=25 vs DEF=10  → WIN
+[02:58.336] Anim: 3A  △ P1(4,4)
+[02:58.336] Card destroyed  P1 (4,4) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[02:58.834] Turn ended  P0  |  Crystals P0=1880 P1=1310
+
+--- Turn 16  |  Player 1  |  Crystals P0=1880 P1=1310 ---
+P0:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Saw ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [Echo][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Arch][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[02:59.431] Mode selected P1: ATTACK
+[02:59.439] Attack phase P1: 2 attack(s) available
+[02:59.440] MSG: Player 2: tap a character to attack.
+[02:59.730] AI1 attack decision: (3,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → (4,0) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used}
+[03:00.031] Dice rolled: 5
+[03:00.041] MSG: Archbishop wins!
+[03:04.722] Crystals: P0 1880 → 980 (-900)  [battle]
+[03:06.121] Attack P1(3,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P0(4,0)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used}  Dice=5  ATK=70 vs DEF=40  → WIN
+[03:06.121] Anim: 3A  △ P0(4,0)
+[03:06.121] Card destroyed  P0 (4,0) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used}
+[03:06.417] Turn ended  P1  |  Crystals P0=980 P1=1310
+
+--- Turn 17  |  Player 0  |  Crystals P0=980 P1=1310 ---
+P0:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [Saw ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Arch][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+[03:07.013] Mode selected P0: ATTACK
+[03:07.018] Attack phase P0: 2 attack(s) available
+[03:07.019] MSG: Player 1: tap a character to attack.
+[03:07.314] AI0 attack decision: (2,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} → (4,0) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos | face-down}
+[03:07.646] Revealed: P1 (4,0) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[03:07.646] Dice rolled: 1
+[03:07.650] MSG: Both cards are destroyed!
+[03:12.222] Crystals: P0 980 → 700 (-280)  [battle]
+[03:13.613] Crystals: P1 1310 → 1210 (-100)  [battle]
+[03:15.006] Attack P0(2,0)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} → P1(4,0)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=1  ATK=25 vs DEF=25  → TIE
+[03:15.006] Anim: 3C  △ P0(2,0) + △ P1(4,0)
+[03:15.006] Card destroyed  P0 (2,0) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[03:15.006] Card destroyed  P1 (4,0) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[03:15.496] Mode selected P0: ATTACK
+[03:15.498] Attack phase P0: 1 attack(s) available
+[03:15.499] MSG: Player 1: tap a character to attack.
+[03:15.796] AI0 attack decision: (2,1)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down} → (3,3) (dead-end)
+[03:16.148] Revealed: P0 (2,1) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[03:16.148] Dice rolled: 5
+[03:16.162] MSG: Nothing happens — Dead End.
+[03:19.530] Attack P0(2,1)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} → P1(3,3)(empty)  Dice=5  → DEAD_END
+[03:19.530] Anim: 3F  (blank slot)
+[03:20.030] Turn ended  P0  |  Crystals P0=700 P1=1210
+
+--- Turn 18  |  Player 1  |  Crystals P0=700 P1=1210 ---
+P0:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Meli][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Arch][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[03:20.613] Mode selected P1: ATTACK
+[03:20.620] Attack phase P1: 2 attack(s) available
+[03:20.620] MSG: Player 2: tap a character to attack.
+[03:20.914] AI1 attack decision: (3,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → (2,1) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[03:21.213] Dice rolled: 5
+[03:21.220] MSG: Archbishop wins!
+[03:25.907] Crystals: P0 700 → 0 (-700)  [battle]
+[03:25.907] Crystals: P0 0 → 300 (+300)  [recovery]
+[03:25.907] MSG: Melissa the Healer: Recovered 300 Crystals!
+[03:25.924] Attack P1(3,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P0(2,1)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}  Dice=5  ATK=70 vs DEF=25  → WIN
+[03:25.925] Anim: 3A  △ P0(2,1)
+[03:25.925] Card destroyed  P0 (2,1) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+
+=== GAME OVER ===
+[03:25.926] AI Player 1 wins
+[03:25.926] Reason: all_destroyed
+[03:25.926] Final crystals — P0: 300  P1: 1210  |  Turns: 18
+[03:25.926] Log saved to: res://logs/results/2026-06-01_09-37-04_903_mint_julep/battle_wifi_router_funeral_2026-06-01_10-03-40_624.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Bleacher-Squad-002
+Highlight: Bleacher Squad (Character)  [setup: Scarlet Mutant]
+Result:    FAIL
+Detail:    Regex not matched: Attack P0\(2,2\)"Bleacher\ Squad".*ATK=40\s
+Turns:     18  |  AI timeouts: 0
+===

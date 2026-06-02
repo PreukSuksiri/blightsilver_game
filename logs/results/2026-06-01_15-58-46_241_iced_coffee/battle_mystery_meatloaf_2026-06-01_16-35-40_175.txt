@@ -1,0 +1,418 @@
+=== Battle of Mystery Meatloaf ===
+Battle started: 2026-06-01 16:35:40.175
+Game Session of Iced Coffee (started 2026-06-01 15:58:46.241)
+=== Card E2E Test ===
+Scenario ID:  E2E-Book-with-Fangs-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Book-with-Fangs-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Book with Fangs (Character)  [setup: Ice Mage]
+Ability:      ATK_DEF_BONUS_VS_AFFINITY — +30 ATK&DEF vs Arcane
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Book with Fangs" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Book with Fangs
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Book\ with\ Fangs".*ATK=75\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +30 ATK vs ARCANE.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Book with Fangs
+AI-1 Deck:    E2E T2 solo Ice Mage
+AI-0 Forced:  (2,2) Book with Fangs
+AI-1 Forced:  (2,2) Ice Mage
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Spy, Release Mutagen
+P1 Tech hand: Great Diplomacy, Siege Cannon, Prayer
+P0:   [C:Yaks][C:Myst][T:Defe][  — ][  — ]
+      [C:Gamm][C:Snip][C:Stri][C:Silv][  — ]
+      [T:Self][T:Snar][C:Book][  — ][C:Raij]
+      [C:Hunt][  — ][  — ][T:Expl][  — ]
+      [  — ][  — ][  — ][  — ][T:Hypn]
+P1:   [C:Gran][C:Dark][C:Curs][  — ][C:War ]
+      [T:Red ][  — ][T:Expl][  — ][T:Curs]
+      [T:Brai][C:Raij][C:Ice ][  — ][T:Echo]
+      [  — ][  — ][  — ][  — ][C:Joan]
+      [C:Book][T:Alar][C:Rott][C:Scou][C:Choi]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.326] Mode selected P0: ATTACK
+[00:05.330] Attack phase P0: 2 attack(s) available
+[00:05.330] MSG: Player 1: tap a character to attack.
+[00:05.625] AI0 attack decision: (2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (2,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down}
+[00:05.964] Revealed: P0 (2,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:05.991] Revealed: P1 (2,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:05.991] Dice rolled: 2
+[00:05.995] MSG: Book with Fangs wins!
+[00:11.576] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:12.973] Attack P0(2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(2,2)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=2  ATK=75 vs DEF=0  → WIN
+[00:12.973] Reckoning overlay: P0 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} +ATK 30
+[00:12.973] Anim: 3A  △ P1(2,2)
+[00:12.973] Card destroyed  P1 (2,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:13.476] Mode selected P0: ATTACK
+[00:13.481] Attack phase P0: 1 attack(s) available
+[00:13.482] MSG: Player 1: tap a character to attack.
+[00:13.784] AI0 attack decision: (1,2)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | face-down} → (0,4) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down}
+[00:14.131] Revealed: P0 (1,2) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[00:14.155] Revealed: P1 (0,4) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:14.155] Dice rolled: 1
+[00:18.901] Crystals: P0 5000 → 4800 (-200)  [battle]
+[00:20.299] Attack P0(1,2)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} → P1(0,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}  Dice=1  ATK=25 vs DEF=80  → LOSE
+[00:20.299] Anim: 3B  △ P0(1,2)
+[00:20.300] Card destroyed  P0 (1,2) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending}
+[00:20.798] Turn ended  P0  |  Crystals P0=4800 P1=4600
+
+--- Turn 2  |  Player 1  |  Crystals P0=4800 P1=4600 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Book][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:22.881] Crystals: P1 4600 → 4300 (-300)  [union]
+[00:22.920] Revealed: P1 (0,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[00:22.920] Union summoned P1: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos | face-down}
+[00:22.920] MSG: Player 2 summoned [Kitsune] using: "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos | face-down}
+[00:26.110] Crystals: P1 4300 → 4250 (-50)  [skip tax]
+[00:26.110] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:27.497] Turn ended  P1  |  Crystals P0=4800 P1=4250
+
+--- Turn 3  |  Player 0  |  Crystals P0=4800 P1=4250 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Book][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][Kits][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:28.094] Mode selected P0: ATTACK
+[00:28.101] Attack phase P0: 2 attack(s) available
+[00:28.101] MSG: Player 1: tap a character to attack.
+[00:28.392] AI0 attack decision: (2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (0,2) (dead-end)
+[00:28.693] Dice rolled: 2
+[00:28.720] MSG: Nothing happens — Dead End.
+[00:32.089] Attack P0(2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(0,2)(empty)  Dice=2  → DEAD_END
+[00:32.089] Anim: 3F  (blank slot)
+[00:32.584] Mode selected P0: ATTACK
+[00:32.591] Attack phase P0: 1 attack(s) available
+[00:32.591] MSG: Player 1: tap a character to attack.
+[00:32.884] AI0 attack decision: (2,4)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine | face-down} → (0,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[00:33.224] Revealed: P0 (2,4) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:33.224] Dice rolled: 2
+[00:33.266] MSG: Raijin wins!
+[00:37.942] Attack P0(2,4)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}  Dice=2  ATK=60 vs DEF=35  → WIN
+[00:37.943] Anim: 3A  △ P1(0,1)
+[00:37.943] Card destroyed  P1 (0,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[00:38.438] Turn ended  P0  |  Crystals P0=4800 P1=4250
+
+--- Turn 4  |  Player 1  |  Crystals P0=4800 P1=4250 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Book][  — ][Raij]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:39.040] Mode selected P1: ATTACK
+[00:39.047] Attack phase P1: 2 attack(s) available
+[00:39.048] MSG: Player 2: tap a character to attack.
+[00:39.334] AI1 attack decision: (0,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → (2,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:39.634] Dice rolled: 3
+[00:39.645] MSG: War Genie wins!
+[00:45.327] Crystals: P0 4800 → 4000 (-800)  [battle]
+[00:46.725] Attack P1(0,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P0(2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=3  ATK=100 vs DEF=85  → WIN
+[00:46.725] Reckoning overlay: P0 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} +DEF 30
+[00:46.725] Anim: 3A  △ P0(2,2)
+[00:46.725] Card destroyed  P0 (2,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:47.022] Turn ended  P1  |  Crystals P0=4000 P1=4250
+
+--- Turn 5  |  Player 0  |  Crystals P0=4000 P1=4250 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][Raij]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:47.618] Mode selected P0: ATTACK
+[00:47.624] Attack phase P0: 2 attack(s) available
+[00:47.625] MSG: Player 1: tap a character to attack.
+[00:47.917] AI0 attack decision: (2,4)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → (3,1) (dead-end)
+[00:48.217] Dice rolled: 1
+[00:48.244] MSG: Nothing happens — Dead End.
+[00:51.607] Attack P0(2,4)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(3,1)(empty)  Dice=1  → DEAD_END
+[00:51.607] Anim: 3F  (blank slot)
+[00:52.102] Mode selected P0: ATTACK
+[00:52.108] Attack phase P0: 1 attack(s) available
+[00:52.109] MSG: Player 1: tap a character to attack.
+[00:52.401] AI0 attack decision: (0,0)"Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos | face-down} → (0,0) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima | face-down}
+[00:52.733] Revealed: P0 (0,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[00:52.777] Revealed: P1 (0,0) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:52.777] Dice rolled: 3
+[00:52.781] MSG: Yaksa wins!
+[00:57.393] Crystals: P1 4250 → 3950 (-300)  [battle]
+[00:58.793] Attack P0(0,0)"Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos} → P1(0,0)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=3  ATK=30 vs DEF=25  → WIN
+[00:58.793] Anim: 3A  △ P1(0,0)
+[00:58.793] Card destroyed  P1 (0,0) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:59.290] Turn ended  P0  |  Crystals P0=4000 P1=3950
+
+--- Turn 6  |  Player 1  |  Crystals P0=4000 P1=3950 ---
+P0:   [Yaks][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][Raij]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:59.889] Mode selected P1: ATTACK
+[00:59.897] Attack phase P1: 2 attack(s) available
+[00:59.897] MSG: Player 2: tap a character to attack.
+[01:00.184] AI1 attack decision: (0,4)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} → (2,4) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[01:00.485] Dice rolled: 5
+[01:00.495] MSG: War Genie wins!
+[01:05.175] Crystals: P0 4000 → 3450 (-550)  [battle]
+[01:06.574] Attack P1(0,4)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} → P0(2,4)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=5  ATK=90 vs DEF=0  → WIN
+[01:06.574] Anim: 3A  △ P0(2,4)
+[01:06.575] Card destroyed  P0 (2,4) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[01:06.873] Turn ended  P1  |  Crystals P0=3450 P1=3950
+
+--- Turn 7  |  Player 0  |  Crystals P0=3450 P1=3950 ---
+P0:   [Yaks][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:07.464] Mode selected P0: ATTACK
+[01:07.471] Attack phase P0: 2 attack(s) available
+[01:07.471] MSG: Player 1: tap a character to attack.
+[01:07.763] AI0 attack decision: (0,0)"Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos} → (4,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down}
+[01:08.065] Revealed: P1 (4,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:08.065] Dice rolled: 2
+[01:12.872] Crystals: P0 3450 → 2950 (-500)  [battle]
+[01:14.271] Attack P0(0,0)"Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos} → P1(4,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=2  ATK=30 vs DEF=55  → LOSE
+[01:14.271] Anim: 3B  △ P0(0,0)
+[01:14.271] Card destroyed  P0 (0,0) "Yaksa" {Unit ATK30 DEF30 | cost 500 | affinity Chaos}
+[01:14.763] Mode selected P0: ATTACK
+[01:14.769] Attack phase P0: 1 attack(s) available
+[01:14.770] MSG: Player 1: tap a character to attack.
+[01:15.063] AI0 attack decision: (0,1)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos | face-down} → (1,1) (dead-end)
+[01:15.405] Revealed: P0 (0,1) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[01:15.406] Dice rolled: 1
+[01:15.420] MSG: Nothing happens — Dead End.
+[01:18.728] Attack P0(0,1)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos} → P1(1,1)(empty)  Dice=1  → DEAD_END
+[01:18.728] Anim: 3F  (blank slot)
+[01:19.232] Turn ended  P0  |  Crystals P0=2950 P1=3950
+
+--- Turn 8  |  Player 1  |  Crystals P0=2950 P1=3950 ---
+P0:   [  — ][Myst][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Book][  ? ][  ? ][  ? ][  ? ]
+[01:19.843] Mode selected P1: ATTACK
+[01:19.850] Attack phase P1: 2 attack(s) available
+[01:19.850] MSG: Player 2: tap a character to attack.
+[01:20.147] AI1 attack decision: (0,4)"War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80} → (0,1) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[01:20.454] Dice rolled: 1
+[01:20.466] MSG: War Genie wins!
+[01:25.155] Crystals: P0 2950 → 2700 (-250)  [battle]
+[01:26.553] Attack P1(0,4)"War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80} → P0(0,1)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}  Dice=1  ATK=80 vs DEF=15  → WIN
+[01:26.553] Anim: 3A  △ P0(0,1)
+[01:26.553] Card destroyed  P0 (0,1) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[01:26.860] Turn ended  P1  |  Crystals P0=2700 P1=3950
+
+--- Turn 9  |  Player 0  |  Crystals P0=2700 P1=3950 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Book][  ? ][  ? ][  ? ][  ? ]
+[01:27.464] Mode selected P0: ATTACK
+[01:27.471] Attack phase P0: 2 attack(s) available
+[01:27.472] MSG: Player 1: tap a character to attack.
+[01:27.771] AI0 attack decision: (1,1)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine | face-down} → (1,3) (dead-end)
+[01:28.118] Revealed: P0 (1,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:28.118] Dice rolled: 3
+[01:28.133] MSG: Nothing happens — Dead End.
+[01:31.499] Attack P0(1,1)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(1,3)(empty)  Dice=3  → DEAD_END
+[01:31.499] Anim: 3F  (blank slot)
+[01:31.993] Mode selected P0: ATTACK
+[01:31.998] Attack phase P0: 1 attack(s) available
+[01:31.998] MSG: Player 1: tap a character to attack.
+[01:32.292] AI0 attack decision: (1,0)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down} → (3,3) (dead-end)
+[01:32.630] Revealed: P0 (1,0) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[01:32.630] Dice rolled: 4
+[01:32.644] MSG: Nothing happens — Dead End.
+[01:36.000] Attack P0(1,0)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P1(3,3)(empty)  Dice=4  → DEAD_END
+[01:36.000] Anim: 3F  (blank slot)
+[01:36.494] Turn ended  P0  |  Crystals P0=2700 P1=3950
+
+--- Turn 10  |  Player 1  |  Crystals P0=2700 P1=3950 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [Gamm][Snip][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Book][  ? ][  ? ][  ? ][  ? ]
+[01:37.097] Mode selected P1: ATTACK
+[01:37.106] Attack phase P1: 2 attack(s) available
+[01:37.106] MSG: Player 2: tap a character to attack.
+[01:37.391] AI1 attack decision: (4,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (1,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:37.692] Dice rolled: 4
+[01:37.704] MSG: Book with Fangs wins!
+[01:42.384] Crystals: P0 2700 → 2350 (-350)  [battle]
+[01:43.782] Attack P1(4,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(1,1)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}  Dice=4  ATK=45 vs DEF=20  → WIN
+[01:43.782] Anim: 3A  △ P0(1,1)
+[01:43.782] Card destroyed  P0 (1,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:44.081] Turn ended  P1  |  Crystals P0=2350 P1=3950
+
+--- Turn 11  |  Player 0  |  Crystals P0=2350 P1=3950 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [Gamm][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Book][  ? ][  ? ][  ? ][  ? ]
+[01:44.672] Mode selected P0: ATTACK
+[01:44.680] Attack phase P0: 2 attack(s) available
+[01:44.680] MSG: Player 1: tap a character to attack.
+[01:44.971] AI0 attack decision: (1,0)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → (4,4) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down}
+[01:45.310] Revealed: P1 (4,4) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[01:45.310] Dice rolled: 3
+[01:50.080] Crystals: P0 2350 → 2130 (-220)  [battle]
+[01:51.480] Attack P0(1,0)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P1(4,4)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}  Dice=3  ATK=20 vs DEF=25  → LOSE
+[01:51.481] Anim: 3B  △ P0(1,0)
+[01:51.481] Card destroyed  P0 (1,0) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[01:51.980] Mode selected P0: ATTACK
+[01:51.988] Attack phase P0: 1 attack(s) available
+[01:51.988] MSG: Player 1: tap a character to attack.
+[01:52.288] AI0 attack decision: (3,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down} → (4,4) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[01:52.640] Revealed: P0 (3,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:52.640] Dice rolled: 3
+[01:52.644] MSG: Huntress of Green Glade wins!
+[01:57.297] Crystals: P1 3950 → 3700 (-250)  [battle]
+[01:58.696] Attack P0(3,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(4,4)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}  Dice=3  ATK=50 vs DEF=25  → WIN
+[01:58.696] Anim: 3A  △ P1(4,4)
+[01:58.696] Card destroyed  P1 (4,4) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[01:59.202] Turn ended  P0  |  Crystals P0=2130 P1=3700
+
+--- Turn 12  |  Player 1  |  Crystals P0=2130 P1=3700 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [Hunt][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Book][  ? ][  ? ][  ? ][  — ]
+[01:59.807] Mode selected P1: ATTACK
+[01:59.815] Attack phase P1: 2 attack(s) available
+[01:59.815] MSG: Player 2: tap a character to attack.
+[02:00.113] AI1 attack decision: (0,4)"War Genie" {Unit ATK70 DEF80 | cost 1150 | affinity Arcane | base 70/80} → (3,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[02:00.421] Dice rolled: 1
+[02:00.433] MSG: War Genie wins!
+[02:05.122] Crystals: P0 2130 → 1330 (-800)  [battle]
+[02:06.520] Attack P1(0,4)"War Genie" {Unit ATK70 DEF80 | cost 1150 | affinity Arcane | base 70/80} → P0(3,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=1  ATK=70 vs DEF=50  → WIN
+[02:06.521] Anim: 3A  △ P0(3,0)
+[02:06.521] Card destroyed  P0 (3,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[02:06.826] Turn ended  P1  |  Crystals P0=1330 P1=3700
+
+--- Turn 13  |  Player 0  |  Crystals P0=1330 P1=3700 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][War ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Book][  ? ][  ? ][  ? ][  — ]
+[02:07.430] Mode selected P0: ATTACK
+[02:07.436] Attack phase P0: 2 attack(s) available
+[02:07.437] MSG: Player 1: tap a character to attack.
+[02:07.737] AI0 attack decision: (1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down} → (1,2) "Explosive Barrels" {cost 0}
+[02:08.087] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:08.112] Revealed: P1 (1,2) "Explosive Barrels" {cost 0}
+[02:08.112] Dice rolled: 3
+[02:08.379] MSG: Trap triggered: Explosive Barrels!
+[02:13.614] Crystals: P0 1330 → 1080 (-250)  [card lost]
+
+=== GAME OVER ===
+[02:15.005] AI Player 1 wins
+[02:15.005] Reason: all_destroyed
+[02:15.005] Final crystals — P0: 1080  P1: 3700  |  Turns: 13
+[02:15.005] Log saved to: res://logs/results/2026-06-01_15-58-46_241_iced_coffee/battle_mystery_meatloaf_2026-06-01_16-35-40_175.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Book-with-Fangs-002
+Highlight: Book with Fangs (Character)  [setup: Ice Mage]
+Result:    PASS
+Detail:    ok
+Turns:     13  |  AI timeouts: 0
+===

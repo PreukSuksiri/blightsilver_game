@@ -1,0 +1,311 @@
+=== Battle of Slippery Banana Peel Protocol ===
+Battle started: 2026-06-01 18:48:48.242
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Release-Mutagen-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Release-Mutagen-001  (test_case/functional/tech_functional_tests.md)
+Highlight:    Release Mutagen (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Ability:      ADD_MUTAGEN_FLAG — Select and reveal (if face-down) 1 of your Bio Unit on the field. Add Mutagen Flag to it.
+Setup role:   t2_tech_play
+Verifies:
+  - Ability: "Release Mutagen" is exercised via forced board/tech setup (t2_tech_play)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must match regex: Tech played\s+P0: "Release\ Mutagen"
+  - Log must contain at least one of: Release Mutagen, Release Mutagen, Tech resolved, Revealed:, Card destroyed, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: tech Release Mutagen played (ADD_MUTAGEN_FLAG).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Release Mutagen
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Siege Cannon, Spy
+P1 Tech hand: Resurrection, Release Mutagen, Radar
+P0:   [C:Chur][  — ][  — ][T:Stre][C:Bat ]
+      [  — ][C:Armo][T:Bunk][  — ][T:Blac]
+      [C:Ange][C:Ice ][C:Ox P][T:Acid][  — ]
+      [C:Wand][C:Lab ][C:Leop][C:Hunt][T:Expl]
+      [C:Scar][C:Big ][C:Mine][  — ][  — ]
+P1:   [  — ][  — ][  — ][T:Snar][  — ]
+      [  — ][C:Swar][C:Aray][C:Paro][  — ]
+      [T:Spik][C:Moon][C:Chao][C:Spac][T:Trap]
+      [  — ][C:Gran][C:Blad][C:Leop][  — ]
+      [T:Self][  — ][  — ][C:Succ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[00:05.317] Mode selected P0: TECH
+[00:05.626] Tech played  P0: "Spy"
+[00:07.193] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:07.600] AI0 target chosen: (3,4)
+[00:07.600] Revealed: P1 (3,4) (blank slot)
+[00:07.604] Tech resolved  P0
+[00:08.519] Mode selected P0: ATTACK
+[00:08.522] Attack phase P0: 2 attack(s) available
+[00:08.522] MSG: Player 1: tap a character to attack.
+[00:08.825] AI0 attack decision: (0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (3,4) (dead-end)
+[00:09.169] Revealed: P0 (0,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:09.169] Dice rolled: 4
+[00:09.184] MSG: Nothing happens — Dead End.
+[00:12.531] Attack P0(0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(3,4)(empty)  Dice=4  → DEAD_END
+[00:12.532] Anim: 3F  (blank slot)
+[00:13.027] Mode selected P0: ATTACK
+[00:13.031] Attack phase P0: 1 attack(s) available
+[00:13.031] MSG: Player 1: tap a character to attack.
+[00:13.324] AI0 attack decision: (0,4)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down} → (0,2) (dead-end)
+[00:13.656] Revealed: P0 (0,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:13.657] Dice rolled: 3
+[00:13.666] MSG: Nothing happens — Dead End.
+[00:17.002] Attack P0(0,4)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P1(0,2)(empty)  Dice=3  → DEAD_END
+[00:17.002] Anim: 3F  (blank slot)
+[00:17.502] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [Chur][  — ][  — ][  ? ][Bat ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[00:18.128] Mode selected P1: ATTACK
+[00:18.131] Attack phase P1: 2 attack(s) available
+[00:18.131] MSG: Player 2: tap a character to attack.
+[00:18.400] AI1 attack decision: (3,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | face-down} → (0,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:18.737] Revealed: P1 (3,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:18.737] Dice rolled: 1
+[00:18.741] MSG: Grand Fort Archer wins!
+[00:24.376] Crystals: P0 5000 → 4800 (-200)  [battle]
+[00:25.774] Attack P1(3,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(0,4)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=1  ATK=30 vs DEF=15  → WIN
+[00:25.774] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} +ATK 10
+[00:25.774] Anim: 3A  △ P0(0,4)
+[00:25.774] Card destroyed  P0 (0,4) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:26.072] Turn ended  P1  |  Crystals P0=4800 P1=5000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4800 P1=5000 ---
+P0:   [Chur][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][Gran][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[00:26.663] Mode selected P0: TECH
+[00:26.963] Crystals: P0 4800 → 3800 (-1000)  [tech cost]
+[00:28.351] Tech played  P0: "Siege Cannon"
+[00:29.895] MSG: Siege Cannon active!
+[00:29.900] Tech resolved  P0
+[00:30.796] Mode selected P0: ATTACK
+[00:30.802] Attack phase P0: 2 attack(s) available
+[00:30.802] MSG: Player 1: tap a character to attack.
+[00:31.096] AI0 attack decision: (0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (1,2) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos | face-down}
+[00:31.433] Revealed: P1 (1,2) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[00:31.433] Dice rolled: 5
+[00:36.206] Crystals: P0 3800 → 3650 (-150)  [battle]
+[00:37.614] Attack P0(0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(1,2)"Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}  Dice=5  ATK=0 vs DEF=20  → LOSE
+[00:37.615] Anim: 3B  △ P0(0,0)
+[00:37.615] Card destroyed  P0 (0,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:37.623] MSG: Siege Cannon: Araya the Eerie Dancer at (1,2) destroyed after surviving the attack!
+[00:37.624] Crystals: P1 5000 → 4600 (-400)  [card lost]
+[00:37.627] Card destroyed  P1 (1,2) "Araya the Eerie Dancer" {Unit ATK15 DEF20 | cost 400 | affinity Chaos}
+[00:38.090] Mode selected P0: ATTACK
+[00:38.095] Attack phase P0: 1 attack(s) available
+[00:38.096] MSG: Player 1: tap a character to attack.
+[00:38.387] AI0 attack decision: (2,1)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down} → (3,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[00:38.732] Revealed: P0 (2,1) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:38.732] Dice rolled: 3
+[00:38.736] MSG: Ice Mage wins!
+[00:43.417] Crystals: P1 4600 → 4320 (-280)  [battle]
+[00:44.814] Attack P0(2,1)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P1(3,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=3  ATK=50 vs DEF=20  → WIN
+[00:44.814] Anim: 3A  △ P1(3,1)
+[00:44.815] Card destroyed  P1 (3,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[00:45.313] Turn ended  P0  |  Crystals P0=3650 P1=4320
+
+--- Turn 4  |  Player 1  |  Crystals P0=3650 P1=4320 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][Ice ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[00:45.923] Mode selected P1: ATTACK
+[00:45.928] Attack phase P1: 2 attack(s) available
+[00:45.929] MSG: Player 2: tap a character to attack.
+[00:46.208] AI1 attack decision: (1,1)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature | face-down} → (2,1) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:46.545] Revealed: P1 (1,1) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[00:46.545] Dice rolled: 1
+[00:46.561] MSG: Swarmcaller wins!
+[00:51.208] Crystals: P0 3650 → 3250 (-400)  [battle]
+[00:52.605] Attack P1(1,1)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature} → P0(2,1)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=1  ATK=45 vs DEF=0  → WIN
+[00:52.606] Anim: 3A  △ P0(2,1)
+[00:52.606] Card destroyed  P0 (2,1) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:52.903] Turn ended  P1  |  Crystals P0=3250 P1=4320
+
+--- Turn 5  |  Player 0  |  Crystals P0=3250 P1=4320 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][Swar][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[00:53.502] Mode selected P0: ATTACK
+[00:53.507] Attack phase P0: 2 attack(s) available
+[00:53.508] MSG: Player 1: tap a character to attack.
+[00:53.799] AI0 attack decision: (3,3)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down} → (1,1) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[00:54.136] Revealed: P0 (3,3) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[00:54.136] Dice rolled: 4
+[00:54.138] MSG: Huntress of Green Glade wins!
+[00:58.783] Crystals: P1 4320 → 3370 (-950)  [battle]
+[01:00.181] Attack P0(3,3)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(1,1)"Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}  Dice=4  ATK=50 vs DEF=45  → WIN
+[01:00.181] Anim: 3A  △ P1(1,1)
+[01:00.182] Card destroyed  P1 (1,1) "Swarmcaller" {Unit ATK45 DEF45 | cost 950 | affinity Nature}
+[01:02.688] Turn ended  P0  |  Crystals P0=3250 P1=3370
+
+--- Turn 6  |  Player 1  |  Crystals P0=3250 P1=3370 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][Hunt][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[01:03.287] Mode selected P1: ATTACK
+[01:03.292] Attack phase P1: 2 attack(s) available
+[01:03.293] MSG: Player 2: tap a character to attack.
+[01:03.575] AI1 attack decision: (2,3)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic | face-down} → (3,3) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:03.914] Revealed: P1 (2,3) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:03.914] Dice rolled: 3
+[01:03.918] MSG: Space Boy wins!
+[01:08.549] Crystals: P0 3250 → 2450 (-800)  [battle]
+[01:09.950] Attack P1(2,3)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P0(3,3)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=3  ATK=75 vs DEF=50  → WIN
+[01:09.951] Anim: 3A  △ P0(3,3)
+[01:09.951] Card destroyed  P0 (3,3) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:10.246] Turn ended  P1  |  Crystals P0=2450 P1=3370
+
+--- Turn 7  |  Player 0  |  Crystals P0=2450 P1=3370 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][Spac][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[01:10.844] Mode selected P0: ATTACK
+[01:10.850] Attack phase P0: 2 attack(s) available
+[01:10.850] MSG: Player 1: tap a character to attack.
+[01:11.142] AI0 attack decision: (3,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio | face-down} → (2,3) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:11.483] Revealed: P0 (3,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:11.483] Dice rolled: 2
+[01:11.489] MSG: Lab Crawler wins!
+[01:16.125] Crystals: P1 3370 → 2570 (-800)  [battle]
+[01:17.524] Attack P0(3,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P1(2,3)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}  Dice=2  ATK=95 vs DEF=65  → WIN
+[01:17.524] Anim: 3A  △ P1(2,3)
+[01:17.524] Card destroyed  P1 (2,3) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[01:20.029] Turn ended  P0  |  Crystals P0=2450 P1=2570
+
+--- Turn 8  |  Player 1  |  Crystals P0=2450 P1=2570 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Lab ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[01:20.637] Mode selected P1: ATTACK
+[01:20.642] Attack phase P1: 2 attack(s) available
+[01:20.642] MSG: Player 2: tap a character to attack.
+[01:20.925] AI1 attack decision: (1,3)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down}
+[01:21.262] Revealed: P1 (1,3) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:21.286] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:21.286] Crystals: P1 2570 → 2610 (+40)  [ability]
+[01:21.287] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:21.287] Dice rolled: 3
+[01:27.017] Crystals: P1 2610 → 2310 (-300)  [battle]
+[01:28.416] Attack P1(1,3)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=3  ATK=30 vs DEF=40  → LOSE
+[01:28.416] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 5
+[01:28.416] Anim: 3B  △ P1(1,3)
+[01:28.416] Card destroyed  P1 (1,3) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:28.722] Turn ended  P1  |  Crystals P0=2450 P1=2310
+
+--- Turn 9  |  Player 0  |  Crystals P0=2450 P1=2310 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Ox P][  ? ][  — ]
+      [  ? ][Lab ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[01:29.325] Mode selected P0: TECH
+[01:29.646] Tech played  P0: "Release Mutagen"
+[01:31.201] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[01:31.608] AI0 target chosen: (3,1)
+[01:31.617] Tech resolved  P0
+[01:32.525] Mode selected P0: ATTACK
+[01:32.533] Attack phase P0: 2 attack(s) available
+[01:32.533] MSG: Player 1: tap a character to attack.
+[01:32.534] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[01:32.538] AI Player 0 wins
+[01:32.538] Final crystals — P0: 2450  P1: 2310  |  Turns: 9
+[01:32.538] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_slippery_banana_peel_protocol_2026-06-01_18-48-48_242.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Release-Mutagen-002
+Highlight: Release Mutagen (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     9  |  AI timeouts: 0
+===

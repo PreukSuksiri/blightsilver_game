@@ -1,0 +1,329 @@
+=== Battle of Basement Spider Negotiation ===
+Battle started: 2026-06-01 20:02:05.410
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Raijin-and-Fujin-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Raijin-and-Fujin-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Raijin and Fujin (Union)  [setup: Raijin, Fujin, Chaotic Wisp]
+Setup role:   t2_union
+Verifies:
+  - Ability: "Raijin and Fujin" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Raijin and Fujin, Attack P\d\(\d+,\d+\)"Raijin\ and\ Fujin", MSG:.*Raijin
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Raijin and Fujin — summon logged and/or union attacks with ATK=80.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Raijin and Fujin
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (0,0) Raijin, (0,1) Fujin
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Tease, Spy
+P1 Tech hand: Siege Cannon, Release Mutagen, Resurrection
+P0:   [C:Raij][C:Fuji][C:Godd][  — ][  — ]
+      [C:Nuki][C:Fuji][T:Bait][C:Dark][C:War ]
+      [  — ][T:Defe][T:Foul][C:Witc][  — ]
+      [C:Jose][  — ][  — ][T:Spik][  — ]
+      [C:Scou][T:Hard][  — ][C:Pyro][C:Mine]
+P1:   [C:Jose][  — ][C:Soni][T:Echo][C:Godd]
+      [C:Vamp][T:Foul][C:Pit ][T:Defe][C:Sunr]
+      [T:Host][  — ][C:Chao][T:Snar][C:Mine]
+      [T:Pepp][  — ][C:Lazy][  — ][C:Leop]
+      [C:Immo][  — ][C:Scyt][  — ][C:Pony]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:06.766] Crystals: P0 5000 → 4700 (-300)  [union]
+[00:06.807] Revealed: P0 (0,2) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:06.807] Union summoned P0: "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}, "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down}
+[00:06.807] MSG: Player 1 summoned [False Prophet] using: "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}, "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down}
+[00:10.228] Mode selected P0: ATTACK
+[00:10.232] Attack phase P0: 2 attack(s) available
+[00:10.232] MSG: Player 1: tap a character to attack.
+[00:10.536] AI0 attack decision: (0,2)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → (1,0) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos | face-down}
+[00:10.884] Revealed: P1 (1,0) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:10.884] Dice rolled: 1
+[00:10.929] MSG: Both cards are destroyed!
+[00:15.436] Crystals: P1 5000 → 4200 (-800)  [battle]
+[00:16.836] Attack P0(0,2)"False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P1(1,0)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=1  ATK=20 vs DEF=20  → TIE
+[00:16.836] Anim: 3C  △ P0(0,2) + △ P1(1,0)
+[00:16.836] Card destroyed  P0 (0,2) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:16.836] Card destroyed  P1 (1,0) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:17.329] Mode selected P0: ATTACK
+[00:17.332] Attack phase P0: 1 attack(s) available
+[00:17.332] MSG: Player 1: tap a character to attack.
+[00:17.628] AI0 attack decision: (0,1)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down} → (1,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}
+[00:17.967] Revealed: P0 (0,1) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:17.998] Revealed: P1 (1,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:17.998] Dice rolled: 4
+[00:22.723] Crystals: P0 4700 → 4250 (-450)  [battle]
+[00:24.121] Attack P0(0,1)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(1,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}  Dice=4  ATK=35 vs DEF=100  → LOSE
+[00:24.122] Anim: 3B  △ P0(0,1)
+[00:24.122] Card destroyed  P0 (0,1) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:24.628] Turn ended  P0  |  Crystals P0=4250 P1=4200
+
+--- Turn 2  |  Player 1  |  Crystals P0=4250 P1=4200 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][Pit ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:26.740] Crystals: P1 4200 → 2200 (-2000)  [union]
+[00:26.776] Revealed: P1 (0,4) "Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature}
+[00:26.776] Union summoned P1: "Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} from "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:26.776] MSG: Player 2 summoned [Gaia Turtle] using: "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:29.994] Crystals: P1 2200 → 2150 (-50)  [skip tax]
+[00:29.995] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:31.382] Turn ended  P1  |  Crystals P0=4250 P1=2150
+
+--- Turn 3  |  Player 0  |  Crystals P0=4250 P1=2150 ---
+P0:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][Gaia]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:31.988] Mode selected P0: ATTACK
+[00:31.995] Attack phase P0: 2 attack(s) available
+[00:31.995] MSG: Player 1: tap a character to attack.
+[00:32.294] AI0 attack decision: (0,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine | face-down} → (1,2) (dead-end)
+[00:32.642] Revealed: P0 (0,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:32.642] Dice rolled: 2
+[00:32.657] MSG: Nothing happens — Dead End.
+[00:36.043] Attack P0(0,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine} → P1(1,2)(empty)  Dice=2  → DEAD_END
+[00:36.043] Anim: 3F  (blank slot)
+[00:36.537] Mode selected P0: ATTACK
+[00:36.543] Attack phase P0: 1 attack(s) available
+[00:36.543] MSG: Player 1: tap a character to attack.
+[00:36.836] AI0 attack decision: (1,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature | face-down} → (1,1) "Foul Gas" {cost 0}
+[00:37.169] Revealed: P0 (1,0) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[00:37.194] Revealed: P1 (1,1) "Foul Gas" {cost 0}
+[00:37.194] Dice rolled: 5
+[00:37.439] MSG: Trap triggered: Foul Gas!
+[00:41.543] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[00:41.548] Trap: "Foul Gas" triggered  P0(1,0)→P1(1,1)
+[00:41.548] Anim: 3D  (attacker survives)
+[00:42.033] Turn ended  P0  |  Crystals P0=4250 P1=2150
+
+--- Turn 4  |  Player 1  |  Crystals P0=4250 P1=2150 ---
+P0:   [Raij][  — ][  — ][  — ][  — ]
+      [Nuki][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][Gaia]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:42.632] Mode selected P1: ATTACK
+[00:42.639] Attack phase P1: 2 attack(s) available
+[00:42.640] MSG: Player 2: tap a character to attack.
+[00:42.931] AI1 attack decision: (0,4)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → (0,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:43.232] Dice rolled: 1
+[00:43.285] MSG: Both cards are destroyed!
+[00:47.841] Crystals: P0 4250 → 3700 (-550)  [battle]
+[00:49.241] Attack P1(0,4)"Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature} → P0(0,0)"Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}  Dice=1  ATK=0 vs DEF=0  → TIE
+[00:49.241] Anim: 3C  △ P1(0,4) + △ P0(0,0)
+[00:49.241] Card destroyed  P1 (0,4) "Gaia Turtle" {Union ATK0 DEF205 | destroy-cost 0 | summon-cost 2000 | affinity Nature}
+[00:49.241] Card destroyed  P0 (0,0) "Raijin" {Unit ATK60 DEF0 | cost 550 | affinity Divine}
+[00:49.534] Turn ended  P1  |  Crystals P0=3700 P1=2150
+
+--- Turn 5  |  Player 0  |  Crystals P0=3700 P1=2150 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [Nuki][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:50.133] Mode selected P0: ATTACK
+[00:50.139] Attack phase P0: 2 attack(s) available
+[00:50.139] MSG: Player 1: tap a character to attack.
+[00:50.431] AI0 attack decision: (1,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} → (1,3) "Defensive Pheromone" {cost 500}
+[00:50.762] Revealed: P1 (1,3) "Defensive Pheromone" {cost 500}
+[00:50.762] Dice rolled: 4
+[00:51.037] MSG: Trap triggered: Defensive Pheromone!
+[00:55.125] Crystals: P1 2150 → 1650 (-500)  [trap cost]
+[00:56.516] MSG: No valid target — effect cancelled.
+[00:56.520] Tech resolved  P0
+[00:56.520] Target prompt: "Defensive Pheromone: Choose an 'Armored' Nature card to swap."  filter=own_armored_nature
+[00:56.522] Trap: "Defensive Pheromone" triggered  P0(1,0)→P1(1,3)
+[00:56.522] Anim: 3D  (attacker survives)
+[00:57.016] Mode selected P0: ATTACK
+[00:57.019] Attack phase P0: 1 attack(s) available
+[00:57.019] MSG: Player 1: tap a character to attack.
+[00:57.314] AI0 attack decision: (1,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down} → (1,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}
+[00:57.648] Revealed: P0 (1,4) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:57.670] Revealed: P1 (1,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[00:57.670] Dice rolled: 3
+[00:57.673] MSG: War Genie wins!
+[00:57.738] AI0 attack decision: (1,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | face-down} → (1,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:02.311] Crystals: P1 1650 → 1350 (-300)  [battle]
+[01:03.710] Attack P0(1,4)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P1(1,4)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}  Dice=3  ATK=100 vs DEF=25  → WIN
+[01:03.710] Anim: 3A  △ P1(1,4)
+[01:03.710] Card destroyed  P1 (1,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:04.208] Turn ended  P0  |  Crystals P0=3700 P1=1350
+
+--- Turn 6  |  Player 1  |  Crystals P0=3700 P1=1350 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [Nuki][  — ][  ? ][  ? ][War ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:04.808] Mode selected P1: ATTACK
+[01:04.814] Attack phase P1: 2 attack(s) available
+[01:04.815] MSG: Player 2: tap a character to attack.
+[01:05.103] AI1 attack decision: (3,2)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down} → (1,4) "War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80}
+[01:05.438] Revealed: P1 (3,2) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[01:05.754] Coin flip: Heads
+[01:08.495] Dice rolled: 1
+[01:08.506] MSG: Lazy Troll wins!
+[01:13.194] Crystals: P0 3700 → 2550 (-1150)  [battle]
+[01:14.592] Attack P1(3,2)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature} → P0(1,4)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80}  Dice=1  ATK=120 vs DEF=80  → WIN
+[01:14.593] Anim: 3A  △ P0(1,4)
+[01:14.593] Card destroyed  P0 (1,4) "War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80}
+[01:14.890] Turn ended  P1  |  Crystals P0=2550 P1=1350
+
+--- Turn 7  |  Player 0  |  Crystals P0=2550 P1=1350 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [Nuki][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][Lazy][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:15.487] Mode selected P0: ATTACK
+[01:15.493] Attack phase P0: 2 attack(s) available
+[01:15.493] MSG: Player 1: tap a character to attack.
+[01:15.785] AI0 attack decision: (3,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (3,2) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[01:16.124] Revealed: P0 (3,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:16.124] Dice rolled: 5
+[01:16.126] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[01:16.129] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[01:16.129] MSG: Joseph the Battle Priest wins!
+[01:16.176] Coin flip: Heads
+[01:20.686] Crystals: P1 1350 → 350 (-1000)  [battle]
+[01:22.084] Attack P0(3,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(3,2)"Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}  Dice=5  ATK=70 vs DEF=60  → WIN
+[01:22.085] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} +ATK 10
+[01:22.085] Anim: 3A  △ P1(3,2)
+[01:22.085] Card destroyed  P1 (3,2) "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature}
+[01:22.577] Mode selected P0: ATTACK
+[01:22.584] Attack phase P0: 1 attack(s) available
+[01:22.584] MSG: Player 1: tap a character to attack.
+[01:22.877] AI0 attack decision: (1,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} → (2,4) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic | face-down}
+[01:23.215] Revealed: P1 (2,4) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[01:23.215] Dice rolled: 2
+[01:23.219] MSG: Both cards are destroyed!
+[01:27.791] Crystals: P0 2550 → 2450 (-100)  [battle]
+[01:29.182] Crystals: P1 350 → 150 (-200)  [battle]
+[01:30.574] Attack P0(1,0)"Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature} → P1(2,4)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}  Dice=2  ATK=10 vs DEF=10  → TIE
+[01:30.574] Anim: 3C  △ P0(1,0) + △ P1(2,4)
+[01:30.574] Card destroyed  P0 (1,0) "Nuki the Tanuki" {Unit ATK10 DEF10 | cost 100 | affinity Nature}
+[01:30.574] Card destroyed  P1 (2,4) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[01:31.069] Turn ended  P0  |  Crystals P0=2450 P1=150
+
+--- Turn 8  |  Player 1  |  Crystals P0=2450 P1=150 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [Jose][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:31.668] Mode selected P1: ATTACK
+[01:31.671] Attack phase P1: 2 attack(s) available
+[01:31.671] MSG: Player 2: tap a character to attack.
+[01:31.965] AI1 attack decision: (0,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine | face-down} → (3,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:32.267] Revealed: P1 (0,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:32.268] Dice rolled: 3
+[01:32.271] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[01:32.277] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[01:32.277] MSG: Joseph the Battle Priest wins!
+[01:32.329] Coin flip: Tails
+[01:37.940] Crystals: P0 2450 → 1850 (-600)  [battle]
+[01:39.338] Attack P1(0,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P0(3,0)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=3  ATK=60 vs DEF=25  → WIN
+[01:39.339] Anim: 3A  △ P0(3,0)
+[01:39.339] Card destroyed  P0 (3,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:39.636] Turn ended  P1  |  Crystals P0=1850 P1=150
+
+--- Turn 9  |  Player 0  |  Crystals P0=1850 P1=150 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [Jose][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:40.232] Mode selected P0: ATTACK
+[01:40.237] Attack phase P0: 2 attack(s) available
+[01:40.237] MSG: Player 1: tap a character to attack.
+[01:40.532] AI0 attack decision: (4,3)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | face-down} → (0,0) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:40.867] Revealed: P0 (4,3) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[01:40.867] Dice rolled: 5
+[01:40.871] MSG: Pyromancer wins!
+[01:45.532] Crystals: P1 150 → 0 (-150)  [battle]
+
+=== GAME OVER ===
+[01:45.540] AI Player 0 wins
+[01:45.540] Reason: crystals
+[01:45.540] Final crystals — P0: 1850  P1: 0  |  Turns: 9
+[01:45.540] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_basement_spider_negotiation_2026-06-01_20-02-05_410.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Raijin-and-Fujin-002
+Highlight: Raijin and Fujin (Union)  [setup: Raijin, Fujin, Chaotic Wisp]
+Result:    FAIL
+Detail:    None of expect_log_any matched: ["Union summoned P0: Raijin and Fujin", "Attack P\\d\\(\\d+,\\d+\\)\"Raijin\\ and\\ Fujin\"", "MSG:.*Raijin"]
+Turns:     9  |  AI timeouts: 0
+===

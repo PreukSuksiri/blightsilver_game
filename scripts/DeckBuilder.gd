@@ -303,6 +303,8 @@ func _rebuild_trunk_list() -> void:
 		for u: UnionData in union_list:
 			if not SaveManager.is_union_unlocked(u.card_name):
 				continue
+			if SaveManager.demo_mode and not UnionDatabase.is_playable_in_demo(u):
+				continue
 			if name_q != "" and name_q not in u.card_name.to_lower():
 				continue
 			if use_aff and int(u.affinity) != _filter_affinity:
@@ -591,17 +593,17 @@ func _show_preview(card_type: String, card_name: String) -> void:
 				var is_unlocked: bool = SaveManager.is_union_unlocked(card_name)
 				preview_desc.text = data.ability_description if is_unlocked else data.partial_ability_description
 			preview_frame.texture = null
-			_load_preview_art(card_name, "unions")
+			_load_preview_art(card_name, "union")
 	preview_stats.add_theme_color_override("font_color", accent)
 	preview_bg.color         = info_bg
 	preview_info_strip.color = info_bg
 
 func _load_preview_art(card_name: String, subfolder: String) -> void:
 	var path: String = CardDatabase.find_artwork(card_name, subfolder, SaveManager.nsfw_enabled)
+	var tex: Texture2D = null
 	if path != "":
-		preview_art.texture = load(path)
-	else:
-		preview_art.texture = _ART_PLACEHOLDER
+		tex = load(path) as Texture2D
+	preview_art.texture = tex if tex != null else _ART_PLACEHOLDER
 
 # ── Union mechanism visibility ────────────────────────────────
 func _on_union_mechanism_changed(unlocked: bool) -> void:

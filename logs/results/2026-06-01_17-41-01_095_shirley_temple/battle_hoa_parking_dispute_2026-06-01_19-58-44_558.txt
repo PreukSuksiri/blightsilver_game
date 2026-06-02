@@ -1,0 +1,78 @@
+=== Battle of HOA Parking Dispute ===
+Battle started: 2026-06-01 19:58:44.558
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Kiba-the-Giant-Slayer-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Kiba-the-Giant-Slayer-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Kiba the Giant Slayer (Union)  [setup: Chaotic Wisp]
+Ability:      ATK_BONUS_VS_UNION — +30 ATK vs Union
+Setup role:   t2_union
+Verifies:
+  - Ability: "Kiba the Giant Slayer" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Kiba the Giant Slayer, Attack P\d\(\d+,\d+\)"Kiba\ the\ Giant\ Slayer", MSG:.*Kiba, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Kiba the Giant Slayer — summon logged and/or union attacks with ATK=80.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Kiba the Giant Slayer
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Siege Cannon, Prayer
+P1 Tech hand: Radar, Bribe, Tease
+P0:   [C:Snip][  — ][C:Succ][  — ][C:Nuki]
+      [C:Skel][C:Mars][T:Spik][C:Gree][T:Flam]
+      [T:Bunk][  — ][C:Ice ][  — ][T:Self]
+      [  — ][C:Blea][  — ][C:Magi][  — ]
+      [C:Soni][  — ][  — ][C:Hair][C:Moon]
+P1:   [  — ][  — ][  — ][T:Flam][  — ]
+      [C:Blea][C:Vamp][C:Jose][C:Pyro][  — ]
+      [  — ][C:Dark][C:Chao][C:Wand][  — ]
+      [  — ][C:Lab ][C:Saw ][C:Kiyo][T:Foul]
+      [  — ][T:Curs][  — ][T:Snar][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+[00:06.814] Crystals: P0 5000 → 4200 (-800)  [union]
+[00:06.860] Revealed: P0 (0,2) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:06.860] Union summoned P0: "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos} from "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down}
+[00:06.861] MSG: Player 1 summoned [Greater Succubus] using: "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down}
+[00:06.861] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.884] AI Player 0 wins
+[00:06.884] Final crystals — P0: 4200  P1: 5000  |  Turns: 1
+[00:06.884] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_hoa_parking_dispute_2026-06-01_19-58-44_558.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Kiba-the-Giant-Slayer-002
+Highlight: Kiba the Giant Slayer (Union)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

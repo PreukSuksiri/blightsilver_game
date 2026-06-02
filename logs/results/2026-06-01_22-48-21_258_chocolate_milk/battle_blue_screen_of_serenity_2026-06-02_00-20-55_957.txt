@@ -1,0 +1,334 @@
+=== Battle of Blue Screen of Serenity ===
+Battle started: 2026-06-02 00:20:55.956
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-False-Prophet-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-False-Prophet-001  (test_case/functional/union_functional_tests.md)
+Highlight:    False Prophet (Union)  [setup: Chaotic Wisp]
+Ability:      TURN_START_REVEAL_OPPONENT_CELL — Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.
+Setup role:   t2_union
+Verifies:
+  - Ability: "False Prophet" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: False Prophet, Attack P\d\(\d+,\d+\)"False\ Prophet", MSG:.*False
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union False Prophet — summon logged and/or union attacks with ATK=20.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union False Prophet
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Bribe, War Supply
+P1 Tech hand: Resurrection, Great Diplomacy, Tease
+P0:   [C:Chur][T:Stre][  — ][C:Jaco][C:Saw ]
+      [C:Stre][C:Gryp][C:Echo][C:Deat][  — ]
+      [C:Stin][  — ][T:Spik][  — ][  — ]
+      [  — ][  — ][C:Demo][C:Aeri][T:Flam]
+      [C:Ice ][T:Hypn][T:Defe][  — ][C:Elec]
+P1:   [C:Pyro][  — ][C:Sate][T:Deco][C:Sunr]
+      [T:Spik][C:Choi][C:Lab ][T:Brai][  — ]
+      [  — ][T:Foul][C:Chao][  — ][T:Acid]
+      [T:Blac][  — ][C:Tomb][  — ][C:Shep]
+      [  — ][  — ][C:Foul][  — ][C:Swar]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:05.337] Mode selected P0: ATTACK
+[00:05.341] Attack phase P0: 2 attack(s) available
+[00:05.341] MSG: Player 1: tap a character to attack.
+[00:05.620] AI0 attack decision: (0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (0,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down}
+[00:05.956] Revealed: P0 (0,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:05.982] Revealed: P1 (0,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:05.982] Dice rolled: 1
+[00:10.711] Crystals: P0 5000 → 4850 (-150)  [battle]
+[00:12.109] Attack P0(0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(0,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}  Dice=1  ATK=0 vs DEF=80  → LOSE
+[00:12.110] Anim: 3B  △ P0(0,0)
+[00:12.110] Card destroyed  P0 (0,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:12.604] Mode selected P0: ATTACK
+[00:12.609] Attack phase P0: 1 attack(s) available
+[00:12.609] MSG: Player 1: tap a character to attack.
+[00:12.903] AI0 attack decision: (1,3)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature | face-down} → (0,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:13.241] Revealed: P0 (1,3) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:13.241] Dice rolled: 1
+[00:13.245] MSG: Death Cobra wins!
+[00:17.894] Crystals: P1 5000 → 3900 (-1100)  [battle]
+[00:19.294] Attack P0(1,3)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature} → P1(0,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}  Dice=1  ATK=85 vs DEF=80  → WIN
+[00:19.294] Anim: 3A  △ P1(0,2)
+[00:19.294] Card destroyed  P1 (0,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:19.792] Turn ended  P0  |  Crystals P0=4850 P1=3900
+
+--- Turn 2  |  Player 1  |  Crystals P0=4850 P1=3900 ---
+P0:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][Deat][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:20.403] Mode selected P1: ATTACK
+[00:20.409] Attack phase P1: 2 attack(s) available
+[00:20.410] MSG: Player 2: tap a character to attack.
+[00:20.687] AI1 attack decision: (3,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima | face-down} → (1,3) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:21.021] Revealed: P1 (3,2) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:21.022] Dice rolled: 4
+[00:21.025] MSG: Tomb Bandit wins!
+[00:25.679] Crystals: P0 4850 → 3950 (-900)  [battle]
+[00:27.076] Attack P1(3,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(1,3)"Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}  Dice=4  ATK=75 vs DEF=50  → WIN
+[00:27.076] Anim: 3A  △ P0(1,3)
+[00:27.076] Card destroyed  P0 (1,3) "Death Cobra" {Unit ATK85 DEF50 | cost 900 | affinity Nature}
+[00:27.375] Turn ended  P1  |  Crystals P0=3950 P1=3900
+
+--- Turn 3  |  Player 0  |  Crystals P0=3950 P1=3900 ---
+P0:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Tomb][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:27.981] Mode selected P0: ATTACK
+[00:27.984] Attack phase P0: 2 attack(s) available
+[00:27.984] MSG: Player 1: tap a character to attack.
+[00:28.269] AI0 attack decision: (1,1)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down} → (3,2) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:28.599] Revealed: P0 (1,1) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:28.599] Dice rolled: 4
+[00:28.602] MSG: Gryphon wins!
+[00:33.278] Crystals: P1 3900 → 2900 (-1000)  [battle]
+[00:34.677] Attack P0(1,1)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P1(3,2)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}  Dice=4  ATK=100 vs DEF=60  → WIN
+[00:34.678] Anim: 3A  △ P1(3,2)
+[00:34.678] Card destroyed  P1 (3,2) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[00:37.192] Turn ended  P0  |  Crystals P0=3950 P1=2900
+
+--- Turn 4  |  Player 1  |  Crystals P0=3950 P1=2900 ---
+P0:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][Gryp][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:37.796] Mode selected P1: ATTACK
+[00:37.801] Attack phase P1: 2 attack(s) available
+[00:37.802] MSG: Player 2: tap a character to attack.
+[00:38.081] AI1 attack decision: (0,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | face-down} → (1,1) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:38.421] Revealed: P1 (0,0) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:38.421] Dice rolled: 4
+[00:38.425] MSG: Pyromancer wins!
+[00:44.059] Crystals: P0 3950 → 2800 (-1150)  [battle]
+[00:45.456] Attack P1(0,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(1,1)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}  Dice=4  ATK=110 vs DEF=85  → WIN
+[00:45.458] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} +ATK 30
+[00:45.458] Anim: 3A  △ P0(1,1)
+[00:45.458] Card destroyed  P0 (1,1) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:45.749] Turn ended  P1  |  Crystals P0=2800 P1=2900
+
+--- Turn 5  |  Player 0  |  Crystals P0=2800 P1=2900 ---
+P0:   [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [Pyro][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:46.362] Mode selected P0: ATTACK
+[00:46.368] Attack phase P0: 2 attack(s) available
+[00:46.368] MSG: Player 1: tap a character to attack.
+[00:46.647] AI0 attack decision: (0,4)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature | face-down} → (0,0) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:46.985] Revealed: P0 (0,4) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[00:46.985] Dice rolled: 1
+[00:46.989] MSG: Saw Shark wins!
+[00:51.633] Crystals: P1 2900 → 2000 (-900)  [battle]
+[00:53.032] Attack P0(0,4)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature} → P1(0,0)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=1  ATK=25 vs DEF=0  → WIN
+[00:53.032] Anim: 3A  △ P1(0,0)
+[00:53.032] Card destroyed  P1 (0,0) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[00:55.536] Turn ended  P0  |  Crystals P0=2800 P1=2000
+
+--- Turn 6  |  Player 1  |  Crystals P0=2800 P1=2000 ---
+P0:   [  — ][  ? ][  — ][  ? ][Saw ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[00:56.144] Mode selected P1: ATTACK
+[00:56.150] Attack phase P1: 2 attack(s) available
+[00:56.150] MSG: Player 2: tap a character to attack.
+[00:56.433] AI1 attack decision: (1,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down} → (0,4) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[00:56.770] Revealed: P1 (1,1) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[00:56.770] Dice rolled: 5
+[00:56.774] MSG: Choir Lady Alice wins!
+[01:01.423] Crystals: P0 2800 → 2520 (-280)  [battle]
+[01:02.822] Attack P1(1,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine} → P0(0,4)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}  Dice=5  ATK=20 vs DEF=10  → WIN
+[01:02.823] Anim: 3A  △ P0(0,4)
+[01:02.823] Card destroyed  P0 (0,4) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[01:03.120] Turn ended  P1  |  Crystals P0=2520 P1=2000
+
+--- Turn 7  |  Player 0  |  Crystals P0=2520 P1=2000 ---
+P0:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][Choi][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[01:03.727] Mode selected P0: ATTACK
+[01:03.733] Attack phase P0: 2 attack(s) available
+[01:03.734] MSG: Player 1: tap a character to attack.
+[01:04.016] AI0 attack decision: (1,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima | face-down} → (1,1) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[01:04.353] Revealed: P0 (1,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:04.356] Dice rolled: 1
+[01:04.361] MSG: Both cards are destroyed!
+[01:08.915] Crystals: P0 2520 → 2170 (-350)  [battle]
+[01:10.307] Crystals: P1 2000 → 1750 (-250)  [battle]
+[01:11.698] Attack P0(1,0)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P1(1,1)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}  Dice=1  ATK=25 vs DEF=25  → TIE
+[01:11.698] Anim: 3C  △ P0(1,0) + △ P1(1,1)
+[01:11.698] Card destroyed  P0 (1,0) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[01:11.698] Card destroyed  P1 (1,1) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[01:12.192] Mode selected P0: ATTACK
+[01:12.195] Attack phase P0: 1 attack(s) available
+[01:12.195] MSG: Player 1: tap a character to attack.
+[01:12.490] AI0 attack decision: (1,2)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | face-down} → (0,1) (dead-end)
+[01:12.827] Revealed: P0 (1,2) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[01:12.827] Dice rolled: 2
+[01:12.841] MSG: Nothing happens — Dead End.
+[01:16.180] Attack P0(1,2)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic} → P1(0,1)(empty)  Dice=2  → DEAD_END
+[01:16.180] Anim: 3F  (blank slot)
+[01:16.676] Turn ended  P0  |  Crystals P0=2170 P1=1750
+
+--- Turn 8  |  Player 1  |  Crystals P0=2170 P1=1750 ---
+P0:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][Echo][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[01:17.284] Mode selected P1: ATTACK
+[01:17.289] Attack phase P1: 2 attack(s) available
+[01:17.289] MSG: Player 2: tap a character to attack.
+[01:17.572] AI1 attack decision: (1,2)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio | face-down} → (1,2) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[01:17.913] Revealed: P1 (1,2) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:17.914] Dice rolled: 5
+[01:17.917] MSG: Lab Zombie wins!
+[01:22.583] Crystals: P0 2170 → 1270 (-900)  [battle]
+[01:23.980] Attack P1(1,2)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P0(1,2)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}  Dice=5  ATK=55 vs DEF=40  → WIN
+[01:23.981] Anim: 3A  △ P0(1,2)
+[01:23.981] Card destroyed  P0 (1,2) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[01:24.286] Turn ended  P1  |  Crystals P0=1270 P1=1750
+
+--- Turn 9  |  Player 0  |  Crystals P0=1270 P1=1750 ---
+P0:   [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][Lab ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[01:24.901] Mode selected P0: ATTACK
+[01:24.906] Attack phase P0: 2 attack(s) available
+[01:24.907] MSG: Player 1: tap a character to attack.
+[01:25.199] AI0 attack decision: (3,2)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | face-down} → (1,2) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:25.547] Revealed: P0 (3,2) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:25.547] Dice rolled: 2
+[01:25.552] MSG: Both cards are destroyed!
+[01:30.116] Crystals: P0 1270 → 870 (-400)  [battle]
+[01:31.507] Crystals: P1 1750 → 1050 (-700)  [battle]
+[01:32.898] Attack P0(3,2)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P1(1,2)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}  Dice=2  ATK=40 vs DEF=40  → TIE
+[01:32.899] Anim: 3C  △ P0(3,2) + △ P1(1,2)
+[01:32.899] Card destroyed  P0 (3,2) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:32.900] Card destroyed  P1 (1,2) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[01:33.390] Mode selected P0: ATTACK
+[01:33.393] Attack phase P0: 1 attack(s) available
+[01:33.393] MSG: Player 1: tap a character to attack.
+[01:33.689] AI0 attack decision: (0,3)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down} → (0,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}
+[01:34.030] Revealed: P0 (0,3) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:34.060] Revealed: P1 (0,4) "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}
+[01:34.060] Dice rolled: 3
+[01:38.825] Crystals: P0 870 → 520 (-350)  [battle]
+[01:40.222] Attack P0(0,3)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P1(0,4)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine}  Dice=3  ATK=15 vs DEF=25  → LOSE
+[01:40.222] Anim: 3B  △ P0(0,3)
+[01:40.222] Card destroyed  P0 (0,3) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:40.721] Turn ended  P0  |  Crystals P0=520 P1=1050
+
+--- Turn 10  |  Player 1  |  Crystals P0=520 P1=1050 ---
+P0:   [  — ][  ? ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  ? ][Sunr]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[01:41.325] Mode selected P1: ATTACK
+[01:41.331] Attack phase P1: 2 attack(s) available
+[01:41.331] MSG: Player 2: tap a character to attack.
+[01:41.614] AI1 attack decision: (0,4)"Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine} → (2,2) "Spike Trap" {cost 1500}
+[01:41.952] Revealed: P0 (2,2) "Spike Trap" {cost 1500}
+[01:41.952] Dice rolled: 1
+[01:42.196] MSG: Trap triggered: Spike Trap!
+[01:47.441] Crystals: P0 520 → 0 (-520)  [trap cost]
+
+=== GAME OVER ===
+[01:47.450] AI Player 1 wins
+[01:47.450] Reason: crystals
+[01:47.450] Final crystals — P0: 0  P1: 1050  |  Turns: 10
+[01:47.450] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_blue_screen_of_serenity_2026-06-02_00-20-55_957.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-False-Prophet-002
+Highlight: False Prophet (Union)  [setup: Chaotic Wisp]
+Result:    FAIL
+Detail:    None of expect_log_any matched: ["Union summoned P0: False Prophet", "Attack P\\d\\(\\d+,\\d+\\)\"False\\ Prophet\"", "MSG:.*False"]
+Turns:     10  |  AI timeouts: 0
+===

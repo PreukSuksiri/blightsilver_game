@@ -16,6 +16,8 @@ func _ready() -> void:
 
 func _on_send() -> void:
 	_execute(input_line.text)
+	if not is_inside_tree():
+		return
 	input_line.clear()
 	input_line.grab_focus()
 

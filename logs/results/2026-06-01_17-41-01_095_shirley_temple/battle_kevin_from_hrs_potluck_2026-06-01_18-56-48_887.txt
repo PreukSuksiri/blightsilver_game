@@ -1,0 +1,361 @@
+=== Battle of Kevin from HR's Potluck ===
+Battle started: 2026-06-01 18:56:48.887
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Alarm-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Alarm-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Alarm (Trap)  [setup: Ox Patrol]
+Ability:      FIELD_BOOST_AFFINITY_DEF — Unil the end of this urn, All face-up Anima monster gain +10 DEF
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Alarm" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Alarm
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Alarm"
+  - Log must contain at least one of: Trap triggered, "Alarm" triggered, Trap triggered: Alarm, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Alarm revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Alarm
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Tease, Siege Cannon
+P1 Tech hand: Radar, Release Mutagen, Siege Cannon
+P0:   [C:Elec][  — ][C:Gold][T:Foul][C:Gran]
+      [  — ][C:Snip][  — ][C:Book][  — ]
+      [  — ][  — ][C:Ox P][  — ][  — ]
+      [  — ][C:Nigh][  — ][C:Choi][  — ]
+      [T:Bait][  — ][T:Hard][T:Snar][C:Nept]
+P1:   [C:Ostr][C:Fuji][C:Meli][C:Joan][C:Hamm]
+      [C:War ][  — ][  — ][  — ][T:Pepp]
+      [  — ][  — ][T:Alar][  — ][T:Spik]
+      [  — ][  — ][  — ][  — ][C:Moon]
+      [T:Flam][C:Mafi][C:Demo][  — ][T:Deco]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:05.324] Mode selected P0: ATTACK
+[00:05.327] Attack phase P0: 2 attack(s) available
+[00:05.327] MSG: Player 1: tap a character to attack.
+[00:05.617] AI0 attack decision: (0,0)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic | face-down} → (1,3) (dead-end)
+[00:05.953] Revealed: P0 (0,0) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:05.954] Dice rolled: 2
+[00:05.969] MSG: Nothing happens — Dead End.
+[00:09.322] Attack P0(0,0)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P1(1,3)(empty)  Dice=2  → DEAD_END
+[00:09.322] Anim: 3F  (blank slot)
+[00:09.830] Mode selected P0: ATTACK
+[00:09.832] Attack phase P0: 1 attack(s) available
+[00:09.832] MSG: Player 1: tap a character to attack.
+[00:10.134] AI0 attack decision: (0,2)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine | face-down} → (0,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[00:10.475] Revealed: P0 (0,2) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[00:10.500] Revealed: P1 (0,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:10.500] Dice rolled: 4
+[00:15.259] Crystals: P0 5000 → 4800 (-200)  [battle]
+[00:16.656] Attack P0(0,2)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine} → P1(0,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}  Dice=4  ATK=15 vs DEF=30  → LOSE
+[00:16.657] Anim: 3B  △ P0(0,2)
+[00:16.657] Card destroyed  P0 (0,2) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[00:17.156] Turn ended  P0  |  Crystals P0=4800 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4800 P1=5000 ---
+P0:   [Elec][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Ostr][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:19.234] Crystals: P1 5000 → 3500 (-1500)  [union]
+[00:19.279] Revealed: P1 (0,0) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[00:19.279] Union summoned P1: "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}, "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down}
+[00:19.280] MSG: Player 2 summoned [Rocket Peacock] using: "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}, "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature | face-down}
+[00:22.446] Crystals: P1 3500 → 3450 (-50)  [skip tax]
+[00:22.446] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:23.831] Turn ended  P1  |  Crystals P0=4800 P1=3450
+
+--- Turn 3  |  Player 0  |  Crystals P0=4800 P1=3450 ---
+P0:   [Elec][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Rock][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:24.430] Mode selected P0: ATTACK
+[00:24.435] Attack phase P0: 2 attack(s) available
+[00:24.435] MSG: Player 1: tap a character to attack.
+[00:24.728] AI0 attack decision: (0,0)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → (0,4) (dead-end)
+[00:25.029] Dice rolled: 3
+[00:25.047] MSG: Nothing happens — Dead End.
+[00:28.426] Attack P0(0,0)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P1(0,4)(empty)  Dice=3  → DEAD_END
+[00:28.426] Anim: 3F  (blank slot)
+[00:30.934] Turn ended  P0  |  Crystals P0=4800 P1=3450
+
+--- Turn 4  |  Player 1  |  Crystals P0=4800 P1=3450 ---
+P0:   [Elec][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Rock][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:31.531] Mode selected P1: ATTACK
+[00:31.538] Attack phase P1: 2 attack(s) available
+[00:31.538] MSG: Player 2: tap a character to attack.
+[00:31.829] AI1 attack decision: (0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (0,0) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:32.129] Dice rolled: 2
+[00:32.207] MSG: Rocket Peacock wins!
+[00:36.805] Crystals: P0 4800 → 3800 (-1000)  [battle]
+[00:38.201] Attack P1(0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(0,0)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}  Dice=2  ATK=150 vs DEF=45  → WIN
+[00:38.202] Anim: 3A  △ P0(0,0)
+[00:38.202] Card destroyed  P0 (0,0) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:38.203] MSG: No valid target — effect cancelled.
+[00:38.206] Ability target resolved  P1
+[00:38.206] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[00:38.499] Turn ended  P1  |  Crystals P0=3800 P1=3450
+
+--- Turn 5  |  Player 0  |  Crystals P0=3800 P1=3450 ---
+P0:   [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Rock][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:39.103] Mode selected P0: ATTACK
+[00:39.109] Attack phase P0: 2 attack(s) available
+[00:39.109] MSG: Player 1: tap a character to attack.
+[00:39.396] AI0 attack decision: (0,4)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima | face-down} → (0,1) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down}
+[00:39.743] Revealed: P0 (0,4) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:39.770] Revealed: P1 (0,1) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:39.770] Dice rolled: 1
+[00:39.774] MSG: Both cards are destroyed!
+[00:44.295] Crystals: P0 3800 → 3450 (-350)  [battle]
+[00:45.688] Crystals: P1 3450 → 3000 (-450)  [battle]
+[00:47.076] Attack P0(0,4)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(0,1)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=1  ATK=40 vs DEF=40  → TIE
+[00:47.076] Anim: 3C  △ P0(0,4) + △ P1(0,1)
+[00:47.076] Card destroyed  P0 (0,4) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:47.076] Card destroyed  P1 (0,1) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:47.583] Mode selected P0: ATTACK
+[00:47.586] Attack phase P0: 1 attack(s) available
+[00:47.586] MSG: Player 1: tap a character to attack.
+[00:47.887] AI0 attack decision: (1,1)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine | face-down} → (0,2) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}
+[00:48.228] Revealed: P0 (1,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:48.248] Revealed: P1 (0,2) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:48.248] Dice rolled: 3
+[00:54.039] Crystals: P0 3450 → 3100 (-350)  [battle]
+[00:55.436] Attack P0(1,1)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(0,2)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}  Dice=3  ATK=20 vs DEF=25  → LOSE
+[00:55.437] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} ATK -20
+[00:55.437] Anim: 3B  △ P0(1,1)
+[00:55.437] Card destroyed  P0 (1,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[00:55.934] Turn ended  P0  |  Crystals P0=3100 P1=3000
+
+--- Turn 6  |  Player 1  |  Crystals P0=3100 P1=3000 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Rock][  — ][Meli][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:56.529] Mode selected P1: ATTACK
+[00:56.536] Attack phase P1: 2 attack(s) available
+[00:56.536] MSG: Player 2: tap a character to attack.
+[00:56.829] AI1 attack decision: (0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (4,1) (dead-end)
+[00:57.129] Dice rolled: 4
+[00:57.190] MSG: Nothing happens — Dead End.
+[01:00.509] Attack P1(0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(4,1)(empty)  Dice=4  → DEAD_END
+[01:00.509] Anim: 3F  (blank slot)
+[01:00.510] MSG: No valid target — effect cancelled.
+[01:00.512] Ability target resolved  P1
+[01:00.512] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[01:00.809] Turn ended  P1  |  Crystals P0=3100 P1=3000
+
+--- Turn 7  |  Player 0  |  Crystals P0=3100 P1=3000 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Rock][  — ][Meli][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[01:01.408] Mode selected P0: ATTACK
+[01:01.414] Attack phase P0: 2 attack(s) available
+[01:01.414] MSG: Player 1: tap a character to attack.
+[01:01.704] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (0,2) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[01:02.037] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:02.037] Dice rolled: 3
+[01:02.041] MSG: Ox Patrol wins!
+[01:07.684] Crystals: P1 3000 → 2300 (-700)  [battle]
+[01:07.684] Crystals: P1 2300 → 2600 (+300)  [recovery]
+[01:07.684] MSG: Melissa the Healer: Recovered 300 Crystals!
+[01:07.695] Attack P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P1(0,2)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}  Dice=3  ATK=35 vs DEF=25  → WIN
+[01:07.695] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +ATK 5
+[01:07.695] Anim: 3A  △ P1(0,2)
+[01:07.695] Card destroyed  P1 (0,2) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[01:10.195] Turn ended  P0  |  Crystals P0=3100 P1=2600
+
+--- Turn 8  |  Player 1  |  Crystals P0=3100 P1=2600 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][Ox P][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Rock][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[01:10.792] Mode selected P1: ATTACK
+[01:10.796] Attack phase P1: 2 attack(s) available
+[01:10.796] MSG: Player 2: tap a character to attack.
+[01:11.091] AI1 attack decision: (0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:11.392] Dice rolled: 2
+[01:11.436] MSG: Rocket Peacock wins!
+[01:17.117] Crystals: P0 3100 → 2680 (-420)  [battle]
+[01:18.514] Attack P1(0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=2  ATK=150 vs DEF=40  → WIN
+[01:18.514] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 5
+[01:18.514] Anim: 3A  △ P0(2,2)
+[01:18.514] Card destroyed  P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:18.515] MSG: No valid target — effect cancelled.
+[01:18.516] Ability target resolved  P1
+[01:18.516] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[01:18.811] Turn ended  P1  |  Crystals P0=2680 P1=2600
+
+--- Turn 9  |  Player 0  |  Crystals P0=2680 P1=2600 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Rock][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[01:19.411] Mode selected P0: ATTACK
+[01:19.417] Attack phase P0: 2 attack(s) available
+[01:19.417] MSG: Player 1: tap a character to attack.
+[01:19.709] AI0 attack decision: (1,3)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (1,0) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down}
+[01:20.067] Revealed: P0 (1,3) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:20.094] Revealed: P1 (1,0) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[01:20.095] Dice rolled: 5
+[01:25.791] Crystals: P0 2680 → 1880 (-800)  [battle]
+[01:27.187] Attack P0(1,3)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(1,0)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}  Dice=5  ATK=75 vs DEF=80  → LOSE
+[01:27.187] Reckoning overlay: P0 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} +ATK 30
+[01:27.187] Anim: 3B  △ P0(1,3)
+[01:27.187] Card destroyed  P0 (1,3) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:27.685] Mode selected P0: ATTACK
+[01:27.690] Attack phase P0: 1 attack(s) available
+[01:27.691] MSG: Player 1: tap a character to attack.
+[01:27.983] AI0 attack decision: (3,1)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos | face-down} → (0,3) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down}
+[01:28.318] Revealed: P0 (3,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:28.347] Revealed: P1 (0,3) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[01:28.347] Dice rolled: 5
+[01:28.351] MSG: Night Whisperer wins!
+[01:32.934] Crystals: P1 2600 → 2320 (-280)  [battle]
+[01:34.325] Attack P0(3,1)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} → P1(0,3)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}  Dice=5  ATK=30 vs DEF=5  → WIN
+[01:34.325] Anim: 3A  △ P1(0,3)
+[01:34.325] Card destroyed  P1 (0,3) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[01:34.830] Turn ended  P0  |  Crystals P0=1880 P1=2320
+
+--- Turn 10  |  Player 1  |  Crystals P0=1880 P1=2320 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Nigh][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Rock][  — ][  — ][  — ][  — ]
+      [War ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[01:35.433] Mode selected P1: ATTACK
+[01:35.438] Attack phase P1: 2 attack(s) available
+[01:35.438] MSG: Player 2: tap a character to attack.
+[01:35.742] AI1 attack decision: (1,0)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → (3,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:36.050] Dice rolled: 5
+[01:36.057] MSG: War Genie wins!
+[01:40.750] Crystals: P0 1880 → 980 (-900)  [battle]
+[01:42.146] Attack P1(1,0)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P0(3,1)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=5  ATK=100 vs DEF=30  → WIN
+[01:42.146] Anim: 3A  △ P0(3,1)
+[01:42.146] Card destroyed  P0 (3,1) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:42.453] Turn ended  P1  |  Crystals P0=980 P1=2320
+
+--- Turn 11  |  Player 0  |  Crystals P0=980 P1=2320 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Rock][  — ][  — ][  — ][  — ]
+      [War ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[01:43.059] Mode selected P0: ATTACK
+[01:43.066] Attack phase P0: 2 attack(s) available
+[01:43.066] MSG: Player 1: tap a character to attack.
+[01:43.367] AI0 attack decision: (3,3)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down} → (2,2) "Alarm" {cost 0}
+[01:43.707] Revealed: P0 (3,3) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[01:43.726] Revealed: P1 (2,2) "Alarm" {cost 0}
+[01:43.726] Dice rolled: 1
+[01:43.998] MSG: Trap triggered: Alarm!
+[01:43.999] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[01:44.010] AI Player 0 wins
+[01:44.010] Final crystals — P0: 980  P1: 2320  |  Turns: 11
+[01:44.010] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_kevin_from_hrs_potluck_2026-06-01_18-56-48_887.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Alarm-002
+Highlight: Alarm (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     11  |  AI timeouts: 0
+===

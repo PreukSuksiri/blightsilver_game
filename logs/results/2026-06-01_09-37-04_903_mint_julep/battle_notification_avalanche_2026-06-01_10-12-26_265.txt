@@ -1,0 +1,421 @@
+=== Battle of Notification Avalanche ===
+Battle started: 2026-06-01 10:12:26.265
+Game Session of Mint Julep (started 2026-06-01 09:37:04.903)
+=== Card E2E Test ===
+Scenario ID:  E2E-Book-with-Fangs-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Book-with-Fangs-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Book with Fangs (Character)  [setup: Ice Mage]
+Ability:      ATK_DEF_BONUS_VS_AFFINITY — +30 ATK&DEF vs Arcane
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Book with Fangs" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Book with Fangs
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Book\ with\ Fangs".*ATK=75\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +30 ATK vs ARCANE.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Book with Fangs
+AI-1 Deck:    E2E T2 solo Ice Mage
+AI-0 Forced:  (2,2) Book with Fangs
+AI-1 Forced:  (2,2) Ice Mage
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Tease, War Supply
+P1 Tech hand: Great Diplomacy, Radar, Resurrection
+P0:   [  — ][  — ][C:Ice ][  — ][T:Hard]
+      [  — ][  — ][C:Whit][T:Acid][  — ]
+      [C:Meli][C:Elec][C:Book][C:Bat ][C:Soni]
+      [C:Moon][T:Spik][C:Scou][T:Flam][  — ]
+      [C:Claw][T:Deco][C:Hand][C:Ange][  — ]
+P1:   [  — ][  — ][  — ][  — ][C:Skel]
+      [T:Spik][T:Snar][  — ][C:Gamm][C:Vamp]
+      [T:Bunk][C:Choi][C:Ice ][  — ][C:Succ]
+      [  — ][C:Heav][  — ][C:Lab ][C:Demo]
+      [  — ][  — ][T:Pepp][T:Curs][C:Book]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:05.329] Mode selected P0: ATTACK
+[00:05.331] Attack phase P0: 2 attack(s) available
+[00:05.331] MSG: Player 1: tap a character to attack.
+[00:05.611] AI0 attack decision: (2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (0,0) (dead-end)
+[00:05.962] Revealed: P0 (2,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:05.963] Dice rolled: 5
+[00:05.977] MSG: Nothing happens — Dead End.
+[00:09.328] Attack P0(2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(0,0)(empty)  Dice=5  → DEAD_END
+[00:09.328] Anim: 3F  (blank slot)
+[00:11.838] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Book][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:13.918] Crystals: P1 5000 → 4200 (-800)  [union]
+[00:13.960] Revealed: P1 (2,4) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:13.961] Union summoned P1: "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos} from "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos | face-down}
+[00:13.961] MSG: Player 2 summoned [Greater Succubus] using: "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}, "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos | face-down}
+[00:17.144] Crystals: P1 4200 → 4150 (-50)  [skip tax]
+[00:17.144] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:18.532] Turn ended  P1  |  Crystals P0=5000 P1=4150
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=4150 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Book][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][Grea]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:19.145] Mode selected P0: ATTACK
+[00:19.151] Attack phase P0: 2 attack(s) available
+[00:19.151] MSG: Player 1: tap a character to attack.
+[00:19.426] AI0 attack decision: (2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (1,4) (dead-end)
+[00:19.726] Dice rolled: 3
+[00:19.750] MSG: Nothing happens — Dead End.
+[00:23.122] Attack P0(2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(1,4)(empty)  Dice=3  → DEAD_END
+[00:23.123] Anim: 3F  (blank slot)
+[00:23.620] Mode selected P0: ATTACK
+[00:23.627] Attack phase P0: 1 attack(s) available
+[00:23.627] MSG: Player 1: tap a character to attack.
+[00:23.918] AI0 attack decision: (2,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic | face-down} → (2,4) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:24.255] Revealed: P0 (2,1) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:24.255] Dice rolled: 3
+[00:24.297] MSG: Electrogazer wins!
+[00:28.934] Attack P0(2,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P1(2,4)"Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}  Dice=3  ATK=80 vs DEF=50  → WIN
+[00:28.935] Anim: 3A  △ P1(2,4)
+[00:28.935] Card destroyed  P1 (2,4) "Greater Succubus" {Union ATK30 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Chaos}
+[00:29.433] Turn ended  P0  |  Crystals P0=5000 P1=4150
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=4150 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][Elec][Book][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:30.032] Mode selected P1: ATTACK
+[00:30.036] Attack phase P1: 2 attack(s) available
+[00:30.036] MSG: Player 2: tap a character to attack.
+[00:30.326] AI1 attack decision: (2,2)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down} → (2,1) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:30.664] Revealed: P1 (2,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:30.664] Dice rolled: 1
+[00:30.668] MSG: Ice Mage wins!
+[00:35.294] Crystals: P0 5000 → 4000 (-1000)  [battle]
+[00:36.692] Attack P1(2,2)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P0(2,1)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}  Dice=1  ATK=50 vs DEF=45  → WIN
+[00:36.692] Anim: 3A  △ P0(2,1)
+[00:36.692] Card destroyed  P0 (2,1) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:36.998] Turn ended  P1  |  Crystals P0=4000 P1=4150
+
+--- Turn 5  |  Player 0  |  Crystals P0=4000 P1=4150 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][Book][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Ice ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:37.619] Mode selected P0: ATTACK
+[00:37.625] Attack phase P0: 2 attack(s) available
+[00:37.625] MSG: Player 1: tap a character to attack.
+[00:37.917] AI0 attack decision: (2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (2,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:38.227] Dice rolled: 5
+[00:38.237] MSG: Book with Fangs wins!
+[00:43.926] Crystals: P1 4150 → 3750 (-400)  [battle]
+[00:45.323] Attack P0(2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(2,2)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=5  ATK=75 vs DEF=0  → WIN
+[00:45.324] Reckoning overlay: P0 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} +ATK 30
+[00:45.324] Anim: 3A  △ P1(2,2)
+[00:45.324] Card destroyed  P1 (2,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:45.828] Mode selected P0: ATTACK
+[00:45.833] Attack phase P0: 1 attack(s) available
+[00:45.834] MSG: Player 1: tap a character to attack.
+[00:46.135] AI0 attack decision: (3,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | face-down} → (4,0) (dead-end)
+[00:46.477] Revealed: P0 (3,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:46.477] Dice rolled: 3
+[00:46.491] MSG: Nothing happens — Dead End.
+[00:49.824] Attack P0(3,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(4,0)(empty)  Dice=3  → DEAD_END
+[00:49.824] Anim: 3F  (blank slot)
+[00:49.832] MSG: No valid target — effect cancelled.
+[00:49.835] Ability target resolved  P0
+[00:49.835] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[00:50.323] Turn ended  P0  |  Crystals P0=4000 P1=3750
+
+--- Turn 6  |  Player 1  |  Crystals P0=4000 P1=3750 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][Book][  ? ][  ? ]
+      [  ? ][  ? ][Scou][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:50.922] Mode selected P1: ATTACK
+[00:50.925] Attack phase P1: 2 attack(s) available
+[00:50.925] MSG: Player 2: tap a character to attack.
+[00:51.218] AI1 attack decision: (3,3)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio | face-down} → (2,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:51.557] Revealed: P1 (3,3) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[00:51.557] Dice rolled: 1
+[00:51.561] MSG: Both cards are destroyed!
+[00:56.127] Crystals: P1 3750 → 3050 (-700)  [battle]
+[00:57.518] Crystals: P0 4000 → 3200 (-800)  [battle]
+[00:58.909] Attack P1(3,3)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P0(2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=1  ATK=55 vs DEF=55  → TIE
+[00:58.910] Anim: 3C  △ P1(3,3) + △ P0(2,2)
+[00:58.910] Card destroyed  P1 (3,3) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[00:58.910] Card destroyed  P0 (2,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:59.202] Turn ended  P1  |  Crystals P0=3200 P1=3050
+
+--- Turn 7  |  Player 0  |  Crystals P0=3200 P1=3050 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][Scou][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:59.815] Mode selected P0: ATTACK
+[00:59.820] Attack phase P0: 2 attack(s) available
+[00:59.820] MSG: Player 1: tap a character to attack.
+[01:00.101] AI0 attack decision: (3,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → (0,4) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down}
+[01:00.439] Revealed: P1 (0,4) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:00.439] Dice rolled: 2
+[01:00.443] MSG: Scout Probe wins!
+[01:05.094] Crystals: P1 3050 → 2900 (-150)  [battle]
+[01:06.491] Attack P0(3,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(0,4)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=2  ATK=40 vs DEF=5  → WIN
+[01:06.492] Anim: 3A  △ P1(0,4)
+[01:06.492] Card destroyed  P1 (0,4) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:06.498] MSG: No valid target — effect cancelled.
+[01:06.501] Ability target resolved  P0
+[01:06.501] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:08.996] Turn ended  P0  |  Crystals P0=3200 P1=2900
+
+--- Turn 8  |  Player 1  |  Crystals P0=3200 P1=2900 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][Scou][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:09.596] Mode selected P1: ATTACK
+[01:09.600] Attack phase P1: 2 attack(s) available
+[01:09.601] MSG: Player 2: tap a character to attack.
+[01:09.893] AI1 attack decision: (1,3)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down} → (2,4) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | face-down}
+[01:10.266] Revealed: P1 (1,3) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[01:10.295] Revealed: P0 (2,4) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:10.295] Dice rolled: 3
+[01:15.018] Crystals: P1 2900 → 2680 (-220)  [battle]
+[01:16.415] Attack P1(1,3)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P0(2,4)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}  Dice=3  ATK=20 vs DEF=50  → LOSE
+[01:16.415] Anim: 3B  △ P1(1,3)
+[01:16.415] Card destroyed  P1 (1,3) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[01:16.708] Turn ended  P1  |  Crystals P0=3200 P1=2680
+
+--- Turn 9  |  Player 0  |  Crystals P0=3200 P1=2680 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][Soni]
+      [  ? ][  ? ][Scou][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[01:17.321] Mode selected P0: ATTACK
+[01:17.326] Attack phase P0: 2 attack(s) available
+[01:17.326] MSG: Player 1: tap a character to attack.
+[01:17.605] AI0 attack decision: (3,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → (4,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down}
+[01:17.907] Revealed: P1 (4,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[01:17.907] Dice rolled: 5
+[01:22.714] Crystals: P0 3200 → 2500 (-700)  [battle]
+[01:24.113] Attack P0(3,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(4,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=5  ATK=40 vs DEF=55  → LOSE
+[01:24.114] Anim: 3B  △ P0(3,2)
+[01:24.114] Card destroyed  P0 (3,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:24.606] Mode selected P0: ATTACK
+[01:24.612] Attack phase P0: 1 attack(s) available
+[01:24.612] MSG: Player 1: tap a character to attack.
+[01:24.905] AI0 attack decision: (2,4)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → (1,1) "Snare Trap" {cost 500}
+[01:25.248] Revealed: P1 (1,1) "Snare Trap" {cost 500}
+[01:25.249] Dice rolled: 5
+[01:25.504] MSG: Trap triggered: Snare Trap!
+[01:29.591] Crystals: P1 2680 → 2180 (-500)  [trap cost]
+[01:30.980] MSG: Snare Trap: Sonic Seraph's effect nullified until end of next turn!
+[01:30.983] Trap: "Snare Trap" triggered  P0(2,4)→P1(1,1)
+[01:30.983] Anim: 3D  (attacker survives)
+[01:31.486] Turn ended  P0  |  Crystals P0=2500 P1=2180
+
+--- Turn 10  |  Player 1  |  Crystals P0=2500 P1=2180 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][Soni]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][Book]
+[01:32.081] Mode selected P1: ATTACK
+[01:32.088] Attack phase P1: 2 attack(s) available
+[01:32.088] MSG: Player 2: tap a character to attack.
+[01:32.381] AI1 attack decision: (4,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (0,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down}
+[01:32.681] Revealed: P0 (0,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:32.681] Dice rolled: 3
+[01:32.688] MSG: Book with Fangs wins!
+[01:38.372] Crystals: P0 2500 → 2100 (-400)  [battle]
+[01:39.769] Attack P1(4,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(0,2)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=3  ATK=75 vs DEF=0  → WIN
+[01:39.770] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} +ATK 30
+[01:39.770] Anim: 3A  △ P0(0,2)
+[01:39.770] Card destroyed  P0 (0,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:40.068] Turn ended  P1  |  Crystals P0=2100 P1=2180
+
+--- Turn 11  |  Player 0  |  Crystals P0=2100 P1=2180 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][Soni]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][Book]
+[01:40.678] Mode selected P0: ATTACK
+[01:40.684] Attack phase P0: 2 attack(s) available
+[01:40.684] MSG: Player 1: tap a character to attack.
+[01:40.963] AI0 attack decision: (2,4)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | nullified≤T10} → (0,1) (dead-end)
+[01:41.263] Dice rolled: 5
+[01:41.291] MSG: Nothing happens — Dead End.
+[01:44.662] Attack P0(2,4)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | nullified≤T10} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[01:44.662] Anim: 3F  (blank slot)
+[01:44.663] MSG: Sonic Seraph: Bonus attack for hitting dead end!
+[01:45.156] Mode selected P0: ATTACK
+[01:45.161] Attack phase P0: 2 attack(s) available
+[01:45.161] MSG: Player 1: tap a character to attack.
+[01:45.455] AI0 attack decision: (2,3)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos | face-down} → (1,0) "Spike Trap" {cost 1500}
+[01:45.790] Revealed: P0 (2,3) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:45.829] Revealed: P1 (1,0) "Spike Trap" {cost 1500}
+[01:45.829] Dice rolled: 1
+[01:46.077] MSG: Trap triggered: Spike Trap!
+[01:51.307] Crystals: P1 2180 → 680 (-1500)  [trap cost]
+[01:52.692] Crystals: P0 2100 → 1900 (-200)  [card lost]
+[01:54.728] MSG: Flame Trap: Bat Swarm destroyed!
+[01:54.734] Trap: "Spike Trap" triggered  P0(2,3)→P1(1,0)
+[01:54.734] Anim: 3E  △ P0(2,3)
+[01:55.229] Mode selected P0: ATTACK
+[01:55.234] Attack phase P0: 1 attack(s) available
+[01:55.234] MSG: Player 1: tap a character to attack.
+[01:55.526] AI0 attack decision: (1,2)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature | face-down} → (3,2) (dead-end)
+[01:55.863] Revealed: P0 (1,2) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[01:55.863] Dice rolled: 3
+[01:55.875] MSG: Nothing happens — Dead End.
+[01:59.221] Attack P0(1,2)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature} → P1(3,2)(empty)  Dice=3  → DEAD_END
+[01:59.221] Anim: 3F  (blank slot)
+[01:59.722] Turn ended  P0  |  Crystals P0=1900 P1=680
+
+--- Turn 12  |  Player 1  |  Crystals P0=1900 P1=680 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][Whit][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][Soni]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][Book]
+[02:00.319] Mode selected P1: ATTACK
+[02:00.324] Attack phase P1: 2 attack(s) available
+[02:00.325] MSG: Player 2: tap a character to attack.
+[02:00.617] AI1 attack decision: (4,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → (1,2) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[02:00.918] Dice rolled: 3
+[02:00.926] MSG: White Tiger: Attacker loses 15 ATK!
+[02:00.926] MSG: Book with Fangs wins!
+[02:05.436] Crystals: P0 1900 → 1450 (-450)  [battle]
+[02:06.836] Attack P1(4,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(1,2)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}  Dice=3  ATK=30 vs DEF=25  → WIN
+[02:06.837] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} ATK -15
+[02:06.837] Anim: 3A  △ P0(1,2)
+[02:06.837] Card destroyed  P0 (1,2) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[02:07.132] Turn ended  P1  |  Crystals P0=1450 P1=680
+
+--- Turn 13  |  Player 0  |  Crystals P0=1450 P1=680 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][Soni]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][Book]
+[02:07.734] Mode selected P0: ATTACK
+[02:07.741] Attack phase P0: 2 attack(s) available
+[02:07.741] MSG: Player 1: tap a character to attack.
+[02:08.022] AI0 attack decision: (2,4)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | nullified≤T10} → (2,0) "Bunker" {cost 900}
+[02:08.358] Revealed: P1 (2,0) "Bunker" {cost 900}
+[02:08.358] Dice rolled: 3
+[02:08.635] MSG: Trap triggered: Bunker!
+[02:12.741] Crystals: P1 680 → 0 (-680)  [trap cost]
+
+=== GAME OVER ===
+[02:12.749] AI Player 0 wins
+[02:12.750] Reason: crystals
+[02:12.750] Final crystals — P0: 1450  P1: 0  |  Turns: 13
+[02:12.750] Log saved to: res://logs/results/2026-06-01_09-37-04_903_mint_julep/battle_notification_avalanche_2026-06-01_10-12-26_265.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Book-with-Fangs-002
+Highlight: Book with Fangs (Character)  [setup: Ice Mage]
+Result:    PASS
+Detail:    ok
+Turns:     13  |  AI timeouts: 0
+===

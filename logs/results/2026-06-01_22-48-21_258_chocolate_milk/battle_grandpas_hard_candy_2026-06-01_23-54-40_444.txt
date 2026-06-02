@@ -1,0 +1,85 @@
+=== Battle of Grandpa's Hard Candy ===
+Battle started: 2026-06-01 23:54:40.444
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Decoy-Puppet-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Decoy-Puppet-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Decoy Puppet (Trap)  [setup: Ox Patrol]
+Ability:      CANCEL_ATTACKER_ATTACK — This turn, foe cannot perform any more attack using unit with 400 or less cost.
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Decoy Puppet" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Decoy Puppet
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Decoy\ Puppet"
+  - Log must contain at least one of: Trap triggered, "Decoy Puppet" triggered, Trap triggered: Decoy Puppet, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Decoy Puppet revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Decoy Puppet
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Resurrection, Siege Cannon
+P1 Tech hand: Release Mutagen, War Supply, Siege Cannon
+P0:   [T:Brai][  — ][C:Choi][  — ][  — ]
+      [T:Spik][C:Raij][C:Stri][C:Blea][T:Hypn]
+      [  — ][C:Armo][C:Ox P][C:Laug][T:Deco]
+      [T:Snar][C:Skel][C:Void][T:Hard][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][T:Snar][C:Polt][T:Red ][  — ]
+      [  — ][  — ][C:Hunt][T:Hypn][  — ]
+      [C:Mind][C:Silv][T:Deco][C:Stin][C:Lab ]
+      [T:Stre][T:Defe][C:Swar][  — ][  — ]
+      [  — ][  — ][C:Flam][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+P1:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:05.312] Mode selected P0: ATTACK
+[00:05.316] Attack phase P0: 2 attack(s) available
+[00:05.317] MSG: Player 1: tap a character to attack.
+[00:05.612] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Decoy Puppet" {cost 100}
+[00:05.945] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:05.971] Revealed: P1 (2,2) "Decoy Puppet" {cost 100}
+[00:05.971] Dice rolled: 4
+[00:06.195] MSG: Trap triggered: Decoy Puppet!
+[00:06.195] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.200] AI Player 0 wins
+[00:06.200] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:06.200] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_grandpas_hard_candy_2026-06-01_23-54-40_444.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Decoy-Puppet-002
+Highlight: Decoy Puppet (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

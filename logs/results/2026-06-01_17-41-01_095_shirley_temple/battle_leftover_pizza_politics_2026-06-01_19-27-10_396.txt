@@ -1,0 +1,212 @@
+=== Battle of Leftover Pizza Politics ===
+Battle started: 2026-06-01 19:27:10.396
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Self-destruct-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Self-destruct-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Self-destruct (Trap)  [setup: Ox Patrol]
+Ability:      SELF_DESTROY_TEMP_ATK_BOOST — Select 1 of your unit. +10 ATK until your next turn’s end, but also destroy it. You pay no cost.
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Self-destruct" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Self-destruct
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Self\-destruct"
+  - Log must contain at least one of: Trap triggered, "Self-destruct" triggered, Trap triggered: Self-destruct, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Self-destruct revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Self-destruct
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Spy, Bribe
+P1 Tech hand: Prayer, Tease, Great Diplomacy
+P0:   [C:Red ][C:Scar][T:Hard][C:Moon][C:Fuji]
+      [C:Meli][T:Acid][C:Scyt][  — ][C:Gree]
+      [C:Bat ][C:Demo][C:Ox P][  — ][  — ]
+      [  — ][  — ][  — ][  — ][T:Foul]
+      [C:Skel][T:Blac][C:Cany][  — ][C:Paro]
+P1:   [T:Host][T:Bunk][C:Blue][T:Pepp][T:Snar]
+      [C:Bomb][  — ][  — ][  — ][C:Tiny]
+      [C:Mage][  — ][T:Self][  — ][C:Moon]
+      [C:Gold][  — ][  — ][  — ][T:Curs]
+      [C:Stai][C:Mind][C:Pony][C:Vamp][T:Brai]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.339] Mode selected P0: ATTACK
+[00:05.343] Attack phase P0: 2 attack(s) available
+[00:05.343] MSG: Player 1: tap a character to attack.
+[00:05.636] AI0 attack decision: (0,0)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane | face-down} → (1,2) (dead-end)
+[00:05.980] Revealed: P0 (0,0) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:05.980] Dice rolled: 3
+[00:05.994] MSG: Nothing happens — Dead End.
+[00:09.306] Attack P0(0,0)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P1(1,2)(empty)  Dice=3  → DEAD_END
+[00:09.306] Anim: 3F  (blank slot)
+[00:09.812] Mode selected P0: ATTACK
+[00:09.816] Attack phase P0: 1 attack(s) available
+[00:09.816] MSG: Player 1: tap a character to attack.
+[00:10.116] AI0 attack decision: (0,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down} → (2,1) (dead-end)
+[00:10.459] Revealed: P0 (0,1) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[00:10.459] Dice rolled: 4
+[00:10.474] MSG: Nothing happens — Dead End.
+[00:13.826] Attack P0(0,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P1(2,1)(empty)  Dice=4  → DEAD_END
+[00:13.827] Anim: 3F  (blank slot)
+[00:14.331] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [Red ][Scar][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:16.441] Crystals: P1 5000 → 4500 (-500)  [union]
+[00:16.488] Revealed: P1 (4,2) "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[00:16.488] Union summoned P1: "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down}
+[00:16.489] MSG: Player 2 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine | face-down}
+[00:19.707] Crystals: P1 4500 → 4450 (-50)  [skip tax]
+[00:19.707] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:21.096] Turn ended  P1  |  Crystals P0=5000 P1=4450
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=4450 ---
+P0:   [Red ][Scar][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Diam][  ? ][  ? ]
+[00:21.709] Mode selected P0: ATTACK
+[00:21.717] Attack phase P0: 2 attack(s) available
+[00:21.717] MSG: Player 1: tap a character to attack.
+[00:22.016] AI0 attack decision: (0,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → (4,2) "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[00:22.324] Dice rolled: 4
+[00:28.148] Crystals: P0 5000 → 4650 (-350)  [battle]
+[00:29.549] Attack P0(0,1)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P1(4,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used}  Dice=4  ATK=35 vs DEF=50  → LOSE
+[00:29.549] Reckoning overlay: P1 "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used} +DEF 15
+[00:29.549] Anim: 3B  △ P0(0,1)
+[00:29.549] Card destroyed  P0 (0,1) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[00:30.049] Mode selected P0: ATTACK
+[00:30.055] Attack phase P0: 1 attack(s) available
+[00:30.056] MSG: Player 1: tap a character to attack.
+[00:30.353] AI0 attack decision: (0,0)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → (2,4) (dead-end)
+[00:30.662] Dice rolled: 3
+[00:30.689] MSG: Nothing happens — Dead End.
+[00:34.059] Attack P0(0,0)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P1(2,4)(empty)  Dice=3  → DEAD_END
+[00:34.060] Anim: 3F  (blank slot)
+[00:34.557] Turn ended  P0  |  Crystals P0=4650 P1=4450
+
+--- Turn 4  |  Player 1  |  Crystals P0=4650 P1=4450 ---
+P0:   [Red ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Diam][  ? ][  ? ]
+[00:35.142] Mode selected P1: ATTACK
+[00:35.148] Attack phase P1: 2 attack(s) available
+[00:35.149] MSG: Player 2: tap a character to attack.
+[00:35.440] AI1 attack decision: (4,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used} → (0,0) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:35.741] Dice rolled: 4
+[00:35.790] MSG: Diamond Unicorn wins!
+[00:40.425] Crystals: P0 4650 → 4250 (-400)  [battle]
+[00:41.821] Attack P1(4,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used} → P0(0,0)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}  Dice=4  ATK=50 vs DEF=20  → WIN
+[00:41.822] Anim: 3A  △ P0(0,0)
+[00:41.822] Card destroyed  P0 (0,0) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:42.119] Turn ended  P1  |  Crystals P0=4250 P1=4450
+
+--- Turn 5  |  Player 0  |  Crystals P0=4250 P1=4450 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Diam][  ? ][  ? ]
+[00:42.712] Mode selected P0: ATTACK
+[00:42.717] Attack phase P0: 2 attack(s) available
+[00:42.717] MSG: Player 1: tap a character to attack.
+[00:43.011] AI0 attack decision: (0,4)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down} → (4,2) "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used}
+[00:43.351] Revealed: P0 (0,4) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:43.351] Dice rolled: 3
+[00:43.393] MSG: Both cards are destroyed!
+[00:47.925] Crystals: P0 4250 → 3800 (-450)  [battle]
+[00:49.343] Attack P0(0,4)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(4,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used}  Dice=3  ATK=35 vs DEF=35  → TIE
+[00:49.344] Anim: 3C  △ P0(0,4) + △ P1(4,2)
+[00:49.344] Card destroyed  P0 (0,4) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:49.344] Card destroyed  P1 (4,2) "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used}
+[00:49.817] Mode selected P0: ATTACK
+[00:49.820] Attack phase P0: 1 attack(s) available
+[00:49.821] MSG: Player 1: tap a character to attack.
+[00:50.116] AI0 attack decision: (0,3)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (1,1) (dead-end)
+[00:50.453] Revealed: P0 (0,3) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:50.453] Dice rolled: 2
+[00:50.469] MSG: Nothing happens — Dead End.
+[00:53.814] Attack P0(0,3)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[00:53.814] Anim: 3F  (blank slot)
+[00:53.865] Coin flip: Heads
+[00:56.574] MSG: Moon Tribe Twin Blader: Coin flip heads — extra attack!
+[00:57.076] Mode selected P0: ATTACK
+[00:57.082] Attack phase P0: 1 attack(s) available
+[00:57.082] MSG: Player 1: tap a character to attack.
+[00:57.374] AI0 attack decision: (1,2)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature | face-down} → (2,2) "Self-destruct" {cost 0}
+[00:57.706] Revealed: P0 (1,2) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:57.736] Revealed: P1 (2,2) "Self-destruct" {cost 0}
+[00:57.736] Dice rolled: 5
+[00:58.040] MSG: Trap triggered: Self-destruct!
+[00:58.040] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:58.047] AI Player 0 wins
+[00:58.047] Final crystals — P0: 3800  P1: 4450  |  Turns: 5
+[00:58.047] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_leftover_pizza_politics_2026-06-01_19-27-10_396.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Self-destruct-002
+Highlight: Self-destruct (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     5  |  AI timeouts: 0
+===

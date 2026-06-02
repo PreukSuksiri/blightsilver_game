@@ -1,0 +1,85 @@
+=== Battle of Mystery Stain on Couch ===
+Battle started: 2026-06-01 23:56:10.682
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Street-Joke-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Street-Joke-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Street Joke (Trap)  [setup: Ox Patrol]
+Ability:      REVEAL_OWN_GAIN_CRYSTAL — Reveal 1 of your cell, you receive 100 crystal
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Street Joke" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Street Joke
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Street\ Joke"
+  - Log must contain at least one of: Trap triggered, "Street Joke" triggered, Trap triggered: Street Joke, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Street Joke revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Street Joke
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Prayer, Tease, War Supply
+P1 Tech hand: War Supply, Tease, Radar
+P0:   [C:Raij][C:Need][C:Nuki][T:Foul][C:Grav]
+      [C:Whit][  — ][C:Doom][T:Bait][T:Echo]
+      [C:Armo][  — ][C:Ox P][  — ][C:Pony]
+      [  — ][  — ][C:Lase][T:Stre][  — ]
+      [C:Laug][T:Brai][  — ][T:Curs][C:Shep]
+P1:   [C:Moon][  — ][C:Jose][  — ][C:Chur]
+      [T:Expl][T:Echo][C:Polt][  — ][T:Spik]
+      [T:Bunk][  — ][T:Stre][  — ][C:Snip]
+      [C:Gobl][C:Yaks][C:Shot][  — ][  — ]
+      [T:Bait][C:Gran][C:Blue][T:Self][C:Arch]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.327] Mode selected P0: ATTACK
+[00:05.329] Attack phase P0: 2 attack(s) available
+[00:05.329] MSG: Player 1: tap a character to attack.
+[00:05.628] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Street Joke" {cost 0}
+[00:05.957] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:05.982] Revealed: P1 (2,2) "Street Joke" {cost 0}
+[00:05.982] Dice rolled: 5
+[00:06.244] MSG: Trap triggered: Street Joke!
+[00:06.245] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.250] AI Player 0 wins
+[00:06.250] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:06.250] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_mystery_stain_on_couch_2026-06-01_23-56-10_683.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Street-Joke-002
+Highlight: Street Joke (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

@@ -982,6 +982,15 @@ func _apply_forced_cells(forced_cells: Array) -> void:
 		cell.occupy(card_name, card_type, _load_card_tex(card_name, card_type))
 		cell.locked = true
 		_locked_cells.append(target_pos)
+		# Optional: start card face-up or with pre-applied flags (E2E setup support)
+		var card_inst: GameState.CardInstance = GameState.get_card(current_setup_player, row, col)
+		if fc.get("face_up", false):
+			card_inst.face_up = true
+		var init_flags: Array = fc.get("flags", [])
+		for flag_v: Variant in init_flags:
+			var flag_s: String = str(flag_v)
+			if flag_s != "" and flag_s not in card_inst.flags:
+				card_inst.flags.append(flag_s)
 
 # ─────────────────────────────────────────────────────────────
 # Random formation

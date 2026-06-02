@@ -1,0 +1,513 @@
+=== Battle of PTA Bake Sale Brawl ===
+Battle started: 2026-06-01 22:57:25.125
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-Cursed-Well-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Cursed-Well-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Cursed Well (Character)  [setup: Chaotic Wisp]
+Ability:      ATK_BOOST_VS_REVEALED — +15 ATK if exposed
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Cursed Well" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Cursed Well
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Cursed\ Well".*ATK=15\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +15 ATK vs exposed defender.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Cursed Well
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Cursed Well
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Tease, War Supply
+P1 Tech hand: Tease, Bribe, Siege Cannon
+P0:   [  — ][  — ][T:Pepp][  — ][  — ]
+      [  — ][C:Stai][C:Pit ][C:Skel][T:Trap]
+      [T:Bait][C:Rott][C:Curs][C:Dark][  — ]
+      [C:Armo][C:Leop][C:Fuji][C:Mine][C:Silv]
+      [  — ][  — ][T:Foul][C:Vamp][  — ]
+P1:   [C:Ostr][  — ][  — ][  — ][C:Cany]
+      [  — ][T:Echo][T:Alar][C:Leec][  — ]
+      [  — ][C:Vamp][C:Chao][C:Vile][T:Flam]
+      [  — ][C:Jaco][C:Immo][C:Book][T:Pepp]
+      [T:Stre][  — ][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:05.268] Mode selected P0: ATTACK
+[00:05.270] Attack phase P0: 2 attack(s) available
+[00:05.270] MSG: Player 1: tap a character to attack.
+[00:05.566] AI0 attack decision: (2,2)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.926] Revealed: P0 (2,2) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[00:05.954] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.954] Dice rolled: 5
+[00:05.958] MSG: Both cards are destroyed!
+[00:10.518] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:11.910] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:13.299] Attack P0(2,2)"Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=0 vs DEF=0  → TIE
+[00:13.300] Anim: 3C  △ P0(2,2) + △ P1(2,2)
+[00:13.300] Card destroyed  P0 (2,2) "Cursed Well" {Unit ATK0 DEF25 | cost 300 | affinity Chaos}
+[00:13.300] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:13.795] Mode selected P0: ATTACK
+[00:13.797] Attack phase P0: 1 attack(s) available
+[00:13.798] MSG: Player 1: tap a character to attack.
+[00:14.091] AI0 attack decision: (1,1)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos | face-down} → (4,0) "Street Joke" {cost 0}
+[00:14.466] Revealed: P0 (1,1) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[00:14.505] Revealed: P1 (4,0) "Street Joke" {cost 0}
+[00:14.505] Dice rolled: 4
+[00:14.719] MSG: Trap triggered: Street Joke!
+[00:18.838] Revealed: P1 (3,4) "Pepper Spray" {cost 0}
+[00:18.839] Crystals: P1 4900 → 5000 (+100)  [trap]
+[00:18.839] MSG: Street Joke: Revealed own card, gained 100 Crystals!
+[00:18.841] Trap: "Street Joke" triggered  P0(1,1)→P1(4,0)
+[00:18.841] Anim: 3D  (attacker survives)
+[00:19.268] Turn ended  P0  |  Crystals P0=4700 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4700 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Stai][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[00:21.385] Crystals: P1 5000 → 3500 (-1500)  [union]
+[00:21.424] Revealed: P1 (0,0) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[00:21.424] Union summoned P1: "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}
+[00:21.425] MSG: Player 2 summoned [Rocket Peacock] using: "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature | face-down}
+[00:24.626] Crystals: P1 3500 → 3450 (-50)  [skip tax]
+[00:24.627] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:26.014] Turn ended  P1  |  Crystals P0=4700 P1=3450
+
+--- Turn 3  |  Player 0  |  Crystals P0=4700 P1=3450 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Stai][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [Rock][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[00:26.618] Mode selected P0: ATTACK
+[00:26.625] Attack phase P0: 2 attack(s) available
+[00:26.626] MSG: Player 1: tap a character to attack.
+[00:26.926] AI0 attack decision: (1,1)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → (0,4) (dead-end)
+[00:27.234] Dice rolled: 2
+[00:27.261] MSG: Nothing happens — Dead End.
+[00:30.648] Attack P0(1,1)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P1(0,4)(empty)  Dice=2  → DEAD_END
+[00:30.648] Anim: 3F  (blank slot)
+[00:31.152] Mode selected P0: ATTACK
+[00:31.158] Attack phase P0: 1 attack(s) available
+[00:31.158] MSG: Player 1: tap a character to attack.
+[00:31.459] AI0 attack decision: (1,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down} → (0,0) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[00:31.833] Revealed: P0 (1,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[00:31.834] Dice rolled: 5
+[00:31.867] MSG: Pit Lord wins!
+[00:36.509] Attack P0(1,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P1(0,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}  Dice=5  ATK=120 vs DEF=100  → WIN
+[00:36.509] Anim: 3A  △ P1(0,0)
+[00:36.509] Card destroyed  P1 (0,0) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[00:37.006] Turn ended  P0  |  Crystals P0=4700 P1=3450
+
+--- Turn 4  |  Player 1  |  Crystals P0=4700 P1=3450 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Stai][Pit ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[00:37.603] Mode selected P1: ATTACK
+[00:37.610] Attack phase P1: 2 attack(s) available
+[00:37.612] MSG: Player 2: tap a character to attack.
+[00:37.900] AI1 attack decision: (1,3)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio | face-down} → (1,2) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[00:38.270] Revealed: P1 (1,3) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:38.270] Dice rolled: 4
+[00:38.274] MSG: Leech Man wins!
+[00:42.860] Crystals: P0 4700 → 3450 (-1250)  [battle]
+[00:44.258] Attack P1(1,3)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P0(1,2)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}  Dice=4  ATK=60 vs DEF=50  → WIN
+[00:44.258] Anim: 3A  △ P0(1,2)
+[00:44.258] Card destroyed  P0 (1,2) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[00:44.555] Turn ended  P1  |  Crystals P0=3450 P1=3450
+
+--- Turn 5  |  Player 0  |  Crystals P0=3450 P1=3450 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Stai][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][Leec][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[00:45.152] Mode selected P0: ATTACK
+[00:45.159] Attack phase P0: 2 attack(s) available
+[00:45.160] MSG: Player 1: tap a character to attack.
+[00:45.451] AI0 attack decision: (1,1)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → (2,0) (dead-end)
+[00:45.751] Dice rolled: 1
+[00:45.779] MSG: Nothing happens — Dead End.
+[00:49.157] Attack P0(1,1)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P1(2,0)(empty)  Dice=1  → DEAD_END
+[00:49.157] Anim: 3F  (blank slot)
+[00:49.652] Mode selected P0: ATTACK
+[00:49.658] Attack phase P0: 1 attack(s) available
+[00:49.658] MSG: Player 1: tap a character to attack.
+[00:49.950] AI0 attack decision: (2,1)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio | face-down} → (1,1) "Echo Barrier" {cost 1000}
+[00:50.285] Revealed: P0 (2,1) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[00:50.316] Revealed: P1 (1,1) "Echo Barrier" {cost 1000}
+[00:50.317] Dice rolled: 1
+[00:50.599] MSG: Trap triggered: Echo Barrier!
+[00:54.685] Crystals: P1 3450 → 2450 (-1000)  [trap cost]
+[00:56.077] MSG: Echo Barrier: Attacking player cannot attack again this turn!
+[00:56.082] Trap: "Echo Barrier" triggered  P0(2,1)→P1(1,1)
+[00:56.082] Anim: 3D  (attacker survives)
+[00:56.577] Turn ended  P0  |  Crystals P0=3450 P1=2450
+
+--- Turn 6  |  Player 1  |  Crystals P0=3450 P1=2450 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Stai][  — ][  ? ][  ? ]
+      [  ? ][Rott][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][Leec][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[00:57.164] Mode selected P1: ATTACK
+[00:57.172] Attack phase P1: 2 attack(s) available
+[00:57.172] MSG: Player 2: tap a character to attack.
+[00:57.464] AI1 attack decision: (1,3)"Leech Man" {Unit ATK60 DEF60 | cost 880 | affinity Bio | buff +permDEF20} → (2,1) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}
+[00:57.763] Dice rolled: 2
+[00:57.774] MSG: Leech Man wins!
+[01:02.456] Crystals: P0 3450 → 3000 (-450)  [battle]
+[01:03.854] Attack P1(1,3)"Leech Man" {Unit ATK60 DEF60 | cost 880 | affinity Bio | buff +permDEF20} → P0(2,1)"Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}  Dice=2  ATK=60 vs DEF=30  → WIN
+[01:03.854] Anim: 3A  △ P0(2,1)
+[01:03.854] Card destroyed  P0 (2,1) "Rotten Shrieker" {Unit ATK40 DEF30 | cost 450 | affinity Bio | base 40/30}
+[01:04.151] Turn ended  P1  |  Crystals P0=3000 P1=2450
+
+--- Turn 7  |  Player 0  |  Crystals P0=3000 P1=2450 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Stai][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][Leec][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:04.748] Mode selected P0: ATTACK
+[01:04.757] Attack phase P0: 2 attack(s) available
+[01:04.758] MSG: Player 1: tap a character to attack.
+[01:05.046] AI0 attack decision: (1,1)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → (1,0) (dead-end)
+[01:05.347] Dice rolled: 1
+[01:05.374] MSG: Nothing happens — Dead End.
+[01:08.745] Attack P0(1,1)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P1(1,0)(empty)  Dice=1  → DEAD_END
+[01:08.745] Anim: 3F  (blank slot)
+[01:09.240] Mode selected P0: ATTACK
+[01:09.246] Attack phase P0: 1 attack(s) available
+[01:09.247] MSG: Player 1: tap a character to attack.
+[01:09.537] AI0 attack decision: (3,1)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima | face-down} → (3,0) (dead-end)
+[01:09.878] Revealed: P0 (3,1) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[01:09.878] Dice rolled: 3
+[01:09.892] MSG: Nothing happens — Dead End.
+[01:13.219] Attack P0(3,1)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} → P1(3,0)(empty)  Dice=3  → DEAD_END
+[01:13.219] Anim: 3F  (blank slot)
+[01:13.728] Turn ended  P0  |  Crystals P0=3000 P1=2450
+
+--- Turn 8  |  Player 1  |  Crystals P0=3000 P1=2450 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Stai][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][Leop][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][Leec][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:14.322] Mode selected P1: ATTACK
+[01:14.329] Attack phase P1: 2 attack(s) available
+[01:14.330] MSG: Player 2: tap a character to attack.
+[01:14.630] AI1 attack decision: (1,3)"Leech Man" {Unit ATK60 DEF80 | cost 880 | affinity Bio | buff +permDEF40} → (3,1) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[01:14.939] Dice rolled: 2
+[01:14.949] MSG: Leech Man wins!
+[01:19.639] Crystals: P0 3000 → 2550 (-450)  [battle]
+[01:21.037] Attack P1(1,3)"Leech Man" {Unit ATK60 DEF80 | cost 880 | affinity Bio | buff +permDEF40} → P0(3,1)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}  Dice=2  ATK=60 vs DEF=45  → WIN
+[01:21.038] Anim: 3A  △ P0(3,1)
+[01:21.038] Card destroyed  P0 (3,1) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[01:21.343] Turn ended  P1  |  Crystals P0=2550 P1=2450
+
+--- Turn 9  |  Player 0  |  Crystals P0=2550 P1=2450 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Stai][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][Leec][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:21.943] Mode selected P0: ATTACK
+[01:21.950] Attack phase P0: 2 attack(s) available
+[01:21.951] MSG: Player 1: tap a character to attack.
+[01:22.251] AI0 attack decision: (1,1)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → (3,1) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | face-down}
+[01:22.636] Revealed: P1 (3,1) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:22.636] Dice rolled: 4
+[01:22.640] MSG: Staircase Lady wins!
+[01:27.301] Crystals: P1 2450 → 2100 (-350)  [battle]
+[01:28.701] Attack P0(1,1)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} → P1(3,1)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}  Dice=4  ATK=30 vs DEF=20  → WIN
+[01:28.703] Anim: 3A  △ P1(3,1)
+[01:28.703] Card destroyed  P1 (3,1) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:29.185] Mode selected P0: ATTACK
+[01:29.191] Attack phase P0: 1 attack(s) available
+[01:29.191] MSG: Player 1: tap a character to attack.
+[01:29.483] AI0 attack decision: (1,3)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down} → (1,2) "Alarm" {cost 0}
+[01:29.846] Revealed: P0 (1,3) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:29.874] Revealed: P1 (1,2) "Alarm" {cost 0}
+[01:29.874] Dice rolled: 2
+[01:30.091] MSG: Trap triggered: Alarm!
+[01:34.187] MSG: Alarm: +5 DEF to all ANIMA characters this turn!
+[01:34.191] Trap: "Alarm" triggered  P0(1,3)→P1(1,2)
+[01:34.191] Anim: 3D  (attacker survives)
+[01:34.682] Turn ended  P0  |  Crystals P0=2550 P1=2100
+
+--- Turn 10  |  Player 1  |  Crystals P0=2550 P1=2100 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][Stai][  — ][Skel][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Leec][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:35.276] Mode selected P1: ATTACK
+[01:35.284] Attack phase P1: 2 attack(s) available
+[01:35.284] MSG: Player 2: tap a character to attack.
+[01:35.576] AI1 attack decision: (1,3)"Leech Man" {Unit ATK60 DEF100 | cost 880 | affinity Bio | buff +permDEF60} → (1,1) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:35.876] Dice rolled: 3
+[01:35.887] MSG: Leech Man wins!
+[01:40.568] Crystals: P0 2550 → 2370 (-180)  [battle]
+[01:41.967] Attack P1(1,3)"Leech Man" {Unit ATK60 DEF100 | cost 880 | affinity Bio | buff +permDEF60} → P0(1,1)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}  Dice=3  ATK=60 vs DEF=0  → WIN
+[01:41.967] Anim: 3A  △ P0(1,1)
+[01:41.967] Card destroyed  P0 (1,1) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[01:42.262] Turn ended  P1  |  Crystals P0=2370 P1=2100
+
+--- Turn 11  |  Player 0  |  Crystals P0=2370 P1=2100 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][Skel][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Leec][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:42.864] Mode selected P0: ATTACK
+[01:42.871] Attack phase P0: 2 attack(s) available
+[01:42.871] MSG: Player 1: tap a character to attack.
+[01:43.163] AI0 attack decision: (1,3)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → (0,1) (dead-end)
+[01:43.462] Dice rolled: 5
+[01:43.491] MSG: Nothing happens — Dead End.
+[01:46.861] Attack P0(1,3)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[01:46.861] Anim: 3F  (blank slot)
+[01:47.355] Mode selected P0: ATTACK
+[01:47.359] Attack phase P0: 1 attack(s) available
+[01:47.359] MSG: Player 1: tap a character to attack.
+[01:47.655] AI0 attack decision: (2,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | face-down} → (2,1) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down}
+[01:48.019] Revealed: P0 (2,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[01:48.065] Revealed: P1 (2,1) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:48.065] Dice rolled: 2
+[01:52.755] Crystals: P0 2370 → 1870 (-500)  [battle]
+[01:54.156] Attack P0(2,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} → P1(2,1)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}  Dice=2  ATK=20 vs DEF=50  → LOSE
+[01:54.157] Anim: 3B  △ P0(2,3)
+[01:54.157] Card destroyed  P0 (2,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[01:54.651] Turn ended  P0  |  Crystals P0=1870 P1=2100
+
+--- Turn 12  |  Player 1  |  Crystals P0=1870 P1=2100 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][Skel][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Leec][  — ]
+      [  — ][Vamp][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[01:55.243] Mode selected P1: ATTACK
+[01:55.254] Attack phase P1: 2 attack(s) available
+[01:55.254] MSG: Player 2: tap a character to attack.
+[01:55.543] AI1 attack decision: (1,3)"Leech Man" {Unit ATK60 DEF120 | cost 880 | affinity Bio | buff +permDEF80} → (1,3) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[01:55.843] Dice rolled: 4
+[01:55.853] MSG: Leech Man wins!
+[02:00.534] Crystals: P0 1870 → 1720 (-150)  [battle]
+[02:01.933] Attack P1(1,3)"Leech Man" {Unit ATK60 DEF120 | cost 880 | affinity Bio | buff +permDEF80} → P0(1,3)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=4  ATK=60 vs DEF=5  → WIN
+[02:01.934] Anim: 3A  △ P0(1,3)
+[02:01.934] Card destroyed  P0 (1,3) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[02:02.229] Turn ended  P1  |  Crystals P0=1720 P1=2100
+
+--- Turn 13  |  Player 0  |  Crystals P0=1720 P1=2100 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Leec][  — ]
+      [  — ][Vamp][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:02.827] Mode selected P0: ATTACK
+[02:02.833] Attack phase P0: 2 attack(s) available
+[02:02.834] MSG: Player 1: tap a character to attack.
+[02:03.126] AI0 attack decision: (4,3)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down} → (2,1) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[02:03.428] Revealed: P0 (4,3) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[02:03.429] Dice rolled: 5
+[02:03.439] MSG: Both cards are destroyed!
+[02:08.035] Crystals: P0 1720 → 920 (-800)  [battle]
+[02:09.425] Crystals: P1 2100 → 1300 (-800)  [battle]
+[02:10.817] Attack P0(4,3)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} → P1(2,1)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}  Dice=5  ATK=50 vs DEF=50  → TIE
+[02:10.818] Anim: 3C  △ P0(4,3) + △ P1(2,1)
+[02:10.818] Card destroyed  P0 (4,3) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[02:10.818] Card destroyed  P1 (2,1) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[02:11.310] Mode selected P0: ATTACK
+[02:11.315] Attack phase P0: 1 attack(s) available
+[02:11.316] MSG: Player 1: tap a character to attack.
+[02:11.609] AI0 attack decision: (3,3)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic | face-down} → (4,1) (dead-end)
+[02:11.977] Revealed: P0 (3,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[02:11.977] Dice rolled: 2
+[02:11.990] MSG: Nothing happens — Dead End.
+[02:15.306] Attack P0(3,3)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → P1(4,1)(empty)  Dice=2  → DEAD_END
+[02:15.306] Anim: 3F  (blank slot)
+[02:15.802] Turn ended  P0  |  Crystals P0=920 P1=1300
+
+--- Turn 14  |  Player 1  |  Crystals P0=920 P1=1300 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][Mine][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Leec][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:16.396] Mode selected P1: ATTACK
+[02:16.403] Attack phase P1: 2 attack(s) available
+[02:16.403] MSG: Player 2: tap a character to attack.
+[02:16.697] AI1 attack decision: (1,3)"Leech Man" {Unit ATK60 DEF140 | cost 880 | affinity Bio | buff +permDEF100} → (3,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[02:16.997] Dice rolled: 1
+[02:17.007] MSG: Leech Man wins!
+[02:21.689] Crystals: P0 920 → 620 (-300)  [battle]
+[02:23.086] Attack P1(1,3)"Leech Man" {Unit ATK60 DEF140 | cost 880 | affinity Bio | buff +permDEF100} → P0(3,3)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}  Dice=1  ATK=60 vs DEF=15  → WIN
+[02:23.086] Anim: 3A  △ P0(3,3)
+[02:23.086] Card destroyed  P0 (3,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[02:23.384] Turn ended  P1  |  Crystals P0=620 P1=1300
+
+--- Turn 15  |  Player 0  |  Crystals P0=620 P1=1300 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Leec][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:23.977] Mode selected P0: ATTACK
+[02:23.981] Attack phase P0: 2 attack(s) available
+[02:23.981] MSG: Player 1: tap a character to attack.
+[02:24.275] AI0 attack decision: (3,0)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down} → (2,3) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio | face-down}
+[02:24.610] Revealed: P0 (3,0) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[02:24.677] Revealed: P1 (2,3) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[02:24.677] Dice rolled: 3
+[02:24.683] MSG: Both cards are destroyed!
+[02:29.121] Crystals: P0 620 → 140 (-480)  [battle]
+[02:30.513] Crystals: P1 1300 → 1100 (-200)  [battle]
+[02:31.906] Attack P0(3,0)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P1(2,3)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=3  ATK=30 vs DEF=30  → TIE
+[02:31.907] Anim: 3C  △ P0(3,0) + △ P1(2,3)
+[02:31.907] Card destroyed  P0 (3,0) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[02:31.907] Card destroyed  P1 (2,3) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[02:32.397] Mode selected P0: ATTACK
+[02:32.403] Attack phase P0: 1 attack(s) available
+[02:32.404] MSG: Player 1: tap a character to attack.
+[02:32.692] AI0 attack decision: (3,4)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima | face-down} → (4,2) (dead-end)
+[02:33.034] Revealed: P0 (3,4) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:33.034] Dice rolled: 1
+[02:33.049] MSG: Nothing happens — Dead End.
+[02:36.400] Attack P0(3,4)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(4,2)(empty)  Dice=1  → DEAD_END
+[02:36.400] Anim: 3F  (blank slot)
+[02:36.898] Turn ended  P0  |  Crystals P0=140 P1=1100
+
+--- Turn 16  |  Player 1  |  Crystals P0=140 P1=1100 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][Silv]
+      [  — ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Leec][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+[02:37.489] Mode selected P1: ATTACK
+[02:37.496] Attack phase P1: 2 attack(s) available
+[02:37.496] MSG: Player 2: tap a character to attack.
+[02:37.789] AI1 attack decision: (1,3)"Leech Man" {Unit ATK60 DEF160 | cost 880 | affinity Bio | buff +permDEF120} → (3,4) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:38.089] Dice rolled: 4
+[02:38.100] MSG: Leech Man wins!
+[02:42.781] Crystals: P0 140 → 0 (-140)  [battle]
+
+=== GAME OVER ===
+[02:42.791] AI Player 1 wins
+[02:42.791] Reason: crystals
+[02:42.791] Final crystals — P0: 0  P1: 1100  |  Turns: 16
+[02:42.791] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_pta_bake_sale_brawl_2026-06-01_22-57-25_125.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Cursed-Well-002
+Highlight: Cursed Well (Character)  [setup: Chaotic Wisp]
+Result:    FAIL
+Detail:    Regex not matched: Attack P0\(2,2\)"Cursed\ Well".*ATK=15\s
+Turns:     16  |  AI timeouts: 0
+===

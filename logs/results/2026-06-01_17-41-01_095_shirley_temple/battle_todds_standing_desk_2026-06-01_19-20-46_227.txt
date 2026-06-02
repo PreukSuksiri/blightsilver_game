@@ -1,0 +1,369 @@
+=== Battle of Todd's Standing Desk ===
+Battle started: 2026-06-01 19:20:46.227
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Hypnosis-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Hypnosis-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Hypnosis (Trap)  [setup: Ox Patrol]
+Ability:      HYPNOTIZE_ATTACKER — The attacking unit cannot attack during their next turn
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Hypnosis" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Hypnosis
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Hypnosis"
+  - Log must contain at least one of: Trap triggered, "Hypnosis" triggered, Trap triggered: Hypnosis, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Hypnosis revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Hypnosis
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, Siege Cannon, Radar
+P1 Tech hand: Resurrection, Accident, Radar
+P0:   [  — ][  — ][T:Red ][C:War ][  — ]
+      [  — ][C:Swar][  — ][C:Armo][C:Vamp]
+      [T:Hard][C:Lase][C:Ox P][C:Mine][  — ]
+      [  — ][C:Plan][C:Mind][C:Hunt][T:Acid]
+      [C:Sate][  — ][  — ][T:Self][C:Curs]
+P1:   [C:Hand][  — ][C:Pyro][  — ][C:Ice ]
+      [T:Host][C:Lazy][C:Meli][  — ][C:Void]
+      [T:Red ][  — ][T:Hypn][C:Lab ][T:Spik]
+      [T:Blac][  — ][  — ][  — ][C:Scou]
+      [T:Hypn][  — ][  — ][  — ][C:Armo]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.331] Mode selected P0: ATTACK
+[00:05.335] Attack phase P0: 2 attack(s) available
+[00:05.335] MSG: Player 1: tap a character to attack.
+[00:05.630] AI0 attack decision: (0,3)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane | face-down} → (0,0) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | face-down}
+[00:05.966] Revealed: P0 (0,3) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[00:05.993] Revealed: P1 (0,0) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[00:05.993] Dice rolled: 2
+[00:05.996] MSG: War Genie wins!
+[00:10.597] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:11.993] Attack P0(0,3)"War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane} → P1(0,0)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}  Dice=2  ATK=100 vs DEF=20  → WIN
+[00:11.993] Anim: 3A  △ P1(0,0)
+[00:11.993] Card destroyed  P1 (0,0) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[00:14.503] Turn ended  P0  |  Crystals P0=5000 P1=4700
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4700 ---
+P0:   [  — ][  — ][  ? ][War ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:16.580] Crystals: P1 4700 → 3900 (-800)  [union]
+[00:16.626] Revealed: P1 (0,2) "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}
+[00:16.626] Union summoned P1: "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} from "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down}, "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}
+[00:16.626] MSG: Player 2 summoned [Burning Phoenix] using: "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane | face-down}, "Lazy Troll" {Unit ATK120 DEF60 | cost 1000 | affinity Nature | face-down}, "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}
+[00:19.822] Crystals: P1 3900 → 3850 (-50)  [skip tax]
+[00:19.823] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:21.210] Turn ended  P1  |  Crystals P0=5000 P1=3850
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3850 ---
+P0:   [  — ][  — ][  ? ][War ][  — ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Burn][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:21.813] Mode selected P0: ATTACK
+[00:21.819] Attack phase P0: 2 attack(s) available
+[00:21.820] MSG: Player 1: tap a character to attack.
+[00:22.121] AI0 attack decision: (0,3)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} → (0,2) "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}
+[00:22.429] Dice rolled: 3
+[00:22.479] MSG: War Genie wins!
+[00:22.480] MSG: War Genie: only a Union card can destroy Burning Phoenix!
+[00:25.839] Attack P0(0,3)"War Genie" {Unit ATK90 DEF80 | cost 1150 | affinity Arcane | base 90/80} → P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}  Dice=3  ATK=90 vs DEF=50  → TIE
+[00:25.840] Anim: exchange  (no destruction)
+[00:26.342] Mode selected P0: ATTACK
+[00:26.349] Attack phase P0: 1 attack(s) available
+[00:26.349] MSG: Player 1: tap a character to attack.
+[00:26.651] AI0 attack decision: (1,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down} → (1,2) (dead-end)
+[00:26.999] Revealed: P0 (1,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[00:26.999] Dice rolled: 3
+[00:27.014] MSG: Nothing happens — Dead End.
+[00:30.383] Attack P0(1,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P1(1,2)(empty)  Dice=3  → DEAD_END
+[00:30.383] Anim: 3F  (blank slot)
+[00:30.888] Turn ended  P0  |  Crystals P0=5000 P1=3850
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=3850 ---
+P0:   [  — ][  — ][  ? ][War ][  — ]
+      [  — ][  ? ][  — ][Armo][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Burn][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:31.494] Mode selected P1: ATTACK
+[00:31.502] Attack phase P1: 2 attack(s) available
+[00:31.502] MSG: Player 2: tap a character to attack.
+[00:31.801] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (0,3) "War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80}
+[00:32.110] Dice rolled: 3
+[00:32.161] MSG: Burning Phoenix wins!
+[00:36.802] Crystals: P0 5000 → 3850 (-1150)  [battle]
+[00:38.199] Attack P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P0(0,3)"War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80}  Dice=3  ATK=125 vs DEF=80  → WIN
+[00:38.199] Anim: 3A  △ P0(0,3)
+[00:38.199] Card destroyed  P0 (0,3) "War Genie" {Unit ATK80 DEF80 | cost 1150 | affinity Arcane | base 80/80}
+[00:38.499] Turn ended  P1  |  Crystals P0=3850 P1=3850
+
+--- Turn 5  |  Player 0  |  Crystals P0=3850 P1=3850 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][Armo][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Burn][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:39.092] Mode selected P0: ATTACK
+[00:39.100] Attack phase P0: 2 attack(s) available
+[00:39.100] MSG: Player 1: tap a character to attack.
+[00:39.392] AI0 attack decision: (1,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → (1,1) (dead-end)
+[00:39.693] Dice rolled: 2
+[00:39.720] MSG: Nothing happens — Dead End.
+[00:43.090] Attack P0(1,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[00:43.090] Anim: 3F  (blank slot)
+[00:45.599] Turn ended  P0  |  Crystals P0=3850 P1=3850
+
+--- Turn 6  |  Player 1  |  Crystals P0=3850 P1=3850 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][Armo][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Burn][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:46.193] Mode selected P1: ATTACK
+[00:46.199] Attack phase P1: 2 attack(s) available
+[00:46.200] MSG: Player 2: tap a character to attack.
+[00:46.492] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (1,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[00:46.792] Dice rolled: 2
+[00:46.843] MSG: Burning Phoenix wins!
+[00:52.471] Crystals: P0 3850 → 3370 (-480)  [battle]
+[00:53.870] Attack P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P0(1,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=2  ATK=125 vs DEF=60  → WIN
+[00:53.870] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} +DEF 60
+[00:53.870] Anim: 3A  △ P0(1,3)
+[00:53.870] Card destroyed  P0 (1,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[00:54.168] Turn ended  P1  |  Crystals P0=3370 P1=3850
+
+--- Turn 7  |  Player 0  |  Crystals P0=3370 P1=3850 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Burn][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:54.765] Mode selected P0: ATTACK
+[00:54.770] Attack phase P0: 2 attack(s) available
+[00:54.771] MSG: Player 1: tap a character to attack.
+[00:55.063] AI0 attack decision: (3,3)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima | face-down} → (0,2) "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}
+[00:55.407] Revealed: P0 (3,3) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[00:55.407] Dice rolled: 5
+[00:55.450] MSG: Both cards are destroyed!
+[00:55.450] MSG: Huntress of Green Glade: only a Union card can destroy Burning Phoenix!
+[01:00.168] Crystals: P0 3370 → 2570 (-800)  [battle]
+[01:01.565] Attack P0(3,3)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}  Dice=5  ATK=50 vs DEF=50  → LOSE
+[01:01.565] Anim: 3B  △ P0(3,3)
+[01:01.567] Card destroyed  P0 (3,3) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:02.061] Mode selected P0: ATTACK
+[01:02.064] Attack phase P0: 1 attack(s) available
+[01:02.065] MSG: Player 1: tap a character to attack.
+[01:02.360] AI0 attack decision: (1,4)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down} → (0,2) "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}
+[01:02.699] Revealed: P0 (1,4) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:02.699] Dice rolled: 5
+[01:02.738] MSG: Both cards are destroyed!
+[01:02.739] MSG: Vampire Duchess: only a Union card can destroy Burning Phoenix!
+[01:07.486] Crystals: P0 2570 → 1770 (-800)  [battle]
+[01:08.883] Attack P0(1,4)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} → P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}  Dice=5  ATK=50 vs DEF=50  → LOSE
+[01:08.883] Anim: 3B  △ P0(1,4)
+[01:08.883] Card destroyed  P0 (1,4) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:09.381] Turn ended  P0  |  Crystals P0=1770 P1=3850
+
+--- Turn 8  |  Player 1  |  Crystals P0=1770 P1=3850 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Burn][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:09.965] Mode selected P1: ATTACK
+[01:09.970] Attack phase P1: 2 attack(s) available
+[01:09.971] MSG: Player 2: tap a character to attack.
+[01:10.262] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (0,2) "Red Card" {cost 0}
+[01:10.597] Revealed: P0 (0,2) "Red Card" {cost 0}
+[01:10.597] Dice rolled: 2
+[01:10.917] MSG: Trap triggered: Red Card!
+[01:15.036] Coin flip: Heads, Tails
+[01:17.761] MSG: Red Card: Heads, Tails.
+[01:17.761] MSG: Not both heads — no effect.
+[01:17.766] Trap: "Red Card" triggered  P1(0,2)→P0(0,2)
+[01:17.766] Anim: 3D  (attacker survives)
+[01:18.064] Turn ended  P1  |  Crystals P0=1770 P1=3850
+
+--- Turn 9  |  Player 0  |  Crystals P0=1770 P1=3850 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Burn][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:18.662] Mode selected P0: ATTACK
+[01:18.668] Attack phase P0: 2 attack(s) available
+[01:18.669] MSG: Player 1: tap a character to attack.
+[01:18.960] AI0 attack decision: (3,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | face-down} → (0,2) "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}
+[01:19.296] Revealed: P0 (3,2) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[01:19.296] Dice rolled: 3
+[01:19.341] MSG: Mind Flayer wins!
+[01:19.341] MSG: Mind Flayer: only a Union card can destroy Burning Phoenix!
+[01:22.643] Attack P0(3,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}  Dice=3  ATK=100 vs DEF=50  → TIE
+[01:22.643] Anim: exchange  (no destruction)
+[01:23.140] Mode selected P0: ATTACK
+[01:23.147] Attack phase P0: 1 attack(s) available
+[01:23.147] MSG: Player 1: tap a character to attack.
+[01:23.438] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (0,3) (dead-end)
+[01:23.775] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:23.775] Dice rolled: 3
+[01:23.791] MSG: Nothing happens — Dead End.
+[01:27.136] Attack P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P1(0,3)(empty)  Dice=3  → DEAD_END
+[01:27.137] Anim: 3F  (blank slot)
+[01:27.635] Turn ended  P0  |  Crystals P0=1770 P1=3850
+
+--- Turn 10  |  Player 1  |  Crystals P0=1770 P1=3850 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][Ox P][  ? ][  — ]
+      [  — ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Burn][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:28.231] Mode selected P1: ATTACK
+[01:28.239] Attack phase P1: 2 attack(s) available
+[01:28.239] MSG: Player 2: tap a character to attack.
+[01:28.529] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (3,2) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[01:28.830] Dice rolled: 1
+[01:28.878] MSG: Burning Phoenix wins!
+[01:33.522] Crystals: P0 1770 → 270 (-1500)  [battle]
+[01:34.921] Attack P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P0(3,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}  Dice=1  ATK=125 vs DEF=70  → WIN
+[01:34.922] Anim: 3A  △ P0(3,2)
+[01:34.922] Card destroyed  P0 (3,2) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[01:35.219] Turn ended  P1  |  Crystals P0=270 P1=3850
+
+--- Turn 11  |  Player 0  |  Crystals P0=270 P1=3850 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][Ox P][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Burn][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:35.814] Mode selected P0: ATTACK
+[01:35.820] Attack phase P0: 2 attack(s) available
+[01:35.820] MSG: Player 1: tap a character to attack.
+[01:36.113] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → (1,0) "Hostage" {cost 200}
+[01:36.445] Revealed: P1 (1,0) "Hostage" {cost 200}
+[01:36.445] Dice rolled: 5
+[01:36.728] MSG: Trap triggered: Hostage!
+[01:40.831] Crystals: P1 3850 → 3650 (-200)  [trap cost]
+[01:42.221] MSG: Hostage: Adjacent squares revealed and locked.
+[01:42.223] Revealed: P1 (2,0) "Red Card" {cost 0}
+[01:42.227] Trap: "Hostage" triggered  P0(2,2)→P1(1,0)
+[01:42.227] Anim: 3D  (attacker survives)
+[01:44.744] Turn ended  P0  |  Crystals P0=270 P1=3650
+
+--- Turn 12  |  Player 1  |  Crystals P0=270 P1=3650 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][Ox P][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Burn][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[01:45.346] Mode selected P1: ATTACK
+[01:45.353] Attack phase P1: 2 attack(s) available
+[01:45.353] MSG: Player 2: tap a character to attack.
+[01:45.654] AI1 attack decision: (0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:45.963] Dice rolled: 2
+[01:46.013] MSG: Burning Phoenix wins!
+[01:51.660] Crystals: P0 270 → 0 (-270)  [battle]
+
+=== GAME OVER ===
+[01:51.669] AI Player 1 wins
+[01:51.669] Reason: crystals
+[01:51.669] Final crystals — P0: 0  P1: 3650  |  Turns: 12
+[01:51.669] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_todds_standing_desk_2026-06-01_19-20-46_227.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Hypnosis-002
+Highlight: Hypnosis (Trap)  [setup: Ox Patrol]
+Result:    FAIL
+Detail:    Missing expected log text: Hypnosis; Regex not matched: Revealed: P1 \(2,2\) "Hypnosis"; Card name never appeared in log: Hypnosis
+Turns:     12  |  AI timeouts: 0
+===

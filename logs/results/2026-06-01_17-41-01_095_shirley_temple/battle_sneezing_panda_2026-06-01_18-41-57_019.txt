@@ -1,0 +1,92 @@
+=== Battle of Sneezing Panda ===
+Battle started: 2026-06-01 18:41:57.019
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Tiny-Pixie-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Tiny-Pixie-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Tiny Pixie (Character)  [setup: Chaotic Wisp]
+Ability:      ONE_USE_SURVIVE_DESTRUCTION — Once, this card is not destroyed
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Tiny Pixie" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Tiny Pixie
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Tiny\ Pixie".*ATK=|→ P\d\(\d+,\d+\)"Tiny\ Pixie")
+  - Log must match regex: ("Tiny\ Pixie".*ATK=|→ P\d\(\d+,\d+\)"Tiny\ Pixie")
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: one-use ability ONE_USE_SURVIVE_DESTRUCTION.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Tiny Pixie
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Tiny Pixie
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Tease, Bribe
+P1 Tech hand: Tease, Release Mutagen, Bribe
+P0:   [C:Ox P][T:Blac][C:Chao][C:Lazy][C:Saw ]
+      [T:Flam][  — ][  — ][  — ][T:Expl]
+      [C:Heav][  — ][C:Tiny][  — ][C:Magi]
+      [C:Gree][  — ][T:Bunk][  — ][C:Choi]
+      [C:Doom][C:Whit][C:Flam][C:Shot][T:Hard]
+P1:   [C:Witc][C:Gran][C:Mind][C:Mine][  — ]
+      [  — ][C:Dark][C:Ange][C:Vile][  — ]
+      [  — ][C:Doom][C:Chao][C:Tomb][C:Aray]
+      [T:Snar][  — ][T:Blac][  — ][  — ]
+      [T:Alar][C:Gran][T:Expl][  — ][T:Flam]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:05.308] Mode selected P0: ATTACK
+[00:05.312] Attack phase P0: 2 attack(s) available
+[00:05.312] MSG: Player 1: tap a character to attack.
+[00:05.616] AI0 attack decision: (2,2)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.952] Revealed: P0 (2,2) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[00:05.979] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.979] Dice rolled: 1
+[00:05.982] MSG: Both cards are destroyed!
+[00:10.525] Crystals: P0 5000 → 4900 (-100)  [battle]
+[00:11.916] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:13.298] MSG: Tiny Pixie survives destruction!
+[00:13.305] Attack P0(2,2)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=0 vs DEF=0  → TIE
+[00:13.305] E2E: ability goal reached — ending battle early.
+[00:13.305] Anim: 3C  △ P0(2,2) + △ P1(2,2)
+[00:13.305] Card destroyed  P0 (2,2) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[00:13.305] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[00:13.313] AI Player 0 wins
+[00:13.313] Final crystals — P0: 4900  P1: 4900  |  Turns: 1
+[00:13.313] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_sneezing_panda_2026-06-01_18-41-57_019.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Tiny-Pixie-002
+Highlight: Tiny Pixie (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

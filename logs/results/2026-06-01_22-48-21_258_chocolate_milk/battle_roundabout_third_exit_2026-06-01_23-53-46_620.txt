@@ -1,0 +1,81 @@
+=== Battle of Roundabout Third Exit ===
+Battle started: 2026-06-01 23:53:46.620
+Game Session of Chocolate Milk (started 2026-06-01 22:48:21.258)
+=== Card E2E Test ===
+Scenario ID:  E2E-War-Supply-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-War-Supply-001  (test_case/functional/tech_functional_tests.md)
+Highlight:    War Supply (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Ability:      TEMP_ATK_DEF_BOOST_ALL — Your units get +10 ATK&DEF in Reckoning until turn’s end
+Setup role:   t2_tech_play
+Verifies:
+  - Ability: "War Supply" is exercised via forced board/tech setup (t2_tech_play)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must match regex: Tech played\s+P0: "War\ Supply"
+  - Log must contain at least one of: War Supply, War Supply, Tech resolved, Revealed:, Card destroyed
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: tech War Supply played (TEMP_ATK_DEF_BOOST_ALL).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    War Supply
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Siege Cannon, Bribe
+P1 Tech hand: Prayer, Siege Cannon, Accident
+P0:   [C:Choi][T:Red ][C:Gian][C:Snip][C:Skel]
+      [C:Lase][  — ][  — ][  — ][C:War ]
+      [T:Flam][  — ][C:Ox P][  — ][T:Foul]
+      [C:Armo][  — ][  — ][  — ][T:Echo]
+      [C:Vamp][T:Deco][C:Jira][C:Blue][T:Self]
+P1:   [C:Stai][  — ][T:Trap][  — ][C:Hunt]
+      [C:Gobl][  — ][  — ][T:Expl][C:Moon]
+      [T:Bunk][T:Foul][C:Chao][C:Stre][T:Red ]
+      [T:Spik][  — ][  — ][  — ][C:Aray]
+      [C:Ice ][  — ][  — ][  — ][C:Vamp]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.319] Mode selected P0: TECH
+[00:05.621] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:07.005] Tech played  P0: "War Supply"
+[00:08.546] MSG: War Supply: All face-up units gain +10 ATK & DEF until end of turn.
+[00:08.546] E2E: ability goal reached — ending battle early.
+[00:08.548] Tech resolved  P0
+
+=== GAME OVER ===
+[00:08.550] AI Player 0 wins
+[00:08.550] Final crystals — P0: 4000  P1: 5000  |  Turns: 1
+[00:08.550] Log saved to: res://logs/results/2026-06-01_22-48-21_258_chocolate_milk/battle_roundabout_third_exit_2026-06-01_23-53-46_620.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-War-Supply-002
+Highlight: War Supply (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

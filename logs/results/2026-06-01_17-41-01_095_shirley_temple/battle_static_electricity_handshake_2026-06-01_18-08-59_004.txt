@@ -1,0 +1,142 @@
+=== Battle of Static Electricity Handshake ===
+Battle started: 2026-06-01 18:08:59.004
+Game Session of Shirley Temple (started 2026-06-01 17:41:01.095)
+=== Card E2E Test ===
+Scenario ID:  E2E-Leorudus-the-Warlord-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Leorudus-the-Warlord-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Leorudus the Warlord (Character)  [setup: Ox Patrol, Chaotic Wisp]
+Ability:      BOOST_PER_ANIMA_ON_FIELD — +20 ATK&DEF for each other face-up Anima card on their own field
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Leorudus the Warlord" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Leorudus the Warlord
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Leorudus\ the\ Warlord".*ATK=100\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +20 ATK with ANIMA ally (1 ally simulated via field).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Leorudus the Warlord
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Leorudus the Warlord, (2,1) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Siege Cannon, Accident
+P1 Tech hand: Great Diplomacy, Bribe, Resurrection
+P0:   [T:Red ][C:Silv][C:Raij][C:Gobl][C:Laug]
+      [  — ][C:Gold][  — ][  — ][C:Lab ]
+      [  — ][C:Ox P][C:Leor][  — ][C:Scar]
+      [  — ][  — ][  — ][  — ][C:Stai]
+      [T:Blac][C:Gamm][T:Trap][T:Spik][  — ]
+P1:   [C:Scou][C:Dark][C:Curs][T:Echo][C:Stri]
+      [  — ][T:Spik][T:Blac][  — ][C:Big ]
+      [C:Hand][T:Curs][C:Chao][  — ][  — ]
+      [C:Leec][  — ][T:Stre][C:Silv][T:Flam]
+      [C:Scyt][  — ][C:Gran][  — ][C:Choi]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.329] Mode selected P0: ATTACK
+[00:05.333] Attack phase P0: 2 attack(s) available
+[00:05.333] MSG: Player 1: tap a character to attack.
+[00:05.628] AI0 attack decision: (2,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.968] Revealed: P0 (2,2) "Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima}
+[00:05.994] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.994] Dice rolled: 2
+[00:05.998] MSG: Leorudus the Warlord wins!
+[00:10.611] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.010] Attack P0(2,2)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=80 vs DEF=0  → WIN
+[00:12.010] Anim: 3A  △ P1(2,2)
+[00:12.010] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.504] Mode selected P0: ATTACK
+[00:12.510] Attack phase P0: 1 attack(s) available
+[00:12.510] MSG: Player 1: tap a character to attack.
+[00:12.804] AI0 attack decision: (2,1)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (1,2) "Blackmail" {cost 0}
+[00:13.138] Revealed: P0 (2,1) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:13.164] Revealed: P1 (1,2) "Blackmail" {cost 0}
+[00:13.164] Dice rolled: 4
+[00:13.394] MSG: Trap triggered: Blackmail!
+[00:17.489] Prompt: "Blackmail"  [Discard 1 Tech Card / End your turn]
+[00:18.077] Ability choice resolved: 0 (Yes)
+[00:18.078] MSG: Blackmail: Discarded 1 Tech Card.
+[00:18.082] Trap: "Blackmail" triggered  P0(2,1)→P1(1,2)
+[00:18.082] Anim: 3D  (attacker survives)
+[00:18.583] Turn ended  P0  |  Crystals P0=5000 P1=4900
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4900 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][Ox P][Leor][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:20.664] Crystals: P1 4900 → 4600 (-300)  [union]
+[00:20.701] Revealed: P1 (0,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[00:20.701] Union summoned P1: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | face-down}
+[00:20.702] MSG: Player 2 summoned [Kitsune] using: "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos | face-down}
+[00:23.905] Crystals: P1 4600 → 4550 (-50)  [skip tax]
+[00:23.905] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:25.294] Turn ended  P1  |  Crystals P0=5000 P1=4550
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=4550 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][Ox P][Leor][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+P1:   [  ? ][Kits][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:25.889] Mode selected P0: ATTACK
+[00:25.896] Attack phase P0: 2 attack(s) available
+[00:25.897] MSG: Player 1: tap a character to attack.
+[00:26.188] AI0 attack decision: (2,2)"Leorudus the Warlord" {Unit ATK100 DEF100 | cost 1150 | affinity Anima | base 80/80 | buff +permATK20, +permDEF20} → (0,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[00:26.487] Dice rolled: 1
+[00:26.536] MSG: Leorudus the Warlord wins!
+[00:31.162] Attack P0(2,2)"Leorudus the Warlord" {Unit ATK100 DEF100 | cost 1150 | affinity Anima | base 80/80 | buff +permATK20, +permDEF20} → P1(0,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}  Dice=1  ATK=100 vs DEF=35  → WIN
+[00:31.163] E2E: ability goal reached — ending battle early.
+[00:31.163] Anim: 3A  △ P1(0,1)
+[00:31.163] Card destroyed  P1 (0,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+
+=== GAME OVER ===
+[00:31.177] AI Player 0 wins
+[00:31.177] Final crystals — P0: 5000  P1: 4550  |  Turns: 3
+[00:31.177] Log saved to: res://logs/results/2026-06-01_17-41-01_095_shirley_temple/battle_static_electricity_handshake_2026-06-01_18-08-59_004.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Leorudus-the-Warlord-002
+Highlight: Leorudus the Warlord (Character)  [setup: Ox Patrol, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     3  |  AI timeouts: 0
+===

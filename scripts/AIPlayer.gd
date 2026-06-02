@@ -11,6 +11,49 @@ func init_as(pi: int) -> void:
 	player_index   = pi
 	opponent_index = 1 - pi
 
+# ─────────────────────────────────────────────────────────────
+# E2E test helpers — only active when CardE2ERunner is running
+# and this instance controls player 0 (the highlight card side).
+# ─────────────────────────────────────────────────────────────
+
+## True when this AI is the "highlight player" in an E2E test (P0 only).
+func _e2e_is_highlight_player() -> bool:
+	return player_index == 0 and CardE2ERunner.is_active()
+
+## The card name the current E2E scenario is testing (empty outside E2E).
+func _e2e_highlight_card() -> String:
+	if not _e2e_is_highlight_player():
+		return ""
+	return str(CardE2ERunner.get_current_scenario().get("card_name", ""))
+
+## The name of the P0 card that should be forced to attack in E2E mode.
+## For character scenarios this equals card_name (the tested card IS the attacker).
+## For trap scenarios card_name is the trap (on P1's side), so we use the first
+## forced_cells_0 entry instead — that is P0's designated attacker (e.g. Ox Patrol).
+func _e2e_forced_attacker_name() -> String:
+	if not _e2e_is_highlight_player():
+		return ""
+	var fc0: Array = AIvsAIManager.forced_cells_0
+	if not fc0.is_empty():
+		return str((fc0[0] as Dictionary).get("card_name", ""))
+	return _e2e_highlight_card()
+
+## True when this AI player is allowed to play Tech cards in the current context.
+## In E2E:
+##   P0 — only allowed when the scenario IS testing a Tech card (card_type == "Tech").
+##   P1 — never allowed (prevents Radar/Spy/Tease from disrupting P0's setup).
+## Outside E2E: always allowed.
+func _e2e_tech_allowed() -> bool:
+	if not CardE2ERunner.is_active():
+		return true
+	if player_index == 0:
+		if CardE2ERunner.get_current_scenario().get("card_type", "") == "Tech":
+			return true
+		# Also allow when the scenario specifies setup techs that must be played first.
+		var fst: Array = CardE2ERunner.get_current_scenario().get("e2e_force_setup_tech", [])
+		return not fst.is_empty()
+	return false  # P1 never plays tech in E2E
+
 # Pre-compiled regex for integer extraction in decide_trap_choice
 var _int_regex: RegEx = RegEx.new()
 
@@ -72,7 +115,8 @@ func decide_turn() -> void:
 	await get_tree().create_timer(0.6).timeout
 
 	# Rule 1: Tech priority — only enter TECH mode if a card actually scores > 0.
-	if GameState.has_playable_tech(player_index) and _has_useful_tech():
+	# In E2E mode, tech is suppressed unless this scenario specifically tests a Tech card.
+	if _e2e_tech_allowed() and GameState.has_playable_tech(player_index) and _has_useful_tech():
 		emit_signal("ai_mode_chosen", GameState.TurnMode.TECH)
 		await get_tree().create_timer(0.3).timeout
 		_choose_tech()
@@ -80,16 +124,36 @@ func decide_turn() -> void:
 
 	# Rule 2: Union summon — hesitation eases over successive AI turns.
 	# Turn 1: 10%, Turn 2: 35%, Turn 3: 60%, Turn 4+: 85%
-	if not _trailer_offensive and not _union_used and GameState.battle_ai_union_enabled:
-		var chance: float = minf(0.85, 0.10 + (_ai_turn_count - 1) * 0.25)
+	# In E2E mode all players summon immediately (100%) so unions are guaranteed.
+	# Exception: P0 skips unions entirely in non-union E2E scenarios so the highlight
+	# card is never accidentally consumed as union material.
+	var _e2e_no_union: bool = CardE2ERunner.is_active() and player_index == 0 \
+			and not CardE2ERunner.is_union_test()
+	if not _e2e_no_union and not _trailer_offensive and not _union_used and GameState.battle_ai_union_enabled:
+		var chance: float = 1.0 if CardE2ERunner.is_active() \
+				else minf(0.85, 0.10 + (_ai_turn_count - 1) * 0.25)
 		if randf() < chance:
 			var unions: Array = _get_available_unions()
 			if not unions.is_empty():
-				_union_used = true
-				var picked: Dictionary = _pick_best_union(unions)
-				var u: UnionData = picked["union"]
-				emit_signal("ai_union_chosen", u.card_name, picked["zone_cells"], picked["material_cells"])
-				return
+				# E2E: for union-test scenarios where the highlight card IS the union
+				# (role contains "union"), restrict P0 to only summon that union so
+				# competing unions cannot hijack the test.
+				# For non-union highlight cards that merely need a union on field
+				# (e.g. ATK_DEF_BONUS_IF_UNION_ON_FIELD), skip the filter so P0
+				# can freely summon whatever union is available.
+				if CardE2ERunner.is_active() and player_index == 0 and CardE2ERunner.is_union_test():
+					var _e2e_role: String = str(CardE2ERunner.get_current_scenario().get("role", ""))
+					if _e2e_role.contains("union"):
+						var _e2e_union: String = str(CardE2ERunner.get_current_scenario().get("card_name", ""))
+						if _e2e_union != "":
+							unions = unions.filter(func(e: Dictionary) -> bool:
+								return (e["union"] as UnionData).card_name == _e2e_union)
+				if not unions.is_empty():
+					_union_used = true
+					var picked: Dictionary = _pick_best_union(unions)
+					var u: UnionData = picked["union"]
+					emit_signal("ai_union_chosen", u.card_name, picked["zone_cells"], picked["material_cells"])
+					return
 
 	_do_attack_decision()
 
@@ -107,6 +171,13 @@ func register_attack_aborted(attacker_pos: Vector2i = Vector2i(-1, -1)) -> void:
 func continue_after_union() -> void:
 	if _game_is_over():
 		return
+	# In E2E, the non-highlight player (P1) ends the turn immediately after
+	# summoning a union.  This guarantees P0's highlight card can engage the
+	# union on the following turn instead of being destroyed by it first.
+	if CardE2ERunner.is_active() and player_index != 0:
+		await get_tree().create_timer(0.3).timeout
+		emit_signal("ai_end_turn")
+		return
 	await get_tree().create_timer(0.5).timeout
 	if _game_is_over():
 		return
@@ -123,7 +194,8 @@ func _do_attack_decision() -> void:
 		emit_signal("ai_end_turn")
 		return
 	# Personality: skip early turns if opponent has nothing revealed yet
-	if _skip_turns > 0 and _ai_turn_count <= _skip_turns and _count_faceup(opponent_index) == 0:
+	# (bypassed for E2E highlight player so it attacks without hesitation)
+	if not _e2e_is_highlight_player() and _skip_turns > 0 and _ai_turn_count <= _skip_turns and _count_faceup(opponent_index) == 0:
 		await get_tree().create_timer(2.0).timeout
 		emit_signal("ai_end_turn")
 		return
@@ -154,6 +226,24 @@ func _choose_best_attack() -> Dictionary:
 	if eligible.is_empty():
 		return none
 
+	# E2E FORCED MODE: bypass scoring entirely.
+	# If a highlight card exists and hasn't attacked yet, force it to attack the
+	# first live forced P1 cell. The +score bias approach is unreliable because
+	# face-up units (e.g. a freshly summoned union) naturally outscore face-down
+	# highlight cards even with the bonus. Only falls back to normal scoring when
+	# the highlight card is gone/already attacked, or no forced target remains.
+	if CardE2ERunner.is_active():
+		var hl := _e2e_forced_attacker_name()
+		if hl != "":
+			var forced := _e2e_forced_attack(hl)
+			if forced.get("attacker_pos", Vector2i(-1, -1)).x != -1:
+				return forced
+			# For ability-gated scenarios (e.g. ATK_BONUS_VS_UNION waiting for P1
+			# to summon), suppress all random attacks to preserve P1's setup cards.
+			var ability: String = str(CardE2ERunner.get_current_scenario().get("ability_type", ""))
+			if ability == "ATK_BONUS_VS_UNION" and _e2e_opponent_union_pos().x == -1:
+				return none
+
 	var best_attacker: Vector2i = Vector2i(-1, -1)
 	var best_target: Vector2i = Vector2i(-1, -1)
 	var best_score: int = -9999
@@ -182,6 +272,67 @@ func _choose_best_attack() -> Dictionary:
 	if best_score < 0 and not _has_positive_attack_option(eligible):
 		return none
 	return {"attacker_pos": best_attacker, "target_pos": best_target}
+
+
+## E2E helper: directly returns {attacker_pos, target_pos} for the highlight card.
+## For ATK_BONUS_VS_UNION scenarios, waits until P1 has a union on the field
+## before attacking (returns none if no P1 union yet). For all other scenarios,
+## attacks the first live forced P1 cell immediately.
+## Returns the empty-pos dict when conditions are not yet met or the highlight
+## card has already attacked — in those cases _choose_best_attack ends the turn.
+func _e2e_forced_attack(highlight_name: String) -> Dictionary:
+	var none: Dictionary = {"attacker_pos": Vector2i(-1, -1), "target_pos": Vector2i(-1, -1)}
+
+	# Find the highlight card on P0's grid.
+	var hl_pos: Vector2i = Vector2i(-1, -1)
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_name == highlight_name \
+					and card.card_type == "character" \
+					and not card.was_destroyed \
+					and not card.attacked_this_turn:
+				hl_pos = Vector2i(r, c)
+				break
+		if hl_pos.x != -1:
+			break
+	if hl_pos.x == -1:
+		return none  # not on field or already attacked
+
+	# ATK_BONUS_VS_UNION: wait until P1 has summoned a union, then attack it.
+	var ability: String = str(CardE2ERunner.get_current_scenario().get("ability_type", ""))
+	if ability == "ATK_BONUS_VS_UNION":
+		var union_pos: Vector2i = _e2e_opponent_union_pos()
+		if union_pos.x == -1:
+			return none  # P1 hasn't summoned union yet — end turn and wait
+		return {"attacker_pos": hl_pos, "target_pos": union_pos}
+
+	# Standard: attack the first live forced P1 cell.
+	var target_pos: Vector2i = Vector2i(-1, -1)
+	for _fc_v: Variant in AIvsAIManager.forced_cells_1:
+		var _fc: Dictionary = _fc_v as Dictionary
+		var r: int = int(_fc.get("row", -1))
+		var c: int = int(_fc.get("col", -1))
+		if r < 0 or c < 0:
+			continue
+		var tgt: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
+		if not tgt.was_destroyed:
+			target_pos = Vector2i(r, c)
+			break
+	if target_pos.x == -1:
+		return none  # forced target already destroyed
+
+	return {"attacker_pos": hl_pos, "target_pos": target_pos}
+
+
+## E2E helper: find P1's union card position. Returns (-1,-1) if none.
+func _e2e_opponent_union_pos() -> Vector2i:
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
+			if card.card_type == "character" and card.is_union and not card.was_destroyed:
+				return Vector2i(r, c)
+	return Vector2i(-1, -1)
 
 
 ## True if any eligible attacker has a non-negative target worth taking.
@@ -277,6 +428,10 @@ func _get_eligible_attackers() -> Array:
 
 	var max_ai_faceup: int = _max_allowed_faceup(opponent_faceup)
 	if ai_faceup >= max_ai_faceup:
+		# E2E: even at the reveal limit, always allow the highlight card to attack.
+		# Without this, a face-down highlight card is silently excluded once a
+		# union (face-up) raises ai_faceup to the allowed ceiling.
+		_e2e_force_highlight_into_eligible(facedown_attackers, eligible)
 		return eligible
 
 	# Prefer adjacent face-down attackers when several can be revealed (same as before).
@@ -294,6 +449,24 @@ func _get_eligible_attackers() -> Array:
 	for pos_v in reveal_pool:
 		eligible.append({"pos": pos_v, "needs_reveal": true})
 	return eligible
+
+
+## E2E helper: if a face-down highlight card exists in facedown_attackers but is
+## not yet in eligible, append it so the +2000 score bias can take effect.
+func _e2e_force_highlight_into_eligible(facedown_attackers: Array, eligible: Array) -> void:
+	var hl: String = _e2e_forced_attacker_name()
+	if hl.is_empty():
+		return
+	for pos_v: Variant in facedown_attackers:
+		var pos: Vector2i = pos_v
+		var card: GameState.CardInstance = GameState.get_card(player_index, pos.x, pos.y)
+		if card.card_name != hl:
+			continue
+		for e: Variant in eligible:
+			if (e as Dictionary).get("pos", Vector2i(-1, -1)) == pos:
+				return  # already present
+		eligible.append({"pos": pos, "needs_reveal": true})
+		return  # only one highlight card needed
 
 
 func _max_allowed_faceup(opponent_faceup: int) -> int:
@@ -367,6 +540,9 @@ func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 				eff_atk += attacker.ability_params.get("bonus", 0) / 2
 			CharacterData.AbilityType.ATK_BOOST_VS_REVEALED:
 				eff_atk += attacker.ability_params.get("bonus", 0)
+			CharacterData.AbilityType.ATK_BONUS_VS_UNION:
+				if target.is_union:
+					eff_atk += attacker.ability_params.get("bonus", 0)
 		var eff_def: int = target.get_effective_def()
 		if eff_atk > eff_def:
 			base = 80 + target.crystal_cost / 20
@@ -398,6 +574,28 @@ func _choose_tech() -> void:
 	var snap: Dictionary = _board_snapshot()
 	var best_name: String = ""
 	var best_score: int = -1
+
+	# E2E: always play the tested tech card first for Tech scenarios, then forced
+	# setup techs, before falling back to normal scoring.
+	if CardE2ERunner.is_active() and player_index == 0:
+		var _scenario := CardE2ERunner.get_current_scenario()
+		# For Tech-type scenarios, the card being tested IS the tech to play.
+		if _scenario.get("card_type", "") == "Tech":
+			var _tname: String = str(_scenario.get("card_name", ""))
+			if _tname != "" and _tname in GameState.tech_hands[player_index]:
+				var _tdata: TechCardData = CardDatabase.get_tech(_tname)
+				if _tdata != null and GameState.crystals[player_index] >= _tdata.crystal_cost:
+					emit_signal("ai_tech_chosen", _tname)
+					return
+		# Forced setup techs (e.g. Great Diplomacy before an ability attack).
+		var fst: Array = _scenario.get("e2e_force_setup_tech", [])
+		for fst_v: Variant in fst:
+			var fst_name: String = str(fst_v)
+			if fst_name in GameState.tech_hands[player_index]:
+				var fst_data: TechCardData = CardDatabase.get_tech(fst_name)
+				if fst_data != null and GameState.crystals[player_index] >= fst_data.crystal_cost:
+					emit_signal("ai_tech_chosen", fst_name)
+					return
 
 	for tech_name: String in GameState.tech_hands[player_index]:
 		var data: TechCardData = CardDatabase.get_tech(tech_name)
@@ -1124,6 +1322,8 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 	var used_chars:     Dictionary = {}
 
 	# Pre-occupy positions already filled by forced cells (placed by GameBoard)
+	# used_chars stores counts so duplicate card names (e.g. Church Guard ×8) are
+	# reserved/consumed correctly rather than blocking all copies at once.
 	var _my_forced_cells: Array = forced_cells_src if not forced_cells_src.is_empty() \
 		else GameState.battle_ai_forced_cells
 	for fc_v: Variant in _my_forced_cells:
@@ -1133,7 +1333,7 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 		used_positions[Vector2i(int(fc_d.get("row", 0)), int(fc_d.get("col", 0)))] = true
 		var fc_name: String = str(fc_d.get("card_name", ""))
 		if fc_name != "":
-			used_chars[fc_name] = true
+			used_chars[fc_name] = int(used_chars.get(fc_name, 0)) + 1
 	# Filter zone_assignments to avoid forced cell conflicts
 	for fp: Vector2i in used_positions.keys():
 		zone_assignments.erase(fp)
@@ -1142,7 +1342,7 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 		var cname: String = zone_assignments[cell]
 		placements.append({"pos": cell, "card_type": "character", "card_name": cname})
 		used_positions[cell] = true
-		used_chars[cname]    = true
+		used_chars[cname]    = int(used_chars.get(cname, 0)) + 1
 
 	# Pool of remaining grid positions (shuffled)
 	var remaining_pos: Array = []
@@ -1164,7 +1364,10 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 		if chars_still_needed <= 0 or pos_idx >= remaining_pos.size():
 			break
 		var cname: String = char_pool[i]
-		if used_chars.has(cname):
+		var reserved: int = int(used_chars.get(cname, 0))
+		if reserved > 0:
+			# Consume one reservation for this copy; remaining copies can be placed.
+			used_chars[cname] = reserved - 1
 			continue
 		placements.append({"pos": remaining_pos[pos_idx], "card_type": "character", "card_name": cname})
 		pos_idx += 1

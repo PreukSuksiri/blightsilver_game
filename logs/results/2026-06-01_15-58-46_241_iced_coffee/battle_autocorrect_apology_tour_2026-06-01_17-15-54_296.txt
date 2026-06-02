@@ -1,0 +1,488 @@
+=== Battle of Autocorrect Apology Tour ===
+Battle started: 2026-06-01 17:15:54.296
+Game Session of Iced Coffee (started 2026-06-01 15:58:46.241)
+=== Card E2E Test ===
+Scenario ID:  E2E-Doom-Wisp-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Doom-Wisp-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Doom Wisp (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Doom Wisp" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Doom Wisp
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Doom\ Wisp".*ATK=15\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=15 when Doom Wisp attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Doom Wisp
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Doom Wisp
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Bribe, Great Diplomacy
+P1 Tech hand: Resurrection, Tease, Accident
+P0:   [C:Fuji][  — ][C:Chur][  — ][C:Meph]
+      [T:Echo][  — ][T:Curs][T:Pepp][  — ]
+      [  — ][  — ][C:Doom][C:Elec][T:Host]
+      [T:Trap][C:Claw][  — ][  — ][C:Nept]
+      [C:Big ][  — ][T:Snar][C:Echo][C:Leop]
+P1:   [C:Leop][  — ][  — ][  — ][  — ]
+      [  — ][C:Armo][C:Shot][C:Godd][T:Bunk]
+      [T:Alar][C:Demo][C:Chao][C:Skel][T:Trap]
+      [  — ][C:Shre][C:Aray][C:Grav][C:Nept]
+      [T:Snar][  — ][T:Spik][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:05.306] Mode selected P0: ATTACK
+[00:05.309] Attack phase P0: 2 attack(s) available
+[00:05.310] MSG: Player 1: tap a character to attack.
+[00:05.614] AI0 attack decision: (2,2)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.962] Revealed: P0 (2,2) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[00:05.987] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.987] Dice rolled: 2
+[00:05.991] MSG: Doom Wisp wins!
+[00:10.598] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:11.995] Attack P0(2,2)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=15 vs DEF=0  → WIN
+[00:11.995] Anim: 3A  △ P1(2,2)
+[00:11.995] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.489] Mode selected P0: ATTACK
+[00:12.496] Attack phase P0: 1 attack(s) available
+[00:12.497] MSG: Player 1: tap a character to attack.
+[00:12.789] AI0 attack decision: (2,3)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic | face-down} → (2,3) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | face-down}
+[00:13.124] Revealed: P0 (2,3) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:13.149] Revealed: P1 (2,3) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:13.149] Dice rolled: 5
+[00:13.153] MSG: Electrogazer wins!
+[00:17.798] Crystals: P1 4900 → 4750 (-150)  [battle]
+[00:19.196] Attack P0(2,3)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P1(2,3)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}  Dice=5  ATK=80 vs DEF=5  → WIN
+[00:19.196] Anim: 3A  △ P1(2,3)
+[00:19.196] Card destroyed  P1 (2,3) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[00:19.693] Turn ended  P0  |  Crystals P0=5000 P1=4750
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4750 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][Doom][Elec][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:21.768] Crystals: P1 4750 → 3950 (-800)  [union]
+[00:21.810] Revealed: P1 (1,1) "Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[00:21.810] Union summoned P1: "Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down}, "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down}
+[00:21.811] MSG: Player 2 summoned [Armored Dino] using: "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature | face-down}, "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature | face-down}
+[00:24.968] Crystals: P1 3950 → 3900 (-50)  [skip tax]
+[00:24.968] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:26.357] Turn ended  P1  |  Crystals P0=5000 P1=3900
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3900 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][Doom][Elec][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:26.960] Mode selected P0: ATTACK
+[00:26.969] Attack phase P0: 2 attack(s) available
+[00:26.969] MSG: Player 1: tap a character to attack.
+[00:27.268] AI0 attack decision: (2,3)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → (1,1) "Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[00:27.577] Dice rolled: 1
+[00:27.625] Defender prompt: "Armored Dino: Pay 1000 Crystals for +60 DEF this battle?"  [Pay 1000 Crystals / Skip]
+[00:28.185] Ability choice resolved: 0 (Yes)
+[00:28.185] Crystals: P1 3900 → 2900 (-1000)  [ability]
+[00:29.568] MSG: Armored Dino: Paid 1000 Crystals for +60 DEF!
+[00:34.144] Crystals: P0 5000 → 4000 (-1000)  [battle]
+[00:35.541] Attack P0(2,3)"Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic} → P1(1,1)"Armored Dino" {Union ATK95 DEF120 | destroy-cost 0 | summon-cost 800 | affinity Nature | buff +tempDEF60}  Dice=1  ATK=80 vs DEF=120  → LOSE
+[00:35.541] Anim: 3B  △ P0(2,3)
+[00:35.541] Card destroyed  P0 (2,3) "Electrogazer" {Unit ATK80 DEF45 | cost 1000 | affinity Cosmic}
+[00:36.046] Mode selected P0: ATTACK
+[00:36.052] Attack phase P0: 1 attack(s) available
+[00:36.052] MSG: Player 1: tap a character to attack.
+[00:36.352] AI0 attack decision: (2,2)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → (1,2) (dead-end)
+[00:36.660] Dice rolled: 4
+[00:36.684] MSG: Nothing happens — Dead End.
+[00:40.071] Attack P0(2,2)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P1(1,2)(empty)  Dice=4  → DEAD_END
+[00:40.071] Anim: 3F  (blank slot)
+[00:40.576] Turn ended  P0  |  Crystals P0=4000 P1=2900
+
+--- Turn 4  |  Player 1  |  Crystals P0=4000 P1=2900 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][Doom][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:41.181] Mode selected P1: ATTACK
+[00:41.187] Attack phase P1: 2 attack(s) available
+[00:41.188] MSG: Player 2: tap a character to attack.
+[00:41.490] AI1 attack decision: (1,1)"Armored Dino" {Union ATK95 DEF120 | destroy-cost 0 | summon-cost 800 | affinity Nature | buff +tempDEF60} → (2,2) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[00:41.798] Dice rolled: 3
+[00:41.852] MSG: Armored Dino wins!
+[00:46.506] Crystals: P0 4000 → 3900 (-100)  [battle]
+[00:47.904] Attack P1(1,1)"Armored Dino" {Union ATK95 DEF120 | destroy-cost 0 | summon-cost 800 | affinity Nature | buff +tempDEF60} → P0(2,2)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}  Dice=3  ATK=95 vs DEF=15  → WIN
+[00:47.905] Anim: 3A  △ P0(2,2)
+[00:47.905] Card destroyed  P0 (2,2) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[00:48.199] Turn ended  P1  |  Crystals P0=3900 P1=2900
+
+--- Turn 5  |  Player 0  |  Crystals P0=3900 P1=2900 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[00:48.798] Mode selected P0: ATTACK
+[00:48.804] Attack phase P0: 2 attack(s) available
+[00:48.804] MSG: Player 1: tap a character to attack.
+[00:49.097] AI0 attack decision: (0,4)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine | face-down} → (1,1) "Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[00:49.438] Revealed: P0 (0,4) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[00:49.438] Dice rolled: 3
+[00:49.479] Defender prompt: "Armored Dino: Pay 1000 Crystals for +60 DEF this battle?"  [Pay 1000 Crystals / Skip]
+[00:50.031] Ability choice resolved: 0 (Yes)
+[00:50.031] Crystals: P1 2900 → 1900 (-1000)  [ability]
+[00:51.414] MSG: Armored Dino: Paid 1000 Crystals for +60 DEF!
+[00:55.980] Crystals: P0 3900 → 3040 (-860)  [battle]
+[00:57.379] Attack P0(0,4)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P1(1,1)"Armored Dino" {Union ATK95 DEF120 | destroy-cost 0 | summon-cost 800 | affinity Nature | buff +tempDEF60}  Dice=3  ATK=75 vs DEF=120  → LOSE
+[00:57.380] Anim: 3B  △ P0(0,4)
+[00:57.380] Card destroyed  P0 (0,4) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[00:57.874] Mode selected P0: ATTACK
+[00:57.879] Attack phase P0: 1 attack(s) available
+[00:57.880] MSG: Player 1: tap a character to attack.
+[00:58.171] AI0 attack decision: (0,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | face-down} → (0,0) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima | face-down}
+[00:58.511] Revealed: P0 (0,0) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:58.534] Revealed: P1 (0,0) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[00:58.534] Dice rolled: 1
+[01:03.239] Crystals: P0 3040 → 2590 (-450)  [battle]
+[01:04.637] Attack P0(0,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(0,0)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}  Dice=1  ATK=35 vs DEF=45  → LOSE
+[01:04.638] Anim: 3B  △ P0(0,0)
+[01:04.638] Card destroyed  P0 (0,0) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[01:05.144] Turn ended  P0  |  Crystals P0=2590 P1=1900
+
+--- Turn 6  |  Player 1  |  Crystals P0=2590 P1=1900 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Leop][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[01:05.747] Mode selected P1: ATTACK
+[01:05.755] Attack phase P1: 2 attack(s) available
+[01:05.755] MSG: Player 2: tap a character to attack.
+[01:06.056] AI1 attack decision: (0,0)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} → (1,3) "Pepper Spray" {cost 0}
+[01:06.402] Revealed: P0 (1,3) "Pepper Spray" {cost 0}
+[01:06.402] Dice rolled: 1
+[01:06.710] MSG: Trap triggered: Pepper Spray!
+[01:10.862] Coin flip: Tails, Tails
+[01:13.572] MSG: Pepper Spray: Tails, Tails.
+[01:13.572] MSG: Not both heads — no effect.
+[01:13.578] Trap: "Pepper Spray" triggered  P1(0,0)→P0(1,3)
+[01:13.578] Anim: 3D  (attacker survives)
+[01:13.885] Turn ended  P1  |  Crystals P0=2590 P1=1900
+
+--- Turn 7  |  Player 0  |  Crystals P0=2590 P1=1900 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [Leop][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[01:14.490] Mode selected P0: ATTACK
+[01:14.497] Attack phase P0: 2 attack(s) available
+[01:14.497] MSG: Player 1: tap a character to attack.
+[01:14.797] AI0 attack decision: (4,3)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | face-down} → (0,0) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[01:15.141] Revealed: P0 (4,3) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[01:15.142] Dice rolled: 2
+[01:15.146] MSG: Echo Bringer wins!
+[01:19.806] Crystals: P1 1900 → 1450 (-450)  [battle]
+[01:21.204] Attack P0(4,3)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic} → P1(0,0)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}  Dice=2  ATK=70 vs DEF=45  → WIN
+[01:21.204] Anim: 3A  △ P1(0,0)
+[01:21.205] Card destroyed  P1 (0,0) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[01:21.205] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[01:21.706] Mode selected P0: ATTACK
+[01:21.711] Attack phase P0: 2 attack(s) available
+[01:21.711] MSG: Player 1: tap a character to attack.
+[01:22.013] AI0 attack decision: (4,4)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima | face-down} → (0,1) (dead-end)
+[01:22.325] Revealed: P0 (4,4) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[01:22.325] Dice rolled: 5
+[01:22.353] MSG: Nothing happens — Dead End.
+[01:25.738] Attack P0(4,4)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[01:25.738] Anim: 3F  (blank slot)
+[01:28.253] Turn ended  P0  |  Crystals P0=2590 P1=1450
+
+--- Turn 8  |  Player 1  |  Crystals P0=2590 P1=1450 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][Echo][Leop]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[01:28.856] Mode selected P1: ATTACK
+[01:28.864] Attack phase P1: 2 attack(s) available
+[01:28.864] MSG: Player 2: tap a character to attack.
+[01:29.164] AI1 attack decision: (1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (4,3) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used}
+[01:29.471] Dice rolled: 3
+[01:29.526] MSG: Armored Dino wins!
+[01:34.181] Crystals: P0 2590 → 1690 (-900)  [battle]
+[01:35.582] Attack P1(1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P0(4,3)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used}  Dice=3  ATK=95 vs DEF=40  → WIN
+[01:35.582] Anim: 3A  △ P0(4,3)
+[01:35.582] Card destroyed  P0 (4,3) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used}
+[01:35.888] Turn ended  P1  |  Crystals P0=1690 P1=1450
+
+--- Turn 9  |  Player 0  |  Crystals P0=1690 P1=1450 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][Leop]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[01:36.488] Mode selected P0: ATTACK
+[01:36.493] Attack phase P0: 2 attack(s) available
+[01:36.493] MSG: Player 1: tap a character to attack.
+[01:36.797] AI0 attack decision: (4,4)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} → (0,2) (dead-end)
+[01:37.106] Dice rolled: 1
+[01:37.133] MSG: Nothing happens — Dead End.
+[01:40.510] Attack P0(4,4)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} → P1(0,2)(empty)  Dice=1  → DEAD_END
+[01:40.510] Anim: 3F  (blank slot)
+[01:43.026] Turn ended  P0  |  Crystals P0=1690 P1=1450
+
+--- Turn 10  |  Player 1  |  Crystals P0=1690 P1=1450 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][Leop]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[01:43.631] Mode selected P1: ATTACK
+[01:43.636] Attack phase P1: 2 attack(s) available
+[01:43.636] MSG: Player 2: tap a character to attack.
+[01:43.939] AI1 attack decision: (1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (4,4) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[01:44.247] Dice rolled: 2
+[01:44.289] MSG: Armored Dino wins!
+[01:48.939] Crystals: P0 1690 → 1240 (-450)  [battle]
+[01:50.338] Attack P1(1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P0(4,4)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}  Dice=2  ATK=95 vs DEF=45  → WIN
+[01:50.338] Anim: 3A  △ P0(4,4)
+[01:50.338] Card destroyed  P0 (4,4) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[01:50.635] Turn ended  P1  |  Crystals P0=1240 P1=1450
+
+--- Turn 11  |  Player 0  |  Crystals P0=1240 P1=1450 ---
+P0:   [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[01:51.232] Mode selected P0: ATTACK
+[01:51.237] Attack phase P0: 2 attack(s) available
+[01:51.237] MSG: Player 1: tap a character to attack.
+[01:51.531] AI0 attack decision: (0,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (1,3) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}
+[01:51.871] Revealed: P0 (0,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:51.900] Revealed: P1 (1,3) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[01:51.900] Dice rolled: 5
+[01:56.651] Crystals: P0 1240 → 1090 (-150)  [battle]
+[01:58.049] Attack P0(0,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(1,3)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}  Dice=5  ATK=0 vs DEF=100  → LOSE
+[01:58.050] Anim: 3B  △ P0(0,2)
+[01:58.050] Card destroyed  P0 (0,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:58.544] Mode selected P0: ATTACK
+[01:58.552] Attack phase P0: 1 attack(s) available
+[01:58.553] MSG: Player 1: tap a character to attack.
+[01:58.843] AI0 attack decision: (3,1)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down} → (1,0) (dead-end)
+[01:59.178] Revealed: P0 (3,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:59.178] Dice rolled: 5
+[01:59.190] MSG: Nothing happens — Dead End.
+[02:02.555] Attack P0(3,1)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P1(1,0)(empty)  Dice=5  → DEAD_END
+[02:02.556] Anim: 3F  (blank slot)
+[02:03.055] Turn ended  P0  |  Crystals P0=1090 P1=1450
+
+--- Turn 12  |  Player 1  |  Crystals P0=1090 P1=1450 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Claw][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][Godd][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[02:03.643] Mode selected P1: ATTACK
+[02:03.648] Attack phase P1: 2 attack(s) available
+[02:03.648] MSG: Player 2: tap a character to attack.
+[02:03.942] AI1 attack decision: (1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → (3,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[02:04.243] Dice rolled: 1
+[02:04.286] MSG: Armored Dino wins!
+[02:08.918] Crystals: P0 1090 → 910 (-180)  [battle]
+[02:10.315] Attack P1(1,1)"Armored Dino" {Union ATK95 DEF60 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P0(3,1)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=1  ATK=95 vs DEF=10  → WIN
+[02:10.315] Anim: 3A  △ P0(3,1)
+[02:10.315] Card destroyed  P0 (3,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[02:10.612] Turn ended  P1  |  Crystals P0=910 P1=1450
+
+--- Turn 13  |  Player 0  |  Crystals P0=910 P1=1450 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][Godd][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[02:11.193] Mode selected P0: ATTACK
+[02:11.197] Attack phase P0: 2 attack(s) available
+[02:11.197] MSG: Player 1: tap a character to attack.
+[02:11.501] AI0 attack decision: (3,4)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | face-down} → (0,3) (dead-end)
+[02:11.844] Revealed: P0 (3,4) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[02:11.844] Dice rolled: 1
+[02:11.855] MSG: Nothing happens — Dead End.
+[02:15.255] Attack P0(3,4)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} → P1(0,3)(empty)  Dice=1  → DEAD_END
+[02:15.256] Anim: 3F  (blank slot)
+[02:17.761] Turn ended  P0  |  Crystals P0=910 P1=1450
+
+--- Turn 14  |  Player 1  |  Crystals P0=910 P1=1450 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Nept]
+      [  ? ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][Godd][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[02:18.350] Mode selected P1: ATTACK
+[02:18.355] Attack phase P1: 2 attack(s) available
+[02:18.356] MSG: Player 2: tap a character to attack.
+[02:18.651] AI1 attack decision: (1,3)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (3,4) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[02:18.950] Dice rolled: 2
+[02:18.957] MSG: Goddess of Virtue wins!
+[02:23.643] Crystals: P0 910 → 710 (-200)  [battle]
+[02:25.039] Attack P1(1,3)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P0(3,4)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}  Dice=2  ATK=80 vs DEF=10  → WIN
+[02:25.040] Anim: 3A  △ P0(3,4)
+[02:25.040] Card destroyed  P0 (3,4) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[02:25.338] Turn ended  P1  |  Crystals P0=710 P1=1450
+
+--- Turn 15  |  Player 0  |  Crystals P0=710 P1=1450 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][Godd][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[02:25.934] Mode selected P0: ATTACK
+[02:25.939] Attack phase P0: 2 attack(s) available
+[02:25.939] MSG: Player 1: tap a character to attack.
+[02:26.234] AI0 attack decision: (4,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (3,3) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos | face-down}
+[02:26.566] Revealed: P0 (4,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:26.592] Revealed: P1 (3,3) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[02:26.592] Dice rolled: 1
+[02:26.594] MSG: Big Thug wins!
+[02:31.198] Crystals: P1 1450 → 1200 (-250)  [battle]
+[02:32.597] Attack P0(4,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(3,3)"Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}  Dice=1  ATK=40 vs DEF=30  → WIN
+[02:32.597] Anim: 3A  △ P1(3,3)
+[02:32.597] Card destroyed  P1 (3,3) "Grave Worm" {Unit ATK15 DEF30 | cost 250 | affinity Chaos}
+[02:33.103] Turn ended  P0  |  Crystals P0=710 P1=1200
+
+--- Turn 16  |  Player 1  |  Crystals P0=710 P1=1200 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [Big ][  — ][  ? ][  — ][  — ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Armo][  — ][Godd][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+[02:33.706] Mode selected P1: ATTACK
+[02:33.714] Attack phase P1: 2 attack(s) available
+[02:33.714] MSG: Player 2: tap a character to attack.
+[02:34.014] AI1 attack decision: (1,3)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → (4,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:34.323] Dice rolled: 3
+[02:34.334] MSG: Goddess of Virtue wins!
+[02:39.022] Crystals: P0 710 → 310 (-400)  [battle]
+[02:40.428] Attack P1(1,3)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P0(4,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=3  ATK=80 vs DEF=35  → WIN
+[02:40.429] Anim: 3A  △ P0(4,0)
+[02:40.429] Card destroyed  P0 (4,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+
+=== GAME OVER ===
+[02:40.430] AI Player 1 wins
+[02:40.430] Reason: all_destroyed
+[02:40.430] Final crystals — P0: 310  P1: 1200  |  Turns: 16
+[02:40.430] Log saved to: res://logs/results/2026-06-01_15-58-46_241_iced_coffee/battle_autocorrect_apology_tour_2026-06-01_17-15-54_296.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Doom-Wisp-002
+Highlight: Doom Wisp (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     16  |  AI timeouts: 0
+===

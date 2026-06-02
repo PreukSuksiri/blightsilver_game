@@ -1561,6 +1561,15 @@ func _find_artwork_by_snake(snake: String, subfolder: String) -> String:
 		return _art_cache[key]
 
 	var dir_path: String = "res://assets/textures/cards/%s/" % subfolder
+
+	# Try common extensions directly first — more reliable than DirAccess enumeration.
+	for ext: String in ["png", "jpg", "jpeg", "webp"]:
+		var direct: String = dir_path + snake + "." + ext
+		if ResourceLoader.exists(direct):
+			_art_cache[key] = direct
+			return direct
+
+	# Fallback: scan directory (handles any other extension).
 	var dir := DirAccess.open(dir_path)
 	if dir:
 		dir.list_dir_begin()
