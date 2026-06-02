@@ -1,0 +1,29 @@
+[
+	{
+		"background": null,
+		"characters": [],
+		"speaker": "",
+		"text": "You hold the badge up to the faint light filtering through the station's grimy skylights.",
+		"dim_others": false,
+		"exploration_actions": []
+	},
+	{
+		"background": null,
+		"characters": [],
+		"speaker": "",
+		"text": "The laminate is cracked but the name is still legible: STATION AUTHORITY — LEVEL 2 ACCESS. And below it, a small handwritten note: \"In case I forget: override code 7741.\"",
+		"dim_others": false,
+		"exploration_actions": [
+			{ "action": "set_var", "key": "knows_override_code", "value": "true" },
+			{ "action": "show_message", "key": "", "value": "You learned the override code." }
+		]
+	},
+	{
+		"background": null,
+		"characters": [],
+		"speaker": "",
+		"text": "You pocket the badge again. The code might be useful somewhere.",
+		"dim_others": false,
+		"exploration_actions": []
+	}
+]

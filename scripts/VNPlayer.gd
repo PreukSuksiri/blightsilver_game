@@ -702,6 +702,20 @@ func _show_beat() -> void:
 			get_tree().change_scene_to_file(_target)
 		return
 
+	# ── Exploration session actions ──
+	# exploration_actions fires give_item / remove_item / set_var / etc. on
+	# ExplorationManager when a VN beat is displayed, only during an active session.
+	# Format: [{ "action": "give_item", "key": "rusty_key", "value": "" }, ...]
+	var expl_actions: Variant = beat.get("exploration_actions", null)
+	if expl_actions is Array and ExplorationManager.is_session_active:
+		for ea: Variant in (expl_actions as Array):
+			if ea is Dictionary:
+				var ead: Dictionary = ea as Dictionary
+				ExplorationManager.dispatch_event(
+					str(ead.get("action", "")),
+					str(ead.get("key",    "")),
+					str(ead.get("value",  "")))
+
 	# ── Continue hint icon ──
 	_show_hint_icon()
 

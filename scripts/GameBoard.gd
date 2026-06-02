@@ -7356,6 +7356,10 @@ func _on_game_over(winner: int) -> void:
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 		DailyDungeonManager.complete_node(GameState.active_dungeon_node_id, player_won)
 
+	# ── Exploration: record result now, before any animation ─────────────────
+	if GameState.game_mode == GameState.GameMode.EXPLORATION:
+		ExplorationManager.complete_battle_node(player_won)
+
 	# ── Disable all interactive UI immediately ───────────────────────────────
 	if _end_turn_btn:
 		_end_turn_btn.visible = false
@@ -7449,8 +7453,9 @@ func _show_endgame_screen(winner: int) -> void:
 	_hide_card_context()
 	var mode := GameState.game_mode
 	var is_hot_seat   := (mode == GameState.GameMode.HOT_SEAT)
-	var is_ai_game    := mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON]
+	var is_ai_game    := mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION]
 	var is_dungeon    := (mode == GameState.GameMode.DAILY_DUNGEON)
+	var is_exploration := (mode == GameState.GameMode.EXPLORATION)
 
 	# Determine win vs lose screen from the human player's perspective
 	var is_win_screen: bool
@@ -7482,6 +7487,8 @@ func _show_endgame_screen(winner: int) -> void:
 		elif is_ai_game and winner == 0:
 			if is_dungeon:
 				title_text = "You've Won the Duel."
+			elif is_exploration:
+				title_text = "You've Won the Duel."
 			else:
 				var node_data: Variant = CampaignManager.get_node_data(GameState.campaign_node_id) \
 					if mode == GameState.GameMode.CAMPAIGN else null
@@ -7494,8 +7501,8 @@ func _show_endgame_screen(winner: int) -> void:
 	else:
 		title_text = "Defeat."
 
-	# Award credits on win (VS AI / Campaign only; Daily Dungeon handles its own rewards)
-	if is_win_screen and is_ai_game and not is_dungeon:
+	# Award credits on win (VS AI / Campaign only; Daily Dungeon and Exploration handle their own rewards)
+	if is_win_screen and is_ai_game and not is_dungeon and not is_exploration:
 		MailboxManager.send_mail(
 			"Battle Reward",
 			"Credits Earned!",
@@ -7646,9 +7653,13 @@ func _show_endgame_screen(winner: int) -> void:
 	# Overlay catches all clicks
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 
-	var dest: String = "res://scenes/campaign_map.tscn" \
-		if mode == GameState.GameMode.CAMPAIGN \
-		else DailyDungeonManager.get_post_battle_scene()
+	var dest: String
+	if mode == GameState.GameMode.CAMPAIGN:
+		dest = "res://scenes/campaign_map.tscn"
+	elif mode == GameState.GameMode.EXPLORATION:
+		dest = ExplorationManager.EXPLORATION_PLAYER_SCENE
+	else:
+		dest = DailyDungeonManager.get_post_battle_scene()
 
 	var _clicked := [false]
 	overlay.gui_input.connect(func(ev: InputEvent) -> void:

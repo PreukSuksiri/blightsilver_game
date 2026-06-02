@@ -173,7 +173,9 @@ func admin_command(raw: String) -> String:
 				+ "  lock_deckbuilding\n"
 				+ "  manage_starting_deck\n"
 				+ "  player_vs_ai\n"
-				+ "  hot_seat"
+				+ "  hot_seat\n"
+				+ "  exploration_editor\n"
+				+ "  exploration_play"
 			)
 
 		"tts":
@@ -1061,6 +1063,25 @@ func admin_command(raw: String) -> String:
 				console_hs._on_close()
 			CheckerTransition.fade_out_to_battle(func() -> void:
 				get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
+			return ""
+
+		"exploration_editor":
+			var console_ee: Node = get_tree().current_scene.get_node_or_null("AdminConsoleOverlay")
+			if console_ee != null and console_ee.has_method("_on_close"):
+				console_ee._on_close()
+			get_tree().change_scene_to_file("res://scenes/exploration_editor.tscn")
+			return ""
+
+		"exploration_play":
+			var current_scene_ep: Node = get_tree().current_scene
+			if current_scene_ep.get_node_or_null("ExplorationLauncherOverlay") != null:
+				return "Exploration Launcher is already open."
+			var console_ep: Node = current_scene_ep.get_node_or_null("AdminConsoleOverlay")
+			if console_ep != null and console_ep.has_method("_on_close"):
+				console_ep._on_close()
+			var launcher: Node = load("res://scripts/ExplorationLauncherOverlay.gd").new()
+			launcher.name = "ExplorationLauncherOverlay"
+			current_scene_ep.add_child(launcher)
 			return ""
 
 		_:

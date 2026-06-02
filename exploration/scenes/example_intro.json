@@ -1,0 +1,41 @@
+[
+	{
+		"background": null,
+		"characters": [],
+		"speaker": "",
+		"text": "The mural dominates the far wall of the platform — paint cracked but colours still vivid after all these years.",
+		"dim_others": false
+	},
+	{
+		"background": null,
+		"characters": [
+			{ "sprite": "", "position": "center" }
+		],
+		"speaker": "??",
+		"text": "You there. You actually came.",
+		"dim_others": false
+	},
+	{
+		"background": null,
+		"characters": [
+			{ "sprite": "", "position": "center" }
+		],
+		"speaker": "??",
+		"text": "Most who find this place turn back at the gates. The ones who don't... they're usually looking for something.",
+		"dim_others": false
+	},
+	{
+		"background": null,
+		"characters": [],
+		"speaker": "",
+		"text": "The figure in the mural seems to shift — or perhaps it is just the light.",
+		"dim_others": false
+	},
+	{
+		"background": null,
+		"characters": [],
+		"speaker": "",
+		"text": "Somewhere in the depths of this station, something is waiting. The security checkpoint to the north holds answers — if you can get past it.",
+		"dim_others": false
+	}
+]

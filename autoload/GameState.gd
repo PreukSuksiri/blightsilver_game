@@ -15,7 +15,7 @@ enum Phase {
 }
 
 enum TurnMode { NONE, ATTACK, TECH }
-enum GameMode { LOCAL_2P, VS_AI, HOT_SEAT, CAMPAIGN, DAILY_DUNGEON, AI_VS_AI }
+enum GameMode { LOCAL_2P, VS_AI, HOT_SEAT, CAMPAIGN, DAILY_DUNGEON, AI_VS_AI, EXPLORATION }
 
 # ─────────────────────────────────────────────────────────────
 # Signals

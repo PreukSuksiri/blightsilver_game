@@ -23,6 +23,8 @@ var bugged_cards: Dictionary = {}  # card_name → bug message string
 var gallery_chapters_completed: Dictionary = {}  # vn_scene path → true
 var deckbuilding_unlocked: bool = false      # admin unlock — bypasses prologue-clear gate
 var deckbuilding_admin_locked: bool = false  # hard admin lock — overrides even natural completion
+var exploration_flags: Dictionary = {}       # flags written by ExplorationManager.end_session()
+var exploration_session: Dictionary = {}    # mid-session snapshot; cleared on end_session()
 
 func _ready() -> void:
 	_load_demo_config()
@@ -127,6 +129,8 @@ func save_data() -> void:
 		"gallery_chapters_completed": gallery_chapters_completed,
 		"deckbuilding_unlocked": deckbuilding_unlocked,
 		"deckbuilding_admin_locked": deckbuilding_admin_locked,
+		"exploration_flags":   exploration_flags,
+		"exploration_session": exploration_session,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -196,6 +200,14 @@ func load_data() -> void:
 
 	deckbuilding_unlocked      = bool(parsed.get("deckbuilding_unlocked", false))
 	deckbuilding_admin_locked  = bool(parsed.get("deckbuilding_admin_locked", false))
+
+	var ef: Variant = parsed.get("exploration_flags", {})
+	if ef is Dictionary:
+		exploration_flags = ef as Dictionary
+
+	var es: Variant = parsed.get("exploration_session", {})
+	if es is Dictionary:
+		exploration_session = es as Dictionary
 
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery chapter progress

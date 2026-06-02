@@ -1,0 +1,249 @@
+{
+	"graph_id": "example_graph",
+	"display_name": "The Abandoned Station",
+	"start_node_id": "hub_entrance",
+	"nodes": [
+		{
+			"id": "hub_entrance",
+			"title": "Station Entrance",
+			"description": "You step through the rusted gates of an abandoned transit station. The air smells of old metal and dust. Three passages branch before you — east to the platform, west to an old storage room, and a locked door to the north that bears a glowing security panel.",
+			"node_type": 5,
+			"background": "",
+			"vn_scene": "",
+			"music": "",
+			"on_enter_events": [
+				{
+					"action": "show_message",
+					"key": "",
+					"value": "Welcome to the Abandoned Station."
+				}
+			],
+			"on_exit_events": [],
+			"connections": [
+				{
+					"target": "story_platform",
+					"label": "Head east to the platform",
+					"locked_hint": "",
+					"conditions": []
+				},
+				{
+					"target": "reward_storage",
+					"label": "Check the storage room to the west",
+					"locked_hint": "",
+					"conditions": []
+				},
+				{
+					"target": "battle_security",
+					"label": "Approach the locked north door",
+					"locked_hint": "You need a Security Badge to open this.",
+					"conditions": [
+						{
+							"type": "has_item",
+							"key": "security_badge",
+							"value": ""
+						}
+					]
+				}
+			],
+			"editor_position": {
+				"x": 400,
+				"y": 200
+			},
+			"usable_items": []
+		},
+		{
+			"id": "story_platform",
+			"title": "The Old Platform",
+			"description": "The platform stretches out before you, rails long since corroded into rust. A faded mural covers the far wall — a painted figure of a woman holding a lantern aloft. Something about it feels significant.",
+			"node_type": 1,
+			"background": "",
+			"vn_scene": "res://exploration/scenes/example_intro.json",
+			"music": "",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"connections": [
+				{
+					"target": "hub_entrance",
+					"label": "Return to the entrance",
+					"locked_hint": "",
+					"conditions": []
+				},
+				{
+					"target": "battle_security",
+					"label": "Cross the platform to the security checkpoint",
+					"locked_hint": "You need a Security Badge to pass.",
+					"conditions": [
+						{
+							"type": "has_item",
+							"key": "security_badge",
+							"value": ""
+						}
+					]
+				}
+			],
+			"usable_items": [
+				{
+					"item": "security_badge",
+					"label": "Examine the badge under the mural's light",
+					"vn_scene": "res://exploration/scenes/badge_inspect.json",
+					"consume": false
+				}
+			],
+			"editor_position": {
+				"x": 700,
+				"y": 80
+			}
+		},
+		{
+			"id": "reward_storage",
+			"title": "Storage Room",
+			"description": "Shelves of old supply crates line the walls. Most are empty, but one bears a faded sticker of a shield emblem. You pry it open and find a laminated badge inside — a security credential. You pocket it.",
+			"node_type": 3,
+			"background": "",
+			"vn_scene": "",
+			"music": "",
+			"on_enter_events": [
+				{
+					"action": "give_item",
+					"key": "security_badge",
+					"value": ""
+				},
+				{
+					"action": "give_credits",
+					"key": "",
+					"value": "50"
+				},
+				{
+					"action": "show_message",
+					"key": "",
+					"value": "Found a Security Badge and 50 credits!"
+				}
+			],
+			"on_exit_events": [],
+			"connections": [
+				{
+					"target": "hub_entrance",
+					"label": "Return to the entrance",
+					"locked_hint": "",
+					"conditions": []
+				}
+			],
+			"editor_position": {
+				"x": 700,
+				"y": 320
+			},
+			"usable_items": []
+		},
+		{
+			"id": "battle_security",
+			"title": "Security Checkpoint",
+			"description": "A security automaton clicks to life as you approach, its optical sensors locking onto you. The machine was built to repel intruders. It won't let you pass without a fight.",
+			"node_type": 2,
+			"background": "",
+			"vn_scene": "",
+			"music": "",
+			"on_enter_events": [
+				{
+					"action": "show_message",
+					"key": "",
+					"value": "The security automaton activates!"
+				}
+			],
+			"on_exit_events": [],
+			"connections": [
+				{
+					"target": "normal_control_room",
+					"label": "Push through to the control room",
+					"locked_hint": "You must defeat the automaton first.",
+					"conditions": [
+						{
+							"type": "var_equals",
+							"key": "battle_battle_security_won",
+							"value": "true"
+						}
+					]
+				},
+				{
+					"target": "hub_entrance",
+					"label": "Retreat to the entrance",
+					"locked_hint": "",
+					"conditions": []
+				}
+			],
+			"editor_position": {
+				"x": 1000,
+				"y": 200
+			},
+			"usable_items": []
+		},
+		{
+			"id": "normal_control_room",
+			"title": "Control Room",
+			"description": "Banks of dead monitors and dormant consoles fill the room. One terminal still flickers with a faint amber glow. Dust motes drift in the half-light. You notice a sealed door at the back marked PLATFORM ZERO.",
+			"node_type": 0,
+			"background": "",
+			"vn_scene": "",
+			"music": "",
+			"on_enter_events": [
+				{
+					"action": "set_var",
+					"key": "control_room_visited",
+					"value": "true"
+				},
+				{
+					"action": "show_message",
+					"key": "",
+					"value": "You've reached the control room."
+				}
+			],
+			"on_exit_events": [],
+			"connections": [
+				{
+					"target": "exit_platform_zero",
+					"label": "Descend to Platform Zero",
+					"locked_hint": "",
+					"conditions": []
+				},
+				{
+					"target": "hub_entrance",
+					"label": "Head back to the entrance",
+					"locked_hint": "",
+					"conditions": []
+				}
+			],
+			"editor_position": {
+				"x": 1300,
+				"y": 200
+			},
+			"usable_items": []
+		},
+		{
+			"id": "exit_platform_zero",
+			"title": "Platform Zero",
+			"description": "A lone rail car sits on a pristine track, its doors open and waiting. Wherever it leads, there is no coming back to this place. You step aboard.",
+			"node_type": 4,
+			"background": "",
+			"vn_scene": "",
+			"music": "",
+			"on_enter_events": [
+				{
+					"action": "set_flag",
+					"key": "station_explored",
+					"value": "true"
+				},
+				{
+					"action": "show_message",
+					"key": "",
+					"value": "The doors close. The journey continues..."
+				}
+			],
+			"on_exit_events": [],
+			"connections": [],
+			"editor_position": {
+				"x": 1600,
+				"y": 200
+			},
+			"usable_items": []
+		}
+	]
+}
