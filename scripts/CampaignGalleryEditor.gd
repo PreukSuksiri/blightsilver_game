@@ -22,6 +22,7 @@ var _f_prerequisite:   OptionButton = null
 var _prerequisite_values: Array = []
 var _f_custom_text_on: CheckBox  = null
 var _f_custom_text:    LineEdit  = null
+var _f_unlock_deckbuilding: CheckBox = null
 var _fields_root: Control   = null
 var _no_sel_lbl:  Label     = null
 var _file_dialog: FileDialog = null
@@ -280,6 +281,14 @@ func _build_ui() -> void:
 	_f_custom_text.text_changed.connect(func(_s: String) -> void: _mark_dirty())
 	row_ct.add_child(_f_custom_text)
 
+	var row_ud: HBoxContainer = _row.call("Unlock")
+	_f_unlock_deckbuilding = CheckBox.new()
+	_f_unlock_deckbuilding.text = "Unlock deckbuilding after cleared"
+	_f_unlock_deckbuilding.add_theme_font_override("font", CHIVO_FONT)
+	_f_unlock_deckbuilding.add_theme_font_size_override("font_size", 13)
+	_f_unlock_deckbuilding.toggled.connect(func(_b: bool) -> void: _mark_dirty())
+	row_ud.add_child(_f_unlock_deckbuilding)
+
 	# Preview thumbnail
 	var sep := HSeparator.new()
 	_fields_root.add_child(sep)
@@ -357,6 +366,7 @@ func _load_fields() -> void:
 	_f_custom_text.text = _ct
 	_f_custom_text.editable = _ct != ""
 	_f_custom_text.modulate.a = 1.0 if _ct != "" else 0.4
+	_f_unlock_deckbuilding.button_pressed = bool(d.get("unlock_deckbuilding", false))
 
 
 func _flush_fields() -> void:
@@ -381,6 +391,10 @@ func _flush_fields() -> void:
 		d["custom_text"] = _f_custom_text.text.strip_edges()
 	else:
 		d.erase("custom_text")
+	if _f_unlock_deckbuilding.button_pressed:
+		d["unlock_deckbuilding"] = true
+	else:
+		d.erase("unlock_deckbuilding")
 
 
 # ─────────────────────────────────────────────────────────────

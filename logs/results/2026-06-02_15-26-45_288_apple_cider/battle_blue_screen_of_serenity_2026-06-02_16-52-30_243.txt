@@ -1,0 +1,91 @@
+=== Battle of Blue Screen of Serenity ===
+Battle started: 2026-06-02 16:52:30.243
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Ostrich-Cannon-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Ostrich-Cannon-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Ostrich Cannon (Character)  [setup: Chaotic Wisp]
+Ability:      LOCK_SELF_AFTER_ATTACK — After performed an attack, this card cannot attack during your next turn.
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Ostrich Cannon" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Ostrich Cannon
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Ostrich\ Cannon".*ATK=|→ P\d\(\d+,\d+\)"Ostrich\ Cannon")
+  - Log must match regex: ("Ostrich\ Cannon".*ATK=|→ P\d\(\d+,\d+\)"Ostrich\ Cannon")
+  - Log must contain at least one of: Ostrich Cannon, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: LOCK_SELF_AFTER_ATTACK — combat contact + ability MSG (best-effort).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ostrich Cannon
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ostrich Cannon
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Tease, Great Diplomacy
+P1 Tech hand: Tease, Radar, Siege Cannon
+P0:   [C:Chur][  — ][  — ][T:Trap][C:Chur]
+      [T:Hypn][  — ][  — ][  — ][T:Spik]
+      [C:Chur][C:Chur][C:Ostr][C:Chur][C:Chur]
+      [C:Chur][  — ][  — ][  — ][C:Chur]
+      [T:Snar][  — ][T:Trap][  — ][C:Chur]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][C:Chur][C:Chur][C:Chur][T:Hypn]
+      [C:Chur][C:Chur][C:Chao][C:Chur][T:Snar]
+      [T:Trap][C:Chur][C:Chur][C:Chur][T:Spik]
+      [  — ][T:Trap][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:05.160] Mode selected P0: ATTACK
+[00:05.164] Attack phase P0: 2 attack(s) available
+[00:05.164] MSG: Player 1: tap a character to attack.
+[00:05.467] AI0 attack decision: (2,2)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.812] Revealed: P0 (2,2) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:05.839] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.839] Dice rolled: 3
+[00:05.843] MSG: Ostrich Cannon wins!
+[00:10.264] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:11.662] Attack P0(2,2)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=3  ATK=60 vs DEF=0  → WIN
+[00:11.662] E2E: ability goal reached — ending battle early.
+[00:11.662] Anim: 3A  △ P1(2,2)
+[00:11.662] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:11.662] MSG: Ostrich Cannon locks itself until next turn.
+
+=== GAME OVER ===
+[00:11.670] AI Player 0 wins
+[00:11.670] Final crystals — P0: 5000  P1: 4900  |  Turns: 1
+[00:11.670] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_blue_screen_of_serenity_2026-06-02_16-52-30_243.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Ostrich-Cannon-002
+Highlight: Ostrich Cannon (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

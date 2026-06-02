@@ -168,7 +168,12 @@ func admin_command(raw: String) -> String:
 				+ "  gallery_editor\n"
 				+ "  tag_bug <card_name> | <message>\n"
 				+ "  resolve_bug <card_name>\n"
-				+ "  list_bugs"
+				+ "  list_bugs\n"
+				+ "  unlock_deckbuilding\n"
+				+ "  lock_deckbuilding\n"
+				+ "  manage_starting_deck\n"
+				+ "  player_vs_ai\n"
+				+ "  hot_seat"
 			)
 
 		"tts":
@@ -666,14 +671,29 @@ func admin_command(raw: String) -> String:
 		"grant_all_cards":
 			var granted: int = 0
 			for cname: String in CardDatabase.get_all_character_names():
+				var cd: CharacterData = CardDatabase.get_character(cname)
+				if cd == null:
+					continue
+				if SaveManager.demo_mode and not cd.include_in_demo:
+					continue
 				if Collection.get_card_count(cname) == 0:
 					Collection.add_card(cname, "character", "Admin")
 					granted += 1
 			for tname: String in CardDatabase.get_all_trap_names():
+				var td: TrapData = CardDatabase.get_trap(tname)
+				if td == null:
+					continue
+				if SaveManager.demo_mode and not td.include_in_demo:
+					continue
 				if Collection.get_card_count(tname) == 0:
 					Collection.add_card(tname, "trap", "Admin")
 					granted += 1
 			for ename: String in CardDatabase.get_all_tech_names():
+				var tc: TechCardData = CardDatabase.get_tech(ename)
+				if tc == null:
+					continue
+				if SaveManager.demo_mode and not tc.include_in_demo:
+					continue
 				if Collection.get_card_count(ename) == 0:
 					Collection.add_card(ename, "tech", "Admin")
 					granted += 1
@@ -995,6 +1015,53 @@ func admin_command(raw: String) -> String:
 				var msg: String = SaveManager.bugged_cards[cname] as String
 				lines.append(("  %s — %s" % [cname, msg]) if msg != "" else ("  %s" % cname))
 			return "Bugged cards:\n" + "\n".join(lines)
+
+		# ── Deckbuilding gate ────────────────────────────────────
+		"unlock_deckbuilding":
+			SaveManager.deckbuilding_unlocked     = true
+			SaveManager.deckbuilding_admin_locked = false
+			SaveManager.save_data()
+			return "Deckbuilding unlocked (admin override — bypasses prologue gate)."
+
+		"lock_deckbuilding":
+			SaveManager.deckbuilding_admin_locked = true
+			SaveManager.deckbuilding_unlocked     = false
+			SaveManager.save_data()
+			return "Deckbuilding hard-locked (overrides even prologue completion)."
+
+		# ── Starting Deck Manager ────────────────────────────────
+		"manage_starting_deck":
+			var scene: Node = get_tree().current_scene
+			if scene.get_node_or_null("StartingDeckManagerOverlay") != null:
+				return "Starting Deck Manager is already open."
+			var mgr: Node = load("res://scripts/StartingDeckManager.gd").new()
+			mgr.name = "StartingDeckManagerOverlay"
+			scene.add_child(mgr)
+			return "Starting Deck Manager opened."
+
+		# ── Quick-start match modes ─────────────────────────────
+		"player_vs_ai":
+			if get_tree().current_scene.name == "GameBoard":
+				return "Cannot start VS AI while a match is in progress."
+			BGMManager.stop(0.0)
+			var console_vs: Node = get_tree().current_scene.get_node_or_null("AdminConsoleOverlay")
+			if console_vs != null and console_vs.has_method("_on_close"):
+				console_vs._on_close()
+			CheckerTransition.fade_out_to_battle(func() -> void:
+				get_tree().change_scene_to_file("res://scenes/vs_ai_config.tscn"))
+			return ""
+
+		"hot_seat":
+			if get_tree().current_scene.name == "GameBoard":
+				return "Cannot start Hot Seat while a match is in progress."
+			BGMManager.stop(0.0)
+			GameState.game_mode = GameState.GameMode.HOT_SEAT
+			var console_hs: Node = get_tree().current_scene.get_node_or_null("AdminConsoleOverlay")
+			if console_hs != null and console_hs.has_method("_on_close"):
+				console_hs._on_close()
+			CheckerTransition.fade_out_to_battle(func() -> void:
+				get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
+			return ""
 
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd

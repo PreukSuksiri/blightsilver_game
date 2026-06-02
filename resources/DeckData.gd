@@ -8,11 +8,15 @@ const MAX_CHARACTERS: int = 12
 const MIN_TRAPS:      int = 4
 const MAX_TRAPS:      int = 6
 const TECH_COUNT:     int = 3   # exactly 3 tech cards held in hand
+const MAX_FORMATIONS: int = 5
 
 @export var deck_name:  String = "My Deck"
 @export var characters: Array  = []   # Array of String card names
 @export var traps:      Array  = []   # Array of String card names
 @export var techs:      Array  = []   # Array of String card names (exactly TECH_COUNT)
+# formations: Array of Dictionary
+#   { "name": String, "placements": Array[Dictionary{r,c,name,type}] }
+@export var formations: Array  = []
 
 # ── Derived ───────────────────────────────────────────────────
 func dead_end_count() -> int:
@@ -56,6 +60,7 @@ func to_dict() -> Dictionary:
 		"characters": characters.duplicate(),
 		"traps":      traps.duplicate(),
 		"techs":      techs.duplicate(),
+		"formations": formations.duplicate(true),
 	}
 
 func load_from_dict(d: Dictionary) -> void:
@@ -63,6 +68,8 @@ func load_from_dict(d: Dictionary) -> void:
 	characters = d.get("characters", [])
 	traps      = d.get("traps", [])
 	techs      = d.get("techs", [])
+	var fv: Variant = d.get("formations", [])
+	formations = (fv as Array).duplicate(true) if fv is Array else []
 
 func duplicate_deck() -> Resource:
 	var copy: Resource = get_script().new()

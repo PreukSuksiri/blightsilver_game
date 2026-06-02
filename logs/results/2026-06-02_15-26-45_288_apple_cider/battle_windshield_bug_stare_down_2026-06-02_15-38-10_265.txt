@@ -1,0 +1,89 @@
+=== Battle of Windshield Bug Stare-Down ===
+Battle started: 2026-06-02 15:38:10.265
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Book-with-Fangs-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Book-with-Fangs-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Book with Fangs (Character)  [setup: Ice Mage]
+Ability:      ATK_DEF_BONUS_VS_AFFINITY — +30 ATK&DEF vs Arcane
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Book with Fangs" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Book with Fangs
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Book\ with\ Fangs".*ATK=75\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +30 ATK vs ARCANE.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Book with Fangs
+AI-1 Deck:    E2E T2 solo Ice Mage
+AI-0 Forced:  (2,2) Book with Fangs
+AI-1 Forced:  (2,2) Ice Mage
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Accident, War Supply
+P1 Tech hand: War Supply, Prayer, Spy
+P0:   [T:Trap][C:Chur][T:Trap][T:Spik][C:Chur]
+      [  — ][  — ][  — ][C:Chur][  — ]
+      [  — ][T:Snar][C:Book][  — ][  — ]
+      [  — ][C:Chur][  — ][T:Hypn][  — ]
+      [C:Chur][C:Chur][C:Chur][C:Chur][C:Chur]
+P1:   [  — ][T:Trap][T:Hypn][  — ][C:Chur]
+      [  — ][T:Spik][T:Snar][  — ][  — ]
+      [C:Chur][C:Chur][C:Ice ][  — ][  — ]
+      [C:Chur][C:Chur][C:Chur][  — ][  — ]
+      [C:Chur][C:Chur][C:Chur][T:Trap][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+[00:05.172] Mode selected P0: ATTACK
+[00:05.176] Attack phase P0: 2 attack(s) available
+[00:05.176] MSG: Player 1: tap a character to attack.
+[00:05.471] AI0 attack decision: (2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane | face-down} → (2,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane | face-down}
+[00:05.807] Revealed: P0 (2,2) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:05.841] Revealed: P1 (2,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:05.841] Dice rolled: 2
+[00:05.845] MSG: Book with Fangs wins!
+[00:11.262] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:12.661] Attack P0(2,2)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P1(2,2)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=2  ATK=75 vs DEF=0  → WIN
+[00:12.661] E2E: ability goal reached — ending battle early.
+[00:12.661] Reckoning overlay: P0 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} +ATK 30
+[00:12.661] Anim: 3A  △ P1(2,2)
+[00:12.661] Card destroyed  P1 (2,2) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+
+=== GAME OVER ===
+[00:12.671] AI Player 0 wins
+[00:12.671] Final crystals — P0: 5000  P1: 4600  |  Turns: 1
+[00:12.671] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_windshield_bug_stare_down_2026-06-02_15-38-10_265.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Book-with-Fangs-002
+Highlight: Book with Fangs (Character)  [setup: Ice Mage]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

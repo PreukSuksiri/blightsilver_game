@@ -766,7 +766,7 @@ func _shatter_triangles(ctrl: Control) -> void:
 				if is_instance_valid(poly):
 					poly.visible = false
 		if level_idx < levels.size() - 1:
-			await get_tree().create_timer(0.12).timeout
+			await get_tree().create_timer(0.05).timeout
 
 	# Fly-apart: animate final level (128 triangles)
 	var final_polys: Array = levels[levels.size() - 1] as Array

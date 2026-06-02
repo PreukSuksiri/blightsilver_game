@@ -410,6 +410,25 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 		defender.force_shielded = false
 		GameState.post_message("Force Shield: %s blocked the attack!" % defender.card_name)
 
+	# Divine Protection (attacker) — pre-apply before the overlay reads the result so the
+	# Reckoning animation reflects the protected outcome (no shatter for the Divine unit).
+	if result.attacker_destroyed and attacker.card_type == "character" \
+			and GameState.divine_protection_active[player] \
+			and attacker.affinity == CharacterData.Affinity.DIVINE:
+		result.attacker_destroyed = false
+		result.attacker_crystal_loss = 0
+		GameState.divine_protection_active[player] = false
+		GameState.post_message("Prayer protected %s!" % attacker.card_name)
+
+	# Divine Protection (defender) — same pre-apply so overlay shows correct outcome.
+	if result.defender_destroyed and defender.card_type == "character" \
+			and GameState.divine_protection_active[opponent] \
+			and defender.affinity == CharacterData.Affinity.DIVINE:
+		result.defender_destroyed = false
+		result.defender_crystal_loss = 0
+		GameState.divine_protection_active[opponent] = false
+		GameState.post_message("Prayer protected %s!" % defender.card_name)
+
 	# Show coin flip visual for any flips that happened inside BattleResolver
 	if not result.coin_flip_results.is_empty():
 		emit_signal("coin_flip_visual_requested", result.coin_flip_results)
@@ -862,8 +881,19 @@ func _apply_battle_result(
 	if _battle_aborted():
 		return
 	if result.attacker_crystal_loss > 0:
-		GameState.lose_crystals(player, result.attacker_crystal_loss, "battle")
-		await crystal_animation_done
+		# Divine Protection for attacker
+		if attacker.card_type == "character" and GameState.divine_protection_active[player]:
+			if attacker.affinity == CharacterData.Affinity.DIVINE:
+				result.attacker_destroyed = false
+				result.attacker_crystal_loss = 0
+				GameState.divine_protection_active[player] = false
+				GameState.post_message("Prayer protected %s!" % attacker.card_name)
+			else:
+				GameState.lose_crystals(player, result.attacker_crystal_loss, "battle")
+				await crystal_animation_done
+		else:
+			GameState.lose_crystals(player, result.attacker_crystal_loss, "battle")
+			await crystal_animation_done
 		if _battle_aborted():
 			return
 

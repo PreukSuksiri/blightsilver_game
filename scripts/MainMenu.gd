@@ -441,11 +441,7 @@ func _on_single_player() -> void:
 			if not _is_deck_ready():
 				_show_deck_warning()
 				return
-			BGMManager.stop(0.0)
-			GameState.game_mode = GameState.GameMode.VS_AI
-			CheckerTransition.fade_out_to_battle(func() -> void:
-				get_tree().change_scene_to_file("res://scenes/game_board.tscn")),
-			MenuButtonConfig.is_sub_enabled("single_player", "vs_ai"))
+			get_tree().change_scene_to_file("res://scenes/vs_ai_config.tscn"), MenuButtonConfig.is_sub_enabled("single_player", "vs_ai"))
 
 func _on_multiplayer() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)

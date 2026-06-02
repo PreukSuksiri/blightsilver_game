@@ -1,0 +1,124 @@
+=== Battle of Mouse Pad Stickiness ===
+Battle started: 2026-06-02 12:48:28.488
+Game Session of Mimosa (started 2026-06-02 12:48:19.087)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[02:01.114] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[02:12.559] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:12.559] Dice rolled: 4
+[02:12.599] MSG: Nothing happens — Dead End.
+[02:14.569] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[02:14.569] Anim: 3F  (blank slot)
+[02:19.850] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[02:19.886] Revealed: P1 (0,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[02:19.886] Dice rolled: 3
+[02:23.747] Crystals: P0 5000 → 4750 (-250)  [battle]
+[02:25.150] Attack P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(0,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}  Dice=3  ATK=25 vs DEF=35  → LOSE
+[02:25.150] Anim: 3B  △ P0(2,4)
+[02:25.150] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[03:00.865] MSG: Tap 2 material card(s) on the field.
+[03:07.089] Turn ended  P0  |  Crystals P0=4750 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4750 P1=5000 ---
+[03:07.684] Mode selected P1: TECH
+[03:07.985] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[03:09.372] Tech played  P1: "Radar"
+[03:10.907] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[03:11.341] Revealed: P0 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[03:12.123] Tech resolved  P1
+[03:13.018] Mode selected P1: ATTACK
+[03:13.025] MSG: Player 2: tap a character to attack.
+[03:13.617] Dice rolled: 3
+[03:13.635] MSG: Nothing happens — Dead End.
+[03:16.999] Attack P1(0,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P0(4,2)(empty)  Dice=3  → DEAD_END
+[03:16.999] Anim: 3F  (blank slot)
+[03:17.492] Mode selected P1: ATTACK
+[03:17.495] MSG: Player 2: tap a character to attack.
+[03:18.124] Revealed: P1 (0,0) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[03:18.124] Dice rolled: 2
+[03:18.127] MSG: Aerial the Battlemage wins!
+[03:22.597] Crystals: P0 4750 → 4500 (-250)  [battle]
+[03:22.816] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:23.996] Attack P1(0,0)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=2  ATK=50 vs DEF=20  → WIN
+[03:23.996] Anim: 3A  △ P0(1,3)
+[03:23.996] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[03:24.483] Turn ended  P1  |  Crystals P0=4500 P1=4400
+
+--- Turn 3  |  Player 0  |  Crystals P0=4500 P1=4400 ---
+[03:34.196] MSG: Tap 2 material card(s) on the field.
+[03:34.764] MSG: 1 more material(s) needed.
+[03:35.371] Crystals: P0 4500 → 4000 (-500)  [union]
+[03:35.413] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[03:35.413] Union summoned P0: "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down}
+[03:35.415] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down}
+[03:46.305] Dice rolled: 4
+[03:46.360] MSG: Diamond Unicorn wins!
+[03:50.785] Crystals: P1 4400 → 3650 (-750)  [battle]
+[03:52.185] Attack P0(0,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} → P1(0,0)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=4  ATK=50 vs DEF=45  → WIN
+[03:52.185] Anim: 3A  △ P1(0,0)
+[03:52.185] Card destroyed  P1 (0,0) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:37.044] Turn ended  P0  |  Crystals P0=4000 P1=3650
+
+--- Turn 4  |  Player 1  |  Crystals P0=4000 P1=3650 ---
+[04:37.631] Mode selected P1: TECH
+[04:37.932] Crystals: P1 3650 → 2150 (-1500)  [tech cost]
+[04:39.319] Tech played  P1: "Resurrection"
+[04:40.852] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[04:41.254] Revealed: P1 (1,2) "Aerial the Battlemage" {Unit ATK0 DEF0 | cost 750 | affinity Arcane | base 0/0}
+[04:41.254] MSG: Revived Aerial the Battlemage at [1,2]!
+[04:41.262] Tech resolved  P1
+[04:42.144] Mode selected P1: ATTACK
+[04:42.152] MSG: Player 2: tap a character to attack.
+[04:42.744] Dice rolled: 5
+[04:47.443] MSG: [DEBUG] Bot Player timed out — ending turn.
+[04:48.342] Crystals: P1 2150 → 1600 (-550)  [battle]
+[04:49.741] Attack P1(0,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P0(0,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used}  Dice=5  ATK=35 vs DEF=50  → LOSE
+[04:49.741] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used} +DEF 15
+[04:49.741] Anim: 3B  △ P1(0,1)
+[04:49.741] Card destroyed  P1 (0,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[04:50.235] Mode selected P1: ATTACK
+[04:50.243] MSG: Player 2: tap a character to attack.
+[04:50.834] Dice rolled: 5
+[04:50.866] MSG: Nothing happens — Dead End.
+[04:54.241] Attack P1(1,2)"Aerial the Battlemage" {Unit ATK0 DEF0 | cost 750 | affinity Arcane | base 0/0} → P0(2,0)(empty)  Dice=5  → DEAD_END
+[04:54.241] Anim: 3F  (blank slot)
+[04:54.727] Turn ended  P1  |  Crystals P0=4000 P1=1600
+
+--- Turn 5  |  Player 0  |  Crystals P0=4000 P1=1600 ---
+[06:59.022] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[06:59.023] Dice rolled: 2
+[06:59.047] MSG: Grand Fort Footsoldier wins!
+[07:03.497] Crystals: P1 1600 → 850 (-750)  [battle]
+[07:04.891] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(1,2)"Aerial the Battlemage" {Unit ATK0 DEF0 | cost 750 | affinity Arcane | base 0/0}  Dice=2  ATK=25 vs DEF=0  → WIN
+[07:04.892] Anim: 3A  △ P1(1,2)
+[07:04.892] Card destroyed  P1 (1,2) "Aerial the Battlemage" {Unit ATK0 DEF0 | cost 750 | affinity Arcane | base 0/0}
+[07:07.359] Turn ended  P0  |  Crystals P0=4000 P1=850
+
+--- Turn 6  |  Player 1  |  Crystals P0=4000 P1=850 ---
+[07:07.965] Mode selected P1: ATTACK
+[07:07.972] MSG: Player 2: tap a character to attack.
+[07:08.600] Revealed: P1 (1,0) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[07:08.600] Dice rolled: 5
+[07:08.643] MSG: Jirayu the Rebellious Prince wins!
+[07:13.053] Attack P1(1,0)"Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima} → P0(0,2)"Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used}  Dice=5  ATK=40 vs DEF=35  → WIN
+[07:13.053] Anim: 3A  △ P0(0,2)
+[07:13.053] Card destroyed  P0 (0,2) "Diamond Unicorn" {Union ATK50 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xDEF-used}
+[07:13.546] Mode selected P1: ATTACK
+[07:13.554] MSG: Player 2: tap a character to attack.
+[07:14.187] Revealed: P1 (2,0) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[07:14.187] Dice rolled: 3
+[07:14.191] MSG: Jacob the Ski Mask wins!
+[07:18.631] Crystals: P0 4000 → 3800 (-200)  [battle]
+[07:18.857] MSG: [DEBUG] Bot Player timed out — ending turn.
+[07:20.028] Attack P1(2,0)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} → P0(3,3)"Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}  Dice=3  ATK=15 vs DEF=0  → WIN
+[07:20.028] Anim: 3A  △ P0(3,3)
+[07:20.028] Card destroyed  P0 (3,3) "Golden Senju" {Unit ATK15 DEF0 | cost 200 | affinity Divine}
+[07:20.524] Turn ended  P1  |  Crystals P0=3800 P1=850
+
+--- Turn 7  |  Play

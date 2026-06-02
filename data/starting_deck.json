@@ -1,0 +1,117 @@
+{
+	"characters": [
+		"Choir Lady Abigail",
+		"Choir Lady Alice",
+		"Choir Lady Anna",
+		"Ponycorn",
+		"Grand Fort Archer",
+		"Grand Fort Footsoldier",
+		"Golden Senju",
+		"Witchhunter",
+		"Silver Spearman",
+		"Magical Butterfly"
+	],
+	"deck_name": "Starter Deck",
+	"formations": [
+		{
+			"name": "Starter Formation",
+			"placements": [
+				{
+					"c": 2.0,
+					"name": "Ponycorn",
+					"r": 0.0,
+					"type": "character"
+				},
+				{
+					"c": 4.0,
+					"name": "Choir Lady Abigail",
+					"r": 2.0,
+					"type": "character"
+				},
+				{
+					"c": 0.0,
+					"name": "Choir Lady Anna",
+					"r": 4.0,
+					"type": "character"
+				},
+				{
+					"c": 2.0,
+					"name": "Pepper Spray",
+					"r": 2.0,
+					"type": "trap"
+				},
+				{
+					"c": 4.0,
+					"name": "Hard Scale",
+					"r": 0.0,
+					"type": "trap"
+				},
+				{
+					"c": 0.0,
+					"name": "Trap Hole",
+					"r": 0.0,
+					"type": "trap"
+				},
+				{
+					"c": 4.0,
+					"name": "Decoy Puppet",
+					"r": 4.0,
+					"type": "trap"
+				},
+				{
+					"c": 1.0,
+					"name": "Grand Fort Archer",
+					"r": 2.0,
+					"type": "character"
+				},
+				{
+					"c": 3.0,
+					"name": "Golden Senju",
+					"r": 3.0,
+					"type": "character"
+				},
+				{
+					"c": 1.0,
+					"name": "Witchhunter",
+					"r": 4.0,
+					"type": "character"
+				},
+				{
+					"c": 1.0,
+					"name": "Grand Fort Footsoldier",
+					"r": 1.0,
+					"type": "character"
+				},
+				{
+					"c": 3.0,
+					"name": "Silver Spearman",
+					"r": 1.0,
+					"type": "character"
+				},
+				{
+					"c": 2.0,
+					"name": "Magical Butterfly",
+					"r": 3.0,
+					"type": "character"
+				},
+				{
+					"c": 0,
+					"name": "Choir Lady Alice",
+					"r": 2,
+					"type": "character"
+				}
+			]
+		}
+	],
+	"techs": [
+		"Spy",
+		"Tease",
+		"Prayer"
+	],
+	"traps": [
+		"Hard Scale",
+		"Pepper Spray",
+		"Decoy Puppet",
+		"Trap Hole"
+	]
+}

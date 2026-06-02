@@ -1,0 +1,77 @@
+=== Battle of Low Battery Panic ===
+Battle started: 2026-06-02 17:58:18.910
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Moon-Tribe-Shaman-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Moon-Tribe-Shaman-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Moon Tribe Shaman (Union)  [setup: Moon Lady Ninja, Chaotic Wisp]
+Ability:      UNION_SUMMON_REVIVE_MATCH — Upon union, revive 1 Moon non-Union card. Double its cost.
+Setup role:   t2_union
+Verifies:
+  - Ability: "Moon Tribe Shaman" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Moon Tribe Shaman, Attack P\d\(\d+,\d+\)"Moon\ Tribe\ Shaman", MSG:.*Moon, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Moon Tribe Shaman — summon logged and/or union attacks with ATK=25.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Moon Tribe Shaman
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (0,0) Moon Lady Ninja, (0,1) Moon Tribe Shaman
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Resurrection, Bribe
+P1 Tech hand: Release Mutagen, Resurrection, War Supply
+P0:   [  — ][  — ][C:Chur][C:Chur][C:Chur]
+      [  — ][T:Trap][  — ][T:Hypn][  — ]
+      [  — ][  — ][C:Chur][  — ][  — ]
+      [  — ][C:Chur][  — ][T:Spik][  — ]
+      [T:Trap][C:Chur][C:Chur][T:Snar][C:Chur]
+P1:   [T:Hypn][T:Snar][  — ][  — ][C:Chur]
+      [C:Chur][  — ][  — ][  — ][T:Trap]
+      [C:Chur][C:Chur][C:Chao][C:Chur][C:Chur]
+      [C:Chur][T:Trap][  — ][  — ][C:Chur]
+      [T:Spik][  — ][  — ][  — ][C:Chur]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.183] Mode selected P0: ATTACK
+[00:05.187] Attack phase P0: 2 attack(s) available
+[00:05.188] MSG: Player 1: tap a character to attack.
+[00:05.188] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:05.189] AI Player 0 wins
+[00:05.189] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:05.189] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_low_battery_panic_2026-06-02_17-58-18_910.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Moon-Tribe-Shaman-002
+Highlight: Moon Tribe Shaman (Union)  [setup: Moon Lady Ninja, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

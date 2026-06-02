@@ -21,6 +21,8 @@ var demo_mode: bool = false
 var ai_exclude_placeholder: bool = false  # exclude placeholder_art cards from AI random deck pool
 var bugged_cards: Dictionary = {}  # card_name → bug message string
 var gallery_chapters_completed: Dictionary = {}  # vn_scene path → true
+var deckbuilding_unlocked: bool = false      # admin unlock — bypasses prologue-clear gate
+var deckbuilding_admin_locked: bool = false  # hard admin lock — overrides even natural completion
 
 func _ready() -> void:
 	_load_demo_config()
@@ -123,6 +125,8 @@ func save_data() -> void:
 		"union_mechanism_unlocked": union_mechanism_unlocked,
 		"bugged_cards": bugged_cards,
 		"gallery_chapters_completed": gallery_chapters_completed,
+		"deckbuilding_unlocked": deckbuilding_unlocked,
+		"deckbuilding_admin_locked": deckbuilding_admin_locked,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -190,9 +194,41 @@ func load_data() -> void:
 			if vn_key is String and (vn_key as String) != "":
 				gallery_chapters_completed[vn_key] = true
 
+	deckbuilding_unlocked      = bool(parsed.get("deckbuilding_unlocked", false))
+	deckbuilding_admin_locked  = bool(parsed.get("deckbuilding_admin_locked", false))
+
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery chapter progress
 # ─────────────────────────────────────────────────────────────
+## Returns true if deckbuilding is accessible.
+## Checks admin override first, then gallery entries with unlock_deckbuilding=true.
+func is_deckbuilding_unlocked() -> bool:
+	if deckbuilding_admin_locked:
+		return false  # hard lock overrides everything
+	if deckbuilding_unlocked:
+		return true
+	return _gallery_unlocks_deckbuilding()
+
+func _gallery_unlocks_deckbuilding() -> bool:
+	const GALLERY_PATH := "res://campaign/gallery_data.json"
+	var f := FileAccess.open(GALLERY_PATH, FileAccess.READ)
+	if f == null:
+		return false
+	var data: Variant = JSON.parse_string(f.get_as_text())
+	f.close()
+	if not data is Array:
+		return false
+	for entry: Variant in (data as Array):
+		if not entry is Dictionary:
+			continue
+		var d: Dictionary = entry as Dictionary
+		if not bool(d.get("unlock_deckbuilding", false)):
+			continue
+		var vn: String = str(d.get("vn_scene", "")).strip_edges()
+		if vn != "" and is_gallery_chapter_completed(vn):
+			return true
+	return false
+
 func mark_gallery_chapter_completed(vn_scene: String) -> void:
 	var key: String = vn_scene.strip_edges()
 	if key.is_empty():

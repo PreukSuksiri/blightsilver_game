@@ -1,0 +1,81 @@
+=== Battle of The Conference Room Smell ===
+Battle started: 2026-06-02 17:22:50.299
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Siege-Cannon-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Siege-Cannon-001  (test_case/functional/tech_functional_tests.md)
+Highlight:    Siege Cannon (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Ability:      OPPONENT_NEXT_DEFENDER_DESTROYED — Until the end of this turn, once, foe’s defending unit is destroyed.
+Setup role:   t2_tech_play
+Verifies:
+  - Ability: "Siege Cannon" is exercised via forced board/tech setup (t2_tech_play)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must match regex: Tech played\s+P0: "Siege\ Cannon"
+  - Log must contain at least one of: Siege Cannon, Siege Cannon, Tech resolved, Revealed:, Card destroyed, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: tech Siege Cannon played (OPPONENT_NEXT_DEFENDER_DESTROYED).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Siege Cannon
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Siege Cannon, Spy, Great Diplomacy
+P1 Tech hand: Bribe, War Supply, Siege Cannon
+P0:   [C:Chur][  — ][  — ][  — ][C:Chur]
+      [T:Snar][C:Chur][  — ][C:Chur][  — ]
+      [T:Hypn][  — ][C:Ox P][T:Spik][T:Trap]
+      [  — ][C:Chur][  — ][C:Chur][C:Chur]
+      [C:Chur][  — ][T:Trap][  — ][C:Chur]
+P1:   [C:Chur][C:Chur][T:Trap][C:Chur][  — ]
+      [C:Chur][  — ][  — ][  — ][C:Chur]
+      [T:Snar][  — ][C:Chao][  — ][C:Chur]
+      [T:Spik][  — ][  — ][  — ][C:Chur]
+      [C:Chur][  — ][T:Hypn][C:Chur][T:Trap]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+[00:05.262] Mode selected P0: TECH
+[00:05.569] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:06.955] Tech played  P0: "Siege Cannon"
+[00:08.511] MSG: Siege Cannon active!
+[00:08.511] E2E: ability goal reached — ending battle early.
+[00:08.514] Tech resolved  P0
+
+=== GAME OVER ===
+[00:08.516] AI Player 0 wins
+[00:08.516] Final crystals — P0: 4000  P1: 5000  |  Turns: 1
+[00:08.516] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_the_conference_room_smell_2026-06-02_17-22-50_299.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Siege-Cannon-002
+Highlight: Siege Cannon (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

@@ -1,0 +1,92 @@
+=== Battle of Parallel Parking Shame ===
+Battle started: 2026-06-02 17:20:59.885
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Great-Diplomacy-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Great-Diplomacy-001  (test_case/functional/tech_functional_tests.md)
+Highlight:    Great Diplomacy (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Ability:      REVEAL_ALL_OWN_CHARACTERS — Select up to 5 of your units and reveal them.
+Setup role:   t2_tech_play
+Verifies:
+  - Ability: "Great Diplomacy" is exercised via forced board/tech setup (t2_tech_play)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must match regex: Tech played\s+P0: "Great\ Diplomacy"
+  - Log must contain at least one of: Great Diplomacy, Great Diplomacy, Tech resolved, Revealed:, Card destroyed, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: tech Great Diplomacy played (REVEAL_ALL_OWN_CHARACTERS).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Great Diplomacy
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Resurrection, Tease
+P1 Tech hand: Resurrection, Great Diplomacy, Tease
+P0:   [C:Chur][  — ][C:Chur][  — ][C:Chur]
+      [T:Trap][T:Spik][T:Hypn][  — ][  — ]
+      [  — ][  — ][C:Ox P][  — ][  — ]
+      [T:Snar][  — ][C:Chur][C:Chur][C:Chur]
+      [C:Chur][  — ][C:Chur][T:Trap][C:Chur]
+P1:   [  — ][  — ][T:Spik][T:Trap][  — ]
+      [C:Chur][C:Chur][C:Chur][C:Chur][  — ]
+      [  — ][C:Chur][C:Chao][C:Chur][  — ]
+      [  — ][C:Chur][C:Chur][C:Chur][  — ]
+      [T:Snar][T:Hypn][  — ][  — ][T:Trap]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:05.200] Mode selected P0: TECH
+[00:05.500] Crystals: P0 5000 → 4000 (-1000)  [tech cost]
+[00:06.884] Tech played  P0: "Great Diplomacy"
+[00:08.497] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:08.884] AI0 target chosen: (2,2)
+[00:08.885] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:09.284] AI0 target chosen: (0,0)
+[00:09.285] Revealed: P0 (0,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:09.684] AI0 target chosen: (0,2)
+[00:09.685] Revealed: P0 (0,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:10.083] AI0 target chosen: (0,4)
+[00:10.085] Revealed: P0 (0,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:10.483] AI0 target chosen: (3,2)
+[00:10.484] Revealed: P0 (3,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:10.485] MSG: Great Diplomacy: revealed 5 unit(s).
+[00:10.485] E2E: ability goal reached — ending battle early.
+[00:10.493] Tech resolved  P0
+
+=== GAME OVER ===
+[00:10.500] AI Player 0 wins
+[00:10.500] Final crystals — P0: 4000  P1: 5000  |  Turns: 1
+[00:10.500] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_parallel_parking_shame_2026-06-02_17-20-59_885.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Great-Diplomacy-002
+Highlight: Great Diplomacy (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

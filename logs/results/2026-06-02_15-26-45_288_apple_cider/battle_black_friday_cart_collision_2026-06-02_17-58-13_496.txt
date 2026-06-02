@@ -1,0 +1,77 @@
+=== Battle of Black Friday Cart Collision ===
+Battle started: 2026-06-02 17:58:13.496
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Moon-Lady-Ninja-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Moon-Lady-Ninja-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Moon Lady Ninja (Union)  [setup: Chaotic Wisp]
+Ability:      ONE_USE_SURVIVE_DESTRUCTION — Once, this card is not destroyed.
+Setup role:   t2_union
+Verifies:
+  - Ability: "Moon Lady Ninja" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Moon Lady Ninja, Attack P\d\(\d+,\d+\)"Moon\ Lady\ Ninja", MSG:.*Moon, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Moon Lady Ninja — summon logged and/or union attacks with ATK=65.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Moon Lady Ninja
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Tease, Spy
+P1 Tech hand: Siege Cannon, Radar, Tease
+P0:   [C:Chur][T:Spik][C:Chur][T:Trap][C:Chur]
+      [  — ][  — ][  — ][T:Snar][  — ]
+      [  — ][  — ][C:Chur][  — ][  — ]
+      [  — ][T:Hypn][  — ][  — ][  — ]
+      [C:Chur][T:Trap][C:Chur][C:Chur][C:Chur]
+P1:   [T:Spik][  — ][  — ][  — ][  — ]
+      [  — ][C:Chur][C:Chur][C:Chur][T:Hypn]
+      [  — ][C:Chur][C:Chao][C:Chur][T:Trap]
+      [T:Snar][C:Chur][C:Chur][C:Chur][T:Trap]
+      [  — ][C:Chur][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+[00:05.209] Mode selected P0: ATTACK
+[00:05.212] Attack phase P0: 2 attack(s) available
+[00:05.212] MSG: Player 1: tap a character to attack.
+[00:05.212] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:05.214] AI Player 0 wins
+[00:05.214] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:05.214] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_black_friday_cart_collision_2026-06-02_17-58-13_496.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Moon-Lady-Ninja-002
+Highlight: Moon Lady Ninja (Union)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

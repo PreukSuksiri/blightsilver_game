@@ -123,6 +123,12 @@ var _p1_reveal_btn: Button = null
 var _p2_reveal_btn: Button = null
 var _reveal_preview: Array[bool] = [false, false]
 var _enemy_view_active: bool = false
+
+# Observer peek (AI vs AI / E2E only) — purely cosmetic, no game-state change
+# 0 = off, 1 = peek P0 only, 2 = peek active player, 3 = peek both
+var _observer_peek_mode: int = 0
+var _observer_peek_panel: Control = null
+var _observer_peek_btns: Array[Button] = []
 var _tech_used_this_turn: Array[bool] = [false, false]
 var _tech_reset_turn: int = -1   # turn_number when _tech_used_this_turn was last cleared
 var _ai_turn_action_started: Array[bool] = [false, false]  # AI already began this player's turn
@@ -1907,6 +1913,83 @@ func _build_reveal_buttons() -> void:
 		if player == 0: _p1_reveal_btn = btn
 		else:           _p2_reveal_btn = btn
 
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		_build_observer_peek_panel()
+
+func _build_observer_peek_panel() -> void:
+	# Floating panel at top-centre — observer only, no gameplay effect.
+	var panel := PanelContainer.new()
+	panel.layout_mode = 1
+	panel.z_index = 4
+	panel.anchor_left   = 0.5; panel.anchor_right  = 0.5
+	panel.anchor_top    = 0.0; panel.anchor_bottom = 0.0
+	panel.offset_left   = -155.0; panel.offset_right  = 155.0
+	panel.offset_top    = 4.0;    panel.offset_bottom = 32.0
+	panel.mouse_filter  = Control.MOUSE_FILTER_STOP
+	var sbox := StyleBoxFlat.new()
+	sbox.bg_color    = Color(0.04, 0.08, 0.12, 0.90)
+	sbox.border_width_left = 1; sbox.border_width_right  = 1
+	sbox.border_width_top  = 1; sbox.border_width_bottom = 1
+	sbox.border_color = Color(0.45, 0.70, 0.85, 0.80)
+	sbox.corner_radius_top_left    = 4; sbox.corner_radius_top_right    = 4
+	sbox.corner_radius_bottom_left = 4; sbox.corner_radius_bottom_right = 4
+	panel.add_theme_stylebox_override("panel", sbox)
+
+	var hbox := HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 2)
+	panel.add_child(hbox)
+
+	var label := Label.new()
+	label.text = "PEEK:"
+	label.add_theme_font_size_override("font_size", 10)
+	label.add_theme_color_override("font_color", Color(0.6, 0.8, 0.9, 1.0))
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_constant_override("margin_left", 4)
+	hbox.add_child(label)
+
+	var modes: Array[String] = ["OFF", "P0", "ACTIVE", "BOTH"]
+	for i in range(modes.size()):
+		var btn := Button.new()
+		btn.text = modes[i]
+		btn.add_theme_font_size_override("font_size", 10)
+		btn.add_theme_color_override("font_color", Color(0.70, 0.92, 1.0, 1.0))
+		var idx := i
+		btn.pressed.connect(func() -> void: _set_observer_peek(idx))
+		hbox.add_child(btn)
+		_observer_peek_btns.append(btn)
+
+	add_child(panel)
+	_observer_peek_panel = panel
+	_update_observer_peek_buttons()
+
+func _set_observer_peek(mode: int) -> void:
+	_observer_peek_mode = mode
+	_apply_observer_peek()
+	_update_observer_peek_buttons()
+
+func _update_observer_peek_buttons() -> void:
+	for i in range(_observer_peek_btns.size()):
+		var btn: Button = _observer_peek_btns[i]
+		if i == _observer_peek_mode:
+			btn.add_theme_color_override("font_color", Color(1.0, 1.0, 0.4, 1.0))
+		else:
+			btn.add_theme_color_override("font_color", Color(0.70, 0.92, 1.0, 1.0))
+
+func _apply_observer_peek() -> void:
+	if _observer_peek_mode == 0:
+		return
+	for p in range(2):
+		var should_peek: bool = false
+		match _observer_peek_mode:
+			1: should_peek = (p == 0)
+			2: should_peek = (p == GameState.current_player)
+			3: should_peek = true
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(p, r, c)
+				if card.card_type in ["character", "trap"] and not card.face_up:
+					(grid_nodes[p][r][c] as Control).set_preview_revealed(should_peek)
+
 func _toggle_reveal_preview(player: int) -> void:
 	# Only the active player may toggle their own peek
 	if player != GameState.current_player:
@@ -1939,6 +2022,8 @@ func _reset_reveal_previews() -> void:
 			for c in range(GameState.GRID_SIZE):
 				grid_nodes[p][r][c].set_preview_revealed(false)
 				grid_nodes[p][r][c].set_enemy_view(false)
+	# Re-apply observer peek on top of the reset (AI vs AI observer mode persists).
+	_apply_observer_peek()
 
 func _update_reveal_buttons() -> void:
 	var in_battle: bool = GameState.current_phase not in [
@@ -4454,12 +4539,24 @@ func _deal_tech_cards(player: int, count: int) -> void:
 						continue
 					forced_names.append(dn)
 	else:
-		var forced_tech: Variant = GameState.campaign_enemy_config.get("forced_tech", null)
-		if forced_tech is Array:
-			for t: Variant in forced_tech as Array:
+		# VS_AI: AI player (1) can have a forced tech hand set from the VS AI config screen
+		if player == 1 and not GameState.battle_ai_forced_tech.is_empty():
+			for t: Variant in GameState.battle_ai_forced_tech:
 				var n: String = str(t).strip_edges()
 				if not n.is_empty() and CardDatabase.get_tech(n) != null and n not in forced_names:
 					forced_names.append(n)
+		elif player == 1 and GameState.battle_ai_deck != null:
+			for t: Variant in (GameState.battle_ai_deck as DeckData).techs:
+				var dn: String = str(t).strip_edges()
+				if not dn.is_empty() and CardDatabase.get_tech(dn) != null and dn not in forced_names:
+					forced_names.append(dn)
+		else:
+			var forced_tech: Variant = GameState.campaign_enemy_config.get("forced_tech", null)
+			if forced_tech is Array:
+				for t: Variant in forced_tech as Array:
+					var n: String = str(t).strip_edges()
+					if not n.is_empty() and CardDatabase.get_tech(n) != null and n not in forced_names:
+						forced_names.append(n)
 
 	for n: String in forced_names:
 		if GameState.tech_hands[player].size() >= count:
@@ -5067,9 +5164,10 @@ func _enter_mode_select() -> void:
 	# In VS_AI mode, never reveal the AI's board — reset previews instead.
 	var cp := GameState.current_player
 	if _is_ai_turn():
-		_reset_reveal_previews()
+		_reset_reveal_previews()   # also calls _apply_observer_peek internally
 	elif not _reveal_preview[cp]:
 		_toggle_reveal_preview(cp)
+		_apply_observer_peek()
 	if _is_ai_turn() and GameState.current_phase != GameState.Phase.GAME_OVER:
 		if _end_turn_btn:
 			_end_turn_btn.visible = false
@@ -5492,6 +5590,10 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	if filter == "own_facedown_character":
 		_set_own_facedown_char_peek(true)
 
+	# Tease: human opponent must choose their own face-down card — let them peek their grid
+	if filter == "self_squares_1_opponent_turn":
+		_set_own_facedown_char_peek(true, GameState.get_opponent(GameState.current_player))
+
 	# Auto-complete filters that don't require grid selection
 	if filter == "view_opponent_hand":
 		_handle_tech_target(GameState.current_player, Vector2i(0, 0))
@@ -5575,6 +5677,10 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		var ai_target: Vector2i = def_ai.decide_target(filter)
 		def_ai.ai_target_chosen.emit(ai_target)  # log defender AI choice
 		_handle_tech_target(def_player, ai_target)
+	elif _is_ai_turn() and filter in _defender_response_filters:
+		# Human is the responding player during the AI's turn.
+		# Stop the watchdog so it doesn't fire and end the turn while the human is choosing.
+		_ai_watchdog.stop()
 
 func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var current_player := GameState.current_player
@@ -6270,13 +6376,22 @@ func _count_own_facedown_units(player: int, exclude: Array = []) -> int:
 
 ## Temporarily show face-down character cards as face-up (visual peek only).
 ## Does NOT change card.face_up in GameState — purely cosmetic.
-func _set_own_facedown_char_peek(enable: bool) -> void:
-	var cp: int = GameState.current_player
-	for r in range(GameState.GRID_SIZE):
-		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.get_card(cp, r, c)
-			if card.card_type == "character" and not card.face_up:
-				(grid_nodes[cp][r][c] as Control).set_preview_revealed(enable)
+## When enable=true, target_player specifies whose cards to peek (defaults to current_player).
+## When enable=false, clears peek for BOTH players as a safety net.
+## In VS_AI mode, the AI's cards are never peeked — the human must not see them.
+func _set_own_facedown_char_peek(enable: bool, target_player: int = -1) -> void:
+	var players: Array = [0, 1] if not enable \
+		else [target_player if target_player >= 0 else GameState.current_player]
+	for cp: int in players:
+		# Never visually peek the AI's face-down cards in VS_AI mode
+		if enable and GameState.game_mode == GameState.GameMode.VS_AI \
+				and ai_player != null and cp == ai_player.player_index:
+			continue
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(cp, r, c)
+				if card.card_type == "character" and not card.face_up:
+					(grid_nodes[cp][r][c] as Control).set_preview_revealed(enable)
 
 func _on_ai_bluff(player: int, row: int, col: int, emoticon: String) -> void:
 	_set_bluff_animated(player, row, col, emoticon)

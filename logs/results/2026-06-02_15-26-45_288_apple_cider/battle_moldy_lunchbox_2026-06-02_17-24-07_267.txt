@@ -1,0 +1,85 @@
+=== Battle of Moldy Lunchbox ===
+Battle started: 2026-06-02 17:24:07.267
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Decoy-Puppet-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Decoy-Puppet-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Decoy Puppet (Trap)  [setup: Ox Patrol]
+Ability:      CANCEL_ATTACKER_ATTACK — This turn, foe cannot perform any more attack using unit with 400 or less cost.
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Decoy Puppet" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Decoy Puppet
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Decoy\ Puppet"
+  - Log must contain at least one of: Trap triggered, "Decoy Puppet" triggered, Trap triggered: Decoy Puppet, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Decoy Puppet revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Decoy Puppet
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Radar, Release Mutagen
+P1 Tech hand: Tease, War Supply, Bribe
+P0:   [C:Chur][C:Chur][T:Trap][C:Chur][  — ]
+      [  — ][C:Chur][C:Chur][C:Chur][  — ]
+      [T:Trap][  — ][C:Ox P][  — ][T:Snar]
+      [T:Hypn][C:Chur][T:Spik][  — ][C:Chur]
+      [C:Chur][  — ][  — ][  — ][  — ]
+P1:   [T:Trap][  — ][  — ][  — ][  — ]
+      [C:Chur][C:Chur][C:Chur][C:Chur][T:Deco]
+      [T:Trap][C:Chur][T:Deco][C:Chur][T:Spik]
+      [  — ][C:Chur][C:Chur][C:Chao][  — ]
+      [T:Hypn][  — ][  — ][  — ][C:Chur]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.185] Mode selected P0: ATTACK
+[00:05.189] Attack phase P0: 2 attack(s) available
+[00:05.190] MSG: Player 1: tap a character to attack.
+[00:05.484] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Decoy Puppet" {cost 100}
+[00:05.815] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:05.842] Revealed: P1 (2,2) "Decoy Puppet" {cost 100}
+[00:05.842] Dice rolled: 2
+[00:06.091] MSG: Trap triggered: Decoy Puppet!
+[00:06.091] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.096] AI Player 0 wins
+[00:06.096] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:06.096] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_moldy_lunchbox_2026-06-02_17-24-07_267.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Decoy-Puppet-002
+Highlight: Decoy Puppet (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

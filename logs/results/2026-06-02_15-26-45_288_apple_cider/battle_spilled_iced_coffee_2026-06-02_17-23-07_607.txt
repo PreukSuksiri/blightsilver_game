@@ -1,0 +1,80 @@
+=== Battle of Spilled Iced Coffee ===
+Battle started: 2026-06-02 17:23:07.607
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Tease-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Tease-001  (test_case/functional/tech_functional_tests.md)
+Highlight:    Tease (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Ability:      OPPONENT_REVEALS_SQUARE — Your foe choose and reveal 1 of their cell
+Setup role:   t2_tech_play
+Verifies:
+  - Ability: "Tease" is exercised via forced board/tech setup (t2_tech_play)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must match regex: Tech played\s+P0: "Tease"
+  - Log must contain at least one of: Tease: Opponent revealed, Opponent must choose, Tease, Tech resolved, Revealed:, Card destroyed, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: tech Tease played (OPPONENT_REVEALS_SQUARE).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    Tease
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, War Supply, Radar
+P1 Tech hand: Spy, Resurrection, Tease
+P0:   [C:Chur][  — ][  — ][  — ][C:Chur]
+      [C:Chur][C:Chur][  — ][  — ][C:Chur]
+      [T:Spik][  — ][C:Ox P][  — ][T:Snar]
+      [C:Chur][  — ][T:Hypn][  — ][  — ]
+      [C:Chur][T:Trap][T:Trap][C:Chur][C:Chur]
+P1:   [  — ][T:Trap][T:Hypn][T:Trap][  — ]
+      [T:Spik][C:Chur][C:Chur][C:Chur][  — ]
+      [  — ][C:Chur][C:Chao][C:Chur][T:Snar]
+      [  — ][C:Chur][C:Chur][C:Chur][  — ]
+      [C:Chur][  — ][  — ][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+[00:05.163] Mode selected P0: TECH
+[00:05.473] Tech played  P0: "Tease"
+[00:07.021] MSG: Opponent must choose and reveal 1 of their squares.
+[00:07.021] E2E: ability goal reached — ending battle early.
+[00:07.086] Target prompt: "Tease: Choose 1 of your squares to reveal."  filter=self_squares_1_opponent_turn
+
+=== GAME OVER ===
+[00:07.091] AI Player 0 wins
+[00:07.091] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:07.091] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_spilled_iced_coffee_2026-06-02_17-23-07_607.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Tease-002
+Highlight: Tease (Tech)  [setup: Ox Patrol, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

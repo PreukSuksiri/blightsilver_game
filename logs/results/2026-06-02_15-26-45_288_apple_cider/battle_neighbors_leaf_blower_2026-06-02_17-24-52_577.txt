@@ -1,0 +1,85 @@
+=== Battle of Neighbor's Leaf Blower ===
+Battle started: 2026-06-02 17:24:52.577
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Hostage-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Hostage-001  (test_case/functional/trap_functional_tests.md)
+Highlight:    Hostage (Trap)  [setup: Ox Patrol]
+Ability:      NULLIFY_ATTACK_REVEAL_ADJACENT — Reveal 1 of your own cell. Until the foe’s turn ends, foe cannot target than cell.
+Setup role:   t2_trap_trigger
+Verifies:
+  - Ability: "Hostage" is exercised via forced board/tech setup (t2_trap_trigger)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Hostage
+  - Log must contain: GAME OVER
+  - Log must match regex: Revealed: P1 \(2,2\) "Hostage"
+  - Log must contain at least one of: Trap triggered, "Hostage" triggered, Trap triggered: Hostage, MSG: Trap triggered
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: trap Hostage revealed and triggered when attacked.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Hostage
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Release Mutagen, Bribe
+P1 Tech hand: Bribe, Resurrection, Accident
+P0:   [T:Hypn][C:Chur][  — ][C:Chur][T:Snar]
+      [T:Trap][  — ][  — ][  — ][T:Trap]
+      [T:Spik][  — ][C:Ox P][  — ][C:Chur]
+      [C:Chur][  — ][  — ][  — ][  — ]
+      [C:Chur][C:Chur][C:Chur][C:Chur][C:Chur]
+P1:   [C:Chur][  — ][C:Chao][  — ][  — ]
+      [  — ][T:Hypn][C:Chur][  — ][  — ]
+      [C:Chur][C:Chur][T:Host][C:Chur][C:Chur]
+      [T:Trap][  — ][C:Chur][T:Trap][T:Spik]
+      [C:Chur][T:Host][C:Chur][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+[00:05.183] Mode selected P0: ATTACK
+[00:05.187] Attack phase P0: 2 attack(s) available
+[00:05.188] MSG: Player 1: tap a character to attack.
+[00:05.490] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Hostage" {cost 200}
+[00:05.830] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:05.854] Revealed: P1 (2,2) "Hostage" {cost 200}
+[00:05.854] Dice rolled: 3
+[00:06.123] MSG: Trap triggered: Hostage!
+[00:06.123] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.127] AI Player 0 wins
+[00:06.127] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:06.127] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_neighbors_leaf_blower_2026-06-02_17-24-52_577.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Hostage-002
+Highlight: Hostage (Trap)  [setup: Ox Patrol]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

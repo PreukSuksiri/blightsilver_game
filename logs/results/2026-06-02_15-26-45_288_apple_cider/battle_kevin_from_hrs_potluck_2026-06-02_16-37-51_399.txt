@@ -1,0 +1,94 @@
+=== Battle of Kevin from HR's Potluck ===
+Battle started: 2026-06-02 16:37:51.399
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Melissa-the-Healer-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Melissa-the-Healer-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Melissa the Healer (Character)  [setup: Chaotic Wisp]
+Ability:      CRYSTAL_RECOVER_ON_BIG_LOSS — If you lose 500 or more crystals, you recover 300 crystals
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Melissa the Healer" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Melissa the Healer
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Melissa\ the\ Healer".*ATK=|→ P\d\(\d+,\d+\)"Melissa\ the\ Healer")
+  - Log must match regex: Crystals:
+  - Log must match regex: ("Melissa\ the\ Healer".*ATK=|→ P\d\(\d+,\d+\)"Melissa\ the\ Healer")
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: CRYSTAL_RECOVER_ON_BIG_LOSS — crystal change logged during battle.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Melissa the Healer
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Melissa the Healer
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Great Diplomacy, Radar
+P1 Tech hand: Bribe, Resurrection, Prayer
+P0:   [C:Chur][T:Hypn][  — ][  — ][C:Chur]
+      [  — ][T:Trap][C:Chur][C:Chur][C:Chur]
+      [  — ][  — ][C:Meli][C:Chur][  — ]
+      [T:Snar][T:Trap][  — ][  — ][C:Chur]
+      [C:Chur][T:Spik][  — ][  — ][C:Chur]
+P1:   [T:Trap][  — ][  — ][  — ][T:Hypn]
+      [C:Chur][T:Snar][  — ][  — ][C:Chur]
+      [T:Spik][C:Chur][C:Chao][C:Chur][C:Chur]
+      [C:Chur][  — ][  — ][  — ][C:Chur]
+      [C:Chur][  — ][T:Trap][  — ][C:Chur]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.195] Mode selected P0: ATTACK
+[00:05.199] Attack phase P0: 2 attack(s) available
+[00:05.199] MSG: Player 1: tap a character to attack.
+[00:05.494] AI0 attack decision: (2,2)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.834] Revealed: P0 (2,2) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:05.860] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.860] Dice rolled: 1
+[00:05.863] MSG: Both cards are destroyed!
+[00:10.209] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:10.209] Crystals: P0 4300 → 4600 (+300)  [recovery]
+[00:10.211] MSG: Melissa the Healer: Recovered 300 Crystals!
+[00:10.222] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:11.605] Attack P0(2,2)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=0 vs DEF=0  → TIE
+[00:11.605] E2E: ability goal reached — ending battle early.
+[00:11.605] Anim: 3C  △ P0(2,2) + △ P1(2,2)
+[00:11.605] Card destroyed  P0 (2,2) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:11.605] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[00:11.610] AI Player 0 wins
+[00:11.610] Final crystals — P0: 4600  P1: 4900  |  Turns: 1
+[00:11.610] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_kevin_from_hrs_potluck_2026-06-02_16-37-51_399.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Melissa-the-Healer-002
+Highlight: Melissa the Healer (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

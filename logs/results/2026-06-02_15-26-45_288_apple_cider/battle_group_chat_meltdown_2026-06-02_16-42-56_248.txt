@@ -1,0 +1,90 @@
+=== Battle of Group Chat Meltdown ===
+Battle started: 2026-06-02 16:42:56.248
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Neptune-Diver-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Neptune-Diver-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Neptune Diver (Character)  [setup: Chaotic Wisp]
+Ability:      REVEAL_ON_TRAP_ATTACK — After hitting a trap : reveal 1 foe’s cell
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Neptune Diver" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Neptune Diver
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Neptune\ Diver".*ATK=|→ P\d\(\d+,\d+\)"Neptune\ Diver")
+  - Log must match regex: ("Neptune\ Diver".*ATK=|→ P\d\(\d+,\d+\)"Neptune\ Diver")
+  - Log must contain at least one of: Revealed:, Reveal
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: REVEAL_ON_TRAP_ATTACK — reveal effect during/after combat.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Neptune Diver
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Neptune Diver
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Spy, Radar
+P1 Tech hand: Prayer, Resurrection, Release Mutagen
+P0:   [T:Snar][T:Trap][T:Hypn][C:Chur][C:Chur]
+      [  — ][  — ][  — ][C:Chur][  — ]
+      [  — ][T:Spik][C:Nept][  — ][  — ]
+      [T:Trap][C:Chur][  — ][  — ][  — ]
+      [C:Chur][C:Chur][C:Chur][C:Chur][C:Chur]
+P1:   [T:Snar][  — ][  — ][  — ][  — ]
+      [  — ][C:Chur][C:Chur][C:Chur][T:Trap]
+      [  — ][C:Chur][C:Chao][C:Chur][  — ]
+      [T:Spik][C:Chur][C:Chur][C:Chur][T:Trap]
+      [T:Hypn][  — ][  — ][C:Chur][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+[00:05.208] Mode selected P0: ATTACK
+[00:05.210] Attack phase P0: 2 attack(s) available
+[00:05.210] MSG: Player 1: tap a character to attack.
+[00:05.508] AI0 attack decision: (2,2)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.850] Revealed: P0 (2,2) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[00:05.877] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:05.877] Dice rolled: 3
+[00:05.887] MSG: Neptune Diver wins!
+[00:10.362] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:11.761] Attack P0(2,2)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=3  ATK=20 vs DEF=0  → WIN
+[00:11.761] E2E: ability goal reached — ending battle early.
+[00:11.761] Anim: 3A  △ P1(2,2)
+[00:11.761] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[00:11.768] AI Player 0 wins
+[00:11.768] Final crystals — P0: 5000  P1: 4900  |  Turns: 1
+[00:11.768] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_group_chat_meltdown_2026-06-02_16-42-56_248.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Neptune-Diver-002
+Highlight: Neptune Diver (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

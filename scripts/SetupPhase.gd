@@ -160,6 +160,8 @@ var _traps_remaining: Array = []
 var _grid_cells: Array = []          # [row][col] -> GridCell
 var _locked_cells: Array = []        # Array[Vector2i] — forced placement cells
 var _union_panel_node: Panel = null  # ref to the "POSSIBLE UNIONS" panel
+var _formation_bar: HBoxContainer = null  # pre-defined formation buttons
+var _body_hbox:     Control       = null  # body (grid + right panel)
 
 var _player_lbl   : Label           = null
 var _instr_lbl    : Label           = null
@@ -247,6 +249,7 @@ func start_setup(player_index: int) -> void:
 	if show_union:
 		_refresh_union_panel()
 	_refresh_confirm()
+	_refresh_formation_bar(deck)
 
 # ─────────────────────────────────────────────────────────────
 # UI build
@@ -315,6 +318,7 @@ func _build_ui() -> void:
 
 	# ── Body (grid + right panel side by side) ──────────────
 	var body := HBoxContainer.new()
+	_body_hbox = body
 	body.set_anchors_preset(Control.PRESET_FULL_RECT)
 	body.offset_top    = 76.0
 	body.offset_bottom = -62.0
@@ -325,6 +329,17 @@ func _build_ui() -> void:
 
 	_build_grid_panel(body)
 	_build_right_panel(body)
+
+	# ── Formation selector bar (above Random / Confirm) ─────
+	_formation_bar = HBoxContainer.new()
+	_formation_bar.layout_mode    = 1
+	_formation_bar.anchor_left    = 0.0; _formation_bar.anchor_right   = 0.0
+	_formation_bar.anchor_top     = 1.0; _formation_bar.anchor_bottom  = 1.0
+	_formation_bar.offset_left    = 172.0; _formation_bar.offset_right  = 476.0
+	_formation_bar.offset_top     = -98.0; _formation_bar.offset_bottom = -60.0
+	_formation_bar.add_theme_constant_override("separation", 4)
+	_formation_bar.visible = false
+	add_child(_formation_bar)
 
 	# ── Bottom bar: Random + Confirm ─────────────────────────
 	_random_btn = Button.new()
@@ -576,6 +591,7 @@ func _build_info_panel(parent: Control) -> void:
 	ip_sb.corner_radius_bottom_left  = 8
 	ip_sb.corner_radius_bottom_right = 8
 	info_panel.add_theme_stylebox_override("panel", ip_sb)
+	info_panel.clip_contents = true
 	parent.add_child(info_panel)
 
 	var row := HBoxContainer.new()
@@ -583,16 +599,16 @@ func _build_info_panel(parent: Control) -> void:
 	row.offset_left   = 10.0
 	row.offset_right  = -10.0
 	row.offset_top    = 8.0
-	row.offset_bottom = -8.0
+	row.offset_bottom = -16.0
 	row.add_theme_constant_override("separation", 12)
 	info_panel.add_child(row)
 
-	# Left: card thumbnail (larger)
+	# Left: card thumbnail — fills available height, never overflows panel
 	_info_img = TextureRect.new()
-	_info_img.custom_minimum_size = Vector2(160.0, 220.0)
+	_info_img.custom_minimum_size = Vector2(100.0, 0.0)
 	_info_img.expand_mode         = TextureRect.EXPAND_IGNORE_SIZE
 	_info_img.stretch_mode        = TextureRect.STRETCH_KEEP_ASPECT
-	_info_img.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_info_img.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	row.add_child(_info_img)
 
 	# Right: text
@@ -643,8 +659,18 @@ func _show_card_info(card_name: String, card_type: String) -> void:
 	_info_card_type = card_type
 	_info_preview_btn.disabled = false
 
-	var tex: Texture2D = _load_card_tex(card_name, card_type)
-	_info_img.texture = tex
+	var subfolder: String
+	match card_type:
+		"character": subfolder = "characters"
+		"trap":      subfolder = "traps"
+		"tech":      subfolder = "tech"
+		"union":     subfolder = "union"
+		_:           subfolder = "characters"
+	var art_path: String = CardDatabase.find_artwork(card_name, subfolder)
+	if art_path != "":
+		_info_img.texture = load(art_path) as Texture2D
+	else:
+		_info_img.texture = _load_card_tex(card_name, card_type)
 
 	match card_type:
 		"character":
@@ -757,31 +783,10 @@ func _find_possible_unions(char_names: Array) -> Array:
 			result.append(u)
 	return result
 
-func _union_feasible(u: UnionData, char_names: Array) -> bool:
-	var cards: Array = []
-	for cname: String in char_names:
-		var cd: CharacterData = CardDatabase.get_character(cname)
-		if cd == null:
-			continue
-		var ci := GameState.CardInstance.new()
-		ci.card_name    = cname
-		ci.card_type    = "character"
-		ci.affinity     = cd.affinity
-		ci.crystal_cost = cd.crystal_cost
-		ci.base_atk     = cd.base_atk
-		ci.base_def     = cd.base_def
-		cards.append(ci)
-	var remaining: Array = cards.duplicate()
-	for cond: Dictionary in u.material_conditions:
-		var found: bool = false
-		for idx: int in range(remaining.size()):
-			if UnionDatabase.card_satisfies_condition(remaining[idx], cond):
-				remaining.remove_at(idx)
-				found = true
-				break
-		if not found:
-			return false
-	return true
+func _union_feasible(u: UnionData, _char_names: Array) -> bool:
+	# With static union zones, check whether the material conditions are currently
+	# satisfied at the union's fixed board positions (not just deck composition).
+	return UnionDatabase.check_union_materials(current_setup_player, u)
 
 func _make_union_tile(u: UnionData) -> Control:
 	var wrap := VBoxContainer.new()
@@ -991,6 +996,91 @@ func _apply_forced_cells(forced_cells: Array) -> void:
 			var flag_s: String = str(flag_v)
 			if flag_s != "" and flag_s not in card_inst.flags:
 				card_inst.flags.append(flag_s)
+
+# ─────────────────────────────────────────────────────────────
+# Formation selector
+# ─────────────────────────────────────────────────────────────
+func _refresh_formation_bar(deck: DeckData) -> void:
+	if _formation_bar == null:
+		return
+	for child in _formation_bar.get_children():
+		child.queue_free()
+
+	var formations: Array = deck.formations if deck != null else []
+	_formation_bar.visible = not formations.is_empty()
+	if not _formation_bar.visible:
+		# Restore body to normal height
+		if _body_hbox != null:
+			_body_hbox.offset_bottom = -62.0
+		return
+
+	# Shrink body to make room for formation bar
+	if _body_hbox != null:
+		_body_hbox.offset_bottom = -104.0
+
+	var lbl := Label.new()
+	lbl.text = "Formation:"
+	lbl.add_theme_font_size_override("font_size", 11)
+	lbl.add_theme_color_override("font_color", Color(0.6, 0.8, 1.0))
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_formation_bar.add_child(lbl)
+
+	for i in range(formations.size()):
+		var fd: Dictionary = formations[i] as Dictionary
+		var btn := Button.new()
+		btn.text = str(fd.get("name", "F%d" % (i + 1)))
+		btn.add_theme_font_size_override("font_size", 11)
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var idx := i
+		btn.pressed.connect(func() -> void: _apply_formation(idx))
+		_formation_bar.add_child(btn)
+
+func _apply_formation(idx: int) -> void:
+	var deck: DeckData = SaveManager.get_active_deck()
+	if deck == null or idx < 0 or idx >= deck.formations.size():
+		return
+	var fd: Dictionary = deck.formations[idx] as Dictionary
+	var pls: Variant = fd.get("placements", [])
+	if not pls is Array:
+		return
+
+	# Clear non-locked cells and return their cards to the pool
+	for r in range(GRID_N):
+		for c in range(GRID_N):
+			var cell: GridCell = _grid_cells[r][c] as GridCell
+			if cell.locked or cell.occupied_name.is_empty():
+				continue
+			_return_to_pool(cell.occupied_name, cell.occupied_type)
+			cell.vacate()
+			GameState.place_dead_end(current_setup_player, r, c)
+
+	# Apply formation placements — only if the card is available in the remaining pool
+	for pl: Variant in (pls as Array):
+		if not pl is Dictionary: continue
+		var p: Dictionary = pl as Dictionary
+		var r: int = int(p.get("r", -1))
+		var c: int = int(p.get("c", -1))
+		var card_name: String = str(p.get("name", ""))
+		var card_type: String = str(p.get("type", "character"))
+		if r < 0 or r > 4 or c < 0 or c > 4 or card_name.is_empty():
+			continue
+		var target_cell: GridCell = _grid_cells[r][c] as GridCell
+		if target_cell.locked or not target_cell.occupied_name.is_empty():
+			continue
+		var pool: Array = _chars_remaining if card_type == "character" else _traps_remaining
+		var pool_idx: int = pool.find(card_name)
+		if pool_idx < 0:
+			continue  # card not available
+		pool.remove_at(pool_idx)
+		match card_type:
+			"character": GameState.place_character(current_setup_player, r, c, card_name)
+			"trap":      GameState.place_trap(current_setup_player, r, c, card_name)
+		var tex: Texture2D = _load_card_tex(card_name, card_type)
+		target_cell.occupy(card_name, card_type, tex)
+
+	SFXManager.play(SFXManager.SFX_PLACE)
+	_refresh_gallery()
+	_refresh_confirm()
 
 # ─────────────────────────────────────────────────────────────
 # Random formation

@@ -13,6 +13,7 @@ DEFENDER_CELL = {"row": 2, "col": 2}
 ALLY_CELL = {"row": 2, "col": 1}
 WEAK_DEFENDER = "Chaotic Wisp"
 ZERO_ATK_FILLER = "Church Guard"
+ZERO_ATK_FILLER_ALT = "Big Thug"  # used when the card under test IS ZERO_ATK_FILLER
 STRONG_ATTACKER = "Ox Patrol"
 UNION_MATERIAL = "Gryphon Rider"
 
@@ -20,7 +21,7 @@ FILLER_CHARS = [
     "Chaotic Wisp", "Foul Wisp", "Doom Wisp", "Church Guard", "Big Thug",
     "Dark Monk", "Goblin Poacher", "Mad Raccoon", "Ox Patrol", "Wandering Swordsman",
 ]
-FILLER_TRAPS = ["Trap Hole", "Trap Hole", "Hypnosis", "Spike Trap", "Snare Trap"]
+FILLER_TRAPS = ["Trap Hole", "Hypnosis", "Spike Trap", "Snare Trap", "Flame Trap"]
 FILLER_TECH = ["Radar", "Spy", "Bribe"]
 
 AFFINITY_DEFENDER = {
@@ -44,6 +45,7 @@ TECH_MSG_HINTS = {
     "REDUCE_CRYSTAL_LOSS": ["Bribe", "crystal"],
     "REVEAL_TRAP": ["Radar", "Trap"],
     "REVEAL_CHARACTER": ["Spy", "Revealed"],
+    "OPPONENT_REVEALS_SQUARE": ["Tease: Opponent revealed", "Opponent must choose"],
 }
 
 
@@ -51,11 +53,23 @@ def slug(name: str) -> str:
     return re.sub(r"[^A-Za-z0-9]+", "-", name.strip()).strip("-") or "Unknown"
 
 
+def _unique_fillers(n: int, exclude: str | set[str] | None = None) -> list[str]:
+    """Return up to n unique chars from FILLER_CHARS, skipping all names in `exclude`."""
+    excluded: set[str] = ({exclude} if isinstance(exclude, str) else (exclude or set()))
+    return [c for c in FILLER_CHARS if c not in excluded][:n]
+
+
 def _deck(chars: list[str], traps: list[str] | None = None, techs: list[str] | None = None, label: str = "E2E T2") -> dict:
     traps = traps or FILLER_TRAPS[:5]
     techs = techs or FILLER_TECH[:3]
-    while len(chars) < 8:
-        chars = chars + [ZERO_ATK_FILLER]
+    # Pad to 8 with unique fillers not already in the list
+    seen = set(chars)
+    for c in FILLER_CHARS:
+        if len(chars) >= 8:
+            break
+        if c not in seen:
+            chars = chars + [c]
+            seen.add(c)
     return {
         "deck_name": label,
         "characters": chars[:12],
@@ -65,12 +79,14 @@ def _deck(chars: list[str], traps: list[str] | None = None, techs: list[str] | N
 
 
 def _solo_attacker_deck(name: str) -> dict:
-    chars = [name] + [ZERO_ATK_FILLER] * 9
-    return _deck(chars, label=f"E2E T2 solo {name}")
+    # name is excluded — it is placed exclusively via forced_cells (2,2).
+    # Use unique fillers so no card appears twice in the deck.
+    return _deck(_unique_fillers(9, exclude=name), label=f"E2E T2 solo {name}")
 
 
 def _solo_defender_deck(name: str) -> dict:
-    return _solo_attacker_deck(name)
+    # Same reasoning as _solo_attacker_deck.
+    return _deck(_unique_fillers(9, exclude=name), label=f"E2E T2 solo {name}")
 
 
 def _base_t2(card: dict, db: dict) -> dict:
@@ -114,11 +130,14 @@ def _solo_attack_scenario(
     notes: str = "",
 ) -> dict:
     name = db["name"]
+    # Exclude ALL forced-cell cards from their respective decks to prevent duplicates.
+    forced0_names: set[str] = {name} | {f["card_name"] for f in (extra_forced_0 or [])}
+    forced1_names: set[str] = {defender} | {f["card_name"] for f in (extra_forced_1 or [])}
     s = _base_t2({}, db)
     s.update({
         "role": "t2_solo_attacker",
-        "deck0": _solo_attacker_deck(name),
-        "deck1": _solo_defender_deck(defender),
+        "deck0": _deck(_unique_fillers(9, exclude=forced0_names), label=f"E2E T2 solo {name}"),
+        "deck1": _deck(_unique_fillers(9, exclude=forced1_names), label=f"E2E T2 solo {defender}"),
         "forced_cells_0": [{"card_name": name, **ATTACKER_CELL}] + (extra_forced_0 or []),
         "forced_cells_1": [{"card_name": defender, **DEFENDER_CELL}] + (extra_forced_1 or []),
         "forced_tech_0": [],
@@ -143,6 +162,7 @@ def _defender_scenario(
     attacker: str = STRONG_ATTACKER,
     expected_def: int | None = None,
     extra_regex: list | None = None,
+    extra_any: list | None = None,
     notes: str = "",
 ) -> dict:
     name = db["name"]
@@ -162,6 +182,8 @@ def _defender_scenario(
     if expected_def is not None:
         regex.append(rf'→ P1\(2,2\)"{re.escape(name)}".*DEF={expected_def}\s')
     s["expect_log_regex"] = regex
+    if extra_any:
+        s["expect_log_any"] = extra_any
     return s
 
 
@@ -305,10 +327,17 @@ def build_tier2_character(db: dict) -> dict:
         )
 
     if ab == "ATTACKER_ATK_DEBUFF":
-        debuff = int(p.get("atk", 15))
+        # DB stores the debuff under "amount"; "atk" is a legacy alias kept for manual test fixtures.
+        debuff = int(p.get("amount", p.get("atk", 0)))
         return _defender_scenario(
             db, attacker=STRONG_ATTACKER,
-            extra_regex=[_rx_card_in_combat(name), rf"ATK changed.*→ {STRONG_ATTACKER}|ATK={30 - debuff}"],
+            extra_regex=[_rx_card_in_combat(name)],
+            # The engine logs "Attacker loses N ATK!" as MSG when the debuff fires.
+            # We assert against the MSG rather than the final ATK value because
+            # STRONG_ATTACKER (Ox Patrol) may gain bonus ATK from its own ability first,
+            # making the net delta ≠ -debuff (e.g. +5 from ATK_DEF_BONUS_VS_NON_AFFINITY
+            # offsets the -15 debuff, giving ATK=20 not ATK=15, but MSG still says 15).
+            extra_any=[f"Attacker loses {debuff} ATK"],
             notes=f"Tier 2: debuff attacker ATK by {debuff} when defending.",
         )
 
@@ -331,7 +360,8 @@ def build_tier2_character(db: dict) -> dict:
         s.update({
             "role": "t2_trap_immunity",
             "deck0": _solo_attacker_deck(name),
-            "deck1": _deck([WEAK_DEFENDER] + [ZERO_ATK_FILLER] * 9, traps=["Trap Hole"] * 5),
+            # Trap Hole excluded from deck traps — it is force-placed at (2,2) via forced_cells_1.
+            "deck1": _deck([WEAK_DEFENDER] + _unique_fillers(9, exclude=WEAK_DEFENDER), traps=[t for t in FILLER_TRAPS if t != "Trap Hole"]),
             "forced_cells_0": [{"card_name": name, **ATTACKER_CELL}],
             "forced_cells_1": [{"card_name": "Trap Hole", **DEFENDER_CELL}],
             "forced_tech_0": [], "forced_tech_1": [],
@@ -347,7 +377,8 @@ def build_tier2_character(db: dict) -> dict:
         s.update({
             "role": "t2_field_trap_negation",
             "deck0": _solo_attacker_deck("Ox Patrol"),
-            "deck1": _deck([WEAK_DEFENDER] * 10, traps=["Trap Hole"] * 5),
+            # Trap Hole excluded from deck traps — it is force-placed at (2,2) via forced_cells_1.
+            "deck1": _deck([WEAK_DEFENDER] + _unique_fillers(9, exclude=WEAK_DEFENDER), traps=[t for t in FILLER_TRAPS if t != "Trap Hole"]),
             "forced_cells_0": [
                 {"card_name": name, **ATTACKER_CELL},
                 {"card_name": "Ox Patrol", **ALLY_CELL},
@@ -374,7 +405,8 @@ def build_tier2_character(db: dict) -> dict:
         techs = ["Release Mutagen", "Radar", "Spy"]
         s.update({
             "role": "t2_mutagen",
-            "deck0": _deck([name] + [ZERO_ATK_FILLER] * 9, techs=techs),
+            # name excluded from deck — it is placed exclusively via forced_cells (2,2).
+            "deck0": _deck(_unique_fillers(9, exclude=name), techs=techs),
             "deck1": _solo_defender_deck(WEAK_DEFENDER),
             "forced_cells_0": [{"card_name": name, **ATTACKER_CELL}],
             "forced_cells_1": [{"card_name": WEAK_DEFENDER, **DEFENDER_CELL}],
@@ -450,7 +482,8 @@ def build_tier2_trap(db: dict) -> dict:
     s.update({
         "role": "t2_trap_trigger",
         "deck0": _solo_attacker_deck(STRONG_ATTACKER),
-        "deck1": _deck([WEAK_DEFENDER] + [ZERO_ATK_FILLER] * 9, traps=[name] + FILLER_TRAPS[:4]),
+        # name excluded from deck traps — it is force-placed at (2,2) via forced_cells_1.
+        "deck1": _deck([WEAK_DEFENDER] + _unique_fillers(9, exclude=WEAK_DEFENDER), traps=[t for t in FILLER_TRAPS if t != name][:5]),
         "forced_cells_0": [{"card_name": STRONG_ATTACKER, **ATTACKER_CELL}],
         "forced_cells_1": [{"card_name": name, **DEFENDER_CELL}],
         "forced_tech_0": [], "forced_tech_1": [],
@@ -476,7 +509,8 @@ def build_tier2_tech(db: dict) -> dict:
     s = _base_t2({}, db)
     s.update({
         "role": "t2_tech_play",
-        "deck0": _deck([STRONG_ATTACKER] + [ZERO_ATK_FILLER] * 9, techs=[name, FILLER_TECH[1], FILLER_TECH[2]]),
+        # STRONG_ATTACKER excluded from deck chars — it is force-placed at (2,2) via forced_cells_0.
+        "deck0": _deck(_unique_fillers(9, exclude=STRONG_ATTACKER), techs=[name, FILLER_TECH[1], FILLER_TECH[2]]),
         "deck1": _solo_defender_deck(WEAK_DEFENDER),
         "forced_cells_0": [{"card_name": STRONG_ATTACKER, **ATTACKER_CELL}],
         "forced_cells_1": [{"card_name": WEAK_DEFENDER, **DEFENDER_CELL}],
@@ -493,9 +527,16 @@ def build_tier2_tech(db: dict) -> dict:
 def build_tier2_union(db: dict, materials: list[str]) -> dict:
     name = db["name"]
     atk = db["atk"]
-    forced = [{"card_name": m, "row": 0, "col": i} for i, m in enumerate(materials[:3])]
+    # Force up to 3 materials at specific board positions.
+    forced_mats = materials[:3]
+    forced = [{"card_name": m, "row": 0, "col": i} for i, m in enumerate(forced_mats)]
+    # Deck must NOT include the forced materials (no-duplicate rule).
+    # Any materials beyond the first 3 can still go in the deck.
+    forced_set = set(forced_mats)
+    extra_mats = [m for m in materials[3:] if m not in forced_set]
+    extra_set = set(extra_mats)
+    chars = extra_mats + [c for c in FILLER_CHARS if c not in forced_set and c not in extra_set]
     s = _base_t2({}, db)
-    chars = materials + [ZERO_ATK_FILLER] * 8
     s.update({
         "role": "t2_union",
         "deck0": _deck(chars[:12], label=f"E2E T2 union {name}"),

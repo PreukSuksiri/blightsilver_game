@@ -1,0 +1,668 @@
+=== Battle of Bird Droppings ===
+Battle started: 2026-06-02 17:54:39.138
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Kitsune-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Kitsune-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Kitsune (Union)  [setup: Chaotic Wisp]
+Setup role:   t2_union
+Verifies:
+  - Ability: "Kitsune" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Kitsune, Attack P\d\(\d+,\d+\)"Kitsune", MSG:.*Kitsune
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Kitsune — summon logged and/or union attacks with ATK=35.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Kitsune
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Great Diplomacy, Resurrection, Spy
+P1 Tech hand: War Supply, Prayer, Great Diplomacy
+P0:   [C:Chur][C:Chur][  — ][  — ][C:Chur]
+      [  — ][  — ][T:Trap][T:Spik][C:Chur]
+      [  — ][  — ][  — ][T:Trap][  — ]
+      [C:Chur][  — ][T:Hypn][C:Chur][T:Snar]
+      [C:Chur][  — ][  — ][  — ][C:Chur]
+P1:   [C:Chur][C:Chur][C:Chur][  — ][C:Chur]
+      [  — ][  — ][  — ][  — ][  — ]
+      [T:Trap][  — ][C:Chao][C:Chur][  — ]
+      [T:Spik][T:Trap][C:Chur][T:Hypn][T:Snar]
+      [C:Chur][  — ][C:Chur][  — ][C:Chur]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.154] Mode selected P0: ATTACK
+[00:05.156] Attack phase P0: 2 attack(s) available
+[00:05.156] MSG: Player 1: tap a character to attack.
+[00:05.450] AI0 attack decision: (0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (2,1) (dead-end)
+[00:05.783] Revealed: P0 (0,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:05.783] Dice rolled: 4
+[00:05.793] MSG: Nothing happens — Dead End.
+[00:09.145] Attack P0(0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(2,1)(empty)  Dice=4  → DEAD_END
+[00:09.145] Anim: 3F  (blank slot)
+[00:09.643] Mode selected P0: ATTACK
+[00:09.648] Attack phase P0: 1 attack(s) available
+[00:09.648] MSG: Player 1: tap a character to attack.
+[00:09.942] AI0 attack decision: (0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (1,2) (dead-end)
+[00:10.246] Revealed: P0 (0,1) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:10.246] Dice rolled: 2
+[00:10.270] MSG: Nothing happens — Dead End.
+[00:13.639] Attack P0(0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(1,2)(empty)  Dice=2  → DEAD_END
+[00:13.639] Anim: 3F  (blank slot)
+[00:14.138] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+P0:   [Chur][Chur][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:14.743] Mode selected P1: ATTACK
+[00:14.746] Attack phase P1: 2 attack(s) available
+[00:14.748] MSG: Player 2: tap a character to attack.
+[00:15.034] AI1 attack decision: (0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (1,1) (dead-end)
+[00:15.336] Revealed: P1 (0,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:15.336] Dice rolled: 5
+[00:15.361] MSG: Nothing happens — Dead End.
+[00:18.736] Attack P1(0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(1,1)(empty)  Dice=5  → DEAD_END
+[00:18.736] Anim: 3F  (blank slot)
+[00:19.038] Turn ended  P1  |  Crystals P0=5000 P1=5000
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [Chur][Chur][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [Chur][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:19.637] Mode selected P0: ATTACK
+[00:19.643] Attack phase P0: 2 attack(s) available
+[00:19.644] MSG: Player 1: tap a character to attack.
+[00:19.933] AI0 attack decision: (0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:20.282] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:20.282] Dice rolled: 4
+[00:20.287] MSG: Both cards are destroyed!
+[00:24.646] Crystals: P0 5000 → 4850 (-150)  [battle]
+[00:26.038] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:27.431] Attack P0(0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=4  ATK=0 vs DEF=0  → TIE
+[00:27.431] Anim: 3C  △ P0(0,0) + △ P1(2,2)
+[00:27.431] Card destroyed  P0 (0,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:27.431] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:27.921] Mode selected P0: ATTACK
+[00:27.923] Attack phase P0: 1 attack(s) available
+[00:27.923] MSG: Player 1: tap a character to attack.
+[00:28.221] AI0 attack decision: (0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (1,3) (dead-end)
+[00:28.521] Dice rolled: 2
+[00:28.548] MSG: Nothing happens — Dead End.
+[00:31.928] Attack P0(0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(1,3)(empty)  Dice=2  → DEAD_END
+[00:31.928] Anim: 3F  (blank slot)
+[00:32.425] Turn ended  P0  |  Crystals P0=4850 P1=4900
+
+--- Turn 4  |  Player 1  |  Crystals P0=4850 P1=4900 ---
+P0:   [  — ][Chur][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [Chur][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:33.025] Mode selected P1: ATTACK
+[00:33.032] Attack phase P1: 2 attack(s) available
+[00:33.032] MSG: Player 2: tap a character to attack.
+[00:33.321] AI1 attack decision: (0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (1,2) "Trap Hole" {cost 0}
+[00:33.656] Revealed: P0 (1,2) "Trap Hole" {cost 0}
+[00:33.656] Dice rolled: 4
+[00:33.944] MSG: Trap triggered: Trap Hole!
+[00:38.063] Crystals: P1 4900 → 4880 (-20)  [trap]
+[00:39.447] MSG: Trap Hole: Player 2 loses 20 Crystals!
+[00:39.452] Trap: "Trap Hole" triggered  P1(0,0)→P0(1,2)
+[00:39.452] Anim: 3D  (attacker survives)
+[00:39.759] Turn ended  P1  |  Crystals P0=4850 P1=4880
+
+--- Turn 5  |  Player 0  |  Crystals P0=4850 P1=4880 ---
+P0:   [  — ][Chur][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [Chur][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:40.367] Mode selected P0: ATTACK
+[00:40.373] Attack phase P0: 2 attack(s) available
+[00:40.373] MSG: Player 1: tap a character to attack.
+[00:40.671] AI0 attack decision: (0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (1,1) (dead-end)
+[00:40.980] Dice rolled: 1
+[00:41.001] MSG: Nothing happens — Dead End.
+[00:44.383] Attack P0(0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(1,1)(empty)  Dice=1  → DEAD_END
+[00:44.383] Anim: 3F  (blank slot)
+[00:44.889] Mode selected P0: ATTACK
+[00:44.893] Attack phase P0: 1 attack(s) available
+[00:44.893] MSG: Player 1: tap a character to attack.
+[00:45.196] AI0 attack decision: (0,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (3,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:45.507] Revealed: P0 (0,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:45.508] Revealed: P1 (3,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:45.508] Dice rolled: 3
+[00:50.121] Crystals: P0 4850 → 4700 (-150)  [battle]
+[00:51.521] Attack P0(0,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(3,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=3  ATK=0 vs DEF=35  → LOSE
+[00:51.521] Anim: 3B  △ P0(0,4)
+[00:51.521] Card destroyed  P0 (0,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:52.025] Turn ended  P0  |  Crystals P0=4700 P1=4880
+
+--- Turn 6  |  Player 1  |  Crystals P0=4700 P1=4880 ---
+P0:   [  — ][Chur][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [Chur][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Chur][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:52.634] Mode selected P1: ATTACK
+[00:52.640] Attack phase P1: 2 attack(s) available
+[00:52.640] MSG: Player 2: tap a character to attack.
+[00:52.937] AI1 attack decision: (0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (0,2) (dead-end)
+[00:53.246] Dice rolled: 1
+[00:53.293] MSG: Nothing happens — Dead End.
+[00:56.669] Attack P1(0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(0,2)(empty)  Dice=1  → DEAD_END
+[00:56.671] Anim: 3F  (blank slot)
+[00:56.959] Turn ended  P1  |  Crystals P0=4700 P1=4880
+
+--- Turn 7  |  Player 0  |  Crystals P0=4700 P1=4880 ---
+P0:   [  — ][Chur][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [Chur][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][Chur][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:57.566] Mode selected P0: ATTACK
+[00:57.572] Attack phase P0: 2 attack(s) available
+[00:57.572] MSG: Player 1: tap a character to attack.
+[00:57.871] AI0 attack decision: (0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (3,1) "Trap Hole" {cost 0}
+[00:58.181] Revealed: P1 (3,1) "Trap Hole" {cost 0}
+[00:58.181] Dice rolled: 5
+[00:58.497] MSG: Trap triggered: Trap Hole!
+[01:02.609] Crystals: P0 4700 → 4680 (-20)  [trap]
+[01:03.987] MSG: Trap Hole: Player 1 loses 20 Crystals!
+[01:03.993] Trap: "Trap Hole" triggered  P0(0,1)→P1(3,1)
+[01:03.993] Anim: 3D  (attacker survives)
+[01:04.496] Mode selected P0: ATTACK
+[01:04.503] Attack phase P0: 1 attack(s) available
+[01:04.504] MSG: Player 1: tap a character to attack.
+[01:04.804] AI0 attack decision: (1,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (2,3) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[01:05.112] Revealed: P0 (1,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:05.113] Revealed: P1 (2,3) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:05.113] Dice rolled: 2
+[01:09.729] Crystals: P0 4680 → 4530 (-150)  [battle]
+[01:11.131] Attack P0(1,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(2,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=2  ATK=0 vs DEF=35  → LOSE
+[01:11.131] Anim: 3B  △ P0(1,4)
+[01:11.131] Card destroyed  P0 (1,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:11.635] Turn ended  P0  |  Crystals P0=4530 P1=4880
+
+--- Turn 8  |  Player 1  |  Crystals P0=4530 P1=4880 ---
+P0:   [  — ][Chur][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [Chur][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  ? ][  — ][Chur][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:12.242] Mode selected P1: ATTACK
+[01:12.248] Attack phase P1: 2 attack(s) available
+[01:12.248] MSG: Player 2: tap a character to attack.
+[01:12.545] AI1 attack decision: (0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (3,3) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[01:12.856] Revealed: P0 (3,3) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:12.856] Dice rolled: 5
+[01:17.471] Crystals: P1 4880 → 4730 (-150)  [battle]
+[01:18.870] Attack P1(0,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(3,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=5  ATK=0 vs DEF=35  → LOSE
+[01:18.871] Anim: 3B  △ P1(0,0)
+[01:18.871] Card destroyed  P1 (0,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:19.178] Turn ended  P1  |  Crystals P0=4530 P1=4730
+
+--- Turn 9  |  Player 0  |  Crystals P0=4530 P1=4730 ---
+P0:   [  — ][Chur][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][Chur][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  ? ][  — ][Chur][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:19.779] Mode selected P0: ATTACK
+[01:19.785] Attack phase P0: 2 attack(s) available
+[01:19.785] MSG: Player 1: tap a character to attack.
+[01:20.087] AI0 attack decision: (3,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (3,3) "Hypnosis" {cost 800}
+[01:20.438] Revealed: P1 (3,3) "Hypnosis" {cost 800}
+[01:20.438] Dice rolled: 5
+[01:20.710] MSG: Trap triggered: Hypnosis!
+[01:24.816] Crystals: P1 4730 → 3930 (-800)  [trap cost]
+[01:26.204] MSG: Hypnosis: Church Guard cannot attack until end of next turn.
+[01:26.210] Trap: "Hypnosis" triggered  P0(3,3)→P1(3,3)
+[01:26.210] Anim: 3D  (attacker survives)
+[01:26.714] Mode selected P0: ATTACK
+[01:26.722] Attack phase P0: 1 attack(s) available
+[01:26.723] MSG: Player 1: tap a character to attack.
+[01:27.021] AI0 attack decision: (0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (4,1) (dead-end)
+[01:27.330] Dice rolled: 5
+[01:27.360] MSG: Nothing happens — Dead End.
+[01:30.735] Attack P0(0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(4,1)(empty)  Dice=5  → DEAD_END
+[01:30.736] Anim: 3F  (blank slot)
+[01:31.239] Turn ended  P0  |  Crystals P0=4530 P1=3930
+
+--- Turn 10  |  Player 1  |  Crystals P0=4530 P1=3930 ---
+P0:   [  — ][Chur][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][Chur][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  ? ][  — ][Chur][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:31.850] Mode selected P1: ATTACK
+[01:31.858] Attack phase P1: 2 attack(s) available
+[01:31.859] MSG: Player 2: tap a character to attack.
+[01:32.155] AI1 attack decision: (2,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (2,0) (dead-end)
+[01:32.464] Dice rolled: 5
+[01:32.490] MSG: Nothing happens — Dead End.
+[01:35.875] Attack P1(2,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(2,0)(empty)  Dice=5  → DEAD_END
+[01:35.875] Anim: 3F  (blank slot)
+[01:36.183] Turn ended  P1  |  Crystals P0=4530 P1=3930
+
+--- Turn 11  |  Player 0  |  Crystals P0=4530 P1=3930 ---
+P0:   [  — ][Chur][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][Chur][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  ? ][  — ][Chur][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:36.790] Mode selected P0: ATTACK
+[01:36.798] Attack phase P0: 2 attack(s) available
+[01:36.799] MSG: Player 1: tap a character to attack.
+[01:37.095] AI0 attack decision: (0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (2,4) (dead-end)
+[01:37.405] Dice rolled: 5
+[01:37.429] MSG: Nothing happens — Dead End.
+[01:40.809] Attack P0(0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(2,4)(empty)  Dice=5  → DEAD_END
+[01:40.810] Anim: 3F  (blank slot)
+[01:41.314] Mode selected P0: ATTACK
+[01:41.321] Attack phase P0: 1 attack(s) available
+[01:41.321] MSG: Player 1: tap a character to attack.
+[01:41.621] AI0 attack decision: (3,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | cannot-atk≤T10} → (0,1) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[01:41.932] Revealed: P1 (0,1) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:41.933] Dice rolled: 5
+[01:46.539] Crystals: P0 4530 → 4380 (-150)  [battle]
+[01:47.939] Attack P0(3,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | cannot-atk≤T10} → P1(0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=5  ATK=0 vs DEF=35  → LOSE
+[01:47.939] Anim: 3B  △ P0(3,3)
+[01:47.939] Card destroyed  P0 (3,3) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | cannot-atk≤T10}
+[01:48.444] Turn ended  P0  |  Crystals P0=4380 P1=3930
+
+--- Turn 12  |  Player 1  |  Crystals P0=4380 P1=3930 ---
+P0:   [  — ][Chur][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][Chur][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  ? ][  — ][Chur][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:49.051] Mode selected P1: ATTACK
+[01:49.061] Attack phase P1: 2 attack(s) available
+[01:49.061] MSG: Player 2: tap a character to attack.
+[01:49.355] AI1 attack decision: (0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (1,3) "Spike Trap" {cost 1500}
+[01:49.697] Revealed: P0 (1,3) "Spike Trap" {cost 1500}
+[01:49.697] Dice rolled: 2
+[01:49.978] MSG: Trap triggered: Spike Trap!
+[01:55.021] Crystals: P0 4380 → 2880 (-1500)  [trap cost]
+[01:56.413] Crystals: P1 3930 → 3780 (-150)  [card lost]
+[01:58.456] MSG: Flame Trap: Church Guard destroyed!
+[01:58.462] Trap: "Spike Trap" triggered  P1(0,1)→P0(1,3)
+[01:58.462] Anim: 3E  △ P1(0,1)
+[01:58.766] Turn ended  P1  |  Crystals P0=2880 P1=3780
+
+--- Turn 13  |  Player 0  |  Crystals P0=2880 P1=3780 ---
+P0:   [  — ][Chur][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  ? ][  — ][Chur][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:59.372] Mode selected P0: ATTACK
+[01:59.380] Attack phase P0: 2 attack(s) available
+[01:59.380] MSG: Player 1: tap a character to attack.
+[01:59.679] AI0 attack decision: (0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (0,3) (dead-end)
+[01:59.988] Dice rolled: 5
+[02:00.016] MSG: Nothing happens — Dead End.
+[02:03.390] Attack P0(0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(0,3)(empty)  Dice=5  → DEAD_END
+[02:03.390] Anim: 3F  (blank slot)
+[02:03.895] Mode selected P0: ATTACK
+[02:03.901] Attack phase P0: 1 attack(s) available
+[02:03.902] MSG: Player 1: tap a character to attack.
+[02:04.205] AI0 attack decision: (3,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (0,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[02:04.514] Revealed: P0 (3,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:04.516] Revealed: P1 (0,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:04.516] Dice rolled: 4
+[02:09.129] Crystals: P0 2880 → 2730 (-150)  [battle]
+[02:10.528] Attack P0(3,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(0,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=4  ATK=0 vs DEF=35  → LOSE
+[02:10.529] Anim: 3B  △ P0(3,0)
+[02:10.529] Card destroyed  P0 (3,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:11.034] Turn ended  P0  |  Crystals P0=2730 P1=3780
+
+--- Turn 14  |  Player 1  |  Crystals P0=2730 P1=3780 ---
+P0:   [  — ][Chur][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Chur][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  ? ][  — ][Chur][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:11.641] Mode selected P1: ATTACK
+[02:11.649] Attack phase P1: 2 attack(s) available
+[02:11.649] MSG: Player 2: tap a character to attack.
+[02:11.946] AI1 attack decision: (2,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (3,1) (dead-end)
+[02:12.254] Dice rolled: 3
+[02:12.281] MSG: Nothing happens — Dead End.
+[02:15.657] Attack P1(2,3)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(3,1)(empty)  Dice=3  → DEAD_END
+[02:15.657] Anim: 3F  (blank slot)
+[02:15.968] Turn ended  P1  |  Crystals P0=2730 P1=3780
+
+--- Turn 15  |  Player 0  |  Crystals P0=2730 P1=3780 ---
+P0:   [  — ][Chur][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Chur][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  ? ][  — ][Chur][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:16.573] Mode selected P0: ATTACK
+[02:16.581] Attack phase P0: 2 attack(s) available
+[02:16.581] MSG: Player 1: tap a character to attack.
+[02:16.879] AI0 attack decision: (0,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (3,0) "Spike Trap" {cost 1500}
+[02:17.189] Revealed: P1 (3,0) "Spike Trap" {cost 1500}
+[02:17.189] Dice rolled: 4
+[02:17.502] MSG: Trap triggered: Spike Trap!
+[02:22.547] Crystals: P1 3780 → 2280 (-1500)  [trap cost]
+[02:23.939] Crystals: P0 2730 → 2580 (-150)  [card lost]
+[02:25.983] MSG: Flame Trap: Church Guard destroyed!
+[02:25.988] Trap: "Spike Trap" triggered  P0(0,1)→P1(3,0)
+[02:25.988] Anim: 3E  △ P0(0,1)
+[02:26.491] Mode selected P0: ATTACK
+[02:26.497] Attack phase P0: 1 attack(s) available
+[02:26.497] MSG: Player 1: tap a character to attack.
+[02:26.795] AI0 attack decision: (4,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (1,0) (dead-end)
+[02:27.107] Revealed: P0 (4,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:27.107] Dice rolled: 3
+[02:27.126] MSG: Nothing happens — Dead End.
+[02:30.509] Attack P0(4,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(1,0)(empty)  Dice=3  → DEAD_END
+[02:30.510] Anim: 3F  (blank slot)
+[02:31.016] Turn ended  P0  |  Crystals P0=2580 P1=2280
+
+--- Turn 16  |  Player 1  |  Crystals P0=2580 P1=2280 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Chur][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Chur][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  — ][  — ][Chur][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:31.625] Mode selected P1: ATTACK
+[02:31.634] Attack phase P1: 2 attack(s) available
+[02:31.634] MSG: Player 2: tap a character to attack.
+[02:31.928] AI1 attack decision: (0,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (2,2) (dead-end)
+[02:32.238] Dice rolled: 5
+[02:32.263] MSG: Nothing happens — Dead End.
+[02:35.644] Attack P1(0,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(2,2)(empty)  Dice=5  → DEAD_END
+[02:35.645] Anim: 3F  (blank slot)
+[02:35.951] Turn ended  P1  |  Crystals P0=2580 P1=2280
+
+--- Turn 17  |  Player 0  |  Crystals P0=2580 P1=2280 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Chur][  — ][  — ][  — ][  ? ]
+P1:   [  — ][  — ][Chur][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  — ][  — ][Chur][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:36.556] Mode selected P0: ATTACK
+[02:36.563] Attack phase P0: 2 attack(s) available
+[02:36.564] MSG: Player 1: tap a character to attack.
+[02:36.862] AI0 attack decision: (4,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (3,4) "Snare Trap" {cost 500}
+[02:37.202] Revealed: P1 (3,4) "Snare Trap" {cost 500}
+[02:37.202] Dice rolled: 2
+[02:37.486] MSG: Trap triggered: Snare Trap!
+[02:41.599] Crystals: P1 2280 → 1780 (-500)  [trap cost]
+[02:42.988] MSG: Snare Trap: Church Guard's effect nullified until end of next turn!
+[02:42.993] Trap: "Snare Trap" triggered  P0(4,0)→P1(3,4)
+[02:42.993] Anim: 3D  (attacker survives)
+[02:43.497] Mode selected P0: ATTACK
+[02:43.508] Attack phase P0: 1 attack(s) available
+[02:43.509] MSG: Player 1: tap a character to attack.
+[02:43.803] AI0 attack decision: (4,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (0,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[02:44.115] Revealed: P0 (4,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:44.116] Revealed: P1 (0,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:44.116] Dice rolled: 5
+[02:48.730] Crystals: P0 2580 → 2430 (-150)  [battle]
+[02:50.128] Attack P0(4,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(0,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=5  ATK=0 vs DEF=35  → LOSE
+[02:50.129] Anim: 3B  △ P0(4,4)
+[02:50.129] Card destroyed  P0 (4,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:50.633] Turn ended  P0  |  Crystals P0=2430 P1=1780
+
+--- Turn 18  |  Player 1  |  Crystals P0=2430 P1=1780 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Chur][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Chur][  — ][Chur]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  — ][  — ][Chur][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:51.241] Mode selected P1: ATTACK
+[02:51.251] Attack phase P1: 2 attack(s) available
+[02:51.251] MSG: Player 2: tap a character to attack.
+[02:51.545] AI1 attack decision: (0,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (0,3) (dead-end)
+[02:51.855] Dice rolled: 1
+[02:51.885] MSG: Nothing happens — Dead End.
+[02:55.260] Attack P1(0,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(0,3)(empty)  Dice=1  → DEAD_END
+[02:55.260] Anim: 3F  (blank slot)
+[02:55.567] Turn ended  P1  |  Crystals P0=2430 P1=1780
+
+--- Turn 19  |  Player 0  |  Crystals P0=2430 P1=1780 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Chur][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Chur][  — ][Chur]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  — ][  — ][Chur][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:56.171] Mode selected P0: ATTACK
+[02:56.179] Attack phase P0: 2 attack(s) available
+[02:56.180] MSG: Player 1: tap a character to attack.
+[02:56.479] AI0 attack decision: (4,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | nullified≤T18} → (1,4) (dead-end)
+[02:56.788] Dice rolled: 5
+[02:56.814] MSG: Nothing happens — Dead End.
+[03:00.192] Attack P0(4,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | nullified≤T18} → P1(1,4)(empty)  Dice=5  → DEAD_END
+[03:00.193] Anim: 3F  (blank slot)
+[03:00.700] Turn ended  P0  |  Crystals P0=2430 P1=1780
+
+--- Turn 20  |  Player 1  |  Crystals P0=2430 P1=1780 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Chur][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Chur][  — ][Chur]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  — ][  — ][Chur][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[03:01.307] Mode selected P1: ATTACK
+[03:01.314] Attack phase P1: 2 attack(s) available
+[03:01.314] MSG: Player 2: tap a character to attack.
+[03:01.612] AI1 attack decision: (0,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (1,0) (dead-end)
+[03:01.920] Dice rolled: 2
+[03:01.947] MSG: Nothing happens — Dead End.
+[03:05.335] Attack P1(0,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(1,0)(empty)  Dice=2  → DEAD_END
+[03:05.335] Anim: 3F  (blank slot)
+[03:05.643] Turn ended  P1  |  Crystals P0=2430 P1=1780
+
+--- Turn 21  |  Player 0  |  Crystals P0=2430 P1=1780 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Chur][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Chur][  — ][Chur]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][Chur][  — ]
+      [  — ][  — ][Chur][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[03:06.246] Mode selected P0: ATTACK
+[03:06.256] Attack phase P0: 2 attack(s) available
+[03:06.256] MSG: Player 1: tap a character to attack.
+[03:06.554] AI0 attack decision: (4,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | nullified≤T18} → (2,0) "Trap Hole" {cost 0}
+[03:06.863] Revealed: P1 (2,0) "Trap Hole" {cost 0}
+[03:06.863] Dice rolled: 5
+[03:07.176] MSG: Trap triggered: Trap Hole!
+[03:11.292] Crystals: P0 2430 → 2410 (-20)  [trap]
+[03:12.671] MSG: Trap Hole: Player 1 loses 20 Crystals!
+[03:12.683] Trap: "Trap Hole" triggered  P0(4,0)→P1(2,0)
+[03:12.683] Anim: 3D  (attacker survives)
+[03:13.186] Turn ended  P0  |  Crystals P0=2410 P1=1780
+
+--- Turn 22  |  Player 1  |  Crystals P0=2410 P1=1780 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [Chur][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Chur][  — ][Chur]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Chur][  — ]
+      [  — ][  — ][Chur][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[03:13.791] Mode selected P1: ATTACK
+[03:13.801] Attack phase P1: 2 attack(s) available
+[03:13.801] MSG: Player 2: tap a character to attack.
+[03:14.095] AI1 attack decision: (0,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (3,4) "Snare Trap" {cost 500}
+[03:14.406] Revealed: P0 (3,4) "Snare Trap" {cost 500}
+[03:14.406] Dice rolled: 2
+[03:14.719] MSG: Trap triggered: Snare Trap!
+[03:18.821] Crystals: P0 2410 → 1910 (-500)  [trap cost]
+[03:20.213] MSG: Snare Trap: Church Guard's effect nullified until end of next turn!
+[03:20.219] Trap: "Snare Trap" triggered  P1(0,2)→P0(3,4)
+[03:20.219] Anim: 3D  (attacker survives)
+[03:20.527] Turn ended  P1  |  Crystals P0=1910 P1=1780
+
+--- Turn 23  |  Player 0  |  Crystals P0=1910 P1=1780 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [Chur][  — ][  — ][  — ][  — ]
+P1:   [  — ][  — ][Chur][  — ][Chur]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][Chur][  — ]
+      [  — ][  — ][Chur][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[03:21.129] Mode selected P0: ATTACK
+[03:21.139] Attack phase P0: 2 attack(s) available
+[03:21.139] MSG: Player 1: tap a character to attack.
+[03:21.438] AI0 attack decision: (4,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | nullified≤T18} → (4,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[03:21.747] Revealed: P1 (4,2) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[03:21.747] Dice rolled: 1
+[03:26.362] Crystals: P0 1910 → 1760 (-150)  [battle]
+[03:27.768] Attack P0(4,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | nullified≤T18} → P1(4,2)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=1  ATK=0 vs DEF=35  → LOSE
+[03:27.768] Anim: 3B  △ P0(4,0)
+[03:27.768] Card destroyed  P0 (4,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | nullified≤T18}
+
+=== GAME OVER ===
+[03:27.771] AI Player 1 wins
+[03:27.771] Reason: all_destroyed
+[03:27.771] Final crystals — P0: 1760  P1: 1780  |  Turns: 23
+[03:27.771] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_bird_droppings_2026-06-02_17-54-39_138.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Kitsune-002
+Highlight: Kitsune (Union)  [setup: Chaotic Wisp]
+Result:    FAIL
+Detail:    None of expect_log_any matched: ["Union summoned P0: Kitsune", "Attack P\\d\\(\\d+,\\d+\\)\"Kitsune\"", "MSG:.*Kitsune"]
+Turns:     23  |  AI timeouts: 0
+===

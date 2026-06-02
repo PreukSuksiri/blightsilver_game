@@ -1,0 +1,77 @@
+=== Battle of Suburban Sprinkler War ===
+Battle started: 2026-06-02 17:28:53.868
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Armored-Dino-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Armored-Dino-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Armored Dino (Union)  [setup: Chaotic Wisp]
+Ability:      OPTIONAL_CRYSTAL_PAY_DEF_BOOST — In Reckoning, pay 1000 crystal cost to +60 DEF
+Setup role:   t2_union
+Verifies:
+  - Ability: "Armored Dino" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Armored Dino, Attack P\d\(\d+,\d+\)"Armored\ Dino", MSG:.*Armored, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Armored Dino — summon logged and/or union attacks with ATK=95.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Armored Dino
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Great Diplomacy, Resurrection
+P1 Tech hand: Siege Cannon, War Supply, Prayer
+P0:   [T:Trap][T:Hypn][C:Chur][C:Chur][C:Chur]
+      [  — ][  — ][  — ][C:Chur][  — ]
+      [  — ][  — ][C:Chur][  — ][  — ]
+      [  — ][C:Chur][  — ][  — ][  — ]
+      [T:Snar][C:Chur][T:Trap][C:Chur][T:Spik]
+P1:   [C:Chur][C:Chur][T:Spik][C:Chur][C:Chur]
+      [T:Snar][T:Hypn][  — ][C:Chur][  — ]
+      [T:Trap][  — ][C:Chao][C:Chur][  — ]
+      [  — ][  — ][  — ][C:Chur][  — ]
+      [C:Chur][  — ][  — ][T:Trap][C:Chur]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+[00:05.175] Mode selected P0: ATTACK
+[00:05.179] Attack phase P0: 2 attack(s) available
+[00:05.179] MSG: Player 1: tap a character to attack.
+[00:05.179] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:05.181] AI Player 0 wins
+[00:05.181] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:05.181] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_suburban_sprinkler_war_2026-06-02_17-28-53_868.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Armored-Dino-002
+Highlight: Armored Dino (Union)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

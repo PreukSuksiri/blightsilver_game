@@ -28,7 +28,7 @@ FILLER_CHARS = [
     "Dark Monk", "Goblin Poacher", "Mad Raccoon", "Ox Patrol", "Wandering Swordsman",
     "Skeleton Lancer", "Shredder Doll", "Ponycorn", "Ice Mage", "Grand Fort Footsoldier",
 ]
-FILLER_TRAPS = ["Trap Hole", "Trap Hole", "Hypnosis", "Spike Trap", "Snare Trap", "Flame Trap"]
+FILLER_TRAPS = ["Trap Hole", "Hypnosis", "Spike Trap", "Snare Trap", "Flame Trap"]
 FILLER_TECH = ["Radar", "Spy", "Bribe"]
 WEAK_DEFENDER = "Chaotic Wisp"
 ATTACKER_CELL = {"row": 2, "col": 2}
@@ -36,42 +36,30 @@ DEFENDER_CELL = {"row": 2, "col": 2}
 
 
 def build_char_deck(target: str | None = None) -> dict:
-    chars: list[str] = []
-    if target:
-        chars.append(target)
-    for c in FILLER_CHARS:
-        if c == target:
-            continue
-        if len(chars) >= 10:
-            break
-        chars.append(c)
-    while len(chars) < 8:
-        chars.append(FILLER_CHARS[len(chars) % len(FILLER_CHARS)])
+    # target is excluded from the deck — it is placed exclusively via forced_cells.
+    # Including it in chars would cause the engine to place a second copy on the board.
+    chars: list[str] = [c for c in FILLER_CHARS if c != target][:12]
     return {
         "deck_name": "E2E T1 Character Deck",
-        "characters": chars[:12],
+        "characters": chars,
         "traps": FILLER_TRAPS[:5],
         "techs": FILLER_TECH[:3],
     }
 
 
 def build_trap_deck(target: str) -> dict:
-    traps = [target]
-    for t in FILLER_TRAPS:
-        if t == target or len(traps) >= 5:
-            continue
-        traps.append(t)
-    while len(traps) < 4:
-        traps.append(FILLER_TRAPS[0])
+    # target excluded from deck traps — it is placed exclusively via forced_cells.
+    traps = [t for t in FILLER_TRAPS if t != target][:5]
     deck = build_char_deck()
     deck["deck_name"] = "E2E T1 Trap Deck"
-    deck["traps"] = traps[:6]
+    deck["traps"] = traps
     return deck
 
 
 def build_tech_deck(target: str) -> dict:
     techs = [target] + [t for t in FILLER_TECH if t != target]
-    deck = build_char_deck()
+    # Ox Patrol is force-placed at (2,1); exclude it from deck chars to prevent duplicates.
+    deck = build_char_deck("Ox Patrol")
     deck["deck_name"] = "E2E T1 Tech Deck"
     deck["techs"] = techs[:3]
     while len(deck["techs"]) < 3:
@@ -112,11 +100,12 @@ def extract_union_materials(formula: str) -> list[str]:
     known = [
         "Gryphon", "Tiny Pixie", "Ponycorn", "Cleaver Saint", "Cruel Angel",
         "Choir Lady Abigail", "Choir Lady Alice", "Choir Lady Anna",
-        "Barros the Colossal", "Gaia Turtle", "Katana Shark", "Kitsune",
         "Moon Lady Ninja", "Moon Tribe Shaman", "Colorful Mage",
-        "Grand Fort Captain", "Imperial Mech", "Jirayu the Rebel King",
-        "Kiba the Giant Slayer", "Rocket Marauder", "Skeleton Overlord",
-        "Raijin", "Fujin", "Flame Seraph", "Hammer Shark", "Saw Shark",
+        "Imperial Mech", "Jirayu the Rebel King",
+        "Kiba the Giant Slayer",
+        "Raijin", "Fujin", "Flame Lizard", "Hammer Shark", "Saw Shark",
+        "Laser Walker", "Dark Monk", "Grand Fort Footsoldier",
+        "Skeleton Archer", "Skeleton Lancer", "Skeleton Scout",
     ]
     found: list[str] = []
     lower = formula.lower()
@@ -126,6 +115,98 @@ def extract_union_materials(formula: str) -> list[str]:
     if "choir lady" in lower and not any("Choir Lady" in f for f in found):
         found.extend(["Choir Lady Abigail", "Choir Lady Alice", "Choir Lady Anna"])
     return found[:4]
+
+
+# Explicit deck character lists for T2 union scenarios where auto-extraction
+# produces wrong or empty materials (wrong affinity, missing named cards, etc.).
+# The deck must have enough correctly-typed cards so the union zone condition
+# can be satisfied by random placement.
+UNION_T2_DECK_CHARS: dict[str, list[str]] = {
+    # needs card_name="Flame Lizard" + 1 Nature
+    "Ancient Lizard": [
+        "Flame Lizard", "Goblin Poacher", "Mad Raccoon", "Canyon Warg",
+        "Armored Bee", "Armored Monkey", "Hammer Shark", "Saw Shark",
+    ],
+    # needs 2 Nature cards
+    "Berserk Hyena": [
+        "Flame Lizard", "Goblin Poacher", "Mad Raccoon", "Canyon Warg",
+        "Armored Bee", "Armored Monkey", "Hammer Shark", "Saw Shark",
+    ],
+    # needs 2 Nature cards with cost >= 800
+    "Barros the Colossal": [
+        "Gryphon", "Death Cobra", "Shotgun Shark", "Swarmcaller",
+        "Lazy Troll", "Ostrich Cannon", "Giant Centipede", "Canyon Warg",
+    ],
+    # needs 2 units with DEF >= 90
+    "Gaia Turtle": [
+        "Angel Gatekeeper", "Archbishop", "Fierce Gladiator",
+        "Ironclad Sentinel", "Railgun Tank", "Church Guard", "Big Thug", "Dark Monk",
+    ],
+    # needs 2 characters with name_contains "grand fort"
+    "Grand Fort Captain": [
+        "Grand Fort Footsoldier", "Grand Fort Archer", "Grand Fort Mauler",
+        "Church Guard", "Big Thug", "Dark Monk", "Goblin Poacher", "Ox Patrol",
+    ],
+    # needs card_name="Laser Walker" + 1 Cosmic
+    "Imperial Frame": [
+        "Laser Walker", "Moon Rover", "Church Guard", "Big Thug",
+        "Dark Monk", "Goblin Poacher", "Mad Raccoon", "Ox Patrol",
+    ],
+    # needs 3 characters with name_contains "shark"
+    "Katana Shark": [
+        "Hammer Shark", "Saw Shark", "Shotgun Shark", "Scythe Shark",
+        "Spear Shark", "Church Guard", "Big Thug", "Dark Monk",
+    ],
+    # needs card_name="Dark Monk" + 1 Chaos
+    "Kitsune": [
+        "Dark Monk", "Chaotic Wisp", "Foul Wisp", "Doom Wisp",
+        "Church Guard", "Big Thug", "Goblin Poacher", "Ox Patrol",
+    ],
+    # needs 1 Bio (cost>=800) + 1 Anima (cost>=800)
+    "Rocket Marauder": [
+        "Lab Bloater", "Leech Man", "Plant 29",
+        "Huntress of Green Glade", "Kiyoko the Death Whisper", "Fierce Gladiator",
+        "Church Guard", "Big Thug",
+    ],
+    # needs 3 characters with name_contains "skeleton"
+    "Skeleton Overlord": [
+        "Skeleton Archer", "Skeleton Lancer", "Skeleton Scout", "Skeleton Grappler",
+        "Church Guard", "Big Thug", "Dark Monk", "Goblin Poacher",
+    ],
+    # needs name_contains "gryphon" + 1 Divine — Gryphon + Church Guards works;
+    # also add Angel Gatekeeper to ensure enough Divine cards hit the diagonal zone
+    "Gryphon Rider": [
+        "Gryphon", "Church Guard", "Angel Gatekeeper", "Ponycorn",
+        "Archbishop", "Big Thug", "Dark Monk", "Goblin Poacher",
+    ],
+    # needs name_contains "raijin" + name_contains "fujin"
+    "Raijin and Fujin": [
+        "Raijin", "Fujin", "Church Guard", "Big Thug",
+        "Dark Monk", "Goblin Poacher", "Mad Raccoon", "Ox Patrol",
+    ],
+}
+
+# Custom forced_cells_0 for unions where zone positioning is critical.
+# Without explicit placement, the required cards may not land in valid zone cells.
+UNION_T2_FORCED_CELLS_0: dict[str, list[dict]] = {
+    # Grand Fort Captain zone (5 cells): force 2 "grand fort" characters into the zone
+    "Grand Fort Captain": [
+        {"card_name": "Grand Fort Footsoldier", "row": 0, "col": 0},
+        {"card_name": "Grand Fort Archer", "row": 0, "col": 1},
+    ],
+    # Gryphon Rider zone: diagonal [[0,0],[1,1],[2,2],[3,3],[4,4]].
+    # Force Gryphon at (0,0) and a Divine card at (1,1) to guarantee zone match.
+    "Gryphon Rider": [
+        {"card_name": "Gryphon", "row": 0, "col": 0},
+        {"card_name": "Church Guard", "row": 1, "col": 1},
+    ],
+    # Raijin and Fujin zone: columns 0 and 4 of every row.
+    # (0,1) is NOT in the zone — must use (0,0) and (0,4).
+    "Raijin and Fujin": [
+        {"card_name": "Raijin", "row": 0, "col": 0},
+        {"card_name": "Fujin", "row": 0, "col": 4},
+    ],
+}
 
 
 def scenario_tier1(db: dict, formula: str = "") -> dict:
@@ -149,7 +230,7 @@ def scenario_tier1(db: dict, formula: str = "") -> dict:
             **base,
             "role": "t1_character_attacker",
             "deck0": build_char_deck(name),
-            "deck1": build_char_deck(),
+            "deck1": build_char_deck(WEAK_DEFENDER),
             "forced_cells_0": [{"card_name": name, **ATTACKER_CELL}],
             "forced_cells_1": [{"card_name": WEAK_DEFENDER, **DEFENDER_CELL}],
             "forced_tech_0": [], "forced_tech_1": [],
@@ -173,7 +254,7 @@ def scenario_tier1(db: dict, formula: str = "") -> dict:
             **base,
             "role": "t1_tech",
             "deck0": build_tech_deck(name),
-            "deck1": build_char_deck(),
+            "deck1": build_char_deck(WEAK_DEFENDER),
             "forced_cells_0": [{"card_name": "Ox Patrol", "row": 2, "col": 1}],
             "forced_cells_1": [{"card_name": WEAK_DEFENDER, **DEFENDER_CELL}],
             "forced_tech_0": [name, "", ""],
@@ -187,7 +268,7 @@ def scenario_tier1(db: dict, formula: str = "") -> dict:
         **base,
         "role": "t1_union",
         "deck0": build_union_deck(materials),
-        "deck1": build_char_deck(),
+        "deck1": build_char_deck(WEAK_DEFENDER),
         "forced_cells_0": forced,
         "forced_cells_1": [{"card_name": WEAK_DEFENDER, **DEFENDER_CELL}],
         "forced_tech_0": [], "forced_tech_1": [],
@@ -233,7 +314,16 @@ def main() -> None:
         db = db_all[name]
         formula = formulas.get(name, "")
         scenarios.append(scenario_tier1(db, formula))
-        scenarios.append(build_tier2(db, extract_union_materials(formula)))
+        s2 = build_tier2(db, extract_union_materials(formula))
+        if db["card_type"] == "Union":
+            if name in UNION_T2_DECK_CHARS:
+                s2["deck0"]["characters"] = UNION_T2_DECK_CHARS[name]
+            if name in UNION_T2_FORCED_CELLS_0:
+                s2["forced_cells_0"] = UNION_T2_FORCED_CELLS_0[name]
+            # Remove forced-cell cards from deck chars to prevent duplicates.
+            forced_names = {f["card_name"] for f in s2["forced_cells_0"]}
+            s2["deck0"]["characters"] = [c for c in s2["deck0"]["characters"] if c not in forced_names]
+        scenarios.append(s2)
 
     # Cards in demo_flags but missing from DB (shouldn't happen often)
     from card_db import demo_names

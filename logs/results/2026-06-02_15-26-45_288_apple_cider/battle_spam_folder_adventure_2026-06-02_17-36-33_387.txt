@@ -1,0 +1,78 @@
+=== Battle of Spam Folder Adventure ===
+Battle started: 2026-06-02 17:36:33.387
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-Choir-Lead-Amber-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Choir-Lead-Amber-001  (test_case/functional/union_functional_tests.md)
+Highlight:    Choir Lead Amber (Union)  [setup: Choir Lady Abigail, Choir Lady Alice, Choir Lady Anna, Chaotic Wisp]
+Ability:      FIELD_ATK_BOOST_OWN_AFFINITY — +20 ATK to all Divine units on their own field
+Setup role:   t2_union
+Verifies:
+  - Ability: "Choir Lead Amber" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: Choir Lead Amber, Attack P\d\(\d+,\d+\)"Choir\ Lead\ Amber", MSG:.*Choir, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union Choir Lead Amber — summon logged and/or union attacks with ATK=35.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union Choir Lead Amber
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (0,0) Choir Lady Abigail, (0,1) Choir Lady Alice, (0,2) Choir Lady Anna
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Accident, Resurrection
+P1 Tech hand: Bribe, Release Mutagen, Spy
+P0:   [C:Choi][C:Choi][C:Choi][  — ][T:Hypn]
+      [T:Trap][C:Choi][  — ][  — ][C:Chur]
+      [C:Chur][C:Chur][C:Chur][C:Chur][C:Chur]
+      [T:Trap][  — ][  — ][  — ][C:Chur]
+      [T:Snar][  — ][T:Spik][  — ][C:Chur]
+P1:   [C:Chur][C:Chur][C:Chur][T:Trap][T:Spik]
+      [T:Snar][  — ][T:Hypn][C:Chur][  — ]
+      [  — ][  — ][C:Chao][  — ][  — ]
+      [  — ][C:Chur][  — ][  — ][  — ]
+      [C:Chur][C:Chur][C:Chur][C:Chur][T:Trap]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:06.727] Crystals: P0 5000 → 4500 (-500)  [union]
+[00:06.770] Revealed: P0 (0,1) "Choir Lead Amber" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[00:06.770] Union summoned P0: "Choir Lead Amber" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down}, "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}, "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down}
+[00:06.770] MSG: Player 1 summoned [Choir Lead Amber] using: "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down}, "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine | face-down}, "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine | face-down}
+[00:06.770] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.805] AI Player 0 wins
+[00:06.805] Final crystals — P0: 4500  P1: 5000  |  Turns: 1
+[00:06.805] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_spam_folder_adventure_2026-06-02_17-36-33_387.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Choir-Lead-Amber-002
+Highlight: Choir Lead Amber (Union)  [setup: Choir Lady Abigail, Choir Lady Alice, Choir Lady Anna, Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

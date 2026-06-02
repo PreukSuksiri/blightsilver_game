@@ -1,0 +1,215 @@
+=== Battle of Dryer Lint Monarchy ===
+Battle started: 2026-06-02 19:59:05.900
+Game Session of Yerba Mate (started 2026-06-02 19:57:40.123)
+=== Card E2E Test ===
+Scenario ID:  E2E-Armored-Bee-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Armored-Bee-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Armored Bee (Character)  [setup: Chaotic Wisp]
+Ability:      ONE_USE_DEF_BOOST — +60 DEF until the end of that turn once
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Armored Bee" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Armored Bee
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Armored\ Bee".*ATK=|→ P\d\(\d+,\d+\)"Armored\ Bee")
+  - Log must match regex: Attack P0\(2,2\)"Armored\ Bee".*ATK=90\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: one-use ability ONE_USE_DEF_BOOST.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Armored Bee
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Armored Bee
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Great Diplomacy, Release Mutagen
+P1 Tech hand: Radar, Prayer, Bribe
+P0:   [  — ][C:Chur][T:Spik][  — ][  — ]
+      [C:Chur][C:Chur][  — ][  — ][C:Chur]
+      [C:Chur][C:Chur][C:Armo][T:Trap][T:Trap]
+      [C:Chur][C:Chur][  — ][T:Snar][T:Hypn]
+      [  — ][C:Chur][  — ][  — ][  — ]
+P1:   [C:Chur][  — ][  — ][  — ][C:Chur]
+      [T:Spik][C:Chur][  — ][C:Chur][  — ]
+      [T:Trap][  — ][C:Chao][  — ][C:Chur]
+      [  — ][C:Chur][T:Hypn][C:Chur][  — ]
+      [C:Chur][T:Trap][  — ][T:Snar][C:Chur]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:05.354] Mode selected P0: ATTACK
+[00:05.357] Attack phase P0: 2 attack(s) available
+[00:05.358] MSG: Player 1: tap a character to attack.
+[00:05.655] AI0 attack decision: (2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:05.992] Revealed: P0 (2,2) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[00:06.018] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:06.018] Dice rolled: 3
+[00:06.022] MSG: Armored Bee wins!
+[00:10.446] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:11.845] Attack P0(2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=3  ATK=30 vs DEF=0  → WIN
+[00:11.845] Anim: 3A  △ P1(2,2)
+[00:11.845] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:12.338] Mode selected P0: ATTACK
+[00:12.343] Attack phase P0: 1 attack(s) available
+[00:12.344] MSG: Player 1: tap a character to attack.
+[00:12.638] AI0 attack decision: (2,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (3,4) (dead-end)
+[00:12.970] Revealed: P0 (2,1) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:12.970] Dice rolled: 2
+[00:12.986] MSG: Nothing happens — Dead End.
+[00:16.335] Attack P0(2,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(3,4)(empty)  Dice=2  → DEAD_END
+[00:16.335] Anim: 3F  (blank slot)
+[00:16.831] Turn ended  P0  |  Crystals P0=5000 P1=4900
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4900 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Chur][Armo][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:18.913] Crystals: P1 4900 → 4600 (-300)  [union]
+[00:18.953] Revealed: P1 (1,1) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:18.953] Union summoned P1: "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:18.953] MSG: Player 2 summoned [False Prophet] using: "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:22.143] Crystals: P1 4600 → 4550 (-50)  [skip tax]
+[00:22.143] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:23.531] Turn ended  P1  |  Crystals P0=5000 P1=4550
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=4550 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][Chur][Armo][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Fals][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:24.121] Mode selected P0: ATTACK
+[00:24.130] Attack phase P0: 2 attack(s) available
+[00:24.130] MSG: Player 1: tap a character to attack.
+[00:24.420] AI0 attack decision: (2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → (1,3) (dead-end)
+[00:24.721] Dice rolled: 4
+[00:24.747] MSG: Nothing happens — Dead End.
+[00:28.115] Attack P0(2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature} → P1(1,3)(empty)  Dice=4  → DEAD_END
+[00:28.115] Anim: 3F  (blank slot)
+[00:28.607] Mode selected P0: ATTACK
+[00:28.610] Attack phase P0: 1 attack(s) available
+[00:28.610] MSG: Player 1: tap a character to attack.
+[00:28.909] AI0 attack decision: (2,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (0,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:29.209] Revealed: P1 (0,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:29.209] Dice rolled: 5
+[00:33.817] Crystals: P0 5000 → 4850 (-150)  [battle]
+[00:35.218] Attack P0(2,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(0,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=5  ATK=0 vs DEF=35  → LOSE
+[00:35.218] Anim: 3B  △ P0(2,1)
+[00:35.218] Card destroyed  P0 (2,1) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:35.719] Turn ended  P0  |  Crystals P0=4850 P1=4550
+
+--- Turn 4  |  Player 1  |  Crystals P0=4850 P1=4550 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][Armo][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][Chur]
+      [  ? ][Fals][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:35.720] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[00:36.107] Revealed: P0 (3,2) (blank slot)
+[00:36.108] MSG: False Prophet: Dead End revealed — self-destructs!
+[00:36.109] Card destroyed  P1 (1,1) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:36.112] Ability target resolved  P1
+[00:36.308] Mode selected P1: ATTACK
+[00:36.312] Attack phase P1: 2 attack(s) available
+[00:36.312] MSG: Player 2: tap a character to attack.
+[00:36.609] AI1 attack decision: (0,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (2,2) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[00:36.908] Dice rolled: 5
+[00:42.517] Crystals: P1 4550 → 4400 (-150)  [battle]
+[00:43.915] Attack P1(0,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P0(2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=5  ATK=0 vs DEF=60  → LOSE
+[00:43.916] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} +DEF 60
+[00:43.916] Anim: 3B  △ P1(0,4)
+[00:43.916] Card destroyed  P1 (0,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:44.210] Turn ended  P1  |  Crystals P0=4850 P1=4400
+
+--- Turn 5  |  Player 0  |  Crystals P0=4850 P1=4400 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][Armo][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+[00:44.810] Mode selected P0: ATTACK
+[00:44.815] Attack phase P0: 2 attack(s) available
+[00:44.815] MSG: Player 1: tap a character to attack.
+[00:45.108] AI0 attack decision: (2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} → (4,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:45.411] Revealed: P1 (4,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:45.412] Dice rolled: 2
+[00:50.017] Crystals: P0 4850 → 4370 (-480)  [battle]
+[00:51.412] Attack P0(2,2)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} → P1(4,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=2  ATK=30 vs DEF=35  → LOSE
+[00:51.412] Anim: 3B  △ P0(2,2)
+[00:51.412] Card destroyed  P0 (2,2) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[00:51.911] Mode selected P0: ATTACK
+[00:51.916] Attack phase P0: 1 attack(s) available
+[00:51.916] MSG: Player 1: tap a character to attack.
+[00:52.209] AI0 attack decision: (1,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (2,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:52.512] Revealed: P0 (1,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:52.513] Revealed: P1 (2,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:52.513] Dice rolled: 2
+[00:57.117] Crystals: P0 4370 → 4220 (-150)  [battle]
+[00:58.515] Attack P0(1,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(2,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=2  ATK=0 vs DEF=35  → LOSE
+[00:58.516] Anim: 3B  △ P0(1,0)
+[00:58.516] Card destroyed  P0 (1,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[00:59.013] Turn ended  P0  |  Crystals P0=4220 P1=4400
+
+--- Turn 6  |  Player 1  |  Crystals P0=4220 P1=4400 ---
+P0:   [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  — ][  — ]
+P1:   [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][Chur]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][Chur]
+[00:59.614] Mode selected P1: ATTACK
+[00:59.620] Attack phase P1: 2 attack(s) available
+[00:59.621] MSG: Player 2: tap a character to attack.
+[00:59.913] AI1 attack decision: (2,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → (3,2) (dead-end)
+[01:00.212] Dice rolled: 4
+[01:00.243] MSG: Nothing happens — Dead End.
+[01:03.606] Attack P1(2,4)"Church Guard" {Unit ATK0

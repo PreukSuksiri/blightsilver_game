@@ -159,7 +159,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Tiny Pixie"}, {"affinity": A.DIVINE}], 9))
 
 	_add("Diamond Unicorn", A.DIVINE, 50, 35, 500, R.UNCOMMON,
-		AB.ONE_USE_DEF_BOOST, {"bonus": 15},
+		AB.ONE_USE_ATK_BOOST, {"bonus": 15},
 		"+15 ATK until the end of this turn, once.",
 		"+15 ATK until ????",
 		"1 Ponycorn + 1 Divine card + 500 cost",
@@ -173,7 +173,7 @@ func _load_unions() -> void:
 		"3 Choir Lady cards + 500 cost",
 		"3 ??? + 500 cost",
 		_z([[0,1], [0,2], [1,1], [1,3], [1,4], [2,1], [2,4], [3,0], [3,1], [4,0], [4,1]]),
-		_conds([{"card_name": "3 Choir Lady cards"}], 11))
+		_conds([{"name_contains": "choir lady"}, {"name_contains": "choir lady"}, {"name_contains": "choir lady"}], 11))
 
 	_add("Genesis Mech", A.DIVINE, 60, 40, 1000, R.RARE,
 		AB.ONE_USE_DESTROY_BY_AFFINITY, {"aff1": A.DIVINE, "aff2": A.ANIMA}, "Once, destroy Divine or Anima card",
@@ -206,7 +206,7 @@ func _load_unions() -> void:
 		"2 Sphinx units + 1000 cost",
 		"2 ???+ 1000 cost",
 		_z([[0,0], [0,4], [1,1], [1,3], [2,2], [3,1], [3,3], [4,0], [4,4]]),
-		_conds([{"card_name": "2 Sphinx units"}], 9))
+		_conds([{"name_contains": "sphinx"}, {"name_contains": "sphinx"}], 9))
 
 	_add("Lucky Wanderer", A.DIVINE, 70, 50, 1000, R.UNCOMMON,
 		AB.END_OF_TURN_COIN_FLIP_STAT_BOOST, {"atk": 10, "def": 10}, "During the end of that turn, flip a coin. If head, +10 ATK. If tail, +10 DEF",
@@ -308,7 +308,7 @@ func _load_unions() -> void:
 		"2 Nature + 500 cost",
 		"2 ???+ 500 cost",
 		_z([[1,0], [1,1], [1,2], [1,3], [1,4], [2,0], [2,2], [2,4], [3,0], [3,2], [3,4]]),
-		_conds([{"card_name": "2 Nature"}], 11))
+		_conds([{"affinity": A.NATURE}, {"affinity": A.NATURE}], 11))
 
 	_add("Rocket Peacock", A.NATURE, 150, 100, 1500, R.LEGENDARY,
 		AB.POST_BATTLE_COIN_FLIP_DESTROY, {}, "After this card battles, select 1 foe’s card, flip a coin. Head : destroy that card",
@@ -426,7 +426,7 @@ func _load_unions() -> void:
 		"2 Mutant cards + 600 cost",
 		"2 ??? + 600 cost",
 		_z([[1,1], [1,3], [2,0], [2,2], [2,4], [3,1], [3,3]]),
-		_conds([{"card_name": "2 Mutant cards"}], 7))
+		_conds([{"name_contains": "mutant"}, {"name_contains": "mutant"}], 7))
 
 	_add("Giant Meteor Vergaia", A.COSMIC, 60, 0, 1000, R.LEGENDARY,
 		AB.DESTROY_END_TURN_BLAST_ADJACENT, {}, "Destroy it at turn's end, then destroy all face-up foe units sharing a border with this card.",
@@ -459,14 +459,14 @@ func _load_unions() -> void:
 		"1 Anima (≥ 800 cost) + 2 Anima + 800 cost",
 		"1 ??? + 2 ??? + 800 cost",
 		_z([[0,0], [0,2], [0,4], [2,0], [2,2], [2,4], [4,0], [4,2], [4,4]]),
-		_conds([{"affinity": A.ANIMA, "min_cost": 800}, {"card_name": "2 Anima"}], 9))
+		_conds([{"affinity": A.ANIMA, "min_cost": 800}, {"affinity": A.ANIMA}, {"affinity": A.ANIMA}], 9))
 
 	_add("Grand Fort Captain", A.ANIMA, 45, 40, 500, R.UNCOMMON,
 		AB.NONE, {}, "None", "None",
 		"2 Grand Fort card + 500 cost",
 		"2 ??? + 500 cost",
 		_z([[1,2], [2,1], [2,2], [2,3], [3,2]]),
-		_conds([{"card_name": "2 Grand Fort card"}], 5))
+		_conds([{"name_contains": "grand fort"}, {"name_contains": "grand fort"}], 5))
 
 	_add("Kiba the Giant Slayer", A.ANIMA, 80, 55, 1000, R.RARE,
 		AB.ATK_BONUS_VS_UNION, {"bonus": 30}, "+30 ATK vs Union",
@@ -530,7 +530,7 @@ func _load_unions() -> void:
 		"3 Skeleton cards + 400 cost",
 		"3 ??? + 400 cost",
 		_z([[0,1], [0,2], [0,3], [2,0], [2,1], [2,2], [2,3], [2,4], [4,1], [4,2], [4,3]]),
-		_conds([{"card_name": "3 Skeleton cards"}], 11))
+		_conds([{"name_contains": "skeleton"}, {"name_contains": "skeleton"}, {"name_contains": "skeleton"}], 11))
 
 	_add("Oblivion Dragon", A.CHAOS, 200, 0, 2000, R.LEGENDARY,
 		AB.HALVE_ATK_ADD_TO_DEF_ON_DEFEND, {}, "When this card defends, halve its attack and increase DEF by that amount  permanently",
@@ -598,7 +598,9 @@ func _conds(specific: Array, _zone_size: int) -> Array:
 ## Find all unions the current player can summon using the card at (tapped_row, tapped_col).
 ## Returns Array of:
 ##   { union: UnionData, zone_cells: Array[Vector2i], tapped_pos: Vector2i }
-## where zone_cells are the absolute grid positions the zone occupies.
+## where zone_cells are the union's fixed absolute grid positions.
+## Union zones are STATIC — the zone cells in UnionDatabase are absolute board positions,
+## not offsets. A union only appears if the tapped cell is one of its fixed zone cells.
 ## If ignore_materials = true, skips condition checking (for admin/debug use).
 func find_available_unions(
 		player: int,
@@ -608,49 +610,47 @@ func find_available_unions(
 ) -> Array:
 	var tapped := Vector2i(tapped_row, tapped_col)
 	var results: Array = []
-	var seen_keys: Dictionary = {}  # prevent duplicate (union_name + anchor) entries
 
 	for union: UnionData in _unions.values():
 		if not is_playable_in_demo(union):
 			continue
 		var zone: Array = union.union_zone
-		var zone_size: int = zone.size()
 
-		# Try placing each zone cell at the tapped position
-		for i: int in range(zone_size):
-			var offset: Vector2i = zone[i]
-			var anchor: Vector2i = tapped - offset
+		# Zone is static — tapped cell must be one of the fixed zone positions
+		var tapped_in_zone: bool = false
+		for zc: Variant in zone:
+			if (zc as Vector2i) == tapped:
+				tapped_in_zone = true
+				break
+		if not tapped_in_zone:
+			continue
 
-			# Compute all absolute zone positions
-			var zone_cells: Array = []
-			var fits: bool = true
-			for j: int in range(zone_size):
-				var cell: Vector2i = anchor + (zone[j] as Vector2i)
-				if cell.x < 0 or cell.x >= GameState.GRID_SIZE or cell.y < 0 or cell.y >= GameState.GRID_SIZE:
-					fits = false
-					break
-				zone_cells.append(cell)
+		# Sanity check: all zone cells within board bounds
+		var fits: bool = true
+		for zc: Variant in zone:
+			var v: Vector2i = zc as Vector2i
+			if v.x < 0 or v.x >= GameState.GRID_SIZE or v.y < 0 or v.y >= GameState.GRID_SIZE:
+				fits = false
+				break
+		if not fits:
+			continue
 
-			if not fits:
-				continue
+		# Material conditions checked against the fixed zone positions
+		if not ignore_materials and not _materials_match(player, zone, union.material_conditions):
+			continue
 
-			# Deduplicate: same union + same anchor = same placement
-			var key: String = union.card_name + "|%d,%d" % [anchor.x, anchor.y]
-			if seen_keys.has(key):
-				continue
-			seen_keys[key] = true
-
-			# Material conditions must be satisfiable
-			if not ignore_materials and not _materials_match(player, zone_cells, union.material_conditions):
-				continue
-
-			results.append({
-				"union": union,
-				"zone_cells": zone_cells,
-				"tapped_pos": tapped,
-			})
+		results.append({
+			"union": union,
+			"zone_cells": zone,
+			"tapped_pos": tapped,
+		})
 
 	return results
+
+## Check whether a union's material conditions are met at its static zone positions.
+## Used by SetupPhase to determine if a union is achievable given the current board state.
+func check_union_materials(player: int, u: UnionData) -> bool:
+	return _materials_match(player, u.union_zone, u.material_conditions)
 
 ## Check whether zone_cells (Array[Vector2i]) contain cards satisfying all material_conditions.
 ## Uses greedy matching: most-specific conditions first.

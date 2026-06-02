@@ -1,0 +1,10 @@
+=== Battle of Spam Folder Adventure ===
+Battle started: 2026-06-02 15:09:10.998
+Game Session of Tonic Water (started 2026-06-02 15:08:44.025)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:50.913] MSG: Coin flip — Heads! Player 1 goes first!

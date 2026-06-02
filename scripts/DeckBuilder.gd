@@ -95,6 +95,120 @@ var _union_section: VBoxContainer = null
 var _union_list: ItemList = null
 var _union_header_label: Label = null
 
+# ── Formation Editor — draggable gallery card ─────────────────
+class FEDraggableCard extends TextureRect:
+	var card_name:    String = ""
+	var card_type:    String = ""
+	var _want_detail: bool   = false
+
+	func _gui_input(event: InputEvent) -> void:
+		if not (event is InputEventMouseButton): return
+		var mbe := event as InputEventMouseButton
+		if mbe.button_index == MOUSE_BUTTON_LEFT:
+			if mbe.pressed:
+				_want_detail = true
+				get_tree().create_timer(0.5).timeout.connect(func() -> void:
+					if _want_detail:
+						_want_detail = false
+						CardDetailOverlay.open(self, card_name, card_type))
+			else:
+				_want_detail = false
+
+	func _get_drag_data(_pos: Vector2) -> Variant:
+		_want_detail = false   # cancel long-press when drag starts
+		const PW: float = 100.0
+		const PH: float = 137.0
+		var prev := TextureRect.new()
+		prev.texture             = texture
+		prev.custom_minimum_size = Vector2(PW, PH)
+		prev.size                = Vector2(PW, PH)
+		prev.expand_mode         = TextureRect.EXPAND_IGNORE_SIZE
+		prev.stretch_mode        = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		prev.pivot_offset        = Vector2(PW * 0.5, PH * 0.5)
+		set_drag_preview(prev)
+		return {"card_name": card_name, "card_type": card_type,
+				"from_grid": false, "grid_row": -1, "grid_col": -1}
+
+# ── Formation Editor — grid cell (drop target + drag source) ──
+class FEGridCell extends Panel:
+	var grid_row:         int      = 0
+	var grid_col:         int      = 0
+	var occupied_name:    String   = ""
+	var occupied_type:    String   = ""
+	var on_drop_cb:       Callable = Callable()
+	var on_unplace_cb:    Callable = Callable()
+	var on_drag_start_cb: Callable = Callable()
+	var _card_tex:    TextureRect = null
+	var _name_lbl:    Label       = null
+	var _want_detail: bool        = false
+
+	func occupy(p_name: String, p_type: String, tex: Texture2D) -> void:
+		occupied_name = p_name
+		occupied_type = p_type
+		if _card_tex != null:
+			_card_tex.texture = tex
+		if _name_lbl != null:
+			_name_lbl.text = p_name
+		self_modulate = Color(1.0, 1.0, 1.0, 1.0)
+		if tex == null and not p_name.is_empty():
+			self_modulate = Color(0.55, 0.85, 1.0) if p_type == "character" \
+				else Color(1.0, 0.55, 0.55)
+
+	func vacate() -> void:
+		occupied_name = ""
+		occupied_type = ""
+		if _card_tex != null:
+			_card_tex.texture = null
+		if _name_lbl != null:
+			_name_lbl.text = ""
+		self_modulate = Color(1.0, 1.0, 1.0, 1.0)
+
+	func _get_drag_data(_pos: Vector2) -> Variant:
+		if occupied_name.is_empty():
+			return null
+		_want_detail = false   # cancel long-press when drag starts
+		if on_drag_start_cb.is_valid():
+			on_drag_start_cb.call(grid_row, grid_col)
+		const PW: float = 100.0
+		const PH: float = 137.0
+		var prev := TextureRect.new()
+		if _card_tex != null:
+			prev.texture = _card_tex.texture
+		prev.custom_minimum_size = Vector2(PW, PH)
+		prev.size                = Vector2(PW, PH)
+		prev.expand_mode         = TextureRect.EXPAND_IGNORE_SIZE
+		prev.stretch_mode        = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		prev.pivot_offset        = Vector2(PW * 0.5, PH * 0.5)
+		set_drag_preview(prev)
+		return {"card_name": occupied_name, "card_type": occupied_type,
+				"from_grid": true, "grid_row": grid_row, "grid_col": grid_col}
+
+	func _can_drop_data(_pos: Vector2, data: Variant) -> bool:
+		return data is Dictionary and (data as Dictionary).has("card_name")
+
+	func _drop_data(_pos: Vector2, data: Variant) -> void:
+		if on_drop_cb.is_valid():
+			on_drop_cb.call(grid_row, grid_col, data as Dictionary)
+
+	func _gui_input(event: InputEvent) -> void:
+		if not (event is InputEventMouseButton): return
+		var mbe := event as InputEventMouseButton
+		if mbe.button_index == MOUSE_BUTTON_LEFT:
+			if mbe.pressed and not occupied_name.is_empty():
+				_want_detail = true
+				var snap_name: String = occupied_name
+				var snap_type: String = occupied_type
+				get_tree().create_timer(0.5).timeout.connect(func() -> void:
+					if _want_detail:
+						_want_detail = false
+						CardDetailOverlay.open(self, snap_name, snap_type))
+			else:
+				_want_detail = false
+		elif mbe.button_index == MOUSE_BUTTON_RIGHT and mbe.pressed:
+			_want_detail = false
+			if not occupied_name.is_empty() and on_unplace_cb.is_valid():
+				on_unplace_cb.call(grid_row, grid_col)
+
 func _ready() -> void:
 	_connect_buttons()
 	_refresh_deck_select()
@@ -124,6 +238,18 @@ func _ready() -> void:
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right_inner.add_child(spacer)
 	right_inner.move_child(spacer, bottom_bar.get_index())
+
+	# Add "FORMATIONS" button above the bottom bar
+	var formations_btn := Button.new()
+	formations_btn.text = "📋  FORMATIONS"
+	formations_btn.add_theme_font_size_override("font_size", 13)
+	formations_btn.pressed.connect(_open_formation_editor)
+	right_inner.add_child(formations_btn)
+	right_inner.move_child(formations_btn, bottom_bar.get_index())
+
+	# Prologue lock check — show overlay if deckbuilding not yet unlocked
+	if not SaveManager.is_deckbuilding_unlocked():
+		_show_deckbuilding_lock_overlay()
 
 # ── Button wiring ─────────────────────────────────────────────
 func _connect_buttons() -> void:
@@ -865,6 +991,719 @@ func _make_union_right_tile(u: UnionData) -> Control:
 		else:
 			lp_union.stop())
 	return tile
+
+# ── Prologue lock overlay ────────────────────────────────────
+func _show_deckbuilding_lock_overlay() -> void:
+	var overlay := Control.new()
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 200
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+
+	# dim covers the full screen and is the primary click target
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.0, 0.0, 0.0, 0.82)
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.add_child(dim)
+
+	var lbl := Label.new()
+	lbl.text = "Play prologue in Campaign Mode to unlock deckbuilding"
+	lbl.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	lbl.offset_left = -500.0; lbl.offset_right  = 500.0
+	lbl.offset_top  =  -30.0; lbl.offset_bottom =  30.0
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+	lbl.add_theme_font_size_override("font_size", 36)
+	lbl.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(lbl)
+
+	var sub := Label.new()
+	sub.text = "Tap or press any key to return to main menu"
+	sub.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	sub.offset_left = -300.0; sub.offset_right  = 300.0
+	sub.offset_top  =   70.0; sub.offset_bottom = 100.0
+	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sub.add_theme_font_size_override("font_size", 14)
+	sub.add_theme_color_override("font_color", Color(0.75, 0.75, 0.75, 1))
+	sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(sub)
+
+	# Subtle blink on the sub label
+	var tween := overlay.create_tween()
+	tween.set_loops()
+	tween.tween_property(sub, "modulate:a", 0.25, 1.2).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(sub, "modulate:a", 1.0,  1.2).set_ease(Tween.EASE_IN_OUT)
+
+	# Clicks land on dim; keyboard handled via overlay focus
+	dim.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed:
+			_on_back())
+	overlay.focus_mode = Control.FOCUS_ALL
+	overlay.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventKey and (ev as InputEventKey).pressed:
+			_on_back())
+	add_child(overlay)
+	overlay.grab_focus()
+
+# ── Formation Editor overlay ─────────────────────────────────
+# Formation data: {"name": str, "placements": [{"r": int, "c": int, "name": str, "type": str}]}
+var _fe_overlay:          Control        = null
+var _fe_selected:         int            = -1
+var _fe_grid_cells:       Array          = []   # [r][c] = FEGridCell
+var _fe_name_edit:        LineEdit       = null
+var _fe_list:             ItemList       = null
+var _fe_gallery_flow:     HFlowContainer = null
+var _fe_union_panel_node: Panel          = null
+var _fe_union_flow:       HFlowContainer = null
+var _fe_chars_remaining:  Array          = []
+var _fe_traps_remaining:  Array          = []
+var _fe_flash_cells:      Array          = []
+var _fe_flash_tween:      Tween          = null
+
+const _FE_CELL_W:   float = 100.0
+const _FE_CELL_H:   float = 137.0
+const _FE_CELL_GAP: int   = 5
+const _FE_GAL_W:    float = 88.0
+const _FE_GAL_H:    float = 121.0
+const _FE_GAL_GAP:  int   = 6
+
+func _open_formation_editor() -> void:
+	if _fe_overlay != null and is_instance_valid(_fe_overlay):
+		_fe_overlay.queue_free()
+
+	_fe_overlay = Control.new()
+	_fe_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_fe_overlay.z_index = 100
+	_fe_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+
+	var bg := ColorRect.new()
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.color = Color(0.04, 0.05, 0.12, 0.97)
+	_fe_overlay.add_child(bg)
+
+	# ── Header bar ────────────────────────────────────────────
+	var hdr_panel := Panel.new()
+	hdr_panel.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	hdr_panel.offset_bottom = 48.0
+	var hdr_sb := StyleBoxFlat.new()
+	hdr_sb.bg_color            = Color(0.05, 0.07, 0.16, 1.0)
+	hdr_sb.border_width_bottom = 1
+	hdr_sb.border_color        = Color(0.35, 0.6, 1.0, 0.45)
+	hdr_panel.add_theme_stylebox_override("panel", hdr_sb)
+	_fe_overlay.add_child(hdr_panel)
+
+	var hdr_lbl := Label.new()
+	hdr_lbl.text = "FORMATIONS  —  up to %d per deck" % DeckData.MAX_FORMATIONS
+	hdr_lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	hdr_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hdr_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+	hdr_lbl.add_theme_font_size_override("font_size", 18)
+	hdr_lbl.add_theme_color_override("font_color", Color(0.5, 0.88, 1.0))
+	hdr_panel.add_child(hdr_lbl)
+
+	var close_btn := Button.new()
+	close_btn.text = "✕ CLOSE"
+	close_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	close_btn.offset_left = -130.0; close_btn.offset_right  = -10.0
+	close_btn.offset_top  =   8.0;  close_btn.offset_bottom =  40.0
+	close_btn.pressed.connect(func() -> void: _fe_overlay.queue_free())
+	_fe_overlay.add_child(close_btn)
+
+	# ── Main 3-column layout ──────────────────────────────────
+	var main := HBoxContainer.new()
+	main.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	main.offset_top = 52.0; main.offset_bottom = -8.0
+	main.offset_left = 8.0; main.offset_right  = -8.0
+	main.add_theme_constant_override("separation", 12)
+	_fe_overlay.add_child(main)
+
+	# ── Left: formation list ──────────────────────────────────
+	var left := VBoxContainer.new()
+	left.custom_minimum_size = Vector2(200.0, 0.0)
+	left.add_theme_constant_override("separation", 5)
+	main.add_child(left)
+
+	var list_panel := Panel.new()
+	list_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var lp_sb := StyleBoxFlat.new()
+	lp_sb.bg_color = Color(0.05, 0.07, 0.16, 1.0)
+	lp_sb.border_color = Color(0.35, 0.6, 1.0, 0.35)
+	lp_sb.border_width_left = 1; lp_sb.border_width_right  = 1
+	lp_sb.border_width_top  = 1; lp_sb.border_width_bottom = 1
+	lp_sb.corner_radius_top_left = 8;    lp_sb.corner_radius_top_right    = 8
+	lp_sb.corner_radius_bottom_left = 8; lp_sb.corner_radius_bottom_right = 8
+	list_panel.add_theme_stylebox_override("panel", lp_sb)
+	left.add_child(list_panel)
+
+	var lp_vb := VBoxContainer.new()
+	lp_vb.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	lp_vb.offset_left = 8.0; lp_vb.offset_right  = -8.0
+	lp_vb.offset_top  = 8.0; lp_vb.offset_bottom = -8.0
+	lp_vb.add_theme_constant_override("separation", 5)
+	list_panel.add_child(lp_vb)
+
+	var list_hdr := Label.new()
+	list_hdr.text = "Formations"
+	list_hdr.add_theme_font_size_override("font_size", 14)
+	list_hdr.add_theme_color_override("font_color", Color(0.8, 0.8, 0.9))
+	lp_vb.add_child(list_hdr)
+
+	_fe_list = ItemList.new()
+	_fe_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_fe_list.item_selected.connect(_fe_on_formation_selected)
+	lp_vb.add_child(_fe_list)
+
+	var list_btns := HBoxContainer.new()
+	list_btns.add_theme_constant_override("separation", 4)
+	lp_vb.add_child(list_btns)
+
+	var add_btn := Button.new()
+	add_btn.text = "+ Add"
+	add_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	add_btn.pressed.connect(_fe_add_formation)
+	list_btns.add_child(add_btn)
+
+	var del_btn := Button.new()
+	del_btn.text = "− Del"
+	del_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	del_btn.pressed.connect(_fe_delete_formation)
+	list_btns.add_child(del_btn)
+
+	var name_row := HBoxContainer.new()
+	name_row.add_theme_constant_override("separation", 4)
+	lp_vb.add_child(name_row)
+	var name_lbl := Label.new()
+	name_lbl.text = "Name:"
+	name_lbl.add_theme_font_size_override("font_size", 12)
+	name_row.add_child(name_lbl)
+	_fe_name_edit = LineEdit.new()
+	_fe_name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_fe_name_edit.placeholder_text = "Formation name"
+	_fe_name_edit.text_changed.connect(_fe_on_name_changed)
+	name_row.add_child(_fe_name_edit)
+
+	var save_f_btn := Button.new()
+	save_f_btn.text = "💾  Save"
+	save_f_btn.add_theme_font_size_override("font_size", 13)
+	save_f_btn.pressed.connect(_fe_save_formation)
+	lp_vb.add_child(save_f_btn)
+
+	# ── Center: styled 5×5 grid ───────────────────────────────
+	var center_vb := VBoxContainer.new()
+	center_vb.add_theme_constant_override("separation", 4)
+	center_vb.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	center_vb.size_flags_vertical   = Control.SIZE_SHRINK_CENTER
+	main.add_child(center_vb)
+
+	var grid_hdr := Label.new()
+	grid_hdr.text = "Formation Grid  —  drag cards from the right"
+	grid_hdr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	grid_hdr.add_theme_font_size_override("font_size", 13)
+	grid_hdr.add_theme_color_override("font_color", Color(0.8, 0.8, 0.9))
+	center_vb.add_child(grid_hdr)
+
+	var grid_panel := Panel.new()
+	var gp_w: float = _FE_CELL_W * 5.0 + float(_FE_CELL_GAP) * 4.0 + 24.0
+	var gp_h: float = _FE_CELL_H * 5.0 + float(_FE_CELL_GAP) * 4.0 + 24.0
+	grid_panel.custom_minimum_size = Vector2(gp_w, gp_h)
+	var gp_sb := StyleBoxFlat.new()
+	gp_sb.bg_color                   = Color(0.06, 0.08, 0.18, 1.0)
+	gp_sb.border_color               = Color(0.35, 0.6, 1.0, 0.45)
+	gp_sb.border_width_left          = 1; gp_sb.border_width_right  = 1
+	gp_sb.border_width_top           = 1; gp_sb.border_width_bottom = 1
+	gp_sb.corner_radius_top_left     = 8; gp_sb.corner_radius_top_right    = 8
+	gp_sb.corner_radius_bottom_left  = 8; gp_sb.corner_radius_bottom_right = 8
+	grid_panel.add_theme_stylebox_override("panel", gp_sb)
+	center_vb.add_child(grid_panel)
+
+	var grid_center := CenterContainer.new()
+	grid_center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	grid_panel.add_child(grid_center)
+
+	var grid_cont := GridContainer.new()
+	grid_cont.columns = 5
+	grid_cont.add_theme_constant_override("h_separation", _FE_CELL_GAP)
+	grid_cont.add_theme_constant_override("v_separation", _FE_CELL_GAP)
+	grid_center.add_child(grid_cont)
+
+	_fe_grid_cells = []
+	for r in range(5):
+		var row_arr: Array = []
+		for c in range(5):
+			var cell := FEGridCell.new()
+			cell.grid_row         = r
+			cell.grid_col         = c
+			cell.on_drop_cb       = _fe_on_card_dropped
+			cell.on_unplace_cb    = _fe_on_cell_unplace
+			cell.on_drag_start_cb = _fe_on_cell_drag_start
+			cell.custom_minimum_size = Vector2(_FE_CELL_W, _FE_CELL_H)
+			var cell_sb := StyleBoxFlat.new()
+			cell_sb.bg_color                   = Color(0.08, 0.10, 0.24, 1.0)
+			cell_sb.border_color               = Color(0.28, 0.48, 0.9, 0.55)
+			cell_sb.border_width_left          = 1; cell_sb.border_width_right  = 1
+			cell_sb.border_width_top           = 1; cell_sb.border_width_bottom = 1
+			cell_sb.corner_radius_top_left     = 4; cell_sb.corner_radius_top_right    = 4
+			cell_sb.corner_radius_bottom_left  = 4; cell_sb.corner_radius_bottom_right = 4
+			cell.add_theme_stylebox_override("panel", cell_sb)
+			# Flash overlay (child 0)
+			var flash_cr := ColorRect.new()
+			flash_cr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			flash_cr.color        = Color(0.25, 0.90, 1.00, 0.0)
+			flash_cr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			flash_cr.z_index      = 5
+			cell.add_child(flash_cr)
+			# Card art TextureRect (child 1)
+			var cell_tex := TextureRect.new()
+			cell_tex.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			cell_tex.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+			cell_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+			cell_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			cell.add_child(cell_tex)
+			cell._card_tex = cell_tex
+			# Name label overlay at bottom (child 2)
+			var cell_lbl := Label.new()
+			cell_lbl.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+			cell_lbl.offset_top    = -20.0; cell_lbl.offset_bottom = 0.0
+			cell_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			cell_lbl.add_theme_font_size_override("font_size", 8)
+			cell_lbl.clip_text    = true
+			cell_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var lbl_bg := StyleBoxFlat.new()
+			lbl_bg.bg_color = Color(0.0, 0.0, 0.0, 0.65)
+			cell_lbl.add_theme_stylebox_override("normal", lbl_bg)
+			cell.add_child(cell_lbl)
+			cell._name_lbl = cell_lbl
+			grid_cont.add_child(cell)
+			row_arr.append(cell)
+		_fe_grid_cells.append(row_arr)
+
+	# ── Right: gallery + possible unions ─────────────────────
+	var right := VBoxContainer.new()
+	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.size_flags_vertical   = Control.SIZE_EXPAND_FILL
+	right.add_theme_constant_override("separation", 8)
+	main.add_child(right)
+
+	_fe_build_gallery_panel(right)
+	_fe_build_union_panel(right)
+
+	add_child(_fe_overlay)
+	_fe_rebuild_list()
+	if current_deck != null and current_deck.formations.size() > 0:
+		_fe_select_formation(0)
+		if _fe_list != null:
+			_fe_list.select(0)
+
+func _fe_build_gallery_panel(parent: Control) -> void:
+	const TWO_ROW_H: float = (_FE_GAL_H + 22.0) * 2.0 + float(_FE_GAL_GAP) + 38.0
+	var gal_panel := Panel.new()
+	gal_panel.custom_minimum_size   = Vector2(0.0, TWO_ROW_H)
+	gal_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var gal_sb := StyleBoxFlat.new()
+	gal_sb.bg_color                   = Color(0.05, 0.07, 0.16, 1.0)
+	gal_sb.border_color               = Color(0.35, 0.6, 1.0, 0.35)
+	gal_sb.border_width_left          = 1; gal_sb.border_width_right  = 1
+	gal_sb.border_width_top           = 1; gal_sb.border_width_bottom = 1
+	gal_sb.corner_radius_top_left     = 8; gal_sb.corner_radius_top_right    = 8
+	gal_sb.corner_radius_bottom_left  = 8; gal_sb.corner_radius_bottom_right = 8
+	gal_panel.add_theme_stylebox_override("panel", gal_sb)
+	parent.add_child(gal_panel)
+
+	var gal_lbl := Label.new()
+	gal_lbl.text = "DECK CARDS  —  drag onto grid  |  right-click placed card to retrieve"
+	gal_lbl.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	gal_lbl.offset_top = 6.0; gal_lbl.offset_bottom = 28.0
+	gal_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	gal_lbl.add_theme_font_size_override("font_size", 12)
+	gal_lbl.add_theme_color_override("font_color", Color(0.55, 0.8, 1.0, 0.85))
+	gal_panel.add_child(gal_lbl)
+
+	var scroll := ScrollContainer.new()
+	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
+	scroll.offset_top    = 30.0; scroll.offset_left   = 8.0
+	scroll.offset_right  = -8.0; scroll.offset_bottom = -8.0
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	gal_panel.add_child(scroll)
+
+	_fe_gallery_flow = HFlowContainer.new()
+	_fe_gallery_flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_fe_gallery_flow.add_theme_constant_override("h_separation", _FE_GAL_GAP)
+	_fe_gallery_flow.add_theme_constant_override("v_separation", _FE_GAL_GAP)
+	scroll.add_child(_fe_gallery_flow)
+
+func _fe_build_union_panel(parent: Control) -> void:
+	var panel := Panel.new()
+	_fe_union_panel_node = panel
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	panel.size_flags_vertical   = Control.SIZE_EXPAND_FILL
+	var sb := StyleBoxFlat.new()
+	sb.bg_color                   = Color(0.04, 0.08, 0.16, 1.0)
+	sb.border_color               = Color(0.25, 0.85, 1.0, 0.40)
+	sb.border_width_left          = 1; sb.border_width_right  = 1
+	sb.border_width_top           = 1; sb.border_width_bottom = 1
+	sb.corner_radius_top_left     = 8; sb.corner_radius_top_right    = 8
+	sb.corner_radius_bottom_left  = 8; sb.corner_radius_bottom_right = 8
+	panel.add_theme_stylebox_override("panel", sb)
+	parent.add_child(panel)
+
+	var hdr := Label.new()
+	hdr.text = "POSSIBLE UNIONS  —  tap to highlight zone"
+	hdr.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	hdr.offset_top = 6.0; hdr.offset_bottom = 28.0
+	hdr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hdr.add_theme_font_size_override("font_size", 12)
+	hdr.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0, 0.90))
+	panel.add_child(hdr)
+
+	var scroll := ScrollContainer.new()
+	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
+	scroll.offset_top    = 30.0; scroll.offset_left   = 8.0
+	scroll.offset_right  = -8.0; scroll.offset_bottom = -8.0
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode   = ScrollContainer.SCROLL_MODE_AUTO
+	panel.add_child(scroll)
+
+	_fe_union_flow = HFlowContainer.new()
+	_fe_union_flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_fe_union_flow.add_theme_constant_override("h_separation", _FE_GAL_GAP)
+	_fe_union_flow.add_theme_constant_override("v_separation", _FE_GAL_GAP)
+	scroll.add_child(_fe_union_flow)
+
+func _fe_refresh_gallery() -> void:
+	if _fe_gallery_flow == null: return
+	for ch in _fe_gallery_flow.get_children():
+		ch.queue_free()
+	for card_name: String in _fe_chars_remaining:
+		_fe_add_gallery_card(card_name, "character")
+	for card_name: String in _fe_traps_remaining:
+		_fe_add_gallery_card(card_name, "trap")
+
+func _fe_add_gallery_card(card_name: String, card_type: String) -> void:
+	var wrap := VBoxContainer.new()
+	wrap.custom_minimum_size = Vector2(_FE_GAL_W, _FE_GAL_H + 22.0)
+	wrap.add_theme_constant_override("separation", 2)
+	_fe_gallery_flow.add_child(wrap)
+
+	var dc := FEDraggableCard.new()
+	dc.card_name             = card_name
+	dc.card_type             = card_type
+	dc.custom_minimum_size   = Vector2(_FE_GAL_W, _FE_GAL_H)
+	dc.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	dc.expand_mode           = TextureRect.EXPAND_IGNORE_SIZE
+	dc.stretch_mode          = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	var tex: Texture2D = _fe_load_card_tex(card_name)
+	if tex != null:
+		dc.texture = tex
+	else:
+		dc.modulate = Color(0.35, 0.55, 1.0) if card_type == "character" \
+			else Color(1.0, 0.38, 0.38)
+	wrap.add_child(dc)
+
+	var lbl := Label.new()
+	lbl.text                 = card_name
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
+	lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+	lbl.add_theme_font_size_override("font_size", 10)
+	lbl.add_theme_color_override("font_color", Color(0.88, 0.88, 0.88))
+	wrap.add_child(lbl)
+
+func _fe_refresh_union_panel() -> void:
+	if _fe_union_flow == null: return
+	for ch in _fe_union_flow.get_children():
+		ch.queue_free()
+	if current_deck == null: return
+	for u: UnionData in UnionDatabase.get_all_unions():
+		if not UnionDatabase.is_playable_in_demo(u): continue
+		if not SaveManager.is_union_unlocked(u.card_name): continue
+		if not _fe_deck_can_form_union(u): continue
+		_fe_union_flow.add_child(_fe_make_union_tile(u))
+
+## Returns true if the current deck's characters satisfy all of u's material_conditions.
+func _fe_deck_can_form_union(u: UnionData) -> bool:
+	if u.material_conditions.is_empty():
+		return true
+	# Sort most-specific conditions first (mirrors UnionDatabase._materials_match)
+	var sorted_conds: Array = u.material_conditions.duplicate()
+	sorted_conds.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return a.size() > b.size())
+	var remaining: Array = current_deck.characters.duplicate()
+	for cond: Dictionary in sorted_conds:
+		var found: bool = false
+		for i: int in range(remaining.size()):
+			if _fe_char_satisfies_cond(str(remaining[i]), cond):
+				remaining.remove_at(i)
+				found = true
+				break
+		if not found:
+			return false
+	return true
+
+func _fe_char_satisfies_cond(card_name: String, cond: Dictionary) -> bool:
+	var cn: Variant = cond.get("card_name", "")
+	if cn is String and (cn as String) != "" and card_name != (cn as String):
+		return false
+	var nc: Variant = cond.get("name_contains", "")
+	if nc is String and (nc as String) != "" \
+			and not card_name.to_lower().contains((nc as String).to_lower()):
+		return false
+	var aff: Variant = cond.get("affinity", -1)
+	if aff is int and (aff as int) >= 0:
+		var cd: CharacterData = CardDatabase.get_character(card_name)
+		if cd == null or cd.affinity != (aff as int):
+			return false
+	var mc: Variant = cond.get("min_cost", 0)
+	if mc is int and (mc as int) > 0:
+		var cd: CharacterData = CardDatabase.get_character(card_name)
+		if cd == null or cd.crystal_cost < (mc as int):
+			return false
+	return true
+
+func _fe_make_union_tile(u: UnionData) -> Control:
+	var wrap := VBoxContainer.new()
+	wrap.custom_minimum_size = Vector2(_FE_GAL_W, _FE_GAL_H + 22.0)
+	wrap.add_theme_constant_override("separation", 2)
+
+	var img := TextureRect.new()
+	img.custom_minimum_size   = Vector2(_FE_GAL_W, _FE_GAL_H)
+	img.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	img.expand_mode           = TextureRect.EXPAND_IGNORE_SIZE
+	img.stretch_mode          = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	var tex: Texture2D = _fe_load_card_tex(u.card_name)
+	if tex != null:
+		img.texture = tex
+	else:
+		img.modulate = Color(0.25, 0.90, 1.00)
+	img.mouse_filter = Control.MOUSE_FILTER_STOP
+	var captured_u: UnionData = u
+	var want_detail_ref: Array = [false]   # mutable bool via array
+	img.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton:
+			var mbe := ev as InputEventMouseButton
+			if mbe.button_index == MOUSE_BUTTON_LEFT:
+				if mbe.pressed:
+					if mbe.double_click:
+						want_detail_ref[0] = false
+						CardDetailOverlay.open(_fe_overlay, captured_u.card_name, "union")
+					else:
+						want_detail_ref[0] = true
+						img.get_tree().create_timer(0.5).timeout.connect(func() -> void:
+							if want_detail_ref[0]:
+								want_detail_ref[0] = false
+								CardDetailOverlay.open(_fe_overlay, captured_u.card_name, "union"))
+				else:
+					if want_detail_ref[0]:
+						want_detail_ref[0] = false
+						_fe_start_zone_flash(captured_u))
+	wrap.add_child(img)
+
+	var lbl := Label.new()
+	lbl.text                 = u.card_name
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
+	lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+	lbl.add_theme_font_size_override("font_size", 10)
+	lbl.add_theme_color_override("font_color", Color(0.25, 0.90, 1.00))
+	wrap.add_child(lbl)
+	return wrap
+
+func _fe_start_zone_flash(u: UnionData) -> void:
+	_fe_stop_zone_flash()
+	_fe_flash_cells = []
+	for zv: Vector2i in u.union_zone:
+		if zv.x >= 0 and zv.x < 5 and zv.y >= 0 and zv.y < 5:
+			_fe_flash_cells.append(_fe_grid_cells[zv.x][zv.y] as FEGridCell)
+	if _fe_flash_cells.is_empty():
+		return
+	_fe_flash_tween = _fe_overlay.create_tween().set_loops(3)
+	var first: bool = true
+	for cell: FEGridCell in _fe_flash_cells:
+		var flash_cr: ColorRect = cell.get_child(0) as ColorRect
+		if first:
+			_fe_flash_tween.tween_property(flash_cr, "color:a", 0.45, 0.30)
+			first = false
+		else:
+			_fe_flash_tween.parallel().tween_property(flash_cr, "color:a", 0.45, 0.30)
+	first = true
+	for cell: FEGridCell in _fe_flash_cells:
+		var flash_cr: ColorRect = cell.get_child(0) as ColorRect
+		if first:
+			_fe_flash_tween.tween_property(flash_cr, "color:a", 0.0, 0.30)
+			first = false
+		else:
+			_fe_flash_tween.parallel().tween_property(flash_cr, "color:a", 0.0, 0.30)
+	_fe_flash_tween.finished.connect(_fe_stop_zone_flash)
+
+func _fe_stop_zone_flash() -> void:
+	if _fe_flash_tween != null and _fe_flash_tween.is_valid():
+		_fe_flash_tween.kill()
+	_fe_flash_tween = null
+	for cell: FEGridCell in _fe_flash_cells:
+		var flash_cr: ColorRect = cell.get_child(0) as ColorRect
+		if flash_cr != null:
+			flash_cr.color.a = 0.0
+	_fe_flash_cells.clear()
+
+func _fe_on_card_dropped(r: int, c: int, data: Dictionary) -> void:
+	if _fe_selected < 0: return
+	var card_name: String = str(data["card_name"])
+	var card_type: String = str(data["card_type"])
+	# At this point the card is always in the pool (gallery drags were always there;
+	# grid drags call on_drag_start_cb first which returns the card to the pool).
+	if card_type == "character":
+		_fe_chars_remaining.erase(card_name)
+	else:
+		_fe_traps_remaining.erase(card_name)
+
+	var fd: Dictionary = current_deck.formations[_fe_selected] as Dictionary
+	var pls: Array = fd.get("placements", []) as Array
+	# Evict any card already in this cell back to pool
+	for i in range(pls.size() - 1, -1, -1):
+		var p: Dictionary = pls[i] as Dictionary
+		if int(p.get("r", -1)) == r and int(p.get("c", -1)) == c:
+			var evicted_name: String = str(p.get("name", ""))
+			var evicted_type: String = str(p.get("type", ""))
+			if not evicted_name.is_empty():
+				if evicted_type == "character":
+					_fe_chars_remaining.append(evicted_name)
+				else:
+					_fe_traps_remaining.append(evicted_name)
+			pls.remove_at(i)
+	pls.append({"r": r, "c": c, "name": card_name, "type": card_type})
+	fd["placements"] = pls
+
+	(_fe_grid_cells[r][c] as FEGridCell).occupy(card_name, card_type, _fe_load_card_tex(card_name))
+	SFXManager.play(SFXManager.SFX_PLACE)
+	_fe_refresh_gallery()
+	_fe_refresh_union_panel()
+
+func _fe_on_cell_drag_start(r: int, c: int) -> void:
+	# Called the moment the user starts dragging from a filled cell.
+	# Vacate and return card to pool immediately so the gallery shows it.
+	if _fe_selected < 0: return
+	var cell: FEGridCell = _fe_grid_cells[r][c] as FEGridCell
+	if cell.occupied_name.is_empty(): return
+	var card_name: String = cell.occupied_name
+	var card_type: String = cell.occupied_type
+	var fd: Dictionary = current_deck.formations[_fe_selected] as Dictionary
+	var pls: Array = fd.get("placements", []) as Array
+	for i in range(pls.size() - 1, -1, -1):
+		var p: Dictionary = pls[i] as Dictionary
+		if int(p.get("r", -1)) == r and int(p.get("c", -1)) == c:
+			pls.remove_at(i)
+	fd["placements"] = pls
+	cell.vacate()
+	if card_type == "character":
+		_fe_chars_remaining.append(card_name)
+	else:
+		_fe_traps_remaining.append(card_name)
+	_fe_refresh_gallery()
+	_fe_refresh_union_panel()
+
+func _fe_on_cell_unplace(r: int, c: int) -> void:
+	_fe_on_cell_drag_start(r, c)
+	SFXManager.play(SFXManager.SFX_REMOVE)
+
+func _fe_rebuild_list() -> void:
+	if _fe_list == null: return
+	_fe_list.clear()
+	if current_deck == null: return
+	for f: Variant in current_deck.formations:
+		var fd: Dictionary = f as Dictionary
+		_fe_list.add_item(str(fd.get("name", "Formation")))
+	_fe_selected = -1
+
+func _fe_on_formation_selected(idx: int) -> void:
+	_fe_select_formation(idx)
+
+func _fe_select_formation(idx: int) -> void:
+	_fe_selected = idx
+	_fe_stop_zone_flash()
+	if current_deck == null or idx < 0 or idx >= current_deck.formations.size():
+		return
+	var fd: Dictionary = current_deck.formations[idx] as Dictionary
+	if _fe_name_edit != null:
+		_fe_name_edit.text = str(fd.get("name", "Formation"))
+	# Rebuild the remaining pool (deck minus already-placed cards)
+	_fe_chars_remaining = current_deck.characters.duplicate()
+	_fe_traps_remaining = current_deck.traps.duplicate()
+	var pls: Variant = fd.get("placements", [])
+	if pls is Array:
+		for pl: Variant in (pls as Array):
+			if not pl is Dictionary: continue
+			var p: Dictionary = pl as Dictionary
+			var n: String = str(p.get("name", ""))
+			var t: String = str(p.get("type", ""))
+			if t == "character":
+				_fe_chars_remaining.erase(n)
+			else:
+				_fe_traps_remaining.erase(n)
+	_fe_refresh_grid(fd)
+	_fe_refresh_gallery()
+	_fe_refresh_union_panel()
+
+func _fe_refresh_grid(fd: Dictionary) -> void:
+	if _fe_grid_cells.is_empty(): return
+	for r in range(5):
+		for c in range(5):
+			(_fe_grid_cells[r][c] as FEGridCell).vacate()
+	var pls: Variant = fd.get("placements", [])
+	if not pls is Array: return
+	for pl: Variant in (pls as Array):
+		if not pl is Dictionary: continue
+		var p: Dictionary = pl as Dictionary
+		var r: int = int(p.get("r", -1))
+		var c: int = int(p.get("c", -1))
+		if r < 0 or r > 4 or c < 0 or c > 4: continue
+		var n: String = str(p.get("name", ""))
+		var t: String = str(p.get("type", ""))
+		(_fe_grid_cells[r][c] as FEGridCell).occupy(n, t, _fe_load_card_tex(n))
+
+func _fe_on_name_changed(new_name: String) -> void:
+	if _fe_selected < 0 or current_deck == null: return
+	(current_deck.formations[_fe_selected] as Dictionary)["name"] = new_name
+	if _fe_list != null and _fe_selected < _fe_list.item_count:
+		_fe_list.set_item_text(_fe_selected, new_name)
+
+func _fe_add_formation() -> void:
+	if current_deck == null: return
+	if current_deck.formations.size() >= DeckData.MAX_FORMATIONS:
+		return
+	current_deck.formations.append({"name": "Formation %d" % (current_deck.formations.size() + 1), "placements": []})
+	_fe_rebuild_list()
+	_fe_select_formation(current_deck.formations.size() - 1)
+	if _fe_list != null:
+		_fe_list.select(_fe_selected)
+
+func _fe_delete_formation() -> void:
+	if current_deck == null or _fe_selected < 0: return
+	current_deck.formations.remove_at(_fe_selected)
+	_fe_rebuild_list()
+	_fe_selected = -1
+	if _fe_name_edit != null:
+		_fe_name_edit.text = ""
+	if not _fe_grid_cells.is_empty():
+		for r in range(5):
+			for c in range(5):
+				(_fe_grid_cells[r][c] as FEGridCell).vacate()
+	_fe_chars_remaining.clear()
+	_fe_traps_remaining.clear()
+	_fe_refresh_gallery()
+	_fe_refresh_union_panel()
+
+func _fe_load_card_tex(card_name: String) -> Texture2D:
+	var snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
+	var path: String = "res://assets/textures/cards/full_cards/" + snake + ".png"
+	if ResourceLoader.exists(path):
+		return load(path) as Texture2D
+	return null
+
+func _fe_save_formation() -> void:
+	if current_deck == null: return
+	SaveManager.save_deck(current_deck)
+	_refresh_deck_select()
+	status_label.text = "Formation saved!"
 
 # ── Save / Back ───────────────────────────────────────────────
 func _on_save() -> void:

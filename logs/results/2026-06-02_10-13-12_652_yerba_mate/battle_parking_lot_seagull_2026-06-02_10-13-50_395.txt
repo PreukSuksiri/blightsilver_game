@@ -1,0 +1,130 @@
+=== Battle of Parking Lot Seagull ===
+Battle started: 2026-06-02 10:13:50.395
+Game Session of Yerba Mate (started 2026-06-02 10:13:12.652)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[01:29.924] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[01:42.284] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[01:42.284] Dice rolled: 2
+[01:42.321] MSG: Nothing happens — Dead End.
+[01:44.239] Attack P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(0,0)(empty)  Dice=2  → DEAD_END
+[01:44.239] Anim: 3F  (blank slot)
+[02:49.855] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:49.897] Revealed: P1 (0,2) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[02:49.897] Dice rolled: 3
+[02:49.906] MSG: Ponycorn wins!
+[02:54.024] Crystals: P1 5000 → 4140 (-860)  [battle]
+[02:55.425] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(0,2)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}  Dice=3  ATK=25 vs DEF=0  → WIN
+[02:55.425] Anim: 3A  △ P1(0,2)
+[02:55.425] Card destroyed  P1 (0,2) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[02:57.245] Turn ended  P0  |  Crystals P0=5000 P1=4140
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4140 ---
+[02:57.836] Mode selected P1: TECH
+[02:58.147] Tech played  P1: "Spy"
+[02:59.688] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[03:00.121] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[03:00.124] Tech resolved  P1
+[03:00.991] Mode selected P1: ATTACK
+[03:00.999] MSG: Player 2: tap a character to attack.
+[03:01.626] Revealed: P1 (2,4) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[03:01.626] Dice rolled: 4
+[03:01.631] MSG: Grand Fort Archer wins!
+[03:06.286] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:07.269] Crystals: P0 5000 → 4700 (-300)  [battle]
+[03:08.668] Attack P1(2,4)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=4  ATK=30 vs DEF=20  → WIN
+[03:08.668] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} +ATK 10
+[03:08.668] Anim: 3A  △ P0(0,2)
+[03:08.668] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[03:09.160] Mode selected P1: ATTACK
+[03:09.167] MSG: Player 2: tap a character to attack.
+[03:09.814] Revealed: P1 (2,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[03:09.814] Dice rolled: 4
+[03:09.822] MSG: Scarlet Mutant wins!
+[03:14.461] Crystals: P0 4700 → 4400 (-300)  [battle]
+[03:14.486] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:15.855] Attack P1(2,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(1,1)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=4  ATK=35 vs DEF=25  → WIN
+[03:15.855] Anim: 3A  △ P0(1,1)
+[03:15.855] Card destroyed  P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[03:16.358] Turn ended  P1  |  Crystals P0=4400 P1=4140
+
+--- Turn 3  |  Player 0  |  Crystals P0=4400 P1=4140 ---
+[03:38.494] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[03:38.495] Dice rolled: 4
+[03:38.509] MSG: Silver Spearman wins!
+[03:41.711] Crystals: P1 4140 → 3860 (-280)  [battle]
+[03:43.120] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(2,4)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=4  ATK=25 vs DEF=20  → WIN
+[03:43.120] Anim: 3A  △ P1(2,4)
+[03:43.120] Card destroyed  P1 (2,4) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[04:01.050] Turn ended  P0  |  Crystals P0=4400 P1=3860
+
+--- Turn 4  |  Player 1  |  Crystals P0=4400 P1=3860 ---
+[04:01.639] Mode selected P1: TECH
+[04:01.933] Crystals: P1 3860 → 2360 (-1500)  [tech cost]
+[04:03.318] Tech played  P1: "Resurrection"
+[04:04.860] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[04:05.262] Revealed: P1 (0,1) "Grand Fort Archer" {Unit ATK0 DEF0 | cost 280 | affinity Anima | base 0/0 | 1xATK-used}
+[04:05.263] MSG: Revived Grand Fort Archer at [0,1]!
+[04:05.269] Tech resolved  P1
+[04:06.161] Mode selected P1: ATTACK
+[04:06.169] MSG: Player 2: tap a character to attack.
+[04:06.761] Dice rolled: 5
+[04:06.771] MSG: Scarlet Mutant wins!
+[04:09.902] Crystals: P0 4400 → 4150 (-250)  [battle]
+[04:11.302] Attack P1(2,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=5  ATK=35 vs DEF=20  → WIN
+[04:11.302] Anim: 3A  △ P0(1,3)
+[04:11.302] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[04:11.794] Mode selected P1: ATTACK
+[04:11.801] MSG: Player 2: tap a character to attack.
+[04:12.393] Dice rolled: 4
+[04:12.420] MSG: Nothing happens — Dead End.
+[04:14.546] Attack P1(0,1)"Grand Fort Archer" {Unit ATK0 DEF0 | cost 280 | affinity Anima | base 0/0 | 1xATK-used} → P0(1,2)(empty)  Dice=4  → DEAD_END
+[04:14.546] Anim: 3F  (blank slot)
+[04:15.036] Turn ended  P1  |  Crystals P0=4150 P1=2360
+
+--- Turn 5  |  Player 0  |  Crystals P0=4150 P1=2360 ---
+[05:09.966] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[05:09.966] Dice rolled: 1
+[05:09.980] MSG: Both cards are destroyed!
+[05:15.557] Crystals: P0 4150 → 3870 (-280)  [battle]
+[05:16.948] Crystals: P1 2360 → 2010 (-350)  [battle]
+[05:18.339] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(2,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=1  ATK=30 vs DEF=30  → TIE
+[05:18.339] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} +ATK 10
+[05:18.339] Anim: 3C  △ P0(2,1) + △ P1(2,3)
+[05:18.339] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[05:18.339] Card destroyed  P1 (2,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[05:22.817] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[05:22.817] Dice rolled: 3
+[05:22.829] MSG: Choir Lady Abigail wins!
+[05:25.882] Crystals: P1 2010 → 1730 (-280)  [battle]
+[05:27.277] Attack P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(0,1)"Grand Fort Archer" {Unit ATK0 DEF0 | cost 280 | affinity Anima | base 0/0 | 1xATK-used}  Dice=3  ATK=25 vs DEF=0  → WIN
+[05:27.277] Anim: 3A  △ P1(0,1)
+[05:27.277] Card destroyed  P1 (0,1) "Grand Fort Archer" {Unit ATK0 DEF0 | cost 280 | affinity Anima | base 0/0 | 1xATK-used}
+[05:28.879] Turn ended  P0  |  Crystals P0=3870 P1=1730
+
+--- Turn 6  |  Player 1  |  Crystals P0=3870 P1=1730 ---
+[05:29.478] Mode selected P1: ATTACK
+[05:29.483] MSG: Player 2: tap a character to attack.
+[05:30.118] Revealed: P1 (2,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[05:30.118] Dice rolled: 1
+[05:30.122] MSG: Mad Raccoon wins!
+[05:33.232] Crystals: P0 3870 → 3620 (-250)  [battle]
+[05:34.630] Attack P1(2,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=1  ATK=30 vs DEF=15  → WIN
+[05:34.630] Anim: 3A  △ P0(2,4)
+[05:34.630] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[05:35.123] Mode selected P1: ATTACK
+[05:35.129] MSG: Player 2: tap a character to attack.
+[05:35.758] Revealed: P1 (2,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[05:35.758] Dice rolled: 3
+[05:35.773] MSG: Nothing happens — Dead End.
+[05:39.138] Attack P1(2,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P0(2,0)(empty)  Dice=3  → DEAD_END
+[05:39.138] Anim: 3F  (blank slot)
+[05:39.632] Turn ended  P1  |  Crystals P0=3620 P1=1730
+
+--- Turn 7  |  Player 0  |  Crystals P0=3620 P1=173

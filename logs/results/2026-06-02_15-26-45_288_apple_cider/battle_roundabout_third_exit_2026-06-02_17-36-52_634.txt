@@ -1,0 +1,78 @@
+=== Battle of Roundabout Third Exit ===
+Battle started: 2026-06-02 17:36:52.634
+Game Session of Apple Cider (started 2026-06-02 15:26:45.288)
+=== Card E2E Test ===
+Scenario ID:  E2E-False-Prophet-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-False-Prophet-001  (test_case/functional/union_functional_tests.md)
+Highlight:    False Prophet (Union)  [setup: Chaotic Wisp]
+Ability:      TURN_START_REVEAL_OPPONENT_CELL — Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.
+Setup role:   t2_union
+Verifies:
+  - Ability: "False Prophet" is exercised via forced board/tech setup (t2_union)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: GAME OVER
+  - Log must contain at least one of: Union summoned P0: False Prophet, Attack P\d\(\d+,\d+\)"False\ Prophet", MSG:.*False, MSG:
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: union False Prophet — summon logged and/or union attacks with ATK=20.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 union False Prophet
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  none
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Bribe, Prayer, Siege Cannon
+P1 Tech hand: Bribe, Resurrection, Prayer
+P0:   [  — ][  — ][  — ][T:Trap][  — ]
+      [  — ][C:Chur][C:Chur][C:Chur][  — ]
+      [T:Trap][C:Chur][  — ][C:Chur][  — ]
+      [T:Hypn][C:Chur][C:Chur][C:Chur][  — ]
+      [  — ][  — ][  — ][T:Spik][T:Snar]
+P1:   [  — ][T:Trap][  — ][  — ][  — ]
+      [T:Trap][C:Chur][C:Chur][C:Chur][  — ]
+      [  — ][C:Chur][C:Chao][C:Chur][  — ]
+      [T:Spik][C:Chur][C:Chur][C:Chur][  — ]
+      [T:Hypn][C:Chur][  — ][  — ][T:Snar]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:06.679] Crystals: P0 5000 → 4700 (-300)  [union]
+[00:06.722] Revealed: P0 (1,1) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[00:06.722] Union summoned P0: "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:06.722] MSG: Player 1 summoned [False Prophet] using: "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[00:06.722] E2E: ability goal reached — ending battle early.
+
+=== GAME OVER ===
+[00:06.750] AI Player 0 wins
+[00:06.750] Final crystals — P0: 4700  P1: 5000  |  Turns: 1
+[00:06.750] Log saved to: res://logs/results/2026-06-02_15-26-45_288_apple_cider/battle_roundabout_third_exit_2026-06-02_17-36-52_634.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-False-Prophet-002
+Highlight: False Prophet (Union)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===
