@@ -2201,7 +2201,7 @@
       "card_name": "Blue Mage",
       "card_type": "Character",
       "ability_type": "COIN_FLIP_2_DESTROY_NON_AFFINITY",
-      "ability_description": "If this card battles non-Arcane card, flip a coins. If both are head, destroy it.",
+      "ability_description": "If this card battles non-Arcane card, flip two coins. If both are head, destroy it.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -4095,8 +4095,8 @@
       "id": "E2E-Cursed-Well-002",
       "card_name": "Cursed Well",
       "card_type": "Character",
-      "ability_type": "ATK_BOOST_VS_REVEALED",
-      "ability_description": "+15 ATK if exposed",
+      "ability_type": "NOT_IMPLEMENTED",
+      "ability_description": "At the end of the turn that it's been exposed, +15 ATK",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -12506,7 +12506,7 @@
       "card_name": "Leech Man",
       "card_type": "Character",
       "ability_type": "PERM_DEF_BOOST_PER_ATTACK_SURVIVE",
-      "ability_description": "+20 DEF permanently each time it performed attack and survive. With mutagen flag : +45 ATK",
+      "ability_description": "+10 DEF permanently after it performed attack on unit. Also +10 ATK with mutagen flag",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -17282,7 +17282,7 @@
       "card_name": "Pit Lord",
       "card_type": "Character",
       "ability_type": "DESTROYED_IF_BATTLES_DIVINE",
-      "ability_description": "his card is destroyed if battle with Divine Unit. After this card attacked, halve its ATK&DEF permanently",
+      "ability_description": "This card is destroyed if battle with Divine Unit. After this card attacked, halve its ATK&DEF permanently",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -17377,7 +17377,7 @@
     {
       "tier": 1,
       "id": "E2E-Plant-29-001",
-      "card_name": "Plant 29",
+      "card_name": "Plant-29",
       "card_type": "Character",
       "ability_type": "TURN_START_COIN_FLIP_FLAG",
       "max_turns": 50,
@@ -17449,7 +17449,7 @@
       },
       "forced_cells_0": [
         {
-          "card_name": "Plant 29",
+          "card_name": "Plant-29",
           "row": 2,
           "col": 2
         }
@@ -17464,7 +17464,7 @@
       "forced_tech_0": [],
       "forced_tech_1": [],
       "expect_log_contains": [
-        "Plant 29",
+        "Plant-29",
         "GAME OVER"
       ],
       "notes": "Tier 1 smoke: character on field, battle completes."
@@ -17472,7 +17472,7 @@
     {
       "tier": 2,
       "id": "E2E-Plant-29-002",
-      "card_name": "Plant 29",
+      "card_name": "Plant-29",
       "card_type": "Character",
       "ability_type": "TURN_START_COIN_FLIP_FLAG",
       "ability_description": "Start of your turn: select 1 face-up foe\u2019s card, flip a coin. Head: put Venom Flag on it. Tail: put Mutagen Flag on it.",
@@ -17485,12 +17485,12 @@
         "Stack trace"
       ],
       "expect_log_contains": [
-        "Plant 29",
+        "Plant-29",
         "GAME OVER"
       ],
       "role": "t2_solo_attacker",
       "deck0": {
-        "deck_name": "E2E T2 solo Plant 29",
+        "deck_name": "E2E T2 solo Plant-29",
         "characters": [
           "Chaotic Wisp",
           "Foul Wisp",
@@ -17543,7 +17543,7 @@
       },
       "forced_cells_0": [
         {
-          "card_name": "Plant 29",
+          "card_name": "Plant-29",
           "row": 2,
           "col": 2
         }
@@ -17563,7 +17563,7 @@
         "(\"Plant\\ 29\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Plant\\ 29\")"
       ],
       "expect_log_any": [
-        "Plant 29",
+        "Plant-29",
         "MSG:"
       ]
     },
@@ -27890,7 +27890,7 @@
       "card_name": "Alarm",
       "card_type": "Trap",
       "ability_type": "FIELD_BOOST_AFFINITY_DEF",
-      "ability_description": "Unil the end of this urn, All face-up Anima monster gain +10 DEF",
+      "ability_description": "Until the end of this turn, All face-up Anima monster gain +10 DEF",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -37032,7 +37032,7 @@
         "characters": [
           "Lab Bloater",
           "Leech Man",
-          "Plant 29",
+          "Plant-29",
           "Huntress of Green Glade",
           "Kiyoko the Death Whisper",
           "Fierce Gladiator",

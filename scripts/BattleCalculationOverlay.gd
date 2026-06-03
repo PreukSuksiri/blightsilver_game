@@ -44,6 +44,10 @@ var _skippable:     bool = false
 # Pause/resume support: set via pause_for_choice() / resume_with_result()
 var _paused: bool = false
 var _live_result: BattleResolver.BattleResult
+# Stored for stat label refresh on resume
+var _attacker_player_idx: int = 0
+var _left_inst: GameState.CardInstance = null
+var _right_inst: GameState.CardInstance = null
 
 ## Called by GameBoard when an ability-choice overlay appears on top of this overlay.
 ## Prevents the overlay from animating or being dismissed until resume_with_result() is called.
@@ -56,8 +60,43 @@ func pause_for_choice() -> void:
 ## Updates the animation result to reflect any applied boosts, then unpauses.
 func resume_with_result(new_result: BattleResolver.BattleResult) -> void:
 	_live_result = new_result
+	_refresh_stat_display(new_result)
 	_paused = false
 	mouse_filter = MOUSE_FILTER_STOP
+
+func _refresh_stat_display(result: BattleResolver.BattleResult) -> void:
+	var left_is_att: bool = _attacker_player_idx == 0
+	_refresh_slot_stats(_left_ctrl, _left_inst, left_is_att, result)
+	_refresh_slot_stats(_right_ctrl, _right_inst, not left_is_att, result)
+
+func _refresh_slot_stats(slot: Control, inst: GameState.CardInstance, is_attacker: bool, result: BattleResolver.BattleResult) -> void:
+	if not is_instance_valid(slot) or inst == null or inst.card_type != "character":
+		return
+	# Use effective values directly from CardInstance — result fields are only populated
+	# for character-vs-character and default to 0 for trap/dead_end battles.
+	var eff_atk: int = inst.get_effective_atk()
+	var eff_def: int = inst.get_effective_def()
+	var changed := false
+	# Update badge (ATK for attacker, DEF for defender)
+	var badge_meta: Variant = slot.get_meta("badge_lbl", null)
+	if badge_meta is Label:
+		var new_text: String = str(eff_atk if is_attacker else eff_def)
+		if (badge_meta as Label).text != new_text:
+			(badge_meta as Label).text = new_text
+			changed = true
+	# Update card body ATK/DEF labels (second child of slot is card_ctrl)
+	if slot.get_child_count() >= 2:
+		var card_ctrl: Control = slot.get_child(1) as Control
+		if card_ctrl != null:
+			var alv: Variant = card_ctrl.get_meta("atk_lbl", null)
+			if alv is Label:
+				(alv as Label).text = "ATK %d" % eff_atk
+			var dlv: Variant = card_ctrl.get_meta("def_lbl", null)
+			if dlv is Label:
+				(dlv as Label).text = "DEF %d" % eff_def
+	# Play burst ring if any stat changed
+	if changed:
+		_play_burst_ring(slot)
 
 # ─────────────────────────────────────────────────────────────
 # Entry point
@@ -107,6 +146,9 @@ func _build_ui(
 	var left_inst:   GameState.CardInstance = attacker if attacker_player == 0 else defender
 	var right_inst:  GameState.CardInstance = defender if attacker_player == 0 else attacker
 	var left_is_attacker: bool = attacker_player == 0
+	_attacker_player_idx = attacker_player
+	_left_inst = left_inst
+	_right_inst = right_inst
 
 	# Deltas: attacker shows ATK delta, defender shows DEF delta
 	var left_atk_delta:  int = result.attacker_atk_delta if left_is_attacker else result.defender_atk_delta
@@ -167,6 +209,8 @@ func _build_slot(inst: GameState.CardInstance, is_attacker: bool, atk_delta: int
 		num_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		num_lbl.mouse_filter = MOUSE_FILTER_IGNORE
 		row.add_child(num_lbl)
+		slot.set_meta("badge_lbl", num_lbl)
+	slot.set_meta("slot_is_attacker", is_attacker)
 	badge.add_child(row)
 	slot.add_child(badge)
 
@@ -303,6 +347,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	atk_lbl.add_theme_color_override("font_color", Color(1.0, 0.62, 0.30))
 	atk_lbl.add_theme_font_override("font", CHIVO_FONT)
 	parent.add_child(atk_lbl)
+	parent.set_meta("atk_lbl", atk_lbl)
 
 	var def_lbl := Label.new()
 	def_lbl.position = Vector2(pad_x + pill_w + 5.0, stats_y)
@@ -313,6 +358,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	def_lbl.add_theme_color_override("font_color", Color(0.38, 0.68, 1.0))
 	def_lbl.add_theme_font_override("font", CHIVO_FONT)
 	parent.add_child(def_lbl)
+	parent.set_meta("def_lbl", def_lbl)
 
 	var aff_lbl := Label.new()
 	aff_lbl.position = Vector2(pad_x, stats_y - 40.0)

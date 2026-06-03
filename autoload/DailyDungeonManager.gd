@@ -754,7 +754,7 @@ func start_node_battle(node: Dictionary, parent_node: Node) -> void:
 	GameState.portrait_p2_size   = float(bs.get("portrait_p2_size", 1.0))
 
 	var bgm: String = str(bs.get("battle_bgm", ""))
-	GameState.battle_bgm_path   = bgm if bgm != "" else "res://assets/audio/bgm_battle_2.mp3"
+	GameState.battle_bgm_path   = bgm if bgm != "" else BGMManager.get_default_path(BGMManager.CONTEXT_BATTLE)
 	GameState.battle_bgm_volume = float(bs.get("battle_bgm_volume", 100.0))
 
 	GameState.battle_ai_union_enabled     = bool(bs.get("ai_union_enabled", true))

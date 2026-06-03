@@ -21,8 +21,8 @@ const DEFAULT_FADE := 0.8
 
 const BUILTIN_DEFAULT_PATHS := {
 	CONTEXT_MAIN_MENU: "res://assets/audio/bgm_storytelling_4.mp3",
-	CONTEXT_PLACEMENT: "res://assets/audio/bgm_placement_1.mp3",
-	CONTEXT_BATTLE: "res://assets/audio/bgm_battle_2.mp3",
+	CONTEXT_PLACEMENT: "res://assets/audio/bgm_placement_2.mp3",
+	CONTEXT_BATTLE: "res://assets/audio/bgm_battle_3.mp3",
 	CONTEXT_BOSS: "res://assets/audio/bgm_boss_1.mp3",
 	CONTEXT_VICTORY: "res://assets/audio/bgm_win.mp3",
 	CONTEXT_DEFEAT: "res://assets/audio/bgm_horror_1.mp3",
@@ -135,7 +135,8 @@ func play_path(
 		fade_out: float = DEFAULT_FADE,
 		volume_pct: float = 100.0,
 		context: String = "",
-		loop_from_sec: float = -1.0) -> void:
+		loop_from_sec: float = -1.0,
+		start_sec: float = -1.0) -> void:
 	path = path.strip_edges()
 	if path.is_empty():
 		stop(fade_out)
@@ -144,6 +145,10 @@ func play_path(
 	_target_volume_db = _volume_pct_to_db(volume_pct)
 	_loop_restart_sec = loop_from_sec
 	_current_context = context
+
+	# start_sec overrides where playback begins; loop_from_sec controls the loop-back point.
+	# If start_sec is not set, fall back to loop_from_sec (original behaviour).
+	var actual_start: float = start_sec if start_sec >= 0.0 else loop_from_sec
 
 	if path == _current_path and _player.playing:
 		_player.volume_db = _target_volume_db
@@ -161,10 +166,10 @@ func play_path(
 		_fade_tween = create_tween()
 		_fade_tween.tween_property(_player, "volume_db", -80.0, fade_out)
 		_fade_tween.tween_callback(func() -> void:
-			_begin_stream(stream, path, fade_in, loop_from_sec))
+			_begin_stream(stream, path, fade_in, actual_start))
 	else:
 		_player.stop()
-		_begin_stream(stream, path, fade_in, loop_from_sec)
+		_begin_stream(stream, path, fade_in, actual_start)
 
 
 func stop(fade_out: float = DEFAULT_FADE) -> void:

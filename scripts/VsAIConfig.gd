@@ -8,6 +8,7 @@ const TECH_SLOT_COUNT: int = 3
 
 # ── UI refs ────────────────────────────────────────────────────────────────────
 var _deck_opt: OptionButton = null
+var _formation_opt: OptionButton = null
 var _forced_tech_btns: Array[Button] = []
 var _forced_tech: Array = ["", "", ""]   # slot → tech name (empty = random on deal)
 var _forced_grid: GridContainer = null
@@ -157,6 +158,25 @@ func _build_ai_column(parent: HBoxContainer) -> void:
 	_deck_opt.item_selected.connect(func(_i: int) -> void: _on_deck_selected())
 	deck_row.add_child(_deck_opt)
 
+	# ── Formation preset selector ───────────────────────────────────────────────
+	var form_row := HBoxContainer.new()
+	form_row.add_theme_constant_override("separation", 8)
+	col.add_child(form_row)
+
+	var form_lbl := Label.new()
+	form_lbl.text = "Formation:"
+	form_lbl.add_theme_font_size_override("font_size", 14)
+	form_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	form_row.add_child(form_lbl)
+
+	_formation_opt = OptionButton.new()
+	_formation_opt.add_theme_font_size_override("font_size", 13)
+	_formation_opt.custom_minimum_size = Vector2(300, 0)
+	_formation_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_formation_opt.item_selected.connect(func(_i: int) -> void: _on_formation_selected())
+	form_row.add_child(_formation_opt)
+	_refresh_formation_opt()
+
 	# ── Forced tech hand ───────────────────────────────────────────────────────
 	var ft_lbl := Label.new()
 	ft_lbl.text = "Forced Tech Hand  (tap slot to assign)"
@@ -218,6 +238,44 @@ func _on_deck_selected() -> void:
 		for i: int in range(mini(TECH_SLOT_COUNT, deck.techs.size())):
 			_forced_tech[i] = str(deck.techs[i])
 	_refresh_forced_tech_row()
+	_refresh_formation_opt()
+
+func _refresh_formation_opt() -> void:
+	if _formation_opt == null:
+		return
+	_formation_opt.clear()
+	_formation_opt.add_item("— no preset —")
+	if _deck_opt != null and _deck_opt.selected > 0:
+		var deck: DeckData = SaveManager.decks[_deck_opt.selected - 1]
+		for f: Variant in deck.formations:
+			var fd: Dictionary = f as Dictionary
+			_formation_opt.add_item(str(fd.get("name", "Formation")))
+
+func _on_formation_selected() -> void:
+	if _formation_opt == null or _formation_opt.selected <= 0:
+		return
+	if _deck_opt == null or _deck_opt.selected <= 0:
+		return
+	var deck: DeckData = SaveManager.decks[_deck_opt.selected - 1]
+	var form_idx: int = _formation_opt.selected - 1
+	if form_idx < 0 or form_idx >= deck.formations.size():
+		return
+	var fd: Dictionary = deck.formations[form_idx] as Dictionary
+	var pls: Variant = fd.get("placements", [])
+	if not pls is Array:
+		return
+	_forced_dict.clear()
+	for pl: Variant in (pls as Array):
+		if not pl is Dictionary:
+			continue
+		var p: Dictionary = pl as Dictionary
+		var r: int = int(p.get("r", -1))
+		var c: int = int(p.get("c", -1))
+		var card_name: String = str(p.get("name", ""))
+		if r < 0 or r > 4 or c < 0 or c > 4 or card_name.is_empty():
+			continue
+		_forced_dict[str(r) + "," + str(c)] = card_name
+	_refresh_forced_grid()
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Start Battle

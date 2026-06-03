@@ -1178,7 +1178,7 @@ Type: Character
 Stats: ATK=45 DEF=45 Cost=800 Affinity=ARCANE
 AbilityType: COIN_FLIP_2_DESTROY_NON_AFFINITY
 ability_params: {'affinity': 'ARCANE'}
-Description: If this card battles non-Arcane card, flip a coins. If both are head, destroy it.
+Description: If this card battles non-Arcane card, flip two coins. If both are head, destroy it.
 Test Cases:
 
 Test Case ID: TC-FUNC-Blue-Mage-001
@@ -4096,7 +4096,7 @@ Expected Result:
 
 ---
 
-Card Name: Plant 29
+Card Name: Plant-29
 Type: Character
 Stats: ATK=45 DEF=85 Cost=900 Affinity=BIO
 AbilityType: TURN_START_COIN_FLIP_FLAG
@@ -4106,7 +4106,7 @@ Test Cases:
 
 Test Case ID: TC-FUNC-Plant-29-001
 Description:
-Plant 29: turn start coin → venom or mutagen flag on selected opponent card
+Plant-29: turn start coin → venom or mutagen flag on selected opponent card
 Implementation Reference:
 - TurnManager turn start ability
 - AbilityType.TURN_START_COIN_FLIP_FLAG
@@ -4114,7 +4114,7 @@ Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Plant 29 on field at turn start.
+- Plant-29 on field at turn start.
 - Opponent face-up character selected.
 Steps:
 Step 1: Start turn; select target; resolve coin.

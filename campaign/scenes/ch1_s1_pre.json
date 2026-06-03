@@ -507,7 +507,7 @@
 	},
 	{
 		"ai_union_enabled": false,
-		"battle_bgm": "res://assets/audio/bgm_battle_2.mp3",
+		"battle_bgm": "res://assets/audio/bgm_battle_3.mp3",
 		"comment": "Battle - Midnight Shadow",
 		"enemy_deck": {
 			"characters": [

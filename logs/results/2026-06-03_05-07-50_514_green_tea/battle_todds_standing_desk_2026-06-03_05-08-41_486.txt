@@ -1,0 +1,209 @@
+=== Battle of Todd's Standing Desk ===
+Battle started: 2026-06-03 05:08:41.486
+Game Session of Green Tea (started 2026-06-03 05:07:50.514)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:44.220] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[01:42.334] Revealed: P0 (0,2) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:42.334] Dice rolled: 5
+[01:42.353] MSG: Nothing happens — Dead End.
+[01:49.615] Attack P0(0,2)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[01:49.615] Anim: 3F  (blank slot)
+[01:59.685] Revealed: P0 (4,4) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[01:59.708] Revealed: P1 (3,1) "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:59.708] Dice rolled: 4
+[02:15.394] Crystals: P0 5000 → 4720 (-280)  [battle]
+[02:20.621] Attack P0(4,4)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → P1(3,1)"Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xDEF-used}  Dice=4  ATK=25 vs DEF=30  → LOSE
+[02:20.621] Reckoning overlay: P1 "Laughing Granny" {Unit ATK15 DEF20 | cost 350 | affinity Chaos | 1xDEF-used} +DEF 10
+[02:20.621] Anim: 3B  △ P0(4,4)
+[02:20.621] Card destroyed  P0 (4,4) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[02:23.964] Turn ended  P0  |  Crystals P0=4720 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4720 P1=5000 ---
+[02:26.174] Mode selected P1: TECH
+[02:27.421] Tech played  P1: "Spy"
+[02:33.176] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[02:34.759] Revealed: P0 (3,2) "Decoy Puppet" {cost 100}
+[02:34.760] Tech resolved  P1
+[02:38.578] Mode selected P1: ATTACK
+[02:38.580] MSG: Player 2: tap a character to attack.
+[02:40.960] Revealed: P0 (0,4) "Pepper Spray" {cost 0}
+[02:40.961] Dice rolled: 4
+[02:42.150] MSG: Trap triggered: Pepper Spray!
+[02:52.212] Coin flip: Heads, Heads
+[02:58.634] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:02.895] MSG: Pepper Spray: Heads, Heads.
+[03:02.895] MSG: Both heads! Laughing Granny -5 ATK permanently!
+[03:02.897] Trap: "Pepper Spray" triggered  P1(3,1)→P0(0,4)
+[03:04.836] Mode selected P1: ATTACK
+[03:04.837] MSG: Player 2: tap a character to attack.
+[03:07.233] Revealed: P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[03:07.252] Revealed: P0 (0,0) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[03:07.252] Dice rolled: 1
+[03:19.133] Crystals: P1 5000 → 4580 (-420)  [battle]
+[03:24.355] Attack P1(2,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} → P0(0,0)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}  Dice=1  ATK=0 vs DEF=85  → LOSE
+[03:24.355] Anim: 3B  △ P1(2,1)
+[03:24.355] Card destroyed  P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[03:26.306] Turn ended  P1  |  Crystals P0=4720 P1=4580
+
+--- Turn 3  |  Player 0  |  Crystals P0=4720 P1=4580 ---
+[03:50.721] Revealed: P0 (2,3) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[03:50.721] Dice rolled: 5
+[03:55.623] Ability choice: 0 (Yes)
+[03:55.624] Crystals: P0 4720 → 4620 (-100)  [ability]
+[04:00.757] MSG: Hairpin Assassin: Paid 100 Crystals for +10 ATK!
+[04:00.758] MSG: Hairpin Assassin wins!
+[04:11.384] Crystals: P1 4580 → 4230 (-350)  [battle]
+[04:16.604] Attack P0(2,3)"Hairpin Assassin" {Unit ATK35 DEF15 | cost 300 | affinity Anima | base 25/15 | buff +tempATK10} → P1(3,1)"Laughing Granny" {Unit ATK10 DEF20 | cost 350 | affinity Chaos | base 10/20 | 1xATK-used,1xDEF-used}  Dice=5  ATK=35 vs DEF=20  → WIN
+[04:16.604] Anim: 3A  △ P1(3,1)
+[04:16.604] Card destroyed  P1 (3,1) "Laughing Granny" {Unit ATK10 DEF20 | cost 350 | affinity Chaos | base 10/20 | 1xATK-used,1xDEF-used}
+[04:45.058] Revealed: P0 (3,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[04:45.079] Revealed: P1 (0,0) "Snare Trap" {cost 500}
+[04:45.079] Dice rolled: 2
+[04:46.222] MSG: Trap triggered: Snare Trap!
+[04:56.293] Crystals: P1 4230 → 3730 (-500)  [trap cost]
+[05:01.539] MSG: Snare Trap: Witchhunter's effect nullified until end of next turn!
+[05:01.542] Trap: "Snare Trap" triggered  P0(3,1)→P1(0,0)
+[05:20.371] Turn ended  P0  |  Crystals P0=4620 P1=3730
+
+--- Turn 4  |  Player 1  |  Crystals P0=4620 P1=3730 ---
+[05:22.628] Mode selected P1: TECH
+[05:23.816] Crystals: P1 3730 → 2730 (-1000)  [tech cost]
+[05:28.947] Tech played  P1: "Accident"
+[05:34.746] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[05:36.320] Card destroyed  P0 (0,0) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[05:36.322] Tech resolved  P1
+[05:39.857] Mode selected P1: ATTACK
+[05:39.860] MSG: Player 2: tap a character to attack.
+[05:42.271] Revealed: P1 (0,2) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[05:42.271] Dice rolled: 2
+[05:42.274] MSG: Heavy Tome Preacher wins!
+[05:53.810] Crystals: P0 4620 → 4340 (-280)  [battle]
+[05:59.042] Attack P1(0,2)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P0(0,2)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=2  ATK=25 vs DEF=20  → WIN
+[05:59.042] Anim: 3A  △ P0(0,2)
+[05:59.042] Card destroyed  P0 (0,2) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[06:08.585] Turn ended  P1  |  Crystals P0=4340 P1=2730
+
+--- Turn 5  |  Player 0  |  Crystals P0=4340 P1=2730 ---
+[06:29.997] MSG: Tap 2 material card(s) on the field.
+[06:31.576] MSG: 1 more material(s) needed.
+[06:33.296] Crystals: P0 4340 → 4040 (-300)  [union]
+[06:33.324] Revealed: P0 (1,3) "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[06:33.324] Union summoned P0: "False Prophet" {Union ATK20 DEF40 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}, "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}
+[06:33.324] MSG: Player 1 summoned [False Prophet] using: "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine | face-down}, "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}
+[06:54.523] Revealed: P0 (2,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[06:54.523] Dice rolled: 5
+[06:54.529] MSG: Mad Raccoon wins!
+[07:06.142] Crystals: P1 2730 → 2430 (-300)  [battle]
+[07:11.387] Attack P0(2,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P1(0,2)"Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=5  ATK=30 vs DEF=20  → WIN
+[07:11.387] Anim: 3A  △ P1(0,2)
+[07:11.387] Card destroyed  P1 (0,2) "Heavy Tome Preacher" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[07:22.749] Revealed: P0 (4,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[07:22.749] Revealed: P1 (1,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[07:22.749] Dice rolled: 3
+[07:22.754] MSG: Big Thug wins!
+[07:34.296] Crystals: P1 2430 → 2080 (-350)  [battle]
+[07:39.528] Attack P0(4,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(1,1)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}  Dice=3  ATK=40 vs DEF=20  → WIN
+[07:39.528] Anim: 3A  △ P1(1,1)
+[07:39.528] Card destroyed  P1 (1,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[07:50.907] Turn ended  P0  |  Crystals P0=4040 P1=2080
+
+--- Turn 6  |  Player 1  |  Crystals P0=4040 P1=2080 ---
+[07:53.143] Mode selected P1: TECH
+[07:54.350] Crystals: P1 2080 → 1080 (-1000)  [tech cost]
+[07:59.506] Tech played  P1: "Siege Cannon"
+[08:05.334] MSG: Siege Cannon active!
+[08:05.336] Tech resolved  P1
+[08:08.850] Mode selected P1: ATTACK
+[08:08.852] MSG: Player 2: tap a character to attack.
+[08:11.240] Revealed: P1 (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[08:11.241] Dice rolled: 3
+[08:11.244] MSG: Big Thug wins!
+[08:22.813] Crystals: P0 4040 → 3640 (-400)  [battle]
+[08:28.031] Attack P1(2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(4,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=3  ATK=40 vs DEF=35  → WIN
+[08:28.032] Anim: 3A  △ P0(4,1)
+[08:28.032] Card destroyed  P0 (4,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[08:29.988] Mode selected P1: ATTACK
+[08:29.990] MSG: Player 2: tap a character to attack.
+[08:32.399] Revealed: P1 (2,3) "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos}
+[08:32.399] Dice rolled: 1
+[08:32.409] MSG: Nothing happens — Dead End.
+[08:39.730] Attack P1(2,3)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P0(1,1)(empty)  Dice=1  → DEAD_END
+[08:39.730] Anim: 3F  (blank slot)
+[08:41.687] Turn ended  P1  |  Crystals P0=3640 P1=1080
+
+--- Turn 7  |  Player 0  |  Crystals P0=3640 P1=1080 ---
+[08:41.687] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[09:45.237] Dice rolled: 5
+[09:47.564] Ability choice: 1 (No)
+[09:47.565] MSG: Nothing happens — Dead End.
+[09:53.947] Attack P0(2,3)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → P1(2,0)(empty)  Dice=5  → DEAD_END
+[09:53.947] Anim: 3F  (blank slot)
+[10:01.479] Dice rolled: 5
+[10:01.490] MSG: Nothing happens — Dead End.
+[10:08.783] Attack P0(3,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima | nullified≤T4} → P1(1,0)(empty)  Dice=5  → DEAD_END
+[10:08.783] Anim: 3F  (blank slot)
+[10:16.031] Turn ended  P0  |  Crystals P0=3640 P1=1080
+
+--- Turn 8  |  Player 1  |  Crystals P0=3640 P1=1080 ---
+[10:18.243] Mode selected P1: ATTACK
+[10:18.245] MSG: Player 2: tap a character to attack.
+[10:20.633] Dice rolled: 2
+[10:20.636] MSG: Big Thug wins!
+[10:32.089] Crystals: P0 3640 → 3340 (-300)  [battle]
+[10:37.310] Attack P1(2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(2,3)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=2  ATK=40 vs DEF=15  → WIN
+[10:37.310] Anim: 3A  △ P0(2,3)
+[10:37.310] Card destroyed  P0 (2,3) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[10:39.261] Mode selected P1: ATTACK
+[10:39.264] MSG: Player 2: tap a character to attack.
+[10:41.660] Revealed: P0 (4,0) "Foul Gas" {cost 0}
+[10:41.660] Dice rolled: 4
+[10:42.849] MSG: Trap triggered: Foul Gas!
+[10:53.400] MSG: Foul Gas: All of Player 2's characters -5 ATK this turn!
+[10:53.406] Trap: "Foul Gas" triggered  P1(2,3)→P0(4,0)
+[10:55.331] Turn ended  P1  |  Crystals P0=3340 P1=1080
+
+--- Turn 9  |  Player 0  |  Crystals P0=3340 P1=1080 ---
+[10:55.331] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[11:12.579] Revealed: P0 (0,3) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[11:12.579] Dice rolled: 5
+[11:12.582] MSG: Ice Mage wins!
+[11:24.062] Crystals: P1 1080 → 680 (-400)  [battle]
+[11:29.284] Attack P0(0,3)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P1(2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=5  ATK=50 vs DEF=35  → WIN
+[11:29.284] Anim: 3A  △ P1(2,2)
+[11:29.284] Card destroyed  P1 (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[11:49.429] Turn ended  P0  |  Crystals P0=3340 P1=680
+
+--- Turn 10  |  Player 1  |  Crystals P0=3340 P1=680 ---
+[11:51.658] Mode selected P1: ATTACK
+[11:51.660] MSG: Player 2: tap a character to attack.
+[11:54.037] Dice rolled: 2
+[11:54.040] MSG: Poltergeist wins!
+[12:09.166] Crystals: P0 3340 → 2940 (-400)  [battle]
+[12:11.540] MSG: [DEBUG] Bot Player timed out — ending turn.
+[12:14.350] Attack P1(2,3)"Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} → P0(0,3)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=2  ATK=70 vs DEF=0  → WIN
+[12:14.350] Reckoning overlay: P1 "Poltergeist" {Unit ATK0 DEF70 | cost 700 | affinity Chaos} +ATK 70
+[12:14.350] Anim: 3A  △ P0(0,3)
+[12:14.350] Card destroyed  P0 (0,3) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[12:23.832] Turn ended  P1  |  Crystals P0=2940 P1=680
+
+--- Turn 11  |  Player 0  |  Crystals P0=2940 P1=680 ---
+[12:23.832] Target prompt: "False Prophet: Choose 1 opponent cell to reveal."  filter=ability_false_prophet_reveal
+[12:38.015] Crystals: P0 2940 → 2340 (-600)  [tech cost]
+[12:43.119] Tech played  P0: "Radar"
+[12:48.909] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[12:51.428] Revealed: P1 (3,3) "Shotgun Shark" {Unit ATK75 DEF25 | cost 900 | affinity Nature}
+[12:53.982] Revealed: P1 (4,0) "Pepper Spray" {cost 0}
+[13:04.227] Tech resolved  P0
+[13:29.614] Dice rolled: 4
+[13:29.617] MSG: Mad Raccoon wins!
+[13:41.084] Crystals: P1 680 → 0 (-680)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2340  P1: 0  |  Turns: 11

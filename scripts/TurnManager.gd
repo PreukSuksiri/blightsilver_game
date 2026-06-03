@@ -109,8 +109,9 @@ func start_turn(player_index: int) -> void:
 					emit_signal("awaiting_target_selection",
 						"%s: Choose 1 opponent cell to reveal." % _ts_card.card_name,
 						"ability_false_prophet_reveal")
+					await ability_selection_done
 				CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG:
-					# Plant 29: automatically select random face-up opponent card, coin flip → venom/mutagen
+					# Plant-29: automatically select random face-up opponent card, coin flip → venom/mutagen
 					var _ts_opp: int = GameState.get_opponent(player_index)
 					var _ts_targets: Array = GameState.get_all_face_up_characters(_ts_opp)
 					if not _ts_targets.is_empty():

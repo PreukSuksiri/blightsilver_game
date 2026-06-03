@@ -1,0 +1,219 @@
+=== Battle of Janice's Essential Oils ===
+Battle started: 2026-06-03 14:55:28.105
+Game Session of Chai Latte (started 2026-06-03 14:54:57.023)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:12.270] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:32.561] Mode selected P1: TECH
+[00:33.734] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:38.803] Tech played  P1: "Radar"
+[00:44.507] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:46.094] Revealed: P0 (4,1) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:47.669] Revealed: P0 (1,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[00:49.244] Revealed: P0 (1,4) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[00:49.245] Tech resolved  P1
+[00:52.709] Mode selected P1: ATTACK
+[00:52.711] MSG: Player 2: tap a character to attack.
+[00:59.209] Revealed: P1 (0,4) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:59.209] Dice rolled: 5
+[00:59.215] MSG: Red Mage wins!
+[01:10.584] Crystals: P0 5000 → 4600 (-400)  [battle]
+[01:12.497] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:15.748] Attack P1(0,4)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P0(1,4)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}  Dice=5  ATK=20 vs DEF=15  → WIN
+[01:15.748] Anim: 3A  △ P0(1,4)
+[01:15.748] Card destroyed  P0 (1,4) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[01:17.984] Ability choice: 0 (Yes)
+[01:17.984] MSG: Ectoplasm absorbs Green Mage's stats!
+[01:19.897] Mode selected P1: ATTACK
+[01:19.900] MSG: Player 2: tap a character to attack.
+[01:26.340] Revealed: P1 (1,1) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[01:26.340] Dice rolled: 4
+[01:26.344] MSG: Mysterious Miner wins!
+[01:37.827] Crystals: P0 4600 → 4400 (-200)  [battle]
+[01:39.745] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:42.969] Attack P1(1,1)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos} → P0(4,1)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}  Dice=4  ATK=25 vs DEF=10  → WIN
+[01:42.969] Anim: 3A  △ P0(4,1)
+[01:42.969] Card destroyed  P0 (4,1) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[01:42.969] Target prompt: "Mysterious Miner: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:44.546] Revealed: P0 (0,2) "Acid Trap Hole" {cost 0}
+[01:44.546] MSG: Revealed: Acid Trap Hole
+[01:45.231] Ability choice: 0 (Yes)
+[01:45.231] MSG: Ectoplasm absorbs Miner Probe's stats!
+[01:47.145] Turn ended  P1  |  Crystals P0=4400 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4400 P1=4400 ---
+[02:07.111] MSG: Tap 2 material card(s) on the field.
+[02:10.901] MSG: 1 more material(s) needed.
+[02:14.077] Crystals: P0 4400 → 3400 (-1000)  [union]
+[02:14.101] Revealed: P0 (3,1) "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[02:14.101] Union summoned P0: "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Ectoplasm" {Unit ATK10 DEF10 | cost 200 (base 800) | affinity Bio | base 10/10 | face-down}, "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}
+[02:14.101] MSG: Player 1 summoned [Volatile Slasher] using: "Ectoplasm" {Unit ATK10 DEF10 | cost 200 (base 800) | affinity Bio | base 10/10 | face-down}, "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}
+[02:32.206] Dice rolled: 2
+[02:32.247] MSG: Volatile Slasher wins!
+[02:43.621] Crystals: P1 4400 → 4150 (-250)  [battle]
+[02:48.795] Attack P0(3,1)"Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P1(1,1)"Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}  Dice=2  ATK=50 vs DEF=15  → WIN
+[02:48.795] Anim: 3A  △ P1(1,1)
+[02:48.795] Card destroyed  P1 (1,1) "Mysterious Miner" {Unit ATK25 DEF15 | cost 250 | affinity Chaos}
+[02:48.796] MSG: Volatile Slasher: +50 ATK permanently vs CHAOS!
+[03:05.750] Turn ended  P0  |  Crystals P0=3400 P1=4150
+
+--- Turn 3  |  Player 1  |  Crystals P0=3400 P1=4150 ---
+[03:07.981] Mode selected P1: TECH
+[03:09.248] Tech played  P1: "Bribe"
+[03:14.986] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[03:16.271] MSG: Bribe: Opponent passed.
+[03:16.273] Tech resolved  P1
+[03:19.678] Mode selected P1: ATTACK
+[03:19.680] MSG: Player 2: tap a character to attack.
+[03:26.130] Dice rolled: 3
+[03:26.134] MSG: Red Mage wins!
+[03:37.501] Crystals: P0 3400 → 3220 (-180)  [battle]
+[03:39.426] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:42.645] Attack P1(0,4)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P0(1,1)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=3  ATK=20 vs DEF=10  → WIN
+[03:42.645] Anim: 3A  △ P0(1,1)
+[03:42.645] Card destroyed  P0 (1,1) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[03:44.573] Mode selected P1: ATTACK
+[03:44.575] MSG: Player 2: tap a character to attack.
+[03:51.121] Revealed: P1 (3,3) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[03:51.121] Dice rolled: 2
+[03:51.157] MSG: Aerial the Battlemage wins!
+[04:02.609] Attack P1(3,3)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P0(3,1)"Volatile Slasher" {Union ATK100 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio | base 100/45 | flags:perm_atk_aff_1}  Dice=2  ATK=50 vs DEF=45  → WIN
+[04:02.609] Anim: 3A  △ P0(3,1)
+[04:02.609] Card destroyed  P0 (3,1) "Volatile Slasher" {Union ATK100 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio | base 100/45 | flags:perm_atk_aff_1}
+[04:04.536] Turn ended  P1  |  Crystals P0=3220 P1=4150
+
+--- Turn 4  |  Player 0  |  Crystals P0=3220 P1=4150 ---
+[04:21.713] Revealed: P0 (1,3) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[04:21.713] Dice rolled: 3
+[04:21.717] MSG: Huntress of Green Glade wins!
+[04:33.168] Crystals: P1 4150 → 3400 (-750)  [battle]
+[04:38.329] Attack P0(1,3)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(3,3)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=3  ATK=50 vs DEF=45  → WIN
+[04:38.329] Anim: 3A  △ P1(3,3)
+[04:38.329] Card destroyed  P1 (3,3) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:46.384] Turn ended  P0  |  Crystals P0=3220 P1=3400
+
+--- Turn 5  |  Player 1  |  Crystals P0=3220 P1=3400 ---
+[04:48.576] Mode selected P1: TECH
+[04:49.747] Crystals: P1 3400 → 2550 (-850)  [tech cost]
+[04:54.829] Tech played  P1: "Bulletproof Vest"
+[05:00.623] Target prompt: "Choose 1 face-up character to boost."  filter=own_faceup_character
+[05:02.179] MSG: Bulletproof Vest: Red Mage permanently gains +15 DEF.
+[05:02.180] Tech resolved  P1
+[05:05.647] Mode selected P1: ATTACK
+[05:05.648] MSG: Player 2: tap a character to attack.
+[05:12.066] Dice rolled: 4
+[05:12.079] MSG: Nothing happens — Dead End.
+[05:19.504] Attack P1(0,4)"Red Mage" {Unit ATK20 DEF35 | cost 400 | affinity Arcane | buff +permDEF15} → P0(0,2)(empty)  Dice=4  → DEAD_END
+[05:19.504] Anim: 3F  (blank slot)
+[05:21.472] Mode selected P1: ATTACK
+[05:21.474] MSG: Player 2: tap a character to attack.
+[05:28.036] Revealed: P1 (2,4) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[05:28.036] Dice rolled: 1
+[05:28.047] MSG: Nothing happens — Dead End.
+[05:35.282] Attack P1(2,4)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P0(2,2)(empty)  Dice=1  → DEAD_END
+[05:35.282] Anim: 3F  (blank slot)
+[05:35.283] MSG: Skeleton Scout: Bonus attack for hitting dead end!
+[05:37.224] Mode selected P1: ATTACK
+[05:37.225] MSG: Player 2: tap a character to attack.
+[05:43.707] Revealed: P1 (2,3) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[05:43.729] Revealed: P0 (1,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[05:43.729] Dice rolled: 2
+[05:55.523] Crystals: P1 2550 → 2400 (-150)  [battle]
+[05:57.014] MSG: [DEBUG] Bot Player timed out — ending turn.
+[06:00.719] Attack P1(2,3)"Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos} → P0(1,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=2  ATK=20 vs DEF=30  → LOSE
+[06:00.720] Anim: 3B  △ P1(2,3)
+[06:00.720] Card destroyed  P1 (2,3) "Skeleton Grappler" {Unit ATK20 DEF5 | cost 150 | affinity Chaos}
+[06:02.645] Turn ended  P1  |  Crystals P0=3220 P1=2400
+
+--- Turn 6  |  Player 0  |  Crystals P0=3220 P1=2400 ---
+[06:15.676] Dice rolled: 3
+[06:15.680] MSG: Huntress of Green Glade wins!
+[06:27.080] Crystals: P1 2400 → 2000 (-400)  [battle]
+[06:32.250] Attack P0(1,3)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(0,4)"Red Mage" {Unit ATK20 DEF35 | cost 400 | affinity Arcane | buff +permDEF15}  Dice=3  ATK=50 vs DEF=35  → WIN
+[06:32.250] Anim: 3A  △ P1(0,4)
+[06:32.250] Card destroyed  P1 (0,4) "Red Mage" {Unit ATK20 DEF35 | cost 400 | affinity Arcane | buff +permDEF15}
+[06:44.691] Turn ended  P0  |  Crystals P0=3220 P1=2000
+
+--- Turn 7  |  Player 1  |  Crystals P0=3220 P1=2000 ---
+[06:46.966] Mode selected P1: ATTACK
+[06:46.968] MSG: Player 2: tap a character to attack.
+[06:53.566] Dice rolled: 5
+[06:53.568] MSG: Skeleton Scout wins!
+[07:05.006] Crystals: P0 3220 → 3020 (-200)  [battle]
+[07:06.936] MSG: [DEBUG] Bot Player timed out — ending turn.
+[07:10.169] Attack P1(2,4)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used} → P0(1,2)"Vile Creeper" {Unit ATK30 DEF10 | cost 200 | affinity Bio | base 30/10}  Dice=5  ATK=20 vs DEF=10  → WIN
+[07:10.169] Anim: 3A  △ P0(1,2)
+[07:10.169] Card destroyed  P0 (1,2) "Vile Creeper" {Unit ATK30 DEF10 | cost 200 | affinity Bio | base 30/10}
+[07:12.131] Mode selected P1: ATTACK
+[07:12.132] MSG: Player 2: tap a character to attack.
+[07:18.646] Revealed: P1 (1,2) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[07:18.646] Dice rolled: 4
+[07:18.657] MSG: Nothing happens — Dead End.
+[07:25.893] Attack P1(1,2)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos} → P0(0,3)(empty)  Dice=4  → DEAD_END
+[07:25.893] Anim: 3F  (blank slot)
+[07:27.818] Turn ended  P1  |  Crystals P0=3020 P1=2000
+
+--- Turn 8  |  Player 0  |  Crystals P0=3020 P1=2000 ---
+[07:37.009] Dice rolled: 4
+[07:37.013] MSG: Huntress of Green Glade wins!
+[07:48.474] Crystals: P1 2000 → 1700 (-300)  [battle]
+[07:53.613] Attack P0(1,3)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(1,2)"Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}  Dice=4  ATK=50 vs DEF=5  → WIN
+[07:53.613] Anim: 3A  △ P1(1,2)
+[07:53.613] Card destroyed  P1 (1,2) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[08:05.815] Turn ended  P0  |  Crystals P0=3020 P1=1700
+
+--- Turn 9  |  Player 1  |  Crystals P0=3020 P1=1700 ---
+[08:13.657] Crystals: P1 1700 → 1400 (-300)  [union]
+[08:13.676] Revealed: P1 (4,1) "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos}
+[08:13.676] Union summoned P1: "Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} from "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}
+[08:13.677] MSG: Player 2 summoned [Kitsune] using: "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}, "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos | face-down}
+[08:26.526] Mode selected P1: ATTACK
+[08:26.528] MSG: Player 2: tap a character to attack.
+[08:32.945] Dice rolled: 1
+[08:32.957] MSG: Nothing happens — Dead End.
+[08:40.156] Attack P1(2,4)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used} → P0(2,3)(empty)  Dice=1  → DEAD_END
+[08:40.156] Anim: 3F  (blank slot)
+[08:42.073] Mode selected P1: ATTACK
+[08:42.075] MSG: Player 2: tap a character to attack.
+[08:48.524] Revealed: P0 (2,4) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[08:48.524] Dice rolled: 1
+[08:48.563] MSG: Kitsune wins!
+[08:59.934] Crystals: P0 3020 → 2820 (-200)  [battle]
+[09:01.918] MSG: [DEBUG] Bot Player timed out — ending turn.
+[09:05.096] Attack P1(4,1)"Kitsune" {Union ATK35 DEF35 | destroy-cost 0 | summon-cost 300 | affinity Chaos} → P0(2,4)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=1  ATK=35 vs DEF=20  → WIN
+[09:05.097] Anim: 3A  △ P0(2,4)
+[09:05.097] Card destroyed  P0 (2,4) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[09:07.012] Turn ended  P1  |  Crystals P0=2820 P1=1400
+
+--- Turn 10  |  Player 0  |  Crystals P0=2820 P1=1400 ---
+[09:14.154] Dice rolled: 4
+[09:14.158] MSG: Huntress of Green Glade wins!
+[09:25.523] Crystals: P1 1400 → 1250 (-150)  [battle]
+[09:30.703] Attack P0(1,3)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P1(2,4)"Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used}  Dice=4  ATK=50 vs DEF=5  → WIN
+[09:30.703] Anim: 3A  △ P1(2,4)
+[09:30.703] Card destroyed  P1 (2,4) "Skeleton Scout" {Unit ATK20 DEF5 | cost 150 | affinity Chaos | flags:extra_deadend_used}
+[09:41.698] Turn ended  P0  |  Crystals P0=2820 P1=1250
+
+--- Turn 11  |  Player 1  |  Crystals P0=2820 P1=1250 ---
+[09:43.883] Mode selected P1: ATTACK
+[09:43.885] MSG: Player 2: tap a character to attack.
+[09:50.343] Revealed: P0 (0,4) "Cursed Reflection" {cost 500}
+[09:50.343] Dice rolled: 2
+[09:51.550] MSG: Trap triggered: Cursed Reflection!
+[10:01.468] Crystals: P0 2820 → 2320 (-500)  [trap cost]
+[10:03.730] MSG: [DEBUG] Bot Player timed out — ending turn.
+[10:06.729] MSG: Cursed Reflection: Kitsune's ATK and DEF swapped until end of turn!
+[10:06.731] Trap: "Cursed Reflection" triggered  P1(4,1)→P0(0,4)
+[10:08.658] Mode selected P1: ATTACK
+[10:08.660] MSG: Player 2: tap a character to attack.
+[10:15.096] Revealed: P1 (3,1) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[10:15.096] Dice rolled: 3
+[10:15.107] MSG: Nothing happens — Dead End.
+[10:22.318] Attack P1(3,1)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} → P0(3,3)(empty)  Dice=3  → DEAD_END
+[10:22.318] Anim: 3F  (blank slot)

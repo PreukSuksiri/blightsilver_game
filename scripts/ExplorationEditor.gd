@@ -68,6 +68,10 @@ var _prop_events_out_vbox:  VBoxContainer = null
 # ── Status bar ────────────────────────────────────────────────
 var _status_lbl: Label = null
 
+# ── Persistent file dialogs ───────────────────────────────────
+var _load_dialog: FileDialog = null
+var _save_dialog: FileDialog = null
+
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
 # ─────────────────────────────────────────────────────────────
@@ -129,6 +133,24 @@ func _build_ui() -> void:
 	_status_lbl.add_theme_font_size_override("font_size", 13)
 	_status_lbl.add_theme_color_override("font_color", Color(0.6, 0.85, 0.6))
 	add_child(_status_lbl)
+
+	# ── Persistent file dialogs ────────────────────────────────
+	_load_dialog = FileDialog.new()
+	_load_dialog.file_mode   = FileDialog.FILE_MODE_OPEN_FILE
+	_load_dialog.filters     = PackedStringArray(["*.json ; Exploration Graph JSON"])
+	_load_dialog.access      = FileDialog.ACCESS_RESOURCES
+	_load_dialog.current_dir = "res://exploration/graphs"
+	_load_dialog.file_selected.connect(_on_load_file_selected)
+	add_child(_load_dialog)
+
+	_save_dialog = FileDialog.new()
+	_save_dialog.file_mode    = FileDialog.FILE_MODE_SAVE_FILE
+	_save_dialog.filters      = PackedStringArray(["*.json ; Exploration Graph JSON"])
+	_save_dialog.access       = FileDialog.ACCESS_RESOURCES
+	_save_dialog.current_dir  = "res://exploration/graphs"
+	_save_dialog.current_file = "exploration_graph.json"
+	_save_dialog.file_selected.connect(_on_save_file_selected)
+	add_child(_save_dialog)
 
 func _build_toolbar() -> Control:
 	var bar := HBoxContainer.new()
@@ -204,9 +226,12 @@ func _build_props_panel() -> Control:
 	# Section: Content
 	_add_section_header(vbox, "CONTENT")
 	_prop_desc_edit  = _add_textarea(vbox, "Description")
-	_prop_bg_edit    = _add_field(vbox, "Background (res:// path)", "")
-	_prop_vn_edit    = _add_field(vbox, "VN Scene (res:// path)", "")
-	_prop_music_edit = _add_field(vbox, "Music (res:// path)", "")
+	_prop_bg_edit    = _add_file_field(vbox, "Background (res:// path)",
+		PackedStringArray(["*.png,*.jpg,*.jpeg ; Images"]), "res://assets/textures")
+	_prop_vn_edit    = _add_file_field(vbox, "VN Scene (res:// path)",
+		PackedStringArray(["*.json ; JSON Files"]), "res://exploration")
+	_prop_music_edit = _add_file_field(vbox, "Music (res:// path)",
+		PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio Files"]), "res://assets/audio")
 	vbox.add_child(HSeparator.new())
 
 	# Section: On-Enter Events
@@ -278,6 +303,37 @@ func _add_field(parent: Control, label_text: String, placeholder: String) -> Lin
 	edit.add_theme_font_size_override("font_size", 14)
 	parent.add_child(edit)
 	return edit
+
+func _add_file_field(parent: Control, label_text: String,
+		filters: PackedStringArray, start_dir: String) -> LineEdit:
+	var lbl := Label.new()
+	lbl.text = label_text
+	lbl.add_theme_font_size_override("font_size", 13)
+	lbl.add_theme_color_override("font_color", Color(0.75, 0.82, 0.90))
+	parent.add_child(lbl)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	parent.add_child(row)
+	var edit := LineEdit.new()
+	edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	edit.add_theme_font_size_override("font_size", 14)
+	row.add_child(edit)
+	var browse_btn := Button.new()
+	browse_btn.text = "…"
+	browse_btn.custom_minimum_size = Vector2(32.0, 0.0)
+	browse_btn.pressed.connect(func() -> void: _browse_for_file(edit, filters, start_dir))
+	row.add_child(browse_btn)
+	return edit
+
+func _browse_for_file(target_edit: LineEdit, filters: PackedStringArray, start_dir: String) -> void:
+	var dialog := FileDialog.new()
+	dialog.file_mode   = FileDialog.FILE_MODE_OPEN_FILE
+	dialog.filters     = filters
+	dialog.access      = FileDialog.ACCESS_RESOURCES
+	dialog.current_dir = start_dir
+	dialog.file_selected.connect(func(path: String) -> void: target_edit.text = path)
+	add_child(dialog)
+	dialog.popup_centered(Vector2(900, 600))
 
 func _add_textarea(parent: Control, label_text: String) -> TextEdit:
 	var lbl := Label.new()
@@ -557,6 +613,10 @@ func _on_connection_request(from_node: StringName, _from_port: int,
 	var src: ExplorationNode = _graph.get_node_by_id(from_id)
 	if src == null:
 		return
+	# Enforce 8-connection cap (radial menu maximum)
+	if src.connections.size() >= 8:
+		_set_status("Cannot add connection: '%s' already has 8 connections (maximum)." % from_id)
+		return
 	# Check if this connection already exists
 	for conn: Variant in src.connections:
 		if conn is Dictionary and str((conn as Dictionary).get("target", "")) == to_id:
@@ -793,14 +853,7 @@ func _on_new_pressed() -> void:
 	_new_graph()
 
 func _on_load_pressed() -> void:
-	var dialog := FileDialog.new()
-	dialog.file_mode   = FileDialog.FILE_MODE_OPEN_FILE
-	dialog.filters     = PackedStringArray(["*.json ; Exploration Graph JSON"])
-	dialog.access      = FileDialog.ACCESS_RESOURCES
-	dialog.current_dir = "res://exploration/graphs"
-	dialog.file_selected.connect(_on_load_file_selected)
-	add_child(dialog)
-	dialog.popup_centered(Vector2(900, 600))
+	_load_dialog.popup_centered(Vector2(900, 600))
 
 func _on_load_file_selected(path: String) -> void:
 	_load_graph(path)
@@ -812,15 +865,7 @@ func _on_save_pressed() -> void:
 		_save_graph(_graph_path)
 
 func _on_save_as_pressed() -> void:
-	var dialog := FileDialog.new()
-	dialog.file_mode   = FileDialog.FILE_MODE_SAVE_FILE
-	dialog.filters     = PackedStringArray(["*.json ; Exploration Graph JSON"])
-	dialog.access      = FileDialog.ACCESS_RESOURCES
-	dialog.current_dir = "res://exploration/graphs"
-	dialog.current_file = "exploration_graph.json"
-	dialog.file_selected.connect(_on_save_file_selected)
-	add_child(dialog)
-	dialog.popup_centered(Vector2(900, 600))
+	_save_dialog.popup_centered(Vector2(900, 600))
 
 func _on_save_file_selected(path: String) -> void:
 	_save_graph(path)

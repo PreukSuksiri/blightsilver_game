@@ -222,7 +222,12 @@ func start_setup(player_index: int) -> void:
 
 	_reset_grid()
 
-	var deck: DeckData = SaveManager.get_active_deck()
+	var deck: DeckData
+	if GameState.game_mode == GameState.GameMode.VS_AI and player_index == 1 \
+			and GameState.battle_ai_deck != null:
+		deck = GameState.battle_ai_deck as DeckData
+	else:
+		deck = SaveManager.get_active_deck()
 	if deck == null or not deck.is_valid():
 		_instr_lbl.text = "No valid deck found. Please build a deck first."
 		_confirm_btn.disabled = true
@@ -1036,7 +1041,12 @@ func _refresh_formation_bar(deck: DeckData) -> void:
 		_formation_bar.add_child(btn)
 
 func _apply_formation(idx: int) -> void:
-	var deck: DeckData = SaveManager.get_active_deck()
+	var deck: DeckData
+	if GameState.game_mode == GameState.GameMode.VS_AI and current_setup_player == 1 \
+			and GameState.battle_ai_deck != null:
+		deck = GameState.battle_ai_deck as DeckData
+	else:
+		deck = SaveManager.get_active_deck()
 	if deck == null or idx < 0 or idx >= deck.formations.size():
 		return
 	var fd: Dictionary = deck.formations[idx] as Dictionary

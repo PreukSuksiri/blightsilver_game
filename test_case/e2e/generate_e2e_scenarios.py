@@ -164,7 +164,7 @@ UNION_T2_DECK_CHARS: dict[str, list[str]] = {
     ],
     # needs 1 Bio (cost>=800) + 1 Anima (cost>=800)
     "Rocket Marauder": [
-        "Lab Bloater", "Leech Man", "Plant 29",
+        "Lab Bloater", "Leech Man", "Plant-29",
         "Huntress of Green Glade", "Kiyoko the Death Whisper", "Fierce Gladiator",
         "Church Guard", "Big Thug",
     ],

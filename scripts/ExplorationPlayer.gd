@@ -14,7 +14,14 @@ extends Control
 ##   Click the [DBG] button in the top-right corner for the same effect.
 
 const VN_PLAYER_SCENE: PackedScene = preload("res://scenes/vn_player.tscn")
-const FONT_PATH: String = "res://assets/fonts/Chivo-VariableFont_wght.ttf"
+const FONT_PATH: String    = "res://assets/fonts/Chivo-VariableFont_wght.ttf"
+const COMPASS_ICON: String    = "res://assets/textures/ui/decorations/ui_icon_compass.png"
+const MAGNIFIER_CURSOR: String = "res://assets/textures/ui/decorations/ui_icon_magnifier.png"
+const COMPASS_SIZE: float  = 72.0   # icon width/height in pixels
+const RADIAL_RADIUS: float = 210.0  # distance from center to item midpoint
+const RADIAL_ITEM_W: float = 180.0  # radial button width
+const RADIAL_ITEM_H: float = 54.0   # radial button height
+const BG_AREA_FRACTION: float = 0.52  # fraction of viewport width used by the background area
 
 # ── UI references (all built in _build_ui) ────────────────────────────────
 var _bg_rect: TextureRect          = null   # background image
@@ -31,12 +38,31 @@ var _toast_tween: Tween            = null
 var _debug_panel: PanelContainer   = null   # F3 debug overlay
 var _debug_lbl: RichTextLabel      = null
 
+# ── Compass radial menu ───────────────────────────────────────────────────
+var _compass_root: Control        = null   # full-screen layer holding compass + radial
+var _compass_icon: TextureRect    = null   # the compass texture
+var _compass_hit: Button          = null   # invisible click area over the icon
+var _radial_overlay: Control      = null   # full-screen click-catcher (outside dismiss)
+var _radial_items: Array          = []     # currently shown radial PanelContainers
+var _compass_open: bool           = false
+var _compass_animating: bool      = false
+# Positions computed in _build_compass_system() after scene is sized
+var _compass_idle_pos: Vector2    = Vector2.ZERO
+var _compass_center_pos: Vector2  = Vector2.ZERO
+
 # ── Internal state ────────────────────────────────────────────────────────
 var _current_bg_path: String = ""
 var _vn_playing: bool        = false
 var _battle_pending: bool    = false
 var _exit_pending: bool      = false
 var _item_use_panel: PanelContainer = null  # floating use-item confirmation panel
+
+# ── Point-and-click hotspots ──────────────────────────────────────────────
+var _spots_layer: Control          = null   # holds spot hit-controls + icons
+var _tooltip_panel: PanelContainer = null   # cursor-following tooltip
+var _tooltip_lbl: Label            = null
+var _hovering_spot: bool           = false
+var _magnifier_tex: Texture2D      = null
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -162,9 +188,11 @@ func _build_ui() -> void:
 	var sep2 := sep1.duplicate() as Control
 	vbox.add_child(sep2)
 
-	# Choices
+	# Choices vbox — only used by BATTLE and EXIT nodes (special action buttons).
+	# Navigation choices are handled by the radial compass menu instead.
 	_choices_vbox = VBoxContainer.new()
 	_choices_vbox.add_theme_constant_override("separation", 10)
+	_choices_vbox.visible = false
 	vbox.add_child(_choices_vbox)
 
 	# Bottom row: back button + inventory
@@ -231,6 +259,15 @@ func _build_ui() -> void:
 	_debug_panel.add_child(_debug_lbl)
 	add_child(_debug_panel)
 
+	# ── Point-and-click spot layer ────────────────────────────
+	_build_spots_layer()
+	_build_tooltip()
+	if ResourceLoader.exists(MAGNIFIER_CURSOR):
+		_magnifier_tex = load(MAGNIFIER_CURSOR) as Texture2D
+
+	# ── Compass radial navigation ─────────────────────────────
+	_build_compass_system()
+
 	# ── Toast label ───────────────────────────────────────────
 	_toast_lbl = Label.new()
 	_toast_lbl.layout_mode  = 1
@@ -251,10 +288,206 @@ func _build_ui() -> void:
 	add_child(_toast_lbl)
 
 # ─────────────────────────────────────────────────────────────
+# Compass Radial Menu
+# ─────────────────────────────────────────────────────────────
+
+func _build_compass_system() -> void:
+	# Full-screen transparent root layer — sits above the content panel.
+	_compass_root = Control.new()
+	_compass_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_compass_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_compass_root.z_index      = 30
+	_compass_root.visible      = false
+	add_child(_compass_root)
+
+	# Idle / center positions (screen is 1600×900)
+	_compass_idle_pos   = Vector2(800.0 - COMPASS_SIZE * 0.5, 900.0 - COMPASS_SIZE - 24.0)
+	_compass_center_pos = Vector2(800.0 - COMPASS_SIZE * 0.5, 450.0 - COMPASS_SIZE * 0.5)
+
+	# Click-catcher overlay (shown when menu is open; catches outside taps)
+	_radial_overlay = Control.new()
+	_radial_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_radial_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	_radial_overlay.visible      = false
+	_radial_overlay.gui_input.connect(_on_radial_overlay_input)
+	_compass_root.add_child(_radial_overlay)
+
+	# Compass icon
+	_compass_icon          = TextureRect.new()
+	_compass_icon.position = _compass_idle_pos
+	_compass_icon.size     = Vector2(COMPASS_SIZE, COMPASS_SIZE)
+	_compass_icon.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	_compass_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	if ResourceLoader.exists(COMPASS_ICON):
+		_compass_icon.texture = load(COMPASS_ICON) as Texture2D
+	_compass_root.add_child(_compass_icon)
+
+	# Invisible button covering the compass (for clean click detection)
+	_compass_hit              = Button.new()
+	_compass_hit.position     = _compass_idle_pos
+	_compass_hit.size         = Vector2(COMPASS_SIZE, COMPASS_SIZE)
+	_compass_hit.flat         = true
+	_compass_hit.mouse_filter = Control.MOUSE_FILTER_STOP
+	var sb_empty := StyleBoxEmpty.new()
+	for state: String in ["normal","hover","pressed","focus","disabled"]:
+		_compass_hit.add_theme_stylebox_override(state, sb_empty)
+	_compass_hit.pressed.connect(_on_compass_clicked)
+	_compass_root.add_child(_compass_hit)
+
+func _compass_set_visible(show: bool) -> void:
+	if _compass_root != null:
+		_compass_root.visible = show
+
+func _on_compass_clicked() -> void:
+	if _compass_animating:
+		return
+	if _compass_open:
+		_close_compass_menu()
+	else:
+		_open_compass_menu()
+
+func _on_radial_overlay_input(ev: InputEvent) -> void:
+	if ev is InputEventMouseButton:
+		var mb: InputEventMouseButton = ev as InputEventMouseButton
+		if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+			_close_compass_menu()
+
+func _open_compass_menu() -> void:
+	if _compass_animating or _compass_open:
+		return
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node == null:
+		return
+	# Gather only unlocked connections (locked hidden per spec)
+	var unlocked: Array = []
+	for conn: Variant in node.connections:
+		if conn is Dictionary and ExplorationManager.is_connection_unlocked(conn as Dictionary):
+			unlocked.append(conn)
+	if unlocked.is_empty():
+		_show_toast("No paths available.")
+		return
+
+	_compass_open      = true
+	_compass_animating = true
+	SFXManager.play(SFXManager.SFX_MENU)
+
+	# Animate compass icon + hit area to center
+	var tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tw.set_parallel(true)
+	tw.tween_property(_compass_icon, "position", _compass_center_pos, 0.28)
+	tw.tween_property(_compass_hit,  "position", _compass_center_pos, 0.28)
+	await tw.finished
+	_compass_animating = false
+
+	# Show overlay to catch outside clicks, raise it below the compass
+	_radial_overlay.visible = true
+	_radial_overlay.z_index = -1  # behind compass icon but above scene
+
+	# Build and animate radial items
+	_spawn_radial_items(unlocked)
+
+func _close_compass_menu(animated: bool = true) -> void:
+	if _compass_animating and _compass_open == false:
+		return
+	_compass_open = false
+
+	# Remove radial items immediately
+	for item: Variant in _radial_items:
+		if is_instance_valid(item as Node):
+			(item as Node).queue_free()
+	_radial_items.clear()
+	_radial_overlay.visible = false
+
+	if not animated:
+		_compass_icon.position = _compass_idle_pos
+		_compass_hit.position  = _compass_idle_pos
+		return
+
+	_compass_animating = true
+	var tw := create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_BACK)
+	tw.set_parallel(true)
+	tw.tween_property(_compass_icon, "position", _compass_idle_pos, 0.22)
+	tw.tween_property(_compass_hit,  "position", _compass_idle_pos, 0.22)
+	await tw.finished
+	_compass_animating = false
+
+func _spawn_radial_items(unlocked: Array) -> void:
+	var n: int      = unlocked.size()
+	var screen_cx: float = 800.0
+	var screen_cy: float = 450.0
+
+	for i: int in range(n):
+		var conn: Dictionary = unlocked[i] as Dictionary
+		var label_text: String = str(conn.get("label", "Continue"))
+
+		# Angle: start at top (−90°), spread clockwise
+		var angle: float = (-PI * 0.5) + float(i) * (TAU / float(n))
+		var item_cx: float = screen_cx + cos(angle) * RADIAL_RADIUS
+		var item_cy: float = screen_cy + sin(angle) * RADIAL_RADIUS
+		var item_x: float  = item_cx - RADIAL_ITEM_W * 0.5
+		var item_y: float  = item_cy - RADIAL_ITEM_H * 0.5
+
+		var panel := PanelContainer.new()
+		panel.custom_minimum_size = Vector2(RADIAL_ITEM_W, RADIAL_ITEM_H)
+		panel.position  = Vector2(item_x, item_y)
+		panel.modulate.a = 0.0
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
+		sb.set_border_width_all(1)
+		sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
+		sb.set_corner_radius_all(8)
+		sb.content_margin_left = 12.0; sb.content_margin_right  = 12.0
+		sb.content_margin_top  = 8.0;  sb.content_margin_bottom = 8.0
+		panel.add_theme_stylebox_override("panel", sb)
+
+		var lbl := Label.new()
+		lbl.text = label_text
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+		lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
+		lbl.add_theme_font_size_override("font_size", 17)
+		lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
+		lbl.add_theme_font_override("font", _make_font(500))
+		panel.add_child(lbl)
+
+		# Make the whole panel clickable
+		panel.mouse_filter = Control.MOUSE_FILTER_STOP
+		var target_id: String = str(conn.get("target", ""))
+		panel.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton:
+				var mb: InputEventMouseButton = ev as InputEventMouseButton
+				if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+					_on_radial_item_selected(target_id))
+
+		# Hover highlight
+		panel.mouse_entered.connect(func() -> void:
+			sb.bg_color = Color(0.10, 0.22, 0.48, 0.97)
+			sb.border_color = Color(0.65, 0.88, 1.0, 1.0))
+		panel.mouse_exited.connect(func() -> void:
+			sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
+			sb.border_color = Color(0.45, 0.70, 1.0, 0.85))
+
+		_compass_root.add_child(panel)
+		_radial_items.append(panel)
+
+		# Fade in with slight stagger
+		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		fade_tw.tween_interval(float(i) * 0.04)
+		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
+
+func _on_radial_item_selected(target_id: String) -> void:
+	if target_id.is_empty():
+		return
+	SFXManager.play(SFXManager.SFX_MENU)
+	_close_compass_menu()
+	ExplorationManager.navigate_to(target_id)
+
+# ─────────────────────────────────────────────────────────────
 # Node Rendering
 # ─────────────────────────────────────────────────────────────
 
 func _on_node_entered(node: ExplorationNode) -> void:
+	_close_compass_menu(false)
 	_refresh_node(node)
 
 func _refresh_node(node: ExplorationNode) -> void:
@@ -306,60 +539,31 @@ func _refresh_node(node: ExplorationNode) -> void:
 	# Inventory
 	_rebuild_inventory_slots()
 
-	# Build choice buttons first (may be replaced for STORY/BATTLE/EXIT)
-	_build_choices(node)
+	# Point-and-click hotspots for this node
+	_rebuild_spots(node)
 
-	# Node-type special behaviour
+	# Node-type routing: BATTLE/EXIT get inline action buttons; all others use compass.
+	_close_compass_menu(false)
 	match node.node_type:
-		ExplorationNode.NodeType.STORY:
-			if not node.vn_scene.is_empty():
-				_play_vn(node.vn_scene, func() -> void: _on_vn_finished(node))
 		ExplorationNode.NodeType.BATTLE:
+			_choices_vbox.visible = true
+			_compass_set_visible(false)
 			_show_battle_prompt(node)
 		ExplorationNode.NodeType.EXIT:
+			_choices_vbox.visible = true
+			_compass_set_visible(false)
 			_show_exit_prompt()
+		ExplorationNode.NodeType.STORY:
+			_choices_vbox.visible = false
+			_compass_set_visible(false)   # hidden while VN plays; restored in _on_vn_finished
+			if not node.vn_scene.is_empty():
+				_play_vn(node.vn_scene, func() -> void: _on_vn_finished(node))
+			else:
+				_compass_set_visible(true)
+		_:
+			_choices_vbox.visible = false
+			_compass_set_visible(true)
 
-func _build_choices(node: ExplorationNode) -> void:
-	for child: Node in _choices_vbox.get_children():
-		child.queue_free()
-
-	if node.connections.is_empty():
-		var lbl := Label.new()
-		lbl.text = "(No exits from this location.)"
-		lbl.add_theme_font_size_override("font_size", 18)
-		lbl.add_theme_color_override("font_color", Color(0.5, 0.5, 0.55))
-		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_choices_vbox.add_child(lbl)
-		return
-
-	for conn: Variant in node.connections:
-		if not conn is Dictionary:
-			continue
-		var cd: Dictionary    = conn as Dictionary
-		var label_text: String = str(cd.get("label", "Continue"))
-		var target_id: String  = str(cd.get("target", ""))
-		var unlocked: bool     = ExplorationManager.is_connection_unlocked(cd)
-		var hint: String       = ExplorationManager.get_connection_lock_hint(cd)
-
-		var btn := Button.new()
-		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		btn.add_theme_font_size_override("font_size", 20)
-
-		if unlocked:
-			btn.text = "▶   " + label_text
-			btn.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
-			var captured_id: String = target_id
-			btn.pressed.connect(func() -> void:
-				SFXManager.play(SFXManager.SFX_MENU)
-				ExplorationManager.navigate_to(captured_id))
-		else:
-			btn.text = "  " + label_text
-			if not hint.is_empty():
-				btn.text += "   [color=#888888](%s)[/color]" % hint
-			btn.add_theme_color_override("font_color", Color(0.45, 0.45, 0.50))
-			btn.disabled = true
-
-		_choices_vbox.add_child(btn)
 
 # ─────────────────────────────────────────────────────────────
 # Visual Novel Integration
@@ -373,6 +577,7 @@ func _play_vn(path: String, on_done: Callable) -> void:
 		on_done.call()
 		return
 	_vn_playing = true
+	_compass_set_visible(false)   # disable compass while VN is active
 	var vn: Node = VN_PLAYER_SCENE.instantiate()
 	add_child(vn)
 	vn.play_scene(path, func() -> void:
@@ -380,8 +585,8 @@ func _play_vn(path: String, on_done: Callable) -> void:
 		on_done.call())
 
 func _on_vn_finished(node: ExplorationNode) -> void:
-	# Rebuild choices after the VN plays so the player can navigate
-	_build_choices(node)
+	# VN done — restore compass so player can navigate
+	_compass_set_visible(true)
 
 # ─────────────────────────────────────────────────────────────
 # Battle Integration
@@ -596,6 +801,7 @@ func _execute_item_use(item_name: String, idict: Dictionary) -> void:
 		_play_vn(vn_path, func() -> void:
 			var node: ExplorationNode = ExplorationManager.current_node
 			if node != null:
+				_compass_set_visible(true)
 				_refresh_node(node))
 	else:
 		var node: ExplorationNode = ExplorationManager.current_node
@@ -621,6 +827,126 @@ func _show_no_session_error() -> void:
 	btn.pressed.connect(func() -> void:
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
 	_choices_vbox.add_child(btn)
+
+# ─────────────────────────────────────────────────────────────
+# Point-and-click hotspots
+# ─────────────────────────────────────────────────────────────
+
+func _build_spots_layer() -> void:
+	_spots_layer = Control.new()
+	_spots_layer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_spots_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_spots_layer.z_index      = 5  # above bg, below compass (30)
+	add_child(_spots_layer)
+
+func _build_tooltip() -> void:
+	_tooltip_panel = PanelContainer.new()
+	_tooltip_panel.visible      = false
+	_tooltip_panel.z_index      = 80
+	_tooltip_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.04, 0.12, 0.20, 0.92)
+	sb.set_border_width_all(2)
+	sb.border_color = Color(0.35, 0.90, 1.0, 0.85)
+	sb.set_corner_radius_all(5)
+	sb.content_margin_left = 12.0; sb.content_margin_right  = 12.0
+	sb.content_margin_top  =  6.0; sb.content_margin_bottom =  6.0
+	_tooltip_panel.add_theme_stylebox_override("panel", sb)
+	_tooltip_lbl = Label.new()
+	_tooltip_lbl.add_theme_font_size_override("font_size", 16)
+	_tooltip_lbl.add_theme_color_override("font_color", Color(0.80, 0.90, 0.95))
+	_tooltip_panel.add_child(_tooltip_lbl)
+	add_child(_tooltip_panel)
+
+func _rebuild_spots(node: ExplorationNode) -> void:
+	if _spots_layer == null:
+		return
+	for child: Node in _spots_layer.get_children():
+		child.queue_free()
+	_on_spot_hover_exit()   # ensure cursor + tooltip reset when node changes
+	if node.clickable_spots.is_empty():
+		return
+	var vp: Vector2 = get_viewport_rect().size
+	var bg_w: float = vp.x * BG_AREA_FRACTION
+	var bg_h: float = vp.y
+	for spot_var: Variant in node.clickable_spots:
+		if spot_var is Dictionary:
+			_spawn_spot(spot_var as Dictionary, bg_w, bg_h)
+
+func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float) -> void:
+	var xn: float         = float(spot.get("x_norm",  0.5))
+	var yn: float         = float(spot.get("y_norm",  0.5))
+	var wn: float         = float(spot.get("w_norm",  0.08))
+	var hn: float         = float(spot.get("h_norm",  0.08))
+	var icon_path: String = str(spot.get("icon",     ""))
+	var vn_path: String   = str(spot.get("vn_scene", ""))
+	var tip: String       = str(spot.get("tooltip",  ""))
+
+	var pw: float = wn * bg_w
+	var ph: float = hn * bg_h
+	var hit := Control.new()
+	hit.position     = Vector2(xn * bg_w - pw * 0.5, yn * bg_h - ph * 0.5)
+	hit.size         = Vector2(pw, ph)
+	hit.mouse_filter = Control.MOUSE_FILTER_STOP
+	_spots_layer.add_child(hit)
+
+	if not icon_path.is_empty() and ResourceLoader.exists(icon_path):
+		var icon_tr := TextureRect.new()
+		icon_tr.set_anchors_preset(Control.PRESET_FULL_RECT)
+		icon_tr.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+		icon_tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon_tr.texture      = load(icon_path) as Texture2D
+		icon_tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		hit.add_child(icon_tr)
+
+	var cap_tip: String = tip
+	var cap_vn: String  = vn_path
+	hit.mouse_entered.connect(func() -> void: _on_spot_hover_enter(cap_tip))
+	hit.mouse_exited.connect(func() -> void:  _on_spot_hover_exit())
+	hit.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton:
+			var mb := ev as InputEventMouseButton
+			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+				_on_spot_clicked(cap_vn))
+
+func _on_spot_hover_enter(tooltip_text: String) -> void:
+	_hovering_spot = true
+	if _magnifier_tex != null:
+		Input.set_custom_mouse_cursor(_magnifier_tex, Input.CURSOR_ARROW, Vector2(8.0, 8.0))
+	if not tooltip_text.is_empty() and _tooltip_panel != null:
+		_tooltip_lbl.text      = tooltip_text
+		_tooltip_panel.visible = true
+
+func _on_spot_hover_exit() -> void:
+	_hovering_spot = false
+	Input.set_custom_mouse_cursor(null)
+	_hide_tooltip()
+
+func _hide_tooltip() -> void:
+	if _tooltip_panel != null:
+		_tooltip_panel.visible = false
+
+func _on_spot_clicked(vn_path: String) -> void:
+	if _vn_playing or vn_path.is_empty():
+		return
+	_on_spot_hover_exit()   # restore cursor before VN takes over
+	SFXManager.play(SFXManager.SFX_MENU)
+	_play_vn(vn_path, func() -> void:
+		var node: ExplorationNode = ExplorationManager.current_node
+		if node != null:
+			_compass_set_visible(true))
+
+func _process(_delta: float) -> void:
+	if _tooltip_panel != null and _tooltip_panel.visible:
+		var mp: Vector2 = get_local_mouse_position()
+		var vp: Vector2 = get_viewport_rect().size
+		var tp: Vector2 = _tooltip_panel.size
+		_tooltip_panel.position = Vector2(
+			minf(mp.x + 16.0, vp.x - tp.x - 4.0),
+			minf(mp.y + 16.0, vp.y - tp.y - 4.0))
+
+func _exit_tree() -> void:
+	Input.set_custom_mouse_cursor(null)
 
 # ─────────────────────────────────────────────────────────────
 # Debug overlay

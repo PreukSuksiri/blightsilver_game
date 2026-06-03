@@ -1,0 +1,111 @@
+=== Battle of Burnt Toast Uprising ===
+Battle started: 2026-06-03 06:19:33.717
+Game Session of Shirley Temple (started 2026-06-03 06:19:06.824)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:53.445] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[01:14.156] Mode selected P1: TECH
+[01:15.357] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[01:20.521] Tech played  P1: "Radar"
+[01:26.327] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:27.948] Revealed: P0 (3,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:29.553] Revealed: P0 (4,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:31.151] Revealed: P0 (3,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:31.152] Tech resolved  P1
+[01:34.674] Mode selected P1: ATTACK
+[01:34.676] MSG: Player 2: tap a character to attack.
+[01:41.304] Revealed: P1 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:41.305] Dice rolled: 4
+[01:41.312] MSG: Ponycorn wins!
+[01:52.908] Crystals: P0 5000 → 4650 (-350)  [battle]
+[01:54.931] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:58.149] Attack P1(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P0(3,3)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}  Dice=4  ATK=25 vs DEF=20  → WIN
+[01:58.149] Anim: 3A  △ P0(3,3)
+[01:58.149] Card destroyed  P0 (3,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[02:00.113] Mode selected P1: ATTACK
+[02:00.115] MSG: Player 2: tap a character to attack.
+[02:06.746] Revealed: P1 (2,3) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[02:06.746] Dice rolled: 4
+[02:06.749] MSG: Flame Lizard wins!
+[02:18.288] Crystals: P0 4650 → 4400 (-250)  [battle]
+[02:20.305] MSG: [DEBUG] Bot Player timed out — ending turn.
+[02:23.522] Attack P1(2,3)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P0(3,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}  Dice=4  ATK=25 vs DEF=20  → WIN
+[02:23.522] Anim: 3A  △ P0(3,1)
+[02:23.522] Card destroyed  P0 (3,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[02:25.491] Turn ended  P1  |  Crystals P0=4400 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4400 P1=4400 ---
+[03:01.746] Revealed: P0 (4,4) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[03:01.746] Dice rolled: 5
+[03:01.754] MSG: Joan the Faithful Warrior wins!
+[03:13.332] Crystals: P1 4400 → 4100 (-300)  [battle]
+[03:18.578] Attack P0(4,4)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine} → P1(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=5  ATK=25 vs DEF=20  → WIN
+[03:18.578] Anim: 3A  △ P1(0,2)
+[03:18.578] Card destroyed  P1 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[03:41.710] Revealed: P0 (0,3) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[03:41.710] Dice rolled: 2
+[03:41.714] MSG: Ice Mage wins!
+[03:53.315] Crystals: P1 4100 → 3700 (-400)  [battle]
+[03:58.559] Attack P0(0,3)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P1(2,3)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=2  ATK=50 vs DEF=40  → WIN
+[03:58.559] Anim: 3A  △ P1(2,3)
+[03:58.559] Card destroyed  P1 (2,3) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[04:12.398] Turn ended  P0  |  Crystals P0=4400 P1=3700
+
+--- Turn 3  |  Player 1  |  Crystals P0=4400 P1=3700 ---
+[04:14.638] Mode selected P1: TECH
+[04:15.835] Crystals: P1 3700 → 2200 (-1500)  [tech cost]
+[04:20.993] Tech played  P1: "Resurrection"
+[04:26.797] Target prompt: "Choose a destroyed character to revive."  filter=graveyard
+[04:28.372] Revealed: P1 (0,1) "Flame Lizard" {Unit ATK0 DEF0 | cost 400 | affinity Nature | base 0/0}
+[04:28.373] MSG: Revived Flame Lizard at [0,1]!
+[04:28.375] Tech resolved  P1
+[04:31.896] Mode selected P1: ATTACK
+[04:31.898] MSG: Player 2: tap a character to attack.
+[04:38.431] Dice rolled: 4
+[04:38.434] MSG: Both cards are destroyed!
+[04:49.634] Crystals: P1 2200 → 1800 (-400)  [battle]
+[04:51.960] MSG: [DEBUG] Bot Player timed out — ending turn.
+[04:54.896] Crystals: P0 4400 → 4000 (-400)  [battle]
+[05:00.068] Attack P1(0,1)"Flame Lizard" {Unit ATK0 DEF0 | cost 400 | affinity Nature | base 0/0} → P0(0,3)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=4  ATK=0 vs DEF=0  → TIE
+[05:00.068] Anim: 3C  △ P1(0,1) + △ P0(0,3)
+[05:00.068] Card destroyed  P1 (0,1) "Flame Lizard" {Unit ATK0 DEF0 | cost 400 | affinity Nature | base 0/0}
+[05:00.068] Card destroyed  P0 (0,3) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[05:02.043] Mode selected P1: ATTACK
+[05:02.045] MSG: Player 2: tap a character to attack.
+[05:08.608] Revealed: P1 (0,0) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[05:08.608] Dice rolled: 5
+[05:08.611] MSG: Leech Man wins!
+[05:20.200] Crystals: P0 4000 → 3720 (-280)  [battle]
+[05:22.150] MSG: [DEBUG] Bot Player timed out — ending turn.
+[05:25.427] Attack P1(0,0)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P0(4,4)"Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}  Dice=5  ATK=60 vs DEF=5  → WIN
+[05:25.427] Anim: 3A  △ P0(4,4)
+[05:25.427] Card destroyed  P0 (4,4) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[05:27.389] Turn ended  P1  |  Crystals P0=3720 P1=1800
+
+--- Turn 4  |  Player 0  |  Crystals P0=3720 P1=1800 ---
+[05:48.019] Crystals: P0 3720 → 2720 (-1000)  [tech cost]
+[05:53.225] Tech played  P0: "Accident"
+[05:59.059] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[06:04.885] Card destroyed  P1 (0,0) "Leech Man" {Unit ATK60 DEF60 | cost 880 | affinity Bio | buff +permDEF20}
+[06:04.888] Tech resolved  P0
+[06:20.689] MSG: Tap 2 material card(s) on the field.
+[06:24.138] MSG: 1 more material(s) needed.
+[06:25.081] Crystals: P0 2720 → 2420 (-300)  [union]
+[06:25.111] Revealed: P0 (3,4) "Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine}
+[06:25.111] Union summoned P0: "Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine} from "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down}, "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}
+[06:25.111] MSG: Player 1 summoned [Pixie Queen] using: "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine | face-down}, "Sunrise Lady" {Unit ATK20 DEF25 | cost 300 | affinity Divine | face-down}
+[06:50.020] Revealed: P1 (1,1) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[06:50.020] Dice rolled: 1
+[06:50.055] MSG: Pixie Queen wins!
+[07:01.596] Crystals: P1 1800 → 1100 (-700)  [battle]
+[07:01.596] Crystals: P1 1100 → 1400 (+300)  [recovery]
+[07:01.597] MSG: Melissa the Healer: Recovered 300 Crystals!
+[07:01.668] Attack P0(3,4)"Pixie Queen" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 300 | affinity Divine} → P1(1,1)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}  Dice=1  ATK=30 vs DEF=25  → WIN
+[07:01.668] Anim: 3A  △ P1(1,1)
+[07:01.668] Card destroyed  P1 (1,1) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}

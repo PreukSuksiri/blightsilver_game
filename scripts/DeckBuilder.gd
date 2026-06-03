@@ -118,13 +118,36 @@ class FEDraggableCard extends TextureRect:
 		_want_detail = false   # cancel long-press when drag starts
 		const PW: float = 100.0
 		const PH: float = 137.0
-		var prev := TextureRect.new()
-		prev.texture             = texture
+		# Card-shaped preview (matches occupied cell appearance)
+		var prev := Panel.new()
 		prev.custom_minimum_size = Vector2(PW, PH)
-		prev.size                = Vector2(PW, PH)
-		prev.expand_mode         = TextureRect.EXPAND_IGNORE_SIZE
-		prev.stretch_mode        = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		prev.pivot_offset        = Vector2(PW * 0.5, PH * 0.5)
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.06, 0.12, 0.28, 0.95) if card_type == "character" \
+				else Color(0.22, 0.07, 0.10, 0.95)
+		sb.set_border_width_all(1)
+		sb.border_color = Color(0.45, 0.70, 1.0, 0.75)
+		sb.set_corner_radius_all(4)
+		prev.add_theme_stylebox_override("panel", sb)
+		var art := TextureRect.new()
+		art.position     = Vector2.ZERO
+		art.size         = Vector2(PW, PH)
+		art.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		art.texture      = texture
+		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		prev.add_child(art)
+		var lbl := Label.new()
+		lbl.position = Vector2(0.0, PH - 22.0)
+		lbl.size     = Vector2(PW, 22.0)
+		lbl.text     = card_name
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.clip_text    = true
+		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		lbl.add_theme_font_size_override("font_size", 9)
+		var lbl_sb := StyleBoxFlat.new()
+		lbl_sb.bg_color = Color(0.0, 0.0, 0.0, 0.72)
+		lbl.add_theme_stylebox_override("normal", lbl_sb)
+		prev.add_child(lbl)
 		set_drag_preview(prev)
 		return {"card_name": card_name, "card_type": card_type,
 				"from_grid": false, "grid_row": -1, "grid_col": -1}
@@ -167,20 +190,46 @@ class FEGridCell extends Panel:
 		if occupied_name.is_empty():
 			return null
 		_want_detail = false   # cancel long-press when drag starts
+		# Capture values BEFORE the callback vacates this cell (vacate() clears occupied_name/tex)
+		var captured_name: String   = occupied_name
+		var captured_type: String   = occupied_type
+		var captured_tex:  Texture2D = _card_tex.texture if _card_tex != null else null
 		if on_drag_start_cb.is_valid():
 			on_drag_start_cb.call(grid_row, grid_col)
 		const PW: float = 100.0
 		const PH: float = 137.0
-		var prev := TextureRect.new()
-		if _card_tex != null:
-			prev.texture = _card_tex.texture
+		# Card-shaped preview (matches occupied cell appearance)
+		var prev := Panel.new()
 		prev.custom_minimum_size = Vector2(PW, PH)
-		prev.size                = Vector2(PW, PH)
-		prev.expand_mode         = TextureRect.EXPAND_IGNORE_SIZE
-		prev.stretch_mode        = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		prev.pivot_offset        = Vector2(PW * 0.5, PH * 0.5)
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.06, 0.12, 0.28, 0.95) if captured_type == "character" \
+				else Color(0.22, 0.07, 0.10, 0.95)
+		sb.set_border_width_all(1)
+		sb.border_color = Color(0.45, 0.70, 1.0, 0.75)
+		sb.set_corner_radius_all(4)
+		prev.add_theme_stylebox_override("panel", sb)
+		var art := TextureRect.new()
+		art.position     = Vector2.ZERO
+		art.size         = Vector2(PW, PH)
+		art.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		art.texture      = captured_tex
+		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		prev.add_child(art)
+		var lbl := Label.new()
+		lbl.position = Vector2(0.0, PH - 22.0)
+		lbl.size     = Vector2(PW, 22.0)
+		lbl.text     = captured_name
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.clip_text    = true
+		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		lbl.add_theme_font_size_override("font_size", 9)
+		var lbl_sb := StyleBoxFlat.new()
+		lbl_sb.bg_color = Color(0.0, 0.0, 0.0, 0.72)
+		lbl.add_theme_stylebox_override("normal", lbl_sb)
+		prev.add_child(lbl)
 		set_drag_preview(prev)
-		return {"card_name": occupied_name, "card_type": occupied_type,
+		return {"card_name": captured_name, "card_type": captured_type,
 				"from_grid": true, "grid_row": grid_row, "grid_col": grid_col}
 
 	func _can_drop_data(_pos: Vector2, data: Variant) -> bool:
@@ -550,17 +599,25 @@ func _on_remove_char() -> void:
 	var selected: PackedInt32Array = char_list.get_selected_items()
 	if selected.is_empty():
 		return
+	var removed_name: String = current_deck.characters[selected[0]]
 	current_deck.characters.remove_at(selected[0])
 	remove_char_btn.disabled = true
+	_fe_purge_card_from_formations(removed_name)
+	SaveManager.save_deck(current_deck)  # persist formation purge immediately
 	_rebuild_deck_lists()
+	_fe_refresh_if_open()
 
 func _on_remove_trap() -> void:
 	var selected: PackedInt32Array = trap_list.get_selected_items()
 	if selected.is_empty():
 		return
+	var removed_name: String = current_deck.traps[selected[0]]
 	current_deck.traps.remove_at(selected[0])
 	remove_trap_btn.disabled = true
+	_fe_purge_card_from_formations(removed_name)
+	SaveManager.save_deck(current_deck)  # persist formation purge immediately
 	_rebuild_deck_lists()
+	_fe_refresh_if_open()
 
 func _on_remove_tech() -> void:
 	var selected: PackedInt32Array = tech_list.get_selected_items()
@@ -1458,6 +1515,11 @@ func _fe_char_satisfies_cond(card_name: String, cond: Dictionary) -> bool:
 		var cd: CharacterData = CardDatabase.get_character(card_name)
 		if cd == null or cd.crystal_cost < (mc as int):
 			return false
+	var md: Variant = cond.get("min_def", 0)
+	if md is int and (md as int) > 0:
+		var cd: CharacterData = CardDatabase.get_character(card_name)
+		if cd == null or cd.base_def < (md as int):
+			return false
 	return true
 
 func _fe_make_union_tile(u: UnionData) -> Control:
@@ -1698,6 +1760,26 @@ func _fe_load_card_tex(card_name: String) -> Texture2D:
 	if ResourceLoader.exists(path):
 		return load(path) as Texture2D
 	return null
+
+## Remove a card from every formation's placements (called when a card is deleted from the deck).
+func _fe_purge_card_from_formations(card_name: String) -> void:
+	if current_deck == null: return
+	for f: Variant in current_deck.formations:
+		var fd: Dictionary = f as Dictionary
+		var pls: Array = fd.get("placements", []) as Array
+		for i in range(pls.size() - 1, -1, -1):
+			if str((pls[i] as Dictionary).get("name", "")) == card_name:
+				pls.remove_at(i)
+		fd["placements"] = pls
+
+## Re-select the current formation in the overlay so gallery + grid stay in sync.
+func _fe_refresh_if_open() -> void:
+	if _fe_overlay == null or not is_instance_valid(_fe_overlay): return
+	if _fe_selected >= 0:
+		_fe_select_formation(_fe_selected)
+	else:
+		_fe_refresh_gallery()
+		_fe_refresh_union_panel()
 
 func _fe_save_formation() -> void:
 	if current_deck == null: return

@@ -158,7 +158,7 @@ func _load_unions() -> void:
 		_z([[0,2], [1,2], [2,0], [2,4], [3,0], [3,2], [3,4], [4,1], [4,3]]),
 		_conds([{"card_name": "Tiny Pixie"}, {"affinity": A.DIVINE}], 9))
 
-	_add("Diamond Unicorn", A.DIVINE, 50, 35, 500, R.UNCOMMON,
+	_add("Diamond Unicorn", A.DIVINE, 30, 35, 500, R.UNCOMMON,
 		AB.ONE_USE_ATK_BOOST, {"bonus": 15},
 		"+15 ATK until the end of this turn, once.",
 		"+15 ATK until ????",
@@ -336,7 +336,7 @@ func _load_unions() -> void:
 		_z([[0,2], [1,1], [1,2], [1,3], [2,0], [2,2], [2,4]]),
 		_conds([{"affinity": A.ARCANE, "min_cost": 500}, {"affinity": A.NATURE, "min_cost": 500}, {"affinity": A.DIVINE, "min_cost": 500}], 7))
 
-	_add("Colorful Mage", A.ARCANE, 55, 40, 500, R.RARE,
+	_add("Colorful Mage", A.ARCANE, 40, 40, 500, R.RARE,
 		AB.PERM_STAT_PENALTY_VS_NON_AFFINITY, {"affinity": A.ARCANE, "atk": 10, "def": 10}, "Foe’s non-Arcane get -10 ATK&DEF permanently in Reckoning with this card",
 		"Foe’s non-Arcane get ??? in Reckoning with this card",
 		"Red Mage + Green Mage + Blue Mage + 500 cost",

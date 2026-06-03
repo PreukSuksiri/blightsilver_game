@@ -39,6 +39,7 @@ var turn_manager: TurnManager
 var ai_player: AIPlayer
 var ai_player_0: AIPlayer = null   # AI_VS_AI mode only: controls player 0
 var _active_ai: AIPlayer = null    # whichever AI is currently taking a turn
+var _vs_ai_deck: Variant = null    # captured before new_game() clears GameState.battle_ai_deck
 
 # Player portrait illustration nodes
 var _p1_portrait: TextureRect = null
@@ -101,7 +102,8 @@ var _void_modal: Control = null
 # Crystal icon refs (for burst animation)
 var _p1_crystal_icon: TextureRect = null
 var _p2_crystal_icon: TextureRect = null
-var _prev_crystals: Array[int] = [3000, 3000]
+var _prev_crystals: Array[int]    = [3000, 3000]
+var _almost_win_bgm_active: bool  = false   # latches true once bgm_almost_win starts
 
 # Attack count labels (shown below each player's crystal display)
 var _p1_attack_lbl: Label = null
@@ -310,6 +312,8 @@ func _ready() -> void:
 	game_over_panel.visible = false
 	mode_panel.visible = false
 	action_panel.visible = false
+	# Capture before new_game() clears it
+	_vs_ai_deck = GameState.battle_ai_deck
 	_start_game()
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
 		AIvsAIManager.start_logging(self)
@@ -1207,7 +1211,7 @@ func _do_ai_setup() -> void:
 
 	var _deck1: Variant = AIvsAIManager.deck1 \
 		if GameState.game_mode == GameState.GameMode.AI_VS_AI \
-		else GameState.battle_ai_deck
+		else _vs_ai_deck
 	var placements := ai_player.decide_setup(_deck1, fc_src)
 	for placement in placements:
 		var pos: Vector2i = placement["pos"]
@@ -1288,8 +1292,9 @@ func _start_battle_music() -> void:
 	var path: String = GameState.battle_bgm_path
 	if path.is_empty():
 		path = BGMManager.get_default_path(BGMManager.CONTEXT_BATTLE)
+	# Start at 00:14 (intro skip), loop back to 00:00 when the track ends.
 	BGMManager.play_path(
-		path, 0.8, 0.8, GameState.battle_bgm_volume, BGMManager.CONTEXT_BATTLE)
+		path, 0.8, 0.8, GameState.battle_bgm_volume, BGMManager.CONTEXT_BATTLE, 0.0, 14.0)
 
 # ─────────────────────────────────────────────────────────────
 # Tech card fan
@@ -2635,7 +2640,7 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 		backdrop.queue_free())
 	vbox.add_child(clear_btn)
 
-	panel.custom_minimum_size = Vector2(520.0, 130.0)
+	panel.custom_minimum_size = Vector2(570.0, 130.0)
 	await get_tree().process_frame
 	var vs: Vector2 = get_viewport_rect().size
 	panel.position = Vector2((vs.x - panel.size.x) * 0.5, (vs.y - panel.size.y) * 0.5)
@@ -4231,7 +4236,7 @@ func _show_compact_coin_flip(results: Array) -> void:
 	# ── Semi-transparent panel ──────────────────────────────
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", _make_compact_flip_stylebox())
-	panel.z_index       = 80
+	panel.z_index       = 115
 	panel.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	panel.anchor_left   = 0.5
 	panel.anchor_right  = 0.5
@@ -4545,8 +4550,8 @@ func _deal_tech_cards(player: int, count: int) -> void:
 				var n: String = str(t).strip_edges()
 				if not n.is_empty() and CardDatabase.get_tech(n) != null and n not in forced_names:
 					forced_names.append(n)
-		elif player == 1 and GameState.battle_ai_deck != null:
-			for t: Variant in (GameState.battle_ai_deck as DeckData).techs:
+		elif player == 1 and _vs_ai_deck != null:
+			for t: Variant in (_vs_ai_deck as DeckData).techs:
 				var dn: String = str(t).strip_edges()
 				if not dn.is_empty() and CardDatabase.get_tech(dn) != null and dn not in forced_names:
 					forced_names.append(dn)
@@ -4595,6 +4600,7 @@ func _on_crystals_changed(player_index: int, new_amount: int, _reason: String = 
 		_play_crystal_burst(player_index)
 		await _tick_down_crystal(player_index, old_amount, new_amount)
 		await get_tree().create_timer(1.0).timeout
+		_check_almost_win_bgm()
 		if new_amount <= 0:
 			_fade_out_battle_music(0.5)
 	else:
@@ -5627,10 +5633,13 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			await get_tree().create_timer(0.4).timeout
 			var _ab_target: Vector2i = _active_ai.decide_target(filter)
 			if filter == "ability_rebel_king_swap":
+				_flash_target_card(GameState.current_player, _ab_target.x, _ab_target.y)
 				_handle_tech_target(GameState.current_player, _ab_target)
 			elif filter == "ability_false_prophet_reveal":
+				_flash_target_card(GameState.get_opponent(GameState.current_player), _ab_target.x, _ab_target.y)
 				_handle_tech_target(GameState.get_opponent(GameState.current_player), _ab_target)
 			else:
+				_flash_target_card(GameState.get_opponent(GameState.current_player), _ab_target.x, _ab_target.y)
 				_handle_tech_target(GameState.get_opponent(GameState.current_player), _ab_target)
 		return
 
@@ -5663,6 +5672,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				target_player = opp_idx
 		elif "opponent" in filter or filter == "row_or_column" or filter == "adjacent":
 			target_player = GameState.get_opponent(GameState.current_player)
+		_flash_target_card(target_player, ai_target.x, ai_target.y)
 		_handle_tech_target(target_player, ai_target)
 	# Trap/tech effects where AI is the DEFENDING player (not AI's turn, but AI must self-select)
 	elif filter in _defender_response_filters \
@@ -5676,6 +5686,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		var def_ai: AIPlayer = _get_defending_ai()
 		var ai_target: Vector2i = def_ai.decide_target(filter)
 		def_ai.ai_target_chosen.emit(ai_target)  # log defender AI choice
+		_flash_target_card(def_player, ai_target.x, ai_target.y)
 		_handle_tech_target(def_player, ai_target)
 	elif _is_ai_turn() and filter in _defender_response_filters:
 		# Human is the responding player during the AI's turn.
@@ -6324,6 +6335,16 @@ func _find_own_card_pos(player: int, card_name: String) -> Vector2i:
 
 func _clear_after_tech() -> void:
 	_set_own_facedown_char_peek(false)   # safety net — always clear peek on tech end
+	# Restore the human player's auto-peek if it was active before this tech card was played.
+	# _set_own_facedown_char_peek(false) blindly kills _is_peeking on all face-down cards;
+	# we re-apply it here so the player's grid doesn't suddenly go dark after a tech action.
+	var cp := GameState.current_player
+	if not _is_ai_turn() and _reveal_preview[cp]:
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(cp, r, c)
+				if card.card_type in ["character", "trap"] and not card.face_up:
+					(grid_nodes[cp][r][c] as Control).set_preview_revealed(true)
 	action_panel.visible = false
 	pending_tech_filter = ""
 	pending_tech_name = ""
@@ -6346,6 +6367,7 @@ func _prompt_ai_radar_pick() -> void:
 		_finish_tech_action(GameState.current_player)
 		return
 	_active_ai.ai_target_chosen.emit(ai_target)
+	_flash_target_card(opponent, ai_target.x, ai_target.y)
 	_handle_tech_target(opponent, ai_target)
 
 ## AI Great Diplomacy: pick up to N own face-down units.
@@ -6399,12 +6421,12 @@ func _on_ai_bluff(player: int, row: int, col: int, emoticon: String) -> void:
 func _on_awaiting_trap_choice(trap_name: String, choices: Array) -> void:
 	if is_instance_valid(_current_battle_overlay):
 		_current_battle_overlay.pause_for_choice()
-	_show_ability_choice_overlay(trap_name, choices)
 	if _is_ai_turn():
 		await get_tree().create_timer(0.6).timeout
-		_hide_ability_choice_overlay()
 		var ai_choice: int = _active_ai.decide_trap_choice(trap_name, choices)
 		turn_manager.resolve_ability_choice(ai_choice)
+	else:
+		_show_ability_choice_overlay(trap_name, choices)
 
 ## Routes OPTIONAL_CRYSTAL_PAY_DEF_BOOST defender choices to the correct player.
 ## During the attacker's turn the defending player is the opponent — if that's the AI, auto-resolve.
@@ -6775,15 +6797,22 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 	_refresh_card_node(player, row, col)
 	var inst := GameState.get_card(player, row, col)
 	node.play_reveal_animation()
-	# Dead-end reveal plays a 0.5s hold before disappearing — wait for that to finish
-	var delay := 0.75 if (inst != null and inst.card_type == "dead_end") else 0.3
+	# Dead-end / trap: 0.75s hold so the player can read what was revealed.
+	# Other card types: 0.3s brief hold.
+	var delay: float
+	if inst != null and inst.card_type in ["dead_end", "trap"]:
+		delay = 0.75
+	else:
+		delay = 0.3
 	await get_tree().create_timer(delay).timeout
-	# Trap revealed → sent to void immediately, UNLESS it's being attacked (BATTLE phase).
-	# In BATTLE phase the trap will be destroyed by _handle_trap_effect instead.
+	# Trap revealed → play black-smoke dissolve then clear the slot.
+	# BATTLE phase is excluded: the trap is handled by _handle_trap_effect after combat.
 	if inst != null and inst.card_type == "trap" \
 			and GameState.current_phase != GameState.Phase.BATTLE:
 		_void_piles[player].append({"card_name": inst.card_name, "card_type": inst.card_type})
 		_update_void_stacks()
+		_spawn_dissolve_effect(node)
+		await get_tree().create_timer(0.90).timeout
 		GameState.void_trap(player, row, col)
 	_refresh_card_node(player, row, col)
 
@@ -6807,6 +6836,7 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 		_spawn_destroy_effect(node)
 		node.play_destroy_animation()
 		await get_tree().create_timer(0.55).timeout
+	_check_almost_win_bgm()
 	_refresh_card_node(player, row, col)
 
 func _spawn_destroy_effect(card_node: Control) -> void:
@@ -6957,6 +6987,17 @@ func _on_ai_mode_chosen(mode: GameState.TurnMode) -> void:
 	_hide_thinking_bubble()
 	turn_manager.select_mode(mode)
 
+## Briefly flash a card node to signal AI target selection (non-blocking).
+func _flash_target_card(player: int, row: int, col: int) -> void:
+	if player < 0 or row < 0 or col < 0:
+		return
+	var node: Control = grid_nodes[player][row][col]
+	var tween := node.create_tween()
+	tween.tween_property(node, "modulate", Color(1.8, 0.55, 0.25, 1.0), 0.14) \
+		.set_trans(Tween.TRANS_SINE)
+	tween.tween_property(node, "modulate", Color.WHITE, 0.26) \
+		.set_trans(Tween.TRANS_SINE)
+
 func _on_ai_attack_chosen(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	if GameState.current_phase == GameState.Phase.GAME_OVER:
 		return
@@ -6964,7 +7005,18 @@ func _on_ai_attack_chosen(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	var attacker: GameState.CardInstance = GameState.get_card(player, attacker_pos.x, attacker_pos.y)
 	if attacker.card_type != "character":
 		return
-	await get_tree().create_timer(0.3).timeout
+	# Flip attacker face-up for 1 second so the human can see which card is attacking
+	var attacker_node: Control = grid_nodes[player][attacker_pos.x][attacker_pos.y]
+	attacker_node.set_preview_revealed(true)
+	await get_tree().create_timer(1.0).timeout
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		attacker_node.set_preview_revealed(false)
+		return
+	# Flash the target cell so the human can see which card is being attacked.
+	# Do NOT call set_preview_revealed(false) here — that causes the brief face-down flicker.
+	# perform_attack will reveal the card properly (face_up=true), making the peek flag moot.
+	_flash_target_card(GameState.get_opponent(player), target_pos.x, target_pos.y)
+	await get_tree().create_timer(0.4).timeout
 	if GameState.current_phase == GameState.Phase.GAME_OVER:
 		return
 	turn_manager.perform_attack(attacker_pos, target_pos)
@@ -7369,23 +7421,26 @@ func _on_game_over(winner: int) -> void:
 		_tech_fan.visible = false
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = false
+	dice_display.text = ""
 
 	# ── 0. Brief pause so the crystal-hit-zero moment lands before the chaos ──
-	_stop_battle_music()
+	# Music is NOT stopped here — it carries through the pause and is handled at shake start.
 	await get_tree().create_timer(1.2).timeout
 
 	# ── 1. Flip-reveal all face-down cards (with screen shake) ───────────────
 	var ml: Control = get_node("MainLayout")
 	_shake_origin = ml.position
 	_shake_active = true
-	# Result sting on loss; victory track on win (start at 0s so playback is reliable)
-	var _go_ctx: String = BGMManager.CONTEXT_VICTORY if player_won else BGMManager.CONTEXT_DEFEAT
-	var _go_path: String = BGMManager.get_default_path(_go_ctx)
-	if _go_path.is_empty():
-		_go_ctx = BGMManager.CONTEXT_RESULT
-		_go_path = BGMManager.get_default_path(_go_ctx)
-	if not _go_path.is_empty():
-		BGMManager.play_path(_go_path, 1.5, 0.0, 100.0, _go_ctx, 0.0)
+	if player_won:
+		# Win: switch to bgm_almost_win.mp3 at 00:00 with no fade-in.
+		# If it's already playing (triggered by the almost-win threshold mid-battle),
+		# leave it running — do not restart it.
+		if BGMManager.get_current_path() != ALMOST_WIN_BGM:
+			BGMManager.play_path(ALMOST_WIN_BGM, 0.0, 0.0, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
+	else:
+		# Lose: slowly fade out whatever is playing across the reveal animation.
+		# Nothing starts after — defeat BGM is intentionally omitted.
+		BGMManager.stop(2.5)
 	await _flip_reveal_all_cards()
 	_shake_active = false
 	ml.position = _shake_origin
@@ -7448,6 +7503,43 @@ func _fade_to_white() -> ColorRect:
 
 func _fade_out_battle_music(duration: float) -> void:
 	await BGMManager.fade_out_and_stop(duration)
+
+# ─────────────────────────────────────────────────────────────
+# Almost-win BGM
+# ─────────────────────────────────────────────────────────────
+const ALMOST_WIN_BGM: String = "res://assets/audio/bgm_almost_win.mp3"
+
+## Called after crystal-tick and after card destruction.
+## Switches to ALMOST_WIN_BGM the first time either player hits the threshold:
+##   – any player's crystals ≤ 1200, OR
+##   – any player's active (non-dead-end) card count ≤ 5.
+## Latches via _almost_win_bgm_active so it only triggers once per battle.
+func _check_almost_win_bgm() -> void:
+	if _almost_win_bgm_active:
+		return
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		return
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
+	if not ResourceLoader.exists(ALMOST_WIN_BGM):
+		return
+	var triggered := false
+	for p: int in range(2):
+		if GameState.crystals[p] <= 1200:
+			triggered = true
+			break
+		var count: int = 0
+		for r: int in range(GameState.GRID_SIZE):
+			for c: int in range(GameState.GRID_SIZE):
+				var inst: GameState.CardInstance = GameState.get_card(p, r, c)
+				if inst.card_type != "dead_end":
+					count += 1
+		if count <= 5:
+			triggered = true
+			break
+	if triggered:
+		_almost_win_bgm_active = true
+		BGMManager.play_path(ALMOST_WIN_BGM, 0.0, 1.5, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
 
 func _show_endgame_screen(winner: int) -> void:
 	_hide_card_context()

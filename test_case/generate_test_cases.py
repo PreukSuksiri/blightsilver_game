@@ -18,7 +18,7 @@ PRIORITY_UNIONS = [
     "Greater Succubus", "Kiba the Giant Slayer", "Choir Lead Amber", "Pixie Queen",
 ]
 PRIORITY_CHARACTERS = [
-    "Lab Bloater", "Lab Crawler", "Lab Zombie", "Plant 29", "Goddess of Virtue",
+    "Lab Bloater", "Lab Crawler", "Lab Zombie", "Plant-29", "Goddess of Virtue",
     "Pit Lord", "Archbishop", "Electrogazer", "Immortal Vampire", "Vampire Duchess",
     "Blue Mage", "Satellite Cannon", "Death Cobra", "Giant Centipede", "Tiny Pixie",
     "Tomb Bandit", "Araya the Eerie Dancer", "Bat Swarm", "Nuki the Tanuki",
@@ -925,7 +925,7 @@ Shared conventions for executing card effect test cases in the Godot battle syst
 | Dead end | `card_type = "dead_end"` | Blank cell marker |
 | Union | `is_union = true` | Summoned face-up |
 | Mutagen | `has_mutagen_flag = true` | Set by Release Mutagen tech (NOT the same as `"mutagen"` in flags array) |
-| Venom | `"venom" in flags` | Set by Death Cobra, Plant 29, Scarlet Shroom, etc. |
+| Venom | `"venom" in flags` | Set by Death Cobra, Plant-29, Scarlet Shroom, etc. |
 
 ## Phase flow for manual / agent UI tests
 

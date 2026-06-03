@@ -132,10 +132,10 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON,
 			true],
 
-		["Blue Mage", CharacterData.Affinity.ARCANE, 45, 45, 800,
+		["Blue Mage", CharacterData.Affinity.ARCANE, 35, 35, 800,
 			CharacterData.AbilityType.COIN_FLIP_2_DESTROY_NON_AFFINITY,
 			{"affinity": CharacterData.Affinity.ARCANE},
-			"If this card battles non-Arcane card, flip a coins. If both are head, destroy it.",
+			"If this card battles non-Arcane card, flip two coins. If both are head, destroy it.",
 			CharacterData.Rarity.RARE],
 
 		["Bomber Fairy", CharacterData.Affinity.DIVINE, 30, 15, 500,
@@ -193,9 +193,9 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Cursed Well", CharacterData.Affinity.CHAOS, 0, 25, 300,
-			CharacterData.AbilityType.ATK_BOOST_VS_REVEALED,
+			CharacterData.AbilityType.NOT_IMPLEMENTED,
 			{"bonus": 15},
-			"+15 ATK if exposed",
+			"At the end of the turn that it's been exposed, +15 ATK",
 			CharacterData.Rarity.COMMON],
 
 		["Dark Blob", CharacterData.Affinity.CHAOS, 20, 50, 500,
@@ -466,8 +466,8 @@ func _load_characters() -> void:
 
 		["Leech Man", CharacterData.Affinity.BIO, 60, 40, 880,
 			CharacterData.AbilityType.PERM_DEF_BOOST_PER_ATTACK_SURVIVE,
-			{"def": 20},
-			"+20 DEF permanently each time it performed attack and survive. With mutagen flag : +45 ATK",
+			{"def": 10},
+			"+10 DEF permanently after it performed attack on unit. Also +10 ATK with mutagen flag",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Leopard Jailer", CharacterData.Affinity.ANIMA, 30, 45, 450,
@@ -611,7 +611,7 @@ func _load_characters() -> void:
 
 		["Ox Patrol", CharacterData.Affinity.ANIMA, 30, 35, 420,
 			CharacterData.AbilityType.ATK_DEF_BONUS_VS_NON_AFFINITY,
-			{"affinity": CharacterData.Affinity.ANIMA, "atk": 5, "def": 5},
+			{"affinity": CharacterData.Affinity.ANIMA, "atk": 10, "def": 10},
 			"+10 ATK&DEF vs Non-Anima",
 			CharacterData.Rarity.UNCOMMON,
 			true],
@@ -626,10 +626,10 @@ func _load_characters() -> void:
 		["Pit Lord", CharacterData.Affinity.CHAOS, 120, 100, 1250,
 			CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE,
 			{},
-			"his card is destroyed if battle with Divine Unit. After this card attacked, halve its ATK&DEF permanently",
+			"This card is destroyed if battle with Divine Unit. After this card attacked, halve its ATK&DEF permanently",
 			CharacterData.Rarity.EXOTIC],
 
-		["Plant 29", CharacterData.Affinity.BIO, 45, 85, 900,
+		["Plant-29", CharacterData.Affinity.BIO, 45, 85, 900,
 			CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG,
 			{},
 			"Start of your turn: select 1 face-up foe’s card, flip a coin. Head: put Venom Flag on it. Tail: put Mutagen Flag on it.",
@@ -996,8 +996,8 @@ func _load_traps() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Alarm", 0, TrapData.TrapEffectType.FIELD_BOOST_AFFINITY_DEF,
-			{"affinity": CharacterData.Affinity.ANIMA, "def": 5},
-			"Unil the end of this urn, All face-up Anima monster gain +10 DEF",
+			{"affinity": CharacterData.Affinity.ANIMA, "def": 10},
+			"Until the end of this turn, All face-up Anima monster gain +10 DEF",
 			CharacterData.Rarity.COMMON,
 			true],
 

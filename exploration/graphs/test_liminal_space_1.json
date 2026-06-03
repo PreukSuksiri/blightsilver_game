@@ -1,0 +1,25 @@
+{
+	"display_name": "New Graph",
+	"graph_id": "new_graph",
+	"nodes": [
+		{
+			"background": "",
+			"clickable_spots": [],
+			"connections": [],
+			"description": "Describe this location here.",
+			"editor_position": {
+				"x": 80.0,
+				"y": 200.0
+			},
+			"id": "start",
+			"music": "",
+			"node_type": "HUB",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"title": "Starting Location",
+			"usable_items": [],
+			"vn_scene": ""
+		}
+	],
+	"start_node_id": "start"
+}

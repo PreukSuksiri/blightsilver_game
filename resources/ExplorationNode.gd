@@ -100,6 +100,13 @@ enum NodeType {
 ## Each entry is a Dictionary (see usable-item format above).
 @export var usable_items: Array = []
 
+## Point-and-click hotspots overlaid on the background image (left 52% of viewport).
+## Each entry: { "x_norm": float, "y_norm": float, "w_norm": float, "h_norm": float,
+##               "icon": String, "vn_scene": String, "tooltip": String }
+## Coords are 0.0–1.0 relative to the background area width/height.
+## icon is optional (empty = invisible hotspot). vn_scene is the beat JSON to play.
+@export var clickable_spots: Array = []
+
 ## Editor-only: position of this GraphNode in the ExplorationEditor canvas.
 @export var editor_position: Vector2 = Vector2.ZERO
 
@@ -121,6 +128,7 @@ func to_dict() -> Dictionary:
 		"on_exit_events":  on_exit_events.duplicate(true),
 		"connections":     connections.duplicate(true),
 		"usable_items":    usable_items.duplicate(true),
+		"clickable_spots": clickable_spots.duplicate(true),
 		"editor_position": {"x": editor_position.x, "y": editor_position.y},
 	}
 
@@ -149,6 +157,9 @@ static func from_dict(d: Dictionary) -> ExplorationNode:
 
 	var ui: Variant = d.get("usable_items", [])
 	node.usable_items = ui if ui is Array else []
+
+	var cs: Variant = d.get("clickable_spots", [])
+	node.clickable_spots = cs if cs is Array else []
 
 	var ep: Variant = d.get("editor_position", {})
 	if ep is Dictionary:

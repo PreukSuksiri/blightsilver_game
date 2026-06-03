@@ -225,7 +225,7 @@ var portrait_p2_offset: Vector2 = Vector2.ZERO
 var portrait_p2_size:   float   = 1.0
 
 # Battle BGM (set by VNPlayer or defaults; not reset by new_game())
-var battle_bgm_path: String = "res://assets/audio/bgm_battle_2.mp3"
+var battle_bgm_path: String = ""
 var battle_bgm_volume: float = 100.0   # percentage  (100 = 0 dB)
 
 # Battle placement/summon config — set by VNPlayer before scene change.
@@ -479,6 +479,7 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 func void_trap(player_index: int, row: int, col: int) -> void:
 	var blank := CardInstance.new()
 	blank.card_type = "dead_end"
+	blank.face_up = true
 	grids[player_index][row][col] = blank
 
 ## Remove a Union material card silently (no crystal loss, no card_destroyed signal,

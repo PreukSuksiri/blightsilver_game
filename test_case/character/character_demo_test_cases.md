@@ -645,7 +645,7 @@ Expected Result:
 Card Name: Blue Mage
 Type: Character
 Stats: Cost=800 ATK=45 DEF=45 Affinity=Arcane
-Ability: If this card battles non-Arcane card, flip a coins. If both are head, destroy it.
+Ability: If this card battles non-Arcane card, flip two coins. If both are head, destroy it.
 Test Cases:
 
 

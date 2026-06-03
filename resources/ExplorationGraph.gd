@@ -94,11 +94,14 @@ static func load_from_file(path: String) -> ExplorationGraph:
 
 ## Save this graph to a JSON file. Returns true on success.
 func save_to_file(path: String) -> bool:
-	var dir: String = path.get_base_dir()
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir))
-	var file := FileAccess.open(path, FileAccess.WRITE)
+	# Convert res:// to absolute filesystem path so writes work both in the
+	# Godot editor and when running as a standalone binary.
+	var abs_path: String = ProjectSettings.globalize_path(path)
+	var dir: String = abs_path.get_base_dir()
+	DirAccess.make_dir_recursive_absolute(dir)
+	var file := FileAccess.open(abs_path, FileAccess.WRITE)
 	if file == null:
-		push_error("ExplorationGraph: cannot write '%s'" % path)
+		push_error("ExplorationGraph: cannot write '%s' (abs: '%s')" % [path, abs_path])
 		return false
 	file.store_string(JSON.stringify(to_dict(), "\t"))
 	file.close()

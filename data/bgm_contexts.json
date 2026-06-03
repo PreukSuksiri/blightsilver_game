@@ -1,7 +1,7 @@
 {
 	"main_menu": "res://assets/audio/bgm_storytelling_4.mp3",
-	"placement": "res://assets/audio/bgm_placement_1.mp3",
-	"battle": "res://assets/audio/bgm_battle_2.mp3",
+	"placement": "res://assets/audio/bgm_placement_2.mp3",
+	"battle": "res://assets/audio/bgm_battle_3.mp3",
 	"boss": "res://assets/audio/bgm_boss_1.mp3",
 	"victory": "res://assets/audio/bgm_win.mp3",
 	"defeat": "res://assets/audio/bgm_horror_1.mp3",
