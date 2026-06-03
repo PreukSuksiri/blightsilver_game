@@ -17,7 +17,7 @@ const VN_PLAYER_SCENE: PackedScene = preload("res://scenes/vn_player.tscn")
 const FONT_PATH: String    = "res://assets/fonts/Chivo-VariableFont_wght.ttf"
 const COMPASS_ICON: String    = "res://assets/textures/ui/decorations/ui_icon_compass.png"
 const MAGNIFIER_CURSOR: String = "res://assets/textures/ui/decorations/ui_icon_magnifier.png"
-const COMPASS_SIZE: float  = 72.0   # icon width/height in pixels
+const COMPASS_SIZE: float  = 110.0  # icon width/height in pixels
 const RADIAL_RADIUS: float = 210.0  # distance from center to item midpoint
 const RADIAL_ITEM_W: float = 180.0  # radial button width
 const RADIAL_ITEM_H: float = 54.0   # radial button height
@@ -37,6 +37,7 @@ var _toast_lbl: Label              = null   # temporary message overlay
 var _toast_tween: Tween            = null
 var _debug_panel: PanelContainer   = null   # F3 debug overlay
 var _debug_lbl: RichTextLabel      = null
+var _content_panel: Panel          = null   # right-side content area (layout_mode=0, sized by _reflow_layout)
 
 # ── Compass radial menu ───────────────────────────────────────────────────
 var _compass_root: Control        = null   # full-screen layer holding compass + radial
@@ -133,23 +134,22 @@ func _build_ui() -> void:
 	add_child(vignette)
 
 	# ── Right-side content panel ──────────────────────────────
+	# layout_mode=0: position/size are set explicitly by _reflow_layout() to avoid
+	# anchor-offset compensation bugs when anchors are resolved before viewport size is known.
 	var content := Panel.new()
-	content.layout_mode    = 1
-	content.anchor_left    = 0.52
-	content.anchor_right   = 1.0
-	content.anchor_top     = 0.0
-	content.anchor_bottom  = 1.0
 	var sb_panel := StyleBoxFlat.new()
 	sb_panel.bg_color          = Color(0.03, 0.05, 0.13, 0.90)
 	sb_panel.border_width_left = 2
 	sb_panel.border_color      = Color(0.35, 0.60, 1.0, 0.30)
 	content.add_theme_stylebox_override("panel", sb_panel)
 	add_child(content)
+	_content_panel = content
 
 	var vbox := VBoxContainer.new()
-	vbox.layout_mode   = 1
-	vbox.anchor_left   = 0.0;  vbox.anchor_right  = 1.0
-	vbox.anchor_top    = 0.0;  vbox.anchor_bottom = 1.0
+	vbox.set_anchor(SIDE_LEFT,   0.0, false, false)
+	vbox.set_anchor(SIDE_RIGHT,  1.0, false, false)
+	vbox.set_anchor(SIDE_TOP,    0.0, false, false)
+	vbox.set_anchor(SIDE_BOTTOM, 1.0, false, false)
 	vbox.offset_left   = 28.0; vbox.offset_right  = -28.0
 	vbox.offset_top    = 28.0; vbox.offset_bottom = -28.0
 	vbox.add_theme_constant_override("separation", 14)
@@ -287,6 +287,31 @@ func _build_ui() -> void:
 	_toast_lbl.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	add_child(_toast_lbl)
 
+	# Apply content panel layout now (deferred so viewport size is settled)
+	_reflow_layout.call_deferred()
+
+# ─────────────────────────────────────────────────────────────
+# Layout
+# ─────────────────────────────────────────────────────────────
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		_reflow_layout()
+
+## Explicitly position and size the content panel from the node's own rect.
+## Called deferred after _build_ui() and whenever the window is resized.
+func _reflow_layout() -> void:
+	if _content_panel == null:
+		return
+	var sw: float = size.x
+	var sh: float = size.y
+	if sw == 0.0 or sh == 0.0:
+		# Viewport size not yet available; try next frame
+		_reflow_layout.call_deferred()
+		return
+	_content_panel.position = Vector2(sw * BG_AREA_FRACTION, 0.0)
+	_content_panel.size     = Vector2(sw * (1.0 - BG_AREA_FRACTION), sh)
+
 # ─────────────────────────────────────────────────────────────
 # Compass Radial Menu
 # ─────────────────────────────────────────────────────────────
@@ -300,9 +325,12 @@ func _build_compass_system() -> void:
 	_compass_root.visible      = false
 	add_child(_compass_root)
 
-	# Idle / center positions (screen is 1600×900)
-	_compass_idle_pos   = Vector2(800.0 - COMPASS_SIZE * 0.5, 900.0 - COMPASS_SIZE - 24.0)
-	_compass_center_pos = Vector2(800.0 - COMPASS_SIZE * 0.5, 450.0 - COMPASS_SIZE * 0.5)
+	# Idle / center positions — use actual viewport size so they work at any resolution.
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	if vp == Vector2.ZERO:
+		vp = Vector2(1600.0, 900.0)  # fallback for when viewport isn't sized yet
+	_compass_idle_pos   = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, vp.y - COMPASS_SIZE - 24.0)
+	_compass_center_pos = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, vp.y * 0.5 - COMPASS_SIZE * 0.5)
 
 	# Click-catcher overlay (shown when menu is open; catches outside taps)
 	_radial_overlay = Control.new()

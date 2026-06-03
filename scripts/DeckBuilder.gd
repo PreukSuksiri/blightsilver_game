@@ -815,38 +815,6 @@ func _add_union_filter_button() -> void:
 	filter_bar.move_child(_filter_union_btn, filter_tech.get_index() + 1)
 
 # ── Union material auto-add ───────────────────────────────────
-func _card_satisfies_cond(cname: String, cond: Dictionary) -> bool:
-	if cond.is_empty():
-		return true
-	var data: CharacterData = CardDatabase.get_character(cname)
-	if data == null:
-		return false
-	if cond.has("card_name") and data.card_name != str(cond["card_name"]):
-		return false
-	if cond.has("name_contains") and not data.card_name.to_lower().contains(str(cond["name_contains"])):
-		return false
-	if cond.has("affinity") and int(cond["affinity"]) >= 0 and int(data.affinity) != int(cond["affinity"]):
-		return false
-	if cond.has("min_cost") and data.crystal_cost < int(cond["min_cost"]):
-		return false
-	if cond.has("min_atk") and data.base_atk < int(cond["min_atk"]):
-		return false
-	if cond.has("min_def") and data.base_def < int(cond["min_def"]):
-		return false
-	return true
-
-func _deck_can_form_union(u: UnionData) -> bool:
-	var available: Array = current_deck.characters.duplicate()
-	for cond: Dictionary in u.material_conditions:
-		var found: int = -1
-		for i: int in range(available.size()):
-			if _card_satisfies_cond(available[i], cond):
-				found = i
-				break
-		if found < 0:
-			return false
-		available.remove_at(found)
-	return true
 
 func _describe_cond(cond: Dictionary) -> String:
 	if cond.is_empty():
@@ -886,7 +854,7 @@ func _add_union_materials_to_deck(union_name: String) -> void:
 				continue
 			if cname in used_in_assign:
 				continue
-			if _card_satisfies_cond(cname, cond):
+			if UnionDatabase.deck_char_satisfies(cname, cond):
 				var data: CharacterData = CardDatabase.get_character(cname)
 				candidates.append({"name": cname, "cost": data.crystal_cost})
 		if candidates.is_empty():
@@ -996,7 +964,7 @@ func _rebuild_union_section() -> void:
 	for u: UnionData in all_unions:
 		if not SaveManager.is_union_unlocked(u.card_name):
 			continue
-		if _deck_can_form_union(u):
+		if UnionDatabase.deck_can_form_union(current_deck.characters, u):
 			union_flow.add_child(_make_union_right_tile(u))
 			count += 1
 	_union_header_label.text = "Union (%d achievable)" % count
@@ -1474,53 +1442,9 @@ func _fe_refresh_union_panel() -> void:
 	for u: UnionData in UnionDatabase.get_all_unions():
 		if not UnionDatabase.is_playable_in_demo(u): continue
 		if not SaveManager.is_union_unlocked(u.card_name): continue
-		if not _fe_deck_can_form_union(u): continue
+		if not UnionDatabase.deck_can_form_union(current_deck.characters, u): continue
 		_fe_union_flow.add_child(_fe_make_union_tile(u))
 
-## Returns true if the current deck's characters satisfy all of u's material_conditions.
-func _fe_deck_can_form_union(u: UnionData) -> bool:
-	if u.material_conditions.is_empty():
-		return true
-	# Sort most-specific conditions first (mirrors UnionDatabase._materials_match)
-	var sorted_conds: Array = u.material_conditions.duplicate()
-	sorted_conds.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return a.size() > b.size())
-	var remaining: Array = current_deck.characters.duplicate()
-	for cond: Dictionary in sorted_conds:
-		var found: bool = false
-		for i: int in range(remaining.size()):
-			if _fe_char_satisfies_cond(str(remaining[i]), cond):
-				remaining.remove_at(i)
-				found = true
-				break
-		if not found:
-			return false
-	return true
-
-func _fe_char_satisfies_cond(card_name: String, cond: Dictionary) -> bool:
-	var cn: Variant = cond.get("card_name", "")
-	if cn is String and (cn as String) != "" and card_name != (cn as String):
-		return false
-	var nc: Variant = cond.get("name_contains", "")
-	if nc is String and (nc as String) != "" \
-			and not card_name.to_lower().contains((nc as String).to_lower()):
-		return false
-	var aff: Variant = cond.get("affinity", -1)
-	if aff is int and (aff as int) >= 0:
-		var cd: CharacterData = CardDatabase.get_character(card_name)
-		if cd == null or cd.affinity != (aff as int):
-			return false
-	var mc: Variant = cond.get("min_cost", 0)
-	if mc is int and (mc as int) > 0:
-		var cd: CharacterData = CardDatabase.get_character(card_name)
-		if cd == null or cd.crystal_cost < (mc as int):
-			return false
-	var md: Variant = cond.get("min_def", 0)
-	if md is int and (md as int) > 0:
-		var cd: CharacterData = CardDatabase.get_character(card_name)
-		if cd == null or cd.base_def < (md as int):
-			return false
-	return true
 
 func _fe_make_union_tile(u: UnionData) -> Control:
 	var wrap := VBoxContainer.new()

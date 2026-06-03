@@ -3,20 +3,117 @@
 	"graph_id": "new_graph",
 	"nodes": [
 		{
-			"background": "",
+			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
 			"clickable_spots": [],
-			"connections": [],
-			"description": "Describe this location here.",
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Peek inside the nurse counter",
+					"locked_hint": "",
+					"target": "node_2"
+				},
+				{
+					"conditions": [],
+					"label": "Go to examination room",
+					"locked_hint": "",
+					"target": "node_3"
+				},
+				{
+					"conditions": [],
+					"label": "Wait quietly at the bench",
+					"locked_hint": "",
+					"target": "node_4"
+				},
+				{
+					"conditions": [],
+					"label": "Go to elevator hall",
+					"locked_hint": "",
+					"target": "node_5"
+				}
+			],
+			"description": "Hospital's nurse front counter",
 			"editor_position": {
-				"x": 80.0,
-				"y": 200.0
+				"x": 20.0,
+				"y": 180.0
 			},
 			"id": "start",
-			"music": "",
+			"music": "res://assets/audio/bgm_liminal_1.mp3",
 			"node_type": "HUB",
 			"on_enter_events": [],
 			"on_exit_events": [],
-			"title": "Starting Location",
+			"title": "Nurse Front",
+			"usable_items": [],
+			"vn_scene": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
+			"clickable_spots": [],
+			"connections": [],
+			"description": "Describe this location.",
+			"editor_position": {
+				"x": 740.0,
+				"y": 80.0
+			},
+			"id": "node_2",
+			"music": "",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"title": "New Node",
+			"usable_items": [],
+			"vn_scene": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
+			"clickable_spots": [],
+			"connections": [],
+			"description": "Describe this location.",
+			"editor_position": {
+				"x": 820.0,
+				"y": 240.0
+			},
+			"id": "node_3",
+			"music": "",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"title": "New Node",
+			"usable_items": [],
+			"vn_scene": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
+			"clickable_spots": [],
+			"connections": [],
+			"description": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
+			"editor_position": {
+				"x": 760.0,
+				"y": 440.0
+			},
+			"id": "node_4",
+			"music": "",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"title": "New Node",
+			"usable_items": [],
+			"vn_scene": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
+			"clickable_spots": [],
+			"connections": [],
+			"description": "Describe this location.",
+			"editor_position": {
+				"x": 720.0,
+				"y": 540.0
+			},
+			"id": "node_5",
+			"music": "",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"title": "New Node",
 			"usable_items": [],
 			"vn_scene": ""
 		}

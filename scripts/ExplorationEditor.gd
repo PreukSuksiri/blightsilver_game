@@ -72,6 +72,11 @@ var _status_lbl: Label = null
 var _load_dialog: FileDialog = null
 var _save_dialog: FileDialog = null
 
+# ── Preview helpers ────────────────────────────────────────────
+var _preview_player: AudioStreamPlayer = null
+var _img_popup:      PopupPanel        = null
+var _img_popup_tex:  TextureRect       = null
+
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
 # ─────────────────────────────────────────────────────────────
@@ -138,19 +143,31 @@ func _build_ui() -> void:
 	_load_dialog = FileDialog.new()
 	_load_dialog.file_mode   = FileDialog.FILE_MODE_OPEN_FILE
 	_load_dialog.filters     = PackedStringArray(["*.json ; Exploration Graph JSON"])
-	_load_dialog.access      = FileDialog.ACCESS_RESOURCES
-	_load_dialog.current_dir = "res://exploration/graphs"
+	_load_dialog.access      = FileDialog.ACCESS_FILESYSTEM
+	_load_dialog.current_dir = ProjectSettings.globalize_path("res://exploration/graphs")
 	_load_dialog.file_selected.connect(_on_load_file_selected)
 	add_child(_load_dialog)
 
 	_save_dialog = FileDialog.new()
 	_save_dialog.file_mode    = FileDialog.FILE_MODE_SAVE_FILE
 	_save_dialog.filters      = PackedStringArray(["*.json ; Exploration Graph JSON"])
-	_save_dialog.access       = FileDialog.ACCESS_RESOURCES
-	_save_dialog.current_dir  = "res://exploration/graphs"
+	_save_dialog.access       = FileDialog.ACCESS_FILESYSTEM
+	_save_dialog.current_dir  = ProjectSettings.globalize_path("res://exploration/graphs")
 	_save_dialog.current_file = "exploration_graph.json"
 	_save_dialog.file_selected.connect(_on_save_file_selected)
 	add_child(_save_dialog)
+
+	# ── Audio preview player ───────────────────────────────────
+	_preview_player = AudioStreamPlayer.new()
+	add_child(_preview_player)
+
+	# ── Image preview popup ────────────────────────────────────
+	_img_popup = PopupPanel.new()
+	add_child(_img_popup)
+	_img_popup_tex = TextureRect.new()
+	_img_popup_tex.custom_minimum_size = Vector2(700, 500)
+	_img_popup_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_img_popup.add_child(_img_popup_tex)
 
 func _build_toolbar() -> Control:
 	var bar := HBoxContainer.new()
@@ -170,7 +187,6 @@ func _build_toolbar() -> Control:
 	panel.anchor_top   = 0.0; panel.anchor_bottom = 0.0
 	panel.offset_bottom = TOOLBAR_H
 	panel.add_theme_stylebox_override("panel", sb)
-	add_child(panel)
 	panel.add_child(bar)
 
 	_make_tool_btn(bar, "New",        _on_new_pressed)
@@ -228,10 +244,33 @@ func _build_props_panel() -> Control:
 	_prop_desc_edit  = _add_textarea(vbox, "Description")
 	_prop_bg_edit    = _add_file_field(vbox, "Background (res:// path)",
 		PackedStringArray(["*.png,*.jpg,*.jpeg ; Images"]), "res://assets/textures")
+	var bg_preview_btn := Button.new()
+	bg_preview_btn.text = "Preview"
+	bg_preview_btn.custom_minimum_size = Vector2(60, 0)
+	bg_preview_btn.add_theme_font_size_override("font_size", 13)
+	bg_preview_btn.pressed.connect(func() -> void: _preview_image(_prop_bg_edit.text.strip_edges()))
+	_prop_bg_edit.get_parent().add_child(bg_preview_btn)
 	_prop_vn_edit    = _add_file_field(vbox, "VN Scene (res:// path)",
-		PackedStringArray(["*.json ; JSON Files"]), "res://exploration")
+		PackedStringArray(["*.json ; JSON Files"]), "res://campaign/scenes")
+	var edit_beats_btn := Button.new()
+	edit_beats_btn.text = "Edit Beats ↗"
+	edit_beats_btn.add_theme_font_size_override("font_size", 13)
+	edit_beats_btn.pressed.connect(_on_edit_beats_pressed)
+	vbox.add_child(edit_beats_btn)
 	_prop_music_edit = _add_file_field(vbox, "Music (res:// path)",
 		PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio Files"]), "res://assets/audio")
+	var music_play_btn := Button.new()
+	music_play_btn.text = "▶"
+	music_play_btn.custom_minimum_size = Vector2(30, 0)
+	music_play_btn.add_theme_font_size_override("font_size", 13)
+	music_play_btn.pressed.connect(func() -> void: _preview_audio(_prop_music_edit.text.strip_edges()))
+	_prop_music_edit.get_parent().add_child(music_play_btn)
+	var music_stop_btn := Button.new()
+	music_stop_btn.text = "■"
+	music_stop_btn.custom_minimum_size = Vector2(30, 0)
+	music_stop_btn.add_theme_font_size_override("font_size", 13)
+	music_stop_btn.pressed.connect(func() -> void: if _preview_player != null: _preview_player.stop())
+	_prop_music_edit.get_parent().add_child(music_stop_btn)
 	vbox.add_child(HSeparator.new())
 
 	# Section: On-Enter Events
@@ -528,6 +567,7 @@ func _rebuild_graph_edit() -> void:
 	_graph_edit.clear_connections()
 	for child: Node in _graph_edit.get_children():
 		if child is GraphNode:
+			_graph_edit.remove_child(child)
 			child.queue_free()
 	_gn_map.clear()
 
@@ -908,6 +948,58 @@ func _on_back_pressed() -> void:
 
 func _on_add_connection_pressed() -> void:
 	_add_connection_row(_prop_connections_vbox)
+
+func _preview_image(path: String) -> void:
+	if path.is_empty():
+		_set_status("No background path set.")
+		return
+	if not ResourceLoader.exists(path):
+		_set_status("Image not found: %s" % path.get_file())
+		return
+	var tex: Variant = load(path)
+	if not tex is Texture2D:
+		_set_status("Not an image: %s" % path.get_file())
+		return
+	_img_popup_tex.texture = tex as Texture2D
+	_img_popup.popup_centered(Vector2(820, 620))
+
+func _preview_audio(path: String) -> void:
+	if path.is_empty():
+		_set_status("No music path set.")
+		return
+	if not ResourceLoader.exists(path):
+		_set_status("Audio not found: %s" % path.get_file())
+		return
+	var stream: Variant = load(path)
+	if not stream is AudioStream:
+		_set_status("Not an audio file: %s" % path.get_file())
+		return
+	_preview_player.stream = stream as AudioStream
+	_preview_player.stop()
+	_preview_player.play()
+	_set_status("Playing: %s" % path.get_file())
+
+func _on_edit_beats_pressed() -> void:
+	var path: String = _prop_vn_edit.text.strip_edges()
+	if path.is_empty():
+		_set_status("Enter a VN Scene path first.")
+		return
+	# Create empty beat file if it doesn't exist yet
+	if not FileAccess.file_exists(path):
+		var abs_path: String = ProjectSettings.globalize_path(path)
+		DirAccess.make_dir_recursive_absolute(abs_path.get_base_dir())
+		var f := FileAccess.open(abs_path, FileAccess.WRITE)
+		if f == null:
+			_set_status("ERROR: Could not create '%s'." % path)
+			return
+		f.store_string("[]")
+		f.close()
+		_set_status("Created '%s' — opening VN Editor." % path.get_file())
+	# Open VNEditor as overlay
+	var vned: Control = load("res://scripts/VNEditor.gd").new()
+	vned.name = "VNEditorOverlay"
+	get_tree().current_scene.add_child(vned)
+	vned.call_deferred("open_file", path)
 
 func _on_apply_pressed() -> void:
 	if _graph == null or _selected_node_id.is_empty():

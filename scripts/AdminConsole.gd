@@ -35,9 +35,10 @@ func _execute(raw: String) -> void:
 		# Escape BBCode in result except colour tags we add ourselves
 		var safe := result.replace("[", "[lb]")
 		_print("[color=#bdf]%s[/color]" % safe)
-	# Close the console after triggering a pack opening animation
+	# Close the console after commands that open a full overlay/editor
 	var cmd: String = trimmed.split(" ")[0].to_lower()
-	if cmd == "animation_pack_opening" and not result.begins_with("Usage:"):
+	var _auto_close_cmds: Array[String] = ["animation_pack_opening", "vn_editor", "card_editor"]
+	if cmd in _auto_close_cmds and not result.begins_with("Usage:") and not result.begins_with("ERROR") and not result.ends_with("already open."):
 		_on_close()
 
 func _print(bbtext: String) -> void:

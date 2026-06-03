@@ -11,6 +11,7 @@ const SOUND_PATH  := "res://assets/audio/sound_spellcasting_3.mp3"
 
 var _tiles: Array[ColorRect] = []
 var _sfx:   AudioStreamPlayer
+var _anim_gen: int = 0   # incremented on each new animation; stale coroutines bail early
 
 func _ready() -> void:
 	layer        = 200
@@ -50,6 +51,7 @@ func fade_in() -> void:
 # ── Internals ───────────────────────────────────────────────────
 
 func _build_tiles(start_visible: bool) -> void:
+	_anim_gen += 1
 	_clear_tiles()
 	var vp_size: Vector2 = get_viewport().get_visible_rect().size
 	var tw: float = vp_size.x / float(COLS)
@@ -68,12 +70,17 @@ func _build_tiles(start_visible: bool) -> void:
 ## cover=true  -> tiles become visible (fade-out).
 ## cover=false -> tiles become invisible (fade-in).
 func _animate(cover: bool) -> void:
+	var my_gen: int = _anim_gen
 	var max_diag: int = (ROWS - 1) + (COLS - 1)
 	for d: int in range(max_diag + 1):
+		if _anim_gen != my_gen:
+			return
 		for r: int in range(ROWS):
 			var c: int = d - r
 			if c >= 0 and c < COLS:
-				_tiles[r * COLS + c].visible = cover
+				var idx: int = r * COLS + c
+				if idx < _tiles.size():
+					_tiles[idx].visible = cover
 		await get_tree().create_timer(DIAG_DELAY).timeout
 
 func _clear_tiles() -> void:

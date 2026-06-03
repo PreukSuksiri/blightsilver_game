@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dw4dpqbbb0axc"
-path="res://.godot/imported/Screenshot 2569-06-02 at 14.23.26.png-bcd670a7962aeab72cb6f3f43cb3cf6b.ctex"
+uid="uid://c07xaqq4gj7g2"
+path="res://.godot/imported/liminal mall.png-6dd97d4330528574f2d552de27405d70.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://bug/Screenshot 2569-06-02 at 14.23.26.png"
-dest_files=["res://.godot/imported/Screenshot 2569-06-02 at 14.23.26.png-bcd670a7962aeab72cb6f3f43cb3cf6b.ctex"]
+source_file="res://assets/textures/exploration/background/mall/liminal mall.png"
+dest_files=["res://.godot/imported/liminal mall.png-6dd97d4330528574f2d552de27405d70.ctex"]
 
 [params]
 

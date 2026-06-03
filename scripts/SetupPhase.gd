@@ -180,7 +180,7 @@ var _info_preview_btn: Button     = null
 var _info_card_name : String      = ""
 var _info_card_type : String      = ""
 
-var _union_flow:  HFlowContainer = null
+var _union_flow:  HBoxContainer  = null
 var _flash_tween: Tween          = null
 var _flash_cells: Array          = []
 
@@ -244,8 +244,14 @@ func start_setup(player_index: int) -> void:
 		else GameState.battle_ai_forced_cells
 	_apply_forced_cells(forced)
 
-	# Show/hide union panel: requires both global unlock AND per-battle flag
-	var show_union: bool = SaveManager.union_mechanism_unlocked and GameState.battle_player_union_enabled
+	# Show/hide union panel: requires per-battle flag, plus either the global unlock
+	# OR a free-play mode (VS_AI / LOCAL_2P / HOT_SEAT) where all features are open.
+	var free_play_mode: bool = GameState.game_mode in [
+		GameState.GameMode.VS_AI, GameState.GameMode.LOCAL_2P, GameState.GameMode.HOT_SEAT
+	]
+	var show_union: bool = GameState.battle_player_union_enabled and (
+		SaveManager.union_mechanism_unlocked or free_play_mode
+	)
 	if _union_panel_node != null:
 		_union_panel_node.visible = show_union
 
@@ -574,10 +580,9 @@ func _build_union_panel(parent: Control) -> void:
 	scroll.vertical_scroll_mode   = ScrollContainer.SCROLL_MODE_DISABLED
 	panel.add_child(scroll)
 
-	_union_flow = HFlowContainer.new()
+	_union_flow = HBoxContainer.new()
 	_union_flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_union_flow.add_theme_constant_override("h_separation", GAL_GAP)
-	_union_flow.add_theme_constant_override("v_separation", GAL_GAP)
+	_union_flow.add_theme_constant_override("separation", GAL_GAP)
 	scroll.add_child(_union_flow)
 
 func _build_info_panel(parent: Control) -> void:
@@ -784,14 +789,10 @@ func _find_possible_unions(char_names: Array) -> Array:
 	for u: UnionData in UnionDatabase.get_all_unions():
 		if not UnionDatabase.is_playable_in_demo(u):
 			continue
-		if SaveManager.is_union_unlocked(u.card_name) and _union_feasible(u, char_names):
+		if SaveManager.is_union_unlocked(u.card_name) and UnionDatabase.deck_can_form_union(char_names, u):
 			result.append(u)
 	return result
 
-func _union_feasible(u: UnionData, _char_names: Array) -> bool:
-	# With static union zones, check whether the material conditions are currently
-	# satisfied at the union's fixed board positions (not just deck composition).
-	return UnionDatabase.check_union_materials(current_setup_player, u)
 
 func _make_union_tile(u: UnionData) -> Control:
 	var wrap := VBoxContainer.new()

@@ -2348,7 +2348,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	var _union_phase_ok: bool = GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]
 	var _available_unions: Array = []
 	if ctx_player == current_player and card.card_type == "character" and _union_phase_ok \
-			and SaveManager.union_mechanism_unlocked and GameState.battle_player_union_enabled \
+			and (SaveManager.union_mechanism_unlocked or GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.LOCAL_2P, GameState.GameMode.HOT_SEAT]) and GameState.battle_player_union_enabled \
 			and _union_summoned_this_duel[ctx_player] < _max_unions_per_duel():
 		var _ctx_seen: Dictionary = {}
 		for _entry: Dictionary in UnionDatabase.find_available_unions(ctx_player, row, col):
@@ -3585,8 +3585,9 @@ func _collect_all_available_unions(player: int) -> Array:
 func _update_union_suggest_button() -> void:
 	if _union_suggest_btn == null:
 		return
-	# Hide entirely if union mechanism is locked for this save file
-	if not SaveManager.union_mechanism_unlocked:
+	# Hide entirely if union mechanism is locked (bypassed in free-play modes)
+	var _union_free_play: bool = GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.LOCAL_2P, GameState.GameMode.HOT_SEAT]
+	if not SaveManager.union_mechanism_unlocked and not _union_free_play:
 		_union_suggest_btn.visible  = false
 		_union_suggest_glow.visible = false
 		if _union_suggest_tween != null and _union_suggest_tween.is_valid():

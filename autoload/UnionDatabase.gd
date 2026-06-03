@@ -727,6 +727,54 @@ func _card_satisfies(card: GameState.CardInstance, cond: Dictionary) -> bool:
 func card_satisfies_condition(card: GameState.CardInstance, cond: Dictionary) -> bool:
 	return _card_satisfies(card, cond)
 
+## Check whether a character (by name) satisfies a single material condition.
+## Used for deck-based union feasibility (before cards are placed on the board).
+func deck_char_satisfies(card_name: String, cond: Dictionary) -> bool:
+	if cond.is_empty():
+		return true
+	var data: CharacterData = CardDatabase.get_character(card_name)
+	if data == null:
+		return false
+	var cn: Variant = cond.get("card_name", "")
+	if cn is String and (cn as String) != "" and data.card_name != (cn as String):
+		return false
+	var nc: Variant = cond.get("name_contains", "")
+	if nc is String and (nc as String) != "" and not data.card_name.to_lower().contains((nc as String).to_lower()):
+		return false
+	var aff: Variant = cond.get("affinity", -1)
+	if aff is int and (aff as int) >= 0 and int(data.affinity) != (aff as int):
+		return false
+	var mc: Variant = cond.get("min_cost", 0)
+	if mc is int and (mc as int) > 0 and data.crystal_cost < (mc as int):
+		return false
+	var ma: Variant = cond.get("min_atk", 0)
+	if ma is int and (ma as int) > 0 and data.base_atk < (ma as int):
+		return false
+	var md: Variant = cond.get("min_def", 0)
+	if md is int and (md as int) > 0 and data.base_def < (md as int):
+		return false
+	return true
+
+## Check whether char_names (Array of String card names) can satisfy all of u's
+## material_conditions. Uses greedy matching with most-specific conditions first.
+func deck_can_form_union(char_names: Array, u: UnionData) -> bool:
+	if u.material_conditions.is_empty():
+		return true
+	var sorted_conds: Array = u.material_conditions.duplicate()
+	sorted_conds.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return a.size() > b.size())
+	var remaining: Array = char_names.duplicate()
+	for cond: Dictionary in sorted_conds:
+		var found: int = -1
+		for i: int in range(remaining.size()):
+			if deck_char_satisfies(str(remaining[i]), cond):
+				found = i
+				break
+		if found < 0:
+			return false
+		remaining.remove_at(found)
+	return true
+
 # ─────────────────────────────────────────────────────────────
 # Debug helpers
 # ─────────────────────────────────────────────────────────────
