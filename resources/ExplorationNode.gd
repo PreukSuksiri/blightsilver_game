@@ -110,11 +110,17 @@ enum NodeType {
 ## Each entry is a Dictionary (see usable-item format above).
 @export var usable_items: Array = []
 
-## Point-and-click hotspots overlaid on the background image (left 52% of viewport).
-## Each entry: { "x_norm": float, "y_norm": float, "w_norm": float, "h_norm": float,
-##               "icon": String, "vn_scene": String, "tooltip": String }
-## Coords are 0.0–1.0 relative to the background area width/height.
-## icon is optional (empty = invisible hotspot). vn_scene is the beat JSON to play.
+## Investigable points overlaid on the background image (left 52% of viewport).
+## Each entry:
+##   { "x_norm": float, "y_norm": float   — centre position (0.0–1.0)
+##     "icon": String                      — res:// image path; empty = 24×24 invisible hitbox
+##     "icon_scale": float                 — display size as % of natural image size (default 100)
+##     "tooltip": String                   — text shown on hover
+##     "actions": Array                    — action dicts fired on click (see on_enter_events format)
+##                                           extra action types: "play_vn", "navigate_to"
+##     "conditions": Array                 — condition dicts (same format as connection conditions)
+##     "vn_scene": String                  — legacy field; treated as play_vn action if actions empty
+##   }
 @export var clickable_spots: Array = []
 
 ## Characters that can be spoken to at this node.

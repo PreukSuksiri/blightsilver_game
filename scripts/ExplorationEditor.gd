@@ -68,6 +68,8 @@ var _prop_connections_vbox: VBoxContainer = null
 var _prop_events_in_vbox:   VBoxContainer = null
 var _prop_events_out_vbox:  VBoxContainer = null
 var _prop_characters_vbox:  VBoxContainer = null
+var _prop_spots_vbox:       VBoxContainer = null
+var _spot_picker_window:    Window        = null
 
 # ── Status bar ────────────────────────────────────────────────
 var _status_lbl: Label = null
@@ -341,6 +343,18 @@ func _build_props_panel() -> Control:
 	add_char_btn.add_theme_font_size_override("font_size", 13)
 	add_char_btn.pressed.connect(func() -> void: _add_character_row(_prop_characters_vbox, {}))
 	vbox.add_child(add_char_btn)
+	vbox.add_child(HSeparator.new())
+
+	# Section: Investigable Points
+	_add_section_header(vbox, "INVESTIGABLE POINTS")
+	_prop_spots_vbox = VBoxContainer.new()
+	_prop_spots_vbox.add_theme_constant_override("separation", 6)
+	vbox.add_child(_prop_spots_vbox)
+	var add_spot_btn := Button.new()
+	add_spot_btn.text = "+ Add Investigable Point"
+	add_spot_btn.add_theme_font_size_override("font_size", 13)
+	add_spot_btn.pressed.connect(func() -> void: _add_spot_row(_prop_spots_vbox, {}))
+	vbox.add_child(add_spot_btn)
 	vbox.add_child(HSeparator.new())
 
 	# Apply button
@@ -770,6 +784,369 @@ func _collect_characters(chars_vbox: VBoxContainer) -> Array:
 		})
 	return result
 
+## Add one investigable-point row to the spots VBox.
+## VBoxContainer children layout (by index):
+##   0: pos_row      (HBoxContainer → SpinBox x_norm, SpinBox y_norm)
+##   1: icon_row     (HBoxContainer → LineEdit icon_path)
+##   2: scale_row    (HBoxContainer → SpinBox icon_scale)
+##   3: tooltip_row  (HBoxContainer → LineEdit tooltip)
+##   4: acts_hdr     (Label)
+##   5: acts_vbox    (VBoxContainer of action rows)
+##   6: add_act_btn  (Button)
+##   7: conds_hdr    (Label)
+##   8: conds_vbox   (VBoxContainer of condition rows)
+##   9: add_cond_btn (Button)
+##  10: del_btn      (Button)
+func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
+	var frame := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.12, 0.10, 0.18)
+	sb.set_border_width_all(1)
+	sb.border_color = Color(0.70, 0.45, 0.90, 0.55)
+	sb.set_corner_radius_all(4)
+	sb.content_margin_left = 8.0; sb.content_margin_right  = 8.0
+	sb.content_margin_top  = 6.0; sb.content_margin_bottom = 6.0
+	frame.add_theme_stylebox_override("panel", sb)
+	spots_vbox.add_child(frame)
+
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 4)
+	frame.add_child(vb)
+
+	# Index 0: Position row
+	var pos_row := HBoxContainer.new()
+	pos_row.add_theme_constant_override("separation", 4)
+	var xlbl := Label.new(); xlbl.text = "X:"; xlbl.add_theme_font_size_override("font_size", 12)
+	pos_row.add_child(xlbl)
+	var x_spin := SpinBox.new()
+	x_spin.min_value = 0.0; x_spin.max_value = 1.0; x_spin.step = 0.001
+	x_spin.value = float(spot_data.get("x_norm", 0.5))
+	x_spin.custom_minimum_size = Vector2(80, 0)
+	x_spin.add_theme_font_size_override("font_size", 12)
+	pos_row.add_child(x_spin)
+	var ylbl := Label.new(); ylbl.text = "Y:"; ylbl.add_theme_font_size_override("font_size", 12)
+	pos_row.add_child(ylbl)
+	var y_spin := SpinBox.new()
+	y_spin.min_value = 0.0; y_spin.max_value = 1.0; y_spin.step = 0.001
+	y_spin.value = float(spot_data.get("y_norm", 0.5))
+	y_spin.custom_minimum_size = Vector2(80, 0)
+	y_spin.add_theme_font_size_override("font_size", 12)
+	pos_row.add_child(y_spin)
+	var pick_btn := Button.new()
+	pick_btn.text = "Pick ◎"
+	pick_btn.add_theme_font_size_override("font_size", 12)
+	pick_btn.pressed.connect(func() -> void:
+		_open_spot_picker(_prop_bg_edit.text.strip_edges(), x_spin, y_spin))
+	pos_row.add_child(pick_btn)
+	vb.add_child(pos_row)
+
+	# Index 1: Icon row
+	var icon_row := HBoxContainer.new()
+	var icon_lbl := Label.new(); icon_lbl.text = "Icon"; icon_lbl.add_theme_font_size_override("font_size", 12)
+	icon_row.add_child(icon_lbl)
+	var icon_edit := LineEdit.new()
+	icon_edit.text             = str(spot_data.get("icon", ""))
+	icon_edit.placeholder_text = "res:// image path (optional)"
+	icon_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	icon_edit.add_theme_font_size_override("font_size", 12)
+	icon_row.add_child(icon_edit)
+	var icon_browse := Button.new()
+	icon_browse.text = "…"
+	icon_browse.custom_minimum_size = Vector2(28, 0)
+	icon_browse.pressed.connect(func() -> void:
+		_browse_for_file(icon_edit, PackedStringArray(["*.png,*.jpg,*.webp ; Images"]),
+			"res://assets/textures/exploration"))
+	icon_row.add_child(icon_browse)
+	vb.add_child(icon_row)
+
+	# Index 2: Scale row
+	var scale_row := HBoxContainer.new()
+	scale_row.add_theme_constant_override("separation", 4)
+	var slbl := Label.new(); slbl.text = "Scale %"; slbl.add_theme_font_size_override("font_size", 12)
+	scale_row.add_child(slbl)
+	var scale_spin := SpinBox.new()
+	scale_spin.min_value = 1.0; scale_spin.max_value = 500.0; scale_spin.step = 1.0
+	scale_spin.value = float(spot_data.get("icon_scale", 100.0))
+	scale_spin.custom_minimum_size = Vector2(80, 0)
+	scale_spin.add_theme_font_size_override("font_size", 12)
+	scale_row.add_child(scale_spin)
+	vb.add_child(scale_row)
+
+	# Index 3: Tooltip row
+	var tip_row := HBoxContainer.new()
+	var tlbl := Label.new(); tlbl.text = "Tooltip"; tlbl.add_theme_font_size_override("font_size", 12)
+	tip_row.add_child(tlbl)
+	var tip_edit := LineEdit.new()
+	tip_edit.text             = str(spot_data.get("tooltip", ""))
+	tip_edit.placeholder_text = "hover text (optional)"
+	tip_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tip_edit.add_theme_font_size_override("font_size", 12)
+	tip_row.add_child(tip_edit)
+	vb.add_child(tip_row)
+
+	# Index 4: Actions header
+	var acts_hdr := Label.new()
+	acts_hdr.text = "Actions on click:"
+	acts_hdr.add_theme_font_size_override("font_size", 11)
+	acts_hdr.add_theme_color_override("font_color", Color(0.80, 0.65, 1.0))
+	vb.add_child(acts_hdr)
+
+	# Index 5: Actions VBox
+	var acts_vbox := VBoxContainer.new()
+	acts_vbox.add_theme_constant_override("separation", 3)
+	vb.add_child(acts_vbox)
+
+	# Index 6: Add Action button
+	var add_act_btn := Button.new()
+	add_act_btn.text = "+ Add Action"
+	add_act_btn.add_theme_font_size_override("font_size", 11)
+	add_act_btn.pressed.connect(func() -> void: _add_spot_action_row(acts_vbox))
+	vb.add_child(add_act_btn)
+
+	# Index 7: Conditions header
+	var cond_hdr := Label.new()
+	cond_hdr.text = "Conditions (all must pass to show):"
+	cond_hdr.add_theme_font_size_override("font_size", 11)
+	cond_hdr.add_theme_color_override("font_color", Color(0.65, 0.80, 0.65))
+	vb.add_child(cond_hdr)
+
+	# Index 8: Conditions VBox
+	var cond_vbox := VBoxContainer.new()
+	cond_vbox.add_theme_constant_override("separation", 3)
+	vb.add_child(cond_vbox)
+
+	# Index 9: Add Condition button
+	var add_cond_btn := Button.new()
+	add_cond_btn.text = "+ Condition"
+	add_cond_btn.add_theme_font_size_override("font_size", 11)
+	add_cond_btn.pressed.connect(func() -> void: _add_condition_row(cond_vbox))
+	vb.add_child(add_cond_btn)
+
+	# Populate existing actions
+	var raw_acts: Variant = spot_data.get("actions", [])
+	if raw_acts is Array:
+		for act_var: Variant in (raw_acts as Array):
+			if act_var is Dictionary:
+				var ad: Dictionary = act_var as Dictionary
+				_add_spot_action_row(acts_vbox,
+					str(ad.get("action", "show_message")),
+					str(ad.get("key",    "")),
+					str(ad.get("value",  "")))
+	# Backward compat: legacy vn_scene field → play_vn action
+	var legacy_vn: String = str(spot_data.get("vn_scene", ""))
+	if not legacy_vn.is_empty() and (not (raw_acts is Array) or (raw_acts as Array).is_empty()):
+		_add_spot_action_row(acts_vbox, "play_vn", "", legacy_vn)
+
+	# Populate existing conditions
+	var conds_v: Variant = spot_data.get("conditions", [])
+	if conds_v is Array:
+		for cond_var: Variant in (conds_v as Array):
+			if cond_var is Dictionary:
+				var cd: Dictionary = cond_var as Dictionary
+				_add_condition_row(cond_vbox,
+					str(cd.get("type",  "has_item")),
+					str(cd.get("key",   "")),
+					str(cd.get("value", "")))
+
+	# Index 10: Remove button
+	var del_btn := Button.new()
+	del_btn.text = "Remove Point"
+	del_btn.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
+	del_btn.add_theme_font_size_override("font_size", 12)
+	del_btn.pressed.connect(frame.queue_free)
+	vb.add_child(del_btn)
+
+## Add one action row inside a spot's actions VBox.
+## Action list extended with play_vn and navigate_to vs. on_enter_events.
+func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
+		key: String = "", value: String = "") -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	vbox.add_child(row)
+	var _spot_actions: Array[String] = [
+		"give_item","remove_item","set_var","give_credits","set_flag",
+		"show_message","play_sfx","play_vn","navigate_to"
+	]
+	var action_btn := OptionButton.new()
+	for a: String in _spot_actions:
+		action_btn.add_item(a)
+	var _idx: int = _spot_actions.find(action)
+	action_btn.select(_idx if _idx >= 0 else 0)
+	action_btn.add_theme_font_size_override("font_size", 12)
+	action_btn.custom_minimum_size = Vector2(120.0, 0.0)
+	row.add_child(action_btn)
+	var key_edit := LineEdit.new()
+	key_edit.text             = key
+	key_edit.placeholder_text = "key"
+	key_edit.add_theme_font_size_override("font_size", 12)
+	key_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(key_edit)
+	var val_edit := LineEdit.new()
+	val_edit.text             = value
+	val_edit.placeholder_text = "value"
+	val_edit.add_theme_font_size_override("font_size", 12)
+	val_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(val_edit)
+	var del_btn := Button.new()
+	del_btn.text = "x"
+	del_btn.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
+	del_btn.pressed.connect(row.queue_free)
+	row.add_child(del_btn)
+
+## Collect all investigable-point rows back into an Array of Dictionaries.
+func _collect_spots(spots_vbox: VBoxContainer) -> Array:
+	var result: Array = []
+	for frame: Node in spots_vbox.get_children():
+		if not frame is PanelContainer:
+			continue
+		var vb: VBoxContainer = null
+		for ch: Node in frame.get_children():
+			if ch is VBoxContainer:
+				vb = ch as VBoxContainer
+				break
+		if vb == null or vb.get_child_count() < 5:
+			continue
+		# Index 0: pos_row — find two SpinBoxes
+		var x_norm: float = 0.5
+		var y_norm: float = 0.5
+		if vb.get_child(0) is HBoxContainer:
+			var spins: Array = []
+			for c: Node in (vb.get_child(0) as HBoxContainer).get_children():
+				if c is SpinBox:
+					spins.append(c as SpinBox)
+			if spins.size() >= 1:
+				x_norm = (spins[0] as SpinBox).value
+			if spins.size() >= 2:
+				y_norm = (spins[1] as SpinBox).value
+		# Index 1: icon_row — first LineEdit
+		var icon_path: String = ""
+		var icon_le: LineEdit = _find_line_edit(vb.get_child(1)) if vb.get_child_count() > 1 else null
+		if icon_le != null:
+			icon_path = icon_le.text.strip_edges()
+		# Index 2: scale_row — SpinBox
+		var icon_scale: float = 100.0
+		if vb.get_child_count() > 2 and vb.get_child(2) is HBoxContainer:
+			for c: Node in (vb.get_child(2) as HBoxContainer).get_children():
+				if c is SpinBox:
+					icon_scale = (c as SpinBox).value
+					break
+		# Index 3: tooltip_row — first LineEdit
+		var tooltip: String = ""
+		var tip_le: LineEdit = _find_line_edit(vb.get_child(3)) if vb.get_child_count() > 3 else null
+		if tip_le != null:
+			tooltip = tip_le.text
+		# Index 5: acts_vbox — VBoxContainer
+		var actions: Array = []
+		if vb.get_child_count() > 5 and vb.get_child(5) is VBoxContainer:
+			actions = _collect_events(vb.get_child(5) as VBoxContainer)
+		# Index 8: conds_vbox — VBoxContainer
+		var conditions: Array = []
+		if vb.get_child_count() > 8 and vb.get_child(8) is VBoxContainer:
+			var cv: VBoxContainer = vb.get_child(8) as VBoxContainer
+			for row: Node in cv.get_children():
+				if not row is HBoxContainer:
+					continue
+				var rc: Array = (row as HBoxContainer).get_children()
+				if rc.size() < 4:
+					continue
+				conditions.append({
+					"type":  (rc[0] as OptionButton).get_item_text((rc[0] as OptionButton).selected),
+					"key":   (rc[1] as LineEdit).text,
+					"value": (rc[2] as LineEdit).text,
+				})
+		result.append({
+			"x_norm":     x_norm,
+			"y_norm":     y_norm,
+			"icon":       icon_path,
+			"icon_scale": icon_scale,
+			"tooltip":    tooltip,
+			"actions":    actions,
+			"conditions": conditions,
+		})
+	return result
+
+## Open an interactive background-picker window so the user can click a position.
+func _open_spot_picker(bg_path: String, x_spin: SpinBox, y_spin: SpinBox) -> void:
+	if _spot_picker_window != null and is_instance_valid(_spot_picker_window):
+		_spot_picker_window.queue_free()
+	const PICK_W: float = 800.0
+	const PICK_H: float = 450.0
+	const MARK:   float = 10.0
+	var win := Window.new()
+	win.title          = "Pick Investigable Point Position"
+	win.size           = Vector2i(int(PICK_W + 24), int(PICK_H + 90))
+	win.exclusive      = false
+	win.close_requested.connect(win.queue_free)
+	get_tree().current_scene.add_child(win)
+	_spot_picker_window = win
+	var root_vbox := VBoxContainer.new()
+	root_vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root_vbox.add_theme_constant_override("separation", 6)
+	root_vbox.offset_left = 8.0; root_vbox.offset_right  = -8.0
+	root_vbox.offset_top  = 8.0; root_vbox.offset_bottom = -8.0
+	win.add_child(root_vbox)
+	var hint := Label.new()
+	hint.text = "Click on the image to set position  •  X: %.3f   Y: %.3f" % [x_spin.value, y_spin.value]
+	hint.add_theme_font_size_override("font_size", 13)
+	root_vbox.add_child(hint)
+	# Image container (fixed size, stretch image to fill)
+	var img_ctrl := Control.new()
+	img_ctrl.custom_minimum_size = Vector2(PICK_W, PICK_H)
+	img_ctrl.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	img_ctrl.mouse_filter = Control.MOUSE_FILTER_STOP
+	root_vbox.add_child(img_ctrl)
+	var tex_rect := TextureRect.new()
+	tex_rect.size          = Vector2(PICK_W, PICK_H)
+	tex_rect.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
+	tex_rect.stretch_mode  = TextureRect.STRETCH_SCALE
+	tex_rect.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	if not bg_path.is_empty() and ResourceLoader.exists(bg_path):
+		tex_rect.texture = load(bg_path) as Texture2D
+	img_ctrl.add_child(tex_rect)
+	# Crosshair marker
+	var marker := Control.new()
+	marker.size         = Vector2(MARK * 2.0, MARK * 2.0)
+	marker.position     = Vector2(x_spin.value * PICK_W - MARK, y_spin.value * PICK_H - MARK)
+	marker.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	img_ctrl.add_child(marker)
+	var hbar := ColorRect.new()
+	hbar.color    = Color(1.0, 0.2, 0.2, 0.9)
+	hbar.size     = Vector2(MARK * 2.0, 2.0)
+	hbar.position = Vector2(0.0, MARK - 1.0)
+	hbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	marker.add_child(hbar)
+	var vbar := ColorRect.new()
+	vbar.color    = Color(1.0, 0.2, 0.2, 0.9)
+	vbar.size     = Vector2(2.0, MARK * 2.0)
+	vbar.position = Vector2(MARK - 1.0, 0.0)
+	vbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	marker.add_child(vbar)
+	# Click handler
+	var cap_hint:   Label   = hint
+	var cap_marker: Control = marker
+	img_ctrl.gui_input.connect(func(ev: InputEvent) -> void:
+		if not (ev is InputEventMouseButton):
+			return
+		var mb: InputEventMouseButton = ev as InputEventMouseButton
+		if not (mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT):
+			return
+		var lp: Vector2 = mb.position
+		var nx: float   = clampf(lp.x / PICK_W, 0.0, 1.0)
+		var ny: float   = clampf(lp.y / PICK_H, 0.0, 1.0)
+		x_spin.value    = nx
+		y_spin.value    = ny
+		cap_marker.position = Vector2(nx * PICK_W - MARK, ny * PICK_H - MARK)
+		cap_hint.text = "Click on the image to set position  •  X: %.3f   Y: %.3f" % [nx, ny])
+	# Done button
+	var done_btn := Button.new()
+	done_btn.text = "Done"
+	done_btn.add_theme_font_size_override("font_size", 14)
+	done_btn.custom_minimum_size = Vector2(80, 0)
+	done_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	done_btn.pressed.connect(win.queue_free)
+	root_vbox.add_child(done_btn)
+	win.popup_centered()
+
 ## Called when the "Edit Beats ↗" button inside a character row is pressed.
 ## Auto-creates the VN JSON file using the pattern vn_<node_id>_<char_name>.json.
 func _on_edit_char_beats_pressed(name_edit: LineEdit, vn_edit: LineEdit) -> void:
@@ -1014,6 +1391,13 @@ func _populate_props(en: ExplorationNode) -> void:
 		if char_data is Dictionary:
 			_add_character_row(_prop_characters_vbox, char_data as Dictionary)
 
+	# Investigable Points
+	for child: Node in _prop_spots_vbox.get_children():
+		child.queue_free()
+	for spot_var: Variant in en.clickable_spots:
+		if spot_var is Dictionary:
+			_add_spot_row(_prop_spots_vbox, spot_var as Dictionary)
+
 	# Connections
 	for child: Node in _prop_connections_vbox.get_children():
 		child.queue_free()
@@ -1062,6 +1446,10 @@ func _collect_props(en: ExplorationNode) -> void:
 	# Characters
 	en.characters.clear()
 	en.characters = _collect_characters(_prop_characters_vbox)
+
+	# Investigable Points
+	en.clickable_spots.clear()
+	en.clickable_spots = _collect_spots(_prop_spots_vbox)
 
 	# Connections
 	en.connections.clear()

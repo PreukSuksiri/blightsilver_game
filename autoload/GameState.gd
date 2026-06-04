@@ -255,11 +255,11 @@ func _ready() -> void:
 
 func _apply_custom_cursor() -> void:
 	var img := Image.load_from_file(
-		ProjectSettings.globalize_path("res://assets/textures/ui/decorations/ui_cursor_64.png"))
+		ProjectSettings.globalize_path("res://assets/textures/ui/decorations/ui_cursor_finger_64.png"))
 	if img == null:
 		return
 	var tex := ImageTexture.create_from_image(img)
-	Input.set_custom_mouse_cursor(tex, Input.CURSOR_ARROW, Vector2(2.0, 2.0))
+	Input.set_custom_mouse_cursor(tex, Input.CURSOR_ARROW, Vector2(12.0, 4.0))
 
 func _init_grids() -> void:
 	grids = []

@@ -1,0 +1,194 @@
+{
+	"display_name": "New Graph",
+	"graph_id": "new_graph",
+	"nodes": [
+		{
+			"background": "res://assets/textures/exploration/background/library/vn_bg_university_library_dark.png",
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Go to Book Aisles",
+					"locked_hint": "",
+					"target": "node_book_aisle"
+				},
+				{
+					"conditions": [],
+					"label": "Go to Group Study Area",
+					"locked_hint": "",
+					"target": "node_group_study"
+				},
+				{
+					"conditions": [],
+					"label": "Go to Magazine Lounge",
+					"locked_hint": "",
+					"target": "node_magazine_lounge"
+				}
+			],
+			"description": "Once a popular spot among slackers. Now turns unnerving when the lights go out.",
+			"editor_position": {
+				"x": -220.0,
+				"y": 160.0
+			},
+			"id": "start",
+			"music": "res://assets/audio/bgm_liminal_5.mp3",
+			"node_type": "HUB",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Window-side Seating",
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Go to Window-side Seating",
+					"locked_hint": "",
+					"target": "start"
+				},
+				{
+					"conditions": [],
+					"label": "Go to Group Study Area",
+					"locked_hint": "",
+					"target": "node_group_study"
+				},
+				{
+					"conditions": [],
+					"label": "Go to Exhibition Booth",
+					"locked_hint": "",
+					"target": "node_exhibition"
+				}
+			],
+			"description": "You spend half an hour searching for a book you read for five minutes.",
+			"editor_position": {
+				"x": -160.0,
+				"y": -80.0
+			},
+			"id": "node_book_aisle",
+			"music": "res://assets/audio/bgm_liminal_5.mp3",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Book Aisle",
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/mall/liminal mall.png",
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Go to Window-side Seating",
+					"locked_hint": "",
+					"target": "start"
+				},
+				{
+					"conditions": [],
+					"label": "Go to Magazine Lounge",
+					"locked_hint": "",
+					"target": "node_magazine_lounge"
+				},
+				{
+					"conditions": [],
+					"label": "Go to Book Aisles",
+					"locked_hint": "",
+					"target": "node_book_aisle"
+				}
+			],
+			"description": "People still faking that group works improve teamwork.",
+			"editor_position": {
+				"x": 160.0,
+				"y": 220.0
+			},
+			"id": "node_group_study",
+			"music": "res://assets/audio/bgm_liminal_5.mp3",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Group Study Area",
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/stadium/liminal_stadium.jpg",
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Go to Window-side Seating",
+					"locked_hint": "",
+					"target": "start"
+				},
+				{
+					"conditions": [],
+					"label": "Go to Group Study Area",
+					"locked_hint": "",
+					"target": "node_group_study"
+				}
+			],
+			"description": "The magazines are brand new and have that great new-paper smell.",
+			"editor_position": {
+				"x": -200.0,
+				"y": 500.0
+			},
+			"id": "node_magazine_lounge",
+			"music": "res://assets/audio/bgm_liminal_5.mp3",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Magazine Lounge",
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/library/vn_bg_university_seclude_pool_of_blood.png",
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Go to Book Aisle",
+					"locked_hint": "",
+					"target": "node_book_aisle"
+				}
+			],
+			"description": "Some of the booths are pretty good. Some of them are just pretty.",
+			"editor_position": {
+				"x": -80.0,
+				"y": -300.0
+			},
+			"id": "node_exhibition",
+			"music": "res://assets/audio/bgm_liminal_5.mp3",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Exhibition Booth",
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": ""
+		}
+	],
+	"start_node_id": "start"
+}

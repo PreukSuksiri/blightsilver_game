@@ -20,9 +20,9 @@ const SETTING_ICON: String     = "res://assets/textures/ui/decorations/ui_icon_e
 const INVENTORY_ICON: String   = "res://assets/textures/ui/decorations/ui_exploration_inventory.png"
 const CHAT_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_exploration_chat.png"
 const INFO_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_exploration_info.png"
-const DEFAULT_CURSOR: String   = "res://assets/textures/ui/decorations/ui_cursor.png"
+const DEFAULT_CURSOR: String   = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
 const MAGNIFIER_CURSOR: String = "res://assets/textures/ui/decorations/ui_icon_magnifier.png"
-const FINGER_CURSOR: String    = "res://assets/textures/ui/decorations/ui_cursor_finger.png"
+const FINGER_CURSOR: String    = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
 const COMPASS_SIZE: float  = 110.0  # icon width/height in pixels
 const RADIAL_RADIUS: float = 210.0  # distance from center to item midpoint
 const RADIAL_ITEM_W: float = 180.0  # radial button width
@@ -48,6 +48,7 @@ var _who_section: VBoxContainer    = null   # "Who is here" section inside the i
 var _who_grid: GridContainer       = null   # 2-column grid of character thumbnails + names
 var _nav_fade_rect: ColorRect      = null   # full-screen black rect for node-transition fade
 var _nav_fade_tween: Tween         = null
+var _transition_active: bool       = false   # true while fade-out/in is running
 
 # ── Compass radial menu ───────────────────────────────────────────────────
 var _compass_root: Control        = null   # full-screen layer holding all 3 icons
@@ -98,6 +99,8 @@ var _info_panel_tween: Tween                 = null
 var _info_auto_dismiss_timer: SceneTreeTimer = null
 var _info_on_close_cb: Callable              = Callable()
 var _info_panel_hovered: bool                = false   # polled each frame; guards auto-dismiss
+var _info_wait_for_mouse: bool               = false   # true after auto-open: dismiss blocked until mouse moves
+var _info_mouse_wait_timer: SceneTreeTimer   = null    # 5s fallback: forces dismiss mode even without mouse move
 
 # ── Item preview overlay ──────────────────────────────────────────────────
 var _item_preview: Control        = null
@@ -761,13 +764,15 @@ func _spawn_radial_items(unlocked: Array) -> void:
 func _navigate_with_fade(callback: Callable) -> void:
 	if _nav_fade_tween and _nav_fade_tween.is_valid():
 		_nav_fade_tween.kill()
+	_transition_active    = true
 	_nav_fade_rect.modulate.a = 0.0
 	_nav_fade_tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
 	_nav_fade_tween.tween_property(_nav_fade_rect, "modulate:a", 1.0, 0.5)
 	_nav_fade_tween.tween_callback(func() -> void:
 		callback.call()
 		var tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
-		tw.tween_property(_nav_fade_rect, "modulate:a", 0.0, 0.3))
+		tw.tween_property(_nav_fade_rect, "modulate:a", 0.0, 0.3)
+		tw.tween_callback(func() -> void: _transition_active = false))
 
 func _on_radial_item_selected(target_id: String) -> void:
 	if target_id.is_empty():
@@ -881,7 +886,8 @@ func _on_setting_action(action: String) -> void:
 		"save_exit":
 			# Session is auto-saved on each navigation; just go to main menu.
 			CheckerTransition.fade_out_to_battle(func() -> void:
-				get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+				get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+				CheckerTransition.fade_in())
 		"restart":
 			_show_confirm_dialog(
 				"Restart Stage?",
@@ -1287,11 +1293,24 @@ func _on_info_clicked() -> void:
 		_open_info_panel()
 
 ## Open the info panel with an optional callback fired after it closes.
-## Auto-dismiss timer always starts after slide-in (cancelled if mouse enters the panel).
-func _open_info_panel(on_close: Callable = Callable(), _unused: bool = false) -> void:
+## Open the info panel. If wait_for_mouse_move=true (auto-open on node entry), the
+## auto-dismiss countdown is suppressed until the player moves the mouse.
+func _open_info_panel(on_close: Callable = Callable(), wait_for_mouse_move: bool = false) -> void:
 	_info_auto_dismiss_timer = null
+	_info_mouse_wait_timer   = null
+	_info_wait_for_mouse     = wait_for_mouse_move
 	_info_on_close_cb = on_close
 	_info_open = true
+	# 5-second fallback: if player still hasn't moved the mouse, release the wait-lock anyway
+	if wait_for_mouse_move:
+		_info_mouse_wait_timer = get_tree().create_timer(5.0)
+		_info_mouse_wait_timer.timeout.connect(func() -> void:
+			if not _info_wait_for_mouse or not _info_open:
+				return
+			_info_mouse_wait_timer = null
+			_info_wait_for_mouse   = false
+			if not _transition_active and not _is_over_info_panel_or_icon():
+				_on_info_panel_mouse_exited())
 	_title_lbl.visible = true
 	_desc_lbl.visible  = true
 	_back_btn.text     = "Dismiss"
@@ -1305,9 +1324,9 @@ func _open_info_panel(on_close: Callable = Callable(), _unused: bool = false) ->
 		_info_panel_tween.kill()
 	_info_panel_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
 	_info_panel_tween.tween_property(_content_panel, "position:x", vp_w * BG_AREA_FRACTION, 0.35)
-	# Start dismiss timer after slide-in only if mouse is not already over panel or info icon
+	# Start dismiss timer after slide-in only if transition settled, no mouse-move wait, and mouse not over panel/icon
 	_info_panel_tween.tween_callback(func() -> void:
-		if _info_open and not _is_over_info_panel_or_icon():
+		if _info_open and not _transition_active and not _info_wait_for_mouse and not _is_over_info_panel_or_icon():
 			_on_info_panel_mouse_exited())
 
 func _is_over_info_panel_or_icon() -> bool:
@@ -1325,17 +1344,19 @@ func _on_info_panel_mouse_entered() -> void:
 	_info_auto_dismiss_timer = null
 
 func _on_info_panel_mouse_exited() -> void:
-	if not _info_open:
+	if not _info_open or _transition_active or _info_wait_for_mouse:
 		return
 	_info_auto_dismiss_timer = get_tree().create_timer(1.0)
 	_info_auto_dismiss_timer.timeout.connect(func() -> void:
-		if _info_open and _info_auto_dismiss_timer != null:
+		if _info_open and _info_auto_dismiss_timer != null and not _transition_active and not _info_wait_for_mouse:
 			_close_info_panel())
 
 func _close_info_panel() -> void:
 	if not _info_open:
 		return
 	_info_auto_dismiss_timer = null
+	_info_mouse_wait_timer   = null
+	_info_wait_for_mouse     = false
 	_info_open = false
 	var cb: Callable = _info_on_close_cb
 	_info_on_close_cb = Callable()
@@ -1822,7 +1843,8 @@ func _on_exit_confirmed() -> void:
 	ExplorationManager.end_session(true)
 	var dest: String = ExplorationManager.return_scene
 	CheckerTransition.fade_out_to_battle(func() -> void:
-		get_tree().change_scene_to_file(dest))
+		get_tree().change_scene_to_file(dest)
+		CheckerTransition.fade_in())
 
 # ─────────────────────────────────────────────────────────────
 # UI helpers
@@ -1904,23 +1926,43 @@ func _rebuild_spots(node: ExplorationNode) -> void:
 			_spawn_spot(spot_var as Dictionary, bg_w, bg_h)
 
 func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float) -> void:
-	var xn: float         = float(spot.get("x_norm",  0.5))
-	var yn: float         = float(spot.get("y_norm",  0.5))
-	var wn: float         = float(spot.get("w_norm",  0.08))
-	var hn: float         = float(spot.get("h_norm",  0.08))
-	var icon_path: String = str(spot.get("icon",     ""))
-	var vn_path: String   = str(spot.get("vn_scene", ""))
-	var tip: String       = str(spot.get("tooltip",  ""))
+	# Check conditions — reuse ExplorationManager's connection-unlock logic (reads "conditions" key)
+	if not ExplorationManager.is_connection_unlocked(spot):
+		return
 
-	var pw: float = wn * bg_w
-	var ph: float = hn * bg_h
+	var xn: float         = float(spot.get("x_norm",    0.5))
+	var yn: float         = float(spot.get("y_norm",    0.5))
+	var icon_path: String = str(spot.get("icon",        ""))
+	var icon_scale: float = float(spot.get("icon_scale", 100.0))
+	var tip: String       = str(spot.get("tooltip",     ""))
+
+	# Build actions list; backward-compat: bare vn_scene field → play_vn action
+	var actions: Array = []
+	var raw_acts: Variant = spot.get("actions", [])
+	if raw_acts is Array:
+		actions = (raw_acts as Array).duplicate()
+	var vn_legacy: String = str(spot.get("vn_scene", ""))
+	if actions.is_empty() and not vn_legacy.is_empty():
+		actions = [{"action": "play_vn", "key": "", "value": vn_legacy}]
+
+	# Compute hit size: image (scaled) or 24×24 invisible fallback
+	var hit_w: float = 24.0
+	var hit_h: float = 24.0
+	var has_icon: bool = not icon_path.is_empty() and ResourceLoader.exists(icon_path)
+	if has_icon:
+		var tex: Texture2D = load(icon_path) as Texture2D
+		if tex != null:
+			var nat: Vector2 = tex.get_size()
+			hit_w = nat.x * icon_scale / 100.0
+			hit_h = nat.y * icon_scale / 100.0
+
 	var hit := Control.new()
-	hit.position     = Vector2(xn * bg_w - pw * 0.5, yn * bg_h - ph * 0.5)
-	hit.size         = Vector2(pw, ph)
+	hit.position     = Vector2(xn * bg_w - hit_w * 0.5, yn * bg_h - hit_h * 0.5)
+	hit.size         = Vector2(hit_w, hit_h)
 	hit.mouse_filter = Control.MOUSE_FILTER_STOP
 	_spots_layer.add_child(hit)
 
-	if not icon_path.is_empty() and ResourceLoader.exists(icon_path):
+	if has_icon:
 		var icon_tr := TextureRect.new()
 		icon_tr.set_anchors_preset(Control.PRESET_FULL_RECT)
 		icon_tr.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
@@ -1929,15 +1971,15 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float) -> void:
 		icon_tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		hit.add_child(icon_tr)
 
-	var cap_tip: String = tip
-	var cap_vn: String  = vn_path
+	var cap_tip:  String = tip
+	var cap_acts: Array  = actions
 	hit.mouse_entered.connect(func() -> void: _on_spot_hover_enter(cap_tip))
 	hit.mouse_exited.connect(func() -> void:  _on_spot_hover_exit())
 	hit.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton:
 			var mb := ev as InputEventMouseButton
 			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-				_on_spot_clicked(cap_vn))
+				_on_spot_triggered(cap_acts))
 
 func _on_spot_hover_enter(tooltip_text: String) -> void:
 	_hovering_spot = true
@@ -1956,15 +1998,58 @@ func _hide_tooltip() -> void:
 	if _tooltip_panel != null:
 		_tooltip_panel.visible = false
 
-func _on_spot_clicked(vn_path: String) -> void:
-	if _vn_playing or vn_path.is_empty():
+func _on_spot_triggered(actions: Array) -> void:
+	if _vn_playing or actions.is_empty():
 		return
-	_on_spot_hover_exit()   # restore cursor before VN takes over
+	_on_spot_hover_exit()   # restore cursor before any action takes over
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
-	_play_vn(vn_path, func() -> void:
-		var node: ExplorationNode = ExplorationManager.current_node
-		if node != null:
-			_compass_set_visible(true))
+	_execute_spot_actions(actions)
+
+func _execute_spot_actions(actions: Array) -> void:
+	# Collect non-sequenced actions and the optional VN + navigate targets
+	var vn_path:    String = ""
+	var nav_target: String = ""
+	var instant_events: Array = []
+	for act_var: Variant in actions:
+		if not act_var is Dictionary:
+			continue
+		var act: Dictionary = act_var as Dictionary
+		var action: String  = str(act.get("action", ""))
+		var key: String     = str(act.get("key",    ""))
+		var value: String   = str(act.get("value",  ""))
+		match action:
+			"give_item":
+				ExplorationManager.add_item(key if not key.is_empty() else value)
+			"remove_item":
+				ExplorationManager.remove_item(key if not key.is_empty() else value)
+			"set_var":
+				ExplorationManager.set_var(key, value)
+			"give_credits", "set_flag":
+				ExplorationManager.process_events([act])
+			"show_message":
+				_show_toast(value)
+			"play_sfx":
+				if not value.is_empty() and ResourceLoader.exists(value):
+					var sfx := AudioStreamPlayer.new()
+					sfx.stream = load(value) as AudioStream
+					sfx.bus    = "SFX"
+					add_child(sfx)
+					sfx.play()
+					sfx.finished.connect(sfx.queue_free)
+			"play_vn":
+				if not value.is_empty():
+					vn_path = value
+			"navigate_to":
+				if not value.is_empty():
+					nav_target = value
+	# VN plays first; navigate fires in its completion callback
+	if not vn_path.is_empty():
+		_play_vn(vn_path, func() -> void:
+			_compass_set_visible(true)
+			if not nav_target.is_empty():
+				_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(nav_target)))
+	elif not nav_target.is_empty():
+		_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(nav_target))
 
 func _process(_delta: float) -> void:
 	# Auto-dismiss: cancel timer while hovering panel or info icon; start it on unhover
@@ -1973,8 +2058,8 @@ func _process(_delta: float) -> void:
 		if over and not _info_panel_hovered:
 			# mouse just entered — cancel pending timer
 			_info_auto_dismiss_timer = null
-		elif not over and _info_panel_hovered:
-			# mouse just left — start dismiss timer
+		elif not over and _info_panel_hovered and not _transition_active and not _info_wait_for_mouse:
+			# mouse just left (transition settled, mouse-move wait cleared) — start dismiss timer
 			_on_info_panel_mouse_exited()
 		_info_panel_hovered = over
 	# Tooltip follow
@@ -2007,6 +2092,13 @@ func _toggle_debug() -> void:
 		_debug_lbl.append_text("[color=#44ff44]" + ExplorationManager.debug_dump() + "[/color]")
 
 func _input(event: InputEvent) -> void:
+	# When the panel is waiting for mouse movement before allowing auto-dismiss,
+	# clear the flag on first motion and immediately start dismiss logic if needed.
+	if event is InputEventMouseMotion and _info_wait_for_mouse and _info_open:
+		_info_wait_for_mouse   = false
+		_info_mouse_wait_timer = null   # cancel 5s fallback
+		if not _transition_active and not _is_over_info_panel_or_icon():
+			_on_info_panel_mouse_exited()
 	if not (event is InputEventMouseButton):
 		return
 	var mb := event as InputEventMouseButton

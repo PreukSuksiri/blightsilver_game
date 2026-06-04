@@ -419,6 +419,10 @@ func get_all_vars() -> Dictionary:
 # Event Processing
 # ─────────────────────────────────────────────────────────────
 
+## Public wrapper — lets external scripts fire a list of event dicts.
+func process_events(events: Array) -> void:
+	_process_events(events)
+
 func _process_events(events: Array) -> void:
 	for ev: Variant in events:
 		if not ev is Dictionary:
