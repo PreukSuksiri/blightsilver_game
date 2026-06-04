@@ -14,14 +14,19 @@ extends Control
 ##   Click the [DBG] button in the top-right corner for the same effect.
 
 const VN_PLAYER_SCENE: PackedScene = preload("res://scenes/vn_player.tscn")
-const FONT_PATH: String    = "res://assets/fonts/Chivo-VariableFont_wght.ttf"
-const COMPASS_ICON: String    = "res://assets/textures/ui/decorations/ui_icon_compass.png"
+const FONT_PATH: String        = "res://assets/fonts/Chivo-VariableFont_wght.ttf"
+const COMPASS_ICON: String     = "res://assets/textures/ui/decorations/ui_icon_compass.png"
+const SETTING_ICON: String     = "res://assets/textures/ui/decorations/ui_icon_exploration_setting.png"
+const INVENTORY_ICON: String   = "res://assets/textures/ui/decorations/ui_exploration_inventory.png"
 const MAGNIFIER_CURSOR: String = "res://assets/textures/ui/decorations/ui_icon_magnifier.png"
+const FINGER_CURSOR: String    = "res://assets/textures/ui/decorations/ui_cursor_finger.png"
 const COMPASS_SIZE: float  = 110.0  # icon width/height in pixels
 const RADIAL_RADIUS: float = 210.0  # distance from center to item midpoint
 const RADIAL_ITEM_W: float = 180.0  # radial button width
 const RADIAL_ITEM_H: float = 54.0   # radial button height
-const BG_AREA_FRACTION: float = 0.52  # fraction of viewport width used by the background area
+const BG_AREA_FRACTION: float = 0.80  # fraction of viewport width used by the background area
+const ICON_SPACING: float  = 180.0  # horizontal gap between compass center and side icon centers
+const ITEMS_PER_PAGE: int  = 7      # max items shown per inventory radial page
 
 # ── UI references (all built in _build_ui) ────────────────────────────────
 var _bg_rect: TextureRect          = null   # background image
@@ -31,8 +36,6 @@ var _type_badge_lbl: Label         = null   # coloured node-type label
 var _desc_lbl: RichTextLabel       = null   # node description
 var _choices_vbox: VBoxContainer   = null   # navigation choice buttons
 var _back_btn: Button              = null   # go-back button
-var _inventory_panel: PanelContainer = null
-var _inventory_hbox: HBoxContainer = null   # per-item slot buttons
 var _toast_lbl: Label              = null   # temporary message overlay
 var _toast_tween: Tween            = null
 var _debug_panel: PanelContainer   = null   # F3 debug overlay
@@ -40,23 +43,46 @@ var _debug_lbl: RichTextLabel      = null
 var _content_panel: Panel          = null   # right-side content area (layout_mode=0, sized by _reflow_layout)
 
 # ── Compass radial menu ───────────────────────────────────────────────────
-var _compass_root: Control        = null   # full-screen layer holding compass + radial
+var _compass_root: Control        = null   # full-screen layer holding all 3 icons
 var _compass_icon: TextureRect    = null   # the compass texture
 var _compass_hit: Button          = null   # invisible click area over the icon
 var _radial_overlay: Control      = null   # full-screen click-catcher (outside dismiss)
-var _radial_items: Array          = []     # currently shown radial PanelContainers
+var _radial_items: Array          = []     # currently shown radial PanelContainers (compass)
 var _compass_open: bool           = false
 var _compass_animating: bool      = false
-# Positions computed in _build_compass_system() after scene is sized
 var _compass_idle_pos: Vector2    = Vector2.ZERO
 var _compass_center_pos: Vector2  = Vector2.ZERO
+
+# ── Setting icon ─────────────────────────────────────────────────────────
+var _setting_icon: TextureRect    = null
+var _setting_hit: Button          = null
+var _setting_idle_pos: Vector2    = Vector2.ZERO
+var _setting_open: bool           = false
+var _setting_animating: bool      = false
+var _setting_radial_items: Array  = []
+
+# ── Inventory icon ────────────────────────────────────────────────────────
+var _inv_icon: TextureRect        = null
+var _inv_hit: Button              = null
+var _inv_idle_pos: Vector2        = Vector2.ZERO
+var _inv_open: bool               = false
+var _inv_animating: bool          = false
+var _inv_radial_items: Array      = []
+var _inv_page: int                = 0
+var _inv_empty_tween: Tween       = null
+var _inv_empty_lbl: Label         = null
+
+# ── Item preview overlay ──────────────────────────────────────────────────
+var _item_preview: Control        = null
+
+# ── Cursors ───────────────────────────────────────────────────────────────
+var _finger_tex: Texture2D        = null
 
 # ── Internal state ────────────────────────────────────────────────────────
 var _current_bg_path: String = ""
 var _vn_playing: bool        = false
 var _battle_pending: bool    = false
 var _exit_pending: bool      = false
-var _item_use_panel: PanelContainer = null  # floating use-item confirmation panel
 
 # ── Point-and-click hotspots ──────────────────────────────────────────────
 var _spots_layer: Control          = null   # holds spot hit-controls + icons
@@ -97,7 +123,6 @@ func _ready() -> void:
 func _connect_signals() -> void:
 	ExplorationManager.node_entered.connect(_on_node_entered)
 	ExplorationManager.message_posted.connect(_show_toast)
-	ExplorationManager.inventory_changed.connect(_on_inventory_changed)
 
 # ─────────────────────────────────────────────────────────────
 # UI Construction
@@ -119,10 +144,9 @@ func _build_ui() -> void:
 	add_child(_bg_base)
 
 	_bg_rect = TextureRect.new()
-	_bg_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_bg_rect.layout_mode  = 0
 	_bg_rect.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 	_bg_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	_bg_rect.modulate.a   = 0.0
 	_bg_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_bg_rect)
 
@@ -142,6 +166,7 @@ func _build_ui() -> void:
 	sb_panel.border_width_left = 2
 	sb_panel.border_color      = Color(0.35, 0.60, 1.0, 0.30)
 	content.add_theme_stylebox_override("panel", sb_panel)
+	content.visible = false
 	add_child(content)
 	_content_panel = content
 
@@ -155,27 +180,22 @@ func _build_ui() -> void:
 	vbox.add_theme_constant_override("separation", 14)
 	content.add_child(vbox)
 
-	# Type badge
+	# Type badge (hidden — kept for signal/logic references)
 	_type_badge_lbl = Label.new()
 	_type_badge_lbl.add_theme_font_size_override("font_size", 14)
+	_type_badge_lbl.visible = false
 	vbox.add_child(_type_badge_lbl)
 
-	# Title
+	# Title (hidden)
 	_title_lbl = Label.new()
 	_title_lbl.add_theme_font_override("font", _make_font(700))
 	_title_lbl.add_theme_font_size_override("font_size", 32)
 	_title_lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0, 1.0))
 	_title_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_title_lbl.visible = false
 	vbox.add_child(_title_lbl)
 
-	var sep1 := HSeparator.new()
-	var sb_sep := StyleBoxFlat.new()
-	sb_sep.bg_color = Color(0.35, 0.60, 1.0, 0.25)
-	sb_sep.content_margin_top = 3.0; sb_sep.content_margin_bottom = 3.0
-	sep1.add_theme_stylebox_override("separator", sb_sep)
-	vbox.add_child(sep1)
-
-	# Description
+	# Description (hidden)
 	_desc_lbl = RichTextLabel.new()
 	_desc_lbl.bbcode_enabled = true
 	_desc_lbl.scroll_active  = false
@@ -183,10 +203,8 @@ func _build_ui() -> void:
 	_desc_lbl.add_theme_font_override("normal_font", _make_font(400))
 	_desc_lbl.add_theme_font_size_override("normal_font_size", 22)
 	_desc_lbl.add_theme_color_override("default_color", Color(0.82, 0.90, 1.0, 0.95))
+	_desc_lbl.visible = false
 	vbox.add_child(_desc_lbl)
-
-	var sep2 := sep1.duplicate() as Control
-	vbox.add_child(sep2)
 
 	# Choices vbox — only used by BATTLE and EXIT nodes (special action buttons).
 	# Navigation choices are handled by the radial compass menu instead.
@@ -195,33 +213,13 @@ func _build_ui() -> void:
 	_choices_vbox.visible = false
 	vbox.add_child(_choices_vbox)
 
-	# Bottom row: back button + inventory
-	var bot_row := HBoxContainer.new()
-	bot_row.add_theme_constant_override("separation", 10)
-	vbox.add_child(bot_row)
-
+	# Back button
 	_back_btn = Button.new()
 	_back_btn.text = "← Go Back"
 	_back_btn.add_theme_font_size_override("font_size", 16)
 	_back_btn.add_theme_color_override("font_color", Color(0.55, 0.78, 0.95))
 	_back_btn.pressed.connect(_on_back_pressed)
-	bot_row.add_child(_back_btn)
-
-	# Inventory slots container (right-aligned, expands to fill)
-	_inventory_panel = PanelContainer.new()
-	_inventory_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var sb_inv := StyleBoxFlat.new()
-	sb_inv.bg_color       = Color(0.05, 0.12, 0.08, 0.85)
-	sb_inv.border_color   = Color(0.35, 0.75, 0.45, 0.50)
-	sb_inv.set_border_width_all(1)
-	sb_inv.set_corner_radius_all(6)
-	sb_inv.content_margin_left = 8.0; sb_inv.content_margin_right  = 8.0
-	sb_inv.content_margin_top  = 4.0; sb_inv.content_margin_bottom = 4.0
-	_inventory_panel.add_theme_stylebox_override("panel", sb_inv)
-	_inventory_hbox = HBoxContainer.new()
-	_inventory_hbox.add_theme_constant_override("separation", 6)
-	_inventory_panel.add_child(_inventory_hbox)
-	bot_row.add_child(_inventory_panel)
+	vbox.add_child(_back_btn)
 
 	# ── Debug button (top-right corner) ───────────────────────
 	var dbg_btn := Button.new()
@@ -298,17 +296,18 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_reflow_layout()
 
-## Explicitly position and size the content panel from the node's own rect.
+## Explicitly position and size the content panel from the viewport rect.
 ## Called deferred after _build_ui() and whenever the window is resized.
 func _reflow_layout() -> void:
 	if _content_panel == null:
 		return
-	var sw: float = size.x
-	var sh: float = size.y
+	var vp_size: Vector2 = get_viewport().get_visible_rect().size
+	var sw: float = vp_size.x
+	var sh: float = vp_size.y
 	if sw == 0.0 or sh == 0.0:
-		# Viewport size not yet available; try next frame
-		_reflow_layout.call_deferred()
 		return
+	_bg_rect.position = Vector2.ZERO
+	_bg_rect.size      = Vector2(sw, sh)
 	_content_panel.position = Vector2(sw * BG_AREA_FRACTION, 0.0)
 	_content_panel.size     = Vector2(sw * (1.0 - BG_AREA_FRACTION), sh)
 
@@ -317,30 +316,35 @@ func _reflow_layout() -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _build_compass_system() -> void:
-	# Full-screen transparent root layer — sits above the content panel.
+	# Root layer — always visible, holds all three bottom icons.
 	_compass_root = Control.new()
 	_compass_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_compass_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_compass_root.z_index      = 30
-	_compass_root.visible      = false
+	_compass_root.visible      = true
 	add_child(_compass_root)
 
-	# Idle / center positions — use actual viewport size so they work at any resolution.
+	# Viewport size for positioning.
 	var vp: Vector2 = get_viewport().get_visible_rect().size
 	if vp == Vector2.ZERO:
-		vp = Vector2(1600.0, 900.0)  # fallback for when viewport isn't sized yet
-	_compass_idle_pos   = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, vp.y - COMPASS_SIZE - 24.0)
-	_compass_center_pos = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, vp.y * 0.5 - COMPASS_SIZE * 0.5)
+		vp = Vector2(1600.0, 900.0)
+	var bottom_y: float = vp.y - COMPASS_SIZE - 24.0
+	var center_y: float = vp.y * 0.5 - COMPASS_SIZE * 0.5
 
-	# Click-catcher overlay (shown when menu is open; catches outside taps)
+	# ── Compass (center) ─────────────────────────────────────
+	_compass_idle_pos   = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, bottom_y)
+	_compass_center_pos = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, center_y)
+
+	# Full-screen click-catcher — direct child of ExplorationPlayer so it is NOT inside
+	# the MOUSE_FILTER_IGNORE compass_root. z_index=25 puts it above scene (0) but below
+	# the icons layer (30), so radial items and icon hits are still reachable.
 	_radial_overlay = Control.new()
 	_radial_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_radial_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	_radial_overlay.z_index      = 25
 	_radial_overlay.visible      = false
-	_radial_overlay.gui_input.connect(_on_radial_overlay_input)
-	_compass_root.add_child(_radial_overlay)
+	add_child(_radial_overlay)   # ← parent is ExplorationPlayer, not compass_root
 
-	# Compass icon
 	_compass_icon          = TextureRect.new()
 	_compass_icon.position = _compass_idle_pos
 	_compass_icon.size     = Vector2(COMPASS_SIZE, COMPASS_SIZE)
@@ -350,21 +354,94 @@ func _build_compass_system() -> void:
 		_compass_icon.texture = load(COMPASS_ICON) as Texture2D
 	_compass_root.add_child(_compass_icon)
 
-	# Invisible button covering the compass (for clean click detection)
-	_compass_hit              = Button.new()
-	_compass_hit.position     = _compass_idle_pos
-	_compass_hit.size         = Vector2(COMPASS_SIZE, COMPASS_SIZE)
-	_compass_hit.flat         = true
-	_compass_hit.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sb_empty := StyleBoxEmpty.new()
-	for state: String in ["normal","hover","pressed","focus","disabled"]:
-		_compass_hit.add_theme_stylebox_override(state, sb_empty)
+	_compass_hit          = _make_icon_hit_button(_compass_idle_pos)
 	_compass_hit.pressed.connect(_on_compass_clicked)
+	_compass_hit.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
+	_compass_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
 	_compass_root.add_child(_compass_hit)
 
+	# ── Setting icon (right of compass) ──────────────────────
+	_setting_idle_pos = Vector2(vp.x * 0.5 + ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
+
+	_setting_icon          = TextureRect.new()
+	_setting_icon.position = _setting_idle_pos
+	_setting_icon.size     = Vector2(COMPASS_SIZE, COMPASS_SIZE)
+	_setting_icon.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	_setting_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	if ResourceLoader.exists(SETTING_ICON):
+		_setting_icon.texture = load(SETTING_ICON) as Texture2D
+	_compass_root.add_child(_setting_icon)
+
+	_setting_hit = _make_icon_hit_button(_setting_idle_pos)
+	_setting_hit.pressed.connect(_on_setting_clicked)
+	_setting_hit.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
+	_setting_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
+	_compass_root.add_child(_setting_hit)
+
+	# ── Inventory icon (left of compass) ─────────────────────
+	_inv_idle_pos = Vector2(vp.x * 0.5 - ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
+
+	_inv_icon          = TextureRect.new()
+	_inv_icon.position = _inv_idle_pos
+	_inv_icon.size     = Vector2(COMPASS_SIZE, COMPASS_SIZE)
+	_inv_icon.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	_inv_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	if ResourceLoader.exists(INVENTORY_ICON):
+		_inv_icon.texture = load(INVENTORY_ICON) as Texture2D
+	_compass_root.add_child(_inv_icon)
+
+	_inv_hit = _make_icon_hit_button(_inv_idle_pos)
+	_inv_hit.pressed.connect(_on_inventory_clicked)
+	_inv_hit.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
+	_inv_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
+	_compass_root.add_child(_inv_hit)
+
+	# Empty-inventory overlay label — positioned directly over the inventory icon
+	_inv_empty_lbl = Label.new()
+	_inv_empty_lbl.layout_mode = 0   # manual position
+	var lbl_w: float = COMPASS_SIZE + 120.0
+	_inv_empty_lbl.position = Vector2(
+		_inv_idle_pos.x + COMPASS_SIZE * 0.5 - lbl_w * 0.5,
+		_inv_idle_pos.y - 36.0)
+	_inv_empty_lbl.size = Vector2(lbl_w, 30.0)
+	_inv_empty_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_inv_empty_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+	_inv_empty_lbl.add_theme_font_size_override("font_size", 16)
+	_inv_empty_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+	_inv_empty_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+	_inv_empty_lbl.add_theme_constant_override("shadow_offset_x", 2)
+	_inv_empty_lbl.add_theme_constant_override("shadow_offset_y", 2)
+	_inv_empty_lbl.modulate.a  = 0.0
+	_inv_empty_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_compass_root.add_child(_inv_empty_lbl)
+
+	# Load cursors
+	if ResourceLoader.exists(FINGER_CURSOR):
+		_finger_tex = load(FINGER_CURSOR) as Texture2D
+
+## Build an invisible full-size hit button for an icon at given position.
+func _make_icon_hit_button(pos: Vector2) -> Button:
+	var btn := Button.new()
+	btn.position     = pos
+	btn.size         = Vector2(COMPASS_SIZE, COMPASS_SIZE)
+	btn.flat         = true
+	btn.mouse_filter = Control.MOUSE_FILTER_STOP
+	var sb := StyleBoxEmpty.new()
+	for state: String in ["normal","hover","pressed","focus","disabled"]:
+		btn.add_theme_stylebox_override(state, sb)
+	return btn
+
+func _set_finger_cursor(on: bool) -> void:
+	if on and _finger_tex != null:
+		Input.set_custom_mouse_cursor(_finger_tex, Input.CURSOR_ARROW, Vector2(12.0, 4.0))
+	elif not on and not _hovering_spot:
+		Input.set_custom_mouse_cursor(null)
+
 func _compass_set_visible(show: bool) -> void:
-	if _compass_root != null:
-		_compass_root.visible = show
+	if _compass_icon != null:
+		_compass_icon.visible = show
+	if _compass_hit != null:
+		_compass_hit.visible = show
 
 func _on_compass_clicked() -> void:
 	if _compass_animating:
@@ -374,11 +451,10 @@ func _on_compass_clicked() -> void:
 	else:
 		_open_compass_menu()
 
-func _on_radial_overlay_input(ev: InputEvent) -> void:
-	if ev is InputEventMouseButton:
-		var mb: InputEventMouseButton = ev as InputEventMouseButton
-		if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-			_close_compass_menu()
+func _close_all_menus(animated: bool = true) -> void:
+	_close_compass_menu(animated)
+	_close_setting_menu(animated)
+	_close_inventory_menu(animated)
 
 func _open_compass_menu() -> void:
 	if _compass_animating or _compass_open:
@@ -409,7 +485,6 @@ func _open_compass_menu() -> void:
 
 	# Show overlay to catch outside clicks, raise it below the compass
 	_radial_overlay.visible = true
-	_radial_overlay.z_index = -1  # behind compass icon but above scene
 
 	# Build and animate radial items
 	_spawn_radial_items(unlocked)
@@ -511,24 +586,576 @@ func _on_radial_item_selected(target_id: String) -> void:
 	ExplorationManager.navigate_to(target_id)
 
 # ─────────────────────────────────────────────────────────────
+# Setting Radial Menu
+# ─────────────────────────────────────────────────────────────
+
+func _on_setting_clicked() -> void:
+	if _setting_animating:
+		return
+	if _setting_open:
+		_close_setting_menu()
+	else:
+		_close_compass_menu(false)
+		_close_inventory_menu(false)
+		_open_setting_menu()
+
+func _open_setting_menu() -> void:
+	if _setting_animating or _setting_open:
+		return
+	_setting_open      = true
+	_setting_animating = true
+	SFXManager.play(SFXManager.SFX_MENU)
+
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	if vp == Vector2.ZERO:
+		vp = Vector2(1600.0, 900.0)
+	var center_pos := Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, vp.y * 0.5 - COMPASS_SIZE * 0.5)
+
+	var tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tw.set_parallel(true)
+	tw.tween_property(_setting_icon, "position", center_pos, 0.28)
+	tw.tween_property(_setting_hit,  "position", center_pos, 0.28)
+	await tw.finished
+	_setting_animating = false
+
+	_radial_overlay.visible = true
+	_spawn_setting_radial_items(center_pos)
+
+func _close_setting_menu(animated: bool = true) -> void:
+	if _setting_animating and not _setting_open:
+		return
+	_setting_open = false
+	for item: Variant in _setting_radial_items:
+		if is_instance_valid(item as Node):
+			(item as Node).queue_free()
+	_setting_radial_items.clear()
+	if not _compass_open and not _inv_open:
+		_radial_overlay.visible = false
+	if not animated:
+		_setting_icon.position = _setting_idle_pos
+		_setting_hit.position  = _setting_idle_pos
+		return
+	_setting_animating = true
+	var tw := create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_BACK)
+	tw.set_parallel(true)
+	tw.tween_property(_setting_icon, "position", _setting_idle_pos, 0.22)
+	tw.tween_property(_setting_hit,  "position", _setting_idle_pos, 0.22)
+	await tw.finished
+	_setting_animating = false
+
+func _spawn_setting_radial_items(center: Vector2) -> void:
+	var cx: float = center.x + COMPASS_SIZE * 0.5
+	var cy: float = center.y + COMPASS_SIZE * 0.5
+	var choices: Array = [
+		{"label": "Save and Exit",  "action": "save_exit"},
+		{"label": "Restart Stage",  "action": "restart"},
+		{"label": "Options",        "action": "options"},
+	]
+	var n: int = choices.size()
+	for i: int in range(n):
+		var angle: float = (-PI * 0.5) + float(i) * (TAU / float(n))
+		var item_cx: float = cx + cos(angle) * RADIAL_RADIUS
+		var item_cy: float = cy + sin(angle) * RADIAL_RADIUS
+		var panel: PanelContainer = _make_radial_panel(
+			Vector2(item_cx - RADIAL_ITEM_W * 0.5, item_cy - RADIAL_ITEM_H * 0.5),
+			Color(0.20, 0.04, 0.04, 0.94), Color(1.0, 0.55, 0.45, 0.85))
+		var lbl := Label.new()
+		lbl.text = str(choices[i].get("label", ""))
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+		lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
+		lbl.add_theme_font_size_override("font_size", 17)
+		lbl.add_theme_color_override("font_color", Color(1.0, 0.88, 0.85))
+		lbl.add_theme_font_override("font", _make_font(500))
+		panel.add_child(lbl)
+		var action: String = str(choices[i].get("action", ""))
+		panel.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton:
+				var mb := ev as InputEventMouseButton
+				if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+					_on_setting_action(action))
+		_compass_root.add_child(panel)
+		_setting_radial_items.append(panel)
+		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		fade_tw.tween_interval(float(i) * 0.04)
+		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
+
+func _on_setting_action(action: String) -> void:
+	SFXManager.play(SFXManager.SFX_MENU)
+	_close_setting_menu()
+	match action:
+		"save_exit":
+			# Session is auto-saved on each navigation; just go to main menu.
+			CheckerTransition.fade_out_to_battle(func() -> void:
+				get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		"restart":
+			_show_confirm_dialog(
+				"Restart Stage?",
+				"All progress will be lost.",
+				func() -> void:
+					ExplorationManager.restart_stage())
+		"options":
+			var sm: Node = load("res://scenes/settings_menu.tscn").instantiate()
+			add_child(sm)
+			sm.closed.connect(func() -> void: sm.queue_free())
+
+# ─────────────────────────────────────────────────────────────
+# Inventory Radial Menu
+# ─────────────────────────────────────────────────────────────
+
+func _on_inventory_clicked() -> void:
+	if _inv_animating:
+		return
+	if _inv_open:
+		_close_inventory_menu()
+	else:
+		var inv: Array = ExplorationManager.get_inventory()
+		if inv.is_empty():
+			_flash_empty_inventory()
+			return
+		_close_compass_menu(false)
+		_close_setting_menu(false)
+		_open_inventory_menu(0)
+
+func _open_inventory_menu(page: int) -> void:
+	if _inv_animating:
+		return
+	# Clear previous page items
+	for item: Variant in _inv_radial_items:
+		if is_instance_valid(item as Node):
+			(item as Node).queue_free()
+	_inv_radial_items.clear()
+
+	_inv_open      = true
+	_inv_page      = page
+	_inv_animating = true
+	SFXManager.play(SFXManager.SFX_MENU)
+
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	if vp == Vector2.ZERO:
+		vp = Vector2(1600.0, 900.0)
+	var center_pos := Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, vp.y * 0.5 - COMPASS_SIZE * 0.5)
+
+	var tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tw.set_parallel(true)
+	tw.tween_property(_inv_icon, "position", center_pos, 0.28)
+	tw.tween_property(_inv_hit,  "position", center_pos, 0.28)
+	await tw.finished
+	_inv_animating = false
+
+	_radial_overlay.visible = true
+	_spawn_inventory_radial_items(center_pos, page)
+
+func _close_inventory_menu(animated: bool = true) -> void:
+	if _inv_animating and not _inv_open:
+		return
+	_inv_open = false
+	for item: Variant in _inv_radial_items:
+		if is_instance_valid(item as Node):
+			(item as Node).queue_free()
+	_inv_radial_items.clear()
+	if not _compass_open and not _setting_open:
+		_radial_overlay.visible = false
+	if not animated:
+		_inv_icon.position = _inv_idle_pos
+		_inv_hit.position  = _inv_idle_pos
+		return
+	_inv_animating = true
+	var tw := create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_BACK)
+	tw.set_parallel(true)
+	tw.tween_property(_inv_icon, "position", _inv_idle_pos, 0.22)
+	tw.tween_property(_inv_hit,  "position", _inv_idle_pos, 0.22)
+	await tw.finished
+	_inv_animating = false
+
+func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
+	var inv: Array = ExplorationManager.get_inventory()
+	# Deduplicate to unique item IDs
+	var seen: Dictionary = {}
+	var unique_ids: Array = []
+	for raw: Variant in inv:
+		var id: String = str(raw)
+		if not seen.has(id):
+			seen[id] = 0
+		seen[id] = int(seen[id]) + 1
+		if not unique_ids.has(id):
+			unique_ids.append(id)
+
+	var start_idx: int  = page * ITEMS_PER_PAGE
+	var end_idx: int    = min(start_idx + ITEMS_PER_PAGE, unique_ids.size())
+	var has_more: bool  = end_idx < unique_ids.size()
+	var has_prev: bool  = page > 0
+	var page_ids: Array = unique_ids.slice(start_idx, end_idx)
+
+	# Build choices: item entries + navigation (More / Back)
+	var choices: Array = []
+	for id: Variant in page_ids:
+		choices.append({"type": "item", "id": str(id), "count": int(seen[id])})
+	if has_prev:
+		choices.append({"type": "prev"})
+	if has_more:
+		choices.append({"type": "more"})
+
+	var n: int     = choices.size()
+	var cx: float  = center.x + COMPASS_SIZE * 0.5
+	var cy: float  = center.y + COMPASS_SIZE * 0.5
+
+	for i: int in range(n):
+		var choice: Dictionary = choices[i] as Dictionary
+		var angle: float = (-PI * 0.5) + float(i) * (TAU / float(n))
+		var item_cx: float = cx + cos(angle) * RADIAL_RADIUS
+		var item_cy: float = cy + sin(angle) * RADIAL_RADIUS
+		var panel: PanelContainer = _make_radial_panel(
+			Vector2(item_cx - RADIAL_ITEM_W * 0.5, item_cy - RADIAL_ITEM_H * 0.5),
+			Color(0.04, 0.14, 0.08, 0.94), Color(0.35, 0.80, 0.45, 0.85))
+
+		var choice_type: String = str(choice.get("type", ""))
+		if choice_type == "item":
+			var item_id: String = str(choice.get("id", ""))
+			var count: int = int(choice.get("count", 1))
+			var item_data: Dictionary = ExplorationItemDatabase.get_item(item_id)
+			var item_name: String = str(item_data.get("name", item_id))
+			var icon_path: String = str(item_data.get("icon", ""))
+
+			var inner := HBoxContainer.new()
+			inner.add_theme_constant_override("separation", 6)
+			inner.alignment = BoxContainer.ALIGNMENT_CENTER
+			panel.add_child(inner)
+
+			if not icon_path.is_empty() and ResourceLoader.exists(icon_path):
+				var icon_tr := TextureRect.new()
+				icon_tr.texture      = load(icon_path) as Texture2D
+				icon_tr.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+				icon_tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				icon_tr.custom_minimum_size = Vector2(36.0, 36.0)
+				icon_tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				inner.add_child(icon_tr)
+
+			var lbl := Label.new()
+			lbl.text = item_name if count == 1 else "%s ×%d" % [item_name, count]
+			lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			lbl.autowrap_mode      = TextServer.AUTOWRAP_WORD_SMART
+			lbl.add_theme_font_size_override("font_size", 16)
+			lbl.add_theme_color_override("font_color", Color(0.85, 1.0, 0.88))
+			lbl.add_theme_font_override("font", _make_font(500))
+			inner.add_child(lbl)
+
+			var captured_id: String = item_id
+			panel.gui_input.connect(func(ev: InputEvent) -> void:
+				if ev is InputEventMouseButton:
+					var mb := ev as InputEventMouseButton
+					if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+						_on_inventory_item_selected(captured_id))
+		else:
+			var nav_lbl := Label.new()
+			nav_lbl.text = "▶ More" if choice_type == "more" else "◀ Back"
+			nav_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			nav_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+			nav_lbl.add_theme_font_size_override("font_size", 16)
+			nav_lbl.add_theme_color_override("font_color", Color(0.75, 0.90, 1.0))
+			nav_lbl.add_theme_font_override("font", _make_font(500))
+			panel.add_child(nav_lbl)
+			var target_page: int = page + 1 if choice_type == "more" else page - 1
+			panel.gui_input.connect(func(ev: InputEvent) -> void:
+				if ev is InputEventMouseButton:
+					var mb := ev as InputEventMouseButton
+					if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+						_open_inventory_menu(target_page))
+
+		_compass_root.add_child(panel)
+		_inv_radial_items.append(panel)
+		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		fade_tw.tween_interval(float(i) * 0.04)
+		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
+
+func _on_inventory_item_selected(item_id: String) -> void:
+	SFXManager.play(SFXManager.SFX_MENU)
+	_close_inventory_menu()
+	_show_item_preview(item_id)
+
+func _flash_empty_inventory() -> void:
+	if _inv_empty_tween and _inv_empty_tween.is_valid():
+		_inv_empty_tween.kill()
+	_inv_icon.modulate = Color(0.4, 0.4, 0.4)
+	_inv_empty_lbl.text = "Inventory is empty"
+	_inv_empty_lbl.modulate.a = 1.0
+	_inv_empty_tween = create_tween()
+	_inv_empty_tween.tween_interval(1.4)
+	_inv_empty_tween.tween_property(_inv_empty_lbl, "modulate:a", 0.0, 0.5)
+	_inv_empty_tween.parallel().tween_property(_inv_icon, "modulate", Color(1.0, 1.0, 1.0), 0.5)
+
+# ─────────────────────────────────────────────────────────────
+# Item Preview Overlay
+# ─────────────────────────────────────────────────────────────
+
+func _show_item_preview(item_id: String) -> void:
+	_close_item_preview()
+	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
+	if item.is_empty():
+		_show_toast("Unknown item.")
+		return
+
+	var overlay := Control.new()
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 50
+	_item_preview = overlay
+	add_child(overlay)
+
+	# Dim background
+	var dimmer := ColorRect.new()
+	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dimmer.color        = Color(0.0, 0.0, 0.0, 0.70)
+	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	dimmer.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed:
+			_close_item_preview())
+	overlay.add_child(dimmer)
+
+	# Center panel
+	var panel := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.03, 0.07, 0.04, 0.97)
+	sb.set_border_width_all(2)
+	sb.border_color = Color(0.35, 0.85, 0.45, 0.70)
+	sb.set_corner_radius_all(10)
+	panel.add_theme_stylebox_override("panel", sb)
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.size     = Vector2(480.0, 520.0)
+	panel.position = -panel.size * 0.5
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vbox.offset_left = 24.0; vbox.offset_right  = -24.0
+	vbox.offset_top  = 24.0; vbox.offset_bottom = -24.0
+	vbox.add_theme_constant_override("separation", 14)
+	panel.add_child(vbox)
+
+	# Big image
+	var big_path: String = str(item.get("big_image", ""))
+	var img_tr := TextureRect.new()
+	img_tr.expand_mode        = TextureRect.EXPAND_IGNORE_SIZE
+	img_tr.stretch_mode       = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	img_tr.custom_minimum_size = Vector2(0.0, 200.0)
+	img_tr.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	img_tr.mouse_filter        = Control.MOUSE_FILTER_IGNORE
+	if not big_path.is_empty() and ResourceLoader.exists(big_path):
+		img_tr.texture = load(big_path) as Texture2D
+	vbox.add_child(img_tr)
+
+	# Item name
+	var name_lbl := Label.new()
+	name_lbl.text = str(item.get("name", item_id))
+	name_lbl.add_theme_font_override("font", _make_font(700))
+	name_lbl.add_theme_font_size_override("font_size", 26)
+	name_lbl.add_theme_color_override("font_color", Color(0.85, 1.0, 0.88))
+	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(name_lbl)
+
+	# Description
+	var desc_lbl := RichTextLabel.new()
+	desc_lbl.bbcode_enabled        = true
+	desc_lbl.scroll_active         = false
+	desc_lbl.custom_minimum_size   = Vector2(0.0, 60.0)
+	desc_lbl.size_flags_vertical   = Control.SIZE_EXPAND_FILL
+	desc_lbl.add_theme_font_size_override("normal_font_size", 18)
+	desc_lbl.add_theme_color_override("default_color", Color(0.78, 0.92, 0.82, 0.95))
+	desc_lbl.append_text(str(item.get("description", "")))
+	vbox.add_child(desc_lbl)
+
+	# Buttons row
+	var btn_row := HBoxContainer.new()
+	btn_row.add_theme_constant_override("separation", 12)
+	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_child(btn_row)
+
+	var use_btn := Button.new()
+	use_btn.text = "  Use  "
+	use_btn.add_theme_font_size_override("font_size", 20)
+	use_btn.add_theme_color_override("font_color", Color(0.85, 1.0, 0.88))
+	use_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var captured_id: String = item_id
+	use_btn.pressed.connect(func() -> void:
+		_close_item_preview()
+		_execute_item_effects(captured_id))
+	btn_row.add_child(use_btn)
+
+	var cancel_btn := Button.new()
+	cancel_btn.text = "Cancel"
+	cancel_btn.add_theme_font_size_override("font_size", 20)
+	cancel_btn.add_theme_color_override("font_color", Color(0.60, 0.65, 0.65))
+	cancel_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cancel_btn.pressed.connect(_close_item_preview)
+	btn_row.add_child(cancel_btn)
+
+func _close_item_preview() -> void:
+	if _item_preview != null and is_instance_valid(_item_preview):
+		_item_preview.queue_free()
+	_item_preview = null
+
+func _execute_item_effects(item_id: String) -> void:
+	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
+	var effects: Variant = item.get("effects", [])
+	if not effects is Array:
+		return
+	for eff_var: Variant in (effects as Array):
+		if not eff_var is Dictionary:
+			continue
+		var eff: Dictionary    = eff_var as Dictionary
+		var eff_type: String   = str(eff.get("type",  ""))
+		var eff_key: String    = str(eff.get("key",   ""))
+		var eff_value: String  = str(eff.get("value", ""))
+		match eff_type:
+			"remove_self":
+				ExplorationManager.remove_item(item_id)
+			"remove_item":
+				var target: String = eff_key if not eff_key.is_empty() else eff_value
+				if not target.is_empty():
+					ExplorationManager.remove_item(target)
+			"set_var":
+				ExplorationManager.set_var(eff_key, eff_value)
+			"show_message":
+				_show_toast(eff_value)
+			"play_sfx":
+				if not eff_value.is_empty() and ResourceLoader.exists(eff_value):
+					var sfx := AudioStreamPlayer.new()
+					sfx.stream = load(eff_value) as AudioStream
+					sfx.bus    = "SFX"
+					add_child(sfx)
+					sfx.play()
+					await sfx.finished
+					sfx.queue_free()
+			"play_vn":
+				if not eff_value.is_empty():
+					var done := false
+					_play_vn(eff_value, func() -> void: done = true)
+					while not done:
+						await get_tree().process_frame
+			"navigate_to":
+				if not eff_value.is_empty():
+					ExplorationManager.navigate_to(eff_value)
+
+# ─────────────────────────────────────────────────────────────
+# Shared Radial Helpers
+# ─────────────────────────────────────────────────────────────
+
+func _make_radial_panel(pos: Vector2, bg_color: Color, border_color: Color) -> PanelContainer:
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(RADIAL_ITEM_W, RADIAL_ITEM_H)
+	panel.position  = pos
+	panel.modulate.a = 0.0
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg_color
+	sb.set_border_width_all(1)
+	sb.border_color = border_color
+	sb.set_corner_radius_all(8)
+	sb.content_margin_left = 12.0; sb.content_margin_right  = 12.0
+	sb.content_margin_top  =  8.0; sb.content_margin_bottom =  8.0
+	panel.add_theme_stylebox_override("panel", sb)
+	var hover_bg: Color    = bg_color.lightened(0.15)
+	var hover_bord: Color  = border_color.lightened(0.20)
+	panel.mouse_entered.connect(func() -> void:
+		sb.bg_color = hover_bg; sb.border_color = hover_bord)
+	panel.mouse_exited.connect(func() -> void:
+		sb.bg_color = bg_color; sb.border_color = border_color)
+	return panel
+
+# ─────────────────────────────────────────────────────────────
+# Confirmation Dialog Helper
+# ─────────────────────────────────────────────────────────────
+
+func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Callable) -> void:
+	var overlay := Control.new()
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 60
+	add_child(overlay)
+
+	var dimmer := ColorRect.new()
+	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dimmer.color        = Color(0.0, 0.0, 0.0, 0.60)
+	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.add_child(dimmer)
+
+	var panel := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.06, 0.06, 0.14, 0.97)
+	sb.set_border_width_all(2)
+	sb.border_color = Color(1.0, 0.55, 0.45, 0.70)
+	sb.set_corner_radius_all(8)
+	panel.add_theme_stylebox_override("panel", sb)
+	panel.set_anchors_preset(Control.PRESET_CENTER)
+	panel.size     = Vector2(380.0, 200.0)
+	panel.position = -panel.size * 0.5
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vbox.offset_left = 24.0; vbox.offset_right  = -24.0
+	vbox.offset_top  = 20.0; vbox.offset_bottom = -20.0
+	vbox.add_theme_constant_override("separation", 12)
+	panel.add_child(vbox)
+
+	var title_lbl := Label.new()
+	title_lbl.text = title_text
+	title_lbl.add_theme_font_override("font", _make_font(700))
+	title_lbl.add_theme_font_size_override("font_size", 22)
+	title_lbl.add_theme_color_override("font_color", Color(1.0, 0.75, 0.70))
+	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(title_lbl)
+
+	var body_lbl := Label.new()
+	body_lbl.text = body_text
+	body_lbl.add_theme_font_size_override("font_size", 16)
+	body_lbl.add_theme_color_override("font_color", Color(0.80, 0.80, 0.85))
+	body_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	body_lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
+	vbox.add_child(body_lbl)
+
+	var btn_row := HBoxContainer.new()
+	btn_row.add_theme_constant_override("separation", 12)
+	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_child(btn_row)
+
+	var confirm_btn := Button.new()
+	confirm_btn.text = "Yes"
+	confirm_btn.add_theme_font_size_override("font_size", 18)
+	confirm_btn.add_theme_color_override("font_color", Color(1.0, 0.60, 0.50))
+	confirm_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	confirm_btn.pressed.connect(func() -> void:
+		overlay.queue_free()
+		on_confirm.call())
+	btn_row.add_child(confirm_btn)
+
+	var cancel_btn := Button.new()
+	cancel_btn.text = "Cancel"
+	cancel_btn.add_theme_font_size_override("font_size", 18)
+	cancel_btn.add_theme_color_override("font_color", Color(0.60, 0.65, 0.65))
+	cancel_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cancel_btn.pressed.connect(func() -> void: overlay.queue_free())
+	btn_row.add_child(cancel_btn)
+
+# ─────────────────────────────────────────────────────────────
 # Node Rendering
 # ─────────────────────────────────────────────────────────────
 
 func _on_node_entered(node: ExplorationNode) -> void:
-	_close_compass_menu(false)
+	_close_all_menus(false)
+	_close_item_preview()
 	_refresh_node(node)
 
 func _refresh_node(node: ExplorationNode) -> void:
 	_exit_pending   = false
 	_battle_pending = false
-	_close_item_use_panel()
 
 	# Background
 	if not node.background.is_empty() and node.background != _current_bg_path:
 		_current_bg_path = node.background
-		if ResourceLoader.exists(node.background):
-			_bg_rect.texture  = load(node.background) as Texture2D
-			_bg_rect.modulate = Color(1.0, 1.0, 1.0, 1.0)
+		var tex: Texture2D = load(node.background) as Texture2D
+		if tex != null:
+			_bg_rect.texture = tex
 		else:
 			push_warning("ExplorationPlayer: bg '%s' not found." % node.background)
 
@@ -564,24 +1191,25 @@ func _refresh_node(node: ExplorationNode) -> void:
 	# Back button
 	_back_btn.visible = ExplorationManager.can_go_back()
 
-	# Inventory
-	_rebuild_inventory_slots()
 
 	# Point-and-click hotspots for this node
 	_rebuild_spots(node)
 
 	# Node-type routing: BATTLE/EXIT get inline action buttons; all others use compass.
-	_close_compass_menu(false)
+	_close_all_menus(false)
 	match node.node_type:
 		ExplorationNode.NodeType.BATTLE:
+			_content_panel.visible = true
 			_choices_vbox.visible = true
 			_compass_set_visible(false)
 			_show_battle_prompt(node)
 		ExplorationNode.NodeType.EXIT:
+			_content_panel.visible = true
 			_choices_vbox.visible = true
 			_compass_set_visible(false)
 			_show_exit_prompt()
 		ExplorationNode.NodeType.STORY:
+			_content_panel.visible = false
 			_choices_vbox.visible = false
 			_compass_set_visible(false)   # hidden while VN plays; restored in _on_vn_finished
 			if not node.vn_scene.is_empty():
@@ -589,6 +1217,7 @@ func _refresh_node(node: ExplorationNode) -> void:
 			else:
 				_compass_set_visible(true)
 		_:
+			_content_panel.visible = false
 			_choices_vbox.visible = false
 			_compass_set_visible(true)
 
@@ -689,153 +1318,6 @@ func _on_back_pressed() -> void:
 	SFXManager.play(SFXManager.SFX_CANCEL)
 	ExplorationManager.go_back()
 
-func _on_inventory_changed(_items: Array) -> void:
-	_rebuild_inventory_slots()
-
-func _rebuild_inventory_slots() -> void:
-	if _inventory_hbox == null:
-		return
-	# Clear old slots and the floating use-panel if open
-	for child: Node in _inventory_hbox.get_children():
-		child.queue_free()
-	_close_item_use_panel()
-
-	var inv: Array = ExplorationManager.get_inventory()
-	_inventory_panel.visible = not inv.is_empty()
-	if inv.is_empty():
-		return
-
-	# Header label
-	var hdr := Label.new()
-	hdr.text = "Items:"
-	hdr.add_theme_font_size_override("font_size", 13)
-	hdr.add_theme_color_override("font_color", Color(0.50, 0.78, 0.55))
-	_inventory_hbox.add_child(hdr)
-
-	# One button per unique item name (shows count if >1)
-	var seen: Dictionary = {}
-	for raw_item: Variant in inv:
-		var item: String = str(raw_item)
-		seen[item] = int(seen.get(item, 0)) + 1
-	for item_name: Variant in seen.keys():
-		var count: int = int(seen[item_name])
-		var label_text: String = str(item_name) + (" ×%d" % count if count > 1 else "")
-		var slot_btn := Button.new()
-		slot_btn.text = label_text
-		slot_btn.add_theme_font_size_override("font_size", 14)
-		slot_btn.add_theme_color_override("font_color", Color(0.70, 0.95, 0.72))
-		var sb_slot := StyleBoxFlat.new()
-		sb_slot.bg_color = Color(0.07, 0.18, 0.10, 0.90)
-		sb_slot.set_border_width_all(1)
-		sb_slot.border_color = Color(0.35, 0.75, 0.45, 0.60)
-		sb_slot.set_corner_radius_all(4)
-		sb_slot.content_margin_left = 8.0;  sb_slot.content_margin_right  = 8.0
-		sb_slot.content_margin_top  = 3.0;  sb_slot.content_margin_bottom = 3.0
-		slot_btn.add_theme_stylebox_override("normal", sb_slot)
-		var sb_h := sb_slot.duplicate() as StyleBoxFlat
-		sb_h.bg_color = Color(0.10, 0.28, 0.16, 0.95)
-		slot_btn.add_theme_stylebox_override("hover", sb_h)
-		var captured_item: String = str(item_name)
-		slot_btn.pressed.connect(func() -> void: _on_item_slot_pressed(captured_item, slot_btn))
-		_inventory_hbox.add_child(slot_btn)
-
-func _on_item_slot_pressed(item_name: String, from_btn: Button) -> void:
-	# If a use-panel is already open for this item, close it (toggle)
-	if _item_use_panel != null and _item_use_panel.get_meta("item", "") == item_name:
-		_close_item_use_panel()
-		return
-	_close_item_use_panel()
-
-	var node: ExplorationNode = ExplorationManager.current_node
-	if node == null:
-		return
-
-	# Find usable interactions for this item at the current node
-	var interactions: Array = []
-	for ui: Variant in node.usable_items:
-		if ui is Dictionary:
-			var uid: Dictionary = ui as Dictionary
-			if str(uid.get("item", "")) == item_name:
-				interactions.append(uid)
-
-	if interactions.is_empty():
-		_show_toast("Can't use %s here." % item_name)
-		return
-
-	# Build a small floating panel anchored near the from_btn
-	_item_use_panel = PanelContainer.new()
-	_item_use_panel.set_meta("item", item_name)
-	_item_use_panel.z_index = 50
-	var sb_up := StyleBoxFlat.new()
-	sb_up.bg_color = Color(0.05, 0.12, 0.08, 0.96)
-	sb_up.set_border_width_all(1)
-	sb_up.border_color = Color(0.35, 0.85, 0.50, 0.80)
-	sb_up.set_corner_radius_all(6)
-	sb_up.content_margin_left = 10.0; sb_up.content_margin_right  = 10.0
-	sb_up.content_margin_top  = 8.0;  sb_up.content_margin_bottom = 8.0
-	_item_use_panel.add_theme_stylebox_override("panel", sb_up)
-
-	var up_vbox := VBoxContainer.new()
-	up_vbox.add_theme_constant_override("separation", 6)
-	_item_use_panel.add_child(up_vbox)
-
-	var up_title := Label.new()
-	up_title.text = item_name.capitalize()
-	up_title.add_theme_font_size_override("font_size", 15)
-	up_title.add_theme_color_override("font_color", Color(0.70, 0.95, 0.72))
-	up_vbox.add_child(up_title)
-
-	for interaction: Variant in interactions:
-		var idict: Dictionary = interaction as Dictionary
-		var btn_label: String = str(idict.get("label", "Use"))
-		var use_btn := Button.new()
-		use_btn.text = "▶  " + btn_label
-		use_btn.add_theme_font_size_override("font_size", 16)
-		use_btn.add_theme_color_override("font_color", Color(0.88, 1.0, 0.90))
-		var captured_idict: Dictionary = idict
-		var captured_item: String = item_name
-		use_btn.pressed.connect(func() -> void:
-			_close_item_use_panel()
-			_execute_item_use(captured_item, captured_idict))
-		up_vbox.add_child(use_btn)
-
-	var cancel_btn := Button.new()
-	cancel_btn.text = "Cancel"
-	cancel_btn.add_theme_font_size_override("font_size", 14)
-	cancel_btn.add_theme_color_override("font_color", Color(0.55, 0.55, 0.60))
-	cancel_btn.pressed.connect(_close_item_use_panel)
-	up_vbox.add_child(cancel_btn)
-
-	# Position: just above the inventory panel (bottom-right area)
-	_item_use_panel.layout_mode = 1
-	_item_use_panel.anchor_right  = 1.0; _item_use_panel.anchor_left   = 1.0
-	_item_use_panel.anchor_bottom = 1.0; _item_use_panel.anchor_top    = 1.0
-	_item_use_panel.offset_right  = -12.0
-	_item_use_panel.offset_bottom = -60.0
-	add_child(_item_use_panel)
-
-func _close_item_use_panel() -> void:
-	if _item_use_panel != null:
-		_item_use_panel.queue_free()
-		_item_use_panel = null
-
-func _execute_item_use(item_name: String, idict: Dictionary) -> void:
-	SFXManager.play(SFXManager.SFX_MENU)
-	var consume: bool    = bool(idict.get("consume", false))
-	var vn_path: String  = str(idict.get("vn_scene", ""))
-	if consume:
-		ExplorationManager.remove_item(item_name)
-	if not vn_path.is_empty():
-		_play_vn(vn_path, func() -> void:
-			var node: ExplorationNode = ExplorationManager.current_node
-			if node != null:
-				_compass_set_visible(true)
-				_refresh_node(node))
-	else:
-		var node: ExplorationNode = ExplorationManager.current_node
-		if node != null:
-			_refresh_node(node)
-
 func _show_toast(text: String) -> void:
 	if _toast_tween and _toast_tween.is_valid():
 		_toast_tween.kill()
@@ -855,6 +1337,9 @@ func _show_no_session_error() -> void:
 	btn.pressed.connect(func() -> void:
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
 	_choices_vbox.add_child(btn)
+	_content_panel.visible = true
+	_choices_vbox.visible = true
+	_compass_set_visible(false)
 
 # ─────────────────────────────────────────────────────────────
 # Point-and-click hotspots
@@ -986,8 +1471,43 @@ func _toggle_debug() -> void:
 		_debug_lbl.text = ""
 		_debug_lbl.append_text("[color=#44ff44]" + ExplorationManager.debug_dump() + "[/color]")
 
+func _input(event: InputEvent) -> void:
+	if not (event is InputEventMouseButton):
+		return
+	var mb := event as InputEventMouseButton
+	if not (mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT):
+		return
+	if _item_preview != null:
+		return  # item preview handles its own dismissal
+	if not (_compass_open or _setting_open or _inv_open):
+		return
+	# If click lands on an icon button or a radial item, let that element handle it
+	var interactive: Array = [_compass_hit, _setting_hit, _inv_hit]
+	interactive.append_array(_radial_items)
+	interactive.append_array(_setting_radial_items)
+	interactive.append_array(_inv_radial_items)
+	for node: Variant in interactive:
+		if is_instance_valid(node as Node):
+			var ctrl: Control = node as Control
+			if ctrl.get_global_rect().has_point(mb.global_position):
+				return  # let the element handle it
+	# Click is outside all menu elements — dismiss and consume
+	_close_all_menus()
+	get_viewport().set_input_as_handled()
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and (event as InputEventKey).pressed and not (event as InputEventKey).echo:
-		if (event as InputEventKey).keycode == KEY_F3:
+		var ke := event as InputEventKey
+		if ke.keycode == KEY_F3:
 			_toggle_debug()
+			get_viewport().set_input_as_handled()
+		elif ke.keycode == KEY_ESCAPE:
+			if _item_preview != null:
+				_close_item_preview()
+			elif _compass_open or _setting_open or _inv_open:
+				_close_all_menus()
+			elif ExplorationManager.can_go_back():
+				SFXManager.play(SFXManager.SFX_CANCEL)
+				ExplorationManager.go_back()
+			# Always consume so CheckerTransition's quit handler never fires here
 			get_viewport().set_input_as_handled()

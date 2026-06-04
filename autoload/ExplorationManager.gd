@@ -142,6 +142,16 @@ func start_session(graph_path: String) -> void:
 	emit_signal("session_started", graph)
 	_navigate_to(graph.start_node_id, false)
 
+## Restart the current session from the start node, resetting all progress.
+## return_scene is preserved. Emits session_started then node_entered for the start node.
+func restart_stage() -> void:
+	if not _session_active or _current_graph == null:
+		return
+	var path: String = _current_graph._source_path
+	var rs: String   = return_scene
+	start_session(path)
+	return_scene = rs
+
 ## End the current session.
 ## If carry_rewards is true, accumulated credits and flags are applied to the main game.
 ## Emits session_ended with a copy of the rewards Dictionary.

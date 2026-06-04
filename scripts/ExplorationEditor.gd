@@ -200,6 +200,8 @@ func _build_toolbar() -> Control:
 	_make_tool_btn(bar, "Validate",   _on_validate_pressed)
 	_make_tool_btn(bar, "▶ Test Play",_on_test_play_pressed)
 	bar.add_child(VSeparator.new())
+	_make_tool_btn(bar, "🗃 Items",   _on_items_pressed)
+	bar.add_child(VSeparator.new())
 	_make_tool_btn(bar, "← Back",     _on_back_pressed)
 
 	return panel   # bar is a child of panel; we return panel as the toolbar Control
@@ -775,7 +777,7 @@ func _collect_props(en: ExplorationNode) -> void:
 	en.id          = _prop_id_edit.text.strip_edges()
 	en.title       = _prop_title_edit.text
 	en.description = _prop_desc_edit.text
-	en.node_type   = _prop_type_btn.selected as ExplorationNode.NodeType
+	en.node_type   = _prop_type_btn.selected
 	en.background  = _prop_bg_edit.text.strip_edges()
 	en.vn_scene    = _prop_vn_edit.text.strip_edges()
 	en.music       = _prop_music_edit.text.strip_edges()
@@ -899,16 +901,39 @@ func _on_load_file_selected(path: String) -> void:
 	_load_graph(path)
 
 func _on_save_pressed() -> void:
+	_commit_selected_node()
 	if _graph_path.is_empty():
 		_on_save_as_pressed()
 	else:
 		_save_graph(_graph_path)
 
 func _on_save_as_pressed() -> void:
+	_commit_selected_node()
 	_save_dialog.popup_centered(Vector2(900, 600))
 
 func _on_save_file_selected(path: String) -> void:
 	_save_graph(path)
+
+## Silently applies any pending property edits for the currently selected node.
+## Called before every save so that unsaved panel changes (e.g. connections added
+## via "+ Add Connection" without clicking Apply) are not lost.
+func _commit_selected_node() -> void:
+	if _selected_node_id.is_empty() or _graph == null:
+		return
+	var en: ExplorationNode = _graph.get_node_by_id(_selected_node_id)
+	if en == null:
+		return
+	var old_id: String = en.id
+	_collect_props(en)
+	if en.id != old_id:
+		_rename_node_references(old_id, en.id)
+		var gn_node: GraphNode = _gn_map.get(old_id, null) as GraphNode
+		if gn_node != null:
+			gn_node.name  = en.id
+			gn_node.title = en.id + "  [" + ExplorationNode.NodeType.keys()[en.node_type] + "]"
+			_gn_map.erase(old_id)
+			_gn_map[en.id] = gn_node
+			_selected_node_id = en.id
 
 func _on_add_node_pressed() -> void:
 	_add_new_node_at(Vector2(200.0, 200.0) + Vector2(randf_range(-50, 50), randf_range(-50, 50)))
@@ -940,8 +965,10 @@ func _on_test_play_pressed() -> void:
 	if _graph_path.is_empty():
 		_set_status("Save to a file before test play.")
 		return
-	ExplorationManager.return_scene = "res://scenes/exploration_editor.tscn"
-	ExplorationManager.launch(_graph_path)
+	ExplorationManager.launch(_graph_path, "res://scenes/exploration_editor.tscn")
+
+func _on_items_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/exploration_item_manager.tscn")
 
 func _on_back_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
@@ -1076,11 +1103,20 @@ func _save_graph(path: String) -> void:
 	else:
 		_set_status("ERROR: Could not save to '%s'." % path)
 
+func _next_unique_node_id() -> String:
+	var existing: Dictionary = {}
+	for n: ExplorationNode in _graph.nodes:
+		existing[n.id] = true
+	var i: int = 1
+	while existing.has("node_%d" % i):
+		i += 1
+	return "node_%d" % i
+
 func _add_new_node_at(position: Vector2) -> void:
 	if _graph == null:
 		return
 	var en := ExplorationNode.new()
-	en.id             = "node_%d" % _graph.nodes.size()
+	en.id             = _next_unique_node_id()
 	en.title          = "New Node"
 	en.description    = "Describe this location."
 	en.node_type      = ExplorationNode.NodeType.NORMAL

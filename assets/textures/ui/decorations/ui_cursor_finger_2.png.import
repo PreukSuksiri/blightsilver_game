@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://clgklasnciner"
-path="res://.godot/imported/Screenshot 2569-06-03 at 17.27.20.png-94f07e9d1e81505fae9f0f649b62d4d5.ctex"
+uid="uid://c6lqv0g3rhxf"
+path="res://.godot/imported/ui_cursor_finger_2.png-7083ca86a7fcd2bbe7b01a1b0c2a125e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://bug/Screenshot 2569-06-03 at 17.27.20.png"
-dest_files=["res://.godot/imported/Screenshot 2569-06-03 at 17.27.20.png-94f07e9d1e81505fae9f0f649b62d4d5.ctex"]
+source_file="res://assets/textures/ui/decorations/ui_cursor_finger_2.png"
+dest_files=["res://.godot/imported/ui_cursor_finger_2.png-7083ca86a7fcd2bbe7b01a1b0c2a125e.ctex"]
 
 [params]
 

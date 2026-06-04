@@ -21,10 +21,8 @@ func _ready() -> void:
 	_sfx.bus     = "SFX"
 	add_child(_sfx)
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_ESCAPE:
-			get_tree().quit()
+## Global Escape-to-quit removed — use the window close button or Alt+F4 instead.
+## Leaving this empty so the autoload doesn't silently swallow input.
 
 # ── Public API ──────────────────────────────────────────────────
 
