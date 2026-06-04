@@ -4,6 +4,15 @@
 	"nodes": [
 		{
 			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
+			"characters": [
+				{
+					"conditions": [],
+					"name": "Mayu",
+					"play_once": false,
+					"thumbnail": "res://assets/textures/exploration/thumbnail/thumbnail_mayu.png",
+					"vn_scene": "res://exploration/vn/vn_test_liminal_space_1/vn_start_mayu.json"
+				}
+			],
 			"clickable_spots": [],
 			"connections": [
 				{
@@ -13,22 +22,40 @@
 					"target": "node_2"
 				},
 				{
-					"conditions": [],
-					"label": "Go to examination room",
+					"conditions": [
+						{
+							"key": "var_examnination_room_open_curtain",
+							"type": "var_equals",
+							"value": ""
+						}
+					],
+					"label": "Go to Examination Room",
 					"locked_hint": "",
-					"target": "node_3"
+					"target": "node_examination_room"
 				},
 				{
 					"conditions": [],
 					"label": "Wait quietly at the bench",
 					"locked_hint": "",
-					"target": "node_4"
+					"target": "node_waiting_bench"
 				},
 				{
 					"conditions": [],
-					"label": "Go to elevator hall",
+					"label": "Go to Elevator Hall",
 					"locked_hint": "",
-					"target": "node_6"
+					"target": "node_elavator_hall"
+				},
+				{
+					"conditions": [
+						{
+							"key": "var_examnination_room_open_curtain",
+							"type": "var_equals",
+							"value": "1"
+						}
+					],
+					"label": "Go to Examination Room",
+					"locked_hint": "",
+					"target": "node_examination_room_open_curtain"
 				}
 			],
 			"description": "Hospital's nurse front counter",
@@ -41,12 +68,16 @@
 			"node_type": "HUB",
 			"on_enter_events": [],
 			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
 			"title": "Nurse Front",
 			"usable_items": [],
-			"vn_scene": ""
+			"vn_play_once": true,
+			"vn_scene": "res://exploration/vn/vn_test_liminal_space_1/vn_node_2.json"
 		},
 		{
 			"background": "res://assets/textures/exploration/background/mall/liminal mall.png",
+			"characters": [],
 			"clickable_spots": [],
 			"connections": [
 				{
@@ -56,7 +87,7 @@
 					"target": "start"
 				}
 			],
-			"description": "Describe this location.",
+			"description": "Inside the nurse counter, there were document scattered. There were unfinished documents and unfinished coffee. Looked like somebody was working here recently, but suddenly went missing?",
 			"editor_position": {
 				"x": 260.0,
 				"y": -40.0
@@ -66,87 +97,174 @@
 			"node_type": "NORMAL",
 			"on_enter_events": [],
 			"on_exit_events": [],
-			"title": "New Node",
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Nurse Counter",
 			"usable_items": [],
-			"vn_scene": ""
+			"vn_play_once": true,
+			"vn_scene": "res://exploration/vn/vn_test_liminal_space_1/vn_node_2.json"
 		},
 		{
 			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
-			"clickable_spots": [],
-			"connections": [],
-			"description": "Describe this location.",
-			"editor_position": {
-				"x": 820.0,
-				"y": 320.0
-			},
-			"id": "node_3",
-			"music": "",
-			"node_type": "NORMAL",
-			"on_enter_events": [],
-			"on_exit_events": [],
-			"title": "New Node",
-			"usable_items": [],
-			"vn_scene": ""
-		},
-		{
-			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
-			"clickable_spots": [],
-			"connections": [],
-			"description": "Describe this location.",
-			"editor_position": {
-				"x": 760.0,
-				"y": 440.0
-			},
-			"id": "node_4",
-			"music": "",
-			"node_type": "NORMAL",
-			"on_enter_events": [],
-			"on_exit_events": [],
-			"title": "New Node",
-			"usable_items": [],
-			"vn_scene": ""
-		},
-		{
-			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
+			"characters": [],
 			"clickable_spots": [],
 			"connections": [
 				{
 					"conditions": [],
-					"label": "Go to elevator hall",
+					"label": "Open the curtain",
 					"locked_hint": "",
-					"target": "node_5"
+					"target": "node_examination_room_open_curtain"
+				},
+				{
+					"conditions": [],
+					"label": "Exit the examination room",
+					"locked_hint": "",
+					"target": "start"
 				}
 			],
 			"description": "Describe this location.",
 			"editor_position": {
-				"x": 720.0,
-				"y": 200.0
+				"x": 900.0,
+				"y": 340.0
 			},
-			"id": "node_6",
+			"id": "node_examination_room",
 			"music": "",
 			"node_type": "NORMAL",
 			"on_enter_events": [],
 			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "New Node",
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "res://exploration/vn/vn_test_liminal_space_1/vn_node_examination_room.json"
+		},
+		{
+			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Get up",
+					"locked_hint": "",
+					"target": "start"
+				}
+			],
+			"description": "Describe this location.",
+			"editor_position": {
+				"x": 260.0,
+				"y": 680.0
+			},
+			"id": "node_waiting_bench",
+			"music": "",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Waiting Bench",
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Get inside the elevator",
+					"locked_hint": "",
+					"target": "node_5"
+				},
+				{
+					"conditions": [],
+					"label": "Go to Nurse Front",
+					"locked_hint": "",
+					"target": "start"
+				}
+			],
+			"description": "Describe this location.",
+			"editor_position": {
+				"x": 760.0,
+				"y": 0.0
+			},
+			"id": "node_elavator_hall",
+			"music": "",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
 			"title": "Elevator Hall",
 			"usable_items": [],
+			"vn_play_once": true,
 			"vn_scene": ""
 		},
 		{
 			"background": "",
+			"characters": [],
 			"clickable_spots": [],
-			"connections": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Get out of the elevator",
+					"locked_hint": "",
+					"target": "node_elavator_hall"
+				}
+			],
 			"description": "Describe this location.",
 			"editor_position": {
-				"x": 1140.0,
-				"y": 160.0
+				"x": 1160.0,
+				"y": 60.0
 			},
 			"id": "node_5",
 			"music": "",
 			"node_type": "EXIT",
 			"on_enter_events": [],
 			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
 			"title": "Elevator",
 			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/hospital/liminal hospital.png",
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Exit examination room",
+					"locked_hint": "",
+					"target": "start"
+				}
+			],
+			"description": "No one is behind the curtain",
+			"editor_position": {
+				"x": 720.0,
+				"y": 680.0
+			},
+			"id": "node_examination_room_open_curtain",
+			"music": "",
+			"node_type": "NORMAL",
+			"on_enter_events": [
+				{
+					"action": "set_var",
+					"key": "var_examnination_room_open_curtain",
+					"value": "1"
+				}
+			],
+			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Examination Room",
+			"usable_items": [],
+			"vn_play_once": true,
 			"vn_scene": ""
 		}
 	],

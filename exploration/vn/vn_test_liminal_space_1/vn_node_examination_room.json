@@ -1,0 +1,26 @@
+[
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sfx/coin_clink_4.mp3"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"text": "(Sounds like someone is rumbling through stuff behind the curtain)"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"text": "(Should I open the curtain?)"
+	}
+]

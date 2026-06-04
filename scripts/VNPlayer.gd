@@ -27,6 +27,14 @@ const USE_WINDOWSKIN: bool = false
 # State
 # ─────────────────────────────────────────────────────────────
 var locale: String = "en"   # set before play_scene() to switch language
+## When true the opaque dark backdrop is hidden, letting the scene behind show through.
+## Set before add_child() so _ready() picks it up.
+var transparent_bg: bool = false
+
+## When true, all BGM changes inside the VN are suppressed — music keeps playing as-is.
+## Use for overlay VNs (e.g. exploration) that should not interrupt the ambient track.
+## Set before add_child() so _ready() picks it up.
+var keep_bgm: bool = false
 
 var _beats: Array = []
 var _beat_index: int = 0
@@ -89,6 +97,8 @@ func _ready() -> void:
 	z_index = 100
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
+	if transparent_bg:
+		_bg_base.visible = false
 	# Mini command overlay (Ctrl+Shift+A to open during VN playback)
 	_cmd_panel = PanelContainer.new()
 	_cmd_panel.visible = false
@@ -822,6 +832,8 @@ func _play_sfx(path: String, vol_db: float = 0.0) -> void:
 # Music — looping BGM, one track at a time, with fade in/out
 # ─────────────────────────────────────────────────────────────
 func _set_music(path: String, fade_out: float = 0.0, fade_in: float = 0.0) -> void:
+	if keep_bgm:
+		return
 	var normalized := path.strip_edges()
 	if normalized == BGMManager.get_current_path():
 		return

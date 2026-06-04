@@ -5,7 +5,7 @@ extends Control
 
 signal closed
 
-const SCENES_DIR     := "res://campaign/scenes/"
+var _scenes_dir: String = "res://campaign/scenes/"
 const LANG_CFG_PATH  := "res://campaign/scenes/languages.json"
 const BUG_TAGS_PATH  := "user://vn_bug_tags.json"
 const SLOT_OPTIONS: Array = ["far_left", "left", "center", "right", "far_right"]
@@ -69,6 +69,8 @@ var _lang_input: LineEdit = null
 # UI refs — left panel
 # ─────────────────────────────────────────────────────────────
 var _file_list: ItemList = null
+var _folder_lbl: Label = null
+var _folder_dialog: FileDialog = null
 var _beat_list: ItemList = null
 var _status_lbl: Label = null
 var _bug_note_lbl: Label = null
@@ -212,8 +214,17 @@ func open_file(path: String) -> void:
 	var full_path: String
 	if path.begins_with("res://") or path.begins_with("user://") or path.begins_with("/"):
 		full_path = path
+		# Auto-switch folder to match the file's directory
+		var file_dir: String = full_path.get_base_dir()
+		if not file_dir.ends_with("/"):
+			file_dir += "/"
+		if file_dir != _scenes_dir:
+			_scenes_dir = file_dir
+			if _folder_lbl != null:
+				_folder_lbl.text = _scenes_dir
+			_scan_files()
 	else:
-		full_path = SCENES_DIR + path
+		full_path = _scenes_dir + path
 	_load_file(full_path)
 	var fname: String = full_path.get_file()
 	for i: int in range(_file_list.item_count):
@@ -307,6 +318,13 @@ func _build_ui() -> void:
 	_file_dialog.file_selected.connect(_on_file_dialog_selected)
 	add_child(_file_dialog)
 
+	_folder_dialog = FileDialog.new()
+	_folder_dialog.access    = FileDialog.ACCESS_FILESYSTEM
+	_folder_dialog.file_mode = FileDialog.FILE_MODE_OPEN_DIR
+	_folder_dialog.current_dir = ProjectSettings.globalize_path(_scenes_dir)
+	_folder_dialog.dir_selected.connect(_on_folder_selected)
+	add_child(_folder_dialog)
+
 	var split := HSplitContainer.new()
 	split.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	split.split_offset = 300
@@ -369,7 +387,22 @@ func _build_left_panel(parent: Control) -> void:
 	parent.add_child(left)
 
 	# File browser
-	_left_hdr(left, "FILES  (campaign/scenes/)")
+	var files_hdr := HBoxContainer.new()
+	files_hdr.add_theme_constant_override("separation", 4)
+	left.add_child(files_hdr)
+	_folder_lbl = Label.new()
+	_folder_lbl.text = _scenes_dir
+	_folder_lbl.add_theme_font_size_override("font_size", 12)
+	_folder_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.7))
+	_folder_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_folder_lbl.clip_text = true
+	files_hdr.add_child(_folder_lbl)
+	var chg_folder_btn := Button.new()
+	chg_folder_btn.text = "📁"
+	chg_folder_btn.custom_minimum_size = Vector2(32, 26)
+	chg_folder_btn.add_theme_font_size_override("font_size", 14)
+	chg_folder_btn.pressed.connect(_on_change_folder_pressed)
+	files_hdr.add_child(chg_folder_btn)
 	_file_list = ItemList.new()
 	_file_list.custom_minimum_size.y = 130.0
 	_file_list.add_theme_font_size_override("font_size", 15)
@@ -1332,13 +1365,36 @@ func _preview_image(path: String) -> void:
 	_img_popup.popup_centered(Vector2(820, 620))
 
 # ─────────────────────────────────────────────────────────────
+# Folder picker
+# ─────────────────────────────────────────────────────────────
+func _on_change_folder_pressed() -> void:
+	_folder_dialog.current_dir = ProjectSettings.globalize_path(_scenes_dir)
+	_folder_dialog.popup_centered(Vector2(900, 600))
+
+func _on_folder_selected(abs_path: String) -> void:
+	# Convert absolute filesystem path back to res:// if possible
+	var res_base: String = ProjectSettings.globalize_path("res://")
+	var result_dir: String
+	if abs_path.begins_with(res_base):
+		result_dir = "res://" + abs_path.substr(res_base.length())
+	else:
+		result_dir = abs_path
+	# Ensure trailing slash
+	if not result_dir.ends_with("/"):
+		result_dir += "/"
+	_scenes_dir = result_dir
+	if _folder_lbl != null:
+		_folder_lbl.text = _scenes_dir
+	_scan_files()
+
+# ─────────────────────────────────────────────────────────────
 # File scanning / loading
 # ─────────────────────────────────────────────────────────────
 func _scan_files() -> void:
 	_file_list.clear()
-	var dir := DirAccess.open(SCENES_DIR)
+	var dir := DirAccess.open(_scenes_dir)
 	if dir == null:
-		_status_lbl.text = "ERROR: cannot open " + SCENES_DIR
+		_status_lbl.text = "ERROR: cannot open " + _scenes_dir
 		return
 	dir.list_dir_begin()
 	var files: Array = []
@@ -1391,7 +1447,7 @@ func _resolve_bug_tag() -> void:
 
 func _refresh_file_list_colors() -> void:
 	for i: int in range(_file_list.item_count):
-		var fpath: String = SCENES_DIR + _file_list.get_item_text(i)
+		var fpath: String = _scenes_dir + _file_list.get_item_text(i)
 		var is_dirty: bool = _file_cache.has(fpath) or (fpath == _file_path and _dirty)
 		if is_dirty:
 			_file_list.set_item_custom_bg_color(i, Color(0.5, 0.45, 0.0, 0.35))
@@ -1404,7 +1460,7 @@ func _refresh_file_list_colors() -> void:
 			_file_list.set_item_custom_fg_color(i, Color(1.0, 1.0, 1.0))
 
 func _on_file_selected(idx: int) -> void:
-	_load_file(SCENES_DIR + _file_list.get_item_text(idx))
+	_load_file(_scenes_dir + _file_list.get_item_text(idx))
 
 func _load_file(path: String) -> void:
 	# Stash unsaved state for the current file before switching away

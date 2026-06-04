@@ -18,6 +18,9 @@ const FONT_PATH: String        = "res://assets/fonts/Chivo-VariableFont_wght.ttf
 const COMPASS_ICON: String     = "res://assets/textures/ui/decorations/ui_icon_compass.png"
 const SETTING_ICON: String     = "res://assets/textures/ui/decorations/ui_icon_exploration_setting.png"
 const INVENTORY_ICON: String   = "res://assets/textures/ui/decorations/ui_exploration_inventory.png"
+const CHAT_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_exploration_chat.png"
+const INFO_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_exploration_info.png"
+const DEFAULT_CURSOR: String   = "res://assets/textures/ui/decorations/ui_cursor.png"
 const MAGNIFIER_CURSOR: String = "res://assets/textures/ui/decorations/ui_icon_magnifier.png"
 const FINGER_CURSOR: String    = "res://assets/textures/ui/decorations/ui_cursor_finger.png"
 const COMPASS_SIZE: float  = 110.0  # icon width/height in pixels
@@ -41,6 +44,10 @@ var _toast_tween: Tween            = null
 var _debug_panel: PanelContainer   = null   # F3 debug overlay
 var _debug_lbl: RichTextLabel      = null
 var _content_panel: Panel          = null   # right-side content area (layout_mode=0, sized by _reflow_layout)
+var _who_section: VBoxContainer    = null   # "Who is here" section inside the info panel
+var _who_grid: GridContainer       = null   # 2-column grid of character thumbnails + names
+var _nav_fade_rect: ColorRect      = null   # full-screen black rect for node-transition fade
+var _nav_fade_tween: Tween         = null
 
 # ── Compass radial menu ───────────────────────────────────────────────────
 var _compass_root: Control        = null   # full-screen layer holding all 3 icons
@@ -72,10 +79,31 @@ var _inv_page: int                = 0
 var _inv_empty_tween: Tween       = null
 var _inv_empty_lbl: Label         = null
 
+# ── Chat icon ────────────────────────────────────────────────────────────────
+var _chat_icon: TextureRect   = null
+var _chat_hit: Button         = null
+var _chat_idle_pos: Vector2   = Vector2.ZERO
+var _chat_open: bool          = false
+var _chat_animating: bool     = false
+var _chat_radial_items: Array = []
+var _chat_empty_tween: Tween  = null
+var _chat_empty_lbl: Label    = null
+
+# ── Info icon ────────────────────────────────────────────────────────────────
+var _info_icon: TextureRect                  = null
+var _info_hit: Button                        = null
+var _info_idle_pos: Vector2                  = Vector2.ZERO
+var _info_open: bool                         = false
+var _info_panel_tween: Tween                 = null
+var _info_auto_dismiss_timer: SceneTreeTimer = null
+var _info_on_close_cb: Callable              = Callable()
+var _info_panel_hovered: bool                = false   # polled each frame; guards auto-dismiss
+
 # ── Item preview overlay ──────────────────────────────────────────────────
 var _item_preview: Control        = null
 
 # ── Cursors ───────────────────────────────────────────────────────────────
+var _default_tex: Texture2D       = null
 var _finger_tex: Texture2D        = null
 
 # ── Internal state ────────────────────────────────────────────────────────
@@ -167,6 +195,7 @@ func _build_ui() -> void:
 	sb_panel.border_color      = Color(0.35, 0.60, 1.0, 0.30)
 	content.add_theme_stylebox_override("panel", sb_panel)
 	content.visible = false
+	content.mouse_entered.connect(_on_info_panel_mouse_entered)
 	add_child(content)
 	_content_panel = content
 
@@ -213,12 +242,34 @@ func _build_ui() -> void:
 	_choices_vbox.visible = false
 	vbox.add_child(_choices_vbox)
 
+	# "Who is here" section (hidden until populated)
+	_who_section = VBoxContainer.new()
+	_who_section.add_theme_constant_override("separation", 8)
+	_who_section.visible = false
+	vbox.add_child(_who_section)
+	var who_hdr := Label.new()
+	who_hdr.text = "Who is Here"
+	who_hdr.add_theme_font_override("font", _make_font(700))
+	who_hdr.add_theme_font_size_override("font_size", 32)
+	who_hdr.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0, 1.0))
+	_who_section.add_child(who_hdr)
+	var who_hdr_spacer := Control.new()
+	who_hdr_spacer.custom_minimum_size = Vector2(0, 8)
+	_who_section.add_child(who_hdr_spacer)
+	_who_grid = GridContainer.new()
+	_who_grid.columns = 2
+	_who_grid.add_theme_constant_override("h_separation", 10)
+	_who_grid.add_theme_constant_override("v_separation", 10)
+	_who_section.add_child(_who_grid)
+
 	# Back button
 	_back_btn = Button.new()
 	_back_btn.text = "← Go Back"
 	_back_btn.add_theme_font_size_override("font_size", 16)
 	_back_btn.add_theme_color_override("font_color", Color(0.55, 0.78, 0.95))
 	_back_btn.pressed.connect(_on_back_pressed)
+	_back_btn.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
+	_back_btn.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
 	vbox.add_child(_back_btn)
 
 	# ── Debug button (top-right corner) ───────────────────────
@@ -284,6 +335,16 @@ func _build_ui() -> void:
 	_toast_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_toast_lbl.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	add_child(_toast_lbl)
+
+	# ── Navigation fade overlay ────────────────────────────────
+	# Sits above all other UI; alpha starts at 0 (invisible).
+	_nav_fade_rect = ColorRect.new()
+	_nav_fade_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_nav_fade_rect.color        = Color(0.0, 0.0, 0.0, 1.0)
+	_nav_fade_rect.modulate.a   = 0.0
+	_nav_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_nav_fade_rect.z_index      = 90   # below VNPlayer (100) but above everything else
+	add_child(_nav_fade_rect)
 
 	# Apply content panel layout now (deferred so viewport size is settled)
 	_reflow_layout.call_deferred()
@@ -360,8 +421,8 @@ func _build_compass_system() -> void:
 	_compass_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
 	_compass_root.add_child(_compass_hit)
 
-	# ── Setting icon (right of compass) ──────────────────────
-	_setting_idle_pos = Vector2(vp.x * 0.5 + ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
+	# ── Setting icon (far right, +2×spacing) ────────────────
+	_setting_idle_pos = Vector2(vp.x * 0.5 + 2.0 * ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
 
 	_setting_icon          = TextureRect.new()
 	_setting_icon.position = _setting_idle_pos
@@ -378,8 +439,26 @@ func _build_compass_system() -> void:
 	_setting_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
 	_compass_root.add_child(_setting_hit)
 
-	# ── Inventory icon (left of compass) ─────────────────────
-	_inv_idle_pos = Vector2(vp.x * 0.5 - ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
+	# ── Info icon (+1×spacing) ────────────────────────────────
+	_info_idle_pos = Vector2(vp.x * 0.5 + ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
+
+	_info_icon          = TextureRect.new()
+	_info_icon.position = _info_idle_pos
+	_info_icon.size     = Vector2(COMPASS_SIZE, COMPASS_SIZE)
+	_info_icon.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	_info_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	if ResourceLoader.exists(INFO_ICON):
+		_info_icon.texture = load(INFO_ICON) as Texture2D
+	_compass_root.add_child(_info_icon)
+
+	_info_hit = _make_icon_hit_button(_info_idle_pos)
+	_info_hit.pressed.connect(_on_info_clicked)
+	_info_hit.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
+	_info_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
+	_compass_root.add_child(_info_hit)
+
+	# ── Inventory icon (far left, −2×spacing) ────────────────
+	_inv_idle_pos = Vector2(vp.x * 0.5 - 2.0 * ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
 
 	_inv_icon          = TextureRect.new()
 	_inv_icon.position = _inv_idle_pos
@@ -395,6 +474,43 @@ func _build_compass_system() -> void:
 	_inv_hit.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
 	_inv_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
 	_compass_root.add_child(_inv_hit)
+
+	# ── Chat icon (−1×spacing) ────────────────────────────────
+	_chat_idle_pos = Vector2(vp.x * 0.5 - ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
+
+	_chat_icon          = TextureRect.new()
+	_chat_icon.position = _chat_idle_pos
+	_chat_icon.size     = Vector2(COMPASS_SIZE, COMPASS_SIZE)
+	_chat_icon.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	_chat_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	if ResourceLoader.exists(CHAT_ICON):
+		_chat_icon.texture = load(CHAT_ICON) as Texture2D
+	_compass_root.add_child(_chat_icon)
+
+	_chat_hit = _make_icon_hit_button(_chat_idle_pos)
+	_chat_hit.pressed.connect(_on_chat_clicked)
+	_chat_hit.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
+	_chat_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
+	_compass_root.add_child(_chat_hit)
+
+	# Empty-chat overlay label
+	_chat_empty_lbl = Label.new()
+	_chat_empty_lbl.layout_mode = 0
+	var chat_lbl_w: float = COMPASS_SIZE + 120.0
+	_chat_empty_lbl.position = Vector2(
+		_chat_idle_pos.x + COMPASS_SIZE * 0.5 - chat_lbl_w * 0.5,
+		_chat_idle_pos.y - 36.0)
+	_chat_empty_lbl.size = Vector2(chat_lbl_w, 30.0)
+	_chat_empty_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_chat_empty_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+	_chat_empty_lbl.add_theme_font_size_override("font_size", 16)
+	_chat_empty_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+	_chat_empty_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+	_chat_empty_lbl.add_theme_constant_override("shadow_offset_x", 2)
+	_chat_empty_lbl.add_theme_constant_override("shadow_offset_y", 2)
+	_chat_empty_lbl.modulate.a  = 0.0
+	_chat_empty_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_compass_root.add_child(_chat_empty_lbl)
 
 	# Empty-inventory overlay label — positioned directly over the inventory icon
 	_inv_empty_lbl = Label.new()
@@ -415,9 +531,23 @@ func _build_compass_system() -> void:
 	_inv_empty_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_compass_root.add_child(_inv_empty_lbl)
 
-	# Load cursors
-	if ResourceLoader.exists(FINGER_CURSOR):
-		_finger_tex = load(FINGER_CURSOR) as Texture2D
+	# Load cursors — resize to 64×64 at runtime so no separate import file is needed.
+	_default_tex = _load_cursor_tex(DEFAULT_CURSOR)
+	_finger_tex  = _load_cursor_tex(FINGER_CURSOR)
+	# Apply default cursor immediately for the exploration scene
+	Input.set_custom_mouse_cursor(_default_tex, Input.CURSOR_ARROW, Vector2(4.0, 4.0))
+
+## Load an image from res:// and resize it to 64×64 for use as a custom cursor.
+## Works on unimported files too (reads raw bytes via Image.load_from_file).
+func _load_cursor_tex(path: String) -> ImageTexture:
+	var img := Image.new()
+	var global: String = ProjectSettings.globalize_path(path)
+	var err: int = img.load(global)
+	if err != OK:
+		push_warning("ExplorationPlayer: could not load cursor '%s' (err %d)" % [path, err])
+		return null
+	img.resize(64, 64, Image.INTERPOLATE_LANCZOS)
+	return ImageTexture.create_from_image(img)
 
 ## Build an invisible full-size hit button for an icon at given position.
 func _make_icon_hit_button(pos: Vector2) -> Button:
@@ -435,13 +565,54 @@ func _set_finger_cursor(on: bool) -> void:
 	if on and _finger_tex != null:
 		Input.set_custom_mouse_cursor(_finger_tex, Input.CURSOR_ARROW, Vector2(12.0, 4.0))
 	elif not on and not _hovering_spot:
-		Input.set_custom_mouse_cursor(null)
+		Input.set_custom_mouse_cursor(_default_tex, Input.CURSOR_ARROW, Vector2(4.0, 4.0))
+
+## Returns true if the mouse is currently over any interactive element that warrants a finger cursor.
+func _mouse_over_interactive() -> bool:
+	if _hovering_spot:
+		return false  # hotspot handles its own cursor
+	var mp: Vector2 = get_global_mouse_position()
+	# Icon hit buttons (always relevant)
+	var hits: Array = [_compass_hit, _setting_hit, _inv_hit, _chat_hit, _info_hit]
+	for h: Variant in hits:
+		if h is Control and (h as Control).visible:
+			var c: Control = h as Control
+			if Rect2(c.global_position, c.size).has_point(mp):
+				return true
+	# Back / Dismiss button
+	if _back_btn != null and _back_btn.visible:
+		if Rect2(_back_btn.global_position, _back_btn.size).has_point(mp):
+			return true
+	# Radial panels
+	var all_panels: Array = []
+	all_panels.append_array(_radial_items)
+	all_panels.append_array(_setting_radial_items)
+	all_panels.append_array(_inv_radial_items)
+	all_panels.append_array(_chat_radial_items)
+	for p: Variant in all_panels:
+		if p is Control and (p as Control).visible:
+			var c: Control = p as Control
+			if Rect2(c.global_position, c.size).has_point(mp):
+				return true
+	return false
+
+## No-op kept for call-site compatibility (cursor is now managed by _process).
+func _hook_cursor(_ctrl: Control) -> void:
+	pass
 
 func _compass_set_visible(show: bool) -> void:
 	if _compass_icon != null:
 		_compass_icon.visible = show
 	if _compass_hit != null:
 		_compass_hit.visible = show
+	if _chat_icon != null:
+		_chat_icon.visible = show
+	if _chat_hit != null:
+		_chat_hit.visible = show
+	if _info_icon != null:
+		_info_icon.visible = show
+	if _info_hit != null:
+		_info_hit.visible = show
 
 func _on_compass_clicked() -> void:
 	if _compass_animating:
@@ -455,6 +626,8 @@ func _close_all_menus(animated: bool = true) -> void:
 	_close_compass_menu(animated)
 	_close_setting_menu(animated)
 	_close_inventory_menu(animated)
+	_close_chat_menu(animated)
+	_close_info_panel()
 
 func _open_compass_menu() -> void:
 	if _compass_animating or _compass_open:
@@ -462,6 +635,11 @@ func _open_compass_menu() -> void:
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node == null:
 		return
+	# Close other menus before opening compass
+	_close_setting_menu(false)
+	_close_inventory_menu(false)
+	_close_chat_menu(false)
+	_close_info_panel()
 	# Gather only unlocked connections (locked hidden per spec)
 	var unlocked: Array = []
 	for conn: Variant in node.connections:
@@ -473,7 +651,7 @@ func _open_compass_menu() -> void:
 
 	_compass_open      = true
 	_compass_animating = true
-	SFXManager.play(SFXManager.SFX_MENU)
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
 
 	# Animate compass icon + hit area to center
 	var tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
@@ -572,18 +750,31 @@ func _spawn_radial_items(unlocked: Array) -> void:
 
 		_compass_root.add_child(panel)
 		_radial_items.append(panel)
+		_hook_cursor(panel)
 
 		# Fade in with slight stagger
 		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 		fade_tw.tween_interval(float(i) * 0.04)
 		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
 
+## Fade screen to black (0.5 s), run callback (navigate/go_back), then fade back in (0.3 s).
+func _navigate_with_fade(callback: Callable) -> void:
+	if _nav_fade_tween and _nav_fade_tween.is_valid():
+		_nav_fade_tween.kill()
+	_nav_fade_rect.modulate.a = 0.0
+	_nav_fade_tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
+	_nav_fade_tween.tween_property(_nav_fade_rect, "modulate:a", 1.0, 0.5)
+	_nav_fade_tween.tween_callback(func() -> void:
+		callback.call()
+		var tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		tw.tween_property(_nav_fade_rect, "modulate:a", 0.0, 0.3))
+
 func _on_radial_item_selected(target_id: String) -> void:
 	if target_id.is_empty():
 		return
-	SFXManager.play(SFXManager.SFX_MENU)
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_close_compass_menu()
-	ExplorationManager.navigate_to(target_id)
+	_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(target_id))
 
 # ─────────────────────────────────────────────────────────────
 # Setting Radial Menu
@@ -597,6 +788,8 @@ func _on_setting_clicked() -> void:
 	else:
 		_close_compass_menu(false)
 		_close_inventory_menu(false)
+		_close_chat_menu(false)
+		_close_info_panel()
 		_open_setting_menu()
 
 func _open_setting_menu() -> void:
@@ -604,7 +797,7 @@ func _open_setting_menu() -> void:
 		return
 	_setting_open      = true
 	_setting_animating = true
-	SFXManager.play(SFXManager.SFX_MENU)
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
 
 	var vp: Vector2 = get_viewport().get_visible_rect().size
 	if vp == Vector2.ZERO:
@@ -629,7 +822,7 @@ func _close_setting_menu(animated: bool = true) -> void:
 		if is_instance_valid(item as Node):
 			(item as Node).queue_free()
 	_setting_radial_items.clear()
-	if not _compass_open and not _inv_open:
+	if not _compass_open and not _inv_open and not _chat_open and not _info_open:
 		_radial_overlay.visible = false
 	if not animated:
 		_setting_icon.position = _setting_idle_pos
@@ -676,12 +869,13 @@ func _spawn_setting_radial_items(center: Vector2) -> void:
 					_on_setting_action(action))
 		_compass_root.add_child(panel)
 		_setting_radial_items.append(panel)
+		_hook_cursor(panel)
 		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 		fade_tw.tween_interval(float(i) * 0.04)
 		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
 
 func _on_setting_action(action: String) -> void:
-	SFXManager.play(SFXManager.SFX_MENU)
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_close_setting_menu()
 	match action:
 		"save_exit":
@@ -693,7 +887,7 @@ func _on_setting_action(action: String) -> void:
 				"Restart Stage?",
 				"All progress will be lost.",
 				func() -> void:
-					ExplorationManager.restart_stage())
+					_navigate_with_fade(func() -> void: ExplorationManager.restart_stage()))
 		"options":
 			var sm: Node = load("res://scenes/settings_menu.tscn").instantiate()
 			add_child(sm)
@@ -715,6 +909,8 @@ func _on_inventory_clicked() -> void:
 			return
 		_close_compass_menu(false)
 		_close_setting_menu(false)
+		_close_chat_menu(false)
+		_close_info_panel()
 		_open_inventory_menu(0)
 
 func _open_inventory_menu(page: int) -> void:
@@ -729,7 +925,7 @@ func _open_inventory_menu(page: int) -> void:
 	_inv_open      = true
 	_inv_page      = page
 	_inv_animating = true
-	SFXManager.play(SFXManager.SFX_MENU)
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
 
 	var vp: Vector2 = get_viewport().get_visible_rect().size
 	if vp == Vector2.ZERO:
@@ -754,7 +950,7 @@ func _close_inventory_menu(animated: bool = true) -> void:
 		if is_instance_valid(item as Node):
 			(item as Node).queue_free()
 	_inv_radial_items.clear()
-	if not _compass_open and not _setting_open:
+	if not _compass_open and not _setting_open and not _chat_open and not _info_open:
 		_radial_overlay.visible = false
 	if not animated:
 		_inv_icon.position = _inv_idle_pos
@@ -864,14 +1060,159 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 
 		_compass_root.add_child(panel)
 		_inv_radial_items.append(panel)
+		_hook_cursor(panel)
 		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 		fade_tw.tween_interval(float(i) * 0.04)
 		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
 
 func _on_inventory_item_selected(item_id: String) -> void:
-	SFXManager.play(SFXManager.SFX_MENU)
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_close_inventory_menu()
 	_show_item_preview(item_id)
+
+# ─────────────────────────────────────────────────────────────
+# Chat Radial Menu
+# ─────────────────────────────────────────────────────────────
+
+func _on_chat_clicked() -> void:
+	if _chat_animating:
+		return
+	if _chat_open:
+		_close_chat_menu()
+	else:
+		var node: ExplorationNode = ExplorationManager.current_node
+		if node == null:
+			return
+		# Filter characters whose conditions are met and haven't been played (if play_once)
+		var available: Array = []
+		for char_data: Variant in node.characters:
+			if available.size() >= 8:
+				break
+			if not char_data is Dictionary:
+				continue
+			var cd: Dictionary = char_data as Dictionary
+			if not ExplorationManager.is_connection_unlocked(cd):
+				continue
+			var play_once: bool   = bool(cd.get("play_once", true))
+			var vn_path: String   = str(cd.get("vn_scene", ""))
+			if play_once and not vn_path.is_empty() and ExplorationManager.is_vn_played(vn_path):
+				continue
+			available.append(cd)
+		if available.is_empty():
+			_flash_empty_chat()
+			return
+		_close_compass_menu(false)
+		_close_setting_menu(false)
+		_close_inventory_menu(false)
+		_close_info_panel()
+		_open_chat_menu(available)
+
+func _open_chat_menu(available: Array) -> void:
+	if _chat_animating:
+		return
+	for item: Variant in _chat_radial_items:
+		if is_instance_valid(item as Node):
+			(item as Node).queue_free()
+	_chat_radial_items.clear()
+
+	_chat_open      = true
+	_chat_animating = true
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
+
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	if vp == Vector2.ZERO:
+		vp = Vector2(1600.0, 900.0)
+	var center_pos := Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, vp.y * 0.5 - COMPASS_SIZE * 0.5)
+
+	var tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tw.set_parallel(true)
+	tw.tween_property(_chat_icon, "position", center_pos, 0.28)
+	tw.tween_property(_chat_hit,  "position", center_pos, 0.28)
+	await tw.finished
+	_chat_animating = false
+
+	_radial_overlay.visible = true
+	_spawn_chat_radial_items(center_pos, available)
+
+func _close_chat_menu(animated: bool = true) -> void:
+	if _chat_animating and not _chat_open:
+		return
+	_chat_open = false
+	for item: Variant in _chat_radial_items:
+		if is_instance_valid(item as Node):
+			(item as Node).queue_free()
+	_chat_radial_items.clear()
+	if not _compass_open and not _setting_open and not _inv_open and not _info_open:
+		_radial_overlay.visible = false
+	if not animated:
+		_chat_icon.position = _chat_idle_pos
+		_chat_hit.position  = _chat_idle_pos
+		return
+	_chat_animating = true
+	var tw := create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_BACK)
+	tw.set_parallel(true)
+	tw.tween_property(_chat_icon, "position", _chat_idle_pos, 0.22)
+	tw.tween_property(_chat_hit,  "position", _chat_idle_pos, 0.22)
+	await tw.finished
+	_chat_animating = false
+
+func _spawn_chat_radial_items(center: Vector2, available: Array) -> void:
+	var cx: float = center.x + COMPASS_SIZE * 0.5
+	var cy: float = center.y + COMPASS_SIZE * 0.5
+	var n: int    = available.size()
+	for i: int in range(n):
+		var char_data: Dictionary = available[i] as Dictionary
+		var char_name: String = str(char_data.get("name", "???"))
+		var angle: float = (-PI * 0.5) + float(i) * (TAU / float(n))
+		var item_cx: float = cx + cos(angle) * RADIAL_RADIUS
+		var item_cy: float = cy + sin(angle) * RADIAL_RADIUS
+		var panel: PanelContainer = _make_radial_panel(
+			Vector2(item_cx - RADIAL_ITEM_W * 0.5, item_cy - RADIAL_ITEM_H * 0.5),
+			Color(0.04, 0.10, 0.20, 0.94), Color(0.45, 0.70, 1.0, 0.85))
+		var lbl := Label.new()
+		lbl.text = char_name
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+		lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
+		lbl.add_theme_font_size_override("font_size", 17)
+		lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
+		lbl.add_theme_font_override("font", _make_font(500))
+		panel.add_child(lbl)
+		var vn_path: String   = str(char_data.get("vn_scene", ""))
+		var play_once_c: bool = bool(char_data.get("play_once", true))
+		panel.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton:
+				var mb := ev as InputEventMouseButton
+				if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+					_on_chat_character_selected(vn_path, play_once_c))
+		_compass_root.add_child(panel)
+		_chat_radial_items.append(panel)
+		_hook_cursor(panel)
+		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		fade_tw.tween_interval(float(i) * 0.04)
+		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
+
+func _on_chat_character_selected(vn_path: String, play_once: bool = true) -> void:
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
+	_close_chat_menu()
+	if vn_path.is_empty():
+		return
+	var done_cb := func() -> void:
+		var node: ExplorationNode = ExplorationManager.current_node
+		if node != null:
+			_compass_set_visible(true)
+	_play_vn(vn_path, done_cb, play_once)
+
+func _flash_empty_chat() -> void:
+	if _chat_empty_tween and _chat_empty_tween.is_valid():
+		_chat_empty_tween.kill()
+	_chat_icon.modulate = Color(0.4, 0.4, 0.4)
+	_chat_empty_lbl.text = "No one is here"
+	_chat_empty_lbl.modulate.a = 1.0
+	_chat_empty_tween = create_tween()
+	_chat_empty_tween.tween_interval(1.4)
+	_chat_empty_tween.tween_property(_chat_empty_lbl, "modulate:a", 0.0, 0.5)
+	_chat_empty_tween.parallel().tween_property(_chat_icon, "modulate", Color(1.0, 1.0, 1.0), 0.5)
 
 func _flash_empty_inventory() -> void:
 	if _inv_empty_tween and _inv_empty_tween.is_valid():
@@ -883,6 +1224,139 @@ func _flash_empty_inventory() -> void:
 	_inv_empty_tween.tween_interval(1.4)
 	_inv_empty_tween.tween_property(_inv_empty_lbl, "modulate:a", 0.0, 0.5)
 	_inv_empty_tween.parallel().tween_property(_inv_icon, "modulate", Color(1.0, 1.0, 1.0), 0.5)
+
+# ─────────────────────────────────────────────────────────────
+# Info Panel
+# ─────────────────────────────────────────────────────────────
+
+## Rebuild the "Who is here" grid from the node's character list.
+## Shows up to 8 characters; hides the section if none are present or feature is off.
+func _rebuild_who_is_here(node: ExplorationNode) -> void:
+	for child: Node in _who_grid.get_children():
+		child.queue_free()
+	if not node.show_who_is_here or node.characters.is_empty():
+		_who_section.visible = false
+		return
+	var count: int = 0
+	for char_data: Variant in node.characters:
+		if count >= 8:
+			break
+		if not char_data is Dictionary:
+			continue
+		var cd: Dictionary = char_data as Dictionary
+		var char_name: String = str(cd.get("name", "")).strip_edges()
+		if char_name.is_empty():
+			continue
+		var thumb_path: String = str(cd.get("thumbnail", "")).strip_edges()
+		# Cell container
+		var cell := VBoxContainer.new()
+		cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		cell.add_theme_constant_override("separation", 4)
+		_who_grid.add_child(cell)
+		# Thumbnail
+		var thumb := TextureRect.new()
+		thumb.custom_minimum_size = Vector2(120.0, 120.0)
+		thumb.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		thumb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		if not thumb_path.is_empty() and ResourceLoader.exists(thumb_path):
+			thumb.texture = load(thumb_path) as Texture2D
+		else:
+			# Fallback: grey placeholder
+			thumb.modulate = Color(0.3, 0.3, 0.4, 0.6)
+		cell.add_child(thumb)
+		# Name label
+		var name_lbl := Label.new()
+		name_lbl.text = char_name
+		name_lbl.add_theme_font_size_override("font_size", 18)
+		name_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+		name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		name_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		cell.add_child(name_lbl)
+		count += 1
+	_who_section.visible = count > 0
+
+func _on_info_clicked() -> void:
+	if _info_open:
+		_close_info_panel()
+	else:
+		_close_compass_menu(false)
+		_close_setting_menu(false)
+		_close_inventory_menu(false)
+		_close_chat_menu(false)
+		_open_info_panel()
+
+## Open the info panel with an optional callback fired after it closes.
+## Auto-dismiss timer always starts after slide-in (cancelled if mouse enters the panel).
+func _open_info_panel(on_close: Callable = Callable(), _unused: bool = false) -> void:
+	_info_auto_dismiss_timer = null
+	_info_on_close_cb = on_close
+	_info_open = true
+	_title_lbl.visible = true
+	_desc_lbl.visible  = true
+	_back_btn.text     = "Dismiss"
+	_back_btn.visible  = false
+	_radial_overlay.visible = true
+	# Slide in from right
+	var vp_w: float = get_viewport().get_visible_rect().size.x
+	_content_panel.position.x = vp_w
+	_content_panel.visible = true
+	if _info_panel_tween and _info_panel_tween.is_valid():
+		_info_panel_tween.kill()
+	_info_panel_tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUINT)
+	_info_panel_tween.tween_property(_content_panel, "position:x", vp_w * BG_AREA_FRACTION, 0.35)
+	# Start dismiss timer after slide-in only if mouse is not already over panel or info icon
+	_info_panel_tween.tween_callback(func() -> void:
+		if _info_open and not _is_over_info_panel_or_icon():
+			_on_info_panel_mouse_exited())
+
+func _is_over_info_panel_or_icon() -> bool:
+	var mp: Vector2 = get_global_mouse_position()
+	if _content_panel != null and _content_panel.visible:
+		if Rect2(_content_panel.global_position, _content_panel.size).has_point(mp):
+			return true
+	if _info_hit != null and _info_hit.visible:
+		if Rect2(_info_hit.global_position, _info_hit.size).has_point(mp):
+			return true
+	return false
+
+func _on_info_panel_mouse_entered() -> void:
+	# Cancel pending auto-dismiss while hovering
+	_info_auto_dismiss_timer = null
+
+func _on_info_panel_mouse_exited() -> void:
+	if not _info_open:
+		return
+	_info_auto_dismiss_timer = get_tree().create_timer(1.0)
+	_info_auto_dismiss_timer.timeout.connect(func() -> void:
+		if _info_open and _info_auto_dismiss_timer != null:
+			_close_info_panel())
+
+func _close_info_panel() -> void:
+	if not _info_open:
+		return
+	_info_auto_dismiss_timer = null
+	_info_open = false
+	var cb: Callable = _info_on_close_cb
+	_info_on_close_cb = Callable()
+	var can_back: bool = ExplorationManager.can_go_back()
+	if not _compass_open and not _setting_open and not _inv_open and not _chat_open:
+		_radial_overlay.visible = false
+	# Slide out to right — hide labels and reset state only after panel is off-screen
+	var vp_w: float = get_viewport().get_visible_rect().size.x
+	if _info_panel_tween and _info_panel_tween.is_valid():
+		_info_panel_tween.kill()
+	_info_panel_tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUINT)
+	_info_panel_tween.tween_property(_content_panel, "position:x", vp_w, 0.28)
+	_info_panel_tween.tween_callback(func() -> void:
+		_title_lbl.visible = false
+		_desc_lbl.visible  = false
+		_back_btn.text     = "← Go Back"
+		_back_btn.visible  = can_back
+		_content_panel.visible = false
+		_content_panel.position.x = vp_w * BG_AREA_FRACTION
+		if cb.is_valid():
+			cb.call())
 
 # ─────────────────────────────────────────────────────────────
 # Item Preview Overlay
@@ -1085,9 +1559,11 @@ func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Cal
 	sb.border_color = Color(1.0, 0.55, 0.45, 0.70)
 	sb.set_corner_radius_all(8)
 	panel.add_theme_stylebox_override("panel", sb)
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.size     = Vector2(380.0, 200.0)
-	panel.position = -panel.size * 0.5
+	panel.layout_mode = 0
+	var dlg_size := Vector2(380.0, 200.0)
+	var vp_sz: Vector2 = get_viewport().get_visible_rect().size
+	panel.size     = dlg_size
+	panel.position = (vp_sz - dlg_size) * 0.5
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	overlay.add_child(panel)
 
@@ -1195,6 +1671,9 @@ func _refresh_node(node: ExplorationNode) -> void:
 	# Point-and-click hotspots for this node
 	_rebuild_spots(node)
 
+	# "Who is here" section in info panel
+	_rebuild_who_is_here(node)
+
 	# Node-type routing: BATTLE/EXIT get inline action buttons; all others use compass.
 	_close_all_menus(false)
 	match node.node_type:
@@ -1212,32 +1691,65 @@ func _refresh_node(node: ExplorationNode) -> void:
 			_content_panel.visible = false
 			_choices_vbox.visible = false
 			_compass_set_visible(false)   # hidden while VN plays; restored in _on_vn_finished
-			if not node.vn_scene.is_empty():
-				_play_vn(node.vn_scene, func() -> void: _on_vn_finished(node))
+			if node.show_info_on_enter:
+				_open_info_panel(func() -> void: _play_story_vn(node), true)
 			else:
-				_compass_set_visible(true)
+				_play_story_vn(node)
 		_:
 			_content_panel.visible = false
 			_choices_vbox.visible = false
-			_compass_set_visible(true)
+			if node.show_info_on_enter:
+				_compass_set_visible(true)
+				_open_info_panel(func() -> void: _play_other_vn(node), true)
+			else:
+				_play_other_vn(node)
 
 
 # ─────────────────────────────────────────────────────────────
 # Visual Novel Integration
 # ─────────────────────────────────────────────────────────────
 
-func _play_vn(path: String, on_done: Callable) -> void:
+## Play the VN for a STORY node (compass hidden during playback).
+func _play_story_vn(node: ExplorationNode) -> void:
+	if not node.vn_scene.is_empty():
+		var already_played: bool = node.vn_play_once and ExplorationManager.is_vn_played(node.vn_scene)
+		if already_played:
+			_compass_set_visible(true)
+		else:
+			_play_vn(node.vn_scene, func() -> void: _on_vn_finished(node), node.vn_play_once)
+	else:
+		_compass_set_visible(true)
+
+## Play the VN for non-STORY nodes (compass restored after VN).
+func _play_other_vn(node: ExplorationNode) -> void:
+	if not node.vn_scene.is_empty():
+		var already_played: bool = node.vn_play_once and ExplorationManager.is_vn_played(node.vn_scene)
+		if already_played:
+			_compass_set_visible(true)
+		else:
+			_compass_set_visible(false)
+			_play_vn(node.vn_scene, func() -> void: _on_vn_finished(node), node.vn_play_once)
+	else:
+		_compass_set_visible(true)
+
+func _play_vn(path: String, on_done: Callable, play_once: bool = true) -> void:
 	if _vn_playing:
 		return
-	if not ResourceLoader.exists(path):
+	if not FileAccess.file_exists(ProjectSettings.globalize_path(path)):
 		push_warning("ExplorationPlayer: VN scene '%s' not found — skipping." % path)
 		on_done.call()
 		return
 	_vn_playing = true
 	_compass_set_visible(false)   # disable compass while VN is active
 	var vn: Node = VN_PLAYER_SCENE.instantiate()
+	vn.set("transparent_bg", true)   # show exploration scene behind VN dialog
+	vn.set("keep_bgm", true)         # don't interrupt exploration ambient track
 	add_child(vn)
+	var captured_path: String = path
+	var captured_once: bool   = play_once
 	vn.play_scene(path, func() -> void:
+		if captured_once:
+			ExplorationManager.mark_vn_played(captured_path)
 		_vn_playing = false
 		on_done.call())
 
@@ -1263,8 +1775,9 @@ func _show_battle_prompt(node: ExplorationNode) -> void:
 	btn.add_theme_color_override("font_color", Color(1.0, 0.55, 0.45))
 	var captured_node: ExplorationNode = node
 	btn.pressed.connect(func() -> void:
-		SFXManager.play(SFXManager.SFX_MENU)
+		SFXManager.play(SFXManager.SFX_EXPLORATION)
 		ExplorationManager.start_battle_for_node(captured_node))
+	_hook_cursor(btn)
 	_choices_vbox.add_child(btn)
 
 func _handle_post_battle_result() -> void:
@@ -1301,10 +1814,11 @@ func _show_exit_prompt() -> void:
 	btn.add_theme_font_size_override("font_size", 22)
 	btn.add_theme_color_override("font_color", Color(1.0, 0.90, 0.45))
 	btn.pressed.connect(_on_exit_confirmed)
+	_hook_cursor(btn)
 	_choices_vbox.add_child(btn)
 
 func _on_exit_confirmed() -> void:
-	SFXManager.play(SFXManager.SFX_MENU)
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	ExplorationManager.end_session(true)
 	var dest: String = ExplorationManager.return_scene
 	CheckerTransition.fade_out_to_battle(func() -> void:
@@ -1315,8 +1829,11 @@ func _on_exit_confirmed() -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _on_back_pressed() -> void:
+	if _info_open:
+		_close_info_panel()
+		return
 	SFXManager.play(SFXManager.SFX_CANCEL)
-	ExplorationManager.go_back()
+	_navigate_with_fade(func() -> void: ExplorationManager.go_back())
 
 func _show_toast(text: String) -> void:
 	if _toast_tween and _toast_tween.is_valid():
@@ -1432,7 +1949,7 @@ func _on_spot_hover_enter(tooltip_text: String) -> void:
 
 func _on_spot_hover_exit() -> void:
 	_hovering_spot = false
-	Input.set_custom_mouse_cursor(null)
+	Input.set_custom_mouse_cursor(_default_tex, Input.CURSOR_ARROW, Vector2(4.0, 4.0))
 	_hide_tooltip()
 
 func _hide_tooltip() -> void:
@@ -1443,13 +1960,24 @@ func _on_spot_clicked(vn_path: String) -> void:
 	if _vn_playing or vn_path.is_empty():
 		return
 	_on_spot_hover_exit()   # restore cursor before VN takes over
-	SFXManager.play(SFXManager.SFX_MENU)
+	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_play_vn(vn_path, func() -> void:
 		var node: ExplorationNode = ExplorationManager.current_node
 		if node != null:
 			_compass_set_visible(true))
 
 func _process(_delta: float) -> void:
+	# Auto-dismiss: cancel timer while hovering panel or info icon; start it on unhover
+	if _info_open:
+		var over: bool = _is_over_info_panel_or_icon()
+		if over and not _info_panel_hovered:
+			# mouse just entered — cancel pending timer
+			_info_auto_dismiss_timer = null
+		elif not over and _info_panel_hovered:
+			# mouse just left — start dismiss timer
+			_on_info_panel_mouse_exited()
+		_info_panel_hovered = over
+	# Tooltip follow
 	if _tooltip_panel != null and _tooltip_panel.visible:
 		var mp: Vector2 = get_local_mouse_position()
 		var vp: Vector2 = get_viewport_rect().size
@@ -1457,6 +1985,13 @@ func _process(_delta: float) -> void:
 		_tooltip_panel.position = Vector2(
 			minf(mp.x + 16.0, vp.x - tp.x - 4.0),
 			minf(mp.y + 16.0, vp.y - tp.y - 4.0))
+	# Cursor: finger over interactive elements, default otherwise
+	if not _hovering_spot:
+		if _mouse_over_interactive():
+			if _finger_tex != null:
+				Input.set_custom_mouse_cursor(_finger_tex, Input.CURSOR_ARROW, Vector2(12.0, 4.0))
+		else:
+			Input.set_custom_mouse_cursor(_default_tex, Input.CURSOR_ARROW, Vector2(4.0, 4.0))
 
 func _exit_tree() -> void:
 	Input.set_custom_mouse_cursor(null)
@@ -1479,13 +2014,17 @@ func _input(event: InputEvent) -> void:
 		return
 	if _item_preview != null:
 		return  # item preview handles its own dismissal
-	if not (_compass_open or _setting_open or _inv_open):
+	if not (_compass_open or _setting_open or _inv_open or _chat_open or _info_open):
 		return
 	# If click lands on an icon button or a radial item, let that element handle it
-	var interactive: Array = [_compass_hit, _setting_hit, _inv_hit]
+	var interactive: Array = [_compass_hit, _setting_hit, _inv_hit, _chat_hit, _info_hit]
 	interactive.append_array(_radial_items)
 	interactive.append_array(_setting_radial_items)
 	interactive.append_array(_inv_radial_items)
+	interactive.append_array(_chat_radial_items)
+	# Also protect the content panel when info is open
+	if _info_open and _content_panel != null:
+		interactive.append(_content_panel)
 	for node: Variant in interactive:
 		if is_instance_valid(node as Node):
 			var ctrl: Control = node as Control

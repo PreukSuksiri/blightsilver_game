@@ -59,11 +59,15 @@ var _prop_title_edit:       LineEdit    = null
 var _prop_desc_edit:        TextEdit    = null
 var _prop_type_btn:         OptionButton = null
 var _prop_bg_edit:          LineEdit    = null
-var _prop_vn_edit:          LineEdit    = null
+var _prop_vn_edit:            LineEdit    = null
+var _prop_vn_play_once_chk:   CheckBox    = null
+var _prop_show_info_chk:      CheckBox    = null
+var _prop_show_who_chk:       CheckBox    = null
 var _prop_music_edit:       LineEdit    = null
 var _prop_connections_vbox: VBoxContainer = null
 var _prop_events_in_vbox:   VBoxContainer = null
 var _prop_events_out_vbox:  VBoxContainer = null
+var _prop_characters_vbox:  VBoxContainer = null
 
 # ── Status bar ────────────────────────────────────────────────
 var _status_lbl: Label = null
@@ -253,12 +257,28 @@ func _build_props_panel() -> Control:
 	bg_preview_btn.pressed.connect(func() -> void: _preview_image(_prop_bg_edit.text.strip_edges()))
 	_prop_bg_edit.get_parent().add_child(bg_preview_btn)
 	_prop_vn_edit    = _add_file_field(vbox, "VN Scene (res:// path)",
-		PackedStringArray(["*.json ; JSON Files"]), "res://campaign/scenes")
+		PackedStringArray(["*.json ; JSON Files"]), "res://exploration/vn",
+		func() -> void: _browse_for_vn_scene())
 	var edit_beats_btn := Button.new()
 	edit_beats_btn.text = "Edit Beats ↗"
 	edit_beats_btn.add_theme_font_size_override("font_size", 13)
 	edit_beats_btn.pressed.connect(_on_edit_beats_pressed)
 	vbox.add_child(edit_beats_btn)
+	_prop_vn_play_once_chk = CheckBox.new()
+	_prop_vn_play_once_chk.text = "Play Once"
+	_prop_vn_play_once_chk.button_pressed = true
+	_prop_vn_play_once_chk.add_theme_font_size_override("font_size", 13)
+	vbox.add_child(_prop_vn_play_once_chk)
+	_prop_show_info_chk = CheckBox.new()
+	_prop_show_info_chk.text = "Show Info Panel on Enter"
+	_prop_show_info_chk.button_pressed = true
+	_prop_show_info_chk.add_theme_font_size_override("font_size", 13)
+	vbox.add_child(_prop_show_info_chk)
+	_prop_show_who_chk = CheckBox.new()
+	_prop_show_who_chk.text = "Show 'Who is Here' in Info Panel"
+	_prop_show_who_chk.button_pressed = true
+	_prop_show_who_chk.add_theme_font_size_override("font_size", 13)
+	vbox.add_child(_prop_show_who_chk)
 	_prop_music_edit = _add_file_field(vbox, "Music (res:// path)",
 		PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio Files"]), "res://assets/audio")
 	var music_play_btn := Button.new()
@@ -311,6 +331,18 @@ func _build_props_panel() -> Control:
 	vbox.add_child(add_conn_btn)
 	vbox.add_child(HSeparator.new())
 
+	# Section: Characters
+	_add_section_header(vbox, "CHARACTERS")
+	_prop_characters_vbox = VBoxContainer.new()
+	_prop_characters_vbox.add_theme_constant_override("separation", 6)
+	vbox.add_child(_prop_characters_vbox)
+	var add_char_btn := Button.new()
+	add_char_btn.text = "+ Add Character"
+	add_char_btn.add_theme_font_size_override("font_size", 13)
+	add_char_btn.pressed.connect(func() -> void: _add_character_row(_prop_characters_vbox, {}))
+	vbox.add_child(add_char_btn)
+	vbox.add_child(HSeparator.new())
+
 	# Apply button
 	var apply_btn := Button.new()
 	apply_btn.text = "Apply Changes"
@@ -346,7 +378,7 @@ func _add_field(parent: Control, label_text: String, placeholder: String) -> Lin
 	return edit
 
 func _add_file_field(parent: Control, label_text: String,
-		filters: PackedStringArray, start_dir: String) -> LineEdit:
+		filters: PackedStringArray, start_dir: String, custom_browse: Callable = Callable()) -> LineEdit:
 	var lbl := Label.new()
 	lbl.text = label_text
 	lbl.add_theme_font_size_override("font_size", 13)
@@ -362,9 +394,19 @@ func _add_file_field(parent: Control, label_text: String,
 	var browse_btn := Button.new()
 	browse_btn.text = "…"
 	browse_btn.custom_minimum_size = Vector2(32.0, 0.0)
-	browse_btn.pressed.connect(func() -> void: _browse_for_file(edit, filters, start_dir))
+	if custom_browse.is_valid():
+		browse_btn.pressed.connect(custom_browse)
+	else:
+		browse_btn.pressed.connect(func() -> void: _browse_for_file(edit, filters, start_dir))
 	row.add_child(browse_btn)
 	return edit
+
+func _browse_for_vn_scene() -> void:
+	var start_dir: String = "res://exploration/vn"
+	if not _graph_path.is_empty():
+		var name: String = _graph_path.get_file().get_basename()
+		start_dir = "res://exploration/vn/vn_" + name
+	_browse_for_file(_prop_vn_edit, PackedStringArray(["*.json ; JSON Files"]), start_dir)
 
 func _browse_for_file(target_edit: LineEdit, filters: PackedStringArray, start_dir: String) -> void:
 	var dialog := FileDialog.new()
@@ -560,6 +602,220 @@ func _add_condition_row(cond_vbox: VBoxContainer, ctype: String = "has_item",
 	del_btn.pressed.connect(row.queue_free)
 	row.add_child(del_btn)
 
+## Add one character row to the characters VBox.
+func _add_character_row(chars_vbox: VBoxContainer, char_data: Dictionary) -> void:
+	var frame := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.10, 0.16, 0.14)
+	sb.set_border_width_all(1)
+	sb.border_color = Color(0.30, 0.70, 0.50, 0.50)
+	sb.set_corner_radius_all(4)
+	sb.content_margin_left = 8.0; sb.content_margin_right  = 8.0
+	sb.content_margin_top  = 6.0; sb.content_margin_bottom = 6.0
+	frame.add_theme_stylebox_override("panel", sb)
+	chars_vbox.add_child(frame)
+
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 4)
+	frame.add_child(vb)
+
+	# Name row
+	var name_row := HBoxContainer.new()
+	var name_lbl := Label.new()
+	name_lbl.text = "Name"
+	name_lbl.add_theme_font_size_override("font_size", 12)
+	name_row.add_child(name_lbl)
+	var name_edit := LineEdit.new()
+	name_edit.text             = str(char_data.get("name", ""))
+	name_edit.placeholder_text = "Character name"
+	name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_edit.add_theme_font_size_override("font_size", 13)
+	name_row.add_child(name_edit)
+	vb.add_child(name_row)
+
+	# VN Scene row
+	var vn_row := HBoxContainer.new()
+	var vn_lbl := Label.new()
+	vn_lbl.text = "VN Scene"
+	vn_lbl.add_theme_font_size_override("font_size", 12)
+	vn_row.add_child(vn_lbl)
+	var vn_edit := LineEdit.new()
+	vn_edit.text             = str(char_data.get("vn_scene", ""))
+	vn_edit.placeholder_text = "res:// path to beat JSON"
+	vn_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vn_edit.add_theme_font_size_override("font_size", 13)
+	vn_row.add_child(vn_edit)
+	var browse_btn := Button.new()
+	browse_btn.text = "…"
+	browse_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	browse_btn.pressed.connect(func() -> void:
+		_browse_for_file(vn_edit, PackedStringArray(["*.json ; JSON Files"]), "res://exploration/vn"))
+	vn_row.add_child(browse_btn)
+	vb.add_child(vn_row)
+
+	# Play Once checkbox (index 2)
+	var play_once_chk := CheckBox.new()
+	play_once_chk.text = "Play Once"
+	play_once_chk.button_pressed = bool(char_data.get("play_once", true))
+	play_once_chk.add_theme_font_size_override("font_size", 12)
+	vb.add_child(play_once_chk)
+
+	# Thumbnail row (index 3)
+	var thumb_row := HBoxContainer.new()
+	var thumb_lbl := Label.new()
+	thumb_lbl.text = "Thumbnail"
+	thumb_lbl.add_theme_font_size_override("font_size", 12)
+	thumb_row.add_child(thumb_lbl)
+	var thumb_edit := LineEdit.new()
+	thumb_edit.text             = str(char_data.get("thumbnail", ""))
+	thumb_edit.placeholder_text = "res:// path to portrait image"
+	thumb_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	thumb_edit.add_theme_font_size_override("font_size", 13)
+	thumb_row.add_child(thumb_edit)
+	var thumb_browse_btn := Button.new()
+	thumb_browse_btn.text = "…"
+	thumb_browse_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	thumb_browse_btn.pressed.connect(func() -> void:
+		_browse_for_file(thumb_edit,
+			PackedStringArray(["*.png,*.jpg,*.webp ; Images"]),
+			"res://assets/textures/exploration/thumbnail"))
+	thumb_row.add_child(thumb_browse_btn)
+	vb.add_child(thumb_row)
+
+	# Edit Beats button
+	var edit_beats_btn := Button.new()
+	edit_beats_btn.text = "Edit Beats ↗"
+	edit_beats_btn.add_theme_font_size_override("font_size", 12)
+	edit_beats_btn.pressed.connect(func() -> void: _on_edit_char_beats_pressed(name_edit, vn_edit))
+	vb.add_child(edit_beats_btn)
+
+	# Conditions section
+	var cond_hdr := Label.new()
+	cond_hdr.text = "Conditions (all must pass to show):"
+	cond_hdr.add_theme_font_size_override("font_size", 11)
+	cond_hdr.add_theme_color_override("font_color", Color(0.65, 0.80, 0.65))
+	vb.add_child(cond_hdr)
+	var cond_vbox := VBoxContainer.new()
+	cond_vbox.add_theme_constant_override("separation", 3)
+	vb.add_child(cond_vbox)
+	var add_cond_btn := Button.new()
+	add_cond_btn.text = "+ Condition"
+	add_cond_btn.add_theme_font_size_override("font_size", 11)
+	add_cond_btn.pressed.connect(func() -> void: _add_condition_row(cond_vbox))
+	vb.add_child(add_cond_btn)
+
+	# Populate existing conditions
+	var conds: Variant = char_data.get("conditions", [])
+	if conds is Array:
+		for cond: Variant in (conds as Array):
+			if cond is Dictionary:
+				var cdd: Dictionary = cond as Dictionary
+				_add_condition_row(cond_vbox,
+					str(cdd.get("type", "has_item")),
+					str(cdd.get("key", "")),
+					str(cdd.get("value", "")))
+
+	# Remove button
+	var del_btn := Button.new()
+	del_btn.text = "Remove Character"
+	del_btn.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
+	del_btn.add_theme_font_size_override("font_size", 12)
+	del_btn.pressed.connect(frame.queue_free)
+	vb.add_child(del_btn)
+
+## Collect all character rows from the characters VBox into an Array of Dictionaries.
+func _collect_characters(chars_vbox: VBoxContainer) -> Array:
+	var result: Array = []
+	for frame: Node in chars_vbox.get_children():
+		if not frame is PanelContainer:
+			continue
+		var vb: VBoxContainer = null
+		for child: Node in frame.get_children():
+			if child is VBoxContainer:
+				vb = child as VBoxContainer
+				break
+		if vb == null or vb.get_child_count() < 2:
+			continue
+		# Row 0: name_row (HBoxContainer → LineEdit)
+		var name_edit: LineEdit = _find_line_edit(vb.get_child(0))
+		# Row 1: vn_row (HBoxContainer → LineEdit)
+		var vn_edit: LineEdit   = _find_line_edit(vb.get_child(1))
+		# Row 2: play_once_chk (CheckBox)
+		var play_once: bool = true
+		if vb.get_child_count() > 2 and vb.get_child(2) is CheckBox:
+			play_once = (vb.get_child(2) as CheckBox).button_pressed
+		# Row 3: thumbnail_row (HBoxContainer → LineEdit)
+		var thumb_edit: LineEdit = _find_line_edit(vb.get_child(3)) if vb.get_child_count() > 3 else null
+		# Row 6: cond_vbox (VBoxContainer at index 6)
+		var conditions: Array = []
+		if vb.get_child_count() > 6 and vb.get_child(6) is VBoxContainer:
+			var cond_vbox: VBoxContainer = vb.get_child(6) as VBoxContainer
+			for row: Node in cond_vbox.get_children():
+				if not row is HBoxContainer:
+					continue
+				var rc: Array = (row as HBoxContainer).get_children()
+				if rc.size() < 4:
+					continue
+				conditions.append({
+					"type":  (rc[0] as OptionButton).get_item_text((rc[0] as OptionButton).selected),
+					"key":   (rc[1] as LineEdit).text,
+					"value": (rc[2] as LineEdit).text,
+				})
+		result.append({
+			"name":       name_edit.text.strip_edges()  if name_edit  != null else "",
+			"vn_scene":   vn_edit.text.strip_edges()    if vn_edit    != null else "",
+			"thumbnail":  thumb_edit.text.strip_edges() if thumb_edit != null else "",
+			"play_once":  play_once,
+			"conditions": conditions,
+		})
+	return result
+
+## Called when the "Edit Beats ↗" button inside a character row is pressed.
+## Auto-creates the VN JSON file using the pattern vn_<node_id>_<char_name>.json.
+func _on_edit_char_beats_pressed(name_edit: LineEdit, vn_edit: LineEdit) -> void:
+	var path: String = vn_edit.text.strip_edges()
+	if path.is_empty():
+		if _graph_path.is_empty():
+			_set_status("Save the graph first before creating a character VN scene.")
+			return
+		if _selected_node_id.is_empty():
+			_set_status("Select a node first.")
+			return
+		var char_name: String = name_edit.text.strip_edges()
+		if char_name.is_empty():
+			_set_status("Enter a character name first.")
+			return
+		var graph_name: String = _graph_path.get_file().get_basename()
+		var sanitized: String  = char_name.to_lower().replace(" ", "_")
+		path = "res://exploration/vn/vn_%s/vn_%s_%s.json" % [graph_name, _selected_node_id, sanitized]
+		_create_vn_subfolder(_graph_path)
+		var abs_path: String = ProjectSettings.globalize_path(path)
+		if not FileAccess.file_exists(abs_path):
+			var f := FileAccess.open(abs_path, FileAccess.WRITE)
+			if f == null:
+				_set_status("ERROR: Could not create '%s'." % path)
+				return
+			f.store_string("[]")
+			f.close()
+		vn_edit.text = path
+		_commit_selected_node()
+		_set_status("Created '%s' — opening VN Editor." % path.get_file())
+	elif not FileAccess.file_exists(ProjectSettings.globalize_path(path)):
+		var abs_path: String = ProjectSettings.globalize_path(path)
+		DirAccess.make_dir_recursive_absolute(abs_path.get_base_dir())
+		var f := FileAccess.open(abs_path, FileAccess.WRITE)
+		if f == null:
+			_set_status("ERROR: Could not create '%s'." % path)
+			return
+		f.store_string("[]")
+		f.close()
+		_set_status("Created '%s' — opening VN Editor." % path.get_file())
+	# Open VNEditor as overlay
+	var vned: Control = load("res://scripts/VNEditor.gd").new()
+	vned.name = "VNEditorOverlay"
+	get_tree().current_scene.add_child(vned)
+	vned.call_deferred("open_file", path)
+
 # ─────────────────────────────────────────────────────────────
 # Graph rendering
 # ─────────────────────────────────────────────────────────────
@@ -724,6 +980,9 @@ func _populate_props(en: ExplorationNode) -> void:
 	_prop_type_btn.select(en.node_type)
 	_prop_bg_edit.text    = en.background
 	_prop_vn_edit.text    = en.vn_scene
+	_prop_vn_play_once_chk.button_pressed = en.vn_play_once
+	_prop_show_info_chk.button_pressed = en.show_info_on_enter
+	_prop_show_who_chk.button_pressed  = en.show_who_is_here
 	_prop_music_edit.text = en.music
 
 	# On-enter events
@@ -747,6 +1006,13 @@ func _populate_props(en: ExplorationNode) -> void:
 				str(d.get("action", "show_message")),
 				str(d.get("key", "")),
 				str(d.get("value", "")))
+
+	# Characters
+	for child: Node in _prop_characters_vbox.get_children():
+		child.queue_free()
+	for char_data: Variant in en.characters:
+		if char_data is Dictionary:
+			_add_character_row(_prop_characters_vbox, char_data as Dictionary)
 
 	# Connections
 	for child: Node in _prop_connections_vbox.get_children():
@@ -780,6 +1046,9 @@ func _collect_props(en: ExplorationNode) -> void:
 	en.node_type   = _prop_type_btn.selected
 	en.background  = _prop_bg_edit.text.strip_edges()
 	en.vn_scene    = _prop_vn_edit.text.strip_edges()
+	en.vn_play_once       = _prop_vn_play_once_chk.button_pressed
+	en.show_info_on_enter = _prop_show_info_chk.button_pressed
+	en.show_who_is_here   = _prop_show_who_chk.button_pressed
 	en.music       = _prop_music_edit.text.strip_edges()
 
 	# On-enter events
@@ -789,6 +1058,10 @@ func _collect_props(en: ExplorationNode) -> void:
 	# On-exit events
 	en.on_exit_events.clear()
 	en.on_exit_events = _collect_events(_prop_events_out_vbox)
+
+	# Characters
+	en.characters.clear()
+	en.characters = _collect_characters(_prop_characters_vbox)
 
 	# Connections
 	en.connections.clear()
@@ -968,7 +1241,9 @@ func _on_test_play_pressed() -> void:
 	ExplorationManager.launch(_graph_path, "res://scenes/exploration_editor.tscn")
 
 func _on_items_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/exploration_item_manager.tscn")
+	var mgr: Control = load("res://scenes/exploration_item_manager.tscn").instantiate() as Control
+	mgr.name = "ExplorationItemManagerOverlay"
+	get_tree().current_scene.add_child(mgr)
 
 func _on_back_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
@@ -1009,10 +1284,32 @@ func _preview_audio(path: String) -> void:
 func _on_edit_beats_pressed() -> void:
 	var path: String = _prop_vn_edit.text.strip_edges()
 	if path.is_empty():
-		_set_status("Enter a VN Scene path first.")
-		return
-	# Create empty beat file if it doesn't exist yet
-	if not FileAccess.file_exists(path):
+		# Auto-create: requires graph to be saved and a node selected
+		if _graph_path.is_empty():
+			_set_status("Save the graph first before creating a VN scene.")
+			return
+		if _selected_node_id.is_empty():
+			_set_status("Select a node first.")
+			return
+		var graph_name: String = _graph_path.get_file().get_basename()
+		path = "res://exploration/vn/vn_%s/vn_%s.json" % [graph_name, _selected_node_id]
+		# Ensure the subfolder exists
+		_create_vn_subfolder(_graph_path)
+		# Create empty beat file
+		var abs_path: String = ProjectSettings.globalize_path(path)
+		if not FileAccess.file_exists(abs_path):
+			var f := FileAccess.open(abs_path, FileAccess.WRITE)
+			if f == null:
+				_set_status("ERROR: Could not create '%s'." % path)
+				return
+			f.store_string("[]")
+			f.close()
+		# Fill the VN Scene field and commit so it saves to the node
+		_prop_vn_edit.text = path
+		_commit_selected_node()
+		_set_status("Created '%s' — opening VN Editor." % path.get_file())
+	elif not FileAccess.file_exists(ProjectSettings.globalize_path(path)):
+		# Path was set manually but file doesn't exist — create it
 		var abs_path: String = ProjectSettings.globalize_path(path)
 		DirAccess.make_dir_recursive_absolute(abs_path.get_base_dir())
 		var f := FileAccess.open(abs_path, FileAccess.WRITE)
@@ -1099,9 +1396,20 @@ func _save_graph(path: String) -> void:
 		_graph_path = path
 		_dirty = false
 		_update_title()
+		_create_vn_subfolder(path)
 		_set_status("Saved to '%s'." % path)
 	else:
 		_set_status("ERROR: Could not save to '%s'." % path)
+
+func _create_vn_subfolder(graph_path: String) -> void:
+	var name: String = graph_path.get_file().get_basename()
+	if name.is_empty():
+		return
+	var folder: String = "res://exploration/vn/vn_" + name
+	var abs_path: String = ProjectSettings.globalize_path(folder)
+	var err: Error = DirAccess.make_dir_recursive_absolute(abs_path)
+	if err != OK and err != ERR_ALREADY_EXISTS:
+		push_warning("ExplorationEditor: could not create VN subfolder '%s' (err %d)" % [folder, err])
 
 func _next_unique_node_id() -> String:
 	var existing: Dictionary = {}

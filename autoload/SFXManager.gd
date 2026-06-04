@@ -13,6 +13,7 @@ const SFX_CARD_DETAIL := preload("res://assets/audio/sfx/scifi_ui_15.mp3")  # Ru
 const SFX_CRYSTAL_GAIN := preload("res://assets/audio/sfx/scifi_ui_24.mp3") # Rule 13: gain crystals
 const SFX_PLACE       := preload("res://assets/audio/sfx/scifi_ui_9.mp3")   # Rule 14: setup card placed into grid
 const SFX_REMOVE      := preload("res://assets/audio/sfx/scifi_ui_8.mp3")   # Rule 15: setup card removed from grid
+const SFX_EXPLORATION := preload("res://assets/audio/sfx/scifi_ui_8.mp3")   # Exploration UI interactions
 const SFX_BLUFF_PLACE  := preload("res://assets/audio/sfx/pop3.mp3")         # assign bluff to cell
 const SFX_BLUFF_REMOVE := preload("res://assets/audio/sfx/pop2.mp3")         # remove bluff from cell
 const SFX_UNION_LAND  := preload("res://assets/audio/sfx/clash1.mp3")       # Rule 9: union fire spark & dust

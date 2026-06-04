@@ -84,6 +84,7 @@ var _current_node_id: String = ""
 var _node_history: Array[String] = []
 var _inventory: Array[String] = []
 var _vars: Dictionary = {}
+var _played_vn_scenes: Dictionary = {}   # path → true; tracks once-only VN scenes played this session
 
 # Accumulated rewards — applied to main game when end_session(carry_rewards=true) is called.
 # { "credits": int, "flags": { key: value, ... } }
@@ -118,9 +119,17 @@ var current_node_id: String:
 # ─────────────────────────────────────────────────────────────
 
 ## Convenience: start a session AND change the scene to ExplorationPlayer.
-## Equivalent to start_session() + change_scene_to_file(EXPLORATION_PLAYER_SCENE).
+## If a saved session exists for the same graph, it is restored instead of starting fresh.
 func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu.tscn") -> void:
 	return_scene = p_return_scene
+	# Resume saved session for the same graph rather than wiping progress
+	var saved: Dictionary = SaveManager.exploration_session
+	if saved.get("active", false) and str(saved.get("graph_path", "")) == graph_path:
+		if restore_saved_session():
+			CheckerTransition.fade_out_to_battle(func() -> void:
+				get_tree().change_scene_to_file(EXPLORATION_PLAYER_SCENE))
+			return
+	# No matching saved session — start fresh
 	start_session(graph_path)
 	if not _session_active:
 		return
@@ -171,8 +180,20 @@ func _reset_session_state() -> void:
 	_node_history.clear()
 	_inventory.clear()
 	_vars.clear()
+	_played_vn_scenes.clear()
 	_session_rewards   = {}
 	_clear_saved_session()
+
+## Mark a VN scene path as having been played this session.
+func mark_vn_played(path: String) -> void:
+	if path.is_empty():
+		return
+	_played_vn_scenes[path] = true
+	_save_session_state()
+
+## Returns true if the given VN scene path has already been played this session.
+func is_vn_played(path: String) -> bool:
+	return _played_vn_scenes.has(path)
 
 ## Save current session state to SaveManager so it survives a game restart.
 ## Called automatically on every navigation, inventory, and variable change.
@@ -180,14 +201,15 @@ func _save_session_state() -> void:
 	if not _session_active or _current_graph == null:
 		return
 	SaveManager.exploration_session = {
-		"active":          true,
-		"graph_path":      _current_graph._source_path,
-		"current_node_id": _current_node_id,
-		"history":         _node_history.duplicate(),
-		"inventory":       _inventory.duplicate(),
-		"vars":            _vars.duplicate(),
-		"rewards":         _session_rewards.duplicate(true),
-		"return_scene":    return_scene,
+		"active":            true,
+		"graph_path":        _current_graph._source_path,
+		"current_node_id":   _current_node_id,
+		"history":           _node_history.duplicate(),
+		"inventory":         _inventory.duplicate(),
+		"vars":              _vars.duplicate(),
+		"played_vn_scenes":  _played_vn_scenes.keys(),
+		"rewards":           _session_rewards.duplicate(true),
+		"return_scene":      return_scene,
 	}
 	SaveManager.save_data()
 
@@ -214,11 +236,20 @@ func restore_saved_session() -> bool:
 	_session_rewards  = sd.get("rewards", {"credits": 0, "flags": {}}).duplicate(true) as Dictionary
 	_session_active   = true
 	var hist: Variant = sd.get("history", [])
-	_node_history     = hist as Array[String] if hist is Array else []
+	_node_history = []
+	if hist is Array:
+		_node_history.assign(hist)
 	var inv: Variant  = sd.get("inventory", [])
-	_inventory        = inv as Array if inv is Array else []
+	_inventory = []
+	if inv is Array:
+		_inventory.assign(inv)
 	var vs: Variant   = sd.get("vars", {})
 	_vars             = vs as Dictionary if vs is Dictionary else {}
+	_played_vn_scenes.clear()
+	var pvn: Variant  = sd.get("played_vn_scenes", [])
+	if pvn is Array:
+		for p: Variant in (pvn as Array):
+			_played_vn_scenes[str(p)] = true
 	return_scene      = str(sd.get("return_scene", "res://scenes/main_menu.tscn"))
 	_current_node_id  = str(sd.get("current_node_id", graph.start_node_id))
 	emit_signal("session_started", graph)

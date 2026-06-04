@@ -38,6 +38,8 @@ var _editing_id:    String          = ""   # empty = new item
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	z_index = 50
 	_build_ui()
 	_refresh_list()
 
@@ -83,8 +85,7 @@ func _build_ui() -> void:
 	var add_btn := _make_btn("+ New Item", func() -> void: _start_edit_new())
 	toolbar.add_child(add_btn)
 
-	var back_btn := _make_btn("← Back", func() -> void:
-		get_tree().change_scene_to_file("res://scenes/exploration_editor.tscn"))
+	var back_btn := _make_btn("← Back", func() -> void: queue_free())
 	toolbar.add_child(back_btn)
 
 	# Two-column layout: list (left) + edit panel (right)

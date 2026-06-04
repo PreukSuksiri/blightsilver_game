@@ -83,6 +83,16 @@ enum NodeType {
 ## Path to a VN beat JSON file. Used by STORY nodes (or as an optional entry cutscene).
 @export var vn_scene: String = ""
 
+## If true, the node's vn_scene plays only once per session (default true).
+@export var vn_play_once: bool = true
+
+## If true, the info panel (title + description) opens automatically when the player enters.
+## When a vn_scene is also set, the info panel appears first; VN plays after it is dismissed.
+@export var show_info_on_enter: bool = true
+
+## If true, a "Who is here" section listing characters is shown inside the info panel.
+@export var show_who_is_here: bool = true
+
 ## Path to a BGM track to start when entering this node. Empty = keep current music.
 @export var music: String = ""
 
@@ -107,6 +117,12 @@ enum NodeType {
 ## icon is optional (empty = invisible hotspot). vn_scene is the beat JSON to play.
 @export var clickable_spots: Array = []
 
+## Characters that can be spoken to at this node.
+## Each entry is a Dictionary:
+##   { "name": String, "vn_scene": String, "conditions": Array }
+## conditions format is the same as connection conditions (all must pass to show).
+@export var characters: Array = []
+
 ## Editor-only: position of this GraphNode in the ExplorationEditor canvas.
 @export var editor_position: Vector2 = Vector2.ZERO
 
@@ -122,13 +138,17 @@ func to_dict() -> Dictionary:
 		"description":     description,
 		"node_type":       NodeType.keys()[node_type],
 		"background":      background,
-		"vn_scene":        vn_scene,
-		"music":           music,
+		"vn_scene":           vn_scene,
+		"vn_play_once":       vn_play_once,
+		"show_info_on_enter": show_info_on_enter,
+		"show_who_is_here":   show_who_is_here,
+		"music":              music,
 		"on_enter_events": on_enter_events.duplicate(true),
 		"on_exit_events":  on_exit_events.duplicate(true),
 		"connections":     connections.duplicate(true),
 		"usable_items":    usable_items.duplicate(true),
 		"clickable_spots": clickable_spots.duplicate(true),
+		"characters":      characters.duplicate(true),
 		"editor_position": {"x": editor_position.x, "y": editor_position.y},
 	}
 
@@ -139,7 +159,10 @@ static func from_dict(d: Dictionary) -> ExplorationNode:
 	node.title       = str(d.get("title",       ""))
 	node.description = str(d.get("description", ""))
 	node.background  = str(d.get("background",  ""))
-	node.vn_scene    = str(d.get("vn_scene",    ""))
+	node.vn_scene           = str(d.get("vn_scene",    ""))
+	node.vn_play_once       = bool(d.get("vn_play_once", true))
+	node.show_info_on_enter = bool(d.get("show_info_on_enter", true))
+	node.show_who_is_here   = bool(d.get("show_who_is_here",   true))
 	node.music       = str(d.get("music",       ""))
 
 	var type_str: String = str(d.get("node_type", "NORMAL")).to_upper()
@@ -160,6 +183,9 @@ static func from_dict(d: Dictionary) -> ExplorationNode:
 
 	var cs: Variant = d.get("clickable_spots", [])
 	node.clickable_spots = cs if cs is Array else []
+
+	var ch: Variant = d.get("characters", [])
+	node.characters = ch if ch is Array else []
 
 	var ep: Variant = d.get("editor_position", {})
 	if ep is Dictionary:

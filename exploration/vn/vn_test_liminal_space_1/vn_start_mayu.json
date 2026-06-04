@@ -1,0 +1,15 @@
+[
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_neutral.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": "Maybe it's too early in the morning... But it shouldn't be this... empty..."
+	}
+]
