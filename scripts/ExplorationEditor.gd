@@ -432,6 +432,70 @@ func _browse_for_file(target_edit: LineEdit, filters: PackedStringArray, start_d
 	add_child(dialog)
 	dialog.popup_centered(Vector2(900, 600))
 
+## Open a searchable item-picker popup. On selection sets target_edit.text to the item id.
+func _open_item_picker(target_edit: LineEdit) -> void:
+	var win := Window.new()
+	win.title = "Pick Item"
+	win.size  = Vector2i(380, 500)
+	win.unresizable = true
+	add_child(win)
+
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left",   8)
+	margin.add_theme_constant_override("margin_right",  8)
+	margin.add_theme_constant_override("margin_top",    8)
+	margin.add_theme_constant_override("margin_bottom", 8)
+	win.add_child(margin)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 6)
+	margin.add_child(vbox)
+
+	var search := LineEdit.new()
+	search.placeholder_text = "Search by name or ID..."
+	search.add_theme_font_size_override("font_size", 14)
+	vbox.add_child(search)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(scroll)
+
+	var list_vbox := VBoxContainer.new()
+	list_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list_vbox.add_theme_constant_override("separation", 2)
+	scroll.add_child(list_vbox)
+
+	var all_items: Array = ExplorationItemDatabase.all_items()
+
+	var refresh := func(filter: String) -> void:
+		for c: Node in list_vbox.get_children():
+			c.queue_free()
+		var f: String = filter.strip_edges().to_lower()
+		for entry: Variant in all_items:
+			if not entry is Dictionary:
+				continue
+			var d: Dictionary = entry as Dictionary
+			var iid: String   = str(d.get("id",   ""))
+			var iname: String = str(d.get("name",  iid))
+			if not f.is_empty() and not iid.to_lower().contains(f) and not iname.to_lower().contains(f):
+				continue
+			var btn := Button.new()
+			btn.text = "%s  [%s]" % [iname, iid]
+			btn.flat = true
+			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			btn.add_theme_font_size_override("font_size", 13)
+			var cap_id: String = iid
+			btn.pressed.connect(func() -> void:
+				target_edit.text = cap_id
+				win.queue_free())
+			list_vbox.add_child(btn)
+
+	refresh.call("")
+	search.text_changed.connect(refresh)
+	win.close_requested.connect(win.queue_free)
+	win.popup_centered()
+
 func _add_textarea(parent: Control, label_text: String) -> TextEdit:
 	var lbl := Label.new()
 	lbl.text = label_text
@@ -482,6 +546,13 @@ func _add_event_row(events_vbox: VBoxContainer, action: String = "show_message",
 	key_edit.add_theme_font_size_override("font_size", 12)
 	key_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(key_edit)
+
+	var item_pick_btn := Button.new()
+	item_pick_btn.text = "…"
+	item_pick_btn.tooltip_text = "Pick item ID"
+	item_pick_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	item_pick_btn.pressed.connect(func() -> void: _open_item_picker(key_edit))
+	row.add_child(item_pick_btn)
 
 	var val_edit := LineEdit.new()
 	val_edit.text             = value
@@ -602,6 +673,13 @@ func _add_condition_row(cond_vbox: VBoxContainer, ctype: String = "has_item",
 	key_edit.add_theme_font_size_override("font_size", 11)
 	key_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(key_edit)
+
+	var cond_pick_btn := Button.new()
+	cond_pick_btn.text = "…"
+	cond_pick_btn.tooltip_text = "Pick item ID"
+	cond_pick_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	cond_pick_btn.pressed.connect(func() -> void: _open_item_picker(key_edit))
+	row.add_child(cond_pick_btn)
 
 	var val_edit := LineEdit.new()
 	val_edit.text             = val
@@ -884,38 +962,47 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	tip_row.add_child(tip_edit)
 	vb.add_child(tip_row)
 
-	# Index 4: Actions header
+	# Index 4: Hide-after-interact row
+	var hide_row := HBoxContainer.new()
+	var hide_cb := CheckBox.new()
+	hide_cb.text           = "Hide after interact"
+	hide_cb.button_pressed = bool(spot_data.get("hide_after_interact", false))
+	hide_cb.add_theme_font_size_override("font_size", 12)
+	hide_row.add_child(hide_cb)
+	vb.add_child(hide_row)
+
+	# Index 5: Actions header
 	var acts_hdr := Label.new()
 	acts_hdr.text = "Actions on click:"
 	acts_hdr.add_theme_font_size_override("font_size", 11)
 	acts_hdr.add_theme_color_override("font_color", Color(0.80, 0.65, 1.0))
 	vb.add_child(acts_hdr)
 
-	# Index 5: Actions VBox
+	# Index 6: Actions VBox
 	var acts_vbox := VBoxContainer.new()
 	acts_vbox.add_theme_constant_override("separation", 3)
 	vb.add_child(acts_vbox)
 
-	# Index 6: Add Action button
+	# Index 7: Add Action button
 	var add_act_btn := Button.new()
 	add_act_btn.text = "+ Add Action"
 	add_act_btn.add_theme_font_size_override("font_size", 11)
 	add_act_btn.pressed.connect(func() -> void: _add_spot_action_row(acts_vbox))
 	vb.add_child(add_act_btn)
 
-	# Index 7: Conditions header
+	# Index 8: Conditions header
 	var cond_hdr := Label.new()
 	cond_hdr.text = "Conditions (all must pass to show):"
 	cond_hdr.add_theme_font_size_override("font_size", 11)
 	cond_hdr.add_theme_color_override("font_color", Color(0.65, 0.80, 0.65))
 	vb.add_child(cond_hdr)
 
-	# Index 8: Conditions VBox
+	# Index 9: Conditions VBox
 	var cond_vbox := VBoxContainer.new()
 	cond_vbox.add_theme_constant_override("separation", 3)
 	vb.add_child(cond_vbox)
 
-	# Index 9: Add Condition button
+	# Index 10: Add Condition button
 	var add_cond_btn := Button.new()
 	add_cond_btn.text = "+ Condition"
 	add_cond_btn.add_theme_font_size_override("font_size", 11)
@@ -981,6 +1068,12 @@ func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
 	key_edit.add_theme_font_size_override("font_size", 12)
 	key_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(key_edit)
+	var spot_pick_btn := Button.new()
+	spot_pick_btn.text = "…"
+	spot_pick_btn.tooltip_text = "Pick item ID"
+	spot_pick_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	spot_pick_btn.pressed.connect(func() -> void: _open_item_picker(key_edit))
+	row.add_child(spot_pick_btn)
 	var val_edit := LineEdit.new()
 	val_edit.text             = value
 	val_edit.placeholder_text = "value"
@@ -1035,33 +1128,47 @@ func _collect_spots(spots_vbox: VBoxContainer) -> Array:
 		var tip_le: LineEdit = _find_line_edit(vb.get_child(3)) if vb.get_child_count() > 3 else null
 		if tip_le != null:
 			tooltip = tip_le.text
-		# Index 5: acts_vbox — VBoxContainer
+		# Index 4: hide_after_interact CheckBox
+		var hide_after_interact: bool = false
+		if vb.get_child_count() > 4 and vb.get_child(4) is HBoxContainer:
+			for c: Node in (vb.get_child(4) as HBoxContainer).get_children():
+				if c is CheckBox:
+					hide_after_interact = (c as CheckBox).button_pressed
+					break
+		# Index 6: acts_vbox — VBoxContainer
 		var actions: Array = []
-		if vb.get_child_count() > 5 and vb.get_child(5) is VBoxContainer:
-			actions = _collect_events(vb.get_child(5) as VBoxContainer)
-		# Index 8: conds_vbox — VBoxContainer
+		if vb.get_child_count() > 6 and vb.get_child(6) is VBoxContainer:
+			actions = _collect_events(vb.get_child(6) as VBoxContainer)
+		# Index 9: conds_vbox — VBoxContainer
 		var conditions: Array = []
-		if vb.get_child_count() > 8 and vb.get_child(8) is VBoxContainer:
-			var cv: VBoxContainer = vb.get_child(8) as VBoxContainer
+		if vb.get_child_count() > 9 and vb.get_child(9) is VBoxContainer:
+			var cv: VBoxContainer = vb.get_child(9) as VBoxContainer
 			for row: Node in cv.get_children():
 				if not row is HBoxContainer:
 					continue
-				var rc: Array = (row as HBoxContainer).get_children()
-				if rc.size() < 4:
+				var ob: OptionButton = null
+				var les: Array[LineEdit] = []
+				for c: Node in (row as HBoxContainer).get_children():
+					if c is OptionButton and ob == null:
+						ob = c as OptionButton
+					elif c is LineEdit:
+						les.append(c as LineEdit)
+				if ob == null or les.size() < 2:
 					continue
 				conditions.append({
-					"type":  (rc[0] as OptionButton).get_item_text((rc[0] as OptionButton).selected),
-					"key":   (rc[1] as LineEdit).text,
-					"value": (rc[2] as LineEdit).text,
+					"type":  ob.get_item_text(ob.selected),
+					"key":   les[0].text,
+					"value": les[1].text,
 				})
 		result.append({
-			"x_norm":     x_norm,
-			"y_norm":     y_norm,
-			"icon":       icon_path,
-			"icon_scale": icon_scale,
-			"tooltip":    tooltip,
-			"actions":    actions,
-			"conditions": conditions,
+			"x_norm":             x_norm,
+			"y_norm":             y_norm,
+			"icon":               icon_path,
+			"icon_scale":         icon_scale,
+			"tooltip":            tooltip,
+			"hide_after_interact": hide_after_interact,
+			"actions":            actions,
+			"conditions":         conditions,
 		})
 	return result
 
@@ -1465,16 +1572,19 @@ func _collect_events(events_vbox: VBoxContainer) -> Array:
 	for row: Node in events_vbox.get_children():
 		if not row is HBoxContainer:
 			continue
-		var children: Array = (row as HBoxContainer).get_children()
-		if children.size() < 4:
+		var ob: OptionButton = null
+		var les: Array[LineEdit] = []
+		for c: Node in (row as HBoxContainer).get_children():
+			if c is OptionButton and ob == null:
+				ob = c as OptionButton
+			elif c is LineEdit:
+				les.append(c as LineEdit)
+		if ob == null or les.size() < 2:
 			continue
-		var action_btn: OptionButton = children[0] as OptionButton
-		var key_edit: LineEdit       = children[1] as LineEdit
-		var val_edit: LineEdit       = children[2] as LineEdit
 		result.append({
-			"action": action_btn.get_item_text(action_btn.selected),
-			"key":    key_edit.text,
-			"value":  val_edit.text,
+			"action": ob.get_item_text(ob.selected),
+			"key":    les[0].text,
+			"value":  les[1].text,
 		})
 	return result
 
@@ -1505,13 +1615,19 @@ func _collect_connection_frame(frame: PanelContainer) -> Dictionary:
 		for row: Node in cond_vbox.get_children():
 			if not row is HBoxContainer:
 				continue
-			var rc: Array = (row as HBoxContainer).get_children()
-			if rc.size() < 4:
+			var ob: OptionButton = null
+			var les: Array[LineEdit] = []
+			for c: Node in (row as HBoxContainer).get_children():
+				if c is OptionButton and ob == null:
+					ob = c as OptionButton
+				elif c is LineEdit:
+					les.append(c as LineEdit)
+			if ob == null or les.size() < 2:
 				continue
 			conditions.append({
-				"type":  (rc[0] as OptionButton).get_item_text((rc[0] as OptionButton).selected),
-				"key":   (rc[1] as LineEdit).text,
-				"value": (rc[2] as LineEdit).text,
+				"type":  ob.get_item_text(ob.selected),
+				"key":   les[0].text,
+				"value": les[1].text,
 			})
 
 	return {
@@ -1629,9 +1745,14 @@ func _on_test_play_pressed() -> void:
 	ExplorationManager.launch(_graph_path, "res://scenes/exploration_editor.tscn")
 
 func _on_items_pressed() -> void:
+	# Prevent duplicate
+	if get_node_or_null("ExplorationItemManagerOverlay") != null:
+		return
 	var mgr: Control = load("res://scenes/exploration_item_manager.tscn").instantiate() as Control
 	mgr.name = "ExplorationItemManagerOverlay"
-	get_tree().current_scene.add_child(mgr)
+	add_child(mgr)
+	# Set anchors AFTER add_child so the parent rect is resolved
+	mgr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 func _on_back_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

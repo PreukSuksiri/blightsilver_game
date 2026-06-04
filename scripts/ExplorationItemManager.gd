@@ -37,11 +37,12 @@ var _editing_id:    String          = ""   # empty = new item
 # ─────────────────────────────────────────────────────────────
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	z_index = 50
 	_build_ui()
 	_refresh_list()
+	# Re-apply full-rect after the layout pass so the parent's rect is fully resolved
+	set_anchors_and_offsets_preset.call_deferred(Control.PRESET_FULL_RECT)
 
 func _make_font(weight: int) -> FontVariation:
 	var base := load(FONT_PATH) as FontFile
@@ -57,22 +58,28 @@ func _make_font(weight: int) -> FontVariation:
 func _build_ui() -> void:
 	# Dark background
 	var bg := ColorRect.new()
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	bg.color        = Color(0.04, 0.05, 0.10, 1.0)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
-	# Toolbar
+	# Root VBox fills the whole overlay
+	var root_vbox := VBoxContainer.new()
+	root_vbox.add_theme_constant_override("separation", 0)
+	add_child(root_vbox)
+	root_vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+	# ── Toolbar ─────────────────────────────────────────────────────
+	var toolbar_bg := PanelContainer.new()
+	toolbar_bg.custom_minimum_size = Vector2(0, 44)
+	var tb_sb := StyleBoxFlat.new()
+	tb_sb.bg_color = Color(0.06, 0.08, 0.18, 1.0)
+	toolbar_bg.add_theme_stylebox_override("panel", tb_sb)
+	root_vbox.add_child(toolbar_bg)
+
 	var toolbar := HBoxContainer.new()
-	toolbar.layout_mode = 1
-	toolbar.anchor_left = 0.0; toolbar.anchor_right  = 1.0
-	toolbar.anchor_top  = 0.0; toolbar.anchor_bottom = 0.0
-	toolbar.offset_bottom = 44.0
 	toolbar.add_theme_constant_override("separation", 8)
-	var tb_bg := StyleBoxFlat.new()
-	tb_bg.bg_color = Color(0.06, 0.08, 0.18, 1.0)
-	toolbar.add_theme_stylebox_override("panel", tb_bg)
-	add_child(toolbar)
+	toolbar_bg.add_child(toolbar)
 
 	var title_lbl := Label.new()
 	title_lbl.text = "  Exploration Items"
@@ -88,14 +95,11 @@ func _build_ui() -> void:
 	var back_btn := _make_btn("← Back", func() -> void: queue_free())
 	toolbar.add_child(back_btn)
 
-	# Two-column layout: list (left) + edit panel (right)
+	# ── Two-column body ─────────────────────────────────────────────
 	var cols := HBoxContainer.new()
-	cols.layout_mode = 1
-	cols.anchor_left = 0.0; cols.anchor_right  = 1.0
-	cols.anchor_top  = 0.0; cols.anchor_bottom = 1.0
-	cols.offset_top  = 44.0
+	cols.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	cols.add_theme_constant_override("separation", 0)
-	add_child(cols)
+	root_vbox.add_child(cols)
 
 	# Left: item list
 	var list_scroll := ScrollContainer.new()
@@ -113,11 +117,11 @@ func _build_ui() -> void:
 
 	# Right: edit panel (initially hidden)
 	_edit_panel = Panel.new()
-	_edit_panel.custom_minimum_size = Vector2(540.0, 0.0)
-	_edit_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_edit_panel.visible             = false
+	_edit_panel.custom_minimum_size  = Vector2(540.0, 0.0)
+	_edit_panel.size_flags_vertical  = Control.SIZE_EXPAND_FILL
+	_edit_panel.visible              = false
 	var ep_sb := StyleBoxFlat.new()
-	ep_sb.bg_color = Color(0.06, 0.08, 0.18, 1.0)
+	ep_sb.bg_color         = Color(0.06, 0.08, 0.18, 1.0)
 	ep_sb.border_width_left = 2
 	ep_sb.border_color      = Color(0.35, 0.60, 1.0, 0.30)
 	_edit_panel.add_theme_stylebox_override("panel", ep_sb)
@@ -150,8 +154,8 @@ func _build_edit_panel() -> void:
 	# ── Fields ─────────────────────────────────────────────
 	_ef_id   = _make_field_row(vbox, "ID",          "item_id (no spaces)")
 	_ef_name = _make_field_row(vbox, "Name",        "Display name")
-	_ef_icon = _make_field_row(vbox, "Icon",        "res:// path to small icon")
-	_ef_big_image = _make_field_row(vbox, "Big Image", "res:// path to large preview")
+	_ef_icon = _make_image_field_row(vbox, "Icon",      "res:// path to small icon")
+	_ef_big_image = _make_image_field_row(vbox, "Big Image", "res:// path to large preview")
 
 	# Description (multi-line)
 	vbox.add_child(_make_label("Description"))
@@ -371,6 +375,34 @@ func _make_field_row(parent: Control, label_text: String, placeholder: String) -
 	le.add_theme_font_size_override("font_size", 14)
 	parent.add_child(le)
 	return le
+
+func _make_image_field_row(parent: Control, label_text: String, placeholder: String) -> LineEdit:
+	parent.add_child(_make_label(label_text))
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	parent.add_child(row)
+	var le := LineEdit.new()
+	le.placeholder_text      = placeholder
+	le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	le.add_theme_font_size_override("font_size", 14)
+	row.add_child(le)
+	var browse_btn := Button.new()
+	browse_btn.text = "…"
+	browse_btn.custom_minimum_size = Vector2(32.0, 0.0)
+	browse_btn.add_theme_font_size_override("font_size", 14)
+	browse_btn.pressed.connect(func() -> void: _browse_for_image(le))
+	row.add_child(browse_btn)
+	return le
+
+func _browse_for_image(target: LineEdit) -> void:
+	var dialog := FileDialog.new()
+	dialog.file_mode   = FileDialog.FILE_MODE_OPEN_FILE
+	dialog.filters     = PackedStringArray(["*.png,*.jpg,*.jpeg,*.webp ; Image Files"])
+	dialog.access      = FileDialog.ACCESS_RESOURCES
+	dialog.current_dir = "res://assets/textures"
+	dialog.file_selected.connect(func(path: String) -> void: target.text = path)
+	add_child(dialog)
+	dialog.popup_centered(Vector2(900, 600))
 
 func _make_btn(text: String, cb: Callable) -> Button:
 	var btn := Button.new()

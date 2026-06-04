@@ -63,6 +63,9 @@ signal var_changed(key: String, value: String)
 ## Emitted by events with action="show_message". UI displays this as a toast.
 signal message_posted(text: String)
 
+## Emitted when an item is added to the session inventory. UI shows the item-obtained overlay.
+signal item_obtained(item_id: String)
+
 # ─────────────────────────────────────────────────────────────
 # Public configuration (set before launch / start_session)
 # ─────────────────────────────────────────────────────────────
@@ -85,6 +88,7 @@ var _node_history: Array[String] = []
 var _inventory: Array[String] = []
 var _vars: Dictionary = {}
 var _played_vn_scenes: Dictionary = {}   # path → true; tracks once-only VN scenes played this session
+var _interacted_spots: Dictionary = {}   # "node_id:spot_index" → true; one-time spots already used
 
 # Accumulated rewards — applied to main game when end_session(carry_rewards=true) is called.
 # { "credits": int, "flags": { key: value, ... } }
@@ -181,6 +185,7 @@ func _reset_session_state() -> void:
 	_inventory.clear()
 	_vars.clear()
 	_played_vn_scenes.clear()
+	_interacted_spots.clear()
 	_session_rewards   = {}
 	_clear_saved_session()
 
@@ -195,6 +200,15 @@ func mark_vn_played(path: String) -> void:
 func is_vn_played(path: String) -> bool:
 	return _played_vn_scenes.has(path)
 
+## Mark a one-time investigable spot (identified by node_id + index) as interacted.
+func mark_spot_interacted(node_id: String, spot_index: int) -> void:
+	_interacted_spots[node_id + ":" + str(spot_index)] = true
+	_save_session_state()
+
+## Returns true if the given spot has already been interacted with this session.
+func is_spot_interacted(node_id: String, spot_index: int) -> bool:
+	return _interacted_spots.has(node_id + ":" + str(spot_index))
+
 ## Save current session state to SaveManager so it survives a game restart.
 ## Called automatically on every navigation, inventory, and variable change.
 func _save_session_state() -> void:
@@ -208,6 +222,7 @@ func _save_session_state() -> void:
 		"inventory":         _inventory.duplicate(),
 		"vars":              _vars.duplicate(),
 		"played_vn_scenes":  _played_vn_scenes.keys(),
+		"interacted_spots":  _interacted_spots.keys(),
 		"rewards":           _session_rewards.duplicate(true),
 		"return_scene":      return_scene,
 	}
@@ -250,6 +265,11 @@ func restore_saved_session() -> bool:
 	if pvn is Array:
 		for p: Variant in (pvn as Array):
 			_played_vn_scenes[str(p)] = true
+	_interacted_spots.clear()
+	var isp: Variant  = sd.get("interacted_spots", [])
+	if isp is Array:
+		for s: Variant in (isp as Array):
+			_interacted_spots[str(s)] = true
 	return_scene      = str(sd.get("return_scene", "res://scenes/main_menu.tscn"))
 	_current_node_id  = str(sd.get("current_node_id", graph.start_node_id))
 	emit_signal("session_started", graph)
@@ -371,6 +391,7 @@ func add_item(item: String) -> void:
 		return
 	_inventory.append(item)
 	emit_signal("inventory_changed", _inventory.duplicate())
+	emit_signal("item_obtained", item)
 	_save_session_state()
 
 ## Remove one instance of an item from the session inventory.

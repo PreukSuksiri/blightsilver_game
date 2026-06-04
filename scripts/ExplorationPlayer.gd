@@ -25,8 +25,15 @@ const MAGNIFIER_CURSOR: String = "res://assets/textures/ui/decorations/ui_icon_m
 const FINGER_CURSOR: String    = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
 const COMPASS_SIZE: float  = 110.0  # icon width/height in pixels
 const RADIAL_RADIUS: float = 210.0  # distance from center to item midpoint
-const RADIAL_ITEM_W: float = 180.0  # radial button width
-const RADIAL_ITEM_H: float = 54.0   # radial button height
+const RADIAL_ITEM_W: float = 180.0  # radial button width (settings / inventory / chat)
+const RADIAL_ITEM_H: float = 54.0   # radial button height (settings / inventory / chat)
+const NAV_RADIAL_ITEM_W_MIN: float = 180.0
+const NAV_RADIAL_ITEM_W_MAX: float = 220.0
+const NAV_RADIAL_ITEM_H_MIN: float = 54.0
+const NAV_RADIAL_ITEM_H_MAX: float = 72.0
+const NAV_RADIAL_FONT_SIZE: int    = 17
+const NAV_RADIAL_PAD_H: float      = 24.0   # total horizontal inset inside nav chip
+const NAV_RADIAL_PAD_V: float      = 16.0   # total vertical inset inside nav chip
 const BG_AREA_FRACTION: float = 0.80  # fraction of viewport width used by the background area
 const ICON_SPACING: float  = 180.0  # horizontal gap between compass center and side icon centers
 const ITEMS_PER_PAGE: int  = 7      # max items shown per inventory radial page
@@ -55,6 +62,7 @@ var _compass_root: Control        = null   # full-screen layer holding all 3 ico
 var _compass_icon: TextureRect    = null   # the compass texture
 var _compass_hit: Button          = null   # invisible click area over the icon
 var _radial_overlay: Control      = null   # full-screen click-catcher (outside dismiss)
+var _radial_menu_layer: Control   = null   # top z-layer for open radial submenu panels
 var _radial_items: Array          = []     # currently shown radial PanelContainers (compass)
 var _compass_open: bool           = false
 var _compass_animating: bool      = false
@@ -102,8 +110,14 @@ var _info_panel_hovered: bool                = false   # polled each frame; guar
 var _info_wait_for_mouse: bool               = false   # true after auto-open: dismiss blocked until mouse moves
 var _info_mouse_wait_timer: SceneTreeTimer   = null    # 5s fallback: forces dismiss mode even without mouse move
 
-# ── Item preview overlay ──────────────────────────────────────────────────
+# ── Item preview overlay (inventory tap-to-inspect) ──────────────────────
 var _item_preview: Control        = null
+
+# ── Item-obtained overlay (awarded item cinematic) ────────────────────────
+var _obtained_overlay: Control              = null
+var _obtained_queue: Array[String]          = []
+var _obtained_dismiss_timer: SceneTreeTimer = null
+var _obtained_dismissing: bool              = false
 
 # ── Cursors ───────────────────────────────────────────────────────────────
 var _default_tex: Texture2D       = null
@@ -154,6 +168,7 @@ func _ready() -> void:
 func _connect_signals() -> void:
 	ExplorationManager.node_entered.connect(_on_node_entered)
 	ExplorationManager.message_posted.connect(_show_toast)
+	ExplorationManager.item_obtained.connect(_on_item_obtained)
 
 # ─────────────────────────────────────────────────────────────
 # UI Construction
@@ -314,8 +329,7 @@ func _build_ui() -> void:
 	# ── Point-and-click spot layer ────────────────────────────
 	_build_spots_layer()
 	_build_tooltip()
-	if ResourceLoader.exists(MAGNIFIER_CURSOR):
-		_magnifier_tex = load(MAGNIFIER_CURSOR) as Texture2D
+	_magnifier_tex = _load_cursor_tex(MAGNIFIER_CURSOR)
 
 	# ── Compass radial navigation ─────────────────────────────
 	_build_compass_system()
@@ -374,6 +388,10 @@ func _reflow_layout() -> void:
 	_bg_rect.size      = Vector2(sw, sh)
 	_content_panel.position = Vector2(sw * BG_AREA_FRACTION, 0.0)
 	_content_panel.size     = Vector2(sw * (1.0 - BG_AREA_FRACTION), sh)
+	if _radial_overlay != null:
+		_radial_overlay.size = vp_size
+	if _radial_menu_layer != null:
+		_radial_menu_layer.size = vp_size
 
 # ─────────────────────────────────────────────────────────────
 # Compass Radial Menu
@@ -382,14 +400,14 @@ func _reflow_layout() -> void:
 func _build_compass_system() -> void:
 	# Root layer — always visible, holds all three bottom icons.
 	_compass_root = Control.new()
-	_compass_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_compass_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_compass_root.z_index      = 30
 	_compass_root.visible      = true
 	add_child(_compass_root)
+	_compass_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 	# Viewport size for positioning.
-	var vp: Vector2 = get_viewport().get_visible_rect().size
+	var vp: Vector2 = get_viewport_rect().size
 	if vp == Vector2.ZERO:
 		vp = Vector2(1600.0, 900.0)
 	var bottom_y: float = vp.y - COMPASS_SIZE - 24.0
@@ -399,15 +417,26 @@ func _build_compass_system() -> void:
 	_compass_idle_pos   = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, bottom_y)
 	_compass_center_pos = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, center_y)
 
-	# Full-screen click-catcher — direct child of ExplorationPlayer so it is NOT inside
-	# the MOUSE_FILTER_IGNORE compass_root. z_index=25 puts it above scene (0) but below
-	# the icons layer (30), so radial items and icon hits are still reachable.
+	# Full-screen click-catcher — sibling below icons (z=30) and radial items (z=40).
+	# Dismisses open menus when the player taps outside interactive HUD elements.
 	_radial_overlay = Control.new()
-	_radial_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_radial_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	_radial_overlay.z_index      = 25
 	_radial_overlay.visible      = false
-	add_child(_radial_overlay)   # ← parent is ExplorationPlayer, not compass_root
+	_radial_overlay.position     = Vector2.ZERO
+	_radial_overlay.size         = vp
+	_radial_overlay.gui_input.connect(_on_radial_overlay_gui_input)
+	add_child(_radial_overlay)
+
+	# Radial submenu panels live here (not under MOUSE_FILTER_IGNORE compass_root) so
+	# taps reliably reach them above the dismiss overlay and below nothing else.
+	_radial_menu_layer = Control.new()
+	_radial_menu_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_radial_menu_layer.z_index      = 40
+	_radial_menu_layer.visible      = true
+	_radial_menu_layer.position     = Vector2.ZERO
+	_radial_menu_layer.size         = vp
+	add_child(_radial_menu_layer)
 
 	_compass_icon          = TextureRect.new()
 	_compass_icon.position = _compass_idle_pos
@@ -674,6 +703,7 @@ func _close_compass_menu(animated: bool = true) -> void:
 	if _compass_animating and _compass_open == false:
 		return
 	_compass_open = false
+	_hide_tooltip()
 
 	# Remove radial items immediately
 	for item: Variant in _radial_items:
@@ -697,63 +727,22 @@ func _close_compass_menu(animated: bool = true) -> void:
 
 func _spawn_radial_items(unlocked: Array) -> void:
 	var n: int      = unlocked.size()
-	var screen_cx: float = 800.0
-	var screen_cy: float = 450.0
+	var vp: Vector2 = get_viewport_rect().size
+	var screen_cx: float = vp.x * 0.5
+	var screen_cy: float = vp.y * 0.5
+	var pad: float  = 8.0   # minimum inset from screen edge
 
 	for i: int in range(n):
 		var conn: Dictionary = unlocked[i] as Dictionary
 		var label_text: String = str(conn.get("label", "Continue"))
+		var target_id: String  = str(conn.get("target", ""))
 
 		# Angle: start at top (−90°), spread clockwise
 		var angle: float = (-PI * 0.5) + float(i) * (TAU / float(n))
 		var item_cx: float = screen_cx + cos(angle) * RADIAL_RADIUS
 		var item_cy: float = screen_cy + sin(angle) * RADIAL_RADIUS
-		var item_x: float  = item_cx - RADIAL_ITEM_W * 0.5
-		var item_y: float  = item_cy - RADIAL_ITEM_H * 0.5
-
-		var panel := PanelContainer.new()
-		panel.custom_minimum_size = Vector2(RADIAL_ITEM_W, RADIAL_ITEM_H)
-		panel.position  = Vector2(item_x, item_y)
-		panel.modulate.a = 0.0
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
-		sb.set_border_width_all(1)
-		sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
-		sb.set_corner_radius_all(8)
-		sb.content_margin_left = 12.0; sb.content_margin_right  = 12.0
-		sb.content_margin_top  = 8.0;  sb.content_margin_bottom = 8.0
-		panel.add_theme_stylebox_override("panel", sb)
-
-		var lbl := Label.new()
-		lbl.text = label_text
-		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-		lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
-		lbl.add_theme_font_size_override("font_size", 17)
-		lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
-		lbl.add_theme_font_override("font", _make_font(500))
-		panel.add_child(lbl)
-
-		# Make the whole panel clickable
-		panel.mouse_filter = Control.MOUSE_FILTER_STOP
-		var target_id: String = str(conn.get("target", ""))
-		panel.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton:
-				var mb: InputEventMouseButton = ev as InputEventMouseButton
-				if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-					_on_radial_item_selected(target_id))
-
-		# Hover highlight
-		panel.mouse_entered.connect(func() -> void:
-			sb.bg_color = Color(0.10, 0.22, 0.48, 0.97)
-			sb.border_color = Color(0.65, 0.88, 1.0, 1.0))
-		panel.mouse_exited.connect(func() -> void:
-			sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
-			sb.border_color = Color(0.45, 0.70, 1.0, 0.85))
-
-		_compass_root.add_child(panel)
-		_radial_items.append(panel)
-		_hook_cursor(panel)
+		var panel: PanelContainer = _make_nav_radial_panel(label_text, target_id, item_cx, item_cy, vp, pad)
+		_add_radial_menu_panel(panel, _radial_items)
 
 		# Fade in with slight stagger
 		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
@@ -842,8 +831,10 @@ func _close_setting_menu(animated: bool = true) -> void:
 	_setting_animating = false
 
 func _spawn_setting_radial_items(center: Vector2) -> void:
-	var cx: float = center.x + COMPASS_SIZE * 0.5
-	var cy: float = center.y + COMPASS_SIZE * 0.5
+	var cx: float  = center.x + COMPASS_SIZE * 0.5
+	var cy: float  = center.y + COMPASS_SIZE * 0.5
+	var vp: Vector2 = get_viewport_rect().size
+	var pad: float  = 8.0
 	var choices: Array = [
 		{"label": "Save and Exit",  "action": "save_exit"},
 		{"label": "Restart Stage",  "action": "restart"},
@@ -855,26 +846,25 @@ func _spawn_setting_radial_items(center: Vector2) -> void:
 		var item_cx: float = cx + cos(angle) * RADIAL_RADIUS
 		var item_cy: float = cy + sin(angle) * RADIAL_RADIUS
 		var panel: PanelContainer = _make_radial_panel(
-			Vector2(item_cx - RADIAL_ITEM_W * 0.5, item_cy - RADIAL_ITEM_H * 0.5),
-			Color(0.20, 0.04, 0.04, 0.94), Color(1.0, 0.55, 0.45, 0.85))
+			Vector2(clampf(item_cx - RADIAL_ITEM_W * 0.5, pad, vp.x - RADIAL_ITEM_W - pad),
+					clampf(item_cy - RADIAL_ITEM_H * 0.5, pad, vp.y - RADIAL_ITEM_H - pad)),
+			Color(0.04, 0.08, 0.20, 0.94), Color(0.45, 0.70, 1.0, 0.85))
 		var lbl := Label.new()
 		lbl.text = str(choices[i].get("label", ""))
-		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-		lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
+		lbl.horizontal_alignment  = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.vertical_alignment    = VERTICAL_ALIGNMENT_CENTER
+		lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		lbl.mouse_filter          = Control.MOUSE_FILTER_IGNORE
 		lbl.add_theme_font_size_override("font_size", 17)
-		lbl.add_theme_color_override("font_color", Color(1.0, 0.88, 0.85))
+		lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
 		lbl.add_theme_font_override("font", _make_font(500))
 		panel.add_child(lbl)
 		var action: String = str(choices[i].get("action", ""))
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton:
-				var mb := ev as InputEventMouseButton
-				if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-					_on_setting_action(action))
-		_compass_root.add_child(panel)
-		_setting_radial_items.append(panel)
-		_hook_cursor(panel)
+			if _is_press_event(ev):
+				_on_setting_action(action))
+		_add_radial_menu_panel(panel, _setting_radial_items)
 		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 		fade_tw.tween_interval(float(i) * 0.04)
 		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
@@ -893,7 +883,9 @@ func _on_setting_action(action: String) -> void:
 				"Restart Stage?",
 				"All progress will be lost.",
 				func() -> void:
-					_navigate_with_fade(func() -> void: ExplorationManager.restart_stage()))
+					CheckerTransition.fade_out_to_battle(func() -> void:
+						ExplorationManager.restart_stage()
+						CheckerTransition.fade_in()))
 		"options":
 			var sm: Node = load("res://scenes/settings_menu.tscn").instantiate()
 			add_child(sm)
@@ -998,9 +990,11 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 	if has_more:
 		choices.append({"type": "more"})
 
-	var n: int     = choices.size()
-	var cx: float  = center.x + COMPASS_SIZE * 0.5
-	var cy: float  = center.y + COMPASS_SIZE * 0.5
+	var n: int      = choices.size()
+	var cx: float   = center.x + COMPASS_SIZE * 0.5
+	var cy: float   = center.y + COMPASS_SIZE * 0.5
+	var vp: Vector2 = get_viewport_rect().size
+	var pad: float  = 8.0
 
 	for i: int in range(n):
 		var choice: Dictionary = choices[i] as Dictionary
@@ -1008,8 +1002,9 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 		var item_cx: float = cx + cos(angle) * RADIAL_RADIUS
 		var item_cy: float = cy + sin(angle) * RADIAL_RADIUS
 		var panel: PanelContainer = _make_radial_panel(
-			Vector2(item_cx - RADIAL_ITEM_W * 0.5, item_cy - RADIAL_ITEM_H * 0.5),
-			Color(0.04, 0.14, 0.08, 0.94), Color(0.35, 0.80, 0.45, 0.85))
+			Vector2(clampf(item_cx - RADIAL_ITEM_W * 0.5, pad, vp.x - RADIAL_ITEM_W - pad),
+					clampf(item_cy - RADIAL_ITEM_H * 0.5, pad, vp.y - RADIAL_ITEM_H - pad)),
+			Color(0.04, 0.08, 0.20, 0.94), Color(0.45, 0.70, 1.0, 0.85))
 
 		var choice_type: String = str(choice.get("type", ""))
 		if choice_type == "item":
@@ -1021,7 +1016,8 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 
 			var inner := HBoxContainer.new()
 			inner.add_theme_constant_override("separation", 6)
-			inner.alignment = BoxContainer.ALIGNMENT_CENTER
+			inner.alignment   = BoxContainer.ALIGNMENT_CENTER
+			inner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			panel.add_child(inner)
 
 			if not icon_path.is_empty() and ResourceLoader.exists(icon_path):
@@ -1035,38 +1031,34 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 
 			var lbl := Label.new()
 			lbl.text = item_name if count == 1 else "%s ×%d" % [item_name, count]
-			lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			lbl.autowrap_mode      = TextServer.AUTOWRAP_WORD_SMART
+			lbl.vertical_alignment    = VERTICAL_ALIGNMENT_CENTER
+			lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			lbl.add_theme_font_size_override("font_size", 16)
-			lbl.add_theme_color_override("font_color", Color(0.85, 1.0, 0.88))
+			lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
 			lbl.add_theme_font_override("font", _make_font(500))
 			inner.add_child(lbl)
 
 			var captured_id: String = item_id
 			panel.gui_input.connect(func(ev: InputEvent) -> void:
-				if ev is InputEventMouseButton:
-					var mb := ev as InputEventMouseButton
-					if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-						_on_inventory_item_selected(captured_id))
+				if _is_press_event(ev):
+					_on_inventory_item_selected(captured_id))
 		else:
 			var nav_lbl := Label.new()
 			nav_lbl.text = "▶ More" if choice_type == "more" else "◀ Back"
 			nav_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			nav_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+			nav_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
 			nav_lbl.add_theme_font_size_override("font_size", 16)
 			nav_lbl.add_theme_color_override("font_color", Color(0.75, 0.90, 1.0))
 			nav_lbl.add_theme_font_override("font", _make_font(500))
 			panel.add_child(nav_lbl)
 			var target_page: int = page + 1 if choice_type == "more" else page - 1
 			panel.gui_input.connect(func(ev: InputEvent) -> void:
-				if ev is InputEventMouseButton:
-					var mb := ev as InputEventMouseButton
-					if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-						_open_inventory_menu(target_page))
+				if _is_press_event(ev):
+					_open_inventory_menu(target_page))
 
-		_compass_root.add_child(panel)
-		_inv_radial_items.append(panel)
-		_hook_cursor(panel)
+		_add_radial_menu_panel(panel, _inv_radial_items)
 		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 		fade_tw.tween_interval(float(i) * 0.04)
 		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
@@ -1163,9 +1155,11 @@ func _close_chat_menu(animated: bool = true) -> void:
 	_chat_animating = false
 
 func _spawn_chat_radial_items(center: Vector2, available: Array) -> void:
-	var cx: float = center.x + COMPASS_SIZE * 0.5
-	var cy: float = center.y + COMPASS_SIZE * 0.5
-	var n: int    = available.size()
+	var cx: float   = center.x + COMPASS_SIZE * 0.5
+	var cy: float   = center.y + COMPASS_SIZE * 0.5
+	var vp: Vector2 = get_viewport_rect().size
+	var pad: float  = 8.0
+	var n: int      = available.size()
 	for i: int in range(n):
 		var char_data: Dictionary = available[i] as Dictionary
 		var char_name: String = str(char_data.get("name", "???"))
@@ -1173,13 +1167,16 @@ func _spawn_chat_radial_items(center: Vector2, available: Array) -> void:
 		var item_cx: float = cx + cos(angle) * RADIAL_RADIUS
 		var item_cy: float = cy + sin(angle) * RADIAL_RADIUS
 		var panel: PanelContainer = _make_radial_panel(
-			Vector2(item_cx - RADIAL_ITEM_W * 0.5, item_cy - RADIAL_ITEM_H * 0.5),
-			Color(0.04, 0.10, 0.20, 0.94), Color(0.45, 0.70, 1.0, 0.85))
+			Vector2(clampf(item_cx - RADIAL_ITEM_W * 0.5, pad, vp.x - RADIAL_ITEM_W - pad),
+					clampf(item_cy - RADIAL_ITEM_H * 0.5, pad, vp.y - RADIAL_ITEM_H - pad)),
+			Color(0.04, 0.08, 0.20, 0.94), Color(0.45, 0.70, 1.0, 0.85))
 		var lbl := Label.new()
 		lbl.text = char_name
-		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-		lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
+		lbl.horizontal_alignment  = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.vertical_alignment    = VERTICAL_ALIGNMENT_CENTER
+		lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		lbl.mouse_filter          = Control.MOUSE_FILTER_IGNORE
 		lbl.add_theme_font_size_override("font_size", 17)
 		lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
 		lbl.add_theme_font_override("font", _make_font(500))
@@ -1187,13 +1184,9 @@ func _spawn_chat_radial_items(center: Vector2, available: Array) -> void:
 		var vn_path: String   = str(char_data.get("vn_scene", ""))
 		var play_once_c: bool = bool(char_data.get("play_once", true))
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
-			if ev is InputEventMouseButton:
-				var mb := ev as InputEventMouseButton
-				if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-					_on_chat_character_selected(vn_path, play_once_c))
-		_compass_root.add_child(panel)
-		_chat_radial_items.append(panel)
-		_hook_cursor(panel)
+			if _is_press_event(ev):
+				_on_chat_character_selected(vn_path, play_once_c))
+		_add_radial_menu_panel(panel, _chat_radial_items)
 		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 		fade_tw.tween_interval(float(i) * 0.04)
 		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
@@ -1390,17 +1383,21 @@ func _show_item_preview(item_id: String) -> void:
 		_show_toast("Unknown item.")
 		return
 
+	var vp_sz: Vector2 = get_viewport_rect().size
+
 	var overlay := Control.new()
-	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
-	overlay.z_index = 50
-	_item_preview = overlay
+	overlay.z_index  = 50
+	overlay.position = Vector2.ZERO
+	overlay.size     = vp_sz
+	_item_preview    = overlay
 	add_child(overlay)
 
 	# Dim background
 	var dimmer := ColorRect.new()
-	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dimmer.color        = Color(0.0, 0.0, 0.0, 0.70)
 	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	dimmer.position     = Vector2.ZERO
+	dimmer.size         = vp_sz
 	dimmer.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton and (ev as InputEventMouseButton).pressed:
 			_close_item_preview())
@@ -1409,23 +1406,23 @@ func _show_item_preview(item_id: String) -> void:
 	# Center panel
 	var panel := Panel.new()
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.03, 0.07, 0.04, 0.97)
+	sb.bg_color = Color(0.04, 0.06, 0.14, 0.97)
 	sb.set_border_width_all(2)
-	sb.border_color = Color(0.35, 0.85, 0.45, 0.70)
+	sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
 	sb.set_corner_radius_all(10)
 	panel.add_theme_stylebox_override("panel", sb)
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.size     = Vector2(480.0, 520.0)
-	panel.position = -panel.size * 0.5
+	var dlg_size := Vector2(480.0, 520.0)
+	panel.size         = dlg_size
+	panel.position     = (vp_sz - dlg_size) * 0.5
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	overlay.add_child(panel)
 
 	var vbox := VBoxContainer.new()
-	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vbox.offset_left = 24.0; vbox.offset_right  = -24.0
-	vbox.offset_top  = 24.0; vbox.offset_bottom = -24.0
 	vbox.add_theme_constant_override("separation", 14)
 	panel.add_child(vbox)
+	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	vbox.offset_left = 24.0; vbox.offset_right  = -24.0
+	vbox.offset_top  = 24.0; vbox.offset_bottom = -24.0
 
 	# Big image
 	var big_path: String = str(item.get("big_image", ""))
@@ -1444,7 +1441,7 @@ func _show_item_preview(item_id: String) -> void:
 	name_lbl.text = str(item.get("name", item_id))
 	name_lbl.add_theme_font_override("font", _make_font(700))
 	name_lbl.add_theme_font_size_override("font_size", 26)
-	name_lbl.add_theme_color_override("font_color", Color(0.85, 1.0, 0.88))
+	name_lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
 	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(name_lbl)
 
@@ -1455,7 +1452,7 @@ func _show_item_preview(item_id: String) -> void:
 	desc_lbl.custom_minimum_size   = Vector2(0.0, 60.0)
 	desc_lbl.size_flags_vertical   = Control.SIZE_EXPAND_FILL
 	desc_lbl.add_theme_font_size_override("normal_font_size", 18)
-	desc_lbl.add_theme_color_override("default_color", Color(0.78, 0.92, 0.82, 0.95))
+	desc_lbl.add_theme_color_override("default_color", Color(0.78, 0.88, 0.96, 0.95))
 	desc_lbl.append_text(str(item.get("description", "")))
 	vbox.add_child(desc_lbl)
 
@@ -1468,7 +1465,7 @@ func _show_item_preview(item_id: String) -> void:
 	var use_btn := Button.new()
 	use_btn.text = "  Use  "
 	use_btn.add_theme_font_size_override("font_size", 20)
-	use_btn.add_theme_color_override("font_color", Color(0.85, 1.0, 0.88))
+	use_btn.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
 	use_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var captured_id: String = item_id
 	use_btn.pressed.connect(func() -> void:
@@ -1488,6 +1485,135 @@ func _close_item_preview() -> void:
 	if _item_preview != null and is_instance_valid(_item_preview):
 		_item_preview.queue_free()
 	_item_preview = null
+
+# ─────────────────────────────────────────────────────────────
+# Item-Obtained Overlay
+# ─────────────────────────────────────────────────────────────
+
+func _on_item_obtained(item_id: String) -> void:
+	_obtained_queue.append(item_id)
+	if _obtained_overlay == null:
+		_show_next_obtained()
+
+func _show_next_obtained() -> void:
+	if _obtained_queue.is_empty():
+		return
+	var item_id: String = _obtained_queue[0]
+	_obtained_queue.remove_at(0)
+	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
+	if item.is_empty():
+		_show_next_obtained()
+		return
+
+	_obtained_dismissing = false
+	var vp_size: Vector2 = get_viewport_rect().size
+
+	var overlay := Control.new()
+	overlay.z_index    = 95
+	overlay.modulate.a = 0.0
+	overlay.position   = Vector2.ZERO
+	overlay.size       = vp_size
+	_obtained_overlay  = overlay
+	add_child(overlay)
+
+	# Dim
+	var dim := ColorRect.new()
+	dim.color        = Color(0.0, 0.0, 0.0, 0.82)
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	dim.position     = Vector2.ZERO
+	dim.size         = vp_size
+	overlay.add_child(dim)
+
+	# Full-screen tap-to-dismiss catcher
+	var tapper := ColorRect.new()
+	tapper.color        = Color(0.0, 0.0, 0.0, 0.0)
+	tapper.mouse_filter = Control.MOUSE_FILTER_STOP
+	tapper.position     = Vector2.ZERO
+	tapper.size         = vp_size
+	tapper.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton:
+			var mb := ev as InputEventMouseButton
+			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+				_dismiss_obtained_overlay())
+	overlay.add_child(tapper)
+
+	# Centred content
+	var center := CenterContainer.new()
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	center.position     = Vector2.ZERO
+	center.size         = vp_size
+	overlay.add_child(center)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 24)
+	vbox.alignment  = BoxContainer.ALIGNMENT_CENTER
+	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	center.add_child(vbox)
+
+	# Image — prefer big_image, fall back to icon
+	var big_path: String  = str(item.get("big_image", ""))
+	var icon_path: String = str(item.get("icon",      ""))
+	var img_tr := TextureRect.new()
+	img_tr.expand_mode         = TextureRect.EXPAND_IGNORE_SIZE
+	img_tr.stretch_mode        = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	img_tr.custom_minimum_size = Vector2(0.0, 340.0)
+	img_tr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	img_tr.mouse_filter        = Control.MOUSE_FILTER_IGNORE
+	if not big_path.is_empty() and ResourceLoader.exists(big_path):
+		img_tr.texture = load(big_path) as Texture2D
+	elif not icon_path.is_empty() and ResourceLoader.exists(icon_path):
+		img_tr.texture = load(icon_path) as Texture2D
+	vbox.add_child(img_tr)
+
+	# "Obtained  <Name>" label
+	var name_str: String = str(item.get("name", item_id))
+	var name_lbl := Label.new()
+	name_lbl.text = "Obtained  " + name_str
+	name_lbl.add_theme_font_override("font", _make_font(700))
+	name_lbl.add_theme_font_size_override("font_size", 38)
+	name_lbl.add_theme_color_override("font_color", Color(1.0, 0.95, 0.75))
+	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(name_lbl)
+
+	# Hint
+	var hint_lbl := Label.new()
+	hint_lbl.text = "Tap to dismiss"
+	hint_lbl.add_theme_font_size_override("font_size", 16)
+	hint_lbl.add_theme_color_override("font_color", Color(0.55, 0.60, 0.65))
+	hint_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(hint_lbl)
+
+	# Fade in
+	var tw := create_tween()
+	tw.tween_property(overlay, "modulate:a", 1.0, 0.45).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+
+	# 5-second auto-dismiss
+	_obtained_dismiss_timer = get_tree().create_timer(5.0)
+	_obtained_dismiss_timer.timeout.connect(func() -> void:
+		if _obtained_overlay == null or not is_instance_valid(_obtained_overlay):
+			return
+		_obtained_dismiss_timer = null
+		_dismiss_obtained_overlay())
+
+func _dismiss_obtained_overlay() -> void:
+	if _obtained_dismissing:
+		return
+	if _obtained_overlay == null or not is_instance_valid(_obtained_overlay):
+		_obtained_overlay = null
+		_show_next_obtained()
+		return
+	_obtained_dismissing = true
+	_obtained_dismiss_timer = null
+	var ov: Control = _obtained_overlay
+	_obtained_overlay = null
+	var tw := create_tween()
+	tw.tween_property(ov, "modulate:a", 0.0, 0.30).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+	tw.tween_callback(ov.queue_free)
+	tw.tween_callback(func() -> void:
+		_obtained_dismissing = false
+		_show_next_obtained())
 
 func _execute_item_effects(item_id: String) -> void:
 	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
@@ -1535,10 +1661,152 @@ func _execute_item_effects(item_id: String) -> void:
 # Shared Radial Helpers
 # ─────────────────────────────────────────────────────────────
 
+func _measure_nav_radial_chip(label_text: String) -> Vector2:
+	var font := _make_font(500)
+	var inner_w_max: float = NAV_RADIAL_ITEM_W_MAX - NAV_RADIAL_PAD_H
+	var single_w: float = font.get_string_size(
+		label_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, NAV_RADIAL_FONT_SIZE).x
+	var chip_w: float = NAV_RADIAL_ITEM_W_MAX
+	if single_w <= inner_w_max:
+		chip_w = clampf(single_w + NAV_RADIAL_PAD_H, NAV_RADIAL_ITEM_W_MIN, NAV_RADIAL_ITEM_W_MAX)
+	var inner_w: float = chip_w - NAV_RADIAL_PAD_H
+	var ml_size: Vector2 = font.get_multiline_string_size(
+		label_text, HORIZONTAL_ALIGNMENT_CENTER, inner_w, NAV_RADIAL_FONT_SIZE, 2)
+	var chip_h: float = clampf(ml_size.y + NAV_RADIAL_PAD_V, NAV_RADIAL_ITEM_H_MIN, NAV_RADIAL_ITEM_H_MAX)
+	return Vector2(chip_w, chip_h)
+
+func _nav_label_needs_tooltip(label_text: String, chip_w: float, chip_h: float) -> bool:
+	var font := _make_font(500)
+	var inner_w: float = chip_w - NAV_RADIAL_PAD_H
+	var inner_h: float = chip_h - NAV_RADIAL_PAD_V
+	var full_size: Vector2 = font.get_multiline_string_size(
+		label_text, HORIZONTAL_ALIGNMENT_CENTER, inner_w, NAV_RADIAL_FONT_SIZE, -1)
+	return full_size.y > inner_h + 0.5 or full_size.x > inner_w + 0.5
+
+func _make_nav_radial_panel(
+		label_text: String,
+		target_id: String,
+		item_cx: float,
+		item_cy: float,
+		vp: Vector2,
+		pad: float) -> PanelContainer:
+	var chip_size: Vector2 = _measure_nav_radial_chip(label_text)
+	var item_w: float = chip_size.x
+	var item_h: float = chip_size.y
+	var item_x: float = clampf(item_cx - item_w * 0.5, pad, vp.x - item_w - pad)
+	var item_y: float = clampf(item_cy - item_h * 0.5, pad, vp.y - item_h - pad)
+	var needs_tooltip: bool = _nav_label_needs_tooltip(label_text, item_w, item_h)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(item_w, item_h)
+	panel.size       = Vector2(item_w, item_h)
+	panel.position   = Vector2(item_x, item_y)
+	panel.modulate.a = 0.0
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
+	sb.set_border_width_all(1)
+	sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
+	sb.set_corner_radius_all(8)
+	sb.content_margin_left = 12.0; sb.content_margin_right  = 12.0
+	sb.content_margin_top  = 8.0;  sb.content_margin_bottom = 8.0
+	panel.add_theme_stylebox_override("panel", sb)
+
+	var lbl := Label.new()
+	lbl.text = label_text
+	lbl.horizontal_alignment  = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.vertical_alignment    = VERTICAL_ALIGNMENT_CENTER
+	lbl.autowrap_mode         = TextServer.AUTOWRAP_WORD_SMART
+	lbl.max_lines_visible     = 2
+	lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lbl.size_flags_vertical   = Control.SIZE_EXPAND_FILL
+	lbl.mouse_filter          = Control.MOUSE_FILTER_IGNORE
+	lbl.add_theme_font_size_override("font_size", NAV_RADIAL_FONT_SIZE)
+	lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
+	lbl.add_theme_font_override("font", _make_font(500))
+	panel.add_child(lbl)
+
+	panel.gui_input.connect(func(ev: InputEvent) -> void:
+		if _is_press_event(ev):
+			_on_radial_item_selected(target_id))
+
+	var cap_tip: String = label_text if needs_tooltip else ""
+	panel.mouse_entered.connect(func() -> void:
+		sb.bg_color = Color(0.10, 0.22, 0.48, 0.97)
+		sb.border_color = Color(0.65, 0.88, 1.0, 1.0)
+		if not cap_tip.is_empty():
+			_tooltip_lbl.text = cap_tip
+			_tooltip_panel.visible = true)
+	panel.mouse_exited.connect(func() -> void:
+		sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
+		sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
+		if not cap_tip.is_empty():
+			_hide_tooltip())
+	return panel
+
+func _add_radial_menu_panel(panel: Control, bucket: Array) -> void:
+	if _radial_menu_layer != null:
+		_radial_menu_layer.add_child(panel)
+	else:
+		_compass_root.add_child(panel)
+	bucket.append(panel)
+	_hook_cursor(panel)
+
+func _is_press_event(event: InputEvent) -> bool:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		return mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT
+	if event is InputEventScreenTouch:
+		return (event as InputEventScreenTouch).pressed
+	return false
+
+func _get_press_global_position(event: InputEvent) -> Vector2:
+	if event is InputEventMouseButton:
+		return (event as InputEventMouseButton).global_position
+	if event is InputEventScreenTouch:
+		return (event as InputEventScreenTouch).position
+	return Vector2(-1.0, -1.0)
+
+func _is_point_on_open_menu_ui(global_pos: Vector2) -> bool:
+	var hits: Array = [_compass_hit, _setting_hit, _inv_hit, _chat_hit, _info_hit]
+	for h: Variant in hits:
+		if h is Control and (h as Control).visible:
+			var c: Control = h as Control
+			if c.get_global_rect().has_point(global_pos):
+				return true
+	if _back_btn != null and _back_btn.visible:
+		if _back_btn.get_global_rect().has_point(global_pos):
+			return true
+	var all_panels: Array = []
+	all_panels.append_array(_radial_items)
+	all_panels.append_array(_setting_radial_items)
+	all_panels.append_array(_inv_radial_items)
+	all_panels.append_array(_chat_radial_items)
+	for p: Variant in all_panels:
+		if p is Control and (p as Control).visible:
+			var c: Control = p as Control
+			if c.get_global_rect().has_point(global_pos):
+				return true
+	if _info_open and _content_panel != null and _content_panel.visible:
+		if _content_panel.get_global_rect().has_point(global_pos):
+			return true
+	return false
+
+func _on_radial_overlay_gui_input(event: InputEvent) -> void:
+	if not _is_press_event(event):
+		return
+	if _is_point_on_open_menu_ui(_get_press_global_position(event)):
+		return
+	_close_all_menus()
+	if _radial_overlay != null:
+		_radial_overlay.accept_event()
+
 func _make_radial_panel(pos: Vector2, bg_color: Color, border_color: Color) -> PanelContainer:
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(RADIAL_ITEM_W, RADIAL_ITEM_H)
-	panel.position  = pos
+	panel.size       = Vector2(RADIAL_ITEM_W, RADIAL_ITEM_H)
+	panel.position   = pos
 	panel.modulate.a = 0.0
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	var sb := StyleBoxFlat.new()
@@ -1562,15 +1830,19 @@ func _make_radial_panel(pos: Vector2, bg_color: Color, border_color: Color) -> P
 # ─────────────────────────────────────────────────────────────
 
 func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Callable) -> void:
+	var vp_sz: Vector2 = get_viewport_rect().size
+
 	var overlay := Control.new()
-	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
-	overlay.z_index = 60
+	overlay.z_index  = 60
+	overlay.position = Vector2.ZERO
+	overlay.size     = vp_sz
 	add_child(overlay)
 
 	var dimmer := ColorRect.new()
-	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dimmer.color        = Color(0.0, 0.0, 0.0, 0.60)
 	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	dimmer.position     = Vector2.ZERO
+	dimmer.size         = vp_sz
 	overlay.add_child(dimmer)
 
 	var panel := Panel.new()
@@ -1580,20 +1852,18 @@ func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Cal
 	sb.border_color = Color(1.0, 0.55, 0.45, 0.70)
 	sb.set_corner_radius_all(8)
 	panel.add_theme_stylebox_override("panel", sb)
-	panel.layout_mode = 0
 	var dlg_size := Vector2(380.0, 200.0)
-	var vp_sz: Vector2 = get_viewport().get_visible_rect().size
-	panel.size     = dlg_size
-	panel.position = (vp_sz - dlg_size) * 0.5
+	panel.size         = dlg_size
+	panel.position     = (vp_sz - dlg_size) * 0.5
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	overlay.add_child(panel)
 
 	var vbox := VBoxContainer.new()
-	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vbox.offset_left = 24.0; vbox.offset_right  = -24.0
-	vbox.offset_top  = 20.0; vbox.offset_bottom = -20.0
 	vbox.add_theme_constant_override("separation", 12)
 	panel.add_child(vbox)
+	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	vbox.offset_left = 24.0; vbox.offset_right  = -24.0
+	vbox.offset_top  = 20.0; vbox.offset_bottom = -20.0
 
 	var title_lbl := Label.new()
 	title_lbl.text = title_text
@@ -1886,10 +2156,10 @@ func _show_no_session_error() -> void:
 
 func _build_spots_layer() -> void:
 	_spots_layer = Control.new()
-	_spots_layer.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_spots_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_spots_layer.z_index      = 5  # above bg, below compass (30)
 	add_child(_spots_layer)
+	_spots_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 func _build_tooltip() -> void:
 	_tooltip_panel = PanelContainer.new()
@@ -1921,13 +2191,17 @@ func _rebuild_spots(node: ExplorationNode) -> void:
 	var vp: Vector2 = get_viewport_rect().size
 	var bg_w: float = vp.x * BG_AREA_FRACTION
 	var bg_h: float = vp.y
-	for spot_var: Variant in node.clickable_spots:
+	for i: int in node.clickable_spots.size():
+		var spot_var: Variant = node.clickable_spots[i]
 		if spot_var is Dictionary:
-			_spawn_spot(spot_var as Dictionary, bg_w, bg_h)
+			_spawn_spot(spot_var as Dictionary, bg_w, bg_h, i)
 
-func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float) -> void:
+func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0) -> void:
 	# Check conditions — reuse ExplorationManager's connection-unlock logic (reads "conditions" key)
 	if not ExplorationManager.is_connection_unlocked(spot):
+		return
+	# Skip one-time spots already interacted with this session
+	if bool(spot.get("hide_after_interact", false)) and ExplorationManager.is_spot_interacted(ExplorationManager.current_node_id, spot_index):
 		return
 
 	var xn: float         = float(spot.get("x_norm",    0.5))
@@ -1971,14 +2245,20 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float) -> void:
 		icon_tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		hit.add_child(icon_tr)
 
-	var cap_tip:  String = tip
-	var cap_acts: Array  = actions
+	var cap_tip:   String = tip
+	var cap_acts:  Array  = actions
+	var cap_hide:  bool   = bool(spot.get("hide_after_interact", false))
+	var cap_node:  String = ExplorationManager.current_node_id
+	var cap_index: int    = spot_index
 	hit.mouse_entered.connect(func() -> void: _on_spot_hover_enter(cap_tip))
 	hit.mouse_exited.connect(func() -> void:  _on_spot_hover_exit())
 	hit.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton:
 			var mb := ev as InputEventMouseButton
 			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+				if cap_hide:
+					hit.visible = false
+					ExplorationManager.mark_spot_interacted(cap_node, cap_index)
 				_on_spot_triggered(cap_acts))
 
 func _on_spot_hover_enter(tooltip_text: String) -> void:
@@ -2099,32 +2379,6 @@ func _input(event: InputEvent) -> void:
 		_info_mouse_wait_timer = null   # cancel 5s fallback
 		if not _transition_active and not _is_over_info_panel_or_icon():
 			_on_info_panel_mouse_exited()
-	if not (event is InputEventMouseButton):
-		return
-	var mb := event as InputEventMouseButton
-	if not (mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT):
-		return
-	if _item_preview != null:
-		return  # item preview handles its own dismissal
-	if not (_compass_open or _setting_open or _inv_open or _chat_open or _info_open):
-		return
-	# If click lands on an icon button or a radial item, let that element handle it
-	var interactive: Array = [_compass_hit, _setting_hit, _inv_hit, _chat_hit, _info_hit]
-	interactive.append_array(_radial_items)
-	interactive.append_array(_setting_radial_items)
-	interactive.append_array(_inv_radial_items)
-	interactive.append_array(_chat_radial_items)
-	# Also protect the content panel when info is open
-	if _info_open and _content_panel != null:
-		interactive.append(_content_panel)
-	for node: Variant in interactive:
-		if is_instance_valid(node as Node):
-			var ctrl: Control = node as Control
-			if ctrl.get_global_rect().has_point(mb.global_position):
-				return  # let the element handle it
-	# Click is outside all menu elements — dismiss and consume
-	_close_all_menus()
-	get_viewport().set_input_as_handled()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and (event as InputEventKey).pressed and not (event as InputEventKey).echo:

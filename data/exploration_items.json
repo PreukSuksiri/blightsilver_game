@@ -1,1 +1,10 @@
-[]
+[
+	{
+		"big_image": "res://assets/textures/exploration/items/item_exploration_secluded study_key.png",
+		"description": "A key for smart electronic door.",
+		"effects": [],
+		"icon": "res://assets/textures/exploration/items/item_exploration_secluded study_key.png",
+		"id": "item_secluded_study_key",
+		"name": "Smart Key"
+	}
+]
