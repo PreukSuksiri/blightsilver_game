@@ -207,6 +207,7 @@ func _build_toolbar() -> Control:
 	_make_tool_btn(bar, "▶ Test Play",_on_test_play_pressed)
 	bar.add_child(VSeparator.new())
 	_make_tool_btn(bar, "🗃 Items",   _on_items_pressed)
+	_make_tool_btn(bar, "🧩 Puzzles", _on_puzzles_pressed)
 	bar.add_child(VSeparator.new())
 	_make_tool_btn(bar, "← Back",     _on_back_pressed)
 
@@ -554,6 +555,73 @@ func _open_pack_picker(target_edit: LineEdit) -> void:
 			var cap_name: String = pname
 			btn.pressed.connect(func() -> void:
 				target_edit.text = cap_name
+				win.queue_free())
+			list_vbox.add_child(btn)
+
+	refresh.call("")
+	search.text_changed.connect(refresh)
+	win.close_requested.connect(win.queue_free)
+	win.popup_centered()
+
+## Open a searchable puzzle picker. On selection sets target_edit.text to puzzle id.
+func _open_puzzle_picker(target_edit: LineEdit) -> void:
+	var win := Window.new()
+	win.title = "Pick Puzzle"
+	win.size  = Vector2i(420, 500)
+	win.unresizable = true
+	add_child(win)
+
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left",   8)
+	margin.add_theme_constant_override("margin_right",  8)
+	margin.add_theme_constant_override("margin_top",    8)
+	margin.add_theme_constant_override("margin_bottom", 8)
+	win.add_child(margin)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 6)
+	margin.add_child(vbox)
+
+	var search := LineEdit.new()
+	search.placeholder_text = "Search by name or id..."
+	search.add_theme_font_size_override("font_size", 14)
+	vbox.add_child(search)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(scroll)
+
+	var list_vbox := VBoxContainer.new()
+	list_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list_vbox.add_theme_constant_override("separation", 2)
+	scroll.add_child(list_vbox)
+
+	var all_puzzles: Array = ExplorationPuzzleDatabase.all_puzzles()
+
+	var refresh := func(filter: String) -> void:
+		for c: Node in list_vbox.get_children():
+			c.queue_free()
+		var f: String = filter.strip_edges().to_lower()
+		for entry: Variant in all_puzzles:
+			if not entry is Dictionary:
+				continue
+			var d: Dictionary = entry as Dictionary
+			var pid: String   = str(d.get("id",   ""))
+			var pname: String = str(d.get("name", pid))
+			var status: String = ExplorationPuzzleDatabase.get_status_label(pid)
+			if not f.is_empty() \
+					and not pid.to_lower().contains(f) \
+					and not pname.to_lower().contains(f):
+				continue
+			var btn := Button.new()
+			btn.text = "%s  [%s]  —  %s" % [pname, pid, status]
+			btn.flat = true
+			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			btn.add_theme_font_size_override("font_size", 13)
+			var cap_id: String = pid
+			btn.pressed.connect(func() -> void:
+				target_edit.text = cap_id
 				win.queue_free())
 			list_vbox.add_child(btn)
 
@@ -1178,7 +1246,7 @@ func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
 	vbox.add_child(row)
 	var _spot_actions: Array[String] = [
 		"give_item", "give_booster_pack", "remove_item", "set_var", "give_credits", "set_flag",
-		"show_message", "play_sfx", "play_vn", "navigate_to"
+		"show_message", "play_sfx", "play_vn", "navigate_to", "play_puzzle"
 	]
 	var action_btn := OptionButton.new()
 	for a: String in _spot_actions:
@@ -1212,11 +1280,24 @@ func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
 	spot_pack_pick_btn.custom_minimum_size = Vector2(28.0, 0.0)
 	spot_pack_pick_btn.pressed.connect(func() -> void: _open_pack_picker(val_edit))
 	row.add_child(spot_pack_pick_btn)
+	var spot_puzzle_pick_btn := Button.new()
+	spot_puzzle_pick_btn.text = "…"
+	spot_puzzle_pick_btn.tooltip_text = "Browse puzzles (fills value field)"
+	spot_puzzle_pick_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	spot_puzzle_pick_btn.pressed.connect(func() -> void: _open_puzzle_picker(val_edit))
+	row.add_child(spot_puzzle_pick_btn)
 	# Show only the relevant picker button based on the selected action.
 	var _update_spot_pickers := func(sel_idx: int) -> void:
 		var sel: String = _spot_actions[sel_idx]
-		spot_pick_btn.visible     = sel in ["give_item", "remove_item"]
+		spot_pick_btn.visible      = sel in ["give_item", "remove_item"]
 		spot_pack_pick_btn.visible = sel == "give_booster_pack"
+		spot_puzzle_pick_btn.visible = sel == "play_puzzle"
+		if sel == "play_puzzle":
+			key_edit.placeholder_text = "params (JSON or text)"
+			val_edit.placeholder_text = "puzzle id"
+		else:
+			key_edit.placeholder_text = "key"
+			val_edit.placeholder_text = "value / amount / pack"
 	action_btn.item_selected.connect(_update_spot_pickers)
 	_update_spot_pickers.call(action_btn.selected)
 	var del_btn := Button.new()
@@ -1900,6 +1981,14 @@ func _on_items_pressed() -> void:
 	mgr.name = "ExplorationItemManagerOverlay"
 	add_child(mgr)
 	# Set anchors AFTER add_child so the parent rect is resolved
+	mgr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+func _on_puzzles_pressed() -> void:
+	if get_node_or_null("ExplorationPuzzleManagerOverlay") != null:
+		return
+	var mgr: Control = load("res://scenes/exploration_puzzle_manager.tscn").instantiate() as Control
+	mgr.name = "ExplorationPuzzleManagerOverlay"
+	add_child(mgr)
 	mgr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 func _on_back_pressed() -> void:

@@ -1,0 +1,17 @@
+[
+	{
+		"description": "Minimal demo puzzle — press Solve to complete.",
+		"id": "puzzle_example",
+		"name": "Example Puzzle"
+	},
+	{
+		"description": "Reserved slot for a puzzle that is not coded yet.",
+		"id": "puzzle_placeholder",
+		"name": "Future Puzzle"
+	},
+	{
+		"description": "Input correct number on the number pad.",
+		"id": "puzzle_numpad_lock",
+		"name": "PIN Code Lock"
+	}
+]

@@ -137,6 +137,8 @@ var _finger_tex: Texture2D        = null
 # ── Internal state ────────────────────────────────────────────────────────
 var _current_bg_path: String = ""
 var _vn_playing: bool        = false
+var _puzzle_playing: bool    = false
+var _puzzle_layer: Control   = null
 var _battle_pending: bool    = false
 var _exit_pending: bool      = false
 
@@ -695,7 +697,7 @@ func _register_exploration_activity() -> void:
 func _can_track_compass_idle() -> bool:
 	if not ExplorationManager.is_session_active:
 		return false
-	if _vn_playing or _transition_active:
+	if _vn_playing or _puzzle_playing or _transition_active:
 		return false
 	if _compass_icon == null or not _compass_icon.visible:
 		return false
@@ -2597,8 +2599,73 @@ func _play_other_vn(node: ExplorationNode) -> void:
 	else:
 		_compass_set_visible(true)
 
+func _play_puzzle(puzzle_id: String, on_done: Callable, puzzle_params: Dictionary = {}) -> void:
+	if _puzzle_playing or _vn_playing:
+		return
+	var pid: String = puzzle_id.strip_edges()
+	if pid.is_empty():
+		on_done.call(false)
+		return
+	if not ExplorationPuzzleDatabase.is_implemented(pid):
+		var meta: Dictionary = ExplorationPuzzleDatabase.get_puzzle(pid)
+		var label: String = str(meta.get("name", pid))
+		_show_toast("Puzzle not implemented: %s" % label)
+		on_done.call(false)
+		return
+	var scene_path: String = ExplorationPuzzleDatabase.get_scene_path(pid)
+	var packed: Variant = load(scene_path)
+	if packed == null or not packed is PackedScene:
+		_show_toast("Failed to load puzzle scene.")
+		on_done.call(false)
+		return
+
+	_puzzle_playing = true
+	_dismiss_all_popups()
+	_compass_set_visible(false)
+
+	var dim := ColorRect.new()
+	dim.color = Color(0.0, 0.0, 0.0, 0.78)
+	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	dim.z_index = 94
+	add_child(dim)
+
+	var layer := Control.new()
+	layer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.z_index = 95
+	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(layer)
+	_puzzle_layer = layer
+
+	var puzzle_node: Node = (packed as PackedScene).instantiate()
+	if not puzzle_node is ExplorationPuzzleBase:
+		push_warning("ExplorationPlayer: puzzle '%s' must extend ExplorationPuzzleBase." % pid)
+		dim.queue_free()
+		layer.queue_free()
+		_puzzle_layer = null
+		_puzzle_playing = false
+		_compass_set_visible(true)
+		on_done.call(false)
+		return
+	var puzzle: ExplorationPuzzleBase = puzzle_node as ExplorationPuzzleBase
+	puzzle.setup(pid, puzzle_params)
+	layer.add_child(puzzle_node)
+
+	var cleanup := func() -> void:
+		if is_instance_valid(dim):
+			dim.queue_free()
+		if is_instance_valid(layer):
+			layer.queue_free()
+		_puzzle_layer = null
+		_puzzle_playing = false
+		_compass_set_visible(true)
+
+	puzzle.puzzle_completed.connect(func(success: bool) -> void:
+		cleanup.call()
+		on_done.call(success))
+
 func _play_vn(path: String, on_done: Callable, play_once: bool = true) -> void:
-	if _vn_playing:
+	if _vn_playing or _puzzle_playing:
 		return
 	if not FileAccess.file_exists(ProjectSettings.globalize_path(path)):
 		push_warning("ExplorationPlayer: VN scene '%s' not found — skipping." % path)
@@ -2826,16 +2893,23 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	var cap_hide:  bool   = bool(spot.get("hide_after_interact", false))
 	var cap_node:  String = ExplorationManager.current_node_id
 	var cap_index: int    = spot_index
+	var puzzle_gated: bool = _spot_actions_have_puzzle_gate(cap_acts)
+	var apply_hide := func() -> void:
+		hit.visible = false
+		ExplorationManager.mark_spot_interacted(cap_node, cap_index)
 	hit.mouse_entered.connect(func() -> void: _on_spot_hover_enter(cap_tip, hit))
 	hit.mouse_exited.connect(func() -> void:  _on_spot_hover_exit())
 	hit.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton:
 			var mb := ev as InputEventMouseButton
 			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+				var hide_cb: Callable = Callable()
 				if cap_hide:
-					hit.visible = false
-					ExplorationManager.mark_spot_interacted(cap_node, cap_index)
-				_on_spot_triggered(cap_acts))
+					if puzzle_gated:
+						hide_cb = apply_hide
+					else:
+						apply_hide.call()
+				_on_spot_triggered(cap_acts, hide_cb))
 
 func _on_spot_hover_enter(tooltip_text: String, spot_hit: Control) -> void:
 	_hovering_spot    = true
@@ -2856,13 +2930,45 @@ func _hide_tooltip() -> void:
 	if _tooltip_panel != null:
 		_tooltip_panel.visible = false
 
-func _on_spot_triggered(actions: Array) -> void:
+func _spot_actions_have_puzzle_gate(actions: Array) -> bool:
+	for act_var: Variant in actions:
+		if act_var is Dictionary and str((act_var as Dictionary).get("action", "")) == "play_puzzle":
+			return true
+	return false
+
+func _on_spot_triggered(actions: Array, hide_on_success: Callable = Callable()) -> void:
 	_register_exploration_activity()
-	if _vn_playing or actions.is_empty():
+	if _vn_playing or _puzzle_playing or actions.is_empty():
 		return
 	_on_spot_hover_exit()   # restore cursor before any action takes over
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
-	_execute_spot_actions(actions)
+	var puzzle_id: String = ""
+	var puzzle_params: Dictionary = {}
+	var remaining: Array = []
+	for act_var: Variant in actions:
+		if not act_var is Dictionary:
+			continue
+		var act: Dictionary = act_var as Dictionary
+		if str(act.get("action", "")) == "play_puzzle":
+			if puzzle_id.is_empty():
+				var val: String = str(act.get("value", "")).strip_edges()
+				var key: String = str(act.get("key", "")).strip_edges()
+				puzzle_id = val if not val.is_empty() else key
+				if not val.is_empty() and not key.is_empty():
+					puzzle_params = ExplorationPuzzleBase.parse_params(key)
+			continue
+		remaining.append(act)
+	if not puzzle_id.is_empty():
+		_play_puzzle(puzzle_id, func(success: bool) -> void:
+			if success:
+				if hide_on_success.is_valid():
+					hide_on_success.call()
+				_execute_spot_actions(remaining), puzzle_params)
+			# cancel/fail: close puzzle overlay only — spot stays active for retry
+	else:
+		if hide_on_success.is_valid():
+			hide_on_success.call()
+		_execute_spot_actions(actions)
 
 func _execute_spot_actions(actions: Array) -> void:
 	# Collect non-sequenced actions and the optional VN + navigate targets
