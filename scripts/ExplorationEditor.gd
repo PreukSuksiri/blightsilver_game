@@ -652,7 +652,8 @@ func _add_event_row(events_vbox: VBoxContainer, action: String = "show_message",
 
 ## Add one connection row to the connections VBox.
 func _add_connection_row(conn_vbox: VBoxContainer, target: String = "",
-		label_text: String = "Continue", hint: String = "") -> void:
+		label_text: String = "Continue", hint: String = "",
+		locked_mode: String = "hide") -> void:
 	var frame := PanelContainer.new()
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.12, 0.14, 0.22)
@@ -719,11 +720,39 @@ func _add_connection_row(conn_vbox: VBoxContainer, target: String = "",
 	var cond_vbox := VBoxContainer.new()
 	cond_vbox.add_theme_constant_override("separation", 3)
 	vb.add_child(cond_vbox)
+
+	# If locked — only shown when the connection has conditions
+	var locked_mode_row := HBoxContainer.new()
+	locked_mode_row.add_theme_constant_override("separation", 6)
+	locked_mode_row.visible = false
+	var locked_mode_lbl := Label.new()
+	locked_mode_lbl.text = "If locked"
+	locked_mode_lbl.add_theme_font_size_override("font_size", 12)
+	locked_mode_row.add_child(locked_mode_lbl)
+	var locked_mode_btn := OptionButton.new()
+	locked_mode_btn.add_item("Hide")
+	locked_mode_btn.add_item("Disable")
+	locked_mode_btn.select(1 if locked_mode.strip_edges().to_lower() == "disable" else 0)
+	locked_mode_btn.add_theme_font_size_override("font_size", 12)
+	locked_mode_btn.custom_minimum_size = Vector2(120.0, 0.0)
+	locked_mode_btn.tooltip_text = "Hide = omit from compass menu. Disable = show greyed out."
+	locked_mode_row.add_child(locked_mode_btn)
+	frame.set_meta("locked_mode_btn", locked_mode_btn)
+
+	var update_locked_mode_row := func() -> void:
+		locked_mode_row.visible = cond_vbox.get_child_count() > 0
 	var add_cond_btn := Button.new()
 	add_cond_btn.text = "+ Condition"
 	add_cond_btn.add_theme_font_size_override("font_size", 11)
-	add_cond_btn.pressed.connect(func() -> void: _add_condition_row(cond_vbox))
+	add_cond_btn.pressed.connect(func() -> void:
+		_add_condition_row(cond_vbox)
+		update_locked_mode_row.call())
 	vb.add_child(add_cond_btn)
+	vb.add_child(locked_mode_row)
+	cond_vbox.child_entered_tree.connect(func(_n: Node) -> void: update_locked_mode_row.call())
+	cond_vbox.child_exiting_tree.connect(func(_n: Node) -> void:
+		update_locked_mode_row.call())
+	update_locked_mode_row.call()
 
 	# Remove connection button
 	var del_btn := Button.new()
@@ -741,7 +770,9 @@ func _add_condition_row(cond_vbox: VBoxContainer, ctype: String = "has_item",
 	cond_vbox.add_child(row)
 
 	var type_btn := OptionButton.new()
-	var _cond_list: Array[String] = ["has_item","not_has_item","var_equals","var_not_equals"]
+	var _cond_list: Array[String] = [
+		"has_item", "not_has_item", "var_equals", "var_not_equals",
+		"var_greater", "var_less", "at_node"]
 	for t: String in _cond_list:
 		type_btn.add_item(t)
 	var _cond_idx: int = _cond_list.find(ctype)
@@ -835,7 +866,14 @@ func _add_character_row(chars_vbox: VBoxContainer, char_data: Dictionary) -> voi
 	play_once_chk.add_theme_font_size_override("font_size", 12)
 	vb.add_child(play_once_chk)
 
-	# Thumbnail row (index 3)
+	# Canon Story checkbox (index 3) — pulses chat HUD when available
+	var canon_chk := CheckBox.new()
+	canon_chk.text = "Canon Story"
+	canon_chk.button_pressed = bool(char_data.get("canon_story", false))
+	canon_chk.add_theme_font_size_override("font_size", 12)
+	vb.add_child(canon_chk)
+
+	# Thumbnail row (index 4)
 	var thumb_row := HBoxContainer.new()
 	var thumb_lbl := Label.new()
 	thumb_lbl.text = "Thumbnail"
@@ -919,12 +957,16 @@ func _collect_characters(chars_vbox: VBoxContainer) -> Array:
 		var play_once: bool = true
 		if vb.get_child_count() > 2 and vb.get_child(2) is CheckBox:
 			play_once = (vb.get_child(2) as CheckBox).button_pressed
-		# Row 3: thumbnail_row (HBoxContainer → LineEdit)
-		var thumb_edit: LineEdit = _find_line_edit(vb.get_child(3)) if vb.get_child_count() > 3 else null
-		# Row 6: cond_vbox (VBoxContainer at index 6)
+		# Row 3: canon_story_chk (CheckBox)
+		var canon_story: bool = false
+		if vb.get_child_count() > 3 and vb.get_child(3) is CheckBox:
+			canon_story = (vb.get_child(3) as CheckBox).button_pressed
+		# Row 4: thumbnail_row (HBoxContainer → LineEdit)
+		var thumb_edit: LineEdit = _find_line_edit(vb.get_child(4)) if vb.get_child_count() > 4 else null
+		# Row 7: cond_vbox (VBoxContainer at index 7)
 		var conditions: Array = []
-		if vb.get_child_count() > 6 and vb.get_child(6) is VBoxContainer:
-			var cond_vbox: VBoxContainer = vb.get_child(6) as VBoxContainer
+		if vb.get_child_count() > 7 and vb.get_child(7) is VBoxContainer:
+			var cond_vbox: VBoxContainer = vb.get_child(7) as VBoxContainer
 			for row: Node in cond_vbox.get_children():
 				if not row is HBoxContainer:
 					continue
@@ -937,11 +979,12 @@ func _collect_characters(chars_vbox: VBoxContainer) -> Array:
 					"value": (rc[2] as LineEdit).text,
 				})
 		result.append({
-			"name":       name_edit.text.strip_edges()  if name_edit  != null else "",
-			"vn_scene":   vn_edit.text.strip_edges()    if vn_edit    != null else "",
-			"thumbnail":  thumb_edit.text.strip_edges() if thumb_edit != null else "",
-			"play_once":  play_once,
-			"conditions": conditions,
+			"name":        name_edit.text.strip_edges()  if name_edit  != null else "",
+			"vn_scene":    vn_edit.text.strip_edges()    if vn_edit    != null else "",
+			"thumbnail":   thumb_edit.text.strip_edges() if thumb_edit != null else "",
+			"play_once":   play_once,
+			"canon_story": canon_story,
+			"conditions":  conditions,
 		})
 	return result
 
@@ -1506,6 +1549,7 @@ func _on_connection_request(from_node: StringName, _from_port: int,
 		"label":       "Go to " + to_id,
 		"locked_hint": "",
 		"conditions":  [],
+		"locked_mode": "hide",
 	})
 	_graph_edit.connect_node(from_node, 0, to_node, 0)
 	_dirty = true
@@ -1610,7 +1654,8 @@ func _populate_props(en: ExplorationNode) -> void:
 			_add_connection_row(_prop_connections_vbox,
 				str(cd.get("target", "")),
 				str(cd.get("label", "Continue")),
-				str(cd.get("locked_hint", "")))
+				str(cd.get("locked_hint", "")),
+				str(cd.get("locked_mode", "hide")))
 			# Restore conditions if present
 			var conds: Variant = cd.get("conditions", [])
 			if conds is Array:
@@ -1726,11 +1771,18 @@ func _collect_connection_frame(frame: PanelContainer) -> Dictionary:
 				"value": les[1].text,
 			})
 
+	var locked_mode: String = "hide"
+	if conditions.size() > 0:
+		var lmb: Variant = frame.get_meta("locked_mode_btn", null)
+		if lmb is OptionButton:
+			locked_mode = "disable" if (lmb as OptionButton).selected == 1 else "hide"
+
 	return {
 		"target":      target_edit.text.strip_edges() if target_edit != null else "",
 		"label":       label_edit.text if label_edit != null else "Continue",
 		"locked_hint": hint_edit.text  if hint_edit  != null else "",
 		"conditions":  conditions,
+		"locked_mode": locked_mode,
 	}
 
 func _find_line_edit(row: Node) -> LineEdit:

@@ -8,7 +8,9 @@ extends Node
 ##   description String  — shown in preview overlay
 ##   icon        String  — res:// path to small icon (radial menu)
 ##   big_image   String  — res:// path to large preview image
-##   effects     Array   — ordered effect Dicts (see below)
+##   effects       Array   — ordered effect Dicts (see below)
+##   use_condition String  — optional boolean expression (ExplorationConditions)
+##   key_item      bool    — pulses inventory HUD when item is eligible to use
 ##
 ## Effect Dict: { "type", "key", "value" }
 ##   play_vn      — play VN beat JSON at value path

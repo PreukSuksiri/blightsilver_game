@@ -125,7 +125,7 @@
 					"target": "node_book_aisle"
 				}
 			],
-			"description": "People still faking that group works improve teamwork.",
+			"description": "People are still faking that group works improve teamwork.",
 			"editor_position": {
 				"x": 160.0,
 				"y": 220.0
@@ -175,6 +175,18 @@
 					"label": "Group Study Area",
 					"locked_hint": "",
 					"target": "node_group_study"
+				},
+				{
+					"conditions": [
+						{
+							"key": "",
+							"type": "has_item",
+							"value": ""
+						}
+					],
+					"label": "Observatory",
+					"locked_hint": "",
+					"target": "node_observatory"
 				}
 			],
 			"description": "The magazines are brand new and have that great new-paper smell.",
@@ -254,6 +266,28 @@
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Library Mascot",
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": ""
+		},
+		{
+			"background": "",
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [],
+			"description": "We were too busy to realize that an epic view from here is available all the time.",
+			"editor_position": {
+				"x": -200.0,
+				"y": 620.0
+			},
+			"id": "node_observatory",
+			"music": "",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Observatory",
 			"usable_items": [],
 			"vn_play_once": true,
 			"vn_scene": ""

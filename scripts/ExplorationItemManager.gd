@@ -28,6 +28,8 @@ var _ef_name:       LineEdit        = null
 var _ef_desc:       TextEdit        = null
 var _ef_icon:       LineEdit        = null
 var _ef_big_image:  LineEdit        = null
+var _ef_use_condition: LineEdit     = null
+var _ef_key_item_chk: CheckBox      = null
 var _ef_effects_vbox: VBoxContainer = null
 
 var _editing_id:    String          = ""   # empty = new item
@@ -165,6 +167,25 @@ func _build_edit_panel() -> void:
 	_ef_desc.add_theme_font_size_override("font_size", 14)
 	vbox.add_child(_ef_desc)
 
+	vbox.add_child(_make_label("Use Condition (optional)"))
+	_ef_use_condition = LineEdit.new()
+	_ef_use_condition.placeholder_text = "e.g. has_item(\"key\") and var(\"flag\") == \"1\""
+	_ef_use_condition.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_ef_use_condition.add_theme_font_size_override("font_size", 13)
+	vbox.add_child(_ef_use_condition)
+	var cond_hint := Label.new()
+	cond_hint.text = "and / or / not / () — has_item(), at_node(), var() ==, !=, >, <"
+	cond_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	cond_hint.add_theme_font_size_override("font_size", 11)
+	cond_hint.add_theme_color_override("font_color", Color(0.50, 0.58, 0.65))
+	vbox.add_child(cond_hint)
+
+	_ef_key_item_chk = CheckBox.new()
+	_ef_key_item_chk.text = "Key Item"
+	_ef_key_item_chk.tooltip_text = "Pulses the inventory HUD icon when this item can be used"
+	_ef_key_item_chk.add_theme_font_size_override("font_size", 13)
+	vbox.add_child(_ef_key_item_chk)
+
 	# ── Effects ────────────────────────────────────────────
 	var eff_hdr_row := HBoxContainer.new()
 	eff_hdr_row.add_theme_constant_override("separation", 8)
@@ -243,6 +264,8 @@ func _start_edit_new() -> void:
 	_ef_desc.text        = ""
 	_ef_icon.text        = ""
 	_ef_big_image.text   = ""
+	_ef_use_condition.text = ""
+	_ef_key_item_chk.button_pressed = false
 	_clear_effects()
 	_edit_panel.visible  = true
 
@@ -257,6 +280,8 @@ func _start_edit_existing(item_id: String) -> void:
 	_ef_desc.text        = str(d.get("description", ""))
 	_ef_icon.text        = str(d.get("icon",        ""))
 	_ef_big_image.text   = str(d.get("big_image",   ""))
+	_ef_use_condition.text = str(d.get("use_condition", ""))
+	_ef_key_item_chk.button_pressed = bool(d.get("key_item", false))
 	_clear_effects()
 	var effs: Variant = d.get("effects", [])
 	if effs is Array:
@@ -339,8 +364,10 @@ func _commit_edit() -> void:
 		"name":        _ef_name.text.strip_edges(),
 		"description": _ef_desc.text.strip_edges(),
 		"icon":        _ef_icon.text.strip_edges(),
-		"big_image":   _ef_big_image.text.strip_edges(),
-		"effects":     effects,
+		"big_image":      _ef_big_image.text.strip_edges(),
+		"use_condition":  _ef_use_condition.text.strip_edges(),
+		"key_item":      _ef_key_item_chk.button_pressed,
+		"effects":        effects,
 	}
 	ExplorationItemDatabase.upsert_item(data)
 	_editing_id = new_id

@@ -19,6 +19,7 @@ extends Resource
 ##       "label"       : String   — button text shown to the player
 ##       "locked_hint" : String   — message shown when locked (e.g. "Requires Rusty Key")
 ##       "conditions"  : Array    — list of Condition Dicts (all must pass to unlock)
+##       "locked_mode" : String   — when conditions fail: "hide" (default) or "disable"
 ##     }
 ##
 ## Condition dict format:
@@ -28,6 +29,9 @@ extends Resource
 ##     "not_has_item"  — player inventory does NOT contain key
 ##     "var_equals"    — exploration variable[key] == value
 ##     "var_not_equals"— exploration variable[key] != value
+##     "var_greater"   — exploration variable[key] > value
+##     "var_less"      — exploration variable[key] < value
+##     "at_node"       — player is at node id (key or value)
 ##
 ## On-enter / on-exit event dict format:
 ##   { "action": <action_string>, "key": String, "value": String }
@@ -127,8 +131,10 @@ enum NodeType {
 
 ## Characters that can be spoken to at this node.
 ## Each entry is a Dictionary:
-##   { "name": String, "vn_scene": String, "conditions": Array }
+##   { "name": String, "vn_scene": String, "conditions": Array,
+##     "canon_story": bool, "play_once": bool, "thumbnail": String }
 ## conditions format is the same as connection conditions (all must pass to show).
+## canon_story — when true, pulses the chat HUD icon while this character can be talked to.
 @export var characters: Array = []
 
 ## Editor-only: position of this GraphNode in the ExplorationEditor canvas.

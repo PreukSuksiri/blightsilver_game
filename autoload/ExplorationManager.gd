@@ -38,6 +38,9 @@ extends Node
 ##   not_has_item  key        → inventory does NOT contain key
 ##   var_equals    key+value  → vars[key] == value
 ##   var_not_equals key+value → vars[key] != value
+##   var_greater   key+value  → vars[key] > value (numeric)
+##   var_less      key+value  → vars[key] < value (numeric)
+##   at_node       key/value  → current node id matches
 
 const EXPLORATION_PLAYER_SCENE: String = "res://scenes/exploration_player.tscn"
 
@@ -359,27 +362,25 @@ func is_connection_unlocked(conn: Dictionary) -> bool:
 	var conditions: Variant = conn.get("conditions", [])
 	if not conditions is Array:
 		return true
-	for cond: Variant in (conditions as Array):
-		if not cond is Dictionary:
-			continue
-		var cd: Dictionary = cond as Dictionary
-		var ctype: String  = str(cd.get("type",  ""))
-		var key: String    = str(cd.get("key",   ""))
-		var val: String    = str(cd.get("value", ""))
-		match ctype:
-			"has_item":
-				if not has_item(key):
-					return false
-			"not_has_item":
-				if has_item(key):
-					return false
-			"var_equals":
-				if get_var(key) != val:
-					return false
-			"var_not_equals":
-				if get_var(key) == val:
-					return false
-	return true
+	return ExplorationConditions.evaluate_all(conditions as Array)
+
+## True when the connection dict has at least one condition entry.
+func connection_has_conditions(conn: Dictionary) -> bool:
+	var conditions: Variant = conn.get("conditions", [])
+	return conditions is Array and not (conditions as Array).is_empty()
+
+## locked_mode when conditions fail: "hide" (default) or "disable".
+func get_connection_locked_mode(conn: Dictionary) -> String:
+	var mode: String = str(conn.get("locked_mode", "hide")).strip_edges().to_lower()
+	return mode if mode == "disable" else "hide"
+
+## Whether a connection should appear in the compass radial menu.
+func connection_should_show(conn: Dictionary) -> bool:
+	if is_connection_unlocked(conn):
+		return true
+	if not connection_has_conditions(conn):
+		return false
+	return get_connection_locked_mode(conn) == "disable"
 
 ## Returns the locked-hint string if the connection is locked, or "" if it is open.
 func get_connection_lock_hint(conn: Dictionary) -> String:

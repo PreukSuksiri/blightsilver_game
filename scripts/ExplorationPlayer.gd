@@ -24,6 +24,8 @@ const DEFAULT_CURSOR: String   = "res://assets/textures/ui/decorations/ui_cursor
 const MAGNIFIER_CURSOR: String = "res://assets/textures/ui/decorations/ui_icon_magnifier.png"
 const FINGER_CURSOR: String    = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
 const COMPASS_SIZE: float  = 110.0  # icon width/height in pixels
+const COMPASS_IDLE_GLOW_PAD: float = 40.0   # soft halo extends this far beyond compass icon
+const COMPASS_IDLE_HINT_DELAY: float = 10.0 # seconds of no interaction before compass hint
 const RADIAL_RADIUS: float = 210.0  # distance from center to item midpoint
 const RADIAL_ITEM_W: float = 180.0  # radial button width (settings / inventory / chat)
 const RADIAL_ITEM_H: float = 54.0   # radial button height (settings / inventory / chat)
@@ -68,6 +70,12 @@ var _compass_open: bool           = false
 var _compass_animating: bool      = false
 var _compass_idle_pos: Vector2    = Vector2.ZERO
 var _compass_center_pos: Vector2  = Vector2.ZERO
+# Cyan HUD glows — priority: chat > inventory > compass (idle timer)
+var _hud_glow_nodes: Dictionary  = {}   # "compass"|"inventory"|"chat" → Control
+var _hud_glow_tweens: Dictionary = {}
+var _hud_glow_active: Dictionary = {}
+var _hud_glow_icons: Dictionary  = {}   # key → TextureRect (position sync)
+var _idle_elapsed: float         = 0.0
 
 # ── Setting icon ─────────────────────────────────────────────────────────
 var _setting_icon: TextureRect    = null
@@ -168,12 +176,15 @@ func _ready() -> void:
 		_show_no_session_error()
 
 	CheckerTransition.fade_in()
+	call_deferred("_refresh_contextual_hud_glows")
 
 func _connect_signals() -> void:
 	ExplorationManager.node_entered.connect(_on_node_entered)
 	ExplorationManager.message_posted.connect(_show_toast)
 	ExplorationManager.item_obtained.connect(_on_item_obtained)
 	ExplorationManager.mailbox_reward_granted.connect(_on_mailbox_reward_granted)
+	ExplorationManager.inventory_changed.connect(_on_exploration_state_changed)
+	ExplorationManager.var_changed.connect(_on_exploration_state_changed)
 
 # ─────────────────────────────────────────────────────────────
 # UI Construction
@@ -549,6 +560,10 @@ func _build_compass_system() -> void:
 	_chat_empty_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_compass_root.add_child(_chat_empty_lbl)
 
+	_setup_hud_glow("compass", _compass_icon, _compass_idle_pos)
+	_setup_hud_glow("inventory", _inv_icon, _inv_idle_pos)
+	_setup_hud_glow("chat", _chat_icon, _chat_idle_pos)
+
 	# Empty-inventory overlay label — positioned directly over the inventory icon
 	_inv_empty_lbl = Label.new()
 	_inv_empty_lbl.layout_mode = 0   # manual position
@@ -650,8 +665,155 @@ func _compass_set_visible(show: bool) -> void:
 		_info_icon.visible = show
 	if _info_hit != null:
 		_info_hit.visible = show
+	if not show:
+		_dismiss_hud_glow("compass", false)
+		_dismiss_hud_glow("inventory", false)
+		_dismiss_hud_glow("chat", false)
+
+func _setup_hud_glow(key: String, icon: TextureRect, idle_pos: Vector2) -> void:
+	var glow_size: float = COMPASS_SIZE + COMPASS_IDLE_GLOW_PAD * 2.0
+	var glow := CompassIdleGlow.new()
+	glow.position     = idle_pos - Vector2(COMPASS_IDLE_GLOW_PAD, COMPASS_IDLE_GLOW_PAD)
+	glow.size         = Vector2(glow_size, glow_size)
+	glow.visible      = false
+	glow.modulate.a   = 0.0
+	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_compass_root.add_child(glow)
+	_compass_root.move_child(glow, icon.get_index())
+	_hud_glow_nodes[key]  = glow
+	_hud_glow_icons[key]  = icon
+	_hud_glow_active[key] = false
+
+func _on_exploration_state_changed(_arg1: Variant = null, _arg2: Variant = null) -> void:
+	_refresh_contextual_hud_glows()
+
+func _register_exploration_activity() -> void:
+	_idle_elapsed = 0.0
+	if _hud_glow_active.get("compass", false):
+		_dismiss_hud_glow("compass")
+
+func _can_track_compass_idle() -> bool:
+	if not ExplorationManager.is_session_active:
+		return false
+	if _vn_playing or _transition_active:
+		return false
+	if _compass_icon == null or not _compass_icon.visible:
+		return false
+	if _compass_open or _compass_animating:
+		return false
+	if _obtained_overlay != null and is_instance_valid(_obtained_overlay):
+		return false
+	return true
+
+func _can_start_compass_idle_timer() -> bool:
+	# Chat and inventory contextual glows block the compass idle timer.
+	return not _hud_glow_active.get("chat", false) \
+		and not _hud_glow_active.get("inventory", false)
+
+func _start_hud_glow(key: String) -> void:
+	if _hud_glow_active.get(key, false):
+		return
+	var glow: Variant = _hud_glow_nodes.get(key, null)
+	var icon: Variant = _hud_glow_icons.get(key, null)
+	if glow == null or not (glow is Control) or icon == null or not (icon is TextureRect):
+		return
+	if not (icon as TextureRect).visible:
+		return
+	if key == "compass" and not _can_track_compass_idle():
+		return
+	_hud_glow_active[key] = true
+	_sync_hud_glow_position(key)
+	(glow as Control).visible = true
+	(glow as Control).modulate.a = 0.30
+	var tw: Variant = _hud_glow_tweens.get(key, null)
+	if tw is Tween and (tw as Tween).is_valid():
+		(tw as Tween).kill()
+	var pulse := create_tween().set_loops()
+	pulse.tween_property(glow, "modulate:a", 0.85, 1.6) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	pulse.tween_property(glow, "modulate:a", 0.30, 1.6) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_hud_glow_tweens[key] = pulse
+
+func _dismiss_hud_glow(key: String, fade: bool = true) -> void:
+	if not _hud_glow_active.get(key, false):
+		return
+	_hud_glow_active[key] = false
+	var tw: Variant = _hud_glow_tweens.get(key, null)
+	if tw is Tween and (tw as Tween).is_valid():
+		(tw as Tween).kill()
+	_hud_glow_tweens[key] = null
+	var glow: Variant = _hud_glow_nodes.get(key, null)
+	if glow == null or not is_instance_valid(glow as Node):
+		return
+	if fade:
+		var fade_tw := create_tween()
+		fade_tw.tween_property(glow, "modulate:a", 0.0, 0.35) \
+			.set_trans(Tween.TRANS_SINE)
+		fade_tw.tween_callback(func() -> void:
+			if is_instance_valid(glow as Node):
+				(glow as Control).visible = false)
+	else:
+		(glow as Control).modulate.a = 0.0
+		(glow as Control).visible    = false
+
+func _sync_hud_glow_position(key: String) -> void:
+	var glow: Variant = _hud_glow_nodes.get(key, null)
+	var icon: Variant = _hud_glow_icons.get(key, null)
+	if glow == null or icon == null or not (icon is TextureRect):
+		return
+	(glow as Control).position = (icon as TextureRect).position \
+		- Vector2(COMPASS_IDLE_GLOW_PAD, COMPASS_IDLE_GLOW_PAD)
+
+func _has_eligible_inventory_item() -> bool:
+	for item_id: Variant in ExplorationManager.get_inventory():
+		var id: String = str(item_id)
+		var item: Dictionary = ExplorationItemDatabase.get_item(id)
+		if not bool(item.get("key_item", false)):
+			continue
+		if _item_can_be_used(id):
+			return true
+	return false
+
+func _has_canon_story_chat() -> bool:
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node == null:
+		return false
+	for char_data: Variant in node.characters:
+		if not char_data is Dictionary:
+			continue
+		var cd: Dictionary = char_data as Dictionary
+		if not bool(cd.get("canon_story", false)):
+			continue
+		if not ExplorationManager.is_connection_unlocked(cd):
+			continue
+		var vn_path: String = str(cd.get("vn_scene", ""))
+		if vn_path.is_empty():
+			continue
+		if bool(cd.get("play_once", true)) and ExplorationManager.is_vn_played(vn_path):
+			continue
+		return true
+	return false
+
+func _refresh_contextual_hud_glows() -> void:
+	var chat_on: bool = _has_canon_story_chat()
+	var inv_on: bool  = _has_eligible_inventory_item()
+	if chat_on:
+		_start_hud_glow("chat")
+	else:
+		_dismiss_hud_glow("chat")
+	if inv_on:
+		_start_hud_glow("inventory")
+	else:
+		_dismiss_hud_glow("inventory")
+	# Higher-priority glows preempt the compass idle hint.
+	if chat_on or inv_on:
+		_idle_elapsed = 0.0
+		if _hud_glow_active.get("compass", false):
+			_dismiss_hud_glow("compass")
 
 func _on_compass_clicked() -> void:
+	_register_exploration_activity()
 	if _compass_animating:
 		return
 	if _compass_open:
@@ -723,12 +885,12 @@ func _open_compass_menu() -> void:
 	_close_inventory_menu(false)
 	_close_chat_menu(false)
 	_close_info_panel()
-	# Gather only unlocked connections (locked hidden per spec)
-	var unlocked: Array = []
+	# Gather connections visible in the compass (unlocked, or locked+disable mode)
+	var menu_connections: Array = []
 	for conn: Variant in node.connections:
-		if conn is Dictionary and ExplorationManager.is_connection_unlocked(conn as Dictionary):
-			unlocked.append(conn)
-	if unlocked.is_empty():
+		if conn is Dictionary and ExplorationManager.connection_should_show(conn as Dictionary):
+			menu_connections.append(conn)
+	if menu_connections.is_empty():
 		_show_toast("No paths available.")
 		return
 
@@ -748,7 +910,7 @@ func _open_compass_menu() -> void:
 	_radial_overlay.visible = true
 
 	# Build and animate radial items
-	_spawn_radial_items(unlocked)
+	_spawn_radial_items(menu_connections)
 
 func _close_compass_menu(animated: bool = true) -> void:
 	if _compass_animating and _compass_open == false:
@@ -776,23 +938,26 @@ func _close_compass_menu(animated: bool = true) -> void:
 	await tw.finished
 	_compass_animating = false
 
-func _spawn_radial_items(unlocked: Array) -> void:
-	var n: int      = unlocked.size()
+func _spawn_radial_items(connections: Array) -> void:
+	var n: int      = connections.size()
 	var vp: Vector2 = get_viewport_rect().size
 	var screen_cx: float = vp.x * 0.5
 	var screen_cy: float = vp.y * 0.5
 	var pad: float  = 8.0   # minimum inset from screen edge
 
 	for i: int in range(n):
-		var conn: Dictionary = unlocked[i] as Dictionary
+		var conn: Dictionary = connections[i] as Dictionary
 		var label_text: String = str(conn.get("label", "Continue"))
 		var target_id: String  = str(conn.get("target", ""))
+		var is_locked: bool = not ExplorationManager.is_connection_unlocked(conn)
+		var lock_hint: String = ExplorationManager.get_connection_lock_hint(conn)
 
 		# Angle: start at top (−90°), spread clockwise
 		var angle: float = (-PI * 0.5) + float(i) * (TAU / float(n))
 		var item_cx: float = screen_cx + cos(angle) * RADIAL_RADIUS
 		var item_cy: float = screen_cy + sin(angle) * RADIAL_RADIUS
-		var panel: PanelContainer = _make_nav_radial_panel(label_text, target_id, item_cx, item_cy, vp, pad)
+		var panel: PanelContainer = _make_nav_radial_panel(
+			label_text, target_id, item_cx, item_cy, vp, pad, is_locked, lock_hint)
 		_add_radial_menu_panel(panel, _radial_items)
 
 		# Fade in with slight stagger
@@ -815,6 +980,7 @@ func _navigate_with_fade(callback: Callable) -> void:
 		tw.tween_callback(func() -> void: _transition_active = false))
 
 func _on_radial_item_selected(target_id: String) -> void:
+	_register_exploration_activity()
 	if target_id.is_empty():
 		return
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
@@ -826,6 +992,7 @@ func _on_radial_item_selected(target_id: String) -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _on_setting_clicked() -> void:
+	_register_exploration_activity()
 	if _setting_animating:
 		return
 	if _setting_open:
@@ -920,6 +1087,7 @@ func _spawn_setting_radial_items(center: Vector2) -> void:
 		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
 
 func _on_setting_action(action: String) -> void:
+	_register_exploration_activity()
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_close_setting_menu()
 	match action:
@@ -945,6 +1113,7 @@ func _on_setting_action(action: String) -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _on_inventory_clicked() -> void:
+	_register_exploration_activity()
 	if _inv_animating:
 		return
 	if _inv_open:
@@ -1112,6 +1281,7 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
 
 func _on_inventory_item_selected(item_id: String) -> void:
+	_register_exploration_activity()
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_close_inventory_menu()
 	_show_item_preview(item_id)
@@ -1121,6 +1291,7 @@ func _on_inventory_item_selected(item_id: String) -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _on_chat_clicked() -> void:
+	_register_exploration_activity()
 	if _chat_animating:
 		return
 	if _chat_open:
@@ -1239,6 +1410,7 @@ func _spawn_chat_radial_items(center: Vector2, available: Array) -> void:
 		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
 
 func _on_chat_character_selected(vn_path: String, play_once: bool = true) -> void:
+	_register_exploration_activity()
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_close_chat_menu()
 	if vn_path.is_empty():
@@ -1247,6 +1419,7 @@ func _on_chat_character_selected(vn_path: String, play_once: bool = true) -> voi
 		var node: ExplorationNode = ExplorationManager.current_node
 		if node != null:
 			_compass_set_visible(true)
+		_refresh_contextual_hud_glows()
 	_play_vn(vn_path, done_cb, play_once)
 
 func _flash_empty_chat() -> void:
@@ -1323,6 +1496,7 @@ func _rebuild_who_is_here(node: ExplorationNode) -> void:
 	_who_section.visible = count > 0
 
 func _on_info_clicked() -> void:
+	_register_exploration_activity()
 	if _info_open:
 		_close_info_panel()
 		return
@@ -1530,9 +1704,17 @@ func _show_item_preview(item_id: String) -> void:
 	btn_row.add_child(close_btn)
 
 func _item_can_be_used(item_id: String) -> bool:
+	if not ExplorationManager.has_item(item_id):
+		return false
 	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
+	if item.is_empty():
+		return false
+	var use_cond: String = str(item.get("use_condition", ""))
+	if not use_cond.is_empty() and not ExplorationConditions.evaluate(use_cond):
+		return false
 	var effects: Variant = item.get("effects", [])
-	if effects is Array and not (effects as Array).is_empty():
+	var has_effects: bool = effects is Array and not (effects as Array).is_empty()
+	if has_effects:
 		return true
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node == null:
@@ -2013,6 +2195,7 @@ func _execute_item_effects(item_id: String) -> void:
 			"navigate_to":
 				if not eff_value.is_empty():
 					ExplorationManager.navigate_to(eff_value)
+	_refresh_contextual_hud_glows()
 
 # ─────────────────────────────────────────────────────────────
 # Shared Radial Helpers
@@ -2046,7 +2229,9 @@ func _make_nav_radial_panel(
 		item_cx: float,
 		item_cy: float,
 		vp: Vector2,
-		pad: float) -> PanelContainer:
+		pad: float,
+		disabled: bool = false,
+		locked_hint: String = "") -> PanelContainer:
 	var chip_size: Vector2 = _measure_nav_radial_chip(label_text)
 	var item_w: float = chip_size.x
 	var item_h: float = chip_size.y
@@ -2061,9 +2246,13 @@ func _make_nav_radial_panel(
 	panel.modulate.a = 0.0
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
+	if disabled:
+		sb.bg_color = Color(0.08, 0.08, 0.10, 0.72)
+		sb.border_color = Color(0.35, 0.38, 0.42, 0.55)
+	else:
+		sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
+		sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
 	sb.set_border_width_all(1)
-	sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
 	sb.set_corner_radius_all(8)
 	sb.content_margin_left = 12.0; sb.content_margin_right  = 12.0
 	sb.content_margin_top  = 8.0;  sb.content_margin_bottom = 8.0
@@ -2080,26 +2269,39 @@ func _make_nav_radial_panel(
 	lbl.size_flags_vertical   = Control.SIZE_EXPAND_FILL
 	lbl.mouse_filter          = Control.MOUSE_FILTER_IGNORE
 	lbl.add_theme_font_size_override("font_size", NAV_RADIAL_FONT_SIZE)
-	lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
+	lbl.add_theme_color_override("font_color",
+		Color(0.48, 0.50, 0.54) if disabled else Color(0.88, 0.96, 1.0))
 	lbl.add_theme_font_override("font", _make_font(500))
 	panel.add_child(lbl)
 
-	panel.gui_input.connect(func(ev: InputEvent) -> void:
-		if _is_press_event(ev):
-			_on_radial_item_selected(target_id))
+	if disabled:
+		panel.gui_input.connect(func(ev: InputEvent) -> void:
+			if _is_press_event(ev):
+				_show_toast(locked_hint if not locked_hint.is_empty() else "Locked"))
+	else:
+		panel.gui_input.connect(func(ev: InputEvent) -> void:
+			if _is_press_event(ev):
+				_on_radial_item_selected(target_id))
 
-	var cap_tip: String = label_text if needs_tooltip else ""
-	panel.mouse_entered.connect(func() -> void:
-		sb.bg_color = Color(0.10, 0.22, 0.48, 0.97)
-		sb.border_color = Color(0.65, 0.88, 1.0, 1.0)
-		if not cap_tip.is_empty():
+	var cap_tip: String = locked_hint if disabled and not locked_hint.is_empty() \
+		else (label_text if needs_tooltip else "")
+	if not disabled:
+		panel.mouse_entered.connect(func() -> void:
+			sb.bg_color = Color(0.10, 0.22, 0.48, 0.97)
+			sb.border_color = Color(0.65, 0.88, 1.0, 1.0)
+			if not cap_tip.is_empty():
+				_tooltip_lbl.text = cap_tip
+				_tooltip_panel.visible = true)
+		panel.mouse_exited.connect(func() -> void:
+			sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
+			sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
+			if not cap_tip.is_empty():
+				_hide_tooltip())
+	elif not cap_tip.is_empty():
+		panel.mouse_entered.connect(func() -> void:
 			_tooltip_lbl.text = cap_tip
 			_tooltip_panel.visible = true)
-	panel.mouse_exited.connect(func() -> void:
-		sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
-		sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
-		if not cap_tip.is_empty():
-			_hide_tooltip())
+		panel.mouse_exited.connect(func() -> void: _hide_tooltip())
 	return panel
 
 func _add_radial_menu_panel(panel: Control, bucket: Array) -> void:
@@ -2283,6 +2485,7 @@ func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Cal
 func _on_node_entered(node: ExplorationNode) -> void:
 	_dismiss_all_popups()
 	_refresh_node(node)
+	_refresh_contextual_hud_glows()
 
 func _refresh_node(node: ExplorationNode) -> void:
 	_exit_pending   = false
@@ -2654,6 +2857,7 @@ func _hide_tooltip() -> void:
 		_tooltip_panel.visible = false
 
 func _on_spot_triggered(actions: Array) -> void:
+	_register_exploration_activity()
 	if _vn_playing or actions.is_empty():
 		return
 	_on_spot_hover_exit()   # restore cursor before any action takes over
@@ -2706,7 +2910,19 @@ func _execute_spot_actions(actions: Array) -> void:
 	elif not nav_target.is_empty():
 		_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(nav_target))
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	# Compass idle hint — lowest priority; blocked while chat/inventory glow active.
+	if _can_track_compass_idle() and _can_start_compass_idle_timer():
+		if not _hud_glow_active.get("compass", false):
+			_idle_elapsed += delta
+			if _idle_elapsed >= COMPASS_IDLE_HINT_DELAY:
+				_start_hud_glow("compass")
+	elif _hud_glow_active.get("compass", false):
+		_dismiss_hud_glow("compass", false)
+	for glow_key: String in ["compass", "inventory", "chat"]:
+		if _hud_glow_active.get(glow_key, false):
+			_sync_hud_glow_position(glow_key)
+
 	# Auto-dismiss: cancel timer while hovering panel or info icon; start it on unhover
 	if _info_open:
 		var over: bool = _is_over_info_panel_or_icon()
@@ -2739,6 +2955,9 @@ func _process(_delta: float) -> void:
 			Input.set_custom_mouse_cursor(_default_tex, Input.CURSOR_ARROW, Vector2(4.0, 4.0))
 
 func _exit_tree() -> void:
+	for tw: Variant in _hud_glow_tweens.values():
+		if tw is Tween and (tw as Tween).is_valid():
+			(tw as Tween).kill()
 	Input.set_custom_mouse_cursor(null)
 
 # ─────────────────────────────────────────────────────────────
@@ -2776,3 +2995,25 @@ func _unhandled_input(event: InputEvent) -> void:
 				ExplorationManager.go_back()
 			# Always consume so CheckerTransition's quit handler never fires here
 			get_viewport().set_input_as_handled()
+
+# Soft radial cyan halo for the compass idle hint (fade-to-transparent edges).
+class CompassIdleGlow extends Control:
+	const LAYERS: int = 20
+	const GLOW_COLOR: Color = Color(0.0, 0.95, 0.90)
+
+	func _ready() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	func _draw() -> void:
+		var center := size * 0.5
+		var outer_r: float = minf(size.x, size.y) * 0.5
+		# Paint outer→inner rings; centre stacks brighter, edge fades to nothing.
+		for i: int in range(LAYERS, 0, -1):
+			var t: float = float(i) / float(LAYERS)
+			var radius: float = outer_r * t
+			if radius <= 0.5:
+				continue
+			var alpha: float = pow(1.0 - t, 2.4) * 0.50
+			if alpha <= 0.001:
+				continue
+			draw_circle(center, radius, Color(GLOW_COLOR.r, GLOW_COLOR.g, GLOW_COLOR.b, alpha))
