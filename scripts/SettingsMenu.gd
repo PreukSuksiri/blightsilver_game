@@ -3,6 +3,8 @@ extends Control
 signal closed
 
 func _ready() -> void:
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
 	# ── Full-screen dimmer (click outside to close) ──────────────
 	var dimmer := ColorRect.new()
 	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -24,8 +26,10 @@ func _ready() -> void:
 	sb.corner_radius_bottom_right = 8; sb.corner_radius_bottom_left  = 8
 	panel.add_theme_stylebox_override("panel", sb)
 	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.size = Vector2(420, 330)
-	panel.position = -panel.size * 0.5
+	panel.offset_left   = -210
+	panel.offset_top    = -165
+	panel.offset_right  = 210
+	panel.offset_bottom = 165
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(panel)
 

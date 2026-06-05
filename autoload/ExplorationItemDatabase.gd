@@ -18,6 +18,8 @@ extends Node
 ##   remove_self  — remove THIS item from inventory
 ##   remove_item  — remove item whose id == key
 ##   navigate_to  — navigate_to(value)
+##
+## Booster packs are granted via exploration events (give_booster_pack), not item effects.
 
 const DATA_PATH: String = "res://data/exploration_items.json"
 

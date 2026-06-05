@@ -496,6 +496,72 @@ func _open_item_picker(target_edit: LineEdit) -> void:
 	win.close_requested.connect(win.queue_free)
 	win.popup_centered()
 
+## Open a searchable booster-pack picker. On selection sets target_edit.text to pack name.
+func _open_pack_picker(target_edit: LineEdit) -> void:
+	var win := Window.new()
+	win.title = "Pick Booster Pack"
+	win.size  = Vector2i(420, 500)
+	win.unresizable = true
+	add_child(win)
+
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left",   8)
+	margin.add_theme_constant_override("margin_right",  8)
+	margin.add_theme_constant_override("margin_top",    8)
+	margin.add_theme_constant_override("margin_bottom", 8)
+	win.add_child(margin)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 6)
+	margin.add_child(vbox)
+
+	var search := LineEdit.new()
+	search.placeholder_text = "Search by pack name or id..."
+	search.add_theme_font_size_override("font_size", 14)
+	vbox.add_child(search)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.add_child(scroll)
+
+	var list_vbox := VBoxContainer.new()
+	list_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list_vbox.add_theme_constant_override("separation", 2)
+	scroll.add_child(list_vbox)
+
+	var all_packs: Array = ShopManager.get_all_packs_unfiltered()
+
+	var refresh := func(filter: String) -> void:
+		for c: Node in list_vbox.get_children():
+			c.queue_free()
+		var f: String = filter.strip_edges().to_lower()
+		for entry: Variant in all_packs:
+			if not entry is Dictionary:
+				continue
+			var d: Dictionary = entry as Dictionary
+			var pid: String   = str(d.get("id",   ""))
+			var pname: String = str(d.get("name", pid))
+			if not f.is_empty() \
+					and not pid.to_lower().contains(f) \
+					and not pname.to_lower().contains(f):
+				continue
+			var btn := Button.new()
+			btn.text = "%s  [%s]" % [pname, pid]
+			btn.flat = true
+			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			btn.add_theme_font_size_override("font_size", 13)
+			var cap_name: String = pname
+			btn.pressed.connect(func() -> void:
+				target_edit.text = cap_name
+				win.queue_free())
+			list_vbox.add_child(btn)
+
+	refresh.call("")
+	search.text_changed.connect(refresh)
+	win.close_requested.connect(win.queue_free)
+	win.popup_centered()
+
 func _add_textarea(parent: Control, label_text: String) -> TextEdit:
 	var lbl := Label.new()
 	lbl.text = label_text
@@ -531,7 +597,9 @@ func _add_event_row(events_vbox: VBoxContainer, action: String = "show_message",
 	events_vbox.add_child(row)
 
 	var action_btn := OptionButton.new()
-	var _action_list: Array[String] = ["give_item","remove_item","set_var","give_credits","set_flag","show_message","play_sfx"]
+	var _action_list: Array[String] = [
+		"give_item", "give_booster_pack", "remove_item", "set_var",
+		"give_credits", "set_flag", "show_message", "play_sfx"]
 	for a: String in _action_list:
 		action_btn.add_item(a)
 	var _action_idx: int = _action_list.find(action)
@@ -549,17 +617,32 @@ func _add_event_row(events_vbox: VBoxContainer, action: String = "show_message",
 
 	var item_pick_btn := Button.new()
 	item_pick_btn.text = "…"
-	item_pick_btn.tooltip_text = "Pick item ID"
+	item_pick_btn.tooltip_text = "Browse items (fills key field)"
 	item_pick_btn.custom_minimum_size = Vector2(28.0, 0.0)
 	item_pick_btn.pressed.connect(func() -> void: _open_item_picker(key_edit))
 	row.add_child(item_pick_btn)
 
 	var val_edit := LineEdit.new()
 	val_edit.text             = value
-	val_edit.placeholder_text = "value"
+	val_edit.placeholder_text = "value / amount / pack"
 	val_edit.add_theme_font_size_override("font_size", 12)
 	val_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(val_edit)
+
+	var pack_pick_btn := Button.new()
+	pack_pick_btn.text = "…"
+	pack_pick_btn.tooltip_text = "Browse booster packs (fills value field)"
+	pack_pick_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	pack_pick_btn.pressed.connect(func() -> void: _open_pack_picker(val_edit))
+	row.add_child(pack_pick_btn)
+
+	# Show only the relevant picker button based on the selected action.
+	var _update_event_pickers := func(sel_idx: int) -> void:
+		var sel: String = _action_list[sel_idx]
+		item_pick_btn.visible = sel in ["give_item", "remove_item"]
+		pack_pick_btn.visible = sel == "give_booster_pack"
+	action_btn.item_selected.connect(_update_event_pickers)
+	_update_event_pickers.call(action_btn.selected)
 
 	var del_btn := Button.new()
 	del_btn.text = "x"
@@ -1051,8 +1134,8 @@ func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
 	row.add_theme_constant_override("separation", 4)
 	vbox.add_child(row)
 	var _spot_actions: Array[String] = [
-		"give_item","remove_item","set_var","give_credits","set_flag",
-		"show_message","play_sfx","play_vn","navigate_to"
+		"give_item", "give_booster_pack", "remove_item", "set_var", "give_credits", "set_flag",
+		"show_message", "play_sfx", "play_vn", "navigate_to"
 	]
 	var action_btn := OptionButton.new()
 	for a: String in _spot_actions:
@@ -1070,16 +1153,29 @@ func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
 	row.add_child(key_edit)
 	var spot_pick_btn := Button.new()
 	spot_pick_btn.text = "…"
-	spot_pick_btn.tooltip_text = "Pick item ID"
+	spot_pick_btn.tooltip_text = "Browse items (fills key field)"
 	spot_pick_btn.custom_minimum_size = Vector2(28.0, 0.0)
 	spot_pick_btn.pressed.connect(func() -> void: _open_item_picker(key_edit))
 	row.add_child(spot_pick_btn)
 	var val_edit := LineEdit.new()
 	val_edit.text             = value
-	val_edit.placeholder_text = "value"
+	val_edit.placeholder_text = "value / amount / pack"
 	val_edit.add_theme_font_size_override("font_size", 12)
 	val_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(val_edit)
+	var spot_pack_pick_btn := Button.new()
+	spot_pack_pick_btn.text = "…"
+	spot_pack_pick_btn.tooltip_text = "Browse booster packs (fills value field)"
+	spot_pack_pick_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	spot_pack_pick_btn.pressed.connect(func() -> void: _open_pack_picker(val_edit))
+	row.add_child(spot_pack_pick_btn)
+	# Show only the relevant picker button based on the selected action.
+	var _update_spot_pickers := func(sel_idx: int) -> void:
+		var sel: String = _spot_actions[sel_idx]
+		spot_pick_btn.visible     = sel in ["give_item", "remove_item"]
+		spot_pack_pick_btn.visible = sel == "give_booster_pack"
+	action_btn.item_selected.connect(_update_spot_pickers)
+	_update_spot_pickers.call(action_btn.selected)
 	var del_btn := Button.new()
 	del_btn.text = "x"
 	del_btn.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))

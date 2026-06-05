@@ -87,7 +87,24 @@
 		{
 			"background": "res://assets/textures/exploration/background/mall/liminal mall.png",
 			"characters": [],
-			"clickable_spots": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "Booster Pack - Unseen Presence"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Investigate",
+					"x_norm": 0.5,
+					"y_norm": 0.5
+				}
+			],
 			"connections": [
 				{
 					"conditions": [],
@@ -187,12 +204,18 @@
 					"label": "Book Aisle",
 					"locked_hint": "",
 					"target": "node_book_aisle"
+				},
+				{
+					"conditions": [],
+					"label": "Library Mascot",
+					"locked_hint": "",
+					"target": "node_library_mascot"
 				}
 			],
 			"description": "Some of the booths are pretty good. Some of them are just pretty.",
 			"editor_position": {
-				"x": -80.0,
-				"y": -300.0
+				"x": -200.0,
+				"y": -240.0
 			},
 			"id": "node_exhibition",
 			"music": "res://assets/audio/bgm_liminal_5.mp3",
@@ -201,7 +224,36 @@
 			"on_exit_events": [],
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
-			"title": "Exhibition Booth",
+			"title": "Exhibition Booths",
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/library/vn_bg_university_library_dark.png",
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Exhibition Booths",
+					"locked_hint": "",
+					"target": "node_exhibition"
+				}
+			],
+			"description": "This mascot looks creepy...",
+			"editor_position": {
+				"x": 20.0,
+				"y": -460.0
+			},
+			"id": "node_library_mascot",
+			"music": "res://assets/audio/bgm_liminal_5.mp3",
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_exit_events": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Library Mascot",
 			"usable_items": [],
 			"vn_play_once": true,
 			"vn_scene": ""

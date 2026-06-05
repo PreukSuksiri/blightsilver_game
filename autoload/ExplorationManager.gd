@@ -25,7 +25,10 @@ extends Node
 ##   give_item   key / value  → add item to session inventory
 ##   remove_item key / value  → remove item from session inventory
 ##   set_var     key + value  → set session variable
-##   give_credits value (int) → add credits to the session reward pool
+##   give_credits value (int) → grant shop credits immediately (value = amount;
+##                              key used as amount if value is empty)
+##   give_booster_pack value  → send pack to mailbox (value = pack name or id;
+##                              key = optional mail subject override)
 ##   set_flag    key + value  → set a flag carried to SaveManager on session end
 ##   show_message value       → emit message_posted signal (toast in UI)
 ##   play_sfx    value        → play the audio file at the given res:// path
@@ -65,6 +68,10 @@ signal message_posted(text: String)
 
 ## Emitted when an item is added to the session inventory. UI shows the item-obtained overlay.
 signal item_obtained(item_id: String)
+
+## Emitted when a reward is sent to the player's mailbox (booster pack, credits, etc.).
+## info keys: image_path (String), display_name (String), type ("credits"|"booster_pack")
+signal mailbox_reward_granted(info: Dictionary)
 
 # ─────────────────────────────────────────────────────────────
 # Public configuration (set before launch / start_session)
@@ -464,11 +471,14 @@ func _process_events(events: Array) -> void:
 				set_var(key, value)
 
 			"give_credits":
-				var amount: int = int(value) if value.is_valid_int() else (int(key) if key.is_valid_int() else 0)
+				var amount: int = _parse_credit_amount(key, value)
 				if amount > 0:
-					var cur: int = int(_session_rewards.get("credits", 0))
-					_session_rewards["credits"] = cur + amount
-					emit_signal("message_posted", "Found %d credits!" % amount)
+					_grant_credits(amount)
+
+			"give_booster_pack":
+				var pack_ref: String = value if not value.is_empty() else key
+				var subject_override: String = key if not value.is_empty() else ""
+				_grant_booster_pack_mail(pack_ref, subject_override)
 
 			"set_flag":
 				var flags: Variant = _session_rewards.get("flags", {})
@@ -481,6 +491,54 @@ func _process_events(events: Array) -> void:
 
 			"play_sfx":
 				_play_sfx(value)
+
+## Grant shop credits immediately (Collection wallet used by the Shop).
+func _grant_credits(amount: int) -> void:
+	if amount <= 0 or amount >= 1_000_000:
+		push_warning("ExplorationManager: invalid credit amount %d." % amount)
+		return
+	Collection.add_credits(amount)
+	emit_signal("mailbox_reward_granted", {
+		"type":         "credits",
+		"image_path":   "res://assets/textures/ui/decorations/ui_coin_front.png",
+		"display_name": "Received %d Credits" % amount,
+	})
+	# Toast is intentionally omitted — the mailbox reward overlay is the visual feedback.
+
+func _parse_credit_amount(key: String, value: String) -> int:
+	if value.is_valid_int():
+		return int(value)
+	if key.is_valid_int():
+		return int(key)
+	return 0
+
+## Send a booster pack to the player's mailbox (claimable from Inventory).
+## pack_ref — pack display name or id (resolved via ShopManager.get_pack_by_name).
+## subject_override — optional custom mail subject; auto-generated when empty.
+func _grant_booster_pack_mail(pack_ref: String, subject_override: String = "") -> void:
+	if pack_ref.is_empty():
+		push_warning("ExplorationManager: give_booster_pack missing pack name/id.")
+		return
+	var pack: Dictionary = ShopManager.get_pack_by_name(pack_ref)
+	if pack.is_empty():
+		push_warning("ExplorationManager: unknown booster pack '%s'." % pack_ref)
+		emit_signal("message_posted", "Unknown booster pack reward.")
+		return
+	var pack_name: String = str(pack.get("name", pack_ref))
+	var subject: String = subject_override if not subject_override.is_empty() \
+		else "Exploration Reward — %s" % pack_name
+	MailboxManager.send_mail(
+		"Exploration",
+		subject,
+		"You earned a booster pack during exploration: %s. Claim it from your Inventory." % pack_name,
+		{"type": "booster_pack", "pack_name": pack_name})
+	var pack_image: String = str(pack.get("pack_image", ""))
+	emit_signal("mailbox_reward_granted", {
+		"type":         "booster_pack",
+		"image_path":   pack_image,
+		"display_name": pack_name,
+	})
+	# Toast is intentionally omitted — the mailbox reward overlay is the visual feedback.
 
 func _play_sfx(path: String) -> void:
 	if path.is_empty() or not ResourceLoader.exists(path):

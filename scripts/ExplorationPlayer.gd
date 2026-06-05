@@ -112,10 +112,13 @@ var _info_mouse_wait_timer: SceneTreeTimer   = null    # 5s fallback: forces dis
 
 # ── Item preview overlay (inventory tap-to-inspect) ──────────────────────
 var _item_preview: Control        = null
+var _settings_menu: Node          = null
+var _confirm_overlay: Control     = null
 
 # ── Item-obtained overlay (awarded item cinematic) ────────────────────────
+# Queue entries are either a String (item_id) or a Dictionary ({_mailbox_type, image_path, display_name}).
 var _obtained_overlay: Control              = null
-var _obtained_queue: Array[String]          = []
+var _obtained_queue: Array                  = []
 var _obtained_dismiss_timer: SceneTreeTimer = null
 var _obtained_dismissing: bool              = false
 
@@ -131,9 +134,10 @@ var _exit_pending: bool      = false
 
 # ── Point-and-click hotspots ──────────────────────────────────────────────
 var _spots_layer: Control          = null   # holds spot hit-controls + icons
-var _tooltip_panel: PanelContainer = null   # cursor-following tooltip
+var _tooltip_panel: PanelContainer = null   # spot tooltip (anchored to spot, not cursor)
 var _tooltip_lbl: Label            = null
 var _hovering_spot: bool           = false
+var _hovered_spot_hit: Control     = null   # the hit Control currently being hovered
 var _magnifier_tex: Texture2D      = null
 
 # ─────────────────────────────────────────────────────────────
@@ -169,6 +173,7 @@ func _connect_signals() -> void:
 	ExplorationManager.node_entered.connect(_on_node_entered)
 	ExplorationManager.message_posted.connect(_show_toast)
 	ExplorationManager.item_obtained.connect(_on_item_obtained)
+	ExplorationManager.mailbox_reward_granted.connect(_on_mailbox_reward_granted)
 
 # ─────────────────────────────────────────────────────────────
 # UI Construction
@@ -236,7 +241,7 @@ func _build_ui() -> void:
 	# Title (hidden)
 	_title_lbl = Label.new()
 	_title_lbl.add_theme_font_override("font", _make_font(700))
-	_title_lbl.add_theme_font_size_override("font_size", 32)
+	_title_lbl.add_theme_font_size_override("font_size", 30)
 	_title_lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0, 1.0))
 	_title_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_title_lbl.visible = false
@@ -268,7 +273,7 @@ func _build_ui() -> void:
 	var who_hdr := Label.new()
 	who_hdr.text = "Who is Here"
 	who_hdr.add_theme_font_override("font", _make_font(700))
-	who_hdr.add_theme_font_size_override("font_size", 32)
+	who_hdr.add_theme_font_size_override("font_size", 30)
 	who_hdr.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0, 1.0))
 	_who_section.add_child(who_hdr)
 	var who_hdr_spacer := Control.new()
@@ -651,15 +656,61 @@ func _on_compass_clicked() -> void:
 		return
 	if _compass_open:
 		_close_compass_menu()
-	else:
-		_open_compass_menu()
+		return
+	if _is_any_other_hud_menu_active("compass"):
+		_dismiss_all_hud_menus(false)
+		return
+	_open_compass_menu()
 
-func _close_all_menus(animated: bool = true) -> void:
+func _is_hud_menu_active(which: String) -> bool:
+	match which:
+		"compass":   return _compass_open
+		"setting":   return _setting_open
+		"inventory": return _inv_open
+		"chat":      return _chat_open
+		"info":      return _info_open
+	return false
+
+func _is_any_other_hud_menu_active(which: String) -> bool:
+	for id: String in ["compass", "setting", "inventory", "chat", "info"]:
+		if id == which:
+			continue
+		if _is_hud_menu_active(id):
+			return true
+	return false
+
+func _dismiss_all_hud_menus(animated: bool = true) -> void:
 	_close_compass_menu(animated)
 	_close_setting_menu(animated)
 	_close_inventory_menu(animated)
 	_close_chat_menu(animated)
 	_close_info_panel()
+
+func _close_settings_menu_popup() -> void:
+	if _settings_menu != null and is_instance_valid(_settings_menu):
+		_settings_menu.queue_free()
+	_settings_menu = null
+
+func _close_confirm_dialog() -> void:
+	if _confirm_overlay != null and is_instance_valid(_confirm_overlay):
+		_confirm_overlay.queue_free()
+	_confirm_overlay = null
+
+func _dismiss_all_popups() -> void:
+	_dismiss_all_hud_menus(false)
+	_hide_tooltip()
+	_close_item_preview()
+	_close_settings_menu_popup()
+	_close_confirm_dialog()
+	_obtained_queue.clear()
+	_obtained_dismiss_timer = null
+	_obtained_dismissing    = false
+	if _obtained_overlay != null and is_instance_valid(_obtained_overlay):
+		_obtained_overlay.queue_free()
+	_obtained_overlay = null
+
+func _close_all_menus(animated: bool = true) -> void:
+	_dismiss_all_hud_menus(animated)
 
 func _open_compass_menu() -> void:
 	if _compass_animating or _compass_open:
@@ -779,12 +830,11 @@ func _on_setting_clicked() -> void:
 		return
 	if _setting_open:
 		_close_setting_menu()
-	else:
-		_close_compass_menu(false)
-		_close_inventory_menu(false)
-		_close_chat_menu(false)
-		_close_info_panel()
-		_open_setting_menu()
+		return
+	if _is_any_other_hud_menu_active("setting"):
+		_dismiss_all_hud_menus(false)
+		return
+	_open_setting_menu()
 
 func _open_setting_menu() -> void:
 	if _setting_animating or _setting_open:
@@ -883,13 +933,12 @@ func _on_setting_action(action: String) -> void:
 				"Restart Stage?",
 				"All progress will be lost.",
 				func() -> void:
+					_dismiss_all_popups()
 					CheckerTransition.fade_out_to_battle(func() -> void:
 						ExplorationManager.restart_stage()
 						CheckerTransition.fade_in()))
 		"options":
-			var sm: Node = load("res://scenes/settings_menu.tscn").instantiate()
-			add_child(sm)
-			sm.closed.connect(func() -> void: sm.queue_free())
+			_open_settings_menu_popup()
 
 # ─────────────────────────────────────────────────────────────
 # Inventory Radial Menu
@@ -900,16 +949,15 @@ func _on_inventory_clicked() -> void:
 		return
 	if _inv_open:
 		_close_inventory_menu()
-	else:
-		var inv: Array = ExplorationManager.get_inventory()
-		if inv.is_empty():
-			_flash_empty_inventory()
-			return
-		_close_compass_menu(false)
-		_close_setting_menu(false)
-		_close_chat_menu(false)
-		_close_info_panel()
-		_open_inventory_menu(0)
+		return
+	if _is_any_other_hud_menu_active("inventory"):
+		_dismiss_all_hud_menus(false)
+		return
+	var inv: Array = ExplorationManager.get_inventory()
+	if inv.is_empty():
+		_flash_empty_inventory()
+		return
+	_open_inventory_menu(0)
 
 func _open_inventory_menu(page: int) -> void:
 	if _inv_animating:
@@ -1077,33 +1125,32 @@ func _on_chat_clicked() -> void:
 		return
 	if _chat_open:
 		_close_chat_menu()
-	else:
-		var node: ExplorationNode = ExplorationManager.current_node
-		if node == null:
-			return
-		# Filter characters whose conditions are met and haven't been played (if play_once)
-		var available: Array = []
-		for char_data: Variant in node.characters:
-			if available.size() >= 8:
-				break
-			if not char_data is Dictionary:
-				continue
-			var cd: Dictionary = char_data as Dictionary
-			if not ExplorationManager.is_connection_unlocked(cd):
-				continue
-			var play_once: bool   = bool(cd.get("play_once", true))
-			var vn_path: String   = str(cd.get("vn_scene", ""))
-			if play_once and not vn_path.is_empty() and ExplorationManager.is_vn_played(vn_path):
-				continue
-			available.append(cd)
-		if available.is_empty():
-			_flash_empty_chat()
-			return
-		_close_compass_menu(false)
-		_close_setting_menu(false)
-		_close_inventory_menu(false)
-		_close_info_panel()
-		_open_chat_menu(available)
+		return
+	if _is_any_other_hud_menu_active("chat"):
+		_dismiss_all_hud_menus(false)
+		return
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node == null:
+		return
+	# Filter characters whose conditions are met and haven't been played (if play_once)
+	var available: Array = []
+	for char_data: Variant in node.characters:
+		if available.size() >= 8:
+			break
+		if not char_data is Dictionary:
+			continue
+		var cd: Dictionary = char_data as Dictionary
+		if not ExplorationManager.is_connection_unlocked(cd):
+			continue
+		var play_once: bool   = bool(cd.get("play_once", true))
+		var vn_path: String   = str(cd.get("vn_scene", ""))
+		if play_once and not vn_path.is_empty() and ExplorationManager.is_vn_played(vn_path):
+			continue
+		available.append(cd)
+	if available.is_empty():
+		_flash_empty_chat()
+		return
+	_open_chat_menu(available)
 
 func _open_chat_menu(available: Array) -> void:
 	if _chat_animating:
@@ -1278,12 +1325,11 @@ func _rebuild_who_is_here(node: ExplorationNode) -> void:
 func _on_info_clicked() -> void:
 	if _info_open:
 		_close_info_panel()
-	else:
-		_close_compass_menu(false)
-		_close_setting_menu(false)
-		_close_inventory_menu(false)
-		_close_chat_menu(false)
-		_open_info_panel()
+		return
+	if _is_any_other_hud_menu_active("info"):
+		_dismiss_all_hud_menus(false)
+		return
+	_open_info_panel()
 
 ## Open the info panel with an optional callback fired after it closes.
 ## Open the info panel. If wait_for_mouse_move=true (auto-open on node entry), the
@@ -1462,24 +1508,39 @@ func _show_item_preview(item_id: String) -> void:
 	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	vbox.add_child(btn_row)
 
-	var use_btn := Button.new()
-	use_btn.text = "  Use  "
-	use_btn.add_theme_font_size_override("font_size", 20)
-	use_btn.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
-	use_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var captured_id: String = item_id
-	use_btn.pressed.connect(func() -> void:
-		_close_item_preview()
-		_execute_item_effects(captured_id))
-	btn_row.add_child(use_btn)
+	var can_use: bool = _item_can_be_used(item_id)
+	if can_use:
+		var use_btn := Button.new()
+		use_btn.text = "  Use  "
+		use_btn.add_theme_font_size_override("font_size", 20)
+		use_btn.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
+		use_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var captured_id: String = item_id
+		use_btn.pressed.connect(func() -> void:
+			_close_item_preview()
+			_execute_item_effects(captured_id))
+		btn_row.add_child(use_btn)
 
-	var cancel_btn := Button.new()
-	cancel_btn.text = "Cancel"
-	cancel_btn.add_theme_font_size_override("font_size", 20)
-	cancel_btn.add_theme_color_override("font_color", Color(0.60, 0.65, 0.65))
-	cancel_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cancel_btn.pressed.connect(_close_item_preview)
-	btn_row.add_child(cancel_btn)
+	var close_btn := Button.new()
+	close_btn.text = "Close"
+	close_btn.add_theme_font_size_override("font_size", 20)
+	close_btn.add_theme_color_override("font_color", Color(0.60, 0.65, 0.65))
+	close_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL if can_use else Control.SIZE_SHRINK_CENTER
+	close_btn.pressed.connect(_close_item_preview)
+	btn_row.add_child(close_btn)
+
+func _item_can_be_used(item_id: String) -> bool:
+	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
+	var effects: Variant = item.get("effects", [])
+	if effects is Array and not (effects as Array).is_empty():
+		return true
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node == null:
+		return false
+	for entry: Variant in node.usable_items:
+		if entry is Dictionary and str((entry as Dictionary).get("item", "")) == item_id:
+			return true
+	return false
 
 func _close_item_preview() -> void:
 	if _item_preview != null and is_instance_valid(_item_preview):
@@ -1495,11 +1556,23 @@ func _on_item_obtained(item_id: String) -> void:
 	if _obtained_overlay == null:
 		_show_next_obtained()
 
+func _on_mailbox_reward_granted(info: Dictionary) -> void:
+	var entry := info.duplicate()
+	entry["_mailbox_type"] = true
+	_obtained_queue.append(entry)
+	if _obtained_overlay == null:
+		_show_next_obtained()
+
 func _show_next_obtained() -> void:
 	if _obtained_queue.is_empty():
 		return
-	var item_id: String = _obtained_queue[0]
+	var entry: Variant = _obtained_queue[0]
 	_obtained_queue.remove_at(0)
+	# Route mailbox rewards to the dedicated overlay
+	if entry is Dictionary and (entry as Dictionary).has("_mailbox_type"):
+		_show_mailbox_reward_overlay(entry as Dictionary)
+		return
+	var item_id: String = str(entry)
 	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
 	if item.is_empty():
 		_show_next_obtained()
@@ -1614,6 +1687,290 @@ func _dismiss_obtained_overlay() -> void:
 	tw.tween_callback(func() -> void:
 		_obtained_dismissing = false
 		_show_next_obtained())
+
+# ─────────────────────────────────────────────────────────────
+# Mailbox Reward Overlay
+# Full-image presentation for items/packs/credits sent to mailbox.
+# Dismisses with a digital-dissolve particle animation, then shows
+# a confirmation message before fading out.
+# ─────────────────────────────────────────────────────────────
+
+const _DIGIT_FONT_PATH: String = "res://assets/fonts/digital-7.ttf"
+
+func _show_mailbox_reward_overlay(info: Dictionary) -> void:
+	_obtained_dismissing = false
+	var vp: Vector2 = get_viewport_rect().size
+
+	var overlay := Control.new()
+	overlay.z_index    = 96
+	overlay.modulate.a = 0.0
+	overlay.position   = Vector2.ZERO
+	overlay.size       = vp
+	_obtained_overlay  = overlay
+	add_child(overlay)
+
+	# Dim layer
+	var dim := ColorRect.new()
+	dim.color        = Color(0.0, 0.0, 0.0, 0.85)
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(dim)
+
+	# Tap-to-dismiss catcher (disabled once dissolve begins)
+	var tapper := ColorRect.new()
+	tapper.color        = Color(0, 0, 0, 0)
+	tapper.mouse_filter = Control.MOUSE_FILTER_STOP
+	tapper.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(tapper)
+
+	# Centred content column
+	var center := CenterContainer.new()
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(center)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 24)
+	vbox.alignment    = BoxContainer.ALIGNMENT_CENTER
+	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	center.add_child(vbox)
+
+	# Image
+	var img_path: String = str(info.get("image_path", ""))
+	var img_tr := TextureRect.new()
+	img_tr.expand_mode           = TextureRect.EXPAND_IGNORE_SIZE
+	img_tr.stretch_mode          = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	img_tr.custom_minimum_size   = Vector2(0.0, 340.0)
+	img_tr.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	img_tr.mouse_filter          = Control.MOUSE_FILTER_IGNORE
+	if not img_path.is_empty() and ResourceLoader.exists(img_path):
+		img_tr.texture = load(img_path) as Texture2D
+	vbox.add_child(img_tr)
+
+	# Title
+	var display_name: String = str(info.get("display_name", ""))
+	var name_lbl := Label.new()
+	name_lbl.text = display_name
+	name_lbl.add_theme_font_override("font", _make_font(700))
+	name_lbl.add_theme_font_size_override("font_size", 36)
+	name_lbl.add_theme_color_override("font_color", Color(1.0, 0.95, 0.75))
+	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(name_lbl)
+
+	# Hint
+	var hint_lbl := Label.new()
+	hint_lbl.text = "Tap to dismiss"
+	hint_lbl.add_theme_font_size_override("font_size", 16)
+	hint_lbl.add_theme_color_override("font_color", Color(0.55, 0.60, 0.65))
+	hint_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(hint_lbl)
+
+	# Wire tapper — only triggers BEFORE dissolve begins
+	tapper.gui_input.connect(func(ev: InputEvent) -> void:
+		if _is_press_event(ev):
+			_dismiss_mailbox_reward_overlay(overlay, tapper, img_tr, hint_lbl, name_lbl))
+
+	# Fade-in
+	var tw := create_tween()
+	tw.tween_property(overlay, "modulate:a", 1.0, 0.45).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
+
+	# 8-second auto-dismiss (gives player time to read, then dissolve plays automatically)
+	_obtained_dismiss_timer = get_tree().create_timer(8.0)
+	_obtained_dismiss_timer.timeout.connect(func() -> void:
+		if _obtained_overlay == null or not is_instance_valid(_obtained_overlay):
+			return
+		_obtained_dismiss_timer = null
+		_dismiss_mailbox_reward_overlay(overlay, tapper, img_tr, hint_lbl, name_lbl))
+
+func _dismiss_mailbox_reward_overlay(
+		overlay: Control,
+		tapper: ColorRect,
+		img_tr: TextureRect,
+		hint_lbl: Label,
+		name_lbl: Label) -> void:
+	if _obtained_dismissing:
+		return
+	if not is_instance_valid(overlay):
+		_obtained_overlay     = null
+		_obtained_dismissing  = false
+		_show_next_obtained()
+		return
+
+	_obtained_dismissing    = true
+	_obtained_dismiss_timer = null
+	_obtained_overlay       = null
+
+	# Disable tapper so accidental taps during animation are ignored
+	tapper.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	# Hide hint and title — only image stays visible for dissolve
+	hint_lbl.visible = false
+	name_lbl.visible = false
+
+	_play_digital_dissolve(overlay, img_tr, func() -> void:
+		_obtained_dismissing = false
+		_show_next_obtained())
+
+func _play_digital_dissolve(overlay: Control, img_tr: TextureRect, on_done: Callable) -> void:
+	var vp: Vector2       = get_viewport_rect().size
+	const DISSOLVE_DUR:   float = 1.5   # total time before confirmation text appears
+	const PARTICLE_COUNT: int   = 28    # subtle, not overwhelming
+	const DRIFT_MAX:      float = 110.0
+
+	# Invisible layer so particles are clipped with the overlay — NOT queue_freed;
+	# _show_mailbox_sent_text hides all overlay children instead.
+	var particle_layer := Control.new()
+	particle_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	particle_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	particle_layer.z_index = 3
+	overlay.add_child(particle_layer)
+
+	var digit_font: FontFile = null
+	if ResourceLoader.exists(_DIGIT_FONT_PATH):
+		digit_font = load(_DIGIT_FONT_PATH) as FontFile
+
+	# Spawn area — read from image rect once layout is settled
+	var spawn_cx: float = vp.x * 0.5
+	var spawn_cy: float = vp.y * 0.42
+	var spawn_w:  float = 340.0
+	var spawn_h:  float = 320.0
+	if is_instance_valid(img_tr) and img_tr.size.x > 10.0:
+		var ir: Rect2 = img_tr.get_global_rect()
+		spawn_cx = ir.position.x + ir.size.x * 0.5
+		spawn_cy = ir.position.y + ir.size.y * 0.5
+		spawn_w  = ir.size.x
+		spawn_h  = ir.size.y
+
+	# Fade the image out
+	if is_instance_valid(img_tr):
+		var img_tw := create_tween()
+		img_tw.tween_property(img_tr, "modulate:a", 0.0, DISSOLVE_DUR * 0.75) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+
+	# Each particle gets THREE independent tweens (appear / drift / fade-out)
+	# so their timing is fully decoupled — no particle vanishes at the same time.
+	for _i: int in range(PARTICLE_COUNT):
+		var lbl := Label.new()
+		lbl.text = "0" if randf() > 0.5 else "1"
+		if digit_font != null:
+			lbl.add_theme_font_override("font", digit_font)
+		lbl.add_theme_font_size_override("font_size", randi_range(14, 34))
+		lbl.add_theme_color_override("font_color",
+			Color(0.0, 0.85 + randf() * 0.15, 0.80 + randf() * 0.20))
+		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		lbl.modulate.a   = 0.0
+
+		# Tighter spawn cluster — particles start close to the image centre
+		var px: float = spawn_cx + randf_range(-spawn_w * 0.22, spawn_w * 0.22)
+		var py: float = spawn_cy + randf_range(-spawn_h * 0.22, spawn_h * 0.22)
+		lbl.position  = Vector2(px, py)
+		particle_layer.add_child(lbl)
+
+		# Individual random timings for every phase
+		var start:      float = randf_range(0.00, 0.35)
+		var appear_dur: float = randf_range(0.08, 0.20)
+		var drift_dur:  float = randf_range(0.40, DISSOLVE_DUR)
+		var fade_delay: float = start + randf_range(0.15, 0.50)
+		var fade_dur:   float = randf_range(0.25, 0.65)
+		# Movement: always upward, with a subtle left-or-right lean per particle
+		var side_bias:  float = randf_range(-1.0, 1.0)           # −1 left … +1 right
+		var drift_x:    float = side_bias * randf_range(4.0, 22.0)
+		var drift_y:    float = -randf_range(DRIFT_MAX * 0.35, DRIFT_MAX * 0.75)
+
+		# Tween 1: appear — each particle has its own random peak opacity
+		var peak_alpha: float = randf_range(0.30, 0.85)
+		var tw_appear := create_tween()
+		tw_appear.tween_interval(start)
+		tw_appear.tween_property(lbl, "modulate:a", peak_alpha, appear_dur) \
+			.set_trans(Tween.TRANS_SINE)
+
+		# Tween 2: drift (starts at same time as appear, independent duration)
+		var tw_drift := create_tween()
+		tw_drift.tween_interval(start)
+		tw_drift.tween_property(lbl, "position",
+			Vector2(px + drift_x, py + drift_y), drift_dur) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+		# Tween 3: fade-out (independent delay and duration — this is the key)
+		var tw_fade := create_tween()
+		tw_fade.tween_interval(fade_delay)
+		tw_fade.tween_property(lbl, "modulate:a", 0.0, fade_dur) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+
+	# After dissolve window, transition to confirmation text.
+	# particle_layer is NOT queue_freed — _show_mailbox_sent_text hides all children.
+	var seq := create_tween()
+	seq.tween_interval(DISSOLVE_DUR + 0.10)
+	seq.tween_callback(func() -> void:
+		if not is_instance_valid(overlay):
+			on_done.call()
+			return
+		_show_mailbox_sent_text(overlay, on_done))
+
+func _show_mailbox_sent_text(overlay: Control, on_done: Callable) -> void:
+	if not is_instance_valid(overlay):
+		on_done.call()
+		return
+
+	# Hide remaining overlay children before showing confirmation
+	for child: Node in overlay.get_children():
+		if child is Control:
+			(child as Control).visible = false
+
+	var center := CenterContainer.new()
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.modulate.a = 0.0
+	overlay.add_child(center)
+
+	var vbox := VBoxContainer.new()
+	vbox.alignment    = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_theme_constant_override("separation", 18)
+	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	center.add_child(vbox)
+
+	# Envelope icon
+	var icon_lbl := Label.new()
+	icon_lbl.text = "[ ✉ ]"
+	icon_lbl.add_theme_font_override("font", _make_font(300))
+	icon_lbl.add_theme_font_size_override("font_size", 52)
+	icon_lbl.add_theme_color_override("font_color", Color(0.0, 1.0, 0.9))
+	icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	icon_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(icon_lbl)
+
+	# Primary text
+	var sent_lbl := Label.new()
+	sent_lbl.text = "Sent to mailbox"
+	sent_lbl.add_theme_font_override("font", _make_font(700))
+	sent_lbl.add_theme_font_size_override("font_size", 34)
+	sent_lbl.add_theme_color_override("font_color", Color(0.0, 1.0, 0.9))
+	sent_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sent_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(sent_lbl)
+
+	# Sub-text
+	var sub_lbl := Label.new()
+	sub_lbl.text = "(accessible via title screen)"
+	sub_lbl.add_theme_font_size_override("font_size", 18)
+	sub_lbl.add_theme_color_override("font_color", Color(0.45, 0.72, 0.80))
+	sub_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sub_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(sub_lbl)
+
+	# Fade in confirmation text
+	var tw_in := create_tween()
+	tw_in.tween_property(center, "modulate:a", 1.0, 0.5).set_trans(Tween.TRANS_SINE)
+
+	# Hold for 2.5s then fade out entire overlay
+	var seq := create_tween()
+	seq.tween_interval(2.5)
+	seq.tween_property(overlay, "modulate:a", 0.0, 0.45) \
+		.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+	seq.tween_callback(overlay.queue_free)
+	seq.tween_callback(on_done)
 
 func _execute_item_effects(item_id: String) -> void:
 	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
@@ -1829,13 +2186,28 @@ func _make_radial_panel(pos: Vector2, bg_color: Color, border_color: Color) -> P
 # Confirmation Dialog Helper
 # ─────────────────────────────────────────────────────────────
 
+func _open_settings_menu_popup() -> void:
+	if _settings_menu != null and is_instance_valid(_settings_menu):
+		return
+	var sm: Node = load("res://scenes/settings_menu.tscn").instantiate()
+	sm.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	sm.z_index = 100
+	_settings_menu = sm
+	add_child(sm)
+	sm.closed.connect(func() -> void:
+		_settings_menu = null
+		sm.queue_free())
+	sm.tree_exiting.connect(func() -> void: _settings_menu = null)
+
 func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Callable) -> void:
+	_close_confirm_dialog()
 	var vp_sz: Vector2 = get_viewport_rect().size
 
 	var overlay := Control.new()
 	overlay.z_index  = 60
 	overlay.position = Vector2.ZERO
 	overlay.size     = vp_sz
+	_confirm_overlay = overlay
 	add_child(overlay)
 
 	var dimmer := ColorRect.new()
@@ -1892,7 +2264,7 @@ func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Cal
 	confirm_btn.add_theme_color_override("font_color", Color(1.0, 0.60, 0.50))
 	confirm_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	confirm_btn.pressed.connect(func() -> void:
-		overlay.queue_free()
+		_close_confirm_dialog()
 		on_confirm.call())
 	btn_row.add_child(confirm_btn)
 
@@ -1901,7 +2273,7 @@ func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Cal
 	cancel_btn.add_theme_font_size_override("font_size", 18)
 	cancel_btn.add_theme_color_override("font_color", Color(0.60, 0.65, 0.65))
 	cancel_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cancel_btn.pressed.connect(func() -> void: overlay.queue_free())
+	cancel_btn.pressed.connect(_close_confirm_dialog)
 	btn_row.add_child(cancel_btn)
 
 # ─────────────────────────────────────────────────────────────
@@ -1909,8 +2281,7 @@ func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Cal
 # ─────────────────────────────────────────────────────────────
 
 func _on_node_entered(node: ExplorationNode) -> void:
-	_close_all_menus(false)
-	_close_item_preview()
+	_dismiss_all_popups()
 	_refresh_node(node)
 
 func _refresh_node(node: ExplorationNode) -> void:
@@ -2189,7 +2560,9 @@ func _rebuild_spots(node: ExplorationNode) -> void:
 	if node.clickable_spots.is_empty():
 		return
 	var vp: Vector2 = get_viewport_rect().size
-	var bg_w: float = vp.x * BG_AREA_FRACTION
+	# Use full viewport width so x_norm 0-1 maps to the full background image width,
+	# matching the coordinate picker in the editor.
+	var bg_w: float = vp.x
 	var bg_h: float = vp.y
 	for i: int in node.clickable_spots.size():
 		var spot_var: Variant = node.clickable_spots[i]
@@ -2250,7 +2623,7 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	var cap_hide:  bool   = bool(spot.get("hide_after_interact", false))
 	var cap_node:  String = ExplorationManager.current_node_id
 	var cap_index: int    = spot_index
-	hit.mouse_entered.connect(func() -> void: _on_spot_hover_enter(cap_tip))
+	hit.mouse_entered.connect(func() -> void: _on_spot_hover_enter(cap_tip, hit))
 	hit.mouse_exited.connect(func() -> void:  _on_spot_hover_exit())
 	hit.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton:
@@ -2261,8 +2634,9 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 					ExplorationManager.mark_spot_interacted(cap_node, cap_index)
 				_on_spot_triggered(cap_acts))
 
-func _on_spot_hover_enter(tooltip_text: String) -> void:
-	_hovering_spot = true
+func _on_spot_hover_enter(tooltip_text: String, spot_hit: Control) -> void:
+	_hovering_spot    = true
+	_hovered_spot_hit = spot_hit
 	if _magnifier_tex != null:
 		Input.set_custom_mouse_cursor(_magnifier_tex, Input.CURSOR_ARROW, Vector2(8.0, 8.0))
 	if not tooltip_text.is_empty() and _tooltip_panel != null:
@@ -2270,7 +2644,8 @@ func _on_spot_hover_enter(tooltip_text: String) -> void:
 		_tooltip_panel.visible = true
 
 func _on_spot_hover_exit() -> void:
-	_hovering_spot = false
+	_hovering_spot    = false
+	_hovered_spot_hit = null
 	Input.set_custom_mouse_cursor(_default_tex, Input.CURSOR_ARROW, Vector2(4.0, 4.0))
 	_hide_tooltip()
 
@@ -2304,7 +2679,7 @@ func _execute_spot_actions(actions: Array) -> void:
 				ExplorationManager.remove_item(key if not key.is_empty() else value)
 			"set_var":
 				ExplorationManager.set_var(key, value)
-			"give_credits", "set_flag":
+			"give_credits", "set_flag", "give_booster_pack":
 				ExplorationManager.process_events([act])
 			"show_message":
 				_show_toast(value)
@@ -2342,14 +2717,19 @@ func _process(_delta: float) -> void:
 			# mouse just left (transition settled, mouse-move wait cleared) — start dismiss timer
 			_on_info_panel_mouse_exited()
 		_info_panel_hovered = over
-	# Tooltip follow
-	if _tooltip_panel != null and _tooltip_panel.visible:
-		var mp: Vector2 = get_local_mouse_position()
+	# Tooltip: anchor to top-right of the hovered spot (not the cursor).
+	if _tooltip_panel != null and _tooltip_panel.visible \
+			and _hovered_spot_hit != null and is_instance_valid(_hovered_spot_hit):
 		var vp: Vector2 = get_viewport_rect().size
 		var tp: Vector2 = _tooltip_panel.size
-		_tooltip_panel.position = Vector2(
-			minf(mp.x + 16.0, vp.x - tp.x - 4.0),
-			minf(mp.y + 16.0, vp.y - tp.y - 4.0))
+		var sr: Rect2   = _hovered_spot_hit.get_global_rect()
+		const GAP: float = 3.0
+		var tx: float = sr.position.x + sr.size.x + GAP
+		var ty: float = sr.position.y - tp.y - GAP
+		# Clamp so tooltip stays on-screen
+		tx = clampf(tx, 4.0, vp.x - tp.x - 4.0)
+		ty = clampf(ty, 4.0, vp.y - tp.y - 4.0)
+		_tooltip_panel.position = Vector2(tx, ty)
 	# Cursor: finger over interactive elements, default otherwise
 	if not _hovering_spot:
 		if _mouse_over_interactive():
