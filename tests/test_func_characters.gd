@@ -571,10 +571,13 @@ func _sniping_fairy(A, AB) -> void:
 	print("-- TC-FUNC-Sniping-Fairy-001")
 	var att := _make_char("Sniping Fairy", 40, 20, 350, A.DIVINE,
 		AB.ATK_PENALTY_WHEN_EXPOSED, {"penalty": 20})
-	att.face_up = true  # exposed — penalty applies
+	att.face_up = true  # exposed same turn — penalty not applied until end of turn
 	var def_ := _make_char("Dummy", 0, 200, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 20, "TC-FUNC-Sniping-Fairy-001: ATK 40-20=20 when face-up")
+	assert_eq(r.attacker_atk_used, 40, "TC-FUNC-Sniping-Fairy-001: full ATK 40 during expose turn")
+	att.current_atk = 20  # simulate end-of-expose-turn penalty
+	var r2 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_eq(r2.attacker_atk_used, 20, "TC-FUNC-Sniping-Fairy-001b: ATK 20 after expose-turn penalty")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # ATTACKER_ATK_DEBUFF
@@ -744,10 +747,14 @@ func _mafia_associates(A, AB) -> void:
 	var opp_att := _make_char("Attacker", 5, 0, 100, A.ANIMA)  # low ATK
 	var def_ := _make_char("Mafia Associates", 45, 40, 500, A.ANIMA,
 		AB.DEF_ZERO_WHEN_EXPOSED, {})
-	def_.face_up = true  # exposed → DEF becomes 0
+	def_.face_up = true  # exposed same turn — full DEF until end of turn
 	var r := BattleResolver.resolve_battle(opp_att, def_, 3, 0, 1)
-	assert_eq(r.defender_def_used, 0, "TC-FUNC-Mafia-Associates-001: DEF=0 when face-up")
-	assert_true(r.defender_destroyed, "TC-FUNC-Mafia-Associates-001: ATK 5 > DEF 0 → destroyed")
+	assert_eq(r.defender_def_used, 40, "TC-FUNC-Mafia-Associates-001: full DEF 40 during expose turn")
+	assert_false(r.defender_destroyed, "TC-FUNC-Mafia-Associates-001: ATK 5 < DEF 40 → survives")
+	def_.current_def = 0  # simulate end-of-expose-turn penalty
+	var r2 := BattleResolver.resolve_battle(opp_att, def_, 3, 0, 1)
+	assert_eq(r2.defender_def_used, 0, "TC-FUNC-Mafia-Associates-001b: DEF=0 after expose-turn penalty")
+	assert_true(r2.defender_destroyed, "TC-FUNC-Mafia-Associates-001b: ATK 5 > DEF 0 → destroyed")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # DESTROYED_IF_BATTLES_DIVINE

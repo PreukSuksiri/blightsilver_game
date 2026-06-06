@@ -33,6 +33,7 @@ const NODE_TYPE_COLORS: Dictionary = {
 const PROPS_PANEL_W: float  = 380.0
 const TOOLBAR_H: float      = 44.0
 const GRAPH_NODE_W: float   = 200.0
+const VN_TRIGGER_VALUES: Array[String] = ["on_enter", "on_exit", "on_var_change"]
 
 # ─────────────────────────────────────────────────────────────
 # State
@@ -54,19 +55,32 @@ var _graph_edit: GraphEdit = null
 var _props_panel: Control  = null
 
 # ── Properties panel fields ───────────────────────────────────
+var _prop_start_node_edit:  LineEdit    = null
+var _prop_start_cond_vbox:  VBoxContainer = null
 var _prop_id_edit:          LineEdit    = null
 var _prop_title_edit:       LineEdit    = null
+var _prop_title_cond_vbox:  VBoxContainer = null
 var _prop_desc_edit:        TextEdit    = null
+var _prop_desc_cond_vbox:   VBoxContainer = null
 var _prop_type_btn:         OptionButton = null
 var _prop_bg_edit:          LineEdit    = null
+var _prop_bg_cond_vbox:     VBoxContainer = null
 var _prop_vn_edit:            LineEdit    = null
+var _prop_vn_cond_vbox:       VBoxContainer = null
+var _prop_vn_trigger_btn:     OptionButton = null
+var _prop_vn_var_trigger_panel: VBoxContainer = null
+var _prop_vn_trigger_var_edit: LineEdit   = null
+var _prop_vn_trigger_eq_edit:  LineEdit   = null
 var _prop_vn_play_once_chk:   CheckBox    = null
 var _prop_show_info_chk:      CheckBox    = null
 var _prop_show_who_chk:       CheckBox    = null
 var _prop_music_edit:       LineEdit    = null
+var _prop_music_cond_vbox:  VBoxContainer = null
 var _prop_connections_vbox: VBoxContainer = null
-var _prop_events_in_vbox:   VBoxContainer = null
-var _prop_events_out_vbox:  VBoxContainer = null
+var _prop_events_in_vbox:       VBoxContainer = null
+var _prop_events_in_cond_vbox:  VBoxContainer = null
+var _prop_events_out_vbox:      VBoxContainer = null
+var _prop_events_out_cond_vbox: VBoxContainer = null
 var _prop_characters_vbox:  VBoxContainer = null
 var _prop_spots_vbox:       VBoxContainer = null
 var _spot_picker_window:    Window        = null
@@ -241,16 +255,48 @@ func _build_props_panel() -> Control:
 	vbox.offset_bottom = -10.0
 	scroll.add_child(vbox)
 
+	# Section: Graph
+	_add_section_header(vbox, "GRAPH")
+	_prop_start_node_edit = _add_field(vbox, "Start Node ID", "start")
+	_add_section_header(vbox, "CONDITIONAL START NODE")
+	_prop_start_cond_vbox = VBoxContainer.new()
+	_prop_start_cond_vbox.add_theme_constant_override("separation", 3)
+	vbox.add_child(_prop_start_cond_vbox)
+	var add_start_cond_btn := Button.new()
+	add_start_cond_btn.text = "+ Add Condition"
+	add_start_cond_btn.add_theme_font_size_override("font_size", 13)
+	add_start_cond_btn.pressed.connect(func() -> void: _add_node_id_cond_row(_prop_start_cond_vbox))
+	vbox.add_child(add_start_cond_btn)
+	vbox.add_child(HSeparator.new())
+
 	# Section: Node Identity
 	_add_section_header(vbox, "NODE IDENTITY")
 	_prop_id_edit    = _add_field(vbox, "ID", "node_id")
 	_prop_title_edit = _add_field(vbox, "Title", "")
+	_add_section_header(vbox, "CONDITIONAL TITLE")
+	_prop_title_cond_vbox = VBoxContainer.new()
+	_prop_title_cond_vbox.add_theme_constant_override("separation", 3)
+	vbox.add_child(_prop_title_cond_vbox)
+	var add_title_cond_btn := Button.new()
+	add_title_cond_btn.text = "+ Add Condition"
+	add_title_cond_btn.add_theme_font_size_override("font_size", 13)
+	add_title_cond_btn.pressed.connect(func() -> void: _add_text_cond_row(_prop_title_cond_vbox, false))
+	vbox.add_child(add_title_cond_btn)
 	_prop_type_btn   = _add_type_dropdown(vbox)
 	vbox.add_child(HSeparator.new())
 
 	# Section: Content
 	_add_section_header(vbox, "CONTENT")
 	_prop_desc_edit  = _add_textarea(vbox, "Description")
+	_add_section_header(vbox, "CONDITIONAL DESCRIPTION")
+	_prop_desc_cond_vbox = VBoxContainer.new()
+	_prop_desc_cond_vbox.add_theme_constant_override("separation", 3)
+	vbox.add_child(_prop_desc_cond_vbox)
+	var add_desc_cond_btn := Button.new()
+	add_desc_cond_btn.text = "+ Add Condition"
+	add_desc_cond_btn.add_theme_font_size_override("font_size", 13)
+	add_desc_cond_btn.pressed.connect(func() -> void: _add_text_cond_row(_prop_desc_cond_vbox, true))
+	vbox.add_child(add_desc_cond_btn)
 	_prop_bg_edit    = _add_file_field(vbox, "Background (res:// path)",
 		PackedStringArray(["*.png,*.jpg,*.jpeg ; Images"]), "res://assets/textures")
 	var bg_preview_btn := Button.new()
@@ -259,9 +305,22 @@ func _build_props_panel() -> Control:
 	bg_preview_btn.add_theme_font_size_override("font_size", 13)
 	bg_preview_btn.pressed.connect(func() -> void: _preview_image(_prop_bg_edit.text.strip_edges()))
 	_prop_bg_edit.get_parent().add_child(bg_preview_btn)
+
+	# Conditional background overrides
+	_add_section_header(vbox, "CONDITIONAL BACKGROUND")
+	_prop_bg_cond_vbox = VBoxContainer.new()
+	_prop_bg_cond_vbox.add_theme_constant_override("separation", 3)
+	vbox.add_child(_prop_bg_cond_vbox)
+	var add_bg_cond_btn := Button.new()
+	add_bg_cond_btn.text = "+ Add Condition"
+	add_bg_cond_btn.add_theme_font_size_override("font_size", 13)
+	add_bg_cond_btn.pressed.connect(func() -> void: _add_media_cond_row(_prop_bg_cond_vbox, true))
+	vbox.add_child(add_bg_cond_btn)
+
 	_prop_vn_edit    = _add_file_field(vbox, "VN Scene (res:// path)",
 		PackedStringArray(["*.json ; JSON Files"]), "res://exploration/vn",
 		func() -> void: _browse_for_vn_scene())
+
 	var edit_beats_btn := Button.new()
 	edit_beats_btn.text = "Edit Beats ↗"
 	edit_beats_btn.add_theme_font_size_override("font_size", 13)
@@ -272,6 +331,59 @@ func _build_props_panel() -> Control:
 	_prop_vn_play_once_chk.button_pressed = true
 	_prop_vn_play_once_chk.add_theme_font_size_override("font_size", 13)
 	vbox.add_child(_prop_vn_play_once_chk)
+
+	var vn_trigger_lbl := Label.new()
+	vn_trigger_lbl.text = "VN Trigger"
+	vn_trigger_lbl.add_theme_font_size_override("font_size", 13)
+	vn_trigger_lbl.add_theme_color_override("font_color", Color(0.75, 0.82, 0.90))
+	vbox.add_child(vn_trigger_lbl)
+	_prop_vn_trigger_btn = OptionButton.new()
+	_prop_vn_trigger_btn.add_item("On Enter")
+	_prop_vn_trigger_btn.add_item("On Exit")
+	_prop_vn_trigger_btn.add_item("On Variable Change")
+	_prop_vn_trigger_btn.add_theme_font_size_override("font_size", 14)
+	_prop_vn_trigger_btn.item_selected.connect(_on_vn_trigger_changed)
+	vbox.add_child(_prop_vn_trigger_btn)
+
+	_prop_vn_var_trigger_panel = VBoxContainer.new()
+	_prop_vn_var_trigger_panel.add_theme_constant_override("separation", 4)
+	vbox.add_child(_prop_vn_var_trigger_panel)
+	var trig_var_lbl := Label.new()
+	trig_var_lbl.text = "Watch Variable"
+	trig_var_lbl.add_theme_font_size_override("font_size", 12)
+	trig_var_lbl.add_theme_color_override("font_color", Color(0.75, 0.82, 0.90))
+	_prop_vn_var_trigger_panel.add_child(trig_var_lbl)
+	_prop_vn_trigger_var_edit = LineEdit.new()
+	_prop_vn_trigger_var_edit.placeholder_text = "variable key (empty = any var)"
+	_prop_vn_trigger_var_edit.add_theme_font_size_override("font_size", 14)
+	_prop_vn_var_trigger_panel.add_child(_prop_vn_trigger_var_edit)
+	var trig_eq_lbl := Label.new()
+	trig_eq_lbl.text = "Equals Value"
+	trig_eq_lbl.add_theme_font_size_override("font_size", 12)
+	trig_eq_lbl.add_theme_color_override("font_color", Color(0.75, 0.82, 0.90))
+	_prop_vn_var_trigger_panel.add_child(trig_eq_lbl)
+	_prop_vn_trigger_eq_edit = LineEdit.new()
+	_prop_vn_trigger_eq_edit.placeholder_text = "value (empty = any value)"
+	_prop_vn_trigger_eq_edit.add_theme_font_size_override("font_size", 14)
+	_prop_vn_var_trigger_panel.add_child(_prop_vn_trigger_eq_edit)
+	var trig_hint := _make_kv_hint_label()
+	trig_hint.text = "Plays vn_scene while the player is on this node when the watched variable changes to the equals value."
+	_prop_vn_var_trigger_panel.add_child(trig_hint)
+	_prop_vn_var_trigger_panel.visible = false
+
+	_add_section_header(vbox, "CONDITIONAL VN SCENE")
+	_prop_vn_cond_vbox = VBoxContainer.new()
+	_prop_vn_cond_vbox.add_theme_constant_override("separation", 3)
+	vbox.add_child(_prop_vn_cond_vbox)
+	var add_vn_cond_btn := Button.new()
+	add_vn_cond_btn.text = "+ Add Condition"
+	add_vn_cond_btn.add_theme_font_size_override("font_size", 13)
+	add_vn_cond_btn.pressed.connect(func() -> void:
+		_add_path_cond_row(_prop_vn_cond_vbox,
+			PackedStringArray(["*.json ; JSON Files"]), "res://exploration/vn",
+			"", "", "", Callable(), true))
+	vbox.add_child(add_vn_cond_btn)
+
 	_prop_show_info_chk = CheckBox.new()
 	_prop_show_info_chk.text = "Show Info Panel on Enter"
 	_prop_show_info_chk.button_pressed = true
@@ -296,6 +408,18 @@ func _build_props_panel() -> Control:
 	music_stop_btn.add_theme_font_size_override("font_size", 13)
 	music_stop_btn.pressed.connect(func() -> void: if _preview_player != null: _preview_player.stop())
 	_prop_music_edit.get_parent().add_child(music_stop_btn)
+
+	# Conditional music overrides
+	_add_section_header(vbox, "CONDITIONAL MUSIC")
+	_prop_music_cond_vbox = VBoxContainer.new()
+	_prop_music_cond_vbox.add_theme_constant_override("separation", 3)
+	vbox.add_child(_prop_music_cond_vbox)
+	var add_music_cond_btn := Button.new()
+	add_music_cond_btn.text = "+ Add Condition"
+	add_music_cond_btn.add_theme_font_size_override("font_size", 13)
+	add_music_cond_btn.pressed.connect(func() -> void: _add_media_cond_row(_prop_music_cond_vbox, false))
+	vbox.add_child(add_music_cond_btn)
+
 	vbox.add_child(HSeparator.new())
 
 	# Section: On-Enter Events
@@ -308,6 +432,15 @@ func _build_props_panel() -> Control:
 	add_enter_btn.add_theme_font_size_override("font_size", 13)
 	add_enter_btn.pressed.connect(func() -> void: _add_event_row(_prop_events_in_vbox))
 	vbox.add_child(add_enter_btn)
+	_add_section_header(vbox, "CONDITIONAL ON-ENTER EVENTS")
+	_prop_events_in_cond_vbox = VBoxContainer.new()
+	_prop_events_in_cond_vbox.add_theme_constant_override("separation", 3)
+	vbox.add_child(_prop_events_in_cond_vbox)
+	var add_enter_cond_btn := Button.new()
+	add_enter_cond_btn.text = "+ Add Condition"
+	add_enter_cond_btn.add_theme_font_size_override("font_size", 13)
+	add_enter_cond_btn.pressed.connect(func() -> void: _add_events_cond_row(_prop_events_in_cond_vbox))
+	vbox.add_child(add_enter_cond_btn)
 	vbox.add_child(HSeparator.new())
 
 	# Section: On-Exit Events
@@ -320,6 +453,15 @@ func _build_props_panel() -> Control:
 	add_exit_btn.add_theme_font_size_override("font_size", 13)
 	add_exit_btn.pressed.connect(func() -> void: _add_event_row(_prop_events_out_vbox))
 	vbox.add_child(add_exit_btn)
+	_add_section_header(vbox, "CONDITIONAL ON-EXIT EVENTS")
+	_prop_events_out_cond_vbox = VBoxContainer.new()
+	_prop_events_out_cond_vbox.add_theme_constant_override("separation", 3)
+	vbox.add_child(_prop_events_out_cond_vbox)
+	var add_exit_cond_btn := Button.new()
+	add_exit_cond_btn.text = "+ Add Condition"
+	add_exit_cond_btn.add_theme_font_size_override("font_size", 13)
+	add_exit_cond_btn.pressed.connect(func() -> void: _add_events_cond_row(_prop_events_out_cond_vbox))
+	vbox.add_child(add_exit_cond_btn)
 	vbox.add_child(HSeparator.new())
 
 	# Section: Connections
@@ -415,6 +557,265 @@ func _add_file_field(parent: Control, label_text: String,
 		browse_btn.pressed.connect(func() -> void: _browse_for_file(edit, filters, start_dir))
 	row.add_child(browse_btn)
 	return edit
+
+func _make_var_cond_frame(cond_vbox: VBoxContainer, var_key: String = "", equals: String = "") -> Dictionary:
+	var frame := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.08, 0.10, 0.18)
+	sb.set_border_width_all(1)
+	sb.border_color = Color(0.35, 0.50, 0.80, 0.45)
+	sb.set_corner_radius_all(3)
+	sb.content_margin_left = 6.0; sb.content_margin_right  = 6.0
+	sb.content_margin_top  = 4.0; sb.content_margin_bottom = 4.0
+	frame.add_theme_stylebox_override("panel", sb)
+	cond_vbox.add_child(frame)
+
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 3)
+	frame.add_child(vb)
+
+	var cond_row := HBoxContainer.new()
+	cond_row.add_theme_constant_override("separation", 4)
+	vb.add_child(cond_row)
+
+	var var_lbl := Label.new()
+	var_lbl.text = "var"
+	var_lbl.add_theme_font_size_override("font_size", 11)
+	var_lbl.add_theme_color_override("font_color", Color(0.55, 0.70, 0.90))
+	cond_row.add_child(var_lbl)
+
+	var key_edit := LineEdit.new()
+	key_edit.text             = var_key
+	key_edit.placeholder_text = "variable key"
+	key_edit.add_theme_font_size_override("font_size", 12)
+	key_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cond_row.add_child(key_edit)
+
+	var eq_lbl := Label.new()
+	eq_lbl.text = "="
+	eq_lbl.add_theme_font_size_override("font_size", 11)
+	cond_row.add_child(eq_lbl)
+
+	var eq_edit := LineEdit.new()
+	eq_edit.text             = equals
+	eq_edit.placeholder_text = "value"
+	eq_edit.add_theme_font_size_override("font_size", 12)
+	eq_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cond_row.add_child(eq_edit)
+
+	return {"frame": frame, "vb": vb, "key_edit": key_edit, "eq_edit": eq_edit}
+
+## Add one conditional background/music row.
+func _add_media_cond_row(cond_vbox: VBoxContainer, is_image: bool,
+		var_key: String = "", equals: String = "", path: String = "") -> void:
+	var filters: PackedStringArray = PackedStringArray(["*.png,*.jpg,*.jpeg ; Images"]) if is_image \
+		else PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio Files"])
+	var browse_dir: String = "res://assets/textures" if is_image else "res://assets/audio"
+	_add_path_cond_row(cond_vbox, filters, browse_dir, var_key, equals, path)
+
+## Conditional path row: var = equals → path.
+func _add_path_cond_row(cond_vbox: VBoxContainer, filters: PackedStringArray, start_dir: String,
+		var_key: String = "", equals: String = "", path: String = "",
+		custom_browse: Callable = Callable(), edit_beats: bool = false,
+		cond_play_once: bool = true) -> void:
+	var parts: Dictionary = _make_var_cond_frame(cond_vbox, var_key, equals)
+	var frame: PanelContainer = parts["frame"] as PanelContainer
+	var vb: VBoxContainer = parts["vb"] as VBoxContainer
+	var key_edit: LineEdit = parts["key_edit"] as LineEdit
+	var eq_edit: LineEdit = parts["eq_edit"] as LineEdit
+
+	var path_row := HBoxContainer.new()
+	path_row.add_theme_constant_override("separation", 4)
+	vb.add_child(path_row)
+
+	var path_lbl := Label.new()
+	path_lbl.text = "→"
+	path_lbl.add_theme_font_size_override("font_size", 11)
+	path_lbl.add_theme_color_override("font_color", Color(0.55, 0.90, 0.60))
+	path_row.add_child(path_lbl)
+
+	var path_edit := LineEdit.new()
+	path_edit.text             = path
+	path_edit.placeholder_text = "res:// path"
+	path_edit.add_theme_font_size_override("font_size", 12)
+	path_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	path_row.add_child(path_edit)
+
+	var browse_btn := Button.new()
+	browse_btn.text = "…"
+	browse_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	browse_btn.add_theme_font_size_override("font_size", 12)
+	if custom_browse.is_valid():
+		browse_btn.pressed.connect(custom_browse)
+	else:
+		browse_btn.pressed.connect(func() -> void: _browse_for_file(path_edit, filters, start_dir))
+	path_row.add_child(browse_btn)
+
+	if edit_beats:
+		var beats_btn := Button.new()
+		beats_btn.text = "Edit Beats ↗"
+		beats_btn.add_theme_font_size_override("font_size", 11)
+		beats_btn.pressed.connect(func() -> void:
+			_on_edit_cond_vn_beats_pressed(path_edit, key_edit, eq_edit))
+		path_row.add_child(beats_btn)
+
+		var play_once_row := HBoxContainer.new()
+		vb.add_child(play_once_row)
+		var play_once_chk := CheckBox.new()
+		play_once_chk.text = "Play Once"
+		play_once_chk.button_pressed = cond_play_once
+		play_once_chk.add_theme_font_size_override("font_size", 12)
+		play_once_row.add_child(play_once_chk)
+		frame.set_meta("play_once_chk", play_once_chk)
+
+	var del_btn := Button.new()
+	del_btn.text = "x"
+	del_btn.custom_minimum_size = Vector2(24.0, 0.0)
+	del_btn.add_theme_font_size_override("font_size", 12)
+	del_btn.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
+	del_btn.pressed.connect(frame.queue_free)
+	path_row.add_child(del_btn)
+
+	frame.set_meta("key_edit",  key_edit)
+	frame.set_meta("eq_edit",   eq_edit)
+	frame.set_meta("path_edit", path_edit)
+
+## Conditional text row: var = equals → value (title/description).
+func _add_text_cond_row(cond_vbox: VBoxContainer, multiline: bool,
+		var_key: String = "", equals: String = "", value: String = "") -> void:
+	var parts: Dictionary = _make_var_cond_frame(cond_vbox, var_key, equals)
+	var frame: PanelContainer = parts["frame"] as PanelContainer
+	var vb: VBoxContainer = parts["vb"] as VBoxContainer
+	var key_edit: LineEdit = parts["key_edit"] as LineEdit
+	var eq_edit: LineEdit = parts["eq_edit"] as LineEdit
+
+	var value_row := HBoxContainer.new()
+	value_row.add_theme_constant_override("separation", 4)
+	vb.add_child(value_row)
+
+	var value_lbl := Label.new()
+	value_lbl.text = "→"
+	value_lbl.add_theme_font_size_override("font_size", 11)
+	value_lbl.add_theme_color_override("font_color", Color(0.55, 0.90, 0.60))
+	value_row.add_child(value_lbl)
+
+	var value_edit: Control
+	if multiline:
+		var te := TextEdit.new()
+		te.text = value
+		te.placeholder_text = "description text"
+		te.custom_minimum_size = Vector2(0.0, 64.0)
+		te.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		te.add_theme_font_size_override("font_size", 12)
+		value_edit = te
+	else:
+		var le := LineEdit.new()
+		le.text = value
+		le.placeholder_text = "title text"
+		le.add_theme_font_size_override("font_size", 12)
+		le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		value_edit = le
+	value_row.add_child(value_edit)
+
+	var del_btn := Button.new()
+	del_btn.text = "x"
+	del_btn.custom_minimum_size = Vector2(24.0, 0.0)
+	del_btn.add_theme_font_size_override("font_size", 12)
+	del_btn.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
+	del_btn.pressed.connect(frame.queue_free)
+	value_row.add_child(del_btn)
+
+	frame.set_meta("key_edit",   key_edit)
+	frame.set_meta("eq_edit",    eq_edit)
+	frame.set_meta("value_edit", value_edit)
+
+## Conditional node-id row: var = equals → node_id (for graph start node).
+func _add_node_id_cond_row(cond_vbox: VBoxContainer,
+		var_key: String = "", equals: String = "", node_id: String = "") -> void:
+	var parts: Dictionary = _make_var_cond_frame(cond_vbox, var_key, equals)
+	var frame: PanelContainer = parts["frame"] as PanelContainer
+	var vb: VBoxContainer = parts["vb"] as VBoxContainer
+	var key_edit: LineEdit = parts["key_edit"] as LineEdit
+	var eq_edit: LineEdit = parts["eq_edit"] as LineEdit
+
+	var id_row := HBoxContainer.new()
+	id_row.add_theme_constant_override("separation", 4)
+	vb.add_child(id_row)
+
+	var id_lbl := Label.new()
+	id_lbl.text = "→"
+	id_lbl.add_theme_font_size_override("font_size", 11)
+	id_lbl.add_theme_color_override("font_color", Color(0.55, 0.90, 0.60))
+	id_row.add_child(id_lbl)
+
+	var node_id_edit := LineEdit.new()
+	node_id_edit.text             = node_id
+	node_id_edit.placeholder_text = "node_id"
+	node_id_edit.add_theme_font_size_override("font_size", 12)
+	node_id_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	id_row.add_child(node_id_edit)
+
+	var del_btn := Button.new()
+	del_btn.text = "x"
+	del_btn.custom_minimum_size = Vector2(24.0, 0.0)
+	del_btn.add_theme_font_size_override("font_size", 12)
+	del_btn.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
+	del_btn.pressed.connect(frame.queue_free)
+	id_row.add_child(del_btn)
+
+	frame.set_meta("key_edit",      key_edit)
+	frame.set_meta("eq_edit",       eq_edit)
+	frame.set_meta("node_id_edit",  node_id_edit)
+
+## Conditional events row: var = equals → event list.
+func _add_events_cond_row(cond_vbox: VBoxContainer,
+		var_key: String = "", equals: String = "", events: Array = []) -> void:
+	var parts: Dictionary = _make_var_cond_frame(cond_vbox, var_key, equals)
+	var frame: PanelContainer = parts["frame"] as PanelContainer
+	var vb: VBoxContainer = parts["vb"] as VBoxContainer
+	var key_edit: LineEdit = parts["key_edit"] as LineEdit
+	var eq_edit: LineEdit = parts["eq_edit"] as LineEdit
+
+	var events_vbox := VBoxContainer.new()
+	events_vbox.add_theme_constant_override("separation", 4)
+	vb.add_child(events_vbox)
+
+	for ev: Variant in events:
+		if ev is Dictionary:
+			var d: Dictionary = ev as Dictionary
+			_add_event_row(events_vbox,
+				str(d.get("action", "show_message")),
+				str(d.get("key", "")),
+				str(d.get("value", "")))
+
+	var btn_row := HBoxContainer.new()
+	btn_row.add_theme_constant_override("separation", 4)
+	vb.add_child(btn_row)
+
+	var add_ev_btn := Button.new()
+	add_ev_btn.text = "+ Add Event"
+	add_ev_btn.add_theme_font_size_override("font_size", 12)
+	add_ev_btn.pressed.connect(func() -> void: _add_event_row(events_vbox))
+	btn_row.add_child(add_ev_btn)
+
+	var del_btn := Button.new()
+	del_btn.text = "x"
+	del_btn.add_theme_font_size_override("font_size", 12)
+	del_btn.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
+	del_btn.pressed.connect(frame.queue_free)
+	btn_row.add_child(del_btn)
+
+	frame.set_meta("key_edit",     key_edit)
+	frame.set_meta("eq_edit",      eq_edit)
+	frame.set_meta("events_vbox",  events_vbox)
+
+func _vn_trigger_index(trigger: String) -> int:
+	var idx: int = VN_TRIGGER_VALUES.find(trigger)
+	return idx if idx >= 0 else 0
+
+func _on_vn_trigger_changed(_idx: int) -> void:
+	if _prop_vn_var_trigger_panel != null and _prop_vn_trigger_btn != null:
+		_prop_vn_var_trigger_panel.visible = (_prop_vn_trigger_btn.selected == 2)
 
 func _browse_for_vn_scene() -> void:
 	var start_dir: String = "res://exploration/vn"
@@ -567,8 +968,7 @@ func _open_pack_picker(target_edit: LineEdit) -> void:
 func _open_puzzle_picker(target_edit: LineEdit) -> void:
 	var win := Window.new()
 	win.title = "Pick Puzzle"
-	win.size  = Vector2i(420, 500)
-	win.unresizable = true
+	win.size  = Vector2i(520, 580)
 	add_child(win)
 
 	var margin := MarginContainer.new()
@@ -594,7 +994,7 @@ func _open_puzzle_picker(target_edit: LineEdit) -> void:
 
 	var list_vbox := VBoxContainer.new()
 	list_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	list_vbox.add_theme_constant_override("separation", 2)
+	list_vbox.add_theme_constant_override("separation", 4)
 	scroll.add_child(list_vbox)
 
 	var all_puzzles: Array = ExplorationPuzzleDatabase.all_puzzles()
@@ -607,23 +1007,55 @@ func _open_puzzle_picker(target_edit: LineEdit) -> void:
 			if not entry is Dictionary:
 				continue
 			var d: Dictionary = entry as Dictionary
-			var pid: String   = str(d.get("id",   ""))
-			var pname: String = str(d.get("name", pid))
-			var status: String = ExplorationPuzzleDatabase.get_status_label(pid)
+			var pid: String    = str(d.get("id",   ""))
+			var pname: String  = str(d.get("name", pid))
+			var guide: String  = str(d.get("params_guide", ""))
+			var implemented: bool = ExplorationPuzzleDatabase.is_implemented(pid)
+			var status: String = "Implemented" if implemented else "Not implemented"
 			if not f.is_empty() \
 					and not pid.to_lower().contains(f) \
 					and not pname.to_lower().contains(f):
 				continue
+
+			# Entry wrapper
+			var entry_vbox := VBoxContainer.new()
+			entry_vbox.add_theme_constant_override("separation", 2)
+			entry_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			list_vbox.add_child(entry_vbox)
+
+			# Puzzle button (name + id + status)
 			var btn := Button.new()
 			btn.text = "%s  [%s]  —  %s" % [pname, pid, status]
 			btn.flat = true
 			btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			btn.add_theme_font_size_override("font_size", 13)
+			if implemented:
+				btn.add_theme_color_override("font_color", Color(0.85, 0.95, 1.0))
+			else:
+				btn.add_theme_color_override("font_color", Color(0.65, 0.65, 0.65))
 			var cap_id: String = pid
 			btn.pressed.connect(func() -> void:
 				target_edit.text = cap_id
 				win.queue_free())
-			list_vbox.add_child(btn)
+			entry_vbox.add_child(btn)
+
+			# Parameter guide label
+			var guide_lbl := Label.new()
+			guide_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			guide_lbl.add_theme_font_size_override("font_size", 11)
+			if not implemented:
+				var suffix: String = ("\n" + guide) if not guide.is_empty() else ""
+				guide_lbl.text = "  ⚠ Not implemented yet.%s" % suffix
+				guide_lbl.add_theme_color_override("font_color", Color(1.0, 0.75, 0.25))
+			elif guide.is_empty():
+				guide_lbl.text = "  ℹ No parameter guide defined."
+				guide_lbl.add_theme_color_override("font_color", Color(0.50, 0.55, 0.65))
+			else:
+				guide_lbl.text = "  " + guide.replace("\n", "\n  ")
+				guide_lbl.add_theme_color_override("font_color", Color(0.60, 0.85, 0.65))
+			entry_vbox.add_child(guide_lbl)
+
+			entry_vbox.add_child(HSeparator.new())
 
 	refresh.call("")
 	search.text_changed.connect(refresh)
@@ -656,13 +1088,117 @@ func _add_type_dropdown(parent: Control) -> OptionButton:
 	parent.add_child(ob)
 	return ob
 
+func _make_kv_hint_label() -> Label:
+	var lbl := Label.new()
+	lbl.add_theme_font_size_override("font_size", 10)
+	lbl.add_theme_color_override("font_color", Color(0.55, 0.65, 0.75))
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	return lbl
+
+func _find_kv_row_node(node: Node) -> HBoxContainer:
+	if node is HBoxContainer:
+		return node as HBoxContainer
+	if node is VBoxContainer:
+		for c: Node in (node as VBoxContainer).get_children():
+			if c is HBoxContainer:
+				return c as HBoxContainer
+	return null
+
+func _event_action_kv_hint(action: String) -> String:
+	match action:
+		"give_item":
+			return "key: item id to add. value: unused (or item id if key is empty)."
+		"remove_item":
+			return "key: item id to remove. value: unused (or item id if key is empty)."
+		"set_var":
+			return "key: session variable name. value: value to set."
+		"give_credits":
+			return "key: unused (or credit amount if value is empty). value: credit amount (integer)."
+		"give_booster_pack":
+			return "key: optional mail subject override. value: booster pack id or name."
+		"set_flag":
+			return "key: carry-over flag name. value: flag value (saved on session end)."
+		"show_message":
+			return "key: unused. value: toast message text shown to the player."
+		"play_sfx":
+			return "key: unused. value: res:// path to audio file."
+		_:
+			return ""
+
+func _spot_action_kv_hint(action: String) -> String:
+	var base: String = _event_action_kv_hint(action)
+	if not base.is_empty():
+		return base
+	match action:
+		"play_vn":
+			return "key: unused. value: res:// path to VN beat JSON. Play Once skips if already seen."
+		"navigate_to":
+			return "key: unused. value: target node id to navigate to."
+		"play_puzzle":
+			return "key: puzzle params (JSON or text). value: puzzle id."
+		_:
+			return ""
+
+func _condition_kv_hint(ctype: String) -> String:
+	match ctype:
+		"has_item":
+			return "key: item id the player must have. value: unused."
+		"not_has_item":
+			return "key: item id the player must not have. value: unused."
+		"var_equals":
+			return "key: session variable name. value: exact string it must equal."
+		"var_not_equals":
+			return "key: session variable name. value: string it must not equal."
+		"var_greater":
+			return "key: session variable name. value: numeric threshold (var > value)."
+		"var_less":
+			return "key: session variable name. value: numeric threshold (var < value)."
+		"at_node":
+			return "key: node id (fallback). value: node id player must be at (preferred)."
+		_:
+			return ""
+
+func _add_kv_row_block(parent: VBoxContainer) -> Dictionary:
+	var block := VBoxContainer.new()
+	block.add_theme_constant_override("separation", 2)
+	parent.add_child(block)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	block.add_child(row)
+	var hint_lbl := _make_kv_hint_label()
+	block.add_child(hint_lbl)
+	return {"block": block, "row": row, "hint": hint_lbl}
+
+func _collect_conditions_from_vbox(cond_vbox: VBoxContainer) -> Array:
+	var result: Array = []
+	for child: Node in cond_vbox.get_children():
+		var row: HBoxContainer = _find_kv_row_node(child)
+		if row == null:
+			continue
+		var ob: OptionButton = null
+		var les: Array[LineEdit] = []
+		for c: Node in row.get_children():
+			if c is OptionButton and ob == null:
+				ob = c as OptionButton
+			elif c is LineEdit:
+				les.append(c as LineEdit)
+		if ob == null or les.size() < 2:
+			continue
+		result.append({
+			"type":  ob.get_item_text(ob.selected),
+			"key":   les[0].text,
+			"value": les[1].text,
+		})
+	return result
+
 ## Add one event row to an events VBox.
 ## Row format: [action OptionButton] [key LineEdit] [value LineEdit] [x Button]
 func _add_event_row(events_vbox: VBoxContainer, action: String = "show_message",
 		key: String = "", value: String = "") -> void:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 4)
-	events_vbox.add_child(row)
+	var block_parts: Dictionary = _add_kv_row_block(events_vbox)
+	var block: VBoxContainer = block_parts["block"] as VBoxContainer
+	var row: HBoxContainer = block_parts["row"] as HBoxContainer
+	var hint_lbl: Label = block_parts["hint"] as Label
 
 	var action_btn := OptionButton.new()
 	var _action_list: Array[String] = [
@@ -709,13 +1245,14 @@ func _add_event_row(events_vbox: VBoxContainer, action: String = "show_message",
 		var sel: String = _action_list[sel_idx]
 		item_pick_btn.visible = sel in ["give_item", "remove_item"]
 		pack_pick_btn.visible = sel == "give_booster_pack"
+		hint_lbl.text = _event_action_kv_hint(sel)
 	action_btn.item_selected.connect(_update_event_pickers)
 	_update_event_pickers.call(action_btn.selected)
 
 	var del_btn := Button.new()
 	del_btn.text = "x"
 	del_btn.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
-	del_btn.pressed.connect(row.queue_free)
+	del_btn.pressed.connect(block.queue_free)
 	row.add_child(del_btn)
 
 ## Add one connection row to the connections VBox.
@@ -833,9 +1370,10 @@ func _add_connection_row(conn_vbox: VBoxContainer, target: String = "",
 ## Add one condition row inside a connection's conditions VBox.
 func _add_condition_row(cond_vbox: VBoxContainer, ctype: String = "has_item",
 		key: String = "", val: String = "") -> void:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 4)
-	cond_vbox.add_child(row)
+	var block_parts: Dictionary = _add_kv_row_block(cond_vbox)
+	var block: VBoxContainer = block_parts["block"] as VBoxContainer
+	var row: HBoxContainer = block_parts["row"] as HBoxContainer
+	var hint_lbl: Label = block_parts["hint"] as Label
 
 	var type_btn := OptionButton.new()
 	var _cond_list: Array[String] = [
@@ -870,10 +1408,17 @@ func _add_condition_row(cond_vbox: VBoxContainer, ctype: String = "has_item",
 	val_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(val_edit)
 
+	var _update_condition_hint := func(sel_idx: int) -> void:
+		var sel: String = _cond_list[sel_idx]
+		cond_pick_btn.visible = sel in ["has_item", "not_has_item"]
+		hint_lbl.text = _condition_kv_hint(sel)
+	type_btn.item_selected.connect(_update_condition_hint)
+	_update_condition_hint.call(type_btn.selected)
+
 	var del_btn := Button.new()
 	del_btn.text = "x"
 	del_btn.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
-	del_btn.pressed.connect(row.queue_free)
+	del_btn.pressed.connect(block.queue_free)
 	row.add_child(del_btn)
 
 ## Add one character row to the characters VBox.
@@ -1034,18 +1579,7 @@ func _collect_characters(chars_vbox: VBoxContainer) -> Array:
 		# Row 7: cond_vbox (VBoxContainer at index 7)
 		var conditions: Array = []
 		if vb.get_child_count() > 7 and vb.get_child(7) is VBoxContainer:
-			var cond_vbox: VBoxContainer = vb.get_child(7) as VBoxContainer
-			for row: Node in cond_vbox.get_children():
-				if not row is HBoxContainer:
-					continue
-				var rc: Array = (row as HBoxContainer).get_children()
-				if rc.size() < 4:
-					continue
-				conditions.append({
-					"type":  (rc[0] as OptionButton).get_item_text((rc[0] as OptionButton).selected),
-					"key":   (rc[1] as LineEdit).text,
-					"value": (rc[2] as LineEdit).text,
-				})
+			conditions = _collect_conditions_from_vbox(vb.get_child(7) as VBoxContainer)
 		result.append({
 			"name":        name_edit.text.strip_edges()  if name_edit  != null else "",
 			"vn_scene":    vn_edit.text.strip_edges()    if vn_edit    != null else "",
@@ -1175,6 +1709,7 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	# Index 6: Actions VBox
 	var acts_vbox := VBoxContainer.new()
 	acts_vbox.add_theme_constant_override("separation", 3)
+	acts_vbox.set_meta("spot_index", spots_vbox.get_child_count() - 1)
 	vb.add_child(acts_vbox)
 
 	# Index 7: Add Action button
@@ -1212,11 +1747,12 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 				_add_spot_action_row(acts_vbox,
 					str(ad.get("action", "show_message")),
 					str(ad.get("key",    "")),
-					str(ad.get("value",  "")))
+					str(ad.get("value",  "")),
+					bool(ad.get("play_once", true)))
 	# Backward compat: legacy vn_scene field → play_vn action
 	var legacy_vn: String = str(spot_data.get("vn_scene", ""))
 	if not legacy_vn.is_empty() and (not (raw_acts is Array) or (raw_acts as Array).is_empty()):
-		_add_spot_action_row(acts_vbox, "play_vn", "", legacy_vn)
+		_add_spot_action_row(acts_vbox, "play_vn", "", legacy_vn, true)
 
 	# Populate existing conditions
 	var conds_v: Variant = spot_data.get("conditions", [])
@@ -1240,10 +1776,12 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 ## Add one action row inside a spot's actions VBox.
 ## Action list extended with play_vn and navigate_to vs. on_enter_events.
 func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
-		key: String = "", value: String = "") -> void:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 4)
-	vbox.add_child(row)
+		key: String = "", value: String = "", play_once: bool = true) -> void:
+	var block_parts: Dictionary = _add_kv_row_block(vbox)
+	var block: VBoxContainer = block_parts["block"] as VBoxContainer
+	var row: HBoxContainer = block_parts["row"] as HBoxContainer
+	var hint_lbl: Label = block_parts["hint"] as Label
+	block.set_meta("spot_action_index", vbox.get_child_count() - 1)
 	var _spot_actions: Array[String] = [
 		"give_item", "give_booster_pack", "remove_item", "set_var", "give_credits", "set_flag",
 		"show_message", "play_sfx", "play_vn", "navigate_to", "play_puzzle"
@@ -1286,24 +1824,71 @@ func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
 	spot_puzzle_pick_btn.custom_minimum_size = Vector2(28.0, 0.0)
 	spot_puzzle_pick_btn.pressed.connect(func() -> void: _open_puzzle_picker(val_edit))
 	row.add_child(spot_puzzle_pick_btn)
-	# Show only the relevant picker button based on the selected action.
+	var spot_vn_browse_btn := Button.new()
+	spot_vn_browse_btn.text = "…"
+	spot_vn_browse_btn.tooltip_text = "Browse VN beat JSON (fills value field)"
+	spot_vn_browse_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	spot_vn_browse_btn.pressed.connect(func() -> void:
+		_browse_for_file(val_edit, PackedStringArray(["*.json ; JSON Files"]), "res://exploration/vn"))
+	row.add_child(spot_vn_browse_btn)
+
+	var vn_extra_row := HBoxContainer.new()
+	vn_extra_row.add_theme_constant_override("separation", 6)
+	var spot_edit_beats_btn := Button.new()
+	spot_edit_beats_btn.text = "Edit Beats ↗"
+	spot_edit_beats_btn.add_theme_font_size_override("font_size", 11)
+	spot_edit_beats_btn.pressed.connect(func() -> void:
+		_on_edit_spot_vn_beats_pressed(val_edit, vbox, block))
+	vn_extra_row.add_child(spot_edit_beats_btn)
+	var spot_play_once_chk := CheckBox.new()
+	spot_play_once_chk.text = "Play Once"
+	spot_play_once_chk.button_pressed = play_once
+	spot_play_once_chk.add_theme_font_size_override("font_size", 11)
+	vn_extra_row.add_child(spot_play_once_chk)
+	block.add_child(vn_extra_row)
+	block.move_child(vn_extra_row, 1)
+	block.set_meta("play_once_chk", spot_play_once_chk)
+	block.set_meta("acts_vbox", vbox)
+
+	# Update pickers, placeholders, and hint text based on selected action.
+	var _update_spot_hint := func() -> void:
+		var sel: String = _spot_actions[action_btn.selected]
+		if sel == "play_puzzle":
+			var extra: String = _puzzle_params_guide_text(val_edit.text.strip_edges())
+			hint_lbl.text = _spot_action_kv_hint(sel) if extra.is_empty() \
+				else _spot_action_kv_hint(sel) + "\n" + extra
+		else:
+			hint_lbl.text = _spot_action_kv_hint(sel)
+
 	var _update_spot_pickers := func(sel_idx: int) -> void:
 		var sel: String = _spot_actions[sel_idx]
-		spot_pick_btn.visible      = sel in ["give_item", "remove_item"]
-		spot_pack_pick_btn.visible = sel == "give_booster_pack"
+		spot_pick_btn.visible        = sel in ["give_item", "remove_item"]
+		spot_pack_pick_btn.visible   = sel == "give_booster_pack"
 		spot_puzzle_pick_btn.visible = sel == "play_puzzle"
+		spot_vn_browse_btn.visible   = sel == "play_vn"
+		vn_extra_row.visible         = sel == "play_vn"
+		key_edit.visible             = sel != "play_vn"
 		if sel == "play_puzzle":
 			key_edit.placeholder_text = "params (JSON or text)"
 			val_edit.placeholder_text = "puzzle id"
+		elif sel == "play_vn":
+			val_edit.placeholder_text = "res:// path to beat JSON"
 		else:
 			key_edit.placeholder_text = "key"
 			val_edit.placeholder_text = "value / amount / pack"
+		_update_spot_hint.call()
 	action_btn.item_selected.connect(_update_spot_pickers)
 	_update_spot_pickers.call(action_btn.selected)
+
+	val_edit.text_changed.connect(func(_new_text: String) -> void:
+		if _spot_actions[action_btn.selected] == "play_puzzle":
+			_update_spot_hint.call()
+	)
+
 	var del_btn := Button.new()
 	del_btn.text = "x"
 	del_btn.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
-	del_btn.pressed.connect(row.queue_free)
+	del_btn.pressed.connect(block.queue_free)
 	row.add_child(del_btn)
 
 ## Collect all investigable-point rows back into an Array of Dictionaries.
@@ -1362,24 +1947,7 @@ func _collect_spots(spots_vbox: VBoxContainer) -> Array:
 		# Index 9: conds_vbox — VBoxContainer
 		var conditions: Array = []
 		if vb.get_child_count() > 9 and vb.get_child(9) is VBoxContainer:
-			var cv: VBoxContainer = vb.get_child(9) as VBoxContainer
-			for row: Node in cv.get_children():
-				if not row is HBoxContainer:
-					continue
-				var ob: OptionButton = null
-				var les: Array[LineEdit] = []
-				for c: Node in (row as HBoxContainer).get_children():
-					if c is OptionButton and ob == null:
-						ob = c as OptionButton
-					elif c is LineEdit:
-						les.append(c as LineEdit)
-				if ob == null or les.size() < 2:
-					continue
-				conditions.append({
-					"type":  ob.get_item_text(ob.selected),
-					"key":   les[0].text,
-					"value": les[1].text,
-				})
+			conditions = _collect_conditions_from_vbox(vb.get_child(9) as VBoxContainer)
 		result.append({
 			"x_norm":             x_norm,
 			"y_norm":             y_norm,
@@ -1474,8 +2042,38 @@ func _open_spot_picker(bg_path: String, x_spin: SpinBox, y_spin: SpinBox) -> voi
 	root_vbox.add_child(done_btn)
 	win.popup_centered()
 
+## Edit beats for an investigable-point play_vn action.
+## Auto-creates vn_<node_id>_invest_<spot_idx>_<action_idx>.json when path is empty.
+func _on_edit_spot_vn_beats_pressed(val_edit: LineEdit, acts_vbox: VBoxContainer,
+		block: VBoxContainer) -> void:
+	var path: String = val_edit.text.strip_edges()
+	if path.is_empty():
+		if _graph_path.is_empty():
+			_set_status("Save the graph first before creating a spot VN scene.")
+			return
+		if _selected_node_id.is_empty():
+			_set_status("Select a node first.")
+			return
+		var graph_name: String = _graph_path.get_file().get_basename()
+		var spot_idx: int = int(acts_vbox.get_meta("spot_index", 0))
+		var act_idx: int = int(block.get_meta("spot_action_index", 0))
+		var uid: String = "%d_%d" % [spot_idx, act_idx]
+		path = "res://exploration/vn/vn_%s/vn_%s_invest_%s.json" % [
+			graph_name, _selected_node_id, uid]
+		_create_vn_subfolder(_graph_path)
+		if not _ensure_vn_beat_file(path):
+			return
+		val_edit.text = path
+		_commit_selected_node()
+		_set_status("Created '%s' — opening VN Editor." % path.get_file())
+	elif not _ensure_vn_beat_file(path):
+		return
+	else:
+		_set_status("Opening VN Editor: %s" % path.get_file())
+	_open_vn_editor_overlay(path)
+
 ## Called when the "Edit Beats ↗" button inside a character row is pressed.
-## Auto-creates the VN JSON file using the pattern vn_<node_id>_<char_name>.json.
+## Auto-creates the VN JSON file using the pattern vn_<node_id>_char_<char_name>.json.
 func _on_edit_char_beats_pressed(name_edit: LineEdit, vn_edit: LineEdit) -> void:
 	var path: String = vn_edit.text.strip_edges()
 	if path.is_empty():
@@ -1491,7 +2089,7 @@ func _on_edit_char_beats_pressed(name_edit: LineEdit, vn_edit: LineEdit) -> void
 			return
 		var graph_name: String = _graph_path.get_file().get_basename()
 		var sanitized: String  = char_name.to_lower().replace(" ", "_")
-		path = "res://exploration/vn/vn_%s/vn_%s_%s.json" % [graph_name, _selected_node_id, sanitized]
+		path = "res://exploration/vn/vn_%s/vn_%s_char_%s.json" % [graph_name, _selected_node_id, sanitized]
 		_create_vn_subfolder(_graph_path)
 		var abs_path: String = ProjectSettings.globalize_path(path)
 		if not FileAccess.file_exists(abs_path):
@@ -1681,14 +2279,59 @@ func _on_graph_popup_request(position: Vector2) -> void:
 func _populate_props(en: ExplorationNode) -> void:
 	_prop_id_edit.text    = en.id
 	_prop_title_edit.text = en.title
+	for child: Node in _prop_title_cond_vbox.get_children():
+		child.queue_free()
+	for cond: Variant in en.title_conditions:
+		if cond is Dictionary:
+			var cd: Dictionary = cond as Dictionary
+			_add_text_cond_row(_prop_title_cond_vbox, false,
+				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("value", "")))
 	_prop_desc_edit.text  = en.description
+	for child: Node in _prop_desc_cond_vbox.get_children():
+		child.queue_free()
+	for cond: Variant in en.description_conditions:
+		if cond is Dictionary:
+			var cd: Dictionary = cond as Dictionary
+			_add_text_cond_row(_prop_desc_cond_vbox, true,
+				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("value", "")))
 	_prop_type_btn.select(en.node_type)
 	_prop_bg_edit.text    = en.background
+
+	for child: Node in _prop_bg_cond_vbox.get_children():
+		child.queue_free()
+	for cond: Variant in en.background_conditions:
+		if cond is Dictionary:
+			var cd: Dictionary = cond as Dictionary
+			_add_media_cond_row(_prop_bg_cond_vbox, true,
+				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("path", "")))
+
 	_prop_vn_edit.text    = en.vn_scene
+	for child: Node in _prop_vn_cond_vbox.get_children():
+		child.queue_free()
+	for cond: Variant in en.vn_scene_conditions:
+		if cond is Dictionary:
+			var cd: Dictionary = cond as Dictionary
+			_add_path_cond_row(_prop_vn_cond_vbox,
+				PackedStringArray(["*.json ; JSON Files"]), "res://exploration/vn",
+				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("path", "")),
+				Callable(), true, bool(cd.get("play_once", true)))
+	if _prop_vn_trigger_btn != null:
+		_prop_vn_trigger_btn.select(_vn_trigger_index(en.vn_trigger))
+		_prop_vn_trigger_var_edit.text = en.vn_trigger_var
+		_prop_vn_trigger_eq_edit.text  = en.vn_trigger_equals
+		_on_vn_trigger_changed(_prop_vn_trigger_btn.selected)
 	_prop_vn_play_once_chk.button_pressed = en.vn_play_once
 	_prop_show_info_chk.button_pressed = en.show_info_on_enter
 	_prop_show_who_chk.button_pressed  = en.show_who_is_here
 	_prop_music_edit.text = en.music
+
+	for child: Node in _prop_music_cond_vbox.get_children():
+		child.queue_free()
+	for cond: Variant in en.music_conditions:
+		if cond is Dictionary:
+			var cd: Dictionary = cond as Dictionary
+			_add_media_cond_row(_prop_music_cond_vbox, false,
+				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("path", "")))
 
 	# On-enter events
 	for child: Node in _prop_events_in_vbox.get_children():
@@ -1700,6 +2343,15 @@ func _populate_props(en: ExplorationNode) -> void:
 				str(d.get("action", "show_message")),
 				str(d.get("key", "")),
 				str(d.get("value", "")))
+	for child: Node in _prop_events_in_cond_vbox.get_children():
+		child.queue_free()
+	for cond: Variant in en.on_enter_events_conditions:
+		if cond is Dictionary:
+			var cd: Dictionary = cond as Dictionary
+			var evs: Variant = cd.get("events", [])
+			_add_events_cond_row(_prop_events_in_cond_vbox,
+				str(cd.get("var", "")), str(cd.get("equals", "")),
+				evs if evs is Array else [])
 
 	# On-exit events
 	for child: Node in _prop_events_out_vbox.get_children():
@@ -1711,6 +2363,15 @@ func _populate_props(en: ExplorationNode) -> void:
 				str(d.get("action", "show_message")),
 				str(d.get("key", "")),
 				str(d.get("value", "")))
+	for child: Node in _prop_events_out_cond_vbox.get_children():
+		child.queue_free()
+	for cond: Variant in en.on_exit_events_conditions:
+		if cond is Dictionary:
+			var cd: Dictionary = cond as Dictionary
+			var evs: Variant = cd.get("events", [])
+			_add_events_cond_row(_prop_events_out_cond_vbox,
+				str(cd.get("var", "")), str(cd.get("equals", "")),
+				evs if evs is Array else [])
 
 	# Characters
 	for child: Node in _prop_characters_vbox.get_children():
@@ -1755,22 +2416,58 @@ func _populate_props(en: ExplorationNode) -> void:
 func _collect_props(en: ExplorationNode) -> void:
 	en.id          = _prop_id_edit.text.strip_edges()
 	en.title       = _prop_title_edit.text
+	en.title_conditions = _collect_text_conds(_prop_title_cond_vbox)
 	en.description = _prop_desc_edit.text
+	en.description_conditions = _collect_text_conds(_prop_desc_cond_vbox)
 	en.node_type   = _prop_type_btn.selected
 	en.background  = _prop_bg_edit.text.strip_edges()
+	en.background_conditions.clear()
+	for frame: Node in _prop_bg_cond_vbox.get_children():
+		if frame.has_meta("key_edit") and frame.has_meta("eq_edit") and frame.has_meta("path_edit"):
+			en.background_conditions.append({
+				"var":    (frame.get_meta("key_edit")  as LineEdit).text.strip_edges(),
+				"equals": (frame.get_meta("eq_edit")   as LineEdit).text.strip_edges(),
+				"path":   (frame.get_meta("path_edit") as LineEdit).text.strip_edges(),
+			})
 	en.vn_scene    = _prop_vn_edit.text.strip_edges()
+	en.vn_scene_conditions.clear()
+	for frame: Node in _prop_vn_cond_vbox.get_children():
+		if frame.has_meta("key_edit") and frame.has_meta("eq_edit") and frame.has_meta("path_edit"):
+			var vn_cond: Dictionary = {
+				"var":    (frame.get_meta("key_edit")  as LineEdit).text.strip_edges(),
+				"equals": (frame.get_meta("eq_edit")   as LineEdit).text.strip_edges(),
+				"path":   (frame.get_meta("path_edit") as LineEdit).text.strip_edges(),
+			}
+			if frame.has_meta("play_once_chk"):
+				vn_cond["play_once"] = (frame.get_meta("play_once_chk") as CheckBox).button_pressed
+			en.vn_scene_conditions.append(vn_cond)
+	if _prop_vn_trigger_btn != null:
+		var trig_idx: int = _prop_vn_trigger_btn.selected
+		en.vn_trigger = VN_TRIGGER_VALUES[trig_idx] if trig_idx >= 0 and trig_idx < VN_TRIGGER_VALUES.size() else "on_enter"
+		en.vn_trigger_var    = _prop_vn_trigger_var_edit.text.strip_edges()
+		en.vn_trigger_equals = _prop_vn_trigger_eq_edit.text.strip_edges()
 	en.vn_play_once       = _prop_vn_play_once_chk.button_pressed
 	en.show_info_on_enter = _prop_show_info_chk.button_pressed
 	en.show_who_is_here   = _prop_show_who_chk.button_pressed
 	en.music       = _prop_music_edit.text.strip_edges()
+	en.music_conditions.clear()
+	for frame: Node in _prop_music_cond_vbox.get_children():
+		if frame.has_meta("key_edit") and frame.has_meta("eq_edit") and frame.has_meta("path_edit"):
+			en.music_conditions.append({
+				"var":    (frame.get_meta("key_edit")  as LineEdit).text.strip_edges(),
+				"equals": (frame.get_meta("eq_edit")   as LineEdit).text.strip_edges(),
+				"path":   (frame.get_meta("path_edit") as LineEdit).text.strip_edges(),
+			})
 
 	# On-enter events
 	en.on_enter_events.clear()
 	en.on_enter_events = _collect_events(_prop_events_in_vbox)
+	en.on_enter_events_conditions = _collect_events_conds(_prop_events_in_cond_vbox)
 
 	# On-exit events
 	en.on_exit_events.clear()
 	en.on_exit_events = _collect_events(_prop_events_out_vbox)
+	en.on_exit_events_conditions = _collect_events_conds(_prop_events_out_cond_vbox)
 
 	# Characters
 	en.characters.clear()
@@ -1789,25 +2486,91 @@ func _collect_props(en: ExplorationNode) -> void:
 		if not conn_dict.is_empty():
 			en.connections.append(conn_dict)
 
+func _populate_graph_props() -> void:
+	if _prop_start_node_edit == null or _graph == null:
+		return
+	_prop_start_node_edit.text = _graph.start_node_id
+	for child: Node in _prop_start_cond_vbox.get_children():
+		child.queue_free()
+	for cond: Variant in _graph.start_node_id_conditions:
+		if cond is Dictionary:
+			var cd: Dictionary = cond as Dictionary
+			_add_node_id_cond_row(_prop_start_cond_vbox,
+				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("node_id", "")))
+
+func _collect_graph_props() -> void:
+	if _prop_start_node_edit == null or _graph == null:
+		return
+	_graph.start_node_id = _prop_start_node_edit.text.strip_edges()
+	_graph.start_node_id_conditions = _collect_node_id_conds(_prop_start_cond_vbox)
+
+func _collect_node_id_conds(cond_vbox: VBoxContainer) -> Array:
+	var result: Array = []
+	for frame: Node in cond_vbox.get_children():
+		if not frame.has_meta("key_edit") or not frame.has_meta("eq_edit") or not frame.has_meta("node_id_edit"):
+			continue
+		result.append({
+			"var":     (frame.get_meta("key_edit")     as LineEdit).text.strip_edges(),
+			"equals":  (frame.get_meta("eq_edit")      as LineEdit).text.strip_edges(),
+			"node_id": (frame.get_meta("node_id_edit") as LineEdit).text.strip_edges(),
+		})
+	return result
+
+func _collect_text_conds(cond_vbox: VBoxContainer) -> Array:
+	var result: Array = []
+	for frame: Node in cond_vbox.get_children():
+		if not frame.has_meta("key_edit") or not frame.has_meta("eq_edit") or not frame.has_meta("value_edit"):
+			continue
+		var value_edit: Node = frame.get_meta("value_edit") as Node
+		var val: String = ""
+		if value_edit is LineEdit:
+			val = (value_edit as LineEdit).text
+		elif value_edit is TextEdit:
+			val = (value_edit as TextEdit).text
+		result.append({
+			"var":    (frame.get_meta("key_edit") as LineEdit).text.strip_edges(),
+			"equals": (frame.get_meta("eq_edit")  as LineEdit).text.strip_edges(),
+			"value":  val,
+		})
+	return result
+
+func _collect_events_conds(cond_vbox: VBoxContainer) -> Array:
+	var result: Array = []
+	for frame: Node in cond_vbox.get_children():
+		if not frame.has_meta("key_edit") or not frame.has_meta("eq_edit") or not frame.has_meta("events_vbox"):
+			continue
+		var events_vbox: VBoxContainer = frame.get_meta("events_vbox") as VBoxContainer
+		result.append({
+			"var":    (frame.get_meta("key_edit") as LineEdit).text.strip_edges(),
+			"equals": (frame.get_meta("eq_edit")  as LineEdit).text.strip_edges(),
+			"events": _collect_events(events_vbox),
+		})
+	return result
+
 func _collect_events(events_vbox: VBoxContainer) -> Array:
 	var result: Array = []
-	for row: Node in events_vbox.get_children():
-		if not row is HBoxContainer:
+	for child: Node in events_vbox.get_children():
+		var row: HBoxContainer = _find_kv_row_node(child)
+		if row == null:
 			continue
 		var ob: OptionButton = null
 		var les: Array[LineEdit] = []
-		for c: Node in (row as HBoxContainer).get_children():
+		for c: Node in row.get_children():
 			if c is OptionButton and ob == null:
 				ob = c as OptionButton
 			elif c is LineEdit:
 				les.append(c as LineEdit)
 		if ob == null or les.size() < 2:
 			continue
-		result.append({
-			"action": ob.get_item_text(ob.selected),
+		var action_name: String = ob.get_item_text(ob.selected)
+		var entry: Dictionary = {
+			"action": action_name,
 			"key":    les[0].text,
 			"value":  les[1].text,
-		})
+		}
+		if action_name == "play_vn" and child.has_meta("play_once_chk"):
+			entry["play_once"] = (child.get_meta("play_once_chk") as CheckBox).button_pressed
+		result.append(entry)
 	return result
 
 func _collect_connection_frame(frame: PanelContainer) -> Dictionary:
@@ -1834,23 +2597,7 @@ func _collect_connection_frame(frame: PanelContainer) -> Dictionary:
 	var cond_vbox: VBoxContainer = _find_cond_vbox(frame)
 	var conditions: Array = []
 	if cond_vbox != null:
-		for row: Node in cond_vbox.get_children():
-			if not row is HBoxContainer:
-				continue
-			var ob: OptionButton = null
-			var les: Array[LineEdit] = []
-			for c: Node in (row as HBoxContainer).get_children():
-				if c is OptionButton and ob == null:
-					ob = c as OptionButton
-				elif c is LineEdit:
-					les.append(c as LineEdit)
-			if ob == null or les.size() < 2:
-				continue
-			conditions.append({
-				"type":  ob.get_item_text(ob.selected),
-				"key":   les[0].text,
-				"value": les[1].text,
-			})
+		conditions = _collect_conditions_from_vbox(cond_vbox)
 
 	var locked_mode: String = "hide"
 	if conditions.size() > 0:
@@ -1907,6 +2654,7 @@ func _on_load_file_selected(path: String) -> void:
 	_load_graph(path)
 
 func _on_save_pressed() -> void:
+	_collect_graph_props()
 	_commit_selected_node()
 	if _graph_path.is_empty():
 		_on_save_as_pressed()
@@ -1914,6 +2662,7 @@ func _on_save_pressed() -> void:
 		_save_graph(_graph_path)
 
 func _on_save_as_pressed() -> void:
+	_collect_graph_props()
 	_commit_selected_node()
 	_save_dialog.popup_centered(Vector2(900, 600))
 
@@ -2027,6 +2776,62 @@ func _preview_audio(path: String) -> void:
 	_preview_player.play()
 	_set_status("Playing: %s" % path.get_file())
 
+func _sanitize_vn_token(token: String) -> String:
+	var s: String = token.strip_edges().to_lower()
+	s = s.replace(" ", "_")
+	s = s.replace("/", "_")
+	return s
+
+func _open_vn_editor_overlay(path: String) -> void:
+	var vned: Control = load("res://scripts/VNEditor.gd").new()
+	vned.name = "VNEditorOverlay"
+	get_tree().current_scene.add_child(vned)
+	vned.call_deferred("open_file", path)
+
+func _ensure_vn_beat_file(path: String) -> bool:
+	var abs_path: String = ProjectSettings.globalize_path(path)
+	if FileAccess.file_exists(abs_path):
+		return true
+	DirAccess.make_dir_recursive_absolute(abs_path.get_base_dir())
+	var f := FileAccess.open(abs_path, FileAccess.WRITE)
+	if f == null:
+		_set_status("ERROR: Could not create '%s'." % path)
+		return false
+	f.store_string("[]")
+	f.close()
+	return true
+
+## Edit beats for a conditional VN row (path field in that condition row).
+func _on_edit_cond_vn_beats_pressed(path_edit: LineEdit, var_edit: LineEdit, eq_edit: LineEdit) -> void:
+	var path: String = path_edit.text.strip_edges()
+	if path.is_empty():
+		if _graph_path.is_empty():
+			_set_status("Save the graph first before creating a VN scene.")
+			return
+		if _selected_node_id.is_empty():
+			_set_status("Select a node first.")
+			return
+		var graph_name: String = _graph_path.get_file().get_basename()
+		var var_t: String = _sanitize_vn_token(var_edit.text)
+		var eq_t:  String = _sanitize_vn_token(eq_edit.text)
+		if var_t.is_empty():
+			var_t = "anyvar"
+		if eq_t.is_empty():
+			eq_t = "anyval"
+		path = "res://exploration/vn/vn_%s/vn_%s_cond_%s_%s.json" % [
+			graph_name, _selected_node_id, var_t, eq_t]
+		_create_vn_subfolder(_graph_path)
+		if not _ensure_vn_beat_file(path):
+			return
+		path_edit.text = path
+		_commit_selected_node()
+		_set_status("Created '%s' — opening VN Editor." % path.get_file())
+	elif not _ensure_vn_beat_file(path):
+		return
+	else:
+		_set_status("Opening VN Editor: %s" % path.get_file())
+	_open_vn_editor_overlay(path)
+
 func _on_edit_beats_pressed() -> void:
 	var path: String = _prop_vn_edit.text.strip_edges()
 	if path.is_empty():
@@ -2038,7 +2843,7 @@ func _on_edit_beats_pressed() -> void:
 			_set_status("Select a node first.")
 			return
 		var graph_name: String = _graph_path.get_file().get_basename()
-		path = "res://exploration/vn/vn_%s/vn_%s.json" % [graph_name, _selected_node_id]
+		path = "res://exploration/vn/vn_%s/vn_%s_main.json" % [graph_name, _selected_node_id]
 		# Ensure the subfolder exists
 		_create_vn_subfolder(_graph_path)
 		# Create empty beat file
@@ -2054,24 +2859,14 @@ func _on_edit_beats_pressed() -> void:
 		_prop_vn_edit.text = path
 		_commit_selected_node()
 		_set_status("Created '%s' — opening VN Editor." % path.get_file())
-	elif not FileAccess.file_exists(ProjectSettings.globalize_path(path)):
-		# Path was set manually but file doesn't exist — create it
-		var abs_path: String = ProjectSettings.globalize_path(path)
-		DirAccess.make_dir_recursive_absolute(abs_path.get_base_dir())
-		var f := FileAccess.open(abs_path, FileAccess.WRITE)
-		if f == null:
-			_set_status("ERROR: Could not create '%s'." % path)
-			return
-		f.store_string("[]")
-		f.close()
-		_set_status("Created '%s' — opening VN Editor." % path.get_file())
-	# Open VNEditor as overlay
-	var vned: Control = load("res://scripts/VNEditor.gd").new()
-	vned.name = "VNEditorOverlay"
-	get_tree().current_scene.add_child(vned)
-	vned.call_deferred("open_file", path)
+	elif not _ensure_vn_beat_file(path):
+		return
+	else:
+		_set_status("Opening VN Editor: %s" % path.get_file())
+	_open_vn_editor_overlay(path)
 
 func _on_apply_pressed() -> void:
+	_collect_graph_props()
 	if _graph == null or _selected_node_id.is_empty():
 		_set_status("Select a node first.")
 		return
@@ -2119,6 +2914,7 @@ func _new_graph() -> void:
 	_graph.nodes.append(start)
 	_graph.start_node_id = "start"
 	_rebuild_graph_edit()
+	_populate_graph_props()
 	_update_title()
 	_set_status("New graph created. Add nodes and save to a .json file.")
 
@@ -2132,6 +2928,7 @@ func _load_graph(path: String) -> void:
 	_dirty      = false
 	_selected_node_id = ""
 	_rebuild_graph_edit()
+	_populate_graph_props()
 	_update_title()
 	_set_status("Loaded '%s' (%d nodes)." % [path, graph.nodes.size()])
 
@@ -2235,6 +3032,35 @@ func _set_status(text: String) -> void:
 	if _status_lbl != null:
 		_status_lbl.text = text
 	print("[ExplorationEditor] %s" % text)
+
+func _puzzle_params_guide_text(puzzle_id: String) -> String:
+	if puzzle_id.is_empty():
+		return "← Enter a puzzle id in the value field to see its parameter guide."
+	var data: Dictionary = ExplorationPuzzleDatabase.get_puzzle(puzzle_id)
+	if data.is_empty():
+		return "⚠ Puzzle \"%s\" not found in the database." % puzzle_id
+	var guide: String = str(data.get("params_guide", ""))
+	if not ExplorationPuzzleDatabase.is_implemented(puzzle_id):
+		var suffix: String = ("\n" + guide) if not guide.is_empty() else ""
+		return "⚠ Not implemented yet — no scene registered.%s" % suffix
+	if guide.is_empty():
+		return "ℹ No parameter guide defined for this puzzle."
+	return guide
+
+## Update the params guide label for a play_puzzle action row.
+## Looks up the puzzle by id in the database and reads its params_guide field.
+func _update_puzzle_guide(lbl: Label, puzzle_id: String) -> void:
+	lbl.text = _puzzle_params_guide_text(puzzle_id)
+	if puzzle_id.is_empty():
+		lbl.add_theme_color_override("font_color", Color(0.50, 0.55, 0.65))
+	elif ExplorationPuzzleDatabase.get_puzzle(puzzle_id).is_empty():
+		lbl.add_theme_color_override("font_color", Color(1.0, 0.60, 0.30))
+	elif not ExplorationPuzzleDatabase.is_implemented(puzzle_id):
+		lbl.add_theme_color_override("font_color", Color(1.0, 0.75, 0.25))
+	elif str(ExplorationPuzzleDatabase.get_puzzle(puzzle_id).get("params_guide", "")).is_empty():
+		lbl.add_theme_color_override("font_color", Color(0.50, 0.55, 0.65))
+	else:
+		lbl.add_theme_color_override("font_color", Color(0.60, 0.85, 0.65))
 
 func _show_popup(title: String, body: String) -> void:
 	var dialog := AcceptDialog.new()

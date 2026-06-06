@@ -21,9 +21,6 @@ func _ready() -> void:
 	_sfx.bus     = "SFX"
 	add_child(_sfx)
 
-## Global Escape-to-quit removed — use the window close button or Alt+F4 instead.
-## Leaving this empty so the autoload doesn't silently swallow input.
-
 # ── Public API ──────────────────────────────────────────────────
 
 ## Cover the screen with checker tiles, play the transition sound,

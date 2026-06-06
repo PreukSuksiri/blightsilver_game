@@ -388,11 +388,6 @@ static func _get_effective_atk(
 				and defender.affinity != CharacterData.Affinity.ARCANE:
 			atk = int(atk * 1.2)
 
-	# DEF_ZERO_WHEN_EXPOSED: attacker's DEF = 0 when face-up (doesn't affect ATK, skip)
-	# ATK_PENALTY_WHEN_EXPOSED: attacker's own ATK is penalised when face-up
-	if attacker.face_up and attacker.ability_type == CharacterData.AbilityType.ATK_PENALTY_WHEN_EXPOSED:
-		atk = max(0, atk - attacker.ability_params.get("penalty", attacker.ability_params.get("amount", 0)))
-
 	# ATK_PENALTY_IF_NO_NAME_ALLY: e.g. Moon Tribe Marksman
 	if attacker.ability_type == CharacterData.AbilityType.ATK_PENALTY_IF_NO_NAME_ALLY:
 		var name_filter: String = attacker.ability_params.get("name", attacker.ability_params.get("name_contains", "")).to_lower()
@@ -590,10 +585,6 @@ static func _get_effective_def(
 				and defender.affinity == CharacterData.Affinity.ARCANE \
 				and attacker.affinity != CharacterData.Affinity.ARCANE:
 			def_val = int(def_val * 1.2)
-
-	# DEF_ZERO_WHEN_EXPOSED: DEF = 0 when face-up
-	if defender.face_up and defender.ability_type == CharacterData.AbilityType.DEF_ZERO_WHEN_EXPOSED:
-		return 0
 
 	match defender.ability_type:
 		CharacterData.AbilityType.DEF_BONUS_VS_AFFINITY:

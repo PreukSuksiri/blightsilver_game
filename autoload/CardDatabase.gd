@@ -90,14 +90,14 @@ func _load_characters() -> void:
 		["Armored Monkey", CharacterData.Affinity.NATURE, 10, 20, 170,
 			CharacterData.AbilityType.ATK_BONUS_IF_AFFINITY_ON_FIELD,
 			{"affinity": CharacterData.Affinity.NATURE, "bonus": 10},
-			"+10 ATK if there is face-up Nature card",
+			"+10 ATK if there is another face-up Nature card",
 			CharacterData.Rarity.COMMON,
 			true],
 
 		["Armored Rhino", CharacterData.Affinity.NATURE, 60, 85, 720,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.RARE],
 
 		["Asteroid Trooper", CharacterData.Affinity.COSMIC, 30, 10, 250,
@@ -115,7 +115,7 @@ func _load_characters() -> void:
 		["Big Thug", CharacterData.Affinity.ANIMA, 40, 35, 400,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Bladeshifter", CharacterData.Affinity.BIO, 0, 50, 420,
@@ -153,37 +153,37 @@ func _load_characters() -> void:
 		["Canyon Warg", CharacterData.Affinity.NATURE, 70, 30, 750,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.RARE],
 
 		["Chaotic Wisp", CharacterData.Affinity.CHAOS, 20, 0, 100,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON],
 
 		["Choir Lady Abigail", CharacterData.Affinity.DIVINE, 25, 15, 250,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON],
 
 		["Choir Lady Alice", CharacterData.Affinity.DIVINE, 20, 25, 250,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON],
 
 		["Choir Lady Anna", CharacterData.Affinity.DIVINE, 20, 20, 250,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON],
 
 		["Church Guard", CharacterData.Affinity.DIVINE, 0, 35, 150,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON],
 
 		["Claw Mutant", CharacterData.Affinity.BIO, 15, 10, 180,
@@ -207,7 +207,7 @@ func _load_characters() -> void:
 		["Dark Monk", CharacterData.Affinity.CHAOS, 15, 25, 300,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON, true],
 
 		["Dark Tengu", CharacterData.Affinity.CHAOS, 25, 25, 250,
@@ -231,13 +231,13 @@ func _load_characters() -> void:
 		["Demon Spawn", CharacterData.Affinity.CHAOS, 40, 30, 400,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Doom Wisp", CharacterData.Affinity.CHAOS, 15, 15, 100,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON],
 
 		["Echo Bringer", CharacterData.Affinity.COSMIC, 70, 40, 900,
@@ -269,19 +269,19 @@ func _load_characters() -> void:
 		["Flame Seraph", CharacterData.Affinity.DIVINE, 50, 10, 500,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Foul Wisp", CharacterData.Affinity.CHAOS, 0, 25, 100,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON],
 
 		["Fujin", CharacterData.Affinity.DIVINE, 35, 40, 450,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Gamma Emitter", CharacterData.Affinity.BIO, 20, 15, 220,
@@ -300,7 +300,7 @@ func _load_characters() -> void:
 		["Goblin Poacher", CharacterData.Affinity.NATURE, 30, 10, 250,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON],
 
 		["Goddess of Virtue", CharacterData.Affinity.DIVINE, 80, 100, 1400,
@@ -325,14 +325,14 @@ func _load_characters() -> void:
 		["Grand Fort Footsoldier", CharacterData.Affinity.ANIMA, 25, 25, 300,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON,
 			true],
 
 		["Grand Fort Mauler", CharacterData.Affinity.ANIMA, 40, 10, 350,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 
@@ -351,7 +351,7 @@ func _load_characters() -> void:
 		["Gryphon", CharacterData.Affinity.NATURE, 100, 85, 1150,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.EXOTIC],
 
 		["Hairpin Assassin", CharacterData.Affinity.ANIMA, 25, 15, 300,
@@ -376,7 +376,7 @@ func _load_characters() -> void:
 		["Heavy Tome Preacher", CharacterData.Affinity.DIVINE, 25, 20, 300,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON],
 
 		["Huntress of Green Glade", CharacterData.Affinity.ANIMA, 50, 50, 800,
@@ -388,7 +388,7 @@ func _load_characters() -> void:
 		["Ice Mage", CharacterData.Affinity.ARCANE, 50, 0, 400,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Immortal Vampire", CharacterData.Affinity.CHAOS, 30, 80, 1200,
@@ -486,13 +486,13 @@ func _load_characters() -> void:
 		["Mad Raccoon", CharacterData.Affinity.NATURE, 30, 15, 260,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON],
 
 		["Mafia Associates", CharacterData.Affinity.ANIMA, 45, 40, 500,
 			CharacterData.AbilityType.DEF_ZERO_WHEN_EXPOSED,
 			{},
-			"If this card is exposed, its defense becomes 0",
+			"At the end of the turn that it's been exposed, its defense becomes 0",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 
@@ -524,7 +524,7 @@ func _load_characters() -> void:
 		["Mephisto the Fallen", CharacterData.Affinity.DIVINE, 75, 0, 860,
 			CharacterData.AbilityType.ATK_ZERO_AFTER_WIN,
 			{},
-			"After this card attacked successfully, its ATK becomes 0 permanently",
+			"After this card attacked unit successfully, its ATK becomes 0 permanently",
 			CharacterData.Rarity.RARE],
 
 		["Mind Flayer", CharacterData.Affinity.ARCANE, 100, 70, 1500,
@@ -645,7 +645,7 @@ func _load_characters() -> void:
 		["Ponycorn", CharacterData.Affinity.DIVINE, 25, 20, 300,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Pyromancer", CharacterData.Affinity.ARCANE, 80, 0, 900,
@@ -657,7 +657,7 @@ func _load_characters() -> void:
 		["Raijin", CharacterData.Affinity.DIVINE, 60, 0, 550,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.RARE],
 
 		["Red Mage", CharacterData.Affinity.ARCANE, 20, 20, 400,
@@ -689,7 +689,7 @@ func _load_characters() -> void:
 		["Scarlet Mutant", CharacterData.Affinity.BIO, 35, 30, 350,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 
@@ -721,7 +721,7 @@ func _load_characters() -> void:
 		["Shredder Doll", CharacterData.Affinity.CHAOS, 25, 5, 250,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.COMMON],
 
 		["Silver Spearman", CharacterData.Affinity.ANIMA, 25, 20, 250,
@@ -746,7 +746,7 @@ func _load_characters() -> void:
 		["Skeleton Lancer", CharacterData.Affinity.CHAOS, 45, 5, 300,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Skeleton Scout", CharacterData.Affinity.CHAOS, 20, 5, 150,
@@ -758,7 +758,7 @@ func _load_characters() -> void:
 		["Sniping Fairy", CharacterData.Affinity.DIVINE, 40, 20, 350,
 			CharacterData.AbilityType.ATK_PENALTY_WHEN_EXPOSED,
 			{"penalty": 20},
-			"-20 ATK if exposed",
+			"At the end of the turn that it's been exposed, -20 ATK",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Sonic Seraph", CharacterData.Affinity.DIVINE, 45, 50, 550,
@@ -770,7 +770,7 @@ func _load_characters() -> void:
 		["Space Boy", CharacterData.Affinity.COSMIC, 75, 65, 800,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.RARE],
 
 		["Spear Shark", CharacterData.Affinity.NATURE, 50, 20, 480,
@@ -782,7 +782,7 @@ func _load_characters() -> void:
 		["Staircase Lady", CharacterData.Affinity.CHAOS, 30, 0, 180,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Stinky Insect", CharacterData.Affinity.NATURE, 10, 10, 400,
@@ -862,7 +862,7 @@ func _load_characters() -> void:
 		["Wandering Swordsman", CharacterData.Affinity.ANIMA, 60, 60, 600,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.RARE],
 
 		["War Genie", CharacterData.Affinity.ARCANE, 100, 80, 1150,
@@ -887,7 +887,7 @@ func _load_characters() -> void:
 		["Yaksa", CharacterData.Affinity.CHAOS, 30, 30, 500,
 			CharacterData.AbilityType.NONE,
 			{},
-			"No ability.",
+			"None",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 

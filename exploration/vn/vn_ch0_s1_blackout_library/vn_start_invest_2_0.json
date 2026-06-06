@@ -1,0 +1,8 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_window-side_seatings_zoom_in_window_pane_light_off.png",
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "The view seems nicer with all lights turned off."
+	}
+]

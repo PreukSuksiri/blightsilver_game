@@ -1500,6 +1500,27 @@ func _end_turn(player: int) -> void:
 					GameState.post_message("%s self-destructs at end of turn!" % _ep_card.card_name)
 					GameState.destroy_card(_pi, _ep_r, _ep_c)
 
+	# End-of-expose-turn stat penalties (Mafia Associates, Sniping Fairy, etc.)
+	for _pi: int in range(2):
+		for _ep_r: int in range(GameState.GRID_SIZE):
+			for _ep_c: int in range(GameState.GRID_SIZE):
+				var _ep_card: GameState.CardInstance = GameState.get_card(_pi, _ep_r, _ep_c)
+				if _ep_card.card_type != "character" or not _ep_card.face_up:
+					continue
+				if _ep_card.revealed_on_turn != GameState.turn_number:
+					continue
+				match _ep_card.ability_type:
+					CharacterData.AbilityType.DEF_ZERO_WHEN_EXPOSED:
+						_ep_card.current_def = 0
+						GameState.post_message(
+							"%s: DEF becomes 0 at end of expose turn." % _ep_card.card_name)
+					CharacterData.AbilityType.ATK_PENALTY_WHEN_EXPOSED:
+						var _pen: int = _ep_card.ability_params.get(
+							"penalty", _ep_card.ability_params.get("amount", 20))
+						_ep_card.current_atk = max(0, _ep_card.current_atk - _pen)
+						GameState.post_message(
+							"%s: -%d ATK at end of expose turn." % [_ep_card.card_name, _pen])
+
 	# SELF_DESTROY_TEMP_ATK_BOOST: destroy cards scheduled for end-of-next-turn destruction
 	for _sd_r: int in range(GameState.GRID_SIZE):
 		for _sd_c: int in range(GameState.GRID_SIZE):

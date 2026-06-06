@@ -1,0 +1,13 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_book_aisle_nex_reading_book_light_on.png",
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "Philosophy... History... Biography...?"
+	},
+	{
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "Why do people care so much about how a stranger's childhood looks like..."
+	}
+]

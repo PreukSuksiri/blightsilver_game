@@ -8,7 +8,14 @@ const DATA_PATH: String = "res://data/exploration_puzzles.json"
 
 ## puzzle_id → res:// scene path. Add an entry when a puzzle scene is coded.
 const SCENE_REGISTRY: Dictionary = {
-	"puzzle_example": "res://scenes/puzzles/puzzle_example.tscn",
+	"puzzle_example":      "res://scenes/puzzles/puzzle_example.tscn",
+	"puzzle_number_lock":  "res://scenes/puzzles/puzzle_number_lock.tscn",
+	"puzzle_symbol_lock":  "res://scenes/puzzles/puzzle_symbol_lock.tscn",
+	"puzzle_safe_dial":    "res://scenes/puzzles/puzzle_safe_dial.tscn",
+	"puzzle_memory_flip":  "res://scenes/puzzles/puzzle_memory_flip.tscn",
+	"puzzle_lights_out":   "res://scenes/puzzles/puzzle_lights_out.tscn",
+	"puzzle_wire_connect": "res://scenes/puzzles/puzzle_wire_connect.tscn",
+	"puzzle_simon_says":   "res://scenes/puzzles/puzzle_simon_says.tscn",
 }
 
 var _puzzles: Array = []

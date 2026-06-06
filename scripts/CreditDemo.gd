@@ -67,6 +67,7 @@ Preuk Suksiri
 
 VISUAL ARTS
 
+Weerawat Srisuchat
 Anifusion
 
 
@@ -74,6 +75,7 @@ Anifusion
 
 CARD ILLUSTRATIONS
 
+Weerawat Srisuchat
 Anifusion
 Grok Imagine
 

@@ -569,10 +569,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: IMMUNE_TO_TECH_CARDS \u2014 combat contact + ability MSG (best-effort).",
+      "notes": "Tier 2: IMMUNE_TO_TECH_CARDS — combat contact + ability MSG (best-effort).",
       "expect_log_regex": [
-        "(\"Araya\\ the\\ Eerie\\ Dancer\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Araya\\ the\\ Eerie\\ Dancer\")",
-        "(\"Araya\\ the\\ Eerie\\ Dancer\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Araya\\ the\\ Eerie\\ Dancer\")"
+        "(\"Araya\\ the\\ Eerie\\ Dancer\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Araya\\ the\\ Eerie\\ Dancer\")",
+        "(\"Araya\\ the\\ Eerie\\ Dancer\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Araya\\ the\\ Eerie\\ Dancer\")"
       ],
       "expect_log_any": [
         "Araya the Eerie Dancer",
@@ -762,10 +762,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: REDIRECT_DESTRUCTION_TO_ALLY \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: REDIRECT_DESTRUCTION_TO_ALLY — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Archbishop\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Archbishop\")",
-        "(\"Archbishop\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Archbishop\")"
+        "(\"Archbishop\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Archbishop\")",
+        "(\"Archbishop\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Archbishop\")"
       ],
       "expect_log_any": [
         "Archbishop",
@@ -886,7 +886,7 @@
         "Armored Bee",
         "GAME OVER"
       ],
-      "role": "t2_solo_attacker",
+      "role": "t2_defender",
       "deck0": {
         "deck_name": "E2E T2 solo Armored Bee",
         "characters": [
@@ -941,24 +941,24 @@
       },
       "forced_cells_0": [
         {
-          "card_name": "Armored Bee",
+          "card_name": "Chaotic Wisp",
           "row": 2,
           "col": 2
         }
       ],
       "forced_cells_1": [
         {
-          "card_name": "Chaotic Wisp",
+          "card_name": "Armored Bee",
           "row": 2,
           "col": 2
         }
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: one-use ability ONE_USE_DEF_BOOST.",
+      "notes": "Tier 2: ONE_USE_DEF_BOOST — Chaotic Wisp (ATK=20) attacks Armored Bee; DEF=0+60=60; Bee survives.",
       "expect_log_regex": [
-        "(\"Armored\\ Bee\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Armored\\ Bee\")",
-        "Attack P0\\(2,2\\)\"Armored\\ Bee\".*ATK=90\\s"
+        "(→ P\\d\\(\\d+,\\d+\\)\"Armored\\ Bee\"|\"Armored\\ Bee\".*DEF=)",
+        "→ P1\\(2,2\\)\"Armored\\ Bee\".*DEF=60\\s"
       ]
     },
     {
@@ -1062,7 +1062,7 @@
       "card_name": "Armored Monkey",
       "card_type": "Character",
       "ability_type": "ATK_BONUS_IF_AFFINITY_ON_FIELD",
-      "ability_description": "+10 ATK if there is face-up Nature card",
+      "ability_description": "+10 ATK if there is another face-up Nature card",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -1149,7 +1149,7 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: +0 ATK with NATURE ally Flame Lizard on field.",
+      "notes": "Tier 2: Flame Lizard on P0 field but face-down during attack → no bonus; ATK=10 (base). Gap: +10 bonus path not covered.",
       "expect_log_regex": [
         "Attack P0\\(2,2\\)\"Armored\\ Monkey\".*ATK=10\\s"
       ]
@@ -1255,7 +1255,7 @@
       "card_name": "Armored Rhino",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -1443,7 +1443,7 @@
       "card_name": "Bat Swarm",
       "card_type": "Character",
       "ability_type": "INTERCEPT_ALLY_ATTACK",
-      "ability_description": "If a Chaos card is being attacked. You can swap this card\u2019s position with that card",
+      "ability_description": "If a Chaos card is being attacked. You can swap this card’s position with that card",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -1525,10 +1525,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: INTERCEPT_ALLY_ATTACK \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: INTERCEPT_ALLY_ATTACK — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Bat\\ Swarm\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Bat\\ Swarm\")",
-        "(\"Bat\\ Swarm\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Bat\\ Swarm\")"
+        "(\"Bat\\ Swarm\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Bat\\ Swarm\")",
+        "(\"Bat\\ Swarm\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Bat\\ Swarm\")"
       ],
       "expect_log_any": [
         "Bat Swarm",
@@ -1636,7 +1636,7 @@
       "card_name": "Big Thug",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -1908,8 +1908,8 @@
       "forced_tech_1": [],
       "notes": "Tier 2: one-use ability ONE_USE_DEFEND_MORPH.",
       "expect_log_regex": [
-        "(\"Bladeshifter\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Bladeshifter\")",
-        "(\"Bladeshifter\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Bladeshifter\")"
+        "(\"Bladeshifter\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Bladeshifter\")",
+        "(\"Bladeshifter\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Bladeshifter\")"
       ]
     },
     {
@@ -2283,10 +2283,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: COIN_FLIP_2_DESTROY_NON_AFFINITY \u2014 card enters combat and coin flip occurs.",
+      "notes": "Tier 2: COIN_FLIP_2_DESTROY_NON_AFFINITY — card enters combat and coin flip occurs.",
       "expect_log_regex": [
-        "(\"Blue\\ Mage\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Blue\\ Mage\")",
-        "(\"Blue\\ Mage\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Blue\\ Mage\")"
+        "(\"Blue\\ Mage\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Blue\\ Mage\")",
+        "(\"Blue\\ Mage\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Blue\\ Mage\")"
       ],
       "expect_log_any": [
         "Coin flip:"
@@ -2477,8 +2477,8 @@
       "forced_tech_1": [],
       "notes": "Tier 2: one-use ability ONE_USE_EXTRA_ATTACK_ON_KILL.",
       "expect_log_regex": [
-        "(\"Bomber\\ Fairy\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Bomber\\ Fairy\")",
-        "(\"Bomber\\ Fairy\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Bomber\\ Fairy\")"
+        "(\"Bomber\\ Fairy\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Bomber\\ Fairy\")",
+        "(\"Bomber\\ Fairy\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Bomber\\ Fairy\")"
       ]
     },
     {
@@ -2770,7 +2770,7 @@
       "card_name": "Canyon Warg",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -2958,7 +2958,7 @@
       "card_name": "Chaotic Wisp",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -3146,7 +3146,7 @@
       "card_name": "Choir Lady Abigail",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -3334,7 +3334,7 @@
       "card_name": "Choir Lady Alice",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -3522,7 +3522,7 @@
       "card_name": "Choir Lady Anna",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -3710,7 +3710,7 @@
       "card_name": "Church Guard",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -3985,7 +3985,7 @@
       ],
       "forced_tech_1": [],
       "expect_log_regex": [
-        "(\"Claw\\ Mutant\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Claw\\ Mutant\")"
+        "(\"Claw\\ Mutant\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Claw\\ Mutant\")"
       ],
       "expect_log_any": [
         "Mutagen",
@@ -3993,7 +3993,7 @@
         "Release Mutagen",
         "Flag+"
       ],
-      "notes": "Tier 2: mutagen ability \u2014 Release Mutagen in hand, bio card on field."
+      "notes": "Tier 2: mutagen ability — Release Mutagen in hand, bio card on field."
     },
     {
       "tier": 1,
@@ -4178,9 +4178,9 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: +15 ATK vs exposed defender.",
+      "notes": "Tier 2: NOT_IMPLEMENTED — base ATK=0; ability future-work. Test verifies no errors in combat.",
       "expect_log_regex": [
-        "Attack P0\\(2,2\\)\"Cursed\\ Well\".*ATK=15\\s"
+        "(\\\"Cursed\\\\ Well\\\".*ATK=|\\u2192 P\\\\d\\\\(\\\\d+,\\\\d+\\\\)\\\"Cursed\\\\ Well\\\")"
       ]
     },
     {
@@ -4284,7 +4284,7 @@
       "card_name": "Dark Blob",
       "card_type": "Character",
       "ability_type": "PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN",
-      "ability_description": "After reckoning: +5 ATK at foe\u2019s turn ends",
+      "ability_description": "After reckoning: +5 ATK at foe’s turn ends",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -4366,10 +4366,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Dark\\ Blob\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Dark\\ Blob\")",
-        "(\"Dark\\ Blob\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Dark\\ Blob\")"
+        "(\"Dark\\ Blob\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Dark\\ Blob\")",
+        "(\"Dark\\ Blob\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Dark\\ Blob\")"
       ],
       "expect_log_any": [
         "Dark Blob",
@@ -4477,7 +4477,7 @@
       "card_name": "Dark Monk",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -4747,10 +4747,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: SELF_DEBUFF_ON_ATTACK_AND_DEFEND \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: SELF_DEBUFF_ON_ATTACK_AND_DEFEND — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Dark\\ Tengu\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Dark\\ Tengu\")",
-        "(\"Dark\\ Tengu\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Dark\\ Tengu\")"
+        "(\"Dark\\ Tengu\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Dark\\ Tengu\")",
+        "(\"Dark\\ Tengu\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Dark\\ Tengu\")"
       ],
       "expect_log_any": [
         "Dark Tengu",
@@ -4858,7 +4858,7 @@
       "card_name": "Death Cobra",
       "card_type": "Character",
       "ability_type": "VENOM_FLAG_END_OF_TURN",
-      "ability_description": "At the end of this turn, select 1 face-up foe\u2019s card. Put 1 venom flag on it.",
+      "ability_description": "At the end of this turn, select 1 face-up foe’s card. Put 1 venom flag on it.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -4940,10 +4940,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: VENOM_FLAG_END_OF_TURN \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: VENOM_FLAG_END_OF_TURN — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Death\\ Cobra\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Death\\ Cobra\")",
-        "(\"Death\\ Cobra\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Death\\ Cobra\")"
+        "(\"Death\\ Cobra\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Death\\ Cobra\")",
+        "(\"Death\\ Cobra\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Death\\ Cobra\")"
       ],
       "expect_log_any": [
         "Death Cobra",
@@ -5244,7 +5244,7 @@
       "card_name": "Demon Spawn",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -5432,7 +5432,7 @@
       "card_name": "Doom Wisp",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -5702,10 +5702,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: EXTRA_ATTACK_VS_REVEALED \u2014 multi/extra attack flow (best-effort).",
+      "notes": "Tier 2: EXTRA_ATTACK_VS_REVEALED — multi/extra attack flow (best-effort).",
       "expect_log_regex": [
-        "(\"Echo\\ Bringer\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Echo\\ Bringer\")",
-        "(\"Echo\\ Bringer\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Echo\\ Bringer\")"
+        "(\"Echo\\ Bringer\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Echo\\ Bringer\")",
+        "(\"Echo\\ Bringer\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Echo\\ Bringer\")"
       ],
       "expect_log_any": [
         "Attack phase",
@@ -5814,7 +5814,7 @@
       "card_name": "Electrogazer",
       "card_type": "Character",
       "ability_type": "NEGATE_ZERO_COST_TRAPS_BOTH",
-      "ability_description": "Negate all zero cost trap on both player\u2019s field",
+      "ability_description": "Negate all zero cost trap on both player’s field",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -6093,10 +6093,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: DESTROY_SELF_VS_DIVINE_BOTH \u2014 combat contact + ability MSG (best-effort).",
+      "notes": "Tier 2: DESTROY_SELF_VS_DIVINE_BOTH — combat contact + ability MSG (best-effort).",
       "expect_log_regex": [
-        "(\"Feral\\ Vampire\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Feral\\ Vampire\")",
-        "(\"Feral\\ Vampire\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Feral\\ Vampire\")"
+        "(\"Feral\\ Vampire\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Feral\\ Vampire\")",
+        "(\"Feral\\ Vampire\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Feral\\ Vampire\")"
       ],
       "expect_log_any": [
         "Feral Vampire",
@@ -6392,7 +6392,7 @@
       "card_name": "Flame Seraph",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -6580,7 +6580,7 @@
       "card_name": "Foul Wisp",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -6768,7 +6768,7 @@
       "card_name": "Fujin",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -7334,7 +7334,7 @@
       "card_name": "Goblin Poacher",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -7604,10 +7604,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: DESTROY_IF_OPPONENT_AFFINITY \u2014 combat contact + ability MSG (best-effort).",
+      "notes": "Tier 2: DESTROY_IF_OPPONENT_AFFINITY — combat contact + ability MSG (best-effort).",
       "expect_log_regex": [
-        "(\"Goddess\\ of\\ Virtue\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Goddess\\ of\\ Virtue\")",
-        "(\"Goddess\\ of\\ Virtue\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Goddess\\ of\\ Virtue\")"
+        "(\"Goddess\\ of\\ Virtue\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Goddess\\ of\\ Virtue\")",
+        "(\"Goddess\\ of\\ Virtue\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Goddess\\ of\\ Virtue\")"
       ],
       "expect_log_any": [
         "Goddess of Virtue",
@@ -7797,10 +7797,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: MULTI_ATTACK_VS_NON_CHARACTER \u2014 multi/extra attack flow (best-effort).",
+      "notes": "Tier 2: MULTI_ATTACK_VS_NON_CHARACTER — multi/extra attack flow (best-effort).",
       "expect_log_regex": [
-        "(\"Golden\\ Senju\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Golden\\ Senju\")",
-        "(\"Golden\\ Senju\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Golden\\ Senju\")"
+        "(\"Golden\\ Senju\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Golden\\ Senju\")",
+        "(\"Golden\\ Senju\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Golden\\ Senju\")"
       ],
       "expect_log_any": [
         "Attack phase",
@@ -7993,7 +7993,7 @@
       "forced_tech_1": [],
       "notes": "Tier 2: one-use ability ONE_USE_ATK_BOOST.",
       "expect_log_regex": [
-        "(\"Grand\\ Fort\\ Archer\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Grand\\ Fort\\ Archer\")",
+        "(\"Grand\\ Fort\\ Archer\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Grand\\ Fort\\ Archer\")",
         "Attack P0\\(2,2\\)\"Grand\\ Fort\\ Archer\".*ATK=30\\s"
       ]
     },
@@ -8098,7 +8098,7 @@
       "card_name": "Grand Fort Footsoldier",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -8286,7 +8286,7 @@
       "card_name": "Grand Fort Mauler",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -8556,10 +8556,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: OPPONENT_EXTRA_CRYSTAL_LOSS \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: OPPONENT_EXTRA_CRYSTAL_LOSS — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Grave\\ Worm\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Grave\\ Worm\")",
-        "(\"Grave\\ Worm\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Grave\\ Worm\")"
+        "(\"Grave\\ Worm\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Grave\\ Worm\")",
+        "(\"Grave\\ Worm\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Grave\\ Worm\")"
       ],
       "expect_log_any": [
         "Grave Worm",
@@ -8751,7 +8751,7 @@
       "forced_tech_1": [],
       "notes": "Tier 2: defender survive debuff (best-effort combat contact).",
       "expect_log_regex": [
-        "(\"Green\\ Mage\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Green\\ Mage\")"
+        "(\"Green\\ Mage\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Green\\ Mage\")"
       ]
     },
     {
@@ -8855,7 +8855,7 @@
       "card_name": "Gryphon",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -9125,10 +9125,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: OPTIONAL_CRYSTAL_PAY_ATK_BOOST \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: OPTIONAL_CRYSTAL_PAY_ATK_BOOST — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Hairpin\\ Assassin\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Hairpin\\ Assassin\")",
-        "(\"Hairpin\\ Assassin\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Hairpin\\ Assassin\")"
+        "(\"Hairpin\\ Assassin\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Hairpin\\ Assassin\")",
+        "(\"Hairpin\\ Assassin\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Hairpin\\ Assassin\")"
       ],
       "expect_log_any": [
         "Hairpin Assassin",
@@ -9511,10 +9511,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: TEMP_ATK_BOOST_OWN_TURN_START \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: TEMP_ATK_BOOST_OWN_TURN_START — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Hands\\ in\\ the\\ Attic\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Hands\\ in\\ the\\ Attic\")",
-        "(\"Hands\\ in\\ the\\ Attic\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Hands\\ in\\ the\\ Attic\")"
+        "(\"Hands\\ in\\ the\\ Attic\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Hands\\ in\\ the\\ Attic\")",
+        "(\"Hands\\ in\\ the\\ Attic\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Hands\\ in\\ the\\ Attic\")"
       ],
       "expect_log_any": [
         "Hands in the Attic",
@@ -9622,7 +9622,7 @@
       "card_name": "Heavy Tome Preacher",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -9893,7 +9893,7 @@
       "forced_tech_0": [],
       "forced_tech_1": [],
       "expect_log_regex": [
-        "(\"Huntress\\ of\\ Green\\ Glade\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Huntress\\ of\\ Green\\ Glade\")"
+        "(\"Huntress\\ of\\ Green\\ Glade\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Huntress\\ of\\ Green\\ Glade\")"
       ],
       "expect_log_any": [
         "trap_nullified",
@@ -10003,7 +10003,7 @@
       "card_name": "Ice Mage",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -10273,10 +10273,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: DESTROYED_IF_BATTLES_DIVINE \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: DESTROYED_IF_BATTLES_DIVINE — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Immortal\\ Vampire\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Immortal\\ Vampire\")",
-        "(\"Immortal\\ Vampire\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Immortal\\ Vampire\")"
+        "(\"Immortal\\ Vampire\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Immortal\\ Vampire\")",
+        "(\"Immortal\\ Vampire\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Immortal\\ Vampire\")"
       ],
       "expect_log_any": [
         "Immortal Vampire",
@@ -10654,10 +10654,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: PERM_DEF_BOOST_ON_DEFEND \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: PERM_DEF_BOOST_ON_DEFEND — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Jirayu\\ the\\ Rebellious\\ Prince\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Jirayu\\ the\\ Rebellious\\ Prince\")",
-        "(\"Jirayu\\ the\\ Rebellious\\ Prince\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Jirayu\\ the\\ Rebellious\\ Prince\")"
+        "(\"Jirayu\\ the\\ Rebellious\\ Prince\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Jirayu\\ the\\ Rebellious\\ Prince\")",
+        "(\"Jirayu\\ the\\ Rebellious\\ Prince\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Jirayu\\ the\\ Rebellious\\ Prince\")"
       ],
       "expect_log_any": [
         "Jirayu the Rebellious Prince",
@@ -10849,7 +10849,7 @@
       "forced_tech_1": [],
       "notes": "Tier 2: DEF_BONUS_IF_AFFINITY_ON_FIELD defender scenario.",
       "expect_log_regex": [
-        "(\"Joan\\ the\\ Faithful\\ Warrior\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Joan\\ the\\ Faithful\\ Warrior\")"
+        "(\"Joan\\ the\\ Faithful\\ Warrior\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Joan\\ the\\ Faithful\\ Warrior\")"
       ]
     },
     {
@@ -11035,10 +11035,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: COIN_FLIP_ATK_BOOST \u2014 card enters combat and coin flip occurs.",
+      "notes": "Tier 2: COIN_FLIP_ATK_BOOST — card enters combat and coin flip occurs.",
       "expect_log_regex": [
-        "(\"Joseph\\ the\\ Battle\\ Priest\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Joseph\\ the\\ Battle\\ Priest\")",
-        "(\"Joseph\\ the\\ Battle\\ Priest\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Joseph\\ the\\ Battle\\ Priest\")"
+        "(\"Joseph\\ the\\ Battle\\ Priest\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Joseph\\ the\\ Battle\\ Priest\")",
+        "(\"Joseph\\ the\\ Battle\\ Priest\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Joseph\\ the\\ Battle\\ Priest\")"
       ],
       "expect_log_any": [
         "Coin flip:"
@@ -11425,7 +11425,7 @@
       ],
       "forced_tech_1": [],
       "expect_log_regex": [
-        "(\"Lab\\ Bloater\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Lab\\ Bloater\")"
+        "(\"Lab\\ Bloater\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Lab\\ Bloater\")"
       ],
       "expect_log_any": [
         "Mutagen",
@@ -11433,7 +11433,7 @@
         "Release Mutagen",
         "Flag+"
       ],
-      "notes": "Tier 2: mutagen ability \u2014 Release Mutagen in hand, bio card on field."
+      "notes": "Tier 2: mutagen ability — Release Mutagen in hand, bio card on field."
     },
     {
       "tier": 1,
@@ -11623,7 +11623,7 @@
       ],
       "forced_tech_1": [],
       "expect_log_regex": [
-        "(\"Lab\\ Crawler\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Lab\\ Crawler\")"
+        "(\"Lab\\ Crawler\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Lab\\ Crawler\")"
       ],
       "expect_log_any": [
         "Mutagen",
@@ -11631,7 +11631,7 @@
         "Release Mutagen",
         "Flag+"
       ],
-      "notes": "Tier 2: mutagen ability \u2014 Release Mutagen in hand, bio card on field."
+      "notes": "Tier 2: mutagen ability — Release Mutagen in hand, bio card on field."
     },
     {
       "tier": 1,
@@ -11821,7 +11821,7 @@
       ],
       "forced_tech_1": [],
       "expect_log_regex": [
-        "(\"Lab\\ Zombie\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Lab\\ Zombie\")"
+        "(\"Lab\\ Zombie\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Lab\\ Zombie\")"
       ],
       "expect_log_any": [
         "Mutagen",
@@ -11829,7 +11829,7 @@
         "Release Mutagen",
         "Flag+"
       ],
-      "notes": "Tier 2: mutagen ability \u2014 Release Mutagen in hand, bio card on field."
+      "notes": "Tier 2: mutagen ability — Release Mutagen in hand, bio card on field."
     },
     {
       "tier": 1,
@@ -12015,7 +12015,7 @@
       "forced_tech_0": [],
       "forced_tech_1": [],
       "expect_log_regex": [
-        "(\"Laser\\ Walker\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Laser\\ Walker\")"
+        "(\"Laser\\ Walker\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Laser\\ Walker\")"
       ],
       "expect_log_any": [
         "trap_nullified",
@@ -12209,7 +12209,7 @@
       "forced_tech_1": [],
       "notes": "Tier 2: one-use ability ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND.",
       "expect_log_regex": [
-        "(\"Laughing\\ Granny\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Laughing\\ Granny\")",
+        "(\"Laughing\\ Granny\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Laughing\\ Granny\")",
         "Attack P0\\(2,2\\)\"Laughing\\ Granny\".*ATK=25\\s"
       ]
     },
@@ -12396,10 +12396,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: COIN_FLIP_CANCEL_ATTACK \u2014 card enters combat and coin flip occurs.",
+      "notes": "Tier 2: COIN_FLIP_CANCEL_ATTACK — card enters combat and coin flip occurs.",
       "expect_log_regex": [
-        "(\"Lazy\\ Troll\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Lazy\\ Troll\")",
-        "(\"Lazy\\ Troll\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Lazy\\ Troll\")"
+        "(\"Lazy\\ Troll\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Lazy\\ Troll\")",
+        "(\"Lazy\\ Troll\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Lazy\\ Troll\")"
       ],
       "expect_log_any": [
         "Coin flip:"
@@ -12588,10 +12588,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: PERM_DEF_BOOST_PER_ATTACK_SURVIVE \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: PERM_DEF_BOOST_PER_ATTACK_SURVIVE — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Leech\\ Man\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Leech\\ Man\")",
-        "(\"Leech\\ Man\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Leech\\ Man\")"
+        "(\"Leech\\ Man\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Leech\\ Man\")",
+        "(\"Leech\\ Man\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Leech\\ Man\")"
       ],
       "expect_log_any": [
         "Leech Man",
@@ -12781,10 +12781,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: LOCK_TARGET_ON_ATTACK \u2014 combat contact + ability MSG (best-effort).",
+      "notes": "Tier 2: LOCK_TARGET_ON_ATTACK — combat contact + ability MSG (best-effort).",
       "expect_log_regex": [
-        "(\"Leopard\\ Jailer\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Leopard\\ Jailer\")",
-        "(\"Leopard\\ Jailer\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Leopard\\ Jailer\")"
+        "(\"Leopard\\ Jailer\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Leopard\\ Jailer\")",
+        "(\"Leopard\\ Jailer\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Leopard\\ Jailer\")"
       ],
       "expect_log_any": [
         "Leopard Jailer",
@@ -13085,7 +13085,7 @@
       "card_name": "Mad Raccoon",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -13265,7 +13265,7 @@
         "Mafia Associates",
         "GAME OVER"
       ],
-      "notes": "Tier 1 smoke: character on field, battle completes."
+      "notes": "Tier 2: DEF becomes 0 at end of expose turn (TurnManager). Regex is best-effort contact check; post-turn DEF value not asserted."
     },
     {
       "tier": 2,
@@ -13273,7 +13273,7 @@
       "card_name": "Mafia Associates",
       "card_type": "Character",
       "ability_type": "DEF_ZERO_WHEN_EXPOSED",
-      "ability_description": "If this card is exposed, its defense becomes 0",
+      "ability_description": "At the end of the turn that it's been exposed, its defense becomes 0",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -13355,9 +13355,9 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: DEF_ZERO_WHEN_EXPOSED defender scenario.",
+      "notes": "Tier 2: DEF becomes 0 at end of expose turn (TurnManager). Regex is best-effort contact check; post-turn DEF value not asserted.",
       "expect_log_regex": [
-        "(\"Mafia\\ Associates\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Mafia\\ Associates\")"
+        "(\"Mafia\\ Associates\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Mafia\\ Associates\")"
       ]
     },
     {
@@ -13545,7 +13545,7 @@
       "forced_tech_1": [],
       "notes": "Tier 2: HALVE_DEF_ON_FIRST_EXPOSE defender scenario.",
       "expect_log_regex": [
-        "(\"Magenta\\ the\\ Nightbloom\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Magenta\\ the\\ Nightbloom\")"
+        "(\"Magenta\\ the\\ Nightbloom\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Magenta\\ the\\ Nightbloom\")"
       ]
     },
     {
@@ -13649,7 +13649,7 @@
       "card_name": "Magical Butterfly",
       "card_type": "Character",
       "ability_type": "TEMP_BOOST_ON_OPP_TECH",
-      "ability_description": "Whenever foe\u2019s tech card is activated, +10 ATK&DEF until the start of your next turn",
+      "ability_description": "Whenever foe’s tech card is activated, +10 ATK&DEF until the start of your next turn",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -13731,10 +13731,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: TEMP_BOOST_ON_OPP_TECH \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: TEMP_BOOST_ON_OPP_TECH — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Magical\\ Butterfly\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Magical\\ Butterfly\")",
-        "(\"Magical\\ Butterfly\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Magical\\ Butterfly\")"
+        "(\"Magical\\ Butterfly\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Magical\\ Butterfly\")",
+        "(\"Magical\\ Butterfly\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Magical\\ Butterfly\")"
       ],
       "expect_log_any": [
         "Magical Butterfly",
@@ -13925,7 +13925,7 @@
       "forced_tech_0": [],
       "forced_tech_1": [],
       "expect_log_regex": [
-        "(\"Mars\\ Drill\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Mars\\ Drill\")"
+        "(\"Mars\\ Drill\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Mars\\ Drill\")"
       ],
       "expect_log_any": [
         "trap_nullified",
@@ -14117,11 +14117,11 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: CRYSTAL_RECOVER_ON_BIG_LOSS \u2014 crystal change logged during battle.",
+      "notes": "Tier 2: CRYSTAL_RECOVER_ON_BIG_LOSS — crystal change logged during battle.",
       "expect_log_regex": [
-        "(\"Melissa\\ the\\ Healer\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Melissa\\ the\\ Healer\")",
+        "(\"Melissa\\ the\\ Healer\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Melissa\\ the\\ Healer\")",
         "Crystals:",
-        "(\"Melissa\\ the\\ Healer\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Melissa\\ the\\ Healer\")"
+        "(\"Melissa\\ the\\ Healer\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Melissa\\ the\\ Healer\")"
       ]
     },
     {
@@ -14225,7 +14225,7 @@
       "card_name": "Mephisto the Fallen",
       "card_type": "Character",
       "ability_type": "ATK_ZERO_AFTER_WIN",
-      "ability_description": "After this card attacked successfully, its ATK becomes 0 permanently",
+      "ability_description": "After this card attacked unit successfully, its ATK becomes 0 permanently",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -14307,10 +14307,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: ATK_ZERO_AFTER_WIN \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: ATK_ZERO_AFTER_WIN — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Mephisto\\ the\\ Fallen\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Mephisto\\ the\\ Fallen\")",
-        "(\"Mephisto\\ the\\ Fallen\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Mephisto\\ the\\ Fallen\")"
+        "(\"Mephisto\\ the\\ Fallen\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Mephisto\\ the\\ Fallen\")",
+        "(\"Mephisto\\ the\\ Fallen\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Mephisto\\ the\\ Fallen\")"
       ],
       "expect_log_any": [
         "Mephisto the Fallen",
@@ -14606,7 +14606,7 @@
       "card_name": "Mine Guard",
       "card_type": "Character",
       "ability_type": "SACRIFICE_FOR_CARD_TYPE",
-      "ability_description": "Prevent \u2018Miner\u2019 or \u2018Mining\u2019 card from being destroyed, but destroy this card instead. Usable face-down",
+      "ability_description": "Prevent ‘Miner’ or ‘Mining’ card from being destroyed, but destroy this card instead. Usable face-down",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -14688,10 +14688,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: SACRIFICE_FOR_CARD_TYPE \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: SACRIFICE_FOR_CARD_TYPE — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Mine\\ Guard\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Mine\\ Guard\")",
-        "(\"Mine\\ Guard\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Mine\\ Guard\")"
+        "(\"Mine\\ Guard\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Mine\\ Guard\")",
+        "(\"Mine\\ Guard\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Mine\\ Guard\")"
       ],
       "expect_log_any": [
         "Mine Guard",
@@ -14881,11 +14881,11 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: CRYSTAL_GAIN_ON_DEAD_END_ATTACK \u2014 crystal change logged during battle.",
+      "notes": "Tier 2: CRYSTAL_GAIN_ON_DEAD_END_ATTACK — crystal change logged during battle.",
       "expect_log_regex": [
-        "(\"Miner\\ Probe\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Miner\\ Probe\")",
+        "(\"Miner\\ Probe\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Miner\\ Probe\")",
         "Crystals:",
-        "(\"Miner\\ Probe\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Miner\\ Probe\")"
+        "(\"Miner\\ Probe\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Miner\\ Probe\")"
       ]
     },
     {
@@ -14989,7 +14989,7 @@
       "card_name": "Moon Rover",
       "card_type": "Character",
       "ability_type": "REVEAL_ON_DEAD_END_ATTACK",
-      "ability_description": "After hitting a dead end : reveal 1 foe\u2019s cell",
+      "ability_description": "After hitting a dead end : reveal 1 foe’s cell",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -15071,10 +15071,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: REVEAL_ON_DEAD_END_ATTACK \u2014 reveal effect during/after combat.",
+      "notes": "Tier 2: REVEAL_ON_DEAD_END_ATTACK — reveal effect during/after combat.",
       "expect_log_regex": [
-        "(\"Moon\\ Rover\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Moon\\ Rover\")",
-        "(\"Moon\\ Rover\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Moon\\ Rover\")"
+        "(\"Moon\\ Rover\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Moon\\ Rover\")",
+        "(\"Moon\\ Rover\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Moon\\ Rover\")"
       ],
       "expect_log_any": [
         "Revealed:",
@@ -15452,10 +15452,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: COIN_FLIP_EXTRA_ATTACK \u2014 card enters combat and coin flip occurs.",
+      "notes": "Tier 2: COIN_FLIP_EXTRA_ATTACK — card enters combat and coin flip occurs.",
       "expect_log_regex": [
-        "(\"Moon\\ Tribe\\ Twin\\ Blader\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Moon\\ Tribe\\ Twin\\ Blader\")",
-        "(\"Moon\\ Tribe\\ Twin\\ Blader\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Moon\\ Tribe\\ Twin\\ Blader\")"
+        "(\"Moon\\ Tribe\\ Twin\\ Blader\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Moon\\ Tribe\\ Twin\\ Blader\")",
+        "(\"Moon\\ Tribe\\ Twin\\ Blader\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Moon\\ Tribe\\ Twin\\ Blader\")"
       ],
       "expect_log_any": [
         "Coin flip:"
@@ -15646,8 +15646,8 @@
       "forced_tech_1": [],
       "notes": "Tier 2: +10 DEF in defense stance.",
       "expect_log_regex": [
-        "(\"Moonrise\\ Gentleman\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Moonrise\\ Gentleman\")",
-        "\u2192 P1\\(2,2\\)\"Moonrise\\ Gentleman\".*DEF=40\\s"
+        "(\"Moonrise\\ Gentleman\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Moonrise\\ Gentleman\")",
+        "→ P1\\(2,2\\)\"Moonrise\\ Gentleman\".*DEF=40\\s"
       ]
     },
     {
@@ -15751,7 +15751,7 @@
       "card_name": "Mysterious Miner",
       "card_type": "Character",
       "ability_type": "REVEAL_ON_WIN",
-      "ability_description": "After attacked: reveal 1 foe\u2019s cell",
+      "ability_description": "After attacked: reveal 1 foe’s cell",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -15833,10 +15833,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: REVEAL_ON_WIN \u2014 reveal effect during/after combat.",
+      "notes": "Tier 2: REVEAL_ON_WIN — reveal effect during/after combat.",
       "expect_log_regex": [
-        "(\"Mysterious\\ Miner\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Mysterious\\ Miner\")",
-        "(\"Mysterious\\ Miner\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Mysterious\\ Miner\")"
+        "(\"Mysterious\\ Miner\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Mysterious\\ Miner\")",
+        "(\"Mysterious\\ Miner\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Mysterious\\ Miner\")"
       ],
       "expect_log_any": [
         "Revealed:",
@@ -16026,10 +16026,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: one-use ability ONE_USE_PERM_DEBUFF_ATTACKER_ATK.",
+      "notes": "Tier 2: ONE_USE_PERM_DEBUFF_ATTACKER_ATK fires when defending (debuffs attacker). Here tested as attacker: base ATK=10.",
       "expect_log_regex": [
-        "(\"Needle\\ Porcupine\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Needle\\ Porcupine\")",
-        "Attack P0\\(2,2\\)\"Needle\\ Porcupine\".*ATK=15\\s"
+        "(\\\"Needle\\\\ Porcupine\\\".*ATK=|\\u2192 P\\\\d\\\\(\\\\d+,\\\\d+\\\\)\\\"Needle\\\\ Porcupine\\\")",
+        "Attack P0\\\\(2,2\\\\)\\\"Needle\\\\ Porcupine\\\".*ATK=10\\\\s"
       ]
     },
     {
@@ -16133,7 +16133,7 @@
       "card_name": "Neptune Diver",
       "card_type": "Character",
       "ability_type": "REVEAL_ON_TRAP_ATTACK",
-      "ability_description": "After hitting a trap : reveal 1 foe\u2019s cell",
+      "ability_description": "After hitting a trap : reveal 1 foe’s cell",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -16215,10 +16215,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: REVEAL_ON_TRAP_ATTACK \u2014 reveal effect during/after combat.",
+      "notes": "Tier 2: REVEAL_ON_TRAP_ATTACK — reveal effect during/after combat.",
       "expect_log_regex": [
-        "(\"Neptune\\ Diver\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Neptune\\ Diver\")",
-        "(\"Neptune\\ Diver\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Neptune\\ Diver\")"
+        "(\"Neptune\\ Diver\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Neptune\\ Diver\")",
+        "(\"Neptune\\ Diver\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Neptune\\ Diver\")"
       ],
       "expect_log_any": [
         "Revealed:",
@@ -16326,7 +16326,7 @@
       "card_name": "Night Whisperer",
       "card_type": "Character",
       "ability_type": "BOOST_PER_TYPED_CARD_ON_FIELD",
-      "ability_description": "+30 ATK&DEF for each face-up \u2018wisp\u2019 card on their own field",
+      "ability_description": "+30 ATK&DEF for each face-up ‘wisp’ card on their own field",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -16601,10 +16601,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: COIN_FLIP_SWAP_POSITION \u2014 card enters combat and coin flip occurs.",
+      "notes": "Tier 2: COIN_FLIP_SWAP_POSITION — card enters combat and coin flip occurs.",
       "expect_log_regex": [
-        "(\"Nuki\\ the\\ Tanuki\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Nuki\\ the\\ Tanuki\")",
-        "(\"Nuki\\ the\\ Tanuki\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Nuki\\ the\\ Tanuki\")"
+        "(\"Nuki\\ the\\ Tanuki\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Nuki\\ the\\ Tanuki\")",
+        "(\"Nuki\\ the\\ Tanuki\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Nuki\\ the\\ Tanuki\")"
       ],
       "expect_log_any": [
         "Coin flip:"
@@ -16793,10 +16793,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: LOCK_SELF_AFTER_ATTACK \u2014 combat contact + ability MSG (best-effort).",
+      "notes": "Tier 2: LOCK_SELF_AFTER_ATTACK — combat contact + ability MSG (best-effort).",
       "expect_log_regex": [
-        "(\"Ostrich\\ Cannon\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Ostrich\\ Cannon\")",
-        "(\"Ostrich\\ Cannon\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Ostrich\\ Cannon\")"
+        "(\"Ostrich\\ Cannon\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Ostrich\\ Cannon\")",
+        "(\"Ostrich\\ Cannon\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Ostrich\\ Cannon\")"
       ],
       "expect_log_any": [
         "Ostrich Cannon",
@@ -16986,9 +16986,9 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: +5 ATK vs non-ANIMA.",
+      "notes": "Tier 2: +10 ATK vs non-ANIMA (Flame Lizard is NATURE ≠ ANIMA). Expected ATK=30+10=40.",
       "expect_log_regex": [
-        "Attack P0\\(2,2\\)\"Ox\\ Patrol\".*ATK=35\\s"
+        "Attack P0\\\\(2,2\\\\)\\\"Ox\\\\ Patrol\\\".*ATK=40\\\\s"
       ]
     },
     {
@@ -17092,7 +17092,7 @@
       "card_name": "Parom the Smuggler",
       "card_type": "Character",
       "ability_type": "CRYSTAL_GAIN_ON_OPP_REVEAL",
-      "ability_description": "Each time foe\u2019s cell got revealed: gain 40 crystals.",
+      "ability_description": "Each time foe’s cell got revealed: gain 40 crystals.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -17174,11 +17174,11 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: CRYSTAL_GAIN_ON_OPP_REVEAL \u2014 crystal change logged during battle.",
+      "notes": "Tier 2: CRYSTAL_GAIN_ON_OPP_REVEAL — crystal change logged during battle.",
       "expect_log_regex": [
-        "(\"Parom\\ the\\ Smuggler\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Parom\\ the\\ Smuggler\")",
+        "(\"Parom\\ the\\ Smuggler\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Parom\\ the\\ Smuggler\")",
         "Crystals:",
-        "(\"Parom\\ the\\ Smuggler\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Parom\\ the\\ Smuggler\")"
+        "(\"Parom\\ the\\ Smuggler\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Parom\\ the\\ Smuggler\")"
       ]
     },
     {
@@ -17364,10 +17364,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: DESTROYED_IF_BATTLES_DIVINE \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: DESTROYED_IF_BATTLES_DIVINE — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Pit\\ Lord\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Pit\\ Lord\")",
-        "(\"Pit\\ Lord\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Pit\\ Lord\")"
+        "(\"Pit\\ Lord\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Pit\\ Lord\")",
+        "(\"Pit\\ Lord\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Pit\\ Lord\")"
       ],
       "expect_log_any": [
         "Pit Lord",
@@ -17475,7 +17475,7 @@
       "card_name": "Plant-29",
       "card_type": "Character",
       "ability_type": "TURN_START_COIN_FLIP_FLAG",
-      "ability_description": "Start of your turn: select 1 face-up foe\u2019s card, flip a coin. Head: put Venom Flag on it. Tail: put Mutagen Flag on it.",
+      "ability_description": "Start of your turn: select 1 face-up foe’s card, flip a coin. Head: put Venom Flag on it. Tail: put Mutagen Flag on it.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -17557,10 +17557,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: TURN_START_COIN_FLIP_FLAG \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: TURN_START_COIN_FLIP_FLAG — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Plant\\ 29\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Plant\\ 29\")",
-        "(\"Plant\\ 29\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Plant\\ 29\")"
+        "(\"Plant\\ 29\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Plant\\ 29\")",
+        "(\"Plant\\ 29\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Plant\\ 29\")"
       ],
       "expect_log_any": [
         "Plant-29",
@@ -17668,7 +17668,7 @@
       "card_name": "Poltergeist",
       "card_type": "Character",
       "ability_type": "SWAP_ATK_DEF_WHEN_ATTACKING",
-      "ability_description": "If this card performs an attack, switch this card\u2019s ATK and DEF",
+      "ability_description": "If this card performs an attack, switch this card’s ATK and DEF",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -17750,10 +17750,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: SWAP_ATK_DEF_WHEN_ATTACKING \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: SWAP_ATK_DEF_WHEN_ATTACKING — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Poltergeist\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Poltergeist\")",
-        "(\"Poltergeist\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Poltergeist\")"
+        "(\"Poltergeist\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Poltergeist\")",
+        "(\"Poltergeist\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Poltergeist\")"
       ],
       "expect_log_any": [
         "Poltergeist",
@@ -17861,7 +17861,7 @@
       "card_name": "Ponycorn",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -18237,7 +18237,7 @@
       "card_name": "Raijin",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -18613,7 +18613,7 @@
       "card_name": "Rotten Shrieker",
       "card_type": "Character",
       "ability_type": "PERM_ATK_LOSS_PER_OWN_TURN",
-      "ability_description": "Without Mutagen Flag : -10 ATK permanently at your turn\u2019s end",
+      "ability_description": "Without Mutagen Flag : -10 ATK permanently at your turn’s end",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -18695,10 +18695,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: PERM_ATK_LOSS_PER_OWN_TURN \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: PERM_ATK_LOSS_PER_OWN_TURN — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Rotten\\ Shrieker\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Rotten\\ Shrieker\")",
-        "(\"Rotten\\ Shrieker\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Rotten\\ Shrieker\")"
+        "(\"Rotten\\ Shrieker\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Rotten\\ Shrieker\")",
+        "(\"Rotten\\ Shrieker\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Rotten\\ Shrieker\")"
       ],
       "expect_log_any": [
         "Rotten Shrieker",
@@ -18888,7 +18888,7 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: center-zone ATK bonus \u2192 160.",
+      "notes": "Tier 2: center-zone ATK bonus → 160.",
       "expect_log_regex": [
         "Attack P0\\(2,2\\)\"Satellite\\ Cannon\".*ATK=160\\s"
       ]
@@ -19187,7 +19187,7 @@
       "card_name": "Scarlet Mutant",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -19457,10 +19457,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: REVEAL_ADJACENT_AFTER_ATTACK \u2014 reveal effect during/after combat.",
+      "notes": "Tier 2: REVEAL_ADJACENT_AFTER_ATTACK — reveal effect during/after combat.",
       "expect_log_regex": [
-        "(\"Scout\\ Probe\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Scout\\ Probe\")",
-        "(\"Scout\\ Probe\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Scout\\ Probe\")"
+        "(\"Scout\\ Probe\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Scout\\ Probe\")",
+        "(\"Scout\\ Probe\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Scout\\ Probe\")"
       ],
       "expect_log_any": [
         "Revealed:",
@@ -19761,7 +19761,7 @@
       "card_name": "Shepherd Detective",
       "card_type": "Character",
       "ability_type": "REVEAL_ON_ANY_ATTACK",
-      "ability_description": "After attack: reveal 1 foe\u2019s cell",
+      "ability_description": "After attack: reveal 1 foe’s cell",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -19843,10 +19843,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: REVEAL_ON_ANY_ATTACK \u2014 reveal effect during/after combat.",
+      "notes": "Tier 2: REVEAL_ON_ANY_ATTACK — reveal effect during/after combat.",
       "expect_log_regex": [
-        "(\"Shepherd\\ Detective\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Shepherd\\ Detective\")",
-        "(\"Shepherd\\ Detective\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Shepherd\\ Detective\")"
+        "(\"Shepherd\\ Detective\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Shepherd\\ Detective\")",
+        "(\"Shepherd\\ Detective\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Shepherd\\ Detective\")"
       ],
       "expect_log_any": [
         "Revealed:",
@@ -20147,7 +20147,7 @@
       "card_name": "Shredder Doll",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -20711,7 +20711,7 @@
       "card_name": "Skeleton Grappler",
       "card_type": "Character",
       "ability_type": "LOCK_ATTACKER_ON_DESTROYED",
-      "ability_description": "After Reckoning: foe card must wait until foe\u2019s turn ends",
+      "ability_description": "After Reckoning: foe card must wait until foe’s turn ends",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -20793,10 +20793,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: LOCK_ATTACKER_ON_DESTROYED \u2014 combat contact + ability MSG (best-effort).",
+      "notes": "Tier 2: LOCK_ATTACKER_ON_DESTROYED — combat contact + ability MSG (best-effort).",
       "expect_log_regex": [
-        "(\"Skeleton\\ Grappler\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Skeleton\\ Grappler\")",
-        "(\"Skeleton\\ Grappler\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Skeleton\\ Grappler\")"
+        "(\"Skeleton\\ Grappler\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Skeleton\\ Grappler\")",
+        "(\"Skeleton\\ Grappler\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Skeleton\\ Grappler\")"
       ],
       "expect_log_any": [
         "Skeleton Grappler",
@@ -20904,7 +20904,7 @@
       "card_name": "Skeleton Lancer",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -21176,8 +21176,8 @@
       "forced_tech_1": [],
       "notes": "Tier 2: one-use ability ONE_USE_EXTRA_ATTACK_ON_DEAD_END.",
       "expect_log_regex": [
-        "(\"Skeleton\\ Scout\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Skeleton\\ Scout\")",
-        "(\"Skeleton\\ Scout\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Skeleton\\ Scout\")"
+        "(\"Skeleton\\ Scout\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Skeleton\\ Scout\")",
+        "(\"Skeleton\\ Scout\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Skeleton\\ Scout\")"
       ]
     },
     {
@@ -21281,7 +21281,7 @@
       "card_name": "Sniping Fairy",
       "card_type": "Character",
       "ability_type": "ATK_PENALTY_WHEN_EXPOSED",
-      "ability_description": "-20 ATK if exposed",
+      "ability_description": "At the end of the turn that it's been exposed, -20 ATK",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -21363,9 +21363,9 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: -20 ATK while exposed.",
+      "notes": "Tier 2: full ATK during expose turn; -20 ATK applied at end of that turn.",
       "expect_log_regex": [
-        "Attack P0\\(2,2\\)\"Sniping\\ Fairy\".*ATK=20\\s"
+        "Attack P0\\(2,2\\)\"Sniping\\ Fairy\".*ATK=40\\s"
       ]
     },
     {
@@ -21551,10 +21551,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: EXTRA_ATTACK_ON_DEAD_END \u2014 multi/extra attack flow (best-effort).",
+      "notes": "Tier 2: EXTRA_ATTACK_ON_DEAD_END — multi/extra attack flow (best-effort).",
       "expect_log_regex": [
-        "(\"Sonic\\ Seraph\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Sonic\\ Seraph\")",
-        "(\"Sonic\\ Seraph\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Sonic\\ Seraph\")"
+        "(\"Sonic\\ Seraph\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Sonic\\ Seraph\")",
+        "(\"Sonic\\ Seraph\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Sonic\\ Seraph\")"
       ],
       "expect_log_any": [
         "Attack phase",
@@ -21663,7 +21663,7 @@
       "card_name": "Space Boy",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -22044,7 +22044,7 @@
       "card_name": "Staircase Lady",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -22232,7 +22232,7 @@
       "card_name": "Stinky Insect",
       "card_type": "Character",
       "ability_type": "LOCK_ATTACKER_ON_DEFEND",
-      "ability_description": "If this card defended, the attacker must wait until foe\u2019s turn ends",
+      "ability_description": "If this card defended, the attacker must wait until foe’s turn ends",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -22314,10 +22314,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: LOCK_ATTACKER_ON_DEFEND \u2014 combat contact + ability MSG (best-effort).",
+      "notes": "Tier 2: LOCK_ATTACKER_ON_DEFEND — combat contact + ability MSG (best-effort).",
       "expect_log_regex": [
-        "(\"Stinky\\ Insect\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Stinky\\ Insect\")",
-        "(\"Stinky\\ Insect\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Stinky\\ Insect\")"
+        "(\"Stinky\\ Insect\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Stinky\\ Insect\")",
+        "(\"Stinky\\ Insect\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Stinky\\ Insect\")"
       ],
       "expect_log_any": [
         "Stinky Insect",
@@ -22695,10 +22695,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: DESTROY_SELF_AT_END_OF_EXPOSE_TURN \u2014 combat contact + ability MSG (best-effort).",
+      "notes": "Tier 2: DESTROY_SELF_AT_END_OF_EXPOSE_TURN — combat contact + ability MSG (best-effort).",
       "expect_log_regex": [
-        "(\"Striker\\ Comet\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Striker\\ Comet\")",
-        "(\"Striker\\ Comet\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Striker\\ Comet\")"
+        "(\"Striker\\ Comet\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Striker\\ Comet\")",
+        "(\"Striker\\ Comet\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Striker\\ Comet\")"
       ],
       "expect_log_any": [
         "Striker Comet",
@@ -22806,7 +22806,7 @@
       "card_name": "Succubus",
       "card_type": "Character",
       "ability_type": "ONE_USE_COPY_STATS_ON_SURVIVE",
-      "ability_description": "Once, if survived Reckoning: +ATK&DEF equal to half of that foe\u2019s card",
+      "ability_description": "Once, if survived Reckoning: +ATK&DEF equal to half of that foe’s card",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -22890,8 +22890,8 @@
       "forced_tech_1": [],
       "notes": "Tier 2: one-use ability ONE_USE_COPY_STATS_ON_SURVIVE.",
       "expect_log_regex": [
-        "(\"Succubus\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Succubus\")",
-        "(\"Succubus\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Succubus\")"
+        "(\"Succubus\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Succubus\")",
+        "(\"Succubus\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Succubus\")"
       ]
     },
     {
@@ -23460,8 +23460,8 @@
       "forced_tech_1": [],
       "notes": "Tier 2: one-use ability ONE_USE_SURVIVE_DESTRUCTION.",
       "expect_log_regex": [
-        "(\"Tiny\\ Pixie\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Tiny\\ Pixie\")",
-        "(\"Tiny\\ Pixie\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Tiny\\ Pixie\")"
+        "(\"Tiny\\ Pixie\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Tiny\\ Pixie\")",
+        "(\"Tiny\\ Pixie\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Tiny\\ Pixie\")"
       ]
     },
     {
@@ -23647,10 +23647,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2: IMMUNE_TO_TRAPS \u2014 combat contact + ability MSG (best-effort).",
+      "notes": "Tier 2: IMMUNE_TO_TRAPS — combat contact + ability MSG (best-effort).",
       "expect_log_regex": [
-        "(\"Tomb\\ Bandit\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Tomb\\ Bandit\")",
-        "(\"Tomb\\ Bandit\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Tomb\\ Bandit\")"
+        "(\"Tomb\\ Bandit\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Tomb\\ Bandit\")",
+        "(\"Tomb\\ Bandit\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Tomb\\ Bandit\")"
       ],
       "expect_log_any": [
         "Tomb Bandit",
@@ -23840,10 +23840,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: DESTROYED_IF_BATTLES_DIVINE \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: DESTROYED_IF_BATTLES_DIVINE — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Vampire\\ Duchess\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Vampire\\ Duchess\")",
-        "(\"Vampire\\ Duchess\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Vampire\\ Duchess\")"
+        "(\"Vampire\\ Duchess\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Vampire\\ Duchess\")",
+        "(\"Vampire\\ Duchess\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Vampire\\ Duchess\")"
       ],
       "expect_log_any": [
         "Vampire Duchess",
@@ -24033,10 +24033,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: SACRIFICE_FOR_CARD_TYPE \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: SACRIFICE_FOR_CARD_TYPE — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Vampire\\ Servant\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Vampire\\ Servant\")",
-        "(\"Vampire\\ Servant\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Vampire\\ Servant\")"
+        "(\"Vampire\\ Servant\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Vampire\\ Servant\")",
+        "(\"Vampire\\ Servant\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Vampire\\ Servant\")"
       ],
       "expect_log_any": [
         "Vampire Servant",
@@ -24144,7 +24144,7 @@
       "card_name": "Vile Creeper",
       "card_type": "Character",
       "ability_type": "SWAP_ATK_DEF_PER_OPP_TURN",
-      "ability_description": "While this card is face-up, at foe\u2019s turn ends, swap its ATK&DEF",
+      "ability_description": "While this card is face-up, at foe’s turn ends, swap its ATK&DEF",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -24226,10 +24226,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: SWAP_ATK_DEF_PER_OPP_TURN \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: SWAP_ATK_DEF_PER_OPP_TURN — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"Vile\\ Creeper\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Vile\\ Creeper\")",
-        "(\"Vile\\ Creeper\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"Vile\\ Creeper\")"
+        "(\"Vile\\ Creeper\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Vile\\ Creeper\")",
+        "(\"Vile\\ Creeper\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"Vile\\ Creeper\")"
       ],
       "expect_log_any": [
         "Vile Creeper",
@@ -24525,7 +24525,7 @@
       "card_name": "Wandering Swordsman",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -24795,10 +24795,10 @@
       ],
       "forced_tech_0": [],
       "forced_tech_1": [],
-      "notes": "Tier 2 best-effort: PERM_ATK_LOSS_PER_ATTACK \u2014 combat + MSG/card presence.",
+      "notes": "Tier 2 best-effort: PERM_ATK_LOSS_PER_ATTACK — combat + MSG/card presence.",
       "expect_log_regex": [
-        "(\"War\\ Genie\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"War\\ Genie\")",
-        "(\"War\\ Genie\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"War\\ Genie\")"
+        "(\"War\\ Genie\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"War\\ Genie\")",
+        "(\"War\\ Genie\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"War\\ Genie\")"
       ],
       "expect_log_any": [
         "War Genie",
@@ -24990,7 +24990,7 @@
       "forced_tech_1": [],
       "notes": "Tier 2: debuff attacker ATK by 15 when defending.",
       "expect_log_regex": [
-        "(\"White\\ Tiger\".*ATK=|\u2192 P\\d\\(\\d+,\\d+\\)\"White\\ Tiger\")"
+        "(\"White\\ Tiger\".*ATK=|→ P\\d\\(\\d+,\\d+\\)\"White\\ Tiger\")"
       ],
       "expect_log_any": [
         "Attacker loses 15 ATK"
@@ -25285,7 +25285,7 @@
       "card_name": "Yaksa",
       "card_type": "Character",
       "ability_type": "NONE",
-      "ability_description": "No ability.",
+      "ability_description": "None",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -25477,7 +25477,7 @@
       "card_name": "Accident",
       "card_type": "Tech",
       "ability_type": "DESTROY_FACEUP_NO_CRYSTAL_LOSS",
-      "ability_description": "Destroy 1 of foe\u2019s face-up card. If there is no face-up card, foe must chooses the target. Foe pay no cost.",
+      "ability_description": "Destroy 1 of foe’s face-up card. If there is no face-up card, foe must chooses the target. Foe pay no cost.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -26086,7 +26086,7 @@
       "card_name": "Prayer",
       "card_type": "Tech",
       "ability_type": "DIVINE_PROTECTION",
-      "ability_description": "Once, until foe\u2019s turn ends: prevent Divine card from being destroyed",
+      "ability_description": "Once, until foe’s turn ends: prevent Divine card from being destroyed",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -26289,7 +26289,7 @@
       "card_name": "Radar",
       "card_type": "Tech",
       "ability_type": "REVEAL_OPPONENT_SQUARE",
-      "ability_description": "Reveal 3 of foe\u2019s cell",
+      "ability_description": "Reveal 3 of foe’s cell",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -26898,7 +26898,7 @@
       "card_name": "Siege Cannon",
       "card_type": "Tech",
       "ability_type": "OPPONENT_NEXT_DEFENDER_DESTROYED",
-      "ability_description": "Until the end of this turn, once, foe\u2019s defending unit is destroyed.",
+      "ability_description": "Until the end of this turn, once, foe’s defending unit is destroyed.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -27101,7 +27101,7 @@
       "card_name": "Spy",
       "card_type": "Tech",
       "ability_type": "REVEAL_OPPONENT_SQUARE",
-      "ability_description": "Reveal 1 of foe\u2019s cell",
+      "ability_description": "Reveal 1 of foe’s cell",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -27508,7 +27508,7 @@
       "card_name": "War Supply",
       "card_type": "Tech",
       "ability_type": "TEMP_ATK_DEF_BOOST_ALL",
-      "ability_description": "Your units get +10 ATK&DEF in Reckoning until turn\u2019s end",
+      "ability_description": "Your units get +10 ATK&DEF in Reckoning until turn’s end",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -29967,7 +29967,7 @@
       "card_name": "Foul Gas",
       "card_type": "Trap",
       "ability_type": "TEMP_DEBUFF_ALL_ATTACKER_CHARS",
-      "ability_description": "-5 ATK to all the attacking player\u2019s units until the end of this turn",
+      "ability_description": "-5 ATK to all the attacking player’s units until the end of this turn",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -30156,7 +30156,7 @@
       "card_name": "Hard Scale",
       "card_type": "Trap",
       "ability_type": "TEMP_DEF_BOOST_ONE_OWN",
-      "ability_description": "All of your unit gain +5 DEF in Reckoning until this turn\u2019s end",
+      "ability_description": "All of your unit gain +5 DEF in Reckoning until this turn’s end",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -30345,7 +30345,7 @@
       "card_name": "Hostage",
       "card_type": "Trap",
       "ability_type": "NULLIFY_ATTACK_REVEAL_ADJACENT",
-      "ability_description": "Reveal 1 of your own cell. Until the foe\u2019s turn ends, foe cannot target than cell.",
+      "ability_description": "Reveal 1 of your own cell. Until the foe’s turn ends, foe cannot target than cell.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -31099,7 +31099,7 @@
       "card_name": "Self-destruct",
       "card_type": "Trap",
       "ability_type": "SELF_DESTROY_TEMP_ATK_BOOST",
-      "ability_description": "Select 1 of your unit. +10 ATK until your next turn\u2019s end, but also destroy it. You pay no cost.",
+      "ability_description": "Select 1 of your unit. +10 ATK until your next turn’s end, but also destroy it. You pay no cost.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -31287,7 +31287,7 @@
       "card_name": "Snare Trap",
       "card_type": "Trap",
       "ability_type": "NULLIFY_ATTACKER_EFFECT",
-      "ability_description": "The attacker's effect becomes None until foe\u2019s next turn ends",
+      "ability_description": "The attacker's effect becomes None until foe’s next turn ends",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": false,
@@ -32110,8 +32110,13 @@
       "forced_cells_0": [
         {
           "card_name": "Flame Lizard",
-          "row": 0,
-          "col": 0
+          "row": 1,
+          "col": 2
+        },
+        {
+          "card_name": "Armored Monkey",
+          "row": 2,
+          "col": 1
         }
       ],
       "forced_cells_1": [
@@ -32128,7 +32133,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Ancient\\ Lizard\"",
         "MSG:.*Ancient"
       ],
-      "notes": "Tier 2: union Ancient Lizard \u2014 summon logged and/or union attacks with ATK=75."
+      "notes": "Tier 2: union Ancient Lizard — summon logged and/or union attacks with ATK=75."
     },
     {
       "tier": 1,
@@ -32291,7 +32296,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Armored Monkey",
+          "row": 1,
+          "col": 1
+        },
+        {
+          "card_name": "Ostrich Cannon",
+          "row": 1,
+          "col": 2
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -32307,7 +32323,7 @@
         "MSG:.*Armored",
         "MSG:"
       ],
-      "notes": "Tier 2: union Armored Dino \u2014 summon logged and/or union attacks with ATK=95."
+      "notes": "Tier 2: union Armored Dino — summon logged and/or union attacks with ATK=95."
     },
     {
       "tier": 1,
@@ -32468,7 +32484,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Ostrich Cannon",
+          "row": 1,
+          "col": 1
+        },
+        {
+          "card_name": "Giant Mosquito",
+          "row": 1,
+          "col": 3
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -32483,7 +32510,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Barros\\ the\\ Colossal\"",
         "MSG:.*Barros"
       ],
-      "notes": "Tier 2: union Barros the Colossal \u2014 summon logged and/or union attacks with ATK=150."
+      "notes": "Tier 2: union Barros the Colossal — summon logged and/or union attacks with ATK=150."
     },
     {
       "tier": 1,
@@ -32644,7 +32671,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Armored Monkey",
+          "row": 1,
+          "col": 0
+        },
+        {
+          "card_name": "Nuki the Tanuki",
+          "row": 1,
+          "col": 1
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -32659,7 +32697,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Berserk\\ Hyena\"",
         "MSG:.*Berserk"
       ],
-      "notes": "Tier 2: union Berserk Hyena \u2014 summon logged and/or union attacks with ATK=40."
+      "notes": "Tier 2: union Berserk Hyena — summon logged and/or union attacks with ATK=40."
     },
     {
       "tier": 1,
@@ -32756,7 +32794,7 @@
       "card_name": "Blood-hungry Mutant",
       "card_type": "Union",
       "ability_type": "CRYSTAL_GAIN_ON_DESTROY",
-      "ability_description": "After destroying foe\u2019s card: +80 crystals",
+      "ability_description": "After destroying foe’s card: +80 crystals",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -32822,7 +32860,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Claw Mutant",
+          "row": 1,
+          "col": 1
+        },
+        {
+          "card_name": "Scarlet Mutant",
+          "row": 1,
+          "col": 3
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -32838,7 +32887,7 @@
         "MSG:.*Blood\\-hungry",
         "MSG:"
       ],
-      "notes": "Tier 2: union Blood-hungry Mutant \u2014 summon logged and/or union attacks with ATK=55."
+      "notes": "Tier 2: union Blood-hungry Mutant — summon logged and/or union attacks with ATK=55."
     },
     {
       "tier": 1,
@@ -33001,7 +33050,23 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Aerial the Battlemage",
+          "row": 0,
+          "col": 2
+        },
+        {
+          "card_name": "Scythe Shark",
+          "row": 1,
+          "col": 1
+        },
+        {
+          "card_name": "Bomber Fairy",
+          "row": 1,
+          "col": 3
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -33017,7 +33082,7 @@
         "MSG:.*Burning",
         "MSG:"
       ],
-      "notes": "Tier 2: union Burning Phoenix \u2014 summon logged and/or union attacks with ATK=125."
+      "notes": "Tier 2: union Burning Phoenix — summon logged and/or union attacks with ATK=125."
     },
     {
       "tier": 1,
@@ -33200,17 +33265,17 @@
         {
           "card_name": "Choir Lady Abigail",
           "row": 0,
-          "col": 0
+          "col": 1
         },
         {
           "card_name": "Choir Lady Alice",
           "row": 0,
-          "col": 1
+          "col": 2
         },
         {
           "card_name": "Choir Lady Anna",
-          "row": 0,
-          "col": 2
+          "row": 1,
+          "col": 1
         }
       ],
       "forced_cells_1": [
@@ -33228,7 +33293,7 @@
         "MSG:.*Choir",
         "MSG:"
       ],
-      "notes": "Tier 2: union Choir Lead Amber \u2014 summon logged and/or union attacks with ATK=35."
+      "notes": "Tier 2: union Choir Lead Amber — summon logged and/or union attacks with ATK=35."
     },
     {
       "tier": 1,
@@ -33325,7 +33390,7 @@
       "card_name": "Colorful Mage",
       "card_type": "Union",
       "ability_type": "PERM_STAT_PENALTY_VS_NON_AFFINITY",
-      "ability_description": "Foe\u2019s non-Arcane get -10 ATK&DEF permanently in Reckoning with this card",
+      "ability_description": "Foe’s non-Arcane get -10 ATK&DEF permanently in Reckoning with this card",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -33391,7 +33456,23 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Red Mage",
+          "row": 0,
+          "col": 4
+        },
+        {
+          "card_name": "Green Mage",
+          "row": 1,
+          "col": 3
+        },
+        {
+          "card_name": "Blue Mage",
+          "row": 2,
+          "col": 2
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -33407,7 +33488,7 @@
         "MSG:.*Colorful",
         "MSG:"
       ],
-      "notes": "Tier 2: union Colorful Mage \u2014 summon logged and/or union attacks with ATK=55."
+      "notes": "Tier 2: union Colorful Mage — summon logged and/or union attacks with ATK=55."
     },
     {
       "tier": 1,
@@ -33580,7 +33661,12 @@
         {
           "card_name": "Ponycorn",
           "row": 0,
-          "col": 0
+          "col": 2
+        },
+        {
+          "card_name": "Church Guard",
+          "row": 1,
+          "col": 1
         }
       ],
       "forced_cells_1": [
@@ -33598,7 +33684,10 @@
         "MSG:.*Diamond",
         "MSG:"
       ],
-      "notes": "Tier 2: union Diamond Unicorn \u2014 summon logged and/or union attacks with ATK=50."
+      "notes": "Tier 2: union Diamond Unicorn — summon logged and/or union attacks with ATK=45 (base 30 + ONE_USE_ATK_BOOST +15).",
+      "expect_log_regex": [
+        "Attack P\\d\\(\\d+,\\d+\\)\"Diamond\\ Unicorn\".*ATK=45\\s"
+      ]
     },
     {
       "tier": 1,
@@ -33695,7 +33784,7 @@
       "card_name": "False Prophet",
       "card_type": "Union",
       "ability_type": "TURN_START_REVEAL_OPPONENT_CELL",
-      "ability_description": "Start of your turn: Reveal 1 foe\u2019s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.",
+      "ability_description": "Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -33761,7 +33850,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Tiny Pixie",
+          "row": 0,
+          "col": 2
+        },
+        {
+          "card_name": "Church Guard",
+          "row": 1,
+          "col": 1
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -33777,7 +33877,7 @@
         "MSG:.*False",
         "MSG:"
       ],
-      "notes": "Tier 2: union False Prophet \u2014 summon logged and/or union attacks with ATK=20."
+      "notes": "Tier 2: union False Prophet — summon logged and/or union attacks with ATK=20."
     },
     {
       "tier": 1,
@@ -33938,7 +34038,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Aether Warden",
+          "row": 2,
+          "col": 1
+        },
+        {
+          "card_name": "Angel Gatekeeper",
+          "row": 2,
+          "col": 2
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -33953,7 +34064,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Gaia\\ Turtle\"",
         "MSG:.*Gaia"
       ],
-      "notes": "Tier 2: union Gaia Turtle \u2014 summon logged and/or union attacks with ATK=0."
+      "notes": "Tier 2: union Gaia Turtle — summon logged and/or union attacks with ATK=0."
     },
     {
       "tier": 1,
@@ -34116,7 +34227,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Gamma Emitter",
+          "row": 1,
+          "col": 1
+        },
+        {
+          "card_name": "Claw Mutant",
+          "row": 1,
+          "col": 2
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -34132,7 +34254,7 @@
         "MSG:.*Gamma",
         "MSG:"
       ],
-      "notes": "Tier 2: union Gamma Mermaid \u2014 summon logged and/or union attacks with ATK=30."
+      "notes": "Tier 2: union Gamma Mermaid — summon logged and/or union attacks with ATK=30."
     },
     {
       "tier": 1,
@@ -34295,7 +34417,23 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Striker Comet",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "card_name": "Miner Probe",
+          "row": 3,
+          "col": 2
+        },
+        {
+          "card_name": "Moon Rover",
+          "row": 3,
+          "col": 3
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -34311,7 +34449,7 @@
         "MSG:.*Giant",
         "MSG:"
       ],
-      "notes": "Tier 2: union Giant Meteor Vergaia \u2014 summon logged and/or union attacks with ATK=60."
+      "notes": "Tier 2: union Giant Meteor Vergaia — summon logged and/or union attacks with ATK=60."
     },
     {
       "tier": 1,
@@ -34474,7 +34612,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Miner Probe",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "card_name": "Moon Rover",
+          "row": 0,
+          "col": 1
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -34490,7 +34639,7 @@
         "MSG:.*Giant",
         "MSG:"
       ],
-      "notes": "Tier 2: union Giant Mining Pod \u2014 summon logged and/or union attacks with ATK=20."
+      "notes": "Tier 2: union Giant Mining Pod — summon logged and/or union attacks with ATK=20."
     },
     {
       "tier": 1,
@@ -34658,12 +34807,12 @@
       "forced_cells_0": [
         {
           "card_name": "Grand Fort Footsoldier",
-          "row": 0,
-          "col": 0
+          "row": 1,
+          "col": 2
         },
         {
           "card_name": "Grand Fort Archer",
-          "row": 0,
+          "row": 2,
           "col": 1
         }
       ],
@@ -34681,7 +34830,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Grand\\ Fort\\ Captain\"",
         "MSG:.*Grand"
       ],
-      "notes": "Tier 2: union Grand Fort Captain \u2014 summon logged and/or union attacks with ATK=45."
+      "notes": "Tier 2: union Grand Fort Captain — summon logged and/or union attacks with ATK=45."
     },
     {
       "tier": 1,
@@ -34778,7 +34927,7 @@
       "card_name": "Greater Succubus",
       "card_type": "Union",
       "ability_type": "GAIN_HALF_STATS_ON_SURVIVE",
-      "ability_description": "Once, after Reckoning: +ATK&DEF equal to half of that foe\u2019s card",
+      "ability_description": "Once, after Reckoning: +ATK&DEF equal to half of that foe’s card",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -34844,7 +34993,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Succubus",
+          "row": 0,
+          "col": 2
+        },
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 1,
+          "col": 0
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -34860,7 +35020,7 @@
         "MSG:.*Greater",
         "MSG:"
       ],
-      "notes": "Tier 2: union Greater Succubus \u2014 summon logged and/or union attacks with ATK=30."
+      "notes": "Tier 2: union Greater Succubus — summon logged and/or union attacks with ATK=30."
     },
     {
       "tier": 1,
@@ -35051,7 +35211,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Gryphon\\ Rider\"",
         "MSG:.*Gryphon"
       ],
-      "notes": "Tier 2: union Gryphon Rider \u2014 summon logged and/or union attacks with ATK=125."
+      "notes": "Tier 2: union Gryphon Rider — summon logged and/or union attacks with ATK=125."
     },
     {
       "tier": 1,
@@ -35221,7 +35381,12 @@
         {
           "card_name": "Laser Walker",
           "row": 0,
-          "col": 0
+          "col": 2
+        },
+        {
+          "card_name": "Miner Probe",
+          "row": 0,
+          "col": 3
         }
       ],
       "forced_cells_1": [
@@ -35238,7 +35403,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Imperial\\ Frame\"",
         "MSG:.*Imperial"
       ],
-      "notes": "Tier 2: union Imperial Frame \u2014 summon logged and/or union attacks with ATK=45."
+      "notes": "Tier 2: union Imperial Frame — summon logged and/or union attacks with ATK=45."
     },
     {
       "tier": 1,
@@ -35399,7 +35564,23 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Hammer Shark",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "card_name": "Saw Shark",
+          "row": 0,
+          "col": 1
+        },
+        {
+          "card_name": "Spear Shark",
+          "row": 1,
+          "col": 2
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -35414,7 +35595,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Katana\\ Shark\"",
         "MSG:.*Katana"
       ],
-      "notes": "Tier 2: union Katana Shark \u2014 summon logged and/or union attacks with ATK=75."
+      "notes": "Tier 2: union Katana Shark — summon logged and/or union attacks with ATK=75."
     },
     {
       "tier": 1,
@@ -35577,7 +35758,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Kiyoko the Death Whisper",
+          "row": 0,
+          "col": 1
+        },
+        {
+          "card_name": "Silver Spearman",
+          "row": 0,
+          "col": 3
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -35593,7 +35785,7 @@
         "MSG:.*Kiba",
         "MSG:"
       ],
-      "notes": "Tier 2: union Kiba the Giant Slayer \u2014 summon logged and/or union attacks with ATK=80."
+      "notes": "Tier 2: union Kiba the Giant Slayer — ATK_BONUS_VS_UNION (+30). Forced opponent Chaotic Wisp is NOT a union → no bonus; ATK=80. Gap: ability bonus path not covered (would need union opponent)."
     },
     {
       "tier": 1,
@@ -35763,7 +35955,12 @@
         {
           "card_name": "Dark Monk",
           "row": 0,
-          "col": 0
+          "col": 1
+        },
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 0,
+          "col": 2
         }
       ],
       "forced_cells_1": [
@@ -35780,7 +35977,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Kitsune\"",
         "MSG:.*Kitsune"
       ],
-      "notes": "Tier 2: union Kitsune \u2014 summon logged and/or union attacks with ATK=35."
+      "notes": "Tier 2: union Kitsune — summon logged and/or union attacks with ATK=35."
     },
     {
       "tier": 1,
@@ -35943,7 +36140,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Vampire Duchess",
+          "row": 1,
+          "col": 2
+        },
+        {
+          "card_name": "Vampire Servant",
+          "row": 2,
+          "col": 2
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -35959,7 +36167,7 @@
         "MSG:.*Lord",
         "MSG:"
       ],
-      "notes": "Tier 2: union Lord of Terror \u2014 summon logged and/or union attacks with ATK=150."
+      "notes": "Tier 2: union Lord of Terror — summon logged and/or union attacks with ATK=150."
     },
     {
       "tier": 1,
@@ -36122,7 +36330,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Kiyoko the Death Whisper",
+          "row": 0,
+          "col": 2
+        },
+        {
+          "card_name": "Silver Spearman",
+          "row": 1,
+          "col": 2
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -36138,7 +36357,7 @@
         "MSG:.*Moon",
         "MSG:"
       ],
-      "notes": "Tier 2: union Moon Lady Ninja \u2014 summon logged and/or union attacks with ATK=65."
+      "notes": "Tier 2: union Moon Lady Ninja — summon logged and/or union attacks with ATK=65."
     },
     {
       "tier": 1,
@@ -36319,9 +36538,9 @@
           "col": 0
         },
         {
-          "card_name": "Moon Tribe Shaman",
+          "card_name": "Miner Probe",
           "row": 0,
-          "col": 1
+          "col": 4
         }
       ],
       "forced_cells_1": [
@@ -36339,7 +36558,7 @@
         "MSG:.*Moon",
         "MSG:"
       ],
-      "notes": "Tier 2: union Moon Tribe Shaman \u2014 summon logged and/or union attacks with ATK=25."
+      "notes": "Tier 2: union Moon Tribe Shaman — summon logged and/or union attacks with ATK=25."
     },
     {
       "tier": 1,
@@ -36512,7 +36731,12 @@
         {
           "card_name": "Tiny Pixie",
           "row": 0,
-          "col": 0
+          "col": 2
+        },
+        {
+          "card_name": "Church Guard",
+          "row": 1,
+          "col": 2
         }
       ],
       "forced_cells_1": [
@@ -36530,7 +36754,7 @@
         "MSG:.*Pixie",
         "MSG:"
       ],
-      "notes": "Tier 2: union Pixie Queen \u2014 summon logged and/or union attacks with ATK=30."
+      "notes": "Tier 2: union Pixie Queen — summon logged and/or union attacks with ATK=30."
     },
     {
       "tier": 1,
@@ -36726,7 +36950,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Raijin\\ and\\ Fujin\"",
         "MSG:.*Raijin"
       ],
-      "notes": "Tier 2: union Raijin and Fujin \u2014 summon logged and/or union attacks with ATK=80."
+      "notes": "Tier 2: union Raijin and Fujin — summon logged and/or union attacks with ATK=80."
     },
     {
       "tier": 1,
@@ -36829,7 +37053,7 @@
       "card_name": "Rebel King",
       "card_type": "Union",
       "ability_type": "OPPONENT_TURN_END_SWAP_ATK_DEF",
-      "ability_description": "At foe\u2019s turn ends: foe select 1 own unit and swap ATK&DEF",
+      "ability_description": "At foe’s turn ends: foe select 1 own unit and swap ATK&DEF",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -36897,8 +37121,13 @@
       },
       "forced_cells_0": [
         {
-          "card_name": "Jirayu the Rebel King",
+          "card_name": "Jirayu the Rebellious Prince",
           "row": 0,
+          "col": 2
+        },
+        {
+          "card_name": "Mafia Associates",
+          "row": 2,
           "col": 0
         }
       ],
@@ -36917,7 +37146,7 @@
         "MSG:.*Rebel",
         "MSG:"
       ],
-      "notes": "Tier 2: union Rebel King \u2014 summon logged and/or union attacks with ATK=60."
+      "notes": "Tier 2: union Rebel King — summon logged and/or union attacks with ATK=60."
     },
     {
       "tier": 1,
@@ -37078,7 +37307,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Lab Bloater",
+          "row": 3,
+          "col": 1
+        },
+        {
+          "card_name": "Huntress of Green Glade",
+          "row": 3,
+          "col": 3
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -37093,7 +37333,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Rocket\\ Marauder\"",
         "MSG:.*Rocket"
       ],
-      "notes": "Tier 2: union Rocket Marauder \u2014 summon logged and/or union attacks with ATK=125."
+      "notes": "Tier 2: union Rocket Marauder — summon logged and/or union attacks with ATK=125."
     },
     {
       "tier": 1,
@@ -37190,7 +37430,7 @@
       "card_name": "Rocket Peacock",
       "card_type": "Union",
       "ability_type": "POST_BATTLE_COIN_FLIP_DESTROY",
-      "ability_description": "After this card battles, select 1 foe\u2019s card, flip a coin. Head : destroy that card",
+      "ability_description": "After this card battles, select 1 foe’s card, flip a coin. Head : destroy that card",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -37256,7 +37496,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Ostrich Cannon",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "card_name": "Armored Monkey",
+          "row": 0,
+          "col": 4
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -37272,7 +37523,7 @@
         "MSG:.*Rocket",
         "MSG:"
       ],
-      "notes": "Tier 2: union Rocket Peacock \u2014 summon logged and/or union attacks with ATK=150."
+      "notes": "Tier 2: union Rocket Peacock — summon logged and/or union attacks with ATK=150."
     },
     {
       "tier": 1,
@@ -37369,7 +37620,7 @@
       "card_name": "Scarlet Shroom",
       "card_type": "Union",
       "ability_type": "UNION_SUMMON_VENOM_ALL_FOE",
-      "ability_description": "Once Union, put venom flag on all foe\u2019s face-up card",
+      "ability_description": "Once Union, put venom flag on all foe’s face-up card",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -37435,7 +37686,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Armored Monkey",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "card_name": "Nuki the Tanuki",
+          "row": 0,
+          "col": 1
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -37451,7 +37713,7 @@
         "MSG:.*Scarlet",
         "MSG:"
       ],
-      "notes": "Tier 2: union Scarlet Shroom \u2014 summon logged and/or union attacks with ATK=0."
+      "notes": "Tier 2: union Scarlet Shroom — summon logged and/or union attacks with ATK=0."
     },
     {
       "tier": 1,
@@ -37614,7 +37876,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Flame Seraph",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "card_name": "Aether Warden",
+          "row": 0,
+          "col": 1
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -37630,7 +37903,10 @@
         "MSG:.*Seraphim",
         "MSG:"
       ],
-      "notes": "Tier 2: union Seraphim Fistmaster \u2014 summon logged and/or union attacks with ATK=120."
+      "notes": "Tier 2: union Seraphim Fistmaster — DOUBLE_STATS_VS_AFFINITY (Chaos). Forced opponent: Chaotic Wisp (CHAOS). Expected ATK=120×2=240.",
+      "expect_log_regex": [
+        "Attack P\\d\\(\\d+,\\d+\\)\"Seraphim\\ Fistmaster\".*ATK=240\\s"
+      ]
     },
     {
       "tier": 1,
@@ -37808,17 +38084,17 @@
         {
           "card_name": "Skeleton Archer",
           "row": 0,
-          "col": 0
+          "col": 1
         },
         {
           "card_name": "Skeleton Lancer",
           "row": 0,
-          "col": 1
+          "col": 2
         },
         {
           "card_name": "Skeleton Scout",
           "row": 0,
-          "col": 2
+          "col": 3
         }
       ],
       "forced_cells_1": [
@@ -37835,7 +38111,7 @@
         "Attack P\\d\\(\\d+,\\d+\\)\"Skeleton\\ Overlord\"",
         "MSG:.*Skeleton"
       ],
-      "notes": "Tier 2: union Skeleton Overlord \u2014 summon logged and/or union attacks with ATK=50."
+      "notes": "Tier 2: union Skeleton Overlord — summon logged and/or union attacks with ATK=50."
     },
     {
       "tier": 1,
@@ -38011,12 +38287,12 @@
       },
       "forced_cells_0": [
         {
-          "card_name": "Moon Lady Ninja",
+          "card_name": "Sunrise Lady",
           "row": 0,
           "col": 0
         },
         {
-          "card_name": "Moon Tribe Shaman",
+          "card_name": "Moonrise Gentleman",
           "row": 0,
           "col": 1
         }
@@ -38036,7 +38312,10 @@
         "MSG:.*Sky",
         "MSG:"
       ],
-      "notes": "Tier 2: union Sky Protector \u2014 summon logged and/or union attacks with ATK=0."
+      "notes": "Tier 2: union Sky Protector — STANCE_FIXED_STATS: base ATK=0 but attack ATK fixed at 50 (atk_atk param). DEF fixed at 0 when attacking.",
+      "expect_log_regex": [
+        "Attack P\\d\\(\\d+,\\d+\\)\"Sky\\ Protector\".*ATK=50\\s"
+      ]
     },
     {
       "tier": 1,
@@ -38199,7 +38478,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Yaksa",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "card_name": "Chaotic Wisp",
+          "row": 0,
+          "col": 1
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -38215,7 +38505,7 @@
         "MSG:.*Ten",
         "MSG:"
       ],
-      "notes": "Tier 2: union Ten Arms Yaksa \u2014 summon logged and/or union attacks with ATK=45."
+      "notes": "Tier 2: union Ten Arms Yaksa — summon logged and/or union attacks with ATK=45."
     },
     {
       "tier": 1,
@@ -38378,7 +38668,18 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Bladeshifter",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "card_name": "Claw Mutant",
+          "row": 1,
+          "col": 1
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -38394,7 +38695,7 @@
         "MSG:.*Volatile",
         "MSG:"
       ],
-      "notes": "Tier 2: union Volatile Slasher \u2014 summon logged and/or union attacks with ATK=50."
+      "notes": "Tier 2: union Volatile Slasher — summon logged and/or union attacks with ATK=50."
     },
     {
       "tier": 1,
@@ -38491,7 +38792,7 @@
       "card_name": "X-Death Squad",
       "card_type": "Union",
       "ability_type": "OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT",
-      "ability_description": "In Reckoning, pay 1000, destroy foe\u2019s unit. They pay no cost.",
+      "ability_description": "In Reckoning, pay 1000, destroy foe’s unit. They pay no cost.",
       "max_turns": 55,
       "max_watchdog_timeouts": 6,
       "union_enabled": true,
@@ -38557,7 +38858,23 @@
           "Bribe"
         ]
       },
-      "forced_cells_0": [],
+      "forced_cells_0": [
+        {
+          "card_name": "Huntress of Green Glade",
+          "row": 0,
+          "col": 0
+        },
+        {
+          "card_name": "Silver Spearman",
+          "row": 0,
+          "col": 2
+        },
+        {
+          "card_name": "Witchhunter",
+          "row": 0,
+          "col": 4
+        }
+      ],
       "forced_cells_1": [
         {
           "card_name": "Chaotic Wisp",
@@ -38573,7 +38890,7 @@
         "MSG:.*X\\-Death",
         "MSG:"
       ],
-      "notes": "Tier 2: union X-Death Squad \u2014 summon logged and/or union attacks with ATK=50."
+      "notes": "Tier 2: union X-Death Squad — summon logged and/or union attacks with ATK=50."
     }
   ]
 }

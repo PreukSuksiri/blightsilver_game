@@ -59,9 +59,9 @@ enum AbilityType {
 	ATK_DEF_BONUS_IF_UNION_ON_FIELD, # +N ATK/DEF if Union card on own field
 	ATK_DEF_BONUS_VS_NON_AFFINITY,   # +N ATK/DEF vs cards that don't match specified affinity
 	DEF_BONUS_IF_AFFINITY_ON_FIELD,  # +N DEF if specific affinity card face-up on own field
-	ATK_PENALTY_WHEN_EXPOSED,        # -N ATK while this card is face-up
+	ATK_PENALTY_WHEN_EXPOSED,        # -N ATK permanently at end of the turn this card was first exposed
 	ATK_PENALTY_IF_NO_NAME_ALLY,     # -N ATK if no other card matching name_contains on own field
-	DEF_ZERO_WHEN_EXPOSED,           # DEF becomes 0 while this card is face-up
+	DEF_ZERO_WHEN_EXPOSED,           # DEF becomes 0 permanently at end of the turn this card was first exposed
 
 	# ── Coin flip ──
 	COIN_FLIP_ATK_BOOST,             # Flip 1 coin; heads → +N ATK this battle

@@ -1,0 +1,18 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_magazine_lounge_nex_manga_light_on.png",
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "........."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_magazine_lounge_nex_manga_light_on.png",
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "No time for this..."
+	}
+]

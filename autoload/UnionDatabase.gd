@@ -160,8 +160,8 @@ func _load_unions() -> void:
 
 	_add("Diamond Unicorn", A.DIVINE, 30, 35, 500, R.UNCOMMON,
 		AB.ONE_USE_ATK_BOOST, {"bonus": 15},
-		"+15 ATK until the end of this turn, once.",
-		"+15 ATK until ????",
+		"Once Union, +15 ATK until this turn's end",
+		"Once Union, ??? until this turn's end",
 		"1 Ponycorn + 1 Divine card + 500 cost",
 		"1 ??? + 1 ??? + 500 cost",
 		_z([[0,2], [1,1], [1,3], [2,0], [2,4], [3,1], [3,3], [4,2]]),

@@ -23,6 +23,11 @@ class_name ExplorationGraph
 ## ID of the node where a new session begins.
 @export var start_node_id: String = ""
 
+## Conditional start-node overrides — evaluated in order, first match wins.
+## Each entry: { "var": String, "equals": String, "node_id": String }
+## If a match is found its "node_id" is used instead of `start_node_id`.
+@export var start_node_id_conditions: Array = []
+
 ## All nodes belonging to this graph.
 var nodes: Array[ExplorationNode] = []
 
@@ -47,6 +52,18 @@ func get_all_ids() -> Array[String]:
 		ids.append(n.id)
 	return ids
 
+## Returns the first matching start node id from conditions, or start_node_id.
+func resolve_start_node_id(vars: Dictionary) -> String:
+	for cond: Variant in start_node_id_conditions:
+		if not cond is Dictionary:
+			continue
+		var cd: Dictionary = cond as Dictionary
+		var var_key: String = str(cd.get("var", ""))
+		var eq_val: String  = str(cd.get("equals", ""))
+		if not var_key.is_empty() and str(vars.get(var_key, "")) == eq_val:
+			return str(cd.get("node_id", ""))
+	return start_node_id
+
 # ─────────────────────────────────────────────────────────────
 # Serialization
 # ─────────────────────────────────────────────────────────────
@@ -60,6 +77,7 @@ func to_dict() -> Dictionary:
 		"graph_id":      graph_id,
 		"display_name":  display_name,
 		"start_node_id": start_node_id,
+		"start_node_id_conditions": start_node_id_conditions.duplicate(true),
 		"nodes":         nodes_arr,
 	}
 
@@ -69,6 +87,8 @@ static func from_dict(d: Dictionary) -> ExplorationGraph:
 	graph.graph_id      = str(d.get("graph_id",      ""))
 	graph.display_name  = str(d.get("display_name",  ""))
 	graph.start_node_id = str(d.get("start_node_id", ""))
+	var snc: Variant = d.get("start_node_id_conditions", [])
+	graph.start_node_id_conditions = snc if snc is Array else []
 	var nodes_arr: Variant = d.get("nodes", [])
 	if nodes_arr is Array:
 		for nd: Variant in (nodes_arr as Array):
@@ -142,6 +162,12 @@ func validate() -> Array[String]:
 		warnings.append("Graph has no EXIT node — exploration will never conclude.")
 	if not start_node_id.is_empty() and start_node_id not in ids:
 		warnings.append("start_node_id '%s' does not match any node." % start_node_id)
+	for cond: Variant in start_node_id_conditions:
+		if not cond is Dictionary:
+			continue
+		var nid: String = str((cond as Dictionary).get("node_id", ""))
+		if not nid.is_empty() and nid not in ids:
+			warnings.append("Conditional start node_id '%s' does not match any node." % nid)
 
 	# Warn about nodes with no incoming connections (except the start node)
 	var referenced: Array[String] = []

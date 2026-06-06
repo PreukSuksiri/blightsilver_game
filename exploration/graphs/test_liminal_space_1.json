@@ -204,14 +204,32 @@
 			"vn_scene": ""
 		},
 		{
-			"background": "",
+			"background": "res://assets/textures/daily_dungeon/background/background_dungeon_shinto_temple.jpg",
 			"characters": [],
-			"clickable_spots": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "play_puzzle",
+							"key": "{\"code\":\"123456\",\"digits\":6}",
+							"value": "puzzle_number_lock"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "",
+					"x_norm": 0.095,
+					"y_norm": 0.12
+				}
+			],
 			"connections": [
 				{
 					"conditions": [],
 					"label": "Get out of the elevator",
 					"locked_hint": "",
+					"locked_mode": "hide",
 					"target": "node_elavator_hall"
 				}
 			],

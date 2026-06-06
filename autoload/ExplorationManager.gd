@@ -21,6 +21,27 @@ extends Node
 ##   # 4. The session ends automatically when the player reaches an EXIT node
 ##   #    and confirms. You can also call end_session() directly.
 ##
+## ─── Launch parameters ─────────────────────────────────────────────────────
+##
+##   Pass any Dictionary as the third argument to launch(). All keys are
+##   seeded as session variables at the start of a fresh session, so your
+##   graph node conditions can read them with var_equals / var_not_equals /
+##   var_greater / var_less / get_var().
+##
+##   Reserved key (not seeded as a session var):
+##     "force_fresh"  bool   If true, always start a fresh session — the
+##                           auto-resume check is skipped even when a saved
+##                           session exists for the same graph.
+##
+##   Examples:
+##     # Pass act + chapter; gate with force_fresh when starting a new run
+##     ExplorationManager.launch(path, return_scene, {
+##         "act": "2", "chapter": "3", "force_fresh": true
+##     })
+##
+##     # Resume saved progress, no extra params
+##     ExplorationManager.launch(path, return_scene)
+##
 ## ─── Event actions (on_enter / on_exit) ────────────────────────────────────
 ##   give_item   key / value  → add item to session inventory
 ##   remove_item key / value  → remove item from session inventory
@@ -84,6 +105,11 @@ signal mailbox_reward_granted(info: Dictionary)
 ## Defaults to the main menu.
 var return_scene: String = "res://scenes/main_menu.tscn"
 
+## Parameters forwarded to the next fresh session.
+## All keys except "force_fresh" are seeded as session variables.
+## Can be set here directly or passed as the third arg to launch().
+var launch_params: Dictionary = {}
+
 ## Written by complete_battle_node(); read by ExplorationPlayer on reload.
 ## Format: { "won": bool, "node_id": String }
 var pending_battle_result: Dictionary = {}
@@ -133,17 +159,25 @@ var current_node_id: String:
 # ─────────────────────────────────────────────────────────────
 
 ## Convenience: start a session AND change the scene to ExplorationPlayer.
-## If a saved session exists for the same graph, it is restored instead of starting fresh.
-func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu.tscn") -> void:
+## Pass {"force_fresh": true} as params to always start fresh and skip
+## auto-resume, even if a saved session exists for the same graph.
+func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu.tscn", params: Dictionary = {}) -> void:
 	return_scene = p_return_scene
-	# Resume saved session for the same graph rather than wiping progress
-	var saved: Dictionary = SaveManager.exploration_session
-	if saved.get("active", false) and str(saved.get("graph_path", "")) == graph_path:
-		if restore_saved_session():
-			CheckerTransition.fade_out_to_battle(func() -> void:
-				get_tree().change_scene_to_file(EXPLORATION_PLAYER_SCENE))
-			return
-	# No matching saved session — start fresh
+	if not params.is_empty():
+		launch_params.merge(params, true)
+
+	var force_fresh: bool = bool(launch_params.get("force_fresh", false))
+
+	# Resume saved session for the same graph (unless force_fresh is set)
+	if not force_fresh:
+		var saved: Dictionary = SaveManager.exploration_session
+		if saved.get("active", false) and str(saved.get("graph_path", "")) == graph_path:
+			if restore_saved_session():
+				CheckerTransition.fade_out_to_battle(func() -> void:
+					get_tree().change_scene_to_file(EXPLORATION_PLAYER_SCENE))
+				return
+
+	# No matching saved session, or force_fresh — start fresh
 	start_session(graph_path)
 	if not _session_active:
 		return
@@ -151,7 +185,8 @@ func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu
 		get_tree().change_scene_to_file(EXPLORATION_PLAYER_SCENE))
 
 ## Start a new exploration session by loading the graph from a JSON file.
-## Clears any previous session data.
+## Clears any previous session data. Non-reserved keys from launch_params
+## are seeded into session vars so graph conditions can read them immediately.
 ## Emits session_started after the start node is entered.
 func start_session(graph_path: String) -> void:
 	var graph: ExplorationGraph = ExplorationGraph.load_from_file(graph_path)
@@ -159,11 +194,15 @@ func start_session(graph_path: String) -> void:
 		push_error("ExplorationManager.start_session: failed to load graph at '%s'." % graph_path)
 		return
 	_reset_session_state()
-	_current_graph = graph
+	_current_graph   = graph
 	_session_rewards = {"credits": 0, "flags": {}}
 	_session_active  = true
+	for k: String in launch_params:
+		if k == "force_fresh":
+			continue
+		_vars[k] = str(launch_params.get(k, ""))
 	emit_signal("session_started", graph)
-	_navigate_to(graph.start_node_id, false)
+	_navigate_to(graph.resolve_start_node_id(_vars), false)
 
 ## Restart the current session from the start node, resetting all progress.
 ## return_scene is preserved. Emits session_started then node_entered for the start node.
@@ -339,7 +378,7 @@ func _navigate_to(node_id: String, push_current_to_history: bool) -> void:
 	if not _current_node_id.is_empty():
 		var old_node: ExplorationNode = _current_graph.get_node_by_id(_current_node_id)
 		if old_node != null:
-			_process_events(old_node.on_exit_events)
+			_process_events(old_node.resolve_on_exit_events(_vars))
 			emit_signal("node_exited", old_node)
 
 	# Update history
@@ -349,7 +388,7 @@ func _navigate_to(node_id: String, push_current_to_history: bool) -> void:
 	_node_history.append(node_id)
 
 	# Fire on_enter events for the new node
-	_process_events(target.on_enter_events)
+	_process_events(target.resolve_on_enter_events(_vars))
 	emit_signal("node_entered", target)
 	_save_session_state()
 

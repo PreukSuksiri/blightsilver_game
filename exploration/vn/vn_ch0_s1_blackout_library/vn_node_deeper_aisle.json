@@ -1,0 +1,50 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_deeper_library_jump_scare.png",
+		"bg_ken_burns": {
+			"duration": 0.5,
+			"pan_x": -90.0,
+			"pan_y": -600.0,
+			"zoom": 2.0
+		},
+		"linger_characters": true,
+		"wait": 0.01
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_deeper_library_jump_scare.png",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sfx/horror_track_1.mp3",
+		"shake_screen": 10.0,
+		"text": "......!?!"
+	},
+	{
+		"background": null,
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "What was that...?"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": null,
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "My shirt must have tangled with something... Forget it..."
+	}
+]

@@ -50,6 +50,13 @@ var _bug_tags: Dictionary = {}        # path → Array[int] raw beat indices; lo
 var _preview_player: AudioStreamPlayer = null
 var _img_popup: PopupPanel = null
 var _img_popup_tex: TextureRect = null
+var _kb_preview_popup: PopupPanel = null
+var _kb_preview_bg: TextureRect = null
+var _kb_preview_tween: Tween = null
+const _KB_PREVIEW_VIEW_W := 800.0
+const _KB_PREVIEW_VIEW_H := 450.0
+const _KB_BG_W := 1600.0
+const _KB_BG_H := 900.0
 
 # Language system
 var _languages: Array = ["en"]       # ordered list of language codes
@@ -204,6 +211,7 @@ func _ready() -> void:
 	_img_popup_tex.custom_minimum_size = Vector2(700, 500)
 	_img_popup_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_img_popup.add_child(_img_popup_tex)
+	_build_kb_preview_popup()
 	if has_meta("_pending_path"):
 		open_file(str(get_meta("_pending_path")))
 
@@ -726,6 +734,26 @@ func _build_fields() -> void:
 	_f_kb_pan_y    = _row_sb(v, "Pan Y",  -800.0, 800.0,  1.0,   "pixels")
 	_f_kb_duration = _row_sb(v, "Duration",  0.0,  60.0,  0.001, "seconds")
 	_f_kb_zoom.value = 1.0
+	var kb_preview_row := HBoxContainer.new()
+	kb_preview_row.add_theme_constant_override("separation", 6)
+	v.add_child(kb_preview_row)
+	var kb_preview_btn := Button.new()
+	kb_preview_btn.text = "Preview ▶"
+	kb_preview_btn.add_theme_font_size_override("font_size", 13)
+	kb_preview_btn.pressed.connect(_preview_ken_burns)
+	kb_preview_row.add_child(kb_preview_btn)
+	var kb_replay_btn := Button.new()
+	kb_replay_btn.text = "Replay ↻"
+	kb_replay_btn.add_theme_font_size_override("font_size", 13)
+	kb_replay_btn.pressed.connect(_replay_ken_burns_preview)
+	kb_preview_row.add_child(kb_replay_btn)
+	var kb_preview_hint := Label.new()
+	kb_preview_hint.text = "Uses Background path above. Close popup or Replay to try new values."
+	kb_preview_hint.add_theme_font_size_override("font_size", 11)
+	kb_preview_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	kb_preview_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	kb_preview_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	kb_preview_row.add_child(kb_preview_hint)
 
 	# ── Battle ────────────────────────────────────────────────
 	_section(v, "BATTLE")
@@ -1363,6 +1391,129 @@ func _preview_image(path: String) -> void:
 		return
 	_img_popup_tex.texture = tex as Texture2D
 	_img_popup.popup_centered(Vector2(820, 620))
+
+func _build_kb_preview_popup() -> void:
+	_kb_preview_popup = PopupPanel.new()
+	add_child(_kb_preview_popup)
+	_kb_preview_popup.popup_hide.connect(_stop_ken_burns_preview)
+
+	var root := MarginContainer.new()
+	root.add_theme_constant_override("margin_left", 12)
+	root.add_theme_constant_override("margin_right", 12)
+	root.add_theme_constant_override("margin_top", 12)
+	root.add_theme_constant_override("margin_bottom", 12)
+	_kb_preview_popup.add_child(root)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 8)
+	root.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "Ken Burns Preview"
+	title.add_theme_font_size_override("font_size", 16)
+	vbox.add_child(title)
+
+	var clip := Control.new()
+	clip.custom_minimum_size = Vector2(_KB_PREVIEW_VIEW_W, _KB_PREVIEW_VIEW_H)
+	clip.clip_contents = true
+	vbox.add_child(clip)
+
+	var stage := Control.new()
+	stage.scale = Vector2(0.5, 0.5)
+	stage.custom_minimum_size = Vector2(_KB_BG_W, _KB_BG_H)
+	clip.add_child(stage)
+
+	var bg_base := ColorRect.new()
+	bg_base.color = Color(0.05, 0.05, 0.08)
+	bg_base.size = Vector2(_KB_BG_W, _KB_BG_H)
+	stage.add_child(bg_base)
+
+	_kb_preview_bg = TextureRect.new()
+	_kb_preview_bg.position = Vector2.ZERO
+	_kb_preview_bg.size = Vector2(_KB_BG_W, _KB_BG_H)
+	_kb_preview_bg.pivot_offset = Vector2(_KB_BG_W * 0.5, _KB_BG_H * 0.5)
+	_kb_preview_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_kb_preview_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	stage.add_child(_kb_preview_bg)
+
+	var btn_row := HBoxContainer.new()
+	btn_row.add_theme_constant_override("separation", 8)
+	vbox.add_child(btn_row)
+	var replay_btn := Button.new()
+	replay_btn.text = "Replay ↻"
+	replay_btn.pressed.connect(_replay_ken_burns_preview)
+	btn_row.add_child(replay_btn)
+	var stop_btn := Button.new()
+	stop_btn.text = "Reset"
+	stop_btn.pressed.connect(_stop_ken_burns_preview)
+	btn_row.add_child(stop_btn)
+
+func _ken_burns_preview_values() -> Dictionary:
+	var dur: float = _f_kb_duration.value
+	if dur <= 0.0:
+		dur = 4.0
+	return {
+		"zoom": _f_kb_zoom.value,
+		"pan_x": _f_kb_pan_x.value,
+		"pan_y": _f_kb_pan_y.value,
+		"duration": maxf(dur, 0.1),
+	}
+
+func _stop_ken_burns_preview() -> void:
+	if _kb_preview_tween != null:
+		_kb_preview_tween.kill()
+		_kb_preview_tween = null
+	if _kb_preview_bg != null:
+		_kb_preview_bg.scale = Vector2.ONE
+		_kb_preview_bg.position = Vector2.ZERO
+
+func _run_ken_burns_preview_tween() -> void:
+	if _kb_preview_bg == null:
+		return
+	_stop_ken_burns_preview()
+	var kb: Dictionary = _ken_burns_preview_values()
+	_kb_preview_tween = create_tween()
+	_kb_preview_tween.set_parallel(true)
+	_kb_preview_tween.tween_property(
+		_kb_preview_bg, "scale", Vector2(kb["zoom"], kb["zoom"]), kb["duration"]
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_kb_preview_tween.tween_property(
+		_kb_preview_bg, "position", Vector2(kb["pan_x"], kb["pan_y"]), kb["duration"]
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+func _preview_ken_burns() -> void:
+	if _kb_preview_popup == null or _kb_preview_bg == null:
+		return
+	var bg_path: String = _f_background.text.strip_edges()
+	if bg_path.is_empty() or bg_path == "null":
+		_status_lbl.text = "Set a Background image path first."
+		return
+	if not ResourceLoader.exists(bg_path):
+		_status_lbl.text = "Background not found: " + bg_path.get_file()
+		return
+	var tex: Variant = load(bg_path)
+	if not tex is Texture2D:
+		_status_lbl.text = "Background is not an image: " + bg_path.get_file()
+		return
+	_kb_preview_bg.texture = tex as Texture2D
+	_stop_ken_burns_preview()
+	_kb_preview_popup.popup_centered(Vector2(_KB_PREVIEW_VIEW_W + 48, _KB_PREVIEW_VIEW_H + 120))
+	_run_ken_burns_preview_tween()
+	var kb: Dictionary = _ken_burns_preview_values()
+	_status_lbl.text = "Ken Burns preview: zoom %.2f  pan (%.0f, %.0f)  %.1fs" % [
+		kb["zoom"], kb["pan_x"], kb["pan_y"], kb["duration"]]
+
+func _replay_ken_burns_preview() -> void:
+	if _kb_preview_popup == null or not _kb_preview_popup.visible:
+		_preview_ken_burns()
+		return
+	if _kb_preview_bg == null or _kb_preview_bg.texture == null:
+		_preview_ken_burns()
+		return
+	_run_ken_burns_preview_tween()
+	var kb: Dictionary = _ken_burns_preview_values()
+	_status_lbl.text = "Replay: zoom %.2f  pan (%.0f, %.0f)  %.1fs" % [
+		kb["zoom"], kb["pan_x"], kb["pan_y"], kb["duration"]]
 
 # ─────────────────────────────────────────────────────────────
 # Folder picker

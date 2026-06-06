@@ -137,6 +137,8 @@ var _finger_tex: Texture2D        = null
 # ── Internal state ────────────────────────────────────────────────────────
 var _current_bg_path: String = ""
 var _vn_playing: bool        = false
+var _exit_vn_defer_enter: bool = false   # hold new-node visuals until on_exit VN finishes
+var _pending_enter_node: ExplorationNode = null
 var _puzzle_playing: bool    = false
 var _puzzle_layer: Control   = null
 var _battle_pending: bool    = false
@@ -182,11 +184,12 @@ func _ready() -> void:
 
 func _connect_signals() -> void:
 	ExplorationManager.node_entered.connect(_on_node_entered)
+	ExplorationManager.node_exited.connect(_on_node_exited)
 	ExplorationManager.message_posted.connect(_show_toast)
 	ExplorationManager.item_obtained.connect(_on_item_obtained)
 	ExplorationManager.mailbox_reward_granted.connect(_on_mailbox_reward_granted)
 	ExplorationManager.inventory_changed.connect(_on_exploration_state_changed)
-	ExplorationManager.var_changed.connect(_on_exploration_state_changed)
+	ExplorationManager.var_changed.connect(_on_var_changed)
 
 # ─────────────────────────────────────────────────────────────
 # UI Construction
@@ -688,6 +691,24 @@ func _setup_hud_glow(key: String, icon: TextureRect, idle_pos: Vector2) -> void:
 
 func _on_exploration_state_changed(_arg1: Variant = null, _arg2: Variant = null) -> void:
 	_refresh_contextual_hud_glows()
+
+func _on_var_changed(key: String, value: String) -> void:
+	_refresh_contextual_hud_glows()
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node == null or _vn_playing or _puzzle_playing:
+		return
+	if not node.vn_var_change_matches(key, value):
+		return
+	_try_play_node_vn(node, node.node_type == ExplorationNode.NodeType.STORY)
+
+func _on_node_exited(node: ExplorationNode) -> void:
+	if node == null or not node.vn_trigger_on_exit():
+		return
+	if _vn_playing or _puzzle_playing:
+		return
+	if _would_play_node_vn(node):
+		_exit_vn_defer_enter = true
+	_try_play_node_vn(node, node.node_type == ExplorationNode.NodeType.STORY)
 
 func _register_exploration_activity() -> void:
 	_idle_elapsed = 0.0
@@ -2486,25 +2507,31 @@ func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Cal
 
 func _on_node_entered(node: ExplorationNode) -> void:
 	_dismiss_all_popups()
+	if _exit_vn_defer_enter:
+		_pending_enter_node = node
+		return
 	_refresh_node(node)
 	_refresh_contextual_hud_glows()
 
 func _refresh_node(node: ExplorationNode) -> void:
 	_exit_pending   = false
 	_battle_pending = false
+	var vars: Dictionary = ExplorationManager.get_all_vars()
 
-	# Background
-	if not node.background.is_empty() and node.background != _current_bg_path:
-		_current_bg_path = node.background
-		var tex: Texture2D = load(node.background) as Texture2D
+	# Background — check conditional overrides first, fall back to base field
+	var effective_bg: String = node.resolve_background(vars)
+	if not effective_bg.is_empty() and effective_bg != _current_bg_path:
+		_current_bg_path = effective_bg
+		var tex: Texture2D = load(effective_bg) as Texture2D
 		if tex != null:
 			_bg_rect.texture = tex
 		else:
-			push_warning("ExplorationPlayer: bg '%s' not found." % node.background)
+			push_warning("ExplorationPlayer: bg '%s' not found." % effective_bg)
 
-	# Music
-	if not node.music.is_empty() and ResourceLoader.exists(node.music):
-		BGMManager.play_path(node.music, 1.0, 0.5, 100.0, BGMManager.CONTEXT_VN)
+	# Music — check conditional overrides first, fall back to base field
+	var effective_music: String = node.resolve_music(vars)
+	if not effective_music.is_empty() and ResourceLoader.exists(effective_music):
+		BGMManager.play_path(effective_music, 1.0, 0.5, 100.0, BGMManager.CONTEXT_VN)
 
 	# Type badge
 	match node.node_type:
@@ -2527,9 +2554,9 @@ func _refresh_node(node: ExplorationNode) -> void:
 			_type_badge_lbl.text = ""
 
 	# Title + description
-	_title_lbl.text = node.title
+	_title_lbl.text = node.resolve_title(vars)
 	_desc_lbl.text  = ""
-	_desc_lbl.append_text(node.description)
+	_desc_lbl.append_text(node.resolve_description(vars))
 
 	# Back button
 	_back_btn.visible = ExplorationManager.can_go_back()
@@ -2558,46 +2585,62 @@ func _refresh_node(node: ExplorationNode) -> void:
 			_content_panel.visible = false
 			_choices_vbox.visible = false
 			_compass_set_visible(false)   # hidden while VN plays; restored in _on_vn_finished
-			if node.show_info_on_enter:
-				_open_info_panel(func() -> void: _play_story_vn(node), true)
+			if node.vn_trigger_on_enter():
+				if node.show_info_on_enter:
+					_open_info_panel(func() -> void: _try_play_node_vn(node, true), true)
+				else:
+					_try_play_node_vn(node, true)
 			else:
-				_play_story_vn(node)
+				_compass_set_visible(true)
 		_:
 			_content_panel.visible = false
 			_choices_vbox.visible = false
-			if node.show_info_on_enter:
-				_compass_set_visible(true)
-				_open_info_panel(func() -> void: _play_other_vn(node), true)
-			else:
-				_play_other_vn(node)
+			if node.vn_trigger_on_enter():
+				if node.show_info_on_enter:
+					_compass_set_visible(true)
+					_open_info_panel(func() -> void: _try_play_node_vn(node, false), true)
+				else:
+					_try_play_node_vn(node, false)
 
 
 # ─────────────────────────────────────────────────────────────
 # Visual Novel Integration
 # ─────────────────────────────────────────────────────────────
 
-## Play the VN for a STORY node (compass hidden during playback).
-func _play_story_vn(node: ExplorationNode) -> void:
-	if not node.vn_scene.is_empty():
-		var already_played: bool = node.vn_play_once and ExplorationManager.is_vn_played(node.vn_scene)
-		if already_played:
-			_compass_set_visible(true)
-		else:
-			_play_vn(node.vn_scene, func() -> void: _on_vn_finished(node), node.vn_play_once)
-	else:
-		_compass_set_visible(true)
+func _would_play_node_vn(node: ExplorationNode) -> bool:
+	var vars: Dictionary = ExplorationManager.get_all_vars()
+	var vn_path: String = node.resolve_vn_scene(vars)
+	if vn_path.is_empty():
+		return false
+	if not FileAccess.file_exists(ProjectSettings.globalize_path(vn_path)):
+		return false
+	var play_once: bool = node.resolve_vn_play_once(vars)
+	if play_once and ExplorationManager.is_vn_played(vn_path):
+		return false
+	return true
 
-## Play the VN for non-STORY nodes (compass restored after VN).
-func _play_other_vn(node: ExplorationNode) -> void:
-	if not node.vn_scene.is_empty():
-		var already_played: bool = node.vn_play_once and ExplorationManager.is_vn_played(node.vn_scene)
-		if already_played:
-			_compass_set_visible(true)
-		else:
-			_compass_set_visible(false)
-			_play_vn(node.vn_scene, func() -> void: _on_vn_finished(node), node.vn_play_once)
-	else:
+func _apply_pending_enter_node() -> void:
+	if _pending_enter_node == null:
+		_exit_vn_defer_enter = false
+		return
+	var pending: ExplorationNode = _pending_enter_node
+	_pending_enter_node = null
+	_exit_vn_defer_enter = false
+	_refresh_node(pending)
+	_refresh_contextual_hud_glows()
+
+## Play the node's resolved VN scene when trigger conditions are met.
+func _try_play_node_vn(node: ExplorationNode, is_story: bool = false) -> void:
+	if not _would_play_node_vn(node):
 		_compass_set_visible(true)
+		_apply_pending_enter_node()
+		return
+	var vars: Dictionary = ExplorationManager.get_all_vars()
+	var vn_path: String = node.resolve_vn_scene(vars)
+	var play_once: bool = node.resolve_vn_play_once(vars)
+	if not is_story:
+		_compass_set_visible(false)
+	_play_vn(vn_path, func() -> void: _on_vn_finished(node), play_once)
 
 func _play_puzzle(puzzle_id: String, on_done: Callable, puzzle_params: Dictionary = {}) -> void:
 	if _puzzle_playing or _vn_playing:
@@ -2685,9 +2728,10 @@ func _play_vn(path: String, on_done: Callable, play_once: bool = true) -> void:
 		_vn_playing = false
 		on_done.call())
 
-func _on_vn_finished(node: ExplorationNode) -> void:
+func _on_vn_finished(_node: ExplorationNode) -> void:
 	# VN done — restore compass so player can navigate
 	_compass_set_visible(true)
+	_apply_pending_enter_node()
 
 # ─────────────────────────────────────────────────────────────
 # Battle Integration
@@ -2972,8 +3016,9 @@ func _on_spot_triggered(actions: Array, hide_on_success: Callable = Callable()) 
 
 func _execute_spot_actions(actions: Array) -> void:
 	# Collect non-sequenced actions and the optional VN + navigate targets
-	var vn_path:    String = ""
-	var nav_target: String = ""
+	var vn_path:       String = ""
+	var vn_play_once:  bool  = true
+	var nav_target:    String = ""
 	var instant_events: Array = []
 	for act_var: Variant in actions:
 		if not act_var is Dictionary:
@@ -3004,15 +3049,22 @@ func _execute_spot_actions(actions: Array) -> void:
 			"play_vn":
 				if not value.is_empty():
 					vn_path = value
+					vn_play_once = bool(act.get("play_once", true))
 			"navigate_to":
 				if not value.is_empty():
 					nav_target = value
 	# VN plays first; navigate fires in its completion callback
 	if not vn_path.is_empty():
-		_play_vn(vn_path, func() -> void:
+		if vn_play_once and ExplorationManager.is_vn_played(vn_path):
 			_compass_set_visible(true)
 			if not nav_target.is_empty():
-				_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(nav_target)))
+				_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(nav_target))
+		else:
+			_play_vn(vn_path, func() -> void:
+				_compass_set_visible(true)
+				if not nav_target.is_empty():
+					_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(nav_target)),
+				vn_play_once)
 	elif not nav_target.is_empty():
 		_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(nav_target))
 
@@ -3085,13 +3137,16 @@ func _input(event: InputEvent) -> void:
 		if not _transition_active and not _is_over_info_panel_or_icon():
 			_on_info_panel_mouse_exited()
 
+func _is_modified_key(key: InputEventKey) -> bool:
+	return key.meta_pressed or key.ctrl_pressed or key.alt_pressed or key.shift_pressed
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and (event as InputEventKey).pressed and not (event as InputEventKey).echo:
 		var ke := event as InputEventKey
 		if ke.keycode == KEY_F3:
 			_toggle_debug()
 			get_viewport().set_input_as_handled()
-		elif ke.keycode == KEY_ESCAPE:
+		elif ke.keycode == KEY_ESCAPE and not _is_modified_key(ke):
 			if _item_preview != null:
 				_close_item_preview()
 			elif _compass_open or _setting_open or _inv_open:
@@ -3099,7 +3154,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			elif ExplorationManager.can_go_back():
 				SFXManager.play(SFXManager.SFX_CANCEL)
 				ExplorationManager.go_back()
-			# Always consume so CheckerTransition's quit handler never fires here
 			get_viewport().set_input_as_handled()
 
 # Soft radial cyan halo for the compass idle hint (fade-to-transparent edges).

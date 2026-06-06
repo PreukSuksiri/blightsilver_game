@@ -1,0 +1,30 @@
+[
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "(Nex nudge the bookshelf a little)"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "It's really a dead end... No secret passage... Of course..."
+	}
+]

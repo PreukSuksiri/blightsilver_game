@@ -77,8 +77,16 @@ enum NodeType {
 ## Display name shown at the top of the player UI when at this node.
 @export var title: String = ""
 
+## Conditional title overrides — evaluated in order, first match wins.
+## Each entry: { "var": String, "equals": String, "value": String }
+@export var title_conditions: Array = []
+
 ## Descriptive flavour text shown to the player.
 @export var description: String = ""
+
+## Conditional description overrides — evaluated in order, first match wins.
+## Each entry: { "var": String, "equals": String, "value": String }
+@export var description_conditions: Array = []
 
 ## Behaviour type — controls what happens when the player enters this node.
 @export var node_type: NodeType = NodeType.NORMAL
@@ -86,8 +94,26 @@ enum NodeType {
 ## Path to a background image (res:// path). Empty = keep the previous background.
 @export var background: String = ""
 
+## Conditional background overrides — evaluated in order, first match wins.
+## Each entry: { "var": String, "equals": String, "path": String }
+## If a match is found its "path" is used instead of `background`.
+@export var background_conditions: Array = []
+
 ## Path to a VN beat JSON file. Used by STORY nodes (or as an optional entry cutscene).
 @export var vn_scene: String = ""
+
+## Conditional VN scene overrides — evaluated in order, first match wins.
+## Each entry: { "var": String, "equals": String, "path": String, "play_once": bool }
+@export var vn_scene_conditions: Array = []
+
+## When to play vn_scene: "on_enter" (default), "on_exit", or "on_var_change".
+@export var vn_trigger: String = "on_enter"
+
+## For vn_trigger "on_var_change": session variable name to watch (empty = any var).
+@export var vn_trigger_var: String = ""
+
+## For vn_trigger "on_var_change": play when the var equals this value (empty = any value).
+@export var vn_trigger_equals: String = ""
 
 ## If true, the node's vn_scene plays only once per session (default true).
 @export var vn_play_once: bool = true
@@ -102,12 +128,25 @@ enum NodeType {
 ## Path to a BGM track to start when entering this node. Empty = keep current music.
 @export var music: String = ""
 
+## Conditional music overrides — evaluated in order, first match wins.
+## Each entry: { "var": String, "equals": String, "path": String }
+## If a match is found its "path" is used instead of `music`.
+@export var music_conditions: Array = []
+
 ## Events fired in order when the player ENTERS this node.
 ## Each entry is a Dictionary (see format above).
 @export var on_enter_events: Array = []
 
+## Conditional on-enter event overrides — evaluated in order, first match wins.
+## Each entry: { "var": String, "equals": String, "events": Array }
+@export var on_enter_events_conditions: Array = []
+
 ## Events fired in order when the player LEAVES this node.
 @export var on_exit_events: Array = []
+
+## Conditional on-exit event overrides — evaluated in order, first match wins.
+## Each entry: { "var": String, "equals": String, "events": Array }
+@export var on_exit_events_conditions: Array = []
 
 ## Outgoing connections — each is a Dictionary (see format above).
 @export var connections: Array = []
@@ -123,7 +162,7 @@ enum NodeType {
 ##     "icon_scale": float                 — display size as % of natural image size (default 100)
 ##     "tooltip": String                   — text shown on hover
 ##     "actions": Array                    — action dicts fired on click (see on_enter_events format)
-##                                           extra action types: "play_vn", "navigate_to", "play_puzzle"
+##                                           extra action types: "play_vn" (optional play_once), "navigate_to", "play_puzzle"
 ##                                           play_puzzle: value = puzzle id, key = optional params (JSON or text)
 ##                                           play_puzzle gates all other actions until solved
 ##     "conditions": Array                 — condition dicts (same format as connection conditions)
@@ -143,6 +182,84 @@ enum NodeType {
 @export var editor_position: Vector2 = Vector2.ZERO
 
 # ─────────────────────────────────────────────────────────────
+# Conditional resolution (first match wins; falls back to base field)
+# ─────────────────────────────────────────────────────────────
+
+func _var_matches(vars: Dictionary, var_key: String, equals: String) -> bool:
+	return not var_key.is_empty() and str(vars.get(var_key, "")) == equals
+
+func _resolve_cond_string(base: String, conditions: Array, vars: Dictionary, value_field: String) -> String:
+	for cond: Variant in conditions:
+		if not cond is Dictionary:
+			continue
+		var cd: Dictionary = cond as Dictionary
+		if _var_matches(vars, str(cd.get("var", "")), str(cd.get("equals", ""))):
+			return str(cd.get(value_field, ""))
+	return base
+
+func _resolve_cond_array(base: Array, conditions: Array, vars: Dictionary, array_field: String) -> Array:
+	for cond: Variant in conditions:
+		if not cond is Dictionary:
+			continue
+		var cd: Dictionary = cond as Dictionary
+		if _var_matches(vars, str(cd.get("var", "")), str(cd.get("equals", ""))):
+			var matched: Variant = cd.get(array_field, [])
+			return matched.duplicate(true) if matched is Array else []
+	return base.duplicate(true)
+
+func resolve_title(vars: Dictionary) -> String:
+	return _resolve_cond_string(title, title_conditions, vars, "value")
+
+func resolve_description(vars: Dictionary) -> String:
+	return _resolve_cond_string(description, description_conditions, vars, "value")
+
+func resolve_background(vars: Dictionary) -> String:
+	return _resolve_cond_string(background, background_conditions, vars, "path")
+
+func resolve_music(vars: Dictionary) -> String:
+	return _resolve_cond_string(music, music_conditions, vars, "path")
+
+func resolve_vn_scene(vars: Dictionary) -> String:
+	return _resolve_cond_string(vn_scene, vn_scene_conditions, vars, "path")
+
+## play_once for the matching conditional VN, or node vn_play_once when no condition matches.
+func resolve_vn_play_once(vars: Dictionary) -> bool:
+	for cond: Variant in vn_scene_conditions:
+		if not cond is Dictionary:
+			continue
+		var cd: Dictionary = cond as Dictionary
+		if _var_matches(vars, str(cd.get("var", "")), str(cd.get("equals", ""))):
+			return bool(cd.get("play_once", true))
+	return vn_play_once
+
+func resolve_on_enter_events(vars: Dictionary) -> Array:
+	return _resolve_cond_array(on_enter_events, on_enter_events_conditions, vars, "events")
+
+func resolve_on_exit_events(vars: Dictionary) -> Array:
+	return _resolve_cond_array(on_exit_events, on_exit_events_conditions, vars, "events")
+
+func effective_vn_trigger() -> String:
+	return vn_trigger if not vn_trigger.is_empty() else "on_enter"
+
+func vn_trigger_on_enter() -> bool:
+	return effective_vn_trigger() == "on_enter"
+
+func vn_trigger_on_exit() -> bool:
+	return effective_vn_trigger() == "on_exit"
+
+func vn_trigger_on_var_change() -> bool:
+	return effective_vn_trigger() == "on_var_change"
+
+func vn_var_change_matches(changed_key: String, changed_value: String) -> bool:
+	if not vn_trigger_on_var_change():
+		return false
+	if not vn_trigger_var.is_empty() and vn_trigger_var != changed_key:
+		return false
+	if not vn_trigger_equals.is_empty() and vn_trigger_equals != changed_value:
+		return false
+	return true
+
+# ─────────────────────────────────────────────────────────────
 # Serialization helpers
 # ─────────────────────────────────────────────────────────────
 
@@ -151,16 +268,26 @@ func to_dict() -> Dictionary:
 	return {
 		"id":              id,
 		"title":           title,
+		"title_conditions": title_conditions.duplicate(true),
 		"description":     description,
+		"description_conditions": description_conditions.duplicate(true),
 		"node_type":       NodeType.keys()[node_type],
-		"background":      background,
+		"background":            background,
+		"background_conditions": background_conditions.duplicate(true),
 		"vn_scene":           vn_scene,
+		"vn_scene_conditions": vn_scene_conditions.duplicate(true),
+		"vn_trigger":         vn_trigger,
+		"vn_trigger_var":     vn_trigger_var,
+		"vn_trigger_equals":  vn_trigger_equals,
 		"vn_play_once":       vn_play_once,
 		"show_info_on_enter": show_info_on_enter,
 		"show_who_is_here":   show_who_is_here,
 		"music":              music,
+		"music_conditions":   music_conditions.duplicate(true),
 		"on_enter_events": on_enter_events.duplicate(true),
+		"on_enter_events_conditions": on_enter_events_conditions.duplicate(true),
 		"on_exit_events":  on_exit_events.duplicate(true),
+		"on_exit_events_conditions": on_exit_events_conditions.duplicate(true),
 		"connections":     connections.duplicate(true),
 		"usable_items":    usable_items.duplicate(true),
 		"clickable_spots": clickable_spots.duplicate(true),
@@ -173,13 +300,26 @@ static func from_dict(d: Dictionary) -> ExplorationNode:
 	var node := ExplorationNode.new()
 	node.id          = str(d.get("id",          ""))
 	node.title       = str(d.get("title",       ""))
+	var tc: Variant = d.get("title_conditions", [])
+	node.title_conditions = tc if tc is Array else []
 	node.description = str(d.get("description", ""))
+	var dc: Variant = d.get("description_conditions", [])
+	node.description_conditions = dc if dc is Array else []
 	node.background  = str(d.get("background",  ""))
+	var bgc: Variant = d.get("background_conditions", [])
+	node.background_conditions = bgc if bgc is Array else []
 	node.vn_scene           = str(d.get("vn_scene",    ""))
+	var vsc: Variant = d.get("vn_scene_conditions", [])
+	node.vn_scene_conditions = vsc if vsc is Array else []
+	node.vn_trigger         = str(d.get("vn_trigger",        "on_enter"))
+	node.vn_trigger_var     = str(d.get("vn_trigger_var",    ""))
+	node.vn_trigger_equals  = str(d.get("vn_trigger_equals", ""))
 	node.vn_play_once       = bool(d.get("vn_play_once", true))
 	node.show_info_on_enter = bool(d.get("show_info_on_enter", true))
 	node.show_who_is_here   = bool(d.get("show_who_is_here",   true))
 	node.music       = str(d.get("music",       ""))
+	var msc: Variant = d.get("music_conditions", [])
+	node.music_conditions = msc if msc is Array else []
 
 	var type_str: String = str(d.get("node_type", "NORMAL")).to_upper()
 	if NodeType.keys().has(type_str):
@@ -187,9 +327,13 @@ static func from_dict(d: Dictionary) -> ExplorationNode:
 
 	var oe: Variant = d.get("on_enter_events", [])
 	node.on_enter_events = oe if oe is Array else []
+	var oec: Variant = d.get("on_enter_events_conditions", [])
+	node.on_enter_events_conditions = oec if oec is Array else []
 
 	var ox: Variant = d.get("on_exit_events", [])
 	node.on_exit_events = ox if ox is Array else []
+	var oxc: Variant = d.get("on_exit_events_conditions", [])
+	node.on_exit_events_conditions = oxc if oxc is Array else []
 
 	var conn: Variant = d.get("connections", [])
 	node.connections = conn if conn is Array else []
