@@ -1334,6 +1334,7 @@ func _add_connection_row(conn_vbox: VBoxContainer, target: String = "",
 	var cond_vbox := VBoxContainer.new()
 	cond_vbox.add_theme_constant_override("separation", 3)
 	vb.add_child(cond_vbox)
+	frame.set_meta("cond_vbox", cond_vbox)   # used by _find_cond_vbox
 
 	# If locked — only shown when the connection has conditions
 	var locked_mode_row := HBoxContainer.new()
@@ -2630,24 +2631,18 @@ func _find_line_edit(row: Node) -> LineEdit:
 	return null
 
 func _find_cond_vbox(frame: Control) -> VBoxContainer:
-	# Walk the tree to find the VBoxContainer that holds condition rows
+	# Fast path: the vbox is tagged with meta when created in _add_connection_row.
+	if frame.has_meta("cond_vbox"):
+		var tagged: Variant = frame.get_meta("cond_vbox")
+		if tagged is VBoxContainer:
+			return tagged as VBoxContainer
+	# Fallback walk for any frame created before the meta tag was added.
 	for child: Node in frame.get_children():
 		if child is VBoxContainer:
 			for sub: Node in (child as VBoxContainer).get_children():
-				if sub is VBoxContainer and sub.get_child_count() == 0 or _is_cond_vbox(sub as VBoxContainer):
-					# Check whether this VBox contains HBoxContainers (condition rows) or is just a separator
-					if sub is VBoxContainer:
-						return sub as VBoxContainer
+				if sub is VBoxContainer:
+					return sub as VBoxContainer
 	return null
-
-func _is_cond_vbox(vb: VBoxContainer) -> bool:
-	# A condition vbox has no child or has HBoxContainer children (condition rows)
-	if vb == null:
-		return false
-	for c: Node in vb.get_children():
-		if c is HBoxContainer:
-			return true
-	return vb.get_child_count() == 0
 
 # ─────────────────────────────────────────────────────────────
 # Toolbar Actions

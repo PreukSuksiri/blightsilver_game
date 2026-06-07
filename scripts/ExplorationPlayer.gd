@@ -149,6 +149,7 @@ var _tooltip_panel: PanelContainer = null   # spot tooltip (anchored to spot, no
 var _tooltip_lbl: Label            = null
 var _hovering_spot: bool           = false
 var _hovered_spot_hit: Control     = null   # the hit Control currently being hovered
+var _hovered_nav_panel: Control    = null   # nav-choice panel currently being hovered
 var _magnifier_tex: Texture2D      = null
 
 # ─────────────────────────────────────────────────────────────
@@ -363,10 +364,10 @@ func _build_ui() -> void:
 	# ── Toast label ───────────────────────────────────────────
 	_toast_lbl = Label.new()
 	_toast_lbl.layout_mode  = 1
-	_toast_lbl.anchor_left  = 0.0;  _toast_lbl.anchor_right  = 0.52
-	_toast_lbl.anchor_top   = 0.5;  _toast_lbl.anchor_bottom = 0.5
-	_toast_lbl.offset_left  = 40.0; _toast_lbl.offset_right  = -40.0
-	_toast_lbl.offset_top   = -60.0; _toast_lbl.offset_bottom = 60.0
+	_toast_lbl.anchor_left  = 0.0;  _toast_lbl.anchor_right  = 1.0
+	_toast_lbl.anchor_top   = 0.0;  _toast_lbl.anchor_bottom = 0.0
+	_toast_lbl.offset_left  = 16.0; _toast_lbl.offset_right  = -16.0
+	_toast_lbl.offset_top   = 16.0; _toast_lbl.offset_bottom = 80.0
 	_toast_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_tag_ui(_toast_lbl, "font", 700)
 	_toast_lbl.add_theme_font_size_override("font_size", 28)
@@ -2306,34 +2307,38 @@ func _make_nav_radial_panel(
 	_tag_ui(lbl, "font", 500)
 	panel.add_child(lbl)
 
-	if disabled:
-		panel.gui_input.connect(func(ev: InputEvent) -> void:
-			if _is_press_event(ev):
-				_show_toast(locked_hint if not locked_hint.is_empty() else "Locked"))
-	else:
+	if not disabled:
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
 			if _is_press_event(ev):
 				_on_radial_item_selected(target_id))
 
 	var cap_tip: String = locked_hint if disabled and not locked_hint.is_empty() \
 		else (label_text if needs_tooltip else "")
+	var cap_panel := panel
 	if not disabled:
 		panel.mouse_entered.connect(func() -> void:
 			sb.bg_color = Color(0.10, 0.22, 0.48, 0.97)
 			sb.border_color = Color(0.65, 0.88, 1.0, 1.0)
 			if not cap_tip.is_empty():
 				_tooltip_lbl.text = cap_tip
-				_tooltip_panel.visible = true)
+				_tooltip_panel.reset_size()
+				_tooltip_panel.visible = true
+				_hovered_nav_panel = cap_panel)
 		panel.mouse_exited.connect(func() -> void:
 			sb.bg_color = Color(0.04, 0.08, 0.20, 0.94)
 			sb.border_color = Color(0.45, 0.70, 1.0, 0.85)
 			if not cap_tip.is_empty():
-				_hide_tooltip())
+				_hide_tooltip()
+			_hovered_nav_panel = null)
 	elif not cap_tip.is_empty():
 		panel.mouse_entered.connect(func() -> void:
 			_tooltip_lbl.text = cap_tip
-			_tooltip_panel.visible = true)
-		panel.mouse_exited.connect(func() -> void: _hide_tooltip())
+			_tooltip_panel.reset_size()
+			_tooltip_panel.visible = true
+			_hovered_nav_panel = cap_panel)
+		panel.mouse_exited.connect(func() -> void:
+			_hide_tooltip()
+			_hovered_nav_panel = null)
 	return panel
 
 func _add_radial_menu_panel(panel: Control, bucket: Array) -> void:
@@ -2898,6 +2903,7 @@ func _build_tooltip() -> void:
 	_tooltip_lbl = Label.new()
 	_tooltip_lbl.add_theme_font_size_override("font_size", 16)
 	_tooltip_lbl.add_theme_color_override("font_color", Color(0.80, 0.90, 0.95))
+	_tooltip_lbl.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	_tooltip_panel.add_child(_tooltip_lbl)
 	add_child(_tooltip_panel)
 
@@ -2998,6 +3004,7 @@ func _on_spot_hover_enter(tooltip_text: String, spot_hit: Control) -> void:
 		Input.set_custom_mouse_cursor(_magnifier_tex, Input.CURSOR_ARROW, Vector2(8.0, 8.0))
 	if not tooltip_text.is_empty() and _tooltip_panel != null:
 		_tooltip_lbl.text      = tooltip_text
+		_tooltip_panel.reset_size()
 		_tooltip_panel.visible = true
 
 func _on_spot_hover_exit() -> void:
@@ -3009,6 +3016,7 @@ func _on_spot_hover_exit() -> void:
 func _hide_tooltip() -> void:
 	if _tooltip_panel != null:
 		_tooltip_panel.visible = false
+	_hovered_nav_panel = null
 
 func _spot_actions_have_puzzle_gate(actions: Array) -> bool:
 	for act_var: Variant in actions:
@@ -3134,19 +3142,29 @@ func _process(delta: float) -> void:
 			# mouse just left (transition settled, mouse-move wait cleared) — start dismiss timer
 			_on_info_panel_mouse_exited()
 		_info_panel_hovered = over
-	# Tooltip: anchor to top-right of the hovered spot (not the cursor).
-	if _tooltip_panel != null and _tooltip_panel.visible \
-			and _hovered_spot_hit != null and is_instance_valid(_hovered_spot_hit):
-		var vp: Vector2 = get_viewport_rect().size
-		var tp: Vector2 = _tooltip_panel.size
-		var sr: Rect2   = _hovered_spot_hit.get_global_rect()
-		const GAP: float = 3.0
-		var tx: float = sr.position.x + sr.size.x + GAP
-		var ty: float = sr.position.y - tp.y - GAP
-		# Clamp so tooltip stays on-screen
-		tx = clampf(tx, 4.0, vp.x - tp.x - 4.0)
-		ty = clampf(ty, 4.0, vp.y - tp.y - 4.0)
-		_tooltip_panel.position = Vector2(tx, ty)
+	# Tooltip positioning — anchors above the hovered element.
+	if _tooltip_panel != null and _tooltip_panel.visible:
+		var vp: Vector2  = get_viewport_rect().size
+		var tp: Vector2  = _tooltip_panel.get_minimum_size()
+		const GAP: float = 6.0
+		var tx: float
+		var ty: float
+		if _hovered_nav_panel != null and is_instance_valid(_hovered_nav_panel):
+			# Nav choice: centre the tooltip horizontally above the panel chip.
+			var nr: Rect2 = _hovered_nav_panel.get_global_rect()
+			tx = nr.position.x + nr.size.x * 0.5 - tp.x * 0.5
+			ty = nr.position.y - tp.y - GAP
+		elif _hovered_spot_hit != null and is_instance_valid(_hovered_spot_hit):
+			# Investigable spot: top-right of the hit area.
+			var sr: Rect2 = _hovered_spot_hit.get_global_rect()
+			tx = sr.position.x + sr.size.x + GAP
+			ty = sr.position.y - tp.y - GAP
+		else:
+			tx = _tooltip_panel.position.x
+			ty = _tooltip_panel.position.y
+		_tooltip_panel.position = Vector2(
+			clampf(tx, 4.0, vp.x - tp.x - 4.0),
+			clampf(ty, 4.0, vp.y - tp.y - 4.0))
 	# Cursor: finger over interactive elements, default otherwise
 	if not _hovering_spot:
 		if _mouse_over_interactive():

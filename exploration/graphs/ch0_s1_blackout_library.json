@@ -333,10 +333,16 @@
 					"target": "node_group_study"
 				},
 				{
-					"conditions": [],
+					"conditions": [
+						{
+							"key": "item_observatory_key",
+							"type": "has_item",
+							"value": ""
+						}
+					],
 					"label": "Observatory",
 					"locked_hint": "Requires key",
-					"locked_mode": "hide",
+					"locked_mode": "disable",
 					"target": "node_observatory"
 				}
 			],
