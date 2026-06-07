@@ -47,6 +47,12 @@ var _selected_node_id: String = ""           ## Currently selected ExplorationNo
 ## Maps node_id → GraphNode widget
 var _gn_map: Dictionary = {}
 
+# ── Test-play params popup ─────────────────────────────────────
+var _test_params_popup:   PopupPanel     = null
+var _test_force_fresh_chk: CheckBox      = null
+var _test_vars_vbox:      VBoxContainer  = null
+var _test_inv_vbox:       VBoxContainer  = null
+
 # ─────────────────────────────────────────────────────────────
 # UI references
 # ─────────────────────────────────────────────────────────────
@@ -104,6 +110,7 @@ var _img_popup_tex:  TextureRect       = null
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	_build_ui()
+	_build_test_params_popup()
 	_new_graph()
 
 ## Call this to open a specific graph file immediately after the scene loads.
@@ -272,6 +279,15 @@ func _build_props_panel() -> Control:
 	# Section: Node Identity
 	_add_section_header(vbox, "NODE IDENTITY")
 	_prop_id_edit    = _add_field(vbox, "ID", "node_id")
+	var copy_loc_row := HBoxContainer.new()
+	copy_loc_row.add_theme_constant_override("separation", 6)
+	vbox.add_child(copy_loc_row)
+	var copy_loc_btn := Button.new()
+	copy_loc_btn.text = "📋 Copy Graph + Node ID"
+	copy_loc_btn.add_theme_font_size_override("font_size", 12)
+	copy_loc_btn.tooltip_text = "Copy graph file name and node ID for bug reports"
+	copy_loc_btn.pressed.connect(_on_copy_bug_loc_pressed)
+	copy_loc_row.add_child(copy_loc_btn)
 	_prop_title_edit = _add_field(vbox, "Title", "")
 	_add_section_header(vbox, "CONDITIONAL TITLE")
 	_prop_title_cond_vbox = VBoxContainer.new()
@@ -2724,7 +2740,185 @@ func _on_test_play_pressed() -> void:
 	if _graph_path.is_empty():
 		_set_status("Save to a file before test play.")
 		return
-	ExplorationManager.launch(_graph_path, "res://scenes/exploration_editor.tscn")
+	# Show the params popup instead of launching immediately.
+	_test_params_popup.popup_centered(Vector2(420, 500))
+
+func _build_test_params_popup() -> void:
+	_test_params_popup = PopupPanel.new()
+	_test_params_popup.min_size = Vector2(420, 0)
+	add_child(_test_params_popup)
+
+	var root := VBoxContainer.new()
+	root.add_theme_constant_override("separation", 10)
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.offset_left = 12; root.offset_right  = -12
+	root.offset_top  = 12; root.offset_bottom = -12
+	_test_params_popup.add_child(root)
+
+	# Title
+	var title := Label.new()
+	title.text = "Test Play Parameters"
+	title.add_theme_font_size_override("font_size", 17)
+	root.add_child(title)
+	root.add_child(HSeparator.new())
+
+	# Force Fresh checkbox
+	_test_force_fresh_chk = CheckBox.new()
+	_test_force_fresh_chk.text = "Force Fresh  (skip saved session resume)"
+	_test_force_fresh_chk.button_pressed = true
+	_test_force_fresh_chk.add_theme_font_size_override("font_size", 13)
+	root.add_child(_test_force_fresh_chk)
+	root.add_child(HSeparator.new())
+
+	# Initial Variables section
+	var vars_hdr := HBoxContainer.new()
+	root.add_child(vars_hdr)
+	var vars_lbl := Label.new()
+	vars_lbl.text = "Initial Variables"
+	vars_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vars_lbl.add_theme_font_size_override("font_size", 14)
+	vars_hdr.add_child(vars_lbl)
+	var add_var_btn := Button.new()
+	add_var_btn.text = "+ Add"
+	add_var_btn.add_theme_font_size_override("font_size", 12)
+	add_var_btn.custom_minimum_size = Vector2(60, 26)
+	add_var_btn.pressed.connect(func() -> void: _test_add_var_row("", ""))
+	vars_hdr.add_child(add_var_btn)
+	_test_vars_vbox = VBoxContainer.new()
+	_test_vars_vbox.add_theme_constant_override("separation", 4)
+	root.add_child(_test_vars_vbox)
+	root.add_child(HSeparator.new())
+
+	# Initial Inventory section
+	var inv_hdr := HBoxContainer.new()
+	root.add_child(inv_hdr)
+	var inv_lbl := Label.new()
+	inv_lbl.text = "Initial Inventory"
+	inv_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	inv_lbl.add_theme_font_size_override("font_size", 14)
+	inv_hdr.add_child(inv_lbl)
+	var add_inv_btn := Button.new()
+	add_inv_btn.text = "+ Add"
+	add_inv_btn.add_theme_font_size_override("font_size", 12)
+	add_inv_btn.custom_minimum_size = Vector2(60, 26)
+	add_inv_btn.pressed.connect(func() -> void: _test_add_inv_row(""))
+	inv_hdr.add_child(add_inv_btn)
+	_test_inv_vbox = VBoxContainer.new()
+	_test_inv_vbox.add_theme_constant_override("separation", 4)
+	root.add_child(_test_inv_vbox)
+	root.add_child(HSeparator.new())
+
+	# Launch / Cancel buttons
+	var btn_row := HBoxContainer.new()
+	btn_row.add_theme_constant_override("separation", 8)
+	root.add_child(btn_row)
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_row.add_child(spacer)
+	var cancel_btn := Button.new()
+	cancel_btn.text = "Cancel"
+	cancel_btn.custom_minimum_size = Vector2(80, 32)
+	cancel_btn.pressed.connect(func() -> void: _test_params_popup.hide())
+	btn_row.add_child(cancel_btn)
+	var launch_btn := Button.new()
+	launch_btn.text = "▶ Launch"
+	launch_btn.custom_minimum_size = Vector2(100, 32)
+	launch_btn.add_theme_color_override("font_color", Color(0.4, 1.0, 0.5))
+	launch_btn.pressed.connect(_on_test_launch_confirmed)
+	btn_row.add_child(launch_btn)
+
+func _test_add_var_row(key: String, value: String) -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	_test_vars_vbox.add_child(row)
+	var k_edit := LineEdit.new()
+	k_edit.placeholder_text = "key"
+	k_edit.text = key
+	k_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	k_edit.add_theme_font_size_override("font_size", 13)
+	row.add_child(k_edit)
+	var eq_lbl := Label.new()
+	eq_lbl.text = "="
+	row.add_child(eq_lbl)
+	var v_edit := LineEdit.new()
+	v_edit.placeholder_text = "value"
+	v_edit.text = value
+	v_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v_edit.add_theme_font_size_override("font_size", 13)
+	row.add_child(v_edit)
+	var rem := Button.new()
+	rem.text = "✕"
+	rem.custom_minimum_size = Vector2(26, 0)
+	rem.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
+	rem.pressed.connect(func() -> void: row.queue_free())
+	row.add_child(rem)
+
+func _test_add_inv_row(item_id: String) -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	_test_inv_vbox.add_child(row)
+
+	var opt := OptionButton.new()
+	opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	opt.add_theme_font_size_override("font_size", 13)
+	var all: Array = ExplorationItemDatabase.all_items()
+	var sel_idx := 0
+	for i: int in all.size():
+		var it: Dictionary = all[i] as Dictionary
+		var id: String = str(it.get("id", ""))
+		var name_str: String = str(it.get("name", id))
+		opt.add_item("%s  (%s)" % [name_str, id], i)
+		opt.set_item_metadata(i, id)
+		if id == item_id:
+			sel_idx = i
+	if all.size() > 0:
+		opt.select(sel_idx)
+	row.add_child(opt)
+
+	var rem := Button.new()
+	rem.text = "✕"
+	rem.custom_minimum_size = Vector2(26, 0)
+	rem.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
+	rem.pressed.connect(func() -> void: row.queue_free())
+	row.add_child(rem)
+
+func _on_test_launch_confirmed() -> void:
+	_test_params_popup.hide()
+
+	# Collect initial vars
+	var params: Dictionary = {}
+	for row_node: Node in _test_vars_vbox.get_children():
+		if not row_node is HBoxContainer:
+			continue
+		var children: Array = (row_node as HBoxContainer).get_children()
+		if children.size() < 3:
+			continue
+		var k: String = ((children[0] as LineEdit).text).strip_edges()
+		var v: String = ((children[2] as LineEdit).text).strip_edges()
+		if not k.is_empty():
+			params[k] = v
+
+	if _test_force_fresh_chk.button_pressed:
+		params["force_fresh"] = true
+
+	# Pre-seed inventory via launch_params special list
+	var inv_items: Array = []
+	for row_node: Node in _test_inv_vbox.get_children():
+		if not row_node is HBoxContainer:
+			continue
+		var children: Array = (row_node as HBoxContainer).get_children()
+		if children.is_empty():
+			continue
+		var opt := children[0] as OptionButton
+		if opt.item_count > 0:
+			var id: Variant = opt.get_item_metadata(opt.selected)
+			if id != null and str(id) != "":
+				inv_items.append(str(id))
+	ExplorationManager.launch(_graph_path, "res://scenes/exploration_editor.tscn", params)
+	# Seed inventory — launch calls start_session synchronously before the async
+	# scene transition, so add_item here lands in the correct active session.
+	for item_id: String in inv_items:
+		ExplorationManager.add_item(item_id)
 
 func _on_items_pressed() -> void:
 	# Prevent duplicate
@@ -3031,6 +3225,18 @@ func _update_title() -> void:
 	if not _graph_path.is_empty():
 		title_str += "  [%s]" % _graph_path.get_file()
 	get_window().title = title_str
+
+func _on_copy_bug_loc_pressed() -> void:
+	var node_id: String = _prop_id_edit.text.strip_edges() if _prop_id_edit != null else ""
+	if node_id.is_empty():
+		node_id = _selected_node_id.strip_edges()
+	if node_id.is_empty():
+		_set_status("Select a node with an ID first.")
+		return
+	var graph_label: String = _graph_path.get_file() if not _graph_path.is_empty() else "(unsaved graph)"
+	var text: String = "graph=%s  node=%s" % [graph_label, node_id]
+	DisplayServer.clipboard_set(text)
+	_set_status("Copied: %s" % text)
 
 func _set_status(text: String) -> void:
 	if _status_lbl != null:

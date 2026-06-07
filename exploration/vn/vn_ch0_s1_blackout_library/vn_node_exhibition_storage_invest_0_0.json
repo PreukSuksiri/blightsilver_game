@@ -1,0 +1,17 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_storage_peek.png",
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "Trash..."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_booths_peak_inside_2.png",
+		"linger_characters": true,
+		"shake_screen": 8.0
+	}
+]

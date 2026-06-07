@@ -1,0 +1,28 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_technician_office_gameboy.png",
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_technician_office_gameboy.png",
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "This one is really classic"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_technician_office_gameboy_zoom_in.png",
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	}
+]

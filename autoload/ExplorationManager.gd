@@ -118,6 +118,10 @@ var return_scene: String = "res://scenes/main_menu.tscn"
 ## Can be set here directly or passed as the third arg to launch().
 var launch_params: Dictionary = {}
 
+## VN JSON path to play as an overlay after the session ends, before return_scene.
+## Set by VNPlayer when a beat launches exploration with exploration_on_return.
+var pending_return_vn: String = ""
+
 ## Written by complete_battle_node(); read by ExplorationPlayer on reload.
 ## Format: { "won": bool, "node_id": String }
 var pending_battle_result: Dictionary = {}

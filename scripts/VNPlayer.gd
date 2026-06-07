@@ -667,6 +667,31 @@ func _show_beat() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 		return
 
+	# ── Exploration call ──
+	var expl_graph: String = str(beat.get("exploration_call", "")).strip_edges()
+	if expl_graph != "":
+		_set_music("", 0.0, 0.0)
+		var params: Dictionary = {}
+		var expl_params: Variant = beat.get("exploration_params", null)
+		if expl_params is Dictionary:
+			for k: Variant in (expl_params as Dictionary):
+				params[str(k)] = str((expl_params as Dictionary)[k])
+		if bool(beat.get("exploration_force_fresh", true)):
+			params["force_fresh"] = true
+		var on_return: String = str(beat.get("exploration_on_return", "")).strip_edges()
+		ExplorationManager.pending_return_vn = on_return
+		var return_scene: String = get_tree().current_scene.scene_file_path
+		if return_scene.is_empty():
+			return_scene = "res://scenes/main_menu.tscn"
+		ExplorationManager.launch(expl_graph, return_scene, params)
+		var inv: Variant = beat.get("exploration_inventory", null)
+		if inv is Array:
+			for item_var: Variant in (inv as Array):
+				var item_id: String = str(item_var).strip_edges()
+				if not item_id.is_empty():
+					ExplorationManager.add_item(item_id)
+		return
+
 	# ── Dungeon call ──
 	var dungeon_id: String = str(beat.get("dungeon_call", ""))
 	if dungeon_id != "":

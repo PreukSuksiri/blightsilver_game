@@ -1,0 +1,1137 @@
+[
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_mayu_sit.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_mayu_sit.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Wow... um... you're still here, great. Let's go home, Mayu. The power is out."
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_mayu_sit.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "......"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_mayu_sit.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Mayu...? Hey... Mayu...?"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_mayu_evil_smile.png",
+		"characters": [],
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_mayu_evil_smile.png",
+		"shake_screen": 25.0,
+		"text": {
+			"en": "!!!"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_mayu_evil_smile.png",
+		"text": {
+			"en": "Mayu turned her face. Her eyes were glowing red. A smile that once gave Nex a relief of life has now turned sinister and uneasy."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "(Sinister laugh)"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_shocked.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Mayu...!? W...what happened to you...!?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "(Sinister laugh)"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "Your smell is so nice I want to drink every single drops of it."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "Let me also squeeze your blood vein and see how beautifully they swell"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
+		"wait": 2.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
+		"text": "Mayu jumped toward Nex unprepared, and immediately grip her hand on his neck. She strangled him. Her grip is absurdly powerful"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
+		"speaker": "Mayu",
+		"text": "Pretty... so pretty..!!"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
+		"speaker": "Nex",
+		"text": "G... go away...!!"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
+		"text": "No matter how hard he tried, he cannot break free of her grip."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
+		"shake_screen": 10.0,
+		"text": "Nex kicked and knock the mad girl off-balance"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
+		"characters": [],
+		"text": {
+			"en": "Nex finally be able to escape the death's embrace"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "**Cough** **Cough**"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "(Sinister laugh)"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
+		"shake_screen": 20.0,
+		"text": "Mayu tried to reach for Nex again. She ransacked and threw everything off shelves along the way, resulting in a mess"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
+		"characters": [],
+		"music_fade_out": 3.0,
+		"text": {
+			"en": "Nex ran away without thinking twice."
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 3.0,
+		"wait": 0.001
+	},
+	{
+		"wait": 3.0
+	},
+	{
+		"comment": "<<<-- Escape Library -->>>",
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"music": "res://assets/audio/bgm_calm_2.mp3",
+		"text": {
+			"en": "He escaped from the library. It was a very quiet night. The street lights are still lit. There were barely any people walking on the sidewalk"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "*Huff* *Huff*"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "What just happened...!?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Is this a dream!?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Is it okay to just leave Mayu like that...!? But... she's out of her mind..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [],
+		"text": {
+			"en": "What just happened is probably too much for an ordinary young man"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [],
+		"text": {
+			"en": "A lot of thoughts came through his mind. His head went blank, but his feet keep running, not noticing what's ahead"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_surprised.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_shocked.png"
+			}
+		],
+		"music_fade_out": 3.0,
+		"text": {
+			"en": "....!!!"
+		}
+	},
+	{
+		"fade_color": "#ffffff",
+		"fade_out": 3.0,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
+		"fade_color": "#ffffff",
+		"fade_in": 3.0,
+		"music": "res://assets/audio/bgm_sexy_1.mp3",
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
+		"sfx": "res://assets/audio/sound_sledgehammer1.mp3",
+		"sfx_volume": 140.0,
+		"shake": "all",
+		"shake_magnitude": 20.0,
+		"shake_screen": 10.0,
+		"text": "** BUMP!! **",
+		"wait": 3.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
+		"text": "!!!!",
+		"wait": 3.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_crossed_arm.png"
+			}
+		],
+		"sound": "res://assets/audio/sound_axe1.mp3",
+		"sound_volume": "140%",
+		"text": {
+			"en": "(The woman pushed Nex away)"
+		}
+	},
+	{
+		"wait": 2.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_crossed_arm_FIX.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "Watch where you're going!"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "S.... sorry!!! I'm so sorry!!"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [],
+		"text": {
+			"en": "Nex kept running"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_surprised.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": {
+			"en": "Wait!"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"characters": [],
+		"music_fade_out": 3.0,
+		"text": {
+			"en": "The silver-haired woman's trying to stop him. Strangely, she should've been angry, but it's more like she's concerned"
+		}
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 3.0
+	},
+	{
+		"wait": 3.0
+	},
+	{
+		"comment": "<<<-- Nex dorm -->>>",
+		"wait": 0.001
+	},
+	{
+		"background": null,
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"text": {
+			"en": "The next morning... at Nex's domitory"
+		}
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [],
+		"text": {
+			"en": "**Knock** **Knock**"
+		}
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [],
+		"text": {
+			"en": "Someone's knocking the door"
+		}
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "(Who's that...?)"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "(Strange... I rarely have a visitor...)"
+		}
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [],
+		"text": {
+			"en": "**Knock** **Knock** **Knock** **Knock**"
+		}
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "(The door knock sound anxious... Or could it be...... Mayu???)"
+		}
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [],
+		"text": {
+			"en": "**Knock** **Knock** **Knock** **Knock**"
+		}
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [],
+		"text": {
+			"en": "**Knock** **Knock** **Knock** **Knock** **Knock** **Knock**"
+		}
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [],
+		"text": {
+			"en": "Nex carefully open the door..."
+		}
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		]
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_shocked.png"
+			}
+		],
+		"shake_screen": 25.0,
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_shocked.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "!!!"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"music": "res://assets/audio/bgm_storytelling_4.mp3",
+		"text": "It's the silver-haired woman from last night."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I... I'm so sorry!!! I didn't meant to bumped into you last night! It was an accident! I am a student here!! My name is Nex Crowmont...! Please don't put me in jail!!"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "Relax. I didn't come here for that matter. Also, I'm not a police... "
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "I just have some questions about last night. If you might have time..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Is... is that so...?? P... please come inside... I don't have a tea but I'll bring something..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "No need for that. I'll make it quick."
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [],
+		"text": {
+			"en": "The silver-haired woman come inside Nex's room"
+		}
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "My name is Kelly. I'm from [color=#7EC8F4]The Order of High Gate[/color]. You may have not heard of it. But we are working on what you might have faced last night."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Last night...? So... you knew what happened?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "I just looked into your eyes, and knew right away that something's wrong. If you could give me a description of what happened, I can help you."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Last night... at the library... my friend... she has been..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I don't know... but she looked like being crazy. Her eyes glowed red. And she strangled me. I broke free... She broke everything in the library... I escaped... and met you..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "That's exactly what we were talking about."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "In this world, there have always been a supernatural phenomenons lurking in the shadows. Many people said, it's not if... but when... they will get you, or your family, your friends"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "From what you've described, it seems like she has been possessed. And it's not a normal spirit. The glowing red eyes told us that it's probably a stronger one."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_warning.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "If you just leave your friend like that, I'm pretty sure, you will not ever see her again."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "That couldn't be! There must be someway to help her! Please help her, Ms.Kelly! "
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_sigh.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Ms.Kelly? That's super old. I'm just 1-2 years older than you. Just call me Kelly."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "There is a way to help your friend. But I need a true bond between you and your friend to make it successful."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "So... Nex... Do you want to risk your life to rescue your friend?"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I will do anything to help her!"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "That's the spirit! We have everything we need now"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"text": "Kelly handed Nex a deck of card"
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "These are called [color=#E8F4FF]Vellum Cards[/color]. It's an exorcism tool use to expel supernatural threats."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "These cards looks like an ordinary cards. But they're actually a device that channel spiritual influence into a card battle. The stronger the duelist, the better the exorcism power, without relying on a heavy weapon."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "An elite duelist can conduct exorcism even better than a silver grenade"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "I will teach you how to play [color=#E8F4FF]Vellum Card[/color] real quick. Are you ready?"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "I'm ready"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Good"
+	}
+]

@@ -249,17 +249,132 @@ var reroll_dice_available: Array = [false, false]   # TEMP_REROLL_DICE tech: may
 var graveyards: Array = [[], []]                    # graveyards[player] -> Array of destroyed CardInstances
 var locked_attack_positions: Array = []             # Vector2i positions current player cannot attack this turn
 
+const CURSOR_PATH: String = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
+const CURSOR_HOTSPOT: Vector2 = Vector2(4.0, 4.0)
+const CURSOR_LAYER: int = 256
+
+var _cursor_tex: Texture2D = null
+var _cursor_layer: CanvasLayer = null
+var _cursor_sprite: TextureRect = null
+var _software_cursor_ready: bool = false
+var _app_focused: bool = true
+var _mouse_over_game: bool = true
+var _finger_cursor_active: bool = false
+
 func _ready() -> void:
 	_init_grids()
-	_apply_custom_cursor()
+	_load_cursor_texture()
+	_setup_software_cursor()
+	set_process(true)
+	if not get_tree().scene_changed.is_connected(_on_scene_changed_reapply_cursor):
+		get_tree().scene_changed.connect(_on_scene_changed_reapply_cursor)
+	_bind_window_mouse_tracking()
+	call_deferred("_activate_software_cursor")
 
-func _apply_custom_cursor() -> void:
-	var img := Image.load_from_file(
-		ProjectSettings.globalize_path("res://assets/textures/ui/decorations/ui_cursor_finger_64.png"))
-	if img == null:
+func _exit_tree() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		_app_focused = false
+		_apply_cursor_mode(false)
+	elif what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		_app_focused = true
+		call_deferred("_refresh_cursor_mode")
+
+func _on_scene_changed_reapply_cursor() -> void:
+	call_deferred("_bind_window_mouse_tracking")
+	call_deferred("_refresh_cursor_mode")
+
+func _bind_window_mouse_tracking() -> void:
+	var win := get_window()
+	if not win.mouse_entered.is_connected(_on_game_window_mouse_entered):
+		win.mouse_entered.connect(_on_game_window_mouse_entered)
+	if not win.mouse_exited.is_connected(_on_game_window_mouse_exited):
+		win.mouse_exited.connect(_on_game_window_mouse_exited)
+
+func _on_game_window_mouse_entered() -> void:
+	_mouse_over_game = true
+	_refresh_cursor_mode()
+
+func _on_game_window_mouse_exited() -> void:
+	_mouse_over_game = false
+	_refresh_cursor_mode()
+
+func _setup_software_cursor() -> void:
+	if _cursor_tex == null:
 		return
-	var tex := ImageTexture.create_from_image(img)
-	Input.set_custom_mouse_cursor(tex, Input.CURSOR_ARROW, Vector2(12.0, 4.0))
+	_cursor_layer = CanvasLayer.new()
+	_cursor_layer.layer = CURSOR_LAYER
+	add_child(_cursor_layer)
+	_cursor_sprite = TextureRect.new()
+	_cursor_sprite.texture = _cursor_tex
+	_cursor_sprite.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_cursor_sprite.custom_minimum_size = Vector2(64.0, 64.0)
+	_cursor_sprite.size = Vector2(64.0, 64.0)
+	_cursor_layer.add_child(_cursor_sprite)
+	_software_cursor_ready = true
+
+func _activate_software_cursor() -> void:
+	_refresh_cursor_mode()
+
+func _has_open_file_dialog() -> bool:
+	var stack: Array[Node] = [get_tree().root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node is FileDialog and (node as FileDialog).visible:
+			return true
+		for child: Node in node.get_children():
+			stack.append(child)
+	return false
+
+func _should_use_finger_cursor() -> bool:
+	return _app_focused \
+		and _mouse_over_game \
+		and not _has_open_file_dialog()
+
+func _apply_cursor_mode(use_finger: bool) -> void:
+	if not _software_cursor_ready or _cursor_sprite == null:
+		return
+	if use_finger == _finger_cursor_active:
+		if use_finger:
+			_update_cursor_position()
+		return
+	_finger_cursor_active = use_finger
+	if use_finger:
+		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+		_cursor_sprite.visible = true
+		_update_cursor_position()
+	else:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		_cursor_sprite.visible = false
+
+func _refresh_cursor_mode() -> void:
+	_apply_cursor_mode(_should_use_finger_cursor())
+
+func _process(_delta: float) -> void:
+	if not _software_cursor_ready:
+		return
+	_refresh_cursor_mode()
+
+func _update_cursor_position() -> void:
+	_cursor_sprite.position = get_viewport().get_mouse_position() - CURSOR_HOTSPOT
+
+func _load_cursor_texture() -> void:
+	if _cursor_tex != null:
+		return
+	var loaded: Texture2D = load(CURSOR_PATH) as Texture2D
+	if loaded != null:
+		_cursor_tex = loaded
+		return
+	var img := Image.new()
+	var global_path: String = ProjectSettings.globalize_path(CURSOR_PATH)
+	if img.load(global_path) != OK or img.is_empty():
+		push_warning("GameState: could not load cursor image at '%s'" % CURSOR_PATH)
+		return
+	if img.get_width() != 64 or img.get_height() != 64:
+		img.resize(64, 64, Image.INTERPOLATE_LANCZOS)
+	_cursor_tex = ImageTexture.create_from_image(img)
 
 func _init_grids() -> void:
 	grids = []

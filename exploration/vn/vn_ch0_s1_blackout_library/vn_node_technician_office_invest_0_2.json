@@ -1,0 +1,8 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_technician_office_gameboy_jumpscare.png",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sfx/horror_track_1.mp3",
+		"shake_screen": 8.0
+	}
+]

@@ -19,9 +19,6 @@ const SETTING_ICON: String     = "res://assets/textures/ui/decorations/ui_icon_e
 const INVENTORY_ICON: String   = "res://assets/textures/ui/decorations/ui_exploration_inventory.png"
 const CHAT_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_exploration_chat.png"
 const INFO_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_exploration_info.png"
-const DEFAULT_CURSOR: String   = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
-const MAGNIFIER_CURSOR: String = "res://assets/textures/ui/decorations/ui_icon_magnifier.png"
-const FINGER_CURSOR: String    = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
 const COMPASS_SIZE: float  = 110.0  # icon width/height in pixels
 const COMPASS_IDLE_GLOW_PAD: float = 40.0   # soft halo extends this far beyond compass icon
 const COMPASS_IDLE_HINT_DELAY: float = 10.0 # seconds of no interaction before compass hint
@@ -129,10 +126,6 @@ var _obtained_queue: Array                  = []
 var _obtained_dismiss_timer: SceneTreeTimer = null
 var _obtained_dismissing: bool              = false
 
-# ── Cursors ───────────────────────────────────────────────────────────────
-var _default_tex: Texture2D       = null
-var _finger_tex: Texture2D        = null
-
 # ── Internal state ────────────────────────────────────────────────────────
 var _current_bg_path: String = ""
 var _vn_playing: bool        = false
@@ -150,7 +143,6 @@ var _tooltip_lbl: Label            = null
 var _hovering_spot: bool           = false
 var _hovered_spot_hit: Control     = null   # the hit Control currently being hovered
 var _hovered_nav_panel: Control    = null   # nav-choice panel currently being hovered
-var _magnifier_tex: Texture2D      = null
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -313,8 +305,6 @@ func _build_ui() -> void:
 	_back_btn.add_theme_font_size_override("font_size", 16)
 	_back_btn.add_theme_color_override("font_color", Color(0.55, 0.78, 0.95))
 	_back_btn.pressed.connect(_on_back_pressed)
-	_back_btn.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
-	_back_btn.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
 	vbox.add_child(_back_btn)
 
 	# ── Debug button (top-right corner) ───────────────────────
@@ -356,7 +346,6 @@ func _build_ui() -> void:
 	# ── Point-and-click spot layer ────────────────────────────
 	_build_spots_layer()
 	_build_tooltip()
-	_magnifier_tex = _load_cursor_tex(MAGNIFIER_CURSOR)
 
 	# ── Compass radial navigation ─────────────────────────────
 	_build_compass_system()
@@ -476,8 +465,6 @@ func _build_compass_system() -> void:
 
 	_compass_hit          = _make_icon_hit_button(_compass_idle_pos)
 	_compass_hit.pressed.connect(_on_compass_clicked)
-	_compass_hit.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
-	_compass_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
 	_compass_root.add_child(_compass_hit)
 
 	# ── Setting icon (far right, +2×spacing) ────────────────
@@ -494,8 +481,6 @@ func _build_compass_system() -> void:
 
 	_setting_hit = _make_icon_hit_button(_setting_idle_pos)
 	_setting_hit.pressed.connect(_on_setting_clicked)
-	_setting_hit.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
-	_setting_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
 	_compass_root.add_child(_setting_hit)
 
 	# ── Info icon (+1×spacing) ────────────────────────────────
@@ -512,8 +497,6 @@ func _build_compass_system() -> void:
 
 	_info_hit = _make_icon_hit_button(_info_idle_pos)
 	_info_hit.pressed.connect(_on_info_clicked)
-	_info_hit.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
-	_info_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
 	_compass_root.add_child(_info_hit)
 
 	# ── Inventory icon (far left, −2×spacing) ────────────────
@@ -530,8 +513,6 @@ func _build_compass_system() -> void:
 
 	_inv_hit = _make_icon_hit_button(_inv_idle_pos)
 	_inv_hit.pressed.connect(_on_inventory_clicked)
-	_inv_hit.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
-	_inv_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
 	_compass_root.add_child(_inv_hit)
 
 	# ── Chat icon (−1×spacing) ────────────────────────────────
@@ -548,8 +529,6 @@ func _build_compass_system() -> void:
 
 	_chat_hit = _make_icon_hit_button(_chat_idle_pos)
 	_chat_hit.pressed.connect(_on_chat_clicked)
-	_chat_hit.mouse_entered.connect(func() -> void: _set_finger_cursor(true))
-	_chat_hit.mouse_exited.connect(func() -> void: _set_finger_cursor(false))
 	_compass_root.add_child(_chat_hit)
 
 	# Empty-chat overlay label
@@ -594,24 +573,6 @@ func _build_compass_system() -> void:
 	_inv_empty_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_compass_root.add_child(_inv_empty_lbl)
 
-	# Load cursors — resize to 64×64 at runtime so no separate import file is needed.
-	_default_tex = _load_cursor_tex(DEFAULT_CURSOR)
-	_finger_tex  = _load_cursor_tex(FINGER_CURSOR)
-	# Apply default cursor immediately for the exploration scene
-	Input.set_custom_mouse_cursor(_default_tex, Input.CURSOR_ARROW, Vector2(4.0, 4.0))
-
-## Load an image from res:// and resize it to 64×64 for use as a custom cursor.
-## Works on unimported files too (reads raw bytes via Image.load_from_file).
-func _load_cursor_tex(path: String) -> ImageTexture:
-	var img := Image.new()
-	var global: String = ProjectSettings.globalize_path(path)
-	var err: int = img.load(global)
-	if err != OK:
-		push_warning("ExplorationPlayer: could not load cursor '%s' (err %d)" % [path, err])
-		return null
-	img.resize(64, 64, Image.INTERPOLATE_LANCZOS)
-	return ImageTexture.create_from_image(img)
-
 ## Build an invisible full-size hit button for an icon at given position.
 func _make_icon_hit_button(pos: Vector2) -> Button:
 	var btn := Button.new()
@@ -624,42 +585,7 @@ func _make_icon_hit_button(pos: Vector2) -> Button:
 		btn.add_theme_stylebox_override(state, sb)
 	return btn
 
-func _set_finger_cursor(on: bool) -> void:
-	if on and _finger_tex != null:
-		Input.set_custom_mouse_cursor(_finger_tex, Input.CURSOR_ARROW, Vector2(12.0, 4.0))
-	elif not on and not _hovering_spot:
-		Input.set_custom_mouse_cursor(_default_tex, Input.CURSOR_ARROW, Vector2(4.0, 4.0))
-
-## Returns true if the mouse is currently over any interactive element that warrants a finger cursor.
-func _mouse_over_interactive() -> bool:
-	if _hovering_spot:
-		return false  # hotspot handles its own cursor
-	var mp: Vector2 = get_global_mouse_position()
-	# Icon hit buttons (always relevant)
-	var hits: Array = [_compass_hit, _setting_hit, _inv_hit, _chat_hit, _info_hit]
-	for h: Variant in hits:
-		if h is Control and (h as Control).visible:
-			var c: Control = h as Control
-			if Rect2(c.global_position, c.size).has_point(mp):
-				return true
-	# Back / Dismiss button
-	if _back_btn != null and _back_btn.visible:
-		if Rect2(_back_btn.global_position, _back_btn.size).has_point(mp):
-			return true
-	# Radial panels
-	var all_panels: Array = []
-	all_panels.append_array(_radial_items)
-	all_panels.append_array(_setting_radial_items)
-	all_panels.append_array(_inv_radial_items)
-	all_panels.append_array(_chat_radial_items)
-	for p: Variant in all_panels:
-		if p is Control and (p as Control).visible:
-			var c: Control = p as Control
-			if Rect2(c.global_position, c.size).has_point(mp):
-				return true
-	return false
-
-## No-op kept for call-site compatibility (cursor is now managed by _process).
+## No-op kept for call-site compatibility.
 func _hook_cursor(_ctrl: Control) -> void:
 	pass
 
@@ -841,8 +767,20 @@ func _refresh_contextual_hud_glows() -> void:
 		if _hud_glow_active.get("compass", false):
 			_dismiss_hud_glow("compass")
 
+func _is_info_panel_showing() -> bool:
+	if _info_open:
+		return true
+	if _content_panel == null or not _content_panel.visible:
+		return false
+	return _title_lbl.visible or _desc_lbl.visible
+
+func _dismiss_info_panel_for_hud() -> void:
+	if _is_info_panel_showing():
+		_close_info_panel(true, false)
+
 func _on_compass_clicked() -> void:
 	_register_exploration_activity()
+	_dismiss_info_panel_for_hud()
 	if _compass_animating:
 		return
 	if _compass_open:
@@ -875,7 +813,7 @@ func _dismiss_all_hud_menus(animated: bool = true) -> void:
 	_close_setting_menu(animated)
 	_close_inventory_menu(animated)
 	_close_chat_menu(animated)
-	_close_info_panel()
+	_close_info_panel(true, false)
 
 func _close_settings_menu_popup() -> void:
 	if _settings_menu != null and is_instance_valid(_settings_menu):
@@ -913,7 +851,7 @@ func _open_compass_menu() -> void:
 	_close_setting_menu(false)
 	_close_inventory_menu(false)
 	_close_chat_menu(false)
-	_close_info_panel()
+	_close_info_panel(true, false)
 	# Gather connections visible in the compass (unlocked, or locked+disable mode)
 	var menu_connections: Array = []
 	for conn: Variant in node.connections:
@@ -1022,6 +960,7 @@ func _on_radial_item_selected(target_id: String) -> void:
 
 func _on_setting_clicked() -> void:
 	_register_exploration_activity()
+	_dismiss_info_panel_for_hud()
 	if _setting_animating:
 		return
 	if _setting_open:
@@ -1143,6 +1082,7 @@ func _on_setting_action(action: String) -> void:
 
 func _on_inventory_clicked() -> void:
 	_register_exploration_activity()
+	_dismiss_info_panel_for_hud()
 	if _inv_animating:
 		return
 	if _inv_open:
@@ -1321,6 +1261,7 @@ func _on_inventory_item_selected(item_id: String) -> void:
 
 func _on_chat_clicked() -> void:
 	_register_exploration_activity()
+	_dismiss_info_panel_for_hud()
 	if _chat_animating:
 		return
 	if _chat_open:
@@ -1526,8 +1467,8 @@ func _rebuild_who_is_here(node: ExplorationNode) -> void:
 
 func _on_info_clicked() -> void:
 	_register_exploration_activity()
-	if _info_open:
-		_close_info_panel()
+	if _is_info_panel_showing():
+		_close_info_panel(true, false)
 		return
 	if _is_any_other_hud_menu_active("info"):
 		_dismiss_all_hud_menus(false)
@@ -1593,22 +1534,33 @@ func _on_info_panel_mouse_exited() -> void:
 		if _info_open and _info_auto_dismiss_timer != null and not _transition_active and not _info_wait_for_mouse:
 			_close_info_panel())
 
-func _close_info_panel() -> void:
-	if not _info_open:
+func _close_info_panel(immediate: bool = false, run_on_close: bool = true) -> void:
+	if not _is_info_panel_showing():
 		return
 	_info_auto_dismiss_timer = null
 	_info_mouse_wait_timer   = null
 	_info_wait_for_mouse     = false
+	_info_panel_hovered      = false
 	_info_open = false
 	var cb: Callable = _info_on_close_cb
 	_info_on_close_cb = Callable()
 	var can_back: bool = ExplorationManager.can_go_back()
 	if not _compass_open and not _setting_open and not _inv_open and not _chat_open:
 		_radial_overlay.visible = false
-	# Slide out to right — hide labels and reset state only after panel is off-screen
 	var vp_w: float = get_viewport().get_visible_rect().size.x
 	if _info_panel_tween and _info_panel_tween.is_valid():
 		_info_panel_tween.kill()
+	if immediate:
+		_title_lbl.visible = false
+		_desc_lbl.visible  = false
+		_back_btn.text     = "← Go Back"
+		_back_btn.visible  = can_back
+		_content_panel.visible = false
+		_content_panel.position.x = vp_w * BG_AREA_FRACTION
+		if run_on_close and cb.is_valid():
+			cb.call()
+		return
+	# Slide out to right — hide labels and reset state only after panel is off-screen
 	_info_panel_tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUINT)
 	_info_panel_tween.tween_property(_content_panel, "position:x", vp_w, 0.28)
 	_info_panel_tween.tween_callback(func() -> void:
@@ -1618,7 +1570,7 @@ func _close_info_panel() -> void:
 		_back_btn.visible  = can_back
 		_content_panel.visible = false
 		_content_panel.position.x = vp_w * BG_AREA_FRACTION
-		if cb.is_valid():
+		if run_on_close and cb.is_valid():
 			cb.call())
 
 # ─────────────────────────────────────────────────────────────
@@ -2215,7 +2167,8 @@ func _execute_item_effects(item_id: String) -> void:
 			"play_vn":
 				if not eff_value.is_empty():
 					var done := false
-					_play_vn(eff_value, func() -> void: done = true)
+					var play_once_flag: bool = bool(eff.get("play_once", false))
+					_play_vn(eff_value, func() -> void: done = true, play_once_flag)
 					while not done:
 						await get_tree().process_frame
 			"navigate_to":
@@ -2821,6 +2774,11 @@ func _on_exit_confirmed() -> void:
 func _do_end_exploration() -> void:
 	if not ExplorationManager.is_session_active:
 		return
+	var ret_vn: String = ExplorationManager.pending_return_vn.strip_edges()
+	if not ret_vn.is_empty():
+		ExplorationManager.pending_return_vn = ""
+		_do_end_exploration_with_vn(ret_vn)
+		return
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	ExplorationManager.end_session(true)
 	var dest: String = ExplorationManager.return_scene
@@ -2831,6 +2789,7 @@ func _do_end_exploration() -> void:
 func _do_end_exploration_with_vn(vn_path: String) -> void:
 	if not ExplorationManager.is_session_active:
 		return
+	ExplorationManager.pending_return_vn = ""
 	ExplorationManager.end_session(true)
 	var dest: String = ExplorationManager.return_scene
 	# VNPlayer runs as an overlay on top of the still-alive exploration scene.
@@ -3000,8 +2959,6 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 func _on_spot_hover_enter(tooltip_text: String, spot_hit: Control) -> void:
 	_hovering_spot    = true
 	_hovered_spot_hit = spot_hit
-	if _magnifier_tex != null:
-		Input.set_custom_mouse_cursor(_magnifier_tex, Input.CURSOR_ARROW, Vector2(8.0, 8.0))
 	if not tooltip_text.is_empty() and _tooltip_panel != null:
 		_tooltip_lbl.text      = tooltip_text
 		_tooltip_panel.reset_size()
@@ -3010,7 +2967,6 @@ func _on_spot_hover_enter(tooltip_text: String, spot_hit: Control) -> void:
 func _on_spot_hover_exit() -> void:
 	_hovering_spot    = false
 	_hovered_spot_hit = null
-	Input.set_custom_mouse_cursor(_default_tex, Input.CURSOR_ARROW, Vector2(4.0, 4.0))
 	_hide_tooltip()
 
 func _hide_tooltip() -> void:
@@ -3059,11 +3015,10 @@ func _on_spot_triggered(actions: Array, hide_on_success: Callable = Callable()) 
 		_execute_spot_actions(actions)
 
 func _execute_spot_actions(actions: Array) -> void:
-	# Collect non-sequenced actions and the optional VN + navigate targets
-	var vn_path:       String = ""
-	var vn_play_once:  bool  = true
-	var nav_target:    String = ""
-	var instant_events: Array = []
+	_run_spot_actions_sequence(actions)
+
+func _run_spot_actions_sequence(actions: Array) -> void:
+	# Run spot actions in list order; play_vn blocks until the scene finishes.
 	for act_var: Variant in actions:
 		if not act_var is Dictionary:
 			continue
@@ -3073,9 +3028,13 @@ func _execute_spot_actions(actions: Array) -> void:
 		var value: String   = str(act.get("value",  ""))
 		match action:
 			"give_item":
-				ExplorationManager.add_item(key if not key.is_empty() else value)
+				var item_id: String = key if not key.is_empty() else value
+				if not item_id.is_empty():
+					ExplorationManager.add_item(item_id)
 			"remove_item":
-				ExplorationManager.remove_item(key if not key.is_empty() else value)
+				var rem_id: String = key if not key.is_empty() else value
+				if not rem_id.is_empty():
+					ExplorationManager.remove_item(rem_id)
 			"set_var":
 				ExplorationManager.set_var(key, value)
 			"give_credits", "set_flag", "give_booster_pack":
@@ -3089,35 +3048,29 @@ func _execute_spot_actions(actions: Array) -> void:
 					sfx.bus    = "SFX"
 					add_child(sfx)
 					sfx.play()
-					sfx.finished.connect(sfx.queue_free)
+					await sfx.finished
+					sfx.queue_free()
 			"play_vn":
 				if not value.is_empty():
-					vn_path = value
-					vn_play_once = bool(act.get("play_once", true))
+					var play_once: bool = bool(act.get("play_once", true))
+					if not (play_once and ExplorationManager.is_vn_played(value)):
+						var done := false
+						_play_vn(value, func() -> void: done = true, play_once)
+						while not done:
+							await get_tree().process_frame
 			"navigate_to":
 				if not value.is_empty():
-					nav_target = value
+					_compass_set_visible(true)
+					_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(value))
+					return
 			"end_exploration":
 				_do_end_exploration()
 				return
 			"end_exploration_vn":
 				if not value.is_empty():
 					_do_end_exploration_with_vn(value)
-					return
-	# VN plays first; navigate fires in its completion callback
-	if not vn_path.is_empty():
-		if vn_play_once and ExplorationManager.is_vn_played(vn_path):
-			_compass_set_visible(true)
-			if not nav_target.is_empty():
-				_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(nav_target))
-		else:
-			_play_vn(vn_path, func() -> void:
-				_compass_set_visible(true)
-				if not nav_target.is_empty():
-					_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(nav_target)),
-				vn_play_once)
-	elif not nav_target.is_empty():
-		_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(nav_target))
+				return
+	_compass_set_visible(true)
 
 func _process(delta: float) -> void:
 	# Compass idle hint — lowest priority; blocked while chat/inventory glow active.
@@ -3165,19 +3118,11 @@ func _process(delta: float) -> void:
 		_tooltip_panel.position = Vector2(
 			clampf(tx, 4.0, vp.x - tp.x - 4.0),
 			clampf(ty, 4.0, vp.y - tp.y - 4.0))
-	# Cursor: finger over interactive elements, default otherwise
-	if not _hovering_spot:
-		if _mouse_over_interactive():
-			if _finger_tex != null:
-				Input.set_custom_mouse_cursor(_finger_tex, Input.CURSOR_ARROW, Vector2(12.0, 4.0))
-		else:
-			Input.set_custom_mouse_cursor(_default_tex, Input.CURSOR_ARROW, Vector2(4.0, 4.0))
 
 func _exit_tree() -> void:
 	for tw: Variant in _hud_glow_tweens.values():
 		if tw is Tween and (tw as Tween).is_valid():
 			(tw as Tween).kill()
-	Input.set_custom_mouse_cursor(null)
 
 # ─────────────────────────────────────────────────────────────
 # Debug overlay

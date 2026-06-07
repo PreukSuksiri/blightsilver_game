@@ -36,6 +36,8 @@ var _dirty: bool = false
 var _char_rows: Array = []
 var _file_dialog: FileDialog = null
 var _browse_target: LineEdit = null
+var _new_file_dialog: ConfirmationDialog = null
+var _new_file_name_edit: LineEdit = null
 var _clipboard: Array = []       # Array[Dictionary] — supports multi-beat copy
 var _has_clipboard: bool = false
 var _char_clipboard: Array = []  # Array[Dictionary] — characters copy/paste
@@ -186,6 +188,14 @@ var _f_dungeon_on_win:      LineEdit     = null
 var _f_dungeon_on_lose:     LineEdit     = null
 var _dungeon_filtered_ids:  Array        = []
 
+# Exploration call fields
+var _f_call_exploration:         CheckBox      = null
+var _f_exploration_graph:        LineEdit      = null
+var _f_exploration_force_fresh:  CheckBox      = null
+var _f_exploration_on_return:    LineEdit      = null
+var _f_exploration_params_vbox:  VBoxContainer = null
+var _f_exploration_inv_vbox:     VBoxContainer = null
+
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
 # ─────────────────────────────────────────────────────────────
@@ -333,6 +343,17 @@ func _build_ui() -> void:
 	_folder_dialog.dir_selected.connect(_on_folder_selected)
 	add_child(_folder_dialog)
 
+	_new_file_dialog = ConfirmationDialog.new()
+	_new_file_dialog.title = "New VN File"
+	_new_file_dialog.min_size = Vector2(340, 110)
+	_new_file_name_edit = LineEdit.new()
+	_new_file_name_edit.placeholder_text = "filename (without .json)"
+	_new_file_name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_new_file_dialog.add_child(_new_file_name_edit)
+	_new_file_name_edit.text_submitted.connect(func(_t: String) -> void: _new_file_dialog.confirmed.emit())
+	_new_file_dialog.confirmed.connect(_on_new_file_confirmed)
+	add_child(_new_file_dialog)
+
 	var split := HSplitContainer.new()
 	split.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	split.split_offset = 300
@@ -411,6 +432,13 @@ func _build_left_panel(parent: Control) -> void:
 	chg_folder_btn.add_theme_font_size_override("font_size", 14)
 	chg_folder_btn.pressed.connect(_on_change_folder_pressed)
 	files_hdr.add_child(chg_folder_btn)
+	var new_file_btn := Button.new()
+	new_file_btn.text = "+"
+	new_file_btn.custom_minimum_size = Vector2(28, 26)
+	new_file_btn.add_theme_font_size_override("font_size", 18)
+	new_file_btn.tooltip_text = "New file"
+	new_file_btn.pressed.connect(_on_new_file_pressed)
+	files_hdr.add_child(new_file_btn)
 	_file_list = ItemList.new()
 	_file_list.custom_minimum_size.y = 130.0
 	_file_list.add_theme_font_size_override("font_size", 15)
@@ -928,6 +956,61 @@ func _build_fields() -> void:
 	_add_browse(_f_dungeon_on_lose, PackedStringArray(["*.json;JSON"]), "res://campaign/scenes/")
 	_f_dungeon_on_lose.text_changed.connect(func(_s: String) -> void: _on_field_changed())
 
+	# ── Exploration Call ───────────────────────────────────────
+	_section(v, "EXPLORATION CALL")
+	_f_call_exploration = _row_cb(v, "Call Exploration", "launch exploration graph from this beat")
+	_f_call_exploration.toggled.connect(func(_b: bool) -> void: _on_field_changed())
+	_f_exploration_graph = _row_le(v, "Graph", "res://exploration/graphs/my_graph.json")
+	_add_browse(_f_exploration_graph, PackedStringArray(["*.json;JSON"]), "res://exploration/graphs/")
+	_f_exploration_graph.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+	_f_exploration_force_fresh = _row_cb(v, "Force Fresh", "skip saved session resume — start a new run")
+	_f_exploration_force_fresh.button_pressed = true
+	_f_exploration_force_fresh.toggled.connect(func(_b: bool) -> void: _on_field_changed())
+
+	var expl_vars_hdr := HBoxContainer.new()
+	expl_vars_hdr.add_theme_constant_override("separation", 4)
+	v.add_child(expl_vars_hdr)
+	var expl_vars_lbl := Label.new()
+	expl_vars_lbl.text = "Initial Variables"
+	expl_vars_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	expl_vars_lbl.add_theme_font_size_override("font_size", 13)
+	expl_vars_hdr.add_child(expl_vars_lbl)
+	var expl_add_var_btn := Button.new()
+	expl_add_var_btn.text = "+ Add"
+	expl_add_var_btn.custom_minimum_size = Vector2(60, 26)
+	expl_add_var_btn.add_theme_font_size_override("font_size", 12)
+	expl_add_var_btn.pressed.connect(func() -> void:
+		_add_exploration_param_row("", "")
+		_on_field_changed())
+	expl_vars_hdr.add_child(expl_add_var_btn)
+	_f_exploration_params_vbox = VBoxContainer.new()
+	_f_exploration_params_vbox.add_theme_constant_override("separation", 3)
+	v.add_child(_f_exploration_params_vbox)
+
+	var expl_inv_hdr := HBoxContainer.new()
+	expl_inv_hdr.add_theme_constant_override("separation", 4)
+	v.add_child(expl_inv_hdr)
+	var expl_inv_lbl := Label.new()
+	expl_inv_lbl.text = "Initial Inventory"
+	expl_inv_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	expl_inv_lbl.add_theme_font_size_override("font_size", 13)
+	expl_inv_hdr.add_child(expl_inv_lbl)
+	var expl_add_inv_btn := Button.new()
+	expl_add_inv_btn.text = "+ Add"
+	expl_add_inv_btn.custom_minimum_size = Vector2(60, 26)
+	expl_add_inv_btn.add_theme_font_size_override("font_size", 12)
+	expl_add_inv_btn.pressed.connect(func() -> void:
+		_add_exploration_inv_row("")
+		_on_field_changed())
+	expl_inv_hdr.add_child(expl_add_inv_btn)
+	_f_exploration_inv_vbox = VBoxContainer.new()
+	_f_exploration_inv_vbox.add_theme_constant_override("separation", 3)
+	v.add_child(_f_exploration_inv_vbox)
+
+	_f_exploration_on_return = _row_le(v, "On Return", "VN JSON played after exploration ends (optional)")
+	_add_browse(_f_exploration_on_return, PackedStringArray(["*.json;JSON"]), "res://campaign/scenes/")
+	_f_exploration_on_return.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+
 	_connect_static_signals()
 
 func _connect_static_signals() -> void:
@@ -1002,6 +1085,121 @@ func _populate_dungeon_call_picker() -> void:
 		_f_dungeon_opt.add_item(did)
 	if _dungeon_filtered_ids.is_empty():
 		_f_dungeon_opt.add_item("(no layouts)")
+
+func _clear_vbox(vbox: VBoxContainer) -> void:
+	if vbox == null:
+		return
+	for child: Node in vbox.get_children():
+		child.queue_free()
+
+func _add_exploration_param_row(key: String, value: String) -> void:
+	if _f_exploration_params_vbox == null:
+		return
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	_f_exploration_params_vbox.add_child(row)
+	var k_edit := LineEdit.new()
+	k_edit.placeholder_text = "key"
+	k_edit.text = key
+	k_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	k_edit.add_theme_font_size_override("font_size", 13)
+	k_edit.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+	row.add_child(k_edit)
+	var eq_lbl := Label.new()
+	eq_lbl.text = "="
+	row.add_child(eq_lbl)
+	var v_edit := LineEdit.new()
+	v_edit.placeholder_text = "value"
+	v_edit.text = value
+	v_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v_edit.add_theme_font_size_override("font_size", 13)
+	v_edit.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+	row.add_child(v_edit)
+	var rem := Button.new()
+	rem.text = "✕"
+	rem.custom_minimum_size = Vector2(26, 0)
+	rem.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
+	rem.pressed.connect(func() -> void:
+		row.queue_free()
+		_on_field_changed())
+	row.add_child(rem)
+
+func _add_exploration_inv_row(item_id: String) -> void:
+	if _f_exploration_inv_vbox == null:
+		return
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	_f_exploration_inv_vbox.add_child(row)
+	var opt := OptionButton.new()
+	opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	opt.add_theme_font_size_override("font_size", 13)
+	opt.item_selected.connect(func(_i: int) -> void: _on_field_changed())
+	var all: Array = ExplorationItemDatabase.all_items()
+	var sel_idx := 0
+	for i: int in all.size():
+		var it: Dictionary = all[i] as Dictionary
+		var id: String = str(it.get("id", ""))
+		var name_str: String = str(it.get("name", id))
+		opt.add_item("%s  (%s)" % [name_str, id], i)
+		opt.set_item_metadata(i, id)
+		if id == item_id:
+			sel_idx = i
+	if all.is_empty():
+		opt.add_item("(no items)")
+	else:
+		opt.select(sel_idx)
+	row.add_child(opt)
+	var rem := Button.new()
+	rem.text = "✕"
+	rem.custom_minimum_size = Vector2(26, 0)
+	rem.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
+	rem.pressed.connect(func() -> void:
+		row.queue_free()
+		_on_field_changed())
+	row.add_child(rem)
+
+func _rebuild_exploration_param_rows(params: Dictionary) -> void:
+	_clear_vbox(_f_exploration_params_vbox)
+	for k: Variant in params:
+		_add_exploration_param_row(str(k), str(params[k]))
+
+func _rebuild_exploration_inv_rows(items: Array) -> void:
+	_clear_vbox(_f_exploration_inv_vbox)
+	for item_var: Variant in items:
+		_add_exploration_inv_row(str(item_var))
+
+func _collect_exploration_params() -> Dictionary:
+	var params: Dictionary = {}
+	if _f_exploration_params_vbox == null:
+		return params
+	for row_node: Node in _f_exploration_params_vbox.get_children():
+		if not row_node is HBoxContainer:
+			continue
+		var children: Array = (row_node as HBoxContainer).get_children()
+		if children.size() < 3:
+			continue
+		var k: String = ((children[0] as LineEdit).text).strip_edges()
+		var val: String = ((children[2] as LineEdit).text).strip_edges()
+		if not k.is_empty():
+			params[k] = val
+	return params
+
+func _collect_exploration_inventory() -> Array:
+	var items: Array = []
+	if _f_exploration_inv_vbox == null:
+		return items
+	for row_node: Node in _f_exploration_inv_vbox.get_children():
+		if not row_node is HBoxContainer:
+			continue
+		var children: Array = (row_node as HBoxContainer).get_children()
+		if children.is_empty():
+			continue
+		var opt := children[0] as OptionButton
+		if opt.item_count > 0 and opt.get_item_text(0) != "(no items)":
+			var id: Variant = opt.get_item_metadata(opt.selected)
+			if id != null and str(id) != "":
+				items.append(str(id))
+	return items
 
 # ─────────────────────────────────────────────────────────────
 # Dynamic locale UI (speaker + text tabs)
@@ -1518,6 +1716,39 @@ func _replay_ken_burns_preview() -> void:
 # ─────────────────────────────────────────────────────────────
 # Folder picker
 # ─────────────────────────────────────────────────────────────
+func _on_new_file_pressed() -> void:
+	_new_file_name_edit.text = ""
+	_new_file_dialog.popup_centered()
+	_new_file_name_edit.grab_focus()
+
+func _on_new_file_confirmed() -> void:
+	var raw: String = _new_file_name_edit.text.strip_edges()
+	if raw.is_empty():
+		_status_lbl.text = "New file: name cannot be empty."
+		return
+	# Sanitise: strip any trailing .json the user may have typed
+	if raw.to_lower().ends_with(".json"):
+		raw = raw.left(raw.length() - 5)
+	var fname: String = raw + ".json"
+	var full_path: String = _scenes_dir + fname
+	if FileAccess.file_exists(full_path):
+		_status_lbl.text = "File already exists: " + fname
+		return
+	var f := FileAccess.open(full_path, FileAccess.WRITE)
+	if f == null:
+		_status_lbl.text = "ERROR: could not create " + fname
+		return
+	f.store_string("[]")
+	f.close()
+	_scan_files()
+	# Select the new file in the list and open it
+	for i: int in range(_file_list.item_count):
+		if _file_list.get_item_text(i) == fname:
+			_file_list.select(i)
+			_on_file_selected(i)
+			break
+	_status_lbl.text = "Created  →  " + fname
+
 func _on_change_folder_pressed() -> void:
 	_folder_dialog.current_dir = ProjectSettings.globalize_path(_scenes_dir)
 	_folder_dialog.popup_centered(Vector2(900, 600))
@@ -1704,6 +1935,9 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 		return prefix + "[characters]"
 	if beat.get("start_battle", false):
 		return prefix + "[start battle]"
+	var expl_call: String = str(beat.get("exploration_call", "")).strip_edges()
+	if expl_call != "":
+		return prefix + "[exploration: %s]" % expl_call.get_file()
 	return prefix + "(empty)"
 
 # ─────────────────────────────────────────────────────────────
@@ -1886,6 +2120,17 @@ func _populate_fields() -> void:
 				break
 	_f_dungeon_on_win.text  = str(b.get("dungeon_on_win",  ""))
 	_f_dungeon_on_lose.text = str(b.get("dungeon_on_lose", ""))
+
+	# Exploration call
+	var ecall: String = str(b.get("exploration_call", "")).strip_edges()
+	_f_call_exploration.button_pressed = ecall != ""
+	_f_exploration_graph.text = ecall
+	_f_exploration_force_fresh.button_pressed = bool(b.get("exploration_force_fresh", true))
+	_f_exploration_on_return.text = str(b.get("exploration_on_return", ""))
+	var eparams: Variant = b.get("exploration_params", {})
+	_rebuild_exploration_param_rows(eparams if eparams is Dictionary else {})
+	var einv: Variant = b.get("exploration_inventory", [])
+	_rebuild_exploration_inv_rows(einv if einv is Array else [])
 
 	_loading = false
 	_update_tab_colors()
@@ -2200,6 +2445,21 @@ func _collect_beat() -> Dictionary:
 	var dl: String = _f_dungeon_on_lose.text.strip_edges()
 	if not dl.is_empty():
 		b["dungeon_on_lose"] = dl
+
+	# Exploration call
+	var expl_graph: String = _f_exploration_graph.text.strip_edges()
+	if _f_call_exploration.button_pressed and not expl_graph.is_empty():
+		b["exploration_call"] = expl_graph
+		b["exploration_force_fresh"] = _f_exploration_force_fresh.button_pressed
+	var expl_params: Dictionary = _collect_exploration_params()
+	if not expl_params.is_empty():
+		b["exploration_params"] = expl_params
+	var expl_inv: Array = _collect_exploration_inventory()
+	if not expl_inv.is_empty():
+		b["exploration_inventory"] = expl_inv
+	var expl_return: String = _f_exploration_on_return.text.strip_edges()
+	if not expl_return.is_empty():
+		b["exploration_on_return"] = expl_return
 
 	return b
 

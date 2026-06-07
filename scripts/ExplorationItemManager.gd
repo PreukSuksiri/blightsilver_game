@@ -401,12 +401,45 @@ func _add_effect_row(eff: Dictionary) -> void:
 		dialog.popup_centered(Vector2(900, 600)))
 	row.add_child(vn_browse_btn)
 
-	# Toggle browse button based on selected type
+	# Edit Beat button (opens VNEditor overlay; shown for play_vn and end_exploration_vn)
+	var edit_beat_btn := Button.new()
+	edit_beat_btn.text = "Edit"
+	edit_beat_btn.tooltip_text = "Open VN Beat Editor for this file"
+	edit_beat_btn.custom_minimum_size = Vector2(44.0, 0.0)
+	edit_beat_btn.add_theme_font_size_override("font_size", 12)
+	edit_beat_btn.pressed.connect(func() -> void:
+		var path: String = val_edit.text.strip_edges()
+		if path.is_empty():
+			return
+		var vned: Control = load("res://scripts/VNEditor.gd").new()
+		vned.name = "VNEditorOverlay"
+		get_tree().current_scene.add_child(vned)
+		vned.call_deferred("open_file", path))
+	row.add_child(edit_beat_btn)
+
+	# Play Once checkbox (shown only for play_vn)
+	var play_once_chk := CheckBox.new()
+	play_once_chk.text = "once"
+	play_once_chk.tooltip_text = "Play this VN only once per session"
+	play_once_chk.button_pressed = bool(eff.get("play_once", false))
+	play_once_chk.add_theme_font_size_override("font_size", 12)
+	row.add_child(play_once_chk)
+
+	# Tag controls on the row for reliable collection in _commit_edit
+	row.set_meta("type_btn",       type_btn)
+	row.set_meta("key_edit",       key_edit)
+	row.set_meta("val_edit",       val_edit)
+	row.set_meta("play_once_chk",  play_once_chk)
+
+	# Toggle VN-only controls based on selected type
 	var _vn_types := ["play_vn", "end_exploration_vn"]
-	var _refresh_vn_btn := func(idx: int) -> void:
-		vn_browse_btn.visible = EFFECT_TYPES[idx] in _vn_types
-	type_btn.item_selected.connect(_refresh_vn_btn)
-	_refresh_vn_btn.call(type_btn.selected)
+	var _refresh_vn_controls := func(idx: int) -> void:
+		var t: String = EFFECT_TYPES[idx]
+		vn_browse_btn.visible  = t in _vn_types
+		edit_beat_btn.visible  = t in _vn_types
+		play_once_chk.visible  = t == "play_vn"
+	type_btn.item_selected.connect(_refresh_vn_controls)
+	_refresh_vn_controls.call(type_btn.selected)
 
 	# Remove button
 	var rem_btn := _make_btn("✕", func() -> void: row.queue_free())
@@ -428,18 +461,21 @@ func _commit_edit() -> void:
 		if not row_node is HBoxContainer:
 			continue
 		var row: HBoxContainer = row_node as HBoxContainer
-		var children: Array = row.get_children()
-		if children.size() < 3:
+		if not row.has_meta("type_btn"):
 			continue
-		var t_btn: Variant = children[0]
-		var k_ed:  Variant = children[1]
-		var v_ed:  Variant = children[2]
-		if t_btn is OptionButton and k_ed is LineEdit and v_ed is LineEdit:
-			effects.append({
-				"type":  EFFECT_TYPES[(t_btn as OptionButton).selected],
-				"key":   (k_ed as LineEdit).text.strip_edges(),
-				"value": (v_ed as LineEdit).text.strip_edges(),
-			})
+		var t_btn := row.get_meta("type_btn") as OptionButton
+		var k_ed  := row.get_meta("key_edit")  as LineEdit
+		var v_ed  := row.get_meta("val_edit")   as LineEdit
+		var once_chk := row.get_meta("play_once_chk") as CheckBox
+		var eff_type: String = EFFECT_TYPES[t_btn.selected]
+		var entry: Dictionary = {
+			"type":  eff_type,
+			"key":   k_ed.text.strip_edges(),
+			"value": v_ed.text.strip_edges(),
+		}
+		if eff_type == "play_vn" and once_chk.button_pressed:
+			entry["play_once"] = true
+		effects.append(entry)
 
 	var data: Dictionary = {
 		"id":          new_id,

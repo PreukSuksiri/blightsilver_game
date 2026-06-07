@@ -188,8 +188,8 @@
 			"description": "You spend half an hour searching for a book you read for five minutes.",
 			"description_conditions": [],
 			"editor_position": {
-				"x": -160.0,
-				"y": -80.0
+				"x": -200.0,
+				"y": -60.0
 			},
 			"id": "node_book_aisle",
 			"music": "res://assets/audio/bgm_liminal_5.mp3",
@@ -419,9 +419,47 @@
 							"key": "interactable_secluded_study_area",
 							"type": "var_equals",
 							"value": "1"
+						},
+						{
+							"key": "item_secluded_study_key",
+							"type": "not_has_item",
+							"value": ""
 						}
 					],
 					"hide_after_interact": false,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.207,
+					"y_norm": 0.541
+				},
+				{
+					"actions": [
+						{
+							"action": "play_vn",
+							"key": "",
+							"play_once": true,
+							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_invest_2_0.json"
+						},
+						{
+							"action": "end_exploration_vn",
+							"key": "",
+							"value": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json"
+						}
+					],
+					"conditions": [
+						{
+							"key": "interactable_secluded_study_area",
+							"type": "var_equals",
+							"value": "1"
+						},
+						{
+							"key": "item_secluded_study_key",
+							"type": "has_item",
+							"value": ""
+						}
+					],
+					"hide_after_interact": true,
 					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
 					"icon_scale": 100.0,
 					"tooltip": "Examine",
@@ -436,13 +474,20 @@
 					"locked_hint": "",
 					"locked_mode": "hide",
 					"target": "node_book_aisle"
+				},
+				{
+					"conditions": [],
+					"label": "Back Hallway",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_back_hallway"
 				}
 			],
 			"description": "Some of the booths are pretty good. Some of them are just pretty.",
 			"description_conditions": [],
 			"editor_position": {
-				"x": -200.0,
-				"y": -240.0
+				"x": -240.0,
+				"y": -280.0
 			},
 			"id": "node_exhibition",
 			"music": "res://assets/audio/bgm_liminal_5.mp3",
@@ -563,6 +608,494 @@
 				}
 			],
 			"vn_trigger": "on_exit",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_storage.png",
+			"background_conditions": [],
+			"characters": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "play_vn",
+							"key": "",
+							"play_once": true,
+							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_storage_invest_0_0.json"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.337,
+					"y_norm": 0.422
+				}
+			],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Back Hallways",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_back_hallway"
+				}
+			],
+			"description": "Describe this location.",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 460.0,
+				"y": -480.0
+			},
+			"id": "node_exhibition_storage",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Storage",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_back_hallway_light_off.png",
+			"background_conditions": [
+				{
+					"equals": "act_1_ch1",
+					"path": "res://assets/textures/exploration/background/university/bg_explo_univ_back_hallway_light_on.png",
+					"var": "chapter"
+				}
+			],
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Exhibition Booths",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_exhibition"
+				},
+				{
+					"conditions": [
+						{
+							"key": "item_exhibition_storage_key",
+							"type": "has_item",
+							"value": ""
+						}
+					],
+					"label": "Storage Room",
+					"locked_hint": "Requires key",
+					"locked_mode": "disable",
+					"target": "node_exhibition_storage"
+				},
+				{
+					"conditions": [],
+					"label": "Break Room",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_break_room"
+				},
+				{
+					"conditions": [],
+					"label": "Preservation Department",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_preservation_department"
+				}
+			],
+			"description": "Why it's so dark in here...?",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 500.0,
+				"y": -160.0
+			},
+			"id": "node_back_hallway",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Back Hallway",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_break_room_light_off.png",
+			"background_conditions": [
+				{
+					"equals": "act_1_ch_1",
+					"path": "res://assets/textures/exploration/background/university/bg_explo_univ_break_room_light_on.png",
+					"var": "chapter"
+				}
+			],
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Back Hallway",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_back_hallway"
+				}
+			],
+			"description": "A famous crime scene where everyone stole each other's food in the fridge.",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 780.0,
+				"y": -340.0
+			},
+			"id": "node_break_room",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Break Room",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_preservation_department_light_off.png",
+			"background_conditions": [
+				{
+					"equals": "act_1_ch_1",
+					"path": "res://assets/textures/exploration/background/university/bg_explo_univ_preservation_department_light_on.png",
+					"var": "chapter"
+				}
+			],
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Back Hallway",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_back_hallway"
+				},
+				{
+					"conditions": [],
+					"label": "Book Repair Unit",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_book_repair_unit"
+				},
+				{
+					"conditions": [],
+					"label": "Chemical Process Room",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_chemical_process_room"
+				},
+				{
+					"conditions": [],
+					"label": "Technician's Office",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_technician_office"
+				}
+			],
+			"description": "Only grumpy folks work in this department",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 660.0,
+				"y": 140.0
+			},
+			"id": "node_preservation_department",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Preservation Department",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_book_repair_unit_light_off.png",
+			"background_conditions": [
+				{
+					"equals": "act_1_ch_1",
+					"path": "res://assets/textures/exploration/background/university/bg_explo_univ_book_repair_unit_light_on.png",
+					"var": "chapter"
+				}
+			],
+			"characters": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "give_item",
+							"key": "item_glued_key",
+							"value": ""
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "",
+					"x_norm": 0.226,
+					"y_norm": 0.647
+				}
+			],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Preservation Department",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_preservation_department"
+				}
+			],
+			"description": "Sharp paper cutter everywhere... It's a guillotine ground for books.",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 960.0,
+				"y": -60.0
+			},
+			"id": "node_book_repair_unit",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Book Repair Unit",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_chemical_process_room_light_off.png",
+			"background_conditions": [
+				{
+					"equals": "act_1_ch_1",
+					"path": "res://assets/textures/exploration/background/university/bg_explo_univ_chemical_process_room_light_off.png",
+					"var": "chapter"
+				}
+			],
+			"characters": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "play_vn",
+							"key": "",
+							"play_once": true,
+							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_chemical_process_room_invest_1_0.json"
+						},
+						{
+							"action": "remove_item",
+							"key": "item_glued_key",
+							"value": ""
+						},
+						{
+							"action": "give_item",
+							"key": "item_secluded_study_key",
+							"value": ""
+						}
+					],
+					"conditions": [
+						{
+							"key": "item_glued_key",
+							"type": "has_item",
+							"value": ""
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "",
+					"x_norm": 0.393,
+					"y_norm": 0.841
+				}
+			],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Preservation Department",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_preservation_department"
+				}
+			],
+			"description": "This room is full of bottles. Smell funny...",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 520.0,
+				"y": 380.0
+			},
+			"id": "node_chemical_process_room",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Chemical Process Room",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_technician_office_light_off.png",
+			"background_conditions": [
+				{
+					"equals": "act_1_ch_1",
+					"path": "res://assets/textures/exploration/background/university/bg_explo_univ_technician_office_light_off.png",
+					"var": "chapter"
+				}
+			],
+			"characters": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "play_vn",
+							"key": "",
+							"play_once": true,
+							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_technician_office_invest_0_0.json"
+						},
+						{
+							"action": "play_puzzle",
+							"key": "",
+							"value": "puzzle_mario_platformer"
+						},
+						{
+							"action": "play_vn",
+							"key": "",
+							"play_once": true,
+							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_technician_office_invest_0_2.json"
+						},
+						{
+							"action": "set_var",
+							"key": "technician_room_gameboy",
+							"value": "1"
+						}
+					],
+					"conditions": [
+						{
+							"key": "chapter",
+							"type": "var_equals",
+							"value": "act_1_ch1"
+						},
+						{
+							"key": "technician_room_gameboy",
+							"type": "var_not_equals",
+							"value": "1"
+						}
+					],
+					"hide_after_interact": false,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.494,
+					"y_norm": 0.481
+				},
+				{
+					"actions": [],
+					"conditions": [],
+					"hide_after_interact": false,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "",
+					"x_norm": 0.5,
+					"y_norm": 0.5
+				}
+			],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Preservation Department",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_preservation_department"
+				}
+			],
+			"description": "Your private office turns into a paper storage instantly.",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 1100.0,
+				"y": 340.0
+			},
+			"id": "node_technician_office",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Technician's Office",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
 			"vn_trigger_equals": "",
 			"vn_trigger_var": ""
 		}

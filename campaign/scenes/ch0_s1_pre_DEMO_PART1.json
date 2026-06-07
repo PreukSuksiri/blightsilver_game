@@ -1,0 +1,720 @@
+[
+	{
+		"comment": "<<<-- Normal Library -->>>",
+		"music_fade_out": 0.02,
+		"wait": 0.001
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [],
+		"music": "res://assets/audio/bgm_relaxed_1.mp3",
+		"text": {
+			"en": "Late night, in a big city... where never-ending struggles to make a living nourish the sleepless society, roof by roof, brick by brick"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [],
+		"music": "res://assets/audio/bgm_relaxed_1.mp3",
+		"text": {
+			"en": "Two youths, blindly chasing the ideal dreams just like everyone else, trying their best preparing for the upcoming university exam"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "It's 50th exam this year. I'm sick of it"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "You're full of dramas. It's only been 9"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I will just quit university and be a cryptotrader or something"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cheerful.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "You're gonna lost it all"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "If I'm rich, I'll start a company and hire you as my secretary or maybe a front desk"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cheerful.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "I hope it's not a black company like in an AV"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "That's too crazy. I'll just start a video games company"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_smile.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "Before starting your own company, let's finished the sample exam first, how's it's going? Everyone has already gone home, let's hurry and finish it."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Err...... It went well but...."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "It seems.... a little stuck..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_exhausted.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I've tried what you have thought me, but the result is always different from yours... what happened...!?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "You didn't pay attention at all, aren't you?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I've paid attention! But there were too much detail that I lost it"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_neutral.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "Did you use my kernel formula? The result will differ based on the kernel we used."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Kernel...? What kernel...?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_pout_2.png"
+			}
+		],
+		"shake_screen": 25.0,
+		"speaker": "Mayu",
+		"text": {
+			"en": "Nex!!!"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"text": {
+			"en": "Mayu stuck her head right into Nex's personal space and read what he've been piddling. Strands of her hair hit just right below his chin"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_annoyed_2.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "You dumb ass. You have been copying the author's kernel from year 1995"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_neutral.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "I suggest you copy the kernel formula from my notebook instead. The one that you've borrowed me. The one with a lot of bookmarks. Did you bring it?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Oh...right... That one... I remembered... eh..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_neutral.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "Bring it on the table right now. I'll show you where the formula is"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Yeah let's do that... but um... eh..."
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I've lent it to Alice"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_scared_2.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "What??? Alice??? You've lent my notebook to other person??"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Sorry......"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cry_out_loud.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "That notebook were meant to be only for you! How dare you give it away to other girl!"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "But Alice is also our friend. So I think it's okay to..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cry_out_loud.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": {
+			"en": "You're so mean! I'll go sit somewhere else! Don't you dare follow!"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [],
+		"text": {
+			"en": "Mayu stormed away to the back of the library floor"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "**Sigh**"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "What have I done..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_out": 3.0,
+		"music_fade_out": 3.0,
+		"wait": 0.001
+	},
+	{
+		"comment": "<<<-- Dark Library -->>>",
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Mayu has been too quiet... Is she asleep already? Or has she gone home...?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_sighed.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Yes... She must have gone home.... I was such a dick..."
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "She's always reached out her hand with that smile..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "And the only good thing I gave her is being a dick..."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [],
+		"flash_color": "#ffffff",
+		"flash_count": 5.0,
+		"flash_delay": 0.25,
+		"flash_duration": 0.25,
+		"music_fade_out": 3.0,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [],
+		"wait": 2.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "......!?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "A blackout?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "This library opens 24 hours. So it must be power outage. The air-con is off too."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I should as well go home..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [],
+		"wait": 2.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"speaker": "Nex",
+		"text": {
+			"en": "Wait... What if Mayu has not gone home... But she's still in the back?"
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "May be I should go for a quick check on her"
+		}
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 3.0,
+		"wait": 0.001
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	}
+]
