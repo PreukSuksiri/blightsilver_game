@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cadminboot001"]
 
-[ext_resource type="Script" path="res://scripts/AdminBoot.gd" id="1"]
+[ext_resource type="Script" uid="uid://cous8dk34wb62" path="res://scripts/AdminBoot.gd" id="1"]
 
-[node name="AdminBoot" type="Control"]
+[node name="AdminBoot" type="Control" unique_id=974012501]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=622937862]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.01, 0.02, 0.04, 1)
 
-[node name="HintLabel" type="Label" parent="."]
+[node name="HintLabel" type="Label" parent="." unique_id=2010604589]
 visible = false
 layout_mode = 1
 anchors_preset = 8

@@ -2067,6 +2067,7 @@ func _open_spot_picker(bg_path: String, x_spin: SpinBox, y_spin: SpinBox) -> voi
 	done_btn.pressed.connect(win.queue_free)
 	root_vbox.add_child(done_btn)
 	win.popup_centered()
+	GameState.attach_popup_cursor(win)
 
 ## Edit beats for an investigable-point play_vn action.
 ## Auto-creates vn_<node_id>_invest_<spot_idx>_<action_idx>.json when path is empty.

@@ -252,6 +252,7 @@ var locked_attack_positions: Array = []             # Vector2i positions current
 const CURSOR_PATH: String = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
 const CURSOR_HOTSPOT: Vector2 = Vector2(4.0, 4.0)
 const CURSOR_LAYER: int = 256
+const POPUP_CURSOR_LAYER: int = 4096
 
 var _cursor_tex: Texture2D = null
 var _cursor_layer: CanvasLayer = null
@@ -260,14 +261,18 @@ var _software_cursor_ready: bool = false
 var _app_focused: bool = true
 var _mouse_over_game: bool = true
 var _finger_cursor_active: bool = false
+var _popup_cursors: Dictionary = {}  # Window -> TextureRect
 
 func _ready() -> void:
 	_init_grids()
 	_load_cursor_texture()
 	_setup_software_cursor()
 	set_process(true)
-	if not get_tree().scene_changed.is_connected(_on_scene_changed_reapply_cursor):
-		get_tree().scene_changed.connect(_on_scene_changed_reapply_cursor)
+	var tree := get_tree()
+	if not tree.node_added.is_connected(_on_node_added_cursor):
+		tree.node_added.connect(_on_node_added_cursor)
+	if not tree.scene_changed.is_connected(_on_scene_changed_reapply_cursor):
+		tree.scene_changed.connect(_on_scene_changed_reapply_cursor)
 	_bind_window_mouse_tracking()
 	call_deferred("_activate_software_cursor")
 
@@ -277,10 +282,39 @@ func _exit_tree() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		_app_focused = false
-		_apply_cursor_mode(false)
+		_refresh_cursor_mode()
 	elif what == NOTIFICATION_APPLICATION_FOCUS_IN:
 		_app_focused = true
 		call_deferred("_refresh_cursor_mode")
+
+func _on_node_added_cursor(node: Node) -> void:
+	if node is Window:
+		call_deferred("_attach_popup_cursor", node)
+
+## Attach the finger cursor overlay to an editor/tool popup Window.
+func attach_popup_cursor(win: Window) -> void:
+	call_deferred("_attach_popup_cursor", win)
+
+func _attach_popup_cursor(win: Window) -> void:
+	if not _software_cursor_ready or _cursor_tex == null:
+		return
+	if not is_instance_valid(win) or win == get_tree().root:
+		return
+	if _popup_cursors.has(win):
+		return
+	var layer := CanvasLayer.new()
+	layer.layer = POPUP_CURSOR_LAYER
+	layer.follow_viewport_enabled = true
+	win.add_child(layer)
+	win.move_child(layer, -1)
+	var sprite := _make_cursor_sprite()
+	sprite.z_index = POPUP_CURSOR_LAYER
+	sprite.visible = false
+	layer.add_child(sprite)
+	_popup_cursors[win] = sprite
+	win.tree_exiting.connect(func() -> void:
+		_popup_cursors.erase(win)
+	)
 
 func _on_scene_changed_reapply_cursor() -> void:
 	call_deferred("_bind_window_mouse_tracking")
@@ -307,13 +341,17 @@ func _setup_software_cursor() -> void:
 	_cursor_layer = CanvasLayer.new()
 	_cursor_layer.layer = CURSOR_LAYER
 	add_child(_cursor_layer)
-	_cursor_sprite = TextureRect.new()
-	_cursor_sprite.texture = _cursor_tex
-	_cursor_sprite.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_cursor_sprite.custom_minimum_size = Vector2(64.0, 64.0)
-	_cursor_sprite.size = Vector2(64.0, 64.0)
+	_cursor_sprite = _make_cursor_sprite()
 	_cursor_layer.add_child(_cursor_sprite)
 	_software_cursor_ready = true
+
+func _make_cursor_sprite() -> TextureRect:
+	var sprite := TextureRect.new()
+	sprite.texture = _cursor_tex
+	sprite.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sprite.custom_minimum_size = Vector2(64.0, 64.0)
+	sprite.size = Vector2(64.0, 64.0)
+	return sprite
 
 func _activate_software_cursor() -> void:
 	_refresh_cursor_mode()
@@ -333,24 +371,52 @@ func _should_use_finger_cursor() -> bool:
 		and _mouse_over_game \
 		and not _has_open_file_dialog()
 
-func _apply_cursor_mode(use_finger: bool) -> void:
+func _refresh_cursor_mode() -> void:
 	if not _software_cursor_ready or _cursor_sprite == null:
 		return
-	if use_finger == _finger_cursor_active:
-		if use_finger:
-			_update_cursor_position()
-		return
-	_finger_cursor_active = use_finger
-	if use_finger:
-		Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
-		_cursor_sprite.visible = true
+	var screen_mouse := Vector2(DisplayServer.mouse_get_position())
+	var active_popup_sprite: TextureRect = null
+	var stale: Array[Window] = []
+	for win: Window in _popup_cursors.keys():
+		if not is_instance_valid(win):
+			stale.append(win)
+			continue
+		var popup_sprite: TextureRect = _popup_cursors[win]
+		if not win.visible or not _app_focused:
+			popup_sprite.visible = false
+			continue
+		var local_mouse := win.get_mouse_position()
+		var win_size := Vector2(win.size)
+		var on_popup := win_size.x > 0.0 and win_size.y > 0.0 \
+			and Rect2(Vector2.ZERO, win_size).has_point(local_mouse)
+		if not on_popup:
+			# Fallback for separate native windows where local coords can lag.
+			on_popup = Rect2(win.position, win.size).has_point(screen_mouse)
+		if on_popup:
+			active_popup_sprite = popup_sprite
+			popup_sprite.visible = true
+			popup_sprite.position = local_mouse - CURSOR_HOTSPOT
+		else:
+			popup_sprite.visible = false
+	for win in stale:
+		_popup_cursors.erase(win)
+	var use_main_finger := active_popup_sprite == null and _should_use_finger_cursor()
+	var use_finger := use_main_finger or active_popup_sprite != null
+	_cursor_sprite.visible = use_main_finger
+	if use_main_finger:
 		_update_cursor_position()
+	if use_finger:
+		if not _finger_cursor_active:
+			Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+		_finger_cursor_active = true
 	else:
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		if _finger_cursor_active:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		_finger_cursor_active = false
 		_cursor_sprite.visible = false
-
-func _refresh_cursor_mode() -> void:
-	_apply_cursor_mode(_should_use_finger_cursor())
+		for sprite: Variant in _popup_cursors.values():
+			if sprite is TextureRect:
+				(sprite as TextureRect).visible = false
 
 func _process(_delta: float) -> void:
 	if not _software_cursor_ready:

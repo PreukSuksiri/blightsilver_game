@@ -959,10 +959,15 @@ func _build_fields() -> void:
 	# ── Exploration Call ───────────────────────────────────────
 	_section(v, "EXPLORATION CALL")
 	_f_call_exploration = _row_cb(v, "Call Exploration", "launch exploration graph from this beat")
-	_f_call_exploration.toggled.connect(func(_b: bool) -> void: _on_field_changed())
+	_f_call_exploration.toggled.connect(func(on: bool) -> void:
+		if not on:
+			_f_exploration_graph.text = ""
+		_on_field_changed())
 	_f_exploration_graph = _row_le(v, "Graph", "res://exploration/graphs/my_graph.json")
 	_add_browse(_f_exploration_graph, PackedStringArray(["*.json;JSON"]), "res://exploration/graphs/")
-	_f_exploration_graph.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+	_f_exploration_graph.text_changed.connect(func(txt: String) -> void:
+		_f_call_exploration.button_pressed = not txt.strip_edges().is_empty()
+		_on_field_changed())
 	_f_exploration_force_fresh = _row_cb(v, "Force Fresh", "skip saved session resume — start a new run")
 	_f_exploration_force_fresh.button_pressed = true
 	_f_exploration_force_fresh.toggled.connect(func(_b: bool) -> void: _on_field_changed())
@@ -1523,6 +1528,8 @@ func _browse(target: LineEdit, filters: PackedStringArray, start_dir: String) ->
 func _on_file_dialog_selected(path: String) -> void:
 	if _browse_target != null:
 		_browse_target.text = path
+		if _browse_target == _f_exploration_graph:
+			_f_call_exploration.button_pressed = true
 		_browse_target = null
 		_on_field_changed()
 
@@ -1845,6 +1852,7 @@ func _on_file_selected(idx: int) -> void:
 	_load_file(_scenes_dir + _file_list.get_item_text(idx))
 
 func _load_file(path: String) -> void:
+	_flush_current_beat()
 	# Stash unsaved state for the current file before switching away
 	if not _file_path.is_empty() and _dirty:
 		_file_cache[_file_path] = {
@@ -1944,6 +1952,7 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 # Beat selection / field display
 # ─────────────────────────────────────────────────────────────
 func _on_beat_selected(idx: int) -> void:
+	_flush_current_beat()
 	_selected_idx = idx
 	_anchor_idx = idx
 	_populate_fields()
@@ -2446,20 +2455,20 @@ func _collect_beat() -> Dictionary:
 	if not dl.is_empty():
 		b["dungeon_on_lose"] = dl
 
-	# Exploration call
+	# Exploration call — graph path is authoritative (checkbox mirrors non-empty graph)
 	var expl_graph: String = _f_exploration_graph.text.strip_edges()
-	if _f_call_exploration.button_pressed and not expl_graph.is_empty():
+	if not expl_graph.is_empty():
 		b["exploration_call"] = expl_graph
 		b["exploration_force_fresh"] = _f_exploration_force_fresh.button_pressed
-	var expl_params: Dictionary = _collect_exploration_params()
-	if not expl_params.is_empty():
-		b["exploration_params"] = expl_params
-	var expl_inv: Array = _collect_exploration_inventory()
-	if not expl_inv.is_empty():
-		b["exploration_inventory"] = expl_inv
-	var expl_return: String = _f_exploration_on_return.text.strip_edges()
-	if not expl_return.is_empty():
-		b["exploration_on_return"] = expl_return
+		var expl_params: Dictionary = _collect_exploration_params()
+		if not expl_params.is_empty():
+			b["exploration_params"] = expl_params
+		var expl_inv: Array = _collect_exploration_inventory()
+		if not expl_inv.is_empty():
+			b["exploration_inventory"] = expl_inv
+		var expl_return: String = _f_exploration_on_return.text.strip_edges()
+		if not expl_return.is_empty():
+			b["exploration_on_return"] = expl_return
 
 	return b
 
@@ -2477,6 +2486,13 @@ func _parse_multi(s: String) -> Variant:
 # ─────────────────────────────────────────────────────────────
 # Field change handler
 # ─────────────────────────────────────────────────────────────
+func _flush_current_beat() -> void:
+	if _loading or _selected_idx < 0 or _selected_idx >= _beats.size():
+		return
+	_beats[_selected_idx] = _collect_beat()
+	if _beat_list.item_count > _selected_idx:
+		_beat_list.set_item_text(_selected_idx, _beat_summary(_beats[_selected_idx], _selected_idx))
+
 func _on_field_changed() -> void:
 	if _loading or _selected_idx < 0:
 		return
@@ -2825,6 +2841,7 @@ func _save() -> void:
 	if _file_path.is_empty():
 		_status_lbl.text = "No file open — select a file first."
 		return
+	_flush_current_beat()
 	var f := FileAccess.open(_file_path, FileAccess.WRITE)
 	if f == null:
 		_status_lbl.text = "ERROR: could not write to " + _file_path.get_file()

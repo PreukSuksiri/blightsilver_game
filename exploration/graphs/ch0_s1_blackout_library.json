@@ -242,8 +242,8 @@
 			"description": "People are still faking that group works improve teamwork.",
 			"description_conditions": [],
 			"editor_position": {
-				"x": 160.0,
-				"y": 220.0
+				"x": 220.0,
+				"y": 200.0
 			},
 			"id": "node_group_study",
 			"music": "res://assets/audio/bgm_liminal_5.mp3",
@@ -410,7 +410,7 @@
 						{
 							"action": "play_vn",
 							"key": "",
-							"play_once": true,
+							"play_once": false,
 							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_invest_1_0.json"
 						}
 					],
@@ -424,6 +424,11 @@
 							"key": "item_secluded_study_key",
 							"type": "not_has_item",
 							"value": ""
+						},
+						{
+							"key": "chapter",
+							"type": "var_not_equals",
+							"value": "act_1_ch_1"
 						}
 					],
 					"hide_after_interact": false,
@@ -442,9 +447,9 @@
 							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_invest_2_0.json"
 						},
 						{
-							"action": "end_exploration_vn",
+							"action": "end_exploration",
 							"key": "",
-							"value": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json"
+							"value": ""
 						}
 					],
 					"conditions": [
@@ -457,6 +462,11 @@
 							"key": "item_secluded_study_key",
 							"type": "has_item",
 							"value": ""
+						},
+						{
+							"key": "chapter",
+							"type": "var_not_equals",
+							"value": "act_1_ch_1"
 						}
 					],
 					"hide_after_interact": true,
@@ -714,6 +724,19 @@
 					"locked_hint": "",
 					"locked_mode": "hide",
 					"target": "node_preservation_department"
+				},
+				{
+					"conditions": [
+						{
+							"key": "chapter",
+							"type": "var_equals",
+							"value": "act_1_ch1"
+						}
+					],
+					"label": "Toilet Front",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_toilet_front"
 				}
 			],
 			"description": "Why it's so dark in here...?",
@@ -959,8 +982,8 @@
 					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
 					"icon_scale": 100.0,
 					"tooltip": "",
-					"x_norm": 0.393,
-					"y_norm": 0.841
+					"x_norm": 0.628,
+					"y_norm": 0.65
 				}
 			],
 			"connections": [
@@ -1090,6 +1113,368 @@
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Technician's Office",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_toilet_front.png",
+			"background_conditions": [],
+			"characters": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "play_puzzle",
+							"key": "",
+							"value": ""
+						},
+						{
+							"action": "play_vn",
+							"key": "",
+							"play_once": true,
+							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_toilet_front_invest_0_1.json"
+						},
+						{
+							"action": "set_var",
+							"key": "toilet_front_password_correct",
+							"value": "1"
+						}
+					],
+					"conditions": [
+						{
+							"key": "toilet_front_password_correct",
+							"type": "var_not_equals",
+							"value": "1"
+						}
+					],
+					"hide_after_interact": false,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.763,
+					"y_norm": 0.532
+				}
+			],
+			"connections": [
+				{
+					"conditions": [
+						{
+							"key": "toilet_front_password_correct",
+							"type": "var_equals",
+							"value": "1"
+						}
+					],
+					"label": "Back Hallway",
+					"locked_hint": "Need password",
+					"locked_mode": "disable",
+					"target": "node_back_hallway"
+				},
+				{
+					"conditions": [],
+					"label": "Staff Area",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_staff_area"
+				}
+			],
+			"description": "The most awkward location to wait for your friend.",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 1100.0,
+				"y": -280.0
+			},
+			"id": "node_toilet_front",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Toilet Front",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_staff_hallway.png",
+			"background_conditions": [],
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Toilet Front",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_toilet_front"
+				},
+				{
+					"conditions": [],
+					"label": "Meeting Room",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_meeting_room"
+				},
+				{
+					"conditions": [],
+					"label": "Manager Room",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_manager_room"
+				},
+				{
+					"conditions": [],
+					"label": "Maintenance Room",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_maintenance_room"
+				}
+			],
+			"description": "Everything looks neat. They either tidy up daily, or no one really work here at all.",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 1620.0,
+				"y": -740.0
+			},
+			"id": "node_staff_area",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Staff Area",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "",
+			"background_conditions": [],
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Staff Area",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_staff_area"
+				}
+			],
+			"description": "When they ask you to join meetings all the day and wonder why the job progress is so slow.",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 1640.0,
+				"y": -180.0
+			},
+			"id": "node_meeting_room",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Meeting Room",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_manager_room.png",
+			"background_conditions": [],
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Staff Area",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_staff_area"
+				}
+			],
+			"description": "Most of the time, you get in here room to get scolded.",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 2060.0,
+				"y": -380.0
+			},
+			"id": "node_manager_room",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Section_Manager_Room",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "",
+			"background_conditions": [],
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Staff Area",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_staff_area"
+				},
+				{
+					"conditions": [],
+					"label": "Server Room",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_server_room"
+				},
+				{
+					"conditions": [],
+					"label": "Go to node_2",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_surveillance_room"
+				}
+			],
+			"description": "Our air-cons depend on these people",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 1580.0,
+				"y": -1020.0
+			},
+			"id": "node_maintenance_room",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Maintenance Room",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "",
+			"background_conditions": [],
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Maintenance Room",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_maintenance_room"
+				}
+			],
+			"description": "This room is far colder than your dormitory's fridge",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 1380.0,
+				"y": -1320.0
+			},
+			"id": "node_server_room",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Server Room",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
+		},
+		{
+			"background": "",
+			"background_conditions": [],
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Go to node_maintenance_room",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_maintenance_room"
+				}
+			],
+			"description": "Mayu got possessed and I got strangled. All they did was finding a scapegoat.",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 1960.0,
+				"y": -1320.0
+			},
+			"id": "node_surveillance_room",
+			"music": "",
+			"music_conditions": [],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Surveillance Room",
 			"title_conditions": [],
 			"usable_items": [],
 			"vn_play_once": true,

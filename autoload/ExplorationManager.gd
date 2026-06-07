@@ -449,6 +449,8 @@ func add_item(item: String) -> void:
 	if item.is_empty():
 		return
 	_inventory.append(item)
+	print("[Exploration] item_obtained: %s  (inventory count: %d, node: %s)" % [
+		item, _inventory.size(), current_node_id])
 	emit_signal("inventory_changed", _inventory.duplicate())
 	emit_signal("item_obtained", item)
 	_save_session_state()
@@ -457,6 +459,8 @@ func add_item(item: String) -> void:
 func remove_item(item: String) -> void:
 	if _inventory.has(item):
 		_inventory.erase(item)
+		print("[Exploration] item_removed: %s  (inventory count: %d, node: %s)" % [
+			item, _inventory.size(), current_node_id])
 		emit_signal("inventory_changed", _inventory.duplicate())
 		_save_session_state()
 
@@ -474,7 +478,11 @@ func get_inventory() -> Array:
 
 ## Set a session variable.
 func set_var(key: String, value: String) -> void:
+	var had_key: bool = _vars.has(key)
+	var prev: String = str(_vars.get(key, "")) if had_key else "(unset)"
 	_vars[key] = value
+	print("[Exploration] var_changed: %s = %q  (was: %s, node: %s)" % [
+		key, value, prev, current_node_id])
 	emit_signal("var_changed", key, value)
 	_save_session_state()
 

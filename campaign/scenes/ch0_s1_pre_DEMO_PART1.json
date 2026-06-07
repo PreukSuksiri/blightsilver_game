@@ -127,9 +127,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "I hope it's not a black company like in an AV"
-		}
+		"text": "I hope it's not a black company like in an Ecchi Manga"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -687,11 +685,8 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
 			}
 		],
-		"music": "res://assets/audio/bgm_horror_1.mp3",
 		"speaker": "Nex",
-		"text": {
-			"en": "Wait... What if Mayu has not gone home... But she's still in the back?"
-		}
+		"text": "Wait... What if Mayu has not gone home... But she's still in the back?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_dark.png",
@@ -716,5 +711,11 @@
 	{
 		"linger_characters": true,
 		"wait": 0.5
+	},
+	{
+		"exploration_call": "res://exploration/graphs/ch0_s1_blackout_library.json",
+		"exploration_force_fresh": true,
+		"exploration_on_return": "res://campaign/scenes/ch0_s1_pre_DEMO_PART2.json",
+		"linger_characters": true
 	}
 ]

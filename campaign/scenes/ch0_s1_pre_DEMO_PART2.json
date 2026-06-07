@@ -1,5 +1,11 @@
 [
 	{
+		"fade_out": 0.01,
+		"linger_characters": true,
+		"music_fade_out": 2.0,
+		"wait": 0.01
+	},
+	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_mayu_sit.png",
 		"characters": [],
 		"fade_color": "#000000",
@@ -65,7 +71,7 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_mayu_evil_smile.png",
-		"characters": [],
+		"music": "res://assets/audio/bgm_horror_1.mp3",
 		"wait": 1.0
 	},
 	{
@@ -140,9 +146,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "Your smell is so nice I want to drink every single drops of it."
-		}
+		"text": "So nice... so clean... so pretty... "
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
@@ -156,9 +160,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "Let me also squeeze your blood vein and see how beautifully they swell"
-		}
+		"text": "Let me see and squeeze your skin. Wonder how pretty it is when they swell?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
@@ -190,6 +192,7 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
+		"sfx": "res://assets/audio/sfx/slam2.mp3",
 		"shake_screen": 10.0,
 		"text": "Nex kicked and knock the mad girl off-balance"
 	},
@@ -1112,7 +1115,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "I'm ready"
+		"text": "Yeah... Whatever... I'm ready..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
@@ -1133,5 +1136,85 @@
 		],
 		"speaker": "Kelly",
 		"text": "Good"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "First, you need to chant a code to optimize your soul pressure with this tool."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Without a chant, you might throw up hard due to sudden shift of soul pressure."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Repeat after me"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "\"May the silver path shows your true sins, Vellum card commence.\""
 	}
 ]

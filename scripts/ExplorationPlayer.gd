@@ -151,6 +151,8 @@ var _hovered_nav_panel: Control    = null   # nav-choice panel currently being h
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	set_process_input(true)
+	set_process_unhandled_input(true)
 
 	_build_ui()
 	_connect_signals()
@@ -444,8 +446,8 @@ func _build_compass_system() -> void:
 	_radial_overlay.gui_input.connect(_on_radial_overlay_gui_input)
 	add_child(_radial_overlay)
 
-	# Radial submenu panels live here (not under MOUSE_FILTER_IGNORE compass_root) so
-	# taps reliably reach them above the dismiss overlay and below nothing else.
+	# Radial submenu panels and HUD hit buttons live here (not under MOUSE_FILTER_IGNORE
+	# compass_root) so taps reliably reach them above the dismiss overlay.
 	_radial_menu_layer = Control.new()
 	_radial_menu_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_radial_menu_layer.z_index      = 40
@@ -464,8 +466,9 @@ func _build_compass_system() -> void:
 	_compass_root.add_child(_compass_icon)
 
 	_compass_hit          = _make_icon_hit_button(_compass_idle_pos)
+	_compass_hit.z_index  = 10
 	_compass_hit.pressed.connect(_on_compass_clicked)
-	_compass_root.add_child(_compass_hit)
+	_radial_menu_layer.add_child(_compass_hit)
 
 	# ── Setting icon (far right, +2×spacing) ────────────────
 	_setting_idle_pos = Vector2(vp.x * 0.5 + 2.0 * ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
@@ -480,8 +483,9 @@ func _build_compass_system() -> void:
 	_compass_root.add_child(_setting_icon)
 
 	_setting_hit = _make_icon_hit_button(_setting_idle_pos)
+	_setting_hit.z_index = 10
 	_setting_hit.pressed.connect(_on_setting_clicked)
-	_compass_root.add_child(_setting_hit)
+	_radial_menu_layer.add_child(_setting_hit)
 
 	# ── Info icon (+1×spacing) ────────────────────────────────
 	_info_idle_pos = Vector2(vp.x * 0.5 + ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
@@ -496,8 +500,9 @@ func _build_compass_system() -> void:
 	_compass_root.add_child(_info_icon)
 
 	_info_hit = _make_icon_hit_button(_info_idle_pos)
+	_info_hit.z_index = 10
 	_info_hit.pressed.connect(_on_info_clicked)
-	_compass_root.add_child(_info_hit)
+	_radial_menu_layer.add_child(_info_hit)
 
 	# ── Inventory icon (far left, −2×spacing) ────────────────
 	_inv_idle_pos = Vector2(vp.x * 0.5 - 2.0 * ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
@@ -512,8 +517,9 @@ func _build_compass_system() -> void:
 	_compass_root.add_child(_inv_icon)
 
 	_inv_hit = _make_icon_hit_button(_inv_idle_pos)
+	_inv_hit.z_index = 10
 	_inv_hit.pressed.connect(_on_inventory_clicked)
-	_compass_root.add_child(_inv_hit)
+	_radial_menu_layer.add_child(_inv_hit)
 
 	# ── Chat icon (−1×spacing) ────────────────────────────────
 	_chat_idle_pos = Vector2(vp.x * 0.5 - ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
@@ -528,8 +534,9 @@ func _build_compass_system() -> void:
 	_compass_root.add_child(_chat_icon)
 
 	_chat_hit = _make_icon_hit_button(_chat_idle_pos)
+	_chat_hit.z_index = 10
 	_chat_hit.pressed.connect(_on_chat_clicked)
-	_compass_root.add_child(_chat_hit)
+	_radial_menu_layer.add_child(_chat_hit)
 
 	# Empty-chat overlay label
 	_chat_empty_lbl = Label.new()
@@ -623,15 +630,25 @@ func _setup_hud_glow(key: String, icon: TextureRect, idle_pos: Vector2) -> void:
 
 func _on_exploration_state_changed(_arg1: Variant = null, _arg2: Variant = null) -> void:
 	_refresh_contextual_hud_glows()
+	_refresh_spots_for_state()
 
 func _on_var_changed(key: String, value: String) -> void:
 	_refresh_contextual_hud_glows()
+	_refresh_spots_for_state()
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node == null or _vn_playing or _puzzle_playing:
 		return
 	if not node.vn_var_change_matches(key, value):
 		return
 	_try_play_node_vn(node, node.node_type == ExplorationNode.NodeType.STORY)
+
+## Re-evaluate clickable spot conditions after inventory or variable changes.
+func _refresh_spots_for_state() -> void:
+	if _vn_playing or _puzzle_playing or _transition_active:
+		return
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node != null:
+		_rebuild_spots(node)
 
 func _on_node_exited(node: ExplorationNode) -> void:
 	if node == null or not node.vn_trigger_on_exit():
@@ -778,6 +795,60 @@ func _dismiss_info_panel_for_hud() -> void:
 	if _is_info_panel_showing():
 		_close_info_panel(true, false)
 
+## Keep the dismiss overlay in sync: STOP only while a radial menu is open; IGNORE while info-only.
+func _sync_radial_overlay_state() -> void:
+	if _radial_overlay == null:
+		return
+	var any_radial_menu: bool = _compass_open or _setting_open or _inv_open or _chat_open
+	if any_radial_menu:
+		_radial_overlay.visible = true
+		_radial_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	elif _is_info_panel_showing():
+		_radial_overlay.visible = true
+		_radial_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	else:
+		_radial_overlay.visible = false
+		_radial_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+
+func _hud_icon_at_point(global_pos: Vector2) -> String:
+	if _compass_hit != null and _compass_hit.visible and _compass_hit.get_global_rect().has_point(global_pos):
+		return "compass"
+	if _setting_hit != null and _setting_hit.visible and _setting_hit.get_global_rect().has_point(global_pos):
+		return "setting"
+	if _inv_hit != null and _inv_hit.visible and _inv_hit.get_global_rect().has_point(global_pos):
+		return "inventory"
+	if _chat_hit != null and _chat_hit.visible and _chat_hit.get_global_rect().has_point(global_pos):
+		return "chat"
+	if _info_hit != null and _info_hit.visible and _info_hit.get_global_rect().has_point(global_pos):
+		return "info"
+	return ""
+
+func _dispatch_hud_click(which: String) -> void:
+	match which:
+		"compass":
+			_on_compass_clicked()
+		"setting":
+			_on_setting_clicked()
+		"inventory":
+			_on_inventory_clicked()
+		"chat":
+			_on_chat_clicked()
+		"info":
+			_on_info_clicked()
+
+## Close every HUD menu except [param except_id], then continue the tapped icon's action.
+func _close_other_hud_menus(except_id: String) -> void:
+	if except_id != "compass" and _compass_open:
+		_close_compass_menu(false)
+	if except_id != "setting" and _setting_open:
+		_close_setting_menu(false)
+	if except_id != "inventory" and _inv_open:
+		_close_inventory_menu(false)
+	if except_id != "chat" and _chat_open:
+		_close_chat_menu(false)
+	if except_id != "info" and _is_info_panel_showing():
+		_close_info_panel(true, false)
+
 func _on_compass_clicked() -> void:
 	_register_exploration_activity()
 	_dismiss_info_panel_for_hud()
@@ -786,9 +857,7 @@ func _on_compass_clicked() -> void:
 	if _compass_open:
 		_close_compass_menu()
 		return
-	if _is_any_other_hud_menu_active("compass"):
-		_dismiss_all_hud_menus(false)
-		return
+	_close_other_hud_menus("compass")
 	_open_compass_menu()
 
 func _is_hud_menu_active(which: String) -> bool:
@@ -797,7 +866,7 @@ func _is_hud_menu_active(which: String) -> bool:
 		"setting":   return _setting_open
 		"inventory": return _inv_open
 		"chat":      return _chat_open
-		"info":      return _info_open
+		"info":      return _is_info_panel_showing()
 	return false
 
 func _is_any_other_hud_menu_active(which: String) -> bool:
@@ -873,11 +942,9 @@ func _open_compass_menu() -> void:
 	await tw.finished
 	_compass_animating = false
 
-	# Show overlay to catch outside clicks, raise it below the compass
-	_radial_overlay.visible = true
-
 	# Build and animate radial items
 	_spawn_radial_items(menu_connections)
+	_sync_radial_overlay_state()
 
 func _close_compass_menu(animated: bool = true) -> void:
 	if _compass_animating and _compass_open == false:
@@ -890,7 +957,7 @@ func _close_compass_menu(animated: bool = true) -> void:
 		if is_instance_valid(item as Node):
 			(item as Node).queue_free()
 	_radial_items.clear()
-	_radial_overlay.visible = false
+	_sync_radial_overlay_state()
 
 	if not animated:
 		_compass_icon.position = _compass_idle_pos
@@ -904,6 +971,7 @@ func _close_compass_menu(animated: bool = true) -> void:
 	tw.tween_property(_compass_hit,  "position", _compass_idle_pos, 0.22)
 	await tw.finished
 	_compass_animating = false
+	_sync_radial_overlay_state()
 
 func _spawn_radial_items(connections: Array) -> void:
 	var n: int      = connections.size()
@@ -966,9 +1034,7 @@ func _on_setting_clicked() -> void:
 	if _setting_open:
 		_close_setting_menu()
 		return
-	if _is_any_other_hud_menu_active("setting"):
-		_dismiss_all_hud_menus(false)
-		return
+	_close_other_hud_menus("setting")
 	_open_setting_menu()
 
 func _open_setting_menu() -> void:
@@ -990,8 +1056,8 @@ func _open_setting_menu() -> void:
 	await tw.finished
 	_setting_animating = false
 
-	_radial_overlay.visible = true
 	_spawn_setting_radial_items(center_pos)
+	_sync_radial_overlay_state()
 
 func _close_setting_menu(animated: bool = true) -> void:
 	if _setting_animating and not _setting_open:
@@ -1001,8 +1067,7 @@ func _close_setting_menu(animated: bool = true) -> void:
 		if is_instance_valid(item as Node):
 			(item as Node).queue_free()
 	_setting_radial_items.clear()
-	if not _compass_open and not _inv_open and not _chat_open and not _info_open:
-		_radial_overlay.visible = false
+	_sync_radial_overlay_state()
 	if not animated:
 		_setting_icon.position = _setting_idle_pos
 		_setting_hit.position  = _setting_idle_pos
@@ -1014,6 +1079,7 @@ func _close_setting_menu(animated: bool = true) -> void:
 	tw.tween_property(_setting_hit,  "position", _setting_idle_pos, 0.22)
 	await tw.finished
 	_setting_animating = false
+	_sync_radial_overlay_state()
 
 func _spawn_setting_radial_items(center: Vector2) -> void:
 	var cx: float  = center.x + COMPASS_SIZE * 0.5
@@ -1088,9 +1154,7 @@ func _on_inventory_clicked() -> void:
 	if _inv_open:
 		_close_inventory_menu()
 		return
-	if _is_any_other_hud_menu_active("inventory"):
-		_dismiss_all_hud_menus(false)
-		return
+	_close_other_hud_menus("inventory")
 	var inv: Array = ExplorationManager.get_inventory()
 	if inv.is_empty():
 		_flash_empty_inventory()
@@ -1123,8 +1187,8 @@ func _open_inventory_menu(page: int) -> void:
 	await tw.finished
 	_inv_animating = false
 
-	_radial_overlay.visible = true
 	_spawn_inventory_radial_items(center_pos, page)
+	_sync_radial_overlay_state()
 
 func _close_inventory_menu(animated: bool = true) -> void:
 	if _inv_animating and not _inv_open:
@@ -1134,8 +1198,7 @@ func _close_inventory_menu(animated: bool = true) -> void:
 		if is_instance_valid(item as Node):
 			(item as Node).queue_free()
 	_inv_radial_items.clear()
-	if not _compass_open and not _setting_open and not _chat_open and not _info_open:
-		_radial_overlay.visible = false
+	_sync_radial_overlay_state()
 	if not animated:
 		_inv_icon.position = _inv_idle_pos
 		_inv_hit.position  = _inv_idle_pos
@@ -1147,6 +1210,7 @@ func _close_inventory_menu(animated: bool = true) -> void:
 	tw.tween_property(_inv_hit,  "position", _inv_idle_pos, 0.22)
 	await tw.finished
 	_inv_animating = false
+	_sync_radial_overlay_state()
 
 func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 	var inv: Array = ExplorationManager.get_inventory()
@@ -1267,9 +1331,7 @@ func _on_chat_clicked() -> void:
 	if _chat_open:
 		_close_chat_menu()
 		return
-	if _is_any_other_hud_menu_active("chat"):
-		_dismiss_all_hud_menus(false)
-		return
+	_close_other_hud_menus("chat")
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node == null:
 		return
@@ -1317,8 +1379,8 @@ func _open_chat_menu(available: Array) -> void:
 	await tw.finished
 	_chat_animating = false
 
-	_radial_overlay.visible = true
 	_spawn_chat_radial_items(center_pos, available)
+	_sync_radial_overlay_state()
 
 func _close_chat_menu(animated: bool = true) -> void:
 	if _chat_animating and not _chat_open:
@@ -1328,8 +1390,7 @@ func _close_chat_menu(animated: bool = true) -> void:
 		if is_instance_valid(item as Node):
 			(item as Node).queue_free()
 	_chat_radial_items.clear()
-	if not _compass_open and not _setting_open and not _inv_open and not _info_open:
-		_radial_overlay.visible = false
+	_sync_radial_overlay_state()
 	if not animated:
 		_chat_icon.position = _chat_idle_pos
 		_chat_hit.position  = _chat_idle_pos
@@ -1341,6 +1402,7 @@ func _close_chat_menu(animated: bool = true) -> void:
 	tw.tween_property(_chat_hit,  "position", _chat_idle_pos, 0.22)
 	await tw.finished
 	_chat_animating = false
+	_sync_radial_overlay_state()
 
 func _spawn_chat_radial_items(center: Vector2, available: Array) -> void:
 	var cx: float   = center.x + COMPASS_SIZE * 0.5
@@ -1470,9 +1532,7 @@ func _on_info_clicked() -> void:
 	if _is_info_panel_showing():
 		_close_info_panel(true, false)
 		return
-	if _is_any_other_hud_menu_active("info"):
-		_dismiss_all_hud_menus(false)
-		return
+	_close_other_hud_menus("info")
 	_open_info_panel()
 
 ## Open the info panel with an optional callback fired after it closes.
@@ -1498,7 +1558,7 @@ func _open_info_panel(on_close: Callable = Callable(), wait_for_mouse_move: bool
 	_desc_lbl.visible  = true
 	_back_btn.text     = "Dismiss"
 	_back_btn.visible  = false
-	_radial_overlay.visible = true
+	_sync_radial_overlay_state()
 	# Slide in from right
 	var vp_w: float = get_viewport().get_visible_rect().size.x
 	_content_panel.position.x = vp_w
@@ -1545,8 +1605,7 @@ func _close_info_panel(immediate: bool = false, run_on_close: bool = true) -> vo
 	var cb: Callable = _info_on_close_cb
 	_info_on_close_cb = Callable()
 	var can_back: bool = ExplorationManager.can_go_back()
-	if not _compass_open and not _setting_open and not _inv_open and not _chat_open:
-		_radial_overlay.visible = false
+	_sync_radial_overlay_state()
 	var vp_w: float = get_viewport().get_visible_rect().size.x
 	if _info_panel_tween and _info_panel_tween.is_valid():
 		_info_panel_tween.kill()
@@ -1557,6 +1616,7 @@ func _close_info_panel(immediate: bool = false, run_on_close: bool = true) -> vo
 		_back_btn.visible  = can_back
 		_content_panel.visible = false
 		_content_panel.position.x = vp_w * BG_AREA_FRACTION
+		_sync_radial_overlay_state()
 		if run_on_close and cb.is_valid():
 			cb.call()
 		return
@@ -1570,6 +1630,7 @@ func _close_info_panel(immediate: bool = false, run_on_close: bool = true) -> vo
 		_back_btn.visible  = can_back
 		_content_panel.visible = false
 		_content_panel.position.x = vp_w * BG_AREA_FRACTION
+		_sync_radial_overlay_state()
 		if run_on_close and cb.is_valid():
 			cb.call())
 
@@ -1673,7 +1734,7 @@ func _show_item_preview(item_id: String) -> void:
 		var captured_id: String = item_id
 		use_btn.pressed.connect(func() -> void:
 			_close_item_preview()
-			_execute_item_effects(captured_id))
+			await _execute_item_effects(captured_id))
 		btn_row.add_child(use_btn)
 
 	var close_btn := Button.new()
@@ -2132,7 +2193,15 @@ func _show_mailbox_sent_text(overlay: Control, on_done: Callable) -> void:
 	seq.tween_callback(overlay.queue_free)
 	seq.tween_callback(on_done)
 
+func _effect_path(eff: Dictionary) -> String:
+	var value: String = str(eff.get("value", "")).strip_edges()
+	if not value.is_empty():
+		return value
+	return str(eff.get("key", "")).strip_edges()
+
 func _execute_item_effects(item_id: String) -> void:
+	_dismiss_all_hud_menus(false)
+	_close_item_preview()
 	var item: Dictionary = ExplorationItemDatabase.get_item(item_id)
 	var effects: Variant = item.get("effects", [])
 	if not effects is Array:
@@ -2156,30 +2225,37 @@ func _execute_item_effects(item_id: String) -> void:
 			"show_message":
 				_show_toast(eff_value)
 			"play_sfx":
-				if not eff_value.is_empty() and ResourceLoader.exists(eff_value):
+				var sfx_path: String = _effect_path(eff)
+				if not sfx_path.is_empty() and ResourceLoader.exists(sfx_path):
 					var sfx := AudioStreamPlayer.new()
-					sfx.stream = load(eff_value) as AudioStream
+					sfx.stream = load(sfx_path) as AudioStream
 					sfx.bus    = "SFX"
 					add_child(sfx)
 					sfx.play()
 					await sfx.finished
 					sfx.queue_free()
 			"play_vn":
-				if not eff_value.is_empty():
-					var done := false
-					var play_once_flag: bool = bool(eff.get("play_once", false))
-					_play_vn(eff_value, func() -> void: done = true, play_once_flag)
-					while not done:
-						await get_tree().process_frame
+				var vn_path: String = _effect_path(eff)
+				if vn_path.is_empty():
+					continue
+				var play_once_flag: bool = bool(eff.get("play_once", false))
+				if play_once_flag and ExplorationManager.is_vn_played(vn_path):
+					continue
+				var done := false
+				_play_vn(vn_path, func() -> void: done = true, play_once_flag)
+				while not done:
+					await get_tree().process_frame
 			"navigate_to":
-				if not eff_value.is_empty():
-					ExplorationManager.navigate_to(eff_value)
+				var nav_target: String = _effect_path(eff)
+				if not nav_target.is_empty():
+					ExplorationManager.navigate_to(nav_target)
 			"end_exploration":
 				_do_end_exploration()
 				return
 			"end_exploration_vn":
-				if not eff_value.is_empty():
-					_do_end_exploration_with_vn(eff_value)
+				var end_vn_path: String = _effect_path(eff)
+				if not end_vn_path.is_empty():
+					_do_end_exploration_with_vn(end_vn_path)
 					return
 	_refresh_contextual_hud_glows()
 
@@ -2314,7 +2390,8 @@ func _get_press_global_position(event: InputEvent) -> Vector2:
 	if event is InputEventMouseButton:
 		return (event as InputEventMouseButton).global_position
 	if event is InputEventScreenTouch:
-		return (event as InputEventScreenTouch).position
+		var touch := event as InputEventScreenTouch
+		return get_viewport().get_canvas_transform().affine_inverse() * touch.position
 	return Vector2(-1.0, -1.0)
 
 func _is_point_on_open_menu_ui(global_pos: Vector2) -> bool:
@@ -2337,7 +2414,7 @@ func _is_point_on_open_menu_ui(global_pos: Vector2) -> bool:
 			var c: Control = p as Control
 			if c.get_global_rect().has_point(global_pos):
 				return true
-	if _info_open and _content_panel != null and _content_panel.visible:
+	if _is_info_panel_showing() and _content_panel != null and _content_panel.visible:
 		if _content_panel.get_global_rect().has_point(global_pos):
 			return true
 	return false
@@ -2345,7 +2422,14 @@ func _is_point_on_open_menu_ui(global_pos: Vector2) -> bool:
 func _on_radial_overlay_gui_input(event: InputEvent) -> void:
 	if not _is_press_event(event):
 		return
-	if _is_point_on_open_menu_ui(_get_press_global_position(event)):
+	var gp: Vector2 = _get_press_global_position(event)
+	var hud_id: String = _hud_icon_at_point(gp)
+	if hud_id != "":
+		_dispatch_hud_click(hud_id)
+		if _radial_overlay != null:
+			_radial_overlay.accept_event()
+		return
+	if _is_point_on_open_menu_ui(gp):
 		return
 	_close_all_menus()
 	if _radial_overlay != null:
@@ -2684,6 +2768,7 @@ func _play_puzzle(puzzle_id: String, on_done: Callable, puzzle_params: Dictionar
 
 func _play_vn(path: String, on_done: Callable, play_once: bool = true) -> void:
 	if _vn_playing or _puzzle_playing:
+		on_done.call()
 		return
 	if not FileAccess.file_exists(ProjectSettings.globalize_path(path)):
 		push_warning("ExplorationPlayer: VN scene '%s' not found — skipping." % path)
@@ -2707,6 +2792,7 @@ func _on_vn_finished(_node: ExplorationNode) -> void:
 	# VN done — restore compass so player can navigate
 	_compass_set_visible(true)
 	_apply_pending_enter_node()
+	_refresh_spots_for_state()
 
 # ─────────────────────────────────────────────────────────────
 # Battle Integration
@@ -2866,6 +2952,31 @@ func _build_tooltip() -> void:
 	_tooltip_panel.add_child(_tooltip_lbl)
 	add_child(_tooltip_panel)
 
+func _log_skipped_spot(spot: Dictionary, spot_index: int) -> void:
+	var conditions: Variant = spot.get("conditions", [])
+	if not conditions is Array or (conditions as Array).is_empty():
+		return
+	var parts: PackedStringArray = []
+	for cond_var: Variant in (conditions as Array):
+		if not cond_var is Dictionary:
+			continue
+		var cd: Dictionary = cond_var as Dictionary
+		var ctype: String  = str(cd.get("type", ""))
+		var key: String    = str(cd.get("key", ""))
+		var val: String    = str(cd.get("value", ""))
+		var ok: bool       = ExplorationConditions.evaluate_condition(cd)
+		var detail: String = ""
+		match ctype:
+			"var_equals", "var_not_equals", "var_greater", "var_less", "var_gte", "var_lte":
+				detail = " actual=%q" % ExplorationManager.get_var(key)
+			"has_item", "not_has_item":
+				detail = " has=%s" % str(ExplorationManager.has_item(key))
+			"at_node":
+				detail = " current=%s" % ExplorationManager.current_node_id
+		parts.append("%s(%s,%s)%s→%s" % [ctype, key, val, detail, ok])
+	print("[Exploration] spot #%d hidden on %s: %s" % [
+		spot_index, ExplorationManager.current_node_id, ", ".join(parts)])
+
 func _rebuild_spots(node: ExplorationNode) -> void:
 	if _spots_layer == null:
 		return
@@ -2887,6 +2998,7 @@ func _rebuild_spots(node: ExplorationNode) -> void:
 func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0) -> void:
 	# Check conditions — reuse ExplorationManager's connection-unlock logic (reads "conditions" key)
 	if not ExplorationManager.is_connection_unlocked(spot):
+		_log_skipped_spot(spot, spot_index)
 		return
 	# Skip one-time spots already interacted with this session
 	if bool(spot.get("hide_after_interact", false)) and ExplorationManager.is_spot_interacted(ExplorationManager.current_node_id, spot_index):
@@ -2940,21 +3052,23 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	var cap_index: int    = spot_index
 	var puzzle_gated: bool = _spot_actions_have_puzzle_gate(cap_acts)
 	var apply_hide := func() -> void:
-		hit.visible = false
-		ExplorationManager.mark_spot_interacted(cap_node, cap_index)
+		# Spot may already be freed if var/inventory change triggered _rebuild_spots mid-action.
+		if is_instance_valid(hit):
+			hit.visible = false
 	hit.mouse_entered.connect(func() -> void: _on_spot_hover_enter(cap_tip, hit))
 	hit.mouse_exited.connect(func() -> void:  _on_spot_hover_exit())
 	hit.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton:
 			var mb := ev as InputEventMouseButton
 			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-				var hide_cb: Callable = Callable()
+				# Mark before actions run so var-triggered spot rebuilds don't respawn this spot.
 				if cap_hide:
-					if puzzle_gated:
-						hide_cb = apply_hide
-					else:
-						apply_hide.call()
-				_on_spot_triggered(cap_acts, hide_cb))
+					ExplorationManager.mark_spot_interacted(cap_node, cap_index)
+				var hide_cb: Callable = apply_hide if cap_hide else Callable()
+				_handle_spot_click(cap_acts, hide_cb))
+
+func _handle_spot_click(actions: Array, hide_on_success: Callable) -> void:
+	_on_spot_triggered(actions, hide_on_success)
 
 func _on_spot_hover_enter(tooltip_text: String, spot_hit: Control) -> void:
 	_hovering_spot    = true
@@ -3005,72 +3119,88 @@ func _on_spot_triggered(actions: Array, hide_on_success: Callable = Callable()) 
 	if not puzzle_id.is_empty():
 		_play_puzzle(puzzle_id, func(success: bool) -> void:
 			if success:
-				if hide_on_success.is_valid():
-					hide_on_success.call()
-				_execute_spot_actions(remaining), puzzle_params)
+				_handle_puzzle_spot_success(remaining, hide_on_success)
 			# cancel/fail: close puzzle overlay only — spot stays active for retry
+		, puzzle_params)
 	else:
-		if hide_on_success.is_valid():
-			hide_on_success.call()
-		_execute_spot_actions(actions)
+		_execute_spot_actions(actions, hide_on_success)
 
-func _execute_spot_actions(actions: Array) -> void:
-	_run_spot_actions_sequence(actions)
+func _handle_puzzle_spot_success(remaining: Array, hide_on_success: Callable) -> void:
+	_execute_spot_actions(remaining, hide_on_success)
 
-func _run_spot_actions_sequence(actions: Array) -> void:
-	# Run spot actions in list order; play_vn blocks until the scene finishes.
-	for act_var: Variant in actions:
-		if not act_var is Dictionary:
-			continue
-		var act: Dictionary = act_var as Dictionary
-		var action: String  = str(act.get("action", ""))
-		var key: String     = str(act.get("key",    ""))
-		var value: String   = str(act.get("value",  ""))
-		match action:
-			"give_item":
-				var item_id: String = key if not key.is_empty() else value
-				if not item_id.is_empty():
-					ExplorationManager.add_item(item_id)
-			"remove_item":
-				var rem_id: String = key if not key.is_empty() else value
-				if not rem_id.is_empty():
-					ExplorationManager.remove_item(rem_id)
-			"set_var":
-				ExplorationManager.set_var(key, value)
-			"give_credits", "set_flag", "give_booster_pack":
-				ExplorationManager.process_events([act])
-			"show_message":
-				_show_toast(value)
-			"play_sfx":
-				if not value.is_empty() and ResourceLoader.exists(value):
-					var sfx := AudioStreamPlayer.new()
-					sfx.stream = load(value) as AudioStream
-					sfx.bus    = "SFX"
-					add_child(sfx)
-					sfx.play()
-					await sfx.finished
-					sfx.queue_free()
-			"play_vn":
-				if not value.is_empty():
-					var play_once: bool = bool(act.get("play_once", true))
-					if not (play_once and ExplorationManager.is_vn_played(value)):
-						var done := false
-						_play_vn(value, func() -> void: done = true, play_once)
-						while not done:
-							await get_tree().process_frame
-			"navigate_to":
-				if not value.is_empty():
-					_compass_set_visible(true)
-					_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(value))
-					return
-			"end_exploration":
-				_do_end_exploration()
+func _execute_spot_actions(actions: Array, on_complete: Callable = Callable()) -> void:
+	_run_spot_actions_from_index(actions, 0, on_complete)
+
+func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Callable) -> void:
+	if index >= actions.size():
+		_compass_set_visible(true)
+		if on_complete.is_valid():
+			on_complete.call()
+		return
+	var act_var: Variant = actions[index]
+	if not act_var is Dictionary:
+		_run_spot_actions_from_index(actions, index + 1, on_complete)
+		return
+	var act: Dictionary = act_var as Dictionary
+	var action: String  = str(act.get("action", ""))
+	var key: String     = str(act.get("key",    ""))
+	var value: String   = str(act.get("value",  ""))
+	var next := func() -> void:
+		_run_spot_actions_from_index(actions, index + 1, on_complete)
+	match action:
+		"give_item":
+			var item_id: String = key if not key.is_empty() else value
+			if not item_id.is_empty():
+				ExplorationManager.add_item(item_id)
+			next.call()
+		"remove_item":
+			var rem_id: String = key if not key.is_empty() else value
+			if not rem_id.is_empty():
+				ExplorationManager.remove_item(rem_id)
+			next.call()
+		"set_var":
+			ExplorationManager.set_var(key, value)
+			next.call()
+		"give_credits", "set_flag", "give_booster_pack":
+			ExplorationManager.process_events([act])
+			next.call()
+		"show_message":
+			_show_toast(value)
+			next.call()
+		"play_sfx":
+			if value.is_empty() or not ResourceLoader.exists(value):
+				next.call()
 				return
-			"end_exploration_vn":
-				if not value.is_empty():
-					_do_end_exploration_with_vn(value)
+			var sfx := AudioStreamPlayer.new()
+			sfx.stream = load(value) as AudioStream
+			sfx.bus    = "SFX"
+			add_child(sfx)
+			sfx.finished.connect(func() -> void:
+				sfx.queue_free()
+				next.call()
+			, CONNECT_ONE_SHOT)
+			sfx.play()
+		"play_vn":
+			if value.is_empty():
+				next.call()
 				return
-	_compass_set_visible(true)
+			var play_once: bool = bool(act.get("play_once", true))
+			if play_once and ExplorationManager.is_vn_played(value):
+				next.call()
+				return
+			_play_vn(value, next, play_once)
+		"navigate_to":
+			if not value.is_empty():
+				_compass_set_visible(true)
+				_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(value))
+			return
+		"end_exploration":
+			_do_end_exploration()
+		"end_exploration_vn":
+			if not value.is_empty():
+				_do_end_exploration_with_vn(value)
+		_:
+			next.call()
 
 func _process(delta: float) -> void:
 	# Compass idle hint — lowest priority; blocked while chat/inventory glow active.
@@ -3135,6 +3265,13 @@ func _toggle_debug() -> void:
 		_debug_lbl.append_text("[color=#44ff44]" + ExplorationManager.debug_dump() + "[/color]")
 
 func _input(event: InputEvent) -> void:
+	# HUD icons can sit under the info-only overlay; route taps explicitly while info is open.
+	if _is_press_event(event) and _is_info_panel_showing():
+		var hud_id: String = _hud_icon_at_point(_get_press_global_position(event))
+		if hud_id != "":
+			_dispatch_hud_click(hud_id)
+			get_viewport().set_input_as_handled()
+			return
 	# When the panel is waiting for mouse movement before allowing auto-dismiss,
 	# clear the flag on first motion and immediately start dismiss logic if needed.
 	if event is InputEventMouseMotion and _info_wait_for_mouse and _info_open:
@@ -3147,6 +3284,13 @@ func _is_modified_key(key: InputEventKey) -> bool:
 	return key.meta_pressed or key.ctrl_pressed or key.alt_pressed or key.shift_pressed
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Dismiss info panel when tapping outside HUD / panel (overlay is IGNORE while info-only).
+	if _is_press_event(event) and _is_info_panel_showing():
+		var gp: Vector2 = _get_press_global_position(event)
+		if _hud_icon_at_point(gp) == "" and not _is_point_on_open_menu_ui(gp):
+			_close_info_panel(true, false)
+			get_viewport().set_input_as_handled()
+			return
 	if event is InputEventKey and (event as InputEventKey).pressed and not (event as InputEventKey).echo:
 		var ke := event as InputEventKey
 		if ke.keycode == KEY_F3:

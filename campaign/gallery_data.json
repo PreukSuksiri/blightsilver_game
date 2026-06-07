@@ -4,9 +4,8 @@
 		"line1": "Prologue",
 		"line2": "Flickering Midnight",
 		"new_line_before": false,
-		"unlock_requires": "",
-		"vn_scene": "res://campaign/scenes/ch0_s1_pre.json",
-		"unlock_deckbuilding": true
+		"unlock_deckbuilding": true,
+		"vn_scene": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json"
 	},
 	{
 		"image": "res://assets/textures/campagin/ui_campaign_capsule_ch1_1.png",
@@ -14,7 +13,7 @@
 		"line2": "Chapter 1 :: Silver Path",
 		"new_line_before": false,
 		"prerequisite_chapter": "res://campaign/scenes/ch0_s1_pre.json",
-		"vn_scene": "res://campaign/scenes/ch1_s1_pre_DEMO.json"
+		"vn_scene": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json"
 	},
 	{
 		"custom_text": "FULL VERSION",

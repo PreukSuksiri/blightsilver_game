@@ -5,12 +5,13 @@
 		"effects": [
 			{
 				"key": "",
+				"play_once": true,
 				"type": "play_vn",
 				"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_invest_2_0.json"
 			},
 			{
-				"key": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json",
-				"type": "end_exploration_vn",
+				"key": "",
+				"type": "end_exploration",
 				"value": ""
 			}
 		],

@@ -5,6 +5,14 @@
 	},
 	{
 		"linger_characters": true,
-		"wait": 0.5
+		"sfx": "res://assets/audio/sfx/acid1.mp3"
+	},
+	{
+		"linger_characters": true,
+		"wait": 1.0
+	},
+	{
+		"linger_characters": true,
+		"text": "(The glue was washed away like magic)"
 	}
 ]
