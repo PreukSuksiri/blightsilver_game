@@ -1203,7 +1203,7 @@ func _add_event_row(events_vbox: VBoxContainer, action: String = "show_message",
 	var action_btn := OptionButton.new()
 	var _action_list: Array[String] = [
 		"give_item", "give_booster_pack", "remove_item", "set_var",
-		"give_credits", "set_flag", "show_message", "play_sfx"]
+		"give_credits", "set_flag", "show_message", "play_sfx", "end_exploration", "end_exploration_vn"]
 	for a: String in _action_list:
 		action_btn.add_item(a)
 	var _action_idx: int = _action_list.find(action)
@@ -1240,11 +1240,20 @@ func _add_event_row(events_vbox: VBoxContainer, action: String = "show_message",
 	pack_pick_btn.pressed.connect(func() -> void: _open_pack_picker(val_edit))
 	row.add_child(pack_pick_btn)
 
+	var event_vn_browse_btn := Button.new()
+	event_vn_browse_btn.text = "…"
+	event_vn_browse_btn.tooltip_text = "Browse VN JSON (fills value field)"
+	event_vn_browse_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	event_vn_browse_btn.pressed.connect(func() -> void:
+		_browse_for_file(val_edit, PackedStringArray(["*.json ; JSON Files"]), "res://exploration"))
+	row.add_child(event_vn_browse_btn)
+
 	# Show only the relevant picker button based on the selected action.
 	var _update_event_pickers := func(sel_idx: int) -> void:
 		var sel: String = _action_list[sel_idx]
-		item_pick_btn.visible = sel in ["give_item", "remove_item"]
-		pack_pick_btn.visible = sel == "give_booster_pack"
+		item_pick_btn.visible       = sel in ["give_item", "remove_item"]
+		pack_pick_btn.visible       = sel == "give_booster_pack"
+		event_vn_browse_btn.visible = sel == "end_exploration_vn"
 		hint_lbl.text = _event_action_kv_hint(sel)
 	action_btn.item_selected.connect(_update_event_pickers)
 	_update_event_pickers.call(action_btn.selected)
@@ -1784,7 +1793,7 @@ func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
 	block.set_meta("spot_action_index", vbox.get_child_count() - 1)
 	var _spot_actions: Array[String] = [
 		"give_item", "give_booster_pack", "remove_item", "set_var", "give_credits", "set_flag",
-		"show_message", "play_sfx", "play_vn", "navigate_to", "play_puzzle"
+		"show_message", "play_sfx", "play_vn", "navigate_to", "play_puzzle", "end_exploration", "end_exploration_vn"
 	]
 	var action_btn := OptionButton.new()
 	for a: String in _spot_actions:
@@ -1865,14 +1874,14 @@ func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
 		spot_pick_btn.visible        = sel in ["give_item", "remove_item"]
 		spot_pack_pick_btn.visible   = sel == "give_booster_pack"
 		spot_puzzle_pick_btn.visible = sel == "play_puzzle"
-		spot_vn_browse_btn.visible   = sel == "play_vn"
+		spot_vn_browse_btn.visible   = sel in ["play_vn", "end_exploration_vn"]
 		vn_extra_row.visible         = sel == "play_vn"
-		key_edit.visible             = sel != "play_vn"
+		key_edit.visible             = sel not in ["play_vn", "end_exploration_vn"]
 		if sel == "play_puzzle":
 			key_edit.placeholder_text = "params (JSON or text)"
 			val_edit.placeholder_text = "puzzle id"
-		elif sel == "play_vn":
-			val_edit.placeholder_text = "res:// path to beat JSON"
+		elif sel in ["play_vn", "end_exploration_vn"]:
+			val_edit.placeholder_text = "res:// path to VN JSON"
 		else:
 			key_edit.placeholder_text = "key"
 			val_edit.placeholder_text = "value / amount / pack"

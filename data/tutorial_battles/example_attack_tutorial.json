@@ -1,0 +1,76 @@
+{
+	"title": "Attack Tutorial",
+	"on_complete": "end_immediately",
+	"player_deck": {
+		"characters": [
+			"Church Guard",
+			"Church Guard",
+			"Church Guard",
+			"Church Guard",
+			"Church Guard",
+			"Church Guard",
+			"Church Guard",
+			"Church Guard"
+		],
+		"traps": [
+			"Trap Hole",
+			"Trap Hole",
+			"Trap Hole",
+			"Trap Hole"
+		],
+		"techs": [
+			"Radar",
+			"Shield Wall",
+			"Quick Draw"
+		]
+	},
+	"player_formation": [
+		{ "card_name": "Church Guard", "row": 4, "col": 2 }
+	],
+	"ai_deck": {
+		"characters": [
+			"Chaotic Wisp",
+			"Chaotic Wisp",
+			"Chaotic Wisp",
+			"Chaotic Wisp",
+			"Chaotic Wisp",
+			"Chaotic Wisp",
+			"Chaotic Wisp",
+			"Chaotic Wisp"
+		],
+		"traps": [
+			"Trap Hole",
+			"Trap Hole",
+			"Trap Hole",
+			"Trap Hole"
+		],
+		"techs": [
+			"Radar",
+			"Shield Wall",
+			"Quick Draw"
+		]
+	},
+	"ai_formation": [
+		{ "card_name": "Chaotic Wisp", "row": 0, "col": 2 }
+	],
+	"turns": {
+		"1": [
+			{
+				"type": "attack",
+				"card_name": "Church Guard",
+				"instruction": "Tap Church Guard, then tap the ⚔ icon to attack!"
+			}
+		],
+		"2": [
+			{
+				"type": "use_tech",
+				"tech_name": "Radar",
+				"instruction": "Tap the TECH stack, then tap USE on Radar."
+			},
+			{
+				"type": "end_turn",
+				"instruction": "Good job! Now end your turn."
+			}
+		]
+	}
+}

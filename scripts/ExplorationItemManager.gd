@@ -6,8 +6,6 @@ extends Control
 ## Item fields: id, name, description, icon, big_image, effects[]
 ## Effect fields: type (enum), key, value
 
-const FONT_PATH: String = "res://assets/fonts/Chivo-VariableFont_wght.ttf"
-
 const EFFECT_TYPES: Array = [
 	"play_vn",
 	"set_var",
@@ -16,6 +14,8 @@ const EFFECT_TYPES: Array = [
 	"remove_self",
 	"remove_item",
 	"navigate_to",
+	"end_exploration",
+	"end_exploration_vn",
 ]
 
 # ── UI refs ────────────────────────────────────────────────────────────────
@@ -43,15 +43,16 @@ func _ready() -> void:
 	z_index = 50
 	_build_ui()
 	_refresh_list()
+	if not FontManager.fonts_changed.is_connected(_on_fonts_changed):
+		FontManager.fonts_changed.connect(_on_fonts_changed)
 	# Re-apply full-rect after the layout pass so the parent's rect is fully resolved
 	set_anchors_and_offsets_preset.call_deferred(Control.PRESET_FULL_RECT)
 
-func _make_font(weight: int) -> FontVariation:
-	var base := load(FONT_PATH) as FontFile
-	var fv := FontVariation.new()
-	fv.base_font = base
-	fv.variation_opentype = {"wght": weight}
-	return fv
+func _on_fonts_changed() -> void:
+	FontManager.refresh_tree(self)
+
+func _tag_ui(node: Control, property: String, weight: int = 400) -> void:
+	FontManager.tag_font(node, property, "primary", weight)
 
 # ─────────────────────────────────────────────────────────────
 # UI Construction
@@ -85,7 +86,7 @@ func _build_ui() -> void:
 
 	var title_lbl := Label.new()
 	title_lbl.text = "  Exploration Items"
-	title_lbl.add_theme_font_override("font", _make_font(700))
+	_tag_ui(title_lbl, "font", 700)
 	title_lbl.add_theme_font_size_override("font_size", 18)
 	title_lbl.add_theme_color_override("font_color", Color(0.55, 0.85, 1.0))
 	title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -148,7 +149,7 @@ func _build_edit_panel() -> void:
 	# ── Heading ────────────────────────────────────────────
 	var heading := Label.new()
 	heading.text = "Edit Item"
-	heading.add_theme_font_override("font", _make_font(700))
+	_tag_ui(heading, "font", 700)
 	heading.add_theme_font_size_override("font_size", 20)
 	heading.add_theme_color_override("font_color", Color(0.75, 0.90, 1.0))
 	vbox.add_child(heading)
@@ -173,12 +174,70 @@ func _build_edit_panel() -> void:
 	_ef_use_condition.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_ef_use_condition.add_theme_font_size_override("font_size", 13)
 	vbox.add_child(_ef_use_condition)
-	var cond_hint := Label.new()
-	cond_hint.text = "and / or / not / () — has_item(), at_node(), var() ==, !=, >, <"
-	cond_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	cond_hint.add_theme_font_size_override("font_size", 11)
-	cond_hint.add_theme_color_override("font_color", Color(0.50, 0.58, 0.65))
-	vbox.add_child(cond_hint)
+
+	# ── Condition reference panel ────────────────────────────
+	var ref_panel := PanelContainer.new()
+	ref_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var ref_sb := StyleBoxFlat.new()
+	ref_sb.bg_color = Color(0.04, 0.07, 0.14, 1.0)
+	ref_sb.set_border_width_all(1)
+	ref_sb.border_color = Color(0.25, 0.45, 0.70, 0.40)
+	ref_sb.set_corner_radius_all(4)
+	ref_sb.content_margin_left   = 10.0
+	ref_sb.content_margin_right  = 10.0
+	ref_sb.content_margin_top    = 8.0
+	ref_sb.content_margin_bottom = 8.0
+	ref_panel.add_theme_stylebox_override("panel", ref_sb)
+	vbox.add_child(ref_panel)
+
+	var ref_vbox := VBoxContainer.new()
+	ref_vbox.add_theme_constant_override("separation", 4)
+	ref_panel.add_child(ref_vbox)
+
+	const REF_HEADER_COL := Color(0.50, 0.78, 1.0)
+	const REF_FN_COL     := Color(0.65, 1.00, 0.75)
+	const REF_OP_COL     := Color(1.00, 0.85, 0.50)
+	const REF_EX_COL     := Color(0.60, 0.65, 0.72)
+	const REF_FS         := 12
+
+	var _ref_lbl := func(text: String, color: Color, bold: bool = false) -> void:
+		var l := Label.new()
+		l.text = text
+		l.add_theme_font_size_override("font_size", REF_FS)
+		l.add_theme_color_override("font_color", color)
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if bold:
+			FontManager.tag_font(l, "font", "primary", 700)
+		ref_vbox.add_child(l)
+
+	_ref_lbl.call("Functions", REF_HEADER_COL, true)
+	_ref_lbl.call("  has_item(\"item_id\")   — true if player holds that item", REF_FN_COL)
+	_ref_lbl.call("  at_node(\"node_id\")    — true if player is at that node", REF_FN_COL)
+	_ref_lbl.call("  var(\"key\")            — reads an exploration variable", REF_FN_COL)
+
+	var sep1 := HSeparator.new()
+	sep1.add_theme_constant_override("separation", 2)
+	ref_vbox.add_child(sep1)
+
+	_ref_lbl.call("Comparisons  (for var())", REF_HEADER_COL, true)
+	_ref_lbl.call("  ==   !=   >   <   >=   <=", REF_OP_COL)
+
+	var sep2 := HSeparator.new()
+	sep2.add_theme_constant_override("separation", 2)
+	ref_vbox.add_child(sep2)
+
+	_ref_lbl.call("Combinators", REF_HEADER_COL, true)
+	_ref_lbl.call("  and   or   not   ( … )", REF_OP_COL)
+
+	var sep3 := HSeparator.new()
+	sep3.add_theme_constant_override("separation", 2)
+	ref_vbox.add_child(sep3)
+
+	_ref_lbl.call("Examples", REF_HEADER_COL, true)
+	_ref_lbl.call("  has_item(\"library_card\")", REF_EX_COL)
+	_ref_lbl.call("  has_item(\"key\") and at_node(\"locked_door\")", REF_EX_COL)
+	_ref_lbl.call("  var(\"chapter\") == \"2\" and not has_item(\"used_map\")", REF_EX_COL)
+	_ref_lbl.call("  (has_item(\"coin\") or var(\"gold\") > 10) and at_node(\"shop\")", REF_EX_COL)
 
 	_ef_key_item_chk = CheckBox.new()
 	_ef_key_item_chk.text = "Key Item"
@@ -325,6 +384,29 @@ func _add_effect_row(eff: Dictionary) -> void:
 	val_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	val_edit.add_theme_font_size_override("font_size", 13)
 	row.add_child(val_edit)
+
+	# VN browse button (shown for play_vn and end_exploration_vn)
+	var vn_browse_btn := Button.new()
+	vn_browse_btn.text = "…"
+	vn_browse_btn.tooltip_text = "Browse VN JSON (fills value field)"
+	vn_browse_btn.custom_minimum_size = Vector2(28.0, 0.0)
+	vn_browse_btn.pressed.connect(func() -> void:
+		var dialog := FileDialog.new()
+		dialog.file_mode   = FileDialog.FILE_MODE_OPEN_FILE
+		dialog.filters     = PackedStringArray(["*.json ; JSON Files"])
+		dialog.access      = FileDialog.ACCESS_RESOURCES
+		dialog.current_dir = "res://exploration"
+		dialog.file_selected.connect(func(path: String) -> void: val_edit.text = path)
+		add_child(dialog)
+		dialog.popup_centered(Vector2(900, 600)))
+	row.add_child(vn_browse_btn)
+
+	# Toggle browse button based on selected type
+	var _vn_types := ["play_vn", "end_exploration_vn"]
+	var _refresh_vn_btn := func(idx: int) -> void:
+		vn_browse_btn.visible = EFFECT_TYPES[idx] in _vn_types
+	type_btn.item_selected.connect(_refresh_vn_btn)
+	_refresh_vn_btn.call(type_btn.selected)
 
 	# Remove button
 	var rem_btn := _make_btn("✕", func() -> void: row.queue_free())

@@ -163,6 +163,7 @@ func admin_command(raw: String) -> String:
 				+ "  demo_status\n"
 				+ "  manage_bgm\n"
 				+ "  manage_menu_buttons\n"
+				+ "  manage_fonts\n"
 				+ "  hide_ui\n"
 				+ "  ai_trailer [on|off]\n"
 				+ "  gallery_editor\n"
@@ -174,8 +175,9 @@ func admin_command(raw: String) -> String:
 				+ "  manage_starting_deck\n"
 				+ "  player_vs_ai\n"
 				+ "  hot_seat\n"
-				+ "  exploration_editor\n"
-				+ "  exploration_play"
+			+ "  exploration_editor\n"
+			+ "  exploration_play\n"
+			+ "  tutorial_battle"
 			)
 
 		"tts":
@@ -212,6 +214,30 @@ func admin_command(raw: String) -> String:
 			menu_overlay.name = "MenuButtonManagerOverlay"
 			menu_scene.add_child(menu_overlay)
 			return "Menu Button Manager opened."
+
+		"manage_fonts", "font_manager":
+			var font_scene: Node = get_tree().current_scene
+			if font_scene.get_node_or_null("FontManagerOverlay") != null:
+				return "Font Manager is already open."
+			var font_admin: Node = font_scene.get_node_or_null("AdminConsoleOverlay")
+			if font_admin != null:
+				font_admin.queue_free()
+			var font_overlay: Node = load("res://scripts/FontManagerOverlay.gd").new()
+			font_overlay.name = "FontManagerOverlay"
+			font_scene.add_child(font_overlay)
+			return "Font Manager opened."
+
+		"tutorial_battle":
+			var tb_scene: Node = get_tree().current_scene
+			if tb_scene.get_node_or_null("TutorialBattleBuilder") != null:
+				return "Tutorial Battle Builder is already open."
+			var tb_admin: Node = tb_scene.get_node_or_null("AdminConsoleOverlay")
+			if tb_admin != null:
+				tb_admin.queue_free()
+			var tb_overlay: Node = load("res://scripts/TutorialBattleBuilder.gd").new()
+			tb_overlay.name = "TutorialBattleBuilder"
+			tb_scene.add_child(tb_overlay)
+			return "Tutorial Battle Builder opened."
 
 		"send":
 			var rest := line.substr(5)   # everything after "send "

@@ -1,0 +1,34 @@
+{
+	"slots": {
+		"primary": {
+			"label": "Primary UI",
+			"description": "Menus, exploration, VN dialog, puzzles, editors",
+			"path": "res://assets/fonts/Chivo-VariableFont_wght.ttf",
+			"variable": true
+		},
+		"digital": {
+			"label": "Digital HUD",
+			"description": "Numeric timers and stat readouts (digital-7)",
+			"path": "res://assets/fonts/digital-7.ttf",
+			"variable": false
+		},
+		"credits_jp": {
+			"label": "Credits Japanese",
+			"description": "Japanese lines in credits / credit demo",
+			"path": "res://assets/fonts/MPLUS1p-ExtraBold.ttf",
+			"variable": false
+		},
+		"display_serif": {
+			"label": "Display Serif",
+			"description": "Optional display / title serif (Playfair)",
+			"path": "res://assets/fonts/PlayfairDisplay-VariableFont_wght.ttf",
+			"variable": true
+		},
+		"mplus": {
+			"label": "M PLUS",
+			"description": "Japanese UI alternative",
+			"path": "res://assets/fonts/MPLUS1p-Regular.ttf",
+			"variable": false
+		}
+	}
+}

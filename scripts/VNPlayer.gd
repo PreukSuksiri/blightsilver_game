@@ -15,7 +15,6 @@ const DIALOG_Y    := 640.0
 const DIALOG_H    := 260.0
 
 const HINT_ICON_PATH  := "res://assets/textures/vn/etc/star_compass.png"
-const FONT_PATH       := "res://assets/fonts/Chivo-VariableFont_wght.ttf"
 const WINDOWSKIN_PATH := "res://assets/textures/ui/decorations/ui_window_skin.png"
 
 # ── Toggle dialog style ───────────────────────────────────────
@@ -82,12 +81,14 @@ func _loc(val) -> String:
 # ─────────────────────────────────────────────────────────────
 # Font helper
 # ─────────────────────────────────────────────────────────────
-func _make_font(weight: int) -> FontVariation:
-	var base := load(FONT_PATH) as FontFile
-	var fv := FontVariation.new()
-	fv.base_font = base
-	fv.variation_opentype = {"wght": weight}
-	return fv
+func _make_font(weight: int) -> Font:
+	return FontManager.make_font("primary", weight)
+
+func _tag_ui(node: Control, property: String, weight: int = 400) -> void:
+	FontManager.tag_font(node, property, "primary", weight)
+
+func _on_fonts_changed() -> void:
+	FontManager.refresh_tree(self)
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -97,6 +98,8 @@ func _ready() -> void:
 	z_index = 100
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
+	if not FontManager.fonts_changed.is_connected(_on_fonts_changed):
+		FontManager.fonts_changed.connect(_on_fonts_changed)
 	if transparent_bg:
 		_bg_base.visible = false
 	# Mini command overlay (Ctrl+Shift+A to open during VN playback)
@@ -209,7 +212,7 @@ func _build_ui() -> void:
 	_dialog_panel.add_child(_speaker_panel)
 
 	_speaker_lbl = Label.new()
-	_speaker_lbl.add_theme_font_override("font", _make_font(700))
+	_tag_ui(_speaker_lbl, "font", 700)
 	_speaker_lbl.add_theme_font_size_override("font_size", 24)
 	_speaker_lbl.add_theme_color_override("font_color", Color(0.72, 0.92, 1.0, 1.0))
 	_speaker_panel.add_child(_speaker_lbl)
@@ -220,7 +223,7 @@ func _build_ui() -> void:
 	_dialog_lbl.size            = Vector2(1460.0, 218.0)
 	_dialog_lbl.bbcode_enabled  = true
 	_dialog_lbl.scroll_active   = false
-	_dialog_lbl.add_theme_font_override("normal_font", _make_font(400))
+	_tag_ui(_dialog_lbl, "normal_font", 400)
 	_dialog_lbl.add_theme_font_size_override("normal_font_size", 30)
 	_dialog_lbl.add_theme_color_override("default_color", Color(0.90, 0.95, 1.0, 0.97))
 	_dialog_panel.add_child(_dialog_lbl)

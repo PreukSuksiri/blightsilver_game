@@ -226,6 +226,9 @@ func start_setup(player_index: int) -> void:
 	if GameState.game_mode == GameState.GameMode.VS_AI and player_index == 1 \
 			and GameState.battle_ai_deck != null:
 		deck = GameState.battle_ai_deck as DeckData
+	elif GameState.game_mode == GameState.GameMode.VS_AI and player_index == 0 \
+			and GameState.battle_player_deck != null:
+		deck = GameState.battle_player_deck as DeckData
 	else:
 		deck = SaveManager.get_active_deck()
 	if deck == null or not deck.is_valid():

@@ -14,7 +14,6 @@ extends Control
 ##   Click the [DBG] button in the top-right corner for the same effect.
 
 const VN_PLAYER_SCENE: PackedScene = preload("res://scenes/vn_player.tscn")
-const FONT_PATH: String        = "res://assets/fonts/Chivo-VariableFont_wght.ttf"
 const COMPASS_ICON: String     = "res://assets/textures/ui/decorations/ui_icon_compass.png"
 const SETTING_ICON: String     = "res://assets/textures/ui/decorations/ui_icon_exploration_setting.png"
 const INVENTORY_ICON: String   = "res://assets/textures/ui/decorations/ui_exploration_inventory.png"
@@ -190,17 +189,23 @@ func _connect_signals() -> void:
 	ExplorationManager.mailbox_reward_granted.connect(_on_mailbox_reward_granted)
 	ExplorationManager.inventory_changed.connect(_on_exploration_state_changed)
 	ExplorationManager.var_changed.connect(_on_var_changed)
+	ExplorationManager.end_exploration_requested.connect(_do_end_exploration)
+	ExplorationManager.end_exploration_vn_requested.connect(_do_end_exploration_with_vn)
+	if not FontManager.fonts_changed.is_connected(_on_fonts_changed):
+		FontManager.fonts_changed.connect(_on_fonts_changed)
+
+func _on_fonts_changed() -> void:
+	FontManager.refresh_tree(self)
 
 # ─────────────────────────────────────────────────────────────
 # UI Construction
 # ─────────────────────────────────────────────────────────────
 
-func _make_font(weight: int) -> FontVariation:
-	var base := load(FONT_PATH) as FontFile
-	var fv := FontVariation.new()
-	fv.base_font = base
-	fv.variation_opentype = {"wght": weight}
-	return fv
+func _make_font(weight: int) -> Font:
+	return FontManager.make_font("primary", weight)
+
+func _tag_ui(node: Control, property: String, weight: int = 400) -> void:
+	FontManager.tag_font(node, property, "primary", weight)
 
 func _build_ui() -> void:
 	# ── Background ────────────────────────────────────────────
@@ -256,7 +261,7 @@ func _build_ui() -> void:
 
 	# Title (hidden)
 	_title_lbl = Label.new()
-	_title_lbl.add_theme_font_override("font", _make_font(700))
+	_tag_ui(_title_lbl, "font", 700)
 	_title_lbl.add_theme_font_size_override("font_size", 30)
 	_title_lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0, 1.0))
 	_title_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -268,7 +273,7 @@ func _build_ui() -> void:
 	_desc_lbl.bbcode_enabled = true
 	_desc_lbl.scroll_active  = false
 	_desc_lbl.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_desc_lbl.add_theme_font_override("normal_font", _make_font(400))
+	_tag_ui(_desc_lbl, "normal_font", 400)
 	_desc_lbl.add_theme_font_size_override("normal_font_size", 22)
 	_desc_lbl.add_theme_color_override("default_color", Color(0.82, 0.90, 1.0, 0.95))
 	_desc_lbl.visible = false
@@ -288,7 +293,7 @@ func _build_ui() -> void:
 	vbox.add_child(_who_section)
 	var who_hdr := Label.new()
 	who_hdr.text = "Who is Here"
-	who_hdr.add_theme_font_override("font", _make_font(700))
+	_tag_ui(who_hdr, "font", 700)
 	who_hdr.add_theme_font_size_override("font_size", 30)
 	who_hdr.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0, 1.0))
 	_who_section.add_child(who_hdr)
@@ -363,7 +368,7 @@ func _build_ui() -> void:
 	_toast_lbl.offset_left  = 40.0; _toast_lbl.offset_right  = -40.0
 	_toast_lbl.offset_top   = -60.0; _toast_lbl.offset_bottom = 60.0
 	_toast_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_toast_lbl.add_theme_font_override("font", _make_font(700))
+	_tag_ui(_toast_lbl, "font", 700)
 	_toast_lbl.add_theme_font_size_override("font_size", 28)
 	_toast_lbl.add_theme_color_override("font_color", Color(1.0, 0.88, 0.30))
 	_toast_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
@@ -1098,7 +1103,7 @@ func _spawn_setting_radial_items(center: Vector2) -> void:
 		lbl.mouse_filter          = Control.MOUSE_FILTER_IGNORE
 		lbl.add_theme_font_size_override("font_size", 17)
 		lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
-		lbl.add_theme_font_override("font", _make_font(500))
+		_tag_ui(lbl, "font", 500)
 		panel.add_child(lbl)
 		var action: String = str(choices[i].get("action", ""))
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
@@ -1276,7 +1281,7 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 			lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			lbl.add_theme_font_size_override("font_size", 16)
 			lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
-			lbl.add_theme_font_override("font", _make_font(500))
+			_tag_ui(lbl, "font", 500)
 			inner.add_child(lbl)
 
 			var captured_id: String = item_id
@@ -1291,7 +1296,7 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 			nav_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
 			nav_lbl.add_theme_font_size_override("font_size", 16)
 			nav_lbl.add_theme_color_override("font_color", Color(0.75, 0.90, 1.0))
-			nav_lbl.add_theme_font_override("font", _make_font(500))
+			_tag_ui(nav_lbl, "font", 500)
 			panel.add_child(nav_lbl)
 			var target_page: int = page + 1 if choice_type == "more" else page - 1
 			panel.gui_input.connect(func(ev: InputEvent) -> void:
@@ -1420,7 +1425,7 @@ func _spawn_chat_radial_items(center: Vector2, available: Array) -> void:
 		lbl.mouse_filter          = Control.MOUSE_FILTER_IGNORE
 		lbl.add_theme_font_size_override("font_size", 17)
 		lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
-		lbl.add_theme_font_override("font", _make_font(500))
+		_tag_ui(lbl, "font", 500)
 		panel.add_child(lbl)
 		var vn_path: String   = str(char_data.get("vn_scene", ""))
 		var play_once_c: bool = bool(char_data.get("play_once", true))
@@ -1682,7 +1687,7 @@ func _show_item_preview(item_id: String) -> void:
 	# Item name
 	var name_lbl := Label.new()
 	name_lbl.text = str(item.get("name", item_id))
-	name_lbl.add_theme_font_override("font", _make_font(700))
+	_tag_ui(name_lbl, "font", 700)
 	name_lbl.add_theme_font_size_override("font_size", 26)
 	name_lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
 	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1847,7 +1852,7 @@ func _show_next_obtained() -> void:
 	var name_str: String = str(item.get("name", item_id))
 	var name_lbl := Label.new()
 	name_lbl.text = "Obtained  " + name_str
-	name_lbl.add_theme_font_override("font", _make_font(700))
+	_tag_ui(name_lbl, "font", 700)
 	name_lbl.add_theme_font_size_override("font_size", 38)
 	name_lbl.add_theme_color_override("font_color", Color(1.0, 0.95, 0.75))
 	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1900,7 +1905,6 @@ func _dismiss_obtained_overlay() -> void:
 # a confirmation message before fading out.
 # ─────────────────────────────────────────────────────────────
 
-const _DIGIT_FONT_PATH: String = "res://assets/fonts/digital-7.ttf"
 
 func _show_mailbox_reward_overlay(info: Dictionary) -> void:
 	_obtained_dismissing = false
@@ -1956,7 +1960,7 @@ func _show_mailbox_reward_overlay(info: Dictionary) -> void:
 	var display_name: String = str(info.get("display_name", ""))
 	var name_lbl := Label.new()
 	name_lbl.text = display_name
-	name_lbl.add_theme_font_override("font", _make_font(700))
+	_tag_ui(name_lbl, "font", 700)
 	name_lbl.add_theme_font_size_override("font_size", 36)
 	name_lbl.add_theme_color_override("font_color", Color(1.0, 0.95, 0.75))
 	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -2032,9 +2036,7 @@ func _play_digital_dissolve(overlay: Control, img_tr: TextureRect, on_done: Call
 	particle_layer.z_index = 3
 	overlay.add_child(particle_layer)
 
-	var digit_font: FontFile = null
-	if ResourceLoader.exists(_DIGIT_FONT_PATH):
-		digit_font = load(_DIGIT_FONT_PATH) as FontFile
+	var digit_font: Font = FontManager.get_font("digital")
 
 	# Spawn area — read from image rect once layout is settled
 	var spawn_cx: float = vp.x * 0.5
@@ -2139,7 +2141,7 @@ func _show_mailbox_sent_text(overlay: Control, on_done: Callable) -> void:
 	# Envelope icon
 	var icon_lbl := Label.new()
 	icon_lbl.text = "[ ✉ ]"
-	icon_lbl.add_theme_font_override("font", _make_font(300))
+	_tag_ui(icon_lbl, "font", 300)
 	icon_lbl.add_theme_font_size_override("font_size", 52)
 	icon_lbl.add_theme_color_override("font_color", Color(0.0, 1.0, 0.9))
 	icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -2149,7 +2151,7 @@ func _show_mailbox_sent_text(overlay: Control, on_done: Callable) -> void:
 	# Primary text
 	var sent_lbl := Label.new()
 	sent_lbl.text = "Sent to mailbox"
-	sent_lbl.add_theme_font_override("font", _make_font(700))
+	_tag_ui(sent_lbl, "font", 700)
 	sent_lbl.add_theme_font_size_override("font_size", 34)
 	sent_lbl.add_theme_color_override("font_color", Color(0.0, 1.0, 0.9))
 	sent_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -2218,6 +2220,13 @@ func _execute_item_effects(item_id: String) -> void:
 			"navigate_to":
 				if not eff_value.is_empty():
 					ExplorationManager.navigate_to(eff_value)
+			"end_exploration":
+				_do_end_exploration()
+				return
+			"end_exploration_vn":
+				if not eff_value.is_empty():
+					_do_end_exploration_with_vn(eff_value)
+					return
 	_refresh_contextual_hud_glows()
 
 # ─────────────────────────────────────────────────────────────
@@ -2294,7 +2303,7 @@ func _make_nav_radial_panel(
 	lbl.add_theme_font_size_override("font_size", NAV_RADIAL_FONT_SIZE)
 	lbl.add_theme_color_override("font_color",
 		Color(0.48, 0.50, 0.54) if disabled else Color(0.88, 0.96, 1.0))
-	lbl.add_theme_font_override("font", _make_font(500))
+	_tag_ui(lbl, "font", 500)
 	panel.add_child(lbl)
 
 	if disabled:
@@ -2464,7 +2473,7 @@ func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Cal
 
 	var title_lbl := Label.new()
 	title_lbl.text = title_text
-	title_lbl.add_theme_font_override("font", _make_font(700))
+	_tag_ui(title_lbl, "font", 700)
 	title_lbl.add_theme_font_size_override("font_size", 22)
 	title_lbl.add_theme_color_override("font_color", Color(1.0, 0.75, 0.70))
 	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -2590,6 +2599,9 @@ func _refresh_node(node: ExplorationNode) -> void:
 					_open_info_panel(func() -> void: _try_play_node_vn(node, true), true)
 				else:
 					_try_play_node_vn(node, true)
+			elif node.show_info_on_enter:
+				_compass_set_visible(true)
+				_open_info_panel(Callable(), true)
 			else:
 				_compass_set_visible(true)
 		_:
@@ -2601,6 +2613,11 @@ func _refresh_node(node: ExplorationNode) -> void:
 					_open_info_panel(func() -> void: _try_play_node_vn(node, false), true)
 				else:
 					_try_play_node_vn(node, false)
+			elif node.show_info_on_enter:
+				_compass_set_visible(true)
+				_open_info_panel(Callable(), true)
+			else:
+				_compass_set_visible(true)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -2794,12 +2811,31 @@ func _show_exit_prompt() -> void:
 	_choices_vbox.add_child(btn)
 
 func _on_exit_confirmed() -> void:
+	_do_end_exploration()
+
+func _do_end_exploration() -> void:
+	if not ExplorationManager.is_session_active:
+		return
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	ExplorationManager.end_session(true)
 	var dest: String = ExplorationManager.return_scene
 	CheckerTransition.fade_out_to_battle(func() -> void:
 		get_tree().change_scene_to_file(dest)
 		CheckerTransition.fade_in())
+
+func _do_end_exploration_with_vn(vn_path: String) -> void:
+	if not ExplorationManager.is_session_active:
+		return
+	ExplorationManager.end_session(true)
+	var dest: String = ExplorationManager.return_scene
+	# VNPlayer runs as an overlay on top of the still-alive exploration scene.
+	var vn: Control = VN_PLAYER_SCENE.instantiate() as Control
+	vn.keep_bgm = false
+	add_child(vn)
+	vn.play_scene(vn_path, func() -> void:
+		CheckerTransition.fade_out_to_battle(func() -> void:
+			get_tree().change_scene_to_file(dest)
+			CheckerTransition.fade_in()))
 
 # ─────────────────────────────────────────────────────────────
 # UI helpers
@@ -3053,6 +3089,13 @@ func _execute_spot_actions(actions: Array) -> void:
 			"navigate_to":
 				if not value.is_empty():
 					nav_target = value
+			"end_exploration":
+				_do_end_exploration()
+				return
+			"end_exploration_vn":
+				if not value.is_empty():
+					_do_end_exploration_with_vn(value)
+					return
 	# VN plays first; navigate fires in its completion callback
 	if not vn_path.is_empty():
 		if vn_play_once and ExplorationManager.is_vn_played(vn_path):

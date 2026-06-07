@@ -15,7 +15,8 @@ const SCENE_REGISTRY: Dictionary = {
 	"puzzle_memory_flip":  "res://scenes/puzzles/puzzle_memory_flip.tscn",
 	"puzzle_lights_out":   "res://scenes/puzzles/puzzle_lights_out.tscn",
 	"puzzle_wire_connect": "res://scenes/puzzles/puzzle_wire_connect.tscn",
-	"puzzle_simon_says":   "res://scenes/puzzles/puzzle_simon_says.tscn",
+	"puzzle_simon_says":        "res://scenes/puzzles/puzzle_simon_says.tscn",
+	"puzzle_mario_platformer": "res://scenes/puzzles/puzzle_mario_platformer.tscn",
 }
 
 var _puzzles: Array = []

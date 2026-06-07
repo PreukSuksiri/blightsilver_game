@@ -320,6 +320,8 @@ func _ready() -> void:
 	elif GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.HOT_SEAT]:
 		_open_session_log()
 	CheckerTransition.fade_in()
+	if TutorialBattleManager.is_prepared:
+		TutorialBattleManager.on_board_ready(self)
 
 # ─────────────────────────────────────────────────────────────
 # Setup
@@ -1507,10 +1509,13 @@ func _create_tech_stack_indicator(player: int) -> Control:
 		_p2_stack_count_lbl = count_lbl
 
 	# Click / tap to open modal (same mechanism as void stack)
+	var _tut_tech_player := player
 	container.gui_input.connect(func(ev: InputEvent) -> void:
 		if (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) \
 				or (ev is InputEventScreenTouch and ev.pressed):
-			_open_tech_modal(player)
+			if TutorialBattleManager.is_active:
+				TutorialBattleManager.report_action("tech_chip_tap", {"player": _tut_tech_player})
+			_open_tech_modal(_tut_tech_player)
 			get_viewport().set_input_as_handled())
 
 	return container
@@ -1729,10 +1734,13 @@ func _create_void_stack_indicator(player: int) -> Control:
 		_p2_void_count_lbl = count_lbl
 
 	# Click opens void modal for own pile only
+	var _tut_void_player := player
 	container.gui_input.connect(func(ev: InputEvent) -> void:
 		if (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) \
 				or (ev is InputEventScreenTouch and ev.pressed):
-			_open_void_modal(player)
+			if TutorialBattleManager.is_active:
+				TutorialBattleManager.report_action("void_stack_tap", {"player": _tut_void_player})
+			_open_void_modal(_tut_void_player)
 			get_viewport().set_input_as_handled())
 
 	return container
@@ -2405,7 +2413,11 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 
 	if can_attack:
 		var btn := _make_context_icon_btn(CTX_ICON_ATTACK)
+		btn.set_meta("tut_action", "attack")
+		var snap_card_name_atk: String = GameState.get_card(ctx_player, row, col).card_name
 		btn.pressed.connect(func() -> void:
+			if TutorialBattleManager.is_active:
+				TutorialBattleManager.report_action("attack_icon_tap", {"card_name": snap_card_name_atk})
 			_hide_card_context()
 			_clear_selection()
 			selected_attacker_pos = snap_pos
@@ -2434,7 +2446,11 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 		var bluff_snap_row: int = row
 		var bluff_snap_col: int = col
 		var btn := _make_context_icon_btn(CTX_ICON_BLUFF)
+		btn.set_meta("tut_action", "bluff")
+		var snap_card_name_bluff: String = GameState.get_card(ctx_player, row, col).card_name
 		btn.pressed.connect(func() -> void:
+			if TutorialBattleManager.is_active:
+				TutorialBattleManager.report_action("bluff_icon_tap", {"card_name": snap_card_name_bluff})
 			_hide_card_context()
 			_show_bluff_modal_board(bluff_snap_player, bluff_snap_row, bluff_snap_col)
 		)
@@ -2680,6 +2696,8 @@ func _on_union_modal_cancelled() -> void:
 
 func _on_union_selected(player: int, union_name: String, zone_cells: Array) -> void:
 	_union_modal = null
+	if TutorialBattleManager.is_active:
+		TutorialBattleManager.report_action("union_selected", {"union_name": union_name, "player": player})
 	var u: UnionData = UnionDatabase.get_union(union_name)
 	if u == null:
 		push_error("Union not found: " + union_name)
@@ -3513,6 +3531,8 @@ func _build_options_button() -> void:
 	_options_btn = btn
 
 func _on_options_btn_pressed() -> void:
+	if TutorialBattleManager.is_active:
+		TutorialBattleManager.report_action("options_tap", {})
 	if _options_panel != null:
 		return
 	_show_options_panel()
@@ -3634,6 +3654,8 @@ func _on_union_suggest_pressed() -> void:
 	var available: Array = _collect_all_available_unions(GameState.current_player)
 	if available.is_empty():
 		return
+	if TutorialBattleManager.is_active:
+		TutorialBattleManager.report_action("union_hud_tap", {})
 	_open_union_modal(GameState.current_player, available)
 
 # ─────────────────────────────────────────────────────────────
@@ -4915,8 +4937,11 @@ func _refresh_tech_hand() -> void:
 			use_btn.text = "USE  (%d◆)" % (data.crystal_cost if data else 0)
 			use_btn.disabled = not can_use
 			use_btn.add_theme_font_size_override("font_size", 16)
+			use_btn.set_meta("tut_tech", tech_name)
 			var captured: String = tech_name
 			use_btn.pressed.connect(func() -> void:
+				if TutorialBattleManager.is_active:
+					TutorialBattleManager.report_action("tech_use_tap", {"tech_name": captured})
 				_dismiss_tech_hand_overlay()
 				_on_tech_card_btn(captured))
 			col.add_child(use_btn)
@@ -4935,6 +4960,93 @@ func _is_ai_turn() -> bool:
 	return GameState.current_player == 1 and \
 		GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
 			GameState.GameMode.DAILY_DUNGEON]
+
+# ─────────────────────────────────────────────────────────────
+# Tutorial Battle — position query helpers
+# ─────────────────────────────────────────────────────────────
+
+## Returns the global center of the first matching card on [player]'s grid.
+func get_card_center(player: int, card_name: String) -> Vector2:
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var ci: GameState.CardInstance = GameState.get_card(player, r, c)
+			if ci != null and ci.card_name == card_name:
+				return grid_nodes[player][r][c].get_global_rect().get_center()
+	return Vector2.ZERO
+
+## Returns the global center of a grid cell.
+func get_cell_center(player: int, row: int, col: int) -> Vector2:
+	if row < 0 or row >= GameState.GRID_SIZE or col < 0 or col >= GameState.GRID_SIZE:
+		return Vector2.ZERO
+	return grid_nodes[player][row][col].get_global_rect().get_center()
+
+## Returns the global center of the context-menu button tagged with [action_meta].
+func get_context_btn_center(action_meta: String) -> Vector2:
+	if _context_popup == null or not is_instance_valid(_context_popup):
+		return Vector2.ZERO
+	return _find_meta_btn_center(_context_popup, "tut_action", action_meta)
+
+## Returns the global center of the End Turn button.
+func get_end_turn_btn_center() -> Vector2:
+	if _end_turn_btn == null or not is_instance_valid(_end_turn_btn):
+		return Vector2.ZERO
+	return _end_turn_btn.get_global_rect().get_center()
+
+## Returns the global center of the Options button.
+func get_options_btn_center() -> Vector2:
+	if _options_btn == null or not is_instance_valid(_options_btn):
+		return Vector2.ZERO
+	return _options_btn.get_global_rect().get_center()
+
+## Returns the global center of the Union suggest button.
+func get_union_btn_center() -> Vector2:
+	if _union_suggest_btn == null or not is_instance_valid(_union_suggest_btn):
+		return Vector2.ZERO
+	return _union_suggest_btn.get_global_rect().get_center()
+
+## Returns the global center of the tech chip stack for a player.
+func get_tech_chip_center(player: int) -> Vector2:
+	var stack: Control = _p1_tech_stack if player == 0 else _p2_tech_stack
+	if stack == null or not is_instance_valid(stack):
+		return Vector2.ZERO
+	return stack.get_global_rect().get_center()
+
+## Returns the global center of the void stack for a player.
+func get_void_stack_center(player: int) -> Vector2:
+	var stack: Control = _p1_void_stack if player == 0 else _p2_void_stack
+	if stack == null or not is_instance_valid(stack):
+		return Vector2.ZERO
+	return stack.get_global_rect().get_center()
+
+## Returns the center of the USE button for [tech_name] inside the tech hand overlay.
+func get_tech_use_btn_center(tech_name: String) -> Vector2:
+	if _tech_hand_overlay == null or not is_instance_valid(_tech_hand_overlay):
+		return Vector2.ZERO
+	return _find_meta_btn_center(_tech_hand_overlay, "tut_tech", tech_name)
+
+## Returns the center of the first Button in [modal] whose text contains [union_name].
+func get_union_modal_btn_center(union_name: String) -> Vector2:
+	if _union_modal == null or not is_instance_valid(_union_modal):
+		return Vector2.ZERO
+	return _find_text_btn_center(_union_modal, union_name)
+
+func _find_meta_btn_center(root: Node, meta_key: String, meta_val: String) -> Vector2:
+	for child in root.get_children():
+		if child is Button and child.has_meta(meta_key) and child.get_meta(meta_key) == meta_val:
+			return (child as Button).get_global_rect().get_center()
+		var r := _find_meta_btn_center(child, meta_key, meta_val)
+		if r != Vector2.ZERO:
+			return r
+	return Vector2.ZERO
+
+func _find_text_btn_center(root: Node, text_contains: String) -> Vector2:
+	for child in root.get_children():
+		if child is Button and text_contains.to_lower() in child.text.to_lower():
+			return (child as Button).get_global_rect().get_center()
+		var r := _find_text_btn_center(child, text_contains)
+		if r != Vector2.ZERO:
+			return r
+	return Vector2.ZERO
 
 func _on_attack_btn() -> void:
 	if GameState.current_phase != GameState.Phase.MODE_SELECT:
@@ -4996,6 +5108,8 @@ func _on_ai_end_turn() -> void:
 	turn_manager.end_attacks_early()
 
 func _on_end_turn_requested() -> void:
+	if TutorialBattleManager.is_active:
+		TutorialBattleManager.report_action("end_turn_tap", {})
 	# Check if this player attacked at all this turn.
 	# Two sources: surviving characters with attacked_this_turn=true, OR
 	# attacks_remaining dropped below 2 (covers destroyed attackers whose flag is gone).
@@ -5167,6 +5281,9 @@ func _enter_mode_select() -> void:
 	if GameState.turn_number != _last_banner_turn:
 		_last_banner_turn = GameState.turn_number
 		_show_turn_banner(GameState.current_player)
+	# Notify tutorial manager when human player's turn begins.
+	if TutorialBattleManager.is_active and not _is_ai_turn():
+		TutorialBattleManager.on_player_turn_started()
 	# Auto-peek for the active player at the start of each turn.
 	# In VS_AI mode, never reveal the AI's board — reset previews instead.
 	var cp := GameState.current_player
@@ -5414,6 +5531,15 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 	# effect (e.g. Tease forces the opponent to reveal one of their own squares).
 	if _is_ai_turn() and selection_state != SelectionState.SELECTING_TECH_TARGET:
 		return
+	# Tutorial action report
+	if TutorialBattleManager.is_active:
+		var _tut_ci: GameState.CardInstance = GameState.get_card(player, row, col)
+		if _tut_ci != null and not _tut_ci.card_name.is_empty():
+			TutorialBattleManager.report_action("card_tap",
+				{"card_name": _tut_ci.card_name, "player": player, "row": row, "col": col})
+		else:
+			TutorialBattleManager.report_action("cell_tap",
+				{"player": player, "row": row, "col": col})
 	var pos := Vector2i(row, col)
 	var current_player := GameState.current_player
 	var opponent := GameState.get_opponent(current_player)
@@ -7346,6 +7472,8 @@ func _process(_delta: float) -> void:
 func _on_game_over(winner: int) -> void:
 	# Dismiss guide box immediately so it doesn't bleed into VN or win screen
 	_hide_guide()
+	if TutorialBattleManager.is_active:
+		TutorialBattleManager.stop()
 
 	# ── AI vs AI mode: hand off to AIvsAIManager which logs + returns to config ──
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:

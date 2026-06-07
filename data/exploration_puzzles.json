@@ -58,5 +58,11 @@
 		"id": "puzzle_simon_says",
 		"name": "Simon Says",
 		"params_guide": "Key field (JSON):\n  {\"length\":4,\"flash_sec\":0.6,\"panels\":4}\n\nlength    (required) — total sequence length to win, integer 2–8\nflash_sec (optional) — how long each panel flashes in seconds (default 0.6)\npanels    (optional) — number of panels: 3 or 4 (default 4)"
+	},
+	{
+		"description": "Run and jump through a short Game Boy-style platformer stage. Avoid ghost monsters and pits, reach the flag to win. Failing returns to exploration.",
+		"id": "puzzle_mario_platformer",
+		"name": "Platformer Stage",
+		"params_guide": "No parameters required.\nControls: ← → Move   ↑ Jump   ESC Quit"
 	}
 ]

@@ -40,6 +40,8 @@ CardE2ERunner="*res://autoload/CardE2ERunner.gd"
 SessionLogNaming="*res://autoload/SessionLogNaming.gd"
 SFXManager="*res://autoload/SFXManager.gd"
 MenuButtonConfig="*res://autoload/MenuButtonConfig.gd"
+FontManager="*res://autoload/FontManager.gd"
+TutorialBattleManager="*res://autoload/TutorialBattleManager.gd"
 
 [display]
 

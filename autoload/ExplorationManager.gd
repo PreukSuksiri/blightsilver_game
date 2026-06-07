@@ -97,6 +97,14 @@ signal item_obtained(item_id: String)
 ## info keys: image_path (String), display_name (String), type ("credits"|"booster_pack")
 signal mailbox_reward_granted(info: Dictionary)
 
+## Emitted when an end_exploration effect fires (item, spot, node event, or VN beat).
+## ExplorationPlayer connects to this and performs the scene transition.
+signal end_exploration_requested
+
+## Emitted when an end_exploration_vn effect fires.
+## vn_path — res:// path to the VN JSON to play before returning to return_scene.
+signal end_exploration_vn_requested(vn_path: String)
+
 # ─────────────────────────────────────────────────────────────
 # Public configuration (set before launch / start_session)
 # ─────────────────────────────────────────────────────────────
@@ -531,6 +539,15 @@ func _process_events(events: Array) -> void:
 
 			"play_sfx":
 				_play_sfx(value)
+
+			"end_exploration":
+				end_session(true)
+				emit_signal("end_exploration_requested")
+
+			"end_exploration_vn":
+				var vn_path: String = value if not value.is_empty() else key
+				end_session(true)
+				emit_signal("end_exploration_vn_requested", vn_path)
 
 ## Grant shop credits immediately (Collection wallet used by the Shop).
 func _grant_credits(amount: int) -> void:

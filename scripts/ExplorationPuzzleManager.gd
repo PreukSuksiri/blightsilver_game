@@ -2,8 +2,6 @@ extends Control
 ## ExplorationPuzzleManager — editor UI for the global puzzle catalog.
 ## Puzzle scenes are manually coded; this UI manages metadata only.
 
-const FONT_PATH: String = "res://assets/fonts/Chivo-VariableFont_wght.ttf"
-
 var _list_vbox: VBoxContainer = null
 var _edit_panel: Panel        = null
 var _ef_id: LineEdit          = null
@@ -18,14 +16,15 @@ func _ready() -> void:
 	z_index = 50
 	_build_ui()
 	_refresh_list()
+	if not FontManager.fonts_changed.is_connected(_on_fonts_changed):
+		FontManager.fonts_changed.connect(_on_fonts_changed)
 	set_anchors_and_offsets_preset.call_deferred(Control.PRESET_FULL_RECT)
 
-func _make_font(weight: int) -> FontVariation:
-	var base := load(FONT_PATH) as FontFile
-	var fv := FontVariation.new()
-	fv.base_font = base
-	fv.variation_opentype = {"wght": weight}
-	return fv
+func _on_fonts_changed() -> void:
+	FontManager.refresh_tree(self)
+
+func _tag_ui(node: Control, property: String, weight: int = 400) -> void:
+	FontManager.tag_font(node, property, "primary", weight)
 
 func _build_ui() -> void:
 	var bg := ColorRect.new()
@@ -52,7 +51,7 @@ func _build_ui() -> void:
 
 	var title_lbl := Label.new()
 	title_lbl.text = "  Exploration Puzzles"
-	title_lbl.add_theme_font_override("font", _make_font(700))
+	_tag_ui(title_lbl, "font", 700)
 	title_lbl.add_theme_font_size_override("font_size", 18)
 	title_lbl.add_theme_color_override("font_color", Color(0.55, 0.85, 1.0))
 	title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -99,7 +98,7 @@ func _build_ui() -> void:
 
 	var heading := Label.new()
 	heading.text = "Edit Puzzle"
-	heading.add_theme_font_override("font", _make_font(700))
+	_tag_ui(heading, "font", 700)
 	heading.add_theme_font_size_override("font_size", 20)
 	heading.add_theme_color_override("font_color", Color(0.75, 0.90, 1.0))
 	vbox.add_child(heading)

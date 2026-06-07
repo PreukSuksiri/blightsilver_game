@@ -1,0 +1,60 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_booths_peak_inside_1.png",
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "There's a light from a desk lamp... That must be Mayu for sure..."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "Why is she still sitting there?"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "Hey...!! Mayu... Let's go home...!!"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "Hey...!!"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "She didn't hear me? Is this door some sort of soundproof?"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_booths_peak_inside_2.png",
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "......?"
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_booths_peak_inside_2.png",
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "She turned the lamp off... What the hell...?"
+	}
+]

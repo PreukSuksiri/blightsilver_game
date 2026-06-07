@@ -1,7 +1,6 @@
 extends Control
 
 const DeckData = preload("res://resources/DeckData.gd")
-const CHIVO_FONT := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 const InventoryMenuScene = preload("res://scenes/inventory_menu.tscn")
 const AdminConsoleScene = preload("res://scenes/admin_console.tscn")
 const ShopMenuScene     = preload("res://scenes/shop_menu.tscn")
@@ -74,6 +73,9 @@ func _ready() -> void:
 			and not DailyDungeonManager.is_story_session():
 		# Orphaned story save from an abandoned session — don't auto-open anything.
 		DailyDungeonManager.end_story_session()
+	_apply_menu_fonts()
+	if not FontManager.fonts_changed.is_connected(_on_fonts_changed):
+		FontManager.fonts_changed.connect(_on_fonts_changed)
 
 func _refresh_deck_status() -> void:
 	var deck: DeckData = SaveManager.get_active_deck()
@@ -132,14 +134,14 @@ func _show_deck_warning() -> void:
 	lbl.text = "Deck not ready\n" + _deck_warning_message()
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_font(lbl, "font", "primary", 400)
 	lbl.add_theme_font_size_override("font_size", 16)
 	lbl.add_theme_color_override("font_color", Color(1.0, 0.6, 0.35, 1.0))
 	vbox.add_child(lbl)
 
 	var ok_btn := Button.new()
 	ok_btn.text = "OK"
-	ok_btn.add_theme_font_override("font", CHIVO_FONT)
+	FontManager.tag_font(ok_btn, "font", "primary", 400)
 	ok_btn.add_theme_font_size_override("font_size", 17)
 	_apply_menu_btn_style(ok_btn, false)
 	ok_btn.pressed.connect(func() -> void: panel.queue_free())
@@ -412,7 +414,7 @@ func _on_single_player() -> void:
 		btn.text = label
 		btn.disabled = not enabled
 		btn.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		btn.add_theme_font_override("font", CHIVO_FONT)
+		FontManager.tag_font(btn, "font", "primary", 400)
 		btn.add_theme_font_size_override("font_size", 18)
 		if enabled:
 			btn.pressed.connect(cb)
@@ -512,7 +514,7 @@ func _on_multiplayer() -> void:
 		btn.text = label
 		btn.disabled = not enabled
 		btn.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		btn.add_theme_font_override("font", CHIVO_FONT)
+		FontManager.tag_font(btn, "font", "primary", 400)
 		btn.add_theme_font_size_override("font_size", 18)
 		if enabled:
 			btn.pressed.connect(cb)
@@ -569,6 +571,25 @@ func _on_inventory() -> void:
 func _on_credits() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
 	get_tree().change_scene_to_file("res://scenes/credits.tscn")
+
+func _apply_menu_fonts() -> void:
+	var btns: Array[Button] = [
+		local_2p_btn, deck_build_btn, shop_btn, gallery_btn, mailbox_btn,
+		credits_btn, exit_game_btn, campaign_btn, settings_icon_btn, exit_icon_btn,
+	]
+	for btn: Button in btns:
+		if btn != null:
+			FontManager.tag_font(btn, "font", "primary", 400)
+	if version_label != null:
+		FontManager.tag_font(version_label, "font", "primary", 400)
+	if deck_status_label != null:
+		FontManager.tag_font(deck_status_label, "font", "primary", 400)
+
+
+func _on_fonts_changed() -> void:
+	_apply_menu_fonts()
+	FontManager.refresh_tree(self)
+
 
 func _on_exit_game() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
