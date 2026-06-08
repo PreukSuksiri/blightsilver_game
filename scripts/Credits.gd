@@ -218,7 +218,7 @@ func _ready() -> void:
 	# Wrap Japanese subtitle in MPLUS ExtraBold
 	processed = processed.replace(
 		"盲目の十字架を抱いて",
-		"[font=%s]盲目の十字架を抱いて[/font]" % FontManager.get_path("credits_jp"))
+		"[font=%s]盲目の十字架を抱いて[/font]" % FontManager.get_slot_path("credits_jp"))
 	_scroll_label.text = "[center]" + processed + "[/center]"
 	clip.add_child(_scroll_label)
 

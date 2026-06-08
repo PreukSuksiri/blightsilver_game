@@ -206,7 +206,7 @@ func _ready() -> void:
 	# Wrap Japanese subtitle in MPLUS ExtraBold
 	processed = processed.replace(
 		"盲目の十字架を抱いて",
-		"[font=%s]盲目の十字架を抱いて[/font]" % FontManager.get_path("credits_jp"))
+		"[font=%s]盲目の十字架を抱いて[/font]" % FontManager.get_slot_path("credits_jp"))
 	_scroll_label.text = "[center]" + processed + "[/center]"
 	clip.add_child(_scroll_label)
 
@@ -233,12 +233,12 @@ func _ready() -> void:
 		_bgm = carried as AudioStreamPlayer
 		_bgm.reparent(self)
 		_bgm.bus = &"Music"
-		(_bgm.stream as AudioStreamMP3).loop = true
+		_set_bgm_loop(_bgm)
 	else:
 		_bgm = AudioStreamPlayer.new()
 		_bgm.stream = BGM_STREAM
 		_bgm.bus = &"Music"
-		(_bgm.stream as AudioStreamMP3).loop = true
+		_set_bgm_loop(_bgm)
 		add_child(_bgm)
 		_bgm.play()
 
@@ -301,6 +301,11 @@ func _end_credits() -> void:
 	tween.tween_property(_fade, "color:a", 1.0, FADE_DURATION).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(func() -> void:
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+
+func _set_bgm_loop(player: AudioStreamPlayer) -> void:
+	var stream: AudioStreamMP3 = player.stream as AudioStreamMP3
+	if stream != null:
+		stream.loop = true
 
 func _build_shader_logo(vp_size: Vector2) -> void:
 	# Root container — anchor-based horizontal centering, Y tracked by _logo_y

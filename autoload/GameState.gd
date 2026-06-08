@@ -216,6 +216,7 @@ var tech_cards_played_this_game: Array = [[], []]
 
 # Special global flags
 # VN-driven battle outcome routing (set by VNPlayer after new_game(), persists across scene change)
+var open_campaign_gallery_on_menu: bool = false
 var vn_on_win: String = ""
 var vn_on_lose: String = ""
 var game_over_reason: String = ""  # "crystals" | "all_destroyed" | "no_moves" | "surrender"

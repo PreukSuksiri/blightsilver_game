@@ -264,7 +264,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 						and _ic_cand.ability_type == CharacterData.AbilityType.INTERCEPT_ALLY_ATTACK:
 					var _ic_aff: int = _ic_cand.ability_params.get("affinity", -1)
 					if _ic_aff == -1 or _ic_aff == defender.affinity:
-						emit_signal("awaiting_trap_choice",
+						emit_signal("awaiting_defender_choice",
 							"%s can intercept for %s!" % [_ic_cand.card_name, defender.card_name],
 							["Intercept", "Don't Intercept"])
 						var _ic_choice: int = await ability_choice_resolved
@@ -946,7 +946,7 @@ func _apply_battle_result(
 						and _sac_cand.ability_type == CharacterData.AbilityType.SACRIFICE_FOR_CARD_TYPE:
 					var _sac_name: String = _sac_cand.ability_params.get("name_contains", "")
 					if _sac_name != "" and _sac_name in defender.card_name:
-						emit_signal("awaiting_trap_choice",
+						emit_signal("awaiting_defender_choice",
 							"%s sacrifices itself to save %s?" % [_sac_cand.card_name, defender.card_name],
 							["Sacrifice", "Let it be destroyed"])
 						var _sac_choice: int = await ability_choice_resolved
@@ -1237,15 +1237,36 @@ func _handle_trap_effect(
 
 		TrapData.TrapEffectType.DRAIN_ATTACKER_CRYSTALS:
 			var amount: int = trap_data.effect_params.get("amount", 800)
-			GameState.lose_crystals(player, amount, "trap")
-			await crystal_animation_done
-			if trap_data.effect_params.get("transfer_to_defender", false):
-				GameState.gain_crystals(opponent, amount, "trap")
-				GameState.post_message(
-					"%s: Player %d loses %d Crystals; defender gains %d!" % [
-						trap_data.card_name, player + 1, amount, amount])
+			var coin_count: int = int(trap_data.effect_params.get("coin_count", 0))
+			var transfer: bool = trap_data.effect_params.get("transfer_to_defender", false)
+			if coin_count > 0 and not transfer:
+				var _cf_r: Array = await _do_coin_flips(coin_count)
+				var _cf_parts: PackedStringArray = []
+				var _heads: int = 0
+				for r in _cf_r:
+					_cf_parts.append("Heads" if r else "Tails")
+					if r:
+						_heads += 1
+				GameState.post_message("%s: %s." % [trap_data.card_name, ", ".join(_cf_parts)])
+				if _heads > 0:
+					var total: int = amount * _heads
+					GameState.lose_crystals(player, total, "trap")
+					await crystal_animation_done
+					GameState.post_message(
+						"%s: %d head(s) — Player %d loses %d Crystals!" % [
+							trap_data.card_name, _heads, player + 1, total])
+				else:
+					GameState.post_message("%s: No heads — no crystal loss." % trap_data.card_name)
 			else:
-				GameState.post_message("%s: Player %d loses %d Crystals!" % [trap_data.card_name, player + 1, amount])
+				GameState.lose_crystals(player, amount, "trap")
+				await crystal_animation_done
+				if transfer:
+					GameState.gain_crystals(opponent, amount, "trap")
+					GameState.post_message(
+						"%s: Player %d loses %d Crystals; defender gains %d!" % [
+							trap_data.card_name, player + 1, amount, amount])
+				else:
+					GameState.post_message("%s: Player %d loses %d Crystals!" % [trap_data.card_name, player + 1, amount])
 
 		TrapData.TrapEffectType.CANCEL_ATTACKER_ATTACK:
 			var _dp_max: int = int(trap_data.effect_params.get("max_attack_cost", -1))

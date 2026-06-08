@@ -95,9 +95,9 @@
 					"type": "character"
 				},
 				{
-					"c": 0,
+					"c": 0.0,
 					"name": "Choir Lady Alice",
-					"r": 2,
+					"r": 2.0,
 					"type": "character"
 				}
 			]

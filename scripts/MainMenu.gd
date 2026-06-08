@@ -73,6 +73,9 @@ func _ready() -> void:
 			and not DailyDungeonManager.is_story_session():
 		# Orphaned story save from an abandoned session — don't auto-open anything.
 		DailyDungeonManager.end_story_session()
+	elif GameState.open_campaign_gallery_on_menu:
+		GameState.open_campaign_gallery_on_menu = false
+		call_deferred("_on_campaign")
 	_apply_menu_fonts()
 	if not FontManager.fonts_changed.is_connected(_on_fonts_changed):
 		FontManager.fonts_changed.connect(_on_fonts_changed)

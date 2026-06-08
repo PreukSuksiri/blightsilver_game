@@ -107,6 +107,19 @@ func _build_ui() -> void:
 	title_lbl.add_theme_color_override("font_color", Color(1, 1, 1))
 	top.add_child(title_lbl)
 
+	var clear_prog_btn := Button.new()
+	clear_prog_btn.text = "Clear Progress"
+	clear_prog_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	clear_prog_btn.offset_left   = -290.0
+	clear_prog_btn.offset_top    = 8.0
+	clear_prog_btn.offset_right  = -130.0
+	clear_prog_btn.offset_bottom = 40.0
+	clear_prog_btn.add_theme_font_override("font", CHIVO_FONT)
+	clear_prog_btn.add_theme_font_size_override("font_size", 13)
+	clear_prog_btn.add_theme_color_override("font_color", Color(1.0, 0.55, 0.45))
+	clear_prog_btn.pressed.connect(_on_clear_progress)
+	top.add_child(clear_prog_btn)
+
 	var save_btn := Button.new()
 	save_btn.text = "💾 SAVE"
 	save_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -496,6 +509,30 @@ func _mark_dirty() -> void:
 
 func _status(msg: String) -> void:
 	_status_lbl.text = msg
+
+
+func _on_clear_progress() -> void:
+	var dlg := ConfirmationDialog.new()
+	dlg.title = "Clear Gallery Progress"
+	dlg.dialog_text = (
+		"Reset all campaign gallery progress for this save?\n\n"
+		+ "• Gallery chapter completions\n"
+		+ "• Campaign map node completions\n\n"
+		+ "Gallery data in gallery_data.json is not changed."
+	)
+	dlg.ok_button_text = "Clear All"
+	dlg.cancel_button_text = "Cancel"
+	dlg.confirmed.connect(func() -> void:
+		var counts: Dictionary = SaveManager.clear_gallery_progress()
+		_status(
+			"Progress cleared — %d gallery chapter(s), %d campaign node(s)."
+			% [int(counts.get("gallery_chapters", 0)), int(counts.get("campaign_nodes", 0))]
+		)
+		dlg.queue_free())
+	dlg.canceled.connect(func() -> void: dlg.queue_free())
+	dlg.close_requested.connect(func() -> void: dlg.queue_free())
+	add_child(dlg)
+	dlg.popup_centered()
 
 
 func _on_close() -> void:

@@ -16,6 +16,7 @@ const CELL_GAP: int   = 5
 const GAL_W   : float = 88.0
 const GAL_H   : float = 121.0
 const GAL_GAP : int   = 6
+const TUTORIAL_FORMATION_MSG := "Formation Change is unavailable in tutorial"
 
 # ─────────────────────────────────────────────────────────────
 # Inner class: gallery card (drag source + tap to preview)
@@ -158,7 +159,9 @@ var current_setup_player: int = 0
 var _chars_remaining: Array = []
 var _traps_remaining: Array = []
 var _grid_cells: Array = []          # [row][col] -> GridCell
+var _grid_panel: Panel = null        # formation grid container
 var _locked_cells: Array = []        # Array[Vector2i] — forced placement cells
+var _tutorial_formation_overlay: Control = null
 var _union_panel_node: Panel = null  # ref to the "POSSIBLE UNIONS" panel
 var _formation_bar: HBoxContainer = null  # pre-defined formation buttons
 var _body_hbox:     Control       = null  # body (grid + right panel)
@@ -195,6 +198,7 @@ func _ready() -> void:
 # ─────────────────────────────────────────────────────────────
 func start_setup(player_index: int) -> void:
 	current_setup_player = player_index
+	_clear_tutorial_formation_lock()
 	_player_lbl.text = "PLAYER %d  —  Place Your Cards" % (player_index + 1)
 	if _sp_p1_portrait:
 		_sp_p1_portrait.visible = (player_index == 0)
@@ -212,13 +216,7 @@ func start_setup(player_index: int) -> void:
 	# Reset confirm button, random button, and info panel
 	_confirm_btn.disabled = true
 	_random_btn.disabled  = true
-	_info_card_name = ""
-	_info_card_type = ""
-	_info_img.texture = null
-	_info_name.text = "Hover over a card to preview"
-	_info_stats.text = ""
-	_info_desc.text = ""
-	_info_preview_btn.disabled = true
+	_clear_card_info()
 
 	_reset_grid()
 
@@ -239,6 +237,7 @@ func start_setup(player_index: int) -> void:
 	_chars_remaining = deck.characters.duplicate()
 	_traps_remaining = deck.traps.duplicate()
 	GameState.tech_hands[player_index] = deck.techs.duplicate()
+	_random_btn.visible = not _is_tutorial_setup()
 	_random_btn.disabled = false
 
 	# Apply forced cell placements for this player
@@ -264,6 +263,8 @@ func start_setup(player_index: int) -> void:
 		_refresh_union_panel()
 	_refresh_confirm()
 	_refresh_formation_bar(deck)
+	if _is_tutorial_setup():
+		_apply_tutorial_formation_lock()
 
 # ─────────────────────────────────────────────────────────────
 # UI build
@@ -424,6 +425,7 @@ func _build_grid_panel(parent: Control) -> void:
 	var grid_h: float = CELL_H * GRID_N + float(CELL_GAP) * (GRID_N - 1) + 24.0
 
 	var grid_panel := Panel.new()
+	_grid_panel = grid_panel
 	grid_panel.custom_minimum_size = Vector2(grid_w, grid_h)
 	grid_panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	var gp_sb := StyleBoxFlat.new()
@@ -632,7 +634,6 @@ func _build_info_panel(parent: Control) -> void:
 	row.add_child(text_col)
 
 	_info_name = Label.new()
-	_info_name.text = "Hover over a card to preview"
 	_info_name.add_theme_font_size_override("font_size", 22)
 	_info_name.add_theme_color_override("font_color", Color(0.95, 0.95, 1.0))
 	text_col.add_child(_info_name)
@@ -651,6 +652,7 @@ func _build_info_panel(parent: Control) -> void:
 
 	_info_preview_btn = Button.new()
 	_info_preview_btn.text = "VIEW FULL CARD"
+	_info_preview_btn.visible = false
 	_info_preview_btn.disabled = true
 	_info_preview_btn.add_theme_font_size_override("font_size", 14)
 	_info_preview_btn.add_theme_color_override("font_color", Color(0.5, 0.88, 1.0))
@@ -664,12 +666,28 @@ func _on_preview_btn() -> void:
 	if _info_card_name != "":
 		CardDetailOverlay.open(self, _info_card_name, _info_card_type)
 
+func _clear_card_info() -> void:
+	_info_card_name = ""
+	_info_card_type = ""
+	if _info_img != null:
+		_info_img.texture = null
+	if _info_name != null:
+		_info_name.text = ""
+	if _info_stats != null:
+		_info_stats.text = ""
+	if _info_desc != null:
+		_info_desc.text = ""
+	if _info_preview_btn != null:
+		_info_preview_btn.visible = false
+		_info_preview_btn.disabled = true
+
 func _open_card_detail(card_name: String, card_type: String) -> void:
 	CardDetailOverlay.open(self, card_name, card_type)
 
 func _show_card_info(card_name: String, card_type: String) -> void:
 	_info_card_name = card_name
 	_info_card_type = card_type
+	_info_preview_btn.visible = true
 	_info_preview_btn.disabled = false
 
 	var subfolder: String
@@ -757,6 +775,7 @@ func _reset_grid() -> void:
 			var cell: GridCell = _grid_cells[r][c]
 			cell.vacate()
 			cell.locked = false
+			cell.modulate = Color(1.0, 1.0, 1.0, 1.0)
 			cell.set_emoticon("")
 			GameState.place_dead_end(current_setup_player, r, c)
 
@@ -908,6 +927,8 @@ func _add_gallery_card(card_name: String, card_type: String) -> void:
 # Drop / unplace handlers
 # ─────────────────────────────────────────────────────────────
 func _on_card_dropped(r: int, c: int, data: Dictionary) -> void:
+	if _is_tutorial_setup():
+		return
 	var card_name: String = str(data["card_name"])
 	var card_type: String = str(data["card_type"])
 	var from_grid: bool   = bool(data.get("from_grid", false))
@@ -945,6 +966,8 @@ func _on_card_dropped(r: int, c: int, data: Dictionary) -> void:
 	_refresh_confirm()
 
 func _on_cell_unplace(r: int, c: int) -> void:
+	if _is_tutorial_setup():
+		return
 	var cell: GridCell = _grid_cells[r][c]
 	if cell.occupied_name.is_empty() or cell.locked:
 		return
@@ -1012,6 +1035,11 @@ func _apply_forced_cells(forced_cells: Array) -> void:
 func _refresh_formation_bar(deck: DeckData) -> void:
 	if _formation_bar == null:
 		return
+	if _is_tutorial_setup():
+		_formation_bar.visible = false
+		if _body_hbox != null:
+			_body_hbox.offset_bottom = -62.0
+		return
 	for child in _formation_bar.get_children():
 		child.queue_free()
 
@@ -1045,6 +1073,8 @@ func _refresh_formation_bar(deck: DeckData) -> void:
 		_formation_bar.add_child(btn)
 
 func _apply_formation(idx: int) -> void:
+	if _is_tutorial_setup():
+		return
 	var deck: DeckData
 	if GameState.game_mode == GameState.GameMode.VS_AI and current_setup_player == 1 \
 			and GameState.battle_ai_deck != null:
@@ -1100,6 +1130,8 @@ func _apply_formation(idx: int) -> void:
 # Random formation
 # ─────────────────────────────────────────────────────────────
 func _on_random_formation() -> void:
+	if _is_tutorial_setup():
+		return
 	SFXManager.play(SFXManager.SFX_PLACE)
 	# Return all non-locked placed cards back to the pool and clear non-locked cells
 	for r in range(GRID_N):
@@ -1208,12 +1240,72 @@ func _flip_one_cell(cell: GridCell, facedown_tex: Texture2D,
 func _refresh_confirm() -> void:
 	var all_placed: bool = _chars_remaining.is_empty() and _traps_remaining.is_empty()
 	_confirm_btn.disabled = not all_placed
-	if all_placed:
+	if _is_tutorial_setup():
+		if all_placed:
+			_instr_lbl.text = "Tutorial formation is preset. Press CONFIRM to begin."
+		else:
+			_instr_lbl.text = "Tutorial formation is incomplete — check tutorial config."
+	elif all_placed:
 		_instr_lbl.text = "All cards placed! Press CONFIRM to begin."
 	else:
 		_instr_lbl.text = "Drag cards onto the grid  |  right-click a placed card to retrieve  |  %d units  %d traps remaining" % [
 			_chars_remaining.size(), _traps_remaining.size()
 		]
+
+# ─────────────────────────────────────────────────────────────
+# Tutorial formation lock
+# ─────────────────────────────────────────────────────────────
+func _is_tutorial_setup() -> bool:
+	return current_setup_player == 0 \
+		and (TutorialBattleManager.is_prepared or TutorialBattleManager.is_active)
+
+func _clear_tutorial_formation_lock() -> void:
+	if _tutorial_formation_overlay != null:
+		_tutorial_formation_overlay.queue_free()
+		_tutorial_formation_overlay = null
+
+func _apply_tutorial_formation_lock() -> void:
+	if not _is_tutorial_setup() or _grid_panel == null:
+		return
+
+	_random_btn.visible = false
+	_gallery_flow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	for r in range(GRID_N):
+		for c in range(GRID_N):
+			var cell: GridCell = _grid_cells[r][c] as GridCell
+			cell.locked = true
+			cell.modulate = Color(0.62, 0.62, 0.68, 1.0)
+
+	_clear_tutorial_formation_lock()
+
+	var overlay := Control.new()
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.z_index = 10
+	_grid_panel.add_child(overlay)
+	_tutorial_formation_overlay = overlay
+
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.0, 0.0, 0.0, 0.42)
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(dim)
+
+	var msg := Label.new()
+	msg.text = TUTORIAL_FORMATION_MSG
+	msg.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	msg.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	msg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	msg.offset_left = 14.0
+	msg.offset_right = -14.0
+	msg.add_theme_font_size_override("font_size", 14)
+	msg.add_theme_color_override("font_color", Color(0.88, 0.92, 1.0))
+	msg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(msg)
+
+	_refresh_confirm()
 
 # ─────────────────────────────────────────────────────────────
 # Helpers
@@ -1225,12 +1317,15 @@ func _card_name_to_snake(p_name: String) -> String:
 # Bluff emoticon
 # ─────────────────────────────────────────────────────────────
 const BLUFF_EMOJIS: Array = ["😃","🥺","🤣","😎","❤️","☠️","🧨","👍","🤝","🖕"]
+const BLUFF_MODAL_SIZE := Vector2(598.5, 130.0)  # 570px width + 5%
 func _get_bluff_emojis() -> Array:
 	if SaveManager.nsfw_enabled:
 		return BLUFF_EMOJIS.map(func(e: String) -> String: return "💩" if e == "🖕" else e)
 	return BLUFF_EMOJIS
 
 func _on_cell_bluff_tap(row: int, col: int) -> void:
+	if _is_tutorial_setup():
+		return
 	_show_bluff_modal(row, col)
 
 func _show_bluff_modal(row: int, col: int) -> void:
@@ -1258,9 +1353,15 @@ func _show_bluff_modal(row: int, col: int) -> void:
 		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
 			backdrop.queue_free())
 
+	var center_wrap := CenterContainer.new()
+	center_wrap.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center_wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backdrop.add_child(center_wrap)
+
 	# Panel
 	var panel := Panel.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.custom_minimum_size = BLUFF_MODAL_SIZE
 	var psb := StyleBoxFlat.new()
 	psb.bg_color     = Color(0.04, 0.07, 0.16, 0.98)
 	psb.border_width_left   = 2; psb.border_width_top    = 2
@@ -1269,13 +1370,14 @@ func _show_bluff_modal(row: int, col: int) -> void:
 	psb.corner_radius_top_left     = 10; psb.corner_radius_top_right    = 10
 	psb.corner_radius_bottom_right = 10; psb.corner_radius_bottom_left  = 10
 	panel.add_theme_stylebox_override("panel", psb)
-	backdrop.add_child(panel)
+	center_wrap.add_child(panel)
 
 	var vbox := VBoxContainer.new()
 	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	vbox.offset_left = 12.0; vbox.offset_top = 10.0
 	vbox.offset_right = -12.0; vbox.offset_bottom = -10.0
 	vbox.add_theme_constant_override("separation", 10)
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	panel.add_child(vbox)
 
 	var title := Label.new()
@@ -1325,15 +1427,10 @@ func _show_bluff_modal(row: int, col: int) -> void:
 	csb.corner_radius_top_left     = 6; csb.corner_radius_top_right    = 6
 	csb.corner_radius_bottom_right = 6; csb.corner_radius_bottom_left  = 6
 	clear_btn.add_theme_stylebox_override("normal", csb)
+	clear_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	clear_btn.pressed.connect(func() -> void:
 		SFXManager.play(SFXManager.SFX_BLUFF_REMOVE)
 		GameState.set_bluff(current_setup_player, snap_row, snap_col, "")
 		(_grid_cells[snap_row][snap_col] as GridCell).set_emoticon("")
 		backdrop.queue_free())
 	vbox.add_child(clear_btn)
-
-	# Size and center the panel
-	panel.custom_minimum_size = Vector2(520.0, 130.0)
-	await get_tree().process_frame
-	var vs: Vector2 = get_viewport_rect().size
-	panel.position = Vector2((vs.x - panel.size.x) * 0.5, (vs.y - panel.size.y) * 0.5)

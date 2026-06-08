@@ -1,75 +1,280 @@
 {
-	"title": "Attack Tutorial",
-	"on_complete": "end_immediately",
-	"player_deck": {
-		"characters": [
-			"Church Guard",
-			"Church Guard",
-			"Church Guard",
-			"Church Guard",
-			"Church Guard",
-			"Church Guard",
-			"Church Guard",
-			"Church Guard"
-		],
-		"traps": [
-			"Trap Hole",
-			"Trap Hole",
-			"Trap Hole",
-			"Trap Hole"
-		],
-		"techs": [
-			"Radar",
-			"Shield Wall",
-			"Quick Draw"
-		]
-	},
-	"player_formation": [
-		{ "card_name": "Church Guard", "row": 4, "col": 2 }
-	],
 	"ai_deck": {
 		"characters": [
-			"Chaotic Wisp",
-			"Chaotic Wisp",
-			"Chaotic Wisp",
-			"Chaotic Wisp",
-			"Chaotic Wisp",
-			"Chaotic Wisp",
-			"Chaotic Wisp",
-			"Chaotic Wisp"
-		],
-		"traps": [
-			"Trap Hole",
-			"Trap Hole",
-			"Trap Hole",
-			"Trap Hole"
+			"Nuki the Tanuki",
+			"Needle Porcupine",
+			"Goblin Poacher",
+			"Laser Walker",
+			"Neptune Diver",
+			"Tiny Pixie",
+			"Mad Raccoon",
+			"Magical Butterfly",
+			"Saw Shark",
+			"Shepherd Detective",
+			"Hairpin Assassin",
+			"Miner Probe"
 		],
 		"techs": [
-			"Radar",
-			"Shield Wall",
-			"Quick Draw"
+			"Bribe",
+			"Tease",
+			"Spy"
+		],
+		"traps": [
+			"Acid Trap Hole",
+			"Trap Hole",
+			"Foul Gas",
+			"Mana Drain"
 		]
 	},
 	"ai_formation": [
-		{ "card_name": "Chaotic Wisp", "row": 0, "col": 2 }
+		{
+			"card_name": "Acid Trap Hole",
+			"col": 2.0,
+			"row": 2.0
+		},
+		{
+			"card_name": "Foul Gas",
+			"col": 2.0,
+			"row": 0.0
+		},
+		{
+			"card_name": "Goblin Poacher",
+			"col": 1.0,
+			"row": 1.0
+		},
+		{
+			"card_name": "Hairpin Assassin",
+			"col": 3.0,
+			"row": 1.0
+		},
+		{
+			"card_name": "Laser Walker",
+			"col": 3.0,
+			"row": 3.0
+		},
+		{
+			"card_name": "Mad Raccoon",
+			"col": 4.0,
+			"row": 3.0
+		},
+		{
+			"card_name": "Magical Butterfly",
+			"col": 2.0,
+			"row": 3.0
+		},
+		{
+			"card_name": "Needle Porcupine",
+			"col": 3.0,
+			"row": 0.0
+		},
+		{
+			"card_name": "Mana Drain",
+			"col": 4.0,
+			"row": 0.0
+		},
+		{
+			"card_name": "Neptune Diver",
+			"col": 0.0,
+			"row": 3.0
+		},
+		{
+			"card_name": "Nuki the Tanuki",
+			"col": 1.0,
+			"row": 4.0
+		},
+		{
+			"card_name": "Saw Shark",
+			"col": 2.0,
+			"row": 4.0
+		},
+		{
+			"card_name": "Shepherd Detective",
+			"col": 4.0,
+			"row": 2.0
+		},
+		{
+			"card_name": "Tiny Pixie",
+			"col": 4.0,
+			"row": 4.0
+		},
+		{
+			"card_name": "Trap Hole",
+			"col": 0.0,
+			"row": 2.0
+		},
+		{
+			"card_name": "Miner Probe",
+			"col": 0.0,
+			"row": 0.0
+		}
 	],
+	"on_complete": "continue_normal",
+	"player_deck": {
+		"characters": [
+			"Choir Lady Abigail",
+			"Choir Lady Alice",
+			"Choir Lady Anna",
+			"Ponycorn",
+			"Grand Fort Archer",
+			"Grand Fort Footsoldier",
+			"Golden Senju",
+			"Witchhunter",
+			"Silver Spearman",
+			"Magical Butterfly"
+		],
+		"techs": [
+			"Spy",
+			"Tease",
+			"Prayer"
+		],
+		"traps": [
+			"Hard Scale",
+			"Pepper Spray",
+			"Decoy Puppet",
+			"Trap Hole"
+		]
+	},
+	"player_formation": [
+		{
+			"card_name": "Ponycorn",
+			"col": 2.0,
+			"row": 0.0
+		},
+		{
+			"card_name": "Choir Lady Abigail",
+			"col": 4.0,
+			"row": 2.0
+		},
+		{
+			"card_name": "Choir Lady Anna",
+			"col": 0.0,
+			"row": 4.0
+		},
+		{
+			"card_name": "Pepper Spray",
+			"col": 2.0,
+			"row": 2.0
+		},
+		{
+			"card_name": "Hard Scale",
+			"col": 4.0,
+			"row": 0.0
+		},
+		{
+			"card_name": "Trap Hole",
+			"col": 0.0,
+			"row": 0.0
+		},
+		{
+			"card_name": "Decoy Puppet",
+			"col": 4.0,
+			"row": 4.0
+		},
+		{
+			"card_name": "Grand Fort Archer",
+			"col": 1.0,
+			"row": 2.0
+		},
+		{
+			"card_name": "Golden Senju",
+			"col": 3.0,
+			"row": 3.0
+		},
+		{
+			"card_name": "Witchhunter",
+			"col": 1.0,
+			"row": 4.0
+		},
+		{
+			"card_name": "Grand Fort Footsoldier",
+			"col": 1.0,
+			"row": 1.0
+		},
+		{
+			"card_name": "Silver Spearman",
+			"col": 3.0,
+			"row": 1.0
+		},
+		{
+			"card_name": "Magical Butterfly",
+			"col": 2.0,
+			"row": 3.0
+		},
+		{
+			"card_name": "Choir Lady Alice",
+			"col": 0.0,
+			"row": 2.0
+		}
+	],
+	"portrait_p2": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png",
+	"title": "Kelly Tutorial",
 	"turns": {
 		"1": [
 			{
-				"type": "attack",
-				"card_name": "Church Guard",
-				"instruction": "Tap Church Guard, then tap the ⚔ icon to attack!"
+				"instruction": "",
+				"message": "Use 'Spy' Tech Card to scan opponent's grid",
+				"type": "show_message"
+			},
+			{
+				"instruction": "Use 'Spy' Tech",
+				"tech_name": "Spy",
+				"type": "use_tech"
+			},
+			{
+				"instruction": "",
+				"seconds": 0.5,
+				"type": "wait"
+			},
+			{
+				"instruction": "",
+				"message": "Select 'Silver Spearman' card and attack opponent's cell",
+				"type": "show_message"
+			},
+			{
+				"card_name": "Silver Spearman",
+				"instruction": "Attack using 'Silver Spearman'",
+				"type": "attack"
+			},
+			{
+				"instruction": "",
+				"seconds": 0.5,
+				"type": "wait"
+			},
+			{
+				"instruction": "",
+				"message": "Select 'Witchhunter' card and attack opponent's cell",
+				"type": "show_message"
+			},
+			{
+				"card_name": "Witchhunter",
+				"instruction": "Attack using 'Witchhunter'",
+				"type": "attack"
+			},
+			{
+				"instruction": "",
+				"seconds": 0.5,
+				"type": "wait"
+			},
+			{
+				"instruction": "",
+				"message": "Now, end your turn",
+				"type": "show_message"
+			},
+			{
+				"instruction": "End your turn",
+				"type": "end_turn"
 			}
 		],
 		"2": [
 			{
-				"type": "use_tech",
-				"tech_name": "Radar",
-				"instruction": "Tap the TECH stack, then tap USE on Radar."
+				"instruction": "",
+				"message": "Conduct your first Union Summon",
+				"type": "show_message"
 			},
 			{
-				"type": "end_turn",
-				"instruction": "Good job! Now end your turn."
+				"instruction": "Perform Union Summon",
+				"type": "union_summon",
+				"union_name": "Diamond Unicorn"
 			}
 		]
 	}

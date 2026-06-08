@@ -1,0 +1,129 @@
+=== Battle of Spam Folder Adventure ===
+Battle started: 2026-06-08 06:49:18.452
+Game Session of Piña Colada (started 2026-06-08 06:49:06.958)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.440] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:08.813] Mode selected P1: ATTACK
+[00:08.815] MSG: Player 2: tap a character to attack.
+[00:10.514] Revealed: P1 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[00:10.558] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[00:10.558] Dice rolled: 1
+[00:10.823] MSG: Trap triggered: Pepper Spray!
+[00:14.101] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:14.976] Coin flip: Heads, Heads
+[00:17.704] MSG: Pepper Spray: Heads, Heads.
+[00:17.704] MSG: Both heads! Magical Butterfly -5 ATK permanently!
+[00:17.706] Trap: "Pepper Spray" triggered  P1(3,2)→P0(2,2)
+[00:18.205] Mode selected P1: ATTACK
+[00:18.208] MSG: Player 2: tap a character to attack.
+[00:19.910] Revealed: P1 (3,3) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[00:19.949] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:19.949] Dice rolled: 5
+[00:20.215] MSG: Trap triggered: Decoy Puppet!
+[00:23.500] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:24.310] Crystals: P0 5000 → 4900 (-100)  [trap cost]
+[00:25.701] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[00:25.703] Trap: "Decoy Puppet" triggered  P1(3,3)→P0(4,4)
+[00:26.203] Turn ended  P1  |  Crystals P0=4900 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4900 P1=5000 ---
+[01:23.856] Tech played  P0: "Spy"
+[01:25.409] MSG: Magical Butterfly: Tech boost — +10 ATK/DEF this turn!
+[01:25.410] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:27.600] Revealed: P1 (2,1) "Trap Hole" {cost 0}
+[01:27.786] Tech resolved  P0
+[01:59.808] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:59.809] Dice rolled: 2
+[01:59.817] MSG: Silver Spearman wins!
+[02:04.276] Crystals: P1 5000 → 4750 (-250)  [battle]
+[02:05.674] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(3,3)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}  Dice=2  ATK=25 vs DEF=10  → WIN
+[02:05.674] Anim: 3A  △ P1(3,3)
+[02:05.674] Card destroyed  P1 (3,3) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[02:18.387] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[02:18.388] Dice rolled: 4
+[02:21.830] Crystals: P0 4900 → 4650 (-250)  [battle]
+[02:23.228] Attack P0(4,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P1(3,2)"Magical Butterfly" {Unit ATK20 DEF25 | cost 180 | affinity Nature | base 10/15 | buff +tempATK10, +tempDEF10}  Dice=4  ATK=20 vs DEF=25  → LOSE
+[02:23.228] Anim: 3B  △ P0(4,1)
+[02:23.228] Card destroyed  P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[02:26.174] Turn ended  P0  |  Crystals P0=4650 P1=4750
+
+--- Turn 3  |  Player 1  |  Crystals P0=4650 P1=4750 ---
+[02:26.771] Mode selected P1: ATTACK
+[02:26.778] MSG: Player 2: tap a character to attack.
+[02:28.484] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[02:28.484] Dice rolled: 5
+[02:28.787] MSG: Trap triggered: Trap Hole!
+[02:32.083] MSG: [DEBUG] Bot Player timed out — ending turn.
+[02:32.946] Coin flip: Heads, Tails, Tails
+[02:35.684] MSG: Trap Hole: Heads, Tails, Tails.
+[02:35.684] Crystals: P1 4750 → 4730 (-20)  [trap]
+[02:37.076] MSG: Trap Hole: 1 head(s) — Player 2 loses 20 Crystals!
+[02:37.078] Trap: "Trap Hole" triggered  P1(3,2)→P0(0,0)
+[02:37.576] Mode selected P1: ATTACK
+[02:37.580] MSG: Player 2: tap a character to attack.
+[02:39.281] Revealed: P1 (4,2) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[02:39.328] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[02:39.328] Dice rolled: 1
+[02:39.586] MSG: Trap triggered: Hard Scale!
+[02:42.867] MSG: [DEBUG] Bot Player timed out — ending turn.
+[02:43.393] Crystals: P0 4650 → 3950 (-700)  [trap cost]
+[02:44.785] MSG: Hard Scale: All your units gain +5 DEF in Reckoning this turn!
+[02:44.788] Trap: "Hard Scale" triggered  P1(4,2)→P0(0,4)
+[02:45.287] Turn ended  P1  |  Crystals P0=3950 P1=4730
+
+--- Turn 4  |  Player 0  |  Crystals P0=3950 P1=4730 ---
+[03:04.864] MSG: Tap 2 material card(s) on the field.
+[03:08.411] MSG: 1 more material(s) needed.
+[03:09.586] Crystals: P0 3950 → 3450 (-500)  [union]
+[03:09.632] Revealed: P0 (3,3) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[03:09.632] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Golden Senju" {Unit ATK15 DEF5 | cost 200 | affinity Divine | buff +tempDEF5 | face-down}, "Ponycorn" {Unit ATK25 DEF25 | cost 300 | affinity Divine | buff +tempDEF5 | face-down}
+[03:09.632] MSG: Player 1 summoned [Diamond Unicorn] using: "Golden Senju" {Unit ATK15 DEF5 | cost 200 | affinity Divine | buff +tempDEF5 | face-down}, "Ponycorn" {Unit ATK25 DEF25 | cost 300 | affinity Divine | buff +tempDEF5 | face-down}
+[03:17.187] Dice rolled: 1
+[03:17.241] MSG: Diamond Unicorn wins!
+[03:22.684] Crystals: P1 4730 → 4450 (-280)  [battle]
+[03:24.081] Attack P0(3,3)"Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} → P1(4,2)"Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}  Dice=1  ATK=45 vs DEF=10  → WIN
+[03:24.081] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} +ATK 15
+[03:24.081] Anim: 3A  △ P1(4,2)
+[03:24.081] Card destroyed  P1 (4,2) "Saw Shark" {Unit ATK25 DEF10 | cost 280 | affinity Nature}
+[03:29.483] Revealed: P0 (2,0) "Choir Lady Alice" {Unit ATK20 DEF30 | cost 250 | affinity Divine | buff +tempDEF5}
+[03:29.483] Dice rolled: 1
+[03:29.490] MSG: Choir Lady Alice wins!
+[03:32.476] Crystals: P1 4450 → 4270 (-180)  [battle]
+[03:33.872] Attack P0(2,0)"Choir Lady Alice" {Unit ATK20 DEF30 | cost 250 | affinity Divine | buff +tempDEF5} → P1(3,2)"Magical Butterfly" {Unit ATK10 DEF15 | cost 180 | affinity Nature | base 10/15}  Dice=1  ATK=20 vs DEF=15  → WIN
+[03:33.872] Anim: 3A  △ P1(3,2)
+[03:33.872] Card destroyed  P1 (3,2) "Magical Butterfly" {Unit ATK10 DEF15 | cost 180 | affinity Nature | base 10/15}
+[03:39.358] Turn ended  P0  |  Crystals P0=3450 P1=4270
+
+--- Turn 5  |  Player 1  |  Crystals P0=3450 P1=4270 ---
+[03:39.943] Mode selected P1: TECH
+[03:40.251] Tech played  P1: "Spy"
+[03:41.796] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[03:42.198] Revealed: P0 (3,2) "Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}
+[03:42.202] Tech resolved  P1
+[03:43.097] Mode selected P1: ATTACK
+[03:43.102] MSG: Player 2: tap a character to attack.
+[03:44.810] Revealed: P1 (1,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[03:44.810] Dice rolled: 5
+[03:44.817] MSG: Goblin Poacher wins!
+[03:48.400] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:49.300] Crystals: P0 3450 → 3200 (-250)  [battle]
+[03:50.697] Attack P1(1,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P0(2,0)"Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}  Dice=5  ATK=30 vs DEF=25  → WIN
+[03:50.697] Anim: 3A  △ P0(2,0)
+[03:50.697] Card destroyed  P0 (2,0) "Choir Lady Alice" {Unit ATK20 DEF25 | cost 250 | affinity Divine}
+[03:51.193] Mode selected P1: ATTACK
+[03:51.199] MSG: Player 2: tap a character to attack.
+[03:52.905] Revealed: P1 (0,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[03:52.906] Dice rolled: 5
+[03:52.911] MSG: Both cards are destroyed!
+[03:56.496] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:56.497] Crystals: P1 4270 → 4070 (-200)  [battle]
+[03:57.888] Crystals: P0 3200 → 3020 (-180)  [battle]
+[03:59.277] Attack P1(0,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P0(3,2)"Magical Butterfly" {Unit ATK15 DEF15 | cost 180 | affinity Nature}  Dice=5  ATK=15 vs DEF=15  → TIE
+[03:59.277] Anim: 3C  △ P

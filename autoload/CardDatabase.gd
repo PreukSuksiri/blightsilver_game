@@ -991,7 +991,7 @@ func _load_traps() -> void:
 	var defs: Array = [
 		# Name, Cost, EffectType, Params, Description, Rarity
 		["Acid Trap Hole", 0, TrapData.TrapEffectType.DRAIN_ATTACKER_CRYSTALS,
-			{"amount": 50},
+			{"amount": 50, "coin_count": 2},
 			"Flip 2 coin, attacking player loses 50 Crystals per each head(s).",
 			CharacterData.Rarity.COMMON],
 
@@ -1108,7 +1108,7 @@ func _load_traps() -> void:
 			true],
 
 		["Trap Hole", 0, TrapData.TrapEffectType.DRAIN_ATTACKER_CRYSTALS,
-			{"amount": 20},
+			{"amount": 20, "coin_count": 3},
 			"Flip 3 coin, attacking player loses 20 Crystals per each head(s).",
 			CharacterData.Rarity.COMMON],
 

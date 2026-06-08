@@ -13,7 +13,7 @@ enum TrapEffectType {
 	HYPNOTIZE_ATTACKER,               # Attacker cannot attack until end of next turn
 	DESTROY_ATTACKER,                 # Destroy the attacking character
 	LOCK_ATTACKER_REMAINING_ATTACKS,  # Attacking player cannot attack again this turn
-	DRAIN_ATTACKER_CRYSTALS,          # Attacking player loses N Crystals
+	DRAIN_ATTACKER_CRYSTALS,          # Attacking player loses N Crystals (optional coin_count × amount per head)
 	SWAP_ARMORED_NATURE,              # Swap this trap with an 'Armored' Nature card
 	PERMANENT_ATK_DEBUFF,             # Permanent -N ATK to attacker
 	NULLIFY_ATTACKER_EFFECT,          # Attacker's effect becomes None until end of next turn

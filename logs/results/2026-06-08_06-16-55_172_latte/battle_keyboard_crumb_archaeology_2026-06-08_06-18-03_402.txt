@@ -1,0 +1,69 @@
+=== Battle of Keyboard Crumb Archaeology ===
+Battle started: 2026-06-08 06:18:03.402
+Game Session of Latte (started 2026-06-08 06:16:55.172)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[02:31.316] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[02:45.552] Tech played  P0: "Spy"
+[02:47.093] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[02:52.724] Tech resolved  P0
+[03:56.404] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[03:56.404] Dice rolled: 1
+[03:56.426] MSG: Nothing happens — Dead End.
+[03:59.808] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(2,1)(empty)  Dice=1  → DEAD_END
+[03:59.808] Anim: 3F  (blank slot)
+[04:11.391] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[04:11.391] Revealed: P1 (3,1) "Trap Hole" {cost 0}
+[04:11.392] Dice rolled: 2
+[04:11.687] MSG: Trap triggered: Trap Hole!
+[04:14.190] Crystals: P0 5000 → 4980 (-20)  [trap]
+[04:15.573] MSG: Trap Hole: Player 1 loses 20 Crystals!
+[04:15.580] Trap: "Trap Hole" triggered  P0(4,1)→P1(3,1)
+[04:17.484] Turn ended  P0  |  Crystals P0=4980 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4980 P1=5000 ---
+[04:18.077] Mode selected P1: ATTACK
+[04:18.081] MSG: Player 2: tap a character to attack.
+[04:19.785] Revealed: P1 (0,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[04:19.786] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[04:19.786] Dice rolled: 2
+[04:20.084] MSG: Trap triggered: Trap Hole!
+[04:23.376] MSG: [DEBUG] Bot Player timed out — ending turn.
+[04:24.190] Crystals: P1 5000 → 4980 (-20)  [trap]
+[04:25.575] MSG: Trap Hole: Player 2 loses 20 Crystals!
+[04:25.578] Trap: "Trap Hole" triggered  P1(0,0)→P0(0,0)
+[04:26.073] Mode selected P1: ATTACK
+[04:26.075] MSG: Player 2: tap a character to attack.
+[04:27.784] Revealed: P1 (0,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[04:27.830] Revealed: P0 (4,0) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[04:27.830] Dice rolled: 3
+[04:31.370] MSG: [DEBUG] Bot Player timed out — ending turn.
+[04:31.514] Crystals: P1 4980 → 4780 (-200)  [battle]
+[04:32.915] Attack P1(0,1)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P0(4,0)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}  Dice=3  ATK=15 vs DEF=20  → LOSE
+[04:32.915] Anim: 3B  △ P1(0,1)
+[04:32.915] Card destroyed  P1 (0,1) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[04:33.406] Turn ended  P1  |  Crystals P0=4980 P1=4780
+
+--- Turn 3  |  Player 0  |  Crystals P0=4980 P1=4780 ---
+[04:59.988] Revealed: P0 (1,1) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[05:00.021] Revealed: P1 (0,2) "Foul Gas" {cost 0}
+[05:00.021] Dice rolled: 1
+[05:00.280] MSG: Trap triggered: Foul Gas!
+[05:03.469] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[05:03.474] Trap: "Foul Gas" triggered  P0(1,1)→P1(0,2)
+[05:07.365] MSG: Tap 2 material card(s) on the field.
+[05:09.395] MSG: 1 more material(s) needed.
+[05:10.253] Crystals: P0 4980 → 4480 (-500)  [union]
+[05:10.279] Revealed: P0 (2,4) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[05:10.279] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}, "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}
+[05:10.279] MSG: Player 1 summoned [Diamond Unicorn] using: "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}, "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}
+[05:20.666] Dice rolled: 3
+[05:20.704] MSG: Diamond Unicorn wins!
+[05:26.160] Crystals: P1 4780 → 4580 (-200)  [battle]
+[05:27.555] Attack P0(2,4)"Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} → P1(0,0)"Bat Swarm" {Uni

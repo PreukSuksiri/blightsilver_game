@@ -114,46 +114,48 @@ func decide_turn() -> void:
 	_aborted_attackers_this_turn.clear()
 	await get_tree().create_timer(0.6).timeout
 
-	# Rule 1: Tech priority — only enter TECH mode if a card actually scores > 0.
-	# In E2E mode, tech is suppressed unless this scenario specifically tests a Tech card.
-	if _e2e_tech_allowed() and GameState.has_playable_tech(player_index) and _has_useful_tech():
-		emit_signal("ai_mode_chosen", GameState.TurnMode.TECH)
-		await get_tree().create_timer(0.3).timeout
-		_choose_tech()
-		return
+	# Tutorial: first two AI turns attack corners/center only — skip tech/union.
+	if not _tutorial_early_attack_phase():
+		# Rule 1: Tech priority — only enter TECH mode if a card actually scores > 0.
+		# In E2E mode, tech is suppressed unless this scenario specifically tests a Tech card.
+		if _e2e_tech_allowed() and GameState.has_playable_tech(player_index) and _has_useful_tech():
+			emit_signal("ai_mode_chosen", GameState.TurnMode.TECH)
+			await get_tree().create_timer(0.3).timeout
+			_choose_tech()
+			return
 
-	# Rule 2: Union summon — hesitation eases over successive AI turns.
-	# Turn 1: 10%, Turn 2: 35%, Turn 3: 60%, Turn 4+: 85%
-	# In E2E mode all players summon immediately (100%) so unions are guaranteed.
-	# Exception: P0 skips unions entirely in non-union E2E scenarios so the highlight
-	# card is never accidentally consumed as union material.
-	var _e2e_no_union: bool = CardE2ERunner.is_active() and player_index == 0 \
-			and not CardE2ERunner.is_union_test()
-	if not _e2e_no_union and not _trailer_offensive and not _union_used and GameState.battle_ai_union_enabled:
-		var chance: float = 1.0 if CardE2ERunner.is_active() \
-				else minf(0.85, 0.10 + (_ai_turn_count - 1) * 0.25)
-		if randf() < chance:
-			var unions: Array = _get_available_unions()
-			if not unions.is_empty():
-				# E2E: for union-test scenarios where the highlight card IS the union
-				# (role contains "union"), restrict P0 to only summon that union so
-				# competing unions cannot hijack the test.
-				# For non-union highlight cards that merely need a union on field
-				# (e.g. ATK_DEF_BONUS_IF_UNION_ON_FIELD), skip the filter so P0
-				# can freely summon whatever union is available.
-				if CardE2ERunner.is_active() and player_index == 0 and CardE2ERunner.is_union_test():
-					var _e2e_role: String = str(CardE2ERunner.get_current_scenario().get("role", ""))
-					if _e2e_role.contains("union"):
-						var _e2e_union: String = str(CardE2ERunner.get_current_scenario().get("card_name", ""))
-						if _e2e_union != "":
-							unions = unions.filter(func(e: Dictionary) -> bool:
-								return (e["union"] as UnionData).card_name == _e2e_union)
+		# Rule 2: Union summon — hesitation eases over successive AI turns.
+		# Turn 1: 10%, Turn 2: 35%, Turn 3: 60%, Turn 4+: 85%
+		# In E2E mode all players summon immediately (100%) so unions are guaranteed.
+		# Exception: P0 skips unions entirely in non-union E2E scenarios so the highlight
+		# card is never accidentally consumed as union material.
+		var _e2e_no_union: bool = CardE2ERunner.is_active() and player_index == 0 \
+				and not CardE2ERunner.is_union_test()
+		if not _e2e_no_union and not _trailer_offensive and not _union_used and GameState.battle_ai_union_enabled:
+			var chance: float = 1.0 if CardE2ERunner.is_active() \
+					else minf(0.85, 0.10 + (_ai_turn_count - 1) * 0.25)
+			if randf() < chance:
+				var unions: Array = _get_available_unions()
 				if not unions.is_empty():
-					_union_used = true
-					var picked: Dictionary = _pick_best_union(unions)
-					var u: UnionData = picked["union"]
-					emit_signal("ai_union_chosen", u.card_name, picked["zone_cells"], picked["material_cells"])
-					return
+					# E2E: for union-test scenarios where the highlight card IS the union
+					# (role contains "union"), restrict P0 to only summon that union so
+					# competing unions cannot hijack the test.
+					# For non-union highlight cards that merely need a union on field
+					# (e.g. ATK_DEF_BONUS_IF_UNION_ON_FIELD), skip the filter so P0
+					# can freely summon whatever union is available.
+					if CardE2ERunner.is_active() and player_index == 0 and CardE2ERunner.is_union_test():
+						var _e2e_role: String = str(CardE2ERunner.get_current_scenario().get("role", ""))
+						if _e2e_role.contains("union"):
+							var _e2e_union: String = str(CardE2ERunner.get_current_scenario().get("card_name", ""))
+							if _e2e_union != "":
+								unions = unions.filter(func(e: Dictionary) -> bool:
+									return (e["union"] as UnionData).card_name == _e2e_union)
+					if not unions.is_empty():
+						_union_used = true
+						var picked: Dictionary = _pick_best_union(unions)
+						var u: UnionData = picked["union"]
+						emit_signal("ai_union_chosen", u.card_name, picked["zone_cells"], picked["material_cells"])
+						return
 
 	_do_attack_decision()
 
@@ -194,8 +196,11 @@ func _do_attack_decision() -> void:
 		emit_signal("ai_end_turn")
 		return
 	# Personality: skip early turns if opponent has nothing revealed yet
-	# (bypassed for E2E highlight player so it attacks without hesitation)
-	if not _e2e_is_highlight_player() and _skip_turns > 0 and _ai_turn_count <= _skip_turns and _count_faceup(opponent_index) == 0:
+	# (bypassed for E2E highlight player and tutorial early attack phase)
+	if not _tutorial_early_attack_phase() \
+			and not _e2e_is_highlight_player() \
+			and _skip_turns > 0 and _ai_turn_count <= _skip_turns \
+			and _count_faceup(opponent_index) == 0:
 		await get_tree().create_timer(2.0).timeout
 		emit_signal("ai_end_turn")
 		return
@@ -218,6 +223,21 @@ func _do_attack_decision() -> void:
 # ─────────────────────────────────────────────────────────────
 const _REVEAL_ATTACKER_PENALTY: int = 12  # cost of revealing a face-down attacker
 const _EXPECTED_ATTACK_DICE: int = 3      # d6 re-roll-on-6 → uniform 1–5, mean 3
+const _TUTORIAL_RESTRICTED_TURNS: int = 2 # tutorial AI: corner/center attacks only
+
+
+func _tutorial_ai_active() -> bool:
+	return TutorialBattleManager.is_active and player_index == 1
+
+func _tutorial_early_attack_phase() -> bool:
+	return _tutorial_ai_active() and _ai_turn_count <= _TUTORIAL_RESTRICTED_TURNS
+
+func _is_tutorial_priority_cell(pos: Vector2i) -> bool:
+	var last: int = GameState.GRID_SIZE - 1
+	var center: int = GameState.GRID_SIZE / 2
+	var on_corner: bool = (pos.x == 0 or pos.x == last) and (pos.y == 0 or pos.y == last)
+	var on_center: bool = pos.x == center and pos.y == center
+	return on_corner or on_center
 
 
 func _choose_best_attack() -> Dictionary:
@@ -254,6 +274,8 @@ func _choose_best_attack() -> Dictionary:
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var target_pos: Vector2i = Vector2i(r, c)
+				if _tutorial_early_attack_phase() and not _is_tutorial_priority_cell(target_pos):
+					continue
 				if target_pos in GameState.locked_attack_positions:
 					continue
 				var target: GameState.CardInstance = GameState.get_card(opponent_index, r, c)
@@ -267,6 +289,9 @@ func _choose_best_attack() -> Dictionary:
 
 	if best_attacker.x == -1:
 		return none
+	# Tutorial early turns: always take the best corner/center option (even a scout).
+	if _tutorial_early_attack_phase():
+		return {"attacker_pos": best_attacker, "target_pos": best_target}
 	# Skip hopeless attacks when a better attacker exists but wasn't chosen due to noise —
 	# and when every option is clearly bad (no kill, no worthwhile scout).
 	if best_score < 0 and not _has_positive_attack_option(eligible):

@@ -258,6 +258,18 @@ func is_gallery_chapter_completed(vn_scene: String) -> bool:
 		return true
 	return CampaignManager.is_vn_scene_completed(key)
 
+## Wipe campaign gallery unlock state (gallery flags + campaign map nodes).
+func clear_gallery_progress() -> Dictionary:
+	var gallery_count: int = gallery_chapters_completed.size()
+	gallery_chapters_completed.clear()
+	var campaign_count: int = CampaignManager.completed.size()
+	CampaignManager.completed.clear()
+	CampaignManager.active_node_id = ""
+	CampaignManager.pending_result = {}
+	CampaignManager.emit_signal("progress_changed")
+	save_data()
+	return {"gallery_chapters": gallery_count, "campaign_nodes": campaign_count}
+
 # ─────────────────────────────────────────────────────────────
 # Bug tagging
 # ─────────────────────────────────────────────────────────────

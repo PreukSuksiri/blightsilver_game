@@ -29,7 +29,14 @@ func fade_out_to_battle(on_black: Callable) -> void:
 	_build_tiles(false)
 	_sfx.play()
 	await _animate(true)
+	if not on_black.is_valid():
+		push_warning("CheckerTransition: fade_out callback is invalid — scene change skipped.")
+		return
 	on_black.call()
+
+## Scene change helper — safe to call from nodes that queue_free() immediately after.
+func fade_out_to_scene(scene_path: String) -> void:
+	fade_out_to_battle(get_tree().change_scene_to_file.bind(scene_path))
 
 ## True while checker tiles from fade_out_to_battle are still covering the screen.
 func is_screen_covered() -> bool:

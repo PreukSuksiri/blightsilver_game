@@ -228,15 +228,16 @@ func admin_command(raw: String) -> String:
 			return "Font Manager opened."
 
 		"tutorial_battle":
-			var tb_scene: Node = get_tree().current_scene
-			if tb_scene.get_node_or_null("TutorialBattleBuilder") != null:
+			var tb_root: Node = get_tree().root
+			if tb_root.get_node_or_null("TutorialBattleBuilder") != null:
 				return "Tutorial Battle Builder is already open."
-			var tb_admin: Node = tb_scene.get_node_or_null("AdminConsoleOverlay")
+			var tb_scene: Node = get_tree().current_scene
+			var tb_admin: Node = tb_scene.get_node_or_null("AdminConsoleOverlay") if tb_scene != null else null
 			if tb_admin != null:
 				tb_admin.queue_free()
 			var tb_overlay: Node = load("res://scripts/TutorialBattleBuilder.gd").new()
 			tb_overlay.name = "TutorialBattleBuilder"
-			tb_scene.add_child(tb_overlay)
+			tb_root.add_child(tb_overlay)
 			return "Tutorial Battle Builder opened."
 
 		"send":

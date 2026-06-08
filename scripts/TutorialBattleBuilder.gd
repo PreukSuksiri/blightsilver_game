@@ -4,6 +4,7 @@ extends Control
 # Lets you create/edit tutorial config JSON and launch a tutorial battle.
 
 const SAVE_DIR := "res://data/tutorial_battles/"
+const STARTING_DECK_PATH := "res://data/starting_deck.json"
 const GRID_SIZE := 5
 
 # ── UI refs ────────────────────────────────────────────────────
@@ -11,10 +12,13 @@ var _file_list: ItemList
 var _file_name_edit: LineEdit
 var _title_edit: LineEdit
 var _on_complete_btn: OptionButton
+var _portrait_p1_edit: LineEdit = null
+var _portrait_p2_edit: LineEdit = null
 var _player_deck_section: VBoxContainer
 var _ai_deck_section: VBoxContainer
 var _player_grid_btns: Array = []   # Array[Array[Button]] [row][col]
 var _ai_grid_btns: Array = []
+var _deck_lists: Dictionary = {}    # "player:characters" → ItemList
 var _missions_vbox: VBoxContainer
 var _status_lbl: Label
 
@@ -31,10 +35,14 @@ var _cell_popup: Window = null
 var _cell_callback: Callable = Callable()
 
 func _ready() -> void:
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	z_index = 200
+	mouse_filter = Control.MOUSE_FILTER_STOP
 	_ensure_dir()
 	_build_ui()
 	_refresh_file_list()
 	_new_config()
+	call_deferred("_apply_fullscreen_layout")
 
 func _ensure_dir() -> void:
 	if not DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(SAVE_DIR)):
@@ -44,33 +52,38 @@ func _ensure_dir() -> void:
 # UI Build
 # ─────────────────────────────────────────────────────────────
 
-func _build_ui() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
-	mouse_filter = Control.MOUSE_FILTER_STOP
+func _apply_fullscreen_layout() -> void:
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var vp: Vector2 = get_viewport_rect().size
+	size = vp
+	position = Vector2.ZERO
 
+func _build_ui() -> void:
 	var bg := ColorRect.new()
 	bg.color = Color(0.1, 0.1, 0.12, 0.97)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(bg)
 
 	var root_hbox := HBoxContainer.new()
-	root_hbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root_hbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root_hbox.add_theme_constant_override("separation", 0)
 	add_child(root_hbox)
 
 	# ── Left panel: file list ──────────────────────────────────
-	var left := VBoxContainer.new()
-	left.custom_minimum_size = Vector2(220, 0)
-	left.add_theme_constant_override("separation", 6)
-	left.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	root_hbox.add_child(left)
+	var left_wrap := PanelContainer.new()
+	left_wrap.custom_minimum_size = Vector2(240, 0)
+	left_wrap.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var left_sb := StyleBoxFlat.new()
+	left_sb.bg_color = Color(0.07, 0.07, 0.09, 1.0)
+	left_wrap.add_theme_stylebox_override("panel", left_sb)
+	root_hbox.add_child(left_wrap)
 
-	var left_bg := ColorRect.new()
-	left_bg.color = Color(0.07, 0.07, 0.09, 1.0)
-	left_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	left.add_child(left_bg)
-	left.move_child(left_bg, 0)
+	var left := VBoxContainer.new()
+	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	left.add_theme_constant_override("separation", 6)
+	left_wrap.add_child(left)
 
 	var lhdr := Label.new(); lhdr.text = "Tutorial Files"
 	lhdr.add_theme_font_size_override("font_size", 14)
@@ -150,12 +163,14 @@ func _build_ui() -> void:
 	var right_scroll := ScrollContainer.new()
 	right_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	root_hbox.add_child(right_scroll)
 
 	var right := VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right.add_theme_constant_override("separation", 10)
 	var right_margin := MarginContainer.new()
+	right_margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right_margin.add_theme_constant_override("margin_left", 12)
 	right_margin.add_theme_constant_override("margin_right", 12)
 	right_margin.add_theme_constant_override("margin_top", 10)
@@ -194,8 +209,68 @@ func _build_settings_section(parent: VBoxContainer) -> void:
 		_cfg["on_complete"] = "end_immediately" if idx == 0 else "continue_normal")
 	grid.add_child(_on_complete_btn)
 
+	_section_header(parent, "BATTLE PORTRAITS")
+	_portrait_p1_edit = _add_portrait_row(parent, "Player 1 illustration", "portrait_p1")
+	_portrait_p2_edit = _add_portrait_row(parent, "Player 2 illustration", "portrait_p2")
+
+func _add_portrait_row(parent: VBoxContainer, label_text: String, cfg_key: String) -> LineEdit:
+	var lbl := Label.new()
+	lbl.text = label_text
+	lbl.add_theme_font_size_override("font_size", 12)
+	lbl.add_theme_color_override("font_color", Color(0.75, 0.82, 0.95))
+	parent.add_child(lbl)
+
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	parent.add_child(row)
+
+	var edit := LineEdit.new()
+	edit.placeholder_text = "res://assets/textures/ui/portraits/..."
+	edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	edit.text_changed.connect(func(v: String) -> void:
+		var trimmed: String = v.strip_edges()
+		if trimmed.is_empty():
+			_cfg.erase(cfg_key)
+		else:
+			_cfg[cfg_key] = trimmed)
+	row.add_child(edit)
+
+	var browse_btn := _small_btn("...")
+	browse_btn.custom_minimum_size = Vector2(36, 0)
+	browse_btn.pressed.connect(func() -> void:
+		_open_portrait_dialog(func(path: String) -> void: edit.text = path))
+	row.add_child(browse_btn)
+	return edit
+
+func _open_portrait_dialog(on_selected: Callable) -> void:
+	var fd := FileDialog.new()
+	fd.access = FileDialog.ACCESS_RESOURCES
+	fd.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	fd.filters = PackedStringArray(["*.png,*.jpg,*.jpeg,*.webp ; Image Files"])
+	fd.min_size = Vector2i(820, 520)
+	fd.title = "Select Portrait"
+	add_child(fd)
+	fd.file_selected.connect(func(path: String) -> void:
+		on_selected.call(path)
+		fd.queue_free())
+	fd.canceled.connect(fd.queue_free)
+	fd.popup_centered_ratio(0.6)
+
 func _build_deck_section(parent: VBoxContainer, header: String, is_player: bool) -> void:
 	_section_header(parent, header)
+
+	if is_player:
+		var starter_row := HBoxContainer.new()
+		starter_row.add_theme_constant_override("separation", 6)
+		parent.add_child(starter_row)
+		var starter_btn := _small_btn("Load Starter Deck")
+		starter_btn.pressed.connect(_apply_starter_deck_to_player)
+		starter_row.add_child(starter_btn)
+		var starter_hint := Label.new()
+		starter_hint.text = "Clone cards + formation from manage_starting_deck"
+		starter_hint.add_theme_font_size_override("font_size", 11)
+		starter_hint.add_theme_color_override("font_color", Color(0.45, 0.48, 0.55))
+		starter_row.add_child(starter_hint)
 
 	var outer := VBoxContainer.new()
 	outer.add_theme_constant_override("separation", 6)
@@ -245,22 +320,41 @@ func _build_deck_section(parent: VBoxContainer, header: String, is_player: bool)
 	else:
 		_ai_grid_btns = grid_btns
 
+func _deck_list_key(is_player: bool, deck_key: String) -> String:
+	return ("%s:%s" % ["player" if is_player else "ai", deck_key])
+
 func _build_card_list_row(parent: VBoxContainer, label: String, is_player: bool, deck_key: String) -> void:
+	var block := VBoxContainer.new()
+	block.add_theme_constant_override("separation", 4)
+	parent.add_child(block)
+
 	var hbox := HBoxContainer.new()
-	parent.add_child(hbox)
+	block.add_child(hbox)
 	var lbl := Label.new(); lbl.text = label + ":"
 	lbl.custom_minimum_size = Vector2(100, 0)
+	lbl.add_theme_font_size_override("font_size", 13)
+	lbl.add_theme_color_override("font_color", Color(0.85, 0.85, 0.9))
 	hbox.add_child(lbl)
 	var add_btn := _small_btn("+ Add")
 	var snap_ip := is_player; var snap_dk := deck_key
 	add_btn.pressed.connect(func() -> void: _open_card_picker(snap_ip, snap_dk))
 	hbox.add_child(add_btn)
+	var remove_btn := _small_btn("− Remove")
+	remove_btn.pressed.connect(func() -> void: _remove_selected_card(snap_ip, snap_dk))
+	hbox.add_child(remove_btn)
 	var clear_btn := _small_btn("Clear All")
 	clear_btn.pressed.connect(func() -> void:
 		var dk: Dictionary = _get_side_deck(snap_ip)
 		dk[snap_dk] = []
 		_refresh_ui_from_cfg())
 	hbox.add_child(clear_btn)
+
+	var card_list := ItemList.new()
+	card_list.custom_minimum_size = Vector2(0, 88)
+	card_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	card_list.add_theme_font_size_override("font_size", 12)
+	_deck_lists[_deck_list_key(is_player, deck_key)] = card_list
+	block.add_child(card_list)
 
 func _build_missions_section(parent: VBoxContainer) -> void:
 	_section_header(parent, "MISSIONS (by player turn)")
@@ -341,7 +435,7 @@ func _load_file(fname: String) -> void:
 	if fa == null:
 		_set_status("Could not open: " + fname)
 		return
-	var parsed := JSON.parse_string(fa.get_as_text())
+	var parsed: Variant = JSON.parse_string(fa.get_as_text())
 	fa.close()
 	if not (parsed is Dictionary):
 		_set_status("Invalid JSON in: " + fname)
@@ -381,16 +475,60 @@ func _delete_file() -> void:
 func _new_config() -> void:
 	_current_file = ""
 	_file_name_edit.text = ""
+	var starter: Dictionary = _load_starter_deck_for_tutorial()
 	_cfg = {
 		"title": "",
 		"on_complete": "end_immediately",
-		"player_deck": {"characters": [], "traps": [], "techs": []},
-		"player_formation": [],
+		"player_deck": starter.get("player_deck", {"characters": [], "traps": [], "techs": []}),
+		"player_formation": starter.get("player_formation", []),
 		"ai_deck": {"characters": [], "traps": [], "techs": []},
 		"ai_formation": [],
 		"turns": {}
 	}
 	_refresh_ui_from_cfg()
+
+func _apply_starter_deck_to_player() -> void:
+	var starter: Dictionary = _load_starter_deck_for_tutorial()
+	_cfg["player_deck"] = starter.get("player_deck", {"characters": [], "traps": [], "techs": []})
+	_cfg["player_formation"] = starter.get("player_formation", [])
+	_refresh_ui_from_cfg()
+	_set_status("Player deck cloned from starter deck.")
+
+func _load_starter_deck_for_tutorial() -> Dictionary:
+	var empty_deck: Dictionary = {"characters": [], "traps": [], "techs": []}
+	if not FileAccess.file_exists(STARTING_DECK_PATH):
+		return {"player_deck": empty_deck.duplicate(true), "player_formation": []}
+	var f := FileAccess.open(STARTING_DECK_PATH, FileAccess.READ)
+	if f == null:
+		return {"player_deck": empty_deck.duplicate(true), "player_formation": []}
+	var parsed: Variant = JSON.parse_string(f.get_as_text())
+	f.close()
+	if not parsed is Dictionary:
+		return {"player_deck": empty_deck.duplicate(true), "player_formation": []}
+	var d: Dictionary = parsed as Dictionary
+	var player_deck: Dictionary = {
+		"characters": (d.get("characters", []) as Array).duplicate(),
+		"traps": (d.get("traps", []) as Array).duplicate(),
+		"techs": (d.get("techs", []) as Array).duplicate(),
+	}
+	var formation: Array = []
+	var formations: Variant = d.get("formations", [])
+	if formations is Array and not (formations as Array).is_empty():
+		var first: Variant = (formations as Array)[0]
+		if first is Dictionary:
+			for placement: Variant in (first as Dictionary).get("placements", []):
+				if not placement is Dictionary:
+					continue
+				var pd: Dictionary = placement as Dictionary
+				var card_name: String = str(pd.get("name", "")).strip_edges()
+				if card_name.is_empty():
+					continue
+				formation.append({
+					"card_name": card_name,
+					"row": int(pd.get("r", 0)),
+					"col": int(pd.get("c", 0)),
+				})
+	return {"player_deck": player_deck, "player_formation": formation}
 
 # ─────────────────────────────────────────────────────────────
 # UI ↔ Config Sync
@@ -400,6 +538,10 @@ func _refresh_ui_from_cfg() -> void:
 	_title_edit.text = _cfg.get("title", "")
 	var oc: String = _cfg.get("on_complete", "end_immediately")
 	_on_complete_btn.select(0 if oc == "end_immediately" else 1)
+	if _portrait_p1_edit != null:
+		_portrait_p1_edit.text = str(_cfg.get("portrait_p1", ""))
+	if _portrait_p2_edit != null:
+		_portrait_p2_edit.text = str(_cfg.get("portrait_p2", ""))
 
 	_refresh_deck_labels(true)
 	_refresh_deck_labels(false)
@@ -409,33 +551,18 @@ func _refresh_ui_from_cfg() -> void:
 
 func _refresh_deck_labels(is_player: bool) -> void:
 	var deck: Dictionary = _get_side_deck(is_player)
-	var section: VBoxContainer = _player_deck_section if is_player else _ai_deck_section
-	if section == null:
-		return
-	# Update the first Label in each card-list row (children 1, 3, 5 → hboxes)
-	# Actually we just update via tooltip/text on the add button area.
-	# Re-building would be complex; instead we show a summary label.
-	_ensure_deck_summary(section, is_player)
-
-func _ensure_deck_summary(section: VBoxContainer, is_player: bool) -> void:
-	var deck: Dictionary = _get_side_deck(is_player)
-	var tag := "_deck_summary_" + ("p" if is_player else "ai")
-	var existing: Label = section.get_node_or_null(tag)
-	if existing == null:
-		existing = Label.new()
-		existing.name = tag
-		existing.add_theme_font_size_override("font_size", 11)
-		existing.add_theme_color_override("font_color", Color(0.7, 0.9, 0.7))
-		existing.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		section.add_child(existing)
-	var chars: Array = deck.get("characters", [])
-	var traps: Array = deck.get("traps", [])
-	var techs: Array = deck.get("techs", [])
-	existing.text = "Chars(%d): %s\nTraps(%d): %s\nTechs(%d): %s" % [
-		chars.size(), ", ".join(chars),
-		traps.size(), ", ".join(traps),
-		techs.size(), ", ".join(techs)
-	]
+	for deck_key: String in ["characters", "traps", "techs"]:
+		var list: ItemList = _deck_lists.get(_deck_list_key(is_player, deck_key)) as ItemList
+		if list == null:
+			continue
+		list.clear()
+		var cards: Array = deck.get(deck_key, [])
+		if cards.is_empty():
+			list.add_item("(empty — click + Add)")
+			list.set_item_custom_fg_color(0, Color(0.45, 0.48, 0.55))
+		else:
+			for card_name: Variant in cards:
+				list.add_item(str(card_name))
 
 func _refresh_formation_grid(is_player: bool) -> void:
 	var grid_btns: Array = _player_grid_btns if is_player else _ai_grid_btns
@@ -454,6 +581,18 @@ func _collect_config_from_ui() -> void:
 	_cfg["title"] = _title_edit.text
 	# on_complete is already updated via signal
 	# Turns are already updated via inline editing
+	if _portrait_p1_edit != null:
+		var p1: String = _portrait_p1_edit.text.strip_edges()
+		if p1.is_empty():
+			_cfg.erase("portrait_p1")
+		else:
+			_cfg["portrait_p1"] = p1
+	if _portrait_p2_edit != null:
+		var p2: String = _portrait_p2_edit.text.strip_edges()
+		if p2.is_empty():
+			_cfg.erase("portrait_p2")
+		else:
+			_cfg["portrait_p2"] = p2
 
 # ─────────────────────────────────────────────────────────────
 # Card Picker Popup
@@ -465,35 +604,36 @@ func _open_card_picker(is_player: bool, deck_key: String) -> void:
 
 	var popup := Window.new()
 	popup.title = "Pick Card — " + deck_key
-	popup.size = Vector2i(380, 500)
+	popup.size = Vector2i(420, 520)
 	popup.wrap_controls = true
 	add_child(popup)
 	_picker_popup = popup
 
-	var vbox := VBoxContainer.new()
-	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 	var margin := MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 8)
-	margin.add_theme_constant_override("margin_right", 8)
-	margin.add_theme_constant_override("margin_top", 8)
-	margin.add_theme_constant_override("margin_bottom", 8)
-	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
-	margin.add_child(vbox)
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left", 10)
+	margin.add_theme_constant_override("margin_right", 10)
+	margin.add_theme_constant_override("margin_top", 10)
+	margin.add_theme_constant_override("margin_bottom", 10)
 	popup.add_child(margin)
 
+	var vbox := VBoxContainer.new()
+	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox.add_theme_constant_override("separation", 8)
+	margin.add_child(vbox)
+
 	var search := LineEdit.new()
-	search.placeholder_text = "Search..."
+	search.placeholder_text = "Search cards..."
 	vbox.add_child(search)
 
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	vbox.add_child(scroll)
+	var picker_list := ItemList.new()
+	picker_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	picker_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	picker_list.allow_reselect = true
+	vbox.add_child(picker_list)
 
-	var list_vbox := VBoxContainer.new()
-	list_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(list_vbox)
-
-	# Build list of candidate card names
 	var names: Array = []
 	match deck_key:
 		"characters":
@@ -504,20 +644,27 @@ func _open_card_picker(is_player: bool, deck_key: String) -> void:
 			names = CardDatabase.get_all_tech_names()
 	names.sort()
 
-	for n in names:
-		var btn := Button.new()
-		btn.text = n
-		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		var snap_n: String = n; var snap_ip := is_player; var snap_dk := deck_key
-		btn.pressed.connect(func() -> void:
-			_add_card_to_deck(snap_ip, snap_dk, snap_n)
-			popup.queue_free())
-		list_vbox.add_child(btn)
+	var all_names: Array[String] = []
+	for entry: Variant in names:
+		all_names.append(str(entry))
 
-	search.text_changed.connect(func(q: String) -> void:
-		for child in list_vbox.get_children():
-			if child is Button:
-				child.visible = q.is_empty() or q.to_lower() in child.text.to_lower())
+	var refill := func(filter: String) -> void:
+		picker_list.clear()
+		var q: String = filter.strip_edges().to_lower()
+		for card_name: String in all_names:
+			if q.is_empty() or q in card_name.to_lower():
+				picker_list.add_item(card_name)
+
+	refill.call("")
+	search.text_changed.connect(func(q: String) -> void: refill.call(q))
+
+	var snap_ip := is_player
+	var snap_dk := deck_key
+	picker_list.item_selected.connect(func(idx: int) -> void:
+		if idx < 0:
+			return
+		_add_card_to_deck(snap_ip, snap_dk, picker_list.get_item_text(idx))
+		popup.queue_free())
 
 	popup.popup_centered()
 	popup.close_requested.connect(popup.queue_free)
@@ -529,6 +676,46 @@ func _add_card_to_deck(is_player: bool, deck_key: String, card_name: String) -> 
 	deck[deck_key] = arr
 	_refresh_deck_labels(is_player)
 	_set_status("Added %s to %s" % [card_name, deck_key])
+
+func _remove_selected_card(is_player: bool, deck_key: String) -> void:
+	var list: ItemList = _deck_lists.get(_deck_list_key(is_player, deck_key)) as ItemList
+	if list == null:
+		return
+	var selected: PackedInt32Array = list.get_selected_items()
+	if selected.is_empty():
+		_set_status("Select a card to remove.")
+		return
+	var idx: int = selected[0]
+	if list.get_item_text(idx) == "(empty — click + Add)":
+		_set_status("No cards to remove.")
+		return
+	var deck: Dictionary = _get_side_deck(is_player)
+	var arr: Array = deck.get(deck_key, [])
+	if idx < 0 or idx >= arr.size():
+		_set_status("Could not remove card — list out of sync. Refreshing.")
+		_refresh_ui_from_cfg()
+		return
+	var removed: String = str(arr[idx])
+	arr.remove_at(idx)
+	deck[deck_key] = arr
+	if not _card_still_in_deck(is_player, removed):
+		_purge_formation_card(is_player, removed)
+	_refresh_ui_from_cfg()
+	_set_status("Removed %s from %s." % [removed, deck_key])
+
+func _card_still_in_deck(is_player: bool, card_name: String) -> bool:
+	var deck: Dictionary = _get_side_deck(is_player)
+	for key: String in ["characters", "traps", "techs"]:
+		for entry: Variant in deck.get(key, []):
+			if str(entry) == card_name:
+				return true
+	return false
+
+func _purge_formation_card(is_player: bool, card_name: String) -> void:
+	var formation: Array = _get_side_formation(is_player)
+	for i: int in range(formation.size() - 1, -1, -1):
+		if str((formation[i] as Dictionary).get("card_name", "")) == card_name:
+			formation.remove_at(i)
 
 # ─────────────────────────────────────────────────────────────
 # Cell Picker Popup
@@ -545,15 +732,20 @@ func _open_cell_picker(is_player: bool, row: int, col: int) -> void:
 	add_child(popup)
 	_cell_popup = popup
 
-	var vbox := VBoxContainer.new()
 	var margin := MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 8)
-	margin.add_theme_constant_override("margin_right", 8)
-	margin.add_theme_constant_override("margin_top", 8)
-	margin.add_theme_constant_override("margin_bottom", 8)
-	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
-	margin.add_child(vbox)
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	margin.add_theme_constant_override("margin_left", 10)
+	margin.add_theme_constant_override("margin_right", 10)
+	margin.add_theme_constant_override("margin_top", 10)
+	margin.add_theme_constant_override("margin_bottom", 10)
 	popup.add_child(margin)
+
+	var vbox := VBoxContainer.new()
+	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox.add_theme_constant_override("separation", 8)
+	margin.add_child(vbox)
 
 	var cur_lbl := Label.new()
 	var cur := _get_cell_placement(is_player, row, col)
@@ -575,12 +767,11 @@ func _open_cell_picker(is_player: bool, row: int, col: int) -> void:
 	var lbl := Label.new(); lbl.text = "Place card from deck:"
 	vbox.add_child(lbl)
 
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	vbox.add_child(scroll)
-
-	var list := VBoxContainer.new()
-	scroll.add_child(list)
+	var cell_list := ItemList.new()
+	cell_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	cell_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	cell_list.allow_reselect = true
+	vbox.add_child(cell_list)
 
 	var deck: Dictionary = _get_side_deck(is_player)
 	var all_cards: Array = []
@@ -589,16 +780,21 @@ func _open_cell_picker(is_player: bool, row: int, col: int) -> void:
 	all_cards.sort()
 	all_cards = _dedup(all_cards)
 
-	for n in all_cards:
-		var btn := Button.new()
-		btn.text = n
-		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		var snap_n: String = n
-		btn.pressed.connect(func() -> void:
-			_set_cell_placement(snap_ip, snap_r, snap_c, snap_n)
-			_refresh_formation_grid(snap_ip)
-			popup.queue_free())
-		list.add_child(btn)
+	if all_cards.is_empty():
+		cell_list.add_item("(deck empty — add cards first)")
+		cell_list.set_item_custom_fg_color(0, Color(0.45, 0.48, 0.55))
+	else:
+		for n: Variant in all_cards:
+			cell_list.add_item(str(n))
+
+	cell_list.item_selected.connect(func(idx: int) -> void:
+		if idx < 0:
+			return
+		if all_cards.is_empty():
+			return
+		_set_cell_placement(snap_ip, snap_r, snap_c, cell_list.get_item_text(idx))
+		_refresh_formation_grid(snap_ip)
+		popup.queue_free())
 
 	popup.popup_centered()
 	popup.close_requested.connect(popup.queue_free)
@@ -615,6 +811,19 @@ func _dedup(arr: Array) -> Array:
 # ─────────────────────────────────────────────────────────────
 # Missions UI
 # ─────────────────────────────────────────────────────────────
+
+func _move_mission(turn_key: String, from_idx: int, to_idx: int) -> void:
+	if not _cfg.has("turns"):
+		return
+	var missions: Array = _cfg["turns"].get(turn_key, [])
+	if from_idx < 0 or from_idx >= missions.size():
+		return
+	if to_idx < 0 or to_idx >= missions.size() or from_idx == to_idx:
+		return
+	var item: Variant = missions[from_idx]
+	missions.remove_at(from_idx)
+	missions.insert(to_idx, item)
+	_rebuild_missions_ui()
 
 func _add_turn() -> void:
 	if not _cfg.has("turns"):
@@ -712,6 +921,18 @@ func _build_mission_row(parent: VBoxContainer, turn_key: String, idx: int) -> vo
 		_cfg["turns"][snap_key][snap_idx]["instruction"] = v)
 	row.add_child(instr_edit)
 
+	var up_btn := _small_btn("Up")
+	up_btn.disabled = idx == 0
+	up_btn.pressed.connect(func() -> void:
+		_move_mission(snap_key, snap_idx, snap_idx - 1))
+	row.add_child(up_btn)
+
+	var down_btn := _small_btn("Down")
+	down_btn.disabled = idx >= missions.size() - 1
+	down_btn.pressed.connect(func() -> void:
+		_move_mission(snap_key, snap_idx, snap_idx + 1))
+	row.add_child(down_btn)
+
 	# Remove button
 	var del_btn := _small_btn("✕")
 	del_btn.pressed.connect(func() -> void:
@@ -724,6 +945,22 @@ func _add_mission_param_fields(row: HBoxContainer, turn_key: String, idx: int, m
 	var snap_key := turn_key; var snap_idx := idx
 
 	match mtype:
+		"show_message":
+			var edit := _param_edit(m, "message", "Message text")
+			edit.custom_minimum_size = Vector2(220, 0)
+			edit.text_changed.connect(func(v: String) -> void:
+				_cfg["turns"][snap_key][snap_idx]["message"] = v)
+			row.add_child(edit)
+
+		"wait":
+			var edit := _param_edit(m, "seconds", "Seconds")
+			edit.custom_minimum_size = Vector2(56, 0)
+			if not str(m.get("seconds", "")).is_valid_float():
+				edit.text = "1"
+			edit.text_changed.connect(func(v: String) -> void:
+				_cfg["turns"][snap_key][snap_idx]["seconds"] = float(v) if v.is_valid_float() else 1.0)
+			row.add_child(edit)
+
 		"attack", "bluff", "tap_card":
 			var edit := _param_edit(m, "card_name", "Card name")
 			edit.text_changed.connect(func(v: String) -> void:
@@ -782,7 +1019,7 @@ func _param_edit(m: Dictionary, key: String, placeholder: String) -> LineEdit:
 
 func _mission_types() -> Array:
 	return [
-		"attack", "bluff", "union_summon", "use_tech",
+		"show_message", "wait", "attack", "bluff", "union_summon", "use_tech",
 		"end_turn", "options", "tap_void_stack", "tap_tech",
 		"tap_card", "tap_cell"
 	]
@@ -793,47 +1030,12 @@ func _mission_types() -> Array:
 
 func _start_battle() -> void:
 	_collect_config_from_ui()
-
-	var player_deck_dict: Dictionary = _cfg.get("player_deck", {})
-	var ai_deck_dict: Dictionary = _cfg.get("ai_deck", {})
-
-	# Build DeckData for player
-	var p_deck := DeckData.new()
-	p_deck.deck_name = "Tutorial Player"
-	p_deck.characters = player_deck_dict.get("characters", []).duplicate()
-	p_deck.traps = player_deck_dict.get("traps", []).duplicate()
-	p_deck.techs = player_deck_dict.get("techs", []).duplicate()
-
-	# Build DeckData for AI
-	var ai_deck := DeckData.new()
-	ai_deck.deck_name = "Tutorial AI"
-	ai_deck.characters = ai_deck_dict.get("characters", []).duplicate()
-	ai_deck.traps = ai_deck_dict.get("traps", []).duplicate()
-	ai_deck.techs = ai_deck_dict.get("techs", []).duplicate()
-
-	# Validate deck composition
-	if not p_deck.is_valid():
-		_set_status("Player deck invalid:\n" + p_deck.validation_message())
+	var err: String = TutorialBattleManager.configure_battle_from_config(_cfg)
+	if not err.is_empty():
+		_set_status(err)
 		return
-	if not ai_deck.is_valid():
-		_set_status("AI deck invalid:\n" + ai_deck.validation_message())
-		return
-
-	# Set GameState
-	GameState.game_mode = GameState.GameMode.VS_AI
-	GameState._vn_battle_pending = true
-	GameState.battle_player_deck = p_deck
-	GameState.battle_player_forced_cells = _cfg.get("player_formation", []).duplicate(true)
-	GameState.battle_ai_deck = ai_deck
-	GameState.battle_ai_forced_cells = _cfg.get("ai_formation", []).duplicate(true)
-	GameState.battle_ai_forced_tech = ai_deck.techs.duplicate()
-
-	# Prepare tutorial manager
-	TutorialBattleManager.prepare(_cfg)
-
+	CheckerTransition.fade_out_to_scene("res://scenes/game_board.tscn")
 	queue_free()
-	CheckerTransition.fade_out_to_battle(func() -> void:
-		get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 
 # ─────────────────────────────────────────────────────────────
 # Helpers

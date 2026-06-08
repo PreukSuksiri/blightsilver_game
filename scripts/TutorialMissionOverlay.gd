@@ -1,9 +1,7 @@
 extends Node
-# Full-screen tutorial overlay: dim + undimmed spotlight, bouncing arrow, cursor tooltip,
-# and input blocking outside the undimmed circle.
+# Tutorial mission overlay: spotlight ring, bouncing arrow, cursor tooltip,
+# and input blocking outside the spotlight circle.
 # Added as a child of GameBoard at the very end of _ready(), so its _input fires first.
-
-const SHADER_PATH := "res://assets/shaders/tutorial_dim.gdshader"
 
 var _active: bool = false
 var _center: Vector2 = Vector2.ZERO
@@ -11,12 +9,14 @@ var _radius: float = 64.0
 
 # Visual nodes
 var _canvas: CanvasLayer = null
-var _dim_rect: ColorRect = null
 var _ring_draw: Control = null      # draws the highlight ring
 var _arrow_lbl: Label = null
 var _tooltip_lbl: Label = null
 var _arrow_tween: Tween = null
 var _tooltip_pos: Vector2 = Vector2.ZERO
+var _message_layer: Control = null
+var _wait_active: bool = false
+var _wait_layer: Control = null
 
 func _ready() -> void:
 	_build_canvas()
@@ -25,16 +25,6 @@ func _build_canvas() -> void:
 	_canvas = CanvasLayer.new()
 	_canvas.layer = 200
 	add_child(_canvas)
-
-	# Full-screen dim with shader hole
-	_dim_rect = ColorRect.new()
-	_dim_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_dim_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_dim_rect.visible = false
-	var mat := ShaderMaterial.new()
-	mat.shader = load(SHADER_PATH)
-	_dim_rect.material = mat
-	_canvas.add_child(_dim_rect)
 
 	# Ring highlight drawn on top
 	_ring_draw = Control.new()
@@ -77,28 +67,20 @@ func _on_ring_draw() -> void:
 # Public API
 # ─────────────────────────────────────────────────────────────
 
-## Show full-screen dim with no interaction area (while checking impossibility).
+## Hide mission visuals while checking impossibility / loading sub-menus.
 func show_checking() -> void:
 	_active = false
-	_dim_rect.visible = true
-	var mat := _dim_rect.material as ShaderMaterial
-	if mat:
-		mat.set_shader_parameter("circle_radius", 0.0)
 	_ring_draw.visible = false
 	_arrow_lbl.visible = false
 	_tooltip_lbl.visible = false
+	_hide_message_dialog()
+	_hide_wait()
 
 ## Show the mission spotlight at a given screen position.
 func show_mission(center: Vector2, radius: float, instruction: String) -> void:
 	_active = true
 	_center = center
 	_radius = radius
-
-	_dim_rect.visible = true
-	var mat := _dim_rect.material as ShaderMaterial
-	if mat:
-		mat.set_shader_parameter("circle_center", center)
-		mat.set_shader_parameter("circle_radius", radius)
 
 	_ring_draw.visible = true
 	_ring_draw.queue_redraw()
@@ -107,16 +89,143 @@ func show_mission(center: Vector2, radius: float, instruction: String) -> void:
 	_tooltip_lbl.text = instruction
 	_tooltip_lbl.visible = not instruction.is_empty()
 
-## Hide the overlay entirely.
-func hide_overlay() -> void:
+## Centered message dialog with OK — satisfies show_message missions.
+func show_message(text: String) -> void:
 	_active = false
 	_center = Vector2.ZERO
-	_dim_rect.visible = false
 	_ring_draw.visible = false
 	_arrow_lbl.visible = false
 	_tooltip_lbl.visible = false
 	if _arrow_tween != null and _arrow_tween.is_valid():
 		_arrow_tween.kill()
+	_hide_message_dialog()
+
+	_message_layer = Control.new()
+	_message_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_message_layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	_canvas.add_child(_message_layer)
+
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.0, 0.0, 0.0, 0.55)
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	_message_layer.add_child(dim)
+
+	var center_wrap := CenterContainer.new()
+	center_wrap.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center_wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_message_layer.add_child(center_wrap)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(440.0, 0.0)
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.add_theme_stylebox_override("panel", _make_message_stylebox())
+	center_wrap.add_child(panel)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 24)
+	margin.add_theme_constant_override("margin_top", 20)
+	margin.add_theme_constant_override("margin_right", 24)
+	margin.add_theme_constant_override("margin_bottom", 20)
+	panel.add_child(margin)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 16)
+	margin.add_child(vbox)
+
+	var title_lbl := Label.new()
+	title_lbl.text = "MESSAGE"
+	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title_lbl.add_theme_font_size_override("font_size", 14)
+	title_lbl.add_theme_color_override("font_color", Color(0.55, 0.78, 1.0, 0.95))
+	vbox.add_child(title_lbl)
+
+	var msg_lbl := Label.new()
+	msg_lbl.text = text
+	msg_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	msg_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	msg_lbl.custom_minimum_size = Vector2(360.0, 0.0)
+	msg_lbl.add_theme_font_size_override("font_size", 18)
+	msg_lbl.add_theme_color_override("font_color", Color(0.88, 0.94, 1.0))
+	vbox.add_child(msg_lbl)
+
+	var ok_btn := Button.new()
+	ok_btn.text = "OK"
+	ok_btn.custom_minimum_size = Vector2(120.0, 42.0)
+	ok_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	ok_btn.add_theme_font_size_override("font_size", 16)
+	var ok_sb := StyleBoxFlat.new()
+	ok_sb.bg_color = Color(0.10, 0.18, 0.38, 1.0)
+	ok_sb.corner_radius_top_left = 6; ok_sb.corner_radius_top_right = 6
+	ok_sb.corner_radius_bottom_right = 6; ok_sb.corner_radius_bottom_left = 6
+	ok_btn.add_theme_stylebox_override("normal", ok_sb)
+	var ok_hover := ok_sb.duplicate() as StyleBoxFlat
+	ok_hover.bg_color = Color(0.16, 0.28, 0.55, 1.0)
+	ok_btn.add_theme_stylebox_override("hover", ok_hover)
+	ok_btn.pressed.connect(func() -> void:
+		_hide_message_dialog()
+		TutorialBattleManager.report_action("message_ok", {}))
+	vbox.add_child(ok_btn)
+
+func _make_message_stylebox() -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.04, 0.07, 0.16, 0.98)
+	sb.border_width_left = 2
+	sb.border_width_top = 2
+	sb.border_width_right = 2
+	sb.border_width_bottom = 2
+	sb.border_color = Color(0.55, 0.78, 1.0, 0.7)
+	sb.corner_radius_top_left = 10
+	sb.corner_radius_top_right = 10
+	sb.corner_radius_bottom_right = 10
+	sb.corner_radius_bottom_left = 10
+	sb.shadow_color = Color(0.0, 0.0, 0.0, 0.45)
+	sb.shadow_size = 8
+	return sb
+
+func _hide_message_dialog() -> void:
+	if _message_layer != null and is_instance_valid(_message_layer):
+		_message_layer.queue_free()
+	_message_layer = null
+
+## Invisible full-screen wait lock — blocks input, no on-screen visuals.
+func show_wait() -> void:
+	_active = false
+	_center = Vector2.ZERO
+	_ring_draw.visible = false
+	_arrow_lbl.visible = false
+	_tooltip_lbl.visible = false
+	if _arrow_tween != null and _arrow_tween.is_valid():
+		_arrow_tween.kill()
+	_hide_message_dialog()
+	_hide_wait()
+
+	_wait_active = true
+	_wait_layer = Control.new()
+	_wait_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_wait_layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	_canvas.add_child(_wait_layer)
+
+func hide_wait() -> void:
+	_hide_wait()
+
+func _hide_wait() -> void:
+	_wait_active = false
+	if _wait_layer != null and is_instance_valid(_wait_layer):
+		_wait_layer.queue_free()
+	_wait_layer = null
+
+## Hide the overlay entirely.
+func hide_overlay() -> void:
+	_active = false
+	_center = Vector2.ZERO
+	_ring_draw.visible = false
+	_arrow_lbl.visible = false
+	_tooltip_lbl.visible = false
+	if _arrow_tween != null and _arrow_tween.is_valid():
+		_arrow_tween.kill()
+	_hide_message_dialog()
+	_hide_wait()
 
 func is_shown() -> bool:
 	return _active
@@ -158,6 +267,10 @@ func _process(_delta: float) -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _input(event: InputEvent) -> void:
+	if _wait_active:
+		get_viewport().set_input_as_handled()
+		return
+
 	if not _active:
 		return
 

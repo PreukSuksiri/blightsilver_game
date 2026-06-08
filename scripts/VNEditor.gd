@@ -131,6 +131,9 @@ var _f_portrait_p2_size:     SpinBox = null
 var _f_battle_bgm: LineEdit = null
 var _f_battle_bgm_vol: SpinBox = null
 var _f_start_battle:  CheckBox = null
+var _f_call_tutorial: CheckBox = null
+var _f_tutorial_opt:  OptionButton = null
+var _tutorial_config_paths: PackedStringArray = PackedStringArray()
 var _f_go_to_credits:    CheckBox     = null
 var _f_credits_target:   OptionButton = null
 var _f_hide_dialog:      CheckBox     = null
@@ -150,6 +153,9 @@ var _f_ai_pers_def: OptionButton = null
 var _f_ai_pers_off: OptionButton = null
 var _f_ai_pers_soc: OptionButton = null
 var _f_call_scene:  OptionButton = null
+var _f_go_to_campaign_gallery: CheckBox     = null
+var _f_unlock_gallery_opt:    OptionButton = null
+var _gallery_unlock_paths:    PackedStringArray = PackedStringArray()
 
 # Enemy deck builder (for start_battle beats)
 var _enemy_deck_chars: Array = []
@@ -809,6 +815,20 @@ func _build_fields() -> void:
 	_f_on_lose = _row_le(v, "On Lose", "path to VN JSON — played if player loses  |  'game_over' = show game-over screen")
 	_add_browse(_f_on_lose, PackedStringArray(["*.json;JSON"]), "res://campaign/scenes/")
 
+	# ── Tutorial Battle ───────────────────────────────────────
+	_section(v, "TUTORIAL BATTLE  (config JSON — no builder UI)")
+	var tut_hint := Label.new()
+	tut_hint.text = "Launches a tutorial duel from data/tutorial_battles/. Decks and missions come from the JSON."
+	tut_hint.add_theme_font_size_override("font_size", 12)
+	tut_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	tut_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(tut_hint)
+	_f_call_tutorial = _row_cb(v, "Call Tutorial Battle",
+		"Start a tutorial duel after this beat using the selected config")
+	_f_tutorial_opt = _row_opt(v, "Tutorial config", ["(none)"],
+		"JSON files in res://data/tutorial_battles/")
+	_populate_tutorial_battle_picker()
+
 	# ── Enemy Deck ────────────────────────────────────────────
 	_section(v, "ENEMY DECK  (optional — leave empty to use random pool)")
 	var hint_lbl := Label.new()
@@ -898,6 +918,14 @@ func _build_fields() -> void:
 	_section(v, "CREDITS")
 	_f_go_to_credits  = _row_cb(v, "Go to Credits", "Transition to the credits scene after this beat")
 	_f_credits_target = _row_opt(v, "Credits scene", ["Normal", "Demo"], "which credits scene to play")
+
+	# ── Campaign Gallery ──────────────────────────────────────
+	_section(v, "CAMPAIGN GALLERY")
+	_f_go_to_campaign_gallery = _row_cb(v, "Go to Campaign Gallery",
+			"Fade out and open the campaign gallery on the main menu")
+	_f_unlock_gallery_opt = _row_opt(v, "Unlock chapter", [],
+			"Mark a gallery chapter complete (unlocks chapters that list it as prerequisite)")
+	_rebuild_gallery_unlock_options()
 
 	# ── Special Command ───────────────────────────────────────
 	_section(v, "SPECIAL COMMAND")
@@ -1035,9 +1063,26 @@ func _connect_static_signals() -> void:
 	_f_bg_color.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_nsfw.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_animation.item_selected.connect(func(_i: int) -> void: ch.call())
-	_f_start_battle.toggled.connect(func(_b: bool) -> void: ch.call())
+	_f_start_battle.toggled.connect(func(on: bool) -> void:
+		if on and _f_call_tutorial != null:
+			_f_call_tutorial.button_pressed = false
+		ch.call())
+	if _f_call_tutorial != null:
+		_f_call_tutorial.toggled.connect(func(on: bool) -> void:
+			if on:
+				_f_start_battle.button_pressed = false
+			ch.call())
+	if _f_tutorial_opt != null:
+		_f_tutorial_opt.item_selected.connect(func(_i: int) -> void:
+			if _f_call_tutorial != null and _f_tutorial_opt.selected > 0:
+				_f_call_tutorial.button_pressed = true
+			ch.call())
 	_f_go_to_credits.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_credits_target.item_selected.connect(func(_i: int) -> void: ch.call())
+	if _f_go_to_campaign_gallery != null:
+		_f_go_to_campaign_gallery.toggled.connect(func(_b: bool) -> void: ch.call())
+	if _f_unlock_gallery_opt != null:
+		_f_unlock_gallery_opt.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_call_scene.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_ai_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_player_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
@@ -1071,6 +1116,39 @@ func _connect_static_signals() -> void:
 # ─────────────────────────────────────────────────────────────
 # Dungeon call picker
 # ─────────────────────────────────────────────────────────────
+func _populate_tutorial_battle_picker() -> void:
+	if _f_tutorial_opt == null:
+		return
+	var prev_path: String = ""
+	if _f_tutorial_opt.selected > 0 and _f_tutorial_opt.selected < _tutorial_config_paths.size():
+		prev_path = _tutorial_config_paths[_f_tutorial_opt.selected]
+	_f_tutorial_opt.clear()
+	_tutorial_config_paths.clear()
+	_tutorial_config_paths.append("")
+	_f_tutorial_opt.add_item("(none)")
+	var dir := DirAccess.open(TutorialBattleManager.CONFIG_DIR)
+	if dir != null:
+		dir.list_dir_begin()
+		var fname := dir.get_next()
+		var names: Array[String] = []
+		while fname != "":
+			if fname.ends_with(".json"):
+				names.append(fname)
+			fname = dir.get_next()
+		dir.list_dir_end()
+		names.sort()
+		for json_name: String in names:
+			var full_path: String = TutorialBattleManager.CONFIG_DIR + json_name
+			_tutorial_config_paths.append(full_path)
+			_f_tutorial_opt.add_item(json_name.trim_suffix(".json"))
+	if _tutorial_config_paths.size() <= 1:
+		_f_tutorial_opt.add_item("(no configs found)")
+	if not prev_path.is_empty():
+		for i: int in range(_tutorial_config_paths.size()):
+			if _tutorial_config_paths[i] == prev_path:
+				_f_tutorial_opt.selected = i
+				break
+
 func _populate_dungeon_call_picker() -> void:
 	_f_dungeon_opt.clear()
 	_dungeon_filtered_ids.clear()
@@ -1519,6 +1597,38 @@ func _insert_color_tag(te: TextEdit, hex: String) -> void:
 # ─────────────────────────────────────────────────────────────
 # File browser helpers
 # ─────────────────────────────────────────────────────────────
+func _rebuild_gallery_unlock_options() -> void:
+	if _f_unlock_gallery_opt == null:
+		return
+	var prev_sel: int = _f_unlock_gallery_opt.selected
+	_f_unlock_gallery_opt.clear()
+	_gallery_unlock_paths = PackedStringArray()
+	_f_unlock_gallery_opt.add_item("(none)")
+	_gallery_unlock_paths.append("")
+	_f_unlock_gallery_opt.add_item("(current VN file)")
+	_gallery_unlock_paths.append("@current")
+	const GALLERY_PATH: String = "res://campaign/gallery_data.json"
+	if FileAccess.file_exists(GALLERY_PATH):
+		var f := FileAccess.open(GALLERY_PATH, FileAccess.READ)
+		if f != null:
+			var parsed: Variant = JSON.parse_string(f.get_as_text())
+			f.close()
+			if parsed is Array:
+				for raw: Variant in (parsed as Array):
+					if not raw is Dictionary:
+						continue
+					var entry: Dictionary = raw as Dictionary
+					var vn_path: String = str(entry.get("vn_scene", "")).strip_edges()
+					if vn_path.is_empty():
+						continue
+					var label: String = str(entry.get("line2", "")).strip_edges()
+					if label.is_empty():
+						label = vn_path.get_file()
+					_f_unlock_gallery_opt.add_item(label)
+					_gallery_unlock_paths.append(vn_path)
+	if _f_unlock_gallery_opt.item_count > 0:
+		_f_unlock_gallery_opt.selected = clampi(prev_sel, 0, _f_unlock_gallery_opt.item_count - 1)
+
 func _browse(target: LineEdit, filters: PackedStringArray, start_dir: String) -> void:
 	_browse_target = target
 	_file_dialog.filters = filters
@@ -1943,9 +2053,19 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 		return prefix + "[characters]"
 	if beat.get("start_battle", false):
 		return prefix + "[start battle]"
+	var tut_path: String = str(beat.get("tutorial_battle", "")).strip_edges()
+	if tut_path != "":
+		return prefix + "[tutorial: %s]" % tut_path.get_file().trim_suffix(".json")
 	var expl_call: String = str(beat.get("exploration_call", "")).strip_edges()
 	if expl_call != "":
 		return prefix + "[exploration: %s]" % expl_call.get_file()
+	if beat.get("go_to_campaign_gallery", false):
+		return prefix + "[campaign gallery]"
+	if beat.get("unlock_current_gallery_chapter", false):
+		return prefix + "[unlock chapter: current]"
+	var unlock_vn: String = str(beat.get("unlock_gallery_chapter", "")).strip_edges()
+	if not unlock_vn.is_empty():
+		return prefix + "[unlock chapter: %s]" % unlock_vn.get_file()
 	return prefix + "(empty)"
 
 # ─────────────────────────────────────────────────────────────
@@ -2062,6 +2182,17 @@ func _populate_fields() -> void:
 	_f_start_battle.button_pressed  = b.get("start_battle",  false)
 	_f_go_to_credits.button_pressed = b.get("go_to_credits", false)
 	_f_credits_target.selected = 1 if str(b.get("credits_target", "")) == "demo" else 0
+	_f_go_to_campaign_gallery.button_pressed = b.get("go_to_campaign_gallery", false)
+	_f_unlock_gallery_opt.selected = 0
+	if b.get("unlock_current_gallery_chapter", false):
+		_f_unlock_gallery_opt.selected = 1
+	else:
+		var unlock_vn: String = str(b.get("unlock_gallery_chapter", "")).strip_edges()
+		if not unlock_vn.is_empty():
+			for i: int in range(_gallery_unlock_paths.size()):
+				if _gallery_unlock_paths[i] == unlock_vn:
+					_f_unlock_gallery_opt.selected = i
+					break
 	var _cs_map: Array = ["", "credit", "credit_demo", "photo_scatter"]
 	var _cs_val: String = str(b.get("call_scene", ""))
 	_f_call_scene.selected = max(0, _cs_map.find(_cs_val))
@@ -2079,6 +2210,19 @@ func _populate_fields() -> void:
 	_f_battle_bgm_vol.value = float(b.get("battle_bgm_volume", 100.0))
 	_f_on_win.text  = str(b.get("on_win",  ""))
 	_f_on_lose.text = str(b.get("on_lose", ""))
+
+	# Tutorial battle
+	var tut_path: String = str(b.get("tutorial_battle", "")).strip_edges()
+	_populate_tutorial_battle_picker()
+	if _f_call_tutorial != null:
+		_f_call_tutorial.button_pressed = tut_path != ""
+	if _f_tutorial_opt != null:
+		_f_tutorial_opt.selected = 0
+		if tut_path != "":
+			for i: int in range(_tutorial_config_paths.size()):
+				if _tutorial_config_paths[i] == tut_path:
+					_f_tutorial_opt.selected = i
+					break
 
 	# Enemy deck
 	_enemy_deck_chars.clear()
@@ -2336,10 +2480,26 @@ func _collect_beat() -> Dictionary:
 
 	if _f_start_battle.button_pressed:
 		b["start_battle"] = true
+	if _f_call_tutorial != null and _f_call_tutorial.button_pressed \
+			and _f_tutorial_opt != null and _f_tutorial_opt.selected > 0:
+		var tut_sel: int = _f_tutorial_opt.selected
+		if tut_sel < _tutorial_config_paths.size():
+			var tut_cfg: String = _tutorial_config_paths[tut_sel]
+			if not tut_cfg.is_empty():
+				b["tutorial_battle"] = tut_cfg
 	if _f_go_to_credits.button_pressed:
 		b["go_to_credits"] = true
 		if _f_credits_target.selected == 1:
 			b["credits_target"] = "demo"
+	if _f_go_to_campaign_gallery.button_pressed:
+		b["go_to_campaign_gallery"] = true
+	if _f_unlock_gallery_opt != null and _f_unlock_gallery_opt.selected > 0 \
+			and _f_unlock_gallery_opt.selected < _gallery_unlock_paths.size():
+		var unlock_path: String = _gallery_unlock_paths[_f_unlock_gallery_opt.selected]
+		if unlock_path == "@current":
+			b["unlock_current_gallery_chapter"] = true
+		elif not unlock_path.is_empty():
+			b["unlock_gallery_chapter"] = unlock_path
 	var _cs_save_map: Array = ["", "credit", "credit_demo", "photo_scatter"]
 	var _cs_idx: int = _f_call_scene.selected
 	if _cs_idx > 0:

@@ -8,6 +8,8 @@ class_name PackOpeningOverlay
 #   PackOpeningOverlay.open(get_tree().root, "Aether Warden", "Radar", "Bunker")
 #
 # Any null / empty / unrecognised card name shows the fallback vellum frame.
+# Only pre-rendered full_cards/ images are shown (never raw artwork).
+# Textures are preloaded before the reveal animation starts.
 # The overlay blocks all input during the animation.
 # Clicking / Space skips the display wait and triggers the fly-off immediately.
 # ──────────────────────────────────────────────────────────────────────────────
@@ -32,6 +34,7 @@ var _skippable:        bool   = true
 var _anim_done:        bool   = false
 var _reroll_triggered: bool   = false
 var _glow_sbs:         Array  = [null, null, null]  # StyleBoxFlat refs
+var _card_tex_cache:   Array  = []                    # preloaded full-card textures
 
 # ── Scene nodes ───────────────────────────────────────────────────────────────
 var _bg       : ColorRect = null
@@ -177,6 +180,8 @@ func _build_ui() -> void:
 # Main animation coroutine
 # ──────────────────────────────────────────────────────────────────────────────
 func _run() -> void:
+	_preload_card_textures()
+
 	var screen: Vector2 = get_viewport_rect().size
 	var cx: float = screen.x * 0.5
 	var cy: float = screen.y * 0.5
@@ -425,7 +430,7 @@ func _make_card_ctrl(card_name: String, idx: int) -> Control:
 	card_img.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 	card_img.stretch_mode = TextureRect.STRETCH_SCALE
 	card_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	card_img.texture      = _load_card_tex(card_name)
+	card_img.texture      = _cached_card_tex(idx, card_name)
 	wrapper.add_child(card_img)
 
 	return wrapper
@@ -451,27 +456,58 @@ func _start_glow_pulse(idx: int) -> void:
 	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Load full-card texture (fallback to vellum frame)
+# Full-card texture loading (full_cards/ only — fallback to vellum frame)
 # ──────────────────────────────────────────────────────────────────────────────
+func _preload_card_textures() -> void:
+	_card_tex_cache.clear()
+	for i: int in range(3):
+		var name: String = _card_names[i] if i < _card_names.size() else ""
+		_card_tex_cache.append(_load_card_tex(name))
+
+func _cached_card_tex(idx: int, card_name: String) -> Texture2D:
+	if idx >= 0 and idx < _card_tex_cache.size():
+		var cached: Variant = _card_tex_cache[idx]
+		if cached is Texture2D:
+			return cached as Texture2D
+	return _load_card_tex(card_name)
+
 func _load_card_tex(card_name: String) -> Texture2D:
-	if card_name == null or card_name == "":
-		return load(FALLBACK_CARD_PATH) as Texture2D
-	# Always hide cards that still use placeholder art
-	var cd: CharacterData = CardDatabase.get_character(card_name)
-	if cd != null and cd.placeholder_art:
-		return load(FALLBACK_CARD_PATH) as Texture2D
-	var td: TrapData = CardDatabase.get_trap(card_name)
-	if td != null and td.placeholder_art:
-		return load(FALLBACK_CARD_PATH) as Texture2D
-	var ed: TechCardData = CardDatabase.get_tech(card_name)
-	if ed != null and ed.placeholder_art:
-		return load(FALLBACK_CARD_PATH) as Texture2D
+	var path: String = _resolve_full_card_path(card_name)
+	if path != "":
+		var tex: Texture2D = load(path) as Texture2D
+		if tex != null:
+			return tex
+	return load(FALLBACK_CARD_PATH) as Texture2D
+
+func _resolve_full_card_path(card_name: String) -> String:
+	if card_name == null or card_name.is_empty():
+		return ""
 	var snake: String = card_name.to_lower() \
 		.replace(" ", "_").replace("'", "").replace("-", "_")
-	var path: String = FULL_CARDS_DIR + snake + ".png"
-	if ResourceLoader.exists(path):
-		return load(path) as Texture2D
-	return load(FALLBACK_CARD_PATH) as Texture2D
+	var card_type: String = _card_type_for(card_name)
+	var candidates: Array[String] = []
+	if SaveManager.nsfw_enabled:
+		candidates.append(snake + "_nsfw")
+		if card_type != "":
+			candidates.append(card_type + "_" + snake + "_nsfw")
+	candidates.append(snake)
+	if card_type != "":
+		candidates.append(card_type + "_" + snake)
+	for base: String in candidates:
+		for ext: String in ["png", "jpg"]:
+			var path: String = FULL_CARDS_DIR + base + "." + ext
+			if ResourceLoader.exists(path):
+				return path
+	return ""
+
+func _card_type_for(card_name: String) -> String:
+	if CardDatabase.get_character(card_name) != null:
+		return "character"
+	if CardDatabase.get_trap(card_name) != null:
+		return "trap"
+	if CardDatabase.get_tech(card_name) != null:
+		return "tech"
+	return ""
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Glow colour by card type

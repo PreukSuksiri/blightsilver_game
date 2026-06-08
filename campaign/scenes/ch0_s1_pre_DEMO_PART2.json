@@ -1155,6 +1155,30 @@
 			}
 		],
 		"speaker": "Kelly",
+		"text": "Hold the stack of cards in your hand"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
 		"text": "First, you need to chant a code to optimize your soul pressure with this tool."
 	},
 	{
@@ -1175,7 +1199,11 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Without a chant, you might throw up hard due to sudden shift of soul pressure."
+		"text": "Without a correct code, you might throw up hard due to sudden shift of soul pressure."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
@@ -1195,7 +1223,11 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Repeat after me"
+		"text": "Now, repeat after me"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
@@ -1215,6 +1247,61 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "\"May the silver path shows your true sins, Vellum card commence.\""
+		"text": "May the silver path shows your true sins...!!"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Ummm.... May the path of soul show us silver..!!"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_vellum_card_on_desk.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_akimbo_sigh.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Kelly"
+	},
+	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"tutorial_battle": "res://data/tutorial_battles/example_attack_tutorial.json"
 	}
 ]

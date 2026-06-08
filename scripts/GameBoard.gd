@@ -322,6 +322,10 @@ func _ready() -> void:
 	CheckerTransition.fade_in()
 	if TutorialBattleManager.is_prepared:
 		TutorialBattleManager.on_board_ready(self)
+		_update_reveal_buttons()
+		_update_tutorial_hud_lock()
+	TutorialBattleManager.mission_started.connect(_on_tutorial_mission_ui_changed)
+	TutorialBattleManager.mission_complete.connect(_on_tutorial_mission_ui_changed)
 
 # ─────────────────────────────────────────────────────────────
 # Setup
@@ -1274,7 +1278,13 @@ func _begin_game() -> void:
 	_refresh_all_grids()
 	_refresh_hud()
 	# E2E tests always give Player 0 (the highlight-card side) first turn.
-	var first_player: int = 0 if CardE2ERunner.is_active() else DiceRoller.flip_coin_first_player()
+	# Tutorial battles always give Player 2 first (tails).
+	var first_player: int
+	if CardE2ERunner.is_active():
+		first_player = 0
+	else:
+		var tut_forced: int = TutorialBattleManager.get_forced_first_player()
+		first_player = tut_forced if tut_forced >= 0 else DiceRoller.flip_coin_first_player()
 	var coin_result: String = "Heads" if first_player == 0 else "Tails"
 	GameState.post_message("Coin flip — %s! Player %d goes first!" % [coin_result, first_player + 1])
 	_show_coin_flip_and_start(first_player)
@@ -2038,16 +2048,47 @@ func _reset_reveal_previews() -> void:
 	# Re-apply observer peek on top of the reset (AI vs AI observer mode persists).
 	_apply_observer_peek()
 
+func _on_tutorial_mission_ui_changed(_instruction: String = "") -> void:
+	_update_reveal_buttons()
+	_update_tutorial_hud_lock()
+
+func _update_tutorial_hud_lock() -> void:
+	if _is_ai_turn():
+		return
+	var in_battle: bool = GameState.current_phase not in [
+		GameState.Phase.NONE, GameState.Phase.SETUP_P1,
+		GameState.Phase.SETUP_P2, GameState.Phase.GAME_OVER
+	]
+	var show_opts: bool = in_battle and not TutorialBattleManager.should_hide_options_btn()
+	var show_end: bool = in_battle and TutorialBattleManager.should_allow_end_turn_btn()
+	if selection_state == SelectionState.CONFIRMING_ATTACK \
+			or (_attack_confirm_panel != null and _attack_confirm_panel.visible):
+		show_end = false
+	if _options_btn:
+		_options_btn.visible = show_opts
+		_options_btn.mouse_filter = Control.MOUSE_FILTER_STOP if show_opts else Control.MOUSE_FILTER_IGNORE
+	if not show_opts:
+		_close_options_panel()
+	if _end_turn_btn:
+		_end_turn_btn.visible = show_end
+		_end_turn_btn.mouse_filter = Control.MOUSE_FILTER_STOP if show_end else Control.MOUSE_FILTER_IGNORE
+		if not show_end:
+			if _end_turn_blink_tween and _end_turn_blink_tween.is_valid():
+				_end_turn_blink_tween.kill()
+				_end_turn_blink_tween = null
+			_end_turn_btn.modulate = Color.WHITE
+
 func _update_reveal_buttons() -> void:
+	var tut_hide: bool = TutorialBattleManager.should_hide_reveal_view_btn()
 	var in_battle: bool = GameState.current_phase not in [
 		GameState.Phase.NONE, GameState.Phase.SETUP_P1,
 		GameState.Phase.SETUP_P2, GameState.Phase.GAME_OVER
 	]
 	if _p1_reveal_btn:
-		_p1_reveal_btn.visible = in_battle and GameState.current_player == 0
+		_p1_reveal_btn.visible = in_battle and GameState.current_player == 0 and not tut_hide
 	if _p2_reveal_btn:
 		var vs_ai: bool = GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON]
-		_p2_reveal_btn.visible = in_battle and GameState.current_player == 1 and not vs_ai
+		_p2_reveal_btn.visible = in_battle and GameState.current_player == 1 and not vs_ai and not tut_hide
 
 # ─────────────────────────────────────────────────────────────
 # End Turn Button (standalone, bottom-center)
@@ -2370,6 +2411,16 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 					break
 	var can_union: bool = _available_unions.size() > 0
 
+	if TutorialBattleManager.is_active:
+		if not TutorialBattleManager.should_open_card_context(ctx_player, card.card_name):
+			return
+		var allowlist: Array = TutorialBattleManager.get_card_context_allowlist(card.card_name)
+		if not allowlist.is_empty():
+			can_attack = can_attack and "attack" in allowlist
+			can_info = can_info and "info" in allowlist
+			can_bluff = can_bluff and "bluff" in allowlist
+			can_union = can_union and "union" in allowlist
+
 	if not can_attack and not can_info and not can_bluff and not can_union:
 		return
 
@@ -2435,6 +2486,10 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 		var col_snap: int = col
 		var btn := _make_context_icon_btn(CTX_ICON_INFO)
 		btn.pressed.connect(func() -> void:
+			if TutorialBattleManager.is_active:
+				var allowlist: Array = TutorialBattleManager.get_card_context_allowlist(card_name_snap)
+				if not allowlist.is_empty() and not "info" in allowlist:
+					return
 			_hide_card_context()
 			var inst_snap: Variant = GameState.get_card(player_snap, row_snap, col_snap)
 			CardDetailOverlay.open(self, card_name_snap, card_type_snap, inst_snap)
@@ -2528,6 +2583,7 @@ func _make_context_btn(label: String, col: Color) -> Button:
 	return btn
 
 const BLUFF_EMOJIS_BOARD: Array = ["😃","🥺","🤣","😎","❤️","☠️","🧨","👍","🤝","🖕"]
+const BLUFF_MODAL_SIZE := Vector2(598.5, 130.0)  # 570px width + 5%
 func _get_bluff_emojis_board() -> Array:
 	if SaveManager.nsfw_enabled:
 		return BLUFF_EMOJIS_BOARD.map(func(e: String) -> String: return "💩" if e == "🖕" else e)
@@ -2586,8 +2642,14 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
 			backdrop.queue_free())
 
+	var center_wrap := CenterContainer.new()
+	center_wrap.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center_wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backdrop.add_child(center_wrap)
+
 	var panel := Panel.new()
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	panel.custom_minimum_size = BLUFF_MODAL_SIZE
 	var psb := StyleBoxFlat.new()
 	psb.bg_color     = Color(0.04, 0.07, 0.16, 0.98)
 	psb.border_width_left   = 2; psb.border_width_top    = 2
@@ -2596,13 +2658,14 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 	psb.corner_radius_top_left     = 10; psb.corner_radius_top_right    = 10
 	psb.corner_radius_bottom_right = 10; psb.corner_radius_bottom_left  = 10
 	panel.add_theme_stylebox_override("panel", psb)
-	backdrop.add_child(panel)
+	center_wrap.add_child(panel)
 
 	var vbox := VBoxContainer.new()
 	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	vbox.offset_left = 12.0; vbox.offset_top = 10.0
 	vbox.offset_right = -12.0; vbox.offset_bottom = -10.0
 	vbox.add_theme_constant_override("separation", 10)
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	panel.add_child(vbox)
 
 	var title := Label.new()
@@ -2649,17 +2712,13 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 	csb.corner_radius_top_left     = 6; csb.corner_radius_top_right    = 6
 	csb.corner_radius_bottom_right = 6; csb.corner_radius_bottom_left  = 6
 	clear_btn.add_theme_stylebox_override("normal", csb)
+	clear_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	clear_btn.pressed.connect(func() -> void:
 		SFXManager.play(SFXManager.SFX_BLUFF_REMOVE)
 		GameState.set_bluff(snap_player, snap_row, snap_col, "")
 		_refresh_bluff_label(snap_player, snap_row, snap_col)
 		backdrop.queue_free())
 	vbox.add_child(clear_btn)
-
-	panel.custom_minimum_size = Vector2(570.0, 130.0)
-	await get_tree().process_frame
-	var vs: Vector2 = get_viewport_rect().size
-	panel.position = Vector2((vs.x - panel.size.x) * 0.5, (vs.y - panel.size.y) * 0.5)
 
 func _hide_card_context() -> void:
 	if is_instance_valid(_context_backdrop):
@@ -2934,6 +2993,11 @@ func _perform_pending_union() -> void:
 	var union_node: Control = grid_nodes[player][first_cell.x][first_cell.y]
 	var cell_center: Vector2 = union_node.global_position + union_node.size * 0.5
 	_spawn_union_shockwave(cell_center)
+	if TutorialBattleManager.is_active:
+		TutorialBattleManager.report_action("union_resolved", {
+			"player": player,
+			"union_name": u.card_name,
+		})
 
 func _cancel_union_material_selection() -> void:
 	_clear_union_flash_nodes()
@@ -3408,7 +3472,7 @@ func _update_crystal_visibility() -> void:
 	if _turn_number_bg:
 		_turn_number_bg.visible = show
 	if _options_btn:
-		_options_btn.visible = show
+		_options_btn.visible = show and not TutorialBattleManager.should_hide_options_btn()
 
 func _refresh_attack_labels() -> void:
 	var phase := GameState.current_phase
@@ -3531,6 +3595,8 @@ func _build_options_button() -> void:
 	_options_btn = btn
 
 func _on_options_btn_pressed() -> void:
+	if TutorialBattleManager.is_active and not TutorialBattleManager.should_allow_options_btn():
+		return
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.report_action("options_tap", {})
 	if _options_panel != null:
@@ -3616,6 +3682,14 @@ func _update_union_suggest_button() -> void:
 		return
 	# Never show the button during the AI's turn
 	if _is_ai_turn():
+		_union_suggest_btn.visible  = false
+		_union_suggest_glow.visible = false
+		if _union_suggest_tween != null and _union_suggest_tween.is_valid():
+			_union_suggest_tween.kill()
+		_union_suggest_tween = null
+		return
+	# Tutorial: hide on human turn 1 (union mission is on turn 2)
+	if TutorialBattleManager.should_hide_union_suggest():
 		_union_suggest_btn.visible  = false
 		_union_suggest_glow.visible = false
 		if _union_suggest_tween != null and _union_suggest_tween.is_valid():
@@ -5108,6 +5182,8 @@ func _on_ai_end_turn() -> void:
 	turn_manager.end_attacks_early()
 
 func _on_end_turn_requested() -> void:
+	if TutorialBattleManager.is_active and not TutorialBattleManager.should_allow_end_turn_btn():
+		return
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.report_action("end_turn_tap", {})
 	# Check if this player attacked at all this turn.
@@ -5272,10 +5348,6 @@ func _on_play_again_btn() -> void:
 func _enter_mode_select() -> void:
 	mode_panel.visible = false
 	end_attack_btn.visible = false
-	if _end_turn_btn:
-		_end_turn_btn.visible = true
-	if _options_btn:
-		_options_btn.visible = true
 	_clear_selection()
 	# Show turn banner once per new turn number.
 	if GameState.turn_number != _last_banner_turn:
@@ -5284,6 +5356,9 @@ func _enter_mode_select() -> void:
 	# Notify tutorial manager when human player's turn begins.
 	if TutorialBattleManager.is_active and not _is_ai_turn():
 		TutorialBattleManager.on_player_turn_started()
+		_update_union_suggest_button()
+		_update_reveal_buttons()
+	_update_tutorial_hud_lock()
 	# Auto-peek for the active player at the start of each turn.
 	# In VS_AI mode, never reveal the AI's board — reset previews instead.
 	var cp := GameState.current_player
@@ -5334,6 +5409,7 @@ func _on_phase_changed(phase: GameState.Phase) -> void:
 	_update_crystal_visibility()
 	_update_reveal_buttons()
 	_update_union_suggest_button()
+	_update_tutorial_hud_lock()
 	_update_dungeon_modifier_panel_visibility()
 	if _tech_overlay_panel != null and _tech_overlay_panel.visible:
 		_rebuild_tech_overlay_content(_tech_overlay_player)
@@ -5367,10 +5443,9 @@ func _on_phase_changed(phase: GameState.Phase) -> void:
 		GameState.Phase.ATTACK:
 			mode_panel.visible = false
 			end_attack_btn.visible = false
-			if _end_turn_btn:
-				_end_turn_btn.visible = true
 			_set_selection_state(SelectionState.SELECTING_ATTACKER)
 			_highlight_attackable_chars()
+			_update_tutorial_hud_lock()
 			_update_end_turn_blink()
 
 		GameState.Phase.GAME_OVER:
@@ -5388,7 +5463,13 @@ func _on_mode_selected(_player: int, _mode: GameState.TurnMode) -> void:
 func _on_attack_phase_started(_player: int, _max_attacks: int) -> void:
 	_refresh_all_grids()
 
-func _on_attack_completed(_from: Vector2i, _to: Vector2i, _result: BattleResolver.BattleResult) -> void:
+func _on_attack_completed(from: Vector2i, _to: Vector2i, _result: BattleResolver.BattleResult) -> void:
+	if TutorialBattleManager.is_active:
+		var attacker: GameState.CardInstance = GameState.get_card(GameState.current_player, from.x, from.y)
+		TutorialBattleManager.report_action("attack_completed", {
+			"player": GameState.current_player,
+			"card_name": attacker.card_name if attacker != null else "",
+		})
 	_refresh_all_grids()
 	_clear_selection()
 	_update_end_turn_blink()
@@ -5399,14 +5480,16 @@ func _on_attack_completed(_from: Vector2i, _to: Vector2i, _result: BattleResolve
 		if not opp_graveyard.is_empty():
 			var killed: GameState.CardInstance = opp_graveyard[-1]
 			if _active_ai._trailer_social and killed.card_type == "character":
-				_active_ai.decide_kill_taunt(_from)
+				_active_ai.decide_kill_taunt(from)
 			else:
 				var is_worthy: bool = killed.current_atk >= 100 or killed.current_def >= 100 or killed.is_union
 				if is_worthy and randf() < 0.35:
-					_active_ai.decide_kill_taunt(_from)
+					_active_ai.decide_kill_taunt(from)
 	# Phase returns to MODE_SELECT after battle; _enter_mode_select() re-enables selection.
 
 func _on_attack_aborted() -> void:
+	if TutorialBattleManager.is_active:
+		TutorialBattleManager.report_action("attack_aborted", {})
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = false
 	_clear_selection()
@@ -5437,14 +5520,18 @@ func _on_battle_preview_needed(attacker_player: int, attacker: GameState.CardIns
 	_current_battle_overlay = null
 	turn_manager.battle_preview_done.emit()
 
-func _on_tech_played(player: int, _tech_name: String) -> void:
+func _on_tech_played(player: int, tech_name: String) -> void:
 	_tech_used_this_turn[player] = true
 	_update_tech_stacks()
 	_refresh_all_grids()
 	if _tech_resolve_blocker != null:
 		_tech_resolve_blocker.visible = true
+	if TutorialBattleManager.is_active:
+		TutorialBattleManager.report_action("tech_played", {"player": player, "tech_name": tech_name})
 
-func _on_tech_resolved(_player: int) -> void:
+func _on_tech_resolved(player: int) -> void:
+	if TutorialBattleManager.is_active:
+		TutorialBattleManager.report_action("tech_resolved", {"player": player})
 	# Tech played during MODE_SELECT — stay in turn, re-enable attacking
 	if _tech_resolve_blocker != null:
 		_tech_resolve_blocker.visible = false
@@ -5521,6 +5608,8 @@ func _show_turn_banner(player: int) -> void:
 # Card Click Handling
 # ─────────────────────────────────────────────────────────────
 func _on_card_detail_requested(card_name: String, card_type: String, owner_player: int, row: int, col: int) -> void:
+	if TutorialBattleManager.should_block_card_detail():
+		return
 	var inst: Variant = null
 	if row >= 0 and col >= 0:
 		inst = GameState.get_card(owner_player, row, col)
@@ -5615,10 +5704,9 @@ func _start_confirm_attack(target_player: int, target_pos: Vector2i) -> void:
 	_confirm_target_pos = target_pos
 	_set_selection_state(SelectionState.CONFIRMING_ATTACK)
 	_update_union_suggest_button()
-	if _end_turn_btn:
-		_end_turn_btn.visible = false
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = true
+	_update_tutorial_hud_lock()
 	# Blink the target card red
 	var target_node: Control = grid_nodes[target_player][target_pos.x][target_pos.y]
 	if _blink_tween and _blink_tween.is_valid():
@@ -5658,12 +5746,11 @@ func _cancel_confirm_attack() -> void:
 	_confirm_target_player = -1
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = false
-	if _end_turn_btn:
-		_end_turn_btn.visible = true
 	_clear_selection()
 	_set_selection_state(SelectionState.SELECTING_ATTACKER)
 	_update_union_suggest_button()
 	_highlight_attackable_chars()
+	_update_tutorial_hud_lock()
 	_update_end_turn_blink()
 
 # ─────────────────────────────────────────────────────────────
@@ -7474,6 +7561,8 @@ func _on_game_over(winner: int) -> void:
 	_hide_guide()
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.stop()
+		_update_reveal_buttons()
+		_update_tutorial_hud_lock()
 
 	# ── AI vs AI mode: hand off to AIvsAIManager which logs + returns to config ──
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:

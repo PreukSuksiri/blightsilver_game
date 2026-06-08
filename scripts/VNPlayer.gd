@@ -598,6 +598,23 @@ func _show_beat() -> void:
 	if beat.has("portrait_p2"):
 		GameState.player_portraits[1] = str(beat["portrait_p2"])
 
+	# ── Tutorial battle (config JSON — no builder UI) ──
+	var tutorial_path: String = str(beat.get("tutorial_battle", "")).strip_edges()
+	if tutorial_path != "":
+		_set_music("", 0.0, 0.0)
+		if beat.has("portrait_p1"):
+			GameState.player_portraits[0] = str(beat["portrait_p1"])
+		if beat.has("portrait_p2"):
+			GameState.player_portraits[1] = str(beat["portrait_p2"])
+		var tut_err: String = TutorialBattleManager.configure_battle_from_path(tutorial_path)
+		if not tut_err.is_empty():
+			push_error(tut_err)
+			_accepting_input = true
+			_show_beat()
+			return
+		CheckerTransition.fade_out_to_scene("res://scenes/game_board.tscn")
+		return
+
 	# ── Start battle ──
 	if beat.get("start_battle", false):
 		_set_music("", 0.0, 0.0)
@@ -704,6 +721,25 @@ func _show_beat() -> void:
 		SaveManager.save_data()
 		CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file(DailyDungeonManager.DUNGEON_MAP_SCENE))
+		return
+
+	# ── Campaign gallery unlock + navigation ──
+	var unlock_gallery: String = str(beat.get("unlock_gallery_chapter", "")).strip_edges()
+	if beat.get("unlock_current_gallery_chapter", false):
+		unlock_gallery = _scene_path
+	if not unlock_gallery.is_empty():
+		SaveManager.mark_gallery_chapter_completed(unlock_gallery)
+
+	if beat.get("go_to_campaign_gallery", false):
+		_set_music("", 0.0, 0.0)
+		_accepting_input = false
+		_fade_rect.color = Color(0.0, 0.0, 0.0, 0.0)
+		var gal_tw := create_tween()
+		gal_tw.tween_property(_fade_rect, "color:a", 1.0, 1.0)
+		await gal_tw.finished
+		GameState.open_campaign_gallery_on_menu = true
+		queue_free()
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 		return
 
 	# ── Credits ──
