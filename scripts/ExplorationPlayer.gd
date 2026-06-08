@@ -1431,28 +1431,39 @@ func _spawn_chat_radial_items(center: Vector2, available: Array) -> void:
 		lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
 		_tag_ui(lbl, "font", 500)
 		panel.add_child(lbl)
-		var vn_path: String   = str(char_data.get("vn_scene", ""))
-		var play_once_c: bool = bool(char_data.get("play_once", true))
+		var captured_char: Dictionary = char_data.duplicate(true)
 		panel.gui_input.connect(func(ev: InputEvent) -> void:
 			if _is_press_event(ev):
-				_on_chat_character_selected(vn_path, play_once_c))
+				_on_chat_character_selected(captured_char))
 		_add_radial_menu_panel(panel, _chat_radial_items)
 		var fade_tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 		fade_tw.tween_interval(float(i) * 0.04)
 		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
 
-func _on_chat_character_selected(vn_path: String, play_once: bool = true) -> void:
+func _on_chat_character_selected(char_data: Dictionary) -> void:
 	_register_exploration_activity()
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_close_chat_menu()
-	if vn_path.is_empty():
-		return
+	var vn_path: String = str(char_data.get("vn_scene", "")).strip_edges()
+	var play_once: bool = bool(char_data.get("play_once", true))
+	var raw_acts: Variant = char_data.get("actions", [])
+	var actions: Array = raw_acts if raw_acts is Array else []
 	var done_cb := func() -> void:
 		var node: ExplorationNode = ExplorationManager.current_node
 		if node != null:
 			_compass_set_visible(true)
 		_refresh_contextual_hud_glows()
-	_play_vn(vn_path, done_cb, play_once)
+	if actions.is_empty():
+		if vn_path.is_empty():
+			return
+		_play_vn(vn_path, done_cb, play_once)
+		return
+	var after_actions := func() -> void:
+		_execute_spot_actions(actions, done_cb)
+	if vn_path.is_empty():
+		_execute_spot_actions(actions, done_cb)
+		return
+	_play_vn(vn_path, after_actions, play_once)
 
 func _flash_empty_chat() -> void:
 	if _chat_empty_tween and _chat_empty_tween.is_valid():
@@ -2207,6 +2218,8 @@ func _execute_item_effects(item_id: String) -> void:
 	if not effects is Array:
 		return
 	for eff_var: Variant in (effects as Array):
+		if not is_inside_tree():
+			return
 		if not eff_var is Dictionary:
 			continue
 		var eff: Dictionary    = eff_var as Dictionary
@@ -2244,6 +2257,8 @@ func _execute_item_effects(item_id: String) -> void:
 				var done := false
 				_play_vn(vn_path, func() -> void: done = true, play_once_flag)
 				while not done:
+					if not is_inside_tree():
+						return
 					await get_tree().process_frame
 			"navigate_to":
 				var nav_target: String = _effect_path(eff)
@@ -2257,7 +2272,8 @@ func _execute_item_effects(item_id: String) -> void:
 				if not end_vn_path.is_empty():
 					_do_end_exploration_with_vn(end_vn_path)
 					return
-	_refresh_contextual_hud_glows()
+	if is_inside_tree():
+		_refresh_contextual_hud_glows()
 
 # ─────────────────────────────────────────────────────────────
 # Shared Radial Helpers

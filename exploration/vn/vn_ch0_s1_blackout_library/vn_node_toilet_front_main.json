@@ -1,0 +1,18 @@
+[
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "far_right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+			}
+		],
+		"text": "(Kelly is standing there, seems to wait for Nex. She is looking the other way)."
+	},
+	{
+		"linger_characters": true,
+		"text": "(Use \"chat\" function to talk to her)"
+	}
+]

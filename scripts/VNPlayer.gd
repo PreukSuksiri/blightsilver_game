@@ -1,4 +1,5 @@
 extends Control
+class_name VNPlayer
 # Visual Novel player — loads a JSON scene file and plays it beat by beat.
 # Usage: instantiate vn_player.tscn, add_child, then call play_scene(path, callback).
 
@@ -279,6 +280,23 @@ func _hide_hint_icon() -> void:
 # ─────────────────────────────────────────────────────────────
 # Public API
 # ─────────────────────────────────────────────────────────────
+## Play a VN on a top-level CanvasLayer so it renders above battle UI / fade overlays.
+static func launch_overlay(json_path: String, on_complete: Callable, canvas_layer: int = 300) -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		push_warning("VNPlayer.launch_overlay: no SceneTree")
+		return
+	var host := CanvasLayer.new()
+	host.layer = canvas_layer
+	host.name = "VNOverlayLayer"
+	tree.root.add_child(host)
+	var vn := preload("res://scenes/vn_player.tscn").instantiate()
+	host.add_child(vn)
+	vn.play_scene(json_path, func() -> void:
+		host.queue_free()
+		if on_complete.is_valid():
+			on_complete.call())
+
 func play_scene(json_path: String, on_complete: Callable) -> void:
 	_on_complete = on_complete
 
@@ -612,6 +630,8 @@ func _show_beat() -> void:
 			_accepting_input = true
 			_show_beat()
 			return
+		GameState.vn_on_win  = str(beat.get("on_win",  ""))
+		GameState.vn_on_lose = str(beat.get("on_lose", ""))
 		CheckerTransition.fade_out_to_scene("res://scenes/game_board.tscn")
 		return
 

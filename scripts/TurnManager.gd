@@ -199,7 +199,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 		GameState.post_message("%s has already attacked this turn." % attacker.card_name)
 		emit_signal("attack_aborted")
 		return
-	if GameState.attacks_remaining <= 0:
+	if GameState.attacks_remaining <= 0 and not attacker.has_pending_multi_attack_non_char():
 		GameState.post_message("No attacks remaining this turn.")
 		emit_signal("attack_aborted")
 		return
@@ -526,27 +526,24 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 				CardRuleEngine.emit_trigger(CardRule.TriggerType.BATTLE_WIN_ANY_OWNER,
 					{"source_player": opponent, "attacker": attacker, "defender": defender})
 
-	if not _attack_completed_emitted:
-		emit_signal("attack_completed", attacker_pos, target_pos, result)
-
 	# Post-battle ability effects — must run before modifying attacked_this_turn
 	var _pb_extra: int = await _apply_post_battle_effects(result, player, opponent, attacker, defender, attacker_pos, target_pos)
 	if _battle_aborted():
 		return
 
-	# Return to mode select before Siege Cannon / follow-ups so non-attack destroys still log.
-	if not _battle_aborted():
-		GameState.set_phase(GameState.Phase.MODE_SELECT)
-
 	# MULTI_ATTACK_VS_NON_CHARACTER: allow this card to keep attacking non-char cells within limit
 	# MULTI_ATTACK_ANY / MULTI_ATTACK_ANY_WITH_ATK_LOSS: allow multiple attacks any target
 	var _skip_mark: bool = false
+	var _consume_attack_slot: int = 1
 	if attacker.ability_type == CharacterData.AbilityType.MULTI_ATTACK_VS_NON_CHARACTER \
 			and defender.card_type != "character":
-		var _max_multi: int = attacker.ability_params.get("max_attacks", 3)
 		attacker.multi_attack_count += 1
-		if attacker.multi_attack_count < _max_multi:
+		var _chain_limit: int = attacker.get_multi_attack_non_char_chain_limit()
+		if attacker.multi_attack_count < _chain_limit:
 			_skip_mark = true
+			# First non-char hit uses a turn attack; chain continuations do not.
+			if attacker.multi_attack_count > 1:
+				_consume_attack_slot = 0
 	elif attacker.ability_type in [
 			CharacterData.AbilityType.MULTI_ATTACK_ANY,
 			CharacterData.AbilityType.MULTI_ATTACK_ANY_WITH_ATK_LOSS] \
@@ -558,7 +555,14 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	if not _skip_mark:
 		attacker.attacked_this_turn = true
 
-	GameState.attacks_remaining = maxi(0, GameState.attacks_remaining - 1 + _pb_extra)
+	GameState.attacks_remaining = maxi(0, GameState.attacks_remaining - _consume_attack_slot + _pb_extra)
+
+	if not _attack_completed_emitted:
+		emit_signal("attack_completed", attacker_pos, target_pos, result)
+
+	# Return to mode select before Siege Cannon / follow-ups so non-attack destroys still log.
+	if not _battle_aborted():
+		GameState.set_phase(GameState.Phase.MODE_SELECT)
 
 	# Check Pit Lord one_use_def_boost mark
 	if defender.ability_type == CharacterData.AbilityType.ONE_USE_DEF_BOOST:
@@ -667,7 +671,7 @@ func play_tech_card(tech_name: String) -> void:
 
 		TechCardData.TechEffectType.OPPONENT_REVEALS_SQUARE:
 			GameState.post_message("Opponent must choose and reveal 1 of their squares.")
-			emit_signal("awaiting_target_selection", "Tease: Choose 1 of your squares to reveal.", "self_squares_1_opponent_turn")
+			emit_signal("awaiting_target_selection", "Tease: Choose 1 of your face-down units to reveal.", "self_squares_1_opponent_turn")
 
 		TechCardData.TechEffectType.OPPONENT_REVEALS_OR_GAINS:
 			emit_signal("awaiting_target_selection", "Bribe: Reveal a creature for 700 Crystals or pass.", "bribe")

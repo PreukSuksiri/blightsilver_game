@@ -85,7 +85,13 @@
 			},
 			"id": "start",
 			"music": "res://assets/audio/bgm_liminal_5.mp3",
-			"music_conditions": [],
+			"music_conditions": [
+				{
+					"equals": "act_1_ch_1",
+					"path": "res://assets/audio/bgm_storytelling_2.mp3",
+					"var": "chapter"
+				}
+			],
 			"node_type": "HUB",
 			"on_enter_events": [],
 			"on_enter_events_conditions": [],
@@ -918,7 +924,7 @@
 			"description": "Sharp paper cutter everywhere... It's a guillotine ground for books.",
 			"description_conditions": [],
 			"editor_position": {
-				"x": 960.0,
+				"x": 840.0,
 				"y": -60.0
 			},
 			"id": "node_book_repair_unit",
@@ -1125,13 +1131,29 @@
 		{
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_toilet_front.png",
 			"background_conditions": [],
-			"characters": [],
+			"characters": [
+				{
+					"actions": [
+						{
+							"action": "set_var",
+							"key": "talked_to_kelly_front_toilet",
+							"value": "1"
+						}
+					],
+					"canon_story": false,
+					"conditions": [],
+					"name": "Kelly",
+					"play_once": true,
+					"thumbnail": "res://assets/textures/exploration/thumbnail/thumbnail_kelly.png",
+					"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_toilet_front_char_kelly.json"
+				}
+			],
 			"clickable_spots": [
 				{
 					"actions": [
 						{
 							"action": "play_puzzle",
-							"key": "",
+							"key": "{\"code\":\"4922\",\"digits\":4}",
 							"value": ""
 						},
 						{
@@ -1150,6 +1172,11 @@
 						{
 							"key": "toilet_front_password_correct",
 							"type": "var_not_equals",
+							"value": "1"
+						},
+						{
+							"key": "found_password",
+							"type": "var_equals",
 							"value": "1"
 						}
 					],
@@ -1172,22 +1199,41 @@
 					],
 					"label": "Back Hallway",
 					"locked_hint": "Need password",
-					"locked_mode": "disable",
+					"locked_mode": "hide",
 					"target": "node_back_hallway"
 				},
 				{
-					"conditions": [],
+					"conditions": [
+						{
+							"key": "talked_to_kelly_front_toilet",
+							"type": "var_equals",
+							"value": "1"
+						}
+					],
 					"label": "Staff Area",
-					"locked_hint": "",
-					"locked_mode": "hide",
+					"locked_hint": "Talk to Kelly first",
+					"locked_mode": "disable",
 					"target": "node_staff_area"
+				},
+				{
+					"conditions": [
+						{
+							"key": "talked_to_kelly_front_toilet",
+							"type": "var_equals",
+							"value": "1"
+						}
+					],
+					"label": "Toilet",
+					"locked_hint": "Talk to Kelly first",
+					"locked_mode": "disable",
+					"target": "node_male_toilet"
 				}
 			],
 			"description": "The most awkward location to wait for your friend.",
 			"description_conditions": [],
 			"editor_position": {
-				"x": 1100.0,
-				"y": -280.0
+				"x": 1140.0,
+				"y": -400.0
 			},
 			"id": "node_toilet_front",
 			"music": "",
@@ -1203,7 +1249,7 @@
 			"title_conditions": [],
 			"usable_items": [],
 			"vn_play_once": true,
-			"vn_scene": "",
+			"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_toilet_front_main.json",
 			"vn_scene_conditions": [],
 			"vn_trigger": "on_enter",
 			"vn_trigger_equals": "",
@@ -1252,7 +1298,13 @@
 			},
 			"id": "node_staff_area",
 			"music": "",
-			"music_conditions": [],
+			"music_conditions": [
+				{
+					"equals": "act_1_ch_1",
+					"path": "res://assets/audio/bgm_liminal_4.mp3",
+					"var": "chapter"
+				}
+			],
 			"node_type": "NORMAL",
 			"on_enter_events": [],
 			"on_enter_events_conditions": [],
@@ -1292,7 +1344,13 @@
 			},
 			"id": "node_meeting_room",
 			"music": "",
-			"music_conditions": [],
+			"music_conditions": [
+				{
+					"equals": "act_1_ch1",
+					"path": "res://assets/audio/bgm_liminal_4.mp3",
+					"var": "chapter"
+				}
+			],
 			"node_type": "NORMAL",
 			"on_enter_events": [],
 			"on_enter_events_conditions": [],
@@ -1332,7 +1390,13 @@
 			},
 			"id": "node_manager_room",
 			"music": "",
-			"music_conditions": [],
+			"music_conditions": [
+				{
+					"equals": "act_1_ch1",
+					"path": "res://assets/audio/bgm_liminal_4.mp3",
+					"var": "chapter"
+				}
+			],
 			"node_type": "NORMAL",
 			"on_enter_events": [],
 			"on_enter_events_conditions": [],
@@ -1386,7 +1450,13 @@
 			},
 			"id": "node_maintenance_room",
 			"music": "",
-			"music_conditions": [],
+			"music_conditions": [
+				{
+					"equals": "act_1_ch_1",
+					"path": "res://assets/audio/bgm_liminal_4.mp3",
+					"var": "chapter"
+				}
+			],
 			"node_type": "NORMAL",
 			"on_enter_events": [],
 			"on_enter_events_conditions": [],
@@ -1483,8 +1553,60 @@
 			"vn_trigger": "on_enter",
 			"vn_trigger_equals": "",
 			"vn_trigger_var": ""
+		},
+		{
+			"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+			"background_conditions": [],
+			"characters": [],
+			"clickable_spots": [],
+			"connections": [
+				{
+					"conditions": [],
+					"label": "Toilet Front",
+					"locked_hint": "",
+					"locked_mode": "hide",
+					"target": "node_toilet_front"
+				}
+			],
+			"description": "It's nicely clean.",
+			"description_conditions": [],
+			"editor_position": {
+				"x": 1240.0,
+				"y": -80.0
+			},
+			"id": "node_male_toilet",
+			"music": "res://assets/audio/bgm_storytelling_2.mp3",
+			"music_conditions": [
+				{
+					"equals": "1",
+					"path": "res://assets/audio/bgm_liminal_4.mp3",
+					"var": "talked_to_kelly_front_toilet"
+				}
+			],
+			"node_type": "NORMAL",
+			"on_enter_events": [],
+			"on_enter_events_conditions": [],
+			"on_exit_events": [],
+			"on_exit_events_conditions": [],
+			"show_info_on_enter": true,
+			"show_who_is_here": true,
+			"title": "Male Toilet",
+			"title_conditions": [],
+			"usable_items": [],
+			"vn_play_once": true,
+			"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_toilet_main.json",
+			"vn_scene_conditions": [],
+			"vn_trigger": "on_enter",
+			"vn_trigger_equals": "",
+			"vn_trigger_var": ""
 		}
 	],
 	"start_node_id": "start",
-	"start_node_id_conditions": []
+	"start_node_id_conditions": [
+		{
+			"equals": "act_1_ch_1",
+			"node_id": "node_male_toilet",
+			"var": "chapter"
+		}
+	]
 }

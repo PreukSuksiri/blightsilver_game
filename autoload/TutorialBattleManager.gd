@@ -28,6 +28,7 @@ var _mission_idx: int = 0
 var _mission_step: int = 0  # 0 = step one, 1 = step two (attack/bluff/union/use_tech)
 var _session_id: int = 0    # incremented whenever missions are reset; used to cancel stale awaits
 var _pending_effect_resolve: bool = false
+var _await_abort_reason: String = ""  # "", "timeout", "unavailable", "cancelled"
 
 # Internal signals used to communicate between report_action() and _run_missions()
 signal _step_ready_sig
@@ -215,7 +216,14 @@ func on_player_turn_started() -> void:
 
 func _end_tutorial_battle() -> void:
 	tutorial_complete.emit()
+	var vn_win: String = GameState.vn_on_win.strip_edges()
+	GameState.vn_on_win = ""
+	GameState.vn_on_lose = ""
 	stop()
+	if vn_win != "" and vn_win != "game_over":
+		VNPlayer.launch_overlay(vn_win, func() -> void:
+			get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		return
 	CheckerTransition.fade_out_to_scene("res://scenes/main_menu.tscn")
 
 # ─────────────────────────────────────────────────────────────
@@ -248,7 +256,7 @@ func _run_missions(sid: int) -> void:
 				_overlay.show_message(msg_text)
 			mission_started.emit(msg_text)
 			if not await _await_mission_player_action(_mission_satisfied_sig, sid):
-				_skip_mission_on_timeout(sid)
+				_handle_mission_await_failed(sid)
 				if _session_id != sid:
 					return
 				continue
@@ -276,7 +284,7 @@ func _run_missions(sid: int) -> void:
 
 		var center0 := _get_step_center(m, 0)
 
-		if center0 == Vector2.ZERO:
+		if center0 == Vector2.ZERO or not _mission_target_available(m):
 			# Mission target not found / impossible → skip silently
 			_mission_idx += 1
 			continue
@@ -293,7 +301,7 @@ func _run_missions(sid: int) -> void:
 		if _is_two_step(m):
 			# Wait for player to complete step 0 (e.g., tap the card)
 			if not await _await_mission_player_action(_step_ready_sig, sid):
-				_skip_mission_on_timeout(sid)
+				_handle_mission_await_failed(sid)
 				if _session_id != sid:
 					return
 				continue
@@ -307,7 +315,7 @@ func _run_missions(sid: int) -> void:
 
 			# Check step 1 target
 			var center1 := _get_step_center(m, 1)
-			if center1 == Vector2.ZERO:
+			if center1 == Vector2.ZERO or not _mission_target_available(m):
 				# Second step impossible; skip this mission
 				_mission_idx += 1
 				_mission_step = 0
@@ -321,14 +329,14 @@ func _run_missions(sid: int) -> void:
 				_overlay.show_mission(center1, radius, instruction)
 
 			if not await _await_mission_player_action(_mission_satisfied_sig, sid):
-				_skip_mission_on_timeout(sid)
+				_handle_mission_await_failed(sid)
 				if _session_id != sid:
 					return
 				continue
 		else:
 			# Single-step mission: wait directly for satisfaction
 			if not await _await_mission_player_action(_mission_satisfied_sig, sid):
-				_skip_mission_on_timeout(sid)
+				_handle_mission_await_failed(sid)
 				if _session_id != sid:
 					return
 				continue
@@ -512,20 +520,61 @@ func _mission_wait_seconds(m: Dictionary) -> float:
 	return maxf(0.1, secs)
 
 # ─────────────────────────────────────────────────────────────
-# Player timeout
+# Player timeout / unavailable target
 # ─────────────────────────────────────────────────────────────
 
+func _mission_target_available(m: Dictionary) -> bool:
+	var card_name: String = str(m.get("card_name", "")).strip_edges()
+	if card_name.is_empty():
+		return true
+	var mtype: String = m.get("type", "")
+	match mtype:
+		"attack", "bluff":
+			return _player_has_character(0, card_name)
+		"tap_card":
+			var player_idx: int = 0 if m.get("side", "player") == "player" else 1
+			return _player_has_character(player_idx, card_name)
+		_:
+			return true
+
+func _player_has_character(player_idx: int, card_name: String) -> bool:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_idx, r, c)
+			if card.card_type == "character" \
+					and card.card_name == card_name \
+					and not card.was_destroyed:
+				return true
+	return false
+
 func _await_mission_player_action(wait_signal: Signal, sid: int) -> bool:
+	_await_abort_reason = ""
 	var state := {"fired": false}
 	wait_signal.connect(func(): state.fired = true, CONNECT_ONE_SHOT)
 	var timer := get_tree().create_timer(MISSION_PLAYER_TIMEOUT_SEC)
 	while not state.fired and timer.time_left > 0.0:
 		if _session_id != sid:
+			_await_abort_reason = "cancelled"
+			return false
+		if _mission_idx < _mission_list.size() \
+				and not _mission_target_available(_mission_list[_mission_idx]):
+			_await_abort_reason = "unavailable"
 			return false
 		await get_tree().process_frame
+	if not state.fired:
+		_await_abort_reason = "timeout"
 	return state.fired and _session_id == sid
 
-func _skip_mission_on_timeout(sid: int) -> void:
+func _handle_mission_await_failed(sid: int) -> void:
+	match _await_abort_reason:
+		"unavailable":
+			_skip_mission_on_unavailable(sid)
+		"timeout":
+			_skip_mission_on_timeout(sid)
+		_:
+			pass
+
+func _skip_current_mission(sid: int, message: String) -> void:
 	if _session_id != sid:
 		return
 	_pending_effect_resolve = false
@@ -533,8 +582,14 @@ func _skip_mission_on_timeout(sid: int) -> void:
 	_mission_idx += 1
 	if _overlay != null and is_instance_valid(_overlay):
 		_overlay.hide_overlay()
-	GameState.post_message("Tutorial step skipped — took too long.")
+	GameState.post_message(message)
 	mission_complete.emit()
+
+func _skip_mission_on_timeout(sid: int) -> void:
+	_skip_current_mission(sid, "Tutorial step skipped — took too long.")
+
+func _skip_mission_on_unavailable(sid: int) -> void:
+	_skip_current_mission(sid, "Tutorial step skipped — assigned unit is no longer available.")
 
 # ─────────────────────────────────────────────────────────────
 # Card context menu restrictions

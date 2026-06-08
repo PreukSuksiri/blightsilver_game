@@ -119,6 +119,7 @@ var _attack_hover_tween: Tween = null
 var _union_flash_tween: Tween = null
 var _is_peeking: bool = false
 var _is_enemy_view: bool = false
+var _defender_reveal_pick: bool = false  # Bribe/Tease — show Exposed icon on pick targets
 var _is_destroying: bool = false
 var grid_pos: Vector2i = Vector2i(-1, -1)
 var is_selected: bool = false
@@ -257,6 +258,25 @@ func _setup_overlay_styles() -> void:
 func _set_active_glow(show: bool) -> void:
 	exposed_icon_rect.visible = show
 	exposed_icon_shadow.visible = show
+
+func _should_show_exposed_icon() -> bool:
+	if card_data == null or _is_enemy_view:
+		return false
+	if player_owner == GameState.current_player and card_data.face_up:
+		return true
+	if _defender_reveal_pick and card_data.card_type == "character":
+		if card_data.face_up:
+			return true
+		if is_highlighted and _is_peeking:
+			return true
+	return false
+
+func set_defender_reveal_pick_mode(active: bool) -> void:
+	if _defender_reveal_pick == active:
+		return
+	_defender_reveal_pick = active
+	if is_inside_tree() and not _is_destroying:
+		_refresh_display()
 
 func _set_attacked_icon(show: bool) -> void:
 	if _attacked_icon_tween:
@@ -455,7 +475,7 @@ func _show_character_face_up() -> void:
 		shield_indicator.visible = card_data.force_shielded
 		shield_indicator.text = "🛡"
 		var is_own_turn := player_owner == GameState.current_player
-		_set_active_glow(is_own_turn and card_data.face_up)
+		_set_active_glow(_should_show_exposed_icon())
 		_set_attacked_icon(is_own_turn and card_data.attacked_this_turn)
 		_apply_rarity(aff_color)
 		_refresh_flag_badges()
@@ -515,7 +535,7 @@ func _show_union_face_up() -> void:
 		shield_indicator.visible = card_data.force_shielded
 		shield_indicator.text = "🛡"
 		var is_own_turn := player_owner == GameState.current_player
-		_set_active_glow(is_own_turn and card_data.face_up)
+		_set_active_glow(_should_show_exposed_icon())
 		_set_attacked_icon(is_own_turn and card_data.attacked_this_turn)
 		_apply_rarity(UNION_CYAN)
 		_refresh_flag_badges()
@@ -731,8 +751,11 @@ func set_selected(selected: bool) -> void:
 	selection_border.visible = selected
 
 func set_highlighted(highlighted: bool) -> void:
+	var changed: bool = is_highlighted != highlighted
 	is_highlighted = highlighted
 	highlight_border.visible = highlighted and not _is_enemy_view
+	if changed and (_defender_reveal_pick or _is_peeking):
+		_refresh_display()
 
 func set_target_hover(hovered: bool) -> void:
 	if not is_highlighted:

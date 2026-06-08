@@ -184,6 +184,8 @@ var _tech_resolve_blocker: ColorRect = null
 enum SelectionState { NONE, SELECTING_ATTACKER, SELECTING_TARGET, CONFIRMING_ATTACK, SELECTING_TECH_TARGET, AWAITING_TRAP_CHOICE, SELECTING_UNION_MATERIALS }
 var selection_state: SelectionState = SelectionState.NONE
 var selected_attacker_pos: Vector2i = Vector2i(-1, -1)
+var _pending_multi_attack_pos: Vector2i = Vector2i(-1, -1)
+var _multi_attack_bonus_targeting: bool = false
 var _confirm_target_pos: Vector2i = Vector2i(-1, -1)
 var _confirm_target_player: int = -1
 var _blink_tween: Tween = null
@@ -200,6 +202,7 @@ var _last_click_pos: Vector2 = Vector2.ZERO  # updated on every press, used for 
 var _context_card_player: int = -1
 var _context_card_pos: Vector2i = Vector2i(-1, -1)
 var pending_tech_filter: String = ""
+var _pending_human_defender_tech: bool = false
 var _pending_ability_destroy_pos: Vector2i = Vector2i(-1, -1)
 var _pending_ability_destroy_player: int = -1
 var pending_tech_name: String = ""
@@ -247,9 +250,7 @@ func _input(event: InputEvent) -> void:
 		var opponent := GameState.get_opponent(GameState.current_player)
 		var opp_grid: GridContainer = p2_grid if opponent == 1 else p1_grid
 		if not opp_grid.get_global_rect().has_point(click_pos):
-			_clear_selection()
-			_set_selection_state(SelectionState.SELECTING_ATTACKER)
-			_highlight_attackable_chars()
+			_try_cancel_attack_targeting()
 
 	# Cancel union material selection when tapping outside own grid
 	if selection_state == SelectionState.SELECTING_UNION_MATERIALS:
@@ -324,7 +325,7 @@ func _ready() -> void:
 		TutorialBattleManager.on_board_ready(self)
 		_update_reveal_buttons()
 		_update_tutorial_hud_lock()
-	TutorialBattleManager.mission_started.connect(_on_tutorial_mission_ui_changed)
+	TutorialBattleManager.mission_started.connect(_on_tutorial_mission_started)
 	TutorialBattleManager.mission_complete.connect(_on_tutorial_mission_ui_changed)
 
 # ─────────────────────────────────────────────────────────────
@@ -448,6 +449,9 @@ func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: 
 		_active_ai.continue_after_union()
 
 func _on_ai_watchdog_timeout() -> void:
+	if _pending_human_defender_tech:
+		_ai_watchdog.start()
+		return
 	print("[AI WATCHDOG] Bot Player went idle — forcing turn end.")
 	GameState.post_message("[DEBUG] Bot Player timed out — ending turn.")
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
@@ -894,12 +898,20 @@ func _hide_bribe_overlay() -> void:
 
 func _on_bribe_reveal_pressed() -> void:
 	_hide_bribe_overlay()
+	var bribed_player := GameState.get_opponent(GameState.current_player)
+	if not _has_bribe_reveal_targets(bribed_player):
+		GameState.post_message("Bribe: No face-down units to reveal.")
+		_finish_tech_action(GameState.current_player)
+		return
+	_begin_human_defender_tech_choice()
 	pending_tech_filter = "bribe_reveal"
-	action_label.text = "Select one of your characters to reveal."
+	_set_own_facedown_char_peek(true, bribed_player)
+	action_label.text = "Select one of your face-down characters to reveal."
 	action_panel.visible = true
 	_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
-	_show_guide("Select one of your characters to reveal.")
+	_show_guide("Select one of your face-down characters to reveal.")
 	_highlight_tech_targets("bribe_reveal")
+	_set_defender_reveal_pick_mode(true, bribed_player)
 
 func _on_bribe_pass_pressed() -> void:
 	_hide_bribe_overlay()
@@ -2048,9 +2060,47 @@ func _reset_reveal_previews() -> void:
 	# Re-apply observer peek on top of the reset (AI vs AI observer mode persists).
 	_apply_observer_peek()
 
+func _on_tutorial_mission_started(_instruction: String = "") -> void:
+	_on_tutorial_mission_ui_changed(_instruction)
+
 func _on_tutorial_mission_ui_changed(_instruction: String = "") -> void:
 	_update_reveal_buttons()
 	_update_tutorial_hud_lock()
+
+## Close unrelated battle UI (not mission spotlight/modals opened for the active step).
+func dismiss_tutorial_overlays() -> void:
+	_hide_card_context()
+	_close_options_panel()
+	_close_tech_overlay()
+	_dismiss_tech_hand_overlay()
+	if _tech_resolve_blocker:
+		_tech_resolve_blocker.visible = false
+	if _void_modal != null and is_instance_valid(_void_modal):
+		_void_modal.queue_free()
+		_void_modal = null
+	var bluff_modal: Node = get_node_or_null("BluffModalBoard")
+	if bluff_modal != null:
+		bluff_modal.queue_free()
+	for ch in get_children():
+		if ch is CardDetailOverlay:
+			ch.queue_free()
+	if _union_modal != null and is_instance_valid(_union_modal):
+		_union_modal.queue_free()
+		_union_modal = null
+	if _tax_confirm_panel != null:
+		_tax_confirm_panel.queue_free()
+		_tax_confirm_panel = null
+	if selection_state == SelectionState.SELECTING_UNION_MATERIALS:
+		_cancel_union_material_selection()
+	elif selection_state == SelectionState.CONFIRMING_ATTACK \
+			or (_attack_confirm_panel != null and _attack_confirm_panel.visible):
+		_cancel_confirm_attack()
+	elif selection_state == SelectionState.SELECTING_TARGET:
+		_try_cancel_attack_targeting()
+	elif selection_state == SelectionState.SELECTING_TECH_TARGET:
+		_clear_selection()
+		_set_selection_state(SelectionState.SELECTING_ATTACKER)
+		_highlight_attackable_chars()
 
 func _update_tutorial_hud_lock() -> void:
 	if _is_ai_turn():
@@ -2388,7 +2438,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 		and card.card_type == "character"
 		and not card.attacked_this_turn
 		and card.cannot_attack_until < GameState.turn_number
-		and GameState.attacks_remaining > 0
+		and (GameState.attacks_remaining > 0 or card.has_pending_multi_attack_non_char())
 		and (GameState.berserk_active[current_player] == null
 			or GameState.berserk_active[current_player] == card)
 	)
@@ -2472,6 +2522,8 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 			_hide_card_context()
 			_clear_selection()
 			selected_attacker_pos = snap_pos
+			var atk_card: GameState.CardInstance = GameState.get_card(snap_player, snap_pos.x, snap_pos.y)
+			_multi_attack_bonus_targeting = atk_card != null and atk_card.has_pending_multi_attack_non_char()
 			grid_nodes[snap_player][snap_pos.x][snap_pos.y].set_selected(true)
 			_set_selection_state(SelectionState.SELECTING_TARGET)
 			_highlight_valid_targets()
@@ -5044,7 +5096,8 @@ func get_card_center(player: int, card_name: String) -> Vector2:
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
 			var ci: GameState.CardInstance = GameState.get_card(player, r, c)
-			if ci != null and ci.card_name == card_name:
+			if ci != null and ci.card_type == "character" \
+					and ci.card_name == card_name and not ci.was_destroyed:
 				return grid_nodes[player][r][c].get_global_rect().get_center()
 	return Vector2.ZERO
 
@@ -5348,6 +5401,8 @@ func _on_play_again_btn() -> void:
 func _enter_mode_select() -> void:
 	mode_panel.visible = false
 	end_attack_btn.visible = false
+	var resume_multi_attack_pos := _pending_multi_attack_pos
+	_pending_multi_attack_pos = Vector2i(-1, -1)
 	_clear_selection()
 	# Show turn banner once per new turn number.
 	if GameState.turn_number != _last_banner_turn:
@@ -5387,6 +5442,20 @@ func _enter_mode_select() -> void:
 			_ai_turn_action_started[GameState.current_player] = true
 			_active_ai.decide_turn()
 		return
+	if resume_multi_attack_pos != Vector2i(-1, -1):
+		var bonus_attacker: GameState.CardInstance = GameState.get_card(
+			cp, resume_multi_attack_pos.x, resume_multi_attack_pos.y)
+		if bonus_attacker != null and bonus_attacker.has_pending_multi_attack_non_char():
+			selected_attacker_pos = resume_multi_attack_pos
+			_multi_attack_bonus_targeting = true
+			grid_nodes[cp][resume_multi_attack_pos.x][resume_multi_attack_pos.y].set_selected(true)
+			_set_selection_state(SelectionState.SELECTING_TARGET)
+			_show_guide("%s: choose another target (bonus attack)" % bonus_attacker.card_name)
+			_highlight_valid_targets()
+			_update_end_turn_blink()
+			_update_dungeon_modifier_panel_visibility()
+			return
+	_multi_attack_bonus_targeting = false
 	_set_selection_state(SelectionState.SELECTING_ATTACKER)
 	_highlight_attackable_chars()
 	_update_end_turn_blink()
@@ -5464,13 +5533,18 @@ func _on_attack_phase_started(_player: int, _max_attacks: int) -> void:
 	_refresh_all_grids()
 
 func _on_attack_completed(from: Vector2i, _to: Vector2i, _result: BattleResolver.BattleResult) -> void:
+	var attacker: GameState.CardInstance = GameState.get_card(GameState.current_player, from.x, from.y)
 	if TutorialBattleManager.is_active:
-		var attacker: GameState.CardInstance = GameState.get_card(GameState.current_player, from.x, from.y)
 		TutorialBattleManager.report_action("attack_completed", {
 			"player": GameState.current_player,
 			"card_name": attacker.card_name if attacker != null else "",
 		})
 	_refresh_all_grids()
+	if attacker != null and attacker.has_pending_multi_attack_non_char() and not _is_ai_turn():
+		_pending_multi_attack_pos = from
+		_multi_attack_bonus_targeting = true
+	else:
+		_multi_attack_bonus_targeting = false
 	_clear_selection()
 	_update_end_turn_blink()
 	_refresh_attack_labels()
@@ -5692,6 +5766,21 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 			pass
 
 		SelectionState.SELECTING_TECH_TARGET:
+			var target_node: Control = grid_nodes[player][row][col]
+			if not target_node.is_highlighted:
+				if pending_tech_filter == "self_squares_1_opponent_turn":
+					var _tease_card: GameState.CardInstance = GameState.get_card(player, row, col)
+					if _tease_card.card_type != "character":
+						GameState.post_message("Tease: Choose a face-down unit.")
+					elif _tease_card.face_up:
+						GameState.post_message("Tease: Choose a face-down unit.")
+				elif pending_tech_filter == "bribe_reveal":
+					var _bribe_card: GameState.CardInstance = GameState.get_card(player, row, col)
+					if _bribe_card.card_type != "character":
+						GameState.post_message("Bribe: Choose a face-down unit.")
+					elif _bribe_card.face_up:
+						GameState.post_message("Bribe: Choose a face-down unit.")
+				return
 			SFXManager.play(SFXManager.SFX_TARGET)
 			_handle_tech_target(player, pos)
 
@@ -5732,6 +5821,7 @@ func _confirm_attack() -> void:
 	var atk_to   := _confirm_target_pos
 	_confirm_target_pos   = Vector2i(-1, -1)
 	_confirm_target_player = -1
+	_multi_attack_bonus_targeting = false
 	turn_manager.perform_attack(atk_from, atk_to)
 
 func _cancel_confirm_attack() -> void:
@@ -5746,10 +5836,17 @@ func _cancel_confirm_attack() -> void:
 	_confirm_target_player = -1
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = false
-	_clear_selection()
-	_set_selection_state(SelectionState.SELECTING_ATTACKER)
+	if _selected_attacker_has_multi_bonus():
+		_set_selection_state(SelectionState.SELECTING_TARGET)
+		var bonus_card: GameState.CardInstance = GameState.get_card(
+			GameState.current_player, selected_attacker_pos.x, selected_attacker_pos.y)
+		if bonus_card != null:
+			_show_guide("%s: choose another target (bonus attack)" % bonus_card.card_name)
+	else:
+		_clear_selection()
+		_set_selection_state(SelectionState.SELECTING_ATTACKER)
+		_highlight_attackable_chars()
 	_update_union_suggest_button()
-	_highlight_attackable_chars()
 	_update_tutorial_hud_lock()
 	_update_end_turn_blink()
 
@@ -5771,6 +5868,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			GameState.post_message("Bribe: AI passed.")
 			_finish_tech_action(GameState.current_player)
 		else:
+			_begin_human_defender_tech_choice()
 			_show_bribe_overlay(opponent)
 		return
 
@@ -5812,7 +5910,9 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 
 	# Tease: human opponent must choose their own face-down card — let them peek their grid
 	if filter == "self_squares_1_opponent_turn":
-		_set_own_facedown_char_peek(true, GameState.get_opponent(GameState.current_player))
+		var tease_defender := GameState.get_opponent(GameState.current_player)
+		_set_own_facedown_char_peek(true, tease_defender)
+		_set_defender_reveal_pick_mode(true, tease_defender)
 
 	# Auto-complete filters that don't require grid selection
 	if filter == "view_opponent_hand":
@@ -5822,7 +5922,10 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	# No-valid-target guard: if the highlight pass found no cells to interact with,
 	# cancel the effect rather than leaving any player (human or AI) stuck.
 	if not _any_highlighted():
-		GameState.post_message("No valid target — effect cancelled.")
+		if filter == "self_squares_1_opponent_turn":
+			GameState.post_message("Tease: No face-down units to reveal — effect cancelled.")
+		else:
+			GameState.post_message("No valid target — effect cancelled.")
 		if filter == "own_any_as_target":
 			turn_manager.complete_brainwash_redirect()
 		if _is_post_attack_ability_filter(filter):
@@ -5903,9 +6006,25 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		_flash_target_card(def_player, ai_target.x, ai_target.y)
 		_handle_tech_target(def_player, ai_target)
 	elif _is_ai_turn() and filter in _defender_response_filters:
-		# Human is the responding player during the AI's turn.
-		# Stop the watchdog so it doesn't fire and end the turn while the human is choosing.
+		# Human is the responding player during the AI's turn — wait for grid pick.
+		_begin_human_defender_tech_choice()
+
+func _is_defender_response_filter(filter: String) -> bool:
+	return filter in [
+		"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct",
+		"self_reveal_choice", "self_faceup_for_copy", "own_armored_nature",
+		"self_squares_1_opponent_turn", "own_divine_character_redirect",
+		"bribe_reveal",
+	]
+
+func _begin_human_defender_tech_choice() -> void:
+	_pending_human_defender_tech = true
+	if _ai_watchdog != null:
 		_ai_watchdog.stop()
+	if _tech_resolve_blocker != null:
+		_tech_resolve_blocker.visible = false
+	if _end_turn_btn:
+		_end_turn_btn.visible = false
 
 func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var current_player := GameState.current_player
@@ -6036,7 +6155,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter == "bribe_reveal":
 		var bribe_opponent := GameState.get_opponent(current_player)
-		if player == bribe_opponent and card.card_type == "character":
+		if player == bribe_opponent and card.card_type == "character" and not card.face_up:
 			GameState.reveal_card(player, pos.x, pos.y)
 			GameState.gain_crystals(player, 700, "ability")
 			GameState.post_message("Bribe: Player %d revealed %s and received 700 Crystals." % [player + 1, card.card_name])
@@ -6167,11 +6286,12 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "self_squares_1_opponent_turn":
-		# Opponent (of tech player) reveals 1 of their own hidden squares
-		if player == opponent and card.card_type != "dead_end" and not card.face_up:
-			GameState.reveal_card(player, pos.x, pos.y)
-			GameState.post_message("Tease: Opponent revealed %s." % card.card_name)
-			_finish_tech_action(current_player)
+		# Opponent (of tech player) reveals 1 of their own face-down units
+		if player != opponent or card.card_type != "character" or card.face_up:
+			return
+		GameState.reveal_card(player, pos.x, pos.y)
+		GameState.post_message("Tease: Opponent revealed %s." % card.card_name)
+		_finish_tech_action(current_player)
 		return
 
 	if pending_tech_filter == "self_reveal_choice":
@@ -6516,6 +6636,10 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			_finish_tech_action(current_player)
 		return
 
+	# Ignore stray clicks during defender-choice techs; never auto-finish without a valid pick.
+	if _is_defender_response_filter(pending_tech_filter):
+		return
+
 	# Fallback — end tech after any selection
 	_finish_tech_action(current_player)
 
@@ -6548,17 +6672,21 @@ func _find_own_card_pos(player: int, card_name: String) -> Vector2i:
 
 
 func _clear_after_tech() -> void:
-	_set_own_facedown_char_peek(false)   # safety net — always clear peek on tech end
-	# Restore the human player's auto-peek if it was active before this tech card was played.
-	# _set_own_facedown_char_peek(false) blindly kills _is_peeking on all face-down cards;
-	# we re-apply it here so the player's grid doesn't suddenly go dark after a tech action.
-	var cp := GameState.current_player
-	if not _is_ai_turn() and _reveal_preview[cp]:
-		for r in range(GameState.GRID_SIZE):
-			for c in range(GameState.GRID_SIZE):
-				var card: GameState.CardInstance = GameState.get_card(cp, r, c)
-				if card.card_type in ["character", "trap"] and not card.face_up:
-					(grid_nodes[cp][r][c] as Control).set_preview_revealed(true)
+	_pending_human_defender_tech = false
+	_set_defender_reveal_pick_mode(false)
+	_set_own_facedown_char_peek(false)   # safety net — always clear temporary peek on tech end
+	# Restore YOUR VIEW auto-peek for human players (e.g. after Bribe/Tease defender choice).
+	# _set_own_facedown_char_peek(false) clears preview on all face-down cards; re-apply here.
+	for cp in range(2):
+		if GameState.game_mode == GameState.GameMode.VS_AI \
+				and ai_player != null and cp == ai_player.player_index:
+			continue
+		if _reveal_preview[cp]:
+			for r in range(GameState.GRID_SIZE):
+				for c in range(GameState.GRID_SIZE):
+					var card: GameState.CardInstance = GameState.get_card(cp, r, c)
+					if card.card_type in ["character", "trap"] and not card.face_up:
+						(grid_nodes[cp][r][c] as Control).set_preview_revealed(true)
 	action_panel.visible = false
 	pending_tech_filter = ""
 	pending_tech_name = ""
@@ -6598,6 +6726,14 @@ func _prompt_ai_diplomacy_pick() -> void:
 	_active_ai.ai_target_chosen.emit(ai_target)
 	_handle_tech_target(player, ai_target)
 
+func _has_bribe_reveal_targets(player: int) -> bool:
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if card.card_type == "character" and not card.face_up:
+				return true
+	return false
+
 func _count_own_facedown_units(player: int, exclude: Array = []) -> int:
 	var count: int = 0
 	for r in range(GameState.GRID_SIZE):
@@ -6628,6 +6764,17 @@ func _set_own_facedown_char_peek(enable: bool, target_player: int = -1) -> void:
 				var card: GameState.CardInstance = GameState.get_card(cp, r, c)
 				if card.card_type == "character" and not card.face_up:
 					(grid_nodes[cp][r][c] as Control).set_preview_revealed(enable)
+
+## Bribe/Tease defender pick — show Exposed icon on valid peeked targets and already-exposed units.
+func _set_defender_reveal_pick_mode(active: bool, player: int = -1) -> void:
+	for p: int in range(2):
+		if player >= 0 and p != player:
+			continue
+		for r: int in range(GameState.GRID_SIZE):
+			for c: int in range(GameState.GRID_SIZE):
+				var node: Control = grid_nodes[p][r][c]
+				if node.has_method("set_defender_reveal_pick_mode"):
+					node.set_defender_reveal_pick_mode(active)
 
 func _on_ai_bluff(player: int, row: int, col: int, emoticon: String) -> void:
 	_set_bluff_animated(player, row, col, emoticon)
@@ -6673,8 +6820,6 @@ func _highlight_attackable_chars() -> void:
 	pass  # Active glow is card-internal (own face-up chars glow automatically on your turn)
 
 func _has_any_attackable_char() -> bool:
-	if GameState.attacks_remaining <= 0:
-		return false
 	var cp := GameState.current_player
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
@@ -6683,7 +6828,8 @@ func _has_any_attackable_char() -> bool:
 					and not card.attacked_this_turn \
 					and card.cannot_attack_until < GameState.turn_number \
 					and (GameState.berserk_active[cp] == null
-						or GameState.berserk_active[cp] == card):
+						or GameState.berserk_active[cp] == card) \
+					and (GameState.attacks_remaining > 0 or card.has_pending_multi_attack_non_char()):
 				return true
 	return false
 
@@ -6759,11 +6905,12 @@ func _highlight_tech_targets(filter: String) -> void:
 					grid_nodes[p][r][c].set_highlighted(card.face_up and card.card_type != "dead_end")
 
 	elif filter == "bribe_reveal":
-		# Highlight all character cells belonging to the opponent (the one choosing to reveal)
+		# Bribed player may only reveal a face-down unit
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
-				grid_nodes[opponent][r][c].set_highlighted(card.card_type == "character")
+				grid_nodes[opponent][r][c].set_highlighted(
+					card.card_type == "character" and not card.face_up)
 
 	elif filter == "own_divine_character_redirect":
 		# Highlight opponent's (Archbishop owner's) other face-up Divine characters
@@ -6814,7 +6961,14 @@ func _highlight_tech_targets(filter: String) -> void:
 					ok = ok and card.face_up
 				grid_nodes[opponent][r][c].set_highlighted(ok)
 
-	elif filter in ["self_squares_1_opponent_turn", "opponent_facedown_forced"]:
+	elif filter == "self_squares_1_opponent_turn":
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(
+					card.card_type == "character" and not card.face_up)
+
+	elif filter == "opponent_facedown_forced":
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
@@ -6929,6 +7083,59 @@ func _clear_highlights() -> void:
 			for c in range(GameState.GRID_SIZE):
 				grid_nodes[p][r][c].set_highlighted(false)
 				grid_nodes[p][r][c].set_locked(false)
+
+func _selected_attacker_has_multi_bonus() -> bool:
+	if selected_attacker_pos == Vector2i(-1, -1):
+		return false
+	var card: GameState.CardInstance = GameState.get_card(
+		GameState.current_player, selected_attacker_pos.x, selected_attacker_pos.y)
+	return card != null and card.has_pending_multi_attack_non_char()
+
+func _should_prompt_forfeit_multi_attack() -> bool:
+	return _multi_attack_bonus_targeting and _selected_attacker_has_multi_bonus()
+
+func _forfeit_multi_attack_bonus() -> void:
+	if selected_attacker_pos == Vector2i(-1, -1):
+		return
+	var card: GameState.CardInstance = GameState.get_card(
+		GameState.current_player, selected_attacker_pos.x, selected_attacker_pos.y)
+	if card != null:
+		card.attacked_this_turn = true
+	_pending_multi_attack_pos = Vector2i(-1, -1)
+	_multi_attack_bonus_targeting = false
+
+func _try_cancel_attack_targeting() -> void:
+	if _should_prompt_forfeit_multi_attack():
+		_prompt_forfeit_multi_attack()
+		return
+	_multi_attack_bonus_targeting = false
+	_clear_selection()
+	_set_selection_state(SelectionState.SELECTING_ATTACKER)
+	_highlight_attackable_chars()
+
+func _prompt_forfeit_multi_attack() -> void:
+	var card: GameState.CardInstance = GameState.get_card(
+		GameState.current_player, selected_attacker_pos.x, selected_attacker_pos.y)
+	var card_label: String = card.card_name if card != null else "This unit"
+	var dlg := ConfirmationDialog.new()
+	dlg.title = "Forfeit Extra Attack?"
+	dlg.dialog_text = (
+		"%s's bonus attack will be lost if you cancel targeting." % card_label)
+	dlg.ok_button_text = "Forfeit"
+	dlg.cancel_button_text = "Keep Selecting"
+	dlg.confirmed.connect(func() -> void:
+		_forfeit_multi_attack_bonus()
+		_clear_selection()
+		_set_selection_state(SelectionState.SELECTING_ATTACKER)
+		_highlight_attackable_chars()
+		_update_end_turn_blink()
+		dlg.queue_free()
+	)
+	dlg.canceled.connect(func() -> void:
+		dlg.queue_free()
+	)
+	add_child(dlg)
+	dlg.popup_centered()
 
 func _clear_selection() -> void:
 	_hide_card_context()
@@ -7604,10 +7811,8 @@ func _on_game_over(winner: int) -> void:
 	if not player_won and vn_lose != "" and vn_lose != "game_over":
 		# Loss: go straight to lose VN, skip win screen
 		_stop_battle_music()
-		var vn := preload("res://scenes/vn_player.tscn").instantiate()
-		add_child(vn)
 		var cb := func() -> void: get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
-		vn.play_scene(vn_lose, cb)
+		VNPlayer.launch_overlay(vn_lose, cb)
 		return
 	if player_won and vn_win != "" and vn_win != "game_over":
 		# Win: show win screen first; VN plays after player taps
@@ -7997,10 +8202,10 @@ func _show_endgame_screen(winner: int) -> void:
 		if pending_vn != "":
 			out_tw.tween_callback(func() -> void:
 				_stop_battle_music()
-				var vn := preload("res://scenes/vn_player.tscn").instantiate()
-				add_child(vn)
+				black.queue_free()
+				overlay.queue_free()
 				var cb := func() -> void: get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
-				vn.play_scene(pending_vn, cb))
+				VNPlayer.launch_overlay(pending_vn, cb))
 		else:
 			out_tw.tween_callback(func() -> void: get_tree().change_scene_to_file(dest)))
 

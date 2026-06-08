@@ -150,6 +150,9 @@ func decide_turn() -> void:
 							if _e2e_union != "":
 								unions = unions.filter(func(e: Dictionary) -> bool:
 									return (e["union"] as UnionData).card_name == _e2e_union)
+					if _tutorial_ai_active():
+						unions = unions.filter(func(e: Dictionary) -> bool:
+							return (e["union"] as UnionData).card_name == _TUTORIAL_AI_UNION_NAME)
 					if not unions.is_empty():
 						_union_used = true
 						var picked: Dictionary = _pick_best_union(unions)
@@ -191,8 +194,8 @@ func _do_attack_decision() -> void:
 	if not GameState.can_player_attack(player_index):
 		emit_signal("ai_end_turn")
 		return
-	# No attacks remaining — end turn immediately (already attacked, no tax)
-	if GameState.attacks_remaining <= 0:
+	# No attacks remaining — end turn unless a unit still has a bonus non-char attack.
+	if GameState.attacks_remaining <= 0 and not _has_pending_multi_attack_attacker():
 		emit_signal("ai_end_turn")
 		return
 	# Personality: skip early turns if opponent has nothing revealed yet
@@ -224,6 +227,7 @@ func _do_attack_decision() -> void:
 const _REVEAL_ATTACKER_PENALTY: int = 12  # cost of revealing a face-down attacker
 const _EXPECTED_ATTACK_DICE: int = 3      # d6 re-roll-on-6 → uniform 1–5, mean 3
 const _TUTORIAL_RESTRICTED_TURNS: int = 2 # tutorial AI: corner/center attacks only
+const _TUTORIAL_AI_UNION_NAME: String = "Berserk Hyena" # tutorial AI: only this union
 
 
 func _tutorial_ai_active() -> bool:
@@ -242,7 +246,7 @@ func _is_tutorial_priority_cell(pos: Vector2i) -> bool:
 
 func _choose_best_attack() -> Dictionary:
 	var none: Dictionary = {"attacker_pos": Vector2i(-1, -1), "target_pos": Vector2i(-1, -1)}
-	var eligible: Array = _get_eligible_attackers()
+	var eligible: Array = _restrict_to_multi_attack_bonus_chain(_get_eligible_attackers())
 	if eligible.is_empty():
 		return none
 
@@ -398,6 +402,27 @@ func _attacker_quality_penalty_for_card(attacker: GameState.CardInstance) -> int
 
 
 ## Mirrors TurnManager pre-attack gates so the AI does not retry blocked units.
+func _restrict_to_multi_attack_bonus_chain(eligible: Array) -> Array:
+	var bonus_only: Array = []
+	for entry: Dictionary in eligible:
+		var pos: Vector2i = entry["pos"]
+		var card: GameState.CardInstance = GameState.get_card(player_index, pos.x, pos.y)
+		if card.has_pending_multi_attack_non_char():
+			bonus_only.append(entry)
+	if bonus_only.is_empty():
+		return eligible
+	return bonus_only
+
+
+func _has_pending_multi_attack_attacker() -> bool:
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.has_pending_multi_attack_non_char():
+				return true
+	return false
+
+
 func _can_unit_attack(card: GameState.CardInstance) -> bool:
 	if GameState.attack_cost_block_player == player_index \
 			and GameState.attack_cost_block_max >= 0 \
@@ -438,6 +463,8 @@ func _get_eligible_attackers() -> Array:
 			if pos in _aborted_attackers_this_turn:
 				continue
 			if not _can_unit_attack(card):
+				continue
+			if GameState.attacks_remaining <= 0 and not card.has_pending_multi_attack_non_char():
 				continue
 			if card.face_up:
 				faceup_attackers.append(pos)
@@ -850,8 +877,9 @@ func decide_target(filter: String) -> Vector2i:
 			return _best_own_faceup()
 		"own_bio_character":
 			return _best_own_faceup_bio()
-		"self_squares_1_opponent_turn", "self_reveal_choice", "own_facedown_character", \
-				"opponent_facedown_forced":
+		"self_squares_1_opponent_turn", "own_facedown_character":
+			return _random_unrevealed_self_character()
+		"self_reveal_choice", "opponent_facedown_forced":
 			return _random_unrevealed_self()
 		"own_faceup_card_sacrifice", "own_any_card":
 			return _best_own_faceup()
@@ -981,6 +1009,17 @@ func _random_unrevealed_self() -> Vector2i:
 		for c in range(GameState.GRID_SIZE):
 			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if not card.face_up and card.card_type != "dead_end":
+				options.append(Vector2i(r, c))
+	if options.is_empty():
+		return Vector2i(0, 0)
+	return options[randi() % options.size()]
+
+func _random_unrevealed_self_character() -> Vector2i:
+	var options: Array = []
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type == "character" and not card.face_up:
 				options.append(Vector2i(r, c))
 	if options.is_empty():
 		return Vector2i(0, 0)

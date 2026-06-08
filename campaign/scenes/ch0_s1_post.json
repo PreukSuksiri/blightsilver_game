@@ -150,7 +150,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Practices??? No way...! That's too boring!"
+		"text": "Practice??? No way...! That's too boring!"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -178,7 +178,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "You are going to be my assistant tonight for a ghost busting at the library."
+		"text": "You are going to be my assistant for a ghost busting at the library."
 	},
 	{
 		"wait": 0.5
@@ -288,9 +288,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "I will do it."
-		}
+		"text": "I meant... yeah.... I will do it."
 	},
 	{
 		"wait": 0.5
@@ -382,7 +380,21 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "The security camera couldn't capture an image of a possessed person. The only image they can captured is you. Nex."
+		"text": "The security camera couldn't capture an image of a person possessed by a high-level spirit."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "So the only image they can captured is you.... Nex."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -433,5 +445,10 @@
 		"fade_color": "#000000",
 		"fade_out": 3.0,
 		"wait": 0.001
+	},
+	{
+		"go_to_campaign_gallery": true,
+		"linger_characters": true,
+		"unlock_gallery_chapter": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json"
 	}
 ]

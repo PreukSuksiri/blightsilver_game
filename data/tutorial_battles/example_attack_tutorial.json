@@ -15,15 +15,15 @@
 			"Miner Probe"
 		],
 		"techs": [
-			"Bribe",
-			"Tease",
+			"Radar",
+			"War Supply",
 			"Spy"
 		],
 		"traps": [
 			"Acid Trap Hole",
 			"Trap Hole",
 			"Foul Gas",
-			"Mana Drain"
+			"Hard Scale"
 		]
 	},
 	"ai_formation": [
@@ -36,16 +36,6 @@
 			"card_name": "Foul Gas",
 			"col": 2.0,
 			"row": 0.0
-		},
-		{
-			"card_name": "Goblin Poacher",
-			"col": 1.0,
-			"row": 1.0
-		},
-		{
-			"card_name": "Hairpin Assassin",
-			"col": 3.0,
-			"row": 1.0
 		},
 		{
 			"card_name": "Laser Walker",
@@ -63,32 +53,12 @@
 			"row": 3.0
 		},
 		{
-			"card_name": "Needle Porcupine",
-			"col": 3.0,
-			"row": 0.0
-		},
-		{
-			"card_name": "Mana Drain",
-			"col": 4.0,
-			"row": 0.0
-		},
-		{
 			"card_name": "Neptune Diver",
 			"col": 0.0,
 			"row": 3.0
 		},
 		{
 			"card_name": "Nuki the Tanuki",
-			"col": 1.0,
-			"row": 4.0
-		},
-		{
-			"card_name": "Saw Shark",
-			"col": 2.0,
-			"row": 4.0
-		},
-		{
-			"card_name": "Shepherd Detective",
 			"col": 4.0,
 			"row": 2.0
 		},
@@ -98,13 +68,43 @@
 			"row": 4.0
 		},
 		{
-			"card_name": "Trap Hole",
+			"card_name": "Saw Shark",
 			"col": 0.0,
 			"row": 2.0
 		},
 		{
 			"card_name": "Miner Probe",
 			"col": 0.0,
+			"row": 0.0
+		},
+		{
+			"card_name": "Goblin Poacher",
+			"col": 1.0,
+			"row": 1.0
+		},
+		{
+			"card_name": "Hairpin Assassin",
+			"col": 3.0,
+			"row": 0.0
+		},
+		{
+			"card_name": "Needle Porcupine",
+			"col": 3.0,
+			"row": 1.0
+		},
+		{
+			"card_name": "Trap Hole",
+			"col": 2.0,
+			"row": 4.0
+		},
+		{
+			"card_name": "Shepherd Detective",
+			"col": 0.0,
+			"row": 1.0
+		},
+		{
+			"card_name": "Hard Scale",
+			"col": 4.0,
 			"row": 0.0
 		}
 	],

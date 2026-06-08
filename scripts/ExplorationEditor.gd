@@ -1541,6 +1541,31 @@ func _add_character_row(chars_vbox: VBoxContainer, char_data: Dictionary) -> voi
 	edit_beats_btn.pressed.connect(func() -> void: _on_edit_char_beats_pressed(name_edit, vn_edit))
 	vb.add_child(edit_beats_btn)
 
+	# After-talk actions (same action types as investigable points)
+	var acts_hdr := Label.new()
+	acts_hdr.text = "After Talk Actions (run when dialogue ends):"
+	acts_hdr.add_theme_font_size_override("font_size", 11)
+	acts_hdr.add_theme_color_override("font_color", Color(0.65, 0.80, 0.65))
+	vb.add_child(acts_hdr)
+	var acts_vbox := VBoxContainer.new()
+	acts_vbox.add_theme_constant_override("separation", 4)
+	vb.add_child(acts_vbox)
+	var add_act_btn := Button.new()
+	add_act_btn.text = "+ Add Action"
+	add_act_btn.add_theme_font_size_override("font_size", 11)
+	add_act_btn.pressed.connect(func() -> void: _add_spot_action_row(acts_vbox))
+	vb.add_child(add_act_btn)
+	var raw_acts: Variant = char_data.get("actions", [])
+	if raw_acts is Array:
+		for act: Variant in (raw_acts as Array):
+			if act is Dictionary:
+				var ad: Dictionary = act as Dictionary
+				_add_spot_action_row(acts_vbox,
+					str(ad.get("action", "show_message")),
+					str(ad.get("key", "")),
+					str(ad.get("value", "")),
+					bool(ad.get("play_once", true)))
+
 	# Conditions section
 	var cond_hdr := Label.new()
 	cond_hdr.text = "Conditions (all must pass to show):"
@@ -1575,6 +1600,14 @@ func _add_character_row(chars_vbox: VBoxContainer, char_data: Dictionary) -> voi
 	del_btn.pressed.connect(frame.queue_free)
 	vb.add_child(del_btn)
 
+	vb.set_meta("char_name_edit", name_edit)
+	vb.set_meta("char_vn_edit", vn_edit)
+	vb.set_meta("char_play_once_chk", play_once_chk)
+	vb.set_meta("char_canon_chk", canon_chk)
+	vb.set_meta("char_thumb_edit", thumb_edit)
+	vb.set_meta("char_acts_vbox", acts_vbox)
+	vb.set_meta("char_cond_vbox", cond_vbox)
+
 ## Collect all character rows from the characters VBox into an Array of Dictionaries.
 func _collect_characters(chars_vbox: VBoxContainer) -> Array:
 	var result: Array = []
@@ -1586,34 +1619,35 @@ func _collect_characters(chars_vbox: VBoxContainer) -> Array:
 			if child is VBoxContainer:
 				vb = child as VBoxContainer
 				break
-		if vb == null or vb.get_child_count() < 2:
+		if vb == null:
 			continue
-		# Row 0: name_row (HBoxContainer → LineEdit)
-		var name_edit: LineEdit = _find_line_edit(vb.get_child(0))
-		# Row 1: vn_row (HBoxContainer → LineEdit)
-		var vn_edit: LineEdit   = _find_line_edit(vb.get_child(1))
-		# Row 2: play_once_chk (CheckBox)
-		var play_once: bool = true
-		if vb.get_child_count() > 2 and vb.get_child(2) is CheckBox:
-			play_once = (vb.get_child(2) as CheckBox).button_pressed
-		# Row 3: canon_story_chk (CheckBox)
-		var canon_story: bool = false
-		if vb.get_child_count() > 3 and vb.get_child(3) is CheckBox:
-			canon_story = (vb.get_child(3) as CheckBox).button_pressed
-		# Row 4: thumbnail_row (HBoxContainer → LineEdit)
-		var thumb_edit: LineEdit = _find_line_edit(vb.get_child(4)) if vb.get_child_count() > 4 else null
-		# Row 7: cond_vbox (VBoxContainer at index 7)
-		var conditions: Array = []
-		if vb.get_child_count() > 7 and vb.get_child(7) is VBoxContainer:
-			conditions = _collect_conditions_from_vbox(vb.get_child(7) as VBoxContainer)
-		result.append({
+		var name_edit: LineEdit = vb.get_meta("char_name_edit") as LineEdit \
+			if vb.has_meta("char_name_edit") else null
+		var vn_edit: LineEdit = vb.get_meta("char_vn_edit") as LineEdit \
+			if vb.has_meta("char_vn_edit") else null
+		var play_once_chk: CheckBox = vb.get_meta("char_play_once_chk") as CheckBox \
+			if vb.has_meta("char_play_once_chk") else null
+		var canon_chk: CheckBox = vb.get_meta("char_canon_chk") as CheckBox \
+			if vb.has_meta("char_canon_chk") else null
+		var thumb_edit: LineEdit = vb.get_meta("char_thumb_edit") as LineEdit \
+			if vb.has_meta("char_thumb_edit") else null
+		var acts_vbox: VBoxContainer = vb.get_meta("char_acts_vbox") as VBoxContainer \
+			if vb.has_meta("char_acts_vbox") else null
+		var cond_vbox: VBoxContainer = vb.get_meta("char_cond_vbox") as VBoxContainer \
+			if vb.has_meta("char_cond_vbox") else null
+		var actions: Array = _collect_events(acts_vbox) if acts_vbox != null else []
+		var conditions: Array = _collect_conditions_from_vbox(cond_vbox) if cond_vbox != null else []
+		var entry: Dictionary = {
 			"name":        name_edit.text.strip_edges()  if name_edit  != null else "",
 			"vn_scene":    vn_edit.text.strip_edges()    if vn_edit    != null else "",
 			"thumbnail":   thumb_edit.text.strip_edges() if thumb_edit != null else "",
-			"play_once":   play_once,
-			"canon_story": canon_story,
+			"play_once":   play_once_chk.button_pressed if play_once_chk != null else true,
+			"canon_story": canon_chk.button_pressed if canon_chk != null else false,
 			"conditions":  conditions,
-		})
+		}
+		if not actions.is_empty():
+			entry["actions"] = actions
+		result.append(entry)
 	return result
 
 ## Add one investigable-point row to the spots VBox.

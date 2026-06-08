@@ -168,15 +168,21 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
-		"text": "Mayu jumped toward Nex unprepared, and immediately grip her hand on his neck. She strangled him. Her grip is absurdly powerful"
+		"text": "Mayu lunged at an unprepared Nex, closing in before he could even react."
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
+		"shake_screen": 8.0,
+		"text": "She wrapped her hands around his neck with an absurdly powerful grip."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
 		"speaker": "Mayu",
 		"text": "Pretty... so pretty..!!"
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
+		"shake_screen": 8.0,
 		"speaker": "Nex",
 		"text": "G... go away...!!"
 	},
@@ -184,15 +190,16 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
 		"text": "No matter how hard he tried, he cannot break free of her grip."
 	},
 	{
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle.png",
 		"sfx": "res://assets/audio/sfx/slam2.mp3",
+		"sfx_volume": 60.0,
 		"shake_screen": 10.0,
 		"text": "Nex kicked and knock the mad girl off-balance"
 	},
@@ -201,10 +208,7 @@
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_study_dark.png",
-		"characters": [],
-		"text": {
-			"en": "Nex finally be able to escape the death's embrace"
-		}
+		"text": "Nex finally be able to escape the death's embrace"
 	},
 	{
 		"wait": 0.5
@@ -421,6 +425,14 @@
 		"wait": 3.0
 	},
 	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
+		"text": "(He stumbled forward, his frantic fall abruptly halted as his face plunged directly into a “soft, yielding curves”.)"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_kelly_bump_safe.png",
+		"text": "(He is too bamboozled to realize what it is. His nose was perfectly wedged right between “them”.)"
+	},
+	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
 		"characters": [
 			{
@@ -431,14 +443,9 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_white_shirt_crossed_arm.png"
 			}
 		],
-		"sound": "res://assets/audio/sound_axe1.mp3",
-		"sound_volume": "140%",
-		"text": {
-			"en": "(The woman pushed Nex away)"
-		}
-	},
-	{
-		"wait": 2.0
+		"sfx": "res://assets/audio/sound_axe1.mp3",
+		"sfx_volume": 140.0,
+		"text": "(The woman pushed Nex away)"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
@@ -1302,6 +1309,8 @@
 	},
 	{
 		"linger_characters": true,
+		"on_lose": "res://campaign/scenes/ch0_s1_post.json",
+		"on_win": "res://campaign/scenes/ch0_s1_post.json",
 		"tutorial_battle": "res://data/tutorial_battles/example_attack_tutorial.json"
 	}
 ]

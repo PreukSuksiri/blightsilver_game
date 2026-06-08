@@ -1,0 +1,286 @@
+[
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "......"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "......"
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"shake_screen": 10.0,
+		"speaker": "Kelly",
+		"text": "eeeeekk...!!"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_sigh.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Oh, it's you. I'm totally fell for it. That flu mask was kinda scary."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_sigh.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Are you sure you're a ghost busting agent?"
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "I have jammed all of the security cameras. We can safely take a free tour."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Now where is the scene of incident?"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "At the back of this floor. A [color=#FFEE44]Quiet Study Area[/color]."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"music_fade_out": 3.0,
+		"speaker": "Kelly",
+		"text": "Perfect spot for anomaly. Let's go."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"text": "(Kelly walked ahead of Nex, while Nex subtly followed)"
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_toilet_kelly_behind_door.png",
+		"sfx": "res://assets/audio/sfx/scifi_ui_33b.mp3",
+		"text": "(As she walk past the glass door... Before Nex could catch up, the door was closed and locked)"
+	},
+	{
+		"speaker": "Kelly",
+		"text": "Oh... no..."
+	},
+	{
+		"speaker": "Kelly",
+		"text": "How come it's suddenly locked...? Do you have a keycard, Nex?"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Shit... "
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "I forgot my student ID..."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"speaker": "Kelly",
+		"text": "What a mess, Nex. You should always carry your ID card."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "I will find a way to open this door... Just wait..."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"speaker": "Kelly",
+		"text": "Nevermind... I'll go and investigate the scene at the Quiet Study Area... Quickly and catch up then..."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Got it..."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": null,
+		"linger_characters": true,
+		"text": "(Kelly walked away)"
+	}
+]

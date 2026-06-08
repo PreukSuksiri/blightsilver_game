@@ -177,6 +177,23 @@ class CardInstance:
 			current_def = current_def / 2
 			halved = true
 
+	## Total non-character attacks allowed per chain (initial hit + bonus_attacks).
+	func get_multi_attack_non_char_chain_limit() -> int:
+		if ability_type != CharacterData.AbilityType.MULTI_ATTACK_VS_NON_CHARACTER:
+			return 0
+		var bonus_attacks: int = int(ability_params.get(
+			"bonus_attacks", ability_params.get("max_attacks", 3) - 1))
+		return 1 + maxi(0, bonus_attacks)
+
+	## Golden Senju (MULTI_ATTACK_VS_NON_CHARACTER): bonus non-unit attack still available.
+	func has_pending_multi_attack_non_char() -> bool:
+		if card_type != "character" or attacked_this_turn:
+			return false
+		if ability_type != CharacterData.AbilityType.MULTI_ATTACK_VS_NON_CHARACTER:
+			return false
+		var chain_limit: int = get_multi_attack_non_char_chain_limit()
+		return multi_attack_count > 0 and multi_attack_count < chain_limit
+
 # ─────────────────────────────────────────────────────────────
 # Runtime State
 # ─────────────────────────────────────────────────────────────

@@ -311,7 +311,7 @@ func _load_characters() -> void:
 
 		["Golden Senju", CharacterData.Affinity.DIVINE, 15, 0, 200,
 			CharacterData.AbilityType.MULTI_ATTACK_VS_NON_CHARACTER,
-			{"max_attacks": 3},
+			{"max_attacks": 3, "bonus_attacks": 1},
 			"Once per turn, if attacked non-unit card, this card : can attack 1 more times",
 			CharacterData.Rarity.UNCOMMON],
 

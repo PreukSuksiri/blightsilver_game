@@ -11,6 +11,9 @@ const CARD_IMG_W: float = 180.0
 const CARD_IMG_H: float = 260.0
 const CARD_GAP:   float = 20.0
 const ROW_GAP:    float = 36.0
+const CARD_DIM_OVERLAY_COLOR := Color(0.0, 0.0, 0.0, 0.62)
+const CARD_DIM_LABEL_COLOR   := Color(0.65, 0.65, 0.68)
+const CARD_DIM_LABEL_SIZE    := 13
 const DUNGEON_MAP_SCENE := DailyDungeonManager.DUNGEON_MAP_SCENE
 
 var _data: Array = []
@@ -118,7 +121,7 @@ func _build_card(d: Dictionary) -> Control:
 	# Image texture
 	var img_path: String = str(d.get("image", ""))
 	var tex: Variant = null
-	if not is_locked and img_path != "" and ResourceLoader.exists(img_path):
+	if img_path != "" and ResourceLoader.exists(img_path):
 		tex = load(img_path)
 	if tex == null:
 		tex = load(PLACEHOLDER_IMG)
@@ -128,18 +131,11 @@ func _build_card(d: Dictionary) -> Control:
 	img.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 	img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	img.set_anchors_preset(Control.PRESET_FULL_RECT)
-	# Desaturate locked cards at the modulate level
-	if is_locked:
-		img.modulate = Color(0.35, 0.35, 0.38, 1.0)
 	frame.add_child(img)
 
 	# ── Locked overlay ────────────────────────────────────────
 	if is_locked:
-		var dim := ColorRect.new()
-		dim.color = Color(0.0, 0.0, 0.0, 0.70)
-		dim.set_anchors_preset(Control.PRESET_FULL_RECT)
-		dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		frame.add_child(dim)
+		_add_card_dim_overlay(frame)
 
 		var lbl_lock := Label.new()
 		var prereq_label: String = _prerequisite_display_name(prereq_vn)
@@ -151,18 +147,14 @@ func _build_card(d: Dictionary) -> Control:
 		lbl_lock.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 		lbl_lock.set_anchors_preset(Control.PRESET_FULL_RECT)
 		lbl_lock.add_theme_font_override("font", CHIVO_FONT)
-		lbl_lock.add_theme_font_size_override("font_size", 14)
-		lbl_lock.add_theme_color_override("font_color", Color(0.55, 0.55, 0.58))
+		lbl_lock.add_theme_font_size_override("font_size", CARD_DIM_LABEL_SIZE)
+		lbl_lock.add_theme_color_override("font_color", CARD_DIM_LABEL_COLOR)
 		lbl_lock.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		frame.add_child(lbl_lock)
 
 	# ── Coming soon overlay (unlocked but no VN yet) ──────────
 	elif not has_vn:
-		var dim := ColorRect.new()
-		dim.color = Color(0.0, 0.0, 0.0, 0.62)
-		dim.set_anchors_preset(Control.PRESET_FULL_RECT)
-		dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		frame.add_child(dim)
+		_add_card_dim_overlay(frame)
 
 		var lbl_cs := Label.new()
 		var _ct: String = str(d.get("custom_text", "")).strip_edges()
@@ -171,8 +163,8 @@ func _build_card(d: Dictionary) -> Control:
 		lbl_cs.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 		lbl_cs.set_anchors_preset(Control.PRESET_FULL_RECT)
 		lbl_cs.add_theme_font_override("font", CHIVO_FONT)
-		lbl_cs.add_theme_font_size_override("font_size", 13)
-		lbl_cs.add_theme_color_override("font_color", Color(0.65, 0.65, 0.68))
+		lbl_cs.add_theme_font_size_override("font_size", CARD_DIM_LABEL_SIZE)
+		lbl_cs.add_theme_color_override("font_color", CARD_DIM_LABEL_COLOR)
 		lbl_cs.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		frame.add_child(lbl_cs)
 
@@ -198,8 +190,7 @@ func _build_card(d: Dictionary) -> Control:
 	l1.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l1.add_theme_font_override("font", CHIVO_FONT)
 	l1.add_theme_font_size_override("font_size", 14)
-	l1.add_theme_color_override("font_color",
-		Color(0.40, 0.40, 0.43, 0.7) if is_locked else Color(1.0, 1.0, 1.0, 0.95))
+	l1.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.95))
 	card.add_child(l1)
 
 	# ── Line 2 (stage) ────────────────────────────────────────
@@ -208,11 +199,18 @@ func _build_card(d: Dictionary) -> Control:
 	l2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l2.add_theme_font_override("font", CHIVO_FONT)
 	l2.add_theme_font_size_override("font_size", 12)
-	l2.add_theme_color_override("font_color",
-		Color(0.35, 0.35, 0.38, 0.6) if is_locked else Color(0.60, 0.62, 0.68, 0.85))
+	l2.add_theme_color_override("font_color", Color(0.60, 0.62, 0.68, 0.85))
 	card.add_child(l2)
 
 	return card
+
+
+func _add_card_dim_overlay(frame: Panel) -> void:
+	var dim := ColorRect.new()
+	dim.color = CARD_DIM_OVERLAY_COLOR
+	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_child(dim)
 
 
 func _on_chapter_pressed(card: Dictionary) -> void:

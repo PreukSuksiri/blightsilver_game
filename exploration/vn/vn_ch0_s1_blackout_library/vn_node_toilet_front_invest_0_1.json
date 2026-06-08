@@ -1,7 +1,8 @@
 [
 	{
 		"linger_characters": true,
-		"sfx": "res://assets/audio/sfx/scifi_ui_31.mp3",
+		"sfx": "res://assets/audio/sfx/scifi_ui_6.mp3",
+		"sfx_volume": 50.0,
 		"text": "(The glass door is unlocked)"
 	}
 ]

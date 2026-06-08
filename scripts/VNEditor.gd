@@ -133,6 +133,8 @@ var _f_battle_bgm_vol: SpinBox = null
 var _f_start_battle:  CheckBox = null
 var _f_call_tutorial: CheckBox = null
 var _f_tutorial_opt:  OptionButton = null
+var _f_tutorial_on_win:  LineEdit = null
+var _f_tutorial_on_lose: LineEdit = null
 var _tutorial_config_paths: PackedStringArray = PackedStringArray()
 var _f_go_to_credits:    CheckBox     = null
 var _f_credits_target:   OptionButton = null
@@ -828,6 +830,10 @@ func _build_fields() -> void:
 	_f_tutorial_opt = _row_opt(v, "Tutorial config", ["(none)"],
 		"JSON files in res://data/tutorial_battles/")
 	_populate_tutorial_battle_picker()
+	_f_tutorial_on_win = _row_le(v, "On Win", "path to VN JSON — played if player wins the tutorial battle")
+	_add_browse(_f_tutorial_on_win, PackedStringArray(["*.json;JSON"]), "res://campaign/scenes/")
+	_f_tutorial_on_lose = _row_le(v, "On Lose", "path to VN JSON — played if player loses  |  'game_over' = show game-over screen")
+	_add_browse(_f_tutorial_on_lose, PackedStringArray(["*.json;JSON"]), "res://campaign/scenes/")
 
 	# ── Enemy Deck ────────────────────────────────────────────
 	_section(v, "ENEMY DECK  (optional — leave empty to use random pool)")
@@ -2055,7 +2061,14 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 		return prefix + "[start battle]"
 	var tut_path: String = str(beat.get("tutorial_battle", "")).strip_edges()
 	if tut_path != "":
-		return prefix + "[tutorial: %s]" % tut_path.get_file().trim_suffix(".json")
+		var tut_extra := ""
+		var tut_win: String = str(beat.get("on_win", "")).strip_edges()
+		var tut_lose: String = str(beat.get("on_lose", "")).strip_edges()
+		if tut_win != "":
+			tut_extra += " →win"
+		if tut_lose != "":
+			tut_extra += " →lose"
+		return prefix + "[tutorial: %s%s]" % [tut_path.get_file().trim_suffix(".json"), tut_extra]
 	var expl_call: String = str(beat.get("exploration_call", "")).strip_edges()
 	if expl_call != "":
 		return prefix + "[exploration: %s]" % expl_call.get_file()
@@ -2208,8 +2221,14 @@ func _populate_fields() -> void:
 	_f_portrait_p2_size.value     = float(b.get("portrait_p2_size", 1.0))
 	_f_battle_bgm.text = str(b.get("battle_bgm", ""))
 	_f_battle_bgm_vol.value = float(b.get("battle_bgm_volume", 100.0))
-	_f_on_win.text  = str(b.get("on_win",  ""))
-	_f_on_lose.text = str(b.get("on_lose", ""))
+	var beat_on_win: String = str(b.get("on_win", ""))
+	var beat_on_lose: String = str(b.get("on_lose", ""))
+	_f_on_win.text  = beat_on_win
+	_f_on_lose.text = beat_on_lose
+	if _f_tutorial_on_win != null:
+		_f_tutorial_on_win.text = beat_on_win
+	if _f_tutorial_on_lose != null:
+		_f_tutorial_on_lose.text = beat_on_lose
 
 	# Tutorial battle
 	var tut_path: String = str(b.get("tutorial_battle", "")).strip_edges()
@@ -2539,10 +2558,18 @@ func _collect_beat() -> Dictionary:
 		b["battle_bgm"] = battle_bgm
 	if _f_battle_bgm_vol.value != 100.0:
 		b["battle_bgm_volume"] = _f_battle_bgm_vol.value
-	var on_win: String = _f_on_win.text.strip_edges()
+	var on_win: String = ""
+	var on_lose: String = ""
+	if _f_call_tutorial != null and _f_call_tutorial.button_pressed:
+		if _f_tutorial_on_win != null:
+			on_win = _f_tutorial_on_win.text.strip_edges()
+		if _f_tutorial_on_lose != null:
+			on_lose = _f_tutorial_on_lose.text.strip_edges()
+	elif _f_start_battle.button_pressed:
+		on_win = _f_on_win.text.strip_edges()
+		on_lose = _f_on_lose.text.strip_edges()
 	if not on_win.is_empty():
 		b["on_win"] = on_win
-	var on_lose: String = _f_on_lose.text.strip_edges()
 	if not on_lose.is_empty():
 		b["on_lose"] = on_lose
 
