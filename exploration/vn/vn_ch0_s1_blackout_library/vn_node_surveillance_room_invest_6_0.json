@@ -1,0 +1,14 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_surveillance_image_6A_update_failed.png",
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"text": "This one got stuck with some update."
+	},
+	{
+		"linger_characters": true,
+		"text": "I have that Bootable Flash Drive though... But there is no USB port anywhere... Then where should I stick this in?"
+	}
+]

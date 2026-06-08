@@ -35,6 +35,8 @@ var transparent_bg: bool = false
 ## Use for overlay VNs (e.g. exploration) that should not interrupt the ambient track.
 ## Set before add_child() so _ready() picks it up.
 var keep_bgm: bool = false
+## True while rendering a beat that launches exploration with exploration_keep_vn_bgm.
+var _preserve_bgm_for_exploration: bool = false
 
 var _beats: Array = []
 var _beat_index: int = 0
@@ -344,6 +346,8 @@ func _show_beat() -> void:
 
 	var beat: Dictionary = _beats[_beat_index]
 	_beat_index += 1
+	_preserve_bgm_for_exploration = bool(beat.get("exploration_keep_vn_bgm", false)) \
+		and str(beat.get("exploration_call", "")).strip_edges() != ""
 
 	# ── Debug message ──
 	if beat.has("debug"):
@@ -707,7 +711,9 @@ func _show_beat() -> void:
 	# ── Exploration call ──
 	var expl_graph: String = str(beat.get("exploration_call", "")).strip_edges()
 	if expl_graph != "":
-		_set_music("", 0.0, 0.0)
+		var keep_vn_bgm: bool = bool(beat.get("exploration_keep_vn_bgm", false))
+		if not keep_vn_bgm:
+			_set_music("", 0.0, 0.0)
 		var params: Dictionary = {}
 		var expl_params: Variant = beat.get("exploration_params", null)
 		if expl_params is Dictionary:
@@ -715,6 +721,8 @@ func _show_beat() -> void:
 				params[str(k)] = str((expl_params as Dictionary)[k])
 		if bool(beat.get("exploration_force_fresh", true)):
 			params["force_fresh"] = true
+		if keep_vn_bgm:
+			params["keep_vn_bgm"] = true
 		var on_return: String = str(beat.get("exploration_on_return", "")).strip_edges()
 		ExplorationManager.pending_return_vn = on_return
 		var return_scene: String = get_tree().current_scene.scene_file_path
@@ -916,7 +924,7 @@ func _play_sfx(path: String, vol_db: float = 0.0) -> void:
 # Music — looping BGM, one track at a time, with fade in/out
 # ─────────────────────────────────────────────────────────────
 func _set_music(path: String, fade_out: float = 0.0, fade_in: float = 0.0) -> void:
-	if keep_bgm:
+	if keep_bgm or _preserve_bgm_for_exploration:
 		return
 	var normalized := path.strip_edges()
 	if normalized == BGMManager.get_current_path():

@@ -1,0 +1,10 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_surveillance_image_5B.png",
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"text": "There's someone in the break room...?"
+	}
+]

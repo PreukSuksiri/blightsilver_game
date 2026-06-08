@@ -1,0 +1,14 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_empty_room_pov_close_zoom_photo.png",
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"text": "(They are just photos of random people.)"
+	},
+	{
+		"linger_characters": true,
+		"text": "( Don't know why... But it feel so unsettling...)"
+	}
+]

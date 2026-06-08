@@ -1,0 +1,10 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_surveillance_image_6A_update_failed.png",
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"text": "This one seems stuck with some update."
+	}
+]

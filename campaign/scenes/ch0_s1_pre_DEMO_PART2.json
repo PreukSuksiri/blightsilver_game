@@ -1305,7 +1305,9 @@
 	},
 	{
 		"animation": "animation_vellum_card_commence_facedown",
-		"linger_characters": true
+		"comment": "Animation",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3"
 	},
 	{
 		"linger_characters": true,

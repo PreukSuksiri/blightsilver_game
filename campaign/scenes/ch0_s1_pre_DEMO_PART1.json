@@ -715,6 +715,7 @@
 	{
 		"exploration_call": "res://exploration/graphs/ch0_s1_blackout_library.json",
 		"exploration_force_fresh": true,
+		"exploration_keep_vn_bgm": true,
 		"exploration_on_return": "res://campaign/scenes/ch0_s1_pre_DEMO_PART2.json",
 		"linger_characters": true
 	}

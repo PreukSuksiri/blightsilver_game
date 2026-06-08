@@ -410,6 +410,10 @@ func _resume_story_dungeon(dungeon_id: String) -> void:
 
 
 func _play_vn(json_path: String) -> void:
+	_play_vn_async(json_path)
+
+func _play_vn_async(json_path: String) -> void:
+	await BGMManager.fade_out_and_stop(BGMManager.DEFAULT_FADE)
 	var vn_scene: Variant = load(VN_PLAYER_SCENE)
 	var vn := (vn_scene as PackedScene).instantiate()
 	add_child(vn)

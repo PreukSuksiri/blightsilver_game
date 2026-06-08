@@ -1,0 +1,10 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_surveillance_image_5A.png",
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"text": "An empty break room. Glad it's empty though..."
+	}
+]

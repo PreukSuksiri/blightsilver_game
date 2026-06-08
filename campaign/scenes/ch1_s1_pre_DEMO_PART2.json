@@ -1,0 +1,273 @@
+[
+	{
+		"comment": "<<<-- Secluded Study Area -->>>",
+		"wait": 0.001
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"text": "The library secluded area has looked a little different this time."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"text": "There is broken windows, scattered stuffs, and a pool of blood."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "This look worse..."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Where is she...?"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 190.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_neutral.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "Mayu! It's me! Come and get the pretty stuffs! Here, look! My neck is really bright and clean!"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"text": "**Splush** **Splush**"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"text": "Sound of spattered liquid is heard faintly"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": {
+			"en": "I heard something..."
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [],
+		"text": "**Splush** **Splush**"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [],
+		"text": "The splatting voice is coming closer..."
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"music": "res://assets/audio/bgm_horror_1.mp3",
+		"shake_screen": 10.0,
+		"text": "!!!",
+		"wait": 2.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"text": "Mayu's body is covered in blood. She crawled on four legs. Gruesome smile is welcoming the tasty friends"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"speaker": "Possessed Mayu",
+		"text": "(mumbles unrecognized words)"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_warning.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Nex!! Use the Vellum Card!!"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "May the silver path show your true sins!! Vellum cards commence!!"
+	},
+	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_seething.png"
+			},
+			{
+				"crop_bottom": 30.0,
+				"position": "far_left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_possessed_2.png"
+			}
+		],
+		"comment": "Animation",
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"wait": 5.8
+	},
+	{
+		"ai_forced_tech": [
+			"Radar",
+			"Harsh Training",
+			"Force Shield"
+		],
+		"ai_union_enabled": false,
+		"battle_bgm": "res://assets/audio/bgm_battle_3.mp3",
+		"comment": "Battle - Midnight Shadow",
+		"enemy_deck": {
+			"characters": [
+				"Doom Wisp",
+				"Chaotic Wisp",
+				"Foul Wisp",
+				"Night Whisperer",
+				"Bat Swarm",
+				"Ectoplasm"
+			],
+			"tech": [
+				"Radar",
+				"Harsh Training",
+				"Force Shield"
+			],
+			"traps": [
+				"Trap Hole",
+				"Trap Hole",
+				"Hypnosis",
+				"Mana Drain"
+			]
+		},
+		"on_lose": "game_over",
+		"on_win": "res://campaign/scenes/ch1_s1_post.json",
+		"player1_name": "Nex Crowmont",
+		"player2_name": "Midnight Shadow",
+		"player_union_enabled": false,
+		"portrait_p1": "res://assets/textures/vn/characters/vn_char_nex_seething.png",
+		"portrait_p2": "res://assets/textures/vn/characters/vn_char_midnight_shadow.png",
+		"portrait_p2_offset_x": -160.0,
+		"portrait_p2_offset_y": 70.0,
+		"start_battle": true
+	}
+]

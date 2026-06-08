@@ -1,0 +1,19 @@
+[
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/profile/battle_illustrations/monsters/battler_univ_meeting_room_ghost.png"
+			}
+		],
+		"speaker": "???",
+		"text": "**mumbles**"
+	},
+	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/bgm_storytelling_2.mp3"
+	}
+]

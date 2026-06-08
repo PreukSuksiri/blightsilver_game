@@ -1,0 +1,22 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_surveillance_image_6A.png",
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"text": "There is some scribbles on the desk... Let's zoom in..."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_surveillance_image_6B.png",
+		"linger_characters": true
+	},
+	{
+		"linger_characters": true,
+		"text": "Some kind of PIN Code... What's that PIN Code for?"
+	}
+]

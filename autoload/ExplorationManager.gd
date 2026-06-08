@@ -117,6 +117,8 @@ var return_scene: String = "res://scenes/main_menu.tscn"
 ## All keys except "force_fresh" are seeded as session variables.
 ## Can be set here directly or passed as the third arg to launch().
 var launch_params: Dictionary = {}
+## When true, exploration does not replace BGM (keeps track from launching VN).
+var keep_vn_bgm: bool = false
 
 ## VN JSON path to play as an overlay after the session ends, before return_scene.
 ## Set by VNPlayer when a beat launches exploration with exploration_on_return.
@@ -178,6 +180,7 @@ func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu
 	if not params.is_empty():
 		launch_params.merge(params, true)
 
+	keep_vn_bgm = bool(launch_params.get("keep_vn_bgm", false))
 	var force_fresh: bool = bool(launch_params.get("force_fresh", false))
 
 	# Resume saved session for the same graph (unless force_fresh is set)
@@ -205,12 +208,14 @@ func start_session(graph_path: String) -> void:
 	if graph == null:
 		push_error("ExplorationManager.start_session: failed to load graph at '%s'." % graph_path)
 		return
+	var preserve_keep_bgm: bool = bool(launch_params.get("keep_vn_bgm", false))
 	_reset_session_state()
+	keep_vn_bgm = preserve_keep_bgm
 	_current_graph   = graph
 	_session_rewards = {"credits": 0, "flags": {}}
 	_session_active  = true
 	for k: String in launch_params:
-		if k == "force_fresh":
+		if k in ["force_fresh", "keep_vn_bgm"]:
 			continue
 		_vars[k] = str(launch_params.get(k, ""))
 	emit_signal("session_started", graph)
@@ -239,6 +244,7 @@ func end_session(carry_rewards: bool = true) -> void:
 	emit_signal("session_ended", rewards)
 
 func _reset_session_state() -> void:
+	keep_vn_bgm        = false
 	_session_active    = false
 	_current_graph     = null
 	_current_node_id   = ""

@@ -200,6 +200,7 @@ var _dungeon_filtered_ids:  Array        = []
 var _f_call_exploration:         CheckBox      = null
 var _f_exploration_graph:        LineEdit      = null
 var _f_exploration_force_fresh:  CheckBox      = null
+var _f_exploration_keep_vn_bgm:  CheckBox      = null
 var _f_exploration_on_return:    LineEdit      = null
 var _f_exploration_params_vbox:  VBoxContainer = null
 var _f_exploration_inv_vbox:     VBoxContainer = null
@@ -1005,6 +1006,9 @@ func _build_fields() -> void:
 	_f_exploration_force_fresh = _row_cb(v, "Force Fresh", "skip saved session resume — start a new run")
 	_f_exploration_force_fresh.button_pressed = true
 	_f_exploration_force_fresh.toggled.connect(func(_b: bool) -> void: _on_field_changed())
+	_f_exploration_keep_vn_bgm = _row_cb(v, "Keep VN Music",
+		"Exploration keeps the VN track playing — node music fields are ignored")
+	_f_exploration_keep_vn_bgm.toggled.connect(func(_b: bool) -> void: _on_field_changed())
 
 	var expl_vars_hdr := HBoxContainer.new()
 	expl_vars_hdr.add_theme_constant_override("separation", 4)
@@ -2071,7 +2075,10 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 		return prefix + "[tutorial: %s%s]" % [tut_path.get_file().trim_suffix(".json"), tut_extra]
 	var expl_call: String = str(beat.get("exploration_call", "")).strip_edges()
 	if expl_call != "":
-		return prefix + "[exploration: %s]" % expl_call.get_file()
+		var expl_extra := ""
+		if beat.get("exploration_keep_vn_bgm", false):
+			expl_extra = " (vn bgm)"
+		return prefix + "[exploration: %s%s]" % [expl_call.get_file(), expl_extra]
 	if beat.get("go_to_campaign_gallery", false):
 		return prefix + "[campaign gallery]"
 	if beat.get("unlock_current_gallery_chapter", false):
@@ -2298,6 +2305,8 @@ func _populate_fields() -> void:
 	_f_call_exploration.button_pressed = ecall != ""
 	_f_exploration_graph.text = ecall
 	_f_exploration_force_fresh.button_pressed = bool(b.get("exploration_force_fresh", true))
+	if _f_exploration_keep_vn_bgm != null:
+		_f_exploration_keep_vn_bgm.button_pressed = bool(b.get("exploration_keep_vn_bgm", false))
 	_f_exploration_on_return.text = str(b.get("exploration_on_return", ""))
 	var eparams: Variant = b.get("exploration_params", {})
 	_rebuild_exploration_param_rows(eparams if eparams is Dictionary else {})
@@ -2647,6 +2656,8 @@ func _collect_beat() -> Dictionary:
 	if not expl_graph.is_empty():
 		b["exploration_call"] = expl_graph
 		b["exploration_force_fresh"] = _f_exploration_force_fresh.button_pressed
+		if _f_exploration_keep_vn_bgm != null and _f_exploration_keep_vn_bgm.button_pressed:
+			b["exploration_keep_vn_bgm"] = true
 		var expl_params: Dictionary = _collect_exploration_params()
 		if not expl_params.is_empty():
 			b["exploration_params"] = expl_params

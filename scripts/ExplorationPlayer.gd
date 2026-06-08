@@ -2595,10 +2595,11 @@ func _refresh_node(node: ExplorationNode) -> void:
 		else:
 			push_warning("ExplorationPlayer: bg '%s' not found." % effective_bg)
 
-	# Music — check conditional overrides first, fall back to base field
-	var effective_music: String = node.resolve_music(vars)
-	if not effective_music.is_empty() and ResourceLoader.exists(effective_music):
-		BGMManager.play_path(effective_music, 1.0, 0.5, 100.0, BGMManager.CONTEXT_VN)
+	# Music — skip when session keeps the launching VN's track
+	if not ExplorationManager.keep_vn_bgm:
+		var effective_music: String = node.resolve_music(vars)
+		if not effective_music.is_empty() and ResourceLoader.exists(effective_music):
+			BGMManager.play_path(effective_music, 1.0, 0.5, 100.0, BGMManager.CONTEXT_VN)
 
 	# Type badge
 	match node.node_type:

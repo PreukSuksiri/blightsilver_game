@@ -1,1 +1,104 @@
-[]
+[
+	{
+		"comment": "<<<-- Toilet Stall -->>>",
+		"wait": 0.001
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"characters": [],
+		"music": "res://assets/audio/bgm_storytelling_2.mp3",
+		"text": {
+			"en": "Nex and Kelly proceeded their undecover plan. Nex entered one of the library's toilet stall."
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "I feel like a real criminal now"
+		}
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": {
+			"en": "So all I have to do is just hide here until midnight right...? Sounds easy."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"characters": [],
+		"fade_color": "#000000",
+		"fade_out": 3.0,
+		"wait": 0.001
+	},
+	{
+		"wait": 1.0
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_disguised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "It's time... I guess I'll go out. Waiting was not easy at all.."
+	},
+	{
+		"exploration_call": "res://exploration/graphs/ch0_s1_blackout_library.json",
+		"exploration_force_fresh": true,
+		"exploration_keep_vn_bgm": true,
+		"exploration_on_return": "res://campaign/scenes/ch1_s1_pre_DEMO_PART2.json",
+		"exploration_params": {
+			"chapter": "act_1_ch_1"
+		},
+		"linger_characters": true
+	}
+]

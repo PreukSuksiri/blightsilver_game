@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c228c5ywc7s8k"
-path="res://.godot/imported/bg_explo_univ_surveillance_image_6.png-8b6acd09acd12c3975132e4980bef10a.ctex"
+uid="uid://obnq36g2x14s"
+path="res://.godot/imported/bg_explo_univ_surveillance_image_6A_update_failed.png-c9060528eab55847c012f042cc185345.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/exploration/background/university/bg_explo_univ_surveillance_image_6.png"
-dest_files=["res://.godot/imported/bg_explo_univ_surveillance_image_6.png-8b6acd09acd12c3975132e4980bef10a.ctex"]
+source_file="res://assets/textures/exploration/background/university/bg_explo_univ_surveillance_image_6A_update_failed.png"
+dest_files=["res://.godot/imported/bg_explo_univ_surveillance_image_6A_update_failed.png-c9060528eab55847c012f042cc185345.ctex"]
 
 [params]
 
