@@ -114,6 +114,16 @@ func is_playing() -> bool:
 	return _player != null and _player.playing
 
 
+func get_playback_position() -> float:
+	if _player == null or not _player.playing:
+		return 0.0
+	return _player.get_playback_position()
+
+
+func get_loop_restart_sec() -> float:
+	return _loop_restart_sec
+
+
 func play_context(
 		context: String,
 		fade_in: float = DEFAULT_FADE,

@@ -1,0 +1,137 @@
+=== Battle of Office Microwave Incident ===
+Battle started: 2026-06-09 15:47:13.390
+Game Session of Apple Juice (started 2026-06-09 15:43:10.365)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.555] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:17.245] Revealed: P0 (1,1) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:17.245] Dice rolled: 1
+[00:17.268] MSG: Nothing happens — Dead End.
+[00:20.521] Attack P0(1,1)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine} → P1(1,1)(empty)  Dice=1  → DEAD_END
+[00:20.521] Anim: 3F  (blank slot)
+[00:23.803] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:23.803] Dice rolled: 5
+[00:23.821] MSG: Nothing happens — Dead End.
+[00:25.845] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(4,1)(empty)  Dice=5  → DEAD_END
+[00:25.845] Anim: 3F  (blank slot)
+[00:29.036] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:29.620] Mode selected P1: TECH
+[00:29.919] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:31.304] Tech played  P1: "Radar"
+[00:32.858] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:33.286] Revealed: P0 (0,4) "Pepper Spray" {cost 0}
+[00:33.679] Revealed: P0 (3,2) "Decoy Puppet" {cost 100}
+[00:34.081] Revealed: P0 (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:34.084] Tech resolved  P1
+[00:34.945] Mode selected P1: ATTACK
+[00:34.948] MSG: Player 2: tap a character to attack.
+[00:36.650] Revealed: P1 (3,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:36.650] Dice rolled: 4
+[00:36.655] MSG: Night Whisperer wins!
+[00:40.236] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:40.270] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:40.270] Crystals: P0 4300 → 4600 (+300)  [recovery]
+[00:40.270] MSG: Melissa the Healer: Recovered 300 Crystals!
+[00:40.279] Attack P1(3,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} → P0(1,1)"Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}  Dice=4  ATK=30 vs DEF=25  → WIN
+[00:40.279] Anim: 3A  △ P0(1,1)
+[00:40.279] Card destroyed  P0 (1,1) "Melissa the Healer" {Unit ATK0 DEF25 | cost 700 | affinity Divine}
+[00:40.769] Mode selected P1: ATTACK
+[00:40.773] MSG: Player 2: tap a character to attack.
+[00:42.479] Revealed: P1 (2,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[00:42.480] Dice rolled: 3
+[00:42.484] MSG: Bat Swarm wins!
+[00:46.066] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:46.457] Crystals: P0 4600 → 4250 (-350)  [battle]
+[00:47.853] Attack P1(2,2)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P0(1,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=3  ATK=15 vs DEF=10  → WIN
+[00:47.853] Anim: 3A  △ P0(1,2)
+[00:47.853] Card destroyed  P0 (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:48.356] Turn ended  P1  |  Crystals P0=4250 P1=4400
+
+--- Turn 3  |  Player 0  |  Crystals P0=4250 P1=4400 ---
+[00:54.791] Dice rolled: 1
+[00:54.802] MSG: Grand Fort Archer wins!
+[00:59.270] Crystals: P1 4400 → 4200 (-200)  [battle]
+[01:00.667] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} → P1(2,2)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=1  ATK=20 vs DEF=15  → WIN
+[01:00.667] Anim: 3A  △ P1(2,2)
+[01:00.667] Card destroyed  P1 (2,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:03.352] Revealed: P0 (0,3) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:03.352] Dice rolled: 5
+[01:03.358] MSG: Ice Mage wins!
+[01:07.503] Crystals: P1 4200 → 3300 (-900)  [battle]
+[01:08.904] Attack P0(0,3)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P1(3,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=5  ATK=50 vs DEF=30  → WIN
+[01:08.904] Anim: 3A  △ P1(3,2)
+[01:08.905] Card destroyed  P1 (3,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:09.879] Turn ended  P0  |  Crystals P0=4250 P1=3300
+
+--- Turn 4  |  Player 1  |  Crystals P0=4250 P1=3300 ---
+[01:10.437] Mode selected P1: ATTACK
+[01:10.439] MSG: Player 2: tap a character to attack.
+[01:12.151] Revealed: P1 (4,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:12.151] Dice rolled: 2
+[01:12.155] MSG: Both cards are destroyed!
+[01:15.744] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:16.557] Crystals: P1 3300 → 3200 (-100)  [battle]
+[01:17.944] Crystals: P0 4250 → 3970 (-280)  [battle]
+[01:19.336] Attack P1(4,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=2  ATK=20 vs DEF=20  → TIE
+[01:19.336] Anim: 3C  △ P1(4,3) + △ P0(2,1)
+[01:19.336] Card destroyed  P1 (4,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:19.336] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[01:19.827] Mode selected P1: ATTACK
+[01:19.829] MSG: Player 2: tap a character to attack.
+[01:21.533] Revealed: P1 (3,4) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[01:21.533] Dice rolled: 2
+[01:21.552] MSG: Nothing happens — Dead End.
+[01:24.934] Attack P1(3,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → P0(3,2)(empty)  Dice=2  → DEAD_END
+[01:24.934] Anim: 3F  (blank slot)
+[01:25.433] Turn ended  P1  |  Crystals P0=3970 P1=3200
+
+--- Turn 5  |  Player 0  |  Crystals P0=3970 P1=3200 ---
+[01:34.094] Revealed: P0 (3,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[01:34.094] Dice rolled: 4
+[01:34.100] MSG: Sniping Fairy wins!
+[01:37.272] Crystals: P1 3200 → 3100 (-100)  [battle]
+[01:38.671] Attack P0(3,3)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(3,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=4  ATK=40 vs DEF=25  → WIN
+[01:38.671] Anim: 3A  △ P1(3,4)
+[01:38.671] Card destroyed  P1 (3,4) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[01:43.185] Revealed: P1 (2,3) "Trap Hole" {cost 0}
+[01:43.185] Dice rolled: 1
+[01:43.451] MSG: Trap triggered: Trap Hole!
+[01:46.068] Coin flip: Heads, Heads, Tails
+[01:48.811] MSG: Trap Hole: Heads, Heads, Tails.
+[01:48.812] Crystals: P0 3970 → 3930 (-40)  [trap]
+[01:50.202] MSG: Trap Hole: 2 head(s) — Player 1 loses 40 Crystals!
+[01:50.208] Trap: "Trap Hole" triggered  P0(0,3)→P1(2,3)
+[01:52.106] MSG: Sniping Fairy: -20 ATK at end of expose turn.
+[01:52.111] Turn ended  P0  |  Crystals P0=3930 P1=3100
+
+--- Turn 6  |  Player 1  |  Crystals P0=3930 P1=3100 ---
+[01:52.699] Mode selected P1: ATTACK
+[01:52.701] MSG: Player 2: tap a character to attack.
+[01:54.408] Revealed: P1 (3,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:54.408] Dice rolled: 1
+[01:54.412] MSG: Doom Wisp wins!
+[01:57.578] Crystals: P0 3930 → 3530 (-400)  [battle]
+[01:57.997] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:58.971] Attack P1(3,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P0(0,3)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=1  ATK=15 vs DEF=0  → WIN
+[01:58.971] Anim: 3A  △ P0(0,3)
+[01:58.971] Card destroyed  P0 (0,3) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:59.472] Turn ended  P1  |  Crystals P0=3530 P1=3100
+
+--- Turn 7  |  Player 0  |  Crystals P0=3530 P1=3100 ---
+[02:02.347] Dice rolled: 1
+[02:02.353] MSG: Sniping Fairy wins!
+[02:06.265] Crystals: P1 3100 → 3000 (-100)  [battle]
+[02:07.669] Attack P0(3,3)"Sniping Fairy" {Unit ATK20 DEF20 | cost 350 | affinity Divine | base 20/20} → P1(3,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}  Dice=1  ATK=20 vs DEF=15  → WIN
+[02:07.669] Anim: 3A  △ P1(3,3)
+[02:07.669] Card destroyed  P1 (3,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3530  P1: 3000  |  Turns: 7

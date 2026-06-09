@@ -78,10 +78,16 @@ var _prop_vn_var_trigger_panel: VBoxContainer = null
 var _prop_vn_trigger_var_edit: LineEdit   = null
 var _prop_vn_trigger_eq_edit:  LineEdit   = null
 var _prop_vn_play_once_chk:   CheckBox    = null
+var _prop_vn_keep_bgm_chk:    CheckBox    = null
 var _prop_show_info_chk:      CheckBox    = null
 var _prop_show_who_chk:       CheckBox    = null
 var _prop_music_edit:       LineEdit    = null
 var _prop_music_cond_vbox:  VBoxContainer = null
+var _prop_battle_section:   VBoxContainer = null
+var _prop_battle_bgm_edit:  LineEdit    = null
+var _prop_setup_bgm_edit:   LineEdit    = null
+var _prop_almost_win_bgm_edit: LineEdit = null
+var _prop_battle_bgm_vol:   SpinBox     = null
 var _prop_connections_vbox: VBoxContainer = null
 var _prop_events_in_vbox:       VBoxContainer = null
 var _prop_events_in_cond_vbox:  VBoxContainer = null
@@ -299,7 +305,40 @@ func _build_props_panel() -> Control:
 	add_title_cond_btn.pressed.connect(func() -> void: _add_text_cond_row(_prop_title_cond_vbox, false))
 	vbox.add_child(add_title_cond_btn)
 	_prop_type_btn   = _add_type_dropdown(vbox)
+	_prop_type_btn.item_selected.connect(func(_idx: int) -> void: _update_battle_section_visibility())
 	vbox.add_child(HSeparator.new())
+
+	# Battle BGM (BATTLE nodes only)
+	_prop_battle_section = VBoxContainer.new()
+	_prop_battle_section.add_theme_constant_override("separation", 4)
+	vbox.add_child(_prop_battle_section)
+	_add_section_header(_prop_battle_section, "BATTLE BGM")
+	var battle_hint := Label.new()
+	battle_hint.text = "Used when this BATTLE node starts a grid duel. Blank paths use engine defaults."
+	battle_hint.add_theme_font_size_override("font_size", 11)
+	battle_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.45))
+	battle_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_prop_battle_section.add_child(battle_hint)
+	var audio_filters := PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio Files"])
+	_prop_battle_bgm_edit = _add_file_field(_prop_battle_section, "Battle BGM",
+		audio_filters, "res://assets/audio")
+	_prop_setup_bgm_edit = _add_file_field(_prop_battle_section, "Setup BGM",
+		audio_filters, "res://assets/audio")
+	_prop_almost_win_bgm_edit = _add_file_field(_prop_battle_section, "Almost-win BGM",
+		audio_filters, "res://assets/audio")
+	var vol_lbl := Label.new()
+	vol_lbl.text = "BGM Volume"
+	vol_lbl.add_theme_font_size_override("font_size", 13)
+	vol_lbl.add_theme_color_override("font_color", Color(0.75, 0.82, 0.90))
+	_prop_battle_section.add_child(vol_lbl)
+	_prop_battle_bgm_vol = SpinBox.new()
+	_prop_battle_bgm_vol.min_value = 0.0
+	_prop_battle_bgm_vol.max_value = 200.0
+	_prop_battle_bgm_vol.step = 1.0
+	_prop_battle_bgm_vol.value = 100.0
+	_prop_battle_bgm_vol.add_theme_font_size_override("font_size", 14)
+	_prop_battle_section.add_child(_prop_battle_bgm_vol)
+	_update_battle_section_visibility()
 
 	# Section: Content
 	_add_section_header(vbox, "CONTENT")
@@ -347,6 +386,11 @@ func _build_props_panel() -> Control:
 	_prop_vn_play_once_chk.button_pressed = true
 	_prop_vn_play_once_chk.add_theme_font_size_override("font_size", 13)
 	vbox.add_child(_prop_vn_play_once_chk)
+	_prop_vn_keep_bgm_chk = CheckBox.new()
+	_prop_vn_keep_bgm_chk.text = "Keep Exploration BGM (VN won't change music)"
+	_prop_vn_keep_bgm_chk.button_pressed = true
+	_prop_vn_keep_bgm_chk.add_theme_font_size_override("font_size", 13)
+	vbox.add_child(_prop_vn_keep_bgm_chk)
 
 	var vn_trigger_lbl := Label.new()
 	vn_trigger_lbl.text = "VN Trigger"
@@ -1090,6 +1134,11 @@ func _add_textarea(parent: Control, label_text: String) -> TextEdit:
 	edit.add_theme_font_size_override("font_size", 14)
 	parent.add_child(edit)
 	return edit
+
+func _update_battle_section_visibility() -> void:
+	if _prop_battle_section == null or _prop_type_btn == null:
+		return
+	_prop_battle_section.visible = _prop_type_btn.selected == ExplorationNode.NodeType.BATTLE
 
 func _add_type_dropdown(parent: Control) -> OptionButton:
 	var lbl := Label.new()
@@ -2367,6 +2416,11 @@ func _populate_props(en: ExplorationNode) -> void:
 			_add_text_cond_row(_prop_desc_cond_vbox, true,
 				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("value", "")))
 	_prop_type_btn.select(en.node_type)
+	_update_battle_section_visibility()
+	_prop_battle_bgm_edit.text = en.battle_bgm
+	_prop_setup_bgm_edit.text = en.setup_bgm
+	_prop_almost_win_bgm_edit.text = en.almost_win_bgm
+	_prop_battle_bgm_vol.value = en.battle_bgm_volume
 	_prop_bg_edit.text    = en.background
 
 	for child: Node in _prop_bg_cond_vbox.get_children():
@@ -2393,6 +2447,7 @@ func _populate_props(en: ExplorationNode) -> void:
 		_prop_vn_trigger_eq_edit.text  = en.vn_trigger_equals
 		_on_vn_trigger_changed(_prop_vn_trigger_btn.selected)
 	_prop_vn_play_once_chk.button_pressed = en.vn_play_once
+	_prop_vn_keep_bgm_chk.button_pressed = en.vn_keep_bgm
 	_prop_show_info_chk.button_pressed = en.show_info_on_enter
 	_prop_show_who_chk.button_pressed  = en.show_who_is_here
 	_prop_music_edit.text = en.music
@@ -2492,6 +2547,10 @@ func _collect_props(en: ExplorationNode) -> void:
 	en.description = _prop_desc_edit.text
 	en.description_conditions = _collect_text_conds(_prop_desc_cond_vbox)
 	en.node_type   = _prop_type_btn.selected
+	en.battle_bgm         = _prop_battle_bgm_edit.text.strip_edges()
+	en.setup_bgm          = _prop_setup_bgm_edit.text.strip_edges()
+	en.almost_win_bgm     = _prop_almost_win_bgm_edit.text.strip_edges()
+	en.battle_bgm_volume  = _prop_battle_bgm_vol.value
 	en.background  = _prop_bg_edit.text.strip_edges()
 	en.background_conditions.clear()
 	for frame: Node in _prop_bg_cond_vbox.get_children():
@@ -2519,6 +2578,7 @@ func _collect_props(en: ExplorationNode) -> void:
 		en.vn_trigger_var    = _prop_vn_trigger_var_edit.text.strip_edges()
 		en.vn_trigger_equals = _prop_vn_trigger_eq_edit.text.strip_edges()
 	en.vn_play_once       = _prop_vn_play_once_chk.button_pressed
+	en.vn_keep_bgm        = _prop_vn_keep_bgm_chk.button_pressed
 	en.show_info_on_enter = _prop_show_info_chk.button_pressed
 	en.show_who_is_here   = _prop_show_who_chk.button_pressed
 	en.music       = _prop_music_edit.text.strip_edges()

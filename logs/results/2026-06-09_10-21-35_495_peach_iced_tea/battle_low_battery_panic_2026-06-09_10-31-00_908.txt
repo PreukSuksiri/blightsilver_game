@@ -1,0 +1,136 @@
+=== Battle of Low Battery Panic ===
+Battle started: 2026-06-09 10:31:00.908
+Game Session of Peach Iced Tea (started 2026-06-09 10:21:35.495)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:10.498] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:15.867] Mode selected P1: TECH
+[00:16.166] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:17.550] Tech played  P1: "Radar"
+[00:19.105] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:19.980] Revealed: P0 (4,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:20.307] Tech resolved  P1
+[00:21.210] Mode selected P1: ATTACK
+[00:21.213] MSG: Player 2: tap a character to attack.
+[00:22.917] Revealed: P1 (2,4) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[00:22.917] Dice rolled: 1
+[00:22.925] MSG: Night Whisperer wins!
+[00:26.461] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:27.396] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:28.802] Attack P1(2,4)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} → P0(4,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=1  ATK=30 vs DEF=20  → WIN
+[00:28.802] Anim: 3A  △ P0(4,2)
+[00:28.802] Card destroyed  P0 (4,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:31.295] Turn ended  P1  |  Crystals P0=4700 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4700 P1=4400 ---
+[01:05.495] Revealed: P0 (4,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:05.495] Dice rolled: 2
+[01:05.506] MSG: Big Thug wins!
+[01:08.512] Crystals: P1 4400 → 3500 (-900)  [battle]
+[01:09.912] Attack P0(4,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(2,4)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=2  ATK=40 vs DEF=30  → WIN
+[01:09.912] Anim: 3A  △ P1(2,4)
+[01:09.912] Card destroyed  P1 (2,4) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:16.553] Revealed: P0 (3,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:16.553] Dice rolled: 1
+[01:16.587] MSG: Nothing happens — Dead End.
+[01:18.289] Attack P0(3,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P1(1,0)(empty)  Dice=1  → DEAD_END
+[01:18.289] Anim: 3F  (blank slot)
+[01:19.260] Turn ended  P0  |  Crystals P0=4700 P1=3500
+
+--- Turn 3  |  Player 1  |  Crystals P0=4700 P1=3500 ---
+[01:19.857] Mode selected P1: ATTACK
+[01:19.860] MSG: Player 2: tap a character to attack.
+[01:21.575] Revealed: P1 (0,1) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:21.575] Dice rolled: 2
+[01:21.581] MSG: Both cards are destroyed!
+[01:24.908] Crystals: P1 3500 → 3400 (-100)  [battle]
+[01:25.166] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:26.300] Crystals: P0 4700 → 4450 (-250)  [battle]
+[01:27.687] Attack P1(0,1)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(3,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}  Dice=2  ATK=20 vs DEF=20  → TIE
+[01:27.687] Anim: 3C  △ P1(0,1) + △ P0(3,1)
+[01:27.687] Card destroyed  P1 (0,1) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:27.687] Card destroyed  P0 (3,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:28.193] Mode selected P1: ATTACK
+[01:28.195] MSG: Player 2: tap a character to attack.
+[01:29.921] Revealed: P1 (0,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:29.921] Dice rolled: 3
+[01:29.944] MSG: Nothing happens — Dead End.
+[01:33.327] Attack P1(0,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P0(1,4)(empty)  Dice=3  → DEAD_END
+[01:33.327] Anim: 3F  (blank slot)
+[01:33.835] Turn ended  P1  |  Crystals P0=4450 P1=3400
+
+--- Turn 4  |  Player 0  |  Crystals P0=4450 P1=3400 ---
+[01:45.948] Dice rolled: 1
+[01:45.955] MSG: Big Thug wins!
+[01:48.883] Crystals: P1 3400 → 3300 (-100)  [battle]
+[01:50.280] Attack P0(4,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(0,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}  Dice=1  ATK=40 vs DEF=15  → WIN
+[01:50.280] Anim: 3A  △ P1(0,3)
+[01:50.280] Card destroyed  P1 (0,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:58.636] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:58.677] Revealed: P1 (3,0) "Trap Hole" {cost 0}
+[01:58.677] Dice rolled: 1
+[01:58.929] MSG: Trap triggered: Trap Hole!
+[02:01.427] Coin flip: Heads, Heads, Tails
+[02:04.178] MSG: Trap Hole: Heads, Heads, Tails.
+[02:04.178] Crystals: P0 4450 → 4410 (-40)  [trap]
+[02:05.570] MSG: Trap Hole: 2 head(s) — Player 1 loses 40 Crystals!
+[02:05.575] Trap: "Trap Hole" triggered  P0(2,1)→P1(3,0)
+[02:10.202] Turn ended  P0  |  Crystals P0=4410 P1=3300
+
+--- Turn 5  |  Player 1  |  Crystals P0=4410 P1=3300 ---
+[02:10.792] Mode selected P1: ATTACK
+[02:10.796] MSG: Player 2: tap a character to attack.
+[02:12.504] Revealed: P1 (4,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[02:12.504] Dice rolled: 1
+[02:12.528] MSG: Nothing happens — Dead End.
+[02:14.468] Attack P1(4,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} → P0(4,3)(empty)  Dice=1  → DEAD_END
+[02:14.468] Anim: 3F  (blank slot)
+[02:16.976] Turn ended  P1  |  Crystals P0=4410 P1=3300
+
+--- Turn 6  |  Player 0  |  Crystals P0=4410 P1=3300 ---
+[02:21.703] Revealed: P0 (2,3) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[02:21.703] Dice rolled: 3
+[02:23.118] Ability choice: 1 (No)
+[02:23.119] MSG: Hairpin Assassin wins!
+[02:25.803] Crystals: P1 3300 → 3100 (-200)  [battle]
+[02:27.201] Attack P0(2,3)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} → P1(4,0)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=3  ATK=25 vs DEF=15  → WIN
+[02:27.201] Anim: 3A  △ P1(4,0)
+[02:27.201] Card destroyed  P1 (4,0) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[02:33.627] Revealed: P0 (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:33.627] Dice rolled: 3
+[02:33.648] MSG: Nothing happens — Dead End.
+[02:35.225] Attack P0(1,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(2,2)(empty)  Dice=3  → DEAD_END
+[02:35.225] Anim: 3F  (blank slot)
+[02:35.855] Turn ended  P0  |  Crystals P0=4410 P1=3100
+
+--- Turn 7  |  Player 1  |  Crystals P0=4410 P1=3100 ---
+[02:36.450] Mode selected P1: ATTACK
+[02:36.455] MSG: Player 2: tap a character to attack.
+[02:38.171] Revealed: P1 (1,4) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[02:38.171] Dice rolled: 4
+[02:38.191] MSG: Nothing happens — Dead End.
+[02:39.832] Attack P1(1,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → P0(1,0)(empty)  Dice=4  → DEAD_END
+[02:39.832] Anim: 3F  (blank slot)
+[02:40.340] Turn ended  P1  |  Crystals P0=4410 P1=3100
+
+--- Turn 8  |  Player 0  |  Crystals P0=4410 P1=3100 ---
+[02:43.102] Dice rolled: 5
+[02:45.886] Crystals: P0 4410 → 4130 (-280)  [battle]
+[02:47.284] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} → P1(1,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=5  ATK=20 vs DEF=25  → LOSE
+[02:47.284] Anim: 3B  △ P0(2,1)
+[02:47.284] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[02:50.377] Dice rolled: 3
+[02:50.385] MSG: Big Thug wins!
+[02:53.123] Crystals: P1 3100 → 3000 (-100)  [battle]
+[02:54.521] Attack P0(4,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(1,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=3  ATK=40 vs DEF=25  → WIN
+[02:54.521] Anim: 3A  △ P1(1,4)
+[02:54.521] Card destroyed  P1 (1,4) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 4130  P1: 3000  |  Turns: 8

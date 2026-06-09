@@ -246,6 +246,33 @@ var portrait_p2_size:   float   = 1.0
 # Battle BGM (set by VNPlayer or defaults; not reset by new_game())
 var battle_bgm_path: String = ""
 var battle_bgm_volume: float = 100.0   # percentage  (100 = 0 dB)
+var battle_setup_bgm_path: String = ""       # placement/setup phase; blank = CONTEXT_PLACEMENT default
+var battle_almost_win_bgm_path: String = ""  # endgame threshold; blank = bgm_almost_win.mp3
+var battle_bgm_start_sec: float = 14.0       # first-play offset; loops back to 00:00
+var battle_almost_win_enabled: bool = true     # mid-battle / win-reveal almost-win track switch
+
+const DEFAULT_BATTLE_BGM: String = "res://assets/audio/bgm_boss_1.mp3"
+const DEFAULT_ALMOST_WIN_BGM: String = "res://assets/audio/bgm_almost_win.mp3"
+const DEFAULT_BATTLE_BGM_START_SEC: float = 14.0
+
+## Apply battle audio paths from a VN beat dict or exploration BATTLE node dict.
+## Keys: battle_bgm, battle_bgm_volume, setup_bgm, almost_win_bgm,
+##       battle_bgm_start_sec, almost_win_bgm_enabled.
+func apply_battle_audio_config(source: Dictionary, default_battle_bgm: String = DEFAULT_BATTLE_BGM) -> void:
+	var bgm := str(source.get("battle_bgm", "")).strip_edges()
+	if bgm.is_empty() and not default_battle_bgm.is_empty():
+		bgm = default_battle_bgm
+	battle_bgm_path = bgm
+	battle_bgm_volume = float(source.get("battle_bgm_volume", 100.0))
+	battle_setup_bgm_path = str(source.get("setup_bgm", "")).strip_edges()
+	battle_almost_win_bgm_path = str(source.get("almost_win_bgm", "")).strip_edges()
+	battle_bgm_start_sec = maxf(0.0, float(source.get("battle_bgm_start_sec", DEFAULT_BATTLE_BGM_START_SEC)))
+	battle_almost_win_enabled = bool(source.get("almost_win_bgm_enabled", true))
+
+
+func get_almost_win_bgm_path() -> String:
+	var path := battle_almost_win_bgm_path.strip_edges()
+	return path if not path.is_empty() else DEFAULT_ALMOST_WIN_BGM
 
 # Battle placement/summon config — set by VNPlayer before scene change.
 # _vn_battle_pending = true tells new_game() to preserve these values instead of resetting them.

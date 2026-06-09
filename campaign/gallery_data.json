@@ -1,5 +1,6 @@
 [
 	{
+		"exploration_graph": "res://exploration/graphs/ch0_s1_blackout_library.json",
 		"image": "res://assets/textures/campagin/ui_campaign_capsule_ch0_1.png",
 		"line1": "Prologue",
 		"line2": "Flickering Midnight",
@@ -8,6 +9,9 @@
 		"vn_scene": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json"
 	},
 	{
+		"exploration_graph": "res://exploration/graphs/ch0_s1_blackout_library.json",
+		"exploration_save_value": "act_1_ch_1",
+		"exploration_save_var": "chapter",
 		"image": "res://assets/textures/campagin/ui_campaign_capsule_ch1_1.png",
 		"line1": "Act I",
 		"line2": "Chapter 1 :: Silver Path",
@@ -16,7 +20,7 @@
 		"vn_scene": "res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json"
 	},
 	{
-		"custom_text": "",
+		"custom_text": "FULL VERSION",
 		"image": "res://assets/textures/campagin/ui_campaign_capsule_ch1_2.png",
 		"line1": "Act I",
 		"line2": "Chapter 2 :: Plague Doctor",

@@ -35,6 +35,8 @@ var transparent_bg: bool = false
 ## Use for overlay VNs (e.g. exploration) that should not interrupt the ambient track.
 ## Set before add_child() so _ready() picks it up.
 var keep_bgm: bool = false
+## Overlay VN launched on top of exploration — do not fade out BGM when the scene ends.
+var exploration_overlay: bool = false
 ## True while rendering a beat that launches exploration with exploration_keep_vn_bgm.
 var _preserve_bgm_for_exploration: bool = false
 
@@ -43,6 +45,7 @@ var _beat_index: int = 0
 var _beat_raw_indices: Array = []   # maps filtered index → raw JSON index
 var _scene_path: String = ""
 var _on_complete: Callable = Callable()
+var _track_campaign_checkpoint: bool = false
 var _current_bg_path: String = ""
 var _accepting_input: bool = true
 var _cmd_panel: PanelContainer = null
@@ -80,6 +83,15 @@ func _loc(val) -> String:
 			return str(val.values()[0])
 		return ""
 	return str(val) if val != null else ""
+
+func _resolve_gallery_chapter_end(beat: Dictionary) -> String:
+	if beat.get("complete_current_gallery_chapter", false) \
+			or beat.get("unlock_current_gallery_chapter", false):
+		return _scene_path
+	var vn_path: String = str(beat.get("complete_gallery_chapter", "")).strip_edges()
+	if vn_path.is_empty():
+		vn_path = str(beat.get("unlock_gallery_chapter", "")).strip_edges()
+	return vn_path
 
 # ─────────────────────────────────────────────────────────────
 # Font helper
@@ -131,6 +143,12 @@ func _ready() -> void:
 # Build UI
 # ─────────────────────────────────────────────────────────────
 func _build_ui() -> void:
+	if not transparent_bg:
+		var root_fill := ColorRect.new()
+		root_fill.set_anchors_preset(Control.PRESET_FULL_RECT)
+		root_fill.color = Color(0.04, 0.06, 0.14, 1.0)
+		root_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(root_fill)
 	# Stage container — everything visual goes here so screen shake works
 	_stage = Control.new()
 	_stage.position = Vector2(0.0, 0.0)
@@ -299,8 +317,9 @@ static func launch_overlay(json_path: String, on_complete: Callable, canvas_laye
 		if on_complete.is_valid():
 			on_complete.call())
 
-func play_scene(json_path: String, on_complete: Callable) -> void:
+func play_scene(json_path: String, on_complete: Callable, track_checkpoint: bool = false) -> void:
 	_on_complete = on_complete
+	_track_campaign_checkpoint = track_checkpoint
 
 	var file := FileAccess.open(json_path, FileAccess.READ)
 	if file == null:
@@ -334,6 +353,10 @@ func play_scene(json_path: String, on_complete: Callable) -> void:
 		_beats.append(_rb)
 		_beat_raw_indices.append(_ri)
 	_beat_index = 0
+	if _track_campaign_checkpoint:
+		var resume_at: int = SaveManager.get_vn_checkpoint(json_path)
+		if resume_at > 0 and resume_at < _beats.size():
+			_beat_index = resume_at
 	_show_beat()
 
 # ─────────────────────────────────────────────────────────────
@@ -346,6 +369,7 @@ func _show_beat() -> void:
 
 	var beat: Dictionary = _beats[_beat_index]
 	_beat_index += 1
+	_persist_campaign_checkpoint()
 	_preserve_bgm_for_exploration = bool(beat.get("exploration_keep_vn_bgm", false)) \
 		and str(beat.get("exploration_call", "")).strip_edges() != ""
 
@@ -654,9 +678,7 @@ func _show_beat() -> void:
 			float(beat.get("portrait_p2_offset_x", 0.0)),
 			float(beat.get("portrait_p2_offset_y", 0.0)))
 		GameState.portrait_p2_size   = float(beat.get("portrait_p2_size", 1.0))
-		var bgm: String = str(beat.get("battle_bgm", ""))
-		GameState.battle_bgm_path   = bgm if bgm != "" else "res://assets/audio/bgm_boss_1.mp3"
-		GameState.battle_bgm_volume = float(beat.get("battle_bgm_volume", 100.0))
+		GameState.apply_battle_audio_config(beat)
 		# Player names — override display names shown in battle HUD
 		var p1n: String = str(beat.get("player1_name", "")).strip_edges()
 		var p2n: String = str(beat.get("player2_name", "")).strip_edges()
@@ -711,6 +733,8 @@ func _show_beat() -> void:
 	# ── Exploration call ──
 	var expl_graph: String = str(beat.get("exploration_call", "")).strip_edges()
 	if expl_graph != "":
+		if _track_campaign_checkpoint:
+			SaveManager.clear_vn_checkpoint(_scene_path)
 		var keep_vn_bgm: bool = bool(beat.get("exploration_keep_vn_bgm", false))
 		if not keep_vn_bgm:
 			_set_music("", 0.0, 0.0)
@@ -725,9 +749,11 @@ func _show_beat() -> void:
 			params["keep_vn_bgm"] = true
 		var on_return: String = str(beat.get("exploration_on_return", "")).strip_edges()
 		ExplorationManager.pending_return_vn = on_return
+		ExplorationManager.launch_source_vn = _scene_path
 		var return_scene: String = get_tree().current_scene.scene_file_path
 		if return_scene.is_empty():
 			return_scene = "res://scenes/main_menu.tscn"
+		await _prepare_scene_handoff()
 		ExplorationManager.launch(expl_graph, return_scene, params)
 		var inv: Variant = beat.get("exploration_inventory", null)
 		if inv is Array:
@@ -740,6 +766,8 @@ func _show_beat() -> void:
 	# ── Dungeon call ──
 	var dungeon_id: String = str(beat.get("dungeon_call", ""))
 	if dungeon_id != "":
+		if _track_campaign_checkpoint:
+			SaveManager.clear_vn_checkpoint(_scene_path)
 		_set_music("", 0.0, 0.0)
 		DailyDungeonManager.begin_story_session(
 			dungeon_id,
@@ -752,11 +780,10 @@ func _show_beat() -> void:
 		return
 
 	# ── Campaign gallery unlock + navigation ──
-	var unlock_gallery: String = str(beat.get("unlock_gallery_chapter", "")).strip_edges()
-	if beat.get("unlock_current_gallery_chapter", false):
-		unlock_gallery = _scene_path
-	if not unlock_gallery.is_empty():
-		SaveManager.mark_gallery_chapter_completed(unlock_gallery)
+	var complete_gallery: String = _resolve_gallery_chapter_end(beat)
+	if not complete_gallery.is_empty():
+		SaveManager.mark_gallery_chapter_completed(complete_gallery)
+		ExplorationManager.clear_saved_session_for_chapter(complete_gallery)
 
 	if beat.get("go_to_campaign_gallery", false):
 		_set_music("", 0.0, 0.0)
@@ -830,10 +857,45 @@ func _on_video_finished() -> void:
 
 func _finish() -> void:
 	_hide_hint_icon()
-	_set_music("", 0.0, 0.0)
+	if not exploration_overlay:
+		_set_music("", 0.0, 0.0)
+	if _track_campaign_checkpoint:
+		SaveManager.clear_vn_checkpoint(_scene_path)
 	if _on_complete.is_valid():
 		_on_complete.call()
 	queue_free()
+
+
+## Fade to black and hide campaign-gallery chrome before scene handoffs.
+## VNs launched from CampaignGallery sit on top of the gallery overlay; without
+## this, checker transitions can briefly reveal chapter cards around the 1600×900 stage.
+func _prepare_scene_handoff(fade_sec: float = 0.35) -> void:
+	_accepting_input = false
+	_hide_hint_icon()
+	if _dialog_panel != null:
+		_dialog_panel.visible = false
+	var host: Node = get_parent()
+	if host != null:
+		for child: Node in host.get_children():
+			if child != self:
+				child.visible = false
+	if _fade_rect != null:
+		_fade_rect.color = Color(0.0, 0.0, 0.0, _fade_rect.color.a)
+		var tw := create_tween()
+		tw.tween_property(_fade_rect, "color:a", 1.0, maxf(fade_sec, 0.01))
+		await tw.finished
+
+func _persist_campaign_checkpoint() -> void:
+	if not _track_campaign_checkpoint or _scene_path.is_empty():
+		return
+	if _beat_index <= 0:
+		return
+	SaveManager.set_vn_checkpoint(_scene_path, _beat_index)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST \
+			or what == NOTIFICATION_APPLICATION_PAUSED:
+		_persist_campaign_checkpoint()
 
 # ─────────────────────────────────────────────────────────────
 # Bug tagging (Ctrl+Shift+A → "tag_bug")

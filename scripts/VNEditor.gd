@@ -129,6 +129,10 @@ var _f_portrait_p2_offset_x: SpinBox = null
 var _f_portrait_p2_offset_y: SpinBox = null
 var _f_portrait_p2_size:     SpinBox = null
 var _f_battle_bgm: LineEdit = null
+var _f_setup_bgm: LineEdit = null
+var _f_almost_win_bgm: LineEdit = null
+var _f_battle_bgm_start: SpinBox = null
+var _f_almost_win_enabled: CheckBox = null
 var _f_battle_bgm_vol: SpinBox = null
 var _f_start_battle:  CheckBox = null
 var _f_call_tutorial: CheckBox = null
@@ -156,6 +160,7 @@ var _f_ai_pers_off: OptionButton = null
 var _f_ai_pers_soc: OptionButton = null
 var _f_call_scene:  OptionButton = null
 var _f_go_to_campaign_gallery: CheckBox     = null
+var _f_mark_chapter_end:       CheckBox     = null
 var _f_unlock_gallery_opt:    OptionButton = null
 var _gallery_unlock_paths:    PackedStringArray = PackedStringArray()
 
@@ -811,6 +816,15 @@ func _build_fields() -> void:
 	_f_portrait_p2_size.value = 1.0
 	_f_battle_bgm = _row_le(v, "Battle BGM", "res://assets/audio/bgm_boss_1.mp3  (blank = use default)")
 	_add_browse(_f_battle_bgm, PackedStringArray(["*.mp3,*.ogg,*.wav;Audio"]), "res://assets/audio/")
+	_f_setup_bgm = _row_le(v, "Setup BGM", "placement phase — blank = default placement track")
+	_add_browse(_f_setup_bgm, PackedStringArray(["*.mp3,*.ogg,*.wav;Audio"]), "res://assets/audio/")
+	_f_almost_win_bgm = _row_le(v, "Almost-win BGM", "endgame threshold — blank = bgm_almost_win.mp3")
+	_add_browse(_f_almost_win_bgm, PackedStringArray(["*.mp3,*.ogg,*.wav;Audio"]), "res://assets/audio/")
+	_f_battle_bgm_start = _row_sb(v, "Start Battle Music At (sec)", 0.0, 600.0, 0.1,
+		"seconds from 00:00 — default 14 skips intro; use 0 to start at beginning")
+	_f_battle_bgm_start.value = 14.0
+	_f_almost_win_enabled = _row_cb(v, "Enable Almost-win BGM",
+		"when off, battle music continues — no mid-battle or win-reveal switch")
 	_f_battle_bgm_vol = _row_sb(v, "BGM Volume", 0.0, 200.0, 1.0, "100 = normal  |  50 = half")
 	_f_battle_bgm_vol.value = 100.0
 	_f_on_win  = _row_le(v, "On Win",  "path to VN JSON — played if player wins")
@@ -930,9 +944,12 @@ func _build_fields() -> void:
 	_section(v, "CAMPAIGN GALLERY")
 	_f_go_to_campaign_gallery = _row_cb(v, "Go to Campaign Gallery",
 			"Fade out and open the campaign gallery on the main menu")
-	_f_unlock_gallery_opt = _row_opt(v, "Unlock chapter", [],
-			"Mark a gallery chapter complete (unlocks chapters that list it as prerequisite)")
+	_f_mark_chapter_end = _row_cb(v, "Mark chapter end",
+			"Mark a gallery chapter as finished (sets is_gallery_chapter_completed; hides Continue Saved Progress; unlocks prerequisites)")
+	_f_unlock_gallery_opt = _row_opt(v, "Complete chapter", [],
+			"Which gallery chapter to mark complete when this beat finishes")
 	_rebuild_gallery_unlock_options()
+	_sync_chapter_end_fields()
 
 	# ── Special Command ───────────────────────────────────────
 	_section(v, "SPECIAL COMMAND")
@@ -1091,8 +1108,17 @@ func _connect_static_signals() -> void:
 	_f_credits_target.item_selected.connect(func(_i: int) -> void: ch.call())
 	if _f_go_to_campaign_gallery != null:
 		_f_go_to_campaign_gallery.toggled.connect(func(_b: bool) -> void: ch.call())
+	if _f_mark_chapter_end != null:
+		_f_mark_chapter_end.toggled.connect(func(on: bool) -> void:
+			_sync_chapter_end_fields()
+			if on and _f_unlock_gallery_opt != null and _f_unlock_gallery_opt.selected <= 0:
+				_f_unlock_gallery_opt.selected = 1
+			ch.call())
 	if _f_unlock_gallery_opt != null:
-		_f_unlock_gallery_opt.item_selected.connect(func(_i: int) -> void: ch.call())
+		_f_unlock_gallery_opt.item_selected.connect(func(_i: int) -> void:
+			if _f_mark_chapter_end != null and _i > 0:
+				_f_mark_chapter_end.button_pressed = true
+			ch.call())
 	_f_call_scene.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_ai_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_player_union_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
@@ -1110,6 +1136,10 @@ func _connect_static_signals() -> void:
 	_f_portrait_p2_offset_y.value_changed.connect(func(_v: float) -> void: ch.call())
 	_f_portrait_p2_size.value_changed.connect(func(_v: float) -> void: ch.call())
 	_f_battle_bgm.text_changed.connect(func(_s: String) -> void: ch.call())
+	_f_setup_bgm.text_changed.connect(func(_s: String) -> void: ch.call())
+	_f_almost_win_bgm.text_changed.connect(func(_s: String) -> void: ch.call())
+	_f_battle_bgm_start.value_changed.connect(func(_v: float) -> void: ch.call())
+	_f_almost_win_enabled.toggled.connect(func(_b: bool) -> void: ch.call())
 	_f_battle_bgm_vol.value_changed.connect(func(_v: float) -> void: ch.call())
 	_f_on_win.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_on_lose.text_changed.connect(func(_s: String) -> void: ch.call())
@@ -1631,13 +1661,30 @@ func _rebuild_gallery_unlock_options() -> void:
 					var vn_path: String = str(entry.get("vn_scene", "")).strip_edges()
 					if vn_path.is_empty():
 						continue
-					var label: String = str(entry.get("line2", "")).strip_edges()
-					if label.is_empty():
-						label = vn_path.get_file()
+					var line1: String = str(entry.get("line1", "")).strip_edges()
+					var line2: String = str(entry.get("line2", "")).strip_edges()
+					var label: String = line2 if not line2.is_empty() else vn_path.get_file()
+					if not line1.is_empty() and not line2.is_empty():
+						label = "%s — %s" % [line1, line2]
 					_f_unlock_gallery_opt.add_item(label)
 					_gallery_unlock_paths.append(vn_path)
 	if _f_unlock_gallery_opt.item_count > 0:
 		_f_unlock_gallery_opt.selected = clampi(prev_sel, 0, _f_unlock_gallery_opt.item_count - 1)
+	_sync_chapter_end_fields()
+
+func _beat_has_chapter_end(b: Dictionary) -> bool:
+	if b.get("complete_current_gallery_chapter", false) \
+			or b.get("unlock_current_gallery_chapter", false):
+		return true
+	var complete_vn: String = str(b.get("complete_gallery_chapter", "")).strip_edges()
+	if complete_vn.is_empty():
+		complete_vn = str(b.get("unlock_gallery_chapter", "")).strip_edges()
+	return not complete_vn.is_empty()
+
+func _sync_chapter_end_fields() -> void:
+	if _f_unlock_gallery_opt == null or _f_mark_chapter_end == null:
+		return
+	_f_unlock_gallery_opt.disabled = not _f_mark_chapter_end.button_pressed
 
 func _browse(target: LineEdit, filters: PackedStringArray, start_dir: String) -> void:
 	_browse_target = target
@@ -2081,11 +2128,14 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 		return prefix + "[exploration: %s%s]" % [expl_call.get_file(), expl_extra]
 	if beat.get("go_to_campaign_gallery", false):
 		return prefix + "[campaign gallery]"
-	if beat.get("unlock_current_gallery_chapter", false):
-		return prefix + "[unlock chapter: current]"
-	var unlock_vn: String = str(beat.get("unlock_gallery_chapter", "")).strip_edges()
-	if not unlock_vn.is_empty():
-		return prefix + "[unlock chapter: %s]" % unlock_vn.get_file()
+	if beat.get("complete_current_gallery_chapter", false) \
+			or beat.get("unlock_current_gallery_chapter", false):
+		return prefix + "[chapter end: current]"
+	var complete_vn: String = str(beat.get("complete_gallery_chapter", "")).strip_edges()
+	if complete_vn.is_empty():
+		complete_vn = str(beat.get("unlock_gallery_chapter", "")).strip_edges()
+	if not complete_vn.is_empty():
+		return prefix + "[chapter end: %s]" % complete_vn.get_file()
 	return prefix + "(empty)"
 
 # ─────────────────────────────────────────────────────────────
@@ -2203,16 +2253,21 @@ func _populate_fields() -> void:
 	_f_go_to_credits.button_pressed = b.get("go_to_credits", false)
 	_f_credits_target.selected = 1 if str(b.get("credits_target", "")) == "demo" else 0
 	_f_go_to_campaign_gallery.button_pressed = b.get("go_to_campaign_gallery", false)
+	_f_mark_chapter_end.button_pressed = _beat_has_chapter_end(b)
 	_f_unlock_gallery_opt.selected = 0
-	if b.get("unlock_current_gallery_chapter", false):
+	if b.get("complete_current_gallery_chapter", false) \
+			or b.get("unlock_current_gallery_chapter", false):
 		_f_unlock_gallery_opt.selected = 1
 	else:
-		var unlock_vn: String = str(b.get("unlock_gallery_chapter", "")).strip_edges()
-		if not unlock_vn.is_empty():
+		var complete_vn: String = str(b.get("complete_gallery_chapter", "")).strip_edges()
+		if complete_vn.is_empty():
+			complete_vn = str(b.get("unlock_gallery_chapter", "")).strip_edges()
+		if not complete_vn.is_empty():
 			for i: int in range(_gallery_unlock_paths.size()):
-				if _gallery_unlock_paths[i] == unlock_vn:
+				if _gallery_unlock_paths[i] == complete_vn:
 					_f_unlock_gallery_opt.selected = i
 					break
+	_sync_chapter_end_fields()
 	var _cs_map: Array = ["", "credit", "credit_demo", "photo_scatter"]
 	var _cs_val: String = str(b.get("call_scene", ""))
 	_f_call_scene.selected = max(0, _cs_map.find(_cs_val))
@@ -2227,6 +2282,10 @@ func _populate_fields() -> void:
 	_f_portrait_p2_offset_y.value = float(b.get("portrait_p2_offset_y", 0.0))
 	_f_portrait_p2_size.value     = float(b.get("portrait_p2_size", 1.0))
 	_f_battle_bgm.text = str(b.get("battle_bgm", ""))
+	_f_setup_bgm.text = str(b.get("setup_bgm", ""))
+	_f_almost_win_bgm.text = str(b.get("almost_win_bgm", ""))
+	_f_battle_bgm_start.value = float(b.get("battle_bgm_start_sec", 14.0))
+	_f_almost_win_enabled.button_pressed = bool(b.get("almost_win_bgm_enabled", true))
 	_f_battle_bgm_vol.value = float(b.get("battle_bgm_volume", 100.0))
 	var beat_on_win: String = str(b.get("on_win", ""))
 	var beat_on_lose: String = str(b.get("on_lose", ""))
@@ -2521,13 +2580,15 @@ func _collect_beat() -> Dictionary:
 			b["credits_target"] = "demo"
 	if _f_go_to_campaign_gallery.button_pressed:
 		b["go_to_campaign_gallery"] = true
-	if _f_unlock_gallery_opt != null and _f_unlock_gallery_opt.selected > 0 \
+	if _f_mark_chapter_end != null and _f_mark_chapter_end.button_pressed \
+			and _f_unlock_gallery_opt != null \
+			and _f_unlock_gallery_opt.selected > 0 \
 			and _f_unlock_gallery_opt.selected < _gallery_unlock_paths.size():
-		var unlock_path: String = _gallery_unlock_paths[_f_unlock_gallery_opt.selected]
-		if unlock_path == "@current":
-			b["unlock_current_gallery_chapter"] = true
-		elif not unlock_path.is_empty():
-			b["unlock_gallery_chapter"] = unlock_path
+		var end_path: String = _gallery_unlock_paths[_f_unlock_gallery_opt.selected]
+		if end_path == "@current":
+			b["complete_current_gallery_chapter"] = true
+		elif not end_path.is_empty():
+			b["complete_gallery_chapter"] = end_path
 	var _cs_save_map: Array = ["", "credit", "credit_demo", "photo_scatter"]
 	var _cs_idx: int = _f_call_scene.selected
 	if _cs_idx > 0:
@@ -2565,6 +2626,16 @@ func _collect_beat() -> Dictionary:
 	var battle_bgm: String = _f_battle_bgm.text.strip_edges()
 	if not battle_bgm.is_empty():
 		b["battle_bgm"] = battle_bgm
+	var setup_bgm: String = _f_setup_bgm.text.strip_edges()
+	if not setup_bgm.is_empty():
+		b["setup_bgm"] = setup_bgm
+	var almost_win_bgm: String = _f_almost_win_bgm.text.strip_edges()
+	if not almost_win_bgm.is_empty():
+		b["almost_win_bgm"] = almost_win_bgm
+	if _f_battle_bgm_start.value != 14.0:
+		b["battle_bgm_start_sec"] = _f_battle_bgm_start.value
+	if not _f_almost_win_enabled.button_pressed:
+		b["almost_win_bgm_enabled"] = false
 	if _f_battle_bgm_vol.value != 100.0:
 		b["battle_bgm_volume"] = _f_battle_bgm_vol.value
 	var on_win: String = ""

@@ -1047,8 +1047,9 @@ func _start_game() -> void:
 	_refresh_hud()
 	if GameState.game_mode == GameState.GameMode.VS_AI \
 			or GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
-		_player_names[1] = "Bot"
-		_apply_player_names()
+		if _player_names[1] == "Player 2":
+			_player_names[1] = "Opponent"
+			_apply_player_names()
 	elif GameState.game_mode == GameState.GameMode.AI_VS_AI:
 		_player_names[0] = "Bot 0"
 		_player_names[1] = "Bot 1"
@@ -1305,7 +1306,12 @@ func _begin_game() -> void:
 # Battle music
 # ─────────────────────────────────────────────────────────────
 func _start_setup_music() -> void:
-	BGMManager.play_context(BGMManager.CONTEXT_PLACEMENT, 0.8, 0.8)
+	var setup_path: String = GameState.battle_setup_bgm_path.strip_edges()
+	if setup_path.is_empty():
+		BGMManager.play_context(BGMManager.CONTEXT_PLACEMENT, 0.8, 0.8)
+	else:
+		BGMManager.play_path(
+			setup_path, 0.8, 0.8, GameState.battle_bgm_volume, BGMManager.CONTEXT_PLACEMENT)
 
 
 func _stop_setup_music() -> void:
@@ -1316,9 +1322,10 @@ func _start_battle_music() -> void:
 	var path: String = GameState.battle_bgm_path
 	if path.is_empty():
 		path = BGMManager.get_default_path(BGMManager.CONTEXT_BATTLE)
-	# Start at 00:14 (intro skip), loop back to 00:00 when the track ends.
+	# Start at battle_bgm_start_sec (default 00:14 intro skip), loop back to 00:00 when the track ends.
+	var start_at: float = maxf(0.0, GameState.battle_bgm_start_sec)
 	BGMManager.play_path(
-		path, 0.8, 0.8, GameState.battle_bgm_volume, BGMManager.CONTEXT_BATTLE, 0.0, 14.0)
+		path, 0.8, 0.8, GameState.battle_bgm_volume, BGMManager.CONTEXT_BATTLE, 0.0, start_at)
 
 # ─────────────────────────────────────────────────────────────
 # Tech card fan
@@ -7854,13 +7861,14 @@ func _on_game_over(winner: int) -> void:
 	var ml: Control = get_node("MainLayout")
 	_shake_origin = ml.position
 	_shake_active = true
-	if player_won:
-		# Win: switch to bgm_almost_win.mp3 at 00:00 with no fade-in.
+	if player_won and GameState.battle_almost_win_enabled:
+		# Win: switch to almost-win BGM at 00:00 with no fade-in.
 		# If it's already playing (triggered by the almost-win threshold mid-battle),
 		# leave it running — do not restart it.
-		if BGMManager.get_current_path() != ALMOST_WIN_BGM:
-			BGMManager.play_path(ALMOST_WIN_BGM, 0.0, 0.0, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
-	else:
+		var almost_path: String = _resolve_almost_win_bgm_path()
+		if BGMManager.get_current_path() != almost_path:
+			BGMManager.play_path(almost_path, 0.0, 0.0, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
+	elif not player_won:
 		# Lose: slowly fade out whatever is playing across the reveal animation.
 		# Nothing starts after — defeat BGM is intentionally omitted.
 		BGMManager.stop(2.5)
@@ -7932,19 +7940,25 @@ func _fade_out_battle_music(duration: float) -> void:
 # ─────────────────────────────────────────────────────────────
 const ALMOST_WIN_BGM: String = "res://assets/audio/bgm_almost_win.mp3"
 
+
+func _resolve_almost_win_bgm_path() -> String:
+	return GameState.get_almost_win_bgm_path()
+
 ## Called after crystal-tick and after card destruction.
-## Switches to ALMOST_WIN_BGM the first time either player hits the threshold:
+## Switches to the almost-win BGM the first time either player hits the threshold:
 ##   – any player's crystals ≤ 1200, OR
 ##   – any player's active (non-dead-end) card count ≤ 5.
 ## Latches via _almost_win_bgm_active so it only triggers once per battle.
 func _check_almost_win_bgm() -> void:
+	if not GameState.battle_almost_win_enabled:
+		return
 	if _almost_win_bgm_active:
 		return
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
 		return
 	if GameState.current_phase == GameState.Phase.GAME_OVER:
 		return
-	if not ResourceLoader.exists(ALMOST_WIN_BGM):
+	if not ResourceLoader.exists(_resolve_almost_win_bgm_path()):
 		return
 	var triggered := false
 	for p: int in range(2):
@@ -7962,7 +7976,8 @@ func _check_almost_win_bgm() -> void:
 			break
 	if triggered:
 		_almost_win_bgm_active = true
-		BGMManager.play_path(ALMOST_WIN_BGM, 0.0, 1.5, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
+		var almost_path: String = _resolve_almost_win_bgm_path()
+		BGMManager.play_path(almost_path, 0.0, 1.5, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
 
 func _show_endgame_screen(winner: int) -> void:
 	_hide_card_context()

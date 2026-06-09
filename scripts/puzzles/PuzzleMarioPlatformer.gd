@@ -372,7 +372,7 @@ func _draw_player(world_x: float, world_y: float) -> void:
 	if x + PL_W < -10.0 or x > VIEW_W + 10.0:
 		return
 
-	var running := _on_ground and abs(_player_vel.x) > 10.0
+	var running: bool = _on_ground and absf(_player_vel.x) > 10.0
 	var phase   := sin(_time * 10.0) if running else 0.0
 	var lp      := int(phase  * 3.0)   # left side phase offset
 	var rp      := int(-phase * 3.0)   # right side phase offset (opposite)

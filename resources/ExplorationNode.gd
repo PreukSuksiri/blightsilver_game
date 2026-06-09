@@ -118,6 +118,11 @@ enum NodeType {
 ## If true, the node's vn_scene plays only once per session (default true).
 @export var vn_play_once: bool = true
 
+## When true (default), exploration keeps its current BGM through the node's VN call —
+## VN music beats are ignored. When false, the VN may change music; the last track
+## keeps playing after the VN ends (exploration overlay does not fade out on exit).
+@export var vn_keep_bgm: bool = true
+
 ## If true, the info panel (title + description) opens automatically when the player enters.
 ## When a vn_scene is also set, the info panel appears first; VN plays after it is dismissed.
 @export var show_info_on_enter: bool = true
@@ -132,6 +137,13 @@ enum NodeType {
 ## Each entry: { "var": String, "equals": String, "path": String }
 ## If a match is found its "path" is used instead of `music`.
 @export var music_conditions: Array = []
+
+## BATTLE node audio — applied when start_battle_for_node() runs.
+## Blank paths fall back to engine defaults at battle start.
+@export var battle_bgm: String = ""
+@export var setup_bgm: String = ""
+@export var almost_win_bgm: String = ""
+@export var battle_bgm_volume: float = 100.0
 
 ## Events fired in order when the player ENTERS this node.
 ## Each entry is a Dictionary (see format above).
@@ -280,10 +292,15 @@ func to_dict() -> Dictionary:
 		"vn_trigger_var":     vn_trigger_var,
 		"vn_trigger_equals":  vn_trigger_equals,
 		"vn_play_once":       vn_play_once,
+		"vn_keep_bgm":        vn_keep_bgm,
 		"show_info_on_enter": show_info_on_enter,
 		"show_who_is_here":   show_who_is_here,
 		"music":              music,
 		"music_conditions":   music_conditions.duplicate(true),
+		"battle_bgm":         battle_bgm,
+		"setup_bgm":          setup_bgm,
+		"almost_win_bgm":     almost_win_bgm,
+		"battle_bgm_volume":  battle_bgm_volume,
 		"on_enter_events": on_enter_events.duplicate(true),
 		"on_enter_events_conditions": on_enter_events_conditions.duplicate(true),
 		"on_exit_events":  on_exit_events.duplicate(true),
@@ -315,11 +332,16 @@ static func from_dict(d: Dictionary) -> ExplorationNode:
 	node.vn_trigger_var     = str(d.get("vn_trigger_var",    ""))
 	node.vn_trigger_equals  = str(d.get("vn_trigger_equals", ""))
 	node.vn_play_once       = bool(d.get("vn_play_once", true))
+	node.vn_keep_bgm        = bool(d.get("vn_keep_bgm", true))
 	node.show_info_on_enter = bool(d.get("show_info_on_enter", true))
 	node.show_who_is_here   = bool(d.get("show_who_is_here",   true))
 	node.music       = str(d.get("music",       ""))
 	var msc: Variant = d.get("music_conditions", [])
 	node.music_conditions = msc if msc is Array else []
+	node.battle_bgm         = str(d.get("battle_bgm", ""))
+	node.setup_bgm          = str(d.get("setup_bgm", ""))
+	node.almost_win_bgm     = str(d.get("almost_win_bgm", ""))
+	node.battle_bgm_volume  = float(d.get("battle_bgm_volume", 100.0))
 
 	var type_str: String = str(d.get("node_type", "NORMAL")).to_upper()
 	if NodeType.keys().has(type_str):

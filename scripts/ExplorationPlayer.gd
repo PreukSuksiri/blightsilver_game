@@ -32,6 +32,14 @@ const NAV_RADIAL_ITEM_H_MAX: float = 72.0
 const NAV_RADIAL_FONT_SIZE: int    = 17
 const NAV_RADIAL_PAD_H: float      = 24.0   # total horizontal inset inside nav chip
 const NAV_RADIAL_PAD_V: float      = 16.0   # total vertical inset inside nav chip
+const INV_RADIAL_ITEM_W_MIN: float = 180.0
+const INV_RADIAL_ITEM_W_MAX: float = 340.0
+const INV_RADIAL_ITEM_H_MIN: float = 54.0
+const INV_RADIAL_ITEM_H_MAX: float = 80.0
+const INV_RADIAL_FONT_SIZE: int    = 16
+const INV_RADIAL_PAD_H: float      = 24.0   # total horizontal inset inside inventory chip
+const INV_RADIAL_PAD_V: float      = 16.0   # total vertical inset inside inventory chip
+const INV_RADIAL_ICON_SLOT: float  = 42.0   # 36px icon + 6px gap
 const BG_AREA_FRACTION: float = 0.80  # fraction of viewport width used by the background area
 const ICON_SPACING: float  = 180.0  # horizontal gap between compass center and side icon centers
 const ITEMS_PER_PAGE: int  = 7      # max items shown per inventory radial page
@@ -110,6 +118,11 @@ var _info_open: bool                         = false
 var _info_panel_tween: Tween                 = null
 var _info_auto_dismiss_timer: SceneTreeTimer = null
 var _info_on_close_cb: Callable              = Callable()
+var _pending_info_panel_close_cb: Callable   = Callable()
+var _pending_enter_vn_after_info: ExplorationNode = null
+var _pending_enter_vn_is_story: bool       = false
+var _enter_vn_after_info_scheduled: bool   = false
+var _enter_vn_hud_blocked: bool            = false   # blocks HUD until enter-VN finishes
 var _info_panel_hovered: bool                = false   # polled each frame; guards auto-dismiss
 var _info_wait_for_mouse: bool               = false   # true after auto-open: dismiss blocked until mouse moves
 var _info_mouse_wait_timer: SceneTreeTimer   = null    # 5s fallback: forces dismiss mode even without mouse move
@@ -117,6 +130,7 @@ var _info_mouse_wait_timer: SceneTreeTimer   = null    # 5s fallback: forces dis
 # ── Item preview overlay (inventory tap-to-inspect) ──────────────────────
 var _item_preview: Control        = null
 var _settings_menu: Node          = null
+var _exploration_options_overlay: Control = null
 var _confirm_overlay: Control     = null
 
 # ── Item-obtained overlay (awarded item cinematic) ────────────────────────
@@ -166,11 +180,9 @@ func _ready() -> void:
 	elif ExplorationManager.is_session_active and ExplorationManager.current_node != null:
 		_refresh_node(ExplorationManager.current_node)
 	elif ExplorationManager.restore_saved_session():
-		# Resumed from a save-file snapshot (e.g. after game restart mid-exploration)
-		var resumed_node: ExplorationNode = ExplorationManager.current_node
-		if resumed_node != null:
+		# restore_saved_session emits node_entered → _refresh_node (applies saved BGM too).
+		if ExplorationManager.current_node != null:
 			_show_toast("Session resumed.")
-			_refresh_node(resumed_node)
 		else:
 			_show_no_session_error()
 	else:
@@ -394,6 +406,10 @@ func _build_ui() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_reflow_layout()
+	elif what == NOTIFICATION_WM_CLOSE_REQUEST \
+			or what == NOTIFICATION_APPLICATION_PAUSED:
+		if ExplorationManager.is_session_active:
+			ExplorationManager.save_session_now()
 
 ## Explicitly position and size the content panel from the viewport rect.
 ## Called deferred after _build_ui() and whenever the window is resized.
@@ -851,6 +867,8 @@ func _hud_icon_at_point(global_pos: Vector2) -> String:
 	return ""
 
 func _dispatch_hud_click(which: String) -> void:
+	if _enter_vn_hud_blocked:
+		return
 	match which:
 		"compass":
 			_on_compass_clicked()
@@ -877,6 +895,8 @@ func _close_other_hud_menus(except_id: String) -> void:
 		_close_info_panel(true, false)
 
 func _on_compass_clicked() -> void:
+	if _enter_vn_hud_blocked:
+		return
 	_register_exploration_activity()
 	_dismiss_info_panel_for_hud()
 	if _compass_animating:
@@ -921,11 +941,17 @@ func _close_confirm_dialog() -> void:
 		_confirm_overlay.queue_free()
 	_confirm_overlay = null
 
+func _close_exploration_options_popup() -> void:
+	if _exploration_options_overlay != null and is_instance_valid(_exploration_options_overlay):
+		_exploration_options_overlay.queue_free()
+	_exploration_options_overlay = null
+
 func _dismiss_all_popups() -> void:
 	_dismiss_all_hud_menus(false)
 	_hide_tooltip()
 	_close_item_preview()
 	_close_settings_menu_popup()
+	_close_exploration_options_popup()
 	_close_confirm_dialog()
 	_obtained_queue.clear()
 	_obtained_dismiss_timer = null
@@ -938,6 +964,8 @@ func _close_all_menus(animated: bool = true) -> void:
 	_dismiss_all_hud_menus(animated)
 
 func _open_compass_menu() -> void:
+	if _enter_vn_hud_blocked:
+		return
 	if _compass_animating or _compass_open:
 		return
 	var node: ExplorationNode = ExplorationManager.current_node
@@ -1054,6 +1082,8 @@ func _on_radial_item_selected(target_id: String) -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _on_setting_clicked() -> void:
+	if _enter_vn_hud_blocked:
+		return
 	_register_exploration_activity()
 	_dismiss_info_panel_for_hud()
 	if _setting_animating:
@@ -1065,6 +1095,8 @@ func _on_setting_clicked() -> void:
 	_open_setting_menu()
 
 func _open_setting_menu() -> void:
+	if _enter_vn_hud_blocked:
+		return
 	if _setting_animating or _setting_open:
 		return
 	_setting_open      = true
@@ -1153,7 +1185,7 @@ func _on_setting_action(action: String) -> void:
 	_close_setting_menu()
 	match action:
 		"save_exit":
-			# Session is auto-saved on each navigation; just go to main menu.
+			ExplorationManager.save_session_now()
 			CheckerTransition.fade_out_to_battle(func() -> void:
 				get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 				CheckerTransition.fade_in())
@@ -1167,13 +1199,15 @@ func _on_setting_action(action: String) -> void:
 						ExplorationManager.restart_stage()
 						CheckerTransition.fade_in()))
 		"options":
-			_open_settings_menu_popup()
+			_open_exploration_options_popup()
 
 # ─────────────────────────────────────────────────────────────
 # Inventory Radial Menu
 # ─────────────────────────────────────────────────────────────
 
 func _on_inventory_clicked() -> void:
+	if _enter_vn_hud_blocked:
+		return
 	_register_exploration_activity()
 	_dismiss_info_panel_for_hud()
 	if _inv_animating:
@@ -1189,6 +1223,8 @@ func _on_inventory_clicked() -> void:
 	_open_inventory_menu(0)
 
 func _open_inventory_menu(page: int) -> void:
+	if _enter_vn_hud_blocked:
+		return
 	if _inv_animating:
 		return
 	# Clear previous page items
@@ -1278,19 +1314,31 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 		var angle: float = (-PI * 0.5) + float(i) * (TAU / float(n))
 		var item_cx: float = cx + cos(angle) * RADIAL_RADIUS
 		var item_cy: float = cy + sin(angle) * RADIAL_RADIUS
-		var panel: PanelContainer = _make_radial_panel(
-			Vector2(clampf(item_cx - RADIAL_ITEM_W * 0.5, pad, vp.x - RADIAL_ITEM_W - pad),
-					clampf(item_cy - RADIAL_ITEM_H * 0.5, pad, vp.y - RADIAL_ITEM_H - pad)),
-			Color(0.04, 0.08, 0.20, 0.94), Color(0.45, 0.70, 1.0, 0.85))
 
 		var choice_type: String = str(choice.get("type", ""))
+		var panel_size: Vector2 = Vector2(RADIAL_ITEM_W, RADIAL_ITEM_H)
+		var item_id: String = ""
+		var item_name: String = ""
+		var icon_path: String = ""
+		var display_text: String = ""
+		var count: int = 1
 		if choice_type == "item":
-			var item_id: String = str(choice.get("id", ""))
-			var count: int = int(choice.get("count", 1))
+			item_id = str(choice.get("id", ""))
+			count = int(choice.get("count", 1))
 			var item_data: Dictionary = ExplorationItemDatabase.get_item(item_id)
-			var item_name: String = str(item_data.get("name", item_id))
-			var icon_path: String = str(item_data.get("icon", ""))
+			item_name = str(item_data.get("name", item_id))
+			icon_path = str(item_data.get("icon", ""))
+			display_text = item_name if count == 1 else "%s ×%d" % [item_name, count]
+			var has_icon: bool = not icon_path.is_empty() and ResourceLoader.exists(icon_path)
+			panel_size = _measure_inventory_radial_chip(display_text, has_icon)
 
+		var panel: PanelContainer = _make_radial_panel(
+			Vector2(
+				clampf(item_cx - panel_size.x * 0.5, pad, vp.x - panel_size.x - pad),
+				clampf(item_cy - panel_size.y * 0.5, pad, vp.y - panel_size.y - pad)),
+			Color(0.04, 0.08, 0.20, 0.94), Color(0.45, 0.70, 1.0, 0.85), panel_size)
+
+		if choice_type == "item":
 			var inner := HBoxContainer.new()
 			inner.add_theme_constant_override("separation", 6)
 			inner.alignment   = BoxContainer.ALIGNMENT_CENTER
@@ -1307,11 +1355,13 @@ func _spawn_inventory_radial_items(center: Vector2, page: int) -> void:
 				inner.add_child(icon_tr)
 
 			var lbl := Label.new()
-			lbl.text = item_name if count == 1 else "%s ×%d" % [item_name, count]
+			lbl.text = display_text
 			lbl.vertical_alignment    = VERTICAL_ALIGNMENT_CENTER
+			lbl.autowrap_mode         = TextServer.AUTOWRAP_WORD_SMART
+			lbl.max_lines_visible     = 2
 			lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 			lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			lbl.add_theme_font_size_override("font_size", 16)
+			lbl.add_theme_font_size_override("font_size", INV_RADIAL_FONT_SIZE)
 			lbl.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
 			_tag_ui(lbl, "font", 500)
 			inner.add_child(lbl)
@@ -1351,6 +1401,8 @@ func _on_inventory_item_selected(item_id: String) -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _on_chat_clicked() -> void:
+	if _enter_vn_hud_blocked:
+		return
 	_register_exploration_activity()
 	_dismiss_info_panel_for_hud()
 	if _chat_animating:
@@ -1386,6 +1438,8 @@ func _on_chat_clicked() -> void:
 	_open_chat_menu(available)
 
 func _open_chat_menu(available: Array) -> void:
+	if _enter_vn_hud_blocked:
+		return
 	if _chat_animating:
 		return
 	for item: Variant in _chat_radial_items:
@@ -1579,6 +1633,8 @@ func _rebuild_who_is_here(node: ExplorationNode) -> void:
 	_who_section.visible = count > 0
 
 func _on_info_clicked() -> void:
+	if _enter_vn_hud_blocked:
+		return
 	_register_exploration_activity()
 	if _is_info_panel_showing():
 		_close_info_panel(true)
@@ -1586,10 +1642,87 @@ func _on_info_clicked() -> void:
 	_close_other_hud_menus("info")
 	_open_info_panel()
 
+func _open_enter_info_then_vn(node: ExplorationNode, is_story: bool) -> void:
+	if _would_play_node_vn(node):
+		_set_enter_vn_hud_blocked(true)
+	else:
+		_set_enter_vn_hud_blocked(false)
+	_pending_enter_vn_after_info = node
+	_pending_enter_vn_is_story = is_story
+	_open_info_panel(Callable(), true, false)
+
+
+func _set_enter_vn_hud_blocked(blocked: bool) -> void:
+	if _enter_vn_hud_blocked == blocked:
+		return
+	_enter_vn_hud_blocked = blocked
+	if blocked:
+		_close_compass_menu(false)
+		_close_setting_menu(false)
+		_close_inventory_menu(false)
+		_close_chat_menu(false)
+		_close_settings_menu_popup()
+		_close_exploration_options_popup()
+	_sync_enter_vn_hud_hits()
+
+
+func _sync_enter_vn_hud_hits() -> void:
+	var mf: Control.MouseFilter = (
+		Control.MOUSE_FILTER_IGNORE if _enter_vn_hud_blocked else Control.MOUSE_FILTER_STOP)
+	for hit: Button in [_compass_hit, _setting_hit, _inv_hit, _chat_hit, _info_hit]:
+		if hit != null:
+			hit.mouse_filter = mf
+
+
+func _schedule_pending_enter_vn_after_info() -> void:
+	if _pending_enter_vn_after_info == null or _enter_vn_after_info_scheduled:
+		return
+	_enter_vn_after_info_scheduled = true
+	call_deferred("_on_enter_info_panel_closed")
+
+
+func _on_enter_info_panel_closed() -> void:
+	_enter_vn_after_info_scheduled = false
+	var node: ExplorationNode = _pending_enter_vn_after_info
+	var is_story: bool = _pending_enter_vn_is_story
+	_pending_enter_vn_after_info = null
+	if node == null:
+		return
+	if ExplorationManager.current_node_id != node.id:
+		return
+	_try_play_node_vn(node, is_story)
+
+
+func _finish_info_panel_close(run_on_close: bool, cb: Callable) -> void:
+	if run_on_close and cb.is_valid():
+		_queue_info_panel_close_cb(cb)
+	# Enter-VN is independent of run_on_close — HUD dismiss must not skip it.
+	_schedule_pending_enter_vn_after_info()
+
+
+func _queue_info_panel_close_cb(cb: Callable) -> void:
+	if not cb.is_valid():
+		return
+	_pending_info_panel_close_cb = cb
+	call_deferred("_execute_info_panel_close_cb")
+
+
+func _execute_info_panel_close_cb() -> void:
+	var cb: Callable = _pending_info_panel_close_cb
+	_pending_info_panel_close_cb = Callable()
+	if cb.is_valid():
+		cb.call()
+
+
 ## Open the info panel with an optional callback fired after it closes.
 ## Open the info panel. If wait_for_mouse_move=true (auto-open on node entry), the
 ## auto-dismiss countdown is suppressed until the player moves the mouse.
-func _open_info_panel(on_close: Callable = Callable(), wait_for_mouse_move: bool = false) -> void:
+func _open_info_panel(
+		on_close: Callable = Callable(),
+		wait_for_mouse_move: bool = false,
+		clear_enter_vn_pending: bool = true) -> void:
+	if clear_enter_vn_pending and not on_close.is_valid():
+		_pending_enter_vn_after_info = null
 	_info_auto_dismiss_timer = null
 	_info_mouse_wait_timer   = null
 	_info_wait_for_mouse     = wait_for_mouse_move
@@ -1608,7 +1741,7 @@ func _open_info_panel(on_close: Callable = Callable(), wait_for_mouse_move: bool
 	_title_lbl.visible = true
 	_desc_lbl.visible  = true
 	_back_btn.text     = "Dismiss"
-	_back_btn.visible  = false
+	_back_btn.visible  = true
 	_sync_radial_overlay_state()
 	# Slide in from right
 	var vp_w: float = get_viewport().get_visible_rect().size.x
@@ -1668,9 +1801,7 @@ func _close_info_panel(immediate: bool = false, run_on_close: bool = true) -> vo
 		_content_panel.visible = false
 		_content_panel.position.x = vp_w * BG_AREA_FRACTION
 		_sync_radial_overlay_state()
-		if run_on_close and cb.is_valid():
-			# Defer so enter-VN can add_child; sync call during input breaks active dismiss.
-			cb.call_deferred()
+		_finish_info_panel_close(run_on_close, cb)
 		return
 	# Slide out to right — hide labels and reset state only after panel is off-screen
 	_info_panel_tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUINT)
@@ -1683,8 +1814,7 @@ func _close_info_panel(immediate: bool = false, run_on_close: bool = true) -> vo
 		_content_panel.visible = false
 		_content_panel.position.x = vp_w * BG_AREA_FRACTION
 		_sync_radial_overlay_state()
-		if run_on_close and cb.is_valid():
-			cb.call())
+		_finish_info_panel_close(run_on_close, cb))
 
 # ─────────────────────────────────────────────────────────────
 # Item Preview Overlay
@@ -2334,6 +2464,26 @@ func _measure_nav_radial_chip(label_text: String) -> Vector2:
 	var chip_h: float = clampf(ml_size.y + NAV_RADIAL_PAD_V, NAV_RADIAL_ITEM_H_MIN, NAV_RADIAL_ITEM_H_MAX)
 	return Vector2(chip_w, chip_h)
 
+
+func _measure_inventory_radial_chip(label_text: String, has_icon: bool) -> Vector2:
+	var font := _make_font(500)
+	var icon_extra: float = INV_RADIAL_ICON_SLOT if has_icon else 0.0
+	var inner_w_max: float = INV_RADIAL_ITEM_W_MAX - INV_RADIAL_PAD_H - icon_extra
+	var single_w: float = font.get_string_size(
+		label_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, INV_RADIAL_FONT_SIZE).x
+	var chip_w: float = INV_RADIAL_ITEM_W_MAX
+	if single_w <= inner_w_max:
+		chip_w = clampf(
+			single_w + INV_RADIAL_PAD_H + icon_extra,
+			INV_RADIAL_ITEM_W_MIN,
+			INV_RADIAL_ITEM_W_MAX)
+	var text_inner_w: float = chip_w - INV_RADIAL_PAD_H - icon_extra
+	var ml_size: Vector2 = font.get_multiline_string_size(
+		label_text, HORIZONTAL_ALIGNMENT_LEFT, text_inner_w, INV_RADIAL_FONT_SIZE, 2)
+	var chip_h: float = clampf(
+		ml_size.y + INV_RADIAL_PAD_V, INV_RADIAL_ITEM_H_MIN, INV_RADIAL_ITEM_H_MAX)
+	return Vector2(chip_w, chip_h)
+
 func _nav_label_needs_tooltip(label_text: String, chip_w: float, chip_h: float) -> bool:
 	var font := _make_font(500)
 	var inner_w: float = chip_w - NAV_RADIAL_PAD_H
@@ -2482,6 +2632,10 @@ func _on_radial_overlay_gui_input(event: InputEvent) -> void:
 	var gp: Vector2 = _get_press_global_position(event)
 	var hud_id: String = _hud_icon_at_point(gp)
 	if hud_id != "":
+		if _enter_vn_hud_blocked:
+			if _radial_overlay != null:
+				_radial_overlay.accept_event()
+			return
 		_dispatch_hud_click(hud_id)
 		if _radial_overlay != null:
 			_radial_overlay.accept_event()
@@ -2492,10 +2646,14 @@ func _on_radial_overlay_gui_input(event: InputEvent) -> void:
 	if _radial_overlay != null:
 		_radial_overlay.accept_event()
 
-func _make_radial_panel(pos: Vector2, bg_color: Color, border_color: Color) -> PanelContainer:
+func _make_radial_panel(
+		pos: Vector2,
+		bg_color: Color,
+		border_color: Color,
+		panel_size: Vector2 = Vector2(RADIAL_ITEM_W, RADIAL_ITEM_H)) -> PanelContainer:
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(RADIAL_ITEM_W, RADIAL_ITEM_H)
-	panel.size       = Vector2(RADIAL_ITEM_W, RADIAL_ITEM_H)
+	panel.custom_minimum_size = panel_size
+	panel.size       = panel_size
 	panel.position   = pos
 	panel.modulate.a = 0.0
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -2518,6 +2676,110 @@ func _make_radial_panel(pos: Vector2, bg_color: Color, border_color: Color) -> P
 # ─────────────────────────────────────────────────────────────
 # Confirmation Dialog Helper
 # ─────────────────────────────────────────────────────────────
+
+func _open_exploration_options_popup() -> void:
+	if _exploration_options_overlay != null and is_instance_valid(_exploration_options_overlay):
+		return
+	var vp_sz: Vector2 = get_viewport_rect().size
+
+	var overlay := Control.new()
+	overlay.z_index = 100
+	overlay.position = Vector2.ZERO
+	overlay.size = vp_sz
+	_exploration_options_overlay = overlay
+	add_child(overlay)
+
+	var dimmer := ColorRect.new()
+	dimmer.color = Color(0.0, 0.0, 0.0, 0.65)
+	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.add_child(dimmer)
+
+	var panel := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.04, 0.06, 0.14, 0.97)
+	sb.set_border_width_all(2)
+	sb.border_color = Color(0.38, 0.65, 1.0, 0.5)
+	sb.set_corner_radius_all(8)
+	panel.add_theme_stylebox_override("panel", sb)
+	var dlg_size := Vector2(420.0, 260.0)
+	panel.size = dlg_size
+	panel.position = (vp_sz - dlg_size) * 0.5
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 12)
+	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	vbox.offset_left = 20
+	vbox.offset_top = 16
+	vbox.offset_right = -20
+	vbox.offset_bottom = -16
+	panel.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "EXPLORATION OPTIONS"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 16)
+	title.add_theme_color_override("font_color", Color(0.55, 0.85, 1.0))
+	_tag_ui(title, "font", 500)
+	vbox.add_child(title)
+
+	var auto_row := HBoxContainer.new()
+	auto_row.add_theme_constant_override("separation", 10)
+	var auto_lbl := Label.new()
+	auto_lbl.text = "Auto-save"
+	auto_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	auto_lbl.add_theme_font_size_override("font_size", 12)
+	auto_lbl.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0))
+	_tag_ui(auto_lbl, "font", 500)
+	auto_row.add_child(auto_lbl)
+	var auto_chk := CheckButton.new()
+	auto_chk.button_pressed = SaveManager.exploration_auto_save
+	auto_row.add_child(auto_chk)
+	vbox.add_child(auto_row)
+
+	var auto_hint := Label.new()
+	auto_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	auto_hint.add_theme_font_size_override("font_size", 11)
+	auto_hint.add_theme_color_override("font_color", Color(0.62, 0.66, 0.74))
+	_tag_ui(auto_hint, "font", 500)
+	vbox.add_child(auto_hint)
+
+	var sync_auto_hint := func() -> void:
+		if SaveManager.exploration_auto_save:
+			auto_hint.text = "Progress is saved automatically as you explore."
+		else:
+			auto_hint.text = "Auto-save is off. Use Save and Exit to keep your progress."
+	auto_chk.toggled.connect(func(on: bool) -> void:
+		SaveManager.exploration_auto_save = on
+		SaveManager.save_data()
+		if on and ExplorationManager.is_session_active:
+			ExplorationManager.save_session_now()
+		sync_auto_hint.call())
+	sync_auto_hint.call()
+
+	var game_settings_btn := Button.new()
+	game_settings_btn.text = "Game Settings..."
+	game_settings_btn.custom_minimum_size = Vector2(0, 36)
+	game_settings_btn.add_theme_font_size_override("font_size", 13)
+	game_settings_btn.add_theme_color_override("font_color", Color(0.6, 0.75, 1.0))
+	game_settings_btn.pressed.connect(func() -> void:
+		_open_settings_menu_popup())
+	vbox.add_child(game_settings_btn)
+
+	var close_btn := Button.new()
+	close_btn.text = "CLOSE"
+	close_btn.custom_minimum_size = Vector2(0, 36)
+	close_btn.add_theme_font_size_override("font_size", 13)
+	close_btn.add_theme_color_override("font_color", Color(0.6, 0.75, 1.0))
+	close_btn.pressed.connect(func() -> void:
+		if _exploration_options_overlay != null and is_instance_valid(_exploration_options_overlay):
+			_exploration_options_overlay.queue_free()
+		_exploration_options_overlay = null)
+	vbox.add_child(close_btn)
+
+	overlay.tree_exiting.connect(func() -> void: _exploration_options_overlay = null)
 
 func _open_settings_menu_popup() -> void:
 	if _settings_menu != null and is_instance_valid(_settings_menu):
@@ -2624,6 +2886,23 @@ func _apply_node_music(node: ExplorationNode) -> void:
 		return
 	BGMManager.play_path(effective_music, 1.0, 0.5, 100.0, BGMManager.CONTEXT_VN)
 
+
+func _try_apply_restored_bgm() -> bool:
+	var bgm: Dictionary = ExplorationManager.take_pending_restored_bgm()
+	var path: String = str(bgm.get("path", "")).strip_edges()
+	if path.is_empty():
+		return false
+	if not ResourceLoader.exists(path):
+		push_warning("ExplorationPlayer: saved BGM '%s' not found." % path)
+		return false
+	var context: String = str(bgm.get("context", BGMManager.CONTEXT_VN)).strip_edges()
+	if context.is_empty():
+		context = BGMManager.CONTEXT_VN
+	var pos: float = maxf(0.0, float(bgm.get("position", 0.0)))
+	var loop_from: float = float(bgm.get("loop_from_sec", -1.0))
+	BGMManager.play_path(path, 1.0, 0.5, 100.0, context, loop_from, pos)
+	return true
+
 func _on_node_entered(node: ExplorationNode) -> void:
 	_dismiss_all_popups()
 	if _exit_vn_defer_enter:
@@ -2647,8 +2926,9 @@ func _refresh_node(node: ExplorationNode) -> void:
 		else:
 			push_warning("ExplorationPlayer: bg '%s' not found." % effective_bg)
 
-	# Music — skip when session keeps the launching VN's track
-	_apply_node_music(node)
+	# Music — restored snapshot first, otherwise node track
+	if not _try_apply_restored_bgm():
+		_apply_node_music(node)
 
 	# Type badge
 	match node.node_type:
@@ -2685,6 +2965,10 @@ func _refresh_node(node: ExplorationNode) -> void:
 	# "Who is here" section in info panel
 	_rebuild_who_is_here(node)
 
+	var will_enter_vn: bool = node.vn_trigger_on_enter() and _would_play_node_vn(node)
+	if not will_enter_vn:
+		_set_enter_vn_hud_blocked(false)
+
 	# Node-type routing: BATTLE/EXIT get inline action buttons; all others use compass.
 	_close_all_menus(false)
 	match node.node_type:
@@ -2704,8 +2988,9 @@ func _refresh_node(node: ExplorationNode) -> void:
 			_compass_set_visible(false)   # hidden while VN plays; restored in _on_vn_finished
 			if node.vn_trigger_on_enter():
 				if node.show_info_on_enter:
-					_open_info_panel(func() -> void: _try_play_node_vn(node, true), true)
+					_open_enter_info_then_vn(node, true)
 				else:
+					_set_enter_vn_hud_blocked(true)
 					_try_play_node_vn(node, true)
 			elif node.show_info_on_enter:
 				_compass_set_visible(true)
@@ -2718,8 +3003,9 @@ func _refresh_node(node: ExplorationNode) -> void:
 			if node.vn_trigger_on_enter():
 				if node.show_info_on_enter:
 					_compass_set_visible(true)
-					_open_info_panel(func() -> void: _try_play_node_vn(node, false), true)
+					_open_enter_info_then_vn(node, false)
 				else:
+					_set_enter_vn_hud_blocked(true)
 					_try_play_node_vn(node, false)
 			elif node.show_info_on_enter:
 				_compass_set_visible(true)
@@ -2757,15 +3043,17 @@ func _apply_pending_enter_node() -> void:
 ## Play the node's resolved VN scene when trigger conditions are met.
 func _try_play_node_vn(node: ExplorationNode, is_story: bool = false) -> void:
 	if not _would_play_node_vn(node):
+		_set_enter_vn_hud_blocked(false)
 		_compass_set_visible(true)
 		_apply_pending_enter_node()
 		return
+	_set_enter_vn_hud_blocked(true)
 	var vars: Dictionary = ExplorationManager.get_all_vars()
 	var vn_path: String = node.resolve_vn_scene(vars)
 	var play_once: bool = node.resolve_vn_play_once(vars)
 	if not is_story:
 		_compass_set_visible(false)
-	_play_vn(vn_path, func() -> void: _on_vn_finished(node), play_once)
+	_play_vn(vn_path, func() -> void: _on_vn_finished(node), play_once, node.vn_keep_bgm)
 
 func _play_puzzle(puzzle_id: String, on_done: Callable, puzzle_params: Dictionary = {}) -> void:
 	if _puzzle_playing or _vn_playing:
@@ -2832,19 +3120,28 @@ func _play_puzzle(puzzle_id: String, on_done: Callable, puzzle_params: Dictionar
 		cleanup.call()
 		on_done.call(success))
 
-func _play_vn(path: String, on_done: Callable, play_once: bool = true) -> void:
+func _play_vn(
+		path: String,
+		on_done: Callable,
+		play_once: bool = true,
+		keep_bgm: bool = true) -> void:
 	if _vn_playing or _puzzle_playing:
 		on_done.call()
 		return
-	if not FileAccess.file_exists(ProjectSettings.globalize_path(path)):
+	if not ResourceLoader.exists(path):
 		push_warning("ExplorationPlayer: VN scene '%s' not found — skipping." % path)
 		on_done.call()
 		return
 	_vn_playing = true
+	_close_compass_menu(false)
+	_close_setting_menu(false)
+	_close_inventory_menu(false)
+	_close_chat_menu(false)
 	_compass_set_visible(false)   # disable compass while VN is active
 	var vn: Node = VN_PLAYER_SCENE.instantiate()
 	vn.set("transparent_bg", true)   # show exploration scene behind VN dialog
-	vn.set("keep_bgm", true)         # don't interrupt exploration ambient track
+	vn.set("keep_bgm", keep_bgm)
+	vn.set("exploration_overlay", true)
 	add_child(vn)
 	var captured_path: String = path
 	var captured_once: bool   = play_once
@@ -2855,6 +3152,7 @@ func _play_vn(path: String, on_done: Callable, play_once: bool = true) -> void:
 		on_done.call())
 
 func _on_vn_finished(_node: ExplorationNode) -> void:
+	_set_enter_vn_hud_blocked(false)
 	# VN done — restore compass so player can navigate
 	_compass_set_visible(true)
 	_apply_pending_enter_node()
@@ -2959,7 +3257,7 @@ func _do_end_exploration_with_vn(vn_path: String) -> void:
 
 func _on_back_pressed() -> void:
 	if _info_open:
-		_close_info_panel()
+		_close_info_panel(true)
 		return
 	SFXManager.play(SFXManager.SFX_CANCEL)
 	_navigate_with_fade(func() -> void: ExplorationManager.go_back())
@@ -3335,6 +3633,9 @@ func _input(event: InputEvent) -> void:
 	if _is_press_event(event) and _is_info_panel_showing():
 		var hud_id: String = _hud_icon_at_point(_get_press_global_position(event))
 		if hud_id != "":
+			if _enter_vn_hud_blocked:
+				get_viewport().set_input_as_handled()
+				return
 			_dispatch_hud_click(hud_id)
 			get_viewport().set_input_as_handled()
 			return
@@ -3365,6 +3666,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif ke.keycode == KEY_ESCAPE and not _is_modified_key(ke):
 			if _item_preview != null:
 				_close_item_preview()
+			elif _enter_vn_hud_blocked:
+				get_viewport().set_input_as_handled()
 			elif _compass_open or _setting_open or _inv_open:
 				_close_all_menus()
 			elif ExplorationManager.can_go_back():

@@ -462,6 +462,7 @@
 	{
 		"call_scene": "photo_scatter",
 		"comment": "Credit",
+		"complete_gallery_chapter": "res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json",
 		"hide_dialog": true,
 		"linger_characters": true
 	}

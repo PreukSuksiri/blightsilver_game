@@ -447,8 +447,8 @@
 		"wait": 0.001
 	},
 	{
+		"complete_gallery_chapter": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json",
 		"go_to_campaign_gallery": true,
-		"linger_characters": true,
-		"unlock_gallery_chapter": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json"
+		"linger_characters": true
 	}
 ]

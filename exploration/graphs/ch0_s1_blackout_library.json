@@ -3,8 +3,11 @@
 	"graph_id": "new_graph",
 	"nodes": [
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/vn_explo_univ_window-side-seatings_light_off.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -97,11 +100,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Window-side Seating",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -110,8 +115,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_book_aisle_light_off.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -205,11 +213,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Book Aisles",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -218,8 +228,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_group_study_light_off.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [],
 			"connections": [
@@ -259,11 +272,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Group Study Area",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -272,8 +287,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_magazine_lounge_light_off.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -366,11 +384,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Magazine Lounge",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -379,9 +399,34 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_booths_clean_light_off.png",
-			"background_conditions": [],
-			"characters": [],
+			"background_conditions": [
+				{
+					"equals": "1",
+					"path": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_booths_vandalized_light_on.png",
+					"var": "toilet_front_password_correct"
+				}
+			],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
+			"characters": [
+				{
+					"canon_story": false,
+					"conditions": [
+						{
+							"key": "toilet_front_password_correct",
+							"type": "var_equals",
+							"value": "1"
+						}
+					],
+					"name": "Kelly",
+					"play_once": true,
+					"remove_after_talk": false,
+					"thumbnail": "res://assets/textures/exploration/thumbnail/thumbnail_kelly.png",
+					"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_char_kelly.json"
+				}
+			],
 			"clickable_spots": [
 				{
 					"actions": [
@@ -500,26 +545,40 @@
 				}
 			],
 			"description": "Some of the booths are pretty good. Some of them are just pretty.",
-			"description_conditions": [],
+			"description_conditions": [
+				{
+					"equals": "1",
+					"value": "All the exhibition displays are destroyed",
+					"var": "toilet_front_password_correct"
+				}
+			],
 			"editor_position": {
 				"x": -240.0,
 				"y": -280.0
 			},
 			"id": "node_exhibition",
-			"music": "res://assets/audio/bgm_liminal_5.mp3",
-			"music_conditions": [],
+			"music": "",
+			"music_conditions": [
+				{
+					"equals": "1",
+					"path": "res://assets/audio/bgm_storytelling_2.mp3",
+					"var": "toilet_front_password_correct"
+				}
+			],
 			"node_type": "NORMAL",
 			"on_enter_events": [],
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Exhibition Booths",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": false,
 			"vn_play_once": true,
-			"vn_scene": "",
+			"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_main.json",
 			"vn_scene_conditions": [
 				{
 					"equals": "1",
@@ -533,8 +592,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_observatory.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -570,11 +632,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Observatory",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -583,8 +647,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_deeper_aisle_light_off.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -633,11 +700,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Deeper Aisle",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [
@@ -653,8 +722,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_storage.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -698,11 +770,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Storage",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -711,6 +785,7 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_back_hallway_light_off.png",
 			"background_conditions": [
 				{
@@ -719,6 +794,8 @@
 					"var": "chapter"
 				}
 			],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [],
 			"connections": [
@@ -790,11 +867,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Back Hallway",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -803,6 +882,7 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_break_room_light_off.png",
 			"background_conditions": [
 				{
@@ -811,6 +891,8 @@
 					"var": "chapter"
 				}
 			],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [],
 			"connections": [
@@ -836,11 +918,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Break Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -849,6 +933,7 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_preservation_department_light_off.png",
 			"background_conditions": [
 				{
@@ -857,6 +942,8 @@
 					"var": "chapter"
 				}
 			],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [],
 			"connections": [
@@ -903,11 +990,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Preservation Department",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -916,6 +1005,7 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_book_repair_unit_light_off.png",
 			"background_conditions": [
 				{
@@ -924,6 +1014,8 @@
 					"var": "chapter"
 				}
 			],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -972,11 +1064,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Book Repair Unit",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -985,14 +1079,17 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_chemical_process_room_light_off.png",
 			"background_conditions": [
 				{
 					"equals": "act_1_ch_1",
-					"path": "res://assets/textures/exploration/background/university/bg_explo_univ_chemical_process_room_light_off.png",
+					"path": "res://assets/textures/exploration/background/university/bg_explo_univ_chemical_process_room_light_on.png",
 					"var": "chapter"
 				}
 			],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -1057,11 +1154,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Chemical Process Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -1070,6 +1169,7 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_technician_office_light_off.png",
 			"background_conditions": [
 				{
@@ -1078,6 +1178,8 @@
 					"var": "chapter"
 				}
 			],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -1148,11 +1250,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Technician's Office",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -1161,8 +1265,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_toilet_front.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [
 				{
 					"actions": [
@@ -1276,11 +1383,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Toilet Front",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_toilet_front_main.json",
 			"vn_scene_conditions": [],
@@ -1289,8 +1398,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_staff_hallway.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [],
 			"connections": [
@@ -1350,11 +1462,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Staff Area",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -1363,15 +1477,18 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_meeting_room.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [
 				{
 					"canon_story": false,
 					"conditions": [],
 					"name": "???",
 					"play_once": true,
-					"remove_after_talk": false,
+					"remove_after_talk": true,
 					"thumbnail": "res://assets/textures/exploration/thumbnail/thumbnail_unknown_male.png",
 					"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_meeting_room_char_???.json"
 				}
@@ -1406,11 +1523,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Meeting Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -1419,8 +1538,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_manager_room.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -1469,11 +1591,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Section Manager Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -1482,8 +1606,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_maintenance_room.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [],
 			"connections": [
@@ -1529,11 +1656,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Maintenance Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -1542,8 +1671,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_server_room.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -1603,11 +1735,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Server Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -1616,8 +1750,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_surveillance_room_blue_screen_2.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -1846,11 +1983,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Surveillance Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -1859,8 +1998,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [],
 			"connections": [
@@ -1892,11 +2034,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Male Toilet",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -1905,8 +2049,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_smoking_room.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [],
 			"connections": [
@@ -1939,11 +2086,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Smoking Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [
@@ -1959,6 +2108,7 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_empty_room_with_photo.png",
 			"background_conditions": [
 				{
@@ -1967,6 +2117,8 @@
 					"var": "arrived_at_back_storage"
 				}
 			],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -2029,11 +2181,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Back Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],
@@ -2042,8 +2196,11 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_empty_storage.png",
 			"background_conditions": [],
+			"battle_bgm": "",
+			"battle_bgm_volume": 100.0,
 			"characters": [],
 			"clickable_spots": [
 				{
@@ -2097,11 +2254,13 @@
 			"on_enter_events_conditions": [],
 			"on_exit_events": [],
 			"on_exit_events_conditions": [],
+			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
 			"title": "Back Storage",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [],

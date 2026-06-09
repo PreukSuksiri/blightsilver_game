@@ -25,6 +25,8 @@ var deckbuilding_unlocked: bool = false      # admin unlock — bypasses prologu
 var deckbuilding_admin_locked: bool = false  # hard admin lock — overrides even natural completion
 var exploration_flags: Dictionary = {}       # flags written by ExplorationManager.end_session()
 var exploration_session: Dictionary = {}    # mid-session snapshot; cleared on end_session()
+var exploration_auto_save: bool = true      # when false, only Save and Exit writes exploration_session
+var campaign_vn_checkpoints: Dictionary = {}  # vn_scene path → filtered beat index to resume
 
 func _ready() -> void:
 	_load_demo_config()
@@ -129,8 +131,10 @@ func save_data() -> void:
 		"gallery_chapters_completed": gallery_chapters_completed,
 		"deckbuilding_unlocked": deckbuilding_unlocked,
 		"deckbuilding_admin_locked": deckbuilding_admin_locked,
-		"exploration_flags":   exploration_flags,
-		"exploration_session": exploration_session,
+		"exploration_flags":       exploration_flags,
+		"exploration_session":     exploration_session,
+		"exploration_auto_save":   exploration_auto_save,
+		"campaign_vn_checkpoints": campaign_vn_checkpoints,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -208,6 +212,38 @@ func load_data() -> void:
 	var es: Variant = parsed.get("exploration_session", {})
 	if es is Dictionary:
 		exploration_session = es as Dictionary
+
+	exploration_auto_save = bool(parsed.get("exploration_auto_save", true))
+
+	var vc: Variant = parsed.get("campaign_vn_checkpoints", {})
+	if vc is Dictionary:
+		campaign_vn_checkpoints = vc as Dictionary
+
+# ─────────────────────────────────────────────────────────────
+# Campaign gallery VN beat checkpoints (pre-exploration progress)
+# ─────────────────────────────────────────────────────────────
+func set_vn_checkpoint(vn_scene: String, beat_index: int) -> void:
+	var key: String = vn_scene.strip_edges()
+	if key.is_empty() or beat_index <= 0:
+		return
+	campaign_vn_checkpoints[key] = beat_index
+	save_data()
+
+func get_vn_checkpoint(vn_scene: String) -> int:
+	var key: String = vn_scene.strip_edges()
+	if key.is_empty():
+		return -1
+	return int(campaign_vn_checkpoints.get(key, -1))
+
+func has_vn_checkpoint(vn_scene: String) -> bool:
+	return get_vn_checkpoint(vn_scene) > 0
+
+func clear_vn_checkpoint(vn_scene: String) -> void:
+	var key: String = vn_scene.strip_edges()
+	if key.is_empty() or not campaign_vn_checkpoints.has(key):
+		return
+	campaign_vn_checkpoints.erase(key)
+	save_data()
 
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery chapter progress

@@ -236,7 +236,8 @@
 			"Force Shield"
 		],
 		"ai_union_enabled": false,
-		"battle_bgm": "res://assets/audio/bgm_battle_3.mp3",
+		"almost_win_bgm": "res://assets/audio/bgm_almost_win_3.mp3",
+		"battle_bgm": "res://assets/audio/bgm_boss_2.mp3",
 		"comment": "Battle - Midnight Shadow",
 		"enemy_deck": {
 			"characters": [

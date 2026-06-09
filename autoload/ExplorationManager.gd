@@ -65,6 +65,14 @@ extends Node
 
 const EXPLORATION_PLAYER_SCENE: String = "res://scenes/exploration_player.tscn"
 
+static func normalize_graph_path(path: String) -> String:
+	var s: String = path.strip_edges()
+	if s.is_empty():
+		return ""
+	if not s.begins_with("res://"):
+		s = "res://%s" % s.trim_prefix("/")
+	return s
+
 # ─────────────────────────────────────────────────────────────
 # Signals
 # ─────────────────────────────────────────────────────────────
@@ -126,6 +134,9 @@ var keep_vn_bgm: bool = false
 ## Set by VNPlayer when a beat launches exploration with exploration_on_return.
 var pending_return_vn: String = ""
 
+## Gallery / VN chapter that launched this session — stored in the save snapshot.
+var launch_source_vn: String = ""
+
 ## Written by complete_battle_node(); read by ExplorationPlayer on reload.
 ## Format: { "won": bool, "node_id": String }
 var pending_battle_result: Dictionary = {}
@@ -147,6 +158,9 @@ var _talked_characters: Dictionary = {}  # "node_id:char_index" → true; charac
 # { "credits": int, "flags": { key: value, ... } }
 var _session_rewards: Dictionary = {}
 var _session_active: bool = false
+var _source_vn_scene: String = ""
+## BGM snapshot from save file; consumed once when ExplorationPlayer refreshes the node.
+var _pending_restored_bgm: Dictionary = {}
 
 # ─────────────────────────────────────────────────────────────
 # Read-only properties
@@ -201,7 +215,9 @@ func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu
 				return
 
 	# No matching saved session, or force_fresh — start fresh
-	start_session(graph_path)
+	var preserved_source_vn: String = launch_source_vn.strip_edges()
+	launch_source_vn = ""
+	start_session(graph_path, preserved_source_vn)
 	if not _session_active:
 		return
 	CheckerTransition.fade_out_to_battle(func() -> void:
@@ -211,14 +227,15 @@ func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu
 ## Clears any previous session data. Non-reserved keys from launch_params
 ## are seeded into session vars so graph conditions can read them immediately.
 ## Emits session_started after the start node is entered.
-func start_session(graph_path: String) -> void:
+func start_session(graph_path: String, source_vn_scene: String = "") -> void:
 	var graph: ExplorationGraph = ExplorationGraph.load_from_file(graph_path)
 	if graph == null:
 		push_error("ExplorationManager.start_session: failed to load graph at '%s'." % graph_path)
 		return
 	var preserve_keep_bgm: bool = bool(launch_params.get("keep_vn_bgm", false))
-	_reset_session_state()
+	_clear_session_memory()
 	keep_vn_bgm = preserve_keep_bgm
+	_source_vn_scene = source_vn_scene.strip_edges()
 	_current_graph   = graph
 	_session_rewards = {"credits": 0, "flags": {}}
 	_session_active  = true
@@ -228,6 +245,7 @@ func start_session(graph_path: String) -> void:
 		_vars[k] = str(launch_params.get(k, ""))
 	emit_signal("session_started", graph)
 	_navigate_to(graph.resolve_start_node_id(_vars), false)
+	_save_session_state(true)
 
 ## Restart the current session from the start node, resetting all progress.
 ## return_scene is preserved. Emits session_started then node_entered for the start node.
@@ -236,7 +254,8 @@ func restart_stage() -> void:
 		return
 	var path: String = _current_graph._source_path
 	var rs: String   = return_scene
-	start_session(path)
+	var src: String  = _source_vn_scene
+	start_session(path, src)
 	return_scene = rs
 
 ## End the current session.
@@ -251,7 +270,7 @@ func end_session(carry_rewards: bool = true) -> void:
 	_reset_session_state()
 	emit_signal("session_ended", rewards)
 
-func _reset_session_state() -> void:
+func _clear_session_memory() -> void:
 	keep_vn_bgm        = false
 	_session_active    = false
 	_current_graph     = null
@@ -263,7 +282,20 @@ func _reset_session_state() -> void:
 	_interacted_spots.clear()
 	_talked_characters.clear()
 	_session_rewards   = {}
+	_source_vn_scene   = ""
+	_pending_restored_bgm = {}
+
+func _reset_session_state() -> void:
+	_clear_session_memory()
 	_clear_saved_session()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		if _session_active:
+			_save_session_state(true)
+	elif what == NOTIFICATION_APPLICATION_PAUSED:
+		if _session_active:
+			_save_session_state(true)
 
 ## Mark a VN scene path as having been played this session.
 func mark_vn_played(path: String) -> void:
@@ -295,13 +327,16 @@ func is_char_talked(node_id: String, char_index: int) -> bool:
 	return _talked_characters.has(node_id + ":" + str(char_index))
 
 ## Save current session state to SaveManager so it survives a game restart.
-## Called automatically on every navigation, inventory, and variable change.
-func _save_session_state() -> void:
+## Called automatically on state changes when auto-save is enabled.
+## Pass force=true for manual Save and Exit or when re-enabling auto-save.
+func _save_session_state(force: bool = false) -> void:
 	if not _session_active or _current_graph == null:
+		return
+	if not force and not SaveManager.exploration_auto_save:
 		return
 	SaveManager.exploration_session = {
 		"active":            true,
-		"graph_path":        _current_graph._source_path,
+		"graph_path":        normalize_graph_path(_current_graph._source_path),
 		"current_node_id":   _current_node_id,
 		"history":           _node_history.duplicate(),
 		"inventory":         _inventory.duplicate(),
@@ -311,8 +346,113 @@ func _save_session_state() -> void:
 		"talked_characters": _talked_characters.keys(),
 		"rewards":           _session_rewards.duplicate(true),
 		"return_scene":      return_scene,
+		"pending_return_vn": pending_return_vn,
+		"source_vn_scene":   _source_vn_scene,
+		"bgm_path":          BGMManager.get_current_path(),
+		"bgm_context":       BGMManager.get_current_context(),
+		"bgm_position":      BGMManager.get_playback_position(),
+		"bgm_loop_from_sec": BGMManager.get_loop_restart_sec(),
 	}
 	SaveManager.save_data()
+
+## Write the current session snapshot immediately (used by Save and Exit).
+func save_session_now() -> void:
+	_save_session_state(true)
+
+## True when a resumable mid-session snapshot exists, optionally for a specific graph.
+func has_saved_session(graph_path: String = "") -> bool:
+	var sd: Dictionary = SaveManager.exploration_session
+	if not sd.get("active", false):
+		return false
+	if graph_path.is_empty():
+		return true
+	return normalize_graph_path(str(sd.get("graph_path", ""))) \
+		== normalize_graph_path(graph_path)
+
+## Drop a mid-session snapshot when a gallery chapter is marked complete.
+func clear_saved_session_for_chapter(chapter_vn_path: String, card: Dictionary = {}) -> void:
+	var chapter: String = chapter_vn_path.strip_edges()
+	if chapter.is_empty():
+		return
+	if not SaveManager.exploration_session.get("active", false):
+		return
+	var graph_path: String = str(SaveManager.exploration_session.get("graph_path", "")).strip_edges()
+	if not card.is_empty():
+		var from_card: String = resolve_chapter_exploration_graph(card, chapter)
+		if not from_card.is_empty():
+			graph_path = from_card
+	elif graph_path.is_empty():
+		graph_path = str(find_exploration_call_in_vn(chapter).get("graph_path", "")).strip_edges()
+	if not has_saved_session_for_chapter(chapter, graph_path, card):
+		return
+	_clear_saved_session()
+
+## Discard the stored mid-session snapshot without ending the live session.
+func clear_saved_session() -> void:
+	_clear_saved_session()
+
+## Scan a VN JSON for the first exploration_call beat (used by campaign chapter picker).
+func find_exploration_call_in_vn(vn_path: String) -> Dictionary:
+	var path: String = vn_path.strip_edges()
+	if path.is_empty() or not ResourceLoader.exists(path):
+		return {}
+	var text: String = FileAccess.get_file_as_string(path)
+	if text.is_empty():
+		return {}
+	var parsed: Variant = JSON.parse_string(text)
+	if not parsed is Array:
+		return {}
+	for beat: Variant in parsed:
+		if not beat is Dictionary:
+			continue
+		var b: Dictionary = beat as Dictionary
+		var graph_path: String = str(b.get("exploration_call", "")).strip_edges()
+		if graph_path.is_empty():
+			continue
+		return {
+			"graph_path": graph_path,
+			"on_return": str(b.get("exploration_on_return", "")).strip_edges(),
+		}
+	return {}
+
+## Resolve the exploration graph for a campaign gallery chapter card.
+func resolve_chapter_exploration_graph(card: Dictionary, vn_path: String) -> String:
+	var from_card: String = str(card.get("exploration_graph", "")).strip_edges()
+	if not from_card.is_empty():
+		return from_card
+	return str(find_exploration_call_in_vn(vn_path).get("graph_path", "")).strip_edges()
+
+## Match a gallery chapter to a saved exploration snapshot.
+func has_saved_session_for_chapter(
+		chapter_vn_path: String,
+		graph_path: String,
+		card: Dictionary = {}) -> bool:
+	if not has_saved_session(graph_path):
+		return false
+	var chapter: String = chapter_vn_path.strip_edges()
+	if chapter.is_empty():
+		return false
+
+	var sd: Dictionary = SaveManager.exploration_session
+	var saved_vn: String = str(sd.get("source_vn_scene", "")).strip_edges()
+	if not saved_vn.is_empty() and saved_vn == chapter:
+		return true
+
+	var var_key: String = str(card.get("exploration_save_var", "")).strip_edges()
+	var var_val: String = str(card.get("exploration_save_value", "")).strip_edges()
+	if not var_key.is_empty() and not var_val.is_empty():
+		var sd_vars: Variant = sd.get("vars", {})
+		if sd_vars is Dictionary and str((sd_vars as Dictionary).get(var_key, "")) == var_val:
+			return true
+
+	if saved_vn.is_empty():
+		return var_key.is_empty()
+
+	return false
+
+## Restore saved progress and open the exploration player (campaign gallery continue).
+func resume_saved_exploration(graph_path: String, fallback_return_scene: String = "res://scenes/main_menu.tscn") -> void:
+	launch(graph_path, fallback_return_scene, {})
 
 ## Clear any stored mid-session data from SaveManager.
 func _clear_saved_session() -> void:
@@ -321,7 +461,6 @@ func _clear_saved_session() -> void:
 		SaveManager.save_data()
 
 ## Restore a previously saved session. Returns true on success.
-## Called by ExplorationPlayer when it detects a saved session in SaveManager.
 func restore_saved_session() -> bool:
 	var sd: Dictionary = SaveManager.exploration_session
 	if not sd.get("active", false):
@@ -332,7 +471,7 @@ func restore_saved_session() -> bool:
 	var graph: ExplorationGraph = ExplorationGraph.load_from_file(graph_path)
 	if graph == null:
 		return false
-	graph._source_path = graph_path
+	graph._source_path = normalize_graph_path(graph_path)
 	_current_graph    = graph
 	_session_rewards  = sd.get("rewards", {"credits": 0, "flags": {}}).duplicate(true) as Dictionary
 	_session_active   = true
@@ -362,12 +501,35 @@ func restore_saved_session() -> bool:
 		for c: Variant in (tc as Array):
 			_talked_characters[str(c)] = true
 	return_scene      = str(sd.get("return_scene", "res://scenes/main_menu.tscn"))
+	pending_return_vn = str(sd.get("pending_return_vn", ""))
+	_source_vn_scene  = str(sd.get("source_vn_scene", ""))
 	_current_node_id  = str(sd.get("current_node_id", graph.start_node_id))
+	_queue_restored_bgm_from_save(sd)
 	emit_signal("session_started", graph)
 	var node: ExplorationNode = graph.get_node_by_id(_current_node_id)
 	if node != null:
 		emit_signal("node_entered", node)
 	return true
+
+
+## Pop the BGM snapshot queued by restore_saved_session (single use).
+func take_pending_restored_bgm() -> Dictionary:
+	var out: Dictionary = _pending_restored_bgm.duplicate()
+	_pending_restored_bgm = {}
+	return out
+
+
+func _queue_restored_bgm_from_save(sd: Dictionary) -> void:
+	var path: String = str(sd.get("bgm_path", "")).strip_edges()
+	if path.is_empty():
+		_pending_restored_bgm = {}
+		return
+	_pending_restored_bgm = {
+		"path": path,
+		"context": str(sd.get("bgm_context", BGMManager.CONTEXT_VN)).strip_edges(),
+		"position": float(sd.get("bgm_position", 0.0)),
+		"loop_from_sec": float(sd.get("bgm_loop_from_sec", -1.0)),
+	}
 
 func _apply_rewards(rewards: Dictionary) -> void:
 	var credits: int = int(rewards.get("credits", 0))
@@ -666,6 +828,12 @@ func start_battle_for_node(node: ExplorationNode) -> void:
 	pending_battle_result = {}
 	# Configure a standard VS_AI battle using the EXPLORATION game mode.
 	# The AI controls player 1; the human plays as player 0.
+	GameState.apply_battle_audio_config({
+		"battle_bgm": node.battle_bgm,
+		"setup_bgm": node.setup_bgm,
+		"almost_win_bgm": node.almost_win_bgm,
+		"battle_bgm_volume": node.battle_bgm_volume,
+	}, "")
 	GameState.new_game(GameState.GameMode.EXPLORATION)
 	SaveManager.save_data()
 	CheckerTransition.fade_out_to_battle(func() -> void:
