@@ -1007,7 +1007,7 @@ func _build_fields() -> void:
 	_f_exploration_force_fresh.button_pressed = true
 	_f_exploration_force_fresh.toggled.connect(func(_b: bool) -> void: _on_field_changed())
 	_f_exploration_keep_vn_bgm = _row_cb(v, "Keep VN Music",
-		"Exploration keeps the VN track playing — node music fields are ignored")
+		"VN track continues through the scene transition only; node music applies once the map loads")
 	_f_exploration_keep_vn_bgm.toggled.connect(func(_b: bool) -> void: _on_field_changed())
 
 	var expl_vars_hdr := HBoxContainer.new()

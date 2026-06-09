@@ -1512,7 +1512,14 @@ func _add_character_row(chars_vbox: VBoxContainer, char_data: Dictionary) -> voi
 	canon_chk.add_theme_font_size_override("font_size", 12)
 	vb.add_child(canon_chk)
 
-	# Thumbnail row (index 4)
+	# Remove from room after talked (index 4)
+	var remove_after_chk := CheckBox.new()
+	remove_after_chk.text = "Remove from room after talked"
+	remove_after_chk.button_pressed = bool(char_data.get("remove_after_talk", false))
+	remove_after_chk.add_theme_font_size_override("font_size", 12)
+	vb.add_child(remove_after_chk)
+
+	# Thumbnail row (index 5)
 	var thumb_row := HBoxContainer.new()
 	var thumb_lbl := Label.new()
 	thumb_lbl.text = "Thumbnail"
@@ -1604,6 +1611,7 @@ func _add_character_row(chars_vbox: VBoxContainer, char_data: Dictionary) -> voi
 	vb.set_meta("char_vn_edit", vn_edit)
 	vb.set_meta("char_play_once_chk", play_once_chk)
 	vb.set_meta("char_canon_chk", canon_chk)
+	vb.set_meta("char_remove_after_chk", remove_after_chk)
 	vb.set_meta("char_thumb_edit", thumb_edit)
 	vb.set_meta("char_acts_vbox", acts_vbox)
 	vb.set_meta("char_cond_vbox", cond_vbox)
@@ -1629,6 +1637,8 @@ func _collect_characters(chars_vbox: VBoxContainer) -> Array:
 			if vb.has_meta("char_play_once_chk") else null
 		var canon_chk: CheckBox = vb.get_meta("char_canon_chk") as CheckBox \
 			if vb.has_meta("char_canon_chk") else null
+		var remove_after_chk: CheckBox = vb.get_meta("char_remove_after_chk") as CheckBox \
+			if vb.has_meta("char_remove_after_chk") else null
 		var thumb_edit: LineEdit = vb.get_meta("char_thumb_edit") as LineEdit \
 			if vb.has_meta("char_thumb_edit") else null
 		var acts_vbox: VBoxContainer = vb.get_meta("char_acts_vbox") as VBoxContainer \
@@ -1643,6 +1653,7 @@ func _collect_characters(chars_vbox: VBoxContainer) -> Array:
 			"thumbnail":   thumb_edit.text.strip_edges() if thumb_edit != null else "",
 			"play_once":   play_once_chk.button_pressed if play_once_chk != null else true,
 			"canon_story": canon_chk.button_pressed if canon_chk != null else false,
+			"remove_after_talk": remove_after_chk.button_pressed if remove_after_chk != null else false,
 			"conditions":  conditions,
 		}
 		if not actions.is_empty():

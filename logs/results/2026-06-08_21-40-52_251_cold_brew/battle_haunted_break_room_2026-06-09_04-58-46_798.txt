@@ -1,0 +1,87 @@
+=== Battle of Haunted Break Room ===
+Battle started: 2026-06-09 04:58:46.798
+Game Session of Cold Brew (started 2026-06-08 21:40:52.251)
+=== Card E2E Test ===
+Scenario ID:  E2E-Scarlet-Mutant-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Scarlet-Mutant-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Scarlet Mutant (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Scarlet Mutant" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Scarlet Mutant
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Scarlet\ Mutant".*ATK=35\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=35 when Scarlet Mutant attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Scarlet Mutant
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Scarlet Mutant
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Great Diplomacy, Radar
+P1 Tech hand: Accident, Radar, Siege Cannon
+P0:   [C:Mad ][C:Gobl][C:Doom][T:Flam][T:Hypn]
+      [  — ][  — ][  — ][C:Big ][  — ]
+      [  — ][  — ][C:Scar][T:Trap][  — ]
+      [T:Snar][C:Chur][  — ][  — ][  — ]
+      [C:Ox P][C:Chao][T:Spik][C:Dark][C:Foul]
+P1:   [T:Trap][T:Flam][C:Doom][T:Spik][  — ]
+      [T:Hypn][T:Snar][C:Gobl][  — ][  — ]
+      [C:Chur][C:Big ][C:Chao][C:Wand][C:Mad ]
+      [  — ][  — ][C:Foul][  — ][C:Dark]
+      [  — ][  — ][C:Ox P][  — ][  — ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  — ]
+[00:05.312] Mode selected P0: ATTACK
+[00:05.315] Attack phase P0: 2 attack(s) available
+[00:05.315] MSG: Player 1: tap a character to attack.
+[00:05.649] AI0 attack decision: (2,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:07.035] Revealed: P0 (2,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[00:07.075] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:07.076] Dice rolled: 4
+[00:07.081] MSG: Scarlet Mutant wins!
+[00:11.525] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.920] Attack P0(2,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=4  ATK=35 vs DEF=0  → WIN
+[00:12.920] E2E: ability goal reached — ending battle early.
+[00:12.920] Anim: 3A  △ P1(2,2)
+[00:12.920] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[00:12.926] AI Player 0 wins
+[00:12.926] Final crystals — P0: 5000  P1: 4900  |  Turns: 1
+[00:12.926] Log saved to: res://logs/results/2026-06-08_21-40-52_251_cold_brew/battle_haunted_break_room_2026-06-09_04-58-46_798.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Scarlet-Mutant-002
+Highlight: Scarlet Mutant (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

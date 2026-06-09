@@ -92,6 +92,7 @@ class CardInstance:
 	var multi_attack_count: int = 0            # for MULTI_ATTACK_VS_NON_CHARACTER — attacks used this turn
 	var perm_atk_bonus: int = 0
 	var perm_def_bonus: int = 0
+	var field_aura_atk_bonus: int = 0  # passive ATK from allied field auras (e.g. Amber)
 	var temp_atk_bonus: int = 0
 	var temp_def_bonus: int = 0
 	var carry_def_bonus: int = 0   # DEF bonus that survives end-of-turn clear; wiped at start of player's own next turn
@@ -120,7 +121,7 @@ class CardInstance:
 		"great_cosmic_tragedy","great_bio_tragedy","great_anima_tragedy"]
 
 	func get_effective_atk() -> int:
-		var base: int = max(0, current_atk + perm_atk_bonus + temp_atk_bonus - atk_debuff)
+		var base: int = max(0, current_atk + perm_atk_bonus + field_aura_atk_bonus + temp_atk_bonus - atk_debuff)
 		if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 			var mods: Array = GameState.active_dungeon_modifiers
 			if "monster_overload" in mods:
@@ -612,6 +613,9 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 		card.revealed_on_turn = turn_number
 		emit_signal("card_revealed", player_index, row, col)
 
+		if card.card_type == "character":
+			BattleResolver.recalculate_all_field_bonuses()
+
 		# CRYSTAL_GAIN_ON_OPP_REVEAL: opponent gains crystals when this player's card is revealed
 		var opponent_idx: int = get_opponent(player_index)
 		for r in range(GRID_SIZE):
@@ -671,6 +675,7 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 	grids[player_index][row][col].face_up = true
 	grids[player_index][row][col].was_destroyed = true
 	if was_character:
+		BattleResolver.recalculate_all_field_bonuses()
 		check_character_wipe_win_condition()
 
 ## Remove a trap card silently when revealed (no crystal cost, no was_destroyed flag).
@@ -711,6 +716,7 @@ func place_union_card(player_index: int, row: int, col: int, u: UnionData) -> vo
 	inst.grid_col = col
 	grids[player_index][row][col] = inst
 	emit_signal("card_revealed", player_index, row, col)
+	BattleResolver.recalculate_all_field_bonuses()
 
 func get_adjacent_positions(row: int, col: int) -> Array:
 	var result: Array = []

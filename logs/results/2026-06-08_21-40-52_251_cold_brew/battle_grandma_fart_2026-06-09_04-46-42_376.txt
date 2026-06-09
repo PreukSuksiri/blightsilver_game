@@ -1,0 +1,553 @@
+=== Battle of Grandma Fart ===
+Battle started: 2026-06-09 04:46:42.376
+Game Session of Cold Brew (started 2026-06-08 21:40:52.251)
+=== Card E2E Test ===
+Scenario ID:  E2E-Satellite-Cannon-001
+Tier:         1 — Smoke (battle completes, card in log, no crashes)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Satellite-Cannon-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Satellite Cannon (Character)  [setup: Chaotic Wisp]
+Ability:      ATK_BONUS_VS_CENTER_ZONE
+Setup role:   t1_character_attacker
+Verifies:
+  - Smoke: "Satellite Cannon" appears in the battle log and the match reaches GAME OVER
+  - No script errors, invalid calls, or stack traces in log
+  - Log must contain: Satellite Cannon
+  - Log must contain: GAME OVER
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 50 turns and <= 5 AI watchdog timeouts
+Notes:        Tier 1 smoke: character on field, battle completes.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T1 Character Deck
+AI-1 Deck:    E2E T1 Character Deck
+AI-0 Forced:  (2,2) Satellite Cannon
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Tease, Accident, Spy
+P1 Tech hand: Resurrection, Tease, Great Diplomacy
+P0:   [T:Flam][  — ][C:Wand][T:Hypn][  — ]
+      [C:Gobl][C:Mad ][C:Chao][  — ][  — ]
+      [C:Dark][C:Chur][C:Sate][C:Skel][C:Shre]
+      [  — ][  — ][C:Foul][  — ][C:Ox P]
+      [T:Snar][T:Trap][C:Doom][T:Spik][C:Big ]
+P1:   [C:Mad ][C:Gobl][T:Flam][  — ][  — ]
+      [  — ][C:Shre][C:Skel][C:Doom][C:Dark]
+      [T:Hypn][C:Big ][C:Chao][C:Pony][  — ]
+      [  — ][C:Foul][C:Wand][C:Ox P][  — ]
+      [  — ][T:Trap][T:Spik][T:Snar][C:Chur]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[00:05.159] Mode selected P0: ATTACK
+[00:05.164] Attack phase P0: 2 attack(s) available
+[00:05.164] MSG: Player 1: tap a character to attack.
+[00:05.506] AI0 attack decision: (2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:06.878] Revealed: P0 (2,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[00:06.910] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:06.910] Dice rolled: 5
+[00:06.913] MSG: Satellite Cannon wins!
+[00:12.372] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:13.767] Attack P0(2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=160 vs DEF=0  → WIN
+[00:13.767] Reckoning overlay: P0 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} +ATK 60
+[00:13.767] Anim: 3A  △ P1(2,2)
+[00:13.767] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:14.273] Mode selected P0: ATTACK
+[00:14.277] Attack phase P0: 1 attack(s) available
+[00:14.277] MSG: Player 1: tap a character to attack.
+[00:14.586] AI0 attack decision: (1,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (1,1) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down}
+[00:16.001] Revealed: P0 (1,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:16.038] Revealed: P1 (1,1) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:16.038] Dice rolled: 4
+[00:16.040] MSG: Chaotic Wisp wins!
+[00:20.502] Crystals: P1 4900 → 4650 (-250)  [battle]
+[00:21.898] Attack P0(1,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P1(1,1)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=4  ATK=20 vs DEF=5  → WIN
+[00:21.898] Anim: 3A  △ P1(1,1)
+[00:21.898] Card destroyed  P1 (1,1) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:22.406] Turn ended  P0  |  Crystals P0=5000 P1=4650
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4650 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Chao][  — ][  — ]
+      [  ? ][  ? ][Sate][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[00:24.517] Crystals: P1 4650 → 4150 (-500)  [union]
+[00:24.560] Revealed: P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:24.560] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}, "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down}
+[00:24.560] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:24.561] MSG: Player 2 summoned [Scarlet Shroom] using: "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}, "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down}
+[00:27.767] Crystals: P1 4150 → 4100 (-50)  [skip tax]
+[00:27.767] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:29.155] Turn ended  P1  |  Crystals P0=5000 P1=4100
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=4100 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Chao][  — ][  — ]
+      [  ? ][  ? ][Sate][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [Scar][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[00:29.761] Mode selected P0: ATTACK
+[00:29.767] Attack phase P0: 2 attack(s) available
+[00:29.767] MSG: Player 1: tap a character to attack.
+[00:30.071] AI0 attack decision: (2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:31.484] Dice rolled: 5
+[00:31.550] MSG: Satellite Cannon wins!
+[00:36.029] Attack P0(2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}  Dice=5  ATK=100 vs DEF=80  → WIN
+[00:36.029] Anim: 3A  △ P1(0,0)
+[00:36.029] Card destroyed  P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:36.526] Mode selected P0: ATTACK
+[00:36.531] Attack phase P0: 1 attack(s) available
+[00:36.532] MSG: Player 1: tap a character to attack.
+[00:36.826] AI0 attack decision: (1,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | flags:venom} → (0,1) (dead-end)
+[00:38.236] Dice rolled: 3
+[00:38.262] MSG: Nothing happens — Dead End.
+[00:41.630] Attack P0(1,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | flags:venom} → P1(0,1)(empty)  Dice=3  → DEAD_END
+[00:41.630] Anim: 3F  (blank slot)
+[00:42.131] Turn ended  P0  |  Crystals P0=5000 P1=4100
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=4100 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][Chao][  — ][  — ]
+      [  ? ][  ? ][Sate][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[00:42.729] Mode selected P1: ATTACK
+[00:42.736] Attack phase P1: 2 attack(s) available
+[00:42.736] MSG: Player 2: tap a character to attack.
+[00:43.058] AI1 attack decision: (1,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (1,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | flags:venom}
+[00:44.435] Revealed: P1 (1,2) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:44.435] Dice rolled: 1
+[00:44.446] MSG: Skeleton Lancer wins!
+[00:48.925] Crystals: P0 5000 → 4900 (-100)  [battle]
+[00:50.325] Attack P1(1,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P0(1,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | flags:venom}  Dice=1  ATK=45 vs DEF=0  → WIN
+[00:50.325] Anim: 3A  △ P0(1,2)
+[00:50.325] Card destroyed  P0 (1,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | flags:venom}
+[00:50.624] Turn ended  P1  |  Crystals P0=4900 P1=4100
+
+--- Turn 5  |  Player 0  |  Crystals P0=4900 P1=4100 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][Sate][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][Skel][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[00:51.217] Mode selected P0: ATTACK
+[00:51.220] Attack phase P0: 2 attack(s) available
+[00:51.220] MSG: Player 1: tap a character to attack.
+[00:51.519] AI0 attack decision: (2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → (1,2) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:52.927] Dice rolled: 5
+[00:52.938] MSG: Satellite Cannon wins!
+[00:58.418] Crystals: P1 4100 → 3800 (-300)  [battle]
+[00:59.816] Attack P0(2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → P1(1,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=5  ATK=120 vs DEF=5  → WIN
+[00:59.816] Reckoning overlay: P0 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} +ATK 20
+[00:59.816] Anim: 3A  △ P1(1,2)
+[00:59.816] Card destroyed  P1 (1,2) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:00.311] Mode selected P0: ATTACK
+[01:00.315] Attack phase P0: 1 attack(s) available
+[01:00.315] MSG: Player 1: tap a character to attack.
+[01:00.652] AI0 attack decision: (2,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (3,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos | face-down}
+[01:02.018] Revealed: P0 (2,1) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:02.053] Revealed: P1 (3,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[01:02.054] Dice rolled: 3
+[01:06.627] Crystals: P0 4900 → 4750 (-150)  [battle]
+[01:08.022] Attack P0(2,1)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine} → P1(3,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=3  ATK=0 vs DEF=25  → LOSE
+[01:08.022] Anim: 3B  △ P0(2,1)
+[01:08.022] Card destroyed  P0 (2,1) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:08.522] Turn ended  P0  |  Crystals P0=4750 P1=3800
+
+--- Turn 6  |  Player 1  |  Crystals P0=4750 P1=3800 ---
+P0:   [  ? ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][Foul][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[01:09.119] Mode selected P1: ATTACK
+[01:09.122] Attack phase P1: 2 attack(s) available
+[01:09.123] MSG: Player 2: tap a character to attack.
+[01:09.419] AI1 attack decision: (3,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → (0,0) "Flame Trap" {cost 250}
+[01:10.868] Revealed: P0 (0,0) "Flame Trap" {cost 250}
+[01:10.868] Dice rolled: 4
+[01:11.131] MSG: Trap triggered: Flame Trap!
+[01:15.230] Crystals: P0 4750 → 4500 (-250)  [trap cost]
+[01:16.618] MSG: Spike Trap: Foul Wisp permanently loses 10 ATK!
+[01:16.623] Trap: "Flame Trap" triggered  P1(3,1)→P0(0,0)
+[01:16.623] Anim: 3D  (attacker survives)
+[01:16.923] Turn ended  P1  |  Crystals P0=4500 P1=3800
+
+--- Turn 7  |  Player 0  |  Crystals P0=4500 P1=3800 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  ? ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][Foul][  ? ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[01:17.518] Mode selected P0: ATTACK
+[01:17.524] Attack phase P0: 2 attack(s) available
+[01:17.524] MSG: Player 1: tap a character to attack.
+[01:17.819] AI0 attack decision: (2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → (3,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[01:19.226] Dice rolled: 3
+[01:19.237] MSG: Satellite Cannon wins!
+[01:24.719] Crystals: P1 3800 → 3700 (-100)  [battle]
+[01:26.115] Attack P0(2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → P1(3,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=3  ATK=120 vs DEF=25  → WIN
+[01:26.115] Reckoning overlay: P0 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} +ATK 20
+[01:26.115] Anim: 3A  △ P1(3,1)
+[01:26.115] Card destroyed  P1 (3,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[01:26.609] Mode selected P0: ATTACK
+[01:26.613] Attack phase P0: 1 attack(s) available
+[01:26.614] MSG: Player 1: tap a character to attack.
+[01:26.911] AI0 attack decision: (2,3)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (3,3) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down}
+[01:28.319] Revealed: P0 (2,3) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:28.350] Revealed: P1 (3,3) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:28.350] Dice rolled: 5
+[01:28.353] MSG: Both cards are destroyed!
+[01:33.725] Crystals: P0 4500 → 4200 (-300)  [battle]
+[01:35.116] Crystals: P1 3700 → 3280 (-420)  [battle]
+[01:36.505] Attack P0(2,3)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P1(3,3)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=5  ATK=45 vs DEF=45  → TIE
+[01:36.505] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 10
+[01:36.505] Anim: 3C  △ P0(2,3) + △ P1(3,3)
+[01:36.505] Card destroyed  P0 (2,3) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:36.505] Card destroyed  P1 (3,3) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:37.002] Turn ended  P0  |  Crystals P0=4200 P1=3280
+
+--- Turn 8  |  Player 1  |  Crystals P0=4200 P1=3280 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[01:37.602] Mode selected P1: ATTACK
+[01:37.607] Attack phase P1: 2 attack(s) available
+[01:37.608] MSG: Player 2: tap a character to attack.
+[01:37.939] AI1 attack decision: (1,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down} → (3,1) (dead-end)
+[01:39.328] Revealed: P1 (1,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:39.328] Dice rolled: 4
+[01:39.350] MSG: Nothing happens — Dead End.
+[01:42.727] Attack P1(1,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P0(3,1)(empty)  Dice=4  → DEAD_END
+[01:42.727] Anim: 3F  (blank slot)
+[01:43.036] Turn ended  P1  |  Crystals P0=4200 P1=3280
+
+--- Turn 9  |  Player 0  |  Crystals P0=4200 P1=3280 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][Doom][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[01:43.643] Mode selected P0: ATTACK
+[01:43.648] Attack phase P0: 2 attack(s) available
+[01:43.648] MSG: Player 1: tap a character to attack.
+[01:43.951] AI0 attack decision: (2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → (1,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:45.368] Dice rolled: 5
+[01:45.376] MSG: Satellite Cannon wins!
+[01:50.868] Crystals: P1 3280 → 3180 (-100)  [battle]
+[01:52.264] Attack P0(2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → P1(1,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}  Dice=5  ATK=120 vs DEF=15  → WIN
+[01:52.264] Reckoning overlay: P0 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} +ATK 20
+[01:52.264] Anim: 3A  △ P1(1,3)
+[01:52.264] Card destroyed  P1 (1,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:52.768] Mode selected P0: ATTACK
+[01:52.771] Attack phase P0: 1 attack(s) available
+[01:52.771] MSG: Player 1: tap a character to attack.
+[01:53.078] AI0 attack decision: (3,2)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos | face-down} → (0,4) (dead-end)
+[01:54.494] Revealed: P0 (3,2) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[01:54.494] Dice rolled: 5
+[01:54.518] MSG: Nothing happens — Dead End.
+[01:57.904] Attack P0(3,2)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → P1(0,4)(empty)  Dice=5  → DEAD_END
+[01:57.904] Anim: 3F  (blank slot)
+[01:58.411] Turn ended  P0  |  Crystals P0=4200 P1=3180
+
+--- Turn 10  |  Player 1  |  Crystals P0=4200 P1=3180 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  — ][  ? ]
+      [  — ][  — ][Foul][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[01:59.015] Mode selected P1: ATTACK
+[01:59.018] Attack phase P1: 2 attack(s) available
+[01:59.018] MSG: Player 2: tap a character to attack.
+[01:59.363] AI1 attack decision: (2,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (3,2) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[02:00.740] Revealed: P1 (2,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:00.740] Dice rolled: 1
+[02:00.745] MSG: Big Thug wins!
+[02:05.239] Crystals: P0 4200 → 4100 (-100)  [battle]
+[02:06.635] Attack P1(2,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(3,2)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=1  ATK=40 vs DEF=25  → WIN
+[02:06.635] Anim: 3A  △ P0(3,2)
+[02:06.635] Card destroyed  P0 (3,2) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[02:06.941] Turn ended  P1  |  Crystals P0=4100 P1=3180
+
+--- Turn 11  |  Player 0  |  Crystals P0=4100 P1=3180 ---
+P0:   [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][Big ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[02:07.545] Mode selected P0: ATTACK
+[02:07.548] Attack phase P0: 2 attack(s) available
+[02:07.548] MSG: Player 1: tap a character to attack.
+[02:07.854] AI0 attack decision: (2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → (2,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:09.268] Dice rolled: 5
+[02:09.274] MSG: Satellite Cannon wins!
+[02:14.768] Crystals: P1 3180 → 2780 (-400)  [battle]
+[02:16.163] Attack P0(2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → P1(2,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=5  ATK=120 vs DEF=35  → WIN
+[02:16.163] Reckoning overlay: P0 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} +ATK 20
+[02:16.163] Anim: 3A  △ P1(2,1)
+[02:16.163] Card destroyed  P1 (2,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:16.669] Mode selected P0: ATTACK
+[02:16.671] Attack phase P0: 1 attack(s) available
+[02:16.671] MSG: Player 1: tap a character to attack.
+[02:17.019] AI0 attack decision: (0,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima | face-down} → (4,0) (dead-end)
+[02:18.394] Revealed: P0 (0,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[02:18.394] Dice rolled: 1
+[02:18.416] MSG: Nothing happens — Dead End.
+[02:21.804] Attack P0(0,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P1(4,0)(empty)  Dice=1  → DEAD_END
+[02:21.804] Anim: 3F  (blank slot)
+[02:22.313] Turn ended  P0  |  Crystals P0=4100 P1=2780
+
+--- Turn 12  |  Player 1  |  Crystals P0=4100 P1=2780 ---
+P0:   [  — ][  — ][Wand][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[02:22.923] Mode selected P1: ATTACK
+[02:22.926] Attack phase P1: 2 attack(s) available
+[02:22.926] MSG: Player 2: tap a character to attack.
+[02:23.231] AI1 attack decision: (3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima | face-down} → (0,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[02:24.649] Revealed: P1 (3,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[02:24.649] Dice rolled: 5
+[02:24.655] MSG: Both cards are destroyed!
+[02:29.072] Crystals: P1 2780 → 2180 (-600)  [battle]
+[02:30.464] Crystals: P0 4100 → 3500 (-600)  [battle]
+[02:31.852] Attack P1(3,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P0(0,2)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}  Dice=5  ATK=60 vs DEF=60  → TIE
+[02:31.852] Anim: 3C  △ P1(3,2) + △ P0(0,2)
+[02:31.852] Card destroyed  P1 (3,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[02:31.852] Card destroyed  P0 (0,2) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[02:32.156] Turn ended  P1  |  Crystals P0=3500 P1=2180
+
+--- Turn 13  |  Player 0  |  Crystals P0=3500 P1=2180 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  ? ]
+[02:32.759] Mode selected P0: ATTACK
+[02:32.762] Attack phase P0: 2 attack(s) available
+[02:32.762] MSG: Player 1: tap a character to attack.
+[02:33.069] AI0 attack decision: (2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → (4,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[02:34.486] Revealed: P1 (4,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:34.487] Dice rolled: 4
+[02:34.491] MSG: Satellite Cannon wins!
+[02:38.987] Crystals: P1 2180 → 2030 (-150)  [battle]
+[02:40.380] Attack P0(2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → P1(4,4)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=4  ATK=100 vs DEF=35  → WIN
+[02:40.380] Anim: 3A  △ P1(4,4)
+[02:40.380] Card destroyed  P1 (4,4) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[02:40.885] Mode selected P0: ATTACK
+[02:40.887] Attack phase P0: 1 attack(s) available
+[02:40.887] MSG: Player 1: tap a character to attack.
+[02:41.237] AI0 attack decision: (1,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down} → (0,2) "Flame Trap" {cost 250}
+[02:42.607] Revealed: P0 (1,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[02:42.607] Revealed: P1 (0,2) "Flame Trap" {cost 250}
+[02:42.607] Dice rolled: 2
+[02:42.925] MSG: Trap triggered: Flame Trap!
+[02:47.031] Crystals: P1 2030 → 1780 (-250)  [trap cost]
+[02:48.422] MSG: Spike Trap: Goblin Poacher permanently loses 10 ATK!
+[02:48.424] Trap: "Flame Trap" triggered  P0(1,0)→P1(0,2)
+[02:48.424] Anim: 3D  (attacker survives)
+[02:48.933] Turn ended  P0  |  Crystals P0=3500 P1=1780
+
+--- Turn 14  |  Player 1  |  Crystals P0=3500 P1=1780 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [Gobl][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+[02:49.535] Mode selected P1: ATTACK
+[02:49.539] Attack phase P1: 2 attack(s) available
+[02:49.539] MSG: Player 2: tap a character to attack.
+[02:49.881] AI1 attack decision: (2,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (1,0) "Goblin Poacher" {Unit ATK20 DEF10 | cost 250 | affinity Nature | base 20/10}
+[02:51.256] Revealed: P1 (2,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:51.257] Dice rolled: 2
+[02:51.263] MSG: Ponycorn wins!
+[02:55.755] Crystals: P0 3500 → 3250 (-250)  [battle]
+[02:57.152] Attack P1(2,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P0(1,0)"Goblin Poacher" {Unit ATK20 DEF10 | cost 250 | affinity Nature | base 20/10}  Dice=2  ATK=25 vs DEF=10  → WIN
+[02:57.152] Anim: 3A  △ P0(1,0)
+[02:57.152] Card destroyed  P0 (1,0) "Goblin Poacher" {Unit ATK20 DEF10 | cost 250 | affinity Nature | base 20/10}
+[02:57.459] Turn ended  P1  |  Crystals P0=3250 P1=1780
+
+--- Turn 15  |  Player 0  |  Crystals P0=3250 P1=1780 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][Pony][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  ? ][  — ]
+[02:58.065] Mode selected P0: ATTACK
+[02:58.068] Attack phase P0: 2 attack(s) available
+[02:58.068] MSG: Player 1: tap a character to attack.
+[02:58.373] AI0 attack decision: (2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → (2,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:59.789] Dice rolled: 5
+[02:59.794] MSG: Satellite Cannon wins!
+[03:05.289] Crystals: P1 1780 → 1480 (-300)  [battle]
+[03:06.684] Attack P0(2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → P1(2,3)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=5  ATK=120 vs DEF=20  → WIN
+[03:06.684] Reckoning overlay: P0 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} +ATK 20
+[03:06.684] Anim: 3A  △ P1(2,3)
+[03:06.684] Card destroyed  P1 (2,3) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[03:07.189] Mode selected P0: ATTACK
+[03:07.191] Attack phase P0: 1 attack(s) available
+[03:07.191] MSG: Player 1: tap a character to attack.
+[03:07.499] AI0 attack decision: (2,4)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down} → (4,3) "Snare Trap" {cost 500}
+[03:08.915] Revealed: P0 (2,4) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[03:08.959] Revealed: P1 (4,3) "Snare Trap" {cost 500}
+[03:08.959] Dice rolled: 2
+[03:09.225] MSG: Trap triggered: Snare Trap!
+[03:13.336] Crystals: P1 1480 → 980 (-500)  [trap cost]
+[03:14.729] MSG: Snare Trap: Shredder Doll's effect nullified until end of next turn!
+[03:14.733] Trap: "Snare Trap" triggered  P0(2,4)→P1(4,3)
+[03:14.733] Anim: 3D  (attacker survives)
+[03:15.238] Turn ended  P0  |  Crystals P0=3250 P1=980
+
+--- Turn 16  |  Player 1  |  Crystals P0=3250 P1=980 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  — ][Shre]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[03:15.848] Mode selected P1: ATTACK
+[03:15.851] Attack phase P1: 2 attack(s) available
+[03:15.852] MSG: Player 2: tap a character to attack.
+[03:16.189] AI1 attack decision: (1,4)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (2,4) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | nullified≤T16}
+[03:17.556] Revealed: P1 (1,4) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[03:17.556] Dice rolled: 1
+[03:17.562] MSG: Dark Monk wins!
+[03:22.047] Crystals: P0 3250 → 3000 (-250)  [battle]
+[03:23.443] Attack P1(1,4)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P0(2,4)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | nullified≤T16}  Dice=1  ATK=15 vs DEF=5  → WIN
+[03:23.443] Anim: 3A  △ P0(2,4)
+[03:23.444] Card destroyed  P0 (2,4) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | nullified≤T16}
+[03:23.741] Turn ended  P1  |  Crystals P0=3000 P1=980
+
+--- Turn 17  |  Player 0  |  Crystals P0=3000 P1=980 ---
+P0:   [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  — ][  — ][  — ]
+      [  ? ][  — ][Sate][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Dark]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+[03:24.336] Mode selected P0: ATTACK
+[03:24.340] Attack phase P0: 2 attack(s) available
+[03:24.340] MSG: Player 1: tap a character to attack.
+[03:24.635] AI0 attack decision: (2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → (1,4) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[03:26.043] Dice rolled: 5
+[03:26.049] MSG: Satellite Cannon wins!
+[03:30.535] Crystals: P1 980 → 680 (-300)  [battle]
+[03:31.932] Attack P0(2,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | flags:venom} → P1(1,4)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}  Dice=5  ATK=100 vs DEF=25  → WIN
+[03:31.932] Anim: 3A  △ P1(1,4)
+[03:31.932] Card destroyed  P1 (1,4) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+
+=== GAME OVER ===
+[03:31.933] AI Player 0 wins
+[03:31.933] Reason: all_destroyed
+[03:31.933] Final crystals — P0: 3000  P1: 680  |  Turns: 17
+[03:31.933] Log saved to: res://logs/results/2026-06-08_21-40-52_251_cold_brew/battle_grandma_fart_2026-06-09_04-46-42_376.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Satellite-Cannon-001
+Highlight: Satellite Cannon (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     17  |  AI timeouts: 0
+===

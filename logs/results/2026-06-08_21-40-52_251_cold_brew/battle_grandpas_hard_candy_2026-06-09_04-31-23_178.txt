@@ -1,0 +1,87 @@
+=== Battle of Grandpa's Hard Candy ===
+Battle started: 2026-06-09 04:31:23.178
+Game Session of Cold Brew (started 2026-06-08 21:40:52.251)
+=== Card E2E Test ===
+Scenario ID:  E2E-Ponycorn-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Ponycorn-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Ponycorn (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Ponycorn" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Ponycorn
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Ponycorn".*ATK=25\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=25 when Ponycorn attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ponycorn
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Ponycorn
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Release Mutagen, Prayer
+P1 Tech hand: Prayer, Tease, Bribe
+P0:   [C:Mad ][C:Gobl][C:Chao][C:Dark][C:Ox P]
+      [  — ][  — ][  — ][C:Foul][  — ]
+      [  — ][T:Snar][C:Pony][  — ][  — ]
+      [  — ][T:Spik][  — ][T:Flam][  — ]
+      [C:Big ][C:Chur][T:Trap][T:Hypn][C:Doom]
+P1:   [C:Gobl][C:Mad ][  — ][  — ][C:Foul]
+      [T:Trap][  — ][  — ][  — ][T:Hypn]
+      [C:Ox P][C:Big ][C:Chao][C:Wand][C:Doom]
+      [C:Chur][  — ][  — ][  — ][C:Dark]
+      [T:Flam][  — ][T:Snar][  — ][T:Spik]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  ? ][  ? ][  — ][  — ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.301] Mode selected P0: ATTACK
+[00:05.306] Attack phase P0: 2 attack(s) available
+[00:05.306] MSG: Player 1: tap a character to attack.
+[00:05.647] AI0 attack decision: (2,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:07.028] Revealed: P0 (2,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:07.067] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:07.067] Dice rolled: 1
+[00:07.073] MSG: Ponycorn wins!
+[00:11.528] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.925] Attack P0(2,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=25 vs DEF=0  → WIN
+[00:12.925] E2E: ability goal reached — ending battle early.
+[00:12.925] Anim: 3A  △ P1(2,2)
+[00:12.925] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[00:12.934] AI Player 0 wins
+[00:12.934] Final crystals — P0: 5000  P1: 4900  |  Turns: 1
+[00:12.934] Log saved to: res://logs/results/2026-06-08_21-40-52_251_cold_brew/battle_grandpas_hard_candy_2026-06-09_04-31-23_178.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Ponycorn-002
+Highlight: Ponycorn (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

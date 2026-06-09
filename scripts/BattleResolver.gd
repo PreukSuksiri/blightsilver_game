@@ -538,15 +538,7 @@ static func _get_effective_atk(
 		CharacterData.AbilityType.NOT_IMPLEMENTED:
 			GameState.show_center_message("Ability not implemented: " + attacker.card_name)
 
-	# FIELD_ATK_BOOST_OWN_AFFINITY: scan field for any card giving an aura boost to this attacker
-	for _fa_r in range(GameState.GRID_SIZE):
-		for _fa_c in range(GameState.GRID_SIZE):
-			var _fa_card: GameState.CardInstance = GameState.grids[attacker_player][_fa_r][_fa_c]
-			if _fa_card == attacker or not _fa_card.face_up:
-				continue
-			if _fa_card.ability_type == CharacterData.AbilityType.FIELD_ATK_BOOST_OWN_AFFINITY \
-					and attacker.affinity == _fa_card.ability_params.get("affinity", -1):
-				atk += _fa_card.ability_params.get("atk", 0)
+	# FIELD_ATK_BOOST_OWN_AFFINITY is applied via calculate_field_bonuses() → field_aura_atk_bonus.
 
 	# Check defender abilities that debuff attacker ATK
 	if defender.ability_type == CharacterData.AbilityType.ATTACKER_ATK_DEBUFF:
@@ -773,13 +765,46 @@ static func _apply_defend_effects(
 				defender.card_name, _halved, _halved])
 
 # ─────────────────────────────────────────────────────────────
-# Field-based stat calculation (called before each battle)
+# Field-based stat calculation (called before each battle and when field composition changes)
 # ─────────────────────────────────────────────────────────────
+static func recalculate_all_field_bonuses() -> void:
+	calculate_field_bonuses(0)
+	calculate_field_bonuses(1)
+
 static func calculate_field_bonuses(player_index: int) -> void:
+	# Clear aura bonuses, then rebuild from current face-up field state.
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.grids[player_index][r][c]
+			if card.card_type == "character":
+				card.field_aura_atk_bonus = 0
+
 	var all_chars := GameState.get_all_characters(player_index)
 	for entry in all_chars:
 		var card: GameState.CardInstance = entry["card"]
 		_apply_field_ability_bonus(card, player_index)
+
+	_apply_field_aura_bonuses(player_index)
+
+static func _apply_field_aura_bonuses(player_index: int) -> void:
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var source: GameState.CardInstance = GameState.grids[player_index][r][c]
+			if source.card_type != "character" or not source.face_up:
+				continue
+			if source.ability_type != CharacterData.AbilityType.FIELD_ATK_BOOST_OWN_AFFINITY:
+				continue
+			var target_affinity: int = source.ability_params.get("affinity", -1)
+			var atk_boost: int = source.ability_params.get("atk", 0)
+			if target_affinity < 0 or atk_boost == 0:
+				continue
+			for r2 in range(GameState.GRID_SIZE):
+				for c2 in range(GameState.GRID_SIZE):
+					var ally: GameState.CardInstance = GameState.grids[player_index][r2][c2]
+					if ally == source or ally.card_type != "character" or not ally.face_up:
+						continue
+					if ally.affinity == target_affinity:
+						ally.field_aura_atk_bonus += atk_boost
 
 static func _apply_field_ability_bonus(
 		card: GameState.CardInstance,
@@ -798,7 +823,8 @@ static func _apply_field_ability_bonus(
 
 static func _count_matching_cards(player_index: int, source_card: GameState.CardInstance) -> int:
 	var count := 0
-	var name_filter: String = source_card.ability_params.get("card_name_contains", "").to_lower()
+	var name_filter: String = source_card.ability_params.get(
+		"card_name_contains", source_card.ability_params.get("name", "")).to_lower()
 	var affinity_filter: int = source_card.ability_params.get("affinity", -1)
 
 	for r in range(GameState.GRID_SIZE):

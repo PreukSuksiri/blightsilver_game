@@ -1,0 +1,23 @@
+[
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_observatory_close_zoom.png",
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "We were too busy to realize that an epic view from here is available all the time."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_observatory_close_zoom_ghost.png",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sfx/horror_track_1.mp3",
+		"shake_screen": 8.0
+	},
+	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3"
+	}
+]

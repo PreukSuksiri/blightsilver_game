@@ -118,6 +118,8 @@ var return_scene: String = "res://scenes/main_menu.tscn"
 ## Can be set here directly or passed as the third arg to launch().
 var launch_params: Dictionary = {}
 ## When true, exploration does not replace BGM (keeps track from launching VN).
+## When true, VNPlayer skipped stopping BGM at the exploration handoff.
+## Cleared as soon as ExplorationPlayer loads — it does not block node music.
 var keep_vn_bgm: bool = false
 
 ## VN JSON path to play as an overlay after the session ends, before return_scene.
@@ -139,6 +141,7 @@ var _inventory: Array[String] = []
 var _vars: Dictionary = {}
 var _played_vn_scenes: Dictionary = {}   # path → true; tracks once-only VN scenes played this session
 var _interacted_spots: Dictionary = {}   # "node_id:spot_index" → true; one-time spots already used
+var _talked_characters: Dictionary = {}  # "node_id:char_index" → true; characters removed from room after talk
 
 # Accumulated rewards — applied to main game when end_session(carry_rewards=true) is called.
 # { "credits": int, "flags": { key: value, ... } }
@@ -179,6 +182,11 @@ func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu
 	return_scene = p_return_scene
 	if not params.is_empty():
 		launch_params.merge(params, true)
+	# Drop reserved keys not supplied by this launch — merge is cumulative and stale
+	# values (e.g. keep_vn_bgm from a prior VN handoff) would otherwise block node music.
+	for reserved_key: String in ["keep_vn_bgm", "force_fresh"]:
+		if not params.has(reserved_key):
+			launch_params.erase(reserved_key)
 
 	keep_vn_bgm = bool(launch_params.get("keep_vn_bgm", false))
 	var force_fresh: bool = bool(launch_params.get("force_fresh", false))
@@ -253,6 +261,7 @@ func _reset_session_state() -> void:
 	_vars.clear()
 	_played_vn_scenes.clear()
 	_interacted_spots.clear()
+	_talked_characters.clear()
 	_session_rewards   = {}
 	_clear_saved_session()
 
@@ -276,6 +285,15 @@ func mark_spot_interacted(node_id: String, spot_index: int) -> void:
 func is_spot_interacted(node_id: String, spot_index: int) -> bool:
 	return _interacted_spots.has(node_id + ":" + str(spot_index))
 
+## Mark a character (node_id + index in node.characters) as talked when remove_after_talk is set.
+func mark_char_talked(node_id: String, char_index: int) -> void:
+	_talked_characters[node_id + ":" + str(char_index)] = true
+	_save_session_state()
+
+## Returns true if the character was already talked to this session (remove_after_talk).
+func is_char_talked(node_id: String, char_index: int) -> bool:
+	return _talked_characters.has(node_id + ":" + str(char_index))
+
 ## Save current session state to SaveManager so it survives a game restart.
 ## Called automatically on every navigation, inventory, and variable change.
 func _save_session_state() -> void:
@@ -290,6 +308,7 @@ func _save_session_state() -> void:
 		"vars":              _vars.duplicate(),
 		"played_vn_scenes":  _played_vn_scenes.keys(),
 		"interacted_spots":  _interacted_spots.keys(),
+		"talked_characters": _talked_characters.keys(),
 		"rewards":           _session_rewards.duplicate(true),
 		"return_scene":      return_scene,
 	}
@@ -337,6 +356,11 @@ func restore_saved_session() -> bool:
 	if isp is Array:
 		for s: Variant in (isp as Array):
 			_interacted_spots[str(s)] = true
+	_talked_characters.clear()
+	var tc: Variant = sd.get("talked_characters", [])
+	if tc is Array:
+		for c: Variant in (tc as Array):
+			_talked_characters[str(c)] = true
 	return_scene      = str(sd.get("return_scene", "res://scenes/main_menu.tscn"))
 	_current_node_id  = str(sd.get("current_node_id", graph.start_node_id))
 	emit_signal("session_started", graph)
@@ -487,7 +511,7 @@ func set_var(key: String, value: String) -> void:
 	var had_key: bool = _vars.has(key)
 	var prev: String = str(_vars.get(key, "")) if had_key else "(unset)"
 	_vars[key] = value
-	print("[Exploration] var_changed: %s = %q  (was: %s, node: %s)" % [
+	print("[Exploration] var_changed: %s = \"%s\" (was: %s, node: %s)" % [
 		key, value, prev, current_node_id])
 	emit_signal("var_changed", key, value)
 	_save_session_state()

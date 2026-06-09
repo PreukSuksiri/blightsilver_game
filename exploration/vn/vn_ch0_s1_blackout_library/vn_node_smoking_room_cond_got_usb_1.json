@@ -1,0 +1,19 @@
+[
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/profile/battle_illustrations/monsters/battler_library_puppet.png"
+			}
+		],
+		"speaker": "???",
+		"text": "** giggles **"
+	},
+	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3"
+	}
+]

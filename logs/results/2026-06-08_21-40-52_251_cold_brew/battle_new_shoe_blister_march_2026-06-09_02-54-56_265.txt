@@ -1,0 +1,88 @@
+=== Battle of New Shoe Blister March ===
+Battle started: 2026-06-09 02:54:56.265
+Game Session of Cold Brew (started 2026-06-08 21:40:52.251)
+=== Card E2E Test ===
+Scenario ID:  E2E-Mars-Drill-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Mars-Drill-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Mars Drill (Character)  [setup: Trap Hole]
+Ability:      IMMUNE_ZERO_COST_TRAPS — This card is not affected by 0 cost traps
+Setup role:   t2_trap_immunity
+Verifies:
+  - Ability: "Mars Drill" is exercised via forced board/tech setup (t2_trap_immunity)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Mars Drill
+  - Log must contain: GAME OVER
+  - Log must match regex: ("Mars\ Drill".*ATK=|→ P\d\(\d+,\d+\)"Mars\ Drill")
+  - Log must contain at least one of: trap_nullified, Trap triggered, Immune
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: 0-cost trap immunity (nullify or no trap damage).
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Mars Drill
+AI-1 Deck:    E2E T2
+AI-0 Forced:  (2,2) Mars Drill
+AI-1 Forced:  (2,2) Trap Hole
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Spy, Accident, Siege Cannon
+P1 Tech hand: Prayer, War Supply, Bribe
+P0:   [C:Dark][  — ][  — ][C:Big ][C:Chur]
+      [  — ][  — ][T:Snar][T:Hypn][  — ]
+      [  — ][  — ][C:Mars][T:Trap][  — ]
+      [C:Gobl][  — ][C:Ox P][C:Doom][T:Spik]
+      [C:Mad ][T:Flam][C:Foul][  — ][C:Chao]
+P1:   [C:Mad ][C:Gobl][  — ][T:Flam][  — ]
+      [T:Snar][  — ][T:Spik][  — ][C:Wand]
+      [  — ][  — ][T:Trap][  — ][C:Ox P]
+      [T:Hypn][C:Doom][C:Big ][  — ][C:Foul]
+      [  — ][  — ][C:Chao][C:Dark][C:Chur]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  — ][  — ][  ? ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  — ][  ? ][  ? ][  ? ]
+[00:05.116] Mode selected P0: ATTACK
+[00:05.121] Attack phase P0: 2 attack(s) available
+[00:05.121] MSG: Player 1: tap a character to attack.
+[00:05.457] AI0 attack decision: (2,2)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic | face-down} → (2,2) "Trap Hole" {cost 0}
+[00:06.843] Revealed: P0 (2,2) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:06.886] Revealed: P1 (2,2) "Trap Hole" {cost 0}
+[00:06.886] Dice rolled: 3
+[00:07.158] MSG: Trap triggered: Trap Hole!
+[00:07.158] MSG: Mars Drill is immune to 0-cost Traps!
+[00:11.264] Attack P0(2,2)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P1(2,2)"Trap Hole"  Dice=3  ATK=0 vs DEF=0  → TIE
+[00:11.264] E2E: ability goal reached — ending battle early.
+[00:11.264] Anim: exchange  (no destruction)
+
+=== GAME OVER ===
+[00:11.275] AI Player 0 wins
+[00:11.275] Final crystals — P0: 5000  P1: 5000  |  Turns: 1
+[00:11.275] Log saved to: res://logs/results/2026-06-08_21-40-52_251_cold_brew/battle_new_shoe_blister_march_2026-06-09_02-54-56_265.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Mars-Drill-002
+Highlight: Mars Drill (Character)  [setup: Trap Hole]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

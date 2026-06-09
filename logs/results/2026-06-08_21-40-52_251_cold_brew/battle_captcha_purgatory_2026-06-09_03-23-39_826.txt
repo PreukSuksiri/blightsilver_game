@@ -1,0 +1,392 @@
+=== Battle of Captcha Purgatory ===
+Battle started: 2026-06-09 03:23:39.826
+Game Session of Cold Brew (started 2026-06-08 21:40:52.251)
+=== Card E2E Test ===
+Scenario ID:  E2E-Moon-Tribe-Twin-Blader-001
+Tier:         1 — Smoke (battle completes, card in log, no crashes)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Moon-Tribe-Twin-Blader-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Moon Tribe Twin Blader (Character)  [setup: Chaotic Wisp]
+Ability:      COIN_FLIP_EXTRA_ATTACK
+Setup role:   t1_character_attacker
+Verifies:
+  - Smoke: "Moon Tribe Twin Blader" appears in the battle log and the match reaches GAME OVER
+  - No script errors, invalid calls, or stack traces in log
+  - Log must contain: Moon Tribe Twin Blader
+  - Log must contain: GAME OVER
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 50 turns and <= 5 AI watchdog timeouts
+Notes:        Tier 1 smoke: character on field, battle completes.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T1 Character Deck
+AI-1 Deck:    E2E T1 Character Deck
+AI-0 Forced:  (2,2) Moon Tribe Twin Blader
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Prayer, War Supply
+P1 Tech hand: Resurrection, Great Diplomacy, War Supply
+P0:   [C:Gobl][C:Mad ][  — ][  — ][C:Dark]
+      [C:Ox P][  — ][T:Hypn][  — ][C:Wand]
+      [C:Shre][C:Foul][C:Moon][C:Big ][C:Chao]
+      [C:Doom][T:Trap][  — ][T:Flam][T:Spik]
+      [C:Chur][  — ][  — ][T:Snar][C:Skel]
+P1:   [C:Gobl][C:Mad ][C:Skel][T:Spik][T:Snar]
+      [C:Dark][  — ][  — ][  — ][T:Hypn]
+      [C:Shre][  — ][C:Chao][T:Flam][C:Wand]
+      [C:Doom][  — ][  — ][  — ][C:Foul]
+      [C:Chur][C:Big ][C:Ox P][T:Trap][C:Pony]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:05.352] Mode selected P0: ATTACK
+[00:05.356] Attack phase P0: 2 attack(s) available
+[00:05.356] MSG: Player 1: tap a character to attack.
+[00:05.702] AI0 attack decision: (2,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:07.060] Revealed: P0 (2,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:07.100] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:07.100] Dice rolled: 2
+[00:07.104] MSG: Moon Tribe Twin Blader wins!
+[00:11.552] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:13.007] Coin flip: Tails
+[00:15.733] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[00:15.736] Attack P0(2,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=2  ATK=30 vs DEF=0  → WIN
+[00:15.736] Anim: 3A  △ P1(2,2)
+[00:15.736] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:18.245] Turn ended  P0  |  Crystals P0=5000 P1=4900
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4900 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Moon][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:20.326] Crystals: P1 4900 → 4400 (-500)  [union]
+[00:20.375] Revealed: P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:20.375] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down}, "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}
+[00:20.375] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:20.375] MSG: Player 2 summoned [Scarlet Shroom] using: "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down}, "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}
+[00:23.560] Crystals: P1 4400 → 4350 (-50)  [skip tax]
+[00:23.561] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:24.946] Turn ended  P1  |  Crystals P0=5000 P1=4350
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=4350 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Moon][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Scar][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:25.544] Mode selected P0: ATTACK
+[00:25.551] Attack phase P0: 2 attack(s) available
+[00:25.551] MSG: Player 1: tap a character to attack.
+[00:25.844] AI0 attack decision: (2,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | flags:venom} → (0,1) (dead-end)
+[00:27.252] Dice rolled: 2
+[00:27.278] MSG: Nothing happens — Dead End.
+[00:30.710] Coin flip: Tails
+[00:33.434] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[00:33.439] Attack P0(2,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | flags:venom} → P1(0,1)(empty)  Dice=2  → DEAD_END
+[00:33.439] Anim: 3F  (blank slot)
+[00:33.937] Mode selected P0: ATTACK
+[00:33.943] Attack phase P0: 1 attack(s) available
+[00:33.943] MSG: Player 1: tap a character to attack.
+[00:34.269] AI0 attack decision: (2,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos | face-down} → (1,0) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down}
+[00:35.645] Revealed: P0 (2,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[00:35.681] Revealed: P1 (1,0) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:35.681] Dice rolled: 5
+[00:40.253] Crystals: P0 5000 → 4900 (-100)  [battle]
+[00:41.653] Attack P0(2,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → P1(1,0)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}  Dice=5  ATK=0 vs DEF=25  → LOSE
+[00:41.653] Anim: 3B  △ P0(2,1)
+[00:41.653] Card destroyed  P0 (2,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[00:42.149] Turn ended  P0  |  Crystals P0=4900 P1=4350
+
+--- Turn 4  |  Player 1  |  Crystals P0=4900 P1=4350 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][Moon][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [Scar][  — ][  ? ][  ? ][  ? ]
+      [Dark][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:42.744] Mode selected P1: ATTACK
+[00:42.754] Attack phase P1: 2 attack(s) available
+[00:42.754] MSG: Player 2: tap a character to attack.
+[00:43.043] AI1 attack decision: (0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → (2,0) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down}
+[00:44.496] Revealed: P0 (2,0) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:44.496] Dice rolled: 3
+[00:49.067] Attack P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P0(2,0)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=3  ATK=0 vs DEF=5  → LOSE
+[00:49.067] Anim: 3B  △ P1(0,0)
+[00:49.067] Card destroyed  P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:49.362] Turn ended  P1  |  Crystals P0=4900 P1=4350
+
+--- Turn 5  |  Player 0  |  Crystals P0=4900 P1=4350 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [Shre][  — ][Moon][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [Dark][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[00:49.993] Mode selected P0: ATTACK
+[00:50.001] Attack phase P0: 2 attack(s) available
+[00:50.001] MSG: Player 1: tap a character to attack.
+[00:50.294] AI0 attack decision: (2,0)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → (1,0) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:51.699] Dice rolled: 4
+[00:51.709] MSG: Both cards are destroyed!
+[00:56.108] Crystals: P0 4900 → 4650 (-250)  [battle]
+[00:57.499] Crystals: P1 4350 → 4050 (-300)  [battle]
+[00:58.897] Attack P0(2,0)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → P1(1,0)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}  Dice=4  ATK=25 vs DEF=25  → TIE
+[00:58.897] Anim: 3C  △ P0(2,0) + △ P1(1,0)
+[00:58.897] Card destroyed  P0 (2,0) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:58.897] Card destroyed  P1 (1,0) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:59.383] Mode selected P0: ATTACK
+[00:59.385] Attack phase P0: 1 attack(s) available
+[00:59.386] MSG: Player 1: tap a character to attack.
+[00:59.685] AI0 attack decision: (2,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | flags:venom} → (1,4) "Hypnosis" {cost 800}
+[01:01.139] Revealed: P1 (1,4) "Hypnosis" {cost 800}
+[01:01.139] Dice rolled: 1
+[01:01.458] MSG: Trap triggered: Hypnosis!
+[01:05.543] Crystals: P1 4050 → 3250 (-800)  [trap cost]
+[01:06.934] MSG: Hypnosis: Moon Tribe Twin Blader cannot attack until end of next turn.
+[01:06.995] Coin flip: Heads
+[01:09.742] MSG: Moon Tribe Twin Blader: Coin flip heads — extra attack!
+[01:09.746] Trap: "Hypnosis" triggered  P0(2,2)→P1(1,4)
+[01:09.746] Anim: 3D  (attacker survives)
+[01:10.243] Mode selected P0: ATTACK
+[01:10.249] Attack phase P0: 1 attack(s) available
+[01:10.249] MSG: Player 1: tap a character to attack.
+[01:10.578] AI0 attack decision: (2,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (2,0) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down}
+[01:11.935] Revealed: P0 (2,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:11.937] Revealed: P1 (2,0) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[01:11.937] Dice rolled: 2
+[01:11.947] MSG: Big Thug wins!
+[01:16.425] Crystals: P1 3250 → 3000 (-250)  [battle]
+[01:17.819] Attack P0(2,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(2,0)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}  Dice=2  ATK=40 vs DEF=5  → WIN
+[01:17.819] Anim: 3A  △ P1(2,0)
+[01:17.819] Card destroyed  P1 (2,0) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[01:18.318] Turn ended  P0  |  Crystals P0=4650 P1=3000
+
+--- Turn 6  |  Player 1  |  Crystals P0=4650 P1=3000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][Moon][Big ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:18.918] Mode selected P1: ATTACK
+[01:18.925] Attack phase P1: 2 attack(s) available
+[01:18.926] MSG: Player 2: tap a character to attack.
+[01:19.253] AI1 attack decision: (0,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (2,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:20.627] Revealed: P1 (0,2) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:20.627] Dice rolled: 3
+[01:20.636] MSG: Skeleton Lancer wins!
+[01:25.117] Crystals: P0 4650 → 4250 (-400)  [battle]
+[01:26.514] Attack P1(0,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} → P0(2,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=3  ATK=45 vs DEF=35  → WIN
+[01:26.515] Anim: 3A  △ P0(2,3)
+[01:26.515] Card destroyed  P0 (2,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:26.810] Turn ended  P1  |  Crystals P0=4250 P1=3000
+
+--- Turn 7  |  Player 0  |  Crystals P0=4250 P1=3000 ---
+P0:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][Moon][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][Skel][  ? ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:27.407] Mode selected P0: ATTACK
+[01:27.413] Attack phase P0: 2 attack(s) available
+[01:27.413] MSG: Player 1: tap a character to attack.
+[01:27.710] AI0 attack decision: (2,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | flags:venom | cannot-atk≤T6} → (0,2) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:29.117] Dice rolled: 3
+[01:29.130] MSG: Moon Tribe Twin Blader wins!
+[01:33.609] Crystals: P1 3000 → 2700 (-300)  [battle]
+[01:35.068] Coin flip: Tails
+[01:37.766] MSG: Moon Tribe Twin Blader: Coin flip tails — no extra attack.
+[01:37.772] Attack P0(2,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | flags:venom | cannot-atk≤T6} → P1(0,2)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=3  ATK=30 vs DEF=5  → WIN
+[01:37.772] Anim: 3A  △ P1(0,2)
+[01:37.772] Card destroyed  P1 (0,2) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[01:38.279] Mode selected P0: ATTACK
+[01:38.284] Attack phase P0: 1 attack(s) available
+[01:38.285] MSG: Player 1: tap a character to attack.
+[01:38.630] AI0 attack decision: (0,1)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down} → (0,3) "Spike Trap" {cost 1500}
+[01:40.001] Revealed: P0 (0,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:40.041] Revealed: P1 (0,3) "Spike Trap" {cost 1500}
+[01:40.041] Dice rolled: 3
+[01:40.313] MSG: Trap triggered: Spike Trap!
+[01:45.356] Crystals: P1 2700 → 1200 (-1500)  [trap cost]
+[01:46.750] Crystals: P0 4250 → 3990 (-260)  [card lost]
+[01:48.792] MSG: Flame Trap: Mad Raccoon destroyed!
+[01:48.796] Trap: "Spike Trap" triggered  P0(0,1)→P1(0,3)
+[01:48.796] Anim: 3E  △ P0(0,1)
+[01:49.304] Turn ended  P0  |  Crystals P0=3990 P1=1200
+
+--- Turn 8  |  Player 1  |  Crystals P0=3990 P1=1200 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][Moon][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+[01:49.909] Mode selected P1: ATTACK
+[01:49.914] Attack phase P1: 2 attack(s) available
+[01:49.915] MSG: Player 2: tap a character to attack.
+[01:50.252] AI1 attack decision: (4,4)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down} → (2,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | flags:venom | cannot-atk≤T6}
+[01:51.634] Revealed: P1 (4,4) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:51.634] Dice rolled: 1
+[01:51.643] MSG: Ponycorn wins!
+[01:56.132] Crystals: P0 3990 → 3690 (-300)  [battle]
+[01:57.531] Attack P1(4,4)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P0(2,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | flags:venom | cannot-atk≤T6}  Dice=1  ATK=25 vs DEF=20  → WIN
+[01:57.531] Anim: 3A  △ P0(2,2)
+[01:57.531] Card destroyed  P0 (2,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic | flags:venom | cannot-atk≤T6}
+[01:57.836] Turn ended  P1  |  Crystals P0=3690 P1=1200
+
+--- Turn 9  |  Player 0  |  Crystals P0=3690 P1=1200 ---
+P0:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][Pony]
+[01:58.445] Mode selected P0: ATTACK
+[01:58.451] Attack phase P0: 2 attack(s) available
+[01:58.452] MSG: Player 1: tap a character to attack.
+[01:58.786] AI0 attack decision: (0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down} → (4,4) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:00.167] Revealed: P0 (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[02:00.167] Dice rolled: 2
+[02:00.176] MSG: Goblin Poacher wins!
+[02:04.665] Crystals: P1 1200 → 900 (-300)  [battle]
+[02:06.063] Attack P0(0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P1(4,4)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=2  ATK=30 vs DEF=20  → WIN
+[02:06.063] Anim: 3A  △ P1(4,4)
+[02:06.063] Card destroyed  P1 (4,4) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[02:06.565] Mode selected P0: ATTACK
+[02:06.570] Attack phase P0: 1 attack(s) available
+[02:06.570] MSG: Player 1: tap a character to attack.
+[02:06.908] AI0 attack decision: (1,0)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (4,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down}
+[02:08.292] Revealed: P0 (1,0) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[02:08.294] Revealed: P1 (4,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:08.294] Dice rolled: 5
+[02:12.907] Crystals: P0 3690 → 3270 (-420)  [battle]
+[02:14.306] Attack P0(1,0)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P1(4,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=5  ATK=30 vs DEF=35  → LOSE
+[02:14.306] Anim: 3B  △ P0(1,0)
+[02:14.306] Card destroyed  P0 (1,0) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[02:14.813] Turn ended  P0  |  Crystals P0=3270 P1=900
+
+--- Turn 10  |  Player 1  |  Crystals P0=3270 P1=900 ---
+P0:   [Gobl][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Big ][  ? ][  ? ][  — ]
+[02:15.415] Mode selected P1: ATTACK
+[02:15.423] Attack phase P1: 2 attack(s) available
+[02:15.423] MSG: Player 2: tap a character to attack.
+[02:15.724] AI1 attack decision: (4,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[02:17.140] Dice rolled: 3
+[02:17.151] MSG: Big Thug wins!
+[02:21.642] Crystals: P0 3270 → 3020 (-250)  [battle]
+[02:23.037] Attack P1(4,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=3  ATK=40 vs DEF=10  → WIN
+[02:23.037] Anim: 3A  △ P0(0,0)
+[02:23.038] Card destroyed  P0 (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[02:23.342] Turn ended  P1  |  Crystals P0=3020 P1=900
+
+--- Turn 11  |  Player 0  |  Crystals P0=3020 P1=900 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Big ][  ? ][  ? ][  — ]
+[02:23.952] Mode selected P0: ATTACK
+[02:23.958] Attack phase P0: 2 attack(s) available
+[02:23.958] MSG: Player 1: tap a character to attack.
+[02:24.295] AI0 attack decision: (1,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima | face-down} → (4,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:25.675] Revealed: P0 (1,4) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[02:25.675] Dice rolled: 1
+[02:25.683] MSG: Wandering Swordsman wins!
+[02:30.172] Crystals: P1 900 → 500 (-400)  [battle]
+[02:31.570] Attack P0(1,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P1(4,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=1  ATK=60 vs DEF=35  → WIN
+[02:31.570] Anim: 3A  △ P1(4,1)
+[02:31.570] Card destroyed  P1 (4,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:32.073] Mode selected P0: ATTACK
+[02:32.076] Attack phase P0: 1 attack(s) available
+[02:32.077] MSG: Player 1: tap a character to attack.
+[02:32.382] AI0 attack decision: (2,4)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (0,4) "Snare Trap" {cost 500}
+[02:33.800] Revealed: P0 (2,4) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:33.841] Revealed: P1 (0,4) "Snare Trap" {cost 500}
+[02:33.841] Dice rolled: 5
+[02:34.113] MSG: Trap triggered: Snare Trap!
+[02:38.215] Crystals: P1 500 → 0 (-500)  [trap cost]
+
+=== GAME OVER ===
+[02:38.223] AI Player 0 wins
+[02:38.223] Reason: crystals
+[02:38.223] Final crystals — P0: 3020  P1: 0  |  Turns: 11
+[02:38.223] Log saved to: res://logs/results/2026-06-08_21-40-52_251_cold_brew/battle_captcha_purgatory_2026-06-09_03-23-39_826.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Moon-Tribe-Twin-Blader-001
+Highlight: Moon Tribe Twin Blader (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     11  |  AI timeouts: 0
+===

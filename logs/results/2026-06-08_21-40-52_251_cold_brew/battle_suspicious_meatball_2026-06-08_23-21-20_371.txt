@@ -1,0 +1,87 @@
+=== Battle of Suspicious Meatball ===
+Battle started: 2026-06-08 23:21:20.371
+Game Session of Cold Brew (started 2026-06-08 21:40:52.251)
+=== Card E2E Test ===
+Scenario ID:  E2E-Dark-Monk-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Dark-Monk-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Dark Monk (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Dark Monk" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Dark Monk
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Dark\ Monk".*ATK=15\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=15 when Dark Monk attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Dark Monk
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Dark Monk
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: War Supply, Tease, Siege Cannon
+P1 Tech hand: Radar, Great Diplomacy, Accident
+P0:   [  — ][T:Spik][C:Big ][T:Trap][  — ]
+      [  — ][  — ][C:Ox P][  — ][T:Hypn]
+      [C:Gobl][C:Doom][C:Dark][C:Mad ][C:Wand]
+      [C:Foul][  — ][C:Chur][  — ][T:Snar]
+      [T:Flam][  — ][C:Chao][  — ][  — ]
+P1:   [C:Gobl][C:Mad ][T:Hypn][  — ][C:Wand]
+      [  — ][C:Chur][  — ][C:Big ][  — ]
+      [T:Spik][  — ][C:Chao][T:Flam][T:Snar]
+      [  — ][C:Dark][  — ][C:Ox P][  — ]
+      [T:Trap][  — ][C:Doom][  — ][C:Foul]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  — ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  — ][  ? ][  — ][  ? ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.152] Mode selected P0: ATTACK
+[00:05.153] Attack phase P0: 2 attack(s) available
+[00:05.153] MSG: Player 1: tap a character to attack.
+[00:05.481] AI0 attack decision: (2,2)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:06.856] Revealed: P0 (2,2) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:06.898] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:06.898] Dice rolled: 3
+[00:06.901] MSG: Dark Monk wins!
+[00:11.343] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.738] Attack P0(2,2)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=3  ATK=15 vs DEF=0  → WIN
+[00:12.738] E2E: ability goal reached — ending battle early.
+[00:12.738] Anim: 3A  △ P1(2,2)
+[00:12.738] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[00:12.742] AI Player 0 wins
+[00:12.742] Final crystals — P0: 5000  P1: 4900  |  Turns: 1
+[00:12.742] Log saved to: res://logs/results/2026-06-08_21-40-52_251_cold_brew/battle_suspicious_meatball_2026-06-08_23-21-20_371.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Dark-Monk-002
+Highlight: Dark Monk (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===

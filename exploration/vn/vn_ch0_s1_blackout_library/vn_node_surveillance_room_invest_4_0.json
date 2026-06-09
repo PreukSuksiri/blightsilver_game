@@ -2,6 +2,7 @@
 	{
 		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_surveillance_image_5D.png",
 		"linger_characters": true,
+		"sfx": "res://assets/audio/sfx/horror_track_2.mp3",
 		"shake_screen": 10.0,
 		"text": "......!!!"
 	},

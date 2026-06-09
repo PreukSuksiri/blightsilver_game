@@ -1020,6 +1020,7 @@ func resolve_brainwash_friendly_fire(attacker_player: int, friendly_pos: Vector2
 
 	var defender_was_exposed: bool = ally.face_up
 	BattleResolver.calculate_field_bonuses(attacker_player)
+	BattleResolver.calculate_field_bonuses(GameState.get_opponent(attacker_player))
 
 	var preview_result := BattleResolver.resolve_battle(
 		attacker, ally, GameState.dice_result, attacker_player, attacker_player,

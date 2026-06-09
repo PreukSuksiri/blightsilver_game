@@ -69,34 +69,104 @@ func _refresh_stat_display(result: BattleResolver.BattleResult) -> void:
 	_refresh_slot_stats(_left_ctrl, _left_inst, left_is_att, result)
 	_refresh_slot_stats(_right_ctrl, _right_inst, not left_is_att, result)
 
-func _refresh_slot_stats(slot: Control, inst: GameState.CardInstance, is_attacker: bool, result: BattleResolver.BattleResult) -> void:
+func _slot_battle_stats(
+		inst: GameState.CardInstance,
+		is_attacker: bool,
+		result: BattleResolver.BattleResult
+) -> Dictionary:
+	var atk_delta: int = result.attacker_atk_delta if is_attacker else result.defender_atk_delta
+	var def_delta: int = result.attacker_def_delta if is_attacker else result.defender_def_delta
+	var eff_atk: int = inst.get_effective_atk() + atk_delta
+	var eff_def: int = inst.get_effective_def() + def_delta
+	return {
+		"eff_atk": eff_atk,
+		"eff_def": eff_def,
+		"badge": eff_atk if is_attacker else eff_def,
+	}
+
+func _apply_slot_body_stats(slot: Control, stats: Dictionary) -> void:
+	if slot.get_child_count() < 2:
+		return
+	var card_ctrl: Control = slot.get_child(1) as Control
+	if card_ctrl == null:
+		return
+	var alv: Variant = card_ctrl.get_meta("atk_lbl", null)
+	if alv is Label:
+		(alv as Label).text = "ATK %d" % int(stats["eff_atk"])
+	var dlv: Variant = card_ctrl.get_meta("def_lbl", null)
+	if dlv is Label:
+		(dlv as Label).text = "DEF %d" % int(stats["eff_def"])
+
+func _parse_badge_value(lbl: Label) -> int:
+	if lbl.text.is_valid_int():
+		return int(lbl.text)
+	return 0
+
+func _tick_badge_label(lbl: Label, from_val: int, to_val: int) -> void:
+	var delta: int = to_val - from_val
+	if delta == 0:
+		return
+	var abs_delta: int = absi(delta)
+	var max_ticks: int = 18
+	var step: int = 1
+	if abs_delta > max_ticks:
+		step = int(ceil(float(abs_delta) / float(max_ticks)))
+	var dir: int = 1 if delta > 0 else -1
+	var step_count: int = int(ceil(float(abs_delta) / float(step)))
+	var step_delay: float = clampf(0.35 / float(step_count), 0.02, 0.07)
+	var current: int = from_val
+	while (dir > 0 and current < to_val) or (dir < 0 and current > to_val):
+		current += dir * step
+		if dir > 0:
+			current = mini(current, to_val)
+		else:
+			current = maxi(current, to_val)
+		lbl.text = str(current)
+		if current == to_val:
+			break
+		await get_tree().create_timer(step_delay).timeout
+		if not is_instance_valid(lbl):
+			return
+	lbl.text = str(to_val)
+
+func _animate_slot_badge_stat(
+		slot: Control,
+		inst: GameState.CardInstance,
+		is_attacker: bool,
+		result: BattleResolver.BattleResult
+) -> void:
 	if not is_instance_valid(slot) or inst == null or inst.card_type != "character":
 		return
-	# Use effective values directly from CardInstance — result fields are only populated
-	# for character-vs-character and default to 0 for trap/dead_end battles.
-	var eff_atk: int = inst.get_effective_atk()
-	var eff_def: int = inst.get_effective_def()
-	var changed := false
-	# Update badge (ATK for attacker, DEF for defender)
+	var stats: Dictionary = _slot_battle_stats(inst, is_attacker, result)
+	_apply_slot_body_stats(slot, stats)
 	var badge_meta: Variant = slot.get_meta("badge_lbl", null)
-	if badge_meta is Label:
-		var new_text: String = str(eff_atk if is_attacker else eff_def)
-		if (badge_meta as Label).text != new_text:
-			(badge_meta as Label).text = new_text
-			changed = true
-	# Update card body ATK/DEF labels (second child of slot is card_ctrl)
-	if slot.get_child_count() >= 2:
-		var card_ctrl: Control = slot.get_child(1) as Control
-		if card_ctrl != null:
-			var alv: Variant = card_ctrl.get_meta("atk_lbl", null)
-			if alv is Label:
-				(alv as Label).text = "ATK %d" % eff_atk
-			var dlv: Variant = card_ctrl.get_meta("def_lbl", null)
-			if dlv is Label:
-				(dlv as Label).text = "DEF %d" % eff_def
-	# Play burst ring if any stat changed
-	if changed:
-		_play_burst_ring(slot)
+	if not badge_meta is Label:
+		return
+	var lbl: Label = badge_meta as Label
+	var from_val: int = _parse_badge_value(lbl)
+	var to_val: int = int(stats["badge"])
+	if from_val == to_val:
+		return
+	var token: int = int(slot.get_meta("badge_tick_token", 0)) + 1
+	slot.set_meta("badge_tick_token", token)
+	_play_burst_ring(slot)
+	await _tick_badge_label(lbl, from_val, to_val)
+	if not is_instance_valid(slot) or int(slot.get_meta("badge_tick_token", 0)) != token:
+		return
+
+func _refresh_slot_stats(slot: Control, inst: GameState.CardInstance, is_attacker: bool, result: BattleResolver.BattleResult) -> void:
+	_animate_slot_badge_stat(slot, inst, is_attacker, result)
+
+func _animate_badge_stat_update(
+		slot: Control,
+		inst: GameState.CardInstance,
+		is_attacker: bool,
+		delay: float
+) -> void:
+	await get_tree().create_timer(delay).timeout
+	if not is_instance_valid(self) or not is_instance_valid(slot):
+		return
+	await _animate_slot_badge_stat(slot, inst, is_attacker, _live_result)
 
 # ─────────────────────────────────────────────────────────────
 # Entry point
@@ -108,6 +178,7 @@ func start(
 	result: BattleResolver.BattleResult
 ) -> void:
 	AudioManager.apply_high_pass(true)
+	_live_result = result
 	_build_ui(attacker_player, attacker, defender, result)
 	await _run_async(attacker_player, attacker, defender, result)
 	AudioManager.remove_bgm_filter(true)
@@ -227,7 +298,10 @@ func _build_slot(inst: GameState.CardInstance, is_attacker: bool, atk_delta: int
 
 	# Stat delta overlay (only for character cards with non-zero deltas)
 	if inst.card_type == "character":
+		var role_delta: int = atk_delta if is_attacker else def_delta
 		_add_stat_deltas(card_ctrl, atk_delta, def_delta)
+		if role_delta != 0:
+			_animate_badge_stat_update(slot, inst, is_attacker, 0.28)
 
 	return slot
 

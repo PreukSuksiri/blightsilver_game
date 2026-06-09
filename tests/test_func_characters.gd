@@ -126,6 +126,7 @@ func run_all_tests() -> void:
 	# BOOST_PER_TYPED_CARD_ON_FIELD (Pattern B — perm_atk_bonus set directly)
 	_death_knight(A, AB)
 	_hammer_shark(A, AB)
+	_hammer_shark_field_recalc(A, AB)
 	_night_whisperer(A, AB)
 	_saw_shark(A, AB)
 	_scythe_shark(A, AB)
@@ -637,6 +638,23 @@ func _hammer_shark(A, AB) -> void:
 	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
 	assert_eq(r.attacker_atk_used, 40, "TC-FUNC-Hammer-Shark-001: 20+20=40 with 2 Shark allies")
+
+func _hammer_shark_field_recalc(A, AB) -> void:
+	print("-- TC-FUNC-Hammer-Shark-002 [field recalc grant/confiscate]")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var hammer := _make_char("Hammer Shark", 20, 20, 250, A.NATURE,
+		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"card_name_contains": "shark", "atk_bonus": 10, "def_bonus": 0})
+	var saw := _make_char("Saw Shark", 25, 10, 280, A.NATURE)
+	hammer.face_up = true
+	saw.face_up = true
+	GameState.grids[0][2][1] = hammer
+	GameState.grids[0][2][2] = saw
+	BattleResolver.calculate_field_bonuses(0)
+	assert_eq(hammer.perm_atk_bonus, 10, "TC-FUNC-Hammer-Shark-002: +10 with Saw Shark ally")
+	assert_eq(hammer.get_effective_atk(), 30, "TC-FUNC-Hammer-Shark-002: effective ATK 30")
+	GameState.destroy_card(0, 2, 2, false)
+	assert_eq(hammer.perm_atk_bonus, 0, "TC-FUNC-Hammer-Shark-002: bonus removed when ally leaves")
+	assert_eq(hammer.get_effective_atk(), 20, "TC-FUNC-Hammer-Shark-002: effective ATK back to 20")
 
 func _night_whisperer(A, AB) -> void:
 	print("-- TC-FUNC-Night-Whisperer-001 [Pattern B, perm bonus direct]")

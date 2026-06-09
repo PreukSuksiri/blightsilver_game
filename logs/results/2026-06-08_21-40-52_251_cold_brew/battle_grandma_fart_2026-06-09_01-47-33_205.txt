@@ -1,0 +1,127 @@
+=== Battle of Grandma Fart ===
+Battle started: 2026-06-09 01:47:33.205
+Game Session of Cold Brew (started 2026-06-08 21:40:52.251)
+=== Card E2E Test ===
+Scenario ID:  E2E-Kiyoko-the-Death-Whisper-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Kiyoko-the-Death-Whisper-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Kiyoko the Death Whisper (Character)  [setup: Gryphon Rider]
+Ability:      ATK_BONUS_VS_UNION — This card gain +50 ATK when attacking Union card
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Kiyoko the Death Whisper" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Kiyoko the Death Whisper
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Kiyoko\ the\ Death\ Whisper".*ATK=90\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +50 ATK vs union defender.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Kiyoko the Death Whisper
+AI-1 Deck:    E2E T2 solo Gryphon Rider
+AI-0 Forced:  (2,2) Kiyoko the Death Whisper
+AI-1 Forced:  (2,2) Gryphon Rider, (2,2) Gryphon Rider
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Release Mutagen, Bribe
+P1 Tech hand: Great Diplomacy, Tease, Release Mutagen
+P0:   [C:Gobl][C:Mad ][T:Spik][  — ][C:Foul]
+      [T:Snar][  — ][T:Hypn][  — ][C:Chao]
+      [T:Trap][  — ][C:Kiyo][  — ][  — ]
+      [C:Dark][  — ][T:Flam][  — ][C:Big ]
+      [C:Chur][  — ][C:Doom][  — ][C:Ox P]
+P1:   [C:Gobl][C:Mad ][T:Trap][  — ][T:Flam]
+      [T:Snar][  — ][  — ][  — ][C:Doom]
+      [C:Foul][  — ][  — ][  — ][T:Spik]
+      [C:Dark][  — ][  — ][  — ][C:Big ]
+      [C:Chur][C:Chao][C:Ox P][  — ][T:Hypn]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:06.624] Crystals: P0 5000 → 4500 (-500)  [union]
+[00:06.671] Revealed: P0 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:06.671] Union summoned P0: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down}, "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}
+[00:06.671] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:06.672] MSG: Player 1 summoned [Scarlet Shroom] using: "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down}, "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}
+[00:12.065] Crystals: P0 4500 → 4450 (-50)  [skip tax]
+[00:12.066] MSG: AI Player 0 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:13.453] Turn ended  P0  |  Crystals P0=4450 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4450 P1=5000 ---
+P0:   [Scar][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:15.533] Crystals: P1 5000 → 4500 (-500)  [union]
+[00:15.536] Revealed: P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:15.536] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down}, "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}
+[00:15.537] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:15.537] MSG: Player 2 summoned [Scarlet Shroom] using: "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down}, "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}
+[00:18.764] Crystals: P1 4500 → 4450 (-50)  [skip tax]
+[00:18.765] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:20.153] Turn ended  P1  |  Crystals P0=4450 P1=4450
+
+--- Turn 3  |  Player 0  |  Crystals P0=4450 P1=4450 ---
+P0:   [Scar][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  — ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [Scar][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+[00:20.749] Mode selected P0: ATTACK
+[00:20.756] Attack phase P0: 2 attack(s) available
+[00:20.756] MSG: Player 1: tap a character to attack.
+[00:21.091] AI0 attack decision: (2,2)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima | face-down} → (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:22.459] Revealed: P0 (2,2) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:22.459] Dice rolled: 2
+[00:22.515] MSG: Kiyoko the Death Whisper wins!
+[00:27.952] Attack P0(2,2)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}  Dice=2  ATK=90 vs DEF=80  → WIN
+[00:27.952] E2E: ability goal reached — ending battle early.
+[00:27.952] Reckoning overlay: P0 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} +ATK 50
+[00:27.952] Anim: 3A  △ P1(0,0)
+[00:27.952] Card destroyed  P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+
+=== GAME OVER ===
+[00:27.960] AI Player 0 wins
+[00:27.960] Final crystals — P0: 4450  P1: 4450  |  Turns: 3
+[00:27.960] Log saved to: res://logs/results/2026-06-08_21-40-52_251_cold_brew/battle_grandma_fart_2026-06-09_01-47-33_205.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Kiyoko-the-Death-Whisper-002
+Highlight: Kiyoko the Death Whisper (Character)  [setup: Gryphon Rider]
+Result:    PASS
+Detail:    ok
+Turns:     3  |  AI timeouts: 0
+===

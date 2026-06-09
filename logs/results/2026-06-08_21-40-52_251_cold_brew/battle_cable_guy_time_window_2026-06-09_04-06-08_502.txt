@@ -1,0 +1,527 @@
+=== Battle of Cable Guy Time Window ===
+Battle started: 2026-06-09 04:06:08.502
+Game Session of Cold Brew (started 2026-06-08 21:40:52.251)
+=== Card E2E Test ===
+Scenario ID:  E2E-Ox-Patrol-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Ox-Patrol-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Ox Patrol (Character)  [setup: Flame Lizard]
+Ability:      ATK_DEF_BONUS_VS_NON_AFFINITY — +10 ATK&DEF vs Non-Anima
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Ox Patrol" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Ox Patrol
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\\(2,2\\)\"Ox\\ Patrol\".*ATK=40\\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: +10 ATK vs non-ANIMA (Flame Lizard is NATURE ≠ ANIMA). Expected ATK=30+10=40.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Ox Patrol
+AI-1 Deck:    E2E T2 solo Flame Lizard
+AI-0 Forced:  (2,2) Ox Patrol
+AI-1 Forced:  (2,2) Flame Lizard
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Release Mutagen, Great Diplomacy, Bribe
+P1 Tech hand: Radar, Prayer, Bribe
+P0:   [C:Gobl][C:Mad ][T:Flam][C:Chao][C:Wand]
+      [  — ][  — ][  — ][C:Doom][  — ]
+      [  — ][  — ][C:Ox P][T:Hypn][  — ]
+      [T:Trap][C:Big ][  — ][  — ][  — ]
+      [T:Snar][C:Foul][C:Chur][C:Dark][T:Spik]
+P1:   [C:Gobl][C:Mad ][  — ][  — ][C:Dark]
+      [C:Chur][  — ][  — ][  — ][C:Foul]
+      [T:Spik][C:Ox P][C:Flam][C:Chao][C:Doom]
+      [T:Trap][  — ][  — ][  — ][T:Flam]
+      [C:Big ][  — ][T:Hypn][  — ][T:Snar]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  ? ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:05.286] Mode selected P0: ATTACK
+[00:05.291] Attack phase P0: 2 attack(s) available
+[00:05.291] MSG: Player 1: tap a character to attack.
+[00:05.625] AI0 attack decision: (2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (2,2) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[00:06.995] Revealed: P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:07.044] Revealed: P1 (2,2) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:07.044] Dice rolled: 3
+[00:07.050] MSG: Both cards are destroyed!
+[00:12.385] Crystals: P0 5000 → 4580 (-420)  [battle]
+[00:13.776] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:15.168] Attack P0(2,2)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P1(2,2)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=3  ATK=40 vs DEF=40  → TIE
+[00:15.169] Reckoning overlay: P0 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +ATK 10
+[00:15.169] Anim: 3C  △ P0(2,2) + △ P1(2,2)
+[00:15.169] Card destroyed  P0 (2,2) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:15.169] Card destroyed  P1 (2,2) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:15.667] Mode selected P0: ATTACK
+[00:15.668] Attack phase P0: 1 attack(s) available
+[00:15.669] MSG: Player 1: tap a character to attack.
+[00:16.007] AI0 attack decision: (0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down} → (0,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}
+[00:17.369] Revealed: P0 (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:17.413] Revealed: P1 (0,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:17.414] Dice rolled: 3
+[00:17.423] MSG: Goblin Poacher wins!
+[00:21.859] Crystals: P1 4600 → 4340 (-260)  [battle]
+[00:23.258] Attack P0(0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P1(0,1)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=3  ATK=30 vs DEF=15  → WIN
+[00:23.258] Anim: 3A  △ P1(0,1)
+[00:23.258] Card destroyed  P1 (0,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:23.756] Turn ended  P0  |  Crystals P0=4580 P1=4340
+
+--- Turn 2  |  Player 1  |  Crystals P0=4580 P1=4340 ---
+P0:   [Gobl][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:24.357] Mode selected P1: ATTACK
+[00:24.362] Attack phase P1: 2 attack(s) available
+[00:24.363] MSG: Player 2: tap a character to attack.
+[00:24.653] AI1 attack decision: (0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down} → (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:26.060] Revealed: P1 (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:26.061] Dice rolled: 2
+[00:26.070] MSG: Goblin Poacher wins!
+[00:30.552] Crystals: P0 4580 → 4330 (-250)  [battle]
+[00:31.949] Attack P1(0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P0(0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=2  ATK=30 vs DEF=10  → WIN
+[00:31.949] Anim: 3A  △ P0(0,0)
+[00:31.949] Card destroyed  P0 (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:32.245] Turn ended  P1  |  Crystals P0=4330 P1=4340
+
+--- Turn 3  |  Player 0  |  Crystals P0=4330 P1=4340 ---
+P0:   [  — ][  ? ][  ? ][  ? ][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [Gobl][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:32.847] Mode selected P0: ATTACK
+[00:32.853] Attack phase P0: 2 attack(s) available
+[00:32.854] MSG: Player 1: tap a character to attack.
+[00:33.143] AI0 attack decision: (0,1)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down} → (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:34.552] Revealed: P0 (0,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:34.552] Dice rolled: 5
+[00:34.560] MSG: Mad Raccoon wins!
+[00:39.043] Crystals: P1 4340 → 4090 (-250)  [battle]
+[00:40.441] Attack P0(0,1)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P1(0,0)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=5  ATK=30 vs DEF=10  → WIN
+[00:40.441] Anim: 3A  △ P1(0,0)
+[00:40.441] Card destroyed  P1 (0,0) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:40.939] Mode selected P0: ATTACK
+[00:40.942] Attack phase P0: 1 attack(s) available
+[00:40.942] MSG: Player 1: tap a character to attack.
+[00:41.277] AI0 attack decision: (0,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (0,3) (dead-end)
+[00:42.644] Revealed: P0 (0,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:42.645] Dice rolled: 3
+[00:42.670] MSG: Nothing happens — Dead End.
+[00:46.040] Attack P0(0,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P1(0,3)(empty)  Dice=3  → DEAD_END
+[00:46.040] Anim: 3F  (blank slot)
+[00:46.540] Turn ended  P0  |  Crystals P0=4330 P1=4090
+
+--- Turn 4  |  Player 1  |  Crystals P0=4330 P1=4090 ---
+P0:   [  — ][Mad ][  ? ][Chao][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:47.136] Mode selected P1: ATTACK
+[00:47.142] Attack phase P1: 2 attack(s) available
+[00:47.142] MSG: Player 2: tap a character to attack.
+[00:47.473] AI1 attack decision: (0,4)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (0,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:48.845] Revealed: P1 (0,4) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:48.845] Dice rolled: 3
+[00:48.855] MSG: Both cards are destroyed!
+[00:53.249] Crystals: P1 4090 → 3790 (-300)  [battle]
+[00:54.641] Crystals: P0 4330 → 4070 (-260)  [battle]
+[00:56.035] Attack P1(0,4)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos} → P0(0,1)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=3  ATK=15 vs DEF=15  → TIE
+[00:56.035] Anim: 3C  △ P1(0,4) + △ P0(0,1)
+[00:56.035] Card destroyed  P1 (0,4) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:56.035] Card destroyed  P0 (0,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:56.327] Turn ended  P1  |  Crystals P0=4070 P1=3790
+
+--- Turn 5  |  Player 0  |  Crystals P0=4070 P1=3790 ---
+P0:   [  — ][  — ][  ? ][Chao][  ? ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[00:56.926] Mode selected P0: ATTACK
+[00:56.932] Attack phase P0: 2 attack(s) available
+[00:56.932] MSG: Player 1: tap a character to attack.
+[00:57.226] AI0 attack decision: (0,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → (0,2) (dead-end)
+[00:58.633] Dice rolled: 5
+[00:58.659] MSG: Nothing happens — Dead End.
+[01:02.030] Attack P0(0,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P1(0,2)(empty)  Dice=5  → DEAD_END
+[01:02.030] Anim: 3F  (blank slot)
+[01:02.527] Mode selected P0: ATTACK
+[01:02.530] Attack phase P0: 1 attack(s) available
+[01:02.531] MSG: Player 1: tap a character to attack.
+[01:02.868] AI0 attack decision: (0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima | face-down} → (1,3) (dead-end)
+[01:04.235] Revealed: P0 (0,4) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[01:04.235] Dice rolled: 1
+[01:04.260] MSG: Nothing happens — Dead End.
+[01:07.638] Attack P0(0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P1(1,3)(empty)  Dice=1  → DEAD_END
+[01:07.638] Anim: 3F  (blank slot)
+[01:08.134] Turn ended  P0  |  Crystals P0=4070 P1=3790
+
+--- Turn 6  |  Player 1  |  Crystals P0=4070 P1=3790 ---
+P0:   [  — ][  — ][  ? ][Chao][Wand]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:08.736] Mode selected P1: ATTACK
+[01:08.743] Attack phase P1: 2 attack(s) available
+[01:08.744] MSG: Player 2: tap a character to attack.
+[01:09.036] AI1 attack decision: (2,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (0,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:10.444] Revealed: P1 (2,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:10.444] Dice rolled: 4
+[01:10.454] MSG: Chaotic Wisp wins!
+[01:14.932] Crystals: P0 4070 → 3970 (-100)  [battle]
+[01:16.332] Attack P1(2,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} → P0(0,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=4  ATK=20 vs DEF=0  → WIN
+[01:16.333] Anim: 3A  △ P0(0,3)
+[01:16.333] Card destroyed  P0 (0,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:16.626] Turn ended  P1  |  Crystals P0=3970 P1=3790
+
+--- Turn 7  |  Player 0  |  Crystals P0=3970 P1=3790 ---
+P0:   [  — ][  — ][  ? ][  — ][Wand]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][Chao][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:17.242] Mode selected P0: ATTACK
+[01:17.247] Attack phase P0: 2 attack(s) available
+[01:17.248] MSG: Player 1: tap a character to attack.
+[01:17.543] AI0 attack decision: (0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → (2,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:18.950] Dice rolled: 5
+[01:18.959] MSG: Wandering Swordsman wins!
+[01:23.442] Crystals: P1 3790 → 3690 (-100)  [battle]
+[01:24.841] Attack P0(0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P1(2,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=60 vs DEF=0  → WIN
+[01:24.841] Anim: 3A  △ P1(2,3)
+[01:24.841] Card destroyed  P1 (2,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:27.346] Turn ended  P0  |  Crystals P0=3970 P1=3690
+
+--- Turn 8  |  Player 1  |  Crystals P0=3970 P1=3690 ---
+P0:   [  — ][  — ][  ? ][  — ][Wand]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:27.943] Mode selected P1: ATTACK
+[01:27.948] Attack phase P1: 2 attack(s) available
+[01:27.949] MSG: Player 2: tap a character to attack.
+[01:28.279] AI1 attack decision: (1,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (0,2) "Flame Trap" {cost 250}
+[01:29.652] Revealed: P1 (1,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:29.690] Revealed: P0 (0,2) "Flame Trap" {cost 250}
+[01:29.690] Dice rolled: 4
+[01:29.957] MSG: Trap triggered: Flame Trap!
+[01:34.052] Crystals: P0 3970 → 3720 (-250)  [trap cost]
+[01:35.440] MSG: Spike Trap: Church Guard permanently loses 10 ATK!
+[01:35.445] Trap: "Flame Trap" triggered  P1(1,0)→P0(0,2)
+[01:35.445] Anim: 3D  (attacker survives)
+[01:35.746] Turn ended  P1  |  Crystals P0=3720 P1=3690
+
+--- Turn 9  |  Player 0  |  Crystals P0=3720 P1=3690 ---
+P0:   [  — ][  — ][  — ][  — ][Wand]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [Chur][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:36.342] Mode selected P0: ATTACK
+[01:36.350] Attack phase P0: 2 attack(s) available
+[01:36.350] MSG: Player 1: tap a character to attack.
+[01:36.643] AI0 attack decision: (0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → (1,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:38.050] Dice rolled: 2
+[01:38.062] MSG: Wandering Swordsman wins!
+[01:42.539] Crystals: P1 3690 → 3540 (-150)  [battle]
+[01:43.938] Attack P0(0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P1(1,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}  Dice=2  ATK=60 vs DEF=35  → WIN
+[01:43.940] Anim: 3A  △ P1(1,0)
+[01:43.940] Card destroyed  P1 (1,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:44.433] Mode selected P0: ATTACK
+[01:44.436] Attack phase P0: 1 attack(s) available
+[01:44.437] MSG: Player 1: tap a character to attack.
+[01:44.775] AI0 attack decision: (1,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down} → (2,0) "Spike Trap" {cost 1500}
+[01:46.143] Revealed: P0 (1,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:46.183] Revealed: P1 (2,0) "Spike Trap" {cost 1500}
+[01:46.183] Dice rolled: 2
+[01:46.448] MSG: Trap triggered: Spike Trap!
+[01:51.473] Crystals: P1 3540 → 2040 (-1500)  [trap cost]
+[01:52.866] Crystals: P0 3720 → 3620 (-100)  [card lost]
+[01:54.907] MSG: Flame Trap: Doom Wisp destroyed!
+[01:54.913] Trap: "Spike Trap" triggered  P0(1,3)→P1(2,0)
+[01:54.913] Anim: 3E  △ P0(1,3)
+[01:55.400] Turn ended  P0  |  Crystals P0=3620 P1=2040
+
+--- Turn 10  |  Player 1  |  Crystals P0=3620 P1=2040 ---
+P0:   [  — ][  — ][  — ][  — ][Wand]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[01:56.001] Mode selected P1: ATTACK
+[01:56.006] Attack phase P1: 2 attack(s) available
+[01:56.007] MSG: Player 2: tap a character to attack.
+[01:56.331] AI1 attack decision: (1,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos | face-down} → (2,1) (dead-end)
+[01:57.708] Revealed: P1 (1,4) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[01:57.708] Dice rolled: 1
+[01:57.733] MSG: Nothing happens — Dead End.
+[02:01.114] Attack P1(1,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → P0(2,1)(empty)  Dice=1  → DEAD_END
+[02:01.114] Anim: 3F  (blank slot)
+[02:01.403] Turn ended  P1  |  Crystals P0=3620 P1=2040
+
+--- Turn 11  |  Player 0  |  Crystals P0=3620 P1=2040 ---
+P0:   [  — ][  — ][  — ][  — ][Wand]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  ? ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Foul]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:02.000] Mode selected P0: ATTACK
+[02:02.006] Attack phase P0: 2 attack(s) available
+[02:02.006] MSG: Player 1: tap a character to attack.
+[02:02.300] AI0 attack decision: (0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → (1,4) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[02:03.707] Dice rolled: 4
+[02:03.717] MSG: Wandering Swordsman wins!
+[02:08.198] Crystals: P1 2040 → 1940 (-100)  [battle]
+[02:09.596] Attack P0(0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P1(1,4)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=4  ATK=60 vs DEF=25  → WIN
+[02:09.596] Anim: 3A  △ P1(1,4)
+[02:09.596] Card destroyed  P1 (1,4) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[02:10.091] Mode selected P0: ATTACK
+[02:10.097] Attack phase P0: 1 attack(s) available
+[02:10.097] MSG: Player 1: tap a character to attack.
+[02:10.430] AI0 attack decision: (3,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (1,1) (dead-end)
+[02:11.802] Revealed: P0 (3,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:11.802] Dice rolled: 1
+[02:11.829] MSG: Nothing happens — Dead End.
+[02:15.192] Attack P0(3,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(1,1)(empty)  Dice=1  → DEAD_END
+[02:15.192] Anim: 3F  (blank slot)
+[02:15.695] Turn ended  P0  |  Crystals P0=3620 P1=1940
+
+--- Turn 12  |  Player 1  |  Crystals P0=3620 P1=1940 ---
+P0:   [  — ][  — ][  — ][  — ][Wand]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][Big ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+[02:16.291] Mode selected P1: ATTACK
+[02:16.297] Attack phase P1: 2 attack(s) available
+[02:16.298] MSG: Player 2: tap a character to attack.
+[02:16.592] AI1 attack decision: (4,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (3,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:17.999] Revealed: P1 (4,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:17.999] Dice rolled: 1
+[02:18.009] MSG: Big Thug wins!
+[02:22.490] Crystals: P0 3620 → 3220 (-400)  [battle]
+[02:23.893] Attack P1(4,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(3,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=1  ATK=40 vs DEF=35  → WIN
+[02:23.894] Anim: 3A  △ P0(3,1)
+[02:23.894] Card destroyed  P0 (3,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:24.184] Turn ended  P1  |  Crystals P0=3220 P1=1940
+
+--- Turn 13  |  Player 0  |  Crystals P0=3220 P1=1940 ---
+P0:   [  — ][  — ][  — ][  — ][Wand]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [Big ][  — ][  ? ][  — ][  ? ]
+[02:24.782] Mode selected P0: ATTACK
+[02:24.789] Attack phase P0: 2 attack(s) available
+[02:24.789] MSG: Player 1: tap a character to attack.
+[02:25.083] AI0 attack decision: (0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → (4,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:26.491] Dice rolled: 3
+[02:26.504] MSG: Wandering Swordsman wins!
+[02:30.981] Crystals: P1 1940 → 1540 (-400)  [battle]
+[02:32.382] Attack P0(0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P1(4,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=3  ATK=60 vs DEF=35  → WIN
+[02:32.382] Anim: 3A  △ P1(4,0)
+[02:32.382] Card destroyed  P1 (4,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:32.873] Mode selected P0: ATTACK
+[02:32.878] Attack phase P0: 1 attack(s) available
+[02:32.879] MSG: Player 1: tap a character to attack.
+[02:33.174] AI0 attack decision: (4,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos | face-down} → (4,1) (dead-end)
+[02:34.581] Revealed: P0 (4,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[02:34.581] Dice rolled: 3
+[02:34.611] MSG: Nothing happens — Dead End.
+[02:37.987] Attack P0(4,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos} → P1(4,1)(empty)  Dice=3  → DEAD_END
+[02:37.988] Anim: 3F  (blank slot)
+[02:38.487] Turn ended  P0  |  Crystals P0=3220 P1=1540
+
+--- Turn 14  |  Player 1  |  Crystals P0=3220 P1=1540 ---
+P0:   [  — ][  — ][  — ][  — ][Wand]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][Foul][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[02:39.081] Mode selected P1: ATTACK
+[02:39.087] Attack phase P1: 2 attack(s) available
+[02:39.087] MSG: Player 2: tap a character to attack.
+[02:39.382] AI1 attack decision: (2,1)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (4,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[02:40.790] Revealed: P1 (2,1) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[02:40.790] Dice rolled: 4
+[02:40.802] MSG: Ox Patrol wins!
+[02:46.281] Crystals: P0 3220 → 3120 (-100)  [battle]
+[02:47.680] Attack P1(2,1)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P0(4,1)"Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}  Dice=4  ATK=40 vs DEF=25  → WIN
+[02:47.680] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +ATK 10
+[02:47.680] Anim: 3A  △ P0(4,1)
+[02:47.680] Card destroyed  P0 (4,1) "Foul Wisp" {Unit ATK0 DEF25 | cost 100 | affinity Chaos}
+[02:47.974] Turn ended  P1  |  Crystals P0=3120 P1=1540
+
+--- Turn 15  |  Player 0  |  Crystals P0=3120 P1=1540 ---
+P0:   [  — ][  — ][  — ][  — ][Wand]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][Ox P][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[02:48.574] Mode selected P0: ATTACK
+[02:48.581] Attack phase P0: 2 attack(s) available
+[02:48.581] MSG: Player 1: tap a character to attack.
+[02:48.873] AI0 attack decision: (0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → (2,1) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[02:50.280] Dice rolled: 5
+[02:50.291] MSG: Wandering Swordsman wins!
+[02:54.773] Crystals: P1 1540 → 1120 (-420)  [battle]
+[02:56.173] Attack P0(0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P1(2,1)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=5  ATK=60 vs DEF=35  → WIN
+[02:56.173] Anim: 3A  △ P1(2,1)
+[02:56.173] Card destroyed  P1 (2,1) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[02:58.678] Turn ended  P0  |  Crystals P0=3120 P1=1120
+
+--- Turn 16  |  Player 1  |  Crystals P0=3120 P1=1120 ---
+P0:   [  — ][  — ][  — ][  — ][Wand]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[02:59.282] Mode selected P1: ATTACK
+[02:59.289] Attack phase P1: 2 attack(s) available
+[02:59.289] MSG: Player 2: tap a character to attack.
+[02:59.588] AI1 attack decision: (2,4)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down} → (3,4) (dead-end)
+[03:01.008] Revealed: P1 (2,4) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[03:01.008] Dice rolled: 1
+[03:01.048] MSG: Nothing happens — Dead End.
+[03:04.421] Attack P1(2,4)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P0(3,4)(empty)  Dice=1  → DEAD_END
+[03:04.422] Anim: 3F  (blank slot)
+[03:04.729] Turn ended  P1  |  Crystals P0=3120 P1=1120
+
+--- Turn 17  |  Player 0  |  Crystals P0=3120 P1=1120 ---
+P0:   [  — ][  — ][  — ][  — ][Wand]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  ? ][  — ]
+      [  ? ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][Doom]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  ? ][  — ][  ? ]
+[03:05.331] Mode selected P0: ATTACK
+[03:05.336] Attack phase P0: 2 attack(s) available
+[03:05.336] MSG: Player 1: tap a character to attack.
+[03:05.639] AI0 attack decision: (0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → (2,4) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[03:07.056] Dice rolled: 4
+[03:07.068] MSG: Wandering Swordsman wins!
+[03:11.555] Crystals: P1 1120 → 1020 (-100)  [battle]
+[03:12.953] Attack P0(0,4)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P1(2,4)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}  Dice=4  ATK=60 vs DEF=15  → WIN
+[03:12.953] Anim: 3A  △ P1(2,4)
+[03:12.953] Card destroyed  P1 (2,4) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[03:12.954] AI Player 0 wins
+[03:12.954] Reason: all_destroyed
+[03:12.954] Final crystals — P0: 3120  P1: 1020  |  Turns: 17
+[03:12.954] Log saved to: res://logs/results/2026-06-08_21-40-52_251_cold_brew/battle_cable_guy_time_window_2026-06-09_04-06-08_502.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Ox-Patrol-002
+Highlight: Ox Patrol (Character)  [setup: Flame Lizard]
+Result:    FAIL
+Detail:    Regex not matched: Attack P0\\(2,2\\)\"Ox\\ Patrol\".*ATK=40\\s
+Turns:     17  |  AI timeouts: 0
+===

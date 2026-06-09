@@ -4,5 +4,14 @@
 		"linger_characters": true,
 		"sfx": "res://assets/audio/sfx/horror_track_1.mp3",
 		"shake_screen": 8.0
+	},
+	{
+		"linger_characters": true,
+		"text": "......!!!"
+	},
+	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3"
 	}
 ]

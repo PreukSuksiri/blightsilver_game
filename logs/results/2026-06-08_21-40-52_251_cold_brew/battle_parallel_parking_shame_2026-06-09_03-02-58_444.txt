@@ -1,0 +1,536 @@
+=== Battle of Parallel Parking Shame ===
+Battle started: 2026-06-09 03:02:58.444
+Game Session of Cold Brew (started 2026-06-08 21:40:52.251)
+=== Card E2E Test ===
+Scenario ID:  E2E-Mind-Flayer-001
+Tier:         1 — Smoke (battle completes, card in log, no crashes)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Mind-Flayer-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Mind Flayer (Character)  [setup: Chaotic Wisp]
+Ability:      ATK_DEF_BONUS_VS_AFFINITY
+Setup role:   t1_character_attacker
+Verifies:
+  - Smoke: "Mind Flayer" appears in the battle log and the match reaches GAME OVER
+  - No script errors, invalid calls, or stack traces in log
+  - Log must contain: Mind Flayer
+  - Log must contain: GAME OVER
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 50 turns and <= 5 AI watchdog timeouts
+Notes:        Tier 1 smoke: character on field, battle completes.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T1 Character Deck
+AI-1 Deck:    E2E T1 Character Deck
+AI-0 Forced:  (2,2) Mind Flayer
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Resurrection, Release Mutagen, Siege Cannon
+P1 Tech hand: Bribe, Spy, Resurrection
+P0:   [C:Mad ][C:Gobl][C:Chao][  — ][C:Ox P]
+      [C:Wand][T:Hypn][C:Dark][  — ][T:Trap]
+      [C:Doom][T:Flam][C:Mind][  — ][C:Chur]
+      [C:Big ][  — ][C:Shre][  — ][T:Snar]
+      [C:Foul][  — ][C:Skel][  — ][T:Spik]
+P1:   [C:Mad ][C:Gobl][  — ][  — ][T:Hypn]
+      [C:Chur][  — ][  — ][T:Snar][C:Foul]
+      [C:Doom][C:Ox P][C:Chao][C:Shre][C:Skel]
+      [C:Wand][  — ][T:Flam][T:Spik][C:Dark]
+      [C:Pony][T:Trap][  — ][  — ][C:Big ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:05.182] Mode selected P0: ATTACK
+[00:05.186] Attack phase P0: 2 attack(s) available
+[00:05.186] MSG: Player 1: tap a character to attack.
+[00:05.528] AI0 attack decision: (2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:06.909] Revealed: P0 (2,2) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:06.948] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:06.948] Dice rolled: 5
+[00:06.952] MSG: Mind Flayer wins!
+[00:11.409] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.808] Attack P0(2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=5  ATK=100 vs DEF=0  → WIN
+[00:12.808] Anim: 3A  △ P1(2,2)
+[00:12.808] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:13.310] Mode selected P0: ATTACK
+[00:13.316] Attack phase P0: 1 attack(s) available
+[00:13.316] MSG: Player 1: tap a character to attack.
+[00:13.656] AI0 attack decision: (1,2)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | face-down} → (1,3) "Snare Trap" {cost 500}
+[00:15.035] Revealed: P0 (1,2) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos}
+[00:15.076] Revealed: P1 (1,3) "Snare Trap" {cost 500}
+[00:15.076] Dice rolled: 1
+[00:15.389] MSG: Trap triggered: Snare Trap!
+[00:19.466] Crystals: P1 4900 → 4400 (-500)  [trap cost]
+[00:20.858] MSG: Snare Trap: Dark Monk's effect nullified until end of next turn!
+[00:20.864] Trap: "Snare Trap" triggered  P0(1,2)→P1(1,3)
+[00:20.864] Anim: 3D  (attacker survives)
+[00:21.362] Turn ended  P0  |  Crystals P0=5000 P1=4400
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4400 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Dark][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:23.442] Crystals: P1 4400 → 3900 (-500)  [union]
+[00:23.490] Revealed: P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:23.490] Union summoned P1: "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}, "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down}
+[00:23.490] MSG: Scarlet Shroom: Venom on all opponent face-up characters!
+[00:23.490] MSG: Player 2 summoned [Scarlet Shroom] using: "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down}, "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down}
+[00:26.674] Crystals: P1 3900 → 3850 (-50)  [skip tax]
+[00:26.674] MSG: AI Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:28.062] Turn ended  P1  |  Crystals P0=5000 P1=3850
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3850 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Dark][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [Scar][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:28.657] Mode selected P0: ATTACK
+[00:28.667] Attack phase P0: 2 attack(s) available
+[00:28.667] MSG: Player 1: tap a character to attack.
+[00:28.959] AI0 attack decision: (2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:30.367] Dice rolled: 3
+[00:30.425] MSG: Mind Flayer wins!
+[00:34.863] Attack P0(2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → P1(0,0)"Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}  Dice=3  ATK=100 vs DEF=80  → WIN
+[00:34.863] Anim: 3A  △ P1(0,0)
+[00:34.863] Card destroyed  P1 (0,0) "Scarlet Shroom" {Union ATK0 DEF80 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[00:35.358] Mode selected P0: ATTACK
+[00:35.365] Attack phase P0: 1 attack(s) available
+[00:35.366] MSG: Player 1: tap a character to attack.
+[00:35.656] AI0 attack decision: (1,2)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | flags:venom | nullified≤T2} → (0,1) (dead-end)
+[00:37.064] Dice rolled: 1
+[00:37.091] MSG: Nothing happens — Dead End.
+[00:40.472] Attack P0(1,2)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | flags:venom | nullified≤T2} → P1(0,1)(empty)  Dice=1  → DEAD_END
+[00:40.472] Anim: 3F  (blank slot)
+[00:40.970] Turn ended  P0  |  Crystals P0=5000 P1=3850
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=3850 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][Dark][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:41.565] Mode selected P1: ATTACK
+[00:41.569] Attack phase P1: 2 attack(s) available
+[00:41.569] MSG: Player 2: tap a character to attack.
+[00:41.906] AI1 attack decision: (2,3)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down} → (1,2) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | flags:venom | nullified≤T2}
+[00:43.276] Revealed: P1 (2,3) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:43.276] Dice rolled: 4
+[00:43.285] MSG: Both cards are destroyed!
+[00:47.680] Crystals: P1 3850 → 3600 (-250)  [battle]
+[00:49.073] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:50.462] Attack P1(2,3)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → P0(1,2)"Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | flags:venom | nullified≤T2}  Dice=4  ATK=25 vs DEF=25  → TIE
+[00:50.462] Anim: 3C  △ P1(2,3) + △ P0(1,2)
+[00:50.462] Card destroyed  P1 (2,3) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:50.462] Card destroyed  P0 (1,2) "Dark Monk" {Unit ATK15 DEF25 | cost 300 | affinity Chaos | flags:venom | nullified≤T2}
+[00:50.758] Turn ended  P1  |  Crystals P0=4700 P1=3600
+
+--- Turn 5  |  Player 0  |  Crystals P0=4700 P1=3600 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[00:51.356] Mode selected P0: ATTACK
+[00:51.362] Attack phase P0: 2 attack(s) available
+[00:51.362] MSG: Player 1: tap a character to attack.
+[00:51.659] AI0 attack decision: (2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → (3,1) (dead-end)
+[00:53.064] Dice rolled: 3
+[00:53.092] MSG: Nothing happens — Dead End.
+[00:56.470] Attack P0(2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → P1(3,1)(empty)  Dice=3  → DEAD_END
+[00:56.470] Anim: 3F  (blank slot)
+[00:56.965] Mode selected P0: ATTACK
+[00:56.967] Attack phase P0: 1 attack(s) available
+[00:56.968] MSG: Player 1: tap a character to attack.
+[00:57.264] AI0 attack decision: (3,2)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos | face-down} → (2,1) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down}
+[00:58.675] Revealed: P0 (3,2) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:58.714] Revealed: P1 (2,1) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[00:58.714] Dice rolled: 3
+[01:04.282] Crystals: P0 4700 → 4450 (-250)  [battle]
+[01:05.685] Attack P0(3,2)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → P1(2,1)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=3  ATK=25 vs DEF=45  → LOSE
+[01:05.685] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 10
+[01:05.685] Anim: 3B  △ P0(3,2)
+[01:05.685] Card destroyed  P0 (3,2) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[01:06.174] Turn ended  P0  |  Crystals P0=4450 P1=3600
+
+--- Turn 6  |  Player 1  |  Crystals P0=4450 P1=3600 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Ox P][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:06.773] Mode selected P1: ATTACK
+[01:06.778] Attack phase P1: 2 attack(s) available
+[01:06.779] MSG: Player 2: tap a character to attack.
+[01:07.073] AI1 attack decision: (2,1)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → (2,3) (dead-end)
+[01:08.481] Dice rolled: 2
+[01:08.509] MSG: Nothing happens — Dead End.
+[01:11.893] Attack P1(2,1)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} → P0(2,3)(empty)  Dice=2  → DEAD_END
+[01:11.893] Anim: 3F  (blank slot)
+[01:12.184] Turn ended  P1  |  Crystals P0=4450 P1=3600
+
+--- Turn 7  |  Player 0  |  Crystals P0=4450 P1=3600 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][Ox P][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:12.785] Mode selected P0: ATTACK
+[01:12.790] Attack phase P0: 2 attack(s) available
+[01:12.790] MSG: Player 1: tap a character to attack.
+[01:13.083] AI0 attack decision: (2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → (2,1) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:14.490] Dice rolled: 5
+[01:14.501] MSG: Mind Flayer wins!
+[01:19.986] Crystals: P1 3600 → 3180 (-420)  [battle]
+[01:21.379] Attack P0(2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → P1(2,1)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=5  ATK=150 vs DEF=45  → WIN
+[01:21.379] Reckoning overlay: P0 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} +ATK 50
+[01:21.379] Reckoning overlay: P1 "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima} +DEF 10
+[01:21.379] Anim: 3A  △ P1(2,1)
+[01:21.379] Card destroyed  P1 (2,1) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[01:23.886] Turn ended  P0  |  Crystals P0=4450 P1=3180
+
+--- Turn 8  |  Player 1  |  Crystals P0=4450 P1=3180 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:24.482] Mode selected P1: ATTACK
+[01:24.488] Attack phase P1: 2 attack(s) available
+[01:24.489] MSG: Player 2: tap a character to attack.
+[01:24.823] AI1 attack decision: (1,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down} → (1,1) "Hypnosis" {cost 800}
+[01:26.192] Revealed: P1 (1,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine}
+[01:26.236] Revealed: P0 (1,1) "Hypnosis" {cost 800}
+[01:26.236] Dice rolled: 4
+[01:26.501] MSG: Trap triggered: Hypnosis!
+[01:30.608] Crystals: P0 4450 → 3650 (-800)  [trap cost]
+[01:31.997] MSG: Hypnosis: Church Guard cannot attack until end of next turn.
+[01:32.002] Trap: "Hypnosis" triggered  P1(1,0)→P0(1,1)
+[01:32.002] Anim: 3D  (attacker survives)
+[01:32.311] Turn ended  P1  |  Crystals P0=3650 P1=3180
+
+--- Turn 9  |  Player 0  |  Crystals P0=3650 P1=3180 ---
+P0:   [  ? ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [Chur][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:32.914] Mode selected P0: ATTACK
+[01:32.921] Attack phase P0: 2 attack(s) available
+[01:32.921] MSG: Player 1: tap a character to attack.
+[01:33.224] AI0 attack decision: (2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → (1,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | cannot-atk≤T9}
+[01:34.637] Dice rolled: 5
+[01:34.643] MSG: Mind Flayer wins!
+[01:39.140] Crystals: P1 3180 → 3030 (-150)  [battle]
+[01:40.538] Attack P0(2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → P1(1,0)"Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | cannot-atk≤T9}  Dice=5  ATK=100 vs DEF=35  → WIN
+[01:40.539] Anim: 3A  △ P1(1,0)
+[01:40.539] Card destroyed  P1 (1,0) "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | cannot-atk≤T9}
+[01:41.040] Mode selected P0: ATTACK
+[01:41.045] Attack phase P0: 1 attack(s) available
+[01:41.046] MSG: Player 1: tap a character to attack.
+[01:41.399] AI0 attack decision: (0,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature | face-down} → (3,2) "Flame Trap" {cost 250}
+[01:42.764] Revealed: P0 (0,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[01:42.805] Revealed: P1 (3,2) "Flame Trap" {cost 250}
+[01:42.805] Dice rolled: 2
+[01:43.080] MSG: Trap triggered: Flame Trap!
+[01:47.191] Crystals: P1 3030 → 2780 (-250)  [trap cost]
+[01:48.580] MSG: Spike Trap: Mad Raccoon permanently loses 10 ATK!
+[01:48.585] Trap: "Flame Trap" triggered  P0(0,0)→P1(3,2)
+[01:48.585] Anim: 3D  (attacker survives)
+[01:49.093] Turn ended  P0  |  Crystals P0=3650 P1=2780
+
+--- Turn 10  |  Player 1  |  Crystals P0=3650 P1=2780 ---
+P0:   [Mad ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:49.697] Mode selected P1: ATTACK
+[01:49.703] Attack phase P1: 2 attack(s) available
+[01:49.704] MSG: Player 2: tap a character to attack.
+[01:50.045] AI1 attack decision: (2,0)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos | face-down} → (0,0) "Mad Raccoon" {Unit ATK20 DEF15 | cost 260 | affinity Nature | base 20/15}
+[01:51.423] Revealed: P1 (2,0) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:51.423] Dice rolled: 4
+[01:51.433] MSG: Both cards are destroyed!
+[01:55.837] Crystals: P1 2780 → 2680 (-100)  [battle]
+[01:57.231] Crystals: P0 3650 → 3390 (-260)  [battle]
+[01:58.621] Attack P1(2,0)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P0(0,0)"Mad Raccoon" {Unit ATK20 DEF15 | cost 260 | affinity Nature | base 20/15}  Dice=4  ATK=15 vs DEF=15  → TIE
+[01:58.622] Anim: 3C  △ P1(2,0) + △ P0(0,0)
+[01:58.622] Card destroyed  P1 (2,0) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:58.622] Card destroyed  P0 (0,0) "Mad Raccoon" {Unit ATK20 DEF15 | cost 260 | affinity Nature | base 20/15}
+[01:58.924] Turn ended  P1  |  Crystals P0=3390 P1=2680
+
+--- Turn 11  |  Player 0  |  Crystals P0=3390 P1=2680 ---
+P0:   [  — ][  ? ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[01:59.531] Mode selected P0: ATTACK
+[01:59.537] Attack phase P0: 2 attack(s) available
+[01:59.537] MSG: Player 1: tap a character to attack.
+[01:59.839] AI0 attack decision: (2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → (1,1) (dead-end)
+[02:01.255] Dice rolled: 2
+[02:01.281] MSG: Nothing happens — Dead End.
+[02:04.668] Attack P0(2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → P1(1,1)(empty)  Dice=2  → DEAD_END
+[02:04.668] Anim: 3F  (blank slot)
+[02:05.173] Mode selected P0: ATTACK
+[02:05.178] Attack phase P0: 1 attack(s) available
+[02:05.179] MSG: Player 1: tap a character to attack.
+[02:05.526] AI0 attack decision: (0,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature | face-down} → (1,2) (dead-end)
+[02:06.899] Revealed: P0 (0,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[02:06.899] Dice rolled: 4
+[02:06.922] MSG: Nothing happens — Dead End.
+[02:10.314] Attack P0(0,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} → P1(1,2)(empty)  Dice=4  → DEAD_END
+[02:10.315] Anim: 3F  (blank slot)
+[02:10.820] Turn ended  P0  |  Crystals P0=3390 P1=2680
+
+--- Turn 12  |  Player 1  |  Crystals P0=3390 P1=2680 ---
+P0:   [  — ][Gobl][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:11.423] Mode selected P1: ATTACK
+[02:11.429] Attack phase P1: 2 attack(s) available
+[02:11.430] MSG: Player 2: tap a character to attack.
+[02:11.762] AI1 attack decision: (3,0)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima | face-down} → (0,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[02:13.147] Revealed: P1 (3,0) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[02:13.148] Dice rolled: 4
+[02:13.157] MSG: Wandering Swordsman wins!
+[02:17.647] Crystals: P0 3390 → 3140 (-250)  [battle]
+[02:19.043] Attack P1(3,0)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima} → P0(0,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=4  ATK=60 vs DEF=10  → WIN
+[02:19.043] Anim: 3A  △ P0(0,1)
+[02:19.043] Card destroyed  P0 (0,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[02:19.348] Turn ended  P1  |  Crystals P0=3140 P1=2680
+
+--- Turn 13  |  Player 0  |  Crystals P0=3140 P1=2680 ---
+P0:   [  — ][  — ][  ? ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [Wand][  — ][  — ][  ? ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:19.958] Mode selected P0: ATTACK
+[02:19.966] Attack phase P0: 2 attack(s) available
+[02:19.966] MSG: Player 1: tap a character to attack.
+[02:20.266] AI0 attack decision: (2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → (3,0) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[02:21.679] Dice rolled: 4
+[02:21.690] MSG: Mind Flayer wins!
+[02:27.179] Crystals: P1 2680 → 2080 (-600)  [battle]
+[02:28.578] Attack P0(2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → P1(3,0)"Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}  Dice=4  ATK=150 vs DEF=60  → WIN
+[02:28.578] Reckoning overlay: P0 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} +ATK 50
+[02:28.578] Anim: 3A  △ P1(3,0)
+[02:28.578] Card destroyed  P1 (3,0) "Wandering Swordsman" {Unit ATK60 DEF60 | cost 600 | affinity Anima}
+[02:29.079] Mode selected P0: ATTACK
+[02:29.082] Attack phase P0: 1 attack(s) available
+[02:29.083] MSG: Player 1: tap a character to attack.
+[02:29.390] AI0 attack decision: (0,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down} → (3,3) "Spike Trap" {cost 1500}
+[02:30.805] Revealed: P0 (0,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[02:30.846] Revealed: P1 (3,3) "Spike Trap" {cost 1500}
+[02:30.846] Dice rolled: 2
+[02:31.118] MSG: Trap triggered: Spike Trap!
+[02:36.163] Crystals: P1 2080 → 580 (-1500)  [trap cost]
+[02:37.554] Crystals: P0 3140 → 3040 (-100)  [card lost]
+[02:39.597] MSG: Flame Trap: Chaotic Wisp destroyed!
+[02:39.599] Trap: "Spike Trap" triggered  P0(0,2)→P1(3,3)
+[02:39.599] Anim: 3E  △ P0(0,2)
+[02:40.109] Turn ended  P0  |  Crystals P0=3040 P1=580
+
+--- Turn 14  |  Player 1  |  Crystals P0=3040 P1=580 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:40.746] Mode selected P1: ATTACK
+[02:40.752] Attack phase P1: 2 attack(s) available
+[02:40.753] MSG: Player 2: tap a character to attack.
+[02:41.088] AI1 attack decision: (2,4)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos | face-down} → (2,1) "Flame Trap" {cost 250}
+[02:42.465] Revealed: P1 (2,4) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[02:42.465] Revealed: P0 (2,1) "Flame Trap" {cost 250}
+[02:42.466] Dice rolled: 5
+[02:42.768] MSG: Trap triggered: Flame Trap!
+[02:46.857] Crystals: P0 3040 → 2790 (-250)  [trap cost]
+[02:48.246] MSG: Spike Trap: Skeleton Lancer permanently loses 10 ATK!
+[02:48.251] Trap: "Flame Trap" triggered  P1(2,4)→P0(2,1)
+[02:48.251] Anim: 3D  (attacker survives)
+[02:48.549] Turn ended  P1  |  Crystals P0=2790 P1=580
+
+--- Turn 15  |  Player 0  |  Crystals P0=2790 P1=580 ---
+P0:   [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][Skel]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  — ][  — ][  ? ]
+[02:49.146] Mode selected P0: ATTACK
+[02:49.153] Attack phase P0: 2 attack(s) available
+[02:49.154] MSG: Player 1: tap a character to attack.
+[02:49.446] AI0 attack decision: (2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → (2,4) "Skeleton Lancer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos | base 35/5}
+[02:50.854] Dice rolled: 5
+[02:50.865] MSG: Mind Flayer wins!
+[02:55.346] Crystals: P1 580 → 280 (-300)  [battle]
+[02:56.746] Attack P0(2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → P1(2,4)"Skeleton Lancer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos | base 35/5}  Dice=5  ATK=100 vs DEF=5  → WIN
+[02:56.746] Anim: 3A  △ P1(2,4)
+[02:56.746] Card destroyed  P1 (2,4) "Skeleton Lancer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos | base 35/5}
+[02:57.237] Mode selected P0: ATTACK
+[02:57.240] Attack phase P0: 1 attack(s) available
+[02:57.242] MSG: Player 1: tap a character to attack.
+[02:57.540] AI0 attack decision: (0,4)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima | face-down} → (4,1) "Trap Hole" {cost 0}
+[02:58.947] Revealed: P0 (0,4) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[02:58.989] Revealed: P1 (4,1) "Trap Hole" {cost 0}
+[02:58.989] Dice rolled: 4
+[02:59.251] MSG: Trap triggered: Trap Hole!
+[03:03.417] Coin flip: Tails, Tails, Tails
+[03:06.152] MSG: Trap Hole: Tails, Tails, Tails.
+[03:06.153] MSG: Trap Hole: No heads — no crystal loss.
+[03:06.158] Trap: "Trap Hole" triggered  P0(0,4)→P1(4,1)
+[03:06.158] Anim: 3D  (attacker survives)
+[03:06.665] Turn ended  P0  |  Crystals P0=2790 P1=280
+
+--- Turn 16  |  Player 1  |  Crystals P0=2790 P1=280 ---
+P0:   [  — ][  — ][  — ][  — ][Ox P]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[03:07.270] Mode selected P1: ATTACK
+[03:07.277] Attack phase P1: 2 attack(s) available
+[03:07.278] MSG: Player 2: tap a character to attack.
+[03:07.621] AI1 attack decision: (4,4)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima | face-down} → (0,4) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[03:08.997] Revealed: P1 (4,4) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[03:08.997] Dice rolled: 3
+[03:09.007] MSG: Big Thug wins!
+[03:13.494] Crystals: P0 2790 → 2370 (-420)  [battle]
+[03:14.893] Attack P1(4,4)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(0,4)"Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}  Dice=3  ATK=40 vs DEF=35  → WIN
+[03:14.893] Anim: 3A  △ P0(0,4)
+[03:14.893] Card destroyed  P0 (0,4) "Ox Patrol" {Unit ATK30 DEF35 | cost 420 | affinity Anima}
+[03:15.201] Turn ended  P1  |  Crystals P0=2370 P1=280
+
+--- Turn 17  |  Player 0  |  Crystals P0=2370 P1=280 ---
+P0:   [  — ][  — ][  — ][  — ][  — ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][Mind][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  ? ][  — ][  ? ]
+P1:   [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  — ][  — ][  — ][  — ][  — ]
+      [  — ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][Big ]
+[03:15.802] Mode selected P0: ATTACK
+[03:15.809] Attack phase P0: 2 attack(s) available
+[03:15.809] MSG: Player 1: tap a character to attack.
+[03:16.113] AI0 attack decision: (2,2)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane | flags:venom} → (4,4) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[03:17.528] Dice rolled: 4
+[03:17.538] MSG: Mind Flayer wins!
+[03:23.028] Crystals: P1 280 → 0 (-280)  [battle]
+
+=== GAME OVER ===
+[03:23.041] AI Player 0 wins
+[03:23.041] Reason: crystals
+[03:23.041] Final crystals — P0: 2370  P1: 0  |  Turns: 17
+[03:23.041] Log saved to: res://logs/results/2026-06-08_21-40-52_251_cold_brew/battle_parallel_parking_shame_2026-06-09_03-02-58_444.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Mind-Flayer-001
+Highlight: Mind Flayer (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     17  |  AI timeouts: 0
+===

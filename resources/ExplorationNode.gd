@@ -173,7 +173,7 @@ enum NodeType {
 ## Characters that can be spoken to at this node.
 ## Each entry is a Dictionary:
 ##   { "name": String, "vn_scene": String, "conditions": Array,
-##     "canon_story": bool, "play_once": bool, "thumbnail": String }
+##     "canon_story": bool, "play_once": bool, "remove_after_talk": bool, "thumbnail": String }
 ## conditions format is the same as connection conditions (all must pass to show).
 ## canon_story — when true, pulses the chat HUD icon while this character can be talked to.
 @export var characters: Array = []

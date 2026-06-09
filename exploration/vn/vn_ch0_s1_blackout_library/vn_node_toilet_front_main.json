@@ -9,7 +9,7 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
 			}
 		],
-		"text": "(Kelly is standing there, seems to wait for Nex. She is looking the other way)."
+		"text": "(Kelly is standing there, seems to wait for Nex. She is looking to the other way)."
 	},
 	{
 		"linger_characters": true,

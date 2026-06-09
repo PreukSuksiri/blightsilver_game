@@ -82,6 +82,7 @@ static func _nonzero_buff_parts(card: GameState.CardInstance) -> PackedStringArr
 	var parts: PackedStringArray = PackedStringArray()
 	_append_signed_stat(parts, "permATK", card.perm_atk_bonus)
 	_append_signed_stat(parts, "permDEF", card.perm_def_bonus)
+	_append_signed_stat(parts, "auraATK", card.field_aura_atk_bonus)
 	_append_signed_stat(parts, "tempATK", card.temp_atk_bonus)
 	_append_signed_stat(parts, "tempDEF", card.temp_def_bonus)
 	_append_signed_stat(parts, "carryDEF", card.carry_def_bonus)

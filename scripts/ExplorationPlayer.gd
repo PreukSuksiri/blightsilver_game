@@ -157,6 +157,9 @@ func _ready() -> void:
 	_build_ui()
 	_connect_signals()
 
+	# VN handoff complete — exploration nodes own BGM from here on.
+	ExplorationManager.keep_vn_bgm = false
+
 	# Returning from a battle? Show result then refresh.
 	if not ExplorationManager.pending_battle_result.is_empty():
 		_handle_post_battle_result()
@@ -638,6 +641,7 @@ func _on_var_changed(key: String, value: String) -> void:
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node == null or _vn_playing or _puzzle_playing:
 		return
+	_apply_node_music(node)
 	if not node.vn_var_change_matches(key, value):
 		return
 	_try_play_node_vn(node, node.node_type == ExplorationNode.NodeType.STORY)
@@ -747,17 +751,40 @@ func _has_eligible_inventory_item() -> bool:
 			return true
 	return false
 
+func _is_char_removed_from_room(char_data: Dictionary, char_index: int) -> bool:
+	if not bool(char_data.get("remove_after_talk", false)):
+		return false
+	return ExplorationManager.is_char_talked(ExplorationManager.current_node_id, char_index)
+
+func _char_index_for_data(char_data: Dictionary) -> int:
+	var node: ExplorationNode = ExplorationManager.current_node
+	if node == null:
+		return -1
+	var target_name: String = str(char_data.get("name", ""))
+	var target_vn: String = str(char_data.get("vn_scene", ""))
+	for i: int in node.characters.size():
+		var entry: Variant = node.characters[i]
+		if not entry is Dictionary:
+			continue
+		var cd: Dictionary = entry as Dictionary
+		if str(cd.get("name", "")) == target_name and str(cd.get("vn_scene", "")) == target_vn:
+			return i
+	return -1
+
 func _has_canon_story_chat() -> bool:
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node == null:
 		return false
-	for char_data: Variant in node.characters:
+	for i: int in node.characters.size():
+		var char_data: Variant = node.characters[i]
 		if not char_data is Dictionary:
 			continue
 		var cd: Dictionary = char_data as Dictionary
 		if not bool(cd.get("canon_story", false)):
 			continue
 		if not ExplorationManager.is_connection_unlocked(cd):
+			continue
+		if _is_char_removed_from_room(cd, i):
 			continue
 		var vn_path: String = str(cd.get("vn_scene", ""))
 		if vn_path.is_empty():
@@ -1337,13 +1364,16 @@ func _on_chat_clicked() -> void:
 		return
 	# Filter characters whose conditions are met and haven't been played (if play_once)
 	var available: Array = []
-	for char_data: Variant in node.characters:
+	for i: int in node.characters.size():
 		if available.size() >= 8:
 			break
+		var char_data: Variant = node.characters[i]
 		if not char_data is Dictionary:
 			continue
 		var cd: Dictionary = char_data as Dictionary
 		if not ExplorationManager.is_connection_unlocked(cd):
+			continue
+		if _is_char_removed_from_room(cd, i):
 			continue
 		var play_once: bool   = bool(cd.get("play_once", true))
 		var vn_path: String   = str(cd.get("vn_scene", ""))
@@ -1446,12 +1476,19 @@ func _on_chat_character_selected(char_data: Dictionary) -> void:
 	_close_chat_menu()
 	var vn_path: String = str(char_data.get("vn_scene", "")).strip_edges()
 	var play_once: bool = bool(char_data.get("play_once", true))
+	var remove_after: bool = bool(char_data.get("remove_after_talk", false))
+	var char_index: int = _char_index_for_data(char_data)
+	var node_id: String = ExplorationManager.current_node_id
 	var raw_acts: Variant = char_data.get("actions", [])
 	var actions: Array = raw_acts if raw_acts is Array else []
 	var done_cb := func() -> void:
 		var node: ExplorationNode = ExplorationManager.current_node
 		if node != null:
 			_compass_set_visible(true)
+		if remove_after and char_index >= 0:
+			ExplorationManager.mark_char_talked(node_id, char_index)
+			if node != null:
+				_rebuild_who_is_here(node)
 		_refresh_contextual_hud_glows()
 	if actions.is_empty():
 		if vn_path.is_empty():
@@ -1500,12 +1537,15 @@ func _rebuild_who_is_here(node: ExplorationNode) -> void:
 		_who_section.visible = false
 		return
 	var count: int = 0
-	for char_data: Variant in node.characters:
+	for i: int in node.characters.size():
 		if count >= 8:
 			break
+		var char_data: Variant = node.characters[i]
 		if not char_data is Dictionary:
 			continue
 		var cd: Dictionary = char_data as Dictionary
+		if _is_char_removed_from_room(cd, i):
+			continue
 		var char_name: String = str(cd.get("name", "")).strip_edges()
 		if char_name.is_empty():
 			continue
@@ -1541,7 +1581,7 @@ func _rebuild_who_is_here(node: ExplorationNode) -> void:
 func _on_info_clicked() -> void:
 	_register_exploration_activity()
 	if _is_info_panel_showing():
-		_close_info_panel(true, false)
+		_close_info_panel(true)
 		return
 	_close_other_hud_menus("info")
 	_open_info_panel()
@@ -1629,7 +1669,8 @@ func _close_info_panel(immediate: bool = false, run_on_close: bool = true) -> vo
 		_content_panel.position.x = vp_w * BG_AREA_FRACTION
 		_sync_radial_overlay_state()
 		if run_on_close and cb.is_valid():
-			cb.call()
+			# Defer so enter-VN can add_child; sync call during input breaks active dismiss.
+			cb.call_deferred()
 		return
 	# Slide out to right — hide labels and reset state only after panel is off-screen
 	_info_panel_tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUINT)
@@ -2572,6 +2613,17 @@ func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Cal
 # Node Rendering
 # ─────────────────────────────────────────────────────────────
 
+func _apply_node_music(node: ExplorationNode) -> void:
+	if node == null:
+		return
+	var effective_music: String = node.resolve_music(ExplorationManager.get_all_vars())
+	if effective_music.is_empty():
+		return
+	if not ResourceLoader.exists(effective_music):
+		push_warning("ExplorationPlayer: music '%s' not found." % effective_music)
+		return
+	BGMManager.play_path(effective_music, 1.0, 0.5, 100.0, BGMManager.CONTEXT_VN)
+
 func _on_node_entered(node: ExplorationNode) -> void:
 	_dismiss_all_popups()
 	if _exit_vn_defer_enter:
@@ -2596,10 +2648,7 @@ func _refresh_node(node: ExplorationNode) -> void:
 			push_warning("ExplorationPlayer: bg '%s' not found." % effective_bg)
 
 	# Music — skip when session keeps the launching VN's track
-	if not ExplorationManager.keep_vn_bgm:
-		var effective_music: String = node.resolve_music(vars)
-		if not effective_music.is_empty() and ResourceLoader.exists(effective_music):
-			BGMManager.play_path(effective_music, 1.0, 0.5, 100.0, BGMManager.CONTEXT_VN)
+	_apply_node_music(node)
 
 	# Type badge
 	match node.node_type:
@@ -2688,7 +2737,7 @@ func _would_play_node_vn(node: ExplorationNode) -> bool:
 	var vn_path: String = node.resolve_vn_scene(vars)
 	if vn_path.is_empty():
 		return false
-	if not FileAccess.file_exists(ProjectSettings.globalize_path(vn_path)):
+	if not ResourceLoader.exists(vn_path):
 		return false
 	var play_once: bool = node.resolve_vn_play_once(vars)
 	if play_once and ExplorationManager.is_vn_played(vn_path):
@@ -2985,7 +3034,7 @@ func _log_skipped_spot(spot: Dictionary, spot_index: int) -> void:
 		var detail: String = ""
 		match ctype:
 			"var_equals", "var_not_equals", "var_greater", "var_less", "var_gte", "var_lte":
-				detail = " actual=%q" % ExplorationManager.get_var(key)
+				detail = " actual=\"%s\"" % ExplorationManager.get_var(key)
 			"has_item", "not_has_item":
 				detail = " has=%s" % str(ExplorationManager.has_item(key))
 			"at_node":
@@ -3305,7 +3354,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _is_press_event(event) and _is_info_panel_showing():
 		var gp: Vector2 = _get_press_global_position(event)
 		if _hud_icon_at_point(gp) == "" and not _is_point_on_open_menu_ui(gp):
-			_close_info_panel(true, false)
+			_close_info_panel(true)
 			get_viewport().set_input_as_handled()
 			return
 	if event is InputEventKey and (event as InputEventKey).pressed and not (event as InputEventKey).echo:

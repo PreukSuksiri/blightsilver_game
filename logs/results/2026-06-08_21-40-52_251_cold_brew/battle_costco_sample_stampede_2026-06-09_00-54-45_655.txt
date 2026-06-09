@@ -1,0 +1,87 @@
+=== Battle of Costco Sample Stampede ===
+Battle started: 2026-06-09 00:54:45.655
+Game Session of Cold Brew (started 2026-06-08 21:40:52.251)
+=== Card E2E Test ===
+Scenario ID:  E2E-Gryphon-002
+Tier:         2 — Ability (forced setup + log assertions)
+Scenario def: res://test_case/e2e/scenarios.json
+Related spec: TC-FUNC-Gryphon-001  (test_case/functional/character_functional_tests.md)
+Highlight:    Gryphon (Character)  [setup: Chaotic Wisp]
+Setup role:   t2_solo_attacker
+Verifies:
+  - Ability: "Gryphon" is exercised via forced board/tech setup (t2_solo_attacker)
+  - Full battle reaches GAME OVER without script errors
+  - Log must contain: Gryphon
+  - Log must contain: GAME OVER
+  - Log must match regex: Attack P0\(2,2\)"Gryphon".*ATK=100\s
+  - Log must NOT contain: SCRIPT ERROR
+  - Log must NOT contain: Invalid call
+  - Log must NOT contain: Stack trace
+  - Highlight card name must appear somewhere in log
+  - Within 55 turns and <= 6 AI watchdog timeouts
+Notes:        Tier 2: verify base ATK=100 when Gryphon attacks.
+===
+
+=== AI vs AI Match ===
+AI-0 Deck:    E2E T2 solo Gryphon
+AI-1 Deck:    E2E T2 solo Chaotic Wisp
+AI-0 Forced:  (2,2) Gryphon
+AI-1 Forced:  (2,2) Chaotic Wisp
+AI-0 Tech:    random
+AI-1 Tech:    random
+===
+
+
+--- Initial Setup (server-side view) ---
+P0 Tech hand: Radar, Spy, War Supply
+P1 Tech hand: Tease, Great Diplomacy, Prayer
+P0:   [C:Mad ][C:Gobl][  — ][T:Hypn][T:Flam]
+      [C:Doom][  — ][  — ][  — ][C:Dark]
+      [C:Foul][T:Snar][C:Gryp][T:Trap][T:Spik]
+      [C:Chao][  — ][  — ][  — ][C:Big ]
+      [C:Ox P][  — ][  — ][  — ][C:Chur]
+P1:   [C:Mad ][C:Gobl][  — ][T:Flam][C:Foul]
+      [C:Doom][  — ][  — ][  — ][C:Ox P]
+      [C:Dark][C:Wand][C:Chao][T:Snar][C:Chur]
+      [T:Trap][  — ][  — ][  — ][T:Spik]
+      [T:Hypn][  — ][  — ][  — ][C:Big ]
+
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+P0:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+P1:   [  ? ][  ? ][  — ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  ? ][  ? ][  ? ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+      [  ? ][  — ][  — ][  — ][  ? ]
+[00:05.132] Mode selected P0: ATTACK
+[00:05.136] Attack phase P0: 2 attack(s) available
+[00:05.136] MSG: Player 1: tap a character to attack.
+[00:05.465] AI0 attack decision: (2,2)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down} → (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos | face-down}
+[00:06.842] Revealed: P0 (2,2) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:06.882] Revealed: P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[00:06.882] Dice rolled: 3
+[00:06.887] MSG: Gryphon wins!
+[00:11.333] Crystals: P1 5000 → 4900 (-100)  [battle]
+[00:12.730] Attack P0(2,2)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P1(2,2)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=3  ATK=100 vs DEF=0  → WIN
+[00:12.730] E2E: ability goal reached — ending battle early.
+[00:12.730] Anim: 3A  △ P1(2,2)
+[00:12.730] Card destroyed  P1 (2,2) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+
+=== GAME OVER ===
+[00:12.739] AI Player 0 wins
+[00:12.739] Final crystals — P0: 5000  P1: 4900  |  Turns: 1
+[00:12.739] Log saved to: res://logs/results/2026-06-08_21-40-52_251_cold_brew/battle_costco_sample_stampede_2026-06-09_00-54-45_655.txt
+
+
+=== Card E2E Result ===
+Scenario:  E2E-Gryphon-002
+Highlight: Gryphon (Character)  [setup: Chaotic Wisp]
+Result:    PASS
+Detail:    ok
+Turns:     1  |  AI timeouts: 0
+===
