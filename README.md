@@ -230,3 +230,31 @@ It demonstrates a 2-turn tutorial: turn 1 teaches attacking with Church Guard; t
 | `data/tutorial_battles/` | JSON config storage |
 
 `TutorialBattleManager` is completely isolated — it only activates when `is_active` is true, which only happens after `prepare()` is called from the builder. All GameBoard hooks are guarded by `if TutorialBattleManager.is_active`, so they have zero effect on VS AI, Hot Seat, Campaign, Daily Dungeon, or E2E test battles.
+
+---
+
+## Battle illustrations
+
+Side portraits shown during VS AI / campaign / exploration battles (configured in **VN Editor → BATTLE → Portrait P1 / P2**).
+
+### How they are cropped on screen
+
+`GameBoard` scales art to **720px tall** (× `portrait_p*_size`, default `1.0`) and shows only a strip beside the board:
+
+| Side | Visible on screen | Off-screen bleed |
+|------|-------------------|------------------|
+| **P1 (left)** | Right ~**60%** of the art | Left ~40% |
+| **P2 (right)** | Left ~**40%** of the art | Right ~60% |
+
+P1 is **mirrored** (`flip_h`); P2 is not. Compose for this crop, not a full-body showcase.
+
+### Quick checklist
+
+1. **Canvas:** **832 × 1216** px (matches `profile_player_*_default.png` and most `battler_*.png` in `res://assets/textures/profile/battle_illustrations/`).
+2. **Path:** use `battle_illustrations/` assets — avoid raw VN dialogue sprites (`vn_char_*.png`) unless they are already 832×1216 and composed for battle.
+3. **P2 / enemy (right):** put **face + shoulders** in the **left third** of the PNG; character faces **left** (toward the board). The right side can bleed off-screen.
+4. **P1 / player (left):** put the hero in the **right half** of the PNG (mirrored toward center); character faces **right** in the source file. The left side can bleed off-screen.
+5. **Vertical:** feet near the **bottom** of the canvas; don’t place the face too high or it clips at the top.
+6. **VN Editor tuning:** set **Portrait P1 / P2** on the `start_battle` beat. For bosses, start from `portrait_p2_offset_x: -160`, `portrait_p2_offset_y: 70` (see `ch1_s1_pre_DEMO.json`) and adjust until the face reads clearly. Use **Portrait size** `0.85–0.95` if the art crowds the grid.
+
+**Visible width is narrow** (~200–300 px at size 1.0) — keep the face **large** in the inner-facing safe zone.

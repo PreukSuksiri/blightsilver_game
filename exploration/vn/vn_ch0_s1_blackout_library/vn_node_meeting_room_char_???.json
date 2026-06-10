@@ -14,6 +14,104 @@
 	{
 		"animation": "animation_vellum_card_commence_facedown",
 		"linger_characters": true,
-		"sfx": "res://assets/audio/sound_spellcasting_2.mp3"
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"wait": 5.8
+	},
+	{
+		"ai_forced_cells": [
+			{
+				"card_name": "Green Mage",
+				"col": 3,
+				"row": 1
+			},
+			{
+				"card_name": "Blue Mage",
+				"col": 0,
+				"row": 4
+			},
+			{
+				"card_name": "Mind Flayer",
+				"col": 1,
+				"row": 0
+			},
+			{
+				"card_name": "Pyromancer",
+				"col": 4,
+				"row": 2
+			},
+			{
+				"card_name": "Ice Mage",
+				"col": 0,
+				"row": 2
+			},
+			{
+				"card_name": "Red Mage",
+				"col": 1,
+				"row": 3
+			},
+			{
+				"card_name": "Explosive Barrels",
+				"col": 2,
+				"row": 2
+			},
+			{
+				"card_name": "Bunker",
+				"col": 4,
+				"row": 0
+			},
+			{
+				"card_name": "Red Card",
+				"col": 0,
+				"row": 0
+			},
+			{
+				"card_name": "Book with Fangs",
+				"col": 4,
+				"row": 4
+			},
+			{
+				"card_name": "Blackmail",
+				"col": 2,
+				"row": 0
+			},
+			{
+				"card_name": "Aerial the Battlemage",
+				"col": 2,
+				"row": 4
+			}
+		],
+		"ai_forced_tech": [
+			"Radar",
+			"Tease",
+			"Bribe"
+		],
+		"enemy_deck": {
+			"characters": [
+				"Mind Flayer",
+				"Pyromancer",
+				"Red Mage",
+				"Ice Mage",
+				"Green Mage",
+				"Book with Fangs",
+				"Blue Mage",
+				"Aerial the Battlemage"
+			],
+			"tech": [
+				"Radar",
+				"Tease",
+				"Bribe"
+			],
+			"traps": [
+				"Blackmail",
+				"Explosive Barrels",
+				"Bunker",
+				"Red Card"
+			]
+		},
+		"linger_characters": true,
+		"player1_name": "Diluted Man",
+		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_univ_meeting_room_ghost.png",
+		"portrait_p2_offset_x": -140.0,
+		"start_battle": true
 	}
 ]

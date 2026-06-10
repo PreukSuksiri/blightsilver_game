@@ -454,6 +454,8 @@ func _rebuild_trunk_list() -> void:
 			if name_q != "" and name_q not in char_name.to_lower():
 				continue
 			var data: CharacterData = CardDatabase.get_character(char_name)
+			if SaveManager.demo_mode and not data.include_in_demo:
+				continue
 			if use_aff and data.affinity != _filter_affinity:
 				continue
 			if data.crystal_cost < _filter_cost_min or data.crystal_cost > _filter_cost_max:
@@ -499,39 +501,34 @@ func _rebuild_trunk_list() -> void:
 			trunk_list.set_item_metadata(trunk_list.item_count - 1,
 				{"type": "union", "name": u.card_name})
 
-	# Traps and Tech have no affinity/ATK/DEF — hide them when those filters are active
-	if not use_aff and not use_atk and not use_def:
-		if _filter in ["all", "trap"]:
-			for trap_name: String in CardDatabase.get_all_trap_names():
-				if Collection.get_card_count(trap_name) == 0:
-					continue
-				if name_q != "" and name_q not in trap_name.to_lower():
-					continue
-				var data: TrapData = CardDatabase.get_trap(trap_name)
-				if data.crystal_cost < _filter_cost_min or data.crystal_cost > _filter_cost_max:
-					continue
-				if abil_q != "" and abil_q not in data.get_effect_description().to_lower():
-					continue
-				var label: String = "TRAP: %s  (%d◆)" % [trap_name, data.crystal_cost]
-				trunk_list.add_item(label)
-				trunk_list.set_item_metadata(trunk_list.item_count - 1,
-					{"type": "trap", "name": trap_name})
+	# Traps and tech ignore affinity/ATK/DEF/cost/ability filters — only tab + name search apply.
+	if _filter in ["all", "trap"]:
+		for trap_name: String in CardDatabase.get_all_trap_names():
+			if Collection.get_card_count(trap_name) == 0:
+				continue
+			if name_q != "" and name_q not in trap_name.to_lower():
+				continue
+			var data: TrapData = CardDatabase.get_trap(trap_name)
+			if SaveManager.demo_mode and not data.include_in_demo:
+				continue
+			var label: String = "TRAP: %s  (%d◆)" % [trap_name, data.crystal_cost]
+			trunk_list.add_item(label)
+			trunk_list.set_item_metadata(trunk_list.item_count - 1,
+				{"type": "trap", "name": trap_name})
 
-		if _filter in ["all", "tech"]:
-			for tech_name: String in CardDatabase.get_all_tech_names():
-				if Collection.get_card_count(tech_name) == 0:
-					continue
-				if name_q != "" and name_q not in tech_name.to_lower():
-					continue
-				var data: TechCardData = CardDatabase.get_tech(tech_name)
-				if data.crystal_cost < _filter_cost_min or data.crystal_cost > _filter_cost_max:
-					continue
-				if abil_q != "" and abil_q not in data.get_effect_description().to_lower():
-					continue
-				var label: String = "TECH: %s  (%d◆)" % [tech_name, data.crystal_cost]
-				trunk_list.add_item(label)
-				trunk_list.set_item_metadata(trunk_list.item_count - 1,
-					{"type": "tech", "name": tech_name})
+	if _filter in ["all", "tech"]:
+		for tech_name: String in CardDatabase.get_all_tech_names():
+			if Collection.get_card_count(tech_name) == 0:
+				continue
+			if name_q != "" and name_q not in tech_name.to_lower():
+				continue
+			var data: TechCardData = CardDatabase.get_tech(tech_name)
+			if SaveManager.demo_mode and not data.include_in_demo:
+				continue
+			var label: String = "TECH: %s  (%d◆)" % [tech_name, data.crystal_cost]
+			trunk_list.add_item(label)
+			trunk_list.set_item_metadata(trunk_list.item_count - 1,
+				{"type": "tech", "name": tech_name})
 
 	if _gallery_mode and _trunk_gallery_flow != null:
 		_rebuild_trunk_gallery()
@@ -850,6 +847,9 @@ func _add_union_materials_to_deck(union_name: String) -> void:
 		for cname: String in CardDatabase.get_all_character_names():
 			if Collection.get_card_count(cname) == 0:
 				continue
+			var char_data: CharacterData = CardDatabase.get_character(cname)
+			if SaveManager.demo_mode and not char_data.include_in_demo:
+				continue
 			if cname in current_deck.characters:
 				continue
 			if cname in used_in_assign:
@@ -963,6 +963,8 @@ func _rebuild_union_section() -> void:
 	all_unions.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)
 	for u: UnionData in all_unions:
 		if not SaveManager.is_union_unlocked(u.card_name):
+			continue
+		if SaveManager.demo_mode and not UnionDatabase.is_playable_in_demo(u):
 			continue
 		if UnionDatabase.deck_can_form_union(current_deck.characters, u):
 			union_flow.add_child(_make_union_right_tile(u))

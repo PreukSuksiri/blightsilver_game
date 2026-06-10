@@ -1,0 +1,118 @@
+=== Battle of Haunted Break Room ===
+Battle started: 2026-06-10 05:02:51.778
+Game Session of Oolong Tea (started 2026-06-10 05:01:53.955)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:07.018] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:12.430] Mode selected P1: ATTACK
+[00:12.432] MSG: Player 2: tap a character to attack.
+[00:14.130] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:14.131] Dice rolled: 2
+[00:14.143] MSG: Nothing happens — Dead End.
+[00:17.529] Attack P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} → P0(3,4)(empty)  Dice=2  → DEAD_END
+[00:17.529] Anim: 3F  (blank slot)
+[00:20.035] Turn ended  P1  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:53.959] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:53.960] Dice rolled: 4
+[00:53.965] MSG: Ponycorn wins!
+[00:56.836] Crystals: P1 5000 → 4200 (-800)  [battle]
+[00:58.235] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=4  ATK=25 vs DEF=20  → WIN
+[00:58.235] Anim: 3A  △ P1(0,2)
+[00:58.235] Card destroyed  P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:03.603] Revealed: P0 (3,0) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[01:03.603] Dice rolled: 3
+[01:03.618] MSG: Nothing happens — Dead End.
+[01:05.574] Attack P0(3,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P1(1,0)(empty)  Dice=3  → DEAD_END
+[01:05.574] Anim: 3F  (blank slot)
+[01:07.421] Turn ended  P0  |  Crystals P0=5000 P1=4200
+
+--- Turn 3  |  Player 1  |  Crystals P0=5000 P1=4200 ---
+[01:08.026] Mode selected P1: TECH
+[01:08.329] Crystals: P1 4200 → 3200 (-1000)  [tech cost]
+[01:09.714] Tech played  P1: "Accident"
+[01:11.253] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[01:11.665] Card destroyed  P0 (3,0) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[01:11.668] Tech resolved  P1
+[01:12.572] Mode selected P1: ATTACK
+[01:12.575] MSG: Player 2: tap a character to attack.
+[01:14.286] Revealed: P1 (3,1) "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}
+[01:14.286] Dice rolled: 3
+[01:14.288] MSG: Ancient Lich wins!
+[01:17.154] Crystals: P0 5000 → 4700 (-300)  [battle]
+[01:17.888] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:18.548] Attack P1(3,1)"Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=3  ATK=60 vs DEF=20  → WIN
+[01:18.548] Anim: 3A  △ P0(0,2)
+[01:18.548] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[01:21.053] Turn ended  P1  |  Crystals P0=4700 P1=3200
+
+--- Turn 4  |  Player 0  |  Crystals P0=4700 P1=3200 ---
+[01:31.369] Revealed: P0 (1,1) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[01:31.370] Dice rolled: 2
+[01:31.377] MSG: Archbishop wins!
+[01:35.854] Crystals: P1 3200 → 2450 (-750)  [battle]
+[01:37.249] Attack P0(1,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P1(3,1)"Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}  Dice=2  ATK=70 vs DEF=60  → WIN
+[01:37.250] Anim: 3A  △ P1(3,1)
+[01:37.250] Card destroyed  P1 (3,1) "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}
+[01:46.568] Revealed: P0 (4,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:46.568] Dice rolled: 4
+[01:46.582] MSG: Nothing happens — Dead End.
+[01:48.227] MSG: Sonic Seraph: Bonus attack for hitting dead end!
+[01:48.229] Attack P0(4,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(3,0)(empty)  Dice=4  → DEAD_END
+[01:48.229] Anim: 3F  (blank slot)
+[03:17.716] Turn ended  P0  |  Crystals P0=4700 P1=2450
+
+--- Turn 5  |  Player 1  |  Crystals P0=4700 P1=2450 ---
+[03:18.313] Mode selected P1: ATTACK
+[03:18.319] MSG: Player 2: tap a character to attack.
+[03:20.010] Revealed: P1 (2,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[03:20.010] Dice rolled: 1
+[03:20.014] MSG: Lab Crawler wins!
+[03:23.620] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:24.170] Target prompt: "Archbishop: Destroy 1 other Divine Character instead?"  filter=own_divine_character_redirect
+[03:30.393] Crystals: P0 4700 → 4150 (-550)  [card lost]
+[03:30.396] MSG: Archbishop redirected destruction to Sonic Seraph.
+[03:30.398] Attack P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} → P0(1,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}  Dice=1  ATK=95 vs DEF=90  → TIE
+[03:30.398] Anim: exchange  (no destruction)
+[03:32.895] Turn ended  P1  |  Crystals P0=4150 P1=2450
+
+--- Turn 6  |  Player 0  |  Crystals P0=4150 P1=2450 ---
+[03:44.188] MSG: Tap 2 material card(s) on the field.
+[03:45.097] MSG: 1 more material(s) needed.
+[03:48.080] Crystals: P0 4150 → 2650 (-1500)  [union]
+[03:48.108] Revealed: P0 (0,4) "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine}
+[03:48.108] Union summoned P0: "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} from "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}, "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}
+[03:48.108] MSG: Player 1 summoned [Seraphim Fistmaster] using: "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}, "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}
+[03:55.039] Dice rolled: 1
+[03:55.072] MSG: Seraphim Fistmaster wins!
+[03:57.829] Crystals: P1 2450 → 1250 (-1200)  [battle]
+[03:59.222] Attack P0(0,4)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=1  ATK=120 vs DEF=60  → WIN
+[03:59.222] Anim: 3A  △ P1(2,1)
+[03:59.222] Card destroyed  P1 (2,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[04:02.583] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[04:02.584] Dice rolled: 4
+[04:02.588] MSG: Archbishop wins!
+[04:05.832] Crystals: P1 1250 → 370 (-880)  [battle]
+[04:07.230] Attack P0(1,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P1(1,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}  Dice=4  ATK=70 vs DEF=40  → WIN
+[04:07.230] Anim: 3A  △ P1(1,1)
+[04:07.230] Card destroyed  P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[04:09.665] Turn ended  P0  |  Crystals P0=2650 P1=370
+
+--- Turn 7  |  Player 1  |  Crystals P0=2650 P1=370 ---
+[04:10.266] Mode selected P1: ATTACK
+[04:10.268] MSG: Player 2: tap a character to attack.
+[04:11.983] Revealed: P1 (4,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[04:11.983] Dice rolled: 2
+[04:11.988] MSG: Pit Lord is destroyed by Divine!
+[04:15.581] MSG: [DEBUG] Bot Player timed out — ending turn.
+[04:17.367] Crystals: P1 370 → 0 (-370)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2650  P1: 0  |  Turns: 7

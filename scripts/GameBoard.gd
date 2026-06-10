@@ -320,7 +320,8 @@ func _ready() -> void:
 		AIvsAIManager.start_logging(self)
 	elif GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.HOT_SEAT]:
 		_open_session_log()
-	CheckerTransition.fade_in()
+	if CheckerTransition.is_screen_covered():
+		await CheckerTransition.fade_in()
 	if TutorialBattleManager.is_prepared:
 		TutorialBattleManager.on_board_ready(self)
 		_update_reveal_buttons()
@@ -1033,7 +1034,11 @@ func _on_handoff_ready() -> void:
 
 func _start_game() -> void:
 	_union_summoned_this_duel = [0, 0]
-	GameState.new_game(GameState.game_mode)
+	if GameState._vn_battle_pending:
+		# VNPlayer already ran new_game() and applied battle config — avoid a second reset.
+		GameState._vn_battle_pending = false
+	else:
+		GameState.new_game(GameState.game_mode)
 	# Apply campaign-supplied player names if VNPlayer set them
 	if GameState.campaign_player_names.size() == 2:
 		var n1: String = GameState.campaign_player_names[0]
@@ -1190,7 +1195,8 @@ func _apply_player_names() -> void:
 func _on_setup_complete_p1() -> void:
 	if GameState.game_mode == GameState.GameMode.VS_AI \
 			or GameState.game_mode == GameState.GameMode.CAMPAIGN \
-			or GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
+			or GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			or GameState.game_mode == GameState.GameMode.EXPLORATION:
 		_do_ai_setup()
 		_begin_game()
 	elif GameState.game_mode == GameState.GameMode.HOT_SEAT:
@@ -2445,7 +2451,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 		and card.card_type == "character"
 		and not card.attacked_this_turn
 		and card.cannot_attack_until < GameState.turn_number
-		and (GameState.attacks_remaining > 0 or card.has_pending_multi_attack_non_char())
+		and (GameState.attacks_remaining > 0 or card.has_pending_bonus_attack_chain())
 		and (GameState.berserk_active[current_player] == null
 			or GameState.berserk_active[current_player] == card)
 	)
@@ -2530,7 +2536,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 			_clear_selection()
 			selected_attacker_pos = snap_pos
 			var atk_card: GameState.CardInstance = GameState.get_card(snap_player, snap_pos.x, snap_pos.y)
-			_multi_attack_bonus_targeting = atk_card != null and atk_card.has_pending_multi_attack_non_char()
+			_multi_attack_bonus_targeting = atk_card != null and atk_card.has_pending_bonus_attack_chain()
 			grid_nodes[snap_player][snap_pos.x][snap_pos.y].set_selected(true)
 			_set_selection_state(SelectionState.SELECTING_TARGET)
 			_highlight_valid_targets()
@@ -4756,9 +4762,8 @@ func _on_crystals_changed(player_index: int, new_amount: int, _reason: String = 
 		_play_crystal_burst(player_index)
 		await _tick_down_crystal(player_index, old_amount, new_amount)
 		await get_tree().create_timer(1.0).timeout
-		_check_almost_win_bgm()
-		if new_amount <= 0:
-			_fade_out_battle_music(0.5)
+		if new_amount > 0:
+			_check_almost_win_bgm()
 	else:
 		var bottom_lbl := _p1_bottom_crystal if player_index == 0 else _p2_bottom_crystal
 		if bottom_lbl != null:
@@ -5452,7 +5457,7 @@ func _enter_mode_select() -> void:
 	if resume_multi_attack_pos != Vector2i(-1, -1):
 		var bonus_attacker: GameState.CardInstance = GameState.get_card(
 			cp, resume_multi_attack_pos.x, resume_multi_attack_pos.y)
-		if bonus_attacker != null and bonus_attacker.has_pending_multi_attack_non_char():
+		if bonus_attacker != null and bonus_attacker.has_pending_bonus_attack_chain():
 			selected_attacker_pos = resume_multi_attack_pos
 			_multi_attack_bonus_targeting = true
 			grid_nodes[cp][resume_multi_attack_pos.x][resume_multi_attack_pos.y].set_selected(true)
@@ -5547,7 +5552,7 @@ func _on_attack_completed(from: Vector2i, _to: Vector2i, _result: BattleResolver
 			"card_name": attacker.card_name if attacker != null else "",
 		})
 	_refresh_all_grids()
-	if attacker != null and attacker.has_pending_multi_attack_non_char() and not _is_ai_turn():
+	if attacker != null and attacker.has_pending_bonus_attack_chain() and not _is_ai_turn():
 		_pending_multi_attack_pos = from
 		_multi_attack_bonus_targeting = true
 	else:
@@ -6836,7 +6841,7 @@ func _has_any_attackable_char() -> bool:
 					and card.cannot_attack_until < GameState.turn_number \
 					and (GameState.berserk_active[cp] == null
 						or GameState.berserk_active[cp] == card) \
-					and (GameState.attacks_remaining > 0 or card.has_pending_multi_attack_non_char()):
+					and (GameState.attacks_remaining > 0 or card.has_pending_bonus_attack_chain()):
 				return true
 	return false
 
@@ -6929,12 +6934,19 @@ func _highlight_tech_targets(filter: String) -> void:
 					and card.affinity == CharacterData.Affinity.DIVINE
 					and card.ability_type != int(CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY))
 
-	elif filter == "opponent_any_hidden" or filter == "ability_false_prophet_reveal":
+	elif filter == "opponent_any_hidden":
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 				grid_nodes[opponent][r][c].set_highlighted(
 					card.card_type != "dead_end" and not card.face_up)
+
+	elif filter == "ability_false_prophet_reveal":
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
+				grid_nodes[opponent][r][c].set_highlighted(
+					not card.face_up and not card.was_destroyed)
 
 	elif filter == "opponent_character_ability_destroy":
 		for r in range(GameState.GRID_SIZE):
@@ -7096,7 +7108,7 @@ func _selected_attacker_has_multi_bonus() -> bool:
 		return false
 	var card: GameState.CardInstance = GameState.get_card(
 		GameState.current_player, selected_attacker_pos.x, selected_attacker_pos.y)
-	return card != null and card.has_pending_multi_attack_non_char()
+	return card != null and card.has_pending_bonus_attack_chain()
 
 func _should_prompt_forfeit_multi_attack() -> bool:
 	return _multi_attack_bonus_targeting and _selected_attacker_has_multi_bonus()
@@ -7108,6 +7120,7 @@ func _forfeit_multi_attack_bonus() -> void:
 		GameState.current_player, selected_attacker_pos.x, selected_attacker_pos.y)
 	if card != null:
 		card.attacked_this_turn = true
+		card.bonus_attack_pending = false
 	_pending_multi_attack_pos = Vector2i(-1, -1)
 	_multi_attack_bonus_targeting = false
 
@@ -7815,9 +7828,13 @@ func _on_game_over(winner: int) -> void:
 	GameState.vn_on_win  = ""
 	GameState.vn_on_lose = ""
 	var player_won := (winner == 0)
+	if GameState.vn_launched_from_exploration and ExplorationManager.is_session_active:
+		ExplorationManager.complete_battle_node(player_won)
 	if not player_won and vn_lose != "" and vn_lose != "game_over":
 		# Loss: go straight to lose VN, skip win screen
 		_stop_battle_music()
+		if GameState.vn_launched_from_exploration:
+			ExplorationManager.clear_vn_resume_bgm()
 		var cb := func() -> void: get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 		VNPlayer.launch_overlay(vn_lose, cb)
 		return
@@ -7861,14 +7878,15 @@ func _on_game_over(winner: int) -> void:
 	var ml: Control = get_node("MainLayout")
 	_shake_origin = ml.position
 	_shake_active = true
-	if player_won and GameState.battle_almost_win_enabled:
+	var _crystal_end: bool = GameState.game_over_reason == "crystals"
+	if player_won and GameState.battle_almost_win_enabled and not _crystal_end:
 		# Win: switch to almost-win BGM at 00:00 with no fade-in.
 		# If it's already playing (triggered by the almost-win threshold mid-battle),
 		# leave it running — do not restart it.
 		var almost_path: String = _resolve_almost_win_bgm_path()
 		if BGMManager.get_current_path() != almost_path:
 			BGMManager.play_path(almost_path, 0.0, 0.0, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
-	elif not player_won:
+	elif not player_won and not _crystal_end:
 		# Lose: slowly fade out whatever is playing across the reveal animation.
 		# Nothing starts after — defeat BGM is intentionally omitted.
 		BGMManager.stop(2.5)
@@ -7932,15 +7950,9 @@ func _fade_to_white() -> ColorRect:
 	await t.finished
 	return overlay
 
-func _fade_out_battle_music(duration: float) -> void:
-	await BGMManager.fade_out_and_stop(duration)
-
 # ─────────────────────────────────────────────────────────────
 # Almost-win BGM
 # ─────────────────────────────────────────────────────────────
-const ALMOST_WIN_BGM: String = "res://assets/audio/bgm_almost_win.mp3"
-
-
 func _resolve_almost_win_bgm_path() -> String:
 	return GameState.get_almost_win_bgm_path()
 
@@ -8184,7 +8196,12 @@ func _show_endgame_screen(winner: int) -> void:
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 
 	var dest: String
-	if mode == GameState.GameMode.CAMPAIGN:
+	var from_exploration: bool = GameState.vn_launched_from_exploration \
+		and ExplorationManager.is_session_active
+	if from_exploration:
+		dest = ExplorationManager.EXPLORATION_PLAYER_SCENE
+		GameState.vn_launched_from_exploration = false
+	elif mode == GameState.GameMode.CAMPAIGN:
 		dest = "res://scenes/campaign_map.tscn"
 	elif mode == GameState.GameMode.EXPLORATION:
 		dest = ExplorationManager.EXPLORATION_PLAYER_SCENE
@@ -8215,14 +8232,19 @@ func _show_endgame_screen(winner: int) -> void:
 		var pending_vn := _pending_win_vn
 		_pending_win_vn = ""
 		if pending_vn != "":
+			var post_vn_dest: String = dest if from_exploration \
+				else "res://scenes/main_menu.tscn"
 			out_tw.tween_callback(func() -> void:
 				_stop_battle_music()
 				black.queue_free()
 				overlay.queue_free()
-				var cb := func() -> void: get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+				var cb := func() -> void: get_tree().change_scene_to_file(post_vn_dest)
 				VNPlayer.launch_overlay(pending_vn, cb))
 		else:
-			out_tw.tween_callback(func() -> void: get_tree().change_scene_to_file(dest)))
+			out_tw.tween_callback(func() -> void:
+				if from_exploration:
+					BGMManager.stop(0.5)
+				get_tree().change_scene_to_file(dest)))
 
 	# Fade in the endgame screen
 	var ft := create_tween()

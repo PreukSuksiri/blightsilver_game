@@ -2888,12 +2888,19 @@ func _apply_node_music(node: ExplorationNode) -> void:
 
 
 func _try_apply_restored_bgm() -> bool:
-	var bgm: Dictionary = ExplorationManager.take_pending_restored_bgm()
+	return _try_apply_bgm_snapshot(ExplorationManager.take_pending_restored_bgm(), "saved")
+
+
+func _try_apply_vn_resume_bgm() -> bool:
+	return _try_apply_bgm_snapshot(ExplorationManager.take_vn_resume_bgm(), "VN resume")
+
+
+func _try_apply_bgm_snapshot(bgm: Dictionary, label: String) -> bool:
 	var path: String = str(bgm.get("path", "")).strip_edges()
 	if path.is_empty():
 		return false
 	if not ResourceLoader.exists(path):
-		push_warning("ExplorationPlayer: saved BGM '%s' not found." % path)
+		push_warning("ExplorationPlayer: %s BGM '%s' not found." % [label, path])
 		return false
 	var context: String = str(bgm.get("context", BGMManager.CONTEXT_VN)).strip_edges()
 	if context.is_empty():
@@ -2926,8 +2933,10 @@ func _refresh_node(node: ExplorationNode) -> void:
 		else:
 			push_warning("ExplorationPlayer: bg '%s' not found." % effective_bg)
 
-	# Music — restored snapshot first, otherwise node track
-	if not _try_apply_restored_bgm():
+	# Music — drop battle tracks, then save restore, VN resume, or node track
+	if BGMManager.get_current_context() == BGMManager.CONTEXT_BATTLE:
+		BGMManager.stop(0.8)
+	if not _try_apply_restored_bgm() and not _try_apply_vn_resume_bgm():
 		_apply_node_music(node)
 
 	# Type badge
@@ -3132,6 +3141,7 @@ func _play_vn(
 		push_warning("ExplorationPlayer: VN scene '%s' not found — skipping." % path)
 		on_done.call()
 		return
+	ExplorationManager.snapshot_bgm_before_vn()
 	_vn_playing = true
 	_close_compass_menu(false)
 	_close_setting_menu(false)
@@ -3142,10 +3152,12 @@ func _play_vn(
 	vn.set("transparent_bg", true)   # show exploration scene behind VN dialog
 	vn.set("keep_bgm", keep_bgm)
 	vn.set("exploration_overlay", true)
+	vn.set("mark_played_on_battle", play_once)
 	add_child(vn)
 	var captured_path: String = path
 	var captured_once: bool   = play_once
 	vn.play_scene(path, func() -> void:
+		ExplorationManager.clear_vn_resume_bgm()
 		if captured_once:
 			ExplorationManager.mark_vn_played(captured_path)
 		_vn_playing = false

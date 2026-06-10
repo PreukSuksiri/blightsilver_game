@@ -583,7 +583,7 @@
 				{
 					"equals": "1",
 					"path": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_cond_toilet_front_password_correct_1.json",
-					"play_once": true,
+					"play_once": false,
 					"var": "toilet_front_password_correct"
 				}
 			],

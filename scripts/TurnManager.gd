@@ -199,7 +199,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 		GameState.post_message("%s has already attacked this turn." % attacker.card_name)
 		emit_signal("attack_aborted")
 		return
-	if GameState.attacks_remaining <= 0 and not attacker.has_pending_multi_attack_non_char():
+	if GameState.attacks_remaining <= 0 and not attacker.has_pending_bonus_attack_chain():
 		GameState.post_message("No attacks remaining this turn.")
 		emit_signal("attack_aborted")
 		return
@@ -551,9 +551,16 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 		var _ma_max2: int = attacker.ability_params.get("max_attacks", 2)
 		if attacker.multi_attack_count < _ma_max2:
 			_skip_mark = true
+	elif _pb_extra > 0 and defender.card_type == "dead_end" \
+			and attacker.ability_type in [
+				CharacterData.AbilityType.EXTRA_ATTACK_ON_DEAD_END,
+				CharacterData.AbilityType.ONE_USE_EXTRA_ATTACK_ON_DEAD_END]:
+		attacker.bonus_attack_pending = true
+		_skip_mark = true
 
 	if not _skip_mark:
 		attacker.attacked_this_turn = true
+		attacker.bonus_attack_pending = false
 
 	GameState.attacks_remaining = maxi(0, GameState.attacks_remaining - _consume_attack_slot + _pb_extra)
 
@@ -1595,6 +1602,7 @@ func _clear_turn_state(player: int) -> void:
 				card.flags.erase("extra_vs_revealed_used")
 				card.flags.erase("extra_deadend_turn")
 				card.multi_attack_count = 0
+				card.bonus_attack_pending = false
 
 func _lighthouse_reveal(player: int) -> void:
 	var opponent: int = GameState.get_opponent(player)

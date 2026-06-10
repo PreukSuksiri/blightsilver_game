@@ -37,6 +37,8 @@ var transparent_bg: bool = false
 var keep_bgm: bool = false
 ## Overlay VN launched on top of exploration — do not fade out BGM when the scene ends.
 var exploration_overlay: bool = false
+## When true, mark this scene played in ExplorationManager if start_battle ends the VN early.
+var mark_played_on_battle: bool = false
 ## True while rendering a beat that launches exploration with exploration_keep_vn_bgm.
 var _preserve_bgm_for_exploration: bool = false
 
@@ -48,6 +50,7 @@ var _on_complete: Callable = Callable()
 var _track_campaign_checkpoint: bool = false
 var _current_bg_path: String = ""
 var _accepting_input: bool = true
+var _battle_handoff_started: bool = false
 var _cmd_panel: PanelContainer = null
 var _cmd_input: LineEdit = null
 
@@ -362,6 +365,25 @@ func play_scene(json_path: String, on_complete: Callable, track_checkpoint: bool
 # ─────────────────────────────────────────────────────────────
 # Beat rendering
 # ─────────────────────────────────────────────────────────────
+
+## Scene-change / battle actions that must run on the same beat after wait/center-text.
+func _beat_has_deferred_actions(beat: Dictionary) -> bool:
+	if beat.get("start_battle", false):
+		return true
+	if str(beat.get("tutorial_battle", "")).strip_edges() != "":
+		return true
+	if str(beat.get("exploration_call", "")).strip_edges() != "":
+		return true
+	if str(beat.get("dungeon_call", "")).strip_edges() != "":
+		return true
+	if beat.get("go_to_campaign_gallery", false):
+		return true
+	if beat.get("go_to_credits", false):
+		return true
+	if str(beat.get("call_scene", "")).strip_edges() != "":
+		return true
+	return false
+
 func _show_beat() -> void:
 	if _beat_index >= _beats.size():
 		_finish()
@@ -594,13 +616,15 @@ func _show_beat() -> void:
 		_hide_hint_icon()
 		await get_tree().create_timer(wait_sec).timeout
 		_accepting_input = true
-		_show_beat()
-		return
+		if not _beat_has_deferred_actions(beat):
+			_show_beat()
+			return
 
 	# ── Auto-advance if screen is fully covered and there is nothing to read ──
 	# After a fade_out with no text the screen is black — hint icon is invisible,
 	# so waiting for a click makes no sense. Skip to the next beat automatically.
-	if beat.has("fade_out") and not beat.has("text"):
+	if beat.has("fade_out") and not beat.has("text") \
+			and not _beat_has_deferred_actions(beat):
 		_show_beat()
 		return
 
@@ -635,8 +659,9 @@ func _show_beat() -> void:
 		await tw.finished
 		lbl.queue_free()
 		_accepting_input = true
-		_show_beat()
-		return
+		if not _beat_has_deferred_actions(beat):
+			_show_beat()
+			return
 
 	# ── Battle portraits (set before optional start_battle) ──
 	if beat.has("portrait_p1"):
@@ -665,8 +690,18 @@ func _show_beat() -> void:
 
 	# ── Start battle ──
 	if beat.get("start_battle", false):
+		_battle_handoff_started = true
+		_accepting_input = false
+		_hide_hint_icon()
 		_set_music("", 0.0, 0.0)
+		# Always VS_AI for VN-configured battles (enemy_deck + AI setup).
+		# EXPLORATION mode breaks setup — GameBoard expects AI to place P2.
 		GameState.new_game(GameState.GameMode.VS_AI)
+		GameState.apply_battle_start_crystals(beat)
+		if exploration_overlay and ExplorationManager.is_session_active:
+			GameState.vn_launched_from_exploration = true
+			if mark_played_on_battle and not _scene_path.is_empty():
+				ExplorationManager.mark_vn_played(_scene_path)
 		# Set post-new_game fields (new_game resets most state but not these)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))
@@ -695,6 +730,9 @@ func _show_beat() -> void:
 			deck_chars = (enemy_deck as Dictionary).get("characters", [])
 			deck_traps = (enemy_deck as Dictionary).get("traps", [])
 			deck_tech = (enemy_deck as Dictionary).get("tech", [])
+			GameState.battle_ai_deck = DeckData.deck_dict_to_deck_data(enemy_deck as Dictionary)
+		else:
+			GameState.battle_ai_deck = null
 		var merged_tech: Array = DailyDungeonManager.resolve_enemy_forced_tech(
 			beat.get("ai_forced_tech", []), deck_tech)
 		var has_tech: bool = false
@@ -717,6 +755,12 @@ func _show_beat() -> void:
 		if _apd != "": GameState.campaign_enemy_config["ai_personality_defensive"] = _apd
 		if _apo != "": GameState.campaign_enemy_config["ai_personality_offensive"] = _apo
 		if _aps != "": GameState.campaign_enemy_config["ai_personality_social"]    = _aps
+		# Optional player deck override — empty = active save deck at setup
+		var player_deck_raw: Variant = beat.get("player_deck", null)
+		if player_deck_raw is Dictionary:
+			GameState.battle_player_deck = DeckData.deck_dict_to_deck_data(player_deck_raw as Dictionary)
+		else:
+			GameState.battle_player_deck = null
 		# Union summon + forced placement config
 		# Flag tells new_game() not to reset these values when the scene loads
 		GameState._vn_battle_pending          = true
@@ -726,7 +770,7 @@ func _show_beat() -> void:
 		GameState.battle_player_forced_cells  = pfc if pfc is Array else []
 		var afc: Variant = beat.get("ai_forced_cells", null)
 		GameState.battle_ai_forced_cells      = afc if afc is Array else []
-		CheckerTransition.fade_out_to_battle(func() -> void:
+		await CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 		return
 
@@ -1120,6 +1164,8 @@ func _input(event: InputEvent) -> void:
 	if _cmd_panel != null and _cmd_panel.visible:
 		return
 	if not _accepting_input:
+		return
+	if _battle_handoff_started:
 		return
 	var advance := false
 	if event is InputEventMouseButton:

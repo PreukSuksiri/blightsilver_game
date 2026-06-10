@@ -90,6 +90,7 @@ class CardInstance:
 	var one_use_def_boost_used: bool = false
 	var one_use_atk_boost_used: bool = false  # for ONE_USE_ATK_BOOST and ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND ATK half
 	var multi_attack_count: int = 0            # for MULTI_ATTACK_VS_NON_CHARACTER — attacks used this turn
+	var bonus_attack_pending: bool = false     # dead-end extra attack granted, bonus not yet used
 	var perm_atk_bonus: int = 0
 	var perm_def_bonus: int = 0
 	var field_aura_atk_bonus: int = 0  # passive ATK from allied field auras (e.g. Amber)
@@ -195,6 +196,10 @@ class CardInstance:
 		var chain_limit: int = get_multi_attack_non_char_chain_limit()
 		return multi_attack_count > 0 and multi_attack_count < chain_limit
 
+	## Golden Senju chain or Sonic Seraph dead-end bonus attack still available.
+	func has_pending_bonus_attack_chain() -> bool:
+		return has_pending_multi_attack_non_char() or bonus_attack_pending
+
 # ─────────────────────────────────────────────────────────────
 # Runtime State
 # ─────────────────────────────────────────────────────────────
@@ -237,6 +242,7 @@ var tech_cards_played_this_game: Array = [[], []]
 var open_campaign_gallery_on_menu: bool = false
 var vn_on_win: String = ""
 var vn_on_lose: String = ""
+var vn_launched_from_exploration: bool = false
 var game_over_reason: String = ""  # "crystals" | "all_destroyed" | "no_moves" | "surrender"
 var portrait_p1_offset: Vector2 = Vector2.ZERO
 var portrait_p1_size:   float   = 1.0
@@ -246,22 +252,24 @@ var portrait_p2_size:   float   = 1.0
 # Battle BGM (set by VNPlayer or defaults; not reset by new_game())
 var battle_bgm_path: String = ""
 var battle_bgm_volume: float = 100.0   # percentage  (100 = 0 dB)
-var battle_setup_bgm_path: String = ""       # placement/setup phase; blank = CONTEXT_PLACEMENT default
-var battle_almost_win_bgm_path: String = ""  # endgame threshold; blank = bgm_almost_win.mp3
+var battle_setup_bgm_path: String = ""       # placement/setup phase; blank = manage_bgm placement default
+var battle_almost_win_bgm_path: String = ""  # endgame threshold; blank = manage_bgm almost_win default
 var battle_bgm_start_sec: float = 14.0       # first-play offset; loops back to 00:00
 var battle_almost_win_enabled: bool = true     # mid-battle / win-reveal almost-win track switch
 
-const DEFAULT_BATTLE_BGM: String = "res://assets/audio/bgm_boss_1.mp3"
-const DEFAULT_ALMOST_WIN_BGM: String = "res://assets/audio/bgm_almost_win.mp3"
 const DEFAULT_BATTLE_BGM_START_SEC: float = 14.0
 
 ## Apply battle audio paths from a VN beat dict or exploration BATTLE node dict.
 ## Keys: battle_bgm, battle_bgm_volume, setup_bgm, almost_win_bgm,
 ##       battle_bgm_start_sec, almost_win_bgm_enabled.
-func apply_battle_audio_config(source: Dictionary, default_battle_bgm: String = DEFAULT_BATTLE_BGM) -> void:
+## Blank battle_bgm resolves via manage_bgm default for default_battle_context
+## (VN start_battle and exploration BATTLE nodes both use battle context when blank).
+func apply_battle_audio_config(
+		source: Dictionary,
+		default_battle_context: String = BGMManager.CONTEXT_BATTLE) -> void:
 	var bgm := str(source.get("battle_bgm", "")).strip_edges()
-	if bgm.is_empty() and not default_battle_bgm.is_empty():
-		bgm = default_battle_bgm
+	if bgm.is_empty():
+		bgm = BGMManager.get_default_path(default_battle_context)
 	battle_bgm_path = bgm
 	battle_bgm_volume = float(source.get("battle_bgm_volume", 100.0))
 	battle_setup_bgm_path = str(source.get("setup_bgm", "")).strip_edges()
@@ -270,9 +278,20 @@ func apply_battle_audio_config(source: Dictionary, default_battle_bgm: String = 
 	battle_almost_win_enabled = bool(source.get("almost_win_bgm_enabled", true))
 
 
+## Optional per-side starting crystals from a VN start_battle beat.
+## Keys: starting_crystals_p1, starting_crystals_p2  (omit = STARTING_CRYSTALS).
+func apply_battle_start_crystals(source: Dictionary) -> void:
+	if source.has("starting_crystals_p1"):
+		crystals[0] = maxi(0, int(source.get("starting_crystals_p1", STARTING_CRYSTALS)))
+	if source.has("starting_crystals_p2"):
+		crystals[1] = maxi(0, int(source.get("starting_crystals_p2", STARTING_CRYSTALS)))
+
+
 func get_almost_win_bgm_path() -> String:
 	var path := battle_almost_win_bgm_path.strip_edges()
-	return path if not path.is_empty() else DEFAULT_ALMOST_WIN_BGM
+	if not path.is_empty():
+		return path
+	return BGMManager.get_default_path(BGMManager.CONTEXT_ALMOST_WIN)
 
 # Battle placement/summon config — set by VNPlayer before scene change.
 # _vn_battle_pending = true tells new_game() to preserve these values instead of resetting them.
@@ -918,6 +937,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		battle_player_deck = null
 		battle_ai_deck     = null
 		battle_ai_forced_tech.clear()
+		vn_launched_from_exploration = false
 	_vn_battle_pending = false
 	game_over_reason = ""
 	_init_grids()

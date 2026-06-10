@@ -75,3 +75,42 @@ func duplicate_deck() -> Resource:
 	var copy: Resource = get_script().new()
 	copy.load_from_dict(to_dict())
 	return copy
+
+## VN battle beats / campaign enemy config use "tech"; deckbuilder uses "techs".
+func to_vn_deck_dict() -> Dictionary:
+	return {
+		"characters": characters.duplicate(),
+		"traps":      traps.duplicate(),
+		"tech":       techs.duplicate(),
+	}
+
+## Convert a deckbuilder formation preset to VN forced-cell entries.
+func get_formation_forced_cells(formation_idx: int) -> Array:
+	if formation_idx < 0 or formation_idx >= formations.size():
+		return []
+	var fd: Variant = formations[formation_idx]
+	if not fd is Dictionary:
+		return []
+	var pls: Variant = (fd as Dictionary).get("placements", [])
+	if not pls is Array:
+		return []
+	var result: Array = []
+	for pl: Variant in (pls as Array):
+		if not pl is Dictionary:
+			continue
+		var p: Dictionary = pl as Dictionary
+		var r: int = int(p.get("r", -1))
+		var c: int = int(p.get("c", -1))
+		var card_name: String = str(p.get("name", "")).strip_edges()
+		if r < 0 or r > 4 or c < 0 or c > 4 or card_name.is_empty():
+			continue
+		result.append({"card_name": card_name, "row": r, "col": c})
+	return result
+
+static func deck_dict_to_deck_data(d: Dictionary) -> DeckData:
+	var deck := DeckData.new()
+	deck.characters = (d.get("characters", []) as Array).duplicate()
+	deck.traps = (d.get("traps", []) as Array).duplicate()
+	var tech_raw: Variant = d.get("tech", d.get("techs", []))
+	deck.techs = (tech_raw as Array).duplicate() if tech_raw is Array else []
+	return deck

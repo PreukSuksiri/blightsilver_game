@@ -17,6 +17,9 @@ const GAL_W   : float = 88.0
 const GAL_H   : float = 121.0
 const GAL_GAP : int   = 6
 const TUTORIAL_FORMATION_MSG := "Formation Change is unavailable in tutorial"
+const FORMATION_BAR_BASE_LEFT: float = 172.0
+const FORMATION_BAR_PORTRAIT_PAD: float = 14.0
+const SP_PORTRAIT_REF_H: float = 720.0
 
 # ─────────────────────────────────────────────────────────────
 # Inner class: gallery card (drag source + tap to preview)
@@ -220,15 +223,7 @@ func start_setup(player_index: int) -> void:
 
 	_reset_grid()
 
-	var deck: DeckData
-	if GameState.game_mode == GameState.GameMode.VS_AI and player_index == 1 \
-			and GameState.battle_ai_deck != null:
-		deck = GameState.battle_ai_deck as DeckData
-	elif GameState.game_mode == GameState.GameMode.VS_AI and player_index == 0 \
-			and GameState.battle_player_deck != null:
-		deck = GameState.battle_player_deck as DeckData
-	else:
-		deck = SaveManager.get_active_deck()
+	var deck: DeckData = _active_setup_deck()
 	if deck == null or not deck.is_valid():
 		_instr_lbl.text = "No valid deck found. Please build a deck first."
 		_confirm_btn.disabled = true
@@ -245,6 +240,9 @@ func start_setup(player_index: int) -> void:
 	var forced: Array = GameState.battle_player_forced_cells if player_index == 0 \
 		else GameState.battle_ai_forced_cells
 	_apply_forced_cells(forced)
+
+	if not _is_tutorial_setup() and not deck.formations.is_empty():
+		_apply_formation(0, false)
 
 	# Show/hide union panel: requires per-battle flag, plus either the global unlock
 	# OR a free-play mode (VS_AI / LOCAL_2P / HOT_SEAT) where all features are open.
@@ -382,17 +380,16 @@ func _build_ui() -> void:
 	add_child(_confirm_btn)
 
 	# ── Player portrait illustrations (on top of all content) ─
-	const _SP_REF_H: float = 720.0
 	var _sp_p1_tex: Texture2D = load(GameState.player_portraits[0])
 	if _sp_p1_tex:
 		var _sz := _sp_p1_tex.get_size()
-		var _pw: float = _SP_REF_H * _sz.x / _sz.y if _sz.y > 0.0 else 220.0
+		var _pw: float = SP_PORTRAIT_REF_H * _sz.x / _sz.y if _sz.y > 0.0 else 220.0
 		var _p1p := TextureRect.new()
 		_p1p.texture       = _sp_p1_tex
 		_p1p.layout_mode   = 1
 		_p1p.anchor_left   = 0.0;  _p1p.anchor_top    = 1.0
 		_p1p.anchor_right  = 0.0;  _p1p.anchor_bottom = 1.0
-		_p1p.offset_left   = -_pw * 0.4; _p1p.offset_top    = -_SP_REF_H
+		_p1p.offset_left   = -_pw * 0.4; _p1p.offset_top    = -SP_PORTRAIT_REF_H
 		_p1p.offset_right  =  _pw * 0.6; _p1p.offset_bottom = 0.0
 		_p1p.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		_p1p.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
@@ -405,13 +402,13 @@ func _build_ui() -> void:
 	var _sp_p2_tex: Texture2D = load(GameState.player_portraits[1])
 	if _sp_p2_tex:
 		var _sz := _sp_p2_tex.get_size()
-		var _pw: float = _SP_REF_H * _sz.x / _sz.y if _sz.y > 0.0 else 220.0
+		var _pw: float = SP_PORTRAIT_REF_H * _sz.x / _sz.y if _sz.y > 0.0 else 220.0
 		var _p2p := TextureRect.new()
 		_p2p.texture       = _sp_p2_tex
 		_p2p.layout_mode   = 1
 		_p2p.anchor_left   = 1.0;  _p2p.anchor_top    = 1.0
 		_p2p.anchor_right  = 1.0;  _p2p.anchor_bottom = 1.0
-		_p2p.offset_left   = -_pw * 0.6; _p2p.offset_top    = -_SP_REF_H
+		_p2p.offset_left   = -_pw * 0.6; _p2p.offset_top    = -SP_PORTRAIT_REF_H
 		_p2p.offset_right  =  _pw * 0.4; _p2p.offset_bottom = 0.0
 		_p2p.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
 		_p2p.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
@@ -1032,9 +1029,31 @@ func _apply_forced_cells(forced_cells: Array) -> void:
 # ─────────────────────────────────────────────────────────────
 # Formation selector
 # ─────────────────────────────────────────────────────────────
+func _active_setup_deck() -> DeckData:
+	if GameState.game_mode == GameState.GameMode.VS_AI and current_setup_player == 1 \
+			and GameState.battle_ai_deck != null:
+		return GameState.battle_ai_deck as DeckData
+	if GameState.game_mode == GameState.GameMode.VS_AI and current_setup_player == 0 \
+			and GameState.battle_player_deck != null:
+		return GameState.battle_player_deck as DeckData
+	return SaveManager.get_active_deck()
+
+func _formation_bar_left_offset() -> float:
+	if current_setup_player != 0:
+		return FORMATION_BAR_BASE_LEFT
+	var tex: Texture2D = load(GameState.player_portraits[0])
+	if tex == null:
+		return FORMATION_BAR_BASE_LEFT
+	var sz := tex.get_size()
+	if sz.y <= 0.0:
+		return FORMATION_BAR_BASE_LEFT
+	var pw: float = SP_PORTRAIT_REF_H * sz.x / sz.y
+	return maxf(FORMATION_BAR_BASE_LEFT, pw * 0.6 + FORMATION_BAR_PORTRAIT_PAD)
+
 func _refresh_formation_bar(deck: DeckData) -> void:
 	if _formation_bar == null:
 		return
+	_formation_bar.offset_left = _formation_bar_left_offset()
 	if _is_tutorial_setup():
 		_formation_bar.visible = false
 		if _body_hbox != null:
@@ -1072,15 +1091,10 @@ func _refresh_formation_bar(deck: DeckData) -> void:
 		btn.pressed.connect(func() -> void: _apply_formation(idx))
 		_formation_bar.add_child(btn)
 
-func _apply_formation(idx: int) -> void:
+func _apply_formation(idx: int, play_sfx: bool = true) -> void:
 	if _is_tutorial_setup():
 		return
-	var deck: DeckData
-	if GameState.game_mode == GameState.GameMode.VS_AI and current_setup_player == 1 \
-			and GameState.battle_ai_deck != null:
-		deck = GameState.battle_ai_deck as DeckData
-	else:
-		deck = SaveManager.get_active_deck()
+	var deck: DeckData = _active_setup_deck()
 	if deck == null or idx < 0 or idx >= deck.formations.size():
 		return
 	var fd: Dictionary = deck.formations[idx] as Dictionary
@@ -1122,7 +1136,8 @@ func _apply_formation(idx: int) -> void:
 		var tex: Texture2D = _load_card_tex(card_name, card_type)
 		target_cell.occupy(card_name, card_type, tex)
 
-	SFXManager.play(SFXManager.SFX_PLACE)
+	if play_sfx:
+		SFXManager.play(SFXManager.SFX_PLACE)
 	_refresh_gallery()
 	_refresh_confirm()
 

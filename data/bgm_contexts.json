@@ -1,13 +1,14 @@
 {
-	"main_menu": "res://assets/audio/bgm_storytelling_4.mp3",
-	"placement": "res://assets/audio/bgm_placement_2.mp3",
+	"almost_win": "res://assets/audio/bgm_almost_win.mp3",
 	"battle": "res://assets/audio/bgm_battle_3.mp3",
 	"boss": "res://assets/audio/bgm_boss_1.mp3",
-	"victory": "res://assets/audio/bgm_win.mp3",
-	"defeat": "res://assets/audio/bgm_horror_1.mp3",
+	"campaign_map": "res://assets/audio/bgm_mystery_2.mp3",
 	"credits": "res://assets/audio/bgm_ost_blind_cross.mp3",
 	"daily_dungeon": "res://assets/audio/bgm_mystery_1.mp3",
-	"vn_story": "",
-	"campaign_map": "res://assets/audio/bgm_mystery_2.mp3",
-	"result": "res://assets/audio/bgm_ost_even_if_everything_flips.mp3"
+	"defeat": "res://assets/audio/bgm_horror_1.mp3",
+	"main_menu": "res://assets/audio/bgm_storytelling_4.mp3",
+	"placement": "res://assets/audio/bgm_placement_2.mp3",
+	"result": "res://assets/audio/bgm_ost_even_if_everything_flips.mp3",
+	"victory": "res://assets/audio/bgm_win.mp3",
+	"vn_story": ""
 }

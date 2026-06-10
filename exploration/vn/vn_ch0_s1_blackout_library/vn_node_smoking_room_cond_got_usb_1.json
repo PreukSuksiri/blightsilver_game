@@ -14,6 +14,111 @@
 	{
 		"animation": "animation_vellum_card_commence_facedown",
 		"linger_characters": true,
-		"sfx": "res://assets/audio/sound_spellcasting_2.mp3"
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"wait": 5.8
+	},
+	{
+		"ai_forced_cells": [
+			{
+				"card_name": "Lab Zombie",
+				"col": 4,
+				"row": 2
+			},
+			{
+				"card_name": "Claw Mutant",
+				"col": 3,
+				"row": 1
+			},
+			{
+				"card_name": "Bladeshifter",
+				"col": 1,
+				"row": 2
+			},
+			{
+				"card_name": "Gamma Emitter",
+				"col": 1,
+				"row": 1
+			},
+			{
+				"card_name": "Lab Bloater",
+				"col": 1,
+				"row": 3
+			},
+			{
+				"card_name": "Rotten Shrieker",
+				"col": 0,
+				"row": 2
+			},
+			{
+				"card_name": "Scarlet Mutant",
+				"col": 3,
+				"row": 4
+			},
+			{
+				"card_name": "Bleacher Squad",
+				"col": 2,
+				"row": 4
+			},
+			{
+				"card_name": "Pepper Spray",
+				"col": 3,
+				"row": 2
+			},
+			{
+				"card_name": "Hypnosis",
+				"col": 0,
+				"row": 0
+			},
+			{
+				"card_name": "Red Card",
+				"col": 4,
+				"row": 0
+			},
+			{
+				"card_name": "Vile Creeper",
+				"col": 2,
+				"row": 2
+			},
+			{
+				"card_name": "Explosive Barrels",
+				"col": 0,
+				"row": 4
+			}
+		],
+		"ai_forced_tech": [
+			"Release Mutagen",
+			"Radar",
+			"War Supply"
+		],
+		"enemy_deck": {
+			"characters": [
+				"Lab Zombie",
+				"Rotten Shrieker",
+				"Claw Mutant",
+				"Bleacher Squad",
+				"Bladeshifter",
+				"Scarlet Mutant",
+				"Vile Creeper",
+				"Gamma Emitter",
+				"Lab Bloater"
+			],
+			"tech": [
+				"Release Mutagen",
+				"Radar",
+				"War Supply"
+			],
+			"traps": [
+				"Red Card",
+				"Pepper Spray",
+				"Hypnosis",
+				"Explosive Barrels"
+			]
+		},
+		"linger_characters": true,
+		"player1_name": "Next Crowmont",
+		"player2_name": "Stained Doll",
+		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_library_puppet.png",
+		"portrait_p2_offset_x": -140.0,
+		"start_battle": true
 	}
 ]

@@ -314,7 +314,7 @@ func _build_props_panel() -> Control:
 	vbox.add_child(_prop_battle_section)
 	_add_section_header(_prop_battle_section, "BATTLE BGM")
 	var battle_hint := Label.new()
-	battle_hint.text = "Used when this BATTLE node starts a grid duel. Blank paths use engine defaults."
+	battle_hint.text = "Used when this BATTLE node starts a grid duel. Blank paths use manage_bgm defaults (battle / placement / almost_win)."
 	battle_hint.add_theme_font_size_override("font_size", 11)
 	battle_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.45))
 	battle_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

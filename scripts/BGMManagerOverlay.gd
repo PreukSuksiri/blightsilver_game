@@ -53,24 +53,34 @@ func _build_header() -> void:
 	header.custom_minimum_size = Vector2(0, 52)
 	add_child(header)
 
+	var hbox := HBoxContainer.new()
+	hbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	hbox.offset_left = 12.0
+	hbox.offset_right = -12.0
+	hbox.offset_top = 6.0
+	hbox.offset_bottom = -6.0
+	hbox.add_theme_constant_override("separation", 10)
+	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	header.add_child(hbox)
+
+	var save_btn := _make_button("SAVE ALL", _BTN_SAVE)
+	save_btn.custom_minimum_size = Vector2(120, 38)
+	save_btn.pressed.connect(_on_save_all)
+	hbox.add_child(save_btn)
+
 	var title := Label.new()
 	title.text = "BGM Manager"
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title.add_theme_font_size_override("font_size", 20)
 	title.add_theme_color_override("font_color", Color(0.75, 0.88, 1.0))
-	title.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	header.add_child(title)
+	hbox.add_child(title)
 
 	var close_btn := _make_button("X", _BTN_CLOSE)
 	close_btn.custom_minimum_size = Vector2(44, 44)
-	close_btn.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	close_btn.offset_left = -48
-	close_btn.offset_top = 4
-	close_btn.offset_right = -4
-	close_btn.offset_bottom = 48
 	close_btn.pressed.connect(queue_free)
-	header.add_child(close_btn)
+	hbox.add_child(close_btn)
 
 
 func _build_body() -> void:
@@ -177,11 +187,6 @@ func _build_bottom_bar() -> void:
 	hbox.offset_right = -12.0
 	hbox.add_theme_constant_override("separation", 10)
 	bot.add_child(hbox)
-
-	var save_btn := _make_button("SAVE ALL", _BTN_SAVE)
-	save_btn.custom_minimum_size = Vector2(120, 38)
-	save_btn.pressed.connect(_on_save_all)
-	hbox.add_child(save_btn)
 
 	var reset_btn := _make_button("RESET DEFAULTS", _BTN_RESET)
 	reset_btn.custom_minimum_size = Vector2(150, 38)

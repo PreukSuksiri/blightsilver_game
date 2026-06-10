@@ -1,0 +1,127 @@
+=== Battle of Parking Lot Seagull ===
+Battle started: 2026-06-10 04:45:01.027
+Game Session of Sparkling Water (started 2026-06-10 04:44:16.307)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.040] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:10.895] Crystals: P1 5000 → 3500 (-1500)  [union]
+[00:10.952] Revealed: P1 (1,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[00:10.952] Union summoned P1: "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} from "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down}, "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos | face-down}
+[00:10.952] MSG: Player 2 summoned [Lord of Terror] using: "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos | face-down}, "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos | face-down}
+[00:14.332] Mode selected P1: ATTACK
+[00:14.333] MSG: Player 2: tap a character to attack.
+[00:16.061] Revealed: P0 (2,0) "Cursed Reflection" {cost 500}
+[00:16.061] Dice rolled: 1
+[00:16.378] MSG: Trap triggered: Cursed Reflection!
+[00:19.627] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:20.436] Crystals: P0 5000 → 4500 (-500)  [trap cost]
+[00:21.828] MSG: Cursed Reflection: Lord of Terror's ATK and DEF swapped until end of turn!
+[00:21.831] Trap: "Cursed Reflection" triggered  P1(1,2)→P0(2,0)
+[00:24.337] Turn ended  P1  |  Crystals P0=4500 P1=3500
+
+--- Turn 2  |  Player 0  |  Crystals P0=4500 P1=3500 ---
+[00:39.369] MSG: Tap 2 material card(s) on the field.
+[00:39.917] MSG: 1 more material(s) needed.
+[00:42.018] Crystals: P0 4500 → 3000 (-1500)  [union]
+[00:42.043] Revealed: P0 (0,4) "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine}
+[00:42.044] Union summoned P0: "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} from "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}, "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}
+[00:42.044] MSG: Player 1 summoned [Seraphim Fistmaster] using: "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | face-down}, "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine | face-down}
+[00:48.410] Dice rolled: 4
+[00:48.467] MSG: Seraphim Fistmaster wins!
+[00:53.965] Attack P0(0,4)"Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} → P1(1,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}  Dice=4  ATK=240 vs DEF=100  → WIN
+[00:53.965] Reckoning overlay: P0 "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine} +ATK 120
+[00:53.965] Anim: 3A  △ P1(1,2)
+[00:53.965] Card destroyed  P1 (1,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[00:59.234] Revealed: P0 (1,4) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[00:59.267] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:59.267] Dice rolled: 2
+[00:59.273] MSG: Mephisto the Fallen wins!
+[01:02.995] Crystals: P1 3500 → 2620 (-880)  [battle]
+[01:04.402] Attack P0(1,4)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P1(1,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}  Dice=2  ATK=75 vs DEF=40  → WIN
+[01:04.402] Anim: 3A  △ P1(1,1)
+[01:04.402] Card destroyed  P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[01:05.483] Turn ended  P0  |  Crystals P0=3000 P1=2620
+
+--- Turn 3  |  Player 1  |  Crystals P0=3000 P1=2620 ---
+[01:06.070] Mode selected P1: TECH
+[01:06.370] Crystals: P1 2620 → 1620 (-1000)  [tech cost]
+[01:07.753] Tech played  P1: "Accident"
+[01:09.303] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[01:09.706] Card destroyed  P0 (0,4) "Seraphim Fistmaster" {Union ATK120 DEF120 | destroy-cost 0 | summon-cost 1500 | affinity Divine}
+[01:09.709] Tech resolved  P1
+[01:10.609] Mode selected P1: ATTACK
+[01:10.612] MSG: Player 2: tap a character to attack.
+[01:12.313] Revealed: P1 (0,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:12.313] Dice rolled: 5
+[01:12.318] MSG: Claw Mutant wins!
+[01:15.901] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:16.808] Crystals: P0 3000 → 2140 (-860)  [battle]
+[01:18.196] Attack P1(0,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(1,4)"Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}  Dice=5  ATK=15 vs DEF=0  → WIN
+[01:18.196] Anim: 3A  △ P0(1,4)
+[01:18.196] Card destroyed  P0 (1,4) "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}
+[01:20.705] Turn ended  P1  |  Crystals P0=2140 P1=1620
+
+--- Turn 4  |  Player 0  |  Crystals P0=2140 P1=1620 ---
+[01:31.718] Revealed: P0 (1,3) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:31.718] Dice rolled: 4
+[01:31.720] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[01:31.722] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[01:31.722] MSG: Joseph the Battle Priest wins!
+[01:31.773] Coin flip: Heads
+[01:36.398] Crystals: P1 1620 → 1440 (-180)  [battle]
+[01:37.787] Attack P0(1,3)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(0,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=4  ATK=70 vs DEF=10  → WIN
+[01:37.787] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} +ATK 10
+[01:37.787] Anim: 3A  △ P1(0,0)
+[01:37.787] Card destroyed  P1 (0,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:43.244] Revealed: P0 (3,0) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[01:43.286] Revealed: P1 (2,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[01:43.287] Dice rolled: 1
+[01:47.853] Crystals: P0 2140 → 1140 (-1000)  [battle]
+[01:49.250] Attack P0(3,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=1  ATK=40 vs DEF=60  → LOSE
+[01:49.250] Anim: 3B  △ P0(3,0)
+[01:49.250] Card destroyed  P0 (3,0) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[01:57.736] Tech played  P0: "Prayer"
+[01:59.286] MSG: Prayer: Divine Characters protected until opponent's turn ends.
+[01:59.291] Tech resolved  P0
+[01:59.748] Turn ended  P0  |  Crystals P0=1140 P1=1440
+
+--- Turn 5  |  Player 1  |  Crystals P0=1140 P1=1440 ---
+[02:00.336] Mode selected P1: TECH
+[02:00.639] Crystals: P1 1440 → 440 (-1000)  [tech cost]
+[02:02.021] Tech played  P1: "Illegal Steroid"
+[02:03.570] Target prompt: "Choose 1 face-up character to boost."  filter=own_faceup_character
+[02:03.970] MSG: Illegal Steroid: Lab Crawler gains +30 ATK this attack.
+[02:03.972] Tech resolved  P1
+[02:04.872] Mode selected P1: ATTACK
+[02:04.876] MSG: Player 2: tap a character to attack.
+[02:06.577] Dice rolled: 5
+[02:06.579] MSG: Lab Crawler wins!
+[02:06.579] MSG: Prayer protected Joseph the Battle Priest!
+[02:09.981] Attack P1(2,1)"Lab Crawler" {Unit ATK125 DEF60 | cost 1200 | affinity Bio | base 95/60 | buff +tempATK30} → P0(1,3)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=5  ATK=125 vs DEF=25  → TIE
+[02:09.981] Anim: exchange  (no destruction)
+[02:10.481] Mode selected P1: ATTACK
+[02:10.486] MSG: Player 2: tap a character to attack.
+[02:12.187] Revealed: P1 (3,1) "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}
+[02:12.187] Dice rolled: 4
+[02:12.193] MSG: Ancient Lich wins!
+[02:15.779] MSG: [DEBUG] Bot Player timed out — ending turn.
+[02:16.678] Crystals: P0 1140 → 540 (-600)  [battle]
+[02:18.072] Attack P1(3,1)"Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} → P0(1,3)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=4  ATK=60 vs DEF=25  → WIN
+[02:18.072] Anim: 3A  △ P0(1,3)
+[02:18.072] Card destroyed  P0 (1,3) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[02:18.573] Turn ended  P1  |  Crystals P0=540 P1=440
+
+--- Turn 6  |  Player 0  |  Crystals P0=540 P1=440 ---
+[02:25.617] Revealed: P0 (0,0) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[02:25.617] Dice rolled: 4
+[02:25.621] MSG: Gryphon wins!
+[02:30.114] Crystals: P1 440 → 0 (-440)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 540  P1: 0  |  Turns: 6

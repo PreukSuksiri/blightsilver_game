@@ -8,6 +8,7 @@ const CONTEXT_MAIN_MENU := "main_menu"
 const CONTEXT_PLACEMENT := "placement"
 const CONTEXT_BATTLE := "battle"
 const CONTEXT_BOSS := "boss"
+const CONTEXT_ALMOST_WIN := "almost_win"
 const CONTEXT_VICTORY := "victory"
 const CONTEXT_DEFEAT := "defeat"
 const CONTEXT_CREDITS := "credits"
@@ -24,6 +25,7 @@ const BUILTIN_DEFAULT_PATHS := {
 	CONTEXT_PLACEMENT: "res://assets/audio/bgm_placement_2.mp3",
 	CONTEXT_BATTLE: "res://assets/audio/bgm_battle_3.mp3",
 	CONTEXT_BOSS: "res://assets/audio/bgm_boss_1.mp3",
+	CONTEXT_ALMOST_WIN: "res://assets/audio/bgm_almost_win.mp3",
 	CONTEXT_VICTORY: "res://assets/audio/bgm_win.mp3",
 	CONTEXT_DEFEAT: "res://assets/audio/bgm_horror_1.mp3",
 	CONTEXT_CREDITS: "res://assets/audio/bgm_ost_blind_cross.mp3",

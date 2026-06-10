@@ -161,6 +161,8 @@ var _session_active: bool = false
 var _source_vn_scene: String = ""
 ## BGM snapshot from save file; consumed once when ExplorationPlayer refreshes the node.
 var _pending_restored_bgm: Dictionary = {}
+## BGM snapshot taken before an exploration VN; survives VN→battle handoff for post-battle resume.
+var _vn_resume_bgm: Dictionary = {}
 
 # ─────────────────────────────────────────────────────────────
 # Read-only properties
@@ -284,6 +286,7 @@ func _clear_session_memory() -> void:
 	_session_rewards   = {}
 	_source_vn_scene   = ""
 	_pending_restored_bgm = {}
+	_vn_resume_bgm = {}
 
 func _reset_session_state() -> void:
 	_clear_session_memory()
@@ -517,6 +520,35 @@ func take_pending_restored_bgm() -> Dictionary:
 	var out: Dictionary = _pending_restored_bgm.duplicate()
 	_pending_restored_bgm = {}
 	return out
+
+
+## Capture ambient exploration BGM before an overlay VN (single-use resume after battle handoff).
+func snapshot_bgm_before_vn() -> void:
+	if not _session_active:
+		return
+	if BGMManager.get_current_context() == BGMManager.CONTEXT_BATTLE:
+		return
+	var path: String = BGMManager.get_current_path().strip_edges()
+	if path.is_empty():
+		return
+	_vn_resume_bgm = {
+		"path": path,
+		"context": BGMManager.get_current_context(),
+		"position": BGMManager.get_playback_position(),
+		"loop_from_sec": BGMManager.get_loop_restart_sec(),
+	}
+
+
+## Pop the VN pre-battle BGM snapshot (single use).
+func take_vn_resume_bgm() -> Dictionary:
+	var out: Dictionary = _vn_resume_bgm.duplicate()
+	_vn_resume_bgm = {}
+	return out
+
+
+## Drop a pending VN resume snapshot (normal VN finish or loss-not-returning-to-exploration).
+func clear_vn_resume_bgm() -> void:
+	_vn_resume_bgm = {}
 
 
 func _queue_restored_bgm_from_save(sd: Dictionary) -> void:
@@ -833,7 +865,7 @@ func start_battle_for_node(node: ExplorationNode) -> void:
 		"setup_bgm": node.setup_bgm,
 		"almost_win_bgm": node.almost_win_bgm,
 		"battle_bgm_volume": node.battle_bgm_volume,
-	}, "")
+	})
 	GameState.new_game(GameState.GameMode.EXPLORATION)
 	SaveManager.save_data()
 	CheckerTransition.fade_out_to_battle(func() -> void:

@@ -9,6 +9,116 @@
 	{
 		"animation": "animation_vellum_card_commence_facedown",
 		"linger_characters": true,
-		"sfx": "res://assets/audio/sound_spellcasting_2.mp3"
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"wait": 5.8
+	},
+	{
+		"ai_forced_cells": [
+			{
+				"card_name": "Kiyoko the Death Whisper",
+				"col": 1,
+				"row": 2
+			},
+			{
+				"card_name": "Silver Spearman",
+				"col": 3,
+				"row": 2
+			},
+			{
+				"card_name": "Hairpin Assassin",
+				"col": 2,
+				"row": 1
+			},
+			{
+				"card_name": "Huntress of Green Glade",
+				"col": 2,
+				"row": 3
+			},
+			{
+				"card_name": "Shepherd Detective",
+				"col": 1,
+				"row": 0
+			},
+			{
+				"card_name": "Big Thug",
+				"col": 3,
+				"row": 0
+			},
+			{
+				"card_name": "Mafia Associates",
+				"col": 1,
+				"row": 4
+			},
+			{
+				"card_name": "Tomb Bandit",
+				"col": 3,
+				"row": 4
+			},
+			{
+				"card_name": "Street Rogue",
+				"col": 3,
+				"row": 1
+			},
+			{
+				"card_name": "Grand Fort Archer",
+				"col": 1,
+				"row": 1
+			},
+			{
+				"card_name": "Pepper Spray",
+				"col": 4,
+				"row": 2
+			},
+			{
+				"card_name": "Brainwash",
+				"col": 2,
+				"row": 2
+			},
+			{
+				"card_name": "Bait",
+				"col": 0,
+				"row": 0
+			},
+			{
+				"card_name": "Decoy Puppet",
+				"col": 4,
+				"row": 0
+			}
+		],
+		"ai_forced_tech": [
+			"Bribe",
+			"Spy",
+			"War Supply"
+		],
+		"enemy_deck": {
+			"characters": [
+				"Kiyoko the Death Whisper",
+				"Silver Spearman",
+				"Mafia Associates",
+				"Hairpin Assassin",
+				"Huntress of Green Glade",
+				"Tomb Bandit",
+				"Big Thug",
+				"Shepherd Detective",
+				"Grand Fort Archer",
+				"Street Rogue"
+			],
+			"tech": [
+				"Bribe",
+				"Spy",
+				"War Supply"
+			],
+			"traps": [
+				"Bait",
+				"Brainwash",
+				"Decoy Puppet",
+				"Pepper Spray"
+			]
+		},
+		"linger_characters": true,
+		"player2_name": "Shady Woman",
+		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_univ_break_room_ghost.png",
+		"portrait_p2_offset_x": -140.0,
+		"start_battle": true
 	}
 ]

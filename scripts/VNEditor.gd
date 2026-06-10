@@ -120,6 +120,8 @@ var _f_shake_magnitude: SpinBox = null
 var _f_shake_screen: SpinBox = null
 var _f_player1_name: LineEdit = null
 var _f_player2_name: LineEdit = null
+var _f_start_crystals_p1: SpinBox = null
+var _f_start_crystals_p2: SpinBox = null
 var _f_portrait_p1: LineEdit = null
 var _f_portrait_p2: LineEdit = null
 var _f_portrait_p1_offset_x: SpinBox = null
@@ -164,13 +166,22 @@ var _f_mark_chapter_end:       CheckBox     = null
 var _f_unlock_gallery_opt:    OptionButton = null
 var _gallery_unlock_paths:    PackedStringArray = PackedStringArray()
 
-# Enemy deck builder (for start_battle beats)
+# Battle deck builder (for start_battle beats)
 var _enemy_deck_chars: Array = []
 var _enemy_deck_traps: Array = []
 var _enemy_deck_tech: Array = []
 var _enemy_chars_chips: HBoxContainer = null
 var _enemy_traps_chips: HBoxContainer = null
 var _enemy_tech_chips: HBoxContainer = null
+var _player_deck_chars: Array = []
+var _player_deck_traps: Array = []
+var _player_deck_tech: Array = []
+var _player_chars_chips: HBoxContainer = null
+var _player_traps_chips: HBoxContainer = null
+var _player_tech_chips: HBoxContainer = null
+var _clone_target_opt: OptionButton = null
+var _clone_deck_opt: OptionButton = null
+var _clone_form_opt: OptionButton = null
 
 # Forced cell placements — grid-based UI
 var _player_forced_grid: Dictionary = {}   # key="r,c"  value=card_name String
@@ -802,6 +813,12 @@ func _build_fields() -> void:
 	_f_start_battle = _row_cb(v, "Start Battle", "Launch battle (VS AI) immediately after this beat's effects")
 	_f_player1_name = _row_le(v, "Player 1 Name", "e.g. Nex  (blank = keep default)")
 	_f_player2_name = _row_le(v, "Player 2 Name", "e.g. Midnight Shadow  (blank = keep default)")
+	_f_start_crystals_p1 = _row_sb(v, "P1 Starting Crystals", 0.0, 99999.0, 100.0,
+		"default %d — only saved when changed" % GameState.STARTING_CRYSTALS)
+	_f_start_crystals_p1.value = GameState.STARTING_CRYSTALS
+	_f_start_crystals_p2 = _row_sb(v, "P2 Starting Crystals", 0.0, 99999.0, 100.0,
+		"default %d — only saved when changed" % GameState.STARTING_CRYSTALS)
+	_f_start_crystals_p2.value = GameState.STARTING_CRYSTALS
 	_f_portrait_p1 = _row_le(v, "Portrait P1", "res://assets/textures/ui/portraits/...")
 	_add_browse(_f_portrait_p1, PackedStringArray(["*.png,*.jpg,*.webp;Image"]), "res://assets/textures/ui/portraits/")
 	_f_portrait_p1_offset_x = _row_sb(v, "P1 Portrait Offset X", -800.0, 800.0, 1.0, "pixels — positive = move right (toward center)")
@@ -814,11 +831,11 @@ func _build_fields() -> void:
 	_f_portrait_p2_offset_y = _row_sb(v, "P2 Portrait Offset Y", -720.0, 720.0, 1.0, "pixels — positive = move up")
 	_f_portrait_p2_size     = _row_sb(v, "P2 Portrait Size",       0.3,   3.0,  0.05, "multiplier  (1.0 = default height)")
 	_f_portrait_p2_size.value = 1.0
-	_f_battle_bgm = _row_le(v, "Battle BGM", "res://assets/audio/bgm_boss_1.mp3  (blank = use default)")
+	_f_battle_bgm = _row_le(v, "Battle BGM", "blank = manage_bgm battle default")
 	_add_browse(_f_battle_bgm, PackedStringArray(["*.mp3,*.ogg,*.wav;Audio"]), "res://assets/audio/")
-	_f_setup_bgm = _row_le(v, "Setup BGM", "placement phase — blank = default placement track")
+	_f_setup_bgm = _row_le(v, "Setup BGM", "placement phase — blank = manage_bgm placement default")
 	_add_browse(_f_setup_bgm, PackedStringArray(["*.mp3,*.ogg,*.wav;Audio"]), "res://assets/audio/")
-	_f_almost_win_bgm = _row_le(v, "Almost-win BGM", "endgame threshold — blank = bgm_almost_win.mp3")
+	_f_almost_win_bgm = _row_le(v, "Almost-win BGM", "endgame threshold — blank = manage_bgm almost_win default")
 	_add_browse(_f_almost_win_bgm, PackedStringArray(["*.mp3,*.ogg,*.wav;Audio"]), "res://assets/audio/")
 	_f_battle_bgm_start = _row_sb(v, "Start Battle Music At (sec)", 0.0, 600.0, 0.1,
 		"seconds from 00:00 — default 14 skips intro; use 0 to start at beginning")
@@ -850,6 +867,75 @@ func _build_fields() -> void:
 	_f_tutorial_on_lose = _row_le(v, "On Lose", "path to VN JSON — played if player loses  |  'game_over' = show game-over screen")
 	_add_browse(_f_tutorial_on_lose, PackedStringArray(["*.json;JSON"]), "res://campaign/scenes/")
 
+	# ── Clone from Deckbuilder ────────────────────────────────
+	_section(v, "CLONE FROM DECKBUILDER  (optional)")
+	var clone_hint := Label.new()
+	clone_hint.text = "Copy a saved deckbuilder deck (and formation) into Player 1 or Player 2 battle config below."
+	clone_hint.add_theme_font_size_override("font_size", 12)
+	clone_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	clone_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(clone_hint)
+	var clone_target_row := HBoxContainer.new()
+	clone_target_row.add_theme_constant_override("separation", 8)
+	v.add_child(clone_target_row)
+	var clone_target_lbl := Label.new()
+	clone_target_lbl.text = "Target"
+	clone_target_lbl.custom_minimum_size.x = 100.0
+	clone_target_lbl.add_theme_font_size_override("font_size", 13)
+	clone_target_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	clone_target_row.add_child(clone_target_lbl)
+	_clone_target_opt = OptionButton.new()
+	_clone_target_opt.add_theme_font_size_override("font_size", 13)
+	_clone_target_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_clone_target_opt.add_item("Player 1")
+	_clone_target_opt.add_item("Player 2 (AI)")
+	clone_target_row.add_child(_clone_target_opt)
+	var clone_deck_row := HBoxContainer.new()
+	clone_deck_row.add_theme_constant_override("separation", 8)
+	v.add_child(clone_deck_row)
+	var clone_deck_lbl := Label.new()
+	clone_deck_lbl.text = "Deck"
+	clone_deck_lbl.custom_minimum_size.x = 100.0
+	clone_deck_lbl.add_theme_font_size_override("font_size", 13)
+	clone_deck_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	clone_deck_row.add_child(clone_deck_lbl)
+	_clone_deck_opt = OptionButton.new()
+	_clone_deck_opt.add_theme_font_size_override("font_size", 13)
+	_clone_deck_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_clone_deck_opt.item_selected.connect(func(_i: int) -> void: _refresh_clone_form_opt())
+	clone_deck_row.add_child(_clone_deck_opt)
+	var clone_form_row := HBoxContainer.new()
+	clone_form_row.add_theme_constant_override("separation", 8)
+	v.add_child(clone_form_row)
+	var clone_form_lbl := Label.new()
+	clone_form_lbl.text = "Formation"
+	clone_form_lbl.custom_minimum_size.x = 100.0
+	clone_form_lbl.add_theme_font_size_override("font_size", 13)
+	clone_form_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	clone_form_row.add_child(clone_form_lbl)
+	_clone_form_opt = OptionButton.new()
+	_clone_form_opt.add_theme_font_size_override("font_size", 13)
+	_clone_form_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	clone_form_row.add_child(_clone_form_opt)
+	var clone_apply_btn := Button.new()
+	clone_apply_btn.text = "Apply Clone"
+	clone_apply_btn.add_theme_font_size_override("font_size", 13)
+	clone_apply_btn.pressed.connect(_apply_deckbuilder_clone)
+	v.add_child(clone_apply_btn)
+	_populate_clone_deck_opt()
+
+	# ── Player Deck ───────────────────────────────────────────
+	_section(v, "PLAYER DECK  (optional — leave empty to use player's active save deck)")
+	var player_hint_lbl := Label.new()
+	player_hint_lbl.text = "Override the human player's deck for this battle. Empty = active deckbuilder deck at runtime."
+	player_hint_lbl.add_theme_font_size_override("font_size", 12)
+	player_hint_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	player_hint_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(player_hint_lbl)
+	_player_chars_chips = _build_battle_deck_row(v, "Characters", "character", "player")
+	_player_traps_chips = _build_battle_deck_row(v, "Traps", "trap", "player")
+	_player_tech_chips  = _build_battle_deck_row(v, "Tech", "tech", "player")
+
 	# ── Enemy Deck ────────────────────────────────────────────
 	_section(v, "ENEMY DECK  (optional — leave empty to use random pool)")
 	var hint_lbl := Label.new()
@@ -858,9 +944,9 @@ func _build_fields() -> void:
 	hint_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
 	hint_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(hint_lbl)
-	_enemy_chars_chips = _build_enemy_deck_row(v, "Characters", "character")
-	_enemy_traps_chips = _build_enemy_deck_row(v, "Traps", "trap")
-	_enemy_tech_chips  = _build_enemy_deck_row(v, "Tech", "tech")
+	_enemy_chars_chips = _build_battle_deck_row(v, "Characters", "character", "enemy")
+	_enemy_traps_chips = _build_battle_deck_row(v, "Traps", "trap", "enemy")
+	_enemy_tech_chips  = _build_battle_deck_row(v, "Tech", "tech", "enemy")
 
 	# ── Union Summon Flags ────────────────────────────────────
 	_section(v, "UNION SUMMON")
@@ -1127,6 +1213,8 @@ func _connect_static_signals() -> void:
 	_f_ai_pers_soc.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_player1_name.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_player2_name.text_changed.connect(func(_s: String) -> void: ch.call())
+	_f_start_crystals_p1.value_changed.connect(func(_v: float) -> void: ch.call())
+	_f_start_crystals_p2.value_changed.connect(func(_v: float) -> void: ch.call())
 	_f_portrait_p1.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_portrait_p2.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_portrait_p1_offset_x.value_changed.connect(func(_v: float) -> void: ch.call())
@@ -2273,6 +2361,8 @@ func _populate_fields() -> void:
 	_f_call_scene.selected = max(0, _cs_map.find(_cs_val))
 	_f_player1_name.text = str(b.get("player1_name", ""))
 	_f_player2_name.text = str(b.get("player2_name", ""))
+	_f_start_crystals_p1.value = float(b.get("starting_crystals_p1", GameState.STARTING_CRYSTALS))
+	_f_start_crystals_p2.value = float(b.get("starting_crystals_p2", GameState.STARTING_CRYSTALS))
 	_f_portrait_p1.text = str(b.get("portrait_p1", ""))
 	_f_portrait_p1_offset_x.value = float(b.get("portrait_p1_offset_x", 0.0))
 	_f_portrait_p1_offset_y.value = float(b.get("portrait_p1_offset_y", 0.0))
@@ -2321,9 +2411,26 @@ func _populate_fields() -> void:
 			_enemy_deck_traps.append(str(v2))
 		for v2: Variant in (ed as Dictionary).get("tech", []):
 			_enemy_deck_tech.append(str(v2))
-	_rebuild_enemy_chips("character", _enemy_chars_chips)
-	_rebuild_enemy_chips("trap", _enemy_traps_chips)
-	_rebuild_enemy_chips("tech", _enemy_tech_chips)
+	_rebuild_deck_chips("enemy", "character", _enemy_chars_chips)
+	_rebuild_deck_chips("enemy", "trap", _enemy_traps_chips)
+	_rebuild_deck_chips("enemy", "tech", _enemy_tech_chips)
+
+	# Player deck
+	_player_deck_chars.clear()
+	_player_deck_traps.clear()
+	_player_deck_tech.clear()
+	var pd: Variant = b.get("player_deck", null)
+	if pd is Dictionary:
+		for v2: Variant in (pd as Dictionary).get("characters", []):
+			_player_deck_chars.append(str(v2))
+		for v2: Variant in (pd as Dictionary).get("traps", []):
+			_player_deck_traps.append(str(v2))
+		for v2: Variant in (pd as Dictionary).get("tech", []):
+			_player_deck_tech.append(str(v2))
+	_rebuild_deck_chips("player", "character", _player_chars_chips)
+	_rebuild_deck_chips("player", "trap", _player_traps_chips)
+	_rebuild_deck_chips("player", "tech", _player_tech_chips)
+	_populate_clone_deck_opt()
 	_load_ai_forced_tech_from_beat(b)
 
 	# Union flags
@@ -2567,6 +2674,12 @@ func _collect_beat() -> Dictionary:
 
 	if _f_start_battle.button_pressed:
 		b["start_battle"] = true
+		var sc1: int = int(_f_start_crystals_p1.value)
+		if sc1 != GameState.STARTING_CRYSTALS:
+			b["starting_crystals_p1"] = sc1
+		var sc2: int = int(_f_start_crystals_p2.value)
+		if sc2 != GameState.STARTING_CRYSTALS:
+			b["starting_crystals_p2"] = sc2
 	if _f_call_tutorial != null and _f_call_tutorial.button_pressed \
 			and _f_tutorial_opt != null and _f_tutorial_opt.selected > 0:
 		var tut_sel: int = _f_tutorial_opt.selected
@@ -2659,6 +2772,14 @@ func _collect_beat() -> Dictionary:
 			"characters": _enemy_deck_chars.duplicate(),
 			"traps":      _enemy_deck_traps.duplicate(),
 			"tech":       _enemy_deck_tech.duplicate(),
+		}
+
+	# Player deck
+	if not _player_deck_chars.is_empty() or not _player_deck_traps.is_empty() or not _player_deck_tech.is_empty():
+		b["player_deck"] = {
+			"characters": _player_deck_chars.duplicate(),
+			"traps":      _player_deck_traps.duplicate(),
+			"tech":       _player_deck_tech.duplicate(),
 		}
 
 	# Union flags (only write if non-default to keep JSON clean)
@@ -3125,10 +3246,84 @@ func _save() -> void:
 	_status_lbl.text = "Saved  (%d beats)  →  %s" % [_beats.size(), _file_path.get_file()]
 
 # ─────────────────────────────────────────────────────────────
-# Enemy deck builder helpers
+# Battle deck builder helpers
 # ─────────────────────────────────────────────────────────────
 
-func _build_enemy_deck_row(parent: Control, label_text: String, card_type: String) -> HBoxContainer:
+func _populate_clone_deck_opt() -> void:
+	if _clone_deck_opt == null:
+		return
+	_clone_deck_opt.clear()
+	_clone_deck_opt.add_item("(select deck)")
+	for i: int in range(SaveManager.decks.size()):
+		var d: DeckData = SaveManager.decks[i]
+		var suffix: String = "" if d.is_valid() else "  [invalid]"
+		_clone_deck_opt.add_item("%s%s" % [d.deck_name, suffix])
+	_refresh_clone_form_opt()
+
+func _refresh_clone_form_opt() -> void:
+	if _clone_form_opt == null:
+		return
+	_clone_form_opt.clear()
+	_clone_form_opt.add_item("(deck only — no formation change)")
+	if _clone_deck_opt == null or _clone_deck_opt.selected <= 0:
+		return
+	var deck_idx: int = _clone_deck_opt.selected - 1
+	if deck_idx < 0 or deck_idx >= SaveManager.decks.size():
+		return
+	var deck: DeckData = SaveManager.decks[deck_idx]
+	for f: Variant in deck.formations:
+		if f is Dictionary:
+			_clone_form_opt.add_item(str((f as Dictionary).get("name", "Formation")))
+
+func _apply_deckbuilder_clone() -> void:
+	if _clone_deck_opt == null or _clone_deck_opt.selected <= 0:
+		_status_lbl.text = "Select a deckbuilder deck to clone."
+		return
+	var deck_idx: int = _clone_deck_opt.selected - 1
+	if deck_idx < 0 or deck_idx >= SaveManager.decks.size():
+		_status_lbl.text = "Invalid deck selection."
+		return
+	var deck: DeckData = SaveManager.decks[deck_idx]
+	var to_player: bool = _clone_target_opt != null and _clone_target_opt.selected == 0
+	var side: String = "player" if to_player else "enemy"
+	var char_arr: Array = _get_battle_deck_array(side, "character")
+	var trap_arr: Array = _get_battle_deck_array(side, "trap")
+	var tech_arr: Array = _get_battle_deck_array(side, "tech")
+	char_arr.clear()
+	trap_arr.clear()
+	tech_arr.clear()
+	for cname: Variant in deck.characters:
+		char_arr.append(str(cname))
+	for tname: Variant in deck.traps:
+		trap_arr.append(str(tname))
+	for tname: Variant in deck.techs:
+		tech_arr.append(str(tname))
+	if to_player:
+		_rebuild_deck_chips("player", "character", _player_chars_chips)
+		_rebuild_deck_chips("player", "trap", _player_traps_chips)
+		_rebuild_deck_chips("player", "tech", _player_tech_chips)
+	else:
+		_rebuild_deck_chips("enemy", "character", _enemy_chars_chips)
+		_rebuild_deck_chips("enemy", "trap", _enemy_traps_chips)
+		_rebuild_deck_chips("enemy", "tech", _enemy_tech_chips)
+		for i: int in range(ENEMY_TECH_SLOTS):
+			_ai_forced_tech[i] = str(tech_arr[i] if i < tech_arr.size() else "").strip_edges()
+		_refresh_ai_forced_tech_row()
+	if _clone_form_opt != null and _clone_form_opt.selected > 0:
+		var form_idx: int = _clone_form_opt.selected - 1
+		var forced: Array = deck.get_formation_forced_cells(form_idx)
+		if to_player:
+			_rebuild_forced_grid(_player_forced_grid, _player_forced_gc, forced)
+		else:
+			_rebuild_forced_grid(_ai_forced_grid, _ai_forced_gc, forced)
+	_on_field_changed()
+	var target_name: String = "Player 1" if to_player else "Player 2 (AI)"
+	var form_note: String = ""
+	if _clone_form_opt != null and _clone_form_opt.selected > 0:
+		form_note = " + formation"
+	_status_lbl.text = "Cloned '%s' into %s battle config%s." % [deck.deck_name, target_name, form_note]
+
+func _build_battle_deck_row(parent: Control, label_text: String, card_type: String, side: String) -> HBoxContainer:
 	# Label + scrollable chip strip
 	var hdr := HBoxContainer.new()
 	hdr.add_theme_constant_override("separation", 6)
@@ -3190,48 +3385,64 @@ func _build_enemy_deck_row(parent: Control, label_text: String, card_type: Strin
 	add_btn.pressed.connect(func() -> void:
 		if opt.item_count == 0:
 			return
-		_add_enemy_card(card_type, opt.get_item_text(opt.selected), chips)
+		_add_battle_deck_card(side, card_type, opt.get_item_text(opt.selected), chips)
 	)
 	clr_btn.pressed.connect(func() -> void:
-		_get_enemy_array(card_type).clear()
-		_rebuild_enemy_chips(card_type, chips)
+		_get_battle_deck_array(side, card_type).clear()
+		_rebuild_deck_chips(side, card_type, chips)
 		_on_field_changed()
 	)
 
 	return chips
 
-func _get_enemy_array(card_type: String) -> Array:
-	match card_type:
-		"character": return _enemy_deck_chars
-		"trap":      return _enemy_deck_traps
-		"tech":      return _enemy_deck_tech
+func _get_battle_deck_array(side: String, card_type: String) -> Array:
+	if side == "player":
+		match card_type:
+			"character": return _player_deck_chars
+			"trap":      return _player_deck_traps
+			"tech":      return _player_deck_tech
+	else:
+		match card_type:
+			"character": return _enemy_deck_chars
+			"trap":      return _enemy_deck_traps
+			"tech":      return _enemy_deck_tech
 	return []
 
-func _add_enemy_card(card_type: String, card_name: String, chips: HBoxContainer) -> void:
-	var arr := _get_enemy_array(card_type)
+func _add_battle_deck_card(side: String, card_type: String, card_name: String, chips: HBoxContainer) -> void:
+	var arr := _get_battle_deck_array(side, card_type)
 	if arr.has(card_name):
-		return  # no duplicates
+		return
 	arr.append(card_name)
-	_rebuild_enemy_chips(card_type, chips)
+	_rebuild_deck_chips(side, card_type, chips)
 	_on_field_changed()
 
-func _rebuild_enemy_chips(card_type: String, chips: HBoxContainer) -> void:
+func _rebuild_deck_chips(side: String, card_type: String, chips: HBoxContainer) -> void:
 	if chips == null:
 		return
 	for child in chips.get_children():
 		child.queue_free()
-	var arr := _get_enemy_array(card_type)
+	var arr := _get_battle_deck_array(side, card_type)
 	for cname: String in arr:
-		var btn := Button.new()
-		btn.text = cname + "  ×"
-		btn.add_theme_font_size_override("font_size", 12)
+		var chip := Button.new()
+		chip.text = cname + "  ×"
+		chip.custom_minimum_size = Vector2(0, 24)
+		chip.add_theme_font_size_override("font_size", 11)
 		var name_copy: String = cname
-		btn.pressed.connect(func() -> void:
-			_get_enemy_array(card_type).erase(name_copy)
-			_rebuild_enemy_chips(card_type, chips)
+		chip.pressed.connect(func() -> void:
+			arr.erase(name_copy)
+			_rebuild_deck_chips(side, card_type, chips)
 			_on_field_changed()
 		)
-		chips.add_child(btn)
+		chips.add_child(chip)
+
+func _get_enemy_array(card_type: String) -> Array:
+	return _get_battle_deck_array("enemy", card_type)
+
+func _add_enemy_card(card_type: String, card_name: String, chips: HBoxContainer) -> void:
+	_add_battle_deck_card("enemy", card_type, card_name, chips)
+
+func _rebuild_enemy_chips(card_type: String, chips: HBoxContainer) -> void:
+	_rebuild_deck_chips("enemy", card_type, chips)
 
 func _collect_ai_forced_tech() -> Array:
 	var result: Array = []

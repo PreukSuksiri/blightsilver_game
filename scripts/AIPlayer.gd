@@ -407,7 +407,7 @@ func _restrict_to_multi_attack_bonus_chain(eligible: Array) -> Array:
 	for entry: Dictionary in eligible:
 		var pos: Vector2i = entry["pos"]
 		var card: GameState.CardInstance = GameState.get_card(player_index, pos.x, pos.y)
-		if card.has_pending_multi_attack_non_char():
+		if card.has_pending_bonus_attack_chain():
 			bonus_only.append(entry)
 	if bonus_only.is_empty():
 		return eligible
@@ -418,7 +418,7 @@ func _has_pending_multi_attack_attacker() -> bool:
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
 			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
-			if card.has_pending_multi_attack_non_char():
+			if card.has_pending_bonus_attack_chain():
 				return true
 	return false
 
@@ -464,7 +464,7 @@ func _get_eligible_attackers() -> Array:
 				continue
 			if not _can_unit_attack(card):
 				continue
-			if GameState.attacks_remaining <= 0 and not card.has_pending_multi_attack_non_char():
+			if GameState.attacks_remaining <= 0 and not card.has_pending_bonus_attack_chain():
 				continue
 			if card.face_up:
 				faceup_attackers.append(pos)
