@@ -395,6 +395,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	var result := BattleResolver.resolve_battle(
 		attacker, defender, GameState.dice_result, player, opponent, defender_was_exposed, target_pos
 	)
+	# Pills freeze at preview time; badge/mod reflect the final resolve.
+	BattleResolver.copy_reckoning_pills_from(preview_result, result)
 	# Capture card names before any destruction so loggers that fire after destroy_card() can use them
 	result.attacker_name = attacker.card_name
 	result.defender_name = defender.card_name
@@ -1006,7 +1008,7 @@ static func _has_brainwash_target(player: int, exclude_pos: Vector2i) -> bool:
 			if Vector2i(r, c) == exclude_pos:
 				continue
 			var card: GameState.CardInstance = GameState.get_card(player, r, c)
-			if card.card_type == "character" and card.face_up:
+			if card.card_type == "character":
 				return true
 	return false
 
@@ -1017,15 +1019,17 @@ func resolve_brainwash_friendly_fire(attacker_player: int, friendly_pos: Vector2
 		complete_brainwash_redirect()
 		return
 	var ally: GameState.CardInstance = GameState.get_card(attacker_player, friendly_pos.x, friendly_pos.y)
-	if ally.card_type != "character" or not ally.face_up or friendly_pos == attacker_pos:
+	if ally.card_type != "character" or friendly_pos == attacker_pos:
 		GameState.post_message("Brainwash: Invalid target — effect fizzles.")
 		complete_brainwash_redirect()
 		return
 
+	var defender_was_exposed: bool = ally.face_up
+	if not ally.face_up:
+		GameState.reveal_card(attacker_player, friendly_pos.x, friendly_pos.y)
+
 	GameState.post_message("Brainwash: %s attacks %s!" % [attacker.card_name, ally.card_name])
 	GameState.defender_pos = friendly_pos
-
-	var defender_was_exposed: bool = ally.face_up
 	BattleResolver.calculate_field_bonuses(attacker_player)
 	BattleResolver.calculate_field_bonuses(GameState.get_opponent(attacker_player))
 
@@ -1037,6 +1041,7 @@ func resolve_brainwash_friendly_fire(attacker_player: int, friendly_pos: Vector2
 	var result := BattleResolver.resolve_battle(
 		attacker, ally, GameState.dice_result, attacker_player, attacker_player,
 		defender_was_exposed, friendly_pos)
+	BattleResolver.copy_reckoning_pills_from(preview_result, result)
 	result.attacker_name = attacker.card_name
 	result.defender_name = ally.card_name
 	result.attacker_log_label = BattleLogFormat.format_unit(attacker)
@@ -1392,7 +1397,9 @@ func _handle_trap_effect(
 			GameState.post_message("%s: %s, %s." % [trap_data.card_name,
 				"Heads" if _cf2l_r[0] else "Tails", "Heads" if _cf2l_r[1] else "Tails"])
 			if _cf2l_r[0] and _cf2l_r[1]:
-				attacker.cannot_attack_until = GameState.turn_number + 1
+				# +2 so the lock survives opponent's turn and blocks attacker's next turn
+				# (same cadence as LOCK_SELF_AFTER_ATTACK; +1 expired before they act again).
+				attacker.cannot_attack_until = GameState.turn_number + 2
 				GameState.post_message("Both heads! %s cannot attack next turn!" % attacker.card_name)
 			else:
 				GameState.post_message("Not both heads — no effect.")

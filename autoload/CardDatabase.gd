@@ -1013,7 +1013,7 @@ func _load_traps() -> void:
 
 		["Brainwash", 1500, TrapData.TrapEffectType.FORCE_FRIENDLY_FIRE,
 			{},
-			"Foe choose their own ally as an attack target",
+			"Foe choose their own ally (face-up or face-down) as an attack target",
 			CharacterData.Rarity.EXOTIC],
 
 		["Bunker", 900, TrapData.TrapEffectType.NULLIFY_BLOCK_ADJACENT,

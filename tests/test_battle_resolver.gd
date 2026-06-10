@@ -19,6 +19,8 @@ func run_all_tests() -> void:
 	test_defend_crystal_gain()
 	test_defend_drain_attacker()
 	test_armored_bee_preview_silent()
+	test_reckoning_overlay_log_lines()
+	test_reckoning_pills_copied_from_preview()
 
 func _make_char(name: String, atk: int, def_val: int, cost: int,
 		affinity: int = CharacterData.Affinity.ANIMA,
@@ -169,3 +171,50 @@ func test_armored_bee_preview_silent() -> void:
 	assert_true(not real.defender_destroyed, "Real battle: Shepherd Detective loses 45 vs 60")
 	assert_true(real.attacker_destroyed, "Real battle: attacker destroyed")
 	assert_true(defender.one_use_def_boost_used, "One-use DEF boost spent after real battle")
+
+func test_reckoning_overlay_log_lines() -> void:
+	print("-- test_reckoning_overlay_log_lines")
+	var attacker := _make_char("Angel Gatekeeper", 40, 12, 1000,
+		CharacterData.Affinity.DIVINE,
+		CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY,
+		{"affinity": CharacterData.Affinity.CHAOS, "bonus": 60})
+	var defender := _make_char("Chaotic Wisp", 20, 30, 100, CharacterData.Affinity.CHAOS)
+	var result := BattleResolver.resolve_battle(attacker, defender, 3, 0, 1)
+	result.attacker_name = attacker.card_name
+	result.defender_name = defender.card_name
+	assert_eq(result.attacker_pill_atk, 40, "Attacker ATK pill frozen at resolve")
+	assert_eq(result.attacker_pill_def, 12, "Attacker DEF pill frozen at resolve")
+	assert_eq(result.defender_pill_atk, 20, "Defender ATK pill frozen at resolve")
+	assert_eq(result.defender_pill_def, 30, "Defender DEF pill frozen at resolve")
+	assert_eq(result.attacker_atk_used, 100, "Attacker badge = pill + mod")
+	assert_eq(result.attacker_atk_delta, 60, "Attacker ATK mod")
+	var lines: PackedStringArray = BattleResolver.reckoning_overlay_log_lines(0, 1, result)
+	assert_eq(lines.size(), 2, "Always two reckoning overlay lines")
+	assert_true(lines[0].begins_with("Reckoning overlay: P0 "), "Attacker line prefix")
+	assert_true("badge=100" in lines[0], "Attacker badge in log")
+	assert_true("ATK pill=40" in lines[0], "Attacker ATK pill in log")
+	assert_true("DEF pill=12" in lines[0], "Attacker DEF pill in log")
+	assert_true("mod=+ATK 60" in lines[0], "Attacker mod in log")
+	assert_true("(40+60=100)" in lines[0], "Attacker verification in log")
+	assert_true(" MISMATCH" not in lines[0], "Attacker verification passes")
+	assert_true(lines[1].begins_with("Reckoning overlay: P1 "), "Defender line prefix")
+	assert_true("badge=30" in lines[1], "Defender badge in log")
+	assert_true("mod=+DEF 0" in lines[1], "Defender zero mod in log")
+	assert_true("(30+0=30)" in lines[1], "Defender verification in log")
+
+func test_reckoning_pills_copied_from_preview() -> void:
+	print("-- test_reckoning_pills_copied_from_preview")
+	var attacker := _make_char("Gryphon", 30, 20, 500)
+	var defender := _make_char("Shield Wall", 10, 40, 200)
+	var preview := BattleResolver.resolve_battle(attacker, defender, 3, 0, 1, false, Vector2i(-1, -1), true)
+	attacker.temp_atk_bonus += 5
+	var final := BattleResolver.resolve_battle(attacker, defender, 3, 0, 1)
+	BattleResolver.copy_reckoning_pills_from(preview, final)
+	assert_eq(final.attacker_pill_atk, preview.attacker_pill_atk, "Preview ATK pill preserved")
+	assert_eq(final.attacker_pill_def, preview.attacker_pill_def, "Preview DEF pill preserved")
+	assert_eq(final.defender_pill_atk, preview.defender_pill_atk, "Preview defender ATK pill preserved")
+	assert_eq(final.defender_pill_def, preview.defender_pill_def, "Preview defender DEF pill preserved")
+	assert_eq(final.attacker_atk_used, 35, "Final badge includes temp boost")
+	assert_eq(final.attacker_atk_delta, 0, "Final mod excludes pill-only temp boost")
+	var lines: PackedStringArray = BattleResolver.reckoning_overlay_log_lines(0, 1, final)
+	assert_true(" MISMATCH" in lines[0], "Optional pay after preview flags mismatch")

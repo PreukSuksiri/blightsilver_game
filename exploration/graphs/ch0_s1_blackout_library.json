@@ -538,7 +538,7 @@
 				},
 				{
 					"conditions": [],
-					"label": "Back Hallway",
+					"label": "Annex Passage",
 					"locked_hint": "",
 					"locked_mode": "hide",
 					"target": "node_back_hallway"
@@ -750,7 +750,7 @@
 			"connections": [
 				{
 					"conditions": [],
-					"label": "Back Hallway",
+					"label": "Annex Passage",
 					"locked_hint": "",
 					"locked_mode": "hide",
 					"target": "node_back_hallway"
@@ -870,7 +870,7 @@
 			"setup_bgm": "",
 			"show_info_on_enter": true,
 			"show_who_is_here": true,
-			"title": "Back Hallway",
+			"title": "Annex Passage",
 			"title_conditions": [],
 			"usable_items": [],
 			"vn_keep_bgm": true,
@@ -898,7 +898,7 @@
 			"connections": [
 				{
 					"conditions": [],
-					"label": "Back Hallway",
+					"label": "Annex Passage",
 					"locked_hint": "",
 					"locked_mode": "hide",
 					"target": "node_back_hallway"
@@ -949,7 +949,7 @@
 			"connections": [
 				{
 					"conditions": [],
-					"label": "Back Hallway",
+					"label": "Annex Passage",
 					"locked_hint": "",
 					"locked_mode": "hide",
 					"target": "node_back_hallway"
@@ -1337,7 +1337,7 @@
 							"value": "1"
 						}
 					],
-					"label": "Back Hallway",
+					"label": "Annex Passage",
 					"locked_hint": "Need password",
 					"locked_mode": "hide",
 					"target": "node_back_hallway"

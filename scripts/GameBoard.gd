@@ -912,7 +912,6 @@ func _on_bribe_reveal_pressed() -> void:
 	_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
 	_show_guide("Select one of your face-down characters to reveal.")
 	_highlight_tech_targets("bribe_reveal")
-	_set_defender_reveal_pick_mode(true, bribed_player)
 
 func _on_bribe_pass_pressed() -> void:
 	_hide_bribe_overlay()
@@ -5924,7 +5923,10 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	if filter == "self_squares_1_opponent_turn":
 		var tease_defender := GameState.get_opponent(GameState.current_player)
 		_set_own_facedown_char_peek(true, tease_defender)
-		_set_defender_reveal_pick_mode(true, tease_defender)
+
+	# Brainwash: attacker may pick any own ally, including face-down units
+	if filter == "own_any_as_target":
+		_set_own_facedown_char_peek(true)
 
 	# Auto-complete filters that don't require grid selection
 	if filter == "view_opponent_hand":
@@ -6569,8 +6571,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "own_any_as_target":
-		# FORCE_FRIENDLY_FIRE: attacker battles one of their own face-up allies
-		if player == current_player and card.card_type == "character" and card.face_up \
+		# FORCE_FRIENDLY_FIRE: attacker battles one of their own allies (face-up or face-down)
+		if player == current_player and card.card_type == "character" \
 				and pos != GameState.attacker_pos:
 			action_panel.visible = false
 			pending_tech_filter = ""
@@ -6685,7 +6687,6 @@ func _find_own_card_pos(player: int, card_name: String) -> Vector2i:
 
 func _clear_after_tech() -> void:
 	_pending_human_defender_tech = false
-	_set_defender_reveal_pick_mode(false)
 	_set_own_facedown_char_peek(false)   # safety net — always clear temporary peek on tech end
 	# Restore YOUR VIEW auto-peek for human players (e.g. after Bribe/Tease defender choice).
 	# _set_own_facedown_char_peek(false) clears preview on all face-down cards; re-apply here.
@@ -6776,17 +6777,6 @@ func _set_own_facedown_char_peek(enable: bool, target_player: int = -1) -> void:
 				var card: GameState.CardInstance = GameState.get_card(cp, r, c)
 				if card.card_type == "character" and not card.face_up:
 					(grid_nodes[cp][r][c] as Control).set_preview_revealed(enable)
-
-## Bribe/Tease defender pick — show Exposed icon on valid peeked targets and already-exposed units.
-func _set_defender_reveal_pick_mode(active: bool, player: int = -1) -> void:
-	for p: int in range(2):
-		if player >= 0 and p != player:
-			continue
-		for r: int in range(GameState.GRID_SIZE):
-			for c: int in range(GameState.GRID_SIZE):
-				var node: Control = grid_nodes[p][r][c]
-				if node.has_method("set_defender_reveal_pick_mode"):
-					node.set_defender_reveal_pick_mode(active)
 
 func _on_ai_bluff(player: int, row: int, col: int, emoticon: String) -> void:
 	_set_bluff_animated(player, row, col, emoticon)
@@ -7038,7 +7028,7 @@ func _highlight_tech_targets(filter: String) -> void:
 				var _bw_pos := Vector2i(r, c)
 				var card: GameState.CardInstance = GameState.get_card(player, r, c)
 				grid_nodes[player][r][c].set_highlighted(
-					card.card_type == "character" and card.face_up and _bw_pos != _bw_attacker_pos)
+					card.card_type == "character" and _bw_pos != _bw_attacker_pos)
 
 	elif filter in ["lock_opponent_monster", "opponent_faceup_zero_stats", "self_faceup_for_copy",
 			"own_armored_nature", "row_or_column"]:
@@ -8063,7 +8053,7 @@ func _show_endgame_screen(winner: int) -> void:
 	if is_win_screen and winner != -1:
 		var bg := TextureRect.new()
 		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		bg.texture      = load("res://assets/textures/ui/backgrounds/bg_win_battle.png")
+		bg.texture      = load("res://assets/textures/profile/win_screen/img_win_screen_nex_2.png")
 		bg.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -8071,7 +8061,7 @@ func _show_endgame_screen(winner: int) -> void:
 	else:
 		var bg := TextureRect.new()
 		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		bg.texture      = load("res://assets/textures/ui/backgrounds/bg_game_over_2.png")
+		bg.texture      = load("res://assets/textures/profile/win_screen/img_lose_screen_default.png")
 		bg.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE

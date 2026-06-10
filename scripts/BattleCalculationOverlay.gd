@@ -76,26 +76,9 @@ func _slot_battle_stats(
 ) -> Dictionary:
 	var atk_delta: int = result.attacker_atk_delta if is_attacker else result.defender_atk_delta
 	var def_delta: int = result.attacker_def_delta if is_attacker else result.defender_def_delta
-	var eff_atk: int = inst.get_effective_atk() + atk_delta
-	var eff_def: int = inst.get_effective_def() + def_delta
-	return {
-		"eff_atk": eff_atk,
-		"eff_def": eff_def,
-		"badge": eff_atk if is_attacker else eff_def,
-	}
-
-func _apply_slot_body_stats(slot: Control, stats: Dictionary) -> void:
-	if slot.get_child_count() < 2:
-		return
-	var card_ctrl: Control = slot.get_child(1) as Control
-	if card_ctrl == null:
-		return
-	var alv: Variant = card_ctrl.get_meta("atk_lbl", null)
-	if alv is Label:
-		(alv as Label).text = "ATK %d" % int(stats["eff_atk"])
-	var dlv: Variant = card_ctrl.get_meta("def_lbl", null)
-	if dlv is Label:
-		(dlv as Label).text = "DEF %d" % int(stats["eff_def"])
+	var badge: int = inst.get_effective_atk() + atk_delta if is_attacker \
+			else inst.get_effective_def() + def_delta
+	return {"badge": badge}
 
 func _parse_badge_value(lbl: Label) -> int:
 	if lbl.text.is_valid_int():
@@ -138,7 +121,6 @@ func _animate_slot_badge_stat(
 	if not is_instance_valid(slot) or inst == null or inst.card_type != "character":
 		return
 	var stats: Dictionary = _slot_battle_stats(inst, is_attacker, result)
-	_apply_slot_body_stats(slot, stats)
 	var badge_meta: Variant = slot.get_meta("badge_lbl", null)
 	if not badge_meta is Label:
 		return

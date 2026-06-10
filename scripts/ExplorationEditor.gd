@@ -103,6 +103,7 @@ var _status_lbl: Label = null
 # ── Persistent file dialogs ───────────────────────────────────
 var _load_dialog: FileDialog = null
 var _save_dialog: FileDialog = null
+var _new_confirm_dialog: ConfirmationDialog = null
 
 # ── Preview helpers ────────────────────────────────────────────
 var _preview_player: AudioStreamPlayer = null
@@ -189,6 +190,15 @@ func _build_ui() -> void:
 	_save_dialog.current_file = "exploration_graph.json"
 	_save_dialog.file_selected.connect(_on_save_file_selected)
 	add_child(_save_dialog)
+
+	_new_confirm_dialog = ConfirmationDialog.new()
+	_new_confirm_dialog.title = "New Graph"
+	_new_confirm_dialog.dialog_text = (
+		"Create a new graph?\n\nUnsaved changes to the current graph will be lost.")
+	_new_confirm_dialog.ok_button_text = "New Graph"
+	_new_confirm_dialog.cancel_button_text = "Cancel"
+	_new_confirm_dialog.confirmed.connect(_new_graph)
+	add_child(_new_confirm_dialog)
 
 	# ── Audio preview player ───────────────────────────────────
 	_preview_player = AudioStreamPlayer.new()
@@ -2771,7 +2781,10 @@ func _find_cond_vbox(frame: Control) -> VBoxContainer:
 # ─────────────────────────────────────────────────────────────
 
 func _on_new_pressed() -> void:
-	_new_graph()
+	if _dirty:
+		_new_confirm_dialog.popup_centered()
+	else:
+		_new_graph()
 
 func _on_load_pressed() -> void:
 	_load_dialog.popup_centered(Vector2(900, 600))

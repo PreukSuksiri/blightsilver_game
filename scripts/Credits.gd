@@ -106,8 +106,8 @@ FONTS
 
 Coji Morishita
 Omnibus-Type
-Digital-7
 Manfred Klein
+GGBotNet
 
 
 

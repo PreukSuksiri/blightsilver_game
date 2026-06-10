@@ -884,7 +884,7 @@ func decide_target(filter: String) -> Vector2i:
 		"own_faceup_card_sacrifice", "own_any_card":
 			return _best_own_faceup()
 		"own_any_as_target":
-			return _worst_own_faceup_excluding(GameState.attacker_pos)
+			return _worst_own_ally_excluding(GameState.attacker_pos)
 		"graveyard":
 			return _first_own_empty_slot()
 		"own_divine_character_redirect":
@@ -1039,6 +1039,23 @@ func _worst_own_faceup_excluding(exclude_pos: Vector2i) -> Vector2i:
 				continue
 			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
 			if card.card_type == "character" and card.face_up and card.current_atk < worst_atk:
+				worst_atk = card.current_atk
+				worst_pos = pos
+	if worst_pos == Vector2i(-1, -1):
+		return Vector2i(0, 0)
+	return worst_pos
+
+func _worst_own_ally_excluding(exclude_pos: Vector2i) -> Vector2i:
+	# Brainwash: pick the weakest own ally, including face-down units
+	var worst_pos: Vector2i = Vector2i(-1, -1)
+	var worst_atk: int = 99999
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var pos := Vector2i(r, c)
+			if pos == exclude_pos:
+				continue
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type == "character" and card.current_atk < worst_atk:
 				worst_atk = card.current_atk
 				worst_pos = pos
 	if worst_pos == Vector2i(-1, -1):

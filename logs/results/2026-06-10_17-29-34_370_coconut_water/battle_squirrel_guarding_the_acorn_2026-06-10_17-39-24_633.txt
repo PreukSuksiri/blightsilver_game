@@ -1,0 +1,155 @@
+=== Battle of Squirrel Guarding the Acorn ===
+Battle started: 2026-06-10 17:39:24.633
+Game Session of Coconut Water (started 2026-06-10 17:29:34.370)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.256] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:17.939] Revealed: P0 (1,1) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[00:17.983] Revealed: P1 (1,2) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:17.983] Dice rolled: 4
+[00:17.990] MSG: Archbishop wins!
+[00:22.423] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:23.822] Attack P0(1,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P1(1,2)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=4  ATK=70 vs DEF=15  → WIN
+[00:23.822] Anim: 3A  △ P1(1,2)
+[00:23.822] Card destroyed  P1 (1,2) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:45.567] Revealed: P0 (1,3) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[00:45.607] Revealed: P1 (2,2) "Brainwash" {cost 1500}
+[00:45.607] Dice rolled: 5
+[00:45.874] MSG: Trap triggered: Brainwash!
+[00:48.495] Crystals: P1 4700 → 3200 (-1500)  [trap cost]
+[00:49.886] Target prompt: "Brainwash: Choose one of your own allies as the attack target."  filter=own_any_as_target
+[01:06.693] MSG: Brainwash: Joseph the Battle Priest attacks Archbishop!
+[01:06.693] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[01:06.697] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[01:06.780] Coin flip: Heads
+[01:11.297] Crystals: P0 5000 → 4400 (-600)  [battle]
+[01:12.696] Attack P0(1,3)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(1,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | attacked}  Dice=5  ATK=70 vs DEF=90  → LOSE
+[01:12.696] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} +ATK 10
+[01:12.696] Anim: 3B  △ P0(1,3)
+[01:12.696] Card destroyed  P0 (1,3) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[01:12.700] Trap: "Brainwash" triggered  P0(1,3)→P1(2,2)
+[01:58.774] Turn ended  P0  |  Crystals P0=4400 P1=3200
+
+--- Turn 2  |  Player 1  |  Crystals P0=4400 P1=3200 ---
+[01:59.371] Mode selected P1: TECH
+[01:59.681] Tech played  P1: "Spy"
+[02:01.219] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[02:01.644] Revealed: P0 (2,0) "Cursed Reflection" {cost 500}
+[02:01.646] Tech resolved  P1
+[02:02.523] Mode selected P1: ATTACK
+[02:02.524] MSG: Player 2: tap a character to attack.
+[02:04.227] Revealed: P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:04.228] Dice rolled: 4
+[02:04.245] MSG: Nothing happens — Dead End.
+[02:07.630] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[02:07.632] Attack P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(1,2)(empty)  Dice=4  → DEAD_END
+[02:07.632] Anim: 3F  (blank slot)
+[02:08.126] Mode selected P1: ATTACK
+[02:08.128] MSG: Player 2: tap a character to attack.
+[02:09.839] Revealed: P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[02:09.839] Dice rolled: 2
+[02:09.852] MSG: Nothing happens — Dead End.
+[02:13.244] Attack P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(2,0)(empty)  Dice=2  → DEAD_END
+[02:13.244] Anim: 3F  (blank slot)
+[02:13.741] Turn ended  P1  |  Crystals P0=4400 P1=3200
+
+--- Turn 3  |  Player 0  |  Crystals P0=4400 P1=3200 ---
+[08:57.222] Dice rolled: 1
+[08:57.237] MSG: Archbishop wins!
+[09:00.074] Crystals: P1 3200 → 2920 (-280)  [battle]
+[09:01.466] Attack P0(1,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=1  ATK=70 vs DEF=20  → WIN
+[09:01.466] Anim: 3A  △ P1(1,1)
+[09:01.466] Card destroyed  P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[09:07.315] MSG: Tap 2 material card(s) on the field.
+[09:07.629] MSG: 1 more material(s) needed.
+[09:09.704] Crystals: P0 4400 → 3900 (-500)  [union]
+[09:09.733] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[09:09.733] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[09:09.733] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}
+[09:17.033] Dice rolled: 5
+[09:17.070] MSG: Diamond Unicorn wins!
+[09:22.536] Crystals: P1 2920 → 2520 (-400)  [battle]
+[09:23.932] Attack P0(0,2)"Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} → P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=5  ATK=45 vs DEF=25  → WIN
+[09:23.932] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} +ATK 15
+[09:23.932] Anim: 3A  △ P1(0,1)
+[09:23.932] Card destroyed  P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[13:50.657] Turn ended  P0  |  Crystals P0=3900 P1=2520
+
+--- Turn 4  |  Player 1  |  Crystals P0=3900 P1=2520 ---
+[13:51.242] Mode selected P1: TECH
+[13:51.551] Tech played  P1: "Bribe"
+[13:53.110] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[13:59.315] MSG: Bribe: Opponent passed.
+[13:59.321] Tech resolved  P1
+[14:00.212] Mode selected P1: ATTACK
+[14:00.214] MSG: Player 2: tap a character to attack.
+[14:01.923] Revealed: P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[14:01.924] Dice rolled: 2
+[14:01.953] MSG: Big Thug wins!
+[14:05.510] MSG: [DEBUG] Bot Player timed out — ending turn.
+[14:06.396] Attack P1(0,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(0,2)"Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xATK-used}  Dice=2  ATK=40 vs DEF=35  → WIN
+[14:06.396] Anim: 3A  △ P0(0,2)
+[14:06.396] Card destroyed  P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine | 1xATK-used}
+[14:08.904] Turn ended  P1  |  Crystals P0=3900 P1=2520
+
+--- Turn 5  |  Player 0  |  Crystals P0=3900 P1=2520 ---
+[14:18.521] Revealed: P0 (3,0) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[14:18.521] Dice rolled: 2
+[14:18.527] MSG: Angel Gatekeeper wins!
+[14:22.998] Crystals: P1 2520 → 2120 (-400)  [battle]
+[14:24.391] Attack P0(3,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P1(0,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=2  ATK=40 vs DEF=35  → WIN
+[14:24.391] Anim: 3A  △ P1(0,3)
+[14:24.391] Card destroyed  P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[14:28.712] Revealed: P0 (0,0) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[14:28.735] Revealed: P1 (2,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[14:28.736] Dice rolled: 3
+[14:28.739] MSG: Gryphon wins!
+[14:31.516] Crystals: P1 2120 → 1320 (-800)  [battle]
+[14:32.914] Attack P0(0,0)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P1(2,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}  Dice=3  ATK=100 vs DEF=35  → WIN
+[14:32.914] Anim: 3A  △ P1(2,1)
+[14:32.914] Card destroyed  P1 (2,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[14:34.988] Turn ended  P0  |  Crystals P0=3900 P1=1320
+
+--- Turn 6  |  Player 1  |  Crystals P0=3900 P1=1320 ---
+[14:35.575] Mode selected P1: ATTACK
+[14:35.577] MSG: Player 2: tap a character to attack.
+[14:37.289] Revealed: P1 (1,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[14:37.289] Dice rolled: 4
+[14:37.302] MSG: Nothing happens — Dead End.
+[14:40.669] Attack P1(1,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P0(3,3)(empty)  Dice=4  → DEAD_END
+[14:40.669] Anim: 3F  (blank slot)
+[14:43.176] Turn ended  P1  |  Crystals P0=3900 P1=1320
+
+--- Turn 7  |  Player 0  |  Crystals P0=3900 P1=1320 ---
+[14:52.140] Dice rolled: 4
+[14:52.149] MSG: Angel Gatekeeper wins!
+[14:56.636] Crystals: P1 1320 → 970 (-350)  [battle]
+[14:58.043] Attack P0(3,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P1(1,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=4  ATK=40 vs DEF=20  → WIN
+[14:58.043] Anim: 3A  △ P1(1,3)
+[14:58.043] Card destroyed  P1 (1,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[15:00.886] Revealed: P1 (2,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[15:00.886] Dice rolled: 4
+[15:00.890] MSG: Archbishop wins!
+[15:04.235] Crystals: P1 970 → 720 (-250)  [battle]
+[15:05.631] Attack P0(1,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P1(2,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=4  ATK=70 vs DEF=20  → WIN
+[15:05.631] Anim: 3A  △ P1(2,3)
+[15:05.631] Card destroyed  P1 (2,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[15:06.463] Turn ended  P0  |  Crystals P0=3900 P1=720
+
+--- Turn 8  |  Player 1  |  Crystals P0=3900 P1=720 ---
+[15:07.066] Mode selected P1: ATTACK
+[15:07.070] MSG: Player 2: tap a character to attack.
+[15:08.757] Revealed: P1 (3,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[15:08.792] Revealed: P0 (0,4) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[15:08.792] Dice rolled: 4
+[15:12.360] MSG: [DEBUG] Bot Player timed out — ending turn.
+[15:13.374] Crystals: P1 720 → 0 (-720)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3900  P1: 0  |  Turns: 8

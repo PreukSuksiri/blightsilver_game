@@ -87,6 +87,19 @@ func delete_claimed() -> void:
 #   clear_all
 #   manage_bgm
 
+func _dismiss_admin_console(scene: Node = null) -> void:
+	if scene == null:
+		scene = get_tree().current_scene
+	if scene == null:
+		return
+	var admin: Node = scene.get_node_or_null("AdminConsoleOverlay")
+	if admin == null:
+		return
+	if admin.has_method("_on_close"):
+		admin._on_close()
+	else:
+		admin.queue_free()
+
 func admin_command(raw: String) -> String:
 	var line := raw.strip_edges()
 	if line.is_empty():
@@ -162,6 +175,7 @@ func admin_command(raw: String) -> String:
 				+ "  demo_off\n"
 				+ "  demo_status\n"
 				+ "  manage_bgm\n"
+				+ "  simulate_win_lose_screen\n"
 				+ "  manage_menu_buttons\n"
 				+ "  manage_fonts\n"
 				+ "  hide_ui\n"
@@ -198,18 +212,27 @@ func admin_command(raw: String) -> String:
 			var bgm_scene: Node = get_tree().current_scene
 			if bgm_scene.get_node_or_null("BGMManagerOverlay") != null:
 				return "BGM Manager is already open."
+			_dismiss_admin_console(bgm_scene)
 			var bgm_overlay: Node = load("res://scripts/BGMManagerOverlay.gd").new()
 			bgm_overlay.name = "BGMManagerOverlay"
 			bgm_scene.add_child(bgm_overlay)
 			return "BGM Manager opened."
 
+		"simulate_win_lose_screen":
+			var wl_scene: Node = get_tree().current_scene
+			if wl_scene.get_node_or_null("WinLoseScreenPreviewOverlay") != null:
+				return "Win/Lose screen preview is already open."
+			_dismiss_admin_console(wl_scene)
+			var wl_overlay: Node = load("res://scripts/WinLoseScreenPreviewOverlay.gd").new()
+			wl_overlay.name = "WinLoseScreenPreviewOverlay"
+			wl_scene.add_child(wl_overlay)
+			return "Win/Lose screen preview opened."
+
 		"manage_menu_buttons", "manage_menu_butons":
 			var menu_scene: Node = get_tree().current_scene
 			if menu_scene.get_node_or_null("MenuButtonManagerOverlay") != null:
 				return "Menu Button Manager is already open."
-			var admin_overlay: Node = menu_scene.get_node_or_null("AdminConsoleOverlay")
-			if admin_overlay != null:
-				admin_overlay.queue_free()
+			_dismiss_admin_console(menu_scene)
 			var menu_overlay: Node = load("res://scripts/MenuButtonManagerOverlay.gd").new()
 			menu_overlay.name = "MenuButtonManagerOverlay"
 			menu_scene.add_child(menu_overlay)
@@ -219,9 +242,7 @@ func admin_command(raw: String) -> String:
 			var font_scene: Node = get_tree().current_scene
 			if font_scene.get_node_or_null("FontManagerOverlay") != null:
 				return "Font Manager is already open."
-			var font_admin: Node = font_scene.get_node_or_null("AdminConsoleOverlay")
-			if font_admin != null:
-				font_admin.queue_free()
+			_dismiss_admin_console(font_scene)
 			var font_overlay: Node = load("res://scripts/FontManagerOverlay.gd").new()
 			font_overlay.name = "FontManagerOverlay"
 			font_scene.add_child(font_overlay)
@@ -232,9 +253,7 @@ func admin_command(raw: String) -> String:
 			if tb_root.get_node_or_null("TutorialBattleBuilder") != null:
 				return "Tutorial Battle Builder is already open."
 			var tb_scene: Node = get_tree().current_scene
-			var tb_admin: Node = tb_scene.get_node_or_null("AdminConsoleOverlay") if tb_scene != null else null
-			if tb_admin != null:
-				tb_admin.queue_free()
+			_dismiss_admin_console(tb_scene)
 			var tb_overlay: Node = load("res://scripts/TutorialBattleBuilder.gd").new()
 			tb_overlay.name = "TutorialBattleBuilder"
 			tb_root.add_child(tb_overlay)
@@ -403,6 +422,7 @@ func admin_command(raw: String) -> String:
 			var scene := get_tree().current_scene
 			if scene.get_node_or_null("CampaignMapEditorOverlay") != null:
 				return "Map Editor is already open."
+			_dismiss_admin_console(scene)
 			var editor: Node = load("res://scripts/CampaignMapEditor.gd").new()
 			editor.name = "CampaignMapEditorOverlay"
 			scene.add_child(editor)
@@ -412,6 +432,7 @@ func admin_command(raw: String) -> String:
 			var scene := get_tree().current_scene
 			if scene.get_node_or_null("VNEditorOverlay") != null:
 				return "VN Editor is already open."
+			_dismiss_admin_console(scene)
 			var vned: Node = load("res://scripts/VNEditor.gd").new()
 			vned.name = "VNEditorOverlay"
 			scene.add_child(vned)
@@ -527,6 +548,7 @@ func admin_command(raw: String) -> String:
 			var scene: Node = get_tree().current_scene
 			if scene.get_node_or_null("CardEditorOverlay") != null:
 				return "Card Editor is already open."
+			_dismiss_admin_console(scene)
 			var editor: Node = load("res://scripts/CardEditorOverlay.gd").new()
 			editor.name = "CardEditorOverlay"
 			scene.add_child(editor)
@@ -540,9 +562,7 @@ func admin_command(raw: String) -> String:
 				var cap_menu: Node = load("res://scripts/UIHideCapture.gd").new()
 				cap_menu.name = "UIHideCapture"
 				scene.add_child(cap_menu)
-				var console_menu: Node = scene.get_node_or_null("AdminConsoleOverlay")
-				if console_menu and console_menu.has_method("_on_close"):
-					console_menu._on_close()
+				_dismiss_admin_console(scene)
 				return ""
 			if scene.name == "GameBoard":
 				if scene.get_node_or_null("BattleUIHideCapture") != null:
@@ -550,9 +570,7 @@ func admin_command(raw: String) -> String:
 				var cap_battle: Node = load("res://scripts/BattleUIHideCapture.gd").new()
 				cap_battle.name = "BattleUIHideCapture"
 				scene.add_child(cap_battle)
-				var console_battle: Node = scene.get_node_or_null("AdminConsoleOverlay")
-				if console_battle and console_battle.has_method("_on_close"):
-					console_battle._on_close()
+				_dismiss_admin_console(scene)
 				return "Battle UI hidden — grids and cards only. Click or press any key to restore."
 			return "hide_ui only works on the Main Menu or in battle."
 
@@ -652,6 +670,7 @@ func admin_command(raw: String) -> String:
 			var c2: String = segs[c_start + 1].strip_edges() if segs.size() > c_start + 1 else ""
 			var c3: String = segs[c_start + 2].strip_edges() if segs.size() > c_start + 2 else ""
 			var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd")
+			_dismiss_admin_console()
 			overlay_script.open(get_tree().root, pack_img, c1, c2, c3)
 			return "Pack opening animation started  [%s | %s | %s]" % [c1, c2, c3]
 
@@ -734,6 +753,7 @@ func admin_command(raw: String) -> String:
 			var scene: Node = get_tree().current_scene
 			if scene.get_node_or_null("DungeonBuilderOverlay") != null:
 				return "Dungeon Builder is already open."
+			_dismiss_admin_console(scene)
 			var builder: Node = load("res://scripts/DailyDungeonBuilder.gd").new()
 			builder.name = "DungeonBuilderOverlay"
 			scene.add_child(builder)
@@ -746,6 +766,7 @@ func admin_command(raw: String) -> String:
 			var scene: Node = get_tree().current_scene
 			if scene.get_node_or_null("DungeonActivatorOverlay") != null:
 				return "Dungeon Activator is already open."
+			_dismiss_admin_console(scene)
 			var activator: Node = load("res://scripts/DailyDungeonActivator.gd").new()
 			activator.name = "DungeonActivatorOverlay"
 			scene.add_child(activator)
@@ -755,6 +776,7 @@ func admin_command(raw: String) -> String:
 			var scene: Node = get_tree().current_scene
 			if scene.get_node_or_null("ModifierEditorOverlay") != null:
 				return "Modifier Editor is already open."
+			_dismiss_admin_console(scene)
 			var editor: Node = load("res://scripts/ModifierEditorOverlay.gd").new()
 			editor.name = "ModifierEditorOverlay"
 			scene.add_child(editor)
@@ -895,6 +917,7 @@ func admin_command(raw: String) -> String:
 			var scene: Node = get_tree().current_scene
 			if scene.get_node_or_null("MusicDiscEditorOverlay") != null:
 				return "Music Disc Editor is already open."
+			_dismiss_admin_console(scene)
 			var editor: Node = load("res://scripts/MusicDiscEditorOverlay.gd").new()
 			editor.name = "MusicDiscEditorOverlay"
 			scene.add_child(editor)
@@ -945,6 +968,7 @@ func admin_command(raw: String) -> String:
 			var scene: Node = get_tree().current_scene
 			if scene.get_node_or_null("PackEditorOverlay") != null:
 				return "Pack Editor is already open."
+			_dismiss_admin_console(scene)
 			var editor: Node = load("res://scripts/PackEditorOverlay.gd").new()
 			editor.name = "PackEditorOverlay"
 			scene.add_child(editor)
@@ -1004,6 +1028,7 @@ func admin_command(raw: String) -> String:
 			var scene := get_tree().current_scene
 			if scene.get_node_or_null("CampaignGalleryEditorOverlay") != null:
 				return "Gallery Editor is already open."
+			_dismiss_admin_console(scene)
 			var ed: Node = load("res://scripts/CampaignGalleryEditor.gd").new()
 			ed.name = "CampaignGalleryEditorOverlay"
 			scene.add_child(ed)
@@ -1063,6 +1088,7 @@ func admin_command(raw: String) -> String:
 			var scene: Node = get_tree().current_scene
 			if scene.get_node_or_null("StartingDeckManagerOverlay") != null:
 				return "Starting Deck Manager is already open."
+			_dismiss_admin_console(scene)
 			var mgr: Node = load("res://scripts/StartingDeckManager.gd").new()
 			mgr.name = "StartingDeckManagerOverlay"
 			scene.add_child(mgr)
@@ -1073,9 +1099,7 @@ func admin_command(raw: String) -> String:
 			if get_tree().current_scene.name == "GameBoard":
 				return "Cannot start VS AI while a match is in progress."
 			BGMManager.stop(0.0)
-			var console_vs: Node = get_tree().current_scene.get_node_or_null("AdminConsoleOverlay")
-			if console_vs != null and console_vs.has_method("_on_close"):
-				console_vs._on_close()
+			_dismiss_admin_console()
 			CheckerTransition.fade_out_to_battle(func() -> void:
 				get_tree().change_scene_to_file("res://scenes/vs_ai_config.tscn"))
 			return ""
@@ -1085,17 +1109,13 @@ func admin_command(raw: String) -> String:
 				return "Cannot start Hot Seat while a match is in progress."
 			BGMManager.stop(0.0)
 			GameState.game_mode = GameState.GameMode.HOT_SEAT
-			var console_hs: Node = get_tree().current_scene.get_node_or_null("AdminConsoleOverlay")
-			if console_hs != null and console_hs.has_method("_on_close"):
-				console_hs._on_close()
+			_dismiss_admin_console()
 			CheckerTransition.fade_out_to_battle(func() -> void:
 				get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 			return ""
 
 		"exploration_editor":
-			var console_ee: Node = get_tree().current_scene.get_node_or_null("AdminConsoleOverlay")
-			if console_ee != null and console_ee.has_method("_on_close"):
-				console_ee._on_close()
+			_dismiss_admin_console()
 			get_tree().change_scene_to_file("res://scenes/exploration_editor.tscn")
 			return ""
 
@@ -1103,9 +1123,7 @@ func admin_command(raw: String) -> String:
 			var current_scene_ep: Node = get_tree().current_scene
 			if current_scene_ep.get_node_or_null("ExplorationLauncherOverlay") != null:
 				return "Exploration Launcher is already open."
-			var console_ep: Node = current_scene_ep.get_node_or_null("AdminConsoleOverlay")
-			if console_ep != null and console_ep.has_method("_on_close"):
-				console_ep._on_close()
+			_dismiss_admin_console(current_scene_ep)
 			var launcher: Node = load("res://scripts/ExplorationLauncherOverlay.gd").new()
 			launcher.name = "ExplorationLauncherOverlay"
 			current_scene_ep.add_child(launcher)

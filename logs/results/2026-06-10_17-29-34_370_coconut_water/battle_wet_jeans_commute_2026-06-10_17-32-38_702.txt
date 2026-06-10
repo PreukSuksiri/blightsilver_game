@@ -1,0 +1,174 @@
+=== Battle of Wet Jeans Commute ===
+Battle started: 2026-06-10 17:32:38.702
+Game Session of Coconut Water (started 2026-06-10 17:29:34.370)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:10.696] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:47.041] Revealed: P0 (0,4) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[00:47.085] Revealed: P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:47.085] Dice rolled: 3
+[00:47.093] MSG: Goddess of Virtue wins!
+[00:50.333] Crystals: P1 5000 → 4780 (-220)  [battle]
+[00:51.732] Attack P0(0,4)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine} → P1(1,1)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}  Dice=3  ATK=80 vs DEF=15  → WIN
+[00:51.732] Anim: 3A  △ P1(1,1)
+[00:51.733] Card destroyed  P1 (1,1) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[00:55.249] Revealed: P0 (1,1) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[00:55.249] Revealed: P1 (2,3) "Pepper Spray" {cost 0}
+[00:55.250] Dice rolled: 1
+[00:55.544] MSG: Trap triggered: Pepper Spray!
+[00:59.712] Coin flip: Tails, Tails
+[01:02.445] MSG: Pepper Spray: Tails, Tails.
+[01:02.445] MSG: Not both heads — no effect.
+[01:02.450] Trap: "Pepper Spray" triggered  P0(1,1)→P1(2,3)
+[01:04.533] Turn ended  P0  |  Crystals P0=5000 P1=4780
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4780 ---
+[01:05.138] Mode selected P1: TECH
+[01:05.440] Crystals: P1 4780 → 4180 (-600)  [tech cost]
+[01:06.823] Tech played  P1: "Radar"
+[01:08.359] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:08.800] Revealed: P0 (4,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:09.602] Revealed: P0 (2,4) "Red Card" {cost 0}
+[01:09.604] Tech resolved  P1
+[01:10.464] Mode selected P1: ATTACK
+[01:10.468] MSG: Player 2: tap a character to attack.
+[01:12.172] Revealed: P1 (2,0) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[01:12.172] Dice rolled: 3
+[01:12.177] MSG: Both cards are destroyed!
+[01:15.763] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:16.563] Crystals: P1 4180 → 3730 (-450)  [battle]
+[01:17.954] Crystals: P0 5000 → 4450 (-550)  [battle]
+[01:19.344] Attack P1(2,0)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} → P0(4,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}  Dice=3  ATK=50 vs DEF=50  → TIE
+[01:19.344] Anim: 3C  △ P1(2,0) + △ P0(4,0)
+[01:19.344] Card destroyed  P1 (2,0) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[01:19.344] Card destroyed  P0 (4,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:19.847] Mode selected P1: ATTACK
+[01:19.850] MSG: Player 2: tap a character to attack.
+[01:21.568] Revealed: P1 (2,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[01:21.568] Dice rolled: 2
+[01:21.594] MSG: Nothing happens — Dead End.
+[01:24.965] Attack P1(2,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} → P0(2,4)(empty)  Dice=2  → DEAD_END
+[01:24.965] Anim: 3F  (blank slot)
+[01:25.465] Turn ended  P1  |  Crystals P0=4450 P1=3730
+
+--- Turn 3  |  Player 0  |  Crystals P0=4450 P1=3730 ---
+[01:54.207] Dice rolled: 3
+[01:54.214] MSG: Archbishop wins!
+[01:57.075] Crystals: P1 3730 → 3530 (-200)  [battle]
+[01:58.472] Attack P0(1,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P1(2,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=3  ATK=70 vs DEF=30  → WIN
+[01:58.472] Anim: 3A  △ P1(2,2)
+[01:58.472] Card destroyed  P1 (2,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[02:01.568] Revealed: P1 (0,0) "Hypnosis" {cost 800}
+[02:01.568] Dice rolled: 5
+[02:01.840] MSG: Trap triggered: Hypnosis!
+[02:05.834] Crystals: P1 3530 → 2730 (-800)  [trap cost]
+[02:07.225] MSG: Hypnosis: Goddess of Virtue cannot attack until end of next turn.
+[02:07.230] Trap: "Hypnosis" triggered  P0(0,4)→P1(0,0)
+[02:22.182] Turn ended  P0  |  Crystals P0=4450 P1=2730
+
+--- Turn 4  |  Player 1  |  Crystals P0=4450 P1=2730 ---
+[02:24.267] Crystals: P1 2730 → 1730 (-1000)  [union]
+[02:24.314] Revealed: P1 (2,1) "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[02:24.314] Union summoned P1: "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down}
+[02:24.314] MSG: Player 2 summoned [Volatile Slasher] using: "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down}
+[02:27.692] Mode selected P1: ATTACK
+[02:27.696] MSG: Player 2: tap a character to attack.
+[02:29.400] Dice rolled: 3
+[02:29.469] MSG: Nothing happens — Dead End.
+[02:32.799] Attack P1(2,1)"Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(3,1)(empty)  Dice=3  → DEAD_END
+[02:32.799] Anim: 3F  (blank slot)
+[02:33.296] Mode selected P1: ATTACK
+[02:33.300] MSG: Player 2: tap a character to attack.
+[02:35.005] Revealed: P1 (1,3) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[02:35.005] Dice rolled: 4
+[02:35.024] MSG: Nothing happens — Dead End.
+[02:38.398] Attack P1(1,3)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(0,3)(empty)  Dice=4  → DEAD_END
+[02:38.398] Anim: 3F  (blank slot)
+[02:38.898] Turn ended  P1  |  Crystals P0=4450 P1=1730
+
+--- Turn 5  |  Player 0  |  Crystals P0=4450 P1=1730 ---
+[03:04.898] Dice rolled: 4
+[03:04.907] MSG: Archbishop wins!
+[03:07.992] Crystals: P1 1730 → 1550 (-180)  [battle]
+[03:09.390] Attack P0(1,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P1(1,3)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=4  ATK=70 vs DEF=10  → WIN
+[03:09.390] Anim: 3A  △ P1(1,3)
+[03:09.390] Card destroyed  P1 (1,3) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[03:13.773] Dice rolled: 2
+[03:13.827] MSG: Goddess of Virtue wins!
+[03:16.726] Attack P0(0,4)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine | cannot-atk≤T4} → P1(2,1)"Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}  Dice=2  ATK=80 vs DEF=45  → WIN
+[03:16.726] Anim: 3A  △ P1(2,1)
+[03:16.726] Card destroyed  P1 (2,1) "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[03:21.265] Turn ended  P0  |  Crystals P0=4450 P1=1550
+
+--- Turn 6  |  Player 1  |  Crystals P0=4450 P1=1550 ---
+[03:21.863] Mode selected P1: ATTACK
+[03:21.867] MSG: Player 2: tap a character to attack.
+[03:23.567] Revealed: P1 (2,4) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[03:23.568] Dice rolled: 4
+[03:23.592] MSG: Nothing happens — Dead End.
+[03:25.424] Attack P1(2,4)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P0(0,1)(empty)  Dice=4  → DEAD_END
+[03:25.424] Anim: 3F  (blank slot)
+[03:25.921] Mode selected P1: ATTACK
+[03:25.925] MSG: Player 2: tap a character to attack.
+[03:27.626] Revealed: P1 (4,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[03:27.665] Revealed: P0 (2,2) "Spike Trap" {cost 1500}
+[03:27.665] Dice rolled: 4
+[03:27.938] MSG: Trap triggered: Spike Trap!
+[03:31.225] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:32.017] Crystals: P0 4450 → 2950 (-1500)  [trap cost]
+[03:33.409] Crystals: P1 1550 → 1230 (-320)  [card lost]
+[03:35.443] MSG: Flame Trap: Bleacher Squad destroyed!
+[03:35.445] Trap: "Spike Trap" triggered  P1(4,2)→P0(2,2)
+[03:35.944] Turn ended  P1  |  Crystals P0=2950 P1=1230
+
+--- Turn 7  |  Player 0  |  Crystals P0=2950 P1=1230 ---
+[03:49.279] MSG: Tap 2 material card(s) on the field.
+[03:50.436] MSG: 1 more material(s) needed.
+[03:51.460] Crystals: P0 2950 → 1950 (-1000)  [union]
+[03:51.503] Revealed: P0 (3,3) "Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine}
+[03:51.503] Union summoned P0: "Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} from "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}, "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down}
+[03:51.504] MSG: Player 1 summoned [Gryphon Rider] using: "Church Guard" {Unit ATK0 DEF35 | cost 150 | affinity Divine | face-down}, "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down}
+[03:59.944] MSG: Cannot target an empty cell.
+[04:01.436] Dice rolled: 1
+[04:01.506] MSG: Nothing happens — Dead End.
+[04:03.122] Attack P0(3,3)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(0,1)(empty)  Dice=1  → DEAD_END
+[04:03.122] Anim: 3F  (blank slot)
+[04:07.190] Dice rolled: 3
+[04:07.197] MSG: Archbishop wins!
+[04:10.200] Crystals: P1 1230 → 530 (-700)  [battle]
+[04:11.611] Attack P0(1,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P1(2,4)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}  Dice=3  ATK=70 vs DEF=40  → WIN
+[04:11.611] Anim: 3A  △ P1(2,4)
+[04:11.611] Card destroyed  P1 (2,4) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[04:16.670] Turn ended  P0  |  Crystals P0=1950 P1=530
+
+--- Turn 8  |  Player 1  |  Crystals P0=1950 P1=530 ---
+[04:17.280] Mode selected P1: ATTACK
+[04:17.284] MSG: Player 2: tap a character to attack.
+[04:18.984] Revealed: P1 (4,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[04:18.984] Dice rolled: 2
+[04:19.008] MSG: Nothing happens — Dead End.
+[04:22.382] Attack P1(4,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(0,0)(empty)  Dice=2  → DEAD_END
+[04:22.382] Anim: 3F  (blank slot)
+[04:22.881] Turn ended  P1  |  Crystals P0=1950 P1=530
+
+--- Turn 9  |  Player 0  |  Crystals P0=1950 P1=530 ---
+[04:33.745] Revealed: P0 (1,3) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[04:33.745] Dice rolled: 5
+[04:33.749] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[04:33.753] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[04:33.753] MSG: Joseph the Battle Priest wins!
+[04:33.813] Coin flip: Heads
+[04:38.879] Crystals: P1 530 → 180 (-350)  [battle]
+[04:40.275] Attack P0(1,3)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(4,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=5  ATK=70 vs DEF=30  → WIN
+[04:40.275] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} +ATK 10
+[04:40.275] Anim: 3A  △ P1(4,3)
+[04:40.275] Card destroyed  P1 (4,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1950  P1: 180  |  Turns: 9

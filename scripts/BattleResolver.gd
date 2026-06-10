@@ -23,6 +23,11 @@ class BattleResult:
 	var defender_def_delta: int = 0
 	var attacker_def_delta: int = 0  # for future symmetric display
 	var defender_atk_delta: int = 0
+	# Frozen pill values at Reckoning open — captured at resolve time (cards may be destroyed before log)
+	var attacker_pill_atk: int = 0
+	var attacker_pill_def: int = 0
+	var defender_pill_atk: int = 0
+	var defender_pill_def: int = 0
 	# Whether the defender was already face_up before this attack
 	var defender_was_exposed: bool = false
 	# Post-battle pending actions for TurnManager
@@ -108,11 +113,15 @@ static func _resolve_character_vs_character(
 	if eff_def != base_def:
 		result.ability_triggered_defender = true
 
-	# Populate delta fields for overlay display
+	# Populate delta and frozen pill fields for overlay display / E2E log
 	result.attacker_atk_used  = eff_atk
 	result.defender_def_used  = eff_def
 	result.attacker_atk_delta = eff_atk - base_atk
 	result.defender_def_delta = eff_def - base_def
+	result.attacker_pill_atk  = base_atk
+	result.attacker_pill_def  = attacker.get_effective_def()
+	result.defender_pill_atk  = defender.get_effective_atk()
+	result.defender_pill_def  = base_def
 
 	# One-time defense boosts apply whenever this card is attacked — spend before outcome.
 	if not _silent_mode:
@@ -855,36 +864,63 @@ static func _count_anima_cards(player_index: int, source_card: GameState.CardIns
 	return count
 
 
+## Overlay pills freeze at preview resolve; badge/mod come from final resolve.
+static func copy_reckoning_pills_from(preview: BattleResult, final: BattleResult) -> void:
+	final.attacker_pill_atk = preview.attacker_pill_atk
+	final.attacker_pill_def = preview.attacker_pill_def
+	final.defender_pill_atk = preview.defender_pill_atk
+	final.defender_pill_def = preview.defender_pill_def
+
+
 static func reckoning_overlay_log_lines(
 		attacker_player: int,
 		defender_player: int,
 		result: BattleResult
 ) -> PackedStringArray:
 	var lines: PackedStringArray = []
-	_append_reckoning_stat_line(
-		lines, attacker_player, BattleLogFormat.attack_side_label(result, true),
-		result.attacker_atk_delta, "ATK")
-	_append_reckoning_stat_line(
-		lines, attacker_player, BattleLogFormat.attack_side_label(result, true),
-		result.attacker_def_delta, "DEF")
-	_append_reckoning_stat_line(
-		lines, defender_player, BattleLogFormat.attack_side_label(result, false),
-		result.defender_atk_delta, "ATK")
-	_append_reckoning_stat_line(
-		lines, defender_player, BattleLogFormat.attack_side_label(result, false),
-		result.defender_def_delta, "DEF")
+	lines.append(_reckoning_overlay_combatant_line(
+		attacker_player,
+		BattleLogFormat.attack_side_label(result, true),
+		result.attacker_atk_used,
+		result.attacker_pill_atk,
+		result.attacker_pill_def,
+		result.attacker_atk_delta,
+		"ATK",
+		result.attacker_pill_atk))
+	lines.append(_reckoning_overlay_combatant_line(
+		defender_player,
+		BattleLogFormat.attack_side_label(result, false),
+		result.defender_def_used,
+		result.defender_pill_atk,
+		result.defender_pill_def,
+		result.defender_def_delta,
+		"DEF",
+		result.defender_pill_def))
 	return lines
 
 
-static func _append_reckoning_stat_line(
-		lines: PackedStringArray,
+static func _reckoning_mod_label(stat: String, delta: int) -> String:
+	if delta == 0:
+		return "mod=+%s 0" % stat
+	if delta > 0:
+		return "mod=+%s %d" % [stat, delta]
+	return "mod=-%s %d" % [stat, absi(delta)]
+
+
+static func _reckoning_overlay_combatant_line(
 		player: int,
 		card_label: String,
-		delta: int,
-		stat: String
-) -> void:
-	if delta == 0:
-		return
+		badge: int,
+		atk_pill: int,
+		def_pill: int,
+		mod_delta: int,
+		mod_stat: String,
+		verify_pill: int
+) -> String:
 	var name_str: String = card_label if not card_label.is_empty() else "?"
-	var stat_label: String = ("%s %d" % [stat, delta]) if delta < 0 else ("+%s %d" % [stat, delta])
-	lines.append("Reckoning overlay: P%d %s %s" % [player, name_str, stat_label])
+	var verify_sum: int = verify_pill + mod_delta
+	var mismatch: String = "" if verify_sum == badge else " MISMATCH"
+	return "Reckoning overlay: P%d %s badge=%d ATK pill=%d DEF pill=%d %s (%d%+d=%d)%s" % [
+		player, name_str, badge, atk_pill, def_pill,
+		_reckoning_mod_label(mod_stat, mod_delta),
+		verify_pill, mod_delta, badge, mismatch]

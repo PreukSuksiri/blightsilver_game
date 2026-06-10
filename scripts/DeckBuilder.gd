@@ -94,6 +94,8 @@ var _gallery_selected_type: String = ""
 var _union_section: VBoxContainer = null
 var _union_list: ItemList = null
 var _union_header_label: Label = null
+var _import_dialog: FileDialog = null
+var _export_dialog: FileDialog = null
 
 # ── Formation Editor — draggable gallery card ─────────────────
 class FEDraggableCard extends TextureRect:
@@ -295,6 +297,9 @@ func _ready() -> void:
 	formations_btn.pressed.connect(_open_formation_editor)
 	right_inner.add_child(formations_btn)
 	right_inner.move_child(formations_btn, bottom_bar.get_index())
+
+	_setup_deck_io_buttons(bottom_bar)
+	_setup_deck_file_dialogs()
 
 	# Prologue lock check — show overlay if deckbuilding not yet unlocked
 	if not SaveManager.is_deckbuilding_unlocked():
@@ -1712,6 +1717,95 @@ func _fe_save_formation() -> void:
 	SaveManager.save_deck(current_deck)
 	_refresh_deck_select()
 	status_label.text = "Formation saved!"
+
+# ── Import / Export ───────────────────────────────────────────
+func _setup_deck_io_buttons(bottom_bar: Node) -> void:
+	var export_btn := Button.new()
+	export_btn.text = "Export"
+	export_btn.custom_minimum_size = Vector2(100, 46)
+	export_btn.add_theme_font_size_override("font_size", 17)
+	export_btn.pressed.connect(_on_export_decks)
+	bottom_bar.add_child(export_btn)
+	bottom_bar.move_child(export_btn, 0)
+
+	var import_btn := Button.new()
+	import_btn.text = "Import"
+	import_btn.custom_minimum_size = Vector2(100, 46)
+	import_btn.add_theme_font_size_override("font_size", 17)
+	import_btn.pressed.connect(_on_import_decks)
+	bottom_bar.add_child(import_btn)
+	bottom_bar.move_child(import_btn, 0)
+
+func _setup_deck_file_dialogs() -> void:
+	var default_dir := _default_deck_io_dir()
+	_import_dialog = FileDialog.new()
+	_import_dialog.title = "Import Decks"
+	_import_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	_import_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	_import_dialog.filters = PackedStringArray(["*.json ; Deck JSON"])
+	_import_dialog.current_dir = default_dir
+	_import_dialog.file_selected.connect(_on_import_file_selected)
+	add_child(_import_dialog)
+
+	_export_dialog = FileDialog.new()
+	_export_dialog.title = "Export Decks"
+	_export_dialog.file_mode = FileDialog.FILE_MODE_SAVE_FILE
+	_export_dialog.access = FileDialog.ACCESS_FILESYSTEM
+	_export_dialog.filters = PackedStringArray(["*.json ; Deck JSON"])
+	_export_dialog.current_dir = default_dir
+	_export_dialog.current_file = "blightsilver_decks.json"
+	_export_dialog.file_selected.connect(_on_export_file_selected)
+	add_child(_export_dialog)
+
+func _default_deck_io_dir() -> String:
+	var docs: String = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS)
+	if not docs.is_empty():
+		return docs
+	var desktop: String = OS.get_system_dir(OS.SYSTEM_DIR_DESKTOP)
+	if not desktop.is_empty():
+		return desktop
+	return ProjectSettings.globalize_path("user://")
+
+func _flush_current_deck_to_manager() -> void:
+	if current_deck == null:
+		return
+	current_deck.deck_name = deck_name_field.text.strip_edges()
+	if current_deck.deck_name.is_empty():
+		current_deck.deck_name = "My Deck"
+		deck_name_field.text = current_deck.deck_name
+	var idx: int = SaveManager.active_deck_index
+	if idx >= 0 and idx < SaveManager.decks.size():
+		SaveManager.decks[idx] = current_deck
+
+func _on_import_decks() -> void:
+	_import_dialog.popup_centered(Vector2i(900, 600))
+
+func _on_export_decks() -> void:
+	_export_dialog.popup_centered(Vector2i(900, 600))
+
+func _on_import_file_selected(path: String) -> void:
+	var result: Dictionary = SaveManager.import_decks_from_file(path)
+	if not bool(result.get("ok", false)):
+		status_label.text = "Import failed: %s" % str(result.get("error", "Unknown error"))
+		return
+	var count: int = int(result.get("imported", 0))
+	_refresh_deck_select()
+	_load_deck(SaveManager.active_deck_index)
+	status_label.text = "Imported %d deck(s)." % count
+
+func _on_export_file_selected(path: String) -> void:
+	_flush_current_deck_to_manager()
+	var payload: Dictionary = SaveManager.export_decks_payload()
+	var export_path: String = path
+	if not export_path.to_lower().ends_with(".json"):
+		export_path += ".json"
+	var file := FileAccess.open(export_path, FileAccess.WRITE)
+	if file == null:
+		status_label.text = "Export failed: could not write file."
+		return
+	file.store_string(JSON.stringify(payload, "\t"))
+	file.close()
+	status_label.text = "Exported %d deck(s) to %s" % [SaveManager.decks.size(), export_path.get_file()]
 
 # ── Save / Back ───────────────────────────────────────────────
 func _on_save() -> void:

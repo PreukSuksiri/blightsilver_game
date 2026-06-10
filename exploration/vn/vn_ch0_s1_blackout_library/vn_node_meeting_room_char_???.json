@@ -110,8 +110,9 @@
 		},
 		"linger_characters": true,
 		"player1_name": "Diluted Man",
+		"portrait_p1_offset_x": -40.0,
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_univ_meeting_room_ghost.png",
-		"portrait_p2_offset_x": -140.0,
+		"portrait_p2_offset_x": -100.0,
 		"start_battle": true
 	}
 ]

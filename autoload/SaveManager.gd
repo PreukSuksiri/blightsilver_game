@@ -115,6 +115,73 @@ func duplicate_deck(index: int) -> void:
 	active_deck_index = decks.size() - 1
 	save_data()
 
+# ── Deck import / export ──────────────────────────────────────
+const DECK_EXPORT_FORMAT: String = "blightsilver_deck_export"
+const DECK_EXPORT_VERSION: int = 1
+
+func export_decks_payload() -> Dictionary:
+	return {
+		"format": DECK_EXPORT_FORMAT,
+		"version": DECK_EXPORT_VERSION,
+		"exported_at": Time.get_datetime_string_from_system(),
+		"active_deck_index": active_deck_index,
+		"decks": decks.map(func(d: DeckData) -> Dictionary: return d.to_dict()),
+	}
+
+func import_decks_from_file(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {"ok": false, "error": "Could not read file.", "imported": 0}
+	var text := file.get_as_text()
+	file.close()
+	var parsed: Variant = JSON.parse_string(text)
+	if parsed == null:
+		return {"ok": false, "error": "Invalid JSON.", "imported": 0}
+	if parsed is Array:
+		return import_decks_from_payload({"decks": parsed})
+	if parsed is Dictionary:
+		return import_decks_from_payload(parsed as Dictionary)
+	return {"ok": false, "error": "Unsupported file format.", "imported": 0}
+
+func import_decks_from_payload(payload: Dictionary) -> Dictionary:
+	var decks_raw: Variant = payload.get("decks", null)
+	if not decks_raw is Array:
+		return {"ok": false, "error": "Missing or invalid 'decks' array.", "imported": 0}
+	var fmt: String = str(payload.get("format", "")).strip_edges()
+	if not fmt.is_empty() and fmt != DECK_EXPORT_FORMAT:
+		return {"ok": false, "error": "Unrecognized deck export format.", "imported": 0}
+	var imported_count: int = 0
+	for item: Variant in (decks_raw as Array):
+		if not item is Dictionary:
+			continue
+		var deck: DeckData = DeckData.new()
+		deck.load_from_dict(item as Dictionary)
+		deck.deck_name = make_unique_deck_name(deck.deck_name)
+		decks.append(deck)
+		imported_count += 1
+	if imported_count == 0:
+		return {"ok": false, "error": "No valid decks found in file.", "imported": 0}
+	active_deck_index = decks.size() - imported_count
+	save_data()
+	return {"ok": true, "error": "", "imported": imported_count}
+
+func make_unique_deck_name(base: String) -> String:
+	var name: String = base.strip_edges()
+	if name.is_empty():
+		name = "Imported Deck"
+	if not deck_name_exists(name):
+		return name
+	var suffix: int = 2
+	while deck_name_exists("%s (%d)" % [name, suffix]):
+		suffix += 1
+	return "%s (%d)" % [name, suffix]
+
+func deck_name_exists(name: String) -> bool:
+	for deck: DeckData in decks:
+		if deck.deck_name == name:
+			return true
+	return false
+
 # ── Persistence ───────────────────────────────────────────────
 func save_data() -> void:
 	var data: Dictionary = {

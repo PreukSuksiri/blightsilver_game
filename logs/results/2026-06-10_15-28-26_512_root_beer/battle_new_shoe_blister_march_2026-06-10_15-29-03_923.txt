@@ -1,0 +1,138 @@
+=== Battle of New Shoe Blister March ===
+Battle started: 2026-06-10 15:29:03.923
+Game Session of Root Beer (started 2026-06-10 15:28:26.512)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.448] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:10.861] Mode selected P1: TECH
+[00:11.161] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:12.544] Tech played  P1: "Radar"
+[00:14.083] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:15.361] Revealed: P0 (0,4) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[00:15.364] Tech resolved  P1
+[00:16.186] Mode selected P1: ATTACK
+[00:16.189] MSG: Player 2: tap a character to attack.
+[00:17.891] Revealed: P1 (0,1) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:17.892] Dice rolled: 1
+[00:17.900] MSG: Both cards are destroyed!
+[00:21.477] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:22.286] Crystals: P1 4400 → 2900 (-1500)  [battle]
+[00:23.678] Crystals: P0 5000 → 3600 (-1400)  [battle]
+[00:25.065] Attack P1(0,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(0,4)"Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}  Dice=1  ATK=100 vs DEF=100  → TIE
+[00:25.065] Anim: 3C  △ P1(0,1) + △ P0(0,4)
+[00:25.065] Card destroyed  P1 (0,1) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:25.065] Card destroyed  P0 (0,4) "Goddess of Virtue" {Unit ATK80 DEF100 | cost 1400 | affinity Divine}
+[00:27.575] Turn ended  P1  |  Crystals P0=3600 P1=2900
+
+--- Turn 2  |  Player 0  |  Crystals P0=3600 P1=2900 ---
+[00:35.597] Revealed: P0 (3,0) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[00:35.597] Dice rolled: 5
+[00:35.623] MSG: Nothing happens — Dead End.
+[00:37.422] Attack P0(3,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P1(1,1)(empty)  Dice=5  → DEAD_END
+[00:37.422] Anim: 3F  (blank slot)
+[00:52.314] Revealed: P0 (4,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:52.359] Revealed: P1 (2,1) "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}
+[00:52.359] Dice rolled: 4
+[00:52.365] MSG: Sonic Seraph wins!
+[00:55.244] Crystals: P1 2900 → 2100 (-800)  [battle]
+[00:56.634] Attack P0(4,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(2,1)"Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}  Dice=4  ATK=45 vs DEF=35  → WIN
+[00:56.634] Anim: 3A  △ P1(2,1)
+[00:56.634] Card destroyed  P1 (2,1) "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}
+[01:03.222] Turn ended  P0  |  Crystals P0=3600 P1=2100
+
+--- Turn 3  |  Player 1  |  Crystals P0=3600 P1=2100 ---
+[01:03.827] Mode selected P1: TECH
+[01:04.136] Tech played  P1: "Tease"
+[01:05.677] MSG: Opponent must choose and reveal 1 of their squares.
+[01:05.833] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[01:11.184] MSG: Tease: Choose a face-down unit.
+[01:16.592] MSG: Tease: Choose a face-down unit.
+[01:17.425] MSG: Tease: Choose a face-down unit.
+[01:18.917] MSG: Tease: Choose a face-down unit.
+[06:58.751] MSG: Tease: Choose a face-down unit.
+[07:07.678] Revealed: P0 (1,1) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[07:07.678] MSG: Tease: Opponent revealed Archbishop.
+[07:07.684] Tech resolved  P1
+[07:08.575] Mode selected P1: ATTACK
+[07:08.578] MSG: Player 2: tap a character to attack.
+[07:10.282] Revealed: P1 (2,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[07:10.282] Dice rolled: 3
+[07:10.290] MSG: Both cards are destroyed!
+[07:13.873] MSG: [DEBUG] Bot Player timed out — ending turn.
+[07:14.675] Crystals: P1 2100 → 1700 (-400)  [battle]
+[07:16.064] Crystals: P0 3600 → 3050 (-550)  [battle]
+[07:17.450] Attack P1(2,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P0(4,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}  Dice=3  ATK=50 vs DEF=50  → TIE
+[07:17.451] Anim: 3C  △ P1(2,0) + △ P0(4,0)
+[07:17.451] Card destroyed  P1 (2,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[07:17.451] Card destroyed  P0 (4,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[07:17.950] Mode selected P1: ATTACK
+[07:17.953] MSG: Player 2: tap a character to attack.
+[07:19.658] Revealed: P1 (1,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[07:19.658] Dice rolled: 1
+[07:19.672] MSG: Nothing happens — Dead End.
+[07:22.451] Attack P1(1,3)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane} → P0(0,3)(empty)  Dice=1  → DEAD_END
+[07:22.451] Anim: 3F  (blank slot)
+[07:22.952] Turn ended  P1  |  Crystals P0=3050 P1=1700
+
+--- Turn 4  |  Player 0  |  Crystals P0=3050 P1=1700 ---
+[07:28.204] Dice rolled: 4
+[07:28.212] MSG: Angel Gatekeeper wins!
+[07:32.216] Crystals: P1 1700 → 1300 (-400)  [battle]
+[07:33.611] Attack P0(3,0)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P1(1,3)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}  Dice=4  ATK=40 vs DEF=15  → WIN
+[07:33.611] Anim: 3A  △ P1(1,3)
+[07:33.611] Card destroyed  P1 (1,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[07:38.632] Revealed: P1 (1,2) "Red Card" {cost 0}
+[07:38.632] Dice rolled: 5
+[07:38.925] MSG: Trap triggered: Red Card!
+[07:41.515] Coin flip: Heads, Heads
+[07:44.279] MSG: Red Card: Heads, Heads.
+[07:44.279] MSG: Both heads! Archbishop cannot attack next turn!
+[07:44.284] Trap: "Red Card" triggered  P0(1,1)→P1(1,2)
+[07:48.415] Turn ended  P0  |  Crystals P0=3050 P1=1300
+
+--- Turn 5  |  Player 1  |  Crystals P0=3050 P1=1300 ---
+[07:49.009] Mode selected P1: TECH
+[07:49.317] Tech played  P1: "Bribe"
+[07:50.856] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[07:54.560] Revealed: P0 (4,4) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[07:54.560] Crystals: P0 3050 → 3750 (+700)  [ability]
+[07:54.561] MSG: Bribe: Player 1 revealed Flame Seraph and received 700 Crystals.
+[07:54.568] Tech resolved  P1
+[07:55.445] Mode selected P1: ATTACK
+[07:55.447] MSG: Player 2: tap a character to attack.
+[07:57.157] Revealed: P1 (3,1) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[07:57.157] Dice rolled: 4
+[07:57.160] MSG: Red Mage wins!
+[08:00.757] MSG: [DEBUG] Bot Player timed out — ending turn.
+[08:00.923] Crystals: P0 3750 → 3250 (-500)  [battle]
+[08:02.315] Attack P1(3,1)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P0(4,4)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=4  ATK=20 vs DEF=10  → WIN
+[08:02.315] Anim: 3A  △ P0(4,4)
+[08:02.315] Card destroyed  P0 (4,4) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[08:02.816] Mode selected P1: ATTACK
+[08:02.821] MSG: Player 2: tap a character to attack.
+[08:04.508] Revealed: P1 (2,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[08:04.508] Dice rolled: 5
+[08:04.521] MSG: Nothing happens — Dead End.
+[08:06.554] Attack P1(2,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(3,2)(empty)  Dice=5  → DEAD_END
+[08:06.554] Anim: 3F  (blank slot)
+[08:07.048] Turn ended  P1  |  Crystals P0=3250 P1=1300
+
+--- Turn 6  |  Player 0  |  Crystals P0=3250 P1=1300 ---
+[08:25.955] Dice rolled: 1
+[08:25.966] MSG: Archbishop wins!
+[08:29.463] Crystals: P1 1300 → 900 (-400)  [battle]
+[08:30.878] Attack P0(1,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine | cannot-atk≤T5} → P1(3,1)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}  Dice=1  ATK=70 vs DEF=20  → WIN
+[08:30.878] Anim: 3A  △ P1(3,1)
+[08:30.878] Card destroyed  P1 (3,1) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[21:17.641] Dice rolled: 1
+[21:17.656] MSG: Angel Gatekeeper wins!
+[21:20.632] Crystals: P1 900 → 0 (-900)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3250  P1: 0  |  Turns: 6

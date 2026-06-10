@@ -36,9 +36,12 @@ func _execute(raw: String) -> void:
 		var safe := result.replace("[", "[lb]")
 		_print("[color=#bdf]%s[/color]" % safe)
 	# Close the console after commands that open a full overlay/editor
-	var cmd: String = trimmed.split(" ")[0].to_lower()
-	var _auto_close_cmds: Array[String] = ["animation_pack_opening", "vn_editor", "card_editor"]
-	if cmd in _auto_close_cmds and not result.begins_with("Usage:") and not result.begins_with("ERROR") and not result.ends_with("already open."):
+	if not result.is_empty() \
+			and result.ends_with(" opened.") \
+			and "already open" not in result.to_lower() \
+			and not result.begins_with("Usage:") \
+			and not result.begins_with("ERROR") \
+			and is_inside_tree():
 		_on_close()
 
 func _print(bbtext: String) -> void:

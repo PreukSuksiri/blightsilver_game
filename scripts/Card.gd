@@ -119,7 +119,6 @@ var _attack_hover_tween: Tween = null
 var _union_flash_tween: Tween = null
 var _is_peeking: bool = false
 var _is_enemy_view: bool = false
-var _defender_reveal_pick: bool = false  # Bribe/Tease — show Exposed icon on pick targets
 var _is_destroying: bool = false
 var grid_pos: Vector2i = Vector2i(-1, -1)
 var is_selected: bool = false
@@ -262,21 +261,8 @@ func _set_active_glow(show: bool) -> void:
 func _should_show_exposed_icon() -> bool:
 	if card_data == null or _is_enemy_view:
 		return false
-	if player_owner == GameState.current_player and card_data.face_up:
-		return true
-	if _defender_reveal_pick and card_data.card_type == "character":
-		if card_data.face_up:
-			return true
-		if is_highlighted and _is_peeking:
-			return true
-	return false
-
-func set_defender_reveal_pick_mode(active: bool) -> void:
-	if _defender_reveal_pick == active:
-		return
-	_defender_reveal_pick = active
-	if is_inside_tree() and not _is_destroying:
-		_refresh_display()
+	# Exposed = face-up on the field during your turn (rules: identity known / dust settled).
+	return player_owner == GameState.current_player and card_data.face_up
 
 func _set_attacked_icon(show: bool) -> void:
 	if _attacked_icon_tween:
@@ -754,7 +740,7 @@ func set_highlighted(highlighted: bool) -> void:
 	var changed: bool = is_highlighted != highlighted
 	is_highlighted = highlighted
 	highlight_border.visible = highlighted and not _is_enemy_view
-	if changed and (_defender_reveal_pick or _is_peeking):
+	if changed and _is_peeking:
 		_refresh_display()
 
 func set_target_hover(hovered: bool) -> void:

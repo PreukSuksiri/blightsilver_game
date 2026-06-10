@@ -1544,17 +1544,18 @@ func _on_chat_character_selected(char_data: Dictionary) -> void:
 			if node != null:
 				_rebuild_who_is_here(node)
 		_refresh_contextual_hud_glows()
+	var mark_talked: bool = remove_after and char_index >= 0
 	if actions.is_empty():
 		if vn_path.is_empty():
 			return
-		_play_vn(vn_path, done_cb, play_once)
+		_play_vn(vn_path, done_cb, play_once, true, mark_talked, node_id, char_index)
 		return
 	var after_actions := func() -> void:
 		_execute_spot_actions(actions, done_cb)
 	if vn_path.is_empty():
 		_execute_spot_actions(actions, done_cb)
 		return
-	_play_vn(vn_path, after_actions, play_once)
+	_play_vn(vn_path, after_actions, play_once, true, mark_talked, node_id, char_index)
 
 func _flash_empty_chat() -> void:
 	if _chat_empty_tween and _chat_empty_tween.is_valid():
@@ -3133,7 +3134,10 @@ func _play_vn(
 		path: String,
 		on_done: Callable,
 		play_once: bool = true,
-		keep_bgm: bool = true) -> void:
+		keep_bgm: bool = true,
+		mark_char_talked: bool = false,
+		char_talk_node_id: String = "",
+		char_talk_index: int = -1) -> void:
 	if _vn_playing or _puzzle_playing:
 		on_done.call()
 		return
@@ -3153,6 +3157,9 @@ func _play_vn(
 	vn.set("keep_bgm", keep_bgm)
 	vn.set("exploration_overlay", true)
 	vn.set("mark_played_on_battle", play_once)
+	vn.set("mark_char_talked_on_battle", mark_char_talked)
+	vn.set("char_talk_node_id", char_talk_node_id)
+	vn.set("char_talk_index", char_talk_index)
 	add_child(vn)
 	var captured_path: String = path
 	var captured_once: bool   = play_once
@@ -3202,8 +3209,7 @@ func _handle_post_battle_result() -> void:
 	# Pattern: "battle_<node_id>_won" = "true" | "false"
 	if not node_id.is_empty():
 		ExplorationManager.set_var("battle_%s_won" % node_id, "true" if won else "false")
-	var msg: String = "Victory!" if won else "Defeated..."
-	_show_toast(msg)
+	# Outcome was already shown on GameBoard's win/lose screen — no duplicate toast here.
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node != null:
 		_refresh_node(node)

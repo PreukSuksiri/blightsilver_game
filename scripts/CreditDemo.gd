@@ -107,8 +107,8 @@ FONTS
 
 Coji Morishita
 Omnibus-Type
-Digital-7
 Manfred Klein
+GGBotNet
 
 
 
@@ -141,6 +141,7 @@ Quiet Eve Studio Presents
 "
 
 var _scroll_label: RichTextLabel
+var _clip_container: Control
 var _logo_node: Control
 var _logo_y:    float = 0.0
 var _bgm: AudioStreamPlayer
@@ -169,15 +170,15 @@ func _ready() -> void:
 
 	# ── Clip container — center column ───────────────────────────
 	var vp_size := get_viewport_rect().size
-	var clip := Control.new()
-	clip.clip_contents = true
-	clip.mouse_filter  = MOUSE_FILTER_IGNORE
-	clip.set_anchors_preset(Control.PRESET_CENTER)
-	clip.offset_left   = -420.0
-	clip.offset_top    = -vp_size.y * 0.5
-	clip.offset_right  =  420.0
-	clip.offset_bottom =  vp_size.y * 0.5
-	add_child(clip)
+	_clip_container = Control.new()
+	_clip_container.clip_contents = true
+	_clip_container.mouse_filter  = MOUSE_FILTER_IGNORE
+	_clip_container.set_anchors_preset(Control.PRESET_CENTER)
+	_clip_container.offset_left   = -420.0
+	_clip_container.offset_top    = -vp_size.y * 0.5
+	_clip_container.offset_right  =  420.0
+	_clip_container.offset_bottom =  vp_size.y * 0.5
+	add_child(_clip_container)
 
 	# ── Scrolling credits label (RichTextLabel for BBCode + image support) ──
 	_scroll_label = RichTextLabel.new()
@@ -208,7 +209,7 @@ func _ready() -> void:
 		"盲目の十字架を抱いて",
 		"[font=%s]盲目の十字架を抱いて[/font]" % FontManager.get_slot_path("credits_jp"))
 	_scroll_label.text = "[center]" + processed + "[/center]"
-	clip.add_child(_scroll_label)
+	_clip_container.add_child(_scroll_label)
 
 	# ── Fade overlay — added BEFORE the process_frame await so the first
 	#    rendered frame is always fully black (prevents flash of background)
@@ -307,13 +308,13 @@ func _set_bgm_loop(player: AudioStreamPlayer) -> void:
 	if stream != null:
 		stream.loop = true
 
-func _build_shader_logo(vp_size: Vector2) -> void:
-	# Root container — horizontally centered, Y tracked by _logo_y
+func _build_shader_logo(_vp_size: Vector2) -> void:
+	# Root container — same 840px column as scrolling credits; Y tracked by _logo_y
 	_logo_node = Control.new()
 	_logo_node.size         = Vector2(LOGO_W, LOGO_H)
-	_logo_node.position     = Vector2((vp_size.x - LOGO_W) * 0.5, _logo_y)
+	_logo_node.position     = Vector2(0.0, _logo_y)
 	_logo_node.mouse_filter = MOUSE_FILTER_IGNORE
-	add_child(_logo_node)
+	_clip_container.add_child(_logo_node)
 
 	# ── BgGlow: radial lantern bloom behind logo ───────────────
 	var bg_mat := ShaderMaterial.new()
@@ -333,15 +334,15 @@ func _build_shader_logo(vp_size: Vector2) -> void:
 	var sil_mat := ShaderMaterial.new()
 	sil_mat.shader = SHADER_SILHOUETTE
 	var shadow := TextureRect.new()
-	shadow.set_anchors_preset(Control.PRESET_FULL_RECT)
-	shadow.offset_left   = 4.0
-	shadow.offset_top    = 4.0
-	shadow.offset_right  = 4.0
-	shadow.offset_bottom = 4.0
+	shadow.set_anchors_preset(Control.PRESET_CENTER)
+	shadow.offset_left   = -(LOGO_W * 0.5 + 4.0)
+	shadow.offset_top    = -(LOGO_H * 0.5 + 4.0)
+	shadow.offset_right  =   LOGO_W * 0.5 + 4.0
+	shadow.offset_bottom =   LOGO_H * 0.5 + 4.0
 	shadow.material      = sil_mat
 	shadow.texture       = LOGO_TEXTURE
 	shadow.expand_mode   = TextureRect.EXPAND_IGNORE_SIZE
-	shadow.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT
+	shadow.stretch_mode  = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	shadow.mouse_filter  = MOUSE_FILTER_IGNORE
 	_logo_node.add_child(shadow)
 
@@ -353,6 +354,6 @@ func _build_shader_logo(vp_size: Vector2) -> void:
 	logo.material    = out_mat
 	logo.texture     = LOGO_TEXTURE
 	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	logo.mouse_filter = MOUSE_FILTER_IGNORE
 	_logo_node.add_child(logo)

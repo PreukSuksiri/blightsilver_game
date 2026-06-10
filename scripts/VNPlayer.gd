@@ -39,6 +39,10 @@ var keep_bgm: bool = false
 var exploration_overlay: bool = false
 ## When true, mark this scene played in ExplorationManager if start_battle ends the VN early.
 var mark_played_on_battle: bool = false
+## When true, mark exploration character talked if start_battle ends the VN early.
+var mark_char_talked_on_battle: bool = false
+var char_talk_node_id: String = ""
+var char_talk_index: int = -1
 ## True while rendering a beat that launches exploration with exploration_keep_vn_bgm.
 var _preserve_bgm_for_exploration: bool = false
 
@@ -702,6 +706,9 @@ func _show_beat() -> void:
 			GameState.vn_launched_from_exploration = true
 			if mark_played_on_battle and not _scene_path.is_empty():
 				ExplorationManager.mark_vn_played(_scene_path)
+			if mark_char_talked_on_battle and char_talk_index >= 0 \
+					and not char_talk_node_id.is_empty():
+				ExplorationManager.mark_char_talked(char_talk_node_id, char_talk_index)
 		# Set post-new_game fields (new_game resets most state but not these)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))

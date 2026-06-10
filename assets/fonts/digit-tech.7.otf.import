@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://d4jh5dbvdp3aj"
-path="res://.godot/imported/digital-7 (mono italic).ttf-74aaa22b3a87a328b3a263672edaa7e5.fontdata"
+uid="uid://deqrbng6iq04u"
+path="res://.godot/imported/digit-tech.7.otf-4da0f831b27358a221676e37830c422d.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/digital-7 (mono italic).ttf"
-dest_files=["res://.godot/imported/digital-7 (mono italic).ttf-74aaa22b3a87a328b3a263672edaa7e5.fontdata"]
+source_file="res://assets/fonts/digit-tech.7.otf"
+dest_files=["res://.godot/imported/digit-tech.7.otf-4da0f831b27358a221676e37830c422d.fontdata"]
 
 [params]
 
