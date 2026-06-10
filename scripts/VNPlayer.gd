@@ -793,7 +793,7 @@ func _show_beat() -> void:
 		var expl_params: Variant = beat.get("exploration_params", null)
 		if expl_params is Dictionary:
 			for k: Variant in (expl_params as Dictionary):
-				params[str(k)] = str((expl_params as Dictionary)[k])
+				params[str(k)] = (expl_params as Dictionary)[k]
 		if bool(beat.get("exploration_force_fresh", true)):
 			params["force_fresh"] = true
 		if keep_vn_bgm:

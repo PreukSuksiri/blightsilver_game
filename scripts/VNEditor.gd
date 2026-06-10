@@ -1126,7 +1126,7 @@ func _build_fields() -> void:
 	expl_add_var_btn.custom_minimum_size = Vector2(60, 26)
 	expl_add_var_btn.add_theme_font_size_override("font_size", 12)
 	expl_add_var_btn.pressed.connect(func() -> void:
-		_add_exploration_param_row("", "")
+		_add_exploration_param_row("", null)
 		_on_field_changed())
 	expl_vars_hdr.add_child(expl_add_var_btn)
 	_f_exploration_params_vbox = VBoxContainer.new()
@@ -1303,29 +1303,101 @@ func _clear_vbox(vbox: VBoxContainer) -> void:
 	for child: Node in vbox.get_children():
 		child.queue_free()
 
-func _add_exploration_param_row(key: String, value: String) -> void:
+func _add_exploration_param_row(key: String, value: Variant) -> void:
 	if _f_exploration_params_vbox == null:
 		return
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
 	_f_exploration_params_vbox.add_child(row)
+
 	var k_edit := LineEdit.new()
 	k_edit.placeholder_text = "key"
 	k_edit.text = key
+	k_edit.custom_minimum_size.x = 100.0
 	k_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	k_edit.add_theme_font_size_override("font_size", 13)
 	k_edit.text_changed.connect(func(_s: String) -> void: _on_field_changed())
 	row.add_child(k_edit)
+
+	var mode_opt := OptionButton.new()
+	mode_opt.add_item("Fixed", 0)
+	mode_opt.add_item("Random", 1)
+	mode_opt.custom_minimum_size.x = 88.0
+	mode_opt.add_theme_font_size_override("font_size", 12)
+	row.add_child(mode_opt)
+
 	var eq_lbl := Label.new()
 	eq_lbl.text = "="
 	row.add_child(eq_lbl)
+
 	var v_edit := LineEdit.new()
 	v_edit.placeholder_text = "value"
-	v_edit.text = value
 	v_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v_edit.add_theme_font_size_override("font_size", 13)
 	v_edit.text_changed.connect(func(_s: String) -> void: _on_field_changed())
 	row.add_child(v_edit)
+
+	var min_edit := LineEdit.new()
+	min_edit.placeholder_text = "min"
+	min_edit.custom_minimum_size.x = 52.0
+	min_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	min_edit.add_theme_font_size_override("font_size", 13)
+	min_edit.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+	row.add_child(min_edit)
+
+	var dash_lbl := Label.new()
+	dash_lbl.text = "–"
+	row.add_child(dash_lbl)
+
+	var max_edit := LineEdit.new()
+	max_edit.placeholder_text = "max"
+	max_edit.custom_minimum_size.x = 52.0
+	max_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	max_edit.add_theme_font_size_override("font_size", 13)
+	max_edit.text_changed.connect(func(_s: String) -> void: _on_field_changed())
+	row.add_child(max_edit)
+
+	var is_random := false
+	var fixed_str := ""
+	var min_str := ""
+	var max_str := ""
+	if value is Dictionary and (value as Dictionary).has("random"):
+		var range_spec: Variant = (value as Dictionary)["random"]
+		if range_spec is Array and (range_spec as Array).size() >= 2:
+			is_random = true
+			min_str = str((range_spec as Array)[0])
+			max_str = str((range_spec as Array)[1])
+		elif range_spec is Dictionary:
+			is_random = true
+			min_str = str((range_spec as Dictionary).get("min", 0))
+			max_str = str((range_spec as Dictionary).get("max", 0))
+	if not is_random and value != null:
+		fixed_str = str(value)
+	v_edit.text = fixed_str
+	min_edit.text = min_str
+	max_edit.text = max_str
+	mode_opt.select(1 if is_random else 0)
+
+	row.set_meta("key_edit", k_edit)
+	row.set_meta("mode_opt", mode_opt)
+	row.set_meta("eq_lbl", eq_lbl)
+	row.set_meta("value_edit", v_edit)
+	row.set_meta("min_edit", min_edit)
+	row.set_meta("dash_lbl", dash_lbl)
+	row.set_meta("max_edit", max_edit)
+
+	var sync_mode_ui := func() -> void:
+		var random_mode: bool = mode_opt.selected == 1
+		eq_lbl.visible = not random_mode
+		v_edit.visible = not random_mode
+		min_edit.visible = random_mode
+		dash_lbl.visible = random_mode
+		max_edit.visible = random_mode
+	mode_opt.item_selected.connect(func(_i: int) -> void:
+		sync_mode_ui.call()
+		_on_field_changed())
+	sync_mode_ui.call()
+
 	var rem := Button.new()
 	rem.text = "✕"
 	rem.custom_minimum_size = Vector2(26, 0)
@@ -1372,7 +1444,7 @@ func _add_exploration_inv_row(item_id: String) -> void:
 func _rebuild_exploration_param_rows(params: Dictionary) -> void:
 	_clear_vbox(_f_exploration_params_vbox)
 	for k: Variant in params:
-		_add_exploration_param_row(str(k), str(params[k]))
+		_add_exploration_param_row(str(k), params[k])
 
 func _rebuild_exploration_inv_rows(items: Array) -> void:
 	_clear_vbox(_f_exploration_inv_vbox)
@@ -1386,13 +1458,24 @@ func _collect_exploration_params() -> Dictionary:
 	for row_node: Node in _f_exploration_params_vbox.get_children():
 		if not row_node is HBoxContainer:
 			continue
-		var children: Array = (row_node as HBoxContainer).get_children()
-		if children.size() < 3:
+		var row: HBoxContainer = row_node as HBoxContainer
+		if not row.has_meta("key_edit"):
 			continue
-		var k: String = ((children[0] as LineEdit).text).strip_edges()
-		var val: String = ((children[2] as LineEdit).text).strip_edges()
-		if not k.is_empty():
-			params[k] = val
+		var k: String = (row.get_meta("key_edit") as LineEdit).text.strip_edges()
+		if k.is_empty():
+			continue
+		var mode_opt: OptionButton = row.get_meta("mode_opt") as OptionButton
+		if mode_opt.selected == 1:
+			var min_edit: LineEdit = row.get_meta("min_edit") as LineEdit
+			var max_edit: LineEdit = row.get_meta("max_edit") as LineEdit
+			var lo_text: String = min_edit.text.strip_edges()
+			var hi_text: String = max_edit.text.strip_edges()
+			if lo_text.is_valid_int() and hi_text.is_valid_int():
+				params[k] = {"random": [int(lo_text), int(hi_text)]}
+			else:
+				params[k] = {"random": [0, 0]}
+		else:
+			params[k] = (row.get_meta("value_edit") as LineEdit).text.strip_edges()
 	return params
 
 func _collect_exploration_inventory() -> Array:
@@ -3848,7 +3931,24 @@ func _toggle_union_highlight(u: UnionData) -> void:
 # Battle reward row helpers
 # ─────────────────────────────────────────────────────────────
 const _REWARD_TYPES: Array = ["Credits", "Card", "Booster Pack"]
-const _PACK_NAMES: Array   = ["Starter Pack", "Fighters Pack", "Trapmaster Pack", "Premium Pack"]
+
+func _get_battle_reward_pack_names(include_name: String = "") -> Array[String]:
+	var names: Array[String] = []
+	for entry: Variant in ShopManager.get_all_packs_unfiltered():
+		if not entry is Dictionary:
+			continue
+		var d: Dictionary = entry as Dictionary
+		var pname: String = str(d.get("name", "")).strip_edges()
+		if pname.is_empty():
+			pname = str(d.get("id", "")).strip_edges()
+		if pname.is_empty() or names.has(pname):
+			continue
+		names.append(pname)
+	names.sort()
+	var extra: String = include_name.strip_edges()
+	if not extra.is_empty() and not names.has(extra):
+		names.append(extra)
+	return names
 
 func _rebuild_reward_rows(rewards: Array) -> void:
 	for child in _reward_rows_vbox.get_children():
@@ -3898,16 +3998,20 @@ func _add_reward_row_from(rd: Dictionary) -> void:
 	card_opt.item_selected.connect(func(_i: int) -> void: _on_field_changed())
 	hbox.add_child(card_opt)
 
-	# Pack dropdown
-	var pack_opt := OptionButton.new()
-	pack_opt.custom_minimum_size.x = 140
-	pack_opt.add_theme_font_size_override("font_size", 13)
-	for pn: String in _PACK_NAMES:
-		pack_opt.add_item(pn)
+	# Pack dropdown (from shop/custom_packs.json via ShopManager)
 	var wanted_pack: String = str(rd.get("pack_name", ""))
-	var pack_idx: int = _PACK_NAMES.find(wanted_pack)
+	var pack_names: Array[String] = _get_battle_reward_pack_names(wanted_pack)
+	var pack_opt := OptionButton.new()
+	pack_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pack_opt.custom_minimum_size.x = 180
+	pack_opt.add_theme_font_size_override("font_size", 13)
+	for pn: String in pack_names:
+		pack_opt.add_item(pn)
+	var pack_idx: int = pack_names.find(wanted_pack)
 	if pack_idx >= 0:
 		pack_opt.select(pack_idx)
+	elif not pack_names.is_empty():
+		pack_opt.select(0)
 	pack_opt.item_selected.connect(func(_i: int) -> void: _on_field_changed())
 	hbox.add_child(pack_opt)
 

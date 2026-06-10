@@ -3951,7 +3951,7 @@ func _show_change_music_panel() -> void:
 		disc_lbl.text = "Already changed music this turn."
 		disc_lbl.add_theme_color_override("font_color", Color(1.0, 0.5, 0.3))
 	elif not has_disc:
-		disc_lbl.text = "No Music Discs available.\nBuy them in the Shop."
+		disc_lbl.text = "No Music Discs available."
 		disc_lbl.add_theme_color_override("font_color", Color(0.7, 0.5, 0.4))
 	else:
 		disc_lbl.text = "Owned: %d disc%s  — costs 1 to change" % [

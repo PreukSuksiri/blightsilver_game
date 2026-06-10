@@ -3063,7 +3063,17 @@ func _try_play_node_vn(node: ExplorationNode, is_story: bool = false) -> void:
 	var play_once: bool = node.resolve_vn_play_once(vars)
 	if not is_story:
 		_compass_set_visible(false)
-	_play_vn(vn_path, func() -> void: _on_vn_finished(node), play_once, node.vn_keep_bgm)
+	var after_actions: Array = node.resolve_vn_after_actions(vars)
+	var done_cb := func() -> void:
+		_on_vn_finished(node)
+	if after_actions.is_empty():
+		_play_vn(vn_path, done_cb, play_once, node.vn_keep_bgm)
+		return
+	ExplorationManager.stage_spot_action_resume(node.id, after_actions, 0, "node_vn_after")
+	var after_vn := func() -> void:
+		ExplorationManager.clear_spot_action_resume()
+		_execute_spot_actions(after_actions, done_cb)
+	_play_vn(vn_path, after_vn, play_once, node.vn_keep_bgm)
 
 func _play_puzzle(puzzle_id: String, on_done: Callable, puzzle_params: Dictionary = {}) -> void:
 	if _puzzle_playing or _vn_playing:
@@ -3209,12 +3219,22 @@ func _handle_post_battle_result() -> void:
 	# Pattern: "battle_<node_id>_won" = "true" | "false"
 	if not node_id.is_empty():
 		ExplorationManager.set_var("battle_%s_won" % node_id, "true" if won else "false")
+	var resume: Dictionary = ExplorationManager.take_spot_action_resume_for_battle(won, node_id)
 	# Outcome was already shown on GameBoard's win/lose screen — no duplicate toast here.
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node != null:
 		_refresh_node(node)
 	else:
 		_show_no_session_error()
+	if not resume.is_empty():
+		var resume_actions: Array = resume.get("actions", []) as Array
+		var from_index: int = int(resume.get("from_index", 0))
+		var resume_tag: String = str(resume.get("resume_tag", ""))
+		if from_index < resume_actions.size():
+			if resume_tag == "node_vn_after" and node != null:
+				call_deferred("_resume_node_vn_after_battle", resume_actions, from_index, node)
+			else:
+				call_deferred("_resume_spot_actions_after_battle", resume_actions, from_index)
 
 # ─────────────────────────────────────────────────────────────
 # Exit Integration
@@ -3511,7 +3531,16 @@ func _handle_puzzle_spot_success(remaining: Array, hide_on_success: Callable) ->
 	_execute_spot_actions(remaining, hide_on_success)
 
 func _execute_spot_actions(actions: Array, on_complete: Callable = Callable()) -> void:
+	ExplorationManager.clear_spot_action_resume()
 	_run_spot_actions_from_index(actions, 0, on_complete)
+
+func _resume_spot_actions_after_battle(actions: Array, from_index: int) -> void:
+	_run_spot_actions_from_index(actions, from_index, Callable())
+
+func _resume_node_vn_after_battle(actions: Array, from_index: int, node: ExplorationNode) -> void:
+	var done_cb := func() -> void:
+		_on_vn_finished(node)
+	_run_spot_actions_from_index(actions, from_index, done_cb)
 
 func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Callable) -> void:
 	if index >= actions.size():
@@ -3570,7 +3599,12 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 			if play_once and ExplorationManager.is_vn_played(value):
 				next.call()
 				return
-			_play_vn(value, next, play_once)
+			ExplorationManager.stage_spot_action_resume(
+				ExplorationManager.current_node_id, actions, index + 1)
+			var vn_done := func() -> void:
+				ExplorationManager.clear_spot_action_resume()
+				next.call()
+			_play_vn(value, vn_done, play_once)
 		"navigate_to":
 			if not value.is_empty():
 				_compass_set_visible(true)

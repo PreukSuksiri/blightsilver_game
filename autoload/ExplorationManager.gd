@@ -122,7 +122,8 @@ signal end_exploration_vn_requested(vn_path: String)
 var return_scene: String = "res://scenes/main_menu.tscn"
 
 ## Parameters forwarded to the next fresh session.
-## All keys except "force_fresh" are seeded as session variables.
+## All keys except reserved entries are seeded as session variables.
+## Values may be plain strings or {"random": [min, max]} for inclusive int rolls.
 ## Can be set here directly or passed as the third arg to launch().
 var launch_params: Dictionary = {}
 ## When true, exploration does not replace BGM (keeps track from launching VN).
@@ -140,6 +141,10 @@ var launch_source_vn: String = ""
 ## Written by complete_battle_node(); read by ExplorationPlayer on reload.
 ## Format: { "won": bool, "node_id": String }
 var pending_battle_result: Dictionary = {}
+
+## Spot action chain interrupted by a VN start_battle handoff.
+## Format: { "node_id": String, "actions": Array, "from_index": int }
+var _pending_spot_action_resume: Dictionary = {}
 
 # ─────────────────────────────────────────────────────────────
 # Internal session state
@@ -225,6 +230,29 @@ func launch(graph_path: String, p_return_scene: String = "res://scenes/main_menu
 	CheckerTransition.fade_out_to_battle(func() -> void:
 		get_tree().change_scene_to_file(EXPLORATION_PLAYER_SCENE))
 
+## Resolve an exploration launch param to the string stored in session vars.
+## Supports fixed values and {"random": [min, max]} inclusive integer ranges.
+static func resolve_launch_param_value(value: Variant) -> String:
+	if value is Dictionary:
+		var spec: Dictionary = value as Dictionary
+		if spec.has("random"):
+			var range_spec: Variant = spec["random"]
+			var lo: int = 0
+			var hi: int = 0
+			if range_spec is Array and (range_spec as Array).size() >= 2:
+				lo = int((range_spec as Array)[0])
+				hi = int((range_spec as Array)[1])
+			elif range_spec is Dictionary:
+				lo = int((range_spec as Dictionary).get("min", 0))
+				hi = int((range_spec as Dictionary).get("max", 0))
+			if lo > hi:
+				var swap: int = lo
+				lo = hi
+				hi = swap
+			return str(randi_range(lo, hi))
+	return str(value)
+
+
 ## Start a new exploration session by loading the graph from a JSON file.
 ## Clears any previous session data. Non-reserved keys from launch_params
 ## are seeded into session vars so graph conditions can read them immediately.
@@ -244,7 +272,7 @@ func start_session(graph_path: String, source_vn_scene: String = "") -> void:
 	for k: String in launch_params:
 		if k in ["force_fresh", "keep_vn_bgm"]:
 			continue
-		_vars[k] = str(launch_params.get(k, ""))
+		_vars[k] = resolve_launch_param_value(launch_params.get(k))
 	emit_signal("session_started", graph)
 	_navigate_to(graph.resolve_start_node_id(_vars), false)
 	_save_session_state(true)
@@ -287,6 +315,7 @@ func _clear_session_memory() -> void:
 	_source_vn_scene   = ""
 	_pending_restored_bgm = {}
 	_vn_resume_bgm = {}
+	_pending_spot_action_resume = {}
 
 func _reset_session_state() -> void:
 	_clear_session_memory()
@@ -877,6 +906,37 @@ func complete_battle_node(won: bool) -> void:
 	pending_battle_result = {"won": won, "node_id": _current_node_id}
 
 # ─────────────────────────────────────────────────────────────
+# Spot action resume (VN start_battle handoff)
+# ─────────────────────────────────────────────────────────────
+
+## Stage remaining spot actions before a play_vn that may hand off to battle.
+## Cleared when the VN finishes normally or after a post-battle resume attempt.
+func stage_spot_action_resume(node_id: String, actions: Array, from_index: int, resume_tag: String = "") -> void:
+	if node_id.is_empty() or from_index >= actions.size():
+		return
+	_pending_spot_action_resume = {
+		"node_id":    node_id,
+		"actions":    actions.duplicate(true),
+		"from_index": from_index,
+		"resume_tag": resume_tag,
+	}
+
+func clear_spot_action_resume() -> void:
+	_pending_spot_action_resume = {}
+
+## Pop staged spot actions after returning from battle. Runs only on a win for the
+## same node that staged them; loss or node mismatch discards the pending chain.
+func take_spot_action_resume_for_battle(won: bool, node_id: String) -> Dictionary:
+	if _pending_spot_action_resume.is_empty():
+		return {}
+	var staged_node: String = str(_pending_spot_action_resume.get("node_id", ""))
+	var out: Dictionary = _pending_spot_action_resume.duplicate(true)
+	clear_spot_action_resume()
+	if not won or staged_node != node_id:
+		return {}
+	return out
+
+# ─────────────────────────────────────────────────────────────
 # Debug
 # ─────────────────────────────────────────────────────────────
 
@@ -893,6 +953,7 @@ func debug_dump() -> String:
 		"Variables (%d) : %s" % [_vars.size(), str(_vars)],
 		"Rewards        : %s" % str(_session_rewards),
 		"Pending battle : %s" % str(pending_battle_result),
+		"Spot resume    : %s" % str(_pending_spot_action_resume),
 		"Return scene   : %s" % return_scene,
 	]
 	return "\n".join(lines)

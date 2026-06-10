@@ -19,8 +19,140 @@
 		"text": "** giggles **"
 	},
 	{
+		"ai_forced_cells": [
+			{
+				"card_name": "Night Whisperer",
+				"col": 2,
+				"row": 3
+			},
+			{
+				"card_name": "Feral Vampire",
+				"col": 2,
+				"row": 1
+			},
+			{
+				"card_name": "Explosive Barrels",
+				"col": 4,
+				"row": 0
+			},
+			{
+				"card_name": "Jacob the Ski Mask",
+				"col": 3,
+				"row": 3
+			},
+			{
+				"card_name": "Immortal Vampire",
+				"col": 1,
+				"row": 3
+			},
+			{
+				"card_name": "Araya the Eerie Dancer",
+				"col": 0,
+				"row": 0
+			},
+			{
+				"card_name": "Cursed Well",
+				"col": 2,
+				"row": 2
+			},
+			{
+				"card_name": "Hypnosis",
+				"col": 4,
+				"row": 1
+			},
+			{
+				"card_name": "Red Card",
+				"col": 0,
+				"row": 2
+			},
+			{
+				"card_name": "Trap Hole",
+				"col": 2,
+				"row": 4
+			},
+			{
+				"card_name": "Chaotic Wisp",
+				"col": 3,
+				"row": 0
+			},
+			{
+				"card_name": "Foul Wisp",
+				"col": 1,
+				"row": 0
+			},
+			{
+				"card_name": "Doom Wisp",
+				"col": 3,
+				"row": 1
+			},
+			{
+				"card_name": "Acid Trap Hole",
+				"col": 4,
+				"row": 4
+			},
+			{
+				"card_name": "Bat Swarm",
+				"col": 0,
+				"row": 4
+			},
+			{
+				"card_name": "Bait",
+				"col": 4,
+				"row": 2
+			},
+			{
+				"card_name": "Vampire Servant",
+				"col": 0,
+				"row": 1
+			},
+			{
+				"card_name": "Vampire Duchess",
+				"col": 2,
+				"row": 0
+			}
+		],
+		"ai_forced_tech": [
+			"Great Diplomacy",
+			"Spy",
+			"Bribe"
+		],
 		"animation": "animation_vellum_card_commence_facedown",
+		"enemy_deck": {
+			"characters": [
+				"Vampire Servant",
+				"Vampire Duchess",
+				"Araya the Eerie Dancer",
+				"Immortal Vampire",
+				"Cursed Well",
+				"Jacob the Ski Mask",
+				"Bat Swarm",
+				"Chaotic Wisp",
+				"Foul Wisp",
+				"Doom Wisp",
+				"Night Whisperer",
+				"Feral Vampire"
+			],
+			"tech": [
+				"Great Diplomacy",
+				"Spy",
+				"Bribe"
+			],
+			"traps": [
+				"Explosive Barrels",
+				"Bait",
+				"Acid Trap Hole",
+				"Hypnosis",
+				"Red Card",
+				"Trap Hole"
+			]
+		},
 		"linger_characters": true,
-		"sfx": "res://assets/audio/sound_spellcasting_2.mp3"
+		"player1_name": "Nex Crowmont",
+		"player2_name": "Mad Mascot",
+		"portrait_p1_offset_x": -40.0,
+		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_univ_mascot_ghost.png",
+		"portrait_p2_offset_x": -120.0,
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"start_battle": true
 	}
 ]

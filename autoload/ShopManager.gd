@@ -16,14 +16,17 @@ const PACKS: Array = []  # Built-in packs removed — define packs via pack_edit
 const MUSIC_DISC_PRICE: int = 300
 const CUSTOM_PACKS_PATH: String = "res://shop/custom_packs.json"
 const MUSIC_DISCS_PATH:  String = "res://shop/music_discs.json"
+const GALLERY_DATA_PATH: String = "res://campaign/gallery_data.json"
 
 # ─────────────────────────────────────────────────────────────
 # Custom packs (editor-managed, persisted to JSON)
 # ─────────────────────────────────────────────────────────────
 var _custom_packs: Array = []
 var _music_disc_products: Array = []
+var _gallery_chapter_labels: Dictionary = {}  # vn_scene path → "Line1 / Line2"
 
 func _ready() -> void:
+	_load_gallery_chapter_labels()
 	_load_custom_packs()
 	_load_music_disc_products()
 
@@ -37,6 +40,69 @@ func _load_custom_packs() -> void:
 	file.close()
 	if parsed is Array:
 		_custom_packs = parsed as Array
+
+func _load_gallery_chapter_labels() -> void:
+	_gallery_chapter_labels.clear()
+	if not FileAccess.file_exists(GALLERY_DATA_PATH):
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(GALLERY_DATA_PATH))
+	if not parsed is Array:
+		return
+	for entry: Variant in (parsed as Array):
+		if not entry is Dictionary:
+			continue
+		var d: Dictionary = entry as Dictionary
+		var vn: String = str(d.get("vn_scene", "")).strip_edges()
+		if vn.is_empty():
+			continue
+		var label: String = "%s / %s" % [str(d.get("line1", "")), str(d.get("line2", ""))]
+		_gallery_chapter_labels[vn] = label.strip_edges().trim_suffix(" /").trim_prefix(" /")
+
+func reload_gallery_chapter_labels() -> void:
+	_load_gallery_chapter_labels()
+
+## vn_scene path from gallery_data.json → display label for shop hints.
+func get_gallery_chapter_label(vn_scene: String) -> String:
+	var key: String = vn_scene.strip_edges()
+	if key.is_empty():
+		return ""
+	return str(_gallery_chapter_labels.get(key, key.get_file().trim_suffix(".json")))
+
+## Campaign chapter vn_scene that must be completed before this pack can be purchased.
+func get_chapter_unlock_requirement(pack: Dictionary) -> String:
+	return str(pack.get("unlock_requires_chapter", "")).strip_edges()
+
+func is_pack_listed_in_shop(pack: Dictionary) -> bool:
+	return bool(pack.get("shop_available", true))
+
+## True when the pack may be purchased (listed in shop and chapter requirement met).
+func is_pack_purchasable(pack: Dictionary) -> bool:
+	if not is_pack_listed_in_shop(pack):
+		return false
+	var req: String = get_chapter_unlock_requirement(pack)
+	if req.is_empty():
+		return true
+	return SaveManager.is_gallery_chapter_completed(req)
+
+func get_chapter_unlock_hint(vn_scene: String) -> String:
+	var req: String = vn_scene.strip_edges()
+	if req.is_empty():
+		return ""
+	var label: String = get_gallery_chapter_label(req)
+	if label.is_empty():
+		return "Complete the required campaign chapter to unlock."
+	return "Complete %s to unlock." % label
+
+## Pack names whose unlock_requires_chapter matches this gallery vn_scene (for gallery editor).
+func get_packs_unlocked_by_chapter(vn_scene: String) -> PackedStringArray:
+	var key: String = vn_scene.strip_edges()
+	var names: PackedStringArray = PackedStringArray()
+	if key.is_empty():
+		return names
+	for p: Dictionary in get_all_packs_unfiltered():
+		if get_chapter_unlock_requirement(p) == key:
+			names.append(str(p.get("name", p.get("id", "?"))))
+	return names
 
 func _load_music_disc_products() -> void:
 	if not FileAccess.file_exists(MUSIC_DISCS_PATH):
@@ -108,8 +174,27 @@ func purchase_music_disc() -> bool:
 func get_all_packs() -> Array:
 	var result: Array = PACKS.duplicate()
 	for p: Dictionary in _custom_packs:
-		if bool(p.get("shop_available", true)):
+		if is_pack_purchasable(p):
 			result.append(p)
+	return result
+
+## All shop-listed packs, including chapter-locked ones. Each copy has shop_unlocked: bool.
+func get_shop_catalog() -> Array:
+	var result: Array = []
+	for p: Dictionary in PACKS:
+		if not is_pack_listed_in_shop(p):
+			continue
+		var copy: Dictionary = (p as Dictionary).duplicate(true)
+		copy["shop_unlocked"] = is_pack_purchasable(p)
+		copy["unlock_requires_chapter"] = get_chapter_unlock_requirement(p)
+		result.append(copy)
+	for p: Dictionary in _custom_packs:
+		if not is_pack_listed_in_shop(p):
+			continue
+		var copy: Dictionary = p.duplicate(true)
+		copy["shop_unlocked"] = is_pack_purchasable(p)
+		copy["unlock_requires_chapter"] = get_chapter_unlock_requirement(p)
+		result.append(copy)
 	return result
 
 ## Returns all custom packs regardless of shop_available (for admin/editor use).
@@ -145,6 +230,11 @@ func purchase_pack(pack_id: String) -> Dictionary:
 	var pack := get_pack(pack_id)
 	if pack.is_empty():
 		return {"success": false, "cards": [], "error": "Unknown pack."}
+	if not is_pack_purchasable(pack):
+		var req: String = get_chapter_unlock_requirement(pack)
+		var hint: String = get_chapter_unlock_hint(req) if not req.is_empty() \
+				else "This pack is not available yet."
+		return {"success": false, "cards": [], "error": hint}
 
 	if not Collection.spend_credits(pack["price"]):
 		return {"success": false, "cards": [], "error": "Not enough credits."}

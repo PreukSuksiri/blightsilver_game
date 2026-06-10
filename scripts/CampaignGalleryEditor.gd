@@ -23,6 +23,7 @@ var _prerequisite_values: Array = []
 var _f_custom_text_on: CheckBox  = null
 var _f_custom_text:    LineEdit  = null
 var _f_unlock_deckbuilding: CheckBox = null
+var _f_unlocks_packs_lbl: Label = null
 var _fields_root: Control   = null
 var _no_sel_lbl:  Label     = null
 var _file_dialog: FileDialog = null
@@ -60,6 +61,7 @@ func _save_data() -> void:
 	f.store_string(JSON.stringify(_data, "\t"))
 	f.close()
 	_dirty = false
+	ShopManager.reload_gallery_chapter_labels()
 	_status("Saved  (%d entries)" % _data.size())
 
 
@@ -252,6 +254,8 @@ func _build_ui() -> void:
 	var row_vn: HBoxContainer = _row.call("VN Scene")
 	_f_vn = _field.call(row_vn)
 	_browse_btn.call(row_vn, _f_vn)
+	_f_vn.text_changed.connect(func(txt: String) -> void:
+		_refresh_unlocks_packs_summary(txt.strip_edges()))
 
 	var row_prereq: HBoxContainer = _row.call("Prerequisite")
 	_f_prerequisite = OptionButton.new()
@@ -301,6 +305,23 @@ func _build_ui() -> void:
 	_f_unlock_deckbuilding.add_theme_font_size_override("font_size", 13)
 	_f_unlock_deckbuilding.toggled.connect(func(_b: bool) -> void: _mark_dirty())
 	row_ud.add_child(_f_unlock_deckbuilding)
+
+	var row_packs: HBoxContainer = _row.call("Shop packs")
+	_f_unlocks_packs_lbl = Label.new()
+	_f_unlocks_packs_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_f_unlocks_packs_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_f_unlocks_packs_lbl.add_theme_font_override("font", CHIVO_FONT)
+	_f_unlocks_packs_lbl.add_theme_font_size_override("font_size", 12)
+	_f_unlocks_packs_lbl.add_theme_color_override("font_color", Color(0.72, 0.78, 0.88))
+	row_packs.add_child(_f_unlocks_packs_lbl)
+	var packs_hint := Label.new()
+	packs_hint.text = "Set per pack in Pack Editor → Unlock requires chapter (read-only summary)."
+	packs_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	packs_hint.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	packs_hint.add_theme_font_override("font", CHIVO_FONT)
+	packs_hint.add_theme_font_size_override("font_size", 11)
+	packs_hint.add_theme_color_override("font_color", Color(0.45, 0.48, 0.55))
+	_fields_root.add_child(packs_hint)
 
 	# Preview thumbnail
 	var sep := HSeparator.new()
@@ -380,6 +401,20 @@ func _load_fields() -> void:
 	_f_custom_text.editable = _ct != ""
 	_f_custom_text.modulate.a = 1.0 if _ct != "" else 0.4
 	_f_unlock_deckbuilding.button_pressed = bool(d.get("unlock_deckbuilding", false))
+	_refresh_unlocks_packs_summary(str(d.get("vn_scene", "")).strip_edges())
+
+
+func _refresh_unlocks_packs_summary(vn_scene: String) -> void:
+	if _f_unlocks_packs_lbl == null:
+		return
+	if vn_scene.is_empty():
+		_f_unlocks_packs_lbl.text = "(set VN Scene to link shop pack unlocks)"
+		return
+	var names: PackedStringArray = ShopManager.get_packs_unlocked_by_chapter(vn_scene)
+	if names.is_empty():
+		_f_unlocks_packs_lbl.text = "(none — configure in Pack Editor)"
+	else:
+		_f_unlocks_packs_lbl.text = ", ".join(names)
 
 
 func _flush_fields() -> void:

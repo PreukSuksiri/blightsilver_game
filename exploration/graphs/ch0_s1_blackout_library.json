@@ -106,6 +106,7 @@
 			"title": "Window-side Seating",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -167,6 +168,28 @@
 					"tooltip": "Examine",
 					"x_norm": 0.5,
 					"y_norm": 0.5
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "50"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "3"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.719,
+					"y_norm": 0.503
 				}
 			],
 			"connections": [
@@ -219,6 +242,7 @@
 			"title": "Book Aisles",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -234,7 +258,30 @@
 			"battle_bgm": "",
 			"battle_bgm_volume": 100.0,
 			"characters": [],
-			"clickable_spots": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "50"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "2"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.78,
+					"y_norm": 0.461
+				}
+			],
 			"connections": [
 				{
 					"conditions": [],
@@ -278,6 +325,7 @@
 			"title": "Group Study Area",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -339,6 +387,28 @@
 					"tooltip": "Examine",
 					"x_norm": 0.579,
 					"y_norm": 0.498
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "50"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "1"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.704,
+					"y_norm": 0.621
 				}
 			],
 			"connections": [
@@ -390,6 +460,7 @@
 			"title": "Magazine Lounge",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -576,6 +647,7 @@
 			"title": "Exhibition Booths",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": false,
 			"vn_play_once": true,
 			"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_main.json",
@@ -638,6 +710,7 @@
 			"title": "Observatory",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -706,6 +779,7 @@
 			"title": "Deeper Aisle",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -736,6 +810,11 @@
 							"key": "",
 							"play_once": true,
 							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_storage_invest_0_0.json"
+						},
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "300"
 						}
 					],
 					"conditions": [],
@@ -745,6 +824,44 @@
 					"tooltip": "Examine",
 					"x_norm": 0.337,
 					"y_norm": 0.422
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "Wind of Dominance"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.547,
+					"y_norm": 0.418
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "Unseen Presence"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "1"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.814,
+					"y_norm": 0.453
 				}
 			],
 			"connections": [
@@ -776,6 +893,7 @@
 			"title": "Storage",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -873,6 +991,7 @@
 			"title": "Annex Passage",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -924,6 +1043,7 @@
 			"title": "Break Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -945,7 +1065,30 @@
 			"battle_bgm": "",
 			"battle_bgm_volume": 100.0,
 			"characters": [],
-			"clickable_spots": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "50"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "3"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.294,
+					"y_norm": 0.438
+				}
+			],
 			"connections": [
 				{
 					"conditions": [],
@@ -996,6 +1139,7 @@
 			"title": "Preservation Department",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -1070,6 +1214,7 @@
 			"title": "Book Repair Unit",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -1129,6 +1274,28 @@
 					"tooltip": "",
 					"x_norm": 0.628,
 					"y_norm": 0.65
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "50"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "2"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.232,
+					"y_norm": 0.354
 				}
 			],
 			"connections": [
@@ -1160,6 +1327,7 @@
 			"title": "Chemical Process Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -1205,6 +1373,11 @@
 							"action": "set_var",
 							"key": "technician_room_gameboy",
 							"value": "1"
+						},
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "300"
 						}
 					],
 					"conditions": [
@@ -1225,6 +1398,28 @@
 					"tooltip": "Examine",
 					"x_norm": 0.494,
 					"y_norm": 0.481
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "50"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "1"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.823,
+					"y_norm": 0.586
 				}
 			],
 			"connections": [
@@ -1256,6 +1451,7 @@
 			"title": "Technician's Office",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -1389,6 +1585,7 @@
 			"title": "Toilet Front",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_toilet_front_main.json",
@@ -1468,6 +1665,7 @@
 			"title": "Staff Area",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -1484,6 +1682,13 @@
 			"battle_bgm_volume": 100.0,
 			"characters": [
 				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "200"
+						}
+					],
 					"canon_story": false,
 					"conditions": [],
 					"name": "???",
@@ -1529,6 +1734,7 @@
 			"title": "Meeting Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -1560,6 +1766,22 @@
 					"tooltip": "Examine",
 					"x_norm": 0.099,
 					"y_norm": 0.524
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.543,
+					"y_norm": 0.417
 				}
 			],
 			"connections": [
@@ -1597,6 +1819,7 @@
 			"title": "Section Manager Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -1612,7 +1835,30 @@
 			"battle_bgm": "",
 			"battle_bgm_volume": 100.0,
 			"characters": [],
-			"clickable_spots": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "1"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.9,
+					"y_norm": 0.527
+				}
+			],
 			"connections": [
 				{
 					"conditions": [],
@@ -1662,6 +1908,7 @@
 			"title": "Maintenance Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -1710,6 +1957,28 @@
 					"tooltip": "Examine",
 					"x_norm": 0.699,
 					"y_norm": 0.5
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "Unseen Presence"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "2"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.083,
+					"y_norm": 0.545
 				}
 			],
 			"connections": [
@@ -1741,6 +2010,7 @@
 			"title": "Server Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -1864,6 +2134,11 @@
 							"action": "set_var",
 							"key": "camera_ghost",
 							"value": "3"
+						},
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "300"
 						}
 					],
 					"conditions": [
@@ -1958,6 +2233,28 @@
 					"tooltip": "Examine",
 					"x_norm": 0.731,
 					"y_norm": 0.595
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "3"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.087,
+					"y_norm": 0.506
 				}
 			],
 			"connections": [
@@ -1989,6 +2286,7 @@
 			"title": "Surveillance Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -2040,6 +2338,7 @@
 			"title": "Male Toilet",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -2055,7 +2354,30 @@
 			"battle_bgm": "",
 			"battle_bgm_volume": 100.0,
 			"characters": [],
-			"clickable_spots": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "2"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.292,
+					"y_norm": 0.657
+				}
+			],
 			"connections": [
 				{
 					"conditions": [],
@@ -2092,11 +2414,19 @@
 			"title": "Smoking Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
 			"vn_scene_conditions": [
 				{
+					"after_actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "200"
+						}
+					],
 					"equals": "1",
 					"path": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_smoking_room_cond_got_usb_1.json",
 					"play_once": true,
@@ -2187,6 +2517,7 @@
 			"title": "Back Room",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",
@@ -2223,6 +2554,28 @@
 					"tooltip": "Examine",
 					"x_norm": 0.706,
 					"y_norm": 0.38
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "Unseen Presence"
+						}
+					],
+					"conditions": [
+						{
+							"key": "surprise_factor",
+							"type": "var_equals",
+							"value": "3"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "res://assets/textures/exploration/decorations/ui_exploration_question_mark.png",
+					"icon_scale": 100.0,
+					"tooltip": "Examine",
+					"x_norm": 0.203,
+					"y_norm": 0.466
 				}
 			],
 			"connections": [
@@ -2260,6 +2613,7 @@
 			"title": "Back Storage",
 			"title_conditions": [],
 			"usable_items": [],
+			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
 			"vn_scene": "",

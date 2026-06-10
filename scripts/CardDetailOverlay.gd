@@ -2,6 +2,7 @@ class_name CardDetailOverlay
 extends Control
 ## Shared full-card detail overlay.
 ## Usage: CardDetailOverlay.open(parent_node, card_name, card_type)
+## parent_node is used only to locate the scene; the overlay is parented to the scene root.
 
 const VELLUM_FRAME    := preload("res://assets/textures/cards/frames/vellum_card_frame_transparent.png")
 const ART_PLACEHOLDER := preload("res://assets/textures/cards/placeholder.png")
@@ -58,17 +59,30 @@ var _art_base_pos: Vector2
 # ─────────────────────────────────────────────────────────────
 # Entry point
 # ─────────────────────────────────────────────────────────────
+
+## Attach overlays to the scene root so PRESET_FULL_RECT / PRESET_CENTER use the viewport,
+## not a small card tile (e.g. formation grid cells in DeckBuilder).
+static func _find_overlay_host(from: Node) -> Node:
+	var tree := from.get_tree()
+	if tree == null:
+		return from
+	var node: Node = from
+	while node.get_parent() != null and node.get_parent() != tree.root:
+		node = node.get_parent()
+	return node
+
 static func open(parent: Node, card_name: String, card_type: String,
 		card_inst: Variant = null, show_quantity: bool = false) -> void:
 	var overlay := CardDetailOverlay.new()
 	overlay._card_inst          = card_inst
 	overlay._show_quantity      = show_quantity
 	overlay._card_name_for_bug  = card_name
-	overlay.z_index = 100
-	parent.add_child(overlay)
+	overlay.z_index = 101
+	var host := _find_overlay_host(parent)
+	host.add_child(overlay)
 
 	# Size card to 94 % of viewport height (almost full screen)
-	var vp    := parent.get_viewport().get_visible_rect().size
+	var vp    := host.get_viewport().get_visible_rect().size
 	var card_h := minf(vp.y * 0.94, vp.x * 0.94 / FRAME_ASPECT)
 	var card_w := card_h * FRAME_ASPECT
 
@@ -114,8 +128,6 @@ static func open(parent: Node, card_name: String, card_type: String,
 		overlay._add_quantity_label(card_name, card_w, card_h)
 		if card_type in ["character", "trap", "tech"]:
 			overlay._add_gallery_buttons(card_name, card_type, card_w, card_h)
-
-	overlay._add_bug_button(card_name, card_w, card_h)
 
 # ─────────────────────────────────────────────────────────────
 # UI construction — static image path (full_cards/ PNG/JPG)

@@ -238,6 +238,16 @@
 		"ai_union_enabled": false,
 		"almost_win_bgm": "res://assets/audio/bgm_almost_win_3.mp3",
 		"battle_bgm": "res://assets/audio/bgm_boss_2.mp3",
+		"battle_reward": [
+			{
+				"amount": 500,
+				"type": "credits"
+			},
+			{
+				"pack_name": "Booster Pack - Wind of Dominance",
+				"type": "booster_pack"
+			}
+		],
 		"comment": "Battle - Midnight Shadow",
 		"enemy_deck": {
 			"characters": [

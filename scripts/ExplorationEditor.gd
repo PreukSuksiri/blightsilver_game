@@ -79,6 +79,7 @@ var _prop_vn_trigger_var_edit: LineEdit   = null
 var _prop_vn_trigger_eq_edit:  LineEdit   = null
 var _prop_vn_play_once_chk:   CheckBox    = null
 var _prop_vn_keep_bgm_chk:    CheckBox    = null
+var _prop_vn_after_vbox:    VBoxContainer = null
 var _prop_show_info_chk:      CheckBox    = null
 var _prop_show_who_chk:       CheckBox    = null
 var _prop_music_edit:       LineEdit    = null
@@ -454,6 +455,16 @@ func _build_props_panel() -> Control:
 			"", "", "", Callable(), true))
 	vbox.add_child(add_vn_cond_btn)
 
+	_add_section_header(vbox, "AFTER VN ACTIONS (default — when no condition matches)")
+	_prop_vn_after_vbox = VBoxContainer.new()
+	_prop_vn_after_vbox.add_theme_constant_override("separation", 4)
+	vbox.add_child(_prop_vn_after_vbox)
+	var add_vn_after_btn := Button.new()
+	add_vn_after_btn.text = "+ Add Action"
+	add_vn_after_btn.add_theme_font_size_override("font_size", 13)
+	add_vn_after_btn.pressed.connect(func() -> void: _add_spot_action_row(_prop_vn_after_vbox))
+	vbox.add_child(add_vn_after_btn)
+
 	_prop_show_info_chk = CheckBox.new()
 	_prop_show_info_chk.text = "Show Info Panel on Enter"
 	_prop_show_info_chk.button_pressed = true
@@ -687,7 +698,7 @@ func _add_media_cond_row(cond_vbox: VBoxContainer, is_image: bool,
 func _add_path_cond_row(cond_vbox: VBoxContainer, filters: PackedStringArray, start_dir: String,
 		var_key: String = "", equals: String = "", path: String = "",
 		custom_browse: Callable = Callable(), edit_beats: bool = false,
-		cond_play_once: bool = true) -> void:
+		cond_play_once: bool = true, after_actions: Array = []) -> void:
 	var parts: Dictionary = _make_var_cond_frame(cond_vbox, var_key, equals)
 	var frame: PanelContainer = parts["frame"] as PanelContainer
 	var vb: VBoxContainer = parts["vb"] as VBoxContainer
@@ -737,6 +748,30 @@ func _add_path_cond_row(cond_vbox: VBoxContainer, filters: PackedStringArray, st
 		play_once_chk.add_theme_font_size_override("font_size", 12)
 		play_once_row.add_child(play_once_chk)
 		frame.set_meta("play_once_chk", play_once_chk)
+
+		var after_hdr := Label.new()
+		after_hdr.text = "After VN actions (this condition only; empty = use default below):"
+		after_hdr.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		after_hdr.add_theme_font_size_override("font_size", 11)
+		after_hdr.add_theme_color_override("font_color", Color(0.65, 0.80, 0.65))
+		vb.add_child(after_hdr)
+		var after_vbox := VBoxContainer.new()
+		after_vbox.add_theme_constant_override("separation", 4)
+		vb.add_child(after_vbox)
+		for act: Variant in after_actions:
+			if act is Dictionary:
+				var ad: Dictionary = act as Dictionary
+				_add_spot_action_row(after_vbox,
+					str(ad.get("action", "show_message")),
+					str(ad.get("key", "")),
+					str(ad.get("value", "")),
+					bool(ad.get("play_once", true)))
+		var add_after_btn := Button.new()
+		add_after_btn.text = "+ Add Action"
+		add_after_btn.add_theme_font_size_override("font_size", 11)
+		add_after_btn.pressed.connect(func() -> void: _add_spot_action_row(after_vbox))
+		vb.add_child(add_after_btn)
+		frame.set_meta("after_actions_vbox", after_vbox)
 
 	var del_btn := Button.new()
 	del_btn.text = "x"
@@ -2447,10 +2482,12 @@ func _populate_props(en: ExplorationNode) -> void:
 	for cond: Variant in en.vn_scene_conditions:
 		if cond is Dictionary:
 			var cd: Dictionary = cond as Dictionary
+			var cond_after: Variant = cd.get("after_actions", [])
 			_add_path_cond_row(_prop_vn_cond_vbox,
 				PackedStringArray(["*.json ; JSON Files"]), "res://exploration/vn",
 				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("path", "")),
-				Callable(), true, bool(cd.get("play_once", true)))
+				Callable(), true, bool(cd.get("play_once", true)),
+				cond_after if cond_after is Array else [])
 	if _prop_vn_trigger_btn != null:
 		_prop_vn_trigger_btn.select(_vn_trigger_index(en.vn_trigger))
 		_prop_vn_trigger_var_edit.text = en.vn_trigger_var
@@ -2458,6 +2495,16 @@ func _populate_props(en: ExplorationNode) -> void:
 		_on_vn_trigger_changed(_prop_vn_trigger_btn.selected)
 	_prop_vn_play_once_chk.button_pressed = en.vn_play_once
 	_prop_vn_keep_bgm_chk.button_pressed = en.vn_keep_bgm
+	for child: Node in _prop_vn_after_vbox.get_children():
+		child.queue_free()
+	for act: Variant in en.vn_after_actions:
+		if act is Dictionary:
+			var ad: Dictionary = act as Dictionary
+			_add_spot_action_row(_prop_vn_after_vbox,
+				str(ad.get("action", "show_message")),
+				str(ad.get("key", "")),
+				str(ad.get("value", "")),
+				bool(ad.get("play_once", true)))
 	_prop_show_info_chk.button_pressed = en.show_info_on_enter
 	_prop_show_who_chk.button_pressed  = en.show_who_is_here
 	_prop_music_edit.text = en.music
@@ -2581,6 +2628,10 @@ func _collect_props(en: ExplorationNode) -> void:
 			}
 			if frame.has_meta("play_once_chk"):
 				vn_cond["play_once"] = (frame.get_meta("play_once_chk") as CheckBox).button_pressed
+			if frame.has_meta("after_actions_vbox"):
+				var cond_acts: Array = _collect_events(frame.get_meta("after_actions_vbox") as VBoxContainer)
+				if not cond_acts.is_empty():
+					vn_cond["after_actions"] = cond_acts
 			en.vn_scene_conditions.append(vn_cond)
 	if _prop_vn_trigger_btn != null:
 		var trig_idx: int = _prop_vn_trigger_btn.selected
@@ -2589,6 +2640,7 @@ func _collect_props(en: ExplorationNode) -> void:
 		en.vn_trigger_equals = _prop_vn_trigger_eq_edit.text.strip_edges()
 	en.vn_play_once       = _prop_vn_play_once_chk.button_pressed
 	en.vn_keep_bgm        = _prop_vn_keep_bgm_chk.button_pressed
+	en.vn_after_actions   = _collect_events(_prop_vn_after_vbox)
 	en.show_info_on_enter = _prop_show_info_chk.button_pressed
 	en.show_who_is_here   = _prop_show_who_chk.button_pressed
 	en.music       = _prop_music_edit.text.strip_edges()
@@ -2901,7 +2953,7 @@ func _build_test_params_popup() -> void:
 	add_var_btn.text = "+ Add"
 	add_var_btn.add_theme_font_size_override("font_size", 12)
 	add_var_btn.custom_minimum_size = Vector2(60, 26)
-	add_var_btn.pressed.connect(func() -> void: _test_add_var_row("", ""))
+	add_var_btn.pressed.connect(func() -> void: _test_add_var_row("", null))
 	vars_hdr.add_child(add_var_btn)
 	_test_vars_vbox = VBoxContainer.new()
 	_test_vars_vbox.add_theme_constant_override("separation", 4)
@@ -2946,25 +2998,93 @@ func _build_test_params_popup() -> void:
 	launch_btn.pressed.connect(_on_test_launch_confirmed)
 	btn_row.add_child(launch_btn)
 
-func _test_add_var_row(key: String, value: String) -> void:
+func _test_add_var_row(key: String, value: Variant) -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 4)
 	_test_vars_vbox.add_child(row)
+
 	var k_edit := LineEdit.new()
 	k_edit.placeholder_text = "key"
 	k_edit.text = key
+	k_edit.custom_minimum_size.x = 100.0
 	k_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	k_edit.add_theme_font_size_override("font_size", 13)
 	row.add_child(k_edit)
+
+	var mode_opt := OptionButton.new()
+	mode_opt.add_item("Fixed", 0)
+	mode_opt.add_item("Random", 1)
+	mode_opt.custom_minimum_size.x = 88.0
+	mode_opt.add_theme_font_size_override("font_size", 12)
+	row.add_child(mode_opt)
+
 	var eq_lbl := Label.new()
 	eq_lbl.text = "="
 	row.add_child(eq_lbl)
+
 	var v_edit := LineEdit.new()
 	v_edit.placeholder_text = "value"
-	v_edit.text = value
 	v_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v_edit.add_theme_font_size_override("font_size", 13)
 	row.add_child(v_edit)
+
+	var min_edit := LineEdit.new()
+	min_edit.placeholder_text = "min"
+	min_edit.custom_minimum_size.x = 52.0
+	min_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	min_edit.add_theme_font_size_override("font_size", 13)
+	row.add_child(min_edit)
+
+	var dash_lbl := Label.new()
+	dash_lbl.text = "–"
+	row.add_child(dash_lbl)
+
+	var max_edit := LineEdit.new()
+	max_edit.placeholder_text = "max"
+	max_edit.custom_minimum_size.x = 52.0
+	max_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	max_edit.add_theme_font_size_override("font_size", 13)
+	row.add_child(max_edit)
+
+	var is_random := false
+	var fixed_str := ""
+	var min_str := ""
+	var max_str := ""
+	if value is Dictionary and (value as Dictionary).has("random"):
+		var range_spec: Variant = (value as Dictionary)["random"]
+		if range_spec is Array and (range_spec as Array).size() >= 2:
+			is_random = true
+			min_str = str((range_spec as Array)[0])
+			max_str = str((range_spec as Array)[1])
+		elif range_spec is Dictionary:
+			is_random = true
+			min_str = str((range_spec as Dictionary).get("min", 0))
+			max_str = str((range_spec as Dictionary).get("max", 0))
+	if not is_random and value != null:
+		fixed_str = str(value)
+	v_edit.text = fixed_str
+	min_edit.text = min_str
+	max_edit.text = max_str
+	mode_opt.select(1 if is_random else 0)
+
+	row.set_meta("key_edit", k_edit)
+	row.set_meta("mode_opt", mode_opt)
+	row.set_meta("eq_lbl", eq_lbl)
+	row.set_meta("value_edit", v_edit)
+	row.set_meta("min_edit", min_edit)
+	row.set_meta("dash_lbl", dash_lbl)
+	row.set_meta("max_edit", max_edit)
+
+	var sync_mode_ui := func() -> void:
+		var random_mode: bool = mode_opt.selected == 1
+		eq_lbl.visible = not random_mode
+		v_edit.visible = not random_mode
+		min_edit.visible = random_mode
+		dash_lbl.visible = random_mode
+		max_edit.visible = random_mode
+	mode_opt.item_selected.connect(func(_i: int) -> void: sync_mode_ui.call())
+	sync_mode_ui.call()
+
 	var rem := Button.new()
 	rem.text = "✕"
 	rem.custom_minimum_size = Vector2(26, 0)
@@ -3009,13 +3129,24 @@ func _on_test_launch_confirmed() -> void:
 	for row_node: Node in _test_vars_vbox.get_children():
 		if not row_node is HBoxContainer:
 			continue
-		var children: Array = (row_node as HBoxContainer).get_children()
-		if children.size() < 3:
+		var row: HBoxContainer = row_node as HBoxContainer
+		if not row.has_meta("key_edit"):
 			continue
-		var k: String = ((children[0] as LineEdit).text).strip_edges()
-		var v: String = ((children[2] as LineEdit).text).strip_edges()
-		if not k.is_empty():
-			params[k] = v
+		var k: String = (row.get_meta("key_edit") as LineEdit).text.strip_edges()
+		if k.is_empty():
+			continue
+		var mode_opt: OptionButton = row.get_meta("mode_opt") as OptionButton
+		if mode_opt.selected == 1:
+			var min_edit: LineEdit = row.get_meta("min_edit") as LineEdit
+			var max_edit: LineEdit = row.get_meta("max_edit") as LineEdit
+			var lo_text: String = min_edit.text.strip_edges()
+			var hi_text: String = max_edit.text.strip_edges()
+			if lo_text.is_valid_int() and hi_text.is_valid_int():
+				params[k] = {"random": [int(lo_text), int(hi_text)]}
+			else:
+				params[k] = {"random": [0, 0]}
+		else:
+			params[k] = (row.get_meta("value_edit") as LineEdit).text.strip_edges()
 
 	if _test_force_fresh_chk.button_pressed:
 		params["force_fresh"] = true

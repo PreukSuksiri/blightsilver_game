@@ -103,7 +103,8 @@ enum NodeType {
 @export var vn_scene: String = ""
 
 ## Conditional VN scene overrides — evaluated in order, first match wins.
-## Each entry: { "var": String, "equals": String, "path": String, "play_once": bool }
+## Each entry: { "var": String, "equals": String, "path": String, "play_once": bool,
+##               optional "after_actions": Array (same format as vn_after_actions) }
 @export var vn_scene_conditions: Array = []
 
 ## When to play vn_scene: "on_enter" (default), "on_exit", or "on_var_change".
@@ -122,6 +123,10 @@ enum NodeType {
 ## VN music beats are ignored. When false, the VN may change music; the last track
 ## keeps playing after the VN ends (exploration overlay does not fade out on exit).
 @export var vn_keep_bgm: bool = true
+
+## Actions run after the default vn_scene finishes (when no vn_scene_condition matches).
+## Each entry: { "action": String, "key": String, "value": String, optional "play_once" }.
+@export var vn_after_actions: Array = []
 
 ## If true, the info panel (title + description) opens automatically when the player enters.
 ## When a vn_scene is also set, the info panel appears first; VN plays after it is dismissed.
@@ -244,6 +249,21 @@ func resolve_vn_play_once(vars: Dictionary) -> bool:
 			return bool(cd.get("play_once", true))
 	return vn_play_once
 
+## After-VN actions for whichever VN plays. First matching vn_scene_condition wins.
+## Uses that row's after_actions when present; otherwise falls back to vn_after_actions.
+## When no condition matches, returns vn_after_actions.
+func resolve_vn_after_actions(vars: Dictionary) -> Array:
+	for cond: Variant in vn_scene_conditions:
+		if not cond is Dictionary:
+			continue
+		var cd: Dictionary = cond as Dictionary
+		if _var_matches(vars, str(cd.get("var", "")), str(cd.get("equals", ""))):
+			if cd.has("after_actions"):
+				var matched: Variant = cd.get("after_actions", [])
+				return matched.duplicate(true) if matched is Array else []
+			return vn_after_actions.duplicate(true)
+	return vn_after_actions.duplicate(true)
+
 func resolve_on_enter_events(vars: Dictionary) -> Array:
 	return _resolve_cond_array(on_enter_events, on_enter_events_conditions, vars, "events")
 
@@ -293,6 +313,7 @@ func to_dict() -> Dictionary:
 		"vn_trigger_equals":  vn_trigger_equals,
 		"vn_play_once":       vn_play_once,
 		"vn_keep_bgm":        vn_keep_bgm,
+		"vn_after_actions":   vn_after_actions.duplicate(true),
 		"show_info_on_enter": show_info_on_enter,
 		"show_who_is_here":   show_who_is_here,
 		"music":              music,
@@ -333,6 +354,8 @@ static func from_dict(d: Dictionary) -> ExplorationNode:
 	node.vn_trigger_equals  = str(d.get("vn_trigger_equals", ""))
 	node.vn_play_once       = bool(d.get("vn_play_once", true))
 	node.vn_keep_bgm        = bool(d.get("vn_keep_bgm", true))
+	var vaa: Variant = d.get("vn_after_actions", [])
+	node.vn_after_actions = vaa if vaa is Array else []
 	node.show_info_on_enter = bool(d.get("show_info_on_enter", true))
 	node.show_who_is_here   = bool(d.get("show_who_is_here",   true))
 	node.music       = str(d.get("music",       ""))

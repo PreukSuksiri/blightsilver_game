@@ -22,6 +22,8 @@ var _prop_desc_edit:  TextEdit = null
 var _prop_accent_edit: LineEdit = null   # hex colour string
 var _prop_image_edit:  LineEdit  = null   # res:// path to booster pack image
 var _prop_shop_check:  CheckBox  = null   # available in shop toggle
+var _prop_unlock_chapter: OptionButton = null
+var _unlock_chapter_values: Array = []
 
 # Card pool
 var _pool_vbox:      VBoxContainer = null
@@ -249,6 +251,18 @@ func _build_right_panel(parent: Control) -> void:
 	_prop_shop_check.button_pressed = true
 	inner.add_child(_prop_shop_check)
 
+	inner.add_child(_lbl("Unlock requires chapter"))
+	var unlock_note := Label.new()
+	unlock_note.text = "Pack stays visible in the Shop but locked until the player completes this gallery chapter. Configure chapter list in Campaign Gallery Editor."
+	unlock_note.add_theme_font_size_override("font_size", 11)
+	unlock_note.add_theme_color_override("font_color", Color(0.65, 0.70, 0.80, 0.65))
+	unlock_note.autowrap_mode = TextServer.AUTOWRAP_WORD
+	inner.add_child(unlock_note)
+	_prop_unlock_chapter = OptionButton.new()
+	_prop_unlock_chapter.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	inner.add_child(_prop_unlock_chapter)
+	_rebuild_unlock_chapter_options("")
+
 	var apply_btn := Button.new()
 	apply_btn.text = "Apply Pack Properties"
 	apply_btn.pressed.connect(_apply_pack_props)
@@ -334,16 +348,25 @@ func _refresh_pack_list() -> void:
 
 	for i: int in range(_packs.size()):
 		var p: Dictionary = _packs[i]
-		var in_shop: bool = bool(p.get("shop_available", true))
+		var listed: bool = bool(p.get("shop_available", true))
+		var req: String = str(p.get("unlock_requires_chapter", "")).strip_edges()
+		var icon: String = "○"
+		if listed:
+			if req.is_empty() or SaveManager.is_gallery_chapter_completed(req):
+				icon = "●"
+			else:
+				icon = "◆"
 		var btn := Button.new()
-		btn.text = ("%s  %s" % [("●" if in_shop else "○"), p.get("name", p.get("id", "?"))])
+		btn.text = ("%s  %s" % [icon, p.get("name", p.get("id", "?"))])
 		btn.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		if i == _selected_idx:
 			btn.add_theme_color_override("font_color", Color(0.3, 0.9, 1.0))
-		elif not in_shop:
+		elif not listed:
 			btn.add_theme_color_override("font_color", Color(0.5, 0.5, 0.55, 0.6))
+		elif req != "" and not SaveManager.is_gallery_chapter_completed(req):
+			btn.add_theme_color_override("font_color", Color(0.95, 0.72, 0.35, 0.75))
 		var idx_cap := i
 		btn.pressed.connect(func() -> void: _select_pack(idx_cap))
 		_pack_list_vbox.add_child(btn)
@@ -371,6 +394,7 @@ func _populate_props() -> void:
 		_prop_accent_edit.text = ""
 	_prop_image_edit.text = str(p.get("pack_image", ""))
 	_prop_shop_check.button_pressed = bool(p.get("shop_available", true))
+	_rebuild_unlock_chapter_options(str(p.get("unlock_requires_chapter", "")).strip_edges())
 	var raw_pool: Variant = p.get("card_pool", [])
 	var pool: Array = raw_pool if raw_pool is Array else []
 	_rebuild_pool_rows(pool)
@@ -378,6 +402,36 @@ func _populate_props() -> void:
 # ─────────────────────────────────────────────────────────────
 # Applying properties
 # ─────────────────────────────────────────────────────────────
+func _rebuild_unlock_chapter_options(selected_vn: String) -> void:
+	if _prop_unlock_chapter == null:
+		return
+	ShopManager.reload_gallery_chapter_labels()
+	_prop_unlock_chapter.clear()
+	_unlock_chapter_values = [""]
+	_prop_unlock_chapter.add_item("(none — no chapter requirement)")
+	var sel_idx := 0
+	if not FileAccess.file_exists("res://campaign/gallery_data.json"):
+		_prop_unlock_chapter.select(sel_idx)
+		return
+	var parsed: Variant = JSON.parse_string(
+		FileAccess.get_file_as_string("res://campaign/gallery_data.json"))
+	if not parsed is Array:
+		_prop_unlock_chapter.select(sel_idx)
+		return
+	for entry: Variant in (parsed as Array):
+		if not entry is Dictionary:
+			continue
+		var d: Dictionary = entry as Dictionary
+		var vn: String = str(d.get("vn_scene", "")).strip_edges()
+		if vn.is_empty():
+			continue
+		var label: String = "%s / %s" % [str(d.get("line1", "")), str(d.get("line2", ""))]
+		_prop_unlock_chapter.add_item(label.strip_edges().trim_suffix(" /").trim_prefix(" /"))
+		_unlock_chapter_values.append(vn)
+		if vn == selected_vn:
+			sel_idx = _unlock_chapter_values.size() - 1
+	_prop_unlock_chapter.select(sel_idx)
+
 func _apply_pack_props() -> void:
 	if _selected_idx < 0 or _selected_idx >= _packs.size():
 		_set_status("No pack selected.")
@@ -403,6 +457,14 @@ func _apply_pack_props() -> void:
 		p["accent"] = [col.r, col.g, col.b]
 	p["pack_image"]     = _prop_image_edit.text.strip_edges()
 	p["shop_available"] = _prop_shop_check.button_pressed
+	var unlock_idx: int = _prop_unlock_chapter.selected
+	var unlock_vn: String = ""
+	if unlock_idx >= 0 and unlock_idx < _unlock_chapter_values.size():
+		unlock_vn = str(_unlock_chapter_values[unlock_idx]).strip_edges()
+	if unlock_vn != "":
+		p["unlock_requires_chapter"] = unlock_vn
+	else:
+		p.erase("unlock_requires_chapter")
 	_packs[_selected_idx] = p
 	_refresh_pack_list()
 	_set_status("Properties applied: %s" % p.get("name",""))
@@ -570,6 +632,7 @@ func _save_all() -> void:
 		_packs[_selected_idx]["card_pool"] = _collect_pool_rows()
 	ShopManager._custom_packs = _packs.duplicate(true)
 	ShopManager.save_custom_packs()
+	ShopManager.reload_gallery_chapter_labels()
 	_set_status("Saved %d custom pack(s)." % _packs.size())
 
 # ─────────────────────────────────────────────────────────────

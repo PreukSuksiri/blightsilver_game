@@ -33,9 +33,8 @@ func _on_credits_changed(_new_amount: int) -> void:
 func _build_pack_cards() -> void:
 	for child in pack_row.get_children():
 		child.queue_free()
-	for pack: Dictionary in ShopManager.get_all_packs():
+	for pack: Dictionary in ShopManager.get_shop_catalog():
 		pack_row.add_child(_make_pack_card(pack))
-	pack_row.add_child(_make_disc_card())
 
 func _make_pack_card(pack: Dictionary) -> Control:
 	var accent_raw: Variant = pack.get("accent", null)
@@ -47,6 +46,8 @@ func _make_pack_card(pack: Dictionary) -> Control:
 	else:
 		accent = Color(0.18, 0.55, 1.0)
 	var can_afford: bool = Collection.credits >= pack["price"]
+	var shop_unlocked: bool = bool(pack.get("shop_unlocked", true))
+	var can_buy: bool = shop_unlocked and can_afford
 
 	var card := PanelContainer.new()
 	card.custom_minimum_size = Vector2(268, 370)
@@ -129,19 +130,29 @@ func _make_pack_card(pack: Dictionary) -> Control:
 			load("res://scripts/PackContentsOverlay.gd").open(get_tree().root, pid))
 		vbox.add_child(vc_btn)
 
+	var req_chapter: String = str(pack.get("unlock_requires_chapter", "")).strip_edges()
+	if not shop_unlocked and not req_chapter.is_empty():
+		var lock_lbl := Label.new()
+		lock_lbl.text = ShopManager.get_chapter_unlock_hint(req_chapter)
+		lock_lbl.add_theme_font_size_override("font_size", 11)
+		lock_lbl.add_theme_color_override("font_color", Color(0.95, 0.72, 0.35, 0.9))
+		lock_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lock_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
+		vbox.add_child(lock_lbl)
+
 	# — Price ——————————————————————————————
 	var price_lbl := Label.new()
 	price_lbl.text = "%d Credits" % pack["price"]
 	price_lbl.add_theme_font_size_override("font_size", 22)
 	price_lbl.add_theme_color_override("font_color",
-		Color(0.95, 0.82, 0.22, 1.0) if can_afford else Color(0.75, 0.28, 0.28, 0.8))
+		Color(0.95, 0.82, 0.22, 1.0) if can_buy else Color(0.75, 0.28, 0.28, 0.8))
 	price_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(price_lbl)
 
 	# — Buy button ——————————————————————————
 	var btn := Button.new()
-	btn.text = "BUY PACK"
-	btn.disabled = not can_afford
+	btn.text = "BUY PACK" if shop_unlocked else "LOCKED"
+	btn.disabled = not can_buy
 	btn.add_theme_font_size_override("font_size", 15)
 	btn.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 1.0))
 
@@ -163,107 +174,6 @@ func _make_pack_card(pack: Dictionary) -> Control:
 
 	var pack_id: String = pack["id"]
 	btn.pressed.connect(func() -> void: _on_buy(pack_id))
-	vbox.add_child(btn)
-
-	return card
-
-func _make_disc_card() -> Control:
-	var accent := Color(0.85, 0.55, 1.0)
-	var can_afford: bool = Collection.credits >= ShopManager.MUSIC_DISC_PRICE
-
-	var card := PanelContainer.new()
-	card.custom_minimum_size = Vector2(268, 370)
-
-	var card_sb := StyleBoxFlat.new()
-	card_sb.bg_color = Color(0.02, 0.018, 0.05, 1.0)
-	card_sb.border_width_left   = 3
-	card_sb.border_width_top    = 1
-	card_sb.border_width_right  = 1
-	card_sb.border_width_bottom = 1
-	card_sb.border_color = Color(accent.r, accent.g, accent.b, 0.65)
-	card_sb.corner_radius_top_left     = 7
-	card_sb.corner_radius_top_right    = 7
-	card_sb.corner_radius_bottom_right = 7
-	card_sb.corner_radius_bottom_left  = 7
-	card_sb.content_margin_left   = 16
-	card_sb.content_margin_right  = 16
-	card_sb.content_margin_top    = 18
-	card_sb.content_margin_bottom = 18
-	card.add_theme_stylebox_override("panel", card_sb)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 12)
-	card.add_child(vbox)
-
-	var icon_lbl := Label.new()
-	icon_lbl.text = "💿"
-	icon_lbl.add_theme_font_size_override("font_size", 48)
-	icon_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(icon_lbl)
-
-	var name_lbl := Label.new()
-	name_lbl.text = "Music Disc"
-	name_lbl.add_theme_font_size_override("font_size", 18)
-	name_lbl.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 1.0))
-	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(name_lbl)
-
-	var sep := ColorRect.new()
-	sep.custom_minimum_size = Vector2(0, 1)
-	sep.color = Color(accent.r, accent.g, accent.b, 0.3)
-	vbox.add_child(sep)
-
-	var desc := Label.new()
-	desc.text = "Change battle music once per turn during a match.\nUse from the Options menu."
-	desc.add_theme_font_size_override("font_size", 12)
-	desc.add_theme_color_override("font_color", Color(0.58, 0.7, 0.8, 0.82))
-	desc.autowrap_mode = TextServer.AUTOWRAP_WORD
-	desc.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	vbox.add_child(desc)
-
-	var owned_lbl := Label.new()
-	owned_lbl.text = "Owned: %d" % Collection.music_discs
-	owned_lbl.add_theme_font_size_override("font_size", 11)
-	owned_lbl.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 0.6))
-	owned_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(owned_lbl)
-
-	var price_lbl := Label.new()
-	price_lbl.text = "%d Credits" % ShopManager.MUSIC_DISC_PRICE
-	price_lbl.add_theme_font_size_override("font_size", 22)
-	price_lbl.add_theme_color_override("font_color",
-		Color(0.95, 0.82, 0.22, 1.0) if can_afford else Color(0.75, 0.28, 0.28, 0.8))
-	price_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(price_lbl)
-
-	var btn := Button.new()
-	btn.text = "BUY DISC"
-	btn.disabled = not can_afford
-	btn.add_theme_font_size_override("font_size", 15)
-	btn.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 1.0))
-	var btn_n := StyleBoxFlat.new()
-	btn_n.bg_color = Color(accent.r * 0.12, accent.g * 0.12, accent.b * 0.12, 1.0)
-	btn_n.border_width_left = 2; btn_n.border_width_top = 1
-	btn_n.border_width_right = 1; btn_n.border_width_bottom = 1
-	btn_n.border_color = Color(accent.r, accent.g, accent.b, 0.65)
-	btn_n.corner_radius_top_left = 4; btn_n.corner_radius_top_right = 4
-	btn_n.corner_radius_bottom_right = 4; btn_n.corner_radius_bottom_left = 4
-	var btn_h := btn_n.duplicate() as StyleBoxFlat
-	btn_h.bg_color = Color(accent.r * 0.22, accent.g * 0.22, accent.b * 0.22, 1.0)
-	btn_h.border_color = Color(accent.r, accent.g, accent.b, 1.0)
-	btn.add_theme_stylebox_override("normal",   btn_n)
-	btn.add_theme_stylebox_override("hover",    btn_h)
-	btn.add_theme_stylebox_override("pressed",  btn_n)
-	btn.add_theme_stylebox_override("focus",    btn_n)
-	btn.add_theme_stylebox_override("disabled", btn_n)
-	btn.pressed.connect(func() -> void:
-		if ShopManager.purchase_music_disc():
-			_show_result("Music Disc", [], "")
-			result_title.text = "Purchased: Music Disc  💿"
-			result_title.add_theme_color_override("font_color", Color(0.85, 0.55, 1.0))
-		else:
-			_show_result("", [], "Not enough credits.")
-		_build_pack_cards())
 	vbox.add_child(btn)
 
 	return card
