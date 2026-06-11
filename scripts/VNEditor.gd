@@ -852,7 +852,7 @@ func _build_fields() -> void:
 	# ── Tutorial Battle ───────────────────────────────────────
 	_section(v, "TUTORIAL BATTLE  (config JSON — no builder UI)")
 	var tut_hint := Label.new()
-	tut_hint.text = "Launches a tutorial duel from data/tutorial_battles/. Decks and missions come from the JSON."
+	tut_hint.text = "Launches a tutorial duel from data/tutorial_battles/. Decks and missions come from the JSON. Optional P1/P2 names and battle illustrations can be set in the BATTLE section above (override tutorial JSON) or in the tutorial config itself (player1_name, player2_name, portrait_p1, portrait_p2)."
 	tut_hint.add_theme_font_size_override("font_size", 12)
 	tut_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
 	tut_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

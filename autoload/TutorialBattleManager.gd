@@ -89,6 +89,10 @@ func configure_battle_from_config(cfg: Dictionary) -> String:
 	GameState.battle_ai_forced_cells = (cfg.get("ai_formation", []) as Array).duplicate(true)
 	GameState.battle_ai_forced_tech = ai_deck.techs.duplicate()
 	_apply_portraits_from_config(cfg)
+	var p1n: String = str(cfg.get("player1_name", "")).strip_edges()
+	var p2n: String = str(cfg.get("player2_name", "")).strip_edges()
+	if not p1n.is_empty() or not p2n.is_empty():
+		GameState.campaign_player_names = [p1n, p2n]
 	prepare(cfg)
 	return ""
 

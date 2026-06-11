@@ -409,10 +409,6 @@ func _build_ui() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		_reflow_layout()
-	elif what == NOTIFICATION_WM_CLOSE_REQUEST \
-			or what == NOTIFICATION_APPLICATION_PAUSED:
-		if ExplorationManager.is_session_active:
-			ExplorationManager.save_session_now()
 
 ## Explicitly position and size the content panel from the viewport rect.
 ## Called deferred after _build_ui() and whenever the window is resized.
@@ -2965,12 +2961,12 @@ func _try_apply_vn_resume_bgm() -> bool:
 
 func _try_apply_bgm_snapshot(bgm: Dictionary, label: String) -> bool:
 	var path: String = str(bgm.get("path", "")).strip_edges()
-	if path.is_empty():
+	var context: String = str(bgm.get("context", BGMManager.CONTEXT_VN)).strip_edges()
+	if path.is_empty() or ExplorationManager.is_battle_bgm_snapshot(path, context):
 		return false
 	if not ResourceLoader.exists(path):
 		push_warning("ExplorationPlayer: %s BGM '%s' not found." % [label, path])
 		return false
-	var context: String = str(bgm.get("context", BGMManager.CONTEXT_VN)).strip_edges()
 	if context.is_empty():
 		context = BGMManager.CONTEXT_VN
 	var pos: float = maxf(0.0, float(bgm.get("position", 0.0)))
@@ -2983,7 +2979,12 @@ func _is_active_battle_bgm() -> bool:
 	if not BGMManager.is_playing():
 		return false
 	var ctx: String = BGMManager.get_current_context()
-	if ctx == BGMManager.CONTEXT_BATTLE or ctx == BGMManager.CONTEXT_PLACEMENT:
+	if ctx in [
+		BGMManager.CONTEXT_BATTLE,
+		BGMManager.CONTEXT_PLACEMENT,
+		BGMManager.CONTEXT_BOSS,
+		BGMManager.CONTEXT_ALMOST_WIN,
+	]:
 		return true
 	var path: String = BGMManager.get_current_path().strip_edges()
 	if path.is_empty():
@@ -3298,17 +3299,18 @@ func _handle_post_battle_result() -> void:
 	var node_id: String = str(result.get("node_id", ""))
 	if not won:
 		_abort_pending_spot_interaction()
-		if ExplorationManager.is_session_active:
-			ExplorationManager.end_session(false)
-		CheckerTransition.fade_out_to_battle(func() -> void:
-			get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
-			CheckerTransition.fade_in())
+		ExplorationManager.take_spot_action_resume_for_battle(false, node_id)
+		if not node_id.is_empty():
+			ExplorationManager.set_var("battle_%s_won" % node_id, "false")
+		var node_loss: ExplorationNode = ExplorationManager.current_node
+		if node_loss != null:
+			_refresh_node(node_loss, true)
+		else:
+			_show_no_session_error()
 		return
-	# Set a session variable so graph conditions can gate progress on battle outcome.
-	# Pattern: "battle_<node_id>_won" = "true" | "false"
 	if not node_id.is_empty():
-		ExplorationManager.set_var("battle_%s_won" % node_id, "true" if won else "false")
-	var resume: Dictionary = ExplorationManager.take_spot_action_resume_for_battle(won, node_id)
+		ExplorationManager.set_var("battle_%s_won" % node_id, "true")
+	var resume: Dictionary = ExplorationManager.take_spot_action_resume_for_battle(true, node_id)
 	# Outcome was already shown on GameBoard's win/lose screen — no duplicate toast here.
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node != null:

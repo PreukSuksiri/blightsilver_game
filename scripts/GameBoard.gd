@@ -8190,7 +8190,7 @@ func _show_endgame_screen(winner: int) -> void:
 		reason_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
 		overlay.add_child(reason_lbl)
 
-	# "Tap to continue" hint — blinks gently
+	# "Tap to continue" hint — blinks gently (hidden when exploration duel defeat offers choices)
 	var hint_lbl := Label.new()
 	hint_lbl.text = "tap anywhere to continue"
 	hint_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -8211,13 +8211,15 @@ func _show_endgame_screen(winner: int) -> void:
 	# Overlay catches all clicks
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 
-	var dest: String
 	var from_exploration: bool = GameState.vn_launched_from_exploration \
 		and ExplorationManager.is_session_active
-	var exploration_defeat: bool = is_exploration and not is_win_screen
-	if exploration_defeat:
+	var exploration_duel_defeat: bool = not is_win_screen \
+		and ExplorationManager.is_session_active \
+		and (is_exploration or from_exploration)
+
+	var dest: String
+	if exploration_duel_defeat:
 		dest = "res://scenes/main_menu.tscn"
-		GameState.vn_launched_from_exploration = false
 	elif from_exploration:
 		dest = ExplorationManager.EXPLORATION_PLAYER_SCENE
 		GameState.vn_launched_from_exploration = false
@@ -8228,49 +8230,135 @@ func _show_endgame_screen(winner: int) -> void:
 	else:
 		dest = DailyDungeonManager.get_post_battle_scene()
 
-	var _clicked := [false]
-	overlay.gui_input.connect(func(ev: InputEvent) -> void:
-		if _clicked[0]:
-			return
-		var is_press: bool = \
-			(ev is InputEventMouseButton \
-				and (ev as InputEventMouseButton).pressed \
-				and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT) \
-			or (ev is InputEventScreenTouch and (ev as InputEventScreenTouch).pressed)
-		if not is_press:
-			return
-		_clicked[0] = true
+	if exploration_duel_defeat:
+		hint_lbl.visible = false
 		blink_tw.kill()
-		var black := ColorRect.new()
-		black.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		black.color = Color(0.0, 0.0, 0.0, 0.0)
-		black.z_index = 200
-		black.mouse_filter = Control.MOUSE_FILTER_STOP
-		add_child(black)
-		var out_tw := create_tween()
-		out_tw.tween_property(black, "color:a", 1.0, 0.5).set_trans(Tween.TRANS_SINE)
-		var pending_vn := _pending_win_vn
-		_pending_win_vn = ""
-		if pending_vn != "":
-			var post_vn_dest: String = dest if from_exploration \
-				else "res://scenes/main_menu.tscn"
-			out_tw.tween_callback(func() -> void:
+		var choice_lbl := Label.new()
+		choice_lbl.text = "What will you do?"
+		choice_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		choice_lbl.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		choice_lbl.offset_left   = -320.0
+		choice_lbl.offset_right  =  320.0
+		choice_lbl.offset_top    =  170.0
+		choice_lbl.offset_bottom =  210.0
+		choice_lbl.add_theme_font_size_override("font_size", 26)
+		choice_lbl.add_theme_color_override("font_color", Color(1.0, 0.82, 0.72, 0.95))
+		choice_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		overlay.add_child(choice_lbl)
+
+		var choice_vbox := VBoxContainer.new()
+		choice_vbox.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+		choice_vbox.offset_left   = -220.0
+		choice_vbox.offset_right  =  220.0
+		choice_vbox.offset_top    =  220.0
+		choice_vbox.offset_bottom =  360.0
+		choice_vbox.add_theme_constant_override("separation", 14)
+		choice_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+		overlay.add_child(choice_vbox)
+
+		var has_save: bool = ExplorationManager.has_saved_session()
+		var load_btn := _make_defeat_choice_button("Load Last Save")
+		load_btn.disabled = not has_save
+		if not has_save:
+			load_btn.tooltip_text = "No exploration save data found."
+		load_btn.pressed.connect(func() -> void:
+			if not has_save:
+				return
+			_fade_endgame_overlay_and_run(overlay, func() -> void:
 				_stop_battle_music()
-				black.queue_free()
-				overlay.queue_free()
-				var cb := func() -> void: get_tree().change_scene_to_file(post_vn_dest)
-				VNPlayer.launch_overlay(pending_vn, cb))
-		else:
-			out_tw.tween_callback(func() -> void:
-				if exploration_defeat and ExplorationManager.is_session_active:
-					ExplorationManager.end_session(false)
-				if from_exploration or (is_exploration and not exploration_defeat):
-					BGMManager.stop(0.5)
-				get_tree().change_scene_to_file(dest)))
+				GameState.vn_launched_from_exploration = false
+				if not ExplorationManager.resume_from_last_save_after_duel_loss():
+					ExplorationManager.quit_to_title_after_duel_loss()
+					get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+					return
+				BGMManager.stop(0.5)
+				get_tree().change_scene_to_file(ExplorationManager.EXPLORATION_PLAYER_SCENE)))
+		choice_vbox.add_child(load_btn)
+
+		var title_btn := _make_defeat_choice_button("Title Screen")
+		title_btn.pressed.connect(func() -> void:
+			_fade_endgame_overlay_and_run(overlay, func() -> void:
+				_stop_battle_music()
+				GameState.vn_launched_from_exploration = false
+				ExplorationManager.quit_to_title_after_duel_loss()
+				get_tree().change_scene_to_file("res://scenes/main_menu.tscn")))
+		choice_vbox.add_child(title_btn)
+	else:
+		var _clicked := [false]
+		overlay.gui_input.connect(func(ev: InputEvent) -> void:
+			if _clicked[0]:
+				return
+			var is_press: bool = \
+				(ev is InputEventMouseButton \
+					and (ev as InputEventMouseButton).pressed \
+					and (ev as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT) \
+				or (ev is InputEventScreenTouch and (ev as InputEventScreenTouch).pressed)
+			if not is_press:
+				return
+			_clicked[0] = true
+			blink_tw.kill()
+			var pending_vn := _pending_win_vn
+			_pending_win_vn = ""
+			if pending_vn != "":
+				var post_vn_dest: String = dest if from_exploration \
+					else "res://scenes/main_menu.tscn"
+				_fade_endgame_overlay_and_run(overlay, func() -> void:
+					_stop_battle_music()
+					var cb := func() -> void: get_tree().change_scene_to_file(post_vn_dest)
+					VNPlayer.launch_overlay(pending_vn, cb))
+			else:
+				_fade_endgame_overlay_and_run(overlay, func() -> void:
+					if from_exploration or is_exploration:
+						BGMManager.stop(0.5)
+					get_tree().change_scene_to_file(dest)))
 
 	# Fade in the endgame screen
 	var ft := create_tween()
 	ft.tween_property(overlay, "modulate:a", 1.0, 0.7)
+
+func _make_defeat_choice_button(label_text: String) -> Button:
+	var btn := Button.new()
+	btn.text = label_text
+	btn.custom_minimum_size = Vector2(440, 52)
+	btn.add_theme_font_size_override("font_size", 22)
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = Color(0.08, 0.1, 0.18, 0.92)
+	normal.border_width_left = 2
+	normal.border_width_top = 2
+	normal.border_width_right = 2
+	normal.border_width_bottom = 2
+	normal.border_color = Color(0.45, 0.62, 0.95, 0.55)
+	normal.corner_radius_top_left = 8
+	normal.corner_radius_top_right = 8
+	normal.corner_radius_bottom_right = 8
+	normal.corner_radius_bottom_left = 8
+	var hover := normal.duplicate() as StyleBoxFlat
+	hover.bg_color = Color(0.12, 0.16, 0.28, 0.98)
+	hover.border_color = Color(0.55, 0.75, 1.0, 0.9)
+	btn.add_theme_stylebox_override("normal", normal)
+	btn.add_theme_stylebox_override("hover", hover)
+	btn.add_theme_stylebox_override("pressed", normal)
+	btn.add_theme_stylebox_override("focus", normal)
+	btn.add_theme_stylebox_override("disabled", normal)
+	btn.add_theme_color_override("font_color", Color(0.92, 0.96, 1.0, 1.0))
+	btn.add_theme_color_override("font_disabled_color", Color(0.55, 0.58, 0.65, 0.8))
+	return btn
+
+func _fade_endgame_overlay_and_run(overlay: Control, action: Callable) -> void:
+	var black := ColorRect.new()
+	black.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	black.color = Color(0.0, 0.0, 0.0, 0.0)
+	black.z_index = 200
+	black.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(black)
+	var out_tw := create_tween()
+	out_tw.tween_property(black, "color:a", 1.0, 0.5).set_trans(Tween.TRANS_SINE)
+	out_tw.tween_callback(func() -> void:
+		if is_instance_valid(overlay):
+			overlay.queue_free()
+		black.queue_free()
+		if action.is_valid():
+			action.call())
 
 # ─────────────────────────────────────────────────────────────
 # Session log — lightweight file logging for VS_AI / HOT_SEAT

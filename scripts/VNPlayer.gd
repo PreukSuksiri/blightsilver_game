@@ -679,16 +679,13 @@ func _show_beat() -> void:
 	var tutorial_path: String = str(beat.get("tutorial_battle", "")).strip_edges()
 	if tutorial_path != "":
 		_set_music("", 0.0, 0.0)
-		if beat.has("portrait_p1"):
-			GameState.player_portraits[0] = str(beat["portrait_p1"])
-		if beat.has("portrait_p2"):
-			GameState.player_portraits[1] = str(beat["portrait_p2"])
 		var tut_err: String = TutorialBattleManager.configure_battle_from_path(tutorial_path)
 		if not tut_err.is_empty():
 			push_error(tut_err)
 			_accepting_input = true
 			_show_beat()
 			return
+		_apply_beat_battle_display(beat, true)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))
 		CheckerTransition.fade_out_to_scene("res://scenes/game_board.tscn")
@@ -699,6 +696,9 @@ func _show_beat() -> void:
 		_battle_handoff_started = true
 		_accepting_input = false
 		_hide_hint_icon()
+		if exploration_overlay and ExplorationManager.is_session_active:
+			ExplorationManager.snapshot_bgm_before_vn()
+			ExplorationManager.save_session_now()
 		_set_music("", 0.0, 0.0)
 		# Always VS_AI for VN-configured battles (enemy_deck + AI setup).
 		# EXPLORATION mode breaks setup — GameBoard expects AI to place P2.
@@ -709,22 +709,8 @@ func _show_beat() -> void:
 		# Set post-new_game fields (new_game resets most state but not these)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))
-		GameState.portrait_p1_offset = Vector2(
-			float(beat.get("portrait_p1_offset_x", 0.0)),
-			float(beat.get("portrait_p1_offset_y", 0.0)))
-		GameState.portrait_p1_size   = float(beat.get("portrait_p1_size", 1.0))
-		GameState.portrait_p2_offset = Vector2(
-			float(beat.get("portrait_p2_offset_x", 0.0)),
-			float(beat.get("portrait_p2_offset_y", 0.0)))
-		GameState.portrait_p2_size   = float(beat.get("portrait_p2_size", 1.0))
+		_apply_beat_battle_display(beat)
 		GameState.apply_battle_audio_config(beat)
-		# Player names — override display names shown in battle HUD
-		var p1n: String = str(beat.get("player1_name", "")).strip_edges()
-		var p2n: String = str(beat.get("player2_name", "")).strip_edges()
-		if not p1n.is_empty() or not p2n.is_empty():
-			GameState.campaign_player_names = [p1n, p2n]
-		else:
-			GameState.campaign_player_names = []
 		# Enemy deck — override what cards the AI places this battle
 		var enemy_deck: Variant = beat.get("enemy_deck", null)
 		var deck_chars: Array = []
@@ -1208,3 +1194,39 @@ func _input(event: InputEvent) -> void:
 	if advance:
 		get_viewport().set_input_as_handled()
 		_show_beat()
+
+
+## Apply optional P1/P2 display names and battle illustrations from a VN beat.
+## When only_override_present is true (tutorial battles), beat fields override config
+## only when explicitly present; otherwise tutorial JSON values are kept.
+func _apply_beat_battle_display(beat: Dictionary, only_override_present: bool = false) -> void:
+	if beat.has("portrait_p1"):
+		GameState.player_portraits[0] = str(beat["portrait_p1"])
+	if beat.has("portrait_p2"):
+		GameState.player_portraits[1] = str(beat["portrait_p2"])
+	if not only_override_present \
+			or beat.has("portrait_p1_offset_x") or beat.has("portrait_p1_offset_y"):
+		GameState.portrait_p1_offset = Vector2(
+			float(beat.get("portrait_p1_offset_x", 0.0)),
+			float(beat.get("portrait_p1_offset_y", 0.0)))
+	if not only_override_present or beat.has("portrait_p1_size"):
+		GameState.portrait_p1_size = float(beat.get("portrait_p1_size", 1.0))
+	if not only_override_present \
+			or beat.has("portrait_p2_offset_x") or beat.has("portrait_p2_offset_y"):
+		GameState.portrait_p2_offset = Vector2(
+			float(beat.get("portrait_p2_offset_x", 0.0)),
+			float(beat.get("portrait_p2_offset_y", 0.0)))
+	if not only_override_present or beat.has("portrait_p2_size"):
+		GameState.portrait_p2_size = float(beat.get("portrait_p2_size", 1.0))
+	if beat.has("player1_name") or beat.has("player2_name"):
+		GameState.campaign_player_names = [
+			str(beat.get("player1_name", "")).strip_edges(),
+			str(beat.get("player2_name", "")).strip_edges(),
+		]
+	elif not only_override_present:
+		var p1n: String = str(beat.get("player1_name", "")).strip_edges()
+		var p2n: String = str(beat.get("player2_name", "")).strip_edges()
+		if not p1n.is_empty() or not p2n.is_empty():
+			GameState.campaign_player_names = [p1n, p2n]
+		else:
+			GameState.campaign_player_names = []

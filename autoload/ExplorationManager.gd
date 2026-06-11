@@ -330,14 +330,6 @@ func _reset_session_state() -> void:
 	_clear_session_memory()
 	_clear_saved_session()
 
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		if _session_active:
-			_save_session_state(true)
-	elif what == NOTIFICATION_APPLICATION_PAUSED:
-		if _session_active:
-			_save_session_state(true)
-
 ## Mark a VN scene path as having been played this session.
 func mark_vn_played(path: String) -> void:
 	if path.is_empty():
@@ -419,6 +411,81 @@ func mark_char_talked(node_id: String, char_index: int) -> void:
 func is_char_talked(node_id: String, char_index: int) -> bool:
 	return _talked_characters.has(node_id + ":" + str(char_index))
 
+## True when a BGM path/context belongs to battle flow (not exploration ambient).
+func is_battle_bgm_snapshot(path: String, context: String = "") -> bool:
+	var ctx: String = context.strip_edges()
+	if ctx in [
+		BGMManager.CONTEXT_BATTLE,
+		BGMManager.CONTEXT_PLACEMENT,
+		BGMManager.CONTEXT_BOSS,
+		BGMManager.CONTEXT_ALMOST_WIN,
+	]:
+		return true
+	path = path.strip_edges()
+	if path.is_empty():
+		return false
+	var file_name: String = path.get_file().to_lower()
+	for prefix: String in ["bgm_battle_", "bgm_boss_", "bgm_placement_", "bgm_almost_win_"]:
+		if file_name.begins_with(prefix):
+			return true
+	for battle_ctx: String in [
+		BGMManager.CONTEXT_BATTLE,
+		BGMManager.CONTEXT_PLACEMENT,
+		BGMManager.CONTEXT_BOSS,
+		BGMManager.CONTEXT_ALMOST_WIN,
+	]:
+		var default_path: String = BGMManager.get_default_path(battle_ctx).strip_edges()
+		if not default_path.is_empty() and path == default_path:
+			return true
+	var battle_path: String = GameState.battle_bgm_path.strip_edges()
+	if not battle_path.is_empty() and path == battle_path:
+		return true
+	var setup_path: String = GameState.battle_setup_bgm_path.strip_edges()
+	if not setup_path.is_empty() and path == setup_path:
+		return true
+	var almost_path: String = GameState.get_almost_win_bgm_path().strip_edges()
+	return not almost_path.is_empty() and path == almost_path
+
+
+func _session_bgm_snapshot() -> Dictionary:
+	var path: String = BGMManager.get_current_path().strip_edges()
+	var context: String = BGMManager.get_current_context().strip_edges()
+	var position: float = BGMManager.get_playback_position()
+	var loop_from_sec: float = BGMManager.get_loop_restart_sec()
+
+	if is_battle_bgm_snapshot(path, context):
+		if not _vn_resume_bgm.is_empty():
+			path = str(_vn_resume_bgm.get("path", "")).strip_edges()
+			context = str(_vn_resume_bgm.get("context", BGMManager.CONTEXT_VN)).strip_edges()
+			position = float(_vn_resume_bgm.get("position", 0.0))
+			loop_from_sec = float(_vn_resume_bgm.get("loop_from_sec", -1.0))
+		else:
+			var prev: Dictionary = SaveManager.exploration_session
+			if prev.get("active", false):
+				path = str(prev.get("bgm_path", "")).strip_edges()
+				context = str(prev.get("bgm_context", BGMManager.CONTEXT_VN)).strip_edges()
+				position = float(prev.get("bgm_position", 0.0))
+				loop_from_sec = float(prev.get("bgm_loop_from_sec", -1.0))
+			else:
+				path = ""
+				context = ""
+				position = 0.0
+				loop_from_sec = -1.0
+
+	if is_battle_bgm_snapshot(path, context):
+		path = ""
+		context = ""
+		position = 0.0
+		loop_from_sec = -1.0
+
+	return {
+		"bgm_path": path,
+		"bgm_context": context,
+		"bgm_position": position,
+		"bgm_loop_from_sec": loop_from_sec,
+	}
+
+
 ## Save current session state to SaveManager so it survives a game restart.
 ## Called automatically on state changes when auto-save is enabled.
 ## Pass force=true for manual Save and Exit or when re-enabling auto-save.
@@ -427,6 +494,7 @@ func _save_session_state(force: bool = false) -> void:
 		return
 	if not force and not SaveManager.exploration_auto_save:
 		return
+	var bgm: Dictionary = _session_bgm_snapshot()
 	SaveManager.exploration_session = {
 		"active":            true,
 		"graph_path":        normalize_graph_path(_current_graph._source_path),
@@ -441,10 +509,10 @@ func _save_session_state(force: bool = false) -> void:
 		"return_scene":      return_scene,
 		"pending_return_vn": pending_return_vn,
 		"source_vn_scene":   _source_vn_scene,
-		"bgm_path":          BGMManager.get_current_path(),
-		"bgm_context":       BGMManager.get_current_context(),
-		"bgm_position":      BGMManager.get_playback_position(),
-		"bgm_loop_from_sec": BGMManager.get_loop_restart_sec(),
+		"bgm_path":          bgm["bgm_path"],
+		"bgm_context":       bgm["bgm_context"],
+		"bgm_position":      bgm["bgm_position"],
+		"bgm_loop_from_sec": bgm["bgm_loop_from_sec"],
 	}
 	SaveManager.save_data()
 
@@ -616,9 +684,10 @@ func take_pending_restored_bgm() -> Dictionary:
 func snapshot_bgm_before_vn() -> void:
 	if not _session_active:
 		return
-	if BGMManager.get_current_context() == BGMManager.CONTEXT_BATTLE:
-		return
 	var path: String = BGMManager.get_current_path().strip_edges()
+	var context: String = BGMManager.get_current_context().strip_edges()
+	if is_battle_bgm_snapshot(path, context):
+		return
 	if path.is_empty():
 		return
 	_vn_resume_bgm = {
@@ -643,12 +712,13 @@ func clear_vn_resume_bgm() -> void:
 
 func _queue_restored_bgm_from_save(sd: Dictionary) -> void:
 	var path: String = str(sd.get("bgm_path", "")).strip_edges()
-	if path.is_empty():
+	var context: String = str(sd.get("bgm_context", BGMManager.CONTEXT_VN)).strip_edges()
+	if path.is_empty() or is_battle_bgm_snapshot(path, context):
 		_pending_restored_bgm = {}
 		return
 	_pending_restored_bgm = {
 		"path": path,
-		"context": str(sd.get("bgm_context", BGMManager.CONTEXT_VN)).strip_edges(),
+		"context": context,
 		"position": float(sd.get("bgm_position", 0.0)),
 		"loop_from_sec": float(sd.get("bgm_loop_from_sec", -1.0)),
 	}
@@ -949,6 +1019,7 @@ func start_battle_for_node(node: ExplorationNode) -> void:
 		return
 	pending_battle_result = {}
 	snapshot_bgm_before_vn()
+	save_session_now()
 	# Configure a standard VS_AI battle using the EXPLORATION game mode.
 	# The AI controls player 1; the human plays as player 0.
 	GameState.apply_battle_audio_config({
@@ -966,6 +1037,31 @@ func start_battle_for_node(node: ExplorationNode) -> void:
 ## Stores the result so ExplorationPlayer can read it when it reloads.
 func complete_battle_node(won: bool) -> void:
 	pending_battle_result = {"won": won, "node_id": _current_node_id}
+
+## Clear battle handoff state after a duel loss without applying loss progress vars.
+func clear_duel_loss_handoff() -> void:
+	pending_battle_result = {}
+	clear_spot_action_resume()
+	clear_pending_spot_on_complete()
+	reset_pending_play_once_paths()
+	var pending_spot: Dictionary = take_pending_spot_interaction()
+	if not pending_spot.is_empty():
+		var node_id: String = str(pending_spot.get("node_id", ""))
+		var spot_index: int = int(pending_spot.get("spot_index", -1))
+		end_spot_interaction(node_id, spot_index)
+
+## Restore the on-disk exploration snapshot after losing a story/exploration duel.
+func resume_from_last_save_after_duel_loss() -> bool:
+	clear_duel_loss_handoff()
+	if not has_saved_session():
+		return false
+	return restore_saved_session()
+
+## End exploration and discard the mid-session snapshot after choosing title screen.
+func quit_to_title_after_duel_loss() -> void:
+	clear_duel_loss_handoff()
+	if _session_active:
+		end_session(false)
 
 # ─────────────────────────────────────────────────────────────
 # Spot action resume (VN start_battle handoff)
