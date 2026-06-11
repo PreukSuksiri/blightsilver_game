@@ -55,6 +55,38 @@
 					"tooltip": "Examine",
 					"x_norm": 0.63,
 					"y_norm": 0.464
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.35,
+					"y_norm": 0.374
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.103,
+					"y_norm": 0.206
 				}
 			],
 			"connections": [
@@ -190,6 +222,22 @@
 					"tooltip": "Examine",
 					"x_norm": 0.719,
 					"y_norm": 0.503
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.497,
+					"y_norm": 0.599
 				}
 			],
 			"connections": [
@@ -280,6 +328,22 @@
 					"tooltip": "Examine",
 					"x_norm": 0.78,
 					"y_norm": 0.461
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.929,
+					"y_norm": 0.162
 				}
 			],
 			"connections": [
@@ -409,6 +473,22 @@
 					"tooltip": "Examine",
 					"x_norm": 0.704,
 					"y_norm": 0.621
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.959,
+					"y_norm": 0.483
 				}
 			],
 			"connections": [
@@ -597,6 +677,38 @@
 					"tooltip": "Examine",
 					"x_norm": 0.207,
 					"y_norm": 0.541
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.92,
+					"y_norm": 0.447
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.619,
+					"y_norm": 0.483
 				}
 			],
 			"connections": [
@@ -748,6 +860,54 @@
 					"tooltip": "Examine",
 					"x_norm": 0.502,
 					"y_norm": 0.554
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.149,
+					"y_norm": 0.526
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.704,
+					"y_norm": 0.284
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.595,
+					"y_norm": 0.664
 				}
 			],
 			"connections": [
@@ -814,7 +974,7 @@
 						{
 							"action": "give_credits",
 							"key": "",
-							"value": "300"
+							"value": "800"
 						}
 					],
 					"conditions": [],
@@ -862,6 +1022,38 @@
 					"tooltip": "Examine",
 					"x_norm": 0.814,
 					"y_norm": 0.453
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_wind_of_dominance"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.821,
+					"y_norm": 0.451
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_wind_of_dominance"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.079,
+					"y_norm": 0.038
 				}
 			],
 			"connections": [
@@ -1013,7 +1205,74 @@
 			"battle_bgm": "",
 			"battle_bgm_volume": 100.0,
 			"characters": [],
-			"clickable_spots": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_wind_of_dominance"
+						}
+					],
+					"conditions": [
+						{
+							"key": "chapter",
+							"type": "var_equals",
+							"value": "act_1_ch_1"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.115,
+					"y_norm": 0.537
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_wind_of_dominance"
+						}
+					],
+					"conditions": [
+						{
+							"key": "chapter",
+							"type": "var_equals",
+							"value": "act_1_ch_1"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.629,
+					"y_norm": 0.434
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_wind_of_dominance"
+						}
+					],
+					"conditions": [
+						{
+							"key": "chapter",
+							"type": "var_equals",
+							"value": "act_1_ch_1"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.369,
+					"y_norm": 0.299
+				}
+			],
 			"connections": [
 				{
 					"conditions": [],
@@ -1087,6 +1346,28 @@
 					"tooltip": "Examine",
 					"x_norm": 0.294,
 					"y_norm": 0.438
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_wind_of_dominance"
+						}
+					],
+					"conditions": [
+						{
+							"key": "chapter",
+							"type": "var_equals",
+							"value": "act_1_ch_1"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.533,
+					"y_norm": 0.495
 				}
 			],
 			"connections": [
@@ -1183,6 +1464,28 @@
 					"tooltip": "",
 					"x_norm": 0.226,
 					"y_norm": 0.647
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_wind_of_dominance"
+						}
+					],
+					"conditions": [
+						{
+							"key": "chapter",
+							"type": "var_equals",
+							"value": "act_1_ch_1"
+						}
+					],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.78,
+					"y_norm": 0.541
 				}
 			],
 			"connections": [
@@ -1377,7 +1680,7 @@
 						{
 							"action": "give_credits",
 							"key": "",
-							"value": "300"
+							"value": "1000"
 						}
 					],
 					"conditions": [
@@ -1420,6 +1723,22 @@
 					"tooltip": "Examine",
 					"x_norm": 0.823,
 					"y_norm": 0.586
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_wind_of_dominance"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.238,
+					"y_norm": 0.269
 				}
 			],
 			"connections": [
@@ -1522,6 +1841,22 @@
 					"tooltip": "Examine",
 					"x_norm": 0.763,
 					"y_norm": 0.532
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_unseen_presence"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.449,
+					"y_norm": 0.511
 				}
 			],
 			"connections": [
@@ -1614,7 +1949,24 @@
 			"battle_bgm": "",
 			"battle_bgm_volume": 100.0,
 			"characters": [],
-			"clickable_spots": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_unseen_presence"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.889,
+					"y_norm": 0.357
+				}
+			],
 			"connections": [
 				{
 					"conditions": [],
@@ -1693,7 +2045,7 @@
 						{
 							"action": "give_credits",
 							"key": "",
-							"value": "200"
+							"value": "500"
 						}
 					],
 					"canon_story": false,
@@ -1721,6 +2073,22 @@
 					"tooltip": "Examine",
 					"x_norm": 0.834,
 					"y_norm": 0.201
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_wind_of_dominance"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.127,
+					"y_norm": 0.12
 				}
 			],
 			"connections": [
@@ -1800,6 +2168,38 @@
 					"tooltip": "Examine",
 					"x_norm": 0.543,
 					"y_norm": 0.417
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_wind_of_dominance"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.461,
+					"y_norm": 0.297
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.676,
+					"y_norm": 0.61
 				}
 			],
 			"connections": [
@@ -1869,6 +2269,22 @@
 					"tooltip": "Examine",
 					"x_norm": 0.9,
 					"y_norm": 0.527
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_wind_of_dominance"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.451,
+					"y_norm": 0.109
 				}
 			],
 			"connections": [
@@ -1985,6 +2401,38 @@
 					"tooltip": "Examine",
 					"x_norm": 0.083,
 					"y_norm": 0.545
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.16,
+					"y_norm": 0.721
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.291,
+					"y_norm": 0.486
 				}
 			],
 			"connections": [
@@ -2144,7 +2592,7 @@
 						{
 							"action": "give_credits",
 							"key": "",
-							"value": "300"
+							"value": "700"
 						}
 					],
 					"conditions": [
@@ -2330,6 +2778,22 @@
 					"tooltip": "Examine",
 					"x_norm": 0.134,
 					"y_norm": 0.558
+				},
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_unseen_presence"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.764,
+					"y_norm": 0.061
 				}
 			],
 			"connections": [
@@ -2405,6 +2869,38 @@
 					"tooltip": "Examine",
 					"x_norm": 0.292,
 					"y_norm": 0.657
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.919,
+					"y_norm": 0.154
+				},
+				{
+					"actions": [
+						{
+							"action": "give_credits",
+							"key": "",
+							"value": "100"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.632,
+					"y_norm": 0.439
 				}
 			],
 			"connections": [
@@ -2453,7 +2949,7 @@
 						{
 							"action": "give_credits",
 							"key": "",
-							"value": "200"
+							"value": "500"
 						}
 					],
 					"equals": "1",
@@ -2653,12 +3149,29 @@
 		},
 		{
 			"almost_win_bgm": "",
-			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_toilet_front.png",
+			"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
 			"background_conditions": [],
 			"battle_bgm": "",
 			"battle_bgm_volume": 100.0,
 			"characters": [],
-			"clickable_spots": [],
+			"clickable_spots": [
+				{
+					"actions": [
+						{
+							"action": "give_booster_pack",
+							"key": "",
+							"value": "booster_unseen_presence"
+						}
+					],
+					"conditions": [],
+					"hide_after_interact": true,
+					"icon": "",
+					"icon_scale": 100.0,
+					"tooltip": "???",
+					"x_norm": 0.452,
+					"y_norm": 0.488
+				}
+			],
 			"connections": [
 				{
 					"conditions": [],

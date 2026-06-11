@@ -707,26 +707,13 @@ func _do_reset() -> void:
 	if _confirm_panel != null and is_instance_valid(_confirm_panel):
 		_confirm_panel.queue_free()
 
-	# Load the starter deck template
-	var starter := _load_deck()
-
-	# Clear player collection owned cards (keep credits, etc.)
 	Collection.owned.clear()
 	Collection.emit_signal("collection_changed")
 
-	# Add one copy of each starter card to the collection
-	for n: String in starter.characters:
-		Collection.add_card(n, "character", "Starter Deck")
-	for n: String in starter.traps:
-		Collection.add_card(n, "trap", "Starter Deck")
-	for n: String in starter.techs:
-		Collection.add_card(n, "tech", "Starter Deck")
+	if not OnboardingManager.install_starter_deck(false, true):
+		_set_status("ERROR: could not load starter deck template.")
+		return
 
-	# Replace all decks with a single copy of the starter deck
-	SaveManager.decks.clear()
-	var new_deck := DeckData.new()
-	new_deck.load_from_dict(starter.to_dict())
-	SaveManager.decks.append(new_deck)
 	SaveManager.active_deck_index = 0
 	SaveManager.save_data()
 

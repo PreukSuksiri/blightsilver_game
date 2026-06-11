@@ -12,7 +12,7 @@ extends Control
 ##   • Drag from an output port (right side) to an input port (left side)
 ##     of another node to create a connection.
 ##   • Right-click in the graph area to add a new node.
-##   • Toolbar buttons: New, Load, Save, Add Node, Validate, Test Play.
+##   • Toolbar buttons: New, Load, Save, Add Node, Validate, Reward Report, Test Play.
 ##   • Ctrl+S to save, Delete to remove selected node.
 ##
 ## Data format: see ExplorationGraph / ExplorationNode for JSON schema.
@@ -34,6 +34,7 @@ const PROPS_PANEL_W: float  = 380.0
 const TOOLBAR_H: float      = 44.0
 const GRAPH_NODE_W: float   = 200.0
 const VN_TRIGGER_VALUES: Array[String] = ["on_enter", "on_exit", "on_var_change"]
+const REWARD_REPORT_DIR: String = "res://logs/reports/"
 
 # ─────────────────────────────────────────────────────────────
 # State
@@ -242,6 +243,7 @@ func _build_toolbar() -> Control:
 	_make_tool_btn(bar, "Delete",     _on_delete_node_pressed)
 	bar.add_child(VSeparator.new())
 	_make_tool_btn(bar, "Validate",   _on_validate_pressed)
+	_make_tool_btn(bar, "📋 Reward Report", _on_reward_report_pressed)
 	_make_tool_btn(bar, "▶ Test Play",_on_test_play_pressed)
 	bar.add_child(VSeparator.new())
 	_make_tool_btn(bar, "🗃 Items",   _on_items_pressed)
@@ -2900,6 +2902,350 @@ func _on_validate_pressed() -> void:
 		_set_status(msg)
 		# Also show as a popup
 		_show_popup("Validation Results", msg)
+
+func _on_reward_report_pressed() -> void:
+	if _graph == null:
+		_set_status("Load a graph first.")
+		return
+	_collect_graph_props()
+	_commit_selected_node()
+	var report: String = _generate_reward_report()
+	var saved_path: String = _save_reward_report_markdown(report)
+	DisplayServer.clipboard_set(report)
+	_show_reward_report_popup(report, saved_path)
+	var status_bits: Array[String] = ["Reward report generated (%d chars), copied to clipboard." % report.length()]
+	if not saved_path.is_empty():
+		status_bits.append("Saved: %s" % saved_path.get_file())
+	_set_status(" ".join(status_bits))
+
+func _generate_reward_report() -> String:
+	var graph_label: String = _graph_path.get_file() if not _graph_path.is_empty() else _graph.graph_id
+	if graph_label.is_empty():
+		graph_label = "(unsaved graph)"
+	var display_name: String = _graph.display_name if not _graph.display_name.is_empty() else _graph.graph_id
+	var lines: Array[String] = []
+	lines.append("# Reward Report — %s" % graph_label)
+	if not display_name.is_empty() and display_name != graph_label:
+		lines.append("Display name: %s" % display_name)
+	lines.append("Generated: %s" % Time.get_datetime_string_from_system(true, true))
+	lines.append("")
+
+	var entries: Array[Dictionary] = []
+	for node: ExplorationNode in _graph.nodes:
+		_collect_spot_reward_entries(entries, node)
+		_collect_on_enter_reward_entries(entries, node)
+
+	entries.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return str(a.get("sort", "")) < str(b.get("sort", ""))
+	)
+
+	var credit_total: int = 0
+	var credit_count: int = 0
+	var booster_counts: Dictionary = {}
+	for entry: Dictionary in entries:
+		var reward: String = str(entry.get("reward", ""))
+		if reward.begins_with("credits:"):
+			credit_count += 1
+			credit_total += int(entry.get("credit_amount", 0))
+		elif reward.begins_with("booster:"):
+			var pack_id: String = str(entry.get("booster_id", ""))
+			booster_counts[pack_id] = int(booster_counts.get(pack_id, 0)) + 1
+
+	lines.append("## Summary")
+	lines.append("Reward entries: %d" % entries.size())
+	lines.append("Credits: %d spot(s), %d total if all obtained" % [credit_count, credit_total])
+	if booster_counts.is_empty():
+		lines.append("Boosters: none")
+	else:
+		var booster_total: int = 0
+		for pack_id: Variant in booster_counts.keys():
+			booster_total += int(booster_counts[pack_id])
+		lines.append("Boosters: %d spot(s)" % booster_total)
+		var pack_ids: Array = booster_counts.keys()
+		pack_ids.sort()
+		for pack_id: Variant in pack_ids:
+			lines.append("  • %s: %d" % [str(pack_id), int(booster_counts[pack_id])])
+	lines.append("")
+
+	if entries.is_empty():
+		lines.append("No give_credits or give_booster_pack actions found in clickable spots or on-enter events.")
+		return "\n".join(lines)
+
+	lines.append("## Entries (%d)" % entries.size())
+	lines.append("")
+	for entry: Dictionary in entries:
+		lines.append("### [%s] %s — %s" % [
+			str(entry.get("node_id", "")),
+			str(entry.get("node_title", "")),
+			str(entry.get("source", "")),
+		])
+		lines.append("Reward: %s" % _reward_report_reward_text(entry))
+		var tooltip: String = str(entry.get("tooltip", ""))
+		if not tooltip.is_empty():
+			lines.append("Tooltip: \"%s\"" % tooltip)
+		var hide_after: Variant = entry.get("hide_after", null)
+		if hide_after != null:
+			lines.append("Hide after click: %s" % ("yes" if bool(hide_after) else "no"))
+		var event_gate: String = str(entry.get("event_gate", ""))
+		if not event_gate.is_empty():
+			lines.append("Event gate: %s" % event_gate)
+		lines.append("Visibility conditions: %s" % _format_report_conditions(entry.get("conditions", [])))
+		lines.append("Action chain: %s" % str(entry.get("chain", "(direct)")))
+		lines.append("")
+
+	return "\n".join(lines)
+
+func _collect_spot_reward_entries(entries: Array[Dictionary], node: ExplorationNode) -> void:
+	for spot_idx: int in node.clickable_spots.size():
+		var spot_var: Variant = node.clickable_spots[spot_idx]
+		if not spot_var is Dictionary:
+			continue
+		var spot: Dictionary = spot_var as Dictionary
+		var actions: Array = spot.get("actions", []) if spot.get("actions", []) is Array else []
+		var extra: Dictionary = {
+			"tooltip": str(spot.get("tooltip", "")),
+			"hide_after": bool(spot.get("hide_after_interact", false)),
+			"conditions": spot.get("conditions", []) if spot.get("conditions", []) is Array else [],
+		}
+		_append_reward_entries_from_actions(
+			entries,
+			node,
+			"spot #%d" % spot_idx,
+			actions,
+			extra,
+		)
+
+func _collect_on_enter_reward_entries(entries: Array[Dictionary], node: ExplorationNode) -> void:
+	var base_extra: Dictionary = {
+		"tooltip": "",
+		"hide_after": null,
+		"conditions": [],
+	}
+	_append_reward_entries_from_actions(entries, node, "on enter", node.on_enter_events, base_extra)
+	for cond_var: Variant in node.on_enter_events_conditions:
+		if not cond_var is Dictionary:
+			continue
+		var cond_block: Dictionary = cond_var as Dictionary
+		var var_key: String = str(cond_block.get("var", ""))
+		var eq_val: String = str(cond_block.get("equals", ""))
+		var gate: String = "%s=%s" % [var_key, eq_val] if not var_key.is_empty() else "(conditional)"
+		var events: Array = cond_block.get("events", []) if cond_block.get("events", []) is Array else []
+		var gated_extra: Dictionary = base_extra.duplicate(true)
+		gated_extra["event_gate"] = gate
+		_append_reward_entries_from_actions(
+			entries,
+			node,
+			"on enter (when %s)" % gate,
+			events,
+			gated_extra,
+		)
+
+func _append_reward_entries_from_actions(
+	entries: Array[Dictionary],
+	node: ExplorationNode,
+	source_label: String,
+	actions: Array,
+	extra: Dictionary,
+) -> void:
+	for action_idx: int in actions.size():
+		var act_var: Variant = actions[action_idx]
+		if not act_var is Dictionary:
+			continue
+		var act: Dictionary = act_var as Dictionary
+		var action: String = str(act.get("action", ""))
+		if action != "give_credits" and action != "give_booster_pack":
+			continue
+		var reward_meta: Dictionary = _reward_report_meta_from_action(act)
+		var sort_key: String = "%s|%s|%03d" % [node.title.to_lower(), source_label.to_lower(), action_idx]
+		entries.append({
+			"sort": sort_key,
+			"node_id": node.id,
+			"node_title": node.title,
+			"source": source_label,
+			"reward": str(reward_meta.get("label", "")),
+			"credit_amount": int(reward_meta.get("credit_amount", 0)),
+			"booster_id": str(reward_meta.get("booster_id", "")),
+			"chain": _format_report_action_chain(actions, action_idx),
+			"tooltip": str(extra.get("tooltip", "")),
+			"hide_after": extra.get("hide_after", null),
+			"conditions": extra.get("conditions", []),
+			"event_gate": str(extra.get("event_gate", "")),
+		})
+
+func _reward_report_meta_from_action(act: Dictionary) -> Dictionary:
+	var action: String = str(act.get("action", ""))
+	if action == "give_credits":
+		var amount: int = _extract_credit_amount(act)
+		return {"label": "credits:%d" % amount, "credit_amount": amount, "booster_id": ""}
+	if action == "give_booster_pack":
+		var pack_id: String = _extract_booster_pack_id(act)
+		return {"label": "booster:%s" % pack_id, "credit_amount": 0, "booster_id": pack_id}
+	return {"label": action, "credit_amount": 0, "booster_id": ""}
+
+func _reward_report_reward_text(entry: Dictionary) -> String:
+	var reward: String = str(entry.get("reward", ""))
+	if reward.begins_with("credits:"):
+		return "%s credits" % str(entry.get("credit_amount", 0))
+	if reward.begins_with("booster:"):
+		var pack_id: String = str(entry.get("booster_id", ""))
+		if pack_id.is_empty():
+			return "booster pack (id missing)"
+		return "booster \"%s\"" % pack_id
+	return reward
+
+func _extract_credit_amount(act: Dictionary) -> int:
+	var val_str: String = str(act.get("value", "")).strip_edges()
+	if val_str.is_valid_int():
+		return int(val_str)
+	var key_str: String = str(act.get("key", "")).strip_edges()
+	if key_str.is_valid_int():
+		return int(key_str)
+	return 0
+
+func _extract_booster_pack_id(act: Dictionary) -> String:
+	return str(act.get("value", "")).strip_edges()
+
+func _format_report_action_chain(actions: Array, reward_index: int) -> String:
+	if reward_index <= 0:
+		return "(direct)"
+	var parts: Array[String] = []
+	for i: int in range(reward_index):
+		var act_var: Variant = actions[i]
+		if not act_var is Dictionary:
+			parts.append("?")
+			continue
+		var act: Dictionary = act_var as Dictionary
+		var action: String = str(act.get("action", ""))
+		match action:
+			"play_vn":
+				parts.append("play_vn(%s)" % str(act.get("value", "")))
+			"play_puzzle":
+				parts.append("play_puzzle(%s)" % str(act.get("value", "")))
+			"navigate_to":
+				parts.append("navigate_to(%s)" % str(act.get("value", "")))
+			_:
+				parts.append(action if not action.is_empty() else "?")
+	parts.append("reward")
+	return " → ".join(parts)
+
+func _format_report_conditions(conditions: Array) -> String:
+	if conditions.is_empty():
+		return "(none — always visible if spot shown)"
+	var parts: Array[String] = []
+	for cond_var: Variant in conditions:
+		if not cond_var is Dictionary:
+			continue
+		parts.append(_format_report_condition(cond_var as Dictionary))
+	if parts.is_empty():
+		return "(none — always visible if spot shown)"
+	return "; ".join(parts)
+
+func _format_report_condition(cond: Dictionary) -> String:
+	var ctype: String = str(cond.get("type", ""))
+	var key: String = str(cond.get("key", ""))
+	var value: String = str(cond.get("value", ""))
+	match ctype:
+		"has_item":
+			return "has_item(%s)" % key
+		"not_has_item":
+			return "not_has_item(%s)" % key
+		"var_equals":
+			return "%s == %s" % [key, value]
+		"var_not_equals":
+			return "%s != %s" % [key, value]
+		"var_greater":
+			return "%s > %s" % [key, value]
+		"var_less":
+			return "%s < %s" % [key, value]
+		"at_node":
+			var node_ref: String = value if not value.is_empty() else key
+			return "at_node(%s)" % node_ref
+		_:
+			if ctype.is_empty():
+				return "(invalid condition)"
+			return "%s(key=%s, value=%s)" % [ctype, key, value]
+
+func _save_reward_report_markdown(report: String) -> String:
+	var dir_abs: String = ProjectSettings.globalize_path(REWARD_REPORT_DIR)
+	var err: Error = DirAccess.make_dir_recursive_absolute(dir_abs)
+	if err != OK:
+		push_warning("ExplorationEditor: could not create report dir: %s" % REWARD_REPORT_DIR)
+		return ""
+	var stem: String = _graph_path.get_file().get_basename() if not _graph_path.is_empty() else _graph.graph_id
+	if stem.is_empty():
+		stem = "unsaved_graph"
+	var stamp: String = Time.get_datetime_string_from_system(true, true).replace(":", "-").replace(" ", "_")
+	var file_name: String = "reward_report_%s_%s.md" % [stem, stamp]
+	var file_abs: String = dir_abs.path_join(file_name)
+	var f: FileAccess = FileAccess.open(file_abs, FileAccess.WRITE)
+	if f == null:
+		push_warning("ExplorationEditor: could not write reward report: %s" % file_abs)
+		return ""
+	f.store_string(report)
+	f.close()
+	return file_abs
+
+func _show_reward_report_popup(body: String, saved_path: String) -> void:
+	var win := Window.new()
+	win.title = "Reward Report"
+	win.min_size = Vector2i(640, 480)
+	win.size = Vector2i(760, 560)
+	win.close_requested.connect(win.queue_free)
+	add_child(win)
+
+	var root := VBoxContainer.new()
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	root.offset_left = 10
+	root.offset_right = -10
+	root.offset_top = 10
+	root.offset_bottom = -10
+	root.add_theme_constant_override("separation", 8)
+	win.add_child(root)
+
+	var header := Label.new()
+	header.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if saved_path.is_empty():
+		header.text = "Report copied to clipboard. Could not save markdown file."
+	else:
+		header.text = "Report copied to clipboard.\nSaved: %s" % saved_path
+	header.add_theme_font_size_override("font_size", 13)
+	root.add_child(header)
+
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	root.add_child(scroll)
+
+	var text_edit := TextEdit.new()
+	text_edit.text = body
+	text_edit.editable = false
+	text_edit.wrap_mode = TextEdit.LINE_WRAPPING_BOUNDARY
+	text_edit.custom_minimum_size = Vector2(700, 420)
+	text_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(text_edit)
+
+	var btn_row := HBoxContainer.new()
+	btn_row.add_theme_constant_override("separation", 8)
+	root.add_child(btn_row)
+
+	var spacer := Control.new()
+	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn_row.add_child(spacer)
+
+	var copy_btn := Button.new()
+	copy_btn.text = "Copy Again"
+	copy_btn.pressed.connect(func() -> void:
+		DisplayServer.clipboard_set(body)
+		_set_status("Reward report copied to clipboard.")
+	)
+	btn_row.add_child(copy_btn)
+
+	var close_btn := Button.new()
+	close_btn.text = "Close"
+	close_btn.pressed.connect(win.queue_free)
+	btn_row.add_child(close_btn)
+
+	win.popup_centered()
 
 func _on_test_play_pressed() -> void:
 	if _graph == null:

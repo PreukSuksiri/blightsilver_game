@@ -27,6 +27,7 @@ var exploration_flags: Dictionary = {}       # flags written by ExplorationManag
 var exploration_session: Dictionary = {}    # mid-session snapshot; cleared on end_session()
 var exploration_auto_save: bool = true      # when false, only Save and Exit writes exploration_session
 var campaign_vn_checkpoints: Dictionary = {}  # vn_scene path → filtered beat index to resume
+var onboarding_complete: bool = false        # true after first-run setup (or legacy save migration)
 
 func _ready() -> void:
 	_load_demo_config()
@@ -202,6 +203,7 @@ func save_data() -> void:
 		"exploration_session":     exploration_session,
 		"exploration_auto_save":   exploration_auto_save,
 		"campaign_vn_checkpoints": campaign_vn_checkpoints,
+		"onboarding_complete":     onboarding_complete,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -285,6 +287,8 @@ func load_data() -> void:
 	var vc: Variant = parsed.get("campaign_vn_checkpoints", {})
 	if vc is Dictionary:
 		campaign_vn_checkpoints = vc as Dictionary
+
+	onboarding_complete = bool(parsed.get("onboarding_complete", false))
 
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery VN beat checkpoints (pre-exploration progress)

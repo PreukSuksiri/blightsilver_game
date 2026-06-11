@@ -58,11 +58,27 @@ func remove_credits(amount: int) -> void:
 
 ## Add one copy of a card to the collection, tagged with the pack it came from.
 func add_card(card_name: String, card_type: String, from_pack: String) -> void:
+	_append_card_copy(card_name, card_type, from_pack)
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+
+## Batch-add one copy of every card in [deck] without writing save (caller saves once).
+func grant_cards_from_deck(deck: DeckData, source: String = "Starter Deck") -> void:
+	if deck == null:
+		return
+	for card_name: Variant in deck.characters:
+		_append_card_copy(str(card_name), "character", source)
+	for card_name: Variant in deck.traps:
+		_append_card_copy(str(card_name), "trap", source)
+	for card_name: Variant in deck.techs:
+		_append_card_copy(str(card_name), "tech", source)
+
+func _append_card_copy(card_name: String, card_type: String, from_pack: String) -> void:
+	if card_name.is_empty():
+		return
 	if not owned.has(card_name):
 		owned[card_name] = {"type": card_type, "copies": []}
 	owned[card_name]["copies"].append(from_pack)
-	emit_signal("collection_changed")
-	SaveManager.save_data()
 
 func add_music_disc(count: int = 1) -> void:
 	music_discs += count

@@ -1987,6 +1987,8 @@ func _show_next_obtained() -> void:
 		_show_next_obtained()
 		return
 
+	SFXManager.play(SFXManager.SFX_EXPLORATION_ITEM)
+
 	_obtained_dismissing = false
 	var vp_size: Vector2 = get_viewport_rect().size
 
@@ -2106,6 +2108,7 @@ func _dismiss_obtained_overlay() -> void:
 
 
 func _show_mailbox_reward_overlay(info: Dictionary) -> void:
+	SFXManager.play(SFXManager.SFX_EXPLORATION_REWARD)
 	_obtained_dismissing = false
 	var vp: Vector2 = get_viewport_rect().size
 
