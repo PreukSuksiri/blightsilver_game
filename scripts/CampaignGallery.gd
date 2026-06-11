@@ -526,10 +526,7 @@ func _show_restart_exploration_warning_dialog(
 	vbox.add_child(title)
 
 	var body := Label.new()
-	body.text = (
-		"Restarting %s will erase all saved exploration progress\n"
-		% chapter_label
-		+ "for this chapter.")
+	body.text = "Restarting %s will erase all saved exploration progress for this chapter." % chapter_label
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_theme_font_override("font", CHIVO_FONT)
@@ -699,10 +696,7 @@ func _show_restart_warning_dialog(
 	vbox.add_child(title)
 
 	var body := Label.new()
-	body.text = (
-		"Restarting %s will erase all saved dungeon progress,\n"
-		% chapter_label
-		+ "wheel modifiers, and map position for this chapter.")
+	body.text = "Restarting %s will erase all saved dungeon progress, wheel modifiers, and map position for this chapter." % chapter_label
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	body.add_theme_font_override("font", CHIVO_FONT)

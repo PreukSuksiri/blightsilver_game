@@ -10,9 +10,236 @@ Open the project in Godot 4.x and press **Run** (F5), or launch the exported bin
 
 ---
 
+## Building a release
+
+This project’s export presets live in `export_presets.cfg`. Configure paths and platform options in the Godot editor, then export from the GUI or CLI.
+
+Create **one preset per target** (recommended names below). On every preset:
+
+- **Runnable** — enabled
+- **Features → Custom features** — leave **empty** for release (see [Release vs dev builds](#release-vs-dev-builds))
+- **Resources → Export Mode** — **Export all resources** (unless you use custom filters)
+- **Encryption → Encrypt PCK** — enabled in this project (see [PCK encryption key](#pck-encryption-key))
+
+### One-time setup (Godot Editor)
+
+1. Open the project in **Godot 4.6** (matches `project.godot`).
+2. **Editor → Manage Export Templates…** — download templates for your Godot version if prompted.
+3. **Project → Export…** → **Add…** — create a preset for each platform you ship (see [Export by target](#export-by-target)).
+4. Click **Export Project** once per preset to verify. Godot writes `export_presets.cfg` into the project root.
+
+> **Tip:** Duplicate any preset for internal builds — e.g. `Dev macOS` — and add custom feature `admin` so admin tools stay available in exported dev builds.
+
+### PCK encryption key
+
+Release exports use **Encrypt PCK** (`encrypt_pck=true` in `export_presets.cfg`). Godot needs a secret **encryption key** when packing the `.pck` — there is no online “key portal”; you generate and store it yourself.
+
+**Generate a key** (256-bit hex — 64 characters):
+
+```bash
+openssl rand -hex 32
+```
+
+**Set in Godot:** **Project → Export…** → select a preset → **Encryption** section → paste the key into **Encryption Key**. Use the **same key** on every preset that encrypts the PCK (Windows, macOS, Linux, Web).
+
+**CLI / CI** — set the environment variable before export (overrides the editor field):
+
+```bash
+export GODOT_SCRIPT_ENCRYPTION_KEY="your_64_character_hex_key_here"
+godot --headless --export-release "Windows" "build/windows/Blightsilver.exe"
+```
+
+| Do | Don’t |
+|----|--------|
+| Store the key in a password manager or CI secrets | Commit the key to git |
+| Reuse the same key for all builds in a release line | Change it casually between patches (old builds won’t match) |
+| Set the env var in automated export scripts | Share the key publicly |
+
+The key is **not** stored in the repo. Each developer or CI job that exports must have access to the shared secret.
+
+### Export by target
+
+Suggested preset names, export paths, and CLI commands. Preset **Name** must match exactly in **Project → Export** and in `--export-release "Name"`.
+
+#### Windows
+
+| | |
+|---|---|
+| **Godot preset** | Windows Desktop |
+| **Suggested preset name** | `Windows` |
+| **Export path** | `build/windows/Blightsilver.exe` |
+| **Output** | `.exe` plus `.pck` (and any bundled DLLs) in `build/windows/` |
+
+**GUI:** Project → Export → `Windows` → Export Project.
+
+**CLI:**
+
+```bash
+godot --headless --export-release "Windows" "build/windows/Blightsilver.exe"
+```
+
+**Ship:** Zip the entire `build/windows/` folder for itch.io (**Uploads → Windows** or as a downloadable zip). Optional: code-sign the `.exe` to reduce SmartScreen warnings.
+
+---
+
+#### macOS
+
+| | |
+|---|---|
+| **Godot preset** | macOS |
+| **Suggested preset name** | `macOS` |
+| **Export path** | `build/macos/Blightsilver.app` |
+| **Output** | `Blightsilver.app` bundle |
+
+**GUI:** Project → Export → `macOS` → Export Project.
+
+**CLI:**
+
+```bash
+godot --headless --export-release "macOS" "build/macos/Blightsilver.app"
+```
+
+On Apple Silicon, set **Architecture** in the macOS export options (`arm64`, `x86_64`, or universal) to match who you ship to.
+
+**Texture compression (arm64 / universal):** macOS exports for **arm64** or **universal** require **Import ETC2 ASTC**. This project already sets it in `project.godot`:
+
+```ini
+rendering/textures/vram_compression/import_etc2_astc=true
+```
+
+**Finding it in the editor:** **Project → Project Settings → General** — enable **Advanced Settings** (toggle at the top of the window). Then search for `etc2` or browse **Rendering → Textures → VRAM Compression → Import ETC2 ASTC**.
+
+**Easier:** **Project → Export… → macOS** — if import is out of date, Godot shows a warning with a **Fix Import** button. Use that, wait for re-import to finish, then export again.
+
+If textures were imported before this flag existed, reopen the project or run **Fix Import** so `.import` files pick up ETC2/ASTC variants.
+
+**Ship:** Zip `Blightsilver.app` for itch.io (**Uploads → macOS**). For distribution outside your Mac, configure **codesign** and **notarization** in the macOS export options.
+
+---
+
+#### Linux
+
+| | |
+|---|---|
+| **Godot preset** | Linux / Linux/X11 |
+| **Suggested preset name** | `Linux` |
+| **Export path** | `build/linux/Blightsilver.x86_64` |
+| **Output** | Binary plus `.pck` in `build/linux/` |
+
+**GUI:** Project → Export → `Linux` → Export Project.
+
+**CLI:**
+
+```bash
+godot --headless --export-release "Linux" "build/linux/Blightsilver.x86_64"
+chmod +x build/linux/Blightsilver.x86_64
+```
+
+**Ship:** Zip `build/linux/` for itch.io (**Uploads → Linux**). Test on a clean machine; install missing shared libraries if the export options require them.
+
+---
+
+#### Itch.io (Web / HTML5)
+
+| | |
+|---|---|
+| **Godot preset** | Web |
+| **Suggested preset name** | `Web` |
+| **Export path** | `build/web/index.html` |
+| **Output** | `index.html`, `.wasm`, `.pck`, and supporting files in `build/web/` |
+
+This project uses the **GL Compatibility** renderer (`project.godot`), which is appropriate for browser export.
+
+**GUI:** Project → Export → `Web` → Export Project.
+
+**CLI:**
+
+```bash
+godot --headless --export-release "Web" "build/web/index.html"
+```
+
+**Upload to itch.io:**
+
+1. Create a new project (or edit an existing one) on [itch.io](https://itch.io).
+2. **Kind of project** — **HTML**.
+3. Upload the **contents** of `build/web/` (the folder with `index.html`, not the repo root).
+4. Check **This file will be played in the browser**.
+5. Set **Viewport dimensions** to **1600 × 900** (matches `project.godot`) or enable **Fullscreen** if you prefer.
+6. Save and use **Preview** before publishing.
+
+> **Note:** If audio or threading misbehaves in the browser, review Godot’s Web export options (e.g. thread support) in **Project → Export → Web**.
+
+---
+
+### Export a release (GUI, any target)
+
+1. **Project → Export…**
+2. Select the **release** preset for your target (no `admin` custom feature).
+3. Click **Export Project**.
+4. Run or upload the files from the matching `build/…` folder above.
+
+### Export a release (CLI, any target)
+
+From the project root, after `export_presets.cfg` exists:
+
+```bash
+cd /path/to/blightsilver_game
+
+# Pick one — preset name must match Project → Export
+godot --headless --export-release "Windows" "build/windows/Blightsilver.exe"
+godot --headless --export-release "macOS"   "build/macos/Blightsilver.app"
+godot --headless --export-release "Linux"   "build/linux/Blightsilver.x86_64"
+godot --headless --export-release "Web"     "build/web/index.html"
+```
+
+Use **`--export-release`**, not `--export-debug`. Preset names are **case-sensitive**.
+
+If `godot` is not on `PATH` (macOS example):
+
+```bash
+/Applications/Godot.app/Contents/MacOS/Godot --headless --export-release "macOS" "build/macos/Blightsilver.app"
+```
+
+### Release vs dev builds
+
+Admin and debug tools are gated by `autoload/BuildConfig.gd`:
+
+| Build | Custom feature `admin` | Admin console (Ctrl+Shift+A) | Exploration F3 / DBG |
+|-------|------------------------|------------------------------|----------------------|
+| **Release export** | omitted | disabled | hidden |
+| **Dev export** | include `admin` | enabled | enabled |
+| **Godot editor (F5)** | n/a | enabled (`OS.has_feature("editor")`) | enabled |
+
+In **Project → Export → Features → Custom features**, type `admin` only on dev/internal presets. Release presets should leave Custom features empty.
+
+### Pre-ship checklist
+
+| Step | Action |
+|------|--------|
+| Version | Bump `config/version` in `project.godot` if needed |
+| Preset | Each release preset has **no** `admin` custom feature |
+| Encryption | **Encrypt PCK** on; same **encryption key** on all presets (or `GODOT_SCRIPT_ENCRYPTION_KEY` in CI) |
+| Test | Run the **exported** build — not F5 in the editor |
+| Windows | Zip `build/windows/`; optional Authenticode signing |
+| macOS | Zip `.app`; codesign + notarize for builds outside your Mac |
+| Linux | `chmod +x` the binary; test on a clean Linux install |
+| itch.io Web | Upload all of `build/web/`; set viewport **1600×900**; preview in browser |
+
+### Verify a release build
+
+In the exported game (not the editor):
+
+- **Ctrl+Shift+A** should do nothing.
+- Admin console should not open.
+- Exploration **F3** and the **DBG** button should be absent.
+
+---
+
 ## Admin Console
 
-Most authoring tools are accessed through the in-game **Admin Console** (the mailbox/envelope icon). Type `help` for a full command list. Key commands:
+Most authoring tools are accessed through the in-game **Admin Console** (opened with **Ctrl+Shift+A** in dev builds and the editor). Type `help` for a full command list. Admin tools are **disabled in release exports** — see [Building a release](#building-a-release).
+
+Key commands:
 
 | Command | Opens |
 |---------|-------|

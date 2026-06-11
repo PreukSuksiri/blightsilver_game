@@ -97,6 +97,8 @@ class CardInstance:
 	var temp_atk_bonus: int = 0
 	var temp_def_bonus: int = 0
 	var carry_def_bonus: int = 0   # DEF bonus that survives end-of-turn clear; wiped at start of player's own next turn
+	var atk_def_swapped: bool = false  # Cursed Reflection: effective ATK/DEF swapped until defender's turn ends
+	var atk_def_swap_clear_on_player_end: int = -1
 	var force_shielded: bool = false
 	var halved: bool = false
 	var mutagen_attacked: bool = false # Mutagen immediate attack used
@@ -122,6 +124,16 @@ class CardInstance:
 		"great_cosmic_tragedy","great_bio_tragedy","great_anima_tragedy"]
 
 	func get_effective_atk() -> int:
+		if atk_def_swapped:
+			return _calc_effective_def()
+		return _calc_effective_atk()
+
+	func get_effective_def() -> int:
+		if atk_def_swapped:
+			return _calc_effective_atk()
+		return _calc_effective_def()
+
+	func _calc_effective_atk() -> int:
 		var base: int = max(0, current_atk + perm_atk_bonus + field_aura_atk_bonus + temp_atk_bonus - atk_debuff)
 		if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 			var mods: Array = GameState.active_dungeon_modifiers
@@ -144,7 +156,7 @@ class CardInstance:
 				if _is_c3   and "corrupted_nobles" in mods:      base = int(base * 0.8)
 		return base
 
-	func get_effective_def() -> int:
+	func _calc_effective_def() -> int:
 		var base: int = max(0, current_def + perm_def_bonus + temp_def_bonus + carry_def_bonus)
 		if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 			var mods: Array = GameState.active_dungeon_modifiers
@@ -172,6 +184,14 @@ class CardInstance:
 		temp_atk_bonus = 0
 		temp_def_bonus = 0
 		atk_debuff = 0
+
+	func apply_atk_def_swap_until_player_turn_end(clear_when_player_ends: int) -> void:
+		atk_def_swapped = true
+		atk_def_swap_clear_on_player_end = clear_when_player_ends
+
+	func clear_atk_def_swap() -> void:
+		atk_def_swapped = false
+		atk_def_swap_clear_on_player_end = -1
 
 	func halve_stats() -> void:
 		if not halved:

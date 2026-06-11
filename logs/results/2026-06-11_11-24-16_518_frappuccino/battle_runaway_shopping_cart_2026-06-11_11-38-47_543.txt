@@ -1,0 +1,284 @@
+=== Battle of Runaway Shopping Cart ===
+Battle started: 2026-06-11 11:38:47.543
+Game Session of Frappuccino (started 2026-06-11 11:24:16.518)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.744] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=8000 ---
+[00:13.115] Crystals: P1 8000 → 7950 (-50)  [skip tax]
+[00:13.116] MSG: Player 2 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:14.499] Turn ended  P1  |  Crystals P0=5000 P1=7950
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=7950 ---
+[00:19.631] Revealed: P0 (1,2) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:19.674] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:19.674] Dice rolled: 2
+[00:24.240] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:25.638] Attack P0(1,2)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(1,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}  Dice=2  ATK=25 vs DEF=50  → LOSE
+[00:25.638] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[00:25.638] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[00:25.638] Anim: 3B  △ P0(1,2)
+[00:25.638] Card destroyed  P0 (1,2) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:33.306] Revealed: P0 (3,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:33.306] Revealed: P1 (3,0) "Acid Trap Hole" {cost 0}
+[00:33.307] Dice rolled: 5
+[00:33.602] MSG: Trap triggered: Acid Trap Hole!
+[00:36.069] Coin flip: Heads, Heads
+[00:38.827] MSG: Acid Trap Hole: Heads, Heads.
+[00:38.827] Crystals: P0 4700 → 4600 (-100)  [trap]
+[00:40.218] MSG: Acid Trap Hole: 2 head(s) — Player 1 loses 100 Crystals!
+[00:40.224] Attack P0(3,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(3,0)"Acid Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[00:40.224] Reckoning overlay: P0 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[00:40.224] Anim: 3D  (attacker survives)
+[00:42.816] Turn ended  P0  |  Crystals P0=4600 P1=7950
+
+--- Turn 3  |  Player 1  |  Crystals P0=4600 P1=7950 ---
+[00:43.398] Mode selected P1: TECH
+[00:43.698] Crystals: P1 7950 → 6950 (-1000)  [tech cost]
+[00:45.083] Tech played  P1: "Accident"
+[00:46.623] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:47.025] Card destroyed  P0 (3,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:47.027] Tech resolved  P1
+[00:49.931] Crystals: P1 6950 → 6850 (-100)  [skip tax]
+[00:49.932] MSG: Player 2 skips without attacking — 100◆ tax (skip #2 this duel)
+[00:51.316] Turn ended  P1  |  Crystals P0=4600 P1=6850
+
+--- Turn 4  |  Player 0  |  Crystals P0=4600 P1=6850 ---
+[01:49.285] Crystals: P0 4600 → 4000 (-600)  [tech cost]
+[01:50.678] Tech played  P0: "Radar"
+[01:52.219] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:52.532] Revealed: P1 (2,3) "Mana Drain" {cost 200}
+[01:53.381] Revealed: P1 (4,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:54.538] Revealed: P1 (0,4) "Explosive Barrels" {cost 0}
+[01:54.743] Tech resolved  P0
+[02:06.059] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:06.060] Revealed: P1 (1,0) "Decoy Puppet" {cost 100}
+[02:06.060] Dice rolled: 1
+[02:06.365] MSG: Trap triggered: Decoy Puppet!
+[02:10.478] Crystals: P1 6850 → 6750 (-100)  [trap cost]
+[02:11.868] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[02:11.875] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(1,0)"Decoy Puppet" {cost 100}  Dice=1  → Unit vs Trap
+[02:11.875] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[02:11.875] Anim: 3D  (attacker survives)
+[02:11.883] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[02:14.918] Revealed: P1 (0,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[02:14.919] MSG: Revealed: Claw Mutant
+[02:30.758] Turn ended  P0  |  Crystals P0=4000 P1=6750
+
+--- Turn 5  |  Player 1  |  Crystals P0=4000 P1=6750 ---
+[02:31.353] Mode selected P1: TECH
+[02:31.661] Crystals: P1 6750 → 5750 (-1000)  [tech cost]
+[02:33.046] Tech played  P1: "Illegal Steroid"
+[02:34.598] Target prompt: "Choose 1 face-up character to boost."  filter=own_faceup_character
+[02:35.006] MSG: Illegal Steroid: Pit Lord gains +30 ATK this attack.
+[02:35.011] Tech resolved  P1
+[02:35.923] Mode selected P1: ATTACK
+[02:35.928] MSG: Player 2: tap a character to attack.
+[02:37.653] Dice rolled: 5
+[02:37.665] MSG: Vampire Duchess wins!
+[02:40.407] Crystals: P0 4000 → 3600 (-400)  [battle]
+[02:41.239] MSG: [DEBUG] Bot Player timed out — ending turn.
+[02:41.804] Attack P1(1,2)"Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=5  ATK=50 vs DEF=25  → WIN
+[02:41.804] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[02:41.804] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[02:41.804] Anim: 3A  △ P0(2,3)
+[02:41.804] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:42.306] Mode selected P1: ATTACK
+[02:42.309] MSG: Player 2: tap a character to attack.
+[02:44.074] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[02:44.074] Dice rolled: 2
+[02:44.340] MSG: Trap triggered: Trap Hole!
+[02:47.029] Coin flip: Tails, Tails, Tails
+[02:47.614] MSG: [DEBUG] Bot Player timed out — ending turn.
+[02:49.764] MSG: Trap Hole: Tails, Tails, Tails.
+[02:49.764] MSG: Trap Hole: No heads — no crystal loss.
+[02:49.767] Attack P1(0,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(0,0)"Trap Hole" {cost 0}  Dice=2  → Unit vs Trap
+[02:49.767] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=15 ATK pill=15 DEF pill=10 mod=+ATK 0 (15+0=15)
+[02:49.767] Anim: 3D  (attacker survives)
+[02:50.272] Turn ended  P1  |  Crystals P0=3600 P1=5750
+
+--- Turn 6  |  Player 0  |  Crystals P0=3600 P1=5750 ---
+[09:29.992] Revealed: P0 (3,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[09:29.993] Dice rolled: 2
+[09:30.008] MSG: Grand Fort Mauler wins!
+[09:32.786] Crystals: P1 5750 → 4950 (-800)  [battle]
+[09:34.186] Attack P0(3,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(1,2)"Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved}  Dice=2  ATK=40 vs DEF=25  → WIN
+[09:34.186] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=40 ATK pill=40 DEF pill=10 mod=+ATK 0 (40+0=40)
+[09:34.186] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[09:34.186] Anim: 3A  △ P1(1,2)
+[09:34.186] Card destroyed  P1 (1,2) "Vampire Duchess" {Unit ATK25 DEF25 | cost 800 | affinity Chaos | base 25/25 | halved}
+[09:39.351] Revealed: P0 (1,4) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[09:39.351] Dice rolled: 4
+[09:42.426] Crystals: P0 3600 → 3150 (-450)  [battle]
+[09:43.827] Attack P0(1,4)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(4,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}  Dice=4  ATK=35 vs DEF=100  → LOSE
+[09:43.827] Reckoning overlay: P0 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=35 ATK pill=35 DEF pill=40 mod=+ATK 0 (35+0=35)
+[09:43.827] Reckoning overlay: P1 "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} badge=100 ATK pill=120 DEF pill=100 mod=+DEF 0 (100+0=100)
+[09:43.828] Anim: 3B  △ P0(1,4)
+[09:43.828] Card destroyed  P0 (1,4) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[11:07.697] Turn ended  P0  |  Crystals P0=3150 P1=4950
+
+--- Turn 7  |  Player 1  |  Crystals P0=3150 P1=4950 ---
+[11:08.284] Mode selected P1: TECH
+[11:08.600] Tech played  P1: "Release Mutagen"
+[11:10.161] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[11:10.572] Tech resolved  P1
+[11:11.486] Mode selected P1: ATTACK
+[11:11.490] MSG: Player 2: tap a character to attack.
+[11:13.211] Dice rolled: 1
+[11:13.215] MSG: Claw Mutant wins!
+[11:16.803] MSG: [DEBUG] Bot Player timed out — ending turn.
+[11:18.411] Crystals: P0 3150 → 2800 (-350)  [battle]
+[11:19.806] Attack P1(0,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:mutagen} → P0(3,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=1  ATK=25 vs DEF=10  → WIN
+[11:19.806] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:mutagen} badge=25 ATK pill=15 DEF pill=10 mod=+ATK 10 (15+10=25)
+[11:19.806] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=10 ATK pill=40 DEF pill=10 mod=+DEF 0 (10+0=10)
+[11:19.806] Anim: 3A  △ P0(3,2)
+[11:19.806] Card destroyed  P0 (3,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[11:20.309] Mode selected P1: ATTACK
+[11:20.315] MSG: Player 2: tap a character to attack.
+[11:22.037] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[11:22.037] Dice rolled: 2
+[11:22.348] MSG: Trap triggered: Decoy Puppet!
+[11:25.627] MSG: [DEBUG] Bot Player timed out — ending turn.
+[11:26.460] Crystals: P0 2800 → 2700 (-100)  [trap cost]
+[11:27.853] MSG: Decoy Puppet: Foe cannot attack with units costing 400 or less this turn!
+[11:27.858] Attack P1(4,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → P0(4,4)"Decoy Puppet" {cost 100}  Dice=2  → Unit vs Trap
+[11:27.858] Reckoning overlay: P1 "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} badge=120 ATK pill=120 DEF pill=100 mod=+ATK 0 (120+0=120)
+[11:27.858] Anim: 3D  (attacker survives)
+[11:28.360] Turn ended  P1  |  Crystals P0=2700 P1=4950
+
+--- Turn 8  |  Player 0  |  Crystals P0=2700 P1=4950 ---
+[18:10.538] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[18:10.538] Dice rolled: 3
+[18:10.547] MSG: Choir Lady Abigail wins!
+[18:13.856] Crystals: P1 4950 → 4770 (-180)  [battle]
+[18:15.252] Attack P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(0,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:mutagen}  Dice=3  ATK=25 vs DEF=10  → WIN
+[18:15.252] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[18:15.252] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:mutagen} badge=10 ATK pill=15 DEF pill=10 mod=+DEF 0 (10+0=10)
+[18:15.252] Anim: 3A  △ P1(0,0)
+[18:15.252] Card destroyed  P1 (0,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | flags:mutagen}
+[18:20.246] Revealed: P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[18:20.246] Revealed: P1 (1,3) "Acid Trap Hole" {cost 0}
+[18:20.247] Dice rolled: 2
+[18:20.547] MSG: Trap triggered: Acid Trap Hole!
+[18:23.117] Coin flip: Heads, Heads
+[18:25.883] MSG: Acid Trap Hole: Heads, Heads.
+[18:25.884] Crystals: P0 2700 → 2600 (-100)  [trap]
+[18:27.279] MSG: Acid Trap Hole: 2 head(s) — Player 1 loses 100 Crystals!
+[18:27.285] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(1,3)"Acid Trap Hole" {cost 0}  Dice=2  → Unit vs Trap
+[18:27.285] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[18:27.285] Anim: 3D  (attacker survives)
+[18:27.842] Turn ended  P0  |  Crystals P0=2600 P1=4770
+
+--- Turn 9  |  Player 1  |  Crystals P0=2600 P1=4770 ---
+[18:29.952] Crystals: P1 4770 → 3270 (-1500)  [union]
+[18:29.984] Revealed: P1 (3,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[18:29.984] Union summoned P1: "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} from "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5 | face-down}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[18:29.984] MSG: Player 2 summoned [Lord of Terror] using: "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5 | face-down}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[18:33.404] Mode selected P1: ATTACK
+[18:33.408] MSG: Player 2: tap a character to attack.
+[18:35.126] Dice rolled: 1
+[18:35.170] MSG: Lord of Terror wins!
+[18:38.722] MSG: [DEBUG] Bot Player timed out — ending turn.
+[18:38.762] Crystals: P0 2600 → 2050 (-550)  [battle]
+[18:40.161] Attack P1(3,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}  Dice=1  ATK=150 vs DEF=50  → WIN
+[18:40.161] Reckoning overlay: P1 "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[18:40.161] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=50 ATK pill=45 DEF pill=50 mod=+DEF 0 (50+0=50)
+[18:40.161] Anim: 3A  △ P0(1,1)
+[18:40.161] Card destroyed  P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[18:42.676] Turn ended  P1  |  Crystals P0=2050 P1=3270
+
+--- Turn 10  |  Player 0  |  Crystals P0=2050 P1=3270 ---
+[18:48.536] Crystals: P0 2050 → 1050 (-1000)  [tech cost]
+[18:49.923] Tech played  P0: "Accident"
+[18:51.482] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[18:51.746] Card destroyed  P1 (3,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[18:51.849] Tech resolved  P0
+[19:12.119] Dice rolled: 2
+[19:12.149] MSG: Nothing happens — Dead End.
+[19:13.770] Attack P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(0,1)(empty)  Dice=2  → DEAD_END
+[19:13.770] Anim: 3F  (blank slot)
+[19:15.263] Turn ended  P0  |  Crystals P0=1050 P1=3270
+
+--- Turn 11  |  Player 1  |  Crystals P0=1050 P1=3270 ---
+[19:15.854] Mode selected P1: ATTACK
+[19:15.855] MSG: Player 2: tap a character to attack.
+[19:17.569] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[19:17.569] Dice rolled: 3
+[19:17.573] MSG: Vampire Servant wins!
+[19:21.103] Crystals: P0 1050 → 800 (-250)  [battle]
+[19:21.158] MSG: [DEBUG] Bot Player timed out — ending turn.
+[19:22.498] Attack P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} → P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=3  ATK=20 vs DEF=15  → WIN
+[19:22.498] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[19:22.498] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[19:22.498] Anim: 3A  △ P0(2,4)
+[19:22.498] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[19:22.994] Mode selected P1: ATTACK
+[19:22.996] MSG: Player 2: tap a character to attack.
+[19:24.703] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[19:24.703] Revealed: P0 (4,0) "Acid Trap Hole" {cost 0}
+[19:24.704] Dice rolled: 2
+[19:25.004] MSG: Trap triggered: Acid Trap Hole!
+[19:28.202] Coin flip: Tails, Heads
+[19:28.295] MSG: [DEBUG] Bot Player timed out — ending turn.
+[19:30.964] MSG: Acid Trap Hole: Tails, Heads.
+[19:30.965] Crystals: P1 3270 → 3220 (-50)  [trap]
+[19:32.353] MSG: Acid Trap Hole: 1 head(s) — Player 2 loses 50 Crystals!
+[19:32.355] Attack P1(1,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P0(4,0)"Acid Trap Hole" {cost 0}  Dice=2  → Unit vs Trap
+[19:32.355] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} badge=60 ATK pill=60 DEF pill=40 mod=+ATK 0 (60+0=60)
+[19:32.355] Anim: 3D  (attacker survives)
+[19:32.859] Turn ended  P1  |  Crystals P0=800 P1=3220
+
+--- Turn 12  |  Player 0  |  Crystals P0=800 P1=3220 ---
+[19:49.318] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[19:49.319] Dice rolled: 2
+[19:49.326] MSG: Silver Spearman wins!
+[19:53.446] Crystals: P1 3220 → 2420 (-800)  [battle]
+[19:54.840] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=2  ATK=30 vs DEF=20  → WIN
+[19:54.840] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=30 ATK pill=25 DEF pill=20 mod=+ATK 5 (25+5=30)
+[19:54.840] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[19:54.840] Anim: 3A  △ P1(0,2)
+[19:54.840] Card destroyed  P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[20:10.215] Turn ended  P0  |  Crystals P0=800 P1=2420
+
+--- Turn 13  |  Player 1  |  Crystals P0=800 P1=2420 ---
+[20:10.809] Mode selected P1: ATTACK
+[20:10.814] MSG: Player 2: tap a character to attack.
+[20:12.533] Dice rolled: 3
+[20:12.537] MSG: Leech Man wins!
+[20:15.669] Crystals: P0 800 → 550 (-250)  [battle]
+[20:16.124] MSG: [DEBUG] Bot Player timed out — ending turn.
+[20:17.064] Attack P1(1,1)"Leech Man" {Unit ATK60 DEF50 | cost 880 | affinity Bio | buff +permDEF10} → P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=3  ATK=60 vs DEF=20  → WIN
+[20:17.064] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF50 | cost 880 | affinity Bio | buff +permDEF10} badge=60 ATK pill=60 DEF pill=50 mod=+ATK 0 (60+0=60)
+[20:17.064] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[20:17.064] Anim: 3A  △ P0(1,3)
+[20:17.064] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[20:19.579] Turn ended  P1  |  Crystals P0=550 P1=2420
+
+--- Turn 14  |  Player 0  |  Crystals P0=550 P1=2420 ---
+[20:43.491] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[20:43.515] Revealed: P1 (2,0) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[20:43.515] Dice rolled: 1
+[20:47.263] Crystals: P0 550 → 250 (-300)  [battle]
+[20:48.663] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(2,0)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}  Dice=1  ATK=25 vs DEF=30  → LOSE
+[20:48.663] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[20:48.663] Reckoning overlay: P1 "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} badge=30 ATK pill=10 DEF pill=30 mod=+DEF 0 (30+0=30)
+[20:48.663] Anim: 3B  △ P0(0,2)
+[20:48.663] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[20:49.625] Turn ended  P0  |  Crystals P0=250 P1=2420
+
+--- Turn 15  |  Player 1  |  Crystals P0=250 P1=2420 ---
+[20:50.222] Mode selected P1: ATTACK
+[20:50.224] MSG: Player 2: tap a character to attack.
+[20:51.972] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[20:51.973] Dice rolled: 4
+[20:52.257] MSG: Trap triggered: Hard Scale!
+[20:55.535] MSG: [DEBUG] Bot Player timed out — ending turn.
+[20:56.366] Crystals: P0 250 → 0 (-250)  [trap cost]
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 0  P1: 2420  |  Turns: 15

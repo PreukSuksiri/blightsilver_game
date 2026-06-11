@@ -1,0 +1,205 @@
+=== Battle of Reply All Disaster ===
+Battle started: 2026-06-11 09:58:39.370
+Game Session of Raspberry Iced Tea (started 2026-06-11 09:55:09.740)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.707] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:10.124] Mode selected P1: TECH
+[00:10.424] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:11.809] Tech played  P1: "Radar"
+[00:13.359] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:13.832] Revealed: P0 (3,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:14.675] Revealed: P0 (3,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:14.678] Tech resolved  P1
+[00:15.538] Mode selected P1: ATTACK
+[00:15.542] MSG: Player 2: tap a character to attack.
+[00:17.242] Revealed: P1 (4,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[00:17.243] Dice rolled: 3
+[00:17.252] MSG: Both cards are destroyed!
+[00:20.829] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:21.645] Crystals: P1 4400 → 4050 (-350)  [battle]
+[00:23.037] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:24.425] Attack P1(4,3)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(3,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=3  ATK=35 vs DEF=35  → TIE
+[00:24.425] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} badge=35 ATK pill=35 DEF pill=30 mod=+ATK 0 (35+0=35)
+[00:24.425] Reckoning overlay: P0 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[00:24.425] Anim: 3C  △ P1(4,3) + △ P0(3,0)
+[00:24.425] Card destroyed  P1 (4,3) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[00:24.425] Card destroyed  P0 (3,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:24.921] Mode selected P1: ATTACK
+[00:24.924] MSG: Player 2: tap a character to attack.
+[00:26.629] Revealed: P1 (3,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:26.629] Dice rolled: 4
+[00:26.635] MSG: Both cards are destroyed!
+[00:30.220] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:31.037] Crystals: P1 4050 → 3250 (-800)  [battle]
+[00:32.429] Crystals: P0 4600 → 4350 (-250)  [battle]
+[00:33.812] Attack P1(3,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(3,1)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}  Dice=4  ATK=20 vs DEF=20  → TIE
+[00:33.812] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} badge=20 ATK pill=20 DEF pill=85 mod=+ATK 0 (20+0=20)
+[00:33.812] Reckoning overlay: P0 "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:33.812] Anim: 3C  △ P1(3,1) + △ P0(3,1)
+[00:33.812] Card destroyed  P1 (3,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[00:33.812] Card destroyed  P0 (3,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:34.313] Turn ended  P1  |  Crystals P0=4350 P1=3250
+
+--- Turn 2  |  Player 0  |  Crystals P0=4350 P1=3250 ---
+[00:37.752] Crystals: P0 4350 → 3750 (-600)  [tech cost]
+[00:39.146] Tech played  P0: "Radar"
+[00:40.682] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:40.990] Revealed: P1 (3,0) "Hypnosis" {cost 800}
+[00:41.720] Revealed: P1 (4,1) "Red Card" {cost 0}
+[00:44.471] Tech resolved  P0
+[00:54.248] Revealed: P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:54.249] Revealed: P1 (0,0) "Hypnosis" {cost 800}
+[00:54.249] Dice rolled: 4
+[00:54.553] MSG: Trap triggered: Hypnosis!
+[00:57.425] Crystals: P1 3250 → 2450 (-800)  [trap cost]
+[00:58.815] MSG: Hypnosis: Sonic Seraph cannot attack until end of next turn.
+[00:58.820] Trap: "Hypnosis" triggered  P0(1,1)→P1(0,0)
+[01:01.271] Turn ended  P0  |  Crystals P0=3750 P1=2450
+
+--- Turn 3  |  Player 1  |  Crystals P0=3750 P1=2450 ---
+[01:01.867] Mode selected P1: ATTACK
+[01:01.871] MSG: Player 2: tap a character to attack.
+[01:03.592] Revealed: P1 (2,0) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[01:03.592] Dice rolled: 4
+[01:03.598] MSG: Both cards are destroyed!
+[01:07.182] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:08.007] Crystals: P1 2450 → 2000 (-450)  [battle]
+[01:09.398] Crystals: P0 3750 → 3200 (-550)  [battle]
+[01:10.787] Attack P1(2,0)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} → P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | cannot-atk≤T4}  Dice=4  ATK=50 vs DEF=50  → TIE
+[01:10.787] Reckoning overlay: P1 "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} badge=50 ATK pill=50 DEF pill=30 mod=+ATK 0 (50+0=50)
+[01:10.787] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | cannot-atk≤T4} badge=50 ATK pill=45 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:10.787] Anim: 3C  △ P1(2,0) + △ P0(1,1)
+[01:10.787] Card destroyed  P1 (2,0) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[01:10.787] Card destroyed  P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | cannot-atk≤T4}
+[01:13.300] Turn ended  P1  |  Crystals P0=3200 P1=2000
+
+--- Turn 4  |  Player 0  |  Crystals P0=3200 P1=2000 ---
+[01:19.361] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:19.361] Dice rolled: 5
+[01:19.384] MSG: Nothing happens — Dead End.
+[01:22.304] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[01:22.304] Anim: 3F  (blank slot)
+[01:22.311] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:26.782] Revealed: P1 (2,3) "Pepper Spray" {cost 0}
+[01:26.782] MSG: Revealed: Pepper Spray
+[04:16.853] Turn ended  P0  |  Crystals P0=3200 P1=2000
+
+--- Turn 5  |  Player 1  |  Crystals P0=3200 P1=2000 ---
+[04:18.959] Crystals: P1 2000 → 1000 (-1000)  [union]
+[04:18.998] Revealed: P1 (2,1) "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[04:18.998] Union summoned P1: "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}
+[04:18.999] MSG: Player 2 summoned [Volatile Slasher] using: "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}
+[04:22.439] Mode selected P1: ATTACK
+[04:22.441] MSG: Player 2: tap a character to attack.
+[04:24.150] Dice rolled: 3
+[04:24.194] MSG: Volatile Slasher wins!
+[04:27.739] MSG: [DEBUG] Bot Player timed out — ending turn.
+[04:28.642] Crystals: P0 3200 → 2800 (-400)  [battle]
+[04:30.033] MSG: Volatile Slasher: +50 ATK permanently vs ANIMA!
+[04:30.034] Attack P1(2,1)"Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=3  ATK=50 vs DEF=25  → WIN
+[04:30.034] Reckoning overlay: P1 "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[04:30.034] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:30.034] Anim: 3A  △ P0(2,3)
+[04:30.034] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[04:30.532] Mode selected P1: ATTACK
+[04:30.534] MSG: Player 2: tap a character to attack.
+[04:32.237] Revealed: P1 (2,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[04:32.237] Dice rolled: 1
+[04:32.252] MSG: Nothing happens — Dead End.
+[04:35.633] Attack P1(2,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} → P0(4,3)(empty)  Dice=1  → DEAD_END
+[04:35.633] Anim: 3F  (blank slot)
+[04:36.133] Turn ended  P1  |  Crystals P0=2800 P1=1000
+
+--- Turn 6  |  Player 0  |  Crystals P0=2800 P1=1000 ---
+[04:52.656] Crystals: P0 2800 → 1800 (-1000)  [tech cost]
+[04:54.044] Tech played  P0: "Accident"
+[04:55.605] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[04:57.941] Card destroyed  P1 (2,1) "Volatile Slasher" {Union ATK100 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio | base 100/45 | flags:perm_atk_aff_6}
+[04:58.136] Tech resolved  P0
+[05:13.595] Revealed: P0 (3,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[05:13.596] Dice rolled: 4
+[05:13.604] MSG: Grand Fort Mauler wins!
+[05:18.094] Crystals: P1 1000 → 800 (-200)  [battle]
+[05:19.490] Attack P0(3,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(2,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=4  ATK=40 vs DEF=30  → WIN
+[05:19.490] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=40 ATK pill=40 DEF pill=10 mod=+ATK 0 (40+0=40)
+[05:19.490] Reckoning overlay: P1 "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} badge=30 ATK pill=10 DEF pill=30 mod=+DEF 0 (30+0=30)
+[05:19.490] Anim: 3A  △ P1(2,2)
+[05:19.490] Card destroyed  P1 (2,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[05:26.529] Revealed: P0 (1,2) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[05:26.568] Revealed: P1 (1,3) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[05:26.569] Dice rolled: 2
+[05:26.580] MSG: Grand Fort Footsoldier wins!
+[05:29.952] Crystals: P1 800 → 620 (-180)  [battle]
+[05:31.348] Attack P0(1,2)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(1,3)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=2  ATK=25 vs DEF=10  → WIN
+[05:31.348] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[05:31.348] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=10 ATK pill=15 DEF pill=10 mod=+DEF 0 (10+0=10)
+[05:31.348] Anim: 3A  △ P1(1,3)
+[05:31.348] Card destroyed  P1 (1,3) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[05:32.420] Turn ended  P0  |  Crystals P0=1800 P1=620
+
+--- Turn 7  |  Player 1  |  Crystals P0=1800 P1=620 ---
+[05:33.020] Mode selected P1: ATTACK
+[05:33.023] MSG: Player 2: tap a character to attack.
+[05:34.747] Revealed: P1 (4,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[05:34.747] Dice rolled: 1
+[05:34.753] MSG: Bleacher Squad wins!
+[05:38.337] MSG: [DEBUG] Bot Player timed out — ending turn.
+[05:39.247] Crystals: P0 1800 → 1450 (-350)  [battle]
+[05:40.641] Attack P1(4,2)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} → P0(3,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=1  ATK=20 vs DEF=10  → WIN
+[05:40.641] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[05:40.641] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=10 ATK pill=40 DEF pill=10 mod=+DEF 0 (10+0=10)
+[05:40.641] Anim: 3A  △ P0(3,2)
+[05:40.641] Card destroyed  P0 (3,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[05:43.155] Turn ended  P1  |  Crystals P0=1450 P1=620
+
+--- Turn 8  |  Player 0  |  Crystals P0=1450 P1=620 ---
+[05:47.564] Dice rolled: 5
+[05:47.571] MSG: Grand Fort Footsoldier wins!
+[05:52.056] Crystals: P1 620 → 300 (-320)  [battle]
+[05:53.457] Attack P0(1,2)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(4,2)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}  Dice=5  ATK=25 vs DEF=20  → WIN
+[05:53.457] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[05:53.457] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:53.457] Anim: 3A  △ P1(4,2)
+[05:53.457] Card destroyed  P1 (4,2) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[06:00.191] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[06:00.191] Dice rolled: 4
+[06:00.216] MSG: Nothing happens — Dead End.
+[06:01.921] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(0,2)(empty)  Dice=4  → DEAD_END
+[06:01.921] Anim: 3F  (blank slot)
+[06:02.965] Turn ended  P0  |  Crystals P0=1450 P1=300
+
+--- Turn 9  |  Player 1  |  Crystals P0=1450 P1=300 ---
+[06:03.565] Mode selected P1: ATTACK
+[06:03.566] MSG: Player 2: tap a character to attack.
+[06:05.274] Revealed: P1 (2,4) "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio}
+[06:05.275] Dice rolled: 2
+[06:05.281] MSG: Lab Zombie wins!
+[06:08.869] MSG: [DEBUG] Bot Player timed out — ending turn.
+[06:09.770] Crystals: P0 1450 → 1150 (-300)  [battle]
+[06:11.166] Attack P1(2,4)"Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} → P0(1,2)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}  Dice=2  ATK=55 vs DEF=25  → WIN
+[06:11.166] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF40 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=40 mod=+ATK 0 (55+0=55)
+[06:11.166] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[06:11.166] Anim: 3A  △ P0(1,2)
+[06:11.166] Card destroyed  P0 (1,2) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[06:11.676] Turn ended  P1  |  Crystals P0=1150 P1=300
+
+--- Turn 10  |  Player 0  |  Crystals P0=1150 P1=300 ---
+[06:23.350] MSG: Tap 2 material card(s) on the field.
+[06:23.889] MSG: 1 more material(s) needed.
+[06:25.531] Crystals: P0 1150 → 650 (-500)  [union]
+[06:25.579] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[06:25.579] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}
+[06:25.579] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine | face-down}
+[06:32.097] Dice rolled: 2
+[06:32.205] MSG: Diamond Unicorn wins!
+[06:37.613] Crystals: P1 300 → 0 (-300)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 650  P1: 0  |  Turns: 10

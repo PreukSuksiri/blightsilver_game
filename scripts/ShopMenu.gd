@@ -2,19 +2,65 @@ extends Control
 
 signal closed()
 
+const DEFAULT_PACK_IMAGE: String = "res://assets/textures/cards/booster_pack/booster_pack_basic.png"
+const BOOSTER_PACK_DIR: String = "res://assets/textures/cards/booster_pack/"
+const PACK_CARD_ART_ASPECT: float = 832.0 / 1216.0  # booster pack illustration width / height
+const PACK_CARD_WIDTH_SCALE: float = 1.14           # panel padding + footer controls
+const PACK_ROW_GAP: int = 28
+const PANEL_VIEWPORT_MARGIN: Vector2 = Vector2(32.0, 40.0)
+const PANEL_MAX_SIZE: Vector2 = Vector2(1680.0, 900.0)
+
+@onready var panel: Panel                  = $Panel
 @onready var credits_label: Label         = $Panel/VBox/Header/CreditsLabel
+@onready var pack_scroll: ScrollContainer = $Panel/VBox/PackScroll
 @onready var pack_row: HBoxContainer      = $Panel/VBox/PackScroll/PackRow
 @onready var result_overlay: Control      = $ResultOverlay
 @onready var result_title: Label          = $ResultOverlay/ResultPanel/VBox/TitleLabel
 @onready var result_card_list: VBoxContainer = $ResultOverlay/ResultPanel/VBox/CardList
 @onready var result_ok_btn: Button        = $ResultOverlay/ResultPanel/VBox/OkBtn
 
+var _card_size: Vector2 = Vector2.ZERO
+
 func _ready() -> void:
 	Collection.credits_changed.connect(_on_credits_changed)
 	$Panel/VBox/Header/CloseBtn.pressed.connect(_on_close)
 	result_ok_btn.pressed.connect(func() -> void: result_overlay.hide())
 	result_overlay.hide()
+	_apply_panel_to_viewport()
 	_refresh_credits()
+	call_deferred("_init_pack_cards")
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED and is_inside_tree():
+		call_deferred("_on_viewport_resized")
+
+func _apply_panel_to_viewport() -> void:
+	var vp: Vector2 = get_viewport_rect().size
+	var panel_w: float = minf(vp.x - PANEL_VIEWPORT_MARGIN.x * 2.0, PANEL_MAX_SIZE.x)
+	var panel_h: float = minf(vp.y - PANEL_VIEWPORT_MARGIN.y * 2.0, PANEL_MAX_SIZE.y)
+	panel_w = maxf(panel_w, 480.0)
+	panel_h = maxf(panel_h, 420.0)
+	panel.offset_left = -panel_w * 0.5
+	panel.offset_top = -panel_h * 0.5
+	panel.offset_right = panel_w * 0.5
+	panel.offset_bottom = panel_h * 0.5
+
+func _on_viewport_resized() -> void:
+	_apply_panel_to_viewport()
+	if _card_size == Vector2.ZERO:
+		return
+	await get_tree().process_frame
+	var new_size := _compute_card_size()
+	if new_size.is_equal_approx(_card_size) and pack_row.get_child_count() > 0:
+		return
+	_card_size = new_size
+	_build_pack_cards()
+
+func _init_pack_cards() -> void:
+	await get_tree().process_frame
+	_apply_panel_to_viewport()
+	await get_tree().process_frame
+	_card_size = _compute_card_size()
 	_build_pack_cards()
 
 # ─────────────────────────────────────────────────────────────
@@ -25,18 +71,67 @@ func _refresh_credits() -> void:
 
 func _on_credits_changed(_new_amount: int) -> void:
 	_refresh_credits()
-	_build_pack_cards()  # refresh buy-button disabled states
+	_refresh_pack_buy_states()
 
 # ─────────────────────────────────────────────────────────────
 # Pack card building
 # ─────────────────────────────────────────────────────────────
+func _compute_card_size() -> Vector2:
+	var scroll_w: float = maxf(pack_scroll.size.x, 320.0)
+	var scroll_h: float = maxf(pack_scroll.size.y, 240.0)
+	# Size cards so up to three fit across the visible shop row.
+	var fit_count: int = 3
+	var gap_total: float = PACK_ROW_GAP * maxi(0, fit_count - 1)
+	var max_card_w: float = (scroll_w - gap_total) / float(fit_count)
+	var card_w: float = max_card_w
+	var card_h: float = card_w / (PACK_CARD_ART_ASPECT * PACK_CARD_WIDTH_SCALE)
+	if card_h > scroll_h:
+		card_h = scroll_h
+		card_w = card_h * PACK_CARD_ART_ASPECT * PACK_CARD_WIDTH_SCALE
+	return Vector2(card_w, card_h)
+
+func _update_pack_scroll_mode(catalog_count: int) -> void:
+	if catalog_count <= 3:
+		pack_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		pack_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	else:
+		pack_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		pack_row.alignment = BoxContainer.ALIGNMENT_BEGIN
+
 func _build_pack_cards() -> void:
 	for child in pack_row.get_children():
 		child.queue_free()
-	for pack: Dictionary in ShopManager.get_shop_catalog():
-		pack_row.add_child(_make_pack_card(pack))
+	var catalog: Array = ShopManager.get_shop_catalog()
+	var count: int = catalog.size()
+	_card_size = _compute_card_size()
+	var total_w: float = _card_size.x * count + PACK_ROW_GAP * maxi(0, count - 1)
+	pack_row.custom_minimum_size = Vector2(total_w, _card_size.y)
+	_update_pack_scroll_mode(count)
+	for pack: Dictionary in catalog:
+		pack_row.add_child(_make_pack_card(pack, _card_size))
 
-func _make_pack_card(pack: Dictionary) -> Control:
+func _refresh_pack_buy_states() -> void:
+	var catalog: Array = ShopManager.get_shop_catalog()
+	var cards := pack_row.get_children()
+	for i: int in range(mini(cards.size(), catalog.size())):
+		_update_pack_card_buy_state(cards[i], catalog[i] as Dictionary)
+
+func _update_pack_card_buy_state(card_root: Node, pack: Dictionary) -> void:
+	var can_afford: bool = Collection.credits >= int(pack.get("price", 0))
+	var shop_unlocked: bool = bool(pack.get("shop_unlocked", true))
+	var can_buy: bool = shop_unlocked and can_afford
+	var vbox: Node = card_root.get_child(0) if card_root.get_child_count() > 0 else null
+	if vbox == null:
+		return
+	for child in vbox.get_children():
+		if child is Label and str((child as Label).text).ends_with(" Credits"):
+			(child as Label).add_theme_color_override("font_color",
+				Color(0.95, 0.82, 0.22, 1.0) if can_buy else Color(0.75, 0.28, 0.28, 0.8))
+		elif child is Button and (child as Button).text in ["BUY PACK", "LOCKED"]:
+			(child as Button).text = "BUY PACK" if shop_unlocked else "LOCKED"
+			(child as Button).disabled = not can_buy
+
+func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
 	var accent_raw: Variant = pack.get("accent", null)
 	var accent: Color
 	if accent_raw is Array and accent_raw.size() >= 3:
@@ -50,7 +145,7 @@ func _make_pack_card(pack: Dictionary) -> Control:
 	var can_buy: bool = shop_unlocked and can_afford
 
 	var card := PanelContainer.new()
-	card.custom_minimum_size = Vector2(268, 370)
+	card.custom_minimum_size = card_size
 
 	var card_sb := StyleBoxFlat.new()
 	card_sb.bg_color = Color(0.02, 0.038, 0.082, 1.0)
@@ -70,7 +165,8 @@ func _make_pack_card(pack: Dictionary) -> Control:
 	card.add_theme_stylebox_override("panel", card_sb)
 
 	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 12)
+	vbox.add_theme_constant_override("separation", 10)
+	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	card.add_child(vbox)
 
 	# — Pack name ——————————————————————————
@@ -88,13 +184,25 @@ func _make_pack_card(pack: Dictionary) -> Control:
 	sep.color = Color(accent.r, accent.g, accent.b, 0.3)
 	vbox.add_child(sep)
 
+	var pack_tex: Texture2D = _load_pack_texture(pack)
+	if pack_tex != null:
+		var img := TextureRect.new()
+		img.texture = pack_tex
+		img.custom_minimum_size = Vector2(0, maxf(80.0, card_size.y * 0.48))
+		img.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		vbox.add_child(img)
+
 	# — Description ——————————————————————————
 	var desc := Label.new()
 	desc.text = pack.get("description", "")
 	desc.add_theme_font_size_override("font_size", 12)
 	desc.add_theme_color_override("font_color", Color(0.58, 0.7, 0.8, 0.82))
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD
-	desc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	desc.clip_text = true
+	desc.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	desc.custom_minimum_size = Vector2(0, 32)
 	vbox.add_child(desc)
 
 	# — Contents tag ——————————————————————————
@@ -190,6 +298,22 @@ func _contents_text(pack: Dictionary) -> String:
 		var t: String = slot["type"].capitalize()
 		parts.append("%d %s%s" % [n, t, "s" if n > 1 else ""])
 	return " + ".join(parts)
+
+func _resolve_pack_image_path(pack: Dictionary) -> String:
+	var path: String = str(pack.get("pack_image", "")).strip_edges()
+	if path.is_empty():
+		return DEFAULT_PACK_IMAGE
+	if not path.begins_with("res://"):
+		path = BOOSTER_PACK_DIR + path
+	return path
+
+func _load_pack_texture(pack: Dictionary) -> Texture2D:
+	var path: String = _resolve_pack_image_path(pack)
+	if ResourceLoader.exists(path):
+		return load(path) as Texture2D
+	if path != DEFAULT_PACK_IMAGE and ResourceLoader.exists(DEFAULT_PACK_IMAGE):
+		return load(DEFAULT_PACK_IMAGE) as Texture2D
+	return null
 
 # ─────────────────────────────────────────────────────────────
 # Purchase flow

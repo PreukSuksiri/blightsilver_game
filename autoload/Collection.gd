@@ -40,6 +40,18 @@ func spend_credits(amount: int) -> bool:
 	SaveManager.save_data()
 	return true
 
+## Admin: set balance directly (clamped to 0+).
+func set_credits(amount: int) -> void:
+	credits = maxi(0, amount)
+	emit_signal("credits_changed", credits)
+	SaveManager.save_data()
+
+## Admin: subtract credits, clamping balance at 0.
+func remove_credits(amount: int) -> void:
+	credits = maxi(0, credits - amount)
+	emit_signal("credits_changed", credits)
+	SaveManager.save_data()
+
 # ─────────────────────────────────────────────────────────────
 # Cards
 # ─────────────────────────────────────────────────────────────

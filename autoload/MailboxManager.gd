@@ -51,6 +51,43 @@ func claim_mail(mail_id: String) -> Dictionary:
 			return item.get("reward", {})
 	return {}
 
+## True when the mail reward grants shop credits (legacy "coins" included).
+func is_credit_reward(reward: Dictionary) -> bool:
+	var t: String = str(reward.get("type", ""))
+	return t == "credits" or t == "coins"
+
+## Unclaimed credit mail summary: { count: int, total: int }.
+func get_unclaimed_credit_summary() -> Dictionary:
+	var count: int = 0
+	var total: int = 0
+	for item: Dictionary in mail_items:
+		if item.get("claimed", false):
+			continue
+		var reward: Dictionary = item.get("reward", {})
+		if not is_credit_reward(reward):
+			continue
+		count += 1
+		total += int(reward.get("amount", 0))
+	return {"count": count, "total": total}
+
+## Mark all unclaimed credit mail claimed. Returns { count, total } (does not apply credits).
+func claim_all_credit_rewards() -> Dictionary:
+	var count: int = 0
+	var total: int = 0
+	for item: Dictionary in mail_items:
+		if item.get("claimed", false):
+			continue
+		var reward: Dictionary = item.get("reward", {})
+		if not is_credit_reward(reward):
+			continue
+		item["claimed"] = true
+		count += 1
+		total += int(reward.get("amount", 0))
+	if count > 0:
+		emit_signal("mailbox_changed")
+		SaveManager.save_data()
+	return {"count": count, "total": total}
+
 ## Claim all unclaimed mail. Returns array of reward dicts.
 func claim_all() -> Array:
 	var rewards: Array = []
@@ -85,6 +122,9 @@ func delete_claimed() -> void:
 #   list
 #   clear_claimed
 #   clear_all
+#   grant_credits <amount>
+#   remove_credits <amount>
+#   reset_credits [amount]
 #   manage_bgm
 
 func _dismiss_admin_console(scene: Node = null) -> void:
@@ -101,6 +141,8 @@ func _dismiss_admin_console(scene: Node = null) -> void:
 		admin.queue_free()
 
 func admin_command(raw: String) -> String:
+	if not BuildConfig.admin_tools_enabled():
+		return "Admin tools are disabled in this build."
 	var line := raw.strip_edges()
 	if line.is_empty():
 		return ""
@@ -171,6 +213,9 @@ func admin_command(raw: String) -> String:
 				+ "  grant_disc <disc_id>\n"
 				+ "  grant_winding_keys [count]\n"
 				+ "  grant_incense [count]\n"
+				+ "  grant_credits <amount>\n"
+				+ "  remove_credits <amount>\n"
+				+ "  reset_credits [amount]\n"
 				+ "  demo_on\n"
 				+ "  demo_off\n"
 				+ "  demo_status\n"
@@ -963,6 +1008,36 @@ func admin_command(raw: String) -> String:
 				return "Count must be positive."
 			Collection.add_incenses(count)
 			return "Granted %d incense(s). Total: %d" % [count, Collection.incenses]
+
+		"grant_credits":
+			if parts.size() < 2:
+				return "Usage: grant_credits <amount>"
+			var grant_amount: int = int(parts[1])
+			if grant_amount <= 0:
+				return "Amount must be positive."
+			Collection.add_credits(grant_amount)
+			return "Granted %d credits. Balance: %d" % [grant_amount, Collection.credits]
+
+		"remove_credits":
+			if parts.size() < 2:
+				return "Usage: remove_credits <amount>"
+			var remove_amount: int = int(parts[1])
+			if remove_amount <= 0:
+				return "Amount must be positive."
+			var before_remove: int = Collection.credits
+			Collection.remove_credits(remove_amount)
+			return "Removed %d credits. Balance: %d (was %d)" % [
+				mini(remove_amount, before_remove), Collection.credits, before_remove]
+
+		"reset_credits":
+			var reset_amount: int = Collection.STARTING_CREDITS
+			if parts.size() >= 2:
+				reset_amount = int(parts[1])
+			if reset_amount < 0:
+				return "Amount cannot be negative."
+			var before_reset: int = Collection.credits
+			Collection.set_credits(reset_amount)
+			return "Credits reset to %d (was %d)." % [Collection.credits, before_reset]
 
 		"pack_editor":
 			var scene: Node = get_tree().current_scene

@@ -97,7 +97,13 @@
 		"exploration_keep_vn_bgm": true,
 		"exploration_on_return": "res://campaign/scenes/ch1_s1_pre_DEMO_PART2.json",
 		"exploration_params": {
-			"chapter": "act_1_ch_1"
+			"chapter": "act_1_ch_1",
+			"surprise_factor": {
+				"random": [
+					1,
+					3
+				]
+			}
 		},
 		"linger_characters": true
 	}

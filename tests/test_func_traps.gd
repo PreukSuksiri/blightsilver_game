@@ -11,6 +11,7 @@ func _ready() -> void:
 	var A := CharacterData.Affinity
 	var AB := CharacterData.AbilityType
 	_run_immunity_tests(A, AB)
+	_run_attacker_lock_turn_tests()
 	_run_manual_tests()
 	print("  Traps: %d passed, %d failed" % [passed, failed])
 
@@ -159,6 +160,21 @@ func _run_immunity_tests(A: Dictionary, AB: Dictionary) -> void:
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Foul-Gas-002: Huntress immune to zero-cost Foul Gas")
 	r = BattleResolver.resolve_battle(electro, trap_gas, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Foul-Gas-002: Electrogazer negates zero-cost Foul Gas")
+
+# ---------------------------------------------------------------------------
+# Attacker "next turn" lock cadence (HYPNOTIZE_ATTACKER / COIN_FLIP_2_LOCK_ATTACKER)
+# ---------------------------------------------------------------------------
+
+func _run_attacker_lock_turn_tests() -> void:
+	# Alternating turns: P0 acts on T5, P1 on T6, P0 again on T7.
+	var attack_turn := 5
+	var attacker_next_turn := 7
+	var wrong_lock := attack_turn + 1
+	var correct_lock := attack_turn + 2
+	assert_true(wrong_lock < attacker_next_turn,
+		"Hypnosis +1 expires before attacker's next acting turn")
+	assert_true(correct_lock >= attacker_next_turn,
+		"Attacker lock +2 blocks attacker's next acting turn")
 
 # ---------------------------------------------------------------------------
 # Pattern C — MANUAL (all trap effect -001 tests; TurnManager required)

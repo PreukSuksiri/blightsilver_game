@@ -226,6 +226,11 @@ var _handoff_last_player: int = -1
 var _handoff_last_turn: int = -1
 
 func _input(event: InputEvent) -> void:
+	if BuildConfig.admin_shortcut_pressed(event):
+		if BuildConfig.admin_tools_enabled():
+			BuildConfig.toggle_admin_console_on(self)
+		get_viewport().set_input_as_handled()
+		return
 	# _input fires for ALL presses regardless of which GUI control consumed them.
 	var is_left_press: bool = (
 		(event is InputEventMouseButton and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT and (event as InputEventMouseButton).pressed) or
@@ -260,12 +265,6 @@ func _input(event: InputEvent) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and (event as InputEventKey).pressed:
-		var ke := event as InputEventKey
-		if ke.keycode == KEY_A and ke.ctrl_pressed and ke.shift_pressed:
-			_toggle_admin_console()
-			get_viewport().set_input_as_handled()
-			return
 	var is_left_press: bool = (
 		(event is InputEventMouseButton and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT and event.pressed) or
 		(event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed)
@@ -275,13 +274,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_close_tech_overlay()
 
 func _toggle_admin_console() -> void:
-	const AdminConsoleScene: PackedScene = preload("res://scenes/admin_console.tscn")
-	if get_node_or_null("AdminConsoleOverlay") != null:
-		get_node("AdminConsoleOverlay").queue_free()
-		return
-	var overlay: Node = AdminConsoleScene.instantiate()
-	overlay.name = "AdminConsoleOverlay"
-	add_child(overlay)
+	BuildConfig.toggle_admin_console_on(self)
 
 func _ready() -> void:
 	_setup_turn_manager()
@@ -4299,9 +4292,10 @@ func _on_grid_card_hovered(player: int, row: int, col: int) -> void:
 			and "opponent_squares" in pending_tech_filter \
 			and player == GameState.get_opponent(GameState.current_player):
 		_set_tech_hover_node(grid_nodes[player][row][col])
-	# Red hover during attack target selection — dead_end slots are valid targets too
+	# Red hover during attack target selection — unrevealed dead_end slots are valid targets
 	if selection_state == SelectionState.SELECTING_TARGET \
-			and player == GameState.get_opponent(GameState.current_player):
+			and player == GameState.get_opponent(GameState.current_player) \
+			and not inst.was_destroyed:
 		_set_attack_hover_node(grid_nodes[player][row][col])
 	# Dead-end slots have no info to show
 	if inst.card_type == "dead_end":
@@ -5634,11 +5628,28 @@ func _on_tech_resolved(player: int) -> void:
 		_ai_watchdog.start()
 		_active_ai.continue_after_union()
 	else:
-		if _end_turn_btn:
-			_end_turn_btn.visible = true
-		_set_selection_state(SelectionState.SELECTING_ATTACKER)
-		_highlight_attackable_chars()
-		_update_end_turn_blink()
+		_resume_human_mode_select()
+
+func _resume_human_mode_select(resume_bonus: bool = false, bonus_pos: Vector2i = Vector2i(-1, -1)) -> void:
+	if _is_ai_turn() or GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
+	if _end_turn_btn:
+		_end_turn_btn.visible = true
+	if resume_bonus and bonus_pos != Vector2i(-1, -1):
+		var cp := GameState.current_player
+		var bonus_attacker: GameState.CardInstance = GameState.get_card(cp, bonus_pos.x, bonus_pos.y)
+		if bonus_attacker != null and bonus_attacker.has_pending_bonus_attack_chain():
+			selected_attacker_pos = bonus_pos
+			grid_nodes[cp][bonus_pos.x][bonus_pos.y].set_selected(true)
+			_set_selection_state(SelectionState.SELECTING_TARGET)
+			_show_guide("%s: choose another target (bonus attack)" % bonus_attacker.card_name)
+			_highlight_valid_targets()
+			_update_end_turn_blink()
+			return
+		_multi_attack_bonus_targeting = false
+	_set_selection_state(SelectionState.SELECTING_ATTACKER)
+	_highlight_attackable_chars()
+	_update_end_turn_blink()
 
 func _on_turn_ended(_player: int) -> void:
 	if _ai_watchdog != null:
@@ -5944,16 +5955,11 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			turn_manager.complete_brainwash_redirect()
 		if _is_post_attack_ability_filter(filter):
 			_clear_after_ability()
+		elif filter in _defender_response_filters():
+			_finish_trap_target_selection()
 		else:
 			_finish_tech_action(GameState.current_player)
 		return
-
-	# Filters that require the DEFENDER (opponent of current_player) to respond
-	var _defender_response_filters: Array = [
-		"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct",
-		"self_reveal_choice", "self_faceup_for_copy", "own_armored_nature",
-		"self_squares_1_opponent_turn", "own_divine_character_redirect"
-	]
 
 	if filter in ["ability_false_prophet_reveal", "opponent_character_ability_destroy", "ability_rebel_king_swap"]:
 		var _ai_responds: bool = _is_ai_turn()
@@ -5975,7 +5981,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		return
 
 	# If AI turn (AI is attacker), auto-resolve — but skip defender-response filters
-	if _is_ai_turn() and filter not in _defender_response_filters:
+	if _is_ai_turn() and filter not in _defender_response_filters():
 		await get_tree().create_timer(0.4).timeout
 		# Guard: if a reveal-tech has no valid targets, skip rather than hang
 		if "opponent_squares" in filter and _count_opponent_facedown(GameState.get_opponent(GameState.current_player)) == 0:
@@ -6006,7 +6012,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		_flash_target_card(target_player, ai_target.x, ai_target.y)
 		_handle_tech_target(target_player, ai_target)
 	# Trap/tech effects where AI is the DEFENDING player (not AI's turn, but AI must self-select)
-	elif filter in _defender_response_filters \
+	elif filter in _defender_response_filters() \
 			and (GameState.game_mode == GameState.GameMode.AI_VS_AI \
 				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
 					GameState.GameMode.DAILY_DUNGEON] \
@@ -6019,12 +6025,15 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		def_ai.ai_target_chosen.emit(ai_target)  # log defender AI choice
 		_flash_target_card(def_player, ai_target.x, ai_target.y)
 		_handle_tech_target(def_player, ai_target)
-	elif _is_ai_turn() and filter in _defender_response_filters:
+	elif _is_ai_turn() and filter in _defender_response_filters():
 		# Human is the responding player during the AI's turn — wait for grid pick.
 		_begin_human_defender_tech_choice()
 
 func _is_defender_response_filter(filter: String) -> bool:
-	return filter in [
+	return filter in _defender_response_filters()
+
+func _defender_response_filters() -> Array:
+	return [
 		"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct",
 		"self_reveal_choice", "self_faceup_for_copy", "own_armored_nature",
 		"self_squares_1_opponent_turn", "own_divine_character_redirect",
@@ -6251,10 +6260,16 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if card.face_up and card.card_type != "dead_end":
 			var pay_cost := pending_tech_name != "Accident" and pending_tech_filter != "opponent_faceup_no_cost"
 			GameState.destroy_card(player, pos.x, pos.y, pay_cost)
-			_finish_tech_action(current_player)
+			if pending_tech_filter == "opponent_faceup_no_cost":
+				_finish_trap_target_selection()
+			else:
+				_finish_tech_action(current_player)
 		else:
 			GameState.post_message("No valid target — effect cancelled.")
-			_finish_tech_action(current_player)
+			if pending_tech_filter == "opponent_faceup_no_cost":
+				_finish_trap_target_selection()
+			else:
+				_finish_tech_action(current_player)
 		return
 
 	if pending_tech_filter == "own_divine_character_redirect":
@@ -6269,10 +6284,13 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "opponent_any_hidden":
-		if player == opponent and card.card_type != "dead_end" and not card.face_up:
+		if player == opponent and not card.face_up:
 			GameState.reveal_card(player, pos.x, pos.y)
-			GameState.post_message("Revealed: %s" % card.card_name)
-			_clear_after_tech()
+			if card.card_type == "dead_end":
+				GameState.post_message("Revealed: (empty)")
+			else:
+				GameState.post_message("Revealed: %s" % card.card_name)
+			_clear_after_ability()
 		return
 
 	if pending_tech_filter == "own_character_for_swap":
@@ -6284,19 +6302,19 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				GameState.grids[current_player][pos.x][pos.y] = swap_card
 				GameState.post_message("Positions swapped: %s ↔ %s" % [card.card_name, swap_card.card_name])
 			turn_manager._pending_swap_attacker_pos = Vector2i(-1, -1)
-			_clear_after_tech()
+			_clear_after_ability()
 		return
 
 	if pending_tech_filter == "own_faceup_for_trap_temp_def_boost":
 		if player == opponent and card.card_type == "character" and card.face_up:
 			turn_manager.resolve_trap_temp_def_boost(player, pos)
-			_clear_after_tech()
+			_finish_trap_target_selection()
 		return
 
 	if pending_tech_filter == "own_character_for_trap_self_destruct":
 		if player == opponent and card.card_type == "character":
 			turn_manager.resolve_trap_self_destruct(player, pos)
-			_clear_after_tech()
+			_finish_trap_target_selection()
 		return
 
 	if pending_tech_filter == "self_squares_1_opponent_turn":
@@ -6313,7 +6331,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == opponent and card.card_type != "dead_end" and not card.face_up:
 			GameState.reveal_card(player, pos.x, pos.y)
 			GameState.post_message("Bait: Defender revealed %s." % card.card_name)
-			_clear_after_tech()
+			_finish_trap_target_selection()
 		return
 
 	if pending_tech_filter == "lock_own_monster":
@@ -6555,7 +6573,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				card.ability_type = _attacker_card.ability_type
 				card.ability_params = _attacker_card.ability_params.duplicate()
 				GameState.post_message("Cursed Reflection: %s copied %s's ability!" % [card.card_name, _attacker_card.card_name])
-			_clear_after_tech()
+			_finish_trap_target_selection()
 		return
 
 	if pending_tech_filter == "own_armored_nature":
@@ -6567,7 +6585,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			# Actually the target_pos is gone. Use a simpler approach: move card to first dead_end slot
 			# or just post a message that swap completed (complex without persistent trap pos)
 			GameState.post_message("Defensive Pheromone: %s swapped positions." % card.card_name)
-			_clear_after_tech()
+			_finish_trap_target_selection()
 		return
 
 	if pending_tech_filter == "own_any_as_target":
@@ -6662,6 +6680,13 @@ func _finish_tech_action(player: int) -> void:
 	turn_manager.after_tech_resolved(player)
 
 func _clear_after_ability() -> void:
+	var resume_bonus: bool = _multi_attack_bonus_targeting
+	var bonus_pos: Vector2i = selected_attacker_pos
+	_clear_after_tech()
+	turn_manager.ability_selection_done.emit()
+	_resume_human_mode_select(resume_bonus, bonus_pos)
+
+func _finish_trap_target_selection() -> void:
 	_clear_after_tech()
 	turn_manager.ability_selection_done.emit()
 
@@ -6673,6 +6698,8 @@ func _is_post_attack_ability_filter(filter: String) -> bool:
 		"ability_false_prophet_reveal",
 		"opponent_character_ability_destroy",
 		"ability_rebel_king_swap",
+		"opponent_any_hidden",
+		"own_character_for_swap",
 	]
 
 
@@ -6928,8 +6955,7 @@ func _highlight_tech_targets(filter: String) -> void:
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
-				grid_nodes[opponent][r][c].set_highlighted(
-					card.card_type != "dead_end" and not card.face_up)
+				grid_nodes[opponent][r][c].set_highlighted(not card.face_up)
 
 	elif filter == "ability_false_prophet_reveal":
 		for r in range(GameState.GRID_SIZE):
@@ -8188,7 +8214,11 @@ func _show_endgame_screen(winner: int) -> void:
 	var dest: String
 	var from_exploration: bool = GameState.vn_launched_from_exploration \
 		and ExplorationManager.is_session_active
-	if from_exploration:
+	var exploration_defeat: bool = is_exploration and not is_win_screen
+	if exploration_defeat:
+		dest = "res://scenes/main_menu.tscn"
+		GameState.vn_launched_from_exploration = false
+	elif from_exploration:
 		dest = ExplorationManager.EXPLORATION_PLAYER_SCENE
 		GameState.vn_launched_from_exploration = false
 	elif mode == GameState.GameMode.CAMPAIGN:
@@ -8232,7 +8262,9 @@ func _show_endgame_screen(winner: int) -> void:
 				VNPlayer.launch_overlay(pending_vn, cb))
 		else:
 			out_tw.tween_callback(func() -> void:
-				if from_exploration:
+				if exploration_defeat and ExplorationManager.is_session_active:
+					ExplorationManager.end_session(false)
+				if from_exploration or (is_exploration and not exploration_defeat):
 					BGMManager.stop(0.5)
 				get_tree().change_scene_to_file(dest)))
 
@@ -8461,43 +8493,19 @@ func _session_on_attack_completed(attacker_pos: Vector2i, target_pos: Vector2i,
 		result: BattleResolver.BattleResult) -> void:
 	var atk_player: int = GameState.current_player
 	var def_player: int = GameState.get_opponent(atk_player)
-	if result.special_trigger == "trap_effect":
-		var trap: Variant = result.special_params.get("trap_data", null)
-		var tname: String = trap.card_name if trap != null else "?"
-		_session_log("Trap: \"%s\" triggered  P%d(%d,%d)→P%d(%d,%d)" % [
-			tname, atk_player, attacker_pos.x, attacker_pos.y,
-			def_player, target_pos.x, target_pos.y])
-		return
 	var a_name: String = BattleLogFormat.attack_side_label(result, true)
 	var d_name: String = BattleLogFormat.attack_side_label(result, false)
-	# Dead-end attack: defender had no card — log as DEAD_END
-	if result.defender_name.is_empty() and not result.defender_destroyed:
-		_session_log("Attack P%d(%d,%d)%s → P%d(%d,%d)(empty)  Dice=%d  → DEAD_END" % [
-			atk_player, attacker_pos.x, attacker_pos.y, a_name,
-			def_player, target_pos.x, target_pos.y, GameState.dice_result])
+	_session_log(BattleLogFormat.format_attack_resolution_line(
+		atk_player, attacker_pos, def_player, target_pos, result, GameState.dice_result))
+	if result.defender_name.is_empty() and not result.defender_destroyed \
+			and result.special_trigger not in ["trap_effect", "trap_nullified"]:
 		_session_log("Anim: 3F  (blank slot)")
 		return
-	var outcome: String = "WIN" if result.defender_destroyed and not result.attacker_destroyed \
-		else "LOSE" if result.attacker_destroyed and not result.defender_destroyed else "TIE"
-	_session_log("Attack P%d(%d,%d)%s → P%d(%d,%d)%s  Dice=%d  ATK=%d vs DEF=%d  → %s" % [
-		atk_player, attacker_pos.x, attacker_pos.y, a_name,
-		def_player, target_pos.x, target_pos.y, d_name,
-		GameState.dice_result, result.attacker_atk_used, result.defender_def_used, outcome])
 	for overlay_line: String in BattleResolver.reckoning_overlay_log_lines(
 			atk_player, def_player, result):
 		_session_log(overlay_line)
-	var anim_line: String
-	if result.attacker_destroyed and result.defender_destroyed:
-		anim_line = "3C  △ P%d(%d,%d) + △ P%d(%d,%d)" % [
-			atk_player, attacker_pos.x, attacker_pos.y,
-			def_player, target_pos.x, target_pos.y]
-	elif result.defender_destroyed:
-		anim_line = "3A  △ P%d(%d,%d)" % [def_player, target_pos.x, target_pos.y]
-	elif result.attacker_destroyed:
-		anim_line = "3B  △ P%d(%d,%d)" % [atk_player, attacker_pos.x, attacker_pos.y]
-	else:
-		anim_line = "exchange  (no destruction)"
-	_session_log("Anim: " + anim_line)
+	_session_log(BattleLogFormat.format_attack_anim_line(
+		atk_player, attacker_pos, def_player, target_pos, result))
 	if result.attacker_destroyed:
 		_session_log_destroy_if_needed(atk_player, attacker_pos.x, attacker_pos.y, a_name)
 	if result.defender_destroyed:

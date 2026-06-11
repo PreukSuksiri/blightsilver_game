@@ -471,76 +471,19 @@ func _log_attack_resolution(attacker_pos: Vector2i, target_pos: Vector2i,
 		result: BattleResolver.BattleResult) -> void:
 	var atk_player: int = GameState.current_player
 	var def_player: int = GameState.get_opponent(atk_player)
-
-	# Trap encounter — log trap name instead of misleading ATK=0 DEF=0 TIE
-	if result.special_trigger == "trap_effect":
-		var trap: Variant = result.special_params.get("trap_data", null)
-		var tname: String = trap.card_name if trap != null else "?"
-		log_event("Trap: \"%s\" triggered  P%d(%d,%d)→P%d(%d,%d)" % [
-			tname,
-			atk_player, attacker_pos.x, attacker_pos.y,
-			def_player, target_pos.x, target_pos.y])
-		# attacker_destroyed is NOT set by BattleResolver for traps — check effect_type directly
-		var _destroys_attacker: bool = false
-		if trap is TrapData:
-			var td: TrapData = trap as TrapData
-			_destroys_attacker = td.effect_type in [
-				TrapData.TrapEffectType.DESTROY_ATTACKER,
-				TrapData.TrapEffectType.DESTROY_ATTACKER_CHOICE_DESTROY,
-				TrapData.TrapEffectType.DESTROY_ATTACKER_DEFENDER_PAYS,
-			]
-		if _destroys_attacker:
-			log_event("Anim: 3E  △ P%d(%d,%d)" % [atk_player, attacker_pos.x, attacker_pos.y])
-		else:
-			log_event("Anim: 3D  (attacker survives)")
-		return
-
-	# Use names captured in BattleResult before destruction — reading from GameState here would
-	# see a dead_end slot for any card that was destroyed during battle resolution.
 	var a_name: String = BattleLogFormat.attack_side_label(result, true)
 	var d_name: String = BattleLogFormat.attack_side_label(result, false)
-	# Dead-end attack: defender had no card — log as DEAD_END
-	if result.defender_name.is_empty() and not result.defender_destroyed:
-		log_event("Attack P%d(%d,%d)%s → P%d(%d,%d)(empty)  Dice=%d  → DEAD_END" % [
-			atk_player, attacker_pos.x, attacker_pos.y, a_name,
-			def_player, target_pos.x, target_pos.y,
-			GameState.dice_result])
+	log_event(BattleLogFormat.format_attack_resolution_line(
+		atk_player, attacker_pos, def_player, target_pos, result, GameState.dice_result))
+	if result.defender_name.is_empty() and not result.defender_destroyed \
+			and result.special_trigger not in ["trap_effect", "trap_nullified"]:
 		log_event("Anim: 3F  (blank slot)")
 		return
-	var outcome: String
-	if result.defender_destroyed and not result.attacker_destroyed:
-		outcome = "WIN"
-	elif result.attacker_destroyed and not result.defender_destroyed:
-		outcome = "LOSE"
-	else:
-		outcome = "TIE"
-	log_event("Attack P%d(%d,%d)%s → P%d(%d,%d)%s  Dice=%d  ATK=%d vs DEF=%d  → %s" % [
-		atk_player, attacker_pos.x, attacker_pos.y, a_name,
-		def_player, target_pos.x, target_pos.y, d_name,
-		GameState.dice_result,
-		result.attacker_atk_used,
-		result.defender_def_used,
-		outcome
-	])
 	for overlay_line: String in BattleResolver.reckoning_overlay_log_lines(
 			atk_player, def_player, result):
 		log_event(overlay_line)
-	# Animation scenario line — lets you audit which overlay animation fired
-	var anim_line: String
-	if result.attacker_destroyed and result.defender_destroyed:
-		anim_line = "3C  △ P%d(%d,%d) + △ P%d(%d,%d)" % [
-			atk_player, attacker_pos.x, attacker_pos.y,
-			def_player, target_pos.x, target_pos.y]
-	elif result.defender_destroyed:
-		anim_line = "3A  △ P%d(%d,%d)" % [def_player, target_pos.x, target_pos.y]
-	elif result.attacker_destroyed:
-		anim_line = "3B  △ P%d(%d,%d)" % [atk_player, attacker_pos.x, attacker_pos.y]
-	elif result.defender_name.is_empty():
-		anim_line = "3F  (blank slot)"
-	else:
-		anim_line = "exchange  (no destruction)"
-	log_event("Anim: " + anim_line)
-
+	log_event(BattleLogFormat.format_attack_anim_line(
+		atk_player, attacker_pos, def_player, target_pos, result))
 	if result.attacker_destroyed:
 		_log_card_destroyed_if_needed(
 			atk_player, attacker_pos.x, attacker_pos.y, a_name)

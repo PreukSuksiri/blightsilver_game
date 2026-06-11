@@ -181,7 +181,7 @@ enum NodeType {
 ##     "actions": Array                    — action dicts fired on click (see on_enter_events format)
 ##                                           extra action types: "play_vn" (optional play_once), "navigate_to", "play_puzzle"
 ##                                           play_puzzle: value = puzzle id, key = optional params (JSON or text)
-##                                           play_puzzle gates all other actions until solved
+##                                           actions run in list order; puzzle failure aborts remaining actions
 ##     "conditions": Array                 — condition dicts (same format as connection conditions)
 ##     "vn_scene": String                  — legacy field; treated as play_vn action if actions empty
 ##   }

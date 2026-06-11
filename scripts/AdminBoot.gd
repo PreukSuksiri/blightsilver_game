@@ -1,25 +1,26 @@
 extends Control
 # Minimal dev entry scene — opens the admin console immediately.
 
-const AdminConsoleScene: PackedScene = preload("res://scenes/admin_console.tscn")
-
 @onready var _hint: Label = $HintLabel
 
 
 func _ready() -> void:
-	_open_console()
+	if BuildConfig.admin_tools_enabled():
+		_open_console()
 
 
 func _open_console() -> void:
+	if not BuildConfig.admin_tools_enabled():
+		return
 	if get_node_or_null("AdminConsoleOverlay") != null:
 		return
 	if _hint:
 		_hint.visible = false
-	var overlay: Control = AdminConsoleScene.instantiate()
-	overlay.name = "AdminConsoleOverlay"
-	if overlay.has_signal("closed"):
-		overlay.closed.connect(_on_console_closed)
-	add_child(overlay)
+	BuildConfig.toggle_admin_console_on(self)
+	var overlay: Node = get_node_or_null("AdminConsoleOverlay")
+	if overlay != null and overlay.has_signal("closed"):
+		if not overlay.closed.is_connected(_on_console_closed):
+			overlay.closed.connect(_on_console_closed)
 
 
 func _close_console() -> void:
@@ -38,13 +39,11 @@ func _on_console_closed() -> void:
 		_hint.visible = true
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if not (event is InputEventKey and event.pressed and not event.echo):
-		return
-	var key := event as InputEventKey
-	if key.keycode == KEY_A and key.ctrl_pressed and key.shift_pressed:
-		if get_node_or_null("AdminConsoleOverlay") != null:
-			_close_console()
-		else:
-			_open_console()
+func _input(event: InputEvent) -> void:
+	if BuildConfig.admin_shortcut_pressed(event):
+		if BuildConfig.admin_tools_enabled():
+			if get_node_or_null("AdminConsoleOverlay") != null:
+				_close_console()
+			else:
+				_open_console()
 		get_viewport().set_input_as_handled()

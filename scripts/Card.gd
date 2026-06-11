@@ -261,7 +261,10 @@ func _set_active_glow(show: bool) -> void:
 func _should_show_exposed_icon() -> bool:
 	if card_data == null or _is_enemy_view:
 		return false
-	# Exposed = face-up on the field during your turn (rules: identity known / dust settled).
+	# Exposed badge: this card's identity is visible to its owner —
+	# face-up on your turn, or face-down while you are peeking your board.
+	if _is_peeking and not card_data.face_up:
+		return card_data.card_type in ["character", "trap"]
 	return player_owner == GameState.current_player and card_data.face_up
 
 func _set_attacked_icon(show: bool) -> void:
@@ -292,7 +295,10 @@ func set_card_data(data: GameState.CardInstance, owner_player: int, pos: Vector2
 	card_data = data
 	player_owner = owner_player
 	grid_pos = pos
-	if is_inside_tree() and not _is_destroying:
+	# Cleared slots update GameState before destroy animation ends; refresh immediately
+	# so stale card art isn't resurrected by hover/selection modulate resets.
+	var cleared_slot := data != null and data.was_destroyed
+	if is_inside_tree() and (not _is_destroying or cleared_slot):
 		_refresh_display()
 
 func set_preview_revealed(value: bool) -> void:
@@ -370,7 +376,7 @@ func _show_empty_slot() -> void:
 	_set_active_glow(false)
 	_set_attacked_icon(false)
 	_flag_bar.visible = false
-	var is_revealed_blank := card_data != null and card_data.face_up
+	var is_revealed_blank := card_data != null and card_data.face_up and not card_data.was_destroyed
 	_blank_found_icon.visible = is_revealed_blank
 	_trap_icon.visible        = false
 
@@ -557,7 +563,7 @@ func _show_trap_face_up() -> void:
 	attacked_indicator.visible = false
 	shield_indicator.visible = false
 	_set_attacked_icon(false)
-	_set_active_glow(player_owner == GameState.current_player and not _is_enemy_view and card_data.face_up)
+	_set_active_glow(_should_show_exposed_icon())
 	_clear_rarity()
 	_flag_bar.visible = false
 	_blank_found_icon.visible = false
@@ -775,6 +781,9 @@ func set_target_hover(hovered: bool) -> void:
 		sb.border_width_bottom = 2
 
 func set_attack_hover(hovered: bool) -> void:
+	# Destroyed slots are empty — modulate tweens would flash stale pre-destroy art.
+	if card_data != null and card_data.was_destroyed:
+		return
 	if _attack_hover_tween and _attack_hover_tween.is_valid():
 		_attack_hover_tween.kill()
 		_attack_hover_tween = null

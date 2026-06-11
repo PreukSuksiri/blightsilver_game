@@ -1101,6 +1101,11 @@ const _FE_GAL_H:    float = 121.0
 const _FE_GAL_GAP:  int   = 6
 
 func _open_formation_editor() -> void:
+	if current_deck == null:
+		return
+	_purge_stale_formation_placements()
+	_fe_refresh_if_open()
+
 	if _fe_overlay != null and is_instance_valid(_fe_overlay):
 		_fe_overlay.queue_free()
 
@@ -1692,6 +1697,55 @@ func _fe_load_card_tex(card_name: String) -> Texture2D:
 		return load(path) as Texture2D
 	return null
 
+## Remove placements that reference cards no longer in the deck (or exceed deck copies).
+func _purge_stale_formation_placements() -> int:
+	if current_deck == null:
+		return 0
+	var char_pool: Dictionary = {}
+	var trap_pool: Dictionary = {}
+	for card_name: Variant in current_deck.characters:
+		var n: String = str(card_name)
+		char_pool[n] = int(char_pool.get(n, 0)) + 1
+	for card_name: Variant in current_deck.traps:
+		var n: String = str(card_name)
+		trap_pool[n] = int(trap_pool.get(n, 0)) + 1
+
+	var removed: int = 0
+	for f: Variant in current_deck.formations:
+		if not f is Dictionary:
+			continue
+		var fd: Dictionary = f as Dictionary
+		var pls: Array = fd.get("placements", []) as Array
+		var used_chars: Dictionary = {}
+		var used_traps: Dictionary = {}
+		for i in range(pls.size() - 1, -1, -1):
+			if not pls[i] is Dictionary:
+				pls.remove_at(i)
+				removed += 1
+				continue
+			var p: Dictionary = pls[i] as Dictionary
+			var n: String = str(p.get("name", "")).strip_edges()
+			var t: String = str(p.get("type", ""))
+			var keep: bool = false
+			if not n.is_empty():
+				if t == "character":
+					var avail: int = int(char_pool.get(n, 0))
+					var used: int = int(used_chars.get(n, 0))
+					if used < avail:
+						keep = true
+						used_chars[n] = used + 1
+				else:
+					var avail: int = int(trap_pool.get(n, 0))
+					var used: int = int(used_traps.get(n, 0))
+					if used < avail:
+						keep = true
+						used_traps[n] = used + 1
+			if not keep:
+				pls.remove_at(i)
+				removed += 1
+		fd["placements"] = pls
+	return removed
+
 ## Remove a card from every formation's placements (called when a card is deleted from the deck).
 func _fe_purge_card_from_formations(card_name: String) -> void:
 	if current_deck == null: return
@@ -1815,6 +1869,8 @@ func _on_save() -> void:
 	if current_deck.deck_name == "":
 		current_deck.deck_name = "My Deck"
 		deck_name_field.text = current_deck.deck_name
+	_purge_stale_formation_placements()
+	_fe_refresh_if_open()
 	SaveManager.save_deck(current_deck)
 	_refresh_deck_select()
 	status_label.text = "Deck saved!"

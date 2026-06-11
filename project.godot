@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 
 AudioManager="*res://autoload/AudioManager.gd"
 BGMManager="*res://autoload/BGMManager.gd"
+BuildConfig="*res://autoload/BuildConfig.gd"
 CardDatabase="*res://autoload/CardDatabase.gd"
 UnionDatabase="*res://autoload/UnionDatabase.gd"
 GameState="*res://autoload/GameState.gd"
@@ -78,4 +79,5 @@ ui_accept={
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)

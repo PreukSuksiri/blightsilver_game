@@ -10,9 +10,9 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_booths_peak_inside_2.png",
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_storage_peek_2.png",
 		"linger_characters": true,
-		"shake_screen": 8.0
+		"shake_screen": 10.0
 	},
 	{
 		"linger_characters": true,

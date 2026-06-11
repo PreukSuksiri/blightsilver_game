@@ -154,7 +154,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": "At the back of this floor. A [color=#FFEE44]Quiet Study Area[/color]."
+		"text": "The [color=#FFEE44]Quiet Study Area[/color]."
 	},
 	{
 		"characters": [
@@ -177,11 +177,13 @@
 		"text": "Perfect spot for anomaly. Let's go."
 	},
 	{
-		"linger_characters": true,
-		"wait": 0.5
+		"wait": 1.0
 	},
 	{
 		"text": "(Kelly walked ahead of Nex, while Nex subtly followed)"
+	},
+	{
+		"wait": 0.5
 	},
 	{
 		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_toilet_kelly_behind_door.png",

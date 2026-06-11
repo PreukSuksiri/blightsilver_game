@@ -157,7 +157,11 @@ var _inventory: Array[String] = []
 var _vars: Dictionary = {}
 var _played_vn_scenes: Dictionary = {}   # path → true; tracks once-only VN scenes played this session
 var _interacted_spots: Dictionary = {}   # "node_id:spot_index" → true; one-time spots already used
+var _spots_in_progress: Dictionary = {}  # "node_id:spot_index" → true; hide-after spots mid-action (not saved)
 var _talked_characters: Dictionary = {}  # "node_id:char_index" → true; characters removed from room after talk
+var _pending_spot_on_complete: Callable = Callable()
+var _pending_spot_interaction: Dictionary = {}  # { node_id, spot_index, hide_after } while a spot queue runs
+var _pending_play_once_paths: Array = []  # VN paths to mark played when the current spot queue finishes
 
 # Accumulated rewards — applied to main game when end_session(carry_rewards=true) is called.
 # { "credits": int, "flags": { key: value, ... } }
@@ -310,12 +314,17 @@ func _clear_session_memory() -> void:
 	_vars.clear()
 	_played_vn_scenes.clear()
 	_interacted_spots.clear()
+	_spots_in_progress.clear()
 	_talked_characters.clear()
+	_pending_spot_on_complete = Callable()
+	_pending_spot_interaction = {}
+	_pending_play_once_paths.clear()
 	_session_rewards   = {}
 	_source_vn_scene   = ""
 	_pending_restored_bgm = {}
 	_vn_resume_bgm = {}
 	_pending_spot_action_resume = {}
+	pending_battle_result = {}
 
 func _reset_session_state() -> void:
 	_clear_session_memory()
@@ -348,6 +357,58 @@ func mark_spot_interacted(node_id: String, spot_index: int) -> void:
 ## Returns true if the given spot has already been interacted with this session.
 func is_spot_interacted(node_id: String, spot_index: int) -> bool:
 	return _interacted_spots.has(node_id + ":" + str(spot_index))
+
+## Track a hide-after spot while its action queue is running (not persisted).
+func begin_spot_interaction(node_id: String, spot_index: int) -> void:
+	if node_id.is_empty() or spot_index < 0:
+		return
+	_spots_in_progress[node_id + ":" + str(spot_index)] = true
+
+func end_spot_interaction(node_id: String, spot_index: int) -> void:
+	_spots_in_progress.erase(node_id + ":" + str(spot_index))
+
+func is_spot_in_progress(node_id: String, spot_index: int) -> bool:
+	return _spots_in_progress.has(node_id + ":" + str(spot_index))
+
+func set_pending_spot_on_complete(cb: Callable) -> void:
+	_pending_spot_on_complete = cb
+
+func take_pending_spot_on_complete() -> Callable:
+	var cb: Callable = _pending_spot_on_complete
+	_pending_spot_on_complete = Callable()
+	return cb
+
+func clear_pending_spot_on_complete() -> void:
+	_pending_spot_on_complete = Callable()
+
+func set_pending_spot_interaction(node_id: String, spot_index: int, hide_after: bool) -> void:
+	_pending_spot_interaction = {
+		"node_id":    node_id,
+		"spot_index": spot_index,
+		"hide_after": hide_after,
+	}
+
+func take_pending_spot_interaction() -> Dictionary:
+	var out: Dictionary = _pending_spot_interaction.duplicate()
+	_pending_spot_interaction = {}
+	return out
+
+func clear_pending_spot_interaction() -> void:
+	_pending_spot_interaction = {}
+
+func reset_pending_play_once_paths() -> void:
+	_pending_play_once_paths.clear()
+
+func append_pending_play_once_path(path: String) -> void:
+	var p: String = path.strip_edges()
+	if p.is_empty():
+		return
+	_pending_play_once_paths.append(p)
+
+func commit_pending_play_once_paths() -> void:
+	for path_var: Variant in _pending_play_once_paths:
+		mark_vn_played(str(path_var))
+	_pending_play_once_paths.clear()
 
 ## Mark a character (node_id + index in node.characters) as talked when remove_after_talk is set.
 func mark_char_talked(node_id: String, char_index: int) -> void:
@@ -822,7 +883,7 @@ func _grant_credits(amount: int) -> void:
 	Collection.add_credits(amount)
 	emit_signal("mailbox_reward_granted", {
 		"type":         "credits",
-		"image_path":   "res://assets/textures/ui/decorations/ui_coin_front.png",
+		"image_path":   "res://assets/textures/ui/decorations/ui_icon_credit.png",
 		"display_name": "Received %d Credits" % amount,
 	})
 	# Toast is intentionally omitted — the mailbox reward overlay is the visual feedback.
@@ -887,6 +948,7 @@ func start_battle_for_node(node: ExplorationNode) -> void:
 		push_warning("ExplorationManager.start_battle_for_node: no active session.")
 		return
 	pending_battle_result = {}
+	snapshot_bgm_before_vn()
 	# Configure a standard VS_AI battle using the EXPLORATION game mode.
 	# The AI controls player 1; the human plays as player 0.
 	GameState.apply_battle_audio_config({
@@ -911,7 +973,12 @@ func complete_battle_node(won: bool) -> void:
 
 ## Stage remaining spot actions before a play_vn that may hand off to battle.
 ## Cleared when the VN finishes normally or after a post-battle resume attempt.
-func stage_spot_action_resume(node_id: String, actions: Array, from_index: int, resume_tag: String = "") -> void:
+func stage_spot_action_resume(
+		node_id: String,
+		actions: Array,
+		from_index: int,
+		resume_tag: String = "",
+		meta: Dictionary = {}) -> void:
 	if node_id.is_empty() or from_index >= actions.size():
 		return
 	_pending_spot_action_resume = {
@@ -919,6 +986,7 @@ func stage_spot_action_resume(node_id: String, actions: Array, from_index: int, 
 		"actions":    actions.duplicate(true),
 		"from_index": from_index,
 		"resume_tag": resume_tag,
+		"meta":       meta.duplicate(),
 	}
 
 func clear_spot_action_resume() -> void:
@@ -933,6 +1001,8 @@ func take_spot_action_resume_for_battle(won: bool, node_id: String) -> Dictionar
 	var out: Dictionary = _pending_spot_action_resume.duplicate(true)
 	clear_spot_action_resume()
 	if not won or staged_node != node_id:
+		clear_pending_spot_on_complete()
+		reset_pending_play_once_paths()
 		return {}
 	return out
 

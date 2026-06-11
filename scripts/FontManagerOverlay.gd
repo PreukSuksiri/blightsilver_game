@@ -40,6 +40,8 @@ func _build_header() -> void:
 	header.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
 	header.custom_minimum_size = Vector2(0, 52)
 	add_child(header)
+	
+	
 
 	var title := Label.new()
 	title.text = "Font Manager"
@@ -58,7 +60,12 @@ func _build_header() -> void:
 	close_btn.offset_right = -4
 	close_btn.offset_bottom = 48
 	close_btn.pressed.connect(queue_free)
-	header.add_child(close_btn)
+	#header.add_child(close_btn)
+	
+	
+	var save_btn := _make_button("Save", _BTN_SAVE)
+	save_btn.pressed.connect(_on_save)
+	header.add_child(save_btn)
 
 
 func _build_body() -> void:
@@ -188,9 +195,6 @@ func _build_bottom_bar() -> void:
 	apply_btn.pressed.connect(_on_apply)
 	hbox.add_child(apply_btn)
 
-	var save_btn := _make_button("Save", _BTN_SAVE)
-	save_btn.pressed.connect(_on_save)
-	hbox.add_child(save_btn)
 
 
 func _build_file_dialog() -> void:

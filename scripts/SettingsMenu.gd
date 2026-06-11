@@ -27,9 +27,9 @@ func _ready() -> void:
 	panel.add_theme_stylebox_override("panel", sb)
 	panel.set_anchors_preset(Control.PRESET_CENTER)
 	panel.offset_left   = -210
-	panel.offset_top    = -165
+	panel.offset_top    = -110
 	panel.offset_right  = 210
-	panel.offset_bottom = 165
+	panel.offset_bottom = 110
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(panel)
 
@@ -61,31 +61,6 @@ func _ready() -> void:
 		AudioManager.sfx_volume,
 		func(v: float) -> void: AudioManager.set_sfx_volume(v)
 	))
-
-	# Narrator toggle
-	vbox.add_child(_make_toggle_row(
-		"Card Narrator",
-		AudioManager.tts_enabled,
-		func(v: bool) -> void: AudioManager.set_tts_enabled(v)
-	))
-
-	# NSFW toggle + warning
-	var nsfw_warning := Label.new()
-	nsfw_warning.text = "Turning this on may cause age-restriction on streaming and affect monetization. Please keep this setting turned off if you or your audience are below 18."
-	nsfw_warning.add_theme_font_size_override("font_size", 10)
-	nsfw_warning.add_theme_color_override("font_color", Color(1.0, 0.65, 0.1, 0.9))
-	nsfw_warning.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	nsfw_warning.visible = SaveManager.nsfw_enabled
-	vbox.add_child(_make_toggle_row(
-		"NSFW Content",
-		SaveManager.nsfw_enabled,
-		func(v: bool) -> void:
-			SaveManager.nsfw_enabled = v
-			SaveManager.save_data()
-			SaveManager.nsfw_changed.emit(v)
-			nsfw_warning.visible = v
-	))
-	vbox.add_child(nsfw_warning)
 
 	# Close button
 	var close_btn := Button.new()
@@ -126,25 +101,6 @@ func _make_slider_row(label_text: String, initial: float, on_change: Callable) -
 	slider.value_changed.connect(func(v: float) -> void:
 		val_lbl.text = "%d%%" % roundi(v * 100)
 		on_change.call(v))
-
-	return row
-
-
-func _make_toggle_row(label_text: String, initial: bool, on_change: Callable) -> HBoxContainer:
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
-
-	var lbl := Label.new()
-	lbl.text = label_text
-	lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	lbl.add_theme_font_size_override("font_size", 12)
-	lbl.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0))
-	row.add_child(lbl)
-
-	var toggle := CheckButton.new()
-	toggle.button_pressed = initial
-	toggle.toggled.connect(func(v: bool) -> void: on_change.call(v))
-	row.add_child(toggle)
 
 	return row
 

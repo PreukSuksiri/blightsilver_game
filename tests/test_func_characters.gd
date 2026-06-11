@@ -780,29 +780,65 @@ func _mafia_associates(A, AB) -> void:
 func _immortal_vampire(A, AB) -> void:
 	print("-- TC-FUNC-Immortal-Vampire-001")
 	var att := _make_char("Immortal Vampire", 30, 80, 1200, A.CHAOS,
-		AB.DESTROYED_IF_BATTLES_DIVINE, {})
+		AB.DESTROY_SELF_VS_DIVINE_BOTH, {})
 	var def_ := _make_char("Angel Gatekeeper", 40, 90, 960, A.DIVINE)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_true(r.attacker_destroyed, "TC-FUNC-Immortal-Vampire-001: destroyed when battling DIVINE")
+	assert_true(r.attacker_destroyed, "TC-FUNC-Immortal-Vampire-001: destroyed when attacking DIVINE")
+	assert_false(r.defender_destroyed, "TC-FUNC-Immortal-Vampire-001: Divine survives (no Reckoning compare)")
 	assert_eq(r.attacker_crystal_loss, 1200, "TC-FUNC-Immortal-Vampire-001: pays own cost 1200")
+	print("-- TC-FUNC-Immortal-Vampire-002")
+	var divine_att := _make_char("Choir Lady Abigail", 25, 15, 250, A.DIVINE)
+	var vamp_def := _make_char("Immortal Vampire", 30, 80, 1200, A.CHAOS,
+		AB.DESTROY_SELF_VS_DIVINE_BOTH, {})
+	var r2 := BattleResolver.resolve_battle(divine_att, vamp_def, 3, 1, 0)
+	assert_true(r2.defender_destroyed, "TC-FUNC-Immortal-Vampire-002: destroyed when defending vs DIVINE")
+	assert_false(r2.attacker_destroyed, "TC-FUNC-Immortal-Vampire-002: Divine attacker survives")
+	assert_eq(r2.defender_crystal_loss, 1200, "TC-FUNC-Immortal-Vampire-002: pays own cost 1200")
 
 func _pit_lord(A, AB) -> void:
 	print("-- TC-FUNC-Pit-Lord-001")
 	var att := _make_char("Pit Lord", 120, 100, 1200, A.CHAOS,
-		AB.DESTROYED_IF_BATTLES_DIVINE, {})
+		AB.DESTROYED_IF_BATTLES_DIVINE, {"also_halve_after_attack": true})
 	var def_ := _make_char("Church Guard", 0, 35, 150, A.DIVINE)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_true(r.attacker_destroyed, "TC-FUNC-Pit-Lord-001: destroyed when battling DIVINE")
+	assert_true(r.attacker_destroyed, "TC-FUNC-Pit-Lord-001: destroyed after Reckoning vs DIVINE (win)")
+	assert_true(r.defender_destroyed, "TC-FUNC-Pit-Lord-001: Divine defender destroyed by ATK compare")
 	assert_eq(r.attacker_crystal_loss, 1200, "TC-FUNC-Pit-Lord-001: pays own cost 1200")
+	print("-- TC-FUNC-Pit-Lord-002")
+	var divine_att := _make_char("Moonrise Gentleman", 40, 30, 400, A.DIVINE)
+	var pit_def := _make_char("Pit Lord", 120, 100, 1200, A.CHAOS,
+		AB.DESTROYED_IF_BATTLES_DIVINE, {"also_halve_after_attack": true})
+	var r2 := BattleResolver.resolve_battle(divine_att, pit_def, 3, 1, 0)
+	assert_true(r2.defender_destroyed, "TC-FUNC-Pit-Lord-002: destroyed after Reckoning vs DIVINE (defender role)")
+	assert_true(r2.attacker_destroyed, "TC-FUNC-Pit-Lord-002: Divine attacker fails the compare")
+	assert_eq(r2.defender_crystal_loss, 1200, "TC-FUNC-Pit-Lord-002: pays own cost 1200")
+	print("-- TC-FUNC-Pit-Lord-003")
+	var weak_att := _make_char("Pit Lord", 120, 100, 1200, A.CHAOS,
+		AB.DESTROYED_IF_BATTLES_DIVINE, {"also_halve_after_attack": true})
+	var strong_divine := _make_char("Goddess of Virtue", 80, 200, 1400, A.DIVINE)
+	var r3 := BattleResolver.resolve_battle(weak_att, strong_divine, 3, 0, 1)
+	assert_true(r3.attacker_destroyed, "TC-FUNC-Pit-Lord-003: destroyed after Reckoning vs DIVINE (loss)")
+	assert_false(r3.defender_destroyed, "TC-FUNC-Pit-Lord-003: Divine defender survives")
 
 func _vampire_duchess(A, AB) -> void:
 	print("-- TC-FUNC-Vampire-Duchess-001")
 	var att := _make_char("Vampire Duchess", 50, 50, 800, A.CHAOS,
-		AB.DESTROYED_IF_BATTLES_DIVINE, {})
+		AB.DESTROY_SELF_VS_DIVINE_BOTH, {"drain_atk": 5, "drain_def": 5})
 	var def_ := _make_char("Moonrise Gentleman", 40, 30, 400, A.DIVINE)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
-	assert_true(r.attacker_destroyed, "TC-FUNC-Vampire-Duchess-001: destroyed when battling DIVINE")
+	assert_true(r.attacker_destroyed, "TC-FUNC-Vampire-Duchess-001: destroyed when attacking DIVINE")
+	assert_false(r.defender_destroyed, "TC-FUNC-Vampire-Duchess-001: Divine survives (no Reckoning compare)")
 	assert_eq(r.attacker_crystal_loss, 800, "TC-FUNC-Vampire-Duchess-001: pays own cost 800")
+	print("-- TC-FUNC-Vampire-Duchess-002")
+	var target := _make_char("Chaos Grunt", 30, 30, 300, A.CHAOS)
+	var duchess := _make_char("Vampire Duchess", 50, 50, 800, A.CHAOS,
+		AB.DESTROY_SELF_VS_DIVINE_BOTH, {"drain_atk": 5, "drain_def": 5})
+	var r2 := BattleResolver.resolve_battle(duchess, target, 3, 0, 1)
+	assert_eq(target.current_atk, 25, "TC-FUNC-Vampire-Duchess-002: defender loses 5 ATK")
+	assert_eq(target.current_def, 25, "TC-FUNC-Vampire-Duchess-002: defender loses 5 DEF")
+	assert_eq(duchess.current_atk, 55, "TC-FUNC-Vampire-Duchess-002: Duchess gains 5 ATK")
+	assert_eq(duchess.current_def, 55, "TC-FUNC-Vampire-Duchess-002: Duchess gains 5 DEF")
+	assert_false(duchess.halved, "TC-FUNC-Vampire-Duchess-002: Duchess does not halve own stats")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # DESTROY_IF_OPPONENT_AFFINITY
@@ -829,8 +865,17 @@ func _feral_vampire(A, AB) -> void:
 		AB.DESTROY_SELF_VS_DIVINE_BOTH, {})
 	var def_divine := _make_char("Choir Lady Abigail", 25, 15, 250, A.DIVINE)
 	var r := BattleResolver.resolve_battle(att, def_divine, 3, 0, 1)
-	assert_true(r.attacker_destroyed, "TC-FUNC-Feral-Vampire-001: self-destructs battling DIVINE")
+	assert_true(r.attacker_destroyed, "TC-FUNC-Feral-Vampire-001: self-destructs attacking DIVINE")
+	assert_false(r.defender_destroyed, "TC-FUNC-Feral-Vampire-001: Divine survives (no Reckoning compare)")
 	assert_eq(r.attacker_crystal_loss, 400, "TC-FUNC-Feral-Vampire-001: pays own cost 400")
+	print("-- TC-FUNC-Feral-Vampire-002")
+	var divine_att := _make_char("Choir Lady Abigail", 25, 15, 250, A.DIVINE)
+	var feral_def := _make_char("Feral Vampire", 40, 25, 400, A.CHAOS,
+		AB.DESTROY_SELF_VS_DIVINE_BOTH, {})
+	var r2 := BattleResolver.resolve_battle(divine_att, feral_def, 3, 1, 0)
+	assert_true(r2.defender_destroyed, "TC-FUNC-Feral-Vampire-002: self-destructs defending vs DIVINE")
+	assert_false(r2.attacker_destroyed, "TC-FUNC-Feral-Vampire-002: Divine attacker survives")
+	assert_eq(r2.defender_crystal_loss, 400, "TC-FUNC-Feral-Vampire-002: pays own cost 400")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # IMMUNE_TO_TRAPS

@@ -11,6 +11,7 @@ var _mail_panel:      Control
 var _mail_list:       VBoxContainer
 var _unclaimed_lbl:   Label
 var _claim_all_btn:   Button
+var _claim_credits_btn: Button
 var _delete_btn:      Button
 var _disc_count_lbl:  Label
 var _credit_count_lbl: Label
@@ -21,6 +22,7 @@ func _ready() -> void:
 
 	MailboxManager.mailbox_changed.connect(_refresh_mail)
 	Collection.collection_changed.connect(_refresh_items)
+	Collection.credits_changed.connect(_refresh_items)
 
 	_build_ui()
 
@@ -307,7 +309,14 @@ func _build_mail_panel() -> Control:
 	_claim_all_btn.text = "Claim All"
 	_claim_all_btn.add_theme_font_size_override("font_size", 12)
 	_claim_all_btn.pressed.connect(_on_claim_all)
+	_claim_all_btn.visible = false
 	mail_header.add_child(_claim_all_btn)
+
+	_claim_credits_btn = Button.new()
+	_claim_credits_btn.text = "Claim Credits"
+	_claim_credits_btn.add_theme_font_size_override("font_size", 12)
+	_claim_credits_btn.pressed.connect(_on_claim_all_credits)
+	mail_header.add_child(_claim_credits_btn)
 
 	_delete_btn = Button.new()
 	_delete_btn.text = "Delete Claimed"
@@ -343,7 +352,9 @@ func _refresh_mail() -> void:
 		child.queue_free()
 
 	var items: Array = MailboxManager.mail_items
-	if items.is_empty():
+	var credit_summary: Dictionary = MailboxManager.get_unclaimed_credit_summary()
+	var credit_unclaimed: int = int(credit_summary.get("count", 0))
+	if items.is_empty() and credit_unclaimed == 0:
 		var lbl := Label.new()
 		lbl.text = "Your mailbox is empty."
 		lbl.add_theme_color_override("font_color", Color(0.4, 0.55, 0.65, 0.7))
@@ -352,17 +363,83 @@ func _refresh_mail() -> void:
 		lbl.custom_minimum_size = Vector2(0, 80)
 		_mail_list.add_child(lbl)
 	else:
+		if credit_unclaimed > 0:
+			_mail_list.add_child(_make_credit_bundle_row(credit_summary))
 		var sorted: Array = items.duplicate()
 		sorted.reverse()
 		for item: Dictionary in sorted:
+			var reward: Dictionary = item.get("reward", {})
+			if not item.get("claimed", false) and MailboxManager.is_credit_reward(reward):
+				continue
 			_mail_list.add_child(_make_mail_row(item))
 
 	var unclaimed := MailboxManager.get_unclaimed_count()
 	_unclaimed_lbl.text = "%d unclaimed" % unclaimed if unclaimed > 0 else "All claimed"
 	_unclaimed_lbl.add_theme_color_override("font_color",
 		Color(0.3, 1.0, 0.7) if unclaimed > 0 else Color(0.4, 0.5, 0.55, 0.8))
+	_claim_credits_btn.visible = credit_unclaimed > 0
+	_claim_credits_btn.disabled = credit_unclaimed == 0
+	_claim_credits_btn.text = "Claim Credits (+%d)" % int(credit_summary.get("total", 0)) if credit_unclaimed > 0 else "Claim Credits"
 	_claim_all_btn.disabled = unclaimed == 0
 	_delete_btn.disabled = (items.size() - unclaimed) == 0
+
+func _make_credit_bundle_row(summary: Dictionary) -> Control:
+	var count: int = int(summary.get("count", 0))
+	var total: int = int(summary.get("total", 0))
+	var row := PanelContainer.new()
+	row.custom_minimum_size = Vector2(0, 72)
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.08, 0.06, 0.015, 1.0)
+	sb.border_width_left = 3
+	sb.border_width_top = 1
+	sb.border_width_right = 1
+	sb.border_width_bottom = 1
+	sb.border_color = Color(1.0, 0.82, 0.22, 0.75)
+	sb.set_corner_radius_all(6)
+	sb.content_margin_left = 12
+	sb.content_margin_right = 12
+	sb.content_margin_top = 10
+	sb.content_margin_bottom = 10
+	row.add_theme_stylebox_override("panel", sb)
+
+	var hbox := HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 10)
+	row.add_child(hbox)
+
+	var dot := Label.new()
+	dot.text = "●"
+	dot.add_theme_font_size_override("font_size", 14)
+	dot.add_theme_color_override("font_color", Color(1.0, 0.82, 0.22))
+	dot.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	dot.custom_minimum_size = Vector2(18, 0)
+	hbox.add_child(dot)
+
+	var vbox := VBoxContainer.new()
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox.add_theme_constant_override("separation", 2)
+	hbox.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "Credit rewards (%d)" % count
+	title.add_theme_font_size_override("font_size", 14)
+	title.add_theme_color_override("font_color", Color(1.0, 0.88, 0.35))
+	title.add_theme_font_override("font", CHIVO_FONT)
+	vbox.add_child(title)
+
+	var sub := Label.new()
+	sub.text = "+%d credits total — claim all at once" % total
+	sub.add_theme_font_size_override("font_size", 11)
+	sub.add_theme_color_override("font_color", Color(0.75, 0.65, 0.35, 0.85))
+	vbox.add_child(sub)
+
+	var btn := Button.new()
+	btn.text = "Claim"
+	btn.add_theme_font_size_override("font_size", 12)
+	btn.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
+	btn.pressed.connect(_on_claim_all_credits)
+	hbox.add_child(btn)
+
+	return row
 
 func _make_mail_row(item: Dictionary) -> Control:
 	var claimed: bool = item.get("claimed", false)
@@ -454,8 +531,16 @@ func _on_claim(mail_id: String) -> void:
 	_apply_reward(reward)
 
 func _on_claim_all() -> void:
-	for reward: Dictionary in MailboxManager.claim_all():
-		_apply_reward(reward)
+	pass  # Hidden — credit mail uses Claim Credits; packs stay per-mail.
+
+func _on_claim_all_credits() -> void:
+	var summary := MailboxManager.claim_all_credit_rewards()
+	var total: int = int(summary.get("total", 0))
+	if total <= 0:
+		return
+	Collection.add_credits(total)
+	CreditsEarnedOverlay.show_earned(get_tree().root, total)
+	_refresh_mail()
 
 func _apply_reward(reward: Dictionary) -> void:
 	if reward.is_empty():

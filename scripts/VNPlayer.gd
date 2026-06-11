@@ -364,6 +364,8 @@ func play_scene(json_path: String, on_complete: Callable, track_checkpoint: bool
 		var resume_at: int = SaveManager.get_vn_checkpoint(json_path)
 		if resume_at > 0 and resume_at < _beats.size():
 			_beat_index = resume_at
+			# Campaign gallery fades BGM out before continue; replay music from skipped beats.
+			_apply_music_state(_music_state_before_beat(_beat_index), true)
 	_show_beat()
 
 # ─────────────────────────────────────────────────────────────
@@ -704,11 +706,6 @@ func _show_beat() -> void:
 		GameState.apply_battle_start_crystals(beat)
 		if exploration_overlay and ExplorationManager.is_session_active:
 			GameState.vn_launched_from_exploration = true
-			if mark_played_on_battle and not _scene_path.is_empty():
-				ExplorationManager.mark_vn_played(_scene_path)
-			if mark_char_talked_on_battle and char_talk_index >= 0 \
-					and not char_talk_node_id.is_empty():
-				ExplorationManager.mark_char_talked(char_talk_node_id, char_talk_index)
 		# Set post-new_game fields (new_game resets most state but not these)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))
@@ -1036,6 +1033,30 @@ func _play_sfx(path: String, vol_db: float = 0.0) -> void:
 # ─────────────────────────────────────────────────────────────
 # Music — looping BGM, one track at a time, with fade in/out
 # ─────────────────────────────────────────────────────────────
+## Effective music after beats [0, up_to_index) — used when resuming a saved checkpoint.
+func _music_state_before_beat(up_to_index: int) -> Dictionary:
+	var path: String = ""
+	var fade_out: float = 0.0
+	var fade_in: float = 0.0
+	for i: int in range(mini(up_to_index, _beats.size())):
+		var beat: Dictionary = _beats[i]
+		if beat.has("music"):
+			var music_val = beat["music"]
+			path = str(music_val).strip_edges() if music_val != null else ""
+			fade_out = float(beat.get("music_fade_out", 0.0))
+			fade_in = float(beat.get("music_fade_in", 0.0))
+		elif beat.has("music_fade_out"):
+			path = ""
+			fade_out = float(beat.get("music_fade_out", 0.0))
+			fade_in = 0.0
+	return {"path": path, "fade_out": fade_out, "fade_in": fade_in}
+
+
+func _apply_music_state(state: Dictionary, skip_fade_out: bool = false) -> void:
+	var fade_out: float = 0.0 if skip_fade_out else float(state.get("fade_out", 0.0))
+	_set_music(str(state.get("path", "")).strip_edges(), fade_out, float(state.get("fade_in", 0.0)))
+
+
 func _set_music(path: String, fade_out: float = 0.0, fade_in: float = 0.0) -> void:
 	if keep_bgm or _preserve_bgm_for_exploration:
 		return

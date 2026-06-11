@@ -29,7 +29,7 @@ enum AbilityType {
 	BOOST_PER_TYPED_CARD_ON_FIELD,# +N ATK/DEF per specific named card type on field
 	BOOST_PER_ANIMA_ON_FIELD,     # +N ATK/DEF per face-up Anima card on own field
 	HALVE_STATS_AFTER_ATTACK,     # Halve ATK and DEF permanently after attacking
-	DESTROYED_IF_BATTLES_DIVINE,  # This card is destroyed if battling Divine
+	DESTROYED_IF_BATTLES_DIVINE,  # Destroy this card after Reckoning with Divine (either role)
 	IMMUNE_TO_TECH_CARDS,         # Not affected by Tech cards
 	ATK_BONUS_IF_DICE_HIGH,       # +N ATK if dice roll >= threshold
 	REVEAL_ADJACENT_AFTER_ATTACK, # Reveal an adjacent square after attacking
@@ -73,7 +73,7 @@ enum AbilityType {
 
 	# ── Destroy / negate conditions ──
 	DESTROY_IF_OPPONENT_AFFINITY,    # At battle calc, destroy defender if they match specified affinity
-	DESTROY_SELF_VS_DIVINE_BOTH,     # This card is destroyed when it battles a Divine card (any role)
+	DESTROY_SELF_VS_DIVINE_BOTH,     # Destroy self before Reckoning when battling Divine (either role)
 	ATK_BONUS_VS_VENOM,              # +N ATK when battling a card that has the "venom" flag
 	ATTACKER_ATK_DEBUFF,             # Reduce attacker's ATK by N during battle (when this card is defender)
 	SWAP_ATK_DEF_WHEN_ATTACKING,     # Swap own ATK and DEF when this card attacks (temp for battle)

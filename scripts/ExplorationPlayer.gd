@@ -11,6 +11,7 @@ extends Control
 ##
 ## Debug:
 ##   Press F3 to toggle the debug overlay (shows inventory, vars, history).
+##   Ctrl/Cmd+Shift+A toggles the admin console (dev builds / editor only).
 ##   Click the [DBG] button in the top-right corner for the same effect.
 
 const VN_PLAYER_SCENE: PackedScene = preload("res://scenes/vn_player.tscn")
@@ -19,6 +20,7 @@ const SETTING_ICON: String     = "res://assets/textures/ui/decorations/ui_icon_e
 const INVENTORY_ICON: String   = "res://assets/textures/ui/decorations/ui_exploration_inventory.png"
 const CHAT_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_exploration_chat.png"
 const INFO_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_exploration_info.png"
+const DISSOLVE_FONT: Font      = preload("res://assets/fonts/digit-tech.7.ttf")
 const COMPASS_SIZE: float  = 110.0  # icon width/height in pixels
 const COMPASS_IDLE_GLOW_PAD: float = 40.0   # soft halo extends this far beyond compass icon
 const COMPASS_IDLE_HINT_DELAY: float = 10.0 # seconds of no interaction before compass hint
@@ -324,41 +326,42 @@ func _build_ui() -> void:
 	_back_btn.pressed.connect(_on_back_pressed)
 	vbox.add_child(_back_btn)
 
-	# ── Debug button (top-right corner) ───────────────────────
-	var dbg_btn := Button.new()
-	dbg_btn.text         = "DBG"
-	dbg_btn.layout_mode  = 1
-	dbg_btn.anchor_left  = 1.0; dbg_btn.anchor_right  = 1.0
-	dbg_btn.anchor_top   = 0.0; dbg_btn.anchor_bottom = 0.0
-	dbg_btn.offset_left  = -58.0; dbg_btn.offset_right  = -6.0
-	dbg_btn.offset_top   = 6.0;   dbg_btn.offset_bottom = 34.0
-	dbg_btn.add_theme_font_size_override("font_size", 11)
-	dbg_btn.pressed.connect(_toggle_debug)
-	add_child(dbg_btn)
+	if BuildConfig.admin_tools_enabled():
+		# ── Debug button (top-right corner) ───────────────────────
+		var dbg_btn := Button.new()
+		dbg_btn.text         = "DBG"
+		dbg_btn.layout_mode  = 1
+		dbg_btn.anchor_left  = 1.0; dbg_btn.anchor_right  = 1.0
+		dbg_btn.anchor_top   = 0.0; dbg_btn.anchor_bottom = 0.0
+		dbg_btn.offset_left  = -58.0; dbg_btn.offset_right  = -6.0
+		dbg_btn.offset_top   = 6.0;   dbg_btn.offset_bottom = 34.0
+		dbg_btn.add_theme_font_size_override("font_size", 11)
+		dbg_btn.pressed.connect(_toggle_debug)
+		add_child(dbg_btn)
 
-	# ── Debug panel ───────────────────────────────────────────
-	_debug_panel = PanelContainer.new()
-	_debug_panel.visible    = false
-	_debug_panel.z_index    = 200
-	_debug_panel.layout_mode = 1
-	_debug_panel.anchor_left   = 0.0; _debug_panel.anchor_right  = 0.52
-	_debug_panel.anchor_top    = 0.0; _debug_panel.anchor_bottom = 1.0
-	_debug_panel.offset_left   = 8.0; _debug_panel.offset_top    = 8.0
-	_debug_panel.offset_bottom = -8.0
-	var sb_dbg := StyleBoxFlat.new()
-	sb_dbg.bg_color = Color(0.0, 0.04, 0.0, 0.90)
-	sb_dbg.set_border_width_all(1)
-	sb_dbg.border_color = Color(0.3, 0.9, 0.3, 0.6)
-	sb_dbg.set_corner_radius_all(6)
-	sb_dbg.content_margin_left = 12.0; sb_dbg.content_margin_top = 12.0
-	_debug_panel.add_theme_stylebox_override("panel", sb_dbg)
-	_debug_lbl = RichTextLabel.new()
-	_debug_lbl.bbcode_enabled = true
-	_debug_lbl.scroll_active  = true
-	_debug_lbl.add_theme_font_size_override("normal_font_size", 13)
-	_debug_lbl.add_theme_color_override("default_color", Color(0.55, 1.0, 0.55))
-	_debug_panel.add_child(_debug_lbl)
-	add_child(_debug_panel)
+		# ── Debug panel ───────────────────────────────────────────
+		_debug_panel = PanelContainer.new()
+		_debug_panel.visible    = false
+		_debug_panel.z_index    = 200
+		_debug_panel.layout_mode = 1
+		_debug_panel.anchor_left   = 0.0; _debug_panel.anchor_right  = 0.52
+		_debug_panel.anchor_top    = 0.0; _debug_panel.anchor_bottom = 1.0
+		_debug_panel.offset_left   = 8.0; _debug_panel.offset_top    = 8.0
+		_debug_panel.offset_bottom = -8.0
+		var sb_dbg := StyleBoxFlat.new()
+		sb_dbg.bg_color = Color(0.0, 0.04, 0.0, 0.90)
+		sb_dbg.set_border_width_all(1)
+		sb_dbg.border_color = Color(0.3, 0.9, 0.3, 0.6)
+		sb_dbg.set_corner_radius_all(6)
+		sb_dbg.content_margin_left = 12.0; sb_dbg.content_margin_top = 12.0
+		_debug_panel.add_theme_stylebox_override("panel", sb_dbg)
+		_debug_lbl = RichTextLabel.new()
+		_debug_lbl.bbcode_enabled = true
+		_debug_lbl.scroll_active  = true
+		_debug_lbl.add_theme_font_size_override("normal_font_size", 13)
+		_debug_lbl.add_theme_color_override("default_color", Color(0.55, 1.0, 0.55))
+		_debug_panel.add_child(_debug_lbl)
+		add_child(_debug_panel)
 
 	# ── Point-and-click spot layer ────────────────────────────
 	_build_spots_layer()
@@ -1539,23 +1542,24 @@ func _on_chat_character_selected(char_data: Dictionary) -> void:
 		var node: ExplorationNode = ExplorationManager.current_node
 		if node != null:
 			_compass_set_visible(true)
+		if play_once and not vn_path.is_empty():
+			ExplorationManager.mark_vn_played(vn_path)
 		if remove_after and char_index >= 0:
 			ExplorationManager.mark_char_talked(node_id, char_index)
 			if node != null:
 				_rebuild_who_is_here(node)
 		_refresh_contextual_hud_glows()
-	var mark_talked: bool = remove_after and char_index >= 0
 	if actions.is_empty():
 		if vn_path.is_empty():
 			return
-		_play_vn(vn_path, done_cb, play_once, true, mark_talked, node_id, char_index)
+		_play_vn(vn_path, done_cb)
 		return
 	var after_actions := func() -> void:
 		_execute_spot_actions(actions, done_cb)
 	if vn_path.is_empty():
 		_execute_spot_actions(actions, done_cb)
 		return
-	_play_vn(vn_path, after_actions, play_once, true, mark_talked, node_id, char_index)
+	_play_vn(vn_path, after_actions)
 
 func _flash_empty_chat() -> void:
 	if _chat_empty_tween and _chat_empty_tween.is_valid():
@@ -1599,6 +1603,8 @@ func _rebuild_who_is_here(node: ExplorationNode) -> void:
 		if not char_data is Dictionary:
 			continue
 		var cd: Dictionary = char_data as Dictionary
+		if not ExplorationManager.is_connection_unlocked(cd):
+			continue
 		if _is_char_removed_from_room(cd, i):
 			continue
 		var char_name: String = str(cd.get("name", "")).strip_edges()
@@ -2119,20 +2125,15 @@ func _show_mailbox_reward_overlay(info: Dictionary) -> void:
 	var dim := ColorRect.new()
 	dim.color        = Color(0.0, 0.0, 0.0, 0.85)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.position     = Vector2.ZERO
+	dim.size         = vp
 	overlay.add_child(dim)
-
-	# Tap-to-dismiss catcher (disabled once dissolve begins)
-	var tapper := ColorRect.new()
-	tapper.color        = Color(0, 0, 0, 0)
-	tapper.mouse_filter = Control.MOUSE_FILTER_STOP
-	tapper.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	overlay.add_child(tapper)
 
 	# Centred content column
 	var center := CenterContainer.new()
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.position     = Vector2.ZERO
+	center.size         = vp
 	overlay.add_child(center)
 
 	var vbox := VBoxContainer.new()
@@ -2173,43 +2174,62 @@ func _show_mailbox_reward_overlay(info: Dictionary) -> void:
 	hint_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(hint_lbl)
 
-	# Wire tapper — only triggers BEFORE dissolve begins
+	overlay.set_meta("mailbox_img", img_tr)
+	overlay.set_meta("mailbox_hint", hint_lbl)
+	overlay.set_meta("mailbox_name", name_lbl)
+
+	# Full-screen tap catcher on top so taps always register (disabled once dissolve begins)
+	var tapper := ColorRect.new()
+	tapper.color        = Color(0.0, 0.0, 0.0, 0.0)
+	tapper.mouse_filter = Control.MOUSE_FILTER_STOP
+	tapper.position     = Vector2.ZERO
+	tapper.size         = vp
+	tapper.z_index      = 50
 	tapper.gui_input.connect(func(ev: InputEvent) -> void:
 		if _is_press_event(ev):
-			_dismiss_mailbox_reward_overlay(overlay, tapper, img_tr, hint_lbl, name_lbl))
+			_dismiss_mailbox_reward_overlay())
+	overlay.add_child(tapper)
 
 	# Fade-in
 	var tw := create_tween()
 	tw.tween_property(overlay, "modulate:a", 1.0, 0.45).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
 
 	# 8-second auto-dismiss (gives player time to read, then dissolve plays automatically)
-	_obtained_dismiss_timer = get_tree().create_timer(8.0)
+	_arm_obtained_auto_dismiss(8.0, _dismiss_mailbox_reward_overlay)
+
+func _arm_obtained_auto_dismiss(seconds: float, dismiss_fn: Callable) -> void:
+	_obtained_dismiss_timer = get_tree().create_timer(seconds)
 	_obtained_dismiss_timer.timeout.connect(func() -> void:
+		_obtained_dismiss_timer = null
 		if _obtained_overlay == null or not is_instance_valid(_obtained_overlay):
 			return
-		_obtained_dismiss_timer = null
-		_dismiss_mailbox_reward_overlay(overlay, tapper, img_tr, hint_lbl, name_lbl))
+		if _obtained_dismissing:
+			return
+		dismiss_fn.call())
 
-func _dismiss_mailbox_reward_overlay(
-		overlay: Control,
-		tapper: ColorRect,
-		img_tr: TextureRect,
-		hint_lbl: Label,
-		name_lbl: Label) -> void:
+func _dismiss_mailbox_reward_overlay() -> void:
 	if _obtained_dismissing:
 		return
-	if not is_instance_valid(overlay):
+	var overlay: Control = _obtained_overlay
+	if overlay == null or not is_instance_valid(overlay):
 		_obtained_overlay     = null
 		_obtained_dismissing  = false
 		_show_next_obtained()
 		return
 
+	var img_tr: TextureRect = overlay.get_meta("mailbox_img") as TextureRect
+	var hint_lbl: Label = overlay.get_meta("mailbox_hint") as Label
+	var name_lbl: Label = overlay.get_meta("mailbox_name") as Label
+
 	_obtained_dismissing    = true
 	_obtained_dismiss_timer = null
 	_obtained_overlay       = null
 
-	# Disable tapper so accidental taps during animation are ignored
-	tapper.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Disable tap catcher so accidental taps during animation are ignored
+	for child: Node in overlay.get_children():
+		if child is ColorRect and (child as ColorRect).z_index >= 50:
+			(child as ColorRect).mouse_filter = Control.MOUSE_FILTER_IGNORE
+			break
 
 	# Hide hint and title — only image stays visible for dissolve
 	hint_lbl.visible = false
@@ -2233,7 +2253,7 @@ func _play_digital_dissolve(overlay: Control, img_tr: TextureRect, on_done: Call
 	particle_layer.z_index = 3
 	overlay.add_child(particle_layer)
 
-	var digit_font: Font = FontManager.get_font("digital")
+	var digit_font: Font = DISSOLVE_FONT
 
 	# Spawn area — read from image rect once layout is settled
 	var spawn_cx: float = vp.x * 0.5
@@ -2305,13 +2325,15 @@ func _play_digital_dissolve(overlay: Control, img_tr: TextureRect, on_done: Call
 
 	# After dissolve window, transition to confirmation text.
 	# particle_layer is NOT queue_freed — _show_mailbox_sent_text hides all children.
+	var overlay_id: int = overlay.get_instance_id()
 	var seq := create_tween()
 	seq.tween_interval(DISSOLVE_DUR + 0.10)
 	seq.tween_callback(func() -> void:
-		if not is_instance_valid(overlay):
+		var ov: Control = instance_from_id(overlay_id) as Control
+		if ov == null or not is_instance_valid(ov):
 			on_done.call()
 			return
-		_show_mailbox_sent_text(overlay, on_done))
+		_show_mailbox_sent_text(ov, on_done))
 
 func _show_mailbox_sent_text(overlay: Control, on_done: Callable) -> void:
 	if not is_instance_valid(overlay):
@@ -2323,10 +2345,36 @@ func _show_mailbox_sent_text(overlay: Control, on_done: Callable) -> void:
 		if child is Control:
 			(child as Control).visible = false
 
+	var vp: Vector2 = get_viewport_rect().size
+	var dismissed := false
+	var hold_tween: Tween = null
+	var overlay_id: int = overlay.get_instance_id()
+
+	var finish := func() -> void:
+		var ov: Control = instance_from_id(overlay_id) as Control
+		if ov == null or not is_instance_valid(ov):
+			on_done.call()
+			return
+		if hold_tween != null and hold_tween.is_valid():
+			hold_tween.kill()
+		var tw := create_tween()
+		tw.tween_property(ov, "modulate:a", 0.0, 0.45) \
+			.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+		tw.tween_callback(ov.queue_free)
+		tw.tween_callback(on_done)
+
+	var dismiss := func() -> void:
+		if dismissed:
+			return
+		dismissed = true
+		finish.call()
+
 	var center := CenterContainer.new()
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	center.modulate.a = 0.0
+	center.position     = Vector2.ZERO
+	center.size         = vp
+	center.modulate.a   = 0.0
+	center.z_index      = 10
 	overlay.add_child(center)
 
 	var vbox := VBoxContainer.new()
@@ -2364,17 +2412,33 @@ func _show_mailbox_sent_text(overlay: Control, on_done: Callable) -> void:
 	sub_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(sub_lbl)
 
+	var hint_lbl := Label.new()
+	hint_lbl.text = "Tap to dismiss"
+	hint_lbl.add_theme_font_size_override("font_size", 16)
+	hint_lbl.add_theme_color_override("font_color", Color(0.55, 0.60, 0.65))
+	hint_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hint_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(hint_lbl)
+
+	var tapper := ColorRect.new()
+	tapper.color        = Color(0.0, 0.0, 0.0, 0.0)
+	tapper.mouse_filter = Control.MOUSE_FILTER_STOP
+	tapper.position     = Vector2.ZERO
+	tapper.size         = vp
+	tapper.z_index      = 50
+	tapper.gui_input.connect(func(ev: InputEvent) -> void:
+		if _is_press_event(ev):
+			dismiss.call())
+	overlay.add_child(tapper)
+
 	# Fade in confirmation text
 	var tw_in := create_tween()
 	tw_in.tween_property(center, "modulate:a", 1.0, 0.5).set_trans(Tween.TRANS_SINE)
 
-	# Hold for 2.5s then fade out entire overlay
-	var seq := create_tween()
-	seq.tween_interval(2.5)
-	seq.tween_property(overlay, "modulate:a", 0.0, 0.45) \
-		.set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
-	seq.tween_callback(overlay.queue_free)
-	seq.tween_callback(on_done)
+	# Auto-dismiss after hold if player does not tap
+	hold_tween = create_tween()
+	hold_tween.tween_interval(2.5)
+	hold_tween.tween_callback(dismiss)
 
 func _effect_path(eff: Dictionary) -> String:
 	var value: String = str(eff.get("value", "")).strip_edges()
@@ -2427,7 +2491,10 @@ func _execute_item_effects(item_id: String) -> void:
 				if play_once_flag and ExplorationManager.is_vn_played(vn_path):
 					continue
 				var done := false
-				_play_vn(vn_path, func() -> void: done = true, play_once_flag)
+				_play_vn(vn_path, func() -> void:
+					if play_once_flag:
+						ExplorationManager.mark_vn_played(vn_path)
+					done = true)
 				while not done:
 					if not is_inside_tree():
 						return
@@ -2911,6 +2978,33 @@ func _try_apply_bgm_snapshot(bgm: Dictionary, label: String) -> bool:
 	BGMManager.play_path(path, 1.0, 0.5, 100.0, context, loop_from, pos)
 	return true
 
+
+func _is_active_battle_bgm() -> bool:
+	if not BGMManager.is_playing():
+		return false
+	var ctx: String = BGMManager.get_current_context()
+	if ctx == BGMManager.CONTEXT_BATTLE or ctx == BGMManager.CONTEXT_PLACEMENT:
+		return true
+	var path: String = BGMManager.get_current_path().strip_edges()
+	if path.is_empty():
+		return false
+	if path == GameState.get_almost_win_bgm_path():
+		return true
+	var battle_path: String = GameState.battle_bgm_path.strip_edges()
+	if not battle_path.is_empty() and path == battle_path:
+		return true
+	var setup_path: String = GameState.battle_setup_bgm_path.strip_edges()
+	if not setup_path.is_empty():
+		return path == setup_path
+	return path == BGMManager.get_default_path(BGMManager.CONTEXT_PLACEMENT)
+
+
+func _restore_node_bgm(node: ExplorationNode, after_battle: bool = false) -> void:
+	if after_battle or _is_active_battle_bgm():
+		BGMManager.stop(0.8)
+	if not _try_apply_restored_bgm() and not _try_apply_vn_resume_bgm():
+		_apply_node_music(node)
+
 func _on_node_entered(node: ExplorationNode) -> void:
 	_dismiss_all_popups()
 	if _exit_vn_defer_enter:
@@ -2919,7 +3013,7 @@ func _on_node_entered(node: ExplorationNode) -> void:
 	_refresh_node(node)
 	_refresh_contextual_hud_glows()
 
-func _refresh_node(node: ExplorationNode) -> void:
+func _refresh_node(node: ExplorationNode, after_battle: bool = false) -> void:
 	_exit_pending   = false
 	_battle_pending = false
 	var vars: Dictionary = ExplorationManager.get_all_vars()
@@ -2934,11 +3028,8 @@ func _refresh_node(node: ExplorationNode) -> void:
 		else:
 			push_warning("ExplorationPlayer: bg '%s' not found." % effective_bg)
 
-	# Music — drop battle tracks, then save restore, VN resume, or node track
-	if BGMManager.get_current_context() == BGMManager.CONTEXT_BATTLE:
-		BGMManager.stop(0.8)
-	if not _try_apply_restored_bgm() and not _try_apply_vn_resume_bgm():
-		_apply_node_music(node)
+	# Music — drop battle/endgame tracks, then save restore, VN resume, or node track
+	_restore_node_bgm(node, after_battle)
 
 	# Type badge
 	match node.node_type:
@@ -3065,15 +3156,20 @@ func _try_play_node_vn(node: ExplorationNode, is_story: bool = false) -> void:
 		_compass_set_visible(false)
 	var after_actions: Array = node.resolve_vn_after_actions(vars)
 	var done_cb := func() -> void:
+		if play_once:
+			ExplorationManager.mark_vn_played(vn_path)
 		_on_vn_finished(node)
 	if after_actions.is_empty():
-		_play_vn(vn_path, done_cb, play_once, node.vn_keep_bgm)
+		_play_vn(vn_path, done_cb, node.vn_keep_bgm)
 		return
-	ExplorationManager.stage_spot_action_resume(node.id, after_actions, 0, "node_vn_after")
+	ExplorationManager.stage_spot_action_resume(node.id, after_actions, 0, "node_vn_after", {
+		"play_once": play_once,
+		"vn_path":   vn_path,
+	})
 	var after_vn := func() -> void:
 		ExplorationManager.clear_spot_action_resume()
 		_execute_spot_actions(after_actions, done_cb)
-	_play_vn(vn_path, after_vn, play_once, node.vn_keep_bgm)
+	_play_vn(vn_path, after_vn, node.vn_keep_bgm)
 
 func _play_puzzle(puzzle_id: String, on_done: Callable, puzzle_params: Dictionary = {}) -> void:
 	if _puzzle_playing or _vn_playing:
@@ -3140,14 +3236,7 @@ func _play_puzzle(puzzle_id: String, on_done: Callable, puzzle_params: Dictionar
 		cleanup.call()
 		on_done.call(success))
 
-func _play_vn(
-		path: String,
-		on_done: Callable,
-		play_once: bool = true,
-		keep_bgm: bool = true,
-		mark_char_talked: bool = false,
-		char_talk_node_id: String = "",
-		char_talk_index: int = -1) -> void:
+func _play_vn(path: String, on_done: Callable, keep_bgm: bool = true) -> void:
 	if _vn_playing or _puzzle_playing:
 		on_done.call()
 		return
@@ -3166,17 +3255,9 @@ func _play_vn(
 	vn.set("transparent_bg", true)   # show exploration scene behind VN dialog
 	vn.set("keep_bgm", keep_bgm)
 	vn.set("exploration_overlay", true)
-	vn.set("mark_played_on_battle", play_once)
-	vn.set("mark_char_talked_on_battle", mark_char_talked)
-	vn.set("char_talk_node_id", char_talk_node_id)
-	vn.set("char_talk_index", char_talk_index)
 	add_child(vn)
-	var captured_path: String = path
-	var captured_once: bool   = play_once
 	vn.play_scene(path, func() -> void:
 		ExplorationManager.clear_vn_resume_bgm()
-		if captured_once:
-			ExplorationManager.mark_vn_played(captured_path)
 		_vn_playing = false
 		on_done.call())
 
@@ -3215,6 +3296,14 @@ func _handle_post_battle_result() -> void:
 	ExplorationManager.pending_battle_result = {}
 	var won: bool    = bool(result.get("won", false))
 	var node_id: String = str(result.get("node_id", ""))
+	if not won:
+		_abort_pending_spot_interaction()
+		if ExplorationManager.is_session_active:
+			ExplorationManager.end_session(false)
+		CheckerTransition.fade_out_to_battle(func() -> void:
+			get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+			CheckerTransition.fade_in())
+		return
 	# Set a session variable so graph conditions can gate progress on battle outcome.
 	# Pattern: "battle_<node_id>_won" = "true" | "false"
 	if not node_id.is_empty():
@@ -3223,7 +3312,7 @@ func _handle_post_battle_result() -> void:
 	# Outcome was already shown on GameBoard's win/lose screen — no duplicate toast here.
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node != null:
-		_refresh_node(node)
+		_refresh_node(node, true)
 	else:
 		_show_no_session_error()
 	if not resume.is_empty():
@@ -3232,7 +3321,8 @@ func _handle_post_battle_result() -> void:
 		var resume_tag: String = str(resume.get("resume_tag", ""))
 		if from_index < resume_actions.size():
 			if resume_tag == "node_vn_after" and node != null:
-				call_deferred("_resume_node_vn_after_battle", resume_actions, from_index, node)
+				var meta: Dictionary = resume.get("meta", {}) as Dictionary
+				call_deferred("_resume_node_vn_after_battle", resume_actions, from_index, node, meta)
 			else:
 				call_deferred("_resume_spot_actions_after_battle", resume_actions, from_index)
 
@@ -3402,8 +3492,11 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	if not ExplorationManager.is_connection_unlocked(spot):
 		_log_skipped_spot(spot, spot_index)
 		return
-	# Skip one-time spots already interacted with this session
-	if bool(spot.get("hide_after_interact", false)) and ExplorationManager.is_spot_interacted(ExplorationManager.current_node_id, spot_index):
+	# Skip one-time spots already used or currently running an action queue
+	var spot_key_node: String = ExplorationManager.current_node_id
+	if bool(spot.get("hide_after_interact", false)) \
+			and (ExplorationManager.is_spot_interacted(spot_key_node, spot_index) \
+			or ExplorationManager.is_spot_in_progress(spot_key_node, spot_index)):
 		return
 
 	var xn: float         = float(spot.get("x_norm",    0.5))
@@ -3452,7 +3545,6 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	var cap_hide:  bool   = bool(spot.get("hide_after_interact", false))
 	var cap_node:  String = ExplorationManager.current_node_id
 	var cap_index: int    = spot_index
-	var puzzle_gated: bool = _spot_actions_have_puzzle_gate(cap_acts)
 	var apply_hide := func() -> void:
 		# Spot may already be freed if var/inventory change triggered _rebuild_spots mid-action.
 		if is_instance_valid(hit):
@@ -3463,11 +3555,17 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 		if ev is InputEventMouseButton:
 			var mb := ev as InputEventMouseButton
 			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
-				# Mark before actions run so var-triggered spot rebuilds don't respawn this spot.
+				ExplorationManager.set_pending_spot_interaction(cap_node, cap_index, cap_hide)
 				if cap_hide:
-					ExplorationManager.mark_spot_interacted(cap_node, cap_index)
-				var hide_cb: Callable = apply_hide if cap_hide else Callable()
-				_handle_spot_click(cap_acts, hide_cb))
+					ExplorationManager.begin_spot_interaction(cap_node, cap_index)
+					apply_hide.call()
+				var complete_cb: Callable = Callable()
+				if cap_hide:
+					complete_cb = func() -> void:
+						ExplorationManager.mark_spot_interacted(cap_node, cap_index)
+						ExplorationManager.end_spot_interaction(cap_node, cap_index)
+						apply_hide.call()
+				_handle_spot_click(cap_acts, complete_cb))
 
 func _handle_spot_click(actions: Array, hide_on_success: Callable) -> void:
 	_on_spot_triggered(actions, hide_on_success)
@@ -3490,57 +3588,55 @@ func _hide_tooltip() -> void:
 		_tooltip_panel.visible = false
 	_hovered_nav_panel = null
 
-func _spot_actions_have_puzzle_gate(actions: Array) -> bool:
-	for act_var: Variant in actions:
-		if act_var is Dictionary and str((act_var as Dictionary).get("action", "")) == "play_puzzle":
-			return true
-	return false
-
 func _on_spot_triggered(actions: Array, hide_on_success: Callable = Callable()) -> void:
 	_register_exploration_activity()
 	if _vn_playing or _puzzle_playing or actions.is_empty():
 		return
 	_on_spot_hover_exit()   # restore cursor before any action takes over
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
-	var puzzle_id: String = ""
-	var puzzle_params: Dictionary = {}
-	var remaining: Array = []
-	for act_var: Variant in actions:
-		if not act_var is Dictionary:
-			continue
-		var act: Dictionary = act_var as Dictionary
-		if str(act.get("action", "")) == "play_puzzle":
-			if puzzle_id.is_empty():
-				var val: String = str(act.get("value", "")).strip_edges()
-				var key: String = str(act.get("key", "")).strip_edges()
-				puzzle_id = val if not val.is_empty() else key
-				if not val.is_empty() and not key.is_empty():
-					puzzle_params = ExplorationPuzzleBase.parse_params(key)
-			continue
-		remaining.append(act)
-	if not puzzle_id.is_empty():
-		_play_puzzle(puzzle_id, func(success: bool) -> void:
-			if success:
-				_handle_puzzle_spot_success(remaining, hide_on_success)
-			# cancel/fail: close puzzle overlay only — spot stays active for retry
-		, puzzle_params)
-	else:
-		_execute_spot_actions(actions, hide_on_success)
-
-func _handle_puzzle_spot_success(remaining: Array, hide_on_success: Callable) -> void:
-	_execute_spot_actions(remaining, hide_on_success)
+	_execute_spot_actions(actions, hide_on_success)
 
 func _execute_spot_actions(actions: Array, on_complete: Callable = Callable()) -> void:
 	ExplorationManager.clear_spot_action_resume()
-	_run_spot_actions_from_index(actions, 0, on_complete)
+	ExplorationManager.reset_pending_play_once_paths()
+	ExplorationManager.set_pending_spot_on_complete(on_complete)
+	_run_spot_actions_from_index(actions, 0, _spot_actions_queue_complete)
+
+func _spot_actions_queue_complete() -> void:
+	ExplorationManager.commit_pending_play_once_paths()
+	var on_complete: Callable = ExplorationManager.take_pending_spot_on_complete()
+	ExplorationManager.clear_pending_spot_interaction()
+	if on_complete.is_valid():
+		on_complete.call()
 
 func _resume_spot_actions_after_battle(actions: Array, from_index: int) -> void:
-	_run_spot_actions_from_index(actions, from_index, Callable())
+	_run_spot_actions_from_index(actions, from_index, _spot_actions_queue_complete)
 
-func _resume_node_vn_after_battle(actions: Array, from_index: int, node: ExplorationNode) -> void:
+func _resume_node_vn_after_battle(
+		actions: Array,
+		from_index: int,
+		node: ExplorationNode,
+		meta: Dictionary = {}) -> void:
 	var done_cb := func() -> void:
+		if bool(meta.get("play_once", false)):
+			ExplorationManager.mark_vn_played(str(meta.get("vn_path", "")))
 		_on_vn_finished(node)
-	_run_spot_actions_from_index(actions, from_index, done_cb)
+	if from_index <= 0:
+		ExplorationManager.reset_pending_play_once_paths()
+	ExplorationManager.set_pending_spot_on_complete(done_cb)
+	_run_spot_actions_from_index(actions, from_index, _spot_actions_queue_complete)
+
+func _abort_pending_spot_interaction() -> void:
+	var ctx: Dictionary = ExplorationManager.take_pending_spot_interaction()
+	if ctx.is_empty():
+		return
+	var node_id: String = str(ctx.get("node_id", ""))
+	var spot_index: int = int(ctx.get("spot_index", -1))
+	ExplorationManager.end_spot_interaction(node_id, spot_index)
+	ExplorationManager.clear_pending_spot_on_complete()
+	ExplorationManager.reset_pending_play_once_paths()
+	if bool(ctx.get("hide_after", false)):
+		_refresh_spots_for_state()
 
 func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Callable) -> void:
 	if index >= actions.size():
@@ -3599,20 +3695,41 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 			if play_once and ExplorationManager.is_vn_played(value):
 				next.call()
 				return
+			if play_once:
+				ExplorationManager.append_pending_play_once_path(value)
 			ExplorationManager.stage_spot_action_resume(
 				ExplorationManager.current_node_id, actions, index + 1)
 			var vn_done := func() -> void:
 				ExplorationManager.clear_spot_action_resume()
 				next.call()
-			_play_vn(value, vn_done, play_once)
+			_play_vn(value, vn_done)
+		"play_puzzle":
+			var val: String = value.strip_edges()
+			var key_str: String = key.strip_edges()
+			var pid: String = val if not val.is_empty() else key_str
+			var params: Dictionary = {}
+			if not val.is_empty() and not key_str.is_empty():
+				params = ExplorationPuzzleBase.parse_params(key_str)
+			if pid.is_empty():
+				next.call()
+				return
+			_play_puzzle(pid, func(success: bool) -> void:
+				if success:
+					next.call()
+				else:
+					_abort_pending_spot_interaction()
+			, params)
 		"navigate_to":
+			_abort_pending_spot_interaction()
 			if not value.is_empty():
 				_compass_set_visible(true)
 				_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(value))
 			return
 		"end_exploration":
+			_abort_pending_spot_interaction()
 			_do_end_exploration()
 		"end_exploration_vn":
+			_abort_pending_spot_interaction()
 			if not value.is_empty():
 				_do_end_exploration_with_vn(value)
 		_:
@@ -3675,10 +3792,16 @@ func _exit_tree() -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _toggle_debug() -> void:
+	if _debug_panel == null:
+		return
 	_debug_panel.visible = not _debug_panel.visible
 	if _debug_panel.visible:
 		_debug_lbl.text = ""
 		_debug_lbl.append_text("[color=#44ff44]" + ExplorationManager.debug_dump() + "[/color]")
+
+
+func _toggle_admin_console() -> void:
+	BuildConfig.toggle_admin_console_on(self)
 
 func _input(event: InputEvent) -> void:
 	# HUD icons can sit under the info-only overlay; route taps explicitly while info is open.
@@ -3712,19 +3835,19 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 	if event is InputEventKey and (event as InputEventKey).pressed and not (event as InputEventKey).echo:
 		var ke := event as InputEventKey
-		if ke.keycode == KEY_F3:
+		if BuildConfig.admin_shortcut_pressed(ke):
+			if BuildConfig.admin_tools_enabled():
+				_toggle_admin_console()
+			get_viewport().set_input_as_handled()
+			return
+		if ke.keycode == KEY_F3 and BuildConfig.admin_tools_enabled():
 			_toggle_debug()
 			get_viewport().set_input_as_handled()
 		elif ke.keycode == KEY_ESCAPE and not _is_modified_key(ke):
 			if _item_preview != null:
 				_close_item_preview()
-			elif _enter_vn_hud_blocked:
-				get_viewport().set_input_as_handled()
 			elif _compass_open or _setting_open or _inv_open:
 				_close_all_menus()
-			elif ExplorationManager.can_go_back():
-				SFXManager.play(SFXManager.SFX_CANCEL)
-				ExplorationManager.go_back()
 			get_viewport().set_input_as_handled()
 
 # Soft radial cyan halo for the compass idle hint (fade-to-transparent edges).

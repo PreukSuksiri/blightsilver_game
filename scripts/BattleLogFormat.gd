@@ -78,6 +78,69 @@ static func attack_side_label(result: BattleResolver.BattleResult, is_attacker: 
 	return '"%s"' % result.defender_name
 
 
+static func format_attack_resolution_line(
+		atk_player: int,
+		attacker_pos: Vector2i,
+		def_player: int,
+		target_pos: Vector2i,
+		result: BattleResolver.BattleResult,
+		dice: int
+) -> String:
+	var a_name: String = attack_side_label(result, true)
+	var d_name: String = attack_side_label(result, false)
+	if result.special_trigger == "trap_effect":
+		return "Attack P%d(%d,%d)%s → P%d(%d,%d)%s  Dice=%d  → Unit vs Trap" % [
+			atk_player, attacker_pos.x, attacker_pos.y, a_name,
+			def_player, target_pos.x, target_pos.y, d_name, dice]
+	if result.special_trigger == "trap_nullified":
+		return "Attack P%d(%d,%d)%s → P%d(%d,%d)%s  Dice=%d  → Unit vs Trap (nullified)" % [
+			atk_player, attacker_pos.x, attacker_pos.y, a_name,
+			def_player, target_pos.x, target_pos.y, d_name, dice]
+	if result.defender_name.is_empty() and not result.defender_destroyed:
+		return "Attack P%d(%d,%d)%s → P%d(%d,%d)(empty)  Dice=%d  → DEAD_END" % [
+			atk_player, attacker_pos.x, attacker_pos.y, a_name,
+			def_player, target_pos.x, target_pos.y, dice]
+	var outcome: String = "WIN" if result.defender_destroyed and not result.attacker_destroyed \
+		else "LOSE" if result.attacker_destroyed and not result.defender_destroyed else "TIE"
+	return "Attack P%d(%d,%d)%s → P%d(%d,%d)%s  Dice=%d  ATK=%d vs DEF=%d  → %s" % [
+		atk_player, attacker_pos.x, attacker_pos.y, a_name,
+		def_player, target_pos.x, target_pos.y, d_name,
+		dice, result.attacker_atk_used, result.defender_def_used, outcome]
+
+
+static func format_attack_anim_line(
+		atk_player: int,
+		attacker_pos: Vector2i,
+		def_player: int,
+		target_pos: Vector2i,
+		result: BattleResolver.BattleResult
+) -> String:
+	if result.special_trigger == "trap_nullified":
+		return "Anim: 3D  (attacker survives)"
+	if result.special_trigger == "trap_effect":
+		var trap: Variant = result.special_params.get("trap_data", null)
+		if trap is TrapData:
+			var td: TrapData = trap as TrapData
+			if td.effect_type in [
+				TrapData.TrapEffectType.DESTROY_ATTACKER,
+				TrapData.TrapEffectType.DESTROY_ATTACKER_CHOICE_DESTROY,
+				TrapData.TrapEffectType.DESTROY_ATTACKER_DEFENDER_PAYS,
+			]:
+				return "Anim: 3E  △ P%d(%d,%d)" % [atk_player, attacker_pos.x, attacker_pos.y]
+		return "Anim: 3D  (attacker survives)"
+	if result.defender_name.is_empty() and not result.defender_destroyed:
+		return "Anim: 3F  (blank slot)"
+	if result.attacker_destroyed and result.defender_destroyed:
+		return "Anim: 3C  △ P%d(%d,%d) + △ P%d(%d,%d)" % [
+			atk_player, attacker_pos.x, attacker_pos.y,
+			def_player, target_pos.x, target_pos.y]
+	if result.defender_destroyed:
+		return "Anim: 3A  △ P%d(%d,%d)" % [def_player, target_pos.x, target_pos.y]
+	if result.attacker_destroyed:
+		return "Anim: 3B  △ P%d(%d,%d)" % [atk_player, attacker_pos.x, attacker_pos.y]
+	return "Anim: exchange  (no destruction)"
+
+
 static func _nonzero_buff_parts(card: GameState.CardInstance) -> PackedStringArray:
 	var parts: PackedStringArray = PackedStringArray()
 	_append_signed_stat(parts, "permATK", card.perm_atk_bonus)

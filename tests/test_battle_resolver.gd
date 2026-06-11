@@ -15,6 +15,7 @@ func run_all_tests() -> void:
 	test_equal_both_destroyed()
 	test_vs_blank_nothing_happens()
 	test_trap_nullified_immune()
+	test_trap_attack_log_line()
 	test_affinity_bonus_applied()
 	test_defend_crystal_gain()
 	test_defend_drain_attacker()
@@ -116,6 +117,21 @@ func test_trap_nullified_immune() -> void:
 	var trap := _make_trap("Trap Hole", 0)
 	var result := BattleResolver.resolve_battle(attacker, trap, 3, 0, 1)
 	assert_eq(result.special_trigger, "trap_nullified", "0-cost trap nullified for immune attacker")
+
+func test_trap_attack_log_line() -> void:
+	print("-- test_trap_attack_log_line")
+	var attacker := _make_char("Dark Monk", 15, 25, 300, CharacterData.Affinity.CHAOS)
+	var trap := _make_trap("Flame Trap", 250)
+	var result := BattleResolver.resolve_battle(attacker, trap, 4, 0, 1)
+	result.attacker_name = attacker.card_name
+	result.defender_name = trap.card_name
+	result.attacker_log_label = BattleLogFormat.format_unit(attacker)
+	result.defender_log_label = BattleLogFormat.format_card(trap)
+	var line: String = BattleLogFormat.format_attack_resolution_line(
+		0, Vector2i(4, 1), 1, Vector2i(4, 4), result, 4)
+	assert_true("Unit vs Trap" in line, "Trap attack logs Unit vs Trap")
+	assert_true("Dark Monk" in line, "Trap attack logs attacker name")
+	assert_true("Flame Trap" in line, "Trap attack logs trap name")
 
 func test_affinity_bonus_applied() -> void:
 	print("-- test_affinity_bonus_applied (Angel Gatekeeper vs Chaos)")

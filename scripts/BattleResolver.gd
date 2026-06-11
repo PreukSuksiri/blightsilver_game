@@ -102,6 +102,11 @@ static func _resolve_character_vs_character(
 		result: BattleResult,
 		defender_was_exposed: bool = false
 ) -> void:
+	# DESTROY_SELF_VS_DIVINE_BOTH: Vampire Duchess / Immortal Vampire / Feral Vampire —
+	# self-destruct before Reckoning when either role battles Divine (no ATK/DEF compare).
+	if _try_destroy_self_vs_divine_before_calc(attacker, defender, result):
+		return
+
 	var base_atk: int = attacker.get_effective_atk()
 	var eff_atk: int = _get_effective_atk(
 		attacker, defender, dice_roll, attacker_player, target_pos, defender_was_exposed)
@@ -127,30 +132,23 @@ static func _resolve_character_vs_character(
 	if not _silent_mode:
 		_spend_one_use_defense_boosts(defender, result)
 
-	result.messages.append("%s ATK %d vs %s DEF %d" % [attacker.card_name, eff_atk, defender.card_name, eff_def])
+	# Vampire Duchess: permanently drain defender ATK/DEF into attacker at battle calculation.
+	if _apply_attacker_battle_drain(attacker, defender, result):
+		base_atk = attacker.get_effective_atk()
+		eff_atk = _get_effective_atk(
+			attacker, defender, dice_roll, attacker_player, target_pos, defender_was_exposed)
+		base_def = defender.get_effective_def()
+		eff_def = _get_effective_def(defender, attacker, defender_player)
+		result.attacker_atk_used = eff_atk
+		result.defender_def_used = eff_def
+		result.attacker_atk_delta = eff_atk - base_atk
+		result.defender_def_delta = eff_def - base_def
+		result.attacker_pill_atk = base_atk
+		result.attacker_pill_def = attacker.get_effective_def()
+		result.defender_pill_atk = defender.get_effective_atk()
+		result.defender_pill_def = base_def
 
-	# DESTROY_SELF_VS_DIVINE_BOTH: Feral Vampire destroyed when battling Divine (either role)
-	if defender.affinity == CharacterData.Affinity.DIVINE:
-		if attacker.ability_type == CharacterData.AbilityType.DESTROY_SELF_VS_DIVINE_BOTH:
-			result.ability_triggered_attacker = true
-			result.attacker_destroyed = true
-			result.attacker_crystal_loss = attacker.crystal_cost
-			result.messages.append("%s is destroyed battling Divine!" % attacker.card_name)
-			if eff_atk >= eff_def:
-				result.defender_destroyed = true
-				result.defender_crystal_loss = defender.crystal_cost
-			return
-	if attacker.affinity == CharacterData.Affinity.DIVINE:
-		if defender.ability_type == CharacterData.AbilityType.DESTROY_SELF_VS_DIVINE_BOTH:
-			result.ability_triggered_defender = true
-			result.defender_destroyed = true
-			result.defender_crystal_loss = defender.crystal_cost
-			result.messages.append("%s is destroyed battling Divine!" % defender.card_name)
-			# Normal comparison still happens
-			if eff_atk <= eff_def:
-				result.attacker_destroyed = true
-				result.attacker_crystal_loss = attacker.crystal_cost
-			return
+	result.messages.append("%s ATK %d vs %s DEF %d" % [attacker.card_name, eff_atk, defender.card_name, eff_def])
 
 	# DESTROY_IF_OPPONENT_AFFINITY: Goblin Poacher / Goddess of Virtue
 	if attacker.ability_type == CharacterData.AbilityType.DESTROY_IF_OPPONENT_AFFINITY:
@@ -178,22 +176,6 @@ static func _resolve_character_vs_character(
 				return
 			else:
 				result.messages.append("%s: Coin flip missed — normal battle." % attacker.card_name)
-
-	# Check Pit Lord destroyed-by-divine rule
-	if attacker.ability_type == CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE:
-		if defender.affinity == CharacterData.Affinity.DIVINE:
-			result.ability_triggered_attacker = true
-			result.attacker_destroyed = true
-			result.attacker_crystal_loss = attacker.crystal_cost
-			result.messages.append("%s is destroyed by Divine!" % attacker.card_name)
-			# Still compare normally for defender
-			if eff_atk > eff_def:
-				result.defender_destroyed = true
-				result.defender_crystal_loss = defender.crystal_cost
-			elif eff_atk == eff_def:
-				result.defender_destroyed = true
-				result.defender_crystal_loss = defender.crystal_cost
-			return
 
 	# ONE_USE_DESTROY_BY_AFFINITY: Genesis Mech — once, destroy a card matching aff1 or aff2
 	if attacker.ability_type == CharacterData.AbilityType.ONE_USE_DESTROY_BY_AFFINITY \
@@ -309,6 +291,87 @@ static func _resolve_character_vs_character(
 			result.defender_crystal_loss = 0  # no crystal loss for bloater
 			result.messages.append("Lab Bloater Mutagen: Attacker destroyed!")
 
+	# Pit Lord: destroyed after Reckoning with Divine regardless of role or outcome.
+	_apply_destroy_after_divine_battle(attacker, defender, result)
+
+# ─────────────────────────────────────────────────────────────
+# Divine battle ability helpers
+# ─────────────────────────────────────────────────────────────
+static func _try_destroy_self_vs_divine_before_calc(
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance,
+		result: BattleResult
+) -> bool:
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
+		return false
+	if defender.affinity == CharacterData.Affinity.DIVINE \
+			and attacker.ability_type == CharacterData.AbilityType.DESTROY_SELF_VS_DIVINE_BOTH:
+		result.ability_triggered_attacker = true
+		result.attacker_destroyed = true
+		result.attacker_crystal_loss = attacker.crystal_cost
+		result.messages.append("%s is destroyed battling Divine!" % attacker.card_name)
+		return true
+	if attacker.affinity == CharacterData.Affinity.DIVINE \
+			and defender.ability_type == CharacterData.AbilityType.DESTROY_SELF_VS_DIVINE_BOTH:
+		result.ability_triggered_defender = true
+		result.defender_destroyed = true
+		result.defender_crystal_loss = defender.crystal_cost
+		result.messages.append("%s is destroyed battling Divine!" % defender.card_name)
+		return true
+	return false
+
+
+static func _apply_destroy_after_divine_battle(
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance,
+		result: BattleResult
+) -> void:
+	if _silent_mode:
+		return
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
+		return
+	var _divine_battle: bool = attacker.affinity == CharacterData.Affinity.DIVINE \
+			or defender.affinity == CharacterData.Affinity.DIVINE
+	if not _divine_battle:
+		return
+	if attacker.ability_type == CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE \
+			and not result.attacker_destroyed:
+		result.ability_triggered_attacker = true
+		result.attacker_destroyed = true
+		result.attacker_crystal_loss = attacker.crystal_cost
+		result.messages.append("%s is destroyed by Divine!" % attacker.card_name)
+	if defender.ability_type == CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE \
+			and not result.defender_destroyed:
+		result.ability_triggered_defender = true
+		result.defender_destroyed = true
+		result.defender_crystal_loss = defender.crystal_cost
+		result.messages.append("%s is destroyed by Divine!" % defender.card_name)
+
+
+static func _apply_attacker_battle_drain(
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance,
+		result: BattleResult
+) -> bool:
+	if not attacker.ability_params.has("drain_atk") and not attacker.ability_params.has("drain_def"):
+		return false
+	var drain_atk: int = int(attacker.ability_params.get("drain_atk", 0))
+	var drain_def: int = int(attacker.ability_params.get("drain_def", drain_atk))
+	if drain_atk <= 0 and drain_def <= 0:
+		return false
+	if _silent_mode:
+		return false
+	result.ability_triggered_attacker = true
+	defender.current_atk = max(0, defender.current_atk - drain_atk)
+	defender.current_def = max(0, defender.current_def - drain_def)
+	attacker.current_atk += drain_atk
+	attacker.current_def += drain_def
+	result.messages.append("%s drains %d ATK & %d DEF from %s!" % [
+		attacker.card_name, drain_atk, drain_def, defender.card_name])
+	return true
+
 # ─────────────────────────────────────────────────────────────
 # Trap Resolution (returns special trigger for complex effects)
 # ─────────────────────────────────────────────────────────────
@@ -323,6 +386,11 @@ static func _resolve_trap(
 	if trap_data == null:
 		result.messages.append("Unknown trap: %s" % trap.card_name)
 		return
+
+	result.attacker_pill_atk = attacker.get_effective_atk()
+	result.attacker_pill_def = attacker.get_effective_def()
+	result.attacker_atk_used = attacker.get_effective_atk()
+	result.attacker_atk_delta = 0
 
 	result.messages.append("Trap triggered: %s!" % trap.card_name)
 
@@ -666,9 +734,9 @@ static func _apply_post_attack_effects(
 ) -> void:
 	if _silent_mode:
 		return
-	# Pit Lord halves stats after attacking (skip during silent preview — avoids permanent mutation)
+	# Pit Lord: halve stats after attacking (skip during silent preview — avoids permanent mutation)
 	var also_halve: bool = attacker.ability_params.get("also_halve_after_attack", false)
-	if attacker.ability_type == CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE or also_halve:
+	if attacker.ability_type == CharacterData.AbilityType.HALVE_STATS_AFTER_ATTACK or also_halve:
 		attacker.halve_stats()
 
 
@@ -878,6 +946,17 @@ static func reckoning_overlay_log_lines(
 		result: BattleResult
 ) -> PackedStringArray:
 	var lines: PackedStringArray = []
+	if result.special_trigger in ["trap_effect", "trap_nullified"]:
+		lines.append(_reckoning_overlay_combatant_line(
+			attacker_player,
+			BattleLogFormat.attack_side_label(result, true),
+			result.attacker_atk_used,
+			result.attacker_pill_atk,
+			result.attacker_pill_def,
+			result.attacker_atk_delta,
+			"ATK",
+			result.attacker_pill_atk))
+		return lines
 	lines.append(_reckoning_overlay_combatant_line(
 		attacker_player,
 		BattleLogFormat.attack_side_label(result, true),

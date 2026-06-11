@@ -1,0 +1,237 @@
+=== Battle of Runaway Shopping Cart ===
+Battle started: 2026-06-11 10:14:53.776
+Game Session of Tequila Sunset (started 2026-06-11 10:14:10.400)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.164] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:21.816] Revealed: P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:21.834] Revealed: P1 (2,0) "Brainwash" {cost 1500}
+[00:21.834] Dice rolled: 5
+[00:22.129] MSG: Trap triggered: Brainwash!
+[00:26.206] Crystals: P1 5000 → 3500 (-1500)  [trap cost]
+[00:27.596] Target prompt: "Brainwash: Choose one of your own allies as the attack target."  filter=own_any_as_target
+[00:43.799] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:43.799] MSG: Brainwash: Sonic Seraph attacks Silver Spearman!
+[00:43.803] MSG: Sonic Seraph wins!
+[00:47.191] Crystals: P0 5000 → 4750 (-250)  [battle]
+[00:48.590] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=5  ATK=45 vs DEF=20  → WIN
+[00:48.590] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[00:48.590] Reckoning overlay: P1 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:48.590] Anim: 3A  △ P1(1,3)
+[00:48.590] Card destroyed  P1 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:48.595] Trap: "Brainwash" triggered  P0(1,1)→P1(2,0)
+[00:59.875] Revealed: P0 (1,4) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:59.875] Dice rolled: 3
+[00:59.909] MSG: Nothing happens — Dead End.
+[01:01.547] Attack P0(1,4)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(3,0)(empty)  Dice=3  → DEAD_END
+[01:01.547] Anim: 3F  (blank slot)
+[01:03.846] Turn ended  P0  |  Crystals P0=4750 P1=3500
+
+--- Turn 2  |  Player 1  |  Crystals P0=4750 P1=3500 ---
+[01:04.446] Mode selected P1: TECH
+[01:04.754] Tech played  P1: "Spy"
+[01:06.292] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:06.726] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:06.729] Tech resolved  P1
+[01:07.608] Mode selected P1: ATTACK
+[01:07.612] MSG: Player 2: tap a character to attack.
+[01:09.309] Revealed: P1 (3,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:09.310] Dice rolled: 4
+[01:09.316] MSG: Both cards are destroyed!
+[01:12.892] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:13.691] Crystals: P1 3500 → 2700 (-800)  [battle]
+[01:15.083] Crystals: P0 4750 → 4200 (-550)  [battle]
+[01:16.482] Attack P1(3,2)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}  Dice=4  ATK=50 vs DEF=50  → TIE
+[01:16.482] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[01:16.482] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=50 ATK pill=45 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:16.482] Anim: 3C  △ P1(3,2) + △ P0(1,1)
+[01:16.482] Card destroyed  P1 (3,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:16.482] Card destroyed  P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[01:16.980] Mode selected P1: ATTACK
+[01:16.985] MSG: Player 2: tap a character to attack.
+[01:18.685] Revealed: P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:18.685] Dice rolled: 5
+[01:18.692] MSG: Both cards are destroyed!
+[01:22.274] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:23.067] Crystals: P1 2700 → 2300 (-400)  [battle]
+[01:24.458] Crystals: P0 4200 → 3750 (-450)  [battle]
+[01:25.847] Attack P1(0,3)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P0(1,4)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=5  ATK=40 vs DEF=40  → TIE
+[01:25.847] Reckoning overlay: P1 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[01:25.847] Reckoning overlay: P0 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=40 ATK pill=35 DEF pill=40 mod=+DEF 0 (40+0=40)
+[01:25.847] Anim: 3C  △ P1(0,3) + △ P0(1,4)
+[01:25.847] Card destroyed  P1 (0,3) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:25.847] Card destroyed  P0 (1,4) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[01:26.344] Turn ended  P1  |  Crystals P0=3750 P1=2300
+
+--- Turn 3  |  Player 0  |  Crystals P0=3750 P1=2300 ---
+[01:32.725] MSG: Tap 2 material card(s) on the field.
+[01:36.615] MSG: 1 more material(s) needed.
+[01:38.240] Crystals: P0 3750 → 3250 (-500)  [union]
+[01:38.287] Revealed: P0 (2,1) "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima}
+[01:38.287] Union summoned P0: "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} from "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | face-down}, "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima | face-down}
+[01:38.288] MSG: Player 1 summoned [Grand Fort Captain] using: "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | face-down}, "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima | face-down}
+[01:48.106] Revealed: P1 (1,0) "Bait" {cost 0}
+[01:48.106] Dice rolled: 1
+[01:48.374] MSG: Trap triggered: Bait!
+[01:52.469] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[01:52.473] Trap: "Bait" triggered  P0(2,3)→P1(1,0)
+[01:52.477] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:52.899] Revealed: P1 (1,2) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[01:52.899] MSG: Revealed: Hairpin Assassin
+[04:02.812] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[04:02.812] Dice rolled: 2
+[04:02.823] MSG: Ponycorn wins!
+[04:05.620] Crystals: P1 2300 → 2000 (-300)  [battle]
+[04:07.019] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(1,2)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=2  ATK=25 vs DEF=15  → WIN
+[04:07.019] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[04:07.019] Reckoning overlay: P1 "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[04:07.019] Anim: 3A  △ P1(1,2)
+[04:07.019] Card destroyed  P1 (1,2) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[04:09.331] Turn ended  P0  |  Crystals P0=3250 P1=2000
+
+--- Turn 4  |  Player 1  |  Crystals P0=3250 P1=2000 ---
+[04:09.920] Mode selected P1: TECH
+[04:10.232] Tech played  P1: "Bribe"
+[04:11.777] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[04:17.570] Revealed: P0 (3,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[04:17.570] Crystals: P0 3250 → 3950 (+700)  [ability]
+[04:17.570] MSG: Bribe: Player 1 revealed Big Thug and received 700 Crystals.
+[04:17.575] Tech resolved  P1
+[04:18.463] Mode selected P1: ATTACK
+[04:18.465] MSG: Player 2: tap a character to attack.
+[04:20.171] Revealed: P1 (2,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[04:20.171] Dice rolled: 2
+[04:20.176] MSG: Both cards are destroyed!
+[04:22.979] Crystals: P1 2000 → 1750 (-250)  [battle]
+[04:23.773] MSG: [DEBUG] Bot Player timed out — ending turn.
+[04:24.373] Crystals: P0 3950 → 3550 (-400)  [battle]
+[04:25.757] Attack P1(2,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=2  ATK=25 vs DEF=25  → TIE
+[04:25.757] Reckoning overlay: P1 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[04:25.757] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:25.757] Anim: 3C  △ P1(2,3) + △ P0(2,3)
+[04:25.757] Card destroyed  P1 (2,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[04:25.757] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[04:26.255] Mode selected P1: ATTACK
+[04:26.259] MSG: Player 2: tap a character to attack.
+[04:27.963] Revealed: P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[04:27.963] Dice rolled: 3
+[04:27.967] MSG: Shepherd Detective wins!
+[04:31.563] MSG: [DEBUG] Bot Player timed out — ending turn.
+[04:32.455] Crystals: P0 3550 → 3150 (-400)  [battle]
+[04:33.852] Attack P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(3,0)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=3  ATK=40 vs DEF=35  → WIN
+[04:33.852] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[04:33.852] Reckoning overlay: P0 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[04:33.852] Anim: 3A  △ P0(3,0)
+[04:33.852] Card destroyed  P0 (3,0) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[04:33.856] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[04:34.285] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[04:34.285] MSG: Revealed: Hard Scale
+[04:34.347] Turn ended  P1  |  Crystals P0=3150 P1=1750
+
+--- Turn 5  |  Player 0  |  Crystals P0=3150 P1=1750 ---
+[04:47.603] Dice rolled: 5
+[04:47.653] MSG: Grand Fort Captain wins!
+[04:50.480] Crystals: P1 1750 → 1350 (-400)  [battle]
+[04:51.866] Attack P0(2,1)"Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} → P1(0,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=5  ATK=45 vs DEF=25  → WIN
+[04:51.866] Reckoning overlay: P0 "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} badge=45 ATK pill=45 DEF pill=40 mod=+ATK 0 (45+0=45)
+[04:51.866] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:51.866] Anim: 3A  △ P1(0,1)
+[04:51.866] Card destroyed  P1 (0,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[04:56.992] Revealed: P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[04:56.992] Dice rolled: 2
+[04:56.998] MSG: Ponycorn wins!
+[05:00.945] Crystals: P1 1350 → 1070 (-280)  [battle]
+[05:02.356] Attack P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} → P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}  Dice=2  ATK=25 vs DEF=20  → WIN
+[05:02.356] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[05:02.356] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:02.356] Anim: 3A  △ P1(1,1)
+[05:02.356] Card destroyed  P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[05:02.838] Turn ended  P0  |  Crystals P0=3150 P1=1070
+
+--- Turn 6  |  Player 1  |  Crystals P0=3150 P1=1070 ---
+[05:03.433] Mode selected P1: ATTACK
+[05:03.435] MSG: Player 2: tap a character to attack.
+[05:05.136] Revealed: P1 (1,3) "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}
+[05:05.136] Dice rolled: 3
+[05:05.140] MSG: Street Rogue wins!
+[05:08.128] Crystals: P0 3150 → 2850 (-300)  [battle]
+[05:08.739] MSG: [DEBUG] Bot Player timed out — ending turn.
+[05:09.527] Attack P1(1,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=3  ATK=25 vs DEF=20  → WIN
+[05:09.527] Reckoning overlay: P1 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[05:09.527] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:09.527] Anim: 3A  △ P0(0,2)
+[05:09.527] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[05:10.021] Mode selected P1: ATTACK
+[05:10.023] MSG: Player 2: tap a character to attack.
+[05:11.735] Revealed: P1 (4,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[05:11.735] Dice rolled: 1
+[05:11.771] MSG: Tomb Bandit wins!
+[05:15.320] MSG: [DEBUG] Bot Player timed out — ending turn.
+[05:16.211] Attack P1(4,3)"Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} → P0(2,1)"Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima}  Dice=1  ATK=75 vs DEF=40  → WIN
+[05:16.211] Reckoning overlay: P1 "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima} badge=75 ATK pill=75 DEF pill=60 mod=+ATK 0 (75+0=75)
+[05:16.211] Reckoning overlay: P0 "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima} badge=40 ATK pill=45 DEF pill=40 mod=+DEF 0 (40+0=40)
+[05:16.211] Anim: 3A  △ P0(2,1)
+[05:16.211] Card destroyed  P0 (2,1) "Grand Fort Captain" {Union ATK45 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Anima}
+[05:16.708] Turn ended  P1  |  Crystals P0=2850 P1=1070
+
+--- Turn 7  |  Player 0  |  Crystals P0=2850 P1=1070 ---
+[05:22.169] Crystals: P0 2850 → 1850 (-1000)  [tech cost]
+[05:23.551] Tech played  P0: "Accident"
+[05:25.092] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[05:25.561] Card destroyed  P1 (4,3) "Tomb Bandit" {Unit ATK75 DEF60 | cost 1000 | affinity Anima}
+[05:25.647] Tech resolved  P0
+[05:36.399] Revealed: P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[05:36.399] Dice rolled: 3
+[05:36.406] MSG: Choir Lady Abigail wins!
+[05:40.877] Crystals: P1 1070 → 720 (-350)  [battle]
+[05:42.276] Attack P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} → P1(1,3)"Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima}  Dice=3  ATK=25 vs DEF=20  → WIN
+[05:42.276] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=25 ATK pill=25 DEF pill=15 mod=+ATK 0 (25+0=25)
+[05:42.276] Reckoning overlay: P1 "Street Rogue" {Unit ATK25 DEF20 | cost 350 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:42.276] Anim: 3A  △ P1(1,3)
+[05:47.491] Revealed: P0 (3,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[05:47.519] Revealed: P1 (2,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[05:47.519] Dice rolled: 4
+[05:52.103] Crystals: P0 1850 → 1600 (-250)  [battle]
+[05:53.508] Attack P0(3,1)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} → P1(2,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}  Dice=4  ATK=20 vs DEF=35  → LOSE
+[05:53.508] Reckoning overlay: P0 "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[05:53.508] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[05:53.508] Anim: 3B  △ P0(3,1)
+[05:53.508] Card destroyed  P0 (3,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[05:54.290] Turn ended  P0  |  Crystals P0=1600 P1=720
+
+--- Turn 8  |  Player 1  |  Crystals P0=1600 P1=720 ---
+[05:54.884] Mode selected P1: ATTACK
+[05:54.887] MSG: Player 2: tap a character to attack.
+[05:56.588] Dice rolled: 1
+[05:56.596] MSG: Kiyoko the Death Whisper wins!
+[06:00.177] MSG: [DEBUG] Bot Player timed out — ending turn.
+[06:01.062] Crystals: P0 1600 → 1350 (-250)  [battle]
+[06:02.459] Attack P1(2,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P0(2,4)"Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}  Dice=1  ATK=40 vs DEF=15  → WIN
+[06:02.459] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[06:02.459] Reckoning overlay: P0 "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[06:02.459] Anim: 3A  △ P0(2,4)
+[06:02.459] Card destroyed  P0 (2,4) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[06:02.954] Mode selected P1: ATTACK
+[06:02.955] MSG: Player 2: tap a character to attack.
+[06:04.669] Revealed: P1 (4,1) "Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima}
+[06:04.669] Dice rolled: 5
+[06:04.688] MSG: Nothing happens — Dead End.
+[06:06.592] Attack P1(4,1)"Mafia Associates" {Unit ATK45 DEF40 | cost 500 | affinity Anima} → P0(0,4)(empty)  Dice=5  → DEAD_END
+[06:06.592] Anim: 3F  (blank slot)
+[06:07.099] MSG: Mafia Associates: DEF becomes 0 at end of expose turn.
+[06:07.101] Turn ended  P1  |  Crystals P0=1350 P1=720
+
+--- Turn 9  |  Player 0  |  Crystals P0=1350 P1=720 ---
+[06:13.506] Revealed: P0 (3,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[06:13.506] Dice rolled: 1
+[06:13.509] MSG: Grand Fort Mauler wins!
+[06:17.987] Crystals: P1 720 → 0 (-720)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1350  P1: 0  |  Turns: 9

@@ -65,9 +65,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "You're full of dramas. It's only been 9"
-		}
+		"text": "You're full of dramas. It's only been 14"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -717,6 +715,14 @@
 		"exploration_force_fresh": true,
 		"exploration_keep_vn_bgm": true,
 		"exploration_on_return": "res://campaign/scenes/ch0_s1_pre_DEMO_PART2.json",
+		"exploration_params": {
+			"surprise_factor": {
+				"random": [
+					1,
+					3
+				]
+			}
+		},
 		"linger_characters": true
 	}
 ]

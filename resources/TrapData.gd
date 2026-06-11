@@ -23,7 +23,7 @@ enum TrapEffectType {
 
 	# ── New implemented trap effects ──
 	FIELD_BOOST_AFFINITY_DEF,         # +N DEF (temp) to all face-up specific-affinity chars until end of turn
-	SWAP_ATTACKER_ATK_DEF_TEMP,       # Swap attacker's ATK and DEF until end of this turn
+	SWAP_ATTACKER_ATK_DEF_TEMP,       # Swap attacker's ATK and DEF until end of defender's turn
 	CANCEL_ATTACKER_ATTACK,           # Cancel the attacking card's attack (trap is consumed)
 	DESTROY_ATTACKER_DEFENDER_PAYS,   # Destroy attacker; defending player also loses crystals = attacker's cost
 	TEMP_DEBUFF_ALL_ATTACKER_CHARS,   # -N ATK (temp) to ALL attacking player's characters until end of turn

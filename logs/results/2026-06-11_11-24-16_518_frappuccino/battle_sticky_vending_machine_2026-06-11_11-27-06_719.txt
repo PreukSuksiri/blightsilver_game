@@ -1,0 +1,295 @@
+=== Battle of Sticky Vending Machine ===
+Battle started: 2026-06-11 11:27:06.719
+Game Session of Frappuccino (started 2026-06-11 11:24:16.518)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.998] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:17.339] Revealed: P0 (1,2) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[00:17.385] Revealed: P1 (3,1) "Cursed Reflection" {cost 500}
+[00:17.386] Dice rolled: 2
+[00:17.636] MSG: Trap triggered: Cursed Reflection!
+[00:20.153] Crystals: P1 5000 → 4500 (-500)  [trap cost]
+[00:21.544] MSG: Cursed Reflection: Grand Fort Footsoldier's ATK and DEF swapped until end of defender's turn!
+[00:21.550] Attack P0(1,2)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(3,1)"Cursed Reflection" {cost 500}  Dice=2  → Unit vs Trap
+[00:21.550] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[00:21.550] Anim: 3D  (attacker survives)
+[00:25.568] Revealed: P0 (1,1) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:25.568] Dice rolled: 1
+[00:25.593] MSG: Nothing happens — Dead End.
+[00:28.965] MSG: Sonic Seraph: Bonus attack for hitting dead end!
+[00:28.971] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(3,0)(empty)  Dice=1  → DEAD_END
+[00:28.971] Anim: 3F  (blank slot)
+[00:35.590] Revealed: P1 (0,1) "Self-destruct" {cost 0}
+[00:35.590] Dice rolled: 1
+[00:35.845] MSG: Trap triggered: Self-destruct!
+[00:38.797] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[00:39.190] MSG: Scout Probe: +10 ATK until end of next turn, then destroyed.
+[00:39.422] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn} → P1(0,1)"Self-destruct" {cost 0}  Dice=1  → Unit vs Trap
+[00:39.422] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[00:39.422] Anim: 3D  (attacker survives)
+[00:42.944] Turn ended  P0  |  Crystals P0=5000 P1=4500
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4500 ---
+[00:43.523] Mode selected P1: TECH
+[00:43.825] Crystals: P1 4500 → 3900 (-600)  [tech cost]
+[00:45.208] Tech played  P1: "Radar"
+[00:46.753] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:47.198] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[00:47.581] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[00:47.956] Tech resolved  P1
+[00:48.854] Mode selected P1: ATTACK
+[00:48.858] MSG: Player 2: tap a character to attack.
+[00:50.557] Revealed: P1 (0,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:50.557] Dice rolled: 1
+[00:50.580] MSG: Nothing happens — Dead End.
+[00:53.955] Attack P1(0,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(3,3)(empty)  Dice=1  → DEAD_END
+[00:53.955] Anim: 3F  (blank slot)
+[00:56.461] MSG: Scout Probe is destroyed by self-destruct trap!
+[00:56.461] Crystals: P1 3900 → 3200 (-700)  [card lost]
+[00:56.462] Card destroyed  P1 (4,4) "Scout Probe" {Unit ATK50 DEF50 | cost 700 | affinity Cosmic | base 40/50 | buff +tempATK10 | face-down}
+[00:56.465] Turn ended  P1  |  Crystals P0=5000 P1=3200
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3200 ---
+[01:04.327] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:04.327] Dice rolled: 3
+[01:04.336] MSG: Shepherd Detective wins!
+[01:08.511] Crystals: P1 3200 → 2800 (-400)  [battle]
+[01:09.909] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(0,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=3  ATK=40 vs DEF=30  → WIN
+[01:09.909] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[01:09.909] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:09.909] Anim: 3A  △ P1(0,0)
+[01:09.909] Card destroyed  P1 (0,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[01:09.918] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:16.964] Revealed: P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[01:16.965] MSG: Revealed: Striker Comet
+[01:27.547] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:27.548] Dice rolled: 1
+[01:27.572] MSG: Nothing happens — Dead End.
+[01:29.458] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(1,0)(empty)  Dice=1  → DEAD_END
+[01:29.458] Anim: 3F  (blank slot)
+[02:09.295] MSG: Striker Comet self-destructs at end of turn!
+[02:09.299] Crystals: P1 2800 → 2600 (-200)  [card lost]
+[02:09.304] Card destroyed  P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending}
+[02:09.313] Turn ended  P0  |  Crystals P0=5000 P1=2600
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=2600 ---
+[02:09.894] Mode selected P1: TECH
+[02:10.210] Tech played  P1: "Spy"
+[02:11.769] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[02:12.182] Tech resolved  P1
+[02:13.094] Mode selected P1: ATTACK
+[02:13.099] MSG: Player 2: tap a character to attack.
+[02:14.815] Revealed: P1 (1,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[02:14.815] Dice rolled: 1
+[02:14.821] MSG: Moon Tribe Marksman wins!
+[02:18.160] Crystals: P0 5000 → 4600 (-400)  [battle]
+[02:18.402] MSG: [DEBUG] Bot Player timed out — ending turn.
+[02:19.558] Attack P1(1,3)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=1  ATK=35 vs DEF=25  → WIN
+[02:19.558] Reckoning overlay: P1 "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} badge=35 ATK pill=35 DEF pill=25 mod=+ATK 0 (35+0=35)
+[02:19.558] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[02:19.558] Anim: 3A  △ P0(2,3)
+[02:19.558] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:20.061] Mode selected P1: ATTACK
+[02:20.064] MSG: Player 2: tap a character to attack.
+[02:21.785] Revealed: P1 (2,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:21.786] Dice rolled: 5
+[02:21.792] MSG: Moon Tribe Twin Blader wins!
+[02:25.372] MSG: [DEBUG] Bot Player timed out — ending turn.
+[02:26.281] Crystals: P0 4600 → 4350 (-250)  [battle]
+[02:27.723] Coin flip: Heads
+[02:30.476] MSG: Moon Tribe Twin Blader: Coin flip heads — extra attack!
+[02:30.481] Attack P1(2,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=5  ATK=30 vs DEF=20  → WIN
+[02:30.481] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[02:30.481] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:30.481] Anim: 3A  △ P0(1,3)
+[02:30.481] Card destroyed  P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[02:32.991] Turn ended  P1  |  Crystals P0=4350 P1=2600
+
+--- Turn 5  |  Player 0  |  Crystals P0=4350 P1=2600 ---
+[02:45.023] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[02:45.023] Dice rolled: 4
+[02:45.031] MSG: Grand Fort Archer wins!
+[02:50.525] Crystals: P1 2600 → 2300 (-300)  [battle]
+[02:51.919] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(1,3)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=4  ATK=30 vs DEF=25  → WIN
+[02:51.920] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[02:51.920] Reckoning overlay: P1 "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} badge=25 ATK pill=35 DEF pill=25 mod=+DEF 0 (25+0=25)
+[02:51.920] Anim: 3A  △ P1(1,3)
+[02:51.920] Card destroyed  P1 (1,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[02:57.605] Dice rolled: 3
+[02:57.611] MSG: Grand Fort Footsoldier wins!
+[03:00.522] Crystals: P1 2300 → 2000 (-300)  [battle]
+[03:01.924] Attack P0(1,2)"Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} → P1(2,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=3  ATK=25 vs DEF=20  → WIN
+[03:01.924] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima} badge=25 ATK pill=25 DEF pill=25 mod=+ATK 0 (25+0=25)
+[03:01.924] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:01.924] Anim: 3A  △ P1(2,4)
+[03:01.924] Card destroyed  P1 (2,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[05:11.842] Turn ended  P0  |  Crystals P0=4350 P1=2000
+
+--- Turn 6  |  Player 1  |  Crystals P0=4350 P1=2000 ---
+[05:12.441] Mode selected P1: TECH
+[05:12.757] Tech played  P1: "Tease"
+[05:14.320] MSG: Opponent must choose and reveal 1 of their squares.
+[05:14.456] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[05:15.651] MSG: Tease: Choose a face-down unit.
+[05:18.617] MSG: Tease: Choose a face-down unit.
+[05:19.425] MSG: Tease: Choose a face-down unit.
+[05:21.370] Revealed: P0 (3,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[05:21.371] MSG: Tease: Opponent revealed Choir Lady Anna.
+[05:21.377] Tech resolved  P1
+[05:22.279] Mode selected P1: ATTACK
+[05:22.283] MSG: Player 2: tap a character to attack.
+[05:24.005] Revealed: P1 (3,4) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[05:24.005] Dice rolled: 5
+[05:24.009] MSG: Parom the Smuggler wins!
+[05:27.596] MSG: [DEBUG] Bot Player timed out — ending turn.
+[05:28.507] Crystals: P0 4350 → 4050 (-300)  [battle]
+[05:29.905] Attack P1(3,4)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=5  ATK=30 vs DEF=20  → WIN
+[05:29.905] Reckoning overlay: P1 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[05:29.905] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:29.905] Anim: 3A  △ P0(0,2)
+[05:29.905] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[05:32.421] Turn ended  P1  |  Crystals P0=4050 P1=2000
+
+--- Turn 7  |  Player 0  |  Crystals P0=4050 P1=2000 ---
+[07:40.855] Revealed: P1 (0,2) "Foul Gas" {cost 0}
+[07:40.856] Dice rolled: 2
+[07:41.124] MSG: Trap triggered: Foul Gas!
+[07:43.333] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[07:43.337] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(0,2)"Foul Gas" {cost 0}  Dice=2  → Unit vs Trap
+[07:43.338] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[07:43.338] Anim: 3D  (attacker survives)
+[07:56.426] Dice rolled: 3
+[07:56.434] MSG: Both cards are destroyed!
+[07:59.228] Crystals: P0 4050 → 3750 (-300)  [battle]
+[08:00.618] Crystals: P1 2000 → 1700 (-300)  [battle]
+[08:02.013] Attack P0(1,2)"Grand Fort Footsoldier" {Unit ATK20 DEF25 | cost 300 | affinity Anima | base 25/25 | buff -tempATK5} → P1(3,4)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=3  ATK=20 vs DEF=20  → TIE
+[08:02.013] Reckoning overlay: P0 "Grand Fort Footsoldier" {Unit ATK20 DEF25 | cost 300 | affinity Anima | base 25/25 | buff -tempATK5} badge=20 ATK pill=20 DEF pill=25 mod=+ATK 0 (20+0=20)
+[08:02.013] Reckoning overlay: P1 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[08:02.013] Anim: 3C  △ P0(1,2) + △ P1(3,4)
+[08:02.013] Card destroyed  P0 (1,2) "Grand Fort Footsoldier" {Unit ATK20 DEF25 | cost 300 | affinity Anima | base 25/25 | buff -tempATK5}
+[08:02.013] Card destroyed  P1 (3,4) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[08:02.979] Turn ended  P0  |  Crystals P0=3750 P1=1700
+
+--- Turn 8  |  Player 1  |  Crystals P0=3750 P1=1700 ---
+[08:03.580] Mode selected P1: ATTACK
+[08:03.585] MSG: Player 2: tap a character to attack.
+[08:05.296] Revealed: P1 (3,3) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[08:05.296] Dice rolled: 1
+[08:05.300] MSG: Both cards are destroyed!
+[08:08.564] Crystals: P1 1700 → 1500 (-200)  [battle]
+[08:08.891] MSG: [DEBUG] Bot Player timed out — ending turn.
+[08:09.950] Crystals: P0 3750 → 3470 (-280)  [battle]
+[08:11.338] Attack P1(3,3)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} → P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=1  ATK=20 vs DEF=20  → TIE
+[08:11.338] Reckoning overlay: P1 "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[08:11.338] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[08:11.338] Anim: 3C  △ P1(3,3) + △ P0(2,1)
+[08:11.338] Card destroyed  P1 (3,3) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[08:11.338] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[08:11.842] Mode selected P1: ATTACK
+[08:11.844] MSG: Player 2: tap a character to attack.
+[08:13.559] Revealed: P1 (4,2) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[08:13.560] Dice rolled: 5
+[08:13.563] MSG: Both cards are destroyed!
+[08:17.152] MSG: [DEBUG] Bot Player timed out — ending turn.
+[08:17.976] Crystals: P1 1500 → 1250 (-250)  [battle]
+[08:19.371] Crystals: P0 3470 → 3220 (-250)  [battle]
+[08:20.760] Attack P1(4,2)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} → P0(3,1)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}  Dice=5  ATK=20 vs DEF=20  → TIE
+[08:20.761] Reckoning overlay: P1 "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[08:20.761] Reckoning overlay: P0 "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[08:20.761] Anim: 3C  △ P1(4,2) + △ P0(3,1)
+[08:20.761] Card destroyed  P1 (4,2) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[08:20.761] Card destroyed  P0 (3,1) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[08:21.262] Turn ended  P1  |  Crystals P0=3220 P1=1250
+
+--- Turn 9  |  Player 0  |  Crystals P0=3220 P1=1250 ---
+[08:25.083] Revealed: P1 (0,3) "Foul Gas" {cost 0}
+[08:25.084] Dice rolled: 3
+[08:25.386] MSG: Trap triggered: Foul Gas!
+[08:27.883] MSG: Foul Gas: All of Player 1's characters -5 ATK this turn!
+[08:27.886] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(0,3)"Foul Gas" {cost 0}  Dice=3  → Unit vs Trap
+[08:27.886] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[08:27.886] Anim: 3D  (attacker survives)
+[08:31.743] Revealed: P0 (1,4) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[08:31.743] Dice rolled: 2
+[08:31.765] MSG: Nothing happens — Dead End.
+[08:33.408] Attack P0(1,4)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(1,2)(empty)  Dice=2  → DEAD_END
+[08:33.408] Anim: 3F  (blank slot)
+[08:34.386] Turn ended  P0  |  Crystals P0=3220 P1=1250
+
+--- Turn 10  |  Player 1  |  Crystals P0=3220 P1=1250 ---
+[08:34.997] Mode selected P1: ATTACK
+[08:35.000] MSG: Player 2: tap a character to attack.
+[08:36.722] Revealed: P1 (2,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[08:36.722] Dice rolled: 3
+[08:36.736] MSG: Nothing happens — Dead End.
+[08:38.551] Crystals: P1 1250 → 1270 (+20)  [ability]
+[08:38.552] MSG: Miner Probe: Gained 20 Crystals!
+[08:38.554] Attack P1(2,0)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} → P0(2,2)(empty)  Dice=3  → DEAD_END
+[08:38.554] Anim: 3F  (blank slot)
+[08:41.069] Turn ended  P1  |  Crystals P0=3220 P1=1270
+
+--- Turn 11  |  Player 0  |  Crystals P0=3220 P1=1270 ---
+[08:44.912] Dice rolled: 1
+[08:44.922] MSG: Fujin wins!
+[08:48.601] Crystals: P1 1270 → 1070 (-200)  [battle]
+[08:50.006] Attack P0(1,4)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(2,0)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}  Dice=1  ATK=35 vs DEF=10  → WIN
+[08:50.006] Reckoning overlay: P0 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=35 ATK pill=35 DEF pill=40 mod=+ATK 0 (35+0=35)
+[08:50.006] Reckoning overlay: P1 "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=10 DEF pill=10 mod=+DEF 0 (10+0=10)
+[08:50.006] Anim: 3A  △ P1(2,0)
+[08:50.006] Card destroyed  P1 (2,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[08:54.006] Revealed: P1 (2,2) "Flame Trap" {cost 250}
+[08:54.007] Dice rolled: 3
+[08:54.274] MSG: Trap triggered: Flame Trap!
+[08:56.668] Crystals: P1 1070 → 820 (-250)  [trap cost]
+[08:58.057] MSG: Spike Trap: Sonic Seraph permanently loses 10 ATK!
+[08:58.062] Attack P0(1,1)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(2,2)"Flame Trap" {cost 250}  Dice=3  → Unit vs Trap
+[08:58.062] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[08:58.062] Anim: 3D  (attacker survives)
+[08:59.348] Turn ended  P0  |  Crystals P0=3220 P1=820
+
+--- Turn 12  |  Player 1  |  Crystals P0=3220 P1=820 ---
+[08:59.955] Mode selected P1: ATTACK
+[08:59.958] MSG: Player 2: tap a character to attack.
+[09:01.676] Revealed: P1 (3,2) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[09:01.676] Dice rolled: 3
+[09:01.690] MSG: Nothing happens — Dead End.
+[09:03.851] Attack P1(3,2)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} → P0(3,4)(empty)  Dice=3  → DEAD_END
+[09:03.851] Anim: 3F  (blank slot)
+[09:03.854] Target prompt: "Moon Rover: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[09:04.287] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[09:04.287] MSG: Revealed: Hard Scale
+[09:04.355] Mode selected P1: ATTACK
+[09:04.357] MSG: Player 2: tap a character to attack.
+[09:06.088] Revealed: P1 (4,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[09:06.089] Dice rolled: 1
+[09:06.104] MSG: Nothing happens — Dead End.
+[09:07.941] Attack P1(4,3)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → P0(0,3)(empty)  Dice=1  → DEAD_END
+[09:07.941] Anim: 3F  (blank slot)
+[09:08.449] Turn ended  P1  |  Crystals P0=3220 P1=820
+
+--- Turn 13  |  Player 0  |  Crystals P0=3220 P1=820 ---
+[09:13.745] Dice rolled: 1
+[09:13.750] MSG: Fujin wins!
+[09:16.507] Crystals: P1 820 → 620 (-200)  [battle]
+[09:17.906] Attack P0(1,4)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(3,2)"Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}  Dice=1  ATK=35 vs DEF=20  → WIN
+[09:17.906] Reckoning overlay: P0 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=35 ATK pill=35 DEF pill=40 mod=+ATK 0 (35+0=35)
+[09:17.906] Reckoning overlay: P1 "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic} badge=20 ATK pill=15 DEF pill=20 mod=+DEF 0 (20+0=20)
+[09:17.906] Anim: 3A  △ P1(3,2)
+[09:17.906] Card destroyed  P1 (3,2) "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic}
+[09:20.662] Dice rolled: 1
+[09:20.672] MSG: Sonic Seraph wins!
+[09:23.474] Crystals: P1 620 → 320 (-300)  [battle]
+[09:24.873] Attack P0(1,1)"Sonic Seraph" {Unit ATK35 DEF50 | cost 550 | affinity Divine | base 35/50} → P1(4,3)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}  Dice=1  ATK=35 vs DEF=15  → WIN
+[09:24.873] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK35 DEF50 | cost 550 | affinity Divine | base 35/50} badge=35 ATK pill=35 DEF pill=50 mod=+ATK 0 (35+0=35)
+[09:24.873] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=15 ATK pill=20 DEF pill=15 mod=+DEF 0 (15+0=15)
+[09:24.873] Anim: 3A  △ P1(4,3)
+[09:24.873] Card destroyed  P1 (4,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3220  P1: 320  |  Turns: 13

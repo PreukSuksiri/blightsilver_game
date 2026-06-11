@@ -392,7 +392,7 @@ func _load_characters() -> void:
 			CharacterData.Rarity.UNCOMMON],
 
 		["Immortal Vampire", CharacterData.Affinity.CHAOS, 30, 80, 1200,
-			CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE,
+			CharacterData.AbilityType.DESTROY_SELF_VS_DIVINE_BOTH,
 			{},
 			"+50 ATK for each other face-up Chaos card on their own field. In Reckoning with Divine, destroy this card.",
 			CharacterData.Rarity.LEGENDARY],
@@ -835,8 +835,8 @@ func _load_characters() -> void:
 			CharacterData.Rarity.LEGENDARY],
 
 		["Vampire Duchess", CharacterData.Affinity.CHAOS, 50, 50, 800,
-			CharacterData.AbilityType.DESTROYED_IF_BATTLES_DIVINE,
-			{},
+			CharacterData.AbilityType.DESTROY_SELF_VS_DIVINE_BOTH,
+			{"drain_atk": 5, "drain_def": 5},
 			"In Reckoning with Divine, destroy this card. In Reckoning with non-Divine, Drain 5 ATK&DEF permanently",
 			CharacterData.Rarity.RARE],
 
@@ -1023,7 +1023,7 @@ func _load_traps() -> void:
 
 		["Cursed Reflection", 500, TrapData.TrapEffectType.SWAP_ATTACKER_ATK_DEF_TEMP,
 			{},
-			"Swap the attacker's ATK&DEF until the end of this turn",
+			"Swap the attacker's ATK&DEF until the end of defender's turn",
 			CharacterData.Rarity.RARE],
 
 		["Decoy Puppet", 100, TrapData.TrapEffectType.CANCEL_ATTACKER_ATTACK,

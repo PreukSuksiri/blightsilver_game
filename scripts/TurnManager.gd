@@ -403,6 +403,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	result.attacker_log_label = BattleLogFormat.format_unit(attacker)
 	if defender.card_type == "character":
 		result.defender_log_label = BattleLogFormat.format_unit(defender)
+	elif defender.card_type == "trap":
+		result.defender_log_label = BattleLogFormat.format_card(defender)
 	for msg in result.messages:
 		GameState.post_message(msg)
 
@@ -573,14 +575,14 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	if not _battle_aborted():
 		GameState.set_phase(GameState.Phase.MODE_SELECT)
 
+	# Post-attack target selection must run after attack_completed + MODE_SELECT so
+	# GameBoard._enter_mode_select() finishes before reveal UI is shown.
+	if not _battle_aborted():
+		await _emit_post_attack_target_selections(result, player, opponent, attacker, defender, attacker_pos, target_pos)
+
 	# Check Pit Lord one_use_def_boost mark
 	if defender.ability_type == CharacterData.AbilityType.ONE_USE_DEF_BOOST:
 		defender.one_use_def_boost_used = true
-
-	# Scout Probe: reveal adjacent after attack
-	if attacker.ability_type == CharacterData.AbilityType.REVEAL_ADJACENT_AFTER_ATTACK:
-		if not result.attacker_destroyed:
-			emit_signal("awaiting_target_selection", "Scout Probe: Choose an adjacent square to reveal.", "adjacent")
 
 	# Check Siege Cannon
 	if GameState.siege_cannon_active[player]:
@@ -1199,7 +1201,8 @@ func _handle_trap_effect(
 				GameState.post_message("Checkpoint: %s destroyed!" % attacker.card_name)
 
 		TrapData.TrapEffectType.REVEAL_DEFENDING_CHOICE:
-			emit_signal("awaiting_target_selection", "Bait: Choose a square on your field to reveal.", "self_reveal_choice")
+			await _prompt_and_await_target_selection(
+				"Bait: Choose a square on your field to reveal.", "self_reveal_choice")
 
 		TrapData.TrapEffectType.ATTACKER_DISCARD_OR_END_TURN:
 			emit_signal("awaiting_trap_choice",
@@ -1219,7 +1222,8 @@ func _handle_trap_effect(
 
 		TrapData.TrapEffectType.COPY_ATTACKER_EFFECT:
 			GameState.post_message("Cursed Reflection: Choose one of your face-up characters to copy %s's effect." % attacker.card_name)
-			emit_signal("awaiting_target_selection", "Cursed Reflection: Choose target.", "self_faceup_for_copy")
+			await _prompt_and_await_target_selection(
+				"Cursed Reflection: Choose target.", "self_faceup_for_copy")
 
 		TrapData.TrapEffectType.DESTROY_ATTACKER_CHOICE_DESTROY:
 			if trap_data.effect_params.get("requires_faceup_defender", false):
@@ -1232,12 +1236,14 @@ func _handle_trap_effect(
 			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 			await get_tree().create_timer(0.65).timeout
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
-			emit_signal("awaiting_target_selection",
+			await _prompt_and_await_target_selection(
 				"Explosive Barrels: Choose 1 revealed card on defender's field to destroy (no crystal loss).",
 				"opponent_faceup_no_cost")
 
 		TrapData.TrapEffectType.HYPNOTIZE_ATTACKER:
-			attacker.cannot_attack_until = GameState.turn_number + 1
+			# +2 so the lock survives opponent's turn and blocks attacker's next turn
+			# (same cadence as LOCK_SELF_AFTER_ATTACK / COIN_FLIP_2_LOCK_ATTACKER; +1 expired before they act again).
+			attacker.cannot_attack_until = GameState.turn_number + 2
 			GameState.post_message("Hypnosis: %s cannot attack until end of next turn." % attacker.card_name)
 
 		TrapData.TrapEffectType.DESTROY_ATTACKER:
@@ -1296,7 +1302,7 @@ func _handle_trap_effect(
 				GameState.post_message("%s: %s's attack is cancelled!" % [trap_data.card_name, attacker.card_name])
 
 		TrapData.TrapEffectType.SWAP_ARMORED_NATURE:
-			emit_signal("awaiting_target_selection",
+			await _prompt_and_await_target_selection(
 				"Defensive Pheromone: Choose an 'Armored' Nature card to swap.",
 				"own_armored_nature")
 
@@ -1306,7 +1312,8 @@ func _handle_trap_effect(
 			GameState.post_message("Spike Trap: %s permanently loses %d ATK!" % [attacker.card_name, amount])
 
 		TrapData.TrapEffectType.NULLIFY_ATTACKER_EFFECT:
-			attacker.effect_nullified_until = GameState.turn_number + 1
+			# Attacker-targeted "next turn" effects need +2 (see HYPNOTIZE_ATTACKER).
+			attacker.effect_nullified_until = GameState.turn_number + 2
 			GameState.post_message("Snare Trap: %s's effect nullified until end of next turn!" % attacker.card_name)
 
 		TrapData.TrapEffectType.FORCE_FRIENDLY_FIRE:
@@ -1338,12 +1345,8 @@ func _handle_trap_effect(
 			GameState.post_message("%s: +%d DEF to all %s characters this turn!" % [trap_data.card_name, _fb_def, _fb_aff_name])
 
 		TrapData.TrapEffectType.SWAP_ATTACKER_ATK_DEF_TEMP:
-			# Swap effective ATK/DEF by adjusting temp bonuses (cleared at end of turn)
-			var _sw_eff_atk: int = attacker.current_atk + attacker.temp_atk_bonus
-			var _sw_eff_def: int = attacker.current_def + attacker.temp_def_bonus
-			attacker.temp_atk_bonus = _sw_eff_def - attacker.current_atk
-			attacker.temp_def_bonus = _sw_eff_atk - attacker.current_def
-			GameState.post_message("%s: %s's ATK and DEF swapped until end of turn!" % [trap_data.card_name, attacker.card_name])
+			attacker.apply_atk_def_swap_until_player_turn_end(opponent)
+			GameState.post_message("%s: %s's ATK and DEF swapped until end of defender's turn!" % [trap_data.card_name, attacker.card_name])
 
 		TrapData.TrapEffectType.DESTROY_ATTACKER_DEFENDER_PAYS:
 			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
@@ -1377,7 +1380,7 @@ func _handle_trap_effect(
 					"%s: All your units gain +%d DEF in Reckoning this turn!" % [trap_data.card_name, _td_def])
 			else:
 				_pending_trap_def_boost = _td_def
-				emit_signal("awaiting_target_selection",
+				await _prompt_and_await_target_selection(
 					"%s: Choose 1 of your characters for +%d DEF this turn." % [trap_data.card_name, _pending_trap_def_boost],
 					"own_faceup_for_trap_temp_def_boost")
 
@@ -1407,7 +1410,7 @@ func _handle_trap_effect(
 		TrapData.TrapEffectType.SELF_DESTROY_TEMP_ATK_BOOST:
 			_pending_trap_self_destruct_boost = trap_data.effect_params.get("atk", 15)
 			_pending_trap_self_destruct_player = opponent
-			emit_signal("awaiting_target_selection",
+			await _prompt_and_await_target_selection(
 				"%s: Choose 1 of your characters for +%d ATK until end of next turn (then destroyed)." % [trap_data.card_name, _pending_trap_self_destruct_boost],
 				"own_character_for_trap_self_destruct")
 
@@ -1578,6 +1581,14 @@ func _end_turn(player: int) -> void:
 				card.attacked_this_turn = false
 				card.clear_temp_buffs()
 
+	# Cursed Reflection: clear ATK/DEF swap when the defending player's turn ends.
+	for _cr_p: int in range(2):
+		for _cr_r: int in range(GameState.GRID_SIZE):
+			for _cr_c: int in range(GameState.GRID_SIZE):
+				var _cr_card: GameState.CardInstance = GameState.get_card(_cr_p, _cr_r, _cr_c)
+				if _cr_card.atk_def_swap_clear_on_player_end == player:
+					_cr_card.clear_atk_def_swap()
+
 	# Prayer: protection for the opponent of this player expires when this turn ends.
 	GameState.expire_divine_protection_at_turn_end(player)
 	# Clear berserk if it's now ending
@@ -1636,18 +1647,7 @@ func _apply_post_battle_effects(
 	if attacker.card_type != "character":
 		return extra
 
-	# Pending reveals from BattleResolver (e.g. COIN_FLIP_2_DESTROY_NON_AFFINITY win)
-	if result.pending_reveal_opponent_cell:
-		emit_signal("awaiting_target_selection",
-			"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
-
-	if result.pending_coin_flip_swap_position:
-		_pending_swap_attacker_pos = attacker_pos
-		emit_signal("awaiting_target_selection",
-			"%s: Choose 1 of your characters to swap position with." % attacker.card_name,
-			"own_character_for_swap")
-
-	# Skip ability effects if nullified
+	# Skip ability effects if nullified (post-attack target prompts emitted later)
 	if attacker.effect_nullified_until >= GameState.turn_number:
 		return extra
 
@@ -1719,25 +1719,6 @@ func _apply_post_battle_effects(
 				attacker.current_atk = max(0, attacker.current_atk - attacker.ability_params.get("atk", 3))
 				GameState.post_message("%s: Self ATK debuff applied." % attacker.card_name)
 
-		CharacterData.AbilityType.REVEAL_ON_WIN:
-			if result.defender_destroyed:
-				emit_signal("awaiting_target_selection",
-					"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
-
-		CharacterData.AbilityType.REVEAL_ON_ANY_ATTACK:
-			emit_signal("awaiting_target_selection",
-				"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
-
-		CharacterData.AbilityType.REVEAL_ON_DEAD_END_ATTACK:
-			if defender.card_type == "dead_end":
-				emit_signal("awaiting_target_selection",
-					"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
-
-		CharacterData.AbilityType.REVEAL_ON_TRAP_ATTACK:
-			if result.special_trigger in ["trap_effect", "trap_nullified"]:
-				emit_signal("awaiting_target_selection",
-					"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
-
 		CharacterData.AbilityType.CRYSTAL_GAIN_ON_DEAD_END_ATTACK:
 			if defender.card_type == "dead_end":
 				var _crys: int = attacker.ability_params.get("amount", 300)
@@ -1783,12 +1764,6 @@ func _apply_post_battle_effects(
 					attacker.current_def = max(0, attacker.current_def - _pdef)
 					GameState.post_message("%s: -%d ATK & -%d DEF permanently (non-%s battle)." % [
 						attacker.card_name, _patk, _pdef, CharacterData.Affinity.keys()[_pen_aff]])
-
-		CharacterData.AbilityType.POST_BATTLE_COIN_FLIP_DESTROY:
-			if not result.attacker_destroyed:
-				emit_signal("awaiting_target_selection",
-					"%s: Choose 1 opponent character to flip a coin on." % attacker.card_name,
-					"opponent_character_ability_destroy")
 
 		CharacterData.AbilityType.GAIN_HALF_STATS_ON_SURVIVE:
 			if not result.attacker_destroyed and defender.card_type == "character":
@@ -1876,6 +1851,64 @@ func _apply_post_battle_effects(
 			GameState.post_message("Cosmic Triumph: %s wins — gain 200 Crystals!" % attacker.display_name)
 
 	return extra
+
+func _prompt_and_await_target_selection(prompt: String, filter: String) -> void:
+	emit_signal("awaiting_target_selection", prompt, filter)
+	await ability_selection_done
+
+func _emit_post_attack_target_selections(
+		result: BattleResolver.BattleResult,
+		player: int, opponent: int,
+		attacker: GameState.CardInstance, defender: GameState.CardInstance,
+		attacker_pos: Vector2i, target_pos: Vector2i
+) -> void:
+	if attacker.card_type != "character":
+		return
+
+	# Pending reveals from BattleResolver (e.g. COIN_FLIP_2_DESTROY_NON_AFFINITY win)
+	if result.pending_reveal_opponent_cell:
+		await _prompt_and_await_target_selection(
+			"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
+
+	if result.pending_coin_flip_swap_position:
+		_pending_swap_attacker_pos = attacker_pos
+		await _prompt_and_await_target_selection(
+			"%s: Choose 1 of your characters to swap position with." % attacker.card_name,
+			"own_character_for_swap")
+
+	if attacker.effect_nullified_until >= GameState.turn_number:
+		return
+
+	match attacker.ability_type:
+		CharacterData.AbilityType.REVEAL_ON_WIN:
+			if result.defender_destroyed:
+				await _prompt_and_await_target_selection(
+					"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
+
+		CharacterData.AbilityType.REVEAL_ON_ANY_ATTACK:
+			await _prompt_and_await_target_selection(
+				"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
+
+		CharacterData.AbilityType.REVEAL_ON_DEAD_END_ATTACK:
+			if defender.card_type == "dead_end":
+				await _prompt_and_await_target_selection(
+					"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
+
+		CharacterData.AbilityType.REVEAL_ON_TRAP_ATTACK:
+			if result.special_trigger in ["trap_effect", "trap_nullified"]:
+				await _prompt_and_await_target_selection(
+					"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
+
+		CharacterData.AbilityType.REVEAL_ADJACENT_AFTER_ATTACK:
+			if not result.attacker_destroyed:
+				await _prompt_and_await_target_selection(
+					"Scout Probe: Choose an adjacent square to reveal.", "adjacent")
+
+		CharacterData.AbilityType.POST_BATTLE_COIN_FLIP_DESTROY:
+			if not result.attacker_destroyed:
+				await _prompt_and_await_target_selection(
+					"%s: Choose 1 opponent character to flip a coin on." % attacker.card_name,
+					"opponent_character_ability_destroy")
 
 func _apply_end_of_turn_boosts(player: int) -> void:
 	# Applied at start of own turn = "end of opponent's turn"

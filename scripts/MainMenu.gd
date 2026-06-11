@@ -612,13 +612,7 @@ func _on_settings() -> void:
 	_open_menu_overlay(SettingsMenuScene.instantiate(), "SettingsMenuOverlay")
 
 func _open_admin_console() -> void:
-	if get_node_or_null("AdminConsoleOverlay") != null:
-		# Toggle: close if already open
-		get_node("AdminConsoleOverlay").queue_free()
-		return
-	var overlay := AdminConsoleScene.instantiate()
-	overlay.name = "AdminConsoleOverlay"
-	add_child(overlay)
+	BuildConfig.toggle_admin_console_on(self)
 
 func _apply_menu_btn_style(btn: Button, bordered: bool = true) -> void:
 	var bw: int = 4 if bordered else 0
@@ -665,8 +659,6 @@ func _apply_menu_btn_style(btn: Button, bordered: bool = true) -> void:
 	btn.add_theme_color_override("font_color", Color(0.910, 0.957, 1.0, 1.0))
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo:
-		# Ctrl + Shift + A  →  Admin Console
-		if event.keycode == KEY_A and event.ctrl_pressed and event.shift_pressed:
-			_open_admin_console()
-			get_viewport().set_input_as_handled()
+	if BuildConfig.admin_shortcut_pressed(event):
+		_open_admin_console()
+		get_viewport().set_input_as_handled()
