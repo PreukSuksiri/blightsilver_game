@@ -9,7 +9,7 @@
 		"digital": {
 			"label": "Digital HUD",
 			"description": "Numeric timers and stat readouts (digital-7)",
-			"path": "res://assets/fonts/digital-7.ttf",
+			"path": "res://assets/fonts/digit-tech.7.ttf",
 			"variable": false
 		},
 		"credits_jp": {

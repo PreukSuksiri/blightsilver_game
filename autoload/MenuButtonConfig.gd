@@ -1,12 +1,10 @@
 extends Node
 ## Main-menu button visibility and enabled state.
-## Shipped defaults: res://data/menu_buttons.json
-## Runtime edits (manage_menu_buttons): user://menu_buttons.json
+## Shipped defaults: res://data/menu_buttons.json (saved from admin tools in the editor).
 
 signal visibility_changed
 
-const DEFAULT_CONFIG_PATH := "res://data/menu_buttons.json"
-const USER_CONFIG_PATH := "user://menu_buttons.json"
+const SHIPPED_CONFIG_PATH := "res://data/menu_buttons.json"
 
 ## Vertical stack slots on the main menu (slot 1 = Single Player position, up to 6).
 const SLOT_COUNT := 6
@@ -16,23 +14,23 @@ const SLOT_BTN_RIGHT := 190.0
 const SLOT_BTN_HEIGHT := 60.0
 
 const DEFAULT_CONFIG: Dictionary = {
-	"campaign": {"label": "Campaign", "visible": true, "enabled": true, "slot": 1},
+	"campaign": {"label": "Campaign", "visible": false, "enabled": true, "slot": 1},
 	"single_player": {
 		"label": "Single Player",
-		"visible": false,
+		"visible": true,
 		"enabled": true,
-		"slot": 1,
+		"slot": 2,
 		"subs": {
 			"campaign": {"label": "Campaign", "visible": true, "enabled": true},
-			"daily_dungeon": {"label": "Daily Dungeon", "visible": true, "enabled": true},
+			"daily_dungeon": {"label": "Daily Dungeon", "visible": false, "enabled": true},
 			"vs_ai": {"label": "VS AI", "visible": true, "enabled": true},
 		},
 	},
 	"multiplayer": {
 		"label": "Multiplayer",
-		"visible": true,
+		"visible": false,
 		"enabled": true,
-		"slot": 2,
+		"slot": 1,
 		"subs": {
 			"matchmaking": {"label": "Matchmaking", "visible": true, "enabled": true},
 			"private": {"label": "Private", "visible": true, "enabled": true},
@@ -40,13 +38,13 @@ const DEFAULT_CONFIG: Dictionary = {
 		},
 	},
 	"deck_builder": {"label": "Deck Builder", "visible": true, "enabled": true, "slot": 3},
+	"inventory": {"label": "Inventory", "visible": true, "enabled": true, "slot": 4},
 	"shop": {"label": "Shop", "visible": true, "enabled": true, "slot": 5},
 	"gallery": {"label": "Gallery", "visible": true, "enabled": true, "slot": 6},
-	"inventory": {"label": "Inventory", "visible": true, "enabled": true, "slot": 4},
-	"credits": {"label": "Credits", "visible": true, "enabled": true, "slot": 0},
-	"settings": {"label": "Settings Icon", "visible": true, "enabled": true, "slot": 0},
-	"exit_icon": {"label": "Exit Icon", "visible": true, "enabled": true, "slot": 0},
-	"exit": {"label": "Exit Game", "visible": true, "enabled": true, "slot": 0},
+	"credits": {"label": "Credits", "visible": false, "enabled": true, "slot": 0},
+	"settings": {"label": "Settings", "visible": true, "enabled": true, "slot": 0},
+	"exit_icon": {"label": "Exit Icon", "visible": false, "enabled": true, "slot": 0},
+	"exit": {"label": "Exit", "visible": true, "enabled": true, "slot": 0},
 }
 
 var _config: Dictionary = {}
@@ -57,25 +55,23 @@ func _ready() -> void:
 
 
 func load_config() -> void:
-	_config = _merge_with_defaults(DEFAULT_CONFIG)
-	if FileAccess.file_exists(USER_CONFIG_PATH):
-		_load_config_file(USER_CONFIG_PATH)
-	elif FileAccess.file_exists(DEFAULT_CONFIG_PATH):
-		_load_config_file(DEFAULT_CONFIG_PATH)
+	if FileAccess.file_exists(SHIPPED_CONFIG_PATH):
+		_load_config_file(SHIPPED_CONFIG_PATH)
+	else:
+		_config = _merge_with_defaults(DEFAULT_CONFIG)
 
 
 func get_save_path() -> String:
-	return USER_CONFIG_PATH
+	return SHIPPED_CONFIG_PATH
 
 
 func save_config() -> bool:
-	var err := DirAccess.make_dir_recursive_absolute(
-		ProjectSettings.globalize_path("user://"))
-	if err != OK and err != ERR_ALREADY_EXISTS:
-		push_warning("MenuButtonConfig: could not create user dir (%s)" % err)
-	var file := FileAccess.open(USER_CONFIG_PATH, FileAccess.WRITE)
+	if not Engine.is_editor_hint():
+		push_warning("MenuButtonConfig: shipped menu config can only be saved in the editor.")
+		return false
+	var file := FileAccess.open(SHIPPED_CONFIG_PATH, FileAccess.WRITE)
 	if file == null:
-		push_warning("MenuButtonConfig: could not write %s" % USER_CONFIG_PATH)
+		push_warning("MenuButtonConfig: could not write %s" % SHIPPED_CONFIG_PATH)
 		return false
 	file.store_string(JSON.stringify(_config, "\t"))
 	file.close()

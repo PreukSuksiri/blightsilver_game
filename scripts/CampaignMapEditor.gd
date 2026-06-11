@@ -1,8 +1,7 @@
 extends Control
 # Campaign Map Node Editor — drag-and-drop stage positioning tool.
 # Open via Admin Console: map_editor
-# Saves positions to user://campaign_node_positions.json
-# CampaignManager loads that file on startup to apply saved positions.
+# Saves positions to res://data/campaign_node_positions.json (editor only).
 
 signal closed
 
@@ -27,7 +26,8 @@ const CANVAS_W  := 1860.0
 const CANVAS_H  := 540.0
 const NODE_W    := 80.0
 const NODE_H    := 60.0
-const SAVE_PATH := "user://campaign_node_positions.json"
+const SHIPPED_SAVE_PATH := "res://data/campaign_node_positions.json"
+const USER_SAVE_PATH := "user://campaign_node_positions.json"
 
 const COLOR_BATTLE := Color(1.00, 0.42, 0.22)
 const COLOR_STORY  := Color(0.30, 0.65, 1.00)
@@ -61,34 +61,37 @@ func _ready() -> void:
 # Position persistence
 # ─────────────────────────────────────────────────────────────
 func _load_positions() -> void:
-	# Seed from CampaignManager defaults
+	# Seed from CampaignManager defaults (includes shipped JSON overrides).
 	for node in CampaignManager.all_nodes:
 		_positions[node.id] = node.map_position
-	# Override with saved file if present
-	if not FileAccess.file_exists(SAVE_PATH):
-		return
-	var f := FileAccess.open(SAVE_PATH, FileAccess.READ)
-	if f == null:
-		return
-	var data: Variant = JSON.parse_string(f.get_as_text())
-	f.close()
-	if not data is Dictionary:
-		return
-	for id: String in data:
-		var arr = data[id]
-		_positions[id] = Vector2(float(arr[0]), float(arr[1]))
+	# Optional local-only tweak file for editor experiments.
+	if Engine.is_editor_hint() and FileAccess.file_exists(USER_SAVE_PATH):
+		var f := FileAccess.open(USER_SAVE_PATH, FileAccess.READ)
+		if f != null:
+			var data: Variant = JSON.parse_string(f.get_as_text())
+			f.close()
+			if data is Dictionary:
+				for id: String in data:
+					var arr = data[id]
+					_positions[id] = Vector2(float(arr[0]), float(arr[1]))
 
 func _save_positions() -> void:
 	var data: Dictionary = {}
 	for id: String in _positions:
 		data[id] = [_positions[id].x, _positions[id].y]
-	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	var save_path: String = SHIPPED_SAVE_PATH if Engine.is_editor_hint() else USER_SAVE_PATH
+	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
-		_pos_label.text = "ERROR: could not write to user://"
+		_pos_label.text = "ERROR: could not write to %s" % save_path
 		return
 	f.store_string(JSON.stringify(data, "\t"))
 	f.close()
-	_pos_label.text = "Saved  (%d nodes)  →  user://campaign_node_positions.json" % data.size()
+	_pos_label.text = "Saved  (%d nodes)  →  %s" % [data.size(), save_path]
+	# Reload CampaignManager positions in this session.
+	for node in CampaignManager.all_nodes:
+		if data.has(node.id):
+			var arr = data[node.id]
+			node.map_position = Vector2(float(arr[0]), float(arr[1]))
 
 func _export_to_log() -> void:
 	print("[CampaignMapEditor] ── Exported positions ──")
@@ -198,7 +201,7 @@ func _build_header() -> void:
 	hbox.add_child(legend)
 
 	_pos_label = Label.new()
-	_pos_label.text = "Drag a node to reposition it"
+	_pos_label.text = "Drag a node — auto-saves to res://data/campaign_node_positions.json on release"
 	_pos_label.add_theme_font_size_override("font_size", 12)
 	_pos_label.add_theme_color_override("font_color", Color(0.65, 0.8, 1.0, 0.8))
 	_pos_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -329,6 +332,8 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton \
 			and event.button_index == MOUSE_BUTTON_LEFT \
 			and not event.pressed:
+		if Engine.is_editor_hint():
+			_save_positions()
 		_drag_node_id = ""
 
 # ─────────────────────────────────────────────────────────────

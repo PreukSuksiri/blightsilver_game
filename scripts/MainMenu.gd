@@ -37,7 +37,7 @@ const MENU_STACK_GAP := 14.0
 var _overlay_obscure_depth: int = 0
 
 func _ready() -> void:
-	local_2p_btn.pressed.connect(_on_campaign)
+	local_2p_btn.pressed.connect(_on_local_play_pressed)
 	deck_build_btn.pressed.connect(_on_deck_builder)
 	shop_btn.pressed.connect(_on_shop)
 	gallery_btn.pressed.connect(_on_gallery)
@@ -174,8 +174,26 @@ func _stack_button_for_key(key: String) -> Button:
 	return null
 
 
+func _local_play_menu_key() -> String:
+	if MenuButtonConfig.is_main_visible("single_player") \
+			and MenuButtonConfig.has_subs("single_player"):
+		return "single_player"
+	return "campaign"
+
+
+func _stack_menu_keys() -> Array[String]:
+	var keys: Array[String] = []
+	var local_key: String = _local_play_menu_key()
+	if local_key == "single_player":
+		keys.append("single_player")
+	else:
+		keys.append("campaign")
+	keys.append_array(["multiplayer", "deck_builder", "inventory", "shop", "gallery"])
+	return keys
+
+
 func _apply_menu_button_state() -> void:
-	_set_main_menu_btn(local_2p_btn, "campaign")
+	_set_main_menu_btn(local_2p_btn, _local_play_menu_key())
 	_set_main_menu_btn(deck_build_btn, "deck_builder")
 	_set_main_menu_btn(shop_btn, "shop")
 	_set_main_menu_btn(gallery_btn, "gallery")
@@ -204,7 +222,7 @@ func _sync_corner_icon(btn: BaseButton, shadow: Control, key: String,
 
 
 func _apply_menu_button_labels() -> void:
-	local_2p_btn.text = MenuButtonConfig.get_label("campaign").to_upper()
+	local_2p_btn.text = MenuButtonConfig.get_label(_local_play_menu_key()).to_upper()
 	campaign_btn.text = MenuButtonConfig.get_label("multiplayer").to_upper()
 	deck_build_btn.text = MenuButtonConfig.get_label("deck_builder").to_upper()
 	mailbox_btn.text = MenuButtonConfig.get_label("inventory").to_upper()
@@ -238,9 +256,7 @@ func _apply_menu_button_positions() -> void:
 	if _overlay_obscure_depth > 0:
 		return
 	var entries: Array = []
-	for key: String in [
-			"campaign", "multiplayer", "deck_builder",
-			"inventory", "shop", "gallery"]:
+	for key: String in _stack_menu_keys():
 		if not MenuButtonConfig.is_main_visible(key):
 			continue
 		if not MenuButtonConfig.uses_stack_slot(key):
@@ -305,9 +321,7 @@ func _pop_main_menu_obscured() -> void:
 
 
 func _set_main_menu_obscured(obscured: bool) -> void:
-	for key: String in [
-			"campaign", "multiplayer", "deck_builder",
-			"inventory", "shop", "gallery", "credits", "exit"]:
+	for key: String in _stack_menu_keys() + ["credits", "exit"]:
 		var btn: Button = _stack_button_for_key(key)
 		if btn == null:
 			continue
@@ -597,6 +611,13 @@ func _on_fonts_changed() -> void:
 func _on_exit_game() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
 	get_tree().quit()
+
+func _on_local_play_pressed() -> void:
+	if _local_play_menu_key() == "single_player":
+		_on_single_player()
+	else:
+		_on_campaign()
+
 
 func _on_campaign() -> void:
 	_open_menu_overlay(CampaignGalleryScene.instantiate(), "CampaignGalleryOverlay")

@@ -208,13 +208,20 @@ func _define_nodes() -> void:
 		"res://campaign/scenes/final_soon.json")
 
 # ─────────────────────────────────────────────────────────────
-# Saved position override (written by CampaignMapEditor)
+# Saved position override (shipped data + optional editor-only user tweak)
 # ─────────────────────────────────────────────────────────────
+const SHIPPED_POSITIONS_PATH := "res://data/campaign_node_positions.json"
+const USER_POSITIONS_PATH := "user://campaign_node_positions.json"
+
 func _load_saved_positions() -> void:
-	const SAVE_PATH := "user://campaign_node_positions.json"
-	if not FileAccess.file_exists(SAVE_PATH):
+	_apply_positions_from_file(SHIPPED_POSITIONS_PATH)
+	if Engine.is_editor_hint():
+		_apply_positions_from_file(USER_POSITIONS_PATH)
+
+func _apply_positions_from_file(path: String) -> void:
+	if not FileAccess.file_exists(path):
 		return
-	var f := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	var f := FileAccess.open(path, FileAccess.READ)
 	if f == null:
 		return
 	var data: Variant = JSON.parse_string(f.get_as_text())

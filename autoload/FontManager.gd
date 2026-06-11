@@ -1,12 +1,10 @@
 extends Node
 ## Central font registry — swap game-wide fonts from the admin Font Manager.
-## Shipped defaults: res://data/fonts.json
-## Runtime edits: user://fonts.json
+## Shipped defaults: res://data/fonts.json (saved from admin tools in the editor).
 
 signal fonts_changed
 
-const DEFAULT_CONFIG_PATH := "res://data/fonts.json"
-const USER_CONFIG_PATH := "user://fonts.json"
+const SHIPPED_CONFIG_PATH := "res://data/fonts.json"
 const FONTS_DIR := "res://assets/fonts/"
 const META_SLOT := "fm_slot"
 const META_PROP := "fm_prop"
@@ -22,28 +20,34 @@ func _ready() -> void:
 
 
 func load_config() -> void:
-	_defaults = _load_json_file(DEFAULT_CONFIG_PATH)
+	_defaults = _load_json_file(SHIPPED_CONFIG_PATH)
 	_slots = _deep_copy_slots(_defaults)
-	if FileAccess.file_exists(USER_CONFIG_PATH):
-		var user_data: Dictionary = _load_json_file(USER_CONFIG_PATH)
-		_merge_user_slots(user_data)
 
 
 func save_config() -> bool:
-	var err := DirAccess.make_dir_recursive_absolute(
-		ProjectSettings.globalize_path("user://"))
-	if err != OK and err != ERR_ALREADY_EXISTS:
-		push_warning("FontManager: could not create user dir (%s)" % err)
-	var out: Dictionary = {"slots": {}}
+	if not Engine.is_editor_hint():
+		push_warning("FontManager: shipped font config can only be saved in the editor.")
+		return false
+	var out: Dictionary = _defaults.duplicate(true)
+	if not out.has("slots"):
+		out["slots"] = {}
+	var out_slots: Dictionary = out["slots"]
 	for slot_id: String in _slots:
-		out["slots"][slot_id] = {"path": get_slot_path(slot_id)}
-	var file := FileAccess.open(USER_CONFIG_PATH, FileAccess.WRITE)
+		if not out_slots.has(slot_id):
+			continue
+		(out_slots[slot_id] as Dictionary)["path"] = get_slot_path(slot_id)
+	var file := FileAccess.open(SHIPPED_CONFIG_PATH, FileAccess.WRITE)
 	if file == null:
-		push_warning("FontManager: could not write %s" % USER_CONFIG_PATH)
+		push_warning("FontManager: could not write %s" % SHIPPED_CONFIG_PATH)
 		return false
 	file.store_string(JSON.stringify(out, "\t"))
 	file.close()
+	_defaults = _load_json_file(SHIPPED_CONFIG_PATH)
 	return true
+
+
+func get_shipped_config_path() -> String:
+	return SHIPPED_CONFIG_PATH
 
 
 func get_all_slots() -> Dictionary:
@@ -201,21 +205,6 @@ func _deep_copy_slots(source: Dictionary) -> Dictionary:
 		if slot is Dictionary:
 			out["slots"][str(slot_id)] = (slot as Dictionary).duplicate(true)
 	return out["slots"]
-
-
-func _merge_user_slots(user_data: Dictionary) -> void:
-	var user_slots: Variant = user_data.get("slots", {})
-	if not user_slots is Dictionary:
-		return
-	for slot_id: Variant in (user_slots as Dictionary):
-		var sid: String = str(slot_id)
-		if not _slots.has(sid):
-			continue
-		var entry: Variant = (user_slots as Dictionary)[slot_id]
-		if entry is Dictionary:
-			var path: String = str((entry as Dictionary).get("path", ""))
-			if not path.is_empty():
-				_slots[sid]["path"] = path
 
 
 func _fallback_font() -> Font:

@@ -61,7 +61,7 @@ func _ready() -> void:
 	header_hbox.add_child(close_btn)
 
 	var hint := Label.new()
-	hint.text = "Slot 1 = top of the menu stack, 6 = bottom. Fixed = corner icons or trailing buttons. Changes auto-save."
+	hint.text = "Slot 1 = top of the menu stack, 6 = bottom. Fixed = corner icons or trailing buttons. Changes auto-save to res://data/menu_buttons.json."
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD
 	hint.add_theme_font_size_override("font_size", 12)
 	hint.add_theme_color_override("font_color", Color(0.58, 0.66, 0.78))

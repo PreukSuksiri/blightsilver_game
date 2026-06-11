@@ -10,6 +10,130 @@ Open the project in Godot 4.x and press **Run** (F5), or launch the exported bin
 
 ---
 
+## Starting completely fresh
+
+Use this when you want a **brand-new player** state: no save, no campaign progress, no dev overrides. On the next launch, **OnboardingManager** runs once and creates a new save with:
+
+- Starter deck + collection from `res://data/starting_deck.json`
+- **2000** shop credits
+- **Union mechanism** unlocked
+- Empty campaign, mailbox, gallery, etc.
+
+Fonts, main menu layout, and campaign map node positions come from **`res://data/`** in the project (not from old `user://` overrides).
+
+### Before you delete anything
+
+1. **Quit the game** (and stop Play in the Godot editor) so nothing is writing the save file.
+2. Decide **editor/dev** vs **exported build** — paths differ slightly (below).
+
+### Can't find the Godot folder? (macOS)
+
+This is normal in a few cases:
+
+1. **`Library` is hidden in Finder** — it is not shown in your home folder by default.
+2. **The folder does not exist until you run the game** — Godot creates `Godot/app_userdata/Blightsilver/` the first time the game saves (play once with **F5**, reach the main menu, or quit after onboarding).
+3. **Wrong macOS user account** — saves live under *your* home folder (`/Users/<you>/Library/...`), not inside the git repo.
+
+**Open the folder directly (easiest):**
+
+1. In Finder, press **⌘⇧G** (Go → Go to Folder…).
+2. Paste:
+
+   ```
+   ~/Library/Application Support/Godot/app_userdata/Blightsilver
+   ```
+
+3. Press **Return**.
+
+If Godot says the folder does not exist, run the game once from the editor (**F5**), then try again.
+
+**Terminal (same path):**
+
+```bash
+open "$HOME/Library/Application Support/Godot/app_userdata/Blightsilver"
+```
+
+Or list whether anything is there yet:
+
+```bash
+ls -la "$HOME/Library/Application Support/Godot/app_userdata/Blightsilver" 2>&1
+```
+
+**Save file name:** `save_data.json` inside that folder.
+
+> **Exported `.app` builds** on macOS use the same `Godot/app_userdata/Blightsilver` layout by default (project name from `project.godot`). If you still cannot find it, search Spotlight for `save_data.json` after running the exported game once.
+
+### Complete reset (recommended)
+
+Delete the whole Blightsilver user-data folder. This clears **everything** local: save, audio settings, E2E progress, legacy override files, etc.
+
+**macOS — Godot editor (F5) or typical desktop export**
+
+```bash
+rm -rf "$HOME/Library/Application Support/Godot/app_userdata/Blightsilver"
+```
+
+**Linux — Godot editor**
+
+```bash
+rm -rf "$HOME/.local/share/godot/app_userdata/Blightsilver"
+```
+
+**Windows — Godot editor** (PowerShell)
+
+```powershell
+Remove-Item -Recurse -Force "$env:APPDATA\Godot\app_userdata\Blightsilver"
+```
+
+Then launch the game again. Godot recreates the folder on first write.
+
+### Minimum reset (player save only)
+
+If you only need to re-run **first-run onboarding** and do not care about other local files:
+
+```bash
+rm -f "$HOME/Library/Application Support/Godot/app_userdata/Blightsilver/save_data.json"
+```
+
+(macOS path — adjust for Linux/Windows as above.)
+
+This does **not** remove audio settings, VN editor bug tags, E2E progress, or old legacy files such as `fonts.json` / `menu_buttons.json` under `user://`. Those are ignored for fonts/menu now but may still exist on disk.
+
+### After a complete reset — what to expect
+
+| Check | Expected |
+|-------|----------|
+| Main menu deck line | Active **Starter Deck** (10 / 4 / 3 / …) |
+| Deckbuilder | **Starter Deck** with **Starter Formation** |
+| Union UI | Visible (deckbuilder union section, battle setup union panel) |
+| Campaign / gallery | Nothing completed |
+| Credits | **2000** |
+
+### Partial reset (not a fresh player)
+
+These **do not** wipe campaign or progress:
+
+| Action | Effect |
+|--------|--------|
+| Admin → `manage_starting_deck` → **Reset to starter deck** | Replaces deck + collection only; keeps credits, campaign, mailbox, etc. |
+| Delete only `save_data.json` | Re-runs onboarding on next launch; other `user://` files may remain |
+
+### Shipped layout vs `user://` (dev note)
+
+Admin tools save **directly to the repo** when run in the **editor**:
+
+| Data | Shipped file | Auto-save in editor |
+|------|----------------|---------------------|
+| Fonts | `data/fonts.json` | Font Manager — **Apply** or font pick |
+| Main menu | `data/menu_buttons.json` | `manage_menu_buttons` — each toggle |
+| Campaign map | `data/campaign_node_positions.json` | Map editor — on drag release |
+
+Commit those JSON files when you want players to see your latest layout. **Git commit is still manual.**
+
+Legacy files `user://fonts.json` and `user://menu_buttons.json` are **no longer loaded**; safe to delete during a complete reset.
+
+---
+
 ## Building a release
 
 This project’s export presets live in `export_presets.cfg`. Configure paths and platform options in the Godot editor, then export from the GUI or CLI.

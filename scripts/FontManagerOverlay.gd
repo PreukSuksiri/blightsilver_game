@@ -181,7 +181,7 @@ func _build_bottom_bar() -> void:
 	bar.add_child(hbox)
 
 	_status_lbl = Label.new()
-	_status_lbl.text = "Edit paths then Apply to swap fonts live."
+	_status_lbl.text = "Edit paths then Apply — saves to res://data/fonts.json in the editor."
 	_status_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_status_lbl.add_theme_font_size_override("font_size", 12)
 	_status_lbl.add_theme_color_override("font_color", Color(0.55, 0.70, 0.85))
@@ -215,6 +215,8 @@ func _on_font_selected(path: String) -> void:
 	FontManager.set_slot_path(_browse_slot, path)
 	(row["preview"] as Label).add_theme_font_override(
 		"font", FontManager.make_font(_browse_slot, 500))
+	if Engine.is_editor_hint() and FontManager.save_config():
+		_set_status("Saved slot '%s' → %s" % [_browse_slot, FontManager.get_shipped_config_path()])
 
 
 func _on_reset_slot(slot_id: String) -> void:
@@ -242,13 +244,16 @@ func _on_apply() -> void:
 		var row: Dictionary = _rows[slot_id]
 		FontManager.set_slot_path(slot_id, (row["path_edit"] as LineEdit).text.strip_edges())
 	FontManager.apply_and_notify()
-	_set_status("Fonts applied live.")
+	if Engine.is_editor_hint():
+		_set_status("Applied and saved to %s." % FontManager.get_shipped_config_path())
+	else:
+		_set_status("Fonts applied live.")
 
 
 func _on_save() -> void:
 	_on_apply()
 	if FontManager.save_config():
-		_set_status("Saved to user://fonts.json and applied.")
+		_set_status("Saved to %s and applied." % FontManager.get_shipped_config_path())
 	else:
 		_set_status("Apply OK but save failed.")
 
