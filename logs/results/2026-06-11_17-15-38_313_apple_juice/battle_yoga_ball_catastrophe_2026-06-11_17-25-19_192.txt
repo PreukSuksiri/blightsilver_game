@@ -1,0 +1,63 @@
+=== Battle of Yoga Ball Catastrophe ===
+Battle started: 2026-06-11 17:25:19.192
+Game Session of Apple Juice (started 2026-06-11 17:15:38.313)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:07.620] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:13.026] Mode selected P1: ATTACK
+[00:13.028] MSG: Player 2: tap a character to attack.
+[00:14.727] Revealed: P1 (0,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[00:14.776] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:14.776] Dice rolled: 4
+[00:15.042] MSG: Trap triggered: Trap Hole!
+[00:18.318] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:19.199] Coin flip: Heads, Heads, Tails
+[00:21.935] MSG: Trap Hole: Heads, Heads, Tails.
+[00:21.936] Crystals: P1 5000 → 4960 (-40)  [trap]
+[00:23.326] MSG: Trap Hole: 2 head(s) — Player 2 loses 40 Crystals!
+[00:23.328] Attack P1(0,0)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} → P0(0,0)"Trap Hole" {cost 0}  Dice=4  → Unit vs Trap
+[00:23.328] Reckoning overlay: P1 "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=10 DEF pill=10 mod=+ATK 0 (10+0=10)
+[00:23.328] Anim: 3D  (attacker survives)
+[00:23.826] Mode selected P1: ATTACK
+[00:23.829] MSG: Player 2: tap a character to attack.
+[00:25.531] Revealed: P1 (1,0) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:25.577] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[00:25.577] Dice rolled: 3
+[00:25.842] MSG: Trap triggered: Pepper Spray!
+[00:29.130] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:29.991] Coin flip: Heads, Tails
+[00:32.734] MSG: Pepper Spray: Heads, Tails.
+[00:32.735] MSG: Not both heads — no effect.
+[00:32.737] Attack P1(1,0)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(2,2)"Pepper Spray" {cost 0}  Dice=3  → Unit vs Trap
+[00:32.737] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:32.737] Anim: 3D  (attacker survives)
+[00:32.742] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:33.135] MSG: Revealed: (empty)
+[00:33.238] Turn ended  P1  |  Crystals P0=5000 P1=4960
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4960 ---
+[00:38.620] Tech played  P0: "Spy"
+[00:40.160] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:42.026] Revealed: P1 (1,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[00:42.236] Tech resolved  P0
+[00:54.687] Revealed: P0 (1,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[00:54.687] Dice rolled: 2
+[00:54.695] MSG: Silver Spearman wins!
+[00:57.610] Crystals: P1 4960 → 4710 (-250)  [battle]
+[00:59.008] Attack P0(1,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} → P1(1,1)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=2  ATK=25 vs DEF=10  → WIN
+[00:59.008] Reckoning overlay: P0 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[00:59.008] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=10 ATK pill=30 DEF pill=10 mod=+DEF 0 (10+0=10)
+[00:59.008] Anim: 3A  △ P1(1,1)
+[00:59.008] Card destroyed  P1 (1,1) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[01:06.409] Revealed: P0 (4,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:06.409] Dice rolled: 3
+[01:09.521] Crystals: P0 5000 → 4750 (-250)  [battle]
+[01:10.915] Attack P0(4,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P1(1,0)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=3  ATK=20 vs DEF=25  → LOSE
+[01:10.916] Reckoning overlay: P0 "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[01:10.916] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity

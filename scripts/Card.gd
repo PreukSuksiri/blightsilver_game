@@ -259,13 +259,12 @@ func _set_active_glow(show: bool) -> void:
 	exposed_icon_shadow.visible = show
 
 func _should_show_exposed_icon() -> bool:
-	if card_data == null or _is_enemy_view:
+	if card_data == null:
 		return false
-	# Exposed badge: this card's identity is visible to its owner —
-	# face-up on your turn, or face-down while you are peeking your board.
-	if _is_peeking and not card_data.face_up:
-		return card_data.card_type in ["character", "trap"]
-	return player_owner == GameState.current_player and card_data.face_up
+	# Exposed badge: opponent can see this card's identity (revealed on the board).
+	if not card_data.face_up:
+		return false
+	return card_data.card_type in ["character", "trap", "tech"]
 
 func _set_attacked_icon(show: bool) -> void:
 	if _attacked_icon_tween:
