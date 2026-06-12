@@ -6,7 +6,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -22,7 +22,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -44,7 +44,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_akimbo_annoyed.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -64,7 +64,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_sigh.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_akimbo_sigh.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -83,7 +83,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_sigh.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_akimbo_sigh.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -102,7 +102,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -121,7 +121,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -144,7 +144,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -163,7 +163,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -188,6 +188,10 @@
 	{
 		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_toilet_kelly_behind_door.png",
 		"sfx": "res://assets/audio/sfx/scifi_ui_33b.mp3",
+		"sfx_volume": 150.0
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_toilet_kelly_behind_door.png",
 		"text": "(As she walk past the glass door... Before Nex could catch up, the door was closed and locked)"
 	},
 	{

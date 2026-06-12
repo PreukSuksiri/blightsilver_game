@@ -33,12 +33,25 @@ const DailyDungeonMapScene  = preload("res://scenes/daily_dungeon_map.tscn")
 @onready var deck_status_bg:    Panel  = $DeckStatusBg
 
 const MENU_BTN_Z := 1
+const TITLE_CHEAT_Z := -10
 const MENU_OVERLAY_Z := 25
 const MENU_DROPDOWN_BACKDROP_Z := 40
 const MENU_DROPDOWN_Z := 41
 const MENU_STACK_GAP := 14.0
 
+const TITLE_BG_TEX_SIZE := Vector2(1216.0, 832.0)
+const TITLE_CHEAT_TAPS_REQUIRED := 20
+const TITLE_CHEAT_APARTMENT_CREDITS := 10000
+const TITLE_CHEAT_MOON_CREDITS := 2500
+# Normalized hit rects on bg_title_1.png — see requirement/Screenshot 2569-06-12 at 12.23.11.png
+const TITLE_CHEAT_APARTMENT_NORM := Rect2(0.020, 0.520, 0.095, 0.135)
+const TITLE_CHEAT_MOON_NORM := Rect2(0.300, 0.020, 0.400, 0.480)
+
 var _overlay_obscure_depth: int = 0
+var _title_cheat_apartment_taps: int = 0
+var _title_cheat_moon_taps: int = 0
+var _title_cheat_apartment_zone: Control = null
+var _title_cheat_moon_zone: Control = null
 
 func _ready() -> void:
 	local_2p_btn.pressed.connect(_on_local_play_pressed)
@@ -86,6 +99,10 @@ func _ready() -> void:
 	_apply_menu_fonts()
 	if not FontManager.fonts_changed.is_connected(_on_fonts_changed):
 		FontManager.fonts_changed.connect(_on_fonts_changed)
+	_reset_title_cheat_tap_counts()
+	_setup_title_cheat_hitboxes()
+	if has_node("TitleLogo"):
+		$TitleLogo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _refresh_deck_status() -> void:
 	var deck: DeckData = SaveManager.get_active_deck()
@@ -344,6 +361,7 @@ func _push_main_menu_obscured() -> void:
 	_overlay_obscure_depth += 1
 	if _overlay_obscure_depth == 1:
 		_set_main_menu_obscured(true)
+		_set_title_cheat_zones_active(false)
 
 
 func _pop_main_menu_obscured() -> void:
@@ -351,6 +369,7 @@ func _pop_main_menu_obscured() -> void:
 	if _overlay_obscure_depth == 0:
 		_set_main_menu_obscured(false)
 		_apply_menu_button_state()
+		_set_title_cheat_zones_active(true)
 
 
 func _set_main_menu_obscured(obscured: bool) -> void:
@@ -727,3 +746,130 @@ func _input(event: InputEvent) -> void:
 	if BuildConfig.admin_shortcut_pressed(event):
 		_open_admin_console()
 		get_viewport().set_input_as_handled()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		_layout_title_cheat_hitboxes()
+
+
+func _reset_title_cheat_tap_counts() -> void:
+	_title_cheat_apartment_taps = 0
+	_title_cheat_moon_taps = 0
+
+
+func refresh_title_cheats_from_save() -> void:
+	_reset_title_cheat_tap_counts()
+	_refresh_title_cheat_zone_visibility()
+
+
+func _setup_title_cheat_hitboxes() -> void:
+	if get_node_or_null("TitleCheatHitZones") != null:
+		return
+	var layer := Control.new()
+	layer.name = "TitleCheatHitZones"
+	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.z_index = TITLE_CHEAT_Z
+	add_child(layer)
+	move_child(layer, get_node("Background").get_index() + 1)
+
+	_title_cheat_apartment_zone = _make_title_cheat_zone(
+		"ApartmentCheatZone", _on_title_cheat_apartment_tapped)
+	_title_cheat_moon_zone = _make_title_cheat_zone(
+		"MoonCheatZone", _on_title_cheat_moon_tapped)
+	layer.add_child(_title_cheat_apartment_zone)
+	layer.add_child(_title_cheat_moon_zone)
+	_refresh_title_cheat_zone_visibility()
+	_layout_title_cheat_hitboxes()
+
+
+func _make_title_cheat_zone(zone_name: String, on_tap: Callable) -> Control:
+	var zone := Control.new()
+	zone.name = zone_name
+	zone.mouse_filter = Control.MOUSE_FILTER_STOP
+	zone.gui_input.connect(func(ev: InputEvent) -> void:
+		if not _title_cheat_zone_pressed(ev):
+			return
+		on_tap.call())
+	return zone
+
+
+func _title_cheat_zone_pressed(event: InputEvent) -> bool:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		return mb.button_index == MOUSE_BUTTON_LEFT and mb.pressed
+	if event is InputEventScreenTouch:
+		return (event as InputEventScreenTouch).pressed
+	return false
+
+
+func _title_cheat_norm_to_screen_rect(norm: Rect2) -> Rect2:
+	var vp_size: Vector2 = get_viewport().get_visible_rect().size
+	var scale: float = maxf(vp_size.x / TITLE_BG_TEX_SIZE.x, vp_size.y / TITLE_BG_TEX_SIZE.y)
+	var drawn_size: Vector2 = TITLE_BG_TEX_SIZE * scale
+	var offset: Vector2 = (vp_size - drawn_size) * 0.5
+	return Rect2(
+		offset + Vector2(norm.position.x, norm.position.y) * drawn_size,
+		Vector2(norm.size.x, norm.size.y) * drawn_size)
+
+
+func _layout_title_cheat_hitboxes() -> void:
+	if _title_cheat_apartment_zone == null or _title_cheat_moon_zone == null:
+		return
+	_apply_title_cheat_zone_rect(_title_cheat_apartment_zone, TITLE_CHEAT_APARTMENT_NORM)
+	_apply_title_cheat_zone_rect(_title_cheat_moon_zone, TITLE_CHEAT_MOON_NORM)
+
+
+func _apply_title_cheat_zone_rect(zone: Control, norm: Rect2) -> void:
+	var rect: Rect2 = _title_cheat_norm_to_screen_rect(norm)
+	zone.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	zone.position = rect.position
+	zone.size = rect.size
+
+
+func _refresh_title_cheat_zone_visibility() -> void:
+	if _title_cheat_apartment_zone != null:
+		_title_cheat_apartment_zone.visible = not SaveManager.title_cheat_apartment_claimed
+	if _title_cheat_moon_zone != null:
+		_title_cheat_moon_zone.visible = not SaveManager.title_cheat_moon_claimed
+
+
+func _set_title_cheat_zones_active(active: bool) -> void:
+	var layer: Node = get_node_or_null("TitleCheatHitZones")
+	if layer != null:
+		layer.visible = active
+
+
+func _on_title_cheat_apartment_tapped() -> void:
+	if SaveManager.title_cheat_apartment_claimed:
+		return
+	_title_cheat_apartment_taps += 1
+	if _title_cheat_apartment_taps >= TITLE_CHEAT_TAPS_REQUIRED:
+		_grant_title_cheat_apartment()
+
+
+func _on_title_cheat_moon_tapped() -> void:
+	if SaveManager.title_cheat_moon_claimed:
+		return
+	_title_cheat_moon_taps += 1
+	if _title_cheat_moon_taps >= TITLE_CHEAT_TAPS_REQUIRED:
+		_grant_title_cheat_moon()
+
+
+func _grant_title_cheat_apartment() -> void:
+	if SaveManager.title_cheat_apartment_claimed:
+		return
+	SaveManager.title_cheat_apartment_claimed = true
+	Collection.add_credits(TITLE_CHEAT_APARTMENT_CREDITS)
+	CreditsEarnedOverlay.show_earned(get_tree().root, TITLE_CHEAT_APARTMENT_CREDITS)
+	_refresh_title_cheat_zone_visibility()
+
+
+func _grant_title_cheat_moon() -> void:
+	if SaveManager.title_cheat_moon_claimed:
+		return
+	SaveManager.title_cheat_moon_claimed = true
+	Collection.add_credits(TITLE_CHEAT_MOON_CREDITS)
+	CreditsEarnedOverlay.show_earned(get_tree().root, TITLE_CHEAT_MOON_CREDITS)
+	_refresh_title_cheat_zone_visibility()

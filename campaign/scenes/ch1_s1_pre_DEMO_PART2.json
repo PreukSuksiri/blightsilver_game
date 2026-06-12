@@ -177,7 +177,7 @@
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_warning.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_warning.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -240,7 +240,7 @@
 		"battle_bgm": "res://assets/audio/bgm_boss_2.mp3",
 		"battle_reward": [
 			{
-				"amount": 500,
+				"amount": 500.0,
 				"type": "credits"
 			},
 			{

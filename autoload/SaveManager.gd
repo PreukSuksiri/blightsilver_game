@@ -28,6 +28,8 @@ var exploration_session: Dictionary = {}    # mid-session snapshot; cleared on e
 var exploration_auto_save: bool = true      # when false, only Save and Exit writes exploration_session
 var campaign_vn_checkpoints: Dictionary = {}  # vn_scene path → filtered beat index to resume
 var onboarding_complete: bool = false        # true after first-run setup (or legacy save migration)
+var title_cheat_apartment_claimed: bool = false  # main-menu apartment-window cheat (once per save)
+var title_cheat_moon_claimed: bool = false       # main-menu moon cheat (once per save)
 
 func _ready() -> void:
 	_load_demo_config()
@@ -82,6 +84,11 @@ func set_union_mechanism_unlocked(val: bool) -> void:
 	union_mechanism_unlocked = val
 	save_data()
 	emit_signal("union_mechanism_changed", val)
+
+func reset_title_cheats() -> void:
+	title_cheat_apartment_claimed = false
+	title_cheat_moon_claimed = false
+	save_data()
 
 # ── CRUD ─────────────────────────────────────────────────────
 func save_deck(deck: DeckData) -> void:
@@ -204,6 +211,8 @@ func save_data() -> void:
 		"exploration_auto_save":   exploration_auto_save,
 		"campaign_vn_checkpoints": campaign_vn_checkpoints,
 		"onboarding_complete":     onboarding_complete,
+		"title_cheat_apartment_claimed": title_cheat_apartment_claimed,
+		"title_cheat_moon_claimed":      title_cheat_moon_claimed,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -289,6 +298,8 @@ func load_data() -> void:
 		campaign_vn_checkpoints = vc as Dictionary
 
 	onboarding_complete = bool(parsed.get("onboarding_complete", false))
+	title_cheat_apartment_claimed = bool(parsed.get("title_cheat_apartment_claimed", false))
+	title_cheat_moon_claimed = bool(parsed.get("title_cheat_moon_claimed", false))
 
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery VN beat checkpoints (pre-exploration progress)

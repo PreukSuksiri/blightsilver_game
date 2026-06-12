@@ -125,6 +125,7 @@ func delete_claimed() -> void:
 #   grant_credits <amount>
 #   remove_credits <amount>
 #   reset_credits [amount]
+#   reset_title_cheats
 #   manage_bgm
 
 func _dismiss_admin_console(scene: Node = null) -> void:
@@ -216,6 +217,7 @@ func admin_command(raw: String) -> String:
 				+ "  grant_credits <amount>\n"
 				+ "  remove_credits <amount>\n"
 				+ "  reset_credits [amount]\n"
+				+ "  reset_title_cheats\n"
 				+ "  demo_on\n"
 				+ "  demo_off\n"
 				+ "  demo_status\n"
@@ -1042,6 +1044,13 @@ func admin_command(raw: String) -> String:
 			var before_reset: int = Collection.credits
 			Collection.set_credits(reset_amount)
 			return "Credits reset to %d (was %d)." % [Collection.credits, before_reset]
+
+		"reset_title_cheats":
+			SaveManager.reset_title_cheats()
+			var menu_scene: Node = get_tree().current_scene
+			if menu_scene != null and menu_scene.has_method("refresh_title_cheats_from_save"):
+				menu_scene.refresh_title_cheats_from_save()
+			return "Title screen cheat quotas reset (apartment 10,000 cr + moon 2,500 cr)."
 
 		"pack_editor":
 			var scene: Node = get_tree().current_scene

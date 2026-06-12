@@ -1088,6 +1088,7 @@ var _fe_flash_cells:      Array          = []
 var _fe_flash_tween:      Tween          = null
 var _fe_drag_ghost:       Control        = null
 var _fe_drag_ghost_active: bool          = false
+var _fe_saved_snapshot:   String         = ""
 
 const _FE_CELL_W:   float = 100.0
 const _FE_CELL_H:   float = 137.0
@@ -1141,9 +1142,7 @@ func _open_formation_editor() -> void:
 	close_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	close_btn.offset_left = -130.0; close_btn.offset_right  = -10.0
 	close_btn.offset_top  =   8.0;  close_btn.offset_bottom =  40.0
-	close_btn.pressed.connect(func() -> void:
-		_fe_hide_drag_ghost()
-		_fe_overlay.queue_free())
+	close_btn.pressed.connect(_fe_on_close_requested)
 	_fe_overlay.add_child(close_btn)
 
 	# ── Main 3-column layout ──────────────────────────────────
@@ -1332,6 +1331,42 @@ func _open_formation_editor() -> void:
 		_fe_select_formation(0)
 		if _fe_list != null:
 			_fe_list.select(0)
+	_fe_saved_snapshot = _fe_formations_snapshot()
+
+func _fe_formations_snapshot() -> String:
+	if current_deck == null:
+		return "[]"
+	return JSON.stringify(current_deck.formations)
+
+func _fe_has_unsaved_changes() -> bool:
+	return _fe_saved_snapshot != _fe_formations_snapshot()
+
+func _fe_on_close_requested() -> void:
+	if _fe_has_unsaved_changes():
+		_fe_show_unsaved_warning()
+		return
+	_fe_close_overlay()
+
+func _fe_show_unsaved_warning() -> void:
+	if _fe_overlay == null or not is_instance_valid(_fe_overlay):
+		return
+	SFXManager.play(SFXManager.SFX_POPUP)
+	var dlg := AcceptDialog.new()
+	dlg.title = "Unsaved Changes"
+	dlg.dialog_text = "You have unsaved formation changes.\n\nTap Save before closing."
+	dlg.ok_button_text = "OK"
+	_fe_overlay.add_child(dlg)
+	dlg.popup_centered()
+	dlg.confirmed.connect(func() -> void: dlg.queue_free())
+	dlg.canceled.connect(func() -> void: dlg.queue_free())
+	dlg.close_requested.connect(func() -> void: dlg.queue_free())
+
+func _fe_close_overlay() -> void:
+	_fe_hide_drag_ghost()
+	_fe_saved_snapshot = ""
+	if _fe_overlay != null and is_instance_valid(_fe_overlay):
+		_fe_overlay.queue_free()
+	_fe_overlay = null
 
 func _fe_build_gallery_panel(parent: Control) -> void:
 	const TWO_ROW_H: float = (_FE_GAL_H + 22.0) * 2.0 + float(_FE_GAL_GAP) + 38.0
@@ -1815,6 +1850,7 @@ func _process(_delta: float) -> void:
 func _fe_save_formation() -> void:
 	if current_deck == null: return
 	SaveManager.save_deck(current_deck)
+	_fe_saved_snapshot = _fe_formations_snapshot()
 	_refresh_deck_select()
 	status_label.text = "Formation saved!"
 
