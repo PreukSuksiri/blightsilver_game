@@ -11,13 +11,15 @@ class_name PackOpeningOverlay
 # Only pre-rendered full_cards/ images are shown (never raw artwork).
 # Textures are preloaded before the reveal animation starts.
 # The overlay blocks all input during the animation.
-# Clicking / Space skips the display wait and triggers the fly-off immediately.
+# Clicking / Space skips the display wait and triggers the fly-off once all cards
+# are on screen and have settled (0.2s after the fan-out animation).
 # ──────────────────────────────────────────────────────────────────────────────
 
 const PACK_TEX_PATH     : String = "res://assets/textures/cards/booster_pack/booster_pack_basic.png"
 const FALLBACK_CARD_PATH: String = "res://assets/textures/cards/frames/vellum_card_frame_full.png"
 const FULL_CARDS_DIR    : String = "res://assets/textures/cards/full_cards/"
 const DISPLAY_HOLD_SECONDS: float = 30.0
+const CARD_SETTLE_SECONDS: float = 0.2
 const _ROUNDED_CLIP: Shader = preload("res://assets/shaders/rounded_clip.gdshader")
 const _CARD_CORNER_RADIUS_REF: float = 16.0   # px at 150px card width
 
@@ -34,6 +36,7 @@ var _pack_image_path:  String = ""   # overrides PACK_TEX_PATH when non-empty
 var _reroll_pack_name: String = ""   # non-empty enables Re-roll button
 var _skip_requested:   bool   = false
 var _skippable:        bool   = true
+var _dismiss_allowed:  bool   = false
 var _anim_done:        bool   = false
 var _reroll_triggered: bool   = false
 var _glow_sbs:         Array  = [null, null, null]  # StyleBoxFlat refs
@@ -84,7 +87,7 @@ func _compute_sizes() -> void:
 	_card_h = _card_w * (210.0 / 150.0)
 
 func _input(event: InputEvent) -> void:
-	if _anim_done or not _skippable:
+	if _anim_done or not _skippable or not _dismiss_allowed:
 		return
 	if event is InputEventMouseButton:
 		var mbe: InputEventMouseButton = event as InputEventMouseButton
@@ -264,6 +267,10 @@ func _run() -> void:
 		t6.tween_property(w, "position:x", fan_positions[i].x, 0.38) \
 			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	await t6.finished
+
+	await get_tree().create_timer(CARD_SETTLE_SECONDS).timeout
+	_skip_requested = false
+	_dismiss_allowed = true
 
 	# ── Phase 7: Glow pulse on each card ──────────────────────────────────
 	for i: int in range(3):

@@ -566,6 +566,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 		attacker.attacked_this_turn = true
 		attacker.bonus_attack_pending = false
 
+	attacker.last_attack_target = target_pos
+
 	GameState.attacks_remaining = maxi(0, GameState.attacks_remaining - _consume_attack_slot + _pb_extra)
 
 	if not _attack_completed_emitted:
@@ -1565,6 +1567,12 @@ func _end_turn(player: int) -> void:
 						_ep_card.current_atk = max(0, _ep_card.current_atk - _pen)
 						GameState.post_message(
 							"%s: -%d ATK at end of expose turn." % [_ep_card.card_name, _pen])
+					CharacterData.AbilityType.PERM_ATK_BOOST_WHEN_EXPOSED:
+						var _boost: int = _ep_card.ability_params.get(
+							"amount", _ep_card.ability_params.get("atk", 15))
+						_ep_card.perm_atk_bonus += _boost
+						GameState.post_message(
+							"%s: +%d ATK permanently at end of expose turn." % [_ep_card.card_name, _boost])
 
 	# SELF_DESTROY_TEMP_ATK_BOOST: destroy cards scheduled for end-of-next-turn destruction
 	for _sd_r: int in range(GameState.GRID_SIZE):
@@ -1581,6 +1589,7 @@ func _end_turn(player: int) -> void:
 			var card: GameState.CardInstance = GameState.get_card(player, r, c)
 			if card.card_type == "character":
 				card.attacked_this_turn = false
+				card.last_attack_target = Vector2i(-1, -1)
 				card.clear_temp_buffs()
 
 	# Cursed Reflection: clear ATK/DEF swap when the defending player's turn ends.

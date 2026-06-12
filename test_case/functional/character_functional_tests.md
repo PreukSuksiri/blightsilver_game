@@ -514,26 +514,25 @@ Expected Result:
 Card Name: Cursed Well
 Type: Character
 Stats: ATK=0 DEF=25 Cost=300 Affinity=CHAOS
-AbilityType: ATK_BOOST_VS_REVEALED
-ability_params: {'bonus': 15}
-Description: +15 ATK if exposed
+AbilityType: PERM_ATK_BOOST_WHEN_EXPOSED
+ability_params: {'amount': 15}
+Description: At the end of the turn that it's been exposed, +15 ATK permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Cursed-Well-001
 Description:
-Cursed Well: +15 ATK vs exposed defender
+Cursed Well: +15 ATK permanently at end of expose turn
 Implementation Reference:
-- BattleResolver._get_effective_atk() checks defender.face_up
-- AbilityType.ATK_BOOST_VS_REVEALED
+- TurnManager end-of-expose-turn handler
+- AbilityType.PERM_ATK_BOOST_WHEN_EXPOSED
 Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Defender was face-up before attack (defender_was_exposed=true).
+- Cursed Well face-up on field; revealed_on_turn == current turn_number.
 Steps:
-Step 1: Attack revealed defender with Cursed Well.
+Step 1: End the turn on which Cursed Well was first exposed.
 Expected Result:
-- attacker_atk_used == 15.
+- perm_atk_bonus += 15 (effective ATK 15 on later turns).
 
 ---
 

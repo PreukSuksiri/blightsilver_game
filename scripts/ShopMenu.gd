@@ -127,8 +127,9 @@ func _update_pack_card_buy_state(card_root: Node, pack: Dictionary) -> void:
 		if child is Label and str((child as Label).text).ends_with(" Credits"):
 			(child as Label).add_theme_color_override("font_color",
 				Color(0.95, 0.82, 0.22, 1.0) if can_buy else Color(0.75, 0.28, 0.28, 0.8))
-		elif child is Button and (child as Button).text in ["BUY PACK", "LOCKED"]:
-			(child as Button).text = "BUY PACK" if shop_unlocked else "LOCKED"
+		elif child is Button and (child as Button).text in ["BUY PACK", "BUY SCROLL", "LOCKED"]:
+			var is_scroll: bool = str(pack.get("product_type", "")) == "union_scroll"
+			(child as Button).text = ("BUY SCROLL" if is_scroll else "BUY PACK") if shop_unlocked else "LOCKED"
 			(child as Button).disabled = not can_buy
 
 func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
@@ -201,6 +202,8 @@ func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
 	desc.add_theme_color_override("font_color", Color(0.58, 0.7, 0.8, 0.82))
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD
 	desc.clip_text = true
+	if str(pack.get("product_type", "")) == "union_scroll":
+		desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	desc.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	desc.custom_minimum_size = Vector2(0, 32)
 	vbox.add_child(desc)
@@ -259,7 +262,8 @@ func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
 
 	# — Buy button ——————————————————————————
 	var btn := Button.new()
-	btn.text = "BUY PACK" if shop_unlocked else "LOCKED"
+	var is_scroll: bool = str(pack.get("product_type", "")) == "union_scroll"
+	btn.text = ("BUY SCROLL" if is_scroll else "BUY PACK") if shop_unlocked else "LOCKED"
 	btn.disabled = not can_buy
 	btn.add_theme_font_size_override("font_size", 15)
 	btn.add_theme_color_override("font_color", Color(accent.r, accent.g, accent.b, 1.0))
@@ -287,6 +291,9 @@ func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
 	return card
 
 func _contents_text(pack: Dictionary) -> String:
+	if str(pack.get("product_type", "")) == "union_scroll":
+		var tag: String = str(pack.get("contents_tag", "")).strip_edges()
+		return tag if not tag.is_empty() else UnionScrollManager.SHOP_CONTENTS
 	var card_pool: Variant = pack.get("card_pool", null)
 	if card_pool is Array and not (card_pool as Array).is_empty():
 		var count: int = int(pack.get("card_count", 3))
@@ -300,6 +307,10 @@ func _contents_text(pack: Dictionary) -> String:
 	return " + ".join(parts)
 
 func _resolve_pack_image_path(pack: Dictionary) -> String:
+	if str(pack.get("product_type", "")) == "union_scroll":
+		var item_path: String = str(pack.get("item_image", "")).strip_edges()
+		if not item_path.is_empty():
+			return item_path
 	var path: String = str(pack.get("pack_image", "")).strip_edges()
 	if path.is_empty():
 		return DEFAULT_PACK_IMAGE
@@ -319,6 +330,17 @@ func _load_pack_texture(pack: Dictionary) -> Texture2D:
 # Purchase flow
 # ─────────────────────────────────────────────────────────────
 func _on_buy(pack_id: String) -> void:
+	if pack_id == UnionScrollManager.PRODUCT_ID:
+		var scroll_res: Dictionary = ShopManager.purchase_shop_item(pack_id, get_tree().root)
+		if not scroll_res["success"]:
+			_show_result("Purchase Failed", [], scroll_res["error"])
+			return
+		var union_name: String = str(scroll_res.get("union_name", ""))
+		if union_name.is_empty():
+			_show_result("Union Scroll", [], "")
+		else:
+			_show_result("Union Scroll", [{"name": union_name, "type": "union"}], "")
+		return
 	var res: Variant = ShopManager.purchase_pack(pack_id)
 	if not res["success"]:
 		_show_result("Purchase Failed", [], res["error"])
@@ -363,6 +385,7 @@ func _make_result_row(card: Dictionary) -> Control:
 	var type_color: Color
 	match c_type:
 		"character": type_color = Color(0.28, 0.82, 1.0)
+		"union":     type_color = Color(0.25, 0.90, 1.0)
 		"trap":      type_color = Color(0.78, 0.28, 1.0)
 		"tech":      type_color = Color(0.28, 1.0, 0.62)
 		_:           type_color = Color(0.6, 0.6, 0.6)
@@ -384,7 +407,7 @@ func _make_result_row(card: Dictionary) -> Control:
 
 	# Type tag
 	var type_lbl := Label.new()
-	type_lbl.text = "UNIT" if c_type == "character" else c_type.to_upper()
+	type_lbl.text = "UNION" if c_type == "union" else ("UNIT" if c_type == "character" else c_type.to_upper())
 	type_lbl.custom_minimum_size = Vector2(88, 0)
 	type_lbl.add_theme_font_size_override("font_size", 10)
 	type_lbl.add_theme_color_override("font_color", Color(type_color.r, type_color.g, type_color.b, 0.75))

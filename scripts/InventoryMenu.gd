@@ -14,6 +14,8 @@ var _claim_all_btn:   Button
 var _claim_credits_btn: Button
 var _delete_btn:      Button
 var _credit_count_lbl: Label
+var _scroll_count_lbl: Label
+var _scroll_use_btn: Button
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -225,12 +227,82 @@ func _build_items_panel() -> Control:
 	_credit_count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	credit_hbox.add_child(_credit_count_lbl)
 
+	# Union Scroll row
+	var scroll_row := PanelContainer.new()
+	scroll_row.custom_minimum_size = Vector2(0, 68)
+	var scroll_sb := StyleBoxFlat.new()
+	scroll_sb.bg_color = Color(0.04, 0.05, 0.10, 1.0)
+	scroll_sb.border_color = Color(0.85, 0.88, 1.0, 0.45)
+	scroll_sb.set_border_width_all(1)
+	scroll_sb.set_corner_radius_all(6)
+	scroll_sb.content_margin_left = 14; scroll_sb.content_margin_right = 14
+	scroll_sb.content_margin_top  = 10; scroll_sb.content_margin_bottom = 10
+	scroll_row.add_theme_stylebox_override("panel", scroll_sb)
+	vbox.add_child(scroll_row)
+
+	var scroll_hbox := HBoxContainer.new()
+	scroll_hbox.add_theme_constant_override("separation", 12)
+	scroll_row.add_child(scroll_hbox)
+
+	var scroll_icon := TextureRect.new()
+	scroll_icon.texture = load(UnionScrollManager.SCROLL_IMAGE) as Texture2D
+	scroll_icon.custom_minimum_size = Vector2(36, 36)
+	scroll_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	scroll_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	scroll_hbox.add_child(scroll_icon)
+
+	var scroll_text_vbox := VBoxContainer.new()
+	scroll_text_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll_text_vbox.add_theme_constant_override("separation", 2)
+	scroll_hbox.add_child(scroll_text_vbox)
+
+	var scroll_name := Label.new()
+	scroll_name.text = "Union Scroll"
+	scroll_name.add_theme_font_size_override("font_size", 15)
+	scroll_name.add_theme_color_override("font_color", Color(0.88, 0.90, 1.0))
+	scroll_name.add_theme_font_override("font", CHIVO_FONT)
+	scroll_text_vbox.add_child(scroll_name)
+
+	var scroll_desc := Label.new()
+	scroll_desc.text = "Reveals one undiscovered Union card from the demo pool"
+	scroll_desc.add_theme_font_size_override("font_size", 11)
+	scroll_desc.add_theme_color_override("font_color", Color(0.5, 0.6, 0.7, 0.8))
+	scroll_text_vbox.add_child(scroll_desc)
+
+	_scroll_use_btn = Button.new()
+	_scroll_use_btn.text = "Use"
+	_scroll_use_btn.add_theme_font_size_override("font_size", 13)
+	_scroll_use_btn.pressed.connect(_on_use_union_scroll)
+	scroll_hbox.add_child(_scroll_use_btn)
+
+	_scroll_count_lbl = Label.new()
+	_scroll_count_lbl.add_theme_font_size_override("font_size", 20)
+	_scroll_count_lbl.add_theme_color_override("font_color", Color(0.88, 0.90, 1.0))
+	_scroll_count_lbl.add_theme_font_override("font", CHIVO_FONT)
+	_scroll_count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	scroll_hbox.add_child(_scroll_count_lbl)
+
 	_refresh_items()
 	return root
 
 func _refresh_items() -> void:
 	if _credit_count_lbl != null:
 		_credit_count_lbl.text = "%d" % Collection.credits
+	if _scroll_count_lbl != null:
+		_scroll_count_lbl.text = "×%d" % Collection.union_scrolls
+	if _scroll_use_btn != null:
+		_scroll_use_btn.disabled = Collection.union_scrolls <= 0
+
+func _on_use_union_scroll() -> void:
+	var res: Dictionary = UnionScrollManager.use_scroll(get_tree().root, true)
+	if not res["success"]:
+		var dlg := AcceptDialog.new()
+		dlg.title = "Union Scroll"
+		dlg.dialog_text = str(res.get("error", "Could not use Union Scroll."))
+		dlg.confirmed.connect(dlg.queue_free)
+		add_child(dlg)
+		dlg.popup_centered()
+	_refresh_items()
 
 # ─────────────────────────────────────────────────────────────
 # Mail panel
@@ -473,6 +545,7 @@ func _reward_label(r: Dictionary) -> String:
 		"booster_pack":     return ">> Booster Pack: %s" % r.get("pack_name", "?")
 		"stage_bonus_card": return ">> Stage Bonus Card: %s" % r.get("card_name", "?")
 		"music_disc":       return ">> Music Disc 💿 ×%d" % r.get("count", 1)
+		"union_scroll":     return ">> Union Scroll ×%d" % r.get("count", 1)
 		"credits":          return ">> Credits ×%d" % r.get("amount", 0)
 	return ""
 
@@ -517,6 +590,9 @@ func _apply_reward(reward: Dictionary) -> void:
 			_open_pack_anim(drawn, pack_nm)
 		"music_disc":
 			Collection.add_music_disc(reward.get("count", 1))
+		"union_scroll":
+			Collection.add_union_scrolls(int(reward.get("count", 1)))
+			_refresh_items()
 
 func _open_pack_anim(cards: Array, pack_name: String = "") -> void:
 	var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd")

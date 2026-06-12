@@ -199,7 +199,16 @@ func get_shop_catalog() -> Array:
 		copy["shop_unlocked"] = is_pack_purchasable(p)
 		copy["unlock_requires_chapter"] = get_chapter_unlock_requirement(p)
 		result.append(copy)
+	var scroll_copy: Dictionary = UnionScrollManager.get_shop_product().duplicate(true)
+	scroll_copy["shop_unlocked"] = UnionScrollManager.is_scroll_purchasable()
+	result.append(scroll_copy)
 	return result
+
+## Purchase a shop catalog entry (booster pack or consumable).
+func purchase_shop_item(item_id: String, parent: Node) -> Dictionary:
+	if item_id == UnionScrollManager.PRODUCT_ID:
+		return UnionScrollManager.purchase_from_shop(parent)
+	return purchase_pack(item_id)
 
 ## Returns all custom packs regardless of shop_available (for admin/editor use).
 func get_all_packs_unfiltered() -> Array:

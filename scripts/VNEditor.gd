@@ -2910,6 +2910,10 @@ func _collect_beat() -> Dictionary:
 					(rr["pack_opt"] as OptionButton).selected)
 				if not pname.is_empty():
 					rewards.append({"type": "booster_pack", "pack_name": pname})
+			3: # Union Scroll
+				var scroll_count: int = int((rr["credits_sb"] as SpinBox).value)
+				if scroll_count > 0:
+					rewards.append({"type": "union_scroll", "count": scroll_count})
 	if not rewards.is_empty():
 		b["battle_reward"] = rewards
 
@@ -3930,7 +3934,7 @@ func _toggle_union_highlight(u: UnionData) -> void:
 # ─────────────────────────────────────────────────────────────
 # Battle reward row helpers
 # ─────────────────────────────────────────────────────────────
-const _REWARD_TYPES: Array = ["Credits", "Card", "Booster Pack"]
+const _REWARD_TYPES: Array = ["Credits", "Card", "Booster Pack", "Union Scroll"]
 
 func _get_battle_reward_pack_names(include_name: String = "") -> Array[String]:
 	var names: Array[String] = []
@@ -3974,7 +3978,7 @@ func _add_reward_row_from(rd: Dictionary) -> void:
 	# Credits spinbox
 	var credits_sb := SpinBox.new()
 	credits_sb.min_value = 1; credits_sb.max_value = 99999; credits_sb.step = 1
-	credits_sb.value = float(rd.get("amount", 50))
+	credits_sb.value = float(rd.get("amount", rd.get("count", 50)))
 	credits_sb.custom_minimum_size.x = 100
 	credits_sb.add_theme_font_size_override("font_size", 13)
 	credits_sb.value_changed.connect(func(_v: float) -> void: _on_field_changed())
@@ -4030,6 +4034,7 @@ func _add_reward_row_from(rd: Dictionary) -> void:
 	match rtype:
 		"card":         type_opt.select(1)
 		"booster_pack": type_opt.select(2)
+		"union_scroll": type_opt.select(3)
 		_:              type_opt.select(0)
 	_update_reward_row_visibility(row)
 
@@ -4045,6 +4050,6 @@ func _add_reward_row_from(rd: Dictionary) -> void:
 
 func _update_reward_row_visibility(row: Dictionary) -> void:
 	var sel: int = (row["type_opt"] as OptionButton).selected
-	(row["credits_sb"] as SpinBox).visible   = (sel == 0)
+	(row["credits_sb"] as SpinBox).visible   = (sel == 0 or sel == 3)
 	(row["card_opt"]   as OptionButton).visible = (sel == 1)
 	(row["pack_opt"]   as OptionButton).visible = (sel == 2)

@@ -278,7 +278,7 @@ Preconditions:
 - Giant Meteor Vergaia summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Giant Meteor Vergaia; verify: Destroy it at turn's end, then destroy all face-up foe units sharing a border with this card.
+Step 1: Attack or defend with Giant Meteor Vergaia; verify: Destroy it at turn's end, then destroy all face-up foe's units surrounding the card that this card attacked.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1168,7 +1168,7 @@ Preconditions:
 - Sky Protector summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Sky Protector; verify: If this card defends, DEF becomes 50, ATK becomes 0. If this card performs attack, ATK becomes 50, DEF becomes 0.
+Step 1: Attack or defend with Sky Protector; verify: If this card defends, DEF becomes 60, ATK becomes 0. If this card performs attack, ATK becomes 60, DEF becomes 0.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 

@@ -1,8 +1,10 @@
 extends Control
 
 signal closed
+signal initial_gallery_load_finished
 
 const DeckData = preload("res://resources/DeckData.gd")
+const GALLERY_TILES_PER_FRAME := 8
 
 # ── Scene node refs ───────────────────────────────────────────
 @onready var deck_name_field:   LineEdit    = $MainLayout/RightPanel/Inner/TopBar/DeckNameField
@@ -89,6 +91,7 @@ var _deck_tech_flow:  HFlowContainer = null
 var _view_toggle_btn: Button = null
 var _gallery_selected_name: String = ""
 var _gallery_selected_type: String = ""
+var _gallery_rebuild_gen: int = 0
 
 # Union right-panel section
 var _union_section: VBoxContainer = null
@@ -835,6 +838,16 @@ func _add_union_materials_to_deck(union_name: String) -> void:
 		return
 	var u: UnionData = UnionDatabase.get_union(union_name)
 	if u == null:
+		return
+
+	if UnionDatabase.deck_can_form_union(current_deck.characters, u):
+		var popup := AcceptDialog.new()
+		popup.title = "Union Already Available"
+		popup.dialog_text = "This Union card is already available in your deck."
+		add_child(popup)
+		popup.popup_centered()
+		popup.confirmed.connect(func() -> void: popup.queue_free())
+		popup.canceled.connect(func() -> void: popup.queue_free())
 		return
 
 	var assigned: Array = []
@@ -2172,8 +2185,22 @@ func _setup_gallery_containers() -> void:
 	tech_section.move_child(_deck_tech_scroll_gal, tech_list.get_index())
 
 	_apply_view_mode()
-	_rebuild_trunk_gallery()
-	_rebuild_deck_galleries()
+	call_deferred("_begin_initial_gallery_load")
+
+
+func _begin_initial_gallery_load() -> void:
+	_gallery_rebuild_gen += 1
+	var gen := _gallery_rebuild_gen
+	_run_initial_gallery_load_async(gen)
+
+
+func _run_initial_gallery_load_async(gen: int) -> void:
+	if _gallery_mode and _trunk_gallery_flow != null:
+		await _chunked_trunk_gallery_rebuild_task(gen)
+		if is_inside_tree() and gen == _gallery_rebuild_gen:
+			await _chunked_deck_galleries_rebuild_async(gen)
+	if is_inside_tree():
+		initial_gallery_load_finished.emit()
 
 
 func _toggle_view_mode() -> void:
@@ -2198,11 +2225,26 @@ func _apply_view_mode() -> void:
 	_view_toggle_btn.text = "≡ List" if _gallery_mode else "⊞ Gallery"
 
 func _rebuild_trunk_gallery() -> void:
+	_gallery_rebuild_gen += 1
+	var gen := _gallery_rebuild_gen
+	_chunked_trunk_gallery_rebuild_task(gen)
+
+
+func _chunked_trunk_gallery_rebuild_task(gen: int) -> void:
+	if _trunk_gallery_flow == null:
+		return
 	for child in _trunk_gallery_flow.get_children():
 		child.queue_free()
+	var batch := 0
 	for i: int in range(trunk_list.item_count):
+		if gen != _gallery_rebuild_gen or not is_inside_tree():
+			return
 		var meta: Dictionary = trunk_list.get_item_metadata(i)
 		_trunk_gallery_flow.add_child(_make_pool_tile(meta["name"], meta["type"]))
+		batch += 1
+		if batch >= GALLERY_TILES_PER_FRAME:
+			batch = 0
+			await get_tree().process_frame
 
 func _rebuild_deck_galleries() -> void:
 	if current_deck == null:
@@ -2219,6 +2261,35 @@ func _rebuild_deck_galleries() -> void:
 		_deck_traps_flow.add_child(_make_deck_tile(card_name, "trap"))
 	for card_name: String in current_deck.techs:
 		_deck_tech_flow.add_child(_make_deck_tile(card_name, "tech"))
+
+
+func _chunked_deck_galleries_rebuild_async(gen: int) -> void:
+	if current_deck == null:
+		return
+	for flow: HFlowContainer in [_deck_chars_flow, _deck_traps_flow, _deck_tech_flow]:
+		if flow == null:
+			continue
+		for child in flow.get_children():
+			child.queue_free()
+	var entries: Array[Dictionary] = []
+	for card_name: String in current_deck.characters:
+		entries.append({"flow": _deck_chars_flow, "name": card_name, "type": "character"})
+	for card_name: String in current_deck.traps:
+		entries.append({"flow": _deck_traps_flow, "name": card_name, "type": "trap"})
+	for card_name: String in current_deck.techs:
+		entries.append({"flow": _deck_tech_flow, "name": card_name, "type": "tech"})
+	var batch := 0
+	for entry: Dictionary in entries:
+		if gen != _gallery_rebuild_gen or not is_inside_tree():
+			return
+		var flow: HFlowContainer = entry["flow"]
+		if flow == null:
+			continue
+		flow.add_child(_make_deck_tile(entry["name"], entry["type"]))
+		batch += 1
+		if batch >= GALLERY_TILES_PER_FRAME:
+			batch = 0
+			await get_tree().process_frame
 
 func _make_pool_tile(card_name: String, card_type: String) -> Control:
 	var tile := Control.new()

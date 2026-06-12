@@ -8074,6 +8074,11 @@ func _grant_vn_battle_rewards() -> void:
 					"You received the card: %s." % card_name,
 					{"type": "card", "card_name": card_name}
 				)
+			"union_scroll":
+				var scroll_count: int = int(reward.get("count", 1))
+				if scroll_count <= 0:
+					scroll_count = 1
+				UnionScrollManager.grant_union_scroll_mail(scroll_count, "Victory Reward — Union Scroll", "Battle Reward")
 	GameState.vn_battle_rewards.clear()
 
 func _show_endgame_screen(winner: int) -> void:

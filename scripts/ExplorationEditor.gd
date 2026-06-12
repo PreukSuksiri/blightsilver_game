@@ -1225,9 +1225,11 @@ func _event_action_kv_hint(action: String) -> String:
 		"set_var":
 			return "key: session variable name. value: value to set."
 		"give_credits":
-			return "key: unused (or credit amount if value is empty). value: credit amount (integer)."
+			return "key: credit amount if value is empty, or optional mail subject if value is the amount. value: credit amount (integer)."
 		"give_booster_pack":
 			return "key: optional mail subject override. value: booster pack id or name."
+		"give_union_scroll":
+			return "key: optional mail subject override (or count if value empty). value: scroll count (integer, default 1)."
 		"set_flag":
 			return "key: carry-over flag name. value: flag value (saved on session end)."
 		"show_message":
@@ -1314,7 +1316,7 @@ func _add_event_row(events_vbox: VBoxContainer, action: String = "show_message",
 
 	var action_btn := OptionButton.new()
 	var _action_list: Array[String] = [
-		"give_item", "give_booster_pack", "remove_item", "set_var",
+		"give_item", "give_booster_pack", "give_union_scroll", "remove_item", "set_var",
 		"give_credits", "set_flag", "show_message", "play_sfx", "end_exploration", "end_exploration_vn"]
 	for a: String in _action_list:
 		action_btn.add_item(a)
@@ -2032,7 +2034,7 @@ func _add_spot_action_row(vbox: VBoxContainer, action: String = "show_message",
 	var hint_lbl: Label = block_parts["hint"] as Label
 	block.set_meta("spot_action_index", vbox.get_child_count() - 1)
 	var _spot_actions: Array[String] = [
-		"give_item", "give_booster_pack", "remove_item", "set_var", "give_credits", "set_flag",
+		"give_item", "give_booster_pack", "give_union_scroll", "remove_item", "set_var", "give_credits", "set_flag",
 		"show_message", "play_sfx", "play_vn", "navigate_to", "play_puzzle", "end_exploration", "end_exploration_vn"
 	]
 	var action_btn := OptionButton.new()
@@ -3152,7 +3154,7 @@ func _append_reward_entries_from_actions(
 			continue
 		var act: Dictionary = act_var as Dictionary
 		var action: String = str(act.get("action", ""))
-		if action != "give_credits" and action != "give_booster_pack":
+		if action != "give_credits" and action != "give_booster_pack" and action != "give_union_scroll":
 			continue
 		var reward_meta: Dictionary = _reward_report_meta_from_action(act)
 		var sort_key: String = "%s|%s|%03d" % [node.title.to_lower(), source_label.to_lower(), action_idx]
@@ -3179,6 +3181,11 @@ func _reward_report_meta_from_action(act: Dictionary) -> Dictionary:
 	if action == "give_booster_pack":
 		var pack_id: String = _extract_booster_pack_id(act)
 		return {"label": "booster:%s" % pack_id, "credit_amount": 0, "booster_id": pack_id}
+	if action == "give_union_scroll":
+		var scroll_n: int = _extract_credit_amount(act)
+		if scroll_n <= 0:
+			scroll_n = 1
+		return {"label": "union_scroll:%d" % scroll_n, "credit_amount": 0, "booster_id": ""}
 	return {"label": action, "credit_amount": 0, "booster_id": ""}
 
 func _reward_report_reward_text(entry: Dictionary) -> String:

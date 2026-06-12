@@ -87,6 +87,7 @@ class CardInstance:
 	var is_union: bool = false       # true when this card is a Union monster
 	var is_revived: bool = false     # true when placed on field via a revive effect
 	var attacked_this_turn: bool = false
+	var last_attack_target: Vector2i = Vector2i(-1, -1)  # grid cell attacked this turn (-1,-1 = none)
 	var cannot_attack_until: int = -1  # Turn number when restriction lifts
 	var effect_nullified_until: int = -1
 	var one_use_def_boost_used: bool = false

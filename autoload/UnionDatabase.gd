@@ -233,7 +233,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Bloom Fairy"}, {"affinity": A.NATURE}], 12))
 
 	_add("Sky Protector", A.DIVINE, 0, 0, 400, R.RARE,
-		AB.STANCE_FIXED_STATS, {"atk_atk": 50, "atk_def": 0, "def_atk": 0, "def_def": 50}, "If this card defends, DEF becomes 50, ATK becomes 0. If this card performs attack, ATK becomes 50, DEF becomes 0.",
+		AB.STANCE_FIXED_STATS, {"atk_atk": 60, "atk_def": 0, "def_atk": 0, "def_def": 60}, "If this card defends, DEF becomes 60, ATK becomes 0. If this card performs attack, ATK becomes 60, DEF becomes 0.",
 		"If this card defends, DEF becomes ???, ATK becomes ???. If this card performs attack, ATK becomes ???, DEF becomes ???.",
 		"Sunrise Lady + Moonrise Gentleman + 400 cost",
 		"1 ??? + 1 ??? + 400 cost",
@@ -291,10 +291,10 @@ func _load_unions() -> void:
 	_add("Armored Dino", A.NATURE, 95, 60, 800, R.UNCOMMON,
 		AB.OPTIONAL_CRYSTAL_PAY_DEF_BOOST, {"cost": 1000, "def": 60}, "In Reckoning, pay 1000 crystal cost to +60 DEF",
 		"In Reckoning, pay ??? crystal cost to +??DEF",
-		"1 Armored Nature card + 1 Nature (≥ 800 cost) + 800 cost",
+		"1 Armored Nature card + 1 Nature (≥ 700 cost) + 800 cost",
 		"1 ??? + 1 ??? + 800 cost",
 		_z([[1,1], [1,2], [1,3], [2,0], [2,1], [2,2], [2,3], [2,4]]),
-		_conds([{"affinity": A.NATURE, "name_contains": "armored"}, {"affinity": A.NATURE, "min_cost": 800}], 8))
+		_conds([{"affinity": A.NATURE, "name_contains": "armored"}, {"affinity": A.NATURE, "min_cost": 700}], 8))
 
 	_add("Ancient Lizard", A.NATURE, 75, 75, 800, R.UNCOMMON,
 		AB.NONE, {}, "None", "None",
@@ -429,17 +429,17 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "mutant"}, {"name_contains": "mutant"}], 7))
 
 	_add("Giant Meteor Vergaia", A.COSMIC, 60, 0, 1000, R.LEGENDARY,
-		AB.DESTROY_END_TURN_BLAST_ADJACENT, {}, "Destroy it at turn's end, then destroy all face-up foe units sharing a border with this card.",
-		"Destroy it at turn’s end, then select all face-up ???.",
+		AB.DESTROY_END_TURN_BLAST_ADJACENT, {}, "Destroy it at turn's end, then destroy all face-up foe's units surrounding the card that this card attacked.",
+		"Destroy it at turn's end, then destroy all face-up foe's units surrounding the card that this card attacked.",
 		"Striker Comet + 2 Cosmic card + 1000 cost",
 		"??? + ??? + 1000 cost",
 		_z([[0,0], [1,1], [3,2], [3,3], [3,4], [4,2], [4,3], [4,4]]),
 		_conds([{"card_name": "Striker Comet"}, {"affinity": A.COSMIC}, {"affinity": A.COSMIC}], 8))
 
-	_add("Imperial Frame", A.COSMIC, 45, 30, 1000, R.UNCOMMON,
+	_add("Imperial Frame", A.COSMIC, 45, 30, 500, R.UNCOMMON,
 		AB.NONE, {}, "None", "None",
-		"Laser Walker + 1 Cosmic card + 1000 cost",
-		"??? + ??? + 1000 cost",
+		"Laser Walker + 1 Cosmic card + 500 cost",
+		"??? + ??? + 500 cost",
 		_z([[0,2], [0,3], [0,4], [1,4], [2,0], [2,4], [3,0], [4,0], [4,1], [4,2]]),
 		_conds([{"card_name": "Laser Walker"}, {"affinity": A.COSMIC}], 10))
 

@@ -38312,7 +38312,7 @@
         "MSG:.*Sky",
         "MSG:"
       ],
-      "notes": "Tier 2: union Sky Protector — STANCE_FIXED_STATS: base ATK=0 but attack ATK fixed at 50 (atk_atk param). DEF fixed at 0 when attacking.",
+      "notes": "Tier 2: union Sky Protector — STANCE_FIXED_STATS: base ATK=0 but attack ATK fixed at 60 (atk_atk param). DEF fixed at 0 when attacking.",
       "expect_log_regex": [
         "Attack P\\d\\(\\d+,\\d+\\)\"Sky\\ Protector\".*ATK=50\\s"
       ]

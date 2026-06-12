@@ -60,6 +60,7 @@ enum AbilityType {
 	ATK_DEF_BONUS_VS_NON_AFFINITY,   # +N ATK/DEF vs cards that don't match specified affinity
 	DEF_BONUS_IF_AFFINITY_ON_FIELD,  # +N DEF if specific affinity card face-up on own field
 	ATK_PENALTY_WHEN_EXPOSED,        # -N ATK permanently at end of the turn this card was first exposed
+	PERM_ATK_BOOST_WHEN_EXPOSED,     # +N ATK permanently at end of the turn this card was first exposed
 	ATK_PENALTY_IF_NO_NAME_ALLY,     # -N ATK if no other card matching name_contains on own field
 	DEF_ZERO_WHEN_EXPOSED,           # DEF becomes 0 permanently at end of the turn this card was first exposed
 
@@ -174,7 +175,7 @@ enum AbilityType {
 	DEF_PENALTY_VS_NON_AFFINITY,         # Defender: -N DEF when attacked by non-matching affinity
 	PERM_ATK_BOOST_ONCE_PER_AFFINITY,    # After battle vs non-affinity: +N ATK once per defender affinity
 	CRYSTAL_GAIN_ON_DESTROY,             # After destroying a foe character: gain N crystals
-	DESTROY_END_TURN_BLAST_ADJACENT,     # Destroy self at turn end; destroy adjacent foe face-up characters
+	DESTROY_END_TURN_BLAST_ADJACENT,     # Destroy self at turn end; destroy adjacent foe face-up chars around last attack target
 	UNION_SUMMON_REVIVE_MATCH,           # On union summon: revive 1 matching graveyard card (doubled cost)
 	OPPONENT_TURN_END_SWAP_ATK_DEF,      # When opponent ends turn: they swap ATK/DEF on 1 own face-up card
 }

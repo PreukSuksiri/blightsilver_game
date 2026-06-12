@@ -35,6 +35,7 @@ const DailyDungeonMapScene  = preload("res://scenes/daily_dungeon_map.tscn")
 const MENU_BTN_Z := 1
 const TITLE_CHEAT_Z := -10
 const MENU_OVERLAY_Z := 25
+const MENU_LOADING_Z := 35
 const MENU_DROPDOWN_BACKDROP_Z := 40
 const MENU_DROPDOWN_Z := 41
 const MENU_STACK_GAP := 14.0
@@ -624,8 +625,25 @@ func _on_multiplayer() -> void:
 
 func _on_deck_builder() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
-	_open_menu_overlay(DeckBuilderScene.instantiate(), "DeckBuilderOverlay",
-		_refresh_deck_status)
+	if get_node_or_null("DeckBuilderOverlay") != null:
+		return
+	var loading := MenuLoadingOverlay.new()
+	loading.name = "DeckBuilderLoadingOverlay"
+	loading.z_index = MENU_LOADING_Z
+	loading.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	loading.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(loading)
+	loading.move_to_front()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var deck_builder: Control = DeckBuilderScene.instantiate()
+	var dismiss_loading := func() -> void:
+		if is_instance_valid(loading):
+			loading.queue_free()
+	if deck_builder.has_signal("initial_gallery_load_finished"):
+		deck_builder.initial_gallery_load_finished.connect(dismiss_loading, CONNECT_ONE_SHOT)
+	deck_builder.tree_exiting.connect(dismiss_loading, CONNECT_ONE_SHOT)
+	_open_menu_overlay(deck_builder, "DeckBuilderOverlay", _refresh_deck_status)
 
 func _on_shop() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)

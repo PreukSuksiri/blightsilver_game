@@ -86,8 +86,10 @@ func run_all_tests() -> void:
 	_giant_centipede(A, AB)
 
 	# ATK_BOOST_VS_REVEALED (Pattern A)
-	_cursed_well(A, AB)
 	_void_stalker(A, AB)
+
+	# PERM_ATK_BOOST_WHEN_EXPOSED — end of expose turn (TurnManager)
+	_cursed_well(A, AB)
 
 	# ATK_DEF_BONUS_IF_UNION_ON_FIELD (Pattern B)
 	_aerial(A, AB)
@@ -259,6 +261,7 @@ func run_all_tests() -> void:
 
 	# PERM_DEF_BOOST_PER_ATTACK_SURVIVE — MANUAL (TurnManager post-attack)
 	_manual("TC-FUNC-Leech-Man-001")
+	_leech_man(A, AB)
 
 	# REDIRECT_DESTRUCTION_TO_ALLY — MANUAL (TurnManager)
 	_manual("TC-FUNC-Archbishop-001")
@@ -425,15 +428,19 @@ func _giant_centipede(A, AB) -> void:
 	assert_eq(r2.attacker_atk_used, 20, "TC-FUNC-Giant-Centipede-001b: no bonus without venom")
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# ATK_BOOST_VS_REVEALED
+# PERM_ATK_BOOST_WHEN_EXPOSED
 # ═══════════════════════════════════════════════════════════════════════════════
 func _cursed_well(A, AB) -> void:
 	print("-- TC-FUNC-Cursed-Well-001")
 	var att := _make_char("Cursed Well", 0, 25, 300, A.CHAOS,
-		AB.ATK_BOOST_VS_REVEALED, {"bonus": 15})
+		AB.PERM_ATK_BOOST_WHEN_EXPOSED, {"amount": 15})
+	att.face_up = true
 	var def_ := _make_char("Dummy", 0, 200, 100, A.ANIMA)
-	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1, true)  # defender_was_exposed=true
-	assert_eq(r.attacker_atk_used, 15, "TC-FUNC-Cursed-Well-001: ATK 0+15=15 vs exposed")
+	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_eq(r.attacker_atk_used, 0, "TC-FUNC-Cursed-Well-001: no battle ATK bonus during expose turn")
+	att.perm_atk_bonus = 15  # simulate end-of-expose-turn boost
+	var r2 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_eq(r2.attacker_atk_used, 15, "TC-FUNC-Cursed-Well-001b: ATK 0+15=15 after expose-turn boost")
 
 func _void_stalker(A, AB) -> void:
 	print("-- TC-FUNC-Void-Stalker-001")
@@ -1097,6 +1104,20 @@ func _needle_porcupine(A, AB) -> void:
 	var r := BattleResolver.resolve_battle(opp_att, def_, 3, 0, 1)
 	assert_true(not r.defender_destroyed, "TC-FUNC-Needle-Porcupine-001: Needle Porcupine survives")
 	assert_eq(opp_att.current_atk, 0, "TC-FUNC-Needle-Porcupine-001: attacker ATK reduced 5→0")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PERM_DEF_BOOST_PER_ATTACK_SURVIVE + mutagen_atk param
+# ═══════════════════════════════════════════════════════════════════════════════
+func _leech_man(A, AB) -> void:
+	print("-- TC-FUNC-Leech-Man-002")
+	var att := _make_char("Leech Man", 60, 40, 880, A.BIO,
+		AB.PERM_DEF_BOOST_PER_ATTACK_SURVIVE, {"def": 10, "mutagen_atk": 10})
+	var def_ := _make_char("Dummy", 0, 30, 100, A.ANIMA)
+	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_eq(r.attacker_atk_used, 60, "TC-FUNC-Leech-Man-002: no mutagen ATK without flag")
+	att.has_mutagen_flag = true
+	var r2 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_eq(r2.attacker_atk_used, 70, "TC-FUNC-Leech-Man-002: 60+10=70 ATK with mutagen flag")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PERM_DEF_BOOST_ON_DEFEND

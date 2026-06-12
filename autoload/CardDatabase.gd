@@ -193,9 +193,9 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Cursed Well", CharacterData.Affinity.CHAOS, 0, 25, 300,
-			CharacterData.AbilityType.ATK_BOOST_VS_REVEALED,
-			{"bonus": 15},
-			"+15 ATK if it attack an exposed card",
+			CharacterData.AbilityType.PERM_ATK_BOOST_WHEN_EXPOSED,
+			{"amount": 15},
+			"At the end of the turn that it's been exposed, +15 ATK permanently",
 			CharacterData.Rarity.COMMON],
 
 		["Dark Blob", CharacterData.Affinity.CHAOS, 20, 50, 500,
@@ -708,7 +708,7 @@ func _load_characters() -> void:
 		["Shepherd Detective", CharacterData.Affinity.ANIMA, 40, 25, 400,
 			CharacterData.AbilityType.REVEAL_ON_ANY_ATTACK,
 			{},
-			"After attack: reveal 1 foe’s cell",
+			"After this card performs an attack, reveal 1 foe’s cell (even if it is destroyed)",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 
@@ -1081,7 +1081,7 @@ func _load_traps() -> void:
 
 		["Red Card", 0, TrapData.TrapEffectType.COIN_FLIP_2_LOCK_ATTACKER,
 			{},
-			"Flip 2 coin, if head, that unit cannot attack next turn",
+			"Flip 2 coin, if both are head, that unit cannot attack next turn",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 

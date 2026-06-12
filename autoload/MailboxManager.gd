@@ -34,11 +34,21 @@ func send_mail(sender: String, subject: String, body: String, reward: Dictionary
 	emit_signal("mailbox_changed")
 	SaveManager.save_data()
 
+## Unclaimed mail count for menu badges. Credit mail is bulk-claimed, so all
+## unclaimed credit messages count as 1 (not one per message).
 func get_unclaimed_count() -> int:
 	var count := 0
+	var has_unclaimed_credits := false
 	for item: Dictionary in mail_items:
-		if not item.get("claimed", false):
+		if item.get("claimed", false):
+			continue
+		var reward: Dictionary = item.get("reward", {})
+		if is_credit_reward(reward):
+			has_unclaimed_credits = true
+		else:
 			count += 1
+	if has_unclaimed_credits:
+		count += 1
 	return count
 
 ## Claim a single mail by id. Returns the reward dict (may be empty).
@@ -127,6 +137,7 @@ func delete_claimed() -> void:
 #   reset_credits [amount]
 #   reset_title_cheats
 #   manage_bgm
+#   menu_loading
 
 func _dismiss_admin_console(scene: Node = null) -> void:
 	if scene == null:
@@ -214,6 +225,9 @@ func admin_command(raw: String) -> String:
 				+ "  grant_disc <disc_id>\n"
 				+ "  grant_winding_keys [count]\n"
 				+ "  grant_incense [count]\n"
+				+ "  grant_union_scroll [count]\n"
+				+ "  remove_union_scroll [count]\n"
+				+ "  send_union_scroll [count]\n"
 				+ "  grant_credits <amount>\n"
 				+ "  remove_credits <amount>\n"
 				+ "  reset_credits [amount]\n"
@@ -226,6 +240,7 @@ func admin_command(raw: String) -> String:
 				+ "  manage_menu_buttons\n"
 				+ "  manage_fonts\n"
 				+ "  hide_ui\n"
+				+ "  menu_loading\n"
 				+ "  ai_trailer [on|off]\n"
 				+ "  gallery_editor\n"
 				+ "  tag_bug <card_name> | <message>\n"
@@ -621,6 +636,21 @@ func admin_command(raw: String) -> String:
 				return "Battle UI hidden — grids and cards only. Click or press any key to restore."
 			return "hide_ui only works on the Main Menu or in battle."
 
+		"menu_loading", "show_menu_loading":
+			var loading_scene: Node = get_tree().current_scene
+			if loading_scene == null:
+				return "ERROR: no active scene."
+			if loading_scene.get_node_or_null("AdminMenuLoadingPreview") != null:
+				return "Menu loading overlay is already showing. Tap to dismiss."
+			_dismiss_admin_console(loading_scene)
+			var loading_overlay: MenuLoadingOverlay = MenuLoadingOverlay.new()
+			loading_overlay.name = "AdminMenuLoadingPreview"
+			loading_overlay.z_index = 180
+			loading_overlay.set_dismiss_on_tap(true)
+			loading_scene.add_child(loading_overlay)
+			loading_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			return "Menu loading overlay opened."
+
 		"animation_vellum_card_commence_flip":
 			var scene: Node = get_tree().current_scene
 			if scene.get_node_or_null("VellumCardCommenceAnim") != null:
@@ -1014,6 +1044,33 @@ func admin_command(raw: String) -> String:
 				return "Count must be positive."
 			Collection.add_incenses(count)
 			return "Granted %d incense(s). Total: %d" % [count, Collection.incenses]
+
+		"grant_union_scroll":
+			var scroll_count: int = 1
+			if parts.size() >= 2:
+				scroll_count = int(parts[1])
+			if scroll_count <= 0:
+				return "Count must be positive."
+			Collection.add_union_scrolls(scroll_count)
+			return "Granted %d Union Scroll(s). Total: %d" % [scroll_count, Collection.union_scrolls]
+
+		"remove_union_scroll":
+			var remove_count: int = 1
+			if parts.size() >= 2:
+				remove_count = int(parts[1])
+			if remove_count <= 0:
+				return "Count must be positive."
+			Collection.remove_union_scrolls(remove_count)
+			return "Removed %d Union Scroll(s). Total: %d" % [remove_count, Collection.union_scrolls]
+
+		"send_union_scroll":
+			var mail_count: int = 1
+			if parts.size() >= 2:
+				mail_count = int(parts[1])
+			if mail_count <= 0:
+				return "Count must be positive."
+			UnionScrollManager.grant_union_scroll_mail(mail_count, "", "Admin")
+			return "Sent mailbox mail with %d Union Scroll(s)." % mail_count
 
 		"grant_credits":
 			if parts.size() < 2:

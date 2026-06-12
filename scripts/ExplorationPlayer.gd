@@ -3719,7 +3719,7 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 		"set_var":
 			ExplorationManager.set_var(key, value)
 			next.call()
-		"give_credits", "set_flag", "give_booster_pack":
+		"give_credits", "set_flag", "give_booster_pack", "give_union_scroll":
 			ExplorationManager.process_events([act])
 			next.call()
 		"show_message":

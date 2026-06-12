@@ -142,22 +142,22 @@ func _seraphim_fistmaster(A: Dictionary, AB: Dictionary) -> void:
 	assert_eq(r2.attacker_atk_used, 120, "TC-FUNC-Seraphim-Fistmaster-001: ATK 120 unchanged vs non-CHAOS")
 
 # TC-FUNC-Sky-Protector-001
-# STANCE_FIXED_STATS — when attacking: ATK=50 DEF=0; when defending: ATK=0 DEF=50
+# STANCE_FIXED_STATS — when attacking: ATK=60 DEF=0; when defending: ATK=0 DEF=60
 func _sky_protector(A: Dictionary, AB: Dictionary) -> void:
 	print("-- TC-FUNC-Sky-Protector-001")
 	var sky := _make_char("Sky Protector", 0, 0, 1000, A.DIVINE,
 			AB.STANCE_FIXED_STATS,
-			{"atk_atk": 50, "atk_def": 0, "def_atk": 0, "def_def": 50})
-	# Attacking — should use ATK=50
+			{"atk_atk": 60, "atk_def": 0, "def_atk": 0, "def_def": 60})
+	# Attacking — should use ATK=60
 	var def_ := _make_char("Dummy", 0, 30, 100, A.ANIMA)
 	var r_att := BattleResolver.resolve_battle(sky, def_, 3, 0, 1)
-	assert_eq(r_att.attacker_atk_used, 50, "TC-FUNC-Sky-Protector-001: attacking ATK fixed at 50")
-	assert_true(r_att.defender_destroyed, "TC-FUNC-Sky-Protector-001: dummy DEF 30 beaten by ATK 50")
-	# Defending — should use DEF=50
+	assert_eq(r_att.attacker_atk_used, 60, "TC-FUNC-Sky-Protector-001: attacking ATK fixed at 60")
+	assert_true(r_att.defender_destroyed, "TC-FUNC-Sky-Protector-001: dummy DEF 30 beaten by ATK 60")
+	# Defending — should use DEF=60
 	var att_strong := _make_char("Strong Attacker", 40, 0, 500, A.ANIMA)
 	var r_def := BattleResolver.resolve_battle(att_strong, sky, 3, 0, 1)
-	assert_eq(r_def.defender_def_used, 50, "TC-FUNC-Sky-Protector-001: defending DEF fixed at 50")
-	assert_true(r_def.attacker_destroyed, "TC-FUNC-Sky-Protector-001: attacker ATK 40 < defender DEF 50; attacker destroyed")
+	assert_eq(r_def.defender_def_used, 60, "TC-FUNC-Sky-Protector-001: defending DEF fixed at 60")
+	assert_true(r_def.attacker_destroyed, "TC-FUNC-Sky-Protector-001: attacker ATK 40 < defender DEF 60; attacker destroyed")
 
 # TC-FUNC-Diamond-Unicorn-001
 # ONE_USE_DEF_BOOST — first defense DEF+15, second defense normal

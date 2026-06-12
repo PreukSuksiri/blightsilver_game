@@ -46,9 +46,11 @@ extends Node
 ##   give_item   key / value  → add item to session inventory
 ##   remove_item key / value  → remove item from session inventory
 ##   set_var     key + value  → set session variable
-##   give_credits value (int) → grant shop credits immediately (value = amount;
-##                              key used as amount if value is empty)
+##   give_credits value (int) → send credits to mailbox (value = amount;
+##                              key = amount if value empty, or optional mail subject if value is amount)
 ##   give_booster_pack value  → send pack to mailbox (value = pack name or id;
+##                              key = optional mail subject override)
+##   give_union_scroll value  → send scroll(s) to mailbox (value = count, default 1;
 ##                              key = optional mail subject override)
 ##   set_flag    key + value  → set a flag carried to SaveManager on session end
 ##   show_message value       → emit message_posted signal (toast in UI)
@@ -917,12 +919,25 @@ func _process_events(events: Array) -> void:
 			"give_credits":
 				var amount: int = _parse_credit_amount(key, value)
 				if amount > 0:
-					_grant_credits(amount)
+					var credit_subject: String = ""
+					if not value.is_empty() and value.is_valid_int() \
+							and not key.is_empty() and not key.is_valid_int():
+						credit_subject = key
+					_grant_credits(amount, credit_subject)
 
 			"give_booster_pack":
 				var pack_ref: String = value if not value.is_empty() else key
 				var subject_override: String = key if not value.is_empty() else ""
 				_grant_booster_pack_mail(pack_ref, subject_override)
+
+			"give_union_scroll":
+				var scroll_amount: int = _parse_credit_amount(key, value)
+				if scroll_amount <= 0:
+					scroll_amount = 1
+				var scroll_subject: String = ""
+				if not key.is_empty() and not key.is_valid_int():
+					scroll_subject = key
+				_grant_union_scroll_mail(scroll_amount, scroll_subject)
 
 			"set_flag":
 				var flags: Variant = _session_rewards.get("flags", {})
@@ -945,12 +960,18 @@ func _process_events(events: Array) -> void:
 				end_session(true)
 				emit_signal("end_exploration_vn_requested", vn_path)
 
-## Grant shop credits immediately (Collection wallet used by the Shop).
-func _grant_credits(amount: int) -> void:
+## Send exploration credits to the player's mailbox (claimable from Inventory).
+func _grant_credits(amount: int, subject_override: String = "") -> void:
 	if amount <= 0 or amount >= 1_000_000:
 		push_warning("ExplorationManager: invalid credit amount %d." % amount)
 		return
-	Collection.add_credits(amount)
+	var subject: String = subject_override if not subject_override.is_empty() \
+		else "Exploration Reward — %d Credits" % amount
+	MailboxManager.send_mail(
+		"Exploration",
+		subject,
+		"You earned %d Credits during exploration. Claim them from your Inventory." % amount,
+		{"type": "credits", "amount": amount})
 	emit_signal("mailbox_reward_granted", {
 		"type":         "credits",
 		"image_path":   "res://assets/textures/ui/decorations/ui_icon_credit.png",
@@ -992,6 +1013,17 @@ func _grant_booster_pack_mail(pack_ref: String, subject_override: String = "") -
 		"display_name": pack_name,
 	})
 	# Toast is intentionally omitted — the mailbox reward overlay is the visual feedback.
+
+func _grant_union_scroll_mail(count: int, subject_override: String = "") -> void:
+	if count <= 0:
+		push_warning("ExplorationManager: give_union_scroll count must be positive.")
+		return
+	UnionScrollManager.grant_union_scroll_mail(count, subject_override, "Exploration")
+	emit_signal("mailbox_reward_granted", {
+		"type":         "union_scroll",
+		"image_path":   UnionScrollManager.SCROLL_IMAGE,
+		"display_name": "Union Scroll ×%d" % count,
+	})
 
 func _play_sfx(path: String) -> void:
 	if path.is_empty() or not ResourceLoader.exists(path):

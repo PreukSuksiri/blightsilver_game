@@ -39,8 +39,11 @@ extends Resource
 ##     "give_item"   — add key (or value if key empty) to session inventory
 ##     "remove_item" — remove key (or value) from session inventory
 ##     "set_var"     — set exploration variable[key] = value
-##     "give_credits"— grant int(value) shop credits immediately
+##     "give_credits"— send int(value) credits to mailbox (value = amount;
+##                     key = amount if value empty, or optional mail subject if value is amount)
 ##     "give_booster_pack" — send pack to mailbox (value = pack name/id;
+##                           key = optional mail subject override)
+##     "give_union_scroll" — send scroll(s) to mailbox (value = count, default 1;
 ##                           key = optional mail subject override)
 ##     "set_flag"    — set carry-over flag[key] = value (persisted to SaveManager)
 ##     "show_message"— display value as a toast notification

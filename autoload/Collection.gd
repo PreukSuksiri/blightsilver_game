@@ -13,6 +13,7 @@ var music_discs:      int        = 0        # legacy — kept for save-file comp
 var winding_keys:     int        = 0
 var owned_discs:      Dictionary = {}       # disc_id -> count
 var incenses:         int        = 0
+var union_scrolls:    int        = 0
 var card_drop_boosts: Dictionary = {}       # card_name -> float (cumulative bonus, e.g. 0.35 = +35%)
 
 # owned[card_name] = {
@@ -153,6 +154,31 @@ func pray_for_card(card_name: String) -> float:
 	SaveManager.save_data()
 	return boost
 
+# ─────────────────────────────────────────────────────────────
+# Union Scrolls (discover undiscovered unions)
+# ─────────────────────────────────────────────────────────────
+func add_union_scrolls(count: int = 1) -> void:
+	if count <= 0:
+		return
+	union_scrolls += count
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+
+func remove_union_scrolls(count: int = 1) -> void:
+	if count <= 0:
+		return
+	union_scrolls = maxi(0, union_scrolls - count)
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+
+func spend_union_scroll() -> bool:
+	if union_scrolls <= 0:
+		return false
+	union_scrolls -= 1
+	emit_signal("collection_changed")
+	SaveManager.save_data()
+	return true
+
 func get_card_boost(card_name: String) -> float:
 	return float(card_drop_boosts.get(card_name, 0.0))
 
@@ -269,6 +295,7 @@ func to_dict() -> Dictionary:
 		"winding_keys":     winding_keys,
 		"owned_discs":      owned_discs.duplicate(),
 		"incenses":         incenses,
+		"union_scrolls":  union_scrolls,
 		"card_drop_boosts": card_drop_boosts.duplicate(),
 	}
 
@@ -285,5 +312,6 @@ func load_from_dict(d: Dictionary) -> void:
 		if music_discs > 0:
 			owned_discs["generic"] = music_discs
 	incenses = d.get("incenses", 0)
+	union_scrolls = d.get("union_scrolls", 0)
 	var raw_boosts: Variant = d.get("card_drop_boosts", null)
 	card_drop_boosts = raw_boosts if raw_boosts is Dictionary else {}

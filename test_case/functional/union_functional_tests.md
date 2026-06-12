@@ -280,7 +280,7 @@ Type: Union
 Stats: ATK=60 DEF=0 summon_cost=1000 Affinity=COSMIC
 AbilityType: DESTROY_END_TURN_BLAST_ADJACENT
 ability_params: {}
-Description: Destroy it at turn's end, then destroy all face-up foe units sharing a border with this card.
+Description: Destroy it at turn's end, then destroy all face-up foe's units surrounding the card that this card attacked.
 Test Cases:
 
 Test Case ID: TC-FUNC-Giant-Meteor-Vergaia-000
@@ -315,7 +315,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: Destroy it at turn's end, then destroy all face-up foe units sharing a border with this card.
+- Behavior matches CardDatabase description: Destroy it at turn's end, then destroy all face-up foe's units surrounding the card that this card attacked.
 
 ---
 
@@ -1430,8 +1430,8 @@ Card Name: Sky Protector
 Type: Union
 Stats: ATK=0 DEF=0 summon_cost=400 Affinity=DIVINE
 AbilityType: STANCE_FIXED_STATS
-ability_params: {'atk_atk': 50, 'atk_def': 0, 'def_atk': 0, 'def_def': 50}
-Description: If this card defends, DEF becomes 50, ATK becomes 0. If this card performs attack, ATK becomes 50, DEF becomes 0.
+ability_params: {'atk_atk': 60, 'atk_def': 0, 'def_atk': 0, 'def_def': 60}
+Description: If this card defends, DEF becomes 60, ATK becomes 0. If this card performs attack, ATK becomes 60, DEF becomes 0.
 Test Cases:
 
 Test Case ID: TC-FUNC-Sky-Protector-000

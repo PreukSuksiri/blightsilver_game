@@ -585,7 +585,7 @@ static func _get_effective_atk(
 				atk = attacker.get_effective_atk() * 2
 
 		CharacterData.AbilityType.STANCE_FIXED_STATS:
-			atk = attacker.ability_params.get("atk_atk", 50)
+			atk = attacker.ability_params.get("atk_atk", 60)
 
 		CharacterData.AbilityType.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE:
 			var _rev_count: int = 0
@@ -601,6 +601,9 @@ static func _get_effective_atk(
 			GameState.show_center_message("Ability not implemented: " + attacker.card_name)
 
 	# FIELD_ATK_BOOST_OWN_AFFINITY is applied via calculate_field_bonuses() → field_aura_atk_bonus.
+
+	if attacker.has_mutagen_flag:
+		atk += attacker.ability_params.get("mutagen_atk", 0)
 
 	# Check defender abilities that debuff attacker ATK
 	if defender.ability_type == CharacterData.AbilityType.ATTACKER_ATK_DEBUFF:
@@ -682,7 +685,7 @@ static func _get_effective_def(
 				def_val = defender.get_effective_def() * 2
 
 		CharacterData.AbilityType.STANCE_FIXED_STATS:
-			def_val = defender.ability_params.get("def_def", 50)
+			def_val = defender.ability_params.get("def_def", 60)
 
 		CharacterData.AbilityType.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE:
 			if defender_player >= 0:
