@@ -31,7 +31,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -79,7 +79,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -113,7 +113,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -146,7 +146,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -160,7 +160,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -174,7 +174,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -220,7 +220,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -253,7 +253,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_annoyed.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_akimbo_annoyed.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -301,7 +301,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -318,7 +318,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -347,7 +347,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -376,11 +376,11 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"speaker": "Kelly",
-		"text": "The security camera couldn't capture an image of a person possessed by a high-level spirit."
+		"text": "Most of the time, security cameras that we use everyday..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -390,7 +390,21 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "They would not capture images of people who got possessed by a high-level spirit."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -404,7 +418,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -433,7 +447,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"music_fade_out": 3.0,
@@ -443,7 +457,6 @@
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
 		"fade_color": "#000000",
-		"fade_out": 3.0,
 		"wait": 0.001
 	},
 	{

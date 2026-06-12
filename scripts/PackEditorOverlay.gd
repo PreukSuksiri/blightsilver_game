@@ -27,9 +27,12 @@ var _unlock_chapter_values: Array = []
 
 # Card pool
 var _pool_vbox:      VBoxContainer = null
-var _pool_rows:      Array         = []  # [{card_le, type_lbl, weight_sb, hbox}]
+var _pool_rows:      Array         = []  # [{card_le, type_opt, weight_sb, hbox}]
 var _add_card_le:    LineEdit       = null
 var _add_weight_sb:  SpinBox        = null
+
+const _POOL_TYPE_IDS: Array = ["character", "trap", "tech"]
+const _POOL_TYPE_LABELS: Array = ["Unit", "Trap", "Tech"]
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -433,19 +436,24 @@ func _rebuild_unlock_chapter_options(selected_vn: String) -> void:
 	_prop_unlock_chapter.select(sel_idx)
 
 func _apply_pack_props() -> void:
+	if not _write_selected_props_to_packs():
+		return
+	_refresh_pack_list()
+	_set_status("Properties applied: %s" % _packs[_selected_idx].get("name", ""))
+
+func _write_selected_props_to_packs() -> bool:
 	if _selected_idx < 0 or _selected_idx >= _packs.size():
 		_set_status("No pack selected.")
-		return
+		return false
 	var p: Dictionary = _packs[_selected_idx]
 	var new_id: String = _prop_id_edit.text.strip_edges().replace(" ", "_")
 	if new_id.is_empty():
 		_set_status("Pack ID cannot be empty.")
-		return
-	# Check duplicate id
+		return false
 	for i: int in range(_packs.size()):
-		if i != _selected_idx and _packs[i].get("id","") == new_id:
+		if i != _selected_idx and _packs[i].get("id", "") == new_id:
 			_set_status("ID '%s' already in use." % new_id)
-			return
+			return false
 	p["id"]          = new_id
 	p["name"]        = _prop_name_edit.text.strip_edges()
 	p["price"]       = int(_prop_price_spin.value)
@@ -466,8 +474,7 @@ func _apply_pack_props() -> void:
 	else:
 		p.erase("unlock_requires_chapter")
 	_packs[_selected_idx] = p
-	_refresh_pack_list()
-	_set_status("Properties applied: %s" % p.get("name",""))
+	return true
 
 func _apply_pool() -> void:
 	if _selected_idx < 0 or _selected_idx >= _packs.size():
@@ -499,19 +506,16 @@ func _add_pool_row(card_name: String = "", card_type: String = "", weight: float
 	var card_le := LineEdit.new()
 	card_le.text = card_name
 	card_le.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	card_le.text_changed.connect(func(v: String) -> void: _auto_type(card_le, v, hbox))
 	hbox.add_child(card_le)
 
-	var type_lbl := Label.new()
-	type_lbl.custom_minimum_size = Vector2(78, 0)
-	type_lbl.add_theme_font_size_override("font_size", 11)
-	type_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	if card_type != "":
-		type_lbl.text = "unit" if card_type == "character" else card_type
-		type_lbl.add_theme_color_override("font_color", _type_color(card_type))
-	else:
-		_auto_type(card_le, card_name, hbox)
-	hbox.add_child(type_lbl)
+	var type_opt := _make_pool_type_option()
+	hbox.add_child(type_opt)
+	_set_pool_type_option(type_opt, card_type if card_type != "" else "character")
+	if card_name != "":
+		_auto_type_option(type_opt, card_name)
+
+	card_le.text_changed.connect(func(v: String) -> void:
+		_auto_type_option(type_opt, v))
 
 	var weight_sb := SpinBox.new()
 	weight_sb.min_value = 1; weight_sb.max_value = 1000
@@ -522,7 +526,7 @@ func _add_pool_row(card_name: String = "", card_type: String = "", weight: float
 	var del_btn := Button.new()
 	del_btn.text = "X"
 	del_btn.custom_minimum_size = Vector2(28, 0)
-	var row_ref: Dictionary = {"card_le": card_le, "type_lbl": type_lbl, "weight_sb": weight_sb, "hbox": hbox}
+	var row_ref: Dictionary = {"card_le": card_le, "type_opt": type_opt, "weight_sb": weight_sb, "hbox": hbox}
 	del_btn.pressed.connect(func() -> void:
 		_pool_rows.erase(row_ref)
 		hbox.queue_free())
@@ -531,46 +535,63 @@ func _add_pool_row(card_name: String = "", card_type: String = "", weight: float
 	_pool_rows.append(row_ref)
 	_pool_vbox.add_child(hbox)
 
-func _auto_type(card_le: LineEdit, name: String, hbox: HBoxContainer) -> void:
-	# Find the type_lbl in the same hbox
-	var type_lbl: Label = null
-	for ch in hbox.get_children():
-		if ch is Label:
-			type_lbl = ch as Label
-			break
-	if type_lbl == null:
+func _make_pool_type_option() -> OptionButton:
+	var opt := OptionButton.new()
+	opt.custom_minimum_size = Vector2(78, 0)
+	for label: String in _POOL_TYPE_LABELS:
+		opt.add_item(label)
+	opt.select(0)
+	return opt
+
+func _normalize_pool_type_id(type_id: String) -> String:
+	match type_id.strip_edges().to_lower():
+		"unit", "character", "characters":
+			return "character"
+		"trap", "traps":
+			return "trap"
+		"tech", "techs":
+			return "tech"
+		_:
+			return "character"
+
+func _set_pool_type_option(opt: OptionButton, type_id: String) -> void:
+	var normalized: String = _normalize_pool_type_id(type_id)
+	var idx: int = _POOL_TYPE_IDS.find(normalized)
+	opt.select(maxi(idx, 0))
+
+func _get_pool_type_from_option(opt: OptionButton) -> String:
+	if opt == null:
+		return "character"
+	return str(_POOL_TYPE_IDS[clampi(opt.selected, 0, _POOL_TYPE_IDS.size() - 1)])
+
+func _auto_type_option(type_opt: OptionButton, name: String) -> void:
+	var trimmed: String = name.strip_edges()
+	if trimmed.is_empty():
 		return
 	var detected: String = ""
-	if CardDatabase.get_character(name) != null:
+	if CardDatabase.get_character(trimmed) != null:
 		detected = "character"
-	elif CardDatabase.get_trap(name) != null:
+	elif CardDatabase.get_trap(trimmed) != null:
 		detected = "trap"
-	elif CardDatabase.get_tech(name) != null:
+	elif CardDatabase.get_tech(trimmed) != null:
 		detected = "tech"
 	if detected != "":
-		type_lbl.text = "unit" if detected == "character" else detected
-		type_lbl.add_theme_color_override("font_color", _type_color(detected))
-	else:
-		type_lbl.text = "" if name.is_empty() else "?"
-		type_lbl.add_theme_color_override("font_color", Color(0.6, 0.6, 0.65, 0.6))
+		_set_pool_type_option(type_opt, detected)
 
 func _collect_pool_rows() -> Array:
 	var result: Array = []
 	for row_ref: Dictionary in _pool_rows:
 		var card_le: LineEdit = row_ref.get("card_le") as LineEdit
-		var type_lbl: Label   = row_ref.get("type_lbl") as Label
+		var type_opt: OptionButton = row_ref.get("type_opt") as OptionButton
 		var weight_sb: SpinBox = row_ref.get("weight_sb") as SpinBox
 		if card_le == null or not is_instance_valid(card_le):
 			continue
 		var cname: String = card_le.text.strip_edges()
 		if cname.is_empty():
 			continue
-		var ctype: String = type_lbl.text if type_lbl != null else "character"
-		if ctype == "?":
-			ctype = "character"
 		result.append({
 			"card_name": cname,
-			"card_type": ctype,
+			"card_type": _get_pool_type_from_option(type_opt),
 			"weight":    int(weight_sb.value),
 		})
 	return result
@@ -585,13 +606,6 @@ func _on_add_card_pressed() -> void:
 	_add_pool_row(name, "", _add_weight_sb.value)
 	_add_card_le.text = ""
 	_add_weight_sb.value = 10.0
-
-func _type_color(t: String) -> Color:
-	match t:
-		"character": return Color(1.0, 0.71, 0.2, 1.0)
-		"trap":      return Color(1.0, 0.40, 0.45, 1.0)
-		"tech":      return Color(0.30, 0.90, 0.45, 1.0)
-	return Color(0.7, 0.7, 0.75)
 
 # ─────────────────────────────────────────────────────────────
 # New / Delete pack
@@ -627,13 +641,17 @@ func _on_delete_pack() -> void:
 # Save
 # ─────────────────────────────────────────────────────────────
 func _save_all() -> void:
-	# Apply any pending pool changes for the selected pack
 	if _selected_idx >= 0 and _selected_idx < _packs.size():
+		if not _write_selected_props_to_packs():
+			return
 		_packs[_selected_idx]["card_pool"] = _collect_pool_rows()
 	ShopManager._custom_packs = _packs.duplicate(true)
-	ShopManager.save_custom_packs()
+	if not ShopManager.save_custom_packs():
+		_set_status("ERROR: could not save to %s" % ShopManager.CUSTOM_PACKS_PATH)
+		return
 	ShopManager.reload_gallery_chapter_labels()
-	_set_status("Saved %d custom pack(s)." % _packs.size())
+	_refresh_pack_list()
+	_set_status("Saved %d custom pack(s) to %s." % [_packs.size(), ShopManager.CUSTOM_PACKS_PATH])
 
 # ─────────────────────────────────────────────────────────────
 # Image file dialog

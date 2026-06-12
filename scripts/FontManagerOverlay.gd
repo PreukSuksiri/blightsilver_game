@@ -215,7 +215,7 @@ func _on_font_selected(path: String) -> void:
 	FontManager.set_slot_path(_browse_slot, path)
 	(row["preview"] as Label).add_theme_font_override(
 		"font", FontManager.make_font(_browse_slot, 500))
-	if Engine.is_editor_hint() and FontManager.save_config():
+	if BuildConfig.can_write_shipped_data() and FontManager.save_config():
 		_set_status("Saved slot '%s' → %s" % [_browse_slot, FontManager.get_shipped_config_path()])
 
 
@@ -244,7 +244,7 @@ func _on_apply() -> void:
 		var row: Dictionary = _rows[slot_id]
 		FontManager.set_slot_path(slot_id, (row["path_edit"] as LineEdit).text.strip_edges())
 	FontManager.apply_and_notify()
-	if Engine.is_editor_hint():
+	if BuildConfig.can_write_shipped_data():
 		_set_status("Applied and saved to %s." % FontManager.get_shipped_config_path())
 	else:
 		_set_status("Fonts applied live.")

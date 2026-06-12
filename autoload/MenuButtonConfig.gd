@@ -66,8 +66,8 @@ func get_save_path() -> String:
 
 
 func save_config() -> bool:
-	if not Engine.is_editor_hint():
-		push_warning("MenuButtonConfig: shipped menu config can only be saved in the editor.")
+	if not BuildConfig.can_write_shipped_data():
+		push_warning("MenuButtonConfig: shipped menu config can only be saved when running from the Godot editor.")
 		return false
 	var file := FileAccess.open(SHIPPED_CONFIG_PATH, FileAccess.WRITE)
 	if file == null:

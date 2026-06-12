@@ -97,11 +97,42 @@ var _union_header_label: Label = null
 var _import_dialog: FileDialog = null
 var _export_dialog: FileDialog = null
 
+const _FE_FACEDOWN_TEX: Texture2D = preload("res://assets/textures/cards/frames/facedown_frame.png")
+
+class FormationDragPreview:
+	const FACEDOWN_TEX: Texture2D = preload("res://assets/textures/cards/frames/facedown_frame.png")
+	const CARDS_DIR: String = "res://assets/textures/cards/full_cards/"
+
+	static func _resolve_tex(card_name: String, tex: Texture2D) -> Texture2D:
+		if tex != null:
+			return tex
+		var snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
+		var path: String = CARDS_DIR + snake + ".png"
+		if ResourceLoader.exists(path):
+			return load(path) as Texture2D
+		return FACEDOWN_TEX
+
+	static func make(card_name: String, tex: Texture2D, w: float, h: float) -> TextureRect:
+		var prev := TextureRect.new()
+		prev.texture = _resolve_tex(card_name, tex)
+		prev.custom_minimum_size = Vector2(w, h)
+		prev.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		prev.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		prev.modulate = Color(1.0, 1.0, 1.0, 0.82)
+		prev.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		return prev
+
 # ── Formation Editor — draggable gallery card ─────────────────
 class FEDraggableCard extends TextureRect:
 	var card_name:    String = ""
 	var card_type:    String = ""
 	var _want_detail: bool   = false
+	var fe_drag_ghost_show: Callable = Callable()
+	var fe_drag_ghost_hide: Callable = Callable()
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_DRAG_END and fe_drag_ghost_hide.is_valid():
+			fe_drag_ghost_hide.call()
 
 	func _gui_input(event: InputEvent) -> void:
 		if not (event is InputEventMouseButton): return
@@ -118,38 +149,18 @@ class FEDraggableCard extends TextureRect:
 
 	func _get_drag_data(_pos: Vector2) -> Variant:
 		_want_detail = false   # cancel long-press when drag starts
-		const PW: float = 100.0
-		const PH: float = 137.0
-		# Card-shaped preview (matches occupied cell appearance)
-		var prev := Panel.new()
-		prev.custom_minimum_size = Vector2(PW, PH)
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = Color(0.06, 0.12, 0.28, 0.95) if card_type == "character" \
-				else Color(0.22, 0.07, 0.10, 0.95)
-		sb.set_border_width_all(1)
-		sb.border_color = Color(0.45, 0.70, 1.0, 0.75)
-		sb.set_corner_radius_all(4)
-		prev.add_theme_stylebox_override("panel", sb)
-		var art := TextureRect.new()
-		art.position     = Vector2.ZERO
-		art.size         = Vector2(PW, PH)
-		art.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
-		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		art.texture      = texture
-		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		prev.add_child(art)
-		var lbl := Label.new()
-		lbl.position = Vector2(0.0, PH - 22.0)
-		lbl.size     = Vector2(PW, 22.0)
-		lbl.text     = card_name
-		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lbl.clip_text    = true
-		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		lbl.add_theme_font_size_override("font_size", 9)
-		var lbl_sb := StyleBoxFlat.new()
-		lbl_sb.bg_color = Color(0.0, 0.0, 0.0, 0.72)
-		lbl.add_theme_stylebox_override("normal", lbl_sb)
-		prev.add_child(lbl)
+		var drag_tex: Texture2D = texture if texture != null \
+			else FormationDragPreview._resolve_tex(card_name, null)
+		var drag_size := Vector2(88.0, 121.0)
+		if fe_drag_ghost_show.is_valid():
+			fe_drag_ghost_show.call(drag_tex, drag_size)
+		var prev := TextureRect.new()
+		prev.texture = drag_tex
+		prev.custom_minimum_size = drag_size
+		prev.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		prev.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		prev.modulate = Color(1.0, 1.0, 1.0, 0.82)
+		prev.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		set_drag_preview(prev)
 		return {"card_name": card_name, "card_type": card_type,
 				"from_grid": false, "grid_row": -1, "grid_col": -1}
@@ -166,6 +177,12 @@ class FEGridCell extends Panel:
 	var _card_tex:    TextureRect = null
 	var _name_lbl:    Label       = null
 	var _want_detail: bool        = false
+	var fe_drag_ghost_show: Callable = Callable()
+	var fe_drag_ghost_hide: Callable = Callable()
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_DRAG_END and fe_drag_ghost_hide.is_valid():
+			fe_drag_ghost_hide.call()
 
 	func occupy(p_name: String, p_type: String, tex: Texture2D) -> void:
 		occupied_name = p_name
@@ -196,41 +213,13 @@ class FEGridCell extends Panel:
 		var captured_name: String   = occupied_name
 		var captured_type: String   = occupied_type
 		var captured_tex:  Texture2D = _card_tex.texture if _card_tex != null else null
+		var drag_tex: Texture2D = FormationDragPreview._resolve_tex(captured_name, captured_tex)
+		var drag_size := Vector2(100.0, 137.0)
+		if fe_drag_ghost_show.is_valid():
+			fe_drag_ghost_show.call(drag_tex, drag_size)
+		set_drag_preview(FormationDragPreview.make(captured_name, captured_tex, 100.0, 137.0))
 		if on_drag_start_cb.is_valid():
 			on_drag_start_cb.call(grid_row, grid_col)
-		const PW: float = 100.0
-		const PH: float = 137.0
-		# Card-shaped preview (matches occupied cell appearance)
-		var prev := Panel.new()
-		prev.custom_minimum_size = Vector2(PW, PH)
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = Color(0.06, 0.12, 0.28, 0.95) if captured_type == "character" \
-				else Color(0.22, 0.07, 0.10, 0.95)
-		sb.set_border_width_all(1)
-		sb.border_color = Color(0.45, 0.70, 1.0, 0.75)
-		sb.set_corner_radius_all(4)
-		prev.add_theme_stylebox_override("panel", sb)
-		var art := TextureRect.new()
-		art.position     = Vector2.ZERO
-		art.size         = Vector2(PW, PH)
-		art.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
-		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		art.texture      = captured_tex
-		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		prev.add_child(art)
-		var lbl := Label.new()
-		lbl.position = Vector2(0.0, PH - 22.0)
-		lbl.size     = Vector2(PW, 22.0)
-		lbl.text     = captured_name
-		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lbl.clip_text    = true
-		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		lbl.add_theme_font_size_override("font_size", 9)
-		var lbl_sb := StyleBoxFlat.new()
-		lbl_sb.bg_color = Color(0.0, 0.0, 0.0, 0.72)
-		lbl.add_theme_stylebox_override("normal", lbl_sb)
-		prev.add_child(lbl)
-		set_drag_preview(prev)
 		return {"card_name": captured_name, "card_type": captured_type,
 				"from_grid": true, "grid_row": grid_row, "grid_col": grid_col}
 
@@ -349,6 +338,11 @@ func _connect_buttons() -> void:
 			CardDetailOverlay.open(self, _preview_card_name, _preview_card_type))
 
 # ── Deck selector ─────────────────────────────────────────────
+func _deck_status_message(deck: DeckData) -> String:
+	return deck.validation_message() \
+		.replace("Character(s)", "Unit(s)") \
+		.replace("Characters", "Units")
+
 func _refresh_deck_select() -> void:
 	deck_select.clear()
 	for deck: DeckData in SaveManager.decks:
@@ -691,7 +685,7 @@ func _rebuild_deck_lists() -> void:
 		Color(0.6, 0.6, 0.6) if nb >= 0 else Color(1.0, 0.3, 0.3))
 
 	# Status & save button
-	status_label.text = current_deck.validation_message()
+	status_label.text = _deck_status_message(current_deck)
 	save_btn.disabled = not current_deck.is_valid()
 
 	remove_char_btn.disabled = true
@@ -820,7 +814,7 @@ func _add_union_filter_button() -> void:
 
 func _describe_cond(cond: Dictionary) -> String:
 	if cond.is_empty():
-		return "Any character card"
+		return "Any unit card"
 	if cond.has("card_name"):
 		return str(cond["card_name"])
 	var parts: Array = []
@@ -834,7 +828,7 @@ func _describe_cond(cond: Dictionary) -> String:
 		parts.append("ATK %d+" % int(cond["min_atk"]))
 	if cond.has("min_def"):
 		parts.append("DEF %d+" % int(cond["min_def"]))
-	return ", ".join(parts) if parts.size() > 0 else "Any character card"
+	return ", ".join(parts) if parts.size() > 0 else "Any unit card"
 
 func _add_union_materials_to_deck(union_name: String) -> void:
 	if current_deck == null:
@@ -1031,10 +1025,10 @@ func _show_deckbuilding_lock_overlay() -> void:
 	overlay.z_index = 200
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 
-	# dim covers the full screen and is the primary click target
+	# Opaque black covers the full screen and is the primary click target
 	var dim := ColorRect.new()
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dim.color = Color(0.0, 0.0, 0.0, 0.82)
+	dim.color = Color(0.0, 0.0, 0.0, 1.0)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	overlay.add_child(dim)
 
@@ -1092,6 +1086,8 @@ var _fe_chars_remaining:  Array          = []
 var _fe_traps_remaining:  Array          = []
 var _fe_flash_cells:      Array          = []
 var _fe_flash_tween:      Tween          = null
+var _fe_drag_ghost:       Control        = null
+var _fe_drag_ghost_active: bool          = false
 
 const _FE_CELL_W:   float = 100.0
 const _FE_CELL_H:   float = 137.0
@@ -1103,6 +1099,7 @@ const _FE_GAL_GAP:  int   = 6
 func _open_formation_editor() -> void:
 	if current_deck == null:
 		return
+	_fe_hide_drag_ghost()
 	_purge_stale_formation_placements()
 	_fe_refresh_if_open()
 
@@ -1144,7 +1141,9 @@ func _open_formation_editor() -> void:
 	close_btn.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	close_btn.offset_left = -130.0; close_btn.offset_right  = -10.0
 	close_btn.offset_top  =   8.0;  close_btn.offset_bottom =  40.0
-	close_btn.pressed.connect(func() -> void: _fe_overlay.queue_free())
+	close_btn.pressed.connect(func() -> void:
+		_fe_hide_drag_ghost()
+		_fe_overlay.queue_free())
 	_fe_overlay.add_child(close_btn)
 
 	# ── Main 3-column layout ──────────────────────────────────
@@ -1274,6 +1273,8 @@ func _open_formation_editor() -> void:
 			cell.on_drop_cb       = _fe_on_card_dropped
 			cell.on_unplace_cb    = _fe_on_cell_unplace
 			cell.on_drag_start_cb = _fe_on_cell_drag_start
+			cell.fe_drag_ghost_show = _fe_show_drag_ghost
+			cell.fe_drag_ghost_hide = _fe_hide_drag_ghost
 			cell.custom_minimum_size = Vector2(_FE_CELL_W, _FE_CELL_H)
 			var cell_sb := StyleBoxFlat.new()
 			cell_sb.bg_color                   = Color(0.08, 0.10, 0.24, 1.0)
@@ -1425,6 +1426,8 @@ func _fe_add_gallery_card(card_name: String, card_type: String) -> void:
 	var dc := FEDraggableCard.new()
 	dc.card_name             = card_name
 	dc.card_type             = card_type
+	dc.fe_drag_ghost_show    = _fe_show_drag_ghost
+	dc.fe_drag_ghost_hide    = _fe_hide_drag_ghost
 	dc.custom_minimum_size   = Vector2(_FE_GAL_W, _FE_GAL_H)
 	dc.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	dc.expand_mode           = TextureRect.EXPAND_IGNORE_SIZE
@@ -1759,12 +1762,55 @@ func _fe_purge_card_from_formations(card_name: String) -> void:
 
 ## Re-select the current formation in the overlay so gallery + grid stay in sync.
 func _fe_refresh_if_open() -> void:
-	if _fe_overlay == null or not is_instance_valid(_fe_overlay): return
+	if _fe_overlay == null or not is_instance_valid(_fe_overlay):
+		return
 	if _fe_selected >= 0:
 		_fe_select_formation(_fe_selected)
 	else:
 		_fe_refresh_gallery()
 		_fe_refresh_union_panel()
+
+func _fe_show_drag_ghost(tex: Texture2D, size: Vector2) -> void:
+	_fe_hide_drag_ghost()
+	if _fe_overlay == null or not is_instance_valid(_fe_overlay) or tex == null:
+		return
+	var ghost := Control.new()
+	ghost.name = "FormationDragGhost"
+	ghost.custom_minimum_size = size
+	ghost.size = size
+	ghost.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ghost.z_index = 4096
+	ghost.top_level = true
+	var art := TextureRect.new()
+	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	art.texture = tex
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	art.modulate = Color(1.0, 1.0, 1.0, 0.82)
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ghost.add_child(art)
+	_fe_overlay.add_child(ghost)
+	_fe_drag_ghost = ghost
+	_fe_drag_ghost_active = true
+	set_process(true)
+	_fe_update_drag_ghost_pos()
+
+func _fe_update_drag_ghost_pos() -> void:
+	if _fe_drag_ghost == null or not is_instance_valid(_fe_drag_ghost):
+		return
+	var mp: Vector2 = get_viewport().get_mouse_position()
+	_fe_drag_ghost.global_position = mp - _fe_drag_ghost.size * 0.5
+
+func _fe_hide_drag_ghost() -> void:
+	_fe_drag_ghost_active = false
+	set_process(false)
+	if _fe_drag_ghost != null and is_instance_valid(_fe_drag_ghost):
+		_fe_drag_ghost.queue_free()
+	_fe_drag_ghost = null
+
+func _process(_delta: float) -> void:
+	if _fe_drag_ghost_active:
+		_fe_update_drag_ghost_pos()
 
 func _fe_save_formation() -> void:
 	if current_deck == null: return

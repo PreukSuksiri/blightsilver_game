@@ -17,6 +17,8 @@ class_name PackOpeningOverlay
 const PACK_TEX_PATH     : String = "res://assets/textures/cards/booster_pack/booster_pack_basic.png"
 const FALLBACK_CARD_PATH: String = "res://assets/textures/cards/frames/vellum_card_frame_full.png"
 const FULL_CARDS_DIR    : String = "res://assets/textures/cards/full_cards/"
+const _ROUNDED_CLIP: Shader = preload("res://assets/shaders/rounded_clip.gdshader")
+const _CARD_CORNER_RADIUS_REF: float = 16.0   # px at 150px card width
 
 # Sizes computed from viewport at _ready; pack ~82% screen height, cards fill remaining width
 var _pack_w : float = 0.0
@@ -357,6 +359,11 @@ func _wiggle(ctrl: Control) -> void:
 # Debris scraps scatter
 # ──────────────────────────────────────────────────────────────────────────────
 func _spawn_debris(cx: float, cy: float) -> void:
+	const DURATION: float = 1.45
+	const FADE_DELAY: float = 0.85
+	const FADE_DURATION: float = 0.65
+	const DIST_MIN: float = 160.0
+	const DIST_MAX: float = 420.0
 	var palette: Array[Color] = [
 		Color(0.88, 0.55, 0.12),
 		Color(0.20, 0.62, 0.92),
@@ -365,7 +372,7 @@ func _spawn_debris(cx: float, cy: float) -> void:
 		Color(0.92, 0.30, 0.30),
 		Color(0.78, 0.78, 0.78),
 	]
-	for _i: int in range(14):
+	for _i: int in range(18):
 		var scrap := ColorRect.new()
 		var sw: float = randf_range(9.0, 30.0)
 		var sh: float = randf_range(5.0, 15.0)
@@ -378,23 +385,27 @@ func _spawn_debris(cx: float, cy: float) -> void:
 		add_child(scrap)
 
 		var angle : float  = randf_range(0.0, TAU)
-		var dist  : float  = randf_range(70.0, 230.0)
+		var dist  : float  = randf_range(DIST_MIN, DIST_MAX)
 		var dest  : Vector2 = Vector2(
 			scrap.position.x + cos(angle) * dist,
 			scrap.position.y + sin(angle) * dist
 		)
 		var tw: Tween = create_tween().set_parallel(true)
-		tw.tween_property(scrap, "position", dest, 0.55) \
-			.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+		tw.tween_property(scrap, "position", dest, DURATION) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		tw.tween_property(scrap, "rotation",
-				scrap.rotation + randf_range(-TAU, TAU), 0.55)
-		tw.tween_property(scrap, "color:a", 0.0, 0.55)
+				scrap.rotation + randf_range(-TAU, TAU), DURATION) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+		tw.tween_property(scrap, "color:a", 0.0, FADE_DURATION).set_delay(FADE_DELAY)
 		var captured: ColorRect = scrap
 		tw.finished.connect(func() -> void: captured.queue_free())
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Card control builder
 # ──────────────────────────────────────────────────────────────────────────────
+func _card_corner_radius() -> float:
+	return max(6.0, _card_w * (_CARD_CORNER_RADIUS_REF / 150.0))
+
 func _make_card_ctrl(card_name: String, idx: int) -> Control:
 	var wrapper := Control.new()
 	wrapper.custom_minimum_size = Vector2(_card_w, _card_h)
@@ -431,6 +442,10 @@ func _make_card_ctrl(card_name: String, idx: int) -> Control:
 	card_img.stretch_mode = TextureRect.STRETCH_SCALE
 	card_img.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card_img.texture      = _cached_card_tex(idx, card_name)
+	var rc_mat := ShaderMaterial.new()
+	rc_mat.shader = _ROUNDED_CLIP
+	rc_mat.set_shader_parameter("corner_radius", _card_corner_radius())
+	card_img.material = rc_mat
 	wrapper.add_child(card_img)
 
 	return wrapper

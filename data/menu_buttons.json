@@ -1,38 +1,129 @@
 {
 	"campaign": {
+		"enabled": true,
 		"label": "Campaign",
-		"visible": false,
-		"enabled": true,
-		"slot": 1
-	},
-	"single_player": {
-		"label": "Single Player",
-		"visible": true,
-		"enabled": true,
 		"slot": 2,
 		"subs": {
-			"campaign": { "label": "Campaign", "visible": true, "enabled": true },
-			"daily_dungeon": { "label": "Daily Dungeon", "visible": false, "enabled": true },
-			"vs_ai": { "label": "VS AI", "visible": true, "enabled": true }
-		}
+
+		},
+		"visible": true
+	},
+	"credits": {
+		"enabled": true,
+		"label": "Credits",
+		"slot": 0,
+		"subs": {
+
+		},
+		"visible": false
+	},
+	"deck_builder": {
+		"enabled": true,
+		"label": "Deck Builder",
+		"slot": 3,
+		"subs": {
+
+		},
+		"visible": true
+	},
+	"exit": {
+		"enabled": true,
+		"label": "Exit",
+		"slot": 0,
+		"subs": {
+
+		},
+		"visible": true
+	},
+	"exit_icon": {
+		"enabled": true,
+		"label": "Exit Icon",
+		"slot": 0,
+		"subs": {
+
+		},
+		"visible": false
+	},
+	"gallery": {
+		"enabled": true,
+		"label": "Gallery",
+		"slot": 6,
+		"subs": {
+
+		},
+		"visible": true
+	},
+	"inventory": {
+		"enabled": true,
+		"label": "Inventory",
+		"slot": 4,
+		"subs": {
+
+		},
+		"visible": true
 	},
 	"multiplayer": {
+		"enabled": false,
 		"label": "Multiplayer",
-		"visible": false,
-		"enabled": true,
 		"slot": 1,
 		"subs": {
-			"matchmaking": { "label": "Matchmaking", "visible": true, "enabled": true },
-			"private": { "label": "Private", "visible": true, "enabled": true },
-			"hot_seat": { "label": "Hot Seat", "visible": true, "enabled": true }
-		}
+			"hot_seat": {
+				"enabled": false,
+				"label": "Hot Seat",
+				"visible": false
+			},
+			"matchmaking": {
+				"enabled": false,
+				"label": "Matchmaking",
+				"visible": false
+			},
+			"private": {
+				"enabled": false,
+				"label": "Private",
+				"visible": false
+			}
+		},
+		"visible": false
 	},
-	"deck_builder": { "label": "Deck Builder", "visible": true, "enabled": true, "slot": 3 },
-	"inventory": { "label": "Inventory", "visible": true, "enabled": true, "slot": 4 },
-	"shop": { "label": "Shop", "visible": true, "enabled": true, "slot": 5 },
-	"gallery": { "label": "Gallery", "visible": true, "enabled": true, "slot": 6 },
-	"credits": { "label": "Credits", "visible": false, "enabled": true, "slot": 0 },
-	"settings": { "label": "Settings", "visible": true, "enabled": true, "slot": 0 },
-	"exit_icon": { "label": "Exit Icon", "visible": false, "enabled": true, "slot": 0 },
-	"exit": { "label": "Exit", "visible": true, "enabled": true, "slot": 0 }
+	"settings": {
+		"enabled": true,
+		"label": "Settings",
+		"slot": 0,
+		"subs": {
+
+		},
+		"visible": true
+	},
+	"shop": {
+		"enabled": true,
+		"label": "Shop",
+		"slot": 5,
+		"subs": {
+
+		},
+		"visible": true
+	},
+	"single_player": {
+		"enabled": true,
+		"label": "Single Player",
+		"slot": 1,
+		"subs": {
+			"campaign": {
+				"enabled": false,
+				"label": "Campaign",
+				"visible": false
+			},
+			"daily_dungeon": {
+				"enabled": false,
+				"label": "Daily Dungeon",
+				"visible": false
+			},
+			"vs_ai": {
+				"enabled": false,
+				"label": "VS AI",
+				"visible": false
+			}
+		},
+		"visible": false
+	}
 }

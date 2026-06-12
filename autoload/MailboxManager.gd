@@ -623,6 +623,8 @@ func admin_command(raw: String) -> String:
 			var scene: Node = get_tree().current_scene
 			if scene.get_node_or_null("VellumCardCommenceAnim") != null:
 				return "Animation is already running."
+			if SaveManager.get_active_deck() == null:
+				return "No active deck — build or restore a deck first."
 			var anim: Node = load("res://scripts/VellumCardCommenceAnimation.gd").new()
 			anim.name = "VellumCardCommenceAnim"
 			scene.add_child(anim)
@@ -633,6 +635,8 @@ func admin_command(raw: String) -> String:
 			var scene: Node = get_tree().current_scene
 			if scene.get_node_or_null("VellumCardCommenceAnim") != null:
 				return "Animation is already running."
+			if SaveManager.get_active_deck() == null:
+				return "No active deck — build or restore a deck first."
 			var anim: Node = load("res://scripts/VellumCardCommenceAnimation.gd").new()
 			anim.name = "VellumCardCommenceAnim"
 			scene.add_child(anim)

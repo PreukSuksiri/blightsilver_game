@@ -4,11 +4,12 @@ extends CanvasLayer
 ## Any key press or mouse click restores them and removes this node.
 
 const _UI_PATHS: Array = [
-	"TitleLogo", "DecoLine",
+	"TitleLogo",
 	"SettingsBtn", "NewGameBtn", "DeckBuilderBtn",
 	"MailboxBtn", "ShopBtn", "GalleryBtn", "CreditsBtn", "ExitGameBtn",
 	"DeckStatusBg", "VersionLabel",
 	"SettingsIconShadow", "SettingsIconBtn",
+	"MailboxIconShadow", "MailboxIconBtn", "MailboxIconBadge",
 	"ExitIconShadow", "ExitIconBtn",
 	"FadeOverlay",
 ]

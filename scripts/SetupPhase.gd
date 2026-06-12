@@ -174,6 +174,10 @@ var _instr_lbl    : Label           = null
 var _gallery_flow : HFlowContainer  = null
 var _confirm_btn  : Button          = null
 var _random_btn   : Button          = null
+var _confirm_btn_base_sb: StyleBoxFlat = null
+var _confirm_btn_pulse_tween: Tween = null
+const _CONFIRM_BTN_BG_REST := Color(0.10, 0.14, 0.32, 1.0)
+const _CONFIRM_BTN_BG_PULSE := Color(0.17, 0.26, 0.50, 1.0)
 var _sp_p1_portrait: TextureRect    = null
 var _sp_p2_portrait: TextureRect    = null
 
@@ -377,6 +381,7 @@ func _build_ui() -> void:
 	_confirm_btn.add_theme_font_size_override("font_size", 20)
 	_confirm_btn.disabled = true
 	_confirm_btn.pressed.connect(_on_confirm)
+	_setup_confirm_btn_styles()
 	add_child(_confirm_btn)
 
 	# ── Player portrait illustrations (on top of all content) ─
@@ -1196,6 +1201,7 @@ func _on_confirm() -> void:
 	if not _traps_remaining.is_empty():
 		_instr_lbl.text = "Place all Traps first (%d left)." % _traps_remaining.size()
 		return
+	_stop_tutorial_confirm_pulse()
 	_confirm_btn.disabled = true
 	_instr_lbl.text = "Locking in your formation..."
 	# Disable all interaction during the animation
@@ -1256,16 +1262,59 @@ func _refresh_confirm() -> void:
 	var all_placed: bool = _chars_remaining.is_empty() and _traps_remaining.is_empty()
 	_confirm_btn.disabled = not all_placed
 	if _is_tutorial_setup():
+		_start_tutorial_confirm_pulse()
 		if all_placed:
 			_instr_lbl.text = "Tutorial formation is preset. Press CONFIRM to begin."
 		else:
 			_instr_lbl.text = "Tutorial formation is incomplete — check tutorial config."
-	elif all_placed:
-		_instr_lbl.text = "All cards placed! Press CONFIRM to begin."
 	else:
-		_instr_lbl.text = "Drag cards onto the grid  |  right-click a placed card to retrieve  |  %d units  %d traps remaining" % [
-			_chars_remaining.size(), _traps_remaining.size()
-		]
+		_stop_tutorial_confirm_pulse()
+		if all_placed:
+			_instr_lbl.text = "All cards placed! Press CONFIRM to begin."
+		else:
+			_instr_lbl.text = "Drag cards onto the grid  |  right-click a placed card to retrieve  |  %d units  %d traps remaining" % [
+				_chars_remaining.size(), _traps_remaining.size()
+			]
+
+func _setup_confirm_btn_styles() -> void:
+	if _confirm_btn_base_sb != null:
+		return
+	_confirm_btn_base_sb = StyleBoxFlat.new()
+	_confirm_btn_base_sb.bg_color = _CONFIRM_BTN_BG_REST
+	_confirm_btn_base_sb.border_color = Color(0.38, 0.62, 1.0, 0.55)
+	_confirm_btn_base_sb.set_border_width_all(1)
+	_confirm_btn_base_sb.set_corner_radius_all(6)
+	_confirm_btn.add_theme_stylebox_override("normal", _confirm_btn_base_sb)
+	var hover_sb := _confirm_btn_base_sb.duplicate() as StyleBoxFlat
+	hover_sb.bg_color = Color(0.14, 0.20, 0.40, 1.0)
+	_confirm_btn.add_theme_stylebox_override("hover", hover_sb)
+	var disabled_sb := _confirm_btn_base_sb.duplicate() as StyleBoxFlat
+	disabled_sb.bg_color = Color(0.08, 0.10, 0.22, 0.85)
+	_confirm_btn.add_theme_stylebox_override("disabled", disabled_sb)
+
+func _start_tutorial_confirm_pulse() -> void:
+	if _confirm_btn == null or _confirm_btn_base_sb == null:
+		return
+	if _confirm_btn_pulse_tween != null and _confirm_btn_pulse_tween.is_valid():
+		return
+	_confirm_btn_base_sb.bg_color = _CONFIRM_BTN_BG_REST
+	_confirm_btn_pulse_tween = create_tween().set_loops()
+	_confirm_btn_pulse_tween.tween_property(
+		_confirm_btn_base_sb, "bg_color", _CONFIRM_BTN_BG_PULSE, 0.90) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_confirm_btn_pulse_tween.tween_property(
+		_confirm_btn_base_sb, "bg_color", _CONFIRM_BTN_BG_REST, 0.90) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+func _stop_tutorial_confirm_pulse() -> void:
+	if _confirm_btn_pulse_tween != null and _confirm_btn_pulse_tween.is_valid():
+		_confirm_btn_pulse_tween.kill()
+	_confirm_btn_pulse_tween = null
+	if _confirm_btn_base_sb != null:
+		_confirm_btn_base_sb.bg_color = _CONFIRM_BTN_BG_REST
+
+func _exit_tree() -> void:
+	_stop_tutorial_confirm_pulse()
 
 # ─────────────────────────────────────────────────────────────
 # Tutorial formation lock

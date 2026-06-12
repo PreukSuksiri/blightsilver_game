@@ -94,9 +94,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "You're gonna lost it all"
-		}
+		"text": "You're gonna lose it all"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -109,9 +107,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "If I'm rich, I'll start a company and hire you as my secretary or maybe a front desk"
-		}
+		"text": "If I'm rich, I'll start a company and hire you as my secretary or maybe a front desk"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -718,8 +714,8 @@
 		"exploration_params": {
 			"surprise_factor": {
 				"random": [
-					1,
-					3
+					1.0,
+					3.0
 				]
 			}
 		},

@@ -72,9 +72,9 @@ func launch(flip: bool = true) -> void:
 	_center = get_viewport().get_visible_rect().size * 0.5
 	var vp: Vector2 = get_viewport().get_visible_rect().size
 
-	var deck: Variant = SaveManager.get_active_deck()
-
-	# Build ordered list of (card_name, card_type) pairs for the whole deck
+	var deck: DeckData = SaveManager.get_active_deck()
+	if deck == null:
+		deck = DeckData.new()
 	var card_entries: Array = []
 	for name: String in deck.characters:
 		card_entries.append({"name": name, "type": "character"})

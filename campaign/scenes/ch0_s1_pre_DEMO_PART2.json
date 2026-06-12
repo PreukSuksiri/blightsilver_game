@@ -701,7 +701,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -711,9 +711,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "!!!"
-		}
+		"text": "!!!"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -723,7 +721,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
 		"music": "res://assets/audio/bgm_storytelling_4.mp3",
@@ -752,7 +750,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Silver-haired woman",
@@ -766,7 +764,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Silver-haired woman",
@@ -795,7 +793,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Silver-haired woman",
@@ -822,7 +820,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -851,7 +849,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -898,7 +896,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -912,7 +910,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -929,7 +927,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -943,7 +941,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_warning.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_warning.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -975,7 +973,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_akimbo_sigh.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_akimbo_sigh.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -992,7 +990,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -1006,7 +1004,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"speaker": "Kelly",
@@ -1035,7 +1033,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm_smile.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
 			}
 		],
 		"speaker": "Kelly",

@@ -7,25 +7,16 @@
 [ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/decor_game_title_text.png" id="4"]
 [ext_resource type="Shader" path="res://assets/shaders/title_glow.gdshader" id="5"]
 [ext_resource type="Shader" path="res://assets/shaders/silver_gradient.gdshader" id="7"]
-[ext_resource type="Shader" path="res://assets/shaders/bg_lantern_glow.gdshader" id="8"]
 [ext_resource type="FontFile" path="res://assets/fonts/Chivo-VariableFont_wght.ttf" id="9"]
 [ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/ui_icon_setting.png" id="10"]
 [ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/ui_icon_exit.png" id="11"]
+[ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/ui_mailbox.png" id="12"]
 
 [sub_resource type="ShaderMaterial" id="SM_title_glow"]
 shader = ExtResource("5")
 
 [sub_resource type="ShaderMaterial" id="SM_silver"]
 shader = ExtResource("7")
-
-[sub_resource type="ShaderMaterial" id="SM_gear_glow"]
-shader = ExtResource("8")
-shader_parameter/glow_color = Color(1.0, 0.88, 0.60, 1.0)
-shader_parameter/radius = 0.28
-shader_parameter/intensity = 2.8
-shader_parameter/falloff = 1.8
-shader_parameter/glow_size = 14.0
-shader_parameter/glow_strength = 2.8
 
 [sub_resource type="StyleBoxFlat" id="SBF_btn_n"]
 bg_color = Color(0.047, 0.094, 0.157, 1)
@@ -125,18 +116,6 @@ material = SubResource("SM_title_glow")
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 5
-
-[node name="DecoLine" type="ColorRect" parent="." unique_id=938152325]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -160.0
-offset_top = 277.0
-offset_right = 160.0
-offset_bottom = 278.0
-grow_horizontal = 2
-color = Color(0.18, 0.651, 1, 0.4)
 
 [node name="SettingsBtn" type="Button" parent="." unique_id=1146786600]
 layout_mode = 1
@@ -376,6 +355,72 @@ icon = ExtResource("10")
 expand_icon = true
 flat = true
 text = ""
+
+[node name="MailboxIconShadow" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 14.0
+offset_top = -90.0
+offset_right = 102.0
+offset_bottom = -2.0
+grow_horizontal = 1
+grow_vertical = 0
+modulate = Color(0, 0, 0, 0.55)
+mouse_filter = 2
+texture = ExtResource("12")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MailboxIconBtn" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -96.0
+offset_right = 96.0
+offset_bottom = -8.0
+grow_horizontal = 1
+grow_vertical = 0
+icon = ExtResource("12")
+expand_icon = true
+flat = true
+text = ""
+
+[node name="MailboxIconBadge" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 70.0
+offset_top = -100.0
+offset_right = 102.0
+offset_bottom = -68.0
+grow_horizontal = 1
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="BadgeLabel" type="Label" parent="MailboxIconBadge"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ExitIconShadow" type="TextureRect" parent="."]
 layout_mode = 1

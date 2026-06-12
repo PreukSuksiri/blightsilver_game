@@ -65,7 +65,7 @@ func _load_positions() -> void:
 	for node in CampaignManager.all_nodes:
 		_positions[node.id] = node.map_position
 	# Optional local-only tweak file for editor experiments.
-	if Engine.is_editor_hint() and FileAccess.file_exists(USER_SAVE_PATH):
+	if BuildConfig.can_write_shipped_data() and FileAccess.file_exists(USER_SAVE_PATH):
 		var f := FileAccess.open(USER_SAVE_PATH, FileAccess.READ)
 		if f != null:
 			var data: Variant = JSON.parse_string(f.get_as_text())
@@ -79,7 +79,7 @@ func _save_positions() -> void:
 	var data: Dictionary = {}
 	for id: String in _positions:
 		data[id] = [_positions[id].x, _positions[id].y]
-	var save_path: String = SHIPPED_SAVE_PATH if Engine.is_editor_hint() else USER_SAVE_PATH
+	var save_path: String = SHIPPED_SAVE_PATH if BuildConfig.can_write_shipped_data() else USER_SAVE_PATH
 	var f := FileAccess.open(save_path, FileAccess.WRITE)
 	if f == null:
 		_pos_label.text = "ERROR: could not write to %s" % save_path
@@ -332,7 +332,7 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton \
 			and event.button_index == MOUSE_BUTTON_LEFT \
 			and not event.pressed:
-		if Engine.is_editor_hint():
+		if BuildConfig.can_write_shipped_data():
 			_save_positions()
 		_drag_node_id = ""
 

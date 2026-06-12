@@ -13,6 +13,12 @@ func admin_tools_enabled() -> bool:
 	return OS.has_feature("editor")
 
 
+func can_write_shipped_data() -> bool:
+	# res://data/* is writable when Play is launched from the Godot editor (F5).
+	# Exported builds cannot write res://; admin tools should not persist there anyway.
+	return OS.has_feature("editor")
+
+
 func admin_shortcut_pressed(event: InputEvent) -> bool:
 	if not event is InputEventKey:
 		return false

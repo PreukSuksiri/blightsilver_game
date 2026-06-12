@@ -192,6 +192,11 @@ End Stage Story:  (to be continue)
 
 ##Drafted future plot
 
+- The Order now only have Halberd, Falchion, and the master who is always busy in the office researching for something.
+- Nex and Mayu visited the order of high gate. Mayu take the cross with her for an inspection due to "Nightmare". Falchion "abduct" Mayu to underground room and offer her a briefcase of cash, exchanging for that bronze cross. (Falchion has already known what does it do). Mayu denied anyway. So one day later, she find a sweet chance between on of the exploration... and stole it.
+- Nex, Mayu, Kelly must travel and recruit the retired members of the order of High Gate: Falchion, Katana, etc.
+
+
 - Nex has killed a human (to protect Mayu in a desparate situation. Kelly said that Next must join the trailer of atonement to atone the sins due to order's rule prohibited killing a human.
 - Anna is not a psychic. But she is actually a techno mage. She can communicate with anyone with Vellum card or any silver technology with logic gate. Mayu has one from Nex as a souvenior so they can receive psychic message from Anna at the mall.
 - Mayu is descendant of the first bishop (the mother's side)

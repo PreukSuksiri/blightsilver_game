@@ -25,8 +25,8 @@ func load_config() -> void:
 
 
 func save_config() -> bool:
-	if not Engine.is_editor_hint():
-		push_warning("FontManager: shipped font config can only be saved in the editor.")
+	if not BuildConfig.can_write_shipped_data():
+		push_warning("FontManager: shipped font config can only be saved when running from the Godot editor.")
 		return false
 	var out: Dictionary = _defaults.duplicate(true)
 	if not out.has("slots"):

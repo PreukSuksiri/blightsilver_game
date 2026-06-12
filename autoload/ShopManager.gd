@@ -149,14 +149,18 @@ func purchase_disc(disc_id: String) -> Dictionary:
 	Collection.add_disc(disc_id)
 	return {"success": true, "error": ""}
 
-func save_custom_packs() -> void:
+func save_custom_packs() -> bool:
+	if not BuildConfig.can_write_shipped_data():
+		push_warning("ShopManager: custom packs can only be saved when running from the Godot editor.")
+		return false
 	DirAccess.make_dir_recursive_absolute("res://shop")
 	var file := FileAccess.open(CUSTOM_PACKS_PATH, FileAccess.WRITE)
 	if file == null:
 		push_error("ShopManager: cannot write custom_packs.json")
-		return
+		return false
 	file.store_string(JSON.stringify(_custom_packs, "\t"))
 	file.close()
+	return true
 
 # ─────────────────────────────────────────────────────────────
 # Music disc purchase
@@ -274,6 +278,7 @@ func _draw_cards(pack: Dictionary) -> Array:
 	rng.randomize()
 	var pack_name: String = pack.get("name", "Unknown Pack")
 	var result: Array = []
+	var drawn_names: Dictionary = {}  # card_name → true; no duplicates within one opening
 
 	# Pool-based draw (custom packs with weighted card_pool)
 	var card_pool: Variant = pack.get("card_pool", null)
@@ -281,11 +286,14 @@ func _draw_cards(pack: Dictionary) -> Array:
 		var pool_arr: Array = card_pool as Array
 		var count: int = int(pack.get("card_count", 3))
 		for _i in range(count):
-			var drawn: Dictionary = _draw_from_pool(pool_arr, rng)
-			if not drawn.is_empty():
-				drawn["from_pack"] = pack_name
-				result.append(drawn)
-				Collection.reset_card_boost(str(drawn.get("name", "")))
+			var drawn: Dictionary = _draw_from_pool(pool_arr, rng, drawn_names)
+			if drawn.is_empty():
+				break
+			var cname: String = str(drawn.get("name", ""))
+			drawn_names[cname] = true
+			drawn["from_pack"] = pack_name
+			result.append(drawn)
+			Collection.reset_card_boost(cname)
 		return result
 
 	# Slot-based draw (built-in packs)
@@ -302,19 +310,35 @@ func _draw_cards(pack: Dictionary) -> Array:
 		if pool.is_empty():
 			continue
 		for _i in range(slot.get("count", 1)):
-			var idx: int = rng.randi() % pool.size()
+			var picked: String = _pick_random_unique_name(pool, rng, drawn_names)
+			if picked.is_empty():
+				continue
+			drawn_names[picked] = true
 			result.append({
-				"name":      pool[idx],
+				"name":      picked,
 				"type":      slot["type"],
 				"from_pack": pack_name,
 			})
 
 	return result
 
-func _draw_from_pool(pool: Array, rng: RandomNumberGenerator) -> Dictionary:
+func _pick_random_unique_name(pool: Array, rng: RandomNumberGenerator, exclude: Dictionary) -> String:
+	var available: Array = []
+	for name_var: Variant in pool:
+		var name: String = str(name_var)
+		if name.is_empty() or exclude.has(name):
+			continue
+		available.append(name)
+	if available.is_empty():
+		return ""
+	return available[rng.randi() % available.size()] as String
+
+func _draw_from_pool(pool: Array, rng: RandomNumberGenerator, exclude: Dictionary = {}) -> Dictionary:
 	var total: float = 0.0
 	for entry: Dictionary in pool:
 		var cname: String = str(entry.get("card_name", ""))
+		if cname.is_empty() or exclude.has(cname):
+			continue
 		var base_w: float = float(entry.get("weight", 1))
 		var boost: float = Collection.get_card_boost(cname)
 		total += base_w * (1.0 + boost)
@@ -324,6 +348,8 @@ func _draw_from_pool(pool: Array, rng: RandomNumberGenerator) -> Dictionary:
 	var cum: float = 0.0
 	for entry: Dictionary in pool:
 		var cname: String = str(entry.get("card_name", ""))
+		if cname.is_empty() or exclude.has(cname):
+			continue
 		var base_w: float = float(entry.get("weight", 1))
 		var boost: float = Collection.get_card_boost(cname)
 		cum += base_w * (1.0 + boost)
@@ -332,11 +358,15 @@ func _draw_from_pool(pool: Array, rng: RandomNumberGenerator) -> Dictionary:
 				"name": cname,
 				"type": str(entry.get("card_type", "character")),
 			}
-	var last: Dictionary = pool[pool.size() - 1]
-	return {
-		"name": str(last.get("card_name", "")),
-		"type": str(last.get("card_type", "character")),
-	}
+	for i: int in range(pool.size() - 1, -1, -1):
+		var entry: Dictionary = pool[i] as Dictionary
+		var cname: String = str(entry.get("card_name", ""))
+		if not cname.is_empty() and not exclude.has(cname):
+			return {
+				"name": cname,
+				"type": str(entry.get("card_type", "character")),
+			}
+	return {}
 
 # ─────────────────────────────────────────────────────────────
 # Drop-rate helpers (used by PackContentsOverlay + CardDetailOverlay)

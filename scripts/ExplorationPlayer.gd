@@ -2402,11 +2402,16 @@ func _show_mailbox_sent_text(overlay: Control, on_done: Callable) -> void:
 	sent_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(sent_lbl)
 
-	# Sub-text
+	# Sub-text — how to claim from the main menu mailbox icon
 	var sub_lbl := Label.new()
-	sub_lbl.text = "(accessible via title screen)"
-	sub_lbl.add_theme_font_size_override("font_size", 18)
-	sub_lbl.add_theme_color_override("font_color", Color(0.45, 0.72, 0.80))
+	sub_lbl.text = (
+		"You can visit your mailbox via Save and Exit, "
+		+ "then tap the mailbox icon at the bottom-left of the main menu.")
+	sub_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	sub_lbl.custom_minimum_size = Vector2(520, 0)
+	_tag_ui(sub_lbl, "font", 400)
+	sub_lbl.add_theme_font_size_override("font_size", 16)
+	sub_lbl.add_theme_color_override("font_color", Color(0.42, 0.68, 0.76))
 	sub_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sub_lbl.mouse_filter         = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(sub_lbl)
@@ -3519,11 +3524,16 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 	if actions.is_empty() and not vn_legacy.is_empty():
 		actions = [{"action": "play_vn", "key": "", "value": vn_legacy}]
 
-	# Compute hit size: image (scaled) or 24×24 invisible fallback
+	# Compute hit size: optional override, else image (scaled), else 24×24 invisible fallback
 	var hit_w: float = 24.0
 	var hit_h: float = 24.0
+	var custom_w: float = float(spot.get("hitbox_w", 0.0))
+	var custom_h: float = float(spot.get("hitbox_h", 0.0))
 	var has_icon: bool = not icon_path.is_empty() and ResourceLoader.exists(icon_path)
-	if has_icon:
+	if custom_w > 0.0 and custom_h > 0.0:
+		hit_w = custom_w
+		hit_h = custom_h
+	elif has_icon:
 		var tex: Texture2D = load(icon_path) as Texture2D
 		if tex != null:
 			var nat: Vector2 = tex.get_size()
@@ -3776,10 +3786,12 @@ func _process(delta: float) -> void:
 			tx = nr.position.x + nr.size.x * 0.5 - tp.x * 0.5
 			ty = nr.position.y - tp.y - GAP
 		elif _hovered_spot_hit != null and is_instance_valid(_hovered_spot_hit):
-			# Investigable spot: top-right of the hit area.
+			# Investigable spot: X centered on hitbox; Y 48 px above hitbox center.
+			const SPOT_TTIP_CENTER_GAP: float = 48.0
 			var sr: Rect2 = _hovered_spot_hit.get_global_rect()
-			tx = sr.position.x + sr.size.x + GAP
-			ty = sr.position.y - tp.y - GAP
+			var hc: Vector2 = sr.position + sr.size * 0.5
+			tx = hc.x - tp.x * 0.5
+			ty = hc.y - SPOT_TTIP_CENTER_GAP - tp.y * 0.5
 		else:
 			tx = _tooltip_panel.position.x
 			ty = _tooltip_panel.position.y

@@ -1757,19 +1757,60 @@ func _collect_characters(chars_vbox: VBoxContainer) -> Array:
 		result.append(entry)
 	return result
 
+## Auto hitbox size when hitbox_w/h are 0: scaled icon, else 24×24.
+func _compute_spot_auto_hitbox(icon_path: String, icon_scale: float) -> Vector2:
+	var w: float = 24.0
+	var h: float = 24.0
+	var path: String = icon_path.strip_edges()
+	if path.is_empty() or not ResourceLoader.exists(path):
+		return Vector2(w, h)
+	var tex: Texture2D = load(path) as Texture2D
+	if tex == null:
+		return Vector2(w, h)
+	var nat: Vector2 = tex.get_size()
+	w = nat.x * icon_scale / 100.0
+	h = nat.y * icon_scale / 100.0
+	return Vector2(w, h)
+
+func _apply_hitbox_spin_auto_display(spin: SpinBox, auto_px: float) -> void:
+	var le: LineEdit = spin.get_line_edit()
+	le.placeholder_text = str(int(round(auto_px)))
+	spin.set_meta("auto_px", auto_px)
+	if spin.value <= 0.0:
+		le.text = ""
+
+func _refresh_spot_hitbox_auto_display(
+		icon_edit: LineEdit, scale_spin: SpinBox,
+		hit_w_spin: SpinBox, hit_h_spin: SpinBox) -> void:
+	var auto_size: Vector2 = _compute_spot_auto_hitbox(icon_edit.text, scale_spin.value)
+	_apply_hitbox_spin_auto_display(hit_w_spin, auto_size.x)
+	_apply_hitbox_spin_auto_display(hit_h_spin, auto_size.y)
+
+func _wire_hitbox_spin_auto_display(spin: SpinBox, refresh_cb: Callable) -> void:
+	spin.get_line_edit().focus_exited.connect(func() -> void:
+		if spin.get_line_edit().text.strip_edges().is_empty():
+			spin.set_value(0.0)
+		refresh_cb.call())
+	spin.value_changed.connect(func(new_val: float) -> void:
+		if new_val <= 0.0:
+			spin.get_line_edit().text = ""
+	)
+
 ## Add one investigable-point row to the spots VBox.
 ## VBoxContainer children layout (by index):
 ##   0: pos_row      (HBoxContainer → SpinBox x_norm, SpinBox y_norm)
 ##   1: icon_row     (HBoxContainer → LineEdit icon_path)
 ##   2: scale_row    (HBoxContainer → SpinBox icon_scale)
-##   3: tooltip_row  (HBoxContainer → LineEdit tooltip)
-##   4: acts_hdr     (Label)
-##   5: acts_vbox    (VBoxContainer of action rows)
-##   6: add_act_btn  (Button)
-##   7: conds_hdr    (Label)
-##   8: conds_vbox   (VBoxContainer of condition rows)
-##   9: add_cond_btn (Button)
-##  10: del_btn      (Button)
+##   3: hitbox_row   (HBoxContainer → SpinBox hitbox_w, SpinBox hitbox_h; 0 = auto)
+##   4: tooltip_row  (HBoxContainer → LineEdit tooltip)
+##   5: hide_row     (HBoxContainer → CheckBox hide_after_interact)
+##   6: acts_hdr     (Label)
+##   7: acts_vbox    (VBoxContainer of action rows)
+##   8: add_act_btn  (Button)
+##   9: conds_hdr    (Label)
+##  10: conds_vbox   (VBoxContainer of condition rows)
+##  11: add_cond_btn (Button)
+##  12: del_btn      (Button)
 func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	var frame := PanelContainer.new()
 	var sb := StyleBoxFlat.new()
@@ -1845,7 +1886,48 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	scale_row.add_child(scale_spin)
 	vb.add_child(scale_row)
 
-	# Index 3: Tooltip row
+	# Index 3: Hitbox size row (px; 0 = auto from icon scale or 24×24 default)
+	var hitbox_row := HBoxContainer.new()
+	hitbox_row.add_theme_constant_override("separation", 4)
+	var hw_lbl := Label.new()
+	hw_lbl.text = "Hit W"
+	hw_lbl.add_theme_font_size_override("font_size", 12)
+	hitbox_row.add_child(hw_lbl)
+	var hit_w_spin := SpinBox.new()
+	hit_w_spin.min_value = 0.0
+	hit_w_spin.max_value = 4096.0
+	hit_w_spin.step = 1.0
+	hit_w_spin.value = float(spot_data.get("hitbox_w", 0.0))
+	hit_w_spin.custom_minimum_size = Vector2(72, 0)
+	hit_w_spin.add_theme_font_size_override("font_size", 12)
+	hitbox_row.add_child(hit_w_spin)
+	var hh_lbl := Label.new()
+	hh_lbl.text = "Hit H"
+	hh_lbl.add_theme_font_size_override("font_size", 12)
+	hitbox_row.add_child(hh_lbl)
+	var hit_h_spin := SpinBox.new()
+	hit_h_spin.min_value = 0.0
+	hit_h_spin.max_value = 4096.0
+	hit_h_spin.step = 1.0
+	hit_h_spin.value = float(spot_data.get("hitbox_h", 0.0))
+	hit_h_spin.custom_minimum_size = Vector2(72, 0)
+	hit_h_spin.add_theme_font_size_override("font_size", 12)
+	hitbox_row.add_child(hit_h_spin)
+	var hit_note := Label.new()
+	hit_note.text = "px (empty = auto)"
+	hit_note.add_theme_font_size_override("font_size", 11)
+	hit_note.add_theme_color_override("font_color", Color(0.55, 0.58, 0.68, 0.75))
+	hitbox_row.add_child(hit_note)
+	vb.add_child(hitbox_row)
+	var refresh_hitbox_defaults := func() -> void:
+		_refresh_spot_hitbox_auto_display(icon_edit, scale_spin, hit_w_spin, hit_h_spin)
+	icon_edit.text_changed.connect(func(_t: String) -> void: refresh_hitbox_defaults.call())
+	scale_spin.value_changed.connect(func(_v: float) -> void: refresh_hitbox_defaults.call())
+	_wire_hitbox_spin_auto_display(hit_w_spin, refresh_hitbox_defaults)
+	_wire_hitbox_spin_auto_display(hit_h_spin, refresh_hitbox_defaults)
+	refresh_hitbox_defaults.call()
+
+	# Index 4: Tooltip row
 	var tip_row := HBoxContainer.new()
 	var tlbl := Label.new(); tlbl.text = "Tooltip"; tlbl.add_theme_font_size_override("font_size", 12)
 	tip_row.add_child(tlbl)
@@ -1857,7 +1939,7 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	tip_row.add_child(tip_edit)
 	vb.add_child(tip_row)
 
-	# Index 4: Hide-after-interact row
+	# Index 5: Hide-after-interact row
 	var hide_row := HBoxContainer.new()
 	var hide_cb := CheckBox.new()
 	hide_cb.text           = "Hide after interact"
@@ -1866,39 +1948,39 @@ func _add_spot_row(spots_vbox: VBoxContainer, spot_data: Dictionary) -> void:
 	hide_row.add_child(hide_cb)
 	vb.add_child(hide_row)
 
-	# Index 5: Actions header
+	# Index 6: Actions header
 	var acts_hdr := Label.new()
 	acts_hdr.text = "Actions on click:"
 	acts_hdr.add_theme_font_size_override("font_size", 11)
 	acts_hdr.add_theme_color_override("font_color", Color(0.80, 0.65, 1.0))
 	vb.add_child(acts_hdr)
 
-	# Index 6: Actions VBox
+	# Index 7: Actions VBox
 	var acts_vbox := VBoxContainer.new()
 	acts_vbox.add_theme_constant_override("separation", 3)
 	acts_vbox.set_meta("spot_index", spots_vbox.get_child_count() - 1)
 	vb.add_child(acts_vbox)
 
-	# Index 7: Add Action button
+	# Index 8: Add Action button
 	var add_act_btn := Button.new()
 	add_act_btn.text = "+ Add Action"
 	add_act_btn.add_theme_font_size_override("font_size", 11)
 	add_act_btn.pressed.connect(func() -> void: _add_spot_action_row(acts_vbox))
 	vb.add_child(add_act_btn)
 
-	# Index 8: Conditions header
+	# Index 9: Conditions header
 	var cond_hdr := Label.new()
 	cond_hdr.text = "Conditions (all must pass to show):"
 	cond_hdr.add_theme_font_size_override("font_size", 11)
 	cond_hdr.add_theme_color_override("font_color", Color(0.65, 0.80, 0.65))
 	vb.add_child(cond_hdr)
 
-	# Index 9: Conditions VBox
+	# Index 10: Conditions VBox
 	var cond_vbox := VBoxContainer.new()
 	cond_vbox.add_theme_constant_override("separation", 3)
 	vb.add_child(cond_vbox)
 
-	# Index 10: Add Condition button
+	# Index 11: Add Condition button
 	var add_cond_btn := Button.new()
 	add_cond_btn.text = "+ Condition"
 	add_cond_btn.add_theme_font_size_override("font_size", 11)
@@ -2095,27 +2177,39 @@ func _collect_spots(spots_vbox: VBoxContainer) -> Array:
 				if c is SpinBox:
 					icon_scale = (c as SpinBox).value
 					break
-		# Index 3: tooltip_row — first LineEdit
+		# Index 3: hitbox_row — two SpinBoxes (W, H)
+		var hitbox_w: float = 0.0
+		var hitbox_h: float = 0.0
+		if vb.get_child_count() > 3 and vb.get_child(3) is HBoxContainer:
+			var hit_spins: Array = []
+			for c: Node in (vb.get_child(3) as HBoxContainer).get_children():
+				if c is SpinBox:
+					hit_spins.append(c as SpinBox)
+			if hit_spins.size() >= 1:
+				hitbox_w = (hit_spins[0] as SpinBox).value
+			if hit_spins.size() >= 2:
+				hitbox_h = (hit_spins[1] as SpinBox).value
+		# Index 4: tooltip_row — first LineEdit
 		var tooltip: String = ""
-		var tip_le: LineEdit = _find_line_edit(vb.get_child(3)) if vb.get_child_count() > 3 else null
+		var tip_le: LineEdit = _find_line_edit(vb.get_child(4)) if vb.get_child_count() > 4 else null
 		if tip_le != null:
 			tooltip = tip_le.text
-		# Index 4: hide_after_interact CheckBox
+		# Index 5: hide_after_interact CheckBox
 		var hide_after_interact: bool = false
-		if vb.get_child_count() > 4 and vb.get_child(4) is HBoxContainer:
-			for c: Node in (vb.get_child(4) as HBoxContainer).get_children():
+		if vb.get_child_count() > 5 and vb.get_child(5) is HBoxContainer:
+			for c: Node in (vb.get_child(5) as HBoxContainer).get_children():
 				if c is CheckBox:
 					hide_after_interact = (c as CheckBox).button_pressed
 					break
-		# Index 6: acts_vbox — VBoxContainer
+		# Index 7: acts_vbox — VBoxContainer
 		var actions: Array = []
-		if vb.get_child_count() > 6 and vb.get_child(6) is VBoxContainer:
-			actions = _collect_events(vb.get_child(6) as VBoxContainer)
-		# Index 9: conds_vbox — VBoxContainer
+		if vb.get_child_count() > 7 and vb.get_child(7) is VBoxContainer:
+			actions = _collect_events(vb.get_child(7) as VBoxContainer)
+		# Index 10: conds_vbox — VBoxContainer
 		var conditions: Array = []
-		if vb.get_child_count() > 9 and vb.get_child(9) is VBoxContainer:
-			conditions = _collect_conditions_from_vbox(vb.get_child(9) as VBoxContainer)
-		result.append({
+		if vb.get_child_count() > 10 and vb.get_child(10) is VBoxContainer:
+			conditions = _collect_conditions_from_vbox(vb.get_child(10) as VBoxContainer)
+		var entry: Dictionary = {
 			"x_norm":             x_norm,
 			"y_norm":             y_norm,
 			"icon":               icon_path,
@@ -2124,7 +2218,12 @@ func _collect_spots(spots_vbox: VBoxContainer) -> Array:
 			"hide_after_interact": hide_after_interact,
 			"actions":            actions,
 			"conditions":         conditions,
-		})
+		}
+		if hitbox_w > 0.0:
+			entry["hitbox_w"] = hitbox_w
+		if hitbox_h > 0.0:
+			entry["hitbox_h"] = hitbox_h
+		result.append(entry)
 	return result
 
 ## Open an interactive background-picker window so the user can click a position.

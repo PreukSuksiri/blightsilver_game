@@ -13,7 +13,6 @@ var _unclaimed_lbl:   Label
 var _claim_all_btn:   Button
 var _claim_credits_btn: Button
 var _delete_btn:      Button
-var _disc_count_lbl:  Label
 var _credit_count_lbl: Label
 
 func _ready() -> void:
@@ -118,6 +117,11 @@ func _build_ui() -> void:
 
 	_switch_tab(true)
 
+
+func show_mailbox_tab() -> void:
+	_switch_tab(false)
+	_refresh_mail()
+
 func _make_separator() -> HSeparator:
 	var sep := HSeparator.new()
 	var sep_sb := StyleBoxFlat.new()
@@ -221,61 +225,10 @@ func _build_items_panel() -> Control:
 	_credit_count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	credit_hbox.add_child(_credit_count_lbl)
 
-	# Music Disc row
-	var disc_row := PanelContainer.new()
-	disc_row.custom_minimum_size = Vector2(0, 68)
-	var row_sb := StyleBoxFlat.new()
-	row_sb.bg_color = Color(0.04, 0.03, 0.09, 1.0)
-	row_sb.border_color = Color(0.75, 0.45, 1.0, 0.4)
-	row_sb.set_border_width_all(1)
-	row_sb.set_corner_radius_all(6)
-	row_sb.content_margin_left = 14; row_sb.content_margin_right = 14
-	row_sb.content_margin_top  = 10; row_sb.content_margin_bottom = 10
-	disc_row.add_theme_stylebox_override("panel", row_sb)
-	vbox.add_child(disc_row)
-
-	var hbox := HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 12)
-	disc_row.add_child(hbox)
-
-	var icon := Label.new()
-	icon.text = "💿"
-	icon.add_theme_font_size_override("font_size", 30)
-	icon.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	hbox.add_child(icon)
-
-	var text_vbox := VBoxContainer.new()
-	text_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	text_vbox.add_theme_constant_override("separation", 2)
-	hbox.add_child(text_vbox)
-
-	var disc_name := Label.new()
-	disc_name.text = "Music Disc"
-	disc_name.add_theme_font_size_override("font_size", 15)
-	disc_name.add_theme_color_override("font_color", Color(0.85, 0.6, 1.0))
-	disc_name.add_theme_font_override("font", CHIVO_FONT)
-	text_vbox.add_child(disc_name)
-
-	var disc_desc := Label.new()
-	disc_desc.text = "Change battle music once per turn (Options menu)"
-	disc_desc.add_theme_font_size_override("font_size", 11)
-	disc_desc.add_theme_color_override("font_color", Color(0.5, 0.6, 0.7, 0.8))
-	text_vbox.add_child(disc_desc)
-
-	_disc_count_lbl = Label.new()
-	_disc_count_lbl.add_theme_font_size_override("font_size", 20)
-	_disc_count_lbl.add_theme_color_override("font_color", Color(0.85, 0.6, 1.0))
-	_disc_count_lbl.add_theme_font_override("font", CHIVO_FONT)
-	_disc_count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	hbox.add_child(_disc_count_lbl)
-
 	_refresh_items()
 	return root
 
 func _refresh_items() -> void:
-	if _disc_count_lbl == null:
-		return
-	_disc_count_lbl.text = "×%d" % Collection.music_discs
 	if _credit_count_lbl != null:
 		_credit_count_lbl.text = "%d" % Collection.credits
 

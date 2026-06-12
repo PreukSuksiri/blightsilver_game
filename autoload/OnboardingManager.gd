@@ -14,15 +14,26 @@ func _ready() -> void:
 	call_deferred("_run_onboarding_check")
 
 func _run_onboarding_check() -> void:
-	if FileAccess.file_exists(SaveManager.SAVE_PATH):
+	if SaveManager.decks.is_empty():
 		if SaveManager.onboarding_complete:
-			return
-		# Existing save from before onboarding existed — do not reset progress.
-		SaveManager.onboarding_complete = true
-		SaveManager.save_data()
-		print("[OnboardingManager] Existing save marked onboarded (no reset).")
+			_recover_missing_decks()
+		else:
+			_apply_first_run_onboarding()
 		return
-	_apply_first_run_onboarding()
+	if SaveManager.onboarding_complete:
+		return
+	# Existing save with decks but no onboarding flag — legacy migration.
+	SaveManager.onboarding_complete = true
+	SaveManager.save_data()
+	print("[OnboardingManager] Existing save marked onboarded (no reset).")
+
+func _recover_missing_decks() -> void:
+	if not install_starter_deck(false, true):
+		push_error("OnboardingManager: failed to recover missing starter deck.")
+		return
+	SaveManager.save_data()
+	Collection.emit_signal("collection_changed")
+	print("[OnboardingManager] Recovered missing starter deck.")
 
 ## Load the project starter deck template from data/starting_deck.json.
 func load_starter_template() -> DeckData:

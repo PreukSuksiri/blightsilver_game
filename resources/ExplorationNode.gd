@@ -177,6 +177,8 @@ enum NodeType {
 ##   { "x_norm": float, "y_norm": float   — centre position (0.0–1.0)
 ##     "icon": String                      — res:// image path; empty = 24×24 invisible hitbox
 ##     "icon_scale": float                 — display size as % of natural image size (default 100)
+##     "hitbox_w": float                    — click area width in px (0 = auto from icon or 24)
+##     "hitbox_h": float                    — click area height in px (0 = auto from icon or 24)
 ##     "tooltip": String                   — text shown on hover
 ##     "actions": Array                    — action dicts fired on click (see on_enter_events format)
 ##                                           extra action types: "play_vn" (optional play_once), "navigate_to", "play_puzzle"

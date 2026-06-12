@@ -4,7 +4,7 @@ signal closed()
 
 const FULL_CARDS_DIR := "res://assets/textures/cards/full_cards/"
 
-# Credits earned per scrapped duplicate copy, by rarity
+# Credits earned per scrapped duplicate copy (single-card scrap button), by rarity
 const SCRAP_VALUES: Dictionary = {
 	CharacterData.Rarity.COMMON:    50,
 	CharacterData.Rarity.UNCOMMON:  100,
@@ -12,6 +12,7 @@ const SCRAP_VALUES: Dictionary = {
 	CharacterData.Rarity.LEGENDARY: 600,
 	CharacterData.Rarity.EXOTIC:    1500,
 }
+const SCRAP_ALL_CREDITS_PER_CARD: int = 100
 
 # ── Affinity accent colours (mirrors Card.gd) ─────────────────
 const AFFINITY_COLORS: Dictionary = {
@@ -596,7 +597,7 @@ func _add_scrap_all_button() -> void:
 	btn.text = "✂ SCRAP ALL DUPES"
 	btn.add_theme_font_size_override("font_size", 12)
 	btn.add_theme_color_override("font_color", Color(1.0, 0.55, 0.20))
-	btn.tooltip_text = "Scrap all duplicate copies, keeping 1 of each card"
+	btn.tooltip_text = "Scrap all duplicate copies, keeping 1 of each card (100 credits per scrapped copy)"
 	btn.pressed.connect(_confirm_scrap_all)
 	# Insert before the CloseBtn
 	var close_btn: Node = $Panel/VBox/Header/CloseBtn
@@ -625,17 +626,18 @@ func _calc_scrap_one_credits(card_name: String, card_type: String) -> int:
 		return 0
 	return extras * _get_scrap_value(card_name, card_type)
 
-func _calc_scrap_all_credits() -> int:
+func _count_scrap_all_duplicate_copies() -> int:
 	var total: int = 0
 	for entry: Dictionary in _tiles:
-		var cname: String = entry["card_name"]
-		var ctype: String = entry["card_type"]
-		if ctype == "union":
+		if entry["card_type"] == "union":
 			continue
-		var extras: int = Collection.get_card_count(cname) - 1
+		var extras: int = Collection.get_card_count(entry["card_name"]) - 1
 		if extras > 0:
-			total += extras * _get_scrap_value(cname, ctype)
+			total += extras
 	return total
+
+func _calc_scrap_all_credits() -> int:
+	return _count_scrap_all_duplicate_copies() * SCRAP_ALL_CREDITS_PER_CARD
 
 func _confirm_scrap_one(card_name: String, card_type: String) -> void:
 	var extras: int = Collection.get_card_count(card_name) - 1
@@ -666,10 +668,15 @@ func _confirm_scrap_all() -> void:
 		return
 	var dlg := ConfirmationDialog.new()
 	dlg.title = "Scrap All Duplicates"
-	dlg.dialog_text = "Scrap all duplicate copies across your entire collection?\nYou will receive %d credits." % credits_gained
+	dlg.dialog_text = (
+		"Scrap all duplicate copies across your entire collection?\n"
+		+ "You will receive %d credits (100 per scrapped copy)." % credits_gained)
 	dlg.confirmed.connect(func() -> void:
-		Collection.scrap_all_duplicates()
-		Collection.add_credits(credits_gained)
+		var removed: int = Collection.scrap_all_duplicates()
+		var earned: int = removed * SCRAP_ALL_CREDITS_PER_CARD
+		if earned > 0:
+			Collection.add_credits(earned)
+			CreditsEarnedOverlay.show_earned(get_tree().root, earned)
 		dlg.queue_free())
 	dlg.canceled.connect(func() -> void: dlg.queue_free())
 	add_child(dlg)

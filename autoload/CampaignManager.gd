@@ -215,7 +215,7 @@ const USER_POSITIONS_PATH := "user://campaign_node_positions.json"
 
 func _load_saved_positions() -> void:
 	_apply_positions_from_file(SHIPPED_POSITIONS_PATH)
-	if Engine.is_editor_hint():
+	if BuildConfig.can_write_shipped_data():
 		_apply_positions_from_file(USER_POSITIONS_PATH)
 
 func _apply_positions_from_file(path: String) -> void:

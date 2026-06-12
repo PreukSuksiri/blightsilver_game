@@ -24,6 +24,10 @@ const DailyDungeonMapScene  = preload("res://scenes/daily_dungeon_map.tscn")
 @onready var deck_status_label: Label  = $DeckStatusBg/DeckStatusLabel
 @onready var settings_icon_btn: Button = $SettingsIconBtn
 @onready var settings_icon_shadow: Control = $SettingsIconShadow
+@onready var mailbox_icon_btn: Button = $MailboxIconBtn
+@onready var mailbox_icon_shadow: Control = $MailboxIconShadow
+@onready var mailbox_icon_badge: Panel = $MailboxIconBadge
+@onready var mailbox_icon_badge_lbl: Label = $MailboxIconBadge/BadgeLabel
 @onready var exit_icon_btn:     Button = $ExitIconBtn
 @onready var exit_icon_shadow:  Control = $ExitIconShadow
 @onready var deck_status_bg:    Panel  = $DeckStatusBg
@@ -47,6 +51,8 @@ func _ready() -> void:
 	campaign_btn.pressed.connect(_on_multiplayer)
 	settings_icon_btn.pressed.connect(_on_settings)
 	settings_icon_btn.tooltip_text = "Settings"
+	mailbox_icon_btn.pressed.connect(_on_mailbox_icon_pressed)
+	mailbox_icon_btn.tooltip_text = "Inventory / Mailbox"
 	exit_icon_btn.pressed.connect(func() -> void:
 		SFXManager.play(SFXManager.SFX_BTN)
 		get_tree().quit())
@@ -59,6 +65,7 @@ func _ready() -> void:
 	tween.tween_property(fade_overlay, "color:a", 0.0, 1.2) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_refresh_deck_status()
+	_setup_mailbox_icon_badge()
 	_refresh_inventory_badge()
 	MailboxManager.mailbox_changed.connect(_refresh_inventory_badge)
 	MenuButtonConfig.load_config()
@@ -153,12 +160,36 @@ func _show_deck_warning() -> void:
 func _refresh_inventory_badge() -> void:
 	var count := MailboxManager.get_unclaimed_count()
 	var label := MenuButtonConfig.get_label("inventory").to_upper()
+	mailbox_btn.text = label
+	mailbox_btn.add_theme_color_override("font_color",
+		Color(0.3, 1.0, 0.65, 1.0) if count > 0 else Color(0.95, 0.8, 0.3, 0.85))
+	_refresh_mailbox_icon_badge()
+
+
+func _setup_mailbox_icon_badge() -> void:
+	if mailbox_icon_badge == null:
+		return
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.92, 0.18, 0.22, 1.0)
+	sb.corner_radius_top_left = 14
+	sb.corner_radius_top_right = 14
+	sb.corner_radius_bottom_left = 14
+	sb.corner_radius_bottom_right = 14
+	sb.set_content_margin_all(0)
+	mailbox_icon_badge.add_theme_stylebox_override("panel", sb)
+	if mailbox_icon_badge_lbl != null:
+		mailbox_icon_badge_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+		FontManager.tag_font(mailbox_icon_badge_lbl, "font", "primary", 700)
+
+
+func _refresh_mailbox_icon_badge() -> void:
+	if mailbox_icon_badge == null or mailbox_icon_badge_lbl == null:
+		return
+	var count := MailboxManager.get_unclaimed_count()
+	var show_icon: bool = mailbox_icon_btn != null and mailbox_icon_btn.visible
+	mailbox_icon_badge.visible = show_icon and count > 0
 	if count > 0:
-		mailbox_btn.text = "%s  [%d]" % [label, count]
-		mailbox_btn.add_theme_color_override("font_color", Color(0.3, 1.0, 0.65, 1.0))
-	else:
-		mailbox_btn.text = label
-		mailbox_btn.add_theme_color_override("font_color", Color(0.95, 0.8, 0.3, 0.85))
+		mailbox_icon_badge_lbl.text = "9+" if count > 9 else str(count)
 
 func _stack_button_for_key(key: String) -> Button:
 	match key:
@@ -202,9 +233,11 @@ func _apply_menu_button_state() -> void:
 	_set_main_menu_btn(exit_game_btn, "exit")
 	_set_main_menu_btn(campaign_btn, "multiplayer")
 	_sync_corner_icon(settings_icon_btn, settings_icon_shadow, "settings")
+	_sync_corner_icon(mailbox_icon_btn, mailbox_icon_shadow, "inventory")
 	_sync_corner_icon(exit_icon_btn, exit_icon_shadow, "exit_icon")
 	_apply_menu_button_labels()
 	_apply_menu_button_positions()
+	_refresh_mailbox_icon_badge()
 
 
 func _set_main_menu_btn(btn: BaseButton, key: String) -> void:
@@ -327,9 +360,11 @@ func _set_main_menu_obscured(obscured: bool) -> void:
 			continue
 		btn.visible = false if obscured else MenuButtonConfig.is_main_visible(key)
 	_sync_corner_icon(settings_icon_btn, settings_icon_shadow, "settings", obscured)
+	_sync_corner_icon(mailbox_icon_btn, mailbox_icon_shadow, "inventory", obscured)
 	_sync_corner_icon(exit_icon_btn, exit_icon_shadow, "exit_icon", obscured)
 	if deck_status_bg != null:
 		deck_status_bg.visible = not obscured
+	_refresh_mailbox_icon_badge()
 
 
 func _on_menu_overlay_closed() -> void:
@@ -585,6 +620,14 @@ func _on_inventory() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
 	_open_menu_overlay(InventoryMenuScene.instantiate(), "InventoryMenuOverlay")
 
+
+func _on_mailbox_icon_pressed() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
+	var overlay: Control = _open_menu_overlay(
+		InventoryMenuScene.instantiate(), "InventoryMenuOverlay")
+	if overlay != null:
+		overlay.call_deferred("show_mailbox_tab")
+
 func _on_credits() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
 	get_tree().change_scene_to_file("res://scenes/credits.tscn")
@@ -592,7 +635,8 @@ func _on_credits() -> void:
 func _apply_menu_fonts() -> void:
 	var btns: Array[Button] = [
 		local_2p_btn, deck_build_btn, shop_btn, gallery_btn, mailbox_btn,
-		credits_btn, exit_game_btn, campaign_btn, settings_icon_btn, exit_icon_btn,
+		credits_btn, exit_game_btn, campaign_btn,
+		settings_icon_btn, mailbox_icon_btn, exit_icon_btn,
 	]
 	for btn: Button in btns:
 		if btn != null:
