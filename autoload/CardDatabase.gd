@@ -505,7 +505,7 @@ func _load_characters() -> void:
 		["Magical Butterfly", CharacterData.Affinity.NATURE, 15, 15, 180,
 			CharacterData.AbilityType.TEMP_BOOST_ON_OPP_TECH,
 			{"atk": 10, "def": 10},
-			"Whenever foe’s tech card is activated, +10 ATK&DEF until the start of your next turn",
+			"Whenever foe’s tech card is activated, +10 ATK&DEF permanently",
 			CharacterData.Rarity.COMMON],
 
 		["Mars Drill", CharacterData.Affinity.COSMIC, 40, 30, 400,

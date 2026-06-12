@@ -1176,11 +1176,11 @@ def build_character_tests(card: dict) -> list[str]:
     elif ab == "TEMP_BOOST_ON_OPP_TECH":
         ba, bd = p.get("atk", 5), p.get("def", 5)
         add(
-            f"{name}: +{ba}/+{bd} temp when opponent plays Tech",
+            f"{name}: +{ba}/+{bd} permanently when opponent plays Tech",
             ["TurnManager.play_tech_card TEMP_BOOST_ON_OPP_TECH loop", f"AbilityType.{ab}"],
             [f"{name} face-up on opponent of tech player."],
             ["Opponent plays any Tech."],
-            [f"temp_atk_bonus += {ba}; temp_def_bonus += {bd} until turn end."],
+            [f"perm_atk_bonus += {ba}; perm_def_bonus += {bd} (stacks per foe Tech)."],
             [],
         )
 

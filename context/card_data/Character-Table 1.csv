@@ -189,7 +189,7 @@ Zomborg,Character,900,65,70,Bio,3,"Once, when this card ATK and/or DEF will be d
 Stinky Insect,Character,400,10,10,Nature,1,"If this card defended, the attacker card cannot attack on the next of opponent’s turn",,Yes,100,Yes,,Yes,,
 Mad Raccoon,Character,260,30,15,Nature,1,None,,,240,Yes,,Yes,,Yes
 Armored Money,Character,170,10,20,Nature,1,+10 ATK if there is face-up Nature card,,,140,Yes,,Yes,,Yes
-Magical Butterfly,Character,180,15,15,Nature,1,"Whenever opponent’s tech card is activated, +10 ATK and DEF until the start of your next turn",,Yes,150,Yes,,,Yes,
+Magical Butterfly,Character,180,15,15,Nature,1,"Whenever foe’s tech card is activated, +10 ATK&DEF permanently",,Yes,150,Yes,,,Yes,
 Hammer Shark,Character,250,20,20,Nature,1,+10 ATK per shark card on the field,,,200,Yes,,Yes,Yes,
 Needle Porcupine,Character,200,10,10,Nature,1,"Once, when this card defends, the attacker permanently loses 5 ATK.",,,100,Yes,,,,Yes
 Seraph Lawkeeper,Character,900,35,50,Divine,4,"Once, if a Divine or Anima card is destroy, flip this card face-up, the destroyed card is revived at this turn’s end. Can be triggered face-down.",,,410,,,,,

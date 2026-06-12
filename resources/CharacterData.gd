@@ -133,7 +133,7 @@ enum AbilityType {
 	# ── Passive field effects ──
 	OPPONENT_EXTRA_CRYSTAL_LOSS,     # Opponent loses +N extra crystals on every crystal loss event
 	CRYSTAL_GAIN_ON_OPP_REVEAL,      # Gain +N crystals each time an opponent grid cell is revealed
-	TEMP_BOOST_ON_OPP_TECH,          # +N ATK/DEF (temp) when opponent plays a tech card
+	TEMP_BOOST_ON_OPP_TECH,          # +N ATK/DEF (permanent) when opponent plays a tech card
 	ATK_BONUS_VS_CENTER_ZONE,        # +N ATK attacking center 3x3 zone; +M more for the very center cell
 	CRYSTAL_RECOVER_ON_BIG_LOSS,     # If own crystal loss ≥ threshold in one event, recover N crystals
 	ONE_USE_SURVIVE_DESTRUCTION,     # Once: when this card would be destroyed, it survives instead

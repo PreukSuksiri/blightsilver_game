@@ -1054,16 +1054,21 @@ func _spawn_radial_items(connections: Array) -> void:
 		fade_tw.tween_interval(float(i) * 0.04)
 		fade_tw.tween_property(panel, "modulate:a", 1.0, 0.18)
 
-## Fade screen to black (0.5 s), run callback (navigate/go_back), then fade back in (0.3 s).
-func _navigate_with_fade(callback: Callable) -> void:
+## Apply navigation state, save, then fade — save completes before the visual transition.
+func _navigate_with_fade(apply_navigation: Callable) -> void:
+	if not apply_navigation.is_valid():
+		return
+	if not apply_navigation.call():
+		return
+	ExplorationManager.save_navigation_checkpoint()
 	if _nav_fade_tween and _nav_fade_tween.is_valid():
 		_nav_fade_tween.kill()
-	_transition_active    = true
+	_transition_active = true
 	_nav_fade_rect.modulate.a = 0.0
 	_nav_fade_tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
 	_nav_fade_tween.tween_property(_nav_fade_rect, "modulate:a", 1.0, 0.5)
 	_nav_fade_tween.tween_callback(func() -> void:
-		callback.call()
+		ExplorationManager.commit_navigation_visuals()
 		var tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 		tw.tween_property(_nav_fade_rect, "modulate:a", 0.0, 0.3)
 		tw.tween_callback(func() -> void: _transition_active = false))
@@ -1074,7 +1079,7 @@ func _on_radial_item_selected(target_id: String) -> void:
 		return
 	SFXManager.play(SFXManager.SFX_EXPLORATION)
 	_close_compass_menu()
-	_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(target_id))
+	_navigate_with_fade(func() -> bool: return ExplorationManager.apply_navigate_to(target_id))
 
 # ─────────────────────────────────────────────────────────────
 # Setting Radial Menu
@@ -3409,7 +3414,7 @@ func _on_back_pressed() -> void:
 		_close_info_panel(true)
 		return
 	SFXManager.play(SFXManager.SFX_CANCEL)
-	_navigate_with_fade(func() -> void: ExplorationManager.go_back())
+	_navigate_with_fade(func() -> bool: return ExplorationManager.apply_go_back())
 
 func _show_toast(text: String) -> void:
 	if _toast_tween and _toast_tween.is_valid():
@@ -3774,7 +3779,7 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 			_abort_pending_spot_interaction()
 			if not value.is_empty():
 				_compass_set_visible(true)
-				_navigate_with_fade(func() -> void: ExplorationManager.navigate_to(value))
+				_navigate_with_fade(func() -> bool: return ExplorationManager.apply_navigate_to(value))
 			return
 		"end_exploration":
 			_abort_pending_spot_interaction()

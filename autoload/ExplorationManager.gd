@@ -747,30 +747,64 @@ func navigate_to(node_id: String) -> void:
 	if not _session_active:
 		push_warning("ExplorationManager.navigate_to() called outside of an active session.")
 		return
-	_navigate_to(node_id, true)
+	_navigate_to(node_id, true, true, true)
+
+
+## Apply navigation state only (on_exit / history / on_enter). No visuals or save.
+func apply_navigate_to(node_id: String) -> bool:
+	if not _session_active:
+		push_warning("ExplorationManager.apply_navigate_to() called outside of an active session.")
+		return false
+	return _navigate_to(node_id, true, false, false)
+
+
+## Apply go-back state only. No visuals or save.
+func apply_go_back() -> bool:
+	if _node_history.size() < 2:
+		return false
+	_node_history.pop_back()
+	var prev_id: String = _node_history.pop_back()
+	return _navigate_to(prev_id, false, false, false)
+
+
+## Refresh ExplorationPlayer after apply_navigate_to / apply_go_back.
+func commit_navigation_visuals() -> void:
+	if _current_graph == null or _current_node_id.is_empty():
+		return
+	var node: ExplorationNode = _current_graph.get_node_by_id(_current_node_id)
+	if node != null:
+		emit_signal("node_entered", node)
+
+
+## Persist session after navigation state is applied, before the fade transition.
+func save_navigation_checkpoint() -> void:
+	_save_session_state()
+
 
 ## Move to the previous node in navigation history.
 ## Returns true on success, false if already at the origin.
 func go_back() -> bool:
 	if _node_history.size() < 2:
 		return false
-	_node_history.pop_back()           # remove current node
-	var prev_id: String = _node_history.pop_back()  # remove previous (re-pushed by _navigate_to)
-	_navigate_to(prev_id, false)
+	_node_history.pop_back()
+	var prev_id: String = _node_history.pop_back()
+	if not _navigate_to(prev_id, false, true, true):
+		return false
 	return true
 
 ## Returns true if there is a previous node to go back to.
 func can_go_back() -> bool:
 	return _node_history.size() >= 2
 
-func _navigate_to(node_id: String, push_current_to_history: bool) -> void:
+func _navigate_to(node_id: String, push_current_to_history: bool,
+		emit_entered: bool = true, save_after: bool = true) -> bool:
 	if _current_graph == null:
-		return
+		return false
 	var target: ExplorationNode = _current_graph.get_node_by_id(node_id)
 	if target == null:
 		push_error("ExplorationManager: node '%s' not found in graph '%s'." % [
 			node_id, _current_graph.graph_id])
-		return
+		return false
 
 	# Fire on_exit events for the node we are leaving
 	if not _current_node_id.is_empty():
@@ -787,8 +821,11 @@ func _navigate_to(node_id: String, push_current_to_history: bool) -> void:
 
 	# Fire on_enter events for the new node
 	_process_events(target.resolve_on_enter_events(_vars))
-	emit_signal("node_entered", target)
-	_save_session_state()
+	if emit_entered:
+		emit_signal("node_entered", target)
+	if save_after:
+		_save_session_state()
+	return true
 
 # ─────────────────────────────────────────────────────────────
 # Connection / Choice Availability — Public API
@@ -1089,11 +1126,14 @@ func resume_from_last_save_after_duel_loss() -> bool:
 		return false
 	return restore_saved_session()
 
-## End exploration and discard the mid-session snapshot after choosing title screen.
+## Return to title after a duel loss while keeping saved chapter progress intact.
 func quit_to_title_after_duel_loss() -> void:
 	clear_duel_loss_handoff()
-	if _session_active:
-		end_session(false)
+	if not _session_active:
+		return
+	if not has_saved_session():
+		save_session_now()
+	_clear_session_memory()
 
 # ─────────────────────────────────────────────────────────────
 # Spot action resume (VN start_battle handoff)

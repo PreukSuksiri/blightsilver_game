@@ -1308,6 +1308,12 @@
 		"sfx": "res://assets/audio/sound_spellcasting_2.mp3"
 	},
 	{
+		"battle_reward": [
+			{
+				"amount": 500,
+				"type": "credits"
+			}
+		],
 		"linger_characters": true,
 		"on_lose": "res://campaign/scenes/ch0_s1_post.json",
 		"on_win": "res://campaign/scenes/ch0_s1_post.json",

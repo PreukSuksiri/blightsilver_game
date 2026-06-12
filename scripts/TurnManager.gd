@@ -658,16 +658,19 @@ func play_tech_card(tech_name: String) -> void:
 	GameState.emit_signal("card_effect_triggered", tech_name, "tech")
 	await card_effect_flash_done
 
-	# TEMP_BOOST_ON_OPP_TECH: opponent's cards get a temp ATK/DEF boost when player plays tech
+	# TEMP_BOOST_ON_OPP_TECH: opponent's cards get a permanent ATK/DEF boost when player plays tech
 	var _tech_opp: int = GameState.get_opponent(player)
 	for _tbt_r: int in range(GameState.GRID_SIZE):
 		for _tbt_c: int in range(GameState.GRID_SIZE):
 			var _tbt_card: GameState.CardInstance = GameState.get_card(_tech_opp, _tbt_r, _tbt_c)
 			if _tbt_card.card_type == "character" and _tbt_card.face_up \
 					and _tbt_card.ability_type == CharacterData.AbilityType.TEMP_BOOST_ON_OPP_TECH:
-				_tbt_card.temp_atk_bonus += _tbt_card.ability_params.get("atk", 5)
-				_tbt_card.temp_def_bonus += _tbt_card.ability_params.get("def", 5)
-				GameState.post_message("%s: Tech boost — +%d ATK/DEF this turn!" % [_tbt_card.card_name, _tbt_card.ability_params.get("atk", 5)])
+				var _tbt_atk: int = _tbt_card.ability_params.get("atk", 5)
+				var _tbt_def: int = _tbt_card.ability_params.get("def", 5)
+				_tbt_card.perm_atk_bonus += _tbt_atk
+				_tbt_card.perm_def_bonus += _tbt_def
+				GameState.post_message("%s: +%d ATK & +%d DEF permanently!" % [
+					_tbt_card.card_name, _tbt_atk, _tbt_def])
 
 	# Effects that resolve immediately without needing targets
 	match data.effect_type:

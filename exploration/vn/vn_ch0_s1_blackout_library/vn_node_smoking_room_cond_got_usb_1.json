@@ -8,6 +8,8 @@
 				"sprite": "res://assets/textures/profile/battle_illustrations/monsters/battler_library_puppet.png"
 			}
 		],
+		"sfx": "res://assets/audio/sfx/laugh_2.mp3",
+		"sfx_volume": 120.0,
 		"speaker": "???",
 		"text": "** giggles **"
 	},
@@ -21,68 +23,68 @@
 		"ai_forced_cells": [
 			{
 				"card_name": "Lab Zombie",
-				"col": 4,
-				"row": 2
+				"col": 4.0,
+				"row": 2.0
 			},
 			{
 				"card_name": "Claw Mutant",
-				"col": 3,
-				"row": 1
+				"col": 3.0,
+				"row": 1.0
 			},
 			{
 				"card_name": "Bladeshifter",
-				"col": 1,
-				"row": 2
+				"col": 1.0,
+				"row": 2.0
 			},
 			{
 				"card_name": "Gamma Emitter",
-				"col": 1,
-				"row": 1
+				"col": 1.0,
+				"row": 1.0
 			},
 			{
 				"card_name": "Lab Bloater",
-				"col": 1,
-				"row": 3
+				"col": 1.0,
+				"row": 3.0
 			},
 			{
 				"card_name": "Rotten Shrieker",
-				"col": 0,
-				"row": 2
+				"col": 0.0,
+				"row": 2.0
 			},
 			{
 				"card_name": "Scarlet Mutant",
-				"col": 3,
-				"row": 4
+				"col": 3.0,
+				"row": 4.0
 			},
 			{
 				"card_name": "Bleacher Squad",
-				"col": 2,
-				"row": 4
+				"col": 2.0,
+				"row": 4.0
 			},
 			{
 				"card_name": "Pepper Spray",
-				"col": 3,
-				"row": 2
+				"col": 3.0,
+				"row": 2.0
 			},
 			{
 				"card_name": "Hypnosis",
-				"col": 0,
-				"row": 0
+				"col": 0.0,
+				"row": 0.0
 			},
 			{
 				"card_name": "Red Card",
-				"col": 4,
-				"row": 0
+				"col": 4.0,
+				"row": 0.0
 			},
 			{
 				"card_name": "Vile Creeper",
-				"col": 2,
-				"row": 2
+				"col": 2.0,
+				"row": 2.0
 			},
 			{
 				"card_name": "Explosive Barrels",
-				"col": 0,
-				"row": 4
+				"col": 0.0,
+				"row": 4.0
 			}
 		],
 		"ai_forced_tech": [

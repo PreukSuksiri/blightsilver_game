@@ -644,6 +644,8 @@ func _on_deck_builder() -> void:
 		deck_builder.initial_gallery_load_finished.connect(dismiss_loading, CONNECT_ONE_SHOT)
 	deck_builder.tree_exiting.connect(dismiss_loading, CONNECT_ONE_SHOT)
 	_open_menu_overlay(deck_builder, "DeckBuilderOverlay", _refresh_deck_status)
+	if is_instance_valid(loading):
+		loading.move_to_front()
 
 func _on_shop() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)

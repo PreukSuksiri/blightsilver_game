@@ -206,23 +206,20 @@ func _build_static_ui(card_w: float, card_h: float, full_card_path: String) -> v
 		_mod_label.mouse_filter = MOUSE_FILTER_IGNORE
 		_mod_label.visible = false
 		card.add_child(_mod_label)
-		var data: CharacterData = CardDatabase.get_character(_card_inst.card_name)
-		if data:
-			var eff_atk: int = _card_inst.get_effective_atk()
-			var eff_def: int = _card_inst.get_effective_def()
-			if eff_atk != data.base_atk or eff_def != data.base_def:
-				_mod_label.text = "▶  ATK=%d / DEF=%d" % [eff_atk, eff_def]
-				var atk_up: bool = eff_atk > data.base_atk
-				var def_up: bool = eff_def > data.base_def
-				var mod_col: Color
-				if atk_up and def_up:
-					mod_col = Color(0.35, 1.0, 0.45)
-				elif not atk_up and not def_up:
-					mod_col = Color(1.0, 0.38, 0.38)
-				else:
-					mod_col = Color(1.0, 0.88, 0.35)
-				_mod_label.add_theme_color_override("font_color", mod_col)
-				_mod_label.visible = true
+		var base_atk: int = -1
+		var base_def: int = -1
+		if _card_inst.is_union:
+			var u: UnionData = UnionDatabase.get_union(_card_inst.card_name)
+			if u:
+				base_atk = u.base_atk
+				base_def = u.base_def
+		else:
+			var data: CharacterData = CardDatabase.get_character(_card_inst.card_name)
+			if data:
+				base_atk = data.base_atk
+				base_def = data.base_def
+		if base_atk >= 0 and base_def >= 0:
+			_apply_live_stat_mod_label(base_atk, base_def)
 
 # ─────────────────────────────────────────────────────────────
 # UI construction — programmatic card (fallback when no full_cards/ image)
@@ -550,27 +547,10 @@ func _populate(card_name: String, card_type: String) -> void:
 			_desc.text = data.get_ability_description()
 			_style_pill(_atk, Color(0.75, 0.28, 0.05), Color(1.0, 0.55, 0.28))
 			_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
-			# Modifier overlay — only shown when a live CardInstance is available
 			_mod_label.visible      = false
 			_cost_mod_label.visible = false
 			if _card_inst != null and _card_inst.card_type == "character":
-				var eff_atk: int = _card_inst.get_effective_atk()
-				var eff_def: int = _card_inst.get_effective_def()
-				var atk_changed: bool = eff_atk != data.base_atk
-				var def_changed: bool = eff_def != data.base_def
-				if atk_changed or def_changed:
-					_mod_label.text = "▶  ATK=%d / DEF=%d" % [eff_atk, eff_def]
-					var atk_up: bool = eff_atk > data.base_atk
-					var def_up: bool = eff_def > data.base_def
-					var mod_col: Color
-					if atk_up and def_up:
-						mod_col = Color(0.35, 1.0, 0.45)
-					elif not atk_up and not def_up:
-						mod_col = Color(1.0, 0.38, 0.38)
-					else:
-						mod_col = Color(1.0, 0.88, 0.35)
-					_mod_label.add_theme_color_override("font_color", mod_col)
-					_mod_label.visible = true
+				_apply_live_stat_mod_label(data.base_atk, data.base_def)
 				if _card_inst.crystal_cost != data.crystal_cost:
 					_cost_mod_label.text = "▼  %d◆" % _card_inst.crystal_cost
 					var cost_col: Color = Color(0.35, 1.0, 0.45) \
@@ -649,6 +629,8 @@ func _populate(card_name: String, card_type: String) -> void:
 			_style_pill(_def, Color(0.08, 0.28, 0.70), Color(0.35, 0.62, 1.0))
 			_mod_label.visible      = false
 			_cost_mod_label.visible = false
+			if _card_inst != null and _card_inst.card_type == "character":
+				_apply_live_stat_mod_label(u.base_atk, u.base_def)
 			# Art: locked vs unlocked version
 			var _snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
 			var _art_path: String = ""
@@ -706,6 +688,28 @@ func _populate(card_name: String, card_type: String) -> void:
 # ─────────────────────────────────────────────────────────────
 # Helpers
 # ─────────────────────────────────────────────────────────────
+func _apply_live_stat_mod_label(base_atk: int, base_def: int) -> void:
+	if _mod_label == null or _card_inst == null:
+		return
+	_mod_label.visible = false
+	var eff_atk: int = _card_inst.get_effective_atk()
+	var eff_def: int = _card_inst.get_effective_def()
+	if eff_atk == base_atk and eff_def == base_def:
+		return
+	_mod_label.text = "▶  ATK=%d / DEF=%d" % [eff_atk, eff_def]
+	var atk_up: bool = eff_atk > base_atk
+	var def_up: bool = eff_def > base_def
+	var mod_col: Color
+	if atk_up and def_up:
+		mod_col = Color(0.35, 1.0, 0.45)
+	elif not atk_up and not def_up:
+		mod_col = Color(1.0, 0.38, 0.38)
+	else:
+		mod_col = Color(1.0, 0.88, 0.35)
+	_mod_label.add_theme_color_override("font_color", mod_col)
+	_mod_label.visible = true
+
+
 func _set_rarity(rarity: CharacterData.Rarity) -> void:
 	_rarity.text = "★".repeat(rarity + 1)
 	var col: Color

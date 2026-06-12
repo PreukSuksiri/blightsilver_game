@@ -141,7 +141,7 @@ Mayu is fighting with Nex on daily basic before going to bed. That night, mayu d
   Reward: 8000 Credits + 1 Legendary guaranteed vellum card booster pack + 1 pack re-opening bonus
 
 - **Stage 3-5:** Slipped into Flame  
-  Start Stage Story: Nex worked overtime during Friday. Everyone got home. He pretend to be in the toilet stall until late night. Nex sneak into CEO's room and downloaded evidence of secret delivery contract to the solar power plant containing square materials of 210 x 210 mm. That's exact size of PV cell for a power plant. Kelly then contacted him to open access to chicken coop. The order members arrived: Kelly, Katana(male), Falchion(glasses female). Falchion introduce herself to Nex and bring him a cold cola. Nex thanked. Falchion tried to open it and pretended she don't have a hand force to open. Nex opened for her suspiciously that tried to mess with him. Falchion cheers the cola. Katana walk passed by and introduce himself simply just say that is name is Katana. As they broke inside, the chicken were all killed. Inside, there was **Benedict Vanderbilt**, a famous trillionnaire. He slayed all of his silver-laid chickens. He officially introduce himself and he said he knows that the order is coming for his silver. He explain that this chicken does not produce silver, but rather act as a silver laundry. The silver molecules were mixed into chicken food, the silver is kept safely inside an egg. And this allow him to completely control silver supply. Kelly announce the ancient contract that the order of high gate can seize any silver supply. Vanderbilt said that the Ancient King is here no more, so that contract is just a mere paper. Nex also question about transportation of fake PV cell to the power plant. Benedict explained all the method. He is the only one with enough silver supply to manufactured PV cell components that was engineered to expire exact the same date, installing them throughout this year. The expiration date is the day of city blackout. Falchion ask for explaination why he did this. Many people has died due to that incident. Vanderbilt said it's a business deal with someone very powerful. But since the trade secret has been exposed, he have to de-supply the merchandise to prevent business rivalry. Benedict Vanderbilt then use a fire spell to burn all the silver eggs . Kelly, Katana, and Falchion deal with Benedict. Nex see opportunity and secure the silver eggs. But Benedicts does not allow that and send out his servant 'Magma Djinn', Nex fight it using vellum card.   
+  Start Stage Story: Nex worked overtime during Friday. Everyone got home. He pretend to be in the toilet stall until late night. Nex sneak into CEO's room and downloaded evidence of secret delivery contract to the solar power plant containing square materials of 210 x 210 mm. That's exact size of PV cell for a power plant. Kelly then contacted him to open access to chicken coop. The order members arrived: Kelly, Katana("Wataru Matsumoto" , male), Falchion("Qiu Zhou" / glasses female). Falchion introduce herself to Nex and bring him a cold cola. Nex thanked. Falchion tried to open it and pretended she don't have a hand force to open. Nex opened for her suspiciously that tried to mess with him. Falchion cheers the cola. Katana walk passed by and introduce himself simply just say that is name is Katana. As they broke inside, the chicken were all killed. Inside, there was **Benedict Vanderbilt**, a famous trillionnaire. He slayed all of his silver-laid chickens. He officially introduce himself and he said he knows that the order is coming for his silver. He explain that this chicken does not produce silver, but rather act as a silver laundry. The silver molecules were mixed into chicken food, the silver is kept safely inside an egg. And this allow him to completely control silver supply. Kelly announce the ancient contract that the order of high gate can seize any silver supply. Vanderbilt said that the Ancient King is here no more, so that contract is just a mere paper. Nex also question about transportation of fake PV cell to the power plant. Benedict explained all the method. He is the only one with enough silver supply to manufactured PV cell components that was engineered to expire exact the same date, installing them throughout this year. The expiration date is the day of city blackout. Falchion ask for explaination why he did this. Many people has died due to that incident. Vanderbilt said it's a business deal with someone very powerful. But since the trade secret has been exposed, he have to de-supply the merchandise to prevent business rivalry. Benedict Vanderbilt then use a fire spell to burn all the silver eggs . Kelly, Katana, and Falchion deal with Benedict. Nex see opportunity and secure the silver eggs. But Benedicts does not allow that and send out his servant 'Magma Djinn', Nex fight it using vellum card.   
   End Stage Story : Benedict Vanderbilt has escaped. The chicken coop burned down, but Nex was still locked inside the coop. In the nick of time, Nex chanted 'Under the blight lies a silver moon'. The silver axe flies from this home into his hand. He finally break open of the door before everything collapsed down. The order members barely secured only some of the silver eggs and need to escape the fire.   
   Opponent: Magma Djinn (arcane based djinn deck)  
   Reward: 8000 Credits + 1 Exotic guaranteed vellum card booster pack
@@ -152,7 +152,21 @@ Mayu is fighting with Nex on daily basic before going to bed. That night, mayu d
 **Theme:** The Order has disbanded and the protagonists returned to normal life
 
 - **Stage 4-1:** The Order of High Gate
-  Start Stage Story: Nex was taken to palace of the order. Falchion snatched Nex arm from Kelly. Kelly pout. Falchion take Nex for a tour around the Order and meeting various people (Flintlock, Maul, Lariat, Stiletto, Zweihander, Gandiva, Katana). The hide a bottle of wine behind the gravestone and share it with Nex, insisted him to celebrate after a long hard work. Kelly barge in and scolded them. At the meeting, Nex also meet Halberd. Then grandmaster come in and officially welcome Nex. also thanked for restoring supply of silver. Although not so much, but enough to start manufacturing silver bullet to defend the order. Halberd mentioned that Nex still has no codename and request codename from the grandmaster. He must pass a trail to receive a codename. The grandmaster open the door to the trail chambe. There were angel inside and Nex must fight him. The angel also use Vellum Deck.
+  Start Stage Story: Nex was taken to palace of the order. Falchion snatched Nex arm from Kelly. Kelly pout. Falchion take Nex for a tour around the Order and meeting various people: 
+  -Halberd(M) "Morris Green"
+  -Flintlock(M) "Philip Valdez"
+  -Maul(M) "Locke Miller"
+  -Lariat(F) "Amandine Vavasseur"
+  -Stiletto(F) "Haliya Gatbonton"
+  -Zweihander (M) "Sigurd Lund"
+  -Gandiva (M) "Pitsanu Chanpayak"
+  -Pike(F) "Melissa Crowmont"
+  -Arbalest(F) "Elisabeth Eisenhauer"
+  -Cestus (M) "Elliot Rossi"
+  -Katana (M) "Wataru Matsumoto"
+  -Mace (F) "Akiko Takahashi"
+  
+  The hide a bottle of wine behind the gravestone and share it with Nex, insisted him to celebrate after a long hard work. Kelly barge in and scolded them. At the meeting, Nex also meet Halberd. Then grandmaster come in and officially welcome Nex. also thanked for restoring supply of silver. Although not so much, but enough to start manufacturing silver bullet to defend the order. Halberd mentioned that Nex still has no codename and request codename from the grandmaster. He must pass a trail to receive a codename. The grandmaster open the door to the trail chambe. There were angel inside and Nex must fight him. The angel also use Vellum Deck.
   End Stage Story : Nex comes out of the trail room. He has now received a codename as 'Tomahawk'. But with surpise, the grandmaster announce that The Order of High Gate is now disbanded indefinitely. Everyone chattered and desperately asking questions. The grandmaster said this is the final announcement, no more question is accepted. And he disappear into his quarter.
   Opponent: Angel Duelist
   Reward: 8000 Credits + 1 pack re-opening bonus
@@ -195,6 +209,8 @@ End Stage Story:  (to be continue)
 - The Order now only have Halberd, Falchion, and the master who is always busy in the office researching for something.
 - Nex and Mayu visited the order of high gate. Mayu take the cross with her for an inspection due to "Nightmare". Falchion "abduct" Mayu to underground room and offer her a briefcase of cash, exchanging for that bronze cross. (Falchion has already known what does it do). Mayu denied anyway. So one day later, she find a sweet chance between on of the exploration... and stole it.
 - Nex, Mayu, Kelly must travel and recruit the retired members of the order of High Gate: Falchion, Katana, etc.
+- Vellum card will allow each player to see another player's real name and surname. Even though falchion always use her alias, you will see Falchion first name and last name during duel "Qiu Zhou"
+
 
 
 - Nex has killed a human (to protect Mayu in a desparate situation. Kelly said that Next must join the trailer of atonement to atone the sins due to order's rule prohibited killing a human.
@@ -219,7 +235,23 @@ Doctor Rat = Doesn't change at all
 
 
 
+## Full list of The Order of High Gate
 
+  -The Grand Master(M) "Dominic Baudelaire"
+  -Tomahawk(M) "Nex Crowmont"
+  -Trebuchet(F) "Kelly Lastockhina"
+  -Halberd(M) "Morris Green"
+  -Flintlock(M) "Philip Valdez"
+  -Maul(M) "Locke Miller"
+  -Lariat(F) "Amandine Vavasseur"
+  -Stiletto(F) "Haliya Gatbonton"
+  -Zweihander (M) "Sigurd Lund"
+  -Gandiva (M) "Pitsanu Chanpayak"
+  -Pike(F) "Melissa Crowmont"
+  -Arbalest(F) "Elisabeth Eisenhauer"
+  -Cestus (M) "Elliot Rossi"
+  -Katana (M) "Wataru Matsumoto"
+  -Mace (F) "Akiko Takahashi"
 
 
 

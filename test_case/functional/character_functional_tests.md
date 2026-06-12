@@ -4074,12 +4074,12 @@ Type: Character
 Stats: ATK=15 DEF=15 Cost=180 Affinity=NATURE
 AbilityType: TEMP_BOOST_ON_OPP_TECH
 ability_params: {'atk': 10, 'def': 10}
-Description: Whenever foe’s tech card is activated, +10 ATK&DEF until the start of your next turn
+Description: Whenever foe’s tech card is activated, +10 ATK&DEF permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Magical-Butterfly-001
 Description:
-Magical Butterfly: +10/+10 temp when opponent plays Tech
+Magical Butterfly: +10/+10 permanently when opponent plays Tech
 Implementation Reference:
 - TurnManager.play_tech_card TEMP_BOOST_ON_OPP_TECH loop
 - AbilityType.TEMP_BOOST_ON_OPP_TECH
@@ -4091,7 +4091,7 @@ Preconditions:
 Steps:
 Step 1: Opponent plays any Tech.
 Expected Result:
-- temp_atk_bonus += 10; temp_def_bonus += 10 until turn end.
+- perm_atk_bonus += 10; perm_def_bonus += 10 (persists; stacks per foe Tech played).
 
 ---
 

@@ -16,6 +16,8 @@
 	},
 	{
 		"linger_characters": true,
+		"sfx": "res://assets/audio/sfx/laugh_4.mp3",
+		"sfx_volume": 120.0,
 		"text": "** giggles **"
 	},
 	{
@@ -28,93 +30,93 @@
 		"ai_forced_cells": [
 			{
 				"card_name": "Night Whisperer",
-				"col": 2,
-				"row": 3
+				"col": 2.0,
+				"row": 3.0
 			},
 			{
 				"card_name": "Feral Vampire",
-				"col": 2,
-				"row": 1
+				"col": 2.0,
+				"row": 1.0
 			},
 			{
 				"card_name": "Explosive Barrels",
-				"col": 4,
-				"row": 0
+				"col": 4.0,
+				"row": 0.0
 			},
 			{
 				"card_name": "Jacob the Ski Mask",
-				"col": 3,
-				"row": 3
+				"col": 3.0,
+				"row": 3.0
 			},
 			{
 				"card_name": "Immortal Vampire",
-				"col": 1,
-				"row": 3
+				"col": 1.0,
+				"row": 3.0
 			},
 			{
 				"card_name": "Araya the Eerie Dancer",
-				"col": 0,
-				"row": 0
+				"col": 0.0,
+				"row": 0.0
 			},
 			{
 				"card_name": "Cursed Well",
-				"col": 2,
-				"row": 2
+				"col": 2.0,
+				"row": 2.0
 			},
 			{
 				"card_name": "Hypnosis",
-				"col": 4,
-				"row": 1
+				"col": 4.0,
+				"row": 1.0
 			},
 			{
 				"card_name": "Red Card",
-				"col": 0,
-				"row": 2
+				"col": 0.0,
+				"row": 2.0
 			},
 			{
 				"card_name": "Trap Hole",
-				"col": 2,
-				"row": 4
+				"col": 2.0,
+				"row": 4.0
 			},
 			{
 				"card_name": "Chaotic Wisp",
-				"col": 3,
-				"row": 0
+				"col": 3.0,
+				"row": 0.0
 			},
 			{
 				"card_name": "Foul Wisp",
-				"col": 1,
-				"row": 0
+				"col": 1.0,
+				"row": 0.0
 			},
 			{
 				"card_name": "Doom Wisp",
-				"col": 3,
-				"row": 1
+				"col": 3.0,
+				"row": 1.0
 			},
 			{
 				"card_name": "Acid Trap Hole",
-				"col": 4,
-				"row": 4
+				"col": 4.0,
+				"row": 4.0
 			},
 			{
 				"card_name": "Bat Swarm",
-				"col": 0,
-				"row": 4
+				"col": 0.0,
+				"row": 4.0
 			},
 			{
 				"card_name": "Bait",
-				"col": 4,
-				"row": 2
+				"col": 4.0,
+				"row": 2.0
 			},
 			{
 				"card_name": "Vampire Servant",
-				"col": 0,
-				"row": 1
+				"col": 0.0,
+				"row": 1.0
 			},
 			{
 				"card_name": "Vampire Duchess",
-				"col": 2,
-				"row": 0
+				"col": 2.0,
+				"row": 0.0
 			}
 		],
 		"ai_forced_tech": [

@@ -92,6 +92,12 @@ var _view_toggle_btn: Button = null
 var _gallery_selected_name: String = ""
 var _gallery_selected_type: String = ""
 var _gallery_rebuild_gen: int = 0
+var _union_rebuild_gen: int = 0
+var _trunk_list_rebuild_gen: int = 0
+var _deferring_initial_load: bool = false
+var _loading_blocker: Control = null
+
+const LOADING_BLOCKER_Z := 4096
 
 # Union right-panel section
 var _union_section: VBoxContainer = null
@@ -253,9 +259,11 @@ class FEGridCell extends Panel:
 				on_unplace_cb.call(grid_row, grid_col)
 
 func _ready() -> void:
+	_deferring_initial_load = true
+	_show_loading_blocker()
 	_connect_buttons()
 	_refresh_deck_select()
-	_load_deck(SaveManager.active_deck_index)
+	status_label.text = "Loading deck…"
 
 	var rc_mat := ShaderMaterial.new()
 	rc_mat.shader = _ROUNDED_CLIP
@@ -296,6 +304,8 @@ func _ready() -> void:
 	# Prologue lock check — show overlay if deckbuilding not yet unlocked
 	if not SaveManager.is_deckbuilding_unlocked():
 		_show_deckbuilding_lock_overlay()
+	if _deferring_initial_load:
+		call_deferred("_grab_loading_blocker_focus")
 
 # ── Button wiring ─────────────────────────────────────────────
 func _connect_buttons() -> void:
@@ -356,14 +366,20 @@ func _on_deck_selected(index: int) -> void:
 	_load_deck(index)
 
 func _load_deck(index: int) -> void:
+	if not _apply_deck_state(index):
+		return
+	_rebuild_trunk_list()
+	_rebuild_deck_lists()
+
+
+func _apply_deck_state(index: int) -> bool:
 	SaveManager.active_deck_index = index
 	var deck: DeckData = SaveManager.get_active_deck()
 	if deck == null:
-		return
+		return false
 	current_deck = deck.duplicate_deck()
 	deck_name_field.text = current_deck.deck_name
-	_rebuild_trunk_list()
-	_rebuild_deck_lists()
+	return true
 
 func _on_new_deck() -> void:
 	var deck := DeckData.new()
@@ -441,13 +457,23 @@ func _update_filter_colors() -> void:
 		_filter_union_btn.add_theme_color_override("font_color",
 			Color(0.25, 0.90, 1.0) if _filter == "union" else inactive_col)
 
-func _rebuild_trunk_list() -> void:
+func _rebuild_trunk_list(rebuild_gallery: bool = true) -> void:
+	if _deferring_initial_load:
+		return
 	trunk_list.clear()
-	var name_q:  String = search_field.text.to_lower()
-	var abil_q:  String = _filter_ability.to_lower()
-	var use_aff: bool   = _filter_affinity >= 0
-	var use_atk: bool   = _filter_atk_min > 0 or _filter_atk_max < 9999
-	var use_def: bool   = _filter_def_min > 0 or _filter_def_max < 9999
+	for entry: Dictionary in _gather_trunk_list_entries():
+		_add_trunk_list_entry(entry)
+	if rebuild_gallery and _gallery_mode and _trunk_gallery_flow != null:
+		_rebuild_trunk_gallery()
+
+
+func _gather_trunk_list_entries() -> Array[Dictionary]:
+	var entries: Array[Dictionary] = []
+	var name_q: String = search_field.text.to_lower()
+	var abil_q: String = _filter_ability.to_lower()
+	var use_aff: bool = _filter_affinity >= 0
+	var use_atk: bool = _filter_atk_min > 0 or _filter_atk_max < 9999
+	var use_def: bool = _filter_def_min > 0 or _filter_def_max < 9999
 
 	if _filter in ["all", "character"]:
 		for char_name: String in CardDatabase.get_all_character_names():
@@ -472,9 +498,10 @@ func _rebuild_trunk_list() -> void:
 				data.get_affinity_name(), char_name,
 				data.base_atk, data.base_def, data.crystal_cost
 			]
-			trunk_list.add_item(label)
-			trunk_list.set_item_metadata(trunk_list.item_count - 1,
-				{"type": "character", "name": char_name})
+			entries.append({
+				"label": label,
+				"meta": {"type": "character", "name": char_name},
+			})
 
 	if _filter in ["all", "union"] and SaveManager.union_mechanism_unlocked:
 		var union_list: Array = UnionDatabase.get_all_unions()
@@ -496,27 +523,28 @@ func _rebuild_trunk_list() -> void:
 				continue
 			if abil_q != "" and abil_q not in u.ability_description.to_lower():
 				continue
-			var label: String = "UNION: %s  ATK:%d DEF:%d  %d◆" % [
+			var union_label: String = "UNION: %s  ATK:%d DEF:%d  %d◆" % [
 				u.card_name, u.base_atk, u.base_def, u.summon_cost]
-			trunk_list.add_item(label)
-			trunk_list.set_item_custom_fg_color(trunk_list.item_count - 1, Color(0.25, 0.90, 1.0))
-			trunk_list.set_item_metadata(trunk_list.item_count - 1,
-				{"type": "union", "name": u.card_name})
+			entries.append({
+				"label": union_label,
+				"meta": {"type": "union", "name": u.card_name},
+				"fg_color": Color(0.25, 0.90, 1.0),
+			})
 
-	# Traps and tech ignore affinity/ATK/DEF/cost/ability filters — only tab + name search apply.
 	if _filter in ["all", "trap"]:
 		for trap_name: String in CardDatabase.get_all_trap_names():
 			if Collection.get_card_count(trap_name) == 0:
 				continue
 			if name_q != "" and name_q not in trap_name.to_lower():
 				continue
-			var data: TrapData = CardDatabase.get_trap(trap_name)
-			if SaveManager.demo_mode and not data.include_in_demo:
+			var trap_data: TrapData = CardDatabase.get_trap(trap_name)
+			if SaveManager.demo_mode and not trap_data.include_in_demo:
 				continue
-			var label: String = "TRAP: %s  (%d◆)" % [trap_name, data.crystal_cost]
-			trunk_list.add_item(label)
-			trunk_list.set_item_metadata(trunk_list.item_count - 1,
-				{"type": "trap", "name": trap_name})
+			var trap_label: String = "TRAP: %s  (%d◆)" % [trap_name, trap_data.crystal_cost]
+			entries.append({
+				"label": trap_label,
+				"meta": {"type": "trap", "name": trap_name},
+			})
 
 	if _filter in ["all", "tech"]:
 		for tech_name: String in CardDatabase.get_all_tech_names():
@@ -524,16 +552,37 @@ func _rebuild_trunk_list() -> void:
 				continue
 			if name_q != "" and name_q not in tech_name.to_lower():
 				continue
-			var data: TechCardData = CardDatabase.get_tech(tech_name)
-			if SaveManager.demo_mode and not data.include_in_demo:
+			var tech_data: TechCardData = CardDatabase.get_tech(tech_name)
+			if SaveManager.demo_mode and not tech_data.include_in_demo:
 				continue
-			var label: String = "TECH: %s  (%d◆)" % [tech_name, data.crystal_cost]
-			trunk_list.add_item(label)
-			trunk_list.set_item_metadata(trunk_list.item_count - 1,
-				{"type": "tech", "name": tech_name})
+			var tech_label: String = "TECH: %s  (%d◆)" % [tech_name, tech_data.crystal_cost]
+			entries.append({
+				"label": tech_label,
+				"meta": {"type": "tech", "name": tech_name},
+			})
+	return entries
 
-	if _gallery_mode and _trunk_gallery_flow != null:
-		_rebuild_trunk_gallery()
+
+func _add_trunk_list_entry(entry: Dictionary) -> void:
+	trunk_list.add_item(entry["label"])
+	var idx: int = trunk_list.item_count - 1
+	trunk_list.set_item_metadata(idx, entry["meta"])
+	if entry.has("fg_color"):
+		trunk_list.set_item_custom_fg_color(idx, entry["fg_color"])
+
+
+func _rebuild_trunk_list_chunked_task(gen: int) -> void:
+	trunk_list.clear()
+	var entries: Array[Dictionary] = _gather_trunk_list_entries()
+	var batch := 0
+	for entry: Dictionary in entries:
+		if gen != _trunk_list_rebuild_gen or not is_inside_tree():
+			return
+		_add_trunk_list_entry(entry)
+		batch += 1
+		if batch >= GALLERY_TILES_PER_FRAME:
+			batch = 0
+			await get_tree().process_frame
 
 # ── Add card from trunk ───────────────────────────────────────
 func _on_trunk_double_click(_index: int) -> void:
@@ -627,7 +676,7 @@ func _on_remove_tech() -> void:
 	_rebuild_deck_lists()
 
 # ── Deck panel refresh ────────────────────────────────────────
-func _rebuild_deck_lists() -> void:
+func _rebuild_deck_lists(refresh_gallery: bool = true, refresh_union: bool = true) -> void:
 	if current_deck == null:
 		return
 
@@ -695,9 +744,10 @@ func _rebuild_deck_lists() -> void:
 	remove_trap_btn.disabled = true
 	remove_tech_btn.disabled = true
 
-	if _gallery_mode and _deck_chars_flow != null:
+	if refresh_gallery and _gallery_mode and _deck_chars_flow != null:
 		_rebuild_deck_galleries()
-	_rebuild_union_section()
+	if refresh_union:
+		_rebuild_union_section()
 
 # ── Card list selection → preview ─────────────────────────────
 func _on_trunk_selected(idx: int) -> void:
@@ -960,17 +1010,13 @@ func _setup_union_section() -> void:
 
 	right_inner.add_child(_union_section)
 	right_inner.move_child(_union_section, tech_section.get_index() + 1)
-	_rebuild_union_section()
+	_union_header_label.text = "Union (…)"
 
-func _rebuild_union_section() -> void:
-	if _union_section == null or current_deck == null:
-		return
-	var union_flow: HBoxContainer = _union_section.get_meta("_union_flow") as HBoxContainer
-	if union_flow == null:
-		return
-	for ch: Node in union_flow.get_children():
-		ch.queue_free()
-	var count: int = 0
+
+func _get_achievable_unions() -> Array[UnionData]:
+	var result: Array[UnionData] = []
+	if current_deck == null:
+		return result
 	var all_unions: Array = UnionDatabase.get_all_unions()
 	all_unions.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)
 	for u: UnionData in all_unions:
@@ -979,9 +1025,40 @@ func _rebuild_union_section() -> void:
 		if SaveManager.demo_mode and not UnionDatabase.is_playable_in_demo(u):
 			continue
 		if UnionDatabase.deck_can_form_union(current_deck.characters, u):
-			union_flow.add_child(_make_union_right_tile(u))
-			count += 1
-	_union_header_label.text = "Union (%d achievable)" % count
+			result.append(u)
+	return result
+
+
+func _rebuild_union_section() -> void:
+	_union_rebuild_gen += 1
+	var gen := _union_rebuild_gen
+	_chunked_union_section_rebuild_task(gen)
+
+
+func _chunked_union_section_rebuild_task(gen: int) -> void:
+	if _union_section == null or current_deck == null:
+		return
+	var union_flow: HBoxContainer = _union_section.get_meta("_union_flow") as HBoxContainer
+	if union_flow == null:
+		return
+	for ch: Node in union_flow.get_children():
+		ch.queue_free()
+	var achievable: Array[UnionData] = _get_achievable_unions()
+	if achievable.is_empty():
+		if gen == _union_rebuild_gen and is_inside_tree():
+			_union_header_label.text = "Union (0 achievable)"
+		return
+	var batch := 0
+	for u: UnionData in achievable:
+		if gen != _union_rebuild_gen or not is_inside_tree():
+			return
+		union_flow.add_child(_make_union_right_tile(u))
+		batch += 1
+		if batch >= GALLERY_TILES_PER_FRAME:
+			batch = 0
+			await get_tree().process_frame
+	if gen == _union_rebuild_gen and is_inside_tree():
+		_union_header_label.text = "Union (%d achievable)" % achievable.size()
 
 func _make_union_right_tile(u: UnionData) -> Control:
 	var tile := Control.new()
@@ -1083,7 +1160,8 @@ func _show_deckbuilding_lock_overlay() -> void:
 		if ev is InputEventKey and (ev as InputEventKey).pressed:
 			_on_back())
 	add_child(overlay)
-	overlay.grab_focus()
+	if not _deferring_initial_load:
+		overlay.grab_focus()
 
 # ── Formation Editor overlay ─────────────────────────────────
 # Formation data: {"name": str, "placements": [{"r": int, "c": int, "name": str, "type": str}]}
@@ -1111,6 +1189,8 @@ const _FE_GAL_H:    float = 121.0
 const _FE_GAL_GAP:  int   = 6
 
 func _open_formation_editor() -> void:
+	if _deferring_initial_load:
+		return
 	if current_deck == null:
 		return
 	_fe_hide_drag_ghost()
@@ -1971,8 +2051,50 @@ func _on_save() -> void:
 	status_label.text = "Deck saved!"
 
 func _on_back() -> void:
+	if _deferring_initial_load:
+		return
 	closed.emit()
 	queue_free()
+
+
+func _show_loading_blocker() -> void:
+	_hide_loading_blocker()
+	_loading_blocker = Control.new()
+	_loading_blocker.name = "LoadingBlocker"
+	_loading_blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_loading_blocker.mouse_filter = Control.MOUSE_FILTER_STOP
+	_loading_blocker.focus_mode = Control.FOCUS_ALL
+	_loading_blocker.z_index = LOADING_BLOCKER_Z
+	add_child(_loading_blocker)
+	_loading_blocker.move_to_front()
+	_loading_blocker.gui_input.connect(_on_loading_blocker_gui_input)
+	call_deferred("_grab_loading_blocker_focus")
+
+
+func _grab_loading_blocker_focus() -> void:
+	if _loading_blocker != null and is_instance_valid(_loading_blocker):
+		_loading_blocker.grab_focus()
+
+
+func _on_loading_blocker_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton \
+			or event is InputEventScreenTouch \
+			or event is InputEventKey:
+		_loading_blocker.accept_event()
+
+
+func _hide_loading_blocker() -> void:
+	if _loading_blocker != null and is_instance_valid(_loading_blocker):
+		_loading_blocker.queue_free()
+	_loading_blocker = null
+
+
+func _finish_initial_load() -> void:
+	if not _deferring_initial_load:
+		return
+	_deferring_initial_load = false
+	_hide_loading_blocker()
+	initial_gallery_load_finished.emit()
 
 # ── Advanced filters ──────────────────────────────────────────
 func _build_advanced_filters() -> void:
@@ -2117,8 +2239,15 @@ func _on_preview_area_input(event: InputEvent) -> void:
 		CardDetailOverlay.open(self, _preview_card_name, _preview_card_type)
 
 func _input(event: InputEvent) -> void:
+	if _deferring_initial_load:
+		return
 	if event is InputEventMouseButton and event.pressed:
 		AudioManager.tts_stop()
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if _deferring_initial_load:
+		get_viewport().set_input_as_handled()
 
 # ── Gallery view ───────────────────────────────────────────────
 func _setup_gallery_containers() -> void:
@@ -2195,12 +2324,32 @@ func _begin_initial_gallery_load() -> void:
 
 
 func _run_initial_gallery_load_async(gen: int) -> void:
+	if not await _initial_load_deck_async(gen):
+		if is_inside_tree():
+			_finish_initial_load()
+		return
 	if _gallery_mode and _trunk_gallery_flow != null:
 		await _chunked_trunk_gallery_rebuild_task(gen)
 		if is_inside_tree() and gen == _gallery_rebuild_gen:
 			await _chunked_deck_galleries_rebuild_async(gen)
+	if is_inside_tree() and gen == _gallery_rebuild_gen:
+		_union_rebuild_gen += 1
+		var union_gen := _union_rebuild_gen
+		await _chunked_union_section_rebuild_task(union_gen)
 	if is_inside_tree():
-		initial_gallery_load_finished.emit()
+		_finish_initial_load()
+
+
+func _initial_load_deck_async(gallery_gen: int) -> bool:
+	if not _apply_deck_state(SaveManager.active_deck_index):
+		return false
+	_trunk_list_rebuild_gen += 1
+	var trunk_gen := _trunk_list_rebuild_gen
+	await _rebuild_trunk_list_chunked_task(trunk_gen)
+	if not is_inside_tree() or trunk_gen != _trunk_list_rebuild_gen or gallery_gen != _gallery_rebuild_gen:
+		return false
+	_rebuild_deck_lists(false, false)
+	return true
 
 
 func _toggle_view_mode() -> void:
