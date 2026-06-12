@@ -41,6 +41,7 @@ signal bluff_changed(player_index: int, row: int, col: int, emoticon: String)
 signal attack_target_selected(attacker_player: int, target_player: int, row: int, col: int)
 signal tech_target_selected(user_player: int, target_player: int, row: int, col: int)
 signal union_summoned(player: int, union_label: String, material_labels: Array)
+signal field_bonuses_recalculated()
 
 # ─────────────────────────────────────────────────────────────
 # Constants
@@ -84,6 +85,7 @@ class CardInstance:
 	var has_mutagen_flag: bool = false
 	var is_token: bool = false
 	var is_union: bool = false       # true when this card is a Union monster
+	var is_revived: bool = false     # true when placed on field via a revive effect
 	var attacked_this_turn: bool = false
 	var cannot_attack_until: int = -1  # Turn number when restriction lifts
 	var effect_nullified_until: int = -1
@@ -262,6 +264,7 @@ var tech_cards_played_this_game: Array = [[], []]
 var open_campaign_gallery_on_menu: bool = false
 var vn_on_win: String = ""
 var vn_on_lose: String = ""
+var vn_battle_rewards: Array = []  # VN start_battle beat rewards — granted to mailbox on win
 var vn_launched_from_exploration: bool = false
 var game_over_reason: String = ""  # "crystals" | "all_destroyed" | "no_moves" | "surrender"
 var portrait_p1_offset: Vector2 = Vector2.ZERO
@@ -677,10 +680,9 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 	if not card.face_up:
 		card.face_up = true
 		card.revealed_on_turn = turn_number
-		emit_signal("card_revealed", player_index, row, col)
-
 		if card.card_type == "character":
 			BattleResolver.recalculate_all_field_bonuses()
+		emit_signal("card_revealed", player_index, row, col)
 
 		# CRYSTAL_GAIN_ON_OPP_REVEAL: opponent gains crystals when this player's card is revealed
 		var opponent_idx: int = get_opponent(player_index)
@@ -958,6 +960,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		battle_ai_deck     = null
 		battle_ai_forced_tech.clear()
 		vn_launched_from_exploration = false
+		vn_battle_rewards.clear()
 	_vn_battle_pending = false
 	game_over_reason = ""
 	_init_grids()

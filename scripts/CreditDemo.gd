@@ -128,7 +128,7 @@ Godot
 
 
 
-Thank you for supporting
+Thank you for supporting, and see you again in
 <img=./assets/textures/ui/decorations/decor_game_title_text.png>
 
 

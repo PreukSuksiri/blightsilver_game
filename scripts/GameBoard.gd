@@ -361,12 +361,12 @@ func _setup_ai() -> void:
 	add_child(_ai_watchdog)
 
 	# Intermediate AI signals → restart the watchdog window (bot is still active)
-	ai_player.ai_mode_chosen.connect(func(_m: GameState.TurnMode) -> void: _ai_watchdog.start())
-	ai_player.ai_attack_chosen.connect(func(_a: Vector2i, _t: Vector2i) -> void: _ai_watchdog.start())
-	ai_player.ai_tech_chosen.connect(func(_n: String) -> void: _ai_watchdog.start())
-	ai_player.ai_union_chosen.connect(func(_n: String, _z: Array, _m: Array) -> void: _ai_watchdog.start())
+	ai_player.ai_mode_chosen.connect(func(_m: GameState.TurnMode) -> void: _restart_ai_watchdog())
+	ai_player.ai_attack_chosen.connect(func(_a: Vector2i, _t: Vector2i) -> void: _restart_ai_watchdog())
+	ai_player.ai_tech_chosen.connect(func(_n: String) -> void: _restart_ai_watchdog())
+	ai_player.ai_union_chosen.connect(func(_n: String, _z: Array, _m: Array) -> void: _restart_ai_watchdog())
 	# Turn fully done → stop watchdog
-	ai_player.ai_end_turn.connect(func() -> void: _ai_watchdog.stop())
+	ai_player.ai_end_turn.connect(func() -> void: _stop_ai_watchdog())
 
 	# AI_VS_AI: create a second AI instance that controls player 0
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
@@ -379,11 +379,11 @@ func _setup_ai() -> void:
 		ai_player_0.ai_end_turn.connect(_on_ai_end_turn)
 		ai_player_0.ai_union_chosen.connect(_on_ai_union_chosen)
 		ai_player_0.ai_bluff.connect(_on_ai_bluff)
-		ai_player_0.ai_mode_chosen.connect(func(_m: GameState.TurnMode) -> void: _ai_watchdog.start())
-		ai_player_0.ai_attack_chosen.connect(func(_a: Vector2i, _t: Vector2i) -> void: _ai_watchdog.start())
-		ai_player_0.ai_tech_chosen.connect(func(_n: String) -> void: _ai_watchdog.start())
-		ai_player_0.ai_union_chosen.connect(func(_n: String, _z: Array, _m: Array) -> void: _ai_watchdog.start())
-		ai_player_0.ai_end_turn.connect(func() -> void: _ai_watchdog.stop())
+		ai_player_0.ai_mode_chosen.connect(func(_m: GameState.TurnMode) -> void: _restart_ai_watchdog())
+		ai_player_0.ai_attack_chosen.connect(func(_a: Vector2i, _t: Vector2i) -> void: _restart_ai_watchdog())
+		ai_player_0.ai_tech_chosen.connect(func(_n: String) -> void: _restart_ai_watchdog())
+		ai_player_0.ai_union_chosen.connect(func(_n: String, _z: Array, _m: Array) -> void: _restart_ai_watchdog())
+		ai_player_0.ai_end_turn.connect(func() -> void: _stop_ai_watchdog())
 
 ## Returns the AI instance controlling the defending player (opponent of current_player).
 func _get_defending_ai() -> AIPlayer:
@@ -442,20 +442,39 @@ func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: 
 	if GameState.current_phase != GameState.Phase.GAME_OVER:
 		_active_ai.continue_after_union()
 
+func _stop_ai_watchdog() -> void:
+	if _ai_watchdog != null:
+		_ai_watchdog.stop()
+
+func _restart_ai_watchdog() -> void:
+	if _ai_watchdog == null or GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
+	if not _is_ai_turn():
+		return
+	_ai_watchdog.start()
+
 func _on_ai_watchdog_timeout() -> void:
 	if _pending_human_defender_tech:
-		_ai_watchdog.start()
+		_restart_ai_watchdog()
+		return
+	if not _is_ai_turn():
+		_stop_ai_watchdog()
+		return
+	if GameState.current_phase == GameState.Phase.BATTLE:
+		_restart_ai_watchdog()
 		return
 	print("[AI WATCHDOG] Bot Player went idle — forcing turn end.")
 	GameState.post_message("[DEBUG] Bot Player timed out — ending turn.")
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
 		AIvsAIManager.log_event("[TIMEOUT] Player %d AI watchdog expired — ending turn." % GameState.current_player)
 	turn_manager.end_attacks_early()
+	_stop_ai_watchdog()
 
 func _connect_signals() -> void:
 	GameState.phase_changed.connect(_on_phase_changed)
 	GameState.card_revealed.connect(_on_card_revealed)
 	GameState.card_destroyed.connect(_on_card_destroyed)
+	GameState.field_bonuses_recalculated.connect(_refresh_all_grids)
 	GameState.crystals_changed.connect(_on_crystals_changed)
 	GameState.dice_rolled.connect(_on_dice_rolled)
 	GameState.game_over.connect(_on_game_over)
@@ -1286,6 +1305,7 @@ func _begin_game() -> void:
 	_deal_tech_cards(1, GameState.STARTING_TECH_HAND)
 	_update_tech_stacks()
 	_update_void_stacks()
+	BattleResolver.recalculate_all_field_bonuses()
 	_refresh_all_grids()
 	_refresh_hud()
 	# E2E tests always give Player 0 (the highlight-card side) first turn.
@@ -2977,6 +2997,7 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 					copy.rarity = revived.rarity
 					copy.ability_type = revived.ability_type
 					copy.ability_params = revived.ability_params.duplicate(true)
+					copy.is_revived = true
 					copy.face_up = true
 					copy.revealed_on_turn = GameState.turn_number
 					GameState.grids[player][r][c] = copy
@@ -3880,7 +3901,6 @@ func _show_options_panel() -> void:
 		["BATTLE LOG",    _show_battle_log_panel],
 		["RULES",         _show_rules_panel],
 		["SETTINGS",      _show_settings_panel],
-		["CHANGE MUSIC",  _show_change_music_panel],
 		["SURRENDER",     _show_surrender_confirm],
 	]
 	for entry: Array in entries:
@@ -5090,7 +5110,7 @@ func _is_ai_turn() -> bool:
 		return true
 	return GameState.current_player == 1 and \
 		GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
-			GameState.GameMode.DAILY_DUNGEON]
+			GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION]
 
 # ─────────────────────────────────────────────────────────────
 # Tutorial Battle — position query helpers
@@ -5432,7 +5452,7 @@ func _enter_mode_select() -> void:
 			_end_turn_btn.visible = false
 		if _options_btn:
 			_options_btn.visible = false
-		_ai_watchdog.start()
+		_restart_ai_watchdog()
 		var _tech_royale_ai: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 			and "tech_royale" in GameState.active_dungeon_modifiers
 		# Pick the correct AI instance for this turn
@@ -5447,6 +5467,7 @@ func _enter_mode_select() -> void:
 			_ai_turn_action_started[GameState.current_player] = true
 			_active_ai.decide_turn()
 		return
+	_stop_ai_watchdog()
 	if resume_multi_attack_pos != Vector2i(-1, -1):
 		var bonus_attacker: GameState.CardInstance = GameState.get_card(
 			cp, resume_multi_attack_pos.x, resume_multi_attack_pos.y)
@@ -5580,7 +5601,7 @@ func _on_attack_aborted() -> void:
 		await get_tree().create_timer(0.4).timeout
 		if GameState.current_phase == GameState.Phase.GAME_OVER:
 			return
-		_ai_watchdog.start()
+		_restart_ai_watchdog()
 		_active_ai.register_attack_aborted()
 		_active_ai.continue_after_union()
 		return
@@ -5625,7 +5646,7 @@ func _on_tech_resolved(player: int) -> void:
 		await get_tree().create_timer(0.4).timeout
 		if GameState.current_phase == GameState.Phase.GAME_OVER:
 			return
-		_ai_watchdog.start()
+		_restart_ai_watchdog()
 		_active_ai.continue_after_union()
 	else:
 		_resume_human_mode_select()
@@ -5633,6 +5654,7 @@ func _on_tech_resolved(player: int) -> void:
 func _resume_human_mode_select(resume_bonus: bool = false, bonus_pos: Vector2i = Vector2i(-1, -1)) -> void:
 	if _is_ai_turn() or GameState.current_phase == GameState.Phase.GAME_OVER:
 		return
+	_stop_ai_watchdog()
 	if _end_turn_btn:
 		_end_turn_btn.visible = true
 	if resume_bonus and bonus_pos != Vector2i(-1, -1):
@@ -5956,7 +5978,10 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		if _is_post_attack_ability_filter(filter):
 			_clear_after_ability()
 		elif filter in _defender_response_filters():
-			_finish_trap_target_selection()
+			if pending_tech_name != "":
+				_finish_tech_action(GameState.current_player)
+			else:
+				_finish_trap_target_selection()
 		else:
 			_finish_tech_action(GameState.current_player)
 		return
@@ -6015,7 +6040,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	elif filter in _defender_response_filters() \
 			and (GameState.game_mode == GameState.GameMode.AI_VS_AI \
 				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
-					GameState.GameMode.DAILY_DUNGEON] \
+					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
 					and GameState.get_opponent(GameState.current_player) == ai_player.player_index)):
 		# AI is the defending/responding player
 		await get_tree().create_timer(0.4).timeout
@@ -6515,6 +6540,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				revived.ability_type = int(CharacterData.AbilityType.NONE)
 			if data and data.effect_params.get("double_cost", false):
 				revived.crystal_cost *= 2
+			revived.is_revived = true
 			revived.face_up = true
 			revived.revealed_on_turn = GameState.turn_number
 			revived.attacked_this_turn = false
@@ -8007,6 +8033,49 @@ func _check_almost_win_bgm() -> void:
 		var almost_path: String = _resolve_almost_win_bgm_path()
 		BGMManager.play_path(almost_path, 0.0, 1.5, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
 
+func _grant_vn_battle_rewards() -> void:
+	for entry: Variant in GameState.vn_battle_rewards:
+		if not entry is Dictionary:
+			continue
+		var reward: Dictionary = entry as Dictionary
+		match str(reward.get("type", "")):
+			"credits", "coins":
+				var amount: int = int(reward.get("amount", 0))
+				if amount <= 0:
+					continue
+				MailboxManager.send_mail(
+					"Battle Reward",
+					"Credits Earned!",
+					"You won and received %d Credits." % amount,
+					{"type": "credits", "amount": amount}
+				)
+			"booster_pack":
+				var pack_ref: String = str(reward.get("pack_name", "")).strip_edges()
+				if pack_ref.is_empty():
+					continue
+				var pack: Dictionary = ShopManager.get_pack_by_name(pack_ref)
+				if pack.is_empty():
+					push_warning("GameBoard: unknown booster pack '%s' in vn_battle_rewards." % pack_ref)
+					continue
+				var pack_name: String = str(pack.get("name", pack_ref))
+				MailboxManager.send_mail(
+					"Battle Reward",
+					"Victory Reward — %s" % pack_name,
+					"You earned a booster pack: %s. Claim it from your Inventory." % pack_name,
+					{"type": "booster_pack", "pack_name": pack_name}
+				)
+			"card":
+				var card_name: String = str(reward.get("card_name", "")).strip_edges()
+				if card_name.is_empty():
+					continue
+				MailboxManager.send_mail(
+					"Battle Reward",
+					"Card Reward",
+					"You received the card: %s." % card_name,
+					{"type": "card", "card_name": card_name}
+				)
+	GameState.vn_battle_rewards.clear()
+
 func _show_endgame_screen(winner: int) -> void:
 	_hide_card_context()
 	var mode := GameState.game_mode
@@ -8059,14 +8128,17 @@ func _show_endgame_screen(winner: int) -> void:
 	else:
 		title_text = "Defeat."
 
-	# Award credits on win (VS AI / Campaign only; Daily Dungeon and Exploration handle their own rewards)
+	# Award on win (VS AI / Campaign only; Daily Dungeon and Exploration handle their own rewards)
 	if is_win_screen and is_ai_game and not is_dungeon and not is_exploration:
-		MailboxManager.send_mail(
-			"Battle Reward",
-			"Credits Earned!",
-			"You won and received 50 Credits.",
-			{"type": "credits", "amount": 50}
-		)
+		if not GameState.vn_battle_rewards.is_empty():
+			_grant_vn_battle_rewards()
+		else:
+			MailboxManager.send_mail(
+				"Battle Reward",
+				"Credits Earned!",
+				"You won and received 50 Credits.",
+				{"type": "credits", "amount": 50}
+			)
 
 	# ── Build full-screen overlay ────────────────────────────────────────────
 	var overlay := Control.new()

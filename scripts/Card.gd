@@ -125,8 +125,12 @@ var is_selected: bool = false
 var is_highlighted: bool = false
 var is_locked: bool = false
 
+const INVERT_ART_SHADER: Shader = preload("res://assets/shaders/invert_color.gdshader")
+
 # Cache so we don't reload the texture every frame
 var _last_loaded_art: String = ""
+var _last_rendered_key: String = ""
+static var _invert_art_material: ShaderMaterial
 
 var _blank_found_icon: TextureRect
 var _trap_icon: TextureRect
@@ -291,6 +295,11 @@ func _set_attacked_icon(show: bool) -> void:
 		wait_glow_panel.visible = false
 
 func set_card_data(data: GameState.CardInstance, owner_player: int, pos: Vector2i) -> void:
+	var render_key := "" if data == null else "%s|%s|%s|%s" % [
+		data.card_type, data.card_name, data.is_union, data.is_revived]
+	if render_key != _last_rendered_key:
+		_last_loaded_art = ""
+		_last_rendered_key = render_key
 	card_data = data
 	player_owner = owner_player
 	grid_pos = pos
@@ -375,6 +384,7 @@ func _show_empty_slot() -> void:
 	_set_active_glow(false)
 	_set_attacked_icon(false)
 	_flag_bar.visible = false
+	_last_loaded_art = ""
 	var is_revealed_blank := card_data != null and card_data.face_up and not card_data.was_destroyed
 	_blank_found_icon.visible = is_revealed_blank
 	_trap_icon.visible        = false
@@ -685,7 +695,8 @@ func _apply_rarity(accent_color: Color) -> void:
 func _load_artwork(explicit_path: String, card_name: String, subfolder: String) -> void:
 	# 1. Try the explicit path set on the resource
 	if explicit_path != "":
-		if explicit_path == _last_loaded_art:
+		if _can_reuse_loaded_art(explicit_path):
+			_apply_artwork_color_fx()
 			return
 		if ResourceLoader.exists(explicit_path):
 			_set_texture(explicit_path)
@@ -693,7 +704,8 @@ func _load_artwork(explicit_path: String, card_name: String, subfolder: String) 
 
 	# 2. Look up via CardDatabase cache (directory scanned at most once per name)
 	var path: String = CardDatabase.find_artwork(card_name, subfolder, SaveManager.nsfw_enabled)
-	if path == _last_loaded_art:
+	if _can_reuse_loaded_art(path):
+		_apply_artwork_color_fx()
 		return
 	if path != "":
 		_set_texture(path)
@@ -702,20 +714,42 @@ func _load_artwork(explicit_path: String, card_name: String, subfolder: String) 
 	# 3. No artwork found — show placeholder
 	_clear_art()
 
+func _can_reuse_loaded_art(path: String) -> bool:
+	return path != "" \
+		and path == _last_loaded_art \
+		and artwork_rect.visible \
+		and artwork_rect.texture != null \
+		and artwork_rect.texture != ART_PLACEHOLDER
+
 func _set_texture(path: String) -> void:
 	var tex: Texture2D = load(path)
 	if tex:
 		artwork_rect.texture = tex
+		artwork_rect.visible = true
 		artwork_placeholder.visible = false
 		_last_loaded_art = path
+		_apply_artwork_color_fx()
 	else:
 		_clear_art()
 
 func _clear_art() -> void:
 	artwork_rect.visible = true
 	artwork_rect.texture = ART_PLACEHOLDER
+	artwork_rect.material = null
 	artwork_placeholder.visible = false
 	_last_loaded_art = ""
+
+func _should_invert_grid_artwork() -> bool:
+	return card_data != null and card_data.is_revived
+
+func _apply_artwork_color_fx() -> void:
+	if _should_invert_grid_artwork():
+		if _invert_art_material == null:
+			_invert_art_material = ShaderMaterial.new()
+			_invert_art_material.shader = INVERT_ART_SHADER
+		artwork_rect.material = _invert_art_material
+	else:
+		artwork_rect.material = null
 
 # Converts "Angel Gatekeeper" → "angel_gatekeeper"
 func _to_snake_case(s: String) -> String:

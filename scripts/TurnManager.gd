@@ -991,6 +991,8 @@ func resolve_trap_temp_def_boost(player: int, target_pos: Vector2i) -> void:
 func resolve_trap_self_destruct(player: int, target_pos: Vector2i) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player, target_pos.x, target_pos.y)
 	if card.card_type == "character":
+		if not card.face_up:
+			GameState.reveal_card(player, target_pos.x, target_pos.y)
 		card.temp_atk_bonus += _pending_trap_self_destruct_boost
 		if "self_destruct_next_turn" not in card.flags:
 			card.flags.append("self_destruct_next_turn")
@@ -1653,7 +1655,7 @@ func _apply_post_battle_effects(
 
 	match attacker.ability_type:
 		CharacterData.AbilityType.PERM_DEF_BOOST_PER_ATTACK_SURVIVE:
-			if not result.attacker_destroyed:
+			if not result.attacker_destroyed and defender.card_type == "character":
 				attacker.perm_def_bonus += attacker.ability_params.get("def", 2)
 
 		CharacterData.AbilityType.PERM_ATK_LOSS_PER_ATTACK:

@@ -19,6 +19,12 @@
 		"text": "** giggles **"
 	},
 	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"wait": 5.8
+	},
+	{
 		"ai_forced_cells": [
 			{
 				"card_name": "Night Whisperer",
@@ -116,7 +122,6 @@
 			"Spy",
 			"Bribe"
 		],
-		"animation": "animation_vellum_card_commence_facedown",
 		"enemy_deck": {
 			"characters": [
 				"Vampire Servant",
@@ -152,7 +157,6 @@
 		"portrait_p1_offset_x": -40.0,
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_univ_mascot_ghost.png",
 		"portrait_p2_offset_x": -120.0,
-		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
 		"start_battle": true
 	}
 ]

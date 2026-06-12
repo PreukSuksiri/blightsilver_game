@@ -709,6 +709,8 @@ func _show_beat() -> void:
 		# Set post-new_game fields (new_game resets most state but not these)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))
+		var battle_rewards: Variant = beat.get("battle_reward", [])
+		GameState.vn_battle_rewards = battle_rewards if battle_rewards is Array else []
 		_apply_beat_battle_display(beat)
 		GameState.apply_battle_audio_config(beat)
 		# Enemy deck — override what cards the AI places this battle

@@ -465,21 +465,6 @@ static func _get_effective_atk(
 				and defender.affinity != CharacterData.Affinity.ARCANE:
 			atk = int(atk * 1.2)
 
-	# ATK_PENALTY_IF_NO_NAME_ALLY: e.g. Moon Tribe Marksman
-	if attacker.ability_type == CharacterData.AbilityType.ATK_PENALTY_IF_NO_NAME_ALLY:
-		var name_filter: String = attacker.ability_params.get("name", attacker.ability_params.get("name_contains", "")).to_lower()
-		var found_ally: bool = false
-		for r in range(GameState.GRID_SIZE):
-			for c in range(GameState.GRID_SIZE):
-				var ally: GameState.CardInstance = GameState.grids[attacker_player][r][c]
-				if ally == attacker:
-					continue
-				if ally.card_type == "character" and name_filter != "" and name_filter in ally.card_name.to_lower():
-					found_ally = true
-					break
-		if not found_ally:
-			atk = max(0, atk - attacker.ability_params.get("penalty", 0))
-
 	match attacker.ability_type:
 		CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY:
 			if defender.affinity == attacker.ability_params.get("affinity", -1):
@@ -847,6 +832,7 @@ static func _apply_defend_effects(
 static func recalculate_all_field_bonuses() -> void:
 	calculate_field_bonuses(0)
 	calculate_field_bonuses(1)
+	GameState.emit_signal("field_bonuses_recalculated")
 
 static func calculate_field_bonuses(player_index: int) -> void:
 	# Clear aura bonuses, then rebuild from current face-up field state.
@@ -897,6 +883,24 @@ static func _apply_field_ability_bonus(
 			var count := _count_anima_cards(player_index, card)
 			card.perm_atk_bonus = card.ability_params.get("atk_bonus", 0) * count
 			card.perm_def_bonus = card.ability_params.get("def_bonus", 0) * count
+
+		CharacterData.AbilityType.ATK_PENALTY_IF_NO_NAME_ALLY:
+			if not _has_name_ally_on_field(player_index, card):
+				card.field_aura_atk_bonus -= card.ability_params.get("penalty", 0)
+
+static func _has_name_ally_on_field(player_index: int, source_card: GameState.CardInstance) -> bool:
+	var name_filter: String = source_card.ability_params.get(
+		"name", source_card.ability_params.get("name_contains", "")).to_lower()
+	if name_filter.is_empty():
+		return false
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var ally: GameState.CardInstance = GameState.grids[player_index][r][c]
+			if ally == source_card:
+				continue
+			if ally.card_type == "character" and name_filter in ally.card_name.to_lower():
+				return true
+	return false
 
 static func _count_matching_cards(player_index: int, source_card: GameState.CardInstance) -> int:
 	var count := 0

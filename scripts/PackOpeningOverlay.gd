@@ -17,6 +17,7 @@ class_name PackOpeningOverlay
 const PACK_TEX_PATH     : String = "res://assets/textures/cards/booster_pack/booster_pack_basic.png"
 const FALLBACK_CARD_PATH: String = "res://assets/textures/cards/frames/vellum_card_frame_full.png"
 const FULL_CARDS_DIR    : String = "res://assets/textures/cards/full_cards/"
+const DISPLAY_HOLD_SECONDS: float = 30.0
 const _ROUNDED_CLIP: Shader = preload("res://assets/shaders/rounded_clip.gdshader")
 const _CARD_CORNER_RADIUS_REF: float = 16.0   # px at 150px card width
 
@@ -275,7 +276,7 @@ func _run() -> void:
 		reroll_btn = _make_reroll_btn(cx, card_y)
 
 	var elapsed: float = 0.0
-	while elapsed < 3.5 and not _skip_requested and not _reroll_triggered:
+	while elapsed < DISPLAY_HOLD_SECONDS and not _skip_requested and not _reroll_triggered:
 		await get_tree().create_timer(0.05).timeout
 		elapsed += 0.05
 

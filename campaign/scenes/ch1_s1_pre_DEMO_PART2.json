@@ -240,11 +240,19 @@
 		"battle_bgm": "res://assets/audio/bgm_boss_2.mp3",
 		"battle_reward": [
 			{
-				"amount": 500.0,
+				"amount": 2500,
 				"type": "credits"
 			},
 			{
 				"pack_name": "Booster Pack - Wind of Dominance",
+				"type": "booster_pack"
+			},
+			{
+				"pack_name": "Booster Pack - Wind of Dominance",
+				"type": "booster_pack"
+			},
+			{
+				"pack_name": "Booster Pack - Unseen Presence",
 				"type": "booster_pack"
 			}
 		],

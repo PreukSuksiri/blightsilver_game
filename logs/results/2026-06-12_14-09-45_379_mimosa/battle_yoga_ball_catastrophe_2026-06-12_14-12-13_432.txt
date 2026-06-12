@@ -1,0 +1,295 @@
+=== Battle of Yoga Ball Catastrophe ===
+Battle started: 2026-06-12 14:12:13.432
+Game Session of Mimosa (started 2026-06-12 14:09:45.379)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.150] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=8000 ---
+[00:09.549] Mode selected P1: ATTACK
+[00:09.551] MSG: Player 2: tap a character to attack.
+[00:11.247] Revealed: P1 (0,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[00:11.287] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:11.288] Dice rolled: 4
+[00:11.558] MSG: Trap triggered: Trap Hole!
+[00:15.495] Coin flip: Heads, Tails, Tails
+[00:18.226] MSG: Trap Hole: Heads, Tails, Tails.
+[00:18.226] Crystals: P1 8000 → 7980 (-20)  [trap]
+[00:19.609] MSG: Trap Hole: 1 head(s) — Player 2 loses 20 Crystals!
+[00:19.611] Attack P1(0,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(0,0)"Trap Hole" {cost 0}  Dice=4  → Unit vs Trap
+[00:19.612] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=15 ATK pill=15 DEF pill=10 mod=+ATK 0 (15+0=15)
+[00:19.612] Anim: 3D  (attacker survives)
+[00:20.115] Mode selected P1: ATTACK
+[00:20.117] MSG: Player 2: tap a character to attack.
+[00:21.823] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:21.862] Revealed: P0 (2,2) "Pepper Spray" {cost 0}
+[00:21.862] Dice rolled: 5
+[00:22.133] MSG: Trap triggered: Pepper Spray!
+[00:25.113] Coin flip: Tails, Tails
+[00:27.853] MSG: Pepper Spray: Tails, Tails.
+[00:27.853] MSG: Not both heads — no effect.
+[00:27.854] Attack P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} → P0(2,2)"Pepper Spray" {cost 0}  Dice=5  → Unit vs Trap
+[00:27.854] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[00:27.854] Anim: 3D  (attacker survives)
+[00:28.353] Turn ended  P1  |  Crystals P0=5000 P1=7980
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=7980 ---
+[00:33.759] Revealed: P0 (1,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:33.759] Dice rolled: 2
+[00:33.768] MSG: Scythe Shark wins!
+[00:36.675] Crystals: P1 7980 → 7180 (-800)  [battle]
+[00:38.078] Attack P0(1,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=2  ATK=35 vs DEF=20  → WIN
+[00:38.078] Reckoning overlay: P0 "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} badge=35 ATK pill=35 DEF pill=35 mod=+ATK 0 (35+0=35)
+[00:38.078] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:38.078] Anim: 3A  △ P1(0,2)
+[00:38.078] Card destroyed  P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[00:54.296] Revealed: P0 (2,4) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos}
+[00:54.296] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[00:54.296] Dice rolled: 3
+[00:54.310] MSG: Magenta the Nightbloom wins!
+[00:56.905] Crystals: P1 7180 → 7000 (-180)  [battle]
+[00:58.309] Attack P0(2,4)"Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20} → P1(0,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=3  ATK=25 vs DEF=10  → WIN
+[00:58.309] Reckoning overlay: P0 "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20} badge=25 ATK pill=25 DEF pill=20 mod=+ATK 0 (25+0=25)
+[00:58.309] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=10 ATK pill=15 DEF pill=10 mod=+DEF 0 (10+0=10)
+[00:58.309] Anim: 3A  △ P1(0,0)
+[00:58.309] Card destroyed  P1 (0,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:00.252] Turn ended  P0  |  Crystals P0=5000 P1=7000
+
+--- Turn 3  |  Player 1  |  Crystals P0=5000 P1=7000 ---
+[01:00.854] Mode selected P1: TECH
+[01:01.151] Crystals: P1 7000 → 6000 (-1000)  [tech cost]
+[01:02.527] Tech played  P1: "Accident"
+[01:04.062] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[01:04.465] Card destroyed  P0 (1,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[01:04.469] Tech resolved  P1
+[01:05.372] Mode selected P1: ATTACK
+[01:05.374] MSG: Player 2: tap a character to attack.
+[01:07.075] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:07.075] Dice rolled: 5
+[01:07.080] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Magenta the Nightbloom!
+[01:07.081] MSG: Vampire Duchess wins!
+[01:12.305] Crystals: P0 5000 → 4700 (-300)  [battle]
+[01:13.703] Attack P1(1,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(2,4)"Magenta the Nightbloom" {Unit ATK20 DEF15 | cost 300 | affinity Chaos | base 20/15}  Dice=5  ATK=55 vs DEF=15  → WIN
+[01:13.703] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[01:13.703] Reckoning overlay: P0 "Magenta the Nightbloom" {Unit ATK20 DEF15 | cost 300 | affinity Chaos | base 20/15} badge=15 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=15) MISMATCH
+[01:13.703] Anim: 3A  △ P0(2,4)
+[01:13.703] Card destroyed  P0 (2,4) "Magenta the Nightbloom" {Unit ATK20 DEF15 | cost 300 | affinity Chaos | base 20/15}
+[01:14.197] Mode selected P1: ATTACK
+[01:14.200] MSG: Player 2: tap a character to attack.
+[01:15.919] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[01:15.919] Dice rolled: 2
+[01:15.939] MSG: Nothing happens — Dead End.
+[01:18.279] Attack P1(1,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P0(0,1)(empty)  Dice=2  → DEAD_END
+[01:18.279] Anim: 3F  (blank slot)
+[01:18.778] Turn ended  P1  |  Crystals P0=4700 P1=6000
+
+--- Turn 4  |  Player 0  |  Crystals P0=4700 P1=6000 ---
+[02:29.008] Tech played  P0: "Tease"
+[02:30.536] MSG: Opponent must choose and reveal 1 of their squares.
+[02:30.537] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[02:30.960] Revealed: P1 (3,3) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[02:30.960] MSG: Tease: Opponent revealed Void Stalker.
+[02:31.168] Tech resolved  P0
+[02:42.388] Revealed: P0 (4,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[02:42.388] Dice rolled: 3
+[02:42.399] MSG: Vampire Duchess is destroyed battling Divine!
+[02:46.692] Crystals: P1 6000 → 5200 (-800)  [battle]
+[02:48.098] Attack P0(4,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(1,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55}  Dice=3  ATK=0 vs DEF=0  → WIN
+[02:48.098] Reckoning overlay: P0 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[02:48.098] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[02:48.098] Anim: 3A  △ P1(1,2)
+[02:48.098] Card destroyed  P1 (1,2) "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55}
+[02:51.906] Revealed: P0 (4,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[02:51.906] Dice rolled: 3
+[02:51.915] MSG: Both cards are destroyed!
+[02:55.534] Crystals: P0 4700 → 4200 (-500)  [battle]
+[02:56.927] Crystals: P1 5200 → 4320 (-880)  [battle]
+[02:58.324] Attack P0(4,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P1(1,1)"Leech Man" {Unit ATK60 DEF50 | cost 880 | affinity Bio | buff +permDEF10}  Dice=3  ATK=50 vs DEF=50  → TIE
+[02:58.324] Reckoning overlay: P0 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=50 ATK pill=50 DEF pill=10 mod=+ATK 0 (50+0=50)
+[02:58.324] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF50 | cost 880 | affinity Bio | buff +permDEF10} badge=50 ATK pill=60 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:58.324] Anim: 3C  △ P0(4,0) + △ P1(1,1)
+[02:58.324] Card destroyed  P0 (4,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[02:58.324] Card destroyed  P1 (1,1) "Leech Man" {Unit ATK60 DEF50 | cost 880 | affinity Bio | buff +permDEF10}
+[03:00.264] Turn ended  P0  |  Crystals P0=4200 P1=4320
+
+--- Turn 5  |  Player 1  |  Crystals P0=4200 P1=4320 ---
+[03:00.862] Mode selected P1: TECH
+[03:01.164] Crystals: P1 4320 → 3320 (-1000)  [tech cost]
+[03:02.549] Tech played  P1: "Illegal Steroid"
+[03:04.087] Target prompt: "Choose 1 face-up character to boost."  filter=own_faceup_character
+[03:04.488] MSG: Illegal Steroid: Void Stalker gains +30 ATK this attack.
+[03:04.492] Tech resolved  P1
+[03:05.389] Mode selected P1: ATTACK
+[03:05.392] MSG: Player 2: tap a character to attack.
+[03:07.098] Dice rolled: 2
+[03:07.104] MSG: Void Stalker wins!
+[03:11.505] Crystals: P0 4200 → 3750 (-450)  [battle]
+[03:12.901] Attack P1(3,3)"Void Stalker" {Unit ATK95 DEF25 | cost 720 | affinity Chaos | base 65/25 | buff +tempATK30} → P0(4,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=2  ATK=115 vs DEF=40  → WIN
+[03:12.901] Reckoning overlay: P1 "Void Stalker" {Unit ATK95 DEF25 | cost 720 | affinity Chaos | base 65/25 | buff +tempATK30} badge=115 ATK pill=95 DEF pill=25 mod=+ATK 20 (95+20=115)
+[03:12.901] Reckoning overlay: P0 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=40 ATK pill=35 DEF pill=40 mod=+DEF 0 (40+0=40)
+[03:12.901] Anim: 3A  △ P0(4,2)
+[03:12.901] Card destroyed  P0 (4,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[03:13.398] Mode selected P1: ATTACK
+[03:13.404] MSG: Player 2: tap a character to attack.
+[03:15.105] Revealed: P1 (3,2) "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5}
+[03:15.122] Revealed: P0 (0,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[03:15.122] Dice rolled: 2
+[03:15.125] MSG: Death Knight wins!
+[03:19.580] Crystals: P0 3750 → 3350 (-400)  [battle]
+[03:20.977] Attack P1(3,2)"Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5} → P0(0,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=2  ATK=70 vs DEF=25  → WIN
+[03:20.977] Reckoning overlay: P1 "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5} badge=70 ATK pill=70 DEF pill=65 mod=+ATK 0 (70+0=70)
+[03:20.977] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[03:20.977] Anim: 3A  △ P0(0,3)
+[03:20.977] Card destroyed  P0 (0,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[03:21.474] Turn ended  P1  |  Crystals P0=3350 P1=3320
+
+--- Turn 6  |  Player 0  |  Crystals P0=3350 P1=3320 ---
+[03:29.076] Tech played  P0: "Spy"
+[03:30.609] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[03:31.692] Revealed: P1 (1,0) "Acid Trap Hole" {cost 0}
+[03:31.869] Tech resolved  P0
+[03:49.981] Revealed: P0 (3,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[03:50.000] Revealed: P1 (0,4) "Explosive Barrels" {cost 0}
+[03:50.001] Dice rolled: 3
+[03:50.285] MSG: Trap triggered: Explosive Barrels!
+[03:53.594] Crystals: P0 3350 → 2950 (-400)  [card lost]
+[03:55.631] Crystals: P1 3320 → 2920 (-400)  [trap]
+[03:57.012] MSG: Explosive Barrels: Big Thug destroyed! Defender loses 400 Crystals.
+[03:57.014] Attack P0(3,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(0,4)"Explosive Barrels" {cost 0}  Dice=3  → Unit vs Trap
+[03:57.014] Reckoning overlay: P0 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[03:57.014] Anim: 3E  △ P0(3,1)
+[03:59.733] Turn ended  P0  |  Crystals P0=2950 P1=2920
+
+--- Turn 7  |  Player 1  |  Crystals P0=2950 P1=2920 ---
+[04:01.817] Crystals: P1 2920 → 1420 (-1500)  [union]
+[04:01.858] Revealed: P1 (3,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[04:01.860] Union summoned P1: "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} from "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}
+[04:01.860] MSG: Player 2 summoned [Lord of Terror] using: "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}
+[04:05.468] Mode selected P1: ATTACK
+[04:05.473] MSG: Player 2: tap a character to attack.
+[04:07.197] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[04:07.197] Dice rolled: 3
+[04:07.233] MSG: Lord of Terror wins!
+[04:11.655] Crystals: P0 2950 → 2650 (-300)  [battle]
+[04:13.056] Attack P1(3,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=3  ATK=150 vs DEF=20  → WIN
+[04:13.056] Reckoning overlay: P1 "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[04:13.056] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:13.056] Anim: 3A  △ P0(0,2)
+[04:13.056] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[04:13.547] Mode selected P1: ATTACK
+[04:13.550] MSG: Player 2: tap a character to attack.
+[04:15.263] Dice rolled: 5
+[04:15.313] MSG: Nothing happens — Dead End.
+[04:18.658] Attack P1(3,3)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} → P0(1,0)(empty)  Dice=5  → DEAD_END
+[04:18.658] Anim: 3F  (blank slot)
+[04:19.151] Turn ended  P1  |  Crystals P0=2650 P1=1420
+
+--- Turn 8  |  Player 0  |  Crystals P0=2650 P1=1420 ---
+[05:44.514] Revealed: P0 (3,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[05:44.514] Dice rolled: 5
+[05:44.523] MSG: Demon Spawn wins!
+[05:47.146] Crystals: P1 1420 → 700 (-720)  [battle]
+[05:48.560] Attack P0(3,4)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P1(3,3)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}  Dice=5  ATK=40 vs DEF=25  → WIN
+[05:48.560] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[05:48.560] Reckoning overlay: P1 "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} badge=25 ATK pill=65 DEF pill=25 mod=+DEF 0 (25+0=25)
+[05:48.561] Anim: 3A  △ P1(3,3)
+[05:48.561] Card destroyed  P1 (3,3) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[05:54.095] Revealed: P0 (4,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[05:54.131] Revealed: P1 (4,0) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[05:54.131] Dice rolled: 1
+[05:54.137] MSG: Bladeshifter morphs: -40 DEF, +40 ATK permanently!
+[05:57.943] Crystals: P0 2650 → 2300 (-350)  [battle]
+[05:59.336] Attack P0(4,3)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(4,0)"Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used}  Dice=1  ATK=40 vs DEF=50  → LOSE
+[05:59.336] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=40 ATK pill=40 DEF pill=20 mod=+ATK 0 (40+0=40)
+[05:59.336] Reckoning overlay: P1 "Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | 1xDEF-used} badge=50 ATK pill=0 DEF pill=50 mod=+DEF 0 (50+0=50)
+[05:59.336] Anim: 3B  △ P0(4,3)
+[05:59.336] Card destroyed  P0 (4,3) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[06:06.257] Turn ended  P0  |  Crystals P0=2300 P1=700
+
+--- Turn 9  |  Player 1  |  Crystals P0=2300 P1=700 ---
+[06:06.852] Mode selected P1: TECH
+[06:07.158] Tech played  P1: "Release Mutagen"
+[06:08.698] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[06:09.098] Tech resolved  P1
+[06:09.998] Mode selected P1: ATTACK
+[06:10.005] MSG: Player 2: tap a character to attack.
+[06:11.706] Dice rolled: 3
+[06:11.746] MSG: Lord of Terror wins!
+[06:15.174] Crystals: P0 2300 → 1900 (-400)  [battle]
+[06:16.571] Attack P1(3,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(3,4)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}  Dice=3  ATK=150 vs DEF=30  → WIN
+[06:16.571] Reckoning overlay: P1 "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[06:16.571] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[06:16.571] Anim: 3A  △ P0(3,4)
+[06:16.571] Card destroyed  P0 (3,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[06:17.063] Mode selected P1: ATTACK
+[06:17.068] MSG: Player 2: tap a character to attack.
+[06:18.814] Revealed: P0 (1,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[06:18.814] Dice rolled: 5
+[06:24.354] Crystals: P1 700 → 280 (-420)  [battle]
+[06:25.748] Attack P1(4,0)"Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | flags:mutagen | 1xDEF-used} → P0(1,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=5  ATK=40 vs DEF=60  → LOSE
+[06:25.748] Reckoning overlay: P1 "Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | flags:mutagen | 1xDEF-used} badge=40 ATK pill=40 DEF pill=10 mod=+ATK 0 (40+0=40)
+[06:25.748] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} badge=60 ATK pill=30 DEF pill=0 mod=+DEF 60 (0+60=60)
+[06:25.748] Anim: 3B  △ P1(4,0)
+[06:25.748] Card destroyed  P1 (4,0) "Bladeshifter" {Unit ATK40 DEF10 | cost 420 | affinity Bio | base 40/10 | flags:mutagen | 1xDEF-used}
+[06:26.247] Turn ended  P1  |  Crystals P0=1900 P1=280
+
+--- Turn 10  |  Player 0  |  Crystals P0=1900 P1=280 ---
+[06:36.699] Revealed: P1 (0,1) "Red Card" {cost 0}
+[06:36.700] Dice rolled: 4
+[06:36.996] MSG: Trap triggered: Red Card!
+[06:39.205] Coin flip: Heads, Tails
+[06:41.935] MSG: Red Card: Heads, Tails.
+[06:41.935] MSG: Not both heads — no effect.
+[06:41.942] Attack P0(1,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} → P1(0,1)"Red Card" {cost 0}  Dice=4  → Unit vs Trap
+[06:41.942] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} badge=30 ATK pill=30 DEF pill=0 mod=+ATK 0 (30+0=30)
+[06:41.942] Anim: 3D  (attacker survives)
+[06:45.727] Revealed: P0 (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[06:45.727] Revealed: P1 (1,3) "Acid Trap Hole" {cost 0}
+[06:45.727] Dice rolled: 5
+[06:46.020] MSG: Trap triggered: Acid Trap Hole!
+[06:48.699] Coin flip: Heads, Tails
+[06:51.455] MSG: Acid Trap Hole: Heads, Tails.
+[06:51.456] Crystals: P0 1900 → 1850 (-50)  [trap]
+[06:52.846] MSG: Acid Trap Hole: 1 head(s) — Player 1 loses 50 Crystals!
+[06:52.850] Attack P0(1,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(1,3)"Acid Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[06:52.850] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=40 ATK pill=40 DEF pill=10 mod=+ATK 0 (40+0=40)
+[06:52.850] Anim: 3D  (attacker survives)
+[06:53.116] Turn ended  P0  |  Crystals P0=1850 P1=280
+
+--- Turn 11  |  Player 1  |  Crystals P0=1850 P1=280 ---
+[06:53.698] Mode selected P1: ATTACK
+[06:53.703] MSG: Player 2: tap a character to attack.
+[06:55.413] Dice rolled: 1
+[06:55.464] MSG: Lord of Terror wins!
+[06:58.097] Crystals: P0 1850 → 1370 (-480)  [battle]
+[06:59.497] Attack P1(3,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(1,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=1  ATK=150 vs DEF=0  → WIN
+[06:59.497] Reckoning overlay: P1 "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[06:59.497] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} badge=0 ATK pill=30 DEF pill=0 mod=+DEF 0 (0+0=0)
+[06:59.497] Anim: 3A  △ P0(1,3)
+[06:59.497] Card destroyed  P0 (1,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[06:59.988] Mode selected P1: ATTACK
+[06:59.992] MSG: Player 2: tap a character to attack.
+[07:01.707] Revealed: P1 (3,1) "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}
+[07:01.708] Dice rolled: 5
+[07:01.714] MSG: Ancient Lich wins!
+[07:04.989] Crystals: P0 1370 → 1020 (-350)  [battle]
+[07:06.383] Attack P1(3,1)"Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} → P0(1,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=5  ATK=60 vs DEF=10  → WIN
+[07:06.383] Reckoning overlay: P1 "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} badge=60 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=60)
+[07:06.383] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=10 ATK pill=40 DEF pill=10 mod=+DEF 0 (10+0=10)
+[07:06.383] Anim: 3A  △ P0(1,2)
+[07:06.383] Card destroyed  P0 (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[07:06.883] Turn ended  P1  |  Crystals P0=1020 P1=280
+
+--- Turn 12  |  Player 0  |  Crystals P0=1020 P1=280 ---
+[07:13.907] Revealed: P0 (2,0) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[07:13.929] Revealed: P1 (2,2) "Cursed Reflection" {cost 500}
+[07:13.929] Dice rolled: 2
+[07:14.209] MSG: Trap triggered: Cursed Reflection!
+[07:16.371] Crystals: P1 280 → 0 (-280)  [trap cost]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1020  P1: 0  |  Turns: 12

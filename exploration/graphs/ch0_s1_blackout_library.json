@@ -2741,7 +2741,7 @@
 						{
 							"action": "play_vn",
 							"key": "",
-							"play_once": true,
+							"play_once": false,
 							"value": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_surveillance_room_invest_7_0.json"
 						},
 						{

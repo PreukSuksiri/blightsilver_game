@@ -193,9 +193,9 @@ func _load_characters() -> void:
 			CharacterData.Rarity.COMMON],
 
 		["Cursed Well", CharacterData.Affinity.CHAOS, 0, 25, 300,
-			CharacterData.AbilityType.NOT_IMPLEMENTED,
+			CharacterData.AbilityType.ATK_BOOST_VS_REVEALED,
 			{"bonus": 15},
-			"At the end of the turn that it's been exposed, +15 ATK",
+			"+15 ATK if it attack an exposed card",
 			CharacterData.Rarity.COMMON],
 
 		["Dark Blob", CharacterData.Affinity.CHAOS, 20, 50, 500,

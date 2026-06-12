@@ -631,7 +631,7 @@
 		"pack_image": "res://assets/textures/cards/booster_pack/booster_pack_unseen_presence.png",
 		"price": 300,
 		"shop_available": true,
-		"unlock_requires_chapter": "res://campaign/scenes/ch1_s1_pre_DEMO_PART1.json"
+		"unlock_requires_chapter": "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json"
 	},
 	{
 		"accent": [

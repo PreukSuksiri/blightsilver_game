@@ -94,7 +94,7 @@ enum AbilityType {
 	LOCK_TARGET_ON_ATTACK,           # Attacked character cannot attack until end of their player's next turn
 	LOCK_SELF_AFTER_ATTACK,          # This card cannot attack on its next available turn
 	LOCK_ATTACKER_ON_DESTROYED,      # Card that destroys this card cannot attack again this turn
-	PERM_DEF_BOOST_PER_ATTACK_SURVIVE, # +N DEF permanently each time this card attacks and survives
+	PERM_DEF_BOOST_PER_ATTACK_SURVIVE, # +N DEF permanently each time this card attacks a unit and survives
 	PERM_ATK_LOSS_PER_ATTACK,        # -N ATK permanently each time this card attacks
 	ATK_ZERO_AFTER_WIN,              # ATK becomes 0 permanently after this card wins a battle
 

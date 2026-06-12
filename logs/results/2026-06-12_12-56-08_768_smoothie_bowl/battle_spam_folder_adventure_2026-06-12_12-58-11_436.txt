@@ -1,0 +1,261 @@
+=== Battle of Spam Folder Adventure ===
+Battle started: 2026-06-12 12:58:11.436
+Game Session of Smoothie Bowl (started 2026-06-12 12:56:08.768)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:14.859] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:34.005] Revealed: P0 (4,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:34.005] Dice rolled: 1
+[00:34.051] MSG: Nothing happens — Dead End.
+[00:35.761] Attack P0(4,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P1(1,1)(empty)  Dice=1  → DEAD_END
+[00:35.761] Anim: 3F  (blank slot)
+[00:39.621] Revealed: P0 (4,3) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:39.621] Dice rolled: 2
+[00:39.636] MSG: Nothing happens — Dead End.
+[00:41.227] Attack P0(4,3)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P1(1,2)(empty)  Dice=2  → DEAD_END
+[00:41.227] Anim: 3F  (blank slot)
+[00:42.218] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:42.823] Mode selected P1: TECH
+[00:43.124] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:44.503] Tech played  P1: "Radar"
+[00:46.043] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:47.283] Revealed: P0 (1,4) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[00:47.286] Tech resolved  P1
+[00:48.154] Mode selected P1: ATTACK
+[00:48.158] MSG: Player 2: tap a character to attack.
+[00:49.850] Revealed: P1 (2,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[00:49.850] Dice rolled: 2
+[00:49.853] MSG: Ice Mage wins!
+[00:53.451] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:54.343] Crystals: P0 5000 → 4450 (-550)  [battle]
+[00:55.738] Attack P1(2,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P0(4,3)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}  Dice=2  ATK=50 vs DEF=35  → WIN
+[00:55.738] Reckoning overlay: P1 "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} badge=50 ATK pill=50 DEF pill=0 mod=+ATK 0 (50+0=50)
+[00:55.738] Reckoning overlay: P0 "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} badge=35 ATK pill=35 DEF pill=35 mod=+DEF 0 (35+0=35)
+[00:55.738] Anim: 3A  △ P0(4,3)
+[00:55.738] Card destroyed  P0 (4,3) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:56.237] Mode selected P1: ATTACK
+[00:56.246] MSG: Player 2: tap a character to attack.
+[00:57.936] Revealed: P1 (2,1) "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}
+[00:57.936] Dice rolled: 3
+[00:57.943] MSG: Blue Mage: Coin flip missed — normal battle.
+[00:57.943] MSG: Blue Mage wins!
+[00:58.009] Coin flip: Tails, Tails
+[01:01.542] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:03.426] Crystals: P0 4450 → 4150 (-300)  [battle]
+[01:04.824] Attack P1(2,1)"Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane} → P0(1,4)"Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}  Dice=3  ATK=35 vs DEF=15  → WIN
+[01:04.824] Reckoning overlay: P1 "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane} badge=35 ATK pill=35 DEF pill=35 mod=+ATK 0 (35+0=35)
+[01:04.824] Reckoning overlay: P0 "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima} badge=15 ATK pill=25 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:04.824] Anim: 3A  △ P0(1,4)
+[01:04.824] Card destroyed  P0 (1,4) "Hairpin Assassin" {Unit ATK25 DEF15 | cost 300 | affinity Anima}
+[01:05.319] Turn ended  P1  |  Crystals P0=4150 P1=4400
+
+--- Turn 3  |  Player 0  |  Crystals P0=4150 P1=4400 ---
+[01:10.281] Revealed: P0 (3,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:10.281] Dice rolled: 2
+[01:10.289] MSG: Demon Spawn wins!
+[01:14.755] Crystals: P1 4400 → 3600 (-800)  [battle]
+[01:16.153] Attack P0(3,4)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P1(2,1)"Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}  Dice=2  ATK=40 vs DEF=35  → WIN
+[01:16.153] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[01:16.153] Reckoning overlay: P1 "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane} badge=35 ATK pill=35 DEF pill=35 mod=+DEF 0 (35+0=35)
+[01:16.153] Anim: 3A  △ P1(2,1)
+[01:16.153] Card destroyed  P1 (2,1) "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}
+[01:18.803] Dice rolled: 4
+[01:18.811] MSG: Mad Raccoon wins!
+[01:21.546] Crystals: P1 3600 → 3200 (-400)  [battle]
+[01:22.945] Attack P0(4,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P1(2,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=4  ATK=30 vs DEF=0  → WIN
+[01:22.945] Reckoning overlay: P0 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[01:22.945] Reckoning overlay: P1 "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} badge=0 ATK pill=50 DEF pill=0 mod=+DEF 0 (0+0=0)
+[01:22.945] Anim: 3A  △ P1(2,0)
+[01:22.945] Card destroyed  P1 (2,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[01:23.975] Turn ended  P0  |  Crystals P0=4150 P1=3200
+
+--- Turn 4  |  Player 1  |  Crystals P0=4150 P1=3200 ---
+[01:24.568] Mode selected P1: TECH
+[01:24.872] Tech played  P1: "Tease"
+[01:26.417] MSG: Opponent must choose and reveal 1 of their squares.
+[01:26.586] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[01:31.552] MSG: Tease: Choose a face-down unit.
+[01:32.094] MSG: Tease: Choose a face-down unit.
+[01:35.697] Revealed: P0 (2,0) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[01:35.697] MSG: Tease: Opponent revealed Plant-29.
+[01:35.702] Tech resolved  P1
+[01:36.591] Mode selected P1: ATTACK
+[01:36.596] MSG: Player 2: tap a character to attack.
+[01:38.294] Revealed: P1 (0,1) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[01:38.294] Dice rolled: 5
+[01:38.303] MSG: Mind Flayer wins!
+[01:41.883] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:42.780] Crystals: P0 4150 → 3250 (-900)  [battle]
+[01:44.174] Attack P1(0,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(2,0)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}  Dice=5  ATK=100 vs DEF=85  → WIN
+[01:44.174] Reckoning overlay: P1 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} badge=100 ATK pill=100 DEF pill=70 mod=+ATK 0 (100+0=100)
+[01:44.174] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=85 ATK pill=45 DEF pill=85 mod=+DEF 0 (85+0=85)
+[01:44.174] Anim: 3A  △ P0(2,0)
+[01:44.174] Card destroyed  P0 (2,0) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[01:44.671] Mode selected P1: ATTACK
+[01:44.676] MSG: Player 2: tap a character to attack.
+[01:46.381] Revealed: P1 (2,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[01:46.382] Dice rolled: 2
+[01:46.389] MSG: Pyromancer wins!
+[01:49.979] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:50.863] Crystals: P0 3250 → 2850 (-400)  [battle]
+[01:52.262] Attack P1(2,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(3,4)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}  Dice=2  ATK=80 vs DEF=30  → WIN
+[01:52.262] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=80 ATK pill=80 DEF pill=0 mod=+ATK 0 (80+0=80)
+[01:52.262] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:52.262] Anim: 3A  △ P0(3,4)
+[01:52.262] Card destroyed  P0 (3,4) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:52.758] Turn ended  P1  |  Crystals P0=2850 P1=3200
+
+--- Turn 5  |  Player 0  |  Crystals P0=2850 P1=3200 ---
+[02:02.040] Tech played  P0: "Spy"
+[02:03.569] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[02:03.757] Revealed: P1 (2,2) "Explosive Barrels" {cost 0}
+[02:03.907] Tech resolved  P0
+[02:20.341] Dice rolled: 5
+[02:20.353] MSG: Mad Raccoon wins!
+[02:23.568] Crystals: P1 3200 → 2300 (-900)  [battle]
+[02:24.968] Attack P0(4,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P1(2,4)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=5  ATK=30 vs DEF=0  → WIN
+[02:24.968] Reckoning overlay: P0 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[02:24.968] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=0 ATK pill=80 DEF pill=0 mod=+DEF 0 (0+0=0)
+[02:24.968] Anim: 3A  △ P1(2,4)
+[02:24.968] Card destroyed  P1 (2,4) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[02:29.009] Revealed: P0 (3,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:29.050] Revealed: P1 (4,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[02:29.050] Dice rolled: 5
+[02:33.610] Crystals: P0 2850 → 2450 (-400)  [battle]
+[02:35.005] Attack P0(3,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(4,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=5  ATK=40 vs DEF=45  → LOSE
+[02:35.005] Reckoning overlay: P0 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[02:35.005] Reckoning overlay: P1 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[02:35.005] Anim: 3B  △ P0(3,1)
+[02:35.005] Card destroyed  P0 (3,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[02:37.122] Turn ended  P0  |  Crystals P0=2450 P1=2300
+
+--- Turn 6  |  Player 1  |  Crystals P0=2450 P1=2300 ---
+[02:37.726] Mode selected P1: TECH
+[02:38.035] Tech played  P1: "Bribe"
+[02:39.571] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[02:46.542] Revealed: P0 (4,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[02:46.542] Crystals: P0 2450 → 3150 (+700)  [ability]
+[02:46.544] MSG: Bribe: Player 1 revealed Fujin and received 700 Crystals.
+[02:46.549] Tech resolved  P1
+[02:47.443] Mode selected P1: ATTACK
+[02:47.449] MSG: Player 2: tap a character to attack.
+[02:49.147] Dice rolled: 1
+[02:49.157] MSG: Mind Flayer wins!
+[02:52.588] Crystals: P0 3150 → 2700 (-450)  [battle]
+[02:52.747] MSG: [DEBUG] Bot Player timed out — ending turn.
+[02:53.990] Attack P1(0,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(4,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=1  ATK=100 vs DEF=40  → WIN
+[02:53.990] Reckoning overlay: P1 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} badge=100 ATK pill=100 DEF pill=70 mod=+ATK 0 (100+0=100)
+[02:53.990] Reckoning overlay: P0 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=40 ATK pill=35 DEF pill=40 mod=+DEF 0 (40+0=40)
+[02:53.990] Anim: 3A  △ P0(4,2)
+[02:53.990] Card destroyed  P0 (4,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[02:54.486] Mode selected P1: ATTACK
+[02:54.490] MSG: Player 2: tap a character to attack.
+[02:56.189] Dice rolled: 5
+[02:56.196] MSG: Aerial the Battlemage wins!
+[02:59.089] Crystals: P0 2700 → 2440 (-260)  [battle]
+[02:59.787] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:00.484] Attack P1(4,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P0(4,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=5  ATK=50 vs DEF=15  → WIN
+[03:00.484] Reckoning overlay: P1 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[03:00.484] Reckoning overlay: P0 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[03:00.484] Anim: 3A  △ P0(4,0)
+[03:00.484] Card destroyed  P0 (4,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[03:00.985] Turn ended  P1  |  Crystals P0=2440 P1=2300
+
+--- Turn 7  |  Player 0  |  Crystals P0=2440 P1=2300 ---
+[03:21.107] Tech played  P0: "Tease"
+[03:22.641] MSG: Opponent must choose and reveal 1 of their squares.
+[03:22.642] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[03:23.047] Revealed: P1 (4,0) "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}
+[03:23.047] MSG: Tease: Opponent revealed Blue Mage.
+[03:23.156] Tech resolved  P0
+[03:30.708] Revealed: P0 (1,1) "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine}
+[03:30.709] Dice rolled: 1
+[03:30.717] MSG: Sniping Fairy wins!
+[03:34.667] Crystals: P1 2300 → 1500 (-800)  [battle]
+[03:36.072] Attack P0(1,1)"Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} → P1(4,0)"Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}  Dice=1  ATK=40 vs DEF=35  → WIN
+[03:36.072] Reckoning overlay: P0 "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine} badge=40 ATK pill=40 DEF pill=20 mod=+ATK 0 (40+0=40)
+[03:36.072] Reckoning overlay: P1 "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane} badge=35 ATK pill=35 DEF pill=35 mod=+DEF 0 (35+0=35)
+[03:36.072] Anim: 3A  △ P1(4,0)
+[03:36.072] Card destroyed  P1 (4,0) "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}
+[04:00.363] MSG: Tap 2 material card(s) on the field.
+[04:00.480] MSG: 1 more material(s) needed.
+[04:01.096] Crystals: P0 2440 → 1940 (-500)  [union]
+[04:01.136] Revealed: P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[04:01.136] Union summoned P0: "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} from "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine | attacked}
+[04:01.136] MSG: Player 1 summoned [Diamond Unicorn] using: "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine | face-down}, "Sniping Fairy" {Unit ATK40 DEF20 | cost 350 | affinity Divine | attacked}
+[04:07.220] Dice rolled: 5
+[04:07.282] MSG: Both cards are destroyed!
+[04:11.347] Crystals: P1 1500 → 750 (-750)  [battle]
+[04:12.753] Attack P0(0,2)"Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} → P1(4,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=5  ATK=45 vs DEF=45  → TIE
+[04:12.753] Reckoning overlay: P0 "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine} badge=45 ATK pill=30 DEF pill=35 mod=+ATK 15 (30+15=45)
+[04:12.753] Reckoning overlay: P1 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[04:12.753] Anim: 3C  △ P0(0,2) + △ P1(4,2)
+[04:12.753] Card destroyed  P0 (0,2) "Diamond Unicorn" {Union ATK30 DEF35 | destroy-cost 0 | summon-cost 500 | affinity Divine}
+[04:12.753] Card destroyed  P1 (4,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:15.940] Turn ended  P0  |  Crystals P0=1940 P1=750
+
+--- Turn 8  |  Player 1  |  Crystals P0=1940 P1=750 ---
+[04:16.541] Mode selected P1: ATTACK
+[04:16.544] MSG: Player 2: tap a character to attack.
+[04:18.247] Dice rolled: 2
+[04:18.271] MSG: Nothing happens — Dead End.
+[04:19.972] Attack P1(0,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(1,1)(empty)  Dice=2  → DEAD_END
+[04:19.972] Anim: 3F  (blank slot)
+[04:20.469] Mode selected P1: ATTACK
+[04:20.471] MSG: Player 2: tap a character to attack.
+[04:22.180] Revealed: P1 (1,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[04:22.180] Dice rolled: 3
+[04:22.196] MSG: Nothing happens — Dead End.
+[04:25.098] Attack P1(1,3)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane} → P0(1,0)(empty)  Dice=3  → DEAD_END
+[04:25.098] Anim: 3F  (blank slot)
+[04:25.598] Turn ended  P1  |  Crystals P0=1940 P1=750
+
+--- Turn 9  |  Player 0  |  Crystals P0=1940 P1=750 ---
+[04:34.063] Revealed: P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[04:34.063] Dice rolled: 1
+[04:34.071] MSG: Grand Fort Archer wins!
+[04:37.747] Crystals: P1 750 → 350 (-400)  [battle]
+[04:39.144] Attack P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P1(1,3)"Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}  Dice=1  ATK=30 vs DEF=15  → WIN
+[04:39.144] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[04:39.144] Reckoning overlay: P1 "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[04:39.144] Anim: 3A  △ P1(1,3)
+[04:39.145] Card destroyed  P1 (1,3) "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane}
+[04:47.795] Turn ended  P0  |  Crystals P0=1940 P1=350
+
+--- Turn 10  |  Player 1  |  Crystals P0=1940 P1=350 ---
+[04:48.391] Mode selected P1: ATTACK
+[04:48.395] MSG: Player 2: tap a character to attack.
+[04:50.098] Dice rolled: 5
+[04:50.104] MSG: Mind Flayer wins!
+[04:53.688] MSG: [DEBUG] Bot Player timed out — ending turn.
+[04:54.488] Crystals: P0 1940 → 1660 (-280)  [battle]
+[04:55.885] Attack P1(0,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=5  ATK=150 vs DEF=20  → WIN
+[04:55.885] Reckoning overlay: P1 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} badge=150 ATK pill=100 DEF pill=70 mod=+ATK 50 (100+50=150)
+[04:55.885] Reckoning overlay: P0 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:55.885] Anim: 3A  △ P0(2,1)
+[04:55.885] Card destroyed  P0 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[04:56.379] Mode selected P1: ATTACK
+[04:56.381] MSG: Player 2: tap a character to attack.
+[04:58.093] Revealed: P1 (3,1) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[04:58.093] Dice rolled: 1
+[04:58.113] MSG: Nothing happens — Dead End.
+[04:59.878] Attack P1(3,1)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P0(4,1)(empty)  Dice=1  → DEAD_END
+[04:59.879] Anim: 3F  (blank slot)
+[05:00.377] Turn ended  P1  |  Crystals P0=1660 P1=350
+
+--- Turn 11  |  Player 0  |  Crystals P0=1660 P1=350 ---
+[05:04.449] Revealed: P0 (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[05:04.449] Dice rolled: 3
+[05:04.455] MSG: Grand Fort Mauler wins!
+[05:07.191] Crystals: P1 350 → 0 (-350)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1660  P1: 0  |  Turns: 11

@@ -93,7 +93,7 @@
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
 		"fade_color": "#000000",
@@ -343,7 +343,7 @@
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
 		"fade_color": "#000000",
@@ -407,7 +407,7 @@
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
 		"speaker": "Kelly",

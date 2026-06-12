@@ -1550,12 +1550,20 @@ func _on_chat_character_selected(char_data: Dictionary) -> void:
 			return
 		_play_vn(vn_path, done_cb)
 		return
-	var after_actions := func() -> void:
-		_execute_spot_actions(actions, done_cb)
 	if vn_path.is_empty():
 		_execute_spot_actions(actions, done_cb)
 		return
-	_play_vn(vn_path, after_actions)
+	ExplorationManager.stage_spot_action_resume(
+		node_id, actions, 0, "char_talk_after", {
+			"play_once": play_once,
+			"vn_path": vn_path,
+			"remove_after": remove_after,
+			"char_index": char_index,
+		})
+	var after_vn := func() -> void:
+		ExplorationManager.clear_spot_action_resume()
+		_execute_spot_actions(actions, done_cb)
+	_play_vn(vn_path, after_vn)
 
 func _flash_empty_chat() -> void:
 	if _chat_empty_tween and _chat_empty_tween.is_valid():
@@ -3333,6 +3341,9 @@ func _handle_post_battle_result() -> void:
 			if resume_tag == "node_vn_after" and node != null:
 				var meta: Dictionary = resume.get("meta", {}) as Dictionary
 				call_deferred("_resume_node_vn_after_battle", resume_actions, from_index, node, meta)
+			elif resume_tag == "char_talk_after":
+				var meta: Dictionary = resume.get("meta", {}) as Dictionary
+				call_deferred("_resume_char_talk_after_battle", resume_actions, from_index, meta)
 			else:
 				call_deferred("_resume_spot_actions_after_battle", resume_actions, from_index)
 
@@ -3636,6 +3647,31 @@ func _resume_node_vn_after_battle(
 		if bool(meta.get("play_once", false)):
 			ExplorationManager.mark_vn_played(str(meta.get("vn_path", "")))
 		_on_vn_finished(node)
+	if from_index <= 0:
+		ExplorationManager.reset_pending_play_once_paths()
+	ExplorationManager.set_pending_spot_on_complete(done_cb)
+	_run_spot_actions_from_index(actions, from_index, _spot_actions_queue_complete)
+
+func _resume_char_talk_after_battle(
+		actions: Array,
+		from_index: int,
+		meta: Dictionary = {}) -> void:
+	var done_cb := func() -> void:
+		var node: ExplorationNode = ExplorationManager.current_node
+		if node != null:
+			_compass_set_visible(true)
+		if bool(meta.get("play_once", false)):
+			var vp: String = str(meta.get("vn_path", "")).strip_edges()
+			if not vp.is_empty():
+				ExplorationManager.mark_vn_played(vp)
+		if bool(meta.get("remove_after", false)):
+			var ci: int = int(meta.get("char_index", -1))
+			var nid: String = ExplorationManager.current_node_id
+			if ci >= 0:
+				ExplorationManager.mark_char_talked(nid, ci)
+				if node != null:
+					_rebuild_who_is_here(node)
+		_refresh_contextual_hud_glows()
 	if from_index <= 0:
 		ExplorationManager.reset_pending_play_once_paths()
 	ExplorationManager.set_pending_spot_on_complete(done_cb)

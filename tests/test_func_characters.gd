@@ -553,6 +553,8 @@ func _moon_tribe_marksman(A, AB) -> void:
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	att.face_up = true
 	GameState.grids[0][0][0] = att
+	BattleResolver.calculate_field_bonuses(0)
+	assert_eq(att.get_effective_atk(), 25, "TC-FUNC-Moon-Tribe-Marksman-001a: card shows 25 ATK without Moon ally")
 	var r1 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
 	assert_eq(r1.attacker_atk_used, 25, "TC-FUNC-Moon-Tribe-Marksman-001: -10 ATK without Moon ally")
 	# With Moon ally: no penalty
@@ -562,6 +564,8 @@ func _moon_tribe_marksman(A, AB) -> void:
 	var moon_ally := _make_char("Moon Rover", 15, 20, 200, A.COSMIC)
 	moon_ally.face_up = true
 	GameState.grids[0][0][1] = moon_ally
+	BattleResolver.calculate_field_bonuses(0)
+	assert_eq(att.get_effective_atk(), 35, "TC-FUNC-Moon-Tribe-Marksman-001b: card shows 35 ATK with Moon ally")
 	var r2 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
 	assert_eq(r2.attacker_atk_used, 35, "TC-FUNC-Moon-Tribe-Marksman-001b: no penalty with Moon ally")
 

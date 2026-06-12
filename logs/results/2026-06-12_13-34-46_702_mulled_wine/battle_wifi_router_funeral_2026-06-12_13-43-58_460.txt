@@ -1,0 +1,327 @@
+=== Battle of WiFi Router Funeral ===
+Battle started: 2026-06-12 13:43:58.460
+Game Session of Mulled Wine (started 2026-06-12 13:34:46.702)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.150] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:17.667] Revealed: P0 (1,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:17.692] Revealed: P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic}
+[00:17.692] Dice rolled: 3
+[00:17.699] MSG: Scythe Shark wins!
+[00:20.532] Crystals: P1 5000 → 4800 (-200)  [battle]
+[00:21.928] Attack P0(1,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P1(1,1)"Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending}  Dice=3  ATK=35 vs DEF=25  → WIN
+[00:21.928] Reckoning overlay: P0 "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} badge=35 ATK pill=35 DEF pill=35 mod=+ATK 0 (35+0=35)
+[00:21.929] Reckoning overlay: P1 "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending} badge=25 ATK pill=25 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:21.929] Anim: 3A  △ P1(1,1)
+[00:21.929] Card destroyed  P1 (1,1) "Striker Comet" {Unit ATK25 DEF25 | cost 200 | affinity Cosmic | flags:expose_destroy_pending}
+[00:24.630] Revealed: P0 (4,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:24.677] Revealed: P1 (1,4) "Self-destruct" {cost 0}
+[00:24.677] Dice rolled: 1
+[00:24.926] MSG: Trap triggered: Self-destruct!
+[00:28.488] Target prompt: "Self-destruct: Choose 1 of your characters for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[00:28.880] MSG: Scout Probe: +10 ATK until end of next turn, then destroyed.
+[00:29.089] Attack P0(4,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P1(1,4)"Self-destruct" {cost 0}  Dice=1  → Unit vs Trap
+[00:29.089] Reckoning overlay: P0 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[00:29.089] Anim: 3D  (attacker survives)
+[00:29.943] Turn ended  P0  |  Crystals P0=5000 P1=4800
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4800 ---
+[00:30.535] Mode selected P1: TECH
+[00:30.852] Tech played  P1: "Spy"
+[00:32.409] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:32.819] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:32.824] Tech resolved  P1
+[00:33.741] Mode selected P1: ATTACK
+[00:33.742] MSG: Player 2: tap a character to attack.
+[00:35.464] Revealed: P1 (4,4) "Scout Probe" {Unit ATK50 DEF50 | cost 700 | affinity Cosmic | base 40/50 | buff +tempATK10 | flags:self_destruct_next_turn}
+[00:35.465] Dice rolled: 5
+[00:35.473] MSG: Scout Probe wins!
+[00:39.052] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:39.961] Crystals: P0 5000 → 4450 (-550)  [battle]
+[00:41.352] Attack P1(4,4)"Scout Probe" {Unit ATK50 DEF50 | cost 700 | affinity Cosmic | base 40/50 | buff +tempATK10 | flags:self_destruct_next_turn} → P0(1,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}  Dice=5  ATK=50 vs DEF=35  → WIN
+[00:41.352] Reckoning overlay: P1 "Scout Probe" {Unit ATK50 DEF50 | cost 700 | affinity Cosmic | base 40/50 | buff +tempATK10 | flags:self_destruct_next_turn} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[00:41.352] Reckoning overlay: P0 "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} badge=35 ATK pill=35 DEF pill=35 mod=+DEF 0 (35+0=35)
+[00:41.352] Anim: 3A  △ P0(1,1)
+[00:41.352] Card destroyed  P0 (1,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:41.354] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[00:41.860] Mode selected P1: ATTACK
+[00:41.863] MSG: Player 2: tap a character to attack.
+[00:43.590] Revealed: P1 (3,4) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:43.591] Dice rolled: 1
+[00:43.595] MSG: Parom the Smuggler wins!
+[00:47.181] MSG: [DEBUG] Bot Player timed out — ending turn.
+[00:48.088] Crystals: P0 4450 → 4190 (-260)  [battle]
+[00:49.485] Attack P1(3,4)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P0(4,0)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=1  ATK=30 vs DEF=15  → WIN
+[00:49.485] Reckoning overlay: P1 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[00:49.485] Reckoning overlay: P0 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[00:49.485] Anim: 3A  △ P0(4,0)
+[00:49.485] Card destroyed  P0 (4,0) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:49.988] MSG: Scout Probe is destroyed by self-destruct trap!
+[00:49.988] Crystals: P1 4800 → 4100 (-700)  [card lost]
+[00:49.989] Card destroyed  P1 (4,4) "Scout Probe" {Unit ATK50 DEF50 | cost 700 | affinity Cosmic | base 40/50 | buff +tempATK10 | attacked}
+[00:49.990] Turn ended  P1  |  Crystals P0=4190 P1=4100
+
+--- Turn 3  |  Player 0  |  Crystals P0=4190 P1=4100 ---
+[02:37.760] Revealed: P0 (4,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[02:37.760] Crystals: P1 4100 → 4140 (+40)  [ability]
+[02:37.763] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[02:37.763] Dice rolled: 5
+[02:37.776] MSG: Fujin wins!
+[02:40.417] Crystals: P1 4140 → 3840 (-300)  [battle]
+[02:41.812] Attack P0(4,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P1(3,4)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=5  ATK=35 vs DEF=20  → WIN
+[02:41.812] Reckoning overlay: P0 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=35 ATK pill=35 DEF pill=40 mod=+ATK 0 (35+0=35)
+[02:41.812] Reckoning overlay: P1 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:41.812] Anim: 3A  △ P1(3,4)
+[02:41.812] Card destroyed  P1 (3,4) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:49.017] Revealed: P0 (0,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:49.046] Revealed: P1 (2,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:49.046] Dice rolled: 2
+[02:49.051] MSG: Shepherd Detective wins!
+[02:52.497] Crystals: P1 3840 → 3540 (-300)  [battle]
+[02:53.892] Attack P0(0,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,4)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=2  ATK=40 vs DEF=20  → WIN
+[02:53.892] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[02:53.892] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:53.892] Anim: 3A  △ P1(2,4)
+[02:53.892] Card destroyed  P1 (2,4) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:53.898] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[02:54.690] Revealed: P1 (0,2) "Foul Gas" {cost 0}
+[02:54.690] MSG: Revealed: Foul Gas
+[02:57.121] Turn ended  P0  |  Crystals P0=4190 P1=3540
+
+--- Turn 4  |  Player 1  |  Crystals P0=4190 P1=3540 ---
+[02:57.704] Mode selected P1: TECH
+[02:58.007] Crystals: P1 3540 → 2940 (-600)  [tech cost]
+[02:59.393] Tech played  P1: "Radar"
+[03:00.940] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[03:01.757] Revealed: P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[03:02.139] Tech resolved  P1
+[03:03.044] Mode selected P1: ATTACK
+[03:03.046] MSG: Player 2: tap a character to attack.
+[03:04.746] Revealed: P1 (0,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[03:04.746] Dice rolled: 2
+[03:04.750] MSG: Both cards are destroyed!
+[03:07.654] Crystals: P1 2940 → 2540 (-400)  [battle]
+[03:08.340] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:09.048] Crystals: P0 4190 → 3740 (-450)  [battle]
+[03:10.436] Attack P1(0,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(4,2)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=2  ATK=40 vs DEF=40  → TIE
+[03:10.436] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[03:10.436] Reckoning overlay: P0 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=40 ATK pill=35 DEF pill=40 mod=+DEF 0 (40+0=40)
+[03:10.436] Anim: 3C  △ P1(0,0) + △ P0(4,2)
+[03:10.436] Card destroyed  P1 (0,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[03:10.436] Card destroyed  P0 (4,2) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[03:10.935] Mode selected P1: ATTACK
+[03:10.942] MSG: Player 2: tap a character to attack.
+[03:12.639] Revealed: P1 (1,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[03:12.639] Dice rolled: 1
+[03:12.645] MSG: Moon Tribe Marksman wins!
+[03:16.231] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:17.129] Crystals: P0 3740 → 3340 (-400)  [battle]
+[03:18.528] Attack P1(1,3)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} → P0(0,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=1  ATK=35 vs DEF=25  → WIN
+[03:18.528] Reckoning overlay: P1 "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} badge=35 ATK pill=35 DEF pill=25 mod=+ATK 0 (35+0=35)
+[03:18.528] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[03:18.528] Anim: 3A  △ P0(0,3)
+[03:18.528] Card destroyed  P0 (0,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[03:19.026] Turn ended  P1  |  Crystals P0=3340 P1=2540
+
+--- Turn 5  |  Player 0  |  Crystals P0=3340 P1=2540 ---
+[06:55.937] Revealed: P0 (3,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[06:55.937] Dice rolled: 5
+[06:55.943] MSG: Big Thug wins!
+[06:59.653] Crystals: P1 2540 → 2240 (-300)  [battle]
+[07:01.056] Attack P0(3,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(1,3)"Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}  Dice=5  ATK=40 vs DEF=25  → WIN
+[07:01.056] Reckoning overlay: P0 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[07:01.056] Reckoning overlay: P1 "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic} badge=25 ATK pill=35 DEF pill=25 mod=+DEF 0 (25+0=25)
+[07:01.056] Anim: 3A  △ P1(1,3)
+[07:01.056] Card destroyed  P1 (1,3) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[07:10.561] Revealed: P0 (1,2) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[07:10.603] Revealed: P1 (2,2) "Flame Trap" {cost 250}
+[07:10.603] Dice rolled: 3
+[07:10.907] MSG: Trap triggered: Flame Trap!
+[07:13.568] Crystals: P1 2240 → 1990 (-250)  [trap cost]
+[07:14.959] MSG: Spike Trap: Grand Fort Mauler permanently loses 10 ATK!
+[07:14.963] Attack P0(1,2)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(2,2)"Flame Trap" {cost 250}  Dice=3  → Unit vs Trap
+[07:14.963] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=40 ATK pill=40 DEF pill=10 mod=+ATK 0 (40+0=40)
+[07:14.963] Anim: 3D  (attacker survives)
+[07:16.062] Turn ended  P0  |  Crystals P0=3340 P1=1990
+
+--- Turn 6  |  Player 1  |  Crystals P0=3340 P1=1990 ---
+[07:16.638] Mode selected P1: TECH
+[07:16.946] Tech played  P1: "Tease"
+[07:18.500] MSG: Opponent must choose and reveal 1 of their squares.
+[07:18.644] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[07:23.281] Revealed: P0 (2,0) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[07:23.282] MSG: Tease: Opponent revealed Plant-29.
+[07:23.287] Tech resolved  P1
+[07:24.174] Mode selected P1: ATTACK
+[07:24.176] MSG: Player 2: tap a character to attack.
+[07:25.878] Revealed: P1 (3,3) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic}
+[07:25.878] Dice rolled: 1
+[07:25.885] MSG: Neptune Diver wins!
+[07:28.930] Crystals: P0 3340 → 2990 (-350)  [battle]
+[07:29.471] MSG: [DEBUG] Bot Player timed out — ending turn.
+[07:30.334] Attack P1(3,3)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} → P0(1,2)"Grand Fort Mauler" {Unit ATK30 DEF10 | cost 350 | affinity Anima | base 30/10}  Dice=1  ATK=20 vs DEF=10  → WIN
+[07:30.334] Reckoning overlay: P1 "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[07:30.334] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK30 DEF10 | cost 350 | affinity Anima | base 30/10} badge=10 ATK pill=30 DEF pill=10 mod=+DEF 0 (10+0=10)
+[07:30.334] Anim: 3A  △ P0(1,2)
+[07:30.334] Card destroyed  P0 (1,2) "Grand Fort Mauler" {Unit ATK30 DEF10 | cost 350 | affinity Anima | base 30/10}
+[07:30.823] Mode selected P1: ATTACK
+[07:30.832] MSG: Player 2: tap a character to attack.
+[07:32.530] Revealed: P1 (4,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[07:32.530] Dice rolled: 5
+[07:32.535] MSG: Both cards are destroyed!
+[07:36.122] MSG: [DEBUG] Bot Player timed out — ending turn.
+[07:36.941] Crystals: P1 1990 → 1690 (-300)  [battle]
+[07:38.330] Crystals: P0 2990 → 2690 (-300)  [battle]
+[07:39.718] Attack P1(4,3)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → P0(0,2)"Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}  Dice=5  ATK=20 vs DEF=20  → TIE
+[07:39.718] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[07:39.718] Reckoning overlay: P0 "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[07:39.719] Anim: 3C  △ P1(4,3) + △ P0(0,2)
+[07:39.719] Card destroyed  P1 (4,3) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[07:39.719] Card destroyed  P0 (0,2) "Ponycorn" {Unit ATK25 DEF20 | cost 300 | affinity Divine}
+[07:40.221] Turn ended  P1  |  Crystals P0=2690 P1=1690
+
+--- Turn 7  |  Player 0  |  Crystals P0=2690 P1=1690 ---
+[07:40.283] Coin flip: Tails
+[07:42.975] MSG: Plant-29: Tails! Mutagen on Neptune Diver.
+[07:52.374] Dice rolled: 4
+[07:52.381] MSG: Big Thug wins!
+[07:55.200] Crystals: P1 1690 → 1490 (-200)  [battle]
+[07:56.599] Attack P0(3,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(3,3)"Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | flags:mutagen}  Dice=4  ATK=40 vs DEF=10  → WIN
+[07:56.599] Reckoning overlay: P0 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[07:56.599] Reckoning overlay: P1 "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | flags:mutagen} badge=10 ATK pill=20 DEF pill=10 mod=+DEF 0 (10+0=10)
+[07:56.599] Anim: 3A  △ P1(3,3)
+[07:56.599] Card destroyed  P1 (3,3) "Neptune Diver" {Unit ATK20 DEF10 | cost 200 | affinity Cosmic | flags:mutagen}
+[07:58.816] Tech played  P0: "Spy"
+[08:00.364] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[08:00.646] Tech resolved  P0
+[08:03.803] Revealed: P1 (2,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[08:03.803] Dice rolled: 2
+[08:03.806] MSG: Plant-29 wins!
+[08:06.493] Crystals: P1 1490 → 1290 (-200)  [battle]
+[08:07.892] Attack P0(2,0)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(2,0)"Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}  Dice=2  ATK=45 vs DEF=10  → WIN
+[08:07.892] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[08:07.892] Reckoning overlay: P1 "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic} badge=10 ATK pill=10 DEF pill=10 mod=+DEF 0 (10+0=10)
+[08:07.892] Anim: 3A  △ P1(2,0)
+[08:07.892] Card destroyed  P1 (2,0) "Miner Probe" {Unit ATK10 DEF10 | cost 200 | affinity Cosmic}
+[08:07.908] Turn ended  P0  |  Crystals P0=2690 P1=1290
+
+--- Turn 8  |  Player 1  |  Crystals P0=2690 P1=1290 ---
+[08:09.985] Crystals: P1 1290 → 790 (-500)  [union]
+[08:10.018] Revealed: P1 (3,2) "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic}
+[08:10.018] Union summoned P1: "Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} from "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}, "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic | face-down}
+[08:10.019] Revealed: P1 (0,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 600 (base 300) | affinity Cosmic}
+[08:10.019] MSG: Moon Tribe Shaman revived Moon Tribe Twin Blader (cost doubled to 600)!
+[08:10.019] MSG: Player 2 summoned [Moon Tribe Shaman] using: "Moon Rover" {Unit ATK15 DEF20 | cost 200 | affinity Cosmic | face-down}, "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic | face-down}
+[08:13.418] Mode selected P1: ATTACK
+[08:13.422] MSG: Player 2: tap a character to attack.
+[08:15.126] Dice rolled: 3
+[08:15.151] MSG: Nothing happens — Dead End.
+[08:18.585] Coin flip: Heads
+[08:18.721] MSG: [DEBUG] Bot Player timed out — ending turn.
+[08:21.322] MSG: Moon Tribe Twin Blader: Coin flip heads — extra attack!
+[08:21.323] Attack P1(0,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 600 (base 300) | affinity Cosmic} → P0(4,4)(empty)  Dice=3  → DEAD_END
+[08:21.323] Anim: 3F  (blank slot)
+[08:21.821] Mode selected P1: ATTACK
+[08:21.824] MSG: Player 2: tap a character to attack.
+[08:23.530] Dice rolled: 5
+[08:23.747] MSG: Nothing happens — Dead End.
+[08:26.959] Attack P1(3,2)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic} → P0(1,4)(empty)  Dice=5  → DEAD_END
+[08:26.959] Anim: 3F  (blank slot)
+[08:27.450] Turn ended  P1  |  Crystals P0=2690 P1=790
+
+--- Turn 9  |  Player 0  |  Crystals P0=2690 P1=790 ---
+[08:27.518] Coin flip: Heads
+[08:30.235] MSG: Plant-29: Heads! Venom on Moon Tribe Shaman.
+[11:01.453] Dice rolled: 2
+[11:01.468] MSG: Big Thug wins!
+[11:04.113] Crystals: P1 790 → 190 (-600)  [battle]
+[11:05.506] Attack P0(3,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(0,2)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 600 (base 300) | affinity Cosmic}  Dice=2  ATK=40 vs DEF=20  → WIN
+[11:05.506] Reckoning overlay: P0 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=35 mod=+ATK 0 (40+0=40)
+[11:05.506] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 600 (base 300) | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[11:05.506] Anim: 3A  △ P1(0,2)
+[11:05.506] Card destroyed  P1 (0,2) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 600 (base 300) | affinity Cosmic}
+[11:16.673] Tech played  P0: "Tease"
+[11:18.215] MSG: Opponent must choose and reveal 1 of their squares.
+[11:18.216] MSG: Tease: No face-down units to reveal — effect cancelled.
+[11:18.322] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[11:33.197] Turn ended  P0  |  Crystals P0=2690 P1=190
+
+--- Turn 10  |  Player 1  |  Crystals P0=2690 P1=190 ---
+[11:33.783] Mode selected P1: ATTACK
+[11:33.785] MSG: Player 2: tap a character to attack.
+[11:35.493] Dice rolled: 3
+[11:35.542] MSG: Nothing happens — Dead End.
+[11:37.365] Attack P1(3,2)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | flags:venom} → P0(0,1)(empty)  Dice=3  → DEAD_END
+[11:37.365] Anim: 3F  (blank slot)
+[11:37.858] Turn ended  P1  |  Crystals P0=2690 P1=190
+
+--- Turn 11  |  Player 0  |  Crystals P0=2690 P1=190 ---
+[11:37.898] Coin flip: Heads
+[11:40.646] MSG: Plant-29: Heads! Venom on Moon Tribe Shaman.
+[11:58.582] Dice rolled: 3
+[11:58.609] MSG: Nothing happens — Dead End.
+[12:00.173] Attack P0(3,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(1,2)(empty)  Dice=3  → DEAD_END
+[12:00.173] Anim: 3F  (blank slot)
+[12:01.518] Turn ended  P0  |  Crystals P0=2690 P1=190
+
+--- Turn 12  |  Player 1  |  Crystals P0=2690 P1=190 ---
+[12:02.106] Mode selected P1: ATTACK
+[12:02.112] MSG: Player 2: tap a character to attack.
+[12:03.813] Dice rolled: 3
+[12:03.861] MSG: Nothing happens — Dead End.
+[12:05.863] Attack P1(3,2)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | flags:venom} → P0(1,0)(empty)  Dice=3  → DEAD_END
+[12:05.863] Anim: 3F  (blank slot)
+[12:06.358] Turn ended  P1  |  Crystals P0=2690 P1=190
+
+--- Turn 13  |  Player 0  |  Crystals P0=2690 P1=190 ---
+[12:06.399] Coin flip: Heads
+[12:09.147] MSG: Plant-29: Heads! Venom on Moon Tribe Shaman.
+[12:21.195] Dice rolled: 4
+[12:21.213] MSG: Nothing happens — Dead End.
+[12:22.792] Attack P0(3,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(0,3)(empty)  Dice=4  → DEAD_END
+[12:22.792] Anim: 3F  (blank slot)
+[12:23.415] Turn ended  P0  |  Crystals P0=2690 P1=190
+
+--- Turn 14  |  Player 1  |  Crystals P0=2690 P1=190 ---
+[12:23.993] Mode selected P1: ATTACK
+[12:23.998] MSG: Player 2: tap a character to attack.
+[12:25.700] Dice rolled: 3
+[12:25.762] MSG: Nothing happens — Dead End.
+[12:27.441] Attack P1(3,2)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | flags:venom} → P0(2,1)(empty)  Dice=3  → DEAD_END
+[12:27.441] Anim: 3F  (blank slot)
+[12:27.939] Turn ended  P1  |  Crystals P0=2690 P1=190
+
+--- Turn 15  |  Player 0  |  Crystals P0=2690 P1=190 ---
+[12:28.014] Coin flip: Heads
+[12:30.703] MSG: Plant-29: Heads! Venom on Moon Tribe Shaman.
+[12:34.128] Dice rolled: 2
+[12:34.142] MSG: Nothing happens — Dead End.
+[12:35.753] Attack P0(3,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} → P1(3,0)(empty)  Dice=2  → DEAD_END
+[12:35.753] Anim: 3F  (blank slot)
+[12:36.598] Turn ended  P0  |  Crystals P0=2690 P1=190
+
+--- Turn 16  |  Player 1  |  Crystals P0=2690 P1=190 ---
+[12:37.192] Mode selected P1: ATTACK
+[12:37.197] MSG: Player 2: tap a character to attack.
+[12:38.917] Dice rolled: 4
+[12:38.985] MSG: Nothing happens — Dead End.
+[12:40.757] Attack P1(3,2)"Moon Tribe Shaman" {Union ATK25 DEF55 | destroy-cost 0 | summon-cost 500 | affinity Cosmic | flags:venom} → P0(4,1)(empty)  Dice=4  → DEAD_END
+[12:40.757] Anim: 3F  (blank slot)
+[12:41.265] Turn ended  P1  |  Crystals P0=2690 P1=190
+
+--- Turn 17  |  Player 0  |  Crystals P0=2690 P1=190 ---
+[12:41.331] Coin flip: Heads
+[12:44.061] MSG: Plant-29: Heads! Venom on Moon Tribe Shaman.
+[12:50.304] Revealed: P1 (4,0) "Cursed Reflection" {cost 500}
+[12:50.304] Dice rolled: 2
+[12:50.563] MSG: Trap triggered: Cursed Reflection!
+[12:52.969] Crystals: P1 190 → 0 (-190)  [trap cost]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2690  P1: 0  |  Turns: 17
