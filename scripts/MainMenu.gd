@@ -55,6 +55,8 @@ var _title_cheat_apartment_zone: Control = null
 var _title_cheat_moon_zone: Control = null
 
 func _ready() -> void:
+	if OS.has_feature("web"):
+		gui_input.connect(_on_web_audio_gate)
 	local_2p_btn.pressed.connect(_on_local_play_pressed)
 	deck_build_btn.pressed.connect(_on_deck_builder)
 	shop_btn.pressed.connect(_on_shop)
@@ -75,10 +77,11 @@ func _ready() -> void:
 	if has_node("BGM"):
 		$BGM.stop()
 	BGMManager.play_context(BGMManager.CONTEXT_MAIN_MENU, 0.0, 0.0)
+	if deck_status_bg != null:
+		deck_status_bg.visible = false
 	var tween := create_tween()	
 	tween.tween_property(fade_overlay, "color:a", 0.0, 1.2) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	_refresh_deck_status()
 	_setup_mailbox_icon_badge()
 	_refresh_inventory_badge()
 	MailboxManager.mailbox_changed.connect(_refresh_inventory_badge)
@@ -104,6 +107,14 @@ func _ready() -> void:
 	_setup_title_cheat_hitboxes()
 	if has_node("TitleLogo"):
 		$TitleLogo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
+func _on_web_audio_gate(event: InputEvent) -> void:
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+		AudioManager.ensure_web_audio_from_ui()
+	elif event is InputEventKey and (event as InputEventKey).pressed and not (event as InputEventKey).echo:
+		AudioManager.ensure_web_audio_from_ui()
+
 
 func _refresh_deck_status() -> void:
 	var deck: DeckData = SaveManager.get_active_deck()
@@ -382,8 +393,6 @@ func _set_main_menu_obscured(obscured: bool) -> void:
 	_sync_corner_icon(settings_icon_btn, settings_icon_shadow, "settings", obscured)
 	_sync_corner_icon(mailbox_icon_btn, mailbox_icon_shadow, "inventory", obscured)
 	_sync_corner_icon(exit_icon_btn, exit_icon_shadow, "exit_icon", obscured)
-	if deck_status_bg != null:
-		deck_status_bg.visible = not obscured
 	_refresh_mailbox_icon_badge()
 
 

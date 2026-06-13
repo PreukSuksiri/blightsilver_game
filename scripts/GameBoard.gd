@@ -2782,6 +2782,7 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 
 	var clear_btn := Button.new()
 	clear_btn.text = "✕  Remove Bluff"
+	clear_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	clear_btn.add_theme_font_size_override("font_size", 14)
 	clear_btn.add_theme_color_override("font_color", Color(0.8, 0.4, 0.4))
 	var csb := StyleBoxFlat.new()
@@ -3861,6 +3862,7 @@ func _make_sub_overlay(half_w: float = 420.0, half_h: float = 300.0) -> Dictiona
 func _add_back_btn(vbox: VBoxContainer, dimmer: Control) -> void:
 	var back_btn := Button.new()
 	back_btn.text = "← BACK"
+	back_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	back_btn.add_theme_font_size_override("font_size", 14)
 	back_btn.add_theme_color_override("font_color", Color(0.7, 0.7, 0.75))
 	back_btn.pressed.connect(func() -> void:
@@ -4312,7 +4314,7 @@ func _on_grid_card_hovered(player: int, row: int, col: int) -> void:
 	# Intensify hover pulse on any valid tech target (face-down adjacent, Radar, etc.)
 	if selection_state == SelectionState.SELECTING_TECH_TARGET:
 		var tech_node: Control = grid_nodes[player][row][col]
-		if tech_node.is_highlighted:
+		if tech_node.is_highlighted and _should_show_ability_target_flash():
 			_set_tech_hover_node(tech_node)
 	# Red hover during attack target selection — unrevealed dead_end slots are valid targets
 	if selection_state == SelectionState.SELECTING_TARGET \
@@ -6067,6 +6069,9 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	elif _is_ai_turn() and filter in _defender_response_filters():
 		# Human is the responding player during the AI's turn — wait for grid pick.
 		_begin_human_defender_tech_choice()
+	elif GameState.game_mode in [GameState.GameMode.HOT_SEAT, GameState.GameMode.LOCAL_2P] \
+			and filter in _defender_response_filters():
+		_begin_human_defender_tech_choice()
 
 func _is_defender_response_filter(filter: String) -> bool:
 	return filter in _defender_response_filters()
@@ -6087,6 +6092,33 @@ func _begin_human_defender_tech_choice() -> void:
 		_tech_resolve_blocker.visible = false
 	if _end_turn_btn:
 		_end_turn_btn.visible = false
+
+func _get_target_selecting_player(filter: String) -> int:
+	if filter in _defender_response_filters():
+		return GameState.get_opponent(GameState.current_player)
+	if filter in ["lock_opponent_monster", "opponent_facedown_forced"]:
+		return GameState.get_opponent(GameState.current_player)
+	return GameState.current_player
+
+func _local_human_is_selecting(selector: int) -> bool:
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		return false
+	if ai_player != null and selector == ai_player.player_index:
+		return false
+	if GameState.game_mode in [GameState.GameMode.HOT_SEAT, GameState.GameMode.LOCAL_2P]:
+		if selector != GameState.current_player:
+			return _pending_human_defender_tech
+		return true
+	if GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+			GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION]:
+		return selector == 0
+	return selector == 0
+
+func _should_show_ability_target_flash(filter: String = "") -> bool:
+	var f := filter if filter != "" else pending_tech_filter
+	if f == "":
+		return false
+	return _local_human_is_selecting(_get_target_selecting_player(f))
 
 func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var current_player := GameState.current_player
@@ -6405,6 +6437,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			pending_tech_filter = "lock_opponent_monster"
 			action_label.text = "Make Friend: Opponent, choose 1 of your monsters to lock."
 			_highlight_tech_targets(pending_tech_filter)
+			if GameState.game_mode in [GameState.GameMode.HOT_SEAT, GameState.GameMode.LOCAL_2P]:
+				_begin_human_defender_tech_choice()
 			# In AI_VS_AI both players are AI — the defending AI auto-picks
 			# In VS_AI: if AI played, human picks (no auto); if human played, AI auto-picks
 			if GameState.game_mode == GameState.GameMode.AI_VS_AI:
@@ -6440,6 +6474,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			pending_tech_filter = "opponent_facedown_forced"
 			action_label.text = "Diplomacy Party: Opponent, choose 1 of your cards to reveal."
 			_highlight_tech_targets(pending_tech_filter)
+			if GameState.game_mode in [GameState.GameMode.HOT_SEAT, GameState.GameMode.LOCAL_2P]:
+				_begin_human_defender_tech_choice()
 			# Auto-resolve if opponent is AI (VS_AI or AI_VS_AI)
 			var _def_is_ai: bool = GameState.game_mode == GameState.GameMode.AI_VS_AI \
 				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
@@ -7193,6 +7229,8 @@ func _clear_ability_target_flash_nodes() -> void:
 
 func _apply_ability_target_flash() -> void:
 	_clear_ability_target_flash_nodes()
+	if not _should_show_ability_target_flash():
+		return
 	for p in range(2):
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
@@ -8115,8 +8153,8 @@ func _check_almost_win_bgm() -> void:
 		var almost_path: String = _resolve_almost_win_bgm_path()
 		BGMManager.play_path(almost_path, 0.0, 1.5, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
 
-func _grant_vn_battle_rewards() -> void:
-	for entry: Variant in GameState.vn_battle_rewards:
+func _send_vn_mail_rewards(rewards: Array, mail_from: String, credits_subject: String, pack_subject_prefix: String, card_subject: String, scroll_subject: String) -> void:
+	for entry: Variant in rewards:
 		if not entry is Dictionary:
 			continue
 		var reward: Dictionary = entry as Dictionary
@@ -8126,9 +8164,9 @@ func _grant_vn_battle_rewards() -> void:
 				if amount <= 0:
 					continue
 				MailboxManager.send_mail(
-					"Battle Reward",
-					"Credits Earned!",
-					"You won and received %d Credits." % amount,
+					mail_from,
+					credits_subject,
+					"You received %d Credits." % amount,
 					{"type": "credits", "amount": amount}
 				)
 			"booster_pack":
@@ -8137,12 +8175,12 @@ func _grant_vn_battle_rewards() -> void:
 					continue
 				var pack: Dictionary = ShopManager.get_pack_by_name(pack_ref)
 				if pack.is_empty():
-					push_warning("GameBoard: unknown booster pack '%s' in vn_battle_rewards." % pack_ref)
+					push_warning("GameBoard: unknown booster pack '%s' in vn mail rewards." % pack_ref)
 					continue
 				var pack_name: String = str(pack.get("name", pack_ref))
 				MailboxManager.send_mail(
-					"Battle Reward",
-					"Victory Reward — %s" % pack_name,
+					mail_from,
+					"%s — %s" % [pack_subject_prefix, pack_name],
 					"You earned a booster pack: %s. Claim it from your Inventory." % pack_name,
 					{"type": "booster_pack", "pack_name": pack_name}
 				)
@@ -8151,8 +8189,8 @@ func _grant_vn_battle_rewards() -> void:
 				if card_name.is_empty():
 					continue
 				MailboxManager.send_mail(
-					"Battle Reward",
-					"Card Reward",
+					mail_from,
+					card_subject,
 					"You received the card: %s." % card_name,
 					{"type": "card", "card_name": card_name}
 				)
@@ -8160,8 +8198,41 @@ func _grant_vn_battle_rewards() -> void:
 				var scroll_count: int = int(reward.get("count", 1))
 				if scroll_count <= 0:
 					scroll_count = 1
-				UnionScrollManager.grant_union_scroll_mail(scroll_count, "Victory Reward — Union Scroll", "Battle Reward")
+				UnionScrollManager.grant_union_scroll_mail(scroll_count, scroll_subject, mail_from)
+
+func _grant_vn_battle_rewards() -> void:
+	_send_vn_mail_rewards(
+		GameState.vn_battle_rewards,
+		"Battle Reward",
+		"Credits Earned!",
+		"Victory Reward",
+		"Card Reward",
+		"Victory Reward — Union Scroll"
+	)
 	GameState.vn_battle_rewards.clear()
+
+func _grant_vn_battle_loss_rewards() -> void:
+	var once_key: String = GameState.vn_battle_loss_reward_once
+	if once_key != "" and str(SaveManager.exploration_flags.get(once_key, "")) == "1":
+		GameState.vn_battle_loss_rewards.clear()
+		GameState.vn_battle_loss_reward_once = ""
+		return
+	if GameState.vn_battle_loss_rewards.is_empty():
+		GameState.vn_battle_loss_reward_once = ""
+		return
+	_send_vn_mail_rewards(
+		GameState.vn_battle_loss_rewards,
+		"Battle Consolation",
+		"Credits Sent",
+		"Consolation Pack",
+		"Consolation Card",
+		"Consolation — Union Scroll"
+	)
+	if once_key != "":
+		SaveManager.exploration_flags[once_key] = "1"
+		SaveManager.save_data()
+	GameState.vn_battle_loss_rewards.clear()
+	GameState.vn_battle_loss_reward_once = ""
 
 func _show_endgame_screen(winner: int) -> void:
 	_hide_card_context()
@@ -8226,6 +8297,9 @@ func _show_endgame_screen(winner: int) -> void:
 				"You won and received 50 Credits.",
 				{"type": "credits", "amount": 50}
 			)
+	elif not is_win_screen and is_ai_game and not is_dungeon and not is_exploration:
+		if not GameState.vn_battle_loss_rewards.is_empty():
+			_grant_vn_battle_loss_rewards()
 
 	# ── Build full-screen overlay ────────────────────────────────────────────
 	var overlay := Control.new()

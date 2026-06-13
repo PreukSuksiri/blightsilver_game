@@ -1310,8 +1310,12 @@
 	{
 		"battle_reward": [
 			{
-				"amount": 500,
+				"amount": 3000,
 				"type": "credits"
+			},
+			{
+				"count": 1,
+				"type": "union_scroll"
 			}
 		],
 		"linger_characters": true,

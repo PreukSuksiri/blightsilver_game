@@ -1911,9 +1911,8 @@ func _emit_post_attack_target_selections(
 					"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
 
 		CharacterData.AbilityType.REVEAL_ADJACENT_AFTER_ATTACK:
-			if not result.attacker_destroyed:
-				await _prompt_and_await_target_selection(
-					"Scout Probe: Choose an adjacent square to reveal.", "adjacent")
+			await _prompt_and_await_target_selection(
+				"Scout Probe: Choose an adjacent square to reveal.", "adjacent")
 
 		CharacterData.AbilityType.POST_BATTLE_COIN_FLIP_DESTROY:
 			if not result.attacker_destroyed:

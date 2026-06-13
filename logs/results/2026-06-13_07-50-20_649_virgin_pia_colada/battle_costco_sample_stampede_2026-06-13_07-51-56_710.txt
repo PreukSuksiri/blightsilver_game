@@ -1,0 +1,116 @@
+=== Battle of Costco Sample Stampede ===
+Battle started: 2026-06-13 07:51:56.710
+Game Session of Virgin Piña Colada (started 2026-06-13 07:50:20.649)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.737] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=8000 ---
+[00:25.206] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:25.254] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:25.254] Dice rolled: 4
+[00:29.801] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:31.208] Attack P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}  Dice=4  ATK=40 vs DEF=50  → LOSE
+[00:31.208] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[00:31.208] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[00:31.208] Anim: 3B  △ P0(0,2)
+[00:31.208] Card destroyed  P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:52.533] MSG: Tap 2 material card(s) on the field.
+[00:59.916] MSG: Tap 2 material card(s) on the field.
+[01:01.266] MSG: 1 more material(s) needed.
+[01:02.099] Crystals: P0 4300 → 2800 (-1500)  [union]
+[01:02.154] Revealed: P0 (2,0) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[01:02.161] Union summoned P0: "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[01:02.161] MSG: Player 1 summoned [Rocket Peacock] using: "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[01:08.454] Dice rolled: 5
+[01:08.500] MSG: Rocket Peacock wins!
+[01:11.300] Crystals: P1 8000 → 7200 (-800)  [battle]
+[01:12.703] Attack P0(2,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(1,2)"Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}  Dice=5  ATK=150 vs DEF=50  → WIN
+[01:12.703] Reckoning overlay: P0 "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[01:12.703] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:12.703] Anim: 3A  △ P1(1,2)
+[01:12.703] Card destroyed  P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:12.709] MSG: No valid target — effect cancelled.
+[01:12.945] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[01:23.898] Turn ended  P0  |  Crystals P0=2800 P1=7200
+
+--- Turn 2  |  Player 1  |  Crystals P0=2800 P1=7200 ---
+[01:24.484] Mode selected P1: TECH
+[01:24.785] Crystals: P1 7200 → 6200 (-1000)  [tech cost]
+[01:26.165] Tech played  P1: "Accident"
+[01:27.704] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[01:28.100] Card destroyed  P0 (2,0) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[01:28.102] Tech resolved  P1
+[01:29.005] Mode selected P1: ATTACK
+[01:29.006] MSG: Player 2: tap a character to attack.
+[01:30.695] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:30.695] Dice rolled: 2
+[01:30.726] MSG: Nothing happens — Dead End.
+[01:32.552] Attack P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} → P0(2,4)(empty)  Dice=2  → DEAD_END
+[01:32.553] Anim: 3F  (blank slot)
+[01:33.055] Mode selected P1: ATTACK
+[01:33.057] MSG: Player 2: tap a character to attack.
+[01:34.762] Revealed: P1 (0,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:34.762] Dice rolled: 2
+[01:34.783] MSG: Nothing happens — Dead End.
+[01:36.495] Attack P1(0,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(0,1)(empty)  Dice=2  → DEAD_END
+[01:36.495] Anim: 3F  (blank slot)
+[01:36.995] Turn ended  P1  |  Crystals P0=2800 P1=6200
+
+--- Turn 3  |  Player 0  |  Crystals P0=2800 P1=6200 ---
+[01:42.349] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[01:42.349] Dice rolled: 4
+[01:42.358] MSG: Aerial the Battlemage wins!
+[01:44.958] Crystals: P1 6200 → 6020 (-180)  [battle]
+[01:46.363] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(0,0)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=4  ATK=50 vs DEF=10  → WIN
+[01:46.363] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[01:46.363] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=10 ATK pill=15 DEF pill=10 mod=+DEF 0 (10+0=10)
+[01:46.363] Anim: 3A  △ P1(0,0)
+[01:46.363] Card destroyed  P1 (0,0) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[01:49.218] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[01:49.218] Dice rolled: 3
+[01:49.222] MSG: Grand Fort Mauler wins!
+[01:51.825] Crystals: P1 6020 → 5220 (-800)  [battle]
+[01:53.227] Attack P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(0,2)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=3  ATK=40 vs DEF=20  → WIN
+[01:53.227] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=40 ATK pill=40 DEF pill=10 mod=+ATK 0 (40+0=40)
+[01:53.227] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:53.227] Anim: 3A  △ P1(0,2)
+[01:53.227] Card destroyed  P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:55.013] Turn ended  P0  |  Crystals P0=2800 P1=5220
+
+--- Turn 4  |  Player 1  |  Crystals P0=2800 P1=5220 ---
+[01:57.092] Crystals: P1 5220 → 3720 (-1500)  [union]
+[01:57.133] Revealed: P1 (3,2) "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos}
+[01:57.135] Union summoned P1: "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} from "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos | face-down}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}
+[01:57.135] MSG: Player 2 summoned [Lord of Terror] using: "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos | face-down}, "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos | face-down}
+[02:00.518] Mode selected P1: ATTACK
+[02:00.522] MSG: Player 2: tap a character to attack.
+[02:02.225] Dice rolled: 4
+[02:02.280] MSG: Lord of Terror wins!
+[02:05.308] Crystals: P0 2800 → 2050 (-750)  [battle]
+[02:06.709] Attack P1(3,2)"Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} → P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=4  ATK=150 vs DEF=45  → WIN
+[02:06.709] Reckoning overlay: P1 "Lord of Terror" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Chaos} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[02:06.709] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[02:06.709] Anim: 3A  △ P0(1,4)
+[02:06.709] Card destroyed  P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[02:07.193] Mode selected P1: ATTACK
+[02:07.198] MSG: Player 2: tap a character to attack.
+[02:08.908] Revealed: P1 (3,1) "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos}
+[02:08.908] Dice rolled: 2
+[02:08.911] MSG: Ancient Lich wins!
+[02:11.875] Crystals: P0 2050 → 1700 (-350)  [battle]
+[02:13.274] Attack P1(3,1)"Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} → P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=2  ATK=60 vs DEF=10  → WIN
+[02:13.274] Reckoning overlay: P1 "Ancient Lich" {Unit ATK60 DEF60 | cost 750 | affinity Chaos} badge=60 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=60)
+[02:13.274] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=10 ATK pill=40 DEF pill=10 mod=+DEF 0 (10+0=10)
+[02:13.274] Anim: 3A  △ P0(2,1)
+[02:13.274] Card destroyed  P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:13.761] Turn ended  P1  |  Crystals P0=1700 P1=3720
+
+--- Turn 5  |  Player 0  |  Crystals P0=1700 P1=3720 ---
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 1700  P1: 3720  |  Turns: 5

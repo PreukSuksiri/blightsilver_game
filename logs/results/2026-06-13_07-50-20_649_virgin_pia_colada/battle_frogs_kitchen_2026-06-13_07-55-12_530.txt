@@ -1,0 +1,59 @@
+=== Battle of Frog's Kitchen ===
+Battle started: 2026-06-13 07:55:12.530
+Game Session of Virgin Piña Colada (started 2026-06-13 07:50:20.649)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.399] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=8000 ---
+[00:14.034] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:14.071] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:14.071] Dice rolled: 5
+[00:14.081] MSG: Both cards are destroyed!
+[00:17.846] Crystals: P0 5000 → 4300 (-700)  [battle]
+[00:19.237] Crystals: P1 8000 → 7120 (-880)  [battle]
+[00:20.640] Attack P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}  Dice=5  ATK=40 vs DEF=40  → TIE
+[00:20.640] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[00:20.640] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} badge=40 ATK pill=60 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:20.640] Anim: 3C  △ P0(0,2) + △ P1(1,1)
+[00:20.640] Card destroyed  P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:20.640] Card destroyed  P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:25.951] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:25.992] Revealed: P1 (2,1) "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}
+[00:25.993] Crystals: P0 4300 → 4340 (+40)  [ability]
+[00:25.993] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:25.993] Dice rolled: 2
+[00:28.880] Crystals: P0 4340 → 4040 (-300)  [battle]
+[00:30.283] Attack P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(2,1)"Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio}  Dice=2  ATK=30 vs DEF=60  → LOSE
+[00:30.283] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[00:30.283] Reckoning overlay: P1 "Lab Crawler" {Unit ATK95 DEF60 | cost 1200 | affinity Bio} badge=60 ATK pill=95 DEF pill=60 mod=+DEF 0 (60+0=60)
+[00:30.283] Anim: 3B  △ P0(4,2)
+[00:30.283] Card destroyed  P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:33.171] Turn ended  P0  |  Crystals P0=4040 P1=7120
+
+--- Turn 2  |  Player 1  |  Crystals P0=4040 P1=7120 ---
+[00:33.755] Mode selected P1: TECH
+[00:34.056] Crystals: P1 7120 → 6120 (-1000)  [tech cost]
+[00:35.440] Tech played  P1: "Illegal Steroid"
+[00:36.981] Target prompt: "Choose 1 face-up character to boost."  filter=own_faceup_character
+[00:37.380] MSG: Illegal Steroid: Lab Crawler gains +30 ATK this attack.
+[00:37.384] Tech resolved  P1
+[00:38.280] Mode selected P1: ATTACK
+[00:38.283] MSG: Player 2: tap a character to attack.
+[00:40.029] Revealed: P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:40.029] Dice rolled: 2
+[00:40.034] MSG: Lab Crawler wins!
+[00:44.472] Crystals: P0 4040 → 3240 (-800)  [battle]
+[00:45.868] Attack P1(2,1)"Lab Crawler" {Unit ATK125 DEF60 | cost 1200 | affinity Bio | base 95/60 | buff +tempATK30} → P0(2,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}  Dice=2  ATK=125 vs DEF=30  → WIN
+[00:45.868] Reckoning overlay: P1 "Lab Crawler" {Unit ATK125 DEF60 | cost 1200 | affinity Bio | base 95/60 | buff +tempATK30} badge=125 ATK pill=125 DEF pill=60 mod=+ATK 0 (125+0=125)
+[00:45.868] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} badge=30 ATK pill=60 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:45.868] Anim: 3A  △ P0(2,0)
+[00:45.868] Card destroyed  P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:46.364] Mode selected P1: ATTACK
+[00:46.367] MSG: Player 2: tap a character to attack.
+[00:48.074] Revealed: P1 (2,0) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[00:48.107] Reve

@@ -171,6 +171,7 @@ func _build_ui() -> void:
 	_status_lbl.anchor_left   = 0.0; _status_lbl.anchor_right  = 1.0
 	_status_lbl.anchor_top    = 1.0; _status_lbl.anchor_bottom = 1.0
 	_status_lbl.offset_top    = -24.0
+	_status_lbl.add_theme_font_override("font", FontManager.ui_font(400))
 	_status_lbl.add_theme_font_size_override("font_size", 13)
 	_status_lbl.add_theme_color_override("font_color", Color(0.6, 0.85, 0.6))
 	add_child(_status_lbl)
@@ -256,6 +257,7 @@ func _build_toolbar() -> Control:
 func _make_tool_btn(parent: Control, label: String, callback: Callable) -> Button:
 	var btn := Button.new()
 	btn.text = label
+	btn.add_theme_font_override("font", FontManager.ui_font(400))
 	btn.add_theme_font_size_override("font_size", 14)
 	btn.pressed.connect(callback)
 	parent.add_child(btn)
@@ -713,6 +715,7 @@ func _add_path_cond_row(cond_vbox: VBoxContainer, filters: PackedStringArray, st
 
 	var path_lbl := Label.new()
 	path_lbl.text = "→"
+	path_lbl.add_theme_font_override("font", FontManager.ui_font(400))
 	path_lbl.add_theme_font_size_override("font_size", 11)
 	path_lbl.add_theme_color_override("font_color", Color(0.55, 0.90, 0.60))
 	path_row.add_child(path_lbl)
@@ -802,6 +805,7 @@ func _add_text_cond_row(cond_vbox: VBoxContainer, multiline: bool,
 
 	var value_lbl := Label.new()
 	value_lbl.text = "→"
+	value_lbl.add_theme_font_override("font", FontManager.ui_font(400))
 	value_lbl.add_theme_font_size_override("font_size", 11)
 	value_lbl.add_theme_color_override("font_color", Color(0.55, 0.90, 0.60))
 	value_row.add_child(value_lbl)
@@ -851,6 +855,7 @@ func _add_node_id_cond_row(cond_vbox: VBoxContainer,
 
 	var id_lbl := Label.new()
 	id_lbl.text = "→"
+	id_lbl.add_theme_font_override("font", FontManager.ui_font(400))
 	id_lbl.add_theme_font_size_override("font_size", 11)
 	id_lbl.add_theme_color_override("font_color", Color(0.55, 0.90, 0.60))
 	id_row.add_child(id_lbl)
@@ -1401,6 +1406,7 @@ func _add_connection_row(conn_vbox: VBoxContainer, target: String = "",
 	var target_row := HBoxContainer.new()
 	var target_lbl := Label.new()
 	target_lbl.text = "→ Target"
+	target_lbl.add_theme_font_override("font", FontManager.ui_font(400))
 	target_lbl.add_theme_font_size_override("font_size", 12)
 	target_row.add_child(target_lbl)
 	var target_edit := LineEdit.new()
@@ -3540,6 +3546,7 @@ func _test_add_var_row(key: String, value: Variant) -> void:
 	var rem := Button.new()
 	rem.text = "✕"
 	rem.custom_minimum_size = Vector2(26, 0)
+	rem.add_theme_font_override("font", FontManager.ui_font(400))
 	rem.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
 	rem.pressed.connect(func() -> void: row.queue_free())
 	row.add_child(rem)
@@ -3569,6 +3576,7 @@ func _test_add_inv_row(item_id: String) -> void:
 	var rem := Button.new()
 	rem.text = "✕"
 	rem.custom_minimum_size = Vector2(26, 0)
+	rem.add_theme_font_override("font", FontManager.ui_font(400))
 	rem.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
 	rem.pressed.connect(func() -> void: row.queue_free())
 	row.add_child(rem)

@@ -1484,6 +1484,7 @@ func _show_bluff_modal(row: int, col: int) -> void:
 	# Clear button
 	var clear_btn := Button.new()
 	clear_btn.text = "✕  Remove Bluff"
+	clear_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	clear_btn.add_theme_font_size_override("font_size", 14)
 	clear_btn.add_theme_color_override("font_color", Color(0.8, 0.4, 0.4))
 	var csb := StyleBoxFlat.new()

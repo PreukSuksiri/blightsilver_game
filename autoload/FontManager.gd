@@ -6,16 +6,29 @@ signal fonts_changed
 
 const SHIPPED_CONFIG_PATH := "res://data/fonts.json"
 const FONTS_DIR := "res://assets/fonts/"
+const SYMBOL_FALLBACK_PATHS: Array[String] = [
+	"res://assets/fonts/MPLUS1p-Regular.ttf",
+	"res://assets/fonts/NotoSansSymbols2-Regular.ttf",
+]
+const PATCH_FONT_PATHS: Array[String] = [
+	"res://assets/fonts/Chivo-VariableFont_wght.ttf",
+	"res://assets/fonts/Chivo-Italic-VariableFont_wght.ttf",
+]
 const META_SLOT := "fm_slot"
 const META_PROP := "fm_prop"
 const META_WEIGHT := "fm_weight"
 
 var _slots: Dictionary = {}
 var _defaults: Dictionary = {}
+var _symbol_fallbacks: Array[Font] = []
+var _default_theme: Theme = null
 
 
 func _ready() -> void:
 	load_config()
+	_init_symbol_fallbacks()
+	_patch_bundled_font_fallbacks()
+	_apply_default_theme()
 	get_tree().node_added.connect(_on_node_added)
 
 
@@ -128,18 +141,30 @@ func make_font(slot_id: String, weight: int = 400) -> Font:
 	var loaded: Variant = load(path)
 	if loaded == null:
 		return _fallback_font()
+	var font: Font = null
 	if is_variable(slot_id) and loaded is FontFile:
 		var fv := FontVariation.new()
 		fv.base_font = loaded as FontFile
 		fv.variation_opentype = {"wght": weight}
-		return fv
-	if loaded is Font:
-		return loaded as Font
-	return _fallback_font()
+		font = fv
+	elif loaded is FontFile:
+		var wrapped := FontVariation.new()
+		wrapped.base_font = loaded as FontFile
+		font = wrapped
+	elif loaded is Font:
+		font = loaded as Font
+	if font == null:
+		return _fallback_font()
+	return _with_symbol_fallback(font)
 
 
 func get_font(slot_id: String) -> Font:
 	return make_font(slot_id, 400)
+
+
+## Primary UI font with symbol fallback (✕, ←, →, etc.). Prefer over raw Chivo preloads.
+func ui_font(weight: int = 400) -> Font:
+	return make_font("primary", weight)
 
 
 ## Tag a control so live font swaps refresh it automatically.
@@ -207,7 +232,63 @@ func _deep_copy_slots(source: Dictionary) -> Dictionary:
 	return out["slots"]
 
 
+func _with_symbol_fallback(font: Font) -> Font:
+	var fallbacks: Array = font.get_fallbacks().duplicate()
+	for fb: Font in _symbol_fallbacks:
+		if fb not in fallbacks:
+			fallbacks.append(fb)
+	if fallbacks != font.get_fallbacks():
+		font.set_fallbacks(fallbacks)
+	return font
+
+
+func _init_symbol_fallbacks() -> void:
+	if not _symbol_fallbacks.is_empty():
+		return
+	for path: String in SYMBOL_FALLBACK_PATHS:
+		if not ResourceLoader.exists(path):
+			push_warning("FontManager: symbol fallback font missing at %s" % path)
+			continue
+		var loaded: Variant = load(path)
+		if loaded is Font:
+			_symbol_fallbacks.append(loaded as Font)
+
+
+func _patch_bundled_font_fallbacks() -> void:
+	for path: String in PATCH_FONT_PATHS:
+		if not ResourceLoader.exists(path):
+			continue
+		var ff: Variant = load(path)
+		if ff is FontFile:
+			_with_symbol_fallback(ff as FontFile)
+
+
+func _apply_default_theme() -> void:
+	if _default_theme != null:
+		return
+	var ui := ui_font(400)
+	_default_theme = Theme.new()
+	_default_theme.default_font = ui
+	_default_theme.default_font_size = 16
+	for type_name: String in [
+			"Button", "Label", "LineEdit", "RichTextLabel",
+			"OptionButton", "CheckBox", "TabBar", "TextEdit"]:
+		_default_theme.set_font(type_name, "font", ui)
+		_default_theme.set_font_size(type_name, "font_size", 16)
+	get_tree().root.theme = _default_theme
+
+
+func _symbol_fallback_font() -> Font:
+	if _symbol_fallbacks.is_empty():
+		_init_symbol_fallbacks()
+	if _symbol_fallbacks.is_empty():
+		return null
+	return _symbol_fallbacks[0]
+
+
 func _fallback_font() -> Font:
-	var fallback := SystemFont.new()
-	fallback.font_names = PackedStringArray(["Sans-Serif"])
-	return fallback
+	if _symbol_fallbacks.is_empty():
+		_init_symbol_fallbacks()
+	if _symbol_fallbacks.is_empty():
+		return null
+	return _symbol_fallbacks[0]

@@ -61,6 +61,7 @@ func _build_ui() -> void:
 
 	var back_btn := Button.new()
 	back_btn.text = "← Back to Main Menu"
+	back_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	back_btn.add_theme_font_size_override("font_size", 14)
 	back_btn.pressed.connect(func() -> void:
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
@@ -669,6 +670,7 @@ func _open_portrait_picker() -> void:
 	title_hb.add_child(title)
 	var close_btn := Button.new()
 	close_btn.text = "✕"
+	close_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	close_btn.add_theme_font_size_override("font_size", 14)
 	close_btn.pressed.connect(func() -> void: overlay.queue_free())
 	title_hb.add_child(close_btn)

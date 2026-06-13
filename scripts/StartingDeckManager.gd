@@ -97,7 +97,7 @@ func _build_ui() -> void:
 	close_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	close_btn.offset_left = 10.0; close_btn.offset_top    = 8.0
 	close_btn.offset_right = 120.0; close_btn.offset_bottom = 40.0
-	close_btn.add_theme_font_override("font", CHIVO_FONT)
+	close_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	close_btn.pressed.connect(func() -> void: queue_free())
 	top.add_child(close_btn)
 
@@ -276,7 +276,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 	close_fe.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	close_fe.offset_left = -130.0; close_fe.offset_top    = 6.0
 	close_fe.offset_right = -10.0;  close_fe.offset_bottom = 38.0
-	close_fe.add_theme_font_override("font", CHIVO_FONT)
+	close_fe.add_theme_font_override("font", FontManager.ui_font(400))
 	close_fe.pressed.connect(func() -> void:
 		_save_deck()
 		summary_lbl.text = "Formations: %d / %d" % [_deck.formations.size(), MAX_FORMATIONS]
@@ -440,7 +440,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 
 	var clear_pick := Button.new()
 	clear_pick.text = "✕ Deselect"
-	clear_pick.add_theme_font_override("font", CHIVO_FONT)
+	clear_pick.add_theme_font_override("font", FontManager.ui_font(400))
 	clear_pick.add_theme_font_size_override("font_size", 11)
 	clear_pick.pressed.connect(func() -> void:
 		_fe_card_pick = ""

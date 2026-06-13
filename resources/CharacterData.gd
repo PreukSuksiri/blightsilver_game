@@ -32,7 +32,7 @@ enum AbilityType {
 	DESTROYED_IF_BATTLES_DIVINE,  # Destroy this card after Reckoning with Divine (either role)
 	IMMUNE_TO_TECH_CARDS,         # Not affected by Tech cards
 	ATK_BONUS_IF_DICE_HIGH,       # +N ATK if dice roll >= threshold
-	REVEAL_ADJACENT_AFTER_ATTACK, # Reveal an adjacent square after attacking
+	REVEAL_ADJACENT_AFTER_ATTACK, # Reveal an adjacent square after attacking (even if destroyed)
 	ATK_BONUS_VS_TWO_AFFINITIES,  # +N ATK vs two specific affinities
 	IMMUNE_TO_TRAPS,              # Cannot be destroyed by Traps
 	IMMUNE_TO_TECH_DESTRUCTION,   # Cannot be destroyed by Tech Cards (but can be affected)

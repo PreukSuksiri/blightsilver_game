@@ -328,6 +328,23 @@ This project uses the **GL Compatibility** renderer (`project.godot`), which is 
 godot --headless --export-release "Web" "build/web/index.html"
 ```
 
+**Run the HTML export locally**
+
+Do **not** open the `.html` file by double-clicking it. Browsers block loading `.wasm` and `.pck` over `file://`, which shows as **Failed to fetch**.
+
+Export first (GUI or CLI), then from the project root:
+
+```bash
+cd /Users/blightsilver/blightsilver_game
+./tools/serve_web.sh
+```
+
+Open in your browser:
+
+**http://127.0.0.1:8765/index.html**
+
+The script serves `Release/Web/` (default port `8765`). Pass another port if needed: `./tools/serve_web.sh 8080`.
+
 **Upload to itch.io:**
 
 1. Create a new project (or edit an existing one) on [itch.io](https://itch.io).
@@ -558,20 +575,20 @@ Tutorial configs are plain JSON stored in `res://data/tutorial_battles/`. You ca
 
   // Player deck — must pass DeckData.is_valid() (8-12 chars, 4-6 traps, 3 techs)
   "player_deck": {
-    "characters": ["Church Guard", "Church Guard", ...],
-    "traps":      ["Trap Hole", ...],
-    "techs":      ["Radar", "Shield Wall", "Quick Draw"]
+	"characters": ["Church Guard", "Church Guard", ...],
+	"traps":      ["Trap Hole", ...],
+	"techs":      ["Radar", "Shield Wall", "Quick Draw"]
   },
 
   // Forced starting positions for the player (overrides saved formation)
   "player_formation": [
-    { "card_name": "Church Guard", "row": 4, "col": 2 }
+	{ "card_name": "Church Guard", "row": 4, "col": 2 }
   ],
 
   // AI deck and forced formation (same structure)
   "ai_deck": { "characters": [...], "traps": [...], "techs": [...] },
   "ai_formation": [
-    { "card_name": "Chaotic Wisp", "row": 0, "col": 2 }
+	{ "card_name": "Chaotic Wisp", "row": 0, "col": 2 }
   ],
 
   // Mission turns — keys are player-turn numbers (1 = player's first turn, ignoring AI turns)

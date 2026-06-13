@@ -1,0 +1,219 @@
+=== Battle of Windy Day Hair Crisis ===
+Battle started: 2026-06-13 08:00:34.187
+Game Session of Root Beer (started 2026-06-13 07:59:47.302)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.004] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=8000 ---
+[00:18.082] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:18.126] Revealed: P1 (4,1) "Acid Trap Hole" {cost 0}
+[00:18.126] Dice rolled: 3
+[00:18.385] MSG: Trap triggered: Acid Trap Hole!
+[00:22.525] Coin flip: Heads, Tails
+[00:25.267] MSG: Acid Trap Hole: Heads, Tails.
+[00:25.268] Crystals: P0 5000 → 4950 (-50)  [trap]
+[00:26.659] MSG: Acid Trap Hole: 1 head(s) — Player 1 loses 50 Crystals!
+[00:26.668] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(4,1)"Acid Trap Hole" {cost 0}  Dice=3  → Unit vs Trap
+[00:26.668] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:26.668] Anim: 3D  (attacker survives)
+[00:26.678] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:29.392] Revealed: P1 (3,2) "Death Knight" {Unit ATK65 DEF65 | cost 850 | affinity Chaos}
+[00:29.392] MSG: Revealed: Death Knight
+[01:39.152] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:39.153] Revealed: P1 (1,3) "Acid Trap Hole" {cost 0}
+[01:39.153] Dice rolled: 3
+[01:39.443] MSG: Trap triggered: Acid Trap Hole!
+[01:42.114] Coin flip: Heads, Heads
+[01:44.881] MSG: Acid Trap Hole: Heads, Heads.
+[01:44.881] Crystals: P0 4950 → 4850 (-100)  [trap]
+[01:46.273] MSG: Acid Trap Hole: 2 head(s) — Player 1 loses 100 Crystals!
+[01:46.279] Attack P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,3)"Acid Trap Hole" {cost 0}  Dice=3  → Unit vs Trap
+[01:46.279] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[01:46.279] Anim: 3D  (attacker survives)
+[01:46.285] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:47.446] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[01:47.446] MSG: Scout Probe: adjacent cell revealed.
+[01:50.145] Turn ended  P0  |  Crystals P0=4850 P1=8000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4850 P1=8000 ---
+[01:50.731] Mode selected P1: TECH
+[01:51.032] Crystals: P1 8000 → 7000 (-1000)  [tech cost]
+[01:52.419] Tech played  P1: "Accident"
+[01:53.978] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[01:54.387] Card destroyed  P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:54.395] Tech resolved  P1
+[01:55.291] Mode selected P1: ATTACK
+[01:55.293] MSG: Player 2: tap a character to attack.
+[01:56.997] Dice rolled: 5
+[01:57.006] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Shepherd Detective!
+[01:57.006] MSG: Vampire Duchess wins!
+[02:02.482] Crystals: P0 4850 → 4450 (-400)  [battle]
+[02:03.877] Attack P1(1,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(2,3)"Shepherd Detective" {Unit ATK35 DEF20 | cost 400 | affinity Anima | base 35/20}  Dice=5  ATK=55 vs DEF=20  → WIN
+[02:03.877] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[02:03.877] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK35 DEF20 | cost 400 | affinity Anima | base 35/20} badge=20 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=20) MISMATCH
+[02:03.877] Anim: 3A  △ P0(2,3)
+[02:03.877] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK35 DEF20 | cost 400 | affinity Anima | base 35/20}
+[02:06.383] Turn ended  P1  |  Crystals P0=4450 P1=7000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4450 P1=7000 ---
+[02:14.148] MSG: Tap 2 material card(s) on the field.
+[02:14.538] MSG: 1 more material(s) needed.
+[02:15.347] Crystals: P0 4450 → 2950 (-1500)  [union]
+[02:15.392] Revealed: P0 (2,0) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[02:15.400] Union summoned P0: "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[02:15.400] MSG: Player 1 summoned [Rocket Peacock] using: "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[02:25.505] Dice rolled: 3
+[02:25.615] MSG: Rocket Peacock wins!
+[02:29.997] Crystals: P1 7000 → 6150 (-850)  [battle]
+[02:31.393] Attack P0(2,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(3,2)"Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5}  Dice=3  ATK=150 vs DEF=65  → WIN
+[02:31.393] Reckoning overlay: P0 "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[02:31.393] Reckoning overlay: P1 "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5} badge=65 ATK pill=70 DEF pill=65 mod=+DEF 0 (65+0=65)
+[02:31.393] Anim: 3A  △ P1(3,2)
+[02:31.393] Card destroyed  P1 (3,2) "Death Knight" {Unit ATK70 DEF65 | cost 850 | affinity Chaos | base 65/65 | buff +permATK5}
+[02:31.396] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[02:32.402] Coin flip: Tails
+[02:35.148] MSG: Rocket Peacock: Tails — Vampire Duchess survives.
+[02:49.838] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[02:49.838] Dice rolled: 1
+[02:49.843] MSG: Aerial the Battlemage wins!
+[02:55.324] Crystals: P1 6150 → 5350 (-800)  [battle]
+[02:56.729] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(1,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55}  Dice=1  ATK=70 vs DEF=55  → WIN
+[02:56.729] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=70 ATK pill=50 DEF pill=45 mod=+ATK 20 (50+20=70)
+[02:56.729] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=55 DEF pill=55 mod=+DEF 0 (55+0=55)
+[02:56.729] Anim: 3A  △ P1(1,2)
+[02:56.729] Card destroyed  P1 (1,2) "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55}
+[03:00.134] Turn ended  P0  |  Crystals P0=2950 P1=5350
+
+--- Turn 4  |  Player 1  |  Crystals P0=2950 P1=5350 ---
+[03:02.215] Crystals: P1 5350 → 4350 (-1000)  [union]
+[03:02.241] Revealed: P1 (4,0) "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[03:02.242] Union summoned P1: "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down}
+[03:02.242] MSG: Player 2 summoned [Volatile Slasher] using: "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio | face-down}, "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio | face-down}
+[03:05.641] Mode selected P1: ATTACK
+[03:05.643] MSG: Player 2: tap a character to attack.
+[03:07.357] Dice rolled: 5
+[03:07.424] MSG: Volatile Slasher wins!
+[03:10.013] Crystals: P0 2950 → 2200 (-750)  [battle]
+[03:11.411] MSG: Volatile Slasher: +50 ATK permanently vs ARCANE!
+[03:11.414] Attack P1(4,0)"Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=5  ATK=50 vs DEF=45  → WIN
+[03:11.414] Reckoning overlay: P1 "Volatile Slasher" {Union ATK50 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[03:11.414] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[03:11.414] Anim: 3A  △ P0(1,4)
+[03:11.414] Card destroyed  P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[03:11.910] Mode selected P1: ATTACK
+[03:11.912] MSG: Player 2: tap a character to attack.
+[03:13.617] Revealed: P1 (4,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[03:13.617] Dice rolled: 5
+[03:13.652] MSG: Pit Lord wins!
+[03:18.103] Attack P1(4,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} → P0(2,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}  Dice=5  ATK=120 vs DEF=100  → WIN
+[03:18.103] Reckoning overlay: P1 "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} badge=120 ATK pill=120 DEF pill=100 mod=+ATK 0 (120+0=120)
+[03:18.103] Reckoning overlay: P0 "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} badge=100 ATK pill=150 DEF pill=100 mod=+DEF 0 (100+0=100)
+[03:18.103] Anim: 3A  △ P0(2,0)
+[03:18.103] Card destroyed  P0 (2,0) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[03:18.603] Turn ended  P1  |  Crystals P0=2200 P1=4350
+
+--- Turn 5  |  Player 0  |  Crystals P0=2200 P1=4350 ---
+[03:54.570] Tech played  P0: "Tease"
+[03:56.113] MSG: Opponent must choose and reveal 1 of their squares.
+[03:56.116] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[03:56.550] Revealed: P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[03:56.550] MSG: Tease: Opponent revealed Leech Man.
+[03:56.708] Tech resolved  P0
+[06:36.632] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[06:36.632] Dice rolled: 5
+[06:36.638] MSG: Plant-29 wins!
+[06:39.650] Crystals: P1 4350 → 3470 (-880)  [battle]
+[06:41.052] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(1,1)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}  Dice=5  ATK=45 vs DEF=40  → WIN
+[06:41.052] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[06:41.052] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} badge=40 ATK pill=60 DEF pill=40 mod=+DEF 0 (40+0=40)
+[06:41.052] Anim: 3A  △ P1(1,1)
+[06:41.052] Card destroyed  P1 (1,1) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[06:50.773] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[06:50.774] Dice rolled: 1
+[06:50.778] MSG: Pit Lord is destroyed by Divine!
+[06:54.461] Crystals: P0 2200 → 1800 (-400)  [battle]
+[06:55.851] Crystals: P1 3470 → 2220 (-1250)  [battle]
+[06:57.252] Attack P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(4,2)"Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}  Dice=1  ATK=40 vs DEF=100  → TIE
+[06:57.252] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[06:57.252] Reckoning overlay: P1 "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos} badge=100 ATK pill=120 DEF pill=100 mod=+DEF 0 (100+0=100)
+[06:57.253] Anim: 3C  △ P0(1,2) + △ P1(4,2)
+[06:57.253] Card destroyed  P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[06:57.253] Card destroyed  P1 (4,2) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[07:00.943] Turn ended  P0  |  Crystals P0=1800 P1=2220
+
+--- Turn 6  |  Player 1  |  Crystals P0=1800 P1=2220 ---
+[07:01.542] Mode selected P1: TECH
+[07:01.844] Crystals: P1 2220 → 1220 (-1000)  [tech cost]
+[07:03.227] Tech played  P1: "Illegal Steroid"
+[07:04.769] Target prompt: "Choose 1 face-up character to boost."  filter=own_faceup_character
+[07:05.169] MSG: Illegal Steroid: Volatile Slasher gains +30 ATK this attack.
+[07:05.175] Tech resolved  P1
+[07:06.070] Mode selected P1: ATTACK
+[07:06.074] MSG: Player 2: tap a character to attack.
+[07:07.776] Dice rolled: 2
+[07:07.834] MSG: Volatile Slasher wins!
+[07:10.844] Crystals: P0 1800 → 900 (-900)  [battle]
+[07:12.232] Attack P1(4,0)"Volatile Slasher" {Union ATK130 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio | base 100/45 | buff +tempATK30 | flags:perm_atk_aff_3} → P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}  Dice=2  ATK=130 vs DEF=85  → WIN
+[07:12.232] Reckoning overlay: P1 "Volatile Slasher" {Union ATK130 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio | base 100/45 | buff +tempATK30 | flags:perm_atk_aff_3} badge=130 ATK pill=130 DEF pill=45 mod=+ATK 0 (130+0=130)
+[07:12.232] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=85 ATK pill=45 DEF pill=85 mod=+DEF 0 (85+0=85)
+[07:12.232] Anim: 3A  △ P0(2,2)
+[07:12.232] Card destroyed  P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[07:12.728] Mode selected P1: ATTACK
+[07:12.731] MSG: Player 2: tap a character to attack.
+[07:14.438] Revealed: P1 (2,0) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[07:14.438] Dice rolled: 1
+[07:14.453] MSG: Nothing happens — Dead End.
+[07:16.851] Attack P1(2,0)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} → P0(2,4)(empty)  Dice=1  → DEAD_END
+[07:16.851] Anim: 3F  (blank slot)
+[07:17.352] Turn ended  P1  |  Crystals P0=900 P1=1220
+
+--- Turn 7  |  Player 0  |  Crystals P0=900 P1=1220 ---
+[07:20.455] Tech played  P0: "Spy"
+[07:21.995] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[07:22.190] Revealed: P1 (2,2) "Cursed Reflection" {cost 500}
+[07:22.298] Tech resolved  P0
+[07:39.040] Revealed: P0 (3,2) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[07:39.040] Dice rolled: 5
+[07:39.046] MSG: Both cards are destroyed!
+[07:42.369] Crystals: P0 900 → 450 (-450)  [battle]
+[07:43.758] Crystals: P1 1220 → 620 (-600)  [battle]
+[07:45.158] Attack P0(3,2)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} → P1(2,0)"Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}  Dice=5  ATK=30 vs DEF=30  → TIE
+[07:45.158] Reckoning overlay: P0 "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} badge=30 ATK pill=30 DEF pill=45 mod=+ATK 0 (30+0=30)
+[07:45.158] Reckoning overlay: P1 "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos} badge=30 ATK pill=10 DEF pill=30 mod=+DEF 0 (30+0=30)
+[07:45.158] Anim: 3C  △ P0(3,2) + △ P1(2,0)
+[07:45.158] Card destroyed  P0 (3,2) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[07:45.158] Card destroyed  P1 (2,0) "Succubus" {Unit ATK10 DEF30 | cost 600 | affinity Chaos}
+[07:45.568] Turn ended  P0  |  Crystals P0=450 P1=620
+
+--- Turn 8  |  Player 1  |  Crystals P0=450 P1=620 ---
+[07:46.167] Mode selected P1: TECH
+[07:46.476] Tech played  P1: "Release Mutagen"
+[07:48.011] Target prompt: "Release Mutagen: Choose a Bio Character to flag."  filter=own_bio_character
+[07:48.415] Tech resolved  P1
+[07:49.313] Mode selected P1: ATTACK
+[07:49.315] MSG: Player 2: tap a character to attack.
+[07:51.042] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[07:51.042] Dice rolled: 1
+[07:51.353] MSG: Trap triggered: Trap Hole!
+[07:55.290] Coin flip: Heads, Heads, Tails
+[07:58.028] MSG: Trap Hole: Heads, Heads, Tails.
+[07:58.029] Crystals: P1 620 → 580 (-40)  [trap]
+[07:59.419] MSG: Trap Hole: 2 head(s) — Player 2 loses 40 Crystals!
+[07:59.423] Attack P1(4,0)"Volatile Slasher" {Union ATK100 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio | base 100/45 | flags:perm_atk_aff_3,mutagen} → P0(0,0)"Trap Hole" {cost 0}  Dice=1  → Unit vs Trap
+[07:59.423] Reckoning overlay: P1 "Volatile Slasher" {Union ATK100 DEF45 | destroy-cost 0 | summon-cost 1000 | affinity Bio | base 100/45 | flags:perm_atk_aff_3,mutagen} badge=100 ATK pill=100 DEF pill=45 mod=+ATK 0 (100+0=100)
+[07:59.423] Anim: 3D  (attacker survives)
+[07:59.921] Mode selected P1: ATTACK
+[07:59.926] MSG: Player 2: tap a character to attack.
+[08:01.640] Revealed: P1 (0,2) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[08:01.666] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[08:01.666] Dice rolled: 3
+[08:01.940] MSG: Trap triggered: Hard Scale!
+[08:06.041] Crystals: P0 450 → 0 (-450)  [trap cost]
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 0  P1: 580  |  Turns: 8

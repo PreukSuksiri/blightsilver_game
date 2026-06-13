@@ -42,6 +42,8 @@ var _current_path: String = ""
 var _current_context: String = ""
 var _target_volume_db: float = 0.0
 var _loop_restart_sec: float = -1.0
+var _deferred_play: Dictionary = {}
+var _last_play: Dictionary = {}
 
 
 func _ready() -> void:
@@ -49,8 +51,13 @@ func _ready() -> void:
 	_player = AudioStreamPlayer.new()
 	_player.name = "BGMPlayer"
 	_player.bus = &"Music"
+	if OS.has_feature("web"):
+		# Long MP3 tracks fail in default Sample mode on HTML5; stream instead.
+		_player.playback_type = AudioServer.PLAYBACK_TYPE_STREAM
 	add_child(_player)
 	_player.finished.connect(_on_player_finished)
+	if OS.has_feature("web"):
+		AudioManager.web_audio_unlocked.connect(_on_web_audio_unlocked)
 
 
 func _load_default_paths() -> void:
@@ -154,6 +161,79 @@ func play_path(
 		stop(fade_out)
 		return
 
+	_last_play = {
+		"path": path,
+		"fade_in": fade_in,
+		"fade_out": fade_out,
+		"volume_pct": volume_pct,
+		"context": context,
+		"loop_from_sec": loop_from_sec,
+		"start_sec": start_sec,
+	}
+
+	if OS.has_feature("web") and not AudioManager.is_web_audio_unlocked():
+		_deferred_play = {
+			"path": path,
+			"fade_in": fade_in,
+			"fade_out": fade_out,
+			"volume_pct": volume_pct,
+			"context": context,
+			"loop_from_sec": loop_from_sec,
+			"start_sec": start_sec,
+		}
+		_target_volume_db = _volume_pct_to_db(volume_pct)
+		_loop_restart_sec = loop_from_sec
+		_current_context = context
+		_current_path = path
+		return
+
+	_play_path_now(path, fade_in, fade_out, volume_pct, context, loop_from_sec, start_sec)
+
+
+func retry_web_playback() -> void:
+	if not OS.has_feature("web") or not AudioManager.is_web_audio_unlocked():
+		return
+	if not _deferred_play.is_empty():
+		_on_web_audio_unlocked()
+		return
+	if _last_play.is_empty() or _player.playing:
+		return
+	_current_path = ""
+	_play_path_now(
+		str(_last_play.get("path", "")),
+		float(_last_play.get("fade_in", 0.0)),
+		float(_last_play.get("fade_out", 0.0)),
+		float(_last_play.get("volume_pct", 100.0)),
+		str(_last_play.get("context", "")),
+		float(_last_play.get("loop_from_sec", -1.0)),
+		float(_last_play.get("start_sec", -1.0)))
+
+
+func _on_web_audio_unlocked() -> void:
+	if _deferred_play.is_empty():
+		retry_web_playback()
+		return
+	var d: Dictionary = _deferred_play.duplicate()
+	_deferred_play.clear()
+	_current_path = ""
+	_play_path_now(
+		str(d.get("path", "")),
+		float(d.get("fade_in", DEFAULT_FADE)),
+		float(d.get("fade_out", DEFAULT_FADE)),
+		float(d.get("volume_pct", 100.0)),
+		str(d.get("context", "")),
+		float(d.get("loop_from_sec", -1.0)),
+		float(d.get("start_sec", -1.0)))
+
+
+func _play_path_now(
+		path: String,
+		fade_in: float,
+		fade_out: float,
+		volume_pct: float,
+		context: String,
+		loop_from_sec: float,
+		start_sec: float) -> void:
 	_target_volume_db = _volume_pct_to_db(volume_pct)
 	_loop_restart_sec = loop_from_sec
 	_current_context = context
@@ -185,6 +265,7 @@ func play_path(
 
 
 func stop(fade_out: float = DEFAULT_FADE) -> void:
+	_deferred_play.clear()
 	_kill_fade()
 	_loop_restart_sec = -1.0
 	_current_context = ""

@@ -324,6 +324,7 @@ func _build_ui() -> void:
 	_back_btn.add_theme_font_size_override("font_size", 16)
 	_back_btn.add_theme_color_override("font_color", Color(0.55, 0.78, 0.95))
 	_back_btn.pressed.connect(_on_back_pressed)
+	_tag_ui(_back_btn, "font", 400)
 	vbox.add_child(_back_btn)
 
 	if BuildConfig.admin_tools_enabled():

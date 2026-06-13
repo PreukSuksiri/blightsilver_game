@@ -138,6 +138,7 @@ func _build_ui() -> void:
 
 	var close_btn := Button.new()
 	close_btn.text = "✕ Close"
+	close_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	close_btn.pressed.connect(queue_free)
 	var close_margin := MarginContainer.new()
 	close_margin.add_theme_constant_override("margin_left", 6)
@@ -935,6 +936,7 @@ func _build_mission_row(parent: VBoxContainer, turn_key: String, idx: int) -> vo
 
 	# Remove button
 	var del_btn := _small_btn("✕")
+	del_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	del_btn.pressed.connect(func() -> void:
 		_cfg["turns"][snap_key].remove_at(snap_idx)
 		_rebuild_missions_ui())

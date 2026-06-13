@@ -97,6 +97,7 @@ func _build_ui() -> void:
 	close_btn.offset_top    = 8.0
 	close_btn.offset_right  = -8.0
 	close_btn.offset_bottom = 44.0
+	close_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	close_btn.add_theme_font_size_override("font_size", 16)
 	_style_close_btn(close_btn)
 	close_btn.pressed.connect(queue_free)

@@ -3762,13 +3762,13 @@ Test Case ID: TC-FUNC-Scout-Probe-001
 Description:
 Scout Probe: reveal adjacent cell after attack (Scout Probe)
 Implementation Reference:
-- TurnManager after battle if attacker survived
+- TurnManager after battle (win or lose)
 - AbilityType.REVEAL_ADJACENT_AFTER_ATTACK
 Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Scout Probe survives attack.
+- Scout Probe completes an attack (survives or is destroyed in Reckoning).
 Steps:
 Step 1: Select adjacent hidden cell.
 Expected Result:

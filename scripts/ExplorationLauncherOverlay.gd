@@ -96,6 +96,7 @@ func _build_panel() -> void:
 
 	var close_btn := Button.new()
 	close_btn.text = "✕"
+	close_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	close_btn.add_theme_font_size_override("font_size", 18)
 	_style_btn(close_btn, _BTN_CLOSE)
 	close_btn.custom_minimum_size = Vector2(36, 36)

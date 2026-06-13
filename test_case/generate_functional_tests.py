@@ -1046,8 +1046,8 @@ def build_character_tests(card: dict) -> list[str]:
     elif ab == "REVEAL_ADJACENT_AFTER_ATTACK":
         add(
             f"{name}: reveal adjacent cell after attack (Scout Probe)",
-            ["TurnManager after battle if attacker survived", f"AbilityType.{ab}"],
-            [f"{name} survives attack."],
+            ["TurnManager after battle (win or lose)", f"AbilityType.{ab}"],
+            [f"{name} completes an attack (survives or is destroyed in Reckoning)."],
             ["Select adjacent hidden cell."],
             ["Adjacent cell revealed."],
             [],

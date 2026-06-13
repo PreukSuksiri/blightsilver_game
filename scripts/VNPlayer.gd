@@ -688,6 +688,8 @@ func _show_beat() -> void:
 		_apply_beat_battle_display(beat, true)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))
+		var tut_battle_rewards: Variant = beat.get("battle_reward", [])
+		GameState.vn_battle_rewards = tut_battle_rewards if tut_battle_rewards is Array else []
 		CheckerTransition.fade_out_to_scene("res://scenes/game_board.tscn")
 		return
 
@@ -711,6 +713,9 @@ func _show_beat() -> void:
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))
 		var battle_rewards: Variant = beat.get("battle_reward", [])
 		GameState.vn_battle_rewards = battle_rewards if battle_rewards is Array else []
+		var loss_rewards: Variant = beat.get("battle_loss_reward", [])
+		GameState.vn_battle_loss_rewards = loss_rewards if loss_rewards is Array else []
+		GameState.vn_battle_loss_reward_once = str(beat.get("battle_loss_reward_once", "")).strip_edges()
 		_apply_beat_battle_display(beat)
 		GameState.apply_battle_audio_config(beat)
 		# Enemy deck — override what cards the AI places this battle

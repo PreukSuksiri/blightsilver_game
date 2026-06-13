@@ -85,6 +85,7 @@ func _build_ui() -> void:
 
 	var back_btn := Button.new()
 	back_btn.text = "← Back to Main Menu"
+	back_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	back_btn.add_theme_font_size_override("font_size", 14)
 	back_btn.pressed.connect(func() -> void:
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))

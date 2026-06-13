@@ -2,8 +2,6 @@ extends Control
 
 signal closed()
 
-const CHIVO_FONT := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
-
 var _tab_items_btn:   Button
 var _tab_mail_btn:    Button
 var _items_panel:     Control
@@ -70,7 +68,7 @@ func _build_ui() -> void:
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 18)
 	title.add_theme_color_override("font_color", Color(0.82, 0.93, 1.0))
-	title.add_theme_font_override("font", CHIVO_FONT)
+	title.add_theme_font_override("font", FontManager.ui_font(400))
 	var title_margin := MarginContainer.new()
 	title_margin.add_theme_constant_override("margin_left", 18)
 	title_margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -81,6 +79,7 @@ func _build_ui() -> void:
 	close_btn.text = "✕"
 	close_btn.custom_minimum_size = Vector2(48, 48)
 	close_btn.flat = true
+	close_btn.add_theme_font_override("font", FontManager.ui_font(400))
 	close_btn.add_theme_font_size_override("font_size", 18)
 	close_btn.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
 	close_btn.pressed.connect(_on_close)
@@ -140,7 +139,7 @@ func _make_tab_button(label: String) -> Button:
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.custom_minimum_size = Vector2(0, 40)
 	btn.add_theme_font_size_override("font_size", 14)
-	btn.add_theme_font_override("font", CHIVO_FONT)
+	btn.add_theme_font_override("font", FontManager.ui_font(400))
 	return btn
 
 func _set_tab_active(btn: Button, active: bool) -> void:
@@ -173,7 +172,7 @@ func _build_items_panel() -> Control:
 	section_lbl.text = "Your Items"
 	section_lbl.add_theme_font_size_override("font_size", 14)
 	section_lbl.add_theme_color_override("font_color", Color(0.55, 0.65, 0.75, 0.8))
-	section_lbl.add_theme_font_override("font", CHIVO_FONT)
+	section_lbl.add_theme_font_override("font", FontManager.ui_font(400))
 	vbox.add_child(section_lbl)
 
 	# Credits row
@@ -211,7 +210,7 @@ func _build_items_panel() -> Control:
 	credit_name.text = "Credits"
 	credit_name.add_theme_font_size_override("font_size", 15)
 	credit_name.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
-	credit_name.add_theme_font_override("font", CHIVO_FONT)
+	credit_name.add_theme_font_override("font", FontManager.ui_font(400))
 	credit_text_vbox.add_child(credit_name)
 
 	var credit_desc := Label.new()
@@ -223,7 +222,7 @@ func _build_items_panel() -> Control:
 	_credit_count_lbl = Label.new()
 	_credit_count_lbl.add_theme_font_size_override("font_size", 20)
 	_credit_count_lbl.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
-	_credit_count_lbl.add_theme_font_override("font", CHIVO_FONT)
+	_credit_count_lbl.add_theme_font_override("font", FontManager.ui_font(700))
 	_credit_count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	credit_hbox.add_child(_credit_count_lbl)
 
@@ -260,7 +259,7 @@ func _build_items_panel() -> Control:
 	scroll_name.text = "Union Scroll"
 	scroll_name.add_theme_font_size_override("font_size", 15)
 	scroll_name.add_theme_color_override("font_color", Color(0.88, 0.90, 1.0))
-	scroll_name.add_theme_font_override("font", CHIVO_FONT)
+	scroll_name.add_theme_font_override("font", FontManager.ui_font(400))
 	scroll_text_vbox.add_child(scroll_name)
 
 	var scroll_desc := Label.new()
@@ -278,7 +277,7 @@ func _build_items_panel() -> Control:
 	_scroll_count_lbl = Label.new()
 	_scroll_count_lbl.add_theme_font_size_override("font_size", 20)
 	_scroll_count_lbl.add_theme_color_override("font_color", Color(0.88, 0.90, 1.0))
-	_scroll_count_lbl.add_theme_font_override("font", CHIVO_FONT)
+	_scroll_count_lbl.add_theme_font_override("font", FontManager.ui_font(700))
 	_scroll_count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	scroll_hbox.add_child(_scroll_count_lbl)
 
@@ -326,7 +325,7 @@ func _build_mail_panel() -> Control:
 	_unclaimed_lbl = Label.new()
 	_unclaimed_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_unclaimed_lbl.add_theme_font_size_override("font_size", 12)
-	_unclaimed_lbl.add_theme_font_override("font", CHIVO_FONT)
+	_unclaimed_lbl.add_theme_font_override("font", FontManager.ui_font(400))
 	_unclaimed_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	mail_header.add_child(_unclaimed_lbl)
 
@@ -448,7 +447,7 @@ func _make_credit_bundle_row(summary: Dictionary) -> Control:
 	title.text = "Credit rewards (%d)" % count
 	title.add_theme_font_size_override("font_size", 14)
 	title.add_theme_color_override("font_color", Color(1.0, 0.88, 0.35))
-	title.add_theme_font_override("font", CHIVO_FONT)
+	title.add_theme_font_override("font", FontManager.ui_font(400))
 	vbox.add_child(title)
 
 	var sub := Label.new()

@@ -265,7 +265,9 @@ var tech_cards_played_this_game: Array = [[], []]
 var open_campaign_gallery_on_menu: bool = false
 var vn_on_win: String = ""
 var vn_on_lose: String = ""
-var vn_battle_rewards: Array = []  # VN start_battle beat rewards — granted to mailbox on win
+var vn_battle_rewards: Array = []  # VN start_battle / tutorial_battle beat rewards — granted to mailbox on win
+var vn_battle_loss_rewards: Array = []  # VN start_battle beat rewards — granted to mailbox on loss (optional once_flag)
+var vn_battle_loss_reward_once: String = ""  # SaveManager.exploration_flags key — skip loss rewards if already "1"
 var vn_launched_from_exploration: bool = false
 var game_over_reason: String = ""  # "crystals" | "all_destroyed" | "no_moves" | "surrender"
 var portrait_p1_offset: Vector2 = Vector2.ZERO
@@ -962,6 +964,8 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		battle_ai_forced_tech.clear()
 		vn_launched_from_exploration = false
 		vn_battle_rewards.clear()
+		vn_battle_loss_rewards.clear()
+		vn_battle_loss_reward_once = ""
 	_vn_battle_pending = false
 	game_over_reason = ""
 	_init_grids()

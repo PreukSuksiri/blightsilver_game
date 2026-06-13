@@ -243,6 +243,7 @@ func _make_field_row(parent: Control, label_text: String, placeholder: String) -
 func _make_btn(text: String, cb: Callable) -> Button:
 	var btn := Button.new()
 	btn.text = text
+	_tag_ui(btn, "font", 400)
 	btn.add_theme_font_size_override("font_size", 14)
 	btn.pressed.connect(cb)
 	return btn

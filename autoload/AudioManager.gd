@@ -4,6 +4,8 @@ extends Node
 ## All AudioStreamPlayers in the game must set bus = "Music" or bus = "SFX".
 ## Changing volume here instantly affects every player on that bus.
 
+signal web_audio_unlocked
+
 const SETTINGS_PATH := "user://audio_settings.json"
 
 var music_volume: float = 0.8   # 0.0 – 1.0
@@ -11,6 +13,7 @@ var sfx_volume:   float = 1.0   # 0.0 – 1.0
 var tts_enabled:  bool  = false
 
 var _tts_voice: String = ""
+var _web_audio_unlocked: bool = false
 
 # ── BGM filter state ──────────────────────────────────────────
 var _hp_filter: AudioEffectHighPassFilter = null
@@ -24,15 +27,74 @@ const _LP_ACTIVE:  float = 10000 #800.0     # cuts treble — music sounds muffl
 const _FILTER_FADE: float = 0.5      # seconds for gradual transition
 
 func _ready() -> void:
+	_web_audio_unlocked = not OS.has_feature("web")
 	_ensure_buses()
 	_load_settings()
 	_apply()
 	_tts_voice = _pick_tts_voice()
+	if OS.has_feature("web"):
+		AudioServer.set("driver/output_latency", 50)
+		set_process_input(true)
 	if DisplayServer.has_feature(DisplayServer.FEATURE_TEXT_TO_SPEECH):
 		# Only restore on natural finish — canceled is handled directly in tts_stop()
 		# to avoid a race where a new speak() ducks music after the cancel-restore fires
 		DisplayServer.tts_set_utterance_callback(
 			DisplayServer.TTS_UTTERANCE_ENDED, func(_id: int) -> void: call_deferred("_restore_music"))
+
+
+func is_web_audio_unlocked() -> bool:
+	return _web_audio_unlocked
+
+
+## Browsers block audio until click/tap/keypress. Call after first user gesture on web.
+func request_web_audio_unlock() -> void:
+	if _web_audio_unlocked:
+		return
+	_resume_web_audio_context()
+	_web_audio_unlocked = true
+	web_audio_unlocked.emit()
+
+
+func ensure_web_audio_from_ui() -> void:
+	if not OS.has_feature("web"):
+		return
+	request_web_audio_unlock()
+	BGMManager.retry_web_playback()
+
+
+func _input(event: InputEvent) -> void:
+	if _web_audio_unlocked or not OS.has_feature("web"):
+		return
+	if _is_user_gesture_event(event):
+		ensure_web_audio_from_ui()
+
+
+func _is_user_gesture_event(event: InputEvent) -> bool:
+	if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+		return true
+	if event is InputEventScreenTouch and (event as InputEventScreenTouch).pressed:
+		return true
+	if event is InputEventKey and (event as InputEventKey).pressed and not (event as InputEventKey).echo:
+		return true
+	return false
+
+
+func _resume_web_audio_context() -> void:
+	if not OS.has_feature("web") or not ClassDB.class_exists("JavaScriptBridge"):
+		return
+	JavaScriptBridge.eval("""
+		(function () {
+			try {
+				if (typeof GodotAudio !== 'undefined' && GodotAudio.ctx
+						&& GodotAudio.ctx.state !== 'running') {
+					GodotAudio.ctx.resume();
+				}
+				if (typeof _godot_audio_resume === 'function') {
+					_godot_audio_resume();
+				}
+			} catch (e) {}
+		})();
+	""", false)
 
 # ── Bus setup ─────────────────────────────────────────────────
 
@@ -50,6 +112,8 @@ func _ensure_buses() -> void:
 	_ensure_music_filters()
 
 func _ensure_music_filters() -> void:
+	if OS.has_feature("web"):
+		return
 	var m: int = AudioServer.get_bus_index("Music")
 	if m < 0:
 		return

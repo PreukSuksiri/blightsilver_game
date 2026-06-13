@@ -26,6 +26,9 @@ const AFFINITY_COLORS: Dictionary = {
 }
 const TECH_ACCENT := Color(0.38, 0.65, 1.0)
 const TRAP_ACCENT := Color(1.0,  0.30, 0.30)
+const TILES_PER_FRAME := 8
+const WEB_TILES_PER_FRAME := 4
+const WEB_TEX_STARTS_PER_FRAME := 3
 
 @onready var stats_label: Label              = $Panel/VBox/Header/StatsLabel
 @onready var header_bar: HBoxContainer       = $Panel/VBox/Header
@@ -57,7 +60,10 @@ var _count_filter_btns: Dictionary = {}
 
 # Threaded texture loading
 var _pending_tex: Dictionary = {}   # tex_path -> TextureRect
+var _tex_start_queue: Array = []
 var _badge_font: FontVariation = null  # shared badge font — created once in _ready
+var _build_gen: int = 0
+var _loading_label: Label = null
 
 # Advanced filter control refs
 var _adv_affinity_btn: OptionButton
@@ -78,11 +84,41 @@ func _ready() -> void:
 	_build_filter_bar()
 	_build_count_filter_row()
 	_build_adv_gallery_filters()
-	_build_all_cards()
 	_add_scrap_all_button()
+	_show_loading_label(true)
+	call_deferred("_begin_gallery_build")
 	# Apply initial union mechanism visibility and subscribe to changes
 	_on_union_mechanism_changed(SaveManager.union_mechanism_unlocked)
 	SaveManager.union_mechanism_changed.connect(_on_union_mechanism_changed)
+
+
+func _tiles_per_frame() -> int:
+	return WEB_TILES_PER_FRAME if OS.has_feature("web") else TILES_PER_FRAME
+
+
+func _show_loading_label(show: bool) -> void:
+	if show:
+		if _loading_label == null:
+			_loading_label = Label.new()
+			_loading_label.text = "Loading gallery..."
+			_loading_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			_loading_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			_loading_label.set_anchors_preset(Control.PRESET_FULL_RECT)
+			_loading_label.add_theme_font_size_override("font_size", 16)
+			_loading_label.add_theme_color_override("font_color", Color(0.55, 0.72, 0.95))
+			_loading_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			card_scroll.add_child(_loading_label)
+		_loading_label.visible = true
+	elif _loading_label != null:
+		_loading_label.visible = false
+
+
+func _begin_gallery_build() -> void:
+	_build_gen += 1
+	var gen := _build_gen
+	await _build_all_cards_async(gen)
+	if is_inside_tree() and gen == _build_gen:
+		_show_loading_label(false)
 
 # ─────────────────────────────────────────────────────────────
 # Filter bar
@@ -212,6 +248,11 @@ func _update_stats() -> void:
 # Build all card tiles
 # ─────────────────────────────────────────────────────────────
 func _process(_delta: float) -> void:
+	var tex_starts_left: int = WEB_TEX_STARTS_PER_FRAME if OS.has_feature("web") else 9999
+	while _tex_start_queue.size() > 0 and tex_starts_left > 0:
+		var item: Dictionary = _tex_start_queue.pop_front()
+		_start_tex_load(str(item.get("path", "")), item.get("art") as TextureRect)
+		tex_starts_left -= 1
 	if _pending_tex.is_empty():
 		return
 	var done: Array[String] = []
@@ -229,59 +270,88 @@ func _process(_delta: float) -> void:
 	for path: String in done:
 		_pending_tex.erase(path)
 
-func _build_all_cards() -> void:
+func _build_all_cards_async(gen: int) -> void:
 	for child in card_flow.get_children():
 		child.queue_free()
 	_tiles.clear()
 	_pending_tex.clear()
+	_tex_start_queue.clear()
+	if _loading_label == null:
+		_show_loading_label(true)
+	else:
+		_loading_label.visible = true
 
+	var entries: Array[Dictionary] = []
 	var char_names: Array = CardDatabase.get_all_character_names()
 	char_names.sort()
 	for cname: String in char_names:
 		var data: CharacterData = CardDatabase.get_character(cname)
-		var tile := _make_char_tile(data)
-		card_flow.add_child(tile)
-		_tiles.append({"node": tile, "card_name": cname, "card_type": "character",
-			"affinity": data.affinity, "cost": data.crystal_cost,
-			"atk": data.base_atk, "def": data.base_def,
-			"desc": data.get_ability_description(),
-			"include_in_demo": data.include_in_demo})
+		entries.append({"kind": "character", "name": cname, "data": data})
 
 	var trap_names: Array = CardDatabase.get_all_trap_names()
 	trap_names.sort()
 	for tname: String in trap_names:
 		var data: TrapData = CardDatabase.get_trap(tname)
-		var tile := _make_trap_tile(data)
-		card_flow.add_child(tile)
-		_tiles.append({"node": tile, "card_name": tname, "card_type": "trap",
-			"affinity": -1, "cost": data.crystal_cost,
-			"atk": -1, "def": -1,
-			"desc": data.get_effect_description(),
-			"include_in_demo": data.include_in_demo})
+		entries.append({"kind": "trap", "name": tname, "data": data})
 
 	var tech_names: Array = CardDatabase.get_all_tech_names()
 	tech_names.sort()
 	for ename: String in tech_names:
 		var data: TechCardData = CardDatabase.get_tech(ename)
-		var tile := _make_tech_tile(data)
-		card_flow.add_child(tile)
-		_tiles.append({"node": tile, "card_name": ename, "card_type": "tech",
-			"affinity": -1, "cost": data.crystal_cost,
-			"atk": -1, "def": -1,
-			"desc": data.get_effect_description(),
-			"include_in_demo": data.include_in_demo})
+		entries.append({"kind": "tech", "name": ename, "data": data})
 
 	var union_list: Array = UnionDatabase.get_all_unions()
 	union_list.sort_custom(func(a: UnionData, b: UnionData) -> bool: return a.card_name < b.card_name)
 	for u: UnionData in union_list:
-		var tile := _make_union_tile(u)
-		card_flow.add_child(tile)
-		var is_unlocked: bool = SaveManager.is_union_unlocked(u.card_name)
-		_tiles.append({"node": tile, "card_name": u.card_name, "card_type": "union",
-			"affinity": int(u.affinity), "cost": u.summon_cost,
-			"atk": u.base_atk, "def": u.base_def,
-			"desc": u.ability_description if is_unlocked else u.partial_ability_description,
-			"include_in_demo": u.include_in_demo})
+		entries.append({"kind": "union", "name": u.card_name, "data": u})
+
+	var batch := 0
+	for entry: Dictionary in entries:
+		if gen != _build_gen or not is_inside_tree():
+			return
+		var tile: Control = null
+		match str(entry.get("kind", "")):
+			"character":
+				var data: CharacterData = entry["data"] as CharacterData
+				tile = _make_char_tile(data)
+				card_flow.add_child(tile)
+				_tiles.append({"node": tile, "card_name": entry["name"], "card_type": "character",
+					"affinity": data.affinity, "cost": data.crystal_cost,
+					"atk": data.base_atk, "def": data.base_def,
+					"desc": data.get_ability_description(),
+					"include_in_demo": data.include_in_demo})
+			"trap":
+				var tdata: TrapData = entry["data"] as TrapData
+				tile = _make_trap_tile(tdata)
+				card_flow.add_child(tile)
+				_tiles.append({"node": tile, "card_name": entry["name"], "card_type": "trap",
+					"affinity": -1, "cost": tdata.crystal_cost,
+					"atk": -1, "def": -1,
+					"desc": tdata.get_effect_description(),
+					"include_in_demo": tdata.include_in_demo})
+			"tech":
+				var edata: TechCardData = entry["data"] as TechCardData
+				tile = _make_tech_tile(edata)
+				card_flow.add_child(tile)
+				_tiles.append({"node": tile, "card_name": entry["name"], "card_type": "tech",
+					"affinity": -1, "cost": edata.crystal_cost,
+					"atk": -1, "def": -1,
+					"desc": edata.get_effect_description(),
+					"include_in_demo": edata.include_in_demo})
+			"union":
+				var udata: UnionData = entry["data"] as UnionData
+				tile = _make_union_tile(udata)
+				card_flow.add_child(tile)
+				var is_unlocked: bool = SaveManager.is_union_unlocked(udata.card_name)
+				_tiles.append({"node": tile, "card_name": entry["name"], "card_type": "union",
+					"affinity": int(udata.affinity), "cost": udata.summon_cost,
+					"atk": udata.base_atk, "def": udata.base_def,
+					"desc": udata.ability_description if is_unlocked else udata.partial_ability_description,
+					"include_in_demo": udata.include_in_demo})
+		batch += 1
+		if batch >= _tiles_per_frame():
+			batch = 0
+			await get_tree().process_frame
 
 	_apply_filter()
 
@@ -426,7 +496,19 @@ func _get_card_tex_path(card_name: String) -> String:
 		return path
 	return ""
 
+
 func _request_tex(path: String, art: TextureRect) -> void:
+	if path.is_empty():
+		return
+	if OS.has_feature("web"):
+		_tex_start_queue.append({"path": path, "art": art})
+		return
+	_start_tex_load(path, art)
+
+
+func _start_tex_load(path: String, art: TextureRect) -> void:
+	if not is_instance_valid(art):
+		return
 	var status: int = ResourceLoader.load_threaded_get_status(path)
 	if status == ResourceLoader.THREAD_LOAD_LOADED:
 		# Already cached — assign immediately
@@ -443,7 +525,7 @@ func _request_tex(path: String, art: TextureRect) -> void:
 # Collection refresh
 # ─────────────────────────────────────────────────────────────
 func _on_collection_changed() -> void:
-	_build_all_cards()
+	_begin_gallery_build()
 	_on_union_mechanism_changed(SaveManager.union_mechanism_unlocked)
 
 func _on_union_mechanism_changed(unlocked: bool) -> void:
