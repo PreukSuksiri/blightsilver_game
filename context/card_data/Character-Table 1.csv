@@ -19,7 +19,7 @@ Swarmcaller,Character,900,45,45,Nature,4,+15 ATK and DEF for each other face-up 
 Ironclad Sentinel,Character,1100,55,95,Anima,5,Immune to 0-cost Traps. This Character cannot be destroyed by Tech Cards.,,Yes,710,,,,,
 Tomb Bandit,Character,900,75,60,Anima,4,This Character cannot be destroyed by Traps.,,Yes,690,Yes,,,,Yes
 Scout Probe,Character,700,40,50,Cosmic,3,Choose and reveal any adjacent square after it attacked.,,Yes,440,Yes,,Yes,,Yes
-Lab Zombie,Character,700,55,40,Bio,3,"With Mutagen Flag, this card gain +25 ATK against Nature or Anima Characters.",,Yes,490,Yes,,,Yes,
+Lab Zombie,Character,700,55,20,Bio,3,"With Mutagen Flag: +45 ATK vs Nature or Anima.",,Yes,490,Yes,,,Yes,
 Lab Bloater,Character,800,20,85,Bio,4,"With Mutagen Flag, destroy the attacker after this card has been attacked. Also, the owner of this card does not pay Crystal Cost when it is destroyed.	",,Yes,460,Yes,,,Yes,Yes
 Lab Crawler,Character,1300,90,45,Bio,5,"With Mutagen Flag, this card can attack twice",,Yes,720,Yes,,,,Yes
 Pit Lord,Character,1200,120,100,Chaos,5,"his card is destroyed if battle with Divine Character. After this card attacked, halve its ATK and DEF permanently",,Yes,1120,Yes,,,Yes,
@@ -304,7 +304,7 @@ Bladeshifter,Character,420,0,50,Bio,2,"Once, after this card defended successful
 Rotten Shrieker,Character,450,50,30,Bio,2,-10 ATK permanently at the end of your turn,,,420,Yes,,,Yes,
 ,Character,,,,Bio,2,,,,0,,,,,
 ,Character,,,,Bio,2,,,,0,,,,,
-Plant 29,Character,800,45,75,Bio,3,"At the start of your turn, select 1 face-up opponent’s card. Flip a coin, if head, put a venom flag on it. If tail, put mutagen flag on it.",,,570,Yes,,,Yes,Yes
+Plant 29,Character,800,45,75,Bio,3,"Start of your turn: Flip a coin. Head: put Venom Flag any face-up card. Tail: put Mutagen Flag on any card (even face-down).",,,570,Yes,,,Yes,Yes
 ,Character,,,,Bio,3,,,,0,,,,,
 ,Character,,,,Bio,3,,,,0,,,,,
 ,Character,,,,Bio,3,,,,0,,,,,

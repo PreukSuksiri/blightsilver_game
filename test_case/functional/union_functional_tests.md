@@ -807,7 +807,7 @@ Expected Result:
 
 Card Name: Imperial Frame
 Type: Union
-Stats: ATK=45 DEF=30 summon_cost=1000 Affinity=COSMIC
+Stats: ATK=45 DEF=30 summon_cost=500 Affinity=COSMIC
 AbilityType: NONE
 ability_params: {}
 Description: None
@@ -821,11 +821,11 @@ Implementation Reference:
 - UnionDatabase.find_available_unions validation
 - Once per duel per player
 Preconditions:
-- summon_cost=1000 crystals available.
+- summon_cost=500 crystals available.
 - Material cells satisfy UnionDatabase material_conditions.
 Steps:
 Step 1: Enter union mode; select valid materials.
-Step 2: Pay 1000 crystals; place at anchor cell.
+Step 2: Pay 500 crystals; place at anchor cell.
 Expected Result:
 - is_union=true; face_up=true at anchor.
 - Materials removed pay_cost=false.
@@ -1071,10 +1071,10 @@ Expected Result:
 
 Card Name: Diamond Unicorn
 Type: Union
-Stats: ATK=50 DEF=35 summon_cost=500 Affinity=DIVINE
-AbilityType: ONE_USE_DEF_BOOST
+Stats: ATK=30 DEF=35 summon_cost=500 Affinity=DIVINE
+AbilityType: ONE_USE_ATK_BOOST
 ability_params: {'bonus': 15}
-Description: +15 ATK until the end of this turn, once.
+Description: Once Union, +15 ATK until this turn's end
 Test Cases:
 
 Test Case ID: TC-FUNC-Diamond-Unicorn-000
@@ -1097,21 +1097,21 @@ Expected Result:
 
 Test Case ID: TC-FUNC-Diamond-Unicorn-001
 Description:
-Diamond Unicorn: one-time +15 DEF when defending
+Diamond Unicorn: one-time +15 ATK on first attack
 Implementation Reference:
-- BattleResolver._get_effective_def()
-- TurnManager marks one_use_def_boost_used after battle
-- AbilityType.ONE_USE_DEF_BOOST
+- BattleResolver._get_effective_atk() if not one_use_atk_boost_used
+- TurnManager._apply_post_battle_effects sets one_use_atk_boost_used=true
+- AbilityType.ONE_USE_ATK_BOOST
 Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- First defense with Diamond Unicorn.
+- Diamond Unicorn has one_use_atk_boost_used=false.
 Steps:
-Step 1: Opponent attacks twice across two turns.
+Step 1: First attack: verify bonus; second attack: no bonus.
 Expected Result:
-- First defense: defender_def_used == 50.
-- Second defense: defender_def_used == 35.
+- First attack: attacker_atk_used == 45; one_use_atk_boost_used becomes true.
+- Second attack: attacker_atk_used == 30.
 
 ---
 
@@ -1340,7 +1340,7 @@ Expected Result:
 
 Card Name: Colorful Mage
 Type: Union
-Stats: ATK=55 DEF=40 summon_cost=500 Affinity=ARCANE
+Stats: ATK=40 DEF=40 summon_cost=500 Affinity=ARCANE
 AbilityType: PERM_STAT_PENALTY_VS_NON_AFFINITY
 ability_params: {'affinity': 'A.ARCANE', 'atk': 10, 'def': 10}
 Description: Foe’s non-Arcane get -10 ATK&DEF permanently in Reckoning with this card

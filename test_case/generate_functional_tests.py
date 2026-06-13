@@ -1226,11 +1226,14 @@ def build_character_tests(card: dict) -> list[str]:
 
     elif ab == "TURN_START_COIN_FLIP_FLAG":
         add(
-            f"{name}: turn start coin → venom or mutagen flag on selected opponent card",
+            f"{name}: turn start coin → venom on any face-up card or mutagen on any card",
             ["TurnManager turn start ability", f"AbilityType.{ab}"],
-            [f"{name} on field at turn start.", "Opponent face-up character selected."],
-            ["Start turn; select target; resolve coin."],
-            ["Heads: venom flag; Tails: mutagen string in flags (NOT has_mutagen_flag)."],
+            [f"{name} on field at turn start.", "Board has valid flag targets."],
+            ["Start turn; resolve coin flip; select target per result."],
+            [
+                "Heads: venom flag on chosen face-up card.",
+                "Tails: mutagen on chosen card (characters get has_mutagen_flag).",
+            ],
             [],
         )
 

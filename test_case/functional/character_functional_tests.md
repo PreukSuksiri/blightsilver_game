@@ -12,7 +12,7 @@ Type: Character
 Stats: ATK=10 DEF=20 Cost=170 Affinity=NATURE
 AbilityType: ATK_BONUS_IF_AFFINITY_ON_FIELD
 ability_params: {'affinity': 'NATURE', 'bonus': 10}
-Description: +10 ATK if there is face-up Nature card
+Description: +10 ATK if there is another face-up Nature card
 Test Cases:
 
 Test Case ID: TC-FUNC-Armored-Monkey-001
@@ -511,31 +511,6 @@ Expected Result:
 
 ---
 
-Card Name: Cursed Well
-Type: Character
-Stats: ATK=0 DEF=25 Cost=300 Affinity=CHAOS
-AbilityType: PERM_ATK_BOOST_WHEN_EXPOSED
-ability_params: {'amount': 15}
-Description: At the end of the turn that it's been exposed, +15 ATK permanently
-Test Cases:
-
-Test Case ID: TC-FUNC-Cursed-Well-001
-Description:
-Cursed Well: +15 ATK permanently at end of expose turn
-Implementation Reference:
-- TurnManager end-of-expose-turn handler
-- AbilityType.PERM_ATK_BOOST_WHEN_EXPOSED
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Cursed Well face-up on field; revealed_on_turn == current turn_number.
-Steps:
-Step 1: End the turn on which Cursed Well was first exposed.
-Expected Result:
-- perm_atk_bonus += 15 (effective ATK 15 on later turns).
-
----
-
 Card Name: Void Stalker
 Type: Character
 Stats: ATK=65 DEF=25 Cost=720 Affinity=CHAOS
@@ -753,13 +728,13 @@ Card Name: Ox Patrol
 Type: Character
 Stats: ATK=30 DEF=35 Cost=420 Affinity=ANIMA
 AbilityType: ATK_DEF_BONUS_VS_NON_AFFINITY
-ability_params: {'affinity': 'ANIMA', 'atk': 5, 'def': 5}
+ability_params: {'affinity': 'ANIMA', 'atk': 10, 'def': 10}
 Description: +10 ATK&DEF vs Non-Anima
 Test Cases:
 
 Test Case ID: TC-FUNC-Ox-Patrol-001
 Description:
-Ox Patrol: +5 ATK/DEF vs non-ANIMA
+Ox Patrol: +10 ATK/DEF vs non-ANIMA
 Implementation Reference:
 - BattleResolver._get_effective_atk/_get_effective_def
 - AbilityType.ATK_DEF_BONUS_VS_NON_AFFINITY
@@ -771,7 +746,7 @@ Preconditions:
 Steps:
 Step 1: Attack or defend with Ox Patrol.
 Expected Result:
-- When opponent affinity != ANIMA: +5 to ATK (attack) or DEF (defend).
+- When opponent affinity != ANIMA: +10 to ATK (attack) or DEF (defend).
 
 ---
 
@@ -806,7 +781,7 @@ Type: Character
 Stats: ATK=40 DEF=20 Cost=350 Affinity=DIVINE
 AbilityType: ATK_PENALTY_WHEN_EXPOSED
 ability_params: {'penalty': 20}
-Description: -20 ATK if exposed
+Description: At the end of the turn that it's been exposed, -20 ATK
 Test Cases:
 
 Test Case ID: TC-FUNC-Sniping-Fairy-001
@@ -832,7 +807,7 @@ Type: Character
 Stats: ATK=75 DEF=0 Cost=860 Affinity=DIVINE
 AbilityType: ATK_ZERO_AFTER_WIN
 ability_params: {}
-Description: After this card attacked successfully, its ATK becomes 0 permanently
+Description: After this card attacked unit successfully, its ATK becomes 0 permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Mephisto-the-Fallen-001
@@ -1174,7 +1149,7 @@ Expected Result:
 
 Card Name: Blue Mage
 Type: Character
-Stats: ATK=45 DEF=45 Cost=800 Affinity=ARCANE
+Stats: ATK=35 DEF=35 Cost=800 Affinity=ARCANE
 AbilityType: COIN_FLIP_2_DESTROY_NON_AFFINITY
 ability_params: {'affinity': 'ARCANE'}
 Description: If this card battles non-Arcane card, flip two coins. If both are head, destroy it.
@@ -1622,7 +1597,7 @@ Type: Character
 Stats: ATK=45 DEF=40 Cost=500 Affinity=ANIMA
 AbilityType: DEF_ZERO_WHEN_EXPOSED
 ability_params: {}
-Description: If this card is exposed, its defense becomes 0
+Description: At the end of the turn that it's been exposed, its defense becomes 0
 Test Cases:
 
 Test Case ID: TC-FUNC-Mafia-Associates-001
@@ -1645,41 +1620,12 @@ Verification (automated):
 
 ---
 
-Card Name: Immortal Vampire
-Type: Character
-Stats: ATK=30 DEF=80 Cost=1200 Affinity=CHAOS
-AbilityType: DESTROYED_IF_BATTLES_DIVINE
-ability_params: {}
-Description: +50 ATK for each other face-up Chaos card on their own field. In Reckoning with Divine, destroy this card.
-Test Cases:
-
-Test Case ID: TC-FUNC-Immortal-Vampire-001
-Description:
-Immortal Vampire: destroyed when battling Divine; halve stats after attack
-Implementation Reference:
-- BattleResolver pre-compare: attacker destroyed if defender.affinity==DIVINE
-- _apply_post_attack_effects: halve_stats() via ability_type match
-- AbilityType.DESTROYED_IF_BATTLES_DIVINE
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Divine defender (e.g. Angel Gatekeeper) face-up.
-Steps:
-Step 1: Immortal Vampire attacks Divine character.
-Expected Result:
-- result.attacker_destroyed == true.
-- result.attacker_crystal_loss == 1200.
-- After any successful attack: current_atk and current_def halved permanently.
-
----
-
 Card Name: Pit Lord
 Type: Character
 Stats: ATK=120 DEF=100 Cost=1250 Affinity=CHAOS
 AbilityType: DESTROYED_IF_BATTLES_DIVINE
 ability_params: {}
-Description: his card is destroyed if battle with Divine Unit. After this card attacked, halve its ATK&DEF permanently
+Description: This card is destroyed if battle with Divine Unit. After this card attacked, halve its ATK&DEF permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Pit-Lord-001
@@ -1699,35 +1645,6 @@ Step 1: Pit Lord attacks Divine character.
 Expected Result:
 - result.attacker_destroyed == true.
 - result.attacker_crystal_loss == 1250.
-- After any successful attack: current_atk and current_def halved permanently.
-
----
-
-Card Name: Vampire Duchess
-Type: Character
-Stats: ATK=50 DEF=50 Cost=800 Affinity=CHAOS
-AbilityType: DESTROYED_IF_BATTLES_DIVINE
-ability_params: {}
-Description: In Reckoning with Divine, destroy this card. In Reckoning with non-Divine, Drain 5 ATK&DEF permanently
-Test Cases:
-
-Test Case ID: TC-FUNC-Vampire-Duchess-001
-Description:
-Vampire Duchess: destroyed when battling Divine; halve stats after attack
-Implementation Reference:
-- BattleResolver pre-compare: attacker destroyed if defender.affinity==DIVINE
-- _apply_post_attack_effects: halve_stats() via ability_type match
-- AbilityType.DESTROYED_IF_BATTLES_DIVINE
-Preconditions:
-- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
-- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
-- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Divine defender (e.g. Angel Gatekeeper) face-up.
-Steps:
-Step 1: Vampire Duchess attacks Divine character.
-Expected Result:
-- result.attacker_destroyed == true.
-- result.attacker_crystal_loss == 800.
 - After any successful attack: current_atk and current_def halved permanently.
 
 ---
@@ -1811,6 +1728,58 @@ Steps:
 Step 1: Battle Feral Vampire vs Divine.
 Expected Result:
 - Feral Vampire result.attacker_destroyed == true.
+
+---
+
+Card Name: Immortal Vampire
+Type: Character
+Stats: ATK=30 DEF=80 Cost=1200 Affinity=CHAOS
+AbilityType: DESTROY_SELF_VS_DIVINE_BOTH
+ability_params: {}
+Description: +50 ATK for each other face-up Chaos card on their own field. In Reckoning with Divine, destroy this card.
+Test Cases:
+
+Test Case ID: TC-FUNC-Immortal-Vampire-001
+Description:
+Immortal Vampire: self-destruct when battling Divine (attacker or defender role)
+Implementation Reference:
+- BattleResolver early-return branches for Divine match
+- AbilityType.DESTROY_SELF_VS_DIVINE_BOTH
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Divine character involved in battle.
+Steps:
+Step 1: Battle Immortal Vampire vs Divine.
+Expected Result:
+- Immortal Vampire result.attacker_destroyed == true.
+
+---
+
+Card Name: Vampire Duchess
+Type: Character
+Stats: ATK=50 DEF=50 Cost=800 Affinity=CHAOS
+AbilityType: DESTROY_SELF_VS_DIVINE_BOTH
+ability_params: {'drain_atk': 5, 'drain_def': 5}
+Description: In Reckoning with Divine, destroy this card. In Reckoning with non-Divine, Drain 5 ATK&DEF permanently
+Test Cases:
+
+Test Case ID: TC-FUNC-Vampire-Duchess-001
+Description:
+Vampire Duchess: self-destruct when battling Divine (attacker or defender role)
+Implementation Reference:
+- BattleResolver early-return branches for Divine match
+- AbilityType.DESTROY_SELF_VS_DIVINE_BOTH
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Divine character involved in battle.
+Steps:
+Step 1: Battle Vampire Duchess vs Divine.
+Expected Result:
+- Vampire Duchess result.attacker_destroyed == true.
 
 ---
 
@@ -2270,7 +2239,7 @@ Card Name: Golden Senju
 Type: Character
 Stats: ATK=15 DEF=0 Cost=200 Affinity=DIVINE
 AbilityType: MULTI_ATTACK_VS_NON_CHARACTER
-ability_params: {'max_attacks': 3}
+ability_params: {'max_attacks': 3, 'bonus_attacks': 1}
 Description: Once per turn, if attacked non-unit card, this card : can attack 1 more times
 Test Cases:
 
@@ -2321,15 +2290,15 @@ Expected Result:
 
 Card Name: Lab Zombie
 Type: Character
-Stats: ATK=55 DEF=40 Cost=700 Affinity=BIO
+Stats: ATK=55 DEF=20 Cost=700 Affinity=BIO
 AbilityType: MUTAGEN_ATK_BOOST_VS_AFFINITIES
-ability_params: {'bonus': 25, 'affinities': ['NATURE']}
-Description: With Mutagen Flag: +25 ATK vs Nature or Anima.
+ability_params: {'bonus': 45, 'affinities': ['NATURE']}
+Description: With Mutagen Flag: +45 ATK vs Nature or Anima.
 Test Cases:
 
 Test Case ID: TC-FUNC-Lab-Zombie-001
 Description:
-Lab Zombie: +25 ATK vs ['NATURE'] when has_mutagen_flag
+Lab Zombie: +45 ATK vs ['NATURE'] when has_mutagen_flag
 Implementation Reference:
 - BattleResolver._get_effective_atk() checks has_mutagen_flag
 - AbilityType.MUTAGEN_ATK_BOOST_VS_AFFINITIES
@@ -2342,7 +2311,7 @@ Preconditions:
 Steps:
 Step 1: Attack with mutagen flag.
 Expected Result:
-- attacker_atk_used == 80 when affinity matches and has_mutagen_flag.
+- attacker_atk_used == 100 when affinity matches and has_mutagen_flag.
 
 ---
 
@@ -2434,7 +2403,7 @@ Type: Character
 Stats: ATK=60 DEF=85 Cost=720 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Armored-Rhino-001
@@ -2451,7 +2420,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2486,7 +2455,7 @@ Type: Character
 Stats: ATK=40 DEF=35 Cost=400 Affinity=ANIMA
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Big-Thug-001
@@ -2503,7 +2472,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2512,7 +2481,7 @@ Type: Character
 Stats: ATK=70 DEF=30 Cost=750 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Canyon-Warg-001
@@ -2529,7 +2498,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2538,7 +2507,7 @@ Type: Character
 Stats: ATK=20 DEF=0 Cost=100 Affinity=CHAOS
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Chaotic-Wisp-001
@@ -2555,7 +2524,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2564,7 +2533,7 @@ Type: Character
 Stats: ATK=25 DEF=15 Cost=250 Affinity=DIVINE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Choir-Lady-Abigail-001
@@ -2581,7 +2550,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2590,7 +2559,7 @@ Type: Character
 Stats: ATK=20 DEF=25 Cost=250 Affinity=DIVINE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Choir-Lady-Alice-001
@@ -2607,7 +2576,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2616,7 +2585,7 @@ Type: Character
 Stats: ATK=20 DEF=20 Cost=250 Affinity=DIVINE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Choir-Lady-Anna-001
@@ -2633,7 +2602,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2642,7 +2611,7 @@ Type: Character
 Stats: ATK=0 DEF=35 Cost=150 Affinity=DIVINE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Church-Guard-001
@@ -2659,7 +2628,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2668,7 +2637,7 @@ Type: Character
 Stats: ATK=15 DEF=25 Cost=300 Affinity=CHAOS
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Dark-Monk-001
@@ -2685,7 +2654,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2694,7 +2663,7 @@ Type: Character
 Stats: ATK=40 DEF=30 Cost=400 Affinity=CHAOS
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Demon-Spawn-001
@@ -2711,7 +2680,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2720,7 +2689,7 @@ Type: Character
 Stats: ATK=15 DEF=15 Cost=100 Affinity=CHAOS
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Doom-Wisp-001
@@ -2737,7 +2706,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2746,7 +2715,7 @@ Type: Character
 Stats: ATK=50 DEF=10 Cost=500 Affinity=DIVINE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Flame-Seraph-001
@@ -2763,7 +2732,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2772,7 +2741,7 @@ Type: Character
 Stats: ATK=0 DEF=25 Cost=100 Affinity=CHAOS
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Foul-Wisp-001
@@ -2789,7 +2758,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2798,7 +2767,7 @@ Type: Character
 Stats: ATK=35 DEF=40 Cost=450 Affinity=DIVINE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Fujin-001
@@ -2815,7 +2784,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2824,7 +2793,7 @@ Type: Character
 Stats: ATK=30 DEF=10 Cost=250 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Goblin-Poacher-001
@@ -2841,7 +2810,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2850,7 +2819,7 @@ Type: Character
 Stats: ATK=25 DEF=25 Cost=300 Affinity=ANIMA
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Grand-Fort-Footsoldier-001
@@ -2867,7 +2836,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2876,7 +2845,7 @@ Type: Character
 Stats: ATK=40 DEF=10 Cost=350 Affinity=ANIMA
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Grand-Fort-Mauler-001
@@ -2893,7 +2862,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2902,7 +2871,7 @@ Type: Character
 Stats: ATK=100 DEF=85 Cost=1150 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Gryphon-001
@@ -2919,7 +2888,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2928,7 +2897,7 @@ Type: Character
 Stats: ATK=25 DEF=20 Cost=300 Affinity=DIVINE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Heavy-Tome-Preacher-001
@@ -2945,7 +2914,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2954,7 +2923,7 @@ Type: Character
 Stats: ATK=50 DEF=0 Cost=400 Affinity=ARCANE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Ice-Mage-001
@@ -2971,7 +2940,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -2980,7 +2949,7 @@ Type: Character
 Stats: ATK=30 DEF=15 Cost=260 Affinity=NATURE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Mad-Raccoon-001
@@ -2997,7 +2966,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -3006,7 +2975,7 @@ Type: Character
 Stats: ATK=25 DEF=20 Cost=300 Affinity=DIVINE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Ponycorn-001
@@ -3023,7 +2992,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -3032,7 +3001,7 @@ Type: Character
 Stats: ATK=60 DEF=0 Cost=550 Affinity=DIVINE
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Raijin-001
@@ -3049,7 +3018,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -3058,7 +3027,7 @@ Type: Character
 Stats: ATK=35 DEF=30 Cost=350 Affinity=BIO
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Scarlet-Mutant-001
@@ -3075,7 +3044,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -3084,7 +3053,7 @@ Type: Character
 Stats: ATK=25 DEF=5 Cost=250 Affinity=CHAOS
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Shredder-Doll-001
@@ -3101,7 +3070,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -3110,7 +3079,7 @@ Type: Character
 Stats: ATK=45 DEF=5 Cost=300 Affinity=CHAOS
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Skeleton-Lancer-001
@@ -3127,7 +3096,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -3136,7 +3105,7 @@ Type: Character
 Stats: ATK=75 DEF=65 Cost=800 Affinity=COSMIC
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Space-Boy-001
@@ -3153,7 +3122,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -3162,7 +3131,7 @@ Type: Character
 Stats: ATK=30 DEF=0 Cost=180 Affinity=CHAOS
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Staircase-Lady-001
@@ -3179,7 +3148,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -3188,7 +3157,7 @@ Type: Character
 Stats: ATK=60 DEF=60 Cost=600 Affinity=ANIMA
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Wandering-Swordsman-001
@@ -3205,7 +3174,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -3214,7 +3183,7 @@ Type: Character
 Stats: ATK=30 DEF=30 Cost=500 Affinity=CHAOS
 AbilityType: NONE
 ability_params: {}
-Description: No ability.
+Description: None
 Test Cases:
 
 Test Case ID: TC-FUNC-Yaksa-001
@@ -3231,7 +3200,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: No ability.
+- Behavior matches CardDatabase description: None
 
 ---
 
@@ -3580,6 +3549,32 @@ Expected Result:
 
 ---
 
+Card Name: Cursed Well
+Type: Character
+Stats: ATK=0 DEF=25 Cost=300 Affinity=CHAOS
+AbilityType: PERM_ATK_BOOST_WHEN_EXPOSED
+ability_params: {'amount': 15}
+Description: At the end of the turn that it's been exposed, +15 ATK permanently
+Test Cases:
+
+Test Case ID: TC-FUNC-Cursed-Well-001
+Description:
+Cursed Well: ability PERM_ATK_BOOST_WHEN_EXPOSED functional smoke test
+Implementation Reference:
+- CharacterData.AbilityType.PERM_ATK_BOOST_WHEN_EXPOSED
+- See BattleResolver.gd / TurnManager.gd
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Card placed; ability_params={'amount': 15}.
+Steps:
+Step 1: Trigger battle/turn/tech condition per description.
+Expected Result:
+- Behavior matches CardDatabase description: At the end of the turn that it's been exposed, +15 ATK permanently
+
+---
+
 Card Name: War Genie
 Type: Character
 Stats: ATK=100 DEF=80 Cost=1150 Affinity=ARCANE
@@ -3705,13 +3700,13 @@ Card Name: Leech Man
 Type: Character
 Stats: ATK=60 DEF=40 Cost=880 Affinity=BIO
 AbilityType: PERM_DEF_BOOST_PER_ATTACK_SURVIVE
-ability_params: {'def': 20}
-Description: +20 DEF permanently each time it performed attack and survive. With mutagen flag : +45 ATK
+ability_params: {'def': 10}
+Description: +10 DEF permanently after it performed attack on unit. Also +10 ATK with mutagen flag
 Test Cases:
 
 Test Case ID: TC-FUNC-Leech-Man-001
 Description:
-Leech Man: +20 DEF permanently each attack survived
+Leech Man: +10 DEF permanently each attack survived
 Implementation Reference:
 - TurnManager._apply_post_battle_effects
 - AbilityType.PERM_DEF_BOOST_PER_ATTACK_SURVIVE
@@ -3723,7 +3718,7 @@ Preconditions:
 Steps:
 Step 1: Complete attack.
 Expected Result:
-- perm_def_bonus += 20 (or current_def += 20).
+- perm_def_bonus += 10 (or current_def += 10).
 
 ---
 
@@ -3786,7 +3781,7 @@ Type: Character
 Stats: ATK=40 DEF=25 Cost=400 Affinity=ANIMA
 AbilityType: REVEAL_ON_ANY_ATTACK
 ability_params: {}
-Description: After attack: reveal 1 foe’s cell
+Description: After this card performs an attack, reveal 1 foe’s cell (even if it is destroyed)
 Test Cases:
 
 Test Case ID: TC-FUNC-Shepherd-Detective-001
@@ -4091,7 +4086,7 @@ Preconditions:
 Steps:
 Step 1: Opponent plays any Tech.
 Expected Result:
-- perm_atk_bonus += 10; perm_def_bonus += 10 (persists; stacks per foe Tech played).
+- perm_atk_bonus += 10; perm_def_bonus += 10 (stacks per foe Tech).
 
 ---
 
@@ -4100,12 +4095,12 @@ Type: Character
 Stats: ATK=45 DEF=85 Cost=900 Affinity=BIO
 AbilityType: TURN_START_COIN_FLIP_FLAG
 ability_params: {}
-Description: Start of your turn: select 1 face-up foe’s card, flip a coin. Head: put Venom Flag on it. Tail: put Mutagen Flag on it.
+Description: Start of your turn: Flip a coin. Head: put Venom Flag any face-up card. Tail: put Mutagen Flag on any card (even face-down).
 Test Cases:
 
 Test Case ID: TC-FUNC-Plant-29-001
 Description:
-Plant-29: turn start coin → venom or mutagen flag on selected opponent card
+Plant-29: turn start coin → venom on any face-up card or mutagen on any card
 Implementation Reference:
 - TurnManager turn start ability
 - AbilityType.TURN_START_COIN_FLIP_FLAG
@@ -4114,11 +4109,12 @@ Preconditions:
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
 - Plant-29 on field at turn start.
-- Opponent face-up character selected.
+- Board has valid flag targets.
 Steps:
-Step 1: Start turn; select target; resolve coin.
+Step 1: Start turn; resolve coin flip; select target per result.
 Expected Result:
-- Heads: venom flag; Tails: mutagen string in flags (NOT has_mutagen_flag).
+- Heads: venom flag on chosen face-up card.
+- Tails: mutagen on chosen card (characters get has_mutagen_flag).
 
 ---
 

@@ -1,0 +1,263 @@
+=== Battle of Terms and Conditions Marathon ===
+Battle started: 2026-06-13 07:24:22.419
+Game Session of Rooibos Tea (started 2026-06-13 07:15:09.811)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.195] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:15.157] Revealed: P0 (1,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:15.198] Revealed: P1 (1,2) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:15.198] Dice rolled: 5
+[00:15.208] MSG: Mad Raccoon wins!
+[00:19.649] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:21.042] Attack P0(1,1)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} → P1(1,2)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=5  ATK=30 vs DEF=25  → WIN
+[00:21.042] Reckoning overlay: P0 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=30 ATK pill=30 DEF pill=15 mod=+ATK 0 (30+0=30)
+[00:21.042] Reckoning overlay: P1 "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:21.042] Anim: 3A  △ P1(1,2)
+[00:21.042] Card destroyed  P1 (1,2) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[00:22.786] Turn ended  P0  |  Crystals P0=5000 P1=4600
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4600 ---
+[00:23.377] Mode selected P1: TECH
+[00:23.683] Tech played  P1: "Spy"
+[00:25.237] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:25.637] Tech resolved  P1
+[00:26.547] Mode selected P1: ATTACK
+[00:26.554] MSG: Player 2: tap a character to attack.
+[00:28.251] Revealed: P1 (1,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[00:28.251] Dice rolled: 3
+[00:28.254] MSG: Both cards are destroyed!
+[00:32.660] Crystals: P1 4600 → 4500 (-100)  [battle]
+[00:34.053] Crystals: P0 5000 → 4740 (-260)  [battle]
+[00:35.439] Attack P1(1,3)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P0(1,1)"Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}  Dice=3  ATK=15 vs DEF=15  → TIE
+[00:35.439] Reckoning overlay: P1 "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+ATK 0 (15+0=15)
+[00:35.439] Reckoning overlay: P0 "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[00:35.439] Anim: 3C  △ P1(1,3) + △ P0(1,1)
+[00:35.439] Card destroyed  P1 (1,3) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[00:35.439] Card destroyed  P0 (1,1) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[00:37.945] Turn ended  P1  |  Crystals P0=4740 P1=4500
+
+--- Turn 3  |  Player 0  |  Crystals P0=4740 P1=4500 ---
+[00:43.367] Revealed: P0 (1,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:43.368] Revealed: P1 (2,1) "Trap Hole" {cost 0}
+[00:43.368] Dice rolled: 4
+[00:43.668] MSG: Trap triggered: Trap Hole!
+[00:47.748] Coin flip: Heads, Heads, Heads
+[00:50.480] MSG: Trap Hole: Heads, Heads, Heads.
+[00:50.481] Crystals: P0 4740 → 4680 (-60)  [trap]
+[00:51.871] MSG: Trap Hole: 3 head(s) — Player 1 loses 60 Crystals!
+[00:51.880] Attack P0(1,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(2,1)"Trap Hole" {cost 0}  Dice=4  → Unit vs Trap
+[00:51.880] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[00:51.880] Anim: 3D  (attacker survives)
+[00:55.143] Turn ended  P0  |  Crystals P0=4680 P1=4500
+
+--- Turn 4  |  Player 1  |  Crystals P0=4680 P1=4500 ---
+[00:55.737] Mode selected P1: TECH
+[00:56.044] Crystals: P1 4500 → 3500 (-1000)  [tech cost]
+[00:57.424] Tech played  P1: "Great Diplomacy"
+[00:58.961] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[00:59.408] Revealed: P1 (0,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:59.792] Revealed: P1 (3,1) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[01:00.205] Revealed: P1 (3,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[01:00.618] Revealed: P1 (0,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[01:01.005] Revealed: P1 (1,0) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[01:01.005] MSG: Great Diplomacy: revealed 5 unit(s).
+[01:01.009] Tech resolved  P1
+[01:01.029] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:01.031] Turn ended  P1  |  Crystals P0=4680 P1=3500
+
+--- Turn 5  |  Player 0  |  Crystals P0=4680 P1=3500 ---
+[01:02.104] Mode selected P0: ATTACK
+[01:02.113] MSG: Player 1: tap a character to attack.
+[01:03.817] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:03.851] Revealed: P1 (1,4) "Hypnosis" {cost 800}
+[01:03.851] Dice rolled: 4
+[01:04.127] MSG: Trap triggered: Hypnosis!
+[01:08.212] Crystals: P1 3500 → 2700 (-800)  [trap cost]
+[01:09.604] MSG: Hypnosis: Scout Probe cannot attack until end of next turn.
+[01:09.608] Attack P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,4)"Hypnosis" {cost 800}  Dice=4  → Unit vs Trap
+[01:09.608] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[01:09.608] Anim: 3D  (attacker survives)
+[01:09.613] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:36.477] Revealed: P1 (0,4) "Explosive Barrels" {cost 0}
+[01:36.478] MSG: Scout Probe: adjacent cell revealed.
+[01:57.593] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:57.593] Dice rolled: 4
+[01:57.601] MSG: Shepherd Detective wins!
+[02:01.132] Crystals: P1 2700 → 1900 (-800)  [battle]
+[02:02.521] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(1,0)"Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}  Dice=4  ATK=40 vs DEF=20  → WIN
+[02:02.521] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[02:02.521] Reckoning overlay: P1 "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:02.521] Anim: 3A  △ P1(1,0)
+[02:02.521] Card destroyed  P1 (1,0) "Vampire Servant" {Unit ATK20 DEF20 | cost 800 | affinity Chaos}
+[02:02.526] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[02:08.079] MSG: Revealed: (empty)
+[02:18.673] Turn ended  P0  |  Crystals P0=4680 P1=1900
+
+--- Turn 6  |  Player 1  |  Crystals P0=4680 P1=1900 ---
+[02:19.279] Mode selected P1: TECH
+[02:19.588] Tech played  P1: "Bribe"
+[02:21.122] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[02:22.771] MSG: Bribe: Opponent passed.
+[02:22.787] Tech resolved  P1
+[02:23.672] Mode selected P1: ATTACK
+[02:23.683] MSG: Player 2: tap a character to attack.
+[02:25.380] Dice rolled: 5
+[02:25.386] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Shepherd Detective!
+[02:25.386] MSG: Vampire Duchess wins!
+[02:30.870] Crystals: P0 4680 → 4280 (-400)  [battle]
+[02:32.263] Attack P1(0,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(2,3)"Shepherd Detective" {Unit ATK35 DEF20 | cost 400 | affinity Anima | base 35/20}  Dice=5  ATK=55 vs DEF=20  → WIN
+[02:32.263] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[02:32.263] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK35 DEF20 | cost 400 | affinity Anima | base 35/20} badge=20 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=20) MISMATCH
+[02:32.263] Anim: 3A  △ P0(2,3)
+[02:32.263] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK35 DEF20 | cost 400 | affinity Anima | base 35/20}
+[02:32.762] Mode selected P1: ATTACK
+[02:32.765] MSG: Player 2: tap a character to attack.
+[02:34.473] Dice rolled: 5
+[02:34.479] MSG: Night Whisperer wins!
+[02:38.964] Crystals: P0 4280 → 3580 (-700)  [battle]
+[02:40.363] Attack P1(3,2)"Night Whisperer" {Unit ATK60 DEF60 | cost 900 | affinity Chaos | base 30/30 | buff +permATK30, +permDEF30} → P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | cannot-atk≤T7}  Dice=5  ATK=60 vs DEF=50  → WIN
+[02:40.363] Reckoning overlay: P1 "Night Whisperer" {Unit ATK60 DEF60 | cost 900 | affinity Chaos | base 30/30 | buff +permATK30, +permDEF30} badge=60 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=60)
+[02:40.363] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | cannot-atk≤T7} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:40.363] Anim: 3A  △ P0(0,2)
+[02:40.363] Card destroyed  P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic | cannot-atk≤T7}
+[02:40.860] Turn ended  P1  |  Crystals P0=3580 P1=1900
+
+--- Turn 7  |  Player 0  |  Crystals P0=3580 P1=1900 ---
+[02:57.662] MSG: Cannot target an empty cell.
+[03:02.860] Revealed: P0 (3,2) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[03:02.860] Dice rolled: 1
+[03:02.865] MSG: Leopard Jailer wins!
+[03:07.338] Crystals: P1 1900 → 1800 (-100)  [battle]
+[03:08.745] Attack P0(3,2)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} → P1(0,3)"Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}  Dice=1  ATK=30 vs DEF=0  → WIN
+[03:08.745] Reckoning overlay: P0 "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} badge=30 ATK pill=30 DEF pill=45 mod=+ATK 0 (30+0=30)
+[03:08.745] Reckoning overlay: P1 "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos} badge=0 ATK pill=20 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:08.745] Anim: 3A  △ P1(0,3)
+[03:08.745] Card destroyed  P1 (0,3) "Chaotic Wisp" {Unit ATK20 DEF0 | cost 100 | affinity Chaos}
+[03:21.766] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[03:21.766] Dice rolled: 3
+[03:21.772] MSG: Grand Fort Mauler wins!
+[03:24.962] Crystals: P1 1800 → 900 (-900)  [battle]
+[03:26.371] Attack P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(3,2)"Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}  Dice=3  ATK=40 vs DEF=30  → WIN
+[03:26.371] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=40 ATK pill=40 DEF pill=10 mod=+ATK 0 (40+0=40)
+[03:26.371] Reckoning overlay: P1 "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:26.371] Anim: 3A  △ P1(3,2)
+[03:26.371] Card destroyed  P1 (3,2) "Night Whisperer" {Unit ATK30 DEF30 | cost 900 | affinity Chaos}
+[03:27.761] Turn ended  P0  |  Crystals P0=3580 P1=900
+
+--- Turn 8  |  Player 1  |  Crystals P0=3580 P1=900 ---
+[03:28.367] Mode selected P1: ATTACK
+[03:28.370] MSG: Player 2: tap a character to attack.
+[03:30.070] Dice rolled: 3
+[03:30.075] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Leopard Jailer!
+[03:30.075] MSG: Vampire Duchess wins!
+[03:35.548] Crystals: P0 3580 → 3130 (-450)  [battle]
+[03:36.950] Attack P1(0,2)"Vampire Duchess" {Unit ATK60 DEF60 | cost 800 | affinity Chaos | base 60/60} → P0(3,2)"Leopard Jailer" {Unit ATK25 DEF40 | cost 450 | affinity Anima | base 25/40}  Dice=3  ATK=60 vs DEF=40  → WIN
+[03:36.950] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK60 DEF60 | cost 800 | affinity Chaos | base 60/60} badge=60 ATK pill=55 DEF pill=55 mod=+ATK 0 (55+0=60) MISMATCH
+[03:36.950] Reckoning overlay: P0 "Leopard Jailer" {Unit ATK25 DEF40 | cost 450 | affinity Anima | base 25/40} badge=40 ATK pill=30 DEF pill=45 mod=+DEF 0 (45+0=40) MISMATCH
+[03:36.950] Anim: 3A  △ P0(3,2)
+[03:36.950] Card destroyed  P0 (3,2) "Leopard Jailer" {Unit ATK25 DEF40 | cost 450 | affinity Anima | base 25/40}
+[03:37.437] Mode selected P1: ATTACK
+[03:37.439] MSG: Player 2: tap a character to attack.
+[03:39.155] Dice rolled: 1
+[03:39.160] MSG: Immortal Vampire wins!
+[03:43.654] Crystals: P0 3130 → 2780 (-350)  [battle]
+[03:45.055] Attack P1(3,1)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos} → P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=1  ATK=30 vs DEF=10  → WIN
+[03:45.055] Reckoning overlay: P1 "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos} badge=30 ATK pill=30 DEF pill=80 mod=+ATK 0 (30+0=30)
+[03:45.055] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=10 ATK pill=40 DEF pill=10 mod=+DEF 0 (10+0=10)
+[03:45.055] Anim: 3A  △ P0(2,1)
+[03:45.055] Card destroyed  P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[03:45.555] Turn ended  P1  |  Crystals P0=2780 P1=900
+
+--- Turn 9  |  Player 0  |  Crystals P0=2780 P1=900 ---
+[04:21.454] Revealed: P1 (1,1) "Bait" {cost 0}
+[04:21.454] Dice rolled: 2
+[04:21.725] MSG: Trap triggered: Bait!
+[04:24.261] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[04:24.657] Revealed: P1 (2,4) "Bait" {cost 0}
+[04:24.658] MSG: Bait: Defender revealed Bait.
+[04:24.803] Attack P0(1,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(1,1)"Bait" {cost 0}  Dice=2  → Unit vs Trap
+[04:24.803] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[04:24.803] Anim: 3D  (attacker survives)
+[04:29.366] Turn ended  P0  |  Crystals P0=2780 P1=900
+
+--- Turn 10  |  Player 1  |  Crystals P0=2780 P1=900 ---
+[04:29.967] Mode selected P1: ATTACK
+[04:29.973] MSG: Player 2: tap a character to attack.
+[04:31.655] Dice rolled: 3
+[04:31.664] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Flame Lizard!
+[04:31.664] MSG: Vampire Duchess wins!
+[04:37.136] Crystals: P0 2780 → 2380 (-400)  [battle]
+[04:38.534] Attack P1(0,2)"Vampire Duchess" {Unit ATK65 DEF65 | cost 800 | affinity Chaos | base 65/65} → P0(1,4)"Flame Lizard" {Unit ATK20 DEF35 | cost 400 | affinity Nature | base 20/35}  Dice=3  ATK=65 vs DEF=35  → WIN
+[04:38.534] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK65 DEF65 | cost 800 | affinity Chaos | base 65/65} badge=65 ATK pill=60 DEF pill=60 mod=+ATK 0 (60+0=65) MISMATCH
+[04:38.534] Reckoning overlay: P0 "Flame Lizard" {Unit ATK20 DEF35 | cost 400 | affinity Nature | base 20/35} badge=35 ATK pill=25 DEF pill=40 mod=+DEF 0 (40+0=35) MISMATCH
+[04:38.534] Anim: 3A  △ P0(1,4)
+[04:38.534] Card destroyed  P0 (1,4) "Flame Lizard" {Unit ATK20 DEF35 | cost 400 | affinity Nature | base 20/35}
+[04:39.031] Mode selected P1: ATTACK
+[04:39.040] MSG: Player 2: tap a character to attack.
+[04:40.747] Dice rolled: 4
+[04:40.761] MSG: Nothing happens — Dead End.
+[04:44.140] Attack P1(3,1)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos} → P0(1,0)(empty)  Dice=4  → DEAD_END
+[04:44.140] Anim: 3F  (blank slot)
+[04:44.643] Turn ended  P1  |  Crystals P0=2380 P1=900
+
+--- Turn 11  |  Player 0  |  Crystals P0=2380 P1=900 ---
+[05:01.730] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[05:01.731] Revealed: P1 (2,0) "Red Card" {cost 0}
+[05:01.731] Crystals: P0 2380 → 2420 (+40)  [ability]
+[05:01.731] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[05:01.731] Dice rolled: 4
+[05:02.026] MSG: Trap triggered: Red Card!
+[05:04.664] Coin flip: Tails, Tails
+[05:07.430] MSG: Red Card: Tails, Tails.
+[05:07.430] MSG: Not both heads — no effect.
+[05:07.438] Attack P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(2,0)"Red Card" {cost 0}  Dice=4  → Unit vs Trap
+[05:07.438] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[05:07.438] Anim: 3D  (attacker survives)
+[05:13.050] Turn ended  P0  |  Crystals P0=2420 P1=900
+
+--- Turn 12  |  Player 1  |  Crystals P0=2420 P1=900 ---
+[05:13.655] Mode selected P1: ATTACK
+[05:13.658] MSG: Player 2: tap a character to attack.
+[05:15.364] Dice rolled: 4
+[05:15.372] MSG: Immortal Vampire wins!
+[05:19.845] Crystals: P0 2420 → 2120 (-300)  [battle]
+[05:21.239] Attack P1(3,1)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos} → P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=4  ATK=30 vs DEF=20  → WIN
+[05:21.239] Reckoning overlay: P1 "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos} badge=30 ATK pill=30 DEF pill=80 mod=+ATK 0 (30+0=30)
+[05:21.239] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:21.239] Anim: 3A  △ P0(4,2)
+[05:21.239] Card destroyed  P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[05:21.737] Mode selected P1: ATTACK
+[05:21.740] MSG: Player 2: tap a character to attack.
+[05:23.440] Dice rolled: 4
+[05:23.465] MSG: Nothing happens — Dead End.
+[05:25.326] Attack P1(0,2)"Vampire Duchess" {Unit ATK65 DEF65 | cost 800 | affinity Chaos | base 65/65} → P0(1,3)(empty)  Dice=4  → DEAD_END
+[05:25.326] Anim: 3F  (blank slot)
+[05:25.821] Turn ended  P1  |  Crystals P0=2120 P1=900
+
+--- Turn 13  |  Player 0  |  Crystals P0=2120 P1=900 ---
+[05:33.583] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[05:33.583] Dice rolled: 3
+[05:33.587] MSG: Vampire Duchess is destroyed battling Divine!
+[05:37.554] Crystals: P1 900 → 100 (-800)  [battle]
+[05:38.958] Attack P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(0,2)"Vampire Duchess" {Unit ATK65 DEF65 | cost 800 | affinity Chaos | base 65/65}  Dice=3  ATK=0 vs DEF=0  → WIN
+[05:38.958] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[05:38.958] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK65 DEF65 | cost 800 | affinity Chaos | base 65/65} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[05:38.958] Anim: 3A  △ P1(0,2)
+[05:38.958] Card destroyed  P1 (0,2) "Vampire Duchess" {Unit ATK65 DEF65 | cost 800 | affinity Chaos | base 65/65}
+[05:39.716] Turn ended  P0  |  Crystals P0=2120 P1=100
+
+--- Turn 14  |  Player 1  |  Crystals P0=2120 P1=100 ---
+[05:40.321] Mode selected P1: ATTACK
+[05:40.326] MSG: Player 2: tap a character to attack.
+[05:42.022] Dice rolled: 2
+[05:42.031] MSG: Immortal Vampire is destroyed battling Divine!
+[05:47.613] Crystals: P1 100 → 0 (-100)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2120  P1: 0  |  Turns: 14

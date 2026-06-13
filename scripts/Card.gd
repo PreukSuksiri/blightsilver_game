@@ -117,6 +117,8 @@ var _active_glow_tween: Tween = null
 var _target_hover_tween: Tween = null
 var _attack_hover_tween: Tween = null
 var _union_flash_tween: Tween = null
+var _ability_target_flash_tween: Tween = null
+var _ability_target_flash_active: bool = false
 var _is_peeking: bool = false
 var _is_enemy_view: bool = false
 var _is_destroying: bool = false
@@ -779,8 +781,22 @@ func set_highlighted(highlighted: bool) -> void:
 	var changed: bool = is_highlighted != highlighted
 	is_highlighted = highlighted
 	highlight_border.visible = highlighted and not _is_enemy_view
+	if not highlighted:
+		set_ability_target_flash(false)
 	if changed and _is_peeking:
 		_refresh_display()
+
+func _reset_target_highlight_border() -> void:
+	var sb := highlight_border.get_theme_stylebox("panel") as StyleBoxFlat
+	if sb == null:
+		return
+	sb.border_color = Color(0.3, 0.9, 1.0, 0.9)
+	sb.shadow_color  = Color(0.3, 0.9, 1.0, 0.5)
+	sb.shadow_size = 6
+	sb.border_width_left   = 2
+	sb.border_width_top    = 2
+	sb.border_width_right  = 2
+	sb.border_width_bottom = 2
 
 func set_target_hover(hovered: bool) -> void:
 	if not is_highlighted:
@@ -792,8 +808,13 @@ func set_target_hover(hovered: bool) -> void:
 		_target_hover_tween.kill()
 		_target_hover_tween = null
 	if hovered:
+		if _ability_target_flash_tween and _ability_target_flash_tween.is_valid():
+			_ability_target_flash_tween.kill()
+			_ability_target_flash_tween = null
+		highlight_border.visible = true
 		sb.border_color = Color(1.0, 0.85, 0.2, 1.0)
 		sb.shadow_color  = Color(1.0, 0.85, 0.2, 0.7)
+		sb.shadow_size = 8
 		sb.border_width_left   = 3
 		sb.border_width_top    = 3
 		sb.border_width_right  = 3
@@ -805,13 +826,12 @@ func set_target_hover(hovered: bool) -> void:
 		_target_hover_tween.tween_property(self, "modulate",
 			Color.WHITE, 0.22).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	else:
-		modulate = Color.WHITE
-		sb.border_color = Color(0.3, 0.9, 1.0, 0.9)
-		sb.shadow_color  = Color(0.3, 0.9, 1.0, 0.5)
-		sb.border_width_left   = 2
-		sb.border_width_top    = 2
-		sb.border_width_right  = 2
-		sb.border_width_bottom = 2
+		if _ability_target_flash_active:
+			set_ability_target_flash(true)
+		else:
+			modulate = Color.WHITE
+			highlight_border.visible = is_highlighted and not _is_enemy_view
+			_reset_target_highlight_border()
 
 func set_attack_hover(hovered: bool) -> void:
 	# Destroyed slots are empty — modulate tweens would flash stale pre-destroy art.
@@ -847,6 +867,34 @@ func set_union_flash(flashing: bool) -> void:
 			Color.WHITE, 0.28).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	else:
 		modulate = Color.WHITE
+
+## Subtle yellow pulse on valid ability/tech targets (works on enemy-view face-down cards).
+func set_ability_target_flash(flashing: bool) -> void:
+	_ability_target_flash_active = flashing
+	if _ability_target_flash_tween and _ability_target_flash_tween.is_valid():
+		_ability_target_flash_tween.kill()
+		_ability_target_flash_tween = null
+	if flashing:
+		highlight_border.visible = true
+		var sb := highlight_border.get_theme_stylebox("panel") as StyleBoxFlat
+		if sb:
+			sb.border_color = Color(1.0, 0.88, 0.15, 0.85)
+			sb.shadow_color = Color(1.0, 0.88, 0.15, 0.35)
+			sb.shadow_size = 8
+			sb.border_width_left   = 3
+			sb.border_width_top    = 3
+			sb.border_width_right  = 3
+			sb.border_width_bottom = 3
+		modulate = Color.WHITE
+		_ability_target_flash_tween = create_tween().set_loops()
+		_ability_target_flash_tween.tween_property(self, "modulate",
+			Color(1.22, 1.12, 0.58, 1.0), 0.42).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_ability_target_flash_tween.tween_property(self, "modulate",
+			Color.WHITE, 0.42).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	else:
+		modulate = Color.WHITE
+		highlight_border.visible = is_highlighted and not _is_enemy_view
+		_reset_target_highlight_border()
 
 # ─────────────────────────────────────────────────────────────
 # Animations

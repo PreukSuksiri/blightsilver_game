@@ -1910,7 +1910,13 @@
 							"value": "booster_unseen_presence"
 						}
 					],
-					"conditions": [],
+					"conditions": [
+						{
+							"key": "found_password",
+							"type": "var_equals",
+							"value": "1"
+						}
+					],
 					"hide_after_interact": true,
 					"hitbox_h": 96.0,
 					"hitbox_w": 96.0,

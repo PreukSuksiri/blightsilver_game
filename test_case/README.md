@@ -20,7 +20,7 @@ Generated from `context/card_data_demo.xlsx` filtering **Demo = Yes** only.
 | [tech/tech_demo_test_cases.md](./tech/tech_demo_test_cases.md) | 11 tech cards |
 | [trap/trap_demo_test_cases.md](./trap/trap_demo_test_cases.md) | 23 trap cards |
 | [union/union_demo_test_cases.md](./union/union_demo_test_cases.md) | 36 union cards |
-| [test_case_manifest.txt](./test_case_manifest.txt) | Flat list of all 809 test case IDs for progress tracking |
+| [test_case_manifest.txt](./test_case_manifest.txt) | Flat list of all 812 test case IDs for progress tracking |
 | [generate_test_cases.py](./generate_test_cases.py) | Regenerator script (re-run after Excel updates) |
 
 ## Functional tests (code-accurate)

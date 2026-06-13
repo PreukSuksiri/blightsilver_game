@@ -70,7 +70,7 @@ enum AbilityType {
 	COIN_FLIP_EXTRA_ATTACK,          # Flip 1 coin after attacking; heads → get one extra attack
 	COIN_FLIP_2_DESTROY_NON_AFFINITY,# Flip 2 coins; both heads → destroy defender if not specified affinity
 	COIN_FLIP_SWAP_POSITION,         # Flip 1 coin after battle; heads → player chooses own card to swap position
-	TURN_START_COIN_FLIP_FLAG,       # Turn start: select opp face-up card; coin → venom flag (heads) or mutagen (tails)
+	TURN_START_COIN_FLIP_FLAG,       # Turn start: coin flip → venom on any face-up card (heads) or mutagen on any card (tails)
 
 	# ── Destroy / negate conditions ──
 	DESTROY_IF_OPPONENT_AFFINITY,    # At battle calc, destroy defender if they match specified affinity

@@ -204,6 +204,52 @@ godot --headless --export-release "Windows" "build/windows/Blightsilver.exe"
 
 **Ship:** Zip the entire `build/windows/` folder for itch.io (**Uploads → Windows** or as a downloadable zip). Optional: code-sign the `.exe` to reduce SmartScreen warnings.
 
+##### Testing the Windows build on macOS
+
+macOS cannot run `Blightsilver.exe` natively. For day-to-day gameplay checks, export and run the **macOS** build instead. When you need to verify the **actual Windows package**, export on the Mac and run it inside a Windows VM (or on a real Windows PC).
+
+| Approach | Best for | Notes |
+|----------|----------|-------|
+| **macOS export** | Daily dev on a Mac | Same game logic; see [macOS](#macos) below |
+| **UTM + Windows 11 ARM** | Free VM on **Apple Silicon** | Simplest free option |
+| **VirtualBox + Windows x64** | Free VM on **Intel Mac** | Use Windows 10/11 x64 ISO |
+| **Parallels** | Easiest paid setup | Fastest install; drag-and-drop files |
+| **Real Windows PC** | Final QA | Most trustworthy before release |
+
+**Export the Windows folder on your Mac:**
+
+```bash
+godot --headless --export-release "Windows" "build/windows/Blightsilver.exe"
+```
+
+Zip the entire `build/windows/` folder (`.exe`, `.pck`, and bundled DLLs must stay together) and copy it into the VM.
+
+**Simple VM — Apple Silicon (UTM + Windows 11 ARM)**
+
+1. Install [UTM](https://mac.getutm.app) (free).
+2. Download the **Windows 11 ARM64** ISO from [Microsoft](https://www.microsoft.com/software-download/windows11).
+3. UTM → **Create a New Virtual Machine** → Windows → attach the ISO.
+4. Minimal settings: **4 GB RAM** (8 GB if you can), **2–4 CPU cores**, **64 GB disk**.
+5. Install Windows (you can skip the product key for testing — unactivated Windows is fine with a watermark).
+6. In the VM: install **SPICE guest tools** if UTM prompts, run **Windows Update** once.
+7. Copy the game zip in via a **shared folder**, drag-and-drop, or download from the network inside the VM.
+8. Unzip and run `Blightsilver.exe`.
+
+**Simple VM — Intel Mac (VirtualBox)**
+
+1. Install [VirtualBox](https://www.virtualbox.org/).
+2. Download a **Windows 10/11 x64** ISO from Microsoft.
+3. New VM: **4 GB RAM**, **2 CPUs**, **64 GB disk**, attach ISO, install Windows.
+4. Install **Guest Additions** (VirtualBox **Devices** menu).
+5. Copy `build/windows/` in via shared folder or USB, then run `Blightsilver.exe`.
+
+**Godot / export tips in a VM**
+
+- Ship and test the **whole** `build/windows/` folder, not the `.exe` alone.
+- Encrypted PCK builds use the same export flow; no extra VM setup.
+- First launch in a VM may be slow — that is normal.
+- If something fails only in the VM, confirm on a **real Windows machine** before treating it as a release blocker.
+
 ---
 
 #### macOS

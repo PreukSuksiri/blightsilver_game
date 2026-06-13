@@ -128,7 +128,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: COIN_FLIP_2_LOCK_ATTACKER
 effect_params: {}
-Description: Flip 2 coin, if head, that unit cannot attack next turn
+Description: Flip 2 coin, if both are head, that unit cannot attack next turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Red-Card-001
@@ -244,7 +244,7 @@ Card Name: Acid Trap Hole
 Type: Trap
 Trap Cost: 0
 TrapEffectType: DRAIN_ATTACKER_CRYSTALS
-effect_params: {'amount': 50}
+effect_params: {'amount': 50, 'coin_count': 2}
 Description: Flip 2 coin, attacking player loses 50 Crystals per each head(s).
 Test Cases:
 
@@ -254,7 +254,7 @@ Attacker loses 50 crystals
 Implementation Reference:
 - TurnManager._handle_trap_effect DRAIN_ATTACKER_CRYSTALS
 - TrapEffectType.DRAIN_ATTACKER_CRYSTALS
-- effect_params: {'amount': 50}
+- effect_params: {'amount': 50, 'coin_count': 2}
 Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
@@ -322,7 +322,7 @@ Card Name: Trap Hole
 Type: Trap
 Trap Cost: 0
 TrapEffectType: DRAIN_ATTACKER_CRYSTALS
-effect_params: {'amount': 20}
+effect_params: {'amount': 20, 'coin_count': 3}
 Description: Flip 3 coin, attacking player loses 20 Crystals per each head(s).
 Test Cases:
 
@@ -332,7 +332,7 @@ Attacker loses 20 crystals
 Implementation Reference:
 - TurnManager._handle_trap_effect DRAIN_ATTACKER_CRYSTALS
 - TrapEffectType.DRAIN_ATTACKER_CRYSTALS
-- effect_params: {'amount': 20}
+- effect_params: {'amount': 20, 'coin_count': 3}
 Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
@@ -370,13 +370,13 @@ Card Name: Alarm
 Type: Trap
 Trap Cost: 0
 TrapEffectType: FIELD_BOOST_AFFINITY_DEF
-effect_params: {'affinity': 'ANIMA', 'def': 5}
-Description: Unil the end of this urn, All face-up Anima monster gain +10 DEF
+effect_params: {'affinity': 'ANIMA', 'def': 10}
+Description: Until the end of this turn, All face-up Anima monster gain +10 DEF
 Test Cases:
 
 Test Case ID: TC-FUNC-Alarm-001
 Description:
-Alarm: +5 temp DEF to Anima face-up
+Alarm: +10 temp DEF to Anima face-up
 Implementation Reference:
 - TurnManager FIELD_BOOST_AFFINITY_DEF
 - TrapEffectType.FIELD_BOOST_AFFINITY_DEF
@@ -388,7 +388,7 @@ Preconditions:
 Steps:
 Step 1: Trigger trap.
 Expected Result:
-- Each matching character temp_def_bonus += 5.
+- Each matching character temp_def_bonus += 10.
 
 Test Case ID: TC-FUNC-Alarm-002
 Description:
@@ -415,7 +415,7 @@ Type: Trap
 Trap Cost: 1500
 TrapEffectType: FORCE_FRIENDLY_FIRE
 effect_params: {}
-Description: Foe choose their own ally as an attack target
+Description: Foe choose their own ally (face-up or face-down) as an attack target
 Test Cases:
 
 Test Case ID: TC-FUNC-Brainwash-001
@@ -761,7 +761,7 @@ Type: Trap
 Trap Cost: 500
 TrapEffectType: SWAP_ATTACKER_ATK_DEF_TEMP
 effect_params: {}
-Description: Swap the attacker's ATK&DEF until the end of this turn
+Description: Swap the attacker's ATK&DEF until the end of defender's turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Cursed-Reflection-001

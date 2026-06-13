@@ -257,7 +257,7 @@ Expected Result:
 Card Name: Self-destruct
 Type: Trap
 Cost: 0
-Ability: Select 1 of your unit. +10 ATK until your next turn’s end, but also destroy it. You pay no cost.
+Ability: Select 1 of your unit. +10 ATK until defender’s turn ends, but also destroy it. You pay no cost.
 Test Cases:
 
 
@@ -272,7 +272,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Select 1 of your unit. +10 ATK until your next turn’s end, but also destroy it. You pay no cost. resolves.
+Step 2: Trap reveals and Select 1 of your unit. +10 ATK until defender’s turn ends, but also destroy it. You pay no cost. resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -675,7 +675,7 @@ Expected Result:
 Card Name: Cursed Reflection
 Type: Trap
 Cost: 500
-Ability: Swap the attacker's ATK&DEF until the end of this turn
+Ability: Swap the attacker's ATK&DEF until the defender’s turn ends
 Test Cases:
 
 
@@ -690,7 +690,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Swap the attacker's ATK&DEF until the end of this turn resolves.
+Step 2: Trap reveals and Swap the attacker's ATK&DEF until the defender’s turn ends resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -1138,7 +1138,7 @@ Expected Result:
 Card Name: Alarm
 Type: Trap
 Cost: 0
-Ability: Unil the end of this urn, All face-up Anima monster gain +10 DEF
+Ability: Until the end of this urn, All face-up Anima monster gain +10 DEF
 Test Cases:
 
 
@@ -1153,7 +1153,7 @@ Preconditions:
 - Player 0 has an attacker ready.
 Steps:
 Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Unil the end of this urn, All face-up Anima monster gain +10 DEF resolves.
+Step 2: Trap reveals and Until the end of this urn, All face-up Anima monster gain +10 DEF resolves.
 Expected Result:
 - Trap effect applies to attacker/active player as described.
 - Trap is consumed/destroyed after activation unless otherwise stated.
@@ -1192,6 +1192,99 @@ Edge — Alarm attacked by face-up vs face-down attacker path.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
 - Ensure 'Alarm' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Repeat with attacker revealed before combat.
+Steps:
+Step 1: Attack trap.
+Expected Result:
+- Trap activates identically regardless of attacker exposure state.
+
+---
+
+Card Name: Red Card
+Type: Trap
+Cost: 0
+Ability: Flip 2 coin, if both are head, that unit cannot attack next turn
+Test Cases:
+
+
+Test Case ID: TC-Red-Card-001
+Description:
+Happy path — opponent attacks Red Card.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Red Card face-down on Player 1 field.
+- Player 0 has an attacker ready.
+Steps:
+Step 1: Player 0 attacks the trap cell.
+Step 2: Trap reveals and Flip 2 coin, if both are head, that unit cannot attack next turn resolves.
+Expected Result:
+- Trap effect applies to attacker/active player as described.
+- Trap is consumed/destroyed after activation unless otherwise stated.
+
+Test Case ID: TC-Red-Card-002
+Description:
+Immunity — Huntress of Green Glade / Laser Walker / Electrogazer vs Red Card.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Player 0 has trap-immune character.
+- Red Card face-down on opponent field.
+Steps:
+Step 1: Attack trap with immune character.
+Expected Result:
+- Zero-cost trap nullified if applicable; attacker not destroyed by trap effect.
+
+Test Case ID: TC-Red-Card-003
+Description:
+Zero-cost — Electrogazer negates Red Card on field.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Player 1 has Electrogazer face-up.
+- Red Card face-down on Player 1 field.
+Steps:
+Step 1: Player 0 attacks another target; verify negation state.
+Expected Result:
+- Zero-cost trap on both fields negated while Electrogazer is active.
+
+Test Case ID: TC-Red-Card-004
+Description:
+Coin flip — Red Card probabilistic debuff.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run multiple trap activations.
+Steps:
+Step 1: Observe heads/tails branches for ATK debuff or attack lock.
+Expected Result:
+- Heads branch applies debuff or attack lock per card text.
+- Tails branch applies alternate or no effect.
+
+Test Case ID: TC-Red-Card-005
+Description:
+Turn control — Red Card attack/turn restriction.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Trigger trap mid-turn with attacks remaining.
+Steps:
+Step 1: Verify turn ends or next-turn attack lock on attacker.
+Expected Result:
+- Attacker cannot attack next turn OR turn ends immediately per Blackmail choice.
+
+Test Case ID: TC-Red-Card-006
+Description:
+Edge — Red Card attacked by face-up vs face-down attacker path.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Repeat with attacker revealed before combat.
 Steps:
@@ -1309,99 +1402,6 @@ Edge — Hypnosis  attacked by face-up vs face-down attacker path.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
 - Ensure 'Hypnosis ' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Repeat with attacker revealed before combat.
-Steps:
-Step 1: Attack trap.
-Expected Result:
-- Trap activates identically regardless of attacker exposure state.
-
----
-
-Card Name: Red Card
-Type: Trap
-Cost: 0
-Ability: Flip 2 coin, if head, that unit cannot attack next turn
-Test Cases:
-
-
-Test Case ID: TC-Red-Card-001
-Description:
-Happy path — opponent attacks Red Card.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Red Card face-down on Player 1 field.
-- Player 0 has an attacker ready.
-Steps:
-Step 1: Player 0 attacks the trap cell.
-Step 2: Trap reveals and Flip 2 coin, if head, that unit cannot attack next turn resolves.
-Expected Result:
-- Trap effect applies to attacker/active player as described.
-- Trap is consumed/destroyed after activation unless otherwise stated.
-
-Test Case ID: TC-Red-Card-002
-Description:
-Immunity — Huntress of Green Glade / Laser Walker / Electrogazer vs Red Card.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Player 0 has trap-immune character.
-- Red Card face-down on opponent field.
-Steps:
-Step 1: Attack trap with immune character.
-Expected Result:
-- Zero-cost trap nullified if applicable; attacker not destroyed by trap effect.
-
-Test Case ID: TC-Red-Card-003
-Description:
-Zero-cost — Electrogazer negates Red Card on field.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Player 1 has Electrogazer face-up.
-- Red Card face-down on Player 1 field.
-Steps:
-Step 1: Player 0 attacks another target; verify negation state.
-Expected Result:
-- Zero-cost trap on both fields negated while Electrogazer is active.
-
-Test Case ID: TC-Red-Card-004
-Description:
-Coin flip — Red Card probabilistic debuff.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Run multiple trap activations.
-Steps:
-Step 1: Observe heads/tails branches for ATK debuff or attack lock.
-Expected Result:
-- Heads branch applies debuff or attack lock per card text.
-- Tails branch applies alternate or no effect.
-
-Test Case ID: TC-Red-Card-005
-Description:
-Turn control — Red Card attack/turn restriction.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Trigger trap mid-turn with attacks remaining.
-Steps:
-Step 1: Verify turn ends or next-turn attack lock on attacker.
-Expected Result:
-- Attacker cannot attack next turn OR turn ends immediately per Blackmail choice.
-
-Test Case ID: TC-Red-Card-006
-Description:
-Edge — Red Card attacked by face-up vs face-down attacker path.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Red Card' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Repeat with attacker revealed before combat.
 Steps:

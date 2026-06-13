@@ -439,10 +439,10 @@ func _load_characters() -> void:
 			"With Mutagen Flag: this card can target 3 cards",
 			CharacterData.Rarity.EXOTIC],
 
-		["Lab Zombie", CharacterData.Affinity.BIO, 55, 40, 700,
+		["Lab Zombie", CharacterData.Affinity.BIO, 55, 20, 700,
 			CharacterData.AbilityType.MUTAGEN_ATK_BOOST_VS_AFFINITIES,
-			{"bonus": 25, "affinities": [CharacterData.Affinity.NATURE, CharacterData.Affinity.ANIMA]},
-			"With Mutagen Flag: +25 ATK vs Nature or Anima.",
+			{"bonus": 45, "affinities": [CharacterData.Affinity.NATURE, CharacterData.Affinity.ANIMA]},
+			"With Mutagen Flag: +45 ATK vs Nature or Anima.",
 			CharacterData.Rarity.RARE],
 
 		["Laser Walker", CharacterData.Affinity.COSMIC, 20, 10, 250,
@@ -632,7 +632,7 @@ func _load_characters() -> void:
 		["Plant-29", CharacterData.Affinity.BIO, 45, 85, 900,
 			CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG,
 			{},
-			"Start of your turn: select 1 face-up foe’s card, flip a coin. Head: put Venom Flag on it. Tail: put Mutagen Flag on it.",
+			"Start of your turn: Flip a coin. Head: put Venom Flag any face-up card. Tail: put Mutagen Flag on any card (even face-down).",
 			CharacterData.Rarity.RARE,
 			true],
 

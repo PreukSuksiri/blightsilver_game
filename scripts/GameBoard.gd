@@ -2820,6 +2820,7 @@ var _pending_union_zone_cells: Array = []
 var _pending_union_conditions_remaining: Array = []
 var _pending_union_selected_materials: Array = []   # Array[Vector2i]
 var _union_flash_nodes: Array = []                  # Array[Card nodes]
+var _ability_target_flash_nodes: Array = []         # Array[Card nodes]
 
 func _open_union_modal(player: int, available: Array) -> void:
 	var modal: UnionModal = UnionModal.open(self, player, available)
@@ -4286,6 +4287,7 @@ func _rift_update_highlight() -> void:
 		for r: int in range(GameState.GRID_SIZE):
 			if GameState.get_card(opp, r, hcol).card_type != "dead_end":
 				grid_nodes[opp][r][hcol].set_highlighted(true)
+	_apply_ability_target_flash()
 
 func _on_grid_card_hovered(player: int, row: int, col: int) -> void:
 	var inst: GameState.CardInstance = GameState.get_card(player, row, col)
@@ -4307,11 +4309,11 @@ func _on_grid_card_hovered(player: int, row: int, col: int) -> void:
 			_rift_last_hover = _rift_hover_cell
 			_rift_hover_cell = new_cell
 			_rift_update_highlight()
-	# Flash hover during tech target selection even if card is face-down
-	if selection_state == SelectionState.SELECTING_TECH_TARGET \
-			and "opponent_squares" in pending_tech_filter \
-			and player == GameState.get_opponent(GameState.current_player):
-		_set_tech_hover_node(grid_nodes[player][row][col])
+	# Intensify hover pulse on any valid tech target (face-down adjacent, Radar, etc.)
+	if selection_state == SelectionState.SELECTING_TECH_TARGET:
+		var tech_node: Control = grid_nodes[player][row][col]
+		if tech_node.is_highlighted:
+			_set_tech_hover_node(tech_node)
 	# Red hover during attack target selection — unrevealed dead_end slots are valid targets
 	if selection_state == SelectionState.SELECTING_TARGET \
 			and player == GameState.get_opponent(GameState.current_player) \
@@ -5986,13 +5988,25 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			_finish_tech_action(GameState.current_player)
 		return
 
-	if filter in ["ability_false_prophet_reveal", "opponent_character_ability_destroy", "ability_rebel_king_swap"]:
+	if filter in ["ability_false_prophet_reveal", "opponent_character_ability_destroy", "ability_rebel_king_swap",
+			"ability_plant29_venom", "ability_plant29_mutagen"]:
 		var _ai_responds: bool = _is_ai_turn()
 		if filter == "ability_rebel_king_swap" and GameState.game_mode == GameState.GameMode.VS_AI \
 				and GameState.current_player == ai_player.player_index:
 			_ai_responds = true
 		if _ai_responds:
 			await get_tree().create_timer(0.4).timeout
+			if filter in ["ability_plant29_venom", "ability_plant29_mutagen"]:
+				var _p29_pick: Dictionary = _active_ai.decide_any_grid_target(filter)
+				if _p29_pick.is_empty():
+					GameState.post_message("No valid target — effect cancelled.")
+					_clear_after_ability()
+				else:
+					var _p29_player: int = int(_p29_pick.get("player", GameState.current_player))
+					var _p29_pos: Vector2i = _p29_pick.get("pos", Vector2i(-1, -1))
+					_flash_target_card(_p29_player, _p29_pos.x, _p29_pos.y)
+					_handle_tech_target(_p29_player, _p29_pos)
+				return
 			var _ab_target: Vector2i = _active_ai.decide_target(filter)
 			if filter == "ability_rebel_king_swap":
 				_flash_target_card(GameState.current_player, _ab_target.x, _ab_target.y)
@@ -6125,6 +6139,28 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			card.current_def = _tmp_atk
 			GameState.post_message("Rebel King: %s swapped ATK (%d) and DEF (%d)." % [
 				card.card_name, card.current_atk, card.current_def])
+		_clear_after_ability()
+		return
+
+	if pending_tech_filter == "ability_plant29_venom":
+		if card.face_up and card.card_type != "dead_end":
+			if "venom" not in card.flags:
+				card.flags.append("venom")
+			var _p29_name: String = _find_turn_start_coin_flip_source_name(current_player)
+			GameState.post_message("%s: Venom on %s." % [_p29_name, card.card_name])
+		_clear_after_ability()
+		return
+
+	if pending_tech_filter == "ability_plant29_mutagen":
+		if card.card_type != "dead_end":
+			if card.card_type == "character":
+				GameState.apply_mutagen_flag(card)
+			elif "mutagen" not in card.flags:
+				card.flags.append("mutagen")
+			if not card.face_up:
+				GameState.reveal_card(player, pos.x, pos.y)
+			var _p29m_name: String = _find_turn_start_coin_flip_source_name(current_player)
+			GameState.post_message("%s: Mutagen on %s." % [_p29m_name, card.card_name])
 		_clear_after_ability()
 		return
 
@@ -6724,9 +6760,21 @@ func _is_post_attack_ability_filter(filter: String) -> bool:
 		"ability_false_prophet_reveal",
 		"opponent_character_ability_destroy",
 		"ability_rebel_king_swap",
+		"ability_plant29_venom",
+		"ability_plant29_mutagen",
 		"opponent_any_hidden",
 		"own_character_for_swap",
 	]
+
+
+func _find_turn_start_coin_flip_source_name(player: int) -> String:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var inst: GameState.CardInstance = GameState.get_card(player, r, c)
+			if inst.card_type == "character" and inst.face_up \
+					and inst.ability_type == CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG:
+				return inst.card_name
+	return "Plant-29"
 
 
 func _find_own_card_pos(player: int, card_name: String) -> Vector2i:
@@ -6959,6 +7007,21 @@ func _highlight_tech_targets(filter: String) -> void:
 					var card: GameState.CardInstance = GameState.get_card(p, r, c)
 					grid_nodes[p][r][c].set_highlighted(card.face_up and card.card_type != "dead_end")
 
+	elif filter == "ability_plant29_venom":
+		for p in range(2):
+			for r in range(GameState.GRID_SIZE):
+				for c in range(GameState.GRID_SIZE):
+					var card: GameState.CardInstance = GameState.get_card(p, r, c)
+					grid_nodes[p][r][c].set_highlighted(card.face_up and card.card_type != "dead_end")
+
+	elif filter == "ability_plant29_mutagen":
+		for p in range(2):
+			for r in range(GameState.GRID_SIZE):
+				for c in range(GameState.GRID_SIZE):
+					var card: GameState.CardInstance = GameState.get_card(p, r, c)
+					grid_nodes[p][r][c].set_highlighted(card.card_type != "dead_end")
+		_set_own_facedown_char_peek(true)
+
 	elif filter == "bribe_reveal":
 		# Bribed player may only reveal a face-down unit
 		for r in range(GameState.GRID_SIZE):
@@ -7120,6 +7183,24 @@ func _highlight_tech_targets(filter: String) -> void:
 			grid_nodes[opponent][pos.x][pos.y].set_highlighted(
 				adj_card.card_type != "dead_end" and not adj_card.face_up and not adj_card.was_destroyed)
 
+	_apply_ability_target_flash()
+
+func _clear_ability_target_flash_nodes() -> void:
+	for node: Control in _ability_target_flash_nodes:
+		if is_instance_valid(node) and node.has_method("set_ability_target_flash"):
+			node.set_ability_target_flash(false)
+	_ability_target_flash_nodes.clear()
+
+func _apply_ability_target_flash() -> void:
+	_clear_ability_target_flash_nodes()
+	for p in range(2):
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var node: Control = grid_nodes[p][r][c]
+				if node.is_highlighted and node.has_method("set_ability_target_flash"):
+					node.set_ability_target_flash(true)
+					_ability_target_flash_nodes.append(node)
+
 func _count_opponent_unrevealed(opponent: int) -> int:
 	var count: int = 0
 	for r in range(GameState.GRID_SIZE):
@@ -7139,6 +7220,7 @@ func _count_opponent_facedown(opponent: int) -> int:
 	return count
 
 func _clear_highlights() -> void:
+	_clear_ability_target_flash_nodes()
 	for p in range(2):
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):

@@ -180,8 +180,8 @@ Expected Result:
 
 Card Name: Lab Zombie
 Type: Character
-Stats: Cost=700 ATK=55 DEF=40 Affinity=Bio
-Ability: With Mutagen Flag: +25 ATK vs Nature or Anima.
+Stats: Cost=700 ATK=55 DEF=20 Affinity=Bio
+Ability: With Mutagen Flag: +45 ATK vs Nature or Anima.
 Test Cases:
 
 
@@ -231,7 +231,7 @@ Preconditions:
 Steps:
 Step 1: Play Release Mutagen; select Lab Zombie.
 Step 2: Verify mutagen flag icon appears on card.
-Step 3: Trigger combat scenario described: With Mutagen Flag: +25 ATK vs Nature or Anima.
+Step 3: Trigger combat scenario described: With Mutagen Flag: +45 ATK vs Nature or Anima.
 Expected Result:
 - has_mutagen_flag is true (not merely 'mutogen' string in flags array).
 - Mutagen-granted ability activates per card text.
@@ -259,6 +259,131 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Lab Zombie and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Plant-29
+Type: Character
+Stats: Cost=900 ATK=45 DEF=85 Affinity=Bio
+Ability: Start of your turn: Flip a coin. Head: put Venom Flag any face-up card. Tail: put Mutagen Flag on any card (even face-down).
+Test Cases:
+
+
+Test Case ID: TC-Plant-29-001
+Description:
+Happy path — Plant-29 attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Plant-29 face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Plant-29 as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Plant-29 participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Plant-29-002
+Description:
+Edge — Plant-29 placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Plant-29 face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Plant-29 via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Plant-29.
+Expected Result:
+- Plant-29 reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Plant-29-003
+Description:
+Mutagen — Plant-29 with has_mutagen_flag active.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Player 0 has Release Mutagen in hand.
+- Place face-up Bio character Plant-29 on field.
+Steps:
+Step 1: Play Release Mutagen; select Plant-29.
+Step 2: Verify mutagen flag icon appears on card.
+Step 3: Trigger combat scenario described: Start of your turn: Flip a coin. Head: put Venom Flag any face-up card. Tail: put Mutagen Flag on any card (even face-down).
+Expected Result:
+- has_mutagen_flag is true (not merely 'mutogen' string in flags array).
+- Mutagen-granted ability activates per card text.
+
+Test Case ID: TC-Plant-29-004
+Description:
+Mutagen edge — Plant-29 WITHOUT mutagen flag.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Plant-29 face-up without using Release Mutagen.
+Steps:
+Step 1: Attempt the mutagen-dependent action or battle.
+Expected Result:
+- Mutagen-specific bonus/effect does NOT apply.
+
+Test Case ID: TC-Plant-29-005
+Description:
+Venom — Plant-29 vs venom-flagged target.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Apply venom flag to opponent character (via Death Cobra end-of-turn or manual test setup).
+Steps:
+Step 1: Attack venom-flagged target with Plant-29.
+Expected Result:
+- Venom-related ATK/DEF bonus applies during battle calculation.
+
+Test Case ID: TC-Plant-29-006
+Description:
+Coin flip — Plant-29 ability resolution.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Note: coin flip uses RNG; run multiple iterations or log outcomes.
+Steps:
+Step 1: Trigger battle/turn event that activates coin flip for Plant-29.
+Expected Result:
+- On heads: positive branch occurs. On tails: alternate branch or no effect per card text.
+
+Test Case ID: TC-Plant-29-007
+Description:
+Exposure edge — Plant-29 face-up vs face-down states.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run once with defender face-up before attack; once face-down until reveal.
+Steps:
+Step 1: Attack with Plant-29 each time.
+Expected Result:
+- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
+
+Test Case ID: TC-Plant-29-008
+Description:
+Edge — low crystals during Plant-29 battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Plant-29 and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -323,7 +448,7 @@ Expected Result:
 Card Name: Pit Lord
 Type: Character
 Stats: Cost=1250 ATK=120 DEF=100 Affinity=Chaos
-Ability: his card is destroyed if battle with Divine Unit. After this card attacked, halve its ATK&DEF permanently
+Ability: Destroy this card after Reckoning with Divine Unit. After this card attacked, halve its ATK&DEF permanently
 Test Cases:
 
 
@@ -644,7 +769,7 @@ Expected Result:
 
 Card Name: Blue Mage
 Type: Character
-Stats: Cost=800 ATK=45 DEF=45 Affinity=Arcane
+Stats: Cost=800 ATK=35 DEF=35 Affinity=Arcane
 Ability: If this card battles non-Arcane card, flip two coins. If both are head, destroy it.
 Test Cases:
 
@@ -2202,131 +2327,6 @@ Expected Result:
 
 ---
 
-Card Name: Plant-29
-Type: Character
-Stats: Cost=900 ATK=45 DEF=85 Affinity=Bio
-Ability: Start of your turn: select 1 face-up foe’s card, flip a coin. Head: put Venom Flag on it. Tail: put Mutagen Flag on it.
-Test Cases:
-
-
-Test Case ID: TC-Plant-29-001
-Description:
-Happy path — Plant-29 attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Plant-29 face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Plant-29 as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Plant-29 participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Plant-29-002
-Description:
-Edge — Plant-29 placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Plant-29 face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Plant-29 via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Plant-29.
-Expected Result:
-- Plant-29 reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Plant-29-003
-Description:
-Mutagen — Plant-29 with has_mutagen_flag active.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Player 0 has Release Mutagen in hand.
-- Place face-up Bio character Plant-29 on field.
-Steps:
-Step 1: Play Release Mutagen; select Plant-29.
-Step 2: Verify mutagen flag icon appears on card.
-Step 3: Trigger combat scenario described: Start of your turn: select 1 face-up foe’s card, flip a coin. Head: put Venom Flag on it. Tail: put Mutagen Flag on it.
-Expected Result:
-- has_mutagen_flag is true (not merely 'mutogen' string in flags array).
-- Mutagen-granted ability activates per card text.
-
-Test Case ID: TC-Plant-29-004
-Description:
-Mutagen edge — Plant-29 WITHOUT mutagen flag.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Plant-29 face-up without using Release Mutagen.
-Steps:
-Step 1: Attempt the mutagen-dependent action or battle.
-Expected Result:
-- Mutagen-specific bonus/effect does NOT apply.
-
-Test Case ID: TC-Plant-29-005
-Description:
-Venom — Plant-29 vs venom-flagged target.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Apply venom flag to opponent character (via Death Cobra end-of-turn or manual test setup).
-Steps:
-Step 1: Attack venom-flagged target with Plant-29.
-Expected Result:
-- Venom-related ATK/DEF bonus applies during battle calculation.
-
-Test Case ID: TC-Plant-29-006
-Description:
-Coin flip — Plant-29 ability resolution.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Note: coin flip uses RNG; run multiple iterations or log outcomes.
-Steps:
-Step 1: Trigger battle/turn event that activates coin flip for Plant-29.
-Expected Result:
-- On heads: positive branch occurs. On tails: alternate branch or no effect per card text.
-
-Test Case ID: TC-Plant-29-007
-Description:
-Exposure edge — Plant-29 face-up vs face-down states.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Run once with defender face-up before attack; once face-down until reveal.
-Steps:
-Step 1: Attack with Plant-29 each time.
-Expected Result:
-- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
-
-Test Case ID: TC-Plant-29-008
-Description:
-Edge — low crystals during Plant-29 battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Plant-29' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Plant-29 and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
 Card Name: Laughing Granny
 Type: Character
 Stats: Cost=350 ATK=15 DEF=20 Affinity=Chaos
@@ -2412,7 +2412,7 @@ Expected Result:
 Card Name: Leech Man
 Type: Character
 Stats: Cost=880 ATK=60 DEF=40 Affinity=Bio
-Ability: +20 DEF permanently each time it performed attack and survive. With mutagen flag : +45 ATK
+Ability: +10 DEF permanently after it performed attack on unit. Also +10 ATK with mutagen flag
 Test Cases:
 
 
@@ -2462,7 +2462,7 @@ Preconditions:
 Steps:
 Step 1: Play Release Mutagen; select Leech Man.
 Step 2: Verify mutagen flag icon appears on card.
-Step 3: Trigger combat scenario described: +20 DEF permanently each time it performed attack and survive. With mutagen flag : +45 ATK
+Step 3: Trigger combat scenario described: +10 DEF permanently after it performed attack on unit. Also +10 ATK with mutagen flag
 Expected Result:
 - has_mutagen_flag is true (not merely 'mutogen' string in flags array).
 - Mutagen-granted ability activates per card text.
@@ -2689,6 +2689,62 @@ Expected Result:
 
 ---
 
+Card Name: Mephisto the Fallen
+Type: Character
+Stats: Cost=860 ATK=75 DEF=0 Affinity=Divine
+Ability: After this card attacked unit successfully, its ATK becomes 0 permanently
+Test Cases:
+
+
+Test Case ID: TC-Mephisto-the-Fallen-001
+Description:
+Happy path — Mephisto the Fallen attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Mephisto the Fallen' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Mephisto the Fallen face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Mephisto the Fallen as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Mephisto the Fallen participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Mephisto-the-Fallen-002
+Description:
+Edge — Mephisto the Fallen placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Mephisto the Fallen' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Mephisto the Fallen face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Mephisto the Fallen via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Mephisto the Fallen.
+Expected Result:
+- Mephisto the Fallen reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Mephisto-the-Fallen-003
+Description:
+Edge — low crystals during Mephisto the Fallen battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Mephisto the Fallen' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Mephisto the Fallen and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Ostrich Cannon
 Type: Character
 Stats: Cost=800 ATK=60 DEF=30 Affinity=Nature
@@ -2841,57 +2897,83 @@ Expected Result:
 
 ---
 
-Card Name: Mephisto the Fallen
+Card Name: Mafia Associates
 Type: Character
-Stats: Cost=860 ATK=75 DEF=0 Affinity=Divine
-Ability: After this card attacked successfully, its ATK becomes 0 permanently
+Stats: Cost=500 ATK=45 DEF=40 Affinity=Anima
+Ability: At the end of the turn that it’s been exposed, its defense becomes 0
 Test Cases:
 
 
-Test Case ID: TC-Mephisto-the-Fallen-001
+Test Case ID: TC-Mafia-Associates-001
 Description:
-Happy path — Mephisto the Fallen attacks and wins a standard battle.
+Happy path — Mafia Associates attacks and wins a standard battle.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Mephisto the Fallen' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Mafia Associates' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Mephisto the Fallen face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place Mafia Associates face-up on Player 0 row 2 col 2 (center-adjacent).
 - Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
 Steps:
-Step 1: End setup phase. Player 0 selects Mephisto the Fallen as attacker targeting opponent character.
+Step 1: End setup phase. Player 0 selects Mafia Associates as attacker targeting opponent character.
 Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
 Step 3: Complete the attack and observe post-battle state.
 Expected Result:
-- Mephisto the Fallen participates in battle resolution without errors.
+- Mafia Associates participates in battle resolution without errors.
 - Winner/loser destruction and crystal loss follow standard rules.
 - Ability-related messages appear in battle log if applicable.
 
-Test Case ID: TC-Mephisto-the-Fallen-002
+Test Case ID: TC-Mafia-Associates-002
 Description:
-Edge — Mephisto the Fallen placed face-down, revealed on attack.
+Edge — Mafia Associates placed face-down, revealed on attack.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Mephisto the Fallen' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Mafia Associates' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Mephisto the Fallen face-down on Player 0 field.
+- Place Mafia Associates face-down on Player 0 field.
 - Opponent has a face-down defender.
 Steps:
-Step 1: Attack with another unit or reveal Mephisto the Fallen via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Mephisto the Fallen.
+Step 1: Attack with another unit or reveal Mafia Associates via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Mafia Associates.
 Expected Result:
-- Mephisto the Fallen reveals correctly on attack.
+- Mafia Associates reveals correctly on attack.
 - Face-down state does not break ability triggers that depend on exposure timing.
 
-Test Case ID: TC-Mephisto-the-Fallen-003
+Test Case ID: TC-Mafia-Associates-003
 Description:
-Edge — low crystals during Mephisto the Fallen battle.
+Exposure edge — Mafia Associates face-up vs face-down states.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Mephisto the Fallen' is in the active player's deck/hand and loaded in CardDatabase.
+- Ensure 'Mafia Associates' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run once with defender face-up before attack; once face-down until reveal.
+Steps:
+Step 1: Attack with Mafia Associates each time.
+Expected Result:
+- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
+
+Test Case ID: TC-Mafia-Associates-004
+Description:
+End-of-turn — Mafia Associates turn boundary effect.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Mafia Associates' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Mafia Associates survives to end of relevant turn.
+Steps:
+Step 1: End turn; observe end-of-turn processing.
+Expected Result:
+- Turn-end stat changes, flags, or self-destruct occur as specified.
+
+Test Case ID: TC-Mafia-Associates-005
+Description:
+Edge — low crystals during Mafia Associates battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Mafia Associates' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Set Player 0 crystals to 100.
 Steps:
-Step 1: Attack/defend with Mephisto the Fallen and lose card (crystal cost payment).
+Step 1: Attack/defend with Mafia Associates and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -3868,6 +3950,170 @@ Expected Result:
 
 ---
 
+Card Name: Cursed Well
+Type: Character
+Stats: Cost=300 ATK=0 DEF=25 Affinity=Chaos
+Ability: At the end of the turn that it’s been exposed, +15 ATK
+Test Cases:
+
+
+Test Case ID: TC-Cursed-Well-001
+Description:
+Happy path — Cursed Well attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Cursed Well face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Cursed Well as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Cursed Well participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Cursed-Well-002
+Description:
+Edge — Cursed Well placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Cursed Well face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Cursed Well via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Cursed Well.
+Expected Result:
+- Cursed Well reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Cursed-Well-003
+Description:
+Exposure edge — Cursed Well face-up vs face-down states.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run once with defender face-up before attack; once face-down until reveal.
+Steps:
+Step 1: Attack with Cursed Well each time.
+Expected Result:
+- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
+
+Test Case ID: TC-Cursed-Well-004
+Description:
+End-of-turn — Cursed Well turn boundary effect.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Cursed Well survives to end of relevant turn.
+Steps:
+Step 1: End turn; observe end-of-turn processing.
+Expected Result:
+- Turn-end stat changes, flags, or self-destruct occur as specified.
+
+Test Case ID: TC-Cursed-Well-005
+Description:
+Edge — low crystals during Cursed Well battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Cursed Well and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Sniping Fairy
+Type: Character
+Stats: Cost=350 ATK=40 DEF=20 Affinity=Divine
+Ability: At the end of the turn that it’s been exposed, -20 ATK
+Test Cases:
+
+
+Test Case ID: TC-Sniping-Fairy-001
+Description:
+Happy path — Sniping Fairy attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sniping Fairy' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Sniping Fairy face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Sniping Fairy as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Sniping Fairy participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Sniping-Fairy-002
+Description:
+Edge — Sniping Fairy placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sniping Fairy' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Sniping Fairy face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Sniping Fairy via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Sniping Fairy.
+Expected Result:
+- Sniping Fairy reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Sniping-Fairy-003
+Description:
+Exposure edge — Sniping Fairy face-up vs face-down states.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sniping Fairy' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run once with defender face-up before attack; once face-down until reveal.
+Steps:
+Step 1: Attack with Sniping Fairy each time.
+Expected Result:
+- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
+
+Test Case ID: TC-Sniping-Fairy-004
+Description:
+End-of-turn — Sniping Fairy turn boundary effect.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sniping Fairy' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Sniping Fairy survives to end of relevant turn.
+Steps:
+Step 1: End turn; observe end-of-turn processing.
+Expected Result:
+- Turn-end stat changes, flags, or self-destruct occur as specified.
+
+Test Case ID: TC-Sniping-Fairy-005
+Description:
+Edge — low crystals during Sniping Fairy battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Sniping Fairy' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Sniping Fairy and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Parom the Smuggler
 Type: Character
 Stats: Cost=300 ATK=30 DEF=20 Affinity=Cosmic
@@ -4295,6 +4541,75 @@ Expected Result:
 
 ---
 
+Card Name: Armored Monkey
+Type: Character
+Stats: Cost=170 ATK=10 DEF=20 Affinity=Nature
+Ability: +10 ATK if there is another face-up Nature card
+Test Cases:
+
+
+Test Case ID: TC-Armored-Monkey-001
+Description:
+Happy path — Armored Monkey attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Armored Monkey face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Armored Monkey as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Armored Monkey participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Armored-Monkey-002
+Description:
+Edge — Armored Monkey placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Armored Monkey face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Armored Monkey via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Armored Monkey.
+Expected Result:
+- Armored Monkey reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Armored-Monkey-003
+Description:
+Exposure edge — Armored Monkey face-up vs face-down states.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Run once with defender face-up before attack; once face-down until reveal.
+Steps:
+Step 1: Attack with Armored Monkey each time.
+Expected Result:
+- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
+
+Test Case ID: TC-Armored-Monkey-004
+Description:
+Edge — low crystals during Armored Monkey battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Armored Monkey and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
 Card Name: Death Knight
 Type: Character
 Stats: Cost=850 ATK=65 DEF=65 Affinity=Chaos
@@ -4346,75 +4661,6 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Death Knight and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
-Card Name: Mafia Associates
-Type: Character
-Stats: Cost=500 ATK=45 DEF=40 Affinity=Anima
-Ability: If this card is exposed, its defense becomes 0
-Test Cases:
-
-
-Test Case ID: TC-Mafia-Associates-001
-Description:
-Happy path — Mafia Associates attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Mafia Associates' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Mafia Associates face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Mafia Associates as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Mafia Associates participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Mafia-Associates-002
-Description:
-Edge — Mafia Associates placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Mafia Associates' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Mafia Associates face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Mafia Associates via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Mafia Associates.
-Expected Result:
-- Mafia Associates reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Mafia-Associates-003
-Description:
-Exposure edge — Mafia Associates face-up vs face-down states.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Mafia Associates' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Run once with defender face-up before attack; once face-down until reveal.
-Steps:
-Step 1: Attack with Mafia Associates each time.
-Expected Result:
-- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
-
-Test Case ID: TC-Mafia-Associates-004
-Description:
-Edge — low crystals during Mafia Associates battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Mafia Associates' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Mafia Associates and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -5101,75 +5347,6 @@ Expected Result:
 
 ---
 
-Card Name: Armored Monkey
-Type: Character
-Stats: Cost=170 ATK=10 DEF=20 Affinity=Nature
-Ability: +10 ATK if there is face-up Nature card
-Test Cases:
-
-
-Test Case ID: TC-Armored-Monkey-001
-Description:
-Happy path — Armored Monkey attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Armored Monkey face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Armored Monkey as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Armored Monkey participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Armored-Monkey-002
-Description:
-Edge — Armored Monkey placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Armored Monkey face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Armored Monkey via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Armored Monkey.
-Expected Result:
-- Armored Monkey reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Armored-Monkey-003
-Description:
-Exposure edge — Armored Monkey face-up vs face-down states.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Run once with defender face-up before attack; once face-down until reveal.
-Steps:
-Step 1: Attack with Armored Monkey each time.
-Expected Result:
-- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
-
-Test Case ID: TC-Armored-Monkey-004
-Description:
-Edge — low crystals during Armored Monkey battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Armored Monkey' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Armored Monkey and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
 Card Name: Skeleton Scout
 Type: Character
 Stats: Cost=150 ATK=20 DEF=5 Affinity=Chaos
@@ -5360,6 +5537,75 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with White Tiger and lose card (crystal cost payment).
+Expected Result:
+- Crystal total floors at 0; game does not crash on bankruptcy.
+
+---
+
+Card Name: Shepherd Detective
+Type: Character
+Stats: Cost=400 ATK=40 DEF=25 Affinity=Anima
+Ability: After attacked : reveal 1 foe’s cell
+Test Cases:
+
+
+Test Case ID: TC-Shepherd-Detective-001
+Description:
+Happy path — Shepherd Detective attacks and wins a standard battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Shepherd Detective' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Shepherd Detective face-up on Player 0 row 2 col 2 (center-adjacent).
+- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
+Steps:
+Step 1: End setup phase. Player 0 selects Shepherd Detective as attacker targeting opponent character.
+Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
+Step 3: Complete the attack and observe post-battle state.
+Expected Result:
+- Shepherd Detective participates in battle resolution without errors.
+- Winner/loser destruction and crystal loss follow standard rules.
+- Ability-related messages appear in battle log if applicable.
+
+Test Case ID: TC-Shepherd-Detective-002
+Description:
+Edge — Shepherd Detective placed face-down, revealed on attack.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Shepherd Detective' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Place Shepherd Detective face-down on Player 0 field.
+- Opponent has a face-down defender.
+Steps:
+Step 1: Attack with another unit or reveal Shepherd Detective via Tech (Spy/Radar) first if needed.
+Step 2: Attack opponent cell with Shepherd Detective.
+Expected Result:
+- Shepherd Detective reveals correctly on attack.
+- Face-down state does not break ability triggers that depend on exposure timing.
+
+Test Case ID: TC-Shepherd-Detective-003
+Description:
+Reveal effect — Shepherd Detective post-attack/ability reveal.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Shepherd Detective' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Opponent has multiple face-down cells.
+Steps:
+Step 1: Trigger reveal via Shepherd Detective's ability.
+Expected Result:
+- Correct number of opponent/own cells revealed; selection UI works.
+
+Test Case ID: TC-Shepherd-Detective-004
+Description:
+Edge — low crystals during Shepherd Detective battle.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Shepherd Detective' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Set Player 0 crystals to 100.
+Steps:
+Step 1: Attack/defend with Shepherd Detective and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -5778,75 +6024,6 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Spear Shark and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
-Card Name: Shepherd Detective
-Type: Character
-Stats: Cost=400 ATK=40 DEF=25 Affinity=Anima
-Ability: After attack: reveal 1 foe’s cell
-Test Cases:
-
-
-Test Case ID: TC-Shepherd-Detective-001
-Description:
-Happy path — Shepherd Detective attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Shepherd Detective' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Shepherd Detective face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Shepherd Detective as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Shepherd Detective participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Shepherd-Detective-002
-Description:
-Edge — Shepherd Detective placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Shepherd Detective' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Shepherd Detective face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Shepherd Detective via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Shepherd Detective.
-Expected Result:
-- Shepherd Detective reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Shepherd-Detective-003
-Description:
-Reveal effect — Shepherd Detective post-attack/ability reveal.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Shepherd Detective' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Opponent has multiple face-down cells.
-Steps:
-Step 1: Trigger reveal via Shepherd Detective's ability.
-Expected Result:
-- Correct number of opponent/own cells revealed; selection UI works.
-
-Test Case ID: TC-Shepherd-Detective-004
-Description:
-Edge — low crystals during Shepherd Detective battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Shepherd Detective' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Shepherd Detective and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 
@@ -6659,144 +6836,6 @@ Preconditions:
 - Set Player 0 crystals to 100.
 Steps:
 Step 1: Attack/defend with Witchhunter and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
-Card Name: Cursed Well
-Type: Character
-Stats: Cost=300 ATK=0 DEF=25 Affinity=Chaos
-Ability: +15 ATK if exposed
-Test Cases:
-
-
-Test Case ID: TC-Cursed-Well-001
-Description:
-Happy path — Cursed Well attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Cursed Well face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Cursed Well as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Cursed Well participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Cursed-Well-002
-Description:
-Edge — Cursed Well placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Cursed Well face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Cursed Well via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Cursed Well.
-Expected Result:
-- Cursed Well reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Cursed-Well-003
-Description:
-Exposure edge — Cursed Well face-up vs face-down states.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Run once with defender face-up before attack; once face-down until reveal.
-Steps:
-Step 1: Attack with Cursed Well each time.
-Expected Result:
-- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
-
-Test Case ID: TC-Cursed-Well-004
-Description:
-Edge — low crystals during Cursed Well battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Cursed Well' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Cursed Well and lose card (crystal cost payment).
-Expected Result:
-- Crystal total floors at 0; game does not crash on bankruptcy.
-
----
-
-Card Name: Sniping Fairy
-Type: Character
-Stats: Cost=350 ATK=40 DEF=20 Affinity=Divine
-Ability: -20 ATK if exposed
-Test Cases:
-
-
-Test Case ID: TC-Sniping-Fairy-001
-Description:
-Happy path — Sniping Fairy attacks and wins a standard battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Sniping Fairy' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Sniping Fairy face-up on Player 0 row 2 col 2 (center-adjacent).
-- Place opponent Wandering Swordsman (60 ATK / 60 DEF) face-up at Player 1 row 2 col 2.
-Steps:
-Step 1: End setup phase. Player 0 selects Sniping Fairy as attacker targeting opponent character.
-Step 2: Confirm battle calculation overlay shows effective ATK/DEF.
-Step 3: Complete the attack and observe post-battle state.
-Expected Result:
-- Sniping Fairy participates in battle resolution without errors.
-- Winner/loser destruction and crystal loss follow standard rules.
-- Ability-related messages appear in battle log if applicable.
-
-Test Case ID: TC-Sniping-Fairy-002
-Description:
-Edge — Sniping Fairy placed face-down, revealed on attack.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Sniping Fairy' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Place Sniping Fairy face-down on Player 0 field.
-- Opponent has a face-down defender.
-Steps:
-Step 1: Attack with another unit or reveal Sniping Fairy via Tech (Spy/Radar) first if needed.
-Step 2: Attack opponent cell with Sniping Fairy.
-Expected Result:
-- Sniping Fairy reveals correctly on attack.
-- Face-down state does not break ability triggers that depend on exposure timing.
-
-Test Case ID: TC-Sniping-Fairy-003
-Description:
-Exposure edge — Sniping Fairy face-up vs face-down states.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Sniping Fairy' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Run once with defender face-up before attack; once face-down until reveal.
-Steps:
-Step 1: Attack with Sniping Fairy each time.
-Expected Result:
-- Exposure-dependent ATK/DEF modifiers differ correctly between scenarios.
-
-Test Case ID: TC-Sniping-Fairy-004
-Description:
-Edge — low crystals during Sniping Fairy battle.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Sniping Fairy' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Set Player 0 crystals to 100.
-Steps:
-Step 1: Attack/defend with Sniping Fairy and lose card (crystal cost payment).
 Expected Result:
 - Crystal total floors at 0; game does not crash on bankruptcy.
 

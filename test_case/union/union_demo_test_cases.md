@@ -213,8 +213,8 @@ Expected Result:
 Card Name: Giant Meteor Vergaia
 Type: Union
 Stats: ATK=60 DEF=0 Affinity=Cosmic
-Partial Ability: Destroy it at turn’s end, then select all face-up ???.
-Full Ability: Destroy it at turn's end, then destroy all face-up foe units sharing a border with this card.
+Partial Ability: Destroy it at turn's end, then destroy all ???
+Full Ability: Destroy it at turn's end, then destroy all face-up foe’s units surrounding the card that this card attacked.
 Summon Formula: Striker Comet + 2 Cosmic card + 1000 cost
 Test Cases:
 
@@ -278,7 +278,7 @@ Preconditions:
 - Giant Meteor Vergaia summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Giant Meteor Vergaia; verify: Destroy it at turn's end, then destroy all face-up foe's units surrounding the card that this card attacked.
+Step 1: Attack or defend with Giant Meteor Vergaia; verify: Destroy it at turn's end, then destroy all face-up foe’s units surrounding the card that this card attacked.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -405,7 +405,7 @@ Type: Union
 Stats: ATK=95 DEF=60 Affinity=Nature
 Partial Ability: In Reckoning, pay ??? crystal cost to +??DEF
 Full Ability: In Reckoning, pay 1000 crystal cost to +60 DEF
-Summon Formula: 1 Armored Nature card + 1 Nature (≥ 800 cost) + 800 cost
+Summon Formula: 1 Armored Nature card + 1 Nature (≥ 700 cost) + 800 cost
 Test Cases:
 
 
@@ -417,7 +417,7 @@ Preconditions:
 - Ensure 'Armored Dino' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: 1 Armored Nature card + 1 Nature (≥ 800 cost) + 800 cost
+- Gather material cards per formula: 1 Armored Nature card + 1 Nature (≥ 700 cost) + 800 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:
@@ -1104,7 +1104,7 @@ Card Name: Sky Protector
 Type: Union
 Stats: ATK=0 DEF=0 Affinity=Divine
 Partial Ability: If this card defends, DEF becomes ???, ATK becomes ???. If this card performs attack, ATK becomes ???, DEF becomes ???.
-Full Ability: If this card defends, DEF becomes 50, ATK becomes 0. If this card performs attack, ATK becomes 50, DEF becomes 0.
+Full Ability: If this card defends, DEF becomes 60, ATK becomes 0. If this card performs attack, ATK becomes 60, DEF becomes 0.
 Summon Formula: Sunrise Lady + Moonrise Gentleman + 400 cost
 Test Cases:
 
@@ -1454,7 +1454,7 @@ Expected Result:
 
 Card Name: Colorful Mage
 Type: Union
-Stats: ATK=55 DEF=40 Affinity=Arcane
+Stats: ATK=40 DEF=40 Affinity=Arcane
 Partial Ability: Foe’s non-Arcane get ??? in Reckoning with this card
 Full Ability: Foe’s non-Arcane get -10 ATK&DEF permanently in Reckoning with this card
 Summon Formula: Red Mage + Green Mage + Blue Mage + 500 cost
@@ -2070,9 +2070,9 @@ Expected Result:
 
 Card Name: Diamond Unicorn
 Type: Union
-Stats: ATK=50 DEF=35 Affinity=Divine
-Partial Ability: +15 ATK until ????
-Full Ability: +15 ATK until the end of this turn, once.
+Stats: ATK=30 DEF=35 Affinity=Divine
+Partial Ability: Once Union, ??? until this turn’s end
+Full Ability: Once Union, +15 ATK until this turn’s end
 Summon Formula: 1 Ponycorn + 1 Divine card + 500 cost
 Test Cases:
 
@@ -2136,7 +2136,7 @@ Preconditions:
 - Diamond Unicorn summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Diamond Unicorn; verify: +15 ATK until the end of this turn, once.
+Step 1: Attack or defend with Diamond Unicorn; verify: Once Union, +15 ATK until this turn’s end
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -2701,7 +2701,7 @@ Type: Union
 Stats: ATK=45 DEF=30 Affinity=Cosmic
 Partial Ability: None
 Full Ability: None
-Summon Formula: Laser Walker + 1 Cosmic card + 1000 cost
+Summon Formula: Laser Walker + 1 Cosmic card + 500 cost
 Test Cases:
 
 
@@ -2713,7 +2713,7 @@ Preconditions:
 - Ensure 'Imperial Frame' is in the active player's deck/hand and loaded in CardDatabase.
 - Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
 - Union summon limit: once per duel per player. Clear prior union summons if re-testing.
-- Gather material cards per formula: Laser Walker + 1 Cosmic card + 1000 cost
+- Gather material cards per formula: Laser Walker + 1 Cosmic card + 500 cost
 - Player 0 has sufficient crystals for summon cost.
 - Material cells marked in union zone pattern (5×5 bitmask).
 Steps:

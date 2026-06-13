@@ -904,6 +904,46 @@ func decide_target(filter: String) -> Vector2i:
 		_:
 			return _random_unrevealed_opponent()
 
+## Plant-29 turn-start targeting — may pick either player's grid.
+func decide_any_grid_target(filter: String) -> Dictionary:
+	var best_player: int = -1
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_score: int = -999999
+	for p: int in range(2):
+		for r: int in range(GameState.GRID_SIZE):
+			for c: int in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(p, r, c)
+				if card.card_type == "dead_end" or card.was_destroyed:
+					continue
+				if filter == "ability_plant29_venom" and not card.face_up:
+					continue
+				var score: int = _plant29_target_score(p, card, filter)
+				if score > best_score:
+					best_score = score
+					best_player = p
+					best_pos = Vector2i(r, c)
+	if best_player < 0:
+		return {}
+	return {"player": best_player, "pos": best_pos}
+
+func _plant29_target_score(player: int, card: GameState.CardInstance, filter: String) -> int:
+	var score: int = 0
+	if player == opponent_index:
+		score += 1000
+	if filter == "ability_plant29_venom":
+		if card.card_type == "character":
+			score += card.get_effective_atk() + card.get_effective_def()
+		else:
+			score += 50
+	elif filter == "ability_plant29_mutagen":
+		if not card.face_up:
+			score += 500
+		if card.card_type == "character":
+			score += card.get_effective_atk() + card.get_effective_def()
+		elif card.card_type == "trap":
+			score += 80
+	return score
+
 ## Intelligent binary choice handler for awaiting_trap_choice prompts.
 ## prompt is the trap_name/title string; choices is the array of choice labels.
 ## Returns the chosen index (0 or 1).

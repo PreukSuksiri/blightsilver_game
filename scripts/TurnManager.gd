@@ -111,22 +111,19 @@ func start_turn(player_index: int) -> void:
 						"ability_false_prophet_reveal")
 					await ability_selection_done
 				CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG:
-					# Plant-29: automatically select random face-up opponent card, coin flip → venom/mutagen
-					var _ts_opp: int = GameState.get_opponent(player_index)
-					var _ts_targets: Array = GameState.get_all_face_up_characters(_ts_opp)
-					if not _ts_targets.is_empty():
-						_ts_targets.shuffle()
-						var _ts_target: GameState.CardInstance = (_ts_targets[0] as Dictionary)["card"]
-						var _ts_cf: Array = await _do_coin_flips(1)
-						if _battle_aborted():
-							return
-						if _ts_cf[0]:  # heads
-							if "venom" not in _ts_target.flags:
-								_ts_target.flags.append("venom")
-							GameState.post_message("%s: Heads! Venom on %s." % [_ts_card.card_name, _ts_target.card_name])
-						else:
-							GameState.apply_mutagen_flag(_ts_target)
-							GameState.post_message("%s: Tails! Mutagen on %s." % [_ts_card.card_name, _ts_target.card_name])
+					# Plant-29: coin flip first, then target by result
+					var _ts_cf: Array = await _do_coin_flips(1)
+					if _battle_aborted():
+						return
+					if _ts_cf[0]:  # heads — venom on any face-up card
+						emit_signal("awaiting_target_selection",
+							"%s: Heads! Choose a face-up card for Venom Flag." % _ts_card.card_name,
+							"ability_plant29_venom")
+					else:  # tails — mutagen on any card (even face-down)
+						emit_signal("awaiting_target_selection",
+							"%s: Tails! Choose any card for Mutagen Flag." % _ts_card.card_name,
+							"ability_plant29_mutagen")
+					await ability_selection_done
 
 	# Handle skip turn (Ceasefire)
 	if GameState.skip_next_turn[player_index]:

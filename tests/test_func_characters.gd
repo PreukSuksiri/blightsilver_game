@@ -953,12 +953,12 @@ func _claw_mutant(A, AB) -> void:
 
 func _lab_zombie(A, AB) -> void:
 	print("-- TC-FUNC-Lab-Zombie-001")
-	var att := _make_char("Lab Zombie", 55, 40, 700, A.BIO,
-		AB.MUTAGEN_ATK_BOOST_VS_AFFINITIES, {"bonus": 25, "affinities": [A.NATURE]})
+	var att := _make_char("Lab Zombie", 55, 20, 700, A.BIO,
+		AB.MUTAGEN_ATK_BOOST_VS_AFFINITIES, {"bonus": 45, "affinities": [A.NATURE]})
 	att.has_mutagen_flag = true
 	var def_nature := _make_char("Nature Target", 0, 10, 100, A.NATURE)
 	var r := BattleResolver.resolve_battle(att, def_nature, 3, 0, 1)
-	assert_eq(r.attacker_atk_used, 80, "TC-FUNC-Lab-Zombie-001: 55+25=80 vs NATURE with mutagen")
+	assert_eq(r.attacker_atk_used, 100, "TC-FUNC-Lab-Zombie-001: 55+45=100 vs NATURE with mutagen")
 	# vs non-NATURE: no bonus
 	var def_other := _make_char("Chaos Target", 0, 10, 100, A.CHAOS)
 	var r2 := BattleResolver.resolve_battle(att, def_other, 3, 0, 1)
