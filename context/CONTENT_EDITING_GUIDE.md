@@ -639,6 +639,83 @@ FORCE_SHIELD_ONE_CARD              {}
 
 ---
 
+### Card ability text — writing rules
+
+These rules apply to the **human-readable ability string** in card data (column **Ability** in `context/card_data.xlsx`, field 8 in `CardDatabase.gd` defs, and Union **Partial / Full Ability** columns).
+
+**Priority:** as short as possible while keeping correct English and clarity for **both players** (owner and opponent reading the same card).
+
+Refined copies with before/after columns live in `context/card_data_refine_*.xlsx` (sheet **Ability Text Rules** + **Old Ability** / **Comment** columns). Regenerate with `python3 tools/refine_card_data_xlsx.py`. Master source for refinement is **`card_data.xlsx`**.
+
+#### Terminology
+
+| Use | Avoid | Notes |
+|-----|-------|-------|
+| **Exposed** | face-up, lowercase exposed | Same as code `face_up`; card text always says Exposed |
+| **face-down** | — | Hidden state; keep lowercase |
+| **cell** | square, slot | Grid squares |
+| **unit** | card (for characters) | Use **card** only when traps, Tech, or dead ends are included |
+| **Reckoning** | in battle, when battling | Keep this jargon |
+| **Trapper** | trap owner | Trapper = trap owner |
+| **owner**, **this player**, **foe**, **attacker** | **You**, **Your** | Never You/Your — confuses the opponent reader |
+| **Heads:** / **Tails:** | if head, Head:, head(s) | Coin results |
+| **Flip 3 coins** | Flip 3 coin | Plural |
+| **500 Crystals** | Crystal (standalone amount) | Plural when stating an amount |
+| **500 Crystal cost**, **no Crystal cost** | Crystals (when paying cost) | Singular **Crystal** only in cost phrasing |
+| **Venom flag**, **Mutagen flag**, **Princess flag** | Venom Flag, ALL CAPS | Sentence case for flags |
+| **0-cost traps** | 0 cost traps | Hyphenated |
+| **Tech** | lowercase tech | When meaning the card type |
+| **Immune to Tech.** / **Immune to traps.** | long “unaffected by…” | Prefer short immunity lines |
+
+#### Stats, shorthand, and symbols
+
+Prefer **compact symbols** over spelled-out math and long phrases.
+
+| Use | Avoid | Example |
+|-----|-------|---------|
+| **ATK&DEF** | ATK and DEF, ATK/DEF | `+20 ATK&DEF vs Nature` |
+| **≥** / **≤** | or more, or less, at least, at most | `cost ≥800`, `≤1000 Crystals` |
+| **=** | equal to, becomes 0 | `ATK&DEF=0`, `DEF=0` |
+| **= # Heads** | equal to number of heads | Horn Face attack-again effect |
+| **= ½** | equal to half of | Succubus-style buffs |
+| **Summoned:** | Once Union, Upon union, On Union: | Union summon triggers |
+
+Other matchups and grammar:
+
+- **+50 ATK vs Chaos** — drop redundant **Affinity**.
+- **both players**, **foe chooses**, **attacker has**, **owner may** — correct agreement.
+- **per Head** — not “per each head(s)”.
+
+#### Structure
+
+| Pattern | Example |
+|---------|---------|
+| One-shot | **Once:** … |
+| Battle | **In Reckoning:** … |
+| Duration | **This turn:** … / **Until foe's turn ends:** … |
+| End trigger | **End of turn:** … |
+
+#### Game rules reflected in text
+
+- **Flags on face-down units:** allowed; applying the flag **permanently Exposes** the unit (not a peek).
+- **Plant-29:** `Start of turn: Choose 1 unit, flip a coin. Heads: Venom flag on it. Tails: Mutagen flag on it.` (units only; owner chooses before coin).
+- **Death Cobra:** `End of turn: Choose 1 foe unit. Put Venom flag on it.` (includes face-down; Exposes on apply).
+
+#### Union cards
+
+- **Partial Ability:** may keep **`???` teasers** in UI.
+- **Full Ability:** complete text; **one ability per card** unless design explicitly combines them (do not merge unrelated effects — e.g. Capnomancer = revive Pyromancer only, no coin flip).
+- **Union summon trigger:** **Summoned:** (not “Once Union”).
+
+#### Avoid
+
+- **You** / **Your**
+- Ambiguous **their** without **owner** / **foe** / **this player**
+- Broken grammar: “both player”, “attacker have”, “the this player's”
+- Mixing **card** and **unit** when you mean characters only
+
+---
+
 ### Add a new card
 
 Find the correct function (`_load_characters`, `_load_traps`, or `_load_tech_cards`) and add a new entry anywhere inside the `defs` array. Copy an existing entry as a template and change the values.

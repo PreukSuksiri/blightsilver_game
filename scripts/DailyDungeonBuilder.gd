@@ -1432,7 +1432,7 @@ func _refresh_wheel_outcomes_ui() -> void:
 		row.add_child(lbl)
 		var rm_btn := Button.new()
 		rm_btn.text = "✕"
-		rm_btn.add_theme_font_override("font", FontManager.ui_font(400))
+		rm_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 		rm_btn.custom_minimum_size = Vector2(30, 0)
 		rm_btn.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35))
 		var i_cap := i

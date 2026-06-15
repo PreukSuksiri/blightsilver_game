@@ -1401,7 +1401,7 @@ func _add_exploration_param_row(key: String, value: Variant) -> void:
 	var rem := Button.new()
 	rem.text = "✕"
 	rem.custom_minimum_size = Vector2(26, 0)
-	rem.add_theme_font_override("font", FontManager.ui_font(400))
+	rem.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	rem.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
 	rem.pressed.connect(func() -> void:
 		row.queue_free()
@@ -1436,7 +1436,7 @@ func _add_exploration_inv_row(item_id: String) -> void:
 	var rem := Button.new()
 	rem.text = "✕"
 	rem.custom_minimum_size = Vector2(26, 0)
-	rem.add_theme_font_override("font", FontManager.ui_font(400))
+	rem.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	rem.add_theme_color_override("font_color", Color(1.0, 0.4, 0.4))
 	rem.pressed.connect(func() -> void:
 		row.queue_free()
@@ -1779,7 +1779,7 @@ func _color_tags(parent: Control, target: TextEdit) -> HBoxContainer:
 		hbox.add_child(btn)
 	var hint := Label.new()
 	hint.text = "← color tags"
-	hint.add_theme_font_override("font", FontManager.ui_font(400))
+	hint.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	hint.add_theme_font_size_override("font_size", 13)
 	hint.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.55))
 	hint.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -3881,7 +3881,7 @@ func _build_union_gallery_section(parent: VBoxContainer) -> void:
 
 	var clear_btn := Button.new()
 	clear_btn.text = "✕"
-	clear_btn.add_theme_font_override("font", FontManager.ui_font(400))
+	clear_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	clear_btn.add_theme_font_size_override("font_size", 13)
 	clear_btn.pressed.connect(func() -> void:
 		_union_gallery_search.text = ""

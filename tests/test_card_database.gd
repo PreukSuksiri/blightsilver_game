@@ -66,7 +66,7 @@ func test_angel_gatekeeper_stats() -> void:
 		assert_eq(data.crystal_cost, 1000, "Angel Gatekeeper cost = 1000")
 		assert_eq(data.affinity, CharacterData.Affinity.DIVINE, "Angel Gatekeeper affinity = Divine")
 		assert_eq(data.ability_type, CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY, "Angel Gatekeeper ability correct")
-		assert_eq(data.ability_params.get("bonus", 0), 60, "Angel Gatekeeper bonus = 60")
+		assert_eq(data.ability_params.get("bonus", 0), 50, "Angel Gatekeeper bonus = 50")
 
 func test_pit_lord_stats() -> void:
 	print("-- test_pit_lord_stats")
@@ -76,6 +76,8 @@ func test_pit_lord_stats() -> void:
 		assert_eq(data.base_atk, 120, "Pit Lord ATK = 120")
 		assert_eq(data.base_def, 100, "Pit Lord DEF = 100")
 		assert_eq(data.affinity, CharacterData.Affinity.CHAOS, "Pit Lord affinity = Chaos")
+		assert_true(data.ability_params.get("also_halve_after_attack", false),
+			"Pit Lord also_halve_after_attack param set")
 
 func test_zero_cost_traps_exist() -> void:
 	print("-- test_zero_cost_traps_exist")

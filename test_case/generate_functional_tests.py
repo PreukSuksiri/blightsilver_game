@@ -23,7 +23,7 @@ def load_demo_names() -> set[str]:
 def load_union_demo_from_excel() -> dict[str, dict]:
     """Excel Demo=Yes unions — includes cards not yet in UnionDatabase.gd."""
     import openpyxl
-    wb = openpyxl.load_workbook(ROOT / "context/card_data_demo.xlsx", data_only=True)
+    wb = openpyxl.load_workbook(ROOT / "context/card_data.xlsx", data_only=True)
     ws = wb["Union"] if "Union" in wb.sheetnames else wb["Character"]
     rows = list(ws.iter_rows(values_only=True))
     headers = [str(h).strip() if h else "" for h in rows[1]]
@@ -1898,7 +1898,7 @@ def build_union_tests(card: dict) -> list[str]:
                 ],
                 BASE_PRE
                 + [
-                    f"Card listed in card_data_demo.xlsx Union sheet.",
+                    f"Card listed in card_data.xlsx Union sheet.",
                     f"Planned formula: {card.get('formula', '?')}",
                 ],
                 [

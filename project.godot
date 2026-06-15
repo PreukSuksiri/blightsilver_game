@@ -76,11 +76,6 @@ ui_accept={
 
 3d/physics_engine="Jolt Physics"
 
-[audio]
-
-general/default_playback_type.web=1
-driver/output_latency.web=50
-
 [rendering]
 
 rendering_device/driver.windows="d3d12"

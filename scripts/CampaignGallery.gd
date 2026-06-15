@@ -51,7 +51,7 @@ func _build_ui() -> void:
 	back_btn.offset_top    = 20.0
 	back_btn.offset_right  = 140.0
 	back_btn.offset_bottom = 52.0
-	back_btn.add_theme_font_override("font", FontManager.ui_font(400))
+	back_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	back_btn.add_theme_font_size_override("font_size", 16)
 	back_btn.pressed.connect(queue_free)
 	add_child(back_btn)
@@ -146,7 +146,7 @@ func _build_card(d: Dictionary) -> Control:
 		lbl_lock.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl_lock.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 		lbl_lock.set_anchors_preset(Control.PRESET_FULL_RECT)
-		lbl_lock.add_theme_font_override("font", FontManager.ui_font(400))
+		lbl_lock.add_theme_font_override("font", FontManager.make_font("primary", 400))
 		lbl_lock.add_theme_font_size_override("font_size", CARD_DIM_LABEL_SIZE)
 		lbl_lock.add_theme_color_override("font_color", CARD_DIM_LABEL_COLOR)
 		lbl_lock.mouse_filter = Control.MOUSE_FILTER_IGNORE

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Generate AI Agent Tester test cases from card_data_demo.xlsx (Demo=Yes only)."""
+"""Generate AI Agent Tester test cases from card_data.xlsx (Demo=Yes only)."""
 
 import re
 import openpyxl
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-XLSX = ROOT / "context" / "card_data_demo.xlsx"
+XLSX = ROOT / "context" / "card_data.xlsx"
 OUT = Path(__file__).resolve().parent
 
 # Priority tiers — complex cards tested first
@@ -785,7 +785,7 @@ def write_index(all_cards: list[dict], total_tc_count: int) -> None:
     lines = [
         "# AI Agent Tester — Card Effect Test Suite",
         "",
-        "Generated from `context/card_data_demo.xlsx` filtering **Demo = Yes** only.",
+        "Generated from `context/card_data.xlsx` filtering **Demo = Yes** only.",
         "",
         f"**Total demo cards:** {len(all_cards)}",
         "",

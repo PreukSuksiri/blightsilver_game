@@ -178,7 +178,7 @@ func _build_static_ui(card_w: float, card_h: float, full_card_path: String) -> v
 	close_btn.offset_top    = -card_h * 0.5
 	close_btn.offset_right  = card_w * 0.5 + 8.0 + cb_size
 	close_btn.offset_bottom = -card_h * 0.5 + cb_size
-	close_btn.add_theme_font_override("font", FontManager.ui_font(400))
+	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	close_btn.add_theme_font_size_override("font_size", 20)
 	close_btn.pressed.connect(_close)
 	add_child(close_btn)
@@ -382,7 +382,7 @@ func _build_ui(card_w: float, card_h: float) -> void:
 	close_btn.offset_top    = -card_h * 0.5
 	close_btn.offset_right  = card_w * 0.5 + 8.0 + cb_size
 	close_btn.offset_bottom = -card_h * 0.5 + cb_size
-	close_btn.add_theme_font_override("font", FontManager.ui_font(400))
+	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	close_btn.add_theme_font_size_override("font_size", 20)
 	close_btn.pressed.connect(_close)
 	add_child(close_btn)

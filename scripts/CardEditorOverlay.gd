@@ -102,7 +102,7 @@ func _build_ui() -> void:
 	close_btn.position = Vector2(PANEL_W - 46.0, 9.0)
 	close_btn.size = Vector2(34.0, 34.0)
 	close_btn.flat = true
-	close_btn.add_theme_font_override("font", FontManager.ui_font(400))
+	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	close_btn.add_theme_font_size_override("font_size", 16)
 	close_btn.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8))
 	close_btn.pressed.connect(queue_free)

@@ -1,6 +1,6 @@
 # AI Agent Tester — Card Effect Test Suite
 
-Generated from `context/card_data_demo.xlsx` filtering **Demo = Yes** only.
+Generated from `context/card_data.xlsx` filtering **Demo = Yes** only.
 
 **Total demo cards:** 203
 

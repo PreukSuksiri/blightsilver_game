@@ -97,6 +97,7 @@ class CardInstance:
 	var perm_atk_bonus: int = 0
 	var perm_def_bonus: int = 0
 	var field_aura_atk_bonus: int = 0  # passive ATK from allied field auras (e.g. Amber)
+	var field_aura_def_bonus: int = 0  # passive DEF from allied field auras (e.g. Gamma Mermaid mutagen)
 	var temp_atk_bonus: int = 0
 	var temp_def_bonus: int = 0
 	var carry_def_bonus: int = 0   # DEF bonus that survives end-of-turn clear; wiped at start of player's own next turn
@@ -160,7 +161,7 @@ class CardInstance:
 		return base
 
 	func _calc_effective_def() -> int:
-		var base: int = max(0, current_def + perm_def_bonus + temp_def_bonus + carry_def_bonus)
+		var base: int = max(0, current_def + perm_def_bonus + temp_def_bonus + carry_def_bonus + field_aura_def_bonus)
 		if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 			var mods: Array = GameState.active_dungeon_modifiers
 			if "monster_overload" in mods:
@@ -749,6 +750,18 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 		BattleResolver.recalculate_all_field_bonuses()
 		check_character_wipe_win_condition()
 
+## True when a revived unit may be placed here: empty slot where a unit was destroyed (not a setup dead-end blank).
+func is_valid_revive_placement_cell(player_index: int, row: int, col: int) -> bool:
+	var card: CardInstance = get_card(player_index, row, col)
+	return card.card_type == "dead_end" and card.was_destroyed
+
+func has_valid_revive_placement_cell(player_index: int) -> bool:
+	for r in range(GRID_SIZE):
+		for c in range(GRID_SIZE):
+			if is_valid_revive_placement_cell(player_index, r, c):
+				return true
+	return false
+
 ## Remove a trap card silently when revealed (no crystal cost, no was_destroyed flag).
 ## The slot becomes a plain blank dead_end — completely empty, re-targetable.
 func void_trap(player_index: int, row: int, col: int) -> void:
@@ -971,6 +984,37 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	_init_grids()
 	set_phase(Phase.SETUP_P1)
 
+const UNIT_EFFECT_FLAGS: Array[String] = ["venom", "mutagen", "berserk"]
+
+static func is_unit_effect_flag(flag: String) -> bool:
+	return flag in UNIT_EFFECT_FLAGS
+
+## Permanently reveal a hidden card before a unit flag effect resolves (not peek).
+func reveal_for_unit_effect(player_index: int, row: int, col: int) -> void:
+	var card: CardInstance = get_card(player_index, row, col)
+	if card.face_up or card.card_type == "dead_end" or card.was_destroyed:
+		return
+	reveal_card(player_index, row, col)
+
+## Apply venom/mutagen/etc. to a board card; face-down targets flip face-up permanently first.
+func apply_unit_effect_flag(player_index: int, row: int, col: int, flag: String) -> bool:
+	var card: CardInstance = get_card(player_index, row, col)
+	if card.card_type == "dead_end" or card.was_destroyed or flag == "":
+		return false
+	if not card.face_up:
+		reveal_card(player_index, row, col)
+		card = get_card(player_index, row, col)
+	if flag == "mutagen":
+		if card.card_type == "character":
+			apply_mutagen_flag(card)
+		elif "mutagen" not in card.flags:
+			card.flags.append("mutagen")
+			emit_signal("card_flag_added", player_index, row, col, flag)
+	elif flag not in card.flags:
+		card.flags.append(flag)
+		emit_signal("card_flag_added", player_index, row, col, flag)
+	return true
+
 func apply_mutagen_flag(card: CardInstance) -> void:
 	if card == null or card.card_type != "character":
 		return
@@ -979,6 +1023,9 @@ func apply_mutagen_flag(card: CardInstance) -> void:
 		card.flags.append("mutagen")
 
 func add_flag(player_index: int, row: int, col: int, flag: String) -> void:
+	if is_unit_effect_flag(flag):
+		apply_unit_effect_flag(player_index, row, col, flag)
+		return
 	var card: CardInstance = get_card(player_index, row, col)
 	if flag not in card.flags:
 		card.flags.append(flag)

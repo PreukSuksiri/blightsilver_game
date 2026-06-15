@@ -702,17 +702,18 @@ static func _get_effective_def(
 			# Handled directly in _resolve_character_vs_character before ATK vs DEF comparison
 			pass
 
-		CharacterData.AbilityType.DEF_PENALTY_VS_NON_AFFINITY:
-			var _dp_aff: int = defender.ability_params.get("affinity", -1)
-			if _dp_aff == -1 or attacker.affinity != _dp_aff:
-				var _dp_amt: int = defender.ability_params.get("def", 20)
-				def_val = max(0, def_val - _dp_amt)
-				if not BattleResolver._silent_mode:
-					GameState.post_message("%s: -%d DEF vs non-%s attacker!" % [
-						defender.card_name, _dp_amt, CharacterData.Affinity.keys()[_dp_aff]])
-
 		CharacterData.AbilityType.NOT_IMPLEMENTED:
 			GameState.show_center_message("Ability not implemented: " + defender.card_name)
+
+	# DEF_PENALTY_VS_NON_AFFINITY (Gamma Mermaid): attacker reduces non-matching defender DEF
+	if attacker.ability_type == CharacterData.AbilityType.DEF_PENALTY_VS_NON_AFFINITY:
+		var _ap_aff: int = attacker.ability_params.get("affinity", -1)
+		if _ap_aff == -1 or defender.affinity != _ap_aff:
+			var _ap_amt: int = attacker.ability_params.get("def", 20)
+			def_val = max(0, def_val - _ap_amt)
+			if not BattleResolver._silent_mode:
+				GameState.post_message("%s: -%d DEF vs non-%s defender!" % [
+					attacker.card_name, _ap_amt, CharacterData.Affinity.keys()[_ap_aff]])
 
 	return def_val
 
@@ -844,6 +845,7 @@ static func calculate_field_bonuses(player_index: int) -> void:
 			var card: GameState.CardInstance = GameState.grids[player_index][r][c]
 			if card.card_type == "character":
 				card.field_aura_atk_bonus = 0
+				card.field_aura_def_bonus = 0
 
 	var all_chars := GameState.get_all_characters(player_index)
 	for entry in all_chars:
@@ -858,19 +860,32 @@ static func _apply_field_aura_bonuses(player_index: int) -> void:
 			var source: GameState.CardInstance = GameState.grids[player_index][r][c]
 			if source.card_type != "character" or not source.face_up:
 				continue
-			if source.ability_type != CharacterData.AbilityType.FIELD_ATK_BOOST_OWN_AFFINITY:
-				continue
-			var target_affinity: int = source.ability_params.get("affinity", -1)
-			var atk_boost: int = source.ability_params.get("atk", 0)
-			if target_affinity < 0 or atk_boost == 0:
-				continue
-			for r2 in range(GameState.GRID_SIZE):
-				for c2 in range(GameState.GRID_SIZE):
-					var ally: GameState.CardInstance = GameState.grids[player_index][r2][c2]
-					if ally == source or ally.card_type != "character" or not ally.face_up:
-						continue
-					if ally.affinity == target_affinity:
-						ally.field_aura_atk_bonus += atk_boost
+			if source.ability_type == CharacterData.AbilityType.FIELD_ATK_BOOST_OWN_AFFINITY:
+				var target_affinity: int = source.ability_params.get("affinity", -1)
+				var atk_boost: int = source.ability_params.get("atk", 0)
+				if target_affinity >= 0 and atk_boost != 0:
+					for r2 in range(GameState.GRID_SIZE):
+						for c2 in range(GameState.GRID_SIZE):
+							var ally: GameState.CardInstance = GameState.grids[player_index][r2][c2]
+							if ally == source or ally.card_type != "character" or not ally.face_up:
+								continue
+							if ally.affinity == target_affinity:
+								ally.field_aura_atk_bonus += atk_boost
+			if source.ability_type == CharacterData.AbilityType.DEF_PENALTY_VS_NON_AFFINITY \
+					and source.has_mutagen_flag:
+				var party_atk: int = source.ability_params.get("mutagen_party_atk", 0)
+				var party_def: int = source.ability_params.get("mutagen_party_def", 0)
+				var party_aff: int = source.ability_params.get(
+					"mutagen_party_affinity", source.ability_params.get("affinity", -1))
+				if party_atk != 0 or party_def != 0:
+					for r2 in range(GameState.GRID_SIZE):
+						for c2 in range(GameState.GRID_SIZE):
+							var ally: GameState.CardInstance = GameState.grids[player_index][r2][c2]
+							if ally.card_type != "character" or not ally.face_up:
+								continue
+							if ally.affinity == party_aff:
+								ally.field_aura_atk_bonus += party_atk
+								ally.field_aura_def_bonus += party_def
 
 static func _apply_field_ability_bonus(
 		card: GameState.CardInstance,
@@ -890,6 +905,12 @@ static func _apply_field_ability_bonus(
 		CharacterData.AbilityType.ATK_PENALTY_IF_NO_NAME_ALLY:
 			if not _has_name_ally_on_field(player_index, card):
 				card.field_aura_atk_bonus -= card.ability_params.get("penalty", 0)
+
+		CharacterData.AbilityType.DESTROY_SELF_VS_DIVINE_BOTH:
+			if card.ability_params.has("atk_bonus") or card.ability_params.has("affinity"):
+				var count := _count_matching_cards(player_index, card)
+				card.perm_atk_bonus = card.ability_params.get("atk_bonus", 0) * count
+				card.perm_def_bonus = card.ability_params.get("def_bonus", 0) * count
 
 static func _has_name_ally_on_field(player_index: int, source_card: GameState.CardInstance) -> bool:
 	var name_filter: String = source_card.ability_params.get(

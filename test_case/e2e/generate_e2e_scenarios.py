@@ -281,7 +281,7 @@ def scenario_tier1(db: dict, formula: str = "") -> dict:
 def load_formulas() -> dict[str, str]:
     import openpyxl
     from card_db import demo_names, ROOT
-    wb = openpyxl.load_workbook(ROOT / "context/card_data_demo.xlsx", data_only=True)
+    wb = openpyxl.load_workbook(ROOT / "context/card_data.xlsx", data_only=True)
     demo = demo_names()
     formulas: dict[str, str] = {}
     for sheet in ["Unit", "Tech", "Trap", "Union"]:

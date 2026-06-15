@@ -42,8 +42,11 @@ const GALLERY_TILES_PER_FRAME := 8
 @onready var tech_count_label:  Label       = $MainLayout/RightPanel/Inner/TechSection/TechHeaderRow/TechCountLabel
 @onready var blank_count_label: Label       = $MainLayout/RightPanel/Inner/DeadEndRow/DeadEndLabel
 @onready var status_label:      Label       = $MainLayout/RightPanel/Inner/StatusLabel
+@onready var formations_btn:    Button      = $MainLayout/RightPanel/Inner/BottomBar/FormationsBtn
 @onready var save_btn:          Button      = $MainLayout/RightPanel/Inner/BottomBar/SaveBtn
-@onready var back_btn:          Button      = $MainLayout/RightPanel/Inner/BottomBar/BackBtn
+@onready var import_btn:        Button      = $PageHeaderActions/ImportBtn
+@onready var export_btn:        Button      = $PageHeaderActions/ExportBtn
+@onready var close_btn:         Button      = $PageHeaderActions/CloseBtn
 @onready var remove_char_btn:   Button      = $MainLayout/RightPanel/Inner/CharSection/RemoveBtn
 @onready var remove_trap_btn:   Button      = $MainLayout/RightPanel/Inner/TrapSection/RemoveBtn
 @onready var remove_tech_btn:   Button      = $MainLayout/RightPanel/Inner/TechSection/RemoveBtn
@@ -261,6 +264,7 @@ class FEGridCell extends Panel:
 func _ready() -> void:
 	_deferring_initial_load = true
 	_show_loading_blocker()
+	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	_connect_buttons()
 	_refresh_deck_select()
 	status_label.text = "Loading deck…"
@@ -282,7 +286,7 @@ func _ready() -> void:
 	# Hide the dead end row — it auto-fills and needs no user action
 	blank_count_label.get_parent().visible = false
 
-	# Pin BottomBar (Save + Back) to the bottom of the right panel
+	# Pin BottomBar (Formations + Save) to the bottom of the right panel
 	var bottom_bar: Node = save_btn.get_parent()
 	var right_inner: Node = bottom_bar.get_parent()
 	var spacer := Control.new()
@@ -290,15 +294,6 @@ func _ready() -> void:
 	right_inner.add_child(spacer)
 	right_inner.move_child(spacer, bottom_bar.get_index())
 
-	# Add "FORMATIONS" button above the bottom bar
-	var formations_btn := Button.new()
-	formations_btn.text = "📋  FORMATIONS"
-	formations_btn.add_theme_font_size_override("font_size", 13)
-	formations_btn.pressed.connect(_open_formation_editor)
-	right_inner.add_child(formations_btn)
-	right_inner.move_child(formations_btn, bottom_bar.get_index())
-
-	_setup_deck_io_buttons(bottom_bar)
 	_setup_deck_file_dialogs()
 
 	# Prologue lock check — show overlay if deckbuilding not yet unlocked
@@ -337,8 +332,11 @@ func _connect_buttons() -> void:
 	delete_deck_btn.pressed.connect(_on_delete_deck)
 	duplicate_btn.pressed.connect(_on_duplicate_deck)
 	deck_name_field.text_changed.connect(_on_deck_name_changed)
+	import_btn.pressed.connect(_on_import_decks)
+	export_btn.pressed.connect(_on_export_decks)
+	close_btn.pressed.connect(_on_back)
+	formations_btn.pressed.connect(_open_formation_editor)
 	save_btn.pressed.connect(_on_save)
-	back_btn.pressed.connect(_on_back)
 	remove_char_btn.disabled = true
 	remove_trap_btn.disabled = true
 	remove_tech_btn.disabled = true
@@ -1948,23 +1946,6 @@ func _fe_save_formation() -> void:
 	status_label.text = "Formation saved!"
 
 # ── Import / Export ───────────────────────────────────────────
-func _setup_deck_io_buttons(bottom_bar: Node) -> void:
-	var export_btn := Button.new()
-	export_btn.text = "Export"
-	export_btn.custom_minimum_size = Vector2(100, 46)
-	export_btn.add_theme_font_size_override("font_size", 17)
-	export_btn.pressed.connect(_on_export_decks)
-	bottom_bar.add_child(export_btn)
-	bottom_bar.move_child(export_btn, 0)
-
-	var import_btn := Button.new()
-	import_btn.text = "Import"
-	import_btn.custom_minimum_size = Vector2(100, 46)
-	import_btn.add_theme_font_size_override("font_size", 17)
-	import_btn.pressed.connect(_on_import_decks)
-	bottom_bar.add_child(import_btn)
-	bottom_bar.move_child(import_btn, 0)
-
 func _setup_deck_file_dialogs() -> void:
 	var default_dir := _default_deck_io_dir()
 	_import_dialog = FileDialog.new()

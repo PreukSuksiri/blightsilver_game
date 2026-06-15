@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sync CardDatabase.gd, UnionDatabase.gd, and demo_flags.json from context/card_data_demo.xlsx."""
+"""Sync CardDatabase.gd, UnionDatabase.gd, and demo_flags.json from context/card_data.xlsx."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from pathlib import Path
 import openpyxl
 
 ROOT = Path(__file__).resolve().parent.parent
-XLSX = ROOT / "context" / "card_data_demo.xlsx"
+XLSX = ROOT / "context" / "card_data.xlsx"
 CARD_DB = ROOT / "autoload" / "CardDatabase.gd"
 UNION_DB = ROOT / "autoload" / "UnionDatabase.gd"
 DEMO_FLAGS = ROOT / "data" / "demo_flags.json"

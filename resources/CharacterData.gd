@@ -70,7 +70,7 @@ enum AbilityType {
 	COIN_FLIP_EXTRA_ATTACK,          # Flip 1 coin after attacking; heads → get one extra attack
 	COIN_FLIP_2_DESTROY_NON_AFFINITY,# Flip 2 coins; both heads → destroy defender if not specified affinity
 	COIN_FLIP_SWAP_POSITION,         # Flip 1 coin after battle; heads → player chooses own card to swap position
-	TURN_START_COIN_FLIP_FLAG,       # Turn start: coin flip → venom on any face-up card (heads) or mutagen on any card (tails)
+	TURN_START_COIN_FLIP_FLAG,       # Turn start: choose 1 unit → coin flip → venom (heads) or mutagen (tails)
 
 	# ── Destroy / negate conditions ──
 	DESTROY_IF_OPPONENT_AFFINITY,    # At battle calc, destroy defender if they match specified affinity
@@ -166,8 +166,9 @@ enum AbilityType {
 	TEMP_ATK_HALF_TARGET,                # When attacking, +ATK equal to half of target's effective ATK (temp, this battle)
 	COIN_FLIP_ATK_DEF_BOOST,             # Flip coin; heads → +N ATK and +N DEF until end of this turn
 
-	# ── Union abilities (card_data_demo.xlsx) ──
+	# ── Union abilities (card_data.xlsx) ──
 	TURN_START_REVEAL_OPPONENT_CELL,     # Start of turn: reveal 1 foe cell; dead end → self destroy; else gain crystals
+	TURN_END_REVEAL_OPPONENT_CELL,       # End of turn: reveal 1 foe cell; dead end → self destroy; else gain crystals
 	POST_BATTLE_COIN_FLIP_DESTROY,       # After battle: coin flip; heads → destroy 1 foe character
 	UNION_SUMMON_VENOM_ALL_FOE,          # On union summon: venom flag on all foe face-up characters
 	IMMUNE_DESTROY_BY_NON_UNION,         # Cannot be destroyed unless attacker is a union card

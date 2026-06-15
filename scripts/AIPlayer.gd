@@ -886,7 +886,9 @@ func decide_target(filter: String) -> Vector2i:
 		"own_any_as_target":
 			return _worst_own_ally_excluding(GameState.attacker_pos)
 		"graveyard":
-			return _first_own_empty_slot()
+			return _first_own_revive_slot()
+		"revive_placement":
+			return _first_own_revive_slot()
 		"own_divine_character_redirect":
 			return _best_own_divine_sacrifice()
 		"any_faceup_card":
@@ -904,7 +906,7 @@ func decide_target(filter: String) -> Vector2i:
 		_:
 			return _random_unrevealed_opponent()
 
-## Plant-29 turn-start targeting — may pick either player's grid.
+## Plant-29 turn-start targeting — owner picks 1 unit on either grid, then coin flip resolves flag.
 func decide_any_grid_target(filter: String) -> Dictionary:
 	var best_player: int = -1
 	var best_pos: Vector2i = Vector2i(-1, -1)
@@ -913,9 +915,7 @@ func decide_any_grid_target(filter: String) -> Dictionary:
 		for r: int in range(GameState.GRID_SIZE):
 			for c: int in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(p, r, c)
-				if card.card_type == "dead_end" or card.was_destroyed:
-					continue
-				if filter == "ability_plant29_venom" and not card.face_up:
+				if card.card_type != "character" or card.was_destroyed:
 					continue
 				var score: int = _plant29_target_score(p, card, filter)
 				if score > best_score:
@@ -926,22 +926,12 @@ func decide_any_grid_target(filter: String) -> Dictionary:
 		return {}
 	return {"player": best_player, "pos": best_pos}
 
-func _plant29_target_score(player: int, card: GameState.CardInstance, filter: String) -> int:
-	var score: int = 0
+func _plant29_target_score(player: int, card: GameState.CardInstance, _filter: String) -> int:
+	var score: int = card.get_effective_atk() + card.get_effective_def()
 	if player == opponent_index:
 		score += 1000
-	if filter == "ability_plant29_venom":
-		if card.card_type == "character":
-			score += card.get_effective_atk() + card.get_effective_def()
-		else:
-			score += 50
-	elif filter == "ability_plant29_mutagen":
-		if not card.face_up:
-			score += 500
-		if card.card_type == "character":
-			score += card.get_effective_atk() + card.get_effective_def()
-		elif card.card_type == "trap":
-			score += 80
+	if not card.face_up:
+		score += 200
 	return score
 
 ## Intelligent binary choice handler for awaiting_trap_choice prompts.
@@ -1022,11 +1012,18 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 				return 0
 		return 1  # let attacker be destroyed
 
-	# ATTACKER_DISCARD_OR_END_TURN (Blackmail trap) — choices: [discard tech, end turn]
+	# ATTACKER_DISCARD_OR_END_TURN (Blackmail trap) — discard a tech or end turn
 	if "Blackmail" in prompt:
 		if GameState.attacks_remaining > 0 and not GameState.tech_hands[player_index].is_empty():
 			return 0  # discard tech, keep attacking
 		return 1
+
+func decide_blackmail_tech() -> String:
+	# Returns tech name to discard, or "" to end the turn.
+	if GameState.attacks_remaining <= 0 or GameState.tech_hands[player_index].is_empty():
+		return ""
+	var hand: Array = GameState.tech_hands[player_index]
+	return str(hand[hand.size() - 1])
 
 	return 0  # safe default
 
@@ -1118,6 +1115,13 @@ func _best_own_divine_sacrifice() -> Vector2i:
 	if best_pos == Vector2i(-1, -1):
 		return Vector2i(0, 0)
 	return best_pos
+
+func _first_own_revive_slot() -> Vector2i:
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			if GameState.is_valid_revive_placement_cell(player_index, r, c):
+				return Vector2i(r, c)
+	return Vector2i(0, 0)
 
 func _first_own_empty_slot() -> Vector2i:
 	for r in range(GameState.GRID_SIZE):

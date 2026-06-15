@@ -90,6 +90,17 @@ var _p2_stack_count_lbl: Label = null
 var _tech_overlay_panel: Panel = null
 var _tech_overlay_player: int = -1
 var _tech_overlay_close_pending: bool = false
+signal revive_placement_resolved
+
+# Pending revive placement (tech Resurrection/Time Travel, union Moon Tribe Shaman, etc.)
+var _pending_revive_card: GameState.CardInstance = null
+var _pending_revive_player: int = -1
+var _pending_revive_tech_data: TechCardData = null
+var _pending_revive_union_source: String = ""
+var _pending_revive_keep_in_graveyard: bool = false
+var _pending_revive_strip_stats: bool = false
+var _pending_revive_double_cost: bool = false
+var _pending_revive_awaiting: bool = false
 
 # Dump stacks (destroyed cards) + modal
 var _void_piles: Array = [[], []]   # Array of {card_name, card_type} per player
@@ -271,7 +282,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	)
 	if is_left_press:
 		_hide_hover_info()
-		_close_tech_overlay()
+		if _tech_overlay_mode != "blackmail":
+			_close_tech_overlay()
 
 func _toggle_admin_console() -> void:
 	BuildConfig.toggle_admin_console_on(self)
@@ -335,6 +347,7 @@ func _setup_turn_manager() -> void:
 	turn_manager.tech_resolved.connect(_on_tech_resolved)
 	turn_manager.turn_ended.connect(_on_turn_ended)
 	turn_manager.awaiting_trap_choice.connect(_on_awaiting_trap_choice)
+	turn_manager.awaiting_blackmail_tech_select.connect(_on_awaiting_blackmail_tech_select)
 	turn_manager.awaiting_defender_choice.connect(_on_awaiting_defender_choice)
 	turn_manager.awaiting_target_selection.connect(_on_awaiting_target_selection)
 	turn_manager.battle_preview_needed.connect(_on_battle_preview_needed)
@@ -1601,6 +1614,8 @@ func _open_tech_overlay(player: int) -> void:
 	_tech_overlay_panel.visible = true
 
 func _close_tech_overlay() -> void:
+	if _tech_overlay_mode == "blackmail":
+		return
 	_tech_overlay_close_pending = false
 	if _tech_overlay_panel:
 		_tech_overlay_panel.visible = false
@@ -2782,7 +2797,7 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 
 	var clear_btn := Button.new()
 	clear_btn.text = "✕  Remove Bluff"
-	clear_btn.add_theme_font_override("font", FontManager.ui_font(400))
+	clear_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	clear_btn.add_theme_font_size_override("font_size", 14)
 	clear_btn.add_theme_color_override("font_color", Color(0.8, 0.4, 0.4))
 	var csb := StyleBoxFlat.new()
@@ -2961,57 +2976,11 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 			for r: int in range(GameState.GRID_SIZE):
 				for c: int in range(GameState.GRID_SIZE):
 					var card: GameState.CardInstance = GameState.get_card(foe, r, c)
-					if card.card_type == "character" and card.face_up:
-						if "venom" not in card.flags:
-							card.flags.append("venom")
-			GameState.post_message("%s: Venom on all opponent face-up characters!" % u.card_name)
+					if card.card_type == "character":
+						GameState.apply_unit_effect_flag(foe, r, c, "venom")
+			GameState.post_message("%s: Venom on all opponent characters!" % u.card_name)
 		CharacterData.AbilityType.UNION_SUMMON_REVIVE_MATCH:
-			var _nc: String = str(u.ability_params.get("name_contains", ""))
-			var _ex_union: bool = bool(u.ability_params.get("exclude_union", true))
-			var revived: GameState.CardInstance = null
-			for g: GameState.CardInstance in GameState.graveyards[player]:
-				if g.card_type != "character":
-					continue
-				if _ex_union and g.is_union:
-					continue
-				if _nc != "" and not g.card_name.to_lower().contains(_nc.to_lower()):
-					continue
-				revived = g
-				break
-			if revived == null:
-				GameState.post_message("%s: No matching card in graveyard to revive." % u.card_name)
-				return
-			for r: int in range(GameState.GRID_SIZE):
-				for c: int in range(GameState.GRID_SIZE):
-					var slot: GameState.CardInstance = GameState.get_card(player, r, c)
-					if slot.card_type != "dead_end" or slot.was_destroyed:
-						continue
-					var copy: GameState.CardInstance = GameState.CardInstance.new()
-					copy.card_type = "character"
-					copy.card_name = revived.card_name
-					copy.display_name = revived.display_name
-					copy.affinity = revived.affinity
-					copy.base_atk = revived.base_atk
-					copy.base_def = revived.base_def
-					copy.current_atk = revived.current_atk
-					copy.current_def = revived.current_def
-					copy.crystal_cost = revived.crystal_cost * 2
-					copy.rarity = revived.rarity
-					copy.ability_type = revived.ability_type
-					copy.ability_params = revived.ability_params.duplicate(true)
-					copy.is_revived = true
-					copy.face_up = true
-					copy.revealed_on_turn = GameState.turn_number
-					GameState.grids[player][r][c] = copy
-					for _gi: int in range(GameState.graveyards[player].size()):
-						if GameState.graveyards[player][_gi] == revived:
-							GameState.graveyards[player].remove_at(_gi)
-							break
-					GameState.emit_signal("card_revealed", player, r, c)
-					GameState.post_message("%s revived %s (cost doubled to %d)!" % [
-						u.card_name, copy.card_name, copy.crystal_cost])
-					return
-			GameState.post_message("%s: No empty cell to revive %s." % [u.card_name, revived.card_name])
+			await _begin_union_revive_match(player, u)
 
 
 func _perform_pending_union() -> void:
@@ -3047,7 +3016,7 @@ func _perform_pending_union() -> void:
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 			and "dimensional_gate" in GameState.active_dungeon_modifiers:
 		DailyDungeonManager.register_dimensional_gate_union(player, first_cell.x, first_cell.y)
-	_apply_union_summon_ability(player, first_cell, u)
+	await _apply_union_summon_ability(player, first_cell, u)
 	# Record unlock (human players only)
 	var human_player: bool = GameState.game_mode not in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON] or player == 0
 	if human_player:
@@ -3862,7 +3831,7 @@ func _make_sub_overlay(half_w: float = 420.0, half_h: float = 300.0) -> Dictiona
 func _add_back_btn(vbox: VBoxContainer, dimmer: Control) -> void:
 	var back_btn := Button.new()
 	back_btn.text = "← BACK"
-	back_btn.add_theme_font_override("font", FontManager.ui_font(400))
+	back_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	back_btn.add_theme_font_size_override("font_size", 14)
 	back_btn.add_theme_color_override("font_color", Color(0.7, 0.7, 0.75))
 	back_btn.pressed.connect(func() -> void:
@@ -5106,6 +5075,142 @@ func _dismiss_tech_hand_overlay() -> void:
 		_tech_hand_overlay.queue_free()
 		_tech_hand_overlay = null
 
+func _close_blackmail_tech_overlay() -> void:
+	_tech_overlay_mode = ""
+	_dismiss_tech_hand_overlay()
+	if _tech_resolve_blocker:
+		_tech_resolve_blocker.visible = false
+	_update_tech_stacks()
+
+func _show_blackmail_tech_overlay(player: int) -> void:
+	_dismiss_tech_hand_overlay()
+	_close_tech_overlay()
+	_tech_overlay_mode = "blackmail"
+	if _tech_resolve_blocker:
+		_tech_resolve_blocker.visible = true
+
+	var hand: Array = GameState.tech_hands[player]
+	const PAD: int = 20
+	const GAP: int = 12
+
+	_tech_hand_overlay = Control.new()
+	_tech_hand_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_tech_hand_overlay.z_index = 110
+	add_child(_tech_hand_overlay)
+
+	var dimmer := ColorRect.new()
+	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dimmer.color = Color(0.0, 0.0, 0.0, 0.75)
+	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	_tech_hand_overlay.add_child(dimmer)
+
+	var panel_c := PanelContainer.new()
+	panel_c.layout_mode = 1
+	panel_c.anchor_left = 0.0
+	panel_c.anchor_top = 0.0
+	panel_c.anchor_right = 1.0
+	panel_c.anchor_bottom = 1.0
+	panel_c.offset_left = PAD
+	panel_c.offset_top = PAD
+	panel_c.offset_right = -PAD
+	panel_c.offset_bottom = -PAD
+	var psb := StyleBoxFlat.new()
+	psb.bg_color = Color(0.05, 0.07, 0.17, 0.98)
+	psb.border_width_left = 2
+	psb.border_width_top = 2
+	psb.border_width_right = 2
+	psb.border_width_bottom = 2
+	psb.border_color = Color(0.85, 0.35, 0.35, 0.65)
+	psb.corner_radius_top_left = 8
+	psb.corner_radius_top_right = 8
+	psb.corner_radius_bottom_left = 8
+	psb.corner_radius_bottom_right = 8
+	psb.content_margin_left = PAD
+	psb.content_margin_right = PAD
+	psb.content_margin_top = 12
+	psb.content_margin_bottom = PAD
+	panel_c.add_theme_stylebox_override("panel", psb)
+	_tech_hand_overlay.add_child(panel_c)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", GAP)
+	panel_c.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "BLACKMAIL — Select a Tech to discard"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 18)
+	title.add_theme_color_override("font_color", Color(1.0, 0.75, 0.75, 1.0))
+	vbox.add_child(title)
+
+	if hand.is_empty():
+		var empty_lbl := Label.new()
+		empty_lbl.text = "No Tech cards in hand"
+		empty_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		empty_lbl.add_theme_font_size_override("font_size", 14)
+		empty_lbl.add_theme_color_override("font_color", Color(0.65, 0.65, 0.65))
+		vbox.add_child(empty_lbl)
+	else:
+		var card_hbox := HBoxContainer.new()
+		card_hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		card_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+		card_hbox.add_theme_constant_override("separation", GAP)
+		vbox.add_child(card_hbox)
+
+		for i in range(hand.size()):
+			var tech_name: String = str(hand[i])
+			var col := VBoxContainer.new()
+			col.custom_minimum_size = Vector2(160.0, 0.0)
+			col.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			col.add_theme_constant_override("separation", 8)
+			card_hbox.add_child(col)
+
+			var img := TextureRect.new()
+			img.custom_minimum_size = Vector2(160.0, 220.0)
+			img.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			img.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			var snake: String = tech_name.to_lower() \
+				.replace(" ", "_").replace("'", "").replace("-", "_")
+			var path: String = "res://assets/textures/cards/full_cards/" + snake + ".png"
+			if not ResourceLoader.exists(path):
+				path = "res://assets/textures/cards/full_cards/tech_" + snake + ".png"
+			if ResourceLoader.exists(path):
+				img.texture = load(path)
+			col.add_child(img)
+
+			var select_btn := Button.new()
+			select_btn.custom_minimum_size = Vector2(0.0, 52.0)
+			select_btn.text = "SELECT"
+			select_btn.add_theme_font_size_override("font_size", 16)
+			var captured: String = tech_name
+			select_btn.pressed.connect(func() -> void:
+				_close_blackmail_tech_overlay()
+				turn_manager.resolve_blackmail_choice(captured))
+			col.add_child(select_btn)
+
+	var end_turn_btn := Button.new()
+	end_turn_btn.custom_minimum_size = Vector2(0.0, 52.0)
+	end_turn_btn.text = "END TURN"
+	end_turn_btn.add_theme_font_size_override("font_size", 16)
+	end_turn_btn.pressed.connect(func() -> void:
+		_close_blackmail_tech_overlay()
+		turn_manager.resolve_blackmail_choice(""))
+	vbox.add_child(end_turn_btn)
+
+	SFXManager.play(SFXManager.SFX_POPUP)
+
+func _on_awaiting_blackmail_tech_select(player: int) -> void:
+	if is_instance_valid(_current_battle_overlay):
+		_current_battle_overlay.pause_for_choice()
+	if _is_ai_turn():
+		await get_tree().create_timer(0.6).timeout
+		var discarded: String = _active_ai.decide_blackmail_tech()
+		turn_manager.resolve_blackmail_choice(discarded)
+	else:
+		_show_blackmail_tech_overlay(player)
+
 # ─────────────────────────────────────────────────────────────
 # Buttons
 # ─────────────────────────────────────────────────────────────
@@ -5828,6 +5933,8 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 						GameState.post_message("Bribe: Choose a face-down unit.")
 					elif _bribe_card.face_up:
 						GameState.post_message("Bribe: Choose a face-down unit.")
+				elif pending_tech_filter == "ability_plant29_target":
+					GameState.post_message("Plant-29: Choose a unit.")
 				return
 			SFXManager.play(SFXManager.SFX_TARGET)
 			_handle_tech_target(player, pos)
@@ -5899,6 +6006,180 @@ func _cancel_confirm_attack() -> void:
 	_update_end_turn_blink()
 
 # ─────────────────────────────────────────────────────────────
+# Revive placement
+# ─────────────────────────────────────────────────────────────
+func _clear_pending_revive() -> void:
+	_pending_revive_card = null
+	_pending_revive_player = -1
+	_pending_revive_tech_data = null
+	_pending_revive_union_source = ""
+	_pending_revive_keep_in_graveyard = false
+	_pending_revive_strip_stats = false
+	_pending_revive_double_cost = false
+	_pending_revive_awaiting = false
+
+func _remove_card_from_graveyard(player: int, card: GameState.CardInstance) -> void:
+	var gy: Array = GameState.graveyards[player]
+	for i: int in range(gy.size()):
+		if gy[i] == card:
+			gy.remove_at(i)
+			return
+
+func _duplicate_revive_card(source: GameState.CardInstance) -> GameState.CardInstance:
+	var copy: GameState.CardInstance = GameState.CardInstance.new()
+	copy.card_type = "character"
+	copy.card_name = source.card_name
+	copy.display_name = source.display_name
+	copy.affinity = source.affinity
+	copy.base_atk = source.base_atk
+	copy.base_def = source.base_def
+	copy.current_atk = source.current_atk
+	copy.current_def = source.current_def
+	copy.crystal_cost = source.crystal_cost
+	copy.rarity = source.rarity
+	copy.ability_type = source.ability_type
+	copy.ability_params = source.ability_params.duplicate(true)
+	return copy
+
+func _prepare_revive_from_graveyard(player: int, tech_data: TechCardData) -> void:
+	var gy: Array = GameState.graveyards[player]
+	if gy.is_empty():
+		GameState.post_message("No destroyed characters to revive.")
+		_finish_tech_action(player)
+		return
+	_pending_revive_card = gy.pop_back()
+	_pending_revive_player = player
+	_pending_revive_tech_data = tech_data
+	_pending_revive_union_source = ""
+	_pending_revive_keep_in_graveyard = false
+	_pending_revive_strip_stats = tech_data != null \
+		and tech_data.effect_type == TechCardData.TechEffectType.REVIVE_CHARACTER_NO_ATK
+	_pending_revive_double_cost = tech_data != null and tech_data.effect_params.get("double_cost", false)
+	_pending_revive_awaiting = false
+	await _begin_revive_placement_selection()
+
+func _begin_union_revive_match(player: int, u: UnionData) -> void:
+	var _nc: String = str(u.ability_params.get("name_contains", ""))
+	var _ex_union: bool = bool(u.ability_params.get("exclude_union", true))
+	var revived: GameState.CardInstance = null
+	for g: GameState.CardInstance in GameState.graveyards[player]:
+		if g.card_type != "character":
+			continue
+		if _ex_union and g.is_union:
+			continue
+		if _nc != "" and not g.card_name.to_lower().contains(_nc.to_lower()):
+			continue
+		revived = g
+		break
+	if revived == null:
+		GameState.post_message("%s: No matching card in graveyard to revive." % u.card_name)
+		return
+	_pending_revive_card = revived
+	_pending_revive_player = player
+	_pending_revive_tech_data = null
+	_pending_revive_union_source = u.card_name
+	_pending_revive_keep_in_graveyard = true
+	_pending_revive_strip_stats = false
+	_pending_revive_double_cost = true
+	_pending_revive_awaiting = true
+	_begin_revive_placement_selection()
+	if _pending_revive_card != null:
+		await revive_placement_resolved
+
+func _revive_placement_ai_player(player: int) -> bool:
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		return true
+	if GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+			GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+			and player == ai_player.player_index:
+		return true
+	return _is_ai_turn()
+
+func _begin_revive_placement_selection() -> void:
+	var player: int = _pending_revive_player
+	var card: GameState.CardInstance = _pending_revive_card
+	if card == null:
+		return
+	if not GameState.has_valid_revive_placement_cell(player):
+		var _was_tech: TechCardData = _pending_revive_tech_data
+		var _was_awaiting: bool = _pending_revive_awaiting
+		if not _pending_revive_keep_in_graveyard:
+			GameState.graveyards[player].append(card)
+		_clear_pending_revive()
+		GameState.post_message("No empty cell to place revived character.")
+		if _was_tech != null:
+			_finish_tech_action(player)
+		elif _was_awaiting:
+			revive_placement_resolved.emit()
+		return
+	var prompt: String = "Choose an empty cell for %s." % card.card_name
+	pending_tech_filter = "revive_placement"
+	action_label.text = prompt
+	action_panel.visible = true
+	_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
+	_show_guide(prompt)
+	_highlight_tech_targets("revive_placement")
+	if _tech_resolve_blocker:
+		_tech_resolve_blocker.visible = true
+	if _revive_placement_ai_player(player):
+		await get_tree().create_timer(0.4).timeout
+		var ai_target: Vector2i = _get_ai_for_player(player).decide_target("revive_placement")
+		_flash_target_card(player, ai_target.x, ai_target.y)
+		_handle_revive_placement(player, ai_target)
+
+func _get_ai_for_player(player: int) -> AIPlayer:
+	if player == 0 and ai_player_0 != null:
+		return ai_player_0
+	return ai_player
+
+func _handle_revive_placement(player: int, pos: Vector2i) -> void:
+	if _pending_revive_card == null or player != _pending_revive_player:
+		return
+	if not GameState.is_valid_revive_placement_cell(player, pos.x, pos.y):
+		return
+	var source: GameState.CardInstance = _pending_revive_card
+	var placed: GameState.CardInstance
+	if _pending_revive_keep_in_graveyard:
+		placed = _duplicate_revive_card(source)
+		_remove_card_from_graveyard(player, source)
+	else:
+		placed = source
+	if _pending_revive_strip_stats:
+		placed.current_atk = 0
+		placed.current_def = 0
+		placed.ability_type = int(CharacterData.AbilityType.NONE)
+	if _pending_revive_double_cost:
+		placed.crystal_cost *= 2
+	placed.is_revived = true
+	placed.face_up = true
+	placed.revealed_on_turn = GameState.turn_number
+	placed.attacked_this_turn = false
+	GameState.grids[player][pos.x][pos.y] = placed
+	_refresh_card_node(player, pos.x, pos.y)
+	GameState.emit_signal("card_revealed", player, pos.x, pos.y)
+	BattleResolver.recalculate_all_field_bonuses()
+	var _source_label: String = _pending_revive_union_source
+	var _was_tech: TechCardData = _pending_revive_tech_data
+	var _was_awaiting: bool = _pending_revive_awaiting
+	_clear_pending_revive()
+	_clear_highlights()
+	_hide_guide()
+	_set_selection_state(SelectionState.NONE)
+	if _tech_resolve_blocker:
+		_tech_resolve_blocker.visible = false
+	if _source_label != "":
+		GameState.post_message("%s revived %s (cost doubled to %d)!" % [
+			_source_label, placed.card_name, placed.crystal_cost])
+	elif _was_tech != null:
+		GameState.post_message("Revived %s at [%d,%d]!" % [placed.card_name, pos.x, pos.y])
+	else:
+		GameState.post_message("Revived %s at [%d,%d]!" % [placed.card_name, pos.x, pos.y])
+	if _was_tech != null:
+		_finish_tech_action(player)
+	elif _was_awaiting:
+		revive_placement_resolved.emit()
+
+# ─────────────────────────────────────────────────────────────
 # Tech Target Handling
 # ─────────────────────────────────────────────────────────────
 func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
@@ -5918,6 +6199,11 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		else:
 			_begin_human_defender_tech_choice()
 			_show_bribe_overlay(opponent)
+		return
+
+	if filter == "graveyard":
+		var tech_data: TechCardData = CardDatabase.get_tech(pending_tech_name)
+		await _prepare_revive_from_graveyard(GameState.current_player, tech_data)
 		return
 
 	action_label.text = prompt
@@ -5991,14 +6277,14 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		return
 
 	if filter in ["ability_false_prophet_reveal", "opponent_character_ability_destroy", "ability_rebel_king_swap",
-			"ability_plant29_venom", "ability_plant29_mutagen"]:
+			"ability_plant29_target"]:
 		var _ai_responds: bool = _is_ai_turn()
 		if filter == "ability_rebel_king_swap" and GameState.game_mode == GameState.GameMode.VS_AI \
-				and GameState.current_player == ai_player.player_index:
+				and GameState.get_opponent(GameState.current_player) == ai_player.player_index:
 			_ai_responds = true
 		if _ai_responds:
 			await get_tree().create_timer(0.4).timeout
-			if filter in ["ability_plant29_venom", "ability_plant29_mutagen"]:
+			if filter == "ability_plant29_target":
 				var _p29_pick: Dictionary = _active_ai.decide_any_grid_target(filter)
 				if _p29_pick.is_empty():
 					GameState.post_message("No valid target — effect cancelled.")
@@ -6120,6 +6406,18 @@ func _should_show_ability_target_flash(filter: String = "") -> bool:
 		return false
 	return _local_human_is_selecting(_get_target_selecting_player(f))
 
+func _apply_tech_target_self_destruct(target_player: int, pos: Vector2i, card: GameState.CardInstance) -> void:
+	if pending_tech_name == "":
+		return
+	if card.was_destroyed or card.card_type != "character":
+		return
+	if not card.ability_params.get("tech_target_self_destruct", false):
+		return
+	if not grid_nodes[target_player][pos.x][pos.y].is_highlighted:
+		return
+	GameState.post_message("%s: self-destructs when targeted by tech!" % card.card_name)
+	GameState.destroy_card(target_player, pos.x, pos.y, true)
+
 func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var current_player := GameState.current_player
 	var opponent := GameState.get_opponent(current_player)
@@ -6135,13 +6433,13 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				if _fp_pos != Vector2i(-1, -1):
 					GameState.destroy_card(current_player, _fp_pos.x, _fp_pos.y, false)
 			else:
-				var _gain: int = 200
+				var _gain: int = 600
 				for _fp_r: int in range(GameState.GRID_SIZE):
 					for _fp_c: int in range(GameState.GRID_SIZE):
 						var _fp: GameState.CardInstance = GameState.get_card(current_player, _fp_r, _fp_c)
 						if _fp.is_union and _fp.card_name == "False Prophet" \
-								and _fp.ability_type == CharacterData.AbilityType.TURN_START_REVEAL_OPPONENT_CELL:
-							_gain = _fp.ability_params.get("gain", 200)
+								and _fp.ability_type == CharacterData.AbilityType.TURN_END_REVEAL_OPPONENT_CELL:
+							_gain = _fp.ability_params.get("gain", 600)
 							break
 				GameState.gain_crystals(current_player, _gain, "ability")
 				GameState.post_message("False Prophet: +%d Crystals!" % _gain)
@@ -6174,33 +6472,29 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		_clear_after_ability()
 		return
 
-	if pending_tech_filter == "ability_plant29_venom":
-		if card.face_up and card.card_type != "dead_end":
-			if "venom" not in card.flags:
-				card.flags.append("venom")
+	if pending_tech_filter == "ability_plant29_target":
+		if card.card_type == "character":
 			var _p29_name: String = _find_turn_start_coin_flip_source_name(current_player)
-			GameState.post_message("%s: Venom on %s." % [_p29_name, card.card_name])
-		_clear_after_ability()
-		return
-
-	if pending_tech_filter == "ability_plant29_mutagen":
-		if card.card_type != "dead_end":
-			if card.card_type == "character":
-				GameState.apply_mutagen_flag(card)
-			elif "mutagen" not in card.flags:
-				card.flags.append("mutagen")
-			if not card.face_up:
-				GameState.reveal_card(player, pos.x, pos.y)
-			var _p29m_name: String = _find_turn_start_coin_flip_source_name(current_player)
-			GameState.post_message("%s: Mutagen on %s." % [_p29m_name, card.card_name])
+			var _cf: Array = await turn_manager._do_coin_flips(1)
+			if _cf[0]:
+				GameState.apply_unit_effect_flag(player, pos.x, pos.y, "venom")
+				var _tgt: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
+				GameState.post_message("%s: Heads! Venom on %s." % [_p29_name, _tgt.card_name])
+			else:
+				GameState.apply_unit_effect_flag(player, pos.x, pos.y, "mutagen")
+				var _tgt_m: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
+				GameState.post_message("%s: Tails! Mutagen on %s." % [_p29_name, _tgt_m.card_name])
 		_clear_after_ability()
 		return
 
 	if pending_tech_filter == "adjacent":
-		if card.card_type != "dead_end" and not card.was_destroyed and not card.face_up:
+		if not card.was_destroyed and not card.face_up:
 			GameState.reveal_card(player, pos.x, pos.y)
 			var _att_name: String = GameState.attacker_card.card_name if GameState.attacker_card != null else "Attacker"
-			GameState.post_message("%s: adjacent cell revealed." % _att_name)
+			if card.card_type == "dead_end":
+				GameState.post_message("%s: adjacent cell revealed (empty)." % _att_name)
+			else:
+				GameState.post_message("%s: adjacent cell revealed." % _att_name)
 		_clear_after_ability()
 		return
 
@@ -6213,6 +6507,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	CardRuleEngine.emit_trigger(CardRule.TriggerType.PLAYER_SELECT_TECH_TARGET,
 		{"source_player": current_player, "target_player": player,
 		 "tech_name": pending_tech_name})
+
+	_apply_tech_target_self_destruct(player, pos, card)
+	card = GameState.get_card(player, pos.x, pos.y)
 
 	if "opponent_squares" in pending_tech_filter:
 		if player == opponent:
@@ -6341,10 +6638,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "own_bio_character":
-		if player == current_player and card.card_type == "character" and card.affinity == CharacterData.Affinity.BIO:
-			card.has_mutagen_flag = true
-			GameState.apply_mutagen_flag(card)
-			GameState.reveal_card(player, pos.x, pos.y)
+		if player == current_player and card.card_type == "character" \
+				and card.affinity == CharacterData.Affinity.BIO:
+			GameState.apply_unit_effect_flag(player, pos.x, pos.y, "mutagen")
 		# Always finish — if target failed the filter, tech completes with no effect rather than hanging
 		_finish_tech_action(current_player)
 		return
@@ -6574,53 +6870,13 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		_finish_tech_action(current_player)
 		return
 
+	if pending_tech_filter == "revive_placement":
+		if player == current_player \
+				and GameState.is_valid_revive_placement_cell(player, pos.x, pos.y):
+			_handle_revive_placement(player, pos)
+		return
+
 	if pending_tech_filter == "graveyard":
-		# REVIVE: pick a destroyed character from player's graveyard
-		# The "graveyard" virtual cells are rendered as highlights on own dead_end+was_destroyed slots
-		# Clicking any own dead_end slot acts as graveyard pick if graveyard has a matching card at that position
-		# Simple approach: first click on own field triggers picking the most recent graveyard card
-		if player == current_player:
-			var gy: Array = GameState.graveyards[current_player]
-			if gy.is_empty():
-				GameState.post_message("No destroyed characters to revive.")
-				_finish_tech_action(current_player)
-				return
-			# Find a dead_end (blank) slot to place the revived card
-			var empty_pos: Vector2i = Vector2i(-1, -1)
-			if GameState.get_card(current_player, pos.x, pos.y).card_type == "dead_end" and \
-					not GameState.get_card(current_player, pos.x, pos.y).was_destroyed:
-				empty_pos = pos
-			if empty_pos == Vector2i(-1, -1):
-				# Find any available dead_end slot
-				for _rv_r: int in range(GameState.GRID_SIZE):
-					for _rv_c: int in range(GameState.GRID_SIZE):
-						var _rv_slot: GameState.CardInstance = GameState.get_card(current_player, _rv_r, _rv_c)
-						if _rv_slot.card_type == "dead_end" and not _rv_slot.was_destroyed:
-							empty_pos = Vector2i(_rv_r, _rv_c)
-							break
-					if empty_pos != Vector2i(-1, -1):
-						break
-			if empty_pos == Vector2i(-1, -1):
-				GameState.post_message("No empty slot to place revived character.")
-				_finish_tech_action(current_player)
-				return
-			# Pick last destroyed character
-			var revived: GameState.CardInstance = gy.pop_back()
-			if data and data.effect_type == TechCardData.TechEffectType.REVIVE_CHARACTER_NO_ATK:
-				revived.current_atk = 0
-				revived.current_def = 0
-				revived.ability_type = int(CharacterData.AbilityType.NONE)
-			if data and data.effect_params.get("double_cost", false):
-				revived.crystal_cost *= 2
-			revived.is_revived = true
-			revived.face_up = true
-			revived.revealed_on_turn = GameState.turn_number
-			revived.attacked_this_turn = false
-			GameState.grids[current_player][empty_pos.x][empty_pos.y] = revived
-			_refresh_card_node(current_player, empty_pos.x, empty_pos.y)
-			GameState.emit_signal("card_revealed", current_player, empty_pos.x, empty_pos.y)
-			GameState.post_message("Revived %s at [%d,%d]!" % [revived.card_name, empty_pos.x, empty_pos.y])
-			_finish_tech_action(current_player)
 		return
 
 	if pending_tech_filter == "view_opponent_hand":
@@ -6767,7 +7023,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	# Ignore stray clicks during defender-choice techs; never auto-finish without a valid pick.
-	if _is_defender_response_filter(pending_tech_filter):
+	if _is_defender_response_filter(pending_tech_filter) \
+			or pending_tech_filter == "revive_placement":
 		return
 
 	# Fallback — end tech after any selection
@@ -6796,8 +7053,7 @@ func _is_post_attack_ability_filter(filter: String) -> bool:
 		"ability_false_prophet_reveal",
 		"opponent_character_ability_destroy",
 		"ability_rebel_king_swap",
-		"ability_plant29_venom",
-		"ability_plant29_mutagen",
+		"ability_plant29_target",
 		"opponent_any_hidden",
 		"own_character_for_swap",
 	]
@@ -7027,7 +7283,8 @@ func _highlight_tech_targets(filter: String) -> void:
 		var _tech_data: TechCardData = CardDatabase.get_tech(pending_tech_name) if pending_tech_name != "" else null
 		var _fd_ok: bool = _tech_data != null and (
 			_tech_data.effect_params.get("allow_facedown", false)
-			or _tech_data.effect_type == TechCardData.TechEffectType.PERM_DEF_BOOST_ONE)
+			or _tech_data.effect_type == TechCardData.TechEffectType.PERM_DEF_BOOST_ONE
+			or _tech_data.effect_type == TechCardData.TechEffectType.ADD_MUTAGEN_FLAG)
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(player, r, c)
@@ -7043,20 +7300,12 @@ func _highlight_tech_targets(filter: String) -> void:
 					var card: GameState.CardInstance = GameState.get_card(p, r, c)
 					grid_nodes[p][r][c].set_highlighted(card.face_up and card.card_type != "dead_end")
 
-	elif filter == "ability_plant29_venom":
+	elif filter == "ability_plant29_target":
 		for p in range(2):
 			for r in range(GameState.GRID_SIZE):
 				for c in range(GameState.GRID_SIZE):
 					var card: GameState.CardInstance = GameState.get_card(p, r, c)
-					grid_nodes[p][r][c].set_highlighted(card.face_up and card.card_type != "dead_end")
-
-	elif filter == "ability_plant29_mutagen":
-		for p in range(2):
-			for r in range(GameState.GRID_SIZE):
-				for c in range(GameState.GRID_SIZE):
-					var card: GameState.CardInstance = GameState.get_card(p, r, c)
-					grid_nodes[p][r][c].set_highlighted(card.card_type != "dead_end")
-		_set_own_facedown_char_peek(true)
+					grid_nodes[p][r][c].set_highlighted(card.card_type == "character")
 
 	elif filter == "bribe_reveal":
 		# Bribed player may only reveal a face-down unit
@@ -7202,12 +7451,14 @@ func _highlight_tech_targets(filter: String) -> void:
 						ok = card.card_type != "dead_end"
 				grid_nodes[opponent][r][c].set_highlighted(ok)
 
-	elif filter == "graveyard":
-		# Highlight own dead_end slots that aren't was_destroyed (blank setup slots = revive targets)
+	elif filter == "revive_placement":
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
-				var card: GameState.CardInstance = GameState.get_card(player, r, c)
-				grid_nodes[player][r][c].set_highlighted(card.card_type == "dead_end" and not card.was_destroyed)
+				grid_nodes[player][r][c].set_highlighted(
+					GameState.is_valid_revive_placement_cell(player, r, c))
+
+	elif filter == "graveyard":
+		pass  # handled immediately in _on_awaiting_target_selection
 
 	elif filter == "adjacent":
 		var center: Vector2i = GameState.defender_pos
@@ -7217,7 +7468,7 @@ func _highlight_tech_targets(filter: String) -> void:
 			var pos: Vector2i = pos_v as Vector2i
 			var adj_card: GameState.CardInstance = GameState.get_card(opponent, pos.x, pos.y)
 			grid_nodes[opponent][pos.x][pos.y].set_highlighted(
-				adj_card.card_type != "dead_end" and not adj_card.face_up and not adj_card.was_destroyed)
+				not adj_card.face_up and not adj_card.was_destroyed)
 
 	_apply_ability_target_flash()
 

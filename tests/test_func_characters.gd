@@ -47,6 +47,9 @@ func assert_true(cond: bool, msg: String) -> void:
 		failed += 1
 		printerr("  FAIL: %s" % msg)
 
+func assert_false(cond: bool, msg: String) -> void:
+	assert_true(not cond, msg)
+
 func assert_eq(a, b, msg: String) -> void:
 	if a == b:
 		passed += 1
@@ -136,9 +139,16 @@ func run_all_tests() -> void:
 	_spear_shark(A, AB)
 	_swarmcaller(A, AB)
 
-	# COIN_FLIP — MANUAL
-	_manual("TC-FUNC-Blue-Mage-001")
-	_manual("TC-FUNC-Joseph-the-Battle-Priest-001")
+	# COIN_FLIP_2_DESTROY_NON_AFFINITY (coin-result-verified)
+	_blue_mage(A, AB)
+
+	# COIN_FLIP_ATK_BOOST (coin-result-verified)
+	_joseph(A, AB)
+
+	# COIN_FLIP_ATK_DEF_BOOST (coin-result-verified)
+	_grand_wizard(A, AB)
+
+	# COIN_FLIP — MANUAL (requires TurnManager or game-flow context)
 	_manual("TC-FUNC-Lazy-Troll-001")
 	_manual("TC-FUNC-Moon-Tribe-Twin-Blades-001")
 	_manual("TC-FUNC-Nuki-the-Tanuki-001")
@@ -222,8 +232,8 @@ func run_all_tests() -> void:
 	# ONE_USE_COPY_STATS_ON_SURVIVE — MANUAL (TurnManager post-battle)
 	_manual("TC-FUNC-Succubus-001")
 
-	# ONE_USE_DEFEND_MORPH — MANUAL (TurnManager post-defend)
-	_manual("TC-FUNC-Bladeshifter-001")
+	# ONE_USE_DEFEND_MORPH (Pattern A)
+	_bladeshifter(A, AB)
 
 	# ONE_USE_DEF_BOOST (Pattern A)
 	_armored_bee(A, AB)
@@ -277,14 +287,24 @@ func run_all_tests() -> void:
 	_manual("TC-FUNC-Mine-Guard-001")
 	_manual("TC-FUNC-Vampire-Servant-001")
 
-	# SELF_DEBUFF_ON_ATTACK_AND_DEFEND — MANUAL (TurnManager post-battle)
-	_manual("TC-FUNC-Dark-Tengu-001")
+	# SELF_DEBUFF_ON_ATTACK_AND_DEFEND — defend-side automated; attack-side (-5 ATK) MANUAL
+	_dark_tengu(A, AB)
+	_manual("TC-FUNC-Dark-Tengu-001-attack-ATK-debuff")
 
 	# SWAP_ATK_DEF_PER_OPP_TURN — MANUAL (TurnManager turn end)
 	_manual("TC-FUNC-Vile-Creeper-001")
 
 	# SWAP_ATK_DEF_WHEN_ATTACKING (Pattern A)
 	_poltergeist(A, AB)
+
+	# DEF_BONUS_VS_AFFINITY (Pattern A)
+	_lightbringer(A, AB)
+
+	# TEMP_ATK_HALF_TARGET (Pattern A)
+	_giant_mosquito(A, AB)
+
+	# ATK_DEF_BONUS_IF_OWN_REVEALED_GTE (Pattern B)
+	_slim_gray_trooper(A, AB)
 
 	# TEMP_ATK_BOOST_OWN_TURN_START — MANUAL (TurnManager turn start)
 	_manual("TC-FUNC-Hands-in-the-Attic-001")
@@ -756,7 +776,7 @@ func _joan(A, AB) -> void:
 	print("-- TC-FUNC-Joan-the-Faithful-Warrior-001 [Pattern B]")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	var joan := _make_char("Joan the Faithful Warrior", 25, 5, 280, A.DIVINE,
-		AB.DEF_BONUS_IF_AFFINITY_ON_FIELD, {"affinity": A.DIVINE, "def": 30})
+		AB.DEF_BONUS_IF_AFFINITY_ON_FIELD, {"affinity": A.DIVINE, "def": 35})
 	joan.face_up = true
 	GameState.grids[1][0][0] = joan  # defender on player 1's field
 	var divine_ally := _make_char("Church Guard", 0, 35, 150, A.DIVINE)
@@ -764,9 +784,9 @@ func _joan(A, AB) -> void:
 	GameState.grids[1][0][1] = divine_ally
 	var opp_att := _make_char("Attacker", 30, 0, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(opp_att, joan, 3, 0, 1)
-	assert_eq(r.defender_def_used, 35, "TC-FUNC-Joan-001: DEF 5+30=35 with DIVINE ally on field")
-	# ATK 30 < DEF 35 → Joan survives
-	assert_true(not r.defender_destroyed, "TC-FUNC-Joan-001: Joan survives ATK 30 vs DEF 35")
+	assert_eq(r.defender_def_used, 40, "TC-FUNC-Joan-001: DEF 5+35=40 with exposed DIVINE unit on field")
+	# ATK 30 < DEF 40 → Joan survives
+	assert_true(not r.defender_destroyed, "TC-FUNC-Joan-001: Joan survives ATK 30 vs DEF 40")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # DEF_ZERO_WHEN_EXPOSED
@@ -789,9 +809,13 @@ func _mafia_associates(A, AB) -> void:
 # DESTROYED_IF_BATTLES_DIVINE
 # ═══════════════════════════════════════════════════════════════════════════════
 func _immortal_vampire(A, AB) -> void:
+	var iv_params: Dictionary = {}
+	var iv_data: CharacterData = CardDatabase.get_character("Immortal Vampire")
+	if iv_data:
+		iv_params = iv_data.ability_params
 	print("-- TC-FUNC-Immortal-Vampire-001")
 	var att := _make_char("Immortal Vampire", 30, 80, 1200, A.CHAOS,
-		AB.DESTROY_SELF_VS_DIVINE_BOTH, {})
+		AB.DESTROY_SELF_VS_DIVINE_BOTH, iv_params)
 	var def_ := _make_char("Angel Gatekeeper", 40, 90, 960, A.DIVINE)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
 	assert_true(r.attacker_destroyed, "TC-FUNC-Immortal-Vampire-001: destroyed when attacking DIVINE")
@@ -800,16 +824,35 @@ func _immortal_vampire(A, AB) -> void:
 	print("-- TC-FUNC-Immortal-Vampire-002")
 	var divine_att := _make_char("Choir Lady Abigail", 25, 15, 250, A.DIVINE)
 	var vamp_def := _make_char("Immortal Vampire", 30, 80, 1200, A.CHAOS,
-		AB.DESTROY_SELF_VS_DIVINE_BOTH, {})
+		AB.DESTROY_SELF_VS_DIVINE_BOTH, iv_params)
 	var r2 := BattleResolver.resolve_battle(divine_att, vamp_def, 3, 1, 0)
 	assert_true(r2.defender_destroyed, "TC-FUNC-Immortal-Vampire-002: destroyed when defending vs DIVINE")
 	assert_false(r2.attacker_destroyed, "TC-FUNC-Immortal-Vampire-002: Divine attacker survives")
 	assert_eq(r2.defender_crystal_loss, 1200, "TC-FUNC-Immortal-Vampire-002: pays own cost 1200")
+	print("-- TC-FUNC-Immortal-Vampire-003 [field recalc]")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var vampire := _make_char("Immortal Vampire", 30, 80, 1200, A.CHAOS,
+		AB.DESTROY_SELF_VS_DIVINE_BOTH, iv_params)
+	var ally1 := _make_char("Chaos Grunt", 20, 20, 200, A.CHAOS)
+	var ally2 := _make_char("Chaos Rogue", 25, 25, 250, A.CHAOS)
+	vampire.face_up = true
+	ally1.face_up = true
+	ally2.face_up = true
+	GameState.grids[0][2][1] = vampire
+	GameState.grids[0][2][2] = ally1
+	GameState.grids[0][2][3] = ally2
+	BattleResolver.calculate_field_bonuses(0)
+	assert_eq(vampire.perm_atk_bonus, 100, "TC-FUNC-Immortal-Vampire-003: +50 ATK per 2 other Chaos allies")
+	assert_eq(vampire.get_effective_atk(), 130, "TC-FUNC-Immortal-Vampire-003: effective ATK 30+100=130")
 
 func _pit_lord(A, AB) -> void:
+	var pit_params: Dictionary = {}
+	var pit_data: CharacterData = CardDatabase.get_character("Pit Lord")
+	if pit_data:
+		pit_params = pit_data.ability_params
 	print("-- TC-FUNC-Pit-Lord-001")
 	var att := _make_char("Pit Lord", 120, 100, 1200, A.CHAOS,
-		AB.DESTROYED_IF_BATTLES_DIVINE, {"also_halve_after_attack": true})
+		AB.DESTROYED_IF_BATTLES_DIVINE, pit_params)
 	var def_ := _make_char("Church Guard", 0, 35, 150, A.DIVINE)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
 	assert_true(r.attacker_destroyed, "TC-FUNC-Pit-Lord-001: destroyed after Reckoning vs DIVINE (win)")
@@ -818,14 +861,14 @@ func _pit_lord(A, AB) -> void:
 	print("-- TC-FUNC-Pit-Lord-002")
 	var divine_att := _make_char("Moonrise Gentleman", 40, 30, 400, A.DIVINE)
 	var pit_def := _make_char("Pit Lord", 120, 100, 1200, A.CHAOS,
-		AB.DESTROYED_IF_BATTLES_DIVINE, {"also_halve_after_attack": true})
+		AB.DESTROYED_IF_BATTLES_DIVINE, pit_params)
 	var r2 := BattleResolver.resolve_battle(divine_att, pit_def, 3, 1, 0)
 	assert_true(r2.defender_destroyed, "TC-FUNC-Pit-Lord-002: destroyed after Reckoning vs DIVINE (defender role)")
 	assert_true(r2.attacker_destroyed, "TC-FUNC-Pit-Lord-002: Divine attacker fails the compare")
 	assert_eq(r2.defender_crystal_loss, 1200, "TC-FUNC-Pit-Lord-002: pays own cost 1200")
 	print("-- TC-FUNC-Pit-Lord-003")
 	var weak_att := _make_char("Pit Lord", 120, 100, 1200, A.CHAOS,
-		AB.DESTROYED_IF_BATTLES_DIVINE, {"also_halve_after_attack": true})
+		AB.DESTROYED_IF_BATTLES_DIVINE, pit_params)
 	var strong_divine := _make_char("Goddess of Virtue", 80, 200, 1400, A.DIVINE)
 	var r3 := BattleResolver.resolve_battle(weak_att, strong_divine, 3, 0, 1)
 	assert_true(r3.attacker_destroyed, "TC-FUNC-Pit-Lord-003: destroyed after Reckoning vs DIVINE (loss)")
@@ -1144,3 +1187,171 @@ func _poltergeist(A, AB) -> void:
 	# Poltergeist uses DEF (70) as ATK when attacking
 	assert_eq(r.attacker_atk_used, 70, "TC-FUNC-Poltergeist-001: uses DEF 70 as ATK")
 	assert_true(r.defender_destroyed, "TC-FUNC-Poltergeist-001: 70 > 50 → defender destroyed")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# COIN_FLIP_2_DESTROY_NON_AFFINITY (coin-result-verified)
+# ═══════════════════════════════════════════════════════════════════════════════
+func _blue_mage(A, AB) -> void:
+	print("-- TC-FUNC-Blue-Mage-001 / -002 [coin-result-verified]")
+	var att := _make_char("Blue Mage", 35, 35, 800, A.ARCANE,
+		AB.COIN_FLIP_2_DESTROY_NON_AFFINITY, {"affinity": A.ARCANE})
+	# vs non-ARCANE with high DEF: coin decides; both-heads → destroyed, else → normal battle
+	var def_high := _make_char("Nature Dummy", 0, 200, 100, A.NATURE)
+	var r1 := BattleResolver.resolve_battle(att, def_high, 3, 0, 1)
+	assert_eq(r1.coin_flip_results.size(), 2, "TC-FUNC-Blue-Mage-001: 2 coins flipped vs non-ARCANE")
+	if r1.coin_flip_results[0] and r1.coin_flip_results[1]:
+		assert_true(r1.defender_destroyed, "TC-FUNC-Blue-Mage-001: both-heads → defender destroyed")
+		assert_false(r1.attacker_destroyed, "TC-FUNC-Blue-Mage-001: attacker survives on double-heads")
+	else:
+		assert_false(r1.defender_destroyed, "TC-FUNC-Blue-Mage-001: miss → high-DEF defender survives")
+		assert_true(r1.attacker_destroyed, "TC-FUNC-Blue-Mage-001: miss → ATK 35 < DEF 200, attacker destroyed")
+	# vs ARCANE: no coin flip (same affinity)
+	var def_arcane := _make_char("Arcane Dummy", 0, 10, 100, A.ARCANE)
+	var r2 := BattleResolver.resolve_battle(att, def_arcane, 3, 0, 1)
+	assert_eq(r2.coin_flip_results.size(), 0, "TC-FUNC-Blue-Mage-002: no coin flip vs ARCANE (same affinity)")
+	assert_true(r2.defender_destroyed, "TC-FUNC-Blue-Mage-002: normal battle wins (ATK 35 > DEF 10)")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# COIN_FLIP_ATK_BOOST (coin-result-verified)
+# ═══════════════════════════════════════════════════════════════════════════════
+func _joseph(A, AB) -> void:
+	print("-- TC-FUNC-Joseph-the-Battle-Priest-001 [coin-result-verified]")
+	var att := _make_char("Joseph the Battle Priest", 60, 25, 600, A.DIVINE,
+		AB.COIN_FLIP_ATK_BOOST, {"bonus": 10})
+	# Use DEF=65 so only a heads-boosted ATK (70) wins; base ATK (60) loses
+	var def_ := _make_char("Dummy", 0, 65, 100, A.ANIMA)
+	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_eq(r.coin_flip_results.size(), 1, "TC-FUNC-Joseph-001: exactly 1 coin flipped")
+	if r.coin_flip_results[0]:
+		assert_eq(r.attacker_atk_used, 70, "TC-FUNC-Joseph-001: heads → 60+10=70 ATK")
+		assert_true(r.defender_destroyed, "TC-FUNC-Joseph-001: heads → 70 > 65 → defender destroyed")
+	else:
+		assert_eq(r.attacker_atk_used, 60, "TC-FUNC-Joseph-001: tails → 60 ATK (no bonus)")
+		assert_true(r.attacker_destroyed, "TC-FUNC-Joseph-001: tails → 60 < 65 → attacker destroyed")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# COIN_FLIP_ATK_DEF_BOOST (coin-result-verified)
+# ═══════════════════════════════════════════════════════════════════════════════
+func _grand_wizard(A, AB) -> void:
+	print("-- TC-FUNC-Grand-Wizard-001 [coin-result-verified]")
+	var att := _make_char("Grand Wizard", 90, 70, 1100, A.ARCANE,
+		AB.COIN_FLIP_ATK_DEF_BOOST, {"bonus": 30})
+	# Use DEF=115 so heads-boosted ATK (120) wins; base ATK (90) loses
+	var def_ := _make_char("Dummy", 0, 115, 100, A.ANIMA)
+	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_eq(r.coin_flip_results.size(), 1, "TC-FUNC-Grand-Wizard-001: exactly 1 coin flipped")
+	if r.coin_flip_results[0]:
+		assert_eq(r.attacker_atk_used, 120, "TC-FUNC-Grand-Wizard-001: heads → 90+30=120 ATK")
+		assert_eq(att.temp_def_bonus, 30, "TC-FUNC-Grand-Wizard-001: heads → temp_def_bonus=30")
+		assert_true(r.defender_destroyed, "TC-FUNC-Grand-Wizard-001: heads → 120 > 115 → defender destroyed")
+	else:
+		assert_eq(r.attacker_atk_used, 90, "TC-FUNC-Grand-Wizard-001: tails → 90 ATK (no bonus)")
+		assert_eq(att.temp_def_bonus, 0, "TC-FUNC-Grand-Wizard-001: tails → no temp DEF bonus")
+		assert_true(r.attacker_destroyed, "TC-FUNC-Grand-Wizard-001: tails → 90 < 115 → attacker destroyed")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# DEF_BONUS_VS_AFFINITY (Pattern A)
+# ═══════════════════════════════════════════════════════════════════════════════
+func _lightbringer(A, AB) -> void:
+	print("-- TC-FUNC-Lightbringer-001 / -002")
+	var def_ := _make_char("Lightbringer", 80, 40, 1200, A.DIVINE,
+		AB.DEF_BONUS_VS_AFFINITY, {"affinity": A.CHAOS, "bonus": 100})
+	# vs CHAOS attacker: DEF = 40+100 = 140
+	var opp_chaos := _make_char("Chaos Attacker", 100, 0, 100, A.CHAOS)
+	var r1 := BattleResolver.resolve_battle(opp_chaos, def_, 3, 0, 1)
+	assert_eq(r1.defender_def_used, 140, "TC-FUNC-Lightbringer-001: DEF 40+100=140 vs CHAOS")
+	assert_false(r1.defender_destroyed, "TC-FUNC-Lightbringer-001: ATK 100 < DEF 140 → survives")
+	# vs non-CHAOS attacker: base DEF = 40
+	var opp_anima := _make_char("Anima Attacker", 100, 0, 100, A.ANIMA)
+	var r2 := BattleResolver.resolve_battle(opp_anima, def_, 3, 0, 1)
+	assert_eq(r2.defender_def_used, 40, "TC-FUNC-Lightbringer-002: DEF 40 base vs non-CHAOS")
+	assert_true(r2.defender_destroyed, "TC-FUNC-Lightbringer-002: ATK 100 > DEF 40 → destroyed")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TEMP_ATK_HALF_TARGET (Pattern A)
+# ═══════════════════════════════════════════════════════════════════════════════
+func _giant_mosquito(A, AB) -> void:
+	print("-- TC-FUNC-Giant-Mosquito-001 / -002")
+	var att := _make_char("Giant Mosquito", 30, 20, 800, A.NATURE,
+		AB.TEMP_ATK_HALF_TARGET, {})
+	# Target ATK=50: bonus = 50/2 = 25, eff_atk = 30+25 = 55
+	var def_high_atk := _make_char("Dummy High ATK", 50, 200, 100, A.ANIMA)
+	var r1 := BattleResolver.resolve_battle(att, def_high_atk, 3, 0, 1)
+	assert_eq(r1.attacker_atk_used, 55, "TC-FUNC-Giant-Mosquito-001: ATK 30+(50/2)=55")
+	# Target ATK=0: bonus = 0
+	var def_zero_atk := _make_char("Dummy Zero ATK", 0, 200, 100, A.ANIMA)
+	var r2 := BattleResolver.resolve_battle(att, def_zero_atk, 3, 0, 1)
+	assert_eq(r2.attacker_atk_used, 30, "TC-FUNC-Giant-Mosquito-002: ATK 30 base (target ATK=0)")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SELF_DEBUFF_ON_ATTACK_AND_DEFEND — defend side only (Pattern A)
+# ═══════════════════════════════════════════════════════════════════════════════
+func _dark_tengu(A, AB) -> void:
+	print("-- TC-FUNC-Dark-Tengu-001 [defend-side; attack-ATK-debuff is MANUAL]")
+	var att := _make_char("Weak Attacker", 10, 0, 100, A.ANIMA)
+	var def_ := _make_char("Dark Tengu", 25, 25, 250, A.CHAOS,
+		AB.SELF_DEBUFF_ON_ATTACK_AND_DEFEND, {"atk": 5, "def": 5})
+	# ATK 10 < DEF 25 → Dark Tengu survives → loses 5 DEF permanently
+	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_false(r.defender_destroyed, "TC-FUNC-Dark-Tengu-001: survives ATK 10 vs DEF 25")
+	assert_eq(def_.current_def, 20, "TC-FUNC-Dark-Tengu-001: DEF 25-5=20 after defending")
+	assert_true(def_.one_use_def_boost_used, "TC-FUNC-Dark-Tengu-001: defend-debuff flag set")
+	# Second defense: flag already set, no further DEF loss
+	var r2 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_false(r2.defender_destroyed, "TC-FUNC-Dark-Tengu-001b: still survives (DEF 20 > ATK 10)")
+	assert_eq(def_.current_def, 20, "TC-FUNC-Dark-Tengu-001b: DEF unchanged on second defense (one-use)")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ONE_USE_DEFEND_MORPH — Bladeshifter (Pattern A)
+# ═══════════════════════════════════════════════════════════════════════════════
+func _bladeshifter(A, AB) -> void:
+	print("-- TC-FUNC-Bladeshifter-001")
+	var att := _make_char("Attacker", 30, 0, 100, A.ANIMA)
+	var def_ := _make_char("Bladeshifter", 0, 50, 420, A.BIO,
+		AB.ONE_USE_DEFEND_MORPH, {"atk": 40, "def": 40})
+	def_.one_use_def_boost_used = false
+	# ATK 30 < DEF 50 → survives → morph fires: -40 DEF +40 ATK permanently
+	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_false(r.defender_destroyed, "TC-FUNC-Bladeshifter-001: survives ATK 30 vs DEF 50")
+	assert_eq(def_.current_def, 10, "TC-FUNC-Bladeshifter-001: DEF 50-40=10 after morph")
+	assert_eq(def_.current_atk, 40, "TC-FUNC-Bladeshifter-001: ATK 0+40=40 after morph")
+	assert_true(def_.one_use_def_boost_used, "TC-FUNC-Bladeshifter-001: morph flag set after use")
+	# Second defense: no morph (flag already set)
+	var att2 := _make_char("Attacker 2", 5, 0, 100, A.ANIMA)
+	var r2 := BattleResolver.resolve_battle(att2, def_, 3, 0, 1)
+	assert_eq(def_.current_def, 10, "TC-FUNC-Bladeshifter-001b: DEF unchanged (morph already used)")
+	assert_eq(def_.current_atk, 40, "TC-FUNC-Bladeshifter-001b: ATK unchanged (morph already used)")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ATK_DEF_BONUS_IF_OWN_REVEALED_GTE — Slim Gray Trooper (Pattern B)
+# ═══════════════════════════════════════════════════════════════════════════════
+func _slim_gray_trooper(A, AB) -> void:
+	print("-- TC-FUNC-Slim-Gray-Trooper-001 [Pattern B]")
+	var att := _make_char("Slim Gray Trooper", 45, 45, 750, A.COSMIC,
+		AB.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE, {"min_revealed": 10, "atk": 30, "def": 30})
+	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
+	# With 10+ revealed cells: bonus applies
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	att.face_up = true
+	GameState.grids[0][0][0] = att
+	var placed := 1
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			if placed >= 10:
+				break
+			if r == 0 and c == 0:
+				continue
+			var filler := _make_char("Filler", 0, 0, 100, A.ANIMA)
+			filler.face_up = true
+			GameState.grids[0][r][c] = filler
+			placed += 1
+		if placed >= 10:
+			break
+	var r1 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_eq(r1.attacker_atk_used, 75, "TC-FUNC-Slim-Gray-Trooper-001: ATK 45+30=75 (10 revealed)")
+	# With fewer than 10 revealed: no bonus
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	att.face_up = true
+	GameState.grids[0][0][0] = att
+	var r2 := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
+	assert_eq(r2.attacker_atk_used, 45, "TC-FUNC-Slim-Gray-Trooper-001b: ATK 45 base (<10 revealed)")

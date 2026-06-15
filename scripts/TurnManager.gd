@@ -17,6 +17,8 @@ signal crystal_animation_done
 signal attack_aborted
 signal card_effect_flash_done
 signal ability_choice_resolved(choice_index: int)
+signal awaiting_blackmail_tech_select(player_index: int)
+signal blackmail_choice_resolved(discarded_tech: String)
 signal awaiting_defender_choice(prompt: String, choices: Array)
 signal coin_flip_visual_requested(results: Array)
 signal coin_flip_visual_done
@@ -36,6 +38,9 @@ var _pending_swap_attacker_pos: Vector2i = Vector2i(-1, -1)
 
 func resolve_ability_choice(choice_index: int) -> void:
 	emit_signal("ability_choice_resolved", choice_index)
+
+func resolve_blackmail_choice(discarded_tech: String) -> void:
+	emit_signal("blackmail_choice_resolved", discarded_tech)
 
 func resolve_coin_flip_visual() -> void:
 	emit_signal("coin_flip_visual_done")
@@ -111,18 +116,10 @@ func start_turn(player_index: int) -> void:
 						"ability_false_prophet_reveal")
 					await ability_selection_done
 				CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG:
-					# Plant-29: coin flip first, then target by result
-					var _ts_cf: Array = await _do_coin_flips(1)
-					if _battle_aborted():
-						return
-					if _ts_cf[0]:  # heads — venom on any face-up card
-						emit_signal("awaiting_target_selection",
-							"%s: Heads! Choose a face-up card for Venom Flag." % _ts_card.card_name,
-							"ability_plant29_venom")
-					else:  # tails — mutagen on any card (even face-down)
-						emit_signal("awaiting_target_selection",
-							"%s: Tails! Choose any card for Mutagen Flag." % _ts_card.card_name,
-							"ability_plant29_mutagen")
+					# Plant-29: owner picks 1 unit, then coin flip → venom (heads) or mutagen (tails)
+					emit_signal("awaiting_target_selection",
+						"%s: Choose 1 unit, then flip a coin for Venom (Heads) or Mutagen (Tails)." % _ts_card.card_name,
+						"ability_plant29_target")
 					await ability_selection_done
 
 	# Handle skip turn (Ceasefire)
@@ -257,7 +254,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 				if Vector2i(_ic_r, _ic_c) == target_pos:
 					continue
 				var _ic_cand: GameState.CardInstance = GameState.get_card(opponent, _ic_r, _ic_c)
-				if _ic_cand.card_type == "character" and _ic_cand.face_up \
+				if _ic_cand.card_type == "character" \
 						and _ic_cand.ability_type == CharacterData.AbilityType.INTERCEPT_ALLY_ATTACK:
 					var _ic_aff: int = _ic_cand.ability_params.get("affinity", -1)
 					if _ic_aff == -1 or _ic_aff == defender.affinity:
@@ -660,7 +657,7 @@ func play_tech_card(tech_name: String) -> void:
 	for _tbt_r: int in range(GameState.GRID_SIZE):
 		for _tbt_c: int in range(GameState.GRID_SIZE):
 			var _tbt_card: GameState.CardInstance = GameState.get_card(_tech_opp, _tbt_r, _tbt_c)
-			if _tbt_card.card_type == "character" and _tbt_card.face_up \
+			if _tbt_card.card_type == "character" \
 					and _tbt_card.ability_type == CharacterData.AbilityType.TEMP_BOOST_ON_OPP_TECH:
 				var _tbt_atk: int = _tbt_card.ability_params.get("atk", 5)
 				var _tbt_def: int = _tbt_card.ability_params.get("def", 5)
@@ -787,7 +784,8 @@ func play_tech_card(tech_name: String) -> void:
 
 		TechCardData.TechEffectType.REVIVE_CHARACTER_FULL, \
 		TechCardData.TechEffectType.REVIVE_CHARACTER_NO_ATK:
-			emit_signal("awaiting_target_selection", "Choose a destroyed character to revive.", "graveyard")
+			emit_signal("awaiting_target_selection",
+				"Choose where to place the revived unit.", "graveyard")
 
 		TechCardData.TechEffectType.VIEW_OPPONENT_TECH:
 			emit_signal("awaiting_target_selection", "Tech Copy: View opponent's hand?", "view_opponent_hand")
@@ -1209,14 +1207,13 @@ func _handle_trap_effect(
 				"Bait: Choose a square on your field to reveal.", "self_reveal_choice")
 
 		TrapData.TrapEffectType.ATTACKER_DISCARD_OR_END_TURN:
-			emit_signal("awaiting_trap_choice",
-				"Blackmail",
-				["Discard 1 Tech Card", "End your turn"])
-			var _bm_choice: int = await ability_choice_resolved
-			if _bm_choice == 0:
-				if not GameState.tech_hands[player].is_empty():
-					GameState.tech_hands[player].pop_back()
-					GameState.post_message("Blackmail: Discarded 1 Tech Card.")
+			emit_signal("awaiting_blackmail_tech_select", player)
+			var _bm_discarded: String = await blackmail_choice_resolved
+			if _bm_discarded != "":
+				var _bm_hand: Array = GameState.tech_hands[player]
+				if _bm_discarded in _bm_hand:
+					_bm_hand.erase(_bm_discarded)
+					GameState.post_message("Blackmail: Discarded %s." % _bm_discarded)
 				else:
 					GameState.attacks_remaining = 0
 					GameState.post_message("Blackmail: No Tech Cards — turn ended.")
@@ -1499,7 +1496,7 @@ func _end_turn(player: int) -> void:
 			break
 	if _rebel_king_active:
 		emit_signal("awaiting_target_selection",
-			"Rebel King: Choose 1 of your face-up characters to swap ATK & DEF.",
+			"Rebel King: Choose 1 of the opponent's face-up characters to swap ATK & DEF.",
 			"ability_rebel_king_swap")
 		await ability_selection_done
 
@@ -1527,15 +1524,23 @@ func _end_turn(player: int) -> void:
 					_blast_adjacent_foe_faceup(_opp_end, _te_r, _te_c)
 					GameState.post_message("%s self-destructs at end of turn!" % _te_card.card_name)
 					GameState.destroy_card(player, _te_r, _te_c, false)
-				CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN:
-					# Automatically pick a random face-up opponent card and apply venom
-					var _venom_targets: Array = GameState.get_all_face_up_characters(_opp_end)
-					if not _venom_targets.is_empty():
-						_venom_targets.shuffle()
-						var _venom_tgt: GameState.CardInstance = (_venom_targets[0] as Dictionary)["card"]
-						if "venom" not in _venom_tgt.flags:
-							_venom_tgt.flags.append("venom")
-						GameState.post_message("%s: Venom applied to %s." % [_te_card.card_name, _venom_tgt.card_name])
+			CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN:
+				var _venom_targets: Array = []
+				for _vn_r: int in range(GameState.GRID_SIZE):
+					for _vn_c: int in range(GameState.GRID_SIZE):
+						var _vn_card: GameState.CardInstance = GameState.get_card(_opp_end, _vn_r, _vn_c)
+						if _vn_card.card_type == "character":
+							_venom_targets.append(Vector2i(_vn_r, _vn_c))
+				if not _venom_targets.is_empty():
+					var _vn_pos: Vector2i = _venom_targets[randi() % _venom_targets.size()]
+					GameState.apply_unit_effect_flag(_opp_end, _vn_pos.x, _vn_pos.y, "venom")
+					var _vn_tgt: GameState.CardInstance = GameState.get_card(_opp_end, _vn_pos.x, _vn_pos.y)
+					GameState.post_message("%s: Venom applied to %s." % [_te_card.card_name, _vn_tgt.card_name])
+			CharacterData.AbilityType.TURN_END_REVEAL_OPPONENT_CELL:
+				emit_signal("awaiting_target_selection",
+					"%s: Choose 1 opponent cell to reveal." % _te_card.card_name,
+					"ability_false_prophet_reveal")
+				await ability_selection_done
 
 	# expose_destroy_pending: destroy cards that became face-up this turn
 	for _pi: int in range(2):
@@ -1771,10 +1776,10 @@ func _apply_post_battle_effects(
 				if _pen_aff == -1 or defender.affinity != _pen_aff:
 					var _patk: int = attacker.ability_params.get("atk", 10)
 					var _pdef: int = attacker.ability_params.get("def", 10)
-					attacker.current_atk = max(0, attacker.current_atk - _patk)
-					attacker.current_def = max(0, attacker.current_def - _pdef)
+					defender.current_atk = max(0, defender.current_atk - _patk)
+					defender.current_def = max(0, defender.current_def - _pdef)
 					GameState.post_message("%s: -%d ATK & -%d DEF permanently (non-%s battle)." % [
-						attacker.card_name, _patk, _pdef, CharacterData.Affinity.keys()[_pen_aff]])
+						defender.card_name, _patk, _pdef, CharacterData.Affinity.keys()[_pen_aff]])
 
 		CharacterData.AbilityType.GAIN_HALF_STATS_ON_SURVIVE:
 			if not result.attacker_destroyed and defender.card_type == "character":
@@ -1800,6 +1805,20 @@ func _apply_post_battle_effects(
 					attacker.perm_atk_bonus = _cov_new
 					GameState.post_message("%s: +%d ATK permanently! (bonus: %d/%d)" % [
 						attacker.card_name, _cov_actual, _cov_new, _cov_max])
+
+	# PERM_STAT_PENALTY_VS_NON_AFFINITY (Colorful Mage): debuff non-matching foe when defending
+	if defender.card_type == "character" \
+			and defender.effect_nullified_until < GameState.turn_number \
+			and defender.ability_type == CharacterData.AbilityType.PERM_STAT_PENALTY_VS_NON_AFFINITY \
+			and attacker.card_type == "character":
+		var _dpen_aff: int = defender.ability_params.get("affinity", -1)
+		if _dpen_aff == -1 or attacker.affinity != _dpen_aff:
+			var _dpatk: int = defender.ability_params.get("atk", 10)
+			var _dpdef: int = defender.ability_params.get("def", 10)
+			attacker.current_atk = max(0, attacker.current_atk - _dpatk)
+			attacker.current_def = max(0, attacker.current_def - _dpdef)
+			GameState.post_message("%s: -%d ATK & -%d DEF permanently (non-%s battle)." % [
+				attacker.card_name, _dpatk, _dpdef, CharacterData.Affinity.keys()[_dpen_aff]])
 
 	# COPY_ALLY_STATS_ON_DESTROY: Ectoplasm — triggered when an ally is destroyed in battle
 	if result.defender_destroyed and defender.card_type == "character" \

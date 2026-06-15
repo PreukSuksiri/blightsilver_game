@@ -93,10 +93,8 @@ func _run_excel_only_manual_tests() -> void:
 	_manual("TC-FUNC-Ancient-Lizard-001")
 	_manual("TC-FUNC-Berserk-Hyena-001")
 	_manual("TC-FUNC-Blood-hungry-Mutant-001")
-	_manual("TC-FUNC-Burning-Phoenix-001")
 	_manual("TC-FUNC-Colorful-Mage-001")
 	_manual("TC-FUNC-False-Prophet-001")
-	_manual("TC-FUNC-Gamma-Mermaid-001")
 	_manual("TC-FUNC-Giant-Meteor-Vergaia-001")
 	_manual("TC-FUNC-Grand-Fort-Captain-001")
 	_manual("TC-FUNC-Imperial-Frame-001")
@@ -118,6 +116,13 @@ func _run_ability_tests(A: Dictionary, AB: Dictionary) -> void:
 	_diamond_unicorn(A, AB)
 	_pixie_queen(A, AB)
 	_choir_lead_amber(A, AB)
+	_gamma_mermaid(A, AB)
+	_keeper_of_righteous(A, AB)
+	_keeper_of_the_afterlife(A, AB)
+	_burning_phoenix(A, AB)
+	_genesis_mech(A, AB)
+	_helios(A, AB)
+	_slim_gray_plasma_bomber(A, AB)
 	_lord_of_terror_manual()
 	_giant_mining_pod_manual()
 	_greater_succubus_manual()
@@ -220,6 +225,34 @@ func _choir_lead_amber(A: Dictionary, AB: Dictionary) -> void:
 	var r2 := BattleResolver.resolve_battle(amber, def2, 3, 0, 1)
 	assert_eq(r2.attacker_atk_used, 35, "TC-FUNC-Choir-Lead-Amber-001: Amber base ATK 35")
 
+func _gamma_mermaid(A: Dictionary, AB: Dictionary) -> void:
+	var gm_params: Dictionary = {
+		"affinity": A.BIO, "def": 20,
+		"mutagen_party_atk": 20, "mutagen_party_def": 20, "mutagen_party_affinity": A.BIO,
+	}
+	print("-- TC-FUNC-Gamma-Mermaid-001")
+	var mermaid := _make_char("Gamma Mermaid", 30, 20, 500, A.BIO,
+		AB.DEF_PENALTY_VS_NON_AFFINITY, gm_params)
+	var non_bio_def := _make_char("Dummy", 0, 50, 100, A.ANIMA)
+	var r := BattleResolver.resolve_battle(mermaid, non_bio_def, 3, 0, 1)
+	assert_eq(r.defender_def_used, 30, "TC-FUNC-Gamma-Mermaid-001: non-Bio defender loses 20 DEF")
+	assert_true(r.defender_destroyed, "TC-FUNC-Gamma-Mermaid-001: ATK 30 > DEF 30")
+	print("-- TC-FUNC-Gamma-Mermaid-002 [mutagen party aura]")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var source := _make_char("Gamma Mermaid", 30, 20, 500, A.BIO,
+		AB.DEF_PENALTY_VS_NON_AFFINITY, gm_params)
+	source.has_mutagen_flag = true
+	var bio_ally := _make_char("Lab Zombie", 40, 40, 300, A.BIO)
+	source.face_up = true
+	bio_ally.face_up = true
+	GameState.grids[0][2][1] = source
+	GameState.grids[0][2][2] = bio_ally
+	BattleResolver.calculate_field_bonuses(0)
+	assert_eq(bio_ally.field_aura_atk_bonus, 20, "TC-FUNC-Gamma-Mermaid-002: +20 ATK aura to Bio ally")
+	assert_eq(bio_ally.field_aura_def_bonus, 20, "TC-FUNC-Gamma-Mermaid-002: +20 DEF aura to Bio ally")
+	assert_eq(bio_ally.get_effective_atk(), 60, "TC-FUNC-Gamma-Mermaid-002: effective ATK 40+20=60")
+	assert_eq(bio_ally.get_effective_def(), 60, "TC-FUNC-Gamma-Mermaid-002: effective DEF 40+20=60")
+
 func _lord_of_terror_manual() -> void:
 	_manual("TC-FUNC-Lord-of-Terror-001")  # ATK_PENALTY_VS_DEAD_END — TurnManager
 
@@ -306,3 +339,142 @@ func _run_none_smoke_tests(A: Dictionary, AB: Dictionary) -> void:
 	var r8 := BattleResolver.resolve_battle(overlord, def8, 3, 0, 1)
 	assert_eq(r8.attacker_atk_used, 50, "TC-FUNC-Skeleton-Overlord-001: ATK=50 correct")
 	assert_true(r8.defender_destroyed, "TC-FUNC-Skeleton-Overlord-001: defender destroyed")
+
+# ---------------------------------------------------------------------------
+# ATK_BONUS_VS_TWO_AFFINITIES — Keeper of Righteous
+# ---------------------------------------------------------------------------
+func _keeper_of_righteous(A: Dictionary, AB: Dictionary) -> void:
+	print("-- TC-FUNC-Keeper-of-Righteous-001")
+	var att := _make_char("Keeper of Righteous", 90, 80, 1000, A.DIVINE,
+		AB.ATK_BONUS_VS_TWO_AFFINITIES, {"aff1": A.CHAOS, "aff2": A.ARCANE, "bonus": 20})
+	var r1 := BattleResolver.resolve_battle(att, _make_char("Chaos", 0, 10, 100, A.CHAOS), 3, 0, 1)
+	assert_eq(r1.attacker_atk_used, 110, "TC-FUNC-Keeper-of-Righteous-001: ATK 90+20=110 vs CHAOS")
+	var r2 := BattleResolver.resolve_battle(att, _make_char("Arcane", 0, 10, 100, A.ARCANE), 3, 0, 1)
+	assert_eq(r2.attacker_atk_used, 110, "TC-FUNC-Keeper-of-Righteous-001: ATK 90+20=110 vs ARCANE")
+	var r3 := BattleResolver.resolve_battle(att, _make_char("Nature", 0, 10, 100, A.NATURE), 3, 0, 1)
+	assert_eq(r3.attacker_atk_used, 90, "TC-FUNC-Keeper-of-Righteous-001: ATK 90 base vs NATURE")
+
+# ---------------------------------------------------------------------------
+# COIN_FLIP_NULLIFY_ON_DEFEND — Keeper of the Afterlife (coin-result-verified)
+# ---------------------------------------------------------------------------
+func _keeper_of_the_afterlife(A: Dictionary, AB: Dictionary) -> void:
+	print("-- TC-FUNC-Keeper-of-the-Afterlife-001 [coin-result-verified]")
+	var strong_att := _make_char("Strong Attacker", 200, 0, 500, A.ANIMA)
+	var def_ := _make_char("Keeper of the Afterlife", 40, 65, 1000, A.DIVINE,
+		AB.COIN_FLIP_NULLIFY_ON_DEFEND, {})
+	var r := BattleResolver.resolve_battle(strong_att, def_, 3, 0, 1)
+	assert_eq(r.coin_flip_results.size(), 1, "TC-FUNC-Keeper-of-Afterlife-001: 1 coin flipped")
+	if r.coin_flip_results[0]:
+		assert_false(r.defender_destroyed, "TC-FUNC-Keeper-of-Afterlife-001: heads → attack nullified")
+		assert_false(r.attacker_destroyed, "TC-FUNC-Keeper-of-Afterlife-001: heads → attacker also unharmed")
+	else:
+		assert_true(r.defender_destroyed, "TC-FUNC-Keeper-of-Afterlife-001: tails → normal battle (200 > 65)")
+
+# ---------------------------------------------------------------------------
+# IMMUNE_DESTROY_BY_NON_UNION — Burning Phoenix
+# ---------------------------------------------------------------------------
+func _burning_phoenix(A: Dictionary, AB: Dictionary) -> void:
+	print("-- TC-FUNC-Burning-Phoenix-001 / -002")
+	var phoenix := _make_char("Burning Phoenix", 125, 50, 800, A.ARCANE,
+		AB.IMMUNE_DESTROY_BY_NON_UNION, {"tech_target_self_destruct": true})
+	phoenix.is_union = true
+	# Non-union high-ATK attacker: wins compare but cannot destroy
+	var non_union_att := _make_char("Strong Non-Union", 200, 0, 500, A.ANIMA)
+	non_union_att.is_union = false
+	var r1 := BattleResolver.resolve_battle(non_union_att, phoenix, 3, 0, 1)
+	assert_false(r1.defender_destroyed, "TC-FUNC-Burning-Phoenix-001: non-union cannot destroy")
+	assert_false(r1.attacker_destroyed, "TC-FUNC-Burning-Phoenix-001: attacker won compare (not destroyed)")
+	# Union attacker CAN destroy
+	var union_att := _make_char("Strong Union", 200, 0, 1000, A.DIVINE)
+	union_att.is_union = true
+	var r2 := BattleResolver.resolve_battle(union_att, phoenix, 3, 0, 1)
+	assert_true(r2.defender_destroyed, "TC-FUNC-Burning-Phoenix-002: union attacker CAN destroy")
+
+# ---------------------------------------------------------------------------
+# ONE_USE_DESTROY_BY_AFFINITY — Genesis Mech
+# ---------------------------------------------------------------------------
+func _genesis_mech(A: Dictionary, AB: Dictionary) -> void:
+	print("-- TC-FUNC-Genesis-Mech-001 / -002 / -003")
+	var mech := _make_char("Genesis Mech", 60, 40, 1000, A.DIVINE,
+		AB.ONE_USE_DESTROY_BY_AFFINITY, {"aff1": A.DIVINE, "aff2": A.ANIMA})
+	mech.one_use_atk_boost_used = false
+	# vs DIVINE (high DEF): instant destroy, no crystal loss, ability consumed
+	var def_divine := _make_char("Divine Target", 0, 200, 500, A.DIVINE)
+	var r1 := BattleResolver.resolve_battle(mech, def_divine, 3, 0, 1)
+	assert_true(r1.defender_destroyed, "TC-FUNC-Genesis-Mech-001: DIVINE target instantly destroyed")
+	assert_false(r1.attacker_destroyed, "TC-FUNC-Genesis-Mech-001: Genesis Mech survives")
+	assert_eq(r1.defender_crystal_loss, 0, "TC-FUNC-Genesis-Mech-001: no crystal loss on one-use destroy")
+	assert_true(mech.one_use_atk_boost_used, "TC-FUNC-Genesis-Mech-001: ability marked used")
+	# Second use (used=true): falls through to normal battle
+	var def_anima := _make_char("Anima Target", 0, 200, 500, A.ANIMA)
+	var r2 := BattleResolver.resolve_battle(mech, def_anima, 3, 0, 1)
+	assert_false(r2.defender_destroyed, "TC-FUNC-Genesis-Mech-002: ability already used — no second destroy")
+	assert_true(r2.attacker_destroyed, "TC-FUNC-Genesis-Mech-002: normal battle (ATK 60 < DEF 200)")
+	# vs CHAOS (neither affinity): ability never triggers
+	var mech2 := _make_char("Genesis Mech", 60, 40, 1000, A.DIVINE,
+		AB.ONE_USE_DESTROY_BY_AFFINITY, {"aff1": A.DIVINE, "aff2": A.ANIMA})
+	mech2.one_use_atk_boost_used = false
+	var def_chaos := _make_char("Chaos Target", 0, 200, 500, A.CHAOS)
+	var r3 := BattleResolver.resolve_battle(mech2, def_chaos, 3, 0, 1)
+	assert_false(r3.defender_destroyed, "TC-FUNC-Genesis-Mech-003: CHAOS not in ability affinities")
+	assert_false(mech2.one_use_atk_boost_used, "TC-FUNC-Genesis-Mech-003: ability not consumed vs CHAOS")
+
+# ---------------------------------------------------------------------------
+# IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP — Helios (Pattern B)
+# ---------------------------------------------------------------------------
+func _helios(A: Dictionary, AB: Dictionary) -> void:
+	print("-- TC-FUNC-Helios-the-Prideful-Fortress-001 [Pattern B]")
+	var helios := _make_char("Helios the Prideful Fortress", 145, 100, 1500, A.COSMIC,
+		AB.IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP, {"affinity": A.COSMIC})
+	helios.is_union = true
+	var strong_att := _make_char("Strong Attacker", 200, 0, 500, A.ANIMA)
+	# With COSMIC ally face-up on same side: cannot be destroyed
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	helios.face_up = true
+	GameState.grids[1][2][2] = helios
+	var cosmic_ally := _make_char("Space Boy", 75, 65, 800, A.COSMIC)
+	cosmic_ally.face_up = true
+	GameState.grids[1][2][3] = cosmic_ally
+	var r1 := BattleResolver.resolve_battle(strong_att, helios, 3, 0, 1)
+	assert_false(r1.defender_destroyed, "TC-FUNC-Helios-001: protected by COSMIC ally (200 vs 100)")
+	# Without COSMIC ally: destroyed normally
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	helios.face_up = true
+	GameState.grids[1][2][2] = helios
+	var r2 := BattleResolver.resolve_battle(strong_att, helios, 3, 0, 1)
+	assert_true(r2.defender_destroyed, "TC-FUNC-Helios-001b: no COSMIC ally → destroyed (200 > 100)")
+
+# ---------------------------------------------------------------------------
+# ATK_DEF_BONUS_IF_OWN_REVEALED_GTE — Slim Gray Plasma Bomber (Pattern B)
+# ---------------------------------------------------------------------------
+func _slim_gray_plasma_bomber(A: Dictionary, AB: Dictionary) -> void:
+	print("-- TC-FUNC-Slim-Gray-Plasma-Bomber-001 [Pattern B]")
+	var bomber := _make_char("Slim Gray Plasma Bomber", 80, 60, 1000, A.COSMIC,
+		AB.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE, {"min_revealed": 15, "atk": 100, "def": 100})
+	bomber.is_union = true
+	var def_ := _make_char("Dummy", 0, 10, 100, A.ANIMA)
+	# With 15+ revealed cells: ATK = 80+100 = 180
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	bomber.face_up = true
+	GameState.grids[0][0][0] = bomber
+	var placed := 1
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			if placed >= 15:
+				break
+			if r == 0 and c == 0:
+				continue
+			var filler := _make_char("Filler", 0, 0, 100, A.ANIMA)
+			filler.face_up = true
+			GameState.grids[0][r][c] = filler
+			placed += 1
+		if placed >= 15:
+			break
+	var r1 := BattleResolver.resolve_battle(bomber, def_, 3, 0, 1)
+	assert_eq(r1.attacker_atk_used, 180, "TC-FUNC-Slim-Gray-Plasma-Bomber-001: ATK 80+100=180 (15 revealed)")
+	# Fewer than 15 revealed: base ATK = 80
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	bomber.face_up = true
+	GameState.grids[0][0][0] = bomber
+	var r2 := BattleResolver.resolve_battle(bomber, def_, 3, 0, 1)
+	assert_eq(r2.attacker_atk_used, 80, "TC-FUNC-Slim-Gray-Plasma-Bomber-001b: ATK 80 base (<15 revealed)")
