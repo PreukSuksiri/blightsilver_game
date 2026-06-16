@@ -14,6 +14,14 @@ Code paths for functional verification.
 | Union summon | `GameBoard._perform_pending_union()` |
 | Field passives | `BattleResolver.calculate_field_bonuses()` |
 
+## Field scope (text → code)
+
+When ability text refers to cards **on the field**, see `context/CONTENT_EDITING_GUIDE.md` § *Field scope*.
+
+- Bare **"on the field"** (no possessive) → `ability_params.field_scope = "all"` → both grids.
+- **"its side" / "your field" / "their own field"** → omit or `"owner"` → owner's grid only.
+- Enforced in `BattleResolver._field_players()`.
+
 ## Demo ability types in use
 
 - `ATK_BONUS_IF_AFFINITY_ON_FIELD`
@@ -27,6 +35,7 @@ Code paths for functional verification.
 - `ATK_DEF_BONUS_IF_UNION_ON_FIELD`
 - `ATK_DEF_BONUS_VS_AFFINITY`
 - `ATK_DEF_BONUS_VS_NON_AFFINITY`
+- `ATK_DEF_BONUS_VS_VENOM`
 - `ATK_PENALTY_IF_NO_NAME_ALLY`
 - `ATK_PENALTY_VS_DEAD_END`
 - `ATK_PENALTY_WHEN_EXPOSED`
@@ -64,6 +73,7 @@ Code paths for functional verification.
 - `EXTRA_ATTACK_ON_DEAD_END`
 - `EXTRA_ATTACK_VS_REVEALED`
 - `FIELD_ATK_BOOST_OWN_AFFINITY`
+- `FIELD_DEBUFF_ALL_VENOM_CARDS`
 - `GAIN_HALF_STATS_ON_SURVIVE`
 - `HALVE_DEF_ON_FIRST_EXPOSE`
 - `IMMUNE_DESTROY_BY_NON_UNION`
@@ -122,8 +132,9 @@ Code paths for functional verification.
 - `TEMP_ATK_BOOST_OWN_TURN_START`
 - `TEMP_ATK_HALF_TARGET`
 - `TEMP_BOOST_ON_OPP_TECH`
+- `TURN_END_REVEAL_OPPONENT_CELL`
 - `TURN_START_COIN_FLIP_FLAG`
-- `TURN_START_REVEAL_OPPONENT_CELL`
 - `UNION_SUMMON_REVIVE_MATCH`
 - `UNION_SUMMON_VENOM_ALL_FOE`
 - `VENOM_FLAG_END_OF_TURN`
+- `VENOM_TOAD_RECKONING`

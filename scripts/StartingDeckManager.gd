@@ -18,6 +18,8 @@ var _deck: DeckData = null
 var _char_list:   ItemList = null
 var _trap_list:   ItemList = null
 var _tech_list:   ItemList = null
+var _union_list:  ItemList = null
+var _union_hdr:   Label    = null
 var _status_lbl:  Label    = null
 var _confirm_panel: Control = null
 
@@ -27,6 +29,9 @@ var _fe_list:       ItemList = null
 var _fe_name_edit:  LineEdit = null
 var _fe_grid_cells: Array    = []   # flattened Button array, row-major
 var _fe_pick_list:  ItemList = null
+var _fe_possible_union_list: ItemList = null
+var _fe_possible_unions: Array = []
+var _fe_flash_state: Dictionary = {}
 var _fe_selected:   int      = -1   # currently selected formation index
 var _fe_card_pick:  String   = ""   # card name chosen to place
 
@@ -40,6 +45,11 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+		if _fe_overlay != null and is_instance_valid(_fe_overlay):
+			AdminDeckEditorSupport.stop_zone_flash(_fe_flash_state)
+			_fe_overlay.queue_free()
+			_fe_overlay = null
+			return
 		queue_free()
 
 # ── Load / Save ──────────────────────────────────────────────
@@ -171,6 +181,7 @@ func _build_ui() -> void:
 		_deck.traps, "trap")
 	_tech_list = _build_card_column(cols, "Techs  [exactly %d]" % DeckData.TECH_COUNT,
 		_deck.techs, "tech")
+	_build_union_column(cols)
 
 	# Formation section
 	var form_row := HBoxContainer.new()
@@ -236,6 +247,67 @@ func _build_card_column(parent: Control, header: String, card_array: Array, card
 
 	return list
 
+func _build_union_column(parent: Control) -> void:
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.size_flags_vertical   = Control.SIZE_EXPAND_FILL
+	col.add_theme_constant_override("separation", 4)
+	parent.add_child(col)
+
+	_union_hdr = Label.new()
+	_union_hdr.text = "Unions  [demo, achievable]"
+	_union_hdr.add_theme_font_override("font", CHIVO_FONT)
+	_union_hdr.add_theme_font_size_override("font_size", 13)
+	_union_hdr.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0))
+	col.add_child(_union_hdr)
+
+	_union_list = ItemList.new()
+	_union_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_union_list.add_theme_font_override("font", CHIVO_FONT)
+	_union_list.add_theme_font_size_override("font_size", 12)
+	col.add_child(_union_list)
+
+	var add_btn := Button.new()
+	add_btn.text = "+ Add"
+	add_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	add_btn.add_theme_font_override("font", CHIVO_FONT)
+	add_btn.add_theme_font_size_override("font_size", 12)
+	add_btn.pressed.connect(_show_union_add_dialog)
+	col.add_child(add_btn)
+
+	_refresh_union_list()
+
+func _refresh_union_list() -> void:
+	if _union_list == null or _deck == null:
+		return
+	var achievable: Array = AdminDeckEditorSupport.achievable_demo_unions(_deck.characters)
+	_union_list.clear()
+	for u: UnionData in achievable:
+		_union_list.add_item(u.card_name)
+	if _union_hdr:
+		_union_hdr.text = "Unions  [demo, %d achievable]" % achievable.size()
+
+func _refresh_deck_lists() -> void:
+	_refresh_card_list(_char_list, _deck.characters)
+	_refresh_card_list(_trap_list, _deck.traps)
+	_refresh_card_list(_tech_list, _deck.techs)
+	_refresh_union_list()
+
+func _refresh_card_list(list: ItemList, card_array: Array) -> void:
+	if list == null:
+		return
+	list.clear()
+	for n: String in card_array:
+		list.add_item(n)
+
+func _show_union_add_dialog() -> void:
+	AdminDeckEditorSupport.show_union_add_dialog(self, _deck, CHIVO_FONT, func(res: Dictionary) -> void:
+		if bool(res.get("ok", false)):
+			_refresh_deck_lists()
+		var msg: String = str(res.get("message", ""))
+		if not msg.is_empty():
+			_set_status(msg))
+
 # ── Formation editor ─────────────────────────────────────────
 func _open_formation_editor(summary_lbl: Label) -> void:
 	if _fe_overlay != null and is_instance_valid(_fe_overlay):
@@ -278,6 +350,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 	close_fe.offset_right = -10.0;  close_fe.offset_bottom = 38.0
 	close_fe.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	close_fe.pressed.connect(func() -> void:
+		AdminDeckEditorSupport.stop_zone_flash(_fe_flash_state)
 		_save_deck()
 		summary_lbl.text = "Formations: %d / %d" % [_deck.formations.size(), MAX_FORMATIONS]
 		_fe_overlay.queue_free()
@@ -402,6 +475,7 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 						_fe_clear_cell(ri, ci))
 			_fe_grid_cells.append(cell)
 			grid.add_child(cell)
+	AdminDeckEditorSupport.ensure_grid_flash_overlays(_fe_grid_cells)
 
 	var bottom_space := Control.new()
 	bottom_space.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -447,8 +521,25 @@ func _open_formation_editor(summary_lbl: Label) -> void:
 		_fe_pick_list.deselect_all())
 	right.add_child(clear_pick)
 
+	var pu_hdr := Label.new()
+	pu_hdr.text = "Possible Unions  [demo]  —  tap to highlight zone"
+	pu_hdr.add_theme_font_override("font", CHIVO_FONT)
+	pu_hdr.add_theme_font_size_override("font_size", 11)
+	pu_hdr.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0))
+	right.add_child(pu_hdr)
+
+	_fe_possible_union_list = ItemList.new()
+	_fe_possible_union_list.custom_minimum_size = Vector2(0, 120)
+	_fe_possible_union_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_fe_possible_union_list.add_theme_font_override("font", CHIVO_FONT)
+	_fe_possible_union_list.add_theme_font_size_override("font_size", 11)
+	_fe_possible_union_list.item_selected.connect(_fe_on_possible_union_selected)
+	right.add_child(_fe_possible_union_list)
+
 	add_child(_fe_overlay)
 	_fe_selected = -1
+	_fe_flash_state = {}
+	_fe_refresh_possible_unions()
 	_fe_refresh_grid()
 
 func _fe_refresh_pick_list() -> void:
@@ -466,6 +557,7 @@ func _fe_refresh_pick_list() -> void:
 			_fe_pick_list.add_item(n)
 
 func _fe_on_select(idx: int) -> void:
+	AdminDeckEditorSupport.stop_zone_flash(_fe_flash_state)
 	_fe_selected = idx
 	if idx < 0 or idx >= _deck.formations.size():
 		return
@@ -474,6 +566,20 @@ func _fe_on_select(idx: int) -> void:
 		_fe_name_edit.editable = true
 		_fe_name_edit.text = str(fd.get("name", "Formation"))
 	_fe_refresh_grid()
+	_fe_refresh_possible_unions()
+
+func _fe_refresh_possible_unions() -> void:
+	if _fe_possible_union_list == null:
+		return
+	AdminDeckEditorSupport.refresh_possible_union_list(
+		_fe_possible_union_list, _deck, _fe_possible_unions)
+
+func _fe_on_possible_union_selected(idx: int) -> void:
+	if idx < 0 or idx >= _fe_possible_unions.size():
+		return
+	var u: UnionData = _fe_possible_unions[idx] as UnionData
+	AdminDeckEditorSupport.start_zone_flash(
+		_fe_flash_state, _fe_grid_cells, GRID_COLS, u, _fe_overlay)
 
 func _fe_refresh_grid() -> void:
 	# Build lookup: "r,c" → card name
@@ -520,6 +626,7 @@ func _fe_place_card(r: int, c: int) -> void:
 	fd["placements"] = placements
 	_deck.formations[_fe_selected] = fd
 	_fe_refresh_grid()
+	_fe_refresh_possible_unions()
 
 func _fe_clear_cell(r: int, c: int) -> void:
 	if _fe_selected < 0:
@@ -538,6 +645,7 @@ func _fe_clear_cell(r: int, c: int) -> void:
 	fd["placements"] = placements
 	_deck.formations[_fe_selected] = fd
 	_fe_refresh_grid()
+	_fe_refresh_possible_unions()
 
 func _fe_on_name_changed(new_name: String) -> void:
 	if _fe_selected < 0 or _fe_selected >= _deck.formations.size():
@@ -577,76 +685,11 @@ func _fe_save_formation() -> void:
 
 # ── Add dialog (simple popup) ────────────────────────────────
 func _show_add_dialog(target_list: ItemList, card_array: Array, card_type: String) -> void:
-	var pop := PanelContainer.new()
-	pop.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	pop.offset_left = -260.0; pop.offset_right  = 260.0
-	pop.offset_top  = -220.0; pop.offset_bottom = 220.0
-	pop.z_index = 10
-	add_child(pop)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 6)
-	pop.add_child(vbox)
-
-	var hdr := Label.new()
-	hdr.text = "Add %s card" % card_type.capitalize()
-	hdr.add_theme_font_override("font", CHIVO_FONT)
-	hdr.add_theme_font_size_override("font_size", 15)
-	hdr.add_theme_color_override("font_color", Color(0.9, 0.9, 1.0))
-	vbox.add_child(hdr)
-
-	var search := LineEdit.new()
-	search.placeholder_text = "Search…"
-	search.add_theme_font_override("font", CHIVO_FONT)
-	vbox.add_child(search)
-
-	var db_list := ItemList.new()
-	db_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	db_list.custom_minimum_size = Vector2(0.0, 280.0)
-	db_list.add_theme_font_override("font", CHIVO_FONT)
-	db_list.add_theme_font_size_override("font_size", 12)
-	vbox.add_child(db_list)
-
-	var all_names: Array = []
-	match card_type:
-		"character": all_names = CardDatabase.characters.keys()
-		"trap":      all_names = CardDatabase.traps.keys()
-		"tech":      all_names = CardDatabase.tech_cards.keys()
-	all_names.sort()
-
-	var _rebuild_db_list := func(query: String) -> void:
-		db_list.clear()
-		for n: String in all_names:
-			if query == "" or query.to_lower() in n.to_lower():
-				db_list.add_item(n)
-	_rebuild_db_list.call("")
-	search.text_changed.connect(_rebuild_db_list)
-
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)
-	vbox.add_child(row)
-
-	var ok_btn := Button.new()
-	ok_btn.text = "Add"
-	ok_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	ok_btn.add_theme_font_override("font", CHIVO_FONT)
-	ok_btn.pressed.connect(func() -> void:
-		var sel: PackedInt32Array = db_list.get_selected_items()
-		if sel.is_empty():
-			return
-		var chosen: String = db_list.get_item_text(sel[0])
+	AdminDeckEditorSupport.show_add_card_dialog(self, card_type, CHIVO_FONT, func(chosen: String) -> void:
 		card_array.append(chosen)
 		target_list.add_item(chosen)
-		pop.queue_free()
+		_refresh_deck_lists()
 		_set_status("Added: %s" % chosen))
-	row.add_child(ok_btn)
-
-	var cancel_btn := Button.new()
-	cancel_btn.text = "Cancel"
-	cancel_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cancel_btn.add_theme_font_override("font", CHIVO_FONT)
-	cancel_btn.pressed.connect(func() -> void: pop.queue_free())
-	row.add_child(cancel_btn)
 
 func _remove_selected(list: ItemList, card_array: Array) -> void:
 	var sel: PackedInt32Array = list.get_selected_items()
@@ -658,6 +701,7 @@ func _remove_selected(list: ItemList, card_array: Array) -> void:
 	var removed: String = list.get_item_text(idx)
 	card_array.remove_at(idx)
 	list.remove_item(idx)
+	_refresh_deck_lists()
 	_set_status("Removed: %s" % removed)
 
 # ── Reset confirm ────────────────────────────────────────────

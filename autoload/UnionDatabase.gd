@@ -160,8 +160,8 @@ func _load_unions() -> void:
 
 	_add("Diamond Unicorn", A.DIVINE, 30, 35, 500, R.UNCOMMON,
 		AB.ONE_USE_ATK_BOOST, {"bonus": 15},
-		"Once Union, +15 ATK until this turn’s end",
-		"Once Union, ??? until this turn’s end",
+		"Summoned: +15 ATK until this turn’s end",
+		"Summoned: ??? until this turn’s end",
 		"1 Ponycorn + 1 Divine card + 500 cost",
 		"1 ??? + 1 ??? + 500 cost",
 		_z([[0,2], [1,1], [1,3], [2,0], [2,4], [3,1], [3,3], [4,2]]),
@@ -256,7 +256,8 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Gerald of the Heavenly Light"}, {"affinity": A.DIVINE}], 12))
 
 	_add("Balthier the Supreme Holiness", A.DIVINE, 100, 100, 1500, R.LEGENDARY,
-		AB.BOOST_PER_ANIMA_ON_FIELD, {"atk_bonus": 50, "def_bonus": 50},
+		AB.BOOST_PER_TYPED_CARD_ON_FIELD,
+		{"atk_bonus": 50, "def_bonus": 50, "affinity": A.DIVINE, "field_scope": "all", "bonus_cap": 100},
 		"+50 ATK&DEF for each Divine cards on the field. This bonus does not exceed maximum of 100",
 		"+??? ATK&DEF for each ???cards on the field. This bonus does not exceed maximum of 1???",
 		"2 Divine (≥800 cost) + 1500 cost",
@@ -319,8 +320,8 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Ostrich Cannon"}, {"affinity": A.NATURE}], 7))
 
 	_add("Scarlet Shroom", A.NATURE, 0, 80, 500, R.RARE,
-		AB.UNION_SUMMON_VENOM_ALL_FOE, {}, "Once Union, put venom flag on all foe’s exposed card",
-		"If ???, put venom flag on all ???.",
+		AB.UNION_SUMMON_VENOM_ALL_FOE, {}, "Summoned: put venom flag on all foe’s exposed card",
+		"Summoned: put venom flag on all ???.",
 		"2 Nature cards + 500 cost",
 		"2 ??? + 500 cost",
 		_z([[0,0], [0,1], [0,2], [0,3], [0,4], [1,2], [2,2], [3,2]]),

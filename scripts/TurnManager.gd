@@ -116,10 +116,16 @@ func start_turn(player_index: int) -> void:
 						"ability_false_prophet_reveal")
 					await ability_selection_done
 				CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG:
-					# Plant-29: owner picks 1 unit, then coin flip → venom (heads) or mutagen (tails)
+					var _p29_cf: Array = await _do_coin_flips(1)
+					if not _plant29_has_valid_targets(player_index, _p29_cf[0]):
+						GameState.post_message("%s: No valid targets — ability cancelled." % _ts_card.card_name)
+						continue
+					var _p29_filter: String = "ability_plant29_venom" if _p29_cf[0] else "ability_plant29_mutagen"
+					var _p29_prompt: String = "Heads! Choose 1 exposed ally or foe for Venom." if _p29_cf[0] \
+							else "Tails! Choose 1 of your units for Mutagen."
 					emit_signal("awaiting_target_selection",
-						"%s: Choose 1 unit, then flip a coin for Venom (Heads) or Mutagen (Tails)." % _ts_card.card_name,
-						"ability_plant29_target")
+						"%s: %s" % [_ts_card.card_name, _p29_prompt],
+						_p29_filter)
 					await ability_selection_done
 
 	# Handle skip turn (Ceasefire)
@@ -766,6 +772,10 @@ func play_tech_card(tech_name: String) -> void:
 		TechCardData.TechEffectType.DESTROY_FACEUP_CARD, \
 		TechCardData.TechEffectType.DESTROY_FACEUP_NO_CRYSTAL_LOSS:
 			emit_signal("awaiting_target_selection", "Choose 1 face-up card to destroy.", "any_faceup_card")
+
+		TechCardData.TechEffectType.DESTROY_VENOM_DOUBLE_COST:
+			emit_signal("awaiting_target_selection",
+				"Potent Poison: Choose 1 card with Venom Flag.", "venom_flagged_card")
 
 		TechCardData.TechEffectType.MULTI_ATTACK_ONE:
 			emit_signal("awaiting_target_selection", "Berserk: Choose 1 face-up character.", "own_faceup_character_berserk")
@@ -1741,6 +1751,21 @@ func _apply_post_battle_effects(
 				GameState.gain_crystals(player, _crys, "ability")
 				GameState.post_message("%s: Gained %d Crystals!" % [attacker.card_name, _crys])
 
+		CharacterData.AbilityType.VENOM_TOAD_RECKONING:
+			var _vt_foe: GameState.CardInstance = defender
+			var _vt_foe_p: int = opponent
+			var _vt_foe_pos: Vector2i = target_pos
+			var _vt_foe_dead: bool = result.defender_destroyed
+			if defender.ability_type == CharacterData.AbilityType.VENOM_TOAD_RECKONING:
+				_vt_foe = attacker
+				_vt_foe_p = player
+				_vt_foe_pos = attacker_pos
+				_vt_foe_dead = result.attacker_destroyed
+			if _vt_foe.card_type == "character" and not _vt_foe_dead:
+				GameState.apply_unit_effect_flag(_vt_foe_p, _vt_foe_pos.x, _vt_foe_pos.y, "venom")
+				var _vt_src: GameState.CardInstance = attacker if attacker.ability_type == CharacterData.AbilityType.VENOM_TOAD_RECKONING else defender
+				GameState.post_message("%s: Venom on %s." % [_vt_src.card_name, _vt_foe.card_name])
+
 		CharacterData.AbilityType.ONE_USE_ATK_BOOST, \
 		CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND:
 			attacker.one_use_atk_boost_used = true
@@ -1938,6 +1963,23 @@ func _emit_post_attack_target_selections(
 				await _prompt_and_await_target_selection(
 					"%s: Choose 1 opponent character to flip a coin on." % attacker.card_name,
 					"opponent_character_ability_destroy")
+
+func _plant29_has_valid_targets(player: int, heads: bool) -> bool:
+	if heads:
+		for p: int in range(2):
+			for r: int in range(GameState.GRID_SIZE):
+				for c: int in range(GameState.GRID_SIZE):
+					var card: GameState.CardInstance = GameState.get_card(p, r, c)
+					if card.card_type == "character" and card.face_up:
+						return true
+		return false
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var own: GameState.CardInstance = GameState.get_card(player, r, c)
+			if own.card_type == "character":
+				return true
+	return false
+
 
 func _apply_end_of_turn_boosts(player: int) -> void:
 	# Applied at start of own turn = "end of opponent's turn"

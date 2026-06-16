@@ -87,6 +87,13 @@ func run_all_tests() -> void:
 
 	# ATK_BONUS_VS_VENOM (Pattern A)
 	_giant_centipede(A, AB)
+	_vicious_lizard(A, AB)
+
+	# FIELD_DEBUFF_ALL_VENOM_CARDS (Pattern B)
+	_venom_queen(A, AB)
+
+	# VENOM_TOAD_RECKONING (Pattern A)
+	_venom_toad(A, AB)
 
 	# ATK_BOOST_VS_REVEALED (Pattern A)
 	_void_stalker(A, AB)
@@ -410,11 +417,11 @@ func _skeleton_archer(A, AB) -> void:
 		AB.ATK_BONUS_VS_FACEDOWN, {"bonus": 5})
 	var def_facedown := _make_char("FaceDown Dummy", 0, 10, 100, A.ANIMA)
 	def_facedown.face_up = false
-	var r1 := BattleResolver.resolve_battle(att, def_facedown, 3, 0, 1)
+	var r1 := BattleResolver.resolve_battle(att, def_facedown, 3, 0, 1, false)
 	assert_eq(r1.attacker_atk_used, 40, "TC-FUNC-Skeleton-Archer-001: ATK 35+5=40 vs face-down")
 	var def_faceup := _make_char("FaceUp Dummy", 0, 10, 100, A.ANIMA)
 	def_faceup.face_up = true
-	var r2 := BattleResolver.resolve_battle(att, def_faceup, 3, 0, 1)
+	var r2 := BattleResolver.resolve_battle(att, def_faceup, 3, 0, 1, true)
 	assert_eq(r2.attacker_atk_used, 35, "TC-FUNC-Skeleton-Archer-001b: no bonus vs face-up")
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -446,6 +453,45 @@ func _giant_centipede(A, AB) -> void:
 	var def_normal := _make_char("Normal", 0, 10, 100, A.ANIMA)
 	var r2 := BattleResolver.resolve_battle(att, def_normal, 3, 0, 1)
 	assert_eq(r2.attacker_atk_used, 20, "TC-FUNC-Giant-Centipede-001b: no bonus without venom")
+
+func _vicious_lizard(A, AB) -> void:
+	print("-- TC-FUNC-Vicious-Lizard-001")
+	var att := _make_char("Vicious Lizard", 40, 25, 900, A.NATURE,
+		AB.ATK_DEF_BONUS_VS_VENOM, {"atk": 60, "def": 60, "self_venom_atk": 40})
+	att.flags = ["venom"]
+	var def_venom := _make_char("Venom Foe", 0, 100, 100, A.ANIMA)
+	def_venom.flags = ["venom"]
+	var r1 := BattleResolver.resolve_battle(att, def_venom, 3, 0, 1)
+	assert_eq(r1.attacker_atk_used, 140, "TC-FUNC-Vicious-Lizard-001: ATK 40+60+40 vs venom foe")
+	var def_liz := _make_char("Vicious Lizard", 40, 25, 900, A.NATURE,
+		AB.ATK_DEF_BONUS_VS_VENOM, {"atk": 60, "def": 60, "self_venom_atk": 40})
+	var att_venom := _make_char("Attacker", 50, 0, 100, A.ANIMA)
+	att_venom.flags = ["venom"]
+	var r2 := BattleResolver.resolve_battle(att_venom, def_liz, 3, 1, 0)
+	assert_eq(r2.defender_def_used, 85, "TC-FUNC-Vicious-Lizard-001b: DEF 25+60 vs venom attacker")
+
+func _venom_queen(A, AB) -> void:
+	print("-- TC-FUNC-Venom-Queen-001")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var queen := _make_char("Venom Queen", 45, 75, 550, A.NATURE,
+		AB.FIELD_DEBUFF_ALL_VENOM_CARDS, {"atk": 15, "def": 15})
+	queen.face_up = true
+	var venom_target := _make_char("Venom Target", 50, 50, 100, A.ANIMA)
+	venom_target.flags = ["venom"]
+	venom_target.face_up = true
+	GameState.grids[0][0][0] = queen
+	GameState.grids[1][1][1] = venom_target
+	BattleResolver.recalculate_all_field_bonuses()
+	assert_eq(venom_target.get_effective_atk(), 35, "TC-FUNC-Venom-Queen-001: -15 ATK aura on venom cards")
+	assert_eq(venom_target.get_effective_def(), 35, "TC-FUNC-Venom-Queen-001: -15 DEF aura on venom cards")
+
+func _venom_toad(A, AB) -> void:
+	print("-- TC-FUNC-Venom-Toad-001")
+	var att := _make_char("Venom Toad", 15, 20, 400, A.NATURE, AB.VENOM_TOAD_RECKONING, {})
+	var def_venom := _make_char("Venom Foe", 0, 200, 100, A.ANIMA)
+	def_venom.flags = ["venom"]
+	var r := BattleResolver.resolve_battle(att, def_venom, 3, 0, 1)
+	assert_true(r.defender_destroyed, "TC-FUNC-Venom-Toad-001: venom-flagged foe destroyed in reckoning")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PERM_ATK_BOOST_WHEN_EXPOSED
@@ -674,7 +720,8 @@ func _hammer_shark_field_recalc(A, AB) -> void:
 	print("-- TC-FUNC-Hammer-Shark-002 [field recalc grant/confiscate]")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	var hammer := _make_char("Hammer Shark", 20, 20, 250, A.NATURE,
-		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"card_name_contains": "shark", "atk_bonus": 10, "def_bonus": 0})
+		AB.BOOST_PER_TYPED_CARD_ON_FIELD,
+		{"card_name_contains": "shark", "atk_bonus": 10, "def_bonus": 0, "field_scope": "all"})
 	var saw := _make_char("Saw Shark", 25, 10, 280, A.NATURE)
 	hammer.face_up = true
 	saw.face_up = true
@@ -686,6 +733,19 @@ func _hammer_shark_field_recalc(A, AB) -> void:
 	GameState.destroy_card(0, 2, 2, false)
 	assert_eq(hammer.perm_atk_bonus, 0, "TC-FUNC-Hammer-Shark-002: bonus removed when ally leaves")
 	assert_eq(hammer.get_effective_atk(), 20, "TC-FUNC-Hammer-Shark-002: effective ATK back to 20")
+
+	print("-- TC-FUNC-Hammer-Shark-003 [field_scope all]")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var hammer3 := _make_char("Hammer Shark", 20, 20, 250, A.NATURE,
+		AB.BOOST_PER_TYPED_CARD_ON_FIELD,
+		{"card_name_contains": "shark", "atk_bonus": 10, "def_bonus": 0, "field_scope": "all"})
+	var foe_shark := _make_char("Spear Shark", 50, 20, 480, A.NATURE)
+	hammer3.face_up = true
+	foe_shark.face_up = true
+	GameState.grids[0][2][1] = hammer3
+	GameState.grids[1][0][0] = foe_shark
+	BattleResolver.calculate_field_bonuses(0)
+	assert_eq(hammer3.perm_atk_bonus, 10, "TC-FUNC-Hammer-Shark-003: +10 from shark on foe field")
 
 func _night_whisperer(A, AB) -> void:
 	print("-- TC-FUNC-Night-Whisperer-001 [Pattern B, perm bonus direct]")
@@ -776,7 +836,7 @@ func _joan(A, AB) -> void:
 	print("-- TC-FUNC-Joan-the-Faithful-Warrior-001 [Pattern B]")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	var joan := _make_char("Joan the Faithful Warrior", 25, 5, 280, A.DIVINE,
-		AB.DEF_BONUS_IF_AFFINITY_ON_FIELD, {"affinity": A.DIVINE, "def": 35})
+		AB.DEF_BONUS_IF_AFFINITY_ON_FIELD, {"affinity": A.DIVINE, "def": 35, "field_scope": "all"})
 	joan.face_up = true
 	GameState.grids[1][0][0] = joan  # defender on player 1's field
 	var divine_ally := _make_char("Church Guard", 0, 35, 150, A.DIVINE)
@@ -784,9 +844,23 @@ func _joan(A, AB) -> void:
 	GameState.grids[1][0][1] = divine_ally
 	var opp_att := _make_char("Attacker", 30, 0, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(opp_att, joan, 3, 0, 1)
-	assert_eq(r.defender_def_used, 40, "TC-FUNC-Joan-001: DEF 5+35=40 with exposed DIVINE unit on field")
+	assert_eq(r.defender_def_used, 40, "TC-FUNC-Joan-001: DEF 5+35=40 with exposed DIVINE ally on field")
 	# ATK 30 < DEF 40 → Joan survives
 	assert_true(not r.defender_destroyed, "TC-FUNC-Joan-001: Joan survives ATK 30 vs DEF 40")
+
+	print("-- TC-FUNC-Joan-the-Faithful-Warrior-002")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var joan_foe := _make_char("Joan the Faithful Warrior", 25, 5, 280, A.DIVINE,
+		AB.DEF_BONUS_IF_AFFINITY_ON_FIELD, {"affinity": A.DIVINE, "def": 35, "field_scope": "all"})
+	joan_foe.face_up = true
+	GameState.grids[1][0][0] = joan_foe
+	var divine_foe := _make_char("Church Guard", 0, 35, 150, A.DIVINE)
+	divine_foe.face_up = true
+	GameState.grids[0][0][0] = divine_foe
+	var opp_att2 := _make_char("Attacker", 30, 0, 100, A.ANIMA)
+	var r2 := BattleResolver.resolve_battle(opp_att2, joan_foe, 3, 0, 1)
+	assert_eq(r2.defender_def_used, 40, "TC-FUNC-Joan-002: DEF 5+35=40 with exposed DIVINE on foe field")
+	assert_true(not r2.defender_destroyed, "TC-FUNC-Joan-002: Joan survives ATK 30 vs DEF 40")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # DEF_ZERO_WHEN_EXPOSED

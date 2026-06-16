@@ -12,7 +12,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: ATTACKER_DISCARD_OR_END_TURN
 effect_params: {}
-Description: The attacker choose either discarding 1 Tech Card or end the turn immediately
+Description: The attacker chooses either discarding 1 Tech Card or end the turn immediately
 Test Cases:
 
 Test Case ID: TC-FUNC-Blackmail-001
@@ -58,7 +58,7 @@ Type: Trap
 Trap Cost: 100
 TrapEffectType: CANCEL_ATTACKER_ATTACK
 effect_params: {'max_attack_cost': 400}
-Description: This turn, foe cannot perform any more attack using unit with 400 or less cost.
+Description: This turn, attacker cannot perform any more attack using unit with 400 or less cost.
 Test Cases:
 
 Test Case ID: TC-FUNC-Decoy-Puppet-001
@@ -84,7 +84,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: COIN_FLIP_2_ATK_DEBUFF
 effect_params: {'amount': 5}
-Description: Flip 2 coin, if head, the attacking unit lose -5 ATK for each head(s) until the end of their next turn.
+Description: Flip 2 coin, if head, the attacker lose -5 ATK for each head(s) until attacker’s next turn ends.
 Test Cases:
 
 Test Case ID: TC-FUNC-Pepper-Spray-001
@@ -128,7 +128,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: COIN_FLIP_2_LOCK_ATTACKER
 effect_params: {}
-Description: Flip 2 coin, if both are head, that unit cannot attack next turn
+Description: Flip 2 coin, if both are head, that unit cannot until attacker’s next turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Red-Card-001
@@ -200,7 +200,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: DESTROY_ATTACKER_DEFENDER_PAYS
 effect_params: {}
-Description: Destroy the attacker. You also pay the same cost as foe.
+Description: Destroy the attacking unit. Trapper also pay the same cost as attacker.
 Test Cases:
 
 Test Case ID: TC-FUNC-Explosive-Barrels-001
@@ -293,7 +293,7 @@ Type: Trap
 Trap Cost: 200
 TrapEffectType: DRAIN_ATTACKER_CRYSTALS
 effect_params: {'amount': 300, 'transfer_to_defender': True}
-Description: Attacking player loses 300 crystals. Increase your crystal by that amount
+Description: Attacking player loses 300 Crystals. Increase trapper’s Crystal by that amount
 Test Cases:
 
 Test Case ID: TC-FUNC-Mana-Drain-001
@@ -371,7 +371,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: FIELD_BOOST_AFFINITY_DEF
 effect_params: {'affinity': 'ANIMA', 'def': 10}
-Description: Until the end of this turn, All face-up Anima monster gain +10 DEF
+Description: Until this turn ends, All trapper’s Anima monster gain +10 DEF in Reckoning
 Test Cases:
 
 Test Case ID: TC-FUNC-Alarm-001
@@ -415,7 +415,7 @@ Type: Trap
 Trap Cost: 1500
 TrapEffectType: FORCE_FRIENDLY_FIRE
 effect_params: {}
-Description: Foe choose their own ally (face-up or face-down) as an attack target
+Description: The attacker chooses their own ally as an attack target
 Test Cases:
 
 Test Case ID: TC-FUNC-Brainwash-001
@@ -468,7 +468,7 @@ Type: Trap
 Trap Cost: 1000
 TrapEffectType: LOCK_ATTACKER_REMAINING_ATTACKS
 effect_params: {}
-Description: This turn, foe cannot perform any more attack.
+Description: This turn, attacker cannot perform any more attack.
 Test Cases:
 
 Test Case ID: TC-FUNC-Echo-Barrier-001
@@ -495,7 +495,7 @@ Type: Trap
 Trap Cost: 500
 TrapEffectType: NULLIFY_ATTACKER_EFFECT
 effect_params: {}
-Description: The attacker's effect becomes None until foe’s next turn ends
+Description: The attacking unit's ability becomes None until attacker’s next turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Snare-Trap-001
@@ -522,7 +522,7 @@ Type: Trap
 Trap Cost: 200
 TrapEffectType: NULLIFY_ATTACK_REVEAL_ADJACENT
 effect_params: {'directions': [], 'lock_revealed': True}
-Description: Reveal 1 of your own cell. Until the foe’s turn ends, foe cannot target than cell.
+Description: Trapper reveal 1 own cell. Until this turn ends, attacker cannot target that cell.
 Test Cases:
 
 Test Case ID: TC-FUNC-Hostage-001
@@ -547,10 +547,10 @@ Expected Result:
 
 Card Name: Bunker
 Type: Trap
-Trap Cost: 900
+Trap Cost: 600
 TrapEffectType: NULLIFY_BLOCK_ADJACENT
 effect_params: {'directions': []}
-Description: Player cannot select adjacent cell as an attack target until the end of this turn.
+Description: Attacker cannot target surrounding cells until the end of this turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Bunker-001
@@ -576,7 +576,7 @@ Type: Trap
 Trap Cost: 250
 TrapEffectType: PERMANENT_ATK_DEBUFF
 effect_params: {'amount': 10}
-Description: Permanently -10 ATK to the Attacking unit
+Description: Attacking unit get -10 ATK permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Flame-Trap-001
@@ -602,7 +602,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: REVEAL_DEFENDING_CHOICE
 effect_params: {}
-Description: The defending player choose one square on their field and reveal it
+Description: The trapper chooses one other cell on their side and reveal it
 Test Cases:
 
 Test Case ID: TC-FUNC-Bait-001
@@ -646,7 +646,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: REVEAL_OWN_GAIN_CRYSTAL
 effect_params: {'amount': 100}
-Description: Reveal 1 of your cell, you receive 100 crystal
+Description: Trapper reveal 1 of their cell, they receive 100 Crystal
 Test Cases:
 
 Test Case ID: TC-FUNC-Street-Joke-001
@@ -690,7 +690,7 @@ Type: Trap
 Trap Cost: 0
 TrapEffectType: SELF_DESTROY_TEMP_ATK_BOOST
 effect_params: {'atk': 10}
-Description: Select 1 of your unit. +10 ATK until your next turn’s end, but also destroy it. You pay no cost.
+Description: Trapper select 1 of their unit. +10 ATK until trapper’s turn ends, but also destroy it. Trapper pay no cost.
 Test Cases:
 
 Test Case ID: TC-FUNC-Self-destruct-001
@@ -734,7 +734,7 @@ Type: Trap
 Trap Cost: 500
 TrapEffectType: SWAP_ARMORED_NATURE
 effect_params: {}
-Description: Select 1 'Armored' Nature card and switch it with this cell
+Description: Trapper switch 1 'Armored' Nature card on their side with this cell, then repeat Reckoning.
 Test Cases:
 
 Test Case ID: TC-FUNC-Defensive-Pheromone-001
@@ -761,7 +761,7 @@ Type: Trap
 Trap Cost: 500
 TrapEffectType: SWAP_ATTACKER_ATK_DEF_TEMP
 effect_params: {}
-Description: Swap the attacker's ATK&DEF until the end of defender's turn
+Description: Swap the attacker's ATK&DEF until the trapper’s turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Cursed-Reflection-001
@@ -832,7 +832,7 @@ Type: Trap
 Trap Cost: 700
 TrapEffectType: TEMP_DEF_BOOST_ONE_OWN
 effect_params: {'def': 5, 'all_own_units': True}
-Description: All of your unit gain +5 DEF in Reckoning until this turn’s end
+Description: All of trapper’s unit gain +5 DEF in Reckoning until attacker’s next turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Hard-Scale-001

@@ -772,6 +772,11 @@ func _score_tech(tech_name: String, snap: Dictionary) -> int:
 				return 0
 			return 60 + _strongest_opp_def() / 3
 
+		TechCardData.TechEffectType.DESTROY_VENOM_DOUBLE_COST:
+			if not _any_venom_flagged_character():
+				return 0
+			return 75 + _strongest_venom_target_cost() / 4
+
 		TechCardData.TechEffectType.DESTROY_OWN_BASE_ZERO_OPPONENT:
 			if opp_rev == 0 or ai_faceup < 2:
 				return 0
@@ -898,6 +903,8 @@ func decide_target(filter: String) -> Vector2i:
 			if opp_card.face_up:
 				return opp_pos
 			return _best_own_faceup()
+		"venom_flagged_card":
+			return _strongest_venom_flagged_pos()
 		"opponent_faceup_no_cost":
 			return _strongest_opp_faceup_pos()
 		"adjacent":
@@ -906,7 +913,7 @@ func decide_target(filter: String) -> Vector2i:
 		_:
 			return _random_unrevealed_opponent()
 
-## Plant-29 turn-start targeting — owner picks 1 unit on either grid, then coin flip resolves flag.
+## Plant-29 turn-start targeting after coin flip — venom on exposed ally/foe or mutagen on own unit.
 func decide_any_grid_target(filter: String) -> Dictionary:
 	var best_player: int = -1
 	var best_pos: Vector2i = Vector2i(-1, -1)
@@ -926,13 +933,59 @@ func decide_any_grid_target(filter: String) -> Dictionary:
 		return {}
 	return {"player": best_player, "pos": best_pos}
 
-func _plant29_target_score(player: int, card: GameState.CardInstance, _filter: String) -> int:
+func _plant29_target_score(player: int, card: GameState.CardInstance, filter: String) -> int:
+	if filter == "ability_plant29_venom":
+		if not card.face_up:
+			return -999999
+	elif filter == "ability_plant29_mutagen":
+		if player != player_index:
+			return -999999
 	var score: int = card.get_effective_atk() + card.get_effective_def()
 	if player == opponent_index:
 		score += 1000
-	if not card.face_up:
+	if filter == "ability_plant29_mutagen" and not card.face_up:
 		score += 200
 	return score
+
+func _any_venom_flagged_character() -> bool:
+	for p: int in range(2):
+		for r: int in range(GameState.GRID_SIZE):
+			for c: int in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(p, r, c)
+				if card.card_type == "character" and "venom" in card.flags:
+					return true
+	return false
+
+func _strongest_venom_target_cost() -> int:
+	var best: int = 0
+	for p: int in range(2):
+		for r: int in range(GameState.GRID_SIZE):
+			for c: int in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(p, r, c)
+				if card.card_type == "character" and "venom" in card.flags:
+					best = maxi(best, card.crystal_cost)
+	return best
+
+func _strongest_venom_flagged_pos() -> Vector2i:
+	var best_player: int = opponent_index
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_score: int = -1
+	for p: int in range(2):
+		for r: int in range(GameState.GRID_SIZE):
+			for c: int in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(p, r, c)
+				if card.card_type != "character" or "venom" not in card.flags:
+					continue
+				var score: int = card.crystal_cost
+				if p == opponent_index:
+					score += 10000
+				if score > best_score:
+					best_score = score
+					best_player = p
+					best_pos = Vector2i(r, c)
+	if best_pos == Vector2i(-1, -1):
+		return Vector2i(0, 0)
+	return best_pos
 
 ## Intelligent binary choice handler for awaiting_trap_choice prompts.
 ## prompt is the trap_name/title string; choices is the array of choice labels.
@@ -1290,6 +1343,14 @@ func _get_available_unions() -> Array:
 
 ## Pick the best-scoring union from a list of candidates.
 func _pick_best_union(unions: Array) -> Dictionary:
+	var featured := ""
+	if player_index == 1:
+		featured = str(GameState.battle_ai_featured_union).strip_edges()
+	if not featured.is_empty():
+		for entry: Dictionary in unions:
+			var u: UnionData = entry["union"]
+			if u.card_name == featured:
+				return entry
 	var best_entry: Dictionary = unions[0]
 	var best_score: int = -1
 	for entry: Dictionary in unions:
@@ -1303,6 +1364,11 @@ func _pick_best_union(unions: Array) -> Dictionary:
 ## Score a union for how desirable it is to summon right now.
 func _score_union(u: UnionData) -> int:
 	var score: int = u.base_atk + u.base_def
+
+	if player_index == 1:
+		var featured := str(GameState.battle_ai_featured_union).strip_edges()
+		if not featured.is_empty() and u.card_name == featured:
+			score += 250
 
 	# Ability bonuses
 	match u.ability_type:

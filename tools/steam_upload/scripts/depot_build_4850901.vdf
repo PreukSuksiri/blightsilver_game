@@ -1,0 +1,12 @@
+"DepotBuild"
+{
+	"DepotID" "4850901"
+	"ContentRoot" "ABSOLUTE_PATH_SET_BY_upload_demo_windows.sh"
+	"FileMapping"
+	{
+		"LocalPath" "*"
+		"DepotPath" "."
+		"recursive" "1"
+	}
+	"FileExclusion" ".DS_Store"
+}

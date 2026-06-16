@@ -1,0 +1,1915 @@
+{
+	"entries": [
+		{
+			"deck": {
+				"characters": [
+					"Lab Zombie",
+					"Rotten Shrieker",
+					"Claw Mutant",
+					"Bleacher Squad",
+					"Bladeshifter",
+					"Scarlet Mutant",
+					"Vile Creeper",
+					"Gamma Emitter",
+					"Lab Bloater"
+				],
+				"deck_name": "Easy / Bio - Lab Mutagen",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 4.0,
+								"name": "Lab Zombie",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Claw Mutant",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Bladeshifter",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Gamma Emitter",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Lab Bloater",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Rotten Shrieker",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Scarlet Mutant",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Bleacher Squad",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Pepper Spray",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Hypnosis",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Red Card",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Vile Creeper",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Explosive Barrels",
+								"r": 4.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Release Mutagen",
+					"Radar",
+					"War Supply"
+				],
+				"traps": [
+					"Red Card",
+					"Pepper Spray",
+					"Hypnosis",
+					"Explosive Barrels"
+				]
+			},
+			"featured_union": "",
+			"id": "easy_lab_mutagen",
+			"label": "Easy / Bio - Lab Mutagen",
+			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_smoking_room_cond_got_usb_1.json",
+			"tags": [
+				"Easy"
+			]
+		},
+		{
+			"deck": {
+				"characters": [
+					"Mind Flayer",
+					"Pyromancer",
+					"Red Mage",
+					"Ice Mage",
+					"Green Mage",
+					"Book with Fangs",
+					"Blue Mage",
+					"Aerial the Battlemage"
+				],
+				"deck_name": "Norm / Arc - Colormage Flayer",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 3.0,
+								"name": "Green Mage",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Blue Mage",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Mind Flayer",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Pyromancer",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Ice Mage",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Red Mage",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Explosive Barrels",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Bunker",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Red Card",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Book with Fangs",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Blackmail",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Aerial the Battlemage",
+								"r": 4.0,
+								"type": "character"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Radar",
+					"Tease",
+					"Bribe"
+				],
+				"traps": [
+					"Blackmail",
+					"Explosive Barrels",
+					"Bunker",
+					"Red Card"
+				]
+			},
+			"featured_union": "",
+			"id": "norm_colormage_flayer",
+			"label": "Norm / Arc - Colormage Flayer",
+			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_meeting_room_char_???.json",
+			"tags": [
+				"Easy"
+			]
+		},
+		{
+			"deck": {
+				"characters": [
+					"Kiyoko the Death Whisper",
+					"Silver Spearman",
+					"Mafia Associates",
+					"Hairpin Assassin",
+					"Huntress of Green Glade",
+					"Tomb Bandit",
+					"Big Thug",
+					"Shepherd Detective",
+					"Grand Fort Archer",
+					"Street Rogue"
+				],
+				"deck_name": "Easy / Ani - Kiba",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 1.0,
+								"name": "Kiyoko the Death Whisper",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Silver Spearman",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Hairpin Assassin",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Huntress of Green Glade",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Shepherd Detective",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Big Thug",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Mafia Associates",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Tomb Bandit",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Street Rogue",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Grand Fort Archer",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Pepper Spray",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Brainwash",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Bait",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Decoy Puppet",
+								"r": 0.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Bribe",
+					"Spy",
+					"War Supply"
+				],
+				"traps": [
+					"Bait",
+					"Brainwash",
+					"Decoy Puppet",
+					"Pepper Spray"
+				]
+			},
+			"featured_union": "",
+			"id": "easy_kiba",
+			"label": "Easy / Ani - Kiba",
+			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_surveillance_room_invest_4_0.json",
+			"tags": [
+				"Easy"
+			]
+		},
+		{
+			"deck": {
+				"characters": [
+					"Striker Comet",
+					"Miner Probe",
+					"Moon Rover",
+					"Laser Walker",
+					"Neptune Diver",
+					"Mars Drill",
+					"Mine Guard",
+					"Parom the Smuggler",
+					"Scout Probe",
+					"Moon Tribe Twin Blader",
+					"Moon Tribe Marksman"
+				],
+				"deck_name": "Norm / Cos - Miner Moon",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 1.0,
+								"name": "Striker Comet",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Moon Rover",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Mine Guard",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Parom the Smuggler",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Scout Probe",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Mars Drill",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Flame Trap",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Self-destruct",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Cursed Reflection",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Laser Walker",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Neptune Diver",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Miner Probe",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Foul Gas",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Moon Tribe Twin Blader",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Moon Tribe Marksman",
+								"r": 1.0,
+								"type": "character"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Spy",
+					"Radar",
+					"Tease"
+				],
+				"traps": [
+					"Foul Gas",
+					"Flame Trap",
+					"Self-destruct",
+					"Cursed Reflection"
+				]
+			},
+			"featured_union": "Giant Meteor Vergaia",
+			"id": "norm_miner_moon",
+			"label": "Norm / Cos - Miner Moon",
+			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_technician_office_invest_0_2.json",
+			"tags": [
+				"Easy"
+			]
+		},
+		{
+			"deck": {
+				"characters": [
+					"Vampire Servant",
+					"Vampire Duchess",
+					"Araya the Eerie Dancer",
+					"Immortal Vampire",
+					"Cursed Well",
+					"Jacob the Ski Mask",
+					"Bat Swarm",
+					"Chaotic Wisp",
+					"Foul Wisp",
+					"Doom Wisp",
+					"Night Whisperer",
+					"Feral Vampire"
+				],
+				"deck_name": "Easy / Cha - Vampire",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Night Whisperer",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Feral Vampire",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Explosive Barrels",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Jacob the Ski Mask",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Immortal Vampire",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Araya the Eerie Dancer",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Cursed Well",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Hypnosis",
+								"r": 1.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Red Card",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Trap Hole",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Chaotic Wisp",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Foul Wisp",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Doom Wisp",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Acid Trap Hole",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Bat Swarm",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Bait",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Vampire Servant",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Vampire Duchess",
+								"r": 0.0,
+								"type": "character"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Great Diplomacy",
+					"Spy",
+					"Bribe"
+				],
+				"traps": [
+					"Explosive Barrels",
+					"Bait",
+					"Acid Trap Hole",
+					"Hypnosis",
+					"Red Card",
+					"Trap Hole"
+				]
+			},
+			"featured_union": "",
+			"id": "easy_vampire",
+			"label": "Easy / Cha - Vampire",
+			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_storage_invest_0_0.json",
+			"tags": [
+				"Easy"
+			]
+		},
+		{
+			"ai_personality_defensive": "Tomb Trap (Hard)",
+			"ai_personality_social": "Vengeful",
+			"deck": {
+				"characters": [
+					"Vampire Duchess",
+					"Vampire Servant",
+					"Succubus",
+					"Bladeshifter",
+					"Claw Mutant",
+					"Death Knight",
+					"Pit Lord",
+					"Void Stalker",
+					"Ancient Lich",
+					"Lab Crawler",
+					"Leech Man",
+					"Poltergeist"
+				],
+				"deck_name": "Norm / Mix - Chaos Bio",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Pit Lord",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Death Knight",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Ancient Lich",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Vampire Servant",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Succubus",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Vampire Duchess",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Void Stalker",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Claw Mutant",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Bladeshifter",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Leech Man",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Lab Crawler",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Red Card",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Cursed Reflection",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Mana Drain",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Acid Trap Hole",
+								"r": 1.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Explosive Barrels",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Poltergeist",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Decoy Puppet",
+								"r": 4.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Release Mutagen",
+					"Accident",
+					"Illegal Steroid"
+				],
+				"traps": [
+					"Mana Drain",
+					"Red Card",
+					"Cursed Reflection",
+					"Decoy Puppet",
+					"Acid Trap Hole",
+					"Explosive Barrels"
+				]
+			},
+			"featured_union": "",
+			"id": "normal_chaos_bio",
+			"label": "Norm / Mix - Chaos Bio",
+			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_cond_toilet_front_password_correct_1.json",
+			"tags": [
+				"Normal"
+			]
+		},
+		{
+			"deck": {
+				"characters": [
+					"Nuki the Tanuki",
+					"Venom Toad",
+					"Venom Queen",
+					"Vicious Lizard",
+					"Giant Centipede",
+					"Death Cobra",
+					"Goblin Poacher",
+					"Death Stag",
+					"Mad Raccoon",
+					"Needle Porcupine"
+				],
+				"deck_name": "Hard / Nat - Venom",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Venom Toad",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Venom Queen",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Nuki the Tanuki",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Vicious Lizard",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Giant Centipede",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Needle Porcupine",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Death Cobra",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Goblin Poacher",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Death Stag",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Mad Raccoon",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Snare Trap",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Decoy Puppet",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Acid Trap Hole",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Hostage",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Blackmail",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Foul Gas",
+								"r": 1.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Spy",
+					"Potent Poison",
+					"Tease"
+				],
+				"traps": [
+					"Snare Trap",
+					"Decoy Puppet",
+					"Acid Trap Hole",
+					"Hostage",
+					"Blackmail",
+					"Foul Gas"
+				]
+			},
+			"featured_union": "Scarlet Shroom",
+			"id": "hard_venom",
+			"label": "Hard / Nat - Venom",
+			"tags": []
+		},
+		{
+			"deck": {
+				"characters": [
+					"Armored Bee",
+					"Armored Monkey",
+					"Armored Rhino",
+					"Nuki the Tanuki",
+					"Lazy Troll",
+					"White Tiger",
+					"Needle Porcupine",
+					"Stinky Insect",
+					"Mad Raccoon",
+					"Death Stag"
+				],
+				"deck_name": "Norm / Nat - Armored",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 3.0,
+								"name": "Armored Bee",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Armored Monkey",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Armored Rhino",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Lazy Troll",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "White Tiger",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Stinky Insect",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Needle Porcupine",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Nuki the Tanuki",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Mad Raccoon",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Death Stag",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Defensive Pheromone",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Spike Trap",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Snare Trap",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Hard Scale",
+								"r": 1.0,
+								"type": "trap"
+							},
+							{
+								"c": 1.0,
+								"name": "Foul Gas",
+								"r": 1.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Harsh Training",
+					"Garrison",
+					"Tease"
+				],
+				"traps": [
+					"Defensive Pheromone",
+					"Foul Gas",
+					"Hard Scale",
+					"Snare Trap",
+					"Spike Trap"
+				]
+			},
+			"featured_union": "Armored Dino",
+			"id": "norm_armored",
+			"label": "Norm / Nat - Armored",
+			"tags": []
+		},
+		{
+			"deck": {
+				"characters": [
+					"Raijin",
+					"Fujin",
+					"Archbishop",
+					"Joan the Faithful Warrior",
+					"Sonic Seraph",
+					"Sunrise Lady",
+					"Mephisto the Fallen",
+					"Heavy Tome Preacher",
+					"Melissa the Healer",
+					"Flame Seraph"
+				],
+				"deck_name": "Norm / Div - Raijin Fujin",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 4.0,
+								"name": "Raijin",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Fujin",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Flame Seraph",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Sonic Seraph",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Hypnosis",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Pepper Spray",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Acid Trap Hole",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Bait",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Pepper Spray",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Bunker",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Archbishop",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Joan the Faithful Warrior",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Sunrise Lady",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Mephisto the Fallen",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Heavy Tome Preacher",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Melissa the Healer",
+								"r": 3.0,
+								"type": "character"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Prayer",
+					"Garrison",
+					"Radar"
+				],
+				"traps": [
+					"Bunker",
+					"Hypnosis",
+					"Red Card",
+					"Pepper Spray",
+					"Bait",
+					"Acid Trap Hole"
+				]
+			},
+			"featured_union": "Raijin and Fujin",
+			"id": "norm_raijin_fujin",
+			"label": "Norm / Div - Raijin Fujin",
+			"tags": []
+		},
+		{
+			"deck": {
+				"characters": [
+					"Aerial the Battlemage",
+					"Scythe Shark",
+					"Bomber Fairy",
+					"Book with Fangs",
+					"War Genie",
+					"Fujin",
+					"Sonic Seraph",
+					"Canyon Warg",
+					"Venom Queen",
+					"Armored Rhino",
+					"Needle Porcupine",
+					"Tiny Pixie"
+				],
+				"deck_name": "Norm / Arc - Phoenix",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Aerial the Battlemage",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Book with Fangs",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Sonic Seraph",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Venom Queen",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Flame Trap",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Tiny Pixie",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "War Genie",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Pepper Spray",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Red Card",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Trap Hole",
+								"r": 3.0,
+								"type": "trap"
+							},
+							{
+								"c": 1.0,
+								"name": "Bait",
+								"r": 3.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Decoy Puppet",
+								"r": 1.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Fujin",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Scythe Shark",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Flame Trap",
+								"r": 3.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Needle Porcupine",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Bomber Fairy",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Armored Rhino",
+								"r": 2.0,
+								"type": "character"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Prayer",
+					"Radar",
+					"Potent Poison"
+				],
+				"traps": [
+					"Flame Trap",
+					"Pepper Spray",
+					"Red Card",
+					"Trap Hole",
+					"Bait",
+					"Decoy Puppet"
+				]
+			},
+			"featured_union": "Burning Phoenix",
+			"id": "norm_phoenix",
+			"label": "Norm / Arc - Phoenix",
+			"tags": []
+		},
+		{
+			"deck": {
+				"characters": [
+					"Yaksa",
+					"Grave Worm",
+					"Vampire Duchess",
+					"Hands in the Attic",
+					"Bat Swarm",
+					"Magenta the Nightbloom",
+					"Poltergeist",
+					"Dark Monk",
+					"Night Whisperer",
+					"Foul Wisp",
+					"Cursed Well"
+				],
+				"deck_name": "Norm / Cha - Ten Arms",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Yaksa",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Hands in the Attic",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Magenta the Nightbloom",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Poltergeist",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Night Whisperer",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Foul Wisp",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Bait",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Cursed Well",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Acid Trap Hole",
+								"r": 1.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Explosive Barrels",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Red Card",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 2,
+								"name": "Grave Worm",
+								"r": 3,
+								"type": "character"
+							},
+							{
+								"c": 2,
+								"name": "Bat Swarm",
+								"r": 4,
+								"type": "character"
+							},
+							{
+								"c": 3,
+								"name": "Vampire Duchess",
+								"r": 3,
+								"type": "character"
+							},
+							{
+								"c": 4,
+								"name": "Dark Monk",
+								"r": 0,
+								"type": "character"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Siege Cannon",
+					"Radar",
+					"War Supply"
+				],
+				"traps": [
+					"Bait",
+					"Acid Trap Hole",
+					"Explosive Barrels",
+					"Red Card"
+				]
+			},
+			"featured_union": "Ten Arms Yaksa",
+			"id": "norm_ten_arms",
+			"label": "Norm / Cha - Ten Arms",
+			"tags": []
+		},
+		{
+			"deck": {
+				"characters": [
+					"Hammer Shark",
+					"Saw Shark",
+					"Spear Shark",
+					"Scythe Shark",
+					"Shotgun Shark",
+					"Canyon Warg",
+					"Stinky Insect",
+					"Swarmcaller",
+					"Goblin Poacher",
+					"Flame Lizard"
+				],
+				"deck_name": "Norm / Nat - Shark",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 1.0,
+								"name": "Hammer Shark",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Saw Shark",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Spear Shark",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Shotgun Shark",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Canyon Warg",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Stinky Insect",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Goblin Poacher",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Flame Lizard",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Explosive Barrels",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Decoy Puppet",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Foul Gas",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Hard Scale",
+								"r": 1.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Hypnosis",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Street Joke",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Scythe Shark",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Swarmcaller",
+								"r": 4.0,
+								"type": "character"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Siege Cannon",
+					"Radar",
+					"Great Diplomacy"
+				],
+				"traps": [
+					"Decoy Puppet",
+					"Explosive Barrels",
+					"Foul Gas",
+					"Hard Scale",
+					"Hypnosis",
+					"Street Joke"
+				]
+			},
+			"featured_union": "Katana Shark",
+			"id": "norm_shark",
+			"label": "Norm / Nat - Shark",
+			"tags": []
+		},
+		{
+			"deck": {
+				"characters": [
+					"Aerial the Battlemage",
+					"Book with Fangs",
+					"Ice Mage",
+					"Mind Flayer",
+					"Pyromancer",
+					"Red Mage",
+					"War Genie",
+					"Angel Gatekeeper",
+					"Archbishop",
+					"Goddess of Virtue",
+					"Pit Lord"
+				],
+				"deck_name": "Hard / Arc - Gaia Arcane",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 2.0,
+								"name": "Archbishop",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Angel Gatekeeper",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Pit Lord",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Goddess of Virtue",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Aerial the Battlemage",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Book with Fangs",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Ice Mage",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Mind Flayer",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Pyromancer",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Red Mage",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "War Genie",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Hypnosis",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Snare Trap",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Spike Trap",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Decoy Puppet",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Acid Trap Hole",
+								"r": 2.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Pepper Spray",
+								"r": 2.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Accident",
+					"Radar",
+					"War Supply"
+				],
+				"traps": [
+					"Hypnosis",
+					"Snare Trap",
+					"Spike Trap",
+					"Decoy Puppet",
+					"Acid Trap Hole",
+					"Pepper Spray"
+				]
+			},
+			"featured_union": "Gaia Turtle",
+			"id": "hard_gaia_arcane",
+			"label": "Hard / Arc - Gaia Arcane",
+			"tags": []
+		},
+		{
+			"deck": {
+				"characters": [
+					"Ostrich Cannon",
+					"Death Cobra",
+					"Armored Bee",
+					"Armored Monkey",
+					"Armored Rhino",
+					"Lazy Troll",
+					"Nuki the Tanuki",
+					"White Tiger",
+					"Needle Porcupine",
+					"Mad Raccoon",
+					"Flame Lizard",
+					"Death Cobra"
+				],
+				"deck_name": "Hard / Nat - Barros",
+				"formations": [
+					{
+						"name": "Default Formation",
+						"placements": [
+							{
+								"c": 1.0,
+								"name": "Ostrich Cannon",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Needle Porcupine",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 1.0,
+								"name": "Death Cobra",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Armored Rhino",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 3.0,
+								"name": "Armored Bee",
+								"r": 1.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Armored Monkey",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Lazy Troll",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Nuki the Tanuki",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "White Tiger",
+								"r": 4.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Mad Raccoon",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 0.0,
+								"name": "Flame Lizard",
+								"r": 0.0,
+								"type": "character"
+							},
+							{
+								"c": 4.0,
+								"name": "Defensive Pheromone",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 0.0,
+								"name": "Decoy Puppet",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 4.0,
+								"name": "Explosive Barrels",
+								"r": 1.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Red Card",
+								"r": 0.0,
+								"type": "trap"
+							},
+							{
+								"c": 3.0,
+								"name": "Street Joke",
+								"r": 4.0,
+								"type": "trap"
+							},
+							{
+								"c": 1.0,
+								"name": "Cursed Reflection",
+								"r": 2.0,
+								"type": "trap"
+							}
+						]
+					}
+				],
+				"techs": [
+					"Tease",
+					"Spy",
+					"Accident"
+				],
+				"traps": [
+					"Defensive Pheromone",
+					"Decoy Puppet",
+					"Red Card",
+					"Explosive Barrels",
+					"Street Joke",
+					"Cursed Reflection"
+				]
+			},
+			"featured_union": "Barros the Colossal",
+			"id": "hard_barros",
+			"label": "Hard / Nat - Barros",
+			"tags": []
+		}
+	]
+}

@@ -249,6 +249,7 @@ func admin_command(raw: String) -> String:
 				+ "  unlock_deckbuilding\n"
 				+ "  lock_deckbuilding\n"
 				+ "  manage_starting_deck\n"
+				+ "  ai_deck_vault\n"
 				+ "  player_vs_ai\n"
 				+ "  hot_seat\n"
 			+ "  exploration_editor\n"
@@ -1238,6 +1239,16 @@ func admin_command(raw: String) -> String:
 			mgr.name = "StartingDeckManagerOverlay"
 			scene.add_child(mgr)
 			return "Starting Deck Manager opened."
+
+		"ai_deck_vault":
+			var vault_scene: Node = get_tree().current_scene
+			if vault_scene.get_node_or_null("AIDeckVaultManagerOverlay") != null:
+				return "AI Deck Vault is already open."
+			_dismiss_admin_console(vault_scene)
+			var vault_mgr: Node = load("res://scripts/AIDeckVaultManager.gd").new()
+			vault_mgr.name = "AIDeckVaultManagerOverlay"
+			vault_scene.add_child(vault_mgr)
+			return "AI Deck Vault opened."
 
 		# ── Quick-start match modes ─────────────────────────────
 		"player_vs_ai":

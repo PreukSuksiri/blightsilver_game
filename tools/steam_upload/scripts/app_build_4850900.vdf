@@ -1,0 +1,11 @@
+"AppBuild"
+{
+	"AppID" "4850900"
+	"Desc" "Blightsilver demo — Windows"
+	"ContentRoot" "ABSOLUTE_PATH_SET_BY_upload_demo_windows.sh"
+	"BuildOutput" "../output"
+	"Depots"
+	{
+		"4850901" "depot_build_4850901.vdf"
+	}
+}

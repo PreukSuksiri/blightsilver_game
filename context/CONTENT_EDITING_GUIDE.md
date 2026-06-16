@@ -512,6 +512,36 @@ Fields in order:
 DIVINE   CHAOS   NATURE   ARCANE   COSMIC   BIO   ANIMA
 ```
 
+### Field scope (`ability_params.field_scope`)
+
+When an ability counts or checks cards **on the field**, interpret the card text like this:
+
+| Card text wording | `field_scope` | Grid scanned |
+|---|---|---|
+| **"on the field"** with **no** possessive (no *its side*, *your field*, *foe's field*, *owner's field*, *their own field*, etc.) | `"all"` | **Both players** (P0 + P1) |
+| **"its side"**, **"your field"**, **"their own field"**, **"on your side"**, etc. | `"owner"` (default) | **Rule owner's grid only** |
+
+Implementation: `BattleResolver._field_players()` — used by field-count abilities (`BOOST_PER_*_ON_FIELD`, `DEF_BONUS_IF_AFFINITY_ON_FIELD`, `ATK_BONUS_IF_AFFINITY_ON_FIELD`, etc.).
+
+**Examples (current data):**
+
+```gdscript
+# Joan — "exposed Divine unit is on the field"
+{"affinity": CharacterData.Affinity.DIVINE, "def": 35, "field_scope": "all"}
+
+# Hammer Shark — "+10 ATK per shark card on the field"
+{"card_name_contains": "shark", "atk_bonus": 10, "def_bonus": 0, "field_scope": "all"}
+
+# Death Knight — "+5 ATK per Chaos unit on their side"  (no field_scope → owner)
+{"atk_bonus": 5, "def_bonus": 0, "affinity": CharacterData.Affinity.CHAOS}
+
+# Balthier — Divine on the field, bonus capped at 100 per stat
+{"atk_bonus": 50, "def_bonus": 50, "affinity": CharacterData.Affinity.DIVINE,
+ "field_scope": "all", "bonus_cap": 100}
+```
+
+Omit `field_scope` for owner-only abilities. Only add `"field_scope": "all"` when the published ability text uses bare **"on the field"**.
+
 **Valid ability types** (see `resources/CharacterData.gd` for the full list):
 ```
 NONE
@@ -698,7 +728,7 @@ Other matchups and grammar:
 #### Game rules reflected in text
 
 - **Flags on face-down units:** allowed; applying the flag **permanently Exposes** the unit (not a peek).
-- **Plant-29:** `Start of turn: Choose 1 unit, flip a coin. Heads: Venom flag on it. Tails: Mutagen flag on it.` (units only; owner chooses before coin).
+- **Plant-29:** `Start of owner's turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.`
 - **Death Cobra:** `End of turn: Choose 1 foe unit. Put Venom flag on it.` (includes face-down; Exposes on apply).
 
 #### Union cards

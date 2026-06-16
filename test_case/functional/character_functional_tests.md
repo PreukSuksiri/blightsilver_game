@@ -3,7 +3,7 @@
 Derived from Godot `CardDatabase.gd` / `UnionDatabase.gd` implementation.
 Each case references the exact handler function and enum type.
 
-**Cards:** 148
+**Cards:** 151
 
 ---
 
@@ -12,7 +12,7 @@ Type: Character
 Stats: ATK=10 DEF=20 Cost=170 Affinity=NATURE
 AbilityType: ATK_BONUS_IF_AFFINITY_ON_FIELD
 ability_params: {'affinity': 'NATURE', 'bonus': 10}
-Description: +10 ATK if there is another face-up Nature card
+Description: +10 ATK if there is another exposed Nature card
 Test Cases:
 
 Test Case ID: TC-FUNC-Armored-Monkey-001
@@ -464,7 +464,7 @@ Type: Character
 Stats: ATK=40 DEF=35 Cost=800 Affinity=ANIMA
 AbilityType: ATK_BONUS_VS_UNION
 ability_params: {'bonus': 50}
-Description: This card gain +50 ATK when attacking Union card
+Description: This card gains +50 ATK when attacking Union card
 Test Cases:
 
 Test Case ID: TC-FUNC-Kiyoko-the-Death-Whisper-001
@@ -516,7 +516,7 @@ Type: Character
 Stats: ATK=65 DEF=25 Cost=720 Affinity=CHAOS
 AbilityType: ATK_BOOST_VS_REVEALED
 ability_params: {'bonus': 20}
-Description: +20 ATK if it attack an exposed card
+Description: +20 ATK if it attacks an exposed card.
 Test Cases:
 
 Test Case ID: TC-FUNC-Void-Stalker-001
@@ -542,7 +542,7 @@ Type: Character
 Stats: ATK=45 DEF=45 Cost=750 Affinity=COSMIC
 AbilityType: ATK_DEF_BONUS_IF_OWN_REVEALED_GTE
 ability_params: {'min_revealed': 10, 'atk': 30, 'def': 30}
-Description: +30 ATK and DEF if 10 or more cells on your side is revealed
+Description: +30 ATK&DEF if 10 or more cells on its side are revealed
 Test Cases:
 
 Test Case ID: TC-FUNC-Slim-Gray-Trooper-001
@@ -568,7 +568,7 @@ Type: Character
 Stats: ATK=50 DEF=45 Cost=750 Affinity=ARCANE
 AbilityType: ATK_DEF_BONUS_IF_UNION_ON_FIELD
 ability_params: {'atk': 20, 'def': 20}
-Description: +20 ATK&DEF if there is Union card on your field
+Description: +20 ATK&DEF if there is Union card on its side
 Test Cases:
 
 Test Case ID: TC-FUNC-Aerial-the-Battlemage-001
@@ -750,12 +750,40 @@ Expected Result:
 
 ---
 
+Card Name: Vicious Lizard
+Type: Character
+Stats: ATK=40 DEF=25 Cost=900 Affinity=NATURE
+AbilityType: ATK_DEF_BONUS_VS_VENOM
+ability_params: {'atk': 60, 'def': 60, 'self_venom_atk': 40}
+Description: +60 ATK&DEF vs foe with Venom Flag. +40 ATK if itself has Venom Flag
+Test Cases:
+
+Test Case ID: TC-FUNC-Vicious-Lizard-001
+Description:
+Vicious Lizard: +60 ATK&DEF vs venom foe; +40 ATK if self has venom
+Implementation Reference:
+- BattleResolver._get_effective_atk/_get_effective_def
+- AbilityType.ATK_DEF_BONUS_VS_VENOM
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Opponent has venom flag and/or self has venom flag.
+Steps:
+Step 1: Resolve battle; read effective stats.
+Expected Result:
+- Attacking venom foe: +60 ATK.
+- Defending vs venom attacker: +60 DEF.
+- Self venom flag: +40 ATK when attacking.
+
+---
+
 Card Name: Moon Tribe Marksman
 Type: Character
 Stats: ATK=35 DEF=25 Cost=300 Affinity=COSMIC
 AbilityType: ATK_PENALTY_IF_NO_NAME_ALLY
 ability_params: {'name_contains': 'Moon', 'penalty': 10}
-Description: If you do not control another Moon card, -10 ATK
+Description: If no other exposed ally Moon card, -10 ATK
 Test Cases:
 
 Test Case ID: TC-FUNC-Moon-Tribe-Marksman-001
@@ -781,7 +809,7 @@ Type: Character
 Stats: ATK=40 DEF=20 Cost=350 Affinity=DIVINE
 AbilityType: ATK_PENALTY_WHEN_EXPOSED
 ability_params: {'penalty': 20}
-Description: At the end of the turn that it's been exposed, -20 ATK
+Description: After it becomes exposed, -20 ATK at that turn’s end.
 Test Cases:
 
 Test Case ID: TC-FUNC-Sniping-Fairy-001
@@ -886,7 +914,7 @@ Type: Character
 Stats: ATK=80 DEF=80 Cost=1150 Affinity=ANIMA
 AbilityType: BOOST_PER_ANIMA_ON_FIELD
 ability_params: {'atk_bonus': 20, 'def_bonus': 20}
-Description: +20 ATK&DEF for each other face-up Anima card on their own field
+Description: +20 ATK&DEF for each other exposed Anima card on its side
 Test Cases:
 
 Test Case ID: TC-FUNC-Leorudus-the-Warlord-001
@@ -912,7 +940,7 @@ Type: Character
 Stats: ATK=65 DEF=65 Cost=850 Affinity=CHAOS
 AbilityType: BOOST_PER_TYPED_CARD_ON_FIELD
 ability_params: {'atk_bonus': 5, 'def_bonus': 0, 'affinity': 'CHAOS'}
-Description: +5 ATK per Chaos card on your side of the field
+Description: +5 ATK per Chaos unit on their side
 Test Cases:
 
 Test Case ID: TC-FUNC-Death-Knight-001
@@ -972,7 +1000,7 @@ Type: Character
 Stats: ATK=30 DEF=30 Cost=900 Affinity=CHAOS
 AbilityType: BOOST_PER_TYPED_CARD_ON_FIELD
 ability_params: {'atk_bonus': 30, 'def_bonus': 30, 'card_name_contains': 'wisp'}
-Description: +30 ATK&DEF for each face-up ‘wisp’ card on their own field
+Description: +30 ATK&DEF for each exposed ‘wisp’ card on its side
 Test Cases:
 
 Test Case ID: TC-FUNC-Night-Whisperer-001
@@ -1122,7 +1150,7 @@ Type: Character
 Stats: ATK=45 DEF=45 Cost=950 Affinity=NATURE
 AbilityType: BOOST_PER_TYPED_CARD_ON_FIELD
 ability_params: {'atk_bonus': 15, 'def_bonus': 15, 'affinity': 'NATURE'}
-Description: +15 ATK&DEF for each other face-up Nature card on your field
+Description: +15 ATK&DEF for each other exposed Nature card on its side
 Test Cases:
 
 Test Case ID: TC-FUNC-Swarmcaller-001
@@ -1207,7 +1235,7 @@ Type: Character
 Stats: ATK=90 DEF=70 Cost=1100 Affinity=ARCANE
 AbilityType: COIN_FLIP_ATK_DEF_BOOST
 ability_params: {'bonus': 30}
-Description: In reckoning, flip a coin, if head, +30 ATK and DEF until this turn’s end
+Description: In Reckoning, flip a coin. Head: +30 ATK&DEF until this turn’s end
 Test Cases:
 
 Test Case ID: TC-FUNC-Grand-Wizard-001
@@ -1224,7 +1252,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: In reckoning, flip a coin, if head, +30 ATK and DEF until this turn’s end
+- Behavior matches CardDatabase description: In Reckoning, flip a coin. Head: +30 ATK&DEF until this turn’s end
 
 ---
 
@@ -1233,7 +1261,7 @@ Type: Character
 Stats: ATK=120 DEF=60 Cost=1000 Affinity=NATURE
 AbilityType: COIN_FLIP_CANCEL_ATTACK
 ability_params: {}
-Description: If this card performs an attack, flip a coin, if tail, it stops attacking.
+Description: If this card performs an attack, flip a coin. Tail: it stops attacking.
 Test Cases:
 
 Test Case ID: TC-FUNC-Lazy-Troll-001
@@ -1259,7 +1287,7 @@ Type: Character
 Stats: ATK=85 DEF=60 Cost=1350 Affinity=COSMIC
 AbilityType: COIN_FLIP_EXTRA_ATTACK
 ability_params: {'max_attacks': 3}
-Description: After successfully attack, flip a coin, if head, it can attack again. Can do up to 3 times.
+Description: After a successful attack, flip 2 coins. It can attack again equal to number of head.
 Test Cases:
 
 Test Case ID: TC-FUNC-Horn-Face-001
@@ -1311,7 +1339,7 @@ Type: Character
 Stats: ATK=10 DEF=10 Cost=100 Affinity=NATURE
 AbilityType: COIN_FLIP_SWAP_POSITION
 ability_params: {}
-Description: Before Reckoning, flip a coin. If head, swap position with any of your card
+Description: Before Reckoning, flip a coin. If head, swap position with any of own unit. Repeat Reckoning.
 Test Cases:
 
 Test Case ID: TC-FUNC-Nuki-the-Tanuki-001
@@ -1337,7 +1365,7 @@ Type: Character
 Stats: ATK=20 DEF=0 Cost=800 Affinity=BIO
 AbilityType: COPY_ALLY_STATS_ON_DESTROY
 ability_params: {}
-Description: When your unit card is destroy, you can copy ATK, DEF, Crystal Cost of the destroyed card to this card instead. Can be triggered face-down.
+Description: After it is destroyed in Reckoning, revive 1 owned unit, but ability becomes None. Repeat the Reckoning.
 Test Cases:
 
 Test Case ID: TC-FUNC-Ectoplasm-001
@@ -1354,7 +1382,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: When your unit card is destroy, you can copy ATK, DEF, Crystal Cost of the destroyed card to this card instead. Can be triggered face-down.
+- Behavior matches CardDatabase description: After it is destroyed in Reckoning, revive 1 owned unit, but ability becomes None. Repeat the Reckoning.
 
 ---
 
@@ -1363,7 +1391,7 @@ Type: Character
 Stats: ATK=10 DEF=10 Cost=200 Affinity=COSMIC
 AbilityType: CRYSTAL_GAIN_ON_DEAD_END_ATTACK
 ability_params: {'amount': 20}
-Description: Gain 20 crystals upon hitting dead end card
+Description: Gain 20 Crystals upon hitting Dead End
 Test Cases:
 
 Test Case ID: TC-FUNC-Miner-Probe-001
@@ -1415,7 +1443,7 @@ Type: Character
 Stats: ATK=30 DEF=20 Cost=300 Affinity=COSMIC
 AbilityType: CRYSTAL_GAIN_ON_OPP_REVEAL
 ability_params: {'amount': 40}
-Description: Each time foe’s cell got revealed: gain 40 crystals.
+Description: Each time foe’s cell got revealed: gain 40 Crystals.
 Test Cases:
 
 Test Case ID: TC-FUNC-Parom-the-Smuggler-001
@@ -1441,7 +1469,7 @@ Type: Character
 Stats: ATK=0 DEF=25 Cost=700 Affinity=DIVINE
 AbilityType: CRYSTAL_RECOVER_ON_BIG_LOSS
 ability_params: {'threshold': 500, 'amount': 300}
-Description: If you lose 500 or more crystals, you recover 300 crystals
+Description: If the owner loses 500 or more Crystals, they recover 300 Crystals
 Test Cases:
 
 Test Case ID: TC-FUNC-Melissa-the-Healer-001
@@ -1467,7 +1495,7 @@ Type: Character
 Stats: ATK=30 DEF=110 Cost=800 Affinity=DIVINE
 AbilityType: DEFEND_DRAIN_ATTACKER
 ability_params: {'drain_amount': 300}
-Description: Attacking player loses 300 Crystals
+Description: In Reckoning if it defends, attacker loses 300 Crystals
 Test Cases:
 
 Test Case ID: TC-FUNC-Aether-Warden-001
@@ -1544,13 +1572,13 @@ Card Name: Joan the Faithful Warrior
 Type: Character
 Stats: ATK=25 DEF=5 Cost=280 Affinity=DIVINE
 AbilityType: DEF_BONUS_IF_AFFINITY_ON_FIELD
-ability_params: {'affinity': 'DIVINE', 'def': 30}
-Description: If at least 1 Divine card is on the field, this card gain 30 DEF
+ability_params: {'affinity': 'DIVINE', 'def': 35}
+Description: If at least 1 exposed Divine unit is on the field, this card gains 35 DEF
 Test Cases:
 
 Test Case ID: TC-FUNC-Joan-the-Faithful-Warrior-001
 Description:
-Joan the Faithful Warrior: +30 DEF when face-up DIVINE on own field
+Joan the Faithful Warrior: +35 DEF when face-up DIVINE on own field
 Implementation Reference:
 - BattleResolver._get_effective_def()
 - AbilityType.DEF_BONUS_IF_AFFINITY_ON_FIELD
@@ -1562,7 +1590,7 @@ Preconditions:
 Steps:
 Step 1: Resolve defense.
 Expected Result:
-- defender_def_used == 35.
+- defender_def_used == 40.
 
 ---
 
@@ -1597,7 +1625,7 @@ Type: Character
 Stats: ATK=45 DEF=40 Cost=500 Affinity=ANIMA
 AbilityType: DEF_ZERO_WHEN_EXPOSED
 ability_params: {}
-Description: At the end of the turn that it's been exposed, its defense becomes 0
+Description: At the end of the turn that it’s been exposed, its defense becomes 0
 Test Cases:
 
 Test Case ID: TC-FUNC-Mafia-Associates-001
@@ -1624,8 +1652,8 @@ Card Name: Pit Lord
 Type: Character
 Stats: ATK=120 DEF=100 Cost=1250 Affinity=CHAOS
 AbilityType: DESTROYED_IF_BATTLES_DIVINE
-ability_params: {}
-Description: This card is destroyed if battle with Divine Unit. After this card attacked, halve its ATK&DEF permanently
+ability_params: {'also_halve_after_attack': True}
+Description: Destroy this card after Reckoning with Divine Unit. After this card attacked, halve its ATK&DEF permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Pit-Lord-001
@@ -1654,7 +1682,7 @@ Type: Character
 Stats: ATK=80 DEF=100 Cost=1400 Affinity=DIVINE
 AbilityType: DESTROY_IF_OPPONENT_AFFINITY
 ability_params: {'affinity': 'CHAOS'}
-Description: In Reckoning, destroy Chaos
+Description: In Reckoning, destroy Chaos before any calculation
 Test Cases:
 
 Test Case ID: TC-FUNC-Goddess-of-Virtue-001
@@ -1684,7 +1712,7 @@ Type: Character
 Stats: ATK=25 DEF=25 Cost=200 Affinity=COSMIC
 AbilityType: DESTROY_SELF_AT_END_OF_EXPOSE_TURN
 ability_params: {}
-Description: Once face-up, destroy it and the end of this turn
+Description: Once exposed, destroy it and the end of this turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Striker-Comet-001
@@ -1735,8 +1763,8 @@ Card Name: Immortal Vampire
 Type: Character
 Stats: ATK=30 DEF=80 Cost=1200 Affinity=CHAOS
 AbilityType: DESTROY_SELF_VS_DIVINE_BOTH
-ability_params: {}
-Description: +50 ATK for each other face-up Chaos card on their own field. In Reckoning with Divine, destroy this card.
+ability_params: {'atk_bonus': 50, 'def_bonus': 0, 'affinity': 'CHAOS'}
+Description: +50 ATK for each other exposed Chaos card on its side. In Reckoning with Divine, destroy this card.
 Test Cases:
 
 Test Case ID: TC-FUNC-Immortal-Vampire-001
@@ -1788,7 +1816,7 @@ Type: Character
 Stats: ATK=50 DEF=30 Cost=600 Affinity=ARCANE
 AbilityType: DOUBLE_TECH_EFFECT
 ability_params: {}
-Description: Double effect of Tech card apply to this unit
+Description: Double effect of Tech card applied to this unit
 Test Cases:
 
 Test Case ID: TC-FUNC-Mountain-Sage-001
@@ -1805,7 +1833,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: Double effect of Tech card apply to this unit
+- Behavior matches CardDatabase description: Double effect of Tech card applied to this unit
 
 ---
 
@@ -1814,7 +1842,7 @@ Type: Character
 Stats: ATK=45 DEF=50 Cost=550 Affinity=DIVINE
 AbilityType: EXTRA_ATTACK_ON_DEAD_END
 ability_params: {}
-Description: Once per turn, if it attacked dead end card, it can attack again
+Description: Once per turn, if it attacked Dead End, it can attack again
 Test Cases:
 
 Test Case ID: TC-FUNC-Sonic-Seraph-001
@@ -1858,6 +1886,33 @@ Steps:
 Step 1: Attack with Echo Bringer.
 Expected Result:
 - attacks_remaining += 1 once per turn; flag extra_vs_revealed_used.
+
+---
+
+Card Name: Venom Queen
+Type: Character
+Stats: ATK=45 DEF=75 Cost=550 Affinity=NATURE
+AbilityType: FIELD_DEBUFF_ALL_VENOM_CARDS
+ability_params: {'atk': 15, 'def': 15}
+Description: While this card remains exposed, -15 ATK&DEF to all cards with Venom Flag
+Test Cases:
+
+Test Case ID: TC-FUNC-Venom-Queen-001
+Description:
+Venom Queen: -15 ATK&DEF aura on all venom-flagged cards while exposed
+Implementation Reference:
+- BattleResolver._apply_venom_queen_global_debuff
+- AbilityType.FIELD_DEBUFF_ALL_VENOM_CARDS
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Venom Queen face-up.
+- Another card has venom flag.
+Steps:
+Step 1: Recalculate field bonuses.
+Expected Result:
+- Venom-flagged cards get field_aura ATK/DEF -= 15/15.
 
 ---
 
@@ -2084,7 +2139,7 @@ Type: Character
 Stats: ATK=15 DEF=15 Cost=200 Affinity=CHAOS
 AbilityType: INTERCEPT_ALLY_ATTACK
 ability_params: {'affinity': 'CHAOS'}
-Description: If a Chaos card is being attacked. You can swap this card’s position with that card
+Description: If a Chaos card is being attacked, they can swap this card’s position with that card. Usable face-down.
 Test Cases:
 
 Test Case ID: TC-FUNC-Bat-Swarm-001
@@ -2111,7 +2166,7 @@ Type: Character
 Stats: ATK=10 DEF=10 Cost=400 Affinity=NATURE
 AbilityType: LOCK_ATTACKER_ON_DEFEND
 ability_params: {}
-Description: If this card defended, the attacker must wait until foe’s turn ends
+Description: If this card defends, the attacking unit cannot attack until foe’s next turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Stinky-Insect-001
@@ -2137,7 +2192,7 @@ Type: Character
 Stats: ATK=20 DEF=5 Cost=150 Affinity=CHAOS
 AbilityType: LOCK_ATTACKER_ON_DESTROYED
 ability_params: {}
-Description: After Reckoning: foe card must wait until foe’s turn ends
+Description: After Reckoning: that foe’s unit must wait until foe’s turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Skeleton-Grappler-001
@@ -2162,7 +2217,7 @@ Type: Character
 Stats: ATK=60 DEF=30 Cost=800 Affinity=NATURE
 AbilityType: LOCK_SELF_AFTER_ATTACK
 ability_params: {}
-Description: After performed an attack, this card cannot attack during your next turn.
+Description: After performing an attack, this card cannot attack during their next turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Ostrich-Cannon-001
@@ -2188,7 +2243,7 @@ Type: Character
 Stats: ATK=150 DEF=95 Cost=1500 Affinity=ANIMA
 AbilityType: LOCK_SELF_AFTER_ATTACK
 ability_params: {}
-Description: After successfully attack, this card cannot attack on the next of your turn.
+Description: After a successful attack, this card cannot attack on the next of owner's turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Railgun-Tank-001
@@ -2214,7 +2269,7 @@ Type: Character
 Stats: ATK=30 DEF=45 Cost=450 Affinity=ANIMA
 AbilityType: LOCK_TARGET_ON_ATTACK
 ability_params: {}
-Description: If this card attacks a unit card, the target is unable to attack until the end of their turn.
+Description: If this card attacks a unit card, the target is unable to attack until the end of owner's turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Leopard-Jailer-001
@@ -2240,7 +2295,7 @@ Type: Character
 Stats: ATK=15 DEF=0 Cost=200 Affinity=DIVINE
 AbilityType: MULTI_ATTACK_VS_NON_CHARACTER
 ability_params: {'max_attacks': 3, 'bonus_attacks': 1}
-Description: Once per turn, if attacked non-unit card, this card : can attack 1 more times
+Description: Once, after attacked a non-unit cell, this card can attack 1 more time.
 Test Cases:
 
 Test Case ID: TC-FUNC-Golden-Senju-001
@@ -2320,7 +2375,7 @@ Type: Character
 Stats: ATK=20 DEF=85 Cost=800 Affinity=BIO
 AbilityType: MUTAGEN_DESTROY_ATTACKER
 ability_params: {}
-Description: With Mutagen Flag: you can destroy both units in Reckoning. No cost is paid.
+Description: With Mutagen Flag: owner can destroy both units in Reckoning. Both players pay no cost.
 Test Cases:
 
 Test Case ID: TC-FUNC-Lab-Bloater-001
@@ -2376,7 +2431,7 @@ Type: Character
 Stats: ATK=80 DEF=45 Cost=1000 Affinity=COSMIC
 AbilityType: NEGATE_ZERO_COST_TRAPS_BOTH
 ability_params: {}
-Description: Negate all zero cost trap on both player’s field
+Description: Negate all zero cost trap on both players’s field
 Test Cases:
 
 Test Case ID: TC-FUNC-Electrogazer-001
@@ -3317,7 +3372,7 @@ Type: Character
 Stats: ATK=20 DEF=5 Cost=150 Affinity=CHAOS
 AbilityType: ONE_USE_EXTRA_ATTACK_ON_DEAD_END
 ability_params: {}
-Description: Once, if hitting dead end: attack again
+Description: Once, if hitting Dead End: attack again
 Test Cases:
 
 Test Case ID: TC-FUNC-Skeleton-Scout-001
@@ -3343,7 +3398,7 @@ Type: Character
 Stats: ATK=30 DEF=15 Cost=500 Affinity=DIVINE
 AbilityType: ONE_USE_EXTRA_ATTACK_ON_KILL
 ability_params: {}
-Description: Once, if destroyed a card, this card can attack 1 more time
+Description: Once, after destroyed a unit, this card can attack 1 more time.
 Test Cases:
 
 Test Case ID: TC-FUNC-Bomber-Fairy-001
@@ -3449,7 +3504,7 @@ Type: Character
 Stats: ATK=15 DEF=30 Cost=250 Affinity=CHAOS
 AbilityType: OPPONENT_EXTRA_CRYSTAL_LOSS
 ability_params: {'amount': 20}
-Description: Each time foe lose crystal: foe lose 20 more crystals
+Description: Each time foe loses Crystal: foe loses 20 more Crystals
 Test Cases:
 
 Test Case ID: TC-FUNC-Grave-Worm-001
@@ -3475,7 +3530,7 @@ Type: Character
 Stats: ATK=25 DEF=15 Cost=300 Affinity=ANIMA
 AbilityType: OPTIONAL_CRYSTAL_PAY_ATK_BOOST
 ability_params: {'cost': 100, 'atk': 10}
-Description: In Reckoning, you can pay 100 crystal for +10 ATK bonus
+Description: In Reckoning, the owner can pay 100 Crystal for +10 ATK bonus
 Test Cases:
 
 Test Case ID: TC-FUNC-Hairpin-Assassin-001
@@ -3502,7 +3557,7 @@ Type: Character
 Stats: ATK=35 DEF=45 Cost=400 Affinity=ANIMA
 AbilityType: PERM_ATK_BOOST_ON_KILL_CAPPED
 ability_params: {'atk': 10, 'max_bonus': 30}
-Description: +10 ATK permanently if it destroyed a unit. This bonus do not exceed maximum of 30
+Description: +10 ATK permanently if it destroyed a unit. This bonus does not exceed 30
 Test Cases:
 
 Test Case ID: TC-FUNC-Champion-of-the-Valley-001
@@ -3519,7 +3574,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: +10 ATK permanently if it destroyed a unit. This bonus do not exceed maximum of 30
+- Behavior matches CardDatabase description: +10 ATK permanently if it destroyed a unit. This bonus does not exceed 30
 
 ---
 
@@ -3528,7 +3583,7 @@ Type: Character
 Stats: ATK=20 DEF=50 Cost=500 Affinity=CHAOS
 AbilityType: PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN
 ability_params: {'atk': 5}
-Description: After reckoning: +5 ATK at foe’s turn ends
+Description: After Reckoning: +5 ATK at the end of foe’s turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Dark-Blob-001
@@ -3554,7 +3609,7 @@ Type: Character
 Stats: ATK=0 DEF=25 Cost=300 Affinity=CHAOS
 AbilityType: PERM_ATK_BOOST_WHEN_EXPOSED
 ability_params: {'amount': 15}
-Description: At the end of the turn that it's been exposed, +15 ATK permanently
+Description: At the end of the turn that it’s been exposed, +15 ATK
 Test Cases:
 
 Test Case ID: TC-FUNC-Cursed-Well-001
@@ -3571,7 +3626,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: At the end of the turn that it's been exposed, +15 ATK permanently
+- Behavior matches CardDatabase description: At the end of the turn that it’s been exposed, +15 ATK
 
 ---
 
@@ -3606,7 +3661,7 @@ Type: Character
 Stats: ATK=50 DEF=30 Cost=450 Affinity=BIO
 AbilityType: PERM_ATK_LOSS_PER_OWN_TURN
 ability_params: {'amount': 10}
-Description: Without Mutagen Flag : -10 ATK permanently at your turn’s end
+Description: Without Mutagen Flag : -10 ATK permanently at the end of owner's turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Rotten-Shrieker-001
@@ -3632,7 +3687,7 @@ Type: Character
 Stats: ATK=80 DEF=40 Cost=850 Affinity=COSMIC
 AbilityType: PERM_BOOST_END_OF_TURN
 ability_params: {'atk': 10, 'def': 10}
-Description: Permanently increase this card's ATK and DEF by 10 at the end of each of your turn
+Description: Permanently increase this card's ATK&DEF by 10 at the end of each of owner's turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Hyperspeed-Saucer-001
@@ -3727,7 +3782,7 @@ Type: Character
 Stats: ATK=70 DEF=90 Cost=1200 Affinity=DIVINE
 AbilityType: REDIRECT_DESTRUCTION_TO_ALLY
 ability_params: {'affinity': 'DIVINE'}
-Description: If this card would be destroyed, you can destroy 1 other Divine card on their own field instead
+Description: If this card would be destroyed, the owner can destroy 1 other Divine card on their side instead
 Test Cases:
 
 Test Case ID: TC-FUNC-Archbishop-001
@@ -3781,7 +3836,7 @@ Type: Character
 Stats: ATK=40 DEF=25 Cost=400 Affinity=ANIMA
 AbilityType: REVEAL_ON_ANY_ATTACK
 ability_params: {}
-Description: After this card performs an attack, reveal 1 foe’s cell (even if it is destroyed)
+Description: After performed attack : reveal 1 foe’s cell
 Test Cases:
 
 Test Case ID: TC-FUNC-Shepherd-Detective-001
@@ -3807,7 +3862,7 @@ Type: Character
 Stats: ATK=15 DEF=20 Cost=200 Affinity=COSMIC
 AbilityType: REVEAL_ON_DEAD_END_ATTACK
 ability_params: {}
-Description: After hitting a dead end : reveal 1 foe’s cell
+Description: After hitting a Dead End : reveal 1 foe’s cell
 Test Cases:
 
 Test Case ID: TC-FUNC-Moon-Rover-001
@@ -3965,7 +4020,7 @@ Type: Character
 Stats: ATK=10 DEF=30 Cost=200 Affinity=BIO
 AbilityType: SWAP_ATK_DEF_PER_OPP_TURN
 ability_params: {}
-Description: While this card is face-up, at foe’s turn ends, swap its ATK&DEF
+Description: While this card is exposed, at foe’s turn end, swap its ATK&DEF
 Test Cases:
 
 Test Case ID: TC-FUNC-Vile-Creeper-001
@@ -3991,7 +4046,7 @@ Type: Character
 Stats: ATK=0 DEF=70 Cost=700 Affinity=CHAOS
 AbilityType: SWAP_ATK_DEF_WHEN_ATTACKING
 ability_params: {}
-Description: If this card performs an attack, switch this card’s ATK and DEF
+Description: If this card performs an attack, switch this card’s ATK&DEF
 Test Cases:
 
 Test Case ID: TC-FUNC-Poltergeist-001
@@ -4069,7 +4124,7 @@ Type: Character
 Stats: ATK=15 DEF=15 Cost=180 Affinity=NATURE
 AbilityType: TEMP_BOOST_ON_OPP_TECH
 ability_params: {'atk': 10, 'def': 10}
-Description: Whenever foe’s tech card is activated, +10 ATK&DEF permanently
+Description: Whenever foe’s tech card is activated, +10 ATK&DEF permanently. Usable face-down
 Test Cases:
 
 Test Case ID: TC-FUNC-Magical-Butterfly-001
@@ -4095,12 +4150,12 @@ Type: Character
 Stats: ATK=45 DEF=85 Cost=900 Affinity=BIO
 AbilityType: TURN_START_COIN_FLIP_FLAG
 ability_params: {}
-Description: Start of your turn: Flip a coin. Head: put Venom Flag any face-up card. Tail: put Mutagen Flag on any card (even face-down).
+Description: Start of owner's turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.
 Test Cases:
 
 Test Case ID: TC-FUNC-Plant-29-001
 Description:
-Plant-29: turn start coin → venom on any face-up card or mutagen on any card
+Plant-29: turn start coin → venom on 1 exposed ally/foe or mutagen on own unit
 Implementation Reference:
 - TurnManager turn start ability
 - AbilityType.TURN_START_COIN_FLIP_FLAG
@@ -4111,10 +4166,10 @@ Preconditions:
 - Plant-29 on field at turn start.
 - Board has valid flag targets.
 Steps:
-Step 1: Start turn; resolve coin flip; select target per result.
+Step 1: Start turn; flip coin; select target per result.
 Expected Result:
-- Heads: venom flag on chosen face-up card.
-- Tails: mutagen on chosen card (characters get has_mutagen_flag).
+- Heads: venom flag on 1 exposed ally or foe card.
+- Tails: mutagen on any of your unit (characters get has_mutagen_flag).
 
 ---
 
@@ -4123,7 +4178,7 @@ Type: Character
 Stats: ATK=85 DEF=50 Cost=900 Affinity=NATURE
 AbilityType: VENOM_FLAG_END_OF_TURN
 ability_params: {}
-Description: At the end of this turn, select 1 face-up foe’s card. Put 1 venom flag on it.
+Description: Owner’s turn end: select 1 exposed card. Put 1 venom flag on it. In Reckoning, foe with Venom Flag get -50 DEF
 Test Cases:
 
 Test Case ID: TC-FUNC-Death-Cobra-001
@@ -4141,5 +4196,33 @@ Steps:
 Step 1: End own turn.
 Expected Result:
 - Random opponent face-up character gets "venom" in flags array.
+
+---
+
+Card Name: Venom Toad
+Type: Character
+Stats: ATK=15 DEF=20 Cost=400 Affinity=NATURE
+AbilityType: VENOM_TOAD_RECKONING
+ability_params: {}
+Description: After Reckoning, add venom flag to the foe’s unit. In Reckoning, destroy foe’s unit with venom flag
+Test Cases:
+
+Test Case ID: TC-FUNC-Venom-Toad-001
+Description:
+Venom Toad: destroy venom foe in reckoning; venom on foe after battle
+Implementation Reference:
+- BattleResolver._apply_venom_toad_reckoning_destroy
+- TurnManager._apply_post_battle_effects VENOM_TOAD_RECKONING
+- AbilityType.VENOM_TOAD_RECKONING
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Venom Toad in battle vs character.
+Steps:
+Step 1: Attack or defend; check destroy and post-battle venom.
+Expected Result:
+- Foe with venom flag destroyed during reckoning.
+- After reckoning, surviving foe receives venom flag.
 
 ---

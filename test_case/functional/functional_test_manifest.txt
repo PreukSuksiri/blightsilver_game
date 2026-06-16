@@ -210,6 +210,7 @@ TC-FUNC-Pixie-Queen-001
 TC-FUNC-Plant-29-001
 TC-FUNC-Poltergeist-001
 TC-FUNC-Ponycorn-001
+TC-FUNC-Potent-Poison-001
 TC-FUNC-Prayer-001
 TC-FUNC-Prayer-002
 TC-FUNC-Pyromancer-001
@@ -290,6 +291,9 @@ TC-FUNC-Trap-Hole-001
 TC-FUNC-Trap-Hole-002
 TC-FUNC-Vampire-Duchess-001
 TC-FUNC-Vampire-Servant-001
+TC-FUNC-Venom-Queen-001
+TC-FUNC-Venom-Toad-001
+TC-FUNC-Vicious-Lizard-001
 TC-FUNC-Vile-Creeper-001
 TC-FUNC-Void-Stalker-001
 TC-FUNC-Volatile-Slasher-000

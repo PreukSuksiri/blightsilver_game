@@ -53,3 +53,6 @@ func _run_manual_tests() -> void:
 
 	# Resurrection — REVIVE_CHARACTER_NO_ATK
 	_manual("TC-FUNC-Resurrection-001")    # revive character with ATK=0, ability=NONE
+
+	# Potent Poison — DESTROY_VENOM_DOUBLE_COST
+	_manual("TC-FUNC-Potent-Poison-001")     # select venom card; double cost; destroy

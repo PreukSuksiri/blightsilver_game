@@ -1,0 +1,223 @@
+=== Battle of Parking Lot Seagull ===
+Battle started: 2026-06-13 13:29:17.950
+Game Session of Margarita (started 2026-06-13 13:25:47.603)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.575] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:14.846] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:14.846] Dice rolled: 4
+[00:14.873] MSG: Nothing happens — Dead End.
+[00:16.485] Attack P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[00:16.485] Anim: 3F  (blank slot)
+[00:16.490] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[00:28.055] Revealed: P1 (0,1) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[00:28.055] MSG: Scout Probe: adjacent cell revealed.
+[00:32.455] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:32.455] Dice rolled: 1
+[00:32.482] MSG: Nothing happens — Dead End.
+[00:34.165] Attack P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(1,0)(empty)  Dice=1  → DEAD_END
+[00:34.165] Anim: 3F  (blank slot)
+[02:14.502] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[02:15.089] Mode selected P1: TECH
+[02:15.390] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[02:16.773] Tech played  P1: "Radar"
+[02:18.308] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[02:19.137] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[02:19.517] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[02:19.519] Tech resolved  P1
+[02:20.425] Mode selected P1: ATTACK
+[02:20.428] MSG: Player 2: tap a character to attack.
+[02:22.139] Dice rolled: 3
+[02:22.143] MSG: Mind Flayer wins!
+[02:25.026] Crystals: P0 5000 → 4300 (-700)  [battle]
+[02:26.419] Attack P1(0,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} → P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=3  ATK=100 vs DEF=50  → WIN
+[02:26.419] Reckoning overlay: P1 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} badge=100 ATK pill=100 DEF pill=70 mod=+ATK 0 (100+0=100)
+[02:26.419] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:26.419] Anim: 3A  △ P0(0,2)
+[02:26.419] Card destroyed  P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:28.931] Turn ended  P1  |  Crystals P0=4300 P1=4400
+
+--- Turn 3  |  Player 0  |  Crystals P0=4300 P1=4400 ---
+[02:35.309] Revealed: P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[02:35.331] Revealed: P1 (4,1) "Blackmail" {cost 0}
+[02:35.331] Dice rolled: 1
+[02:35.618] MSG: Trap triggered: Blackmail!
+[02:39.580] Ability choice: 0 (Yes)
+[02:39.580] MSG: Blackmail: Discarded 1 Tech Card.
+[02:39.581] MSG: Ostrich Cannon locks itself until next turn.
+[02:39.595] Attack P0(2,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(4,1)"Blackmail" {cost 0}  Dice=1  → Unit vs Trap
+[02:39.595] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} badge=60 ATK pill=60 DEF pill=30 mod=+ATK 0 (60+0=60)
+[02:39.595] Anim: 3D  (attacker survives)
+[02:50.632] MSG: Tap 2 material card(s) on the field.
+[02:50.973] MSG: 1 more material(s) needed.
+[02:51.749] Crystals: P0 4300 → 2800 (-1500)  [union]
+[02:51.775] Revealed: P0 (2,0) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[02:51.782] Union summoned P0: "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | attacked,cannot-atk≤T5}, "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[02:51.782] MSG: Player 1 summoned [Rocket Peacock] using: "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | attacked,cannot-atk≤T5}, "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[03:06.481] Dice rolled: 3
+[03:06.521] MSG: Rocket Peacock wins!
+[03:09.681] Crystals: P1 4400 → 2900 (-1500)  [battle]
+[03:11.088] Attack P0(2,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(0,1)"Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}  Dice=3  ATK=150 vs DEF=70  → WIN
+[03:11.088] Reckoning overlay: P0 "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[03:11.088] Reckoning overlay: P1 "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane} badge=70 ATK pill=100 DEF pill=70 mod=+DEF 0 (70+0=70)
+[03:11.088] Anim: 3A  △ P1(0,1)
+[03:11.088] Card destroyed  P1 (0,1) "Mind Flayer" {Unit ATK100 DEF70 | cost 1500 | affinity Arcane}
+[03:11.094] MSG: No valid target — effect cancelled.
+[03:11.268] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[03:13.161] Turn ended  P0  |  Crystals P0=2800 P1=2900
+
+--- Turn 4  |  Player 1  |  Crystals P0=2800 P1=2900 ---
+[03:13.770] Mode selected P1: TECH
+[03:14.074] Tech played  P1: "Bribe"
+[03:15.618] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[03:16.931] MSG: Bribe: Opponent passed.
+[03:16.946] Tech resolved  P1
+[03:17.843] Mode selected P1: ATTACK
+[03:17.846] MSG: Player 2: tap a character to attack.
+[03:19.559] Revealed: P1 (2,1) "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}
+[03:19.560] Dice rolled: 1
+[03:19.574] MSG: Blue Mage: Two heads — Moonrise Gentleman is destroyed!
+[03:19.611] Coin flip: Heads, Heads
+[03:25.035] Crystals: P0 2800 → 2400 (-400)  [battle]
+[03:26.435] Attack P1(2,1)"Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane} → P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}  Dice=1  ATK=35 vs DEF=40  → WIN
+[03:26.435] Reckoning overlay: P1 "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane} badge=35 ATK pill=35 DEF pill=35 mod=+ATK 0 (35+0=35)
+[03:26.435] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+DEF 10 (30+10=40)
+[03:26.435] Anim: 3A  △ P0(1,2)
+[03:26.435] Card destroyed  P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[03:28.950] Turn ended  P1  |  Crystals P0=2400 P1=2900
+
+--- Turn 5  |  Player 0  |  Crystals P0=2400 P1=2900 ---
+[03:43.130] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[03:43.130] Dice rolled: 5
+[03:43.137] MSG: Shepherd Detective wins!
+[03:45.947] Crystals: P1 2900 → 2100 (-800)  [battle]
+[03:47.353] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,1)"Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}  Dice=5  ATK=40 vs DEF=35  → WIN
+[03:47.353] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[03:47.353] Reckoning overlay: P1 "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane} badge=35 ATK pill=35 DEF pill=35 mod=+DEF 0 (35+0=35)
+[03:47.353] Anim: 3A  △ P1(2,1)
+[03:47.353] Card destroyed  P1 (2,1) "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane}
+[03:47.356] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[03:47.782] Revealed: P1 (0,3) "Explosive Barrels" {cost 0}
+[03:47.782] MSG: Revealed: Explosive Barrels
+[03:55.156] Dice rolled: 5
+[03:55.176] MSG: Nothing happens — Dead End.
+[03:56.678] Attack P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(3,2)(empty)  Dice=5  → DEAD_END
+[03:56.678] Anim: 3F  (blank slot)
+[03:58.193] Turn ended  P0  |  Crystals P0=2400 P1=2100
+
+--- Turn 6  |  Player 1  |  Crystals P0=2400 P1=2100 ---
+[03:58.789] Mode selected P1: TECH
+[03:59.096] Tech played  P1: "Tease"
+[04:00.636] MSG: Opponent must choose and reveal 1 of their squares.
+[04:00.771] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[04:04.751] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[04:04.751] MSG: Tease: Opponent revealed Parom the Smuggler.
+[04:04.756] Tech resolved  P1
+[04:05.632] Mode selected P1: ATTACK
+[04:05.635] MSG: Player 2: tap a character to attack.
+[04:07.335] Revealed: P1 (4,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:07.335] Crystals: P0 2400 → 2440 (+40)  [ability]
+[04:07.335] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[04:07.335] Dice rolled: 1
+[04:07.341] MSG: Aerial the Battlemage wins!
+[04:11.813] Crystals: P0 2440 → 2040 (-400)  [battle]
+[04:13.212] Attack P1(4,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=1  ATK=50 vs DEF=25  → WIN
+[04:13.212] Reckoning overlay: P1 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[04:13.212] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:13.212] Anim: 3A  △ P0(2,3)
+[04:13.212] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[04:15.721] Turn ended  P1  |  Crystals P0=2040 P1=2100
+
+--- Turn 7  |  Player 0  |  Crystals P0=2040 P1=2100 ---
+[04:27.088] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:27.088] Dice rolled: 4
+[04:27.093] MSG: Aerial the Battlemage wins!
+[04:30.805] Crystals: P1 2100 → 1350 (-750)  [battle]
+[04:32.199] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(4,2)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=4  ATK=70 vs DEF=45  → WIN
+[04:32.199] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=70 ATK pill=50 DEF pill=45 mod=+ATK 20 (50+20=70)
+[04:32.199] Reckoning overlay: P1 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[04:32.199] Anim: 3A  △ P1(4,2)
+[04:32.199] Card destroyed  P1 (4,2) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:34.476] Dice rolled: 2
+[04:34.495] MSG: Nothing happens — Dead End.
+[04:36.141] Attack P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(1,2)(empty)  Dice=2  → DEAD_END
+[04:36.141] Anim: 3F  (blank slot)
+[04:37.309] Turn ended  P0  |  Crystals P0=2040 P1=1350
+
+--- Turn 8  |  Player 1  |  Crystals P0=2040 P1=1350 ---
+[04:39.394] Crystals: P1 1350 → 850 (-500)  [union]
+[04:39.418] Revealed: P1 (3,1) "Colorful Mage" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Arcane}
+[04:39.420] Union summoned P1: "Colorful Mage" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Arcane} from "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane | face-down}, "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down}, "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane | face-down}
+[04:39.420] MSG: Player 2 summoned [Colorful Mage] using: "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane | face-down}, "Green Mage" {Unit ATK15 DEF15 | cost 400 | affinity Arcane | face-down}, "Blue Mage" {Unit ATK35 DEF35 | cost 800 | affinity Arcane | face-down}
+[04:42.822] Mode selected P1: ATTACK
+[04:42.825] MSG: Player 2: tap a character to attack.
+[04:44.514] Revealed: P1 (2,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[04:44.514] Crystals: P0 2040 → 2080 (+40)  [ability]
+[04:44.515] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[04:44.515] Dice rolled: 2
+[04:44.518] MSG: Ice Mage wins!
+[04:49.004] Crystals: P0 2080 → 1330 (-750)  [battle]
+[04:50.402] Attack P1(2,0)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=2  ATK=50 vs DEF=45  → WIN
+[04:50.402] Reckoning overlay: P1 "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} badge=50 ATK pill=50 DEF pill=0 mod=+ATK 0 (50+0=50)
+[04:50.402] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[04:50.402] Anim: 3A  △ P0(1,4)
+[04:50.402] Card destroyed  P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:50.893] Mode selected P1: ATTACK
+[04:50.896] MSG: Player 2: tap a character to attack.
+[04:52.604] Dice rolled: 1
+[04:52.667] MSG: Colorful Mage wins!
+[04:56.795] Crystals: P0 1330 → 980 (-350)  [battle]
+[04:58.194] MSG: Colorful Mage: -10 ATK & -10 DEF permanently (non-ARCANE battle).
+[04:58.198] Attack P1(3,1)"Colorful Mage" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Arcane} → P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=1  ATK=40 vs DEF=10  → WIN
+[04:58.198] Reckoning overlay: P1 "Colorful Mage" {Union ATK40 DEF40 | destroy-cost 0 | summon-cost 500 | affinity Arcane} badge=40 ATK pill=40 DEF pill=40 mod=+ATK 0 (40+0=40)
+[04:58.198] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=10 ATK pill=40 DEF pill=10 mod=+DEF 0 (10+0=10)
+[04:58.198] Anim: 3A  △ P0(2,1)
+[04:58.198] Card destroyed  P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[04:58.682] Turn ended  P1  |  Crystals P0=980 P1=850
+
+--- Turn 9  |  Player 0  |  Crystals P0=980 P1=850 ---
+[05:09.127] Dice rolled: 5
+[05:09.206] MSG: Rocket Peacock wins!
+[05:12.438] Attack P0(2,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(3,1)"Colorful Mage" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 500 | affinity Arcane | base 30/30}  Dice=5  ATK=150 vs DEF=30  → WIN
+[05:12.438] Reckoning overlay: P0 "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[05:12.438] Reckoning overlay: P1 "Colorful Mage" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 500 | affinity Arcane | base 30/30} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[05:12.438] Anim: 3A  △ P1(3,1)
+[05:12.438] Card destroyed  P1 (3,1) "Colorful Mage" {Union ATK30 DEF30 | destroy-cost 0 | summon-cost 500 | affinity Arcane | base 30/30}
+[05:12.442] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[05:16.297] Coin flip: Heads
+[05:19.052] Crystals: P1 850 → 450 (-400)  [card lost]
+[05:19.054] Card destroyed  P1 (2,0) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[05:19.059] MSG: Rocket Peacock: Heads — Ice Mage destroyed!
+[05:27.457] Turn ended  P0  |  Crystals P0=980 P1=450
+
+--- Turn 10  |  Player 1  |  Crystals P0=980 P1=450 ---
+[05:28.053] Mode selected P1: ATTACK
+[05:28.056] MSG: Player 2: tap a character to attack.
+[05:29.755] Revealed: P1 (4,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[05:29.756] Crystals: P0 980 → 1020 (+40)  [ability]
+[05:29.756] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[05:29.757] Dice rolled: 5
+[05:29.768] MSG: Book with Fangs wins!
+[05:34.223] Crystals: P0 1020 → 720 (-300)  [battle]
+[05:35.629] Attack P1(4,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=5  ATK=45 vs DEF=20  → WIN
+[05:35.629] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[05:35.629] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:35.629] Anim: 3A  △ P0(4,2)
+[05:35.629] Card destroyed  P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[05:38.117] Turn ended  P1  |  Crystals P0=720 P1=450
+
+--- Turn 11  |  Player 0  |  Crystals P0=720 P1=450 ---
+[17:10.272] Dice rolled: 3
+[17:10.313] MSG: Rocket Peacock wins!
+[17:13.082] Crystals: P1 450 → 0 (-450)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 720  P1: 0  |  Turns: 11

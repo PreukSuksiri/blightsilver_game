@@ -1,0 +1,11 @@
+"AppBuild"
+{
+	"AppID" "4850900"
+	"Desc" "Blightsilver demo — Windows"
+	"ContentRoot" "/Users/blightsilver/blightsilver_game/Release/Windows"
+	"BuildOutput" "/Users/blightsilver/blightsilver_game/tools/steam_upload/output"
+	"Depots"
+	{
+		"4850901" "depot_build_4850901.vdf"
+	}
+}

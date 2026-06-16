@@ -219,7 +219,7 @@ func _load_characters() -> void:
 		["Death Cobra", CharacterData.Affinity.NATURE, 85, 50, 900,
 			CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN,
 			{},
-			"At the end of this turn, select 1 exposed foe’s card. Put 1 venom flag on it.",
+			"Owner’s turn end: select 1 exposed card. Put 1 venom flag on it. In Reckoning, foe with Venom Flag get -50 DEF",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Death Knight", CharacterData.Affinity.CHAOS, 65, 65, 850,
@@ -363,7 +363,7 @@ func _load_characters() -> void:
 
 		["Hammer Shark", CharacterData.Affinity.NATURE, 20, 20, 250,
 			CharacterData.AbilityType.BOOST_PER_TYPED_CARD_ON_FIELD,
-			{"atk_bonus": 10, "def_bonus": 0, "card_name_contains": "shark"},
+			{"atk_bonus": 10, "def_bonus": 0, "card_name_contains": "shark", "field_scope": "all"},
 			"+10 ATK per shark card on the field",
 			CharacterData.Rarity.COMMON],
 
@@ -411,7 +411,7 @@ func _load_characters() -> void:
 
 		["Joan the Faithful Warrior", CharacterData.Affinity.DIVINE, 25, 5, 280,
 			CharacterData.AbilityType.DEF_BONUS_IF_AFFINITY_ON_FIELD,
-			{"affinity": CharacterData.Affinity.DIVINE, "def": 35},
+			{"affinity": CharacterData.Affinity.DIVINE, "def": 35, "field_scope": "all"},
 			"If at least 1 exposed Divine unit is on the field, this card gains 35 DEF",
 			CharacterData.Rarity.COMMON],
 
@@ -632,7 +632,7 @@ func _load_characters() -> void:
 		["Plant-29", CharacterData.Affinity.BIO, 45, 85, 900,
 			CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG,
 			{},
-			"Start of your turn: Flip a coin. Head: put Venom Flag any face-up card. Tail: put Mutagen Flag on any card (even face-down).",
+			"Start of owner's turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.",
 			CharacterData.Rarity.RARE,
 			true],
 
@@ -682,7 +682,7 @@ func _load_characters() -> void:
 
 		["Saw Shark", CharacterData.Affinity.NATURE, 25, 10, 280,
 			CharacterData.AbilityType.BOOST_PER_TYPED_CARD_ON_FIELD,
-			{"atk_bonus": 10, "def_bonus": 0, "card_name_contains": "shark"},
+			{"atk_bonus": 10, "def_bonus": 0, "card_name_contains": "shark", "field_scope": "all"},
 			"+10 ATK per shark card on the field",
 			CharacterData.Rarity.COMMON],
 
@@ -701,7 +701,7 @@ func _load_characters() -> void:
 
 		["Scythe Shark", CharacterData.Affinity.NATURE, 35, 35, 550,
 			CharacterData.AbilityType.BOOST_PER_TYPED_CARD_ON_FIELD,
-			{"atk_bonus": 10, "def_bonus": 0, "card_name_contains": "shark"},
+			{"atk_bonus": 10, "def_bonus": 0, "card_name_contains": "shark", "field_scope": "all"},
 			"+10 ATK per shark card on the field",
 			CharacterData.Rarity.UNCOMMON],
 
@@ -714,7 +714,7 @@ func _load_characters() -> void:
 
 		["Shotgun Shark", CharacterData.Affinity.NATURE, 75, 25, 900,
 			CharacterData.AbilityType.BOOST_PER_TYPED_CARD_ON_FIELD,
-			{"atk_bonus": 10, "def_bonus": 0, "card_name_contains": "shark"},
+			{"atk_bonus": 10, "def_bonus": 0, "card_name_contains": "shark", "field_scope": "all"},
 			"+10 ATK per shark card on the field",
 			CharacterData.Rarity.RARE],
 
@@ -775,7 +775,7 @@ func _load_characters() -> void:
 
 		["Spear Shark", CharacterData.Affinity.NATURE, 50, 20, 480,
 			CharacterData.AbilityType.BOOST_PER_TYPED_CARD_ON_FIELD,
-			{"atk_bonus": 10, "def_bonus": 0, "card_name_contains": "shark"},
+			{"atk_bonus": 10, "def_bonus": 0, "card_name_contains": "shark", "field_scope": "all"},
 			"+10 ATK per shark card on the field",
 			CharacterData.Rarity.UNCOMMON],
 
@@ -845,6 +845,24 @@ func _load_characters() -> void:
 			{"name_contains": "Vampire"},
 			"If a 'Vampire' card will be destroyed, destroy this card instead. Usable face-down.",
 			CharacterData.Rarity.UNCOMMON],
+
+		["Venom Queen", CharacterData.Affinity.NATURE, 45, 75, 550,
+			CharacterData.AbilityType.FIELD_DEBUFF_ALL_VENOM_CARDS,
+			{"atk": 15, "def": 15},
+			"While this card remains exposed, -15 ATK&DEF to all cards with Venom Flag",
+			CharacterData.Rarity.LEGENDARY],
+
+		["Venom Toad", CharacterData.Affinity.NATURE, 15, 20, 400,
+			CharacterData.AbilityType.VENOM_TOAD_RECKONING,
+			{},
+			"After Reckoning, add venom flag to the foe’s unit. In Reckoning, destroy foe’s unit with venom flag",
+			CharacterData.Rarity.COMMON],
+
+		["Vicious Lizard", CharacterData.Affinity.NATURE, 40, 25, 900,
+			CharacterData.AbilityType.ATK_DEF_BONUS_VS_VENOM,
+			{"atk": 60, "def": 60, "self_venom_atk": 40},
+			"+60 ATK&DEF vs foe with Venom Flag. +40 ATK if itself has Venom Flag",
+			CharacterData.Rarity.RARE],
 
 		["Vile Creeper", CharacterData.Affinity.BIO, 10, 30, 200,
 			CharacterData.AbilityType.SWAP_ATK_DEF_PER_OPP_TURN,
@@ -1103,7 +1121,7 @@ func _load_traps() -> void:
 
 		["Street Joke", 0, TrapData.TrapEffectType.REVEAL_OWN_GAIN_CRYSTAL,
 			{"amount": 100},
-			"Reveal 1 of trapper’s cell, they receive 100 Crystal",
+			"Trapper reveal 1 of their cell, they receive 100 Crystal",
 			CharacterData.Rarity.COMMON,
 			true],
 
@@ -1159,6 +1177,11 @@ func _load_tech_cards() -> void:
 			{}, "",
 			"Once, until foe’s turn ends: prevent Divine card from being destroyed",
 			CharacterData.Rarity.LEGENDARY],
+
+		["Potent Poison", 1000, TechCardData.TechEffectType.DESTROY_VENOM_DOUBLE_COST,
+			{}, "",
+			"Select 1 card with Venom Flag. Double its cost, then destroy it.",
+			CharacterData.Rarity.EXOTIC],
 
 		["Radar", 600, TechCardData.TechEffectType.REVEAL_OPPONENT_SQUARE,
 			{"count": 3}, "",

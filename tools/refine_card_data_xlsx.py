@@ -17,8 +17,8 @@ OUT = ROOT / "context" / f"card_data_refine_{TS}.xlsx"
 # --- Manual final text (user-confirmed design) ---
 MANUAL: dict[str, dict[str, str]] = {
     "Plant-29": {
-        "Ability": "At turn start: choose 1 card and flip a coin. Heads: Venom flag. Tails: Mutagen flag.",
-        "comment": "Synced to design rule; choose unit before coin; flag Exposes face-down.",
+        "Ability": "Start of owner's turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.",
+        "comment": "Synced to card_data.xlsx Ability column.",
     },
     "Death Cobra": {
         "Ability": "At end of turn: choose 1 foe card. Put Venom flag on it.",
@@ -1697,7 +1697,7 @@ ABILITY_TEXT_RULES: list[tuple[str, str, str, str]] = [
     ("", "", "", ""),
     ("Game rules in text", "Rule", "Use", "Avoid / Notes"),
     ("", "Flag on face-down", "Flag applies; unit becomes Exposed permanently", "Temporary peek"),
-    ("", "Plant-29", "Choose 1 card, flip coin. Heads: Venom flag. Tails: Mutagen flag.", "Choose before coin"),
+    ("", "Plant-29", "Start of owner's turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.", "Synced to card_data.xlsx"),
     ("", "Death Cobra", "End of turn: Choose 1 foe card. Put Venom flag on it.", "Works on face-down targets"),
     ("", "", "", ""),
     ("Union", "Rule", "Use", "Avoid / Notes"),

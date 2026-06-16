@@ -370,9 +370,9 @@ def build_character_tests(card: dict) -> list[str]:
         bonus = p.get("def", p.get("bonus", 0))
         aff = p.get("affinity", "?")
         add(
-            f"{name}: +{bonus} DEF when face-up {aff} on own field",
+            f"{name}: +{bonus} DEF when face-up {aff} on field (both players unless scoped)",
             ["BattleResolver._get_effective_def()", f"AbilityType.{ab}"],
-            [f"Face-up {aff} ally on field; opponent attacks {name}."],
+            [f"Face-up {aff} unit on either field when field_scope=all; opponent attacks {name}."],
             ["Resolve defense."],
             [f"defender_def_used == {df + bonus}."],
             [],
@@ -1226,13 +1226,57 @@ def build_character_tests(card: dict) -> list[str]:
 
     elif ab == "TURN_START_COIN_FLIP_FLAG":
         add(
-            f"{name}: turn start coin → venom on any face-up card or mutagen on any card",
+            f"{name}: turn start coin → venom on 1 exposed ally/foe or mutagen on own unit",
             ["TurnManager turn start ability", f"AbilityType.{ab}"],
             [f"{name} on field at turn start.", "Board has valid flag targets."],
-            ["Start turn; resolve coin flip; select target per result."],
+            ["Start turn; flip coin; select target per result."],
             [
-                "Heads: venom flag on chosen face-up card.",
-                "Tails: mutagen on chosen card (characters get has_mutagen_flag).",
+                "Heads: venom flag on 1 exposed ally or foe card.",
+                "Tails: mutagen on any of your unit (characters get has_mutagen_flag).",
+            ],
+            [],
+        )
+
+    elif ab == "FIELD_DEBUFF_ALL_VENOM_CARDS":
+        pa, pd = p.get("atk", 15), p.get("def", 15)
+        add(
+            f"{name}: -{pa} ATK&DEF aura on all venom-flagged cards while exposed",
+            ["BattleResolver._apply_venom_queen_global_debuff", f"AbilityType.{ab}"],
+            [f"{name} face-up.", "Another card has venom flag."],
+            ["Recalculate field bonuses."],
+            [f"Venom-flagged cards get field_aura ATK/DEF -= {pa}/{pd}."],
+            [],
+        )
+
+    elif ab == "ATK_DEF_BONUS_VS_VENOM":
+        ba, bd = p.get("atk", 0), p.get("def", 0)
+        sa = p.get("self_venom_atk", 0)
+        add(
+            f"{name}: +{ba} ATK&DEF vs venom foe; +{sa} ATK if self has venom",
+            ["BattleResolver._get_effective_atk/_get_effective_def", f"AbilityType.{ab}"],
+            ["Opponent has venom flag and/or self has venom flag."],
+            ["Resolve battle; read effective stats."],
+            [
+                f"Attacking venom foe: +{ba} ATK.",
+                f"Defending vs venom attacker: +{bd} DEF.",
+                f"Self venom flag: +{sa} ATK when attacking.",
+            ],
+            [],
+        )
+
+    elif ab == "VENOM_TOAD_RECKONING":
+        add(
+            f"{name}: destroy venom foe in reckoning; venom on foe after battle",
+            [
+                "BattleResolver._apply_venom_toad_reckoning_destroy",
+                "TurnManager._apply_post_battle_effects VENOM_TOAD_RECKONING",
+                f"AbilityType.{ab}",
+            ],
+            [f"{name} in battle vs character."],
+            ["Attack or defend; check destroy and post-battle venom."],
+            [
+                "Foe with venom flag destroyed during reckoning.",
+                "After reckoning, surviving foe receives venom flag.",
             ],
             [],
         )
@@ -1844,6 +1888,16 @@ def build_tech_tests(card: dict) -> list[str]:
                 "Card face_up at chosen cell.",
                 "current_atk=0; ability_type=NONE.",
                 "Second play blocked if once-only enforced.",
+            ],
+        ),
+        "DESTROY_VENOM_DOUBLE_COST": (
+            f"{name}: destroy venom-flagged card with doubled cost",
+            ["TurnManager DESTROY_VENOM_DOUBLE_COST", "GameBoard venom_flagged_card filter"],
+            ["Venom-flagged character on field.", f"crystals>={cost}."],
+            [f"Play {name}; select venom-flagged card."],
+            [
+                "Target crystal_cost doubled before destroy.",
+                "Owner pays doubled crystal loss on destroy.",
             ],
         ),
         "NOT_IMPLEMENTED": (

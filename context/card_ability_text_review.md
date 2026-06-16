@@ -536,10 +536,10 @@ See agent response for ambiguous cards.
 - **Current:** Destroy this card after Reckoning with Divine Unit. After this card attacked, halve its ATK&DEF permanently
 - **Suggested:** Destroy this card after Reckoning with Divine Unit. After this card attacked, halve its ATK and DEF permanently
 
-### Plant-29 *(Demo=Yes)* — **OUT OF SYNC WITH GAME**
+### Plant-29 *(Demo=Yes)*
 
-- **Current (xlsx):** Start of their turn: Flip a coin. Head: put Venom Flag on 1 exposed card. Tail: put Mutagen Flag on any card.
-- **Suggested (matches implemented rule):** Start of turn: Choose 1 unit, flip a coin. Heads: Venom flag on it. Tails: Mutagen flag on it. *(Face-down targets flip up.)*
+- **Current (xlsx):** Start of owner's turn: Flip a coin. Head: put Venom Flag on 1 exposed ally or foe card. Tail: put Mutagen Flag on any of your unit.
+- **Suggested:** *(OK — synced to xlsx)*
 
 ### Poltergeist *(Demo=Yes)*
 

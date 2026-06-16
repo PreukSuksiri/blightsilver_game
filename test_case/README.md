@@ -2,12 +2,12 @@
 
 Generated from `context/card_data.xlsx` filtering **Demo = Yes** only.
 
-**Total demo cards:** 203
+**Total demo cards:** 207
 
 ## Card counts
 
-- **Character**: 133
-- **Tech**: 11
+- **Character**: 136
+- **Tech**: 12
 - **Trap**: 23
 - **Union**: 36
 
@@ -16,11 +16,11 @@ Generated from `context/card_data.xlsx` filtering **Demo = Yes** only.
 | File | Description |
 |------|-------------|
 | [test_framework.md](./test_framework.md) | Shared setup, Godot execution guide, verification checklist |
-| [character/character_demo_test_cases.md](./character/character_demo_test_cases.md) | 133 character cards |
-| [tech/tech_demo_test_cases.md](./tech/tech_demo_test_cases.md) | 11 tech cards |
+| [character/character_demo_test_cases.md](./character/character_demo_test_cases.md) | 136 character cards |
+| [tech/tech_demo_test_cases.md](./tech/tech_demo_test_cases.md) | 12 tech cards |
 | [trap/trap_demo_test_cases.md](./trap/trap_demo_test_cases.md) | 23 trap cards |
 | [union/union_demo_test_cases.md](./union/union_demo_test_cases.md) | 36 union cards |
-| [test_case_manifest.txt](./test_case_manifest.txt) | Flat list of all 812 test case IDs for progress tracking |
+| [test_case_manifest.txt](./test_case_manifest.txt) | Flat list of all 831 test case IDs for progress tracking |
 | [generate_test_cases.py](./generate_test_cases.py) | Regenerator script (re-run after Excel updates) |
 
 ## Functional tests (code-accurate)
@@ -224,6 +224,9 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Tomb Bandit
 - Vampire Duchess
 - Vampire Servant
+- Venom Queen
+- Venom Toad
+- Vicious Lizard
 - Vile Creeper
 - Void Stalker
 - Wandering Swordsman
@@ -236,6 +239,7 @@ Progress: `user://card_e2e_progress.json` (resume supported).
 - Accident
 - Bribe
 - Great Diplomacy
+- Potent Poison
 - Prayer
 - Radar
 - Release Mutagen

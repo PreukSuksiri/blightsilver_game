@@ -1,0 +1,556 @@
+
+============================================================
+Unit (102 differences)
+============================================================
+
+### Pyromancer
+  - rarity: xlsx=4 vs game=LEGENDARY
+  XLSX: +30 ATK vs Nature Affinity
+  GAME: +30 ATK vs Nature Affinity
+
+### Angel Gatekeeper
+  - rarity: xlsx=4 vs game=LEGENDARY
+  XLSX: +50 ATK vs Chaos Affinity
+  GAME: +50 ATK vs Chaos Affinity
+
+### Wandering Swordsman
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: None
+  GAME: None
+
+### Huntress of Green Glade
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: Immune to 0-cost Traps
+  GAME: Immune to 0-cost Traps
+
+### Canyon Warg
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: None
+  GAME: None
+
+### Armored Bee
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: +60 DEF until the end of that turn once
+  GAME: +60 DEF until the end of that turn once
+
+### Armored Rhino
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: None
+  GAME: None
+
+### Chaotic Wisp
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: None
+  GAME: None
+
+### Foul Wisp
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: None
+  GAME: None
+
+### Doom Wisp
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: None
+  GAME: None
+
+### Night Whisperer
+  - rarity: xlsx=3 vs game=RARE
+  - ability text differs
+  XLSX: +30 ATK&DEF for each exposed ‘wisp’ card on its side
+  GAME: +30 ATK&DEF for each face-up ‘wisp’ card on their own field
+
+### Leorudus the Warlord
+  - rarity: xlsx=5 vs game=EXOTIC
+  - ability text differs
+  XLSX: +20 ATK&DEF for each other exposed Anima card on its side
+  GAME: +20 ATK&DEF for each other face-up Anima card on their own field
+
+### Void Stalker
+  - rarity: xlsx=3 vs game=RARE
+  - ability text differs
+  XLSX: +20 ATK if it attacks an exposed card.
+  GAME: +20 ATK if it attack an exposed card
+
+### Swarmcaller
+  - rarity: xlsx=4 vs game=LEGENDARY
+  - ability text differs
+  XLSX: +15 ATK&DEF for each other exposed Nature card on its side
+  GAME: +15 ATK&DEF for each other face-up Nature card on your field
+
+### Tomb Bandit
+  - rarity: xlsx=4 vs game=LEGENDARY
+  XLSX: This Unit cannot be destroyed by Traps.
+  GAME: This Unit cannot be destroyed by Traps.
+
+### Scout Probe
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: Choose and reveal any adjacent square after it attacked.
+  GAME: Choose and reveal any adjacent square after it attacked.
+
+### Lab Zombie
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: With Mutagen Flag: +45 ATK vs Nature or Anima.
+  GAME: With Mutagen Flag: +45 ATK vs Nature or Anima.
+
+### Lab Bloater
+  - rarity: xlsx=4 vs game=LEGENDARY
+  - ability text differs
+  XLSX: With Mutagen Flag: owner can destroy both units in Reckoning. Both players pay no cost.
+  GAME: With Mutagen Flag: you can destroy both units in Reckoning. No cost is paid.
+
+### Lab Crawler
+  - rarity: xlsx=5 vs game=EXOTIC
+  XLSX: With Mutagen Flag: this card can target 3 cards
+  GAME: With Mutagen Flag: this card can target 3 cards
+
+### Pit Lord
+  - rarity: xlsx=5 vs game=EXOTIC
+  - ability text differs
+  XLSX: Destroy this card after Reckoning with Divine Unit. After this card attacked, halve its ATK&DEF permanently
+  GAME: This card is destroyed if battle with Divine Unit. After this card attacked, halve its ATK&DEF permanently
+
+### War Genie
+  - rarity: xlsx=4 vs game=LEGENDARY
+  XLSX: -10 ATK permanently after it attacked
+  GAME: -10 ATK permanently after it attacked
+
+### Archbishop
+  - rarity: xlsx=4 vs game=LEGENDARY
+  - ability text differs
+  XLSX: If this card would be destroyed, the owner can destroy 1 other Divine card on their side instead
+  GAME: If this card would be destroyed, you can destroy 1 other Divine card on their own field instead
+
+### Space Boy
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: None
+  GAME: None
+
+### Lazy Troll
+  - rarity: xlsx=5 vs game=EXOTIC
+  - ability text differs
+  XLSX: If this card performs an attack, flip a coin. Tail: it stops attacking.
+  GAME: If this card performs an attack, flip a coin, if tail, it stops attacking.
+
+### Leech Man
+  - rarity: xlsx=4 vs game=LEGENDARY
+  XLSX: +10 DEF permanently after it performed attack on unit. Also +10 ATK with mutagen flag
+  GAME: +10 DEF permanently after it performed attack on unit. Also +10 ATK with mutagen flag
+
+### Immortal Vampire
+  - rarity: xlsx=4 vs game=LEGENDARY
+  - ability text differs
+  XLSX: +50 ATK for each other exposed Chaos card on its side. In Reckoning with Divine, destroy this card.
+  GAME: +50 ATK for each other face-up Chaos card on their own field. In Reckoning with Divine, destroy this card.
+
+### Vampire Servant
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: If a 'Vampire' card will be destroyed, destroy this card instead. Usable face-down.
+  GAME: If a 'Vampire' card will be destroyed, destroy this card instead. Usable face-down.
+
+### Bat Swarm
+  - rarity: xlsx=3 vs game=RARE
+  - ability text differs
+  XLSX: If a Chaos card is being attacked, they can swap this card’s position with that card. Usable face-down.
+  GAME: If a Chaos card is being attacked. You can swap this card’s position with that card
+
+### Poltergeist
+  - rarity: xlsx=3 vs game=RARE
+  - ability text differs
+  XLSX: If this card performs an attack, switch this card’s ATK&DEF
+  GAME: If this card performs an attack, switch this card’s ATK and DEF
+
+### Street Rogue
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: +20 ATK against Anima card
+  GAME: +20 ATK against Anima card
+
+### Big Thug
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: None
+  GAME: None
+
+### Goblin Poacher
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: None
+  GAME: None
+
+### Magenta the Nightbloom
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: Half its DEF permanently at the end of that turn
+  GAME: Half its DEF permanently at the end of that turn
+
+### Jirayu the Rebellious Prince
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: If this card successfully defended, +10 DEF permanently
+  GAME: If this card successfully defended, +10 DEF permanently
+
+### Ice Mage
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: None
+  GAME: None
+
+### Gryphon
+  - rarity: xlsx=5 vs game=EXOTIC
+  XLSX: None
+  GAME: None
+
+### Succubus
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: Once, if survived Reckoning: +ATK&DEF equal to half of that foe’s card
+  GAME: Once, if survived Reckoning: +ATK&DEF equal to half of that foe’s card
+
+### Nuki the Tanuki
+  - rarity: xlsx=1 vs game=COMMON
+  - ability text differs
+  XLSX: Before Reckoning, flip a coin. If head, swap position with any of own unit. Repeat Reckoning.
+  GAME: Before Reckoning, flip a coin. If head, swap position with any of your card
+
+### Tiny Pixie
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: Once, this card is not destroyed
+  GAME: Once, this card is not destroyed
+
+### Melissa the Healer
+  - rarity: xlsx=1 vs game=COMMON
+  - ability text differs
+  XLSX: If the owner loses 500 or more Crystals, they recover 300 Crystals
+  GAME: If you lose 500 or more crystals, you recover 300 crystals
+
+### Heavy Tome Preacher
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: None
+  GAME: None
+
+### Ponycorn
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: None
+  GAME: None
+
+### Joan the Faithful Warrior
+  - rarity: xlsx=1 vs game=COMMON
+  - ability text differs
+  XLSX: If at least 1 exposed Divine unit is on the field, this card gains 35 DEF
+  GAME: If at least 1 Divine card is on the field, this card gain 30 DEF
+
+### Choir Lady Alice
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: None
+  GAME: None
+
+### Choir Lady Anna
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: None
+  GAME: None
+
+### Choir Lady Abigail
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: None
+  GAME: None
+
+### Church Guard
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: None
+  GAME: None
+
+### Sniping Fairy
+  - rarity: xlsx=2 vs game=UNCOMMON
+  - ability text differs
+  XLSX: After it becomes exposed, -20 ATK at that turn’s end.
+  GAME: At the end of the turn that it's been exposed, -20 ATK
+
+### Bomber Fairy
+  - rarity: xlsx=2 vs game=UNCOMMON
+  - ability text differs
+  XLSX: Once, after destroyed a unit, this card can attack 1 more time.
+  GAME: Once, if destroyed a card, this card can attack 1 more time
+
+### Golden Senju
+  - rarity: xlsx=2 vs game=UNCOMMON
+  - ability text differs
+  XLSX: Once, after attacked a non-unit cell, this card can attack 1 more time.
+  GAME: Once per turn, if attacked non-unit card, this card : can attack 1 more times
+
+### Sunrise Lady
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: If it attacks: +10 ATK,-10 DEF permanently
+  GAME: If it attacks: +10 ATK,-10 DEF permanently
+
+### Flame Seraph
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: None
+  GAME: None
+
+### Raijin
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: None
+  GAME: None
+
+### Moonrise Gentleman
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: If it defends: +10 DEF,-10 ATK
+  GAME: If it defends: +10 DEF,-10 ATK
+
+### Fujin
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: None
+  GAME: None
+
+### Mephisto the Fallen
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: After this card attacked unit successfully, its ATK becomes 0 permanently
+  GAME: After this card attacked unit successfully, its ATK becomes 0 permanently
+
+### Joseph the Battle Priest
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: In Reckoning, flip a coin. If head, +10 ATK
+  GAME: In Reckoning, flip a coin. If head, +10 ATK
+
+### Sonic Seraph
+  - rarity: xlsx=3 vs game=RARE
+  - ability text differs
+  XLSX: Once per turn, if it attacked Dead End, it can attack again
+  GAME: Once per turn, if it attacked dead end card, it can attack again
+
+### Goddess of Virtue
+  - rarity: xlsx=5 vs game=EXOTIC
+  - ability text differs
+  XLSX: In Reckoning, destroy Chaos before any calculation
+  GAME: In Reckoning, destroy Chaos
+
+### Cursed Well
+  - rarity: xlsx=1 vs game=COMMON
+  - ability text differs
+  XLSX: At the end of the turn that it’s been exposed, +15 ATK
+  GAME: At the end of the turn that it's been exposed, +15 ATK permanently
+
+### Shredder Doll
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: None
+  GAME: None
+
+### Hands in the Attic
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: +10 ATK until Reckoning ends
+  GAME: +10 ATK until Reckoning ends
+
+### Miner Probe
+  - rarity: xlsx=1 vs game=COMMON
+  - ability text differs
+  XLSX: Gain 20 Crystals upon hitting Dead End
+  GAME: Gain 20 crystals upon hitting dead end card
+
+### Mine Guard
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: Prevent ‘Miner’ or ‘Mining’ card from being destroyed, but destroy this card instead. Usable face-down
+  GAME: Prevent ‘Miner’ or ‘Mining’ card from being destroyed, but destroy this card instead. Usable face-down
+
+### Jacob the Ski Mask
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: +5 ATK vs Anima
+  GAME: +5 ATK vs Anima
+
+### Dark Tengu
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: -5 ATK once it successfully attacked. -5 DEF once it successfully defended.
+  GAME: -5 ATK once it successfully attacked. -5 DEF once it successfully defended.
+
+### Araya the Eerie Dancer
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: This card is unaffected by Tech cards
+  GAME: This card is unaffected by Tech cards
+
+### Skeleton Grappler
+  - rarity: xlsx=1 vs game=COMMON
+  - ability text differs
+  XLSX: After Reckoning: that foe’s unit must wait until foe’s turn ends
+  GAME: After Reckoning: foe card must wait until foe’s turn ends
+
+### Skeleton Scout
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: Once, if hitting Dead End: attack again
+  GAME: Once, if hitting dead end: attack again
+
+### Demon Spawn
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: None
+  GAME: None
+
+### Skeleton Archer
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: +5 ATK vs face-down Defender
+  GAME: +5 ATK vs face-down Defender
+
+### Skeleton Lancer
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: None
+  GAME: None
+
+### Dark Blob
+  - rarity: xlsx=2 vs game=UNCOMMON
+  - ability text differs
+  XLSX: After Reckoning: +5 ATK at the end of foe’s turn
+  GAME: After reckoning: +5 ATK at foe’s turn ends
+
+### Grave Worm
+  - rarity: xlsx=2 vs game=UNCOMMON
+  - ability text differs
+  XLSX: Each time foe loses Crystal: foe loses 20 more Crystals
+  GAME: Each time foe lose crystal: foe lose 20 more crystals
+
+### Mysterious Miner
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: After attacked: reveal 1 foe’s cell
+  GAME: After attacked: reveal 1 foe’s cell
+
+### Staircase Lady
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: None
+  GAME: None
+
+### Feral Vampire
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: In Reckoning with Divine, destroy this card
+  GAME: In Reckoning with Divine, destroy this card
+
+### Laughing Granny
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: Once when defending, +10 DEF until end of turn. Once when attacking, +10 ATK until end of turn
+  GAME: Once when defending, +10 DEF until end of turn. Once when attacking, +10 ATK until end of turn
+
+### Vampire Duchess
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: In Reckoning with Divine, destroy this card. In Reckoning with non-Divine, Drain 5 ATK&DEF permanently
+  GAME: In Reckoning with Divine, destroy this card. In Reckoning with non-Divine, Drain 5 ATK&DEF permanently
+
+### Death Knight
+  - rarity: xlsx=3 vs game=RARE
+  - ability text differs
+  XLSX: +5 ATK per Chaos unit on their side
+  GAME: +5 ATK per Chaos card on your side of the field
+
+### Stinky Insect
+  - rarity: xlsx=1 vs game=COMMON
+  - ability text differs
+  XLSX: If this card defends, the attacking unit cannot attack until foe’s next turn ends
+  GAME: If this card defended, the attacker must wait until foe’s turn ends
+
+### Mad Raccoon
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: None
+  GAME: None
+
+### Magical Butterfly
+  - rarity: xlsx=1 vs game=COMMON
+  - ability text differs
+  XLSX: Whenever foe’s tech card is activated, +10 ATK&DEF permanently. Usable face-down
+  GAME: Whenever foe’s tech card is activated, +10 ATK&DEF permanently
+
+### Hammer Shark
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: +10 ATK per shark card on the field
+  GAME: +10 ATK per shark card on the field
+
+### Needle Porcupine
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: Once, when this card defends, the attacker permanently loses 5 ATK.
+  GAME: Once, when this card defends, the attacker permanently loses 5 ATK.
+
+### Saw Shark
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: +10 ATK per shark card on the field
+  GAME: +10 ATK per shark card on the field
+
+### Kiyoko the Death Whisper
+  - rarity: xlsx=4 vs game=LEGENDARY
+  - ability text differs
+  XLSX: This card gains +50 ATK when attacking Union card
+  GAME: This card gain +50 ATK when attacking Union card
+
+### Spear Shark
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: +10 ATK per shark card on the field
+  GAME: +10 ATK per shark card on the field
+
+### Giant Centipede
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: +100 ATK vs cards with venom flag
+  GAME: +100 ATK vs cards with venom flag
+
+### Scythe Shark
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: +10 ATK per shark card on the field
+  GAME: +10 ATK per shark card on the field
+
+### White Tiger
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: In Reckoning, -15 ATK to the attacker
+  GAME: In Reckoning, -15 ATK to the attacker
+
+### Flame Lizard
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: +20 ATK&DEF vs Nature
+  GAME: +20 ATK&DEF vs Nature
+
+### Ostrich Cannon
+  - rarity: xlsx=2 vs game=UNCOMMON
+  - ability text differs
+  XLSX: After performing an attack, this card cannot attack during their next turn.
+  GAME: After performed an attack, this card cannot attack during your next turn.
+
+### Shotgun Shark
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: +10 ATK per shark card on the field
+  GAME: +10 ATK per shark card on the field
+
+### Death Cobra
+  - rarity: xlsx=4 vs game=LEGENDARY
+  XLSX: At the end of this turn, select 1 exposed foe’s card. Put 1 venom flag on it.
+  GAME: At the end of this turn, select 1 face-up foe’s card. Put 1 venom flag on it.
+
+### Red Mage
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: +10 ATK vs Nature
+  GAME: +10 ATK vs Nature
+
+### Green Mage
+  - rarity: xlsx=2 vs game=UNCOMMON
+  XLSX: When this card defends, the attacker permanently loses 10 ATK&DEF.
+  GAME: When this card defends, the attacker permanently loses 10 ATK&DEF.
+
+### Blue Mage
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: If this card battles non-Arcane card, flip two coins. If both are head, destroy it.
+  GAME: If this card battles non-Arcane card, flip two coins. If both are head, destroy it.
+
+### Aerial the Battlemage
+  - rarity: xlsx=3 vs game=RARE
+  - ability text differs
+  XLSX: +20 ATK&DEF if there is Union card on its side
+  GAME: +20 ATK&DEF if there is Union card on your field
+
+### Book with Fangs
+  - rarity: xlsx=3 vs game=RARE
+  XLSX: +30 ATK&DEF vs Arcane
+  GAME: +30 ATK&DEF vs Arcane
+
+### Mind Flayer
+  - rarity: xlsx=5 vs game=EXOTIC
+  XLSX: +50 ATK&DEF against Anima
+  GAME: +50 ATK&DEF against Anima
+
+### Claw Mutant
+  - rarity: xlsx=1 vs game=COMMON
+  XLSX: +10 ATK if it has mutagen flag
+  GAME: +10 ATK if it has mutagen flag
+
+============================================================
+Trap (0 differences)
+============================================================
+
+============================================================
+Tech (0 differences)
+============================================================
+
+============================================================
+Union (0 differences)
+============================================================

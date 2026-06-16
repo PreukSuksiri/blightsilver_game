@@ -1,3 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Local build outputs and large video assets (do not commit)
+Release/
+video/*.avi

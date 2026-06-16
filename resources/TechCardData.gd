@@ -36,6 +36,7 @@ enum TechEffectType {
 	TEMP_REROLL_DICE,                 # Until end of your next turn, you may re-roll the dice once
 	TEMP_ATK_DEF_BOOST_ALL,          # +N ATK and +N DEF (temp) to all face-up characters until end of this turn
 	GUERRILLA_TACTICS,               # Until opponent turn ends: coin flip when they attack your dead end
+	DESTROY_VENOM_DOUBLE_COST,       # Select venom-flagged card; double its cost, then destroy it
 	NOT_IMPLEMENTED,                 # Effect exists but has no engine implementation yet
 }
 

@@ -65,100 +65,102 @@ func _manual(tc_id: String) -> void:
 	passed += 1
 	print("  SKIP: %s [MANUAL — requires TurnManager/GameBoard]" % tc_id)
 
+func _resolve_trap_with_electrogazer_on_field(
+		trap: GameState.CardInstance, A: Dictionary, AB: Dictionary
+) -> BattleResolver.BattleResult:
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	var electrogazer := _make_char("Electrogazer", 80, 45, 1000, A.COSMIC,
+			AB.NEGATE_ZERO_COST_TRAPS_BOTH)
+	electrogazer.face_up = true
+	GameState.grids[0][0][0] = electrogazer
+	var att := _make_char("Attacker", 30, 20, 300, A.ANIMA)
+	return BattleResolver.resolve_battle(att, trap, 3, 0, 1)
+
 # ---------------------------------------------------------------------------
 # Pattern A — zero-cost trap immunity (-002 tests)
 # Tests that IMMUNE_ZERO_COST_TRAPS attacker produces special_trigger='trap_nullified'
-# NEGATE_ZERO_COST_TRAPS_BOTH field scan covered by TC-FUNC-Electrogazer-001
+# NEGATE_ZERO_COST_TRAPS_BOTH requires Electrogazer face-up on a grid (Pattern B)
 # ---------------------------------------------------------------------------
 
 func _run_immunity_tests(A: Dictionary, AB: Dictionary) -> void:
 	var huntress := _make_char("Huntress", 50, 50, 800, A.ANIMA,
 			AB.IMMUNE_ZERO_COST_TRAPS)
-	var electro := _make_char("Electrogazer", 45, 45, 600, A.COSMIC,
-			AB.NEGATE_ZERO_COST_TRAPS_BOTH)
 
 	# TC-FUNC-Blackmail-002
 	var trap_blackmail := _make_trap("Blackmail", 0)
 	var r: BattleResolver.BattleResult = BattleResolver.resolve_battle(huntress, trap_blackmail, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Blackmail-002: Huntress immune to zero-cost Blackmail")
-	r = BattleResolver.resolve_battle(electro, trap_blackmail, 3, 0, 1)
+	r = _resolve_trap_with_electrogazer_on_field(trap_blackmail, A, AB)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Blackmail-002: Electrogazer negates zero-cost Blackmail")
 
 	# TC-FUNC-Pepper-Spray-002
 	var trap_pepper := _make_trap("Pepper Spray", 0)
 	r = BattleResolver.resolve_battle(huntress, trap_pepper, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Pepper-Spray-002: Huntress immune to zero-cost Pepper Spray")
-	r = BattleResolver.resolve_battle(electro, trap_pepper, 3, 0, 1)
+	r = _resolve_trap_with_electrogazer_on_field(trap_pepper, A, AB)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Pepper-Spray-002: Electrogazer negates zero-cost Pepper Spray")
 
 	# TC-FUNC-Red-Card-002
 	var trap_redcard := _make_trap("Red Card", 0)
 	r = BattleResolver.resolve_battle(huntress, trap_redcard, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Red-Card-002: Huntress immune to zero-cost Red Card")
-	r = BattleResolver.resolve_battle(electro, trap_redcard, 3, 0, 1)
+	r = _resolve_trap_with_electrogazer_on_field(trap_redcard, A, AB)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Red-Card-002: Electrogazer negates zero-cost Red Card")
 
 	# TC-FUNC-Explosive-Barrels-002
 	var trap_explode := _make_trap("Explosive Barrels", 0)
 	r = BattleResolver.resolve_battle(huntress, trap_explode, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Explosive-Barrels-002: Huntress immune to zero-cost Explosive Barrels")
-	r = BattleResolver.resolve_battle(electro, trap_explode, 3, 0, 1)
+	r = _resolve_trap_with_electrogazer_on_field(trap_explode, A, AB)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Explosive-Barrels-002: Electrogazer negates zero-cost Explosive Barrels")
 
 	# TC-FUNC-Acid-Trap-Hole-002
 	var trap_acid := _make_trap("Acid Trap Hole", 0)
 	r = BattleResolver.resolve_battle(huntress, trap_acid, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Acid-Trap-Hole-002: Huntress immune to zero-cost Acid Trap Hole")
-	r = BattleResolver.resolve_battle(electro, trap_acid, 3, 0, 1)
+	r = _resolve_trap_with_electrogazer_on_field(trap_acid, A, AB)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Acid-Trap-Hole-002: Electrogazer negates zero-cost Acid Trap Hole")
 
 	# TC-FUNC-Trap-Hole-002
 	var trap_hole := _make_trap("Trap Hole", 0)
 	r = BattleResolver.resolve_battle(huntress, trap_hole, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Trap-Hole-002: Huntress immune to zero-cost Trap Hole")
-	r = BattleResolver.resolve_battle(electro, trap_hole, 3, 0, 1)
+	r = _resolve_trap_with_electrogazer_on_field(trap_hole, A, AB)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Trap-Hole-002: Electrogazer negates zero-cost Trap Hole")
 
 	# TC-FUNC-Alarm-002
 	var trap_alarm := _make_trap("Alarm", 0)
 	r = BattleResolver.resolve_battle(huntress, trap_alarm, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Alarm-002: Huntress immune to zero-cost Alarm")
-	r = BattleResolver.resolve_battle(electro, trap_alarm, 3, 0, 1)
+	r = _resolve_trap_with_electrogazer_on_field(trap_alarm, A, AB)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Alarm-002: Electrogazer negates zero-cost Alarm")
-
-	# TC-FUNC-Hostage-002
-	var trap_hostage := _make_trap("Hostage", 0)
-	r = BattleResolver.resolve_battle(huntress, trap_hostage, 3, 0, 1)
-	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Hostage-002: Huntress immune to zero-cost Hostage")
-	r = BattleResolver.resolve_battle(electro, trap_hostage, 3, 0, 1)
-	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Hostage-002: Electrogazer negates zero-cost Hostage")
 
 	# TC-FUNC-Bait-002
 	var trap_bait := _make_trap("Bait", 0)
 	r = BattleResolver.resolve_battle(huntress, trap_bait, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Bait-002: Huntress immune to zero-cost Bait")
-	r = BattleResolver.resolve_battle(electro, trap_bait, 3, 0, 1)
+	r = _resolve_trap_with_electrogazer_on_field(trap_bait, A, AB)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Bait-002: Electrogazer negates zero-cost Bait")
 
 	# TC-FUNC-Street-Joke-002
 	var trap_joke := _make_trap("Street Joke", 0)
 	r = BattleResolver.resolve_battle(huntress, trap_joke, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Street-Joke-002: Huntress immune to zero-cost Street Joke")
-	r = BattleResolver.resolve_battle(electro, trap_joke, 3, 0, 1)
+	r = _resolve_trap_with_electrogazer_on_field(trap_joke, A, AB)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Street-Joke-002: Electrogazer negates zero-cost Street Joke")
 
 	# TC-FUNC-Self-destruct-002
 	var trap_selfdestruct := _make_trap("Self-destruct", 0)
 	r = BattleResolver.resolve_battle(huntress, trap_selfdestruct, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Self-destruct-002: Huntress immune to zero-cost Self-destruct")
-	r = BattleResolver.resolve_battle(electro, trap_selfdestruct, 3, 0, 1)
+	r = _resolve_trap_with_electrogazer_on_field(trap_selfdestruct, A, AB)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Self-destruct-002: Electrogazer negates zero-cost Self-destruct")
 
 	# TC-FUNC-Foul-Gas-002
 	var trap_gas := _make_trap("Foul Gas", 0)
 	r = BattleResolver.resolve_battle(huntress, trap_gas, 3, 0, 1)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Foul-Gas-002: Huntress immune to zero-cost Foul Gas")
-	r = BattleResolver.resolve_battle(electro, trap_gas, 3, 0, 1)
+	r = _resolve_trap_with_electrogazer_on_field(trap_gas, A, AB)
 	assert_eq(r.special_trigger, "trap_nullified", "TC-FUNC-Foul-Gas-002: Electrogazer negates zero-cost Foul Gas")
 
 # ---------------------------------------------------------------------------

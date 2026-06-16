@@ -1,0 +1,14 @@
+[2026-06-13 16:26:30]: Starting build for depot 4850901, content path is "/Users/blightsilver/blightsilver_game/Release/Windows", build flags 0x0
+[2026-06-13 16:26:30]: Building file listing for depot 4850901 ...
+[2026-06-13 16:26:30]: Found 3 files for mapping: /Users/blightsilver/blightsilver_game/Release/Windows * -> .
+[2026-06-13 16:26:30]: Found 3 files (964 MB) for depot 4850901
+[2026-06-13 16:26:31]: Building depot 4850901, no baseline manifest
+[2026-06-13 16:26:41]: Found 966 new chunks ( 0 used previously ) for depot 4850901, took 0 minutes, 10 seconds
+[2026-06-13 16:26:41]: Changes to baseline manifest 0 :
+[2026-06-13 16:26:41]: Added  : "Blightsilver.exe" 102263 KB 
+[2026-06-13 16:26:41]: Added  : "Blightsilver.pck" 882535 KB 
+[2026-06-13 16:26:41]: Added  : "libgdsqlite.windows.template_release.x86_64.dll" 3302 KB 
+[2026-06-13 16:26:41]: Summary: 3 files added (964.94 MB), 0 files changed (0 bytes), 0 files removed (0 bytes)
+[2026-06-13 16:26:41]: Uploading new manifest to depot_ingest.discovery.steamserver.net (handle 3718970182173060078, 29479 bytes).
+[2026-06-13 16:26:43]: Uploading 966 out of 966 missing chunks.
+[2026-06-13 16:33:02]: Success! New manifestID 1983354219294637278 created and 966 new chunks uploaded.

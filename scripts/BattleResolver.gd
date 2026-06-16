@@ -291,6 +291,9 @@ static func _resolve_character_vs_character(
 			result.defender_crystal_loss = 0  # no crystal loss for bloater
 			result.messages.append("Lab Bloater Mutagen: Attacker destroyed!")
 
+	# Venom Toad: destroy foe with venom flag during reckoning
+	_apply_venom_toad_reckoning_destroy(attacker, defender, result)
+
 	# Pit Lord: destroyed after Reckoning with Divine regardless of role or outcome.
 	_apply_destroy_after_divine_battle(attacker, defender, result)
 
@@ -320,6 +323,30 @@ static func _try_destroy_self_vs_divine_before_calc(
 		result.messages.append("%s is destroyed battling Divine!" % defender.card_name)
 		return true
 	return false
+
+
+static func _apply_venom_toad_reckoning_destroy(
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance,
+		result: BattleResult
+) -> void:
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
+		return
+	if attacker.ability_type == CharacterData.AbilityType.VENOM_TOAD_RECKONING \
+			and defender.card_type == "character" \
+			and "venom" in defender.flags:
+		result.ability_triggered_attacker = true
+		result.defender_destroyed = true
+		result.defender_crystal_loss = defender.crystal_cost
+		result.messages.append("Venom Toad: %s destroyed by venom!" % defender.card_name)
+	elif defender.ability_type == CharacterData.AbilityType.VENOM_TOAD_RECKONING \
+			and attacker.card_type == "character" \
+			and "venom" in attacker.flags:
+		result.ability_triggered_defender = true
+		result.attacker_destroyed = true
+		result.attacker_crystal_loss = attacker.crystal_cost
+		result.messages.append("Venom Toad: %s destroyed by venom!" % attacker.card_name)
 
 
 static func _apply_destroy_after_divine_battle(
@@ -500,6 +527,12 @@ static func _get_effective_atk(
 			if "venom" in defender.flags:
 				atk += attacker.ability_params.get("bonus", 0)
 
+		CharacterData.AbilityType.ATK_DEF_BONUS_VS_VENOM:
+			if "venom" in defender.flags:
+				atk += attacker.ability_params.get("atk", 0)
+			if "venom" in attacker.flags:
+				atk += attacker.ability_params.get("self_venom_atk", 0)
+
 		CharacterData.AbilityType.ATK_DEF_BONUS_VS_NON_AFFINITY:
 			var _non_aff: int = attacker.ability_params.get("affinity", -2)
 			if _non_aff == -2 or defender.affinity != _non_aff:
@@ -507,14 +540,21 @@ static func _get_effective_atk(
 
 		CharacterData.AbilityType.ATK_BONUS_IF_AFFINITY_ON_FIELD:
 			var needed_aff: int = attacker.ability_params.get("affinity", -1)
-			for r in range(GameState.GRID_SIZE):
-				for c in range(GameState.GRID_SIZE):
-					var ally: GameState.CardInstance = GameState.grids[attacker_player][r][c]
-					if ally == attacker:
-						continue
-					if ally.card_type == "character" and ally.face_up and ally.affinity == needed_aff:
-						atk += attacker.ability_params.get("atk", attacker.ability_params.get("bonus", 0))
+			for p: int in _field_players(attacker_player, attacker.ability_params):
+				var found := false
+				for r in range(GameState.GRID_SIZE):
+					for c in range(GameState.GRID_SIZE):
+						var ally: GameState.CardInstance = GameState.grids[p][r][c]
+						if ally == attacker:
+							continue
+						if ally.card_type == "character" and ally.face_up and ally.affinity == needed_aff:
+							atk += attacker.ability_params.get("atk", attacker.ability_params.get("bonus", 0))
+							found = true
+							break
+					if found:
 						break
+				if found:
+					break
 
 		CharacterData.AbilityType.ATK_DEF_BONUS_IF_UNION_ON_FIELD:
 			for r in range(GameState.GRID_SIZE):
@@ -652,6 +692,10 @@ static func _get_effective_def(
 			if attacker.affinity == defender.ability_params.get("affinity", -1):
 				def_val += defender.ability_params.get("def", 0)
 
+		CharacterData.AbilityType.ATK_DEF_BONUS_VS_VENOM:
+			if "venom" in attacker.flags:
+				def_val += defender.ability_params.get("def", 0)
+
 		CharacterData.AbilityType.ATK_DEF_BONUS_VS_NON_AFFINITY:
 			var _non_aff_d: int = defender.ability_params.get("affinity", -2)
 			if _non_aff_d == -2 or attacker.affinity != _non_aff_d:
@@ -671,14 +715,22 @@ static func _get_effective_def(
 		CharacterData.AbilityType.DEF_BONUS_IF_AFFINITY_ON_FIELD:
 			if defender_player >= 0:
 				var needed_aff: int = defender.ability_params.get("affinity", -1)
-				for r in range(GameState.GRID_SIZE):
-					for c in range(GameState.GRID_SIZE):
-						var ally: GameState.CardInstance = GameState.grids[defender_player][r][c]
-						if ally == defender:
-							continue
-						if ally.card_type == "character" and ally.face_up and ally.affinity == needed_aff:
-							def_val += defender.ability_params.get("def", defender.ability_params.get("bonus", 0))
+				var bonus_applied := false
+				for p: int in _field_players(defender_player, defender.ability_params):
+					for r in range(GameState.GRID_SIZE):
+						for c in range(GameState.GRID_SIZE):
+							var field_card: GameState.CardInstance = GameState.grids[p][r][c]
+							if field_card == defender:
+								continue
+							if field_card.card_type == "character" and field_card.face_up \
+									and field_card.affinity == needed_aff:
+								def_val += defender.ability_params.get("def", defender.ability_params.get("bonus", 0))
+								bonus_applied = true
+								break
+						if bonus_applied:
 							break
+					if bonus_applied:
+						break
 
 		CharacterData.AbilityType.DOUBLE_STATS_VS_AFFINITY:
 			if attacker.affinity == defender.ability_params.get("affinity", -1):
@@ -831,11 +883,42 @@ static func _apply_defend_effects(
 				defender.card_name, _halved, _halved])
 
 # ─────────────────────────────────────────────────────────────
+# Field scope — ability_params.field_scope (see CONTENT_EDITING_GUIDE.md)
+#
+# Text rule: bare "on the field" (no possessive) → scope "all" (both players).
+# "its side", "your field", "their own field", etc. → scope "owner" (default).
+#
+# Values: "owner" (default) | "all" (aliases: global, both, field)
+# Handler: _field_players() — used by field-count / field-presence abilities.
+# ─────────────────────────────────────────────────────────────
+static func _field_players(owner_player: int, ability_params: Dictionary) -> Array:
+	var scope := str(ability_params.get("field_scope", "owner")).to_lower()
+	if scope in ["all", "global", "both", "field"]:
+		return [0, 1]
+	if owner_player < 0:
+		return []
+	return [owner_player]
+
+static func _apply_per_field_count_bonus(
+		card: GameState.CardInstance,
+		count: int
+) -> void:
+	var atk_bonus: int = card.ability_params.get("atk_bonus", 0) * count
+	var def_bonus: int = card.ability_params.get("def_bonus", 0) * count
+	var cap: int = int(card.ability_params.get("bonus_cap", -1))
+	if cap >= 0:
+		atk_bonus = mini(atk_bonus, cap)
+		def_bonus = mini(def_bonus, cap)
+	card.perm_atk_bonus = atk_bonus
+	card.perm_def_bonus = def_bonus
+
+# ─────────────────────────────────────────────────────────────
 # Field-based stat calculation (called before each battle and when field composition changes)
 # ─────────────────────────────────────────────────────────────
 static func recalculate_all_field_bonuses() -> void:
 	calculate_field_bonuses(0)
 	calculate_field_bonuses(1)
+	_apply_venom_queen_global_debuff()
 	GameState.emit_signal("field_bonuses_recalculated")
 
 static func calculate_field_bonuses(player_index: int) -> void:
@@ -887,6 +970,30 @@ static func _apply_field_aura_bonuses(player_index: int) -> void:
 								ally.field_aura_atk_bonus += party_atk
 								ally.field_aura_def_bonus += party_def
 
+static func _apply_venom_queen_global_debuff() -> void:
+	var total_atk_penalty: int = 0
+	var total_def_penalty: int = 0
+	for p in range(2):
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var source: GameState.CardInstance = GameState.grids[p][r][c]
+				if source.card_type != "character" or not source.face_up:
+					continue
+				if source.ability_type != CharacterData.AbilityType.FIELD_DEBUFF_ALL_VENOM_CARDS:
+					continue
+				total_atk_penalty += source.ability_params.get("atk", 15)
+				total_def_penalty += source.ability_params.get("def", 15)
+	if total_atk_penalty == 0 and total_def_penalty == 0:
+		return
+	for p in range(2):
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.grids[p][r][c]
+				if card.card_type != "character" or "venom" not in card.flags:
+					continue
+				card.field_aura_atk_bonus -= total_atk_penalty
+				card.field_aura_def_bonus -= total_def_penalty
+
 static func _apply_field_ability_bonus(
 		card: GameState.CardInstance,
 		player_index: int
@@ -894,13 +1001,11 @@ static func _apply_field_ability_bonus(
 	match card.ability_type:
 		CharacterData.AbilityType.BOOST_PER_TYPED_CARD_ON_FIELD:
 			var count := _count_matching_cards(player_index, card)
-			card.perm_atk_bonus = card.ability_params.get("atk_bonus", 0) * count
-			card.perm_def_bonus = card.ability_params.get("def_bonus", 0) * count
+			_apply_per_field_count_bonus(card, count)
 
 		CharacterData.AbilityType.BOOST_PER_ANIMA_ON_FIELD:
 			var count := _count_anima_cards(player_index, card)
-			card.perm_atk_bonus = card.ability_params.get("atk_bonus", 0) * count
-			card.perm_def_bonus = card.ability_params.get("def_bonus", 0) * count
+			_apply_per_field_count_bonus(card, count)
 
 		CharacterData.AbilityType.ATK_PENALTY_IF_NO_NAME_ALLY:
 			if not _has_name_ally_on_field(player_index, card):
@@ -909,21 +1014,21 @@ static func _apply_field_ability_bonus(
 		CharacterData.AbilityType.DESTROY_SELF_VS_DIVINE_BOTH:
 			if card.ability_params.has("atk_bonus") or card.ability_params.has("affinity"):
 				var count := _count_matching_cards(player_index, card)
-				card.perm_atk_bonus = card.ability_params.get("atk_bonus", 0) * count
-				card.perm_def_bonus = card.ability_params.get("def_bonus", 0) * count
+				_apply_per_field_count_bonus(card, count)
 
 static func _has_name_ally_on_field(player_index: int, source_card: GameState.CardInstance) -> bool:
 	var name_filter: String = source_card.ability_params.get(
 		"name", source_card.ability_params.get("name_contains", "")).to_lower()
 	if name_filter.is_empty():
 		return false
-	for r in range(GameState.GRID_SIZE):
-		for c in range(GameState.GRID_SIZE):
-			var ally: GameState.CardInstance = GameState.grids[player_index][r][c]
-			if ally == source_card:
-				continue
-			if ally.card_type == "character" and name_filter in ally.card_name.to_lower():
-				return true
+	for p: int in _field_players(player_index, source_card.ability_params):
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var ally: GameState.CardInstance = GameState.grids[p][r][c]
+				if ally == source_card:
+					continue
+				if ally.card_type == "character" and name_filter in ally.card_name.to_lower():
+					return true
 	return false
 
 static func _count_matching_cards(player_index: int, source_card: GameState.CardInstance) -> int:
@@ -932,31 +1037,33 @@ static func _count_matching_cards(player_index: int, source_card: GameState.Card
 		"card_name_contains", source_card.ability_params.get("name", "")).to_lower()
 	var affinity_filter: int = source_card.ability_params.get("affinity", -1)
 
-	for r in range(GameState.GRID_SIZE):
-		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.grids[player_index][r][c]
-			if card == source_card:
-				continue
-			if card.card_type != "character":
-				continue
-			if name_filter != "" and name_filter in card.card_name.to_lower():
-				if card.face_up:
-					count += 1
-			elif affinity_filter != -1 and card.affinity == affinity_filter:
-				if card.face_up:
-					count += 1
+	for p: int in _field_players(player_index, source_card.ability_params):
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.grids[p][r][c]
+				if card == source_card:
+					continue
+				if card.card_type != "character":
+					continue
+				if name_filter != "" and name_filter in card.card_name.to_lower():
+					if card.face_up:
+						count += 1
+				elif affinity_filter != -1 and card.affinity == affinity_filter:
+					if card.face_up:
+						count += 1
 	return count
 
 static func _count_anima_cards(player_index: int, source_card: GameState.CardInstance) -> int:
 	var count := 0
-	for r in range(GameState.GRID_SIZE):
-		for c in range(GameState.GRID_SIZE):
-			var card: GameState.CardInstance = GameState.grids[player_index][r][c]
-			if card == source_card:
-				continue
-			if card.card_type == "character" and card.face_up:
-				if card.affinity == CharacterData.Affinity.ANIMA:
-					count += 1
+	for p: int in _field_players(player_index, source_card.ability_params):
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.grids[p][r][c]
+				if card == source_card:
+					continue
+				if card.card_type == "character" and card.face_up:
+					if card.affinity == CharacterData.Affinity.ANIMA:
+						count += 1
 	return count
 
 

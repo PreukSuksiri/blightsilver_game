@@ -1,6 +1,6 @@
 # Tech Card Test Cases (Demo = Yes)
 
-Total cards: 11
+Total cards: 12
 
 Ordered by complexity/priority (most complex first).
 
@@ -9,7 +9,7 @@ Ordered by complexity/priority (most complex first).
 Card Name: Release Mutagen
 Type: Tech
 Cost: 0
-Ability: Select and reveal (if face-down) 1 of your Bio Unit on the field. Add Mutagen Flag to it.
+Ability: Add Mutagen Flag to 1 of this player’s unit
 Test Cases:
 
 
@@ -26,7 +26,7 @@ Steps:
 Step 1: Enter tech play phase; select Release Mutagen from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Select and reveal (if face-down) 1 of your Bio Unit on the field. Add Mutagen Flag to it.
+- Effect resolves: Add Mutagen Flag to 1 of this player’s unit
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Release-Mutagen-002
@@ -44,19 +44,6 @@ Expected Result:
 
 Test Case ID: TC-Release-Mutagen-003
 Description:
-Reveal — Release Mutagen target selection.
-Preconditions:
-- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
-- Ensure 'Release Mutagen' is in the active player's deck/hand and loaded in CardDatabase.
-- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
-- Opponent has ≥3 face-down cells.
-Steps:
-Step 1: Play Release Mutagen; select valid target cell(s).
-Expected Result:
-- Selected cell(s) become face-up; hidden info updates for both players.
-
-Test Case ID: TC-Release-Mutagen-004
-Description:
 Mutagen — Release Mutagen on Bio character.
 Preconditions:
 - Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
@@ -69,7 +56,7 @@ Step 1: Play Release Mutagen; attempt to select each.
 Expected Result:
 - Only Bio character eligible; has_mutagen_flag set true on success.
 
-Test Case ID: TC-Release-Mutagen-005
+Test Case ID: TC-Release-Mutagen-004
 Description:
 Edge — Release Mutagen with full board.
 Preconditions:
@@ -203,7 +190,7 @@ Expected Result:
 Card Name: Accident
 Type: Tech
 Cost: 1000
-Ability: Destroy 1 of foe’s face-up card. If there is no face-up card, foe must chooses the target. Foe pay no cost.
+Ability: Destroy 1 of foe’s exposed card. If there is no exposed card, foe must choose the target. foe pays no cost.
 Test Cases:
 
 
@@ -220,7 +207,7 @@ Steps:
 Step 1: Enter tech play phase; select Accident from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Destroy 1 of foe’s face-up card. If there is no face-up card, foe must chooses the target. Foe pay no cost.
+- Effect resolves: Destroy 1 of foe’s exposed card. If there is no exposed card, foe must choose the target. foe pays no cost.
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Accident-002
@@ -344,7 +331,7 @@ Expected Result:
 Card Name: Bribe
 Type: Tech
 Cost: 0
-Ability: Your foe can choose to reveal a unit card and receive 700 crystals or do nothing
+Ability: Foe can choose to reveal a unit card and receive 700 Crystals or do nothing
 Test Cases:
 
 
@@ -361,7 +348,7 @@ Steps:
 Step 1: Enter tech play phase; select Bribe from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Your foe can choose to reveal a unit card and receive 700 crystals or do nothing
+- Effect resolves: Foe can choose to reveal a unit card and receive 700 Crystals or do nothing
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Bribe-002
@@ -421,7 +408,7 @@ Expected Result:
 Card Name: Great Diplomacy
 Type: Tech
 Cost: 1000
-Ability: Select up to 5 of your units and reveal them.
+Ability: This player selects up to 5 of their units and reveal them.
 Test Cases:
 
 
@@ -438,7 +425,7 @@ Steps:
 Step 1: Enter tech play phase; select Great Diplomacy from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Select up to 5 of your units and reveal them.
+- Effect resolves: This player selects up to 5 of their units and reveal them.
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Great-Diplomacy-002
@@ -472,7 +459,7 @@ Expected Result:
 Card Name: War Supply
 Type: Tech
 Cost: 1000
-Ability: Your units get +10 ATK&DEF in Reckoning until turn’s end
+Ability: This player’s units get +10 ATK&DEF in Reckoning until turn’s end
 Test Cases:
 
 
@@ -489,7 +476,7 @@ Steps:
 Step 1: Enter tech play phase; select War Supply from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Your units get +10 ATK&DEF in Reckoning until turn’s end
+- Effect resolves: This player’s units get +10 ATK&DEF in Reckoning until turn’s end
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-War-Supply-002
@@ -635,10 +622,61 @@ Expected Result:
 
 ---
 
+Card Name: Potent Poison
+Type: Tech
+Cost: 1000
+Ability: Select 1 card with Venom Flag. Double its cost, then destroy it.
+Test Cases:
+
+
+Test Case ID: TC-Potent-Poison-001
+Description:
+Happy path — play Potent Poison during MODE_SELECT.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Potent Poison' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Potent Poison in Player 0 hand.
+- Player 0 has ≥ 1000 crystals.
+Steps:
+Step 1: Enter tech play phase; select Potent Poison from hand.
+Step 2: Pay cost; complete any target selection.
+Expected Result:
+- Effect resolves: Select 1 card with Venom Flag. Double its cost, then destroy it.
+- Tech card removed from hand; crystals deducted.
+
+Test Case ID: TC-Potent-Poison-002
+Description:
+Destroy — Potent Poison removal without crystal loss.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Potent Poison' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- Multiple face-up characters on field.
+Steps:
+Step 1: Play Potent Poison; destroy target.
+Expected Result:
+- Target removed; owner does NOT pay crystal cost for destroyed card.
+
+Test Case ID: TC-Potent-Poison-003
+Description:
+Edge — Potent Poison with full board.
+Preconditions:
+- Start a new battle (Daily Dungeon or battle_test scene). Both players begin with 5000 crystals unless testing low-crystal edge cases.
+- Ensure 'Potent Poison' is in the active player's deck/hand and loaded in CardDatabase.
+- Board is 5×5 per side; place supporting cards face-down unless the test requires face-up exposure.
+- All placement cells occupied where applicable.
+Steps:
+Step 1: Attempt to play Potent Poison.
+Expected Result:
+- Invalid targets disabled; no soft-lock in target selection UI.
+
+---
+
 Card Name: Tease
 Type: Tech
 Cost: 0
-Ability: Your foe choose and reveal 1 of their cell
+Ability: Foe chooses and reveal 1 of their cell
 Test Cases:
 
 
@@ -655,7 +693,7 @@ Steps:
 Step 1: Enter tech play phase; select Tease from hand.
 Step 2: Pay cost; complete any target selection.
 Expected Result:
-- Effect resolves: Your foe choose and reveal 1 of their cell
+- Effect resolves: Foe chooses and reveal 1 of their cell
 - Tech card removed from hand; crystals deducted.
 
 Test Case ID: TC-Tease-002

@@ -5933,8 +5933,12 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 						GameState.post_message("Bribe: Choose a face-down unit.")
 					elif _bribe_card.face_up:
 						GameState.post_message("Bribe: Choose a face-down unit.")
-				elif pending_tech_filter == "ability_plant29_target":
-					GameState.post_message("Plant-29: Choose a unit.")
+				elif pending_tech_filter == "ability_plant29_venom":
+					GameState.post_message("Plant-29: Choose 1 exposed ally or foe.")
+				elif pending_tech_filter == "ability_plant29_mutagen":
+					GameState.post_message("Plant-29: Choose 1 of your units.")
+				elif pending_tech_filter == "venom_flagged_card":
+					GameState.post_message("Potent Poison: Choose 1 card with Venom Flag.")
 				return
 			SFXManager.play(SFXManager.SFX_TARGET)
 			_handle_tech_target(player, pos)
@@ -6277,14 +6281,14 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		return
 
 	if filter in ["ability_false_prophet_reveal", "opponent_character_ability_destroy", "ability_rebel_king_swap",
-			"ability_plant29_target"]:
+			"ability_plant29_venom", "ability_plant29_mutagen"]:
 		var _ai_responds: bool = _is_ai_turn()
 		if filter == "ability_rebel_king_swap" and GameState.game_mode == GameState.GameMode.VS_AI \
 				and GameState.get_opponent(GameState.current_player) == ai_player.player_index:
 			_ai_responds = true
 		if _ai_responds:
 			await get_tree().create_timer(0.4).timeout
-			if filter == "ability_plant29_target":
+			if filter == "ability_plant29_venom" or filter == "ability_plant29_mutagen":
 				var _p29_pick: Dictionary = _active_ai.decide_any_grid_target(filter)
 				if _p29_pick.is_empty():
 					GameState.post_message("No valid target — effect cancelled.")
@@ -6334,6 +6338,12 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			var opp_card: GameState.CardInstance = GameState.get_card(opp_idx, ai_target.x, ai_target.y)
 			if opp_card.face_up and opp_card.card_type != "dead_end":
 				target_player = opp_idx
+		elif filter == "venom_flagged_card":
+			for p in range(2):
+				var picked: GameState.CardInstance = GameState.get_card(p, ai_target.x, ai_target.y)
+				if picked.card_type == "character" and "venom" in picked.flags:
+					target_player = p
+					break
 		elif "opponent" in filter or filter == "row_or_column" or filter == "adjacent":
 			target_player = GameState.get_opponent(GameState.current_player)
 		_flash_target_card(target_player, ai_target.x, ai_target.y)
@@ -6472,18 +6482,21 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		_clear_after_ability()
 		return
 
-	if pending_tech_filter == "ability_plant29_target":
-		if card.card_type == "character":
+	if pending_tech_filter == "ability_plant29_venom":
+		if card.card_type == "character" and card.face_up:
 			var _p29_name: String = _find_turn_start_coin_flip_source_name(current_player)
-			var _cf: Array = await turn_manager._do_coin_flips(1)
-			if _cf[0]:
-				GameState.apply_unit_effect_flag(player, pos.x, pos.y, "venom")
-				var _tgt: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
-				GameState.post_message("%s: Heads! Venom on %s." % [_p29_name, _tgt.card_name])
-			else:
-				GameState.apply_unit_effect_flag(player, pos.x, pos.y, "mutagen")
-				var _tgt_m: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
-				GameState.post_message("%s: Tails! Mutagen on %s." % [_p29_name, _tgt_m.card_name])
+			GameState.apply_unit_effect_flag(player, pos.x, pos.y, "venom")
+			var _tgt: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
+			GameState.post_message("%s: Venom on %s." % [_p29_name, _tgt.card_name])
+		_clear_after_ability()
+		return
+
+	if pending_tech_filter == "ability_plant29_mutagen":
+		if player == current_player and card.card_type == "character":
+			var _p29_name_m: String = _find_turn_start_coin_flip_source_name(current_player)
+			GameState.apply_unit_effect_flag(player, pos.x, pos.y, "mutagen")
+			var _tgt_m: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
+			GameState.post_message("%s: Mutagen on %s." % [_p29_name_m, _tgt_m.card_name])
 		_clear_after_ability()
 		return
 
@@ -6659,6 +6672,18 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				_finish_trap_target_selection()
 			else:
 				_finish_tech_action(current_player)
+		return
+
+	if pending_tech_filter == "venom_flagged_card":
+		if card.card_type == "character" and "venom" in card.flags:
+			var _doubled_cost: int = card.crystal_cost * 2
+			card.crystal_cost = _doubled_cost
+			GameState.destroy_card(player, pos.x, pos.y, true)
+			GameState.post_message("Potent Poison: %s destroyed (cost doubled to %d)." % [
+				card.card_name, _doubled_cost])
+		else:
+			GameState.post_message("No valid target — effect cancelled.")
+		_finish_tech_action(current_player)
 		return
 
 	if pending_tech_filter == "own_divine_character_redirect":
@@ -7053,7 +7078,8 @@ func _is_post_attack_ability_filter(filter: String) -> bool:
 		"ability_false_prophet_reveal",
 		"opponent_character_ability_destroy",
 		"ability_rebel_king_swap",
-		"ability_plant29_target",
+		"ability_plant29_venom",
+		"ability_plant29_mutagen",
 		"opponent_any_hidden",
 		"own_character_for_swap",
 	]
@@ -7300,12 +7326,27 @@ func _highlight_tech_targets(filter: String) -> void:
 					var card: GameState.CardInstance = GameState.get_card(p, r, c)
 					grid_nodes[p][r][c].set_highlighted(card.face_up and card.card_type != "dead_end")
 
-	elif filter == "ability_plant29_target":
+	elif filter == "ability_plant29_venom":
 		for p in range(2):
 			for r in range(GameState.GRID_SIZE):
 				for c in range(GameState.GRID_SIZE):
 					var card: GameState.CardInstance = GameState.get_card(p, r, c)
-					grid_nodes[p][r][c].set_highlighted(card.card_type == "character")
+					grid_nodes[p][r][c].set_highlighted(
+						card.card_type == "character" and card.face_up)
+
+	elif filter == "ability_plant29_mutagen":
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(player, r, c)
+				grid_nodes[player][r][c].set_highlighted(card.card_type == "character")
+
+	elif filter == "venom_flagged_card":
+		for p in range(2):
+			for r in range(GameState.GRID_SIZE):
+				for c in range(GameState.GRID_SIZE):
+					var card: GameState.CardInstance = GameState.get_card(p, r, c)
+					grid_nodes[p][r][c].set_highlighted(
+						card.card_type == "character" and "venom" in card.flags)
 
 	elif filter == "bribe_reveal":
 		# Bribed player may only reveal a face-down unit

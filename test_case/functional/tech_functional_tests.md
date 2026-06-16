@@ -3,7 +3,7 @@
 Derived from Godot `CardDatabase.gd` / `UnionDatabase.gd` implementation.
 Each case references the exact handler function and enum type.
 
-**Cards:** 32
+**Cards:** 33
 
 ---
 
@@ -12,7 +12,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: ADD_MUTAGEN_FLAG
 effect_params: {}
-Description: Select and reveal (if face-down) 1 of your Bio Unit on the field. Add Mutagen Flag to it.
+Description: Add Mutagen Flag to 1 of this player’s unit
 Test Cases:
 
 Test Case ID: TC-FUNC-Release-Mutagen-001
@@ -57,7 +57,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: BOTH_LOCK_CHOSEN_MONSTER
 effect_params: {'allow_facedown': True}
-Description: Both you and your foe select 1 monster from own's field (can reveal face-down card for this effect). Those monster cannot attack until the end of your next turn.
+Description: Both players select 1 monster from their side. That monster cannot attack until this player’s next turn ends
 Test Cases:
 
 Test Case ID: TC-FUNC-Make-Friend-001
@@ -74,7 +74,7 @@ Preconditions:
 Steps:
 Step 1: Play Make Friend.
 Expected Result:
-- Both you and your foe select 1 monster from own's field (can reveal face-down card for this effect). Those monster cannot attack until the end of your next turn.
+- Both players select 1 monster from their side. That monster cannot attack until this player’s next turn ends
 
 Test Case ID: TC-FUNC-Make-Friend-002
 Description:
@@ -98,7 +98,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: BOTH_SKIP_TURN
 effect_params: {}
-Description: Both you and your foe skip 1 turn (tax is forced to apply)
+Description: Both players skip 1 turn (tax is forced to apply)
 Test Cases:
 
 Test Case ID: TC-FUNC-Ceasefire-001
@@ -115,7 +115,7 @@ Preconditions:
 Steps:
 Step 1: Play Ceasefire.
 Expected Result:
-- Both you and your foe skip 1 turn (tax is forced to apply)
+- Both players skip 1 turn (tax is forced to apply)
 
 Test Case ID: TC-FUNC-Ceasefire-002
 Description:
@@ -139,7 +139,7 @@ Type: Tech
 Tech Cost: 1000
 TechEffectType: CLONE_CHARACTER_AS_TOKEN
 effect_params: {'destroy_at_turn_end': True}
-Description: Choose 1 of your face-up Units. Create a token copy of it on an empty square on your field. Destroy it at the start of your next turn.
+Description: This player. Choose 1 unit. Create a token copy of it on an empty cell. Destroy it at the end of this player’s next turn.
 Test Cases:
 
 Test Case ID: TC-FUNC-Arcane-Duplication-001
@@ -156,7 +156,7 @@ Preconditions:
 Steps:
 Step 1: Play Arcane Duplication.
 Expected Result:
-- Choose 1 of your face-up Units. Create a token copy of it on an empty square on your field. Destroy it at the start of your next turn.
+- This player. Choose 1 unit. Create a token copy of it on an empty cell. Destroy it at the end of this player’s next turn.
 
 ---
 
@@ -165,7 +165,7 @@ Type: Tech
 Tech Cost: 3000
 TechEffectType: DESTROY_ALL_REVEALED_OPPONENT
 effect_params: {'count': 5}
-Description: Destroy 5 face-up foe Units. You foe do not lose crystals under this effect. Discard all of your Tech afterward.
+Description: Destroy up to 3 exposed foe units (no cost is paid). This player discard all of their tech cards afterward.
 Test Cases:
 
 Test Case ID: TC-FUNC-Arcane-Nova-001
@@ -182,7 +182,7 @@ Preconditions:
 Steps:
 Step 1: Play Arcane Nova.
 Expected Result:
-- Destroy 5 face-up foe Units. You foe do not lose crystals under this effect. Discard all of your Tech afterward.
+- Destroy up to 3 exposed foe units (no cost is paid). This player discard all of their tech cards afterward.
 
 ---
 
@@ -191,7 +191,7 @@ Type: Tech
 Tech Cost: 1000
 TechEffectType: DESTROY_FACEUP_NO_CRYSTAL_LOSS
 effect_params: {}
-Description: Destroy 1 of foe’s face-up card. If there is no face-up card, foe must chooses the target. Foe pay no cost.
+Description: Destroy 1 of foe’s exposed card. If there is no exposed card, foe must choose the target. foe pays no cost.
 Test Cases:
 
 Test Case ID: TC-FUNC-Accident-001
@@ -218,7 +218,7 @@ Type: Tech
 Tech Cost: 1200
 TechEffectType: DESTROY_OWN_BASE_ZERO_OPPONENT
 effect_params: {}
-Description: Destroy 1 face-up card on the your field. You don't pay Crystal cost for the destroyed card. Choose 1 of your foe's face-up unit. Its ATK and DEF becomes 0 permanently
+Description: Destroy 1 card on this player’s side (No paid cost). Choose 1 of foe's exposed unit. Its ATK&DEF becomes 0 permanently
 Test Cases:
 
 Test Case ID: TC-FUNC-Blood-Ritual-001
@@ -235,7 +235,7 @@ Preconditions:
 Steps:
 Step 1: Play Blood Ritual.
 Expected Result:
-- Destroy 1 face-up card on the your field. You don't pay Crystal cost for the destroyed card. Choose 1 of your foe's face-up unit. Its ATK and DEF becomes 0 permanently
+- Destroy 1 card on this player’s side (No paid cost). Choose 1 of foe's exposed unit. Its ATK&DEF becomes 0 permanently
 
 ---
 
@@ -244,7 +244,7 @@ Type: Tech
 Tech Cost: 2000
 TechEffectType: DESTROY_ROW_AROUND_TARGET
 effect_params: {}
-Description: Select 1 face-up foe’s card. Destroy other face-up units on that same rows. Your foe don’t pay cost.
+Description: Select 1 exposed foe’s card. Destroy other exposed units on that same rows. Foe don’t pay cost.
 Test Cases:
 
 Test Case ID: TC-FUNC-Rift-Strike-001
@@ -261,7 +261,33 @@ Preconditions:
 Steps:
 Step 1: Play Rift Strike.
 Expected Result:
-- Select 1 face-up foe’s card. Destroy other face-up units on that same rows. Your foe don’t pay cost.
+- Select 1 exposed foe’s card. Destroy other exposed units on that same rows. Foe don’t pay cost.
+
+---
+
+Card Name: Potent Poison
+Type: Tech
+Tech Cost: 1000
+TechEffectType: DESTROY_VENOM_DOUBLE_COST
+effect_params: {}
+Description: Select 1 card with Venom Flag. Double its cost, then destroy it.
+Test Cases:
+
+Test Case ID: TC-FUNC-Potent-Poison-001
+Description:
+Potent Poison: tech DESTROY_VENOM_DOUBLE_COST
+Implementation Reference:
+- TechEffectType.DESTROY_VENOM_DOUBLE_COST
+- TurnManager.play_tech_card
+Preconditions:
+- Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
+- Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
+- Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
+- Potent Poison in hand during MODE_SELECT.
+Steps:
+Step 1: Play Potent Poison.
+Expected Result:
+- Select 1 card with Venom Flag. Double its cost, then destroy it.
 
 ---
 
@@ -270,7 +296,7 @@ Type: Tech
 Tech Cost: 250
 TechEffectType: DESTROY_WISPS_REVEAL_OPPONENT
 effect_params: {}
-Description: Destroy as many wisp on your side of the field  as you can. Reveal that much square on foe's field.
+Description: Destroy as many ally ‘wisp’ units. Reveal that much cells on foe's side.
 Test Cases:
 
 Test Case ID: TC-FUNC-Wisp-Light-001
@@ -287,7 +313,7 @@ Preconditions:
 Steps:
 Step 1: Play Wisp Light.
 Expected Result:
-- Destroy as many wisp on your side of the field  as you can. Reveal that much square on foe's field.
+- Destroy as many ally ‘wisp’ units. Reveal that much cells on foe's side.
 
 ---
 
@@ -340,7 +366,7 @@ Type: Tech
 Tech Cost: 600
 TechEffectType: FORCE_SHIELD_ONE_CARD
 effect_params: {}
-Description: Select 1 card on your field. It is not destroyed until the end of your foe's turn
+Description: This player selects 1 card. It is not destroyed until the end of foe's turn
 Test Cases:
 
 Test Case ID: TC-FUNC-Force-Shield-001
@@ -357,7 +383,7 @@ Preconditions:
 Steps:
 Step 1: Play Force Shield.
 Expected Result:
-- Select 1 card on your field. It is not destroyed until the end of your foe's turn
+- This player selects 1 card. It is not destroyed until the end of foe's turn
 
 ---
 
@@ -366,7 +392,7 @@ Type: Tech
 Tech Cost: 1500
 TechEffectType: GUERRILLA_TACTICS
 effect_params: {}
-Description: Until the end of your foe's turn. Whenever your foe attack your dead end card, flip a coin. If head, destroy it.
+Description: Until the end of foe's turn, If they attack a non-unit card, flip a coin. Head: destroy the attacking unit.
 Test Cases:
 
 Test Case ID: TC-FUNC-Guerrilla-Tactics-001
@@ -383,7 +409,7 @@ Preconditions:
 Steps:
 Step 1: Play Guerrilla Tactics.
 Expected Result:
-- Until the end of your foe's turn. Whenever your foe attack your dead end card, flip a coin. If head, destroy it.
+- Until the end of foe's turn, If they attack a non-unit card, flip a coin. Head: destroy the attacking unit.
 
 ---
 
@@ -392,7 +418,7 @@ Type: Tech
 Tech Cost: 700
 TechEffectType: MOVE_BUFFS_BETWEEN_CHARACTERS
 effect_params: {}
-Description: Choose 1 of your Units. Move all its ATK and DEF bonuses or debuffs to another face-up Unit on your field. If used on face-down card, you can turn it face-up and apply this effect.
+Description: This player chooses 1 unit. Move all its ATK&DEF bonuses or debuffs to another ally unit.
 Test Cases:
 
 Test Case ID: TC-FUNC-Essence-Transfer-001
@@ -409,7 +435,7 @@ Preconditions:
 Steps:
 Step 1: Play Essence Transfer.
 Expected Result:
-- Choose 1 of your Units. Move all its ATK and DEF bonuses or debuffs to another face-up Unit on your field. If used on face-down card, you can turn it face-up and apply this effect.
+- This player chooses 1 unit. Move all its ATK&DEF bonuses or debuffs to another ally unit.
 
 ---
 
@@ -418,7 +444,7 @@ Type: Tech
 Tech Cost: 2000
 TechEffectType: MULTI_ATTACK_ONE
 effect_params: {'extra_attacks': 1}
-Description: Select 1 of your face-up unit. You get 1 additional attack, but can only perform attack with that unit. You can’t use this card if you’ve already performed any attack.
+Description: Select 1 of this player's exposed unit. They get 1 additional attack, but can only perform attack with that unit. Can’t use this card if already performed any attack.
 Test Cases:
 
 Test Case ID: TC-FUNC-Berserk-001
@@ -435,7 +461,7 @@ Preconditions:
 Steps:
 Step 1: Play Berserk.
 Expected Result:
-- Select 1 of your face-up unit. You get 1 additional attack, but can only perform attack with that unit. You can’t use this card if you’ve already performed any attack.
+- Select 1 of this player's exposed unit. They get 1 additional attack, but can only perform attack with that unit. Can’t use this card if already performed any attack.
 
 ---
 
@@ -473,7 +499,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: OPPONENT_REVEALS_OR_GAINS
 effect_params: {'crystal_reward': 700}
-Description: Your foe can choose to reveal a unit card and receive 700 crystals or do nothing
+Description: Foe can choose to reveal a unit card and receive 700 Crystals or do nothing
 Test Cases:
 
 Test Case ID: TC-FUNC-Bribe-001
@@ -515,7 +541,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: OPPONENT_REVEALS_SQUARE
 effect_params: {}
-Description: Your foe choose and reveal 1 of their cell
+Description: Foe chooses and reveal 1 of their cell
 Test Cases:
 
 Test Case ID: TC-FUNC-Tease-001
@@ -556,7 +582,7 @@ Type: Tech
 Tech Cost: 500
 TechEffectType: PERM_ATK_BOOST_ONE
 effect_params: {'atk': 10, 'allow_facedown': True}
-Description: +10 ATK permanently to one of your unit. If used on face-down card, you can turn it face-up and apply this effect.
+Description: +10 ATK permanently to one of this player's unit.
 Test Cases:
 
 Test Case ID: TC-FUNC-Harsh-Training-001
@@ -573,7 +599,7 @@ Preconditions:
 Steps:
 Step 1: Play Harsh Training.
 Expected Result:
-- +10 ATK permanently to one of your unit. If used on face-down card, you can turn it face-up and apply this effect.
+- +10 ATK permanently to one of this player's unit.
 
 ---
 
@@ -582,7 +608,7 @@ Type: Tech
 Tech Cost: 850
 TechEffectType: PERM_DEF_BOOST_ONE
 effect_params: {'def': 15}
-Description: +15 DEF permanently for 1 face-up unit. If use on face-down card, flip it up.
+Description: +15 DEF permanently for 1 exposed unit. If use on face-down card, flip it up.
 Test Cases:
 
 Test Case ID: TC-FUNC-Bulletproof-Vest-001
@@ -599,7 +625,7 @@ Preconditions:
 Steps:
 Step 1: Play Bulletproof Vest.
 Expected Result:
-- +15 DEF permanently for 1 face-up unit. If use on face-down card, flip it up.
+- +15 DEF permanently for 1 exposed unit. If use on face-down card, flip it up.
 
 ---
 
@@ -608,7 +634,7 @@ Type: Tech
 Tech Cost: 1000
 TechEffectType: REVEAL_ALL_OWN_CHARACTERS
 effect_params: {'count': 5}
-Description: Select up to 5 of your units and reveal them.
+Description: This player selects up to 5 of their units and reveal them.
 Test Cases:
 
 Test Case ID: TC-FUNC-Great-Diplomacy-001
@@ -707,7 +733,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: REVEAL_OPPONENT_SQUARE_CHAIN
 effect_params: {'count': 2}
-Description: This card only trigger if you have Spy card in your void. Reveal 2 square on foe's side of the field.
+Description: Only trigger if this player have Spy card in the void. Reveal 2 square on foe's side of the field.
 Test Cases:
 
 Test Case ID: TC-FUNC-Double-Spy-001
@@ -724,7 +750,7 @@ Preconditions:
 Steps:
 Step 1: Play Double Spy.
 Expected Result:
-- This card only trigger if you have Spy card in your void. Reveal 2 square on foe's side of the field.
+- Only trigger if this player have Spy card in the void. Reveal 2 square on foe's side of the field.
 
 Test Case ID: TC-FUNC-Double-Spy-002
 Description:
@@ -748,7 +774,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: REVEAL_OPPONENT_SQUARE_CHAIN
 effect_params: {'count': 2}
-Description: This card only trigger if you have Double Spy card in your void. Reveal 2 square on foe's side of the field.
+Description: Only trigger if this player have Double Spy card in the void. Reveal 2 square on foe's side of the field.
 Test Cases:
 
 Test Case ID: TC-FUNC-Invisible-Spy-001
@@ -765,7 +791,7 @@ Preconditions:
 Steps:
 Step 1: Play Invisible Spy.
 Expected Result:
-- This card only trigger if you have Double Spy card in your void. Reveal 2 square on foe's side of the field.
+- Only trigger if this player have Double Spy card in the void. Reveal 2 square on foe's side of the field.
 
 Test Case ID: TC-FUNC-Invisible-Spy-002
 Description:
@@ -789,7 +815,7 @@ Type: Tech
 Tech Cost: 0
 TechEffectType: REVEAL_OPPONENT_SQUARE_RISKY
 effect_params: {'count': 3, 'cost_per_card': 700}
-Description: Reveal 3 square on foe's side of the field. If you found any trap or Unit, you pay 700 Crystal or each card found.
+Description: Reveal 3 square on foe's side of the field. If any trap or unit is found, this player pays 700 Crystal for each card found.
 Test Cases:
 
 Test Case ID: TC-FUNC-Corrupted-Spy-001
@@ -806,7 +832,7 @@ Preconditions:
 Steps:
 Step 1: Play Corrupted Spy.
 Expected Result:
-- Reveal 3 square on foe's side of the field. If you found any trap or Unit, you pay 700 Crystal or each card found.
+- Reveal 3 square on foe's side of the field. If any trap or unit is found, this player pays 700 Crystal for each card found.
 
 Test Case ID: TC-FUNC-Corrupted-Spy-002
 Description:
@@ -830,7 +856,7 @@ Type: Tech
 Tech Cost: 1800
 TechEffectType: REVIVE_CHARACTER_FULL
 effect_params: {'double_cost': True}
-Description: Once only, revive 1 unit to any unoccupied or empty cell in face-up position. Double its crystal cost.
+Description: Once only, revive 1 unit to any unoccupied or empty cell in exposed position. Double its Crystal cost.
 Test Cases:
 
 Test Case ID: TC-FUNC-Time-Travel-001
@@ -847,7 +873,7 @@ Preconditions:
 Steps:
 Step 1: Play Time Travel.
 Expected Result:
-- Once only, revive 1 unit to any unoccupied or empty cell in face-up position. Double its crystal cost.
+- Once only, revive 1 unit to any unoccupied or empty cell in exposed position. Double its Crystal cost.
 
 ---
 
@@ -912,7 +938,7 @@ Type: Tech
 Tech Cost: 1000
 TechEffectType: TEMP_ATK_DEF_BOOST_ALL
 effect_params: {'atk': 10, 'def': 10}
-Description: Your units get +10 ATK&DEF in Reckoning until turn’s end
+Description: This player’s units get +10 ATK&DEF in Reckoning until turn’s end
 Test Cases:
 
 Test Case ID: TC-FUNC-War-Supply-001
@@ -929,7 +955,7 @@ Preconditions:
 Steps:
 Step 1: Play War Supply.
 Expected Result:
-- Your units get +10 ATK&DEF in Reckoning until turn’s end
+- This player’s units get +10 ATK&DEF in Reckoning until turn’s end
 
 ---
 
@@ -938,7 +964,7 @@ Type: Tech
 Tech Cost: 1500
 TechEffectType: TEMP_DEF_BOOST_ALL
 effect_params: {'def': 20}
-Description: Until foe's turn ends: +20 DEF to all your cards in Reckoning
+Description: Until foe's turn ends: +20 DEF to all this player's cards in Reckoning
 Test Cases:
 
 Test Case ID: TC-FUNC-Garrison-001
@@ -955,7 +981,7 @@ Preconditions:
 Steps:
 Step 1: Play Garrison.
 Expected Result:
-- Until foe's turn ends: +20 DEF to all your cards in Reckoning
+- Until foe's turn ends: +20 DEF to all this player's cards in Reckoning
 
 ---
 
@@ -964,7 +990,7 @@ Type: Tech
 Tech Cost: 300
 TechEffectType: TEMP_REROLL_DICE
 effect_params: {'coin_reward': 600}
-Description: Flip a coin. If head, receive 600 crystals.
+Description: Flip a coin. If head, receive 600 Crystals. Always head, if trapper’s Crystal is 1000 or less.
 Test Cases:
 
 Test Case ID: TC-FUNC-Lucky-Day-001
@@ -981,7 +1007,7 @@ Preconditions:
 Steps:
 Step 1: Play Lucky Day.
 Expected Result:
-- Flip a coin. If head, receive 600 crystals.
+- Flip a coin. If head, receive 600 Crystals. Always head, if trapper’s Crystal is 1000 or less.
 
 ---
 
@@ -990,7 +1016,7 @@ Type: Tech
 Tech Cost: 1000
 TechEffectType: VIEW_OPPONENT_TECH
 effect_params: {'copy_to_hand': True}
-Description: Your foe show 1 tech card in their hand. Add a copy of that card into your Tech Stack.
+Description: Foe show 1 tech card in their hand. Add a copy of that card into this player's Tech Stack.
 Test Cases:
 
 Test Case ID: TC-FUNC-Tech-Copy-001
@@ -1007,6 +1033,6 @@ Preconditions:
 Steps:
 Step 1: Play Tech Copy.
 Expected Result:
-- Your foe show 1 tech card in their hand. Add a copy of that card into your Tech Stack.
+- Foe show 1 tech card in their hand. Add a copy of that card into this player's Tech Stack.
 
 ---

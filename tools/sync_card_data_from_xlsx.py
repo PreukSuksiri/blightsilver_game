@@ -14,10 +14,35 @@ XLSX = ROOT / "context" / "card_data.xlsx"
 CARD_DB = ROOT / "autoload" / "CardDatabase.gd"
 UNION_DB = ROOT / "autoload" / "UnionDatabase.gd"
 DEMO_FLAGS = ROOT / "data" / "demo_flags.json"
+CUSTOM_PACKS = ROOT / "shop" / "custom_packs.json"
 
 NAME_ALIASES = {
     "Armored Money": "Armored Monkey",
-    "Plant-29": "Plant 29",
+}
+
+PACK_ID_BY_SHORT_NAME = {
+    "Blightsilver": "booster_blightsilver",
+    "Unseen Presence": "booster_unseen_presence",
+    "Wind of Dominance": "booster_wind_of_dominance",
+}
+
+SHEET_CARD_TYPE = {
+    "Unit": "character",
+    "Trap": "trap",
+    "Tech": "tech",
+}
+
+WEIGHT_ALIASES = {
+    "Night Whisperer": "Night Whisperor",
+    "Moon Tribe Twin Blader": "Moon Tribe Twin Blades",
+}
+
+RARITY_DEFAULT_WEIGHT = {
+    1: 100,
+    2: 50,
+    3: 20,
+    4: 5,
+    5: 1,
 }
 
 AFFINITY = {
@@ -451,6 +476,129 @@ def write_demo_flags(wb) -> int:
     return sum(1 for v in flags.values() if v)
 
 
+def _parse_booster_columns(headers: list[str]) -> dict[str, str]:
+    """Map booster header string -> short pack name (e.g. 'Blightsilver')."""
+    result: dict[str, str] = {}
+    for h in headers:
+        m = re.match(r"Booster Pack - (.+?) / \d+$", h)
+        if m:
+            result[h] = m.group(1)
+    return result
+
+
+def _default_weight(card: dict) -> int:
+    rarity = card.get("Rarity")
+    if rarity is not None:
+        try:
+            return RARITY_DEFAULT_WEIGHT.get(int(rarity), 100)
+        except (TypeError, ValueError):
+            pass
+    cost = card.get("Cost")
+    if cost is not None:
+        try:
+            if int(cost) >= 1000:
+                return 5
+        except (TypeError, ValueError):
+            pass
+    return 100
+
+
+def _collect_booster_pools(wb) -> dict[str, dict[str, dict]]:
+    """Return {pack_short_name: {card_name: {type, card_row}}}."""
+    pools: dict[str, dict[str, dict]] = {}
+    for sheet, default_type in SHEET_CARD_TYPE.items():
+        headers, cards = sheet_rows(wb, sheet)
+        booster_cols = _parse_booster_columns(headers)
+        for header, short_name in booster_cols.items():
+            pack_cards = pools.setdefault(short_name, {})
+            for card in cards:
+                val = card.get(header)
+                if val is None or str(val).strip().lower() != "yes":
+                    continue
+                cname = gd_name(card["_name"])
+                pack_cards[cname] = {
+                    "type": default_type,
+                    "row": card,
+                }
+    return pools
+
+
+def _pack_unit_type_id(pack: dict) -> str:
+    for entry in pack.get("card_pool", []):
+        t = str(entry.get("card_type", "")).strip().lower()
+        if t in ("unit", "character"):
+            return t
+    return "character"
+
+
+def sync_custom_packs(wb) -> tuple[int, int, int]:
+    if not CUSTOM_PACKS.exists():
+        print("custom_packs.json not found — skipped booster sync")
+        return 0, 0, 0
+
+    pools = _collect_booster_pools(wb)
+    packs: list = json.loads(CUSTOM_PACKS.read_text(encoding="utf-8"))
+    updated_packs = 0
+    added_total = 0
+    removed_total = 0
+
+    for pack in packs:
+        short_name = str(pack.get("name", "")).replace("Booster Pack - ", "").strip()
+        if short_name not in pools:
+            continue
+
+        desired = pools[short_name]
+        old_pool: list = pack.get("card_pool", [])
+        old_by_name = {str(e.get("card_name", "")): e for e in old_pool}
+        unit_type = _pack_unit_type_id(pack)
+
+        new_pool: list[dict] = []
+        for cname in sorted(desired.keys()):
+            meta = desired[cname]
+            ctype = meta["type"]
+            if ctype == "character":
+                ctype = unit_type
+
+            old_entry = old_by_name.get(cname)
+            if old_entry is None:
+                alias = WEIGHT_ALIASES.get(cname)
+                if alias:
+                    old_entry = old_by_name.get(alias)
+
+            if old_entry is not None:
+                weight = old_entry.get("weight", 100)
+                ctype = str(old_entry.get("card_type", ctype))
+            else:
+                weight = _default_weight(meta["row"])
+
+            new_pool.append(
+                {
+                    "card_name": cname,
+                    "card_type": ctype,
+                    "weight": weight,
+                }
+            )
+
+        old_names = set(old_by_name.keys())
+        new_names = set(desired.keys())
+        added = new_names - old_names
+        removed = old_names - new_names
+        # Treat alias renames as updates, not add/remove churn
+        for new_name, old_name in WEIGHT_ALIASES.items():
+            if new_name in added and old_name in removed:
+                added.discard(new_name)
+                removed.discard(old_name)
+
+        if new_pool != old_pool:
+            pack["card_pool"] = new_pool
+            updated_packs += 1
+            added_total += len(added)
+            removed_total += len(removed)
+
+    CUSTOM_PACKS.write_text(json.dumps(packs, indent="\t") + "\n", encoding="utf-8")
+    return updated_packs, added_total, removed_total
+
+
 def main():
     wb = load_workbook()
     _, units = sheet_rows(wb, "Unit")
@@ -469,9 +617,14 @@ def main():
     UNION_DB.write_text(union_text, encoding="utf-8")
 
     demo_count = write_demo_flags(wb)
+    pack_updates, pack_added, pack_removed = sync_custom_packs(wb)
     print(f"CardDatabase: {u1} character stat/desc touches, {u2} traps, {u3} tech")
     print(f"UnionDatabase: {u4} union touches")
     print(f"demo_flags.json: {demo_count} demo=yes entries")
+    print(
+        f"custom_packs.json: {pack_updates} pack(s) updated "
+        f"(+{pack_added} cards, -{pack_removed} cards)"
+    )
 
 
 if __name__ == "__main__":

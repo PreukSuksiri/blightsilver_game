@@ -19,6 +19,9 @@ enum Affinity {
 	ANIMA
 }
 
+# Field-presence abilities: set ability_params.field_scope to "all" when card text
+# says "on the field" without a possessive ("its side", "your field", etc.).
+# See context/CONTENT_EDITING_GUIDE.md § Field scope and BattleResolver._field_players().
 enum AbilityType {
 	NONE,
 	ATK_BONUS_VS_AFFINITY,        # +N ATK when battling specific affinity
@@ -26,8 +29,8 @@ enum AbilityType {
 	ATK_DEF_BONUS_VS_AFFINITY,    # +N ATK and DEF vs affinity
 	IMMUNE_ZERO_COST_TRAPS,       # Not affected by 0-cost traps
 	CRYSTAL_GAIN_ON_DEFEND,       # +N Crystals when successfully defends
-	BOOST_PER_TYPED_CARD_ON_FIELD,# +N ATK/DEF per specific named card type on field
-	BOOST_PER_ANIMA_ON_FIELD,     # +N ATK/DEF per face-up Anima card on own field
+	BOOST_PER_TYPED_CARD_ON_FIELD,# +N ATK/DEF per matching face-up card (field_scope: owner|all)
+	BOOST_PER_ANIMA_ON_FIELD,     # +N ATK/DEF per other face-up Anima on owner's field
 	HALVE_STATS_AFTER_ATTACK,     # Halve ATK and DEF permanently after attacking
 	DESTROYED_IF_BATTLES_DIVINE,  # Destroy this card after Reckoning with Divine (either role)
 	IMMUNE_TO_TECH_CARDS,         # Not affected by Tech cards
@@ -58,7 +61,7 @@ enum AbilityType {
 	ATK_BONUS_IF_AFFINITY_ON_FIELD,  # +N ATK if specific affinity face-up on own field
 	ATK_DEF_BONUS_IF_UNION_ON_FIELD, # +N ATK/DEF if Union card on own field
 	ATK_DEF_BONUS_VS_NON_AFFINITY,   # +N ATK/DEF vs cards that don't match specified affinity
-	DEF_BONUS_IF_AFFINITY_ON_FIELD,  # +N DEF if specific affinity card face-up on own field
+	DEF_BONUS_IF_AFFINITY_ON_FIELD,  # +N DEF if affinity face-up on field (field_scope: owner|all)
 	ATK_PENALTY_WHEN_EXPOSED,        # -N ATK permanently at end of the turn this card was first exposed
 	PERM_ATK_BOOST_WHEN_EXPOSED,     # +N ATK permanently at end of the turn this card was first exposed
 	ATK_PENALTY_IF_NO_NAME_ALLY,     # -N ATK if no other card matching name_contains on own field
@@ -70,7 +73,7 @@ enum AbilityType {
 	COIN_FLIP_EXTRA_ATTACK,          # Flip 1 coin after attacking; heads → get one extra attack
 	COIN_FLIP_2_DESTROY_NON_AFFINITY,# Flip 2 coins; both heads → destroy defender if not specified affinity
 	COIN_FLIP_SWAP_POSITION,         # Flip 1 coin after battle; heads → player chooses own card to swap position
-	TURN_START_COIN_FLIP_FLAG,       # Turn start: choose 1 unit → coin flip → venom (heads) or mutagen (tails)
+	TURN_START_COIN_FLIP_FLAG,       # Turn start: coin flip → venom on exposed ally/foe or mutagen on own unit
 
 	# ── Destroy / negate conditions ──
 	DESTROY_IF_OPPONENT_AFFINITY,    # At battle calc, destroy defender if they match specified affinity
@@ -129,6 +132,9 @@ enum AbilityType {
 	HALVE_DEF_ON_FIRST_EXPOSE,       # Halve DEF permanently the first time this card becomes face-up
 	DESTROY_SELF_AT_END_OF_EXPOSE_TURN, # When first becoming face-up, destroyed at end of that turn
 	VENOM_FLAG_END_OF_TURN,          # End of own turn: player chooses 1 face-up opponent card → add "venom" flag
+	FIELD_DEBUFF_ALL_VENOM_CARDS,    # While face-up: -N ATK&DEF to all cards with venom flag (both grids)
+	ATK_DEF_BONUS_VS_VENOM,          # +N ATK&DEF vs venom-flagged foe; +M ATK when self has venom
+	VENOM_TOAD_RECKONING,            # In reckoning: destroy venom-flagged foe; after reckoning: venom on foe
 
 	# ── Passive field effects ──
 	OPPONENT_EXTRA_CRYSTAL_LOSS,     # Opponent loses +N extra crystals on every crystal loss event

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdsxck5y4iqva"
-path="res://.godot/imported/potent_poison.jpg-c55fe695ce4d07e9d958f85d6e1bc9b5.ctex"
+uid="uid://bsubtcvtysooa"
+path="res://.godot/imported/messenger_of_fate.jpg-6a322d51cef94a17b93697d917592780.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/cards/traps/potent_poison.jpg"
-dest_files=["res://.godot/imported/potent_poison.jpg-c55fe695ce4d07e9d958f85d6e1bc9b5.ctex"]
+source_file="res://assets/textures/cards/characters/messenger_of_fate.jpg"
+dest_files=["res://.godot/imported/messenger_of_fate.jpg-6a322d51cef94a17b93697d917592780.ctex"]
 
 [params]
 

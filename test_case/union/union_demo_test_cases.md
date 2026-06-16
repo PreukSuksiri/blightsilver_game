@@ -214,7 +214,7 @@ Card Name: Giant Meteor Vergaia
 Type: Union
 Stats: ATK=60 DEF=0 Affinity=Cosmic
 Partial Ability: Destroy it at turn's end, then destroy all ???
-Full Ability: Destroy it at turn's end, then destroy all face-up foe’s units surrounding the card that this card attacked.
+Full Ability: Destroy it at turn's end, then destroy all exposed foe’s units surrounding the card that this card attacked.
 Summon Formula: Striker Comet + 2 Cosmic card + 1000 cost
 Test Cases:
 
@@ -278,7 +278,7 @@ Preconditions:
 - Giant Meteor Vergaia summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Giant Meteor Vergaia; verify: Destroy it at turn's end, then destroy all face-up foe’s units surrounding the card that this card attacked.
+Step 1: Attack or defend with Giant Meteor Vergaia; verify: Destroy it at turn's end, then destroy all exposed foe’s units surrounding the card that this card attacked.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -403,8 +403,8 @@ Expected Result:
 Card Name: Armored Dino
 Type: Union
 Stats: ATK=95 DEF=60 Affinity=Nature
-Partial Ability: In Reckoning, pay ??? crystal cost to +??DEF
-Full Ability: In Reckoning, pay 1000 crystal cost to +60 DEF
+Partial Ability: In Reckoning, pay ??? Crystal cost to +??DEF
+Full Ability: In Reckoning, pay 1000 Crystal cost to +60 DEF
 Summon Formula: 1 Armored Nature card + 1 Nature (≥ 700 cost) + 800 cost
 Test Cases:
 
@@ -468,7 +468,7 @@ Preconditions:
 - Armored Dino summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Armored Dino; verify: In Reckoning, pay 1000 crystal cost to +60 DEF
+Step 1: Attack or defend with Armored Dino; verify: In Reckoning, pay 1000 Crystal cost to +60 DEF
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -505,8 +505,8 @@ Expected Result:
 Card Name: Rocket Peacock
 Type: Union
 Stats: ATK=150 DEF=100 Affinity=Nature
-Partial Ability: After this card battles, select 1 foe’s card, flip a coin. Head : ???
-Full Ability: After this card battles, select 1 foe’s card, flip a coin. Head : destroy that card
+Partial Ability: After this card battles, select 1 foe’s card, flip a coin. Head: ???
+Full Ability: After this card battles, select 1 foe’s card, flip a coin. Head: destroy that card
 Summon Formula: Ostrich Cannon + 1 Nature + 1500 cost
 Test Cases:
 
@@ -570,7 +570,7 @@ Preconditions:
 - Rocket Peacock summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Rocket Peacock; verify: After this card battles, select 1 foe’s card, flip a coin. Head : destroy that card
+Step 1: Attack or defend with Rocket Peacock; verify: After this card battles, select 1 foe’s card, flip a coin. Head: destroy that card
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -620,9 +620,9 @@ Expected Result:
 
 Card Name: False Prophet
 Type: Union
-Stats: ATK=20 DEF=40 Affinity=Divine
-Partial Ability: Start of your turn: Reveal ???. If it was a Dead End, destroy this card. Otherwise, gain ???
-Full Ability: Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.
+Stats: ATK=30 DEF=40 Affinity=Divine
+Partial Ability: End of owner’s turn: Reveal ???.
+Full Ability: End of owner’s turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.
 Summon Formula: 2 Divine cards + 300 cost
 Test Cases:
 
@@ -686,7 +686,7 @@ Preconditions:
 - False Prophet summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with False Prophet; verify: Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.
+Step 1: Attack or defend with False Prophet; verify: End of owner’s turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -826,7 +826,7 @@ Card Name: Blood-hungry Mutant
 Type: Union
 Stats: ATK=55 DEF=40 Affinity=Cosmic
 Partial Ability: After destroying foe’s card: ???
-Full Ability: After destroying foe’s card: +80 crystals
+Full Ability: After destroying foe’s card: +80 Crystals
 Summon Formula: 2 Mutant cards + 600 cost
 Test Cases:
 
@@ -890,7 +890,7 @@ Preconditions:
 - Blood-hungry Mutant summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Blood-hungry Mutant; verify: After destroying foe’s card: +80 crystals
+Step 1: Attack or defend with Blood-hungry Mutant; verify: After destroying foe’s card: +80 Crystals
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -927,8 +927,8 @@ Expected Result:
 Card Name: Volatile Slasher
 Type: Union
 Stats: ATK=50 DEF=45 Affinity=Bio
-Partial Ability: Once, after Reckoning with non-Bio, it gain ???.
-Full Ability: Once, after Reckoning with non-Bio, it gain +50 ATK permanently.
+Partial Ability: Once, after Reckoning with non-Bio, it gains ???.
+Full Ability: Once, after Reckoning with non-Bio, it gains +50 ATK permanently.
 Summon Formula: 1 Bladeshifter + 1 Bio card + 1000 cost
 Test Cases:
 
@@ -992,7 +992,7 @@ Preconditions:
 - Volatile Slasher summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Volatile Slasher; verify: Once, after Reckoning with non-Bio, it gain +50 ATK permanently.
+Step 1: Attack or defend with Volatile Slasher; verify: Once, after Reckoning with non-Bio, it gains +50 ATK permanently.
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1191,8 +1191,8 @@ Expected Result:
 Card Name: Scarlet Shroom
 Type: Union
 Stats: ATK=0 DEF=80 Affinity=Nature
-Partial Ability: If ???, put venom flag on all ???. 
-Full Ability: Once Union, put venom flag on all foe’s face-up card
+Partial Ability: Summoned: put venom flag on all ???. 
+Full Ability: Summoned: put venom flag on all foe’s exposed card
 Summon Formula: 2 Nature cards + 500 cost
 Test Cases:
 
@@ -1256,7 +1256,7 @@ Preconditions:
 - Scarlet Shroom summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Scarlet Shroom; verify: Once Union, put venom flag on all foe’s face-up card
+Step 1: Attack or defend with Scarlet Shroom; verify: Summoned: put venom flag on all foe’s exposed card
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1279,8 +1279,8 @@ Expected Result:
 Card Name: Rebel King
 Type: Union
 Stats: ATK=60 DEF=40 Affinity=Anima
-Partial Ability: At foe’s turn ends: ??? and swap ATK&DEF
-Full Ability: At foe’s turn ends: foe select 1 own unit and swap ATK&DEF
+Partial Ability: At the end of foe’s turn: ??? and swap its ATK&DEF
+Full Ability: At the end of foe’s turn: the owner of this card select 1 exposed foe’s unit and swap its ATK&DEF
 Summon Formula: Jirayu the Rebellious Prince + 1 Anima card (≥ 500 cost) + 800 cost
 Test Cases:
 
@@ -1344,7 +1344,7 @@ Preconditions:
 - Rebel King summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Rebel King; verify: At foe’s turn ends: foe select 1 own unit and swap ATK&DEF
+Step 1: Attack or defend with Rebel King; verify: At the end of foe’s turn: the owner of this card select 1 exposed foe’s unit and swap its ATK&DEF
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1368,7 +1368,7 @@ Card Name: Lord of Terror
 Type: Union
 Stats: ATK=150 DEF=100 Affinity=Chaos
 Partial Ability: -50 ATK if ???
-Full Ability: -50 ATK if attacks dead end card
+Full Ability: -50 ATK if attacks Dead End
 Summon Formula: 2 Chaos (≥ 800 cost) + 1500 cost
 Test Cases:
 
@@ -1432,7 +1432,7 @@ Preconditions:
 - Lord of Terror summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Lord of Terror; verify: -50 ATK if attacks dead end card
+Step 1: Attack or defend with Lord of Terror; verify: -50 ATK if attacks Dead End
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1720,7 +1720,7 @@ Card Name: Choir Lead Amber
 Type: Union
 Stats: ATK=35 DEF=35 Affinity=Divine
 Partial Ability: +20 ATK to all ?????
-Full Ability: +20 ATK to all Divine units on their own field
+Full Ability: +20 ATK to all Divine units on its side
 Summon Formula: 3 Choir Lady cards + 500 cost
 Test Cases:
 
@@ -1784,7 +1784,7 @@ Preconditions:
 - Choir Lead Amber summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Choir Lead Amber; verify: +20 ATK to all Divine units on their own field
+Step 1: Attack or defend with Choir Lead Amber; verify: +20 ATK to all Divine units on its side
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1808,7 +1808,7 @@ Card Name: Pixie Queen
 Type: Union
 Stats: ATK=30 DEF=30 Affinity=Divine
 Partial Ability: +5 ATK for each ????
-Full Ability: +5 ATK for each Divine cards on their own field
+Full Ability: +5 ATK for each Divine cards on its side
 Summon Formula: 1 Tiny Pixie + 1 Divine+ 300 cost
 Test Cases:
 
@@ -1872,7 +1872,7 @@ Preconditions:
 - Pixie Queen summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Pixie Queen; verify: +5 ATK for each Divine cards on their own field
+Step 1: Attack or defend with Pixie Queen; verify: +5 ATK for each Divine cards on its side
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1896,7 +1896,7 @@ Card Name: Gamma Mermaid
 Type: Union
 Stats: ATK=30 DEF=20 Affinity=Bio
 Partial Ability: Non-Bio defender get ???. With Mutagen Flag: +20 ???
-Full Ability: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all your Bio units
+Full Ability: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all ally Bio units
 Summon Formula: 1 Gamma cards + 1 Bio card + 500 cost
 Test Cases:
 
@@ -1960,7 +1960,7 @@ Preconditions:
 - Gamma Mermaid summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Gamma Mermaid; verify: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all your Bio units
+Step 1: Attack or defend with Gamma Mermaid; verify: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all ally Bio units
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -1983,8 +1983,8 @@ Expected Result:
 Card Name: Giant Mining Pod
 Type: Union
 Stats: ATK=20 DEF=80 Affinity=Cosmic
-Partial Ability: If this card attacks a dead end card, you receive ???crystals
-Full Ability: If this card attacks a dead end card, you receive 200 crystals
+Partial Ability: If this card attacks a Dead End, receive ??? Crystals
+Full Ability: If this card attacks a Dead End, receive 200 Crystals
 Summon Formula: 1 Miner probe + 1 Cosmic + 500 cost
 Test Cases:
 
@@ -2048,7 +2048,7 @@ Preconditions:
 - Giant Mining Pod summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Giant Mining Pod; verify: If this card attacks a dead end card, you receive 200 crystals
+Step 1: Attack or defend with Giant Mining Pod; verify: If this card attacks a Dead End, receive 200 Crystals
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 
@@ -2071,8 +2071,8 @@ Expected Result:
 Card Name: Diamond Unicorn
 Type: Union
 Stats: ATK=30 DEF=35 Affinity=Divine
-Partial Ability: Once Union, ??? until this turn’s end
-Full Ability: Once Union, +15 ATK until this turn’s end
+Partial Ability: Summoned: ??? until this turn’s end
+Full Ability: Summoned: +15 ATK until this turn’s end
 Summon Formula: 1 Ponycorn + 1 Divine card + 500 cost
 Test Cases:
 
@@ -2136,7 +2136,7 @@ Preconditions:
 - Diamond Unicorn summoned and face-up.
 - Opponent has valid battle target.
 Steps:
-Step 1: Attack or defend with Diamond Unicorn; verify: Once Union, +15 ATK until this turn’s end
+Step 1: Attack or defend with Diamond Unicorn; verify: Summoned: +15 ATK until this turn’s end
 Expected Result:
 - Full (not partial) ability text applies after union summon.
 

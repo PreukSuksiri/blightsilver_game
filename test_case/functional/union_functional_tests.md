@@ -56,7 +56,7 @@ Type: Union
 Stats: ATK=150 DEF=100 summon_cost=1500 Affinity=CHAOS
 AbilityType: ATK_PENALTY_VS_DEAD_END
 ability_params: {'penalty': 50}
-Description: -50 ATK if attacks dead end card
+Description: -50 ATK if attacks Dead End
 Test Cases:
 
 Test Case ID: TC-FUNC-Lord-of-Terror-000
@@ -100,7 +100,7 @@ Type: Union
 Stats: ATK=30 DEF=30 summon_cost=300 Affinity=DIVINE
 AbilityType: BOOST_PER_TYPED_CARD_ON_FIELD
 ability_params: {'atk_bonus': 5, 'def_bonus': 0, 'affinity': 'A.DIVINE'}
-Description: +5 ATK for each Divine cards on their own field
+Description: +5 ATK for each Divine cards on its side
 Test Cases:
 
 Test Case ID: TC-FUNC-Pixie-Queen-000
@@ -148,7 +148,7 @@ Type: Union
 Stats: ATK=20 DEF=80 summon_cost=500 Affinity=COSMIC
 AbilityType: CRYSTAL_GAIN_ON_DEAD_END_ATTACK
 ability_params: {'amount': 200}
-Description: If this card attacks a dead end card, you receive 200 crystals
+Description: If this card attacks a Dead End, receive 200 Crystals
 Test Cases:
 
 Test Case ID: TC-FUNC-Giant-Mining-Pod-000
@@ -192,7 +192,7 @@ Type: Union
 Stats: ATK=55 DEF=40 summon_cost=600 Affinity=COSMIC
 AbilityType: CRYSTAL_GAIN_ON_DESTROY
 ability_params: {'amount': 80}
-Description: After destroying foe’s card: +80 crystals
+Description: After destroying foe’s card: +80 Crystals
 Test Cases:
 
 Test Case ID: TC-FUNC-Blood-hungry-Mutant-000
@@ -227,7 +227,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: After destroying foe’s card: +80 crystals
+- Behavior matches CardDatabase description: After destroying foe’s card: +80 Crystals
 
 ---
 
@@ -235,8 +235,8 @@ Card Name: Gamma Mermaid
 Type: Union
 Stats: ATK=30 DEF=20 summon_cost=500 Affinity=BIO
 AbilityType: DEF_PENALTY_VS_NON_AFFINITY
-ability_params: {'affinity': 'A.BIO', 'def': 20}
-Description: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all your Bio units
+ability_params: {'affinity': 'A.BIO', 'def': 20, 'mutagen_party_atk': 20, 'mutagen_party_def': 20, 'mutagen_party_affinity': 'A.BIO'}
+Description: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all ally Bio units
 Test Cases:
 
 Test Case ID: TC-FUNC-Gamma-Mermaid-000
@@ -267,11 +267,11 @@ Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card placed; ability_params={'affinity': 'A.BIO', 'def': 20}.
+- Card placed; ability_params={'affinity': 'A.BIO', 'def': 20, 'mutagen_party_atk': 20, 'mutagen_party_def': 20, 'mutagen_party_affinity': 'A.BIO'}.
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all your Bio units
+- Behavior matches CardDatabase description: Non-Bio defender get -20 DEF. With Mutagen Flag: +20 ATK&DEF to all ally Bio units
 
 ---
 
@@ -280,7 +280,7 @@ Type: Union
 Stats: ATK=60 DEF=0 summon_cost=1000 Affinity=COSMIC
 AbilityType: DESTROY_END_TURN_BLAST_ADJACENT
 ability_params: {}
-Description: Destroy it at turn's end, then destroy all face-up foe's units surrounding the card that this card attacked.
+Description: Destroy it at turn's end, then destroy all exposed foe’s units surrounding the card that this card attacked.
 Test Cases:
 
 Test Case ID: TC-FUNC-Giant-Meteor-Vergaia-000
@@ -315,7 +315,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: Destroy it at turn's end, then destroy all face-up foe's units surrounding the card that this card attacked.
+- Behavior matches CardDatabase description: Destroy it at turn's end, then destroy all exposed foe’s units surrounding the card that this card attacked.
 
 ---
 
@@ -369,7 +369,7 @@ Type: Union
 Stats: ATK=35 DEF=35 summon_cost=500 Affinity=DIVINE
 AbilityType: FIELD_ATK_BOOST_OWN_AFFINITY
 ability_params: {'affinity': 'A.DIVINE', 'atk': 20}
-Description: +20 ATK to all Divine units on their own field
+Description: +20 ATK to all Divine units on its side
 Test Cases:
 
 Test Case ID: TC-FUNC-Choir-Lead-Amber-000
@@ -457,7 +457,7 @@ Card Name: Burning Phoenix
 Type: Union
 Stats: ATK=125 DEF=50 summon_cost=800 Affinity=ARCANE
 AbilityType: IMMUNE_DESTROY_BY_NON_UNION
-ability_params: {}
+ability_params: {'tech_target_self_destruct': True}
 Description: Cannot be destroyed by non-union cards. If targeted by tech, destroy this card.
 Test Cases:
 
@@ -489,7 +489,7 @@ Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card placed; ability_params={}.
+- Card placed; ability_params={'tech_target_self_destruct': True}.
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
@@ -501,7 +501,7 @@ Card Name: Ten Arms Yaksa
 Type: Union
 Stats: ATK=45 DEF=30 summon_cost=600 Affinity=CHAOS
 AbilityType: MULTI_ATTACK_ANY_WITH_ATK_LOSS
-ability_params: {'max_attacks': 3, 'atk_loss': 5}
+ability_params: {'max_attacks': 2, 'atk_loss': 5}
 Description: This card can choose two attack targets. -5 ATK for each successful attack.
 Test Cases:
 
@@ -525,7 +525,7 @@ Expected Result:
 
 Test Case ID: TC-FUNC-Ten-Arms-Yaksa-001
 Description:
-Ten Arms Yaksa: up to 3 attacks, -5 ATK per attack
+Ten Arms Yaksa: up to 2 attacks, -5 ATK per attack
 Implementation Reference:
 - TurnManager MULTI_ATTACK_ANY_WITH_ATK_LOSS
 - AbilityType.MULTI_ATTACK_ANY_WITH_ATK_LOSS
@@ -535,9 +535,9 @@ Preconditions:
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
 - attacks_remaining sufficient.
 Steps:
-Step 1: Chain 3 attacks same turn.
+Step 1: Chain 2 attacks same turn.
 Expected Result:
-- Each attack: current_atk -= 5; extra attack while multi_attack_count < 3.
+- Each attack: current_atk -= 5; extra attack while multi_attack_count < 2.
 
 ---
 
@@ -1074,7 +1074,7 @@ Type: Union
 Stats: ATK=30 DEF=35 summon_cost=500 Affinity=DIVINE
 AbilityType: ONE_USE_ATK_BOOST
 ability_params: {'bonus': 15}
-Description: Once Union, +15 ATK until this turn's end
+Description: Summoned: +15 ATK until this turn’s end
 Test Cases:
 
 Test Case ID: TC-FUNC-Diamond-Unicorn-000
@@ -1164,7 +1164,7 @@ Type: Union
 Stats: ATK=60 DEF=40 summon_cost=800 Affinity=ANIMA
 AbilityType: OPPONENT_TURN_END_SWAP_ATK_DEF
 ability_params: {}
-Description: At foe’s turn ends: foe select 1 own unit and swap ATK&DEF
+Description: At the end of foe’s turn: the owner of this card select 1 exposed foe’s unit and swap its ATK&DEF
 Test Cases:
 
 Test Case ID: TC-FUNC-Rebel-King-000
@@ -1199,7 +1199,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: At foe’s turn ends: foe select 1 own unit and swap ATK&DEF
+- Behavior matches CardDatabase description: At the end of foe’s turn: the owner of this card select 1 exposed foe’s unit and swap its ATK&DEF
 
 ---
 
@@ -1208,7 +1208,7 @@ Type: Union
 Stats: ATK=95 DEF=60 summon_cost=800 Affinity=NATURE
 AbilityType: OPTIONAL_CRYSTAL_PAY_DEF_BOOST
 ability_params: {'cost': 1000, 'def': 60}
-Description: In Reckoning, pay 1000 crystal cost to +60 DEF
+Description: In Reckoning, pay 1000 Crystal cost to +60 DEF
 Test Cases:
 
 Test Case ID: TC-FUNC-Armored-Dino-000
@@ -1299,7 +1299,7 @@ Type: Union
 Stats: ATK=50 DEF=45 summon_cost=1000 Affinity=BIO
 AbilityType: PERM_ATK_BOOST_ONCE_PER_AFFINITY
 ability_params: {'affinity': 'A.BIO', 'atk': 50}
-Description: Once, after Reckoning with non-Bio, it gain +50 ATK permanently.
+Description: Once, after Reckoning with non-Bio, it gains +50 ATK permanently.
 Test Cases:
 
 Test Case ID: TC-FUNC-Volatile-Slasher-000
@@ -1334,7 +1334,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: Once, after Reckoning with non-Bio, it gain +50 ATK permanently.
+- Behavior matches CardDatabase description: Once, after Reckoning with non-Bio, it gains +50 ATK permanently.
 
 ---
 
@@ -1387,7 +1387,7 @@ Type: Union
 Stats: ATK=150 DEF=100 summon_cost=1500 Affinity=NATURE
 AbilityType: POST_BATTLE_COIN_FLIP_DESTROY
 ability_params: {}
-Description: After this card battles, select 1 foe’s card, flip a coin. Head : destroy that card
+Description: After this card battles, select 1 foe’s card, flip a coin. Head: destroy that card
 Test Cases:
 
 Test Case ID: TC-FUNC-Rocket-Peacock-000
@@ -1422,7 +1422,7 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: After this card battles, select 1 foe’s card, flip a coin. Head : destroy that card
+- Behavior matches CardDatabase description: After this card battles, select 1 foe’s card, flip a coin. Head: destroy that card
 
 ---
 
@@ -1472,10 +1472,10 @@ Expected Result:
 
 Card Name: False Prophet
 Type: Union
-Stats: ATK=20 DEF=40 summon_cost=300 Affinity=DIVINE
-AbilityType: TURN_START_REVEAL_OPPONENT_CELL
-ability_params: {'gain': 200}
-Description: Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.
+Stats: ATK=30 DEF=40 summon_cost=300 Affinity=DIVINE
+AbilityType: TURN_END_REVEAL_OPPONENT_CELL
+ability_params: {'gain': 600}
+Description: End of owner’s turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.
 Test Cases:
 
 Test Case ID: TC-FUNC-False-Prophet-000
@@ -1498,19 +1498,19 @@ Expected Result:
 
 Test Case ID: TC-FUNC-False-Prophet-001
 Description:
-False Prophet: ability TURN_START_REVEAL_OPPONENT_CELL functional smoke test
+False Prophet: ability TURN_END_REVEAL_OPPONENT_CELL functional smoke test
 Implementation Reference:
-- CharacterData.AbilityType.TURN_START_REVEAL_OPPONENT_CELL
+- CharacterData.AbilityType.TURN_END_REVEAL_OPPONENT_CELL
 - See BattleResolver.gd / TurnManager.gd
 Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.
 - Both players STARTING_CRYSTALS=5000 unless test specifies otherwise.
 - Disable `bare_hands_brawling` dungeon modifier (cancels character abilities in BattleResolver).
-- Card placed; ability_params={'gain': 200}.
+- Card placed; ability_params={'gain': 600}.
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: Start of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 200 crystals.
+- Behavior matches CardDatabase description: End of owner’s turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.
 
 ---
 
@@ -1563,7 +1563,7 @@ Type: Union
 Stats: ATK=0 DEF=80 summon_cost=500 Affinity=NATURE
 AbilityType: UNION_SUMMON_VENOM_ALL_FOE
 ability_params: {}
-Description: Once Union, put venom flag on all foe’s face-up card
+Description: Summoned: put venom flag on all foe’s exposed card
 Test Cases:
 
 Test Case ID: TC-FUNC-Scarlet-Shroom-000
@@ -1598,6 +1598,6 @@ Preconditions:
 Steps:
 Step 1: Trigger battle/turn/tech condition per description.
 Expected Result:
-- Behavior matches CardDatabase description: Once Union, put venom flag on all foe’s face-up card
+- Behavior matches CardDatabase description: Summoned: put venom flag on all foe’s exposed card
 
 ---

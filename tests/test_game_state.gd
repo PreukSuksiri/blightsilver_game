@@ -16,6 +16,9 @@ func assert_true(condition: bool, msg: String) -> void:
 		failed += 1
 		printerr("  FAIL: %s" % msg)
 
+func assert_false(condition: bool, msg: String) -> void:
+	assert_true(not condition, msg)
+
 func assert_eq(a, b, msg: String) -> void:
 	if a == b:
 		passed += 1
