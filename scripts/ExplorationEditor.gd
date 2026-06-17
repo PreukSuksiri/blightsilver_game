@@ -86,6 +86,8 @@ var _prop_show_who_chk:       CheckBox    = null
 var _prop_music_edit:       LineEdit    = null
 var _prop_music_cond_vbox:  VBoxContainer = null
 var _prop_battle_section:   VBoxContainer = null
+var _prop_vault_opt:        OptionButton = null
+var _prop_vault_form_opt:   OptionButton = null
 var _prop_battle_bgm_edit:  LineEdit    = null
 var _prop_setup_bgm_edit:   LineEdit    = null
 var _prop_almost_win_bgm_edit: LineEdit = null
@@ -334,6 +336,25 @@ func _build_props_panel() -> Control:
 	battle_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.45))
 	battle_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_prop_battle_section.add_child(battle_hint)
+	var vault_lbl := Label.new()
+	vault_lbl.text = "AI Deck Vault (optional — highest priority over random AI pool)"
+	vault_lbl.add_theme_font_size_override("font_size", 11)
+	vault_lbl.add_theme_color_override("font_color", Color(0.75, 0.95, 1.0))
+	vault_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_prop_battle_section.add_child(vault_lbl)
+	_prop_vault_opt = OptionButton.new()
+	_prop_vault_opt.add_theme_font_size_override("font_size", 14)
+	_prop_vault_opt.item_selected.connect(func(_i: int) -> void: _on_battle_vault_selected())
+	_prop_battle_section.add_child(_prop_vault_opt)
+	AIDeckVault.populate_vault_option(_prop_vault_opt)
+	var vault_form_lbl := Label.new()
+	vault_form_lbl.text = "Vault formation"
+	vault_form_lbl.add_theme_font_size_override("font_size", 13)
+	_prop_battle_section.add_child(vault_form_lbl)
+	_prop_vault_form_opt = OptionButton.new()
+	_prop_vault_form_opt.add_theme_font_size_override("font_size", 14)
+	_prop_vault_form_opt.item_selected.connect(func(_i: int) -> void: _on_battle_vault_selected())
+	_prop_battle_section.add_child(_prop_vault_form_opt)
 	var audio_filters := PackedStringArray(["*.mp3,*.ogg,*.wav ; Audio Files"])
 	_prop_battle_bgm_edit = _add_file_field(_prop_battle_section, "Battle BGM",
 		audio_filters, "res://assets/audio")
@@ -1191,6 +1212,14 @@ func _update_battle_section_visibility() -> void:
 	if _prop_battle_section == null or _prop_type_btn == null:
 		return
 	_prop_battle_section.visible = _prop_type_btn.selected == ExplorationNode.NodeType.BATTLE
+
+
+func _on_battle_vault_selected() -> void:
+	if _prop_vault_opt == null or _prop_vault_form_opt == null:
+		return
+	AIDeckVault.populate_formation_option(
+		_prop_vault_form_opt, AIDeckVault.option_entry_id(_prop_vault_opt))
+
 
 func _add_type_dropdown(parent: Control) -> OptionButton:
 	var lbl := Label.new()
@@ -2571,6 +2600,12 @@ func _populate_props(en: ExplorationNode) -> void:
 				str(cd.get("var", "")), str(cd.get("equals", "")), str(cd.get("value", "")))
 	_prop_type_btn.select(en.node_type)
 	_update_battle_section_visibility()
+	if _prop_vault_opt != null:
+		AIDeckVault.populate_vault_option(_prop_vault_opt)
+		AIDeckVault.select_vault_option(_prop_vault_opt, en.ai_deck_vault)
+		_on_battle_vault_selected()
+		if _prop_vault_form_opt != null:
+			AIDeckVault.select_formation_option(_prop_vault_form_opt, en.ai_deck_vault_formation)
 	_prop_battle_bgm_edit.text = en.battle_bgm
 	_prop_setup_bgm_edit.text = en.setup_bgm
 	_prop_almost_win_bgm_edit.text = en.almost_win_bgm
@@ -2717,6 +2752,10 @@ func _collect_props(en: ExplorationNode) -> void:
 	en.setup_bgm          = _prop_setup_bgm_edit.text.strip_edges()
 	en.almost_win_bgm     = _prop_almost_win_bgm_edit.text.strip_edges()
 	en.battle_bgm_volume  = _prop_battle_bgm_vol.value
+	if _prop_vault_opt != null:
+		en.ai_deck_vault = AIDeckVault.option_entry_id(_prop_vault_opt)
+		en.ai_deck_vault_formation = AIDeckVault.option_formation_index(_prop_vault_form_opt) \
+			if _prop_vault_form_opt != null else 0
 	en.background  = _prop_bg_edit.text.strip_edges()
 	en.background_conditions.clear()
 	for frame: Node in _prop_bg_cond_vbox.get_children():

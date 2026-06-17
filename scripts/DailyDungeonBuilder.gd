@@ -56,6 +56,8 @@ var _prop_pack_edit:    LineEdit = null
 var _prop_chars_edit:   TextEdit = null
 var _prop_traps_edit:   TextEdit = null
 var _prop_tech_edit:    TextEdit = null
+var _prop_vault_opt:    OptionButton = null
+var _prop_vault_form_opt: OptionButton = null
 
 var _conn_text: TextEdit = null
 var _prop_img_edit:     LineEdit = null
@@ -478,6 +480,17 @@ func _build_prop_panel(parent: Control) -> void:
 	inner.add_child(_prop_post_msg_edit)
 
 	inner.add_child(_make_sep())
+
+	# ── AI Deck Vault (overrides inline deck + AI forced cells when set) ──
+	inner.add_child(_make_lbl("AI Deck Vault (optional — highest priority)"))
+	_prop_vault_opt = OptionButton.new()
+	_prop_vault_opt.item_selected.connect(func(_i: int) -> void: _on_vault_selected())
+	inner.add_child(_prop_vault_opt)
+	AIDeckVault.populate_vault_option(_prop_vault_opt)
+	inner.add_child(_make_lbl("Vault formation"))
+	_prop_vault_form_opt = OptionButton.new()
+	_prop_vault_form_opt.item_selected.connect(func(_i: int) -> void: _on_vault_selected())
+	inner.add_child(_prop_vault_form_opt)
 
 	# ── AI Deck ──
 	inner.add_child(_make_lbl("AI Characters (one per line)"))
@@ -1081,13 +1094,23 @@ func _update_prop_panel() -> void:
 	if _prop_post_msg_edit != null:
 		_prop_post_msg_edit.text = str(nd.get("post_battle_message", ""))
 	var deck: Dictionary = nd.get("ai_deck", {})
+	var bs: Dictionary = nd.get("battle_settings", {})
 	_prop_chars_edit.text = "\n".join(PackedStringArray(deck.get("characters", [])))
 	_prop_traps_edit.text = "\n".join(PackedStringArray(deck.get("traps", [])))
 	_prop_tech_edit.text  = "\n".join(PackedStringArray(deck.get("tech", [])))
+	if _prop_vault_opt != null:
+		AIDeckVault.populate_vault_option(_prop_vault_opt)
+		var vault_id: String = str(nd.get("ai_deck_vault", "")).strip_edges()
+		if vault_id.is_empty():
+			vault_id = str(bs.get("ai_deck_vault", "")).strip_edges()
+		AIDeckVault.select_vault_option(_prop_vault_opt, vault_id)
+		_on_vault_selected(false)
+		if _prop_vault_form_opt != null:
+			var form_idx: int = int(nd.get("ai_deck_vault_formation", bs.get("ai_deck_vault_formation", 0)))
+			AIDeckVault.select_formation_option(_prop_vault_form_opt, form_idx)
 
 	# Battle settings
 	if _prop_p1_name != null:
-		var bs: Dictionary = nd.get("battle_settings", {})
 		_prop_p1_name.text       = str(bs.get("player1_name", ""))
 		_prop_p2_name.text       = str(bs.get("player2_name", ""))
 		_prop_portrait_p1.text   = str(bs.get("portrait_p1", ""))
@@ -1149,6 +1172,18 @@ func _apply_node_changes() -> void:
 		if not s.is_empty():
 			techs.append(s)
 	nd["ai_deck"] = {"characters": chars, "traps": traps, "tech": techs}
+	if _prop_vault_opt != null:
+		var vault_id: String = AIDeckVault.option_entry_id(_prop_vault_opt)
+		if vault_id.is_empty():
+			nd.erase("ai_deck_vault")
+			nd.erase("ai_deck_vault_formation")
+		else:
+			nd["ai_deck_vault"] = vault_id
+			var form_idx: int = AIDeckVault.option_formation_index(_prop_vault_form_opt)
+			if form_idx != 0:
+				nd["ai_deck_vault_formation"] = form_idx
+			else:
+				nd.erase("ai_deck_vault_formation")
 	# Collect battle settings
 	if _prop_p1_name != null:
 		var pfc: Array = _collect_forced_cells_from_grid_bld(_player_forced_grid)
@@ -1287,6 +1322,8 @@ func _copy_battle_data() -> void:
 	var afc: Array = _collect_forced_cells_from_grid_bld(_ai_forced_grid)
 	_battle_clipboard = {
 		"ai_deck": {"characters": chars, "traps": traps, "tech": techs},
+		"ai_deck_vault": AIDeckVault.option_entry_id(_prop_vault_opt) if _prop_vault_opt != null else "",
+		"ai_deck_vault_formation": AIDeckVault.option_formation_index(_prop_vault_form_opt) if _prop_vault_form_opt != null else 0,
 		"battle_settings": {
 			"player1_name":              _prop_p1_name.text.strip_edges(),
 			"player2_name":              _prop_p2_name.text.strip_edges(),
@@ -1324,6 +1361,11 @@ func _paste_battle_data() -> void:
 	_prop_chars_edit.text = "\n".join(PackedStringArray(deck.get("characters", [])))
 	_prop_traps_edit.text = "\n".join(PackedStringArray(deck.get("traps", [])))
 	_prop_tech_edit.text  = "\n".join(PackedStringArray(deck.get("tech", [])))
+	if _prop_vault_opt != null:
+		AIDeckVault.select_vault_option(_prop_vault_opt, str(_battle_clipboard.get("ai_deck_vault", "")).strip_edges())
+		_on_vault_selected(false)
+		if _prop_vault_form_opt != null:
+			AIDeckVault.select_formation_option(_prop_vault_form_opt, int(_battle_clipboard.get("ai_deck_vault_formation", 0)))
 	# Restore battle settings
 	var bs: Dictionary = _battle_clipboard.get("battle_settings", {})
 	_prop_p1_name.text       = str(bs.get("player1_name", ""))
@@ -1644,6 +1686,19 @@ func _collect_forced_cells_from_grid_bld(grid_dict: Dictionary) -> Array:
 				"col": int(parts[1]),
 			})
 	return result
+
+func _on_vault_selected(preview_grid: bool = true) -> void:
+	if _prop_vault_opt == null or _prop_vault_form_opt == null:
+		return
+	var entry_id: String = AIDeckVault.option_entry_id(_prop_vault_opt)
+	AIDeckVault.populate_formation_option(_prop_vault_form_opt, entry_id)
+	if not preview_grid or entry_id.is_empty():
+		return
+	var cfg: Dictionary = AIDeckVault.build_ai_battle_config(
+		entry_id, AIDeckVault.option_formation_index(_prop_vault_form_opt))
+	if not bool(cfg.get("ok", false)):
+		return
+	_rebuild_forced_grid_bld(_ai_forced_grid, _ai_forced_gc, cfg.get("forced_cells", []))
 
 func _rebuild_forced_grid_bld(grid_dict: Dictionary, gc: GridContainer, data: Array) -> void:
 	grid_dict.clear()

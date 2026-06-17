@@ -153,6 +153,11 @@ enum NodeType {
 @export var almost_win_bgm: String = ""
 @export var battle_bgm_volume: float = 100.0
 
+## Optional AI Deck Vault entry — overrides random AI pool when set.
+@export var ai_deck_vault: String = ""
+## Formation index within the vault deck (default 0).
+@export var ai_deck_vault_formation: int = 0
+
 ## Events fired in order when the player ENTERS this node.
 ## Each entry is a Dictionary (see format above).
 @export var on_enter_events: Array = []
@@ -327,6 +332,8 @@ func to_dict() -> Dictionary:
 		"setup_bgm":          setup_bgm,
 		"almost_win_bgm":     almost_win_bgm,
 		"battle_bgm_volume":  battle_bgm_volume,
+		"ai_deck_vault":          ai_deck_vault,
+		"ai_deck_vault_formation": ai_deck_vault_formation,
 		"on_enter_events": on_enter_events.duplicate(true),
 		"on_enter_events_conditions": on_enter_events_conditions.duplicate(true),
 		"on_exit_events":  on_exit_events.duplicate(true),
@@ -370,6 +377,8 @@ static func from_dict(d: Dictionary) -> ExplorationNode:
 	node.setup_bgm          = str(d.get("setup_bgm", ""))
 	node.almost_win_bgm     = str(d.get("almost_win_bgm", ""))
 	node.battle_bgm_volume  = float(d.get("battle_bgm_volume", 100.0))
+	node.ai_deck_vault = str(d.get("ai_deck_vault", "")).strip_edges()
+	node.ai_deck_vault_formation = int(d.get("ai_deck_vault_formation", 0))
 
 	var type_str: String = str(d.get("node_type", "NORMAL")).to_upper()
 	if NodeType.keys().has(type_str):

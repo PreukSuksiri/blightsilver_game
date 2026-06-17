@@ -44,15 +44,19 @@ const TITLE_BG_TEX_SIZE := Vector2(1216.0, 832.0)
 const TITLE_CHEAT_TAPS_REQUIRED := 20
 const TITLE_CHEAT_APARTMENT_CREDITS := 10000
 const TITLE_CHEAT_MOON_CREDITS := 2500
+const CREDIT_DEMO_SCENE := "res://scenes/credit_demo.tscn"
 # Normalized hit rects on bg_title_1.png — see requirement/Screenshot 2569-06-12 at 12.23.11.png
 const TITLE_CHEAT_APARTMENT_NORM := Rect2(0.020, 0.520, 0.095, 0.135)
 const TITLE_CHEAT_MOON_NORM := Rect2(0.300, 0.020, 0.400, 0.480)
+const TITLE_CHEAT_CREDIT_DEMO_NORM := Rect2(0.885, 0.020, 0.095, 0.135)
 
 var _overlay_obscure_depth: int = 0
 var _title_cheat_apartment_taps: int = 0
 var _title_cheat_moon_taps: int = 0
+var _title_cheat_credit_demo_taps: int = 0
 var _title_cheat_apartment_zone: Control = null
 var _title_cheat_moon_zone: Control = null
+var _title_cheat_credit_demo_zone: Control = null
 
 func _ready() -> void:
 	if OS.has_feature("web"):
@@ -785,6 +789,7 @@ func _notification(what: int) -> void:
 func _reset_title_cheat_tap_counts() -> void:
 	_title_cheat_apartment_taps = 0
 	_title_cheat_moon_taps = 0
+	_title_cheat_credit_demo_taps = 0
 
 
 func refresh_title_cheats_from_save() -> void:
@@ -807,8 +812,11 @@ func _setup_title_cheat_hitboxes() -> void:
 		"ApartmentCheatZone", _on_title_cheat_apartment_tapped)
 	_title_cheat_moon_zone = _make_title_cheat_zone(
 		"MoonCheatZone", _on_title_cheat_moon_tapped)
+	_title_cheat_credit_demo_zone = _make_title_cheat_zone(
+		"CreditDemoCheatZone", _on_title_cheat_credit_demo_tapped)
 	layer.add_child(_title_cheat_apartment_zone)
 	layer.add_child(_title_cheat_moon_zone)
+	layer.add_child(_title_cheat_credit_demo_zone)
 	_refresh_title_cheat_zone_visibility()
 	_layout_title_cheat_hitboxes()
 
@@ -844,10 +852,12 @@ func _title_cheat_norm_to_screen_rect(norm: Rect2) -> Rect2:
 
 
 func _layout_title_cheat_hitboxes() -> void:
-	if _title_cheat_apartment_zone == null or _title_cheat_moon_zone == null:
+	if _title_cheat_apartment_zone == null or _title_cheat_moon_zone == null \
+			or _title_cheat_credit_demo_zone == null:
 		return
 	_apply_title_cheat_zone_rect(_title_cheat_apartment_zone, TITLE_CHEAT_APARTMENT_NORM)
 	_apply_title_cheat_zone_rect(_title_cheat_moon_zone, TITLE_CHEAT_MOON_NORM)
+	_apply_title_cheat_zone_rect(_title_cheat_credit_demo_zone, TITLE_CHEAT_CREDIT_DEMO_NORM)
 
 
 func _apply_title_cheat_zone_rect(zone: Control, norm: Rect2) -> void:
@@ -902,3 +912,16 @@ func _grant_title_cheat_moon() -> void:
 	Collection.add_credits(TITLE_CHEAT_MOON_CREDITS)
 	CreditsEarnedOverlay.show_earned(get_tree().root, TITLE_CHEAT_MOON_CREDITS)
 	_refresh_title_cheat_zone_visibility()
+
+
+func _on_title_cheat_credit_demo_tapped() -> void:
+	_title_cheat_credit_demo_taps += 1
+	if _title_cheat_credit_demo_taps >= TITLE_CHEAT_TAPS_REQUIRED:
+		_launch_title_cheat_credit_demo()
+
+
+func _launch_title_cheat_credit_demo() -> void:
+	_title_cheat_credit_demo_taps = 0
+	_set_title_cheat_zones_active(false)
+	BGMManager.stop(0.0)
+	get_tree().change_scene_to_file(CREDIT_DEMO_SCENE)

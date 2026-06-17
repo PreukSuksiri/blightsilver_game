@@ -718,33 +718,39 @@ func _show_beat() -> void:
 		GameState.vn_battle_loss_reward_once = str(beat.get("battle_loss_reward_once", "")).strip_edges()
 		_apply_beat_battle_display(beat)
 		GameState.apply_battle_audio_config(beat)
-		# Enemy deck — override what cards the AI places this battle
-		var enemy_deck: Variant = beat.get("enemy_deck", null)
-		var deck_chars: Array = []
-		var deck_traps: Array = []
-		var deck_tech: Array = []
-		if enemy_deck is Dictionary:
-			deck_chars = (enemy_deck as Dictionary).get("characters", [])
-			deck_traps = (enemy_deck as Dictionary).get("traps", [])
-			deck_tech = (enemy_deck as Dictionary).get("tech", [])
-			GameState.battle_ai_deck = DeckData.deck_dict_to_deck_data(enemy_deck as Dictionary)
+		# Enemy deck — vault entry overrides inline enemy_deck + ai_forced_cells
+		var vault_cfg: Dictionary = AIDeckVault.resolve_vault_from_dict(beat)
+		if bool(vault_cfg.get("ok", false)):
+			AIDeckVault.apply_enemy_battle_config(vault_cfg)
 		else:
-			GameState.battle_ai_deck = null
-		var merged_tech: Array = DailyDungeonManager.resolve_enemy_forced_tech(
-			beat.get("ai_forced_tech", []), deck_tech)
-		var has_tech: bool = false
-		for t: Variant in merged_tech:
-			if str(t).strip_edges() != "":
-				has_tech = true
-				break
-		if not deck_chars.is_empty() or not deck_traps.is_empty() or has_tech:
-			GameState.campaign_enemy_config = {
-				"forced_characters": deck_chars,
-				"forced_traps":      deck_traps,
-				"forced_tech":       merged_tech,
-			}
-		else:
-			GameState.campaign_enemy_config = {}
+			var enemy_deck: Variant = beat.get("enemy_deck", null)
+			var deck_chars: Array = []
+			var deck_traps: Array = []
+			var deck_tech: Array = []
+			if enemy_deck is Dictionary:
+				deck_chars = (enemy_deck as Dictionary).get("characters", [])
+				deck_traps = (enemy_deck as Dictionary).get("traps", [])
+				deck_tech = (enemy_deck as Dictionary).get("tech", [])
+				GameState.battle_ai_deck = DeckData.deck_dict_to_deck_data(enemy_deck as Dictionary)
+			else:
+				GameState.battle_ai_deck = null
+			var merged_tech: Array = DailyDungeonManager.resolve_enemy_forced_tech(
+				beat.get("ai_forced_tech", []), deck_tech)
+			var has_tech: bool = false
+			for t: Variant in merged_tech:
+				if str(t).strip_edges() != "":
+					has_tech = true
+					break
+			if not deck_chars.is_empty() or not deck_traps.is_empty() or has_tech:
+				GameState.campaign_enemy_config = {
+					"forced_characters": deck_chars,
+					"forced_traps":      deck_traps,
+					"forced_tech":       merged_tech,
+				}
+			else:
+				GameState.campaign_enemy_config = {}
+			var afc_inline: Variant = beat.get("ai_forced_cells", null)
+			GameState.battle_ai_forced_cells = afc_inline if afc_inline is Array else []
 		# AI personality overrides (empty string = pick randomly)
 		var _apd: String = str(beat.get("ai_personality_defensive", ""))
 		var _apo: String = str(beat.get("ai_personality_offensive", ""))
@@ -765,8 +771,6 @@ func _show_beat() -> void:
 		GameState.battle_player_union_enabled = bool(beat.get("player_union_enabled", true))
 		var pfc: Variant = beat.get("player_forced_cells", null)
 		GameState.battle_player_forced_cells  = pfc if pfc is Array else []
-		var afc: Variant = beat.get("ai_forced_cells", null)
-		GameState.battle_ai_forced_cells      = afc if afc is Array else []
 		await CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 		return

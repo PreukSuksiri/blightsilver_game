@@ -716,16 +716,24 @@ func start_node_battle(node: Dictionary, parent_node: Node) -> void:
 	GameState.game_mode = GameState.GameMode.DAILY_DUNGEON
 	GameState.active_dungeon_node_id = node_id
 
-	# Configure AI deck via campaign_enemy_config pattern
-	var deck: Dictionary = node.get("ai_deck", {})
+	# Configure AI deck — vault entry overrides inline ai_deck
 	var bs: Dictionary = node.get("battle_settings", {})
-	var deck_tech: Array = deck.get("tech", [])
-	var merged_tech: Array = resolve_enemy_forced_tech(bs.get("ai_forced_tech", []), deck_tech)
-	GameState.campaign_enemy_config = {
-		"forced_characters": deck.get("characters", []),
-		"forced_traps":      deck.get("traps", []),
-		"forced_tech":       merged_tech,
-	}
+	var vault_cfg: Dictionary = AIDeckVault.resolve_vault_from_dict(node)
+	if not bool(vault_cfg.get("ok", false)):
+		vault_cfg = AIDeckVault.resolve_vault_from_dict(bs)
+	if bool(vault_cfg.get("ok", false)):
+		AIDeckVault.apply_enemy_battle_config(vault_cfg)
+	else:
+		var deck: Dictionary = node.get("ai_deck", {})
+		var deck_tech: Array = deck.get("tech", [])
+		var merged_tech: Array = resolve_enemy_forced_tech(bs.get("ai_forced_tech", []), deck_tech)
+		GameState.campaign_enemy_config = {
+			"forced_characters": deck.get("characters", []),
+			"forced_traps":      deck.get("traps", []),
+			"forced_tech":       merged_tech,
+		}
+		var raw_afc: Variant = bs.get("ai_forced_cells", [])
+		GameState.battle_ai_forced_cells = raw_afc if raw_afc is Array else []
 
 	# No VN for dungeon battles — but we want _vn_battle_pending so new_game()
 	# doesn't reset our modifier-adjusted config.
@@ -768,9 +776,10 @@ func start_node_battle(node: Dictionary, parent_node: Node) -> void:
 	if _aps != "": GameState.campaign_enemy_config["ai_personality_social"]    = _aps
 
 	var raw_pfc: Variant = bs.get("player_forced_cells", [])
-	var raw_afc: Variant = bs.get("ai_forced_cells", [])
 	GameState.battle_player_forced_cells = raw_pfc if raw_pfc is Array else []
-	GameState.battle_ai_forced_cells     = raw_afc if raw_afc is Array else []
+	if not bool(vault_cfg.get("ok", false)):
+		var raw_afc: Variant = bs.get("ai_forced_cells", [])
+		GameState.battle_ai_forced_cells = raw_afc if raw_afc is Array else []
 
 	# Pass today's active modifiers to GameState so GameBoard/TurnManager can read them
 	GameState.active_dungeon_modifiers = get_dungeon_modifiers(_get_active_dungeon_id()).duplicate()

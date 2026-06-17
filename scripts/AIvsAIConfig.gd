@@ -9,6 +9,10 @@ const TECH_SLOT_COUNT: int = 3
 # ── UI refs ───────────────────────────────────────────────────────────────────
 var _deck_opt_0: OptionButton = null
 var _deck_opt_1: OptionButton = null
+var _vault_opt_0: OptionButton = null
+var _vault_opt_1: OptionButton = null
+var _vault_form_opt_0: OptionButton = null
+var _vault_form_opt_1: OptionButton = null
 var _forced_tech_btns_0: Array[Button] = []
 var _forced_tech_btns_1: Array[Button] = []
 var _forced_tech_0: Array = ["", "", ""]   # slot → tech name (empty = random on deal)
@@ -250,6 +254,46 @@ func _build_ai_column(parent: HBoxContainer, player_idx: int) -> void:
 		Color(0.5, 0.85, 1.0) if player_idx == 0 else Color(1.0, 0.6, 0.6))
 	col.add_child(hdr)
 
+	# AI Deck Vault (overrides deck + forced cells when set)
+	var vault_hdr := Label.new()
+	vault_hdr.text = "Deck Vault"
+	vault_hdr.add_theme_font_size_override("font_size", 13)
+	vault_hdr.add_theme_color_override("font_color", Color(0.75, 0.95, 1.0))
+	col.add_child(vault_hdr)
+	var vault_row := HBoxContainer.new()
+	vault_row.add_theme_constant_override("separation", 8)
+	col.add_child(vault_row)
+	var vault_lbl := Label.new()
+	vault_lbl.text = "Entry:"
+	vault_lbl.add_theme_font_size_override("font_size", 14)
+	vault_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	vault_row.add_child(vault_lbl)
+	var vault_opt := OptionButton.new()
+	vault_opt.add_theme_font_size_override("font_size", 13)
+	vault_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vault_opt.item_selected.connect(func(_i: int) -> void: _on_vault_selected(player_idx))
+	vault_row.add_child(vault_opt)
+	AIDeckVault.populate_vault_option(vault_opt)
+	var vault_form_row := HBoxContainer.new()
+	vault_form_row.add_theme_constant_override("separation", 8)
+	col.add_child(vault_form_row)
+	var form_lbl := Label.new()
+	form_lbl.text = "Formation:"
+	form_lbl.add_theme_font_size_override("font_size", 14)
+	form_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	vault_form_row.add_child(form_lbl)
+	var vault_form_opt := OptionButton.new()
+	vault_form_opt.add_theme_font_size_override("font_size", 13)
+	vault_form_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vault_form_opt.item_selected.connect(func(_i: int) -> void: _on_vault_selected(player_idx))
+	vault_form_row.add_child(vault_form_opt)
+	if player_idx == 0:
+		_vault_opt_0 = vault_opt
+		_vault_form_opt_0 = vault_form_opt
+	else:
+		_vault_opt_1 = vault_opt
+		_vault_form_opt_1 = vault_form_opt
+
 	# Deck selector
 	var deck_row := HBoxContainer.new()
 	deck_row.add_theme_constant_override("separation", 8)
@@ -327,6 +371,59 @@ func _populate_decks() -> void:
 			opt.add_item(d.deck_name)  # indices 1+ = saved decks
 
 
+func _vault_opts_for(player_idx: int) -> Array:
+	if player_idx == 0:
+		return [_vault_opt_0, _vault_form_opt_0, _deck_opt_0, _forced_dict_0, _forced_tech_0]
+	return [_vault_opt_1, _vault_form_opt_1, _deck_opt_1, _forced_dict_1, _forced_tech_1]
+
+
+func _on_vault_selected(player_idx: int) -> void:
+	var parts: Array = _vault_opts_for(player_idx)
+	var vault_opt: OptionButton = parts[0] as OptionButton
+	var vault_form_opt: OptionButton = parts[1] as OptionButton
+	var deck_opt: OptionButton = parts[2] as OptionButton
+	var grid_dict: Dictionary = parts[3] as Dictionary
+	var tech_slots: Array = parts[4] as Array
+	if vault_opt == null or vault_form_opt == null:
+		return
+	var entry_id: String = AIDeckVault.option_entry_id(vault_opt)
+	var using_vault := not entry_id.is_empty()
+	if deck_opt != null:
+		deck_opt.disabled = using_vault
+	AIDeckVault.populate_formation_option(vault_form_opt, entry_id)
+	if not using_vault:
+		return
+	var cfg: Dictionary = AIDeckVault.build_ai_battle_config(
+		entry_id, AIDeckVault.option_formation_index(vault_form_opt))
+	if not bool(cfg.get("ok", false)):
+		return
+	var deck: DeckData = cfg.get("deck") as DeckData
+	if deck != null:
+		for i: int in range(TECH_SLOT_COUNT):
+			tech_slots[i] = str(deck.techs[i]) if i < deck.techs.size() else ""
+		_refresh_forced_tech_row(player_idx)
+	grid_dict.clear()
+	grid_dict.merge(AIDeckVault.forced_cells_to_grid_dict(cfg.get("forced_cells", [])))
+	var gc: GridContainer = _forced_grid_0 if player_idx == 0 else _forced_grid_1
+	_refresh_forced_grid_for(gc, grid_dict)
+
+
+func _refresh_forced_grid_for(gc: GridContainer, grid_dict: Dictionary) -> void:
+	if gc == null:
+		return
+	var children: Array = gc.get_children()
+	for r: int in range(5):
+		for c: int in range(5):
+			var btn: Button = children[r * 5 + c] as Button
+			var key: String = str(r) + "," + str(c)
+			if grid_dict.has(key):
+				btn.text = grid_dict[key] as String
+				btn.modulate = Color(0.55, 1.0, 0.55)
+			else:
+				btn.text = "%d,%d" % [r, c]
+				btn.modulate = Color(1.0, 1.0, 1.0, 0.45)
+
+
 func _on_deck_selected(player_idx: int) -> void:
 	# Pre-fill tech slots from saved deck; random deck clears manual picks.
 	var opt: OptionButton = _deck_opt_0 if player_idx == 0 else _deck_opt_1
@@ -343,24 +440,51 @@ func _on_deck_selected(player_idx: int) -> void:
 # Start Battle
 # ─────────────────────────────────────────────────────────────────────────────
 func _on_start_battle() -> void:
-	# index 0 = random pool (null); indices 1+ = saved deck at [selected - 1]
 	var d0: Variant = null
-	if _deck_opt_0.selected > 0:
+	var fc0: Array = []
+	var ft0: Array = _collect_forced_tech(_forced_tech_0)
+	var featured0 := ""
+	var vault0: String = AIDeckVault.option_entry_id(_vault_opt_0) if _vault_opt_0 != null else ""
+	if not vault0.is_empty():
+		var cfg0: Dictionary = AIDeckVault.build_ai_battle_config(
+			vault0, AIDeckVault.option_formation_index(_vault_form_opt_0), ft0)
+		if not bool(cfg0.get("ok", false)):
+			_status_lbl.text = "AI Player 0 vault entry is invalid."
+			return
+		d0 = cfg0.get("deck")
+		fc0 = (cfg0.get("forced_cells", []) as Array).duplicate(true)
+		ft0 = (cfg0.get("forced_tech", []) as Array).duplicate(true)
+		featured0 = str(cfg0.get("featured_union", "")).strip_edges()
+	elif _deck_opt_0.selected > 0:
 		d0 = SaveManager.decks[_deck_opt_0.selected - 1]
 		if not (d0 as DeckData).is_valid():
 			_status_lbl.text = "AI Player 0 deck is invalid."
 			return
+	if vault0.is_empty():
+		fc0 = _collect_forced_cells_from_grid(_forced_dict_0)
+
 	var d1: Variant = null
-	if _deck_opt_1.selected > 0:
+	var fc1: Array = []
+	var ft1: Array = _collect_forced_tech(_forced_tech_1)
+	var featured1 := ""
+	var vault1: String = AIDeckVault.option_entry_id(_vault_opt_1) if _vault_opt_1 != null else ""
+	if not vault1.is_empty():
+		var cfg1: Dictionary = AIDeckVault.build_ai_battle_config(
+			vault1, AIDeckVault.option_formation_index(_vault_form_opt_1), ft1)
+		if not bool(cfg1.get("ok", false)):
+			_status_lbl.text = "AI Player 1 vault entry is invalid."
+			return
+		d1 = cfg1.get("deck")
+		fc1 = (cfg1.get("forced_cells", []) as Array).duplicate(true)
+		ft1 = (cfg1.get("forced_tech", []) as Array).duplicate(true)
+		featured1 = str(cfg1.get("featured_union", "")).strip_edges()
+	elif _deck_opt_1.selected > 0:
 		d1 = SaveManager.decks[_deck_opt_1.selected - 1]
 		if not (d1 as DeckData).is_valid():
 			_status_lbl.text = "AI Player 1 deck is invalid."
 			return
-
-	var fc0: Array = _collect_forced_cells_from_grid(_forced_dict_0)
-	var fc1: Array = _collect_forced_cells_from_grid(_forced_dict_1)
-	var ft0: Array = _collect_forced_tech(_forced_tech_0)
-	var ft1: Array = _collect_forced_tech(_forced_tech_1)
+	if vault1.is_empty():
+		fc1 = _collect_forced_cells_from_grid(_forced_dict_1)
 
 	for label: String in _validate_forced_tech(ft0, "AI Player 0"):
 		_status_lbl.text = label
@@ -368,6 +492,9 @@ func _on_start_battle() -> void:
 	for label: String in _validate_forced_tech(ft1, "AI Player 1"):
 		_status_lbl.text = label
 		return
+
+	GameState.battle_featured_unions = [featured0, featured1]
+	GameState.battle_ai_featured_union = featured1
 
 	AIvsAIManager.configure(d0, fc0, d1, fc1, ft0, ft1)
 	var iterations: int = clampi(int(_iter_spin.value), 1, AIvsAIManager.MAX_BATCH_ITERATIONS)

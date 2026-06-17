@@ -1342,10 +1342,19 @@ func _get_available_unions() -> Array:
 	return results
 
 ## Pick the best-scoring union from a list of candidates.
-func _pick_best_union(unions: Array) -> Dictionary:
-	var featured := ""
+func _featured_union_preference() -> String:
+	var arr: Variant = GameState.battle_featured_unions
+	if arr is Array and player_index >= 0 and player_index < (arr as Array).size():
+		var from_arr: String = str((arr as Array)[player_index]).strip_edges()
+		if not from_arr.is_empty():
+			return from_arr
 	if player_index == 1:
-		featured = str(GameState.battle_ai_featured_union).strip_edges()
+		return str(GameState.battle_ai_featured_union).strip_edges()
+	return ""
+
+
+func _pick_best_union(unions: Array) -> Dictionary:
+	var featured := _featured_union_preference()
 	if not featured.is_empty():
 		for entry: Dictionary in unions:
 			var u: UnionData = entry["union"]
@@ -1365,10 +1374,9 @@ func _pick_best_union(unions: Array) -> Dictionary:
 func _score_union(u: UnionData) -> int:
 	var score: int = u.base_atk + u.base_def
 
-	if player_index == 1:
-		var featured := str(GameState.battle_ai_featured_union).strip_edges()
-		if not featured.is_empty() and u.card_name == featured:
-			score += 250
+	var featured := _featured_union_preference()
+	if not featured.is_empty() and u.card_name == featured:
+		score += 250
 
 	# Ability bonuses
 	match u.ability_type:

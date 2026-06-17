@@ -182,6 +182,8 @@ var _player_tech_chips: HBoxContainer = null
 var _clone_target_opt: OptionButton = null
 var _clone_deck_opt: OptionButton = null
 var _clone_form_opt: OptionButton = null
+var _f_ai_vault_opt: OptionButton = null
+var _f_ai_vault_form_opt: OptionButton = null
 
 # Forced cell placements — grid-based UI
 var _player_forced_grid: Dictionary = {}   # key="r,c"  value=card_name String
@@ -935,6 +937,40 @@ func _build_fields() -> void:
 	_player_chars_chips = _build_battle_deck_row(v, "Characters", "character", "player")
 	_player_traps_chips = _build_battle_deck_row(v, "Traps", "trap", "player")
 	_player_tech_chips  = _build_battle_deck_row(v, "Tech", "tech", "player")
+
+	# ── AI Deck Vault (overrides enemy deck + AI forced cells when set) ──
+	_section(v, "AI DECK VAULT  (optional — highest priority over enemy deck below)")
+	var vault_hint := Label.new()
+	vault_hint.text = "Pick a vault entry to use its deck and formation. Inline enemy deck and AI forced cells are ignored when set."
+	vault_hint.add_theme_font_size_override("font_size", 12)
+	vault_hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.5))
+	vault_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(vault_hint)
+	_f_ai_vault_opt = OptionButton.new()
+	_f_ai_vault_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	AIDeckVault.populate_vault_option(_f_ai_vault_opt)
+	_f_ai_vault_opt.item_selected.connect(func(_i: int) -> void: _on_ai_vault_selected())
+	var vault_row := HBoxContainer.new()
+	vault_row.add_theme_constant_override("separation", 8)
+	v.add_child(vault_row)
+	var vault_lbl := Label.new()
+	vault_lbl.text = "Vault entry:"
+	vault_lbl.add_theme_font_size_override("font_size", 14)
+	vault_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	vault_row.add_child(vault_lbl)
+	vault_row.add_child(_f_ai_vault_opt)
+	var form_row := HBoxContainer.new()
+	form_row.add_theme_constant_override("separation", 8)
+	v.add_child(form_row)
+	var form_lbl := Label.new()
+	form_lbl.text = "Formation:"
+	form_lbl.add_theme_font_size_override("font_size", 14)
+	form_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	form_row.add_child(form_lbl)
+	_f_ai_vault_form_opt = OptionButton.new()
+	_f_ai_vault_form_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_f_ai_vault_form_opt.item_selected.connect(func(_i: int) -> void: _on_ai_vault_selected())
+	form_row.add_child(_f_ai_vault_form_opt)
 
 	# ── Enemy Deck ────────────────────────────────────────────
 	_section(v, "ENEMY DECK  (optional — leave empty to use random pool)")
@@ -2485,6 +2521,14 @@ func _populate_fields() -> void:
 					_f_tutorial_opt.selected = i
 					break
 
+	# AI deck vault
+	if _f_ai_vault_opt != null:
+		AIDeckVault.populate_vault_option(_f_ai_vault_opt)
+		AIDeckVault.select_vault_option(_f_ai_vault_opt, str(b.get("ai_deck_vault", "")).strip_edges())
+		_on_ai_vault_selected(false)
+		if _f_ai_vault_form_opt != null:
+			AIDeckVault.select_formation_option(_f_ai_vault_form_opt, int(b.get("ai_deck_vault_formation", 0)))
+
 	# Enemy deck
 	_enemy_deck_chars.clear()
 	_enemy_deck_traps.clear()
@@ -2851,6 +2895,15 @@ func _collect_beat() -> Dictionary:
 		b["on_win"] = on_win
 	if not on_lose.is_empty():
 		b["on_lose"] = on_lose
+
+	# AI deck vault (overrides inline enemy deck at runtime)
+	if _f_ai_vault_opt != null:
+		var vault_id: String = AIDeckVault.option_entry_id(_f_ai_vault_opt)
+		if not vault_id.is_empty():
+			b["ai_deck_vault"] = vault_id
+			var form_idx: int = AIDeckVault.option_formation_index(_f_ai_vault_form_opt)
+			if form_idx != 0:
+				b["ai_deck_vault_formation"] = form_idx
 
 	# Enemy deck
 	if not _enemy_deck_chars.is_empty() or not _enemy_deck_traps.is_empty() or not _enemy_deck_tech.is_empty():
@@ -3338,6 +3391,20 @@ func _save() -> void:
 # ─────────────────────────────────────────────────────────────
 # Battle deck builder helpers
 # ─────────────────────────────────────────────────────────────
+
+func _on_ai_vault_selected(preview_grid: bool = true) -> void:
+	if _f_ai_vault_opt == null or _f_ai_vault_form_opt == null:
+		return
+	var entry_id: String = AIDeckVault.option_entry_id(_f_ai_vault_opt)
+	AIDeckVault.populate_formation_option(_f_ai_vault_form_opt, entry_id)
+	if not preview_grid or entry_id.is_empty():
+		return
+	var cfg: Dictionary = AIDeckVault.build_ai_battle_config(
+		entry_id, AIDeckVault.option_formation_index(_f_ai_vault_form_opt))
+	if not bool(cfg.get("ok", false)):
+		return
+	_rebuild_forced_grid(_ai_forced_grid, _ai_forced_gc, cfg.get("forced_cells", []))
+
 
 func _populate_clone_deck_opt() -> void:
 	if _clone_deck_opt == null:

@@ -56,6 +56,10 @@ var _choices_vbox: VBoxContainer   = null   # navigation choice buttons
 var _back_btn: Button              = null   # go-back button
 var _toast_lbl: Label              = null   # temporary message overlay
 var _toast_tween: Tween            = null
+var _save_toast_lbl: Label         = null   # bottom-left auto-save indicator
+var _save_toast_tween: Tween       = null
+const SAVE_TOAST_HOLD_SEC := 1.5
+const SAVE_TOAST_FADE_SEC := 0.4
 var _debug_panel: PanelContainer   = null   # F3 debug overlay
 var _debug_lbl: RichTextLabel      = null
 var _content_panel: Panel          = null   # right-side content area (layout_mode=0, sized by _reflow_layout)
@@ -197,6 +201,7 @@ func _connect_signals() -> void:
 	ExplorationManager.node_entered.connect(_on_node_entered)
 	ExplorationManager.node_exited.connect(_on_node_exited)
 	ExplorationManager.message_posted.connect(_show_toast)
+	ExplorationManager.session_saved.connect(_show_save_toast)
 	ExplorationManager.item_obtained.connect(_on_item_obtained)
 	ExplorationManager.mailbox_reward_granted.connect(_on_mailbox_reward_granted)
 	ExplorationManager.inventory_changed.connect(_on_exploration_state_changed)
@@ -389,6 +394,20 @@ func _build_ui() -> void:
 	_toast_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_toast_lbl.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	add_child(_toast_lbl)
+
+	_save_toast_lbl = Label.new()
+	_save_toast_lbl.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	_save_toast_lbl.offset_left = 16.0
+	_save_toast_lbl.offset_bottom = -12.0
+	_save_toast_lbl.offset_top = -32.0
+	_tag_ui(_save_toast_lbl, "font", 400)
+	_save_toast_lbl.add_theme_font_size_override("font_size", 13)
+	_save_toast_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.72))
+	_save_toast_lbl.text = "Game saved."
+	_save_toast_lbl.modulate.a = 0.0
+	_save_toast_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_save_toast_lbl.z_index = 50
+	add_child(_save_toast_lbl)
 
 	# ── Navigation fade overlay ────────────────────────────────
 	# Sits above all other UI; alpha starts at 0 (invisible).
@@ -3425,6 +3444,18 @@ func _show_toast(text: String) -> void:
 	_toast_tween = create_tween()
 	_toast_tween.tween_interval(2.5)
 	_toast_tween.tween_property(_toast_lbl, "modulate:a", 0.0, 0.8)
+
+
+func _show_save_toast() -> void:
+	if _save_toast_lbl == null:
+		return
+	if _save_toast_tween and _save_toast_tween.is_valid():
+		_save_toast_tween.kill()
+	_save_toast_lbl.modulate.a = 1.0
+	_save_toast_tween = create_tween()
+	_save_toast_tween.tween_interval(SAVE_TOAST_HOLD_SEC)
+	_save_toast_tween.tween_property(_save_toast_lbl, "modulate:a", 0.0, SAVE_TOAST_FADE_SEC)
+
 
 func _show_no_session_error() -> void:
 	_title_lbl.text = "No Exploration Active"

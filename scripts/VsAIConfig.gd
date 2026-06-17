@@ -8,6 +8,8 @@ const TECH_SLOT_COUNT: int = 3
 
 # ── UI refs ────────────────────────────────────────────────────────────────────
 var _deck_opt: OptionButton = null
+var _vault_opt: OptionButton = null
+var _vault_form_opt: OptionButton = null
 var _formation_opt: OptionButton = null
 var _forced_tech_btns: Array[Button] = []
 var _forced_tech: Array = ["", "", ""]   # slot → tech name (empty = random on deal)
@@ -141,6 +143,42 @@ func _build_ai_column(parent: HBoxContainer) -> void:
 	change_btn.pressed.connect(_open_portrait_picker)
 	illus_vb.add_child(change_btn)
 
+	# ── AI Deck Vault (overrides deck + formation when set) ───────────────────
+	var vault_hdr := Label.new()
+	vault_hdr.text = "AI Deck Vault  (highest priority)"
+	vault_hdr.add_theme_font_size_override("font_size", 13)
+	vault_hdr.add_theme_color_override("font_color", Color(0.75, 0.95, 1.0))
+	col.add_child(vault_hdr)
+
+	var vault_row := HBoxContainer.new()
+	vault_row.add_theme_constant_override("separation", 8)
+	col.add_child(vault_row)
+	var vault_lbl := Label.new()
+	vault_lbl.text = "Vault:"
+	vault_lbl.add_theme_font_size_override("font_size", 14)
+	vault_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	vault_row.add_child(vault_lbl)
+	_vault_opt = OptionButton.new()
+	_vault_opt.add_theme_font_size_override("font_size", 13)
+	_vault_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_vault_opt.item_selected.connect(func(_i: int) -> void: _on_vault_selected())
+	vault_row.add_child(_vault_opt)
+	AIDeckVault.populate_vault_option(_vault_opt)
+
+	var vault_form_row := HBoxContainer.new()
+	vault_form_row.add_theme_constant_override("separation", 8)
+	col.add_child(vault_form_row)
+	var vault_form_lbl := Label.new()
+	vault_form_lbl.text = "Formation:"
+	vault_form_lbl.add_theme_font_size_override("font_size", 14)
+	vault_form_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	vault_form_row.add_child(vault_form_lbl)
+	_vault_form_opt = OptionButton.new()
+	_vault_form_opt.add_theme_font_size_override("font_size", 13)
+	_vault_form_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_vault_form_opt.item_selected.connect(func(_i: int) -> void: _on_vault_selected())
+	vault_form_row.add_child(_vault_form_opt)
+
 	# ── Deck selector ──────────────────────────────────────────────────────────
 	var deck_row := HBoxContainer.new()
 	deck_row.add_theme_constant_override("separation", 8)
@@ -230,6 +268,31 @@ func _populate_decks() -> void:
 		var d: DeckData = SaveManager.decks[i]
 		_deck_opt.add_item(d.deck_name)
 
+func _on_vault_selected() -> void:
+	if _vault_opt == null or _vault_form_opt == null:
+		return
+	var entry_id: String = AIDeckVault.option_entry_id(_vault_opt)
+	var using_vault := not entry_id.is_empty()
+	if _deck_opt != null:
+		_deck_opt.disabled = using_vault
+	if _formation_opt != null:
+		_formation_opt.disabled = using_vault
+	AIDeckVault.populate_formation_option(_vault_form_opt, entry_id)
+	if not using_vault:
+		return
+	var cfg: Dictionary = AIDeckVault.build_ai_battle_config(
+		entry_id, AIDeckVault.option_formation_index(_vault_form_opt))
+	if not bool(cfg.get("ok", false)):
+		return
+	var deck: DeckData = cfg.get("deck") as DeckData
+	if deck != null:
+		for i: int in range(TECH_SLOT_COUNT):
+			_forced_tech[i] = str(deck.techs[i]) if i < deck.techs.size() else ""
+		_refresh_forced_tech_row()
+	_forced_dict = AIDeckVault.forced_cells_to_grid_dict(cfg.get("forced_cells", []))
+	_refresh_forced_grid()
+
+
 func _on_deck_selected() -> void:
 	# Pre-fill tech slots from the selected deck
 	for i: int in range(TECH_SLOT_COUNT):
@@ -282,6 +345,36 @@ func _on_formation_selected() -> void:
 # Start Battle
 # ─────────────────────────────────────────────────────────────────────────────
 func _on_start_battle() -> void:
+	var vault_id: String = AIDeckVault.option_entry_id(_vault_opt) if _vault_opt != null else ""
+	if not vault_id.is_empty():
+		var ft: Array = _collect_forced_tech()
+		for msg: String in _validate_forced_tech(ft):
+			_status_lbl.text = msg
+			return
+		var cfg: Dictionary = AIDeckVault.build_ai_battle_config(
+			vault_id,
+			AIDeckVault.option_formation_index(_vault_form_opt),
+			ft)
+		if not bool(cfg.get("ok", false)):
+			_status_lbl.text = "Invalid AI deck vault entry."
+			return
+		GameState.game_mode              = GameState.GameMode.VS_AI
+		GameState.battle_ai_deck         = cfg.get("deck")
+		GameState.battle_ai_forced_cells = (cfg.get("forced_cells", []) as Array).duplicate(true)
+		GameState.battle_ai_forced_tech  = (cfg.get("forced_tech", []) as Array).duplicate(true)
+		GameState.battle_ai_featured_union = str(cfg.get("featured_union", "")).strip_edges()
+		GameState.battle_featured_unions = ["", GameState.battle_ai_featured_union]
+		GameState.campaign_enemy_config = {
+			"forced_characters": (cfg.get("forced_characters", []) as Array).duplicate(),
+			"forced_traps": (cfg.get("forced_traps", []) as Array).duplicate(),
+			"forced_tech": (cfg.get("forced_tech", []) as Array).duplicate(),
+		}
+		GameState.player_portraits[1] = _ai_portrait_path
+		BGMManager.stop(0.0)
+		CheckerTransition.fade_out_to_battle(func() -> void:
+			get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
+		return
+
 	var d: Variant = null
 	if _deck_opt.selected > 0:
 		d = SaveManager.decks[_deck_opt.selected - 1]

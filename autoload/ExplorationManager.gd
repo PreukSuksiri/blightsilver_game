@@ -115,6 +115,9 @@ signal end_exploration_requested
 ## vn_path — res:// path to the VN JSON to play before returning to return_scene.
 signal end_exploration_vn_requested(vn_path: String)
 
+## Emitted after exploration session data is written to disk.
+signal session_saved
+
 # ─────────────────────────────────────────────────────────────
 # Public configuration (set before launch / start_session)
 # ─────────────────────────────────────────────────────────────
@@ -517,6 +520,7 @@ func _save_session_state(force: bool = false) -> void:
 		"bgm_loop_from_sec": bgm["bgm_loop_from_sec"],
 	}
 	SaveManager.save_data()
+	emit_signal("session_saved")
 
 ## Write the current session snapshot immediately (used by Save and Exit).
 func save_session_now() -> void:
@@ -1097,6 +1101,19 @@ func start_battle_for_node(node: ExplorationNode) -> void:
 		"almost_win_bgm": node.almost_win_bgm,
 		"battle_bgm_volume": node.battle_bgm_volume,
 	})
+	var vault_cfg: Dictionary = AIDeckVault.resolve_vault_from_dict({
+		"ai_deck_vault": node.ai_deck_vault,
+		"ai_deck_vault_formation": node.ai_deck_vault_formation,
+	})
+	if bool(vault_cfg.get("ok", false)):
+		GameState._vn_battle_pending = true
+		AIDeckVault.apply_enemy_battle_config(vault_cfg)
+	else:
+		GameState.campaign_enemy_config = {}
+		GameState.battle_ai_deck = null
+		GameState.battle_ai_forced_cells.clear()
+		GameState.battle_ai_forced_tech.clear()
+		GameState.battle_ai_featured_union = ""
 	GameState.new_game(GameState.GameMode.EXPLORATION)
 	SaveManager.save_data()
 	CheckerTransition.fade_out_to_battle(func() -> void:

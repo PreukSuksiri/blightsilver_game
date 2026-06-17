@@ -330,7 +330,8 @@ var battle_ai_forced_cells: Array = []      # Array[Dictionary{card_name, row, c
 var battle_player_deck: Variant = null      # DeckData or null — AI_VS_AI: deck for player 0
 var battle_ai_deck:     Variant = null      # DeckData or null — AI_VS_AI: deck for player 1
 var battle_ai_forced_tech: Array = []       # Array[String] — VS_AI: forced tech hand for the AI
-var battle_ai_featured_union: String = ""    # Vault entry: AI strongly prefers this union when summoning
+var battle_ai_featured_union: String = ""    # Legacy alias for battle_featured_unions[1]
+var battle_featured_unions: Array = ["", ""] # Per-player featured union preference [P0, P1]
 
 var divine_protection_active: Array = [false, false]
 var siege_cannon_active: Array = [false, false]
@@ -977,6 +978,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		battle_ai_deck     = null
 		battle_ai_forced_tech.clear()
 		battle_ai_featured_union = ""
+		battle_featured_unions = ["", ""]
 		vn_launched_from_exploration = false
 		vn_battle_rewards.clear()
 		vn_battle_loss_rewards.clear()
