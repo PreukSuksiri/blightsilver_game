@@ -28,10 +28,12 @@ extends Node
 ##   graph node conditions can read them with var_equals / var_not_equals /
 ##   var_greater / var_less / get_var().
 ##
-##   Reserved key (not seeded as a session var):
-##     "force_fresh"  bool   If true, always start a fresh session — the
-##                           auto-resume check is skipped even when a saved
-##                           session exists for the same graph.
+##   Reserved keys (not seeded as session vars):
+##     "force_fresh"  bool   Skip auto-resume; always start fresh
+##     "keep_vn_bgm"  bool   Keep VN music through exploration launch
+##
+##   Common launch params (seeded as session vars):
+##     "flashlight"   "1"/"0"  Handheld flashlight cone in ExplorationPlayer
 ##
 ##   Examples:
 ##     # Pass act + chapter; gate with force_fresh when starting a new run
@@ -921,6 +923,14 @@ func dispatch_event(action: String, key: String, value: String) -> void:
 ## Get a session variable value, or default_val if not set.
 func get_var(key: String, default_val: String = "") -> String:
 	return str(_vars.get(key, default_val))
+
+
+## True when session var flashlight is enabled ("1", "true", etc.).
+func is_flashlight_enabled() -> bool:
+	if not _session_active:
+		return false
+	var v: String = str(_vars.get("flashlight", "")).strip_edges().to_lower()
+	return v == "1" or v == "true" or v == "yes" or v == "on"
 
 ## Returns true if the session variable is set (regardless of value).
 func has_var(key: String) -> bool:

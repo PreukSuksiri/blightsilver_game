@@ -43,12 +43,33 @@ const INV_RADIAL_PAD_H: float      = 24.0   # total horizontal inset inside inve
 const INV_RADIAL_PAD_V: float      = 16.0   # total vertical inset inside inventory chip
 const INV_RADIAL_ICON_SLOT: float  = 42.0   # 36px icon + 6px gap
 const BG_AREA_FRACTION: float = 0.80  # fraction of viewport width used by the background area
+const FLASHLIGHT_SHADER := preload("res://assets/shaders/exploration_flashlight.gdshader")
+const FLASHLIGHT_HAND_NORM := Vector2(0.80, 0.94)   # 80% across left bg band, near bottom
+const FLASHLIGHT_HALF_ANGLE := 0.42                 # radians (~24°)
+const FLASHLIGHT_DIM_ALPHA := 0.93
+const FLASHLIGHT_USE_CONE := false
+const FLASHLIGHT_CIRCLE_RADIUS := 220.0
+const FLASHLIGHT_CIRCLE_SOFT := 72.0
+const FLASHLIGHT_ANGULAR_SOFT := 0.16
+const FLASHLIGHT_LENGTH_SOFT := 96.0
+const FLASHLIGHT_LENGTH_PAD := 1.12                 # beam reach past top-left corner
+const FLASHLIGHT_ORIGIN_GLOW_RADIUS := 52.0
+const FLASHLIGHT_ORIGIN_GLOW_SOFT := 34.0
+const FLASHLIGHT_DUST_COUNT := 52
+const FLASHLIGHT_DUST_MIN_SPEED := 6.0
+const FLASHLIGHT_DUST_MAX_SPEED := 18.0
 const ICON_SPACING: float  = 180.0  # horizontal gap between compass center and side icon centers
 const ITEMS_PER_PAGE: int  = 7      # max items shown per inventory radial page
 
 # ── UI references (all built in _build_ui) ────────────────────────────────
 var _bg_rect: TextureRect          = null   # background image
 var _bg_base: ColorRect            = null   # solid-colour fallback behind bg
+var _vignette: ColorRect           = null   # static edge darken (hidden when flashlight on)
+var _flashlight_overlay: ColorRect = null
+var _flashlight_mat: ShaderMaterial = null
+var _flashlight_time: float        = 0.0
+var _flashlight_dust_layer: Control = null
+var _flashlight_dust_motes: Array = []   # [{node, pos, vel, base_alpha, phase}]
 var _title_lbl: Label              = null   # node title
 var _type_badge_lbl: Label         = null   # coloured node-type label
 var _desc_lbl: RichTextLabel       = null   # node description
@@ -196,6 +217,7 @@ func _ready() -> void:
 
 	CheckerTransition.fade_in()
 	call_deferred("_refresh_contextual_hud_glows")
+	_refresh_flashlight_state()
 
 func _connect_signals() -> void:
 	ExplorationManager.node_entered.connect(_on_node_entered)
@@ -240,11 +262,36 @@ func _build_ui() -> void:
 	add_child(_bg_rect)
 
 	# ── Vignette ──────────────────────────────────────────────
-	var vignette := ColorRect.new()
-	vignette.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vignette.color        = Color(0.0, 0.0, 0.0, 0.55)
-	vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(vignette)
+	_vignette = ColorRect.new()
+	_vignette.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_vignette.color        = Color(0.0, 0.0, 0.0, 0.55)
+	_vignette.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_vignette)
+
+	# ── Flashlight dim overlay (full screen incl. info panel; session var flashlight=1) ──
+	_flashlight_mat = ShaderMaterial.new()
+	_flashlight_mat.shader = FLASHLIGHT_SHADER
+	_flashlight_mat.set_shader_parameter("beam_half_angle", FLASHLIGHT_HALF_ANGLE)
+	_flashlight_mat.set_shader_parameter("angular_softness", FLASHLIGHT_ANGULAR_SOFT)
+	_flashlight_mat.set_shader_parameter("length_softness", FLASHLIGHT_LENGTH_SOFT)
+	_flashlight_mat.set_shader_parameter("dim_alpha", FLASHLIGHT_DIM_ALPHA)
+	_flashlight_mat.set_shader_parameter("use_cone", FLASHLIGHT_USE_CONE)
+	_flashlight_mat.set_shader_parameter("circle_radius", FLASHLIGHT_CIRCLE_RADIUS)
+	_flashlight_mat.set_shader_parameter("circle_softness", FLASHLIGHT_CIRCLE_SOFT)
+	_flashlight_mat.set_shader_parameter("origin_glow_radius", FLASHLIGHT_ORIGIN_GLOW_RADIUS)
+	_flashlight_mat.set_shader_parameter("origin_glow_soft", FLASHLIGHT_ORIGIN_GLOW_SOFT)
+	_flashlight_overlay = ColorRect.new()
+	_flashlight_overlay.material = _flashlight_mat
+	_flashlight_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_flashlight_overlay.z_index = 22
+	_flashlight_overlay.visible = false
+	add_child(_flashlight_overlay)
+	_flashlight_dust_layer = Control.new()
+	_flashlight_dust_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_flashlight_dust_layer.z_index = 23
+	_flashlight_dust_layer.visible = false
+	add_child(_flashlight_dust_layer)
+	_build_flashlight_dust_motes()
 
 	# ── Right-side content panel ──────────────────────────────
 	# layout_mode=0: position/size are set explicitly by _reflow_layout() to avoid
@@ -256,6 +303,7 @@ func _build_ui() -> void:
 	sb_panel.border_color      = Color(0.35, 0.60, 1.0, 0.30)
 	content.add_theme_stylebox_override("panel", sb_panel)
 	content.visible = false
+	content.z_index = 24   # keep info panel above flashlight dim overlay (z=22)
 	content.mouse_entered.connect(_on_info_panel_mouse_entered)
 	add_child(content)
 	_content_panel = content
@@ -442,6 +490,10 @@ func _reflow_layout() -> void:
 		return
 	_bg_rect.position = Vector2.ZERO
 	_bg_rect.size      = Vector2(sw, sh)
+	if _flashlight_overlay != null and _flashlight_overlay.visible:
+		_layout_flashlight_overlay()
+	if _flashlight_dust_layer != null and _flashlight_dust_layer.visible:
+		_layout_flashlight_dust_layer()
 	_content_panel.position = Vector2(sw * BG_AREA_FRACTION, 0.0)
 	_content_panel.size     = Vector2(sw * (1.0 - BG_AREA_FRACTION), sh)
 	if _radial_overlay != null:
@@ -673,6 +725,8 @@ func _on_exploration_state_changed(_arg1: Variant = null, _arg2: Variant = null)
 func _on_var_changed(key: String, value: String) -> void:
 	_refresh_contextual_hud_glows()
 	_refresh_spots_for_state()
+	if key == "flashlight":
+		_refresh_flashlight_state()
 	var node: ExplorationNode = ExplorationManager.current_node
 	if node == null or _vn_playing or _puzzle_playing:
 		return
@@ -3156,6 +3210,184 @@ func _refresh_node(node: ExplorationNode, after_battle: bool = false) -> void:
 			else:
 				_compass_set_visible(true)
 
+	_refresh_flashlight_state()
+
+
+# ─────────────────────────────────────────────────────────────
+# Flashlight (session var flashlight = 1)
+# ─────────────────────────────────────────────────────────────
+
+func _refresh_flashlight_state() -> void:
+	var want: bool = ExplorationManager.is_flashlight_enabled() \
+		and not _vn_playing and not _puzzle_playing
+	if _flashlight_overlay != null:
+		_flashlight_overlay.visible = want
+	if _flashlight_dust_layer != null:
+		_flashlight_dust_layer.visible = want
+	if _vignette != null:
+		_vignette.visible = not want
+	if want:
+		_layout_flashlight_overlay()
+		_layout_flashlight_dust_layer()
+		_update_flashlight_shader()
+
+
+func _get_flashlight_hand_local(area_size: Vector2) -> Vector2:
+	return Vector2(
+		area_size.x * BG_AREA_FRACTION * FLASHLIGHT_HAND_NORM.x,
+		area_size.y * FLASHLIGHT_HAND_NORM.y)
+
+
+func _layout_flashlight_overlay() -> void:
+	if _flashlight_overlay == null:
+		return
+	var area_size: Vector2 = get_viewport().get_visible_rect().size
+	_flashlight_overlay.position = Vector2.ZERO
+	_flashlight_overlay.size = area_size
+	if _flashlight_mat == null or area_size.y <= 0.0:
+		return
+	var hand: Vector2 = _get_flashlight_hand_local(area_size)
+	_flashlight_mat.set_shader_parameter("overlay_size", area_size)
+	_flashlight_mat.set_shader_parameter(
+		"beam_length", hand.length() * FLASHLIGHT_LENGTH_PAD)
+
+
+func _build_flashlight_dust_motes() -> void:
+	if _flashlight_dust_layer == null:
+		return
+	_flashlight_dust_motes.clear()
+	for i: int in range(FLASHLIGHT_DUST_COUNT):
+		var mote := ColorRect.new()
+		var size_px: float = randf_range(1.0, 2.6)
+		mote.color = Color(1.0, 1.0, 1.0, 1.0)
+		mote.size = Vector2(size_px, size_px)
+		mote.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_flashlight_dust_layer.add_child(mote)
+		var ang: float = randf() * TAU
+		var spd: float = randf_range(FLASHLIGHT_DUST_MIN_SPEED, FLASHLIGHT_DUST_MAX_SPEED)
+		_flashlight_dust_motes.append({
+			"node": mote,
+			"pos": Vector2.ZERO,
+			"vel": Vector2(cos(ang), sin(ang)) * spd,
+			"base_alpha": randf_range(0.08, 0.22),
+			"phase": randf() * TAU,
+		})
+	_reset_flashlight_dust_positions()
+
+
+func _layout_flashlight_dust_layer() -> void:
+	if _flashlight_dust_layer == null:
+		return
+	var vp_size: Vector2 = get_viewport().get_visible_rect().size
+	_flashlight_dust_layer.position = Vector2.ZERO
+	_flashlight_dust_layer.size = vp_size
+	if _flashlight_dust_motes.is_empty():
+		return
+	for m: Dictionary in _flashlight_dust_motes:
+		var pos: Vector2 = m.get("pos", Vector2.ZERO)
+		pos.x = clampf(pos.x, 0.0, vp_size.x)
+		pos.y = clampf(pos.y, 0.0, vp_size.y)
+		m["pos"] = pos
+
+
+func _reset_flashlight_dust_positions() -> void:
+	if _flashlight_dust_layer == null:
+		return
+	var sz: Vector2 = _flashlight_dust_layer.size
+	if sz.x <= 0.0 or sz.y <= 0.0:
+		sz = get_viewport().get_visible_rect().size
+	for m: Dictionary in _flashlight_dust_motes:
+		m["pos"] = Vector2(randf() * sz.x, randf() * sz.y)
+
+
+func _flashlight_shake(t: float, freq: float, phase: float) -> float:
+	return sin(t * TAU * freq + phase)
+
+
+func _update_flashlight_shader() -> void:
+	if _flashlight_mat == null or _flashlight_overlay == null:
+		return
+	var area_size: Vector2 = _flashlight_overlay.size
+	if area_size.x <= 0.0 or area_size.y <= 0.0:
+		return
+	var overlay_origin: Vector2 = _flashlight_overlay.global_position
+	var mouse_local: Vector2 = get_global_mouse_position() - overlay_origin
+	_flashlight_mat.set_shader_parameter("beam_origin", mouse_local)
+	if not FLASHLIGHT_USE_CONE:
+		return
+	var hand: Vector2 = _get_flashlight_hand_local(area_size)
+	var t: float = _flashlight_time
+	hand += Vector2(
+		_flashlight_shake(t, 0.39, 0.0) * 4.0 + _flashlight_shake(t, 0.98, 1.2) * 1.9,
+		_flashlight_shake(t, 0.34, 0.7) * 3.3 + _flashlight_shake(t, 0.88, 2.1) * 1.6)
+	var aim: Vector2 = mouse_local - hand
+	if aim.length_squared() < 4.0:
+		aim = Vector2(0.0, -1.0)
+	else:
+		aim = aim.normalized()
+	var shake_angle: float = _flashlight_shake(t, 0.49, 0.4) * 0.035 \
+		+ _flashlight_shake(t, 1.14, 1.8) * 0.015
+	aim = aim.rotated(shake_angle)
+	var spread: float = 1.0 + _flashlight_shake(t, 0.43, 2.5) * 0.06
+	var beam_length: float = hand.length() * FLASHLIGHT_LENGTH_PAD
+	_flashlight_mat.set_shader_parameter("overlay_size", area_size)
+	_flashlight_mat.set_shader_parameter("beam_length", beam_length)
+	_flashlight_mat.set_shader_parameter("beam_origin", hand)
+	_flashlight_mat.set_shader_parameter("beam_direction", aim)
+	_flashlight_mat.set_shader_parameter("beam_spread", spread)
+
+
+func _flashlight_lit_factor(local_pos: Vector2, mouse_local: Vector2) -> float:
+	if not FLASHLIGHT_USE_CONE:
+		var dist: float = local_pos.distance_to(mouse_local)
+		var t: float = smoothstep(FLASHLIGHT_CIRCLE_RADIUS, FLASHLIGHT_CIRCLE_RADIUS + FLASHLIGHT_CIRCLE_SOFT, dist)
+		var lit: float = 1.0 - t
+		return lit * lit
+	# Fallback when cone mode is enabled later: keep at least origin glow lit.
+	var hand: Vector2 = _get_flashlight_hand_local(_flashlight_overlay.size)
+	var d_hand: float = local_pos.distance_to(hand)
+	var ht: float = smoothstep(
+		FLASHLIGHT_ORIGIN_GLOW_RADIUS,
+		FLASHLIGHT_ORIGIN_GLOW_RADIUS + FLASHLIGHT_ORIGIN_GLOW_SOFT,
+		d_hand)
+	var h_lit: float = 1.0 - ht
+	return h_lit * h_lit
+
+
+func _update_flashlight_dust_motes(delta: float) -> void:
+	if _flashlight_dust_layer == null or not _flashlight_dust_layer.visible:
+		return
+	var area: Vector2 = _flashlight_dust_layer.size
+	if area.x <= 0.0 or area.y <= 0.0:
+		return
+	var mouse_local: Vector2 = get_global_mouse_position() - _flashlight_dust_layer.global_position
+	for m: Dictionary in _flashlight_dust_motes:
+		var pos: Vector2 = m.get("pos", Vector2.ZERO)
+		var vel: Vector2 = m.get("vel", Vector2.ZERO)
+		var phase: float = float(m.get("phase", 0.0))
+		phase += delta
+		var drift := Vector2(
+			sin(_flashlight_time * 0.7 + phase) * 3.2,
+			cos(_flashlight_time * 0.9 + phase * 1.3) * 2.4)
+		pos += (vel + drift) * delta
+		if pos.x < -4.0:
+			pos.x = area.x + 4.0
+		elif pos.x > area.x + 4.0:
+			pos.x = -4.0
+		if pos.y < -4.0:
+			pos.y = area.y + 4.0
+		elif pos.y > area.y + 4.0:
+			pos.y = -4.0
+		var lit: float = _flashlight_lit_factor(pos, mouse_local)
+		var pulse: float = 0.75 + 0.25 * sin(_flashlight_time * 2.1 + phase * 0.8)
+		var base_alpha: float = float(m.get("base_alpha", 0.12))
+		var mote: ColorRect = m.get("node") as ColorRect
+		if mote != null:
+			mote.position = pos
+			mote.modulate.a = base_alpha * lit * pulse
+		m["pos"] = pos
+		m["phase"] = phase
+
 
 # ─────────────────────────────────────────────────────────────
 # Visual Novel Integration
@@ -3273,6 +3505,7 @@ func _play_puzzle(puzzle_id: String, on_done: Callable, puzzle_params: Dictionar
 		_puzzle_layer = null
 		_puzzle_playing = false
 		_compass_set_visible(true)
+		_refresh_flashlight_state()
 
 	puzzle.puzzle_completed.connect(func(success: bool) -> void:
 		cleanup.call()
@@ -3288,6 +3521,7 @@ func _play_vn(path: String, on_done: Callable, keep_bgm: bool = true) -> void:
 		return
 	ExplorationManager.snapshot_bgm_before_vn()
 	_vn_playing = true
+	_refresh_flashlight_state()
 	_close_compass_menu(false)
 	_close_setting_menu(false)
 	_close_inventory_menu(false)
@@ -3301,6 +3535,7 @@ func _play_vn(path: String, on_done: Callable, keep_bgm: bool = true) -> void:
 	vn.play_scene(path, func() -> void:
 		ExplorationManager.clear_vn_resume_bgm()
 		_vn_playing = false
+		_refresh_flashlight_state()
 		on_done.call())
 
 func _on_vn_finished(_node: ExplorationNode) -> void:
@@ -3824,6 +4059,11 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 			next.call()
 
 func _process(delta: float) -> void:
+	if _flashlight_overlay != null and _flashlight_overlay.visible:
+		_flashlight_time += delta
+		_update_flashlight_shader()
+		_update_flashlight_dust_motes(delta)
+
 	# Compass idle hint — lowest priority; blocked while chat/inventory glow active.
 	if _can_track_compass_idle() and _can_start_compass_idle_timer():
 		if not _hud_glow_active.get("compass", false):
