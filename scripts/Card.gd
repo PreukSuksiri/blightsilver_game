@@ -71,8 +71,8 @@ const ART_PLACEHOLDER: Texture2D    = preload("res://assets/textures/cards/place
 const VELLUM_FRAME: Texture2D       = preload("res://assets/textures/cards/frames/vellum_card_frame_transparent.png")
 const FACEDOWN_TEX: Texture2D       = preload("res://assets/textures/cards/frames/facedown_frame.png")
 const BLANK_FRAME_TEX: Texture2D    = preload("res://assets/textures/cards/frames/vellum_card_frame_full.png")
-const ICON_BLANK_FOUND: Texture2D   = preload("res://assets/textures/ui/decorations/ui_icon_blank_found.png")
-const ICON_TRAP: Texture2D          = preload("res://assets/textures/ui/decorations/ui_icon_trap.png")
+var ICON_BLANK_FOUND: Texture2D
+var ICON_TRAP: Texture2D
 
 # ─────────────────────────────────────────────────────────────
 # Node references (match card.tscn)
@@ -146,11 +146,26 @@ func _ready() -> void:
 	bg.mouse_filter = MOUSE_FILTER_IGNORE
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
+	ICON_BLANK_FOUND  = HudSkin.hud_tex("ui_icon_blank_found.png")
+	ICON_TRAP         = HudSkin.hud_tex("ui_icon_trap.png")
 	_blank_found_icon = _make_card_icon(ICON_BLANK_FOUND)
 	_trap_icon        = _make_card_icon(ICON_TRAP)
+	HudSkin.skin_changed.connect(_reload_hud_skin)
 	_setup_overlay_styles()
 	_build_flag_bar()
 	_refresh_display()
+
+func _exit_tree() -> void:
+	if HudSkin.skin_changed.is_connected(_reload_hud_skin):
+		HudSkin.skin_changed.disconnect(_reload_hud_skin)
+
+func _reload_hud_skin(_new_version: String = "") -> void:
+	ICON_BLANK_FOUND = HudSkin.hud_tex("ui_icon_blank_found.png")
+	ICON_TRAP        = HudSkin.hud_tex("ui_icon_trap.png")
+	if is_instance_valid(_blank_found_icon):
+		_blank_found_icon.texture = ICON_BLANK_FOUND
+	if is_instance_valid(_trap_icon):
+		_trap_icon.texture = ICON_TRAP
 
 func _make_card_icon(tex: Texture2D) -> TextureRect:
 	var icon := TextureRect.new()

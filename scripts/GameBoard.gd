@@ -90,6 +90,7 @@ var _p2_stack_count_lbl: Label = null
 var _tech_overlay_panel: Panel = null
 var _tech_overlay_player: int = -1
 var _tech_overlay_close_pending: bool = false
+var _tech_overlay_mode: String = ""
 signal revive_placement_resolved
 
 # Pending revive placement (tech Resurrection/Time Travel, union Moon Tribe Shaman, etc.)
@@ -132,10 +133,15 @@ var _portrait_last_tap: Array[float] = [0.0, 0.0]  # last tap timestamp per play
 var _tax_confirm_panel: Control = null
 
 # Peek (reveal preview) buttons
-var _p1_reveal_btn: Button = null
-var _p2_reveal_btn: Button = null
+var _p1_reveal_btn: TextureButton = null
+var _p2_reveal_btn: TextureButton = null
+var _p1_view_slash: ColorRect = null
+var _p2_view_slash: ColorRect = null
+var _p1_view_slash_shadow: ColorRect = null
+var _p2_view_slash_shadow: ColorRect = null
 var _reveal_preview: Array[bool] = [false, false]
 var _enemy_view_active: bool = false
+var _enemy_view_return_dialog: ConfirmationDialog = null
 
 # Observer peek (AI vs AI / E2E only) — purely cosmetic, no game-state change
 # 0 = off, 1 = peek P0 only, 2 = peek active player, 3 = peek both
@@ -315,6 +321,11 @@ func _ready() -> void:
 	_build_options_button()
 	_build_union_suggest_button()
 	SaveManager.union_mechanism_changed.connect(func(_u: bool) -> void: _update_union_suggest_button())
+	CTX_ICON_ATTACK = HudSkin.hud_tex("ui_context_menu_attack.png")
+	CTX_ICON_INFO   = HudSkin.hud_tex("ui_context_menu_info.png")
+	CTX_ICON_BLUFF  = HudSkin.hud_tex("ui_context_menu_bluff.png")
+	CTX_ICON_UNION  = HudSkin.hud_tex("ui_icon_union.png")
+	HudSkin.skin_changed.connect(_reload_hud_skin)
 	game_over_panel.visible = false
 	mode_panel.visible = false
 	action_panel.visible = false
@@ -1948,45 +1959,66 @@ func _open_void_modal(player: int) -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _build_reveal_buttons() -> void:
+	# 64×64 eye icon. Keeps the ORIGINAL reveal-button anchoring: P1 left-anchored,
+	# P2 right-anchored — sits directly under each player's VOID/TECH stacks.
+	var eye_tex := load("res://assets/textures/ui/battle/v2_magitech/ui_magitech_eye_open.png") as Texture2D
 	for player in range(2):
-		var btn := Button.new()
-		btn.text = "ENEMY VIEW"
+		var btn := TextureButton.new()
+		btn.texture_normal = eye_tex
+		btn.ignore_texture_size = true
+		btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		btn.layout_mode = 1
 		btn.z_index = 4
 		btn.visible = false
 		btn.mouse_filter = Control.MOUSE_FILTER_STOP
+		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		btn.modulate = Color(0.9, 0.97, 1.0, 0.95)
 		if player == 0:
 			btn.anchor_left   = 0.0; btn.anchor_right  = 0.0
-			btn.offset_left   = 8.0; btn.offset_right  = 168.0
+			btn.offset_left   = 8.0;  btn.offset_right  = 72.0
 		else:
 			btn.anchor_left   = 1.0; btn.anchor_right  = 1.0
-			btn.offset_left   = -168.0; btn.offset_right = -8.0
-		btn.offset_top    = 202.0
-		btn.offset_bottom = 232.0
+			btn.offset_left   = -72.0; btn.offset_right = -8.0
 		btn.anchor_top    = 0.0
 		btn.anchor_bottom = 0.0
-		# Style — silver-cyan border, dark translucent bg
-		var sbox := StyleBoxFlat.new()
-		sbox.bg_color = Color(0.05, 0.10, 0.14, 0.88)
-		sbox.border_width_left = 1; sbox.border_width_right  = 1
-		sbox.border_width_top  = 1; sbox.border_width_bottom = 1
-		sbox.border_color = Color(0.55, 0.80, 0.90, 0.85)
-		sbox.corner_radius_top_left     = 4; sbox.corner_radius_top_right    = 4
-		sbox.corner_radius_bottom_left  = 4; sbox.corner_radius_bottom_right = 4
-		btn.add_theme_stylebox_override("normal", sbox)
-		var sbox_hover := sbox.duplicate() as StyleBoxFlat
-		sbox_hover.bg_color = Color(0.10, 0.20, 0.28, 0.95)
-		btn.add_theme_stylebox_override("hover", sbox_hover)
-		var sbox_press := sbox.duplicate() as StyleBoxFlat
-		sbox_press.bg_color = Color(0.15, 0.30, 0.40, 1.0)
-		btn.add_theme_stylebox_override("pressed", sbox_press)
-		btn.add_theme_color_override("font_color", Color(0.70, 0.92, 1.0, 1.0))
-		btn.add_theme_font_size_override("font_size", 11)
+		btn.offset_top    = 202.0
+		btn.offset_bottom = 266.0
+
+		# Slash shadow (black, offset slightly) — shown only in "enemy view" icon state
+		var slash_shadow := ColorRect.new()
+		slash_shadow.layout_mode = 0
+		slash_shadow.color = Color(0.0, 0.0, 0.0, 0.70)
+		slash_shadow.position = Vector2(2.0, 33.0)
+		slash_shadow.size = Vector2(62.0, 5.0)
+		slash_shadow.pivot_offset = Vector2(31.0, 2.5)
+		slash_shadow.rotation_degrees = -40.0
+		slash_shadow.visible = true
+		slash_shadow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		btn.add_child(slash_shadow)
+
+		# Slash (white line on top)
+		var slash := ColorRect.new()
+		slash.layout_mode = 0
+		slash.color = Color(1.0, 1.0, 1.0, 0.92)
+		slash.position = Vector2(0.0, 31.0)
+		slash.size = Vector2(62.0, 5.0)
+		slash.pivot_offset = Vector2(31.0, 2.5)
+		slash.rotation_degrees = -40.0
+		slash.visible = true
+		slash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		btn.add_child(slash)
+
 		var p := player
 		btn.pressed.connect(func() -> void: _toggle_reveal_preview(p))
 		add_child(btn)
-		if player == 0: _p1_reveal_btn = btn
-		else:           _p2_reveal_btn = btn
+		if player == 0:
+			_p1_reveal_btn = btn
+			_p1_view_slash = slash
+			_p1_view_slash_shadow = slash_shadow
+		else:
+			_p2_reveal_btn = btn
+			_p2_view_slash = slash
+			_p2_view_slash_shadow = slash_shadow
 
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
 		_build_observer_peek_panel()
@@ -2071,9 +2103,12 @@ func _toggle_reveal_preview(player: int) -> void:
 		return
 	_reveal_preview[player] = not _reveal_preview[player]
 	_enemy_view_active = not _reveal_preview[player]
-	var btn: Button = _p1_reveal_btn if player == 0 else _p2_reveal_btn
-	if btn:
-		btn.text = "YOUR VIEW" if _reveal_preview[player] else "ENEMY VIEW"
+	# Slash shown in "enemy view" icon state (i.e. when NOT currently revealing).
+	var show_slash: bool = not _reveal_preview[player]
+	var slash: ColorRect = _p1_view_slash if player == 0 else _p2_view_slash
+	var slash_shadow: ColorRect = _p1_view_slash_shadow if player == 0 else _p2_view_slash_shadow
+	if slash: slash.visible = show_slash
+	if slash_shadow: slash_shadow.visible = show_slash
 	# Apply peek state and enemy-view flag to all cards
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
@@ -2088,11 +2123,13 @@ func _toggle_reveal_preview(player: int) -> void:
 func _reset_reveal_previews() -> void:
 	_enemy_view_active = false
 	for p in range(2):
-		var btn: Button = _p1_reveal_btn if p == 0 else _p2_reveal_btn
 		if _reveal_preview[p]:
 			_reveal_preview[p] = false
-			if btn:
-				btn.text = "ENEMY VIEW"
+			# Back to "enemy view" icon state → show slash.
+			var slash: ColorRect = _p1_view_slash if p == 0 else _p2_view_slash
+			var slash_shadow: ColorRect = _p1_view_slash_shadow if p == 0 else _p2_view_slash_shadow
+			if slash: slash.visible = true
+			if slash_shadow: slash_shadow.visible = true
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				grid_nodes[p][r][c].set_preview_revealed(false)
@@ -2188,7 +2225,7 @@ func _build_end_turn_button() -> void:
 	# Image is 1216×832 → ratio ≈ 1.46 : 1
 	# Display at 160×110 px, centered below turn number label
 	_end_turn_btn = TextureButton.new()
-	_end_turn_btn.texture_normal = load("res://assets/textures/ui/decorations/ui_end_turn.png")
+	_end_turn_btn.texture_normal = HudSkin.hud_tex("ui_end_turn.png")
 	_end_turn_btn.ignore_texture_size = true
 	_end_turn_btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	_end_turn_btn.layout_mode = 1
@@ -2451,10 +2488,10 @@ func _build_attack_confirm_panel() -> void:
 # Card Context Menu
 # ─────────────────────────────────────────────────────────────
 
-const CTX_ICON_ATTACK: Texture2D = preload("res://assets/textures/ui/decorations/ui_context_menu_attack.png")
-const CTX_ICON_INFO:   Texture2D = preload("res://assets/textures/ui/decorations/ui_context_menu_info.png")
-const CTX_ICON_BLUFF:  Texture2D = preload("res://assets/textures/ui/decorations/ui_context_menu_bluff.png")
-const CTX_ICON_UNION:  Texture2D = preload("res://assets/textures/ui/decorations/ui_icon_union.png")
+var CTX_ICON_ATTACK: Texture2D
+var CTX_ICON_INFO:   Texture2D
+var CTX_ICON_BLUFF:  Texture2D
+var CTX_ICON_UNION:  Texture2D
 
 func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	# Close any existing popup first
@@ -2463,16 +2500,19 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	_context_card_player = ctx_player
 	_context_card_pos = Vector2i(row, col)
 
-	# ── Enemy-view simulation: only own cards get a "SWITCH VIEW" button ──
+	# Enemy view: card taps show a return prompt instead of the context menu.
 	if _enemy_view_active:
-		if ctx_player != GameState.current_player:
-			return  # no menu for opponent cards during simulation
-		_build_enemy_view_context_popup(row, col)
+		_show_enemy_view_return_prompt()
 		return
 
 	var card: GameState.CardInstance = GameState.get_card(ctx_player, row, col)
 	var current_player := GameState.current_player
 
+	var _decoy_blocked: bool = (
+		GameState.attack_cost_block_max >= 0
+		and GameState.attack_cost_block_player == current_player
+		and card.crystal_cost <= GameState.attack_cost_block_max
+	)
 	var can_attack: bool = (
 		ctx_player == current_player
 		and card.card_type == "character"
@@ -2481,6 +2521,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 		and (GameState.attacks_remaining > 0 or card.has_pending_bonus_attack_chain())
 		and (GameState.berserk_active[current_player] == null
 			or GameState.berserk_active[current_player] == card)
+		and not _decoy_blocked
 	)
 	var can_info: bool  = (card.card_type != "dead_end" and card.card_name != "")
 	var can_bluff: bool = (ctx_player == current_player)
@@ -3184,57 +3225,46 @@ func _show_blank_context(ctx_player: int, row: int, col: int) -> void:
 	popup.position = Vector2(px, py)
 	popup.size     = Vector2(popup_w, popup_h)
 
-func _build_enemy_view_context_popup(row: int, col: int) -> void:
-	var backdrop := Control.new()
-	backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
-	backdrop.z_index = 9
-	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
-	backdrop.gui_input.connect(func(e: InputEvent) -> void:
-		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
-			_hide_card_context())
-	add_child(backdrop)
-	_context_backdrop = backdrop
+func _should_block_card_actions_for_enemy_view() -> bool:
+	if not _enemy_view_active:
+		return false
+	if _is_ai_turn():
+		return false
+	return selection_state not in [
+		SelectionState.SELECTING_TECH_TARGET,
+		SelectionState.SELECTING_UNION_MATERIALS,
+		SelectionState.CONFIRMING_ATTACK,
+		SelectionState.AWAITING_TRAP_CHOICE,
+	]
 
-	var popup := Panel.new()
-	popup.z_index = 10
-	popup.mouse_filter = Control.MOUSE_FILTER_STOP
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.04, 0.07, 0.16, 0.97)
-	sb.border_width_left = 2; sb.border_width_top = 2
-	sb.border_width_right = 2; sb.border_width_bottom = 2
-	sb.border_color = Color(0.45, 0.70, 1.0, 0.70)
-	sb.corner_radius_top_left = 7; sb.corner_radius_top_right = 7
-	sb.corner_radius_bottom_right = 7; sb.corner_radius_bottom_left = 7
-	popup.add_theme_stylebox_override("panel", sb)
-	add_child(popup)
-	_context_popup = popup
-
-	var vbox := VBoxContainer.new()
-	vbox.layout_mode = 1
-	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vbox.offset_left = 6.0; vbox.offset_top = 6.0
-	vbox.offset_right = -6.0; vbox.offset_bottom = -6.0
-	popup.add_child(vbox)
-
-	var btn := _make_context_btn("YOUR VIEW", Color(0.65, 0.85, 1.0, 1.0))
-	btn.pressed.connect(func() -> void:
-		_hide_card_context()
-		_toggle_reveal_preview(GameState.current_player))
-	vbox.add_child(btn)
-
-	var btn_h := 40.0
-	var pad := 12.0
-	var popup_h := btn_h + pad * 2.0
-	var popup_w := 148.0
-	var screen := get_viewport_rect().size
-	var px := _last_click_pos.x - popup_w * 0.5
-	px = clampf(px, 4.0, screen.x - popup_w - 4.0)
-	var py := _last_click_pos.y - popup_h - 8.0
-	if py < 4.0:
-		py = _last_click_pos.y + 8.0
-	py = clampf(py, 4.0, screen.y - popup_h - 4.0)
-	popup.position = Vector2(px, py)
-	popup.size = Vector2(popup_w, popup_h)
+func _show_enemy_view_return_prompt() -> void:
+	_hide_card_context()
+	if is_instance_valid(_enemy_view_return_dialog):
+		_enemy_view_return_dialog.popup_centered()
+		return
+	SFXManager.play(SFXManager.SFX_POPUP)
+	var dlg := ConfirmationDialog.new()
+	dlg.title = "Enemy's View"
+	dlg.dialog_text = "You are now in \"Enemy's View\". Would you like to return to \"Your View\"?"
+	dlg.ok_button_text = "Your View"
+	dlg.cancel_button_text = "Stay"
+	dlg.confirmed.connect(func() -> void:
+		if _enemy_view_active:
+			_toggle_reveal_preview(GameState.current_player)
+		_enemy_view_return_dialog = null
+		dlg.queue_free()
+	)
+	dlg.canceled.connect(func() -> void:
+		_enemy_view_return_dialog = null
+		dlg.queue_free()
+	)
+	dlg.close_requested.connect(func() -> void:
+		_enemy_view_return_dialog = null
+		dlg.queue_free()
+	)
+	add_child(dlg)
+	_enemy_view_return_dialog = dlg
+	dlg.popup_centered()
 
 # ─────────────────────────────────────────────────────────────
 # Corner Crystal Labels
@@ -3250,8 +3280,7 @@ func _build_bottom_crystal_labels() -> void:
 	const COL_W      : float = 300.0
 	const MARGIN     : float = 12.0
 
-	var crystal_tex: Texture2D = load(
-		"res://assets/textures/ui/decorations/ui_crystal_indicator.png")
+	var crystal_tex: Texture2D = HudSkin.hud_tex("ui_crystal_indicator.png")
 
 	# ── P1 — upper left ───────────────────────────────────────
 	var p1_vbox := VBoxContainer.new()
@@ -3479,13 +3508,13 @@ func _start_dot_animation() -> void:
 ## Creates a fixed-size Control with the attack-count icon and a centered number label.
 ## Child 0 = TextureRect (icon), Child 1 = Label (count). Caller stores child 1 as _pN_attack_lbl.
 func _build_attack_count_icon() -> Control:
-	const ICON_SIZE: float = 72.0
+	const ICON_SIZE: float = 92.0
 	var container := Control.new()
 	container.custom_minimum_size = Vector2(ICON_SIZE, ICON_SIZE)
 	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	var icon := TextureRect.new()
-	icon.texture = load("res://assets/textures/ui/decorations/ui_icon_attack_count.png")
+	icon.texture = HudSkin.hud_tex("ui_icon_attack_count.png")
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -3496,7 +3525,7 @@ func _build_attack_count_icon() -> Control:
 	lbl.text = "2"
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_size_override("font_size", 32)
+	lbl.add_theme_font_size_override("font_size", 38)
 	lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
 	lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
 	lbl.add_theme_constant_override("shadow_offset_x", 2)
@@ -3543,9 +3572,9 @@ func _refresh_attack_labels() -> void:
 		lbl.text = str(remaining)
 
 func _build_attack_count_indicators() -> void:
-	const ICON_SIZE: float = 72.0
+	const ICON_SIZE: float = 92.0
 	const MED_HALF: float  = 140.0   # MED_SIZE (280) / 2
-	const GAP: float       = 8.0
+	const GAP: float       = 22.0    # offset from turn number panel
 
 	var p1_container: Control = _build_attack_count_icon()
 	p1_container.layout_mode = 1
@@ -3581,7 +3610,7 @@ func _build_turn_number_label() -> void:
 	# Medallion background — upper half hidden above screen, lower half visible
 	const MED_SIZE: float = 280.0
 	var bg := TextureRect.new()
-	bg.texture = load("res://assets/textures/ui/decorations/ui_turn_number_panel.png")
+	bg.texture = HudSkin.hud_tex("ui_turn_number_panel.png")
 	bg.ignore_texture_size = true
 	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -3603,10 +3632,10 @@ func _build_turn_number_label() -> void:
 	lbl.anchor_left   = 0.5; lbl.anchor_right  = 0.5
 	lbl.anchor_top    = 0.0; lbl.anchor_bottom = 0.0
 	lbl.offset_left   = -160.0; lbl.offset_right  = 160.0
-	lbl.offset_top    = 10.0;   lbl.offset_bottom = 72.0
+	lbl.offset_top    = -4.0;   lbl.offset_bottom = 56.0
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_size_override("font_size", 44)
+	lbl.add_theme_font_size_override("font_size", 30)
 	lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.92))
 	lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
 	lbl.add_theme_constant_override("shadow_offset_x", 3)
@@ -3626,7 +3655,7 @@ func _build_options_button() -> void:
 	const HIDE_H : float = BTN_H - SHOW_H        # 60 px below screen edge (clipped)
 
 	var btn := TextureButton.new()
-	btn.texture_normal = load("res://assets/textures/ui/decorations/ui_battle_options.png")
+	btn.texture_normal = HudSkin.hud_tex("ui_battle_options.png")
 	btn.ignore_texture_size = true
 	btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	btn.layout_mode = 1
@@ -3662,7 +3691,7 @@ func _build_union_suggest_button() -> void:
 
 	# Pulsing cyan glow halo behind the button
 	var glow := TextureRect.new()
-	glow.texture = load("res://assets/textures/ui/decorations/ui_icon_union.png")
+	glow.texture = HudSkin.hud_tex("ui_icon_union.png")
 	glow.ignore_texture_size = true
 	glow.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 	glow.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
@@ -3680,7 +3709,7 @@ func _build_union_suggest_button() -> void:
 
 	# Tappable button on top
 	var btn := TextureButton.new()
-	btn.texture_normal   = load("res://assets/textures/ui/decorations/ui_icon_union.png")
+	btn.texture_normal   = HudSkin.hud_tex("ui_icon_union.png")
 	btn.ignore_texture_size = true
 	btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	btn.layout_mode  = 1
@@ -3716,6 +3745,34 @@ func _collect_all_available_unions(player: int) -> Array:
 				seen[u.card_name] = true
 				results.append(entry)
 	return results
+
+## Re-applies all HUD textures from the currently active HudSkin version.
+## Called automatically when HudSkin.skin_changed fires (admin: hud_skin v1|v2).
+func _reload_hud_skin(_new_version: String = "") -> void:
+	CTX_ICON_ATTACK = HudSkin.hud_tex("ui_context_menu_attack.png")
+	CTX_ICON_INFO   = HudSkin.hud_tex("ui_context_menu_info.png")
+	CTX_ICON_BLUFF  = HudSkin.hud_tex("ui_context_menu_bluff.png")
+	CTX_ICON_UNION  = HudSkin.hud_tex("ui_icon_union.png")
+	if is_instance_valid(_end_turn_btn):
+		_end_turn_btn.texture_normal     = HudSkin.hud_tex("ui_end_turn.png")
+	if is_instance_valid(_options_btn):
+		_options_btn.texture_normal      = HudSkin.hud_tex("ui_battle_options.png")
+	if is_instance_valid(_union_suggest_btn):
+		_union_suggest_btn.texture_normal = HudSkin.hud_tex("ui_icon_union.png")
+	if is_instance_valid(_union_suggest_glow):
+		_union_suggest_glow.texture      = HudSkin.hud_tex("ui_icon_union.png")
+	if is_instance_valid(_turn_number_bg):
+		_turn_number_bg.texture          = HudSkin.hud_tex("ui_turn_number_panel.png")
+	if is_instance_valid(_p1_crystal_icon):
+		_p1_crystal_icon.texture         = HudSkin.hud_tex("ui_crystal_indicator.png")
+	if is_instance_valid(_p2_crystal_icon):
+		_p2_crystal_icon.texture         = HudSkin.hud_tex("ui_crystal_indicator.png")
+	if is_instance_valid(_p1_attack_lbl):
+		var p1_icon := _p1_attack_lbl.get_parent().get_child(0) as TextureRect
+		if p1_icon: p1_icon.texture = HudSkin.hud_tex("ui_icon_attack_count.png")
+	if is_instance_valid(_p2_attack_lbl):
+		var p2_icon := _p2_attack_lbl.get_parent().get_child(0) as TextureRect
+		if p2_icon: p2_icon.texture = HudSkin.hud_tex("ui_icon_attack_count.png")
 
 func _update_union_suggest_button() -> void:
 	if _union_suggest_btn == null:
@@ -4373,8 +4430,8 @@ func _on_coin_flip_visual_requested(results: Array) -> void:
 	turn_manager.resolve_coin_flip_visual()
 
 func _show_compact_coin_flip(results: Array) -> void:
-	var _COIN_FRONT: Texture2D = load("res://assets/textures/ui/decorations/ui_coin_front.png")
-	var _COIN_BACK:  Texture2D = load("res://assets/textures/ui/decorations/ui_coin_back.png")
+	var _COIN_FRONT: Texture2D = HudSkin.hud_tex("ui_coin_front.png")
+	var _COIN_BACK:  Texture2D = HudSkin.hud_tex("ui_coin_back.png")
 	const COIN_SZ   : float = 140.0
 	const NUM_FLIPS : int   = 5
 
@@ -4505,8 +4562,8 @@ func _make_compact_flip_stylebox() -> StyleBoxFlat:
 # Coin flip overlay
 # ─────────────────────────────────────────────────────────────
 func _show_coin_flip_and_start(first_player: int) -> void:
-	var _COIN_FRONT: Texture2D = load("res://assets/textures/ui/decorations/ui_coin_front.png")
-	var _COIN_BACK:  Texture2D = load("res://assets/textures/ui/decorations/ui_coin_back.png")
+	var _COIN_FRONT: Texture2D = HudSkin.hud_tex("ui_coin_front.png")
+	var _COIN_BACK:  Texture2D = HudSkin.hud_tex("ui_coin_back.png")
 	const COIN_SIZE    : float = 420.0
 	const NUM_FLIPS    : int   = 10   # even → lands on same side it started
 	const PORTRAIT_W   : float = 260.0
@@ -5457,7 +5514,7 @@ func _show_tax_confirm() -> void:
 	cost_row.add_theme_constant_override("separation", 6)
 	vbox.add_child(cost_row)
 
-	var crystal_tex: Texture2D = load("res://assets/textures/ui/decorations/ui_crystal_indicator.png")
+	var crystal_tex: Texture2D = HudSkin.hud_tex("ui_crystal_indicator.png")
 	if crystal_tex:
 		var crystal_icon := TextureRect.new()
 		crystal_icon.texture = crystal_tex
@@ -5878,6 +5935,10 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 		_on_union_material_tapped(pos)
 		return
 
+	if _should_block_card_actions_for_enemy_view():
+		_show_enemy_view_return_prompt()
+		return
+
 	# Own blank/empty cell → show blank context menu (with BLUFF option)
 	var clicked_card: GameState.CardInstance = GameState.get_card(player, row, col)
 	var _in_targeting: bool = selection_state in [
@@ -6130,11 +6191,6 @@ func _begin_revive_placement_selection() -> void:
 		var ai_target: Vector2i = _get_ai_for_player(player).decide_target("revive_placement")
 		_flash_target_card(player, ai_target.x, ai_target.y)
 		_handle_revive_placement(player, ai_target)
-
-func _get_ai_for_player(player: int) -> AIPlayer:
-	if player == 0 and ai_player_0 != null:
-		return ai_player_0
-	return ai_player
 
 func _handle_revive_placement(player: int, pos: Vector2i) -> void:
 	if _pending_revive_card == null or player != _pending_revive_player:

@@ -1071,14 +1071,14 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 			return 0  # discard tech, keep attacking
 		return 1
 
+	return 0  # unknown prompt — default to first choice
+
 func decide_blackmail_tech() -> String:
 	# Returns tech name to discard, or "" to end the turn.
 	if GameState.attacks_remaining <= 0 or GameState.tech_hands[player_index].is_empty():
 		return ""
 	var hand: Array = GameState.tech_hands[player_index]
 	return str(hand[hand.size() - 1])
-
-	return 0  # safe default
 
 func _random_adjacent_unrevealed_to(center: Vector2i, target_player: int) -> Vector2i:
 	var adj: Array = GameState.get_adjacent_positions(center.x, center.y)

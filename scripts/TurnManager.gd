@@ -2,17 +2,17 @@ class_name TurnManager
 extends Node
 # Manages turn flow, delegates to GameState for state tracking.
 
-signal mode_selected(player_index: int, mode: GameState.TurnMode)
+signal mode_selected(player_index: int, mode)
 signal attack_phase_started(player_index: int, max_attacks: int)
-signal attack_completed(attacker_pos: Vector2i, target_pos: Vector2i, result: BattleResolver.BattleResult)
+signal attack_completed(attacker_pos: Vector2i, target_pos: Vector2i, result)
 signal tech_played(player_index: int, tech_name: String)
 signal tech_resolved(player_index: int)
 signal turn_ended(player_index: int)
 signal awaiting_trap_choice(trap_name: String, choices: Array)
 signal awaiting_target_selection(prompt: String, filter: String)
-signal battle_preview_needed(attacker_player: int, attacker: GameState.CardInstance, defender: GameState.CardInstance, result: BattleResolver.BattleResult)
+signal battle_preview_needed(attacker_player: int, attacker, defender, result)
 signal battle_preview_done
-signal battle_result_finalized(result: BattleResolver.BattleResult)
+signal battle_result_finalized(result)
 signal crystal_animation_done
 signal attack_aborted
 signal card_effect_flash_done
@@ -1534,23 +1534,23 @@ func _end_turn(player: int) -> void:
 					_blast_adjacent_foe_faceup(_opp_end, _te_r, _te_c)
 					GameState.post_message("%s self-destructs at end of turn!" % _te_card.card_name)
 					GameState.destroy_card(player, _te_r, _te_c, false)
-			CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN:
-				var _venom_targets: Array = []
-				for _vn_r: int in range(GameState.GRID_SIZE):
-					for _vn_c: int in range(GameState.GRID_SIZE):
-						var _vn_card: GameState.CardInstance = GameState.get_card(_opp_end, _vn_r, _vn_c)
-						if _vn_card.card_type == "character":
-							_venom_targets.append(Vector2i(_vn_r, _vn_c))
-				if not _venom_targets.is_empty():
-					var _vn_pos: Vector2i = _venom_targets[randi() % _venom_targets.size()]
-					GameState.apply_unit_effect_flag(_opp_end, _vn_pos.x, _vn_pos.y, "venom")
-					var _vn_tgt: GameState.CardInstance = GameState.get_card(_opp_end, _vn_pos.x, _vn_pos.y)
-					GameState.post_message("%s: Venom applied to %s." % [_te_card.card_name, _vn_tgt.card_name])
-			CharacterData.AbilityType.TURN_END_REVEAL_OPPONENT_CELL:
-				emit_signal("awaiting_target_selection",
-					"%s: Choose 1 opponent cell to reveal." % _te_card.card_name,
-					"ability_false_prophet_reveal")
-				await ability_selection_done
+				CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN:
+					var _venom_targets: Array = []
+					for _vn_r: int in range(GameState.GRID_SIZE):
+						for _vn_c: int in range(GameState.GRID_SIZE):
+							var _vn_card: GameState.CardInstance = GameState.get_card(_opp_end, _vn_r, _vn_c)
+							if _vn_card.card_type == "character":
+								_venom_targets.append(Vector2i(_vn_r, _vn_c))
+					if not _venom_targets.is_empty():
+						var _vn_pos: Vector2i = _venom_targets[randi() % _venom_targets.size()]
+						GameState.apply_unit_effect_flag(_opp_end, _vn_pos.x, _vn_pos.y, "venom")
+						var _vn_tgt: GameState.CardInstance = GameState.get_card(_opp_end, _vn_pos.x, _vn_pos.y)
+						GameState.post_message("%s: Venom applied to %s." % [_te_card.card_name, _vn_tgt.card_name])
+				CharacterData.AbilityType.TURN_END_REVEAL_OPPONENT_CELL:
+					emit_signal("awaiting_target_selection",
+						"%s: Choose 1 opponent cell to reveal." % _te_card.card_name,
+						"ability_false_prophet_reveal")
+					await ability_selection_done
 
 	# expose_destroy_pending: destroy cards that became face-up this turn
 	for _pi: int in range(2):

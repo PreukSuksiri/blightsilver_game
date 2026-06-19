@@ -10,7 +10,6 @@ extends Node
 const VELLUM_FRAME    := preload("res://assets/textures/cards/frames/vellum_card_frame_transparent.png")
 const ART_PLACEHOLDER := preload("res://assets/textures/cards/placeholder.png")
 const CHIVO_FONT      := preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
-const CRYSTAL_ICON    := preload("res://assets/textures/ui/decorations/ui_crystal_indicator.png")
 
 const EXPORT_W     := 819.0
 const EXPORT_H     := 1126.0
@@ -254,7 +253,7 @@ func _build_card_node() -> Control:
 	cost_hbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	cost_pc.add_child(cost_hbox)
 	var cost_icon := TextureRect.new()
-	cost_icon.texture              = CRYSTAL_ICON
+	cost_icon.texture              = HudSkin.hud_tex("ui_crystal_indicator.png")
 	cost_icon.expand_mode          = TextureRect.EXPAND_IGNORE_SIZE
 	cost_icon.stretch_mode         = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	cost_icon.custom_minimum_size  = Vector2(fsz_hdr, fsz_hdr)

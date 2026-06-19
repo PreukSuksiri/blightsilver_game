@@ -209,6 +209,7 @@ size_flags_horizontal = 3
 
 [node name="P1Label" type="Label" parent="MainLayout/P1Side"]
 layout_mode = 2
+visible = false
 text = "PLAYER 1"
 theme_override_font_sizes/font_size = 11
 theme_override_colors/font_color = Color(0.749, 0.878, 1.0, 1)
@@ -273,6 +274,7 @@ theme_override_styles/focus = SubResource("SBF_endatk_n")
 
 [node name="DiceDisplay" type="Label" parent="MainLayout/CenterPanel"]
 layout_mode = 2
+visible = false
 text = ""
 theme_override_font_sizes/font_size = 28
 theme_override_colors/font_color = Color(1.0, 0.851, 0.20, 1)
@@ -316,6 +318,7 @@ size_flags_horizontal = 3
 
 [node name="P2Label" type="Label" parent="MainLayout/P2Side"]
 layout_mode = 2
+visible = false
 text = "PLAYER 2 / AI"
 theme_override_font_sizes/font_size = 11
 theme_override_colors/font_color = Color(1.0, 0.722, 0.722, 1)

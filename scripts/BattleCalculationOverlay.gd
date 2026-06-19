@@ -27,10 +27,10 @@ const TYPE_COLOR_CHARACTER := Color(1.0, 0.71, 0.2, 1.0)
 const TYPE_COLOR_TRAP      := Color(1.0, 0.263, 0.345, 1.0)
 const TYPE_COLOR_TECH      := Color(0.18, 0.764, 0.341, 1.0)
 
-const ICON_ATTACK := preload("res://assets/textures/ui/decorations/ui_context_menu_attack.png")
-const ICON_DEFEND := preload("res://assets/textures/ui/decorations/ui_icon_defend.png")
-const ICON_TRAP := preload("res://assets/textures/ui/decorations/ui_icon_trap.png")
-const ICON_BLANK := preload("res://assets/textures/ui/decorations/ui_icon_blank_found.png")
+var ICON_ATTACK: Texture2D
+var ICON_DEFEND: Texture2D
+var ICON_TRAP: Texture2D
+var ICON_BLANK: Texture2D
 
 
 var _left_ctrl:  Control  # P1 slot (always left)
@@ -48,6 +48,23 @@ var _live_result: BattleResolver.BattleResult
 var _attacker_player_idx: int = 0
 var _left_inst: GameState.CardInstance = null
 var _right_inst: GameState.CardInstance = null
+
+func _ready() -> void:
+	ICON_ATTACK = HudSkin.hud_tex("ui_context_menu_attack.png")
+	ICON_DEFEND = HudSkin.hud_tex("ui_icon_defend.png")
+	ICON_TRAP   = HudSkin.hud_tex("ui_icon_trap.png")
+	ICON_BLANK  = HudSkin.hud_tex("ui_icon_blank_found.png")
+	HudSkin.skin_changed.connect(_reload_hud_skin)
+
+func _exit_tree() -> void:
+	if HudSkin.skin_changed.is_connected(_reload_hud_skin):
+		HudSkin.skin_changed.disconnect(_reload_hud_skin)
+
+func _reload_hud_skin(_new_version: String = "") -> void:
+	ICON_ATTACK = HudSkin.hud_tex("ui_context_menu_attack.png")
+	ICON_DEFEND = HudSkin.hud_tex("ui_icon_defend.png")
+	ICON_TRAP   = HudSkin.hud_tex("ui_icon_trap.png")
+	ICON_BLANK  = HudSkin.hud_tex("ui_icon_blank_found.png")
 
 ## Called by GameBoard when an ability-choice overlay appears on top of this overlay.
 ## Prevents the overlay from animating or being dismissed until resume_with_result() is called.
