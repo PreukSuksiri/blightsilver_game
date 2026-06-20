@@ -726,31 +726,28 @@ func _confirm_scrap_one(card_name: String, card_type: String) -> void:
 	if extras <= 0:
 		return
 	var credits_gained: int = extras * _get_scrap_value(card_name, card_type)
-	var dlg := ConfirmationDialog.new()
-	dlg.title = "Scrap Duplicates"
-	dlg.dialog_text = "Scrap %d extra cop%s of \"%s\"?\nYou will receive %d credits." % [
-		extras, ("ies" if extras > 1 else "y"), card_name, credits_gained]
+	var dlg := GameDialog.confirmation(
+		self,
+		"Scrap Duplicates",
+		"Scrap %d extra cop%s of \"%s\"?\nYou will receive %d credits." % [
+			extras, ("ies" if extras > 1 else "y"), card_name, credits_gained])
 	dlg.confirmed.connect(func() -> void:
 		Collection.scrap_duplicates(card_name)
 		Collection.add_credits(credits_gained)
 		dlg.queue_free())
 	dlg.canceled.connect(func() -> void: dlg.queue_free())
-	add_child(dlg)
 	dlg.popup_centered()
 
 func _confirm_scrap_all() -> void:
 	var credits_gained: int = _calc_scrap_all_credits()
 	if credits_gained == 0:
-		var dlg := AcceptDialog.new()
-		dlg.title = "Nothing to Scrap"
-		dlg.dialog_text = "You have no duplicate cards."
+		var dlg := GameDialog.accept(self, "Nothing to Scrap", "You have no duplicate cards.")
 		dlg.confirmed.connect(func() -> void: dlg.queue_free())
-		add_child(dlg)
 		dlg.popup_centered()
 		return
-	var dlg := ConfirmationDialog.new()
-	dlg.title = "Scrap All Duplicates"
-	dlg.dialog_text = (
+	var dlg := GameDialog.confirmation(
+		self,
+		"Scrap All Duplicates",
 		"Scrap all duplicate copies across your entire collection?\n"
 		+ "You will receive %d credits (100 per scrapped copy)." % credits_gained)
 	dlg.confirmed.connect(func() -> void:
@@ -761,5 +758,4 @@ func _confirm_scrap_all() -> void:
 			CreditsEarnedOverlay.show_earned(get_tree().root, earned)
 		dlg.queue_free())
 	dlg.canceled.connect(func() -> void: dlg.queue_free())
-	add_child(dlg)
 	dlg.popup_centered()

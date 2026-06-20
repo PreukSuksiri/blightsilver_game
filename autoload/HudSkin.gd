@@ -19,6 +19,7 @@ const _V2_BASE := "res://assets/textures/ui/battle/v2_magitech/"
 ## v1 filename → v2 filename mapping.
 ## Add an entry here whenever a new v2 asset is approved.
 const _V2_MAP: Dictionary = {
+	"ui_playmat_default.png":     "ui_magitech_playmat.png",
 	"ui_end_turn.png":            "ui_magitech_end_turn.png",
 	"ui_battle_options.png":      "ui_magitech_options.png",
 	"ui_turn_number_panel.png":   "ui_magitech_turn_number.png",

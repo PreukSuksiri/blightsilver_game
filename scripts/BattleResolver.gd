@@ -107,6 +107,8 @@ static func _resolve_character_vs_character(
 	if _try_destroy_self_vs_divine_before_calc(attacker, defender, result):
 		return
 
+	_apply_pre_battle_perm_debuffs(attacker, defender, attacker_player, defender_player, result)
+
 	var base_atk: int = attacker.get_effective_atk()
 	var eff_atk: int = _get_effective_atk(
 		attacker, defender, dice_roll, attacker_player, target_pos, defender_was_exposed)
@@ -300,6 +302,30 @@ static func _resolve_character_vs_character(
 # ─────────────────────────────────────────────────────────────
 # Divine battle ability helpers
 # ─────────────────────────────────────────────────────────────
+static func _apply_pre_battle_perm_debuffs(
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance,
+		_attacker_player: int,
+		_defender_player: int,
+		result: BattleResult
+) -> void:
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
+		return
+	for _pb_src: GameState.CardInstance in [attacker, defender]:
+		if _pb_src.card_type != "character":
+			continue
+		if _pb_src.ability_type != CharacterData.AbilityType.PRE_BATTLE_PERM_DEF_DEBUFF_VS_AFFINITY:
+			continue
+		var _pb_aff: int = _pb_src.ability_params.get("affinity", -1)
+		var _pb_def_loss: int = _pb_src.ability_params.get("def", 5)
+		var _pb_foe: GameState.CardInstance = defender if _pb_src == attacker else attacker
+		if _pb_foe.card_type != "character" or _pb_foe.affinity != _pb_aff:
+			continue
+		_pb_foe.current_def = max(0, _pb_foe.current_def - _pb_def_loss)
+		result.messages.append("%s: %s permanently loses %d DEF before Reckoning!" % [
+			_pb_src.card_name, _pb_foe.card_name, _pb_def_loss])
+
 static func _try_destroy_self_vs_divine_before_calc(
 		attacker: GameState.CardInstance,
 		defender: GameState.CardInstance,
@@ -447,6 +473,9 @@ static func _resolve_trap(
 	# Immune to all traps
 	if attacker.ability_type == CharacterData.AbilityType.IMMUNE_TO_TRAPS:
 		result.messages.append("%s cannot be destroyed by Traps!" % attacker.card_name)
+		if not _silent_mode:
+			attacker.current_def = max(0, attacker.current_def - 20)
+			result.messages.append("%s permanently loses 20 DEF from trap attack!" % attacker.card_name)
 		result.special_trigger = "trap_nullified"
 		return
 
@@ -509,6 +538,12 @@ static func _get_effective_atk(
 
 		CharacterData.AbilityType.ATK_BONUS_IF_DICE_HIGH:
 			if dice_roll >= attacker.ability_params.get("threshold", 4):
+				atk += attacker.ability_params.get("bonus", 0)
+
+		CharacterData.AbilityType.ATK_BONUS_IF_TECH_PLAYED:
+			var _tech_needed: String = attacker.ability_params.get("tech_name", "")
+			if _tech_needed != "" \
+					and GameState.tech_name_played_this_game(attacker_player, _tech_needed):
 				atk += attacker.ability_params.get("bonus", 0)
 
 		CharacterData.AbilityType.ATK_BOOST_VS_REVEALED:
@@ -767,7 +802,23 @@ static func _get_effective_def(
 				GameState.post_message("%s: -%d DEF vs non-%s defender!" % [
 					attacker.card_name, _ap_amt, CharacterData.Affinity.keys()[_ap_aff]])
 
+	# Death Cobra aura: foe units with venom get -50 DEF while Death Cobra is on field
+	if defender_player >= 0 and "venom" in defender.flags:
+		def_val = max(0, def_val - _death_cobra_venom_def_penalty(defender_player))
+
 	return def_val
+
+static func _death_cobra_venom_def_penalty(defender_player: int) -> int:
+	for p: int in range(2):
+		if p == defender_player:
+			continue
+		for r: int in range(GameState.GRID_SIZE):
+			for c: int in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.grids[p][r][c]
+				if card.card_type == "character" and card.face_up \
+						and card.ability_type == CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN:
+					return 50
+	return 0
 
 static func _apply_post_attack_effects(
 		attacker: GameState.CardInstance,
@@ -882,6 +933,14 @@ static func _apply_defend_effects(
 			result.messages.append("%s: halved ATK, -%d ATK +%d DEF permanently!" % [
 				defender.card_name, _halved, _halved])
 
+		CharacterData.AbilityType.LOCK_ATTACKER_ON_DEFEND:
+			if not result.defender_destroyed:
+				result.ability_triggered_defender = true
+				if mutate:
+					attacker.cannot_attack_until = GameState.turn_number + 2
+				result.messages.append("%s: %s cannot attack until end of next turn!" % [
+					defender.card_name, attacker.card_name])
+
 # ─────────────────────────────────────────────────────────────
 # Field scope — ability_params.field_scope (see CONTENT_EDITING_GUIDE.md)
 #
@@ -945,15 +1004,37 @@ static func _apply_field_aura_bonuses(player_index: int) -> void:
 				continue
 			if source.ability_type == CharacterData.AbilityType.FIELD_ATK_BOOST_OWN_AFFINITY:
 				var target_affinity: int = source.ability_params.get("affinity", -1)
+				var name_filter: String = str(source.ability_params.get("name_contains", "")).to_lower()
 				var atk_boost: int = source.ability_params.get("atk", 0)
-				if target_affinity >= 0 and atk_boost != 0:
+				if atk_boost != 0 and (target_affinity >= 0 or not name_filter.is_empty()):
 					for r2 in range(GameState.GRID_SIZE):
 						for c2 in range(GameState.GRID_SIZE):
 							var ally: GameState.CardInstance = GameState.grids[player_index][r2][c2]
 							if ally == source or ally.card_type != "character" or not ally.face_up:
 								continue
-							if ally.affinity == target_affinity:
+							var name_match: bool = not name_filter.is_empty() \
+									and name_filter in ally.card_name.to_lower()
+							var aff_match: bool = target_affinity >= 0 and ally.affinity == target_affinity
+							if name_match or aff_match:
 								ally.field_aura_atk_bonus += atk_boost
+			if source.ability_type == CharacterData.AbilityType.MOON_ALLY_FIELD_AURA:
+				var _moon_filter: String = str(source.ability_params.get("name_contains", "moon")).to_lower()
+				var _moon_atk: int = source.ability_params.get("atk", 15)
+				var _moon_def: int = source.ability_params.get("def", 15)
+				var _moon_self_atk: int = source.ability_params.get("self_atk", 30)
+				var _moon_ally_found: bool = false
+				for r2 in range(GameState.GRID_SIZE):
+					for c2 in range(GameState.GRID_SIZE):
+						var ally: GameState.CardInstance = GameState.grids[player_index][r2][c2]
+						if ally.card_type != "character" or not ally.face_up:
+							continue
+						if _moon_filter in ally.card_name.to_lower():
+							if ally != source:
+								_moon_ally_found = true
+							ally.field_aura_atk_bonus += _moon_atk
+							ally.field_aura_def_bonus += _moon_def
+				if _moon_ally_found:
+					source.field_aura_atk_bonus += _moon_self_atk
 			if source.ability_type == CharacterData.AbilityType.DEF_PENALTY_VS_NON_AFFINITY \
 					and source.has_mutagen_flag:
 				var party_atk: int = source.ability_params.get("mutagen_party_atk", 0)

@@ -295,11 +295,11 @@ func _refresh_items() -> void:
 func _on_use_union_scroll() -> void:
 	var res: Dictionary = UnionScrollManager.use_scroll(get_tree().root, true)
 	if not res["success"]:
-		var dlg := AcceptDialog.new()
-		dlg.title = "Union Scroll"
-		dlg.dialog_text = str(res.get("error", "Could not use Union Scroll."))
+		var dlg := GameDialog.accept(
+			get_tree().root,
+			"Union Scroll",
+			str(res.get("error", "Could not use Union Scroll.")))
 		dlg.confirmed.connect(dlg.queue_free)
-		add_child(dlg)
 		dlg.popup_centered()
 	_refresh_items()
 

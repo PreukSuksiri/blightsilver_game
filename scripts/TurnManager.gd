@@ -32,9 +32,20 @@ var _pending_target_resolve: Callable
 var _siege_cannon_attacker_player: int = -1
 # Pending trap/ability params for target-selection callbacks
 var _pending_trap_def_boost: int = 0
+var _pending_trap_def_boost_carry: bool = false
 var _pending_trap_self_destruct_boost: int = 0
 var _pending_trap_self_destruct_player: int = -1
 var _pending_swap_attacker_pos: Vector2i = Vector2i(-1, -1)
+var _pending_rebel_king_owner: int = -1
+var _pending_rebel_king_foe_player: int = -1
+var _pending_trap_hostage_lock: bool = false
+var _pending_street_joke_crystal: int = 0
+var _pending_lockpicker_owner: int = -1
+var _pending_wk17_foe_player: int = -1
+var _pending_wk17_mode: String = ""
+var _pending_wk17_new_target_pos: Vector2i = Vector2i(-1, -1)
+var _wk17_friendly_fire: bool = false
+var _wk17_friendly_fire_pos: Vector2i = Vector2i(-1, -1)
 
 func resolve_ability_choice(choice_index: int) -> void:
 	emit_signal("ability_choice_resolved", choice_index)
@@ -301,6 +312,25 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	# Exposed = already face-up BEFORE this attack began.
 	var defender_was_exposed: bool = defender.face_up
 
+	# Methanomancer: adjacent cell targeted → flip face-up + temp ATK/DEF
+	for _mn_p: int in range(2):
+		for _mn_r: int in range(GameState.GRID_SIZE):
+			for _mn_c: int in range(GameState.GRID_SIZE):
+				var _mn_card: GameState.CardInstance = GameState.get_card(_mn_p, _mn_r, _mn_c)
+				if _mn_card.card_type != "character" \
+						or _mn_card.ability_type != CharacterData.AbilityType.ADJACENT_ATTACK_FLIP_BUFF:
+					continue
+				var _mn_adj: Array = GameState.get_adjacent_positions(_mn_r, _mn_c)
+				var _mn_pos: Vector2i = Vector2i(_mn_r, _mn_c)
+				if target_pos in _mn_adj or attacker_pos in _mn_adj:
+					if not _mn_card.face_up:
+						GameState.reveal_card(_mn_p, _mn_r, _mn_c)
+					_mn_card.temp_atk_bonus += _mn_card.ability_params.get("atk", 30)
+					_mn_card.temp_def_bonus += _mn_card.ability_params.get("def", 30)
+					GameState.post_message("%s: Surrounding attack — +%d ATK&DEF!" % [
+						_mn_card.card_name,
+						_mn_card.ability_params.get("atk", 30)])
+
 	# Flip cards face-up now so the player sees revealed stats while deciding on optional prompts
 	GameState.reveal_card(player, attacker_pos.x, attacker_pos.y)
 	if defender.card_type != "dead_end":
@@ -309,6 +339,37 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	# Update field-based bonuses before battle
 	BattleResolver.calculate_field_bonuses(player)
 	BattleResolver.calculate_field_bonuses(opponent)
+
+	# Pre-battle: COIN_FLIP_SWAP_POSITION (Nuki) — heads → swap with own unit, then resolve Reckoning
+	if attacker.ability_type == CharacterData.AbilityType.COIN_FLIP_SWAP_POSITION:
+		var _nuki_cf: Array = await _do_coin_flips(1)
+		if _nuki_cf[0]:
+			_pending_swap_attacker_pos = attacker_pos
+			await _prompt_and_await_target_selection(
+				"%s: Heads! Choose 1 of your characters to swap position with." % attacker.card_name,
+				"own_character_for_swap")
+			attacker = GameState.get_card(player, _pending_swap_attacker_pos.x, _pending_swap_attacker_pos.y)
+			attacker_pos = _pending_swap_attacker_pos
+			_pending_swap_attacker_pos = Vector2i(-1, -1)
+			GameState.attacker_card = attacker
+			GameState.attacker_pos = attacker_pos
+			BattleResolver.calculate_field_bonuses(player)
+			BattleResolver.calculate_field_bonuses(opponent)
+		else:
+			GameState.post_message("%s: Tails — no position swap." % attacker.card_name)
+
+	await maybe_apply_on_expose_reveal_foe(player, attacker_pos.x, attacker_pos.y)
+	if defender.card_type != "dead_end":
+		await maybe_apply_on_expose_reveal_foe(opponent, target_pos.x, target_pos.y)
+
+	var _wk17_out: Dictionary = await _apply_wk17_pre_battle(
+		player, opponent, attacker, defender, attacker_pos, target_pos, defender_was_exposed)
+	if _wk17_out.get("abort", false):
+		emit_signal("attack_aborted")
+		return
+	target_pos = _wk17_out.get("target_pos", target_pos)
+	defender_was_exposed = _wk17_out.get("defender_was_exposed", defender_was_exposed)
+	defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
 
 	# Roll the attack dice
 	GameState.dice_result = DiceRoller.roll_attack_dice()
@@ -325,6 +386,13 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 			GameState.dice_result = DiceRoller.roll_attack_dice()
 			GameState.emit_signal("dice_rolled", GameState.dice_result)
 			GameState.post_message("Lucky Break: Re-rolled — new result: %d" % GameState.dice_result)
+
+	if _wk17_friendly_fire and _wk17_friendly_fire_pos != Vector2i(-1, -1):
+		var _wk17_ff_pos: Vector2i = _wk17_friendly_fire_pos
+		_wk17_friendly_fire = false
+		_wk17_friendly_fire_pos = Vector2i(-1, -1)
+		await resolve_brainwash_friendly_fire(player, _wk17_ff_pos)
+		return
 
 	# OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT (X-Death Squad) — before overlay since it may abort
 	if attacker.ability_type == CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT \
@@ -705,7 +773,7 @@ func play_tech_card(tech_name: String) -> void:
 			emit_signal("awaiting_target_selection", "Make Friend: Choose 1 of your monsters to lock.", "lock_own_monster")
 
 		TechCardData.TechEffectType.ADD_MUTAGEN_FLAG:
-			emit_signal("awaiting_target_selection", "Release Mutagen: Choose a Bio Character to flag.", "own_bio_character")
+			emit_signal("awaiting_target_selection", "Release Mutagen: Choose 1 of your units to flag.", "own_faceup_character")
 
 		TechCardData.TechEffectType.DIVINE_PROTECTION:
 			GameState.divine_protection_active[player] = true
@@ -983,6 +1051,16 @@ func _apply_battle_result(
 						_sac_found = true
 						break
 
+	# Dark Blob: survived Reckoning → eligible for +ATK at foe turn end
+	for _db_card: GameState.CardInstance in [attacker, defender]:
+		if _db_card.card_type != "character":
+			continue
+		if _db_card.ability_type != CharacterData.AbilityType.PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN:
+			continue
+		var _db_dead: bool = result.attacker_destroyed if _db_card == attacker else result.defender_destroyed
+		if not _db_dead and "reckoning_participated" not in _db_card.flags:
+			_db_card.flags.append("reckoning_participated")
+
 	if result.attacker_destroyed:
 		GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 	if result.defender_destroyed:
@@ -994,9 +1072,14 @@ func _apply_battle_result(
 func resolve_trap_temp_def_boost(player: int, target_pos: Vector2i) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player, target_pos.x, target_pos.y)
 	if card.card_type == "character":
-		card.temp_def_bonus += _pending_trap_def_boost
-		GameState.post_message("%s: +%d DEF until end of turn." % [card.card_name, _pending_trap_def_boost])
+		if _pending_trap_def_boost_carry:
+			card.carry_def_bonus += _pending_trap_def_boost
+			GameState.post_message("%s: +%d DEF until attacker's next turn ends." % [card.card_name, _pending_trap_def_boost])
+		else:
+			card.temp_def_bonus += _pending_trap_def_boost
+			GameState.post_message("%s: +%d DEF until end of turn." % [card.card_name, _pending_trap_def_boost])
 	_pending_trap_def_boost = 0
+	_pending_trap_def_boost_carry = false
 
 func resolve_trap_self_destruct(player: int, target_pos: Vector2i) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player, target_pos.x, target_pos.y)
@@ -1199,6 +1282,13 @@ func _handle_trap_effect(
 				if _hst_pos not in GameState.locked_attack_positions:
 					GameState.locked_attack_positions.append(_hst_pos)
 
+		TrapData.TrapEffectType.NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE:
+			GameState.post_message("Hostage: Attack nullified — choose a cell to reveal and lock.")
+			_pending_trap_hostage_lock = true
+			await _prompt_and_await_target_selection(
+				"Hostage: Choose 1 of your cells to reveal and lock until turn end.",
+				"trap_hostage_reveal_lock")
+
 		TrapData.TrapEffectType.NULLIFY_ATTACK_CHOICE:
 			emit_signal("awaiting_trap_choice",
 				"Checkpoint",
@@ -1263,7 +1353,7 @@ func _handle_trap_effect(
 			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 			await get_tree().create_timer(0.65).timeout
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
-			GameState.post_message("Flame Trap: %s destroyed!" % attacker.card_name)
+			GameState.post_message("%s: %s destroyed!" % [trap_data.card_name, attacker.card_name])
 
 		TrapData.TrapEffectType.LOCK_ATTACKER_REMAINING_ATTACKS:
 			GameState.attacks_remaining = 0
@@ -1320,7 +1410,7 @@ func _handle_trap_effect(
 		TrapData.TrapEffectType.PERMANENT_ATK_DEBUFF:
 			var amount: int = trap_data.effect_params.get("amount", 10)
 			attacker.current_atk = max(0, attacker.current_atk - amount)
-			GameState.post_message("Spike Trap: %s permanently loses %d ATK!" % [attacker.card_name, amount])
+			GameState.post_message("%s: %s permanently loses %d ATK!" % [trap_data.card_name, attacker.card_name, amount])
 
 		TrapData.TrapEffectType.NULLIFY_ATTACKER_EFFECT:
 			# Attacker-targeted "next turn" effects need +2 (see HYPNOTIZE_ATTACKER).
@@ -1345,15 +1435,21 @@ func _handle_trap_effect(
 
 		TrapData.TrapEffectType.FIELD_BOOST_AFFINITY_DEF:
 			var _fb_aff: int = trap_data.effect_params.get("affinity", -1)
+			var _fb_atk: int = trap_data.effect_params.get("atk", 0)
 			var _fb_def: int = trap_data.effect_params.get("def", 5)
 			for _fb_r: int in range(GameState.GRID_SIZE):
 				for _fb_c: int in range(GameState.GRID_SIZE):
 					var _fb_card: GameState.CardInstance = GameState.get_card(opponent, _fb_r, _fb_c)
 					if _fb_card.card_type == "character" and _fb_card.face_up:
 						if _fb_aff == -1 or _fb_card.affinity == _fb_aff:
+							_fb_card.temp_atk_bonus += _fb_atk
 							_fb_card.temp_def_bonus += _fb_def
 			var _fb_aff_name: String = CharacterData.Affinity.keys()[_fb_aff] if _fb_aff >= 0 else "face-up"
-			GameState.post_message("%s: +%d DEF to all %s characters this turn!" % [trap_data.card_name, _fb_def, _fb_aff_name])
+			if _fb_atk > 0 and _fb_def > 0:
+				GameState.post_message("%s: +%d ATK & +%d DEF to all %s characters this turn!" % [
+					trap_data.card_name, _fb_atk, _fb_def, _fb_aff_name])
+			else:
+				GameState.post_message("%s: +%d DEF to all %s characters this turn!" % [trap_data.card_name, _fb_def, _fb_aff_name])
 
 		TrapData.TrapEffectType.SWAP_ATTACKER_ATK_DEF_TEMP:
 			attacker.apply_atk_def_swap_until_player_turn_end(opponent)
@@ -1381,30 +1477,57 @@ func _handle_trap_effect(
 
 		TrapData.TrapEffectType.TEMP_DEF_BOOST_ONE_OWN:
 			var _td_def: int = trap_data.effect_params.get("def", 10)
+			var _td_carry: bool = trap_data.effect_params.get("carry_def", trap_data.effect_params.get("all_own_units", false))
 			if trap_data.effect_params.get("all_own_units", false):
 				for _td_r: int in range(GameState.GRID_SIZE):
 					for _td_c: int in range(GameState.GRID_SIZE):
 						var _td_card: GameState.CardInstance = GameState.get_card(opponent, _td_r, _td_c)
 						if _td_card.card_type == "character":
-							_td_card.temp_def_bonus += _td_def
-				GameState.post_message(
-					"%s: All your units gain +%d DEF in Reckoning this turn!" % [trap_data.card_name, _td_def])
+							if _td_carry:
+								_td_card.carry_def_bonus += _td_def
+							else:
+								_td_card.temp_def_bonus += _td_def
+				if _td_carry:
+					GameState.post_message(
+						"%s: All your units gain +%d DEF in Reckoning until attacker's next turn ends!" % [
+							trap_data.card_name, _td_def])
+				else:
+					GameState.post_message(
+						"%s: All your units gain +%d DEF in Reckoning this turn!" % [
+							trap_data.card_name, _td_def])
 			else:
 				_pending_trap_def_boost = _td_def
+				_pending_trap_def_boost_carry = _td_carry
 				await _prompt_and_await_target_selection(
 					"%s: Choose 1 of your characters for +%d DEF this turn." % [trap_data.card_name, _pending_trap_def_boost],
 					"own_faceup_for_trap_temp_def_boost")
 
 		TrapData.TrapEffectType.COIN_FLIP_2_ATK_DEBUFF:
 			var _cf2d_amount: int = trap_data.effect_params.get("amount", 10)
+			var _cf2d_per_head: bool = trap_data.effect_params.get("per_head", false)
+			var _cf2d_carry: bool = trap_data.effect_params.get("carry_atk_debuff", false)
 			var _cf2d_r: Array = await _do_coin_flips(2)
 			GameState.post_message("%s: %s, %s." % [trap_data.card_name,
 				"Heads" if _cf2d_r[0] else "Tails", "Heads" if _cf2d_r[1] else "Tails"])
-			if _cf2d_r[0] and _cf2d_r[1]:
+			var _cf2d_heads: int = 0
+			for _cf2d_h in _cf2d_r:
+				if _cf2d_h:
+					_cf2d_heads += 1
+			if _cf2d_per_head and _cf2d_heads > 0:
+				var _cf2d_total: int = _cf2d_amount * _cf2d_heads
+				if _cf2d_carry:
+					attacker.carry_atk_debuff += _cf2d_total
+					GameState.post_message("%s: %d head(s) — %s -%d ATK until next turn ends!" % [
+						trap_data.card_name, _cf2d_heads, attacker.card_name, _cf2d_total])
+				else:
+					attacker.current_atk = max(0, attacker.current_atk - _cf2d_total)
+					GameState.post_message("%s: %d head(s) — %s -%d ATK permanently!" % [
+						trap_data.card_name, _cf2d_heads, attacker.card_name, _cf2d_total])
+			elif not _cf2d_per_head and _cf2d_r[0] and _cf2d_r[1]:
 				attacker.current_atk = max(0, attacker.current_atk - _cf2d_amount)
 				GameState.post_message("Both heads! %s -%d ATK permanently!" % [attacker.card_name, _cf2d_amount])
 			else:
-				GameState.post_message("Not both heads — no effect.")
+				GameState.post_message("Not both heads — no effect." if not _cf2d_per_head else "No heads — no effect.")
 
 		TrapData.TrapEffectType.COIN_FLIP_2_LOCK_ATTACKER:
 			var _cf2l_r: Array = await _do_coin_flips(2)
@@ -1427,20 +1550,10 @@ func _handle_trap_effect(
 
 		TrapData.TrapEffectType.REVEAL_OWN_GAIN_CRYSTAL:
 			var _rogc_amount: int = trap_data.effect_params.get("amount", 300)
-			var _rogc_hidden: Array = []
-			for _rogc_r: int in range(GameState.GRID_SIZE):
-				for _rogc_c: int in range(GameState.GRID_SIZE):
-					var _rogc_card: GameState.CardInstance = GameState.get_card(opponent, _rogc_r, _rogc_c)
-					if not _rogc_card.face_up and _rogc_card.card_type != "dead_end":
-						_rogc_hidden.append(Vector2i(_rogc_r, _rogc_c))
-			if not _rogc_hidden.is_empty():
-				_rogc_hidden.shuffle()
-				var _rogc_pos: Vector2i = _rogc_hidden[0]
-				GameState.reveal_card(opponent, _rogc_pos.x, _rogc_pos.y)
-				GameState.gain_crystals(opponent, _rogc_amount, "trap")
-				GameState.post_message("%s: Revealed own card, gained %d Crystals!" % [trap_data.card_name, _rogc_amount])
-			else:
-				GameState.post_message("%s: No hidden cards to reveal." % trap_data.card_name)
+			_pending_street_joke_crystal = _rogc_amount
+			await _prompt_and_await_target_selection(
+				"%s: Choose 1 of your cells to reveal." % trap_data.card_name,
+				"trap_street_joke_reveal")
 
 		TrapData.TrapEffectType.NOT_IMPLEMENTED:
 			GameState.show_center_message("Ability not implemented: " + trap_data.card_name)
@@ -1531,26 +1644,56 @@ func _end_turn(player: int) -> void:
 						_te_card.current_def += _cf_def
 						GameState.post_message("%s: Tails! +%d DEF permanently." % [_te_card.card_name, _cf_def])
 				CharacterData.AbilityType.DESTROY_END_TURN_BLAST_ADJACENT:
-					_blast_adjacent_foe_faceup(_opp_end, _te_r, _te_c)
+					var _blast_row: int = _te_r
+					var _blast_col: int = _te_c
+					if _te_card.last_attack_target != Vector2i(-1, -1):
+						_blast_row = _te_card.last_attack_target.x
+						_blast_col = _te_card.last_attack_target.y
+					_blast_adjacent_foe_faceup(_opp_end, _blast_row, _blast_col)
 					GameState.post_message("%s self-destructs at end of turn!" % _te_card.card_name)
 					GameState.destroy_card(player, _te_r, _te_c, false)
 				CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN:
-					var _venom_targets: Array = []
-					for _vn_r: int in range(GameState.GRID_SIZE):
-						for _vn_c: int in range(GameState.GRID_SIZE):
-							var _vn_card: GameState.CardInstance = GameState.get_card(_opp_end, _vn_r, _vn_c)
-							if _vn_card.card_type == "character":
-								_venom_targets.append(Vector2i(_vn_r, _vn_c))
-					if not _venom_targets.is_empty():
-						var _vn_pos: Vector2i = _venom_targets[randi() % _venom_targets.size()]
-						GameState.apply_unit_effect_flag(_opp_end, _vn_pos.x, _vn_pos.y, "venom")
-						var _vn_tgt: GameState.CardInstance = GameState.get_card(_opp_end, _vn_pos.x, _vn_pos.y)
-						GameState.post_message("%s: Venom applied to %s." % [_te_card.card_name, _vn_tgt.card_name])
+					emit_signal("awaiting_target_selection",
+						"%s: Choose 1 exposed card (either side) for Venom." % _te_card.card_name,
+						"ability_death_cobra_venom")
+					await ability_selection_done
 				CharacterData.AbilityType.TURN_END_REVEAL_OPPONENT_CELL:
 					emit_signal("awaiting_target_selection",
 						"%s: Choose 1 opponent cell to reveal." % _te_card.card_name,
 						"ability_false_prophet_reveal")
 					await ability_selection_done
+				CharacterData.AbilityType.TURN_END_REVEAL_OPPONENT_CELLS_ONCE:
+					if "turn_end_reveal_used" not in _te_card.flags:
+						_te_card.flags.append("turn_end_reveal_used")
+						var _nr_count: int = maxi(1, int(_te_card.ability_params.get("count", 2)))
+						emit_signal("awaiting_target_selection",
+							"%s: Choose %d opponent cell(s) to reveal." % [_te_card.card_name, _nr_count],
+							"opponent_squares_%d" % _nr_count)
+						await ability_selection_done
+				CharacterData.AbilityType.TURN_END_FOE_CRYSTAL_PER_MUTAGEN:
+					var _bw_mutagen_count: int = 0
+					for _bw_p: int in range(2):
+						for _bw_r: int in range(GameState.GRID_SIZE):
+							for _bw_c: int in range(GameState.GRID_SIZE):
+								var _bw_card: GameState.CardInstance = GameState.get_card(_bw_p, _bw_r, _bw_c)
+								if _bw_card.card_type == "character" and _bw_card.has_mutagen_flag:
+									_bw_mutagen_count += 1
+					if _bw_mutagen_count > 0:
+						var _bw_loss: int = _bw_mutagen_count * _te_card.ability_params.get("amount", 300)
+						GameState.lose_crystals(_opp_end, _bw_loss, "ability")
+						GameState.post_message("%s: Foe loses %d Crystals (%d Mutagen on field)!" % [
+							_te_card.card_name, _bw_loss, _bw_mutagen_count])
+
+	# Wood Elemental / PERM_DEF_ON_FOE_TURN_END: when this player (foe) ends turn, boost opponent's cards
+	var _wo_owner: int = GameState.get_opponent(player)
+	for _wo_r: int in range(GameState.GRID_SIZE):
+		for _wo_c: int in range(GameState.GRID_SIZE):
+			var _wo_card: GameState.CardInstance = GameState.get_card(_wo_owner, _wo_r, _wo_c)
+			if _wo_card.card_type == "character" and _wo_card.face_up \
+					and _wo_card.ability_type == CharacterData.AbilityType.PERM_DEF_ON_FOE_TURN_END:
+				var _wo_def: int = _wo_card.ability_params.get("def", 5)
+				_wo_card.current_def += _wo_def
+				GameState.post_message("%s: +%d DEF permanently at foe's turn end." % [_wo_card.card_name, _wo_def])
 
 	# expose_destroy_pending: destroy cards that became face-up this turn
 	for _pi: int in range(2):
@@ -1642,6 +1785,7 @@ func _clear_turn_state(player: int) -> void:
 				# This runs at the START of the player's OWN turn, so the bonus
 				# persisted through the entire opponent turn as intended.
 				card.carry_def_bonus = 0
+				card.carry_atk_debuff = 0
 				# Clear per-turn "once per turn" ability flags
 				card.flags.erase("extra_vs_revealed_used")
 				card.flags.erase("extra_deadend_turn")
@@ -1681,6 +1825,15 @@ func _apply_post_battle_effects(
 		CharacterData.AbilityType.PERM_DEF_BOOST_PER_ATTACK_SURVIVE:
 			if not result.attacker_destroyed and defender.card_type == "character":
 				attacker.perm_def_bonus += attacker.ability_params.get("def", 2)
+
+		CharacterData.AbilityType.ATTACK_STANCE_BOOST:
+			if defender.card_type == "character":
+				var _as_atk: int = attacker.ability_params.get("atk", attacker.ability_params.get("atk_bonus", 0))
+				var _as_def_loss: int = attacker.ability_params.get("def_penalty", _as_atk)
+				attacker.current_atk += _as_atk
+				attacker.current_def = maxi(0, attacker.current_def - _as_def_loss)
+				GameState.post_message("%s: +%d ATK, -%d DEF permanently (if possible)." % [
+					attacker.card_name, _as_atk, _as_def_loss])
 
 		CharacterData.AbilityType.PERM_ATK_LOSS_PER_ATTACK:
 			attacker.current_atk = max(0, attacker.current_atk - attacker.ability_params.get("amount", 5))
@@ -1739,6 +1892,14 @@ func _apply_post_battle_effects(
 			else:
 				GameState.post_message("%s: Coin flip tails — no extra attack." % attacker.card_name)
 
+		CharacterData.AbilityType.COIN_FLIP_2_EXTRA_ATTACK:
+			var _cf2ea_r: Array = await _do_coin_flips(2)
+			if _cf2ea_r[0] and _cf2ea_r[1]:
+				extra += 1
+				GameState.post_message("%s: Both coins heads — extra attack!" % attacker.card_name)
+			else:
+				GameState.post_message("%s: Coin flip failed — no extra attack." % attacker.card_name)
+
 		CharacterData.AbilityType.SELF_DEBUFF_ON_ATTACK_AND_DEFEND:
 			if "atk_debuff_used" not in attacker.flags:
 				attacker.flags.append("atk_debuff_used")
@@ -1783,17 +1944,16 @@ func _apply_post_battle_effects(
 					attacker.card_name, _cgd, defender.card_name])
 
 		CharacterData.AbilityType.PERM_ATK_BOOST_ONCE_PER_AFFINITY:
-			if not result.attacker_destroyed and defender.card_type == "character":
+			if not result.attacker_destroyed and defender.card_type == "character" \
+					and not attacker.one_use_atk_boost_used:
 				var _req_aff: int = attacker.ability_params.get("affinity", -1)
 				if _req_aff == -1 or defender.affinity != _req_aff:
-					var _aff_key: String = "perm_atk_aff_%d" % defender.affinity
-					if _aff_key not in attacker.flags:
-						attacker.flags.append(_aff_key)
-						var _pa_gain: int = attacker.ability_params.get("atk", 50)
-						attacker.current_atk += _pa_gain
-						GameState.post_message("%s: +%d ATK permanently vs %s!" % [
-							attacker.card_name, _pa_gain,
-							CharacterData.Affinity.keys()[defender.affinity]])
+					attacker.one_use_atk_boost_used = true
+					var _pa_gain: int = attacker.ability_params.get("atk", 50)
+					attacker.current_atk += _pa_gain
+					GameState.post_message("%s: +%d ATK permanently vs %s!" % [
+						attacker.card_name, _pa_gain,
+						CharacterData.Affinity.keys()[defender.affinity]])
 
 		CharacterData.AbilityType.PERM_STAT_PENALTY_VS_NON_AFFINITY:
 			if defender.card_type == "character":
@@ -1807,7 +1967,9 @@ func _apply_post_battle_effects(
 						defender.card_name, _patk, _pdef, CharacterData.Affinity.keys()[_pen_aff]])
 
 		CharacterData.AbilityType.GAIN_HALF_STATS_ON_SURVIVE:
-			if not result.attacker_destroyed and defender.card_type == "character":
+			if not result.attacker_destroyed and defender.card_type == "character" \
+					and not attacker.one_use_atk_boost_used:
+				attacker.one_use_atk_boost_used = true
 				var _hs_atk: int = defender.current_atk / 2
 				var _hs_def: int = defender.current_def / 2
 				attacker.current_atk += _hs_atk
@@ -1830,6 +1992,17 @@ func _apply_post_battle_effects(
 					attacker.perm_atk_bonus = _cov_new
 					GameState.post_message("%s: +%d ATK permanently! (bonus: %d/%d)" % [
 						attacker.card_name, _cov_actual, _cov_new, _cov_max])
+
+	if defender.card_type == "character" \
+			and defender.effect_nullified_until < GameState.turn_number \
+			and defender.ability_type == CharacterData.AbilityType.DEFENSE_STANCE_BOOST \
+			and attacker.card_type == "character":
+		var _ds_def: int = defender.ability_params.get("def", defender.ability_params.get("def_bonus", 0))
+		var _ds_atk_loss: int = defender.ability_params.get("atk_penalty", _ds_def)
+		defender.current_def += _ds_def
+		defender.current_atk = maxi(0, defender.current_atk - _ds_atk_loss)
+		GameState.post_message("%s: +%d DEF, -%d ATK permanently (if possible)." % [
+			defender.card_name, _ds_def, _ds_atk_loss])
 
 	# PERM_STAT_PENALTY_VS_NON_AFFINITY (Colorful Mage): debuff non-matching foe when defending
 	if defender.card_type == "character" \
@@ -1876,8 +2049,16 @@ func _apply_post_battle_effects(
 		attacker.multi_attack_count += 1
 		if attacker.ability_type == CharacterData.AbilityType.MULTI_ATTACK_ANY_WITH_ATK_LOSS:
 			var _ma_loss: int = attacker.ability_params.get("atk_loss", 5)
-			attacker.current_atk = max(0, attacker.current_atk - _ma_loss)
-			GameState.post_message("%s: -%d ATK after attack." % [attacker.card_name, _ma_loss])
+			var _loss_from: int = attacker.ability_params.get("atk_loss_from_attack", 0)
+			var _loss_if_unit: bool = attacker.ability_params.get("atk_loss_if_unit", false)
+			var _apply_loss: bool = _ma_loss > 0
+			if _loss_from > 0:
+				_apply_loss = attacker.multi_attack_count >= _loss_from
+			if _loss_if_unit and defender.card_type != "character":
+				_apply_loss = false
+			if _apply_loss:
+				attacker.current_atk = max(0, attacker.current_atk - _ma_loss)
+				GameState.post_message("%s: -%d ATK after attack." % [attacker.card_name, _ma_loss])
 		if attacker.multi_attack_count < _ma_max and not result.attacker_destroyed:
 			extra += 1
 
@@ -1911,6 +2092,117 @@ func _prompt_and_await_target_selection(prompt: String, filter: String) -> void:
 	emit_signal("awaiting_target_selection", prompt, filter)
 	await ability_selection_done
 
+func maybe_apply_on_expose_reveal_foe(owner_player: int, row: int, col: int) -> void:
+	var card: GameState.CardInstance = GameState.get_card(owner_player, row, col)
+	if card.card_type != "character" or not card.face_up:
+		return
+	if card.ability_type != CharacterData.AbilityType.ON_EXPOSE_REVEAL_FOE_ONCE:
+		return
+	if "expose_reveal_used" in card.flags:
+		return
+	card.flags.append("expose_reveal_used")
+	var foe: int = GameState.get_opponent(owner_player)
+	if not _has_hidden_cells(foe):
+		GameState.post_message("%s: No hidden foe cells to reveal." % card.card_name)
+		return
+	_pending_lockpicker_owner = owner_player
+	var _saved_cp: int = GameState.current_player
+	GameState.current_player = owner_player
+	await _prompt_and_await_target_selection(
+		"%s: Choose 1 foe cell to reveal." % card.card_name,
+		"ability_lockpicker_reveal")
+	GameState.current_player = _saved_cp
+	_pending_lockpicker_owner = -1
+
+static func _has_hidden_cells(player_index: int) -> bool:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var inst: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if not inst.face_up and not inst.was_destroyed:
+				return true
+	return false
+
+static func _has_wk17_foe_pick_target(foe_player: int, redirect_attacker: bool, attacker_pos: Vector2i) -> bool:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var pos: Vector2i = Vector2i(r, c)
+			if redirect_attacker and pos == attacker_pos:
+				continue
+			var inst: GameState.CardInstance = GameState.get_card(foe_player, r, c)
+			if inst.card_type == "character":
+				return true
+	return false
+
+func _apply_wk17_pre_battle(
+		player: int, opponent: int,
+		attacker: GameState.CardInstance, defender: GameState.CardInstance,
+		attacker_pos: Vector2i, target_pos: Vector2i,
+		defender_was_exposed: bool
+) -> Dictionary:
+	_wk17_friendly_fire = false
+	_wk17_friendly_fire_pos = Vector2i(-1, -1)
+	var wk17_player: int = -1
+	var wk17_pos: Vector2i = Vector2i(-1, -1)
+	var wk17_as_defender: bool = false
+	if attacker.ability_type == CharacterData.AbilityType.PRE_BATTLE_COIN_FLIP_2_REDIRECT_OR_DESTROY:
+		wk17_player = player
+		wk17_pos = attacker_pos
+	elif defender.card_type == "character" \
+			and defender.ability_type == CharacterData.AbilityType.PRE_BATTLE_COIN_FLIP_2_REDIRECT_OR_DESTROY:
+		wk17_player = opponent
+		wk17_pos = target_pos
+		wk17_as_defender = true
+	else:
+		return {"abort": false, "target_pos": target_pos, "defender_was_exposed": defender_was_exposed}
+
+	var wk17_card: GameState.CardInstance = GameState.get_card(wk17_player, wk17_pos.x, wk17_pos.y)
+	var wk17_name: String = wk17_card.card_name
+	var _wk17_cf: Array = await _do_coin_flips(2)
+	var _heads: int = 0
+	for _h in _wk17_cf:
+		if _h:
+			_heads += 1
+
+	if _heads == 0:
+		GameState.post_message("%s: Both tails — destroyed!" % wk17_name)
+		GameState.destroy_card(wk17_player, wk17_pos.x, wk17_pos.y, false)
+		if wk17_as_defender:
+			defender_was_exposed = true
+			return {"abort": false, "target_pos": target_pos, "defender_was_exposed": defender_was_exposed}
+		return {"abort": true, "target_pos": target_pos, "defender_was_exposed": defender_was_exposed}
+
+	if _heads == 2:
+		var wk17_foe: int = GameState.get_opponent(wk17_player)
+		_pending_wk17_foe_player = wk17_foe
+		_pending_wk17_mode = "redirect_attacker" if wk17_as_defender else "retarget_defender"
+		if not _has_wk17_foe_pick_target(wk17_foe, wk17_as_defender, attacker_pos):
+			GameState.post_message("%s: Both heads — no valid ally to target." % wk17_name)
+			_pending_wk17_foe_player = -1
+			_pending_wk17_mode = ""
+			return {"abort": false, "target_pos": target_pos, "defender_was_exposed": defender_was_exposed}
+		var _saved_cp: int = GameState.current_player
+		GameState.current_player = wk17_foe
+		await _prompt_and_await_target_selection(
+			"%s: Both heads! Choose one of your allies as the target." % wk17_name,
+			"wk17_foe_pick_character")
+		GameState.current_player = _saved_cp
+		if _pending_wk17_mode == "retarget_defender" \
+				and _pending_wk17_new_target_pos != Vector2i(-1, -1):
+			target_pos = _pending_wk17_new_target_pos
+			defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
+			defender_was_exposed = defender.face_up
+			if defender.card_type != "dead_end" and not defender.face_up:
+				GameState.reveal_card(opponent, target_pos.x, target_pos.y)
+				defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
+				defender_was_exposed = false
+			BattleResolver.calculate_field_bonuses(player)
+			BattleResolver.calculate_field_bonuses(opponent)
+		_pending_wk17_foe_player = -1
+		_pending_wk17_mode = ""
+		_pending_wk17_new_target_pos = Vector2i(-1, -1)
+
+	return {"abort": false, "target_pos": target_pos, "defender_was_exposed": defender_was_exposed}
+
 func _emit_post_attack_target_selections(
 		result: BattleResolver.BattleResult,
 		player: int, opponent: int,
@@ -1924,12 +2216,6 @@ func _emit_post_attack_target_selections(
 	if result.pending_reveal_opponent_cell:
 		await _prompt_and_await_target_selection(
 			"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
-
-	if result.pending_coin_flip_swap_position:
-		_pending_swap_attacker_pos = attacker_pos
-		await _prompt_and_await_target_selection(
-			"%s: Choose 1 of your characters to swap position with." % attacker.card_name,
-			"own_character_for_swap")
 
 	if attacker.effect_nullified_until >= GameState.turn_number:
 		return
@@ -1991,7 +2277,9 @@ func _apply_end_of_turn_boosts(player: int) -> void:
 					card.current_atk += card.ability_params.get("atk", 0)
 					card.current_def += card.ability_params.get("def", 0)
 				elif card.ability_type == CharacterData.AbilityType.PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN:
-					card.current_atk += card.ability_params.get("atk", 2)
+					if "reckoning_participated" in card.flags:
+						card.flags.erase("reckoning_participated")
+						card.current_atk += card.ability_params.get("atk", 2)
 				elif card.ability_type == CharacterData.AbilityType.SWAP_ATK_DEF_PER_OPP_TURN:
 					var _tmp_atk: int = card.current_atk
 					card.current_atk = card.current_def

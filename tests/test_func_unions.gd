@@ -150,22 +150,10 @@ func _seraphim_fistmaster(A: Dictionary, AB: Dictionary) -> void:
 	assert_eq(r2.attacker_atk_used, 120, "TC-FUNC-Seraphim-Fistmaster-001: ATK 120 unchanged vs non-CHAOS")
 
 # TC-FUNC-Sky-Protector-001
-# STANCE_FIXED_STATS — when attacking: ATK=60 DEF=0; when defending: ATK=0 DEF=60
+# UNION_SUMMON_PERM_ATK_OR_DEF_CHOICE — summon choice handled in GameBoard._apply_union_summon_ability
 func _sky_protector(A: Dictionary, AB: Dictionary) -> void:
-	print("-- TC-FUNC-Sky-Protector-001")
-	var sky := _make_char("Sky Protector", 0, 0, 1000, A.DIVINE,
-			AB.STANCE_FIXED_STATS,
-			{"atk_atk": 60, "atk_def": 0, "def_atk": 0, "def_def": 60})
-	# Attacking — should use ATK=60
-	var def_ := _make_char("Dummy", 0, 30, 100, A.ANIMA)
-	var r_att := BattleResolver.resolve_battle(sky, def_, 3, 0, 1)
-	assert_eq(r_att.attacker_atk_used, 60, "TC-FUNC-Sky-Protector-001: attacking ATK fixed at 60")
-	assert_true(r_att.defender_destroyed, "TC-FUNC-Sky-Protector-001: dummy DEF 30 beaten by ATK 60")
-	# Defending — should use DEF=60
-	var att_strong := _make_char("Strong Attacker", 40, 0, 500, A.ANIMA)
-	var r_def := BattleResolver.resolve_battle(att_strong, sky, 3, 0, 1)
-	assert_eq(r_def.defender_def_used, 60, "TC-FUNC-Sky-Protector-001: defending DEF fixed at 60")
-	assert_true(r_def.attacker_destroyed, "TC-FUNC-Sky-Protector-001: attacker ATK 40 < defender DEF 60; attacker destroyed")
+	print("-- TC-FUNC-Sky-Protector-001 [MANUAL — union summon choice in GameBoard]")
+	_manual("TC-FUNC-Sky-Protector-001")
 
 # TC-FUNC-Diamond-Unicorn-001
 # ONE_USE_DEF_BOOST — first defense DEF+15, second defense normal
@@ -303,12 +291,12 @@ func _run_none_smoke_tests(A: Dictionary, AB: Dictionary) -> void:
 	assert_eq(r3.attacker_atk_used, 125, "TC-FUNC-Gryphon-Rider-001: ATK=125 correct")
 	assert_true(r3.defender_destroyed, "TC-FUNC-Gryphon-Rider-001: defender destroyed")
 
-	# TC-FUNC-Katana-Shark-001 — ATK=75, DEF=50, DIVINE, NONE
+	# TC-FUNC-Katana-Shark-001 — ATK=105, DEF=50, DIVINE, NONE
 	print("-- TC-FUNC-Katana-Shark-001")
-	var katana := _make_char("Katana Shark", 75, 50, 0, A.DIVINE)
+	var katana := _make_char("Katana Shark", 105, 50, 0, A.DIVINE)
 	var def4 := _make_char("Dummy", 0, 40, 100, A.ANIMA)
 	var r4 := BattleResolver.resolve_battle(katana, def4, 3, 0, 1)
-	assert_eq(r4.attacker_atk_used, 75, "TC-FUNC-Katana-Shark-001: ATK=75 correct")
+	assert_eq(r4.attacker_atk_used, 105, "TC-FUNC-Katana-Shark-001: ATK=105 correct")
 	assert_true(r4.defender_destroyed, "TC-FUNC-Katana-Shark-001: defender destroyed")
 
 	# TC-FUNC-Kitsune-001 — ATK=35, DEF=35, CHAOS, NONE

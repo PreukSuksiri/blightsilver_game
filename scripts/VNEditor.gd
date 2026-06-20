@@ -380,6 +380,7 @@ func _build_ui() -> void:
 	_new_file_name_edit.text_submitted.connect(func(_t: String) -> void: _new_file_dialog.confirmed.emit())
 	_new_file_dialog.confirmed.connect(_on_new_file_confirmed)
 	add_child(_new_file_dialog)
+	GameDialog.style(_new_file_dialog)
 
 	var split := HSplitContainer.new()
 	split.size_flags_vertical = Control.SIZE_EXPAND_FILL

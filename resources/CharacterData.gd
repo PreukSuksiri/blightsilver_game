@@ -71,6 +71,7 @@ enum AbilityType {
 	COIN_FLIP_ATK_BOOST,             # Flip 1 coin; heads → +N ATK this battle
 	COIN_FLIP_CANCEL_ATTACK,         # Flip 1 coin before attack; tails → own attack is cancelled
 	COIN_FLIP_EXTRA_ATTACK,          # Flip 1 coin after attacking; heads → get one extra attack
+	COIN_FLIP_2_EXTRA_ATTACK,        # Flip 2 coins after attacking; both heads → get one extra attack
 	COIN_FLIP_2_DESTROY_NON_AFFINITY,# Flip 2 coins; both heads → destroy defender if not specified affinity
 	COIN_FLIP_SWAP_POSITION,         # Flip 1 coin after battle; heads → player chooses own card to swap position
 	TURN_START_COIN_FLIP_FLAG,       # Turn start: coin flip → venom on exposed ally/foe or mutagen on own unit
@@ -185,6 +186,20 @@ enum AbilityType {
 	DESTROY_END_TURN_BLAST_ADJACENT,     # Destroy self at turn end; destroy adjacent foe face-up chars around last attack target
 	UNION_SUMMON_REVIVE_MATCH,           # On union summon: revive 1 matching graveyard card (doubled cost)
 	OPPONENT_TURN_END_SWAP_ATK_DEF,      # When opponent ends turn: they swap ATK/DEF on 1 own face-up card
+
+	# ── Demo sync additions ──
+	TURN_END_FOE_CRYSTAL_PER_MUTAGEN,    # Owner turn end: foe loses N crystals per mutagen flag on field
+	ON_EXPOSE_REVEAL_FOE_ONCE,           # Once when first exposed: reveal 1 foe cell (player chooses)
+	PRE_BATTLE_COIN_FLIP_2_REDIRECT_OR_DESTROY, # WK-17: 2 coins; both heads → foe picks ally; both tails → destroy self
+	TURN_END_REVEAL_OPPONENT_CELLS_ONCE, # Once at turn end: reveal N foe cells
+	ATK_BONUS_IF_TECH_PLAYED,            # +N ATK if a named tech was played this game (void stack)
+	PRE_BATTLE_PERM_DEF_DEBUFF_VS_AFFINITY, # Before reckoning: -N DEF permanently to foe of affinity
+	ADJACENT_ATTACK_FLIP_BUFF,           # When adjacent cell targeted: flip face-up + temp ATK/DEF
+	MOON_ALLY_FIELD_AURA,                # +N ATK/DEF to exposed Moon allies; +M ATK to self if Moon ally exposed
+	PERM_DEF_ON_FOE_TURN_END,            # At end of each foe's turn: +N DEF permanently
+	UNION_SUMMON_COSMIC_ANIMA_IMMUNITY,  # Summoned: until foe turn end, own Cosmic+Anima allies not destroyed
+	UNION_SUMMON_REVEAL_FIELD,           # Summoned: reveal N cards on the field (any player)
+	UNION_SUMMON_PERM_ATK_OR_DEF_CHOICE, # Summoned: choose permanent +N ATK or +N DEF
 }
 
 @export var card_name: String = ""

@@ -142,7 +142,7 @@ func _load_unions() -> void:
 
 	_add("One Winged Angel", A.DIVINE, 120, 120, 1500, R.LEGENDARY,
 		AB.PERM_BOOST_END_OF_TURN, {"atk": 30, "def": 0},
-		"Once, +30 ATK permanently at the end of owner’s turn",
+		"Once, +30 ATK permanently at the end of your turn",
 		"+??? ATK permanently at ???",
 		"1 Cleaver Saint + 1 Divine card + 1500 cost",
 		"1 ??? + 1 ??? + 1500 cost",
@@ -151,7 +151,7 @@ func _load_unions() -> void:
 
 	_add("Pixie Queen", A.DIVINE, 30, 30, 300, R.UNCOMMON,
 		AB.BOOST_PER_TYPED_CARD_ON_FIELD, {"atk_bonus": 5, "def_bonus": 0, "affinity": A.DIVINE},
-		"+5 ATK for each Divine cards on its side",
+		"+5 ATK for each Divine cards on your side",
 		"+5 ATK for each ????",
 		"1 Tiny Pixie + 1 Divine+ 300 cost",
 		"1 ??? + 1 ??? + 300 cost",
@@ -159,7 +159,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Tiny Pixie"}, {"affinity": A.DIVINE}], 9))
 
 	_add("Diamond Unicorn", A.DIVINE, 30, 35, 500, R.UNCOMMON,
-		AB.ONE_USE_ATK_BOOST, {"bonus": 15},
+		AB.NONE, {},
 		"Summoned: +15 ATK until this turn’s end",
 		"Summoned: ??? until this turn’s end",
 		"1 Ponycorn + 1 Divine card + 500 cost",
@@ -168,12 +168,12 @@ func _load_unions() -> void:
 		_conds([{"name_contains": "ponycorn"}, {"affinity": A.DIVINE}], 8))
 
 	_add("Choir Lead Amber", A.DIVINE, 35, 35, 500, R.RARE,
-		AB.FIELD_ATK_BOOST_OWN_AFFINITY, {"affinity": A.DIVINE, "atk": 20}, "+20 ATK to all Divine units on its side",
+		AB.FIELD_ATK_BOOST_OWN_AFFINITY, {"affinity": A.DIVINE, "atk": 20}, "+20 ATK to all Divine units on your side",
 		"+20 ATK to all ?????",
 		"3 Choir Lady cards + 500 cost",
 		"3 ??? + 500 cost",
 		_z([[0,1], [0,2], [1,1], [1,3], [1,4], [2,1], [2,4], [3,0], [3,1], [4,0], [4,1]]),
-		_conds([{"card_name": "3 Choir Lady cards"}], 11))
+		_conds([{"name_contains": "choir lady"}, {"name_contains": "choir lady"}, {"name_contains": "choir lady"}], 11))
 
 	_add("Genesis Mech", A.DIVINE, 60, 40, 1000, R.RARE,
 		AB.ONE_USE_DESTROY_BY_AFFINITY, {"aff1": A.DIVINE, "aff2": A.ANIMA}, "Once, destroy Divine or Anima card",
@@ -184,15 +184,15 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Cruel Angel"}, {"affinity": A.ANIMA}], 10))
 
 	_add("Keeper of the Afterlife", A.DIVINE, 40, 65, 1000, R.UNCOMMON,
-		AB.COIN_FLIP_NULLIFY_ON_DEFEND, {}, "At battle calculation, flip a coin. If head, the attack does nothing",
-		"At battle calculation, flip a coin. If head, ????",
+		AB.COIN_FLIP_NULLIFY_ON_DEFEND, {}, "At Reckoning, flip a coin. If head, the attack does nothing",
+		"At Reckoning, flip a coin. If head, ????",
 		"1 Sphinx unit + 1 Divine card + 1000 cost",
 		"1 ??? + 1 ???+ 1000 cost",
 		_z([[2,2], [3,1], [3,2], [3,3], [4,0], [4,1], [4,2], [4,3], [4,4]]),
 		_conds([{"name_contains": "sphinx"}, {"affinity": A.DIVINE}], 9))
 
 	_add("Keeper of the Sun", A.DIVINE, 70, 35, 1000, R.UNCOMMON,
-		AB.CANNOT_ATTACK_IF_NON_AFFINITY_ON_FIELD, {"allowed": [CharacterData.Affinity.DIVINE, CharacterData.Affinity.ANIMA]}, "This card cannot attack if there is card with affinity other than Divine or Anima on its side",
+		AB.CANNOT_ATTACK_IF_NON_AFFINITY_ON_FIELD, {"allowed": [CharacterData.Affinity.DIVINE, CharacterData.Affinity.ANIMA]}, "This card cannot attack if there is card with affinity other than Divine or Anima on your side",
 		"This card cannot attack if there is card with affinity other than ??? Or ???",
 		"1 Sphinx unit + 1 Anima + 1000 cost",
 		"1 ???+ ??? + 1000 cost",
@@ -206,7 +206,7 @@ func _load_unions() -> void:
 		"2 Sphinx units + 1000 cost",
 		"2 ???+ 1000 cost",
 		_z([[0,0], [0,4], [1,1], [1,3], [2,2], [3,1], [3,3], [4,0], [4,4]]),
-		_conds([{"card_name": "2 Sphinx units"}], 9))
+		_conds([{"name_contains": "sphinx"}, {"name_contains": "sphinx"}], 9))
 
 	_add("Lucky Wanderer", A.DIVINE, 70, 50, 1000, R.UNCOMMON,
 		AB.END_OF_TURN_COIN_FLIP_STAT_BOOST, {"atk": 10, "def": 10}, "During the end of that turn, flip a coin. If head, +10 ATK. If tail, +10 DEF",
@@ -232,11 +232,11 @@ func _load_unions() -> void:
 		_z([[0,0], [0,1], [0,2], [0,3], [0,4], [1,0], [1,1], [1,3], [1,4], [2,2], [3,2], [4,2]]),
 		_conds([{"card_name": "Bloom Fairy"}, {"affinity": A.NATURE}], 12))
 
-	_add("Sky Protector", A.DIVINE, 0, 0, 400, R.RARE,
-		AB.STANCE_FIXED_STATS, {"atk_atk": 60, "atk_def": 0, "def_atk": 0, "def_def": 60}, "If this card defends, DEF becomes 60, ATK becomes 0. If this card performs attack, ATK becomes 60, DEF becomes 0.",
-		"If this card defends, DEF becomes ???, ATK becomes ???. If this card performs attack, ATK becomes ???, DEF becomes ???.",
-		"Sunrise Lady + Moonrise Gentleman + 400 cost",
-		"1 ??? + 1 ??? + 400 cost",
+	_add("Sky Protector", A.DIVINE, 0, 0, 700, R.RARE,
+		AB.UNION_SUMMON_PERM_ATK_OR_DEF_CHOICE, {"amount": 80}, "Summon: choose either permanently gain +80 ATK or +80 DEF permanently",
+		"Summon: choose either permanently gain ??? or ???permanently",
+		"Sunrise Lady + Moonrise Gentleman + 700 cost",
+		"1 ??? + 1 ??? + 700 cost",
 		_z([[0,0], [0,1], [0,2], [0,3], [0,4]]),
 		_conds([{"card_name": "Sunrise Lady"}, {"card_name": "Moonrise Gentleman"}], 5))
 
@@ -259,15 +259,15 @@ func _load_unions() -> void:
 		AB.BOOST_PER_TYPED_CARD_ON_FIELD,
 		{"atk_bonus": 50, "def_bonus": 50, "affinity": A.DIVINE, "field_scope": "all", "bonus_cap": 100},
 		"+50 ATK&DEF for each Divine cards on the field. This bonus does not exceed maximum of 100",
-		"+??? ATK&DEF for each ???cards on the field. This bonus does not exceed maximum of 1???",
+		"+??? ATK&DEF for each ???cards on the field. This bonus does not exceed maximum of ???",
 		"2 Divine (≥800 cost) + 1500 cost",
 		"2 ??? + 1500 cost",
 		_z([[0,2], [1,0], [1,1], [1,2], [1,3], [1,4], [2,2], [3,2], [4,2]]),
 		_conds([{"affinity": A.DIVINE, "min_cost": 800}, {"affinity": A.DIVINE, "min_cost": 800}], 9))
 
 	_add("False Prophet", A.DIVINE, 30, 40, 300, R.RARE,
-		AB.TURN_END_REVEAL_OPPONENT_CELL, {"gain": 600}, "End of owner’s turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.",
-		"End of owner’s turn: Reveal ???.",
+		AB.TURN_END_REVEAL_OPPONENT_CELL, {"gain": 600}, "End of your turn: Reveal 1 foe’s cell. If it was a Dead End, destroy this card. Otherwise, gain 600 Crystals.",
+		"End of your turn: Reveal ???.",
 		"2 Divine cards + 300 cost",
 		"2 ??? + 300 cost",
 		_z([[0,2], [1,1], [1,3], [2,2]]),
@@ -295,7 +295,7 @@ func _load_unions() -> void:
 		"1 Armored Nature card + 1 Nature (≥ 700 cost) + 800 cost",
 		"1 ??? + 1 ??? + 700 cost",
 		_z([[1,1], [1,2], [1,3], [2,0], [2,1], [2,2], [2,3], [2,4]]),
-		_conds([{"affinity": A.NATURE, "name_contains": "armored"}, {"affinity": A.NATURE, "min_cost": 700}], 8))
+		_conds([{"name_contains": "armored nature"}, {"affinity": A.NATURE, "min_cost": 700}], 8))
 
 	_add("Ancient Lizard", A.NATURE, 75, 75, 800, R.UNCOMMON,
 		AB.NONE, {}, "None", "None",
@@ -309,15 +309,15 @@ func _load_unions() -> void:
 		"2 Nature + 500 cost",
 		"2 ???+ 500 cost",
 		_z([[1,0], [1,1], [1,2], [1,3], [1,4], [2,0], [2,2], [2,4], [3,0], [3,2], [3,4]]),
-		_conds([{"card_name": "2 Nature"}], 11))
+		_conds([{"affinity": A.NATURE}, {"affinity": A.NATURE}], 11))
 
 	_add("Rocket Peacock", A.NATURE, 150, 100, 1500, R.LEGENDARY,
-		AB.POST_BATTLE_COIN_FLIP_DESTROY, {}, "After this card battles, select 1 foe’s card, flip a coin. Head: destroy that card",
-		"After this card battles, select 1 foe’s card, flip a coin. Head: ???",
-		"Ostrich Cannon + 1 Nature + 1500 cost",
+		AB.POST_BATTLE_COIN_FLIP_DESTROY, {}, "After this card battles, select 1 foe’s exposed card, flip a coin. Head: destroy that card",
+		"After this card battles, select 1 foe’s exposed card, flip a coin. Head: ???",
+		"Ostrich Cannon + 1 Nature (≥ 800 cost)  + 1500 cost",
 		"1 ??? + 1 ??? + 1500 cost",
 		_z([[0,0], [0,4], [1,0], [1,4], [2,0], [2,4], [4,2]]),
-		_conds([{"card_name": "Ostrich Cannon"}, {"affinity": A.NATURE}], 7))
+		_conds([{"card_name": "Ostrich Cannon"}, {"affinity": A.NATURE, "min_cost": 800}], 7))
 
 	_add("Scarlet Shroom", A.NATURE, 0, 80, 500, R.RARE,
 		AB.UNION_SUMMON_VENOM_ALL_FOE, {}, "Summoned: put venom flag on all foe’s exposed card",
@@ -345,6 +345,53 @@ func _load_unions() -> void:
 		_z([[0,4], [1,3], [2,1], [2,2], [3,1], [3,2], [4,0]]),
 		_conds([{"card_name": "Red Mage"}, {"card_name": "Green Mage"}, {"card_name": "Blue Mage"}], 7))
 
+	_add("Cloud Elemental", A.ARCANE, 65, 65, 1000, R.RARE,
+		AB.ONE_USE_SURVIVE_DESTRUCTION, {}, "Once, this card is not destroyed",
+		"Once, this card is not destroyed",
+		"Fire Elemental + Water Elemental + 1000 cost",
+		"Fire Elemental + Water Elemental + 1000 cost",
+		_z([[0,2], [1,2], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
+		_conds([{"card_name": "Fire Elemental"}, {"card_name": "Water Elemental"}], 8))
+
+	_add("Diamond Elemental", A.ARCANE, 60, 100, 1000, R.RARE,
+		AB.NONE, {}, "None", "None",
+		"Fire Elemental + Earth Elemental + 1000 cost",
+		"Fire Elemental + Earth Elemental + 1000 cost",
+		_z([[0,1], [0,3], [1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,2]]),
+		_conds([{"card_name": "Fire Elemental"}, {"card_name": "Earth Elemental"}], 9))
+
+	_add("Ice Elemental", A.ARCANE, 80, 50, 1000, R.RARE,
+		AB.LOCK_TARGET_ON_ATTACK, {}, "Card that battles this card cannot perform attack until the end of their next turn.",
+		"Card that battles this card cannot perform attack until the end of their next turn.",
+		"Water Elemental + Wind Elemental + 1000 cost",
+		"Water Elemental + Wind Elemental + 1000 cost",
+		_z([[1,1], [1,2], [1,3], [2,2], [3,1], [3,2], [3,3]]),
+		_conds([{"card_name": "Water Elemental"}, {"card_name": "Wind Elemental"}], 7))
+
+	_add("Sand Elemental", A.ARCANE, 55, 55, 1000, R.RARE,
+		AB.ATK_DEF_BONUS_VS_NON_AFFINITY, {"affinity": A.ARCANE, "atk": 50, "def": 50}, "+50 ATK&DEF vs Non-Arcane cards",
+		"+50 ATK&DEF vs Non-Arcane cards",
+		"Wind Elemental + Earth Elemental + 1000 cost",
+		"Wind Elemental + Earth Elemental + 1000 cost",
+		_z([[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
+		_conds([{"card_name": "Wind Elemental"}, {"card_name": "Earth Elemental"}], 9))
+
+	_add("Thunder Elemental", A.ARCANE, 90, 55, 1000, R.RARE,
+		AB.REVEAL_ON_WIN, {}, "After a successful attack, reveal 1 foe’s card",
+		"After a successful attack, reveal 1 foe’s card",
+		"Fire Elemental + Wind Elemental + 1000 cost",
+		"Fire Elemental + Wind Elemental + 1000 cost",
+		_z([[0,3], [1,2], [1,3], [2,2], [3,1], [3,2], [4,1]]),
+		_conds([{"card_name": "Fire Elemental"}, {"card_name": "Wind Elemental"}], 7))
+
+	_add("Wood Elemental", A.ARCANE, 65, 85, 1000, R.RARE,
+		AB.PERM_DEF_ON_FOE_TURN_END, {"def": 5}, "At the end of each foe’s turn, +5 DEF permanently.",
+		"At the end of each foe’s turn, +5 DEF permanently.",
+		"Water Elemental + Earth Elemental + 1000 cost",
+		"Water Elemental + Earth Elemental + 1000 cost",
+		_z([[2,1], [2,2], [2,3], [3,1], [3,2], [3,3], [4,1], [4,2], [4,3]]),
+		_conds([{"card_name": "Water Elemental"}, {"card_name": "Earth Elemental"}], 9))
+
 	# ── Bio ───────────────────────────────────────────────────
 
 	_add("Tendrill Tyrant", A.BIO, 90, 110, 1500, R.LEGENDARY,
@@ -356,7 +403,7 @@ func _load_unions() -> void:
 		_conds([{"affinity": A.BIO, "has_flag": "mutagen"}, {"affinity": A.BIO, "min_cost": 800}, {"affinity": A.BIO, "min_cost": 800}], 9))
 
 	_add("Bioterrorist", A.BIO, 150, 0, 1000, R.RARE,
-		AB.DESTROY_SELF_AFTER_BATTLE, {}, "Destroy this card after battle calculation",
+		AB.DESTROY_SELF_AFTER_BATTLE, {}, "Destroy this card after Reckoning",
 		"Destroy this card after ???",
 		"2 Bio cards (≥ 800 cost) + 1000 cost",
 		"2 ??? + 1000 cost",
@@ -388,6 +435,15 @@ func _load_unions() -> void:
 		_z([[0,0], [1,1], [1,2], [2,1], [2,2], [3,1], [3,2], [4,0]]),
 		_conds([{"name_contains": "bladeshifter"}, {"affinity": A.BIO}], 8))
 
+	_add("Dimensional Virus", A.BIO, 0, 0, 800, R.RARE,
+		AB.PERM_STAT_PENALTY_VS_NON_AFFINITY, {"affinity": A.BIO, "atk": 10, "def": 10},
+		"Foe’s unit get -10 ATK&DEF permanently in Reckoning . With Mutagen Flag : Cannot be destroyed by Non-Arcane.",
+		"Foe’s unit get ??? in Reckoning . With Mutagen Flag : ???",
+		"1 Bio (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost",
+		"1 ??? + 1 ??? + 1500 cost",
+		_z([[0,0], [0,2], [0,3], [1,1], [1,4], [2,0], [2,3], [3,1], [3,3], [4,2], [4,4]]),
+		_conds([{"affinity": A.BIO, "min_cost": 800}, {"affinity": A.ARCANE, "min_cost": 800}], 11))
+
 	# ── Cosmic ────────────────────────────────────────────────
 
 	_add("Helios the Prideful Fortress", A.COSMIC, 145, 100, 1500, R.LEGENDARY,
@@ -399,8 +455,8 @@ func _load_unions() -> void:
 		_conds([{"affinity": A.COSMIC, "min_cost": 800}, {"affinity": A.COSMIC, "min_cost": 800}], 8))
 
 	_add("Slim Gray Plasma Bomber", A.COSMIC, 80, 60, 1000, R.RARE,
-		AB.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE, {"min_revealed": 15, "atk": 100, "def": 100}, "+100 ATK&DEF if 10 or more cells on its side are revealed",
-		"+?? ATK&DEF if ?? or more of cells on its side are revealed",
+		AB.ATK_DEF_BONUS_IF_OWN_REVEALED_GTE, {"min_revealed": 15, "atk": 100, "def": 100}, "+100 ATK&DEF if 10 or more cells on your side are revealed",
+		"+?? ATK&DEF if ?? or more of cells on your side are revealed",
 		"1 Slim Gray + 1 Cosmic (≥ 800 cost) + 1000 cost",
 		"1 ??? + 1 ??? + 1000 cost",
 		_z([[0,2], [1,1], [1,2], [1,3], [2,1], [2,3], [3,1], [3,2], [3,3]]),
@@ -423,13 +479,13 @@ func _load_unions() -> void:
 		_z([[0,0], [0,1], [0,2], [0,3], [0,4], [1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,2]]),
 		_conds([{"card_name": "Miner probe"}, {"affinity": A.COSMIC}], 12))
 
-	_add("Blood-hungry Mutant", A.COSMIC, 55, 40, 600, R.RARE,
+	_add("Blood-hungry Mutant", A.BIO, 55, 40, 600, R.RARE,
 		AB.CRYSTAL_GAIN_ON_DESTROY, {"amount": 80}, "After destroying foe’s card: +80 Crystals",
 		"After destroying foe’s card: ???",
 		"2 Mutant cards + 600 cost",
 		"2 ??? + 600 cost",
 		_z([[1,1], [1,3], [2,0], [2,2], [2,4], [3,1], [3,3]]),
-		_conds([{"card_name": "2 Mutant cards"}], 7))
+		_conds([{"name_contains": "mutant"}, {"name_contains": "mutant"}], 7))
 
 	_add("Giant Meteor Vergaia", A.COSMIC, 60, 0, 1000, R.LEGENDARY,
 		AB.DESTROY_END_TURN_BLAST_ADJACENT, {}, "Destroy it at turn's end, then destroy all exposed foe’s units surrounding the card that this card attacked.",
@@ -445,6 +501,15 @@ func _load_unions() -> void:
 		"??? + ??? + 500 cost",
 		_z([[0,2], [0,3], [0,4], [1,4], [2,0], [2,4], [3,0], [4,0], [4,1], [4,2]]),
 		_conds([{"card_name": "Laser Walker"}, {"affinity": A.COSMIC}], 10))
+
+	_add("Team Galaxos", A.COSMIC, 85, 85, 800, R.RARE,
+		AB.UNION_SUMMON_COSMIC_ANIMA_IMMUNITY, {},
+		"Summoned: Until the end of foe’s turn, Cosmic and Anima units on your side are not destroyed",
+		"Summoned: Until the end of foe’s turn, ??? units on your side are ???",
+		"1 Cosmic (≥ 800 cost) + 1 Anima (≥ 800 cost) + 800 cost",
+		"1 ??? + 1 ??? + 800 cost",
+		_z([[0,1], [0,2], [0,3], [1,1], [2,1], [2,3], [2,4], [3,1], [3,2], [3,3]]),
+		_conds([{"affinity": A.COSMIC, "min_cost": 800}, {"affinity": A.ANIMA, "min_cost": 800}], 10))
 
 	_add("Moon Tribe Shaman", A.COSMIC, 25, 55, 500, R.RARE,
 		AB.UNION_SUMMON_REVIVE_MATCH, {"name_contains": "moon", "exclude_union": true}, "Upon union, revive 1 Moon non-Union card. Double its cost.",
@@ -462,22 +527,30 @@ func _load_unions() -> void:
 		"1 Anima (≥ 800 cost) + 2 Anima + 800 cost",
 		"1 ??? + 2 ??? + 800 cost",
 		_z([[0,0], [0,2], [0,4], [2,0], [2,2], [2,4], [4,0], [4,2], [4,4]]),
-		_conds([{"affinity": A.ANIMA, "min_cost": 800}, {"card_name": "2 Anima"}], 9))
+		_conds([{"affinity": A.ANIMA, "min_cost": 800}, {"affinity": A.ANIMA}, {"affinity": A.ANIMA}], 9))
 
 	_add("Grand Fort Captain", A.ANIMA, 45, 40, 500, R.UNCOMMON,
 		AB.NONE, {}, "None", "None",
 		"2 Grand Fort card + 500 cost",
 		"2 ??? + 500 cost",
 		_z([[1,2], [2,1], [2,2], [2,3], [3,2]]),
-		_conds([{"card_name": "2 Grand Fort card"}], 5))
+		_conds([{"name_contains": "grand fort"}, {"name_contains": "grand fort"}], 5))
 
 	_add("Kiba the Giant Slayer", A.ANIMA, 80, 55, 1000, R.RARE,
-		AB.ATK_BONUS_VS_UNION, {"bonus": 30}, "+30 ATK vs Union",
+		AB.ATK_BONUS_VS_UNION, {"bonus": 70}, "+70 ATK vs Union",
 		"+??? vs Union",
 		"Kiyoko the Death Whisper + Silver Spearman + 1000 cost",
 		"??? + ??? + 1000 cost",
 		_z([[0,1], [0,3], [1,1], [1,3], [2,1], [2,3], [3,1], [3,3], [4,1], [4,3]]),
 		_conds([{"card_name": "Kiyoko the Death Whisper"}, {"card_name": "Silver Spearman"}], 10))
+
+	_add("Legendary Locksmith", A.ANIMA, 35, 60, 800, R.LEGENDARY,
+		AB.UNION_SUMMON_REVEAL_FIELD, {"count": 3}, "Summoned: Reveal 3 cards on the field",
+		"Summoned: Reveal ??? cards on the field",
+		"1 Lockpicker + 1 Anima + 800 cost",
+		"1 ??? + 1 ??? + 800 cost",
+		_z([[0,1], [0,2], [1,2], [2,1], [2,2], [3,2], [4,2]]),
+		_conds([{"name_contains": "lockpicker"}, {"affinity": A.ANIMA}], 7))
 
 	_add("Moon Lady Ninja", A.ANIMA, 65, 50, 800, R.RARE,
 		AB.ONE_USE_SURVIVE_DESTRUCTION, {}, "Once, this card is not destroyed.",
@@ -488,7 +561,7 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Kiyoko the Death Whisper"}, {"affinity": A.ANIMA}], 7))
 
 	_add("Rebel King", A.ANIMA, 60, 40, 800, R.RARE,
-		AB.OPPONENT_TURN_END_SWAP_ATK_DEF, {}, "At the end of foe’s turn: the owner of this card select 1 exposed foe’s unit and swap its ATK&DEF",
+		AB.OPPONENT_TURN_END_SWAP_ATK_DEF, {}, "At the end of foe’s turn: you select 1 exposed foe’s unit and swap its ATK&DEF",
 		"At the end of foe’s turn: ??? and swap its ATK&DEF",
 		"Jirayu the Rebellious Prince + 1 Anima card (≥ 500 cost) + 800 cost",
 		"??? + ??? + 800 cost",
@@ -520,10 +593,11 @@ func _load_unions() -> void:
 		_z([[0,1], [0,2], [1,2], [1,3], [2,1], [2,2], [3,2], [3,3], [4,1], [4,2]]),
 		_conds([{"card_name": "Dark Monk"}, {"affinity": A.CHAOS}], 10))
 
-	_add("Ten Arms Yaksa", A.CHAOS, 45, 30, 600, R.RARE,
-		AB.MULTI_ATTACK_ANY_WITH_ATK_LOSS, {"max_attacks": 2, "atk_loss": 5}, "This card can choose two attack targets. -5 ATK for each successful attack.",
-		"This card can choose ?? attack targets. -?? ATK for each successful attack.",
-		"Yaksa + 1 Chaos + 600 cost",
+	_add("Ten Arms Yaksa", A.CHAOS, 50, 30, 800, R.RARE,
+		AB.MULTI_ATTACK_ANY_WITH_ATK_LOSS, {"max_attacks": 3, "atk_loss": 5, "atk_loss_from_attack": 3, "atk_loss_if_unit": true},
+		"This card can choose three attack targets. -5 ATK if the third target is unit.",
+		"This card can choose ??? attack targets. -5 ATK if the ??? is unit.",
+		"Yaksa + 1 Chaos + 800 cost",
 		"1 ??? + 1 ??? + 600 cost",
 		_z([[0,0], [0,1], [0,3], [0,4], [1,2], [2,2], [3,1], [3,2], [3,3], [4,1], [4,3]]),
 		_conds([{"name_contains": "yaksa"}, {"affinity": A.CHAOS}], 11))
@@ -533,7 +607,7 @@ func _load_unions() -> void:
 		"3 Skeleton cards + 400 cost",
 		"3 ??? + 400 cost",
 		_z([[0,1], [0,2], [0,3], [2,0], [2,1], [2,2], [2,3], [2,4], [4,1], [4,2], [4,3]]),
-		_conds([{"card_name": "3 Skeleton cards"}], 11))
+		_conds([{"name_contains": "skeleton"}, {"name_contains": "skeleton"}, {"name_contains": "skeleton"}], 11))
 
 	_add("Oblivion Dragon", A.CHAOS, 200, 0, 2000, R.LEGENDARY,
 		AB.HALVE_ATK_ADD_TO_DEF_ON_DEFEND, {}, "When this card defends, halve its attack and gain DEF by that amount permanently",
@@ -545,7 +619,7 @@ func _load_unions() -> void:
 
 	# ── No affinity ───────────────────────────────────────────
 
-	_add("Katana Shark", A.NATURE, 75, 50, 800, R.UNCOMMON,
+	_add("Katana Shark", A.NATURE, 105, 50, 800, R.UNCOMMON,
 		AB.NONE, {}, "None", "None",
 		"3 ‘Sharks’ name + 800 cost",
 		"3 ??? + 800 cost",
@@ -662,11 +736,8 @@ func _materials_match(player: int, zone_cells: Array, conditions: Array) -> bool
 	if conditions.is_empty():
 		return true
 
-	# Sort conditions by specificity descending (more keys = more specific)
-	var sorted_conds: Array = conditions.duplicate()
-	sorted_conds.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return a.size() > b.size()
-	)
+	# Sort conditions by specificity descending (named cards before generic affinity).
+	var sorted_conds: Array = sort_material_conditions(conditions)
 
 	var used: Array = []
 	used.resize(zone_cells.size())
@@ -758,15 +829,38 @@ func deck_char_satisfies(card_name: String, cond: Dictionary) -> bool:
 		return false
 	return true
 
-## Check whether char_names (Array of String card names) can satisfy all of u's
-## material_conditions. Uses greedy matching with most-specific conditions first.
-func deck_can_form_union(char_names: Array, u: UnionData) -> bool:
-	if u.material_conditions.is_empty():
-		return true
-	var sorted_conds: Array = u.material_conditions.duplicate()
+## Higher score = match this condition before generic affinity/name rules.
+func condition_specificity(cond: Dictionary) -> int:
+	var score: int = 0
+	if cond.has("card_name") and not str(cond["card_name"]).is_empty():
+		score += 100
+	if cond.has("name_contains") and not str(cond["name_contains"]).is_empty():
+		score += 50
+	if cond.has("has_flag") and not str(cond["has_flag"]).is_empty():
+		score += 40
+	if cond.has("min_cost"):
+		score += 10
+	if cond.has("min_atk"):
+		score += 10
+	if cond.has("min_def"):
+		score += 10
+	if cond.has("affinity") and int(cond.get("affinity", -1)) >= 0:
+		score += 5
+	return score
+
+func sort_material_conditions(conditions: Array) -> Array:
+	var sorted_conds: Array = conditions.duplicate()
 	sorted_conds.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return a.size() > b.size())
+		var sa: int = condition_specificity(a)
+		var sb: int = condition_specificity(b)
+		return sa > sb if sa != sb else str(a) < str(b))
+	return sorted_conds
+
+## Conditions not satisfied by char_names (each card used at most once).
+func deck_unmatched_conditions(char_names: Array, conditions: Array) -> Array:
+	var sorted_conds: Array = sort_material_conditions(conditions)
 	var remaining: Array = char_names.duplicate()
+	var unmatched: Array = []
 	for cond: Dictionary in sorted_conds:
 		var found: int = -1
 		for i: int in range(remaining.size()):
@@ -774,9 +868,15 @@ func deck_can_form_union(char_names: Array, u: UnionData) -> bool:
 				found = i
 				break
 		if found < 0:
-			return false
-		remaining.remove_at(found)
-	return true
+			unmatched.append(cond)
+		else:
+			remaining.remove_at(found)
+	return unmatched
+
+## Check whether char_names (Array of String card names) can satisfy all of u's
+## material_conditions. Uses greedy matching with most-specific conditions first.
+func deck_can_form_union(char_names: Array, u: UnionData) -> bool:
+	return deck_unmatched_conditions(char_names, u.material_conditions).is_empty()
 
 # ─────────────────────────────────────────────────────────────
 # Debug helpers

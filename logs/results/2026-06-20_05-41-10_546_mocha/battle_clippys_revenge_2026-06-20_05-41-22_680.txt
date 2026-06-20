@@ -1,0 +1,114 @@
+=== Battle of Clippy's Revenge ===
+Battle started: 2026-06-20 05:41:22.680
+Game Session of Mocha (started 2026-06-20 05:41:10.546)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:02.914] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[01:14.261] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:14.290] Revealed: P1 (1,2) "Magenta the Nightbloom" {Unit ATK25 DEF40 | cost 300 | affinity Chaos}
+[01:14.291] MSG: Magenta the Nightbloom's DEF is halved upon reveal!
+[01:14.291] Dice rolled: 3
+[01:14.311] MSG: Scout Probe wins!
+[01:17.372] Crystals: P1 5000 → 4700 (-300)  [battle]
+[01:18.778] Attack P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,2)"Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}  Dice=3  ATK=40 vs DEF=20  → WIN
+[01:18.778] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[01:18.778] Reckoning overlay: P1 "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:18.778] Anim: 3A  △ P1(1,2)
+[01:18.778] Card destroyed  P1 (1,2) "Magenta the Nightbloom" {Unit ATK25 DEF20 | cost 300 | affinity Chaos | base 25/20}
+[01:18.785] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[01:31.396] Revealed: P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:31.396] MSG: Scout Probe: adjacent cell revealed.
+[01:37.626] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:37.657] Revealed: P1 (3,2) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:37.657] Dice rolled: 1
+[01:37.675] MSG: Shepherd Detective wins!
+[01:41.015] Crystals: P1 4700 → 4350 (-350)  [battle]
+[01:42.411] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(3,2)"Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}  Dice=1  ATK=40 vs DEF=20  → WIN
+[01:42.411] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[01:42.411] Reckoning overlay: P1 "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos} badge=20 ATK pill=15 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:42.411] Anim: 3A  △ P1(3,2)
+[01:42.411] Card destroyed  P1 (3,2) "Jacob the Ski Mask" {Unit ATK15 DEF20 | cost 350 | affinity Chaos}
+[01:42.416] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:43.955] MSG: Revealed: (empty)
+[01:50.430] MSG: Tap 2 material card(s) on the field.
+[01:58.490] Turn ended  P0  |  Crystals P0=5000 P1=4350
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4350 ---
+[01:59.080] Mode selected P1: TECH
+[01:59.390] Crystals: P1 4350 → 2850 (-1500)  [tech cost]
+[02:00.772] Tech played  P1: "Resurrection"
+[02:02.334] Target prompt: "Choose where to place the revived unit."  filter=graveyard
+[02:02.740] Revealed: P1 (1,2) "Jacob the Ski Mask" {Unit ATK0 DEF0 | cost 350 | affinity Chaos | base 0/0}
+[02:02.742] MSG: Revived Jacob the Ski Mask at [1,2]!
+[02:02.745] Tech resolved  P1
+[02:03.658] Mode selected P1: ATTACK
+[02:03.662] MSG: Player 2: tap a character to attack.
+[02:05.413] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[02:05.413] Dice rolled: 1
+[02:05.714] MSG: Trap triggered: Trap Hole!
+[02:09.847] Coin flip: Tails, Tails, Tails
+[02:12.615] MSG: Trap Hole: Tails, Tails, Tails.
+[02:12.615] MSG: Trap Hole: No heads — no crystal loss.
+[02:12.617] Attack P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(0,0)"Trap Hole" {cost 0}  Dice=1  → Unit vs Trap
+[02:12.617] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[02:12.617] Anim: 3D  (attacker survives)
+[02:13.123] Mode selected P1: ATTACK
+[02:13.127] MSG: Player 2: tap a character to attack.
+[02:14.850] Dice rolled: 1
+[02:14.873] MSG: Nothing happens — Dead End.
+[02:17.988] Attack P1(1,2)"Jacob the Ski Mask" {Unit ATK0 DEF0 | cost 350 | affinity Chaos | base 0/0} → P0(0,1)(empty)  Dice=1  → DEAD_END
+[02:17.988] Anim: 3F  (blank slot)
+[02:18.494] Turn ended  P1  |  Crystals P0=5000 P1=2850
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=2850 ---
+[02:36.930] Dice rolled: 1
+[02:36.970] MSG: Nothing happens — Dead End.
+[02:38.911] Attack P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,0)(empty)  Dice=1  → DEAD_END
+[02:38.911] Anim: 3F  (blank slot)
+[02:38.920] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[02:40.483] Revealed: P1 (0,0) "Defensive Pheromone" {cost 500}
+[02:40.483] MSG: Scout Probe: adjacent cell revealed.
+[02:46.564] MSG: Tap 2 material card(s) on the field.
+[02:49.496] MSG: 1 more material(s) needed.
+[02:50.213] Crystals: P0 5000 → 3500 (-1500)  [union]
+[02:50.251] Revealed: P0 (2,4) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[02:50.256] Union summoned P0: "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[02:50.256] MSG: Player 1 summoned [Rocket Peacock] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[02:58.137] Dice rolled: 5
+[02:58.194] MSG: Rocket Peacock wins!
+[03:01.981] Crystals: P1 2850 → 2570 (-280)  [battle]
+[03:03.384] Attack P0(2,4)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(1,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=5  ATK=150 vs DEF=20  → WIN
+[03:03.384] Reckoning overlay: P0 "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[03:03.384] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:03.384] Anim: 3A  △ P1(1,1)
+[03:03.384] Card destroyed  P1 (1,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[03:03.389] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[03:07.005] Coin flip: Tails
+[03:09.747] MSG: Rocket Peacock: Tails — Jacob the Ski Mask survives.
+[04:15.643] Turn ended  P0  |  Crystals P0=3500 P1=2570
+
+--- Turn 4  |  Player 1  |  Crystals P0=3500 P1=2570 ---
+[04:16.239] Mode selected P1: TECH
+[04:16.547] Crystals: P1 2570 → 1570 (-1000)  [tech cost]
+[04:17.932] Tech played  P1: "Siege Cannon"
+[04:19.480] MSG: Siege Cannon active!
+[04:19.484] Tech resolved  P1
+[04:20.381] Mode selected P1: ATTACK
+[04:20.385] MSG: Player 2: tap a character to attack.
+[04:22.092] Revealed: P1 (2,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[04:22.092] Dice rolled: 5
+[04:22.119] MSG: Both cards are destroyed!
+[04:25.380] Crystals: P1 1570 → 1090 (-480)  [battle]
+[04:26.783] Crystals: P0 3500 → 2800 (-700)  [battle]
+[04:28.173] Attack P1(2,2)"Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} → P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=5  ATK=50 vs DEF=50  → TIE
+[04:28.173] Reckoning overlay: P1 "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature} badge=50 ATK pill=50 DEF pill=20 mod=+ATK 0 (50+0=50)
+[04:28.173] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[04:28.173] Anim: 3C  △ P1(2,2) + △ P0(0,2)
+[04:28.173] Card destroyed  P1 (2,2) "Spear Shark" {Unit ATK50 DEF20 | cost 480 | affinity Nature}
+[04:28.173] Card destroyed 

@@ -204,6 +204,7 @@ func _build_ui() -> void:
 	_new_confirm_dialog.cancel_button_text = "Cancel"
 	_new_confirm_dialog.confirmed.connect(_new_graph)
 	add_child(_new_confirm_dialog)
+	GameDialog.style(_new_confirm_dialog)
 
 	# ── Audio preview player ───────────────────────────────────
 	_preview_player = AudioStreamPlayer.new()
@@ -4022,11 +4023,8 @@ func _update_puzzle_guide(lbl: Label, puzzle_id: String) -> void:
 		lbl.add_theme_color_override("font_color", Color(0.60, 0.85, 0.65))
 
 func _show_popup(title: String, body: String) -> void:
-	var dialog := AcceptDialog.new()
-	dialog.title        = title
-	dialog.dialog_text  = body
-	dialog.size         = Vector2i(500, 300)
-	add_child(dialog)
+	var dialog := GameDialog.accept(self, title, body)
+	dialog.size = Vector2i(500, 300)
 	dialog.popup_centered()
 
 # ─────────────────────────────────────────────────────────────

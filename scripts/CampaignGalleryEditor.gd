@@ -547,16 +547,15 @@ func _status(msg: String) -> void:
 
 
 func _on_clear_progress() -> void:
-	var dlg := ConfirmationDialog.new()
-	dlg.title = "Clear Gallery Progress"
-	dlg.dialog_text = (
+	var dlg := GameDialog.confirmation(
+		self,
+		"Clear Gallery Progress",
 		"Reset all campaign gallery progress for this save?\n\n"
 		+ "• Gallery chapter completions\n"
 		+ "• Campaign map node completions\n\n"
-		+ "Gallery data in gallery_data.json is not changed."
-	)
-	dlg.ok_button_text = "Clear All"
-	dlg.cancel_button_text = "Cancel"
+		+ "Gallery data in gallery_data.json is not changed.",
+		"Clear All",
+		"Cancel")
 	dlg.confirmed.connect(func() -> void:
 		var counts: Dictionary = SaveManager.clear_gallery_progress()
 		_status(
@@ -566,7 +565,6 @@ func _on_clear_progress() -> void:
 		dlg.queue_free())
 	dlg.canceled.connect(func() -> void: dlg.queue_free())
 	dlg.close_requested.connect(func() -> void: dlg.queue_free())
-	add_child(dlg)
 	dlg.popup_centered()
 
 

@@ -1,0 +1,207 @@
+=== Battle of Mystery Meatloaf ===
+Battle started: 2026-06-20 16:27:10.684
+Game Session of Mojito (started 2026-06-20 16:26:27.530)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:08.281] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:26.605] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:26.605] Dice rolled: 5
+[00:26.636] MSG: Nothing happens — Dead End.
+[00:28.678] Attack P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(0,1)(empty)  Dice=5  → DEAD_END
+[00:28.678] Anim: 3F  (blank slot)
+[00:28.690] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[00:29.683] Revealed: P1 (0,2) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[00:29.683] MSG: Scout Probe: adjacent cell revealed.
+[00:41.635] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:41.635] Dice rolled: 4
+[00:41.656] MSG: Grand Fort Mauler wins!
+[00:45.051] Crystals: P1 5000 → 4550 (-450)  [battle]
+[00:46.451] Attack P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(0,2)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}  Dice=4  ATK=40 vs DEF=30  → WIN
+[00:46.451] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=40 ATK pill=40 DEF pill=10 mod=+ATK 0 (40+0=40)
+[00:46.451] Reckoning overlay: P1 "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} badge=30 ATK pill=50 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:46.451] Anim: 3A  △ P1(0,2)
+[00:46.451] Card destroyed  P1 (0,2) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[00:48.206] Turn ended  P0  |  Crystals P0=5000 P1=4550
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4550 ---
+[00:48.799] Mode selected P1: TECH
+[00:49.102] Crystals: P1 4550 → 3950 (-600)  [tech cost]
+[00:50.475] Tech played  P1: "Radar"
+[00:52.028] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:52.856] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:53.264] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:53.267] Tech resolved  P1
+[00:54.141] Mode selected P1: ATTACK
+[00:54.149] MSG: Player 2: tap a character to attack.
+[00:55.846] Revealed: P1 (2,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[00:55.846] Dice rolled: 4
+[00:55.863] MSG: Lab Zombie wins!
+[01:00.327] Crystals: P0 5000 → 4300 (-700)  [battle]
+[01:01.724] Attack P1(2,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=4  ATK=55 vs DEF=50  → WIN
+[01:01.724] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[01:01.724] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:01.724] Anim: 3A  △ P0(0,2)
+[01:01.724] Card destroyed  P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[01:02.216] Mode selected P1: ATTACK
+[01:02.218] MSG: Player 2: tap a character to attack.
+[01:03.930] Revealed: P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[01:03.930] Dice rolled: 2
+[01:03.954] MSG: Nothing happens — Dead End.
+[01:07.321] Attack P1(2,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} → P0(4,4)(empty)  Dice=2  → DEAD_END
+[01:07.321] Anim: 3F  (blank slot)
+[01:07.819] Turn ended  P1  |  Crystals P0=4300 P1=3950
+
+--- Turn 3  |  Player 0  |  Crystals P0=4300 P1=3950 ---
+[01:19.354] Revealed: P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[01:19.355] Dice rolled: 3
+[01:19.385] MSG: Ostrich Cannon wins!
+[01:22.943] Crystals: P1 3950 → 3530 (-420)  [battle]
+[01:24.339] MSG: Ostrich Cannon locks itself until next turn.
+[01:24.348] Attack P0(2,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(2,1)"Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}  Dice=3  ATK=60 vs DEF=50  → WIN
+[01:24.348] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} badge=60 ATK pill=60 DEF pill=30 mod=+ATK 0 (60+0=60)
+[01:24.348] Reckoning overlay: P1 "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio} badge=50 ATK pill=0 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:24.348] Anim: 3A  △ P1(2,1)
+[01:24.348] Card destroyed  P1 (2,1) "Bladeshifter" {Unit ATK0 DEF50 | cost 420 | affinity Bio}
+[01:28.301] MSG: Tap 2 material card(s) on the field.
+[01:28.498] MSG: 1 more material(s) needed.
+[01:30.082] Crystals: P0 4300 → 2800 (-1500)  [union]
+[01:30.122] Revealed: P0 (2,0) "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature}
+[01:30.126] Union summoned P0: "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} from "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | attacked,cannot-atk≤T5}, "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[01:30.127] MSG: Player 1 summoned [Rocket Peacock] using: "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | attacked,cannot-atk≤T5}, "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[01:38.031] Dice rolled: 5
+[01:38.092] MSG: Rocket Peacock wins!
+[01:42.535] Crystals: P1 3530 → 2830 (-700)  [battle]
+[01:43.929] Attack P0(2,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(2,0)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=5  ATK=150 vs DEF=20  → WIN
+[01:43.929] Reckoning overlay: P0 "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[01:43.929] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:43.929] Anim: 3A  △ P1(2,0)
+[01:43.929] Card destroyed  P1 (2,0) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[01:43.932] MSG: No valid target — effect cancelled.
+[01:44.073] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[03:16.576] Turn ended  P0  |  Crystals P0=2800 P1=2830
+
+--- Turn 4  |  Player 1  |  Crystals P0=2800 P1=2830 ---
+[03:17.175] Mode selected P1: ATTACK
+[03:17.177] MSG: Player 2: tap a character to attack.
+[03:18.878] Revealed: P1 (1,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[03:18.878] Dice rolled: 4
+[03:18.900] MSG: Nothing happens — Dead End.
+[03:21.377] Attack P1(1,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(2,4)(empty)  Dice=4  → DEAD_END
+[03:21.377] Anim: 3F  (blank slot)
+[03:21.874] Mode selected P1: ATTACK
+[03:21.877] MSG: Player 2: tap a character to attack.
+[03:23.592] Revealed: P1 (2,2) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[03:23.592] Dice rolled: 5
+[03:23.608] MSG: Claw Mutant wins!
+[03:27.275] Crystals: P0 2800 → 2450 (-350)  [battle]
+[03:28.670] Attack P1(2,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} → P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=5  ATK=15 vs DEF=10  → WIN
+[03:28.670] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=15 ATK pill=15 DEF pill=10 mod=+ATK 0 (15+0=15)
+[03:28.670] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=10 ATK pill=40 DEF pill=10 mod=+DEF 0 (10+0=10)
+[03:28.670] Anim: 3A  △ P0(2,1)
+[03:28.670] Card destroyed  P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[03:29.167] Turn ended  P1  |  Crystals P0=2450 P1=2830
+
+--- Turn 5  |  Player 0  |  Crystals P0=2450 P1=2830 ---
+[03:34.490] Dice rolled: 2
+[03:34.562] MSG: Rocket Peacock wins!
+[03:38.982] Crystals: P1 2830 → 2480 (-350)  [battle]
+[03:40.385] Attack P0(2,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(1,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=2  ATK=150 vs DEF=30  → WIN
+[03:40.385] Reckoning overlay: P0 "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[03:40.385] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} badge=30 ATK pill=35 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:40.385] Anim: 3A  △ P1(1,2)
+[03:40.385] Card destroyed  P1 (1,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[03:40.390] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[03:43.449] Coin flip: Tails
+[03:46.198] MSG: Rocket Peacock: Tails — Claw Mutant survives.
+[03:53.256] Dice rolled: 5
+[03:53.282] MSG: Shepherd Detective wins!
+[03:55.949] Crystals: P1 2480 → 2300 (-180)  [battle]
+[03:57.350] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,2)"Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}  Dice=5  ATK=40 vs DEF=10  → WIN
+[03:57.350] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[03:57.350] Reckoning overlay: P1 "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio} badge=10 ATK pill=15 DEF pill=10 mod=+DEF 0 (10+0=10)
+[03:57.350] Anim: 3A  △ P1(2,2)
+[03:57.350] Card destroyed  P1 (2,2) "Claw Mutant" {Unit ATK15 DEF10 | cost 180 | affinity Bio}
+[03:57.355] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[03:58.773] MSG: Revealed: (empty)
+[04:00.836] Turn ended  P0  |  Crystals P0=2450 P1=2300
+
+--- Turn 6  |  Player 1  |  Crystals P0=2450 P1=2300 ---
+[04:02.907] Crystals: P1 2300 → 1800 (-500)  [union]
+[04:02.950] Revealed: P1 (3,2) "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}
+[04:02.951] Union summoned P1: "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} from "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}, "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down}
+[04:02.952] MSG: Player 2 summoned [Gamma Mermaid] using: "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio | face-down}, "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio | face-down}
+[04:06.341] Mode selected P1: ATTACK
+[04:06.344] MSG: Player 2: tap a character to attack.
+[04:08.049] Dice rolled: 5
+[04:08.132] MSG: Gamma Mermaid: -20 DEF vs non-BIO defender!
+[04:08.133] MSG: Gamma Mermaid wins!
+[04:13.526] Crystals: P0 2450 → 2050 (-400)  [battle]
+[04:14.921] Attack P1(3,2)"Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=5  ATK=30 vs DEF=5  → WIN
+[04:14.921] Reckoning overlay: P1 "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[04:14.921] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=5 ATK pill=40 DEF pill=25 mod=-DEF 20 (25-20=5)
+[04:14.921] Anim: 3A  △ P0(2,3)
+[04:14.921] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[04:15.415] Mode selected P1: ATTACK
+[04:15.417] MSG: Player 2: tap a character to attack.
+[04:17.133] Revealed: P1 (4,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[04:17.133] Dice rolled: 3
+[04:17.155] MSG: Nothing happens — Dead End.
+[04:20.535] Attack P1(4,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} → P0(1,1)(empty)  Dice=3  → DEAD_END
+[04:20.535] Anim: 3F  (blank slot)
+[04:21.033] Turn ended  P1  |  Crystals P0=2050 P1=1800
+
+--- Turn 7  |  Player 0  |  Crystals P0=2050 P1=1800 ---
+[04:37.922] MSG: Cannot target an empty cell.
+[04:42.836] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:42.836] Dice rolled: 3
+[04:42.863] MSG: Aerial the Battlemage wins!
+[04:47.501] Crystals: P1 1800 → 1600 (-200)  [battle]
+[04:48.899] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(4,2)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=3  ATK=70 vs DEF=30  → WIN
+[04:48.899] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=70 ATK pill=50 DEF pill=45 mod=+ATK 20 (50+20=70)
+[04:48.899] Reckoning overlay: P1 "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} badge=30 ATK pill=10 DEF pill=30 mod=+DEF 0 (30+0=30)
+[04:48.899] Anim: 3A  △ P1(4,2)
+[04:48.899] Card destroyed  P1 (4,2) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[04:52.773] Dice rolled: 1
+[04:52.850] MSG: Rocket Peacock wins!
+[04:57.283] Attack P0(2,0)"Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} → P1(3,2)"Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}  Dice=1  ATK=150 vs DEF=20  → WIN
+[04:57.283] Reckoning overlay: P0 "Rocket Peacock" {Union ATK150 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Nature} badge=150 ATK pill=150 DEF pill=100 mod=+ATK 0 (150+0=150)
+[04:57.283] Reckoning overlay: P1 "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:57.283] Anim: 3A  △ P1(3,2)
+[04:57.283] Card destroyed  P1 (3,2) "Gamma Mermaid" {Union ATK30 DEF20 | destroy-cost 0 | summon-cost 500 | affinity Bio}
+[04:57.288] MSG: No valid target — effect cancelled.
+[04:57.446] Target prompt: "Rocket Peacock: Choose 1 opponent character to flip a coin on."  filter=opponent_character_ability_destroy
+[05:00.536] Turn ended  P0  |  Crystals P0=2050 P1=1600
+
+--- Turn 8  |  Player 1  |  Crystals P0=2050 P1=1600 ---
+[05:01.141] Mode selected P1: ATTACK
+[05:01.144] MSG: Player 2: tap a character to attack.
+[05:02.852] Revealed: P1 (2,4) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[05:02.891] Revealed: P0 (0,3) "Flame Trap" {cost 250}
+[05:02.891] Dice rolled: 4
+[05:03.177] MSG: Trap triggered: Flame Trap!
+[05:07.252] Crystals: P0 2050 → 1800 (-250)  [trap cost]
+[05:08.643] MSG: Spike Trap: Bleacher Squad permanently loses 10 ATK!
+[05:08.645] Attack P1(2,4)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} → P0(0,3)"Flame Trap" {cost 250}  Dice=4  → Unit vs Trap
+[05:08.645] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} badge=20 ATK pill=20 DEF pill=20 mod=+ATK 0 (20+0=20)
+[05:08.645] Anim: 3D  (attacker survives)
+[05:09.141] Turn ended  P1  |  Crystals P0=1800 P1=1600
+
+--- Turn 9  |  Player 0  |  Crystals P0=1800 P1=1600 ---
+[07:26.430] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[07:26.430] Dice rolled: 4
+[07:26.450] MSG: Moonrise Gentleman wins!
+[07:29.476] Crystals: P1 1600 → 1280 (-320)  [battle]
+[07:30.872] Attack P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(2,4)"Bleacher Squad" {Unit ATK10 DEF20 | cost 320 | affinity Bio | base 10/20}  Dice=4  ATK=40 vs DEF=20  → WIN
+[07:30.872] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[07:30.872] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK10 DEF20 | cost 320 | affinity Bio | base 10/20} badge=20 ATK pill=10 DEF pill=20 mod=+DEF 0 (20+0=20)
+[07:30.872] Anim: 3A  △ P1(2,4)
+[07:30.872] Card destroyed  P1 (2,4) "Bleacher Squad" {Unit ATK10 DEF20 | cost 320 | affinity Bio | base 10/20}
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1800  P1: 1280  |  Turns: 9

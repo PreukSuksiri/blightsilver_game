@@ -101,6 +101,7 @@ class CardInstance:
 	var temp_atk_bonus: int = 0
 	var temp_def_bonus: int = 0
 	var carry_def_bonus: int = 0   # DEF bonus that survives end-of-turn clear; wiped at start of player's own next turn
+	var carry_atk_debuff: int = 0  # ATK debuff until start of owner's next turn (e.g. Pepper Spray)
 	var atk_def_swapped: bool = false  # Cursed Reflection: effective ATK/DEF swapped until defender's turn ends
 	var atk_def_swap_clear_on_player_end: int = -1
 	var force_shielded: bool = false
@@ -138,7 +139,7 @@ class CardInstance:
 		return _calc_effective_def()
 
 	func _calc_effective_atk() -> int:
-		var base: int = max(0, current_atk + perm_atk_bonus + field_aura_atk_bonus + temp_atk_bonus - atk_debuff)
+		var base: int = max(0, current_atk + perm_atk_bonus + field_aura_atk_bonus + temp_atk_bonus - atk_debuff - carry_atk_debuff)
 		if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 			var mods: Array = GameState.active_dungeon_modifiers
 			if "monster_overload" in mods:
@@ -334,6 +335,7 @@ var battle_ai_featured_union: String = ""    # Legacy alias for battle_featured_
 var battle_featured_unions: Array = ["", ""] # Per-player featured union preference [P0, P1]
 
 var divine_protection_active: Array = [false, false]
+var galaxos_immunity_owner: int = -1  # Team Galaxos: owner whose Cosmic+Anima allies cannot be destroyed
 var siege_cannon_active: Array = [false, false]
 var berserk_active: Array = [null, null]     # CardInstance or null
 var skip_next_turn: Array = [false, false]
@@ -731,10 +733,33 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 	# ONE_USE_SURVIVE_DESTRUCTION: card survives once
 	if was_character:
 		if card.ability_type == CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION:
-			if "indestructible_used" not in card.flags:
+			var _req_aff: int = card.ability_params.get("destroyer_affinity", -1)
+			if _req_aff >= 0:
+				var _destroyer: CardInstance = attacker_card
+				if _destroyer == null or _destroyer.card_type != "character" \
+						or _destroyer.affinity != _req_aff:
+					pass  # required destroyer affinity not met — proceed with destruction
+				elif "indestructible_used" not in card.flags:
+					card.flags.append("indestructible_used")
+					post_message("%s survives destruction!" % card.card_name)
+					return
+			elif "indestructible_used" not in card.flags:
 				card.flags.append("indestructible_used")
 				post_message("%s survives destruction!" % card.card_name)
 				return
+		# Dimensional Virus mutagen: immune to destruction by non-Arcane
+		if card.has_mutagen_flag and card.is_union \
+				and card.card_name == "Dimensional Virus":
+			var _dv_destroyer: CardInstance = attacker_card
+			if _dv_destroyer != null and _dv_destroyer.card_type == "character" \
+					and _dv_destroyer.affinity != CharacterData.Affinity.ARCANE:
+				post_message("%s: Mutagen shields against non-Arcane destruction!" % card.card_name)
+				return
+		# Team Galaxos immunity
+		if galaxos_immunity_owner >= 0 and player_index == galaxos_immunity_owner \
+				and card.affinity in [CharacterData.Affinity.COSMIC, CharacterData.Affinity.ANIMA]:
+			post_message("%s is protected by Team Galaxos!" % card.card_name)
+			return
 		# Track destroyed characters in graveyard
 		graveyards[player_index].append(card)
 	if pay_cost and card.card_type != "dead_end":
@@ -848,6 +873,8 @@ func get_opponent(player_index: int) -> int:
 ## Prayer (DIVINE_PROTECTION): clears when the protected player's opponent finishes a turn.
 func expire_divine_protection_at_turn_end(turn_ending_player: int) -> void:
 	divine_protection_active[get_opponent(turn_ending_player)] = false
+	if galaxos_immunity_owner >= 0 and turn_ending_player == get_opponent(galaxos_immunity_owner):
+		galaxos_immunity_owner = -1
 
 ## Human-facing label: "AI Player 0/1" in AI vs AI logs, "Player 1/2" elsewhere.
 func format_player_label(player_index: int) -> String:
@@ -958,6 +985,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	attacker_pos = Vector2i(-1, -1)
 	defender_pos = Vector2i(-1, -1)
 	divine_protection_active = [false, false]
+	galaxos_immunity_owner = -1
 	siege_cannon_active = [false, false]
 	berserk_active = [null, null]
 	skip_next_turn = [false, false]

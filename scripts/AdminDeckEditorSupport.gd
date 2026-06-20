@@ -120,10 +120,11 @@ static func add_union_materials_to_deck(
 		return result
 
 	var assigned: Array = []
-	var missing_conds: Array = []
+	var missing_conds: Array = UnionDatabase.deck_unmatched_conditions(
+		deck.characters, u.material_conditions)
 	var used_in_assign: Array = []
 
-	for cond: Dictionary in u.material_conditions:
+	for cond: Dictionary in missing_conds:
 		var candidates: Array = []
 		for cname: String in CardDatabase.get_all_character_names():
 			if demo_only and not card_include_in_demo(cname, "character"):
@@ -174,7 +175,11 @@ static func add_union_materials_to_deck(
 	result["ok"] = not added.is_empty()
 	result["added"] = added
 	if added.is_empty() and result["message"].is_empty():
-		result["message"] = "No cards added."
+		if missing_conds.is_empty():
+			result["ok"] = true
+			result["message"] = "Union already achievable with current deck."
+		else:
+			result["message"] = "No cards added."
 	elif added.size() > 0:
 		result["message"] = "Added union materials: %s" % ", ".join(added)
 	return result
@@ -579,10 +584,7 @@ static func refresh_possible_union_list(
 
 
 static func _show_info_dialog(host: Node, title: String, text: String) -> void:
-	var popup := AcceptDialog.new()
-	popup.title = title
-	popup.dialog_text = text
-	host.add_child(popup)
+	var popup := GameDialog.accept(host, title, text)
 	popup.popup_centered()
 	popup.confirmed.connect(func() -> void: popup.queue_free())
 	popup.canceled.connect(func() -> void: popup.queue_free())

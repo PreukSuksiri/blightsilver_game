@@ -143,6 +143,23 @@ var _reveal_preview: Array[bool] = [false, false]
 var _enemy_view_active: bool = false
 var _enemy_view_return_dialog: ConfirmationDialog = null
 
+# Playmat fog (Noise 3.png)
+var _fog_container: Control = null
+var _fog_rect: TextureRect = null
+var _fog_material: ShaderMaterial = null
+var _fog_material_diag: ShaderMaterial = null
+var _fog_scroll: Vector2 = Vector2.ZERO
+var _fog_scroll_diag: Vector2 = Vector2(0.37, 0.61)
+var _fog_scroll_x: float = 14.0
+var _fog_scroll_y: float = 0.0
+var _fog_diag_scroll_x: float = 11.0   # screen-left
+var _fog_diag_scroll_y: float = -11.0  # screen-up → top-left diagonal
+var _fog_dir_timer: float = 0.0
+const _FOG_TILE_REPEAT: float = 8.0       # straight layer
+const _FOG_TILE_REPEAT_DIAG: float = 3.0  # diagonal layer
+const _FOG_IMAGE_SCALE: float = 3.0  # 300% — each noise tile drawn 3× larger
+const _FOG_ALPHA: float = 0.2
+
 # Observer peek (AI vs AI / E2E only) — purely cosmetic, no game-state change
 # 0 = off, 1 = peek P0 only, 2 = peek active player, 3 = peek both
 var _observer_peek_mode: int = 0
@@ -319,6 +336,7 @@ func _ready() -> void:
 	_build_attack_count_indicators()
 	_build_thinking_bubble()
 	_build_options_button()
+	_build_fog()
 	_build_union_suggest_button()
 	SaveManager.union_mechanism_changed.connect(func(_u: bool) -> void: _update_union_suggest_button())
 	CTX_ICON_ATTACK = HudSkin.hud_tex("ui_context_menu_attack.png")
@@ -326,6 +344,7 @@ func _ready() -> void:
 	CTX_ICON_BLUFF  = HudSkin.hud_tex("ui_context_menu_bluff.png")
 	CTX_ICON_UNION  = HudSkin.hud_tex("ui_icon_union.png")
 	HudSkin.skin_changed.connect(_reload_hud_skin)
+	_reload_hud_skin()
 	game_over_panel.visible = false
 	mode_panel.visible = false
 	action_panel.visible = false
@@ -3022,6 +3041,40 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 			GameState.post_message("%s: Venom on all opponent characters!" % u.card_name)
 		CharacterData.AbilityType.UNION_SUMMON_REVIVE_MATCH:
 			await _begin_union_revive_match(player, u)
+		CharacterData.AbilityType.UNION_SUMMON_COSMIC_ANIMA_IMMUNITY:
+			GameState.galaxos_immunity_owner = player
+			GameState.post_message("%s: Cosmic and Anima allies protected until foe's turn ends!" % u.card_name)
+		CharacterData.AbilityType.UNION_SUMMON_REVEAL_FIELD:
+			var _ll_count: int = maxi(1, int(u.ability_params.get("count", 3)))
+			var _ll_hidden: Array = []
+			for _ll_p: int in range(2):
+				for _ll_r: int in range(GameState.GRID_SIZE):
+					for _ll_c: int in range(GameState.GRID_SIZE):
+						var _ll_card: GameState.CardInstance = GameState.get_card(_ll_p, _ll_r, _ll_c)
+						if _ll_card.card_type != "dead_end" and not _ll_card.face_up:
+							_ll_hidden.append({"p": _ll_p, "pos": Vector2i(_ll_r, _ll_c)})
+			_ll_hidden.shuffle()
+			var _ll_revealed: int = 0
+			for _ll_entry: Dictionary in _ll_hidden:
+				if _ll_revealed >= _ll_count:
+					break
+				var _ll_pos: Vector2i = _ll_entry["pos"]
+				GameState.reveal_card(int(_ll_entry["p"]), _ll_pos.x, _ll_pos.y)
+				_ll_revealed += 1
+			GameState.post_message("%s: Revealed %d card(s) on the field!" % [u.card_name, _ll_revealed])
+		CharacterData.AbilityType.UNION_SUMMON_PERM_ATK_OR_DEF_CHOICE:
+			var _sp_amt: int = int(u.ability_params.get("amount", 80))
+			turn_manager.emit_signal("awaiting_trap_choice",
+				"%s: Choose a permanent bonus." % u.card_name,
+				["+%d ATK permanently" % _sp_amt, "+%d DEF permanently" % _sp_amt])
+			var _sp_choice: int = await turn_manager.ability_choice_resolved
+			var _sp_card: GameState.CardInstance = GameState.get_card(player, anchor.x, anchor.y)
+			if _sp_choice == 0:
+				_sp_card.perm_atk_bonus += _sp_amt
+				GameState.post_message("%s: +%d ATK permanently!" % [u.card_name, _sp_amt])
+			else:
+				_sp_card.perm_def_bonus += _sp_amt
+				GameState.post_message("%s: +%d DEF permanently!" % [u.card_name, _sp_amt])
 
 
 func _perform_pending_union() -> void:
@@ -3049,7 +3102,23 @@ func _perform_pending_union() -> void:
 		var cell: Vector2i = _pending_union_selected_materials[i]
 		GameState.remove_union_material(player, cell.x, cell.y)
 	# Place union at first selected cell
+	var _zealot_boost: int = 0
+	for _zm: Vector2i in _pending_union_selected_materials:
+		var _zm_card: GameState.CardInstance = GameState.get_card(player, _zm.x, _zm.y)
+		if _zm_card.card_type == "character" and _zm_card.card_name == "Zealot":
+			_zealot_boost = int(_zm_card.ability_params.get("union_material_boost", 40))
+			break
 	GameState.place_union_card(player, first_cell.x, first_cell.y, u)
+	if _zealot_boost > 0:
+		var _union_inst: GameState.CardInstance = GameState.get_card(player, first_cell.x, first_cell.y)
+		_union_inst.current_atk += _zealot_boost
+		_union_inst.current_def += _zealot_boost
+		GameState.post_message("Zealot: Union gains +%d ATK&DEF!" % _zealot_boost)
+	if u.card_name == "Diamond Unicorn":
+		var _du_card: GameState.CardInstance = GameState.get_card(player, first_cell.x, first_cell.y)
+		if _du_card.card_type == "character":
+			_du_card.temp_atk_bonus += 15
+			GameState.post_message("Diamond Unicorn: +15 ATK until end of turn!")
 	GameState.union_summoned.emit(
 		player,
 		BattleLogFormat.format_unit_at(player, first_cell.x, first_cell.y, u.card_name),
@@ -3243,11 +3312,12 @@ func _show_enemy_view_return_prompt() -> void:
 		_enemy_view_return_dialog.popup_centered()
 		return
 	SFXManager.play(SFXManager.SFX_POPUP)
-	var dlg := ConfirmationDialog.new()
-	dlg.title = "Enemy's View"
-	dlg.dialog_text = "You are now in \"Enemy's View\". Would you like to return to \"Your View\"?"
-	dlg.ok_button_text = "Your View"
-	dlg.cancel_button_text = "Stay"
+	var dlg := GameDialog.confirmation(
+		self,
+		"Enemy's View",
+		"You are now in \"Enemy's View\". Would you like to return to \"Your View\"?",
+		"Your View",
+		"Stay")
 	dlg.confirmed.connect(func() -> void:
 		if _enemy_view_active:
 			_toggle_reveal_preview(GameState.current_player)
@@ -3262,7 +3332,6 @@ func _show_enemy_view_return_prompt() -> void:
 		_enemy_view_return_dialog = null
 		dlg.queue_free()
 	)
-	add_child(dlg)
 	_enemy_view_return_dialog = dlg
 	dlg.popup_centered()
 
@@ -3551,6 +3620,8 @@ func _update_crystal_visibility() -> void:
 		_turn_number_bg.visible = show
 	if _options_btn:
 		_options_btn.visible = show and not TutorialBattleManager.should_hide_options_btn()
+	if _fog_container:
+		_fog_container.visible = show
 
 func _refresh_attack_labels() -> void:
 	var phase := GameState.current_phase
@@ -3682,6 +3753,106 @@ func _on_options_btn_pressed() -> void:
 	_show_options_panel()
 
 # ─────────────────────────────────────────────────────────────
+# Playmat Fog
+# ─────────────────────────────────────────────────────────────
+
+func _build_fog() -> void:
+	const FOG_PATH := "res://assets/textures/effect/fog/Noise 3.png"
+	var fog_tex := load(FOG_PATH) as Texture2D
+	if fog_tex == null:
+		return
+
+	var playmat_bg: Control = get_node_or_null("Background") as Control
+	if playmat_bg == null:
+		return
+
+	var smoke_shader := Shader.new()
+	smoke_shader.code = """
+shader_type canvas_item;
+uniform vec2 scroll = vec2(0.0, 0.0);
+uniform float tile_repeat = 1.0;
+uniform float image_scale = 3.0;
+uniform float fog_alpha = 0.2;
+void fragment() {
+	vec2 uv = fract(UV * tile_repeat / image_scale + scroll);
+	vec4 tex = texture(TEXTURE, uv);
+	float smoke = 1.0 - tex.r;
+	COLOR = vec4(vec3(smoke), smoke * fog_alpha);
+}
+"""
+
+	playmat_bg.clip_contents = true
+
+	var fog_clip := Control.new()
+	fog_clip.name = "PlaymatFog"
+	fog_clip.clip_contents = true
+	fog_clip.layout_mode = 1
+	fog_clip.set_anchors_preset(Control.PRESET_FULL_RECT)
+	fog_clip.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	playmat_bg.add_child(fog_clip)
+	_fog_container = fog_clip
+
+	_fog_material = _make_fog_material(smoke_shader, _FOG_TILE_REPEAT)
+	_fog_material_diag = _make_fog_material(smoke_shader, _FOG_TILE_REPEAT_DIAG)
+
+	var tr := _make_fog_layer(fog_tex, _fog_material)
+	fog_clip.add_child(tr)
+	_fog_rect = tr
+
+	var tr_diag := _make_fog_layer(fog_tex, _fog_material_diag)
+	fog_clip.add_child(tr_diag)
+
+	_fog_dir_timer = randf_range(3.0, 6.0)
+	_pick_new_fog_vertical_dir()
+
+
+func _make_fog_material(smoke_shader: Shader, tile_repeat: float) -> ShaderMaterial:
+	var mat := ShaderMaterial.new()
+	mat.shader = smoke_shader
+	mat.set_shader_parameter("tile_repeat", tile_repeat)
+	mat.set_shader_parameter("image_scale", _FOG_IMAGE_SCALE)
+	mat.set_shader_parameter("fog_alpha", _FOG_ALPHA)
+	return mat
+
+
+func _make_fog_layer(fog_tex: Texture2D, mat: ShaderMaterial) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.texture = fog_tex
+	tr.material = mat
+	tr.layout_mode = 1
+	tr.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_SCALE
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return tr
+
+
+func _pick_new_fog_vertical_dir() -> void:
+	_fog_scroll_y = randf_range(-5.0, 5.0)
+	if absf(_fog_scroll_y) < 1.5:
+		_fog_scroll_y = 2.0 if randf() > 0.5 else -2.0
+
+
+func _update_fog(delta: float) -> void:
+	if _fog_material == null:
+		return
+
+	_fog_dir_timer -= delta
+	if _fog_dir_timer <= 0.0:
+		_fog_dir_timer = randf_range(3.0, 7.0)
+		_pick_new_fog_vertical_dir()
+
+	var step := delta * 0.002
+	_fog_scroll.x += _fog_scroll_x * step
+	_fog_scroll.y += _fog_scroll_y * step
+	_fog_material.set_shader_parameter("scroll", _fog_scroll)
+
+	if _fog_material_diag:
+		_fog_scroll_diag.x += _fog_diag_scroll_x * step
+		_fog_scroll_diag.y += _fog_diag_scroll_y * step
+		_fog_material_diag.set_shader_parameter("scroll", _fog_scroll_diag)
+
+# ─────────────────────────────────────────────────────────────
 # Union Suggestion Button
 # ─────────────────────────────────────────────────────────────
 
@@ -3749,6 +3920,9 @@ func _collect_all_available_unions(player: int) -> Array:
 ## Re-applies all HUD textures from the currently active HudSkin version.
 ## Called automatically when HudSkin.skin_changed fires (admin: hud_skin v1|v2).
 func _reload_hud_skin(_new_version: String = "") -> void:
+	var playmat_rect: TextureRect = get_node_or_null("Background") as TextureRect
+	if playmat_rect:
+		playmat_rect.texture = HudSkin.hud_tex("ui_playmat_default.png")
 	CTX_ICON_ATTACK = HudSkin.hud_tex("ui_context_menu_attack.png")
 	CTX_ICON_INFO   = HudSkin.hud_tex("ui_context_menu_info.png")
 	CTX_ICON_BLUFF  = HudSkin.hud_tex("ui_context_menu_bluff.png")
@@ -6126,7 +6300,7 @@ func _prepare_revive_from_graveyard(player: int, tech_data: TechCardData) -> voi
 func _begin_union_revive_match(player: int, u: UnionData) -> void:
 	var _nc: String = str(u.ability_params.get("name_contains", ""))
 	var _ex_union: bool = bool(u.ability_params.get("exclude_union", true))
-	var revived: GameState.CardInstance = null
+	var matches: Array = []
 	for g: GameState.CardInstance in GameState.graveyards[player]:
 		if g.card_type != "character":
 			continue
@@ -6134,11 +6308,20 @@ func _begin_union_revive_match(player: int, u: UnionData) -> void:
 			continue
 		if _nc != "" and not g.card_name.to_lower().contains(_nc.to_lower()):
 			continue
-		revived = g
-		break
-	if revived == null:
+		matches.append(g)
+	if matches.is_empty():
 		GameState.post_message("%s: No matching card in graveyard to revive." % u.card_name)
 		return
+	var revived: GameState.CardInstance = matches[0]
+	if matches.size() > 1:
+		var _choice_labels: Array = []
+		for _m: GameState.CardInstance in matches:
+			_choice_labels.append("%s (ATK %d / DEF %d / Cost %d)" % [
+				_m.card_name, _m.current_atk, _m.current_def, _m.crystal_cost])
+		turn_manager.emit_signal("awaiting_trap_choice",
+			"%s: Choose 1 card to revive." % u.card_name, _choice_labels)
+		var _rev_choice: int = await turn_manager.ability_choice_resolved
+		revived = matches[mini(_rev_choice, matches.size() - 1)]
 	_pending_revive_card = revived
 	_pending_revive_player = player
 	_pending_revive_tech_data = null
@@ -6316,6 +6499,12 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		_handle_tech_target(GameState.current_player, Vector2i(0, 0))
 		return
 
+	# WK-17: foe may pick face-down allies as the redirected target
+	if filter == "wk17_foe_pick_character":
+		var _wk17_sel: int = turn_manager._pending_wk17_foe_player
+		if _wk17_sel >= 0:
+			_set_own_facedown_char_peek(true, _wk17_sel)
+
 	# No-valid-target guard: if the highlight pass found no cells to interact with,
 	# cancel the effect rather than leaving any player (human or AI) stuck.
 	if not _any_highlighted():
@@ -6325,7 +6514,8 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			GameState.post_message("No valid target — effect cancelled.")
 		if filter == "own_any_as_target":
 			turn_manager.complete_brainwash_redirect()
-		if _is_post_attack_ability_filter(filter):
+		if _is_post_attack_ability_filter(filter) \
+				or filter in ["ability_lockpicker_reveal", "wk17_foe_pick_character"]:
 			_clear_after_ability()
 		elif filter in _defender_response_filters():
 			if pending_tech_name != "":
@@ -6337,11 +6527,27 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		return
 
 	if filter in ["ability_false_prophet_reveal", "opponent_character_ability_destroy", "ability_rebel_king_swap",
-			"ability_plant29_venom", "ability_plant29_mutagen"]:
+			"ability_plant29_venom", "ability_plant29_mutagen", "ability_death_cobra_venom",
+			"ability_lockpicker_reveal", "wk17_foe_pick_character"]:
 		var _ai_responds: bool = _is_ai_turn()
-		if filter == "ability_rebel_king_swap" and GameState.game_mode == GameState.GameMode.VS_AI \
-				and GameState.get_opponent(GameState.current_player) == ai_player.player_index:
-			_ai_responds = true
+		if filter == "ability_rebel_king_swap":
+			var _rk_owner: int = turn_manager._pending_rebel_king_owner
+			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+					and _rk_owner == ai_player.player_index)
+		if filter == "ability_lockpicker_reveal":
+			var _lp_owner: int = turn_manager._pending_lockpicker_owner
+			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+					and _lp_owner == ai_player.player_index)
+		if filter == "wk17_foe_pick_character":
+			var _wk17_foe: int = turn_manager._pending_wk17_foe_player
+			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+					and _wk17_foe == ai_player.player_index)
 		if _ai_responds:
 			await get_tree().create_timer(0.4).timeout
 			if filter == "ability_plant29_venom" or filter == "ability_plant29_mutagen":
@@ -6355,13 +6561,39 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 					_flash_target_card(_p29_player, _p29_pos.x, _p29_pos.y)
 					_handle_tech_target(_p29_player, _p29_pos)
 				return
-			var _ab_target: Vector2i = _active_ai.decide_target(filter)
+			if filter == "ability_death_cobra_venom":
+				var _dc_pick: Dictionary = _active_ai.decide_any_grid_target("ability_plant29_venom")
+				if _dc_pick.is_empty():
+					GameState.post_message("No valid target — effect cancelled.")
+					_clear_after_ability()
+				else:
+					var _dc_player: int = int(_dc_pick.get("player", GameState.current_player))
+					var _dc_pos: Vector2i = _dc_pick.get("pos", Vector2i(-1, -1))
+					_flash_target_card(_dc_player, _dc_pos.x, _dc_pos.y)
+					_handle_tech_target(_dc_player, _dc_pos)
+				return
+			var _ab_target: Vector2i
+			var _ab_player: int = GameState.current_player
 			if filter == "ability_rebel_king_swap":
-				_flash_target_card(GameState.current_player, _ab_target.x, _ab_target.y)
-				_handle_tech_target(GameState.current_player, _ab_target)
-			elif filter == "ability_false_prophet_reveal":
-				_flash_target_card(GameState.get_opponent(GameState.current_player), _ab_target.x, _ab_target.y)
-				_handle_tech_target(GameState.get_opponent(GameState.current_player), _ab_target)
+				_ab_player = turn_manager._pending_rebel_king_foe_player
+				_ab_target = _get_ai_for_player(turn_manager._pending_rebel_king_owner).decide_target("ability_rebel_king_swap")
+			elif filter == "ability_lockpicker_reveal":
+				_ab_player = GameState.get_opponent(turn_manager._pending_lockpicker_owner)
+				_ab_target = _get_ai_for_player(turn_manager._pending_lockpicker_owner).decide_target(filter)
+			elif filter == "wk17_foe_pick_character":
+				_ab_player = turn_manager._pending_wk17_foe_player
+				_ab_target = _get_ai_for_player(_ab_player).decide_target(filter)
+			else:
+				_ab_target = _active_ai.decide_target(filter)
+			if filter == "ability_rebel_king_swap":
+				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
+				_handle_tech_target(_ab_player, _ab_target)
+			elif filter in ["ability_false_prophet_reveal", "ability_lockpicker_reveal"]:
+				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
+				_handle_tech_target(_ab_player, _ab_target)
+			elif filter == "wk17_foe_pick_character":
+				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
+				_handle_tech_target(_ab_player, _ab_target)
 			else:
 				_flash_target_card(GameState.get_opponent(GameState.current_player), _ab_target.x, _ab_target.y)
 				_handle_tech_target(GameState.get_opponent(GameState.current_player), _ab_target)
@@ -6433,7 +6665,7 @@ func _defender_response_filters() -> Array:
 		"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct",
 		"self_reveal_choice", "self_faceup_for_copy", "own_armored_nature",
 		"self_squares_1_opponent_turn", "own_divine_character_redirect",
-		"bribe_reveal",
+		"bribe_reveal", "trap_hostage_reveal_lock", "trap_street_joke_reveal",
 	]
 
 func _begin_human_defender_tech_choice() -> void:
@@ -6446,6 +6678,15 @@ func _begin_human_defender_tech_choice() -> void:
 		_end_turn_btn.visible = false
 
 func _get_target_selecting_player(filter: String) -> int:
+	if filter == "ability_rebel_king_swap":
+		var _rk_owner: int = turn_manager._pending_rebel_king_owner
+		return _rk_owner if _rk_owner >= 0 else GameState.current_player
+	if filter == "ability_lockpicker_reveal":
+		var _lp_owner: int = turn_manager._pending_lockpicker_owner
+		return _lp_owner if _lp_owner >= 0 else GameState.current_player
+	if filter == "wk17_foe_pick_character":
+		var _wk17_foe: int = turn_manager._pending_wk17_foe_player
+		return _wk17_foe if _wk17_foe >= 0 else GameState.current_player
 	if filter in _defender_response_filters():
 		return GameState.get_opponent(GameState.current_player)
 	if filter in ["lock_opponent_monster", "opponent_facedown_forced"]:
@@ -6512,6 +6753,37 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		_clear_after_ability()
 		return
 
+	if pending_tech_filter == "ability_lockpicker_reveal":
+		var _lp_owner: int = turn_manager._pending_lockpicker_owner
+		var _lp_foe: int = GameState.get_opponent(_lp_owner) if _lp_owner >= 0 else opponent
+		if player == _lp_foe and not card.face_up:
+			GameState.reveal_card(player, pos.x, pos.y)
+			card = GameState.get_card(player, pos.x, pos.y)
+			if card.card_type == "dead_end":
+				GameState.post_message("Lockpicker: Revealed Dead End.")
+			else:
+				GameState.post_message("Lockpicker: Revealed %s!" % card.card_name)
+		_clear_after_ability()
+		return
+
+	if pending_tech_filter == "wk17_foe_pick_character":
+		var _wk17_foe: int = turn_manager._pending_wk17_foe_player
+		if player == _wk17_foe and card.card_type == "character":
+			if turn_manager._pending_wk17_mode == "redirect_attacker":
+				if pos == GameState.attacker_pos:
+					return
+				turn_manager._wk17_friendly_fire = true
+				turn_manager._wk17_friendly_fire_pos = pos
+				if not card.face_up:
+					GameState.reveal_card(player, pos.x, pos.y)
+				var _wk17_att: GameState.CardInstance = GameState.attacker_card
+				if _wk17_att != null:
+					GameState.post_message("WK-17: %s will attack %s!" % [_wk17_att.card_name, card.card_name])
+			else:
+				turn_manager._pending_wk17_new_target_pos = pos
+			_clear_after_ability()
+		return
+
 	if pending_tech_filter == "opponent_character_ability_destroy":
 		if _pending_ability_destroy_pos == Vector2i(-1, -1):
 			if player == opponent and card.card_type == "character" and card.face_up:
@@ -6529,12 +6801,23 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "ability_rebel_king_swap":
-		if player == current_player and card.card_type == "character" and card.face_up:
+		var _rk_foe: int = turn_manager._pending_rebel_king_foe_player
+		if player == _rk_foe and card.card_type == "character" and card.face_up:
 			var _tmp_atk: int = card.current_atk
 			card.current_atk = card.current_def
 			card.current_def = _tmp_atk
 			GameState.post_message("Rebel King: %s swapped ATK (%d) and DEF (%d)." % [
 				card.card_name, card.current_atk, card.current_def])
+		_clear_after_ability()
+		return
+
+	if pending_tech_filter == "ability_death_cobra_venom":
+		if card.card_type == "character" and card.face_up:
+			var _dc_name: String = _find_own_card_name_by_ability(
+				current_player, CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN)
+			GameState.apply_unit_effect_flag(player, pos.x, pos.y, "venom")
+			var _dc_tgt: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
+			GameState.post_message("%s: Venom on %s." % [_dc_name, _dc_tgt.card_name])
 		_clear_after_ability()
 		return
 
@@ -6647,7 +6930,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	if pending_tech_filter == "own_faceup_character" or pending_tech_filter == "own_faceup_character_berserk":
 		var _allow_fd: bool = data != null and (
 			data.effect_params.get("allow_facedown", false)
-			or data.effect_type == TechCardData.TechEffectType.PERM_DEF_BOOST_ONE)
+			or data.effect_type == TechCardData.TechEffectType.PERM_DEF_BOOST_ONE
+			or data.effect_type == TechCardData.TechEffectType.ADD_MUTAGEN_FLAG)
 		if player == current_player and card.card_type == "character" \
 				and (card.face_up or _allow_fd):
 			if not card.face_up:
@@ -6703,6 +6987,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 								break
 						if not _clone_placed:
 							GameState.post_message("Arcane Duplication: No empty slot for clone.")
+					TechCardData.TechEffectType.ADD_MUTAGEN_FLAG:
+						GameState.apply_unit_effect_flag(player, pos.x, pos.y, "mutagen")
+						GameState.post_message("Release Mutagen: Mutagen on %s." % card.card_name)
 			_finish_tech_action(current_player)
 		return
 
@@ -6801,6 +7088,27 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == opponent and card.card_type != "dead_end" and not card.face_up:
 			GameState.reveal_card(player, pos.x, pos.y)
 			GameState.post_message("Bait: Defender revealed %s." % card.card_name)
+			_finish_trap_target_selection()
+		return
+
+	if pending_tech_filter == "trap_hostage_reveal_lock":
+		if player == opponent and card.card_type != "dead_end":
+			if not card.face_up:
+				GameState.reveal_card(player, pos.x, pos.y)
+			if turn_manager._pending_trap_hostage_lock and pos not in GameState.locked_attack_positions:
+				GameState.locked_attack_positions.append(pos)
+			GameState.post_message("Hostage: %s revealed and locked until turn end." % card.card_name)
+			turn_manager._pending_trap_hostage_lock = false
+			_finish_trap_target_selection()
+		return
+
+	if pending_tech_filter == "trap_street_joke_reveal":
+		if player == opponent and card.card_type != "dead_end" and not card.face_up:
+			GameState.reveal_card(player, pos.x, pos.y)
+			var _sj_gain: int = turn_manager._pending_street_joke_crystal
+			GameState.gain_crystals(opponent, _sj_gain, "trap")
+			GameState.post_message("Street Joke: Revealed %s, gained %d Crystals!" % [card.card_name, _sj_gain])
+			turn_manager._pending_street_joke_crystal = 0
 			_finish_trap_target_selection()
 		return
 
@@ -7136,8 +7444,11 @@ func _is_post_attack_ability_filter(filter: String) -> bool:
 		"ability_rebel_king_swap",
 		"ability_plant29_venom",
 		"ability_plant29_mutagen",
+		"ability_death_cobra_venom",
 		"opponent_any_hidden",
 		"own_character_for_swap",
+		"ability_lockpicker_reveal",
+		"wk17_foe_pick_character",
 	]
 
 
@@ -7158,6 +7469,15 @@ func _find_own_card_pos(player: int, card_name: String) -> Vector2i:
 			if inst.card_type == "character" and inst.card_name == card_name:
 				return Vector2i(r, c)
 	return Vector2i(-1, -1)
+
+
+func _find_own_card_name_by_ability(player: int, ability: CharacterData.AbilityType) -> String:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var inst: GameState.CardInstance = GameState.get_card(player, r, c)
+			if inst.card_type == "character" and inst.face_up and inst.ability_type == ability:
+				return inst.card_name
+	return "Ability"
 
 
 func _clear_after_tech() -> void:
@@ -7435,6 +7755,29 @@ func _highlight_tech_targets(filter: String) -> void:
 				grid_nodes[opponent][r][c].set_highlighted(
 					not card.face_up and not card.was_destroyed)
 
+	elif filter == "ability_lockpicker_reveal":
+		var _lp_owner: int = turn_manager._pending_lockpicker_owner
+		var _lp_foe: int = GameState.get_opponent(_lp_owner) if _lp_owner >= 0 else opponent
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(_lp_foe, r, c)
+				grid_nodes[_lp_foe][r][c].set_highlighted(
+					not card.face_up and not card.was_destroyed)
+
+	elif filter == "wk17_foe_pick_character":
+		var _wk17_foe: int = turn_manager._pending_wk17_foe_player
+		if _wk17_foe < 0:
+			_wk17_foe = opponent
+		var _wk17_att_pos: Vector2i = GameState.attacker_pos
+		for r in range(GameState.GRID_SIZE):
+			for c in range(GameState.GRID_SIZE):
+				var pos: Vector2i = Vector2i(r, c)
+				var card: GameState.CardInstance = GameState.get_card(_wk17_foe, r, c)
+				var ok: bool = card.card_type == "character"
+				if turn_manager._pending_wk17_mode == "redirect_attacker" and pos == _wk17_att_pos:
+					ok = false
+				grid_nodes[_wk17_foe][r][c].set_highlighted(ok)
+
 	elif filter == "opponent_character_ability_destroy":
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
@@ -7443,11 +7786,22 @@ func _highlight_tech_targets(filter: String) -> void:
 					card.card_type == "character" and card.face_up)
 
 	elif filter == "ability_rebel_king_swap":
+		var _rk_foe: int = turn_manager._pending_rebel_king_foe_player
+		if _rk_foe < 0:
+			_rk_foe = opponent
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
-				var card: GameState.CardInstance = GameState.get_card(player, r, c)
-				grid_nodes[player][r][c].set_highlighted(
+				var card: GameState.CardInstance = GameState.get_card(_rk_foe, r, c)
+				grid_nodes[_rk_foe][r][c].set_highlighted(
 					card.card_type == "character" and card.face_up)
+
+	elif filter == "ability_death_cobra_venom":
+		for p in range(2):
+			for r in range(GameState.GRID_SIZE):
+				for c in range(GameState.GRID_SIZE):
+					var card: GameState.CardInstance = GameState.get_card(p, r, c)
+					grid_nodes[p][r][c].set_highlighted(
+						card.card_type == "character" and card.face_up)
 
 	elif filter == "own_character_for_swap":
 		# ATTACKER picks one of their own characters to swap positions with
@@ -7480,7 +7834,7 @@ func _highlight_tech_targets(filter: String) -> void:
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 				grid_nodes[opponent][r][c].set_highlighted(card.card_type != "dead_end" and not card.face_up)
 
-	elif filter == "self_reveal_choice":
+	elif filter == "self_reveal_choice" or filter == "trap_hostage_reveal_lock" or filter == "trap_street_joke_reveal":
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
@@ -7647,12 +8001,12 @@ func _prompt_forfeit_multi_attack() -> void:
 	var card: GameState.CardInstance = GameState.get_card(
 		GameState.current_player, selected_attacker_pos.x, selected_attacker_pos.y)
 	var card_label: String = card.card_name if card != null else "This unit"
-	var dlg := ConfirmationDialog.new()
-	dlg.title = "Forfeit Extra Attack?"
-	dlg.dialog_text = (
-		"%s's bonus attack will be lost if you cancel targeting." % card_label)
-	dlg.ok_button_text = "Forfeit"
-	dlg.cancel_button_text = "Keep Selecting"
+	var dlg := GameDialog.confirmation(
+		self,
+		"Forfeit Extra Attack?",
+		"%s's bonus attack will be lost if you cancel targeting." % card_label,
+		"Forfeit",
+		"Keep Selecting")
 	dlg.confirmed.connect(func() -> void:
 		_forfeit_multi_attack_bonus()
 		_clear_selection()
@@ -7664,7 +8018,6 @@ func _prompt_forfeit_multi_attack() -> void:
 	dlg.canceled.connect(func() -> void:
 		dlg.queue_free()
 	)
-	add_child(dlg)
 	dlg.popup_centered()
 
 func _clear_selection() -> void:
@@ -7756,6 +8109,11 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 	else:
 		delay = 0.3
 	await get_tree().create_timer(delay).timeout
+	if inst != null and inst.card_type == "character" \
+			and inst.ability_type == CharacterData.AbilityType.ON_EXPOSE_REVEAL_FOE_ONCE \
+			and GameState.current_phase != GameState.Phase.BATTLE \
+			and turn_manager != null:
+		await turn_manager.maybe_apply_on_expose_reveal_foe(player, row, col)
 	# Trap revealed → play black-smoke dissolve then clear the slot.
 	# BATTLE phase is excluded: the trap is handled by _handle_trap_effect after combat.
 	if inst != null and inst.card_type == "trap" \
@@ -8283,7 +8641,7 @@ func _spawn_union_landing_dust(overlay: Control, origin: Vector2) -> void:
 func _on_return_to_map() -> void:
 	get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if _guide_box != null and _guide_box.visible:
 		_guide_box.global_position = get_global_mouse_position() + Vector2(4.0, 112.0)
 	if _shake_active:
@@ -8292,6 +8650,7 @@ func _process(_delta: float) -> void:
 			randf_range(-_shake_intensity, _shake_intensity),
 			randf_range(-_shake_intensity, _shake_intensity)
 		)
+	_update_fog(delta)
 
 func _on_game_over(winner: int) -> void:
 	# Dismiss guide box immediately so it doesn't bleed into VN or win screen

@@ -1004,13 +1004,7 @@ func _show_message_dialog(message: String, on_close: Callable) -> void:
 
 	var panel := PanelContainer.new()
 	panel.custom_minimum_size = Vector2(680.0, 0.0)
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.04, 0.06, 0.13, 0.97)
-	sb.border_color = Color(0.60, 0.82, 1.0, 0.65)
-	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(8)
-	sb.set_content_margin_all(18.0)
-	panel.add_theme_stylebox_override("panel", sb)
+	panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox())
 	panel.modulate.a = 0.0
 	center.add_child(panel)
 
@@ -1021,15 +1015,15 @@ func _show_message_dialog(message: String, on_close: Callable) -> void:
 	var lbl := Label.new()
 	lbl.text = message
 	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lbl.add_theme_font_size_override("font_size", 15)
+	FontManager.tag_font(lbl, "font", "primary", 400)
+	lbl.add_theme_font_size_override("font_size", GameDialog.BODY_FONT_SIZE)
+	lbl.add_theme_color_override("font_color", GameDialog.BODY_COLOR)
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(lbl)
 
 	var ok_btn := Button.new()
 	ok_btn.text = "OK"
-	ok_btn.custom_minimum_size = Vector2(110, 36)
-	ok_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	ok_btn.add_theme_font_size_override("font_size", 14)
+	GameDialog.style_button(ok_btn)
 	ok_btn.pressed.connect(func() -> void:
 		var tw_out := create_tween()
 		tw_out.set_parallel(true)

@@ -889,20 +889,21 @@ func _add_union_materials_to_deck(union_name: String) -> void:
 		return
 
 	if UnionDatabase.deck_can_form_union(current_deck.characters, u):
-		var popup := AcceptDialog.new()
-		popup.title = "Union Already Available"
-		popup.dialog_text = "This Union card is already available in your deck."
-		add_child(popup)
+		var popup := GameDialog.accept(
+			self,
+			"Union Already Available",
+			"This Union card is already available in your deck.")
 		popup.popup_centered()
 		popup.confirmed.connect(func() -> void: popup.queue_free())
 		popup.canceled.connect(func() -> void: popup.queue_free())
 		return
 
 	var assigned: Array = []
-	var missing_conds: Array = []
+	var missing_conds: Array = UnionDatabase.deck_unmatched_conditions(
+		current_deck.characters, u.material_conditions)
 	var used_in_assign: Array = []
 
-	for cond: Dictionary in u.material_conditions:
+	for cond: Dictionary in missing_conds:
 		var candidates: Array = []
 		for cname: String in CardDatabase.get_all_character_names():
 			if Collection.get_card_count(cname) == 0:
@@ -931,12 +932,11 @@ func _add_union_materials_to_deck(union_name: String) -> void:
 		var missing_str: String = ""
 		for cond: Dictionary in missing_conds:
 			missing_str += "\n  • " + _describe_cond(cond)
-		var popup := AcceptDialog.new()
-		popup.title = "Not Enough Union Material"
-		popup.dialog_text = (
+		var popup := GameDialog.accept(
+			self,
+			"Not Enough Union Material",
 			"Not enough union material.\n\nFormula: %s\n\nFound: %s\nMissing:%s"
 			% [u.formula_description, found_str, missing_str])
-		add_child(popup)
 		popup.popup_centered()
 		popup.confirmed.connect(func() -> void: popup.queue_free())
 		popup.canceled.connect(func() -> void: popup.queue_free())
@@ -1442,11 +1442,11 @@ func _fe_show_unsaved_warning() -> void:
 	if _fe_overlay == null or not is_instance_valid(_fe_overlay):
 		return
 	SFXManager.play(SFXManager.SFX_POPUP)
-	var dlg := AcceptDialog.new()
-	dlg.title = "Unsaved Changes"
-	dlg.dialog_text = "You have unsaved formation changes.\n\nTap Save before closing."
-	dlg.ok_button_text = "OK"
-	_fe_overlay.add_child(dlg)
+	var dlg := GameDialog.accept(
+		_fe_overlay,
+		"Unsaved Changes",
+		"You have unsaved formation changes.\n\nTap Save before closing.",
+		"OK")
 	dlg.popup_centered()
 	dlg.confirmed.connect(func() -> void: dlg.queue_free())
 	dlg.canceled.connect(func() -> void: dlg.queue_free())

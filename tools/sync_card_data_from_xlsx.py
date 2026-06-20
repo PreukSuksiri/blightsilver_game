@@ -73,7 +73,8 @@ RARITY = {
 
 
 def load_workbook():
-    return openpyxl.load_workbook(XLSX, data_only=True)
+    # data_only=False keeps COUNTIF header formulas readable; card rows store plain "Yes"/None.
+    return openpyxl.load_workbook(XLSX, data_only=False)
 
 
 def sheet_rows(wb, name: str) -> tuple[list[str], list[dict]]:
@@ -143,6 +144,14 @@ def _normalize_formula(formula: str) -> str:
     return f.strip()
 
 
+def _count_name_or_affinity_material(count: int, label: str) -> list[dict]:
+    label = label.strip()
+    aff = _affinity_word(label)
+    if aff:
+        return [{"affinity": aff}] * count
+    return [{"name_contains": label.lower()}] * count
+
+
 def _parse_material_part(part: str) -> list[dict]:
     part = part.strip()
     if not part or re.fullmatch(r"\d+\s*(?:crystals?|cost)", part, re.I):
@@ -196,7 +205,7 @@ def _parse_material_part(part: str) -> list[dict]:
             lambda m: (
                 [{"affinity": _affinity_word(m.group(2))}] * int(m.group(1))
                 if _affinity_word(m.group(2))
-                else []
+                else _count_name_or_affinity_material(int(m.group(1)), m.group(2))
             ),
         ),
         (
@@ -233,6 +242,16 @@ def _parse_material_part(part: str) -> list[dict]:
             result = builder(m)
             if result:
                 return result
+
+    m = re.match(r"(\d+)\s+(.+?)\s+(?:cards?|units?)\s*$", part, re.I)
+    if m:
+        return _count_name_or_affinity_material(int(m.group(1)), m.group(2).strip())
+
+    m = re.match(r"(\d+)\s+(\w+)\s*$", part, re.I)
+    if m:
+        aff = _affinity_word(m.group(2))
+        if aff:
+            return [{"affinity": aff}] * int(m.group(1))
 
     if "armored" in low and "nature" in low:
         return [{"name_contains": "armored", "affinity": "NATURE"}]
@@ -480,9 +499,17 @@ def _parse_booster_columns(headers: list[str]) -> dict[str, str]:
     """Map booster header string -> short pack name (e.g. 'Blightsilver')."""
     result: dict[str, str] = {}
     for h in headers:
+        if not h:
+            continue
         m = re.match(r"Booster Pack - (.+?) / \d+$", h)
         if m:
             result[h] = m.group(1)
+            continue
+        # Live COUNTIF header formulas, e.g. ="Booster Pack - Blightsilver / "&COUNTIF(...)
+        for pack_name in ("Blightsilver", "Unseen Presence", "Wind of Dominance"):
+            if pack_name in h:
+                result[h] = pack_name
+                break
     return result
 
 

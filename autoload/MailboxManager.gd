@@ -219,6 +219,7 @@ func admin_command(raw: String) -> String:
 				+ "  list_packs\n"
 				+ "  open_pack <pack_id_or_name>\n"
 				+ "  grant_pack <pack_id_or_name>\n"
+				+ "  grant_booster_packs [count]\n"
 				+ "  pack_editor\n"
 				+ "  disc_editor\n"
 				+ "  list_discs\n"
@@ -1001,6 +1002,39 @@ func admin_command(raw: String) -> String:
 			if overlay_script:
 				overlay_script.open(get_tree().root, pack_img, c1, c2, c3, true, pack_nm)
 			return "Granted %s (free): %s, %s, %s" % [pack_nm, c1, c2, c3]
+
+		"grant_booster_packs":
+			var pack_count: int = 1
+			if parts.size() >= 2:
+				pack_count = int(parts[1])
+			if pack_count <= 0:
+				return "Count must be positive."
+			var boosters: Array = []
+			for p: Dictionary in ShopManager.get_all_packs_unfiltered():
+				var pool: Variant = p.get("card_pool", null)
+				if pool is Array and not (pool as Array).is_empty():
+					boosters.append(p)
+			if boosters.is_empty():
+				return "No booster packs with card pools found."
+			var mail_sent: int = 0
+			var lines: Array = []
+			for p: Dictionary in boosters:
+				var pack_name: String = str(p.get("name", ""))
+				if pack_name.is_empty():
+					continue
+				for _i: int in range(pack_count):
+					send_mail(
+						"Admin",
+						"Booster Pack",
+						"A booster pack is waiting for you: %s." % pack_name,
+						{"type": "booster_pack", "pack_name": pack_name})
+					mail_sent += 1
+				lines.append("  %s ×%d" % [pack_name, pack_count])
+			return (
+				"Sent %d booster pack(s) to mail (%d types):\n"
+				% [mail_sent, boosters.size()]
+				+ "\n".join(PackedStringArray(lines))
+			)
 
 		"disc_editor":
 			var scene: Node = get_tree().current_scene

@@ -31,7 +31,8 @@ enum TrapEffectType {
 	COIN_FLIP_2_ATK_DEBUFF,           # Flip 2 coins; both heads → attacker loses N ATK until end of next turn
 	COIN_FLIP_2_LOCK_ATTACKER,        # Flip 2 coins; both heads → attacker cannot attack next turn
 	SELF_DESTROY_TEMP_ATK_BOOST,      # Choose 1 own character: +N ATK until end of next turn, destroyed at end (no crystal cost)
-	REVEAL_OWN_GAIN_CRYSTAL,          # Reveal 1 random own face-down cell; gain N crystals
+	REVEAL_OWN_GAIN_CRYSTAL,          # Reveal 1 own face-down cell (choice); gain N crystals
+	NULLIFY_ATTACK_REVEAL_DEFENDER_CHOICE,  # Nullify + trapper reveals/locks 1 own cell until turn end
 }
 
 @export var card_name: String = ""

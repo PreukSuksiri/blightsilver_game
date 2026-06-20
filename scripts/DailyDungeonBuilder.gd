@@ -1423,13 +1423,13 @@ func _on_dungeon_selected(idx: int) -> void:
 
 func _on_new_layout() -> void:
 	# Prompt via a small popup
-	var popup := AcceptDialog.new()
-	popup.title = "New Dungeon Layout"
-	popup.dialog_text = "Enter new dungeon ID (e.g. dungeon_forest):"
+	var popup := GameDialog.accept(
+		self,
+		"New Dungeon Layout",
+		"Enter new dungeon ID (e.g. dungeon_forest):")
 	var line := LineEdit.new()
 	line.placeholder_text = "dungeon_id"
 	popup.add_child(line)
-	add_child(popup)
 	popup.confirmed.connect(func() -> void:
 		var did: String = line.text.strip_edges()
 		if did.is_empty():

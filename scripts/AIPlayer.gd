@@ -865,12 +865,12 @@ func decide_target(filter: String) -> Vector2i:
 		"opponent_squares_1", "opponent_squares_2", "opponent_squares_3", \
 				"opponent_squares_3_risky":
 			return decide_facedown_opponent_excluding([])
-		"opponent_any_hidden", "ability_false_prophet_reveal", "lock_opponent_monster":
+		"opponent_any_hidden", "ability_false_prophet_reveal", "ability_lockpicker_reveal", "lock_opponent_monster":
 			return _random_unrevealed_opponent()
 		"opponent_character_ability_destroy":
 			return _random_faceup_opponent()
 		"ability_rebel_king_swap":
-			return _best_own_faceup()
+			return _strongest_opp_faceup_pos()
 		"row_or_column":
 			return _best_rift_strike_cell()
 		"opponent_faceup_zero_stats":
@@ -884,11 +884,14 @@ func decide_target(filter: String) -> Vector2i:
 			return _best_own_faceup_bio()
 		"self_squares_1_opponent_turn", "own_facedown_character":
 			return _random_unrevealed_self_character()
-		"self_reveal_choice", "opponent_facedown_forced":
+		"self_reveal_choice", "opponent_facedown_forced", \
+				"trap_hostage_reveal_lock", "trap_street_joke_reveal":
 			return _random_unrevealed_self()
 		"own_faceup_card_sacrifice", "own_any_card":
 			return _best_own_faceup()
 		"own_any_as_target":
+			return _worst_own_ally_excluding(GameState.attacker_pos)
+		"wk17_foe_pick_character":
 			return _worst_own_ally_excluding(GameState.attacker_pos)
 		"graveyard":
 			return _first_own_revive_slot()
@@ -1407,8 +1410,8 @@ func _score_union(u: UnionData) -> int:
 ## that satisfy u.material_conditions from the given zone_cells.
 ## Returns [] if any condition cannot be satisfied.
 func _solve_materials(u: UnionData, zone_cells: Array) -> Array:
-	var conditions: Array = u.material_conditions.duplicate()
-	conditions.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.size() > b.size())
+	var conditions: Array = UnionDatabase.sort_material_conditions(
+		u.material_conditions.duplicate())
 	var used: Array = []
 	used.resize(zone_cells.size())
 	used.fill(false)
@@ -1723,8 +1726,8 @@ func _find_best_setup_union(char_pool: Array, num_chars: int) -> Dictionary:
 ## Tries to assign chars from available_chars to the union's material conditions.
 ## Returns {Vector2i zone_cell → char_name} on success, {} on failure.
 func _try_assign_setup_union(u: UnionData, available_chars: Array) -> Dictionary:
-	var conditions: Array = u.material_conditions.duplicate()
-	conditions.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return a.size() > b.size())
+	var conditions: Array = UnionDatabase.sort_material_conditions(
+		u.material_conditions.duplicate())
 
 	var used_chars: Dictionary = {}
 	var matched: Array = []   # char_names in condition order
