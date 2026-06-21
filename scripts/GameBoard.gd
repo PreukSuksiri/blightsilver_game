@@ -8,7 +8,7 @@ const SFX_CRYSTAL: AudioStream = preload("res://assets/audio/sound_crystal_1.mp3
 
 # ── Grid containers
 @onready var p1_grid: GridContainer = $MainLayout/P1Side/P1Grid
-@onready var p2_grid: GridContainer = $MainLayout/P2Side/P2Grid
+@onready var p2_grid: GridContainer = $MainLayout/P2Side/P2GridHost/P2Grid
 
 # ── Mode controls
 @onready var mode_panel: Panel = $MainLayout/CenterPanel/ModePanel
@@ -255,6 +255,12 @@ var _tech_sacrifice_player: int = -1                       # DESTROY_OWN_BASE_ZE
 var _guide_box: Control = null
 var _guide_label: Label = null
 var _game_guide_text: String = ""
+
+# Debug alignment overlay (Ctrl+Shift+U, editor-only)
+var _debug_align_visible: bool = false
+var _debug_center_line: ColorRect = null
+var _debug_p1_border: Panel = null
+var _debug_p2_border: Panel = null
 var locked_positions: Array = []
 # HOT_SEAT handoff tracking: avoid showing handoff again for the same player's continued turn
 var _handoff_last_player: int = -1
@@ -264,6 +270,14 @@ func _input(event: InputEvent) -> void:
 	if BuildConfig.admin_shortcut_pressed(event):
 		if BuildConfig.admin_tools_enabled():
 			BuildConfig.toggle_admin_console_on(self)
+		get_viewport().set_input_as_handled()
+		return
+	if OS.has_feature("editor") and event is InputEventKey \
+			and (event as InputEventKey).pressed \
+			and (event as InputEventKey).keycode == KEY_U \
+			and (event as InputEventKey).ctrl_pressed \
+			and (event as InputEventKey).shift_pressed:
+		_toggle_debug_alignment()
 		get_viewport().set_input_as_handled()
 		return
 	# _input fires for ALL presses regardless of which GUI control consumed them.
@@ -992,7 +1006,7 @@ func _build_portraits() -> void:
 	if p1_tex:
 		var sz := p1_tex.get_size()
 		var p1_scale: float = maxf(0.1, GameState.portrait_p1_size)
-		var p1h: float = REF_H * p1_scale
+		var p1h: float = REF_H * p1_scale * 0.9
 		var pw: float = p1h * sz.x / sz.y if sz.y > 0.0 else 300.0
 		var p1ox: float = GameState.portrait_p1_offset.x
 		var p1oy: float = GameState.portrait_p1_offset.y
@@ -1031,7 +1045,7 @@ func _build_portraits() -> void:
 	if p2_tex:
 		var sz := p2_tex.get_size()
 		var p2_scale: float = maxf(0.1, GameState.portrait_p2_size)
-		var p2h: float = REF_H * p2_scale
+		var p2h: float = REF_H * p2_scale * 0.9
 		var pw: float = p2h * sz.x / sz.y if sz.y > 0.0 else 300.0
 		var p2ox: float = GameState.portrait_p2_offset.x
 		var p2oy: float = GameState.portrait_p2_offset.y
@@ -1531,21 +1545,21 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	container.z_index = 4
 	container.mouse_filter = Control.MOUSE_FILTER_STOP
 	container.visible = false
-	# P1: anchored left at x=92 | P2: anchored right, 84–168px from right edge
+	# P1: anchored left at x=88 | P2: anchored right, 80–156px from right edge
 	if player == 0:
 		container.anchor_left   = 0.0
 		container.anchor_right  = 0.0
 		container.anchor_top    = 0.0
 		container.anchor_bottom = 0.0
-		container.offset_left   = 92.0
-		container.offset_right  = 168.0
+		container.offset_left   = 88.0
+		container.offset_right  = 164.0
 	else:
 		container.anchor_left   = 1.0
 		container.anchor_right  = 1.0
 		container.anchor_top    = 0.0
 		container.anchor_bottom = 0.0
-		container.offset_left   = -160.0
-		container.offset_right  = -84.0
+		container.offset_left   = -156.0
+		container.offset_right  = -80.0
 	container.offset_top    = 100.0
 	container.offset_bottom = 196.0
 	add_child(container)
@@ -1752,8 +1766,7 @@ func _rebuild_tech_overlay_content(player: int) -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _build_void_stacks() -> void:
-	# P1: Dump at x=8 (left of tech at x=92)
-	# P2: Dump at x=1280 (right of tech at x=1196)
+	# P1: Void at x=8, Tech at x=88 | P2: Void at right edge, Tech just left of Void
 	_p1_void_stack = _create_void_stack_indicator(0)
 	_p2_void_stack = _create_void_stack_indicator(1)
 
@@ -2042,6 +2055,9 @@ func _build_reveal_buttons() -> void:
 
 		var p := player
 		btn.pressed.connect(func() -> void: _toggle_reveal_preview(p))
+		btn.mouse_entered.connect(func() -> void:
+			_show_hud_tooltip("Toggle between Your View and Enemy View"))
+		btn.mouse_exited.connect(func() -> void: _restore_game_guide())
 		add_child(btn)
 		if player == 0:
 			_p1_reveal_btn = btn
@@ -3782,6 +3798,7 @@ func _on_options_btn_pressed() -> void:
 # ─────────────────────────────────────────────────────────────
 # Playmat Fog
 # ─────────────────────────────────────────────────────────────
+const PLAYMAT_V2_EXTRA_WIDTH: float = 0.0
 
 func _build_fog() -> void:
 	const FOG_PATH := "res://assets/textures/effect/fog/Noise 3.png"
@@ -3897,7 +3914,7 @@ func _build_union_suggest_button() -> void:
 	glow.anchor_left   = 0.5; glow.anchor_right  = 0.5
 	glow.anchor_top    = 0.5; glow.anchor_bottom = 0.5
 	glow.offset_left   = -(GLOW_SIZE * 0.5); glow.offset_right  =  (GLOW_SIZE * 0.5)
-	glow.offset_top    = -(GLOW_SIZE * 0.5) - 20.0; glow.offset_bottom =  (GLOW_SIZE * 0.5) - 20.0
+	glow.offset_top    = -(GLOW_SIZE * 0.5) - 34.0; glow.offset_bottom =  (GLOW_SIZE * 0.5) - 34.0
 	glow.modulate    = Color(0.25, 0.90, 1.00, 0.0)
 	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	glow.z_index  = 3
@@ -3914,7 +3931,7 @@ func _build_union_suggest_button() -> void:
 	btn.anchor_left   = 0.5; btn.anchor_right  = 0.5
 	btn.anchor_top    = 0.5; btn.anchor_bottom = 0.5
 	btn.offset_left   = -(BTN_SIZE * 0.5); btn.offset_right  =  (BTN_SIZE * 0.5)
-	btn.offset_top    = -(BTN_SIZE * 0.5) - 20.0; btn.offset_bottom =  (BTN_SIZE * 0.5) - 20.0
+	btn.offset_top    = -(BTN_SIZE * 0.5) - 34.0; btn.offset_bottom =  (BTN_SIZE * 0.5) - 34.0
 	btn.z_index  = 4
 	btn.visible  = false
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
@@ -3946,12 +3963,31 @@ func _collect_all_available_unions(player: int) -> Array:
 				results.append(entry)
 	return results
 
+func _apply_playmat_skin_layout(playmat_rect: TextureRect) -> void:
+	playmat_rect.offset_left  = 8.0
+	playmat_rect.offset_right = 0.0
+	if HudSkin.version == "v2":
+		call_deferred("_apply_playmat_v2_scale", playmat_rect)
+	else:
+		playmat_rect.scale        = Vector2.ONE
+		playmat_rect.pivot_offset = Vector2.ZERO
+
+func _apply_playmat_v2_scale(playmat_rect: TextureRect) -> void:
+	if not is_instance_valid(playmat_rect):
+		return
+	var base_w: float = playmat_rect.size.x
+	if base_w <= 0.0:
+		return
+	playmat_rect.pivot_offset = playmat_rect.size * 0.5
+	playmat_rect.scale = Vector2((base_w + PLAYMAT_V2_EXTRA_WIDTH) / base_w, 1.0)
+
 ## Re-applies all HUD textures from the currently active HudSkin version.
 ## Called automatically when HudSkin.skin_changed fires (admin: hud_skin v1|v2).
 func _reload_hud_skin(_new_version: String = "") -> void:
 	var playmat_rect: TextureRect = get_node_or_null("Background") as TextureRect
 	if playmat_rect:
 		playmat_rect.texture = HudSkin.hud_tex("ui_playmat_default.png")
+		_apply_playmat_skin_layout(playmat_rect)
 	CTX_ICON_ATTACK = HudSkin.hud_tex("ui_context_menu_attack.png")
 	CTX_ICON_INFO   = HudSkin.hud_tex("ui_context_menu_info.png")
 	CTX_ICON_BLUFF  = HudSkin.hud_tex("ui_context_menu_bluff.png")
@@ -8082,6 +8118,76 @@ func _ordinal(n: int) -> String:
 		3: return "3rd"
 		_: return "%dth" % n
 
+
+# ─────────────────────────────────────────────────────────────
+# Debug Alignment Overlay  (editor-only, Ctrl+Shift+U)
+# ─────────────────────────────────────────────────────────────
+func _toggle_debug_alignment() -> void:
+	_debug_align_visible = not _debug_align_visible
+	if _debug_align_visible:
+		_build_debug_alignment()
+	else:
+		_destroy_debug_alignment()
+
+func _build_debug_alignment() -> void:
+	const Z: int = 500  # above everything
+
+	# White vertical center line (1 px wide)
+	var line := ColorRect.new()
+	line.color = Color(1, 1, 1, 1)
+	line.layout_mode = 1
+	line.anchor_left   = 0.5; line.anchor_right  = 0.5
+	line.anchor_top    = 0.0; line.anchor_bottom = 1.0
+	line.offset_left   = 0.0; line.offset_right  = 1.0
+	line.offset_top    = 0.0; line.offset_bottom = 0.0
+	line.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	line.z_index = Z
+	add_child(line)
+	_debug_center_line = line
+
+	# White border overlays for each portrait
+	for i in range(2):
+		var portrait: TextureRect = _p1_portrait if i == 0 else _p2_portrait
+		if portrait == null or not is_instance_valid(portrait):
+			continue
+		var border := Panel.new()
+		border.layout_mode = 0
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0, 0, 0, 0)
+		sb.border_color = Color(1, 1, 1, 1)
+		sb.border_width_left   = 2
+		sb.border_width_right  = 2
+		sb.border_width_top    = 2
+		sb.border_width_bottom = 2
+		border.add_theme_stylebox_override("panel", sb)
+		border.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		border.z_index = Z
+		# Match position and size of the portrait in local (GameBoard) space
+		var local_pos: Vector2 = portrait.get_global_rect().position - global_position
+		border.position = local_pos
+		border.size     = portrait.get_global_rect().size
+		add_child(border)
+		if i == 0:
+			_debug_p1_border = border
+		else:
+			_debug_p2_border = border
+
+	# Auto-hide after 20 seconds
+	get_tree().create_timer(20.0).timeout.connect(func() -> void:
+		if _debug_align_visible:
+			_debug_align_visible = false
+			_destroy_debug_alignment())
+
+func _destroy_debug_alignment() -> void:
+	if is_instance_valid(_debug_center_line):
+		_debug_center_line.queue_free()
+	if is_instance_valid(_debug_p1_border):
+		_debug_p1_border.queue_free()
+	if is_instance_valid(_debug_p2_border):
+		_debug_p2_border.queue_free()
+	_debug_center_line = null
+	_debug_p1_border   = null
+	_debug_p2_border   = null
 
 func _build_guide_box() -> void:
 	if _guide_box != null:

@@ -1,0 +1,36 @@
+=== Battle of Shirt Tag Itchiness ===
+Battle started: 2026-06-21 14:45:58.246
+Game Session of Virgin Margarita (started 2026-06-21 14:45:48.711)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.118] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:10.514] Mode selected P1: TECH
+[00:10.815] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:12.199] Tech played  P1: "Radar"
+[00:13.741] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:14.603] Revealed: P0 (4,0) "Echo Barrier" {cost 1000}
+[00:14.983] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:14.985] Tech resolved  P1
+[00:15.849] Mode selected P1: ATTACK
+[00:15.851] MSG: Player 2: tap a unit to attack.
+[00:17.559] Revealed: P1 (0,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:17.560] Dice rolled: 2
+[00:17.601] MSG: Nothing happens — Dead End.
+[00:20.243] Attack P1(0,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(1,3)(empty)  Dice=2  → DEAD_END
+[00:20.243] Anim: 3F  (blank slot)
+[00:20.739] Mode selected P1: ATTACK
+[00:20.742] MSG: Player 2: tap a unit to attack.
+[00:22.459] Revealed: P1 (0,1) "Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature}
+[00:22.459] Dice rolled: 5
+[00:22.495] MSG: Nothing happens — Dead End.
+[00:25.859] Attack P1(0,1)"Scythe Shark" {Unit ATK35 DEF35 | cost 550 | affinity Nature} → P0(4,0)(empty)  Dice=5  → DEAD_END
+[00:25.859] Anim: 3F  (blank slot)
+[00:26.359] Turn ended  P1  |  Crystals P0=5000 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4400 ---

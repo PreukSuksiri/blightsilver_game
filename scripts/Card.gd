@@ -176,13 +176,13 @@ func _ready() -> void:
 	_crystal_cost_icon.visible        = false
 	add_child(_crystal_cost_icon)
 	# Narrow CostLabel to leave room for the icon
-	cost_label.offset_left  = -20
-	cost_label.offset_right = -12
+	cost_label.offset_left  = -18
+	cost_label.offset_right = -10
 
 	var _wait_outline := ShaderMaterial.new()
 	_wait_outline.shader = OUTLINE_SHADER
 	_wait_outline.set_shader_parameter("outline_color", Color(0, 0, 0, 1))
-	_wait_outline.set_shader_parameter("outline_width", 4.0)
+	_wait_outline.set_shader_parameter("outline_width", 6.0)
 	attacked_icon_rect.material = _wait_outline
 
 	_refresh_display()

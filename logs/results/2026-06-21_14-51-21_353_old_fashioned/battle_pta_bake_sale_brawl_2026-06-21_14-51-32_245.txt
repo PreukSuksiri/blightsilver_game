@@ -1,0 +1,12 @@
+=== Battle of PTA Bake Sale Brawl ===
+Battle started: 2026-06-21 14:51:32.245
+Game Session of Old Fashioned (started 2026-06-21 14:51:21.353)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:09.446] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---

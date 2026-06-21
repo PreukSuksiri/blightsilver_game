@@ -1,0 +1,58 @@
+=== Battle of Discount Lasagna ===
+Battle started: 2026-06-21 14:32:50.957
+Game Session of Virgin Piña Colada (started 2026-06-21 14:32:30.618)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.499] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:08.908] Mode selected P1: TECH
+[00:09.208] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:10.592] Tech played  P1: "Radar"
+[00:12.144] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:12.585] Revealed: P0 (3,2) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[00:12.992] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:13.400] Revealed: P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:13.405] Tech resolved  P1
+[00:14.259] Mode selected P1: ATTACK
+[00:14.266] MSG: Player 2: tap a unit to attack.
+[00:15.973] Revealed: P1 (0,3) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[00:15.973] Dice rolled: 2
+[00:16.004] MSG: Fire Elemental wins!
+[00:18.932] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:20.334] Attack P1(0,3)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} → P0(3,0)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}  Dice=2  ATK=35 vs DEF=30  → WIN
+[00:20.334] Reckoning overlay: P1 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=35 ATK pill=35 DEF pill=20 mod=+ATK 0 (35+0=35)
+[00:20.334] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:20.334] Anim: 3A  △ P0(3,0)
+[00:20.334] Card destroyed  P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:20.833] Mode selected P1: ATTACK
+[00:20.843] MSG: Player 2: tap a unit to attack.
+[00:22.547] Revealed: P1 (0,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:22.547] Dice rolled: 4
+[00:22.571] MSG: Both cards are destroyed!
+[00:26.941] Crystals: P1 4400 → 3600 (-800)  [battle]
+[00:28.333] Crystals: P0 4600 → 4150 (-450)  [battle]
+[00:29.729] Attack P1(0,4)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(3,2)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}  Dice=4  ATK=45 vs DEF=45  → TIE
+[00:29.729] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[00:29.729] Reckoning overlay: P0 "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} badge=45 ATK pill=30 DEF pill=45 mod=+DEF 0 (45+0=45)
+[00:29.729] Anim: 3C  △ P1(0,4) + △ P0(3,2)
+[00:29.729] Card destroyed  P1 (0,4) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:29.729] Card destroyed  P0 (3,2) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[00:30.211] Turn ended  P1  |  Crystals P0=4150 P1=3600
+
+--- Turn 2  |  Player 0  |  Crystals P0=4150 P1=3600 ---
+[01:02.755] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:02.755] Dice rolled: 2
+[01:02.787] MSG: Shepherd Detective wins!
+[01:07.232] Crystals: P1 3600 → 3220 (-380)  [battle]
+[01:08.649] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(0,3)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}  Dice=2  ATK=40 vs DEF=20  → WIN
+[01:08.649] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[01:08.649] Reckoning overlay: P1 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=20 ATK pill=35 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:08.649] Anim: 3A  △ P1(0,3)
+[01:08.649] Card destroyed  P1 (0,3) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[01:08.663] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:09.740] MSG: Revealed: (empty)
