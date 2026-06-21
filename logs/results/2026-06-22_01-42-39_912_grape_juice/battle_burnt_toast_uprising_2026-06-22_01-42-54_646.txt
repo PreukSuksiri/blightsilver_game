@@ -1,0 +1,59 @@
+=== Battle of Burnt Toast Uprising ===
+Battle started: 2026-06-22 01:42:54.646
+Game Session of Grape Juice (started 2026-06-22 01:42:39.912)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.436] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:19.292] Revealed: P0 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:19.334] Revealed: P1 (0,0) "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}
+[00:19.334] Dice rolled: 4
+[00:25.110] Crystals: P0 5000 → 4500 (-500)  [battle]
+[00:26.939] Attack P0(3,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} → P1(0,0)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}  Dice=4  ATK=20 vs DEF=85  → LOSE
+[00:26.940] Reckoning overlay: P0 "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} badge=20 ATK pill=20 DEF pill=50 mod=+ATK 0 (20+0=20)
+[00:26.940] Reckoning overlay: P1 "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} badge=85 ATK pill=100 DEF pill=85 mod=+DEF 0 (85+0=85)
+[00:26.940] Anim: 3B  △ P0(3,3)
+[00:26.940] Card destroyed  P0 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:35.032] Revealed: P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:35.032] Dice rolled: 5
+[00:40.844] Crystals: P0 4500 → 4100 (-400)  [battle]
+[00:42.671] Attack P0(3,0)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P1(0,0)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature}  Dice=5  ATK=40 vs DEF=85  → LOSE
+[00:42.671] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[00:42.671] Reckoning overlay: P1 "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} badge=85 ATK pill=100 DEF pill=85 mod=+DEF 0 (85+0=85)
+[00:42.671] Anim: 3B  △ P0(3,0)
+[00:42.671] Card destroyed  P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:47.367] Turn ended  P0  |  Crystals P0=4100 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4100 P1=5000 ---
+[00:47.969] Mode selected P1: TECH
+[00:48.277] Tech played  P1: "Tease"
+[00:49.819] MSG: Opponent must choose and reveal 1 of their squares.
+[00:50.006] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[00:53.280] Revealed: P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:53.282] MSG: Tease: Opponent revealed Flame Lizard.
+[00:53.286] Tech resolved  P1
+[00:54.161] Mode selected P1: ATTACK
+[00:54.165] MSG: Player 2: tap a unit to attack.
+[00:55.361] Dice rolled: 1
+[00:55.387] MSG: Gryphon wins!
+[00:59.852] Crystals: P0 4100 → 3700 (-400)  [battle]
+[01:03.036] Attack P1(0,0)"Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} → P0(2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=1  ATK=100 vs DEF=60  → WIN
+[01:03.036] Reckoning overlay: P1 "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature} badge=100 ATK pill=100 DEF pill=85 mod=+ATK 0 (100+0=100)
+[01:03.036] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=60 ATK pill=25 DEF pill=40 mod=+DEF 20 (40+20=60)
+[01:03.036] Anim: 3A  △ P0(2,4)
+[01:03.036] Card destroyed  P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:03.533] Mode selected P1: ATTACK
+[01:03.536] MSG: Player 2: tap a unit to attack.
+[01:03.873] Revealed: P1 (1,2) "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos}
+[01:05.764] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[01:05.764] Dice rolled: 1
+[01:07.017] MSG: Trap triggered: Hard Scale!
+[01:11.083] Crystals: P0 3700 → 3000 (-700)  [trap cost]
+[01:12.902] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[01:14.264] Attack P1(1,2)"Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} → P0(0,4)"Hard Scale" {cost 700}  Dice=1  → Unit vs Trap
+[01:14.264] Reckoning overlay: P1 "Doom Wisp" {Unit ATK15 DEF15 | cost 100 | affinity Chaos} badge=15 ATK pill=15 DEF 

@@ -7716,7 +7716,7 @@ func _clear_after_ability_when_ready() -> void:
 	var resume_bonus: bool = _multi_attack_bonus_targeting
 	var bonus_pos: Vector2i = selected_attacker_pos
 	_clear_after_tech()
-	turn_manager.ability_selection_done.emit()
+	_emit_ability_selection_done_next_frame()
 	_resume_human_mode_select(resume_bonus, bonus_pos)
 
 func _finish_trap_target_selection() -> void:
@@ -7725,7 +7725,11 @@ func _finish_trap_target_selection() -> void:
 func _finish_trap_target_when_ready() -> void:
 	await GameState.wait_crystal_animation()
 	_clear_after_tech()
-	turn_manager.ability_selection_done.emit()
+	_emit_ability_selection_done_next_frame()
+
+## Defer so TurnManager's await ability_selection_done is registered before we emit.
+func _emit_ability_selection_done_next_frame() -> void:
+	turn_manager.call_deferred("emit_signal", "ability_selection_done")
 
 
 func _is_post_attack_ability_filter(filter: String) -> bool:
