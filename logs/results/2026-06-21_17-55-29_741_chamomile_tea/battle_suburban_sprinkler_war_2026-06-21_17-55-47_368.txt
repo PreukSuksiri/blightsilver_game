@@ -1,0 +1,61 @@
+=== Battle of Suburban Sprinkler War ===
+Battle started: 2026-06-21 17:55:47.368
+Game Session of Chamomile Tea (started 2026-06-21 17:55:29.741)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.553] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:19.747] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:19.748] Dice rolled: 4
+[00:19.798] MSG: Nothing happens — Dead End.
+[00:23.139] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,1)(empty)  Dice=4  → DEAD_END
+[00:23.139] Anim: 3F  (blank slot)
+[00:23.149] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:25.374] MSG: Revealed: (empty)
+[00:31.195] Revealed: P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:31.234] Revealed: P1 (0,1) "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}
+[00:31.234] Dice rolled: 1
+[00:35.808] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:37.208] Attack P0(2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(0,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima}  Dice=1  ATK=25 vs DEF=35  → LOSE
+[00:37.208] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[00:37.208] Reckoning overlay: P1 "Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[00:37.208] Anim: 3B  △ P0(2,4)
+[00:37.208] Card destroyed  P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:45.540] Turn ended  P0  |  Crystals P0=4600 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4600 P1=5000 ---
+[00:46.133] Mode selected P1: TECH
+[00:46.434] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:47.818] Tech played  P1: "Radar"
+[00:49.367] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:50.607] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:50.610] Tech resolved  P1
+[00:51.468] Mode selected P1: ATTACK
+[00:51.472] MSG: Player 2: tap a unit to attack.
+[00:53.175] Dice rolled: 3
+[00:53.218] MSG: Nothing happens — Dead End.
+[00:56.579] Attack P1(0,1)"Kiyoko the Death Whisper" {Unit ATK40 DEF35 | cost 800 | affinity Anima} → P0(4,1)(empty)  Dice=3  → DEAD_END
+[00:56.579] Anim: 3F  (blank slot)
+[00:59.087] Turn ended  P1  |  Crystals P0=4600 P1=4400
+
+--- Turn 3  |  Player 0  |  Crystals P0=4600 P1=4400 ---
+[01:06.338] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[01:06.378] Revealed: P1 (0,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:06.378] Dice rolled: 1
+[01:06.396] MSG: Moonrise Gentleman wins!
+[01:10.820] Crystals: P1 4400 → 4150 (-250)  [battle]
+[01:12.229] Attack P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(0,3)"Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}  Dice=1  ATK=40 vs DEF=20  → WIN
+[01:12.229] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[01:12.229] Reckoning overlay: P1 "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima} badge=20 ATK pill=25 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:12.229] Anim: 3A  △ P1(0,3)
+[01:12.229] Card destroyed  P1 (0,3) "Silver Spearman" {Unit ATK25 DEF20 | cost 250 | affinity Anima}
+[01:38.388] Revealed: P1 (2,2) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:38.388] Dice rolled: 1
+[01:42.821] Crystals: P0 4600 → 4200 (-400)  [battle]
+[01:44.237] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,2)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}  Dice=1  ATK=40 vs DEF=50  → LOSE
+[01:44.237] Reckoning overlay: P0 "Shepherd Detective" {Unit 

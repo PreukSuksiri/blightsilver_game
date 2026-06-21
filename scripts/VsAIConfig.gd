@@ -1,10 +1,15 @@
 extends Control
 ## VS AI Config — pre-battle setup screen for Player vs AI mode.
 ## Launched from the main menu VS AI button.
-## Lets the player configure the AI's deck, forced formation cells, and forced tech hand.
+## Lets the player configure both sides' names/illustrations and the AI deck setup.
 
 const DeckData = preload("res://resources/DeckData.gd")
 const TECH_SLOT_COUNT: int = 3
+const DEFAULT_PORTRAIT_PATHS: Array[String] = [
+	"res://assets/textures/ui/portraits/profile_player_1_default.png",
+	"res://assets/textures/ui/portraits/profile_player_2_default.png",
+]
+const DEFAULT_PLAYER_NAMES: Array[String] = ["Player 1", "Opponent"]
 
 # ── UI refs ────────────────────────────────────────────────────────────────────
 var _deck_opt: OptionButton = null
@@ -16,14 +21,14 @@ var _forced_tech: Array = ["", "", ""]   # slot → tech name (empty = random on
 var _forced_grid: GridContainer = null
 var _forced_dict: Dictionary = {}        # key="r,c" value=card_name
 var _status_lbl: Label = null
+var _bgm_enabled_chk: CheckBox = null
+var _name_edits: Array[LineEdit] = [null, null]
+var _portrait_paths: Array[String] = DEFAULT_PORTRAIT_PATHS.duplicate()
+var _portrait_previews: Array[TextureRect] = [null, null]
 
 # Union zone highlight
 var _union_highlighted_name: String = ""
 var _union_highlight_cells: Array = []
-
-# AI illustration
-var _ai_portrait_path: String = "res://assets/textures/ui/portraits/profile_player_2_default.png"
-var _ai_portrait_preview: TextureRect = null
 
 # ─────────────────────────────────────────────────────────────────────────────
 func _ready() -> void:
@@ -55,7 +60,7 @@ func _build_ui() -> void:
 	root.add_child(title_hb)
 
 	var title_lbl := Label.new()
-	title_lbl.text = "VS AI  —  Configure Opponent"
+	title_lbl.text = "VS AI  —  Configure Battle"
 	title_lbl.add_theme_font_size_override("font_size", 22)
 	title_lbl.add_theme_color_override("font_color", Color(0.5, 0.85, 1.0))
 	title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -69,12 +74,13 @@ func _build_ui() -> void:
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
 	title_hb.add_child(back_btn)
 
-	# ── AI config column ───────────────────────────────────────────────────────
+	# ── Two-column config area ───────────────────────────────────────────────────
 	var cols := HBoxContainer.new()
 	cols.add_theme_constant_override("separation", 24)
 	cols.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	root.add_child(cols)
 
+	_build_player_column(cols)
 	_build_ai_column(cols)
 
 	# ── Start + status row ─────────────────────────────────────────────────────
@@ -98,6 +104,21 @@ func _build_ui() -> void:
 	_status_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	action_hb.add_child(_status_lbl)
 
+func _build_player_column(parent: HBoxContainer) -> void:
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 10)
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	parent.add_child(col)
+
+	var hdr := Label.new()
+	hdr.text = "You"
+	hdr.add_theme_font_size_override("font_size", 17)
+	hdr.add_theme_color_override("font_color", Color(0.55, 1.0, 0.75))
+	col.add_child(hdr)
+
+	_add_name_row(col, 0)
+	_add_portrait_row(col, 0, "Your Illustration")
+
 func _build_ai_column(parent: HBoxContainer) -> void:
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 10)
@@ -110,38 +131,8 @@ func _build_ai_column(parent: HBoxContainer) -> void:
 	hdr.add_theme_color_override("font_color", Color(1.0, 0.6, 0.6))
 	col.add_child(hdr)
 
-	# ── Illustration picker ────────────────────────────────────────────────────
-	var illus_row := HBoxContainer.new()
-	illus_row.add_theme_constant_override("separation", 10)
-	col.add_child(illus_row)
-
-	_ai_portrait_preview = TextureRect.new()
-	_ai_portrait_preview.custom_minimum_size = Vector2(60, 88)
-	_ai_portrait_preview.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
-	_ai_portrait_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_ai_portrait_preview.clip_contents = true
-	var init_tex: Texture2D = load(_ai_portrait_path)
-	if init_tex:
-		_ai_portrait_preview.texture = init_tex
-	illus_row.add_child(_ai_portrait_preview)
-
-	var illus_vb := VBoxContainer.new()
-	illus_vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	illus_vb.add_theme_constant_override("separation", 4)
-	illus_row.add_child(illus_vb)
-
-	var illus_lbl := Label.new()
-	illus_lbl.text = "AI Illustration"
-	illus_lbl.add_theme_font_size_override("font_size", 13)
-	illus_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.6))
-	illus_vb.add_child(illus_lbl)
-
-	var change_btn := Button.new()
-	change_btn.text = "Change..."
-	change_btn.add_theme_font_size_override("font_size", 12)
-	change_btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	change_btn.pressed.connect(_open_portrait_picker)
-	illus_vb.add_child(change_btn)
+	_add_name_row(col, 1)
+	_add_portrait_row(col, 1, "AI Illustration")
 
 	# ── AI Deck Vault (overrides deck + formation when set) ───────────────────
 	var vault_hdr := Label.new()
@@ -261,6 +252,69 @@ func _build_ai_column(parent: HBoxContainer) -> void:
 		_refresh_forced_grid())
 	col.add_child(clear_btn)
 
+	# ── Audio ──────────────────────────────────────────────────────────────────
+	var bgm_row := HBoxContainer.new()
+	bgm_row.add_theme_constant_override("separation", 8)
+	col.add_child(bgm_row)
+	_bgm_enabled_chk = CheckBox.new()
+	_bgm_enabled_chk.text = "Background Music"
+	_bgm_enabled_chk.button_pressed = true
+	_bgm_enabled_chk.add_theme_font_size_override("font_size", 14)
+	bgm_row.add_child(_bgm_enabled_chk)
+
+func _add_name_row(parent: Control, player_index: int) -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	parent.add_child(row)
+
+	var lbl := Label.new()
+	lbl.text = "Name:"
+	lbl.add_theme_font_size_override("font_size", 14)
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	row.add_child(lbl)
+
+	var edit := LineEdit.new()
+	edit.placeholder_text = DEFAULT_PLAYER_NAMES[player_index]
+	edit.add_theme_font_size_override("font_size", 14)
+	edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(edit)
+	_name_edits[player_index] = edit
+
+func _add_portrait_row(parent: Control, player_index: int, label_text: String) -> void:
+	var illus_row := HBoxContainer.new()
+	illus_row.add_theme_constant_override("separation", 10)
+	parent.add_child(illus_row)
+
+	var preview := TextureRect.new()
+	preview.custom_minimum_size = Vector2(60, 88)
+	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	preview.clip_contents = true
+	var init_tex: Texture2D = load(_portrait_paths[player_index])
+	if init_tex:
+		preview.texture = init_tex
+	illus_row.add_child(preview)
+	_portrait_previews[player_index] = preview
+
+	var illus_vb := VBoxContainer.new()
+	illus_vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	illus_vb.add_theme_constant_override("separation", 4)
+	illus_row.add_child(illus_vb)
+
+	var illus_lbl := Label.new()
+	illus_lbl.text = label_text
+	illus_lbl.add_theme_font_size_override("font_size", 13)
+	illus_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.6))
+	illus_vb.add_child(illus_lbl)
+
+	var change_btn := Button.new()
+	change_btn.text = "Change..."
+	change_btn.add_theme_font_size_override("font_size", 12)
+	change_btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	var idx := player_index
+	change_btn.pressed.connect(func() -> void: _open_portrait_picker(idx))
+	illus_vb.add_child(change_btn)
+
 func _populate_decks() -> void:
 	_deck_opt.clear()
 	_deck_opt.add_item("Random (full card pool)")  # index 0 = null deck
@@ -344,6 +398,19 @@ func _on_formation_selected() -> void:
 # ─────────────────────────────────────────────────────────────────────────────
 # Start Battle
 # ─────────────────────────────────────────────────────────────────────────────
+func _apply_battle_identity() -> void:
+	GameState.player_portraits[0] = _portrait_paths[0]
+	GameState.player_portraits[1] = _portrait_paths[1]
+	var names: Array[String] = []
+	for i: int in range(2):
+		var edit: LineEdit = _name_edits[i]
+		var n: String = edit.text.strip_edges() if edit != null else ""
+		if n.is_empty():
+			n = DEFAULT_PLAYER_NAMES[i]
+		names.append(n)
+	GameState.campaign_player_names = names
+	GameState.battle_bgm_enabled = _bgm_enabled_chk.button_pressed if _bgm_enabled_chk != null else true
+
 func _on_start_battle() -> void:
 	var vault_id: String = AIDeckVault.option_entry_id(_vault_opt) if _vault_opt != null else ""
 	if not vault_id.is_empty():
@@ -369,7 +436,7 @@ func _on_start_battle() -> void:
 			"forced_traps": (cfg.get("forced_traps", []) as Array).duplicate(),
 			"forced_tech": (cfg.get("forced_tech", []) as Array).duplicate(),
 		}
-		GameState.player_portraits[1] = _ai_portrait_path
+		_apply_battle_identity()
 		BGMManager.stop(0.0)
 		CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
@@ -393,7 +460,7 @@ func _on_start_battle() -> void:
 	GameState.battle_ai_deck          = d
 	GameState.battle_ai_forced_cells  = fc
 	GameState.battle_ai_forced_tech   = ft
-	GameState.player_portraits[1]     = _ai_portrait_path
+	_apply_battle_identity()
 
 	BGMManager.stop(0.0)
 	CheckerTransition.fade_out_to_battle(func() -> void:
@@ -706,12 +773,11 @@ func _validate_forced_tech(slots: Array) -> Array[String]:
 # ─────────────────────────────────────────────────────────────────────────────
 # Portrait picker
 # ─────────────────────────────────────────────────────────────────────────────
-func _get_portrait_options() -> Array:
-	# Returns Array of {label, path} for all available AI illustrations.
+func _get_portrait_options(default_path: String) -> Array:
 	var opts: Array = []
 	opts.append({
 		"label": "Default",
-		"path":  "res://assets/textures/ui/portraits/profile_player_2_default.png"
+		"path": default_path,
 	})
 	var dir := DirAccess.open("res://assets/textures/vn/characters")
 	if dir:
@@ -732,8 +798,9 @@ func _get_portrait_options() -> Array:
 			})
 	return opts
 
-func _open_portrait_picker() -> void:
-	var options: Array = _get_portrait_options()
+func _open_portrait_picker(player_index: int) -> void:
+	var options: Array = _get_portrait_options(DEFAULT_PORTRAIT_PATHS[player_index])
+	var side_label: String = "Your" if player_index == 0 else "AI"
 
 	var overlay := ColorRect.new()
 	overlay.color = Color(0.0, 0.0, 0.0, 0.65)
@@ -757,7 +824,7 @@ func _open_portrait_picker() -> void:
 	var title_hb := HBoxContainer.new()
 	vb.add_child(title_hb)
 	var title := Label.new()
-	title.text = "Choose AI Illustration"
+	title.text = "Choose %s Illustration" % side_label
 	title.add_theme_font_size_override("font_size", 16)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	title_hb.add_child(title)
@@ -799,7 +866,7 @@ func _open_portrait_picker() -> void:
 			thumb.texture = tex
 		else:
 			thumb.modulate = Color(0.3, 0.3, 0.3)
-		if opt_path == _ai_portrait_path:
+		if opt_path == _portrait_paths[player_index]:
 			thumb.modulate = Color(0.4, 1.0, 0.6)
 		cell.add_child(thumb)
 
@@ -812,15 +879,17 @@ func _open_portrait_picker() -> void:
 		cell.add_child(name_lbl)
 
 		var p_cap := opt_path
+		var idx := player_index
 		thumb.mouse_filter = Control.MOUSE_FILTER_STOP
 		thumb.gui_input.connect(func(event: InputEvent) -> void:
 			if event is InputEventMouseButton:
 				var mbe := event as InputEventMouseButton
 				if mbe.pressed and mbe.button_index == MOUSE_BUTTON_LEFT:
-					_ai_portrait_path = p_cap
+					_portrait_paths[idx] = p_cap
 					var new_tex: Texture2D = load(p_cap)
-					if new_tex and _ai_portrait_preview != null:
-						_ai_portrait_preview.texture = new_tex
+					var preview: TextureRect = _portrait_previews[idx]
+					if new_tex and preview != null:
+						preview.texture = new_tex
 					overlay.queue_free())
 
 	overlay.gui_input.connect(func(event: InputEvent) -> void:

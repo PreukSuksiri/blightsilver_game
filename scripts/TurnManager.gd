@@ -16,6 +16,7 @@ signal battle_result_finalized(result)
 signal crystal_animation_done
 signal attack_aborted
 signal card_effect_flash_done
+signal card_reveal_animation_done
 signal ability_choice_resolved(choice_index: int)
 signal awaiting_blackmail_tech_select(player_index: int)
 signal blackmail_choice_resolved(discarded_tech: String)
@@ -33,6 +34,7 @@ var _siege_cannon_attacker_player: int = -1
 # Pending trap/ability params for target-selection callbacks
 var _pending_trap_def_boost: int = 0
 var _pending_trap_def_boost_carry: bool = false
+var _attack_reveal_pending: Array = []  # Vector3i(player, row, col)
 var _pending_trap_self_destruct_boost: int = 0
 var _pending_trap_self_destruct_player: int = -1
 var _pending_swap_attacker_pos: Vector2i = Vector2i(-1, -1)
@@ -190,10 +192,32 @@ func _battle_aborted() -> bool:
 	return GameState.current_phase == GameState.Phase.GAME_OVER
 
 
-func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
+func _reveal_for_attack(player_index: int, row: int, col: int) -> void:
+	if GameState.get_card(player_index, row, col).face_up:
+		return
+	var key := Vector3i(player_index, row, col)
+	if key not in _attack_reveal_pending:
+		_attack_reveal_pending.append(key)
+	GameState.reveal_card(player_index, row, col)
+
+
+func _await_attack_reveal_animations() -> void:
+	while not _attack_reveal_pending.is_empty():
+		await card_reveal_animation_done
+
+
+func notify_card_reveal_animation_done(player_index: int, row: int, col: int) -> void:
+	var key := Vector3i(player_index, row, col)
+	if key not in _attack_reveal_pending:
+		return
+	_attack_reveal_pending.erase(key)
+	card_reveal_animation_done.emit()
+
+
+func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_player: int = -1) -> void:
 	if _battle_aborted():
 		return
-	var player := GameState.current_player
+	var player := attacker_player if attacker_player >= 0 else GameState.current_player
 	var opponent := GameState.get_opponent(player)
 
 	if GameState.current_phase not in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]:
@@ -332,9 +356,10 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 						_mn_card.ability_params.get("atk", 30)])
 
 	# Flip cards face-up now so the player sees revealed stats while deciding on optional prompts
-	GameState.reveal_card(player, attacker_pos.x, attacker_pos.y)
+	_attack_reveal_pending.clear()
+	_reveal_for_attack(player, attacker_pos.x, attacker_pos.y)
 	if defender.card_type != "dead_end":
-		GameState.reveal_card(opponent, target_pos.x, target_pos.y)
+		_reveal_for_attack(opponent, target_pos.x, target_pos.y)
 
 	# Update field-based bonuses before battle
 	BattleResolver.calculate_field_bonuses(player)
@@ -414,9 +439,11 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	GameState.defender_pos = target_pos
 	GameState.set_phase(GameState.Phase.BATTLE)
 
-	# If the defender is a trap, wait for its flip animation to complete before showing the overlay
-	if defender.card_type == "trap":
-		await get_tree().create_timer(0.30).timeout
+	# Wait for attacker/defender flip animations before Reckoning overlay.
+	if defender.card_type == "dead_end" and not defender_was_exposed:
+		_reveal_for_attack(opponent, target_pos.x, target_pos.y)
+		defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
+	await _await_attack_reveal_animations()
 
 	# Compute a preview result (without optional crystal boosts) for the battle overlay display.
 	# silent=true prevents ability messages from firing twice (they fire again on the real resolve).

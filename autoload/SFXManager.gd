@@ -4,6 +4,7 @@ extends Node
 
 const SFX_MENU        := preload("res://assets/audio/sfx/scifi_ui_1.mp3")   # Rule 1: main menu buttons
 const SFX_BTN         := preload("res://assets/audio/sfx/scifi_ui_2.mp3")   # Rule 2: generic game buttons
+const SFX_VIEW_TOGGLE := preload("res://assets/audio/sfx/scifi_ui_3.mp3") # Rule 2b: battle view toggle
 const SFX_CANCEL      := preload("res://assets/audio/sfx/scifi_ui_12.mp3")  # Rule 3: cancel / dismiss
 const SFX_TARGET      := preload("res://assets/audio/sfx/scifi_ui_13.mp3")  # Rule 4: select target
 const SFX_POPUP       := preload("res://assets/audio/sfx/scifi_ui_30_B.mp3")  # Rule 5: warning / choice popup
@@ -30,6 +31,7 @@ const SFX_COIN_TAIL   := preload("res://assets/audio/sfx/coin_flip_tail.mp3") # 
 const SFX_CREDIT_CLINK := preload("res://assets/audio/sfx/coin_clink_4b.mp3") # Mailbox / credit earn
 const SFX_BATTLE_CALC := preload("res://assets/audio/sfx/chime_4.mp3")         # Rule 23: battle calculation overlay opens
 const SFX_MODIFIER_REVEAL := preload("res://assets/audio/sfx/scifi_ui_34.mp3") # wheel spin result reveal
+const SFX_FLIP := preload("res://assets/audio/sfx/flip3.mp3")                  # card flip / reveal
 
 func play(stream: AudioStream) -> void:
 	if stream == null:

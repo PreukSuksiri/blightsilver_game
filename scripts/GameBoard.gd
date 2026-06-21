@@ -58,6 +58,7 @@ var _p1_name_lbl: Label = null
 var _p2_name_lbl: Label = null
 var _turn_number_lbl: Label = null
 var _turn_number_bg: TextureRect = null
+var _turn_number_hit: Control = null
 
 # Options menu & battle log
 var _battle_log_lines: Array[String] = []
@@ -978,8 +979,6 @@ func _on_bribe_reveal_pressed() -> void:
 	_begin_human_defender_tech_choice()
 	pending_tech_filter = "bribe_reveal"
 	_set_own_facedown_char_peek(true, bribed_player)
-	action_label.text = "Select one of your face-down units to reveal."
-	action_panel.visible = true
 	_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
 	_show_guide("Select one of your face-down units to reveal.")
 	_highlight_tech_targets("bribe_reveal")
@@ -1407,6 +1406,9 @@ func _begin_game() -> void:
 # Battle music
 # ─────────────────────────────────────────────────────────────
 func _start_setup_music() -> void:
+	if _vs_ai_bgm_muted():
+		BGMManager.stop(0.0)
+		return
 	var setup_path: String = GameState.battle_setup_bgm_path.strip_edges()
 	if setup_path.is_empty():
 		BGMManager.play_context(BGMManager.CONTEXT_PLACEMENT, 0.8, 0.8)
@@ -1420,6 +1422,8 @@ func _stop_setup_music() -> void:
 
 
 func _start_battle_music() -> void:
+	if _vs_ai_bgm_muted():
+		return
 	var path: String = GameState.battle_bgm_path
 	if path.is_empty():
 		path = BGMManager.get_default_path(BGMManager.CONTEXT_BATTLE)
@@ -1650,6 +1654,7 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	container.gui_input.connect(func(ev: InputEvent) -> void:
 		if (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) \
 				or (ev is InputEventScreenTouch and ev.pressed):
+			SFXManager.play(SFXManager.SFX_BTN)
 			if TutorialBattleManager.is_active:
 				TutorialBattleManager.report_action("tech_chip_tap", {"player": _tut_tech_player})
 			_open_tech_modal(_tut_tech_player)
@@ -1882,6 +1887,7 @@ func _create_void_stack_indicator(player: int) -> Control:
 	container.gui_input.connect(func(ev: InputEvent) -> void:
 		if (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) \
 				or (ev is InputEventScreenTouch and ev.pressed):
+			SFXManager.play(SFXManager.SFX_BTN)
 			if TutorialBattleManager.is_active:
 				TutorialBattleManager.report_action("void_stack_tap", {"player": _tut_void_player})
 			_open_void_modal(_tut_void_player)
@@ -2178,6 +2184,7 @@ func _toggle_reveal_preview(player: int) -> void:
 	# Only the active player may toggle their own peek
 	if player != GameState.current_player:
 		return
+	SFXManager.play(SFXManager.SFX_VIEW_TOGGLE)
 	_reveal_preview[player] = not _reveal_preview[player]
 	_enemy_view_active = not _reveal_preview[player]
 	# Slash shown in "enemy view" icon state (i.e. when NOT currently revealing).
@@ -2752,6 +2759,7 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 
 	popup.position = Vector2(px, py)
 	popup.size     = Vector2(popup_w, popup_h)
+	SFXManager.play(SFXManager.SFX_BTN)
 
 func _make_context_icon_btn(tex: Texture2D) -> Button:
 	var btn := Button.new()
@@ -2774,6 +2782,7 @@ func _make_context_icon_btn(tex: Texture2D) -> Button:
 	var sbp := sbh.duplicate() as StyleBoxFlat
 	sbp.bg_color = Color(0.20, 0.30, 0.56, 1.0)
 	btn.add_theme_stylebox_override("pressed", sbp)
+	SFXManager.wire_prompt_button(btn)
 	return btn
 
 func _make_context_btn(label: String, col: Color) -> Button:
@@ -3355,6 +3364,7 @@ func _show_blank_context(ctx_player: int, row: int, col: int) -> void:
 
 	popup.position = Vector2(px, py)
 	popup.size     = Vector2(popup_w, popup_h)
+	SFXManager.play(SFXManager.SFX_BTN)
 
 func _should_block_card_actions_for_enemy_view() -> bool:
 	if not _enemy_view_active:
@@ -3727,6 +3737,8 @@ func _update_crystal_visibility() -> void:
 		_turn_number_lbl.visible = show
 	if _turn_number_bg:
 		_turn_number_bg.visible = show
+	if _turn_number_hit:
+		_turn_number_hit.visible = show
 	if _options_btn:
 		_options_btn.visible = show and not TutorialBattleManager.should_hide_options_btn()
 	if _fog_container:
@@ -3793,6 +3805,8 @@ func _build_attack_count_indicators() -> void:
 func _build_turn_number_label() -> void:
 	# Medallion background — upper half hidden above screen, lower half visible
 	const MED_SIZE: float = 280.0
+	const HIT_W: float = 108.0
+	const HIT_H: float = 52.0
 	var bg := TextureRect.new()
 	bg.texture = HudSkin.hud_tex("ui_turn_number_panel.png")
 	bg.ignore_texture_size = true
@@ -3805,13 +3819,27 @@ func _build_turn_number_label() -> void:
 	bg.offset_right  =  (MED_SIZE * 0.5)
 	bg.offset_top    = -(MED_SIZE * 0.5)   # upper half above screen edge (clipped)
 	bg.offset_bottom =   (MED_SIZE * 0.5)  # lower half visible
-	bg.mouse_filter  = Control.MOUSE_FILTER_PASS
+	bg.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	bg.z_index = 3
 	bg.visible = false
 	add_child(bg)
 	_turn_number_bg = bg
-	bg.mouse_entered.connect(func(): _show_hud_tooltip("Current turn number"))
-	bg.mouse_exited.connect(func(): _restore_game_guide())
+
+	var hit := Control.new()
+	hit.layout_mode = 1
+	hit.anchor_left   = 0.5; hit.anchor_right  = 0.5
+	hit.anchor_top    = 0.0; hit.anchor_bottom = 0.0
+	hit.offset_left   = -(HIT_W * 0.5)
+	hit.offset_right  =  (HIT_W * 0.5)
+	hit.offset_top    = 0.0
+	hit.offset_bottom = HIT_H
+	hit.mouse_filter  = Control.MOUSE_FILTER_PASS
+	hit.z_index = 4
+	hit.visible = false
+	add_child(hit)
+	_turn_number_hit = hit
+	hit.mouse_entered.connect(func(): _show_hud_tooltip("Current turn number"))
+	hit.mouse_exited.connect(func(): _restore_game_guide())
 
 	var lbl := Label.new()
 	lbl.layout_mode = 1
@@ -3887,6 +3915,7 @@ func _build_options_button() -> void:
 func _on_options_btn_pressed() -> void:
 	if TutorialBattleManager.is_active and not TutorialBattleManager.should_allow_options_btn():
 		return
+	SFXManager.play(SFXManager.SFX_BTN)
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.report_action("options_tap", {})
 	if _options_panel != null:
@@ -4168,6 +4197,7 @@ func _update_union_suggest_button() -> void:
 func _on_union_suggest_pressed() -> void:
 	if selection_state == SelectionState.SELECTING_UNION_MATERIALS:
 		return  # already in material selection — ignore duplicate tap
+	SFXManager.play(SFXManager.SFX_BTN)
 	var available: Array = _collect_all_available_unions(GameState.current_player)
 	if available.is_empty():
 		return
@@ -4361,6 +4391,8 @@ func _show_change_music_panel() -> void:
 	SFXManager.wire_prompt_buttons_in(vbox)
 
 func _change_battle_music(path: String) -> void:
+	if _vs_ai_bgm_muted():
+		return
 	GameState.battle_bgm_path = path
 	BGMManager.play_path(
 		path, 0.5, 0.5, GameState.battle_bgm_volume, BGMManager.CONTEXT_BATTLE)
@@ -4767,6 +4799,10 @@ func _set_attack_hover_node(node: Control) -> void:
 
 func _stop_battle_music() -> void:
 	BGMManager.stop(0.0)
+
+
+func _vs_ai_bgm_muted() -> bool:
+	return GameState.game_mode == GameState.GameMode.VS_AI and not GameState.battle_bgm_enabled
 
 # ─────────────────────────────────────────────────────────────
 # Compact card-effect coin flip overlay (1–3 coins, auto-dismiss)
@@ -5375,6 +5411,7 @@ func _refresh_tech_hand() -> void:
 		if not mid_reveal and GameState.current_phase in [GameState.Phase.MODE_SELECT, GameState.Phase.ATTACK]:
 			_set_selection_state(SelectionState.SELECTING_ATTACKER)
 			_highlight_attackable_chars())
+	SFXManager.wire_prompt_button(cancel)
 	title_row.add_child(cancel)
 
 	# Card row — each card column grows to fill remaining height
@@ -5772,6 +5809,7 @@ func _on_ai_end_turn() -> void:
 func _on_end_turn_requested() -> void:
 	if TutorialBattleManager.is_active and not TutorialBattleManager.should_allow_end_turn_btn():
 		return
+	SFXManager.play(SFXManager.SFX_BTN)
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.report_action("end_turn_tap", {})
 	await get_tree().create_timer(0.5).timeout
@@ -6365,7 +6403,6 @@ func _start_confirm_attack(target_player: int, target_pos: Vector2i) -> void:
 	_update_union_suggest_button()
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = true
-		SFXManager.play(SFXManager.SFX_POPUP)
 	_update_tutorial_hud_lock()
 	# Blink the target card red
 	var target_node: Control = grid_nodes[target_player][target_pos.x][target_pos.y]
@@ -6540,8 +6577,6 @@ func _begin_revive_placement_selection() -> void:
 		return
 	var prompt: String = "Choose an empty cell for %s." % card.card_name
 	pending_tech_filter = "revive_placement"
-	action_label.text = prompt
-	action_panel.visible = true
 	_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
 	_show_guide(prompt)
 	_highlight_tech_targets("revive_placement")
@@ -6627,8 +6662,6 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		await _prepare_revive_from_graveyard(GameState.current_player, tech_data)
 		return
 
-	action_label.text = prompt
-	action_panel.visible = true
 	pending_tech_filter = filter
 	# Parse reveal count for multi-reveal filters (e.g. "opponent_squares_3", "own_units_up_to_5")
 	if "opponent_squares" in filter:
@@ -6708,6 +6741,9 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			"ability_plant29_venom", "ability_plant29_mutagen", "ability_death_cobra_venom",
 			"ability_lockpicker_reveal", "wk17_foe_pick_character"]:
 		var _ai_responds: bool = _is_ai_turn()
+		if filter in ["ability_plant29_venom", "ability_plant29_mutagen"]:
+			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+				or not _local_human_is_selecting(GameState.current_player)
 		if filter == "ability_rebel_king_swap":
 			var _rk_owner: int = turn_manager._pending_rebel_king_owner
 			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
@@ -7088,8 +7124,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				GameState.post_message("Great Diplomacy: revealed %d unit(s)." % picked)
 				_finish_tech_action(current_player)
 			else:
-				action_label.text = "Great Diplomacy: %d/%d selected. Pick more or CLOSE to finish." % [picked, _tech_reveals_total]
-				_show_guide(action_label.text)
+				var _gd_msg := "Great Diplomacy: %d/%d selected. Pick more or CLOSE to finish." % [picked, _tech_reveals_total]
+				_show_guide(_gd_msg)
 				_highlight_tech_targets(pending_tech_filter)
 				if _is_ai_turn():
 					await get_tree().create_timer(0.4).timeout
@@ -7298,7 +7334,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			GameState.post_message("Make Friend: %s is locked from attacking." % card.card_name)
 			# Opponent also picks a monster to lock — transition to opponent lock
 			pending_tech_filter = "lock_opponent_monster"
-			action_label.text = "Make Friend: Opponent, choose 1 of your monsters to lock."
+			_show_guide("Make Friend: Opponent, choose 1 of your monsters to lock.")
 			_highlight_tech_targets(pending_tech_filter)
 			if GameState.game_mode in [GameState.GameMode.HOT_SEAT, GameState.GameMode.LOCAL_2P]:
 				_begin_human_defender_tech_choice()
@@ -7335,7 +7371,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			GameState.reveal_card(player, pos.x, pos.y)
 			GameState.post_message("Diplomacy Party: Revealed %s — opponent must reveal 1." % card.card_name)
 			pending_tech_filter = "opponent_facedown_forced"
-			action_label.text = "Diplomacy Party: Opponent, choose 1 of your cards to reveal."
+			_show_guide("Diplomacy Party: Opponent, choose 1 of your cards to reveal.")
 			_highlight_tech_targets(pending_tech_filter)
 			if GameState.game_mode in [GameState.GameMode.HOT_SEAT, GameState.GameMode.LOCAL_2P]:
 				_begin_human_defender_tech_choice()
@@ -7361,7 +7397,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == current_player and card.card_type == "character" and card.face_up:
 			_tech_buff_move_source = pos
 			pending_tech_filter = "own_faceup_character_target"
-			action_label.text = "Essence Transfer: Choose target unit to receive buffs."
+			_show_guide("Essence Transfer: Choose target unit to receive buffs.")
 			_highlight_tech_targets(pending_tech_filter)
 			if _is_ai_turn():
 				await get_tree().create_timer(0.4).timeout
@@ -7412,7 +7448,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			GameState.destroy_card(current_player, pos.x, pos.y, false)
 			GameState.post_message("Blood Ritual: Sacrificed %s — choose opponent card to zero out." % card.card_name)
 			pending_tech_filter = "opponent_faceup_zero_stats"
-			action_label.text = "Blood Ritual: Choose 1 opponent face-up unit to set ATK/DEF to 0."
+			_show_guide("Blood Ritual: Choose 1 opponent face-up unit to set ATK/DEF to 0.")
 			_highlight_tech_targets(pending_tech_filter)
 			if _is_ai_turn():
 				await get_tree().create_timer(0.5).timeout
@@ -8335,15 +8371,67 @@ func _build_guide_box() -> void:
 
 func _show_guide(text: String) -> void:
 	_game_guide_text = text
-	_build_guide_box()
-	_guide_label.text = text
-	_guide_box.reset_size()
-	_guide_box.visible = true
+	_sync_guide_visibility()
 
 func _hide_guide() -> void:
 	_game_guide_text = ""
 	if _guide_box != null:
 		_guide_box.visible = false
+
+func _is_action_overlay_active() -> bool:
+	if GameState.current_phase in [
+		GameState.Phase.NONE, GameState.Phase.SETUP_P1,
+		GameState.Phase.SETUP_P2, GameState.Phase.GAME_OVER]:
+		return false
+	if _handoff_overlay != null and _handoff_overlay.visible:
+		return true
+	if _bribe_overlay != null and _bribe_overlay.visible:
+		return true
+	if _ability_choice_overlay != null and _ability_choice_overlay.visible:
+		return true
+	if _attack_confirm_panel != null and _attack_confirm_panel.visible:
+		return true
+	if _tax_confirm_panel != null and is_instance_valid(_tax_confirm_panel):
+		return true
+	if _tech_hand_overlay != null and is_instance_valid(_tech_hand_overlay):
+		return true
+	if _tech_overlay_panel != null and _tech_overlay_panel.visible \
+			and GameState.current_phase == GameState.Phase.TECH \
+			and _tech_overlay_player == GameState.current_player:
+		return true
+	if _options_panel != null and is_instance_valid(_options_panel):
+		return true
+	if is_instance_valid(_context_popup):
+		return true
+	if get_node_or_null("BluffModalBoard") != null:
+		return true
+	if _union_modal != null and is_instance_valid(_union_modal):
+		return true
+	if is_instance_valid(_current_battle_overlay):
+		return true
+	if selection_state in [
+		SelectionState.CONFIRMING_ATTACK,
+		SelectionState.AWAITING_TRAP_CHOICE]:
+		return true
+	for child in get_children():
+		if child is ConfirmationDialog or child is AcceptDialog:
+			return true
+		if child is CardDetailOverlay:
+			return true
+		if child is ColorRect and child.z_index >= 55 \
+				and child.mouse_filter == Control.MOUSE_FILTER_STOP:
+			return true
+	return false
+
+func _sync_guide_visibility() -> void:
+	if _game_guide_text.is_empty():
+		if _guide_box != null:
+			_guide_box.visible = false
+		return
+	_build_guide_box()
+	_guide_label.text = _game_guide_text
+	_guide_box.reset_size()
+	_guide_box.visible = not _is_action_overlay_active()
 
 func _show_hud_tooltip(text: String) -> void:
 	_build_guide_box()
@@ -8356,10 +8444,7 @@ func _restore_game_guide() -> void:
 		if _guide_box != null:
 			_guide_box.visible = false
 	else:
-		_build_guide_box()
-		_guide_label.text = _game_guide_text
-		_guide_box.reset_size()
-		_guide_box.visible = true
+		_sync_guide_visibility()
 
 # ─────────────────────────────────────────────────────────────
 # Card Events
@@ -8377,6 +8462,8 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 	else:
 		delay = 0.3
 	await get_tree().create_timer(delay).timeout
+	if turn_manager != null:
+		turn_manager.notify_card_reveal_animation_done(player, row, col)
 	if inst != null and inst.card_type == "character" \
 			and inst.ability_type == CharacterData.AbilityType.ON_EXPOSE_REVEAL_FOE_ONCE \
 			and GameState.current_phase != GameState.Phase.BATTLE \
@@ -8407,6 +8494,8 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 			_get_ai_for_player(player).decide_death_bluff(row, col)
 	var node: Control = grid_nodes[player][row][col]
 	if inst != null and inst.card_type in ["dead_end", "trap"]:
+		if inst.card_type == "dead_end":
+			await get_tree().create_timer(0.5).timeout
 		_spawn_dissolve_effect(node)
 		await get_tree().create_timer(0.90).timeout
 	else:
@@ -8579,6 +8668,8 @@ func _on_ai_attack_chosen(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	if GameState.current_phase == GameState.Phase.GAME_OVER:
 		return
 	var player := GameState.current_player
+	if not _is_ai_turn() or player != _active_ai.player_index:
+		return
 	var attacker: GameState.CardInstance = GameState.get_card(player, attacker_pos.x, attacker_pos.y)
 	if attacker.card_type != "character":
 		return
@@ -8586,7 +8677,8 @@ func _on_ai_attack_chosen(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	var attacker_node: Control = grid_nodes[player][attacker_pos.x][attacker_pos.y]
 	attacker_node.set_preview_revealed(true)
 	await get_tree().create_timer(1.0).timeout
-	if GameState.current_phase == GameState.Phase.GAME_OVER:
+	if GameState.current_phase == GameState.Phase.GAME_OVER \
+			or GameState.current_player != player:
 		attacker_node.set_preview_revealed(false)
 		return
 	# Flash the target cell so the human can see which card is being attacked.
@@ -8594,9 +8686,11 @@ func _on_ai_attack_chosen(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	# perform_attack will reveal the card properly (face_up=true), making the peek flag moot.
 	_flash_target_card(GameState.get_opponent(player), target_pos.x, target_pos.y)
 	await get_tree().create_timer(0.4).timeout
-	if GameState.current_phase == GameState.Phase.GAME_OVER:
+	if GameState.current_phase == GameState.Phase.GAME_OVER \
+			or GameState.current_player != player:
+		attacker_node.set_preview_revealed(false)
 		return
-	turn_manager.perform_attack(attacker_pos, target_pos)
+	turn_manager.perform_attack(attacker_pos, target_pos, player)
 
 func _on_ai_tech_chosen(tech_name: String) -> void:
 	pending_tech_name = tech_name
@@ -8910,8 +9004,17 @@ func _on_return_to_map() -> void:
 	get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
 
 func _process(delta: float) -> void:
-	if _guide_box != null and _guide_box.visible:
-		_guide_box.global_position = get_global_mouse_position() + Vector2(58.0, 62.0)
+	if _guide_box != null:
+		if _is_action_overlay_active():
+			if _guide_box.visible:
+				_guide_box.visible = false
+		elif not _game_guide_text.is_empty():
+			if not _guide_box.visible:
+				_sync_guide_visibility()
+			if _guide_box.visible:
+				_guide_box.global_position = get_global_mouse_position() + Vector2(58.0, 62.0)
+		elif _guide_box.visible:
+			_guide_box.global_position = get_global_mouse_position() + Vector2(58.0, 62.0)
 	if _shake_active:
 		var ml: Control = get_node("MainLayout")
 		ml.position = _shake_origin + Vector2(
@@ -9016,14 +9119,14 @@ func _on_game_over(winner: int) -> void:
 	_shake_origin = ml.position
 	_shake_active = true
 	var _crystal_end: bool = GameState.game_over_reason == "crystals"
-	if player_won and GameState.battle_almost_win_enabled and not _crystal_end:
+	if player_won and GameState.battle_almost_win_enabled and not _crystal_end and not _vs_ai_bgm_muted():
 		# Win: switch to almost-win BGM at 00:00 with no fade-in.
 		# If it's already playing (triggered by the almost-win threshold mid-battle),
 		# leave it running — do not restart it.
 		var almost_path: String = _resolve_almost_win_bgm_path()
 		if BGMManager.get_current_path() != almost_path:
 			BGMManager.play_path(almost_path, 0.0, 0.0, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
-	elif not player_won and not _crystal_end:
+	elif not player_won and not _crystal_end and not _vs_ai_bgm_muted():
 		# Lose: slowly fade out whatever is playing across the reveal animation.
 		# Nothing starts after — defeat BGM is intentionally omitted.
 		BGMManager.stop(2.5)
@@ -9063,6 +9166,7 @@ func _flip_reveal_all_cards() -> void:
 
 func _flip_card_reveal(player: int, row: int, col: int) -> void:
 	var node: Control = grid_nodes[player][row][col]
+	SFXManager.play(SFXManager.SFX_FLIP)
 	# Squish inward (scale X: 1 → 0)
 	var t1 := create_tween()
 	t1.tween_property(node, "scale:x", 0.0, 0.06).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
@@ -9099,6 +9203,8 @@ func _resolve_almost_win_bgm_path() -> String:
 ##   – any player's active (non-dead-end) card count ≤ 5.
 ## Latches via _almost_win_bgm_active so it only triggers once per battle.
 func _check_almost_win_bgm() -> void:
+	if _vs_ai_bgm_muted():
+		return
 	if not GameState.battle_almost_win_enabled:
 		return
 	if _almost_win_bgm_active:

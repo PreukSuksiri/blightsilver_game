@@ -1,0 +1,115 @@
+=== Battle of Uncle Barry's Basement ===
+Battle started: 2026-06-21 21:08:50.721
+Game Session of English Breakfast Tea (started 2026-06-21 21:05:23.905)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:42.413] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:54.283] Revealed: P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:54.304] Revealed: P1 (2,1) "Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima}
+[00:54.307] Target prompt: "Lockpicker: Choose 1 foe cell to reveal."  filter=ability_lockpicker_reveal
+[00:54.676] MSG: Lockpicker: Revealed Dead End.
+[00:54.915] Dice rolled: 5
+[00:59.376] Crystals: P0 5000 → 4600 (-400)  [battle]
+[01:00.777] Attack P0(2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(2,1)"Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima | flags:expose_reveal_used}  Dice=5  ATK=25 vs DEF=35  → LOSE
+[01:00.778] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[01:00.778] Reckoning overlay: P1 "Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima | flags:expose_reveal_used} badge=35 ATK pill=30 DEF pill=35 mod=+DEF 0 (35+0=35)
+[01:00.778] Anim: 3B  △ P0(2,4)
+[01:00.778] Card destroyed  P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:12.242] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[01:12.242] Dice rolled: 3
+[01:12.575] MSG: Plant-29 wins!
+[01:17.034] Crystals: P1 5000 → 4550 (-450)  [battle]
+[01:18.442] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(2,1)"Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima | flags:expose_reveal_used}  Dice=3  ATK=45 vs DEF=35  → WIN
+[01:18.442] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[01:18.442] Reckoning overlay: P1 "Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima | flags:expose_reveal_used} badge=35 ATK pill=30 DEF pill=35 mod=+DEF 0 (35+0=35)
+[01:18.442] Anim: 3A  △ P1(2,1)
+[01:18.442] Card destroyed  P1 (2,1) "Lockpicker" {Unit ATK30 DEF35 | cost 450 | affinity Anima | flags:expose_reveal_used}
+[01:29.416] Turn ended  P0  |  Crystals P0=4600 P1=4550
+
+--- Turn 2  |  Player 1  |  Crystals P0=4600 P1=4550 ---
+[01:30.013] Mode selected P1: TECH
+[01:30.318] Tech played  P1: "Bribe"
+[01:31.868] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[01:35.704] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:35.704] Crystals: P0 4600 → 5300 (+700)  [ability]
+[01:35.704] MSG: Bribe: Player 1 revealed Shepherd Detective and received 700 Crystals.
+[01:35.708] Tech resolved  P1
+[01:36.610] Mode selected P1: ATTACK
+[01:36.612] MSG: Player 2: tap a unit to attack.
+[01:38.337] Revealed: P1 (0,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[01:38.337] Dice rolled: 2
+[01:38.667] MSG: Huntress of Green Glade wins!
+[01:43.141] Crystals: P0 5300 → 4900 (-400)  [battle]
+[01:44.540] Attack P1(0,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=2  ATK=50 vs DEF=25  → WIN
+[01:44.540] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[01:44.540] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:44.540] Anim: 3A  △ P0(2,3)
+[01:44.540] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:45.046] Mode selected P1: ATTACK
+[01:45.049] MSG: Player 2: tap a unit to attack.
+[01:46.768] Revealed: P1 (1,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima}
+[01:46.768] Dice rolled: 5
+[01:47.101] MSG: Nothing happens — Dead End.
+[01:50.487] Attack P1(1,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima} → P0(1,1)(empty)  Dice=5  → DEAD_END
+[01:50.487] Anim: 3F  (blank slot)
+[01:50.997] Turn ended  P1  |  Crystals P0=4900 P1=4550
+
+--- Turn 3  |  Player 0  |  Crystals P0=4900 P1=4550 ---
+[01:51.060] Coin flip: Heads
+[01:53.793] Target prompt: "Plant-29: Heads! Choose 1 exposed ally or foe for Venom."  filter=ability_plant29_venom
+[01:59.883] MSG: Plant-29: Venom on Witchhunter.
+[02:10.834] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[02:10.834] Dice rolled: 1
+[02:11.625] MSG: Nothing happens — Dead End.
+[02:13.634] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(2,0)(empty)  Dice=1  → DEAD_END
+[02:13.634] Anim: 3F  (blank slot)
+[03:05.403] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[03:05.403] Dice rolled: 2
+[03:05.724] MSG: Moonrise Gentleman wins!
+[03:10.189] Crystals: P1 4550 → 4300 (-250)  [battle]
+[03:11.591] Attack P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(1,1)"Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima | flags:venom}  Dice=2  ATK=40 vs DEF=20  → WIN
+[03:11.591] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[03:11.591] Reckoning overlay: P1 "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima | flags:venom} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:11.591] Anim: 3A  △ P1(1,1)
+[03:11.591] Card destroyed  P1 (1,1) "Witchhunter" {Unit ATK20 DEF20 | cost 250 | affinity Anima | flags:venom}
+[03:31.503] Tech played  P0: "Prayer"
+[03:33.054] MSG: Prayer: Divine Units protected until opponent's turn ends.
+[03:33.059] Tech resolved  P0
+[03:38.216] Turn ended  P0  |  Crystals P0=4900 P1=4300
+
+--- Turn 4  |  Player 1  |  Crystals P0=4900 P1=4300 ---
+[03:38.821] Mode selected P1: TECH
+[03:39.139] Tech played  P1: "Tease"
+[03:40.705] MSG: Opponent must choose and reveal 1 of their squares.
+[03:40.878] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[03:43.874] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[03:43.875] MSG: Tease: Opponent revealed Grand Fort Mauler.
+[03:43.878] Tech resolved  P1
+[03:44.765] Mode selected P1: ATTACK
+[03:44.768] MSG: Player 2: tap a unit to attack.
+[03:46.472] Dice rolled: 3
+[03:46.502] MSG: Huntress of Green Glade wins!
+[03:50.964] Crystals: P0 4900 → 4150 (-750)  [battle]
+[03:52.358] Attack P1(0,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=3  ATK=50 vs DEF=45  → WIN
+[03:52.358] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[03:52.358] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[03:52.358] Anim: 3A  △ P0(1,4)
+[03:52.358] Card destroyed  P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[03:54.866] Turn ended  P1  |  Crystals P0=4150 P1=4300
+
+--- Turn 5  |  Player 0  |  Crystals P0=4150 P1=4300 ---
+[03:54.917] Coin flip: Heads
+[03:57.655] Target prompt: "Plant-29: Heads! Choose 1 exposed ally or foe for Venom."  filter=ability_plant29_venom
+[03:59.103] MSG: Plant-29: Venom on Plant-29.
+[04:25.926] Revealed: P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[04:25.926] Dice rolled: 4
+[04:26.243] MSG: Ostrich Cannon wins!
+[04:30.713] Crystals: P1 4300 → 3500 (-800)  [battle]
+[04:32.111] MSG: Ostrich Cannon locks itself until next turn.
+[04:32.115] Attack P0(2,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(0,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima

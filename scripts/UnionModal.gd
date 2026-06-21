@@ -91,6 +91,7 @@ func _build_ui() -> void:
 	close_btn.custom_minimum_size = Vector2(100.0, 36.0)
 	close_btn.add_theme_font_size_override("font_size", 13)
 	close_btn.pressed.connect(_on_cancel)
+	SFXManager.wire_prompt_button(close_btn)
 	title_row.add_child(close_btn)
 
 	# ── Card row (with scroll when > 3 unions) ────────────
@@ -186,6 +187,7 @@ func _build_ui() -> void:
 		btn.pressed.connect(func() -> void:
 			union_selected.emit(_player, captured_name, captured_zone)
 			queue_free())
+		SFXManager.wire_prompt_button(btn)
 		col.add_child(btn)
 
 # ─────────────────────────────────────────────────────────────

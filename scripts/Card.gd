@@ -962,6 +962,7 @@ func set_ability_target_flash(flashing: bool) -> void:
 # Animations
 # ─────────────────────────────────────────────────────────────
 func play_reveal_animation() -> void:
+	SFXManager.play(SFXManager.SFX_FLIP)
 	pivot_offset = size * 0.5
 	var tween := create_tween()
 	tween.tween_property(self, "scale", Vector2(0.05, 1.0), 0.12).set_trans(Tween.TRANS_CUBIC)

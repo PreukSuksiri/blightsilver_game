@@ -284,6 +284,7 @@ var battle_setup_bgm_path: String = ""       # placement/setup phase; blank = ma
 var battle_almost_win_bgm_path: String = ""  # endgame threshold; blank = manage_bgm almost_win default
 var battle_bgm_start_sec: float = 14.0       # first-play offset; loops back to 00:00
 var battle_almost_win_enabled: bool = true     # mid-battle / win-reveal almost-win track switch
+var battle_bgm_enabled: bool = true            # VS AI config: false = no BGM for entire duel
 
 const DEFAULT_BATTLE_BGM_START_SEC: float = 14.0
 
@@ -1012,6 +1013,8 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		vn_battle_loss_rewards.clear()
 		vn_battle_loss_reward_once = ""
 	_vn_battle_pending = false
+	if mode != GameMode.VS_AI:
+		battle_bgm_enabled = true
 	game_over_reason = ""
 	_init_grids()
 	set_phase(Phase.SETUP_P1)

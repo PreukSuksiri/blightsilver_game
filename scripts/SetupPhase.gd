@@ -369,6 +369,7 @@ func _build_ui() -> void:
 	_random_btn.add_theme_font_size_override("font_size", 16)
 	_random_btn.disabled = true
 	_random_btn.pressed.connect(_on_random_formation)
+	SFXManager.wire_prompt_button(_random_btn)
 	add_child(_random_btn)
 
 	_confirm_btn = Button.new()
@@ -382,6 +383,7 @@ func _build_ui() -> void:
 	_confirm_btn.disabled = true
 	_confirm_btn.pressed.connect(_on_confirm)
 	_setup_confirm_btn_styles()
+	SFXManager.wire_prompt_button(_confirm_btn)
 	add_child(_confirm_btn)
 
 	# ── Player portrait illustrations (on top of all content) ─
@@ -1152,7 +1154,6 @@ func _apply_formation(idx: int, play_sfx: bool = true) -> void:
 func _on_random_formation() -> void:
 	if _is_tutorial_setup():
 		return
-	SFXManager.play(SFXManager.SFX_PLACE)
 	# Return all non-locked placed cards back to the pool and clear non-locked cells
 	for r in range(GRID_N):
 		for c in range(GRID_N):
@@ -1241,6 +1242,7 @@ func _flip_one_cell(cell: GridCell, facedown_tex: Texture2D,
 	if delay > 0.0:
 		await get_tree().create_timer(delay).timeout
 
+	SFXManager.play(SFXManager.SFX_FLIP)
 	# First half — squeeze X to 0 (card turning away)
 	var tw1 := create_tween()
 	tw1.set_ease(Tween.EASE_IN)
