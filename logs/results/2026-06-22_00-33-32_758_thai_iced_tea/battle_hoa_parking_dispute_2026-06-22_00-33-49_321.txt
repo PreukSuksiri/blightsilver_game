@@ -1,0 +1,161 @@
+=== Battle of HOA Parking Dispute ===
+Battle started: 2026-06-22 00:33:49.321
+Game Session of Thai Iced Tea (started 2026-06-22 00:33:32.758)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.567] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:23.416] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:23.416] Dice rolled: 3
+[00:24.681] MSG: Nothing happens — Dead End.
+[00:29.419] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(1,1)(empty)  Dice=3  → DEAD_END
+[00:29.419] Anim: 3F  (blank slot)
+[00:29.433] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:33.157] Revealed: P1 (2,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[00:33.157] MSG: Revealed: Big Thug
+[00:44.041] Revealed: P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:44.041] Dice rolled: 5
+[00:45.287] MSG: Demon Spawn wins!
+[00:49.747] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:52.932] Attack P0(3,0)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P1(2,1)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=5  ATK=40 vs DEF=35  → WIN
+[00:52.933] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[00:52.933] Reckoning overlay: P1 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[00:52.933] Anim: 3A  △ P1(2,1)
+[00:52.933] Card destroyed  P1 (2,1) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[01:56.557] Turn ended  P0  |  Crystals P0=5000 P1=4600
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4600 ---
+[01:57.150] Mode selected P1: TECH
+[01:57.450] Crystals: P1 4600 → 3600 (-1000)  [tech cost]
+[01:59.261] Tech played  P1: "Great Diplomacy"
+[02:00.809] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[02:01.250] Revealed: P1 (0,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[02:01.649] Revealed: P1 (0,1) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[02:02.043] Revealed: P1 (1,4) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[02:02.451] Revealed: P1 (2,4) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[02:02.465] MSG: [DEBUG] Bot Player timed out — ending turn.
+[02:02.467] Turn ended  P1  |  Crystals P0=5000 P1=3600
+
+--- Turn 3  |  Player 0  |  Crystals P0=5000 P1=3600 ---
+[03:47.641] Dice rolled: 1
+[03:47.674] MSG: Demon Spawn wins!
+[03:50.691] Crystals: P1 3600 → 3420 (-180)  [battle]
+[03:53.887] Attack P0(3,0)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P1(1,4)"Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}  Dice=1  ATK=40 vs DEF=0  → WIN
+[03:53.887] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[03:53.887] Reckoning overlay: P1 "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos} badge=0 ATK pill=30 DEF pill=0 mod=+DEF 0 (0+0=0)
+[03:53.887] Anim: 3A  △ P1(1,4)
+[03:53.887] Card destroyed  P1 (1,4) "Staircase Lady" {Unit ATK30 DEF0 | cost 180 | affinity Chaos}
+[03:57.371] Revealed: P0 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[03:57.372] Dice rolled: 4
+[03:58.629] MSG: Dark Blob wins!
+[04:03.096] Crystals: P1 3420 → 3170 (-250)  [battle]
+[04:06.295] Attack P0(3,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} → P1(2,4)"Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}  Dice=4  ATK=20 vs DEF=10  → WIN
+[04:06.295] Reckoning overlay: P0 "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} badge=20 ATK pill=20 DEF pill=50 mod=+ATK 0 (20+0=20)
+[04:06.295] Reckoning overlay: P1 "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature} badge=10 ATK pill=30 DEF pill=10 mod=+DEF 0 (10+0=10)
+[04:06.295] Anim: 3A  △ P1(2,4)
+[04:06.295] Card destroyed  P1 (2,4) "Goblin Poacher" {Unit ATK30 DEF10 | cost 250 | affinity Nature}
+[04:08.162] Turn ended  P0  |  Crystals P0=5000 P1=3170
+
+--- Turn 4  |  Player 1  |  Crystals P0=5000 P1=3170 ---
+[04:08.763] Mode selected P1: TECH
+[04:09.080] Tech played  P1: "Bribe"
+[04:10.641] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[04:13.079] MSG: Bribe: Opponent passed.
+[04:13.084] Tech resolved  P1
+[04:13.996] Mode selected P1: ATTACK
+[04:14.002] MSG: Player 2: tap a unit to attack.
+[04:15.220] Dice rolled: 2
+[04:15.250] MSG: Both cards are destroyed!
+[04:19.145] Crystals: P1 3170 → 2670 (-500)  [battle]
+[04:20.962] Crystals: P0 5000 → 4500 (-500)  [battle]
+[04:22.779] Attack P1(0,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P0(3,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | flags:reckoning_participated}  Dice=2  ATK=50 vs DEF=50  → TIE
+[04:22.779] Reckoning overlay: P1 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=50 ATK pill=50 DEF pill=10 mod=+ATK 0 (50+0=50)
+[04:22.779] Reckoning overlay: P0 "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | flags:reckoning_participated} badge=50 ATK pill=20 DEF pill=50 mod=+DEF 0 (50+0=50)
+[04:22.779] Anim: 3C  △ P1(0,0) + △ P0(3,3)
+[04:22.779] Card destroyed  P1 (0,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[04:22.779] Card destroyed  P0 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | flags:reckoning_participated}
+[04:23.281] Mode selected P1: ATTACK
+[04:23.285] MSG: Player 2: tap a unit to attack.
+[04:24.508] Dice rolled: 5
+[04:24.542] MSG: Angel Gatekeeper wins!
+[04:30.003] Crystals: P0 4500 → 4100 (-400)  [battle]
+[04:33.194] Attack P1(0,1)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P0(3,0)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}  Dice=5  ATK=90 vs DEF=30  → WIN
+[04:33.194] Reckoning overlay: P1 "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} badge=90 ATK pill=40 DEF pill=90 mod=+ATK 50 (40+50=90)
+[04:33.194] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[04:33.194] Anim: 3A  △ P0(3,0)
+[04:33.194] Card destroyed  P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[04:33.704] Turn ended  P1  |  Crystals P0=4100 P1=2670
+
+--- Turn 5  |  Player 0  |  Crystals P0=4100 P1=2670 ---
+[04:42.947] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[04:42.947] Revealed: P1 (1,2) "Explosive Barrels" {cost 0}
+[04:42.948] Crystals: P0 4100 → 4140 (+40)  [ability]
+[04:42.948] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[04:42.949] Dice rolled: 4
+[04:44.243] MSG: Trap triggered: Explosive Barrels!
+[04:48.281] Crystals: P0 4140 → 3840 (-300)  [card lost]
+[04:50.743] Crystals: P1 2670 → 2370 (-300)  [trap]
+[04:52.551] MSG: Explosive Barrels: Parom the Smuggler destroyed! Defender loses 300 Crystals.
+[04:52.557] Attack P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(1,2)"Explosive Barrels" {cost 0}  Dice=4  → Unit vs Trap
+[04:52.557] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[04:52.557] Anim: 3E  △ P0(4,2)
+[04:56.089] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:56.114] Revealed: P1 (1,0) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[04:56.114] Dice rolled: 3
+[04:57.329] MSG: Aerial the Battlemage wins!
+[05:01.799] Crystals: P1 2370 → 2070 (-300)  [battle]
+[05:04.990] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(1,0)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}  Dice=3  ATK=50 vs DEF=20  → WIN
+[05:04.990] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[05:04.990] Reckoning overlay: P1 "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[05:04.990] Anim: 3A  △ P1(1,0)
+[05:04.990] Card destroyed  P1 (1,0) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[06:28.432] MSG: Tap 2 material card(s) on the field.
+[06:28.824] MSG: 1 more material(s) needed.
+[06:29.607] Crystals: P0 3840 → 3340 (-500)  [union]
+[06:31.425] Revealed: P0 (2,4) "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[06:31.465] Union summoned P0: "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[06:31.465] MSG: Player 1 summoned [Berserk Hyena] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[06:54.809] Turn ended  P0  |  Crystals P0=3340 P1=2070
+
+--- Turn 6  |  Player 1  |  Crystals P0=3340 P1=2070 ---
+[06:55.405] Mode selected P1: ATTACK
+[06:55.410] MSG: Player 2: tap a unit to attack.
+[06:56.599] Dice rolled: 4
+[06:56.629] MSG: Angel Gatekeeper wins!
+[07:01.092] Crystals: P0 3340 → 2940 (-400)  [battle]
+[07:04.279] Attack P1(0,1)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=4  ATK=40 vs DEF=25  → WIN
+[07:04.279] Reckoning overlay: P1 "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} badge=40 ATK pill=40 DEF pill=90 mod=+ATK 0 (40+0=40)
+[07:04.279] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[07:04.279] Anim: 3A  △ P0(2,3)
+[07:04.279] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[07:04.777] Mode selected P1: ATTACK
+[07:04.782] MSG: Player 2: tap a unit to attack.
+[07:05.120] Revealed: P1 (0,4) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[07:07.001] Dice rolled: 2
+[07:07.067] MSG: Mine Guard wins!
+[07:11.471] Attack P1(0,4)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → P0(2,4)"Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}  Dice=2  ATK=20 vs DEF=0  → WIN
+[07:11.471] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[07:11.471] Reckoning overlay: P0 "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} badge=0 ATK pill=40 DEF pill=0 mod=+DEF 0 (0+0=0)
+[07:11.471] Anim: 3A  △ P0(2,4)
+[07:11.471] Card destroyed  P0 (2,4) "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[07:11.971] Turn ended  P1  |  Crystals P0=2940 P1=2070
+
+--- Turn 7  |  Player 0  |  Crystals P0=2940 P1=2070 ---
+[07:23.697] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[07:23.697] Dice rolled: 3
+[07:24.937] MSG: Plant-29 wins!
+[07:29.408] Crystals: P1 2070 → 1770 (-300)  [battle]
+[07:32.580] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(0,4)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}  Dice=3  ATK=45 vs DEF=15  → WIN
+[07:32.580] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[07:32.580] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=15 ATK pill=20 DEF pill=15 mod=+DEF 0 (15+0=15)
+[07:32.580] Anim: 3A  △ P1(0,4)
+[07:32.580] Card destroyed  P1 (0,4) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[07:38.431] Turn ended  P0  |  Crystals P0=2940 P1=1770
+
+--- Turn 8  |  Player 1  |  Crystals P0=2940 P1=1770 ---
+[07:39.024] Mode selected P1

@@ -1242,7 +1242,7 @@ func _flip_one_cell(cell: GridCell, facedown_tex: Texture2D,
 	if delay > 0.0:
 		await get_tree().create_timer(delay).timeout
 
-	SFXManager.play(SFXManager.SFX_FLIP)
+	SFXManager.play_flip()
 	# First half — squeeze X to 0 (card turning away)
 	var tw1 := create_tween()
 	tw1.set_ease(Tween.EASE_IN)

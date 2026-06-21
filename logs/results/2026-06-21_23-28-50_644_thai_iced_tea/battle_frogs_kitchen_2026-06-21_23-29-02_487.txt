@@ -1,0 +1,124 @@
+=== Battle of Frog's Kitchen ===
+Battle started: 2026-06-21 23:29:02.487
+Game Session of Thai Iced Tea (started 2026-06-21 23:28:50.644)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.707] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:09.108] Mode selected P1: TECH
+[00:09.408] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:10.793] Tech played  P1: "Radar"
+[00:12.347] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:12.803] Revealed: P0 (3,2) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[00:13.461] Dead-end placed  P0 (4,3)
+[00:13.662] Revealed: P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:13.665] Tech resolved  P1
+[00:14.537] Mode selected P1: ATTACK
+[00:14.543] MSG: Player 2: tap a unit to attack.
+[00:14.853] Revealed: P1 (1,4) "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio}
+[00:16.750] Dice rolled: 4
+[00:16.781] MSG: Leech Man wins!
+[00:21.242] Crystals: P0 5000 → 4550 (-450)  [battle]
+[00:24.002] Attack P1(1,4)"Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} → P0(3,2)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}  Dice=4  ATK=60 vs DEF=45  → WIN
+[00:24.002] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF40 | cost 880 | affinity Bio} badge=60 ATK pill=60 DEF pill=40 mod=+ATK 0 (60+0=60)
+[00:24.002] Reckoning overlay: P0 "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} badge=45 ATK pill=30 DEF pill=45 mod=+DEF 0 (45+0=45)
+[00:24.002] Anim: 3A  △ P0(3,2)
+[00:24.002] Card destroyed  P0 (3,2) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[00:24.503] Mode selected P1: ATTACK
+[00:24.508] MSG: Player 2: tap a unit to attack.
+[00:24.843] Revealed: P1 (0,4) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:26.722] Dice rolled: 1
+[00:26.742] MSG: Both cards are destroyed!
+[00:32.132] Crystals: P1 4400 → 4000 (-400)  [battle]
+[00:33.523] Crystals: P0 4550 → 3750 (-800)  [battle]
+[00:34.928] Attack P1(0,4)"Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} → P0(2,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}  Dice=1  ATK=30 vs DEF=30  → TIE
+[00:34.928] Reckoning overlay: P1 "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane} badge=30 ATK pill=20 DEF pill=20 mod=+ATK 10 (20+10=30)
+[00:34.928] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} badge=30 ATK pill=60 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:34.928] Anim: 3C  △ P1(0,4) + △ P0(2,0)
+[00:34.928] Card destroyed  P1 (0,4) "Red Mage" {Unit ATK20 DEF20 | cost 400 | affinity Arcane}
+[00:34.928] Card destroyed  P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:35.410] Turn ended  P1  |  Crystals P0=3750 P1=4000
+
+--- Turn 2  |  Player 0  |  Crystals P0=3750 P1=4000 ---
+[01:56.352] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:56.352] Dice rolled: 2
+[01:56.354] Crystals: P0 3750 → 3790 (+40)  [ability]
+[01:56.355] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:57.593] MSG: Nothing happens — Dead End.
+[02:02.325] Attack P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(1,3)(empty)  Dice=2  → DEAD_END
+[02:02.325] Anim: 3F  (blank slot)
+[02:05.318] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:05.318] Dice rolled: 1
+[02:05.324] Crystals: P0 3790 → 3830 (+40)  [ability]
+[02:05.324] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[02:06.557] MSG: Nothing happens — Dead End.
+[02:11.312] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(1,1)(empty)  Dice=1  → DEAD_END
+[02:11.312] Anim: 3F  (blank slot)
+[02:11.321] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[02:12.334] Revealed: P1 (1,0) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[02:12.334] Crystals: P0 3830 → 3870 (+40)  [ability]
+[02:12.334] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[02:12.335] MSG: Revealed: Feral Vampire
+[02:24.167] Turn ended  P0  |  Crystals P0=3870 P1=4000
+
+--- Turn 3  |  Player 1  |  Crystals P0=3870 P1=4000 ---
+[02:24.751] Mode selected P1: TECH
+[02:25.054] Crystals: P1 4000 → 2500 (-1500)  [tech cost]
+[02:26.440] Tech played  P1: "Resurrection"
+[02:27.987] Target prompt: "Choose where to place the revived unit."  filter=graveyard
+[02:28.387] Revealed: P1 (0,4) "Red Mage" {Unit ATK0 DEF0 | cost 400 | affinity Arcane | base 0/0}
+[02:28.390] MSG: Revived Red Mage at [0,4]!
+[02:28.394] Tech resolved  P1
+[02:29.288] Mode selected P1: ATTACK
+[02:29.295] MSG: Player 2: tap a unit to attack.
+[02:30.487] Dice rolled: 2
+[02:30.521] MSG: Feral Vampire wins!
+[02:34.982] Crystals: P0 3870 → 3470 (-400)  [battle]
+[02:37.743] Attack P1(1,0)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=2  ATK=40 vs DEF=25  → WIN
+[02:37.743] Reckoning overlay: P1 "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[02:37.743] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[02:37.743] Anim: 3A  △ P0(2,3)
+[02:37.743] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:38.237] Mode selected P1: ATTACK
+[02:38.243] MSG: Player 2: tap a unit to attack.
+[02:39.435] Dice rolled: 5
+[02:39.461] MSG: Leech Man wins!
+[02:43.928] Crystals: P0 3470 → 3170 (-300)  [battle]
+[02:46.689] Attack P1(1,4)"Leech Man" {Unit ATK60 DEF50 | cost 880 | affinity Bio | buff +permDEF10} → P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=5  ATK=60 vs DEF=20  → WIN
+[02:46.689] Reckoning overlay: P1 "Leech Man" {Unit ATK60 DEF50 | cost 880 | affinity Bio | buff +permDEF10} badge=60 ATK pill=60 DEF pill=50 mod=+ATK 0 (60+0=60)
+[02:46.689] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:46.689] Anim: 3A  △ P0(4,2)
+[02:46.689] Card destroyed  P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:47.191] Turn ended  P1  |  Crystals P0=3170 P1=2500
+
+--- Turn 4  |  Player 0  |  Crystals P0=3170 P1=2500 ---
+[03:18.566] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[03:18.566] Dice rolled: 2
+[03:19.809] MSG: Plant-29 wins!
+[03:24.275] Crystals: P1 2500 → 2100 (-400)  [battle]
+[03:27.042] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(1,0)"Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}  Dice=2  ATK=45 vs DEF=25  → WIN
+[03:27.042] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[03:27.042] Reckoning overlay: P1 "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[03:27.042] Anim: 3A  △ P1(1,0)
+[03:27.042] Card destroyed  P1 (1,0) "Feral Vampire" {Unit ATK40 DEF25 | cost 400 | affinity Chaos}
+[04:11.883] Turn ended  P0  |  Crystals P0=3170 P1=2100
+
+--- Turn 5  |  Player 1  |  Crystals P0=3170 P1=2100 ---
+[04:12.477] Mode selected P1: ATTACK
+[04:12.481] MSG: Player 2: tap a unit to attack.
+[04:13.673] Dice rolled: 5
+[04:13.957] MSG: Nothing happens — Dead End.
+[04:18.705] Attack P1(0,4)"Red Mage" {Unit ATK0 DEF0 | cost 400 | affinity Arcane | base 0/0} → P0(1,1)(empty)  Dice=5  → DEAD_END
+[04:18.705] Anim: 3F  (blank slot)
+[04:19.196] Mode selected P1: ATTACK
+[04:19.202] MSG: Player 2: tap a unit to attack.
+[04:20.437] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[04:20.437] Dice rolled: 2
+[04:21.624] MSG: Leech Man wins!
+[04:26.094] Crystals: P0 3170 → 2820 (-350)  [battle]
+[04:28.853] Attack P1(1,4)"Leech M

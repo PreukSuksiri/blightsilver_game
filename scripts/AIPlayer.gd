@@ -875,11 +875,15 @@ func decide_target(filter: String) -> Vector2i:
 			return _best_rift_strike_cell()
 		"opponent_faceup_zero_stats":
 			return _random_faceup_opponent()
-		"own_faceup_character", "own_faceup_character_berserk", "own_character_for_swap", \
-				"own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct", \
-				"lock_own_monster", "own_faceup_character_source", "own_faceup_character_target", \
-				"self_faceup_for_copy", "own_armored_nature":
+		"own_faceup_character_berserk", "own_faceup_for_trap_temp_def_boost", \
+				"self_faceup_for_copy", "own_character_for_swap":
 			return _best_own_faceup()
+		"own_faceup_character", "own_faceup_character_source", "own_faceup_character_target", \
+				"own_faceup_card_sacrifice", "own_any_card", \
+				"own_character_for_trap_self_destruct", "lock_own_monster":
+			return _best_own_character()
+		"own_armored_nature":
+			return _best_own_armored_nature()
 		"own_bio_character":
 			return _best_own_faceup_bio()
 		"self_squares_1_opponent_turn", "own_facedown_character":
@@ -887,8 +891,6 @@ func decide_target(filter: String) -> Vector2i:
 		"self_reveal_choice", "opponent_facedown_forced", \
 				"trap_hostage_reveal_lock", "trap_street_joke_reveal":
 			return _random_unrevealed_self()
-		"own_faceup_card_sacrifice", "own_any_card":
-			return _best_own_faceup()
 		"own_any_as_target":
 			return _worst_own_ally_excluding(GameState.attacker_pos)
 		"wk17_foe_pick_character":
@@ -1259,6 +1261,32 @@ func _random_faceup_opponent() -> Vector2i:
 	if options.is_empty():
 		return Vector2i(0, 0)
 	return options[randi() % options.size()]
+
+func _best_own_character() -> Vector2i:
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_atk: int = -1
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type == "character":
+				if card.get_effective_atk() > best_atk:
+					best_atk = card.get_effective_atk()
+					best_pos = Vector2i(r, c)
+	return best_pos
+
+func _best_own_armored_nature() -> Vector2i:
+	var best_pos: Vector2i = Vector2i(-1, -1)
+	var best_atk: int = -1
+	for r in range(GameState.GRID_SIZE):
+		for c in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player_index, r, c)
+			if card.card_type == "character" \
+					and card.affinity == CharacterData.Affinity.NATURE \
+					and "Armored" in card.card_name:
+				if card.get_effective_atk() > best_atk:
+					best_atk = card.get_effective_atk()
+					best_pos = Vector2i(r, c)
+	return best_pos
 
 func _best_own_faceup() -> Vector2i:
 	var best_pos: Vector2i = Vector2i(-1, -1)

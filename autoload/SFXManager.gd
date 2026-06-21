@@ -22,6 +22,7 @@ const SFX_BLUFF_PLACE  := preload("res://assets/audio/sfx/pop3.mp3")         # a
 const SFX_BLUFF_REMOVE := preload("res://assets/audio/sfx/pop2.mp3")         # remove bluff from cell
 const SFX_UNION_LAND  := preload("res://assets/audio/sfx/clash.mp3")       # Rule 9: union fire spark & dust
 const SFX_DESTROY     := preload("res://assets/audio/sfx/explosion3.mp3")   # Rule 10: card node destroyed (character)
+const SFX_METAL_DEFLECT := preload("res://assets/audio/sfx/scifi_ui_42_B.mp3") # destruction blocked / deflected
 const SFX_DISSOLVE    := preload("res://assets/audio/sfx/acid1.mp3")         # dead_end / trap dissolved
 const SFX_UNION_SHOCKWAVE := preload("res://assets/audio/sfx/scifi_ui_31.mp3") # Rule 22: union shockwave
 const SFX_TURN_BANNER := preload("res://assets/audio/sfx/scifi_ui_39.mp3")   # Rule 18: Player x's Turn banner
@@ -32,16 +33,21 @@ const SFX_CREDIT_CLINK := preload("res://assets/audio/sfx/coin_clink_4b.mp3") # 
 const SFX_BATTLE_CALC := preload("res://assets/audio/sfx/chime_4.mp3")         # Rule 23: battle calculation overlay opens
 const SFX_MODIFIER_REVEAL := preload("res://assets/audio/sfx/scifi_ui_34.mp3") # wheel spin result reveal
 const SFX_FLIP := preload("res://assets/audio/sfx/flip3.mp3")                  # card flip / reveal
+const SFX_FLIP_VOLUME := 0.7
 
-func play(stream: AudioStream) -> void:
+func play(stream: AudioStream, volume: float = 1.0) -> void:
 	if stream == null:
 		return
 	var asp := AudioStreamPlayer.new()
 	asp.stream = stream
 	asp.bus = "SFX"
+	asp.volume_db = linear_to_db(clampf(volume, 0.0, 1.0))
 	add_child(asp)
 	asp.play()
 	asp.finished.connect(asp.queue_free)
+
+func play_flip() -> void:
+	play(SFX_FLIP, SFX_FLIP_VOLUME)
 
 
 func wire_prompt_button(btn: Button) -> void:

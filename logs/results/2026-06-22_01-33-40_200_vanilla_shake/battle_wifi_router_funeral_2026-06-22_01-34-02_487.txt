@@ -1,0 +1,59 @@
+=== Battle of WiFi Router Funeral ===
+Battle started: 2026-06-22 01:34:02.487
+Game Session of Vanilla Shake (started 2026-06-22 01:33:40.200)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.708] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:22.633] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:22.674] Revealed: P1 (1,2) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:22.674] Dice rolled: 4
+[00:23.887] MSG: Shepherd Detective wins!
+[00:28.344] Crystals: P1 5000 → 4750 (-250)  [battle]
+[00:31.519] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(1,2)"Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}  Dice=4  ATK=40 vs DEF=20  → WIN
+[00:31.520] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:31.520] Reckoning overlay: P1 "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:31.520] Anim: 3A  △ P1(1,2)
+[00:31.520] Card destroyed  P1 (1,2) "Choir Lady Anna" {Unit ATK20 DEF20 | cost 250 | affinity Divine}
+[00:31.559] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:34.566] Revealed: P1 (3,2) "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos}
+[00:34.566] MSG: Revealed: Immortal Vampire
+[00:40.145] Turn ended  P0  |  Crystals P0=5000 P1=4750
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4750 ---
+[00:40.745] Mode selected P1: TECH
+[00:41.045] Crystals: P1 4750 → 3750 (-1000)  [tech cost]
+[00:42.855] Tech played  P1: "Accident"
+[00:44.404] Target prompt: "Choose 1 face-up card to destroy."  filter=any_faceup_card
+[00:44.804] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:44.809] Tech resolved  P1
+[00:45.702] Mode selected P1: ATTACK
+[00:45.705] MSG: Player 2: tap a unit to attack.
+[00:46.939] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:46.939] Dice rolled: 5
+[00:48.154] MSG: Immortal Vampire wins!
+[00:52.611] Crystals: P0 5000 → 4700 (-300)  [battle]
+[00:55.795] Attack P1(3,2)"Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos} → P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=5  ATK=30 vs DEF=20  → WIN
+[00:55.795] Reckoning overlay: P1 "Immortal Vampire" {Unit ATK30 DEF80 | cost 1200 | affinity Chaos} badge=30 ATK pill=30 DEF pill=80 mod=+ATK 0 (30+0=30)
+[00:55.795] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:55.795] Anim: 3A  △ P0(4,2)
+[00:55.795] Card destroyed  P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:58.304] Turn ended  P1  |  Crystals P0=4700 P1=3750
+
+--- Turn 3  |  Player 0  |  Crystals P0=4700 P1=3750 ---
+[01:20.083] Revealed: P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:20.120] Revealed: P1 (1,1) "Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature}
+[01:20.120] Dice rolled: 5
+[01:21.337] MSG: Flame Lizard wins!
+[01:25.794] Crystals: P1 3750 → 2650 (-1100)  [battle]
+[01:28.984] Attack P0(2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(1,1)"Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature}  Dice=5  ATK=45 vs DEF=25  → WIN
+[01:28.984] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=45 ATK pill=25 DEF pill=40 mod=+ATK 20 (25+20=45)
+[01:28.984] Reckoning overlay: P1 "Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:28.984] Anim: 3A  △ P1(1,1)
+[01:28.984] Card destroyed  P1 (1,1) "Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature}
+[01:33.626] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 D

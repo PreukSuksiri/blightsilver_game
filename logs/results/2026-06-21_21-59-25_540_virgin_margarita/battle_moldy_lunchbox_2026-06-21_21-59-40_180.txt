@@ -1,0 +1,120 @@
+=== Battle of Moldy Lunchbox ===
+Battle started: 2026-06-21 21:59:40.180
+Game Session of Virgin Margarita (started 2026-06-21 21:59:25.540)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.128] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:12.502] Crystals: P1 5000 → 4950 (-50)  [skip tax]
+[00:12.502] MSG: Player 2 skips without attacking — 50◆ tax (skip #1 this duel)
+[00:13.883] Turn ended  P1  |  Crystals P0=5000 P1=4950
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4950 ---
+[01:09.093] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[01:09.129] Revealed: P1 (1,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:09.130] Dice rolled: 3
+[01:10.337] MSG: Moonrise Gentleman wins!
+[01:13.587] Crystals: P1 4950 → 4750 (-200)  [battle]
+[01:16.362] Attack P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(1,2)"Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}  Dice=3  ATK=40 vs DEF=15  → WIN
+[01:16.362] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[01:16.362] Reckoning overlay: P1 "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos} badge=15 ATK pill=15 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:16.362] Anim: 3A  △ P1(1,2)
+[01:16.362] Card destroyed  P1 (1,2) "Bat Swarm" {Unit ATK15 DEF15 | cost 200 | affinity Chaos}
+[01:19.911] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:19.933] Revealed: P1 (2,1) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:19.934] Dice rolled: 2
+[01:21.131] MSG: Shepherd Detective wins!
+[01:25.711] Crystals: P1 4750 → 4030 (-720)  [battle]
+[01:28.512] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,1)"Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}  Dice=2  ATK=40 vs DEF=25  → WIN
+[01:28.512] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[01:28.512] Reckoning overlay: P1 "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos} badge=25 ATK pill=65 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:28.512] Anim: 3A  △ P1(2,1)
+[01:28.512] Card destroyed  P1 (2,1) "Void Stalker" {Unit ATK65 DEF25 | cost 720 | affinity Chaos}
+[01:28.518] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:35.515] Revealed: P1 (1,1) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[01:35.515] MSG: Revealed: Hammer Shark
+[01:41.541] Turn ended  P0  |  Crystals P0=5000 P1=4030
+
+--- Turn 3  |  Player 1  |  Crystals P0=5000 P1=4030 ---
+[01:42.043] Mode selected P1: TECH
+[01:42.345] Crystals: P1 4030 → 2530 (-1500)  [tech cost]
+[01:43.735] Tech played  P1: "Resurrection"
+[01:45.284] Target prompt: "Choose where to place the revived unit."  filter=graveyard
+[01:45.685] Revealed: P1 (1,2) "Void Stalker" {Unit ATK0 DEF0 | cost 720 | affinity Chaos | base 0/0}
+[01:45.689] MSG: Revived Void Stalker at [1,2]!
+[01:45.693] Tech resolved  P1
+[01:46.584] Mode selected P1: ATTACK
+[01:46.589] MSG: Player 2: tap a unit to attack.
+[01:48.295] Dice rolled: 3
+[01:49.074] MSG: Nothing happens — Dead End.
+[01:53.811] Attack P1(1,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} → P0(0,1)(empty)  Dice=3  → DEAD_END
+[01:53.811] Anim: 3F  (blank slot)
+[01:54.309] Mode selected P1: ATTACK
+[01:54.314] MSG: Player 2: tap a unit to attack.
+[01:56.055] Revealed: P0 (0,3) "Flame Trap" {cost 250}
+[01:56.055] Dice rolled: 1
+[01:57.267] MSG: Trap triggered: Flame Trap!
+[02:01.345] Crystals: P0 5000 → 4750 (-250)  [trap cost]
+[02:02.734] MSG: Flame Trap: Void Stalker permanently loses 10 ATK!
+[02:04.159] Attack P1(1,2)"Void Stalker" {Unit ATK0 DEF0 | cost 720 | affinity Chaos | base 0/0} → P0(0,3)"Flame Trap" {cost 250}  Dice=1  → Unit vs Trap
+[02:04.159] Reckoning overlay: P1 "Void Stalker" {Unit ATK0 DEF0 | cost 720 | affinity Chaos | base 0/0} badge=0 ATK pill=0 DEF pill=0 mod=+ATK 0 (0+0=0)
+[02:04.159] Anim: 3D  (attacker survives)
+[02:04.671] Turn ended  P1  |  Crystals P0=4750 P1=2530
+
+--- Turn 4  |  Player 0  |  Crystals P0=4750 P1=2530 ---
+[02:14.213] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[02:14.214] Dice rolled: 4
+[02:15.454] MSG: Plant-29 wins!
+[02:19.924] Crystals: P1 2530 → 2280 (-250)  [battle]
+[02:22.747] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(1,1)"Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}  Dice=4  ATK=45 vs DEF=20  → WIN
+[02:22.747] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[02:22.747] Reckoning overlay: P1 "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[02:22.747] Anim: 3A  △ P1(1,1)
+[02:22.747] Card destroyed  P1 (1,1) "Hammer Shark" {Unit ATK20 DEF20 | cost 250 | affinity Nature}
+[02:28.190] MSG: Tap 2 material card(s) on the field.
+[02:29.854] MSG: 1 more material(s) needed.
+[02:31.077] Crystals: P0 4750 → 4250 (-500)  [union]
+[02:31.105] Revealed: P0 (2,0) "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[02:31.108] Union summoned P0: "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[02:31.108] MSG: Player 1 summoned [Berserk Hyena] using: "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}, "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}
+[02:38.640] Dice rolled: 5
+[02:38.697] MSG: Berserk Hyena wins!
+[02:43.096] Crystals: P1 2280 → 1560 (-720)  [battle]
+[02:45.854] Attack P0(2,0)"Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P1(1,2)"Void Stalker" {Unit ATK0 DEF0 | cost 720 | affinity Chaos | base 0/0}  Dice=5  ATK=40 vs DEF=0  → WIN
+[02:45.854] Reckoning overlay: P0 "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} badge=40 ATK pill=40 DEF pill=0 mod=+ATK 0 (40+0=40)
+[02:45.854] Reckoning overlay: P1 "Void Stalker" {Unit ATK0 DEF0 | cost 720 | affinity Chaos | base 0/0} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[02:45.854] Anim: 3A  △ P1(1,2)
+[04:38.973] Turn ended  P0  |  Crystals P0=4250 P1=1560
+
+--- Turn 5  |  Player 1  |  Crystals P0=4250 P1=1560 ---
+[04:39.222] Mode selected P1: TECH
+[04:39.509] Crystals: P1 1560 → 560 (-1000)  [tech cost]
+[04:40.896] Tech played  P1: "Siege Cannon"
+[04:42.434] MSG: Siege Cannon active!
+[04:42.437] Tech resolved  P1
+[04:43.339] Mode selected P1: ATTACK
+[04:43.342] MSG: Player 2: tap a unit to attack.
+[04:45.043] Revealed: P1 (1,3) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[04:45.043] Dice rolled: 4
+[04:46.283] MSG: Both cards are destroyed!
+[04:50.674] Crystals: P1 560 → 180 (-380)  [battle]
+[04:52.065] Crystals: P0 4250 → 3850 (-400)  [battle]
+[04:53.456] Attack P1(1,3)"Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=4  ATK=25 vs DEF=25  → TIE
+[04:53.456] Reckoning overlay: P1 "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane} badge=25 ATK pill=25 DEF pill=35 mod=+ATK 0 (25+0=25)
+[04:53.456] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:53.456] Anim: 3C  △ P1(1,3) + △ P0(2,3)
+[04:53.456] Card destroyed  P1 (1,3) "Water Elemental" {Unit ATK25 DEF35 | cost 380 | affinity Arcane}
+[04:53.456] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[04:53.952] Mode selected P1: ATTACK
+[04:53.956] MSG: Player 2: tap a unit to attack.
+[04:55.661] Revealed: P1 (2,3) "Skeleton Archer" {Unit ATK35 DEF5 | cost 300 | affinity Chaos}
+[04:55.661] Dice rolled: 3
+[05:02.491] Crystals: P1 180 → 0 (-180)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 3850  P1: 0  |  Turns: 5

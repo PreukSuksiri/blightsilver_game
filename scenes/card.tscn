@@ -236,15 +236,17 @@ mouse_filter = 2
 
 [node name="WaitGlowPanel" type="Panel" parent="."]
 layout_mode = 0
-position = Vector2(28, 4)
-size = Vector2(54, 46)
+position = Vector2(28, 48)
+size = Vector2(54, 54)
 visible = false
 mouse_filter = 2
 
 [node name="AttackedIconRect" type="TextureRect" parent="."]
 layout_mode = 1
-anchor_right = 1.0
-anchor_bottom = 0.4
+offset_left = 33.0
+offset_top = 53.0
+offset_right = 77.0
+offset_bottom = 97.0
 expand_mode = 1
 stretch_mode = 5
 texture = ExtResource("3")

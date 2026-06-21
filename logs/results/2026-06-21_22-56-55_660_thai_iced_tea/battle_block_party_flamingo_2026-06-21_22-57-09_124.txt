@@ -1,0 +1,110 @@
+=== Battle of Block Party Flamingo ===
+Battle started: 2026-06-21 22:57:09.123
+Game Session of Thai Iced Tea (started 2026-06-21 22:56:55.660)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.110] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:18.754] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:18.754] Dice rolled: 4
+[00:20.011] MSG: Nothing happens — Dead End.
+[00:24.756] Attack P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[00:24.756] Anim: 3F  (blank slot)
+[00:49.702] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[00:49.708] Revealed: P1 (2,1) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:49.708] Dice rolled: 5
+[00:50.962] MSG: Plant-29 wins!
+[00:55.253] Crystals: P1 5000 → 4600 (-400)  [battle]
+[00:58.022] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(2,1)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=5  ATK=45 vs DEF=40  → WIN
+[00:58.022] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[00:58.022] Reckoning overlay: P1 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=40 ATK pill=25 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:58.022] Anim: 3A  △ P1(2,1)
+[00:58.022] Card destroyed  P1 (2,1) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:11.512] Turn ended  P0  |  Crystals P0=5000 P1=4600
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4600 ---
+[01:12.114] Mode selected P1: TECH
+[01:12.415] Crystals: P1 4600 → 4000 (-600)  [tech cost]
+[01:13.800] Tech played  P1: "Radar"
+[01:15.340] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:16.179] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[01:16.544] Tech resolved  P1
+[01:17.440] Mode selected P1: ATTACK
+[01:17.444] MSG: Player 2: tap a unit to attack.
+[01:17.775] Revealed: P1 (1,4) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:19.665] Dice rolled: 5
+[01:19.695] MSG: Both cards are destroyed!
+[01:25.056] Crystals: P1 4000 → 3600 (-400)  [battle]
+[01:26.448] Crystals: P0 5000 → 4600 (-400)  [battle]
+[01:27.839] MSG: Moonrise Gentleman: +10 DEF, -10 ATK permanently (if possible).
+[01:27.841] Attack P1(1,4)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}  Dice=5  ATK=40 vs DEF=40  → TIE
+[01:27.841] Reckoning overlay: P1 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[01:27.841] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+DEF 10 (30+10=40)
+[01:27.841] Anim: 3C  △ P1(1,4) + △ P0(1,2)
+[01:27.841] Card destroyed  P1 (1,4) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:27.841] Card destroyed  P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[01:27.845] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:28.234] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:28.234] MSG: Revealed: Parom the Smuggler
+[01:28.332] Mode selected P1: ATTACK
+[01:28.335] MSG: Player 2: tap a unit to attack.
+[01:28.673] Revealed: P1 (0,0) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[01:28.673] Crystals: P0 4600 → 4640 (+40)  [ability]
+[01:28.673] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[01:30.565] Dice rolled: 1
+[01:30.593] MSG: Fujin wins!
+[01:34.720] Crystals: P0 4640 → 4290 (-350)  [battle]
+[01:37.487] Attack P1(0,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=1  ATK=35 vs DEF=10  → WIN
+[01:37.487] Reckoning overlay: P1 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=35 ATK pill=35 DEF pill=40 mod=+ATK 0 (35+0=35)
+[01:37.487] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=10 ATK pill=40 DEF pill=10 mod=+DEF 0 (10+0=10)
+[01:37.487] Anim: 3A  △ P0(2,1)
+[01:37.487] Card destroyed  P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[01:37.981] Turn ended  P1  |  Crystals P0=4290 P1=3600
+
+--- Turn 3  |  Player 0  |  Crystals P0=4290 P1=3600 ---
+[01:38.050] Coin flip: Tails
+[01:40.943] Target prompt: "Plant-29: Tails! Choose 1 of your units for Mutagen."  filter=ability_plant29_mutagen
+[01:44.754] Revealed: P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[01:44.756] MSG: Plant-29: Mutagen on Demon Spawn.
+[03:25.955] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[03:25.981] Revealed: P1 (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[03:25.981] Crystals: P0 4290 → 4330 (+40)  [ability]
+[03:25.982] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[03:25.982] Dice rolled: 4
+[03:27.214] MSG: Shepherd Detective wins!
+[03:31.670] Crystals: P1 3600 → 3200 (-400)  [battle]
+[03:34.428] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,2)"Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}  Dice=4  ATK=40 vs DEF=35  → WIN
+[03:34.428] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[03:34.428] Reckoning overlay: P1 "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima} badge=35 ATK pill=40 DEF pill=35 mod=+DEF 0 (35+0=35)
+[03:34.428] Anim: 3A  △ P1(2,2)
+[03:34.428] Card destroyed  P1 (2,2) "Big Thug" {Unit ATK40 DEF35 | cost 400 | affinity Anima}
+[03:34.441] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[03:36.143] Revealed: P1 (1,2) "Blackmail" {cost 0}
+[03:36.143] Crystals: P0 4330 → 4370 (+40)  [ability]
+[03:36.143] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[03:36.143] MSG: Revealed: Blackmail
+[04:27.677] MSG: Tap 2 material card(s) on the field.
+[04:28.059] MSG: 1 more material(s) needed.
+[04:28.751] Crystals: P0 4370 → 3870 (-500)  [union]
+[04:28.751] Revealed: P0 (2,4) "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[04:28.806] Union summoned P0: "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[04:28.806] MSG: Player 1 summoned [Berserk Hyena] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[05:39.716] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[05:39.716] Dice rolled: 2
+[05:40.968] MSG: Aerial the Battlemage wins!
+[05:45.605] Crystals: P1 3200 → 2750 (-450)  [battle]
+[05:48.359] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(0,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=2  ATK=70 vs DEF=40  → WIN
+[05:48.359] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=70 ATK pill=50 DEF pill=45 mod=+ATK 20 (50+20=70)
+[05:48.359] Reckoning overlay: P1 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=40 ATK pill=35 DEF pill=40 mod=+DEF 0 (40+0=40)
+[05:48.359] Anim: 3A  △ P1(0,0)
+[05:48.359] Card destroyed  P1 (0,0) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[05:52.898] Turn ended  P0  |  Crystals P0=3870 P1=2750
+
+--- Turn 4  |  Player 1  |  Crystals P0=3870 P1=2750 ---
+[05:53.499] Mode selected P1: TECH
+[05:53.797] Crystals: P1 2750 → 1750 (-1000)  [tech c

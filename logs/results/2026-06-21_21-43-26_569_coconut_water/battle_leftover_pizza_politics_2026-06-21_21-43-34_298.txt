@@ -1,0 +1,61 @@
+=== Battle of Leftover Pizza Politics ===
+Battle started: 2026-06-21 21:43:34.298
+Game Session of Coconut Water (started 2026-06-21 21:43:26.569)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:14.179] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:28.856] Revealed: P0 (0,0) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:28.856] Revealed: P1 (0,1) "Trap Hole" {cost 0}
+[00:28.856] Dice rolled: 1
+[00:29.594] MSG: Trap triggered: Trap Hole!
+[00:33.735] Coin flip: Tails, Tails, Heads
+[00:36.476] MSG: Trap Hole: Tails, Tails, Heads.
+[00:36.476] Crystals: P0 5000 → 4980 (-20)  [trap]
+[00:37.857] MSG: Trap Hole: 1 head(s) — Player 1 loses 20 Crystals!
+[00:38.852] Attack P0(0,0)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(0,1)"Trap Hole" {cost 0}  Dice=1  → Unit vs Trap
+[00:38.852] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[00:38.852] Anim: 3D  (attacker survives)
+[00:50.882] Revealed: P0 (1,4) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[00:50.921] Revealed: P1 (1,1) "Jirayu the Rebellious Prince" {Unit ATK40 DEF40 | cost 600 | affinity Anima}
+[00:50.921] Dice rolled: 2
+[00:51.627] MSG: Jirayu the Rebellious Prince gains +10 DEF permanently!
+[00:57.201] Crystals: P0 4980 → 4530 (-450)  [battle]
+[00:58.604] MSG: Jirayu the Rebellious Prince locked — cannot attack until end of next turn.
+[00:58.609] Attack P0(1,4)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} → P1(1,1)"Jirayu the Rebellious Prince" {Unit ATK40 DEF50 | cost 600 | affinity Anima | base 40/50}  Dice=2  ATK=30 vs DEF=40  → LOSE
+[00:58.609] Reckoning overlay: P0 "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} badge=30 ATK pill=30 DEF pill=45 mod=+ATK 0 (30+0=30)
+[00:58.609] Reckoning overlay: P1 "Jirayu the Rebellious Prince" {Unit ATK40 DEF50 | cost 600 | affinity Anima | base 40/50} badge=40 ATK pill=40 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:58.609] Anim: 3B  △ P0(1,4)
+[00:58.610] Card destroyed  P0 (1,4) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[01:06.183] Turn ended  P0  |  Crystals P0=4530 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4530 P1=5000 ---
+[01:06.784] Mode selected P1: TECH
+[01:07.084] Crystals: P1 5000 → 4000 (-1000)  [tech cost]
+[01:08.469] Tech played  P1: "Great Diplomacy"
+[01:10.009] Target prompt: "Select up to 5 of your units and reveal them."  filter=own_units_up_to_5
+[01:10.452] Revealed: P1 (1,3) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[01:10.861] Revealed: P1 (1,2) "Grand Fort Footsoldier" {Unit ATK25 DEF25 | cost 300 | affinity Anima}
+[01:11.264] Revealed: P1 (3,1) "Choir Lady Abigail" {Unit ATK25 DEF15 | cost 250 | affinity Divine}
+[01:11.659] Revealed: P1 (2,1) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[01:12.073] Revealed: P1 (0,2) "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature}
+[01:12.074] MSG: Great Diplomacy: revealed 5 unit(s).
+[01:12.078] Tech resolved  P1
+[01:12.082] MSG: [DEBUG] Bot Player timed out — ending turn.
+[01:12.084] Turn ended  P1  |  Crystals P0=4530 P1=4000
+
+--- Turn 3  |  Player 0  |  Crystals P0=4530 P1=4000 ---
+[01:13.126] Mode selected P0: ATTACK
+[01:13.143] MSG: Player 1: tap a unit to attack.
+[01:21.015] Revealed: P0 (1,2) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:21.015] Dice rolled: 3
+[01:21.754] MSG: Shepherd Detective wins!
+[01:26.225] Crystals: P1 4000 → 3720 (-280)  [battle]
+[01:28.501] Attack P0(1,2)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,1)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}  Dice=3  ATK=40 vs DEF=20  → WIN
+[01:28.501] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[01:28.501] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 28

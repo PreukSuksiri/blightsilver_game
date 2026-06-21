@@ -117,6 +117,8 @@ var _void_modal: Control = null
 var _p1_crystal_icon: TextureRect = null
 var _p2_crystal_icon: TextureRect = null
 var _prev_crystals: Array[int]    = [3000, 3000]
+var _crystal_anim_queue: Array = []
+var _crystal_anim_processing: bool = false
 var _almost_win_bgm_active: bool  = false   # latches true once bgm_almost_win starts
 
 # Attack count labels (shown below each player's crystal display)
@@ -142,6 +144,8 @@ var _p2_view_slash: ColorRect = null
 var _p1_view_slash_shadow: ColorRect = null
 var _p2_view_slash_shadow: ColorRect = null
 var _reveal_preview: Array[bool] = [false, false]
+var _revealing_cells: Dictionary = {}   # "p,r,c" → true while reveal animation runs
+var _pending_flag_pops: Array = []      # {player, row, col, flag}
 var _enemy_view_active: bool = false
 var _enemy_view_return_dialog: ConfirmationDialog = null
 
@@ -400,6 +404,7 @@ func _setup_turn_manager() -> void:
 	turn_manager.battle_preview_needed.connect(_on_battle_preview_needed)
 	turn_manager.battle_result_finalized.connect(_on_battle_result_finalized)
 	turn_manager.attack_aborted.connect(_on_attack_aborted)
+	turn_manager.wait_badge_animation_requested.connect(_on_wait_badge_animation_requested)
 	turn_manager.coin_flip_visual_requested.connect(_on_coin_flip_visual_requested)
 
 func _setup_ai() -> void:
@@ -523,6 +528,9 @@ func _on_ai_watchdog_timeout() -> void:
 	if GameState.current_phase == GameState.Phase.BATTLE:
 		_restart_ai_watchdog()
 		return
+	if selection_state == SelectionState.SELECTING_TECH_TARGET:
+		_restart_ai_watchdog()
+		return
 	print("[AI WATCHDOG] Bot Player went idle — forcing turn end.")
 	GameState.post_message("[DEBUG] Bot Player timed out — ending turn.")
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
@@ -531,9 +539,12 @@ func _on_ai_watchdog_timeout() -> void:
 	_stop_ai_watchdog()
 
 func _connect_signals() -> void:
+	GameState.register_crystal_animation_board()
 	GameState.phase_changed.connect(_on_phase_changed)
 	GameState.card_revealed.connect(_on_card_revealed)
+	GameState.card_flag_added.connect(_on_card_flag_added)
 	GameState.card_destroyed.connect(_on_card_destroyed)
+	GameState.card_destruction_blocked.connect(_on_card_destruction_blocked)
 	GameState.field_bonuses_recalculated.connect(_refresh_all_grids)
 	GameState.crystals_changed.connect(_on_crystals_changed)
 	GameState.dice_rolled.connect(_on_dice_rolled)
@@ -2089,7 +2100,9 @@ func _build_reveal_buttons() -> void:
 		btn.add_child(slash)
 
 		var p := player
-		btn.pressed.connect(func() -> void: _toggle_reveal_preview(p))
+		btn.pressed.connect(func() -> void:
+			SFXManager.play(SFXManager.SFX_VIEW_TOGGLE)
+			_toggle_reveal_preview(p))
 		btn.mouse_entered.connect(func() -> void:
 			_show_hud_tooltip("Toggle between Your View and Enemy View"))
 		btn.mouse_exited.connect(func() -> void: _restore_game_guide())
@@ -2184,7 +2197,6 @@ func _toggle_reveal_preview(player: int) -> void:
 	# Only the active player may toggle their own peek
 	if player != GameState.current_player:
 		return
-	SFXManager.play(SFXManager.SFX_VIEW_TOGGLE)
 	_reveal_preview[player] = not _reveal_preview[player]
 	_enemy_view_active = not _reveal_preview[player]
 	# Slash shown in "enemy view" icon state (i.e. when NOT currently revealing).
@@ -2580,6 +2592,19 @@ var CTX_ICON_INFO:   Texture2D
 var CTX_ICON_BLUFF:  Texture2D
 var CTX_ICON_UNION:  Texture2D
 
+const CTX_MENU_SCALE: float = 1.25
+const CTX_ICON_SZ: float = 52.0 * CTX_MENU_SCALE
+const CTX_PAD: float = 8.0 * CTX_MENU_SCALE
+const CTX_SEP: float = 6.0 * CTX_MENU_SCALE
+const CTX_ICON_MAX_W: float = 36.0 * CTX_MENU_SCALE
+const BLUFF_MODAL_SIZE: Vector2 = Vector2(598.5, 130.0) * CTX_MENU_SCALE
+
+
+func _ctx_popup_size(btn_count: int) -> Vector2:
+	var w: float = btn_count * CTX_ICON_SZ + maxf(float(btn_count - 1), 0.0) * CTX_SEP + CTX_PAD * 2.0
+	var h: float = CTX_ICON_SZ + CTX_PAD * 2.0
+	return Vector2(w, h)
+
 func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	# Close any existing popup first
 	_hide_card_context()
@@ -2671,9 +2696,9 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 	var hbox := HBoxContainer.new()
 	hbox.layout_mode = 1
 	hbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-	hbox.offset_left = 8.0; hbox.offset_top    = 8.0
-	hbox.offset_right = -8.0; hbox.offset_bottom = -8.0
-	hbox.add_theme_constant_override("separation", 6)
+	hbox.offset_left = CTX_PAD; hbox.offset_top    = CTX_PAD
+	hbox.offset_right = -CTX_PAD; hbox.offset_bottom = -CTX_PAD
+	hbox.add_theme_constant_override("separation", CTX_SEP)
 	popup.add_child(hbox)
 
 	# Snapshot position BEFORE callbacks alter member vars
@@ -2742,12 +2767,10 @@ func _show_card_context(ctx_player: int, row: int, col: int) -> void:
 		hbox.add_child(ubtn)
 
 	# ── Size and position: horizontal strip above the cursor ──
-	const ICON_SZ: float = 52.0
-	const PAD: float     = 8.0
-	const SEP: float     = 6.0
-	var btn_count: int   = int(can_attack) + int(can_info) + int(can_bluff) + int(can_union)
-	var popup_w: float   = btn_count * ICON_SZ + maxf(float(btn_count - 1), 0.0) * SEP + PAD * 2.0
-	var popup_h: float   = ICON_SZ + PAD * 2.0
+	var btn_count: int = int(can_attack) + int(can_info) + int(can_bluff) + int(can_union)
+	var popup_size: Vector2 = _ctx_popup_size(btn_count)
+	var popup_w: float = popup_size.x
+	var popup_h: float = popup_size.y
 
 	var screen: Vector2 = get_viewport_rect().size
 	var px: float = _last_click_pos.x - popup_w * 0.5
@@ -2768,13 +2791,15 @@ func _make_context_icon_btn(tex: Texture2D) -> Button:
 	btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	btn.vertical_icon_alignment = VERTICAL_ALIGNMENT_CENTER
-	btn.custom_minimum_size = Vector2(52.0, 52.0)
-	btn.add_theme_constant_override("icon_max_width", 36)
+	btn.custom_minimum_size = Vector2(CTX_ICON_SZ, CTX_ICON_SZ)
+	btn.add_theme_constant_override("icon_max_width", int(CTX_ICON_MAX_W))
 	btn.add_theme_constant_override("h_separation", 0)
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.06, 0.10, 0.24, 1.0)
-	sb.corner_radius_top_left     = 6; sb.corner_radius_top_right    = 6
-	sb.corner_radius_bottom_right = 6; sb.corner_radius_bottom_left  = 6
+	sb.corner_radius_top_left     = int(6.0 * CTX_MENU_SCALE)
+	sb.corner_radius_top_right    = int(6.0 * CTX_MENU_SCALE)
+	sb.corner_radius_bottom_right = int(6.0 * CTX_MENU_SCALE)
+	sb.corner_radius_bottom_left  = int(6.0 * CTX_MENU_SCALE)
 	btn.add_theme_stylebox_override("normal", sb)
 	var sbh := sb.duplicate() as StyleBoxFlat
 	sbh.bg_color = Color(0.14, 0.22, 0.44, 1.0)
@@ -2805,7 +2830,6 @@ func _make_context_btn(label: String, col: Color) -> Button:
 	return btn
 
 const BLUFF_EMOJIS_BOARD: Array = ["😃","🥺","🤣","😎","❤️","☠️","🧨","👍","🤝","🖕"]
-const BLUFF_MODAL_SIZE := Vector2(598.5, 130.0)  # 570px width + 5%
 func _get_bluff_emojis_board() -> Array:
 	if SaveManager.nsfw_enabled:
 		return BLUFF_EMOJIS_BOARD.map(func(e: String) -> String: return "💩" if e == "🖕" else e)
@@ -2877,29 +2901,32 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 	psb.border_width_left   = 2; psb.border_width_top    = 2
 	psb.border_width_right  = 2; psb.border_width_bottom = 2
 	psb.border_color = Color(0.55, 0.78, 1.0, 0.7)
-	psb.corner_radius_top_left     = 10; psb.corner_radius_top_right    = 10
-	psb.corner_radius_bottom_right = 10; psb.corner_radius_bottom_left  = 10
+	psb.corner_radius_top_left     = int(10.0 * CTX_MENU_SCALE)
+	psb.corner_radius_top_right    = int(10.0 * CTX_MENU_SCALE)
+	psb.corner_radius_bottom_right = int(10.0 * CTX_MENU_SCALE)
+	psb.corner_radius_bottom_left  = int(10.0 * CTX_MENU_SCALE)
 	panel.add_theme_stylebox_override("panel", psb)
 	center_wrap.add_child(panel)
 
 	var vbox := VBoxContainer.new()
 	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	vbox.offset_left = 12.0; vbox.offset_top = 10.0
-	vbox.offset_right = -12.0; vbox.offset_bottom = -10.0
-	vbox.add_theme_constant_override("separation", 10)
+	var bluff_pad: float = 12.0 * CTX_MENU_SCALE
+	vbox.offset_left = bluff_pad; vbox.offset_top = 10.0 * CTX_MENU_SCALE
+	vbox.offset_right = -bluff_pad; vbox.offset_bottom = -10.0 * CTX_MENU_SCALE
+	vbox.add_theme_constant_override("separation", 10.0 * CTX_MENU_SCALE)
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	panel.add_child(vbox)
 
 	var title := Label.new()
 	title.text = "Pick a Bluff"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 16)
+	title.add_theme_font_size_override("font_size", int(16.0 * CTX_MENU_SCALE))
 	title.add_theme_color_override("font_color", Color(0.75, 0.92, 1.0))
 	vbox.add_child(title)
 
 	var hbox := HBoxContainer.new()
 	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
-	hbox.add_theme_constant_override("separation", 6)
+	hbox.add_theme_constant_override("separation", CTX_SEP)
 	vbox.add_child(hbox)
 
 	var snap_player: int = player
@@ -2909,12 +2936,15 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 	for emoji in _get_bluff_emojis_board():
 		var btn := Button.new()
 		btn.text = emoji
-		btn.custom_minimum_size = Vector2(46.0, 46.0)
-		btn.add_theme_font_size_override("font_size", 22)
+		var emoji_sz: float = 46.0 * CTX_MENU_SCALE
+		btn.custom_minimum_size = Vector2(emoji_sz, emoji_sz)
+		btn.add_theme_font_size_override("font_size", int(22.0 * CTX_MENU_SCALE))
 		var esb := StyleBoxFlat.new()
 		esb.bg_color = Color(0.08, 0.12, 0.28, 1.0)
-		esb.corner_radius_top_left     = 6; esb.corner_radius_top_right    = 6
-		esb.corner_radius_bottom_right = 6; esb.corner_radius_bottom_left  = 6
+		esb.corner_radius_top_left     = int(6.0 * CTX_MENU_SCALE)
+		esb.corner_radius_top_right    = int(6.0 * CTX_MENU_SCALE)
+		esb.corner_radius_bottom_right = int(6.0 * CTX_MENU_SCALE)
+		esb.corner_radius_bottom_left  = int(6.0 * CTX_MENU_SCALE)
 		btn.add_theme_stylebox_override("normal", esb)
 		var esbh := esb.duplicate() as StyleBoxFlat
 		esbh.bg_color = Color(0.15, 0.25, 0.55, 1.0)
@@ -2928,12 +2958,14 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 	var clear_btn := Button.new()
 	clear_btn.text = "✕  Remove Bluff"
 	clear_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
-	clear_btn.add_theme_font_size_override("font_size", 14)
+	clear_btn.add_theme_font_size_override("font_size", int(14.0 * CTX_MENU_SCALE))
 	clear_btn.add_theme_color_override("font_color", Color(0.8, 0.4, 0.4))
 	var csb := StyleBoxFlat.new()
 	csb.bg_color = Color(0.08, 0.08, 0.16, 1.0)
-	csb.corner_radius_top_left     = 6; csb.corner_radius_top_right    = 6
-	csb.corner_radius_bottom_right = 6; csb.corner_radius_bottom_left  = 6
+	csb.corner_radius_top_left     = int(6.0 * CTX_MENU_SCALE)
+	csb.corner_radius_top_right    = int(6.0 * CTX_MENU_SCALE)
+	csb.corner_radius_bottom_right = int(6.0 * CTX_MENU_SCALE)
+	csb.corner_radius_bottom_left  = int(6.0 * CTX_MENU_SCALE)
 	clear_btn.add_theme_stylebox_override("normal", csb)
 	clear_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	clear_btn.pressed.connect(func() -> void:
@@ -3168,6 +3200,7 @@ func _perform_pending_union() -> void:
 		material_labels.append(BattleLogFormat.format_card(_card))
 	# Pay crystal cost (apply dungeon modifiers via _effective_union_cost)
 	GameState.lose_crystals(player, _effective_union_cost(u.summon_cost), "union")
+	await GameState.wait_crystal_animation()
 	# Remove selected material cards (except the first which becomes the union)
 	for i: int in range(1, _pending_union_selected_materials.size()):
 		var cell: Vector2i = _pending_union_selected_materials[i]
@@ -3336,8 +3369,9 @@ func _show_blank_context(ctx_player: int, row: int, col: int) -> void:
 	var hbox := HBoxContainer.new()
 	hbox.layout_mode = 1
 	hbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-	hbox.offset_left = 8.0; hbox.offset_top    = 8.0
-	hbox.offset_right = -8.0; hbox.offset_bottom = -8.0
+	hbox.offset_left = CTX_PAD; hbox.offset_top    = CTX_PAD
+	hbox.offset_right = -CTX_PAD; hbox.offset_bottom = -CTX_PAD
+	hbox.add_theme_constant_override("separation", CTX_SEP)
 	popup.add_child(hbox)
 
 	var snap_player: int = ctx_player
@@ -3351,8 +3385,9 @@ func _show_blank_context(ctx_player: int, row: int, col: int) -> void:
 	hbox.add_child(btn)
 
 	# ── Size and position: icon strip above the cursor ────────
-	var popup_w: float = 52.0 + 8.0 * 2.0
-	var popup_h: float = 52.0 + 8.0 * 2.0
+	var popup_size: Vector2 = _ctx_popup_size(1)
+	var popup_w: float = popup_size.x
+	var popup_h: float = popup_size.y
 
 	var screen: Vector2 = get_viewport_rect().size
 	var px: float = _last_click_pos.x - popup_w * 0.5
@@ -3817,8 +3852,8 @@ func _build_turn_number_label() -> void:
 	bg.anchor_top    = 0.0; bg.anchor_bottom = 0.0
 	bg.offset_left   = -(MED_SIZE * 0.5)
 	bg.offset_right  =  (MED_SIZE * 0.5)
-	bg.offset_top    = -(MED_SIZE * 0.5)   # upper half above screen edge (clipped)
-	bg.offset_bottom =   (MED_SIZE * 0.5)  # lower half visible
+	bg.offset_top    = -(MED_SIZE * 0.5) + 20.0   # upper half above screen edge (clipped)
+	bg.offset_bottom =   (MED_SIZE * 0.5) + 20.0  # lower half visible
 	bg.mouse_filter  = Control.MOUSE_FILTER_IGNORE
 	bg.z_index = 3
 	bg.visible = false
@@ -3831,8 +3866,8 @@ func _build_turn_number_label() -> void:
 	hit.anchor_top    = 0.0; hit.anchor_bottom = 0.0
 	hit.offset_left   = -(HIT_W * 0.5)
 	hit.offset_right  =  (HIT_W * 0.5)
-	hit.offset_top    = 0.0
-	hit.offset_bottom = HIT_H
+	hit.offset_top    = 20.0
+	hit.offset_bottom = HIT_H + 20.0
 	hit.mouse_filter  = Control.MOUSE_FILTER_PASS
 	hit.z_index = 4
 	hit.visible = false
@@ -3846,7 +3881,7 @@ func _build_turn_number_label() -> void:
 	lbl.anchor_left   = 0.5; lbl.anchor_right  = 0.5
 	lbl.anchor_top    = 0.0; lbl.anchor_bottom = 0.0
 	lbl.offset_left   = -160.0; lbl.offset_right  = 160.0
-	lbl.offset_top    = -4.0;   lbl.offset_bottom = 56.0
+	lbl.offset_top    = 16.0;   lbl.offset_bottom = 76.0
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 	lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 600))
@@ -5180,27 +5215,39 @@ func _refresh_hud() -> void:
 	_update_turn_info()
 
 func _on_crystals_changed(player_index: int, new_amount: int, _reason: String = "") -> void:
+	_crystal_anim_queue.append({"player": player_index, "new_amount": new_amount})
+	if not _crystal_anim_processing:
+		_process_crystal_anim_queue()
+
+func _process_crystal_anim_queue() -> void:
+	_crystal_anim_processing = true
+	while _crystal_anim_queue.size() > 0:
+		var job: Dictionary = _crystal_anim_queue.pop_front()
+		await _run_crystal_change_animation(int(job["player"]), int(job["new_amount"]))
+		_update_union_suggest_button()
+		GameState.complete_crystal_animation()
+		if turn_manager != null:
+			turn_manager.crystal_animation_done.emit()
+	_crystal_anim_processing = false
+
+func _run_crystal_change_animation(player_index: int, new_amount: int) -> void:
 	var old_amount := _prev_crystals[player_index]
 	_prev_crystals[player_index] = new_amount
 	if new_amount < old_amount:
-		# Animated deduction: burst icon + tick-down + 1s hold
-		_play_crystal_burst(player_index)
-		await _tick_down_crystal(player_index, old_amount, new_amount)
+		await _play_crystal_burst(player_index, false)
+		await _tick_crystal(player_index, old_amount, new_amount)
 		await get_tree().create_timer(1.0).timeout
 		if new_amount > 0:
 			_check_almost_win_bgm()
+	elif new_amount > old_amount:
+		await _play_crystal_burst(player_index, true)
+		await _tick_crystal(player_index, old_amount, new_amount)
+		await get_tree().create_timer(1.0).timeout
 	else:
 		var bottom_lbl := _p1_bottom_crystal if player_index == 0 else _p2_bottom_crystal
 		if bottom_lbl != null:
 			bottom_lbl.text = str(new_amount)
-		# Yield one frame so TurnManager can reach its await before the signal fires.
-		# Without this, crystal_animation_done emits synchronously during lose_crystals,
-		# before TurnManager executes `await crystal_animation_done`, causing a hang.
 		await get_tree().process_frame
-	# Unblock TurnManager (or whoever is awaiting after lose_crystals)
-	_update_union_suggest_button()
-	if turn_manager != null:
-		turn_manager.crystal_animation_done.emit()
 
 func _update_crystals(player_index: int, amount: int) -> void:
 	_prev_crystals[player_index] = amount
@@ -5209,12 +5256,12 @@ func _update_crystals(player_index: int, amount: int) -> void:
 		bottom_lbl.text = str(amount)
 
 # Crystal burst animation: icon duplicates, scales up and fades out
-func _play_crystal_burst(player_index: int) -> void:
+func _play_crystal_burst(player_index: int, is_gain: bool) -> void:
 	var icon := _p1_crystal_icon if player_index == 0 else _p2_crystal_icon
 	if icon == null or not is_instance_valid(icon):
 		return
 	var asp := AudioStreamPlayer.new()
-	asp.stream = SFX_CRYSTAL
+	asp.stream = SFXManager.SFX_CRYSTAL_GAIN if is_gain else SFX_CRYSTAL
 	asp.bus = "SFX"
 	add_child(asp)
 	asp.play()
@@ -5237,8 +5284,8 @@ func _play_crystal_burst(player_index: int) -> void:
 	await t.finished
 	burst.queue_free()
 
-# Tick-down animation: smoothly counts the label from old to new
-func _tick_down_crystal(player_index: int, old_amount: int, new_amount: int) -> void:
+# Tick animation: smoothly counts the label from old to new (up or down)
+func _tick_crystal(player_index: int, old_amount: int, new_amount: int) -> void:
 	var lbl := _p1_bottom_crystal if player_index == 0 else _p2_bottom_crystal
 	if lbl == null:
 		return
@@ -5803,7 +5850,7 @@ func _on_ai_end_turn() -> void:
 		GameState.lose_crystals(player, tax, "skip tax")
 		GameState.post_message("%s skips without attacking — %d◆ tax (skip #%d this duel)" % [
 			GameState.format_player_label(player), tax, GameState.skip_counts[player]])
-		await turn_manager.crystal_animation_done
+		await GameState.wait_crystal_animation()
 	turn_manager.end_attacks_early()
 
 func _on_end_turn_requested() -> void:
@@ -5952,7 +5999,7 @@ func _show_tax_confirm() -> void:
 		GameState.lose_crystals(player, tax, "skip tax")
 		GameState.post_message("%s skips without attacking — %d◆ tax (skip #%d this duel)" % [
 			GameState.format_player_label(player), tax, GameState.skip_counts[player]])
-		await turn_manager.crystal_animation_done
+		await GameState.wait_crystal_animation()
 		turn_manager.end_attacks_early())
 	row.add_child(confirm_btn)
 
@@ -6197,10 +6244,10 @@ func _on_tech_resolved(player: int) -> void:
 	if _is_ai_turn() and GameState.current_phase != GameState.Phase.GAME_OVER:
 		# Go straight to attack — do NOT call decide_turn() again (would replay tech check)
 		_ai_turn_action_started[GameState.current_player] = true
+		_restart_ai_watchdog()
 		await get_tree().create_timer(0.4).timeout
 		if GameState.current_phase == GameState.Phase.GAME_OVER:
 			return
-		_restart_ai_watchdog()
 		_active_ai.continue_after_union()
 	else:
 		_resume_human_mode_select()
@@ -6642,6 +6689,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	# Unblock input — player now needs to interact with the field or overlay
 	if _tech_resolve_blocker != null:
 		_tech_resolve_blocker.visible = false
+	await _maybe_flash_outside_reckoning_ability(prompt, filter)
 	# Bribe: show a non-dismissable choice overlay instead of grid selection
 	if filter == "bribe":
 		var opponent := GameState.get_opponent(GameState.current_player)
@@ -6696,6 +6744,10 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	if filter == "own_facedown_character":
 		_set_own_facedown_char_peek(true)
 
+	# Plant-29 tails: pick any own unit (including face-down) for Mutagen
+	if filter == "ability_plant29_mutagen":
+		_set_own_facedown_char_peek(true)
+
 	# Tease: human opponent must choose their own face-down card — let them peek their grid
 	if filter == "self_squares_1_opponent_turn":
 		var tease_defender := GameState.get_opponent(GameState.current_player)
@@ -6704,6 +6756,10 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	# Brainwash: attacker may pick any own ally, including face-down units
 	if filter == "own_any_as_target":
 		_set_own_facedown_char_peek(true)
+
+	# Own-unit picks without "face-up/exposed only" in card text — cosmetic peek while selecting
+	if _own_unit_target_allows_facedown(filter):
+		_set_own_facedown_char_peek(true, _get_target_selecting_player(filter))
 
 	# Auto-complete filters that don't require grid selection
 	if filter == "view_opponent_hand":
@@ -7142,14 +7198,12 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "own_faceup_character" or pending_tech_filter == "own_faceup_character_berserk":
-		var _allow_fd: bool = data != null and (
-			data.effect_params.get("allow_facedown", false)
-			or data.effect_type == TechCardData.TechEffectType.PERM_DEF_BOOST_ONE
-			or data.effect_type == TechCardData.TechEffectType.ADD_MUTAGEN_FLAG)
+		var _allow_fd: bool = _own_unit_target_allows_facedown(pending_tech_filter, data)
 		if player == current_player and card.card_type == "character" \
 				and (card.face_up or _allow_fd):
 			if not card.face_up:
 				GameState.reveal_card(player, pos.x, pos.y)
+				card = GameState.get_card(player, pos.x, pos.y)
 			if data:
 				match data.effect_type:
 					TechCardData.TechEffectType.PERM_ATK_BOOST_ONE:
@@ -7394,15 +7448,19 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter == "own_faceup_character_source":
 		# MOVE_BUFFS_BETWEEN_CHARACTERS phase 1: pick source
-		if player == current_player and card.card_type == "character" and card.face_up:
+		if player == current_player and card.card_type == "character":
+			if not card.face_up:
+				GameState.reveal_card(player, pos.x, pos.y)
+				card = GameState.get_card(player, pos.x, pos.y)
 			_tech_buff_move_source = pos
 			pending_tech_filter = "own_faceup_character_target"
 			_show_guide("Essence Transfer: Choose target unit to receive buffs.")
 			_highlight_tech_targets(pending_tech_filter)
+			_set_own_facedown_char_peek(true, current_player)
 			if _is_ai_turn():
 				await get_tree().create_timer(0.4).timeout
 				var ai_target := _active_ai.decide_target("own_faceup_character_target")
-				# Guard: if AI picked the same card as source, pick any other face-up char
+				# Guard: if AI picked the same card as source, pick any other ally
 				if ai_target == _tech_buff_move_source:
 					var fallback := Vector2i(-1, -1)
 					for r2: int in range(GameState.GRID_SIZE):
@@ -7411,7 +7469,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 							if alt == _tech_buff_move_source:
 								continue
 							var alt_card: GameState.CardInstance = GameState.get_card(current_player, r2, c2)
-							if alt_card.card_type == "character" and alt_card.face_up:
+							if alt_card.card_type == "character":
 								fallback = alt
 								break
 						if fallback.x >= 0:
@@ -7426,7 +7484,10 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter == "own_faceup_character_target":
 		# MOVE_BUFFS_BETWEEN_CHARACTERS phase 2: pick target, transfer buffs
-		if player == current_player and card.card_type == "character" and card.face_up and pos != _tech_buff_move_source:
+		if player == current_player and card.card_type == "character" and pos != _tech_buff_move_source:
+			if not card.face_up:
+				GameState.reveal_card(player, pos.x, pos.y)
+				card = GameState.get_card(player, pos.x, pos.y)
 			var src: GameState.CardInstance = GameState.get_card(current_player, _tech_buff_move_source.x, _tech_buff_move_source.y)
 			card.perm_atk_bonus += src.perm_atk_bonus
 			card.perm_def_bonus += src.perm_def_bonus
@@ -7443,12 +7504,15 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter == "own_faceup_card_sacrifice":
 		# DESTROY_OWN_BASE_ZERO_OPPONENT phase 1: destroy own card, then target opponent
-		if player == current_player and card.face_up and card.card_type != "dead_end":
+		if player == current_player and card.card_type != "dead_end":
+			if not card.face_up:
+				GameState.reveal_card(player, pos.x, pos.y)
+				card = GameState.get_card(player, pos.x, pos.y)
 			_tech_sacrifice_player = current_player
 			GameState.destroy_card(current_player, pos.x, pos.y, false)
-			GameState.post_message("Blood Ritual: Sacrificed %s — choose opponent card to zero out." % card.card_name)
+			GameState.post_message("Blood Ritual: Sacrificed %s — choose opponent exposed unit to zero out." % card.card_name)
 			pending_tech_filter = "opponent_faceup_zero_stats"
-			_show_guide("Blood Ritual: Choose 1 opponent face-up unit to set ATK/DEF to 0.")
+			_show_guide("Blood Ritual: Choose 1 opponent exposed unit to set ATK/DEF to 0.")
 			_highlight_tech_targets(pending_tech_filter)
 			if _is_ai_turn():
 				await get_tree().create_timer(0.5).timeout
@@ -7535,8 +7599,11 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter == "own_armored_nature":
 		# SWAP_ARMORED_NATURE: swap trap position with chosen Armored Nature card
-		if player == opponent and card.card_type == "character" and card.face_up \
+		if player == opponent and card.card_type == "character" \
 				and card.affinity == CharacterData.Affinity.NATURE and "Armored" in card.card_name:
+			if not card.face_up:
+				GameState.reveal_card(player, pos.x, pos.y)
+				card = GameState.get_card(player, pos.x, pos.y)
 			# Swap this card into the trap slot (trap already destroyed → dead_end)
 			# Find the trap position — stored in GameState.attacker_pos (attacker attacked it)
 			# Actually the target_pos is gone. Use a simpler approach: move card to first dead_end slot
@@ -7634,10 +7701,18 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	_finish_tech_action(current_player)
 
 func _finish_tech_action(player: int) -> void:
+	_finish_tech_action_when_ready(player)
+
+func _finish_tech_action_when_ready(player: int) -> void:
+	await GameState.wait_crystal_animation()
 	_clear_after_tech()
 	turn_manager.after_tech_resolved(player)
 
 func _clear_after_ability() -> void:
+	_clear_after_ability_when_ready()
+
+func _clear_after_ability_when_ready() -> void:
+	await GameState.wait_crystal_animation()
 	var resume_bonus: bool = _multi_attack_bonus_targeting
 	var bonus_pos: Vector2i = selected_attacker_pos
 	_clear_after_tech()
@@ -7645,6 +7720,10 @@ func _clear_after_ability() -> void:
 	_resume_human_mode_select(resume_bonus, bonus_pos)
 
 func _finish_trap_target_selection() -> void:
+	_finish_trap_target_when_ready()
+
+func _finish_trap_target_when_ready() -> void:
+	await GameState.wait_crystal_animation()
 	_clear_after_tech()
 	turn_manager.ability_selection_done.emit()
 
@@ -7725,6 +7804,7 @@ func _clear_after_tech() -> void:
 
 ## AI Radar / multi-reveal: pick a unique face-down opponent cell.
 func _prompt_ai_radar_pick() -> void:
+	_restart_ai_watchdog()
 	var opponent: int = GameState.get_opponent(GameState.current_player)
 	var ai_target: Vector2i = _active_ai.decide_facedown_opponent_excluding(_tech_reveal_picked)
 	if ai_target.x < 0:
@@ -7736,6 +7816,7 @@ func _prompt_ai_radar_pick() -> void:
 
 ## AI Great Diplomacy: pick up to N own face-down units.
 func _prompt_ai_diplomacy_pick() -> void:
+	_restart_ai_watchdog()
 	var player: int = GameState.current_player
 	var ai_target: Vector2i = _active_ai.decide_facedown_own_excluding(_tech_reveal_picked)
 	if ai_target.x < 0:
@@ -7767,6 +7848,20 @@ func _count_own_facedown_units(player: int, exclude: Array = []) -> int:
 			if card.card_type == "character" and not card.face_up:
 				count += 1
 	return count
+
+## Own-unit targeting allows face-down picks unless card text requires exposed/face-up only.
+func _own_unit_target_allows_facedown(filter: String, tech_data: TechCardData = null) -> bool:
+	if filter == "own_faceup_character_berserk":
+		return false
+	if filter in [
+		"own_faceup_character", "own_faceup_character_source", "own_faceup_character_target",
+		"own_faceup_card_sacrifice", "own_armored_nature"]:
+		return true
+	if tech_data != null:
+		return tech_data.effect_params.get("allow_facedown", false) \
+			or tech_data.effect_type == TechCardData.TechEffectType.PERM_DEF_BOOST_ONE \
+			or tech_data.effect_type == TechCardData.TechEffectType.ADD_MUTAGEN_FLAG
+	return false
 
 ## Temporarily show face-down character cards as face-up (visual peek only).
 ## Does NOT change card.face_up in GameState — purely cosmetic.
@@ -7897,10 +7992,7 @@ func _highlight_tech_targets(filter: String) -> void:
 
 	elif "own_faceup_character" in filter or "own_bio_character" in filter:
 		var _tech_data: TechCardData = CardDatabase.get_tech(pending_tech_name) if pending_tech_name != "" else null
-		var _fd_ok: bool = _tech_data != null and (
-			_tech_data.effect_params.get("allow_facedown", false)
-			or _tech_data.effect_type == TechCardData.TechEffectType.PERM_DEF_BOOST_ONE
-			or _tech_data.effect_type == TechCardData.TechEffectType.ADD_MUTAGEN_FLAG)
+		var _fd_ok: bool = _own_unit_target_allows_facedown(filter, _tech_data)
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(player, r, c)
@@ -8077,9 +8169,9 @@ func _highlight_tech_targets(filter: String) -> void:
 						"lock_own_monster":
 							ok = card.card_type == "character"
 						"own_faceup_character_source", "own_faceup_character_target":
-							ok = card.card_type == "character" and card.face_up
+							ok = card.card_type == "character"
 						"own_faceup_card_sacrifice":
-							ok = card.face_up and card.card_type != "dead_end"
+							ok = card.card_type != "dead_end"
 						"own_any_card":
 							ok = card.card_type != "dead_end"
 						"own_facedown_character":
@@ -8109,7 +8201,7 @@ func _highlight_tech_targets(filter: String) -> void:
 					"self_faceup_for_copy":
 						ok = card.card_type == "character" and card.face_up
 					"own_armored_nature":
-						ok = card.card_type == "character" and card.face_up \
+						ok = card.card_type == "character" \
 							and card.affinity == CharacterData.Affinity.NATURE \
 							and "Armored" in card.card_name
 					"row_or_column":
@@ -8222,12 +8314,16 @@ func _prompt_forfeit_multi_attack() -> void:
 		"Forfeit",
 		"Keep Selecting")
 	dlg.confirmed.connect(func() -> void:
+		var pos := selected_attacker_pos
+		var player := GameState.current_player
 		_forfeit_multi_attack_bonus()
 		_clear_selection()
 		_set_selection_state(SelectionState.SELECTING_ATTACKER)
 		_highlight_attackable_chars()
 		_update_end_turn_blink()
 		dlg.queue_free()
+		if pos != Vector2i(-1, -1):
+			await _play_wait_badge_on_card(player, pos.x, pos.y)
 	)
 	dlg.canceled.connect(func() -> void:
 		dlg.queue_free()
@@ -8449,19 +8545,85 @@ func _restore_game_guide() -> void:
 # ─────────────────────────────────────────────────────────────
 # Card Events
 # ─────────────────────────────────────────────────────────────
-func _on_card_revealed(player: int, row: int, col: int) -> void:
-	var node: Control = grid_nodes[player][row][col]
+func _cell_reveal_key(player: int, row: int, col: int) -> String:
+	return "%d,%d,%d" % [player, row, col]
+
+func _is_cell_revealing(player: int, row: int, col: int) -> bool:
+	return _revealing_cells.has(_cell_reveal_key(player, row, col))
+
+
+func _is_battle_attack_dead_end_reveal(player: int, row: int, col: int) -> bool:
+	if GameState.current_phase != GameState.Phase.BATTLE:
+		return false
+	if GameState.defender_pos != Vector2i(row, col):
+		return false
+	var attacker_player: int = GameState.current_player
+	if player != GameState.get_opponent(attacker_player):
+		return false
+	return GameState.get_card(player, row, col).card_type == "dead_end"
+
+
+func _await_card_reveal_animation(player: int, row: int, col: int) -> void:
+	while _is_cell_revealing(player, row, col):
+		await get_tree().process_frame
+
+func _play_flag_pop_on_card(player: int, row: int, col: int, flag: String) -> void:
 	_refresh_card_node(player, row, col)
+	var node: Control = grid_nodes[player][row][col]
+	if node is Card:
+		await (node as Card).play_flag_badge_pop(flag)
+
+func _flush_flag_pops_for_cell(player: int, row: int, col: int) -> void:
+	var keep: Array = []
+	for entry: Variant in _pending_flag_pops:
+		if not entry is Dictionary:
+			continue
+		var e: Dictionary = entry as Dictionary
+		if int(e.get("player", -1)) == player \
+				and int(e.get("row", -1)) == row \
+				and int(e.get("col", -1)) == col:
+			await _play_flag_pop_on_card(player, row, col, str(e.get("flag", "")))
+		else:
+			keep.append(entry)
+	_pending_flag_pops = keep
+
+func _play_wait_badge_on_card(player: int, row: int, col: int) -> void:
+	_refresh_card_node(player, row, col)
+	var node: Control = grid_nodes[player][row][col]
+	if node is Card:
+		await (node as Card).play_wait_badge_entrance()
+
+func _on_wait_badge_animation_requested(player: int, row: int, col: int) -> void:
+	await _play_wait_badge_on_card(player, row, col)
+	turn_manager.wait_badge_animation_done.emit()
+
+func _on_card_flag_added(player: int, row: int, col: int, flag: String) -> void:
+	_pending_flag_pops.append({
+		"player": player,
+		"row": row,
+		"col": col,
+		"flag": flag,
+	})
+	if not _is_cell_revealing(player, row, col):
+		await _flush_flag_pops_for_cell(player, row, col)
+
+func _on_card_revealed(player: int, row: int, col: int) -> void:
+	var reveal_key := _cell_reveal_key(player, row, col)
+	_revealing_cells[reveal_key] = true
+	var node: Control = grid_nodes[player][row][col]
 	var inst := GameState.get_card(player, row, col)
-	node.play_reveal_animation()
-	# Dead-end / trap: 0.75s hold so the player can read what was revealed.
-	# Other card types: 0.3s brief hold.
-	var delay: float
-	if inst != null and inst.card_type in ["dead_end", "trap"]:
-		delay = 0.75
+	if node is Card:
+		var card_node := node as Card
+		# Keep face-down art until play_reveal_animation flips at the squish midpoint.
+		card_node.set_card_data(inst, player, Vector2i(row, col), false)
+		card_node.suppress_exposed_badge()
+		await card_node.play_reveal_animation()
 	else:
-		delay = 0.3
-	await get_tree().create_timer(delay).timeout
+		_refresh_card_node(player, row, col)
+		if node.has_method("play_reveal_animation"):
+			await node.play_reveal_animation()
+	_revealing_cells.erase(reveal_key)
+	await _flush_flag_pops_for_cell(player, row, col)
 	if turn_manager != null:
 		turn_manager.notify_card_reveal_animation_done(player, row, col)
 	if inst != null and inst.card_type == "character" \
@@ -8469,6 +8631,14 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 			and GameState.current_phase != GameState.Phase.BATTLE \
 			and turn_manager != null:
 		await turn_manager.maybe_apply_on_expose_reveal_foe(player, row, col)
+	# Revealed empty cell — brief blank flash then dissolve (Scout Probe, Radar, etc.).
+	# Battle attacks on dead_end skip here; destroy_card runs after Reckoning.
+	if inst != null and inst.card_type == "dead_end":
+		if not _is_battle_attack_dead_end_reveal(player, row, col):
+			GameState.destroy_card(player, row, col, false)
+		else:
+			_refresh_card_node(player, row, col)
+		return
 	# Trap revealed → play black-smoke dissolve then clear the slot.
 	# BATTLE phase is excluded: the trap is handled by _handle_trap_effect after combat.
 	if inst != null and inst.card_type == "trap" \
@@ -8478,7 +8648,16 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 		_spawn_dissolve_effect(node)
 		await get_tree().create_timer(0.90).timeout
 		GameState.void_trap(player, row, col)
+		if node is Card:
+			(node as Card).modulate = Color.WHITE
 	_refresh_card_node(player, row, col)
+
+func _on_card_destruction_blocked(player: int, row: int, col: int) -> void:
+	var node: Control = grid_nodes[player][row][col]
+	if node is Card:
+		await (node as Card).play_metallic_deflect_animation()
+	else:
+		SFXManager.play(SFXManager.SFX_METAL_DEFLECT)
 
 func _on_card_destroyed(player: int, row: int, col: int) -> void:
 	# Signal fires before place_dead_end(), so card data is still available
@@ -8673,22 +8852,21 @@ func _on_ai_attack_chosen(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	var attacker: GameState.CardInstance = GameState.get_card(player, attacker_pos.x, attacker_pos.y)
 	if attacker.card_type != "character":
 		return
-	# Flip attacker face-up for 1 second so the human can see which card is attacking
-	var attacker_node: Control = grid_nodes[player][attacker_pos.x][attacker_pos.y]
-	attacker_node.set_preview_revealed(true)
-	await get_tree().create_timer(1.0).timeout
+	# Reveal the attacker with the normal flip + EXPOSED badge animation.
+	if not attacker.face_up:
+		GameState.reveal_card(player, attacker_pos.x, attacker_pos.y)
+		await _await_card_reveal_animation(player, attacker_pos.x, attacker_pos.y)
+		await get_tree().create_timer(0.3).timeout
+	else:
+		await get_tree().create_timer(0.5).timeout
 	if GameState.current_phase == GameState.Phase.GAME_OVER \
 			or GameState.current_player != player:
-		attacker_node.set_preview_revealed(false)
 		return
 	# Flash the target cell so the human can see which card is being attacked.
-	# Do NOT call set_preview_revealed(false) here — that causes the brief face-down flicker.
-	# perform_attack will reveal the card properly (face_up=true), making the peek flag moot.
 	_flash_target_card(GameState.get_opponent(player), target_pos.x, target_pos.y)
 	await get_tree().create_timer(0.4).timeout
 	if GameState.current_phase == GameState.Phase.GAME_OVER \
 			or GameState.current_player != player:
-		attacker_node.set_preview_revealed(false)
 		return
 	turn_manager.perform_attack(attacker_pos, target_pos, player)
 
@@ -8697,10 +8875,41 @@ func _on_ai_tech_chosen(tech_name: String) -> void:
 	turn_manager.play_tech_card(tech_name)
 
 # ─────────────────────────────────────────────────────────────
-# Card Effect Flash (tech cards, outside battle overlay)
+# Card Effect Flash (tech cards and outside-reckoning character/trap abilities)
 # ─────────────────────────────────────────────────────────────
 const SFX_SPELL_FLASH: AudioStream = preload("res://assets/audio/sound_spellcasting_2.mp3")
 const FULL_CARDS_DIR: String = "res://assets/textures/cards/full_cards/"
+
+func _resolve_outside_reckoning_flash_card(prompt: String, filter: String) -> Dictionary:
+	if filter in ["bribe", "graveyard", "view_opponent_hand", "bribe_reveal"]:
+		return {}
+	var colon_idx: int = prompt.find(": ")
+	if colon_idx <= 0:
+		return {}
+	var card_name: String = prompt.substr(0, colon_idx).strip_edges()
+	if card_name.is_empty():
+		return {}
+	if CardDatabase.get_character(card_name) != null:
+		return {"name": card_name, "type": "character"}
+	if CardDatabase.get_trap(card_name) != null:
+		return {"name": card_name, "type": "trap"}
+	return {}
+
+func _maybe_flash_outside_reckoning_ability(prompt: String, filter: String) -> void:
+	if pending_tech_name != "":
+		return
+	if is_instance_valid(_current_battle_overlay):
+		return
+	# These filters follow an earlier flash at ability activation (coin flip / pre-target).
+	if filter in [
+		"ability_plant29_venom", "ability_plant29_mutagen",
+		"wk17_foe_pick_character", "own_character_for_swap",
+	]:
+		return
+	var info: Dictionary = _resolve_outside_reckoning_flash_card(prompt, filter)
+	if info.is_empty():
+		return
+	await _show_card_effect_flash(str(info.get("name", "")), str(info.get("type", "character")))
 
 func _on_card_effect_triggered(card_name: String, card_type: String) -> void:
 	await _show_card_effect_flash(card_name, card_type)
@@ -9166,7 +9375,7 @@ func _flip_reveal_all_cards() -> void:
 
 func _flip_card_reveal(player: int, row: int, col: int) -> void:
 	var node: Control = grid_nodes[player][row][col]
-	SFXManager.play(SFXManager.SFX_FLIP)
+	SFXManager.play_flip()
 	# Squish inward (scale X: 1 → 0)
 	var t1 := create_tween()
 	t1.tween_property(node, "scale:x", 0.0, 0.06).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)

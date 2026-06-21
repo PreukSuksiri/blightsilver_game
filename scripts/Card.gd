@@ -1,4 +1,5 @@
 extends Control
+class_name Card
 
 signal card_clicked()
 signal card_detail_requested(card_name: String, card_type: String, owner_player: int, row: int, col: int)
@@ -65,7 +66,7 @@ const RARITY_SHADOW: Dictionary = {
 # ─────────────────────────────────────────────────────────────
 const FLAG_DEFS: Dictionary = {
 	"mutagen": {"emoji": "🧬", "color": Color(0.55, 0.95, 0.55, 0.92)},
-	"venom":   {"emoji": "☠", "color": Color(0.55, 0.85, 0.30, 0.92)},
+	"venom":   {"emoji": "☣", "color": Color(0.55, 0.85, 0.30, 0.92), "icon_color": Color(0.15, 0.22, 0.05, 1.0)},
 	"berserk": {"emoji": "💢", "color": Color(0.95, 0.30, 0.25, 0.92)},
 }
 
@@ -115,7 +116,11 @@ var _rarity_tween: Tween = null
 var _flip_tween: Tween = null
 var _attacked_icon_tween: Tween = null
 var _wait_glow_tween: Tween = null
-var _active_glow_tween: Tween = null
+var _wait_entrance_tween: Tween = null
+var _wait_entrance_played: bool = false
+var _exposed_icon_tween: Tween = null
+var _badge_pop_token: int = 0
+var _defer_exposed_badge_pop: bool = false
 var _target_hover_tween: Tween = null
 var _attack_hover_tween: Tween = null
 var _union_flash_tween: Tween = null
@@ -141,6 +146,14 @@ var _blank_found_icon: TextureRect
 var _trap_icon: TextureRect
 var _crystal_cost_icon: TextureRect = null
 var _flag_bar: HBoxContainer = null
+var _wait_icon_shadow: TextureRect = null
+# Source art is 1024px; on a ~110px-wide card the wait icon needs a wide
+# texture-pixel outline (~24px) to read as ~2-3 screen pixels.
+const WAIT_ICON_OUTLINE_TEX_PX: float = 24.0
+const BADGE_POST_ANIM_DELAY: float = 0.5
+const WAIT_ICON_SIZE: float = 44.0
+const WAIT_GLOW_SIZE: float = 54.0
+const WAIT_ICON_SHADOW_DROP: float = 2.0
 
 func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_STOP
@@ -182,10 +195,76 @@ func _ready() -> void:
 	var _wait_outline := ShaderMaterial.new()
 	_wait_outline.shader = OUTLINE_SHADER
 	_wait_outline.set_shader_parameter("outline_color", Color(0, 0, 0, 1))
-	_wait_outline.set_shader_parameter("outline_width", 6.0)
+	_wait_outline.set_shader_parameter("outline_width", WAIT_ICON_OUTLINE_TEX_PX)
+	_wait_outline.set_shader_parameter("outline_fade_with_modulate", false)
+	_layout_wait_icon_overlay()
 	attacked_icon_rect.material = _wait_outline
+	_setup_wait_icon_shadow()
 
 	_refresh_display()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		_layout_wait_icon_overlay()
+
+func _layout_wait_icon_overlay() -> void:
+	if attacked_icon_rect == null or wait_glow_panel == null:
+		return
+	var cx: float = size.x * 0.5
+	var cy: float = size.y * 0.5
+	_place_centered_control(attacked_icon_rect, cx, cy, WAIT_ICON_SIZE, WAIT_ICON_SIZE)
+	var glow_half: float = WAIT_GLOW_SIZE * 0.5
+	wait_glow_panel.position = Vector2(cx - glow_half, cy - glow_half)
+	wait_glow_panel.size = Vector2(WAIT_GLOW_SIZE, WAIT_GLOW_SIZE)
+	wait_glow_panel.pivot_offset = wait_glow_panel.size * 0.5
+	_sync_wait_icon_shadow_layout()
+
+func _place_centered_control(ctrl: Control, cx: float, cy: float, w: float, h: float) -> void:
+	if ctrl == null:
+		return
+	ctrl.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	ctrl.offset_left = cx - w * 0.5
+	ctrl.offset_top = cy - h * 0.5
+	ctrl.offset_right = cx + w * 0.5
+	ctrl.offset_bottom = cy + h * 0.5
+	ctrl.pivot_offset = Vector2(w, h) * 0.5
+
+func _sync_wait_icon_shadow_layout() -> void:
+	if _wait_icon_shadow == null or attacked_icon_rect == null:
+		return
+	var d: float = WAIT_ICON_SHADOW_DROP
+	_wait_icon_shadow.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_wait_icon_shadow.offset_left = attacked_icon_rect.offset_left + d
+	_wait_icon_shadow.offset_top = attacked_icon_rect.offset_top + d
+	_wait_icon_shadow.offset_right = attacked_icon_rect.offset_right + d
+	_wait_icon_shadow.offset_bottom = attacked_icon_rect.offset_bottom + d
+	_wait_icon_shadow.pivot_offset = attacked_icon_rect.pivot_offset
+
+func _setup_wait_icon_shadow() -> void:
+	_wait_icon_shadow = attacked_icon_rect.duplicate() as TextureRect
+	_wait_icon_shadow.name = "WaitIconShadow"
+	_wait_icon_shadow.material = null
+	_wait_icon_shadow.modulate = Color(0.02, 0.02, 0.05, 0.92)
+	_wait_icon_shadow.visible = false
+	_wait_icon_shadow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_wait_icon_shadow.z_index = attacked_icon_rect.z_index - 1
+	var idx := attacked_icon_rect.get_index()
+	add_child(_wait_icon_shadow)
+	move_child(_wait_icon_shadow, idx)
+	_sync_wait_icon_shadow_layout()
+
+func _wait_icon_transform_nodes() -> Array:
+	var nodes: Array = [attacked_icon_rect]
+	if _wait_icon_shadow != null:
+		nodes.append(_wait_icon_shadow)
+	return nodes
+
+func _sync_wait_icon_shadow_transform() -> void:
+	if _wait_icon_shadow == null:
+		return
+	_wait_icon_shadow.pivot_offset = attacked_icon_rect.pivot_offset
+	_wait_icon_shadow.scale = attacked_icon_rect.scale
+	_wait_icon_shadow.rotation = attacked_icon_rect.rotation
 
 func _exit_tree() -> void:
 	if HudSkin.skin_changed.is_connected(_reload_hud_skin):
@@ -273,6 +352,7 @@ func _refresh_flag_badges() -> void:
 		sb.border_width_bottom = 2
 		panel.add_theme_stylebox_override("panel", sb)
 		panel.custom_minimum_size = Vector2(24.0, 17.0)
+		panel.set_meta("flag_name", flag_name)
 
 		var lbl := Label.new()
 		lbl.text = emoji
@@ -280,6 +360,8 @@ func _refresh_flag_badges() -> void:
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
 		lbl.add_theme_font_size_override("font_size", 9)
+		if def.has("icon_color"):
+			lbl.add_theme_color_override("font_color", def["icon_color"])
 		lbl.mouse_filter = MOUSE_FILTER_IGNORE
 		panel.add_child(lbl)
 		_flag_bar.add_child(panel)
@@ -312,9 +394,95 @@ func _setup_overlay_styles() -> void:
 	wg_style.shadow_size   = 18
 	wait_glow_panel.add_theme_stylebox_override("panel", wg_style)
 
+func suppress_exposed_badge() -> void:
+	_set_active_glow(false)
+
+func _reset_badge_node_scales(nodes: Array) -> void:
+	for node: Variant in nodes:
+		if node is Control and is_instance_valid(node):
+			var ctrl := node as Control
+			ctrl.pivot_offset = ctrl.size * 0.5
+			ctrl.scale = Vector2.ONE
+
+func _live_badge_nodes(nodes: Array) -> Array:
+	var live: Array = []
+	for node: Variant in nodes:
+		if node is Control and is_instance_valid(node) and (node as Control).is_inside_tree():
+			live.append(node)
+	return live
+
+func _badge_pop_still_active(token: int) -> bool:
+	return is_instance_valid(self) and token == _badge_pop_token
+
+func _stop_badge_pop_tween() -> void:
+	_badge_pop_token += 1
+	if _exposed_icon_tween != null and _exposed_icon_tween.is_valid():
+		_exposed_icon_tween.kill()
+	_exposed_icon_tween = null
+
+func _play_badge_pop(nodes: Array) -> void:
+	var live: Array = _live_badge_nodes(nodes)
+	if live.is_empty():
+		return
+	_stop_badge_pop_tween()
+	var token: int = _badge_pop_token
+	_reset_badge_node_scales(live)
+	const PEAK_SCALE: float = 1.38
+	const ENLARGE_SEC: float = 0.18
+	const HOLD_SEC: float = 0.14
+	const SHRINK_SEC: float = 0.16
+	_exposed_icon_tween = create_tween()
+	_exposed_icon_tween.set_parallel(true)
+	for node: Control in live:
+		_exposed_icon_tween.tween_property(node, "scale", Vector2(PEAK_SCALE, PEAK_SCALE), ENLARGE_SEC) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	await _exposed_icon_tween.finished
+	if not _badge_pop_still_active(token):
+		return
+	await get_tree().create_timer(HOLD_SEC).timeout
+	if not _badge_pop_still_active(token):
+		return
+	live = _live_badge_nodes(live)
+	if live.is_empty():
+		return
+	_exposed_icon_tween = create_tween()
+	_exposed_icon_tween.set_parallel(true)
+	for node: Control in live:
+		_exposed_icon_tween.tween_property(node, "scale", Vector2.ONE, SHRINK_SEC) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	await _exposed_icon_tween.finished
+	if not _badge_pop_still_active(token):
+		return
+	_exposed_icon_tween = null
+	await get_tree().create_timer(BADGE_POST_ANIM_DELAY).timeout
+
+func play_flag_badge_pop(flag_name: String) -> void:
+	if flag_name not in FLAG_DEFS or _flag_bar == null:
+		return
+	for child: Node in _flag_bar.get_children():
+		if child is Panel and str(child.get_meta("flag_name", "")) == flag_name:
+			await _play_badge_pop([child as Control])
+			return
+
 func _set_active_glow(show: bool) -> void:
-	exposed_icon_rect.visible = show
-	exposed_icon_shadow.visible = show
+	if not show:
+		_stop_badge_pop_tween()
+		exposed_icon_rect.visible = false
+		exposed_icon_shadow.visible = false
+		_reset_badge_node_scales([exposed_icon_rect, exposed_icon_shadow])
+		return
+	if _defer_exposed_badge_pop:
+		return
+	exposed_icon_rect.visible = true
+	exposed_icon_shadow.visible = true
+	_reset_badge_node_scales([exposed_icon_rect, exposed_icon_shadow])
+
+func _play_exposed_badge_pop() -> void:
+	if not _should_show_exposed_icon():
+		return
+	exposed_icon_rect.visible = true
+	exposed_icon_shadow.visible = true
+	await _play_badge_pop([exposed_icon_rect, exposed_icon_shadow])
 
 func _should_show_exposed_icon() -> bool:
 	if card_data == null:
@@ -324,31 +492,144 @@ func _should_show_exposed_icon() -> bool:
 		return false
 	return card_data.card_type in ["character", "trap", "tech"]
 
-func _set_attacked_icon(show: bool) -> void:
+func _should_show_wait_icon() -> bool:
+	return BattleLogFormat.should_show_wait_icon_on_board(
+		card_data, player_owner, _is_own_turn_for_wait_icon())
+
+func _is_own_turn_for_wait_icon() -> bool:
+	return player_owner == GameState.current_player
+
+func _stop_wait_badge_animations() -> void:
 	if _attacked_icon_tween:
 		_attacked_icon_tween.kill()
 		_attacked_icon_tween = null
 	if _wait_glow_tween:
 		_wait_glow_tween.kill()
 		_wait_glow_tween = null
-	if show:
-		attacked_icon_rect.visible = true
-		wait_glow_panel.visible = true
-		_attacked_icon_tween = create_tween().set_loops()
-		_attacked_icon_tween.tween_property(attacked_icon_rect, "modulate:a", 0.15, 1.1) \
-			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		_attacked_icon_tween.tween_property(attacked_icon_rect, "modulate:a", 0.75, 1.1) \
-			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		_wait_glow_tween = create_tween().set_loops()
-		_wait_glow_tween.tween_property(wait_glow_panel, "modulate:a", 0.2, 1.1) \
-			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-		_wait_glow_tween.tween_property(wait_glow_panel, "modulate:a", 0.7, 1.1) \
-			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	else:
-		attacked_icon_rect.visible = false
-		wait_glow_panel.visible = false
+	if _wait_entrance_tween != null and _wait_entrance_tween.is_valid():
+		_wait_entrance_tween.kill()
+	_wait_entrance_tween = null
 
-func set_card_data(data: GameState.CardInstance, owner_player: int, pos: Vector2i) -> void:
+func _reset_wait_badge_transform() -> void:
+	for node: Control in _wait_icon_transform_nodes():
+		node.pivot_offset = node.size * 0.5
+		node.scale = Vector2.ONE
+		node.rotation = 0.0
+	attacked_icon_rect.modulate = Color(1.0, 1.0, 1.0, 1.0)
+	if _wait_icon_shadow != null:
+		_wait_icon_shadow.modulate = Color(0.02, 0.02, 0.05, 0.92)
+	wait_glow_panel.modulate = Color(1.0, 1.0, 1.0, 0.0)
+
+func _start_wait_badge_pulse() -> void:
+	if _attacked_icon_tween:
+		_attacked_icon_tween.kill()
+		_attacked_icon_tween = null
+	if _wait_glow_tween:
+		_wait_glow_tween.kill()
+		_wait_glow_tween = null
+	attacked_icon_rect.modulate = Color(1.0, 1.0, 1.0, 0.75)
+	if _wait_icon_shadow != null:
+		_wait_icon_shadow.modulate = Color(0.02, 0.02, 0.05, 0.92)
+	wait_glow_panel.modulate = Color(1.0, 1.0, 1.0, 0.7)
+	_attacked_icon_tween = create_tween().set_loops()
+	_attacked_icon_tween.tween_property(attacked_icon_rect, "modulate:a", 0.35, 1.1) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_attacked_icon_tween.tween_property(attacked_icon_rect, "modulate:a", 0.75, 1.1) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_wait_glow_tween = create_tween().set_loops()
+	_wait_glow_tween.tween_property(wait_glow_panel, "modulate:a", 0.2, 1.1) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_wait_glow_tween.tween_property(wait_glow_panel, "modulate:a", 0.7, 1.1) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+func play_wait_badge_entrance() -> void:
+	if _wait_entrance_played:
+		return
+	if card_data == null or not card_data.attacked_this_turn:
+		return
+	if not _should_show_wait_icon():
+		return
+	if player_owner != GameState.current_player:
+		return
+	_wait_entrance_played = true
+	for node: Control in _wait_icon_transform_nodes():
+		node.visible = true
+	wait_glow_panel.visible = true
+	_stop_wait_badge_animations()
+	_reset_wait_badge_transform()
+	const START_SCALE: float = 0.08
+	const PEAK_SCALE: float = 1.45
+	const SPIN_TURNS: float = 1.25
+	const SPIN_SEC: float = 0.38
+	const ENLARGE_SEC: float = 0.20
+	const HOLD_SEC: float = 0.12
+	const SHRINK_SEC: float = 0.16
+	attacked_icon_rect.scale = Vector2(START_SCALE, START_SCALE)
+	_sync_wait_icon_shadow_transform()
+	_wait_entrance_tween = create_tween()
+	_wait_entrance_tween.tween_method(_sync_wait_icon_shadow_transform, 0.0, 1.0, SPIN_SEC)
+	_wait_entrance_tween.parallel().tween_property(
+		attacked_icon_rect, "rotation", TAU * SPIN_TURNS, SPIN_SEC) \
+		.set_trans(Tween.TRANS_LINEAR)
+	await _wait_entrance_tween.finished
+	_wait_entrance_tween = create_tween()
+	_wait_entrance_tween.set_parallel(true)
+	for node: Control in _wait_icon_transform_nodes():
+		_wait_entrance_tween.tween_property(
+			node, "scale", Vector2(PEAK_SCALE, PEAK_SCALE), ENLARGE_SEC) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_wait_entrance_tween.tween_property(
+		wait_glow_panel, "modulate:a", 0.7, ENLARGE_SEC) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await _wait_entrance_tween.finished
+	await get_tree().create_timer(HOLD_SEC).timeout
+	_wait_entrance_tween = create_tween()
+	_wait_entrance_tween.set_parallel(true)
+	for node: Control in _wait_icon_transform_nodes():
+		_wait_entrance_tween.tween_property(
+			node, "scale", Vector2.ONE, SHRINK_SEC) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	_wait_entrance_tween.tween_property(
+		attacked_icon_rect, "rotation", 0.0, SHRINK_SEC) \
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
+	_wait_entrance_tween.tween_method(_sync_wait_icon_shadow_transform, 0.0, 1.0, SHRINK_SEC)
+	await _wait_entrance_tween.finished
+	_wait_entrance_tween = null
+	await get_tree().create_timer(BADGE_POST_ANIM_DELAY).timeout
+	_start_wait_badge_pulse()
+
+func _set_attacked_icon(show: bool) -> void:
+	if not show:
+		_wait_entrance_played = false
+		_stop_wait_badge_animations()
+		attacked_icon_rect.visible = false
+		if _wait_icon_shadow != null:
+			_wait_icon_shadow.visible = false
+		wait_glow_panel.visible = false
+		_reset_wait_badge_transform()
+		return
+	for node: Control in _wait_icon_transform_nodes():
+		node.visible = true
+	wait_glow_panel.visible = true
+	if _wait_entrance_played:
+		_start_wait_badge_pulse()
+		return
+	_stop_wait_badge_animations()
+	# Trap locks and multi-turn attack locks: show wait icon without spin entrance.
+	if card_data != null and not card_data.attacked_this_turn \
+			and BattleLogFormat.should_show_wait_icon(card_data, player_owner):
+		_reset_wait_badge_transform()
+		_start_wait_badge_pulse()
+		return
+	attacked_icon_rect.scale = Vector2(0.08, 0.08)
+	attacked_icon_rect.rotation = 0.0
+	attacked_icon_rect.modulate = Color(1.0, 1.0, 1.0, 1.0)
+	if _wait_icon_shadow != null:
+		_wait_icon_shadow.modulate = Color(0.02, 0.02, 0.05, 0.92)
+	_sync_wait_icon_shadow_transform()
+	wait_glow_panel.modulate = Color(1.0, 1.0, 1.0, 0.0)
+
+func set_card_data(data: GameState.CardInstance, owner_player: int, pos: Vector2i, refresh_display: bool = true) -> void:
 	var render_key := "" if data == null else "%s|%s|%s|%s" % [
 		data.card_type, data.card_name, data.is_union, data.is_revived]
 	if render_key != _last_rendered_key:
@@ -360,7 +641,7 @@ func set_card_data(data: GameState.CardInstance, owner_player: int, pos: Vector2
 	# Cleared slots update GameState before destroy animation ends; refresh immediately
 	# so stale card art isn't resurrected by hover/selection modulate resets.
 	var cleared_slot := data != null and data.was_destroyed
-	if is_inside_tree() and (not _is_destroying or cleared_slot):
+	if refresh_display and is_inside_tree() and (not _is_destroying or cleared_slot):
 		_refresh_display()
 
 func set_preview_revealed(value: bool) -> void:
@@ -382,11 +663,12 @@ func _refresh_display() -> void:
 		return
 	match card_data.card_type:
 		"dead_end":
-			# Show face-down when the card is unrevealed AND either:
-			#   - it belongs to the opponent (always hidden from current player), or
-			#   - it's own card but peek is OFF (enemy-view simulation).
-			# Revealed (destroyed) blanks are completely invisible.
-			if not card_data.face_up and (player_owner != GameState.current_player or not _is_peeking):
+			# Destroyed/cleared slots are invisible; revealed blanks keep art until dissolve.
+			if card_data.was_destroyed:
+				_show_empty_slot()
+			elif card_data.face_up:
+				_show_revealed_dead_end()
+			elif player_owner != GameState.current_player or not _is_peeking:
 				_show_face_down()
 			else:
 				_show_empty_slot()
@@ -420,6 +702,11 @@ func _show_blank() -> void:
 	artwork_rect.visible = false
 	_blank_found_icon.visible = false
 	_trap_icon.visible        = false
+
+func _show_revealed_dead_end() -> void:
+	# Face-up blank slot — keep the blank frame visible until dissolve (same cadence as traps).
+	_show_blank()
+	_blank_found_icon.visible = true
 
 # ─────────────────────────────────────────────────────────────
 # Empty slot (blank card while peeking — completely invisible)
@@ -531,9 +818,8 @@ func _show_character_face_up() -> void:
 	else:
 		shield_indicator.visible = card_data.force_shielded
 		shield_indicator.text = "🛡"
-		var is_own_turn := player_owner == GameState.current_player
 		_set_active_glow(_should_show_exposed_icon())
-		_set_attacked_icon(is_own_turn and card_data.attacked_this_turn)
+		_set_attacked_icon(_should_show_wait_icon())
 		_apply_rarity(aff_color)
 		_refresh_flag_badges()
 
@@ -593,9 +879,8 @@ func _show_union_face_up() -> void:
 	else:
 		shield_indicator.visible = card_data.force_shielded
 		shield_indicator.text = "🛡"
-		var is_own_turn := player_owner == GameState.current_player
 		_set_active_glow(_should_show_exposed_icon())
-		_set_attacked_icon(is_own_turn and card_data.attacked_this_turn)
+		_set_attacked_icon(_should_show_wait_icon())
 		_apply_rarity(UNION_CYAN)
 		_refresh_flag_badges()
 
@@ -962,18 +1247,62 @@ func set_ability_target_flash(flashing: bool) -> void:
 # Animations
 # ─────────────────────────────────────────────────────────────
 func play_reveal_animation() -> void:
-	SFXManager.play(SFXManager.SFX_FLIP)
+	SFXManager.play_flip()
 	pivot_offset = size * 0.5
 	var tween := create_tween()
 	tween.tween_property(self, "scale", Vector2(0.05, 1.0), 0.12).set_trans(Tween.TRANS_CUBIC)
+	await tween.finished
 	if card_data != null and card_data.card_type == "dead_end":
-		tween.tween_callback(_show_blank)
-		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.12).set_trans(Tween.TRANS_CUBIC)
-		tween.tween_interval(0.5)
-		tween.tween_callback(_show_empty_slot)
-	else:
-		tween.tween_callback(_refresh_display)
-		tween.tween_property(self, "scale", Vector2(1.0, 1.0), 0.12).set_trans(Tween.TRANS_CUBIC)
+		_show_revealed_dead_end()
+		var expand := create_tween()
+		expand.tween_property(self, "scale", Vector2(1.0, 1.0), 0.12).set_trans(Tween.TRANS_CUBIC)
+		await expand.finished
+		return
+	_defer_exposed_badge_pop = true
+	_refresh_display()
+	_defer_exposed_badge_pop = false
+	var expand := create_tween()
+	expand.tween_property(self, "scale", Vector2(1.0, 1.0), 0.12).set_trans(Tween.TRANS_CUBIC)
+	await expand.finished
+	await _play_exposed_badge_pop()
+
+func play_metallic_deflect_animation() -> void:
+	SFXManager.play(SFXManager.SFX_METAL_DEFLECT)
+	pivot_offset = size * 0.5
+	var saved_mod: Color = modulate
+	var saved_pos: Vector2 = position
+
+	var shine := ColorRect.new()
+	shine.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shine.color = Color(0.75, 0.88, 1.0, 0.0)
+	shine.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shine.z_index = 12
+	add_child(shine)
+
+	var streak := ColorRect.new()
+	streak.size = Vector2(size.x * 0.18, size.y * 1.1)
+	streak.color = Color(1.0, 1.0, 1.0, 0.0)
+	streak.rotation = -0.35
+	streak.position = Vector2(-size.x * 0.3, size.y * 0.05)
+	streak.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	streak.z_index = 13
+	add_child(streak)
+
+	var tween := create_tween()
+	tween.tween_property(self, "modulate", Color(1.7, 1.85, 2.2, 1.0), 0.05).set_trans(Tween.TRANS_LINEAR)
+	tween.parallel().tween_property(shine, "color:a", 0.55, 0.05)
+	tween.tween_property(streak, "color:a", 0.95, 0.04)
+	tween.parallel().tween_property(streak, "position:x", size.x * 0.95, 0.22) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(self, "position", saved_pos + Vector2(-5, 0), 0.04)
+	tween.tween_property(self, "position", saved_pos + Vector2(4, 0), 0.04)
+	tween.tween_property(self, "position", saved_pos, 0.05)
+	tween.parallel().tween_property(self, "modulate", saved_mod, 0.18).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(shine, "color:a", 0.0, 0.18)
+	tween.parallel().tween_property(streak, "color:a", 0.0, 0.12)
+	await tween.finished
+	shine.queue_free()
+	streak.queue_free()
 
 func play_destroy_animation() -> void:
 	_is_destroying = true

@@ -1,0 +1,200 @@
+=== Battle of Discount Lasagna ===
+Battle started: 2026-06-22 00:58:41.039
+Game Session of Banana Smoothie (started 2026-06-22 00:58:31.432)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.861] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:16.887] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:16.887] Revealed: P1 (3,0) "Snare Trap" {cost 500}
+[00:16.887] Dice rolled: 3
+[00:18.129] MSG: Trap triggered: Snare Trap!
+[00:22.208] Crystals: P1 5000 → 4500 (-500)  [trap cost]
+[00:24.023] MSG: Snare Trap: Shepherd Detective's effect nullified until end of next turn!
+[00:25.405] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(3,0)"Snare Trap" {cost 500}  Dice=3  → Unit vs Trap
+[00:25.405] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:25.405] Anim: 3D  (attacker survives)
+[00:28.661] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:28.706] Revealed: P1 (1,1) "Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature}
+[00:28.706] Dice rolled: 2
+[00:34.473] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:36.304] Attack P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(1,1)"Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature}  Dice=2  ATK=40 vs DEF=75  → LOSE
+[00:36.304] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[00:36.304] Reckoning overlay: P1 "Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature} badge=75 ATK pill=45 DEF pill=75 mod=+DEF 0 (75+0=75)
+[00:36.304] Anim: 3B  △ P0(1,2)
+[00:36.304] Card destroyed  P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:47.483] Turn ended  P0  |  Crystals P0=4600 P1=4500
+
+--- Turn 2  |  Player 1  |  Crystals P0=4600 P1=4500 ---
+[00:48.080] Mode selected P1: TECH
+[00:48.390] Tech played  P1: "Bribe"
+[00:49.931] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[00:51.956] MSG: Bribe: Opponent passed.
+[00:51.962] Tech resolved  P1
+[00:52.856] Mode selected P1: ATTACK
+[00:52.860] MSG: Player 2: tap a unit to attack.
+[00:54.056] Dice rolled: 4
+[00:54.087] MSG: Venom Queen wins!
+[00:58.539] Crystals: P0 4600 → 4200 (-400)  [battle]
+[01:01.723] Attack P1(1,1)"Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima | nullified≤T3}  Dice=4  ATK=45 vs DEF=25  → WIN
+[01:01.723] Reckoning overlay: P1 "Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature} badge=45 ATK pill=45 DEF pill=75 mod=+ATK 0 (45+0=45)
+[01:01.723] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima | nullified≤T3} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:01.723] Anim: 3A  △ P0(2,3)
+[01:01.723] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima | nullified≤T3}
+[01:04.232] Turn ended  P1  |  Crystals P0=4200 P1=4500
+
+--- Turn 3  |  Player 0  |  Crystals P0=4200 P1=4500 ---
+[01:37.879] Revealed: P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[01:37.911] Revealed: P1 (1,3) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[01:37.912] Dice rolled: 2
+[01:39.134] MSG: Ostrich Cannon wins!
+[01:43.581] Crystals: P1 4500 → 4100 (-400)  [battle]
+[01:45.405] MSG: Ostrich Cannon locks itself until next turn.
+[01:46.773] Attack P0(2,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(1,3)"Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}  Dice=2  ATK=60 vs DEF=10  → WIN
+[01:46.773] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} badge=60 ATK pill=60 DEF pill=30 mod=+ATK 0 (60+0=60)
+[01:46.773] Reckoning overlay: P1 "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature} badge=10 ATK pill=10 DEF pill=10 mod=+DEF 0 (10+0=10)
+[01:46.774] Anim: 3A  △ P1(1,3)
+[01:46.774] Card destroyed  P1 (1,3) "Stinky Insect" {Unit ATK10 DEF10 | cost 400 | affinity Nature}
+[02:09.898] Revealed: P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[02:09.941] Revealed: P1 (3,1) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[02:09.941] Dice rolled: 3
+[02:15.713] Crystals: P0 4200 → 3800 (-400)  [battle]
+[02:17.542] Attack P0(3,0)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P1(3,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=3  ATK=40 vs DEF=60  → LOSE
+[02:17.542] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[02:17.542] Reckoning overlay: P1 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} badge=60 ATK pill=30 DEF pill=0 mod=+DEF 60 (0+60=60)
+[02:17.542] Anim: 3B  △ P0(3,0)
+[02:17.542] Card destroyed  P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[02:18.920] Turn ended  P0  |  Crystals P0=3800 P1=4100
+
+--- Turn 4  |  Player 1  |  Crystals P0=3800 P1=4100 ---
+[02:19.524] Mode selected P1: ATTACK
+[02:19.530] MSG: Player 2: tap a unit to attack.
+[02:20.724] Dice rolled: 1
+[02:20.754] MSG: Venom Queen wins!
+[02:25.194] Crystals: P0 3800 → 3000 (-800)  [battle]
+[02:28.380] Attack P1(1,1)"Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature} → P0(2,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T5}  Dice=1  ATK=45 vs DEF=30  → WIN
+[02:28.380] Reckoning overlay: P1 "Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature} badge=45 ATK pill=45 DEF pill=75 mod=+ATK 0 (45+0=45)
+[02:28.380] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T5} badge=30 ATK pill=60 DEF pill=30 mod=+DEF 0 (30+0=30)
+[02:28.380] Anim: 3A  △ P0(2,0)
+[02:28.380] Card destroyed  P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T5}
+[02:28.880] Mode selected P1: ATTACK
+[02:28.885] MSG: Player 2: tap a unit to attack.
+[02:30.077] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[02:30.077] Dice rolled: 4
+[02:31.342] MSG: Trap triggered: Hard Scale!
+[02:35.417] Crystals: P0 3000 → 2300 (-700)  [trap cost]
+[02:37.232] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[02:38.602] Attack P1(3,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} → P0(0,4)"Hard Scale" {cost 700}  Dice=4  → Unit vs Trap
+[02:38.602] Reckoning overlay: P1 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} badge=30 ATK pill=30 DEF pill=0 mod=+ATK 0 (30+0=30)
+[02:38.602] Anim: 3D  (attacker survives)
+[02:39.101] Turn ended  P1  |  Crystals P0=2300 P1=4100
+
+--- Turn 5  |  Player 0  |  Crystals P0=2300 P1=4100 ---
+[02:51.936] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[02:51.977] Revealed: P1 (2,2) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[02:51.977] Crystals: P0 2300 → 2340 (+40)  [ability]
+[02:51.978] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[02:51.978] Dice rolled: 4
+[02:53.179] MSG: Parom the Smuggler wins!
+[02:56.814] Crystals: P1 4100 → 3400 (-700)  [battle]
+[03:00.004] Attack P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(2,2)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=4  ATK=30 vs DEF=20  → WIN
+[03:00.004] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[03:00.004] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:00.004] Anim: 3A  △ P1(2,2)
+[03:00.004] Card destroyed  P1 (2,2) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[03:03.267] Turn ended  P0  |  Crystals P0=2340 P1=3400
+
+--- Turn 6  |  Player 1  |  Crystals P0=2340 P1=3400 ---
+[03:05.361] Crystals: P1 3400 → 2600 (-800)  [union]
+[03:07.177] Revealed: P1 (0,2) "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}
+[03:07.225] Union summoned P1: "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} from "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down}, "Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature}, "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane | face-down}
+[03:07.225] MSG: Player 2 summoned [Burning Phoenix] using: "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine | face-down}, "Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature}, "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane | face-down}
+[03:08.877] MSG: [DEBUG] Bot Player timed out — ending turn.
+[03:08.881] Turn ended  P1  |  Crystals P0=2340 P1=2600
+
+--- Turn 7  |  Player 0  |  Crystals P0=2340 P1=2600 ---
+[03:10.777] Mode selected P0: ATTACK
+[03:10.789] MSG: Player 1: tap a unit to attack.
+[03:17.715] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[03:17.715] Dice rolled: 2
+[03:23.543] Crystals: P0 2340 → 1440 (-900)  [battle]
+[03:25.369] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane}  Dice=2  ATK=45 vs DEF=50  → LOSE
+[03:25.369] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[03:25.369] Reckoning overlay: P1 "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} badge=50 ATK pill=125 DEF pill=50 mod=+DEF 0 (50+0=50)
+[03:25.369] Anim: 3B  △ P0(2,2)
+[03:25.369] Card destroyed  P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[03:44.850] Tech played  P0: "Tease"
+[03:46.385] MSG: Opponent must choose and reveal 1 of their squares.
+[03:46.386] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[03:46.828] Revealed: P1 (4,0) "Uproaring Warband" {Unit ATK30 DEF15 | cost 280 | affinity Anima}
+[03:46.828] Crystals: P0 1440 → 1480 (+40)  [ability]
+[03:46.829] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[03:46.829] MSG: Tease: Opponent revealed Uproaring Warband.
+[03:48.754] Tech resolved  P0
+[04:13.560] Dice rolled: 4
+[04:13.594] MSG: Parom the Smuggler wins!
+[04:17.477] Crystals: P1 2600 → 2320 (-280)  [battle]
+[04:20.664] Attack P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} → P1(4,0)"Uproaring Warband" {Unit ATK30 DEF15 | cost 280 | affinity Anima}  Dice=4  ATK=30 vs DEF=15  → WIN
+[04:20.664] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=30 ATK pill=30 DEF pill=20 mod=+ATK 0 (30+0=30)
+[04:20.664] Reckoning overlay: P1 "Uproaring Warband" {Unit ATK30 DEF15 | cost 280 | affinity Anima} badge=15 ATK pill=30 DEF pill=15 mod=+DEF 0 (15+0=15)
+[04:20.664] Anim: 3A  △ P1(4,0)
+[04:20.664] Card destroyed  P1 (4,0) "Uproaring Warband" {Unit ATK30 DEF15 | cost 280 | affinity Anima}
+[04:24.880] Turn ended  P0  |  Crystals P0=1480 P1=2320
+
+--- Turn 8  |  Player 1  |  Crystals P0=1480 P1=2320 ---
+[04:25.486] Mode selected P1: ATTACK
+[04:25.490] MSG: Player 2: tap a unit to attack.
+[04:26.685] Dice rolled: 2
+[04:26.759] MSG: Burning Phoenix wins!
+[04:31.168] Crystals: P0 1480 → 1180 (-300)  [battle]
+[04:34.344] Attack P1(0,2)"Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} → P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=2  ATK=125 vs DEF=20  → WIN
+[04:34.344] Reckoning overlay: P1 "Burning Phoenix" {Union ATK125 DEF50 | destroy-cost 0 | summon-cost 800 | affinity Arcane} badge=125 ATK pill=125 DEF pill=50 mod=+ATK 0 (125+0=125)
+[04:34.344] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[04:34.345] Anim: 3A  △ P0(4,2)
+[04:34.345] Card destroyed  P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[04:34.843] Mode selected P1: ATTACK
+[04:34.845] MSG: Player 2: tap a unit to attack.
+[04:36.067] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:36.067] Dice rolled: 5
+[04:41.868] Crystals: P1 2320 → 1840 (-480)  [battle]
+[04:43.688] Attack P1(3,1)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} → P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=5  ATK=30 vs DEF=45  → LOSE
+[04:43.688] Reckoning overlay: P1 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} badge=30 ATK pill=30 DEF pill=0 mod=+ATK 0 (30+0=30)
+[04:43.688] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[04:43.688] Anim: 3B  △ P1(3,1)
+[04:43.688] Card destroyed  P1 (3,1) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[04:44.186] Turn ended  P1  |  Crystals P0=1180 P1=1840
+
+--- Turn 9  |  Player 0  |  Crystals P0=1180 P1=1840 ---
+[08:00.957] Revealed: P0 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[08:01.003] Revealed: P1 (0,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[08:01.005] Dice rolled: 5
+[08:02.226] MSG: Both cards are destroyed!
+[08:06.585] Crystals: P0 1180 → 680 (-500)  [battle]
+[08:08.401] Crystals: P1 1840 → 1540 (-300)  [battle]
+[08:10.221] Attack P0(3,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} → P1(0,0)"Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=5  ATK=20 vs DEF=20  → TIE
+[08:10.221] Reckoning overlay: P0 "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} badge=20 ATK pill=20 DEF pill=50 mod=+ATK 0 (20+0=20)
+[08:10.221] Reckoning overlay: P1 "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[08:10.221] Anim: 3C  △ P0(3,3) + △ P1(0,0)
+[08:10.221] Card destroyed  P0 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[08:10.221] Card destroyed  P1 (0,0) "Moon Tribe Twin Blader" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[08:16.538] Revealed: P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[08:16.539] Dice rolled: 5
+[08:17.797] MSG: Nothing happens — Dead End.
+[08:22.543] Attack P0(2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(1,0)(empty)  Dice=5  → DEAD_END
+[08:22.543] Anim: 3F  (blank slot)
+[08:23.844] Turn ended  P0  |  Crystals P0=680 P1=1540
+
+--- Turn 10  |  Player 1  |  Crystals P0=680 P1=1540 ---
+[08:24.457] Mode selected P1: ATTACK
+[08:24.461] MSG: Player 2: tap a unit to attack.
+[08:25.656] Dice rolled: 4
+[08:25.735] MSG: Burning Phoenix wins!
+[08:30.139] Crystals: P0 680 → 0 (-680)  [battle]
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 0  P1: 1540  |  Turns: 10

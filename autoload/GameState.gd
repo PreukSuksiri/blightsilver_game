@@ -23,9 +23,11 @@ enum GameMode { LOCAL_2P, VS_AI, HOT_SEAT, CAMPAIGN, DAILY_DUNGEON, AI_VS_AI, EX
 signal phase_changed(new_phase: Phase)
 signal turn_changed(player_index: int)
 signal crystals_changed(player_index: int, new_amount: int, reason: String)
+signal crystal_animation_finished()
 signal card_placed(player_index: int, row: int, col: int)
 signal card_revealed(player_index: int, row: int, col: int)
 signal card_destroyed(player_index: int, row: int, col: int)
+signal card_destruction_blocked(player_index: int, row: int, col: int)
 signal dice_rolled(result: int)
 signal game_over(winner: int)  # -1 = tie, 0 = player 1, 1 = player 2
 signal tech_card_used(player_index: int, card_name: String)
@@ -59,9 +61,10 @@ const MAX_CHARACTERS: int = 12
 const MIN_TRAPS: int = 4
 const MAX_TRAPS: int = 6
 
-# Decoy Puppet / Guerrilla Tactics battle flow (declared before inner class)
+# Decoy Puppet / Echo Barrier / Guerrilla Tactics battle flow (declared before inner class)
 var attack_cost_block_max: int = -1
 var attack_cost_block_player: int = -1
+var echo_barrier_player: int = -1       # Attacker locked out of further attacks this turn (Echo Barrier)
 var guerrilla_tactics_owner: int = -1
 
 # ─────────────────────────────────────────────────────────────
@@ -574,6 +577,33 @@ func set_phase(new_phase: Phase) -> void:
 # ─────────────────────────────────────────────────────────────
 # Crystal Management
 # ─────────────────────────────────────────────────────────────
+var _crystal_anim_pending: int = 0
+var _crystal_anim_board_registered: bool = false
+
+func register_crystal_animation_board() -> void:
+	_crystal_anim_board_registered = true
+
+func _begin_crystal_animation() -> void:
+	_crystal_anim_pending += 1
+	if not _crystal_anim_board_registered:
+		call_deferred("_complete_crystal_animation_headless")
+
+func _complete_crystal_animation_headless() -> void:
+	if _crystal_anim_board_registered:
+		return
+	while _crystal_anim_pending > 0:
+		complete_crystal_animation()
+
+func complete_crystal_animation() -> void:
+	if _crystal_anim_pending <= 0:
+		return
+	_crystal_anim_pending -= 1
+	crystal_animation_finished.emit()
+
+func wait_crystal_animation() -> void:
+	while _crystal_anim_pending > 0:
+		await crystal_animation_finished
+
 func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 	# Risk & Reward: crystal losses cost 25% more in Daily Dungeon
 	if game_mode == GameMode.DAILY_DUNGEON and "risk_and_reward" in active_dungeon_modifiers:
@@ -591,6 +621,7 @@ func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 	amount += extra_loss
 
 	crystals[player_index] = max(0, crystals[player_index] - amount)
+	_begin_crystal_animation()
 	emit_signal("crystals_changed", player_index, crystals[player_index], reason)
 
 	# CRYSTAL_RECOVER_ON_BIG_LOSS: if this player's loss was large, recover some crystals
@@ -604,6 +635,7 @@ func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 						var recover: int = own_card.ability_params.get("recover", 300)
 						if amount >= threshold:
 							crystals[player_index] = min(crystals[player_index] + recover, crystals[player_index] + recover)
+							_begin_crystal_animation()
 							emit_signal("crystals_changed", player_index, crystals[player_index], "recovery")
 							post_message("%s: Recovered %d Crystals!" % [own_card.card_name, recover])
 
@@ -611,8 +643,8 @@ func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 
 func gain_crystals(player_index: int, amount: int, reason: String = "") -> void:
 	crystals[player_index] += amount
+	_begin_crystal_animation()
 	emit_signal("crystals_changed", player_index, crystals[player_index], reason)
-	SFXManager.play(SFXManager.SFX_CRYSTAL_GAIN)
 
 func _check_crystal_win_condition() -> void:
 	var p0_zero: bool = crystals[0] <= 0
@@ -728,7 +760,32 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 				if "expose_destroy_pending" not in card.flags:
 					card.flags.append("expose_destroy_pending")
 
-func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) -> void:
+func would_block_destruction(player_index: int, row: int, col: int) -> bool:
+	var card: CardInstance = get_card(player_index, row, col)
+	if card.card_type != "character":
+		return false
+	if card.ability_type == CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION:
+		var _req_aff: int = card.ability_params.get("destroyer_affinity", -1)
+		if _req_aff >= 0:
+			var _destroyer: CardInstance = attacker_card
+			if _destroyer == null or _destroyer.card_type != "character" \
+					or _destroyer.affinity != _req_aff:
+				pass
+			elif "indestructible_used" not in card.flags:
+				return true
+		elif "indestructible_used" not in card.flags:
+			return true
+	if card.has_mutagen_flag and card.is_union and card.card_name == "Dimensional Virus":
+		var _dv_destroyer: CardInstance = attacker_card
+		if _dv_destroyer != null and _dv_destroyer.card_type == "character" \
+				and _dv_destroyer.affinity != CharacterData.Affinity.ARCANE:
+			return true
+	if galaxos_immunity_owner >= 0 and player_index == galaxos_immunity_owner \
+			and card.affinity in [CharacterData.Affinity.COSMIC, CharacterData.Affinity.ANIMA]:
+		return true
+	return false
+
+func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) -> bool:
 	var card: CardInstance = get_card(player_index, row, col)
 	var was_character: bool = card.card_type == "character"
 	# ONE_USE_SURVIVE_DESTRUCTION: card survives once
@@ -743,11 +800,13 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 				elif "indestructible_used" not in card.flags:
 					card.flags.append("indestructible_used")
 					post_message("%s survives destruction!" % card.card_name)
-					return
+					emit_signal("card_destruction_blocked", player_index, row, col)
+					return false
 			elif "indestructible_used" not in card.flags:
 				card.flags.append("indestructible_used")
 				post_message("%s survives destruction!" % card.card_name)
-				return
+				emit_signal("card_destruction_blocked", player_index, row, col)
+				return false
 		# Dimensional Virus mutagen: immune to destruction by non-Arcane
 		if card.has_mutagen_flag and card.is_union \
 				and card.card_name == "Dimensional Virus":
@@ -755,12 +814,14 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 			if _dv_destroyer != null and _dv_destroyer.card_type == "character" \
 					and _dv_destroyer.affinity != CharacterData.Affinity.ARCANE:
 				post_message("%s: Mutagen shields against non-Arcane destruction!" % card.card_name)
-				return
+				emit_signal("card_destruction_blocked", player_index, row, col)
+				return false
 		# Team Galaxos immunity
 		if galaxos_immunity_owner >= 0 and player_index == galaxos_immunity_owner \
 				and card.affinity in [CharacterData.Affinity.COSMIC, CharacterData.Affinity.ANIMA]:
 			post_message("%s is protected by Team Galaxos!" % card.card_name)
-			return
+			emit_signal("card_destruction_blocked", player_index, row, col)
+			return false
 		# Track destroyed characters in graveyard
 		graveyards[player_index].append(card)
 	if pay_cost and card.card_type != "dead_end":
@@ -777,6 +838,7 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 	if was_character:
 		BattleResolver.recalculate_all_field_bonuses()
 		check_character_wipe_win_condition()
+	return true
 
 ## True when a revived unit may be placed here: empty slot where a unit was destroyed (not a setup dead-end blank).
 func is_valid_revive_placement_cell(player_index: int, row: int, col: int) -> bool:
@@ -790,20 +852,19 @@ func has_valid_revive_placement_cell(player_index: int) -> bool:
 				return true
 	return false
 
-## Remove a trap card silently when revealed (no crystal cost, no was_destroyed flag).
-## The slot becomes a plain blank dead_end — completely empty, re-targetable.
+## Remove a trap card silently when revealed (no crystal cost, no card_destroyed signal).
+## Slot becomes a cleared empty cell (same as destroy_card) so dissolve does not linger.
 func void_trap(player_index: int, row: int, col: int) -> void:
-	var blank := CardInstance.new()
-	blank.card_type = "dead_end"
-	blank.face_up = true
-	grids[player_index][row][col] = blank
+	place_dead_end(player_index, row, col)
+	grids[player_index][row][col].face_up = true
+	grids[player_index][row][col].was_destroyed = true
 
-## Remove a Union material card silently (no crystal loss, no card_destroyed signal,
-## no was_destroyed flag). The slot becomes a normal blank dead_end.
+## Remove a Union material card silently (no crystal loss, no card_destroyed signal).
+## Slot becomes a cleared empty cell (same as destroy_card) so it does not linger as a revealed blank.
 func remove_union_material(player_index: int, row: int, col: int) -> void:
 	place_dead_end(player_index, row, col)
-	# Mark face_up so it can be attacked as a normal blank slot
 	grids[player_index][row][col].face_up = true
+	grids[player_index][row][col].was_destroyed = true
 
 ## Place a Union monster at (row, col) for player.
 ## The card appears face-up and behaves like a character card.
@@ -992,11 +1053,13 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	skip_next_turn = [false, false]
 	hypnotized_cards = [[], []]
 	skip_counts = [0, 0]
+	_crystal_anim_pending = 0
 	reroll_dice_available = [false, false]
 	graveyards = [[], []]
 	locked_attack_positions = []
 	attack_cost_block_max = -1
 	attack_cost_block_player = -1
+	echo_barrier_player = -1
 	guerrilla_tactics_owner = -1
 	if not _vn_battle_pending:
 		battle_ai_union_enabled = true

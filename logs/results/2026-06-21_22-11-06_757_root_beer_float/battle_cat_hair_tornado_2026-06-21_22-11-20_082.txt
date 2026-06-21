@@ -1,0 +1,116 @@
+=== Battle of Cat Hair Tornado ===
+Battle started: 2026-06-21 22:11:20.082
+Game Session of Root Beer Float (started 2026-06-21 22:11:06.757)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.425] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:08.833] Mode selected P1: TECH
+[00:09.140] Tech played  P1: "Spy"
+[00:10.676] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:11.077] Tech resolved  P1
+[00:11.976] Mode selected P1: ATTACK
+[00:11.978] MSG: Player 2: tap a unit to attack.
+[00:12.346] Revealed: P1 (0,2) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima}
+[00:14.199] Dice rolled: 5
+[00:14.243] MSG: Nothing happens — Dead End.
+[00:18.971] Attack P1(0,2)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima} → P0(4,1)(empty)  Dice=5  → DEAD_END
+[00:18.971] Anim: 3F  (blank slot)
+[00:19.482] Mode selected P1: ATTACK
+[00:19.484] MSG: Player 2: tap a unit to attack.
+[00:19.827] Revealed: P1 (0,0) "Leorudus the Warlord" {Unit ATK100 DEF100 | cost 1150 | affinity Anima | base 80/80 | buff +permATK20, +permDEF20}
+[00:21.723] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[00:21.723] Dice rolled: 3
+[00:22.979] MSG: Trap triggered: Hard Scale!
+[00:27.038] Crystals: P0 5000 → 4300 (-700)  [trap cost]
+[00:28.425] MSG: Hard Scale: All your units gain +5 DEF in Reckoning until attacker's next turn ends!
+[00:29.809] Attack P1(0,0)"Leorudus the Warlord" {Unit ATK100 DEF100 | cost 1150 | affinity Anima | base 80/80 | buff +permATK20, +permDEF20} → P0(0,4)"Hard Scale" {cost 700}  Dice=3  → Unit vs Trap
+[00:29.810] Reckoning overlay: P1 "Leorudus the Warlord" {Unit ATK100 DEF100 | cost 1150 | affinity Anima | base 80/80 | buff +permATK20, +permDEF20} badge=100 ATK pill=100 DEF pill=100 mod=+ATK 0 (100+0=100)
+[00:29.810] Anim: 3D  (attacker survives)
+[00:30.308] Turn ended  P1  |  Crystals P0=4300 P1=5000
+
+--- Turn 2  |  Player 0  |  Crystals P0=4300 P1=5000 ---
+[00:58.659] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:58.659] Dice rolled: 2
+[00:59.908] MSG: Moonrise Gentleman wins!
+[01:04.370] Crystals: P1 5000 → 4720 (-280)  [battle]
+[01:07.136] Attack P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(0,2)"Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}  Dice=2  ATK=40 vs DEF=20  → WIN
+[01:07.136] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[01:07.136] Reckoning overlay: P1 "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:07.136] Anim: 3A  △ P1(0,2)
+[01:07.136] Card destroyed  P1 (0,2) "Grand Fort Archer" {Unit ATK20 DEF20 | cost 280 | affinity Anima | 1xATK-used}
+[01:46.211] Revealed: P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:46.211] Revealed: P1 (1,0) "Street Joke" {cost 0}
+[01:46.211] Dice rolled: 2
+[01:47.461] MSG: Trap triggered: Street Joke!
+[01:51.535] Target prompt: "Street Joke: Choose 1 of your cells to reveal."  filter=trap_street_joke_reveal
+[01:51.957] Revealed: P1 (2,4) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[01:51.957] Crystals: P1 4720 → 4820 (+100)  [trap]
+[01:51.957] MSG: Street Joke: Revealed Elemental Master, gained 100 Crystals!
+[01:53.391] Attack P0(2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(1,0)"Street Joke" {cost 0}  Dice=2  → Unit vs Trap
+[01:53.391] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[01:53.391] Anim: 3D  (attacker survives)
+[01:56.279] Turn ended  P0  |  Crystals P0=4300 P1=4820
+
+--- Turn 3  |  Player 1  |  Crystals P0=4300 P1=4820 ---
+[01:56.875] Mode selected P1: ATTACK
+[01:56.878] MSG: Player 2: tap a unit to attack.
+[01:58.087] Dice rolled: 4
+[01:58.121] MSG: Leorudus the Warlord wins!
+[02:02.562] Crystals: P0 4300 → 3900 (-400)  [battle]
+[02:05.311] Attack P1(0,0)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P0(2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}  Dice=4  ATK=80 vs DEF=40  → WIN
+[02:05.311] Reckoning overlay: P1 "Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} badge=80 ATK pill=80 DEF pill=80 mod=+ATK 0 (80+0=80)
+[02:05.311] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=40 ATK pill=25 DEF pill=40 mod=+DEF 0 (40+0=40)
+[02:05.311] Anim: 3A  △ P0(2,4)
+[02:05.311] Card destroyed  P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[02:05.814] Mode selected P1: ATTACK
+[02:05.816] MSG: Player 2: tap a unit to attack.
+[02:07.037] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[02:07.037] Dice rolled: 1
+[02:12.822] Crystals: P1 4820 → 4020 (-800)  [battle]
+[02:14.212] Attack P1(2,4)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} → P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=1  ATK=20 vs DEF=45  → LOSE
+[02:14.212] Reckoning overlay: P1 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=20 ATK pill=20 DEF pill=60 mod=+ATK 0 (20+0=20)
+[02:14.212] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[02:14.212] Anim: 3B  △ P1(2,4)
+[02:14.212] Card destroyed  P1 (2,4) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[02:14.726] Turn ended  P1  |  Crystals P0=3900 P1=4020
+
+--- Turn 4  |  Player 0  |  Crystals P0=3900 P1=4020 ---
+[02:21.226] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[02:21.227] Dice rolled: 1
+[02:22.466] MSG: Nothing happens — Dead End.
+[02:27.222] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(1,2)(empty)  Dice=1  → DEAD_END
+[02:27.222] Anim: 3F  (blank slot)
+[03:34.858] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[03:34.858] Revealed: P1 (2,1) "Red Card" {cost 0}
+[03:34.859] Dice rolled: 5
+[03:36.112] MSG: Trap triggered: Red Card!
+[03:39.538] Coin flip: Tails, Heads
+[03:42.293] MSG: Red Card: Tails, Heads.
+[03:42.293] MSG: Not both heads — no effect.
+[03:43.682] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,1)"Red Card" {cost 0}  Dice=5  → Unit vs Trap
+[03:43.682] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[03:43.682] Anim: 3D  (attacker survives)
+[03:43.689] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[03:44.054] Revealed: P1 (2,2) "Mad Raccoon" {Unit ATK30 DEF15 | cost 260 | affinity Nature}
+[03:44.054] MSG: Revealed: Mad Raccoon
+[03:49.107] Turn ended  P0  |  Crystals P0=3900 P1=4020
+
+--- Turn 5  |  Player 1  |  Crystals P0=3900 P1=4020 ---
+[03:49.714] Mode selected P1: ATTACK
+[03:49.718] MSG: Player 2: tap a unit to attack.
+[03:50.917] Dice rolled: 2
+[03:50.935] MSG: Leorudus the Warlord wins!
+[03:55.394] Crystals: P0 3900 → 3150 (-750)  [battle]
+[03:58.130] Attack P1(0,0)"Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} → P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=2  ATK=80 vs DEF=45  → WIN
+[03:58.130] Reckoning overlay: P1 "Leorudus the Warlord" {Unit ATK80 DEF80 | cost 1150 | affinity Anima} badge=80 ATK pill=80 DEF pill=80 mod=+ATK 0 (80+0=80)
+[03:58.130] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[03:58.130] Anim: 3A  △ P0(1,4)
+[03:58.130] Card destroyed  P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[03:58.645] Mode selected P1: ATTACK
+[03:58.648] MSG: Player

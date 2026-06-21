@@ -1,0 +1,122 @@
+=== Battle of Aunt Edna's Meatloaf ===
+Battle started: 2026-06-21 21:18:18.333
+Game Session of Matcha Latte (started 2026-06-21 21:17:44.686)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:06.323] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:11.728] Mode selected P1: TECH
+[00:12.028] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:13.396] Tech played  P1: "Radar"
+[00:14.937] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:15.403] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[00:15.783] Revealed: P0 (3,2) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[00:16.157] Tech resolved  P1
+[00:17.054] Mode selected P1: ATTACK
+[00:17.058] MSG: Player 2: tap a unit to attack.
+[00:18.764] Revealed: P1 (0,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[00:18.764] Dice rolled: 1
+[00:19.105] MSG: Nothing happens — Dead End.
+[00:22.464] Attack P1(0,1)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P0(1,1)(empty)  Dice=1  → DEAD_END
+[00:22.464] Anim: 3F  (blank slot)
+[00:22.962] Mode selected P1: ATTACK
+[00:22.966] MSG: Player 2: tap a unit to attack.
+[00:24.690] Revealed: P1 (0,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:24.690] Dice rolled: 3
+[00:25.007] MSG: Both cards are destroyed!
+[00:29.320] Crystals: P1 4400 → 3850 (-550)  [battle]
+[00:30.711] Crystals: P0 5000 → 4550 (-450)  [battle]
+[00:32.098] Attack P1(0,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P0(3,2)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}  Dice=3  ATK=45 vs DEF=45  → TIE
+[00:32.098] Reckoning overlay: P1 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[00:32.098] Reckoning overlay: P0 "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} badge=45 ATK pill=30 DEF pill=45 mod=+DEF 0 (45+0=45)
+[00:32.098] Anim: 3C  △ P1(0,0) + △ P0(3,2)
+[00:32.098] Card destroyed  P1 (0,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[00:32.098] Card destroyed  P0 (3,2) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[00:32.599] Turn ended  P1  |  Crystals P0=4550 P1=3850
+
+--- Turn 2  |  Player 0  |  Crystals P0=4550 P1=3850 ---
+[00:32.656] Coin flip: Heads
+[00:35.404] Target prompt: "Plant-29: Heads! Choose 1 exposed ally or foe for Venom."  filter=ability_plant29_venom
+[00:39.485] MSG: Plant-29: Venom on Plant-29.
+[00:46.026] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:46.026] Dice rolled: 2
+[00:46.342] MSG: Shepherd Detective wins!
+[00:50.811] Crystals: P1 3850 → 2990 (-860)  [battle]
+[00:52.213] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(0,1)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}  Dice=2  ATK=40 vs DEF=0  → WIN
+[00:52.213] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:52.213] Reckoning overlay: P1 "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} badge=0 ATK pill=75 DEF pill=0 mod=+DEF 0 (0+0=0)
+[00:52.213] Anim: 3A  △ P1(0,1)
+[00:52.213] Card destroyed  P1 (0,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[00:52.222] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:53.836] Revealed: P1 (2,2) "Hypnosis" {cost 800}
+[00:53.836] MSG: Revealed: Hypnosis
+[06:15.430] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[06:15.430] Dice rolled: 4
+[06:16.215] MSG: Nothing happens — Dead End.
+[06:19.596] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(1,2)(empty)  Dice=4  → DEAD_END
+[06:19.596] Anim: 3F  (blank slot)
+[07:51.587] Turn ended  P0  |  Crystals P0=4550 P1=2990
+
+--- Turn 3  |  Player 1  |  Crystals P0=4550 P1=2990 ---
+[07:52.197] Mode selected P1: ATTACK
+[07:52.203] MSG: Player 2: tap a unit to attack.
+[07:53.904] Revealed: P1 (2,3) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[07:53.904] Dice rolled: 5
+[07:54.222] MSG: Flame Seraph wins!
+[07:58.244] Crystals: P0 4550 → 3800 (-750)  [battle]
+[07:59.643] Attack P1(2,3)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=5  ATK=50 vs DEF=45  → WIN
+[07:59.643] Reckoning overlay: P1 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=50 ATK pill=50 DEF pill=10 mod=+ATK 0 (50+0=50)
+[07:59.643] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[07:59.643] Anim: 3A  △ P0(1,4)
+[07:59.643] Card destroyed  P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[08:02.160] Turn ended  P1  |  Crystals P0=3800 P1=2990
+
+--- Turn 4  |  Player 0  |  Crystals P0=3800 P1=2990 ---
+[08:02.215] Coin flip: Tails
+[08:04.962] Target prompt: "Plant-29: Tails! Choose 1 of your units for Mutagen."  filter=ability_plant29_mutagen
+[08:14.559] MSG: Plant-29: Mutagen on Shepherd Detective.
+[08:23.273] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[08:23.273] Dice rolled: 4
+[08:24.066] MSG: Nothing happens — Dead End.
+[08:27.435] Attack P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[08:27.435] Anim: 3F  (blank slot)
+[09:10.816] Revealed: P1 (2,1) "Bait" {cost 0}
+[09:10.816] Dice rolled: 5
+[09:11.553] MSG: Trap triggered: Bait!
+[09:13.972] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[09:14.398] Revealed: P1 (2,0) "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine}
+[09:14.399] MSG: Bait: Defender revealed Joan the Faithful Warrior.
+[09:14.537] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | flags:venom} → P1(2,1)"Bait" {cost 0}  Dice=5  → Unit vs Trap
+[09:14.537] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | flags:venom} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[09:14.537] Anim: 3D  (attacker survives)
+[09:14.913] Turn ended  P0  |  Crystals P0=3800 P1=2990
+
+--- Turn 5  |  Player 1  |  Crystals P0=3800 P1=2990 ---
+[09:15.505] Mode selected P1: TECH
+[09:15.808] Crystals: P1 2990 → 1490 (-1500)  [tech cost]
+[09:17.193] Tech played  P1: "Garrison"
+[09:18.732] MSG: Garrison: All face-up units gain +20 DEF until end of next turn.
+[09:18.736] Tech resolved  P1
+[09:19.630] Mode selected P1: ATTACK
+[09:19.634] MSG: Player 2: tap a unit to attack.
+[09:21.343] Dice rolled: 5
+[09:21.371] MSG: Flame Seraph wins!
+[09:26.100] Crystals: P0 3800 → 3400 (-400)  [battle]
+[09:27.495] MSG: Moonrise Gentleman: +10 DEF, -10 ATK permanently (if possible).
+[09:27.497] Attack P1(2,3)"Flame Seraph" {Unit ATK50 DEF30 | cost 500 | affinity Divine | buff +carryDEF20} → P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}  Dice=5  ATK=50 vs DEF=40  → WIN
+[09:27.497] Reckoning overlay: P1 "Flame Seraph" {Unit ATK50 DEF30 | cost 500 | affinity Divine | buff +carryDEF20} badge=50 ATK pill=50 DEF pill=30 mod=+ATK 0 (50+0=50)
+[09:27.498] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+DEF 10 (30+10=40)
+[09:27.498] Anim: 3A  △ P0(1,2)
+[09:27.498] Card destroyed  P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[09:27.981] Mode selected P1: ATTACK
+[09:27.986] MSG: Player 2: tap a unit to attack.
+[09:29.691] Dice rolled: 5
+[09:29.720] MSG: Both cards are destroyed!
+[09:33.365] Crystals: P1 1490 → 1210 (-280)  [battle]
+[09:34.761] Crystals: P0 3400 → 3000 (-400)  [battle]
+[09:36.144] Attack P1(2,0)"Joan the Faithful Warrior" {Unit ATK25 DEF25 | cost 28

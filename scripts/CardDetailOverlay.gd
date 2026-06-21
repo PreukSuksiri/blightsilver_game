@@ -53,6 +53,7 @@ var _info_h: float
 var _pad_x:  float
 var _card_w: float
 var _art_base_pos: Vector2
+var _card_root: Control = null
 
 # ─────────────────────────────────────────────────────────────
 # Entry point
@@ -127,6 +128,8 @@ static func open(parent: Node, card_name: String, card_type: String,
 		if card_type in ["character", "trap", "tech"]:
 			overlay._add_gallery_buttons(card_name, card_type, card_w, card_h)
 
+	overlay._attach_card_status_overlay(card_w, card_h)
+
 # ─────────────────────────────────────────────────────────────
 # UI construction — static image path (full_cards/ PNG/JPG)
 # ─────────────────────────────────────────────────────────────
@@ -156,8 +159,7 @@ func _build_static_ui(card_w: float, card_h: float, full_card_path: String) -> v
 		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
 			_close())
 	add_child(card)
-
-	# Full pre-rendered card image
+	_card_root = card
 	var img := TextureRect.new()
 	img.position     = Vector2.ZERO
 	img.size         = Vector2(card_w, card_h)
@@ -251,6 +253,7 @@ func _build_ui(card_w: float, card_h: float) -> void:
 		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
 			_close())
 	add_child(card)
+	_card_root = card
 
 	# Derived layout helpers
 	var al      := ART_L_PCT   * card_w
@@ -684,6 +687,64 @@ func _populate(card_name: String, card_type: String) -> void:
 			_def.text  = ""
 			_aff.text  = ""
 			_desc.text = ""
+
+# ─────────────────────────────────────────────────────────────
+# Live card status (battle overlay — right side of art)
+# ─────────────────────────────────────────────────────────────
+func _resolve_card_owner() -> Dictionary:
+	if _card_inst == null:
+		return {"owner": -1, "pos": Vector2i(-1, -1)}
+	for player: int in [0, 1]:
+		var pos: Vector2i = GameState.find_card_position(player, _card_inst)
+		if pos != Vector2i(-1, -1):
+			return {"owner": player, "pos": pos}
+	return {"owner": -1, "pos": Vector2i(-1, -1)}
+
+
+func _attach_card_status_overlay(card_w: float, card_h: float) -> void:
+	if _card_root == null or _card_inst == null:
+		return
+
+	var owner_info: Dictionary = _resolve_card_owner()
+	var lines: PackedStringArray = BattleLogFormat.format_overlay_status_lines(
+		_card_inst,
+		int(owner_info.get("owner", -1)),
+		owner_info.get("pos", Vector2i(-1, -1)) as Vector2i
+	)
+	if lines.is_empty():
+		return
+
+	var art_l: float = ART_L_PCT * card_w
+	var art_r: float = ART_R_PCT * card_w
+	var art_t: float = ART_T_PCT * card_h
+	var art_b: float = INFO_TOP_PCT * card_h
+	var art_w_px: float = art_r - art_l
+	var art_h_px: float = art_b - art_t
+	var margin: float = 6.0
+	var panel_w: float = art_w_px * 0.44
+
+	var panel := VBoxContainer.new()
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.position = Vector2(art_r - panel_w - margin, art_t + margin)
+	panel.size = Vector2(panel_w, maxf(art_h_px - margin * 2.0, 0.0))
+	panel.add_theme_constant_override("separation", 3)
+	_card_root.add_child(panel)
+
+	var fsz: int = maxi(int(card_w * 0.028), 10)
+	for line: String in lines:
+		var lbl := Label.new()
+		lbl.text = line
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		lbl.add_theme_font_size_override("font_size", fsz)
+		lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
+		lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+		lbl.add_theme_constant_override("shadow_offset_x", 1)
+		lbl.add_theme_constant_override("shadow_offset_y", 1)
+		lbl.add_theme_font_override("font", CHIVO_FONT)
+		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		panel.add_child(lbl)
+
 
 # ─────────────────────────────────────────────────────────────
 # Helpers

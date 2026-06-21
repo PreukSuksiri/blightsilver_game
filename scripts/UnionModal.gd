@@ -11,6 +11,8 @@ extends Control
 signal union_selected(player: int, union_name: String, zone_cells: Array)
 signal union_cancelled
 
+const MENU_SCALE: float = 1.25
+
 # ─────────────────────────────────────────────────────────────
 # State
 # ─────────────────────────────────────────────────────────────
@@ -36,8 +38,8 @@ func _build_ui() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 
-	const PAD: int = 20
-	const GAP: int = 12
+	const PAD: int = int(20.0 * MENU_SCALE)
+	const GAP: int = int(12.0 * MENU_SCALE)
 
 	# Dim backdrop — clicking cancels
 	var dimmer := ColorRect.new()
@@ -80,7 +82,7 @@ func _build_ui() -> void:
 	var title := Label.new()
 	title.text = "UNION SUMMON  —  Choose a union to summon"
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title.add_theme_font_size_override("font_size", 17)
+	title.add_theme_font_size_override("font_size", int(17.0 * MENU_SCALE))
 	title.add_theme_color_override("font_color", Color(0.30, 0.85, 1.0))
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -88,8 +90,8 @@ func _build_ui() -> void:
 
 	var close_btn := Button.new()
 	close_btn.text = "CLOSE"
-	close_btn.custom_minimum_size = Vector2(100.0, 36.0)
-	close_btn.add_theme_font_size_override("font_size", 13)
+	close_btn.custom_minimum_size = Vector2(100.0 * MENU_SCALE, 36.0 * MENU_SCALE)
+	close_btn.add_theme_font_size_override("font_size", int(13.0 * MENU_SCALE))
 	close_btn.pressed.connect(_on_cancel)
 	SFXManager.wire_prompt_button(close_btn)
 	title_row.add_child(close_btn)
@@ -107,9 +109,9 @@ func _build_ui() -> void:
 
 		var left_arr := Button.new()
 		left_arr.text = "<"
-		left_arr.custom_minimum_size = Vector2(40.0, 0.0)
+		left_arr.custom_minimum_size = Vector2(40.0 * MENU_SCALE, 0.0)
 		left_arr.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		left_arr.add_theme_font_size_override("font_size", 22)
+		left_arr.add_theme_font_size_override("font_size", int(22.0 * MENU_SCALE))
 		scroll_row.add_child(left_arr)
 
 		scroll_c = ScrollContainer.new()
@@ -121,15 +123,15 @@ func _build_ui() -> void:
 
 		var right_arr := Button.new()
 		right_arr.text = ">"
-		right_arr.custom_minimum_size = Vector2(40.0, 0.0)
+		right_arr.custom_minimum_size = Vector2(40.0 * MENU_SCALE, 0.0)
 		right_arr.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		right_arr.add_theme_font_size_override("font_size", 22)
+		right_arr.add_theme_font_size_override("font_size", int(22.0 * MENU_SCALE))
 		scroll_row.add_child(right_arr)
 
 		left_arr.pressed.connect(func() -> void:
-			scroll_c.scroll_horizontal = maxi(scroll_c.scroll_horizontal - 220, 0))
+			scroll_c.scroll_horizontal = maxi(scroll_c.scroll_horizontal - int(220.0 * MENU_SCALE), 0))
 		right_arr.pressed.connect(func() -> void:
-			scroll_c.scroll_horizontal += 220)
+			scroll_c.scroll_horizontal += int(220.0 * MENU_SCALE))
 
 	var card_hbox := HBoxContainer.new()
 	card_hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -149,8 +151,8 @@ func _build_ui() -> void:
 		var col := VBoxContainer.new()
 		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		col.size_flags_vertical   = Control.SIZE_EXPAND_FILL
-		col.custom_minimum_size   = Vector2(200.0, 0.0)
-		col.add_theme_constant_override("separation", 8)
+		col.custom_minimum_size   = Vector2(200.0 * MENU_SCALE, 0.0)
+		col.add_theme_constant_override("separation", int(8.0 * MENU_SCALE))
 		card_hbox.add_child(col)
 
 		# Full card image — expands to fill available height
@@ -180,10 +182,10 @@ func _build_ui() -> void:
 		var captured_zone: Array  = zone_cells
 		var btn := Button.new()
 		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		btn.custom_minimum_size = Vector2(0.0, 52.0)
+		btn.custom_minimum_size = Vector2(0.0, 52.0 * MENU_SCALE)
 		btn.text = "UNION  (%d◆)" % u.summon_cost
 		btn.disabled = not can_afford
-		btn.add_theme_font_size_override("font_size", 16)
+		btn.add_theme_font_size_override("font_size", int(16.0 * MENU_SCALE))
 		btn.pressed.connect(func() -> void:
 			union_selected.emit(_player, captured_name, captured_zone)
 			queue_free())

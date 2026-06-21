@@ -14,6 +14,7 @@ const SFX_GEAR        := preload("res://assets/audio/sound_sledgehammer1.mp3")
 const SFX_SHATTER     := preload("res://assets/audio/sfx/ceramic.mp3")
 const SFX_SWOOSH      := preload("res://assets/audio/sound_swoosh_2.mp3")
 const SFX_SPELL       := preload("res://assets/audio/sound_spellcasting_2.mp3")
+const SFX_METAL_DEFLECT := preload("res://assets/audio/sfx/scifi_ui_42_B.mp3")
 
 # Card layout constants (mirrors CardDetailOverlay)
 const FRAME_ASPECT := 819.0 / 1126.0
@@ -151,6 +152,7 @@ func _animate_slot_badge_stat(
 		return
 	var token: int = int(slot.get_meta("badge_tick_token", 0)) + 1
 	slot.set_meta("badge_tick_token", token)
+	_play_sfx(SFX_SPELL)
 	_play_burst_ring(slot)
 	await _tick_badge_label(lbl, from_val, to_val)
 	if not is_instance_valid(slot) or int(slot.get_meta("badge_tick_token", 0)) != token:
@@ -158,6 +160,14 @@ func _animate_slot_badge_stat(
 
 func _refresh_slot_stats(slot: Control, inst: GameState.CardInstance, is_attacker: bool, result: BattleResolver.BattleResult) -> void:
 	_animate_slot_badge_stat(slot, inst, is_attacker, result)
+
+func _slot_shows_badge_stat_delta(slot: Control, result: BattleResolver.BattleResult) -> bool:
+	if not is_instance_valid(slot):
+		return false
+	var is_attacker: bool = bool(slot.get_meta("slot_is_attacker", false))
+	if is_attacker:
+		return result.attacker_atk_delta != 0
+	return result.defender_def_delta != 0
 
 func _animate_badge_stat_update(
 		slot: Control,
@@ -632,14 +642,19 @@ func _run_async(
 	var _def_pre: Control = _right_ctrl if attacker_player == 0 else _left_ctrl
 	match _get_scenario(defender, _live_result):
 		"3A":
-			_prebuild_tri_polys(_def_pre)
+			if not _live_result.destruction_blocked_defender:
+				_prebuild_tri_polys(_def_pre)
 		"3B":
-			_prebuild_tri_polys(_att_pre)
+			if not _live_result.destruction_blocked_attacker:
+				_prebuild_tri_polys(_att_pre)
 		"3C":
-			_prebuild_tri_polys(_att_pre)
-			_prebuild_tri_polys(_def_pre)
+			if not _live_result.destruction_blocked_attacker:
+				_prebuild_tri_polys(_att_pre)
+			if not _live_result.destruction_blocked_defender:
+				_prebuild_tri_polys(_def_pre)
 		"3E":
-			_prebuild_tri_polys(_att_pre)
+			if not _live_result.destruction_blocked_attacker:
+				_prebuild_tri_polys(_att_pre)
 
 	# Skippable 2-second pause
 	_skippable = true
@@ -658,11 +673,15 @@ func _run_async(
 	# Card effect flash — trap or character ability (use _live_result for final outcome)
 	# Skip ability flash for trap encounters — the burst is embedded inside the scenario
 	# animation (fires after the bounce), so running it here would move the attacker twice.
+	# Stat-boost abilities (e.g. Angel Gatekeeper vs Chaos) already play a burst ring when
+	# the badge ticks up — skip the duplicate ability flash in that case.
 	if _live_result.special_trigger not in ["trap_effect", "trap_nullified"]:
-		if _live_result.ability_triggered_attacker:
-			await _animate_card_effect_flash(att_ctrl)
-		elif _live_result.ability_triggered_defender:
-			await _animate_card_effect_flash(def_ctrl)
+		if _live_result.ability_triggered_attacker \
+				and not _slot_shows_badge_stat_delta(att_ctrl, _live_result):
+			await _animate_card_effect_flash(att_ctrl, _live_result.destruction_blocked_attacker)
+		elif _live_result.ability_triggered_defender \
+				and not _slot_shows_badge_stat_delta(def_ctrl, _live_result):
+			await _animate_card_effect_flash(def_ctrl, _live_result.destruction_blocked_defender)
 
 	# Run scenario animation using the final (possibly boosted) result
 	var scenario := _get_scenario(defender, _live_result)
@@ -727,7 +746,10 @@ func _play_sfx(stream: AudioStream) -> void:
 	asp.play()
 	asp.finished.connect(asp.queue_free)
 
-func _animate_card_effect_flash(ctrl: Control) -> void:
+func _animate_card_effect_flash(ctrl: Control, metallic: bool = false) -> void:
+	if metallic:
+		await _play_metallic_deflect(ctrl)
+		return
 	_play_sfx(SFX_SPELL)
 	_play_burst_ring(ctrl)
 	_flash_white(ctrl)
@@ -740,6 +762,44 @@ func _animate_trap_flash(ctrl: Control) -> void:
 	_flash_white(ctrl)
 	_flash_screen_white()
 	await get_tree().create_timer(1.0).timeout
+
+func _play_metallic_deflect(ctrl: Control) -> void:
+	_play_sfx(SFX_METAL_DEFLECT)
+	ctrl.pivot_offset = Vector2(_card_w * 0.5, (BADGE_H + _card_h) * 0.5)
+	var saved_mod: Color = ctrl.modulate
+	var saved_pos: Vector2 = ctrl.position
+
+	var shine := ColorRect.new()
+	shine.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	shine.color = Color(0.75, 0.88, 1.0, 0.0)
+	shine.mouse_filter = MOUSE_FILTER_IGNORE
+	shine.z_index = 6
+	ctrl.add_child(shine)
+
+	var streak := ColorRect.new()
+	streak.size = Vector2(_card_w * 0.22, (BADGE_H + _card_h) * 1.15)
+	streak.color = Color(1.0, 1.0, 1.0, 0.0)
+	streak.rotation = -0.35
+	streak.position = Vector2(-_card_w * 0.35, -BADGE_H * 0.2)
+	streak.mouse_filter = MOUSE_FILTER_IGNORE
+	streak.z_index = 7
+	ctrl.add_child(streak)
+
+	var t := create_tween()
+	t.tween_property(ctrl, "modulate", Color(1.7, 1.85, 2.2, 1.0), 0.05).set_trans(Tween.TRANS_LINEAR)
+	t.parallel().tween_property(shine, "color:a", 0.55, 0.05)
+	t.tween_property(streak, "color:a", 0.95, 0.04)
+	t.parallel().tween_property(streak, "position:x", _card_w * 0.95, 0.22) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	t.tween_property(ctrl, "position", saved_pos + Vector2(-5, 0), 0.04)
+	t.tween_property(ctrl, "position", saved_pos + Vector2(4, 0), 0.04)
+	t.tween_property(ctrl, "position", saved_pos, 0.05)
+	t.parallel().tween_property(ctrl, "modulate", saved_mod, 0.18).set_ease(Tween.EASE_OUT)
+	t.parallel().tween_property(shine, "color:a", 0.0, 0.18)
+	t.parallel().tween_property(streak, "color:a", 0.0, 0.12)
+	await t.finished
+	shine.queue_free()
+	streak.queue_free()
 
 func _play_burst_ring(ctrl: Control) -> void:
 	var ring := Panel.new()
@@ -964,7 +1024,7 @@ func _subdivide_triangle(verts: PackedVector2Array, uvs: PackedVector2Array) -> 
 # Scenario animations
 # ─────────────────────────────────────────────────────────────
 
-# 3A: Attacker wins — defender destroyed
+# 3A: Attacker wins — defender destroyed (or deflects if indestructible)
 func _anim_attacker_wins(att: Control, def: Control, dx: float) -> void:
 	var att_rest := att.position.x
 	_play_sfx(SFX_CLANK)
@@ -972,9 +1032,12 @@ func _anim_attacker_wins(att: Control, def: Control, dx: float) -> void:
 	_flash_white(def)  # runs concurrently as background coroutine
 	await _bounce_back(att, att_rest)
 	await get_tree().create_timer(0.1).timeout
-	await _destroy_card(def)
+	if _live_result.destruction_blocked_defender:
+		await _play_metallic_deflect(def)
+	else:
+		await _destroy_card(def)
 
-# 3B: Defender wins — attacker destroyed
+# 3B: Defender wins — attacker destroyed (or deflects if indestructible)
 func _anim_defender_wins(att: Control, def: Control, dx: float) -> void:
 	var att_rest := att.position.x
 	var def_rest := def.position.x
@@ -988,9 +1051,12 @@ func _anim_defender_wins(att: Control, def: Control, dx: float) -> void:
 	await _bounce_back(att, att_rest)
 	await push_t.finished
 	await get_tree().create_timer(0.12).timeout
-	await _destroy_card(att)
+	if _live_result.destruction_blocked_attacker:
+		await _play_metallic_deflect(att)
+	else:
+		await _destroy_card(att)
 
-# 3C: Tie — both destroyed
+# 3C: Tie — both destroyed (or metallic deflect per side)
 func _anim_tie(att: Control, def: Control, dx: float) -> void:
 	var att_rest := att.position.x
 	var def_rest := def.position.x
@@ -1005,9 +1071,14 @@ func _anim_tie(att: Control, def: Control, dx: float) -> void:
 	_flash_white(att)  # fire-and-forget, runs concurrently
 	await _flash_white(def)
 	await get_tree().create_timer(0.06).timeout
-	# Both shatter simultaneously — fire att concurrently, await def
-	_destroy_card(att)
-	await _destroy_card(def)
+	if _live_result.destruction_blocked_attacker:
+		_play_metallic_deflect(att)
+	else:
+		_destroy_card(att)
+	if _live_result.destruction_blocked_defender:
+		await _play_metallic_deflect(def)
+	else:
+		await _destroy_card(def)
 
 # 3D: Trap triggered, attacker survives
 func _anim_trap_survives(att: Control, def: Control, dx: float) -> void:
@@ -1049,13 +1120,17 @@ func _anim_blank(att: Control, def: Control, dx: float) -> void:
 	t.parallel().tween_property(def, "modulate:a", 0.0, 0.30).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	await t.finished
 
-# Fallback: exchange (neither destroyed)
+# Fallback: exchange (neither destroyed) — deflect if a block was flagged
 func _anim_exchange(att: Control, def: Control, dx: float) -> void:
 	var att_rest := att.position.x
 	_play_sfx(SFX_CLANK)
 	await _bounce_forward(att, dx)
 	_flash_white(def)  # runs concurrently as background coroutine
 	await _bounce_back(att, att_rest)
+	if _live_result.destruction_blocked_defender:
+		await _play_metallic_deflect(def)
+	elif _live_result.destruction_blocked_attacker:
+		await _play_metallic_deflect(att)
 
 # ─────────────────────────────────────────────────────────────
 # Input

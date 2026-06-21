@@ -25,6 +25,133 @@ static func format_unit_at(player: int, row: int, col: int, fallback_name: Strin
 	return format_card(GameState.get_card(player, row, col), fallback_name)
 
 
+## Human-readable status lines for the full-card detail overlay (right-side art labels).
+static func format_overlay_status_lines(
+		card: GameState.CardInstance,
+		owner_player: int = -1,
+		grid_pos: Vector2i = Vector2i(-1, -1)
+) -> PackedStringArray:
+	if card == null or card.was_destroyed:
+		return PackedStringArray()
+
+	var lines: PackedStringArray = PackedStringArray()
+
+	if not card.face_up:
+		lines.append("Face Down")
+
+	if card.card_type == "character" and card.attacked_this_turn \
+			and not is_decoy_puppet_blocked(card, owner_player) \
+			and not is_echo_barrier_blocked(card, owner_player):
+		lines.append("Waiting")
+
+	if is_decoy_puppet_blocked(card, owner_player):
+		lines.append("Decoy Puppet (cannot attack)")
+
+	if is_echo_barrier_blocked(card, owner_player):
+		lines.append("Echo Barrier (cannot attack)")
+
+	if is_cannot_attack_locked(card):
+		lines.append(format_cannot_attack_lock_overlay_line(card))
+
+	if card.effect_nullified_until >= GameState.turn_number:
+		lines.append("Effect Nullified (until turn %d)" % card.effect_nullified_until)
+
+	if owner_player >= 0 and GameState.berserk_active[owner_player] == card:
+		lines.append("Berserk Active")
+
+	if grid_pos != Vector2i(-1, -1) and grid_pos in GameState.locked_attack_positions:
+		lines.append("Cannot Be Attacked This Turn")
+
+	for flag: String in _flag_parts(card):
+		if flag in _ONCE_CONSUMPTION_FLAGS:
+			continue
+		lines.append(_overlay_flag_label(flag))
+
+	_append_overlay_once_used_lines(lines, card)
+	_append_overlay_buff_lines(lines, card)
+	_append_overlay_debuff_lines(lines, card)
+
+	if card.force_shielded:
+		lines.append("Shielded")
+	if card.halved:
+		lines.append("Stats Halved")
+	if card.atk_def_swapped:
+		lines.append("ATK/DEF Swapped")
+	if card.is_revived:
+		if _is_resurrection_revive(card):
+			lines.append("Revived via Resurrection")
+			lines.append("ATK = 0, DEF = 0")
+			lines.append("No ability")
+		else:
+			lines.append("Revived")
+	if card.mutagen_attacked:
+		lines.append("Mutagen Attack Used")
+	if card.bonus_attack_pending:
+		lines.append("Bonus Attack Ready")
+	if card.has_pending_multi_attack_non_char():
+		var chain_limit: int = card.get_multi_attack_non_char_chain_limit()
+		lines.append("Multi-Attack (%d/%d)" % [card.multi_attack_count, chain_limit])
+	elif card.multi_attack_count > 0:
+		lines.append("Multi-Attack (%d used)" % card.multi_attack_count)
+
+	return lines
+
+
+static func is_decoy_puppet_blocked(card: GameState.CardInstance, owner_player: int) -> bool:
+	if card == null or card.card_type != "character" or card.was_destroyed:
+		return false
+	if owner_player < 0 or GameState.attack_cost_block_player != owner_player:
+		return false
+	if GameState.attack_cost_block_max < 0:
+		return false
+	return card.crystal_cost <= GameState.attack_cost_block_max
+
+
+static func is_echo_barrier_blocked(card: GameState.CardInstance, owner_player: int) -> bool:
+	if card == null or card.card_type != "character" or card.was_destroyed:
+		return false
+	if owner_player < 0:
+		return false
+	return GameState.echo_barrier_player == owner_player
+
+
+static func is_cannot_attack_locked(card: GameState.CardInstance) -> bool:
+	if card == null or card.card_type != "character" or card.was_destroyed:
+		return false
+	return card.cannot_attack_until >= GameState.turn_number
+
+
+static func format_cannot_attack_lock_overlay_line(card: GameState.CardInstance) -> String:
+	return "Cannot attack until turn %d ends" % card.cannot_attack_until
+
+
+static func should_show_wait_icon(card: GameState.CardInstance, owner_player: int) -> bool:
+	if card == null or card.card_type != "character" or card.was_destroyed:
+		return false
+	if card.attacked_this_turn:
+		return true
+	if is_decoy_puppet_blocked(card, owner_player):
+		return true
+	if is_echo_barrier_blocked(card, owner_player):
+		return true
+	if is_cannot_attack_locked(card):
+		return true
+	return false
+
+
+## Turn-based attack locks stay visible across turns; same-turn waits only on the owner's turn.
+static func should_show_wait_icon_on_board(
+		card: GameState.CardInstance,
+		owner_player: int,
+		is_owners_turn: bool
+) -> bool:
+	if not should_show_wait_icon(card, owner_player):
+		return false
+	if is_cannot_attack_locked(card):
+		return true
+	return is_owners_turn
+
+
 static func format_unit(card: GameState.CardInstance) -> String:
 	if not is_unit(card):
 		return format_card(card)
@@ -139,6 +266,144 @@ static func format_attack_anim_line(
 	if result.attacker_destroyed:
 		return "Anim: 3B  △ P%d(%d,%d)" % [atk_player, attacker_pos.x, attacker_pos.y]
 	return "Anim: exchange  (no destruction)"
+
+
+const _ONCE_CONSUMPTION_FLAGS: Array[String] = [
+	"indestructible_used",
+	"copy_stats_used",
+	"extra_kill_used",
+	"extra_vs_revealed_used",
+	"extra_deadend_used",
+	"extra_deadend_turn",
+	"atk_debuff_used",
+	"expose_reveal_used",
+	"turn_end_reveal_used",
+	"anima_triumph_extra_used",
+]
+
+
+static func _append_overlay_once_used_lines(lines: PackedStringArray, card: GameState.CardInstance) -> void:
+	if card.card_type != "character":
+		return
+	if "indestructible_used" in card.flags:
+		_append_unique_overlay_line(lines, _survive_once_used_label(card))
+	if card.one_use_atk_boost_used:
+		_append_unique_overlay_line(lines, _once_atk_consumed_label(card))
+	if card.one_use_def_boost_used:
+		_append_unique_overlay_line(lines, _once_def_consumed_label(card))
+	if "copy_stats_used" in card.flags:
+		_append_unique_overlay_line(lines, "Once Copy Stats Used")
+	if "extra_kill_used" in card.flags:
+		_append_unique_overlay_line(lines, "Once Extra Attack (Kill) Used")
+	if "extra_vs_revealed_used" in card.flags:
+		_append_unique_overlay_line(lines, "Once Extra Attack (Revealed) Used")
+	if "extra_deadend_used" in card.flags:
+		_append_unique_overlay_line(lines, "Once Extra Attack (Dead End) Used")
+	if "extra_deadend_turn" in card.flags:
+		_append_unique_overlay_line(lines, "Extra Attack (Dead End) Used This Turn")
+	if "atk_debuff_used" in card.flags \
+			and card.ability_type == CharacterData.AbilityType.SELF_DEBUFF_ON_ATTACK_AND_DEFEND:
+		_append_unique_overlay_line(lines, "Once Self ATK Debuff Used")
+	if "expose_reveal_used" in card.flags:
+		_append_unique_overlay_line(lines, "Once Reveal Foe Used")
+	if "turn_end_reveal_used" in card.flags:
+		_append_unique_overlay_line(lines, "Once Turn-End Reveal Used")
+	if "anima_triumph_extra_used" in card.flags:
+		_append_unique_overlay_line(lines, "Once Extra Attack Used")
+
+
+static func _append_unique_overlay_line(lines: PackedStringArray, text: String) -> void:
+	if text.is_empty() or text in lines:
+		return
+	lines.append(text)
+
+
+static func _survive_once_used_label(card: GameState.CardInstance) -> String:
+	if card.ability_type == CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION:
+		var req_aff: int = int(card.ability_params.get("destroyer_affinity", -1))
+		if req_aff >= 0 and req_aff < CharacterData.Affinity.size():
+			return "Once Survive vs %s Used" % _affinity_name(req_aff)
+		return "Survive Once Used"
+	return "Survive Once Used"
+
+
+static func _once_atk_consumed_label(card: GameState.CardInstance) -> String:
+	match card.ability_type:
+		CharacterData.AbilityType.ONE_USE_ATK_BOOST:
+			return "Once ATK Boost Used"
+		CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND:
+			return "Once ATK Boost Used"
+		CharacterData.AbilityType.ONE_USE_DESTROY_BY_AFFINITY:
+			return "Once Destroy Used"
+		CharacterData.AbilityType.PERM_ATK_BOOST_ONCE_PER_AFFINITY:
+			return "Once ATK Gain Used"
+		CharacterData.AbilityType.GAIN_HALF_STATS_ON_SURVIVE:
+			return "Once Half Stats Gain Used"
+		_:
+			return "One-Use ATK Used"
+
+
+static func _once_def_consumed_label(card: GameState.CardInstance) -> String:
+	match card.ability_type:
+		CharacterData.AbilityType.ONE_USE_DEF_BOOST:
+			return "Once DEF Boost Used"
+		CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND:
+			return "Once DEF Boost Used"
+		CharacterData.AbilityType.ONE_USE_DEFEND_MORPH:
+			return "Once Defend Morph Used"
+		CharacterData.AbilityType.ONE_USE_PERM_DEBUFF_ATTACKER_ATK:
+			return "Once Perm ATK Debuff Used"
+		CharacterData.AbilityType.SELF_DEBUFF_ON_ATTACK_AND_DEFEND:
+			return "Once Self DEF Debuff Used"
+		_:
+			return "One-Use DEF Used"
+
+
+static func _is_resurrection_revive(card: GameState.CardInstance) -> bool:
+	if not card.is_revived or card.card_type != "character":
+		return false
+	return card.ability_type == int(CharacterData.AbilityType.NONE) \
+		and card.current_atk == 0 \
+		and card.current_def == 0
+
+
+static func _overlay_flag_label(flag: String) -> String:
+	match flag:
+		"venom": return "Venom Flag"
+		"mutagen": return "Mutagen Flag"
+		"berserk": return "Berserk Flag"
+		"expose_destroy_pending": return "Expose Destroy Pending"
+		"indestructible_used": return "Indestructible Used"
+		_: return "%s Flag" % flag.capitalize().replace("_", " ")
+
+
+static func _append_overlay_buff_lines(lines: PackedStringArray, card: GameState.CardInstance) -> void:
+	_append_signed_overlay_line(lines, "ATK", card.perm_atk_bonus, "permanent")
+	_append_signed_overlay_line(lines, "DEF", card.perm_def_bonus, "permanent")
+	_append_signed_overlay_line(lines, "ATK", card.field_aura_atk_bonus, "aura")
+	_append_signed_overlay_line(lines, "DEF", card.field_aura_def_bonus, "aura")
+	_append_signed_overlay_line(lines, "ATK", card.temp_atk_bonus, "temp")
+	_append_signed_overlay_line(lines, "DEF", card.temp_def_bonus, "temp")
+	_append_signed_overlay_line(lines, "DEF", card.carry_def_bonus, "carry")
+
+
+static func _append_overlay_debuff_lines(lines: PackedStringArray, card: GameState.CardInstance) -> void:
+	if card.atk_debuff > 0:
+		lines.append("ATK Debuff -%d" % card.atk_debuff)
+	if card.carry_atk_debuff > 0:
+		lines.append("ATK Debuff -%d (carry)" % card.carry_atk_debuff)
+
+
+static func _append_signed_overlay_line(
+		lines: PackedStringArray,
+		stat: String,
+		value: int,
+		kind: String
+) -> void:
+	if value == 0:
+		return
+	var sign: String = "+" if value > 0 else "-"
+	lines.append("%s %s%d (%s)" % [stat, sign, abs(value), kind])
 
 
 static func _nonzero_buff_parts(card: GameState.CardInstance) -> PackedStringArray:

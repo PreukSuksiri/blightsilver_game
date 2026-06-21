@@ -16,6 +16,8 @@ class BattleResult:
 	var special_params: Dictionary = {}
 	var ability_triggered_attacker: bool = false
 	var ability_triggered_defender: bool = false
+	var destruction_blocked_attacker: bool = false
+	var destruction_blocked_defender: bool = false
 	# Stat delta fields — difference between base and effective values entering battle
 	var attacker_atk_used: int = 0   # effective ATK used
 	var defender_def_used: int = 0   # effective DEF used
@@ -266,6 +268,7 @@ static func _resolve_character_vs_character(
 			and not attacker.is_union:
 		result.defender_destroyed = false
 		result.defender_crystal_loss = 0
+		result.destruction_blocked_defender = true
 		result.messages.append("%s: only a Union card can destroy %s!" % [attacker.card_name, defender.card_name])
 
 	# IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP: Helios — cannot be destroyed while another own card of same affinity is face-up
@@ -279,6 +282,7 @@ static func _resolve_character_vs_character(
 				if _im_card.affinity == _immune_aff:
 					result.defender_destroyed = false
 					result.defender_crystal_loss = 0
+					result.destruction_blocked_defender = true
 					result.messages.append("%s: protected by another %s ally!" % [
 						defender.card_name, CharacterData.Affinity.keys()[_immune_aff]])
 					result.ability_triggered_defender = true
