@@ -1118,7 +1118,7 @@ export_all_cards
 
 Only one export job can run at a time. If an export is already in progress, the command returns an error message.
 
-> After exporting, you may need to reimport the files in the Godot editor (right-click the `full_cards/` folder → Reimport) before using them as textures.
+Before and after exporting, the command asks the **Card Import Regen** editor plugin to call Godot's `reimport_files()` on source art (`characters/`, `traps/`, `tech/`, `union/`) and `full_cards/`, regenerating `.import` sidecars automatically. This only works when running from the Godot editor (F5 play); exported builds skip reimport and log a warning.
 
 ---
 

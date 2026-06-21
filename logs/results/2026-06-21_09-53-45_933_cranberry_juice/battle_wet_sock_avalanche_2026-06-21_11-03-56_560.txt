@@ -1,0 +1,141 @@
+=== Battle of Wet Sock Avalanche ===
+Battle started: 2026-06-21 11:03:56.560
+Game Session of Cranberry Juice (started 2026-06-21 09:53:45.933)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.855] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:27.163] Revealed: P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:27.188] Revealed: P1 (0,1) "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}
+[00:27.188] Dice rolled: 2
+[00:31.714] Crystals: P0 5000 → 4200 (-800)  [battle]
+[00:33.114] MSG: Ostrich Cannon locks itself until next turn.
+[00:33.120] Attack P0(2,0)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(0,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine}  Dice=2  ATK=60 vs DEF=90  → LOSE
+[00:33.120] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} badge=60 ATK pill=60 DEF pill=30 mod=+ATK 0 (60+0=60)
+[00:33.120] Reckoning overlay: P1 "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} badge=90 ATK pill=70 DEF pill=90 mod=+DEF 0 (90+0=90)
+[00:33.120] Anim: 3B  △ P0(2,0)
+[00:33.120] Card destroyed  P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:36.574] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:36.574] Dice rolled: 1
+[00:36.592] MSG: Nothing happens — Dead End.
+[00:38.459] Attack P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} → P1(2,1)(empty)  Dice=1  → DEAD_END
+[00:38.459] Anim: 3F  (blank slot)
+[00:40.646] Turn ended  P0  |  Crystals P0=4200 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=4200 P1=5000 ---
+[00:41.241] Mode selected P1: TECH
+[00:41.551] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:42.931] Tech played  P1: "Radar"
+[00:44.493] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:45.735] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:45.737] Tech resolved  P1
+[00:46.633] Mode selected P1: ATTACK
+[00:46.635] MSG: Player 2: tap a character to attack.
+[00:48.358] Dice rolled: 3
+[00:48.372] MSG: Archbishop wins!
+[00:52.858] Crystals: P0 4200 → 3850 (-350)  [battle]
+[00:54.254] Attack P1(0,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=3  ATK=70 vs DEF=10  → WIN
+[00:54.254] Reckoning overlay: P1 "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} badge=70 ATK pill=70 DEF pill=90 mod=+ATK 0 (70+0=70)
+[00:54.254] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=10 ATK pill=40 DEF pill=10 mod=+DEF 0 (10+0=10)
+[00:54.254] Anim: 3A  △ P0(2,1)
+[00:54.254] Card destroyed  P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:54.755] Mode selected P1: ATTACK
+[00:54.758] MSG: Player 2: tap a character to attack.
+[00:56.486] Revealed: P1 (0,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:56.487] Dice rolled: 1
+[00:56.500] MSG: Nothing happens — Dead End.
+[00:58.669] Attack P1(0,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P0(1,3)(empty)  Dice=1  → DEAD_END
+[00:58.669] Anim: 3F  (blank slot)
+[00:59.179] Turn ended  P1  |  Crystals P0=3850 P1=4400
+
+--- Turn 3  |  Player 0  |  Crystals P0=3850 P1=4400 ---
+[01:06.749] Revealed: P0 (3,2) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[01:06.790] Revealed: P1 (3,0) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[01:06.790] Dice rolled: 2
+[01:11.339] Crystals: P0 3850 → 3400 (-450)  [battle]
+[01:12.735] MSG: Fujin locked — cannot attack until end of next turn.
+[01:12.737] Attack P0(3,2)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} → P1(3,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}  Dice=2  ATK=30 vs DEF=40  → LOSE
+[01:12.737] Reckoning overlay: P0 "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} badge=30 ATK pill=30 DEF pill=45 mod=+ATK 0 (30+0=30)
+[01:12.739] Reckoning overlay: P1 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=40 ATK pill=35 DEF pill=40 mod=+DEF 0 (40+0=40)
+[01:12.739] Anim: 3B  △ P0(3,2)
+[01:12.739] Card destroyed  P0 (3,2) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[02:07.180] Revealed: P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[02:07.180] Dice rolled: 2
+[02:07.206] MSG: Nothing happens — Dead End.
+[02:10.278] Attack P0(3,0)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} → P1(2,2)(empty)  Dice=2  → DEAD_END
+[02:10.278] Anim: 3F  (blank slot)
+[03:47.471] Turn ended  P0  |  Crystals P0=3400 P1=4400
+
+--- Turn 4  |  Player 1  |  Crystals P0=3400 P1=4400 ---
+[03:48.051] Mode selected P1: TECH
+[03:48.351] Crystals: P1 4400 → 2900 (-1500)  [tech cost]
+[03:49.737] Tech played  P1: "Garrison"
+[03:51.286] MSG: Garrison: All face-up characters gain +20 DEF until end of next turn.
+[03:51.290] Tech resolved  P1
+[03:52.184] Mode selected P1: ATTACK
+[03:52.186] MSG: Player 2: tap a character to attack.
+[03:53.895] Dice rolled: 4
+[03:53.915] MSG: Flame Seraph wins!
+[03:58.387] Crystals: P0 3400 → 3000 (-400)  [battle]
+[03:59.780] Attack P1(0,0)"Flame Seraph" {Unit ATK50 DEF30 | cost 500 | affinity Divine | buff +carryDEF20} → P0(3,0)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}  Dice=4  ATK=50 vs DEF=30  → WIN
+[03:59.780] Reckoning overlay: P1 "Flame Seraph" {Unit ATK50 DEF30 | cost 500 | affinity Divine | buff +carryDEF20} badge=50 ATK pill=50 DEF pill=30 mod=+ATK 0 (50+0=50)
+[03:59.780] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:59.780] Anim: 3A  △ P0(3,0)
+[03:59.780] Card destroyed  P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[04:00.277] Mode selected P1: ATTACK
+[04:00.280] MSG: Player 2: tap a character to attack.
+[04:01.986] Dice rolled: 3
+[04:02.018] MSG: Nothing happens — Dead End.
+[04:05.390] Attack P1(0,1)"Archbishop" {Unit ATK70 DEF110 | cost 1200 | affinity Divine | buff +carryDEF20} → P0(0,0)(empty)  Dice=3  → DEAD_END
+[04:05.390] Anim: 3F  (blank slot)
+[04:05.890] Turn ended  P1  |  Crystals P0=3000 P1=2900
+
+--- Turn 5  |  Player 0  |  Crystals P0=3000 P1=2900 ---
+[04:10.775] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:10.776] Dice rolled: 2
+[04:10.793] MSG: Aerial the Battlemage wins!
+[04:15.274] Crystals: P1 2900 → 2400 (-500)  [battle]
+[04:16.677] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(0,0)"Flame Seraph" {Unit ATK50 DEF30 | cost 500 | affinity Divine | buff +carryDEF20}  Dice=2  ATK=50 vs DEF=30  → WIN
+[04:16.677] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[04:16.677] Reckoning overlay: P1 "Flame Seraph" {Unit ATK50 DEF30 | cost 500 | affinity Divine | buff +carryDEF20} badge=30 ATK pill=50 DEF pill=30 mod=+DEF 0 (30+0=30)
+[04:16.677] Anim: 3A  △ P1(0,0)
+[04:16.677] Card destroyed  P1 (0,0) "Flame Seraph" {Unit ATK50 DEF30 | cost 500 | affinity Divine | buff +carryDEF20}
+[04:32.825] Turn ended  P0  |  Crystals P0=3000 P1=2400
+
+--- Turn 6  |  Player 1  |  Crystals P0=3000 P1=2400 ---
+[04:33.419] Mode selected P1: TECH
+[04:33.737] Tech played  P1: "Prayer"
+[04:35.295] MSG: Prayer: Divine Characters protected until opponent's turn ends.
+[04:35.298] Tech resolved  P1
+[04:36.210] Mode selected P1: ATTACK
+[04:36.213] MSG: Player 2: tap a character to attack.
+[04:37.936] Dice rolled: 2
+[04:37.953] MSG: Archbishop wins!
+[04:41.856] Crystals: P0 3000 → 2250 (-750)  [battle]
+[04:43.263] Attack P1(0,1)"Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} → P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=2  ATK=70 vs DEF=45  → WIN
+[04:43.263] Reckoning overlay: P1 "Archbishop" {Unit ATK70 DEF90 | cost 1200 | affinity Divine} badge=70 ATK pill=70 DEF pill=90 mod=+ATK 0 (70+0=70)
+[04:43.264] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[04:43.264] Anim: 3A  △ P0(1,4)
+[04:43.264] Card destroyed  P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[04:43.755] Mode selected P1: ATTACK
+[04:43.759] MSG: Player 2: tap a character to attack.
+[04:45.480] Dice rolled: 5
+[04:45.522] MSG: Nothing happens — Dead End.
+[04:48.894] Attack P1(3,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | cannot-atk≤T4} → P0(4,3)(empty)  Dice=5  → DEAD_END
+[04:48.894] Anim: 3F  (blank slot)
+[04:49.400] Turn ended  P1  |  Crystals P0=2250 P1=2400
+
+--- Turn 7  |  Player 0  |  Crystals P0=2250 P1=2400 ---
+[05:43.180] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[05:43.180] Dice rolled: 3
+[05:43.201] MSG: Plant-29 wins!
+[05:43.201] MSG: Prayer protected Fujin!
+[05:46.574] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(3,0)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | cannot-atk≤T4}  Dice=3  ATK=45 vs DEF=40  → TIE
+[05:46.574] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[05:46.574] Reckoning overlay: P1 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine | cannot-atk≤T4} badge=40 ATK pill=35 DEF pill=40 mod=+DEF 0 (40+0=40)
+[05:46.574] Anim: exchange  (no destruction)

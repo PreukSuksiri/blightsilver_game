@@ -37,6 +37,17 @@ const AFFINITY_COLORS: Dictionary = {
 
 const OUTPUT_DIR := "res://assets/textures/cards/full_cards/"
 
+const IMPORT_CLEANUP_DIRS: PackedStringArray = [
+	"res://assets/textures/cards/characters/",
+	"res://assets/textures/cards/traps/",
+	"res://assets/textures/cards/tech/",
+	"res://assets/textures/cards/union/",
+	OUTPUT_DIR,
+]
+
+const REIMPORT_REQUEST_PATH := "user://card_exporter_reimport_request.json"
+const REIMPORT_WAIT_MAX_FRAMES := 6000
+
 # ── Per-card label refs (reassigned each render) ──────────────────────────────
 var _art:          TextureRect
 var _art_base_pos: Vector2
@@ -76,6 +87,13 @@ func export_dead_end_card() -> void:
 	queue_free()
 
 func export_all_cards() -> void:
+	if OS.has_feature("editor"):
+		var pre_paths := _collect_importable_assets_in_dirs(IMPORT_CLEANUP_DIRS)
+		print("[CardExporter] Regenerating .import sidecars for %d asset(s) before export..." % pre_paths.size())
+		await _await_editor_reimport(pre_paths)
+	else:
+		push_warning("[CardExporter] Skipping .import regeneration (not running from Godot editor).")
+
 	var pairs := _collect_all_pairs()
 	var done  := 0
 	for pair: Array in pairs:
@@ -87,6 +105,12 @@ func export_all_cards() -> void:
 			print("[CardExporter] %d/%d — %s (union locked)" % [done, pairs.size(), pair[0]])
 		await get_tree().process_frame
 	print("[CardExporter] Complete. Exported %d cards (+locked union variants) to %s" % [done, OUTPUT_DIR])
+
+	if OS.has_feature("editor"):
+		var post_paths := _collect_importable_assets_in_dir(OUTPUT_DIR)
+		print("[CardExporter] Regenerating .import sidecars for %d exported asset(s)..." % post_paths.size())
+		await _await_editor_reimport(post_paths)
+
 	MailboxManager._exporter_active = false
 	queue_free()
 
@@ -243,8 +267,8 @@ func _build_card_node() -> Control:
 	cost_sb.content_margin_top         = 4
 	cost_sb.content_margin_bottom      = 4
 	var cost_pc := PanelContainer.new()
-	cost_pc.position     = Vector2(card_w * 0.68, hdr_h * 0.22)
-	cost_pc.size         = Vector2(card_w * 0.27, hdr_h * 0.66)
+	cost_pc.position     = Vector2(card_w * 0.68, hdr_h * 0.32)
+	cost_pc.size         = Vector2(card_w * 0.27 - 12.0, hdr_h * 0.50 + 2.0)
 	cost_pc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cost_pc.add_theme_stylebox_override("panel", cost_sb)
 	var cost_hbox := HBoxContainer.new()
@@ -546,11 +570,11 @@ func _style_pill(lbl: Label, bg_col: Color, border_col: Color) -> void:
 func _load_art(path: String) -> void:
 	var tex: Texture2D = null
 	if path != "" and ResourceLoader.exists(path):
-		tex = load(path) as Texture2D
+		tex = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
 	if tex == null and path.ends_with(".png"):
 		var jpg_path := path.left(path.length() - 4) + ".jpg"
 		if ResourceLoader.exists(jpg_path):
-			tex = load(jpg_path) as Texture2D
+			tex = ResourceLoader.load(jpg_path, "", ResourceLoader.CACHE_MODE_IGNORE) as Texture2D
 	_art.texture = tex if tex != null else ART_PLACEHOLDER
 
 # ─────────────────────────────────────────────────────────────
@@ -690,3 +714,54 @@ func _collect_all_pairs() -> Array:
 	for u: UnionData in UnionDatabase.get_all_unions():
 		pairs.append([u.card_name, "union"])
 	return pairs
+
+func _collect_importable_assets_in_dirs(dirs: PackedStringArray) -> PackedStringArray:
+	var paths := PackedStringArray()
+	for res_dir: String in dirs:
+		for path: String in _collect_importable_assets_in_dir(res_dir):
+			paths.append(path)
+	return paths
+
+func _collect_importable_assets_in_dir(res_dir: String) -> PackedStringArray:
+	var paths := PackedStringArray()
+	var dir := DirAccess.open(res_dir)
+	if dir == null:
+		push_warning("[CardExporter] Cannot open dir for import scan: " + res_dir)
+		return paths
+	dir.list_dir_begin()
+	var file_name := dir.get_next()
+	while file_name != "":
+		if not dir.current_is_dir() and not file_name.ends_with(".import"):
+			var ext := file_name.get_extension().to_lower()
+			if ext in ["png", "jpg", "jpeg", "webp"]:
+				paths.append(res_dir + file_name)
+		file_name = dir.get_next()
+	dir.list_dir_end()
+	return paths
+
+func _await_editor_reimport(res_paths: PackedStringArray) -> void:
+	if res_paths.is_empty():
+		return
+
+	var req := {
+		"paths": res_paths,
+		"done": false,
+	}
+	var file := FileAccess.open(REIMPORT_REQUEST_PATH, FileAccess.WRITE)
+	if file == null:
+		push_error("[CardExporter] Cannot write reimport request.")
+		return
+	file.store_string(JSON.stringify(req))
+
+	var frames := 0
+	while frames < REIMPORT_WAIT_MAX_FRAMES:
+		await get_tree().process_frame
+		if not FileAccess.file_exists(REIMPORT_REQUEST_PATH):
+			return
+		var state_text := FileAccess.get_file_as_string(REIMPORT_REQUEST_PATH)
+		var state: Variant = JSON.parse_string(state_text)
+		if typeof(state) == TYPE_DICTIONARY and state.get("done", false):
+			return
+		frames += 1
+
+	push_warning("[CardExporter] Timed out waiting for .import regeneration.")

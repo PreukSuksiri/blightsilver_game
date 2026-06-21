@@ -63,7 +63,7 @@ movie_writer/movie_file="/Users/blightsilver/blightsilver_game/video/test1.avi"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg", "res://addons/card_import_regen/plugin.cfg")
 
 [input]
 

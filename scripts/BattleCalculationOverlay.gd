@@ -31,6 +31,7 @@ var ICON_ATTACK: Texture2D
 var ICON_DEFEND: Texture2D
 var ICON_TRAP: Texture2D
 var ICON_BLANK: Texture2D
+var ICON_CRYSTAL: Texture2D
 
 
 var _left_ctrl:  Control  # P1 slot (always left)
@@ -50,10 +51,11 @@ var _left_inst: GameState.CardInstance = null
 var _right_inst: GameState.CardInstance = null
 
 func _ready() -> void:
-	ICON_ATTACK = HudSkin.hud_tex("ui_context_menu_attack.png")
-	ICON_DEFEND = HudSkin.hud_tex("ui_icon_defend.png")
-	ICON_TRAP   = HudSkin.hud_tex("ui_icon_trap.png")
-	ICON_BLANK  = HudSkin.hud_tex("ui_icon_blank_found.png")
+	ICON_ATTACK   = HudSkin.hud_tex("ui_context_menu_attack.png")
+	ICON_DEFEND   = HudSkin.hud_tex("ui_icon_defend.png")
+	ICON_TRAP     = HudSkin.hud_tex("ui_icon_trap.png")
+	ICON_BLANK    = HudSkin.hud_tex("ui_icon_blank_found.png")
+	ICON_CRYSTAL  = HudSkin.hud_tex("ui_crystal_indicator.png")
 	HudSkin.skin_changed.connect(_reload_hud_skin)
 
 func _exit_tree() -> void:
@@ -61,10 +63,11 @@ func _exit_tree() -> void:
 		HudSkin.skin_changed.disconnect(_reload_hud_skin)
 
 func _reload_hud_skin(_new_version: String = "") -> void:
-	ICON_ATTACK = HudSkin.hud_tex("ui_context_menu_attack.png")
-	ICON_DEFEND = HudSkin.hud_tex("ui_icon_defend.png")
-	ICON_TRAP   = HudSkin.hud_tex("ui_icon_trap.png")
-	ICON_BLANK  = HudSkin.hud_tex("ui_icon_blank_found.png")
+	ICON_ATTACK   = HudSkin.hud_tex("ui_context_menu_attack.png")
+	ICON_DEFEND   = HudSkin.hud_tex("ui_icon_defend.png")
+	ICON_TRAP     = HudSkin.hud_tex("ui_icon_trap.png")
+	ICON_BLANK    = HudSkin.hud_tex("ui_icon_blank_found.png")
+	ICON_CRYSTAL  = HudSkin.hud_tex("ui_crystal_indicator.png")
 
 ## Called by GameBoard when an ability-choice overlay appears on top of this overlay.
 ## Prevents the overlay from animating or being dismissed until resume_with_result() is called.
@@ -381,15 +384,40 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	type_lbl.add_theme_font_override("font", CHIVO_FONT)
 	parent.add_child(type_lbl)
 
+	var cost_sb := StyleBoxFlat.new()
+	cost_sb.bg_color                   = Color(0.04, 0.04, 0.04, 0.88)
+	cost_sb.border_color               = Color(0.85, 0.68, 0.18)
+	cost_sb.border_width_left          = 2; cost_sb.border_width_right  = 2
+	cost_sb.border_width_top           = 2; cost_sb.border_width_bottom = 2
+	cost_sb.corner_radius_top_left     = 7; cost_sb.corner_radius_top_right   = 7
+	cost_sb.corner_radius_bottom_left  = 7; cost_sb.corner_radius_bottom_right = 7
+	cost_sb.content_margin_left        = 6; cost_sb.content_margin_right  = 6
+	cost_sb.content_margin_top         = 4; cost_sb.content_margin_bottom = 4
+	var cost_pc := PanelContainer.new()
+	cost_pc.position     = Vector2(cw * 0.68, hdr_h * 0.32)
+	cost_pc.size         = Vector2(cw * 0.27 - 12.0, hdr_h * 0.50 + 2.0)
+	cost_pc.mouse_filter = MOUSE_FILTER_IGNORE
+	cost_pc.add_theme_stylebox_override("panel", cost_sb)
+	var cost_hbox := HBoxContainer.new()
+	cost_hbox.alignment    = BoxContainer.ALIGNMENT_CENTER
+	cost_hbox.mouse_filter = MOUSE_FILTER_IGNORE
+	cost_hbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	cost_pc.add_child(cost_hbox)
+	var cost_icon := TextureRect.new()
+	cost_icon.texture             = ICON_CRYSTAL
+	cost_icon.expand_mode         = TextureRect.EXPAND_IGNORE_SIZE
+	cost_icon.stretch_mode        = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	cost_icon.custom_minimum_size = Vector2(fsz_hdr, fsz_hdr)
+	cost_icon.mouse_filter        = MOUSE_FILTER_IGNORE
+	cost_hbox.add_child(cost_icon)
 	var cost_lbl := Label.new()
-	cost_lbl.position = Vector2(cw * 0.70, hdr_h * 0.26)
-	cost_lbl.size = Vector2(cw * 0.24, hdr_h * 0.62)
-	cost_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	cost_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	cost_lbl.add_theme_font_size_override("font_size", fsz_hdr)
 	cost_lbl.add_theme_color_override("font_color", Color(1.0, 0.88, 0.25))
 	cost_lbl.add_theme_font_override("font", CHIVO_FONT)
-	parent.add_child(cost_lbl)
+	cost_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	cost_lbl.mouse_filter       = MOUSE_FILTER_IGNORE
+	cost_hbox.add_child(cost_lbl)
+	parent.add_child(cost_pc)
 
 	# Info section
 	var info_y  := INFO_TOP_PCT * ch
@@ -456,7 +484,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	match inst.card_type:
 		"character":
 			var data: CharacterData = CardDatabase.get_character(inst.card_name)
-			cost_lbl.text = "%d◆" % inst.crystal_cost
+			cost_lbl.text = str(inst.crystal_cost)
 			name_lbl.text = inst.card_name
 			if inst.is_union:
 				const UNION_CYAN: Color = Color(0.25, 0.90, 1.00)
@@ -487,7 +515,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 			var data: TrapData = CardDatabase.get_trap(inst.card_name)
 			type_lbl.text = "TRAP"
 			type_lbl.add_theme_color_override("font_color", TYPE_COLOR_TRAP)
-			cost_lbl.text = "%d◆" % inst.crystal_cost
+			cost_lbl.text = str(inst.crystal_cost)
 			name_lbl.text = inst.card_name
 			if data:
 				desc_lbl.text = data.get_effect_description()
@@ -497,7 +525,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 			var data: TechCardData = CardDatabase.get_tech(inst.card_name)
 			type_lbl.text = "TECH"
 			type_lbl.add_theme_color_override("font_color", TYPE_COLOR_TECH)
-			cost_lbl.text = "%d◆" % inst.crystal_cost
+			cost_lbl.text = str(inst.crystal_cost)
 			name_lbl.text = inst.card_name
 			if data:
 				desc_lbl.text = data.get_effect_description()

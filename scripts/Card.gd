@@ -65,6 +65,8 @@ const RARITY_SHADOW: Dictionary = {
 # ─────────────────────────────────────────────────────────────
 const FLAG_DEFS: Dictionary = {
 	"mutagen": {"emoji": "🧬", "color": Color(0.55, 0.95, 0.55, 0.92)},
+	"venom":   {"emoji": "☠", "color": Color(0.55, 0.85, 0.30, 0.92)},
+	"berserk": {"emoji": "💢", "color": Color(0.95, 0.30, 0.25, 0.92)},
 }
 
 const ART_PLACEHOLDER: Texture2D    = preload("res://assets/textures/cards/placeholder.png")
@@ -128,6 +130,7 @@ var is_highlighted: bool = false
 var is_locked: bool = false
 
 const INVERT_ART_SHADER: Shader = preload("res://assets/shaders/invert_color.gdshader")
+const OUTLINE_SHADER: Shader    = preload("res://assets/shaders/logo_outline.gdshader")
 
 # Cache so we don't reload the texture every frame
 var _last_loaded_art: String = ""
@@ -136,6 +139,7 @@ static var _invert_art_material: ShaderMaterial
 
 var _blank_found_icon: TextureRect
 var _trap_icon: TextureRect
+var _crystal_cost_icon: TextureRect = null
 var _flag_bar: HBoxContainer = null
 
 func _ready() -> void:
@@ -153,6 +157,34 @@ func _ready() -> void:
 	HudSkin.skin_changed.connect(_reload_hud_skin)
 	_setup_overlay_styles()
 	_build_flag_bar()
+
+	# Crystal icon left of the cost number — fits inside the CostLabel area
+	_crystal_cost_icon = TextureRect.new()
+	_crystal_cost_icon.layout_mode    = 1
+	_crystal_cost_icon.anchor_left    = 1.0
+	_crystal_cost_icon.anchor_right   = 1.0
+	_crystal_cost_icon.anchor_top     = 0.0
+	_crystal_cost_icon.anchor_bottom  = 0.0
+	_crystal_cost_icon.offset_left    = -30
+	_crystal_cost_icon.offset_top     = 2
+	_crystal_cost_icon.offset_right   = -21
+	_crystal_cost_icon.offset_bottom  = 11
+	_crystal_cost_icon.expand_mode    = TextureRect.EXPAND_IGNORE_SIZE
+	_crystal_cost_icon.stretch_mode   = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_crystal_cost_icon.mouse_filter   = MOUSE_FILTER_IGNORE
+	_crystal_cost_icon.texture        = HudSkin.hud_tex("ui_crystal_indicator.png")
+	_crystal_cost_icon.visible        = false
+	add_child(_crystal_cost_icon)
+	# Narrow CostLabel to leave room for the icon
+	cost_label.offset_left  = -20
+	cost_label.offset_right = -12
+
+	var _wait_outline := ShaderMaterial.new()
+	_wait_outline.shader = OUTLINE_SHADER
+	_wait_outline.set_shader_parameter("outline_color", Color(0, 0, 0, 1))
+	_wait_outline.set_shader_parameter("outline_width", 4.0)
+	attacked_icon_rect.material = _wait_outline
+
 	_refresh_display()
 
 func _exit_tree() -> void:
@@ -234,6 +266,11 @@ func _refresh_flag_badges() -> void:
 		sb.shadow_color  = Color(badge_color.r * 0.5, badge_color.g * 0.5, badge_color.b * 0.5, 0.6)
 		sb.shadow_offset = Vector2(0.0, 1.0)
 		sb.shadow_size   = 3
+		sb.border_color        = Color(0, 0, 0, 0.85)
+		sb.border_width_left   = 2
+		sb.border_width_right  = 2
+		sb.border_width_top    = 2
+		sb.border_width_bottom = 2
 		panel.add_theme_stylebox_override("panel", sb)
 		panel.custom_minimum_size = Vector2(24.0, 17.0)
 
@@ -466,11 +503,13 @@ func _show_character_face_up() -> void:
 	affinity_stat_label.add_theme_color_override("font_color", Color(aff_color.r, aff_color.g, aff_color.b, 0.7))
 
 	if char_data and card_data.crystal_cost != char_data.crystal_cost:
-		cost_label.text = "%d◆" % card_data.crystal_cost
+		cost_label.text = "%d" % card_data.crystal_cost
 		cost_label.add_theme_color_override("font_color", Color(1.0, 0.96, 0.65))
 	else:
-		cost_label.text = "%d◆" % card_data.crystal_cost
+		cost_label.text = "%d" % card_data.crystal_cost
 		cost_label.add_theme_color_override("font_color", Color(1.0, 0.90, 0.30))
+	if _crystal_cost_icon:
+		_crystal_cost_icon.visible = true
 
 	if char_data:
 		ability_label.text = char_data.get_ability_description()
@@ -527,8 +566,10 @@ func _show_union_face_up() -> void:
 	affinity_stat_label.text = aff_keys[aff_idx].capitalize() if aff_idx < aff_keys.size() else ""
 	affinity_stat_label.add_theme_color_override("font_color", Color(UNION_CYAN.r, UNION_CYAN.g, UNION_CYAN.b, 0.7))
 
-	cost_label.text = "0◆"
+	cost_label.text = "0"
 	cost_label.add_theme_color_override("font_color", Color(1.0, 0.90, 0.30))
+	if _crystal_cost_icon:
+		_crystal_cost_icon.visible = true
 
 	var u: UnionData = UnionDatabase.get_union(card_data.card_name)
 	if u:
@@ -575,7 +616,9 @@ func _show_trap_face_up() -> void:
 	atk_label.text = ""
 	def_label.text = ""
 	affinity_stat_label.text = ""
-	cost_label.text = "%d◆" % card_data.crystal_cost
+	cost_label.text = "%d" % card_data.crystal_cost
+	if _crystal_cost_icon:
+		_crystal_cost_icon.visible = true
 
 	var trap_data: TrapData = CardDatabase.get_trap(card_data.card_name)
 	if trap_data:
@@ -613,7 +656,9 @@ func _show_tech_face_up() -> void:
 	atk_label.text = ""
 	def_label.text = ""
 	affinity_stat_label.text = ""
-	cost_label.text = "%d◆" % card_data.crystal_cost
+	cost_label.text = "%d" % card_data.crystal_cost
+	if _crystal_cost_icon:
+		_crystal_cost_icon.visible = true
 
 	var tech_data: TechCardData = CardDatabase.get_tech(card_data.card_name)
 	if tech_data:
@@ -784,6 +829,8 @@ func _clear_labels() -> void:
 	affinity_stat_label.text = ""
 	ability_label.text = ""
 	cost_label.text = ""
+	if _crystal_cost_icon:
+		_crystal_cost_icon.visible = false
 
 # ─────────────────────────────────────────────────────────────
 # Selection / Highlight

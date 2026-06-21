@@ -1,0 +1,80 @@
+=== Battle of Parking Lot Seagull ===
+Battle started: 2026-06-21 13:16:08.534
+Game Session of Orange Juice (started 2026-06-21 13:15:58.746)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.779] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:17.768] Revealed: P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:17.794] Revealed: P1 (1,1) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[00:17.795] Dice rolled: 5
+[00:17.830] MSG: Flame Lizard wins!
+[00:22.248] Crystals: P1 5000 → 4750 (-250)  [battle]
+[00:23.652] Attack P0(2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(1,1)"Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}  Dice=5  ATK=25 vs DEF=10  → WIN
+[00:23.652] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[00:23.652] Reckoning overlay: P1 "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic} badge=10 ATK pill=20 DEF pill=10 mod=+DEF 0 (10+0=10)
+[00:23.652] Anim: 3A  △ P1(1,1)
+[00:23.652] Card destroyed  P1 (1,1) "Laser Walker" {Unit ATK20 DEF10 | cost 250 | affinity Cosmic}
+[00:30.895] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[00:30.896] Revealed: P1 (2,1) "Trap Hole" {cost 0}
+[00:30.896] Dice rolled: 5
+[00:31.192] MSG: Trap triggered: Trap Hole!
+[00:33.866] Coin flip: Heads, Tails, Heads
+[00:36.632] MSG: Trap Hole: Heads, Tails, Heads.
+[00:36.632] Crystals: P0 5000 → 4960 (-40)  [trap]
+[00:38.025] MSG: Trap Hole: 2 head(s) — Player 1 loses 40 Crystals!
+[00:38.030] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(2,1)"Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[00:38.030] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[00:38.030] Anim: 3D  (attacker survives)
+[00:38.744] Turn ended  P0  |  Crystals P0=4960 P1=4750
+
+--- Turn 2  |  Player 1  |  Crystals P0=4960 P1=4750 ---
+[00:39.342] Mode selected P1: TECH
+[00:39.640] Crystals: P1 4750 → 4150 (-600)  [tech cost]
+[00:41.026] Tech played  P1: "Radar"
+[00:42.565] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:42.988] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:43.360] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:43.780] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:43.783] Tech resolved  P1
+[00:44.662] Mode selected P1: ATTACK
+[00:44.665] MSG: Player 2: tap a character to attack.
+[00:46.367] Revealed: P1 (2,3) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:46.367] Crystals: P0 4960 → 5000 (+40)  [ability]
+[00:46.367] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:46.367] Dice rolled: 4
+[00:46.382] MSG: Both cards are destroyed!
+[00:51.774] Crystals: P1 4150 → 3750 (-400)  [battle]
+[00:53.165] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:54.558] MSG: Moonrise Gentleman: +10 DEF, -10 ATK permanently (if possible).
+[00:54.563] Attack P1(2,3)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} → P0(1,2)"Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}  Dice=4  ATK=40 vs DEF=40  → TIE
+[00:54.563] Reckoning overlay: P1 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[00:54.563] Reckoning overlay: P0 "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine} badge=40 ATK pill=40 DEF pill=30 mod=+DEF 10 (30+10=40)
+[00:54.563] Anim: 3C  △ P1(2,3) + △ P0(1,2)
+[00:54.563] Card destroyed  P1 (2,3) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:54.563] Card destroyed  P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[00:55.053] Mode selected P1: ATTACK
+[00:55.059] MSG: Player 2: tap a character to attack.
+[00:56.771] Revealed: P1 (0,4) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[00:56.771] Crystals: P0 4600 → 4640 (+40)  [ability]
+[00:56.771] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:56.772] Dice rolled: 4
+[00:56.799] MSG: Both cards are destroyed!
+[01:01.179] Crystals: P1 3750 → 3450 (-300)  [battle]
+[01:02.573] Crystals: P0 4640 → 4340 (-300)  [battle]
+[01:03.977] Attack P1(0,4)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=4  ATK=20 vs DEF=20  → TIE
+[01:03.977] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[01:03.977] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[01:03.977] Anim: 3C  △ P1(0,4) + △ P0(4,2)
+[01:03.977] Card destroyed  P1 (0,4) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[01:03.977] Card destroyed  P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[01:04.460] Turn ended  P1  |  Crystals P0=4340 P1=3450
+
+--- Turn 3  |  Player 0  |  Crystals P0=4340 P1=3450 ---
+[01:04.509] Coin flip: Heads
+[01:07.245] Target prompt: "Plant-29: Heads! Choose 1 exposed ally or foe for Venom."  filter=ability_plant29_venom

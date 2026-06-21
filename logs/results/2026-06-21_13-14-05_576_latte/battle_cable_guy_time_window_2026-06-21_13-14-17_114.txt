@@ -1,0 +1,43 @@
+=== Battle of Cable Guy Time Window ===
+Battle started: 2026-06-21 13:14:17.114
+Game Session of Latte (started 2026-06-21 13:14:05.576)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:06.020] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:11.387] Mode selected P1: TECH
+[00:11.694] Tech played  P1: "Tease"
+[00:13.237] MSG: Opponent must choose and reveal 1 of their squares.
+[00:13.483] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[00:18.438] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[00:18.438] MSG: Tease: Opponent revealed Aerial the Battlemage.
+[00:18.440] Tech resolved  P1
+[00:19.331] Mode selected P1: ATTACK
+[00:19.337] MSG: Player 2: tap a character to attack.
+[00:21.042] Revealed: P1 (0,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[00:21.071] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:21.071] Dice rolled: 1
+[00:21.370] MSG: Trap triggered: Trap Hole!
+[00:21.370] MSG: Mars Drill is immune to 0-cost Traps!
+[00:25.451] Attack P1(0,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P0(0,0)"Trap Hole" {cost 0}  Dice=1  → Unit vs Trap (nullified)
+[00:25.451] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=30 mod=+ATK 0 (40+0=40)
+[00:25.451] Anim: 3D  (attacker survives)
+[00:25.953] Mode selected P1: ATTACK
+[00:25.955] MSG: Player 2: tap a character to attack.
+[00:27.666] Revealed: P1 (0,1) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[00:27.687] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[00:27.688] Dice rolled: 2
+[00:32.003] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:33.418] Attack P1(0,1)"Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} → P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=2  ATK=20 vs DEF=50  → LOSE
+[00:33.419] Reckoning overlay: P1 "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[00:33.419] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[00:33.419] Anim: 3B  △ P1(0,1)
+[00:33.419] Card destroyed  P1 (0,1) "Mine Guard" {Unit ATK20 DEF15 | cost 300 | affinity Cosmic}
+[00:33.910] Turn ended  P1  |  Crystals P0=5000 P1=4700
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4700 ---

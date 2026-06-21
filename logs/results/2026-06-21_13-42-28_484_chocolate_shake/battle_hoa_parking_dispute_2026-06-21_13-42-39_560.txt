@@ -1,0 +1,157 @@
+=== Battle of HOA Parking Dispute ===
+Battle started: 2026-06-21 13:42:39.560
+Game Session of Chocolate Shake (started 2026-06-21 13:42:28.484)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.857] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:10.233] Mode selected P1: TECH
+[00:10.532] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:11.902] Tech played  P1: "Radar"
+[00:13.444] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:13.891] Revealed: P0 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:14.280] Revealed: P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos}
+[00:14.667] Tech resolved  P1
+[00:15.565] Mode selected P1: ATTACK
+[00:15.567] MSG: Player 2: tap a unit to attack.
+[00:17.281] Revealed: P1 (0,2) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[00:17.281] Dice rolled: 5
+[00:17.299] MSG: Space Boy wins!
+[00:21.748] Crystals: P0 5000 → 4500 (-500)  [battle]
+[00:23.147] Attack P1(0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P0(3,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}  Dice=5  ATK=75 vs DEF=50  → WIN
+[00:23.147] Reckoning overlay: P1 "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} badge=75 ATK pill=75 DEF pill=65 mod=+ATK 0 (75+0=75)
+[00:23.147] Reckoning overlay: P0 "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} badge=50 ATK pill=20 DEF pill=50 mod=+DEF 0 (50+0=50)
+[00:23.147] Anim: 3A  △ P0(3,3)
+[00:23.147] Card destroyed  P0 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:25.658] Turn ended  P1  |  Crystals P0=4500 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4500 P1=4400 ---
+[01:52.596] Revealed: P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[01:52.596] Dice rolled: 5
+[01:52.630] MSG: Nothing happens — Dead End.
+[01:54.368] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P1(2,1)(empty)  Dice=5  → DEAD_END
+[01:54.368] Anim: 3F  (blank slot)
+[03:38.372] Revealed: P1 (0,4) "Methanomancer" {Unit ATK20 DEF20 | cost 350 | affinity Cosmic}
+[03:38.373] MSG: Methanomancer: Surrounding attack — +30 ATK&DEF!
+[03:38.376] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[03:38.400] Revealed: P1 (1,1) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[03:38.400] Dice rolled: 1
+[03:38.417] MSG: Aerial the Battlemage wins!
+[03:41.333] Crystals: P1 4400 → 3500 (-900)  [battle]
+[03:42.733] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(1,1)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}  Dice=1  ATK=50 vs DEF=40  → WIN
+[03:42.734] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[03:42.734] Reckoning overlay: P1 "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic} badge=40 ATK pill=70 DEF pill=40 mod=+DEF 0 (40+0=40)
+[03:42.734] Anim: 3A  △ P1(1,1)
+[03:42.734] Card destroyed  P1 (1,1) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[06:14.587] Turn ended  P0  |  Crystals P0=4500 P1=3500
+
+--- Turn 3  |  Player 1  |  Crystals P0=4500 P1=3500 ---
+[06:15.183] Mode selected P1: TECH
+[06:15.489] Tech played  P1: "Bribe"
+[06:17.025] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[06:19.308] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[06:19.308] Crystals: P0 4500 → 5200 (+700)  [ability]
+[06:19.308] MSG: Bribe: Player 1 revealed Shepherd Detective and received 700 Crystals.
+[06:19.311] Tech resolved  P1
+[06:20.199] Mode selected P1: ATTACK
+[06:20.204] MSG: Player 2: tap a unit to attack.
+[06:21.905] MSG: Methanomancer: Surrounding attack — +30 ATK&DEF!
+[06:21.905] Dice rolled: 3
+[06:21.931] MSG: Space Boy wins!
+[06:26.391] Crystals: P0 5200 → 4450 (-750)  [battle]
+[06:27.787] Attack P1(0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=3  ATK=75 vs DEF=45  → WIN
+[06:27.789] Reckoning overlay: P1 "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} badge=75 ATK pill=75 DEF pill=65 mod=+ATK 0 (75+0=75)
+[06:27.789] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[06:27.789] Anim: 3A  △ P0(1,4)
+[06:27.789] Card destroyed  P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[06:28.283] Mode selected P1: ATTACK
+[06:28.288] MSG: Player 2: tap a unit to attack.
+[06:29.991] Dice rolled: 2
+[06:30.007] MSG: Methanomancer wins!
+[06:34.471] Crystals: P0 4450 → 4050 (-400)  [battle]
+[06:35.868] Attack P1(0,4)"Methanomancer" {Unit ATK80 DEF80 | cost 350 | affinity Cosmic | base 20/20 | buff +tempATK60, +tempDEF60} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=2  ATK=80 vs DEF=25  → WIN
+[06:35.868] Reckoning overlay: P1 "Methanomancer" {Unit ATK80 DEF80 | cost 350 | affinity Cosmic | base 20/20 | buff +tempATK60, +tempDEF60} badge=80 ATK pill=80 DEF pill=80 mod=+ATK 0 (80+0=80)
+[06:35.868] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[06:35.868] Anim: 3A  △ P0(2,3)
+[06:35.868] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[06:36.368] Turn ended  P1  |  Crystals P0=4050 P1=3500
+
+--- Turn 4  |  Player 0  |  Crystals P0=4050 P1=3500 ---
+[06:36.414] Coin flip: Heads
+[06:39.177] Target prompt: "Plant-29: Heads! Choose 1 exposed ally or foe for Venom."  filter=ability_plant29_venom
+[06:54.065] MSG: Plant-29: Venom on Plant-29.
+[07:17.622] Dice rolled: 4
+[07:17.642] MSG: Plant-29 wins!
+[07:22.106] Crystals: P1 3500 → 3150 (-350)  [battle]
+[07:23.507] Attack P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | flags:venom} → P1(0,4)"Methanomancer" {Unit ATK20 DEF20 | cost 350 | affinity Cosmic}  Dice=4  ATK=45 vs DEF=20  → WIN
+[07:23.507] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | flags:venom} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[07:23.507] Reckoning overlay: P1 "Methanomancer" {Unit ATK20 DEF20 | cost 350 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[07:23.507] Anim: 3A  △ P1(0,4)
+[07:23.507] Card destroyed  P1 (0,4) "Methanomancer" {Unit ATK20 DEF20 | cost 350 | affinity Cosmic}
+[08:07.174] Turn ended  P0  |  Crystals P0=4050 P1=3150
+
+--- Turn 5  |  Player 1  |  Crystals P0=4050 P1=3150 ---
+[08:07.753] Mode selected P1: TECH
+[08:08.062] Tech played  P1: "Tease"
+[08:09.610] MSG: Opponent must choose and reveal 1 of their squares.
+[08:09.727] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[08:10.644] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[08:10.644] MSG: Tease: Opponent revealed Scout Probe.
+[08:10.647] Tech resolved  P1
+[08:11.534] Mode selected P1: ATTACK
+[08:11.537] MSG: Player 2: tap a unit to attack.
+[08:13.244] Dice rolled: 3
+[08:13.267] MSG: Space Boy wins!
+[08:17.726] Crystals: P0 4050 → 3350 (-700)  [battle]
+[08:19.125] Attack P1(0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P0(0,2)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=3  ATK=75 vs DEF=50  → WIN
+[08:19.125] Reckoning overlay: P1 "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} badge=75 ATK pill=75 DEF pill=65 mod=+ATK 0 (75+0=75)
+[08:19.125] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[08:19.125] Anim: 3A  △ P0(0,2)
+[08:19.125] Card destroyed  P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[08:21.633] Turn ended  P1  |  Crystals P0=3350 P1=3150
+
+--- Turn 6  |  Player 0  |  Crystals P0=3350 P1=3150 ---
+[08:21.683] Coin flip: Tails
+[08:24.427] Target prompt: "Plant-29: Tails! Choose 1 of your units for Mutagen."  filter=ability_plant29_mutagen
+[08:26.018] MSG: Plant-29: Mutagen on Demon Spawn.
+[08:32.617] Crystals: P0 3350 → 3300 (-50)  [skip tax]
+[08:32.618] MSG: Player 1 skips without attacking — 50◆ tax (skip #1 this duel)
+[08:34.007] Turn ended  P0  |  Crystals P0=3300 P1=3150
+
+--- Turn 7  |  Player 1  |  Crystals P0=3300 P1=3150 ---
+[08:36.094] Crystals: P1 3150 → 1650 (-1500)  [union]
+[08:36.145] Revealed: P1 (0,2) "Helios the Prideful Fortress" {Union ATK145 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Cosmic}
+[08:36.146] Union summoned P1: "Helios the Prideful Fortress" {Union ATK145 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Cosmic} from "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}, "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down}
+[08:36.147] MSG: Player 2 summoned [Helios the Prideful Fortress] using: "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}, "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic | face-down}
+[08:39.511] Mode selected P1: ATTACK
+[08:39.515] MSG: Player 2: tap a unit to attack.
+[08:41.219] Dice rolled: 4
+[08:41.272] MSG: Helios the Prideful Fortress wins!
+[08:45.709] Crystals: P0 3300 → 2400 (-900)  [battle]
+[08:47.095] Attack P1(0,2)"Helios the Prideful Fortress" {Union ATK145 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Cosmic} → P0(2,2)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | flags:venom}  Dice=4  ATK=145 vs DEF=85  → WIN
+[08:47.095] Reckoning overlay: P1 "Helios the Prideful Fortress" {Union ATK145 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Cosmic} badge=145 ATK pill=145 DEF pill=100 mod=+ATK 0 (145+0=145)
+[08:47.095] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | flags:venom} badge=85 ATK pill=45 DEF pill=85 mod=+DEF 0 (85+0=85)
+[08:47.095] Anim: 3A  △ P0(2,2)
+[08:47.095] Card destroyed  P0 (2,2) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | flags:venom}
+[08:47.596] Mode selected P1: ATTACK
+[08:47.603] MSG: Player 2: tap a unit to attack.
+[08:49.299] Revealed: P1 (4,0) "Nimrod the Wonder Seeker" {Unit ATK65 DEF50 | cost 720 | affinity Cosmic}
+[08:49.299] Dice rolled: 1
+[08:49.313] MSG: Nimrod the Wonder Seeker wins!
+[08:52.394] Crystals: P0 2400 → 2000 (-400)  [battle]
+[08:53.798] Attack P1(4,0)"Nimrod the Wonder Seeker" {Unit ATK65 DEF50 | cost 720 | affinity Cosmic} → P0(3,0)"Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | flags:mutagen}  Dice=1  ATK=65 vs DEF=30  → WIN
+[08:53.798] Reckoning overlay: P1 "Nimrod the Wonder Seeker" {Unit ATK65 DEF50 | cost 720 | affinity Cosmic} badge=65 ATK pill=65 DEF pill=50 mod=+ATK 0 (65+0=65)
+[08:53.798] Reckoning overlay: P0 "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | flags:mutagen} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[08:53.798] Anim: 3A  △ P0(3,0)
+[08:53.798] Card destroyed  P0 (3,0) "Demon Spawn" {Unit ATK40 DEF30 | cost 400 | affinity Chaos | flags:mutagen}
+[08:54.301] Target prompt: "Nimrod the Wonder Seeker: Choose 2 opponent cell(s) to reveal."  filter=opponent_squares_2
+[08:54.727] Revealed: P0 (2,0) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[08:55.115] Tech resolved  P1
+[08:56.033] Turn ended  P1  |  Crystals P0=2000 P1=1650
+
+--- Turn 8  |  Player 0  |  Crystals P0=2000 P1=1650 ---

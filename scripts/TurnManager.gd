@@ -169,7 +169,7 @@ func select_mode(mode: GameState.TurnMode) -> void:
 		return
 
 	if mode == GameState.TurnMode.ATTACK and not GameState.can_player_attack(player):
-		GameState.post_message("Player %d has no characters that can attack." % (player + 1))
+		GameState.post_message("Player %d has no units that can attack." % (player + 1))
 		return
 
 	GameState.current_mode = mode
@@ -184,7 +184,7 @@ func select_mode(mode: GameState.TurnMode) -> void:
 func _start_attack_mode(player: int) -> void:
 	GameState.set_phase(GameState.Phase.ATTACK)
 	emit_signal("attack_phase_started", player, GameState.attacks_remaining)
-	GameState.post_message("Player %d: tap a character to attack." % (player + 1))
+	GameState.post_message("Player %d: tap a unit to attack." % (player + 1))
 
 func _battle_aborted() -> bool:
 	return GameState.current_phase == GameState.Phase.GAME_OVER
@@ -203,7 +203,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	var defender := GameState.get_card(opponent, target_pos.x, target_pos.y)
 
 	if attacker.card_type != "character":
-		GameState.post_message("You must attack with a Character.")
+		GameState.post_message("You must attack with a Unit.")
 		emit_signal("attack_aborted")
 		return
 	if attacker.attacked_this_turn:
@@ -230,7 +230,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 	# Berserk: only berserk card can attack
 	if GameState.berserk_active[player] != null:
 		if GameState.berserk_active[player] != attacker:
-			GameState.post_message("Only the Berserk character can attack!")
+			GameState.post_message("Only the Berserk unit can attack!")
 			emit_signal("attack_aborted")
 			return
 
@@ -322,7 +322,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 					continue
 				var _mn_adj: Array = GameState.get_adjacent_positions(_mn_r, _mn_c)
 				var _mn_pos: Vector2i = Vector2i(_mn_r, _mn_c)
-				if target_pos in _mn_adj or attacker_pos in _mn_adj:
+				if target_pos in _mn_adj:
 					if not _mn_card.face_up:
 						GameState.reveal_card(_mn_p, _mn_r, _mn_c)
 					_mn_card.temp_atk_bonus += _mn_card.ability_params.get("atk", 30)
@@ -346,7 +346,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> void:
 		if _nuki_cf[0]:
 			_pending_swap_attacker_pos = attacker_pos
 			await _prompt_and_await_target_selection(
-				"%s: Heads! Choose 1 of your characters to swap position with." % attacker.card_name,
+				"%s: Heads! Choose 1 of your units to swap position with." % attacker.card_name,
 				"own_character_for_swap")
 			attacker = GameState.get_card(player, _pending_swap_attacker_pos.x, _pending_swap_attacker_pos.y)
 			attacker_pos = _pending_swap_attacker_pos
@@ -777,7 +777,7 @@ func play_tech_card(tech_name: String) -> void:
 
 		TechCardData.TechEffectType.DIVINE_PROTECTION:
 			GameState.divine_protection_active[player] = true
-			GameState.post_message("Prayer: Divine Characters protected until opponent's turn ends.")
+			GameState.post_message("Prayer: Divine Units protected until opponent's turn ends.")
 			after_tech_resolved(player)
 			return
 
@@ -790,7 +790,7 @@ func play_tech_card(tech_name: String) -> void:
 
 		TechCardData.TechEffectType.DESTROY_ROW_AROUND_TARGET:
 			emit_signal("awaiting_target_selection",
-				"Rift Strike: Choose 1 face-up opponent character.", "rift_strike_anchor")
+				"Rift Strike: Choose 1 face-up opponent unit.", "rift_strike_anchor")
 
 		TechCardData.TechEffectType.GUERRILLA_TACTICS:
 			GameState.guerrilla_tactics_owner = player
@@ -814,12 +814,12 @@ func play_tech_card(tech_name: String) -> void:
 		TechCardData.TechEffectType.PERM_ATK_BOOST_ONE, \
 		TechCardData.TechEffectType.PERM_DEF_BOOST_ONE, \
 		TechCardData.TechEffectType.TEMP_ATK_BOOST_ATTACK_NOW:
-			emit_signal("awaiting_target_selection", "Choose 1 face-up character to boost.", "own_faceup_character")
+			emit_signal("awaiting_target_selection", "Choose 1 face-up unit to boost.", "own_faceup_character")
 
 		TechCardData.TechEffectType.TEMP_DEF_BOOST_ALL:
 			var _garrison_def: int = data.effect_params.get("def", 0)
 			_temp_boost_all(player, 0, _garrison_def, true)
-			GameState.post_message("%s: All face-up characters gain +%d DEF until end of next turn." % [data.card_name, _garrison_def])
+			GameState.post_message("%s: All face-up units gain +%d DEF until end of next turn." % [data.card_name, _garrison_def])
 			after_tech_resolved(player)
 			return
 
@@ -846,19 +846,19 @@ func play_tech_card(tech_name: String) -> void:
 				"Potent Poison: Choose 1 card with Venom Flag.", "venom_flagged_card")
 
 		TechCardData.TechEffectType.MULTI_ATTACK_ONE:
-			emit_signal("awaiting_target_selection", "Berserk: Choose 1 face-up character.", "own_faceup_character_berserk")
+			emit_signal("awaiting_target_selection", "Berserk: Choose 1 face-up unit.", "own_faceup_character_berserk")
 
 		TechCardData.TechEffectType.REVEAL_OWN_AND_OPPONENT_REVEALS:
-			emit_signal("awaiting_target_selection", "Choose 1 of your face-down characters.", "own_facedown_character")
+			emit_signal("awaiting_target_selection", "Choose 1 of your face-down units.", "own_facedown_character")
 
 		TechCardData.TechEffectType.MOVE_BUFFS_BETWEEN_CHARACTERS:
-			emit_signal("awaiting_target_selection", "Essence Transfer: Choose source character.", "own_faceup_character_source")
+			emit_signal("awaiting_target_selection", "Essence Transfer: Choose source unit.", "own_faceup_character_source")
 
 		TechCardData.TechEffectType.DESTROY_OWN_BASE_ZERO_OPPONENT:
 			emit_signal("awaiting_target_selection", "Blood Ritual: Choose 1 of your face-up cards to destroy.", "own_faceup_card_sacrifice")
 
 		TechCardData.TechEffectType.CLONE_CHARACTER_AS_TOKEN:
-			emit_signal("awaiting_target_selection", "Arcane Duplication: Choose 1 of your face-up characters.", "own_faceup_character")
+			emit_signal("awaiting_target_selection", "Arcane Duplication: Choose 1 of your face-up units.", "own_faceup_character")
 
 		TechCardData.TechEffectType.REVIVE_CHARACTER_FULL, \
 		TechCardData.TechEffectType.REVIVE_CHARACTER_NO_ATK:
@@ -996,7 +996,7 @@ func _apply_battle_result(
 			and defender.ability_type == CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY \
 			and _has_archbishop_redirect_target(opponent, target_pos):
 		emit_signal("awaiting_target_selection",
-			"Archbishop: Destroy 1 other Divine Character instead?",
+			"Archbishop: Destroy 1 other Divine Unit instead?",
 			"own_divine_character_redirect")
 		await archbishop_redirect_resolved
 		result.defender_destroyed = false
@@ -1292,7 +1292,7 @@ func _handle_trap_effect(
 		TrapData.TrapEffectType.NULLIFY_ATTACK_CHOICE:
 			emit_signal("awaiting_trap_choice",
 				"Checkpoint",
-				["Lose 500 Crystals", "Destroy your attacking character"])
+				["Lose 500 Crystals", "Destroy your attacking unit"])
 			var _nac_choice: int = await ability_choice_resolved
 			if _nac_choice == 0:
 				GameState.lose_crystals(player, 500, "trap")
@@ -1322,7 +1322,7 @@ func _handle_trap_effect(
 				GameState.post_message("Blackmail: %s ended attacker's turn!" % trap_data.card_name)
 
 		TrapData.TrapEffectType.COPY_ATTACKER_EFFECT:
-			GameState.post_message("Cursed Reflection: Choose one of your face-up characters to copy %s's effect." % attacker.card_name)
+			GameState.post_message("Cursed Reflection: Choose one of your face-up units to copy %s's effect." % attacker.card_name)
 			await _prompt_and_await_target_selection(
 				"Cursed Reflection: Choose target.", "self_faceup_for_copy")
 
@@ -1446,10 +1446,10 @@ func _handle_trap_effect(
 							_fb_card.temp_def_bonus += _fb_def
 			var _fb_aff_name: String = CharacterData.Affinity.keys()[_fb_aff] if _fb_aff >= 0 else "face-up"
 			if _fb_atk > 0 and _fb_def > 0:
-				GameState.post_message("%s: +%d ATK & +%d DEF to all %s characters this turn!" % [
+				GameState.post_message("%s: +%d ATK & +%d DEF to all %s units this turn!" % [
 					trap_data.card_name, _fb_atk, _fb_def, _fb_aff_name])
 			else:
-				GameState.post_message("%s: +%d DEF to all %s characters this turn!" % [trap_data.card_name, _fb_def, _fb_aff_name])
+				GameState.post_message("%s: +%d DEF to all %s units this turn!" % [trap_data.card_name, _fb_def, _fb_aff_name])
 
 		TrapData.TrapEffectType.SWAP_ATTACKER_ATK_DEF_TEMP:
 			attacker.apply_atk_def_swap_until_player_turn_end(opponent)
@@ -1473,7 +1473,7 @@ func _handle_trap_effect(
 					var _tda_card: GameState.CardInstance = GameState.get_card(player, _tda_r, _tda_c)
 					if _tda_card.card_type == "character" and _tda_card.face_up:
 						_tda_card.temp_atk_bonus -= _tda_amount
-			GameState.post_message("%s: All of Player %d's characters -%d ATK this turn!" % [trap_data.card_name, player + 1, _tda_amount])
+			GameState.post_message("%s: All of Player %d's units -%d ATK this turn!" % [trap_data.card_name, player + 1, _tda_amount])
 
 		TrapData.TrapEffectType.TEMP_DEF_BOOST_ONE_OWN:
 			var _td_def: int = trap_data.effect_params.get("def", 10)
@@ -1499,7 +1499,7 @@ func _handle_trap_effect(
 				_pending_trap_def_boost = _td_def
 				_pending_trap_def_boost_carry = _td_carry
 				await _prompt_and_await_target_selection(
-					"%s: Choose 1 of your characters for +%d DEF this turn." % [trap_data.card_name, _pending_trap_def_boost],
+					"%s: Choose 1 of your units for +%d DEF this turn." % [trap_data.card_name, _pending_trap_def_boost],
 					"own_faceup_for_trap_temp_def_boost")
 
 		TrapData.TrapEffectType.COIN_FLIP_2_ATK_DEBUFF:
@@ -1545,7 +1545,7 @@ func _handle_trap_effect(
 			_pending_trap_self_destruct_boost = trap_data.effect_params.get("atk", 15)
 			_pending_trap_self_destruct_player = opponent
 			await _prompt_and_await_target_selection(
-				"%s: Choose 1 of your characters for +%d ATK until end of next turn (then destroyed)." % [trap_data.card_name, _pending_trap_self_destruct_boost],
+				"%s: Choose 1 of your units for +%d ATK until end of next turn (then destroyed)." % [trap_data.card_name, _pending_trap_self_destruct_boost],
 				"own_character_for_trap_self_destruct")
 
 		TrapData.TrapEffectType.REVEAL_OWN_GAIN_CRYSTAL:
@@ -1619,7 +1619,7 @@ func _end_turn(player: int) -> void:
 			break
 	if _rebel_king_active:
 		emit_signal("awaiting_target_selection",
-			"Rebel King: Choose 1 of the opponent's face-up characters to swap ATK & DEF.",
+			"Rebel King: Choose 1 of the opponent's face-up units to swap ATK & DEF.",
 			"ability_rebel_king_swap")
 		await ability_selection_done
 
@@ -2247,7 +2247,7 @@ func _emit_post_attack_target_selections(
 		CharacterData.AbilityType.POST_BATTLE_COIN_FLIP_DESTROY:
 			if not result.attacker_destroyed:
 				await _prompt_and_await_target_selection(
-					"%s: Choose 1 opponent character to flip a coin on." % attacker.card_name,
+					"%s: Choose 1 opponent unit to flip a coin on." % attacker.card_name,
 					"opponent_character_ability_destroy")
 
 func _plant29_has_valid_targets(player: int, heads: bool) -> bool:

@@ -254,6 +254,7 @@ var _tech_sacrifice_player: int = -1                       # DESTROY_OWN_BASE_ZE
 # Cursor-following guide box
 var _guide_box: Control = null
 var _guide_label: Label = null
+var _game_guide_text: String = ""
 var locked_positions: Array = []
 # HOT_SEAT handoff tracking: avoid showing handoff again for the same player's continued turn
 var _handoff_last_player: int = -1
@@ -825,7 +826,7 @@ func _build_bribe_overlay() -> void:
 
 	# "Reveal" button
 	var reveal_btn := Button.new()
-	reveal_btn.text = "Reveal a Character  (+700 💎)"
+	reveal_btn.text = "Reveal a Unit  (+700 💎)"
 	reveal_btn.custom_minimum_size = Vector2(220.0, 48.0)
 	reveal_btn.add_theme_font_size_override("font_size", 14)
 	var rn := StyleBoxFlat.new()
@@ -946,7 +947,7 @@ func _hide_ability_choice_overlay() -> void:
 		btn.visible = false
 
 func _show_bribe_overlay(opponent: int) -> void:
-	_bribe_desc_lbl.text = "Player %d: Reveal one of your characters to gain 700 Crystals, or pass." % (opponent + 1)
+	_bribe_desc_lbl.text = "Player %d: Reveal one of your units to gain 700 Crystals, or pass." % (opponent + 1)
 	_bribe_overlay.visible = true
 
 func _hide_bribe_overlay() -> void:
@@ -962,10 +963,10 @@ func _on_bribe_reveal_pressed() -> void:
 	_begin_human_defender_tech_choice()
 	pending_tech_filter = "bribe_reveal"
 	_set_own_facedown_char_peek(true, bribed_player)
-	action_label.text = "Select one of your face-down characters to reveal."
+	action_label.text = "Select one of your face-down units to reveal."
 	action_panel.visible = true
 	_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
-	_show_guide("Select one of your face-down characters to reveal.")
+	_show_guide("Select one of your face-down units to reveal.")
 	_highlight_tech_targets("bribe_reveal")
 
 func _on_bribe_pass_pressed() -> void:
@@ -1548,6 +1549,9 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	container.offset_top    = 100.0
 	container.offset_bottom = 196.0
 	add_child(container)
+	var _tech_tip: String = "Your Tech hand — tap to view" if player == 0 else "Opponent's Tech hand"
+	container.mouse_entered.connect(func(): _show_hud_tooltip(_tech_tip))
+	container.mouse_exited.connect(func(): _restore_game_guide())
 
 	# 3 stacked card panels (back to front)
 	for i in range(3):
@@ -1588,8 +1592,11 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	count_lbl.size = Vector2(26.0, 26.0)
 	count_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	count_lbl.add_theme_font_size_override("font_size", 13)
+	count_lbl.add_theme_font_size_override("font_size", 18)
 	count_lbl.add_theme_color_override("font_color", Color(1.0, 0.95, 0.82))
+	count_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+	count_lbl.add_theme_constant_override("shadow_offset_x", 1)
+	count_lbl.add_theme_constant_override("shadow_offset_y", 1)
 	count_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	container.add_child(count_lbl)
 
@@ -1774,6 +1781,9 @@ func _create_void_stack_indicator(player: int) -> Control:
 	container.offset_top    = 100.0
 	container.offset_bottom = 196.0
 	add_child(container)
+	var _void_tip: String = "Your Void — destroyed cards" if player == 0 else "Opponent's Void — destroyed cards"
+	container.mouse_entered.connect(func(): _show_hud_tooltip(_void_tip))
+	container.mouse_exited.connect(func(): _restore_game_guide())
 
 	# 3 stacked card backs (reddish tint)
 	for i in range(3):
@@ -1814,8 +1824,11 @@ func _create_void_stack_indicator(player: int) -> Control:
 	count_lbl.size = Vector2(26.0, 26.0)
 	count_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	count_lbl.add_theme_font_size_override("font_size", 13)
+	count_lbl.add_theme_font_size_override("font_size", 18)
 	count_lbl.add_theme_color_override("font_color", Color(0.88, 0.72, 1.0))
+	count_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+	count_lbl.add_theme_constant_override("shadow_offset_x", 1)
+	count_lbl.add_theme_constant_override("shadow_offset_y", 1)
 	count_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	count_lbl.text = "0"
 	container.add_child(count_lbl)
@@ -2261,6 +2274,8 @@ func _build_end_turn_button() -> void:
 	_end_turn_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	_end_turn_btn.pressed.connect(_on_end_turn_requested)
 	add_child(_end_turn_btn)
+	_end_turn_btn.mouse_entered.connect(func(): _show_hud_tooltip("End your turn"))
+	_end_turn_btn.mouse_exited.connect(func(): _restore_game_guide())
 
 func _build_dungeon_modifier_panel() -> void:
 	if GameState.game_mode != GameState.GameMode.DAILY_DUNGEON:
@@ -3038,7 +3053,7 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 					var card: GameState.CardInstance = GameState.get_card(foe, r, c)
 					if card.card_type == "character":
 						GameState.apply_unit_effect_flag(foe, r, c, "venom")
-			GameState.post_message("%s: Venom on all opponent characters!" % u.card_name)
+			GameState.post_message("%s: Venom on all opponent units!" % u.card_name)
 		CharacterData.AbilityType.UNION_SUMMON_REVIVE_MATCH:
 			await _begin_union_revive_match(player, u)
 		CharacterData.AbilityType.UNION_SUMMON_COSMIC_ANIMA_IMMUNITY:
@@ -3359,11 +3374,13 @@ func _build_bottom_crystal_labels() -> void:
 	p1_vbox.offset_left   = MARGIN; p1_vbox.offset_right  = MARGIN + COL_W
 	p1_vbox.offset_top    = MARGIN; p1_vbox.offset_bottom = MARGIN + COL_H
 	p1_vbox.add_theme_constant_override("separation", 0)
-	p1_vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p1_vbox.mouse_filter = Control.MOUSE_FILTER_PASS
 	p1_vbox.z_index = 4
 	p1_vbox.visible = false
 	add_child(p1_vbox)
 	_p1_crystal_row = p1_vbox
+	p1_vbox.mouse_entered.connect(func(): _show_hud_tooltip("Player 1 Crystals — first to reach 0 loses"))
+	p1_vbox.mouse_exited.connect(func(): _restore_game_guide())
 
 	_p1_name_lbl = Label.new()
 	_p1_name_lbl.text = _player_names[0]
@@ -3405,11 +3422,13 @@ func _build_bottom_crystal_labels() -> void:
 	p2_vbox.offset_left   = -(MARGIN + COL_W); p2_vbox.offset_right  = -MARGIN
 	p2_vbox.offset_top    = MARGIN;             p2_vbox.offset_bottom = MARGIN + COL_H
 	p2_vbox.add_theme_constant_override("separation", 0)
-	p2_vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p2_vbox.mouse_filter = Control.MOUSE_FILTER_PASS
 	p2_vbox.z_index = 4
 	p2_vbox.visible = false
 	add_child(p2_vbox)
 	_p2_crystal_row = p2_vbox
+	p2_vbox.mouse_entered.connect(func(): _show_hud_tooltip("Player 2 Crystals — first to reach 0 loses"))
+	p2_vbox.mouse_exited.connect(func(): _restore_game_guide())
 
 	_p2_name_lbl = Label.new()
 	_p2_name_lbl.text = _player_names[1]
@@ -3580,7 +3599,7 @@ func _build_attack_count_icon() -> Control:
 	const ICON_SIZE: float = 92.0
 	var container := Control.new()
 	container.custom_minimum_size = Vector2(ICON_SIZE, ICON_SIZE)
-	container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	container.mouse_filter = Control.MOUSE_FILTER_PASS
 
 	var icon := TextureRect.new()
 	icon.texture = HudSkin.hud_tex("ui_icon_attack_count.png")
@@ -3594,7 +3613,7 @@ func _build_attack_count_icon() -> Control:
 	lbl.text = "2"
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_size_override("font_size", 38)
+	lbl.add_theme_font_size_override("font_size", 34)
 	lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
 	lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
 	lbl.add_theme_constant_override("shadow_offset_x", 2)
@@ -3661,6 +3680,8 @@ func _build_attack_count_indicators() -> void:
 	p1_container.visible       = false
 	add_child(p1_container)
 	_p1_attack_lbl = p1_container.get_child(1) as Label
+	p1_container.mouse_entered.connect(func(): _show_hud_tooltip("Remaining attack count for this turn"))
+	p1_container.mouse_exited.connect(func(): _restore_game_guide())
 
 	var p2_container: Control = _build_attack_count_icon()
 	p2_container.layout_mode = 1
@@ -3676,6 +3697,8 @@ func _build_attack_count_indicators() -> void:
 	p2_container.visible       = false
 	add_child(p2_container)
 	_p2_attack_lbl = p2_container.get_child(1) as Label
+	p2_container.mouse_entered.connect(func(): _show_hud_tooltip("Remaining attack count for this turn"))
+	p2_container.mouse_exited.connect(func(): _restore_game_guide())
 
 func _build_turn_number_label() -> void:
 	# Medallion background — upper half hidden above screen, lower half visible
@@ -3692,11 +3715,13 @@ func _build_turn_number_label() -> void:
 	bg.offset_right  =  (MED_SIZE * 0.5)
 	bg.offset_top    = -(MED_SIZE * 0.5)   # upper half above screen edge (clipped)
 	bg.offset_bottom =   (MED_SIZE * 0.5)  # lower half visible
-	bg.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	bg.mouse_filter  = Control.MOUSE_FILTER_PASS
 	bg.z_index = 3
 	bg.visible = false
 	add_child(bg)
 	_turn_number_bg = bg
+	bg.mouse_entered.connect(func(): _show_hud_tooltip("Current turn number"))
+	bg.mouse_exited.connect(func(): _restore_game_guide())
 
 	var lbl := Label.new()
 	lbl.layout_mode = 1
@@ -3742,6 +3767,8 @@ func _build_options_button() -> void:
 	btn.pressed.connect(_on_options_btn_pressed)
 	add_child(btn)
 	_options_btn = btn
+	_options_btn.mouse_entered.connect(func(): _show_hud_tooltip("Game options (concede, settings)"))
+	_options_btn.mouse_exited.connect(func(): _restore_game_guide())
 
 func _on_options_btn_pressed() -> void:
 	if TutorialBattleManager.is_active and not TutorialBattleManager.should_allow_options_btn():
@@ -3870,7 +3897,7 @@ func _build_union_suggest_button() -> void:
 	glow.anchor_left   = 0.5; glow.anchor_right  = 0.5
 	glow.anchor_top    = 0.5; glow.anchor_bottom = 0.5
 	glow.offset_left   = -(GLOW_SIZE * 0.5); glow.offset_right  =  (GLOW_SIZE * 0.5)
-	glow.offset_top    = -(GLOW_SIZE * 0.5); glow.offset_bottom =  (GLOW_SIZE * 0.5)
+	glow.offset_top    = -(GLOW_SIZE * 0.5) - 20.0; glow.offset_bottom =  (GLOW_SIZE * 0.5) - 20.0
 	glow.modulate    = Color(0.25, 0.90, 1.00, 0.0)
 	glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	glow.z_index  = 3
@@ -3887,13 +3914,15 @@ func _build_union_suggest_button() -> void:
 	btn.anchor_left   = 0.5; btn.anchor_right  = 0.5
 	btn.anchor_top    = 0.5; btn.anchor_bottom = 0.5
 	btn.offset_left   = -(BTN_SIZE * 0.5); btn.offset_right  =  (BTN_SIZE * 0.5)
-	btn.offset_top    = -(BTN_SIZE * 0.5); btn.offset_bottom =  (BTN_SIZE * 0.5)
+	btn.offset_top    = -(BTN_SIZE * 0.5) - 20.0; btn.offset_bottom =  (BTN_SIZE * 0.5) - 20.0
 	btn.z_index  = 4
 	btn.visible  = false
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	btn.pressed.connect(_on_union_suggest_pressed)
 	add_child(btn)
 	_union_suggest_btn = btn
+	btn.mouse_entered.connect(func(): _show_hud_tooltip("Tap to summon a Union card"))
+	btn.mouse_exited.connect(func(): _restore_game_guide())
 
 func _collect_all_available_unions(player: int) -> Array:
 	if _union_summoned_this_duel[player] >= _max_unions_per_duel():
@@ -4296,9 +4325,9 @@ func _show_rules_panel() -> void:
 	rtl.add_theme_color_override("default_color", Color(0.88, 0.88, 0.92))
 	rtl.append_text(
 		"[b]OBJECTIVE[/b]\nReduce your opponent's Crystals to 0.\n\n" +
-		"[b]SETUP[/b]\nEach player places Characters and Traps face-down on their 5×5 grid.\n\n" +
+		"[b]SETUP[/b]\nEach player places Units and Traps face-down on their 5×5 grid.\n\n" +
 		"[b]EACH TURN[/b]\nChoose ATTACK or TECH mode.\n" +
-		"  [b]Attack[/b] — Pick one of your Characters to attack any opponent card.\n" +
+		"  [b]Attack[/b] — Pick one of your Units to attack any opponent card.\n" +
 		"  [b]Tech[/b]   — Play one Tech card from your hand.\n\n" +
 		"[b]BATTLE RESOLUTION[/b]\nAttacker ATK vs Defender DEF.\n" +
 		"Loser pays Crystal cost. Attacker wins ties.\n\n" +
@@ -6283,7 +6312,7 @@ func _duplicate_revive_card(source: GameState.CardInstance) -> GameState.CardIns
 func _prepare_revive_from_graveyard(player: int, tech_data: TechCardData) -> void:
 	var gy: Array = GameState.graveyards[player]
 	if gy.is_empty():
-		GameState.post_message("No destroyed characters to revive.")
+		GameState.post_message("No destroyed units to revive.")
 		_finish_tech_action(player)
 		return
 	_pending_revive_card = gy.pop_back()
@@ -6354,7 +6383,7 @@ func _begin_revive_placement_selection() -> void:
 		if not _pending_revive_keep_in_graveyard:
 			GameState.graveyards[player].append(card)
 		_clear_pending_revive()
-		GameState.post_message("No empty cell to place revived character.")
+		GameState.post_message("No empty cell to place revived unit.")
 		if _was_tech != null:
 			_finish_tech_action(player)
 		elif _was_awaiting:
@@ -7183,7 +7212,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == current_player and card.card_type == "character" and card.face_up:
 			_tech_buff_move_source = pos
 			pending_tech_filter = "own_faceup_character_target"
-			action_label.text = "Essence Transfer: Choose target character to receive buffs."
+			action_label.text = "Essence Transfer: Choose target unit to receive buffs."
 			_highlight_tech_targets(pending_tech_filter)
 			if _is_ai_turn():
 				await get_tree().create_timer(0.4).timeout
@@ -7234,7 +7263,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			GameState.destroy_card(current_player, pos.x, pos.y, false)
 			GameState.post_message("Blood Ritual: Sacrificed %s — choose opponent card to zero out." % card.card_name)
 			pending_tech_filter = "opponent_faceup_zero_stats"
-			action_label.text = "Blood Ritual: Choose 1 opponent face-up character to set ATK/DEF to 0."
+			action_label.text = "Blood Ritual: Choose 1 opponent face-up unit to set ATK/DEF to 0."
 			_highlight_tech_targets(pending_tech_filter)
 			if _is_ai_turn():
 				await get_tree().create_timer(0.5).timeout
@@ -7655,7 +7684,7 @@ func _update_end_turn_blink() -> void:
 			_end_turn_blink_tween = null
 		_end_turn_btn.modulate = Color.WHITE
 		if selection_state == SelectionState.SELECTING_ATTACKER:
-			_show_guide("Choose a character to attack with")
+			_show_guide("Choose a unit to attack with")
 
 func _highlight_valid_targets() -> void:
 	pass  # No visual hints on opponent cards during target selection
@@ -8036,7 +8065,7 @@ func _set_selection_state(state: SelectionState) -> void:
 	selection_state = state
 	match state:
 		SelectionState.SELECTING_ATTACKER:
-			_show_guide("Choose a character to attack with")
+			_show_guide("Choose a unit to attack with")
 		SelectionState.SELECTING_TARGET:
 			_show_guide("Choose a target to attack")
 		SelectionState.SELECTING_TECH_TARGET:
@@ -8085,13 +8114,32 @@ func _build_guide_box() -> void:
 	_guide_label = lbl
 
 func _show_guide(text: String) -> void:
+	_game_guide_text = text
 	_build_guide_box()
 	_guide_label.text = text
+	_guide_box.reset_size()
 	_guide_box.visible = true
 
 func _hide_guide() -> void:
+	_game_guide_text = ""
 	if _guide_box != null:
 		_guide_box.visible = false
+
+func _show_hud_tooltip(text: String) -> void:
+	_build_guide_box()
+	_guide_label.text = text
+	_guide_box.reset_size()
+	_guide_box.visible = true
+
+func _restore_game_guide() -> void:
+	if _game_guide_text.is_empty():
+		if _guide_box != null:
+			_guide_box.visible = false
+	else:
+		_build_guide_box()
+		_guide_label.text = _game_guide_text
+		_guide_box.reset_size()
+		_guide_box.visible = true
 
 # ─────────────────────────────────────────────────────────────
 # Card Events
@@ -8643,7 +8691,7 @@ func _on_return_to_map() -> void:
 
 func _process(delta: float) -> void:
 	if _guide_box != null and _guide_box.visible:
-		_guide_box.global_position = get_global_mouse_position() + Vector2(4.0, 112.0)
+		_guide_box.global_position = get_global_mouse_position() + Vector2(58.0, 62.0)
 	if _shake_active:
 		var ml: Control = get_node("MainLayout")
 		ml.position = _shake_origin + Vector2(
@@ -9091,9 +9139,9 @@ func _show_endgame_screen(winner: int) -> void:
 				reason_text = "Your crystals were fully depleted."
 		"all_destroyed":
 			if is_win_screen:
-				reason_text = "All opponent's characters were destroyed."
+				reason_text = "All opponent's units were destroyed."
 			else:
-				reason_text = "All your characters were destroyed."
+				reason_text = "All your units were destroyed."
 		"no_moves":
 			if winner == -1:
 				reason_text = "Neither player had any valid moves remaining."

@@ -1,0 +1,51 @@
+=== Battle of Neighbor's Leaf Blower ===
+Battle started: 2026-06-21 13:11:44.657
+Game Session of Matcha Latte (started 2026-06-21 13:10:42.408)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:07.781] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:13.166] Mode selected P1: TECH
+[00:13.484] Tech played  P1: "Spy"
+[00:15.045] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[00:15.472] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:15.473] Tech resolved  P1
+[00:16.370] Mode selected P1: ATTACK
+[00:16.374] MSG: Player 2: tap a character to attack.
+[00:18.092] Revealed: P1 (0,0) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[00:18.112] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:18.112] Dice rolled: 5
+[00:18.414] MSG: Trap triggered: Trap Hole!
+[00:22.559] Coin flip: Heads, Tails, Heads
+[00:25.326] MSG: Trap Hole: Heads, Tails, Heads.
+[00:25.326] Crystals: P1 5000 → 4960 (-40)  [trap]
+[00:26.717] MSG: Trap Hole: 2 head(s) — Player 2 loses 40 Crystals!
+[00:26.720] Attack P1(0,0)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} → P0(0,0)"Trap Hole" {cost 0}  Dice=5  → Unit vs Trap
+[00:26.720] Reckoning overlay: P1 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=50 ATK pill=50 DEF pill=10 mod=+ATK 0 (50+0=50)
+[00:26.720] Anim: 3D  (attacker survives)
+[00:27.224] Mode selected P1: ATTACK
+[00:27.225] MSG: Player 2: tap a character to attack.
+[00:28.959] Revealed: P1 (0,1) "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine}
+[00:28.959] Dice rolled: 5
+[00:28.996] MSG: Nothing happens — Dead End.
+[00:32.414] Attack P1(0,1)"Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine} → P0(4,4)(empty)  Dice=5  → DEAD_END
+[00:32.414] Anim: 3F  (blank slot)
+[00:32.909] Turn ended  P1  |  Crystals P0=5000 P1=4960
+
+--- Turn 2  |  Player 0  |  Crystals P0=5000 P1=4960 ---
+[00:54.090] Revealed: P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:54.090] Dice rolled: 2
+[00:54.118] MSG: Both cards are destroyed!
+[00:58.491] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:59.879] Crystals: P1 4960 → 3960 (-1000)  [battle]
+[01:01.292] Attack P0(2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(0,1)"Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine}  Dice=2  ATK=25 vs DEF=25  → TIE
+[01:01.293] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[01:01.293] Reckoning overlay: P1 "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine} badge=25 ATK pill=50 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:01.293] Anim: 3C  △ P0(2,4) + △ P1(0,1)
+[01:01.293] Card destroyed  P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:01.293] Card destroyed  P1 (0,1) "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine}

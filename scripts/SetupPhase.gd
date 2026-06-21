@@ -365,7 +365,7 @@ func _build_ui() -> void:
 	_random_btn.anchor_right   = 0.0;  _random_btn.anchor_bottom = 1.0
 	_random_btn.offset_left    = 172.0; _random_btn.offset_top   = -54.0
 	_random_btn.offset_right   = 476.0; _random_btn.offset_bottom = -8.0
-	_random_btn.text = "⚄ RANDOM FORMATION"
+	_random_btn.text = "RANDOM FORMATION"
 	_random_btn.add_theme_font_size_override("font_size", 16)
 	_random_btn.disabled = true
 	_random_btn.pressed.connect(_on_random_formation)

@@ -1,0 +1,51 @@
+=== Battle of Shirt Tag Itchiness ===
+Battle started: 2026-06-21 13:25:27.627
+Game Session of Turkish Coffee (started 2026-06-21 13:25:01.663)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.579] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:54.917] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:54.917] Dice rolled: 4
+[00:54.951] MSG: Nothing happens — Dead End.
+[00:58.317] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[00:58.317] Anim: 3F  (blank slot)
+[00:58.328] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[01:00.461] Revealed: P1 (2,1) "Waste Slime" {Unit ATK10 DEF15 | cost 150 | affinity Bio}
+[01:00.462] MSG: Revealed: Waste Slime
+[01:15.728] Revealed: P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[01:15.728] Dice rolled: 3
+[01:15.745] MSG: Flame Lizard wins!
+[01:20.228] Crystals: P1 5000 → 4850 (-150)  [battle]
+[01:21.627] Attack P0(2,4)"Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} → P1(2,1)"Waste Slime" {Unit ATK10 DEF15 | cost 150 | affinity Bio}  Dice=3  ATK=25 vs DEF=15  → WIN
+[01:21.628] Reckoning overlay: P0 "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature} badge=25 ATK pill=25 DEF pill=40 mod=+ATK 0 (25+0=25)
+[01:21.628] Reckoning overlay: P1 "Waste Slime" {Unit ATK10 DEF15 | cost 150 | affinity Bio} badge=15 ATK pill=10 DEF pill=15 mod=+DEF 0 (15+0=15)
+[01:21.628] Anim: 3A  △ P1(2,1)
+[01:21.628] Card destroyed  P1 (2,1) "Waste Slime" {Unit ATK10 DEF15 | cost 150 | affinity Bio}
+[01:23.973] Turn ended  P0  |  Crystals P0=5000 P1=4850
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4850 ---
+[01:24.558] Mode selected P1: TECH
+[01:24.872] Tech played  P1: "Spy"
+[01:26.428] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[01:26.862] Revealed: P0 (1,2) "Moonrise Gentleman" {Unit ATK40 DEF30 | cost 400 | affinity Divine}
+[01:26.865] Tech resolved  P1
+[01:27.744] Mode selected P1: ATTACK
+[01:27.750] MSG: Player 2: tap a character to attack.
+[01:29.456] Revealed: P1 (0,4) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[01:29.457] Dice rolled: 1
+[01:29.501] MSG: Plant-29 wins!
+[01:33.938] Crystals: P0 5000 → 4600 (-400)  [battle]
+[01:35.338] Attack P1(0,4)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} → P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=1  ATK=45 vs DEF=25  → WIN
+[01:35.338] Reckoning overlay: P1 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=45 ATK pill=45 DEF pill=85 mod=+ATK 0 (45+0=45)
+[01:35.338] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[01:35.338] Anim: 3A  △ P0(2,3)
+[01:35.338] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[01:37.838] Turn ended  P1  |  Crystals P0=4600 P1=4850
+
+--- Turn 3  |  Player 0  |  Crystals P0=4600 P1=4850 ---

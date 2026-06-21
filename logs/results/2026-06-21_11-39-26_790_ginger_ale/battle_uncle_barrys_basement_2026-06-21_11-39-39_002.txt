@@ -1,0 +1,70 @@
+=== Battle of Uncle Barry's Basement ===
+Battle started: 2026-06-21 11:39:39.002
+Game Session of Ginger Ale (started 2026-06-21 11:39:26.790)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:04.204] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:09.596] Mode selected P1: TECH
+[00:09.896] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:11.279] Tech played  P1: "Radar"
+[00:12.826] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:13.260] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:13.655] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[00:14.064] Revealed: P0 (2,4) "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature}
+[00:14.066] Tech resolved  P1
+[00:14.945] Mode selected P1: ATTACK
+[00:14.946] MSG: Player 2: tap a character to attack.
+[00:16.637] Revealed: P1 (1,2) "Vampire Duchess" {Unit ATK50 DEF50 | cost 800 | affinity Chaos}
+[00:16.637] Dice rolled: 4
+[00:16.652] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Flame Lizard!
+[00:16.652] MSG: Vampire Duchess wins!
+[00:22.122] Crystals: P0 5000 → 4600 (-400)  [battle]
+[00:23.518] Attack P1(1,2)"Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} → P0(2,4)"Flame Lizard" {Unit ATK20 DEF35 | cost 400 | affinity Nature | base 20/35}  Dice=4  ATK=55 vs DEF=35  → WIN
+[00:23.518] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK55 DEF55 | cost 800 | affinity Chaos | base 55/55} badge=55 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=55) MISMATCH
+[00:23.518] Reckoning overlay: P0 "Flame Lizard" {Unit ATK20 DEF35 | cost 400 | affinity Nature | base 20/35} badge=35 ATK pill=25 DEF pill=40 mod=+DEF 0 (40+0=35) MISMATCH
+[00:23.518] Anim: 3A  △ P0(2,4)
+[00:23.518] Card destroyed  P0 (2,4) "Flame Lizard" {Unit ATK20 DEF35 | cost 400 | affinity Nature | base 20/35}
+[00:26.032] Turn ended  P1  |  Crystals P0=4600 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4600 P1=4400 ---
+[00:36.371] Ability choice: 1 (No)
+[00:36.379] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:36.403] Revealed: P1 (2,3) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[00:36.403] Dice rolled: 1
+[00:36.418] MSG: Shepherd Detective wins!
+[00:40.862] Crystals: P1 4400 → 4100 (-300)  [battle]
+[00:42.267] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,3)"Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}  Dice=1  ATK=40 vs DEF=20  → WIN
+[00:42.267] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:42.267] Reckoning overlay: P1 "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:42.267] Anim: 3A  △ P1(2,3)
+[00:42.267] Card destroyed  P1 (2,3) "Hands in the Attic" {Unit ATK20 DEF20 | cost 300 | affinity Chaos}
+[00:42.278] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[00:44.635] MSG: Revealed: (empty)
+[89:59.283] Turn ended  P0  |  Crystals P0=4600 P1=4100
+
+--- Turn 3  |  Player 1  |  Crystals P0=4600 P1=4100 ---
+[89:59.879] Mode selected P1: TECH
+[90:00.188] Crystals: P1 4100 → 3100 (-1000)  [tech cost]
+[90:01.573] Tech played  P1: "Siege Cannon"
+[90:03.127] MSG: Siege Cannon active!
+[90:03.130] Tech resolved  P1
+[90:04.045] Mode selected P1: ATTACK
+[90:04.048] MSG: Player 2: tap a character to attack.
+[90:05.761] Dice rolled: 1
+[90:05.778] MSG: Vampire Duchess drains 5 ATK & 5 DEF from Shepherd Detective!
+[90:05.778] MSG: Vampire Duchess wins!
+[90:11.261] Crystals: P0 4600 → 4200 (-400)  [battle]
+[90:12.662] Attack P1(1,2)"Vampire Duchess" {Unit ATK60 DEF60 | cost 800 | affinity Chaos | base 60/60} → P0(2,3)"Shepherd Detective" {Unit ATK35 DEF20 | cost 400 | affinity Anima | base 35/20}  Dice=1  ATK=60 vs DEF=20  → WIN
+[90:12.662] Reckoning overlay: P1 "Vampire Duchess" {Unit ATK60 DEF60 | cost 800 | affinity Chaos | base 60/60} badge=60 ATK pill=55 DEF pill=55 mod=+ATK 0 (55+0=60) MISMATCH
+[90:12.663] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK35 DEF20 | cost 400 | affinity Anima | base 35/20} badge=20 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=20) MISMATCH
+[90:12.663] Anim: 3A  △ P0(2,3)
+[90:12.663] Card destroyed  P0 (2,3) "Shepherd Detective" {Unit ATK35 DEF20 | cost 400 | affinity Anima | base 35/20}
+[90:15.174] Turn ended  P1  |  Crystals P0=4200 P1=3100
+
+--- Turn 4  |  Player 0  |  Crystals P0=4200 P1=3100 ---
