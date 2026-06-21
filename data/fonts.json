@@ -20,9 +20,9 @@
 		},
 		"display_serif": {
 			"label": "Display Serif",
-			"description": "Optional display / title serif (Playfair)",
-			"path": "res://assets/fonts/PlayfairDisplay-VariableFont_wght.ttf",
-			"variable": true
+			"description": "Battle HUD display titles (Farro Bold)",
+			"path": "res://assets/fonts/Farro-Bold.ttf",
+			"variable": false
 		},
 		"mplus": {
 			"label": "M PLUS",

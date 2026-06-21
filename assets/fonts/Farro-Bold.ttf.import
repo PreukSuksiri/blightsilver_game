@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bty8e8v0li5qs"
-path="res://.godot/imported/PlayfairDisplay-Italic-VariableFont_wght.ttf-c704d443ee83de0a1591ce013aa389ba.fontdata"
+uid="uid://cy8eks2jb1q8p"
+path="res://.godot/imported/Farro-Bold.ttf-79b1f29651bbef0aa9c141b41bfbaffc.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/PlayfairDisplay-Italic-VariableFont_wght.ttf"
-dest_files=["res://.godot/imported/PlayfairDisplay-Italic-VariableFont_wght.ttf-c704d443ee83de0a1591ce013aa389ba.fontdata"]
+source_file="res://assets/fonts/Farro-Bold.ttf"
+dest_files=["res://.godot/imported/Farro-Bold.ttf-79b1f29651bbef0aa9c141b41bfbaffc.fontdata"]
 
 [params]
 

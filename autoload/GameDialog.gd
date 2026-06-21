@@ -39,6 +39,7 @@ func style_button(btn: Button) -> void:
 	btn.add_theme_stylebox_override("hover", _make_button_style(BTN_HOVER))
 	btn.add_theme_stylebox_override("pressed", _make_button_style(BTN_PRESSED))
 	btn.add_theme_stylebox_override("focus", _make_button_style(BTN_HOVER))
+	SFXManager.wire_prompt_button(btn)
 
 
 func style(dlg: AcceptDialog) -> void:

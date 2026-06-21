@@ -6,7 +6,8 @@ const SFX_MENU        := preload("res://assets/audio/sfx/scifi_ui_1.mp3")   # Ru
 const SFX_BTN         := preload("res://assets/audio/sfx/scifi_ui_2.mp3")   # Rule 2: generic game buttons
 const SFX_CANCEL      := preload("res://assets/audio/sfx/scifi_ui_12.mp3")  # Rule 3: cancel / dismiss
 const SFX_TARGET      := preload("res://assets/audio/sfx/scifi_ui_13.mp3")  # Rule 4: select target
-const SFX_POPUP       := preload("res://assets/audio/sfx/scifi_ui_30.mp3")  # Rule 5: warning / choice popup
+const SFX_POPUP       := preload("res://assets/audio/sfx/scifi_ui_30_B.mp3")  # Rule 5: warning / choice popup
+const PROMPT_BTN_SFX_META := "_prompt_btn_sfx_wired"
 const SFX_UNION_FLASH := preload("res://assets/audio/sfx/scifi_ui_38.mp3")  # Rule 6: union zone flash
 const SFX_CARD_INFO   := preload("res://assets/audio/sfx/scifi_ui_18.mp3")  # Rule 7: card info (gallery/setup)
 const SFX_CARD_DETAIL := preload("res://assets/audio/sfx/scifi_ui_15.mp3")  # Rule 11: battle info context menu
@@ -39,3 +40,17 @@ func play(stream: AudioStream) -> void:
 	add_child(asp)
 	asp.play()
 	asp.finished.connect(asp.queue_free)
+
+
+func wire_prompt_button(btn: Button) -> void:
+	if btn == null or btn.get_meta(PROMPT_BTN_SFX_META, false):
+		return
+	btn.set_meta(PROMPT_BTN_SFX_META, true)
+	btn.pressed.connect(func() -> void: play(SFX_BTN))
+
+
+func wire_prompt_buttons_in(root: Node) -> void:
+	if root is Button:
+		wire_prompt_button(root as Button)
+	for child in root.get_children():
+		wire_prompt_buttons_in(child)

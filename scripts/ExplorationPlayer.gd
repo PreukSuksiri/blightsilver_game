@@ -3029,6 +3029,7 @@ func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Cal
 	cancel_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	cancel_btn.pressed.connect(_close_confirm_dialog)
 	btn_row.add_child(cancel_btn)
+	SFXManager.wire_prompt_buttons_in(panel)
 
 # ─────────────────────────────────────────────────────────────
 # Node Rendering

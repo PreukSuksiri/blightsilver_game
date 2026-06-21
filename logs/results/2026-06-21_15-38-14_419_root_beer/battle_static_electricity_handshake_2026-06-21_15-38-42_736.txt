@@ -1,0 +1,53 @@
+=== Battle of Static Electricity Handshake ===
+Battle started: 2026-06-21 15:38:42.736
+Game Session of Root Beer (started 2026-06-21 15:38:14.419)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.421] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:08.843] Mode selected P1: TECH
+[00:09.142] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:10.527] Tech played  P1: "Radar"
+[00:12.068] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:12.912] Revealed: P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:13.314] Revealed: P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:13.317] Tech resolved  P1
+[00:14.176] Mode selected P1: ATTACK
+[00:14.179] MSG: Player 2: tap a unit to attack.
+[00:15.878] Revealed: P1 (1,1) "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine}
+[00:15.878] Crystals: P0 5000 → 5040 (+40)  [ability]
+[00:15.878] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:15.878] Dice rolled: 2
+[00:15.904] MSG: Fujin wins!
+[00:20.359] Crystals: P0 5040 → 4690 (-350)  [battle]
+[00:21.756] Attack P1(1,1)"Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} → P0(2,1)"Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}  Dice=2  ATK=35 vs DEF=10  → WIN
+[00:21.756] Reckoning overlay: P1 "Fujin" {Unit ATK35 DEF40 | cost 450 | affinity Divine} badge=35 ATK pill=35 DEF pill=40 mod=+ATK 0 (35+0=35)
+[00:21.756] Reckoning overlay: P0 "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima} badge=10 ATK pill=40 DEF pill=10 mod=+DEF 0 (10+0=10)
+[00:21.756] Anim: 3A  △ P0(2,1)
+[00:21.756] Card destroyed  P0 (2,1) "Grand Fort Mauler" {Unit ATK40 DEF10 | cost 350 | affinity Anima}
+[00:22.242] Mode selected P1: ATTACK
+[00:22.245] MSG: Player 2: tap a unit to attack.
+[00:23.965] Revealed: P1 (0,1) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[00:23.965] Crystals: P0 4690 → 4730 (+40)  [ability]
+[00:23.966] MSG: Parom the Smuggler: Gained 40 Crystals from reveal!
+[00:23.966] Dice rolled: 4
+[00:23.998] MSG: Mephisto the Fallen wins!
+[00:28.442] Crystals: P0 4730 → 4430 (-300)  [battle]
+[00:29.838] Attack P1(0,1)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P0(4,2)"Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}  Dice=4  ATK=75 vs DEF=20  → WIN
+[00:29.838] Reckoning overlay: P1 "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} badge=75 ATK pill=75 DEF pill=0 mod=+ATK 0 (75+0=75)
+[00:29.838] Reckoning overlay: P0 "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic} badge=20 ATK pill=30 DEF pill=20 mod=+DEF 0 (20+0=20)
+[00:29.838] Anim: 3A  △ P0(4,2)
+[00:29.838] Card destroyed  P0 (4,2) "Parom the Smuggler" {Unit ATK30 DEF20 | cost 300 | affinity Cosmic}
+[00:30.337] Turn ended  P1  |  Crystals P0=4430 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4430 P1=4400 ---
+[01:01.349] MSG: Tap 2 material card(s) on the field.
+[01:07.027] MSG: Tap 2 material card(s) on the field.
+
+=== GAME OVER: Player 2 wins ===
+Final crystals — P0: 4430  P1: 4400  |  Turns: 2

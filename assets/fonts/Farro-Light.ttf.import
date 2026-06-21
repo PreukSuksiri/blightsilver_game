@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://dc0wt268lk8ic"
-path="res://.godot/imported/PlayfairDisplay-VariableFont_wght.ttf-fbc765a7962e1c71b0eb2c53d6eb2a10.fontdata"
+uid="uid://c2ie5bpm3a5kr"
+path="res://.godot/imported/Farro-Light.ttf-5701b1976a487f52a6c230d84032d616.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/PlayfairDisplay-VariableFont_wght.ttf"
-dest_files=["res://.godot/imported/PlayfairDisplay-VariableFont_wght.ttf-fbc765a7962e1c71b0eb2c53d6eb2a10.fontdata"]
+source_file="res://assets/fonts/Farro-Light.ttf"
+dest_files=["res://.godot/imported/Farro-Light.ttf-5701b1976a487f52a6c230d84032d616.fontdata"]
 
 [params]
 

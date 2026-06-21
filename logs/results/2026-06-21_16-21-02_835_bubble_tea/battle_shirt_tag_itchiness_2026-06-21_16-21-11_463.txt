@@ -1,0 +1,66 @@
+=== Battle of Shirt Tag Itchiness ===
+Battle started: 2026-06-21 16:21:11.463
+Game Session of Bubble Tea (started 2026-06-21 16:21:02.835)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.889] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:09.295] Mode selected P1: TECH
+[00:09.594] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:10.978] Tech played  P1: "Radar"
+[00:12.521] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:12.996] Revealed: P0 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:13.369] Revealed: P0 (0,3) "Flame Trap" {cost 250}
+[00:13.764] Revealed: P0 (4,4) "Decoy Puppet" {cost 100}
+[00:13.768] Tech resolved  P1
+[00:14.628] Mode selected P1: ATTACK
+[00:14.631] MSG: Player 2: tap a unit to attack.
+[00:16.338] Revealed: P1 (3,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:16.339] Dice rolled: 2
+[00:16.368] MSG: Canyon Warg wins!
+[00:20.828] Crystals: P0 5000 → 4500 (-500)  [battle]
+[00:22.224] Attack P1(3,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(3,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}  Dice=2  ATK=70 vs DEF=50  → WIN
+[00:22.224] Reckoning overlay: P1 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=70 ATK pill=70 DEF pill=30 mod=+ATK 0 (70+0=70)
+[00:22.224] Reckoning overlay: P0 "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} badge=50 ATK pill=20 DEF pill=50 mod=+DEF 0 (50+0=50)
+[00:22.224] Anim: 3A  △ P0(3,3)
+[00:22.224] Card destroyed  P0 (3,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[00:22.712] Mode selected P1: ATTACK
+[00:22.715] MSG: Player 2: tap a unit to attack.
+[00:24.430] Revealed: P1 (0,2) "Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine}
+[00:24.430] Dice rolled: 3
+[00:24.470] MSG: Nothing happens — Dead End.
+[00:26.381] Attack P1(0,2)"Bomber Fairy" {Unit ATK30 DEF15 | cost 500 | affinity Divine} → P0(0,3)(empty)  Dice=3  → DEAD_END
+[00:26.381] Anim: 3F  (blank slot)
+[00:26.880] Turn ended  P1  |  Crystals P0=4500 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4500 P1=4400 ---
+[03:24.438] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[03:24.438] Dice rolled: 1
+[03:24.472] MSG: Shepherd Detective wins!
+[03:28.915] Crystals: P1 4400 → 3650 (-750)  [battle]
+[03:30.316] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(3,0)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=1  ATK=40 vs DEF=30  → WIN
+[03:30.316] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[03:30.316] Reckoning overlay: P1 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=30 ATK pill=70 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:30.316] Anim: 3A  △ P1(3,0)
+[03:30.316] Card destroyed  P1 (3,0) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[03:30.325] Target prompt: "Shepherd Detective: Choose 1 opponent cell to reveal."  filter=opponent_any_hidden
+[03:32.023] Revealed: P1 (1,2) "War Genie" {Unit ATK100 DEF80 | cost 1150 | affinity Arcane}
+[03:32.023] MSG: Revealed: War Genie
+[04:10.424] MSG: Tap 2 material card(s) on the field.
+[04:17.299] Tech played  P0: "Spy"
+[04:18.842] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[04:27.465] Revealed: P1 (0,4) "Red Card" {cost 0}
+[04:27.668] Tech resolved  P0
+[05:06.379] MSG: Tap 2 material card(s) on the field.
+[05:06.742] MSG: 1 more material(s) needed.
+[08:08.461] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[08:08.461] Dice rolled: 1
+[08:08.506] MSG: Nothing happens — Dead End.
+[08:11.862] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(0,3)(empty)  Dice=1  → DEAD_END
+[08:11.862] Anim: 3F  (blank slot)
+[09:02.547] Turn ended  P0  |  Crystals P0=4500 

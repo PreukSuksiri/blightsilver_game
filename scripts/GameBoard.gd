@@ -4,6 +4,7 @@ extends Control
 const CARD_SCENE: PackedScene = preload("res://scenes/card.tscn")
 const MAX_CRYSTALS: int = 5000
 const MAX_LOG_LINES: int = 60
+const PROMPT_DISMISS_DELAY: float = 0.5
 const SFX_CRYSTAL: AudioStream = preload("res://assets/audio/sound_crystal_1.mp3")
 
 # ── Grid containers
@@ -771,6 +772,7 @@ func _build_handoff_overlay() -> void:
 	_handoff_ready_btn.add_theme_color_override("font_color", Color(0.72, 0.9, 1.0, 1.0))
 	_handoff_ready_btn.pressed.connect(_on_handoff_ready)
 	vbox.add_child(_handoff_ready_btn)
+	SFXManager.wire_prompt_button(_handoff_ready_btn)
 
 func _build_bribe_overlay() -> void:
 	_bribe_overlay = Control.new()
@@ -879,6 +881,7 @@ func _build_bribe_overlay() -> void:
 	pass_btn.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0, 1.0))
 	pass_btn.pressed.connect(_on_bribe_pass_pressed)
 	hbox.add_child(pass_btn)
+	SFXManager.wire_prompt_buttons_in(_bribe_overlay)
 
 func _build_ability_choice_overlay() -> void:
 	_ability_choice_overlay = Control.new()
@@ -934,14 +937,10 @@ func _build_ability_choice_overlay() -> void:
 		btn.visible = false
 		btn.add_theme_color_override("font_color", Color(0.8, 0.95, 1.0, 1.0))
 		var capture_i: int = i
-		btn.pressed.connect(func() -> void:
-			_ability_choice_overlay.visible = false
-			for b: Button in _ability_choice_btns:
-				b.visible = false
-			turn_manager.resolve_ability_choice(capture_i)
-		)
+		btn.pressed.connect(func() -> void: _on_ability_choice_selected(capture_i))
 		vbox.add_child(btn)
 		_ability_choice_btns.append(btn)
+	SFXManager.wire_prompt_buttons_in(_ability_choice_overlay)
 
 func _show_ability_choice_overlay(title: String, choices: Array) -> void:
 	SFXManager.play(SFXManager.SFX_POPUP)
@@ -961,6 +960,7 @@ func _hide_ability_choice_overlay() -> void:
 		btn.visible = false
 
 func _show_bribe_overlay(opponent: int) -> void:
+	SFXManager.play(SFXManager.SFX_POPUP)
 	_bribe_desc_lbl.text = "Player %d: Reveal one of your units to gain 700 Crystals, or pass." % (opponent + 1)
 	_bribe_overlay.visible = true
 
@@ -969,6 +969,7 @@ func _hide_bribe_overlay() -> void:
 
 func _on_bribe_reveal_pressed() -> void:
 	_hide_bribe_overlay()
+	await _await_prompt_dismiss_delay()
 	var bribed_player := GameState.get_opponent(GameState.current_player)
 	if not _has_bribe_reveal_targets(bribed_player):
 		GameState.post_message("Bribe: No face-down units to reveal.")
@@ -985,8 +986,31 @@ func _on_bribe_reveal_pressed() -> void:
 
 func _on_bribe_pass_pressed() -> void:
 	_hide_bribe_overlay()
+	await _await_prompt_dismiss_delay()
 	GameState.post_message("Bribe: Opponent passed.")
 	_finish_tech_action(GameState.current_player)
+
+func _await_prompt_dismiss_delay() -> void:
+	if _tech_resolve_blocker:
+		_tech_resolve_blocker.visible = true
+	await get_tree().create_timer(PROMPT_DISMISS_DELAY).timeout
+	if _tech_resolve_blocker:
+		_tech_resolve_blocker.visible = false
+
+func _on_tech_use_pressed(tech_name: String, from_hand: bool) -> void:
+	if from_hand:
+		if TutorialBattleManager.is_active:
+			TutorialBattleManager.report_action("tech_use_tap", {"tech_name": tech_name})
+		_dismiss_tech_hand_overlay()
+	else:
+		_close_tech_overlay()
+	await _await_prompt_dismiss_delay()
+	_on_tech_card_btn(tech_name)
+
+func _on_ability_choice_selected(choice_index: int) -> void:
+	_hide_ability_choice_overlay()
+	await _await_prompt_dismiss_delay()
+	turn_manager.resolve_ability_choice(choice_index)
 
 func _build_tech_resolve_blocker() -> void:
 	_tech_resolve_blocker = ColorRect.new()
@@ -1097,6 +1121,7 @@ func _show_handoff(player: int, context: String, callback: Callable) -> void:
 
 func _on_handoff_ready() -> void:
 	_handoff_overlay.visible = false
+	await _await_prompt_dismiss_delay()
 	if _handoff_callback.is_valid():
 		_handoff_callback.call()
 	_handoff_callback = Callable()
@@ -1606,6 +1631,7 @@ func _create_tech_stack_indicator(player: int) -> Control:
 	count_lbl.size = Vector2(26.0, 26.0)
 	count_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	count_lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 700))
 	count_lbl.add_theme_font_size_override("font_size", 18)
 	count_lbl.add_theme_color_override("font_color", Color(1.0, 0.95, 0.82))
 	count_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
@@ -1756,9 +1782,8 @@ func _rebuild_tech_overlay_content(player: int) -> void:
 			use_btn.disabled = crystals < data.crystal_cost
 			use_btn.add_theme_font_size_override("font_size", 10)
 			var captured: String = tech_name
-			use_btn.pressed.connect(func() -> void:
-				_close_tech_overlay()
-				_on_tech_card_btn(captured))
+			use_btn.pressed.connect(func() -> void: _on_tech_use_pressed(captured, false))
+			SFXManager.wire_prompt_button(use_btn)
 			_tech_overlay_panel.add_child(use_btn)
 
 # ─────────────────────────────────────────────────────────────
@@ -1837,6 +1862,7 @@ func _create_void_stack_indicator(player: int) -> Control:
 	count_lbl.size = Vector2(26.0, 26.0)
 	count_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	count_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	count_lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 700))
 	count_lbl.add_theme_font_size_override("font_size", 18)
 	count_lbl.add_theme_color_override("font_color", Color(0.88, 0.72, 1.0))
 	count_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
@@ -1895,7 +1921,8 @@ func _open_void_modal(player: int) -> void:
 				or (ev is InputEventScreenTouch and ev.pressed):
 			if _void_modal != null:
 				_void_modal.queue_free()
-				_void_modal = null)
+				_void_modal = null
+			await _await_prompt_dismiss_delay())
 	_void_modal.add_child(dimmer)
 
 	# Panel with margin
@@ -1954,7 +1981,9 @@ func _open_void_modal(player: int) -> void:
 	close_btn.pressed.connect(func() -> void:
 		if _void_modal != null:
 			_void_modal.queue_free()
-			_void_modal = null)
+			_void_modal = null
+		await _await_prompt_dismiss_delay())
+	SFXManager.wire_prompt_button(close_btn)
 	title_row.add_child(close_btn)
 
 	# Scrollable card grid
@@ -2533,6 +2562,7 @@ func _build_attack_confirm_panel() -> void:
 	cancel_btn2.add_theme_stylebox_override("normal", xsb)
 	cancel_btn2.pressed.connect(_cancel_confirm_attack)
 	hbox.add_child(cancel_btn2)
+	SFXManager.wire_prompt_buttons_in(_attack_confirm_panel)
 
 # ─────────────────────────────────────────────────────────────
 # Card Context Menu
@@ -2903,6 +2933,7 @@ func _show_bluff_modal_board(player: int, row: int, col: int) -> void:
 		_refresh_bluff_label(snap_player, snap_row, snap_col)
 		backdrop.queue_free())
 	vbox.add_child(clear_btn)
+	SFXManager.wire_prompt_buttons_in(vbox)
 
 func _hide_card_context() -> void:
 	if is_instance_valid(_context_backdrop):
@@ -3370,6 +3401,44 @@ func _show_enemy_view_return_prompt() -> void:
 # Corner Crystal Labels
 # ─────────────────────────────────────────────────────────────
 
+func _build_crystal_icon_with_shadow(tex: Texture2D, size: float) -> Control:
+	const SHADOW_OFFSET: float = 1.0
+	var wrap := Control.new()
+	wrap.custom_minimum_size = Vector2(size, size)
+	wrap.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var shadow := TextureRect.new()
+	shadow.texture = tex
+	shadow.modulate = Color(0.0, 0.0, 0.0, 1.0)
+	shadow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	shadow.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	shadow.position = Vector2(SHADOW_OFFSET, SHADOW_OFFSET)
+	shadow.size = Vector2(size, size)
+	shadow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.add_child(shadow)
+
+	var icon := TextureRect.new()
+	icon.texture = tex
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.position = Vector2.ZERO
+	icon.size = Vector2(size, size)
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.add_child(icon)
+
+	return wrap
+
+func _set_crystal_icon_texture(icon: TextureRect, tex: Texture2D) -> void:
+	if icon == null:
+		return
+	icon.texture = tex
+	var wrap := icon.get_parent()
+	if wrap != null and wrap.get_child_count() > 0:
+		var shadow := wrap.get_child(0) as TextureRect
+		if shadow != null and shadow != icon:
+			shadow.texture = tex
+
 func _build_bottom_crystal_labels() -> void:
 	const ICON_SIZE  : float = 48.0
 	const FONT_SIZE  : int   = 40
@@ -3400,8 +3469,12 @@ func _build_bottom_crystal_labels() -> void:
 
 	_p1_name_lbl = Label.new()
 	_p1_name_lbl.text = _player_names[0]
+	_p1_name_lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 600))
 	_p1_name_lbl.add_theme_font_size_override("font_size", NAME_SIZE)
 	_p1_name_lbl.add_theme_color_override("font_color", NAME_COLOR)
+	_p1_name_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+	_p1_name_lbl.add_theme_constant_override("shadow_offset_x", 1)
+	_p1_name_lbl.add_theme_constant_override("shadow_offset_y", 1)
 	_p1_name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	p1_vbox.add_child(_p1_name_lbl)
 
@@ -3411,20 +3484,18 @@ func _build_bottom_crystal_labels() -> void:
 	p1_vbox.add_child(p1_crystal_hbox)
 
 	if crystal_tex:
-		var icon := TextureRect.new()
-		icon.texture = crystal_tex
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.custom_minimum_size = Vector2(ICON_SIZE, ICON_SIZE)
-		icon.size_flags_vertical = Control.SIZE_SHRINK_BEGIN  # shifted upward
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var icon := _build_crystal_icon_with_shadow(crystal_tex, ICON_SIZE)
 		p1_crystal_hbox.add_child(icon)
-		_p1_crystal_icon = icon
+		_p1_crystal_icon = icon.get_child(1) as TextureRect
 
 	_p1_bottom_crystal = Label.new()
 	_p1_bottom_crystal.text = str(GameState.crystals[0])
+	_p1_bottom_crystal.add_theme_font_override("font", FontManager.make_font("display_serif", 700))
 	_p1_bottom_crystal.add_theme_font_size_override("font_size", FONT_SIZE)
 	_p1_bottom_crystal.add_theme_color_override("font_color", TEXT_COLOR)
+	_p1_bottom_crystal.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+	_p1_bottom_crystal.add_theme_constant_override("shadow_offset_x", 1)
+	_p1_bottom_crystal.add_theme_constant_override("shadow_offset_y", 1)
 	_p1_bottom_crystal.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_p1_bottom_crystal.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_p1_bottom_crystal.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -3448,8 +3519,12 @@ func _build_bottom_crystal_labels() -> void:
 
 	_p2_name_lbl = Label.new()
 	_p2_name_lbl.text = _player_names[1]
+	_p2_name_lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 600))
 	_p2_name_lbl.add_theme_font_size_override("font_size", NAME_SIZE)
 	_p2_name_lbl.add_theme_color_override("font_color", NAME_COLOR)
+	_p2_name_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+	_p2_name_lbl.add_theme_constant_override("shadow_offset_x", 1)
+	_p2_name_lbl.add_theme_constant_override("shadow_offset_y", 1)
 	_p2_name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_p2_name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	p2_vbox.add_child(_p2_name_lbl)
@@ -3462,23 +3537,21 @@ func _build_bottom_crystal_labels() -> void:
 
 	_p2_bottom_crystal = Label.new()
 	_p2_bottom_crystal.text = str(GameState.crystals[1])
+	_p2_bottom_crystal.add_theme_font_override("font", FontManager.make_font("display_serif", 700))
 	_p2_bottom_crystal.add_theme_font_size_override("font_size", FONT_SIZE)
 	_p2_bottom_crystal.add_theme_color_override("font_color", TEXT_COLOR)
+	_p2_bottom_crystal.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+	_p2_bottom_crystal.add_theme_constant_override("shadow_offset_x", 1)
+	_p2_bottom_crystal.add_theme_constant_override("shadow_offset_y", 1)
 	_p2_bottom_crystal.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_p2_bottom_crystal.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_p2_bottom_crystal.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	p2_crystal_hbox.add_child(_p2_bottom_crystal)
 
 	if crystal_tex:
-		var icon2 := TextureRect.new()
-		icon2.texture = crystal_tex
-		icon2.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon2.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon2.custom_minimum_size = Vector2(ICON_SIZE, ICON_SIZE)
-		icon2.size_flags_vertical = Control.SIZE_SHRINK_BEGIN  # shifted upward
-		icon2.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var icon2 := _build_crystal_icon_with_shadow(crystal_tex, ICON_SIZE)
 		p2_crystal_hbox.add_child(icon2)
-		_p2_crystal_icon = icon2
+		_p2_crystal_icon = icon2.get_child(1) as TextureRect
 
 ## Builds the "thinking bubble" overlay used to show when the AI is processing.
 ## Hidden by default; shown via _show_thinking_bubble() after a 0.5s delay.
@@ -3629,7 +3702,8 @@ func _build_attack_count_icon() -> Control:
 	lbl.text = "2"
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_size_override("font_size", 34)
+	lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 700))
+	lbl.add_theme_font_size_override("font_size", 32)
 	lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
 	lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
 	lbl.add_theme_constant_override("shadow_offset_x", 2)
@@ -3747,7 +3821,8 @@ func _build_turn_number_label() -> void:
 	lbl.offset_top    = -4.0;   lbl.offset_bottom = 56.0
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_size_override("font_size", 30)
+	lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 600))
+	lbl.add_theme_font_size_override("font_size", 32)
 	lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.92))
 	lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
 	lbl.add_theme_constant_override("shadow_offset_x", 3)
@@ -3755,7 +3830,7 @@ func _build_turn_number_label() -> void:
 	lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	lbl.z_index = 4
 	lbl.visible = false
-	lbl.text = "Turn 1"
+	lbl.text = "TURN 1"
 	add_child(lbl)
 	_turn_number_lbl = lbl
 
@@ -3775,14 +3850,37 @@ func _build_options_button() -> void:
 	btn.anchor_top    = 1.0;  btn.anchor_bottom = 1.0
 	btn.offset_left   = -(BTN_W * 0.5)
 	btn.offset_right  =  (BTN_W * 0.5)
-	btn.offset_top    = -SHOW_H   # top edge = 120px above screen bottom
-	btn.offset_bottom =  HIDE_H   # bottom edge = 60px below screen bottom (clipped)
+	btn.offset_top    = -SHOW_H - 20.0   # top edge = 140px above screen bottom
+	btn.offset_bottom =  HIDE_H - 20.0   # bottom edge = 40px below screen bottom (clipped)
 	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	btn.z_index = 5
 	btn.visible = false
 	btn.pressed.connect(_on_options_btn_pressed)
 	add_child(btn)
 	_options_btn = btn
+
+	var opts_lbl := Label.new()
+	opts_lbl.text = "OPTIONS"
+	opts_lbl.layout_mode = 1
+	opts_lbl.anchor_left   = 0.5
+	opts_lbl.anchor_right  = 0.5
+	opts_lbl.anchor_top    = 0.0
+	opts_lbl.anchor_bottom = 0.0
+	opts_lbl.offset_left   = -(BTN_W * 0.42)
+	opts_lbl.offset_right  =  (BTN_W * 0.42)
+	opts_lbl.offset_top    = 58.0
+	opts_lbl.offset_bottom = 88.0
+	opts_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	opts_lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
+	opts_lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 400))
+	opts_lbl.add_theme_font_size_override("font_size", 26)
+	opts_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.95))
+	opts_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 1.0))
+	opts_lbl.add_theme_constant_override("shadow_offset_x", 1)
+	opts_lbl.add_theme_constant_override("shadow_offset_y", 1)
+	opts_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	btn.add_child(opts_lbl)
+
 	_options_btn.mouse_entered.connect(func(): _show_hud_tooltip("Game options (concede, settings)"))
 	_options_btn.mouse_exited.connect(func(): _restore_game_guide())
 
@@ -4003,9 +4101,9 @@ func _reload_hud_skin(_new_version: String = "") -> void:
 	if is_instance_valid(_turn_number_bg):
 		_turn_number_bg.texture          = HudSkin.hud_tex("ui_turn_number_panel.png")
 	if is_instance_valid(_p1_crystal_icon):
-		_p1_crystal_icon.texture         = HudSkin.hud_tex("ui_crystal_indicator.png")
+		_set_crystal_icon_texture(_p1_crystal_icon, HudSkin.hud_tex("ui_crystal_indicator.png"))
 	if is_instance_valid(_p2_crystal_icon):
-		_p2_crystal_icon.texture         = HudSkin.hud_tex("ui_crystal_indicator.png")
+		_set_crystal_icon_texture(_p2_crystal_icon, HudSkin.hud_tex("ui_crystal_indicator.png"))
 	if is_instance_valid(_p1_attack_lbl):
 		var p1_icon := _p1_attack_lbl.get_parent().get_child(0) as TextureRect
 		if p1_icon: p1_icon.texture = HudSkin.hud_tex("ui_icon_attack_count.png")
@@ -4134,6 +4232,7 @@ func _add_back_btn(vbox: VBoxContainer, dimmer: Control) -> void:
 		dimmer.queue_free()
 		_show_options_panel())
 	vbox.add_child(back_btn)
+	SFXManager.wire_prompt_button(back_btn)
 
 func _show_options_panel() -> void:
 	var dimmer := ColorRect.new()
@@ -4191,6 +4290,7 @@ func _show_options_panel() -> void:
 	close_btn.add_theme_color_override("font_color", Color(0.7, 0.7, 0.75))
 	close_btn.pressed.connect(_close_options_panel)
 	vbox.add_child(close_btn)
+	SFXManager.wire_prompt_buttons_in(vbox)
 
 func _close_options_panel() -> void:
 	if _options_panel != null:
@@ -4258,6 +4358,7 @@ func _show_change_music_panel() -> void:
 		vbox.add_child(btn)
 
 	_add_back_btn(vbox, overlay["dimmer"])
+	SFXManager.wire_prompt_buttons_in(vbox)
 
 func _change_battle_music(path: String) -> void:
 	GameState.battle_bgm_path = path
@@ -4327,6 +4428,7 @@ func _show_battle_log_panel() -> void:
 			CardDetailOverlay.open(self, parts[0], parts[1]))
 
 	_add_back_btn(vbox, dimmer)
+	SFXManager.wire_prompt_buttons_in(vbox)
 
 	# Scroll to bottom after layout settles
 	await get_tree().process_frame
@@ -4376,6 +4478,7 @@ func _show_rules_panel() -> void:
 	scroll.add_child(rtl)
 
 	_add_back_btn(vbox, dimmer)
+	SFXManager.wire_prompt_buttons_in(vbox)
 
 # ─────────────────────────────────────────────────────────────
 # Settings sub-panel (placeholder)
@@ -4404,6 +4507,7 @@ func _show_settings_panel() -> void:
 	vbox.add_child(placeholder)
 
 	_add_back_btn(vbox, dimmer)
+	SFXManager.wire_prompt_buttons_in(vbox)
 
 # ─────────────────────────────────────────────────────────────
 # Surrender confirm
@@ -4442,6 +4546,7 @@ func _show_surrender_confirm() -> void:
 	yes_btn.custom_minimum_size = Vector2(140, 40)
 	yes_btn.pressed.connect(func() -> void:
 		dimmer.queue_free()
+		await _await_prompt_dismiss_delay()
 		var winner: int = GameState.get_opponent(GameState.current_player)
 		GameState.game_over_reason = "surrender"
 		GameState._end_game(winner))
@@ -4453,8 +4558,10 @@ func _show_surrender_confirm() -> void:
 	no_btn.custom_minimum_size = Vector2(80, 40)
 	no_btn.pressed.connect(func() -> void:
 		dimmer.queue_free()
+		await _await_prompt_dismiss_delay()
 		_show_options_panel())
 	row.add_child(no_btn)
+	SFXManager.wire_prompt_buttons_in(vbox)
 
 # ─────────────────────────────────────────────────────────────
 # Hover Info Panel
@@ -5148,7 +5255,7 @@ func _update_turn_info() -> void:
 	_update_portrait_dims()
 	_update_crystal_visibility()
 	if _turn_number_lbl:
-		_turn_number_lbl.text = "Turn %d" % GameState.turn_number
+		_turn_number_lbl.text = "TURN %d" % GameState.turn_number
 
 # ─────────────────────────────────────────────────────────────
 # Grid
@@ -5359,11 +5466,8 @@ func _refresh_tech_hand() -> void:
 			use_btn.add_theme_font_size_override("font_size", 16)
 			use_btn.set_meta("tut_tech", tech_name)
 			var captured: String = tech_name
-			use_btn.pressed.connect(func() -> void:
-				if TutorialBattleManager.is_active:
-					TutorialBattleManager.report_action("tech_use_tap", {"tech_name": captured})
-				_dismiss_tech_hand_overlay()
-				_on_tech_card_btn(captured))
+			use_btn.pressed.connect(func() -> void: _on_tech_use_pressed(captured, true))
+			SFXManager.wire_prompt_button(use_btn)
 			col.add_child(use_btn)
 
 func _dismiss_tech_hand_overlay() -> void:
@@ -5495,6 +5599,7 @@ func _show_blackmail_tech_overlay(player: int) -> void:
 		turn_manager.resolve_blackmail_choice(""))
 	vbox.add_child(end_turn_btn)
 
+	SFXManager.wire_prompt_buttons_in(vbox)
 	SFXManager.play(SFXManager.SFX_POPUP)
 
 func _on_awaiting_blackmail_tech_select(player: int) -> void:
@@ -5669,6 +5774,9 @@ func _on_end_turn_requested() -> void:
 		return
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.report_action("end_turn_tap", {})
+	await get_tree().create_timer(0.5).timeout
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
 	# Check if this player attacked at all this turn.
 	# Two sources: surviving characters with attacked_this_turn=true, OR
 	# attacks_remaining dropped below 2 (covers destroyed attackers whose flag is gone).
@@ -5801,6 +5909,7 @@ func _show_tax_confirm() -> void:
 		if _tax_confirm_panel != null:
 			_tax_confirm_panel.queue_free()
 			_tax_confirm_panel = null
+		await _await_prompt_dismiss_delay()
 		GameState.skip_counts[player] += 1
 		GameState.lose_crystals(player, tax, "skip tax")
 		GameState.post_message("%s skips without attacking — %d◆ tax (skip #%d this duel)" % [
@@ -5815,8 +5924,10 @@ func _show_tax_confirm() -> void:
 	cancel_btn2.pressed.connect(func() -> void:
 		if _tax_confirm_panel != null:
 			_tax_confirm_panel.queue_free()
-			_tax_confirm_panel = null)
+			_tax_confirm_panel = null
+		await _await_prompt_dismiss_delay())
 	row.add_child(cancel_btn2)
+	SFXManager.wire_prompt_buttons_in(panel)
 
 func _on_tech_card_btn(tech_name: String) -> void:
 	pending_tech_name = tech_name
@@ -6254,6 +6365,7 @@ func _start_confirm_attack(target_player: int, target_pos: Vector2i) -> void:
 	_update_union_suggest_button()
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = true
+		SFXManager.play(SFXManager.SFX_POPUP)
 	_update_tutorial_hud_lock()
 	# Blink the target card red
 	var target_node: Control = grid_nodes[target_player][target_pos.x][target_pos.y]
@@ -6275,6 +6387,7 @@ func _confirm_attack() -> void:
 		target_node.modulate = Color(1.0, 1.0, 1.0, 1.0)
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = false
+	await _await_prompt_dismiss_delay()
 	_set_selection_state(SelectionState.NONE)
 	var atk_from := selected_attacker_pos
 	var atk_to   := _confirm_target_pos
@@ -6284,7 +6397,6 @@ func _confirm_attack() -> void:
 	turn_manager.perform_attack(atk_from, atk_to)
 
 func _cancel_confirm_attack() -> void:
-	SFXManager.play(SFXManager.SFX_CANCEL)
 	if _blink_tween and _blink_tween.is_valid():
 		_blink_tween.kill()
 		_blink_tween = null
@@ -6295,6 +6407,7 @@ func _cancel_confirm_attack() -> void:
 	_confirm_target_player = -1
 	if _attack_confirm_panel:
 		_attack_confirm_panel.visible = false
+	await _await_prompt_dismiss_delay()
 	if _selected_attacker_has_multi_bonus():
 		_set_selection_state(SelectionState.SELECTING_TARGET)
 		var bonus_card: GameState.CardInstance = GameState.get_card(
@@ -8083,6 +8196,7 @@ func _prompt_forfeit_multi_attack() -> void:
 	dlg.canceled.connect(func() -> void:
 		dlg.queue_free()
 	)
+	SFXManager.play(SFXManager.SFX_POPUP)
 	dlg.popup_centered()
 
 func _clear_selection() -> void:

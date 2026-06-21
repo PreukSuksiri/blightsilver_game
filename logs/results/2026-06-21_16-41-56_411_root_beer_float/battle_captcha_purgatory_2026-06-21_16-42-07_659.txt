@@ -1,0 +1,12 @@
+=== Battle of Captcha Purgatory ===
+Battle started: 2026-06-21 16:42:07.659
+Game Session of Root Beer Float (started 2026-06-21 16:41:56.411)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.281] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
