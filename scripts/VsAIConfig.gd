@@ -1,7 +1,7 @@
 extends Control
 ## VS AI Config — pre-battle setup screen for Player vs AI mode.
 ## Launched from the main menu VS AI button.
-## Lets the player configure both sides' names/illustrations and the AI deck setup.
+## Lets the player configure both sides' names/illustrations and deck setup (save deck or AI Deck Vault).
 
 const DeckData = preload("res://resources/DeckData.gd")
 const TECH_SLOT_COUNT: int = 3
@@ -10,9 +10,13 @@ const DEFAULT_PORTRAIT_PATHS: Array[String] = [
 	"res://assets/textures/ui/portraits/profile_player_2_default.png",
 ]
 const DEFAULT_PLAYER_NAMES: Array[String] = ["Player 1", "Opponent"]
+const DEFAULT_PORTRAIT_BROWSE_DIR: String = "res://assets/textures/profile/battle_illustrations"
+const PORTRAIT_IMAGE_EXTENSIONS: Array[String] = [".png", ".jpg", ".jpeg", ".webp"]
 
 # ── UI refs ────────────────────────────────────────────────────────────────────
 var _deck_opt: OptionButton = null
+var _player_vault_opt: OptionButton = null
+var _player_vault_form_opt: OptionButton = null
 var _vault_opt: OptionButton = null
 var _vault_form_opt: OptionButton = null
 var _formation_opt: OptionButton = null
@@ -24,6 +28,10 @@ var _status_lbl: Label = null
 var _bgm_enabled_chk: CheckBox = null
 var _name_edits: Array[LineEdit] = [null, null]
 var _portrait_paths: Array[String] = DEFAULT_PORTRAIT_PATHS.duplicate()
+var _portrait_browse_dirs: Array[String] = [
+	DEFAULT_PORTRAIT_BROWSE_DIR,
+	DEFAULT_PORTRAIT_BROWSE_DIR,
+]
 var _portrait_previews: Array[TextureRect] = [null, null]
 
 # Union zone highlight
@@ -36,6 +44,7 @@ func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_STOP
 	_build_ui()
 	_populate_decks()
+	_on_player_vault_selected()
 	CheckerTransition.fade_in()
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -119,6 +128,41 @@ func _build_player_column(parent: HBoxContainer) -> void:
 	_add_name_row(col, 0)
 	_add_portrait_row(col, 0, "Your Illustration")
 
+	var player_vault_hdr := Label.new()
+	player_vault_hdr.text = "Deck Vault  (overrides active save deck)"
+	player_vault_hdr.add_theme_font_size_override("font_size", 13)
+	player_vault_hdr.add_theme_color_override("font_color", Color(0.75, 0.95, 1.0))
+	col.add_child(player_vault_hdr)
+
+	var player_vault_row := HBoxContainer.new()
+	player_vault_row.add_theme_constant_override("separation", 8)
+	col.add_child(player_vault_row)
+	var player_vault_lbl := Label.new()
+	player_vault_lbl.text = "Vault:"
+	player_vault_lbl.add_theme_font_size_override("font_size", 14)
+	player_vault_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	player_vault_row.add_child(player_vault_lbl)
+	_player_vault_opt = OptionButton.new()
+	_player_vault_opt.add_theme_font_size_override("font_size", 13)
+	_player_vault_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_player_vault_opt.item_selected.connect(func(_i: int) -> void: _on_player_vault_selected())
+	player_vault_row.add_child(_player_vault_opt)
+	AIDeckVault.populate_vault_option(_player_vault_opt, "(none — use active save deck)")
+
+	var player_vault_form_row := HBoxContainer.new()
+	player_vault_form_row.add_theme_constant_override("separation", 8)
+	col.add_child(player_vault_form_row)
+	var player_vault_form_lbl := Label.new()
+	player_vault_form_lbl.text = "Formation:"
+	player_vault_form_lbl.add_theme_font_size_override("font_size", 14)
+	player_vault_form_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	player_vault_form_row.add_child(player_vault_form_lbl)
+	_player_vault_form_opt = OptionButton.new()
+	_player_vault_form_opt.add_theme_font_size_override("font_size", 13)
+	_player_vault_form_opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_player_vault_form_opt.item_selected.connect(func(_i: int) -> void: _on_player_vault_selected())
+	player_vault_form_row.add_child(_player_vault_form_opt)
+
 func _build_ai_column(parent: HBoxContainer) -> void:
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 10)
@@ -136,7 +180,7 @@ func _build_ai_column(parent: HBoxContainer) -> void:
 
 	# ── AI Deck Vault (overrides deck + formation when set) ───────────────────
 	var vault_hdr := Label.new()
-	vault_hdr.text = "AI Deck Vault  (highest priority)"
+	vault_hdr.text = "AI Deck Vault  (overrides deck + formation below)"
 	vault_hdr.add_theme_font_size_override("font_size", 13)
 	vault_hdr.add_theme_color_override("font_color", Color(0.75, 0.95, 1.0))
 	col.add_child(vault_hdr)
@@ -290,7 +334,7 @@ func _add_portrait_row(parent: Control, player_index: int, label_text: String) -
 	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	preview.clip_contents = true
-	var init_tex: Texture2D = load(_portrait_paths[player_index])
+	var init_tex: Texture2D = GameState.load_portrait_texture(_portrait_paths[player_index])
 	if init_tex:
 		preview.texture = init_tex
 	illus_row.add_child(preview)
@@ -321,6 +365,12 @@ func _populate_decks() -> void:
 	for i: int in range(SaveManager.decks.size()):
 		var d: DeckData = SaveManager.decks[i]
 		_deck_opt.add_item(d.deck_name)
+
+func _on_player_vault_selected() -> void:
+	if _player_vault_opt == null or _player_vault_form_opt == null:
+		return
+	var entry_id: String = AIDeckVault.option_entry_id(_player_vault_opt)
+	AIDeckVault.populate_formation_option(_player_vault_form_opt, entry_id)
 
 func _on_vault_selected() -> void:
 	if _vault_opt == null or _vault_form_opt == null:
@@ -411,7 +461,34 @@ func _apply_battle_identity() -> void:
 	GameState.campaign_player_names = names
 	GameState.battle_bgm_enabled = _bgm_enabled_chk.button_pressed if _bgm_enabled_chk != null else true
 
+func _apply_player_vault_or_clear() -> Array[String]:
+	var errs: Array[String] = []
+	GameState.battle_player_deck = null
+	GameState.battle_player_forced_cells.clear()
+	while GameState.battle_featured_unions.size() < 2:
+		GameState.battle_featured_unions.append("")
+	GameState.battle_featured_unions[0] = ""
+
+	var player_vault_id: String = AIDeckVault.option_entry_id(_player_vault_opt) \
+		if _player_vault_opt != null else ""
+	if player_vault_id.is_empty():
+		return errs
+
+	var pcfg: Dictionary = AIDeckVault.build_ai_battle_config(
+		player_vault_id,
+		AIDeckVault.option_formation_index(_player_vault_form_opt))
+	if not bool(pcfg.get("ok", false)):
+		errs.append("Invalid player deck vault entry.")
+		return errs
+	AIDeckVault.apply_player_battle_config(pcfg)
+	return errs
+
 func _on_start_battle() -> void:
+	_status_lbl.text = ""
+	for msg: String in _apply_player_vault_or_clear():
+		_status_lbl.text = msg
+		return
+
 	var vault_id: String = AIDeckVault.option_entry_id(_vault_opt) if _vault_opt != null else ""
 	if not vault_id.is_empty():
 		var ft: Array = _collect_forced_tech()
@@ -430,7 +507,8 @@ func _on_start_battle() -> void:
 		GameState.battle_ai_forced_cells = (cfg.get("forced_cells", []) as Array).duplicate(true)
 		GameState.battle_ai_forced_tech  = (cfg.get("forced_tech", []) as Array).duplicate(true)
 		GameState.battle_ai_featured_union = str(cfg.get("featured_union", "")).strip_edges()
-		GameState.battle_featured_unions = ["", GameState.battle_ai_featured_union]
+		var _p0_union: String = str(GameState.battle_featured_unions[0]) if GameState.battle_featured_unions.size() > 0 else ""
+		GameState.battle_featured_unions = [_p0_union, GameState.battle_ai_featured_union]
 		GameState.campaign_enemy_config = {
 			"forced_characters": (cfg.get("forced_characters", []) as Array).duplicate(),
 			"forced_traps": (cfg.get("forced_traps", []) as Array).duplicate(),
@@ -460,6 +538,10 @@ func _on_start_battle() -> void:
 	GameState.battle_ai_deck          = d
 	GameState.battle_ai_forced_cells  = fc
 	GameState.battle_ai_forced_tech   = ft
+	var _p0_union_manual: String = str(GameState.battle_featured_unions[0]) \
+		if GameState.battle_featured_unions.size() > 0 else ""
+	GameState.battle_featured_unions = [_p0_union_manual, ""]
+	GameState.battle_ai_featured_union = ""
 	_apply_battle_identity()
 
 	BGMManager.stop(0.0)
@@ -773,33 +855,160 @@ func _validate_forced_tech(slots: Array) -> Array[String]:
 # ─────────────────────────────────────────────────────────────────────────────
 # Portrait picker
 # ─────────────────────────────────────────────────────────────────────────────
-func _get_portrait_options(default_path: String) -> Array:
+func _is_portrait_image_file(fname: String) -> bool:
+	if fname.ends_with(".import"):
+		return false
+	var lower := fname.to_lower()
+	for ext: String in PORTRAIT_IMAGE_EXTENSIONS:
+		if lower.ends_with(ext):
+			return true
+	return false
+
+func _portrait_file_label(fname: String) -> String:
+	return fname.get_basename().trim_prefix("vn_char_").replace("_", " ")
+
+func _short_folder_label(path: String) -> String:
+	if path.begins_with("res://"):
+		return path.trim_prefix("res://")
+	return path
+
+func _path_to_res_if_possible(abs_path: String) -> String:
+	var normalized := abs_path.replace("\\", "/")
+	var res_base := ProjectSettings.globalize_path("res://").replace("\\", "/")
+	if not res_base.ends_with("/"):
+		res_base += "/"
+	if normalized.begins_with(res_base):
+		return "res://" + normalized.substr(res_base.length())
+	return normalized
+
+func _join_dir_file(dir_path: String, fname: String) -> String:
+	if dir_path.ends_with("/"):
+		return dir_path + fname
+	return dir_path + "/" + fname
+
+func _open_dir_access(dir_path: String) -> DirAccess:
+	var dir := DirAccess.open(dir_path)
+	if dir != null:
+		return dir
+	if dir_path.begins_with("res://"):
+		return DirAccess.open(ProjectSettings.globalize_path(dir_path))
+	return null
+
+func _get_portrait_options(default_path: String, browse_dir: String) -> Array:
 	var opts: Array = []
 	opts.append({
 		"label": "Default",
 		"path": default_path,
 	})
-	var dir := DirAccess.open("res://assets/textures/vn/characters")
-	if dir:
-		dir.list_dir_begin()
-		var fname: String = dir.get_next()
-		var files: Array = []
-		while fname != "":
-			if not dir.current_is_dir() and fname.ends_with(".png") and not fname.ends_with(".import"):
-				files.append(fname)
-			fname = dir.get_next()
-		dir.list_dir_end()
-		files.sort()
-		for f: String in files:
-			var label: String = f.get_basename().trim_prefix("vn_char_").replace("_", " ")
-			opts.append({
-				"label": label,
-				"path":  "res://assets/textures/vn/characters/" + f
-			})
+	for entry: Dictionary in _collect_portrait_files(browse_dir, true):
+		opts.append(entry)
 	return opts
 
+func _collect_portrait_files(dir_path: String, recursive: bool) -> Array:
+	var results: Array = []
+	var dir := _open_dir_access(dir_path)
+	if dir == null:
+		return results
+	dir.list_dir_begin()
+	var fname: String = dir.get_next()
+	while fname != "":
+		if fname.begins_with("."):
+			fname = dir.get_next()
+			continue
+		var full_path: String = _join_dir_file(dir_path, fname)
+		if dir.current_is_dir():
+			if recursive:
+				for sub: Dictionary in _collect_portrait_files(full_path, true):
+					results.append(sub)
+		elif _is_portrait_image_file(fname):
+			var rel: String = full_path
+			if full_path.begins_with(dir_path):
+				rel = full_path.substr(dir_path.length()).trim_prefix("/")
+			var label: String = _portrait_file_label(fname)
+			if recursive and rel.contains("/"):
+				label = rel.get_basename().replace("_", " ") + " (" + rel.get_base_dir() + ")"
+			results.append({
+				"label": label,
+				"path": full_path,
+			})
+		fname = dir.get_next()
+	dir.list_dir_end()
+	results.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return str(a.get("label", "")) < str(b.get("label", "")))
+	return results
+
+func _populate_portrait_picker_flow(
+		flow: HFlowContainer,
+		options: Array,
+		player_index: int,
+		overlay: Control,
+		thumb_w: float,
+		thumb_h: float) -> void:
+	for child: Node in flow.get_children():
+		child.queue_free()
+	for opt: Dictionary in options:
+		var opt_path: String = str(opt["path"])
+		var opt_label: String = str(opt["label"])
+
+		var cell := VBoxContainer.new()
+		cell.custom_minimum_size = Vector2(thumb_w, thumb_h + 24)
+		cell.add_theme_constant_override("separation", 2)
+		flow.add_child(cell)
+
+		var thumb := TextureRect.new()
+		thumb.custom_minimum_size = Vector2(thumb_w, thumb_h)
+		thumb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		var tex: Texture2D = GameState.load_portrait_texture(opt_path)
+		if tex:
+			thumb.texture = tex
+		else:
+			thumb.modulate = Color(0.3, 0.3, 0.3)
+		if opt_path == _portrait_paths[player_index]:
+			thumb.modulate = Color(0.4, 1.0, 0.6)
+		cell.add_child(thumb)
+
+		var name_lbl := Label.new()
+		name_lbl.text = opt_label
+		name_lbl.add_theme_font_size_override("font_size", 9)
+		name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		name_lbl.clip_text = true
+		name_lbl.custom_minimum_size = Vector2(thumb_w, 0)
+		cell.add_child(name_lbl)
+
+		var p_cap := opt_path
+		var idx := player_index
+		thumb.mouse_filter = Control.MOUSE_FILTER_STOP
+		thumb.gui_input.connect(func(event: InputEvent) -> void:
+			if event is InputEventMouseButton:
+				var mbe := event as InputEventMouseButton
+				if mbe.pressed and mbe.button_index == MOUSE_BUTTON_LEFT:
+					_portrait_paths[idx] = p_cap
+					var new_tex: Texture2D = GameState.load_portrait_texture(p_cap)
+					var preview: TextureRect = _portrait_previews[idx]
+					if new_tex and preview != null:
+						preview.texture = new_tex
+					overlay.queue_free())
+
+func _open_portrait_folder_dialog(player_index: int, overlay: Control, on_changed: Callable) -> void:
+	var fd := FileDialog.new()
+	fd.title = "Choose Illustration Folder"
+	fd.access = FileDialog.ACCESS_FILESYSTEM
+	fd.file_mode = FileDialog.FILE_MODE_OPEN_DIR
+	var current_dir: String = _portrait_browse_dirs[player_index]
+	if current_dir.begins_with("res://"):
+		fd.current_dir = ProjectSettings.globalize_path(current_dir)
+	else:
+		fd.current_dir = current_dir
+	fd.dir_selected.connect(func(dir: String) -> void:
+		_portrait_browse_dirs[player_index] = _path_to_res_if_possible(dir)
+		on_changed.call()
+		fd.queue_free())
+	fd.canceled.connect(func() -> void: fd.queue_free())
+	overlay.add_child(fd)
+	fd.popup_centered_ratio(0.55)
+
 func _open_portrait_picker(player_index: int) -> void:
-	var options: Array = _get_portrait_options(DEFAULT_PORTRAIT_PATHS[player_index])
 	var side_label: String = "Your" if player_index == 0 else "AI"
 
 	var overlay := ColorRect.new()
@@ -835,6 +1044,22 @@ func _open_portrait_picker(player_index: int) -> void:
 	close_btn.pressed.connect(func() -> void: overlay.queue_free())
 	title_hb.add_child(close_btn)
 
+	var folder_row := HBoxContainer.new()
+	folder_row.add_theme_constant_override("separation", 8)
+	vb.add_child(folder_row)
+
+	var folder_lbl := Label.new()
+	folder_lbl.add_theme_font_size_override("font_size", 11)
+	folder_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 0.65))
+	folder_lbl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	folder_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	folder_row.add_child(folder_lbl)
+
+	var folder_btn := Button.new()
+	folder_btn.text = "Change Folder…"
+	folder_btn.add_theme_font_size_override("font_size", 12)
+	folder_row.add_child(folder_btn)
+
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	vb.add_child(scroll)
@@ -848,49 +1073,16 @@ func _open_portrait_picker(player_index: int) -> void:
 	const THUMB_W: float = 80.0
 	const THUMB_H: float = 110.0
 
-	for opt: Dictionary in options:
-		var opt_path: String = str(opt["path"])
-		var opt_label: String = str(opt["label"])
+	var refresh_picker := func() -> void:
+		folder_lbl.text = "Folder: %s" % _short_folder_label(_portrait_browse_dirs[player_index])
+		var options: Array = _get_portrait_options(
+			DEFAULT_PORTRAIT_PATHS[player_index], _portrait_browse_dirs[player_index])
+		_populate_portrait_picker_flow(flow, options, player_index, overlay, THUMB_W, THUMB_H)
 
-		var cell := VBoxContainer.new()
-		cell.custom_minimum_size = Vector2(THUMB_W, THUMB_H + 24)
-		cell.add_theme_constant_override("separation", 2)
-		flow.add_child(cell)
+	folder_btn.pressed.connect(func() -> void:
+		_open_portrait_folder_dialog(player_index, overlay, refresh_picker))
 
-		var thumb := TextureRect.new()
-		thumb.custom_minimum_size = Vector2(THUMB_W, THUMB_H)
-		thumb.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
-		thumb.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		var tex: Texture2D = load(opt_path)
-		if tex:
-			thumb.texture = tex
-		else:
-			thumb.modulate = Color(0.3, 0.3, 0.3)
-		if opt_path == _portrait_paths[player_index]:
-			thumb.modulate = Color(0.4, 1.0, 0.6)
-		cell.add_child(thumb)
-
-		var name_lbl := Label.new()
-		name_lbl.text = opt_label
-		name_lbl.add_theme_font_size_override("font_size", 9)
-		name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		name_lbl.clip_text = true
-		name_lbl.custom_minimum_size = Vector2(THUMB_W, 0)
-		cell.add_child(name_lbl)
-
-		var p_cap := opt_path
-		var idx := player_index
-		thumb.mouse_filter = Control.MOUSE_FILTER_STOP
-		thumb.gui_input.connect(func(event: InputEvent) -> void:
-			if event is InputEventMouseButton:
-				var mbe := event as InputEventMouseButton
-				if mbe.pressed and mbe.button_index == MOUSE_BUTTON_LEFT:
-					_portrait_paths[idx] = p_cap
-					var new_tex: Texture2D = load(p_cap)
-					var preview: TextureRect = _portrait_previews[idx]
-					if new_tex and preview != null:
-						preview.texture = new_tex
-					overlay.queue_free())
+	refresh_picker.call()
 
 	overlay.gui_input.connect(func(event: InputEvent) -> void:
 		if event is InputEventMouseButton and (event as InputEventMouseButton).pressed:

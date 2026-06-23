@@ -13,6 +13,7 @@ const SFX_UNION_FLASH := preload("res://assets/audio/sfx/scifi_ui_38.mp3")  # Ru
 const SFX_CARD_INFO   := preload("res://assets/audio/sfx/scifi_ui_18.mp3")  # Rule 7: card info (gallery/setup)
 const SFX_CARD_DETAIL := preload("res://assets/audio/sfx/scifi_ui_15.mp3")  # Rule 11: battle info context menu
 const SFX_CRYSTAL_GAIN := preload("res://assets/audio/sfx/scifi_ui_24.mp3") # Rule 13: gain crystals
+const SFX_TICK         := preload("res://assets/audio/sfx/tick_1.mp3")      # crystal count tick
 const SFX_PLACE       := preload("res://assets/audio/sfx/scifi_ui_9.mp3")   # Rule 14: setup card placed into grid
 const SFX_REMOVE      := preload("res://assets/audio/sfx/scifi_ui_8.mp3")   # Rule 15: setup card removed from grid
 const SFX_EXPLORATION := preload("res://assets/audio/sfx/scifi_ui_8.mp3")   # Exploration UI interactions

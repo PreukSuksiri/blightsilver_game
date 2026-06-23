@@ -202,6 +202,7 @@ func admin_command(raw: String) -> String:
 				+ "  animation_vellum_card_commence_facedown\n"
 				+ "  animation_pack_opening <pack_image> | <card1> | <card2> | <card3>\n"
 				+ "  set_card_qty <card_name> | <quantity>\n"
+				+ "  grant_card <card_name> [count]\n"
 				+ "  confiscate_non_deck\n"
 				+ "  grant_deck_cards\n"
 				+ "  grant_all_cards\n"
@@ -775,6 +776,35 @@ func admin_command(raw: String) -> String:
 				return "Card name cannot be empty."
 			Collection.set_card_quantity(cname, qty)
 			return "Set '%s' quantity → %d" % [cname, qty]
+
+		"grant_card":
+			if parts.size() < 2:
+				return "Usage: grant_card <card_name> [count]"
+			var grant_count: int = 1
+			var name_end: int = parts.size()
+			if parts.size() >= 3 and String(parts[-1]).is_valid_int():
+				grant_count = int(parts[-1])
+				name_end = parts.size() - 1
+				if grant_count <= 0:
+					return "Count must be positive."
+			var cname: String = " ".join(PackedStringArray(parts.slice(1, name_end)))
+			if cname.is_empty():
+				return "Card name cannot be empty."
+			var card_type: String = ""
+			if CardDatabase.get_character(cname):
+				card_type = "character"
+			elif CardDatabase.get_trap(cname):
+				card_type = "trap"
+			elif CardDatabase.get_tech(cname):
+				card_type = "tech"
+			if card_type.is_empty():
+				return "Card not found: '%s'. Use card_find to search." % cname
+			for _i in grant_count:
+				Collection.add_card(cname, card_type, "Admin")
+			var owned: int = Collection.get_card_count(cname)
+			if grant_count == 1:
+				return "Granted '%s' (%s). Now own %d." % [cname, card_type, owned]
+			return "Granted %d × '%s' (%s). Now own %d." % [grant_count, cname, card_type, owned]
 
 		"confiscate_non_deck":
 			var protected: Array = []

@@ -259,7 +259,7 @@ func _wait_icon_transform_nodes() -> Array:
 		nodes.append(_wait_icon_shadow)
 	return nodes
 
-func _sync_wait_icon_shadow_transform() -> void:
+func _sync_wait_icon_shadow_transform(_progress: float = 0.0) -> void:
 	if _wait_icon_shadow == null:
 		return
 	_wait_icon_shadow.pivot_offset = attacked_icon_rect.pivot_offset
@@ -399,7 +399,9 @@ func suppress_exposed_badge() -> void:
 
 func _reset_badge_node_scales(nodes: Array) -> void:
 	for node: Variant in nodes:
-		if node is Control and is_instance_valid(node):
+		if not is_instance_valid(node):
+			continue
+		if node is Control:
 			var ctrl := node as Control
 			ctrl.pivot_offset = ctrl.size * 0.5
 			ctrl.scale = Vector2.ONE
@@ -407,7 +409,9 @@ func _reset_badge_node_scales(nodes: Array) -> void:
 func _live_badge_nodes(nodes: Array) -> Array:
 	var live: Array = []
 	for node: Variant in nodes:
-		if node is Control and is_instance_valid(node) and (node as Control).is_inside_tree():
+		if not is_instance_valid(node):
+			continue
+		if node is Control and (node as Control).is_inside_tree():
 			live.append(node)
 	return live
 

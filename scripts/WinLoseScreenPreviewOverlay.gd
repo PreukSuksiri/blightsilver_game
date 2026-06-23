@@ -180,6 +180,9 @@ func _on_preview_pressed() -> void:
 		path.get_file(), "Win" if is_win else "Lose"])
 
 
+func _apply_endgame_serif_font(control: Control, weight: int = 400) -> void:
+	control.add_theme_font_override("font", FontManager.make_font("display_serif", weight))
+
 func _build_preview_overlay(tex: Texture2D, is_win: bool) -> Control:
 	var overlay := Control.new()
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -211,6 +214,7 @@ func _build_preview_overlay(tex: Texture2D, is_win: bool) -> Control:
 		title_lbl.offset_top = -80.0
 		title_lbl.offset_bottom = 40.0
 		title_lbl.add_theme_font_size_override("font_size", 52)
+		_apply_endgame_serif_font(title_lbl, 600)
 		title_lbl.add_theme_color_override("font_color", Color(1.0, 0.92, 0.55))
 		title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		overlay.add_child(title_lbl)
@@ -225,6 +229,7 @@ func _build_preview_overlay(tex: Texture2D, is_win: bool) -> Control:
 		go_lbl.offset_top = -160.0
 		go_lbl.offset_bottom = 60.0
 		go_lbl.add_theme_font_size_override("font_size", 96)
+		_apply_endgame_serif_font(go_lbl, 700)
 		go_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
 		go_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
 		go_lbl.add_theme_constant_override("shadow_offset_x", 4)
@@ -242,6 +247,7 @@ func _build_preview_overlay(tex: Texture2D, is_win: bool) -> Control:
 		defeat_lbl.offset_top = 20.0
 		defeat_lbl.offset_bottom = 80.0
 		defeat_lbl.add_theme_font_size_override("font_size", 52)
+		_apply_endgame_serif_font(defeat_lbl, 600)
 		defeat_lbl.add_theme_color_override("font_color", Color(1.0, 0.72, 0.60, 0.85))
 		defeat_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		overlay.add_child(defeat_lbl)
@@ -255,6 +261,7 @@ func _build_preview_overlay(tex: Texture2D, is_win: bool) -> Control:
 	hint_lbl.offset_top = 220.0
 	hint_lbl.offset_bottom = 270.0
 	hint_lbl.add_theme_font_size_override("font_size", 24)
+	_apply_endgame_serif_font(hint_lbl, 400)
 	hint_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.6))
 	hint_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.add_child(hint_lbl)

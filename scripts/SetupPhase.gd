@@ -387,7 +387,7 @@ func _build_ui() -> void:
 	add_child(_confirm_btn)
 
 	# ── Player portrait illustrations (on top of all content) ─
-	var _sp_p1_tex: Texture2D = load(GameState.player_portraits[0])
+	var _sp_p1_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[0])
 	if _sp_p1_tex:
 		var _sz := _sp_p1_tex.get_size()
 		var _pw: float = SP_PORTRAIT_REF_H * _sz.x / _sz.y if _sz.y > 0.0 else 220.0
@@ -406,7 +406,7 @@ func _build_ui() -> void:
 		add_child(_p1p)
 		_sp_p1_portrait = _p1p
 
-	var _sp_p2_tex: Texture2D = load(GameState.player_portraits[1])
+	var _sp_p2_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[1])
 	if _sp_p2_tex:
 		var _sz := _sp_p2_tex.get_size()
 		var _pw: float = SP_PORTRAIT_REF_H * _sz.x / _sz.y if _sz.y > 0.0 else 220.0
@@ -570,7 +570,7 @@ func _build_union_panel(parent: Control) -> void:
 	parent.add_child(panel)
 
 	var hdr := Label.new()
-	hdr.text = "POSSIBLE UNIONS  —  tap to highlight zone"
+	hdr.text = "POSSIBLE UNIONS  —  tap to highlight zone, hold for card info"
 	hdr.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	hdr.offset_top    = 6.0
 	hdr.offset_bottom = 28.0
@@ -807,7 +807,10 @@ func _refresh_gallery() -> void:
 func _refresh_union_panel() -> void:
 	for ch in _union_flow.get_children():
 		ch.queue_free()
-	for u: UnionData in _find_possible_unions(_chars_remaining):
+	var deck: DeckData = _active_setup_deck()
+	if deck == null:
+		return
+	for u: UnionData in _find_possible_unions(deck.characters):
 		_union_flow.add_child(_make_union_tile(u))
 
 func _find_possible_unions(char_names: Array) -> Array:
@@ -836,14 +839,26 @@ func _make_union_tile(u: UnionData) -> Control:
 	else:
 		img.modulate = Color(0.25, 0.90, 1.00)
 	var captured_u: UnionData = u
+	img.mouse_filter = Control.MOUSE_FILTER_STOP
+	var want_detail_ref: Array = [false]
 	img.gui_input.connect(func(ev: InputEvent) -> void:
 		if ev is InputEventMouseButton:
 			var mbe := ev as InputEventMouseButton
-			if mbe.button_index == MOUSE_BUTTON_LEFT and mbe.pressed:
-				if mbe.double_click:
-					CardDetailOverlay.open(self, captured_u.card_name, "union")
+			if mbe.button_index == MOUSE_BUTTON_LEFT:
+				if mbe.pressed:
+					if mbe.double_click:
+						want_detail_ref[0] = false
+						CardDetailOverlay.open(self, captured_u.card_name, "union")
+					else:
+						want_detail_ref[0] = true
+						img.get_tree().create_timer(0.5).timeout.connect(func() -> void:
+							if want_detail_ref[0]:
+								want_detail_ref[0] = false
+								CardDetailOverlay.open(self, captured_u.card_name, "union"))
 				else:
-					_start_zone_flash(captured_u))
+					if want_detail_ref[0]:
+						want_detail_ref[0] = false
+						_start_zone_flash(captured_u))
 	wrap.add_child(img)
 
 	var lbl := Label.new()
@@ -1048,7 +1063,7 @@ func _active_setup_deck() -> DeckData:
 func _formation_bar_left_offset() -> float:
 	if current_setup_player != 0:
 		return FORMATION_BAR_BASE_LEFT
-	var tex: Texture2D = load(GameState.player_portraits[0])
+	var tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[0])
 	if tex == null:
 		return FORMATION_BAR_BASE_LEFT
 	var sz := tex.get_size()

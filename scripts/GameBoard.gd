@@ -41,6 +41,8 @@ var ai_player: AIPlayer
 var ai_player_0: AIPlayer = null   # AI_VS_AI mode only: controls player 0
 var _active_ai: AIPlayer = null    # whichever AI is currently taking a turn
 var _vs_ai_deck: Variant = null    # captured before new_game() clears GameState.battle_ai_deck
+var _vs_ai_player_deck: Variant = null
+var _vs_ai_player_forced_cells: Array = []
 
 # Player portrait illustration nodes
 var _p1_portrait: TextureRect = null
@@ -119,6 +121,22 @@ var _p2_crystal_icon: TextureRect = null
 var _prev_crystals: Array[int]    = [3000, 3000]
 var _crystal_anim_queue: Array = []
 var _crystal_anim_processing: bool = false
+const CRYSTAL_TICK_BASE_SEC: float = 0.90
+const CRYSTAL_TICK_PER_UNIT_SEC: float = 0.022
+const CRYSTAL_TICK_MAX_SEC: float = 2.40
+const CRYSTAL_TICK_SFX_MAX: int = 18
+const CRYSTAL_TICK_SFX_INTERVAL_SEC: float = 0.1
+const CRYSTAL_TICK_SFX_WINDOW_SEC: float = CRYSTAL_TICK_SFX_MAX * CRYSTAL_TICK_SFX_INTERVAL_SEC
+var _crystal_tick_sfx_window_start: Array[float] = [-1.0, -1.0]
+var _crystal_tick_sfx_window_count: Array[int] = [0, 0]
+
+func _crystal_tick_sfx_slots_available(player_index: int) -> int:
+	var idx: int = clampi(player_index, 0, 1)
+	var now: float = Time.get_ticks_msec() * 0.001
+	if _crystal_tick_sfx_window_start[idx] < 0.0 \
+			or now - _crystal_tick_sfx_window_start[idx] >= CRYSTAL_TICK_SFX_WINDOW_SEC:
+		return CRYSTAL_TICK_SFX_MAX
+	return maxi(0, CRYSTAL_TICK_SFX_MAX - _crystal_tick_sfx_window_count[idx])
 var _almost_win_bgm_active: bool  = false   # latches true once bgm_almost_win starts
 
 # Attack count labels (shown below each player's crystal display)
@@ -135,6 +153,7 @@ var _portrait_last_tap: Array[float] = [0.0, 0.0]  # last tap timestamp per play
 
 # Tax confirmation overlay
 var _tax_confirm_panel: Control = null
+var _end_turn_request_busy: bool = false
 
 # Peek (reveal preview) buttons
 var _p1_reveal_btn: TextureButton = null
@@ -369,8 +388,10 @@ func _ready() -> void:
 	game_over_panel.visible = false
 	mode_panel.visible = false
 	action_panel.visible = false
-	# Capture before new_game() clears it
+	# Capture before new_game() clears VS AI pre-battle config from VsAIConfig.
 	_vs_ai_deck = GameState.battle_ai_deck
+	_vs_ai_player_deck = GameState.battle_player_deck
+	_vs_ai_player_forced_cells = GameState.battle_player_forced_cells.duplicate(true)
 	_start_game()
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
 		AIvsAIManager.start_logging(self)
@@ -1036,7 +1057,7 @@ func _build_portraits() -> void:
 	# so the inner edge (right for P1, left for P2) is never cropped.
 	const REF_H: float = 720.0
 
-	var p1_tex: Texture2D = load(GameState.player_portraits[0])
+	var p1_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[0])
 	if p1_tex:
 		var sz := p1_tex.get_size()
 		var p1_scale: float = maxf(0.1, GameState.portrait_p1_size)
@@ -1075,7 +1096,7 @@ func _build_portraits() -> void:
 		#			_on_portrait_tapped(0)
 		#		_portrait_last_tap[0] = now)
 
-	var p2_tex: Texture2D = load(GameState.player_portraits[1])
+	var p2_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[1])
 	if p2_tex:
 		var sz := p2_tex.get_size()
 		var p2_scale: float = maxf(0.1, GameState.portrait_p2_size)
@@ -1143,6 +1164,10 @@ func _start_game() -> void:
 		GameState._vn_battle_pending = false
 	else:
 		GameState.new_game(GameState.game_mode)
+		if _vs_ai_player_deck != null:
+			GameState.battle_player_deck = _vs_ai_player_deck
+		if not _vs_ai_player_forced_cells.is_empty():
+			GameState.battle_player_forced_cells = _vs_ai_player_forced_cells.duplicate(true)
 	# Apply campaign-supplied player names if VNPlayer set them
 	if GameState.campaign_player_names.size() == 2:
 		var n1: String = GameState.campaign_player_names[0]
@@ -2283,7 +2308,8 @@ func _update_tutorial_hud_lock() -> void:
 		GameState.Phase.SETUP_P2, GameState.Phase.GAME_OVER
 	]
 	var show_opts: bool = in_battle and not TutorialBattleManager.should_hide_options_btn()
-	var show_end: bool = in_battle and TutorialBattleManager.should_allow_end_turn_btn()
+	var show_end: bool = in_battle and TutorialBattleManager.should_allow_end_turn_btn() \
+			and GameState.current_phase != GameState.Phase.BATTLE
 	if selection_state == SelectionState.CONFIRMING_ATTACK \
 			or (_attack_confirm_panel != null and _attack_confirm_panel.visible):
 		show_end = false
@@ -3139,9 +3165,9 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 			for r: int in range(GameState.GRID_SIZE):
 				for c: int in range(GameState.GRID_SIZE):
 					var card: GameState.CardInstance = GameState.get_card(foe, r, c)
-					if card.card_type == "character":
+					if card.card_type == "character" and card.face_up:
 						GameState.apply_unit_effect_flag(foe, r, c, "venom")
-			GameState.post_message("%s: Venom on all opponent units!" % u.card_name)
+			GameState.post_message("%s: Venom on all opponent face-up characters!" % u.card_name)
 		CharacterData.AbilityType.UNION_SUMMON_REVIVE_MATCH:
 			await _begin_union_revive_match(player, u)
 		CharacterData.AbilityType.UNION_SUMMON_COSMIC_ANIMA_IMMUNITY:
@@ -5003,7 +5029,7 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 	var coin_p1_port: TextureRect = null
 	var coin_p2_port: TextureRect = null
 
-	var _p1_tex: Texture2D = load(GameState.player_portraits[0])
+	var _p1_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[0])
 	if _p1_tex:
 		var sz := _p1_tex.get_size()
 		var _p1h: float = REF_H * maxf(0.1, GameState.portrait_p1_size)
@@ -5025,7 +5051,7 @@ func _show_coin_flip_and_start(first_player: int) -> void:
 		coin_p1_port.modulate      = GREY_MODULATE
 		overlay.add_child(coin_p1_port)
 
-	var _p2_tex: Texture2D = load(GameState.player_portraits[1])
+	var _p2_tex: Texture2D = GameState.load_portrait_texture(GameState.player_portraits[1])
 	if _p2_tex:
 		var sz := _p2_tex.get_size()
 		var _p2h: float = REF_H * maxf(0.1, GameState.portrait_p2_size)
@@ -5225,10 +5251,27 @@ func _process_crystal_anim_queue() -> void:
 		var job: Dictionary = _crystal_anim_queue.pop_front()
 		await _run_crystal_change_animation(int(job["player"]), int(job["new_amount"]))
 		_update_union_suggest_button()
-		GameState.complete_crystal_animation()
-		if turn_manager != null:
-			turn_manager.crystal_animation_done.emit()
 	_crystal_anim_processing = false
+
+func _notify_crystal_animation_complete() -> void:
+	GameState.complete_crystal_animation()
+	if turn_manager != null:
+		turn_manager.crystal_animation_done.emit()
+
+## Waits for burst, tick, and post-tick hold — used before end-game reveal/shake.
+func _wait_crystal_display_finished() -> void:
+	while _crystal_anim_processing:
+		await get_tree().process_frame
+	await GameState.wait_crystal_animation()
+
+func _crystal_tick_duration(old_amount: int, new_amount: int) -> float:
+	var delta := absi(new_amount - old_amount)
+	if delta <= 0:
+		return 0.0
+	return clampf(
+		CRYSTAL_TICK_BASE_SEC + float(delta) * CRYSTAL_TICK_PER_UNIT_SEC,
+		CRYSTAL_TICK_BASE_SEC,
+		CRYSTAL_TICK_MAX_SEC)
 
 func _run_crystal_change_animation(player_index: int, new_amount: int) -> void:
 	var old_amount := _prev_crystals[player_index]
@@ -5236,18 +5279,21 @@ func _run_crystal_change_animation(player_index: int, new_amount: int) -> void:
 	if new_amount < old_amount:
 		await _play_crystal_burst(player_index, false)
 		await _tick_crystal(player_index, old_amount, new_amount)
+		_notify_crystal_animation_complete()
 		await get_tree().create_timer(1.0).timeout
 		if new_amount > 0:
 			_check_almost_win_bgm()
 	elif new_amount > old_amount:
 		await _play_crystal_burst(player_index, true)
 		await _tick_crystal(player_index, old_amount, new_amount)
+		_notify_crystal_animation_complete()
 		await get_tree().create_timer(1.0).timeout
 	else:
 		var bottom_lbl := _p1_bottom_crystal if player_index == 0 else _p2_bottom_crystal
 		if bottom_lbl != null:
 			bottom_lbl.text = str(new_amount)
 		await get_tree().process_frame
+		_notify_crystal_animation_complete()
 
 func _update_crystals(player_index: int, amount: int) -> void:
 	_prev_crystals[player_index] = amount
@@ -5260,6 +5306,9 @@ func _play_crystal_burst(player_index: int, is_gain: bool) -> void:
 	var icon := _p1_crystal_icon if player_index == 0 else _p2_crystal_icon
 	if icon == null or not is_instance_valid(icon):
 		return
+	var icon_wrap := icon.get_parent()
+	if icon_wrap == null:
+		return
 	var asp := AudioStreamPlayer.new()
 	asp.stream = SFXManager.SFX_CRYSTAL_GAIN if is_gain else SFX_CRYSTAL
 	asp.bus = "SFX"
@@ -5270,14 +5319,15 @@ func _play_crystal_burst(player_index: int, is_gain: bool) -> void:
 	burst.texture = icon.texture
 	burst.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	burst.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	burst.custom_minimum_size = icon.custom_minimum_size
-	burst.size = icon.size
+	var burst_size: Vector2 = icon.size
+	if burst_size.x <= 0.0 or burst_size.y <= 0.0:
+		burst_size = icon.get_rect().size
+	burst.size = burst_size
+	burst.position = icon.position
+	burst.pivot_offset = burst_size * 0.5
 	burst.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	burst.z_index = 10
-	var gpos := icon.get_global_rect().position
-	burst.position = gpos
-	burst.pivot_offset = icon.custom_minimum_size * 0.5
-	add_child(burst)
+	icon_wrap.add_child(burst)
 	var t := create_tween()
 	t.tween_property(burst, "scale", Vector2(2.4, 2.4), 0.42).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
 	t.parallel().tween_property(burst, "modulate:a", 0.0, 0.42).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
@@ -5285,15 +5335,43 @@ func _play_crystal_burst(player_index: int, is_gain: bool) -> void:
 	burst.queue_free()
 
 # Tick animation: smoothly counts the label from old to new (up or down)
+func _play_crystal_tick_sfx(player_index: int) -> bool:
+	var idx: int = clampi(player_index, 0, 1)
+	var now: float = Time.get_ticks_msec() * 0.001
+	if _crystal_tick_sfx_window_start[idx] < 0.0 \
+			or now - _crystal_tick_sfx_window_start[idx] >= CRYSTAL_TICK_SFX_WINDOW_SEC:
+		_crystal_tick_sfx_window_start[idx] = now
+		_crystal_tick_sfx_window_count[idx] = 0
+	if _crystal_tick_sfx_window_count[idx] >= CRYSTAL_TICK_SFX_MAX:
+		return false
+	_crystal_tick_sfx_window_count[idx] += 1
+	SFXManager.play(SFXManager.SFX_TICK)
+	return true
+
 func _tick_crystal(player_index: int, old_amount: int, new_amount: int) -> void:
 	var lbl := _p1_bottom_crystal if player_index == 0 else _p2_bottom_crystal
 	if lbl == null:
 		return
+	if old_amount == new_amount:
+		lbl.text = str(new_amount)
+		return
+	var duration := _crystal_tick_duration(old_amount, new_amount)
+	var slots: int = _crystal_tick_sfx_slots_available(player_index)
+	var fits_duration: int = int(duration / CRYSTAL_TICK_SFX_INTERVAL_SEC) + 1 if duration > 0.0 else 1
+	var plays: int = mini(slots, mini(CRYSTAL_TICK_SFX_MAX, fits_duration))
+	var tick_sfx := func() -> void:
+		_play_crystal_tick_sfx(player_index)
 	var t := create_tween()
+	if plays > 0:
+		t.set_parallel(true)
 	t.tween_method(
-		func(v: float) -> void: lbl.text = str(int(v)),
-		float(old_amount), float(new_amount), 0.38)
+		func(v: float) -> void: lbl.text = str(int(round(v))),
+		float(old_amount), float(new_amount), duration) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	for i in range(plays):
+		t.tween_callback(tick_sfx).set_delay(CRYSTAL_TICK_SFX_INTERVAL_SEC * float(i))
 	await t.finished
+	lbl.text = str(new_amount)
 
 func _on_dice_rolled(result: int) -> void:
 	dice_display.text = "[%d]" % result
@@ -5822,9 +5900,28 @@ func _on_cancel_btn() -> void:
 # ─────────────────────────────────────────────────────────────
 const TAX_BASE: int = 50
 
-func _current_skip_tax() -> int:
+func _current_skip_tax(player: int = -1) -> int:
+	var p: int = player if player >= 0 else GameState.current_player
 	# Doubles each consecutive no-attack turn: 50, 100, 200, 400, 800, 1600 …
-	return TAX_BASE << GameState.skip_counts[GameState.current_player]
+	return TAX_BASE << GameState.skip_counts[p]
+
+func _player_has_attacked_this_turn(player: int) -> bool:
+	# Mid-reckoning: attack committed but attacked_this_turn / attacks_remaining not updated yet.
+	if GameState.current_phase == GameState.Phase.BATTLE and GameState.current_player == player:
+		return true
+	if GameState.attacks_remaining < 2:
+		return true
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			var card: GameState.CardInstance = GameState.get_card(player, r, c)
+			if card.card_type == "character" and card.attacked_this_turn:
+				return true
+	return false
+
+func _dismiss_tax_confirm_panel() -> void:
+	if _tax_confirm_panel != null:
+		_tax_confirm_panel.queue_free()
+		_tax_confirm_panel = null
 
 ## AI end-turn handler — mirrors _on_end_turn_requested but auto-pays the skip tax.
 func _on_ai_end_turn() -> void:
@@ -5832,16 +5929,7 @@ func _on_ai_end_turn() -> void:
 		return
 	_hide_thinking_bubble()
 	var player := GameState.current_player
-	var has_attacked := GameState.attacks_remaining < 2
-	if not has_attacked:
-		for r in range(GameState.GRID_SIZE):
-			for c in range(GameState.GRID_SIZE):
-				var card: GameState.CardInstance = GameState.get_card(player, r, c)
-				if card.card_type == "character" and card.attacked_this_turn:
-					has_attacked = true
-					break
-			if has_attacked:
-				break
+	var has_attacked := _player_has_attacked_this_turn(player)
 	var _tax_free: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 		and "tax_free_zone" in GameState.active_dungeon_modifiers
 	if not has_attacked and GameState.can_player_attack(player) and not _tax_free:
@@ -5854,43 +5942,45 @@ func _on_ai_end_turn() -> void:
 	turn_manager.end_attacks_early()
 
 func _on_end_turn_requested() -> void:
+	if _end_turn_request_busy:
+		return
 	if TutorialBattleManager.is_active and not TutorialBattleManager.should_allow_end_turn_btn():
 		return
+	if _is_ai_turn():
+		return
+	if GameState.current_phase in [GameState.Phase.BATTLE, GameState.Phase.GAME_OVER]:
+		return
+	var requesting_player: int = GameState.current_player
+	_end_turn_request_busy = true
 	SFXManager.play(SFXManager.SFX_BTN)
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.report_action("end_turn_tap", {})
 	await get_tree().create_timer(0.5).timeout
+	_end_turn_request_busy = false
 	if GameState.current_phase == GameState.Phase.GAME_OVER:
 		return
-	# Check if this player attacked at all this turn.
-	# Two sources: surviving characters with attacked_this_turn=true, OR
-	# attacks_remaining dropped below 2 (covers destroyed attackers whose flag is gone).
-	var player := GameState.current_player
-	var has_attacked := GameState.attacks_remaining < 2
-	if not has_attacked:
-		for r in range(GameState.GRID_SIZE):
-			for c in range(GameState.GRID_SIZE):
-				var card: GameState.CardInstance = GameState.get_card(player, r, c)
-				if card.card_type == "character" and card.attacked_this_turn:
-					has_attacked = true
-					break
-			if has_attacked:
-				break
+	# Ignore stale clicks after the 0.5s debounce (turn advanced, reckoning, or AI started).
+	if _is_ai_turn() or GameState.current_player != requesting_player:
+		return
+	if GameState.current_phase == GameState.Phase.BATTLE:
+		return
+	var has_attacked := _player_has_attacked_this_turn(requesting_player)
 	var _tax_free: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 		and "tax_free_zone" in GameState.active_dungeon_modifiers
-	if not has_attacked and GameState.can_player_attack(player) and not _tax_free:
-		_show_tax_confirm()
+	if not has_attacked and GameState.can_player_attack(requesting_player) and not _tax_free:
+		_show_tax_confirm(requesting_player)
 	else:
 		turn_manager.end_attacks_early()
 
-func _show_tax_confirm() -> void:
+func _show_tax_confirm(player: int) -> void:
 	SFXManager.play(SFXManager.SFX_POPUP)
 	if _tax_confirm_panel != null:
 		return
+	if _is_ai_turn() or GameState.current_player != player:
+		return
 
-	var player := GameState.current_player
 	var skips: int = GameState.skip_counts[player]
-	var tax := _current_skip_tax()
+	var tax := _current_skip_tax(player)
 	var is_consecutive := skips >= 1
 
 	var panel := PanelContainer.new()
@@ -6049,6 +6139,7 @@ func _enter_mode_select() -> void:
 		_toggle_reveal_preview(cp)
 		_apply_observer_peek()
 	if _is_ai_turn() and GameState.current_phase != GameState.Phase.GAME_OVER:
+		_dismiss_tax_confirm_panel()
 		if _end_turn_btn:
 			_end_turn_btn.visible = false
 		if _options_btn:
@@ -6143,6 +6234,15 @@ func _on_phase_changed(phase: GameState.Phase) -> void:
 			_highlight_attackable_chars()
 			_update_tutorial_hud_lock()
 			_update_end_turn_blink()
+
+		GameState.Phase.BATTLE:
+			mode_panel.visible = false
+			end_attack_btn.visible = false
+			if _end_turn_btn:
+				_end_turn_btn.visible = false
+				_end_turn_btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_dismiss_tax_confirm_panel()
+			_update_tutorial_hud_lock()
 
 		GameState.Phase.GAME_OVER:
 			mode_panel.visible = false
@@ -9323,8 +9423,9 @@ func _on_game_over(winner: int) -> void:
 		_attack_confirm_panel.visible = false
 	dice_display.text = ""
 
-	# ── 0. Brief pause so the crystal-hit-zero moment lands before the chaos ──
+	# ── 0. Let the final crystal burst + tick finish, then a brief beat ─────
 	# Music is NOT stopped here — it carries through the pause and is handled at shake start.
+	await _wait_crystal_display_finished()
 	await get_tree().create_timer(1.2).timeout
 
 	# ── 1. Flip-reveal all face-down cards (with screen shake) ───────────────
@@ -9528,6 +9629,9 @@ func _grant_vn_battle_loss_rewards() -> void:
 	GameState.vn_battle_loss_rewards.clear()
 	GameState.vn_battle_loss_reward_once = ""
 
+func _apply_endgame_serif_font(control: Control, weight: int = 400) -> void:
+	control.add_theme_font_override("font", FontManager.make_font("display_serif", weight))
+
 func _show_endgame_screen(winner: int) -> void:
 	_hide_card_context()
 	var mode := GameState.game_mode
@@ -9639,6 +9743,7 @@ func _show_endgame_screen(winner: int) -> void:
 		go_lbl.offset_top   = -160.0
 		go_lbl.offset_bottom =  60.0
 		go_lbl.add_theme_font_size_override("font_size", 96)
+		_apply_endgame_serif_font(go_lbl, 700)
 		go_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 1.0))
 		go_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
 		go_lbl.add_theme_constant_override("shadow_offset_x", 4)
@@ -9661,6 +9766,7 @@ func _show_endgame_screen(winner: int) -> void:
 		title_lbl.offset_top   = -80.0
 		title_lbl.offset_bottom =  40.0
 		title_lbl.add_theme_font_size_override("font_size", 52)
+		_apply_endgame_serif_font(title_lbl, 600)
 		title_lbl.add_theme_color_override("font_color", Color(1.0, 0.92, 0.55))
 		overlay.add_child(title_lbl)
 
@@ -9708,6 +9814,7 @@ func _show_endgame_screen(winner: int) -> void:
 		reason_lbl.offset_top    =  44.0
 		reason_lbl.offset_bottom =  80.0
 		reason_lbl.add_theme_font_size_override("font_size", 18)
+		_apply_endgame_serif_font(reason_lbl, 400)
 		reason_lbl.add_theme_color_override("font_color",
 			Color(0.72, 0.88, 1.0, 0.90) if is_win_screen else Color(1.0, 0.72, 0.60, 0.85))
 		reason_lbl.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.7))
@@ -9727,6 +9834,7 @@ func _show_endgame_screen(winner: int) -> void:
 	hint_lbl.offset_top    =  220.0
 	hint_lbl.offset_bottom =  270.0
 	hint_lbl.add_theme_font_size_override("font_size", 24)
+	_apply_endgame_serif_font(hint_lbl, 400)
 	hint_lbl.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0, 0.6))
 	hint_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	overlay.add_child(hint_lbl)
@@ -9769,6 +9877,7 @@ func _show_endgame_screen(winner: int) -> void:
 		choice_lbl.offset_top    =  170.0
 		choice_lbl.offset_bottom =  210.0
 		choice_lbl.add_theme_font_size_override("font_size", 26)
+		_apply_endgame_serif_font(choice_lbl, 600)
 		choice_lbl.add_theme_color_override("font_color", Color(1.0, 0.82, 0.72, 0.95))
 		choice_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		overlay.add_child(choice_lbl)
@@ -9848,6 +9957,7 @@ func _make_defeat_choice_button(label_text: String) -> Button:
 	btn.text = label_text
 	btn.custom_minimum_size = Vector2(440, 52)
 	btn.add_theme_font_size_override("font_size", 22)
+	_apply_endgame_serif_font(btn, 600)
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = Color(0.08, 0.1, 0.18, 0.92)
 	normal.border_width_left = 2

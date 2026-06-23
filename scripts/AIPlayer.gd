@@ -59,6 +59,8 @@ var _int_regex: RegEx = RegEx.new()
 
 func _ready() -> void:
 	_int_regex.compile("\\d+")
+	if not GameState.union_summoned.is_connected(_on_opponent_union_summoned):
+		GameState.union_summoned.connect(_on_opponent_union_summoned)
 
 signal ai_mode_chosen(mode: GameState.TurnMode)
 signal ai_attack_chosen(attacker_pos: Vector2i, target_pos: Vector2i)
@@ -72,6 +74,7 @@ signal ai_bluff(player: int, row: int, col: int, emoticon: String)
 # Per-duel state
 var _ai_turn_count: int = 0   # incremented at start of each decide_turn call
 var _union_used:    bool = false
+var _opponent_union_summoned: bool = false  # set when the other player summons a union
 var _pending_death_bluff: Vector2i = Vector2i(-1, -1)  # set when AI card dies; flushed on next AI turn
 var _aborted_attackers_this_turn: Array = []  # positions excluded after attack_aborted this turn
 var _last_chosen_attacker_pos: Vector2i = Vector2i(-1, -1)
@@ -105,6 +108,20 @@ var _ai_kill_count:  int     = 0             # kills scored this game
 func _game_is_over() -> bool:
 	return GameState.current_phase == GameState.Phase.GAME_OVER
 
+func _on_opponent_union_summoned(player: int, _union_label: String, _material_labels: Array) -> void:
+	if player != player_index:
+		_opponent_union_summoned = true
+
+## Base union-summon attempt chance for this AI turn (0.0–1.0).
+func _union_summon_chance() -> float:
+	if CardE2ERunner.is_active():
+		return 1.0
+	var chance: float = minf(0.90, 0.15 + (_ai_turn_count - 1) * 0.30)
+	if _opponent_union_summoned and _ai_turn_count <= 3:
+		var less_hesitation: Array[float] = [0.30, 0.25, 0.20]
+		chance = minf(0.90, chance + less_hesitation[_ai_turn_count - 1])
+	return chance
+
 
 # Called at the start of each AI action opportunity (start of turn, after each attack, after tech).
 func decide_turn() -> void:
@@ -125,15 +142,16 @@ func decide_turn() -> void:
 			return
 
 		# Rule 2: Union summon — hesitation eases over successive AI turns.
-		# Turn 1: 10%, Turn 2: 35%, Turn 3: 60%, Turn 4+: 85%
+		# Turn 1: 15%, Turn 2: 45%, Turn 3: 75%, Turn 4+: 90%
+		# If the opponent already summoned a union: less hesitation on turns 1–3
+		# (−30%, −25%, −20% respectively — added to summon chance, capped at 90%).
 		# In E2E mode all players summon immediately (100%) so unions are guaranteed.
 		# Exception: P0 skips unions entirely in non-union E2E scenarios so the highlight
 		# card is never accidentally consumed as union material.
 		var _e2e_no_union: bool = CardE2ERunner.is_active() and player_index == 0 \
 				and not CardE2ERunner.is_union_test()
 		if not _e2e_no_union and not _trailer_offensive and not _union_used and GameState.battle_ai_union_enabled:
-			var chance: float = 1.0 if CardE2ERunner.is_active() \
-					else minf(0.85, 0.10 + (_ai_turn_count - 1) * 0.25)
+			var chance: float = _union_summon_chance()
 			if randf() < chance:
 				var unions: Array = _get_available_unions()
 				if not unions.is_empty():
@@ -1466,6 +1484,7 @@ func _solve_materials(u: UnionData, zone_cells: Array) -> Array:
 func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -> Array:
 	_ai_turn_count = 0
 	_union_used    = false
+	_opponent_union_summoned = false
 	_ai_kill_count = 0
 	_pick_personalities()
 

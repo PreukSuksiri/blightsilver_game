@@ -103,7 +103,10 @@ class CardInstance:
 	var field_aura_def_bonus: int = 0  # passive DEF from allied field auras (e.g. Gamma Mermaid mutagen)
 	var temp_atk_bonus: int = 0
 	var temp_def_bonus: int = 0
-	var carry_def_bonus: int = 0   # DEF bonus that survives end-of-turn clear; wiped at start of player's own next turn
+	var carry_def_bonus: int = 0   # Garrison-style DEF; wiped at start of owner's next turn
+	var trap_carry_def_bonus: int = 0  # Trap DEF (Hard Scale); cleared after attacker's next turn ends
+	var trap_carry_def_clear_attacker: int = -1
+	var trap_carry_def_ends_after_attacker_turns: int = 0
 	var carry_atk_debuff: int = 0  # ATK debuff until start of owner's next turn (e.g. Pepper Spray)
 	var atk_def_swapped: bool = false  # Cursed Reflection: effective ATK/DEF swapped until defender's turn ends
 	var atk_def_swap_clear_on_player_end: int = -1
@@ -165,7 +168,8 @@ class CardInstance:
 		return base
 
 	func _calc_effective_def() -> int:
-		var base: int = max(0, current_def + perm_def_bonus + temp_def_bonus + carry_def_bonus + field_aura_def_bonus)
+		var base: int = max(0, current_def + perm_def_bonus + temp_def_bonus \
+			+ carry_def_bonus + trap_carry_def_bonus + field_aura_def_bonus)
 		if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
 			var mods: Array = GameState.active_dungeon_modifiers
 			if "monster_overload" in mods:
@@ -192,6 +196,17 @@ class CardInstance:
 		temp_atk_bonus = 0
 		temp_def_bonus = 0
 		atk_debuff = 0
+
+	## Hard Scale: +DEF on trapper units until the attacking player's next turn ends.
+	func apply_trap_carry_def(amount: int, attacker: int, ends_after_attacker_turns: int = 2) -> void:
+		trap_carry_def_bonus += amount
+		trap_carry_def_clear_attacker = attacker
+		trap_carry_def_ends_after_attacker_turns = ends_after_attacker_turns
+
+	func clear_trap_carry_def() -> void:
+		trap_carry_def_bonus = 0
+		trap_carry_def_clear_attacker = -1
+		trap_carry_def_ends_after_attacker_turns = 0
 
 	func apply_atk_def_swap_until_player_turn_end(clear_when_player_ends: int) -> void:
 		atk_def_swapped = true
@@ -241,6 +256,16 @@ var player_portraits: Array[String] = [
 	"res://assets/textures/ui/portraits/profile_player_1_default.png",
 	"res://assets/textures/ui/portraits/profile_player_2_default.png"
 ]
+
+static func load_portrait_texture(path: String) -> Texture2D:
+	if path.is_empty():
+		return null
+	if path.begins_with("res://"):
+		return load(path) as Texture2D
+	var img := Image.load_from_file(path)
+	if img == null or img.is_empty():
+		return null
+	return ImageTexture.create_from_image(img)
 
 # Campaign-specific state (only meaningful when game_mode == CAMPAIGN)
 var campaign_node_id: String = ""

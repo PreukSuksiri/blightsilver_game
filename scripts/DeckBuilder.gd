@@ -1087,12 +1087,7 @@ func _make_union_right_tile(u: UnionData) -> Control:
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
 	tile.tooltip_text = "%s  ATK %d / DEF %d  %d◆" % [u.card_name, u.base_atk, u.base_def, u.summon_cost]
-	var lp_union := Timer.new()
-	lp_union.one_shot = true
-	lp_union.wait_time = 0.5
-	tile.add_child(lp_union)
-	lp_union.timeout.connect(func() -> void:
-		CardDetailOverlay.open(self, u.card_name, "union"))
+	var want_detail := false
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
 			return
@@ -1100,10 +1095,19 @@ func _make_union_right_tile(u: UnionData) -> Control:
 		if mb.button_index != MOUSE_BUTTON_LEFT:
 			return
 		if mb.pressed:
-			lp_union.start()
-			_show_preview("union", u.card_name)
+			if mb.double_click:
+				want_detail = false
+				CardDetailOverlay.open(self, u.card_name, "union")
+			else:
+				want_detail = true
+				tile.get_tree().create_timer(0.5).timeout.connect(func() -> void:
+					if want_detail:
+						want_detail = false
+						CardDetailOverlay.open(self, u.card_name, "union"))
 		else:
-			lp_union.stop())
+			if want_detail:
+				want_detail = false
+				_show_preview("union", u.card_name))
 	return tile
 
 # ── Prologue lock overlay ────────────────────────────────────
@@ -1196,6 +1200,7 @@ func _open_formation_editor() -> void:
 	_fe_refresh_if_open()
 
 	if _fe_overlay != null and is_instance_valid(_fe_overlay):
+		_fe_stop_zone_flash()
 		_fe_overlay.queue_free()
 
 	_fe_overlay = Control.new()
@@ -1453,6 +1458,7 @@ func _fe_show_unsaved_warning() -> void:
 	dlg.close_requested.connect(func() -> void: dlg.queue_free())
 
 func _fe_close_overlay() -> void:
+	_fe_stop_zone_flash()
 	_fe_hide_drag_ghost()
 	_fe_saved_snapshot = ""
 	if _fe_overlay != null and is_instance_valid(_fe_overlay):
@@ -1512,7 +1518,7 @@ func _fe_build_union_panel(parent: Control) -> void:
 	parent.add_child(panel)
 
 	var hdr := Label.new()
-	hdr.text = "POSSIBLE UNIONS  —  tap to highlight zone"
+	hdr.text = "POSSIBLE UNIONS  —  tap to highlight zone, hold for card info"
 	hdr.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	hdr.offset_top = 6.0; hdr.offset_bottom = 28.0
 	hdr.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -1666,9 +1672,12 @@ func _fe_stop_zone_flash() -> void:
 	if _fe_flash_tween != null and _fe_flash_tween.is_valid():
 		_fe_flash_tween.kill()
 	_fe_flash_tween = null
-	for cell: FEGridCell in _fe_flash_cells:
+	for cell_v: Variant in _fe_flash_cells:
+		if not is_instance_valid(cell_v):
+			continue
+		var cell := cell_v as FEGridCell
 		var flash_cr: ColorRect = cell.get_child(0) as ColorRect
-		if flash_cr != null:
+		if flash_cr != null and is_instance_valid(flash_cr):
 			flash_cr.color.a = 0.0
 	_fe_flash_cells.clear()
 
