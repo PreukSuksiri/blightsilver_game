@@ -1,0 +1,136 @@
+=== Battle of Janice's Essential Oils ===
+Battle started: 2026-06-23 08:40:20.921
+Game Session of Root Beer (started 2026-06-23 08:37:14.570)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.578] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[00:17.235] Revealed: P0 (1,2) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:17.258] Revealed: P1 (1,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:17.258] Dice rolled: 4
+[00:18.480] MSG: Ostrich Cannon wins!
+[00:22.960] Crystals: P1 5000 → 4700 (-300)  [battle]
+[00:25.804] MSG: Ostrich Cannon locks itself until next turn.
+[00:27.145] Attack P0(1,2)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(1,1)"Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}  Dice=4  ATK=60 vs DEF=5  → WIN
+[00:27.146] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} badge=60 ATK pill=60 DEF pill=30 mod=+ATK 0 (60+0=60)
+[00:27.146] Reckoning overlay: P1 "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos} badge=5 ATK pill=45 DEF pill=5 mod=+DEF 0 (5+0=5)
+[00:27.146] Anim: 3A  △ P1(1,1)
+[00:27.146] Card destroyed  P1 (1,1) "Skeleton Lancer" {Unit ATK45 DEF5 | cost 300 | affinity Chaos}
+[00:31.163] Revealed: P0 (2,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:31.163] Revealed: P1 (1,2) "Brainwash" {cost 1500}
+[00:31.163] Dice rolled: 3
+[00:32.399] MSG: Trap triggered: Brainwash!
+[00:35.520] Crystals: P1 4700 → 3200 (-1500)  [trap cost]
+[00:38.367] Target prompt: "Brainwash: Choose one of your own allies as the attack target."  filter=own_any_as_target
+[00:42.180] Revealed: P0 (3,1) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:42.181] MSG: Brainwash: Canyon Warg attacks Dystopian Cultist!
+[00:42.194] MSG: Canyon Warg wins!
+[00:46.669] Crystals: P0 5000 → 4450 (-550)  [battle]
+[00:49.525] Attack P0(2,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P1(3,1)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=3  ATK=70 vs DEF=40  → WIN
+[00:49.525] Reckoning overlay: P0 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=70 ATK pill=70 DEF pill=30 mod=+ATK 0 (70+0=70)
+[00:49.525] Reckoning overlay: P1 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:49.525] Anim: 3A  △ P1(3,1)
+[00:49.525] Card destroyed  P1 (3,1) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:50.872] Attack P0(2,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P1(1,2)"Brainwash" {cost 1500}  Dice=3  → Unit vs Trap
+[00:50.872] Reckoning overlay: P0 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=70 ATK pill=70 DEF pill=30 mod=+ATK 0 (70+0=70)
+[00:50.872] Anim: 3D  (attacker survives)
+[00:53.043] Turn ended  P0  |  Crystals P0=4450 P1=3200
+
+--- Turn 2  |  Player 1  |  Crystals P0=4450 P1=3200 ---
+[00:53.645] Mode selected P1: TECH
+[00:53.945] Crystals: P1 3200 → 2600 (-600)  [tech cost]
+[00:56.773] Tech played  P1: "Radar"
+[00:58.337] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:58.731] Revealed: P0 (0,3) "Flame Trap" {cost 250}
+[00:59.150] Revealed: P0 (4,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:59.533] Revealed: P0 (1,0) "Pepper Spray" {cost 0}
+[00:59.559] Tech resolved  P1
+[01:00.434] Mode selected P1: ATTACK
+[01:00.437] MSG: Player 2: tap a unit to attack.
+[01:00.760] Revealed: P1 (2,2) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[01:02.665] Dice rolled: 4
+[01:02.682] MSG: Pyromancer wins!
+[01:07.159] Crystals: P0 4450 → 3650 (-800)  [battle]
+[01:11.362] Attack P1(2,2)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} → P0(1,2)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3}  Dice=4  ATK=110 vs DEF=30  → WIN
+[01:11.362] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=110 ATK pill=80 DEF pill=0 mod=+ATK 30 (80+30=110)
+[01:11.362] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3} badge=30 ATK pill=60 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:11.362] Anim: 3A  △ P0(1,2)
+[01:11.362] Card destroyed  P0 (1,2) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3}
+[01:11.858] Mode selected P1: ATTACK
+[01:11.860] MSG: Player 2: tap a unit to attack.
+[01:12.187] Revealed: P1 (1,3) "Pit Lord" {Unit ATK120 DEF100 | cost 1250 | affinity Chaos}
+[01:14.084] Dice rolled: 1
+[01:14.102] MSG: Pit Lord wins!
+[01:18.576] Crystals: P0 3650 → 2900 (-750)  [battle]
+[01:22.787] Attack P1(1,3)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} → P0(2,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=1  ATK=120 vs DEF=30  → WIN
+[01:22.787] Reckoning overlay: P1 "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} badge=120 ATK pill=120 DEF pill=100 mod=+ATK 0 (120+0=120)
+[01:22.787] Reckoning overlay: P0 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=30 ATK pill=70 DEF pill=30 mod=+DEF 0 (30+0=30)
+[01:22.787] Anim: 3A  △ P0(2,1)
+[01:22.787] Card destroyed  P0 (2,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[01:23.287] Turn ended  P1  |  Crystals P0=2900 P1=2600
+
+--- Turn 3  |  Player 0  |  Crystals P0=2900 P1=2600 ---
+[01:36.515] MSG: Tap 2 material card(s) on the field.
+[01:36.697] MSG: 1 more material(s) needed.
+[01:37.489] Crystals: P0 2900 → 1900 (-1000)  [union]
+[01:40.313] Revealed: P0 (1,1) "Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio}
+[01:40.351] Union summoned P0: "Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio} from "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio | face-down}, "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down}
+[01:40.351] MSG: Player 1 summoned [Bioterrorist] using: "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio | face-down}, "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio | face-down}
+[01:47.279] Dice rolled: 5
+[01:47.330] MSG: Bioterrorist wins!
+[01:50.584] Crystals: P1 2600 → 1350 (-1250)  [battle]
+[01:53.426] MSG: Bioterrorist: self-destroyed after battle (no crystal loss)!
+[01:53.429] Attack P0(1,1)"Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio} → P1(1,3)"Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}  Dice=5  ATK=150 vs DEF=50  → WIN
+[01:53.429] Reckoning overlay: P0 "Bioterrorist" {Union ATK150 DEF0 | destroy-cost 0 | summon-cost 1000 | affinity Bio} badge=150 ATK pill=150 DEF pill=0 mod=+ATK 0 (150+0=150)
+[01:53.429] Reckoning overlay: P1 "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved} badge=50 ATK pill=60 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:53.429] Anim: 3A  △ P1(1,3)
+[01:53.429] Card destroyed  P1 (1,3) "Pit Lord" {Unit ATK60 DEF50 | cost 1250 | affinity Chaos | base 60/50 | halved}
+[02:01.418] Revealed: P0 (2,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[02:01.418] Dice rolled: 1
+[02:02.662] MSG: Dark Blob wins!
+[02:05.413] Crystals: P1 1350 → 450 (-900)  [battle]
+[02:09.616] Attack P0(2,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} → P1(2,2)"Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}  Dice=1  ATK=20 vs DEF=0  → WIN
+[02:09.616] Reckoning overlay: P0 "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos} badge=20 ATK pill=20 DEF pill=50 mod=+ATK 0 (20+0=20)
+[02:09.616] Reckoning overlay: P1 "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane} badge=0 ATK pill=80 DEF pill=0 mod=+DEF 0 (0+0=0)
+[02:09.616] Anim: 3A  △ P1(2,2)
+[02:09.616] Card destroyed  P1 (2,2) "Pyromancer" {Unit ATK80 DEF0 | cost 900 | affinity Arcane}
+[02:11.131] Turn ended  P0  |  Crystals P0=1900 P1=450
+
+--- Turn 4  |  Player 1  |  Crystals P0=1900 P1=450 ---
+[02:11.733] Mode selected P1: ATTACK
+[02:11.736] MSG: Player 2: tap a unit to attack.
+[02:12.035] Revealed: P1 (4,4) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[02:13.958] Dice rolled: 5
+[02:13.982] MSG: Canyon Warg wins!
+[02:16.932] Crystals: P0 1900 → 1400 (-500)  [battle]
+[02:21.138] Attack P1(4,4)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P0(2,3)"Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | flags:reckoning_participated}  Dice=5  ATK=70 vs DEF=50  → WIN
+[02:21.138] Reckoning overlay: P1 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=70 ATK pill=70 DEF pill=30 mod=+ATK 0 (70+0=70)
+[02:21.138] Reckoning overlay: P0 "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | flags:reckoning_participated} badge=50 ATK pill=20 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:21.138] Anim: 3A  △ P0(2,3)
+[02:21.138] Card destroyed  P0 (2,3) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos | flags:reckoning_participated}
+[02:21.634] Mode selected P1: ATTACK
+[02:21.637] MSG: Player 2: tap a unit to attack.
+[02:21.971] Revealed: P1 (0,0) "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima}
+[02:23.866] Dice rolled: 1
+[02:23.888] MSG: Huntress of Green Glade wins!
+[02:28.362] Crystals: P0 1400 → 1000 (-400)  [battle]
+[02:32.608] Attack P1(0,0)"Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} → P0(4,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=1  ATK=50 vs DEF=25  → WIN
+[02:32.608] Reckoning overlay: P1 "Huntress of Green Glade" {Unit ATK50 DEF50 | cost 800 | affinity Anima} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[02:32.608] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[02:32.608] Anim: 3A  △ P0(4,1)
+[02:32.608] Card destroyed  P0 (4,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[02:33.106] Turn ended  P1  |  Crystals P0=1000 P1=450
+
+--- Turn 5  |  Player 0  |  Crystals P0=1000 P1=450 ---
+[02:48.013] Revealed: P0 (0,2) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[02:48.013] Dice rolled: 4
+[02:49.248] MSG: Scout Probe wins!
+[02:53.721] Crystals: P1 450 → 0 (-450)  [battle]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 1000  P1: 0  |  Turns: 5

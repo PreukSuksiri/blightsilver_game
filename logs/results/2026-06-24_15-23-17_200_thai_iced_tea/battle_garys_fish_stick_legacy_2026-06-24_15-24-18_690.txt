@@ -1,0 +1,109 @@
+=== Battle of Gary's Fish Stick Legacy ===
+Battle started: 2026-06-24 15:24:18.690
+Game Session of Thai Iced Tea (started 2026-06-24 15:23:17.200)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:34.041] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[01:15.585] Revealed: P0 (1,1) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[01:15.585] Dice rolled: 1
+[01:20.520] MSG: Nothing happens — Dead End.
+[01:27.988] MSG: Ostrich Cannon locks itself until next turn.
+[01:33.780] Attack P0(1,1)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(2,1)(empty)  Dice=1  → DEAD_END
+[01:33.780] Anim: 3F  (blank slot)
+[01:40.471] Revealed: P1 (1,3) "Methanomancer" {Unit ATK20 DEF20 | cost 350 | affinity Cosmic}
+[01:54.058] MSG: Methanomancer: Surrounding attack — +30 ATK&DEF!
+[01:54.061] Revealed: P0 (4,2) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[01:54.061] Revealed: P1 (1,2) "Pepper Spray" {cost 0}
+[01:54.061] Dice rolled: 2
+[01:59.354] MSG: Trap triggered: Pepper Spray!
+[02:10.230] Coin flip: Heads, Heads
+[02:22.072] MSG: Pepper Spray: Heads, Heads.
+[02:22.072] MSG: Pepper Spray: 2 head(s) — White Tiger -10 ATK until next turn ends!
+[02:28.017] Attack P0(4,2)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature} → P1(1,2)"Pepper Spray" {cost 0}  Dice=2  → Unit vs Trap
+[02:28.017] Reckoning overlay: P0 "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[02:28.017] Anim: 3D  (attacker survives)
+[02:38.048] Turn ended  P0  |  Crystals P0=5000 P1=5000
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[02:40.599] Mode selected P1: TECH
+[02:41.932] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[02:54.189] Tech played  P1: "Radar"
+[03:00.530] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[03:02.305] Revealed: P0 (1,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature}
+[03:04.066] Revealed: P0 (2,4) "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}
+[03:05.817] Tech resolved  P1
+[03:06.853] Dead-end placed  P0 (3,4)
+[03:09.709] Mode selected P1: ATTACK
+[03:09.712] MSG: Player 2: tap a unit to attack.
+[03:14.998] Dice rolled: 1
+[03:15.011] MSG: Methanomancer wins!
+[03:27.500] Crystals: P0 5000 → 4200 (-800)  [battle]
+[03:45.281] Attack P1(1,3)"Methanomancer" {Unit ATK50 DEF50 | cost 350 | affinity Cosmic | base 20/20 | buff +tempATK30, +tempDEF30} → P0(1,1)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3}  Dice=1  ATK=50 vs DEF=30  → WIN
+[03:45.281] Reckoning overlay: P1 "Methanomancer" {Unit ATK50 DEF50 | cost 350 | affinity Cosmic | base 20/20 | buff +tempATK30, +tempDEF30} badge=50 ATK pill=50 DEF pill=50 mod=+ATK 0 (50+0=50)
+[03:45.281] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3} badge=30 ATK pill=60 DEF pill=30 mod=+DEF 0 (30+0=30)
+[03:45.281] Anim: 3A  △ P0(1,1)
+[03:45.281] Card destroyed  P0 (1,1) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | cannot-atk≤T3}
+[03:47.458] Mode selected P1: ATTACK
+[03:47.460] MSG: Player 2: tap a unit to attack.
+[03:48.812] Revealed: P1 (0,2) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic}
+[03:57.214] Dice rolled: 2
+[03:57.226] MSG: Echo Bringer wins!
+[04:09.883] Crystals: P0 4200 → 3720 (-480)  [battle]
+[04:21.863] MSG: Echo Bringer: Bonus attack for targeting revealed card!
+[04:27.922] Attack P1(0,2)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic} → P0(1,3)"Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}  Dice=2  ATK=70 vs DEF=60  → WIN
+[04:27.922] Reckoning overlay: P1 "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic} badge=70 ATK pill=70 DEF pill=40 mod=+ATK 0 (70+0=70)
+[04:27.922] Reckoning overlay: P0 "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used} badge=60 ATK pill=30 DEF pill=0 mod=+DEF 60 (0+60=60)
+[04:27.922] Anim: 3A  △ P0(1,3)
+[04:27.922] Card destroyed  P0 (1,3) "Armored Bee" {Unit ATK30 DEF0 | cost 480 | affinity Nature | 1xDEF-used}
+[04:38.678] Turn ended  P1  |  Crystals P0=3720 P1=4400
+
+--- Turn 3  |  Player 0  |  Crystals P0=3720 P1=4400 ---
+[05:02.067] MSG: Tap 2 material card(s) on the field.
+[05:04.574] MSG: 1 more material(s) needed.
+[05:06.143] Crystals: P0 3720 → 3220 (-500)  [union]
+[05:17.335] Revealed: P0 (2,4) "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature}
+[05:17.363] Union summoned P0: "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} from "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}, "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down}
+[05:17.363] MSG: Player 1 summoned [Berserk Hyena] using: "Armored Monkey" {Unit ATK10 DEF20 | cost 170 | affinity Nature}, "Needle Porcupine" {Unit ATK10 DEF10 | cost 200 | affinity Nature | face-down}
+[06:13.238] Revealed: P0 (3,3) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[06:13.238] Dice rolled: 3
+[06:18.103] MSG: Armored Rhino wins!
+[06:30.048] Crystals: P1 4400 → 3500 (-900)  [battle]
+[06:46.925] Attack P0(3,3)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} → P1(0,2)"Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used}  Dice=3  ATK=60 vs DEF=40  → WIN
+[06:46.925] Reckoning overlay: P0 "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} badge=60 ATK pill=60 DEF pill=85 mod=+ATK 0 (60+0=60)
+[06:46.925] Reckoning overlay: P1 "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used} badge=40 ATK pill=70 DEF pill=40 mod=+DEF 0 (40+0=40)
+[06:46.925] Anim: 3A  △ P1(0,2)
+[06:46.925] Card destroyed  P1 (0,2) "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | flags:extra_vs_revealed_used}
+[06:53.433] Dice rolled: 2
+[06:53.493] MSG: Berserk Hyena wins!
+[07:05.911] Crystals: P1 3500 → 3150 (-350)  [battle]
+[07:23.955] Attack P0(2,4)"Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} → P1(1,3)"Methanomancer" {Unit ATK20 DEF20 | cost 350 | affinity Cosmic}  Dice=2  ATK=40 vs DEF=20  → WIN
+[07:23.955] Reckoning overlay: P0 "Berserk Hyena" {Union ATK40 DEF0 | destroy-cost 0 | summon-cost 500 | affinity Nature} badge=40 ATK pill=40 DEF pill=0 mod=+ATK 0 (40+0=40)
+[07:23.955] Reckoning overlay: P1 "Methanomancer" {Unit ATK20 DEF20 | cost 350 | affinity Cosmic} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[07:23.955] Anim: 3A  △ P1(1,3)
+[07:23.955] Card destroyed  P1 (1,3) "Methanomancer" {Unit ATK20 DEF20 | cost 350 | affinity Cosmic}
+[07:31.473] Turn ended  P0  |  Crystals P0=3220 P1=3150
+
+--- Turn 4  |  Player 1  |  Crystals P0=3220 P1=3150 ---
+[07:33.868] Mode selected P1: TECH
+[07:35.181] Tech played  P1: "Bribe"
+[07:41.193] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[07:46.728] MSG: Bribe: Opponent passed.
+[07:46.730] Tech resolved  P1
+[07:50.404] Mode selected P1: ATTACK
+[07:50.406] MSG: Player 2: tap a unit to attack.
+[07:51.672] Revealed: P1 (4,2) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[07:59.494] Dice rolled: 4
+[07:59.506] MSG: Satellite Cannon wins!
+[08:11.268] Crystals: P0 3220 → 2500 (-720)  [battle]
+[08:28.633] Attack P1(4,2)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P0(3,3)"Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}  Dice=4  ATK=120 vs DEF=85  → WIN
+[08:28.633] Reckoning overlay: P1 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} badge=120 ATK pill=100 DEF pill=80 mod=+ATK 20 (100+20=120)
+[08:28.633] Reckoning overlay: P0 "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature} badge=85 ATK pill=60 DEF pill=85 mod=+DEF 0 (85+0=85)
+[08:28.633] Anim: 3A  △ P0(3,3)
+[08:28.633] Card destroyed  P0 (3,3) "Armored Rhino" {Unit ATK60 DEF85 | cost 720 | affinity Nature}
+[08:39.460] Turn ended  P1  |  Crys

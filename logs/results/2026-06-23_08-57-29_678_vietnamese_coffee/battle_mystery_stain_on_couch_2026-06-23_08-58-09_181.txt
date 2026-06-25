@@ -1,0 +1,172 @@
+=== Battle of Mystery Stain on Couch ===
+Battle started: 2026-06-23 08:58:09.181
+Game Session of Vietnamese Coffee (started 2026-06-23 08:57:29.678)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[01:26.527] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[01:49.201] Mode selected P1: TECH
+[01:50.564] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[02:02.174] Tech played  P1: "Radar"
+[02:08.550] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[02:10.482] Revealed: P0 (1,3) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[02:13.373] Dead-end placed  P0 (1,2)
+[02:14.079] Revealed: P0 (2,2) "Explosive Barrels" {cost 0}
+[02:14.113] Tech resolved  P1
+[02:18.035] Mode selected P1: ATTACK
+[02:18.038] MSG: Player 2: tap a unit to attack.
+[02:19.541] Revealed: P1 (3,4) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[02:28.716] Dice rolled: 2
+[02:28.741] MSG: Mad Wyvern wins!
+[02:41.588] Crystals: P0 5000 → 4200 (-800)  [battle]
+[02:59.889] Attack P1(3,4)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} → P0(1,3)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=2  ATK=65 vs DEF=55  → WIN
+[02:59.889] Reckoning overlay: P1 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[02:59.889] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[02:59.889] Anim: 3A  △ P0(1,3)
+[02:59.889] Card destroyed  P0 (1,3) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[03:02.215] Mode selected P1: ATTACK
+[03:02.218] MSG: Player 2: tap a unit to attack.
+[03:03.658] Revealed: P1 (2,4) "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane}
+[03:12.816] Revealed: P0 (0,3) "Flame Trap" {cost 250}
+[03:12.816] Dice rolled: 1
+[03:18.415] MSG: Trap triggered: Flame Trap!
+[03:30.277] Crystals: P0 4200 → 3950 (-250)  [trap cost]
+[03:43.037] MSG: Flame Trap: Elemental Master permanently loses 10 ATK!
+[03:49.498] Attack P1(2,4)"Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} → P0(0,3)"Flame Trap" {cost 250}  Dice=1  → Unit vs Trap
+[03:49.498] Reckoning overlay: P1 "Elemental Master" {Unit ATK20 DEF60 | cost 800 | affinity Arcane} badge=20 ATK pill=20 DEF pill=60 mod=+ATK 0 (20+0=20)
+[03:49.498] Anim: 3D  (attacker survives)
+[03:51.965] Turn ended  P1  |  Crystals P0=3950 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=3950 P1=4400 ---
+[04:22.770] MSG: Tap 2 material card(s) on the field.
+[04:23.651] MSG: 1 more material(s) needed.
+[04:26.060] Crystals: P0 3950 → 3150 (-800)  [union]
+[04:38.075] Revealed: P0 (3,2) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[04:38.094] Union summoned P0: "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[04:38.096] MSG: Player 1 summoned [Ancient Lizard] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | face-down}
+[05:11.293] Dice rolled: 3
+[05:11.359] MSG: Ancient Lizard wins!
+[05:23.681] Crystals: P1 4400 → 3850 (-550)  [battle]
+[05:42.244] Attack P0(3,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P1(3,4)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}  Dice=3  ATK=75 vs DEF=40  → WIN
+[05:42.244] Reckoning overlay: P0 "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} badge=75 ATK pill=75 DEF pill=75 mod=+ATK 0 (75+0=75)
+[05:42.244] Reckoning overlay: P1 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[05:42.244] Anim: 3A  △ P1(3,4)
+[05:42.244] Card destroyed  P1 (3,4) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[06:00.417] Revealed: P0 (2,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[06:00.418] Dice rolled: 5
+[06:05.950] MSG: Canyon Warg wins!
+[06:19.035] Crystals: P1 3850 → 3050 (-800)  [battle]
+[06:38.217] Attack P0(2,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P1(2,4)"Elemental Master" {Unit ATK10 DEF60 | cost 800 | affinity Arcane | base 10/60}  Dice=5  ATK=70 vs DEF=60  → WIN
+[06:38.217] Reckoning overlay: P0 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=70 ATK pill=70 DEF pill=30 mod=+ATK 0 (70+0=70)
+[06:38.217] Reckoning overlay: P1 "Elemental Master" {Unit ATK10 DEF60 | cost 800 | affinity Arcane | base 10/60} badge=60 ATK pill=10 DEF pill=60 mod=+DEF 0 (60+0=60)
+[06:38.217] Anim: 3A  △ P1(2,4)
+[06:38.217] Card destroyed  P1 (2,4) "Elemental Master" {Unit ATK10 DEF60 | cost 800 | affinity Arcane | base 10/60}
+[07:34.508] Turn ended  P0  |  Crystals P0=3150 P1=3050
+
+--- Turn 3  |  Player 1  |  Crystals P0=3150 P1=3050 ---
+[07:37.028] Mode selected P1: TECH
+[07:38.396] Tech played  P1: "Tease"
+[07:44.932] MSG: Opponent must choose and reveal 1 of their squares.
+[07:45.135] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[08:21.038] Revealed: P0 (0,4) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[08:21.038] MSG: Tease: Opponent revealed Angel Gatekeeper.
+[08:21.042] Tech resolved  P1
+[08:24.904] Mode selected P1: ATTACK
+[08:24.909] MSG: Player 2: tap a unit to attack.
+[08:26.322] Revealed: P1 (0,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[08:34.774] Dice rolled: 2
+[08:34.792] MSG: Book with Fangs wins!
+[08:47.366] Crystals: P0 3150 → 2400 (-750)  [battle]
+[09:06.945] Attack P1(0,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(2,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}  Dice=2  ATK=45 vs DEF=30  → WIN
+[09:06.946] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[09:06.946] Reckoning overlay: P0 "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} badge=30 ATK pill=70 DEF pill=30 mod=+DEF 0 (30+0=30)
+[09:06.946] Anim: 3A  △ P0(2,1)
+[09:06.946] Card destroyed  P0 (2,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[09:09.267] Mode selected P1: ATTACK
+[09:09.275] MSG: Player 2: tap a unit to attack.
+[09:10.788] Revealed: P1 (0,4) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[09:19.719] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[09:19.719] Dice rolled: 4
+[09:39.339] Crystals: P1 3050 → 2670 (-380)  [battle]
+[09:52.607] Attack P1(0,4)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} → P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=4  ATK=30 vs DEF=45  → LOSE
+[09:52.607] Reckoning overlay: P1 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+ATK 0 (30+0=30)
+[09:52.607] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[09:52.607] Anim: 3B  △ P1(0,4)
+[09:52.607] Card destroyed  P1 (0,4) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[09:54.858] Turn ended  P1  |  Crystals P0=2400 P1=2670
+
+--- Turn 4  |  Player 0  |  Crystals P0=2400 P1=2670 ---
+[10:22.891] Dice rolled: 4
+[10:22.960] MSG: Ancient Lizard wins!
+[10:35.941] Crystals: P1 2670 → 1870 (-800)  [battle]
+[10:54.397] Attack P0(3,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P1(0,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=4  ATK=75 vs DEF=55  → WIN
+[10:54.397] Reckoning overlay: P0 "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} badge=75 ATK pill=75 DEF pill=75 mod=+ATK 0 (75+0=75)
+[10:54.398] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=55 ATK pill=45 DEF pill=55 mod=+DEF 0 (55+0=55)
+[10:54.398] Anim: 3A  △ P1(0,0)
+[10:54.398] Card destroyed  P1 (0,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[11:10.400] Revealed: P0 (1,1) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[11:10.423] Revealed: P1 (2,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[11:10.423] Dice rolled: 2
+[11:16.110] MSG: Dystopian Cultist wins!
+[11:29.921] Crystals: P1 1870 → 1470 (-400)  [battle]
+[11:49.502] Attack P0(1,1)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} → P1(2,1)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=2  ATK=65 vs DEF=30  → WIN
+[11:49.503] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[11:49.503] Reckoning overlay: P1 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[11:49.503] Anim: 3A  △ P1(2,1)
+[11:49.503] Card destroyed  P1 (2,1) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[11:55.286] Turn ended  P0  |  Crystals P0=2400 P1=1470
+
+--- Turn 5  |  Player 1  |  Crystals P0=2400 P1=1470 ---
+[11:58.156] Mode selected P1: TECH
+[11:59.534] Tech played  P1: "Bribe"
+[12:05.985] Target prompt: "Bribe: Reveal a creature for 700 Crystals or pass."  filter=bribe
+[12:11.656] Revealed: P0 (3,4) "Dark Blob" {Unit ATK20 DEF50 | cost 500 | affinity Chaos}
+[12:11.656] Crystals: P0 2400 → 3100 (+700)  [ability]
+[12:11.656] MSG: Bribe: Player 1 revealed Dark Blob and received 700 Crystals.
+[12:23.614] Tech resolved  P1
+[12:27.625] Mode selected P1: ATTACK
+[12:27.635] MSG: Player 2: tap a unit to attack.
+[12:29.052] Revealed: P1 (3,1) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[12:37.210] Dice rolled: 4
+[12:37.231] MSG: Both cards are destroyed!
+[12:49.522] Crystals: P1 1470 → 770 (-700)  [battle]
+[13:02.122] Crystals: P0 3100 → 2550 (-550)  [battle]
+[13:18.281] Attack P1(3,1)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P0(1,1)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=4  ATK=40 vs DEF=40  → TIE
+[13:18.281] Reckoning overlay: P1 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[13:18.281] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[13:18.281] Anim: 3C  △ P1(3,1) + △ P0(1,1)
+[13:18.281] Card destroyed  P1 (3,1) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[13:18.281] Card destroyed  P0 (1,1) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[13:18.306] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[13:20.447] Mode selected P1: ATTACK
+[13:20.450] MSG: Player 2: tap a unit to attack.
+[13:21.780] Revealed: P1 (1,2) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[13:26.695] Revealed: P0 (1,0) "Pepper Spray" {cost 0}
+[13:26.695] MSG: Scout Probe: adjacent cell revealed.
+[13:30.527] Revealed: P0 (3,1) "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}
+[13:30.527] Dice rolled: 4
+[13:49.760] Crystals: P1 770 → 70 (-700)  [battle]
+[14:01.778] Attack P1(1,2)"Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} → P0(3,1)"Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio}  Dice=4  ATK=70 vs DEF=85  → LOSE
+[14:01.778] Reckoning overlay: P1 "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane} badge=70 ATK pill=20 DEF pill=50 mod=+ATK 50 (20+50=70)
+[14:01.778] Reckoning overlay: P0 "Plant-29" {Unit ATK45 DEF85 | cost 900 | affinity Bio} badge=85 ATK pill=45 DEF pill=85 mod=+DEF 0 (85+0=85)
+[14:01.778] Anim: 3B  △ P1(1,2)
+[14:01.778] Card destroyed  P1 (1,2) "Spell Sniper" {Unit ATK20 DEF50 | cost 700 | affinity Arcane}
+[14:03.990] Turn ended  P1  |  Crystals P0=2550 P1=70
+
+--- Turn 6  |  Player 0  |  Crystals P0=2550 P1=70 ---
+[14:10.568] Coin flip: Heads
+[14:22.717] Target prompt: "Plant-29: Heads! Choose 1 exposed ally or foe for Venom."  filter=ability_plant29_venom
+[14:33.861] MSG: Plant-29: Venom on Plant-29.
+[14:48.105] Revealed: P0 (4,2) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[14:48.106] Revealed: P1 (1,1) "Snare Trap" {cost 500}
+[14:48.106] Dice rolled: 4
+[14:53.841] MSG: Trap triggered: Snare Trap!
+[15:05.822] Crystals: P1 70 → 0 (-70)  [trap cost]
+
+=== GAME OVER: Player 1 wins ===
+Final crystals — P0: 2550  P1: 0  |  Turns: 6

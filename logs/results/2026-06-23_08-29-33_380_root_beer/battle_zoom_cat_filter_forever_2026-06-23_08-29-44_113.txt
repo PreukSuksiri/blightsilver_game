@@ -1,0 +1,66 @@
+=== Battle of Zoom Cat Filter Forever ===
+Battle started: 2026-06-23 08:29:44.113
+Game Session of Root Beer (started 2026-06-23 08:29:33.380)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:03.377] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:08.763] Mode selected P1: TECH
+[00:09.067] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:11.883] Tech played  P1: "Radar"
+[00:13.433] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:13.895] Revealed: P0 (3,1) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:14.475] Dead-end placed  P0 (4,2)
+[00:14.664] Revealed: P0 (4,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:14.669] Tech resolved  P1
+[00:15.551] Mode selected P1: ATTACK
+[00:15.555] MSG: Player 2: tap a unit to attack.
+[00:15.870] Revealed: P1 (0,0) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[00:17.779] Dice rolled: 5
+[00:17.800] MSG: Both cards are destroyed!
+[00:22.174] Crystals: P1 4400 → 3950 (-450)  [battle]
+[00:25.010] Crystals: P0 5000 → 4450 (-550)  [battle]
+[00:28.849] Attack P1(0,0)"White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature} → P0(3,1)"Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}  Dice=5  ATK=40 vs DEF=40  → TIE
+[00:28.850] Reckoning overlay: P1 "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[00:28.850] Reckoning overlay: P0 "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[00:28.850] Anim: 3C  △ P1(0,0) + △ P0(3,1)
+[00:28.850] Card destroyed  P1 (0,0) "White Tiger" {Unit ATK40 DEF25 | cost 450 | affinity Nature}
+[00:28.850] Card destroyed  P0 (3,1) "Dystopian Cultist" {Unit ATK65 DEF40 | cost 550 | affinity Bio}
+[00:29.344] Mode selected P1: ATTACK
+[00:29.348] MSG: Player 2: tap a unit to attack.
+[00:29.684] Revealed: P1 (2,2) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:31.567] Dice rolled: 2
+[00:31.585] MSG: Both cards are destroyed!
+[00:35.958] Crystals: P1 3950 → 3700 (-250)  [battle]
+[00:38.787] Crystals: P0 4450 → 4050 (-400)  [battle]
+[00:42.637] Attack P1(2,2)"Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} → P0(4,1)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}  Dice=2  ATK=25 vs DEF=25  → TIE
+[00:42.637] Reckoning overlay: P1 "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos} badge=25 ATK pill=25 DEF pill=5 mod=+ATK 0 (25+0=25)
+[00:42.637] Reckoning overlay: P0 "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[00:42.637] Anim: 3C  △ P1(2,2) + △ P0(4,1)
+[00:42.637] Card destroyed  P1 (2,2) "Shredder Doll" {Unit ATK25 DEF5 | cost 250 | affinity Chaos}
+[00:42.637] Card destroyed  P0 (4,1) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[00:43.122] Turn ended  P1  |  Crystals P0=4050 P1=3700
+
+--- Turn 2  |  Player 0  |  Crystals P0=4050 P1=3700 ---
+[00:54.018] Revealed: P0 (2,1) "Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature}
+[00:54.019] Dice rolled: 1
+[00:55.282] MSG: Nothing happens — Dead End.
+[00:58.261] Attack P0(2,1)"Canyon Warg" {Unit ATK70 DEF30 | cost 750 | affinity Nature} → P1(1,4)(empty)  Dice=1  → DEAD_END
+[00:58.261] Anim: 3F  (blank slot)
+[01:01.929] Revealed: P0 (0,4) "Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine}
+[01:01.929] Dice rolled: 5
+[01:03.178] MSG: Nothing happens — Dead End.
+[01:07.911] Attack P0(0,4)"Angel Gatekeeper" {Unit ATK40 DEF90 | cost 1000 | affinity Divine} → P1(3,0)(empty)  Dice=5  → DEAD_END
+[01:07.912] Anim: 3F  (blank slot)
+[01:11.840] Turn ended  P0  |  Crystals P0=4050 P1=3700
+
+--- Turn 3  |  Player 1  |  Crystals P0=4050 P1=3700 ---
+[01:12.454] Mode selected P1: TECH
+[01:12.752] Crystals: P1 3700 → 2700 (-1000)  [tech cost]
+[01:15.559] Tech played  P1: "Great Diplomacy"
+[01:17.125] Target 

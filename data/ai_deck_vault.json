@@ -1779,8 +1779,7 @@
 					"White Tiger",
 					"Needle Porcupine",
 					"Mad Raccoon",
-					"Flame Lizard",
-					"Death Cobra"
+					"Flame Lizard"
 				],
 				"deck_name": "Hard / Nat - Barros",
 				"formations": [
@@ -1791,12 +1790,6 @@
 								"c": 1.0,
 								"name": "Ostrich Cannon",
 								"r": 1.0,
-								"type": "character"
-							},
-							{
-								"c": 2.0,
-								"name": "Needle Porcupine",
-								"r": 2.0,
 								"type": "character"
 							},
 							{
@@ -1824,12 +1817,6 @@
 								"type": "character"
 							},
 							{
-								"c": 0.0,
-								"name": "Lazy Troll",
-								"r": 2.0,
-								"type": "character"
-							},
-							{
 								"c": 2.0,
 								"name": "Nuki the Tanuki",
 								"r": 0.0,
@@ -1844,12 +1831,6 @@
 							{
 								"c": 4.0,
 								"name": "Mad Raccoon",
-								"r": 0.0,
-								"type": "character"
-							},
-							{
-								"c": 0.0,
-								"name": "Flame Lizard",
 								"r": 0.0,
 								"type": "character"
 							},
@@ -1888,6 +1869,24 @@
 								"name": "Cursed Reflection",
 								"r": 2.0,
 								"type": "trap"
+							},
+							{
+								"c": 2.0,
+								"name": "Lazy Troll",
+								"r": 3.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Flame Lizard",
+								"r": 2.0,
+								"type": "character"
+							},
+							{
+								"c": 2.0,
+								"name": "Needle Porcupine",
+								"r": 1.0,
+								"type": "character"
 							}
 						]
 					}
@@ -3630,81 +3629,81 @@
 						"name": "Default Formation",
 						"placements": [
 							{
-								"r": 2,
-								"c": 2,
+								"c": 2.0,
 								"name": "Sunrise Lady",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 2,
+								"c": 2.0,
 								"name": "Moonrise Gentleman",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 2,
+								"c": 2.0,
 								"name": "Sniping Fairy",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 2,
+								"c": 2.0,
 								"name": "Church Guard",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 2,
+								"c": 2.0,
 								"name": "Melissa the Healer",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 1,
+								"c": 1.0,
 								"name": "Joan the Faithful Warrior",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 3,
+								"c": 3.0,
 								"name": "Bomber Fairy",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Ponycorn",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Tiny Pixie",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Bait",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 0,
+								"c": 0.0,
 								"name": "Snare Trap",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
-								"r": 0,
-								"c": 4,
+								"c": 4.0,
 								"name": "Trap Hole",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Alarm",
+								"r": 4.0,
 								"type": "trap"
 							}
 						]
@@ -3723,12 +3722,12 @@
 				]
 			},
 			"featured_union": "Sky Protector",
-			"union_formula": "Sunrise Lady + Moonrise Gentleman + 400 cost",
 			"id": "easy_sky_protector",
 			"label": "Easy / Div - Sky Protector",
 			"tags": [
 				"Easy"
-			]
+			],
+			"union_formula": "Sunrise Lady + Moonrise Gentleman + 400 cost"
 		},
 		{
 			"deck": {
@@ -3749,81 +3748,81 @@
 						"name": "Default Formation",
 						"placements": [
 							{
-								"r": 2,
-								"c": 2,
+								"c": 2.0,
 								"name": "Choir Lady Alice",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 2,
+								"c": 2.0,
 								"name": "Choir Lady Anna",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 2,
+								"c": 2.0,
 								"name": "Choir Lady Abigail",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 2,
+								"c": 2.0,
 								"name": "Church Guard",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 2,
+								"c": 2.0,
 								"name": "Archbishop",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 1,
+								"c": 1.0,
 								"name": "Joseph the Battle Priest",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 3,
+								"c": 3.0,
 								"name": "Tiny Pixie",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Melissa the Healer",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Sniping Fairy",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Red Card",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 0,
+								"c": 0.0,
 								"name": "Hypnosis",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
-								"r": 0,
-								"c": 4,
+								"c": 4.0,
 								"name": "Snare Trap",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Street Joke",
+								"r": 4.0,
 								"type": "trap"
 							}
 						]
@@ -3842,12 +3841,12 @@
 				]
 			},
 			"featured_union": "Choir Lead Amber",
-			"union_formula": "3 Choir Lady cards + 500 cost",
 			"id": "norm_choir_lead",
 			"label": "Norm / Div - Choir Lead Amber",
 			"tags": [
 				"Norm"
-			]
+			],
+			"union_formula": "3 Choir Lady cards + 500 cost"
 		},
 		{
 			"deck": {
@@ -3868,81 +3867,81 @@
 						"name": "Default Formation",
 						"placements": [
 							{
-								"r": 2,
-								"c": 2,
+								"c": 2.0,
 								"name": "Kiyoko the Death Whisper",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 2,
+								"c": 2.0,
 								"name": "Lockpicker",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 2,
+								"c": 2.0,
 								"name": "Hairpin Assassin",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 2,
+								"c": 2.0,
 								"name": "Mafia Associates",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 2,
+								"c": 2.0,
 								"name": "Street Rogue",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 1,
+								"c": 1.0,
 								"name": "Shepherd Detective",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 3,
+								"c": 3.0,
 								"name": "Church Guard",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Big Thug",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Silver Spearman",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Brainwash",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 0,
+								"c": 0.0,
 								"name": "Bunker",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
-								"r": 0,
-								"c": 4,
+								"c": 4.0,
 								"name": "Pepper Spray",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Trap Hole",
+								"r": 4.0,
 								"type": "trap"
 							}
 						]
@@ -3961,12 +3960,12 @@
 				]
 			},
 			"featured_union": "Moon Lady Ninja",
-			"union_formula": "Kiyoko the Death Whisper + 1 Anima card (\u2265 500 cost) + 800 cost",
 			"id": "easy_moon_lady_ninja",
 			"label": "Easy / Ani - Moon Lady Ninja",
 			"tags": [
 				"Easy"
-			]
+			],
+			"union_formula": "Kiyoko the Death Whisper + 1 Anima card (≥ 500 cost) + 800 cost"
 		},
 		{
 			"deck": {
@@ -3987,81 +3986,81 @@
 						"name": "Default Formation",
 						"placements": [
 							{
-								"r": 2,
-								"c": 2,
+								"c": 2.0,
 								"name": "Lockpicker",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 2,
+								"c": 2.0,
 								"name": "Miner Probe",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 2,
+								"c": 2.0,
 								"name": "Scout Probe",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 2,
+								"c": 2.0,
 								"name": "Mysterious Miner",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 2,
+								"c": 2.0,
 								"name": "Neptune Diver",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 1,
+								"c": 1.0,
 								"name": "Moon Rover",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 3,
+								"c": 3.0,
 								"name": "Huntress of Green Glade",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Tomb Bandit",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Mine Guard",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Bait",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 0,
+								"c": 0.0,
 								"name": "Acid Trap Hole",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
-								"r": 0,
-								"c": 4,
+								"c": 4.0,
 								"name": "Snare Trap",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Decoy Puppet",
+								"r": 4.0,
 								"type": "trap"
 							}
 						]
@@ -4080,12 +4079,12 @@
 				]
 			},
 			"featured_union": "Legendary Locksmith",
-			"union_formula": "1 Lockpicker + 1 Anima + 800 cost",
 			"id": "norm_legendary_locksmith",
 			"label": "Norm / Ani - Legendary Locksmith",
 			"tags": [
 				"Norm"
-			]
+			],
+			"union_formula": "1 Lockpicker + 1 Anima + 800 cost"
 		},
 		{
 			"deck": {
@@ -4106,81 +4105,81 @@
 						"name": "Default Formation",
 						"placements": [
 							{
-								"r": 2,
-								"c": 2,
+								"c": 2.0,
 								"name": "Grand Fort Footsoldier",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 2,
+								"c": 2.0,
 								"name": "Grand Fort Archer",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 2,
+								"c": 2.0,
 								"name": "Grand Fort Mauler",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 2,
+								"c": 2.0,
 								"name": "Leorudus the Warlord",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 2,
+								"c": 2.0,
 								"name": "Zealot",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 1,
+								"c": 1.0,
 								"name": "Huntress of Green Glade",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 3,
+								"c": 3.0,
 								"name": "Mafia Associates",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Church Guard",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Wandering Swordsman",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Bunker",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 0,
+								"c": 0.0,
 								"name": "Spike Trap",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
-								"r": 0,
-								"c": 4,
+								"c": 4.0,
 								"name": "Brainwash",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Trap Hole",
+								"r": 4.0,
 								"type": "trap"
 							}
 						]
@@ -4199,12 +4198,12 @@
 				]
 			},
 			"featured_union": "Grand Fort Captain",
-			"union_formula": "2 Grand Fort card + 500 cost",
 			"id": "norm_grand_fort_captain",
 			"label": "Norm / Ani - Grand Fort Captain",
 			"tags": [
 				"Norm"
-			]
+			],
+			"union_formula": "2 Grand Fort card + 500 cost"
 		},
 		{
 			"deck": {
@@ -4225,82 +4224,94 @@
 						"name": "Default Formation",
 						"placements": [
 							{
-								"r": 2,
-								"c": 2,
+								"c": 2.0,
 								"name": "Bladeshifter",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 2,
-								"name": "Claw Mutant",
-								"type": "character"
-							},
-							{
-								"r": 3,
-								"c": 2,
+								"c": 2.0,
 								"name": "Scarlet Mutant",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 2,
-								"name": "Lab Zombie",
-								"type": "character"
-							},
-							{
-								"r": 4,
-								"c": 2,
-								"name": "Gamma Emitter",
-								"type": "character"
-							},
-							{
-								"r": 1,
-								"c": 1,
+								"c": 1.0,
 								"name": "Bleacher Squad",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 3,
+								"c": 3.0,
 								"name": "Vile Creeper",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
-								"name": "Rotten Shrieker",
-								"type": "character"
-							},
-							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Lab Bloater",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
-								"name": "Pepper Spray",
-								"type": "trap"
-							},
-							{
-								"r": 4,
-								"c": 0,
-								"name": "Explosive Barrels",
-								"type": "trap"
-							},
-							{
-								"r": 0,
-								"c": 4,
+								"c": 4.0,
 								"name": "Red Card",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Hypnosis",
+								"r": 4.0,
 								"type": "trap"
+							},
+							{
+								"c": 1,
+								"name": "Gamma Emitter",
+								"r": 3,
+								"type": "character"
+							},
+							{
+								"c": 1,
+								"name": "Lab Zombie",
+								"r": 2,
+								"type": "character"
+							},
+							{
+								"c": 0,
+								"name": "Lab Bloater",
+								"r": 0,
+								"type": "character"
+							},
+							{
+								"c": 2,
+								"name": "Pepper Spray",
+								"r": 0,
+								"type": "trap"
+							},
+							{
+								"c": 0,
+								"name": "Scarlet Mutant",
+								"r": 4,
+								"type": "character"
+							},
+							{
+								"c": 4,
+								"name": "Explosive Barrels",
+								"r": 2,
+								"type": "trap"
+							},
+							{
+								"c": 2,
+								"name": "Rotten Shrieker",
+								"r": 1,
+								"type": "character"
+							},
+							{
+								"c": 3,
+								"name": "Claw Mutant",
+								"r": 1,
+								"type": "character"
 							}
 						]
 					}
@@ -4318,12 +4329,12 @@
 				]
 			},
 			"featured_union": "Volatile Slasher",
-			"union_formula": "1 Bladeshifter + 1 Bio card + 1000 cost",
 			"id": "norm_volatile_slasher",
 			"label": "Norm / Bio - Volatile Slasher",
 			"tags": [
 				"Norm"
-			]
+			],
+			"union_formula": "1 Bladeshifter + 1 Bio card + 1000 cost"
 		},
 		{
 			"deck": {
@@ -4344,81 +4355,81 @@
 						"name": "Default Formation",
 						"placements": [
 							{
-								"r": 2,
-								"c": 2,
+								"c": 2.0,
 								"name": "Mind Flayer",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 2,
+								"c": 2.0,
 								"name": "Lab Crawler",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 2,
+								"c": 2.0,
 								"name": "Bladeshifter",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 2,
+								"c": 2.0,
 								"name": "Scarlet Mutant",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 2,
+								"c": 2.0,
 								"name": "Lab Zombie",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 1,
+								"c": 1.0,
 								"name": "Lab Bloater",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 3,
+								"c": 3.0,
 								"name": "Gamma Emitter",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Claw Mutant",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Black Worms",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Brainwash",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 0,
+								"c": 0.0,
 								"name": "Foul Gas",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
-								"r": 0,
-								"c": 4,
+								"c": 4.0,
 								"name": "Trap Hole",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Snare Trap",
+								"r": 4.0,
 								"type": "trap"
 							}
 						]
@@ -4437,12 +4448,12 @@
 				]
 			},
 			"featured_union": "Dimensional Virus",
-			"union_formula": "1 Bio (\u2265 800 cost) + 1 Arcane (\u2265 800 cost) + 800 cost",
 			"id": "hard_dimensional_virus",
 			"label": "Hard / Bio+Arc - Dimensional Virus",
 			"tags": [
 				"Hard"
-			]
+			],
+			"union_formula": "1 Bio (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost"
 		},
 		{
 			"deck": {
@@ -4463,81 +4474,81 @@
 						"name": "Default Formation",
 						"placements": [
 							{
-								"r": 2,
-								"c": 2,
+								"c": 2.0,
 								"name": "Succubus",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 2,
+								"c": 2.0,
 								"name": "Dark Monk",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 2,
+								"c": 2.0,
 								"name": "Demon Spawn",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 2,
+								"c": 2.0,
 								"name": "Jacob the Ski Mask",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 2,
+								"c": 2.0,
 								"name": "Araya the Eerie Dancer",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 1,
+								"c": 1.0,
 								"name": "Shredder Doll",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 3,
+								"c": 3.0,
 								"name": "Poltergeist",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Dark Blob",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Laughing Granny",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Hypnosis",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 0,
+								"c": 0.0,
 								"name": "Brainwash",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
-								"r": 0,
-								"c": 4,
+								"c": 4.0,
 								"name": "Hands in the Attic",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Street Joke",
+								"r": 4.0,
 								"type": "trap"
 							}
 						]
@@ -4556,12 +4567,12 @@
 				]
 			},
 			"featured_union": "Greater Succubus",
-			"union_formula": "1 Succubus + 1 Chaos + 800 cost",
 			"id": "norm_greater_succubus",
 			"label": "Norm / Cha - Greater Succubus",
 			"tags": [
 				"Norm"
-			]
+			],
+			"union_formula": "1 Succubus + 1 Chaos + 800 cost"
 		},
 		{
 			"deck": {
@@ -4577,93 +4588,93 @@
 					"Tiny Pixie",
 					"Ponycorn"
 				],
-				"deck_name": "Hard / Div - False Prophet Casino",
+				"deck_name": "Easy / Div - False Prophet Casino",
 				"formations": [
 					{
 						"name": "Default Formation",
 						"placements": [
 							{
-								"r": 2,
-								"c": 2,
+								"c": 2.0,
 								"name": "Church Guard",
+								"r": 2.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 2,
+								"c": 2.0,
 								"name": "Archbishop",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 2,
+								"c": 2.0,
 								"name": "Joseph the Battle Priest",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 2,
+								"c": 2.0,
 								"name": "Joan the Faithful Warrior",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 2,
+								"c": 2.0,
 								"name": "Melissa the Healer",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 1,
+								"c": 1.0,
 								"name": "Sniping Fairy",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 3,
+								"c": 3.0,
 								"name": "Bomber Fairy",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Padmapani",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Tiny Pixie",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 3,
+								"c": 3.0,
 								"name": "Ponycorn",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Bait",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 0,
+								"c": 0.0,
 								"name": "Decoy Puppet",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
-								"r": 0,
-								"c": 4,
+								"c": 4.0,
 								"name": "Acid Trap Hole",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Street Joke",
+								"r": 4.0,
 								"type": "trap"
 							}
 						]
@@ -4682,17 +4693,16 @@
 				]
 			},
 			"featured_union": "False Prophet",
-			"union_formula": "2 Divine cards + 300 cost",
-			"id": "hard_false_prophet_casino",
-			"label": "Hard / Div - False Prophet Casino",
+			"id": "easy_false_prophet_casino",
+			"label": "Easy / Div - False Prophet Casino",
 			"tags": [
 				"Hard"
-			]
+			],
+			"union_formula": "2 Divine cards + 300 cost"
 		},
 		{
 			"deck": {
 				"characters": [
-					"WK-17 the Siren",
 					"WK-17 the Siren",
 					"Bladeshifter",
 					"Claw Mutant",
@@ -4703,93 +4713,87 @@
 					"Mind Flayer",
 					"Lab Crawler"
 				],
-				"deck_name": "Hard / Bio - WK-17 Mutagen Roulette",
+				"deck_name": "Easy / Bio - WK-17 Mutagen Roulette",
 				"formations": [
 					{
 						"name": "Default Formation",
 						"placements": [
 							{
-								"r": 2,
-								"c": 2,
+								"c": 2.0,
 								"name": "WK-17 the Siren",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 2,
-								"name": "WK-17 the Siren",
-								"type": "character"
-							},
-							{
-								"r": 3,
-								"c": 2,
+								"c": 2.0,
 								"name": "Bladeshifter",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 2,
+								"c": 2.0,
 								"name": "Claw Mutant",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 2,
+								"c": 2.0,
 								"name": "Scarlet Mutant",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 1,
+								"c": 1.0,
 								"name": "Lab Zombie",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 3,
-								"c": 3,
+								"c": 3.0,
 								"name": "Gamma Emitter",
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Lab Bloater",
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Mind Flayer",
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"r": 1,
-								"c": 3,
+								"c": 3.0,
 								"name": "Lab Crawler",
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"r": 0,
-								"c": 0,
+								"c": 0.0,
 								"name": "Brainwash",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 0,
+								"c": 0.0,
 								"name": "Hypnosis",
+								"r": 4.0,
 								"type": "trap"
 							},
 							{
-								"r": 0,
-								"c": 4,
+								"c": 4.0,
 								"name": "Pepper Spray",
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"r": 4,
-								"c": 4,
+								"c": 4.0,
 								"name": "Explosive Barrels",
+								"r": 4.0,
 								"type": "trap"
 							}
 						]
@@ -4808,12 +4812,12 @@
 				]
 			},
 			"featured_union": "Dimensional Virus",
-			"union_formula": "1 Bio (\u2265 800 cost) + 1 Arcane (\u2265 800 cost) + 800 cost",
-			"id": "hard_wk17_roulette",
-			"label": "Hard / Bio - WK-17 Mutagen Roulette",
+			"id": "easy_wk17_roulette",
+			"label": "Easy / Bio - WK-17 Mutagen Roulette",
 			"tags": [
 				"Hard"
-			]
+			],
+			"union_formula": "1 Bio (≥ 800 cost) + 1 Arcane (≥ 800 cost) + 800 cost"
 		}
 	]
 }

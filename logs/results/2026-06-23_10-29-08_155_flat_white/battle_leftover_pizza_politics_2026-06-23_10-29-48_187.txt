@@ -1,0 +1,217 @@
+=== Battle of Leftover Pizza Politics ===
+Battle started: 2026-06-23 10:29:48.187
+Game Session of Flat White (started 2026-06-23 10:29:08.155)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:30.132] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:51.790] Mode selected P1: TECH
+[00:53.053] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[01:04.388] Tech played  P1: "Radar"
+[01:10.504] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[01:13.169] Dead-end placed  P0 (1,3)
+[01:14.822] Dead-end placed  P0 (2,3)
+[01:15.538] Revealed: P0 (4,4) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[01:15.540] Tech resolved  P1
+[01:19.327] Mode selected P1: ATTACK
+[01:19.329] MSG: Player 2: tap a unit to attack.
+[01:20.650] Revealed: P1 (0,1) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[01:28.509] Dice rolled: 1
+[01:28.525] MSG: Earth Elemental wins!
+[01:40.669] Crystals: P0 5000 → 4500 (-500)  [battle]
+[01:57.966] Attack P1(0,1)"Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} → P0(4,4)"Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}  Dice=1  ATK=20 vs DEF=10  → WIN
+[01:57.967] Reckoning overlay: P1 "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} badge=20 ATK pill=20 DEF pill=40 mod=+ATK 0 (20+0=20)
+[01:57.967] Reckoning overlay: P0 "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine} badge=10 ATK pill=50 DEF pill=10 mod=+DEF 0 (10+0=10)
+[01:57.967] Anim: 3A  △ P0(4,4)
+[01:57.967] Card destroyed  P0 (4,4) "Flame Seraph" {Unit ATK50 DEF10 | cost 500 | affinity Divine}
+[02:08.864] Turn ended  P1  |  Crystals P0=4500 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4500 P1=4400 ---
+[02:40.238] Revealed: P0 (2,0) "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine}
+[02:40.239] Dice rolled: 4
+[02:45.364] MSG: Mephisto the Fallen wins!
+[02:57.621] Crystals: P1 4400 → 4020 (-380)  [battle]
+[03:15.279] Attack P0(2,0)"Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} → P1(0,1)"Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}  Dice=4  ATK=75 vs DEF=40  → WIN
+[03:15.279] Reckoning overlay: P0 "Mephisto the Fallen" {Unit ATK75 DEF0 | cost 860 | affinity Divine} badge=75 ATK pill=75 DEF pill=0 mod=+ATK 0 (75+0=75)
+[03:15.279] Reckoning overlay: P1 "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane} badge=40 ATK pill=20 DEF pill=40 mod=+DEF 0 (40+0=40)
+[03:15.279] Anim: 3A  △ P1(0,1)
+[03:15.279] Card destroyed  P1 (0,1) "Earth Elemental" {Unit ATK20 DEF40 | cost 380 | affinity Arcane}
+[03:33.035] Tech played  P0: "Prayer"
+[03:39.647] MSG: Prayer: Divine Units protected until opponent's turn ends.
+[03:39.655] Tech resolved  P0
+[03:56.456] Revealed: P0 (4,2) "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine}
+[03:56.456] Dice rolled: 5
+[04:01.905] MSG: Nothing happens — Dead End.
+[04:16.217] Attack P0(4,2)"Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine} → P1(1,2)(empty)  Dice=5  → DEAD_END
+[04:16.217] Anim: 3F  (blank slot)
+[04:29.916] Turn ended  P0  |  Crystals P0=4500 P1=4020
+
+--- Turn 3  |  Player 1  |  Crystals P0=4500 P1=4020 ---
+[04:32.390] Mode selected P1: TECH
+[04:33.734] Tech played  P1: "Spy"
+[04:39.880] Target prompt: "Choose 1 square(s) to reveal on opponent's field."  filter=opponent_squares_1
+[04:41.612] Tech resolved  P1
+[04:42.640] Dead-end placed  P0 (1,4)
+[04:45.451] Mode selected P1: ATTACK
+[04:45.454] MSG: Player 2: tap a unit to attack.
+[04:46.809] Revealed: P1 (0,3) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[04:54.840] Dice rolled: 5
+[04:54.855] MSG: Fire Elemental wins!
+[04:54.855] MSG: Prayer protected Padmapani!
+[05:10.696] Attack P1(0,3)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} → P0(4,2)"Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine}  Dice=5  ATK=35 vs DEF=25  → TIE
+[05:10.696] Reckoning overlay: P1 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=35 ATK pill=35 DEF pill=20 mod=+ATK 0 (35+0=35)
+[05:10.696] Reckoning overlay: P0 "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine} badge=25 ATK pill=50 DEF pill=25 mod=+DEF 0 (25+0=25)
+[05:10.696] Anim: exchange  (no destruction)
+[05:12.951] Mode selected P1: ATTACK
+[05:12.953] MSG: Player 2: tap a unit to attack.
+[05:14.371] Revealed: P1 (1,0) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[05:22.958] Dice rolled: 4
+[05:22.973] MSG: Aerial the Battlemage wins!
+[05:35.830] Crystals: P0 4500 → 3500 (-1000)  [battle]
+[05:54.530] Attack P1(1,0)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P0(4,2)"Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine}  Dice=4  ATK=50 vs DEF=25  → WIN
+[05:54.530] Reckoning overlay: P1 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=50 ATK pill=50 DEF pill=45 mod=+ATK 0 (50+0=50)
+[05:54.530] Reckoning overlay: P0 "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine} badge=25 ATK pill=50 DEF pill=25 mod=+DEF 0 (25+0=25)
+[05:54.530] Anim: 3A  △ P0(4,2)
+[05:54.530] Card destroyed  P0 (4,2) "Padmapani" {Unit ATK50 DEF25 | cost 1000 | affinity Divine}
+[05:56.801] Turn ended  P1  |  Crystals P0=3500 P1=4020
+
+--- Turn 4  |  Player 0  |  Crystals P0=3500 P1=4020 ---
+[06:18.158] MSG: Tap 2 material card(s) on the field.
+[06:20.257] MSG: 1 more material(s) needed.
+[06:22.742] Crystals: P0 3500 → 2500 (-1000)  [union]
+[06:34.082] Revealed: P0 (1,1) "Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine}
+[06:34.111] Union summoned P0: "Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} from "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down}, "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down}
+[06:34.111] MSG: Player 1 summoned [Gryphon Rider] using: "Gryphon" {Unit ATK100 DEF85 | cost 1150 | affinity Nature | face-down}, "Joan the Faithful Warrior" {Unit ATK25 DEF5 | cost 280 | affinity Divine | face-down}
+[07:05.474] Dice rolled: 4
+[07:05.533] MSG: Gryphon Rider wins!
+[07:17.763] Crystals: P1 4020 → 3270 (-750)  [battle]
+[07:35.200] Attack P0(1,1)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(1,0)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}  Dice=4  ATK=125 vs DEF=45  → WIN
+[07:35.200] Reckoning overlay: P0 "Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} badge=125 ATK pill=125 DEF pill=90 mod=+ATK 0 (125+0=125)
+[07:35.200] Reckoning overlay: P1 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=45 ATK pill=50 DEF pill=45 mod=+DEF 0 (45+0=45)
+[07:35.200] Anim: 3A  △ P1(1,0)
+[07:35.200] Card destroyed  P1 (1,0) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[08:16.126] Revealed: P0 (1,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[08:16.126] Dice rolled: 5
+[08:21.588] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[08:21.602] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[08:21.602] MSG: Joseph the Battle Priest wins!
+[08:21.638] Coin flip: Tails
+[08:34.495] Crystals: P1 3270 → 2890 (-380)  [battle]
+[08:53.129] Attack P0(1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(0,3)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}  Dice=5  ATK=60 vs DEF=20  → WIN
+[08:53.129] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=60 ATK pill=60 DEF pill=25 mod=+ATK 0 (60+0=60)
+[08:53.129] Reckoning overlay: P1 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=20 ATK pill=35 DEF pill=20 mod=+DEF 0 (20+0=20)
+[08:53.129] Anim: 3A  △ P1(0,3)
+[08:53.129] Card destroyed  P1 (0,3) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[09:05.984] Turn ended  P0  |  Crystals P0=2500 P1=2890
+
+--- Turn 5  |  Player 1  |  Crystals P0=2500 P1=2890 ---
+[09:08.464] Mode selected P1: TECH
+[09:09.837] Tech played  P1: "Tease"
+[09:16.210] MSG: Opponent must choose and reveal 1 of their squares.
+[09:16.290] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[09:20.754] Revealed: P0 (4,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[09:20.754] MSG: Tease: Opponent revealed Tiny Pixie.
+[09:20.757] Tech resolved  P1
+[09:24.447] Mode selected P1: ATTACK
+[09:24.450] MSG: Player 2: tap a unit to attack.
+[09:25.738] Revealed: P1 (1,4) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[09:33.719] Dice rolled: 1
+[09:33.734] MSG: Ice Mage wins!
+[09:45.919] Crystals: P0 2500 → 1640 (-860)  [battle]
+[10:03.951] Attack P1(1,4)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} → P0(2,0)"Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}  Dice=1  ATK=50 vs DEF=0  → WIN
+[10:03.951] Reckoning overlay: P1 "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} badge=50 ATK pill=50 DEF pill=0 mod=+ATK 0 (50+0=50)
+[10:03.951] Reckoning overlay: P0 "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[10:03.951] Anim: 3A  △ P0(2,0)
+[10:03.951] Card destroyed  P0 (2,0) "Mephisto the Fallen" {Unit ATK0 DEF0 | cost 860 | affinity Divine | base 0/0}
+[10:15.067] Turn ended  P1  |  Crystals P0=1640 P1=2890
+
+--- Turn 6  |  Player 0  |  Crystals P0=1640 P1=2890 ---
+[10:32.538] Dice rolled: 3
+[10:32.540] MSG: Joseph the Battle Priest coin flip: heads! +10 ATK
+[10:32.556] MSG: Joseph the Battle Priest coin flip: tails — no bonus.
+[10:32.556] MSG: Joseph the Battle Priest wins!
+[10:32.593] Coin flip: Tails
+[10:45.023] Crystals: P1 2890 → 2490 (-400)  [battle]
+[11:02.726] Attack P0(1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} → P1(1,4)"Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}  Dice=3  ATK=60 vs DEF=0  → WIN
+[11:02.727] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=60 ATK pill=60 DEF pill=25 mod=+ATK 0 (60+0=60)
+[11:02.727] Reckoning overlay: P1 "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane} badge=0 ATK pill=50 DEF pill=0 mod=+DEF 0 (0+0=0)
+[11:02.727] Anim: 3A  △ P1(1,4)
+[11:02.727] Card destroyed  P1 (1,4) "Ice Mage" {Unit ATK50 DEF0 | cost 400 | affinity Arcane}
+[12:25.419] Revealed: P0 (0,0) "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine}
+[12:25.441] Revealed: P1 (2,1) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[12:25.441] Dice rolled: 5
+[12:30.911] MSG: Sonic Seraph wins!
+[12:43.898] Crystals: P1 2490 → 2110 (-380)  [battle]
+[13:02.641] Attack P0(0,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(2,1)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=5  ATK=45 vs DEF=30  → WIN
+[13:02.641] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[13:02.641] Reckoning overlay: P1 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[13:02.641] Anim: 3A  △ P1(2,1)
+[13:02.641] Card destroyed  P1 (2,1) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[13:11.862] Turn ended  P0  |  Crystals P0=1640 P1=2110
+
+--- Turn 7  |  Player 1  |  Crystals P0=1640 P1=2110 ---
+[13:14.338] Mode selected P1: ATTACK
+[13:14.341] MSG: Player 2: tap a unit to attack.
+[13:15.632] Revealed: P1 (4,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[13:23.626] Dice rolled: 5
+[13:23.641] MSG: Book with Fangs wins!
+[13:35.971] Crystals: P0 1640 → 1040 (-600)  [battle]
+[13:53.635] Attack P1(4,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(1,2)"Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}  Dice=5  ATK=45 vs DEF=25  → WIN
+[13:53.635] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[13:53.635] Reckoning overlay: P0 "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine} badge=25 ATK pill=60 DEF pill=25 mod=+DEF 0 (25+0=25)
+[13:53.635] Anim: 3A  △ P0(1,2)
+[13:53.635] Card destroyed  P0 (1,2) "Joseph the Battle Priest" {Unit ATK60 DEF25 | cost 600 | affinity Divine}
+[14:04.598] Turn ended  P1  |  Crystals P0=1040 P1=2110
+
+--- Turn 8  |  Player 0  |  Crystals P0=1040 P1=2110 ---
+[14:30.134] Dice rolled: 4
+[14:30.188] MSG: Gryphon Rider wins!
+[14:42.408] Crystals: P1 2110 → 1310 (-800)  [battle]
+[15:00.171] Attack P0(1,1)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(4,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=4  ATK=125 vs DEF=55  → WIN
+[15:00.171] Reckoning overlay: P0 "Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} badge=125 ATK pill=125 DEF pill=90 mod=+ATK 0 (125+0=125)
+[15:00.171] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=55 ATK pill=45 DEF pill=55 mod=+DEF 0 (55+0=55)
+[15:00.171] Anim: 3A  △ P1(4,0)
+[15:00.171] Card destroyed  P1 (4,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[15:24.134] Dice rolled: 4
+[15:25.271] MSG: Nothing happens — Dead End.
+[15:33.354] MSG: Sonic Seraph: Bonus attack for hitting dead end!
+[15:33.358] Attack P0(0,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[15:33.358] Anim: 3F  (blank slot)
+[16:14.821] Revealed: P1 (2,0) "Bait" {cost 0}
+[16:14.821] Dice rolled: 5
+[16:20.244] MSG: Trap triggered: Bait!
+[16:31.562] Target prompt: "Bait: Choose a square on your field to reveal."  filter=self_reveal_choice
+[16:40.012] Revealed: P1 (2,3) "Foul Gas" {cost 0}
+[16:40.013] MSG: Bait: Defender revealed Foul Gas.
+[16:46.229] Attack P0(0,0)"Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn} → P1(2,0)"Bait" {cost 0}  Dice=5  → Unit vs Trap
+[16:46.229] Reckoning overlay: P0 "Sonic Seraph" {Unit ATK45 DEF50 | cost 550 | affinity Divine | flags:extra_deadend_turn} badge=45 ATK pill=45 DEF pill=50 mod=+ATK 0 (45+0=45)
+[16:46.229] Anim: 3D  (attacker survives)
+[17:06.699] Turn ended  P0  |  Crystals P0=1040 P1=1310
+
+--- Turn 9  |  Player 1  |  Crystals P0=1040 P1=1310 ---
+[17:09.241] Mode selected P1: ATTACK
+[17:09.247] MSG: Player 2: tap a unit to attack.
+[17:10.562] Revealed: P1 (2,4) "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane}
+[17:18.669] Dice rolled: 3
+[17:18.685] MSG: Lightning Hawk wins!
+[17:28.956] MSG: Tiny Pixie survives destruction!
+[17:28.992] Coin flip: Heads, Tails
+[17:40.430] MSG: Lightning Hawk: Coin flip failed — no extra attack.
+[17:46.443] Attack P1(2,4)"Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane} → P0(4,3)"Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}  Dice=3  ATK=20 vs DEF=0  → WIN
+[17:46.443] Reckoning overlay: P1 "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[17:46.443] Reckoning overlay: P0 "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine} badge=0 ATK pill=0 DEF pill=0 mod=+DEF 0 (0+0=0)
+[17:46.443] Anim: 3A  △ P0(4,3)
+[17:46.443] Card destroyed  P0 (4,3) "Tiny Pixie" {Unit ATK0 DEF0 | cost 100 | affinity Divine}
+[17:57.597] Turn ended  P1  |  Crystals P0=1040 P1=1310
+
+--- Turn 10  |  Player 0  |  Crystals P0=1040 P1=1310 ---
+[18:11.084] Dice rolled: 2
+[18:11.136] MSG: Gryphon Rider wins!
+[18:23.279] Crystals: P1 1310 → 810 (-500)  [battle]
+[18:40.834] Attack P0(1,1)"Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affinity Divine} → P1(2,4)"Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane}  Dice=2  ATK=125 vs DEF=10  → WIN
+[18:40.834] Reckoning overlay: P0 "Gryphon Rider" {Union ATK125 DEF90 | destroy-cost 0 | summon-cost 1000 | affi

@@ -1,0 +1,111 @@
+=== Battle of Roundabout Third Exit ===
+Battle started: 2026-06-22 10:16:02.790
+Game Session of Cranberry Juice (started 2026-06-22 10:14:47.542)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:13.166] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:33.844] Mode selected P1: TECH
+[00:35.061] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:41.999] Tech played  P1: "Radar"
+[00:47.901] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:49.528] Revealed: P0 (0,4) "Hard Scale" {cost 700}
+[00:51.182] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:52.819] Revealed: P0 (4,0) "Echo Barrier" {cost 1000}
+[00:52.840] Tech resolved  P1
+[00:56.466] Mode selected P1: ATTACK
+[00:56.468] MSG: Player 2: tap a unit to attack.
+[00:57.731] Revealed: P1 (0,3) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[01:05.477] Revealed: P0 (1,1) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[01:05.477] Dice rolled: 3
+[01:22.519] Crystals: P1 4400 → 4020 (-380)  [battle]
+[01:29.563] Attack P1(0,3)"Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} → P0(1,1)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=3  ATK=35 vs DEF=55  → LOSE
+[01:29.563] Reckoning overlay: P1 "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane} badge=35 ATK pill=35 DEF pill=20 mod=+ATK 0 (35+0=35)
+[01:29.563] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[01:29.563] Anim: 3B  △ P1(0,3)
+[01:29.563] Card destroyed  P1 (0,3) "Fire Elemental" {Unit ATK35 DEF20 | cost 380 | affinity Arcane}
+[01:31.577] Mode selected P1: ATTACK
+[01:31.578] MSG: Player 2: tap a unit to attack.
+[01:32.825] Revealed: P1 (2,1) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[01:40.619] Dice rolled: 5
+[01:40.632] MSG: Mad Wyvern wins!
+[01:52.404] Crystals: P0 5000 → 4200 (-800)  [battle]
+[02:05.266] Attack P1(2,1)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} → P0(1,1)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}  Dice=5  ATK=65 vs DEF=55  → WIN
+[02:05.266] Reckoning overlay: P1 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=65 ATK pill=65 DEF pill=40 mod=+ATK 0 (65+0=65)
+[02:05.266] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=55 ATK pill=50 DEF pill=55 mod=+DEF 0 (55+0=55)
+[02:05.266] Anim: 3A  △ P0(1,1)
+[02:05.266] Card destroyed  P0 (1,1) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[02:07.440] Turn ended  P1  |  Crystals P0=4200 P1=4020
+
+--- Turn 2  |  Player 0  |  Crystals P0=4200 P1=4020 ---
+[02:26.441] Revealed: P0 (2,1) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[02:26.441] Dice rolled: 3
+[02:31.319] MSG: Ostrich Cannon wins!
+[02:43.155] Crystals: P1 4020 → 3470 (-550)  [battle]
+[02:50.265] MSG: Ostrich Cannon locks itself until next turn.
+[02:56.098] Attack P0(2,1)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} → P1(2,1)"Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}  Dice=3  ATK=60 vs DEF=40  → WIN
+[02:56.098] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} badge=60 ATK pill=60 DEF pill=30 mod=+ATK 0 (60+0=60)
+[02:56.098] Reckoning overlay: P1 "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane} badge=40 ATK pill=65 DEF pill=40 mod=+DEF 0 (40+0=40)
+[02:56.098] Anim: 3A  △ P1(2,1)
+[02:56.098] Card destroyed  P1 (2,1) "Mad Wyvern" {Unit ATK65 DEF40 | cost 550 | affinity Arcane}
+[03:19.564] MSG: Tap 2 material card(s) on the field.
+[03:27.040] MSG: 1 more material(s) needed.
+[03:31.446] Crystals: P0 4200 → 3400 (-800)  [union]
+[03:39.038] Revealed: P0 (3,2) "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature}
+[03:39.067] Union summoned P0: "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} from "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | attacked,cannot-atk≤T4}
+[03:39.067] MSG: Player 1 summoned [Ancient Lizard] using: "Flame Lizard" {Unit ATK25 DEF40 | cost 400 | affinity Nature | face-down}, "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature | attacked,cannot-atk≤T4}
+[04:04.985] Revealed: P1 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[04:04.985] Dice rolled: 1
+[04:09.830] MSG: Ancient Lizard wins!
+[04:21.494] Crystals: P1 3470 → 3090 (-380)  [battle]
+[04:34.365] Attack P0(3,2)"Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} → P1(1,2)"Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}  Dice=1  ATK=75 vs DEF=30  → WIN
+[04:34.365] Reckoning overlay: P0 "Ancient Lizard" {Union ATK75 DEF75 | destroy-cost 0 | summon-cost 800 | affinity Nature} badge=75 ATK pill=75 DEF pill=75 mod=+ATK 0 (75+0=75)
+[04:34.365] Reckoning overlay: P1 "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane} badge=30 ATK pill=30 DEF pill=30 mod=+DEF 0 (30+0=30)
+[04:34.365] Anim: 3A  △ P1(1,2)
+[04:34.365] Card destroyed  P1 (1,2) "Wind Elemental" {Unit ATK30 DEF30 | cost 380 | affinity Arcane}
+[04:45.972] Turn ended  P0  |  Crystals P0=3400 P1=3090
+
+--- Turn 3  |  Player 1  |  Crystals P0=3400 P1=3090 ---
+[04:48.306] Mode selected P1: TECH
+[04:49.580] Tech played  P1: "Tease"
+[04:55.405] MSG: Opponent must choose and reveal 1 of their squares.
+[04:55.571] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[05:00.831] Revealed: P0 (2,4) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[05:00.831] MSG: Tease: Opponent revealed Leopard Jailer.
+[05:00.833] Tech resolved  P1
+[05:04.335] Mode selected P1: ATTACK
+[05:04.337] MSG: Player 2: tap a unit to attack.
+[05:05.565] Revealed: P1 (3,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[05:13.109] Dice rolled: 1
+[05:13.123] MSG: Both cards are destroyed!
+[05:24.299] Crystals: P1 3090 → 2290 (-800)  [battle]
+[05:31.236] Crystals: P0 3400 → 2950 (-450)  [battle]
+[05:38.118] Attack P1(3,0)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(2,4)"Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}  Dice=1  ATK=45 vs DEF=45  → TIE
+[05:38.118] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[05:38.118] Reckoning overlay: P0 "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima} badge=45 ATK pill=30 DEF pill=45 mod=+DEF 0 (45+0=45)
+[05:38.118] Anim: 3C  △ P1(3,0) + △ P0(2,4)
+[05:38.118] Card destroyed  P1 (3,0) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[05:38.118] Card destroyed  P0 (2,4) "Leopard Jailer" {Unit ATK30 DEF45 | cost 450 | affinity Anima}
+[05:40.098] Mode selected P1: ATTACK
+[05:40.100] MSG: Player 2: tap a unit to attack.
+[05:41.326] Revealed: P1 (2,0) "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane}
+[05:49.040] Dice rolled: 3
+[05:50.028] MSG: Nothing happens — Dead End.
+[05:57.519] Coin flip: Tails, Tails
+[06:08.320] MSG: Lightning Hawk: Coin flip failed — no extra attack.
+[06:14.031] Attack P1(2,0)"Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane} → P0(3,1)(empty)  Dice=3  → DEAD_END
+[06:14.031] Anim: 3F  (blank slot)
+[06:16.163] Turn ended  P1  |  Crystals P0=2950 P1=2290
+
+--- Turn 4  |  Player 0  |  Crystals P0=2950 P1=2290 ---
+[06:33.227] Revealed: P0 (2,3) "Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima}
+[06:33.228] Dice rolled: 5
+[06:38.064] MSG: Shepherd Detective wins!
+[06:49.643] Crystals: P1 2290 → 1790 (-500)  [battle]
+[07:02.179] Attack P0(2,3)"Shepherd Detective" {Unit ATK40 DEF25 | cost 400 | affinity Anima} → P1(2,0)"Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane}  Dice=5  ATK=40 vs DEF=10  → WIN
+[07:02.179] Reckoning overlay: P0 "Shepherd De

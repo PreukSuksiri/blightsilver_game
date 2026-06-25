@@ -1,0 +1,62 @@
+=== Battle of Rogue Roomba Rampage ===
+Battle started: 2026-06-23 09:31:01.260
+Game Session of Mulled Wine (started 2026-06-23 09:28:44.948)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[01:03.032] MSG: Coin flip — Heads! Player 1 goes first!
+
+--- Turn 1  |  Player 0  |  Crystals P0=5000 P1=5000 ---
+[01:47.674] Revealed: P0 (1,3) "Death Stag" {Unit ATK45 DEF40 | cost 400 | affinity Nature}
+[01:47.700] Revealed: P1 (1,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[01:47.700] Dice rolled: 5
+[01:53.705] MSG: Death Stag wins!
+[02:06.333] Crystals: P1 5000 → 4650 (-350)  [battle]
+[02:24.466] Attack P0(1,3)"Death Stag" {Unit ATK45 DEF40 | cost 400 | affinity Nature} → P1(1,2)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}  Dice=5  ATK=45 vs DEF=30  → WIN
+[02:24.466] Reckoning overlay: P0 "Death Stag" {Unit ATK45 DEF40 | cost 400 | affinity Nature} badge=45 ATK pill=45 DEF pill=40 mod=+ATK 0 (45+0=45)
+[02:24.466] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} badge=30 ATK pill=35 DEF pill=30 mod=+DEF 0 (30+0=30)
+[02:24.466] Anim: 3A  △ P1(1,2)
+[02:24.466] Card destroyed  P1 (1,2) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[02:37.004] Revealed: P0 (0,1) "Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature}
+[02:37.028] Revealed: P1 (2,1) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[02:37.028] Dice rolled: 5
+[02:42.395] MSG: Vicious Lizard wins!
+[02:54.931] Crystals: P1 4650 → 4330 (-320)  [battle]
+[03:13.076] Attack P0(0,1)"Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature} → P1(2,1)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}  Dice=5  ATK=40 vs DEF=20  → WIN
+[03:13.076] Reckoning overlay: P0 "Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature} badge=40 ATK pill=40 DEF pill=25 mod=+ATK 0 (40+0=40)
+[03:13.076] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:13.076] Anim: 3A  △ P1(2,1)
+[03:13.076] Card destroyed  P1 (2,1) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[03:21.354] Turn ended  P0  |  Crystals P0=5000 P1=4330
+
+--- Turn 2  |  Player 1  |  Crystals P0=5000 P1=4330 ---
+[03:23.791] Mode selected P1: TECH
+[03:25.032] Crystals: P1 4330 → 3730 (-600)  [tech cost]
+[03:36.349] Tech played  P1: "Radar"
+[03:42.558] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[03:44.225] Revealed: P0 (3,2) "Venom Queen" {Unit ATK45 DEF75 | cost 550 | affinity Nature}
+[03:45.893] Revealed: P0 (0,3) "Giant Centipede" {Unit ATK20 DEF20 | cost 850 | affinity Nature}
+[03:47.544] Tech resolved  P1
+[03:48.587] Dead-end placed  P0 (0,2)
+[03:51.313] Mode selected P1: ATTACK
+[03:51.316] MSG: Player 2: tap a unit to attack.
+[03:52.635] Revealed: P1 (2,0) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[04:00.567] Dice rolled: 2
+[04:00.585] MSG: Gamma Emitter wins!
+[04:12.534] Crystals: P0 5000 → 3900 (-1100)  [battle]
+[04:29.580] Attack P1(2,0)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P0(0,1)"Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature}  Dice=2  ATK=30 vs DEF=25  → WIN
+[04:29.580] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=30 ATK pill=20 DEF pill=15 mod=+ATK 10 (20+10=30)
+[04:29.580] Reckoning overlay: P0 "Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature} badge=25 ATK pill=40 DEF pill=25 mod=+DEF 0 (25+0=25)
+[04:29.580] Anim: 3A  △ P0(0,1)
+[04:29.580] Card destroyed  P0 (0,1) "Vicious Lizard" {Unit ATK40 DEF25 | cost 1100 | affinity Nature}
+[04:31.781] Mode selected P1: ATTACK
+[04:31.785] MSG: Player 2: tap a unit to attack.
+[04:33.235] Revealed: P1 (2,3) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[04:41.948] Dice rolled: 3
+[04:41.966] MSG: Both cards are destroyed!
+[04:54.365] Crystals: P1 3730 → 2930 (-800)  [battle]
+[05:06.926] Crystals: P0 3900 → 3050 (-850)  [battle]
+[05:23.238] 

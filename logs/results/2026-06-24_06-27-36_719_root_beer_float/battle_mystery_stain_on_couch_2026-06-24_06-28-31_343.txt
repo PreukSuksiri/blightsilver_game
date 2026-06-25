@@ -1,0 +1,218 @@
+=== Battle of Mystery Stain on Couch ===
+Battle started: 2026-06-24 06:28:31.343
+Game Session of Root Beer Float (started 2026-06-24 06:27:36.719)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:11.818] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:32.609] Mode selected P1: TECH
+[00:33.828] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:44.741] Tech played  P1: "Radar"
+[00:50.675] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:52.269] Revealed: P0 (4,4) "Pepper Spray" {cost 0}
+[00:53.922] Revealed: P0 (3,3) "Nimrod the Wonder Seeker" {Unit ATK65 DEF50 | cost 720 | affinity Cosmic}
+[00:55.526] Tech resolved  P1
+[00:56.479] Dead-end placed  P0 (0,3)
+[00:59.110] Mode selected P1: ATTACK
+[00:59.112] MSG: Player 2: tap a unit to attack.
+[01:00.367] Revealed: P1 (4,1) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[01:07.964] Revealed: P0 (3,2) "Methanomancer" {Unit ATK20 DEF20 | cost 350 | affinity Cosmic}
+[01:07.965] MSG: Methanomancer: Surrounding attack — +30 ATK&DEF!
+[01:07.965] Dice rolled: 1
+[01:07.986] MSG: Both cards are destroyed!
+[01:19.231] Crystals: P1 4400 → 3950 (-450)  [battle]
+[01:30.140] Crystals: P0 5000 → 4280 (-720)  [battle]
+[01:45.183] Attack P1(4,1)"Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} → P0(3,3)"Nimrod the Wonder Seeker" {Unit ATK65 DEF50 | cost 720 | affinity Cosmic}  Dice=1  ATK=50 vs DEF=50  → TIE
+[01:45.183] Reckoning overlay: P1 "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio} badge=50 ATK pill=50 DEF pill=30 mod=+ATK 0 (50+0=50)
+[01:45.183] Reckoning overlay: P0 "Nimrod the Wonder Seeker" {Unit ATK65 DEF50 | cost 720 | affinity Cosmic} badge=50 ATK pill=65 DEF pill=50 mod=+DEF 0 (50+0=50)
+[01:45.183] Anim: 3C  △ P1(4,1) + △ P0(3,3)
+[01:45.183] Card destroyed  P1 (4,1) "Rotten Shrieker" {Unit ATK50 DEF30 | cost 450 | affinity Bio}
+[01:45.183] Card destroyed  P0 (3,3) "Nimrod the Wonder Seeker" {Unit ATK65 DEF50 | cost 720 | affinity Cosmic}
+[01:47.171] Mode selected P1: ATTACK
+[01:47.172] MSG: Player 2: tap a unit to attack.
+[01:48.419] Revealed: P1 (0,2) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[01:56.112] Dice rolled: 1
+[01:56.130] MSG: Lab Zombie wins!
+[02:07.893] Crystals: P0 4280 → 3930 (-350)  [battle]
+[02:24.677] Attack P1(0,2)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} → P0(3,2)"Methanomancer" {Unit ATK50 DEF50 | cost 350 | affinity Cosmic | base 20/20 | buff +tempATK30, +tempDEF30}  Dice=1  ATK=55 vs DEF=50  → WIN
+[02:24.677] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=55 ATK pill=55 DEF pill=20 mod=+ATK 0 (55+0=55)
+[02:24.677] Reckoning overlay: P0 "Methanomancer" {Unit ATK50 DEF50 | cost 350 | affinity Cosmic | base 20/20 | buff +tempATK30, +tempDEF30} badge=50 ATK pill=50 DEF pill=50 mod=+DEF 0 (50+0=50)
+[02:24.677] Anim: 3A  △ P0(3,2)
+[02:24.677] Card destroyed  P0 (3,2) "Methanomancer" {Unit ATK50 DEF50 | cost 350 | affinity Cosmic | base 20/20 | buff +tempATK30, +tempDEF30}
+[02:26.786] Turn ended  P1  |  Crystals P0=3930 P1=3950
+
+--- Turn 2  |  Player 0  |  Crystals P0=3930 P1=3950 ---
+[02:47.599] Revealed: P0 (0,2) "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[02:47.599] Dice rolled: 4
+[02:52.444] MSG: Space Boy wins!
+[03:04.268] Crystals: P1 3950 → 3250 (-700)  [battle]
+[03:21.102] Attack P0(0,2)"Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} → P1(0,2)"Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}  Dice=4  ATK=75 vs DEF=20  → WIN
+[03:21.102] Reckoning overlay: P0 "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic} badge=75 ATK pill=75 DEF pill=65 mod=+ATK 0 (75+0=75)
+[03:21.102] Reckoning overlay: P1 "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio} badge=20 ATK pill=55 DEF pill=20 mod=+DEF 0 (20+0=20)
+[03:21.102] Anim: 3A  △ P1(0,2)
+[03:21.102] Card destroyed  P1 (0,2) "Lab Zombie" {Unit ATK55 DEF20 | cost 700 | affinity Bio}
+[03:43.727] Revealed: P0 (2,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[03:43.728] Dice rolled: 4
+[03:48.946] MSG: Nothing happens — Dead End.
+[04:02.744] Attack P0(2,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} → P1(1,1)(empty)  Dice=4  → DEAD_END
+[04:02.744] Anim: 3F  (blank slot)
+[04:08.359] Turn ended  P0  |  Crystals P0=3930 P1=3250
+
+--- Turn 3  |  Player 1  |  Crystals P0=3930 P1=3250 ---
+[04:10.698] Mode selected P1: ATTACK
+[04:10.700] MSG: Player 2: tap a unit to attack.
+[04:11.937] Revealed: P1 (1,4) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio}
+[04:19.572] Dice rolled: 4
+[04:19.585] MSG: Scarlet Mutant wins!
+[04:31.404] Crystals: P0 3930 → 3530 (-400)  [battle]
+[04:48.238] Attack P1(1,4)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} → P0(2,0)"Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}  Dice=4  ATK=35 vs DEF=30  → WIN
+[04:48.238] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio} badge=35 ATK pill=35 DEF pill=30 mod=+ATK 0 (35+0=35)
+[04:48.238] Reckoning overlay: P0 "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic} badge=30 ATK pill=40 DEF pill=30 mod=+DEF 0 (30+0=30)
+[04:48.238] Anim: 3A  △ P0(2,0)
+[04:48.238] Card destroyed  P0 (2,0) "Mars Drill" {Unit ATK40 DEF30 | cost 400 | affinity Cosmic}
+[04:58.834] Turn ended  P1  |  Crystals P0=3530 P1=3250
+
+--- Turn 4  |  Player 0  |  Crystals P0=3530 P1=3250 ---
+[05:31.336] Revealed: P0 (1,1) "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic}
+[05:31.336] Dice rolled: 3
+[05:36.183] MSG: Nothing happens — Dead End.
+[05:49.396] Attack P0(1,1)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(3,2)(empty)  Dice=3  → DEAD_END
+[05:49.396] Anim: 3F  (blank slot)
+[05:59.736] MSG: Tap 2 material card(s) on the field.
+[06:11.266] MSG: 1 more material(s) needed.
+[06:13.822] Crystals: P0 3530 → 2030 (-1500)  [union]
+[06:25.563] Revealed: P0 (1,3) "Helios the Prideful Fortress" {Union ATK145 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Cosmic}
+[06:25.594] Union summoned P0: "Helios the Prideful Fortress" {Union ATK145 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Cosmic} from "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | face-down}, "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[06:25.595] MSG: Player 1 summoned [Helios the Prideful Fortress] using: "Echo Bringer" {Unit ATK70 DEF40 | cost 900 | affinity Cosmic | face-down}, "Space Boy" {Unit ATK75 DEF65 | cost 800 | affinity Cosmic}
+[06:47.380] Dice rolled: 1
+[06:48.482] MSG: Nothing happens — Dead End.
+[07:02.332] Attack P0(1,3)"Helios the Prideful Fortress" {Union ATK145 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Cosmic} → P1(2,1)(empty)  Dice=1  → DEAD_END
+[07:02.332] Anim: 3F  (blank slot)
+[07:06.379] Turn ended  P0  |  Crystals P0=2030 P1=3250
+
+--- Turn 5  |  Player 1  |  Crystals P0=2030 P1=3250 ---
+[07:08.715] Mode selected P1: TECH
+[07:09.997] Tech played  P1: "Release Mutagen"
+[07:15.945] Target prompt: "Release Mutagen: Choose 1 of your units to flag."  filter=own_faceup_character
+[07:17.547] MSG: Release Mutagen: Mutagen on Scarlet Mutant.
+[07:17.551] Tech resolved  P1
+[07:21.129] Mode selected P1: ATTACK
+[07:21.131] MSG: Player 2: tap a unit to attack.
+[07:25.967] Revealed: P0 (0,4) "Self-destruct" {cost 0}
+[07:25.967] Dice rolled: 2
+[07:30.869] MSG: Trap triggered: Self-destruct!
+[07:41.184] Target prompt: "Self-destruct: Choose 1 of your units for +10 ATK until end of next turn (then destroyed)."  filter=own_character_for_trap_self_destruct
+[07:58.946] Revealed: P0 (3,1) "Moon Tribe Marksman" {Unit ATK35 DEF25 | cost 300 | affinity Cosmic}
+[07:58.946] MSG: Moon Tribe Marksman: +10 ATK until end of next turn, then destroyed.
+[08:04.640] Attack P1(1,4)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | flags:mutagen} → P0(0,4)"Self-destruct" {cost 0}  Dice=2  → Unit vs Trap
+[08:04.640] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | flags:mutagen} badge=35 ATK pill=35 DEF pill=30 mod=+ATK 0 (35+0=35)
+[08:04.640] Anim: 3D  (attacker survives)
+[08:15.144] Turn ended  P1  |  Crystals P0=2030 P1=3250
+
+--- Turn 6  |  Player 0  |  Crystals P0=2030 P1=3250 ---
+[09:06.289] Dice rolled: 2
+[09:06.304] MSG: Moon Tribe Marksman wins!
+[09:18.115] Crystals: P1 3250 → 2900 (-350)  [battle]
+[09:34.870] Attack P0(3,1)"Moon Tribe Marksman" {Unit ATK45 DEF25 | cost 300 | affinity Cosmic | base 35/25 | buff +tempATK10 | flags:self_destruct_next_turn} → P1(1,4)"Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | flags:mutagen}  Dice=2  ATK=45 vs DEF=30  → WIN
+[09:34.870] Reckoning overlay: P0 "Moon Tribe Marksman" {Unit ATK45 DEF25 | cost 300 | affinity Cosmic | base 35/25 | buff +tempATK10 | flags:self_destruct_next_turn} badge=45 ATK pill=45 DEF pill=25 mod=+ATK 0 (45+0=45)
+[09:34.870] Reckoning overlay: P1 "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | flags:mutagen} badge=30 ATK pill=35 DEF pill=30 mod=+DEF 0 (30+0=30)
+[09:34.870] Anim: 3A  △ P1(1,4)
+[09:34.870] Card destroyed  P1 (1,4) "Scarlet Mutant" {Unit ATK35 DEF30 | cost 350 | affinity Bio | flags:mutagen}
+[10:42.130] Dice rolled: 3
+[10:43.119] MSG: Nothing happens — Dead End.
+[10:56.441] Attack P0(1,1)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(2,2)(empty)  Dice=3  → DEAD_END
+[10:56.441] Anim: 3F  (blank slot)
+[11:01.394] MSG: Moon Tribe Marksman is destroyed by self-destruct trap!
+[11:01.394] Crystals: P0 2030 → 1730 (-300)  [card lost]
+[11:01.395] Card destroyed  P0 (3,1) "Moon Tribe Marksman" {Unit ATK45 DEF25 | cost 300 | affinity Cosmic | base 35/25 | buff +tempATK10 | attacked}
+[11:01.398] Turn ended  P0  |  Crystals P0=1730 P1=2900
+
+--- Turn 7  |  Player 1  |  Crystals P0=1730 P1=2900 ---
+[11:03.746] Mode selected P1: ATTACK
+[11:03.747] MSG: Player 2: tap a unit to attack.
+[11:04.986] Revealed: P1 (1,0) "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio}
+[11:12.622] Revealed: P0 (1,4) "Cursed Reflection" {cost 500}
+[11:12.622] Dice rolled: 3
+[11:17.465] MSG: Trap triggered: Cursed Reflection!
+[11:27.692] Crystals: P0 1730 → 1230 (-500)  [trap cost]
+[11:38.802] MSG: Cursed Reflection: Gamma Emitter's ATK and DEF swapped until end of defender's turn!
+[11:44.644] Attack P1(1,0)"Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} → P0(1,4)"Cursed Reflection" {cost 500}  Dice=3  → Unit vs Trap
+[11:44.644] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK20 DEF15 | cost 220 | affinity Bio} badge=20 ATK pill=20 DEF pill=15 mod=+ATK 0 (20+0=20)
+[11:44.644] Anim: 3D  (attacker survives)
+[11:46.778] Mode selected P1: ATTACK
+[11:46.781] MSG: Player 2: tap a unit to attack.
+[11:48.122] Revealed: P1 (0,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[11:56.390] Revealed: P0 (2,4) "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}
+[11:56.390] Dice rolled: 1
+[12:14.388] Crystals: P1 2900 → 2100 (-800)  [battle]
+[12:26.057] Attack P1(0,1)"Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} → P0(2,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic}  Dice=1  ATK=20 vs DEF=50  → LOSE
+[12:26.057] Reckoning overlay: P1 "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio} badge=20 ATK pill=20 DEF pill=85 mod=+ATK 0 (20+0=20)
+[12:26.057] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=50 ATK pill=40 DEF pill=50 mod=+DEF 0 (50+0=50)
+[12:26.057] Anim: 3B  △ P1(0,1)
+[12:26.057] Card destroyed  P1 (0,1) "Lab Bloater" {Unit ATK20 DEF85 | cost 800 | affinity Bio}
+[12:28.198] Turn ended  P1  |  Crystals P0=1230 P1=2100
+
+--- Turn 8  |  Player 0  |  Crystals P0=1230 P1=2100 ---
+[13:12.436] Dice rolled: 3
+[13:12.452] MSG: Scout Probe wins!
+[13:24.200] Crystals: P1 2100 → 1880 (-220)  [battle]
+[13:40.899] Attack P0(2,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(1,0)"Gamma Emitter" {Unit ATK15 DEF20 | cost 220 | affinity Bio | base 20/15}  Dice=3  ATK=40 vs DEF=20  → WIN
+[13:40.899] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[13:40.899] Reckoning overlay: P1 "Gamma Emitter" {Unit ATK15 DEF20 | cost 220 | affinity Bio | base 20/15} badge=20 ATK pill=15 DEF pill=20 mod=+DEF 0 (20+0=20)
+[13:40.899] Anim: 3A  △ P1(1,0)
+[13:40.899] Card destroyed  P1 (1,0) "Gamma Emitter" {Unit ATK15 DEF20 | cost 220 | affinity Bio | base 20/15}
+[13:40.918] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[13:50.843] Revealed: P1 (0,0) "Hypnosis" {cost 800}
+[13:50.845] MSG: Scout Probe: adjacent cell revealed.
+[14:12.972] Revealed: P1 (3,0) "Explosive Barrels" {cost 0}
+[14:12.973] Dice rolled: 3
+[14:18.171] MSG: Trap triggered: Explosive Barrels!
+[14:32.961] Crystals: P0 1230 → 130 (-1100)  [card lost]
+[14:47.360] Crystals: P1 1880 → 780 (-1100)  [trap]
+[15:00.555] MSG: Explosive Barrels: Satellite Cannon destroyed! Defender loses 1100 Crystals.
+[15:00.557] Attack P0(1,1)"Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} → P1(3,0)"Explosive Barrels" {cost 0}  Dice=3  → Unit vs Trap
+[15:00.557] Reckoning overlay: P0 "Satellite Cannon" {Unit ATK100 DEF80 | cost 1100 | affinity Cosmic} badge=100 ATK pill=100 DEF pill=80 mod=+ATK 0 (100+0=100)
+[15:00.557] Anim: 3E  △ P0(1,1)
+[15:07.381] Turn ended  P0  |  Crystals P0=130 P1=780
+
+--- Turn 9  |  Player 1  |  Crystals P0=130 P1=780 ---
+[15:09.739] Mode selected P1: ATTACK
+[15:09.741] MSG: Player 2: tap a unit to attack.
+[15:10.988] Revealed: P1 (0,4) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[15:18.635] Dice rolled: 5
+[15:19.611] MSG: Nothing happens — Dead End.
+[15:32.923] Attack P1(0,4)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} → P0(3,4)(empty)  Dice=5  → DEAD_END
+[15:32.923] Anim: 3F  (blank slot)
+[15:43.455] Turn ended  P1  |  Crystals P0=130 P1=780
+
+--- Turn 10  |  Player 0  |  Crystals P0=130 P1=780 ---
+[15:58.729] Tech played  P0: "Tease"
+[16:04.680] MSG: Opponent must choose and reveal 1 of their squares.
+[16:04.680] Target prompt: "Tease: Choose 1 of your face-down units to reveal."  filter=self_squares_1_opponent_turn
+[16:06.314] Revealed: P1 (4,0) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[16:06.314] MSG: Tease: Opponent revealed Bleacher Squad.
+[16:06.370] Tech resolved  P0
+[16:42.697] Dice rolled: 1
+[16:42.712] MSG: Scout Probe wins!
+[16:54.616] Crystals: P1 780 → 460 (-320)  [battle]
+[17:11.602] Attack P0(2,4)"Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} → P1(4,0)"Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}  Dice=1  ATK=40 vs DEF=20  → WIN
+[17:11.602] Reckoning overlay: P0 "Scout Probe" {Unit ATK40 DEF50 | cost 700 | affinity Cosmic} badge=40 ATK pill=40 DEF pill=50 mod=+ATK 0 (40+0=40)
+[17:11.602] Reckoning overlay: P1 "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio} badge=20 ATK pill=20 DEF pill=20 mod=+DEF 0 (20+0=20)
+[17:11.602] Anim: 3A  △ P1(4,0)
+[17:11.602] Card destroyed  P1 (4,0) "Bleacher Squad" {Unit ATK20 DEF20 | cost 320 | affinity Bio}
+[17:11.621] Target prompt: "Scout Probe: Choose an adjacent square to reveal."  filter=adjacent
+[17:18.013] MSG: No valid target — effect cancelled.
+[17:25.963] Dice rolled: 4
+[17:26.017] MSG: Helios the Prideful Fortress wins!
+[17:38.739] Crystals: P1 460 → 260 (-200)  [battle]
+[17:57.014] Attack P0(1,3)"Helios the Prideful Fortress" {Union ATK145 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Cosmic} → P1(0,4)"Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}  Dice=4  ATK=145 vs DEF=30  → WIN
+[17:57.014] Reckoning overlay: P0 "Helios the Prideful Fortress" {Union ATK145 DEF100 | destroy-cost 0 | summon-cost 1500 | affinity Cosmic} badge=145 ATK pill=145 DEF pill=100 mod=+ATK 0 (145+0=145)
+[17:57.014] Reckoning overlay: P1 "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio} badge=30 ATK pill=10 DEF pill=30 mod=+DEF 0 (30+0=30)
+[17:57.014] Anim: 3A  △ P1(0,4)
+[17:57.014] Card destroyed  P1 (0,4) "Vile Creeper" {Unit ATK10 DEF30 | cost 200 | affinity Bio}
+[18:13.

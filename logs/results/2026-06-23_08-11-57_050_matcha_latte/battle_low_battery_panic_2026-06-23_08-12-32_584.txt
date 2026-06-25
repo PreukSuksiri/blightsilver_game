@@ -1,0 +1,62 @@
+=== Battle of Low Battery Panic ===
+Battle started: 2026-06-23 08:12:32.584
+Game Session of Matcha Latte (started 2026-06-23 08:11:57.050)
+Mode: vs_ai
+===
+
+=== VS AI Match ===
+===
+
+[00:05.235] MSG: Coin flip — Tails! Player 2 goes first!
+
+--- Turn 1  |  Player 1  |  Crystals P0=5000 P1=5000 ---
+[00:10.624] Mode selected P1: TECH
+[00:10.924] Crystals: P1 5000 → 4400 (-600)  [tech cost]
+[00:13.750] Tech played  P1: "Radar"
+[00:15.295] Target prompt: "Choose 3 square(s) to reveal on opponent's field."  filter=opponent_squares_3
+[00:15.931] Dead-end placed  P0 (4,2)
+[00:16.091] Revealed: P0 (2,2) "Explosive Barrels" {cost 0}
+[00:16.531] Revealed: P0 (1,2) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:16.533] Tech resolved  P1
+[00:17.408] Mode selected P1: ATTACK
+[00:17.410] MSG: Player 2: tap a unit to attack.
+[00:17.762] Revealed: P1 (1,1) "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}
+[00:19.627] Dice rolled: 5
+[00:19.652] MSG: Book with Fangs wins!
+[00:24.079] Crystals: P0 5000 → 4200 (-800)  [battle]
+[00:28.284] Attack P1(1,1)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} → P0(1,2)"Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}  Dice=5  ATK=45 vs DEF=30  → WIN
+[00:28.284] Reckoning overlay: P1 "Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane} badge=45 ATK pill=45 DEF pill=55 mod=+ATK 0 (45+0=45)
+[00:28.284] Reckoning overlay: P0 "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature} badge=30 ATK pill=60 DEF pill=30 mod=+DEF 0 (30+0=30)
+[00:28.284] Anim: 3A  △ P0(1,2)
+[00:28.284] Card destroyed  P0 (1,2) "Ostrich Cannon" {Unit ATK60 DEF30 | cost 800 | affinity Nature}
+[00:28.784] Mode selected P1: ATTACK
+[00:28.787] MSG: Player 2: tap a unit to attack.
+[00:29.110] Revealed: P1 (0,1) "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane}
+[00:31.001] Revealed: P0 (0,0) "Trap Hole" {cost 0}
+[00:31.001] Dice rolled: 1
+[00:32.262] MSG: Trap triggered: Trap Hole!
+[00:36.393] Coin flip: Tails, Tails, Tails
+[00:39.156] MSG: Trap Hole: Tails, Tails, Tails.
+[00:39.156] MSG: Trap Hole: No heads — no crystal loss.
+[00:39.157] Coin flip: Tails, Tails
+[00:41.941] MSG: Lightning Hawk: Coin flip failed — no extra attack.
+[00:43.319] Attack P1(0,1)"Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane} → P0(0,0)"Trap Hole" {cost 0}  Dice=1  → Unit vs Trap
+[00:43.319] Reckoning overlay: P1 "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane} badge=20 ATK pill=20 DEF pill=10 mod=+ATK 0 (20+0=20)
+[00:43.319] Anim: 3D  (attacker survives)
+[00:43.828] Turn ended  P1  |  Crystals P0=4200 P1=4400
+
+--- Turn 2  |  Player 0  |  Crystals P0=4200 P1=4400 ---
+[00:55.881] Revealed: P0 (1,1) "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio}
+[00:55.881] Dice rolled: 2
+[00:57.126] MSG: Nanomites Beast wins!
+[01:01.604] Crystals: P1 4400 → 3900 (-500)  [battle]
+[01:05.816] Attack P0(1,1)"Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} → P1(0,1)"Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane}  Dice=2  ATK=50 vs DEF=10  → WIN
+[01:05.816] Reckoning overlay: P0 "Nanomites Beast" {Unit ATK50 DEF55 | cost 800 | affinity Bio} badge=50 ATK pill=50 DEF pill=55 mod=+ATK 0 (50+0=50)
+[01:05.816] Reckoning overlay: P1 "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane} badge=10 ATK pill=20 DEF pill=10 mod=+DEF 0 (10+0=10)
+[01:05.816] Anim: 3A  △ P1(0,1)
+[01:05.816] Card destroyed  P1 (0,1) "Lightning Hawk" {Unit ATK20 DEF10 | cost 500 | affinity Arcane}
+[01:10.291] Revealed: P0 (1,4) "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane}
+[01:10.291] Dice rolled: 3
+[01:16.105] Crystals: P0 4200 → 3450 (-750)  [battle]
+[01:18.951] Attack P0(1,4)"Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} → P1(1,1)"Book with Fangs" {Unit ATK45 DEF55 | cost 800 | affinity Arcane}  Dice=3  ATK=50 vs DEF=85  → LOSE
+[01:18.951] Reckoning overlay: P0 "Aerial the Battlemage" {Unit ATK50 DEF45 | cost 750 | affinity Arcane} badge=5
