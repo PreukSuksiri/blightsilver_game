@@ -50,6 +50,28 @@ class BattleResult:
 # ─────────────────────────────────────────────────────────────
 static var _battle_coin_results: Array = []
 
+# Pre-rolled coins from TurnManager (Reckoning visual runs before resolve_battle).
+static var _predetermined_coin_flips: Array = []
+static var _predetermined_coin_flip_index: int = 0
+
+static func set_predetermined_coin_flips(flips: Array) -> void:
+	_predetermined_coin_flips = flips.duplicate()
+	_predetermined_coin_flip_index = 0
+
+static func reset_predetermined_coin_flip_index() -> void:
+	_predetermined_coin_flip_index = 0
+
+static func clear_predetermined_coin_flips() -> void:
+	_predetermined_coin_flips = []
+	_predetermined_coin_flip_index = 0
+
+static func _roll_battle_coin() -> bool:
+	if _predetermined_coin_flip_index < _predetermined_coin_flips.size():
+		var r: bool = bool(_predetermined_coin_flips[_predetermined_coin_flip_index])
+		_predetermined_coin_flip_index += 1
+		return r
+	return randf() >= 0.5
+
 # When true, suppress inline GameState.post_message() calls inside helpers.
 # Used by the preview (first) resolve_battle call in perform_attack() so that
 # ability messages only fire once — during the real resolution.
@@ -547,7 +569,7 @@ static func _get_effective_atk(
 		CharacterData.AbilityType.ATK_BONUS_IF_TECH_PLAYED:
 			var _tech_needed: String = attacker.ability_params.get("tech_name", "")
 			if _tech_needed != "" \
-					and GameState.tech_name_played_this_game(attacker_player, _tech_needed):
+					and GameState.void_contains_card(attacker_player, _tech_needed, "tech"):
 				atk += attacker.ability_params.get("bonus", 0)
 
 		CharacterData.AbilityType.ATK_BOOST_VS_REVEALED:
@@ -607,7 +629,7 @@ static func _get_effective_atk(
 			atk += attacker.ability_params.get("atk", attacker.ability_params.get("atk_bonus", 0))
 
 		CharacterData.AbilityType.COIN_FLIP_ATK_BOOST:
-			var _cfab_heads: bool = randf() >= 0.5
+			var _cfab_heads: bool = _roll_battle_coin()
 			_battle_coin_results.append(_cfab_heads)
 			if _cfab_heads:
 				atk += attacker.ability_params.get("bonus", 0)
@@ -616,7 +638,7 @@ static func _get_effective_atk(
 				GameState.post_message("%s coin flip: tails — no bonus." % attacker.card_name)
 
 		CharacterData.AbilityType.COIN_FLIP_ATK_DEF_BOOST:
-			var _cfadb_heads: bool = randf() >= 0.5
+			var _cfadb_heads: bool = _roll_battle_coin()
 			_battle_coin_results.append(_cfadb_heads)
 			var _cfadb_bonus: int = attacker.ability_params.get("bonus", 0)
 			if _cfadb_heads:
@@ -1112,7 +1134,8 @@ static func _has_name_ally_on_field(player_index: int, source_card: GameState.Ca
 				var ally: GameState.CardInstance = GameState.grids[p][r][c]
 				if ally == source_card:
 					continue
-				if ally.card_type == "character" and name_filter in ally.card_name.to_lower():
+				if ally.card_type == "character" and ally.face_up \
+						and name_filter in ally.card_name.to_lower():
 					return true
 	return false
 

@@ -794,13 +794,9 @@ func _show_character_face_up() -> void:
 	affinity_stat_label.add_theme_color_override("font_color", Color(aff_color.r, aff_color.g, aff_color.b, 0.7))
 
 	if char_data and card_data.crystal_cost != char_data.crystal_cost:
-		cost_label.text = "%d" % card_data.crystal_cost
-		cost_label.add_theme_color_override("font_color", Color(1.0, 0.96, 0.65))
+		_update_crystal_cost_display(card_data.crystal_cost, Color(1.0, 0.96, 0.65))
 	else:
-		cost_label.text = "%d" % card_data.crystal_cost
-		cost_label.add_theme_color_override("font_color", Color(1.0, 0.90, 0.30))
-	if _crystal_cost_icon:
-		_crystal_cost_icon.visible = true
+		_update_crystal_cost_display(card_data.crystal_cost)
 
 	if char_data:
 		ability_label.text = char_data.get_ability_description()
@@ -856,10 +852,7 @@ func _show_union_face_up() -> void:
 	affinity_stat_label.text = aff_keys[aff_idx].capitalize() if aff_idx < aff_keys.size() else ""
 	affinity_stat_label.add_theme_color_override("font_color", Color(UNION_CYAN.r, UNION_CYAN.g, UNION_CYAN.b, 0.7))
 
-	cost_label.text = "0"
-	cost_label.add_theme_color_override("font_color", Color(1.0, 0.90, 0.30))
-	if _crystal_cost_icon:
-		_crystal_cost_icon.visible = true
+	_update_crystal_cost_display(0)
 
 	var u: UnionData = UnionDatabase.get_union(card_data.card_name)
 	if u:
@@ -905,9 +898,7 @@ func _show_trap_face_up() -> void:
 	atk_label.text = ""
 	def_label.text = ""
 	affinity_stat_label.text = ""
-	cost_label.text = "%d" % card_data.crystal_cost
-	if _crystal_cost_icon:
-		_crystal_cost_icon.visible = true
+	_update_crystal_cost_display(card_data.crystal_cost)
 
 	var trap_data: TrapData = CardDatabase.get_trap(card_data.card_name)
 	if trap_data:
@@ -945,9 +936,7 @@ func _show_tech_face_up() -> void:
 	atk_label.text = ""
 	def_label.text = ""
 	affinity_stat_label.text = ""
-	cost_label.text = "%d" % card_data.crystal_cost
-	if _crystal_cost_icon:
-		_crystal_cost_icon.visible = true
+	_update_crystal_cost_display(card_data.crystal_cost)
 
 	var tech_data: TechCardData = CardDatabase.get_tech(card_data.card_name)
 	if tech_data:
@@ -970,6 +959,31 @@ func _show_tech_face_up() -> void:
 # ─────────────────────────────────────────────────────────────
 # Rarity
 # ─────────────────────────────────────────────────────────────
+func _update_crystal_cost_display(cost: int, color: Color = Color(1.0, 0.90, 0.30)) -> void:
+	var text := str(cost)
+	cost_label.text = text
+	cost_label.add_theme_color_override("font_color", color)
+	if _crystal_cost_icon == null:
+		return
+	_crystal_cost_icon.visible = true
+	var digits := text.length()
+	var icon_left := -30.0
+	var icon_right := -21.0
+	var label_left := -18.0
+	var label_right := -10.0
+	if digits >= 4:
+		icon_left = -44.0
+		icon_right = -33.0
+		label_left = -30.0
+	elif digits == 3:
+		icon_left = -36.0
+		icon_right = -26.0
+		label_left = -24.0
+	_crystal_cost_icon.offset_left = int(icon_left)
+	_crystal_cost_icon.offset_right = int(icon_right)
+	cost_label.offset_left = int(label_left)
+	cost_label.offset_right = int(label_right)
+
 func _clear_rarity() -> void:
 	if _rarity_tween:
 		_rarity_tween.kill()
@@ -1020,12 +1034,13 @@ func _apply_rarity(accent_color: Color) -> void:
 				.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		CharacterData.Rarity.LEGENDARY:
 			# Shimmer strip sweeps left → right every ~10s
-			rarity_shimmer.size = Vector2(26, 150)
+			rarity_shimmer.size = Vector2(26, size.y)
 			rarity_shimmer.color = Color(1.0, 1.0, 1.0, 0.14)
 			rarity_shimmer.visible = true
+			var _shimmer_end: float = maxf(size.x - rarity_shimmer.size.x, 0.0)
 			_rarity_tween = create_tween().set_loops()
 			_rarity_tween.tween_interval(1.5)
-			_rarity_tween.tween_property(rarity_shimmer, "position:x", 140.0, 8.4) \
+			_rarity_tween.tween_property(rarity_shimmer, "position:x", _shimmer_end, 8.4) \
 				.set_trans(Tween.TRANS_SINE)
 			_rarity_tween.tween_callback(func() -> void: rarity_shimmer.position.x = -30.0)
 		CharacterData.Rarity.EXOTIC:
@@ -1276,27 +1291,32 @@ func play_metallic_deflect_animation() -> void:
 	var saved_mod: Color = modulate
 	var saved_pos: Vector2 = position
 
+	var fx_layer := Control.new()
+	fx_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fx_layer.clip_contents = true
+	fx_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fx_layer.z_index = 12
+	add_child(fx_layer)
+
 	var shine := ColorRect.new()
 	shine.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	shine.color = Color(0.75, 0.88, 1.0, 0.0)
 	shine.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	shine.z_index = 12
-	add_child(shine)
+	fx_layer.add_child(shine)
 
 	var streak := ColorRect.new()
-	streak.size = Vector2(size.x * 0.18, size.y * 1.1)
+	streak.size = Vector2(size.x * 0.18, size.y)
 	streak.color = Color(1.0, 1.0, 1.0, 0.0)
 	streak.rotation = -0.35
-	streak.position = Vector2(-size.x * 0.3, size.y * 0.05)
+	streak.position = Vector2(-size.x * 0.3, 0.0)
 	streak.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	streak.z_index = 13
-	add_child(streak)
+	fx_layer.add_child(streak)
 
 	var tween := create_tween()
 	tween.tween_property(self, "modulate", Color(1.7, 1.85, 2.2, 1.0), 0.05).set_trans(Tween.TRANS_LINEAR)
 	tween.parallel().tween_property(shine, "color:a", 0.55, 0.05)
 	tween.tween_property(streak, "color:a", 0.95, 0.04)
-	tween.parallel().tween_property(streak, "position:x", size.x * 0.95, 0.22) \
+	tween.parallel().tween_property(streak, "position:x", size.x * 0.82, 0.22) \
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tween.tween_property(self, "position", saved_pos + Vector2(-5, 0), 0.04)
 	tween.tween_property(self, "position", saved_pos + Vector2(4, 0), 0.04)
@@ -1305,8 +1325,7 @@ func play_metallic_deflect_animation() -> void:
 	tween.parallel().tween_property(shine, "color:a", 0.0, 0.18)
 	tween.parallel().tween_property(streak, "color:a", 0.0, 0.12)
 	await tween.finished
-	shine.queue_free()
-	streak.queue_free()
+	fx_layer.queue_free()
 
 func play_destroy_animation() -> void:
 	_is_destroying = true

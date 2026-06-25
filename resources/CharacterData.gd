@@ -73,7 +73,7 @@ enum AbilityType {
 	COIN_FLIP_EXTRA_ATTACK,          # Flip 1 coin after attacking; heads → get one extra attack
 	COIN_FLIP_2_EXTRA_ATTACK,        # Flip 2 coins after attacking; both heads → get one extra attack
 	COIN_FLIP_2_DESTROY_NON_AFFINITY,# Flip 2 coins; both heads → destroy defender if not specified affinity
-	COIN_FLIP_SWAP_POSITION,         # Flip 1 coin after battle; heads → player chooses own card to swap position
+	COIN_FLIP_SWAP_POSITION,         # Flip 1 coin before Reckoning; heads → swap with own unit, then resolve
 	TURN_START_COIN_FLIP_FLAG,       # Turn start: coin flip → venom on exposed ally/foe or mutagen on own unit
 
 	# ── Destroy / negate conditions ──
@@ -179,6 +179,7 @@ enum AbilityType {
 	POST_BATTLE_COIN_FLIP_DESTROY,       # After battle: coin flip; heads → destroy 1 foe character
 	UNION_SUMMON_VENOM_ALL_FOE,          # On union summon: venom flag on all foe face-up characters
 	IMMUNE_DESTROY_BY_NON_UNION,         # Cannot be destroyed unless attacker is a union card
+	REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION, # Once: if destroyed by a non-union card, revive at owner's turn start
 	PERM_STAT_PENALTY_VS_NON_AFFINITY,   # Permanent -N ATK&DEF when battling non-matching affinity
 	DEF_PENALTY_VS_NON_AFFINITY,         # Defender: -N DEF when attacked by non-matching affinity
 	PERM_ATK_BOOST_ONCE_PER_AFFINITY,    # After battle vs non-affinity: +N ATK once per defender affinity

@@ -362,20 +362,20 @@ func _keeper_of_the_afterlife(A: Dictionary, AB: Dictionary) -> void:
 		assert_true(r.defender_destroyed, "TC-FUNC-Keeper-of-Afterlife-001: tails → normal battle (200 > 65)")
 
 # ---------------------------------------------------------------------------
-# IMMUNE_DESTROY_BY_NON_UNION — Burning Phoenix
+# REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION — Burning Phoenix
 # ---------------------------------------------------------------------------
 func _burning_phoenix(A: Dictionary, AB: Dictionary) -> void:
 	print("-- TC-FUNC-Burning-Phoenix-001 / -002")
 	var phoenix := _make_char("Burning Phoenix", 125, 50, 800, A.ARCANE,
-		AB.IMMUNE_DESTROY_BY_NON_UNION, {"tech_target_self_destruct": true})
+		AB.REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION, {"tech_target_self_destruct": true})
 	phoenix.is_union = true
-	# Non-union high-ATK attacker: wins compare but cannot destroy
+	# Non-union high-ATK attacker: wins compare and destroys (revive queued separately)
 	var non_union_att := _make_char("Strong Non-Union", 200, 0, 500, A.ANIMA)
 	non_union_att.is_union = false
 	var r1 := BattleResolver.resolve_battle(non_union_att, phoenix, 3, 0, 1)
-	assert_false(r1.defender_destroyed, "TC-FUNC-Burning-Phoenix-001: non-union cannot destroy")
+	assert_true(r1.defender_destroyed, "TC-FUNC-Burning-Phoenix-001: non-union CAN destroy (revive at turn start)")
 	assert_false(r1.attacker_destroyed, "TC-FUNC-Burning-Phoenix-001: attacker won compare (not destroyed)")
-	# Union attacker CAN destroy
+	# Union attacker CAN destroy normally
 	var union_att := _make_char("Strong Union", 200, 0, 1000, A.DIVINE)
 	union_att.is_union = true
 	var r2 := BattleResolver.resolve_battle(union_att, phoenix, 3, 0, 1)
@@ -415,8 +415,8 @@ func _genesis_mech(A: Dictionary, AB: Dictionary) -> void:
 # ---------------------------------------------------------------------------
 func _helios(A: Dictionary, AB: Dictionary) -> void:
 	print("-- TC-FUNC-Helios-the-Prideful-Fortress-001 [Pattern B]")
-	var helios := _make_char("Helios the Prideful Fortress", 145, 100, 1500, A.COSMIC,
-		AB.IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP, {"affinity": A.COSMIC})
+	var helios := _make_char("Helios the Prideful Fortress", 145, 60, 1500, A.COSMIC,
+		AB.IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP, {"affinity": A.COSMIC, "tech_target_self_destruct": true})
 	helios.is_union = true
 	var strong_att := _make_char("Strong Attacker", 200, 0, 500, A.ANIMA)
 	# With COSMIC ally face-up on same side: cannot be destroyed
@@ -427,13 +427,13 @@ func _helios(A: Dictionary, AB: Dictionary) -> void:
 	cosmic_ally.face_up = true
 	GameState.grids[1][2][3] = cosmic_ally
 	var r1 := BattleResolver.resolve_battle(strong_att, helios, 3, 0, 1)
-	assert_false(r1.defender_destroyed, "TC-FUNC-Helios-001: protected by COSMIC ally (200 vs 100)")
+	assert_false(r1.defender_destroyed, "TC-FUNC-Helios-001: protected by COSMIC ally (200 vs 60)")
 	# Without COSMIC ally: destroyed normally
 	GameState.new_game(GameState.GameMode.LOCAL_2P)
 	helios.face_up = true
 	GameState.grids[1][2][2] = helios
 	var r2 := BattleResolver.resolve_battle(strong_att, helios, 3, 0, 1)
-	assert_true(r2.defender_destroyed, "TC-FUNC-Helios-001b: no COSMIC ally → destroyed (200 > 100)")
+	assert_true(r2.defender_destroyed, "TC-FUNC-Helios-001b: no COSMIC ally → destroyed (200 > 60)")
 
 # ---------------------------------------------------------------------------
 # ATK_DEF_BONUS_IF_OWN_REVEALED_GTE — Slim Gray Plasma Bomber (Pattern B)

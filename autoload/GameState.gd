@@ -289,6 +289,8 @@ var defender_pos: Vector2i = Vector2i(-1, -1)
 
 # Track which tech cards have been played (for chain requirements)
 var tech_cards_played_this_game: Array = [[], []]
+# Void pile entries per player — mirrors GameBoard dump stacks (card_name + card_type).
+var void_pile_entries: Array = [[], []]
 
 # Special global flags
 # VN-driven battle outcome routing (set by VNPlayer after new_game(), persists across scene change)
@@ -372,6 +374,8 @@ var hypnotized_cards: Array = [[], []]       # List of CardInstances that can't 
 var skip_counts: Array = [0, 0]              # Consecutive no-attack turns per player (for doubling tax)
 var reroll_dice_available: Array = [false, false]   # TEMP_REROLL_DICE tech: may reroll once before next attack
 var graveyards: Array = [[], []]                    # graveyards[player] -> Array of destroyed CardInstances
+var turn_start_revives: Array = []                  # {player, row, col, card_name} — e.g. Burning Phoenix
+var destruction_from_tech_self_destruct: bool = false
 var locked_attack_positions: Array = []             # Vector2i positions current player cannot attack this turn
 
 const CURSOR_PATH: String = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
@@ -741,7 +745,7 @@ func place_dead_end(player_index: int, row: int, col: int) -> void:
 	inst.grid_col = col
 	grids[player_index][row][col] = inst
 
-func reveal_card(player_index: int, row: int, col: int) -> void:
+func reveal_card(player_index: int, row: int, col: int, from_card_ability: bool = false) -> void:
 	var card: CardInstance = get_card(player_index, row, col)
 	if not card.face_up:
 		card.face_up = true
@@ -750,16 +754,21 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 			BattleResolver.recalculate_all_field_bonuses()
 		emit_signal("card_revealed", player_index, row, col)
 
-		# CRYSTAL_GAIN_ON_OPP_REVEAL: opponent gains crystals when this player's card is revealed
-		var opponent_idx: int = get_opponent(player_index)
-		for r in range(GRID_SIZE):
-			for c in range(GRID_SIZE):
-				var opp_card: CardInstance = grids[opponent_idx][r][c]
-				if opp_card.card_type == "character" and opp_card.face_up:
-					if opp_card.ability_type == CharacterData.AbilityType.CRYSTAL_GAIN_ON_OPP_REVEAL:
-						var amt: int = opp_card.ability_params.get("amount", 40)
-						gain_crystals(opponent_idx, amt, "ability")
-						post_message("%s: Gained %d Crystals from reveal!" % [opp_card.card_name, amt])
+		# CRYSTAL_GAIN_ON_OPP_REVEAL: gain when foe cell is revealed by a card ability
+		if from_card_ability:
+			var opponent_idx: int = get_opponent(player_index)
+			for r in range(GRID_SIZE):
+				for c in range(GRID_SIZE):
+					var opp_card: CardInstance = grids[opponent_idx][r][c]
+					if opp_card.card_type == "character" and opp_card.face_up:
+						if opp_card.ability_type == CharacterData.AbilityType.CRYSTAL_GAIN_ON_OPP_REVEAL:
+							var amt: int = opp_card.ability_params.get("amount", 40)
+							gain_crystals(opponent_idx, amt, "ability")
+							post_message("%s: Gained %d Crystals from reveal!" % [opp_card.card_name, amt])
+
+
+func reveal_card_by_ability(player_index: int, row: int, col: int) -> void:
+	reveal_card(player_index, row, col, true)
 
 		# Dungeon: Bio Triumph — Bio characters receive Mutagen flag on reveal
 		# Dungeon: Nature Triumph — Nature characters receive Venom flag on reveal
@@ -775,31 +784,84 @@ func reveal_card(player_index: int, row: int, col: int) -> void:
 				card.flags.append("venom")
 				post_message("Nature Triumph: %s receives Venom flag!" % card.display_name)
 
-		# HALVE_DEF_ON_FIRST_EXPOSE: halve DEF when this card first becomes face-up
-		if card.card_type == "character":
-			if card.ability_type == CharacterData.AbilityType.HALVE_DEF_ON_FIRST_EXPOSE:
-				card.current_def = card.current_def / 2
-				post_message("%s's DEF is halved upon reveal!" % card.card_name)
-			# DESTROY_SELF_AT_END_OF_EXPOSE_TURN: mark for end-of-turn self-destruction
-			elif card.ability_type == CharacterData.AbilityType.DESTROY_SELF_AT_END_OF_EXPOSE_TURN:
-				if "expose_destroy_pending" not in card.flags:
-					card.flags.append("expose_destroy_pending")
+func _one_use_survive_matches_destroyer(card: CardInstance) -> bool:
+	var affinities: Array = card.ability_params.get("destroyer_affinities", [])
+	if affinities.is_empty():
+		var single: int = card.ability_params.get("destroyer_affinity", -1)
+		if single >= 0:
+			affinities = [single]
+	if affinities.is_empty():
+		return true
+	var destroyer: CardInstance = attacker_card
+	if destroyer == null or destroyer.card_type != "character":
+		return false
+	return destroyer.affinity in affinities
+
+func process_turn_start_revives(player_index: int) -> void:
+	var kept: Array = []
+	for entry: Variant in turn_start_revives:
+		if entry is not Dictionary:
+			continue
+		var revive_player: int = int((entry as Dictionary).get("player", -1))
+		if revive_player != player_index:
+			kept.append(entry)
+			continue
+		var row: int = int((entry as Dictionary).get("row", -1))
+		var col: int = int((entry as Dictionary).get("col", -1))
+		var card_name: String = str((entry as Dictionary).get("card_name", ""))
+		if row < 0 or col < 0 or card_name.is_empty():
+			continue
+		if not is_valid_revive_placement_cell(player_index, row, col):
+			kept.append(entry)
+			continue
+		var source: CardInstance = null
+		var gy: Array = graveyards[player_index]
+		for i: int in range(gy.size() - 1, -1, -1):
+			var g: CardInstance = gy[i]
+			if g.card_name == card_name:
+				source = g
+				gy.remove_at(i)
+				break
+		if source == null:
+			kept.append(entry)
+			continue
+		var revived: CardInstance = _clone_card_for_revive(source)
+		revived.is_union = source.is_union
+		revived.is_revived = true
+		revived.grid_row = row
+		revived.grid_col = col
+		revived.face_up = true
+		grids[player_index][row][col] = revived
+		BattleResolver.recalculate_all_field_bonuses()
+		post_message("%s revives at the start of your turn!" % revived.display_name)
+	turn_start_revives = kept
+
+func _clone_card_for_revive(source: CardInstance) -> CardInstance:
+	var copy := CardInstance.new()
+	copy.card_type = "character"
+	copy.card_name = source.card_name
+	copy.display_name = source.display_name
+	copy.affinity = source.affinity
+	copy.base_atk = source.base_atk
+	copy.base_def = source.base_def
+	copy.current_atk = source.current_atk
+	copy.current_def = source.current_def
+	copy.crystal_cost = source.crystal_cost
+	copy.rarity = source.rarity
+	copy.ability_type = source.ability_type
+	copy.ability_params = source.ability_params.duplicate(true)
+	copy.is_union = source.is_union
+	copy.flags = source.flags.duplicate()
+	return copy
 
 func would_block_destruction(player_index: int, row: int, col: int) -> bool:
 	var card: CardInstance = get_card(player_index, row, col)
 	if card.card_type != "character":
 		return false
 	if card.ability_type == CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION:
-		var _req_aff: int = card.ability_params.get("destroyer_affinity", -1)
-		if _req_aff >= 0:
-			var _destroyer: CardInstance = attacker_card
-			if _destroyer == null or _destroyer.card_type != "character" \
-					or _destroyer.affinity != _req_aff:
-				pass
-			elif "indestructible_used" not in card.flags:
+		if _one_use_survive_matches_destroyer(card):
+			if "indestructible_used" not in card.flags:
 				return true
-		elif "indestructible_used" not in card.flags:
-			return true
 	if card.has_mutagen_flag and card.is_union and card.card_name == "Dimensional Virus":
 		var _dv_destroyer: CardInstance = attacker_card
 		if _dv_destroyer != null and _dv_destroyer.card_type == "character" \
@@ -816,18 +878,8 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 	# ONE_USE_SURVIVE_DESTRUCTION: card survives once
 	if was_character:
 		if card.ability_type == CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION:
-			var _req_aff: int = card.ability_params.get("destroyer_affinity", -1)
-			if _req_aff >= 0:
-				var _destroyer: CardInstance = attacker_card
-				if _destroyer == null or _destroyer.card_type != "character" \
-						or _destroyer.affinity != _req_aff:
-					pass  # required destroyer affinity not met — proceed with destruction
-				elif "indestructible_used" not in card.flags:
-					card.flags.append("indestructible_used")
-					post_message("%s survives destruction!" % card.card_name)
-					emit_signal("card_destruction_blocked", player_index, row, col)
-					return false
-			elif "indestructible_used" not in card.flags:
+			if _one_use_survive_matches_destroyer(card) \
+					and "indestructible_used" not in card.flags:
 				card.flags.append("indestructible_used")
 				post_message("%s survives destruction!" % card.card_name)
 				emit_signal("card_destruction_blocked", player_index, row, col)
@@ -848,6 +900,21 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 			emit_signal("card_destruction_blocked", player_index, row, col)
 			return false
 		# Track destroyed characters in graveyard
+		if card.ability_type == CharacterData.AbilityType.REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION \
+				and not destruction_from_tech_self_destruct \
+				and "phoenix_revive_used" not in card.flags:
+			var _phoenix_destroyer: CardInstance = attacker_card
+			var _by_non_union: bool = _phoenix_destroyer == null \
+					or _phoenix_destroyer.card_type != "character" \
+					or not _phoenix_destroyer.is_union
+			if _by_non_union:
+				card.flags.append("phoenix_revive_used")
+				turn_start_revives.append({
+					"player": player_index,
+					"row": row,
+					"col": col,
+					"card_name": card.card_name,
+				})
 		graveyards[player_index].append(card)
 	if pay_cost and card.card_type != "dead_end":
 		var _dc_cost: int = card.crystal_cost
@@ -995,6 +1062,17 @@ func has_playable_tech(player_index: int) -> bool:
 func tech_name_played_this_game(player_index: int, tech_name: String) -> bool:
 	return tech_name in tech_cards_played_this_game[player_index]
 
+func add_void_entry(player_index: int, card_name: String, card_type: String) -> void:
+	void_pile_entries[player_index].append({"card_name": card_name, "card_type": card_type})
+
+func void_contains_card(player_index: int, card_name: String, card_type: String = "") -> bool:
+	for entry: Dictionary in void_pile_entries[player_index]:
+		if entry.get("card_name", "") != card_name:
+			continue
+		if card_type.is_empty() or entry.get("card_type", "") == card_type:
+			return true
+	return false
+
 ## True when the player has no character that can attack this turn.
 ## Playable tech no longer prevents a stuck loss — only attack capability matters.
 func is_stuck(player_index: int) -> bool:
@@ -1065,6 +1143,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		crystals = [3000, 3000]
 	tech_hands = [[], []]
 	tech_cards_played_this_game = [[], []]
+	void_pile_entries = [[], []]
 	dice_result = 0
 	attacks_remaining = 0
 	current_mode = TurnMode.NONE
@@ -1112,12 +1191,21 @@ const UNIT_EFFECT_FLAGS: Array[String] = ["venom", "mutagen", "berserk"]
 static func is_unit_effect_flag(flag: String) -> bool:
 	return flag in UNIT_EFFECT_FLAGS
 
+## Double numeric tech values when the target has DOUBLE_TECH_EFFECT (Mountain Sage).
+func scaled_tech_effect_for_unit(target: CardInstance, value: int) -> int:
+	if value <= 0:
+		return value
+	if target != null and target.card_type == "character" \
+			and target.ability_type == CharacterData.AbilityType.DOUBLE_TECH_EFFECT:
+		return value * 2
+	return value
+
 ## Permanently reveal a hidden card before a unit flag effect resolves (not peek).
 func reveal_for_unit_effect(player_index: int, row: int, col: int) -> void:
 	var card: CardInstance = get_card(player_index, row, col)
 	if card.face_up or card.card_type == "dead_end" or card.was_destroyed:
 		return
-	reveal_card(player_index, row, col)
+	reveal_card_by_ability(player_index, row, col)
 
 ## Apply venom/mutagen/etc. to a board card; face-down targets flip face-up permanently first.
 func apply_unit_effect_flag(player_index: int, row: int, col: int, flag: String) -> bool:
@@ -1125,7 +1213,7 @@ func apply_unit_effect_flag(player_index: int, row: int, col: int, flag: String)
 	if card.card_type == "dead_end" or card.was_destroyed or flag == "":
 		return false
 	if not card.face_up:
-		reveal_card(player_index, row, col)
+		reveal_card_by_ability(player_index, row, col)
 		card = get_card(player_index, row, col)
 	if flag == "mutagen":
 		if card.card_type == "character":

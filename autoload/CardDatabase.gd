@@ -78,7 +78,7 @@ func _load_characters() -> void:
 		["Archbishop", CharacterData.Affinity.DIVINE, 70, 90, 1200,
 			CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY,
 			{"affinity": CharacterData.Affinity.DIVINE},
-			"If this card would be destroyed, you can destroy 1 other Divine card on their side instead",
+			"If this card would be destroyed, you can destroy 1 other Divine card on your side instead",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Armored Bee", CharacterData.Affinity.NATURE, 30, 0, 480,
@@ -231,7 +231,7 @@ func _load_characters() -> void:
 		["Death Knight", CharacterData.Affinity.CHAOS, 65, 65, 850,
 			CharacterData.AbilityType.BOOST_PER_TYPED_CARD_ON_FIELD,
 			{"atk_bonus": 5, "def_bonus": 0, "affinity": CharacterData.Affinity.CHAOS},
-			"+5 ATK per Chaos unit on their side",
+			"+5 ATK per Chaos unit on your side",
 			CharacterData.Rarity.RARE],
 
 		["Demon Spawn", CharacterData.Affinity.CHAOS, 40, 30, 400,
@@ -690,7 +690,7 @@ func _load_characters() -> void:
 		["Ostrich Cannon", CharacterData.Affinity.NATURE, 60, 30, 800,
 			CharacterData.AbilityType.LOCK_SELF_AFTER_ATTACK,
 			{},
-			"After performing an attack, this card cannot attack during their next turn.",
+			"After performing an attack, this card cannot attack during your next turn.",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Ox Patrol", CharacterData.Affinity.ANIMA, 30, 35, 420,
@@ -709,7 +709,7 @@ func _load_characters() -> void:
 		["Parom the Smuggler", CharacterData.Affinity.COSMIC, 30, 20, 300,
 			CharacterData.AbilityType.CRYSTAL_GAIN_ON_OPP_REVEAL,
 			{"amount": 40},
-			"Each time foe’s cell got revealed: gain 40 Crystals.",
+			"Each time foe's cell got revealed by a card's ability: gain 40 Crystals.",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 
@@ -836,7 +836,7 @@ func _load_characters() -> void:
 		["Skeleton Grappler", CharacterData.Affinity.CHAOS, 20, 5, 150,
 			CharacterData.AbilityType.LOCK_ATTACKER_ON_DEFEND,
 			{},
-			"After Reckoning: that foe’s unit must wait until foe’s turn ends",
+			"After Reckoning: that foe's unit cannot attack until foe's turn ends",
 			CharacterData.Rarity.COMMON],
 
 		["Skeleton Lancer", CharacterData.Affinity.CHAOS, 45, 5, 300,
@@ -999,8 +999,13 @@ func _load_characters() -> void:
 
 		["Waste Slime", CharacterData.Affinity.BIO, 10, 15, 150,
 			CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION,
-			{"destroyer_affinity": CharacterData.Affinity.ANIMA},
-			"Once, if it’s going to be destroyed by Anima card, it’s not destroyed.",
+			{
+				"destroyer_affinities": [
+					CharacterData.Affinity.ANIMA,
+					CharacterData.Affinity.BIO,
+				],
+			},
+			"Once, if it's going to be destroyed by Anima or Bio card, it's not destroyed.",
 			CharacterData.Rarity.COMMON],
 
 		["Water Elemental", CharacterData.Affinity.ARCANE, 25, 35, 380,
@@ -1191,7 +1196,7 @@ func _load_traps() -> void:
 
 		["Defensive Pheromone", 500, TrapData.TrapEffectType.SWAP_ARMORED_NATURE,
 			{},
-			"You switch 1 'Armored' Nature card on their side with this cell, then repeat Reckoning.",
+			"You switch 1 'Armored' Nature card on your side with this cell, then repeat Reckoning.",
 			CharacterData.Rarity.RARE],
 
 		["Echo Barrier", 1000, TrapData.TrapEffectType.LOCK_ATTACKER_REMAINING_ATTACKS,
@@ -1244,7 +1249,7 @@ func _load_traps() -> void:
 
 		["Self-destruct", 0, TrapData.TrapEffectType.SELF_DESTROY_TEMP_ATK_BOOST,
 			{"atk": 10},
-			"You select 1 of their unit. +10 ATK until your turn ends, but also destroy it. You pay no cost.",
+			"You select 1 of your unit. +10 ATK until your turn ends, but also destroy it. You pay no cost.",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 
@@ -1260,7 +1265,7 @@ func _load_traps() -> void:
 
 		["Street Joke", 0, TrapData.TrapEffectType.REVEAL_OWN_GAIN_CRYSTAL,
 			{"amount": 100},
-			"You reveal 1 of their cell, they receive 100 Crystal",
+			"You reveal 1 of your cell, they receive 100 Crystal",
 			CharacterData.Rarity.COMMON,
 			true],
 
@@ -1309,7 +1314,7 @@ func _load_tech_cards() -> void:
 
 		["Great Diplomacy", 1000, TechCardData.TechEffectType.REVEAL_ALL_OWN_CHARACTERS,
 			{"count": 5}, "",
-			"You select up to 5 of their units and reveal them.",
+			"You select up to 5 of your units and reveal them.",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Prayer", 0, TechCardData.TechEffectType.DIVINE_PROTECTION,

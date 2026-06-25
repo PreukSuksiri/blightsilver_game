@@ -768,28 +768,35 @@ func _play_metallic_deflect(ctrl: Control) -> void:
 	ctrl.pivot_offset = Vector2(_card_w * 0.5, (BADGE_H + _card_h) * 0.5)
 	var saved_mod: Color = ctrl.modulate
 	var saved_pos: Vector2 = ctrl.position
+	var card_h: float = BADGE_H + _card_h
+
+	var fx_layer := Control.new()
+	fx_layer.position = Vector2.ZERO
+	fx_layer.size = Vector2(_card_w, card_h)
+	fx_layer.clip_contents = true
+	fx_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fx_layer.z_index = 6
+	ctrl.add_child(fx_layer)
 
 	var shine := ColorRect.new()
 	shine.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	shine.color = Color(0.75, 0.88, 1.0, 0.0)
-	shine.mouse_filter = MOUSE_FILTER_IGNORE
-	shine.z_index = 6
-	ctrl.add_child(shine)
+	shine.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fx_layer.add_child(shine)
 
 	var streak := ColorRect.new()
-	streak.size = Vector2(_card_w * 0.22, (BADGE_H + _card_h) * 1.15)
+	streak.size = Vector2(_card_w * 0.18, card_h)
 	streak.color = Color(1.0, 1.0, 1.0, 0.0)
 	streak.rotation = -0.35
-	streak.position = Vector2(-_card_w * 0.35, -BADGE_H * 0.2)
-	streak.mouse_filter = MOUSE_FILTER_IGNORE
-	streak.z_index = 7
-	ctrl.add_child(streak)
+	streak.position = Vector2(-_card_w * 0.3, 0.0)
+	streak.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fx_layer.add_child(streak)
 
 	var t := create_tween()
 	t.tween_property(ctrl, "modulate", Color(1.7, 1.85, 2.2, 1.0), 0.05).set_trans(Tween.TRANS_LINEAR)
 	t.parallel().tween_property(shine, "color:a", 0.55, 0.05)
 	t.tween_property(streak, "color:a", 0.95, 0.04)
-	t.parallel().tween_property(streak, "position:x", _card_w * 0.95, 0.22) \
+	t.parallel().tween_property(streak, "position:x", _card_w * 0.82, 0.22) \
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	t.tween_property(ctrl, "position", saved_pos + Vector2(-5, 0), 0.04)
 	t.tween_property(ctrl, "position", saved_pos + Vector2(4, 0), 0.04)
@@ -798,8 +805,7 @@ func _play_metallic_deflect(ctrl: Control) -> void:
 	t.parallel().tween_property(shine, "color:a", 0.0, 0.18)
 	t.parallel().tween_property(streak, "color:a", 0.0, 0.12)
 	await t.finished
-	shine.queue_free()
-	streak.queue_free()
+	fx_layer.queue_free()
 
 func _play_burst_ring(ctrl: Control) -> void:
 	var ring := Panel.new()

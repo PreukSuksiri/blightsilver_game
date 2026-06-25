@@ -330,8 +330,8 @@ func _load_unions() -> void:
 	# ── Arcane ────────────────────────────────────────────────
 
 	_add("Burning Phoenix", A.ARCANE, 125, 50, 800, R.LEGENDARY,
-		AB.IMMUNE_DESTROY_BY_NON_UNION, {"tech_target_self_destruct": true}, "Cannot be destroyed by non-union cards. If targeted by tech, destroy this card.",
-		"Cannot be destroyed by ???. If targeted by tech, ???",
+		AB.REVIVE_ONCE_IF_DESTROYED_BY_NON_UNION, {"tech_target_self_destruct": true}, "Once, if destroyed by non-union cards, revive it at the start of your turn.",
+		"Once, if ???, revive it at the start of your turn.",
 		"1 Arcane (≥ 500 cost) + 1 Nature (≥ 500 cost) + 1 Divine (≥ 500 cost) + 800 cost",
 		"1 ??? + 1 ??? + 1 ??? + 800 cost",
 		_z([[0,2], [1,1], [1,2], [1,3], [2,0], [2,2], [2,4]]),
@@ -446,9 +446,9 @@ func _load_unions() -> void:
 
 	# ── Cosmic ────────────────────────────────────────────────
 
-	_add("Helios the Prideful Fortress", A.COSMIC, 145, 100, 1500, R.LEGENDARY,
-		AB.IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP, {"affinity": A.COSMIC}, "With another exposed Cosmic: this card cannot be destroyed",
-		"As long as there is exposed ???, this card cannot be ???",
+	_add("Helios the Prideful Fortress", A.COSMIC, 145, 60, 1500, R.LEGENDARY,
+		AB.IMMUNE_IF_OWN_SAME_AFFINITY_FACE_UP, {"affinity": A.COSMIC, "tech_target_self_destruct": true}, "With another exposed Cosmic: this card cannot be destroyed. If targeted by tech, destroy this card.",
+		"As long as there is exposed ???, this card cannot be ???. If targeted by tech, ???",
 		"2 Cosmic (≥ 800 cost) + 1500 cost",
 		"2 ??? + 1500 cost",
 		_z([[0,2], [1,1], [1,3], [2,0], [2,4], [3,1], [3,3], [4,2]]),
@@ -594,9 +594,9 @@ func _load_unions() -> void:
 		_conds([{"card_name": "Dark Monk"}, {"affinity": A.CHAOS}], 10))
 
 	_add("Ten Arms Yaksa", A.CHAOS, 50, 30, 800, R.RARE,
-		AB.MULTI_ATTACK_ANY_WITH_ATK_LOSS, {"max_attacks": 3, "atk_loss": 5, "atk_loss_from_attack": 3, "atk_loss_if_unit": true},
-		"This card can choose three attack targets. -5 ATK if the third target is unit.",
-		"This card can choose ??? attack targets. -5 ATK if the ??? is unit.",
+		AB.MULTI_ATTACK_ANY_WITH_ATK_LOSS, {"max_attacks": 3, "atk_loss": 5, "atk_loss_from_attack": 3},
+		"This card can choose up to 3 attack targets. -5 ATK after the third attack.",
+		"This card can choose up to ???attack targets. -5 ATK after ???",
 		"Yaksa + 1 Chaos + 800 cost",
 		"1 ??? + 1 ??? + 600 cost",
 		_z([[0,0], [0,1], [0,3], [0,4], [1,2], [2,2], [3,1], [3,2], [3,3], [4,1], [4,3]]),

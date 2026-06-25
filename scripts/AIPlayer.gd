@@ -74,6 +74,7 @@ signal ai_bluff(player: int, row: int, col: int, emoticon: String)
 # Per-duel state
 var _ai_turn_count: int = 0   # incremented at start of each decide_turn call
 var _union_used:    bool = false
+var _union_attempted_this_turn: bool = false
 var _opponent_union_summoned: bool = false  # set when the other player summons a union
 var _pending_death_bluff: Vector2i = Vector2i(-1, -1)  # set when AI card dies; flushed on next AI turn
 var _aborted_attackers_this_turn: Array = []  # positions excluded after attack_aborted this turn
@@ -129,6 +130,7 @@ func decide_turn() -> void:
 		return
 	_ai_turn_count += 1
 	_aborted_attackers_this_turn.clear()
+	_union_attempted_this_turn = false
 	await get_tree().create_timer(0.6).timeout
 
 	# Tutorial: first two AI turns attack corners/center only — skip tech/union.
@@ -141,44 +143,47 @@ func decide_turn() -> void:
 			_choose_tech()
 			return
 
-		# Rule 2: Union summon — hesitation eases over successive AI turns.
-		# Turn 1: 15%, Turn 2: 45%, Turn 3: 75%, Turn 4+: 90%
-		# If the opponent already summoned a union: less hesitation on turns 1–3
-		# (−30%, −25%, −20% respectively — added to summon chance, capped at 90%).
-		# In E2E mode all players summon immediately (100%) so unions are guaranteed.
-		# Exception: P0 skips unions entirely in non-union E2E scenarios so the highlight
-		# card is never accidentally consumed as union material.
-		var _e2e_no_union: bool = CardE2ERunner.is_active() and player_index == 0 \
-				and not CardE2ERunner.is_union_test()
-		if not _e2e_no_union and not _trailer_offensive and not _union_used and GameState.battle_ai_union_enabled:
-			var chance: float = _union_summon_chance()
-			if randf() < chance:
-				var unions: Array = _get_available_unions()
-				if not unions.is_empty():
-					# E2E: for union-test scenarios where the highlight card IS the union
-					# (role contains "union"), restrict P0 to only summon that union so
-					# competing unions cannot hijack the test.
-					# For non-union highlight cards that merely need a union on field
-					# (e.g. ATK_DEF_BONUS_IF_UNION_ON_FIELD), skip the filter so P0
-					# can freely summon whatever union is available.
-					if CardE2ERunner.is_active() and player_index == 0 and CardE2ERunner.is_union_test():
-						var _e2e_role: String = str(CardE2ERunner.get_current_scenario().get("role", ""))
-						if _e2e_role.contains("union"):
-							var _e2e_union: String = str(CardE2ERunner.get_current_scenario().get("card_name", ""))
-							if _e2e_union != "":
-								unions = unions.filter(func(e: Dictionary) -> bool:
-									return (e["union"] as UnionData).card_name == _e2e_union)
-					if _tutorial_ai_active():
-						unions = unions.filter(func(e: Dictionary) -> bool:
-							return (e["union"] as UnionData).card_name == _TUTORIAL_AI_UNION_NAME)
-					if not unions.is_empty():
-						_union_used = true
-						var picked: Dictionary = _pick_best_union(unions)
-						var u: UnionData = picked["union"]
-						emit_signal("ai_union_chosen", u.card_name, picked["zone_cells"], picked["material_cells"])
-						return
+		# Rule 2: Union summon (also re-checked after tech via continue_after_union).
+		if _try_union_summon():
+			return
 
 	_do_attack_decision()
+
+## Mark a union as successfully summoned this duel (called by GameBoard after validation).
+func register_union_summoned() -> void:
+	_union_used = true
+
+## Attempt a union summon roll for this turn. Returns true if ai_union_chosen was emitted.
+func _try_union_summon() -> bool:
+	if _union_attempted_this_turn or _union_used:
+		return false
+	var _e2e_no_union: bool = CardE2ERunner.is_active() and player_index == 0 \
+			and not CardE2ERunner.is_union_test()
+	if _e2e_no_union or _trailer_offensive or not GameState.battle_ai_union_enabled:
+		return false
+	var chance: float = _union_summon_chance()
+	if randf() >= chance:
+		return false
+	var unions: Array = _get_available_unions()
+	if unions.is_empty():
+		return false
+	if CardE2ERunner.is_active() and player_index == 0 and CardE2ERunner.is_union_test():
+		var _e2e_role: String = str(CardE2ERunner.get_current_scenario().get("role", ""))
+		if _e2e_role.contains("union"):
+			var _e2e_union: String = str(CardE2ERunner.get_current_scenario().get("card_name", ""))
+			if _e2e_union != "":
+				unions = unions.filter(func(e: Dictionary) -> bool:
+					return (e["union"] as UnionData).card_name == _e2e_union)
+	if _tutorial_ai_active():
+		unions = unions.filter(func(e: Dictionary) -> bool:
+			return (e["union"] as UnionData).card_name == _TUTORIAL_AI_UNION_NAME)
+	if unions.is_empty():
+		return false
+	_union_attempted_this_turn = true
+	var picked: Dictionary = _pick_best_union(unions)
+	var u: UnionData = picked["union"]
+	emit_signal("ai_union_chosen", u.card_name, picked["zone_cells"], picked["material_cells"])
+	return true
 
 ## Called when TurnManager aborts an attack the AI just attempted.
 func register_attack_aborted(attacker_pos: Vector2i = Vector2i(-1, -1)) -> void:
@@ -189,20 +194,22 @@ func register_attack_aborted(attacker_pos: Vector2i = Vector2i(-1, -1)) -> void:
 		_aborted_attackers_this_turn.append(pos)
 
 
-## Continuation called by GameBoard after union summon resolves, so the AI
-## can still attack in the same turn without re-incrementing the turn counter.
-func continue_after_union() -> void:
+## Continuation after union resolves, tech resolves, or mid-turn attack continue.
+## When try_union_after_tech is true, rolls for union once after tech finishes.
+func continue_after_union(try_union_after_tech: bool = false) -> void:
 	if _game_is_over():
 		return
 	# In E2E, the non-highlight player (P1) ends the turn immediately after
 	# summoning a union.  This guarantees P0's highlight card can engage the
 	# union on the following turn instead of being destroyed by it first.
-	if CardE2ERunner.is_active() and player_index != 0:
+	if CardE2ERunner.is_active() and player_index != 0 and _union_used:
 		await get_tree().create_timer(0.3).timeout
 		emit_signal("ai_end_turn")
 		return
 	await get_tree().create_timer(0.5).timeout
 	if _game_is_over():
+		return
+	if try_union_after_tech and _try_union_summon():
 		return
 	_do_attack_decision()
 
@@ -1484,6 +1491,7 @@ func _solve_materials(u: UnionData, zone_cells: Array) -> Array:
 func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -> Array:
 	_ai_turn_count = 0
 	_union_used    = false
+	_union_attempted_this_turn = false
 	_opponent_union_summoned = false
 	_ai_kill_count = 0
 	_pick_personalities()

@@ -344,11 +344,11 @@ func _execute_effect(rule: CardRule, source_card: GameState.CardInstance, owner_
 			for tc: GameState.CardInstance in target_cards:
 				var pos: Vector2i = GameState.find_card_position(owner_player, tc)
 				if pos.x >= 0:
-					GameState.reveal_card(owner_player, pos.x, pos.y)
+					GameState.reveal_card_by_ability(owner_player, pos.x, pos.y)
 				else:
 					var pos2: Vector2i = GameState.find_card_position(opponent_player, tc)
 					if pos2.x >= 0:
-						GameState.reveal_card(opponent_player, pos2.x, pos2.y)
+						GameState.reveal_card_by_ability(opponent_player, pos2.x, pos2.y)
 
 		CardRule.EffectType.DRAW_TECH:
 			var count: int = params.get("count", 1)

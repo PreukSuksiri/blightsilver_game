@@ -39,7 +39,10 @@ var _siege_cannon_attacker_player: int = -1
 # Pending trap/ability params for target-selection callbacks
 var _pending_trap_def_boost: int = 0
 var _pending_trap_def_boost_carry: bool = false
+var _pending_trap_def_boost_attacker: int = -1
 var _attack_reveal_pending: Array = []  # Vector3i(player, row, col)
+var _standalone_reveal_wait: Vector3i = Vector3i(-1, -1, -1)
+const WITNESS_VIEW_DELAY: float = 0.5
 var _pending_trap_self_destruct_boost: int = 0
 var _pending_trap_self_destruct_player: int = -1
 var _pending_swap_attacker_pos: Vector2i = Vector2i(-1, -1)
@@ -47,6 +50,7 @@ var _pending_rebel_king_owner: int = -1
 var _pending_rebel_king_foe_player: int = -1
 var _pending_trap_hostage_lock: bool = false
 var _pending_street_joke_crystal: int = 0
+var _pending_street_joke_attacker: int = -1
 var _pending_lockpicker_owner: int = -1
 var _pending_wk17_foe_player: int = -1
 var _pending_wk17_mode: String = ""
@@ -72,6 +76,16 @@ func _do_coin_flips(count: int) -> Array:
 	await coin_flip_visual_done
 	return results
 
+## Joseph / Grand Wizard: flip before Reckoning overlay so stats match the visual.
+func _maybe_flip_reckoning_attacker_coins(attacker: GameState.CardInstance) -> Array:
+	if attacker == null or attacker.card_type != "character":
+		return []
+	match attacker.ability_type:
+		CharacterData.AbilityType.COIN_FLIP_ATK_BOOST, \
+		CharacterData.AbilityType.COIN_FLIP_ATK_DEF_BOOST:
+			return await _do_coin_flips(1)
+	return []
+
 func start_turn(player_index: int) -> void:
 	GameState.current_player = player_index
 	GameState.turn_number += 1
@@ -91,6 +105,9 @@ func start_turn(player_index: int) -> void:
 
 	# Clear per-turn state
 	_clear_turn_state(player_index)
+
+	# Burning Phoenix and similar: revive at the start of the owner's turn
+	GameState.process_turn_start_revives(player_index)
 
 	# Dimensional Gate: destroy unions summoned under this modifier on the next turn start.
 	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
@@ -156,7 +173,7 @@ func start_turn(player_index: int) -> void:
 		return
 
 	# Apply end-of-turn permanent boosts for Hyperspeed Saucer (from previous turn)
-	_apply_end_of_turn_boosts(player_index)
+	await _apply_end_of_turn_boosts(player_index)
 
 	# Check stuck condition
 	GameState.check_stuck_win_condition()
@@ -215,10 +232,32 @@ func _await_attack_reveal_animations() -> void:
 
 func notify_card_reveal_animation_done(player_index: int, row: int, col: int) -> void:
 	var key := Vector3i(player_index, row, col)
+	if key == _standalone_reveal_wait:
+		_standalone_reveal_wait = Vector3i(-1, -1, -1)
+		card_reveal_animation_done.emit()
+		return
 	if key not in _attack_reveal_pending:
 		return
 	_attack_reveal_pending.erase(key)
 	card_reveal_animation_done.emit()
+
+
+func _await_standalone_reveal_animation(player_index: int, row: int, col: int) -> void:
+	_standalone_reveal_wait = Vector3i(player_index, row, col)
+	await card_reveal_animation_done
+
+
+## Reveal a hidden card so the opponent can see it, wait for flip animation, then pause briefly.
+func _witness_card(player_index: int, row: int, col: int) -> void:
+	var card: GameState.CardInstance = GameState.get_card(player_index, row, col)
+	if card.card_type != "character" or card.face_up:
+		return
+	GameState.reveal_card(player_index, row, col)
+	await _await_standalone_reveal_animation(player_index, row, col)
+
+
+func _witness_pause() -> void:
+	await get_tree().create_timer(WITNESS_VIEW_DELAY).timeout
 
 
 func _should_play_wait_badge_animation(player_index: int, row: int, col: int) -> bool:
@@ -300,7 +339,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		# Reveal Lazy Troll face-up before the coin flip so the player sees who is flipping
 		if not attacker.face_up:
 			GameState.reveal_card(player, attacker_pos.x, attacker_pos.y)
-			await get_tree().create_timer(0.30).timeout
+			await _await_standalone_reveal_animation(player, attacker_pos.x, attacker_pos.y)
+		await await_card_effect_flash(attacker.card_name)
 		var _cca_results: Array = await _do_coin_flips(1)
 		if not _cca_results[0]:  # tails
 			GameState.post_message("%s flips tails — too lazy to attack! It has to wait." % attacker.card_name)
@@ -324,6 +364,9 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 						and _ic_cand.ability_type == CharacterData.AbilityType.INTERCEPT_ALLY_ATTACK:
 					var _ic_aff: int = _ic_cand.ability_params.get("affinity", -1)
 					if _ic_aff == -1 or _ic_aff == defender.affinity:
+						await _witness_card(opponent, _ic_r, _ic_c)
+						await _witness_pause()
+						await await_card_effect_flash(_ic_cand.card_name)
 						emit_signal("awaiting_defender_choice",
 							"%s can intercept for %s!" % [_ic_cand.card_name, defender.card_name],
 							["Intercept", "Don't Intercept"])
@@ -373,8 +416,9 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 				var _mn_adj: Array = GameState.get_adjacent_positions(_mn_r, _mn_c)
 				var _mn_pos: Vector2i = Vector2i(_mn_r, _mn_c)
 				if target_pos in _mn_adj:
-					if not _mn_card.face_up:
-						GameState.reveal_card(_mn_p, _mn_r, _mn_c)
+					await _witness_card(_mn_p, _mn_r, _mn_c)
+					await _witness_pause()
+					await await_card_effect_flash(_mn_card.card_name)
 					_mn_card.temp_atk_bonus += _mn_card.ability_params.get("atk", 30)
 					_mn_card.temp_def_bonus += _mn_card.ability_params.get("def", 30)
 					GameState.post_message("%s: Surrounding attack — +%d ATK&DEF!" % [
@@ -391,25 +435,6 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	BattleResolver.calculate_field_bonuses(player)
 	BattleResolver.calculate_field_bonuses(opponent)
 
-	# Pre-battle: COIN_FLIP_SWAP_POSITION (Nuki) — heads → swap with own unit, then resolve Reckoning
-	if attacker.ability_type == CharacterData.AbilityType.COIN_FLIP_SWAP_POSITION:
-		await await_card_effect_flash(attacker.card_name)
-		var _nuki_cf: Array = await _do_coin_flips(1)
-		if _nuki_cf[0]:
-			_pending_swap_attacker_pos = attacker_pos
-			await _prompt_and_await_target_selection(
-				"%s: Heads! Choose 1 of your units to swap position with." % attacker.card_name,
-				"own_character_for_swap")
-			attacker = GameState.get_card(player, _pending_swap_attacker_pos.x, _pending_swap_attacker_pos.y)
-			attacker_pos = _pending_swap_attacker_pos
-			_pending_swap_attacker_pos = Vector2i(-1, -1)
-			GameState.attacker_card = attacker
-			GameState.attacker_pos = attacker_pos
-			BattleResolver.calculate_field_bonuses(player)
-			BattleResolver.calculate_field_bonuses(opponent)
-		else:
-			GameState.post_message("%s: Tails — no position swap." % attacker.card_name)
-
 	await maybe_apply_on_expose_reveal_foe(player, attacker_pos.x, attacker_pos.y)
 	if defender.card_type != "dead_end":
 		await maybe_apply_on_expose_reveal_foe(opponent, target_pos.x, target_pos.y)
@@ -422,22 +447,6 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	target_pos = _wk17_out.get("target_pos", target_pos)
 	defender_was_exposed = _wk17_out.get("defender_was_exposed", defender_was_exposed)
 	defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
-
-	# Roll the attack dice
-	GameState.dice_result = DiceRoller.roll_attack_dice()
-	GameState.emit_signal("dice_rolled", GameState.dice_result)
-
-	# TEMP_REROLL_DICE: offer one re-roll (before overlay so preview uses the final dice result)
-	if GameState.reroll_dice_available[player]:
-		GameState.reroll_dice_available[player] = false
-		emit_signal("awaiting_trap_choice",
-			"Lucky Break: Re-roll dice? (current: %d)" % GameState.dice_result,
-			["Re-roll", "Keep %d" % GameState.dice_result])
-		var _rr_choice: int = await ability_choice_resolved
-		if _rr_choice == 0:
-			GameState.dice_result = DiceRoller.roll_attack_dice()
-			GameState.emit_signal("dice_rolled", GameState.dice_result)
-			GameState.post_message("Lucky Break: Re-rolled — new result: %d" % GameState.dice_result)
 
 	if _wk17_friendly_fire and _wk17_friendly_fire_pos != Vector2i(-1, -1):
 		var _wk17_ff_pos: Vector2i = _wk17_friendly_fire_pos
@@ -471,6 +480,31 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		_reveal_for_attack(opponent, target_pos.x, target_pos.y)
 		defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
 	await _await_attack_reveal_animations()
+
+	attacker = GameState.get_card(player, attacker_pos.x, attacker_pos.y)
+	var _nuki_out: Dictionary = await _apply_nuki_pre_reckoning(player, attacker, attacker_pos)
+	attacker = _nuki_out.get("attacker", attacker) as GameState.CardInstance
+	attacker_pos = _nuki_out.get("attacker_pos", attacker_pos)
+	GameState.attacker_card = attacker
+	GameState.attacker_pos = attacker_pos
+
+	# Roll dice after Nuki swap (coin flip + optional reposition) and before Reckoning overlay.
+	GameState.dice_result = DiceRoller.roll_attack_dice()
+	GameState.emit_signal("dice_rolled", GameState.dice_result)
+	if GameState.reroll_dice_available[player]:
+		GameState.reroll_dice_available[player] = false
+		emit_signal("awaiting_trap_choice",
+			"Lucky Break: Re-roll dice? (current: %d)" % GameState.dice_result,
+			["Re-roll", "Keep %d" % GameState.dice_result])
+		var _rr_choice: int = await ability_choice_resolved
+		if _rr_choice == 0:
+			GameState.dice_result = DiceRoller.roll_attack_dice()
+			GameState.emit_signal("dice_rolled", GameState.dice_result)
+			GameState.post_message("Lucky Break: Re-rolled — new result: %d" % GameState.dice_result)
+
+	var _pre_shown_reckoning_coins: Array = await _maybe_flip_reckoning_attacker_coins(attacker)
+	if not _pre_shown_reckoning_coins.is_empty():
+		BattleResolver.set_predetermined_coin_flips(_pre_shown_reckoning_coins)
 
 	# Compute a preview result (without optional crystal boosts) for the battle overlay display.
 	# silent=true prevents ability messages from firing twice (they fire again on the real resolve).
@@ -514,9 +548,11 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 				GameState.post_message("%s: Paid %d Crystals for +%d DEF!" % [defender.card_name, _dd_cost, _dd_boost])
 
 	# Recompute with any applied temp bonuses and post final battle messages
+	BattleResolver.reset_predetermined_coin_flip_index()
 	var result := BattleResolver.resolve_battle(
 		attacker, defender, GameState.dice_result, player, opponent, defender_was_exposed, target_pos
 	)
+	BattleResolver.clear_predetermined_coin_flips()
 	# Pills freeze at preview time; badge/mod reflect the final resolve.
 	BattleResolver.copy_reckoning_pills_from(preview_result, result)
 	# Capture card names before any destruction so loggers that fire after destroy_card() can use them
@@ -563,7 +599,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		result, attacker, defender, player, opponent, attacker_pos, target_pos)
 
 	# Show coin flip visual for any flips that happened inside BattleResolver
-	if not result.coin_flip_results.is_empty():
+	if not result.coin_flip_results.is_empty() and _pre_shown_reckoning_coins.is_empty():
 		emit_signal("coin_flip_visual_requested", result.coin_flip_results)
 		await coin_flip_visual_done
 		if _battle_aborted():
@@ -797,6 +833,9 @@ func play_tech_card(tech_name: String) -> void:
 					and _tbt_card.ability_type == CharacterData.AbilityType.TEMP_BOOST_ON_OPP_TECH:
 				var _tbt_atk: int = _tbt_card.ability_params.get("atk", 5)
 				var _tbt_def: int = _tbt_card.ability_params.get("def", 5)
+				await _witness_card(_tech_opp, _tbt_r, _tbt_c)
+				await _witness_pause()
+				await await_card_effect_flash(_tbt_card.card_name)
 				_tbt_card.perm_atk_bonus += _tbt_atk
 				_tbt_card.perm_def_bonus += _tbt_def
 				GameState.post_message("%s: +%d ATK & +%d DEF permanently!" % [
@@ -935,14 +974,19 @@ func play_tech_card(tech_name: String) -> void:
 
 		TechCardData.TechEffectType.DESTROY_WISPS_REVEAL_OPPONENT:
 			var _dwro_opp: int = GameState.get_opponent(player)
-			var _dwro_count: int = 0
+			var _wisp_slots: Array = []
 			for _dwro_r: int in range(GameState.GRID_SIZE):
 				for _dwro_c: int in range(GameState.GRID_SIZE):
 					var _dwro_card: GameState.CardInstance = GameState.get_card(player, _dwro_r, _dwro_c)
-					if _dwro_card.card_type == "character" and "wisp" in _dwro_card.card_name.to_lower():
-						GameState.destroy_card(player, _dwro_r, _dwro_c, false)
-						_dwro_count += 1
-			if _dwro_count > 0:
+					if _dwro_card.card_type == "character" \
+							and "wisp" in _dwro_card.card_name.to_lower():
+						_wisp_slots.append(Vector2i(_dwro_r, _dwro_c))
+			if not _wisp_slots.is_empty():
+				for _wisp_pos: Vector2i in _wisp_slots:
+					await _witness_card(player, _wisp_pos.x, _wisp_pos.y)
+					await _witness_pause()
+				for _wisp_pos: Vector2i in _wisp_slots:
+					GameState.destroy_card(player, _wisp_pos.x, _wisp_pos.y, false)
 				var _dwro_hidden: Array = []
 				for _dwro_r2: int in range(GameState.GRID_SIZE):
 					for _dwro_c2: int in range(GameState.GRID_SIZE):
@@ -951,10 +995,14 @@ func play_tech_card(tech_name: String) -> void:
 							_dwro_hidden.append(Vector2i(_dwro_r2, _dwro_c2))
 				_dwro_hidden.shuffle()
 				var _dwro_revealed: int = 0
-				for _dwro_i: int in range(mini(_dwro_count, _dwro_hidden.size())):
-					GameState.reveal_card(_dwro_opp, _dwro_hidden[_dwro_i].x, _dwro_hidden[_dwro_i].y)
+				for _dwro_i: int in range(mini(_wisp_slots.size(), _dwro_hidden.size())):
+					var _rev_pos: Vector2i = _dwro_hidden[_dwro_i]
+					GameState.reveal_card_by_ability(_dwro_opp, _rev_pos.x, _rev_pos.y)
+					await _await_standalone_reveal_animation(_dwro_opp, _rev_pos.x, _rev_pos.y)
+					await _witness_pause()
 					_dwro_revealed += 1
-				GameState.post_message("Wisp Light: %d Wisps destroyed, %d squares revealed." % [_dwro_count, _dwro_revealed])
+				GameState.post_message("Wisp Light: %d Wisps destroyed, %d squares revealed." % [
+					_wisp_slots.size(), _dwro_revealed])
 			else:
 				GameState.post_message("Wisp Light: No Wisps on your field.")
 			after_tech_resolved(player)
@@ -1119,10 +1167,13 @@ func _apply_battle_result(
 				if Vector2i(_sac_r, _sac_c) == target_pos:
 					continue
 				var _sac_cand: GameState.CardInstance = GameState.get_card(opponent, _sac_r, _sac_c)
-				if _sac_cand.card_type == "character" and _sac_cand.face_up \
+				if _sac_cand.card_type == "character" \
 						and _sac_cand.ability_type == CharacterData.AbilityType.SACRIFICE_FOR_CARD_TYPE:
 					var _sac_name: String = _sac_cand.ability_params.get("name_contains", "")
 					if _sac_name != "" and _sac_name in defender.card_name:
+						await _witness_card(opponent, _sac_r, _sac_c)
+						await _witness_pause()
+						await await_card_effect_flash(_sac_cand.card_name)
 						emit_signal("awaiting_defender_choice",
 							"%s sacrifices itself to save %s?" % [_sac_cand.card_name, defender.card_name],
 							["Sacrifice", "Let it be destroyed"])
@@ -1157,13 +1208,27 @@ func resolve_trap_temp_def_boost(player: int, target_pos: Vector2i) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player, target_pos.x, target_pos.y)
 	if card.card_type == "character":
 		if _pending_trap_def_boost_carry:
-			card.carry_def_bonus += _pending_trap_def_boost
+			card.apply_trap_carry_def(_pending_trap_def_boost, _pending_trap_def_boost_attacker)
 			GameState.post_message("%s: +%d DEF until attacker's next turn ends." % [card.card_name, _pending_trap_def_boost])
 		else:
 			card.temp_def_bonus += _pending_trap_def_boost
 			GameState.post_message("%s: +%d DEF until end of turn." % [card.card_name, _pending_trap_def_boost])
 	_pending_trap_def_boost = 0
 	_pending_trap_def_boost_carry = false
+	_pending_trap_def_boost_attacker = -1
+
+func _expire_trap_carry_def_at_turn_end(ending_player: int) -> void:
+	for _p: int in range(2):
+		for _r: int in range(GameState.GRID_SIZE):
+			for _c: int in range(GameState.GRID_SIZE):
+				var _card: GameState.CardInstance = GameState.get_card(_p, _r, _c)
+				if _card.trap_carry_def_clear_attacker != ending_player:
+					continue
+				if _card.trap_carry_def_ends_after_attacker_turns <= 0:
+					continue
+				_card.trap_carry_def_ends_after_attacker_turns -= 1
+				if _card.trap_carry_def_ends_after_attacker_turns == 0:
+					_card.clear_trap_carry_def()
 
 func resolve_trap_self_destruct(player: int, target_pos: Vector2i) -> void:
 	var card: GameState.CardInstance = GameState.get_card(player, target_pos.x, target_pos.y)
@@ -1214,14 +1279,20 @@ func resolve_brainwash_friendly_fire(attacker_player: int, friendly_pos: Vector2
 	BattleResolver.calculate_field_bonuses(attacker_player)
 	BattleResolver.calculate_field_bonuses(GameState.get_opponent(attacker_player))
 
+	var _pre_shown_reckoning_coins: Array = await _maybe_flip_reckoning_attacker_coins(attacker)
+	if not _pre_shown_reckoning_coins.is_empty():
+		BattleResolver.set_predetermined_coin_flips(_pre_shown_reckoning_coins)
+
 	var preview_result := BattleResolver.resolve_battle(
 		attacker, ally, GameState.dice_result, attacker_player, attacker_player,
 		defender_was_exposed, friendly_pos, true)
 	emit_signal("battle_preview_needed", attacker_player, attacker, ally, preview_result)
 
+	BattleResolver.reset_predetermined_coin_flip_index()
 	var result := BattleResolver.resolve_battle(
 		attacker, ally, GameState.dice_result, attacker_player, attacker_player,
 		defender_was_exposed, friendly_pos)
+	BattleResolver.clear_predetermined_coin_flips()
 	BattleResolver.copy_reckoning_pills_from(preview_result, result)
 	result.attacker_name = attacker.card_name
 	result.defender_name = ally.card_name
@@ -1236,7 +1307,7 @@ func resolve_brainwash_friendly_fire(attacker_player: int, friendly_pos: Vector2
 		ally.force_shielded = false
 		GameState.post_message("Force Shield: %s blocked the attack!" % ally.card_name)
 
-	if not result.coin_flip_results.is_empty():
+	if not result.coin_flip_results.is_empty() and _pre_shown_reckoning_coins.is_empty():
 		emit_signal("coin_flip_visual_requested", result.coin_flip_results)
 		await coin_flip_visual_done
 		if _battle_aborted():
@@ -1364,7 +1435,7 @@ func _handle_trap_effect(
 			GameState.post_message("Hostage: Adjacent squares revealed and locked.")
 			var _hst_adj: Array = GameState.get_adjacent_positions(target_pos.x, target_pos.y)
 			for _hst_pos: Vector2i in _hst_adj:
-				GameState.reveal_card(opponent, _hst_pos.x, _hst_pos.y)
+				GameState.reveal_card_by_ability(opponent, _hst_pos.x, _hst_pos.y)
 				if _hst_pos not in GameState.locked_attack_positions:
 					GameState.locked_attack_positions.append(_hst_pos)
 
@@ -1572,7 +1643,7 @@ func _handle_trap_effect(
 						var _td_card: GameState.CardInstance = GameState.get_card(opponent, _td_r, _td_c)
 						if _td_card.card_type == "character":
 							if _td_carry:
-								_td_card.carry_def_bonus += _td_def
+								_td_card.apply_trap_carry_def(_td_def, player)
 							else:
 								_td_card.temp_def_bonus += _td_def
 				if _td_carry:
@@ -1586,6 +1657,7 @@ func _handle_trap_effect(
 			else:
 				_pending_trap_def_boost = _td_def
 				_pending_trap_def_boost_carry = _td_carry
+				_pending_trap_def_boost_attacker = player
 				await _prompt_and_await_target_selection(
 					"%s: Choose 1 of your units for +%d DEF this turn." % [trap_data.card_name, _pending_trap_def_boost],
 					"own_faceup_for_trap_temp_def_boost")
@@ -1639,6 +1711,7 @@ func _handle_trap_effect(
 		TrapData.TrapEffectType.REVEAL_OWN_GAIN_CRYSTAL:
 			var _rogc_amount: int = trap_data.effect_params.get("amount", 300)
 			_pending_street_joke_crystal = _rogc_amount
+			_pending_street_joke_attacker = player
 			await _prompt_and_await_target_selection(
 				"%s: Choose 1 of your cells to reveal." % trap_data.card_name,
 				"trap_street_joke_reveal")
@@ -1722,6 +1795,7 @@ func _end_turn(player: int) -> void:
 				continue
 			match _te_card.ability_type:
 				CharacterData.AbilityType.PERM_ATK_LOSS_PER_OWN_TURN:
+					await await_card_effect_flash(_te_card.card_name)
 					_te_card.current_atk = max(0, _te_card.current_atk - _te_card.ability_params.get("amount", 2))
 				CharacterData.AbilityType.END_OF_TURN_COIN_FLIP_STAT_BOOST:
 					await await_card_effect_flash(_te_card.card_name)
@@ -1797,6 +1871,7 @@ func _end_turn(player: int) -> void:
 				var _ep_card: GameState.CardInstance = GameState.get_card(_pi, _ep_r, _ep_c)
 				if "expose_destroy_pending" in _ep_card.flags \
 						and _ep_card.revealed_on_turn == GameState.turn_number:
+					await await_card_effect_flash(_ep_card.card_name)
 					GameState.post_message("%s self-destructs at end of turn!" % _ep_card.card_name)
 					GameState.destroy_card(_pi, _ep_r, _ep_c)
 
@@ -1811,18 +1886,21 @@ func _end_turn(player: int) -> void:
 					continue
 				match _ep_card.ability_type:
 					CharacterData.AbilityType.DEF_ZERO_WHEN_EXPOSED:
+						await await_card_effect_flash(_ep_card.card_name)
 						_ep_card.current_def = 0
 						GameState.post_message(
 							"%s: DEF becomes 0 at end of expose turn." % _ep_card.card_name)
 					CharacterData.AbilityType.ATK_PENALTY_WHEN_EXPOSED:
 						var _pen: int = _ep_card.ability_params.get(
 							"penalty", _ep_card.ability_params.get("amount", 20))
+						await await_card_effect_flash(_ep_card.card_name)
 						_ep_card.current_atk = max(0, _ep_card.current_atk - _pen)
 						GameState.post_message(
 							"%s: -%d ATK at end of expose turn." % [_ep_card.card_name, _pen])
 					CharacterData.AbilityType.PERM_ATK_BOOST_WHEN_EXPOSED:
 						var _boost: int = _ep_card.ability_params.get(
 							"amount", _ep_card.ability_params.get("atk", 15))
+						await await_card_effect_flash(_ep_card.card_name)
 						_ep_card.perm_atk_bonus += _boost
 						GameState.post_message(
 							"%s: +%d ATK permanently at end of expose turn." % [_ep_card.card_name, _boost])
@@ -1853,6 +1931,8 @@ func _end_turn(player: int) -> void:
 				if _cr_card.atk_def_swap_clear_on_player_end == player:
 					_cr_card.clear_atk_def_swap()
 
+	_expire_trap_carry_def_at_turn_end(player)
+
 	# Prayer: protection for the opponent of this player expires when this turn ends.
 	GameState.expire_divine_protection_at_turn_end(player)
 	# Clear berserk if it's now ending
@@ -1876,9 +1956,8 @@ func _clear_turn_state(player: int) -> void:
 			var card: GameState.CardInstance = GameState.get_card(player, r, c)
 			if card.card_type == "character":
 				card.attacked_this_turn = false
-				# Clear carry_def_bonus (Garrison-type: "until end of next turn")
-				# This runs at the START of the player's OWN turn, so the bonus
-				# persisted through the entire opponent turn as intended.
+				# Clear carry_def_bonus (Garrison-type: until end of foe's turn / start of own next turn).
+				# Hard Scale uses trap_carry_def_bonus instead — see _expire_trap_carry_def_at_turn_end().
 				card.carry_def_bonus = 0
 				card.carry_atk_debuff = 0
 				# Clear per-turn "once per turn" ability flags
@@ -1899,7 +1978,7 @@ func _lighthouse_reveal(player: int) -> void:
 		return
 	hidden_cells.shuffle()
 	var cell: Vector2i = hidden_cells[0]
-	GameState.reveal_card(opponent, cell.x, cell.y)
+	GameState.reveal_card_by_ability(opponent, cell.x, cell.y)
 	GameState.post_message("Lighthouse: One of Player %d's cards is revealed!" % (opponent + 1))
 
 func _apply_post_battle_effects(
@@ -2124,6 +2203,8 @@ func _apply_post_battle_effects(
 				if _ecto.card_type == "character" \
 						and _ecto.ability_type == CharacterData.AbilityType.COPY_ALLY_STATS_ON_DESTROY \
 						and not _ecto.was_destroyed:
+					await _witness_card(opponent, _ecr, _ecc)
+					await _witness_pause()
 					emit_signal("awaiting_trap_choice",
 						"Ectoplasm: Absorb %s's stats? (ATK %d / DEF %d / Cost %d)" % [
 							defender.card_name, defender.current_atk, defender.current_def, defender.crystal_cost],
@@ -2191,6 +2272,72 @@ func await_card_effect_flash(card_name: String, card_type: String = "character")
 		return
 	GameState.emit_signal("card_effect_triggered", card_name, card_type)
 	await card_effect_flash_done
+
+
+func apply_on_reveal_abilities(player: int, row: int, col: int) -> void:
+	var card: GameState.CardInstance = GameState.get_card(player, row, col)
+	if card.card_type != "character" or not card.face_up:
+		return
+	match card.ability_type:
+		CharacterData.AbilityType.HALVE_DEF_ON_FIRST_EXPOSE:
+			if "halve_def_applied" in card.flags:
+				return
+			await await_card_effect_flash(card.card_name)
+			card.flags.append("halve_def_applied")
+			card.current_def = card.current_def / 2
+			GameState.post_message("%s's DEF is halved upon reveal!" % card.card_name)
+		CharacterData.AbilityType.DESTROY_SELF_AT_END_OF_EXPOSE_TURN:
+			if "expose_destroy_pending" in card.flags:
+				return
+			await await_card_effect_flash(card.card_name)
+			card.flags.append("expose_destroy_pending")
+
+
+func _has_own_character_to_swap(player: int, exclude_pos: Vector2i) -> bool:
+	for r: int in range(GameState.GRID_SIZE):
+		for c: int in range(GameState.GRID_SIZE):
+			if Vector2i(r, c) == exclude_pos:
+				continue
+			if GameState.get_card(player, r, c).card_type == "character":
+				return true
+	return false
+
+
+## Nuki the Tanuki: coin flip after reveal animations, before Reckoning overlay.
+func _apply_nuki_pre_reckoning(
+		player: int,
+		attacker: GameState.CardInstance,
+		attacker_pos: Vector2i
+) -> Dictionary:
+	if attacker == null \
+			or attacker.card_type != "character" \
+			or attacker.effect_nullified_until >= GameState.turn_number \
+			or attacker.ability_type != CharacterData.AbilityType.COIN_FLIP_SWAP_POSITION:
+		return {"attacker": attacker, "attacker_pos": attacker_pos}
+	await await_card_effect_flash(attacker.card_name)
+	await _witness_pause()
+	var _nuki_cf: Array = await _do_coin_flips(1)
+	var _flip_label: String = "Heads" if _nuki_cf[0] else "Tails"
+	GameState.post_message("%s: Coin flip — %s." % [attacker.card_name, _flip_label])
+	if not _nuki_cf[0]:
+		return {"attacker": attacker, "attacker_pos": attacker_pos}
+	if not _has_own_character_to_swap(player, attacker_pos):
+		GameState.post_message("%s: Heads — but no other unit to swap with." % attacker.card_name)
+		return {"attacker": attacker, "attacker_pos": attacker_pos}
+	var _nuki_origin: Vector2i = attacker_pos
+	_pending_swap_attacker_pos = attacker_pos
+	await _prompt_and_await_target_selection(
+		"%s: Heads! Choose 1 of your units to swap position with." % attacker.card_name,
+		"own_character_for_swap")
+	attacker_pos = _nuki_origin
+	attacker = GameState.get_card(player, attacker_pos.x, attacker_pos.y)
+	_pending_swap_attacker_pos = Vector2i(-1, -1)
+	GameState.attacker_card = attacker
+	GameState.attacker_pos = attacker_pos
+	BattleResolver.calculate_field_bonuses(player)
+	BattleResolver.calculate_field_bonuses(GameState.get_opponent(player))
+	return {"attacker": attacker, "attacker_pos": attacker_pos}
+
 
 func _prompt_and_await_target_selection(prompt: String, filter: String) -> void:
 	emit_signal("awaiting_target_selection", prompt, filter)
@@ -2297,7 +2444,7 @@ func _apply_wk17_pre_battle(
 			defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
 			defender_was_exposed = defender.face_up
 			if defender.card_type != "dead_end" and not defender.face_up:
-				GameState.reveal_card(opponent, target_pos.x, target_pos.y)
+				GameState.reveal_card_by_ability(opponent, target_pos.x, target_pos.y)
 				defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
 				defender_was_exposed = false
 			BattleResolver.calculate_field_bonuses(player)
@@ -2377,15 +2524,34 @@ func _apply_end_of_turn_boosts(player: int) -> void:
 	for r in range(GameState.GRID_SIZE):
 		for c in range(GameState.GRID_SIZE):
 			var card: GameState.CardInstance = GameState.get_card(player, r, c)
-			if card.card_type == "character" and card.face_up:
-				if card.ability_type == CharacterData.AbilityType.PERM_BOOST_END_OF_TURN:
-					card.current_atk += card.ability_params.get("atk", 0)
-					card.current_def += card.ability_params.get("def", 0)
-				elif card.ability_type == CharacterData.AbilityType.PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN:
-					if "reckoning_participated" in card.flags:
-						card.flags.erase("reckoning_participated")
-						card.current_atk += card.ability_params.get("atk", 2)
-				elif card.ability_type == CharacterData.AbilityType.SWAP_ATK_DEF_PER_OPP_TURN:
-					var _tmp_atk: int = card.current_atk
-					card.current_atk = card.current_def
-					card.current_def = _tmp_atk
+			if card.card_type != "character" or not card.face_up:
+				continue
+			match card.ability_type:
+				CharacterData.AbilityType.PERM_BOOST_END_OF_TURN:
+					var _hs_atk: int = card.ability_params.get("atk", 0)
+					var _hs_def: int = card.ability_params.get("def", 0)
+					await await_card_effect_flash(card.card_name)
+					await _witness_pause()
+					card.current_atk += _hs_atk
+					card.current_def += _hs_def
+					GameState.post_message("%s: +%d ATK & +%d DEF permanently." % [
+						card.card_name, _hs_atk, _hs_def])
+				CharacterData.AbilityType.PERM_ATK_BOOST_PER_SURVIVE_OPP_TURN:
+					if "reckoning_participated" not in card.flags:
+						continue
+					card.flags.erase("reckoning_participated")
+					var _db_atk: int = card.ability_params.get("atk", 2)
+					await await_card_effect_flash(card.card_name)
+					await _witness_pause()
+					card.current_atk += _db_atk
+					GameState.post_message("%s: +%d ATK permanently after surviving Reckoning." % [
+						card.card_name, _db_atk])
+				CharacterData.AbilityType.SWAP_ATK_DEF_PER_OPP_TURN:
+					await await_card_effect_flash(card.card_name)
+					await _witness_pause()
+					var _vc_atk: int = card.current_atk
+					var _vc_def: int = card.current_def
+					card.current_atk = _vc_def
+					card.current_def = _vc_atk
+					GameState.post_message("%s: ATK & DEF swapped (%d / %d)." % [
+						card.card_name, card.current_atk, card.current_def])

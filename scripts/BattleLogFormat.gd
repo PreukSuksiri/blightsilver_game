@@ -320,9 +320,18 @@ static func _append_unique_overlay_line(lines: PackedStringArray, text: String) 
 
 static func _survive_once_used_label(card: GameState.CardInstance) -> String:
 	if card.ability_type == CharacterData.AbilityType.ONE_USE_SURVIVE_DESTRUCTION:
-		var req_aff: int = int(card.ability_params.get("destroyer_affinity", -1))
-		if req_aff >= 0 and req_aff < CharacterData.Affinity.size():
-			return "Once Survive vs %s Used" % _affinity_name(req_aff)
+		var affinities: Array = card.ability_params.get("destroyer_affinities", [])
+		if affinities.is_empty():
+			var req_aff: int = int(card.ability_params.get("destroyer_affinity", -1))
+			if req_aff >= 0:
+				affinities = [req_aff]
+		if not affinities.is_empty():
+			var names: PackedStringArray = []
+			for aff: Variant in affinities:
+				if int(aff) >= 0 and int(aff) < CharacterData.Affinity.size():
+					names.append(_affinity_name(int(aff)))
+			if not names.is_empty():
+				return "Once Survive vs %s Used" % " / ".join(names)
 		return "Survive Once Used"
 	return "Survive Once Used"
 
@@ -385,6 +394,7 @@ static func _append_overlay_buff_lines(lines: PackedStringArray, card: GameState
 	_append_signed_overlay_line(lines, "ATK", card.temp_atk_bonus, "temp")
 	_append_signed_overlay_line(lines, "DEF", card.temp_def_bonus, "temp")
 	_append_signed_overlay_line(lines, "DEF", card.carry_def_bonus, "carry")
+	_append_signed_overlay_line(lines, "DEF", card.trap_carry_def_bonus, "trap carry")
 
 
 static func _append_overlay_debuff_lines(lines: PackedStringArray, card: GameState.CardInstance) -> void:

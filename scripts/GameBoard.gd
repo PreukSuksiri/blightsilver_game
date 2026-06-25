@@ -526,6 +526,7 @@ func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: 
 	await _play_union_zone_preview(cp, zone_cells)
 	await _perform_pending_union()
 	if GameState.current_phase != GameState.Phase.GAME_OVER:
+		_active_ai.register_union_summoned()
 		_active_ai.continue_after_union()
 
 func _stop_ai_watchdog() -> void:
@@ -572,7 +573,8 @@ func _connect_signals() -> void:
 	GameState.game_over.connect(_on_game_over)
 	GameState.message_posted.connect(_on_message_posted)
 	GameState.center_message_requested.connect(_on_center_message_requested)
-	GameState.tech_card_used.connect(func(_p: int, _n: String) -> void:
+	GameState.tech_card_used.connect(func(p: int, tech_name: String) -> void:
+		_add_to_void_pile(p, tech_name, "tech")
 		_update_tech_stacks()
 		if _tech_overlay_panel != null and _tech_overlay_panel.visible:
 			_rebuild_tech_overlay_content(_tech_overlay_player))
@@ -1159,6 +1161,7 @@ func _on_handoff_ready() -> void:
 
 func _start_game() -> void:
 	_union_summoned_this_duel = [0, 0]
+	_void_piles = [[], []]
 	if GameState._vn_battle_pending:
 		# VNPlayer already ran new_game() and applied battle config — avoid a second reset.
 		GameState._vn_battle_pending = false
@@ -3188,7 +3191,7 @@ func _apply_union_summon_ability(player: int, anchor: Vector2i, u: UnionData) ->
 				if _ll_revealed >= _ll_count:
 					break
 				var _ll_pos: Vector2i = _ll_entry["pos"]
-				GameState.reveal_card(int(_ll_entry["p"]), _ll_pos.x, _ll_pos.y)
+				GameState.reveal_card_by_ability(int(_ll_entry["p"]), _ll_pos.x, _ll_pos.y)
 				_ll_revealed += 1
 			GameState.post_message("%s: Revealed %d card(s) on the field!" % [u.card_name, _ll_revealed])
 		CharacterData.AbilityType.UNION_SUMMON_PERM_ATK_OR_DEF_CHOICE:
@@ -6348,7 +6351,7 @@ func _on_tech_resolved(player: int) -> void:
 		await get_tree().create_timer(0.4).timeout
 		if GameState.current_phase == GameState.Phase.GAME_OVER:
 			return
-		_active_ai.continue_after_union()
+		_active_ai.continue_after_union(true)
 	else:
 		_resume_human_mode_select()
 
@@ -6857,9 +6860,13 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 	if filter == "own_any_as_target":
 		_set_own_facedown_char_peek(true)
 
+	# Nuki: swap with any own unit (face-down allowed)
+	if filter == "own_character_for_swap":
+		_set_own_facedown_char_peek(true)
+
 	# Own-unit picks without "face-up/exposed only" in card text — cosmetic peek while selecting
 	if _own_unit_target_allows_facedown(filter):
-		_set_own_facedown_char_peek(true, _get_target_selecting_player(filter))
+		_begin_target_selection_peek(filter)
 
 	# Auto-complete filters that don't require grid selection
 	if filter == "view_opponent_hand":
@@ -6881,7 +6888,10 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			GameState.post_message("No valid target — effect cancelled.")
 		if filter == "own_any_as_target":
 			turn_manager.complete_brainwash_redirect()
-		if _is_post_attack_ability_filter(filter) \
+		if filter == "own_character_for_swap" \
+				and GameState.current_phase == GameState.Phase.BATTLE:
+			_clear_after_pre_battle_ability()
+		elif _is_post_attack_ability_filter(filter) \
 				or filter in ["ability_lockpicker_reveal", "wk17_foe_pick_character"]:
 			_clear_after_ability()
 		elif filter in _defender_response_filters():
@@ -7093,7 +7103,9 @@ func _apply_tech_target_self_destruct(target_player: int, pos: Vector2i, card: G
 	if not grid_nodes[target_player][pos.x][pos.y].is_highlighted:
 		return
 	GameState.post_message("%s: self-destructs when targeted by tech!" % card.card_name)
+	GameState.destruction_from_tech_self_destruct = true
 	GameState.destroy_card(target_player, pos.x, pos.y, true)
+	GameState.destruction_from_tech_self_destruct = false
 
 func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	var current_player := GameState.current_player
@@ -7102,7 +7114,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter == "ability_false_prophet_reveal":
 		if player == opponent and not card.face_up:
-			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			card = GameState.get_card(player, pos.x, pos.y)
 			var _fp_pos: Vector2i = _find_own_card_pos(current_player, "False Prophet")
 			if card.card_type == "dead_end":
@@ -7127,7 +7139,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		var _lp_owner: int = turn_manager._pending_lockpicker_owner
 		var _lp_foe: int = GameState.get_opponent(_lp_owner) if _lp_owner >= 0 else opponent
 		if player == _lp_foe and not card.face_up:
-			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			card = GameState.get_card(player, pos.x, pos.y)
 			if card.card_type == "dead_end":
 				GameState.post_message("Lockpicker: Revealed Dead End.")
@@ -7145,7 +7157,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				turn_manager._wk17_friendly_fire = true
 				turn_manager._wk17_friendly_fire_pos = pos
 				if not card.face_up:
-					GameState.reveal_card(player, pos.x, pos.y)
+					GameState.reveal_card_by_ability(player, pos.x, pos.y)
 				var _wk17_att: GameState.CardInstance = GameState.attacker_card
 				if _wk17_att != null:
 					GameState.post_message("WK-17: %s will attack %s!" % [_wk17_att.card_name, card.card_name])
@@ -7211,7 +7223,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter == "adjacent":
 		if not card.was_destroyed and not card.face_up:
-			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			var _att_name: String = GameState.attacker_card.card_name if GameState.attacker_card != null else "Attacker"
 			if card.card_type == "dead_end":
 				GameState.post_message("%s: adjacent cell revealed (empty)." % _att_name)
@@ -7241,7 +7253,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 					await get_tree().create_timer(0.2).timeout
 					_prompt_ai_radar_pick()
 				return
-			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			if not _tech_reveal_picked.has(pos):
 				_tech_reveal_picked.append(pos)
 			# _on_card_revealed handles trap auto-void when a trap is found
@@ -7271,7 +7283,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == current_player and card.card_type == "character" and not card.face_up:
 			if _tech_reveal_picked.has(pos):
 				return
-			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			_tech_reveal_picked.append(pos)
 			_tech_reveals_remaining -= 1
 			var picked: int = _tech_reveal_picked.size()
@@ -7291,7 +7303,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	if pending_tech_filter == "bribe_reveal":
 		var bribe_opponent := GameState.get_opponent(current_player)
 		if player == bribe_opponent and card.card_type == "character" and not card.face_up:
-			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			GameState.gain_crystals(player, 700, "ability")
 			GameState.post_message("Bribe: Player %d revealed %s and received 700 Crystals." % [player + 1, card.card_name])
 			_finish_tech_action(current_player)
@@ -7302,26 +7314,27 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == current_player and card.card_type == "character" \
 				and (card.face_up or _allow_fd):
 			if not card.face_up:
-				GameState.reveal_card(player, pos.x, pos.y)
+				GameState.reveal_card_by_ability(player, pos.x, pos.y)
 				card = GameState.get_card(player, pos.x, pos.y)
 			if data:
 				match data.effect_type:
 					TechCardData.TechEffectType.PERM_ATK_BOOST_ONE:
-						var _boost_atk: int = data.effect_params.get("atk", 0)
+						var _boost_atk: int = GameState.scaled_tech_effect_for_unit(card, data.effect_params.get("atk", 0))
 						card.perm_atk_bonus += _boost_atk
 						GameState.post_message("%s: %s permanently gains +%d ATK." % [data.card_name, card.card_name, _boost_atk])
 					TechCardData.TechEffectType.PERM_DEF_BOOST_ONE:
-						var _boost_def: int = data.effect_params.get("def", 0)
+						var _boost_def: int = GameState.scaled_tech_effect_for_unit(card, data.effect_params.get("def", 0))
 						card.perm_def_bonus += _boost_def
 						GameState.post_message("%s: %s permanently gains +%d DEF." % [data.card_name, card.card_name, _boost_def])
 					TechCardData.TechEffectType.TEMP_ATK_BOOST_ATTACK_NOW:
-						var _boost_tmp: int = data.effect_params.get("atk", 0)
+						var _boost_tmp: int = GameState.scaled_tech_effect_for_unit(card, data.effect_params.get("atk", 0))
 						card.temp_atk_bonus += _boost_tmp
 						GameState.post_message("%s: %s gains +%d ATK this attack." % [data.card_name, card.card_name, _boost_tmp])
 					TechCardData.TechEffectType.MULTI_ATTACK_ONE:
 						GameState.berserk_active[current_player] = card
-						GameState.attacks_remaining = 1
-						GameState.post_message("%s: %s gets 1 attack this turn (Berserk)." % [data.card_name, card.card_name])
+						var _berserk_attacks: int = GameState.scaled_tech_effect_for_unit(card, 1)
+						GameState.attacks_remaining = _berserk_attacks
+						GameState.post_message("%s: %s gets %d attack(s) this turn (Berserk)." % [data.card_name, card.card_name, _berserk_attacks])
 					TechCardData.TechEffectType.CLONE_CHARACTER_AS_TOKEN:
 						# Find a blank slot to place the clone
 						var _clone_placed: bool = false
@@ -7410,7 +7423,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter == "opponent_any_hidden":
 		if player == opponent and not card.face_up:
-			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			if card.card_type == "dead_end":
 				GameState.post_message("Revealed: (empty)")
 			else:
@@ -7423,11 +7436,13 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 			var swap_pos: Vector2i = turn_manager._pending_swap_attacker_pos
 			if swap_pos != Vector2i(-1, -1) and swap_pos != pos:
 				var swap_card: GameState.CardInstance = GameState.get_card(current_player, swap_pos.x, swap_pos.y)
-				GameState.grids[current_player][swap_pos.x][swap_pos.y] = card
-				GameState.grids[current_player][pos.x][pos.y] = swap_card
+				GameState.set_card(current_player, swap_pos.x, swap_pos.y, card)
+				GameState.set_card(current_player, pos.x, pos.y, swap_card)
 				GameState.post_message("Positions swapped: %s ↔ %s" % [card.card_name, swap_card.card_name])
-			turn_manager._pending_swap_attacker_pos = Vector2i(-1, -1)
-			_clear_after_ability()
+			if GameState.current_phase == GameState.Phase.BATTLE:
+				_clear_after_pre_battle_ability()
+			else:
+				_clear_after_ability()
 		return
 
 	if pending_tech_filter == "own_faceup_for_trap_temp_def_boost":
@@ -7446,7 +7461,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		# Opponent (of tech player) reveals 1 of their own face-down units
 		if player != opponent or card.card_type != "character" or card.face_up:
 			return
-		GameState.reveal_card(player, pos.x, pos.y)
+		GameState.reveal_card_by_ability(player, pos.x, pos.y)
 		GameState.post_message("Tease: Opponent revealed %s." % card.card_name)
 		_finish_tech_action(current_player)
 		return
@@ -7454,7 +7469,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	if pending_tech_filter == "self_reveal_choice":
 		# Trap: defending player (opponent = trap owner) reveals 1 of their own hidden squares
 		if player == opponent and card.card_type != "dead_end" and not card.face_up:
-			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			GameState.post_message("Bait: Defender revealed %s." % card.card_name)
 			_finish_trap_target_selection()
 		return
@@ -7462,7 +7477,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	if pending_tech_filter == "trap_hostage_reveal_lock":
 		if player == opponent and card.card_type != "dead_end":
 			if not card.face_up:
-				GameState.reveal_card(player, pos.x, pos.y)
+				GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			if turn_manager._pending_trap_hostage_lock and pos not in GameState.locked_attack_positions:
 				GameState.locked_attack_positions.append(pos)
 			GameState.post_message("Hostage: %s revealed and locked until turn end." % card.card_name)
@@ -7472,24 +7487,28 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter == "trap_street_joke_reveal":
 		if player == opponent and card.card_type != "dead_end" and not card.face_up:
-			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			var _sj_gain: int = turn_manager._pending_street_joke_crystal
-			GameState.gain_crystals(opponent, _sj_gain, "trap")
-			GameState.post_message("Street Joke: Revealed %s, gained %d Crystals!" % [card.card_name, _sj_gain])
+			var _sj_attacker: int = turn_manager._pending_street_joke_attacker
+			if _sj_attacker >= 0:
+				GameState.gain_crystals(_sj_attacker, _sj_gain, "trap")
+			GameState.post_message("Street Joke: Revealed %s — attacker gains %d Crystals!" % [card.card_name, _sj_gain])
 			turn_manager._pending_street_joke_crystal = 0
+			turn_manager._pending_street_joke_attacker = -1
 			_finish_trap_target_selection()
 		return
 
 	if pending_tech_filter == "lock_own_monster":
 		if player == current_player and card.card_type == "character":
 			if not card.face_up:
-				GameState.reveal_card(player, pos.x, pos.y)
+				GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			card.cannot_attack_until = GameState.turn_number + 2
 			GameState.post_message("Make Friend: %s is locked from attacking." % card.card_name)
 			# Opponent also picks a monster to lock — transition to opponent lock
 			pending_tech_filter = "lock_opponent_monster"
 			_show_guide("Make Friend: Opponent, choose 1 of your monsters to lock.")
 			_highlight_tech_targets(pending_tech_filter)
+			_begin_target_selection_peek("lock_opponent_monster")
 			if GameState.game_mode in [GameState.GameMode.HOT_SEAT, GameState.GameMode.LOCAL_2P]:
 				_begin_human_defender_tech_choice()
 			# In AI_VS_AI both players are AI — the defending AI auto-picks
@@ -7510,7 +7529,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	if pending_tech_filter == "lock_opponent_monster":
 		if player == opponent and card.card_type == "character":
 			if not card.face_up:
-				GameState.reveal_card(player, pos.x, pos.y)
+				GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			card.cannot_attack_until = GameState.turn_number + 2
 			GameState.post_message("Make Friend: %s is also locked from attacking." % card.card_name)
 		else:
@@ -7522,11 +7541,12 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		# REVEAL_OWN_AND_OPPONENT_REVEALS: reveal own chosen, then opponent reveals 1
 		if player == current_player and card.card_type == "character" and not card.face_up:
 			_set_own_facedown_char_peek(false)   # restore all others to face-down before reveal
-			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			GameState.post_message("Diplomacy Party: Revealed %s — opponent must reveal 1." % card.card_name)
 			pending_tech_filter = "opponent_facedown_forced"
 			_show_guide("Diplomacy Party: Opponent, choose 1 of your cards to reveal.")
 			_highlight_tech_targets(pending_tech_filter)
+			_begin_target_selection_peek("opponent_facedown_forced")
 			if GameState.game_mode in [GameState.GameMode.HOT_SEAT, GameState.GameMode.LOCAL_2P]:
 				_begin_human_defender_tech_choice()
 			# Auto-resolve if opponent is AI (VS_AI or AI_VS_AI)
@@ -7541,7 +7561,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 
 	if pending_tech_filter == "opponent_facedown_forced":
 		if player == opponent and card.card_type != "dead_end" and not card.face_up:
-			GameState.reveal_card(player, pos.x, pos.y)
+			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			GameState.post_message("Diplomacy Party: Opponent revealed %s." % card.card_name)
 			_finish_tech_action(current_player)
 		return
@@ -7550,7 +7570,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		# MOVE_BUFFS_BETWEEN_CHARACTERS phase 1: pick source
 		if player == current_player and card.card_type == "character":
 			if not card.face_up:
-				GameState.reveal_card(player, pos.x, pos.y)
+				GameState.reveal_card_by_ability(player, pos.x, pos.y)
 				card = GameState.get_card(player, pos.x, pos.y)
 			_tech_buff_move_source = pos
 			pending_tech_filter = "own_faceup_character_target"
@@ -7586,7 +7606,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		# MOVE_BUFFS_BETWEEN_CHARACTERS phase 2: pick target, transfer buffs
 		if player == current_player and card.card_type == "character" and pos != _tech_buff_move_source:
 			if not card.face_up:
-				GameState.reveal_card(player, pos.x, pos.y)
+				GameState.reveal_card_by_ability(player, pos.x, pos.y)
 				card = GameState.get_card(player, pos.x, pos.y)
 			var src: GameState.CardInstance = GameState.get_card(current_player, _tech_buff_move_source.x, _tech_buff_move_source.y)
 			card.perm_atk_bonus += src.perm_atk_bonus
@@ -7606,7 +7626,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		# DESTROY_OWN_BASE_ZERO_OPPONENT phase 1: destroy own card, then target opponent
 		if player == current_player and card.card_type != "dead_end":
 			if not card.face_up:
-				GameState.reveal_card(player, pos.x, pos.y)
+				GameState.reveal_card_by_ability(player, pos.x, pos.y)
 				card = GameState.get_card(player, pos.x, pos.y)
 			_tech_sacrifice_player = current_player
 			GameState.destroy_card(current_player, pos.x, pos.y, false)
@@ -7702,7 +7722,7 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == opponent and card.card_type == "character" \
 				and card.affinity == CharacterData.Affinity.NATURE and "Armored" in card.card_name:
 			if not card.face_up:
-				GameState.reveal_card(player, pos.x, pos.y)
+				GameState.reveal_card_by_ability(player, pos.x, pos.y)
 				card = GameState.get_card(player, pos.x, pos.y)
 			# Swap this card into the trap slot (trap already destroyed → dead_end)
 			# Find the trap position — stored in GameState.attacker_pos (attacker attacked it)
@@ -7807,6 +7827,16 @@ func _finish_tech_action_when_ready(player: int) -> void:
 	await GameState.wait_crystal_animation()
 	_clear_after_tech()
 	turn_manager.after_tech_resolved(player)
+
+func _clear_after_pre_battle_ability() -> void:
+	_set_own_facedown_char_peek(false)
+	action_panel.visible = false
+	pending_tech_filter = ""
+	_hide_guide()
+	_clear_selection()
+	_set_selection_state(SelectionState.NONE)
+	_refresh_all_grids()
+	_emit_ability_selection_done_next_frame()
 
 func _clear_after_ability() -> void:
 	_clear_after_ability_when_ready()
@@ -7959,7 +7989,10 @@ func _own_unit_target_allows_facedown(filter: String, tech_data: TechCardData = 
 		return false
 	if filter in [
 		"own_faceup_character", "own_faceup_character_source", "own_faceup_character_target",
-		"own_faceup_card_sacrifice", "own_armored_nature"]:
+		"own_faceup_card_sacrifice", "own_armored_nature", "own_character_for_trap_self_destruct",
+		"lock_own_monster", "lock_opponent_monster", "own_any_card",
+		"self_reveal_choice", "trap_hostage_reveal_lock", "trap_street_joke_reveal",
+		"opponent_facedown_forced"]:
 		return true
 	if tech_data != null:
 		return tech_data.effect_params.get("allow_facedown", false) \
@@ -7967,12 +8000,30 @@ func _own_unit_target_allows_facedown(filter: String, tech_data: TechCardData = 
 			or tech_data.effect_type == TechCardData.TechEffectType.ADD_MUTAGEN_FLAG
 	return false
 
+
+func _filter_peek_includes_traps(filter: String) -> bool:
+	return filter in [
+		"own_any_card", "self_reveal_choice", "trap_hostage_reveal_lock",
+		"trap_street_joke_reveal", "opponent_facedown_forced",
+	]
+
+
+func _begin_target_selection_peek(filter: String) -> void:
+	_set_own_facedown_char_peek(false)
+	if not _own_unit_target_allows_facedown(filter):
+		return
+	_set_own_facedown_char_peek(
+		true,
+		_get_target_selecting_player(filter),
+		_filter_peek_includes_traps(filter))
+
+
 ## Temporarily show face-down character cards as face-up (visual peek only).
 ## Does NOT change card.face_up in GameState — purely cosmetic.
 ## When enable=true, target_player specifies whose cards to peek (defaults to current_player).
 ## When enable=false, clears peek for BOTH players as a safety net.
 ## In VS_AI mode, the AI's cards are never peeked — the human must not see them.
-func _set_own_facedown_char_peek(enable: bool, target_player: int = -1) -> void:
+func _set_own_facedown_char_peek(enable: bool, target_player: int = -1, include_traps: bool = false) -> void:
 	var players: Array = [0, 1] if not enable \
 		else [target_player if target_player >= 0 else GameState.current_player]
 	for cp: int in players:
@@ -7983,7 +8034,9 @@ func _set_own_facedown_char_peek(enable: bool, target_player: int = -1) -> void:
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var card: GameState.CardInstance = GameState.get_card(cp, r, c)
-				if card.card_type == "character" and not card.face_up:
+				var _peekable: bool = card.card_type == "character" \
+						or (include_traps and card.card_type == "trap")
+				if _peekable and not card.face_up:
 					(grid_nodes[cp][r][c] as Control).set_preview_revealed(enable)
 
 func _on_ai_bluff(player: int, row: int, col: int, emoticon: String) -> void:
@@ -8214,11 +8267,15 @@ func _highlight_tech_targets(filter: String) -> void:
 						card.card_type == "character" and card.face_up)
 
 	elif filter == "own_character_for_swap":
-		# ATTACKER picks one of their own characters to swap positions with
+		# ATTACKER picks another own character to swap with (Nuki origin cell excluded).
+		var _swap_origin: Vector2i = turn_manager._pending_swap_attacker_pos
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
+				var _swap_pos: Vector2i = Vector2i(r, c)
+				if _swap_pos == _swap_origin:
+					continue
 				var card: GameState.CardInstance = GameState.get_card(player, r, c)
-				grid_nodes[player][r][c].set_highlighted(card.card_type == "character" and card.face_up)
+				grid_nodes[player][r][c].set_highlighted(card.card_type == "character")
 
 	elif filter in ["own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct"]:
 		# DEFENDER (trap owner = opponent) picks one of their own characters
@@ -8667,6 +8724,25 @@ func _is_battle_attack_dead_end_reveal(player: int, row: int, col: int) -> bool:
 	return GameState.get_card(player, row, col).card_type == "dead_end"
 
 
+func _should_dissolve_trap_after_reveal(player: int, row: int, col: int) -> bool:
+	if GameState.current_phase != GameState.Phase.BATTLE:
+		return true
+	# The attacked trap stays on board until post-combat trap handling.
+	if GameState.defender_pos == Vector2i(row, col):
+		var attacker_player: int = GameState.current_player
+		if player == GameState.get_opponent(attacker_player):
+			var inst: GameState.CardInstance = GameState.get_card(player, row, col)
+			if inst != null and inst.card_type == "trap":
+				return false
+	return true
+
+
+func _add_to_void_pile(player: int, card_name: String, card_type: String) -> void:
+	_void_piles[player].append({"card_name": card_name, "card_type": card_type})
+	GameState.add_void_entry(player, card_name, card_type)
+	_update_void_stacks()
+
+
 func _await_card_reveal_animation(player: int, row: int, col: int) -> void:
 	while _is_cell_revealing(player, row, col):
 		await get_tree().process_frame
@@ -8729,6 +8805,8 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 	_revealing_cells.erase(reveal_key)
 	await _flush_flag_pops_for_cell(player, row, col)
 	if turn_manager != null:
+		await turn_manager.apply_on_reveal_abilities(player, row, col)
+	if turn_manager != null:
 		turn_manager.notify_card_reveal_animation_done(player, row, col)
 	if inst != null and inst.card_type == "character" \
 			and inst.ability_type == CharacterData.AbilityType.ON_EXPOSE_REVEAL_FOE_ONCE \
@@ -8744,11 +8822,10 @@ func _on_card_revealed(player: int, row: int, col: int) -> void:
 			_refresh_card_node(player, row, col)
 		return
 	# Trap revealed → play black-smoke dissolve then clear the slot.
-	# BATTLE phase is excluded: the trap is handled by _handle_trap_effect after combat.
+	# BATTLE phase keeps the attacked trap until post-combat handling (Bait/Hostage/etc. dissolve).
 	if inst != null and inst.card_type == "trap" \
-			and GameState.current_phase != GameState.Phase.BATTLE:
-		_void_piles[player].append({"card_name": inst.card_name, "card_type": inst.card_type})
-		_update_void_stacks()
+			and _should_dissolve_trap_after_reveal(player, row, col):
+		_add_to_void_pile(player, inst.card_name, inst.card_type)
 		_spawn_dissolve_effect(node)
 		await get_tree().create_timer(0.90).timeout
 		GameState.void_trap(player, row, col)
@@ -8767,8 +8844,7 @@ func _on_card_destroyed(player: int, row: int, col: int) -> void:
 	# Signal fires before place_dead_end(), so card data is still available
 	var inst: GameState.CardInstance = GameState.get_card(player, row, col)
 	if inst != null and inst.card_type != "dead_end":
-		_void_piles[player].append({"card_name": inst.card_name, "card_type": inst.card_type})
-		_update_void_stacks()
+		_add_to_void_pile(player, inst.card_name, inst.card_type)
 	# AI death-bluff reaction: when a face-up AI character is destroyed
 	if inst != null and inst.card_type == "character" and inst.face_up and randf() < 0.60:
 		if GameState.game_mode == GameState.GameMode.VS_AI and player == ai_player.player_index:
