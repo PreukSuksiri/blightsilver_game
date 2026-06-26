@@ -1,13 +1,7 @@
 {
-	"quick_duel": {
-		"enabled": true,
-		"label": "Quick Duel",
-		"slot": 1,
-		"subs": {},
-		"visible": true
-	},
 	"campaign": {
 		"enabled": true,
+		"font_color": "default",
 		"label": "Campaign",
 		"slot": 2,
 		"subs": {
@@ -17,6 +11,7 @@
 	},
 	"credits": {
 		"enabled": true,
+		"font_color": "default",
 		"label": "Credits",
 		"slot": 0,
 		"subs": {
@@ -26,6 +21,7 @@
 	},
 	"deck_builder": {
 		"enabled": true,
+		"font_color": "default",
 		"label": "Deck Builder",
 		"slot": 3,
 		"subs": {
@@ -35,6 +31,7 @@
 	},
 	"exit": {
 		"enabled": true,
+		"font_color": "default",
 		"label": "Exit",
 		"slot": 0,
 		"subs": {
@@ -44,6 +41,7 @@
 	},
 	"exit_icon": {
 		"enabled": true,
+		"font_color": "default",
 		"label": "Exit Icon",
 		"slot": 0,
 		"subs": {
@@ -53,6 +51,7 @@
 	},
 	"gallery": {
 		"enabled": true,
+		"font_color": "default",
 		"label": "Gallery",
 		"slot": 6,
 		"subs": {
@@ -62,6 +61,7 @@
 	},
 	"inventory": {
 		"enabled": true,
+		"font_color": "white",
 		"label": "Inventory",
 		"slot": 4,
 		"subs": {
@@ -71,6 +71,7 @@
 	},
 	"multiplayer": {
 		"enabled": false,
+		"font_color": "default",
 		"label": "Multiplayer",
 		"slot": 1,
 		"subs": {
@@ -92,8 +93,19 @@
 		},
 		"visible": false
 	},
+	"quick_duel": {
+		"enabled": true,
+		"font_color": "green",
+		"label": "Quick Duel",
+		"slot": 1,
+		"subs": {
+
+		},
+		"visible": true
+	},
 	"settings": {
 		"enabled": true,
+		"font_color": "default",
 		"label": "Settings",
 		"slot": 0,
 		"subs": {
@@ -103,6 +115,7 @@
 	},
 	"shop": {
 		"enabled": true,
+		"font_color": "default",
 		"label": "Shop",
 		"slot": 5,
 		"subs": {
@@ -112,6 +125,7 @@
 	},
 	"single_player": {
 		"enabled": true,
+		"font_color": "default",
 		"label": "Single Player",
 		"slot": 1,
 		"subs": {

@@ -252,6 +252,7 @@ func admin_command(raw: String) -> String:
 				+ "  lock_deckbuilding\n"
 				+ "  manage_starting_deck\n"
 				+ "  ai_deck_vault\n"
+				+ "  ai_identity_vault\n"
 				+ "  quick_duel_reward\n"
 				+ "  player_vs_ai\n"
 				+ "  hot_seat\n"
@@ -1321,6 +1322,16 @@ func admin_command(raw: String) -> String:
 			vault_mgr.name = "AIDeckVaultManagerOverlay"
 			vault_scene.add_child(vault_mgr)
 			return "AI Deck Vault opened."
+
+		"ai_identity_vault":
+			var id_scene: Node = get_tree().current_scene
+			if id_scene.get_node_or_null("AIIdentityVaultManagerOverlay") != null:
+				return "AI Identity Vault is already open."
+			_dismiss_admin_console(id_scene)
+			var id_mgr: Node = load("res://scripts/AIIdentityVaultManager.gd").new()
+			id_mgr.name = "AIIdentityVaultManagerOverlay"
+			id_scene.add_child(id_mgr)
+			return "AI Bot Identity Vault opened."
 
 		"quick_duel_reward":
 			var qd_scene: Node = get_tree().current_scene

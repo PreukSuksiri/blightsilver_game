@@ -9570,6 +9570,15 @@ func _on_game_over(winner: int) -> void:
 # Game-over helpers
 # ─────────────────────────────────────────────────────────────
 
+func _resolve_endgame_background_path(is_win_screen: bool) -> String:
+	var protagonist_id: String = GameState.quick_duel_protagonist_id.strip_edges()
+	if protagonist_id.is_empty():
+		return ""
+	if is_win_screen:
+		return ProtagonistVault.get_win_screen_path(protagonist_id)
+	return ProtagonistVault.get_lose_screen_path(protagonist_id)
+
+
 func _flip_reveal_all_cards() -> void:
 	for p in range(2):
 		for r in range(GameState.GRID_SIZE):
@@ -9918,22 +9927,19 @@ func _show_endgame_screen(winner: int) -> void:
 	add_child(overlay)
 
 	# Background
-	if is_win_screen and winner != -1:
-		var bg := TextureRect.new()
-		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		bg.texture      = load("res://assets/textures/profile/win_screen/img_win_screen_nex_2.png")
-		bg.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
-		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		overlay.add_child(bg)
-	else:
-		var bg := TextureRect.new()
-		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		bg.texture      = load("res://assets/textures/profile/win_screen/img_lose_screen_default.png")
-		bg.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
-		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		overlay.add_child(bg)
+	var endgame_bg_path: String = _resolve_endgame_background_path(is_win_screen)
+	if endgame_bg_path.is_empty():
+		if is_win_screen and winner != -1:
+			endgame_bg_path = "res://assets/textures/profile/win_screen/img_win_screen_nex.png"
+		else:
+			endgame_bg_path = "res://assets/textures/profile/win_screen/img_lose_screen_default.png"
+	var bg := TextureRect.new()
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	bg.texture      = load(endgame_bg_path)
+	bg.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(bg)
 
 	# Dark vignette so text stays readable over the background image
 	var vignette := ColorRect.new()

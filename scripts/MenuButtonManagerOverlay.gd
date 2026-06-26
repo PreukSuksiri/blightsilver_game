@@ -99,6 +99,7 @@ func _ready() -> void:
 	_add_col_label(col_hbox, "Show", 64)
 	_add_col_label(col_hbox, "Enabled", 72)
 	_add_col_label(col_hbox, "Slot", 56)
+	_add_col_label(col_hbox, "Color", 88)
 	_add_col_label(col_hbox, "Key", 140)
 
 	var scroll := ScrollContainer.new()
@@ -183,6 +184,9 @@ func _build_main_row(parent: VBoxContainer, main_key: String, alt: bool) -> void
 		slot_control = fixed_lbl
 	hbox.add_child(slot_control)
 
+	var color_opt := _make_font_color_option(MenuButtonConfig.get_main_font_color_id(main_key))
+	hbox.add_child(color_opt)
+
 	var key_lbl := Label.new()
 	key_lbl.text = main_key
 	key_lbl.custom_minimum_size = Vector2(140, 0)
@@ -195,6 +199,7 @@ func _build_main_row(parent: VBoxContainer, main_key: String, alt: bool) -> void
 		"visible_check": visible_check,
 		"enabled_check": enabled_check,
 		"slot_spin": slot_control if slot_control is SpinBox else null,
+		"color_opt": color_opt,
 		"subs": {},
 	}
 
@@ -236,6 +241,13 @@ func _build_sub_row(parent: VBoxContainer, main_key: String, sub_key: String) ->
 	slot_spacer.add_theme_color_override("font_color", Color(0.35, 0.40, 0.48))
 	hbox.add_child(slot_spacer)
 
+	var color_spacer := Label.new()
+	color_spacer.text = "—"
+	color_spacer.custom_minimum_size = Vector2(88, 0)
+	color_spacer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	color_spacer.add_theme_color_override("font_color", Color(0.35, 0.40, 0.48))
+	hbox.add_child(color_spacer)
+
 	var key_lbl := Label.new()
 	key_lbl.text = "%s.%s" % [main_key, sub_key]
 	key_lbl.custom_minimum_size = Vector2(140, 0)
@@ -260,6 +272,20 @@ func _make_toggle_check(pressed: bool) -> CheckBox:
 	return check
 
 
+func _make_font_color_option(selected_id: String) -> OptionButton:
+	var opt := OptionButton.new()
+	opt.custom_minimum_size = Vector2(88, 28)
+	for color_id: String in MenuButtonConfig.FONT_COLOR_IDS:
+		opt.add_item(color_id.capitalize())
+		opt.set_item_metadata(opt.item_count - 1, color_id)
+	for i: int in range(opt.item_count):
+		if str(opt.get_item_metadata(i)) == selected_id:
+			opt.select(i)
+			break
+	opt.item_selected.connect(func(_idx: int) -> void: _on_checkbox_changed())
+	return opt
+
+
 func _sync_config_from_ui() -> void:
 	for main_key: String in _rows.keys():
 		var row: Dictionary = _rows[main_key]
@@ -272,6 +298,10 @@ func _sync_config_from_ui() -> void:
 		var slot_spin: SpinBox = row.get("slot_spin")
 		if slot_spin != null:
 			MenuButtonConfig.set_main_slot(main_key, int(slot_spin.value))
+		var color_opt: OptionButton = row.get("color_opt")
+		if color_opt != null and color_opt.selected >= 0:
+			MenuButtonConfig.set_main_font_color(
+				main_key, str(color_opt.get_item_metadata(color_opt.selected)))
 		var subs: Dictionary = row.get("subs", {})
 		for sub_key: String in subs.keys():
 			var sub_row: Dictionary = subs[sub_key]

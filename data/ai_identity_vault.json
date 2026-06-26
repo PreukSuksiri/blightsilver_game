@@ -1,0 +1,67 @@
+{
+	"entries": [
+		{
+			"id": "easy_green_wisp",
+			"name": "Green Wisp",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_green_wisp.png",
+			"difficulty": "easy",
+			"exclude_protagonists": []
+		},
+		{
+			"id": "easy_dusty_roach",
+			"name": "Dusty Roach",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_dusty_roach.png",
+			"difficulty": "easy",
+			"exclude_protagonists": ["kelly"]
+		},
+		{
+			"id": "easy_kelly",
+			"name": "Kelly Lastochkina",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/profile_quick_duel_kelly_easy.png",
+			"difficulty": "easy",
+			"exclude_protagonists": ["kelly"]
+		},
+		{
+			"id": "normal_big_thug",
+			"name": "Big Thug",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_big_thug.png",
+			"difficulty": "normal",
+			"exclude_protagonists": []
+		},
+		{
+			"id": "normal_canyon_warg",
+			"name": "Canyon Warg",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_canyon_warg.png",
+			"difficulty": "normal",
+			"exclude_protagonists": ["nex"]
+		},
+		{
+			"id": "normal_mayu",
+			"name": "Mayu Kokawa",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/profile_quick_duel_mayu_normal.png",
+			"difficulty": "normal",
+			"exclude_protagonists": ["mayu"]
+		},
+		{
+			"id": "hard_midnight_shadow",
+			"name": "Midnight Shadow",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/battler_midnight_shadow.png",
+			"difficulty": "hard",
+			"exclude_protagonists": []
+		},
+		{
+			"id": "hard_nex",
+			"name": "Nex Crowmont",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/profile_quick_duel_nex_hard.png",
+			"difficulty": "hard",
+			"exclude_protagonists": ["nex"]
+		},
+		{
+			"id": "hard_kelly",
+			"name": "Kelly Lastochkina",
+			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/profile_quick_duel_kelly_hard.png",
+			"difficulty": "hard",
+			"exclude_protagonists": ["kelly"]
+		}
+	]
+}

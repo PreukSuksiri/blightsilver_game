@@ -16,7 +16,10 @@ const REWARD_SHADOW_OFFSET := Vector2(2, 2)
 const HOVER_OVERLAY_COLOR := Color(1.0, 1.0, 1.0, 0.22)
 const DEFAULT_PORTRAIT_P1 := "res://assets/textures/ui/portraits/profile_player_1_default.png"
 const DEFAULT_PORTRAIT_P2 := "res://assets/textures/ui/portraits/profile_player_2_default.png"
+const PORTRAIT_REF_H := 720.0
+const PORTRAIT_PEEK := 0.4
 const SettingsMenuScene := preload("res://scenes/settings_menu.tscn")
+const ProtagonistOverlayScene := preload("res://scripts/ProtagonistOverlay.gd")
 
 var _picker_panel: Control = null
 var _prompt_panel: Control = null
@@ -24,6 +27,8 @@ var _status_lbl: Label = null
 var _casual_btn: Button = null
 var _reroll_btn: Button = null
 var _tier_capsules: Dictionary = {}
+var _player_portrait: TextureRect = null
+var _switch_char_btn: Button = null
 
 
 func _ready() -> void:
@@ -49,15 +54,18 @@ func _build_shell() -> void:
 	_prompt_panel = Control.new()
 	_prompt_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_prompt_panel.offset_top = HEADER_HEIGHT
+	_prompt_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root_add_panel(_prompt_panel)
 
 	_picker_panel = Control.new()
 	_picker_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_picker_panel.offset_top = HEADER_HEIGHT
 	_picker_panel.visible = false
+	_picker_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root_add_panel(_picker_panel)
 
 	_build_picker_ui()
+	_build_player_portrait_zone()
 
 
 func _root_add_panel(panel: Control) -> void:
@@ -106,6 +114,76 @@ func _build_header() -> void:
 	add_child(close_btn)
 
 
+func _build_player_portrait_zone() -> void:
+	var portrait_path: String = SaveManager.get_protagonist_portrait_path()
+	var tex: Texture2D = GameState.load_portrait_texture(portrait_path)
+
+	_player_portrait = TextureRect.new()
+	_player_portrait.texture = tex
+	_player_portrait.layout_mode = 1
+	_player_portrait.anchor_left = 0.0
+	_player_portrait.anchor_top = 1.0
+	_player_portrait.anchor_right = 0.0
+	_player_portrait.anchor_bottom = 1.0
+	_player_portrait.offset_bottom = 0.0
+	_apply_player_portrait_layout(tex)
+	_player_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_player_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	_player_portrait.flip_h = true
+	_player_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_player_portrait.z_index = 2
+	add_child(_player_portrait)
+
+	_switch_char_btn = Button.new()
+	_switch_char_btn.text = "Switch Character"
+	_switch_char_btn.custom_minimum_size = Vector2(168, 34)
+	_switch_char_btn.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+	_switch_char_btn.offset_left = 12.0
+	_switch_char_btn.offset_top = -52.0
+	_switch_char_btn.offset_right = 180.0
+	_switch_char_btn.offset_bottom = -16.0
+	_switch_char_btn.z_index = 10
+	_switch_char_btn.mouse_filter = Control.MOUSE_FILTER_STOP
+	_switch_char_btn.pressed.connect(_open_protagonist_overlay)
+	add_child(_switch_char_btn)
+
+
+func _refresh_player_portrait() -> void:
+	if _player_portrait == null:
+		return
+	var portrait_path: String = SaveManager.get_protagonist_portrait_path()
+	var tex: Texture2D = GameState.load_portrait_texture(portrait_path)
+	_player_portrait.texture = tex
+	_apply_player_portrait_layout(tex)
+
+
+func _apply_player_portrait_layout(tex: Texture2D) -> void:
+	if _player_portrait == null:
+		return
+	var portrait_w: float = PORTRAIT_REF_H * 0.55
+	if tex != null:
+		var sz := tex.get_size()
+		if sz.y > 0.0:
+			portrait_w = PORTRAIT_REF_H * sz.x / sz.y
+	_player_portrait.offset_left = -portrait_w * PORTRAIT_PEEK
+	_player_portrait.offset_top = -PORTRAIT_REF_H
+	_player_portrait.offset_right = portrait_w * (1.0 - PORTRAIT_PEEK)
+
+
+func _open_protagonist_overlay() -> void:
+	var overlay: ProtagonistOverlay = ProtagonistOverlayScene.new()
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 80
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	if overlay.has_signal("closed"):
+		overlay.closed.connect(func() -> void:
+			_refresh_player_portrait()
+			if _picker_panel.visible:
+				_roll_all_tier_offers()
+				_refresh_picker_capsules())
+	add_child(overlay)
+
+
 func _make_close_stylebox() -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.18, 0.04, 0.04, 1.0)
@@ -123,6 +201,7 @@ func _show_tutorial_prompt() -> void:
 
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_prompt_panel.add_child(center)
 
 	var panel := PanelContainer.new()
@@ -170,11 +249,13 @@ func _show_tutorial_prompt() -> void:
 func _build_picker_ui() -> void:
 	var body := Control.new()
 	body.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	body.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_picker_panel.add_child(body)
 
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	center.offset_bottom = -56.0
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	body.add_child(center)
 
 	var margin := MarginContainer.new()
@@ -232,18 +313,23 @@ func _show_picker() -> void:
 	_refresh_picker_capsules()
 	_refresh_casual_button()
 	_refresh_reroll_button()
+	_refresh_player_portrait()
 
 
 func _roll_all_tier_offers() -> void:
 	var previews: Dictionary = {}
 	var rewards: Dictionary = {}
+	var identities: Dictionary = {}
 	var demo_only: bool = SaveManager.demo_mode
+	var protagonist_id: String = SaveManager.quick_duel_protagonist_id
 	for tier: String in ["easy", "normal", "hard"]:
 		var tags: Array = QuickDuelRewards.get_tier_tags(tier)
 		var entry: Dictionary = AIDeckVault.pick_random_entry_for_tags(tags, demo_only)
 		previews[tier] = str(entry.get("id", "")).strip_edges() if not entry.is_empty() else ""
 		rewards[tier] = QuickDuelRewards.pick_random_rewards(tier)
-	SaveManager.set_quick_duel_tier_offers(previews, rewards)
+		var identity: Dictionary = AIIdentityVault.pick_random_for_tier(tier, protagonist_id)
+		identities[tier] = str(identity.get("id", "")).strip_edges() if not identity.is_empty() else ""
+	SaveManager.set_quick_duel_tier_offers(previews, rewards, identities)
 
 
 func _sanitize_saved_offers_if_needed() -> void:
@@ -259,7 +345,7 @@ func _sanitize_saved_offers_if_needed() -> void:
 		if JSON.stringify(fixed) != JSON.stringify(raw):
 			changed = true
 	if changed:
-		SaveManager.set_quick_duel_tier_offers(previews, rewards)
+		SaveManager.set_quick_duel_tier_offers(previews, rewards, SaveManager.quick_duel_tier_identities)
 
 
 func _refresh_picker_capsules() -> void:
@@ -514,6 +600,37 @@ func _open_settings() -> void:
 	add_child(settings)
 
 
+func _apply_protagonist_to_battle() -> void:
+	GameState.quick_duel_protagonist_id = SaveManager.quick_duel_protagonist_id
+	while GameState.player_portraits.size() < 2:
+		GameState.player_portraits.append(DEFAULT_PORTRAIT_P2)
+	GameState.player_portraits[0] = SaveManager.get_protagonist_portrait_path()
+	var names: Array = GameState.campaign_player_names.duplicate()
+	if names.size() < 2:
+		names = ["Player", "Opponent"]
+	names[0] = SaveManager.get_protagonist_display_name()
+	GameState.campaign_player_names = names
+
+
+func _apply_ai_identity_to_battle(tier: String) -> void:
+	while GameState.player_portraits.size() < 2:
+		GameState.player_portraits.append(DEFAULT_PORTRAIT_P2)
+	var identity_id: String = SaveManager.get_quick_duel_identity(tier)
+	var identity: Dictionary = AIIdentityVault.get_entry(identity_id)
+	if identity.is_empty():
+		return
+	var illus: String = str(identity.get("illustration", "")).strip_edges()
+	if illus != "":
+		GameState.player_portraits[1] = illus
+	var ai_name: String = str(identity.get("name", "")).strip_edges()
+	if not ai_name.is_empty():
+		var names: Array = GameState.campaign_player_names.duplicate()
+		if names.size() < 2:
+			names = [SaveManager.get_protagonist_display_name(), "Opponent"]
+		names[1] = ai_name
+		GameState.campaign_player_names = names
+
+
 func launch_tutorial() -> void:
 	var intro: String = QuickDuelRewards.get_tutorial_intro_vn()
 	var battle_path: String = QuickDuelRewards.get_tutorial_battle_path()
@@ -530,6 +647,7 @@ func _begin_guided_tutorial_battle(battle_path: String) -> void:
 	GameState.post_battle_return_scene = "res://scenes/quick_duel.tscn"
 	GameState.quick_duel_launch = true
 	GameState.quick_duel_active = false
+	_apply_protagonist_to_battle()
 	var err: String = TutorialBattleManager.configure_battle_from_path(battle_path, true)
 	if not err.is_empty():
 		push_error(err)
@@ -561,10 +679,17 @@ func launch_vault_duel(tier: String) -> void:
 	if active != null:
 		GameState.battle_player_forced_cells = active.get_formation_forced_cells(0)
 
-	GameState.player_portraits[0] = DEFAULT_PORTRAIT_P1
-	GameState.player_portraits[1] = DEFAULT_PORTRAIT_P2
-	var opp_label: String = str(AIDeckVault.get_entry(entry_id).get("label", "Opponent"))
-	GameState.campaign_player_names = ["Player", opp_label]
+	_apply_protagonist_to_battle()
+	_apply_ai_identity_to_battle(tier)
+	if str(GameState.player_portraits[1]).strip_edges().is_empty():
+		GameState.player_portraits[1] = DEFAULT_PORTRAIT_P2
+	if GameState.campaign_player_names.size() < 2 \
+			or str(GameState.campaign_player_names[1]).strip_edges().is_empty():
+		var names: Array = GameState.campaign_player_names.duplicate()
+		if names.size() < 2:
+			names = [SaveManager.get_protagonist_display_name(), "Opponent"]
+		names[1] = str(AIDeckVault.get_entry(entry_id).get("label", "Opponent"))
+		GameState.campaign_player_names = names
 
 	AIDeckVault.apply_enemy_battle_config(cfg)
 	GameState.battle_ai_deck = cfg.get("deck")

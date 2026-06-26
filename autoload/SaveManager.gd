@@ -36,6 +36,9 @@ var quick_duel_tier_previews: Dictionary = {}   # tier -> vault entry_id
 var quick_duel_tier_rewards: Dictionary = {}  # tier -> Array of reward dicts
 var quick_duel_loss_streak: int = 0
 var wishlist_cta_shown: bool = false
+var quick_duel_protagonist_id: String = "nex"
+var quick_duel_protagonist_portrait: String = ""
+var quick_duel_tier_identities: Dictionary = {}
 
 func _ready() -> void:
 	_load_demo_config()
@@ -225,6 +228,9 @@ func save_data() -> void:
 		"quick_duel_tier_rewards":       quick_duel_tier_rewards.duplicate(true),
 		"quick_duel_loss_streak":        quick_duel_loss_streak,
 		"wishlist_cta_shown":            wishlist_cta_shown,
+		"quick_duel_protagonist_id":     quick_duel_protagonist_id,
+		"quick_duel_protagonist_portrait": quick_duel_protagonist_portrait,
+		"quick_duel_tier_identities":    quick_duel_tier_identities.duplicate(true),
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -316,6 +322,13 @@ func load_data() -> void:
 	casual_mode = bool(parsed.get("casual_mode", false))
 	quick_duel_loss_streak = int(parsed.get("quick_duel_loss_streak", 0))
 	wishlist_cta_shown = bool(parsed.get("wishlist_cta_shown", false))
+	quick_duel_protagonist_id = ProtagonistVault.normalize_id(
+		str(parsed.get("quick_duel_protagonist_id", "nex")))
+	quick_duel_protagonist_portrait = str(
+		parsed.get("quick_duel_protagonist_portrait", "")).strip_edges()
+
+	var qdi: Variant = parsed.get("quick_duel_tier_identities", {})
+	quick_duel_tier_identities = qdi as Dictionary if qdi is Dictionary else {}
 
 	var qdp: Variant = parsed.get("quick_duel_tier_previews", {})
 	quick_duel_tier_previews = qdp as Dictionary if qdp is Dictionary else {}
@@ -332,6 +345,7 @@ func load_data() -> void:
 				quick_duel_tier_rewards[tier] = [((val as Dictionary).duplicate(true))]
 
 	_migrate_quick_duel_offers()
+	_ensure_protagonist_defaults()
 
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery VN beat checkpoints (pre-exploration progress)
@@ -405,19 +419,51 @@ func get_quick_duel_rewards(tier: String) -> Array:
 		return (raw as Array).duplicate(true)
 	return []
 
-func set_quick_duel_tier_offers(previews: Dictionary, rewards: Dictionary) -> void:
+func set_quick_duel_tier_offers(
+		previews: Dictionary,
+		rewards: Dictionary,
+		identities: Dictionary = {}
+) -> void:
 	quick_duel_tier_previews = previews.duplicate(true)
 	quick_duel_tier_rewards = rewards.duplicate(true)
+	quick_duel_tier_identities = identities.duplicate(true)
 	save_data()
 
 func has_quick_duel_offers() -> bool:
 	for tier: String in ["easy", "normal", "hard"]:
 		if get_quick_duel_preview(tier).is_empty():
 			return false
+		if get_quick_duel_identity(tier).is_empty():
+			return false
 		var rw: Array = get_quick_duel_rewards(tier)
 		if rw.is_empty():
 			return false
 	return true
+
+func get_quick_duel_identity(tier: String) -> String:
+	return str(quick_duel_tier_identities.get(tier, "")).strip_edges()
+
+func get_protagonist_display_name() -> String:
+	return ProtagonistVault.get_display_name(quick_duel_protagonist_id)
+
+func get_protagonist_portrait_path() -> String:
+	return ProtagonistVault.get_portrait_or_default(
+		quick_duel_protagonist_id, quick_duel_protagonist_portrait)
+
+func set_protagonist(protagonist_id: String, portrait_path: String) -> void:
+	quick_duel_protagonist_id = ProtagonistVault.normalize_id(protagonist_id)
+	quick_duel_protagonist_portrait = portrait_path.strip_edges()
+	if quick_duel_protagonist_portrait.is_empty():
+		quick_duel_protagonist_portrait = ProtagonistVault.get_default_portrait(
+			quick_duel_protagonist_id)
+	save_data()
+
+func _ensure_protagonist_defaults() -> void:
+	if not ProtagonistVault.is_valid_id(quick_duel_protagonist_id):
+		quick_duel_protagonist_id = ProtagonistVault.DEFAULT_ID
+	if quick_duel_protagonist_portrait.is_empty():
+		quick_duel_protagonist_portrait = ProtagonistVault.get_default_portrait(
+			quick_duel_protagonist_id)
 
 func get_quick_duel_loss_streak() -> int:
 	return quick_duel_loss_streak
@@ -443,7 +489,15 @@ func _migrate_quick_duel_offers() -> void:
 		if rw is Array and (rw as Array).is_empty():
 			quick_duel_tier_previews.clear()
 			quick_duel_tier_rewards.clear()
+			quick_duel_tier_identities.clear()
 			return
+	if not quick_duel_tier_previews.is_empty():
+		for tier: String in ["easy", "normal", "hard"]:
+			if get_quick_duel_identity(tier).is_empty():
+				quick_duel_tier_previews.clear()
+				quick_duel_tier_rewards.clear()
+				quick_duel_tier_identities.clear()
+				return
 
 func _gallery_unlocks_deckbuilding() -> bool:
 	const GALLERY_PATH := "res://campaign/gallery_data.json"

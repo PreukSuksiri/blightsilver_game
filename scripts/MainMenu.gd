@@ -191,11 +191,8 @@ func _show_deck_warning() -> void:
 	vbox.add_child(ok_btn)
 
 func _refresh_inventory_badge() -> void:
-	var count := MailboxManager.get_unclaimed_count()
 	var label := MenuButtonConfig.get_label("inventory").to_upper()
 	mailbox_btn.text = label
-	mailbox_btn.add_theme_color_override("font_color",
-		Color(0.3, 1.0, 0.65, 1.0) if count > 0 else Color(0.95, 0.8, 0.3, 0.85))
 	_refresh_mailbox_icon_badge()
 
 
@@ -275,6 +272,7 @@ func _apply_menu_button_state() -> void:
 	_sync_corner_icon(mailbox_icon_btn, mailbox_icon_shadow, "inventory")
 	_sync_corner_icon(exit_icon_btn, exit_icon_shadow, "exit_icon")
 	_apply_menu_button_labels()
+	_apply_menu_button_font_colors()
 	_apply_menu_button_positions()
 	_refresh_mailbox_icon_badge()
 
@@ -305,6 +303,31 @@ func _apply_menu_button_labels() -> void:
 		credits_btn.text = MenuButtonConfig.get_label("credits").to_upper()
 	if exit_game_btn.visible:
 		exit_game_btn.text = MenuButtonConfig.get_label("exit").to_upper()
+
+
+func _menu_font_color_for_key(key: String) -> Color:
+	return MenuButtonConfig.get_font_color(key)
+
+
+func _apply_menu_button_font_colors() -> void:
+	for key: String in _stack_menu_keys():
+		var btn: Button = _stack_button_for_key(key)
+		if btn == null or not btn.visible:
+			continue
+		var color: Color = _menu_font_color_for_key(key)
+		btn.add_theme_color_override("font_color", color)
+		btn.add_theme_color_override("font_hover_color", color)
+		btn.add_theme_color_override("font_pressed_color", color)
+	if credits_btn.visible:
+		var credits_color: Color = MenuButtonConfig.get_font_color("credits")
+		credits_btn.add_theme_color_override("font_color", credits_color)
+		credits_btn.add_theme_color_override("font_hover_color", credits_color)
+		credits_btn.add_theme_color_override("font_pressed_color", credits_color)
+	if exit_game_btn.visible:
+		var exit_color: Color = MenuButtonConfig.get_font_color("exit")
+		exit_game_btn.add_theme_color_override("font_color", exit_color)
+		exit_game_btn.add_theme_color_override("font_hover_color", exit_color)
+		exit_game_btn.add_theme_color_override("font_pressed_color", exit_color)
 
 
 func _trailing_stack_button_y(visual_slot: int) -> float:

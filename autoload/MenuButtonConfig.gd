@@ -13,9 +13,18 @@ const SLOT_BTN_LEFT := -190.0
 const SLOT_BTN_RIGHT := 190.0
 const SLOT_BTN_HEIGHT := 60.0
 
+const FONT_COLOR_IDS: Array[String] = ["default", "cyan", "green", "yellow", "white"]
+const FONT_COLORS: Dictionary = {
+	"default": Color(0.910, 0.957, 1.0, 1.0),
+	"cyan": Color(0.40, 0.85, 1.0, 1.0),
+	"green": Color(0.30, 1.0, 0.65, 1.0),
+	"yellow": Color(0.95, 0.80, 0.30, 1.0),
+	"white": Color(1.0, 1.0, 1.0, 1.0),
+}
+
 const DEFAULT_CONFIG: Dictionary = {
-	"quick_duel": {"label": "Quick Duel", "visible": true, "enabled": true, "slot": 1},
-	"campaign": {"label": "Campaign", "visible": true, "enabled": true, "slot": 2},
+	"quick_duel": {"label": "Quick Duel", "visible": true, "enabled": true, "slot": 1, "font_color": "green"},
+	"campaign": {"label": "Campaign", "visible": true, "enabled": true, "slot": 2, "font_color": "green"},
 	"single_player": {
 		"label": "Single Player",
 		"visible": true,
@@ -39,7 +48,7 @@ const DEFAULT_CONFIG: Dictionary = {
 		},
 	},
 	"deck_builder": {"label": "Deck Builder", "visible": true, "enabled": true, "slot": 3},
-	"inventory": {"label": "Inventory", "visible": true, "enabled": true, "slot": 4},
+	"inventory": {"label": "Inventory", "visible": true, "enabled": true, "slot": 4, "font_color": "white"},
 	"shop": {"label": "Shop", "visible": true, "enabled": true, "slot": 5},
 	"gallery": {"label": "Gallery", "visible": true, "enabled": true, "slot": 6},
 	"credits": {"label": "Credits", "visible": false, "enabled": true, "slot": 0},
@@ -138,6 +147,26 @@ func get_label(main_key: String, sub_key: String = "") -> String:
 			return str((subs as Dictionary)[sub_key].get("label", sub_key))
 		return sub_key
 	return str(_config.get(main_key, {}).get("label", main_key))
+
+
+func get_main_font_color_id(main_key: String) -> String:
+	var raw: String = str(_config.get(main_key, {}).get("font_color", "default")).strip_edges().to_lower()
+	if raw in FONT_COLORS:
+		return raw
+	return "default"
+
+
+func get_font_color(main_key: String) -> Color:
+	return FONT_COLORS[get_main_font_color_id(main_key)] as Color
+
+
+func set_main_font_color(main_key: String, color_id: String) -> void:
+	if not _config.has(main_key):
+		return
+	var id: String = color_id.strip_edges().to_lower()
+	if id not in FONT_COLORS:
+		id = "default"
+	_config[main_key]["font_color"] = id
 
 
 func is_main_visible(main_key: String) -> bool:
@@ -266,6 +295,8 @@ func _merge_with_defaults(source: Dictionary) -> Dictionary:
 		dst_entry["visible"] = bool((src_entry as Dictionary).get("visible", dst_entry.get("visible", true)))
 		dst_entry["enabled"] = bool((src_entry as Dictionary).get("enabled", dst_entry.get("enabled", true)))
 		dst_entry["slot"] = int((src_entry as Dictionary).get("slot", dst_entry.get("slot", _default_slot_for(main_key))))
+		dst_entry["font_color"] = str((src_entry as Dictionary).get(
+			"font_color", dst_entry.get("font_color", "default")))
 		var src_subs: Variant = (src_entry as Dictionary).get("subs", {})
 		if src_subs is Dictionary:
 			var dst_subs: Dictionary = dst_entry.get("subs", {}).duplicate(true)
