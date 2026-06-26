@@ -303,6 +303,7 @@ var quick_duel_reroll_previews: bool = false
 var quick_duel_pending_rewards: Array = []
 var quick_duel_reveal_queue: Array = []
 var quick_duel_reveal_skip_all: bool = false
+var pending_wishlist_cta: bool = false
 var vn_on_win: String = ""
 var vn_on_lose: String = ""
 var vn_battle_rewards: Array = []  # VN start_battle / tutorial_battle beat rewards — granted to mailbox on win
@@ -1213,6 +1214,7 @@ func abort_quick_duel_battle() -> void:
 	quick_duel_pending_rewards.clear()
 	quick_duel_reveal_queue.clear()
 	quick_duel_reveal_skip_all = false
+	pending_wishlist_cta = false
 
 const UNIT_EFFECT_FLAGS: Array[String] = ["venom", "mutagen", "berserk"]
 

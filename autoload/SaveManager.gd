@@ -35,6 +35,7 @@ var casual_mode: bool = false
 var quick_duel_tier_previews: Dictionary = {}   # tier -> vault entry_id
 var quick_duel_tier_rewards: Dictionary = {}  # tier -> Array of reward dicts
 var quick_duel_loss_streak: int = 0
+var wishlist_cta_shown: bool = false
 
 func _ready() -> void:
 	_load_demo_config()
@@ -223,6 +224,7 @@ func save_data() -> void:
 		"quick_duel_tier_previews":      quick_duel_tier_previews.duplicate(true),
 		"quick_duel_tier_rewards":       quick_duel_tier_rewards.duplicate(true),
 		"quick_duel_loss_streak":        quick_duel_loss_streak,
+		"wishlist_cta_shown":            wishlist_cta_shown,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -313,6 +315,7 @@ func load_data() -> void:
 	attack_tutorial_complete = bool(parsed.get("attack_tutorial_complete", false))
 	casual_mode = bool(parsed.get("casual_mode", false))
 	quick_duel_loss_streak = int(parsed.get("quick_duel_loss_streak", 0))
+	wishlist_cta_shown = bool(parsed.get("wishlist_cta_shown", false))
 
 	var qdp: Variant = parsed.get("quick_duel_tier_previews", {})
 	quick_duel_tier_previews = qdp as Dictionary if qdp is Dictionary else {}
@@ -374,6 +377,15 @@ func mark_attack_tutorial_complete() -> void:
 
 func is_attack_tutorial_complete() -> bool:
 	return attack_tutorial_complete
+
+func is_wishlist_cta_shown() -> bool:
+	return wishlist_cta_shown
+
+func mark_wishlist_cta_shown() -> void:
+	if wishlist_cta_shown:
+		return
+	wishlist_cta_shown = true
+	save_data()
 
 func is_casual_mode() -> bool:
 	return casual_mode

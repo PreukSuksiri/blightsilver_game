@@ -9555,12 +9555,16 @@ func _on_game_over(winner: int) -> void:
 		if not combat_rewards.is_empty():
 			await CombatRewardOverlay.present(self, combat_rewards)
 
-	if GameState.game_mode == GameState.GameMode.VS_AI \
-			and not GameState.quick_duel_pending_rewards.is_empty():
-		await CombatRewardOverlay.present(self, GameState.quick_duel_pending_rewards)
-		await _present_quick_duel_reward_reveal_anims()
-		GameState.quick_duel_pending_rewards.clear()
-		GameState.quick_duel_reveal_queue.clear()
+	if GameState.game_mode == GameState.GameMode.VS_AI:
+		if not GameState.quick_duel_pending_rewards.is_empty():
+			await CombatRewardOverlay.present(self, GameState.quick_duel_pending_rewards)
+			await _present_quick_duel_reward_reveal_anims()
+			GameState.quick_duel_pending_rewards.clear()
+			GameState.quick_duel_reveal_queue.clear()
+		if GameState.pending_wishlist_cta:
+			await WishlistCtaOverlay.present(self)
+			SaveManager.mark_wishlist_cta_shown()
+			GameState.pending_wishlist_cta = false
 
 # ─────────────────────────────────────────────────────────────
 # Game-over helpers
@@ -9734,6 +9738,8 @@ func _handle_quick_duel_win_rewards() -> void:
 			_grant_quick_duel_reward(reward as Dictionary)
 	if not picked.is_empty():
 		GameState.quick_duel_pending_rewards = picked.duplicate(true)
+	if not SaveManager.is_wishlist_cta_shown():
+		GameState.pending_wishlist_cta = true
 	SaveManager.reset_quick_duel_loss_streak()
 	GameState.quick_duel_active = false
 	GameState.quick_duel_battle_tier = ""
