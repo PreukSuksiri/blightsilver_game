@@ -56,8 +56,29 @@ func load_config_file(path: String) -> Dictionary:
 	fa.close()
 	return parsed as Dictionary if parsed is Dictionary else {}
 
+## Load config from path, then configure battle. Returns "" on success.
+func configure_battle_from_path(path: String, run_tutorial_missions: bool = true) -> String:
+	var cfg := load_config_file(path)
+	if cfg.is_empty():
+		return "Could not load tutorial config: " + path.strip_edges()
+	var err: String = _configure_battle_state_from_config(cfg)
+	if not err.is_empty():
+		return err
+	if run_tutorial_missions:
+		prepare(cfg)
+	return ""
+
 ## Configure GameState + tutorial layer from a config dict. Returns "" on success.
 func configure_battle_from_config(cfg: Dictionary) -> String:
+	if cfg.is_empty():
+		return "Tutorial config is empty."
+	var err: String = _configure_battle_state_from_config(cfg)
+	if not err.is_empty():
+		return err
+	prepare(cfg)
+	return ""
+
+func _configure_battle_state_from_config(cfg: Dictionary) -> String:
 	if cfg.is_empty():
 		return "Tutorial config is empty."
 
@@ -93,7 +114,6 @@ func configure_battle_from_config(cfg: Dictionary) -> String:
 	var p2n: String = str(cfg.get("player2_name", "")).strip_edges()
 	if not p1n.is_empty() or not p2n.is_empty():
 		GameState.campaign_player_names = [p1n, p2n]
-	prepare(cfg)
 	return ""
 
 func _apply_portraits_from_config(cfg: Dictionary) -> void:
@@ -103,13 +123,6 @@ func _apply_portraits_from_config(cfg: Dictionary) -> void:
 	var p2_port: String = str(cfg.get("portrait_p2", "")).strip_edges()
 	if not p2_port.is_empty():
 		GameState.player_portraits[1] = p2_port
-
-## Load config from path, then configure battle. Returns "" on success.
-func configure_battle_from_path(path: String) -> String:
-	var cfg := load_config_file(path)
-	if cfg.is_empty():
-		return "Could not load tutorial config: " + path.strip_edges()
-	return configure_battle_from_config(cfg)
 
 ## Tutorial duels always start with Player 2 (index 1, tails). -1 = not forced.
 func get_forced_first_player() -> int:
@@ -220,10 +233,22 @@ func on_player_turn_started() -> void:
 
 func _end_tutorial_battle() -> void:
 	tutorial_complete.emit()
+	SaveManager.mark_attack_tutorial_complete()
 	var vn_win: String = GameState.vn_on_win.strip_edges()
 	GameState.vn_on_win = ""
 	GameState.vn_on_lose = ""
 	stop()
+	var return_scene: String = ""
+	if GameState.quick_duel_launch:
+		GameState.quick_duel_launch = false
+		GameState.quick_duel_reroll_previews = true
+		return_scene = GameState.post_battle_return_scene.strip_edges()
+		if return_scene.is_empty():
+			return_scene = "res://scenes/quick_duel.tscn"
+		GameState.post_battle_return_scene = ""
+	if return_scene != "":
+		CheckerTransition.fade_out_to_scene(return_scene)
+		return
 	if vn_win != "" and vn_win != "game_over":
 		VNPlayer.launch_overlay(vn_win, func() -> void:
 			get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))

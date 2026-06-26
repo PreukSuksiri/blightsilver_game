@@ -3431,7 +3431,7 @@ Test Case ID: TC-FUNC-Needle-Porcupine-001
 Description:
 Needle Porcupine: once, defender permanently -5 ATK to attacker
 Implementation Reference:
-- BattleResolver._apply_defend_effects; one_use_def_boost_used flag
+- BattleResolver._apply_on_defend_triggers; one_use_def_boost_used flag
 - AbilityType.ONE_USE_PERM_DEBUFF_ATTACKER_ATK
 Preconditions:
 - Godot battle_test or Daily Dungeon; `CardDatabase` loaded.

@@ -267,6 +267,140 @@ func get_entries_by_tag(tag: String) -> Array:
 	return out
 
 
+func is_entry_demo_safe(entry: Dictionary) -> bool:
+	if not SaveManager.demo_mode:
+		return true
+	var deck_raw: Variant = entry.get("deck", {})
+	if not deck_raw is Dictionary:
+		return false
+	var deck := DeckData.new()
+	deck.load_from_dict(deck_raw as Dictionary)
+	for cname: String in deck.characters:
+		var cd: CharacterData = CardDatabase.get_character(cname)
+		if cd == null or not cd.include_in_demo:
+			return false
+	for tname: String in deck.traps:
+		var td: TrapData = CardDatabase.get_trap(tname)
+		if td == null or not td.include_in_demo:
+			return false
+	for ename: String in deck.techs:
+		var tc: TechCardData = CardDatabase.get_tech(ename)
+		if tc == null or not tc.include_in_demo:
+			return false
+	return true
+
+
+func pick_random_entry_for_tags(tags: Array, demo_only: bool = false) -> Dictionary:
+	var candidates: Array = []
+	var seen: Dictionary = {}
+	for tag: Variant in tags:
+		for ed: Variant in get_entries_by_tag(str(tag)):
+			if not ed is Dictionary:
+				continue
+			var entry: Dictionary = ed as Dictionary
+			var eid: String = str(entry.get("id", "")).strip_edges()
+			if eid.is_empty() or seen.has(eid):
+				continue
+			if demo_only and not is_entry_demo_safe(entry):
+				continue
+			seen[eid] = true
+			candidates.append(entry)
+	if candidates.is_empty():
+		return {}
+	return (candidates[randi() % candidates.size()] as Dictionary).duplicate(true)
+
+
+func resolve_preview_card_name(entry: Dictionary) -> String:
+	var deck_raw: Variant = entry.get("deck", {})
+	if not deck_raw is Dictionary:
+		return ""
+	var deck := DeckData.new()
+	deck.load_from_dict(deck_raw as Dictionary)
+	var char_names: Array = deck.characters.duplicate()
+
+	var featured: String = str(entry.get("featured_union", "")).strip_edges()
+	if not featured.is_empty():
+		var fu: UnionData = UnionDatabase.get_union(featured)
+		if fu != null \
+				and (not SaveManager.demo_mode or UnionDatabase.is_playable_in_demo(fu)) \
+				and UnionDatabase.deck_can_form_union(char_names, fu) \
+				and _preview_texture_exists(fu.card_name):
+			return fu.card_name
+
+	var best_union: UnionData = null
+	for u: UnionData in UnionDatabase.get_all_unions():
+		if u == null:
+			continue
+		if SaveManager.demo_mode and not UnionDatabase.is_playable_in_demo(u):
+			continue
+		if not UnionDatabase.deck_can_form_union(char_names, u):
+			continue
+		if not _preview_texture_exists(u.card_name):
+			continue
+		if best_union == null or u.summon_cost > best_union.summon_cost:
+			best_union = u
+	if best_union != null:
+		return best_union.card_name
+
+	var best_char: String = ""
+	var best_cost: int = -1
+	for cname: String in char_names:
+		var cd: CharacterData = CardDatabase.get_character(cname)
+		if cd == null:
+			continue
+		if not _preview_texture_exists(cname):
+			continue
+		if cd.crystal_cost > best_cost:
+			best_cost = cd.crystal_cost
+			best_char = cname
+	return best_char
+
+
+func resolve_preview_texture(entry: Dictionary) -> Texture2D:
+	var card_name: String = resolve_preview_card_name(entry)
+	if card_name.is_empty():
+		return null
+	var path: String = _preview_art_path(card_name)
+	if path.is_empty():
+		return null
+	return load(path) as Texture2D
+
+
+func _preview_texture_exists(card_name: String) -> bool:
+	return not _preview_art_path(card_name).is_empty()
+
+
+func _preview_art_subfolder(card_name: String) -> String:
+	if CardDatabase.get_trap(card_name) != null:
+		return "traps"
+	if CardDatabase.get_tech(card_name) != null:
+		return "tech"
+	if UnionDatabase.get_union(card_name) != null:
+		return "union"
+	return "characters"
+
+
+func _preview_art_path(card_name: String) -> String:
+	var path: String = CardDatabase.find_artwork(
+		card_name,
+		_preview_art_subfolder(card_name),
+		SaveManager.nsfw_enabled)
+	if path != "" and ResourceLoader.exists(path):
+		return path
+	return ""
+
+
+func _full_card_tex_path(card_name: String) -> String:
+	var snake: String = card_name.to_lower().replace(" ", "_").replace("'", "").replace("-", "_")
+	for candidate: String in [
+		"res://assets/textures/cards/full_cards/" + snake + ".png",
+		"res://assets/textures/cards/full_cards/character_" + snake + ".png",
+	]:
+		if ResourceLoader.exists(candidate):
+			return candidate
+	return ""
+
+
 func save_entries(entries: Array) -> bool:
 	_entries = entries.duplicate(true)
 	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)

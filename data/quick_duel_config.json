@@ -1,0 +1,12 @@
+{
+	"tutorial_intro_vn": "res://data/quick_duel/tutorial_intro.json",
+	"tutorial_battle": "res://data/tutorial_battles/example_attack_tutorial.json",
+	"tier_tags": {
+		"easy": ["easy"],
+		"normal": ["normal", "norm"],
+		"hard": ["hard"]
+	},
+	"reroll_cost": 100,
+	"loss_consolation_min_turns": 4,
+	"loss_consolation_streak": [200, 100, 50, 20]
+}

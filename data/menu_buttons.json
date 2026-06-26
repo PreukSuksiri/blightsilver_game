@@ -1,4 +1,11 @@
 {
+	"quick_duel": {
+		"enabled": true,
+		"label": "Quick Duel",
+		"slot": 1,
+		"subs": {},
+		"visible": true
+	},
 	"campaign": {
 		"enabled": true,
 		"label": "Campaign",

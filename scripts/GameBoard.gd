@@ -70,6 +70,7 @@ var _session_log_start_msec: int = 0
 var _session_log_prev_crystals: Array[int] = [0, 0]
 var _session_logged_destroy_slots: Dictionary = {}
 var _ai_watchdog: Timer = null
+var _ai_union_resolve_in_progress: bool = false  # suppress watchdog during long union cinematics
 var _card_name_to_type: Dictionary = {}   # card_name -> "character"|"trap"|"tech"
 var _options_panel: Control = null
 var _options_btn: TextureButton = null
@@ -518,13 +519,17 @@ func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: 
 		if GameState.current_phase != GameState.Phase.GAME_OVER:
 			_active_ai.continue_after_union()
 		return
+	_ai_union_resolve_in_progress = true
 	_pending_union_player = cp
 	_pending_union_data = u
 	_pending_union_zone_cells = zone_cells.duplicate()
 	_pending_union_conditions_remaining = []
 	_pending_union_selected_materials = material_cells.duplicate()
 	await _play_union_zone_preview(cp, zone_cells)
+	_restart_ai_watchdog()
 	await _perform_pending_union()
+	_ai_union_resolve_in_progress = false
+	_restart_ai_watchdog()
 	if GameState.current_phase != GameState.Phase.GAME_OVER:
 		_active_ai.register_union_summoned()
 		_active_ai.continue_after_union()
@@ -550,7 +555,10 @@ func _on_ai_watchdog_timeout() -> void:
 	if GameState.current_phase == GameState.Phase.BATTLE:
 		_restart_ai_watchdog()
 		return
-	if selection_state == SelectionState.SELECTING_TECH_TARGET:
+	if _ai_union_resolve_in_progress:
+		_restart_ai_watchdog()
+		return
+	if selection_state in [SelectionState.SELECTING_TECH_TARGET, SelectionState.SELECTING_UNION_MATERIALS]:
 		_restart_ai_watchdog()
 		return
 	print("[AI WATCHDOG] Bot Player went idle — forcing turn end.")
@@ -3230,6 +3238,8 @@ func _perform_pending_union() -> void:
 	# Pay crystal cost (apply dungeon modifiers via _effective_union_cost)
 	GameState.lose_crystals(player, _effective_union_cost(u.summon_cost), "union")
 	await GameState.wait_crystal_animation()
+	if _is_ai_turn():
+		_restart_ai_watchdog()
 	# Remove selected material cards (except the first which becomes the union)
 	for i: int in range(1, _pending_union_selected_materials.size()):
 		var cell: Vector2i = _pending_union_selected_materials[i]
@@ -3260,6 +3270,8 @@ func _perform_pending_union() -> void:
 			and "dimensional_gate" in GameState.active_dungeon_modifiers:
 		DailyDungeonManager.register_dimensional_gate_union(player, first_cell.x, first_cell.y)
 	await _apply_union_summon_ability(player, first_cell, u)
+	if _is_ai_turn():
+		_restart_ai_watchdog()
 	# Record unlock (human players only)
 	var human_player: bool = GameState.game_mode not in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON] or player == 0
 	if human_player:
@@ -3281,6 +3293,8 @@ func _perform_pending_union() -> void:
 	_highlight_attackable_chars()
 	# Full cinematic reveal (shake and dust happen inside on landing)
 	await _show_union_summon_reveal(u.card_name)
+	if _is_ai_turn():
+		_restart_ai_watchdog()
 	# Cyan shockwave plays on the union card node AFTER shake+dust landing
 	var union_node: Control = grid_nodes[player][first_cell.x][first_cell.y]
 	var cell_center: Vector2 = union_node.global_position + union_node.size * 0.5
@@ -9541,6 +9555,13 @@ func _on_game_over(winner: int) -> void:
 		if not combat_rewards.is_empty():
 			await CombatRewardOverlay.present(self, combat_rewards)
 
+	if GameState.game_mode == GameState.GameMode.VS_AI \
+			and not GameState.quick_duel_pending_rewards.is_empty():
+		await CombatRewardOverlay.present(self, GameState.quick_duel_pending_rewards)
+		await _present_quick_duel_reward_reveal_anims()
+		GameState.quick_duel_pending_rewards.clear()
+		GameState.quick_duel_reveal_queue.clear()
+
 # ─────────────────────────────────────────────────────────────
 # Game-over helpers
 # ─────────────────────────────────────────────────────────────
@@ -9705,6 +9726,110 @@ func _grant_vn_battle_loss_rewards() -> void:
 	GameState.vn_battle_loss_rewards.clear()
 	GameState.vn_battle_loss_reward_once = ""
 
+func _handle_quick_duel_win_rewards() -> void:
+	var tier: String = GameState.quick_duel_battle_tier
+	var picked: Array = SaveManager.get_quick_duel_rewards(tier)
+	for reward: Variant in picked:
+		if reward is Dictionary:
+			_grant_quick_duel_reward(reward as Dictionary)
+	if not picked.is_empty():
+		GameState.quick_duel_pending_rewards = picked.duplicate(true)
+	SaveManager.reset_quick_duel_loss_streak()
+	GameState.quick_duel_active = false
+	GameState.quick_duel_battle_tier = ""
+
+func _handle_quick_duel_loss_rewards() -> void:
+	var min_turns: int = QuickDuelRewards.get_loss_consolation_min_turns()
+	if GameState.turn_number >= min_turns:
+		var streak: int = SaveManager.get_quick_duel_loss_streak()
+		var loss_credits: int = QuickDuelRewards.get_loss_consolation_amount_for_streak(streak)
+		if loss_credits > 0:
+			var consolation: Dictionary = {"type": "credits", "amount": loss_credits}
+			_grant_quick_duel_reward(consolation)
+			GameState.quick_duel_pending_rewards = [consolation]
+			SaveManager.increment_quick_duel_loss_streak()
+	GameState.quick_duel_active = false
+	GameState.quick_duel_battle_tier = ""
+
+func _grant_quick_duel_reward(reward: Dictionary) -> void:
+	match str(reward.get("type", "")):
+		"credits", "coins":
+			var amount: int = int(reward.get("amount", 0))
+			if amount > 0:
+				Collection.add_credits(amount)
+		"card":
+			var card_name: String = str(reward.get("card_name", "")).strip_edges()
+			if not card_name.is_empty():
+				Collection.add_card(card_name, _quick_duel_card_type(card_name), "Quick Duel")
+				GameState.quick_duel_reveal_queue.append({
+					"kind": "card",
+					"card_name": card_name,
+				})
+		"union_scroll":
+			var scroll_count: int = int(reward.get("count", 1))
+			if scroll_count <= 0:
+				scroll_count = 1
+			Collection.add_union_scrolls(scroll_count)
+		"booster_pack":
+			var pack_name: String = str(reward.get("pack_name", "")).strip_edges()
+			if pack_name.is_empty():
+				return
+			var drawn: Array = ShopManager.draw_pack_free(pack_name)
+			var card_names: Array[String] = []
+			for c: Variant in drawn:
+				if c is Dictionary:
+					card_names.append(str((c as Dictionary).get("name", "")))
+			var pack_dict: Dictionary = ShopManager.get_pack_by_name(pack_name)
+			GameState.quick_duel_reveal_queue.append({
+				"kind": "pack",
+				"pack_name": pack_name,
+				"pack_image": str(pack_dict.get("pack_image", "")),
+				"cards": card_names,
+			})
+
+func _quick_duel_card_type(card_name: String) -> String:
+	if CardDatabase.get_trap(card_name) != null:
+		return "trap"
+	if CardDatabase.get_tech(card_name) != null:
+		return "tech"
+	return "character"
+
+func _present_quick_duel_reward_reveal_anims() -> void:
+	GameState.quick_duel_reveal_skip_all = false
+	for entry: Variant in GameState.quick_duel_reveal_queue:
+		if GameState.quick_duel_reveal_skip_all:
+			break
+		if not entry is Dictionary:
+			continue
+		var item: Dictionary = entry as Dictionary
+		match str(item.get("kind", "")):
+			"pack":
+				var cards: Array = item.get("cards", [])
+				var c1: String = str(cards[0]) if cards.size() > 0 else ""
+				var c2: String = str(cards[1]) if cards.size() > 1 else ""
+				var c3: String = str(cards[2]) if cards.size() > 2 else ""
+				var pack_img: String = str(item.get("pack_image", ""))
+				PackOpeningOverlay.open(self, pack_img, c1, c2, c3, true)
+				await _await_pack_opening_overlay()
+			"card":
+				var card_name: String = str(item.get("card_name", "")).strip_edges()
+				if card_name.is_empty():
+					continue
+				PackOpeningOverlay.open_single_card_reveal(self, card_name, true)
+				await _await_pack_opening_overlay()
+
+
+func _await_pack_opening_overlay() -> void:
+	await get_tree().process_frame
+	for child: Node in get_children():
+		if child is PackOpeningOverlay:
+			await child.tree_exiting
+			return
+
+func _exit_tree() -> void:
+	if GameState.quick_duel_active and GameState.current_phase != GameState.Phase.GAME_OVER:
+		GameState.abort_quick_duel_battle()
+
 func _apply_endgame_serif_font(control: Control, weight: int = 400) -> void:
 	control.add_theme_font_override("font", FontManager.make_font("display_serif", weight))
 
@@ -9762,7 +9887,9 @@ func _show_endgame_screen(winner: int) -> void:
 
 	# Award on win (VS AI / Campaign only; Daily Dungeon and Exploration handle their own rewards)
 	if is_win_screen and is_ai_game and not is_dungeon and not is_exploration:
-		if not GameState.vn_battle_rewards.is_empty():
+		if GameState.quick_duel_active:
+			_handle_quick_duel_win_rewards()
+		elif not GameState.vn_battle_rewards.is_empty():
 			_grant_vn_battle_rewards()
 		else:
 			MailboxManager.send_mail(
@@ -9772,7 +9899,9 @@ func _show_endgame_screen(winner: int) -> void:
 				{"type": "credits", "amount": 50}
 			)
 	elif not is_win_screen and is_ai_game and not is_dungeon and not is_exploration:
-		if not GameState.vn_battle_loss_rewards.is_empty():
+		if GameState.quick_duel_active:
+			_handle_quick_duel_loss_rewards()
+		elif not GameState.vn_battle_loss_rewards.is_empty():
 			_grant_vn_battle_loss_rewards()
 
 	# ── Build full-screen overlay ────────────────────────────────────────────
@@ -9938,6 +10067,11 @@ func _show_endgame_screen(winner: int) -> void:
 		dest = "res://scenes/campaign_map.tscn"
 	elif mode == GameState.GameMode.EXPLORATION:
 		dest = ExplorationManager.EXPLORATION_PLAYER_SCENE
+	elif mode == GameState.GameMode.VS_AI and GameState.post_battle_return_scene != "":
+		dest = GameState.post_battle_return_scene
+		if dest == "res://scenes/quick_duel.tscn":
+			GameState.quick_duel_reroll_previews = true
+		GameState.post_battle_return_scene = ""
 	else:
 		dest = DailyDungeonManager.get_post_battle_scene()
 

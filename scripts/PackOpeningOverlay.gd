@@ -20,6 +20,7 @@ const FALLBACK_CARD_PATH: String = "res://assets/textures/cards/frames/vellum_ca
 const FULL_CARDS_DIR    : String = "res://assets/textures/cards/full_cards/"
 const DISPLAY_HOLD_SECONDS: float = 30.0
 const CARD_SETTLE_SECONDS: float = 0.2
+const HOLD_SKIP_ALL_SECONDS: float = 3.0
 const _ROUNDED_CLIP: Shader = preload("res://assets/shaders/rounded_clip.gdshader")
 const _CARD_CORNER_RADIUS_REF: float = 16.0   # px at 150px card width
 
@@ -39,6 +40,8 @@ var _skippable:        bool   = true
 var _dismiss_allowed:  bool   = false
 var _anim_done:        bool   = false
 var _reroll_triggered: bool   = false
+var _single_card_mode: bool   = false
+var _hold_skip_elapsed: float = 0.0
 var _glow_sbs:         Array  = [null, null, null]  # StyleBoxFlat refs
 var _card_tex_cache:   Array  = []                    # preloaded full-card textures
 
@@ -68,13 +71,41 @@ static func open(parent: Node, pack_image: String, card1: String, card2: String,
 	overlay.mouse_filter   = Control.MOUSE_FILTER_STOP
 	parent.add_child(overlay)
 
+static func open_single_card_reveal(parent: Node, card_name: String, skippable: bool = true) -> void:
+	var overlay := PackOpeningOverlay.new()
+	overlay._single_card_mode = true
+	overlay._skippable = skippable
+	overlay._card_names = [card_name if card_name != null else ""]
+	overlay._glow_sbs = [null]
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 50
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	parent.add_child(overlay)
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Lifecycle
 # ──────────────────────────────────────────────────────────────────────────────
 func _ready() -> void:
 	_compute_sizes()
-	_build_ui()
+	if _single_card_mode:
+		_build_single_card_ui()
+	else:
+		_build_ui()
 	_run.call_deferred()
+
+func _process(delta: float) -> void:
+	if _anim_done or GameState.quick_duel_reveal_skip_all:
+		return
+	if _is_hold_skip_pressed():
+		_hold_skip_elapsed += delta
+		if _hold_skip_elapsed >= HOLD_SKIP_ALL_SECONDS:
+			GameState.quick_duel_reveal_skip_all = true
+			_skip_requested = true
+	else:
+		_hold_skip_elapsed = 0.0
+
+func _is_hold_skip_pressed() -> bool:
+	return Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or Input.is_key_pressed(KEY_SPACE)
 
 func _compute_sizes() -> void:
 	var s: Vector2 = get_viewport_rect().size
@@ -182,10 +213,20 @@ func _build_ui() -> void:
 	bot_img.mouse_filter    = Control.MOUSE_FILTER_IGNORE
 	_clip_bot.add_child(bot_img)
 
+func _build_single_card_ui() -> void:
+	_bg = ColorRect.new()
+	_bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_bg.color = Color(0.0, 0.0, 0.0, 0.0)
+	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_bg)
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Main animation coroutine
 # ──────────────────────────────────────────────────────────────────────────────
 func _run() -> void:
+	if _single_card_mode:
+		await _run_single_card_reveal()
+		return
 	_preload_card_textures()
 
 	var screen: Vector2 = get_viewport_rect().size
@@ -283,7 +324,8 @@ func _run() -> void:
 		reroll_btn = _make_reroll_btn(cx, card_y)
 
 	var elapsed: float = 0.0
-	while elapsed < DISPLAY_HOLD_SECONDS and not _skip_requested and not _reroll_triggered:
+	while elapsed < DISPLAY_HOLD_SECONDS and not _skip_requested and not _reroll_triggered \
+			and not GameState.quick_duel_reveal_skip_all:
 		await get_tree().create_timer(0.05).timeout
 		elapsed += 0.05
 
@@ -308,8 +350,59 @@ func _run() -> void:
 	_anim_done = true
 	queue_free()
 
-# ──────────────────────────────────────────────────────────────────────────────
-# Re-roll (winding key)
+func _run_single_card_reveal() -> void:
+	_card_tex_cache.clear()
+	_card_tex_cache.append(_load_card_tex(_card_names[0] if _card_names.size() > 0 else ""))
+
+	var screen: Vector2 = get_viewport_rect().size
+	var cx: float = screen.x * 0.5
+	var cy: float = screen.y * 0.5
+	var card_y: float = cy - _card_h * 0.5
+
+	var t1: Tween = create_tween()
+	t1.tween_property(_bg, "color:a", 0.75, 0.35)
+	await t1.finished
+	if GameState.quick_duel_reveal_skip_all:
+		_anim_done = true
+		queue_free()
+		return
+
+	_spawn_debris(cx, cy)
+
+	var w: Control = _make_card_ctrl(_card_names[0] if _card_names.size() > 0 else "", 0)
+	w.position = Vector2(cx - _card_w * 0.5, screen.y + 20.0)
+	w.scale = Vector2(0.5, 0.5)
+	w.pivot_offset = Vector2(_card_w * 0.5, _card_h * 0.5)
+	w.z_index = 2
+	add_child(w)
+
+	var t5: Tween = create_tween().set_parallel(true)
+	t5.tween_property(w, "position:y", card_y, 0.42) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t5.tween_property(w, "scale", Vector2.ONE, 0.42) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await t5.finished
+	await get_tree().create_timer(CARD_SETTLE_SECONDS).timeout
+	_skip_requested = false
+	_dismiss_allowed = true
+	_start_glow_pulse(0)
+
+	var elapsed: float = 0.0
+	while elapsed < DISPLAY_HOLD_SECONDS and not _skip_requested and not GameState.quick_duel_reveal_skip_all:
+		await get_tree().create_timer(0.05).timeout
+		elapsed += 0.05
+
+	_skip_requested = false
+	var dest: Vector2 = Vector2(screen.x + 60.0, -_card_h - 60.0)
+	var t9: Tween = create_tween().set_parallel(true)
+	t9.tween_property(w, "position", dest, 0.48) \
+		.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
+	t9.tween_property(w, "scale", Vector2(0.0, 0.0), 0.48) \
+		.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
+	t9.tween_property(_bg, "color:a", 0.0, 0.40)
+	await t9.finished
+	_anim_done = true
+	queue_free()
 # ──────────────────────────────────────────────────────────────────────────────
 func _make_reroll_btn(cx: float, card_y: float) -> Button:
 	var btn := Button.new()

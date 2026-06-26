@@ -679,12 +679,17 @@ func _show_beat() -> void:
 	var tutorial_path: String = str(beat.get("tutorial_battle", "")).strip_edges()
 	if tutorial_path != "":
 		_set_music("", 0.0, 0.0)
-		var tut_err: String = TutorialBattleManager.configure_battle_from_path(tutorial_path)
+		var tut_err: String = TutorialBattleManager.configure_battle_from_path(
+			tutorial_path, not SaveManager.is_attack_tutorial_complete())
 		if not tut_err.is_empty():
 			push_error(tut_err)
 			_accepting_input = true
 			_show_beat()
 			return
+		if SaveManager.is_attack_tutorial_complete():
+			GameState.apply_casual_mode_crystals()
+		else:
+			GameState.apply_tutorial_opponent_crystals()
 		_apply_beat_battle_display(beat, true)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))

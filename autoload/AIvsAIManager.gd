@@ -524,6 +524,10 @@ func _on_coin_flip(results: Array) -> void:
 	for r: Variant in results:
 		strs.append("Heads" if r else "Tails")
 	log_event("Coin flip: " + ", ".join(PackedStringArray(strs)))
+	# GameBoard resolves after its overlay; AI-vs-AI also resolves next frame so headless
+	# E2E cannot hang if the visual handler is still animating.
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI and _tm_ref != null:
+		_tm_ref.call_deferred("resolve_coin_flip_visual")
 
 func _on_game_over_signal(_winner: int) -> void:
 	# GameBoard handles this directly via on_game_over(); do nothing here

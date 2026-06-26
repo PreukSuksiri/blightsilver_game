@@ -61,14 +61,14 @@ var _title_cheat_credit_demo_zone: Control = null
 func _ready() -> void:
 	if OS.has_feature("web"):
 		gui_input.connect(_on_web_audio_gate)
-	local_2p_btn.pressed.connect(_on_local_play_pressed)
+	local_2p_btn.pressed.connect(_on_stack_primary_pressed)
 	deck_build_btn.pressed.connect(_on_deck_builder)
 	shop_btn.pressed.connect(_on_shop)
 	gallery_btn.pressed.connect(_on_gallery)
 	mailbox_btn.pressed.connect(_on_inventory)
 	credits_btn.pressed.connect(_on_credits)
 	exit_game_btn.pressed.connect(_on_exit_game)
-	campaign_btn.pressed.connect(_on_multiplayer)
+	campaign_btn.pressed.connect(_on_stack_secondary_pressed)
 	settings_icon_btn.pressed.connect(_on_settings)
 	settings_icon_btn.tooltip_text = "Settings"
 	mailbox_icon_btn.pressed.connect(_on_mailbox_icon_pressed)
@@ -226,7 +226,8 @@ func _refresh_mailbox_icon_badge() -> void:
 
 func _stack_button_for_key(key: String) -> Button:
 	match key:
-		"campaign": return local_2p_btn
+		"quick_duel": return local_2p_btn
+		"campaign": return campaign_btn
 		"single_player": return local_2p_btn
 		"multiplayer": return campaign_btn
 		"deck_builder": return deck_build_btn
@@ -238,33 +239,38 @@ func _stack_button_for_key(key: String) -> Button:
 	return null
 
 
-func _local_play_menu_key() -> String:
-	if MenuButtonConfig.is_main_visible("single_player") \
-			and MenuButtonConfig.has_subs("single_player"):
-		return "single_player"
-	return "campaign"
-
-
 func _stack_menu_keys() -> Array[String]:
 	var keys: Array[String] = []
-	var local_key: String = _local_play_menu_key()
-	if local_key == "single_player":
-		keys.append("single_player")
-	else:
-		keys.append("campaign")
-	keys.append_array(["multiplayer", "deck_builder", "inventory", "shop", "gallery"])
+	for key: Variant in MenuButtonConfig.get_main_keys():
+		var k: String = str(key)
+		if MenuButtonConfig.uses_stack_slot(k) and MenuButtonConfig.is_main_visible(k):
+			keys.append(k)
+	keys.sort_custom(func(a: String, b: String) -> bool:
+		return MenuButtonConfig.get_sort_slot(a) < MenuButtonConfig.get_sort_slot(b))
 	return keys
 
 
+func _key_for_stack_button(btn: Button) -> String:
+	for key: String in _stack_menu_keys():
+		if _stack_button_for_key(key) == btn:
+			return key
+	return ""
+
+
 func _apply_menu_button_state() -> void:
-	_set_main_menu_btn(local_2p_btn, _local_play_menu_key())
-	_set_main_menu_btn(deck_build_btn, "deck_builder")
-	_set_main_menu_btn(shop_btn, "shop")
-	_set_main_menu_btn(gallery_btn, "gallery")
-	_set_main_menu_btn(mailbox_btn, "inventory")
+	var btn_keys: Dictionary = {}
+	for key: String in _stack_menu_keys():
+		var btn: Button = _stack_button_for_key(key)
+		if btn != null:
+			btn_keys[btn] = key
+	for btn: Button in [local_2p_btn, campaign_btn, deck_build_btn, mailbox_btn,
+			shop_btn, gallery_btn, credits_btn, exit_game_btn]:
+		if btn_keys.has(btn):
+			_set_main_menu_btn(btn, btn_keys[btn])
+		elif btn != credits_btn and btn != exit_game_btn:
+			btn.visible = false
 	_set_main_menu_btn(credits_btn, "credits")
 	_set_main_menu_btn(exit_game_btn, "exit")
-	_set_main_menu_btn(campaign_btn, "multiplayer")
 	_sync_corner_icon(settings_icon_btn, settings_icon_shadow, "settings")
 	_sync_corner_icon(mailbox_icon_btn, mailbox_icon_shadow, "inventory")
 	_sync_corner_icon(exit_icon_btn, exit_icon_shadow, "exit_icon")
@@ -288,14 +294,17 @@ func _sync_corner_icon(btn: BaseButton, shadow: Control, key: String,
 
 
 func _apply_menu_button_labels() -> void:
-	local_2p_btn.text = MenuButtonConfig.get_label(_local_play_menu_key()).to_upper()
-	campaign_btn.text = MenuButtonConfig.get_label("multiplayer").to_upper()
-	deck_build_btn.text = MenuButtonConfig.get_label("deck_builder").to_upper()
-	mailbox_btn.text = MenuButtonConfig.get_label("inventory").to_upper()
-	shop_btn.text = MenuButtonConfig.get_label("shop").to_upper()
-	gallery_btn.text = MenuButtonConfig.get_label("gallery").to_upper()
-	credits_btn.text = MenuButtonConfig.get_label("credits").to_upper()
-	exit_game_btn.text = MenuButtonConfig.get_label("exit").to_upper()
+	var btn_keys: Dictionary = {}
+	for key: String in _stack_menu_keys():
+		var btn: Button = _stack_button_for_key(key)
+		if btn != null:
+			btn_keys[btn] = key
+	for btn: Button in btn_keys.keys():
+		btn.text = MenuButtonConfig.get_label(str(btn_keys[btn])).to_upper()
+	if credits_btn.visible:
+		credits_btn.text = MenuButtonConfig.get_label("credits").to_upper()
+	if exit_game_btn.visible:
+		exit_game_btn.text = MenuButtonConfig.get_label("exit").to_upper()
 
 
 func _trailing_stack_button_y(visual_slot: int) -> float:
@@ -708,11 +717,36 @@ func _on_exit_game() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
 	get_tree().quit()
 
+func _on_stack_primary_pressed() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
+	match _key_for_stack_button(local_2p_btn):
+		"quick_duel":
+			_on_quick_duel()
+		"single_player":
+			_on_single_player()
+		"campaign":
+			_on_campaign()
+		_:
+			_on_campaign()
+
+
+func _on_stack_secondary_pressed() -> void:
+	SFXManager.play(SFXManager.SFX_BTN)
+	match _key_for_stack_button(campaign_btn):
+		"campaign":
+			_on_campaign()
+		"multiplayer":
+			_on_multiplayer()
+		_:
+			_on_multiplayer()
+
+
+func _on_quick_duel() -> void:
+	get_tree().change_scene_to_file("res://scenes/quick_duel.tscn")
+
+
 func _on_local_play_pressed() -> void:
-	if _local_play_menu_key() == "single_player":
-		_on_single_player()
-	else:
-		_on_campaign()
+	_on_stack_primary_pressed()
 
 
 func _on_campaign() -> void:

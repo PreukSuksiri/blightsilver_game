@@ -47,6 +47,7 @@ func run_all_tests() -> void:
 	test_stuck_without_characters_ends_game_at_turn_start()
 	test_stuck_with_characters_but_no_attack_is_no_moves()
 	test_divine_protection_turn_timing()
+	test_nuki_has_coin_flip_swap_on_place()
 
 func _start_play_phase() -> void:
 	GameState.set_phase(GameState.Phase.MODE_SELECT)
@@ -237,3 +238,14 @@ func test_apply_unit_effect_flag_reveals_facedown() -> void:
 	assert_true(bio.face_up, "Mutagen on face-down permanently reveals card")
 	assert_true(bio.has_mutagen_flag, "Mutagen sets has_mutagen_flag")
 	assert_true("mutagen" in bio.flags, "Mutagen flag string is set")
+
+func test_nuki_has_coin_flip_swap_on_place() -> void:
+	print("-- test_nuki_has_coin_flip_swap_on_place")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 2, 2, "Nuki the Tanuki")
+	var nuki: GameState.CardInstance = GameState.get_card(0, 2, 2)
+	assert_eq(nuki.card_name, "Nuki the Tanuki", "Nuki placed by name")
+	assert_eq(
+		nuki.ability_type,
+		CharacterData.AbilityType.COIN_FLIP_SWAP_POSITION,
+		"Nuki keeps COIN_FLIP_SWAP_POSITION from CardDatabase")

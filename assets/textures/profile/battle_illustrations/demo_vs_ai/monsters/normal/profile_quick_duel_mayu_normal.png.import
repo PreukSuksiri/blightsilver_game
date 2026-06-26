@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://l87e5bps560b"
-path="res://.godot/imported/img_win_screen_nex_2.png-eaa5ef86524c1343921f1aa68e8c5dad.ctex"
+uid="uid://dndcrs2s0qny8"
+path="res://.godot/imported/profile_quick_duel_mayu_normal.png-6ca70ba4243a1c59e1becb5a088f9c47.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/win_screen/img_win_screen_nex_2.png"
-dest_files=["res://.godot/imported/img_win_screen_nex_2.png-eaa5ef86524c1343921f1aa68e8c5dad.ctex"]
+source_file="res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/profile_quick_duel_mayu_normal.png"
+dest_files=["res://.godot/imported/profile_quick_duel_mayu_normal.png-6ca70ba4243a1c59e1becb5a088f9c47.ctex"]
 
 [params]
 

@@ -295,6 +295,14 @@ var void_pile_entries: Array = [[], []]
 # Special global flags
 # VN-driven battle outcome routing (set by VNPlayer after new_game(), persists across scene change)
 var open_campaign_gallery_on_menu: bool = false
+var post_battle_return_scene: String = ""
+var quick_duel_launch: bool = false
+var quick_duel_active: bool = false
+var quick_duel_battle_tier: String = ""
+var quick_duel_reroll_previews: bool = false
+var quick_duel_pending_rewards: Array = []
+var quick_duel_reveal_queue: Array = []
+var quick_duel_reveal_skip_all: bool = false
 var vn_on_win: String = ""
 var vn_on_lose: String = ""
 var vn_battle_rewards: Array = []  # VN start_battle / tutorial_battle beat rewards — granted to mailbox on win
@@ -766,10 +774,6 @@ func reveal_card(player_index: int, row: int, col: int, from_card_ability: bool 
 							gain_crystals(opponent_idx, amt, "ability")
 							post_message("%s: Gained %d Crystals from reveal!" % [opp_card.card_name, amt])
 
-
-func reveal_card_by_ability(player_index: int, row: int, col: int) -> void:
-	reveal_card(player_index, row, col, true)
-
 		# Dungeon: Bio Triumph — Bio characters receive Mutagen flag on reveal
 		# Dungeon: Nature Triumph — Nature characters receive Venom flag on reveal
 		if card.card_type == "character" and game_mode == GameMode.DAILY_DUNGEON:
@@ -783,6 +787,10 @@ func reveal_card_by_ability(player_index: int, row: int, col: int) -> void:
 					and "venom" not in card.flags:
 				card.flags.append("venom")
 				post_message("Nature Triumph: %s receives Venom flag!" % card.display_name)
+
+
+func reveal_card_by_ability(player_index: int, row: int, col: int) -> void:
+	reveal_card(player_index, row, col, true)
 
 func _one_use_survive_matches_destroyer(card: CardInstance) -> bool:
 	var affinities: Array = card.ability_params.get("destroyer_affinities", [])
@@ -1141,6 +1149,8 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	# Sudden Death: both players start with only 3 000 crystals
 	if mode == GameMode.DAILY_DUNGEON and "sudden_death" in active_dungeon_modifiers:
 		crystals = [3000, 3000]
+	if mode in [GameMode.VS_AI, GameMode.CAMPAIGN, GameMode.DAILY_DUNGEON, GameMode.EXPLORATION]:
+		apply_casual_mode_crystals()
 	tech_hands = [[], []]
 	tech_cards_played_this_game = [[], []]
 	void_pile_entries = [[], []]
@@ -1185,6 +1195,24 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	game_over_reason = ""
 	_init_grids()
 	set_phase(Phase.SETUP_P1)
+
+func apply_casual_mode_crystals() -> void:
+	crystals[0] = STARTING_CRYSTALS
+	if SaveManager.is_casual_mode():
+		crystals[1] = 3000
+	else:
+		crystals[1] = STARTING_CRYSTALS
+
+func apply_tutorial_opponent_crystals() -> void:
+	crystals[0] = STARTING_CRYSTALS
+	crystals[1] = 3000
+
+func abort_quick_duel_battle() -> void:
+	quick_duel_active = false
+	quick_duel_battle_tier = ""
+	quick_duel_pending_rewards.clear()
+	quick_duel_reveal_queue.clear()
+	quick_duel_reveal_skip_all = false
 
 const UNIT_EFFECT_FLAGS: Array[String] = ["venom", "mutagen", "berserk"]
 

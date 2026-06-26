@@ -30,6 +30,11 @@ var campaign_vn_checkpoints: Dictionary = {}  # vn_scene path → filtered beat 
 var onboarding_complete: bool = false        # true after first-run setup (or legacy save migration)
 var title_cheat_apartment_claimed: bool = false  # main-menu apartment-window cheat (once per save)
 var title_cheat_moon_claimed: bool = false       # main-menu moon cheat (once per save)
+var attack_tutorial_complete: bool = false
+var casual_mode: bool = false
+var quick_duel_tier_previews: Dictionary = {}   # tier -> vault entry_id
+var quick_duel_tier_rewards: Dictionary = {}  # tier -> Array of reward dicts
+var quick_duel_loss_streak: int = 0
 
 func _ready() -> void:
 	_load_demo_config()
@@ -213,6 +218,11 @@ func save_data() -> void:
 		"onboarding_complete":     onboarding_complete,
 		"title_cheat_apartment_claimed": title_cheat_apartment_claimed,
 		"title_cheat_moon_claimed":      title_cheat_moon_claimed,
+		"attack_tutorial_complete":      attack_tutorial_complete,
+		"casual_mode":                   casual_mode,
+		"quick_duel_tier_previews":      quick_duel_tier_previews.duplicate(true),
+		"quick_duel_tier_rewards":       quick_duel_tier_rewards.duplicate(true),
+		"quick_duel_loss_streak":        quick_duel_loss_streak,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -300,6 +310,25 @@ func load_data() -> void:
 	onboarding_complete = bool(parsed.get("onboarding_complete", false))
 	title_cheat_apartment_claimed = bool(parsed.get("title_cheat_apartment_claimed", false))
 	title_cheat_moon_claimed = bool(parsed.get("title_cheat_moon_claimed", false))
+	attack_tutorial_complete = bool(parsed.get("attack_tutorial_complete", false))
+	casual_mode = bool(parsed.get("casual_mode", false))
+	quick_duel_loss_streak = int(parsed.get("quick_duel_loss_streak", 0))
+
+	var qdp: Variant = parsed.get("quick_duel_tier_previews", {})
+	quick_duel_tier_previews = qdp as Dictionary if qdp is Dictionary else {}
+
+	var qdr: Variant = parsed.get("quick_duel_tier_rewards", {})
+	quick_duel_tier_rewards = {}
+	if qdr is Dictionary:
+		for tier_key: Variant in (qdr as Dictionary).keys():
+			var tier: String = str(tier_key)
+			var val: Variant = (qdr as Dictionary)[tier_key]
+			if val is Array:
+				quick_duel_tier_rewards[tier] = (val as Array).duplicate(true)
+			elif val is Dictionary:
+				quick_duel_tier_rewards[tier] = [((val as Dictionary).duplicate(true))]
+
+	_migrate_quick_duel_offers()
 
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery VN beat checkpoints (pre-exploration progress)
@@ -334,10 +363,75 @@ func clear_vn_checkpoint(vn_scene: String) -> void:
 ## Checks admin override first, then gallery entries with unlock_deckbuilding=true.
 func is_deckbuilding_unlocked() -> bool:
 	if deckbuilding_admin_locked:
-		return false  # hard lock overrides everything
-	if deckbuilding_unlocked:
-		return true
-	return _gallery_unlocks_deckbuilding()
+		return false
+	return true
+
+func mark_attack_tutorial_complete() -> void:
+	if attack_tutorial_complete:
+		return
+	attack_tutorial_complete = true
+	save_data()
+
+func is_attack_tutorial_complete() -> bool:
+	return attack_tutorial_complete
+
+func is_casual_mode() -> bool:
+	return casual_mode
+
+func set_casual_mode(enabled: bool) -> void:
+	if casual_mode == enabled:
+		return
+	casual_mode = enabled
+	save_data()
+
+func get_quick_duel_preview(tier: String) -> String:
+	return str(quick_duel_tier_previews.get(tier, "")).strip_edges()
+
+func get_quick_duel_rewards(tier: String) -> Array:
+	var raw: Variant = quick_duel_tier_rewards.get(tier, [])
+	if raw is Array:
+		return (raw as Array).duplicate(true)
+	return []
+
+func set_quick_duel_tier_offers(previews: Dictionary, rewards: Dictionary) -> void:
+	quick_duel_tier_previews = previews.duplicate(true)
+	quick_duel_tier_rewards = rewards.duplicate(true)
+	save_data()
+
+func has_quick_duel_offers() -> bool:
+	for tier: String in ["easy", "normal", "hard"]:
+		if get_quick_duel_preview(tier).is_empty():
+			return false
+		var rw: Array = get_quick_duel_rewards(tier)
+		if rw.is_empty():
+			return false
+	return true
+
+func get_quick_duel_loss_streak() -> int:
+	return quick_duel_loss_streak
+
+func increment_quick_duel_loss_streak() -> void:
+	quick_duel_loss_streak += 1
+	save_data()
+
+func reset_quick_duel_loss_streak() -> void:
+	if quick_duel_loss_streak == 0:
+		return
+	quick_duel_loss_streak = 0
+	save_data()
+
+func _migrate_quick_duel_offers() -> void:
+	if quick_duel_tier_previews.is_empty() and quick_duel_tier_rewards.is_empty():
+		return
+	if not quick_duel_tier_previews.is_empty() and quick_duel_tier_rewards.is_empty():
+		quick_duel_tier_previews.clear()
+		return
+	for tier: String in ["easy", "normal", "hard"]:
+		var rw: Variant = quick_duel_tier_rewards.get(tier, null)
+		if rw is Array and (rw as Array).is_empty():
+			quick_duel_tier_previews.clear()
+			quick_duel_tier_rewards.clear()
+			return
 
 func _gallery_unlocks_deckbuilding() -> bool:
 	const GALLERY_PATH := "res://campaign/gallery_data.json"

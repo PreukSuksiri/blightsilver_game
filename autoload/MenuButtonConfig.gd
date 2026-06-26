@@ -14,7 +14,8 @@ const SLOT_BTN_RIGHT := 190.0
 const SLOT_BTN_HEIGHT := 60.0
 
 const DEFAULT_CONFIG: Dictionary = {
-	"campaign": {"label": "Campaign", "visible": false, "enabled": true, "slot": 1},
+	"quick_duel": {"label": "Quick Duel", "visible": true, "enabled": true, "slot": 1},
+	"campaign": {"label": "Campaign", "visible": true, "enabled": true, "slot": 2},
 	"single_player": {
 		"label": "Single Player",
 		"visible": true,
@@ -284,7 +285,8 @@ func _merge_with_defaults(source: Dictionary) -> Dictionary:
 
 func _default_slot_for(main_key: String) -> int:
 	match main_key:
-		"campaign": return 1
+		"quick_duel": return 1
+		"campaign": return 2
 		"single_player": return 1
 		"multiplayer": return 2
 		"deck_builder": return 3

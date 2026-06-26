@@ -1,0 +1,14 @@
+[
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"text": {
+			"en": "Welcome to Quick Duel. This short tutorial will teach you the basics of attacking."
+		}
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
+		"text": {
+			"en": "Follow the on-screen instructions during your first duel. Good luck!"
+		}
+	}
+]

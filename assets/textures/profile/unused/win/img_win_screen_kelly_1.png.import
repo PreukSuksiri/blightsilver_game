@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dey8x6ys3wn1v"
-path="res://.godot/imported/img_win_screen_mayu_1.png-fdc670f8fece30e4ec9bd33794af519d.ctex"
+uid="uid://xaidvxnp2q0r"
+path="res://.godot/imported/img_win_screen_kelly_1.png-bb02260b81c179a58da6c850608da549.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/win_screen/img_win_screen_mayu_1.png"
-dest_files=["res://.godot/imported/img_win_screen_mayu_1.png-fdc670f8fece30e4ec9bd33794af519d.ctex"]
+source_file="res://assets/textures/profile/unused/win/img_win_screen_kelly_1.png"
+dest_files=["res://.godot/imported/img_win_screen_kelly_1.png-bb02260b81c179a58da6c850608da549.ctex"]
 
 [params]
 

@@ -1217,10 +1217,18 @@ func _needle_porcupine(A, AB) -> void:
 	var def_ := _make_char("Needle Porcupine", 10, 10, 200, A.NATURE,
 		AB.ONE_USE_PERM_DEBUFF_ATTACKER_ATK, {"atk": 5})
 	def_.one_use_def_boost_used = false
-	# Defend: attacker -5 ATK permanently
+	# Defend: attacker -5 ATK permanently even when defender wins compare
 	var r := BattleResolver.resolve_battle(opp_att, def_, 3, 0, 1)
 	assert_true(not r.defender_destroyed, "TC-FUNC-Needle-Porcupine-001: Needle Porcupine survives")
 	assert_eq(opp_att.current_atk, 0, "TC-FUNC-Needle-Porcupine-001: attacker ATK reduced 5→0")
+
+	print("-- TC-FUNC-Needle-Porcupine-002")
+	var opp_att2 := _make_char("Strong Attacker", 15, 0, 100, A.CHAOS)
+	var def2 := _make_char("Needle Porcupine", 10, 10, 200, A.NATURE,
+		AB.ONE_USE_PERM_DEBUFF_ATTACKER_ATK, {"atk": 5})
+	var r2 := BattleResolver.resolve_battle(opp_att2, def2, 3, 0, 1)
+	assert_true(r2.defender_destroyed, "TC-FUNC-Needle-Porcupine-002: attacker wins battle")
+	assert_eq(opp_att2.current_atk, 10, "TC-FUNC-Needle-Porcupine-002: -5 ATK even when porcupine destroyed")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PERM_DEF_BOOST_PER_ATTACK_SURVIVE + mutagen_atk param

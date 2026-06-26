@@ -1,0 +1,109 @@
+{
+	"weights": {
+		"medium": 40,
+		"low": 10
+	},
+	"reward_count_chances": {
+		"easy": {
+			"two": 0.20
+		},
+		"normal": {
+			"two": 0.50
+		},
+		"hard": {
+			"three": 0.50
+		}
+	},
+	"tiers": {
+		"easy": {
+			"rewards": [
+				{
+					"type": "credits",
+					"amount": 500,
+					"weight": 40
+				},
+				{
+					"type": "booster_pack",
+					"pack_name": "Booster Pack - Blightsilver",
+					"weight": 40
+				},
+				{
+					"type": "booster_pack",
+					"pack_name": "Booster Pack - Unseen Presence",
+					"weight": 10
+				},
+				{
+					"type": "random_card",
+					"rarity_min": 2,
+					"rarity_max": 3,
+					"weight": 40
+				}
+			]
+		},
+		"normal": {
+			"rewards": [
+				{
+					"type": "credits",
+					"amount": 1000,
+					"weight": 40
+				},
+				{
+					"type": "booster_pack",
+					"pack_name": "Booster Pack - Unseen Presence",
+					"weight": 40
+				},
+				{
+					"type": "union_scroll",
+					"count": 1,
+					"weight": 40
+				},
+				{
+					"type": "booster_pack",
+					"pack_name": "Booster Pack - Wind of Dominance",
+					"weight": 10
+				},
+				{
+					"type": "random_card",
+					"rarity_min": 3,
+					"rarity_max": 4,
+					"weight": 40
+				}
+			]
+		},
+		"hard": {
+			"rewards": [
+				{
+					"type": "credits",
+					"amount": 1500,
+					"weight": 40
+				},
+				{
+					"type": "credits",
+					"amount": 2000,
+					"weight": 10
+				},
+				{
+					"type": "credits",
+					"amount": 3000,
+					"weight": 10
+				},
+				{
+					"type": "booster_pack",
+					"pack_name": "Booster Pack - Wind of Dominance",
+					"weight": 40
+				},
+				{
+					"type": "union_scroll",
+					"count": 1,
+					"weight": 40
+				},
+				{
+					"type": "random_card",
+					"rarity_min": 4,
+					"rarity_max": 5,
+					"weight": 40
+				}
+			]
+		}
+	}
+}

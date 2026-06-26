@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkls0w7egodiv"
-path="res://.godot/imported/profile_demo_mayu.png-d3fb3c87d09286cd156815381873253f.ctex"
+uid="uid://beqqkwl2lwjci"
+path="res://.godot/imported/img_lose_screen_default.png-05abd5d07b381d0a2d2250f02e5eae5e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/battle_illustrations/demo_vs_ai/profile_demo_mayu.png"
-dest_files=["res://.godot/imported/profile_demo_mayu.png-d3fb3c87d09286cd156815381873253f.ctex"]
+source_file="res://assets/textures/profile/unused/win/img_lose_screen_default.png"
+dest_files=["res://.godot/imported/img_lose_screen_default.png-05abd5d07b381d0a2d2250f02e5eae5e.ctex"]
 
 [params]
 

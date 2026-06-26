@@ -481,7 +481,13 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
 	await _await_attack_reveal_animations()
 
-	attacker = GameState.get_card(player, attacker_pos.x, attacker_pos.y)
+	if GameState.attacker_card != null \
+			and GameState.attacker_card.card_type == "character" \
+			and not GameState.attacker_card.was_destroyed:
+		attacker = GameState.attacker_card
+		attacker_pos = GameState.attacker_pos
+	else:
+		attacker = GameState.get_card(player, attacker_pos.x, attacker_pos.y)
 	var _nuki_out: Dictionary = await _apply_nuki_pre_reckoning(player, attacker, attacker_pos)
 	attacker = _nuki_out.get("attacker", attacker) as GameState.CardInstance
 	attacker_pos = _nuki_out.get("attacker_pos", attacker_pos)
@@ -2270,6 +2276,8 @@ func _apply_post_battle_effects(
 func await_card_effect_flash(card_name: String, card_type: String = "character") -> void:
 	if card_name.is_empty():
 		return
+	if GameState.card_effect_triggered.get_connections().is_empty():
+		return
 	GameState.emit_signal("card_effect_triggered", card_name, card_type)
 	await card_effect_flash_done
 
@@ -2303,16 +2311,29 @@ func _has_own_character_to_swap(player: int, exclude_pos: Vector2i) -> bool:
 	return false
 
 
+func _character_has_coin_flip_swap_ability(card: GameState.CardInstance) -> bool:
+	if card == null or card.card_type != "character":
+		return false
+	if card.effect_nullified_until >= GameState.turn_number:
+		return false
+	if card.ability_type == CharacterData.AbilityType.COIN_FLIP_SWAP_POSITION:
+		return true
+	var data: CharacterData = CardDatabase.get_character(card.card_name)
+	if data == null or data.ability_type != CharacterData.AbilityType.COIN_FLIP_SWAP_POSITION:
+		return false
+	# Self-heal stale runtime copies that lost ability metadata (copy/revive/transform).
+	card.ability_type = data.ability_type
+	card.ability_params = data.ability_params.duplicate()
+	return true
+
+
 ## Nuki the Tanuki: coin flip after reveal animations, before Reckoning overlay.
 func _apply_nuki_pre_reckoning(
 		player: int,
 		attacker: GameState.CardInstance,
 		attacker_pos: Vector2i
 ) -> Dictionary:
-	if attacker == null \
-			or attacker.card_type != "character" \
-			or attacker.effect_nullified_until >= GameState.turn_number \
-			or attacker.ability_type != CharacterData.AbilityType.COIN_FLIP_SWAP_POSITION:
+	if not _character_has_coin_flip_swap_ability(attacker):
 		return {"attacker": attacker, "attacker_pos": attacker_pos}
 	await await_card_effect_flash(attacker.card_name)
 	await _witness_pause()

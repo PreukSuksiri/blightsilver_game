@@ -284,6 +284,9 @@ static func _resolve_character_vs_character(
 		result.defender_crystal_loss = defender.crystal_cost
 		result.messages.append("Both cards are destroyed!")
 
+	# "When this card defends" — fire regardless of battle outcome (win/loss/tie).
+	_apply_on_defend_triggers(defender, attacker, result, defender_player)
+
 	# IMMUNE_DESTROY_BY_NON_UNION: only union attackers can destroy this defender
 	if result.defender_destroyed and defender.is_union \
 			and defender.ability_type == CharacterData.AbilityType.IMMUNE_DESTROY_BY_NON_UNION \
@@ -871,6 +874,41 @@ static func _spend_one_use_defense_boosts(
 			result.ability_triggered_defender = true
 
 
+static func _apply_on_defend_triggers(
+		defender: GameState.CardInstance,
+		attacker: GameState.CardInstance,
+		result: BattleResult,
+		_defender_player: int
+) -> void:
+	# Bare Hands Brawling: character abilities are cancelled
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
+		return
+	var mutate: bool = not _silent_mode
+	match defender.ability_type:
+		CharacterData.AbilityType.ONE_USE_PERM_DEBUFF_ATTACKER_ATK:
+			if not defender.one_use_def_boost_used:
+				result.ability_triggered_defender = true
+				if mutate:
+					defender.one_use_def_boost_used = true
+					var _debuff_atk: int = defender.ability_params.get(
+							"atk", defender.ability_params.get("amount", 0))
+					attacker.current_atk = max(0, attacker.current_atk - _debuff_atk)
+				result.messages.append("%s: %s permanently loses %d ATK!" % [
+					defender.card_name, attacker.card_name,
+					defender.ability_params.get("atk", defender.ability_params.get("amount", 0))])
+
+		CharacterData.AbilityType.DEFEND_PERM_DEBUFF_ATTACKER_ATK_DEF:
+			result.ability_triggered_defender = true
+			var _debuff_a: int = defender.ability_params.get("atk", defender.ability_params.get("amount", 0))
+			var _debuff_d: int = defender.ability_params.get("def", _debuff_a)
+			if mutate:
+				attacker.current_atk = max(0, attacker.current_atk - _debuff_a)
+				attacker.current_def = max(0, attacker.current_def - _debuff_d)
+			result.messages.append("%s: %s permanently loses %d ATK and DEF!" % [
+				defender.card_name, attacker.card_name, _debuff_a])
+
+
 static func _apply_defend_effects(
 		defender: GameState.CardInstance,
 		attacker: GameState.CardInstance,
@@ -907,26 +945,6 @@ static func _apply_defend_effects(
 			if mutate:
 				defender.current_def += _perm_def
 			result.messages.append("%s gains +%d DEF permanently!" % [defender.card_name, _perm_def])
-
-		CharacterData.AbilityType.ONE_USE_PERM_DEBUFF_ATTACKER_ATK:
-			if not defender.one_use_def_boost_used:
-				result.ability_triggered_defender = true
-				if mutate:
-					defender.one_use_def_boost_used = true
-					var _debuff_atk: int = defender.ability_params.get("atk", defender.ability_params.get("amount", 0))
-					attacker.current_atk = max(0, attacker.current_atk - _debuff_atk)
-					result.messages.append("%s: %s permanently loses %d ATK!" % [
-						defender.card_name, attacker.card_name, _debuff_atk])
-
-		CharacterData.AbilityType.DEFEND_PERM_DEBUFF_ATTACKER_ATK_DEF:
-			result.ability_triggered_defender = true
-			var _debuff_a: int = defender.ability_params.get("atk", defender.ability_params.get("amount", 0))
-			var _debuff_d: int = defender.ability_params.get("def", _debuff_a)
-			if mutate:
-				attacker.current_atk = max(0, attacker.current_atk - _debuff_a)
-				attacker.current_def = max(0, attacker.current_def - _debuff_d)
-			result.messages.append("%s: %s permanently loses %d ATK and DEF!" % [
-				defender.card_name, attacker.card_name, _debuff_a])
 
 		CharacterData.AbilityType.ONE_USE_DEFEND_MORPH:
 			if not defender.one_use_def_boost_used:

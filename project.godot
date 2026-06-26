@@ -48,6 +48,7 @@ GameDialog="*res://autoload/GameDialog.gd"
 TutorialBattleManager="*res://autoload/TutorialBattleManager.gd"
 OnboardingManager="*res://autoload/OnboardingManager.gd"
 AIDeckVault="*res://autoload/AIDeckVault.gd"
+QuickDuelRewards="*res://autoload/QuickDuelRewards.gd"
 
 [display]
 
@@ -59,7 +60,7 @@ window/stretch/aspect="expand"
 
 [editor]
 
-movie_writer/movie_file="/Users/blightsilver/blightsilver_game/video/battle_magitech_ui_11.avi"
+movie_writer/movie_file="/Users/blightsilver/blightsilver_game/video/battle_magitech_ui_15.avi"
 
 [editor_plugins]
 

@@ -250,7 +250,7 @@ func _do_attack_decision() -> void:
 # Attack selection — pick the best (attacker, target) pair jointly
 # ─────────────────────────────────────────────────────────────
 const _REVEAL_ATTACKER_PENALTY: int = 12  # cost of revealing a face-down attacker
-const _EXPECTED_ATTACK_DICE: int = 3      # d6 re-roll-on-6 → uniform 1–5, mean 3
+const _UNION_ATTACK_MARGIN: int = 5       # unions need ATK clearly above DEF before attacking
 const _TUTORIAL_RESTRICTED_TURNS: int = 2 # tutorial AI: corner/center attacks only
 const _TUTORIAL_AI_UNION_NAME: String = "Berserk Hyena" # tutorial AI: only this union
 
@@ -587,6 +587,44 @@ func _choose_target_for(attacker_pos: Vector2i) -> Vector2i:
 
 	return best_pos
 
+## Crystal investment already paid for this attacker (union grid copies store cost as 0).
+func _attacker_summon_investment(attacker: GameState.CardInstance) -> int:
+	if attacker.crystal_cost > 0:
+		return attacker.crystal_cost
+	if attacker.is_union:
+		var u: UnionData = UnionDatabase.get_union(attacker.card_name)
+		if u != null:
+			return u.crystal_cost
+	return 0
+
+
+## Mirror BattleResolver ATK/DEF for AI scoring (pessimistic coin flips avoid false wins).
+func _estimate_battle_atk(
+		attacker: GameState.CardInstance,
+		target: GameState.CardInstance,
+		target_pos: Vector2i
+) -> int:
+	var prev_silent: bool = BattleResolver._silent_mode
+	BattleResolver._silent_mode = true
+	BattleResolver.set_predetermined_coin_flips([false, false, false])
+	var eff_atk: int = BattleResolver._get_effective_atk(
+		attacker, target, 3, player_index, target_pos, target.face_up)
+	BattleResolver.clear_predetermined_coin_flips()
+	BattleResolver._silent_mode = prev_silent
+	return eff_atk
+
+
+func _estimate_battle_def(
+		attacker: GameState.CardInstance,
+		target: GameState.CardInstance
+) -> int:
+	var prev_silent: bool = BattleResolver._silent_mode
+	BattleResolver._silent_mode = true
+	var eff_def: int = BattleResolver._get_effective_def(target, attacker, opponent_index)
+	BattleResolver._silent_mode = prev_silent
+	return eff_def
+
+
 ## Score an attack from attacker_pos onto target_pos. Higher = more desirable.
 func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 	var attacker: GameState.CardInstance = GameState.get_card(player_index, attacker_pos.x, attacker_pos.y)
@@ -600,33 +638,24 @@ func _score_attack(attacker_pos: Vector2i, target_pos: Vector2i) -> int:
 	elif target.card_type == "trap":
 		base = 15   # hitting a trap is risky but better than nothing
 	else:
-		# Revealed character — estimate outcome with ability-aware ATK
-		var eff_atk: int = attacker.get_effective_atk() + _EXPECTED_ATTACK_DICE
-		match attacker.ability_type:
-			CharacterData.AbilityType.ATK_BONUS_VS_AFFINITY:
-				if target.affinity == attacker.ability_params.get("affinity", -1):
-					eff_atk += attacker.ability_params.get("bonus", 0)
-			CharacterData.AbilityType.ATK_DEF_BONUS_VS_AFFINITY:
-				if target.affinity == attacker.ability_params.get("affinity", -1):
-					eff_atk += attacker.ability_params.get("atk", 0)
-			CharacterData.AbilityType.ATK_BONUS_VS_TWO_AFFINITIES:
-				if target.affinity == attacker.ability_params.get("aff1", -1) \
-						or target.affinity == attacker.ability_params.get("aff2", -1):
-					eff_atk += attacker.ability_params.get("bonus", 0)
-			CharacterData.AbilityType.ATK_BONUS_IF_DICE_HIGH:
-				eff_atk += attacker.ability_params.get("bonus", 0) / 2
-			CharacterData.AbilityType.ATK_BOOST_VS_REVEALED:
-				eff_atk += attacker.ability_params.get("bonus", 0)
-			CharacterData.AbilityType.ATK_BONUS_VS_UNION:
-				if target.is_union:
-					eff_atk += attacker.ability_params.get("bonus", 0)
-		var eff_def: int = target.get_effective_def()
+		# Revealed character — estimate outcome with ability-aware ATK/DEF (no dice bonus)
+		var eff_atk: int = _estimate_battle_atk(attacker, target, target_pos)
+		var eff_def: int = _estimate_battle_def(attacker, target)
+		var investment: int = _attacker_summon_investment(attacker)
 		if eff_atk > eff_def:
 			base = 80 + target.crystal_cost / 20
+			if attacker.is_union and eff_atk - eff_def < _UNION_ATTACK_MARGIN:
+				base -= 50
 		elif eff_atk == eff_def:
-			base = 20 - attacker.crystal_cost / 30
+			base = 20 - investment / 30
+			if attacker.is_union:
+				base -= 80
+			if attacker.ability_type == CharacterData.AbilityType.GAIN_HALF_STATS_ON_SURVIVE:
+				base -= 50
 		else:
-			base = -30 - attacker.crystal_cost / 20
+			base = -30 - investment / 20
+			if attacker.is_union:
+				base -= 40
 
 	# Personality: offensive zone bias
 	base += _score_pos_offensive(target_pos)
@@ -1498,6 +1527,10 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 
 	var placements: Array = []
 
+	var _my_forced_cells: Array = forced_cells_src if not forced_cells_src.is_empty() \
+		else GameState.battle_ai_forced_cells
+	var formation_locked: bool = not _my_forced_cells.is_empty()
+
 	var char_pool: Array
 	var trap_pool: Array
 	var num_chars: int
@@ -1505,13 +1538,15 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 	var is_forced: bool = false
 
 	if deck_override != null:
-		# AI_VS_AI: use the provided deck directly
+		# VS AI / AI vs AI: use the provided deck directly
 		char_pool = (deck_override.characters as Array).duplicate()
-		char_pool.shuffle()
 		trap_pool = (deck_override.traps as Array).duplicate()
-		trap_pool.shuffle()
+		if not formation_locked:
+			char_pool.shuffle()
+			trap_pool.shuffle()
 		num_chars = char_pool.size()
 		num_traps = trap_pool.size()
+		is_forced = formation_locked
 	else:
 		var cfg: Dictionary = GameState.campaign_enemy_config \
 			if not GameState.campaign_enemy_config.is_empty() else {}
@@ -1553,6 +1588,9 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 				cfg.get("min_traps", GameState.MIN_TRAPS),
 				min(cfg.get("max_traps", GameState.MAX_TRAPS), 25 - num_chars))
 
+	if formation_locked:
+		is_forced = true
+
 	# ── Demo mode filter — only allow demo-flagged cards ──────────────────────
 	if SaveManager.demo_mode:
 		char_pool = char_pool.filter(func(n: String) -> bool:
@@ -1581,8 +1619,6 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 	# Pre-occupy positions already filled by forced cells (placed by GameBoard)
 	# used_chars stores counts so duplicate card names (e.g. Church Guard ×8) are
 	# reserved/consumed correctly rather than blocking all copies at once.
-	var _my_forced_cells: Array = forced_cells_src if not forced_cells_src.is_empty() \
-		else GameState.battle_ai_forced_cells
 	for fc_v: Variant in _my_forced_cells:
 		if not (fc_v is Dictionary):
 			continue
@@ -1607,12 +1643,19 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 		for c: int in range(GameState.GRID_SIZE):
 			if not used_positions.has(Vector2i(r, c)):
 				remaining_pos.append(Vector2i(r, c))
-	remaining_pos.shuffle()
-	# Personality: sort preferred formation positions to the front so characters
-	# fill those cells first; traps naturally take the remaining positions.
-	if _def_zone != "" and _def_zone != "random_def":
+	if formation_locked:
+		# Vault / deck formation: keep preset cells fixed; fill gaps in stable order.
 		remaining_pos.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
-			return _score_pos_defensive(a) > _score_pos_defensive(b))
+			if a.x != b.x:
+				return a.x < b.x
+			return a.y < b.y)
+	else:
+		remaining_pos.shuffle()
+		# Personality: sort preferred formation positions to the front so characters
+		# fill those cells first; traps naturally take the remaining positions.
+		if _def_zone != "" and _def_zone != "random_def":
+			remaining_pos.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+				return _score_pos_defensive(a) > _score_pos_defensive(b))
 
 	var pos_idx: int = 0
 	# Remaining characters
@@ -1638,7 +1681,7 @@ func decide_setup(deck_override: Variant = null, forced_cells_src: Array = []) -
 			"card_name": trap_pool[i % trap_pool.size()]})
 		pos_idx += 1
 
-	if _trailer_defensive:
+	if not formation_locked and _trailer_defensive:
 		placements = _trailer_defensive_post_process(placements, trap_pool)
 
 	return placements

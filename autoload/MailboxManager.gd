@@ -252,6 +252,7 @@ func admin_command(raw: String) -> String:
 				+ "  lock_deckbuilding\n"
 				+ "  manage_starting_deck\n"
 				+ "  ai_deck_vault\n"
+				+ "  quick_duel_reward\n"
 				+ "  player_vs_ai\n"
 				+ "  hot_seat\n"
 			+ "  exploration_editor\n"
@@ -1320,6 +1321,16 @@ func admin_command(raw: String) -> String:
 			vault_mgr.name = "AIDeckVaultManagerOverlay"
 			vault_scene.add_child(vault_mgr)
 			return "AI Deck Vault opened."
+
+		"quick_duel_reward":
+			var qd_scene: Node = get_tree().current_scene
+			if qd_scene.get_node_or_null("QuickDuelRewardEditor") != null:
+				return "Quick Duel Reward Editor is already open."
+			_dismiss_admin_console(qd_scene)
+			var qd_mgr: Node = load("res://scripts/QuickDuelRewardEditor.gd").new()
+			qd_mgr.name = "QuickDuelRewardEditor"
+			qd_scene.add_child(qd_mgr)
+			return "Quick Duel Reward Editor opened."
 
 		# ── Quick-start match modes ─────────────────────────────
 		"player_vs_ai":

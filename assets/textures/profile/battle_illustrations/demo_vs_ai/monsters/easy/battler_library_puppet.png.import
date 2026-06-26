@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://sx727rvh201j"
-path="res://.godot/imported/profile_demo_nex.png-17a10029c036f1728f96f26fde4d9c69.ctex"
+uid="uid://b8eiqw808ui7e"
+path="res://.godot/imported/battler_library_puppet.png-fe94fd00d91acfdeeb08f0ef8dfc6d73.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/battle_illustrations/demo_vs_ai/profile_demo_nex.png"
-dest_files=["res://.godot/imported/profile_demo_nex.png-17a10029c036f1728f96f26fde4d9c69.ctex"]
+source_file="res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_library_puppet.png"
+dest_files=["res://.godot/imported/battler_library_puppet.png-fe94fd00d91acfdeeb08f0ef8dfc6d73.ctex"]
 
 [params]
 
