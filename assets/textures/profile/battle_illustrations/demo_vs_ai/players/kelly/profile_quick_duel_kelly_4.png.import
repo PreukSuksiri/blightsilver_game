@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://n3kgcf5dkfad"
-path="res://.godot/imported/profile_quick_duel_kelly_1.png-4dc158b0e73efc688ab4b5fff96ec717.ctex"
+uid="uid://du8k0nkp8o3n0"
+path="res://.godot/imported/profile_quick_duel_kelly_4.png-2311cbc0424d3fb8121062decebfedaa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/kelly/profile_quick_duel_kelly_1.png"
-dest_files=["res://.godot/imported/profile_quick_duel_kelly_1.png-4dc158b0e73efc688ab4b5fff96ec717.ctex"]
+source_file="res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/kelly/profile_quick_duel_kelly_4.png"
+dest_files=["res://.godot/imported/profile_quick_duel_kelly_4.png-2311cbc0424d3fb8121062decebfedaa.ctex"]
 
 [params]
 

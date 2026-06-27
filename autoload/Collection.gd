@@ -30,6 +30,9 @@ var owned: Dictionary = {}
 func add_credits(amount: int) -> void:
 	credits += amount
 	emit_signal("credits_changed", credits)
+	if amount > 0:
+		GlobalStatManager.on_credits_earned(amount)
+		AchievementManager.on_credit_balance_changed()
 	SaveManager.save_data()
 
 ## Returns false and does nothing if the player cannot afford it.
@@ -38,6 +41,8 @@ func spend_credits(amount: int) -> bool:
 		return false
 	credits -= amount
 	emit_signal("credits_changed", credits)
+	GlobalStatManager.on_credits_spent(amount)
+	AchievementManager.on_credit_balance_changed()
 	SaveManager.save_data()
 	return true
 
@@ -59,7 +64,13 @@ func remove_credits(amount: int) -> void:
 
 ## Add one copy of a card to the collection, tagged with the pack it came from.
 func add_card(card_name: String, card_type: String, from_pack: String) -> void:
+	var was_new: bool = not owned.has(card_name)
 	_append_card_copy(card_name, card_type, from_pack)
+	if was_new:
+		GlobalStatManager.on_new_card_collected()
+		if _is_exotic_card(card_name):
+			AchievementManager.on_first_exotic_card()
+		AchievementManager.on_collection_changed()
 	emit_signal("collection_changed")
 	SaveManager.save_data()
 
@@ -315,3 +326,13 @@ func load_from_dict(d: Dictionary) -> void:
 	union_scrolls = d.get("union_scrolls", 0)
 	var raw_boosts: Variant = d.get("card_drop_boosts", null)
 	card_drop_boosts = raw_boosts if raw_boosts is Dictionary else {}
+
+
+func _is_exotic_card(card_name: String) -> bool:
+	if CardDatabase.characters.has(card_name):
+		return (CardDatabase.characters[card_name] as CharacterData).rarity == CharacterData.Rarity.EXOTIC
+	if CardDatabase.traps.has(card_name):
+		return (CardDatabase.traps[card_name] as TrapData).rarity == CharacterData.Rarity.EXOTIC
+	if CardDatabase.tech_cards.has(card_name):
+		return (CardDatabase.tech_cards[card_name] as TechCardData).rarity == CharacterData.Rarity.EXOTIC
+	return false

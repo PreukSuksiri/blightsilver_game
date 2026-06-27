@@ -1,0 +1,274 @@
+{
+	"stats": [
+		{
+			"id": "duel_count",
+			"implemented": true,
+			"title": "Duels Played",
+			"type": "int"
+		},
+		{
+			"id": "duel_win",
+			"implemented": true,
+			"title": "Duel Wins",
+			"type": "int"
+		},
+		{
+			"id": "duel_loss",
+			"implemented": true,
+			"title": "Duel Losses",
+			"type": "int"
+		},
+		{
+			"id": "credit_earned",
+			"implemented": true,
+			"title": "Credits Earned (lifetime)",
+			"type": "int"
+		},
+		{
+			"id": "card_earned",
+			"implemented": true,
+			"title": "Cards Collected",
+			"type": "int"
+		},
+		{
+			"id": "union_discovered",
+			"implemented": true,
+			"title": "Union Formulas Discovered",
+			"type": "int"
+		},
+		{
+			"id": "union_summon_count",
+			"implemented": true,
+			"title": "Union Summons",
+			"type": "int"
+		},
+		{
+			"id": "union_summon_divine_count",
+			"implemented": true,
+			"title": "Divine Union Summons",
+			"type": "int"
+		},
+		{
+			"id": "union_summon_chaos_count",
+			"implemented": true,
+			"title": "Chaos Union Summons",
+			"type": "int"
+		},
+		{
+			"id": "union_summon_nature_count",
+			"implemented": true,
+			"title": "Nature Union Summons",
+			"type": "int"
+		},
+		{
+			"id": "union_summon_arcane_count",
+			"implemented": true,
+			"title": "Arcane Union Summons",
+			"type": "int"
+		},
+		{
+			"id": "union_summon_cosmic_count",
+			"implemented": true,
+			"title": "Cosmic Union Summons",
+			"type": "int"
+		},
+		{
+			"id": "union_summon_bio_count",
+			"implemented": true,
+			"title": "Bio Union Summons",
+			"type": "int"
+		},
+		{
+			"id": "union_summon_anima_count",
+			"implemented": true,
+			"title": "Anima Union Summons",
+			"type": "int"
+		},
+		{
+			"id": "hidden_spot_clicked",
+			"implemented": true,
+			"title": "Hidden Spots Found",
+			"type": "int"
+		},
+		{
+			"id": "exploration_navigate_count",
+			"implemented": true,
+			"title": "Exploration Steps",
+			"type": "int"
+		},
+		{
+			"id": "story_vn_before_quick_duel_first",
+			"implemented": true,
+			"title": "Story First",
+			"type": "flag"
+		},
+		{
+			"id": "quick_duel_before_story_vn_first",
+			"implemented": true,
+			"title": "Quick Duel First",
+			"type": "flag"
+		},
+		{
+			"id": "prologue_before_quick_duel_first",
+			"implemented": true,
+			"title": "Prologue First",
+			"type": "flag"
+		},
+		{
+			"id": "quick_duel_before_prologue_first",
+			"implemented": true,
+			"title": "Quick Duel Before Prologue",
+			"type": "flag"
+		},
+		{
+			"id": "credit_spent",
+			"implemented": true,
+			"title": "Credits Spent (lifetime)",
+			"type": "int"
+		},
+		{
+			"id": "pack_opened_count",
+			"implemented": true,
+			"title": "Packs Opened",
+			"type": "int"
+		},
+		{
+			"id": "quick_duel_count",
+			"implemented": true,
+			"title": "Quick Duels Played",
+			"type": "int"
+		},
+		{
+			"id": "quick_duel_win",
+			"implemented": true,
+			"title": "Quick Duel Wins",
+			"type": "int"
+		},
+		{
+			"id": "best_win_streak",
+			"implemented": true,
+			"title": "Best Win Streak",
+			"type": "int"
+		},
+		{
+			"id": "prologue_tutorial_battle_reached",
+			"implemented": true,
+			"title": "Prologue Tutorial Battle Reached",
+			"type": "flag"
+		},
+		{
+			"id": "prologue_complete",
+			"implemented": true,
+			"title": "Prologue Complete",
+			"type": "flag"
+		},
+		{
+			"id": "quick_duel_complete",
+			"implemented": true,
+			"title": "Quick Duel Complete",
+			"type": "flag"
+		},
+		{
+			"id": "chapter1_stage1_boss_reached",
+			"implemented": true,
+			"title": "Chapter 1 Boss Reached",
+			"type": "flag"
+		},
+		{
+			"id": "chapter1_stage1_complete",
+			"implemented": true,
+			"title": "Chapter 1 Stage 1 Complete",
+			"type": "flag"
+		},
+		{
+			"id": "quick_duel_loss_streak",
+			"implemented": true,
+			"title": "Quick Duel Loss Streak (current)",
+			"type": "int"
+		},
+		{
+			"id": "max_loss_streak",
+			"implemented": true,
+			"title": "Max Loss Streak",
+			"type": "int"
+		},
+		{
+			"id": "quick_duel_loss",
+			"implemented": true,
+			"title": "Quick Duel Losses",
+			"type": "int"
+		},
+		{
+			"id": "surrender_count",
+			"implemented": true,
+			"title": "Surrenders",
+			"type": "int"
+		},
+		{
+			"id": "quick_duel_attempts_hard",
+			"implemented": true,
+			"title": "Quick Duel Hard Attempts",
+			"type": "int"
+		},
+		{
+			"id": "quick_duel_loss_hard",
+			"implemented": true,
+			"title": "Quick Duel Hard Losses",
+			"type": "int"
+		},
+		{
+			"id": "battle_abandon_count",
+			"implemented": true,
+			"title": "Battle Abandons",
+			"type": "int"
+		},
+		{
+			"id": "quick_duel_rematch_fast_count",
+			"implemented": true,
+			"title": "Quick Rematch After Loss",
+			"type": "int"
+		},
+		{
+			"id": "casual_mode_after_loss_count",
+			"implemented": true,
+			"title": "Casual Mode After Loss",
+			"type": "int"
+		},
+		{
+			"id": "quick_duel_reroll_count",
+			"implemented": true,
+			"title": "Quick Duel Re-rolls",
+			"type": "int"
+		},
+		{
+			"id": "chapter1_boss_loss_count",
+			"implemented": true,
+			"title": "Chapter 1 Boss Losses",
+			"type": "int"
+		},
+		{
+			"id": "protagonist_switch_count",
+			"implemented": true,
+			"title": "Protagonist Switches",
+			"type": "int"
+		},
+		{
+			"id": "duel_loss_crystals",
+			"implemented": true,
+			"title": "Losses (Crystals)",
+			"type": "int"
+		},
+		{
+			"id": "duel_loss_wipe",
+			"implemented": true,
+			"title": "Losses (Wiped)",
+			"type": "int"
+		},
+		{
+			"id": "duel_loss_no_moves",
+			"implemented": true,
+			"title": "Losses (No Moves)",
+			"type": "int"
+		}
+	]
+}

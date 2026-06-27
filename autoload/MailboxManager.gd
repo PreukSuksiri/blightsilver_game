@@ -253,6 +253,9 @@ func admin_command(raw: String) -> String:
 				+ "  manage_starting_deck\n"
 				+ "  ai_deck_vault\n"
 				+ "  ai_identity_vault\n"
+				+ "  achievement_manager\n"
+				+ "  global_stat_manager\n"
+				+ "  protagonist_manager\n"
 				+ "  quick_duel_reward\n"
 				+ "  player_vs_ai\n"
 				+ "  hot_seat\n"
@@ -1332,6 +1335,30 @@ func admin_command(raw: String) -> String:
 			id_mgr.name = "AIIdentityVaultManagerOverlay"
 			id_scene.add_child(id_mgr)
 			return "AI Bot Identity Vault opened."
+
+		"achievement_manager":
+			var ach_scene: Node = get_tree().current_scene
+			if ach_scene.get_node_or_null("ProgressAdminOverlay") != null:
+				return "Progress Admin is already open."
+			_dismiss_admin_console(ach_scene)
+			ProgressAdminOverlay.open(ach_scene, "achievements")
+			return "Achievement Manager opened."
+
+		"global_stat_manager":
+			var stat_scene: Node = get_tree().current_scene
+			if stat_scene.get_node_or_null("ProgressAdminOverlay") != null:
+				return "Progress Admin is already open."
+			_dismiss_admin_console(stat_scene)
+			ProgressAdminOverlay.open(stat_scene, "stats")
+			return "Global Stat Manager opened."
+
+		"protagonist_manager":
+			var pro_scene: Node = get_tree().current_scene
+			if pro_scene.get_node_or_null("ProtagonistManagerOverlay") != null:
+				return "Protagonist Manager is already open."
+			_dismiss_admin_console(pro_scene)
+			ProtagonistManagerOverlay.open(pro_scene)
+			return "Protagonist Manager opened."
 
 		"quick_duel_reward":
 			var qd_scene: Node = get_tree().current_scene

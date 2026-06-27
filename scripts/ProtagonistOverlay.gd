@@ -434,9 +434,7 @@ func _cycle_pose(delta: int) -> void:
 
 func _select_protagonist(protagonist_id: String) -> void:
 	_selected_id = protagonist_id
-	if _selected_portrait.is_empty() \
-			or not _selected_portrait.begins_with(ProtagonistVault.get_portrait_dir(protagonist_id)):
-		_selected_portrait = ProtagonistVault.get_default_portrait(protagonist_id)
+	_selected_portrait = ProtagonistVault.get_first_unlocked_portrait(protagonist_id)
 	_refresh_capsules()
 
 
@@ -465,6 +463,9 @@ func _refresh_capsules() -> void:
 		if tex_rect != null:
 			var path: String = _portrait_path_for_capsule(protagonist_id)
 			tex_rect.texture = GameState.load_portrait_texture(path)
+			var locked_pose: bool = selected \
+					and not ProtagonistVault.is_pose_portrait_unlocked(protagonist_id, path)
+			tex_rect.modulate = Color(0.06, 0.06, 0.06, 1.0) if locked_pose else Color.WHITE
 		if up_btn != null:
 			up_btn.visible = show_pose_ui
 			up_btn.custom_minimum_size.y = ARROW_H if show_pose_ui else 0.0
@@ -482,7 +483,11 @@ func _refresh_capsules() -> void:
 		if pose_lbl != null:
 			pose_lbl.visible = show_pose_ui
 			if show_pose_ui:
-				pose_lbl.text = "Pose %d / %d" % [selected_pose_idx + 1, portraits.size()]
+				var locked_sel: bool = not ProtagonistVault.is_pose_portrait_unlocked(
+					_selected_id, _selected_portrait)
+				var suffix: String = " · Locked" if locked_sel else ""
+				pose_lbl.text = "Pose %d / %d%s" % [
+					selected_pose_idx + 1, portraits.size(), suffix]
 		var col_root: VBoxContainer = cap.get("root") as VBoxContainer
 		if col_root != null:
 			var name_h := 36.0
@@ -494,6 +499,8 @@ func _refresh_capsules() -> void:
 
 
 func _on_done() -> void:
+	if not ProtagonistVault.is_pose_portrait_unlocked(_selected_id, _selected_portrait):
+		_selected_portrait = ProtagonistVault.get_first_unlocked_portrait(_selected_id)
 	if _selected_portrait.is_empty():
 		_selected_portrait = ProtagonistVault.get_default_portrait(_selected_id)
 	SaveManager.set_protagonist(_selected_id, _selected_portrait)

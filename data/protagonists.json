@@ -1,0 +1,104 @@
+{
+	"nex": {
+		"display_name": "Nex Crowmont",
+		"portrait_dir": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/nex",
+		"win_screen": "res://assets/textures/profile/win_screen/img_win_screen_nex.png",
+		"poses": [
+			{
+				"index": 1,
+				"portrait": "profile_quick_duel_nex_1.png",
+				"locked": false
+			},
+			{
+				"index": 2,
+				"portrait": "profile_quick_duel_nex_2.png",
+				"locked": false
+			},
+			{
+				"index": 3,
+				"portrait": "profile_quick_duel_nex_3.png",
+				"locked": false
+			},
+			{
+				"index": 4,
+				"portrait": "profile_quick_duel_nex_4.png",
+				"locked": true,
+				"unlock_achievement_id": "win_duel_nex"
+			},
+			{
+				"index": 5,
+				"portrait": "profile_quick_duel_nex_5.png",
+				"locked": true,
+				"unlock_achievement_id": "collect_cards_50"
+			}
+		]
+	},
+	"mayu": {
+		"display_name": "Mayu Kokawa",
+		"portrait_dir": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/mayu",
+		"win_screen": "res://assets/textures/profile/win_screen/img_win_screen_mayu.png",
+		"poses": [
+			{
+				"index": 1,
+				"portrait": "profile_quick_duel_mayu_1.png",
+				"locked": false
+			},
+			{
+				"index": 2,
+				"portrait": "profile_quick_duel_mayu_2.png",
+				"locked": false
+			},
+			{
+				"index": 3,
+				"portrait": "profile_quick_duel_mayu_3.png",
+				"locked": false
+			},
+			{
+				"index": 4,
+				"portrait": "profile_quick_duel_mayu_4.png",
+				"locked": true,
+				"unlock_achievement_id": "win_duel_mayu"
+			},
+			{
+				"index": 5,
+				"portrait": "profile_quick_duel_mayu_5.png",
+				"locked": true,
+				"unlock_achievement_id": "finish_chapter_1"
+			}
+		]
+	},
+	"kelly": {
+		"display_name": "Kelly Lastochkina",
+		"portrait_dir": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/kelly",
+		"win_screen": "res://assets/textures/profile/win_screen/img_win_screen_kelly.png",
+		"poses": [
+			{
+				"index": 1,
+				"portrait": "profile_quick_duel_kelly_1.png",
+				"locked": false
+			},
+			{
+				"index": 2,
+				"portrait": "profile_quick_duel_kelly_2.png",
+				"locked": false
+			},
+			{
+				"index": 3,
+				"portrait": "profile_quick_duel_kelly_3.png",
+				"locked": false
+			},
+			{
+				"index": 4,
+				"portrait": "profile_quick_duel_kelly_4.png",
+				"locked": true,
+				"unlock_achievement_id": "win_duel_kelly"
+			},
+			{
+				"index": 5,
+				"portrait": "profile_quick_duel_kelly_5.png",
+				"locked": true,
+				"unlock_achievement_id": "discover_unions_5"
+			}
+		]
+	}
+}

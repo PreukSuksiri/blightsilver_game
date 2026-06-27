@@ -822,6 +822,7 @@ func _navigate_to(node_id: String, push_current_to_history: bool,
 	# Update history
 	if push_current_to_history and not _current_node_id.is_empty():
 		_node_history.append(_current_node_id)
+		GlobalStatManager.on_exploration_navigate()
 	_current_node_id = node_id
 	_node_history.append(node_id)
 
@@ -1118,13 +1119,19 @@ func start_battle_for_node(node: ExplorationNode) -> void:
 	if bool(vault_cfg.get("ok", false)):
 		GameState._vn_battle_pending = true
 		AIDeckVault.apply_enemy_battle_config(vault_cfg)
+		GameState.analytics_battle_id = str(vault_cfg.get("entry_id", "")).strip_edges()
 	else:
+		GameState.analytics_battle_id = ""
 		GameState.campaign_enemy_config = {}
 		GameState.battle_ai_deck = null
 		GameState.battle_ai_forced_cells.clear()
 		GameState.battle_ai_forced_tech.clear()
 		GameState.battle_ai_featured_union = ""
 	GameState.new_game(GameState.GameMode.EXPLORATION)
+	GameState.quick_duel_protagonist_id = "nex"
+	if _current_graph != null:
+		GameState.analytics_graph_path = str(_current_graph._source_path)
+	GlobalStatManager.on_duel_started({"is_quick_duel": false, "is_tutorial": false})
 	SaveManager.save_data()
 	CheckerTransition.fade_out_to_battle(func() -> void:
 		get_tree().change_scene_to_file("res://scenes/game_board.tscn"))

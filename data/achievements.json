@@ -1,0 +1,511 @@
+{
+	"achievements": [
+		{
+			"condition": "Win a duel as Nex Crowmont.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "win_duel_nex",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0,
+			"reward": {
+
+			},
+			"title": "Nex the Duelist"
+		},
+		{
+			"condition": "Win a duel as Mayu Kokawa.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "win_duel_mayu",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0,
+			"reward": {
+
+			},
+			"title": "Mayu the Duelist"
+		},
+		{
+			"condition": "Win a duel as Kelly Lastochkina.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "win_duel_kelly",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0,
+			"reward": {
+
+			},
+			"title": "Kelly the Duelist"
+		},
+		{
+			"condition": "Summon a Divine union for once.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_summon_divine",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0,
+			"reward": {
+				"card_name": "False Prophet",
+				"type": "card"
+			},
+			"title": "Follower of the Divine"
+		},
+		{
+			"condition": "Summon a Chaos union for once.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_summon_chaos",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0,
+			"reward": {
+				"card_name": "Kitsune",
+				"type": "card"
+			},
+			"title": "Follower of the Chaos"
+		},
+		{
+			"condition": "Summon a Nature union for once.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_summon_nature",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0,
+			"reward": {
+				"card_name": "Berserk Hyena",
+				"type": "card"
+			},
+			"title": "Follower of the Nature"
+		},
+		{
+			"condition": "Summon an Arcane union for once.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_summon_arcane",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0,
+			"reward": {
+				"card_name": "",
+				"type": "card"
+			},
+			"title": "Follower of the Arcane"
+		},
+		{
+			"condition": "Summon a Bio union for once.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_summon_bio",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0,
+			"reward": {
+				"card_name": "Volatile Slasher",
+				"type": "card"
+			},
+			"title": "Follower of the Bio"
+		},
+		{
+			"condition": "Summon a Cosmic union for once.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_summon_cosmic",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0,
+			"reward": {
+				"card_name": "Imperial Frame",
+				"type": "card"
+			},
+			"title": "Follower of the Cosmic"
+		},
+		{
+			"condition": "Summon an Anima union for once.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_summon_anima",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0,
+			"reward": {
+				"card_name": "Legendary Locksmith",
+				"type": "card"
+			},
+			"title": "Follower of the Anima"
+		},
+		{
+			"condition": "Summon Divine union cards 10 times.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_champion_divine",
+			"implemented": true,
+			"progress_kind": "union_summon_divine_count",
+			"progress_target": 10,
+			"reward": {
+				"card_name": "Seraphim Fistmaster",
+				"type": "card"
+			},
+			"title": "Champion of the Divine"
+		},
+		{
+			"condition": "Summon Chaos union cards 10 times.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_champion_chaos",
+			"implemented": true,
+			"progress_kind": "union_summon_chaos_count",
+			"progress_target": 10,
+			"reward": {
+				"card_name": "Lord of Terror",
+				"type": "card"
+			},
+			"title": "Champion of the Chaos"
+		},
+		{
+			"condition": "Summon Nature union cards 10 times.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_champion_nature",
+			"implemented": true,
+			"progress_kind": "union_summon_nature_count",
+			"progress_target": 10,
+			"reward": {
+				"card_name": "Barros the Colossal",
+				"type": "card"
+			},
+			"title": "Champion of the Nature"
+		},
+		{
+			"condition": "Summon Arcane union cards 10 times.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_champion_arcane",
+			"implemented": true,
+			"progress_kind": "union_summon_arcane_count",
+			"progress_target": 10,
+			"reward": {
+				"card_name": "Burning Phoenix",
+				"type": "card"
+			},
+			"title": "Champion of the Arcane"
+		},
+		{
+			"condition": "Summon Cosmic union cards 10 times.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_champion_cosmic",
+			"implemented": true,
+			"progress_kind": "union_summon_cosmic_count",
+			"progress_target": 10,
+			"reward": {
+				"card_name": "Helios the Prideful Fortress",
+				"type": "card"
+			},
+			"title": "Champion of the Cosmic"
+		},
+		{
+			"condition": "Summon Bio union cards 10 times.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_champion_bio",
+			"implemented": true,
+			"progress_kind": "union_summon_bio_count",
+			"progress_target": 10,
+			"reward": {
+				"card_name": "Bioterrorist",
+				"type": "card"
+			},
+			"title": "Champion of the Bio"
+		},
+		{
+			"condition": "Summon Anima union cards 10 times.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "union_champion_anima",
+			"implemented": true,
+			"progress_kind": "union_summon_anima_count",
+			"progress_target": 10,
+			"reward": {
+				"card_name": "X-Death Squad",
+				"type": "card"
+			},
+			"title": "Champion of the Anima"
+		},
+		{
+			"condition": "Collect 50 unique cards.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "collect_cards_50",
+			"implemented": true,
+			"progress_kind": "unique_cards",
+			"progress_target": 50.0,
+			"reward": {
+				"card_name": "Great Diplomacy",
+				"type": "card"
+			},
+			"title": "Growing Collection I"
+		},
+		{
+			"condition": "Collect 100 unique cards.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "collect_cards_100",
+			"implemented": true,
+			"progress_kind": "unique_cards",
+			"progress_target": 100.0,
+			"reward": {
+				"card_name": "Release Mutagen",
+				"type": "card"
+			},
+			"title": "Growing Collection II"
+		},
+		{
+			"condition": "Collect 200 unique cards.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "collect_cards_200",
+			"implemented": true,
+			"progress_kind": "unique_cards",
+			"progress_target": 200.0,
+			"reward": {
+				"card_name": "Arcane Nova",
+				"type": "card"
+			},
+			"title": "Growing Collection III"
+		},
+		{
+			"condition": "Discover 5 union formulas.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "discover_unions_5",
+			"implemented": true,
+			"progress_kind": "unions_discovered",
+			"progress_target": 5.0,
+			"reward": {
+				"card_name": "War Supply",
+				"type": "card"
+			},
+			"title": "Formula Hunter I"
+		},
+		{
+			"condition": "Discover 10 union formulas.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "discover_unions_10",
+			"implemented": true,
+			"progress_kind": "unions_discovered",
+			"progress_target": 10.0,
+			"reward": {
+				"card_name": "Spike Trap",
+				"type": "card"
+			},
+			"title": "Formula Hunter II"
+		},
+		{
+			"condition": "Discover 20 union formulas.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "discover_unions_20",
+			"implemented": true,
+			"progress_kind": "unions_discovered",
+			"progress_target": 20.0,
+			"reward": {
+				"amount": 30000.0,
+				"type": "credits"
+			},
+			"title": "Formula Hunter III"
+		},
+		{
+			"condition": "Win by destroying all enemy units.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "win_wipe_all_units",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0.0,
+			"reward": {
+				"card_name": "Armored Rhino",
+				"type": "card"
+			},
+			"title": "Genocide"
+		},
+		{
+			"condition": "Destroy an opponent with your tech card.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "destroy_by_tech",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0.0,
+			"reward": {
+				"card_name": "Space Boy",
+				"type": "card"
+			},
+			"title": "Tech Master"
+		},
+		{
+			"condition": "Destroy an opponent with your trap.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "destroy_by_trap",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0.0,
+			"reward": {
+				"card_name": "Poltergeist",
+				"type": "card"
+			},
+			"title": "Trap Master"
+		},
+		{
+			"condition": "Complete Chapter 1 Stage 1.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "finish_chapter_1",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0.0,
+			"reward": {
+				"count": 10.0,
+				"type": "union_scroll"
+			},
+			"title": "Silver Path"
+		},
+		{
+			"condition": "Win every battle in the Blackout Library.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "ch1_all_exploration_enemies",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0.0,
+			"reward": {
+				"card_name": "Spell Sniper",
+				"type": "card"
+			},
+			"title": "Library Janitor"
+		},
+		{
+			"condition": "Reach 10,000 credits.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "credits_10k",
+			"implemented": true,
+			"progress_kind": "credit_balance",
+			"progress_target": 10000.0,
+			"reward": {
+				"card_name": "Pit Lord",
+				"type": "card"
+			},
+			"title": "Build Up Fortune"
+		},
+		{
+			"condition": "Reach 100,000 credits.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "credits_100k",
+			"implemented": true,
+			"progress_kind": "credit_balance",
+			"progress_target": 100000.0,
+			"reward": {
+				"card_name": "Goddess of Virtue",
+				"type": "card"
+			},
+			"title": "Sugar Daddy"
+		},
+		{
+			"condition": "Win a Hard Quick Duel with casual mode off.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "win_hard_no_casual",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0.0,
+			"reward": {
+				"card_name": "Siege Cannon",
+				"type": "card"
+			},
+			"title": "No Mercy"
+		},
+		{
+			"condition": "Own 5 decks.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "build_decks_5",
+			"implemented": true,
+			"progress_kind": "deck_count",
+			"progress_target": 5.0,
+			"reward": {
+				"card_name": "Bunker",
+				"type": "card"
+			},
+			"title": "Deck Architect I"
+		},
+		{
+			"condition": "Own 10 decks.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "build_decks_10",
+			"implemented": true,
+			"progress_kind": "deck_count",
+			"progress_target": 10.0,
+			"reward": {
+				"card_name": "Wandering Swordsman",
+				"type": "card"
+			},
+			"title": "Deck Architect II"
+		},
+		{
+			"condition": "Obtain your first Exotic card.",
+			"hidden": false,
+			"hidden_hint": "",
+			"icon": "res://icon.svg",
+			"id": "first_exotic_card",
+			"implemented": true,
+			"progress_kind": "none",
+			"progress_target": 0.0,
+			"reward": {
+				"card_name": "Resurrection",
+				"type": "card"
+			},
+			"title": "Rare Hunter"
+		}
+	]
+}

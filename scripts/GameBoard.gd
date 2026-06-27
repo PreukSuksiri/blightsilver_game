@@ -353,6 +353,7 @@ func _toggle_admin_console() -> void:
 	BuildConfig.toggle_admin_console_on(self)
 
 func _ready() -> void:
+	RewardGranter.set_ui_host(self)
 	_setup_turn_manager()
 	_setup_ai()
 	_connect_signals()
@@ -3276,6 +3277,9 @@ func _perform_pending_union() -> void:
 	var human_player: bool = GameState.game_mode not in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON] or player == 0
 	if human_player:
 		SaveManager.unlock_union(u.card_name)
+	if human_player and player == 0:
+		GlobalStatManager.on_union_summoned(int(u.affinity))
+		AchievementManager.on_union_summoned(int(u.affinity))
 	# Mark once-per-duel flag and hide suggestion button
 	_union_summoned_this_duel[player] += 1
 	_update_union_suggest_button()
@@ -7122,6 +7126,8 @@ func _apply_tech_target_self_destruct(target_player: int, pos: Vector2i, card: G
 	GameState.destruction_from_tech_self_destruct = false
 
 func _handle_tech_target(player: int, pos: Vector2i) -> void:
+	GameState.analytics_destroy_source = "tech"
+	GameState.analytics_destroy_by_player = GameState.current_player
 	var current_player := GameState.current_player
 	var opponent := GameState.get_opponent(current_player)
 	var card: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
@@ -9766,6 +9772,35 @@ func _handle_quick_duel_loss_rewards() -> void:
 	GameState.quick_duel_active = false
 	GameState.quick_duel_battle_tier = ""
 
+
+func _report_duel_finished(
+		player_won: bool,
+		was_quick_duel: bool = false,
+		quick_duel_tier_snapshot: String = ""
+) -> void:
+	if TutorialBattleManager.is_active or TutorialBattleManager.is_prepared:
+		return
+	var mode := GameState.game_mode
+	if mode == GameState.GameMode.AI_VS_AI or mode == GameState.GameMode.HOT_SEAT:
+		return
+	var protagonist_id: String = GameState.quick_duel_protagonist_id.strip_edges().to_lower()
+	if protagonist_id.is_empty():
+		protagonist_id = "nex"
+	var ctx := {
+		"game_over_reason": GameState.game_over_reason,
+		"game_mode": mode,
+		"protagonist_id": protagonist_id,
+		"quick_duel_battle_tier": quick_duel_tier_snapshot,
+		"analytics_battle_tag": GameState.analytics_battle_tag,
+		"is_quick_duel": was_quick_duel,
+		"is_tutorial": false,
+	}
+	GlobalStatManager.on_duel_finished(player_won, ctx)
+	if player_won and mode == GameState.GameMode.EXPLORATION:
+		GlobalStatManager.on_exploration_battle_won(
+			GameState.analytics_battle_id, GameState.analytics_graph_path)
+
+
 func _grant_quick_duel_reward(reward: Dictionary) -> void:
 	match str(reward.get("type", "")):
 		"credits", "coins":
@@ -9842,14 +9877,31 @@ func _await_pack_opening_overlay() -> void:
 			return
 
 func _exit_tree() -> void:
+	RewardGranter.clear_ui_host(self)
+	if _is_mid_battle_for_abandon():
+		GlobalStatManager.on_battle_abandoned()
 	if GameState.quick_duel_active and GameState.current_phase != GameState.Phase.GAME_OVER:
 		GameState.abort_quick_duel_battle()
+
+
+func _is_mid_battle_for_abandon() -> bool:
+	if TutorialBattleManager.is_active or TutorialBattleManager.is_prepared:
+		return false
+	var phase := GameState.current_phase
+	return phase not in [
+		GameState.Phase.NONE,
+		GameState.Phase.SETUP_P1,
+		GameState.Phase.SETUP_P2,
+		GameState.Phase.GAME_OVER,
+	]
 
 func _apply_endgame_serif_font(control: Control, weight: int = 400) -> void:
 	control.add_theme_font_override("font", FontManager.make_font("display_serif", weight))
 
 func _show_endgame_screen(winner: int) -> void:
 	_hide_card_context()
+	var was_quick_duel: bool = GameState.quick_duel_active
+	var quick_duel_tier_snapshot: String = GameState.quick_duel_battle_tier
 	var mode := GameState.game_mode
 	var is_hot_seat   := (mode == GameState.GameMode.HOT_SEAT)
 	var is_ai_game    := mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN, GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION]
@@ -9918,6 +9970,9 @@ func _show_endgame_screen(winner: int) -> void:
 			_handle_quick_duel_loss_rewards()
 		elif not GameState.vn_battle_loss_rewards.is_empty():
 			_grant_vn_battle_loss_rewards()
+
+	if is_ai_game and not is_dungeon and not is_hot_seat:
+		_report_duel_finished(is_win_screen, was_quick_duel, quick_duel_tier_snapshot)
 
 	# ── Build full-screen overlay ────────────────────────────────────────────
 	var overlay := Control.new()

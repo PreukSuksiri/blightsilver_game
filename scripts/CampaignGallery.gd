@@ -738,6 +738,9 @@ func _play_vn(json_path: String, fresh_start: bool = true, card: Dictionary = {}
 	_play_vn_async(json_path, fresh_start, card)
 
 func _play_vn_async(json_path: String, fresh_start: bool = true, card: Dictionary = {}) -> void:
+	GlobalStatManager.on_first_touch("story_vn")
+	if json_path.find("ch0_s1_pre_DEMO_PART1") >= 0:
+		GlobalStatManager.on_first_touch("prologue_capsule")
 	await BGMManager.fade_out_and_stop(BGMManager.DEFAULT_FADE)
 	if fresh_start:
 		SaveManager.clear_vn_checkpoint(json_path)

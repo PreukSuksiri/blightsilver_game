@@ -386,6 +386,11 @@ var reroll_dice_available: Array = [false, false]   # TEMP_REROLL_DICE tech: may
 var graveyards: Array = [[], []]                    # graveyards[player] -> Array of destroyed CardInstances
 var turn_start_revives: Array = []                  # {player, row, col, card_name} — e.g. Burning Phoenix
 var destruction_from_tech_self_destruct: bool = false
+var analytics_battle_tag: String = ""
+var analytics_battle_id: String = ""
+var analytics_graph_path: String = ""
+var analytics_destroy_source: String = ""
+var analytics_destroy_by_player: int = -1
 var locked_attack_positions: Array = []             # Vector2i positions current player cannot attack this turn
 
 const CURSOR_PATH: String = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
@@ -940,7 +945,22 @@ func destroy_card(player_index: int, row: int, col: int, pay_cost: bool = true) 
 	if was_character:
 		BattleResolver.recalculate_all_field_bonuses()
 		check_character_wipe_win_condition()
+		_notify_achievement_destroy(player_index)
 	return true
+
+
+func _notify_achievement_destroy(destroyed_player: int) -> void:
+	if analytics_destroy_by_player != 0 or destroyed_player == 0:
+		analytics_destroy_source = ""
+		analytics_destroy_by_player = -1
+		return
+	match analytics_destroy_source:
+		"trap":
+			AchievementManager.on_opponent_destroyed_by_trap()
+		"tech":
+			AchievementManager.on_opponent_destroyed_by_tech()
+	analytics_destroy_source = ""
+	analytics_destroy_by_player = -1
 
 ## True when a revived unit may be placed here: empty slot where a unit was destroyed (not a setup dead-end blank).
 func is_valid_revive_placement_cell(player_index: int, row: int, col: int) -> bool:
@@ -1195,6 +1215,11 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	if mode != GameMode.VS_AI:
 		battle_bgm_enabled = true
 	game_over_reason = ""
+	analytics_battle_tag = ""
+	analytics_battle_id = ""
+	analytics_graph_path = ""
+	analytics_destroy_source = ""
+	analytics_destroy_by_player = -1
 	_init_grids()
 	set_phase(Phase.SETUP_P1)
 

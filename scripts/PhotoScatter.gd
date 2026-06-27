@@ -11,6 +11,10 @@ const PHOTOS: PackedStringArray = [
 ]
 const BGM_PATH:      String = "res://assets/audio/bgm_ost_blind_cross.mp3"
 const CREDITS_SCENE: String = "res://scenes/credit_demo.tscn"
+const WISHLIST_MINI_PATH: String = "res://assets/textures/ui/decorations/wishlist_now_mini.png"
+const WISHLIST_MINI_MAX_WIDTH_RATIO: float = 0.34
+const WISHLIST_MINI_BOTTOM_MARGIN: float = 56.0
+const WISHLIST_MINI_FADE_IN: float = 1.0
 
 # ── Final resting positions (offset from screen centre) ───────
 const OFFSET_X: PackedFloat32Array  = [-370.0,  170.0, -120.0,  350.0,  20.0]
@@ -51,6 +55,7 @@ const ZOOM_DURATION: float = ALL_LANDED + 0.4   # finishes just after last drop
 var _bgm:          AudioStreamPlayer = null
 var _fade_overlay: ColorRect         = null
 var _content:      Control           = null   # zoom container
+var _wishlist_mini: TextureRect      = null
 
 
 func _ready() -> void:
@@ -163,6 +168,8 @@ func _animate_drop(
 
 # ── Outro: hold → fade out BGM + screen → go to credits ───────
 func _schedule_outro() -> void:
+	_fade_in_wishlist_mini()
+
 	# "To be continued . . ." — fades in when all photos have settled
 	var label := Label.new()
 	label.text                  = "To be continued . . ."
@@ -214,6 +221,41 @@ func _schedule_outro() -> void:
 	var tw_change := create_tween()
 	tw_change.tween_interval(screen_start + FADE_OUT)
 	tw_change.tween_callback(_go_to_credits)
+
+
+func _fade_in_wishlist_mini() -> void:
+	await get_tree().process_frame
+	var tex: Texture2D = load(WISHLIST_MINI_PATH) as Texture2D
+	if tex == null:
+		return
+
+	var nat: Vector2 = tex.get_size()
+	if nat.x <= 0.0:
+		return
+
+	var display_w: float = size.x * WISHLIST_MINI_MAX_WIDTH_RATIO
+	var display_h: float = display_w * nat.y / nat.x
+
+	_wishlist_mini = TextureRect.new()
+	_wishlist_mini.texture = tex
+	_wishlist_mini.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_wishlist_mini.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_wishlist_mini.custom_minimum_size = Vector2(display_w, display_h)
+	_wishlist_mini.size = Vector2(display_w, display_h)
+	_wishlist_mini.position = Vector2(
+		(size.x - display_w) * 0.5,
+		size.y - display_h - WISHLIST_MINI_BOTTOM_MARGIN
+	)
+	_wishlist_mini.modulate = Color(1.0, 1.0, 1.0, 0.0)
+	_wishlist_mini.z_index = 60
+	_wishlist_mini.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_wishlist_mini)
+
+	var tw := create_tween()
+	tw.tween_interval(ALL_LANDED)
+	tw.tween_property(_wishlist_mini, "modulate:a", 1.0, WISHLIST_MINI_FADE_IN) \
+		.set_ease(Tween.EASE_OUT) \
+		.set_trans(Tween.TRANS_QUAD)
 
 
 func _go_to_credits() -> void:

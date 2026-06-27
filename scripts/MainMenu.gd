@@ -765,6 +765,7 @@ func _on_stack_secondary_pressed() -> void:
 
 
 func _on_quick_duel() -> void:
+	GlobalStatManager.on_first_touch("quick_duel_menu")
 	get_tree().change_scene_to_file("res://scenes/quick_duel.tscn")
 
 

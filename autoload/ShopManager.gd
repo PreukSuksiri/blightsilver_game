@@ -277,6 +277,7 @@ func draw_pack_free(pack_name: String) -> Array:
 	var cards := _draw_cards(pack)
 	for card: Dictionary in cards:
 		Collection.add_card(card["name"], card["type"], card["from_pack"])
+	GlobalStatManager.on_pack_opened()
 	return cards
 
 # ─────────────────────────────────────────────────────────────

@@ -1398,6 +1398,8 @@ func _handle_trap_effect(
 	var trap_data = params.get("trap_data") as TrapData
 	if trap_data == null:
 		return
+	GameState.analytics_destroy_source = "trap"
+	GameState.analytics_destroy_by_player = opponent
 
 	# Traps that destroy the attacker defer their own destruction until after
 	# the character card has visually disappeared.

@@ -678,6 +678,7 @@ func _show_beat() -> void:
 	# ── Tutorial battle (config JSON — no builder UI) ──
 	var tutorial_path: String = str(beat.get("tutorial_battle", "")).strip_edges()
 	if tutorial_path != "":
+		GlobalStatManager.on_prologue_tutorial_battle_reached()
 		_set_music("", 0.0, 0.0)
 		var tut_err: String = TutorialBattleManager.configure_battle_from_path(
 			tutorial_path, not SaveManager.is_attack_tutorial_complete())
@@ -703,6 +704,11 @@ func _show_beat() -> void:
 		_battle_handoff_started = true
 		_accepting_input = false
 		_hide_hint_icon()
+		if _scene_path.find("ch1_s1_pre_DEMO_PART2") >= 0:
+			GameState.analytics_battle_tag = "ch1_stage1_boss"
+			GlobalStatManager.on_chapter1_boss_reached()
+		GameState.quick_duel_protagonist_id = "nex"
+		GlobalStatManager.on_duel_started({"is_quick_duel": false, "is_tutorial": false})
 		if exploration_overlay and ExplorationManager.is_session_active:
 			ExplorationManager.snapshot_bgm_before_vn()
 			ExplorationManager.save_session_now()

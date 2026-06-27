@@ -1,0 +1,14 @@
+{
+	"graph": "res://exploration/graphs/ch0_s1_blackout_library.json",
+	"battle_ids": [
+		"easy_lab_mutagen",
+		"norm_colormage_flayer",
+		"easy_kiba",
+		"norm_miner_moon",
+		"easy_vampire",
+		"normal_chaos_bio"
+	],
+	"boss_battle_ids": [
+		"normal_chaos_bio"
+	]
+}

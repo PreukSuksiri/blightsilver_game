@@ -113,6 +113,18 @@ func _build_header() -> void:
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
 	add_child(close_btn)
 
+	var ach_btn := Button.new()
+	ach_btn.text = "Achievements"
+	ach_btn.custom_minimum_size = Vector2(120, 32)
+	ach_btn.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	ach_btn.offset_left = -178.0
+	ach_btn.offset_top = 6.0
+	ach_btn.offset_right = -58.0
+	ach_btn.offset_bottom = 38.0
+	ach_btn.pressed.connect(func() -> void:
+		AchievementListOverlay.open(self))
+	add_child(ach_btn)
+
 
 func _build_player_portrait_zone() -> void:
 	var portrait_path: String = SaveManager.get_protagonist_portrait_path()
@@ -585,6 +597,7 @@ func _on_reroll_pressed() -> void:
 		_status_lbl.text = "Not enough credits (%d needed)." % cost
 		return
 	Collection.spend_credits(cost)
+	GlobalStatManager.on_quick_duel_reroll()
 	_roll_all_tier_offers()
 	_refresh_picker_capsules()
 	_refresh_reroll_button()
@@ -659,6 +672,7 @@ func _begin_guided_tutorial_battle(battle_path: String) -> void:
 
 
 func launch_vault_duel(tier: String) -> void:
+	GlobalStatManager.on_first_touch("quick_duel_battle")
 	var entry_id: String = SaveManager.get_quick_duel_preview(tier)
 	if entry_id.is_empty():
 		return
@@ -681,6 +695,8 @@ func launch_vault_duel(tier: String) -> void:
 
 	_apply_protagonist_to_battle()
 	_apply_ai_identity_to_battle(tier)
+	GlobalStatManager.on_duel_started({"is_quick_duel": true, "is_tutorial": false})
+	RewardGranter.set_ui_host(self)
 	if str(GameState.player_portraits[1]).strip_edges().is_empty():
 		GameState.player_portraits[1] = DEFAULT_PORTRAIT_P2
 	if GameState.campaign_player_names.size() < 2 \

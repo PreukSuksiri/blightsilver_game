@@ -82,6 +82,8 @@ func set_active_deck_index(index: int) -> void:
 func unlock_union(union_name: String) -> void:
 	if union_name not in unlocked_unions:
 		unlocked_unions.append(union_name)
+		GlobalStatManager.on_union_discovered()
+		AchievementManager.on_union_discovered()
 		save_data()
 
 func is_union_unlocked(union_name: String) -> bool:
@@ -101,7 +103,6 @@ func reset_title_cheats() -> void:
 
 # ── CRUD ─────────────────────────────────────────────────────
 func save_deck(deck: DeckData) -> void:
-	# Replace existing deck by name, or append new
 	for i in range(decks.size()):
 		if decks[i].deck_name == deck.deck_name:
 			decks[i] = deck
@@ -111,6 +112,7 @@ func save_deck(deck: DeckData) -> void:
 	decks.append(deck)
 	active_deck_index = decks.size() - 1
 	save_data()
+	AchievementManager.on_deck_count_changed()
 
 func delete_deck(index: int) -> void:
 	if index < 0 or index >= decks.size():
@@ -131,6 +133,7 @@ func duplicate_deck(index: int) -> void:
 	decks.append(copy)
 	active_deck_index = decks.size() - 1
 	save_data()
+	AchievementManager.on_deck_count_changed()
 
 # ── Deck import / export ──────────────────────────────────────
 const DECK_EXPORT_FORMAT: String = "blightsilver_deck_export"
@@ -232,6 +235,9 @@ func save_data() -> void:
 		"quick_duel_protagonist_portrait": quick_duel_protagonist_portrait,
 		"quick_duel_tier_identities":    quick_duel_tier_identities.duplicate(true),
 	}
+	var progress: Dictionary = GlobalStatManager.to_save_dict()
+	data.merge(progress)
+	data.merge(AchievementManager.to_save_dict())
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
 		file.store_string(JSON.stringify(data, "\t"))
@@ -346,6 +352,8 @@ func load_data() -> void:
 
 	_migrate_quick_duel_offers()
 	_ensure_protagonist_defaults()
+	GlobalStatManager.load_from_save(parsed as Dictionary)
+	AchievementManager.load_from_save(parsed as Dictionary)
 
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery VN beat checkpoints (pre-exploration progress)
@@ -408,6 +416,8 @@ func set_casual_mode(enabled: bool) -> void:
 	if casual_mode == enabled:
 		return
 	casual_mode = enabled
+	if enabled:
+		GlobalStatManager.on_casual_mode_enabled()
 	save_data()
 
 func get_quick_duel_preview(tier: String) -> String:
@@ -451,11 +461,18 @@ func get_protagonist_portrait_path() -> String:
 		quick_duel_protagonist_id, quick_duel_protagonist_portrait)
 
 func set_protagonist(protagonist_id: String, portrait_path: String) -> void:
-	quick_duel_protagonist_id = ProtagonistVault.normalize_id(protagonist_id)
-	quick_duel_protagonist_portrait = portrait_path.strip_edges()
+	var prev_id: String = quick_duel_protagonist_id
+	var new_id: String = ProtagonistVault.normalize_id(protagonist_id)
+	var resolved_portrait: String = portrait_path.strip_edges()
+	if not ProtagonistVault.is_pose_portrait_unlocked(new_id, resolved_portrait):
+		resolved_portrait = ProtagonistVault.get_first_unlocked_portrait(new_id)
+	quick_duel_protagonist_id = new_id
+	quick_duel_protagonist_portrait = resolved_portrait
 	if quick_duel_protagonist_portrait.is_empty():
 		quick_duel_protagonist_portrait = ProtagonistVault.get_default_portrait(
 			quick_duel_protagonist_id)
+	if prev_id != new_id and ProtagonistVault.is_valid_id(prev_id):
+		GlobalStatManager.on_protagonist_switched()
 	save_data()
 
 func _ensure_protagonist_defaults() -> void:
@@ -526,6 +543,7 @@ func mark_gallery_chapter_completed(vn_scene: String) -> void:
 	if gallery_chapters_completed.get(key, false):
 		return
 	gallery_chapters_completed[key] = true
+	GlobalStatManager.on_gallery_chapter_completed(key)
 	save_data()
 
 func is_gallery_chapter_completed(vn_scene: String) -> bool:

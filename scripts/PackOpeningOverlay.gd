@@ -1,6 +1,8 @@
 extends Control
 class_name PackOpeningOverlay
 
+signal reveal_finished
+
 # ──────────────────────────────────────────────────────────────────────────────
 # PackOpeningOverlay — standalone booster-pack opening animation.
 #
@@ -23,6 +25,7 @@ const CARD_SETTLE_SECONDS: float = 0.2
 const HOLD_SKIP_ALL_SECONDS: float = 3.0
 const _ROUNDED_CLIP: Shader = preload("res://assets/shaders/rounded_clip.gdshader")
 const _CARD_CORNER_RADIUS_REF: float = 16.0   # px at 150px card width
+const _POSE_GLOW_COLOR: Color = Color(0.35, 0.92, 1.0, 0.95)
 
 # Sizes computed from viewport at _ready; pack ~82% screen height, cards fill remaining width
 var _pack_w : float = 0.0
@@ -30,6 +33,9 @@ var _pack_h : float = 0.0
 var _card_w : float = 0.0
 var _card_h : float = 0.0
 var _card_gap: float = 0.0
+var _pose_w: float = 0.0
+var _pose_h: float = 0.0
+var _reveal_glow_h: float = 0.0
 
 # ── State ──────────────────────────────────────────────────────────────────────
 var _card_names     : Array[String] = []
@@ -41,6 +47,10 @@ var _dismiss_allowed:  bool   = false
 var _anim_done:        bool   = false
 var _reroll_triggered: bool   = false
 var _single_card_mode: bool   = false
+var _single_pose_mode: bool   = false
+var _pose_portrait_path: String = ""
+var _pose_label: String = ""
+var _pose_tex: Texture2D = null
 var _hold_skip_elapsed: float = 0.0
 var _glow_sbs:         Array  = [null, null, null]  # StyleBoxFlat refs
 var _card_tex_cache:   Array  = []                    # preloaded full-card textures
@@ -56,7 +66,7 @@ var _clip_bot : Control   = null
 # pack_image: res:// path to the pack illustration (empty = use default)
 # card1/2/3 : card names (empty / invalid = shows fallback vellum frame)
 # ──────────────────────────────────────────────────────────────────────────────
-static func open(parent: Node, pack_image: String, card1: String, card2: String, card3: String, skippable: bool = true, reroll_pack_name: String = "") -> void:
+static func open(parent: Node, pack_image: String, card1: String, card2: String, card3: String, skippable: bool = true, reroll_pack_name: String = "") -> PackOpeningOverlay:
 	var overlay := PackOpeningOverlay.new()
 	overlay._pack_image_path  = pack_image if pack_image != null else ""
 	overlay._reroll_pack_name = reroll_pack_name
@@ -70,8 +80,9 @@ static func open(parent: Node, pack_image: String, card1: String, card2: String,
 	overlay.z_index        = 50
 	overlay.mouse_filter   = Control.MOUSE_FILTER_STOP
 	parent.add_child(overlay)
+	return overlay
 
-static func open_single_card_reveal(parent: Node, card_name: String, skippable: bool = true) -> void:
+static func open_single_card_reveal(parent: Node, card_name: String, skippable: bool = true) -> PackOpeningOverlay:
 	var overlay := PackOpeningOverlay.new()
 	overlay._single_card_mode = true
 	overlay._skippable = skippable
@@ -81,13 +92,31 @@ static func open_single_card_reveal(parent: Node, card_name: String, skippable: 
 	overlay.z_index = 50
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	parent.add_child(overlay)
+	return overlay
+
+static func open_pose_reveal(parent: Node, portrait_path: String, pose_label: String, skippable: bool = true) -> PackOpeningOverlay:
+	var overlay := PackOpeningOverlay.new()
+	overlay._single_pose_mode = true
+	overlay._skippable = skippable
+	overlay._pose_portrait_path = portrait_path if portrait_path != null else ""
+	overlay._pose_label = pose_label if pose_label != null else ""
+	overlay._glow_sbs = [null]
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 50
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	parent.add_child(overlay)
+	return overlay
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Lifecycle
 # ──────────────────────────────────────────────────────────────────────────────
 func _ready() -> void:
 	_compute_sizes()
-	if _single_card_mode:
+	if _single_pose_mode:
+		_load_pose_texture()
+		_compute_pose_sizes()
+		_build_single_pose_ui()
+	elif _single_card_mode:
 		_build_single_card_ui()
 	else:
 		_build_ui()
@@ -214,19 +243,46 @@ func _build_ui() -> void:
 	_clip_bot.add_child(bot_img)
 
 func _build_single_card_ui() -> void:
+	_build_single_reveal_bg()
+
+func _build_single_pose_ui() -> void:
+	_build_single_reveal_bg()
+
+func _build_single_reveal_bg() -> void:
 	_bg = ColorRect.new()
 	_bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_bg.color = Color(0.0, 0.0, 0.0, 0.0)
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_bg)
 
+func _load_pose_texture() -> void:
+	_pose_tex = null
+	var path: String = _pose_portrait_path.strip_edges()
+	if path != "" and ResourceLoader.exists(path):
+		_pose_tex = load(path) as Texture2D
+
+func _compute_pose_sizes() -> void:
+	var s: Vector2 = get_viewport_rect().size
+	var max_h: float = s.y * 0.62
+	var max_w: float = s.x * 0.58
+	var aspect: float = 0.72
+	if _pose_tex != null and _pose_tex.get_height() > 0:
+		aspect = float(_pose_tex.get_width()) / float(_pose_tex.get_height())
+	_pose_h = minf(max_h, max_w / aspect)
+	_pose_w = _pose_h * aspect
+	_reveal_glow_h = _pose_h
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Main animation coroutine
 # ──────────────────────────────────────────────────────────────────────────────
 func _run() -> void:
+	if _single_pose_mode:
+		await _run_single_pose_reveal()
+		return
 	if _single_card_mode:
 		await _run_single_card_reveal()
 		return
+	_reveal_glow_h = _card_h
 	_preload_card_textures()
 
 	var screen: Vector2 = get_viewport_rect().size
@@ -346,11 +402,10 @@ func _run() -> void:
 			.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
 	t9.tween_property(_bg, "color:a", 0.0, 0.40)
 	await t9.finished
-
-	_anim_done = true
-	queue_free()
+	_finish_reveal()
 
 func _run_single_card_reveal() -> void:
+	_reveal_glow_h = _card_h
 	_card_tex_cache.clear()
 	_card_tex_cache.append(_load_card_tex(_card_names[0] if _card_names.size() > 0 else ""))
 
@@ -363,8 +418,7 @@ func _run_single_card_reveal() -> void:
 	t1.tween_property(_bg, "color:a", 0.75, 0.35)
 	await t1.finished
 	if GameState.quick_duel_reveal_skip_all:
-		_anim_done = true
-		queue_free()
+		_finish_reveal()
 		return
 
 	_spawn_debris(cx, cy)
@@ -401,7 +455,64 @@ func _run_single_card_reveal() -> void:
 		.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
 	t9.tween_property(_bg, "color:a", 0.0, 0.40)
 	await t9.finished
+	_finish_reveal()
+
+func _run_single_pose_reveal() -> void:
+	_reveal_glow_h = _pose_h
+	var screen: Vector2 = get_viewport_rect().size
+	var cx: float = screen.x * 0.5
+	var cy: float = screen.y * 0.5
+	var block_h: float = _pose_h + 56.0
+	var block_y: float = cy - block_h * 0.5
+
+	var t1: Tween = create_tween()
+	t1.tween_property(_bg, "color:a", 0.75, 0.35)
+	await t1.finished
+	if GameState.quick_duel_reveal_skip_all:
+		_finish_reveal()
+		return
+
+	_spawn_debris(cx, cy)
+
+	var w: Control = _make_pose_ctrl()
+	w.position = Vector2(cx - _pose_w * 0.5, screen.y + 20.0)
+	w.scale = Vector2(0.5, 0.5)
+	w.pivot_offset = Vector2(_pose_w * 0.5, block_h * 0.5)
+	w.z_index = 2
+	add_child(w)
+
+	var t5: Tween = create_tween().set_parallel(true)
+	t5.tween_property(w, "position:y", block_y, 0.42) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t5.tween_property(w, "scale", Vector2.ONE, 0.42) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await t5.finished
+	await get_tree().create_timer(CARD_SETTLE_SECONDS).timeout
+	_skip_requested = false
+	_dismiss_allowed = true
+	_start_glow_pulse(0)
+
+	var elapsed: float = 0.0
+	while elapsed < DISPLAY_HOLD_SECONDS and not _skip_requested and not GameState.quick_duel_reveal_skip_all:
+		await get_tree().create_timer(0.05).timeout
+		elapsed += 0.05
+
+	_skip_requested = false
+	var dest: Vector2 = Vector2(screen.x + 60.0, -block_h - 60.0)
+	var t9: Tween = create_tween().set_parallel(true)
+	t9.tween_property(w, "position", dest, 0.48) \
+		.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
+	t9.tween_property(w, "scale", Vector2(0.0, 0.0), 0.48) \
+		.set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_IN)
+	t9.tween_property(_bg, "color:a", 0.0, 0.40)
+	await t9.finished
+	_finish_reveal()
+
+func _finish_reveal() -> void:
+	if _anim_done:
+		return
 	_anim_done = true
+	reveal_finished.emit()
 	queue_free()
 # ──────────────────────────────────────────────────────────────────────────────
 func _make_reroll_btn(cx: float, card_y: float) -> Button:
@@ -551,6 +662,62 @@ func _make_card_ctrl(card_name: String, idx: int) -> Control:
 
 	return wrapper
 
+func _make_pose_ctrl() -> Control:
+	var wrapper := Control.new()
+	var label_h: float = 56.0
+	wrapper.custom_minimum_size = Vector2(_pose_w, _pose_h + label_h)
+	wrapper.size = Vector2(_pose_w, _pose_h + label_h)
+	wrapper.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var glow_panel := Panel.new()
+	glow_panel.size = Vector2(_pose_w, _pose_h)
+	glow_panel.position = Vector2.ZERO
+	glow_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var gp_sb := StyleBoxFlat.new()
+	gp_sb.bg_color = Color(0.0, 0.0, 0.0, 0.0)
+	gp_sb.draw_center = true
+	gp_sb.shadow_color = _POSE_GLOW_COLOR
+	gp_sb.shadow_size = int(_pose_h * 0.05)
+	gp_sb.shadow_offset = Vector2.ZERO
+	glow_panel.add_theme_stylebox_override("panel", gp_sb)
+	wrapper.add_child(glow_panel)
+	_glow_sbs[0] = gp_sb
+
+	var portrait := TextureRect.new()
+	portrait.size = Vector2(_pose_w, _pose_h)
+	portrait.position = Vector2.ZERO
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	portrait.texture = _pose_tex
+	var rc_mat := ShaderMaterial.new()
+	rc_mat.shader = _ROUNDED_CLIP
+	rc_mat.set_shader_parameter("corner_radius", max(8.0, _pose_w * 0.03))
+	portrait.material = rc_mat
+	wrapper.add_child(portrait)
+
+	var title_lbl := Label.new()
+	title_lbl.text = "New Pose Unlocked"
+	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title_lbl.position = Vector2(0.0, _pose_h + 4.0)
+	title_lbl.size = Vector2(_pose_w, 22.0)
+	title_lbl.add_theme_font_size_override("font_size", 18)
+	title_lbl.add_theme_color_override("font_color", Color(0.95, 0.88, 0.5))
+	title_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrapper.add_child(title_lbl)
+
+	var name_lbl := Label.new()
+	name_lbl.text = _pose_label if not _pose_label.is_empty() else "Protagonist Pose"
+	name_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	name_lbl.position = Vector2(0.0, _pose_h + 26.0)
+	name_lbl.size = Vector2(_pose_w, 22.0)
+	name_lbl.add_theme_font_size_override("font_size", 15)
+	name_lbl.add_theme_color_override("font_color", Color(0.82, 0.9, 0.98))
+	name_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrapper.add_child(name_lbl)
+
+	return wrapper
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Glow pulse (looping, via shadow_size)
 # ──────────────────────────────────────────────────────────────────────────────
@@ -559,8 +726,9 @@ func _start_glow_pulse(idx: int) -> void:
 	if sb == null:
 		return
 	var gp_sb: StyleBoxFlat = sb as StyleBoxFlat
-	var lo: float = _card_h * 0.035
-	var hi: float = _card_h * 0.075
+	var glow_h: float = _reveal_glow_h if _reveal_glow_h > 0.0 else _card_h
+	var lo: float = glow_h * 0.035
+	var hi: float = glow_h * 0.075
 	var tw: Tween = create_tween().set_loops()
 	tw.tween_method(
 		func(v: float) -> void: gp_sb.shadow_size = int(v),

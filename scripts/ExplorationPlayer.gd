@@ -3864,10 +3864,23 @@ func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0
 						ExplorationManager.mark_spot_interacted(cap_node, cap_index)
 						ExplorationManager.end_spot_interaction(cap_node, cap_index)
 						apply_hide.call()
-				_handle_spot_click(cap_acts, complete_cb))
+				_handle_spot_click(cap_acts, complete_cb, spot))
 
-func _handle_spot_click(actions: Array, hide_on_success: Callable) -> void:
+func _handle_spot_click(actions: Array, hide_on_success: Callable, spot: Dictionary = {}) -> void:
+	if _is_hidden_spot(spot):
+		GlobalStatManager.on_hidden_spot_clicked()
 	_on_spot_triggered(actions, hide_on_success)
+
+
+func _is_hidden_spot(spot: Dictionary) -> bool:
+	if spot.is_empty():
+		return false
+	var cond: Variant = spot.get("conditions", [])
+	if cond is Array and not (cond as Array).is_empty():
+		return true
+	var icon: String = str(spot.get("icon", "")).strip_edges()
+	var tip: String = str(spot.get("tooltip", "")).strip_edges()
+	return icon.is_empty() and tip == "???"
 
 func _on_spot_hover_enter(tooltip_text: String, spot_hit: Control) -> void:
 	_hovering_spot    = true
