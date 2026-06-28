@@ -23,6 +23,7 @@ AudioManager="*res://autoload/AudioManager.gd"
 BGMManager="*res://autoload/BGMManager.gd"
 BuildConfig="*res://autoload/BuildConfig.gd"
 HudSkin="*res://autoload/HudSkin.gd"
+UiTheme="*res://autoload/UiTheme.gd"
 CardDatabase="*res://autoload/CardDatabase.gd"
 UnionDatabase="*res://autoload/UnionDatabase.gd"
 UnionScrollManager="*res://autoload/UnionScrollManager.gd"
@@ -65,7 +66,7 @@ window/stretch/aspect="expand"
 
 [editor]
 
-movie_writer/movie_file="/Users/blightsilver/blightsilver_game/video/battle_magitech_ui_15.avi"
+movie_writer/movie_file="/Users/blightsilver/blightsilver_game/video/battle_magitech_ui_21111.avi"
 
 [editor_plugins]
 

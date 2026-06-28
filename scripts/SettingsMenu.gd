@@ -8,7 +8,7 @@ func _ready() -> void:
 	# ── Full-screen dimmer (click outside to close) ──────────────
 	var dimmer := ColorRect.new()
 	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
-	dimmer.color = Color(0, 0, 0, 0.65)
+	dimmer.color = Color(0.0, 0.0, 0.0, 0.0)
 	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
 	dimmer.gui_input.connect(func(e: InputEvent) -> void:
 		if e is InputEventMouseButton and e.pressed:
@@ -17,14 +17,7 @@ func _ready() -> void:
 
 	# ── Centered panel ───────────────────────────────────────────
 	var panel := Panel.new()
-	var sb := StyleBoxFlat.new()
-	sb.bg_color            = Color(0.04, 0.06, 0.14, 0.97)
-	sb.border_width_left   = 2; sb.border_width_top    = 2
-	sb.border_width_right  = 2; sb.border_width_bottom = 2
-	sb.border_color        = Color(0.38, 0.65, 1.0, 0.5)
-	sb.corner_radius_top_left     = 8; sb.corner_radius_top_right    = 8
-	sb.corner_radius_bottom_right = 8; sb.corner_radius_bottom_left  = 8
-	panel.add_theme_stylebox_override("panel", sb)
+	panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox())
 	panel.set_anchors_preset(Control.PRESET_CENTER)
 	panel.offset_left   = -210
 	panel.offset_top    = -110
@@ -43,9 +36,7 @@ func _ready() -> void:
 	# Title
 	var title := Label.new()
 	title.text = "SETTINGS"
-	title.add_theme_font_size_override("font_size", 16)
-	title.add_theme_color_override("font_color", Color(0.55, 0.85, 1.0, 1))
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	GameDialog.style_title_label(title)
 	vbox.add_child(title)
 
 	# Music volume
@@ -80,9 +71,8 @@ func _ready() -> void:
 
 	# Close button
 	var close_btn := Button.new()
-	close_btn.text = "CLOSE"
-	close_btn.add_theme_font_size_override("font_size", 13)
-	close_btn.add_theme_color_override("font_color", Color(0.6, 0.75, 1.0))
+	close_btn.text = "Close"
+	GameDialog.style_button(close_btn)
 	close_btn.pressed.connect(_close)
 	vbox.add_child(close_btn)
 

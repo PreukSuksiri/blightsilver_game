@@ -19,6 +19,8 @@ const CONTEXT_RESULT := "result"
 
 const CONFIG_PATH := "res://data/bgm_contexts.json"
 const DEFAULT_FADE := 0.8
+## Play the track once; do not loop or restart when it ends.
+const LOOP_PLAY_ONCE := -2.0
 
 const BUILTIN_DEFAULT_PATHS := {
 	CONTEXT_MAIN_MENU: "res://assets/audio/bgm_storytelling_4.mp3",
@@ -27,7 +29,7 @@ const BUILTIN_DEFAULT_PATHS := {
 	CONTEXT_BOSS: "res://assets/audio/bgm_boss_1.mp3",
 	CONTEXT_ALMOST_WIN: "res://assets/audio/bgm_almost_win.mp3",
 	CONTEXT_VICTORY: "res://assets/audio/bgm_win.mp3",
-	CONTEXT_DEFEAT: "res://assets/audio/bgm_horror_1.mp3",
+	CONTEXT_DEFEAT: "res://assets/audio/blightsilver_trailer_4_short.mp3",
 	CONTEXT_CREDITS: "res://assets/audio/bgm_ost_blind_cross.mp3",
 	CONTEXT_DAILY_DUNGEON: "res://assets/audio/bgm_mystery_1.mp3",
 	CONTEXT_VN: "",
@@ -238,9 +240,17 @@ func _play_path_now(
 	_loop_restart_sec = loop_from_sec
 	_current_context = context
 
-	# start_sec overrides where playback begins; loop_from_sec controls the loop-back point.
-	# If start_sec is not set, fall back to loop_from_sec (original behaviour).
-	var actual_start: float = start_sec if start_sec >= 0.0 else loop_from_sec
+	# start_sec overrides where playback begins; loop_from_sec controls looping.
+	#   -1.0  = loop whole track
+	#   >= 0  = loop from that timestamp
+	#   LOOP_PLAY_ONCE = play once, no restart
+	var actual_start: float
+	if start_sec >= 0.0:
+		actual_start = start_sec
+	elif loop_from_sec >= 0.0:
+		actual_start = loop_from_sec
+	else:
+		actual_start = 0.0
 
 	if path == _current_path and _player.playing:
 		_player.volume_db = _target_volume_db
@@ -251,7 +261,7 @@ func _play_path_now(
 		push_warning("BGMManager: failed to load '%s'" % path)
 		return
 
-	_configure_loop(stream, loop_from_sec < 0.0)
+	_configure_loop(stream, loop_from_sec == -1.0)
 	_kill_fade()
 
 	if _player.playing and fade_out > 0.0:
@@ -321,17 +331,17 @@ func _kill_fade() -> void:
 func _on_player_finished() -> void:
 	if _loop_restart_sec >= 0.0:
 		_player.play(_loop_restart_sec)
+	elif _loop_restart_sec == LOOP_PLAY_ONCE:
+		return
 	elif _player.stream != null and not _stream_loops(_player.stream):
 		_player.play()
 
 
 func _configure_loop(stream: AudioStream, should_loop: bool) -> void:
-	if not should_loop:
-		return
 	if stream is AudioStreamMP3:
-		(stream as AudioStreamMP3).loop = true
+		(stream as AudioStreamMP3).loop = should_loop
 	elif stream is AudioStreamOggVorbis:
-		(stream as AudioStreamOggVorbis).loop = true
+		(stream as AudioStreamOggVorbis).loop = should_loop
 
 
 func _stream_loops(stream: AudioStream) -> bool:

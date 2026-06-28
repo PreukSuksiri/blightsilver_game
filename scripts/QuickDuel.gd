@@ -696,7 +696,6 @@ func launch_vault_duel(tier: String) -> void:
 	_apply_protagonist_to_battle()
 	_apply_ai_identity_to_battle(tier)
 	GlobalStatManager.on_duel_started({"is_quick_duel": true, "is_tutorial": false})
-	RewardGranter.set_ui_host(self)
 	if str(GameState.player_portraits[1]).strip_edges().is_empty():
 		GameState.player_portraits[1] = DEFAULT_PORTRAIT_P2
 	if GameState.campaign_player_names.size() < 2 \

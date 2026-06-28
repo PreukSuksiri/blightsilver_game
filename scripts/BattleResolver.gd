@@ -98,10 +98,15 @@ static func resolve_battle(
 	match defender.card_type:
 		"dead_end":
 			result.messages.append("Nothing happens — Dead End.")
+			if attacker.card_type == "character":
+				_populate_attacker_reckoning_fields(
+					attacker, defender, dice_roll, attacker_player, defender_was_exposed, target_pos, result)
 			return result
 
 		"trap":
-			_resolve_trap(attacker, defender, attacker_player, defender_player, result)
+			_resolve_trap(
+				attacker, defender, attacker_player, defender_player, dice_roll,
+				defender_was_exposed, target_pos, result)
 			return result
 
 		"character":
@@ -457,11 +462,24 @@ static func _apply_attacker_battle_drain(
 # ─────────────────────────────────────────────────────────────
 # Trap Resolution (returns special trigger for complex effects)
 # ─────────────────────────────────────────────────────────────
+static func apply_swap_atk_def_when_attacking(attacker: GameState.CardInstance) -> void:
+	if attacker.card_type != "character":
+		return
+	if attacker.ability_type != CharacterData.AbilityType.SWAP_ATK_DEF_WHEN_ATTACKING:
+		return
+	var tmp: int = attacker.current_atk
+	attacker.current_atk = attacker.current_def
+	attacker.current_def = tmp
+
+
 static func _resolve_trap(
 		attacker: GameState.CardInstance,
 		trap: GameState.CardInstance,
 		attacker_player: int,
 		_defender_player: int,
+		dice_roll: int,
+		defender_was_exposed: bool,
+		target_pos: Vector2i,
 		result: BattleResult
 ) -> void:
 	var trap_data = CardDatabase.get_trap(trap.card_name) as TrapData
@@ -469,10 +487,8 @@ static func _resolve_trap(
 		result.messages.append("Unknown trap: %s" % trap.card_name)
 		return
 
-	result.attacker_pill_atk = attacker.get_effective_atk()
-	result.attacker_pill_def = attacker.get_effective_def()
-	result.attacker_atk_used = attacker.get_effective_atk()
-	result.attacker_atk_delta = 0
+	_populate_attacker_reckoning_fields(
+		attacker, trap, dice_roll, attacker_player, defender_was_exposed, target_pos, result)
 
 	result.messages.append("Trap triggered: %s!" % trap.card_name)
 
@@ -522,6 +538,70 @@ static func _resolve_trap(
 # ─────────────────────────────────────────────────────────────
 # ATK / DEF Calculation
 # ─────────────────────────────────────────────────────────────
+static func _populate_attacker_reckoning_fields(
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance,
+		dice_roll: int,
+		attacker_player: int,
+		defender_was_exposed: bool,
+		target_pos: Vector2i,
+		result: BattleResult) -> void:
+	var pill_atk: int = attacker.get_effective_atk()
+	var pill_def: int = attacker.get_effective_def()
+	result.attacker_pill_atk = pill_atk
+	result.attacker_pill_def = pill_def
+	var used_atk: int = pill_atk
+	if defender.card_type == "character":
+		used_atk = _get_effective_atk(
+			attacker, defender, dice_roll, attacker_player, target_pos, defender_was_exposed)
+	else:
+		used_atk = _get_effective_atk_for_non_unit_target(
+			attacker, dice_roll, attacker_player, target_pos)
+	result.attacker_atk_used = used_atk
+	result.attacker_atk_delta = used_atk - pill_atk
+
+
+## Attack-only ATK modifiers for trap / dead-end reckoning (no defender unit to compare).
+static func _get_effective_atk_for_non_unit_target(
+		attacker: GameState.CardInstance,
+		dice_roll: int,
+		attacker_player: int,
+		target_pos: Vector2i) -> int:
+	var atk: int = attacker.get_effective_atk()
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "bare_hands_brawling" in GameState.active_dungeon_modifiers:
+		var _bhb_mods: Array = GameState.active_dungeon_modifiers
+		if "offensive_game" in _bhb_mods:
+			atk += 5
+		return atk
+	if GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "offensive_game" in GameState.active_dungeon_modifiers:
+		atk += 5
+	match attacker.ability_type:
+		CharacterData.AbilityType.ATTACK_STANCE_BOOST:
+			atk += attacker.ability_params.get("atk", attacker.ability_params.get("atk_bonus", 0))
+		CharacterData.AbilityType.ONE_USE_ATK_BOOST:
+			if not attacker.one_use_atk_boost_used:
+				atk += attacker.ability_params.get("bonus", 0)
+		CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND:
+			if not attacker.one_use_atk_boost_used:
+				atk += attacker.ability_params.get("atk_bonus", attacker.ability_params.get("atk", 0))
+		CharacterData.AbilityType.ATK_BONUS_VS_CENTER_ZONE:
+			if target_pos.x >= 0:
+				var in_center_zone: bool = (target_pos.x >= 1 and target_pos.x <= 3
+					and target_pos.y >= 1 and target_pos.y <= 3)
+				var in_very_center: bool = (target_pos.x == 2 and target_pos.y == 2)
+				if in_center_zone:
+					atk += attacker.ability_params.get("zone_bonus", 20)
+				if in_very_center:
+					atk += attacker.ability_params.get("center_bonus", 40)
+		CharacterData.AbilityType.STANCE_FIXED_STATS:
+			atk = attacker.ability_params.get("atk_atk", 60)
+	if attacker.has_mutagen_flag:
+		atk += attacker.ability_params.get("mutagen_atk", 0)
+	return atk
+
+
 static func _get_effective_atk(
 		attacker: GameState.CardInstance,
 		defender: GameState.CardInstance,
@@ -656,9 +736,6 @@ static func _get_effective_atk(
 			var _half_atk: int = int(defender.get_effective_atk() / 2)
 			atk += _half_atk
 			GameState.post_message("%s: +%d ATK (half of %s's ATK)" % [attacker.card_name, _half_atk, defender.card_name])
-
-		CharacterData.AbilityType.SWAP_ATK_DEF_WHEN_ATTACKING:
-			atk = attacker.get_effective_def()  # use DEF as ATK
 
 		CharacterData.AbilityType.ONE_USE_ATK_BOOST:
 			if not attacker.one_use_atk_boost_used:

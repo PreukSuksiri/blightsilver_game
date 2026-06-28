@@ -3,6 +3,8 @@ extends Control
 ## Opened via admin command: ai_identity_vault
 
 const DIFFICULTIES: Array[String] = ["easy", "normal", "hard"]
+const PREVIEW_WIDTH := 220.0
+const PREVIEW_HEIGHT := 280.0
 
 var _entries: Array = []
 var _selected_idx: int = -1
@@ -11,6 +13,8 @@ var _list: ItemList = null
 var _id_edit: LineEdit = null
 var _name_edit: LineEdit = null
 var _illus_edit: LineEdit = null
+var _illus_preview: TextureRect = null
+var _illus_preview_hint: Label = null
 var _diff_opt: OptionButton = null
 var _exclude_checks: Dictionary = {}
 var _status_lbl: Label = null
@@ -105,8 +109,10 @@ func _build_ui() -> void:
 	right.add_theme_constant_override("separation", 10)
 	body.add_child(right)
 
-	right.add_child(_labeled_row("ID", _id_edit := LineEdit.new()))
-	right.add_child(_labeled_row("Name", _name_edit := LineEdit.new()))
+	_id_edit = LineEdit.new()
+	right.add_child(_labeled_row("ID", _id_edit))
+	_name_edit = LineEdit.new()
+	right.add_child(_labeled_row("Name", _name_edit))
 
 	var illus_row := HBoxContainer.new()
 	illus_row.add_theme_constant_override("separation", 8)
@@ -116,12 +122,14 @@ func _build_ui() -> void:
 	illus_row.add_child(illus_lbl)
 	_illus_edit = LineEdit.new()
 	_illus_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_illus_edit.text_changed.connect(_on_illustration_path_changed)
 	illus_row.add_child(_illus_edit)
 	var browse_btn := Button.new()
 	browse_btn.text = "Browse..."
 	browse_btn.pressed.connect(_browse_illustration)
 	illus_row.add_child(browse_btn)
 	right.add_child(illus_row)
+	right.add_child(_make_illustration_preview_row())
 
 	_diff_opt = OptionButton.new()
 	for d: String in DIFFICULTIES:
@@ -166,10 +174,76 @@ func _build_ui() -> void:
 	_file_dialog.access = FileDialog.ACCESS_RESOURCES
 	_file_dialog.filters = PackedStringArray(["*.png ; PNG Images"])
 	_file_dialog.file_selected.connect(func(path: String) -> void:
-		_illus_edit.text = path)
+		_illus_edit.text = path
+		_refresh_illustration_preview())
 	add_child(_file_dialog)
 
 	_refresh_list()
+
+
+func _make_illustration_preview_row() -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+
+	var spacer := Control.new()
+	spacer.custom_minimum_size.x = 110.0
+	row.add_child(spacer)
+
+	var preview_col := VBoxContainer.new()
+	preview_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	preview_col.add_theme_constant_override("separation", 6)
+	row.add_child(preview_col)
+
+	var preview_panel := PanelContainer.new()
+	preview_panel.custom_minimum_size = Vector2(PREVIEW_WIDTH, PREVIEW_HEIGHT)
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.08, 0.09, 0.12, 0.95)
+	sb.border_color = Color(0.35, 0.4, 0.48, 0.85)
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(6)
+	sb.content_margin_left = 8.0
+	sb.content_margin_top = 8.0
+	sb.content_margin_right = 8.0
+	sb.content_margin_bottom = 8.0
+	preview_panel.add_theme_stylebox_override("panel", sb)
+	preview_col.add_child(preview_panel)
+
+	_illus_preview = TextureRect.new()
+	_illus_preview.custom_minimum_size = Vector2(PREVIEW_WIDTH - 16.0, PREVIEW_HEIGHT - 16.0)
+	_illus_preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_illus_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_illus_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	preview_panel.add_child(_illus_preview)
+
+	_illus_preview_hint = Label.new()
+	_illus_preview_hint.text = "No illustration selected"
+	_illus_preview_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_illus_preview_hint.add_theme_font_size_override("font_size", 12)
+	_illus_preview_hint.add_theme_color_override("font_color", Color(0.55, 0.6, 0.68))
+	preview_col.add_child(_illus_preview_hint)
+
+	return row
+
+
+func _on_illustration_path_changed(_new_text: String) -> void:
+	_refresh_illustration_preview()
+
+
+func _refresh_illustration_preview() -> void:
+	if _illus_preview == null:
+		return
+	var path: String = _illus_edit.text.strip_edges() if _illus_edit else ""
+	var tex: Texture2D = null
+	if path != "" and ResourceLoader.exists(path):
+		tex = load(path) as Texture2D
+	_illus_preview.texture = tex
+	if _illus_preview_hint != null:
+		if tex != null:
+			_illus_preview_hint.text = path.get_file()
+		elif path.is_empty():
+			_illus_preview_hint.text = "No illustration selected"
+		else:
+			_illus_preview_hint.text = "Image not found: %s" % path.get_file()
 
 
 func _labeled_row(label_text: String, control: Control) -> HBoxContainer:
@@ -215,6 +289,7 @@ func _select_entry(idx: int) -> void:
 		_name_edit.text = str(entry.get("name", ""))
 	if _illus_edit:
 		_illus_edit.text = str(entry.get("illustration", ""))
+	_refresh_illustration_preview()
 	var diff: String = str(entry.get("difficulty", "easy")).strip_edges().to_lower()
 	if _diff_opt:
 		for i: int in range(_diff_opt.item_count):

@@ -3,6 +3,8 @@
 	"graph_id": "new_graph",
 	"nodes": [
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/vn_explo_univ_window-side-seatings_light_off.png",
 			"background_conditions": [],
@@ -152,6 +154,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_book_aisle_light_off.png",
 			"background_conditions": [],
@@ -306,6 +310,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_group_study_light_off.png",
 			"background_conditions": [],
@@ -407,6 +413,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_magazine_lounge_light_off.png",
 			"background_conditions": [],
@@ -560,6 +568,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_booths_clean_light_off.png",
 			"background_conditions": [
@@ -790,6 +800,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_observatory.png",
 			"background_conditions": [],
@@ -846,6 +858,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_deeper_aisle_light_off.png",
 			"background_conditions": [],
@@ -976,6 +990,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_exhibition_storage.png",
 			"background_conditions": [],
@@ -1135,6 +1151,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_back_hallway_light_off.png",
 			"background_conditions": [
@@ -1233,6 +1251,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_break_room_light_off.png",
 			"background_conditions": [
@@ -1376,6 +1396,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_preservation_department_light_off.png",
 			"background_conditions": [
@@ -1518,6 +1540,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_book_repair_unit_light_off.png",
 			"background_conditions": [
@@ -1617,6 +1641,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_chemical_process_room_light_off.png",
 			"background_conditions": [
@@ -1730,6 +1756,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_technician_office_light_off.png",
 			"background_conditions": [
@@ -1878,6 +1906,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_toilet_front.png",
 			"background_conditions": [],
@@ -2043,6 +2073,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_staff_hallway.png",
 			"background_conditions": [],
@@ -2136,6 +2168,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_meeting_room.png",
 			"background_conditions": [],
@@ -2234,6 +2268,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_manager_room.png",
 			"background_conditions": [],
@@ -2349,6 +2385,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_maintenance_room.png",
 			"background_conditions": [],
@@ -2450,6 +2488,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_server_room.png",
 			"background_conditions": [],
@@ -2588,6 +2628,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_surveillance_room_blue_screen_2.png",
 			"background_conditions": [],
@@ -2864,6 +2906,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
 			"background_conditions": [],
@@ -2957,6 +3001,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_smoking_room.png",
 			"background_conditions": [],
@@ -3083,6 +3129,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_empty_room_with_photo.png",
 			"background_conditions": [
@@ -3172,6 +3220,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/exploration/background/university/bg_explo_univ_empty_storage.png",
 			"background_conditions": [],
@@ -3284,6 +3334,8 @@
 			"vn_trigger_var": ""
 		},
 		{
+			"ai_deck_vault": "",
+			"ai_deck_vault_formation": 0,
 			"almost_win_bgm": "",
 			"background": "res://assets/textures/vn/backgrounds/vn_cut_library_toilet_day.png",
 			"background_conditions": [],

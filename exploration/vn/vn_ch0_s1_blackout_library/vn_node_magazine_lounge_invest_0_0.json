@@ -10,9 +10,19 @@
 		"wait": 0.5
 	},
 	{
-		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_magazine_lounge_nex_newspaper_mess.png",
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_magazine_lounge_nex_nespaper_light_off.png",
 		"linger_characters": true,
 		"speaker": "Nex",
-		"text": "Holy shit... I can't fold them back..."
+		"text": "It's from the last year."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/exploration/background/university/bg_explo_univ_magazine_lounge_nex_nespaper_light_off.png",
+		"linger_characters": true,
+		"speaker": "Nex",
+		"text": "Newspapers are just as good as decoration nowadays."
 	}
 ]

@@ -308,178 +308,43 @@ func _resolve_chapter_exploration(card: Dictionary, vn_path: String) -> Dictiona
 
 
 func _show_continue_or_restart_vn_dialog(card: Dictionary, vn_path: String) -> void:
-	if get_node_or_null("ChapterResumeDialog") != null:
+	if GameDialog.has_open_overlay(self):
 		return
 	var chapter_label: String = str(card.get("line2", card.get("line1", "this chapter")))
-
-	var blocker := ColorRect.new()
-	blocker.name = "ChapterResumeDialog"
-	blocker.color = Color(0.0, 0.0, 0.0, 0.72)
-	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
-	blocker.z_index = 30
-	add_child(blocker)
-
-	var panel := PanelContainer.new()
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.offset_left = -260.0
-	panel.offset_right = 260.0
-	panel.offset_top = -130.0
-	panel.offset_bottom = 130.0
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.08, 0.09, 0.12, 0.98)
-	sb.border_color = Color(0.55, 0.72, 0.95, 0.75)
-	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(10)
-	sb.set_content_margin_all(22)
-	panel.add_theme_stylebox_override("panel", sb)
-	blocker.add_child(panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 14)
-	panel.add_child(vbox)
-
-	var title := Label.new()
-	title.text = "Saved Progress Found"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_override("font", CHIVO_FONT)
-	title.add_theme_font_size_override("font_size", 20)
-	title.add_theme_color_override("font_color", Color(0.92, 0.94, 1.0))
-	vbox.add_child(title)
-
-	var body := Label.new()
-	body.text = (
-		"You have saved story progress in %s.\n\n"
-		% chapter_label
-		+ "Continue from where you left off, or restart the chapter from the beginning.")
-	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	body.add_theme_font_override("font", CHIVO_FONT)
-	body.add_theme_font_size_override("font_size", 14)
-	body.add_theme_color_override("font_color", Color(0.78, 0.80, 0.86))
-	vbox.add_child(body)
-
-	var btn_row := HBoxContainer.new()
-	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	btn_row.add_theme_constant_override("separation", 10)
-	vbox.add_child(btn_row)
-
-	var continue_btn := Button.new()
-	continue_btn.text = "Continue Saved Progress"
-	continue_btn.custom_minimum_size = Vector2(0, 40)
-	continue_btn.add_theme_font_override("font", CHIVO_FONT)
-	continue_btn.add_theme_font_size_override("font_size", 13)
-	continue_btn.pressed.connect(func() -> void:
-		blocker.queue_free()
-		_play_vn(vn_path, false))
-	btn_row.add_child(continue_btn)
-
-	var restart_btn := Button.new()
-	restart_btn.text = "Restart Chapter"
-	restart_btn.custom_minimum_size = Vector2(0, 40)
-	restart_btn.add_theme_font_override("font", CHIVO_FONT)
-	restart_btn.add_theme_font_size_override("font_size", 13)
-	restart_btn.pressed.connect(func() -> void:
-		blocker.queue_free()
-		_play_vn(vn_path, true, card))
-	btn_row.add_child(restart_btn)
-
-	var cancel_btn := Button.new()
-	cancel_btn.text = "Cancel"
-	cancel_btn.custom_minimum_size = Vector2(90, 40)
-	cancel_btn.add_theme_font_override("font", CHIVO_FONT)
-	cancel_btn.add_theme_font_size_override("font_size", 13)
-	cancel_btn.pressed.connect(func() -> void: blocker.queue_free())
-	btn_row.add_child(cancel_btn)
+	GameDialog.choices_overlay(
+		self,
+		"Saved Progress Found",
+		"You have saved story progress in %s.\n\nContinue from where you left off, or restart the chapter from the beginning." % chapter_label,
+		[
+			{"text": "Continue Saved Progress", "callback": func() -> void: _play_vn(vn_path, false)},
+			{"text": "Restart Chapter", "callback": func() -> void: _play_vn(vn_path, true, card)},
+		],
+		"Cancel",
+		Callable(),
+		520.0,
+		30)
 
 
 func _show_continue_or_restart_exploration_dialog(
 		card: Dictionary,
 		vn_path: String,
 		graph_path: String) -> void:
-	if get_node_or_null("ChapterResumeDialog") != null:
+	if GameDialog.has_open_overlay(self):
 		return
 	var chapter_label: String = str(card.get("line2", card.get("line1", "this chapter")))
-
-	var blocker := ColorRect.new()
-	blocker.name = "ChapterResumeDialog"
-	blocker.color = Color(0.0, 0.0, 0.0, 0.72)
-	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
-	blocker.z_index = 30
-	add_child(blocker)
-
-	var panel := PanelContainer.new()
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.offset_left = -260.0
-	panel.offset_right = 260.0
-	panel.offset_top = -130.0
-	panel.offset_bottom = 130.0
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.08, 0.09, 0.12, 0.98)
-	sb.border_color = Color(0.55, 0.72, 0.95, 0.75)
-	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(10)
-	sb.set_content_margin_all(22)
-	panel.add_theme_stylebox_override("panel", sb)
-	blocker.add_child(panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 14)
-	panel.add_child(vbox)
-
-	var title := Label.new()
-	title.text = "Saved Progress Found"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_override("font", CHIVO_FONT)
-	title.add_theme_font_size_override("font_size", 20)
-	title.add_theme_color_override("font_color", Color(0.92, 0.94, 1.0))
-	vbox.add_child(title)
-
-	var body := Label.new()
-	body.text = (
-		"You have saved exploration progress in %s.\n\n"
-		% chapter_label
-		+ "Continue from where you left off, or restart the chapter from the beginning.")
-	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	body.add_theme_font_override("font", CHIVO_FONT)
-	body.add_theme_font_size_override("font_size", 14)
-	body.add_theme_color_override("font_color", Color(0.78, 0.80, 0.86))
-	vbox.add_child(body)
-
-	var btn_row := HBoxContainer.new()
-	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	btn_row.add_theme_constant_override("separation", 10)
-	vbox.add_child(btn_row)
-
-	var continue_btn := Button.new()
-	continue_btn.text = "Continue Saved Progress"
-	continue_btn.custom_minimum_size = Vector2(0, 40)
-	continue_btn.add_theme_font_override("font", CHIVO_FONT)
-	continue_btn.add_theme_font_size_override("font_size", 13)
-	continue_btn.pressed.connect(func() -> void:
-		blocker.queue_free()
-		_resume_exploration(graph_path))
-	btn_row.add_child(continue_btn)
-
-	var restart_btn := Button.new()
-	restart_btn.text = "Restart Chapter"
-	restart_btn.custom_minimum_size = Vector2(0, 40)
-	restart_btn.add_theme_font_override("font", CHIVO_FONT)
-	restart_btn.add_theme_font_size_override("font_size", 13)
-	restart_btn.pressed.connect(func() -> void:
-		blocker.queue_free()
-		_show_restart_exploration_warning_dialog(card, vn_path, graph_path, chapter_label))
-	btn_row.add_child(restart_btn)
-
-	var cancel_btn := Button.new()
-	cancel_btn.text = "Cancel"
-	cancel_btn.custom_minimum_size = Vector2(90, 40)
-	cancel_btn.add_theme_font_override("font", CHIVO_FONT)
-	cancel_btn.add_theme_font_size_override("font_size", 13)
-	cancel_btn.pressed.connect(func() -> void: blocker.queue_free())
-	btn_row.add_child(cancel_btn)
+	GameDialog.choices_overlay(
+		self,
+		"Saved Progress Found",
+		"You have saved exploration progress in %s.\n\nContinue from where you left off, or restart the chapter from the beginning." % chapter_label,
+		[
+			{"text": "Continue Saved Progress", "callback": func() -> void: _resume_exploration(graph_path)},
+			{"text": "Restart Chapter", "callback": func() -> void:
+				_show_restart_exploration_warning_dialog(card, vn_path, graph_path, chapter_label)},
+		],
+		"Cancel",
+		Callable(),
+		520.0,
+		30)
 
 
 func _show_restart_exploration_warning_dialog(
@@ -487,77 +352,21 @@ func _show_restart_exploration_warning_dialog(
 		vn_path: String,
 		_graph_path: String,
 		chapter_label: String) -> void:
-	if get_node_or_null("ChapterRestartDialog") != null:
+	if GameDialog.has_open_overlay(self):
 		return
-
-	var blocker := ColorRect.new()
-	blocker.name = "ChapterRestartDialog"
-	blocker.color = Color(0.0, 0.0, 0.0, 0.72)
-	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
-	blocker.z_index = 30
-	add_child(blocker)
-
-	var panel := PanelContainer.new()
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.offset_left = -250.0
-	panel.offset_right = 250.0
-	panel.offset_top = -110.0
-	panel.offset_bottom = 110.0
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.12, 0.06, 0.06, 0.98)
-	sb.border_color = Color(1.0, 0.45, 0.35, 0.85)
-	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(10)
-	sb.set_content_margin_all(22)
-	panel.add_theme_stylebox_override("panel", sb)
-	blocker.add_child(panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 14)
-	panel.add_child(vbox)
-
-	var title := Label.new()
-	title.text = "Restart Chapter?"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_override("font", CHIVO_FONT)
-	title.add_theme_font_size_override("font_size", 20)
-	title.add_theme_color_override("font_color", Color(1.0, 0.55, 0.45))
-	vbox.add_child(title)
-
-	var body := Label.new()
-	body.text = "Restarting %s will erase all saved exploration progress for this chapter." % chapter_label
-	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	body.add_theme_font_override("font", CHIVO_FONT)
-	body.add_theme_font_size_override("font_size", 14)
-	body.add_theme_color_override("font_color", Color(0.88, 0.78, 0.74))
-	vbox.add_child(body)
-
-	var btn_row := HBoxContainer.new()
-	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	btn_row.add_theme_constant_override("separation", 10)
-	vbox.add_child(btn_row)
-
-	var confirm_btn := Button.new()
-	confirm_btn.text = "Restart Chapter"
-	confirm_btn.custom_minimum_size = Vector2(0, 40)
-	confirm_btn.add_theme_font_override("font", CHIVO_FONT)
-	confirm_btn.add_theme_font_size_override("font_size", 13)
-	confirm_btn.pressed.connect(func() -> void:
-		blocker.queue_free()
-		ExplorationManager.clear_saved_session()
-		SaveManager.clear_vn_checkpoint(vn_path)
-		_play_vn(vn_path, true, card))
-	btn_row.add_child(confirm_btn)
-
-	var cancel_btn := Button.new()
-	cancel_btn.text = "Cancel"
-	cancel_btn.custom_minimum_size = Vector2(90, 40)
-	cancel_btn.add_theme_font_override("font", CHIVO_FONT)
-	cancel_btn.add_theme_font_size_override("font_size", 13)
-	cancel_btn.pressed.connect(func() -> void: blocker.queue_free())
-	btn_row.add_child(cancel_btn)
+	GameDialog.confirmation_overlay(
+		self,
+		"Restart Chapter?",
+		"Restarting %s will erase all saved exploration progress for this chapter." % chapter_label,
+		"Restart Chapter",
+		"Cancel",
+		func() -> void:
+			ExplorationManager.clear_saved_session()
+			SaveManager.clear_vn_checkpoint(vn_path)
+			_play_vn(vn_path, true, card),
+		Callable(),
+		520.0,
+		30)
 
 
 func _resume_exploration(graph_path: String) -> void:
@@ -567,89 +376,22 @@ func _resume_exploration(graph_path: String) -> void:
 
 
 func _show_continue_or_restart_dialog(card: Dictionary, vn_path: String, dungeon_id: String) -> void:
-	if get_node_or_null("ChapterResumeDialog") != null:
+	if GameDialog.has_open_overlay(self):
 		return
 	var chapter_label: String = str(card.get("line2", card.get("line1", "this chapter")))
-
-	var blocker := ColorRect.new()
-	blocker.name = "ChapterResumeDialog"
-	blocker.color = Color(0.0, 0.0, 0.0, 0.72)
-	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
-	blocker.z_index = 30
-	add_child(blocker)
-
-	var panel := PanelContainer.new()
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.offset_left = -260.0
-	panel.offset_right = 260.0
-	panel.offset_top = -130.0
-	panel.offset_bottom = 130.0
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.08, 0.09, 0.12, 0.98)
-	sb.border_color = Color(0.55, 0.72, 0.95, 0.75)
-	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(10)
-	sb.set_content_margin_all(22)
-	panel.add_theme_stylebox_override("panel", sb)
-	blocker.add_child(panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 14)
-	panel.add_child(vbox)
-
-	var title := Label.new()
-	title.text = "Saved Progress Found"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_override("font", CHIVO_FONT)
-	title.add_theme_font_size_override("font_size", 20)
-	title.add_theme_color_override("font_color", Color(0.92, 0.94, 1.0))
-	vbox.add_child(title)
-
-	var body := Label.new()
-	body.text = (
-		"You have saved progress in %s.\n\n"
-		% chapter_label
-		+ "Continue from where you left off, or restart the chapter from the beginning.")
-	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	body.add_theme_font_override("font", CHIVO_FONT)
-	body.add_theme_font_size_override("font_size", 14)
-	body.add_theme_color_override("font_color", Color(0.78, 0.80, 0.86))
-	vbox.add_child(body)
-
-	var btn_row := HBoxContainer.new()
-	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	btn_row.add_theme_constant_override("separation", 10)
-	vbox.add_child(btn_row)
-
-	var continue_btn := Button.new()
-	continue_btn.text = "Continue Saved Progress"
-	continue_btn.custom_minimum_size = Vector2(0, 40)
-	continue_btn.add_theme_font_override("font", CHIVO_FONT)
-	continue_btn.add_theme_font_size_override("font_size", 13)
-	continue_btn.pressed.connect(func() -> void:
-		blocker.queue_free()
-		_resume_story_dungeon(dungeon_id))
-	btn_row.add_child(continue_btn)
-
-	var restart_btn := Button.new()
-	restart_btn.text = "Restart Chapter"
-	restart_btn.custom_minimum_size = Vector2(0, 40)
-	restart_btn.add_theme_font_override("font", CHIVO_FONT)
-	restart_btn.add_theme_font_size_override("font_size", 13)
-	restart_btn.pressed.connect(func() -> void:
-		blocker.queue_free()
-		_show_restart_warning_dialog(card, vn_path, dungeon_id, chapter_label))
-	btn_row.add_child(restart_btn)
-
-	var cancel_btn := Button.new()
-	cancel_btn.text = "Cancel"
-	cancel_btn.custom_minimum_size = Vector2(90, 40)
-	cancel_btn.add_theme_font_override("font", CHIVO_FONT)
-	cancel_btn.add_theme_font_size_override("font_size", 13)
-	cancel_btn.pressed.connect(func() -> void: blocker.queue_free())
-	btn_row.add_child(cancel_btn)
+	GameDialog.choices_overlay(
+		self,
+		"Saved Progress Found",
+		"You have saved progress in %s.\n\nContinue from where you left off, or restart the chapter from the beginning." % chapter_label,
+		[
+			{"text": "Continue Saved Progress", "callback": func() -> void: _resume_story_dungeon(dungeon_id)},
+			{"text": "Restart Chapter", "callback": func() -> void:
+				_show_restart_warning_dialog(card, vn_path, dungeon_id, chapter_label)},
+		],
+		"Cancel",
+		Callable(),
+		520.0,
+		30)
 
 
 func _show_restart_warning_dialog(
@@ -657,76 +399,20 @@ func _show_restart_warning_dialog(
 		vn_path: String,
 		dungeon_id: String,
 		chapter_label: String) -> void:
-	if get_node_or_null("ChapterRestartDialog") != null:
+	if GameDialog.has_open_overlay(self):
 		return
-
-	var blocker := ColorRect.new()
-	blocker.name = "ChapterRestartDialog"
-	blocker.color = Color(0.0, 0.0, 0.0, 0.72)
-	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
-	blocker.z_index = 30
-	add_child(blocker)
-
-	var panel := PanelContainer.new()
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.offset_left = -250.0
-	panel.offset_right = 250.0
-	panel.offset_top = -110.0
-	panel.offset_bottom = 110.0
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.12, 0.06, 0.06, 0.98)
-	sb.border_color = Color(1.0, 0.45, 0.35, 0.85)
-	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(10)
-	sb.set_content_margin_all(22)
-	panel.add_theme_stylebox_override("panel", sb)
-	blocker.add_child(panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 14)
-	panel.add_child(vbox)
-
-	var title := Label.new()
-	title.text = "Restart Chapter?"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_override("font", CHIVO_FONT)
-	title.add_theme_font_size_override("font_size", 20)
-	title.add_theme_color_override("font_color", Color(1.0, 0.55, 0.45))
-	vbox.add_child(title)
-
-	var body := Label.new()
-	body.text = "Restarting %s will erase all saved dungeon progress, wheel modifiers, and map position for this chapter." % chapter_label
-	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	body.add_theme_font_override("font", CHIVO_FONT)
-	body.add_theme_font_size_override("font_size", 14)
-	body.add_theme_color_override("font_color", Color(0.88, 0.78, 0.74))
-	vbox.add_child(body)
-
-	var btn_row := HBoxContainer.new()
-	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	btn_row.add_theme_constant_override("separation", 10)
-	vbox.add_child(btn_row)
-
-	var confirm_btn := Button.new()
-	confirm_btn.text = "Restart Chapter"
-	confirm_btn.custom_minimum_size = Vector2(0, 40)
-	confirm_btn.add_theme_font_override("font", CHIVO_FONT)
-	confirm_btn.add_theme_font_size_override("font_size", 13)
-	confirm_btn.pressed.connect(func() -> void:
-		blocker.queue_free()
-		DailyDungeonManager.reset_story_dungeon_chapter(dungeon_id)
-		_play_vn(vn_path, true, card))
-	btn_row.add_child(confirm_btn)
-
-	var cancel_btn := Button.new()
-	cancel_btn.text = "Cancel"
-	cancel_btn.custom_minimum_size = Vector2(90, 40)
-	cancel_btn.add_theme_font_override("font", CHIVO_FONT)
-	cancel_btn.add_theme_font_size_override("font_size", 13)
-	cancel_btn.pressed.connect(func() -> void: blocker.queue_free())
-	btn_row.add_child(cancel_btn)
+	GameDialog.confirmation_overlay(
+		self,
+		"Restart Chapter?",
+		"Restarting %s will erase all saved dungeon progress, wheel modifiers, and map position for this chapter." % chapter_label,
+		"Restart Chapter",
+		"Cancel",
+		func() -> void:
+			DailyDungeonManager.reset_story_dungeon_chapter(dungeon_id)
+			_play_vn(vn_path, true, card),
+		Callable(),
+		520.0,
+		30)
 
 
 func _resume_story_dungeon(dungeon_id: String) -> void:

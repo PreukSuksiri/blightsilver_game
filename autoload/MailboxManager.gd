@@ -9,10 +9,76 @@ var mail_items: Array = []   # Array of Dicts (see _make_item)
 var _next_id: int = 0
 var _exporter_active: bool = false
 
+const MAIL_KIND_ACHIEVEMENT := "achievement_reward"
+
 
 # ─────────────────────────────────────────────────────────────
 # Public API
 # ─────────────────────────────────────────────────────────────
+
+## Send achievement reward mail (unclaimed until claimed in Inventory / Mailbox).
+func send_achievement_reward_mail(achievement_id: String, reward: Dictionary = {}) -> void:
+	var ach_id: String = achievement_id.strip_edges()
+	var def: Dictionary = AchievementManager.get_definition(ach_id)
+	var title: String = str(def.get("title", ach_id))
+	var body: String = "Congratulations! Claim your reward from this message."
+	var pose: String = ProtagonistVault.get_pose_reward_label_for_achievement(ach_id)
+	if reward.is_empty() and not pose.is_empty():
+		body = "You unlocked a new protagonist pose: %s." % pose
+	elif not reward.is_empty():
+		body = "Your reward is attached."
+	var item := {
+		"id": str(_next_id),
+		"sender": "System",
+		"subject": "Achievement: %s" % title,
+		"body": body,
+		"reward": reward.duplicate(true),
+		"claimed": false,
+		"timestamp": int(Time.get_unix_time_from_system()),
+		"mail_kind": MAIL_KIND_ACHIEVEMENT,
+		"achievement_id": ach_id,
+		"menu_notified": false,
+	}
+	_next_id += 1
+	mail_items.append(item)
+	emit_signal("mail_received", item)
+	emit_signal("mailbox_changed")
+	SaveManager.save_data()
+
+
+func is_achievement_reward_mail(item: Dictionary) -> bool:
+	if str(item.get("mail_kind", "")) == MAIL_KIND_ACHIEVEMENT:
+		return true
+	return str(item.get("subject", "")).begins_with("Achievement:")
+
+
+func has_unnotified_achievement_reward_mail() -> bool:
+	for item: Dictionary in mail_items:
+		if item.get("claimed", false):
+			continue
+		if not is_achievement_reward_mail(item):
+			continue
+		if bool(item.get("menu_notified", true)):
+			continue
+		return true
+	return false
+
+
+func mark_achievement_reward_mails_notified() -> void:
+	var changed := false
+	for item: Dictionary in mail_items:
+		if item.get("claimed", false):
+			continue
+		if not is_achievement_reward_mail(item):
+			continue
+		if bool(item.get("menu_notified", false)):
+			continue
+		item["menu_notified"] = true
+		changed = true
+	if changed:
+		emit_signal("mailbox_changed")
+		SaveManager.save_data()
+
 
 ## Send a mail item to the player's inbox.
 ## reward dict keys:

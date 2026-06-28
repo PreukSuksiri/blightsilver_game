@@ -60,6 +60,16 @@ const MIN_CHARACTERS: int = 8
 const MAX_CHARACTERS: int = 12
 const MIN_TRAPS: int = 4
 const MAX_TRAPS: int = 6
+## Voluntary crystal payments — Melissa the Healer does not recover on these.
+const CRYSTAL_LOSS_NO_RECOVERY_REASONS: Array[String] = [
+	"union",
+	"skip tax",
+	"ability",
+	"attack tax",
+	"tech cost",
+	"trap cost",
+	"mining tax",
+]
 
 # Decoy Puppet / Echo Barrier / Guerrilla Tactics battle flow (declared before inner class)
 var attack_cost_block_max: int = -1
@@ -239,9 +249,23 @@ class CardInstance:
 		var chain_limit: int = get_multi_attack_non_char_chain_limit()
 		return multi_attack_count > 0 and multi_attack_count < chain_limit
 
-	## Golden Senju chain or Sonic Seraph dead-end bonus attack still available.
+	## Twin Axe Saintess / Tendrill Tyrant — bonus chain attack still available.
+	func has_pending_multi_attack_any() -> bool:
+		if card_type != "character" or attacked_this_turn:
+			return false
+		if ability_type not in [
+				CharacterData.AbilityType.MULTI_ATTACK_ANY,
+				CharacterData.AbilityType.MULTI_ATTACK_ANY_WITH_ATK_LOSS]:
+			return false
+		var max_attacks: int = int(ability_params.get("max_attacks", 2))
+		return multi_attack_count > 0 and multi_attack_count < max_attacks
+
+	## Golden Senju chain, bonus-attack flags, or multi-attack-any chain still available.
 	func has_pending_bonus_attack_chain() -> bool:
-		return has_pending_multi_attack_non_char() or bonus_attack_pending
+		return (
+			has_pending_multi_attack_non_char()
+			or bonus_attack_pending
+			or has_pending_multi_attack_any())
 
 # ─────────────────────────────────────────────────────────────
 # Runtime State
@@ -366,6 +390,7 @@ func get_almost_win_bgm_path() -> String:
 # _vn_battle_pending = true tells new_game() to preserve these values instead of resetting them.
 var _vn_battle_pending: bool = false
 var battle_ai_union_enabled: bool = true
+var battle_ai_union_maniac: bool = false
 var battle_player_union_enabled: bool = true
 var battle_player_forced_cells: Array = []  # Array[Dictionary{card_name, row, col}]
 var battle_ai_forced_cells: Array = []      # Array[Dictionary{card_name, row, col}]
@@ -669,19 +694,25 @@ func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 	emit_signal("crystals_changed", player_index, crystals[player_index], reason)
 
 	# CRYSTAL_RECOVER_ON_BIG_LOSS: if this player's loss was large, recover some crystals
-	if amount > 0:
+	if amount > 0 and reason not in CRYSTAL_LOSS_NO_RECOVERY_REASONS:
 		for r in range(GRID_SIZE):
 			for c in range(GRID_SIZE):
 				var own_card: CardInstance = grids[player_index][r][c]
 				if own_card.card_type == "character" and own_card.face_up:
 					if own_card.ability_type == CharacterData.AbilityType.CRYSTAL_RECOVER_ON_BIG_LOSS:
 						var threshold: int = own_card.ability_params.get("threshold", 500)
-						var recover: int = own_card.ability_params.get("recover", 300)
+						var recover: int = own_card.ability_params.get(
+							"recover", own_card.ability_params.get("amount", 300))
 						if amount >= threshold:
+							emit_signal("card_effect_triggered", own_card.card_name, "character")
 							crystals[player_index] = min(crystals[player_index] + recover, crystals[player_index] + recover)
 							_begin_crystal_animation()
 							emit_signal("crystals_changed", player_index, crystals[player_index], "recovery")
 							post_message("%s: Recovered %d Crystals!" % [own_card.card_name, recover])
+						break
+			else:
+				continue
+			break
 
 	_check_crystal_win_condition()
 
@@ -1199,6 +1230,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	guerrilla_tactics_owner = -1
 	if not _vn_battle_pending:
 		battle_ai_union_enabled = true
+		battle_ai_union_maniac = false
 		battle_player_union_enabled = true
 		battle_player_forced_cells.clear()
 		battle_ai_forced_cells.clear()

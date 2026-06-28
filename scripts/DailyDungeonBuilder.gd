@@ -1422,36 +1422,33 @@ func _on_dungeon_selected(idx: int) -> void:
 	_load_dungeon(_filtered_ids[idx])
 
 func _on_new_layout() -> void:
-	# Prompt via a small popup
-	var popup := GameDialog.accept(
+	GameDialog.prompt_overlay(
 		self,
 		"New Dungeon Layout",
-		"Enter new dungeon ID (e.g. dungeon_forest):")
-	var line := LineEdit.new()
-	line.placeholder_text = "dungeon_id"
-	popup.add_child(line)
-	popup.confirmed.connect(func() -> void:
-		var did: String = line.text.strip_edges()
-		if did.is_empty():
-			return
-		_layout = {
-			"id": did, "name": did, "background": "",
-			"nodes": [], "connections": []
-		}
-		_dungeon_id = did
-		_positions.clear()
-		_node_controls.clear()
-		_selected_id  = ""
-		_connect_from = ""
-		_rebuild_canvas()
-		_all_ids = DailyDungeonManager.get_all_layout_ids()
-		if did not in _all_ids:
-			_all_ids.append(did)
-		_populate_dungeon_picker()
-		_dungeon_picker.selected = _filtered_ids.find(did)
-		_set_status("New layout: %s  (not yet saved)" % did)
-		popup.queue_free())
-	popup.popup_centered()
+		"Enter new dungeon ID (e.g. dungeon_forest):",
+		"dungeon_id",
+		"OK",
+		"Cancel",
+		func(did: String) -> bool:
+			if did.is_empty():
+				return false
+			_layout = {
+				"id": did, "name": did, "background": "",
+				"nodes": [], "connections": []
+			}
+			_dungeon_id = did
+			_positions.clear()
+			_node_controls.clear()
+			_selected_id  = ""
+			_connect_from = ""
+			_rebuild_canvas()
+			_all_ids = DailyDungeonManager.get_all_layout_ids()
+			if did not in _all_ids:
+				_all_ids.append(did)
+			_populate_dungeon_picker()
+			_dungeon_picker.selected = _filtered_ids.find(did)
+			_set_status("New layout: %s  (not yet saved)" % did)
+			return true)
 
 # ─────────────────────────────────────────────────────────────
 # Helpers

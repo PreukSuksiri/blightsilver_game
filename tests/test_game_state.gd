@@ -127,6 +127,26 @@ func test_crystal_loss() -> void:
 	GameState.lose_crystals(0, 2000)
 	assert_eq(GameState.crystals[0], 500, "Player 0 loses 2000 more crystals")
 
+func test_melissa_recovers_on_large_battle_loss() -> void:
+	print("-- test_melissa_recovers_on_large_battle_loss")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 0, 0, "Melissa the Healer")
+	GameState.get_card(0, 0, 0).face_up = true
+	GameState.crystals[0] = 3000
+	GameState.lose_crystals(0, 600, "battle")
+	assert_eq(GameState.crystals[0], 2700, "Melissa recovers 300 after 600 battle loss")
+
+func test_melissa_skips_recovery_on_voluntary_costs() -> void:
+	print("-- test_melissa_skips_recovery_on_voluntary_costs")
+	GameState.new_game(GameState.GameMode.LOCAL_2P)
+	GameState.place_character(0, 0, 0, "Melissa the Healer")
+	GameState.get_card(0, 0, 0).face_up = true
+	GameState.crystals[0] = 3000
+	for reason: String in ["union", "skip tax", "ability", "tech cost"]:
+		GameState.lose_crystals(0, 600, reason)
+		assert_eq(GameState.crystals[0], 2400, "No Melissa recovery on %s payment" % reason)
+		GameState.crystals[0] = 3000
+
 func test_crystal_loss_to_zero_triggers_game_over() -> void:
 	print("-- test_crystal_loss_to_zero_triggers_game_over")
 	GameState.new_game(GameState.GameMode.LOCAL_2P)

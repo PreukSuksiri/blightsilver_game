@@ -84,6 +84,10 @@ var _union_suggest_tween: Tween         = null
 var _union_summoned_this_duel: Array[int] = [0, 0]
 
 # Setup-phase BGM player (started when placement begins, stopped at _begin_game)
+var _setup_p1_resolved: bool = false
+var _setup_p2_resolved: bool = false
+var _battle_begun: bool = false
+var _handoff_resolving: bool = false
 # Tech card fan (bottom of screen, active player only)
 var _tech_fan: Control = null
 
@@ -167,7 +171,7 @@ var _reveal_preview: Array[bool] = [false, false]
 var _revealing_cells: Dictionary = {}   # "p,r,c" → true while reveal animation runs
 var _pending_flag_pops: Array = []      # {player, row, col, flag}
 var _enemy_view_active: bool = false
-var _enemy_view_return_dialog: ConfirmationDialog = null
+var _enemy_view_return_dialog: Control = null
 
 # Playmat fog (Noise 3.png)
 var _fog_container: Control = null
@@ -326,7 +330,8 @@ func _input(event: InputEvent) -> void:
 			_hide_card_context()
 
 	# Cancel attack-target selection when tapping outside the opponent's grid
-	if selection_state == SelectionState.SELECTING_TARGET:
+	if selection_state == SelectionState.SELECTING_TARGET \
+			and not GameDialog.has_open_overlay(self):
 		var opponent := GameState.get_opponent(GameState.current_player)
 		var opp_grid: GridContainer = p2_grid if opponent == 1 else p1_grid
 		if not opp_grid.get_global_rect().has_point(click_pos):
@@ -353,7 +358,6 @@ func _toggle_admin_console() -> void:
 	BuildConfig.toggle_admin_console_on(self)
 
 func _ready() -> void:
-	RewardGranter.set_ui_host(self)
 	_setup_turn_manager()
 	_setup_ai()
 	_connect_signals()
@@ -1146,6 +1150,9 @@ func _build_portraits() -> void:
 		#		_portrait_last_tap[1] = now)
 
 func _show_handoff(player: int, context: String, callback: Callable) -> void:
+	_handoff_resolving = false
+	if _handoff_ready_btn != null:
+		_handoff_ready_btn.disabled = false
 	_handoff_callback = callback
 	_handoff_player_lbl.text = _player_names[player].to_upper()
 	var p_color := Color(0.4, 0.8, 1.0, 1.0) if player == 0 else Color(0.3, 1.0, 0.65, 1.0)
@@ -1162,13 +1169,25 @@ func _show_handoff(player: int, context: String, callback: Callable) -> void:
 		_options_btn.visible = false
 
 func _on_handoff_ready() -> void:
+	if _handoff_resolving:
+		return
+	_handoff_resolving = true
+	if _handoff_ready_btn != null:
+		_handoff_ready_btn.disabled = true
 	_handoff_overlay.visible = false
 	await _await_prompt_dismiss_delay()
 	if _handoff_callback.is_valid():
 		_handoff_callback.call()
 	_handoff_callback = Callable()
+	_handoff_resolving = false
+	if _handoff_ready_btn != null:
+		_handoff_ready_btn.disabled = false
 
 func _start_game() -> void:
+	_setup_p1_resolved = false
+	_setup_p2_resolved = false
+	_battle_begun = false
+	_handoff_resolving = false
 	_union_summoned_this_duel = [0, 0]
 	_void_piles = [[], []]
 	if GameState._vn_battle_pending:
@@ -1334,6 +1353,9 @@ func _apply_player_names() -> void:
 # Setup Phase Handlers
 # ─────────────────────────────────────────────────────────────
 func _on_setup_complete_p1() -> void:
+	if _setup_p1_resolved:
+		return
+	_setup_p1_resolved = true
 	if GameState.game_mode == GameState.GameMode.VS_AI \
 			or GameState.game_mode == GameState.GameMode.CAMPAIGN \
 			or GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
@@ -1352,6 +1374,9 @@ func _on_setup_complete_p1() -> void:
 		setup_phase.setup_complete.connect(_on_setup_complete_p2, CONNECT_ONE_SHOT)
 
 func _on_setup_complete_p2() -> void:
+	if _setup_p2_resolved:
+		return
+	_setup_p2_resolved = true
 	_begin_game()
 
 func _do_ai_setup() -> void:
@@ -1422,6 +1447,9 @@ func _do_ai_setup_p0() -> void:
 		GameState.set_bluff(0, cell.x, cell.y, setup_bluffs[cell])
 
 func _begin_game() -> void:
+	if _battle_begun:
+		return
+	_battle_begun = true
 	if setup_phase:
 		setup_phase.visible = false
 	_stop_setup_music()
@@ -3463,31 +3491,21 @@ func _should_block_card_actions_for_enemy_view() -> bool:
 func _show_enemy_view_return_prompt() -> void:
 	_hide_card_context()
 	if is_instance_valid(_enemy_view_return_dialog):
-		_enemy_view_return_dialog.popup_centered()
+		_enemy_view_return_dialog.move_to_front()
 		return
 	SFXManager.play(SFXManager.SFX_POPUP)
-	var dlg := GameDialog.confirmation(
+	_enemy_view_return_dialog = GameDialog.confirmation_overlay(
 		self,
 		"Enemy's View",
 		"You are now in \"Enemy's View\". Would you like to return to \"Your View\"?",
 		"Your View",
-		"Stay")
-	dlg.confirmed.connect(func() -> void:
-		if _enemy_view_active:
-			_toggle_reveal_preview(GameState.current_player)
-		_enemy_view_return_dialog = null
-		dlg.queue_free()
-	)
-	dlg.canceled.connect(func() -> void:
-		_enemy_view_return_dialog = null
-		dlg.queue_free()
-	)
-	dlg.close_requested.connect(func() -> void:
-		_enemy_view_return_dialog = null
-		dlg.queue_free()
-	)
-	_enemy_view_return_dialog = dlg
-	dlg.popup_centered()
+		"Stay",
+		func() -> void:
+			if _enemy_view_active:
+				_toggle_reveal_preview(GameState.current_player)
+			_enemy_view_return_dialog = null,
+		func() -> void:
+			_enemy_view_return_dialog = null)
 
 # ─────────────────────────────────────────────────────────────
 # Corner Crystal Labels
@@ -4301,19 +4319,14 @@ func _build_card_name_lookup() -> void:
 		_card_name_to_type[n] = "tech"
 
 func _make_panel_stylebox() -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.05, 0.05, 0.12, 0.97)
-	sb.border_color = Color(0.55, 0.75, 1.0, 0.5)
-	sb.set_border_width_all(1)
-	sb.set_corner_radius_all(12)
-	sb.set_content_margin_all(24)
-	return sb
+	return GameDialog.make_panel_stylebox(24.0)
+
 
 # Returns {dimmer, vbox}. Caller fills vbox, then calls _add_back_btn(vbox, dimmer).
 func _make_sub_overlay(half_w: float = 420.0, half_h: float = 300.0) -> Dictionary:
 	var dimmer := ColorRect.new()
 	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dimmer.color = Color(0.0, 0.0, 0.0, 0.72)
+	dimmer.color = Color(0.0, 0.0, 0.0, 0.0)
 	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
 	dimmer.z_index = 55
 	add_child(dimmer)
@@ -4349,7 +4362,7 @@ func _add_back_btn(vbox: VBoxContainer, dimmer: Control) -> void:
 func _show_options_panel() -> void:
 	var dimmer := ColorRect.new()
 	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dimmer.color = Color(0.0, 0.0, 0.0, 0.72)
+	dimmer.color = Color(0.0, 0.0, 0.0, 0.0)
 	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
 	dimmer.z_index = 50
 	add_child(dimmer)
@@ -4371,8 +4384,7 @@ func _show_options_panel() -> void:
 	var title := Label.new()
 	title.text = "OPTIONS"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 22)
-	title.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+	GameDialog.style_title_label(title)
 	vbox.add_child(title)
 	vbox.add_child(HSeparator.new())
 
@@ -4628,54 +4640,21 @@ func _show_settings_panel() -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _show_surrender_confirm() -> void:
-	var ovl: Dictionary = _make_sub_overlay(300.0, 210.0)
-	var dimmer: Control = ovl["dimmer"]
-	var vbox: VBoxContainer = ovl["vbox"]
-
-	var lbl := Label.new()
-	lbl.text = "Surrender?"
-	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_size_override("font_size", 20)
-	lbl.add_theme_color_override("font_color", Color(1.0, 0.4, 0.35))
-	vbox.add_child(lbl)
-
-	var body := Label.new()
-	body.text = "You will lose this duel."
-	body.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	body.add_theme_font_size_override("font_size", 14)
-	body.add_theme_color_override("font_color", Color(0.8, 0.8, 0.85))
-	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	body.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	vbox.add_child(body)
-
-	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 16)
-	vbox.add_child(row)
-
-	var yes_btn := Button.new()
-	yes_btn.text = "Yes, Surrender"
-	yes_btn.add_theme_font_size_override("font_size", 15)
-	yes_btn.add_theme_color_override("font_color", Color(1.0, 0.4, 0.3))
-	yes_btn.custom_minimum_size = Vector2(140, 40)
-	yes_btn.pressed.connect(func() -> void:
-		dimmer.queue_free()
-		await _await_prompt_dismiss_delay()
-		var winner: int = GameState.get_opponent(GameState.current_player)
-		GameState.game_over_reason = "surrender"
-		GameState._end_game(winner))
-	row.add_child(yes_btn)
-
-	var no_btn := Button.new()
-	no_btn.text = "Cancel"
-	no_btn.add_theme_font_size_override("font_size", 15)
-	no_btn.custom_minimum_size = Vector2(80, 40)
-	no_btn.pressed.connect(func() -> void:
-		dimmer.queue_free()
-		await _await_prompt_dismiss_delay()
-		_show_options_panel())
-	row.add_child(no_btn)
-	SFXManager.wire_prompt_buttons_in(vbox)
+	SFXManager.play(SFXManager.SFX_POPUP)
+	GameDialog.confirmation_overlay(
+		self,
+		"Surrender?",
+		"You will lose this duel.",
+		"Yes, Surrender",
+		"Cancel",
+		func() -> void:
+			await _await_prompt_dismiss_delay()
+			var winner: int = GameState.get_opponent(GameState.current_player)
+			GameState.game_over_reason = "surrender"
+			GameState._end_game(winner),
+		func() -> void:
+			await _await_prompt_dismiss_delay()
+			_show_options_panel())
 
 # ─────────────────────────────────────────────────────────────
 # Hover Info Panel
@@ -8485,32 +8464,30 @@ func _try_cancel_attack_targeting() -> void:
 	_highlight_attackable_chars()
 
 func _prompt_forfeit_multi_attack() -> void:
+	if GameDialog.has_open_overlay(self):
+		return
 	var card: GameState.CardInstance = GameState.get_card(
 		GameState.current_player, selected_attacker_pos.x, selected_attacker_pos.y)
 	var card_label: String = card.card_name if card != null else "This unit"
-	var dlg := GameDialog.confirmation(
+	SFXManager.play(SFXManager.SFX_POPUP)
+	var forfeit_pos := selected_attacker_pos
+	var forfeit_player := GameState.current_player
+	GameDialog.confirmation_overlay(
 		self,
 		"Forfeit Extra Attack?",
 		"%s's bonus attack will be lost if you cancel targeting." % card_label,
 		"Forfeit",
-		"Keep Selecting")
-	dlg.confirmed.connect(func() -> void:
-		var pos := selected_attacker_pos
-		var player := GameState.current_player
-		_forfeit_multi_attack_bonus()
-		_clear_selection()
-		_set_selection_state(SelectionState.SELECTING_ATTACKER)
-		_highlight_attackable_chars()
-		_update_end_turn_blink()
-		dlg.queue_free()
-		if pos != Vector2i(-1, -1):
-			await _play_wait_badge_on_card(player, pos.x, pos.y)
-	)
-	dlg.canceled.connect(func() -> void:
-		dlg.queue_free()
-	)
-	SFXManager.play(SFXManager.SFX_POPUP)
-	dlg.popup_centered()
+		"Keep Selecting",
+		_on_forfeit_multi_attack_confirmed.bind(forfeit_pos, forfeit_player))
+
+func _on_forfeit_multi_attack_confirmed(pos: Vector2i, player: int) -> void:
+	_forfeit_multi_attack_bonus()
+	_clear_selection()
+	_set_selection_state(SelectionState.SELECTING_ATTACKER)
+	_highlight_attackable_chars()
+	_update_end_turn_blink()
+	if pos != Vector2i(-1, -1):
+		await _play_wait_badge_on_card(player, pos.x, pos.y)
 
 func _clear_selection() -> void:
 	_hide_card_context()
@@ -8691,7 +8668,7 @@ func _is_action_overlay_active() -> bool:
 		SelectionState.AWAITING_TRAP_CHOICE]:
 		return true
 	for child in get_children():
-		if child is ConfirmationDialog or child is AcceptDialog:
+		if child.name == "GameDialogOverlay":
 			return true
 		if child is CardDetailOverlay:
 			return true
@@ -9536,10 +9513,9 @@ func _on_game_over(winner: int) -> void:
 		var almost_path: String = _resolve_almost_win_bgm_path()
 		if BGMManager.get_current_path() != almost_path:
 			BGMManager.play_path(almost_path, 0.0, 0.0, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
-	elif not player_won and not _crystal_end and not _vs_ai_bgm_muted():
-		# Lose: slowly fade out whatever is playing across the reveal animation.
-		# Nothing starts after — defeat BGM is intentionally omitted.
-		BGMManager.stop(2.5)
+	elif not player_won and not _vs_ai_bgm_muted():
+		# Lose: crossfade battle BGM out while defeat track fades in.
+		BGMManager.play_context(BGMManager.CONTEXT_DEFEAT, 1.0, 2.5, 100.0, BGMManager.LOOP_PLAY_ONCE)
 	await _flip_reveal_all_cards()
 	_shake_active = false
 	ml.position = _shake_origin
@@ -9877,7 +9853,6 @@ func _await_pack_opening_overlay() -> void:
 			return
 
 func _exit_tree() -> void:
-	RewardGranter.clear_ui_host(self)
 	if _is_mid_battle_for_abandon():
 		GlobalStatManager.on_battle_abandoned()
 	if GameState.quick_duel_active and GameState.current_phase != GameState.Phase.GAME_OVER:

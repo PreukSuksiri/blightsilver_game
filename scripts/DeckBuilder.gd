@@ -5,6 +5,10 @@ signal initial_gallery_load_finished
 
 const DeckData = preload("res://resources/DeckData.gd")
 const GALLERY_TILES_PER_FRAME := 8
+const DECK_COST_TOTAL_WARN := 10000
+const DECK_COST_AVG_WARN := 800
+const COLOR_DECK_COST_OK := Color(1.0, 0.92, 0.35)
+const COLOR_DECK_COST_WARN := Color(1.0, 0.35, 0.35)
 
 # ── Scene node refs ───────────────────────────────────────────
 @onready var deck_name_field:   LineEdit    = $MainLayout/RightPanel/Inner/TopBar/DeckNameField
@@ -57,6 +61,7 @@ var _filter: String = "all"   # "all" | "character" | "trap" | "tech" | "union"
 var _filter_union_btn: Button = null
 var _preview_card_type: String = ""
 var _preview_card_name: String = ""
+var _cost_summary_label: RichTextLabel = null
 
 # Advanced filter state
 var _filter_affinity: int  = -1   # -1 = any
@@ -266,6 +271,7 @@ func _ready() -> void:
 	_show_loading_blocker()
 	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	_connect_buttons()
+	_setup_status_row()
 	_refresh_deck_select()
 	status_label.text = "Loading deck…"
 
@@ -353,6 +359,82 @@ func _deck_status_message(deck: DeckData) -> String:
 	return deck.validation_message() \
 		.replace("Character(s)", "Unit(s)") \
 		.replace("Characters", "Units")
+
+
+func _setup_status_row() -> void:
+	if status_label == null:
+		return
+	var parent: Node = status_label.get_parent()
+	if parent == null:
+		return
+	var row := HBoxContainer.new()
+	row.name = "StatusRow"
+	row.add_theme_constant_override("separation", 12)
+	parent.add_child(row)
+	parent.move_child(row, status_label.get_index())
+	status_label.reparent(row)
+	status_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+	_cost_summary_label = RichTextLabel.new()
+	_cost_summary_label.name = "CostSummaryLabel"
+	_cost_summary_label.bbcode_enabled = true
+	_cost_summary_label.fit_content = true
+	_cost_summary_label.scroll_active = false
+	_cost_summary_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_cost_summary_label.custom_minimum_size.x = 360.0
+	_cost_summary_label.size_flags_horizontal = Control.SIZE_SHRINK_END
+	_cost_summary_label.add_theme_font_size_override("normal_font_size", 18)
+	row.add_child(_cost_summary_label)
+
+
+func _unit_trap_cost_stats(deck: DeckData) -> Dictionary:
+	var total: int = 0
+	var count: int = 0
+	for card_name: Variant in deck.characters:
+		var data: CharacterData = CardDatabase.get_character(str(card_name))
+		if data == null:
+			continue
+		total += data.crystal_cost
+		count += 1
+	for card_name: Variant in deck.traps:
+		var trap_data: TrapData = CardDatabase.get_trap(str(card_name))
+		if trap_data == null:
+			continue
+		total += trap_data.crystal_cost
+		count += 1
+	var average: int = 0
+	if count > 0:
+		average = int(round(float(total) / float(count)))
+	return {"total": total, "count": count, "average": average}
+
+
+func _deck_cost_is_high(deck: DeckData) -> bool:
+	var stats: Dictionary = _unit_trap_cost_stats(deck)
+	if int(stats.get("total", 0)) > DECK_COST_TOTAL_WARN:
+		return true
+	if int(stats.get("count", 0)) > 0 and int(stats.get("average", 0)) >= DECK_COST_AVG_WARN:
+		return true
+	return false
+
+
+func _color_to_bbcode(color: Color) -> String:
+	return "#%02x%02x%02x" % [int(color.r * 255.0), int(color.g * 255.0), int(color.b * 255.0)]
+
+
+func _update_cost_summary(deck: DeckData) -> void:
+	if _cost_summary_label == null:
+		return
+	var stats: Dictionary = _unit_trap_cost_stats(deck)
+	var total: int = int(stats.get("total", 0))
+	var average: int = int(stats.get("average", 0))
+	var total_color: String = _color_to_bbcode(
+		COLOR_DECK_COST_WARN if total > DECK_COST_TOTAL_WARN else COLOR_DECK_COST_OK)
+	var avg_color: String = _color_to_bbcode(
+		COLOR_DECK_COST_WARN if average >= DECK_COST_AVG_WARN else COLOR_DECK_COST_OK)
+	_cost_summary_label.text = "[right]Total Cost = [color=%s]%d[/color]   Average Cost = [color=%s]%d[/color][/right]" % [
+		total_color, total, avg_color, average]
+
 
 func _refresh_deck_select() -> void:
 	deck_select.clear()
@@ -736,6 +818,7 @@ func _rebuild_deck_lists(refresh_gallery: bool = true, refresh_union: bool = tru
 
 	# Status & save button
 	status_label.text = _deck_status_message(current_deck)
+	_update_cost_summary(current_deck)
 	save_btn.disabled = not current_deck.is_valid()
 
 	remove_char_btn.disabled = true
@@ -889,13 +972,10 @@ func _add_union_materials_to_deck(union_name: String) -> void:
 		return
 
 	if UnionDatabase.deck_can_form_union(current_deck.characters, u):
-		var popup := GameDialog.accept(
+		GameDialog.accept_overlay(
 			self,
 			"Union Already Available",
 			"This Union card is already available in your deck.")
-		popup.popup_centered()
-		popup.confirmed.connect(func() -> void: popup.queue_free())
-		popup.canceled.connect(func() -> void: popup.queue_free())
 		return
 
 	var assigned: Array = []
@@ -932,14 +1012,11 @@ func _add_union_materials_to_deck(union_name: String) -> void:
 		var missing_str: String = ""
 		for cond: Dictionary in missing_conds:
 			missing_str += "\n  • " + _describe_cond(cond)
-		var popup := GameDialog.accept(
+		GameDialog.accept_overlay(
 			self,
 			"Not Enough Union Material",
 			"Not enough union material.\n\nFormula: %s\n\nFound: %s\nMissing:%s"
 			% [u.formula_description, found_str, missing_str])
-		popup.popup_centered()
-		popup.confirmed.connect(func() -> void: popup.queue_free())
-		popup.canceled.connect(func() -> void: popup.queue_free())
 		return
 
 	for cname: String in assigned:
@@ -1447,15 +1524,10 @@ func _fe_show_unsaved_warning() -> void:
 	if _fe_overlay == null or not is_instance_valid(_fe_overlay):
 		return
 	SFXManager.play(SFXManager.SFX_POPUP)
-	var dlg := GameDialog.accept(
+	GameDialog.accept_overlay(
 		_fe_overlay,
 		"Unsaved Changes",
-		"You have unsaved formation changes.\n\nTap Save before closing.",
-		"OK")
-	dlg.popup_centered()
-	dlg.confirmed.connect(func() -> void: dlg.queue_free())
-	dlg.canceled.connect(func() -> void: dlg.queue_free())
-	dlg.close_requested.connect(func() -> void: dlg.queue_free())
+		"You have unsaved formation changes.\n\nTap Save before closing.")
 
 func _fe_close_overlay() -> void:
 	_fe_stop_zone_flash()
@@ -2028,6 +2100,25 @@ func _on_export_file_selected(path: String) -> void:
 
 # ── Save / Back ───────────────────────────────────────────────
 func _on_save() -> void:
+	if current_deck == null or not current_deck.is_valid():
+		return
+	if _deck_cost_is_high(current_deck):
+		_confirm_high_cost_save()
+		return
+	_perform_save()
+
+
+func _confirm_high_cost_save() -> void:
+	GameDialog.confirmation_overlay(
+		self,
+		"High Deck Cost",
+		"The unit and trap costs in this deck are too high. Consider replacing some cards with lower-cost options.",
+		"Save",
+		"Edit Deck",
+		func() -> void: _perform_save())
+
+
+func _perform_save() -> void:
 	if current_deck == null or not current_deck.is_valid():
 		return
 	current_deck.deck_name = deck_name_field.text.strip_edges()

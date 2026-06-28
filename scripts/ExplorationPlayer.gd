@@ -1010,9 +1010,23 @@ func _close_settings_menu_popup() -> void:
 	_settings_menu = null
 
 func _close_confirm_dialog() -> void:
-	if _confirm_overlay != null and is_instance_valid(_confirm_overlay):
-		_confirm_overlay.queue_free()
+	GameDialog.close_overlay(self)
 	_confirm_overlay = null
+
+func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Callable) -> void:
+	_close_confirm_dialog()
+	_confirm_overlay = GameDialog.confirmation_overlay(
+		self,
+		title_text,
+		body_text,
+		"Yes",
+		"Cancel",
+		func() -> void:
+			_confirm_overlay = null
+			on_confirm.call(),
+		func() -> void: _confirm_overlay = null,
+		GameDialog.DEFAULT_MIN_WIDTH,
+		60)
 
 func _close_exploration_options_popup() -> void:
 	if _exploration_options_overlay != null and is_instance_valid(_exploration_options_overlay):
@@ -2952,84 +2966,6 @@ func _open_settings_menu_popup() -> void:
 		_settings_menu = null
 		sm.queue_free())
 	sm.tree_exiting.connect(func() -> void: _settings_menu = null)
-
-func _show_confirm_dialog(title_text: String, body_text: String, on_confirm: Callable) -> void:
-	_close_confirm_dialog()
-	var vp_sz: Vector2 = get_viewport_rect().size
-
-	var overlay := Control.new()
-	overlay.z_index  = 60
-	overlay.position = Vector2.ZERO
-	overlay.size     = vp_sz
-	_confirm_overlay = overlay
-	add_child(overlay)
-
-	var dimmer := ColorRect.new()
-	dimmer.color        = Color(0.0, 0.0, 0.0, 0.60)
-	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
-	dimmer.position     = Vector2.ZERO
-	dimmer.size         = vp_sz
-	overlay.add_child(dimmer)
-
-	var panel := Panel.new()
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.06, 0.06, 0.14, 0.97)
-	sb.set_border_width_all(2)
-	sb.border_color = Color(1.0, 0.55, 0.45, 0.70)
-	sb.set_corner_radius_all(8)
-	panel.add_theme_stylebox_override("panel", sb)
-	var dlg_size := Vector2(380.0, 200.0)
-	panel.size         = dlg_size
-	panel.position     = (vp_sz - dlg_size) * 0.5
-	panel.mouse_filter = Control.MOUSE_FILTER_STOP
-	overlay.add_child(panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 12)
-	panel.add_child(vbox)
-	vbox.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	vbox.offset_left = 24.0; vbox.offset_right  = -24.0
-	vbox.offset_top  = 20.0; vbox.offset_bottom = -20.0
-
-	var title_lbl := Label.new()
-	title_lbl.text = title_text
-	_tag_ui(title_lbl, "font", 700)
-	title_lbl.add_theme_font_size_override("font_size", 22)
-	title_lbl.add_theme_color_override("font_color", Color(1.0, 0.75, 0.70))
-	title_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(title_lbl)
-
-	var body_lbl := Label.new()
-	body_lbl.text = body_text
-	body_lbl.add_theme_font_size_override("font_size", 16)
-	body_lbl.add_theme_color_override("font_color", Color(0.80, 0.80, 0.85))
-	body_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	body_lbl.autowrap_mode        = TextServer.AUTOWRAP_WORD_SMART
-	vbox.add_child(body_lbl)
-
-	var btn_row := HBoxContainer.new()
-	btn_row.add_theme_constant_override("separation", 12)
-	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	vbox.add_child(btn_row)
-
-	var confirm_btn := Button.new()
-	confirm_btn.text = "Yes"
-	confirm_btn.add_theme_font_size_override("font_size", 18)
-	confirm_btn.add_theme_color_override("font_color", Color(1.0, 0.60, 0.50))
-	confirm_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	confirm_btn.pressed.connect(func() -> void:
-		_close_confirm_dialog()
-		on_confirm.call())
-	btn_row.add_child(confirm_btn)
-
-	var cancel_btn := Button.new()
-	cancel_btn.text = "Cancel"
-	cancel_btn.add_theme_font_size_override("font_size", 18)
-	cancel_btn.add_theme_color_override("font_color", Color(0.60, 0.65, 0.65))
-	cancel_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	cancel_btn.pressed.connect(_close_confirm_dialog)
-	btn_row.add_child(cancel_btn)
-	SFXManager.wire_prompt_buttons_in(panel)
 
 # ─────────────────────────────────────────────────────────────
 # Node Rendering

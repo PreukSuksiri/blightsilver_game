@@ -107,7 +107,6 @@ var _status_lbl: Label = null
 # ── Persistent file dialogs ───────────────────────────────────
 var _load_dialog: FileDialog = null
 var _save_dialog: FileDialog = null
-var _new_confirm_dialog: ConfirmationDialog = null
 
 # ── Preview helpers ────────────────────────────────────────────
 var _preview_player: AudioStreamPlayer = null
@@ -195,16 +194,6 @@ func _build_ui() -> void:
 	_save_dialog.current_file = "exploration_graph.json"
 	_save_dialog.file_selected.connect(_on_save_file_selected)
 	add_child(_save_dialog)
-
-	_new_confirm_dialog = ConfirmationDialog.new()
-	_new_confirm_dialog.title = "New Graph"
-	_new_confirm_dialog.dialog_text = (
-		"Create a new graph?\n\nUnsaved changes to the current graph will be lost.")
-	_new_confirm_dialog.ok_button_text = "New Graph"
-	_new_confirm_dialog.cancel_button_text = "Cancel"
-	_new_confirm_dialog.confirmed.connect(_new_graph)
-	add_child(_new_confirm_dialog)
-	GameDialog.style(_new_confirm_dialog)
 
 	# ── Audio preview player ───────────────────────────────────
 	_preview_player = AudioStreamPlayer.new()
@@ -2983,7 +2972,13 @@ func _find_cond_vbox(frame: Control) -> VBoxContainer:
 
 func _on_new_pressed() -> void:
 	if _dirty:
-		_new_confirm_dialog.popup_centered()
+		GameDialog.confirmation_overlay(
+			self,
+			"New Graph",
+			"Create a new graph?\n\nUnsaved changes to the current graph will be lost.",
+			"New Graph",
+			"Cancel",
+			_new_graph)
 	else:
 		_new_graph()
 
@@ -4023,9 +4018,7 @@ func _update_puzzle_guide(lbl: Label, puzzle_id: String) -> void:
 		lbl.add_theme_color_override("font_color", Color(0.60, 0.85, 0.65))
 
 func _show_popup(title: String, body: String) -> void:
-	var dialog := GameDialog.accept(self, title, body)
-	dialog.size = Vector2i(500, 300)
-	dialog.popup_centered()
+	GameDialog.accept_overlay(self, title, body)
 
 # ─────────────────────────────────────────────────────────────
 # Input

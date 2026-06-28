@@ -193,6 +193,8 @@ var _info_card_type : String      = ""
 var _union_flow:  HBoxContainer  = null
 var _flash_tween: Tween          = null
 var _flash_cells: Array          = []
+var _confirm_in_progress: bool = false
+var _setup_complete_emitted: bool = false
 
 # ─────────────────────────────────────────────────────────────
 # Lifecycle
@@ -205,6 +207,8 @@ func _ready() -> void:
 # ─────────────────────────────────────────────────────────────
 func start_setup(player_index: int) -> void:
 	current_setup_player = player_index
+	_confirm_in_progress = false
+	_setup_complete_emitted = false
 	_clear_tutorial_formation_lock()
 	_player_lbl.text = "PLAYER %d  —  Place Your Cards" % (player_index + 1)
 	if _sp_p1_portrait:
@@ -1211,20 +1215,19 @@ func _on_random_formation() -> void:
 # Confirm + flip animation
 # ─────────────────────────────────────────────────────────────
 func _on_confirm() -> void:
+	if _confirm_in_progress:
+		return
 	if not _chars_remaining.is_empty():
 		_instr_lbl.text = "Place all Units first (%d left)." % _chars_remaining.size()
 		return
 	if not _traps_remaining.is_empty():
 		_instr_lbl.text = "Place all Traps first (%d left)." % _traps_remaining.size()
 		return
+	_confirm_in_progress = true
+	_setup_complete_emitted = false
+	_lock_confirm_ui()
 	_stop_tutorial_confirm_pulse()
-	_confirm_btn.disabled = true
 	_instr_lbl.text = "Locking in your formation..."
-	# Disable all interaction during the animation
-	_gallery_flow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	for r in range(GRID_N):
-		for c in range(GRID_N):
-			(_grid_cells[r][c] as GridCell).mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_flip_sequence()
 
 func _flip_sequence() -> void:
@@ -1245,9 +1248,12 @@ func _flip_sequence() -> void:
 	for i in range(occupied.size()):
 		_flip_one_cell(occupied[i], facedown_tex, float(i) * STAGGER, HALF_DUR)
 
-	# Wait for all to finish, then signal
+	# Wait for all to finish, then signal once.
 	var total: float = float(occupied.size()) * STAGGER + HALF_DUR * 2.0
 	await get_tree().create_timer(total + 0.35).timeout
+	if _setup_complete_emitted:
+		return
+	_setup_complete_emitted = true
 	emit_signal("setup_complete")
 
 # Coroutine: flip a single cell face-down after an optional delay.
@@ -1276,6 +1282,9 @@ func _flip_one_cell(cell: GridCell, facedown_tex: Texture2D,
 	tw2.tween_property(cell, "scale:x", 1.0, half_dur)
 
 func _refresh_confirm() -> void:
+	if _confirm_in_progress:
+		_lock_confirm_ui()
+		return
 	var all_placed: bool = _chars_remaining.is_empty() and _traps_remaining.is_empty()
 	_confirm_btn.disabled = not all_placed
 	if _is_tutorial_setup():
@@ -1292,6 +1301,19 @@ func _refresh_confirm() -> void:
 			_instr_lbl.text = "Drag cards onto the grid  |  right-click a placed card to retrieve  |  %d units  %d traps remaining" % [
 				_chars_remaining.size(), _traps_remaining.size()
 			]
+
+func _lock_confirm_ui() -> void:
+	if _confirm_btn != null:
+		_confirm_btn.disabled = true
+	if _random_btn != null:
+		_random_btn.disabled = true
+	if _gallery_flow != null:
+		_gallery_flow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if _formation_bar != null:
+		_formation_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for r in range(GRID_N):
+		for c in range(GRID_N):
+			(_grid_cells[r][c] as GridCell).mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 func _setup_confirm_btn_styles() -> void:
 	if _confirm_btn_base_sb != null:

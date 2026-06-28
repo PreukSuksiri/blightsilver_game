@@ -1095,7 +1095,7 @@ func _load_characters() -> void:
 			CharacterData.Rarity.LEGENDARY],
 
 		["Horn Face", CharacterData.Affinity.COSMIC, 85, 60, 1350,
-			CharacterData.AbilityType.COIN_FLIP_EXTRA_ATTACK, {"max_attacks": 3},
+			CharacterData.AbilityType.COIN_FLIP_EXTRA_ATTACK, {"max_attacks": 3, "coin_flips": 2},
 			"After a successful attack, flip 2 coins. It can attack again equal to number of head.",
 			CharacterData.Rarity.EXOTIC],
 

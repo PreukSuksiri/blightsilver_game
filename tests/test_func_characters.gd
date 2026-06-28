@@ -1264,11 +1264,27 @@ func _poltergeist(A, AB) -> void:
 	print("-- TC-FUNC-Poltergeist-001")
 	var att := _make_char("Poltergeist", 0, 70, 700, A.CHAOS,
 		AB.SWAP_ATK_DEF_WHEN_ATTACKING, {})
+	BattleResolver.apply_swap_atk_def_when_attacking(att)
 	var def_ := _make_char("Dummy", 0, 50, 100, A.ANIMA)
 	var r := BattleResolver.resolve_battle(att, def_, 3, 0, 1)
 	# Poltergeist uses DEF (70) as ATK when attacking
 	assert_eq(r.attacker_atk_used, 70, "TC-FUNC-Poltergeist-001: uses DEF 70 as ATK")
 	assert_true(r.defender_destroyed, "TC-FUNC-Poltergeist-001: 70 > 50 → defender destroyed")
+	print("-- TC-FUNC-Poltergeist-002 trap reckoning")
+	var trap_att := _make_char("Poltergeist", 0, 70, 700, A.CHAOS,
+		AB.SWAP_ATK_DEF_WHEN_ATTACKING, {})
+	BattleResolver.apply_swap_atk_def_when_attacking(trap_att)
+	var trap := _make_trap("Pepper Spray", 0)
+	var r_trap := BattleResolver.resolve_battle(trap_att, trap, 3, 0, 1)
+	assert_eq(r_trap.attacker_atk_used, 70, "TC-FUNC-Poltergeist-002: trap attack uses DEF 70 as ATK")
+	print("-- TC-FUNC-Poltergeist-003 dead-end reckoning")
+	var de_att := _make_char("Poltergeist", 0, 70, 700, A.CHAOS,
+		AB.SWAP_ATK_DEF_WHEN_ATTACKING, {})
+	BattleResolver.apply_swap_atk_def_when_attacking(de_att)
+	var dead := GameState.CardInstance.new()
+	dead.card_type = "dead_end"
+	var r_dead := BattleResolver.resolve_battle(de_att, dead, 3, 0, 1)
+	assert_eq(r_dead.attacker_atk_used, 70, "TC-FUNC-Poltergeist-003: dead-end attack uses DEF 70 as ATK")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # COIN_FLIP_2_DESTROY_NON_AFFINITY (coin-result-verified)

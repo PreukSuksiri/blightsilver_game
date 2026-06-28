@@ -47,14 +47,11 @@ func pick_random_discoverable_union() -> String:
 	return pool[randi() % pool.size()]
 
 func show_empty_pool_dialog(parent: Node) -> void:
-	var dlg := GameDialog.accept(
+	GameDialog.accept_overlay(
 		parent,
 		"Union Scroll",
 		"There are no more Union cards to discover.\n"
 		+ "You received %d Credits instead." % COMPENSATION_CREDITS)
-	dlg.confirmed.connect(dlg.queue_free)
-	dlg.canceled.connect(dlg.queue_free)
-	dlg.popup_centered()
 
 func apply_empty_pool_compensation() -> void:
 	Collection.add_credits(COMPENSATION_CREDITS)

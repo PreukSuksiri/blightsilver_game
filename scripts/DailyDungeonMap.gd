@@ -988,58 +988,18 @@ func _play_vn_then_exit(vn_path: String) -> void:
 # Message dialog
 # ─────────────────────────────────────────────────────────────
 
-## Centred dim overlay + panel — shared by pre-battle and post-battle node messages.
+## Centred overlay + panel — shared by pre-battle and post-battle node messages.
 func _show_message_dialog(message: String, on_close: Callable) -> void:
-	var blocker := ColorRect.new()
-	blocker.color = Color(0.0, 0.0, 0.0, 0.0)
-	blocker.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	blocker.mouse_filter = Control.MOUSE_FILTER_STOP
-	blocker.z_index = 65
-	add_child(blocker)
-
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	blocker.add_child(center)
-
-	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(680.0, 0.0)
-	panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox())
-	panel.modulate.a = 0.0
-	center.add_child(panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 14)
-	panel.add_child(vbox)
-
-	var lbl := Label.new()
-	lbl.text = message
-	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	FontManager.tag_font(lbl, "font", "primary", 400)
-	lbl.add_theme_font_size_override("font_size", GameDialog.BODY_FONT_SIZE)
-	lbl.add_theme_color_override("font_color", GameDialog.BODY_COLOR)
-	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(lbl)
-
-	var ok_btn := Button.new()
-	ok_btn.text = "OK"
-	GameDialog.style_button(ok_btn)
-	ok_btn.pressed.connect(func() -> void:
-		var tw_out := create_tween()
-		tw_out.set_parallel(true)
-		tw_out.tween_property(blocker, "color:a", 0.0, 0.22)
-		tw_out.tween_property(panel, "modulate:a", 0.0, 0.20)
-		tw_out.finished.connect(func() -> void:
-			blocker.queue_free()
+	GameDialog.accept_overlay(
+		self,
+		"",
+		message,
+		"OK",
+		func() -> void:
 			if on_close.is_valid():
-				on_close.call()))
-	vbox.add_child(ok_btn)
-
-	await get_tree().process_frame
-	var tw_in := create_tween()
-	tw_in.set_parallel(true)
-	tw_in.tween_property(blocker, "color:a", 0.50, 0.25)
-	tw_in.tween_property(panel, "modulate:a", 1.0, 0.22)
+				on_close.call(),
+		680.0,
+		65)
 
 # ─────────────────────────────────────────────────────────────
 # Helpers

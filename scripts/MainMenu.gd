@@ -111,6 +111,7 @@ func _ready() -> void:
 	_setup_title_cheat_hitboxes()
 	if has_node("TitleLogo"):
 		$TitleLogo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	call_deferred("_check_achievement_reward_mail_notice")
 
 
 func _on_web_audio_gate(event: InputEvent) -> void:
@@ -148,47 +149,32 @@ func _is_deck_ready() -> bool:
 	return deck != null and deck.is_valid()
 
 func _show_deck_warning() -> void:
-	if get_node_or_null("DeckWarningPanel") != null:
+	if GameDialog.has_open_overlay(self):
 		return
-	var panel := Panel.new()
-	panel.name = "DeckWarningPanel"
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.059, 0.078, 0.145, 0.98)
-	sb.border_width_left = 2; sb.border_width_top = 2
-	sb.border_width_right = 2; sb.border_width_bottom = 2
-	sb.border_color = Color(1.0, 0.5, 0.3, 0.85)
-	sb.corner_radius_top_left = 8; sb.corner_radius_top_right = 8
-	sb.corner_radius_bottom_right = 8; sb.corner_radius_bottom_left = 8
-	panel.add_theme_stylebox_override("panel", sb)
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.size = Vector2(380, 140)
-	panel.position -= panel.size * 0.5
-	panel.z_index = 20
-	add_child(panel)
+	GameDialog.accept_overlay(
+		self,
+		"Deck Not Ready",
+		_deck_warning_message(),
+		"OK",
+		Callable(),
+		GameDialog.DEFAULT_MIN_WIDTH,
+		20)
 
-	var vbox := VBoxContainer.new()
-	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-	vbox.offset_left = 16; vbox.offset_top = 16
-	vbox.offset_right = -16; vbox.offset_bottom = -16
-	vbox.add_theme_constant_override("separation", 12)
-	panel.add_child(vbox)
 
-	var lbl := Label.new()
-	lbl.text = "Deck not ready\n" + _deck_warning_message()
-	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	FontManager.tag_font(lbl, "font", "primary", 400)
-	lbl.add_theme_font_size_override("font_size", 16)
-	lbl.add_theme_color_override("font_color", Color(1.0, 0.6, 0.35, 1.0))
-	vbox.add_child(lbl)
-
-	var ok_btn := Button.new()
-	ok_btn.text = "OK"
-	FontManager.tag_font(ok_btn, "font", "primary", 400)
-	ok_btn.add_theme_font_size_override("font_size", 17)
-	_apply_menu_btn_style(ok_btn, false)
-	ok_btn.pressed.connect(func() -> void: panel.queue_free())
-	vbox.add_child(ok_btn)
+func _check_achievement_reward_mail_notice() -> void:
+	if not MailboxManager.has_unnotified_achievement_reward_mail():
+		return
+	if GameDialog.has_open_overlay(self):
+		return
+	MailboxManager.mark_achievement_reward_mails_notified()
+	GameDialog.accept_overlay(
+		self,
+		"Achievement Reward",
+		"There are achievement rewards waiting for you to claim in the Mailbox.",
+		"OK",
+		Callable(),
+		GameDialog.DEFAULT_MIN_WIDTH,
+		MENU_OVERLAY_Z)
 
 func _refresh_inventory_badge() -> void:
 	var label := MenuButtonConfig.get_label("inventory").to_upper()

@@ -512,6 +512,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	if not _pre_shown_reckoning_coins.is_empty():
 		BattleResolver.set_predetermined_coin_flips(_pre_shown_reckoning_coins)
 
+	BattleResolver.apply_swap_atk_def_when_attacking(attacker)
+
 	# Compute a preview result (without optional crystal boosts) for the battle overlay display.
 	# silent=true prevents ability messages from firing twice (they fire again on the real resolve).
 	var preview_result := BattleResolver.resolve_battle(
@@ -726,10 +728,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		var _ma_max2: int = attacker.ability_params.get("max_attacks", 2)
 		if attacker.multi_attack_count < _ma_max2:
 			_skip_mark = true
-	elif _pb_extra > 0 and defender.card_type == "dead_end" \
-			and attacker.ability_type in [
-				CharacterData.AbilityType.EXTRA_ATTACK_ON_DEAD_END,
-				CharacterData.AbilityType.ONE_USE_EXTRA_ATTACK_ON_DEAD_END]:
+	elif _pb_extra > 0:
 		attacker.bonus_attack_pending = true
 		_skip_mark = true
 
@@ -2009,13 +2008,12 @@ func _apply_post_battle_effects(
 				attacker.perm_def_bonus += attacker.ability_params.get("def", 2)
 
 		CharacterData.AbilityType.ATTACK_STANCE_BOOST:
-			if defender.card_type == "character":
-				var _as_atk: int = attacker.ability_params.get("atk", attacker.ability_params.get("atk_bonus", 0))
-				var _as_def_loss: int = attacker.ability_params.get("def_penalty", _as_atk)
-				attacker.current_atk += _as_atk
-				attacker.current_def = maxi(0, attacker.current_def - _as_def_loss)
-				GameState.post_message("%s: +%d ATK, -%d DEF permanently (if possible)." % [
-					attacker.card_name, _as_atk, _as_def_loss])
+			var _as_atk: int = attacker.ability_params.get("atk", attacker.ability_params.get("atk_bonus", 0))
+			var _as_def_loss: int = attacker.ability_params.get("def_penalty", _as_atk)
+			attacker.current_atk += _as_atk
+			attacker.current_def = maxi(0, attacker.current_def - _as_def_loss)
+			GameState.post_message("%s: +%d ATK, -%d DEF permanently (if possible)." % [
+				attacker.card_name, _as_atk, _as_def_loss])
 
 		CharacterData.AbilityType.PERM_ATK_LOSS_PER_ATTACK:
 			attacker.current_atk = max(0, attacker.current_atk - attacker.ability_params.get("amount", 5))
@@ -2067,10 +2065,22 @@ func _apply_post_battle_effects(
 				GameState.post_message("%s: Bonus attack for hitting dead end!" % attacker.card_name)
 
 		CharacterData.AbilityType.COIN_FLIP_EXTRA_ATTACK:
-			var _cfea_r: Array = await _do_coin_flips(1)
-			if _cfea_r[0]:  # heads
-				extra += 1
-				GameState.post_message("%s: Coin flip heads — extra attack!" % attacker.card_name)
+			var _coin_count: int = maxi(1, int(attacker.ability_params.get("coin_flips", 1)))
+			var _cfea_r: Array = await _do_coin_flips(_coin_count)
+			var _heads: int = 0
+			for _h: Variant in _cfea_r:
+				if bool(_h):
+					_heads += 1
+			if _heads > 0:
+				extra += _heads
+				if _coin_count > 1:
+					GameState.post_message(
+						"%s: %d head(s) on %d coins — %d extra attack(s)!" % [
+							attacker.card_name, _heads, _coin_count, _heads])
+				else:
+					GameState.post_message("%s: Coin flip heads — extra attack!" % attacker.card_name)
+			elif _coin_count > 1:
+				GameState.post_message("%s: No heads — no extra attack." % attacker.card_name)
 			else:
 				GameState.post_message("%s: Coin flip tails — no extra attack." % attacker.card_name)
 

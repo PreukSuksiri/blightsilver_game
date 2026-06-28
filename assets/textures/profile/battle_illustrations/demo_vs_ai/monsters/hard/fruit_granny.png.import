@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bhx031nbr4llp"
-path="res://.godot/imported/928022cc-90c2-4bc9-a177-d168e6ee728d.png-de738a80e95f619682d7a090b9c76ea8.ctex"
+uid="uid://dkeaow8646egs"
+path="res://.godot/imported/fruit_granny.png-d03e31217fa1d459f1a48279850f421c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/928022cc-90c2-4bc9-a177-d168e6ee728d.png"
-dest_files=["res://.godot/imported/928022cc-90c2-4bc9-a177-d168e6ee728d.png-de738a80e95f619682d7a090b9c76ea8.ctex"]
+source_file="res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/fruit_granny.png"
+dest_files=["res://.godot/imported/fruit_granny.png-d03e31217fa1d459f1a48279850f421c.ctex"]
 
 [params]
 

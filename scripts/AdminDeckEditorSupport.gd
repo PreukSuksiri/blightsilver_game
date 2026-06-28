@@ -584,7 +584,4 @@ static func refresh_possible_union_list(
 
 
 static func _show_info_dialog(host: Node, title: String, text: String) -> void:
-	var popup := GameDialog.accept(host, title, text)
-	popup.popup_centered()
-	popup.confirmed.connect(func() -> void: popup.queue_free())
-	popup.canceled.connect(func() -> void: popup.queue_free())
+	GameDialog.accept_overlay(host, title, text)

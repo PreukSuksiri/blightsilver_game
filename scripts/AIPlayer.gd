@@ -113,8 +113,13 @@ func _on_opponent_union_summoned(player: int, _union_label: String, _material_la
 	if player != player_index:
 		_opponent_union_summoned = true
 
+func _union_maniac_active() -> bool:
+	return GameState.battle_ai_union_maniac
+
 ## Base union-summon attempt chance for this AI turn (0.0–1.0).
 func _union_summon_chance() -> float:
+	if _union_maniac_active():
+		return 1.0
 	if CardE2ERunner.is_active():
 		return 1.0
 	var chance: float = minf(0.90, 0.15 + (_ai_turn_count - 1) * 0.30)
@@ -135,13 +140,15 @@ func decide_turn() -> void:
 
 	# Tutorial: first two AI turns attack corners/center only — skip tech/union.
 	if not _tutorial_early_attack_phase():
-		# Rule 1: Tech priority — only enter TECH mode if a card actually scores > 0.
-		# In E2E mode, tech is suppressed unless this scenario specifically tests a Tech card.
-		if _e2e_tech_allowed() and GameState.has_playable_tech(player_index) and _has_useful_tech():
-			emit_signal("ai_mode_chosen", GameState.TurnMode.TECH)
-			await get_tree().create_timer(0.3).timeout
-			_choose_tech()
-			return
+		# Union Maniac: skip tech and attempt union immediately every turn.
+		if not _union_maniac_active():
+			# Rule 1: Tech priority — only enter TECH mode if a card actually scores > 0.
+			# In E2E mode, tech is suppressed unless this scenario specifically tests a Tech card.
+			if _e2e_tech_allowed() and GameState.has_playable_tech(player_index) and _has_useful_tech():
+				emit_signal("ai_mode_chosen", GameState.TurnMode.TECH)
+				await get_tree().create_timer(0.3).timeout
+				_choose_tech()
+				return
 
 		# Rule 2: Union summon (also re-checked after tech via continue_after_union).
 		if _try_union_summon():
@@ -159,7 +166,9 @@ func _try_union_summon() -> bool:
 		return false
 	var _e2e_no_union: bool = CardE2ERunner.is_active() and player_index == 0 \
 			and not CardE2ERunner.is_union_test()
-	if _e2e_no_union or _trailer_offensive or not GameState.battle_ai_union_enabled:
+	if _e2e_no_union or not GameState.battle_ai_union_enabled:
+		return false
+	if not _union_maniac_active() and _trailer_offensive:
 		return false
 	var chance: float = _union_summon_chance()
 	if randf() >= chance:
@@ -209,8 +218,9 @@ func continue_after_union(try_union_after_tech: bool = false) -> void:
 	await get_tree().create_timer(0.5).timeout
 	if _game_is_over():
 		return
-	if try_union_after_tech and _try_union_summon():
-		return
+	if try_union_after_tech or _union_maniac_active():
+		if _try_union_summon():
+			return
 	_do_attack_decision()
 
 func _do_attack_decision() -> void:
@@ -594,7 +604,7 @@ func _attacker_summon_investment(attacker: GameState.CardInstance) -> int:
 	if attacker.is_union:
 		var u: UnionData = UnionDatabase.get_union(attacker.card_name)
 		if u != null:
-			return u.crystal_cost
+			return u.summon_cost
 	return 0
 
 
@@ -2300,6 +2310,7 @@ func _pick_personalities() -> void:
 			_emoji_reactions = soc_pick["reactions"] as Dictionary
 			_bluff_pool      = _build_bluff_pool(soc_pick["prefer"] as Array, soc_pick["avoid_emoji"] as Array)
 			personality_social = SOC_PERSONALITY_NAMES[soc_idx] as String
+		_apply_union_maniac_overrides()
 		return   # skip normal trait application below
 
 	var def_pick: Dictionary = def_list[def_idx]
@@ -2347,6 +2358,13 @@ func _pick_personalities() -> void:
 	personality_defensive = DEF_PERSONALITY_NAMES[def_idx] as String
 	personality_offensive = OFF_PERSONALITY_NAMES[off_idx] as String
 	personality_social    = SOC_PERSONALITY_NAMES[soc_idx] as String
+	_apply_union_maniac_overrides()
+
+
+func _apply_union_maniac_overrides() -> void:
+	if not _union_maniac_active():
+		return
+	_union_concern = "high"
 
 
 ## Build a weighted emoji pool. Preferred emojis appear 3×, avoided emojis are excluded.

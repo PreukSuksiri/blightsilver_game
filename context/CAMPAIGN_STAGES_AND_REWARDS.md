@@ -200,7 +200,11 @@ End Stage Story:  (to be continue)
 
 
 
+## Protagonist Ability
 
+Nex : Photographic Memory = Learn foe's Union Summon formula. Union Summons cost 300 less crystals.
+Mayu : Unwavering Faith = If both players has 1000 Crystals or lower, you continue playing for 1 extra turn when crystal reaches 0.
+Kelly : Hunter's Trophy = If foe's crystal is 3000 or less, peek 1 free card on foe's side at the start of your turn, only once.
 
 
 

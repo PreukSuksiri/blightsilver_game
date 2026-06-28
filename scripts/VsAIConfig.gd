@@ -26,6 +26,7 @@ var _forced_grid: GridContainer = null
 var _forced_dict: Dictionary = {}        # key="r,c" value=card_name
 var _status_lbl: Label = null
 var _bgm_enabled_chk: CheckBox = null
+var _union_maniac_chk: CheckBox = null
 var _name_edits: Array[LineEdit] = [null, null]
 var _portrait_paths: Array[String] = DEFAULT_PORTRAIT_PATHS.duplicate()
 var _portrait_browse_dirs: Array[String] = [
@@ -306,6 +307,12 @@ func _build_ai_column(parent: HBoxContainer) -> void:
 	_bgm_enabled_chk.add_theme_font_size_override("font_size", 14)
 	bgm_row.add_child(_bgm_enabled_chk)
 
+	_union_maniac_chk = CheckBox.new()
+	_union_maniac_chk.text = "Union Maniac"
+	_union_maniac_chk.button_pressed = false
+	_union_maniac_chk.add_theme_font_size_override("font_size", 14)
+	bgm_row.add_child(_union_maniac_chk)
+
 func _add_name_row(parent: Control, player_index: int) -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
@@ -460,6 +467,9 @@ func _apply_battle_identity() -> void:
 		names.append(n)
 	GameState.campaign_player_names = names
 	GameState.battle_bgm_enabled = _bgm_enabled_chk.button_pressed if _bgm_enabled_chk != null else true
+	GameState.battle_ai_union_maniac = _union_maniac_chk.button_pressed if _union_maniac_chk != null else false
+	if GameState.battle_ai_union_maniac:
+		GameState.battle_ai_union_enabled = true
 
 func _apply_player_vault_or_clear() -> Array[String]:
 	var errs: Array[String] = []

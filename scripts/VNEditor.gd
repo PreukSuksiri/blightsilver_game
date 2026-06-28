@@ -36,8 +36,6 @@ var _dirty: bool = false
 var _char_rows: Array = []
 var _file_dialog: FileDialog = null
 var _browse_target: LineEdit = null
-var _new_file_dialog: ConfirmationDialog = null
-var _new_file_name_edit: LineEdit = null
 var _clipboard: Array = []       # Array[Dictionary] — supports multi-beat copy
 var _has_clipboard: bool = false
 var _char_clipboard: Array = []  # Array[Dictionary] — characters copy/paste
@@ -369,18 +367,6 @@ func _build_ui() -> void:
 	_folder_dialog.current_dir = ProjectSettings.globalize_path(_scenes_dir)
 	_folder_dialog.dir_selected.connect(_on_folder_selected)
 	add_child(_folder_dialog)
-
-	_new_file_dialog = ConfirmationDialog.new()
-	_new_file_dialog.title = "New VN File"
-	_new_file_dialog.min_size = Vector2(340, 110)
-	_new_file_name_edit = LineEdit.new()
-	_new_file_name_edit.placeholder_text = "filename (without .json)"
-	_new_file_name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_new_file_dialog.add_child(_new_file_name_edit)
-	_new_file_name_edit.text_submitted.connect(func(_t: String) -> void: _new_file_dialog.confirmed.emit())
-	_new_file_dialog.confirmed.connect(_on_new_file_confirmed)
-	add_child(_new_file_dialog)
-	GameDialog.style(_new_file_dialog)
 
 	var split := HSplitContainer.new()
 	split.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -2102,15 +2088,20 @@ func _replay_ken_burns_preview() -> void:
 # Folder picker
 # ─────────────────────────────────────────────────────────────
 func _on_new_file_pressed() -> void:
-	_new_file_name_edit.text = ""
-	_new_file_dialog.popup_centered()
-	_new_file_name_edit.grab_focus()
+	GameDialog.prompt_overlay(
+		self,
+		"New VN File",
+		"Enter a filename (without .json):",
+		"filename (without .json)",
+		"Create",
+		"Cancel",
+		_try_create_new_file)
 
-func _on_new_file_confirmed() -> void:
-	var raw: String = _new_file_name_edit.text.strip_edges()
+func _try_create_new_file(raw: String) -> bool:
+	raw = raw.strip_edges()
 	if raw.is_empty():
 		_status_lbl.text = "New file: name cannot be empty."
-		return
+		return false
 	# Sanitise: strip any trailing .json the user may have typed
 	if raw.to_lower().ends_with(".json"):
 		raw = raw.left(raw.length() - 5)
@@ -2118,11 +2109,11 @@ func _on_new_file_confirmed() -> void:
 	var full_path: String = _scenes_dir + fname
 	if FileAccess.file_exists(full_path):
 		_status_lbl.text = "File already exists: " + fname
-		return
+		return false
 	var f := FileAccess.open(full_path, FileAccess.WRITE)
 	if f == null:
 		_status_lbl.text = "ERROR: could not create " + fname
-		return
+		return false
 	f.store_string("[]")
 	f.close()
 	_scan_files()
@@ -2133,6 +2124,7 @@ func _on_new_file_confirmed() -> void:
 			_on_file_selected(i)
 			break
 	_status_lbl.text = "Created  →  " + fname
+	return true
 
 func _on_change_folder_pressed() -> void:
 	_folder_dialog.current_dir = ProjectSettings.globalize_path(_scenes_dir)
