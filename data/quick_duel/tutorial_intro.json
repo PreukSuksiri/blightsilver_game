@@ -1,14 +1,244 @@
 [
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
-		"text": {
-			"en": "Welcome to Quick Duel. This short tutorial will teach you the basics of attacking."
-		}
+		"comment": "<<<-- Nex Dorm -->>>",
+		"wait": 0.001
 	},
 	{
-		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_campus_night_stret.png",
-		"text": {
-			"en": "Follow the on-screen instructions during your first duel. Good luck!"
-		}
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/quick_duel/bg_vn_quick_duel_tutorial_back_alley.png",
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"music": "res://assets/audio/bgm_investigate_1.mp3",
+		"wait": 0.001
+	},
+	{
+		"text": "You woke up in a quiet alley. Faint crackles of fire echoed in the distance, carrying the acrid smell of smoke and ashes."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"music": "res://assets/audio/bgm_investigate_1.mp3",
+		"text": "Your body is all wet. Your head feels all blank, and barely can stand up."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"music": "res://assets/audio/bgm_investigate_1.mp3",
+		"text": "You do not have a slight idea of what was going on, or how did you end up here."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "You're awake."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"music": "res://assets/audio/bgm_investigate_1.mp3",
+		"text": "(A silver-haired woman wearing a tactical uniform approaches you. She have a sharp piercing eyes.)"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "What are you doing out here? You should stay away from this place."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"music": "res://assets/audio/bgm_investigate_1.mp3",
+		"text": "(You tried to answer, but you're too dizzy to answer anything.)"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "Something's wrong isn't it?"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "Can't speak aren't you? This is getting interesting..."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "Let me check up for \"Anomalies\" in your body."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "I want you to hold this stack of cards. It's a tool for spiritual influence."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"linger_characters": true,
+		"music": "res://assets/audio/bgm_investigate_1.mp3",
+		"text": "(You just nodded as she handed you a deck of some cards with silver compass on its back.)"
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "This is gonna be a rough trip, but trust me, it will be fine."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "Now, keep holding this deck of cards still. Do not let go of it, no matter what happen."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "Get ready."
+	},
+	{
+		"animation": "animation_vellum_card_commence_facedown",
+		"comment": "Animation",
+		"linger_characters": true,
+		"sfx": "res://assets/audio/sound_spellcasting_2.mp3",
+		"wait": 5.8
+	},
+	{
+		"battle_reward": [
+			{
+				"amount": 3000,
+				"type": "credits"
+			},
+			{
+				"count": 1,
+				"type": "union_scroll"
+			}
+		],
+		"linger_characters": true,
+		"on_lose": "res://data/quick_duel/tutorial_intro_post.json",
+		"on_win": "res://data/quick_duel/tutorial_intro_post.json",
+		"player1_name": "Nex Crowmont",
+		"player2_name": "Kelly Lastochkina",
+		"portrait_p1": "res://assets/textures/profile/battle_illustrations/battler_nex_wet.png",
+		"portrait_p2": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png",
+		"tutorial_battle": "res://data/tutorial_battles/example_attack_tutorial.json"
 	}
 ]

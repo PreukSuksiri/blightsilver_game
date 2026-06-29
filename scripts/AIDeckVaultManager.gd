@@ -17,6 +17,7 @@ var _selected_idx: int = -1
 var _deck: DeckData = null
 var _tags: Array = []
 var _featured_union: String = ""
+var _featured_unit: String = ""
 
 var _vault_list: ItemList = null
 var _entry_id_edit: LineEdit = null
@@ -25,6 +26,8 @@ var _tags_list: ItemList = null
 var _tag_input: LineEdit = null
 var _featured_union_option: OptionButton = null
 var _featured_union_block_sync: bool = false
+var _featured_unit_option: OptionButton = null
+var _featured_unit_block_sync: bool = false
 var _deck_name_edit: LineEdit = null
 var _char_list: ItemList = null
 var _trap_list: ItemList = null
@@ -75,6 +78,7 @@ func _make_blank_entry(entry_id: String, label: String) -> Dictionary:
 		"label": label,
 		"tags": [],
 		"featured_union": "",
+		"featured_unit": "",
 		"deck": {
 			"deck_name": label,
 			"characters": [],
@@ -93,6 +97,7 @@ func _sync_current_entry() -> void:
 	entry["label"] = _entry_label_edit.text.strip_edges() if _entry_label_edit else str(entry.get("label", ""))
 	entry["tags"] = _tags.duplicate()
 	entry["featured_union"] = _featured_union.strip_edges()
+	entry["featured_unit"] = _featured_unit.strip_edges()
 	entry["deck"] = _deck.to_dict()
 	_entries[_selected_idx] = entry
 
@@ -121,7 +126,9 @@ func _select_entry(idx: int) -> void:
 	_tags = (raw_tags as Array).duplicate() if raw_tags is Array else []
 	_refresh_tags_list()
 	_featured_union = str(entry.get("featured_union", "")).strip_edges()
+	_featured_unit = str(entry.get("featured_unit", "")).strip_edges()
 	_refresh_featured_union_options()
+	_refresh_featured_unit_options()
 	var deck_raw: Variant = entry.get("deck", {})
 	if deck_raw is Dictionary:
 		_deck.load_from_dict(deck_raw as Dictionary)
@@ -153,6 +160,9 @@ func _refresh_vault_list() -> void:
 			var fu := str(ed.get("featured_union", "")).strip_edges()
 			if not fu.is_empty():
 				line += "\n  ★ %s" % fu
+			var fcu := str(ed.get("featured_unit", "")).strip_edges()
+			if not fcu.is_empty():
+				line += "\n  ◆ %s" % fcu
 			_vault_list.add_item(line)
 	if keep_idx >= 0 and keep_idx < _vault_list.item_count:
 		_vault_list.select(keep_idx)
@@ -166,6 +176,7 @@ func _refresh_deck_ui() -> void:
 	_refresh_card_list(_tech_list, _deck.techs)
 	_refresh_union_list()
 	_refresh_featured_union_options()
+	_refresh_featured_unit_options()
 	if _form_lbl:
 		_form_lbl.text = "Formations: %d / %d" % [_deck.formations.size(), MAX_FORMATIONS]
 
@@ -272,6 +283,53 @@ func _on_featured_union_selected(idx: int) -> void:
 		_set_status("Featured union cleared.")
 	else:
 		_set_status("Featured union: %s" % _featured_union)
+
+
+func _refresh_featured_unit_options() -> void:
+	if _featured_unit_option == null:
+		return
+	_featured_unit_block_sync = true
+	_featured_unit_option.clear()
+	_featured_unit_option.add_item("(none)")
+	var deck_chars: Array = _deck.characters if _deck != null else []
+	var in_deck: Dictionary = {}
+	for cname: Variant in deck_chars:
+		var name: String = str(cname).strip_edges()
+		if name.is_empty():
+			continue
+		in_deck[name] = true
+		_featured_unit_option.add_item(name)
+	var select_idx := 0
+	if not _featured_unit.is_empty():
+		if in_deck.has(_featured_unit):
+			for i: int in range(_featured_unit_option.item_count):
+				if _featured_unit_option.get_item_text(i) == _featured_unit:
+					select_idx = i
+					break
+		else:
+			_featured_unit_option.add_item("%s (not in deck)" % _featured_unit)
+			select_idx = _featured_unit_option.item_count - 1
+	_featured_unit_option.select(select_idx)
+	_featured_unit_block_sync = false
+
+
+func _on_featured_unit_selected(idx: int) -> void:
+	if _featured_unit_block_sync or _featured_unit_option == null:
+		return
+	if idx <= 0:
+		_featured_unit = ""
+	else:
+		var label := _featured_unit_option.get_item_text(idx)
+		if label.ends_with(" (not in deck)"):
+			_featured_unit = label.trim_suffix(" (not in deck)")
+		else:
+			_featured_unit = label
+	_sync_current_entry()
+	_refresh_vault_list()
+	if _featured_unit.is_empty():
+		_set_status("Featured unit cleared.")
+	else:
+		_set_status("Featured unit: %s" % _featured_unit)
 
 
 func _build_ui() -> void:
@@ -477,6 +535,27 @@ func _build_ui() -> void:
 	_featured_union_option.item_selected.connect(_on_featured_union_selected)
 	left.add_child(_featured_union_option)
 
+	var featured_unit_hdr := Label.new()
+	featured_unit_hdr.text = "Featured Unit"
+	featured_unit_hdr.add_theme_font_override("font", CHIVO_FONT)
+	featured_unit_hdr.add_theme_font_size_override("font_size", 12)
+	featured_unit_hdr.add_theme_color_override("font_color", Color(0.25, 0.90, 1.0))
+	left.add_child(featured_unit_hdr)
+
+	var featured_unit_hint := Label.new()
+	featured_unit_hint.text = "Quick Duel capsule portrait (when no featured union art)."
+	featured_unit_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	featured_unit_hint.add_theme_font_override("font", CHIVO_FONT)
+	featured_unit_hint.add_theme_font_size_override("font_size", 10)
+	featured_unit_hint.add_theme_color_override("font_color", Color(0.55, 0.65, 0.75))
+	left.add_child(featured_unit_hint)
+
+	_featured_unit_option = OptionButton.new()
+	_featured_unit_option.add_theme_font_override("font", CHIVO_FONT)
+	_featured_unit_option.add_theme_font_size_override("font_size", 11)
+	_featured_unit_option.item_selected.connect(_on_featured_unit_selected)
+	left.add_child(_featured_unit_option)
+
 	var main := VBoxContainer.new()
 	main.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	main.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -563,6 +642,7 @@ func _duplicate_entry() -> void:
 	src["id"] = base_id + "_copy"
 	src["label"] = str(src.get("label", "Deck")) + " (copy)"
 	src["featured_union"] = str(src.get("featured_union", ""))
+	src["featured_unit"] = str(src.get("featured_unit", ""))
 	_entries.append(src)
 	_refresh_vault_list()
 	_select_entry(_entries.size() - 1)

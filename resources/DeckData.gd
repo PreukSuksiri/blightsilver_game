@@ -17,6 +17,8 @@ const MAX_FORMATIONS: int = 5
 # formations: Array of Dictionary
 #   { "name": String, "placements": Array[Dictionary{r,c,name,type}] }
 @export var formations: Array  = []
+## Last formation saved/selected in the deckbuilder (used for battle setup).
+@export var preferred_formation_index: int = 0
 
 # ── Derived ───────────────────────────────────────────────────
 func dead_end_count() -> int:
@@ -61,6 +63,7 @@ func to_dict() -> Dictionary:
 		"traps":      traps.duplicate(),
 		"techs":      techs.duplicate(),
 		"formations": formations.duplicate(true),
+		"preferred_formation_index": preferred_formation_index,
 	}
 
 func load_from_dict(d: Dictionary) -> void:
@@ -70,6 +73,28 @@ func load_from_dict(d: Dictionary) -> void:
 	techs      = d.get("techs", [])
 	var fv: Variant = d.get("formations", [])
 	formations = (fv as Array).duplicate(true) if fv is Array else []
+	preferred_formation_index = int(d.get("preferred_formation_index", 0))
+
+func _formation_has_placements(formation_idx: int) -> bool:
+	if formation_idx < 0 or formation_idx >= formations.size():
+		return false
+	var fd: Variant = formations[formation_idx]
+	if not fd is Dictionary:
+		return false
+	var pls: Variant = (fd as Dictionary).get("placements", [])
+	return pls is Array and not (pls as Array).is_empty()
+
+## Formation to pre-fill in battle setup (saved preference, else first non-empty).
+func get_preferred_formation_index() -> int:
+	if formations.is_empty():
+		return 0
+	var saved: int = clampi(preferred_formation_index, 0, formations.size() - 1)
+	if _formation_has_placements(saved):
+		return saved
+	for i in range(formations.size()):
+		if _formation_has_placements(i):
+			return i
+	return 0
 
 func duplicate_deck() -> Resource:
 	var copy: Resource = get_script().new()

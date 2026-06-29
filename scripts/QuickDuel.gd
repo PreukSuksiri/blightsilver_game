@@ -22,7 +22,6 @@ const SettingsMenuScene := preload("res://scenes/settings_menu.tscn")
 const ProtagonistOverlayScene := preload("res://scripts/ProtagonistOverlay.gd")
 
 var _picker_panel: Control = null
-var _prompt_panel: Control = null
 var _status_lbl: Label = null
 var _casual_btn: Button = null
 var _reroll_btn: Button = null
@@ -34,6 +33,7 @@ var _switch_char_btn: Button = null
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = MOUSE_FILTER_STOP
+	VNPlayer.dismiss_overlay_if_present(get_tree())
 	_build_shell()
 	CheckerTransition.fade_in()
 	if SaveManager.is_attack_tutorial_complete():
@@ -50,12 +50,6 @@ func _build_shell() -> void:
 	add_child(bg)
 
 	_build_header()
-
-	_prompt_panel = Control.new()
-	_prompt_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_prompt_panel.offset_top = HEADER_HEIGHT
-	_prompt_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_root_add_panel(_prompt_panel)
 
 	_picker_panel = Control.new()
 	_picker_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -205,57 +199,28 @@ func _make_close_stylebox() -> StyleBoxFlat:
 	return sb
 
 
+func _set_protagonist_zone_visible(visible: bool) -> void:
+	if _player_portrait != null:
+		_player_portrait.visible = visible
+	if _switch_char_btn != null:
+		_switch_char_btn.visible = visible
+
+
 func _show_tutorial_prompt() -> void:
-	_prompt_panel.visible = true
 	_picker_panel.visible = false
-	for c: Node in _prompt_panel.get_children():
-		c.queue_free()
-
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_prompt_panel.add_child(center)
-
-	var panel := PanelContainer.new()
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.04, 0.06, 0.14, 0.97)
-	sb.border_color = Color(0.38, 0.65, 1.0, 0.5)
-	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(8)
-	panel.add_theme_stylebox_override("panel", sb)
-	center.add_child(panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 16)
-	vbox.custom_minimum_size = Vector2(420, 0)
-	panel.add_child(vbox)
-
-	var lbl := Label.new()
-	lbl.text = "Do you need the attack tutorial?"
-	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
-	lbl.add_theme_font_size_override("font_size", 18)
-	lbl.add_theme_color_override("font_color", Color(0.85, 0.92, 1.0))
-	vbox.add_child(lbl)
-
-	var row := HBoxContainer.new()
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 20)
-	vbox.add_child(row)
-
-	var yes_btn := Button.new()
-	yes_btn.text = "Yes — Teach Me"
-	yes_btn.custom_minimum_size = Vector2(160, 44)
-	yes_btn.pressed.connect(func() -> void: launch_tutorial())
-	row.add_child(yes_btn)
-
-	var no_btn := Button.new()
-	no_btn.text = "No — Skip"
-	no_btn.custom_minimum_size = Vector2(160, 44)
-	no_btn.pressed.connect(func() -> void:
-		SaveManager.mark_attack_tutorial_complete()
-		_show_picker())
-	row.add_child(no_btn)
+	_set_protagonist_zone_visible(false)
+	if GameDialog.has_open_overlay(self):
+		return
+	GameDialog.confirmation_overlay(
+		self,
+		"Quick Duel Tutorial",
+		"Do you need a tutorial on card battle?",
+		"Yes — Teach Me",
+		"No — Skip",
+		func() -> void: launch_tutorial(),
+		func() -> void:
+			SaveManager.mark_attack_tutorial_complete()
+			_show_picker())
 
 
 func _build_picker_ui() -> void:
@@ -316,8 +281,9 @@ func _build_picker_ui() -> void:
 
 
 func _show_picker() -> void:
-	_prompt_panel.visible = false
+	GameDialog.close_overlay(self)
 	_picker_panel.visible = true
+	_set_protagonist_zone_visible(true)
 	_sanitize_saved_offers_if_needed()
 	if GameState.quick_duel_reroll_previews or not SaveManager.has_quick_duel_offers():
 		_roll_all_tier_offers()
@@ -618,9 +584,9 @@ func _apply_protagonist_to_battle() -> void:
 	while GameState.player_portraits.size() < 2:
 		GameState.player_portraits.append(DEFAULT_PORTRAIT_P2)
 	GameState.player_portraits[0] = SaveManager.get_protagonist_portrait_path()
-	var names: Array = GameState.campaign_player_names.duplicate()
+	var names: Array[String] = GameState.campaign_player_names.duplicate()
 	if names.size() < 2:
-		names = ["Player", "Opponent"]
+		names = [SaveManager.get_protagonist_display_name(), "Opponent"]
 	names[0] = SaveManager.get_protagonist_display_name()
 	GameState.campaign_player_names = names
 
@@ -637,7 +603,7 @@ func _apply_ai_identity_to_battle(tier: String) -> void:
 		GameState.player_portraits[1] = illus
 	var ai_name: String = str(identity.get("name", "")).strip_edges()
 	if not ai_name.is_empty():
-		var names: Array = GameState.campaign_player_names.duplicate()
+		var names: Array[String] = GameState.campaign_player_names.duplicate()
 		if names.size() < 2:
 			names = [SaveManager.get_protagonist_display_name(), "Opponent"]
 		names[1] = ai_name
@@ -646,21 +612,39 @@ func _apply_ai_identity_to_battle(tier: String) -> void:
 
 func launch_tutorial() -> void:
 	var intro: String = QuickDuelRewards.get_tutorial_intro_vn()
-	var battle_path: String = QuickDuelRewards.get_tutorial_battle_path()
-	if battle_path.is_empty():
-		_status_lbl.text = "Tutorial battle not configured."
-		return
 	if intro.is_empty():
-		_begin_guided_tutorial_battle(battle_path)
-	else:
-		VNPlayer.launch_overlay(intro, func() -> void: _begin_guided_tutorial_battle(battle_path))
+		_status_lbl.text = "Tutorial intro VN not configured."
+		return
+	var battle_path: String = QuickDuelRewards.find_tutorial_battle_in_vn(intro)
+	if battle_path.is_empty():
+		_status_lbl.text = "Tutorial intro VN has no tutorial_battle beat."
+		return
+	_prepare_quick_duel_tutorial_context()
+	GameDialog.close_overlay(self)
+	VNPlayer.launch_overlay(intro, _on_tutorial_intro_overlay_finished)
 
 
-func _begin_guided_tutorial_battle(battle_path: String) -> void:
+func _prepare_quick_duel_tutorial_context() -> void:
 	GameState.post_battle_return_scene = "res://scenes/quick_duel.tscn"
 	GameState.quick_duel_launch = true
 	GameState.quick_duel_active = false
 	_apply_protagonist_to_battle()
+
+
+func _on_tutorial_intro_overlay_finished() -> void:
+	# Beat with tutorial_battle starts the duel inside VNPlayer — overlay ends without _finish.
+	if TutorialBattleManager.is_prepared or TutorialBattleManager.is_active:
+		return
+	var intro: String = QuickDuelRewards.get_tutorial_intro_vn()
+	var battle_path: String = QuickDuelRewards.find_tutorial_battle_in_vn(intro)
+	if battle_path.is_empty():
+		return
+	_begin_guided_tutorial_battle(battle_path)
+
+
+func _begin_guided_tutorial_battle(battle_path: String) -> void:
+	_prepare_quick_duel_tutorial_context()
+	GameState.new_game(GameState.GameMode.VS_AI)
 	var err: String = TutorialBattleManager.configure_battle_from_path(battle_path, true)
 	if not err.is_empty():
 		push_error(err)
@@ -668,6 +652,7 @@ func _begin_guided_tutorial_battle(battle_path: String) -> void:
 	GameState.apply_tutorial_opponent_crystals()
 	BGMManager.stop(0.0)
 	CheckerTransition.fade_out_to_battle(func() -> void:
+		VNPlayer.dismiss_overlay_if_present(get_tree())
 		get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 
 
@@ -686,12 +671,13 @@ func launch_vault_duel(tier: String) -> void:
 	GameState.quick_duel_active = true
 	GameState.quick_duel_battle_tier = tier
 
+	# Abandoned tutorial battles can leave tutorial flags set and block setup formations.
+	if TutorialBattleManager.is_active or TutorialBattleManager.is_prepared:
+		TutorialBattleManager.stop()
+
 	GameState.new_game(GameState.GameMode.VS_AI)
 	GameState.battle_player_deck = null
 	GameState.battle_player_forced_cells.clear()
-	var active: DeckData = SaveManager.get_active_deck()
-	if active != null:
-		GameState.battle_player_forced_cells = active.get_formation_forced_cells(0)
 
 	_apply_protagonist_to_battle()
 	_apply_ai_identity_to_battle(tier)
@@ -700,7 +686,7 @@ func launch_vault_duel(tier: String) -> void:
 		GameState.player_portraits[1] = DEFAULT_PORTRAIT_P2
 	if GameState.campaign_player_names.size() < 2 \
 			or str(GameState.campaign_player_names[1]).strip_edges().is_empty():
-		var names: Array = GameState.campaign_player_names.duplicate()
+		var names: Array[String] = GameState.campaign_player_names.duplicate()
 		if names.size() < 2:
 			names = [SaveManager.get_protagonist_display_name(), "Opponent"]
 		names[1] = str(AIDeckVault.get_entry(entry_id).get("label", "Opponent"))

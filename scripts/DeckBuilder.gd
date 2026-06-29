@@ -1501,9 +1501,10 @@ func _open_formation_editor() -> void:
 	add_child(_fe_overlay)
 	_fe_rebuild_list()
 	if current_deck != null and current_deck.formations.size() > 0:
-		_fe_select_formation(0)
+		var preferred: int = current_deck.get_preferred_formation_index()
+		_fe_select_formation(preferred)
 		if _fe_list != null:
-			_fe_list.select(0)
+			_fe_list.select(preferred)
 	_fe_saved_snapshot = _fe_formations_snapshot()
 
 func _fe_formations_snapshot() -> String:
@@ -2021,6 +2022,8 @@ func _process(_delta: float) -> void:
 
 func _fe_save_formation() -> void:
 	if current_deck == null: return
+	if _fe_selected >= 0:
+		current_deck.preferred_formation_index = _fe_selected
 	SaveManager.save_deck(current_deck)
 	_fe_saved_snapshot = _fe_formations_snapshot()
 	_refresh_deck_select()

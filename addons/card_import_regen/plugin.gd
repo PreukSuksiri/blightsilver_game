@@ -2,6 +2,8 @@
 extends EditorPlugin
 
 const REQUEST_PATH := "user://card_exporter_reimport_request.json"
+const REQUEST_FILE := "card_exporter_reimport_request.json"
+const REQUEST_TMP := REQUEST_FILE + ".tmp"
 
 
 func _enter_tree() -> void:
@@ -16,7 +18,10 @@ func _process(_delta: float) -> void:
 	if text.is_empty():
 		return
 
-	var req: Variant = JSON.parse_string(text)
+	var json := JSON.new()
+	if json.parse(text) != OK:
+		return
+	var req: Variant = json.get_data()
 	if typeof(req) != TYPE_DICTIONARY:
 		return
 	if req.get("done", false):
@@ -37,6 +42,14 @@ func _process(_delta: float) -> void:
 
 
 func _write_request(req: Dictionary) -> void:
-	var file := FileAccess.open(REQUEST_PATH, FileAccess.WRITE)
-	if file:
-		file.store_string(JSON.stringify(req))
+	var file := FileAccess.open("user://" + REQUEST_TMP, FileAccess.WRITE)
+	if file == null:
+		return
+	file.store_string(JSON.stringify(req))
+	file.close()
+	var dir := DirAccess.open("user://")
+	if dir == null:
+		return
+	if dir.file_exists(REQUEST_FILE):
+		dir.remove(REQUEST_FILE)
+	dir.rename(REQUEST_TMP, REQUEST_FILE)

@@ -2,6 +2,7 @@ extends Control
 # Main game board — manages grids, selection, turn flow, and AI.
 
 const CARD_SCENE: PackedScene = preload("res://scenes/card.tscn")
+const MAX_BATTLE_NAME_LENGTH: int = 24
 const MAX_CRYSTALS: int = 5000
 const MAX_LOG_LINES: int = 60
 const PROMPT_DISMISS_DELAY: float = 0.5
@@ -271,6 +272,8 @@ var _pending_ability_destroy_pos: Vector2i = Vector2i(-1, -1)
 var _pending_ability_destroy_player: int = -1
 var pending_tech_name: String = ""
 var _tech_reveals_remaining: int = 0   # for multi-reveal effects (e.g. Radar)
+var _deferred_ai_turn_flow: bool = false
+var _ui_flow_block_active: bool = false
 
 # Rift Strike hover state
 var _rift_hover_cell: Vector2i = Vector2i(-1, -1)
@@ -358,6 +361,7 @@ func _toggle_admin_console() -> void:
 	BuildConfig.toggle_admin_console_on(self)
 
 func _ready() -> void:
+	VNPlayer.dismiss_overlay_if_present(get_tree())
 	_setup_turn_manager()
 	_setup_ai()
 	_connect_signals()
@@ -398,6 +402,8 @@ func _ready() -> void:
 	_vs_ai_deck = GameState.battle_ai_deck
 	_vs_ai_player_deck = GameState.battle_player_deck
 	_vs_ai_player_forced_cells = GameState.battle_player_forced_cells.duplicate(true)
+	if TutorialBattleManager.is_prepared:
+		TutorialBattleManager.on_board_ready(self)
 	_start_game()
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
 		AIvsAIManager.start_logging(self)
@@ -405,12 +411,12 @@ func _ready() -> void:
 		_open_session_log()
 	if CheckerTransition.is_screen_covered():
 		await CheckerTransition.fade_in()
-	if TutorialBattleManager.is_prepared:
-		TutorialBattleManager.on_board_ready(self)
+	if TutorialBattleManager.is_active:
 		_update_reveal_buttons()
 		_update_tutorial_hud_lock()
 	TutorialBattleManager.mission_started.connect(_on_tutorial_mission_started)
 	TutorialBattleManager.mission_complete.connect(_on_tutorial_mission_ui_changed)
+	TutorialBattleManager.all_tutorial_missions_done.connect(_on_tutorial_mission_ui_changed)
 
 # ─────────────────────────────────────────────────────────────
 # Setup
@@ -428,6 +434,8 @@ func _setup_turn_manager() -> void:
 	turn_manager.awaiting_blackmail_tech_select.connect(_on_awaiting_blackmail_tech_select)
 	turn_manager.awaiting_defender_choice.connect(_on_awaiting_defender_choice)
 	turn_manager.awaiting_target_selection.connect(_on_awaiting_target_selection)
+	turn_manager.ability_selection_done.connect(_on_flow_blocking_cleared)
+	turn_manager.brainwash_redirect_resolved.connect(_on_flow_blocking_cleared)
 	turn_manager.battle_preview_needed.connect(_on_battle_preview_needed)
 	turn_manager.battle_result_finalized.connect(_on_battle_result_finalized)
 	turn_manager.attack_aborted.connect(_on_attack_aborted)
@@ -515,14 +523,14 @@ func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: 
 	if _union_summoned_this_duel[cp] >= _max_unions_per_duel():
 		await get_tree().create_timer(0.3).timeout
 		if GameState.current_phase != GameState.Phase.GAME_OVER:
-			_active_ai.continue_after_union()
+			_request_ai_continue_after_union()
 		return
 	var u: UnionData = UnionDatabase.get_union(union_name)
 	if u == null or not UnionDatabase.is_playable_in_demo(u) \
 			or material_cells.is_empty() or GameState.crystals[cp] < _effective_union_cost(u.summon_cost):
 		await get_tree().create_timer(0.3).timeout
 		if GameState.current_phase != GameState.Phase.GAME_OVER:
-			_active_ai.continue_after_union()
+			_request_ai_continue_after_union()
 		return
 	_ai_union_resolve_in_progress = true
 	_pending_union_player = cp
@@ -537,7 +545,7 @@ func _on_ai_union_chosen(union_name: String, zone_cells: Array, material_cells: 
 	_restart_ai_watchdog()
 	if GameState.current_phase != GameState.Phase.GAME_OVER:
 		_active_ai.register_union_summoned()
-		_active_ai.continue_after_union()
+		_request_ai_continue_after_union()
 
 func _stop_ai_watchdog() -> void:
 	if _ai_watchdog != null:
@@ -563,7 +571,7 @@ func _on_ai_watchdog_timeout() -> void:
 	if _ai_union_resolve_in_progress:
 		_restart_ai_watchdog()
 		return
-	if selection_state in [SelectionState.SELECTING_TECH_TARGET, SelectionState.SELECTING_UNION_MATERIALS]:
+	if _should_defer_turn_flow():
 		_restart_ai_watchdog()
 		return
 	print("[AI WATCHDOG] Bot Player went idle — forcing turn end.")
@@ -1210,30 +1218,90 @@ func _start_game() -> void:
 		_apply_player_names()
 		GameState.campaign_player_names = []
 	_refresh_hud()
-	if GameState.game_mode == GameState.GameMode.VS_AI \
-			or GameState.game_mode == GameState.GameMode.DAILY_DUNGEON:
-		if _player_names[1] == "Player 2":
-			_player_names[1] = "Opponent"
-			_apply_player_names()
-	elif GameState.game_mode == GameState.GameMode.AI_VS_AI:
+	var ask_mode: String = GameState.battle_ask_player_name.strip_edges().to_lower()
+	GameState.battle_ask_player_name = ""
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
 		_player_names[0] = "Bot 0"
 		_player_names[1] = "Bot 1"
 		_apply_player_names()
-	if GameState.game_mode == GameState.GameMode.HOT_SEAT:
-		_start_setup_music()
-		_show_name_entry()
-	elif GameState.game_mode == GameState.GameMode.AI_VS_AI:
-		# Skip human setup UI — both AIs place their cards directly
 		_do_ai_setup_p0()
 		_do_ai_setup()
 		_begin_game()
-	elif setup_phase:
-		setup_phase.visible = true
-		setup_phase.start_setup(0)
-		setup_phase.setup_complete.connect(_on_setup_complete_p1, CONNECT_ONE_SHOT)
+	elif ask_mode in ["player1", "player2", "both"]:
+		if ask_mode == "player1":
+			_apply_vs_ai_opponent_default_name()
+		var ask_p1: bool = ask_mode in ["player1", "both"]
+		var ask_p2: bool = ask_mode in ["player2", "both"]
 		_start_setup_music()
+		_show_name_entry(ask_p1, ask_p2, _battle_name_entry_prompt(ask_p1, ask_p2))
+	elif GameState.game_mode == GameState.GameMode.HOT_SEAT:
+		_start_setup_music()
+		_show_name_entry()
+	elif setup_phase:
+		_apply_vs_ai_opponent_default_name()
+		_begin_setup_phase()
 
-func _show_name_entry() -> void:
+func _apply_vs_ai_opponent_default_name() -> void:
+	if GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.DAILY_DUNGEON] \
+			and _player_names[1] == "Player 2":
+		_player_names[1] = "Opponent"
+		_apply_player_names()
+
+func _battle_name_entry_prompt(ask_p1: bool, ask_p2: bool) -> String:
+	if GameState.game_mode == GameState.GameMode.HOT_SEAT:
+		return "ENTER PLAYER NAMES"
+	if ask_p1 and ask_p2:
+		return "Could you tell us you and your opponent's name?"
+	if ask_p1:
+		return "Could you tell us your name?"
+	if ask_p2:
+		return "Could you tell us your opponent's name?"
+	return "ENTER PLAYER NAMES"
+
+func _is_allowed_name_char(c: String) -> bool:
+	if c.length() != 1:
+		return false
+	return (c >= "a" and c <= "z") \
+		or (c >= "A" and c <= "Z") \
+		or (c >= "0" and c <= "9") \
+		or c == " "
+
+func _sanitize_name_chars(text: String) -> String:
+	var out := ""
+	for i in text.length():
+		var c: String = text[i]
+		if _is_allowed_name_char(c):
+			out += c
+	return out
+
+func _normalized_name_from_edit(text: String) -> String:
+	return _sanitize_name_chars(text).strip_edges()
+
+func _wire_name_line_edit(le: LineEdit, error_lbl: Label) -> void:
+	var filtering: Array = [false]
+	le.text = _sanitize_name_chars(le.text)
+	le.text_changed.connect(func(new_text: String) -> void:
+		if filtering[0]:
+			return
+		error_lbl.visible = false
+		var filtered: String = _sanitize_name_chars(new_text)
+		if filtered != new_text:
+			filtering[0] = true
+			var caret: int = le.caret_column
+			le.text = filtered
+			le.caret_column = mini(caret, filtered.length())
+			filtering[0] = false
+	)
+
+func _begin_setup_phase() -> void:
+	if setup_phase == null:
+		return
+	setup_phase.visible = true
+	setup_phase.start_setup(0)
+	setup_phase.setup_complete.connect(_on_setup_complete_p1, CONNECT_ONE_SHOT)
+	_start_setup_music()
+
+func _show_name_entry(ask_p1: bool = true, ask_p2: bool = true, heading_text: String = "") -> void:
 	var overlay := Control.new()
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index = 20
@@ -1275,75 +1343,117 @@ func _show_name_entry() -> void:
 	panel.add_child(vbox)
 
 	var heading := Label.new()
-	heading.text = "ENTER PLAYER NAMES"
+	var prompt: String = heading_text.strip_edges()
+	if prompt.is_empty():
+		prompt = _battle_name_entry_prompt(ask_p1, ask_p2)
+	heading.text = prompt
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	heading.add_theme_font_size_override("font_size", 20)
+	heading.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	heading.add_theme_font_size_override("font_size", 18)
 	heading.add_theme_color_override("font_color", Color(0.38, 0.75, 1.0))
 	vbox.add_child(heading)
 
 	var sub := Label.new()
-	sub.text = "Leave blank to keep the default name."
+	sub.text = "Use letters, numbers, and spaces only."
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sub.add_theme_font_size_override("font_size", 12)
 	sub.add_theme_color_override("font_color", Color(0.55, 0.65, 0.80))
 	vbox.add_child(sub)
 
+	var error_lbl := Label.new()
+	error_lbl.text = ""
+	error_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	error_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	error_lbl.add_theme_font_size_override("font_size", 12)
+	error_lbl.add_theme_color_override("font_color", Color(1.0, 0.45, 0.45))
+	error_lbl.visible = false
+	vbox.add_child(error_lbl)
+
 	var sep1 := HSeparator.new()
 	vbox.add_child(sep1)
 
-	# P1 name
-	var p1_lbl := Label.new()
-	p1_lbl.text = "Player 1 name"
-	p1_lbl.add_theme_font_size_override("font_size", 13)
-	p1_lbl.add_theme_color_override("font_color", Color(0.749, 0.878, 1.0))
-	vbox.add_child(p1_lbl)
+	var is_vs_ai: bool = GameState.game_mode in [
+		GameState.GameMode.VS_AI,
+		GameState.GameMode.CAMPAIGN,
+		GameState.GameMode.DAILY_DUNGEON,
+		GameState.GameMode.EXPLORATION,
+	]
+	var p1_default: String = "Player 1"
+	var p2_default: String = "Opponent" if is_vs_ai else "Player 2"
 
-	var p1_edit := LineEdit.new()
-	p1_edit.placeholder_text = "Player 1"
-	p1_edit.text = _player_names[0] if _player_names[0] != "Player 1" else ""
-	p1_edit.max_length = 20
-	p1_edit.custom_minimum_size = Vector2(0, 40)
-	p1_edit.add_theme_font_size_override("font_size", 16)
-	vbox.add_child(p1_edit)
+	var p1_edit: LineEdit = null
+	if ask_p1:
+		var p1_lbl := Label.new()
+		p1_lbl.text = "Your name" if is_vs_ai else "Player 1 name"
+		p1_lbl.add_theme_font_size_override("font_size", 13)
+		p1_lbl.add_theme_color_override("font_color", Color(0.749, 0.878, 1.0))
+		vbox.add_child(p1_lbl)
 
-	# P2 name
-	var p2_lbl := Label.new()
-	p2_lbl.text = "Player 2 name"
-	p2_lbl.add_theme_font_size_override("font_size", 13)
-	p2_lbl.add_theme_color_override("font_color", Color(1.0, 0.78, 0.78))
-	vbox.add_child(p2_lbl)
+		p1_edit = LineEdit.new()
+		p1_edit.placeholder_text = p1_default
+		var p1_seed: String = _player_names[0] if _player_names[0] != p1_default else ""
+		p1_edit.text = _sanitize_name_chars(p1_seed)
+		p1_edit.max_length = MAX_BATTLE_NAME_LENGTH
+		p1_edit.custom_minimum_size = Vector2(0, 40)
+		p1_edit.add_theme_font_size_override("font_size", 16)
+		_wire_name_line_edit(p1_edit, error_lbl)
+		vbox.add_child(p1_edit)
 
-	var p2_edit := LineEdit.new()
-	p2_edit.placeholder_text = "Player 2"
-	p2_edit.text = _player_names[1] if _player_names[1] != "Player 2" else ""
-	p2_edit.max_length = 20
-	p2_edit.custom_minimum_size = Vector2(0, 40)
-	p2_edit.add_theme_font_size_override("font_size", 16)
-	vbox.add_child(p2_edit)
+	var p2_edit: LineEdit = null
+	if ask_p2:
+		var p2_lbl := Label.new()
+		p2_lbl.text = "Opponent name" if is_vs_ai else "Player 2 name"
+		p2_lbl.add_theme_font_size_override("font_size", 13)
+		p2_lbl.add_theme_color_override("font_color", Color(1.0, 0.78, 0.78))
+		vbox.add_child(p2_lbl)
+
+		p2_edit = LineEdit.new()
+		p2_edit.placeholder_text = p2_default
+		var p2_seed: String = _player_names[1] if _player_names[1] != p2_default else ""
+		p2_edit.text = _sanitize_name_chars(p2_seed)
+		p2_edit.max_length = MAX_BATTLE_NAME_LENGTH
+		p2_edit.custom_minimum_size = Vector2(0, 40)
+		p2_edit.add_theme_font_size_override("font_size", 16)
+		_wire_name_line_edit(p2_edit, error_lbl)
+		vbox.add_child(p2_edit)
 
 	var spacer := Control.new()
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	vbox.add_child(spacer)
 
 	var start_btn := Button.new()
-	start_btn.text = "START GAME"
+	start_btn.text = "START GAME" if GameState.game_mode == GameState.GameMode.HOT_SEAT else "CONTINUE"
 	start_btn.custom_minimum_size = Vector2(0, 52)
 	start_btn.add_theme_font_size_override("font_size", 18)
 	start_btn.pressed.connect(func() -> void:
-		var n1 := p1_edit.text.strip_edges()
-		var n2 := p2_edit.text.strip_edges()
-		_player_names[0] = n1 if not n1.is_empty() else "Player 1"
-		_player_names[1] = n2 if not n2.is_empty() else "Player 2"
+		var missing: PackedStringArray = []
+		if ask_p1 and p1_edit != null and _normalized_name_from_edit(p1_edit.text).is_empty():
+			missing.append("your name" if is_vs_ai else "Player 1 name")
+		if ask_p2 and p2_edit != null and _normalized_name_from_edit(p2_edit.text).is_empty():
+			missing.append("opponent name" if is_vs_ai else "Player 2 name")
+		if not missing.is_empty():
+			error_lbl.text = "Please enter %s." % " and ".join(missing)
+			error_lbl.visible = true
+			if ask_p1 and p1_edit != null and _normalized_name_from_edit(p1_edit.text).is_empty():
+				p1_edit.grab_focus()
+			elif ask_p2 and p2_edit != null:
+				p2_edit.grab_focus()
+			return
+		if ask_p1 and p1_edit != null:
+			_player_names[0] = _normalized_name_from_edit(p1_edit.text)
+		if ask_p2 and p2_edit != null:
+			_player_names[1] = _normalized_name_from_edit(p2_edit.text)
+		if not ask_p2:
+			_apply_vs_ai_opponent_default_name()
 		_apply_player_names()
 		overlay.queue_free()
-		if setup_phase:
-			setup_phase.visible = true
-			setup_phase.start_setup(0)
-			setup_phase.setup_complete.connect(_on_setup_complete_p1, CONNECT_ONE_SHOT)
-			_start_setup_music())
+		_begin_setup_phase())
 	vbox.add_child(start_btn)
 
-	p1_edit.grab_focus()
+	if p1_edit != null:
+		p1_edit.grab_focus()
+	elif p2_edit != null:
+		p2_edit.grab_focus()
 
 func _apply_player_names() -> void:
 	if _p1_name_lbl: _p1_name_lbl.text = _player_names[0]
@@ -3826,9 +3936,13 @@ func _build_attack_count_icon() -> Control:
 	return container
 
 func _update_crystal_visibility() -> void:
-	var show := GameState.current_phase not in [
+	var hide_phases: Array = [
 		GameState.Phase.NONE, GameState.Phase.SETUP_P1,
-		GameState.Phase.SETUP_P2, GameState.Phase.GAME_OVER]
+		GameState.Phase.SETUP_P2]
+	var show: bool = GameState.current_phase not in hide_phases
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		# Keep the HUD visible until burst/tick/post-tick hold finishes on crystal depletion.
+		show = _crystal_anim_processing
 	if _p1_crystal_row:
 		_p1_crystal_row.visible = show
 	if _p2_crystal_row:
@@ -4018,7 +4132,7 @@ func _on_options_btn_pressed() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.report_action("options_tap", {})
-	if _options_panel != null:
+	if GameDialog.has_open_overlay(self):
 		return
 	_show_options_panel()
 
@@ -4060,7 +4174,8 @@ void fragment() {
 	fog_clip.layout_mode = 1
 	fog_clip.set_anchors_preset(Control.PRESET_FULL_RECT)
 	fog_clip.mouse_filter  = Control.MOUSE_FILTER_IGNORE
-	playmat_bg.add_child(fog_clip)
+	add_child(fog_clip)
+	move_child(fog_clip, playmat_bg.get_index() + 1)
 	_fog_container = fog_clip
 
 	_fog_material = _make_fog_material(smoke_shader, _FOG_TILE_REPEAT)
@@ -4309,6 +4424,8 @@ func _on_union_suggest_pressed() -> void:
 # Options Menu
 # ─────────────────────────────────────────────────────────────
 
+const OPTIONS_CONTENT_OVERLAY := &"GameDialogContentOverlay"
+
 func _build_card_name_lookup() -> void:
 	_card_name_to_type.clear()
 	for n: String in CardDatabase.get_all_character_names():
@@ -4318,108 +4435,39 @@ func _build_card_name_lookup() -> void:
 	for n: String in CardDatabase.get_all_tech_names():
 		_card_name_to_type[n] = "tech"
 
-func _make_panel_stylebox() -> StyleBoxFlat:
-	return GameDialog.make_panel_stylebox(24.0)
-
-
-# Returns {dimmer, vbox}. Caller fills vbox, then calls _add_back_btn(vbox, dimmer).
 func _make_sub_overlay(half_w: float = 420.0, half_h: float = 300.0) -> Dictionary:
-	var dimmer := ColorRect.new()
-	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dimmer.color = Color(0.0, 0.0, 0.0, 0.0)
-	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
-	dimmer.z_index = 55
-	add_child(dimmer)
-
-	var panel := PanelContainer.new()
-	panel.layout_mode = 1
-	panel.anchor_left = 0.5; panel.anchor_right  = 0.5
-	panel.anchor_top  = 0.5; panel.anchor_bottom = 0.5
-	panel.offset_left = -half_w; panel.offset_right  =  half_w
-	panel.offset_top  = -half_h; panel.offset_bottom =  half_h
-	panel.add_theme_stylebox_override("panel", _make_panel_stylebox())
-	dimmer.add_child(panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 12)
-	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	panel.add_child(vbox)
-
-	return {"dimmer": dimmer, "vbox": vbox}
+	var shell: Dictionary = GameDialog.content_overlay(
+		self, half_w * 2.0, half_h * 2.0, GameDialog.DEFAULT_Z_INDEX, OPTIONS_CONTENT_OVERLAY)
+	return {"dimmer": shell["root"], "vbox": shell["vbox"]}
 
 func _add_back_btn(vbox: VBoxContainer, dimmer: Control) -> void:
 	var back_btn := Button.new()
-	back_btn.text = "← BACK"
-	back_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
-	back_btn.add_theme_font_size_override("font_size", 14)
-	back_btn.add_theme_color_override("font_color", Color(0.7, 0.7, 0.75))
+	back_btn.text = "← Back"
+	GameDialog.style_menu_button(back_btn)
 	back_btn.pressed.connect(func() -> void:
 		dimmer.queue_free()
 		_show_options_panel())
 	vbox.add_child(back_btn)
-	SFXManager.wire_prompt_button(back_btn)
 
 func _show_options_panel() -> void:
-	var dimmer := ColorRect.new()
-	dimmer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	dimmer.color = Color(0.0, 0.0, 0.0, 0.0)
-	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
-	dimmer.z_index = 50
-	add_child(dimmer)
-	_options_panel = dimmer
-
-	var panel := PanelContainer.new()
-	panel.layout_mode = 1
-	panel.anchor_left = 0.5; panel.anchor_right  = 0.5
-	panel.anchor_top  = 0.5; panel.anchor_bottom = 0.5
-	panel.offset_left = -190.0; panel.offset_right  = 190.0
-	panel.offset_top  = -240.0; panel.offset_bottom = 240.0
-	panel.add_theme_stylebox_override("panel", _make_panel_stylebox())
-	dimmer.add_child(panel)
-
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 14)
-	panel.add_child(vbox)
-
-	var title := Label.new()
-	title.text = "OPTIONS"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	GameDialog.style_title_label(title)
-	vbox.add_child(title)
-	vbox.add_child(HSeparator.new())
-
-	var entries: Array = [
-		["BATTLE LOG",    _show_battle_log_panel],
-		["RULES",         _show_rules_panel],
-		["SETTINGS",      _show_settings_panel],
-		["SURRENDER",     _show_surrender_confirm],
-	]
-	for entry: Array in entries:
-		var btn := Button.new()
-		btn.text = entry[0] as String
-		btn.custom_minimum_size = Vector2(0, 48)
-		btn.add_theme_font_size_override("font_size", 18)
-		var cb: Callable = entry[1] as Callable
-		btn.pressed.connect(func() -> void:
-			_close_options_panel()
-			cb.call())
-		vbox.add_child(btn)
-
-	vbox.add_child(HSeparator.new())
-
-	var close_btn := Button.new()
-	close_btn.text = "CLOSE"
-	close_btn.custom_minimum_size = Vector2(0, 38)
-	close_btn.add_theme_font_size_override("font_size", 15)
-	close_btn.add_theme_color_override("font_color", Color(0.7, 0.7, 0.75))
-	close_btn.pressed.connect(_close_options_panel)
-	vbox.add_child(close_btn)
-	SFXManager.wire_prompt_buttons_in(vbox)
+	if GameDialog.has_open_overlay(self):
+		return
+	SFXManager.play(SFXManager.SFX_POPUP)
+	_options_panel = GameDialog.menu_overlay(
+		self,
+		"Options",
+		"",
+		[
+			{"text": "Battle Log", "callback": _show_battle_log_panel},
+			{"text": "Rules", "callback": _show_rules_panel},
+			{"text": "Settings", "callback": _show_settings_panel},
+			{"text": "Surrender", "callback": _show_surrender_confirm},
+		],
+		"Close")
 
 func _close_options_panel() -> void:
-	if _options_panel != null:
-		_options_panel.queue_free()
-		_options_panel = null
+	GameDialog.close_overlay(self)
+	_options_panel = null
 
 # ─────────────────────────────────────────────────────────────
 # Change Music sub-panel
@@ -4443,15 +4491,13 @@ func _show_change_music_panel() -> void:
 	var vbox: VBoxContainer = overlay["vbox"]
 
 	var title := Label.new()
-	title.text = "CHANGE MUSIC  💿"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 20)
-	title.add_theme_color_override("font_color", Color(0.85, 0.55, 1.0))
+	title.text = "Change Music  💿"
+	GameDialog.style_title_label(title)
 	vbox.add_child(title)
 
 	var disc_lbl := Label.new()
 	disc_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	disc_lbl.add_theme_font_size_override("font_size", 13)
+	GameDialog.style_body_label(disc_lbl)
 	if already_used:
 		disc_lbl.text = "Already changed music this turn."
 		disc_lbl.add_theme_color_override("font_color", Color(1.0, 0.5, 0.3))
@@ -4470,8 +4516,7 @@ func _show_change_music_panel() -> void:
 	for track: Dictionary in MUSIC_TRACKS:
 		var btn := Button.new()
 		btn.text = track["label"] as String
-		btn.custom_minimum_size = Vector2(0, 40)
-		btn.add_theme_font_size_override("font_size", 15)
+		GameDialog.style_menu_button(btn)
 		btn.disabled = not can_change
 		var track_path: String = track["path"]
 		btn.pressed.connect(func() -> void:
@@ -4522,12 +4567,9 @@ func _show_battle_log_panel() -> void:
 	var vbox: VBoxContainer = ovl["vbox"]
 
 	var header := Label.new()
-	header.text = "BATTLE LOG"
-	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	header.add_theme_font_size_override("font_size", 20)
-	header.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+	header.text = "Battle Log"
+	GameDialog.style_title_label(header)
 	vbox.add_child(header)
-	vbox.add_child(HSeparator.new())
 
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -4570,12 +4612,9 @@ func _show_rules_panel() -> void:
 	var vbox: VBoxContainer = ovl["vbox"]
 
 	var header := Label.new()
-	header.text = "RULES"
-	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	header.add_theme_font_size_override("font_size", 20)
-	header.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+	header.text = "Rules"
+	GameDialog.style_title_label(header)
 	vbox.add_child(header)
-	vbox.add_child(HSeparator.new())
 
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -4604,7 +4643,6 @@ func _show_rules_panel() -> void:
 	scroll.add_child(rtl)
 
 	_add_back_btn(vbox, dimmer)
-	SFXManager.wire_prompt_buttons_in(vbox)
 
 # ─────────────────────────────────────────────────────────────
 # Settings sub-panel (placeholder)
@@ -4616,24 +4654,18 @@ func _show_settings_panel() -> void:
 	var vbox: VBoxContainer = ovl["vbox"]
 
 	var header := Label.new()
-	header.text = "SETTINGS"
-	header.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	header.add_theme_font_size_override("font_size", 20)
-	header.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+	header.text = "Settings"
+	GameDialog.style_title_label(header)
 	vbox.add_child(header)
-	vbox.add_child(HSeparator.new())
 
 	var placeholder := Label.new()
 	placeholder.text = "Settings coming soon."
-	placeholder.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	placeholder.add_theme_font_size_override("font_size", 15)
-	placeholder.add_theme_color_override("font_color", Color(0.6, 0.6, 0.65))
+	GameDialog.style_body_label(placeholder)
 	placeholder.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	placeholder.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	vbox.add_child(placeholder)
 
 	_add_back_btn(vbox, dimmer)
-	SFXManager.wire_prompt_buttons_in(vbox)
 
 # ─────────────────────────────────────────────────────────────
 # Surrender confirm
@@ -5247,11 +5279,13 @@ func _on_crystals_changed(player_index: int, new_amount: int, _reason: String = 
 
 func _process_crystal_anim_queue() -> void:
 	_crystal_anim_processing = true
+	_update_crystal_visibility()
 	while _crystal_anim_queue.size() > 0:
 		var job: Dictionary = _crystal_anim_queue.pop_front()
 		await _run_crystal_change_animation(int(job["player"]), int(job["new_amount"]))
 		_update_union_suggest_button()
 	_crystal_anim_processing = false
+	_update_crystal_visibility()
 
 func _notify_crystal_animation_complete() -> void:
 	GameState.complete_crystal_animation()
@@ -5927,6 +5961,9 @@ func _dismiss_tax_confirm_panel() -> void:
 func _on_ai_end_turn() -> void:
 	if GameState.current_phase == GameState.Phase.GAME_OVER:
 		return
+	if _should_defer_turn_flow():
+		_deferred_ai_turn_flow = true
+		return
 	_hide_thinking_bubble()
 	var player := GameState.current_player
 	var has_attacked := _player_has_attacked_this_turn(player)
@@ -6112,6 +6149,84 @@ func _on_play_again_btn() -> void:
 	get_tree().reload_current_scene()
 
 # ─────────────────────────────────────────────────────────────
+# Turn-flow blocking — prevent AI/turn advance during pending selections
+# ─────────────────────────────────────────────────────────────
+func _should_defer_turn_flow() -> bool:
+	if turn_manager.is_flow_blocked():
+		return true
+	if selection_state in [
+		SelectionState.SELECTING_TECH_TARGET,
+		SelectionState.AWAITING_TRAP_CHOICE,
+		SelectionState.SELECTING_UNION_MATERIALS,
+	]:
+		return true
+	if _pending_human_defender_tech:
+		return true
+	if _ai_union_resolve_in_progress:
+		return true
+	return false
+
+func _on_flow_blocking_cleared() -> void:
+	call_deferred("_try_resume_deferred_turn_flow")
+
+func _try_resume_deferred_turn_flow() -> void:
+	if not _deferred_ai_turn_flow:
+		return
+	if _should_defer_turn_flow():
+		return
+	if not _is_ai_turn() or GameState.current_phase == GameState.Phase.GAME_OVER:
+		_deferred_ai_turn_flow = false
+		return
+	_deferred_ai_turn_flow = false
+	_start_ai_turn_flow()
+
+func _start_ai_turn_flow() -> void:
+	if _should_defer_turn_flow():
+		_deferred_ai_turn_flow = true
+		return
+	_deferred_ai_turn_flow = false
+	_dismiss_tax_confirm_panel()
+	if _end_turn_btn:
+		_end_turn_btn.visible = false
+	if _options_btn:
+		_options_btn.visible = false
+	_restart_ai_watchdog()
+	var _tech_royale_ai: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+		and "tech_royale" in GameState.active_dungeon_modifiers
+	_active_ai = ai_player_0 if (GameState.game_mode == GameState.GameMode.AI_VS_AI \
+		and GameState.current_player == 0) else ai_player
+	_active_ai.decide_bluff()
+	_start_ai_thinking()
+	if (_tech_used_this_turn[GameState.current_player] and not _tech_royale_ai) \
+			or _ai_turn_action_started[GameState.current_player]:
+		_request_ai_continue_after_union()
+	else:
+		_ai_turn_action_started[GameState.current_player] = true
+		_active_ai.decide_turn()
+
+func _request_ai_continue_after_union(try_union_after_tech: bool = false) -> void:
+	if _should_defer_turn_flow():
+		_deferred_ai_turn_flow = true
+		return
+	_deferred_ai_turn_flow = false
+	_restart_ai_watchdog()
+	_active_ai.continue_after_union(try_union_after_tech)
+
+func _request_ai_continue_after_union_delayed(try_union_after_tech: bool = false) -> void:
+	if _should_defer_turn_flow():
+		_deferred_ai_turn_flow = true
+		return
+	_restart_ai_watchdog()
+	await get_tree().create_timer(0.4).timeout
+	if GameState.current_phase == GameState.Phase.GAME_OVER:
+		return
+	if _should_defer_turn_flow():
+		_deferred_ai_turn_flow = true
+		return
+	_deferred_ai_turn_flow = false
+	_active_ai.continue_after_union(try_union_after_tech)
+
+# ─────────────────────────────────────────────────────────────
 # Phase Changes
 # ─────────────────────────────────────────────────────────────
 func _enter_mode_select() -> void:
@@ -6139,25 +6254,7 @@ func _enter_mode_select() -> void:
 		_toggle_reveal_preview(cp)
 		_apply_observer_peek()
 	if _is_ai_turn() and GameState.current_phase != GameState.Phase.GAME_OVER:
-		_dismiss_tax_confirm_panel()
-		if _end_turn_btn:
-			_end_turn_btn.visible = false
-		if _options_btn:
-			_options_btn.visible = false
-		_restart_ai_watchdog()
-		var _tech_royale_ai: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
-			and "tech_royale" in GameState.active_dungeon_modifiers
-		# Pick the correct AI instance for this turn
-		_active_ai = ai_player_0 if (GameState.game_mode == GameState.GameMode.AI_VS_AI \
-			and GameState.current_player == 0) else ai_player
-		_active_ai.decide_bluff()   # fire-and-forget; runs in background
-		_start_ai_thinking()        # show thinking bubble after 0.5s if still processing
-		if (_tech_used_this_turn[GameState.current_player] and not _tech_royale_ai) \
-				or _ai_turn_action_started[GameState.current_player]:
-			_active_ai.continue_after_union()  # tech already played or mid-turn attack continue
-		else:
-			_ai_turn_action_started[GameState.current_player] = true
-			_active_ai.decide_turn()
+		_start_ai_turn_flow()
 		return
 	_stop_ai_watchdog()
 	if resume_multi_attack_pos != Vector2i(-1, -1):
@@ -6299,12 +6396,8 @@ func _on_attack_aborted() -> void:
 	# If AI aborted its own attack (e.g. attacks_remaining ran out, coin-flip cancel),
 	# re-trigger the AI decision loop instead of showing human UI.
 	if _is_ai_turn() and GameState.current_phase != GameState.Phase.GAME_OVER:
-		await get_tree().create_timer(0.4).timeout
-		if GameState.current_phase == GameState.Phase.GAME_OVER:
-			return
-		_restart_ai_watchdog()
 		_active_ai.register_attack_aborted()
-		_active_ai.continue_after_union()
+		await _request_ai_continue_after_union_delayed()
 		return
 	if _end_turn_btn:
 		_end_turn_btn.visible = true
@@ -6327,6 +6420,8 @@ func _on_tech_played(player: int, tech_name: String) -> void:
 	_refresh_all_grids()
 	if _tech_resolve_blocker != null:
 		_tech_resolve_blocker.visible = true
+	if _is_ai_turn():
+		_restart_ai_watchdog()
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.report_action("tech_played", {"player": player, "tech_name": tech_name})
 
@@ -6342,13 +6437,8 @@ func _on_tech_resolved(player: int) -> void:
 	_clear_selection()
 	_refresh_all_grids()
 	if _is_ai_turn() and GameState.current_phase != GameState.Phase.GAME_OVER:
-		# Go straight to attack — do NOT call decide_turn() again (would replay tech check)
 		_ai_turn_action_started[GameState.current_player] = true
-		_restart_ai_watchdog()
-		await get_tree().create_timer(0.4).timeout
-		if GameState.current_phase == GameState.Phase.GAME_OVER:
-			return
-		_active_ai.continue_after_union(true)
+		await _request_ai_continue_after_union_delayed(true)
 	else:
 		_resume_human_mode_select()
 
@@ -6438,6 +6528,12 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 	# Allow clicks during the AI's turn only when the human must respond to a tech/trap
 	# effect (e.g. Tease forces the opponent to reveal one of their own squares).
 	if _is_ai_turn() and selection_state != SelectionState.SELECTING_TECH_TARGET:
+		return
+	# Post-attack reveal (Shepherd Detective, etc.) is chosen by the attacker — block
+	# human clicks when the AI owns the ability even if the turn already advanced.
+	if selection_state == SelectionState.SELECTING_TECH_TARGET \
+			and pending_tech_filter in ["opponent_any_hidden", "adjacent", "opponent_character_ability_destroy"] \
+			and _ai_owns_pending_reveal_attacker():
 		return
 	# Tutorial action report
 	if TutorialBattleManager.is_active:
@@ -6785,7 +6881,23 @@ func _handle_revive_placement(player: int, pos: Vector2i) -> void:
 # ─────────────────────────────────────────────────────────────
 # Tech Target Handling
 # ─────────────────────────────────────────────────────────────
+func _begin_target_selection_blocking(filter: String) -> void:
+	if not turn_manager.is_flow_blocked():
+		turn_manager.begin_ui_target_selection()
+		_ui_flow_block_active = true
+	if filter != "bribe":
+		pending_tech_filter = filter
+		if filter != "graveyard":
+			_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
+	_restart_ai_watchdog()
+
+func _end_target_selection_blocking() -> void:
+	if _ui_flow_block_active:
+		turn_manager.end_ui_target_selection()
+		_ui_flow_block_active = false
+
 func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
+	_begin_target_selection_blocking(filter)
 	# Unblock input — player now needs to interact with the field or overlay
 	if _tech_resolve_blocker != null:
 		_tech_resolve_blocker.visible = false
@@ -6810,7 +6922,7 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		await _prepare_revive_from_graveyard(GameState.current_player, tech_data)
 		return
 
-	pending_tech_filter = filter
+	# pending_tech_filter + SELECTING_TECH_TARGET set synchronously in _begin_target_selection_blocking
 	# Parse reveal count for multi-reveal filters (e.g. "opponent_squares_3", "own_units_up_to_5")
 	if "opponent_squares" in filter:
 		var parts := filter.split("_")
@@ -6824,7 +6936,6 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 		_tech_reveal_picked.clear()
 	else:
 		_tech_reveals_total = 0
-	_set_selection_state(SelectionState.SELECTING_TECH_TARGET)
 	# Reset Rift Strike hover state when entering row_or_column targeting
 	if filter == "row_or_column":
 		_rift_hover_cell = Vector2i(-1, -1)
@@ -6859,7 +6970,11 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 
 	# Nuki: swap with any own unit (face-down allowed)
 	if filter == "own_character_for_swap":
-		_set_own_facedown_char_peek(true)
+		var _nuki_owner: int = turn_manager._pending_swap_owner_player
+		if _nuki_owner >= 0:
+			_set_own_facedown_char_peek(true, _nuki_owner)
+		else:
+			_set_own_facedown_char_peek(true)
 
 	# Own-unit picks without "face-up/exposed only" in card text — cosmetic peek while selecting
 	if _own_unit_target_allows_facedown(filter):
@@ -6900,9 +7015,32 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			_finish_tech_action(GameState.current_player)
 		return
 
+	if filter == "own_character_for_swap":
+		var _nuki_sel: int = turn_manager._pending_swap_owner_player
+		if _nuki_sel < 0:
+			_nuki_sel = GameState.current_player
+		var _nuki_sel_is_ai: bool = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+			or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+				GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+				and _nuki_sel == ai_player.player_index)
+		if _nuki_sel_is_ai:
+			await get_tree().create_timer(0.4).timeout
+			var _nuki_ai: AIPlayer = _get_ai_for_player(_nuki_sel)
+			var _nuki_target: Vector2i = _nuki_ai.decide_target(filter)
+			_nuki_ai.ai_target_chosen.emit(_nuki_target)
+			_flash_target_card(_nuki_sel, _nuki_target.x, _nuki_target.y)
+			_handle_tech_target(_nuki_sel, _nuki_target)
+			return
+		if _local_human_is_selecting(_nuki_sel) \
+				and GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+				and GameState.get_opponent(_nuki_sel) == ai_player.player_index:
+			_begin_human_defender_tech_choice()
+		return
+
 	if filter in ["ability_false_prophet_reveal", "opponent_character_ability_destroy", "ability_rebel_king_swap",
 			"ability_plant29_venom", "ability_plant29_mutagen", "ability_death_cobra_venom",
-			"ability_lockpicker_reveal", "wk17_foe_pick_character"]:
+			"ability_lockpicker_reveal", "wk17_foe_pick_character", "opponent_any_hidden", "adjacent"]:
 		var _ai_responds: bool = _is_ai_turn()
 		if filter in ["ability_plant29_venom", "ability_plant29_mutagen"]:
 			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
@@ -6925,6 +7063,18 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
 					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
 					and _wk17_foe == ai_player.player_index)
+		if filter == "opponent_any_hidden":
+			var _rev_owner: int = turn_manager._pending_reveal_attacker_player
+			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+					and _rev_owner == ai_player.player_index)
+		if filter in ["adjacent", "opponent_character_ability_destroy"]:
+			var _ab_owner: int = turn_manager._pending_reveal_attacker_player
+			_ai_responds = GameState.game_mode == GameState.GameMode.AI_VS_AI \
+				or (GameState.game_mode in [GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+					GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+					and _ab_owner == ai_player.player_index)
 		if _ai_responds:
 			await get_tree().create_timer(0.4).timeout
 			if filter == "ability_plant29_venom" or filter == "ability_plant29_mutagen":
@@ -6957,6 +7107,14 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			elif filter == "ability_lockpicker_reveal":
 				_ab_player = GameState.get_opponent(turn_manager._pending_lockpicker_owner)
 				_ab_target = _get_ai_for_player(turn_manager._pending_lockpicker_owner).decide_target(filter)
+			elif filter == "opponent_any_hidden":
+				var _rev_owner: int = turn_manager._pending_reveal_attacker_player
+				_ab_player = GameState.get_opponent(_rev_owner)
+				_ab_target = _get_ai_for_player(_rev_owner).decide_target(filter)
+			elif filter in ["adjacent", "opponent_character_ability_destroy"]:
+				var _ab_owner: int = turn_manager._pending_reveal_attacker_player
+				_ab_player = GameState.get_opponent(_ab_owner)
+				_ab_target = _get_ai_for_player(_ab_owner).decide_target(filter)
 			elif filter == "wk17_foe_pick_character":
 				_ab_player = turn_manager._pending_wk17_foe_player
 				_ab_target = _get_ai_for_player(_ab_player).decide_target(filter)
@@ -6965,7 +7123,8 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 			if filter == "ability_rebel_king_swap":
 				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
 				_handle_tech_target(_ab_player, _ab_target)
-			elif filter in ["ability_false_prophet_reveal", "ability_lockpicker_reveal"]:
+			elif filter in ["ability_false_prophet_reveal", "ability_lockpicker_reveal", "opponent_any_hidden",
+					"adjacent", "opponent_character_ability_destroy"]:
 				_flash_target_card(_ab_player, _ab_target.x, _ab_target.y)
 				_handle_tech_target(_ab_player, _ab_target)
 			elif filter == "wk17_foe_pick_character":
@@ -7061,9 +7220,18 @@ func _get_target_selecting_player(filter: String) -> int:
 	if filter == "ability_lockpicker_reveal":
 		var _lp_owner: int = turn_manager._pending_lockpicker_owner
 		return _lp_owner if _lp_owner >= 0 else GameState.current_player
+	if filter == "opponent_any_hidden":
+		var _rev_owner: int = turn_manager._pending_reveal_attacker_player
+		return _rev_owner if _rev_owner >= 0 else GameState.current_player
+	if filter in ["adjacent", "opponent_character_ability_destroy"]:
+		var _ab_owner: int = turn_manager._pending_reveal_attacker_player
+		return _ab_owner if _ab_owner >= 0 else GameState.current_player
 	if filter == "wk17_foe_pick_character":
 		var _wk17_foe: int = turn_manager._pending_wk17_foe_player
 		return _wk17_foe if _wk17_foe >= 0 else GameState.current_player
+	if filter == "own_character_for_swap":
+		var _swap_owner: int = turn_manager._pending_swap_owner_player
+		return _swap_owner if _swap_owner >= 0 else GameState.current_player
 	if filter in _defender_response_filters():
 		return GameState.get_opponent(GameState.current_player)
 	if filter in ["lock_opponent_monster", "opponent_facedown_forced"]:
@@ -7166,8 +7334,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "opponent_character_ability_destroy":
+		var _coin_foe: int = _reveal_attacker_foe_player(opponent)
 		if _pending_ability_destroy_pos == Vector2i(-1, -1):
-			if player == opponent and card.card_type == "character" and card.face_up:
+			if player == _coin_foe and card.card_type == "character" and card.face_up:
 				_pending_ability_destroy_pos = pos
 				_pending_ability_destroy_player = player
 				var _cf: Array = await turn_manager._do_coin_flips(1)
@@ -7421,7 +7590,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "opponent_any_hidden":
-		if player == opponent and not card.face_up:
+		var _rev_foe: int = _reveal_attacker_foe_player(opponent)
+		if player == _rev_foe and not card.face_up:
 			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			if card.card_type == "dead_end":
 				GameState.post_message("Revealed: (empty)")
@@ -7431,7 +7601,10 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		return
 
 	if pending_tech_filter == "own_character_for_swap":
-		if player == current_player and card.card_type == "character":
+		var _swap_owner: int = turn_manager._pending_swap_owner_player
+		if _swap_owner < 0:
+			_swap_owner = current_player
+		if player == _swap_owner and card.card_type == "character":
 			var swap_pos: Vector2i = turn_manager._pending_swap_attacker_pos
 			if swap_pos != Vector2i(-1, -1) and swap_pos != pos:
 				var swap_card: GameState.CardInstance = GameState.get_card(current_player, swap_pos.x, swap_pos.y)
@@ -7835,6 +8008,7 @@ func _clear_after_pre_battle_ability() -> void:
 	_clear_selection()
 	_set_selection_state(SelectionState.NONE)
 	_refresh_all_grids()
+	_end_target_selection_blocking()
 	_emit_ability_selection_done_next_frame()
 
 func _clear_after_ability() -> void:
@@ -7876,6 +8050,25 @@ func _is_post_attack_ability_filter(filter: String) -> bool:
 		"ability_lockpicker_reveal",
 		"wk17_foe_pick_character",
 	]
+
+
+func _reveal_attacker_foe_player(fallback_opponent: int) -> int:
+	var _rev_owner: int = turn_manager._pending_reveal_attacker_player
+	if _rev_owner >= 0:
+		return GameState.get_opponent(_rev_owner)
+	return fallback_opponent
+
+
+func _ai_owns_pending_reveal_attacker() -> bool:
+	var _rev_owner: int = turn_manager._pending_reveal_attacker_player
+	if _rev_owner < 0 or ai_player == null:
+		return false
+	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
+		return true
+	return GameState.game_mode in [
+			GameState.GameMode.VS_AI, GameState.GameMode.CAMPAIGN,
+			GameState.GameMode.DAILY_DUNGEON, GameState.GameMode.EXPLORATION] \
+		and _rev_owner == ai_player.player_index
 
 
 func _find_turn_start_coin_flip_source_name(player: int) -> String:
@@ -7934,6 +8127,8 @@ func _clear_after_tech() -> void:
 	_clear_selection()
 	_set_selection_state(SelectionState.NONE)
 	_refresh_all_grids()
+	_end_target_selection_blocking()
+	_try_resume_deferred_turn_flow()
 
 ## AI Radar / multi-reveal: pick a unique face-down opponent cell.
 func _prompt_ai_radar_pick() -> void:
@@ -8205,10 +8400,11 @@ func _highlight_tech_targets(filter: String) -> void:
 					and card.ability_type != int(CharacterData.AbilityType.REDIRECT_DESTRUCTION_TO_ALLY))
 
 	elif filter == "opponent_any_hidden":
+		var _rev_foe: int = _reveal_attacker_foe_player(opponent)
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
-				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
-				grid_nodes[opponent][r][c].set_highlighted(not card.face_up)
+				var card: GameState.CardInstance = GameState.get_card(_rev_foe, r, c)
+				grid_nodes[_rev_foe][r][c].set_highlighted(not card.face_up)
 
 	elif filter == "ability_false_prophet_reveal":
 		for r in range(GameState.GRID_SIZE):
@@ -8241,10 +8437,11 @@ func _highlight_tech_targets(filter: String) -> void:
 				grid_nodes[_wk17_foe][r][c].set_highlighted(ok)
 
 	elif filter == "opponent_character_ability_destroy":
+		var _coin_foe: int = _reveal_attacker_foe_player(opponent)
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
-				var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
-				grid_nodes[opponent][r][c].set_highlighted(
+				var card: GameState.CardInstance = GameState.get_card(_coin_foe, r, c)
+				grid_nodes[_coin_foe][r][c].set_highlighted(
 					card.card_type == "character" and card.face_up)
 
 	elif filter == "ability_rebel_king_swap":
@@ -8266,15 +8463,18 @@ func _highlight_tech_targets(filter: String) -> void:
 						card.card_type == "character" and card.face_up)
 
 	elif filter == "own_character_for_swap":
-		# ATTACKER picks another own character to swap with (Nuki origin cell excluded).
+		# Nuki owner picks another own character to swap with (origin cell excluded).
+		var _swap_owner: int = turn_manager._pending_swap_owner_player
+		if _swap_owner < 0:
+			_swap_owner = player
 		var _swap_origin: Vector2i = turn_manager._pending_swap_attacker_pos
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var _swap_pos: Vector2i = Vector2i(r, c)
 				if _swap_pos == _swap_origin:
 					continue
-				var card: GameState.CardInstance = GameState.get_card(player, r, c)
-				grid_nodes[player][r][c].set_highlighted(card.card_type == "character")
+				var card: GameState.CardInstance = GameState.get_card(_swap_owner, r, c)
+				grid_nodes[_swap_owner][r][c].set_highlighted(card.card_type == "character")
 
 	elif filter in ["own_faceup_for_trap_temp_def_boost", "own_character_for_trap_self_destruct"]:
 		# DEFENDER (trap owner = opponent) picks one of their own characters
@@ -8378,13 +8578,14 @@ func _highlight_tech_targets(filter: String) -> void:
 		pass  # handled immediately in _on_awaiting_target_selection
 
 	elif filter == "adjacent":
+		var _adj_foe: int = _reveal_attacker_foe_player(opponent)
 		var center: Vector2i = GameState.defender_pos
 		if center.x < 0:
 			center = GameState.attacker_pos
 		for pos_v: Variant in GameState.get_adjacent_positions(center.x, center.y):
 			var pos: Vector2i = pos_v as Vector2i
-			var adj_card: GameState.CardInstance = GameState.get_card(opponent, pos.x, pos.y)
-			grid_nodes[opponent][pos.x][pos.y].set_highlighted(
+			var adj_card: GameState.CardInstance = GameState.get_card(_adj_foe, pos.x, pos.y)
+			grid_nodes[_adj_foe][pos.x][pos.y].set_highlighted(
 				not adj_card.face_up and not adj_card.was_destroyed)
 
 	_apply_ability_target_flash()
@@ -8653,7 +8854,8 @@ func _is_action_overlay_active() -> bool:
 			and GameState.current_phase == GameState.Phase.TECH \
 			and _tech_overlay_player == GameState.current_player:
 		return true
-	if _options_panel != null and is_instance_valid(_options_panel):
+	if (_options_panel != null and is_instance_valid(_options_panel)) \
+			or get_node_or_null(NodePath(OPTIONS_CONTENT_OVERLAY)) != null:
 		return true
 	if is_instance_valid(_context_popup):
 		return true
@@ -9461,8 +9663,14 @@ func _on_game_over(winner: int) -> void:
 		_stop_battle_music()
 		if GameState.vn_launched_from_exploration:
 			ExplorationManager.clear_vn_resume_bgm()
-		var cb := func() -> void: get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
-		VNPlayer.launch_overlay(vn_lose, cb)
+		var lose_dest: String = GameState.post_battle_return_scene.strip_edges()
+		GameState.post_battle_return_scene = ""
+		if lose_dest.is_empty():
+			lose_dest = "res://scenes/main_menu.tscn"
+		var lose_cb := func() -> void:
+			_on_quick_duel_tutorial_post_vn(lose_dest)
+			get_tree().change_scene_to_file(lose_dest)
+		VNPlayer.launch_overlay(vn_lose, lose_cb)
 		return
 	if player_won and vn_win != "" and vn_win != "game_over":
 		# Win: show win screen first; VN plays after player taps
@@ -9735,6 +9943,13 @@ func _handle_quick_duel_win_rewards() -> void:
 	GameState.quick_duel_active = false
 	GameState.quick_duel_battle_tier = ""
 
+func _on_quick_duel_tutorial_post_vn(dest: String) -> void:
+	if dest != "res://scenes/quick_duel.tscn":
+		return
+	SaveManager.mark_attack_tutorial_complete()
+	GameState.quick_duel_reroll_previews = true
+	GameState.quick_duel_launch = false
+
 func _handle_quick_duel_loss_rewards() -> void:
 	var min_turns: int = QuickDuelRewards.get_loss_consolation_min_turns()
 	if GameState.turn_number >= min_turns:
@@ -9853,6 +10068,8 @@ func _await_pack_opening_overlay() -> void:
 			return
 
 func _exit_tree() -> void:
+	if TutorialBattleManager.is_active or TutorialBattleManager.is_prepared:
+		TutorialBattleManager.stop()
 	if _is_mid_battle_for_abandon():
 		GlobalStatManager.on_battle_abandoned()
 	if GameState.quick_duel_active and GameState.current_phase != GameState.Phase.GAME_OVER:
@@ -10188,11 +10405,12 @@ func _show_endgame_screen(winner: int) -> void:
 			var pending_vn := _pending_win_vn
 			_pending_win_vn = ""
 			if pending_vn != "":
-				var post_vn_dest: String = dest if from_exploration \
-					else "res://scenes/main_menu.tscn"
+				var post_vn_dest: String = dest
 				_fade_endgame_overlay_and_run(overlay, func() -> void:
 					_stop_battle_music()
-					var cb := func() -> void: get_tree().change_scene_to_file(post_vn_dest)
+					var cb := func() -> void:
+						_on_quick_duel_tutorial_post_vn(post_vn_dest)
+						get_tree().change_scene_to_file(post_vn_dest)
 					VNPlayer.launch_overlay(pending_vn, cb))
 			else:
 				_fade_endgame_overlay_and_run(overlay, func() -> void:

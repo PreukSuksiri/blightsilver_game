@@ -70,6 +70,12 @@ const CRYSTAL_LOSS_NO_RECOVERY_REASONS: Array[String] = [
 	"trap cost",
 	"mining tax",
 ]
+const DEFAULT_BATTLE_BGM_START_SEC: float = 14.0
+const CURSOR_PATH: String = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
+const CURSOR_HOTSPOT: Vector2 = Vector2(4.0, 4.0)
+const CURSOR_LAYER: int = 256
+const POPUP_CURSOR_LAYER: int = 4096
+const UNIT_EFFECT_FLAGS: Array[String] = ["venom", "mutagen", "berserk"]
 
 # Decoy Puppet / Echo Barrier / Guerrilla Tactics battle flow (declared before inner class)
 var attack_cost_block_max: int = -1
@@ -281,20 +287,12 @@ var player_portraits: Array[String] = [
 	"res://assets/textures/ui/portraits/profile_player_2_default.png"
 ]
 
-static func load_portrait_texture(path: String) -> Texture2D:
-	if path.is_empty():
-		return null
-	if path.begins_with("res://"):
-		return load(path) as Texture2D
-	var img := Image.load_from_file(path)
-	if img == null or img.is_empty():
-		return null
-	return ImageTexture.create_from_image(img)
-
 # Campaign-specific state (only meaningful when game_mode == CAMPAIGN)
 var campaign_node_id: String = ""
 var campaign_enemy_config: Dictionary = {}
 var campaign_player_names: Array[String] = []   # [p1_name, p2_name] — set by VNPlayer before battle
+## VN battle beat ask_player_name: "", "player1", "player2", or "both" — prompt before setup.
+var battle_ask_player_name: String = ""
 
 # Daily Dungeon state (only meaningful when game_mode == DAILY_DUNGEON)
 var active_dungeon_node_id: String = ""
@@ -350,7 +348,61 @@ var battle_bgm_start_sec: float = 14.0       # first-play offset; loops back to 
 var battle_almost_win_enabled: bool = true     # mid-battle / win-reveal almost-win track switch
 var battle_bgm_enabled: bool = true            # VS AI config: false = no BGM for entire duel
 
-const DEFAULT_BATTLE_BGM_START_SEC: float = 14.0
+# Battle placement/summon config — set by VNPlayer before scene change.
+# _vn_battle_pending = true tells new_game() to preserve these values instead of resetting them.
+var _vn_battle_pending: bool = false
+var battle_ai_union_enabled: bool = true
+var battle_ai_union_maniac: bool = false
+var battle_player_union_enabled: bool = true
+var battle_player_forced_cells: Array = []  # Array[Dictionary{card_name, row, col}]
+var battle_ai_forced_cells: Array = []      # Array[Dictionary{card_name, row, col}]
+var battle_player_deck: Variant = null      # DeckData or null — AI_VS_AI: deck for player 0
+var battle_ai_deck:     Variant = null      # DeckData or null — AI_VS_AI: deck for player 1
+var battle_ai_forced_tech: Array = []       # Array[String] — VS_AI: forced tech hand for the AI
+var battle_ai_featured_union: String = ""    # Legacy alias for battle_featured_unions[1]
+var battle_featured_unions: Array = ["", ""] # Per-player featured union preference [P0, P1]
+
+var divine_protection_active: Array = [false, false]
+var galaxos_immunity_owner: int = -1  # Team Galaxos: owner whose Cosmic+Anima allies cannot be destroyed
+var siege_cannon_active: Array = [false, false]
+var berserk_active: Array = [null, null]     # CardInstance or null
+var skip_next_turn: Array = [false, false]
+var hypnotized_cards: Array = [[], []]       # List of CardInstances that can't attack
+var skip_counts: Array = [0, 0]              # Consecutive no-attack turns per player (for doubling tax)
+var reroll_dice_available: Array = [false, false]   # TEMP_REROLL_DICE tech: may reroll once before next attack
+var graveyards: Array = [[], []]                    # graveyards[player] -> Array of destroyed CardInstances
+var turn_start_revives: Array = []                  # {player, row, col, card_name} — e.g. Burning Phoenix
+var destruction_from_tech_self_destruct: bool = false
+var analytics_battle_tag: String = ""
+var analytics_battle_id: String = ""
+var analytics_graph_path: String = ""
+var analytics_destroy_source: String = ""
+var analytics_destroy_by_player: int = -1
+var locked_attack_positions: Array = []             # Vector2i positions current player cannot attack this turn
+
+var _cursor_tex: Texture2D = null
+var _cursor_layer: CanvasLayer = null
+var _cursor_sprite: TextureRect = null
+var _software_cursor_ready: bool = false
+var _app_focused: bool = true
+var _mouse_over_game: bool = true
+var _finger_cursor_active: bool = false
+var _popup_cursors: Dictionary = {}  # Window -> TextureRect
+var _crystal_anim_pending: int = 0
+var _crystal_anim_board_registered: bool = false
+
+static func load_portrait_texture(path: String) -> Texture2D:
+	if path.is_empty():
+		return null
+	if path.begins_with("res://"):
+		return load(path) as Texture2D
+	var img := Image.load_from_file(path)
+	if img == null or img.is_empty():
+		return null
+	return ImageTexture.create_from_image(img)
+
+static func is_unit_effect_flag(flag: String) -> bool:
+	return flag in UNIT_EFFECT_FLAGS
 
 ## Apply battle audio paths from a VN beat dict or exploration BATTLE node dict.
 ## Keys: battle_bgm, battle_bgm_volume, setup_bgm, almost_win_bgm,
@@ -385,52 +437,6 @@ func get_almost_win_bgm_path() -> String:
 	if not path.is_empty():
 		return path
 	return BGMManager.get_default_path(BGMManager.CONTEXT_ALMOST_WIN)
-
-# Battle placement/summon config — set by VNPlayer before scene change.
-# _vn_battle_pending = true tells new_game() to preserve these values instead of resetting them.
-var _vn_battle_pending: bool = false
-var battle_ai_union_enabled: bool = true
-var battle_ai_union_maniac: bool = false
-var battle_player_union_enabled: bool = true
-var battle_player_forced_cells: Array = []  # Array[Dictionary{card_name, row, col}]
-var battle_ai_forced_cells: Array = []      # Array[Dictionary{card_name, row, col}]
-var battle_player_deck: Variant = null      # DeckData or null — AI_VS_AI: deck for player 0
-var battle_ai_deck:     Variant = null      # DeckData or null — AI_VS_AI: deck for player 1
-var battle_ai_forced_tech: Array = []       # Array[String] — VS_AI: forced tech hand for the AI
-var battle_ai_featured_union: String = ""    # Legacy alias for battle_featured_unions[1]
-var battle_featured_unions: Array = ["", ""] # Per-player featured union preference [P0, P1]
-
-var divine_protection_active: Array = [false, false]
-var galaxos_immunity_owner: int = -1  # Team Galaxos: owner whose Cosmic+Anima allies cannot be destroyed
-var siege_cannon_active: Array = [false, false]
-var berserk_active: Array = [null, null]     # CardInstance or null
-var skip_next_turn: Array = [false, false]
-var hypnotized_cards: Array = [[], []]       # List of CardInstances that can't attack
-var skip_counts: Array = [0, 0]              # Consecutive no-attack turns per player (for doubling tax)
-var reroll_dice_available: Array = [false, false]   # TEMP_REROLL_DICE tech: may reroll once before next attack
-var graveyards: Array = [[], []]                    # graveyards[player] -> Array of destroyed CardInstances
-var turn_start_revives: Array = []                  # {player, row, col, card_name} — e.g. Burning Phoenix
-var destruction_from_tech_self_destruct: bool = false
-var analytics_battle_tag: String = ""
-var analytics_battle_id: String = ""
-var analytics_graph_path: String = ""
-var analytics_destroy_source: String = ""
-var analytics_destroy_by_player: int = -1
-var locked_attack_positions: Array = []             # Vector2i positions current player cannot attack this turn
-
-const CURSOR_PATH: String = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
-const CURSOR_HOTSPOT: Vector2 = Vector2(4.0, 4.0)
-const CURSOR_LAYER: int = 256
-const POPUP_CURSOR_LAYER: int = 4096
-
-var _cursor_tex: Texture2D = null
-var _cursor_layer: CanvasLayer = null
-var _cursor_sprite: TextureRect = null
-var _software_cursor_ready: bool = false
-var _app_focused: bool = true
-var _mouse_over_game: bool = true
-var _finger_cursor_active: bool = false
-var _popup_cursors: Dictionary = {}  # Window -> TextureRect
 
 func _ready() -> void:
 	_init_grids()
@@ -646,9 +652,6 @@ func set_phase(new_phase: Phase) -> void:
 # ─────────────────────────────────────────────────────────────
 # Crystal Management
 # ─────────────────────────────────────────────────────────────
-var _crystal_anim_pending: int = 0
-var _crystal_anim_board_registered: bool = false
-
 func register_crystal_animation_board() -> void:
 	_crystal_anim_board_registered = true
 
@@ -695,24 +698,25 @@ func lose_crystals(player_index: int, amount: int, reason: String = "") -> void:
 
 	# CRYSTAL_RECOVER_ON_BIG_LOSS: if this player's loss was large, recover some crystals
 	if amount > 0 and reason not in CRYSTAL_LOSS_NO_RECOVERY_REASONS:
+		var recovered: bool = false
 		for r in range(GRID_SIZE):
+			if recovered:
+				break
 			for c in range(GRID_SIZE):
 				var own_card: CardInstance = grids[player_index][r][c]
-				if own_card.card_type == "character" and own_card.face_up:
-					if own_card.ability_type == CharacterData.AbilityType.CRYSTAL_RECOVER_ON_BIG_LOSS:
-						var threshold: int = own_card.ability_params.get("threshold", 500)
-						var recover: int = own_card.ability_params.get(
-							"recover", own_card.ability_params.get("amount", 300))
-						if amount >= threshold:
-							emit_signal("card_effect_triggered", own_card.card_name, "character")
-							crystals[player_index] = min(crystals[player_index] + recover, crystals[player_index] + recover)
-							_begin_crystal_animation()
-							emit_signal("crystals_changed", player_index, crystals[player_index], "recovery")
-							post_message("%s: Recovered %d Crystals!" % [own_card.card_name, recover])
+				if own_card.card_type == "character" and own_card.face_up \
+						and own_card.ability_type == CharacterData.AbilityType.CRYSTAL_RECOVER_ON_BIG_LOSS:
+					var threshold: int = own_card.ability_params.get("threshold", 500)
+					var recover: int = own_card.ability_params.get(
+						"recover", own_card.ability_params.get("amount", 300))
+					if amount >= threshold:
+						emit_signal("card_effect_triggered", own_card.card_name, "character")
+						crystals[player_index] = min(crystals[player_index] + recover, crystals[player_index] + recover)
+						_begin_crystal_animation()
+						emit_signal("crystals_changed", player_index, crystals[player_index], "recovery")
+						post_message("%s: Recovered %d Crystals!" % [own_card.card_name, recover])
+						recovered = true
 						break
-			else:
-				continue
-			break
 
 	_check_crystal_win_condition()
 
@@ -1244,6 +1248,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		vn_battle_loss_rewards.clear()
 		vn_battle_loss_reward_once = ""
 	_vn_battle_pending = false
+	battle_ask_player_name = ""
 	if mode != GameMode.VS_AI:
 		battle_bgm_enabled = true
 	game_over_reason = ""
@@ -1274,11 +1279,6 @@ func abort_quick_duel_battle() -> void:
 	quick_duel_reveal_skip_all = false
 	pending_wishlist_cta = false
 	quick_duel_protagonist_id = ""
-
-const UNIT_EFFECT_FLAGS: Array[String] = ["venom", "mutagen", "berserk"]
-
-static func is_unit_effect_flag(flag: String) -> bool:
-	return flag in UNIT_EFFECT_FLAGS
 
 ## Double numeric tech values when the target has DOUBLE_TECH_EFFECT (Mountain Sage).
 func scaled_tech_effect_for_unit(target: CardInstance, value: int) -> int:

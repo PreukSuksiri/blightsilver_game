@@ -9,6 +9,7 @@ const MISSION_PLAYER_TIMEOUT_SEC := 20.0
 signal mission_started(instruction: String)
 signal mission_complete
 signal all_turn_missions_done
+signal all_tutorial_missions_done
 signal tutorial_complete
 
 # ── Public state ──────────────────────────────────────────────
@@ -29,6 +30,7 @@ var _mission_step: int = 0  # 0 = step one, 1 = step two (attack/bluff/union/use
 var _session_id: int = 0    # incremented whenever missions are reset; used to cancel stale awaits
 var _pending_effect_resolve: bool = false
 var _await_abort_reason: String = ""  # "", "timeout", "unavailable", "cancelled"
+var _all_missions_complete: bool = false
 
 # Internal signals used to communicate between report_action() and _run_missions()
 signal _step_ready_sig
@@ -126,7 +128,7 @@ func _apply_portraits_from_config(cfg: Dictionary) -> void:
 
 ## Tutorial duels always start with Player 2 (index 1, tails). -1 = not forced.
 func get_forced_first_player() -> int:
-	if is_active:
+	if is_prepared or is_active:
 		return 1
 	return -1
 
@@ -155,12 +157,16 @@ func should_allow_end_turn_btn() -> bool:
 		return true
 	return get_current_mission_type() == "end_turn"
 
-## Hide the options button for the whole tutorial battle.
+## Hide the options button until every configured tutorial mission is finished.
 func should_hide_options_btn() -> bool:
-	return is_active
+	if not is_active:
+		return false
+	if _all_missions_complete:
+		return false
+	return get_current_mission_type() != "options"
 
 func should_allow_options_btn() -> bool:
-	return false if should_hide_options_btn() else true
+	return not should_hide_options_btn()
 
 ## Called by GameBoard._ready() when the battle starts.
 func on_board_ready(board: Node) -> void:
@@ -175,15 +181,37 @@ func on_board_ready(board: Node) -> void:
 	_mission_idx = 0
 	_mission_step = 0
 	_session_id += 1
+	_all_missions_complete = false
 
 	var ov_script = load("res://scripts/TutorialMissionOverlay.gd")
 	_overlay = ov_script.new()
 	_overlay.name = "TutorialMissionOverlay"
 	board.add_child(_overlay)
 
+func _get_max_configured_turn() -> int:
+	var turns: Dictionary = config.get("turns", {})
+	var max_turn: int = 0
+	for k: Variant in turns.keys():
+		max_turn = maxi(max_turn, int(k))
+	return max_turn
+
+func _try_mark_all_missions_complete() -> void:
+	if _all_missions_complete:
+		return
+	var max_turn: int = _get_max_configured_turn()
+	if max_turn <= 0:
+		return
+	if _player_turn_count < max_turn:
+		return
+	_all_missions_complete = true
+	all_tutorial_missions_done.emit()
+
 ## Cleanly shuts down the tutorial layer.
 func stop() -> void:
 	is_active = false
+	is_prepared = false
+	config = {}
+	_all_missions_complete = false
 	_pending_effect_resolve = false
 	_last_tutorial_game_turn = -1
 	_session_id += 1
@@ -381,6 +409,7 @@ func _run_missions(sid: int) -> void:
 	all_turn_missions_done.emit()
 	if _overlay != null and is_instance_valid(_overlay):
 		_overlay.hide_overlay()
+	_try_mark_all_missions_complete()
 
 # ─────────────────────────────────────────────────────────────
 # Action Reporting  (called by GameBoard hooks)

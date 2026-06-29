@@ -212,7 +212,7 @@
 		"1": [
 			{
 				"instruction": "",
-				"message": "Use 'Spy' Tech Card to scan opponent's grid",
+				"message": "Use 'Spy' Tech Card to scan any of your opponent's cell",
 				"type": "show_message"
 			},
 			{
@@ -227,7 +227,7 @@
 			},
 			{
 				"instruction": "",
-				"message": "Select 'Silver Spearman' card and attack opponent's cell",
+				"message": "Select 'Silver Spearman' card and attack opponent's cell. Remember : Higher ATK defeats lower DEF. Higher DEF defeats lower ATK.",
 				"type": "show_message"
 			},
 			{
@@ -247,7 +247,7 @@
 			},
 			{
 				"card_name": "Witchhunter",
-				"instruction": "Attack using 'Witchhunter'",
+				"instruction": "Attack using 'Witchhunter'. Remember : Higher ATK defeats lower DEF. Higher DEF defeats lower ATK.",
 				"type": "attack"
 			},
 			{

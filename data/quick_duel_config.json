@@ -1,6 +1,5 @@
 {
 	"tutorial_intro_vn": "res://data/quick_duel/tutorial_intro.json",
-	"tutorial_battle": "res://data/tutorial_battles/example_attack_tutorial.json",
 	"tier_tags": {
 		"easy": ["easy"],
 		"normal": ["normal", "norm"],

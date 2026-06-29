@@ -8,13 +8,15 @@ const COLS        := 10
 const ROWS        := 7
 const DIAG_DELAY  := 0.040   # seconds between each diagonal wave step
 const SOUND_PATH  := "res://assets/audio/sound_spellcasting_3.mp3"
+const DEFAULT_LAYER := 200
+const COVER_LAYER := 400     # above VN overlay (300) during battle handoff
 
 var _tiles: Array[ColorRect] = []
 var _sfx:   AudioStreamPlayer
 var _anim_gen: int = 0   # incremented on each new animation; stale coroutines bail early
 
 func _ready() -> void:
-	layer        = 200
+	layer        = DEFAULT_LAYER
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_sfx         = AudioStreamPlayer.new()
 	_sfx.stream  = load(SOUND_PATH)
@@ -26,6 +28,7 @@ func _ready() -> void:
 ## Cover the screen with checker tiles, play the transition sound,
 ## then call on_black (which should change the scene).
 func fade_out_to_battle(on_black: Callable) -> void:
+	layer = COVER_LAYER
 	_build_tiles(false)
 	_sfx.play()
 	await _animate(true)
@@ -46,9 +49,11 @@ func is_screen_covered() -> bool:
 ## If tiles don't exist yet (no prior fade_out was run), builds them visible first.
 func fade_in() -> void:
 	if _tiles.is_empty():
+		layer = COVER_LAYER
 		_build_tiles(true)
 	await _animate(false)
 	_clear_tiles()
+	layer = DEFAULT_LAYER
 
 # ── Internals ───────────────────────────────────────────────────
 

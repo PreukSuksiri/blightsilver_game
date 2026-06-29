@@ -575,12 +575,12 @@ func _apply_reward(reward: Dictionary) -> void:
 			var card_name: String = reward.get("card_name", "")
 			if card_name != "":
 				Collection.add_card(card_name, _detect_card_type(card_name), "Mailbox Reward")
-				_open_pack_anim([card_name])
+				_reveal_single_card(card_name)
 		"stage_bonus_card":
 			var card_name: String = reward.get("card_name", "")
 			if card_name != "":
 				Collection.add_card(card_name, _detect_card_type(card_name), "Stage Bonus")
-				_open_pack_anim([card_name])
+				_reveal_single_card(card_name)
 		"booster_pack":
 			var pack_nm: String = reward.get("pack_name", "")
 			var drawn: Array = ShopManager.draw_pack_free(pack_nm)
@@ -590,6 +590,11 @@ func _apply_reward(reward: Dictionary) -> void:
 		"union_scroll":
 			Collection.add_union_scrolls(int(reward.get("count", 1)))
 			_refresh_items()
+
+func _reveal_single_card(card_name: String) -> void:
+	var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd")
+	if overlay_script:
+		overlay_script.open_single_card_reveal(get_tree().root, card_name, true)
 
 func _open_pack_anim(cards: Array, pack_name: String = "") -> void:
 	var overlay_script: GDScript = load("res://scripts/PackOpeningOverlay.gd")

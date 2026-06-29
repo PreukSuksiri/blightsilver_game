@@ -1,0 +1,68 @@
+[
+	{
+		"comment": "<<<-- Nex Dorm -->>>",
+		"wait": 0.001
+	},
+	{
+		"fade_color": "#000000",
+		"fade_out": 0.001,
+		"wait": 0.001
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/quick_duel/bg_vn_quick_duel_tutorial_back_alley.png",
+		"fade_color": "#000000",
+		"fade_in": 3.0,
+		"wait": 0.001
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "I think you're OK. No anomaly in your body."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "It seems that you're just having a bad dizziness."
+	},
+	{
+		"linger_characters": true,
+		"wait": 0.5
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_akimbo_annoyed.png"
+			}
+		],
+		"speaker": "Silver-haired woman",
+		"text": "Have a safe trip home. I hope not to find you here again. Goodbye."
+	},
+	{
+		"go_to_quick_duel": true,
+		"linger_characters": true
+	}
+]

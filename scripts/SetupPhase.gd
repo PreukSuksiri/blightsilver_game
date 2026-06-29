@@ -250,7 +250,7 @@ func start_setup(player_index: int) -> void:
 	_apply_forced_cells(forced)
 
 	if not _is_tutorial_setup() and not deck.formations.is_empty():
-		_apply_formation(0, false)
+		_apply_formation(deck.get_preferred_formation_index(), false)
 
 	# Show/hide union panel: requires per-battle flag, plus either the global unlock
 	# OR a free-play mode (VS_AI / LOCAL_2P / HOT_SEAT) where all features are open.
@@ -1359,8 +1359,9 @@ func _exit_tree() -> void:
 # Tutorial formation lock
 # ─────────────────────────────────────────────────────────────
 func _is_tutorial_setup() -> bool:
-	return current_setup_player == 0 \
-		and (TutorialBattleManager.is_prepared or TutorialBattleManager.is_active)
+	# Only is_active counts — is_prepared is cleared before setup begins; a stale
+	# is_prepared flag would block deckbuilder formations in Quick Duel / VS AI.
+	return current_setup_player == 0 and TutorialBattleManager.is_active
 
 func _clear_tutorial_formation_lock() -> void:
 	if _tutorial_formation_overlay != null:

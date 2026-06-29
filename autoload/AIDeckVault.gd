@@ -2,8 +2,9 @@ extends Node
 # Named AI deck templates for battles (exploration, campaign, etc.).
 # Edited via admin command: ai_deck_vault
 #
-# Entry schema: { id, label, tags, featured_union, deck, ... }
+# Entry schema: { id, label, tags, featured_union, featured_unit, deck, ... }
 # featured_union — optional union name; AI strongly prefers it when summoning.
+# featured_unit — optional character name; Quick Duel capsule portrait when set.
 #
 # Optional config fields on VN beats, dungeon nodes, exploration BATTLE nodes:
 #   ai_deck_vault            — vault entry id (highest priority over inline ai_deck)
@@ -68,6 +69,13 @@ func get_featured_union(entry_id: String) -> String:
 	if entry.is_empty():
 		return ""
 	return str(entry.get("featured_union", "")).strip_edges()
+
+
+func get_featured_unit(entry_id: String) -> String:
+	var entry := get_entry(entry_id)
+	if entry.is_empty():
+		return ""
+	return str(entry.get("featured_unit", "")).strip_edges()
 
 
 func populate_vault_option(opt: OptionButton, none_label: String = "(none — manual deck)") -> void:
@@ -326,6 +334,14 @@ func resolve_preview_card_name(entry: Dictionary) -> String:
 				and UnionDatabase.deck_can_form_union(char_names, fu) \
 				and _preview_texture_exists(fu.card_name):
 			return fu.card_name
+
+	var featured_unit: String = str(entry.get("featured_unit", "")).strip_edges()
+	if not featured_unit.is_empty() and featured_unit in char_names:
+		var fcd: CharacterData = CardDatabase.get_character(featured_unit)
+		if fcd != null \
+				and (not SaveManager.demo_mode or fcd.include_in_demo) \
+				and _preview_texture_exists(featured_unit):
+			return featured_unit
 
 	var best_union: UnionData = null
 	for u: UnionData in UnionDatabase.get_all_unions():

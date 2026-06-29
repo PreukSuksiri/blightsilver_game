@@ -24,6 +24,7 @@ const COLOR_PRESETS: Array = [
 	["W", "#FFFFFF"],
 	["Gr", "#AAAAAA"],
 ]
+const ASK_PLAYER_NAME_KEYS: Array = ["player1", "player2", "both"]
 
 # ─────────────────────────────────────────────────────────────
 # State
@@ -118,6 +119,8 @@ var _f_shake_magnitude: SpinBox = null
 var _f_shake_screen: SpinBox = null
 var _f_player1_name: LineEdit = null
 var _f_player2_name: LineEdit = null
+var _f_ask_player_name_cb: CheckBox = null
+var _f_ask_player_name_opt: OptionButton = null
 var _f_start_crystals_p1: SpinBox = null
 var _f_start_crystals_p2: SpinBox = null
 var _f_portrait_p1: LineEdit = null
@@ -160,6 +163,7 @@ var _f_ai_pers_off: OptionButton = null
 var _f_ai_pers_soc: OptionButton = null
 var _f_call_scene:  OptionButton = null
 var _f_go_to_campaign_gallery: CheckBox     = null
+var _f_go_to_quick_duel:       CheckBox     = null
 var _f_mark_chapter_end:       CheckBox     = null
 var _f_unlock_gallery_opt:    OptionButton = null
 var _gallery_unlock_paths:    PackedStringArray = PackedStringArray()
@@ -802,6 +806,11 @@ func _build_fields() -> void:
 	_f_start_battle = _row_cb(v, "Start Battle", "Launch battle (VS AI) immediately after this beat's effects")
 	_f_player1_name = _row_le(v, "Player 1 Name", "e.g. Nex  (blank = keep default)")
 	_f_player2_name = _row_le(v, "Player 2 Name", "e.g. Midnight Shadow  (blank = keep default)")
+	_f_ask_player_name_cb = _row_cb(v, "Ask Player Name",
+		"Popup before placement — asks the player to enter name(s) at battle start")
+	_f_ask_player_name_opt = _row_opt(v, "Ask for", ["Player 1", "Player 2", "Both"],
+		"Which name fields appear in the popup")
+	_sync_ask_player_name_fields()
 	_f_start_crystals_p1 = _row_sb(v, "P1 Starting Crystals", 0.0, 99999.0, 100.0,
 		"default %d — only saved when changed" % GameState.STARTING_CRYSTALS)
 	_f_start_crystals_p1.value = GameState.STARTING_CRYSTALS
@@ -1049,10 +1058,12 @@ func _build_fields() -> void:
 	_f_go_to_credits  = _row_cb(v, "Go to Credits", "Transition to the credits scene after this beat")
 	_f_credits_target = _row_opt(v, "Credits scene", ["Normal", "Demo"], "which credits scene to play")
 
-	# ── Campaign Gallery ──────────────────────────────────────
-	_section(v, "CAMPAIGN GALLERY")
+	# ── Menu navigation ───────────────────────────────────────
+	_section(v, "MENU NAVIGATION")
 	_f_go_to_campaign_gallery = _row_cb(v, "Go to Campaign Gallery",
 			"Fade out and open the campaign gallery on the main menu")
+	_f_go_to_quick_duel = _row_cb(v, "Go to Quick Duel",
+			"Fade out and open the Quick Duel scene")
 	_f_mark_chapter_end = _row_cb(v, "Mark chapter end",
 			"Mark a gallery chapter as finished (sets is_gallery_chapter_completed; hides Continue Saved Progress; unlocks prerequisites)")
 	_f_unlock_gallery_opt = _row_opt(v, "Complete chapter", [],
@@ -1217,6 +1228,8 @@ func _connect_static_signals() -> void:
 	_f_credits_target.item_selected.connect(func(_i: int) -> void: ch.call())
 	if _f_go_to_campaign_gallery != null:
 		_f_go_to_campaign_gallery.toggled.connect(func(_b: bool) -> void: ch.call())
+	if _f_go_to_quick_duel != null:
+		_f_go_to_quick_duel.toggled.connect(func(_b: bool) -> void: ch.call())
 	if _f_mark_chapter_end != null:
 		_f_mark_chapter_end.toggled.connect(func(on: bool) -> void:
 			_sync_chapter_end_fields()
@@ -1236,6 +1249,12 @@ func _connect_static_signals() -> void:
 	_f_ai_pers_soc.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_player1_name.text_changed.connect(func(_s: String) -> void: ch.call())
 	_f_player2_name.text_changed.connect(func(_s: String) -> void: ch.call())
+	if _f_ask_player_name_cb != null:
+		_f_ask_player_name_cb.toggled.connect(func(_on: bool) -> void:
+			_sync_ask_player_name_fields()
+			ch.call())
+	if _f_ask_player_name_opt != null:
+		_f_ask_player_name_opt.item_selected.connect(func(_i: int) -> void: ch.call())
 	_f_start_crystals_p1.value_changed.connect(func(_v: float) -> void: ch.call())
 	_f_start_crystals_p2.value_changed.connect(func(_v: float) -> void: ch.call())
 	_f_portrait_p1.text_changed.connect(func(_s: String) -> void: ch.call())
@@ -1883,6 +1902,11 @@ func _sync_chapter_end_fields() -> void:
 		return
 	_f_unlock_gallery_opt.disabled = not _f_mark_chapter_end.button_pressed
 
+func _sync_ask_player_name_fields() -> void:
+	if _f_ask_player_name_opt == null or _f_ask_player_name_cb == null:
+		return
+	_f_ask_player_name_opt.disabled = not _f_ask_player_name_cb.button_pressed
+
 func _browse(target: LineEdit, filters: PackedStringArray, start_dir: String) -> void:
 	_browse_target = target
 	_file_dialog.filters = filters
@@ -2331,6 +2355,8 @@ func _beat_summary(beat: Dictionary, idx: int) -> String:
 		return prefix + "[exploration: %s%s]" % [expl_call.get_file(), expl_extra]
 	if beat.get("go_to_campaign_gallery", false):
 		return prefix + "[campaign gallery]"
+	if beat.get("go_to_quick_duel", false):
+		return prefix + "[quick duel]"
 	if beat.get("complete_current_gallery_chapter", false) \
 			or beat.get("unlock_current_gallery_chapter", false):
 		return prefix + "[chapter end: current]"
@@ -2456,6 +2482,7 @@ func _populate_fields() -> void:
 	_f_go_to_credits.button_pressed = b.get("go_to_credits", false)
 	_f_credits_target.selected = 1 if str(b.get("credits_target", "")) == "demo" else 0
 	_f_go_to_campaign_gallery.button_pressed = b.get("go_to_campaign_gallery", false)
+	_f_go_to_quick_duel.button_pressed = b.get("go_to_quick_duel", false)
 	_f_mark_chapter_end.button_pressed = _beat_has_chapter_end(b)
 	_f_unlock_gallery_opt.selected = 0
 	if b.get("complete_current_gallery_chapter", false) \
@@ -2476,6 +2503,13 @@ func _populate_fields() -> void:
 	_f_call_scene.selected = max(0, _cs_map.find(_cs_val))
 	_f_player1_name.text = str(b.get("player1_name", ""))
 	_f_player2_name.text = str(b.get("player2_name", ""))
+	var ask_key: String = str(b.get("ask_player_name", "")).strip_edges().to_lower()
+	if _f_ask_player_name_cb != null:
+		_f_ask_player_name_cb.button_pressed = ask_key in ASK_PLAYER_NAME_KEYS
+	if _f_ask_player_name_opt != null:
+		var ask_idx: int = ASK_PLAYER_NAME_KEYS.find(ask_key)
+		_f_ask_player_name_opt.selected = ask_idx if ask_idx >= 0 else 0
+	_sync_ask_player_name_fields()
 	_f_start_crystals_p1.value = float(b.get("starting_crystals_p1", GameState.STARTING_CRYSTALS))
 	_f_start_crystals_p2.value = float(b.get("starting_crystals_p2", GameState.STARTING_CRYSTALS))
 	_f_portrait_p1.text = str(b.get("portrait_p1", ""))
@@ -2816,6 +2850,8 @@ func _collect_beat() -> Dictionary:
 			b["credits_target"] = "demo"
 	if _f_go_to_campaign_gallery.button_pressed:
 		b["go_to_campaign_gallery"] = true
+	if _f_go_to_quick_duel.button_pressed:
+		b["go_to_quick_duel"] = true
 	if _f_mark_chapter_end != null and _f_mark_chapter_end.button_pressed \
 			and _f_unlock_gallery_opt != null \
 			and _f_unlock_gallery_opt.selected > 0 \
@@ -2835,6 +2871,10 @@ func _collect_beat() -> Dictionary:
 	var p2n: String = _f_player2_name.text.strip_edges()
 	if not p2n.is_empty():
 		b["player2_name"] = p2n
+	if _f_ask_player_name_cb != null and _f_ask_player_name_cb.button_pressed:
+		var ask_sel: int = _f_ask_player_name_opt.selected if _f_ask_player_name_opt != null else 0
+		ask_sel = clampi(ask_sel, 0, ASK_PLAYER_NAME_KEYS.size() - 1)
+		b["ask_player_name"] = ASK_PLAYER_NAME_KEYS[ask_sel]
 	var pp1: String = _f_portrait_p1.text.strip_edges()
 	if not pp1.is_empty():
 		b["portrait_p1"] = pp1

@@ -391,11 +391,14 @@ func is_deckbuilding_unlocked() -> bool:
 		return false
 	return true
 
-func mark_attack_tutorial_complete() -> void:
-	if attack_tutorial_complete:
+func set_attack_tutorial_complete(enabled: bool) -> void:
+	if attack_tutorial_complete == enabled:
 		return
-	attack_tutorial_complete = true
+	attack_tutorial_complete = enabled
 	save_data()
+
+func mark_attack_tutorial_complete() -> void:
+	set_attack_tutorial_complete(true)
 
 func is_attack_tutorial_complete() -> bool:
 	return attack_tutorial_complete

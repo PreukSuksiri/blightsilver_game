@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ca4rjp0y85n4i"
-path="res://.godot/imported/profile_quick_duel_nex_5.png-94af1c458dabf7eb5bffe8a24a38d7d3.ctex"
+uid="uid://borp3wpp7o0mw"
+path="res://.godot/imported/battler_nex_wet.png-d1bd82a9528e0de3214a57f10f3f9412.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/nex/profile_quick_duel_nex_5.png"
-dest_files=["res://.godot/imported/profile_quick_duel_nex_5.png-94af1c458dabf7eb5bffe8a24a38d7d3.ctex"]
+source_file="res://assets/textures/profile/battle_illustrations/battler_nex_wet.png"
+dest_files=["res://.godot/imported/battler_nex_wet.png-d1bd82a9528e0de3214a57f10f3f9412.ctex"]
 
 [params]
 

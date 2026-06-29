@@ -324,6 +324,37 @@ static func launch_overlay(json_path: String, on_complete: Callable, canvas_laye
 		if on_complete.is_valid():
 			on_complete.call())
 
+## Remove a launch_overlay() host left on the scene tree (e.g. after tutorial_battle handoff).
+static func dismiss_overlay_if_present(tree: SceneTree = null) -> void:
+	if tree == null:
+		tree = Engine.get_main_loop() as SceneTree
+	if tree == null:
+		return
+	var host: Node = tree.root.get_node_or_null("VNOverlayLayer")
+	if host != null:
+		host.queue_free()
+
+func _is_vn_overlay() -> bool:
+	var host: Node = get_parent()
+	return host != null and host.name == "VNOverlayLayer"
+
+## Vellum commence must render above overlay VNs (layer 300) — not on current_scene.
+func _spawn_vn_animation(anim_key: String) -> void:
+	var anim: CanvasLayer = _ANIMATION_SCENE.new()
+	anim.name = "VNAnimation"
+	var flip: bool = anim_key == "animation_vellum_card_commence_flip"
+	var parent: Node
+	if _is_vn_overlay():
+		parent = get_tree().root
+	else:
+		parent = get_tree().current_scene
+		if parent == null:
+			parent = self
+	parent.add_child(anim)
+	if _is_vn_overlay():
+		anim.layer = 310
+	anim.call("launch", flip)
+
 func play_scene(json_path: String, on_complete: Callable, track_checkpoint: bool = false) -> void:
 	_on_complete = on_complete
 	_track_campaign_checkpoint = track_checkpoint
@@ -383,6 +414,8 @@ func _beat_has_deferred_actions(beat: Dictionary) -> bool:
 	if str(beat.get("dungeon_call", "")).strip_edges() != "":
 		return true
 	if beat.get("go_to_campaign_gallery", false):
+		return true
+	if beat.get("go_to_quick_duel", false):
 		return true
 	if beat.get("go_to_credits", false):
 		return true
@@ -609,11 +642,7 @@ func _show_beat() -> void:
 	# ── Animation (fire-and-forget overlay) ──
 	var anim_key: String = str(beat.get("animation", ""))
 	if anim_key != "":
-		var anim: CanvasLayer = _ANIMATION_SCENE.new()
-		anim.name = "VNAnimation"
-		get_tree().current_scene.add_child(anim)
-		var flip: bool = anim_key == "animation_vellum_card_commence_flip"
-		anim.call("launch", flip)
+		_spawn_vn_animation(anim_key)
 
 	# ── Wait (auto-advance after N seconds, blocks input) ──
 	var wait_sec: float = beat.get("wait", 0.0)
@@ -678,10 +707,17 @@ func _show_beat() -> void:
 	# ── Tutorial battle (config JSON — no builder UI) ──
 	var tutorial_path: String = str(beat.get("tutorial_battle", "")).strip_edges()
 	if tutorial_path != "":
-		GlobalStatManager.on_prologue_tutorial_battle_reached()
+		if not GameState.quick_duel_launch:
+			GlobalStatManager.on_prologue_tutorial_battle_reached()
+		_battle_handoff_started = true
+		_accepting_input = false
+		_hide_hint_icon()
 		_set_music("", 0.0, 0.0)
+		GameState.new_game(GameState.GameMode.VS_AI)
+		var run_missions: bool = GameState.quick_duel_launch \
+			or not SaveManager.is_attack_tutorial_complete()
 		var tut_err: String = TutorialBattleManager.configure_battle_from_path(
-			tutorial_path, not SaveManager.is_attack_tutorial_complete())
+			tutorial_path, run_missions)
 		if not tut_err.is_empty():
 			push_error(tut_err)
 			_accepting_input = true
@@ -696,7 +732,9 @@ func _show_beat() -> void:
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))
 		var tut_battle_rewards: Variant = beat.get("battle_reward", [])
 		GameState.vn_battle_rewards = tut_battle_rewards if tut_battle_rewards is Array else []
-		CheckerTransition.fade_out_to_scene("res://scenes/game_board.tscn")
+		await CheckerTransition.fade_out_to_battle(func() -> void:
+			VNPlayer.dismiss_overlay_if_present(get_tree())
+			get_tree().change_scene_to_file("res://scenes/game_board.tscn"))
 		return
 
 	# ── Start battle ──
@@ -851,6 +889,17 @@ func _show_beat() -> void:
 		GameState.open_campaign_gallery_on_menu = true
 		queue_free()
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		return
+
+	if beat.get("go_to_quick_duel", false):
+		_set_music("", 0.0, 0.0)
+		_accepting_input = false
+		_fade_rect.color = Color(0.0, 0.0, 0.0, 0.0)
+		var qd_tw := create_tween()
+		qd_tw.tween_property(_fade_rect, "color:a", 1.0, 1.0)
+		await qd_tw.finished
+		GlobalStatManager.on_first_touch("quick_duel_menu")
+		_finish()
 		return
 
 	# ── Credits ──
@@ -1240,6 +1289,11 @@ func _apply_beat_battle_display(beat: Dictionary, only_override_present: bool = 
 			float(beat.get("portrait_p2_offset_y", 0.0)))
 	if not only_override_present or beat.has("portrait_p2_size"):
 		GameState.portrait_p2_size = float(beat.get("portrait_p2_size", 1.0))
+	if beat.has("ask_player_name"):
+		GameState.battle_ask_player_name = _normalize_ask_player_name(
+			str(beat.get("ask_player_name", "")))
+	elif not only_override_present:
+		GameState.battle_ask_player_name = ""
 	if beat.has("player1_name") or beat.has("player2_name"):
 		GameState.campaign_player_names = [
 			str(beat.get("player1_name", "")).strip_edges(),
@@ -1252,3 +1306,14 @@ func _apply_beat_battle_display(beat: Dictionary, only_override_present: bool = 
 			GameState.campaign_player_names = [p1n, p2n]
 		else:
 			GameState.campaign_player_names = []
+
+
+func _normalize_ask_player_name(raw: String) -> String:
+	var key: String = raw.strip_edges().to_lower()
+	if key in ["player1", "p1", "player_1"]:
+		return "player1"
+	if key in ["player2", "p2", "player_2"]:
+		return "player2"
+	if key == "both":
+		return "both"
+	return ""

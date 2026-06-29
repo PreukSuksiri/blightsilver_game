@@ -747,11 +747,9 @@ func _await_editor_reimport(res_paths: PackedStringArray) -> void:
 		"paths": res_paths,
 		"done": false,
 	}
-	var file := FileAccess.open(REIMPORT_REQUEST_PATH, FileAccess.WRITE)
-	if file == null:
+	if not _write_reimport_request(req):
 		push_error("[CardExporter] Cannot write reimport request.")
 		return
-	file.store_string(JSON.stringify(req))
 
 	var frames := 0
 	while frames < REIMPORT_WAIT_MAX_FRAMES:
@@ -759,9 +757,33 @@ func _await_editor_reimport(res_paths: PackedStringArray) -> void:
 		if not FileAccess.file_exists(REIMPORT_REQUEST_PATH):
 			return
 		var state_text := FileAccess.get_file_as_string(REIMPORT_REQUEST_PATH)
-		var state: Variant = JSON.parse_string(state_text)
+		if state_text.is_empty():
+			frames += 1
+			continue
+		var json := JSON.new()
+		if json.parse(state_text) != OK:
+			frames += 1
+			continue
+		var state: Variant = json.get_data()
 		if typeof(state) == TYPE_DICTIONARY and state.get("done", false):
 			return
 		frames += 1
 
 	push_warning("[CardExporter] Timed out waiting for .import regeneration.")
+
+
+func _write_reimport_request(req: Dictionary) -> bool:
+	var tmp_path := REIMPORT_REQUEST_PATH + ".tmp"
+	var file := FileAccess.open(tmp_path, FileAccess.WRITE)
+	if file == null:
+		return false
+	file.store_string(JSON.stringify(req))
+	file.close()
+	var dir := DirAccess.open("user://")
+	if dir == null:
+		return false
+	var final_name := REIMPORT_REQUEST_PATH.get_file()
+	var tmp_name := tmp_path.get_file()
+	if dir.file_exists(final_name):
+		dir.remove(final_name)
+	return dir.rename(tmp_name, final_name) == OK

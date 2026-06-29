@@ -202,6 +202,7 @@ func delete_claimed() -> void:
 #   remove_credits <amount>
 #   reset_credits [amount]
 #   reset_title_cheats
+#   attack_tutorial on|off|true|false|status
 #   manage_bgm
 #   menu_loading
 
@@ -300,6 +301,7 @@ func admin_command(raw: String) -> String:
 				+ "  remove_credits <amount>\n"
 				+ "  reset_credits [amount]\n"
 				+ "  reset_title_cheats\n"
+				+ "  attack_tutorial on|off|true|false|status\n"
 				+ "  demo_on\n"
 				+ "  demo_off\n"
 				+ "  demo_status\n"
@@ -1251,6 +1253,23 @@ func admin_command(raw: String) -> String:
 			if menu_scene != null and menu_scene.has_method("refresh_title_cheats_from_save"):
 				menu_scene.refresh_title_cheats_from_save()
 			return "Title screen cheat quotas reset (apartment 10,000 cr + moon 2,500 cr)."
+
+		"attack_tutorial":
+			if parts.size() < 2:
+				return "Usage: attack_tutorial on|off|true|false|status"
+			var tut_arg: String = parts[1].to_lower()
+			match tut_arg:
+				"on", "true", "1", "yes":
+					SaveManager.set_attack_tutorial_complete(true)
+					return "attack_tutorial_complete = true (tutorial skipped / Quick Duel picker unlocked)."
+				"off", "false", "0", "no":
+					SaveManager.set_attack_tutorial_complete(false)
+					return "attack_tutorial_complete = false (attack tutorial will be offered again)."
+				"status":
+					var tut_state: String = "true" if SaveManager.is_attack_tutorial_complete() else "false"
+					return "attack_tutorial_complete = %s" % tut_state
+				_:
+					return "Usage: attack_tutorial on|off|true|false|status"
 
 		"pack_editor":
 			var scene: Node = get_tree().current_scene

@@ -46,17 +46,33 @@ const WITNESS_VIEW_DELAY: float = 0.5
 var _pending_trap_self_destruct_boost: int = 0
 var _pending_trap_self_destruct_player: int = -1
 var _pending_swap_attacker_pos: Vector2i = Vector2i(-1, -1)
+var _pending_swap_owner_player: int = -1
 var _pending_rebel_king_owner: int = -1
 var _pending_rebel_king_foe_player: int = -1
 var _pending_trap_hostage_lock: bool = false
 var _pending_street_joke_crystal: int = 0
 var _pending_street_joke_attacker: int = -1
 var _pending_lockpicker_owner: int = -1
+var _pending_reveal_attacker_player: int = -1
 var _pending_wk17_foe_player: int = -1
 var _pending_wk17_mode: String = ""
 var _pending_wk17_new_target_pos: Vector2i = Vector2i(-1, -1)
 var _wk17_friendly_fire: bool = false
 var _wk17_friendly_fire_pos: Vector2i = Vector2i(-1, -1)
+
+## Depth counter for async flows (target selection, brainwash, etc.) that must
+## finish before turn/AI continuation is allowed.
+var _flow_block_depth: int = 0
+
+func is_flow_blocked() -> bool:
+	return _flow_block_depth > 0
+
+## UI-driven target selection (tech/trap grid picks) that TurnManager does not await.
+func begin_ui_target_selection() -> void:
+	_flow_block_depth += 1
+
+func end_ui_target_selection() -> void:
+	_flow_block_depth = maxi(0, _flow_block_depth - 1)
 
 func resolve_ability_choice(choice_index: int) -> void:
 	emit_signal("ability_choice_resolved", choice_index)
@@ -147,10 +163,9 @@ func start_turn(player_index: int) -> void:
 					await await_card_effect_flash(_ts_card.card_name)
 					_ts_card.temp_atk_bonus += _ts_card.ability_params.get("atk", 5)
 				CharacterData.AbilityType.TURN_START_REVEAL_OPPONENT_CELL:
-					emit_signal("awaiting_target_selection",
+					await _prompt_and_await_target_selection(
 						"%s: Choose 1 opponent cell to reveal." % _ts_card.card_name,
 						"ability_false_prophet_reveal")
-					await ability_selection_done
 				CharacterData.AbilityType.TURN_START_COIN_FLIP_FLAG:
 					await await_card_effect_flash(_ts_card.card_name)
 					var _p29_cf: Array = await _do_coin_flips(1)
@@ -160,10 +175,9 @@ func start_turn(player_index: int) -> void:
 					var _p29_filter: String = "ability_plant29_venom" if _p29_cf[0] else "ability_plant29_mutagen"
 					var _p29_prompt: String = "Heads! Choose 1 exposed ally or foe for Venom." if _p29_cf[0] \
 							else "Tails! Choose 1 of your units for Mutagen."
-					emit_signal("awaiting_target_selection",
+					await _prompt_and_await_target_selection(
 						"%s: %s" % [_ts_card.card_name, _p29_prompt],
 						_p29_filter)
-					await ability_selection_done
 
 	# Handle skip turn (Ceasefire)
 	if GameState.skip_next_turn[player_index]:
@@ -488,11 +502,19 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		attacker_pos = GameState.attacker_pos
 	else:
 		attacker = GameState.get_card(player, attacker_pos.x, attacker_pos.y)
-	var _nuki_out: Dictionary = await _apply_nuki_pre_reckoning(player, attacker, attacker_pos)
-	attacker = _nuki_out.get("attacker", attacker) as GameState.CardInstance
-	attacker_pos = _nuki_out.get("attacker_pos", attacker_pos)
+	var _nuki_out: Dictionary = await _apply_nuki_pre_reckoning(player, attacker, attacker_pos, true)
+	attacker = _nuki_out.get("card", attacker) as GameState.CardInstance
+	attacker_pos = _nuki_out.get("pos", attacker_pos)
 	GameState.attacker_card = attacker
 	GameState.attacker_pos = attacker_pos
+
+	if defender.card_type != "dead_end":
+		defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
+		var _nuki_def_out: Dictionary = await _apply_nuki_pre_reckoning(
+			opponent, defender, target_pos, false)
+		target_pos = _nuki_def_out.get("pos", target_pos)
+		defender = _nuki_def_out.get("card", defender) as GameState.CardInstance
+		GameState.defender_pos = target_pos
 
 	# Roll dice after Nuki swap (coin flip + optional reposition) and before Reckoning overlay.
 	GameState.dice_result = DiceRoller.roll_attack_dice()
@@ -744,14 +766,14 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 	if not _attack_completed_emitted:
 		emit_signal("attack_completed", attacker_pos, target_pos, result)
 
+	# Post-attack target selection before MODE_SELECT so AI turn continuation cannot
+	# advance current_player while the attacker still chooses reveal targets.
+	if not _battle_aborted():
+		await _emit_post_attack_target_selections(result, player, opponent, attacker, defender, attacker_pos, target_pos)
+
 	# Return to mode select before Siege Cannon / follow-ups so non-attack destroys still log.
 	if not _battle_aborted():
 		GameState.set_phase(GameState.Phase.MODE_SELECT)
-
-	# Post-attack target selection must run after attack_completed + MODE_SELECT so
-	# GameBoard._enter_mode_select() finishes before reveal UI is shown.
-	if not _battle_aborted():
-		await _emit_post_attack_target_selections(result, player, opponent, attacker, defender, attacker_pos, target_pos)
 
 	# Check Pit Lord one_use_def_boost mark
 	if defender.ability_type == CharacterData.AbilityType.ONE_USE_DEF_BOOST:
@@ -1587,10 +1609,12 @@ func _handle_trap_effect(
 			if not _has_brainwash_target(player, attacker_pos):
 				GameState.post_message("Brainwash: No ally to redirect — effect fizzles.")
 				return
+			_flow_block_depth += 1
 			emit_signal("awaiting_target_selection",
 				"Brainwash: Choose one of your own allies as the attack target.",
 				"own_any_as_target")
 			await brainwash_redirect_resolved
+			_flow_block_depth -= 1
 
 		TrapData.TrapEffectType.NULLIFY_BLOCK_ADJACENT:
 			GameState.post_message("Bunker: Adjacent squares cannot be targeted this turn.")
@@ -1788,10 +1812,16 @@ func _end_turn(player: int) -> void:
 		if _rebel_king_active:
 			break
 	if _rebel_king_active:
-		emit_signal("awaiting_target_selection",
+		_pending_rebel_king_owner = _rk_opp
+		_pending_rebel_king_foe_player = player
+		var _rk_saved_cp: int = GameState.current_player
+		GameState.current_player = _rk_opp
+		await _prompt_and_await_target_selection(
 			"Rebel King: Choose 1 of the opponent's face-up units to swap ATK & DEF.",
 			"ability_rebel_king_swap")
-		await ability_selection_done
+		GameState.current_player = _rk_saved_cp
+		_pending_rebel_king_owner = -1
+		_pending_rebel_king_foe_player = -1
 
 	# Turn-end per-card effects (current player's cards)
 	var _opp_end: int = GameState.get_opponent(player)
@@ -1826,23 +1856,20 @@ func _end_turn(player: int) -> void:
 					GameState.post_message("%s self-destructs at end of turn!" % _te_card.card_name)
 					GameState.destroy_card(player, _te_r, _te_c, false)
 				CharacterData.AbilityType.VENOM_FLAG_END_OF_TURN:
-					emit_signal("awaiting_target_selection",
+					await _prompt_and_await_target_selection(
 						"%s: Choose 1 exposed card (either side) for Venom." % _te_card.card_name,
 						"ability_death_cobra_venom")
-					await ability_selection_done
 				CharacterData.AbilityType.TURN_END_REVEAL_OPPONENT_CELL:
-					emit_signal("awaiting_target_selection",
+					await _prompt_and_await_target_selection(
 						"%s: Choose 1 opponent cell to reveal." % _te_card.card_name,
 						"ability_false_prophet_reveal")
-					await ability_selection_done
 				CharacterData.AbilityType.TURN_END_REVEAL_OPPONENT_CELLS_ONCE:
 					if "turn_end_reveal_used" not in _te_card.flags:
 						_te_card.flags.append("turn_end_reveal_used")
 						var _nr_count: int = maxi(1, int(_te_card.ability_params.get("count", 2)))
-						emit_signal("awaiting_target_selection",
+						await _prompt_and_await_target_selection(
 							"%s: Choose %d opponent cell(s) to reveal." % [_te_card.card_name, _nr_count],
 							"opponent_squares_%d" % _nr_count)
-						await ability_selection_done
 				CharacterData.AbilityType.TURN_END_FOE_CRYSTAL_PER_MUTAGEN:
 					var _bw_mutagen_count: int = 0
 					for _bw_p: int in range(2):
@@ -2341,40 +2368,66 @@ func _character_has_coin_flip_swap_ability(card: GameState.CardInstance) -> bool
 
 ## Nuki the Tanuki: coin flip after reveal animations, before Reckoning overlay.
 func _apply_nuki_pre_reckoning(
-		player: int,
-		attacker: GameState.CardInstance,
-		attacker_pos: Vector2i
+		owner_player: int,
+		nuki_card: GameState.CardInstance,
+		nuki_pos: Vector2i,
+		is_attacker_unit: bool
 ) -> Dictionary:
-	if not _character_has_coin_flip_swap_ability(attacker):
-		return {"attacker": attacker, "attacker_pos": attacker_pos}
-	await await_card_effect_flash(attacker.card_name)
+	if not _character_has_coin_flip_swap_ability(nuki_card):
+		return {"card": nuki_card, "pos": nuki_pos}
+	await await_card_effect_flash(nuki_card.card_name)
 	await _witness_pause()
 	var _nuki_cf: Array = await _do_coin_flips(1)
 	var _flip_label: String = "Heads" if _nuki_cf[0] else "Tails"
-	GameState.post_message("%s: Coin flip — %s." % [attacker.card_name, _flip_label])
+	GameState.post_message("%s: Coin flip — %s." % [nuki_card.card_name, _flip_label])
 	if not _nuki_cf[0]:
-		return {"attacker": attacker, "attacker_pos": attacker_pos}
-	if not _has_own_character_to_swap(player, attacker_pos):
-		GameState.post_message("%s: Heads — but no other unit to swap with." % attacker.card_name)
-		return {"attacker": attacker, "attacker_pos": attacker_pos}
-	var _nuki_origin: Vector2i = attacker_pos
-	_pending_swap_attacker_pos = attacker_pos
-	await _prompt_and_await_target_selection(
-		"%s: Heads! Choose 1 of your units to swap position with." % attacker.card_name,
+		return {"card": nuki_card, "pos": nuki_pos}
+	if not _has_own_character_to_swap(owner_player, nuki_pos):
+		GameState.post_message("%s: Heads — but no other unit to swap with." % nuki_card.card_name)
+		return {"card": nuki_card, "pos": nuki_pos}
+	var _nuki_origin: Vector2i = nuki_pos
+	_pending_swap_owner_player = owner_player
+	_pending_swap_attacker_pos = nuki_pos
+	await _await_attacker_anchored_target_selection(
+		owner_player,
+		"%s: Heads! Choose 1 of your units to swap position with." % nuki_card.card_name,
 		"own_character_for_swap")
-	attacker_pos = _nuki_origin
-	attacker = GameState.get_card(player, attacker_pos.x, attacker_pos.y)
+	nuki_pos = _nuki_origin
+	nuki_card = GameState.get_card(owner_player, nuki_pos.x, nuki_pos.y)
 	_pending_swap_attacker_pos = Vector2i(-1, -1)
-	GameState.attacker_card = attacker
-	GameState.attacker_pos = attacker_pos
-	BattleResolver.calculate_field_bonuses(player)
-	BattleResolver.calculate_field_bonuses(GameState.get_opponent(player))
-	return {"attacker": attacker, "attacker_pos": attacker_pos}
+	_pending_swap_owner_player = -1
+	if is_attacker_unit:
+		GameState.attacker_card = nuki_card
+		GameState.attacker_pos = nuki_pos
+	BattleResolver.calculate_field_bonuses(owner_player)
+	BattleResolver.calculate_field_bonuses(GameState.get_opponent(owner_player))
+	return {"card": nuki_card, "pos": nuki_pos}
 
 
 func _prompt_and_await_target_selection(prompt: String, filter: String) -> void:
+	_flow_block_depth += 1
 	emit_signal("awaiting_target_selection", prompt, filter)
 	await ability_selection_done
+	_flow_block_depth -= 1
+
+func _await_attacker_anchored_target_selection(
+		attacker_player: int, prompt: String, filter: String) -> void:
+	var _saved_cp: int = GameState.current_player
+	_pending_reveal_attacker_player = attacker_player
+	GameState.current_player = attacker_player
+	await _prompt_and_await_target_selection(prompt, filter)
+	GameState.current_player = _saved_cp
+	_pending_reveal_attacker_player = -1
+
+func _await_reveal_opponent_hidden_selection(attacker: GameState.CardInstance, attacker_player: int) -> void:
+	var foe: int = GameState.get_opponent(attacker_player)
+	if not _has_hidden_cells(foe):
+		GameState.post_message("%s: No hidden foe cells to reveal." % attacker.card_name)
+		return
+	await _await_attacker_anchored_target_selection(
+		attacker_player,
+		"%s: Choose 1 opponent cell to reveal." % attacker.card_name,
+		"opponent_any_hidden")
 
 func maybe_apply_on_expose_reveal_foe(owner_player: int, row: int, col: int) -> void:
 	var card: GameState.CardInstance = GameState.get_card(owner_player, row, col)
@@ -2499,8 +2552,7 @@ func _emit_post_attack_target_selections(
 
 	# Pending reveals from BattleResolver (e.g. COIN_FLIP_2_DESTROY_NON_AFFINITY win)
 	if result.pending_reveal_opponent_cell:
-		await _prompt_and_await_target_selection(
-			"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
+		await _await_reveal_opponent_hidden_selection(attacker, player)
 
 	if attacker.effect_nullified_until >= GameState.turn_number:
 		return
@@ -2508,30 +2560,29 @@ func _emit_post_attack_target_selections(
 	match attacker.ability_type:
 		CharacterData.AbilityType.REVEAL_ON_WIN:
 			if result.defender_destroyed:
-				await _prompt_and_await_target_selection(
-					"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
+				await _await_reveal_opponent_hidden_selection(attacker, player)
 
 		CharacterData.AbilityType.REVEAL_ON_ANY_ATTACK:
-			await _prompt_and_await_target_selection(
-				"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
+			await _await_reveal_opponent_hidden_selection(attacker, player)
 
 		CharacterData.AbilityType.REVEAL_ON_DEAD_END_ATTACK:
 			if defender.card_type == "dead_end":
-				await _prompt_and_await_target_selection(
-					"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
+				await _await_reveal_opponent_hidden_selection(attacker, player)
 
 		CharacterData.AbilityType.REVEAL_ON_TRAP_ATTACK:
 			if result.special_trigger in ["trap_effect", "trap_nullified"]:
-				await _prompt_and_await_target_selection(
-					"%s: Choose 1 opponent cell to reveal." % attacker.card_name, "opponent_any_hidden")
+				await _await_reveal_opponent_hidden_selection(attacker, player)
 
 		CharacterData.AbilityType.REVEAL_ADJACENT_AFTER_ATTACK:
-			await _prompt_and_await_target_selection(
-				"Scout Probe: Choose an adjacent square to reveal.", "adjacent")
+			await _await_attacker_anchored_target_selection(
+				player,
+				"Scout Probe: Choose an adjacent square to reveal.",
+				"adjacent")
 
 		CharacterData.AbilityType.POST_BATTLE_COIN_FLIP_DESTROY:
 			if not result.attacker_destroyed:
-				await _prompt_and_await_target_selection(
+				await _await_attacker_anchored_target_selection(
+					player,
 					"%s: Choose 1 opponent unit to flip a coin on." % attacker.card_name,
 					"opponent_character_ability_destroy")
 

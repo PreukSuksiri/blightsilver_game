@@ -112,6 +112,7 @@
 				]
 			},
 			"featured_union": "",
+			"featured_unit": "Lab Zombie",
 			"id": "easy_lab_mutagen",
 			"label": "Easy / Bio - Lab Mutagen",
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_smoking_room_cond_got_usb_1.json",
@@ -224,6 +225,7 @@
 				]
 			},
 			"featured_union": "Colorful Mage",
+			"featured_unit": "",
 			"id": "norm_colormage_flayer",
 			"label": "Norm / Arc - Colormage Flayer",
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_meeting_room_char_???.json",
@@ -350,6 +352,7 @@
 				]
 			},
 			"featured_union": "Kiba the Giant Slayer",
+			"featured_unit": "",
 			"id": "easy_kiba",
 			"label": "Easy / Ani - Kiba",
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_surveillance_room_invest_4_0.json",
@@ -482,7 +485,8 @@
 					"Cursed Reflection"
 				]
 			},
-			"featured_union": "Giant Meteor Vergaia",
+			"featured_union": "",
+			"featured_unit": "Striker Comet",
 			"id": "norm_miner_moon",
 			"label": "Norm / Cos - Miner Moon",
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_technician_office_invest_0_2.json",
@@ -637,6 +641,7 @@
 				]
 			},
 			"featured_union": "",
+			"featured_unit": "Immortal Vampire",
 			"id": "easy_vampire",
 			"label": "Easy / Cha - Vampire",
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_storage_invest_0_0.json",
@@ -793,6 +798,7 @@
 				]
 			},
 			"featured_union": "",
+			"featured_unit": "Pit Lord",
 			"id": "normal_chaos_bio",
 			"label": "Norm / Mix - Chaos Bio",
 			"source_vn": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_exhibition_cond_toilet_front_password_correct_1.json",
@@ -933,6 +939,7 @@
 				]
 			},
 			"featured_union": "Scarlet Shroom",
+			"featured_unit": "",
 			"id": "hard_venom",
 			"label": "Hard / Nat - Venom",
 			"tags": []
@@ -1063,6 +1070,7 @@
 				]
 			},
 			"featured_union": "Armored Dino",
+			"featured_unit": "",
 			"id": "norm_armored",
 			"label": "Norm / Nat - Armored",
 			"tags": []
@@ -1200,6 +1208,7 @@
 				]
 			},
 			"featured_union": "Raijin and Fujin",
+			"featured_unit": "",
 			"id": "norm_raijin_fujin",
 			"label": "Norm / Div - Raijin Fujin",
 			"tags": []
@@ -1351,6 +1360,7 @@
 				]
 			},
 			"featured_union": "Burning Phoenix",
+			"featured_unit": "",
 			"id": "norm_phoenix",
 			"label": "Norm / Arc - Phoenix",
 			"tags": []
@@ -1481,6 +1491,7 @@
 				]
 			},
 			"featured_union": "Ten Arms Yaksa",
+			"featured_unit": "",
 			"id": "easy_ten_arms",
 			"label": "Easy / Cha - Ten Arms",
 			"tags": []
@@ -1618,6 +1629,7 @@
 				]
 			},
 			"featured_union": "Katana Shark",
+			"featured_unit": "",
 			"id": "norm_shark",
 			"label": "Norm / Nat - Shark",
 			"tags": []
@@ -1762,6 +1774,7 @@
 				]
 			},
 			"featured_union": "Gaia Turtle",
+			"featured_unit": "",
 			"id": "hard_gaia_arcane",
 			"label": "Hard / Arc - Gaia Arcane",
 			"tags": []
@@ -1906,6 +1919,7 @@
 				]
 			},
 			"featured_union": "Barros the Colossal",
+			"featured_unit": "",
 			"id": "hard_barros",
 			"label": "Hard / Nat - Barros",
 			"tags": []
@@ -2042,7 +2056,8 @@
 					"Bunker"
 				]
 			},
-			"featured_union": "",
+			"featured_union": "Diamond Elemental",
+			"featured_unit": "",
 			"id": "hard_full_emental",
 			"label": "Hard / Arc - Full Elemental",
 			"tags": [
@@ -2189,6 +2204,7 @@
 				]
 			},
 			"featured_union": "Thunder Elemental",
+			"featured_unit": "",
 			"id": "norm_thunder_elemental",
 			"label": "Norm / Arc - Thunder Elemental",
 			"tags": [
@@ -2314,6 +2330,7 @@
 				]
 			},
 			"featured_union": "Moon Tribe Shaman",
+			"featured_unit": "",
 			"id": "easy_pure_moon",
 			"label": "Easy / Cos - Pure Moon",
 			"tags": [
@@ -2460,6 +2477,7 @@
 				]
 			},
 			"featured_union": "Helios the Prideful Fortress",
+			"featured_unit": "",
 			"id": "hard_helios",
 			"label": "Hard / Cos - Helios",
 			"tags": [
@@ -2594,6 +2612,7 @@
 				]
 			},
 			"featured_union": "Bioterrorist",
+			"featured_unit": "",
 			"id": "new_ai_deck_19",
 			"label": "Norm / Bio - Bioterrorist",
 			"tags": []
@@ -2632,6 +2651,7 @@
 				]
 			},
 			"featured_union": "Wood Elemental",
+			"featured_unit": "",
 			"id": "norm_wood_elemental",
 			"label": "Norm / Arc - Wood Elemental",
 			"tags": []
@@ -2747,6 +2767,7 @@
 				]
 			},
 			"featured_union": "Giant Meteor Vergaia",
+			"featured_unit": "",
 			"id": "normal_vergaia",
 			"label": "Norm / Cos - Vergaia",
 			"tags": []
@@ -2876,6 +2897,7 @@
 				]
 			},
 			"featured_union": "Skeleton Overlord",
+			"featured_unit": "",
 			"id": "easy_skeleton",
 			"label": "Easy / Cha - Skeleton",
 			"tags": []
@@ -2986,6 +3008,7 @@
 				]
 			},
 			"featured_union": "Gamma Mermaid",
+			"featured_unit": "",
 			"id": "easy_gamma",
 			"label": "Easy / Bio - Gamma",
 			"tags": []
@@ -3110,6 +3133,7 @@
 				]
 			},
 			"featured_union": "X-Death Squad",
+			"featured_unit": "",
 			"id": "norm_xdeath",
 			"label": "Norm / Ani - X Death",
 			"tags": []
@@ -3227,6 +3251,7 @@
 				]
 			},
 			"featured_union": "Gryphon Rider",
+			"featured_unit": "",
 			"id": "hard_gryphon",
 			"label": "Hard / Div - Gryphon",
 			"tags": []
@@ -3357,6 +3382,7 @@
 				]
 			},
 			"featured_union": "Rebel King",
+			"featured_unit": "",
 			"id": "easy_rebel_king",
 			"label": "Easy / Ani - Rebel King",
 			"tags": []
@@ -3469,6 +3495,7 @@
 				]
 			},
 			"featured_union": "Legendary Locksmith",
+			"featured_unit": "",
 			"id": "norm_leorudus",
 			"label": "Norm / Anim - Leorudus",
 			"tags": []
@@ -3606,6 +3633,7 @@
 				]
 			},
 			"featured_union": "Kiba the Giant Slayer",
+			"featured_unit": "",
 			"id": "hard_zealot_kiba",
 			"label": "Hard / Anim - Zealot Kiba",
 			"tags": []
@@ -3722,6 +3750,7 @@
 				]
 			},
 			"featured_union": "Sky Protector",
+			"featured_unit": "",
 			"id": "easy_sky_protector",
 			"label": "Easy / Div - Sky Protector",
 			"tags": [
@@ -3841,6 +3870,7 @@
 				]
 			},
 			"featured_union": "Choir Lead Amber",
+			"featured_unit": "",
 			"id": "norm_choir_lead",
 			"label": "Norm / Div - Choir Lead Amber",
 			"tags": [
@@ -3960,6 +3990,7 @@
 				]
 			},
 			"featured_union": "Moon Lady Ninja",
+			"featured_unit": "",
 			"id": "easy_moon_lady_ninja",
 			"label": "Easy / Ani - Moon Lady Ninja",
 			"tags": [
@@ -4079,6 +4110,7 @@
 				]
 			},
 			"featured_union": "Legendary Locksmith",
+			"featured_unit": "",
 			"id": "norm_legendary_locksmith",
 			"label": "Norm / Ani - Legendary Locksmith",
 			"tags": [
@@ -4198,6 +4230,7 @@
 				]
 			},
 			"featured_union": "Grand Fort Captain",
+			"featured_unit": "",
 			"id": "norm_grand_fort_captain",
 			"label": "Norm / Ani - Grand Fort Captain",
 			"tags": [
@@ -4266,51 +4299,51 @@
 								"type": "trap"
 							},
 							{
-								"c": 1,
+								"c": 1.0,
 								"name": "Gamma Emitter",
-								"r": 3,
+								"r": 3.0,
 								"type": "character"
 							},
 							{
-								"c": 1,
+								"c": 1.0,
 								"name": "Lab Zombie",
-								"r": 2,
+								"r": 2.0,
 								"type": "character"
 							},
 							{
-								"c": 0,
+								"c": 0.0,
 								"name": "Lab Bloater",
-								"r": 0,
+								"r": 0.0,
 								"type": "character"
 							},
 							{
-								"c": 2,
+								"c": 2.0,
 								"name": "Pepper Spray",
-								"r": 0,
+								"r": 0.0,
 								"type": "trap"
 							},
 							{
-								"c": 0,
+								"c": 0.0,
 								"name": "Scarlet Mutant",
-								"r": 4,
+								"r": 4.0,
 								"type": "character"
 							},
 							{
-								"c": 4,
+								"c": 4.0,
 								"name": "Explosive Barrels",
-								"r": 2,
+								"r": 2.0,
 								"type": "trap"
 							},
 							{
-								"c": 2,
+								"c": 2.0,
 								"name": "Rotten Shrieker",
-								"r": 1,
+								"r": 1.0,
 								"type": "character"
 							},
 							{
-								"c": 3,
+								"c": 3.0,
 								"name": "Claw Mutant",
-								"r": 1,
+								"r": 1.0,
 								"type": "character"
 							}
 						]
@@ -4329,6 +4362,7 @@
 				]
 			},
 			"featured_union": "Volatile Slasher",
+			"featured_unit": "",
 			"id": "norm_volatile_slasher",
 			"label": "Norm / Bio - Volatile Slasher",
 			"tags": [
@@ -4448,6 +4482,7 @@
 				]
 			},
 			"featured_union": "Dimensional Virus",
+			"featured_unit": "",
 			"id": "hard_dimensional_virus",
 			"label": "Hard / Bio+Arc - Dimensional Virus",
 			"tags": [
@@ -4567,6 +4602,7 @@
 				]
 			},
 			"featured_union": "Greater Succubus",
+			"featured_unit": "",
 			"id": "norm_greater_succubus",
 			"label": "Norm / Cha - Greater Succubus",
 			"tags": [
@@ -4693,6 +4729,7 @@
 				]
 			},
 			"featured_union": "False Prophet",
+			"featured_unit": "",
 			"id": "easy_false_prophet_casino",
 			"label": "Easy / Div - False Prophet Casino",
 			"tags": [
@@ -4811,7 +4848,8 @@
 					"Explosive Barrels"
 				]
 			},
-			"featured_union": "Dimensional Virus",
+			"featured_union": "",
+			"featured_unit": "Mind Flayer",
 			"id": "easy_wk17_roulette",
 			"label": "Easy / Bio - WK-17 Mutagen Roulette",
 			"tags": [

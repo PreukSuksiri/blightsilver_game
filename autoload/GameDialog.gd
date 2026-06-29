@@ -49,6 +49,12 @@ func style_button(btn: Button) -> void:
 	SFXManager.wire_prompt_button(btn)
 
 
+func style_menu_button(btn: Button) -> void:
+	style_button(btn)
+	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	btn.custom_minimum_size = Vector2(0.0, BTN_MIN_SIZE.y)
+
+
 func style_title_label(lbl: Label) -> void:
 	FontManager.tag_font(lbl, "font", "primary", 700)
 	lbl.add_theme_font_size_override("font_size", TITLE_FONT_SIZE)
@@ -100,13 +106,13 @@ func confirmation_overlay(
 	_add_title_body(vbox, title, body)
 	var root: Control = shell["root"]
 	_add_button_row(vbox, [
-		_make_button_def(cancel_text, func() -> void:
-			if on_cancel.is_valid():
-				on_cancel.call()
-			root.queue_free()),
 		_make_button_def(ok_text, func() -> void:
 			if on_confirm.is_valid():
 				on_confirm.call()
+			root.queue_free()),
+		_make_button_def(cancel_text, func() -> void:
+			if on_cancel.is_valid():
+				on_cancel.call()
 			root.queue_free()),
 	])
 	return root
@@ -145,6 +151,71 @@ func choices_overlay(
 			root.queue_free()))
 	_add_button_row(vbox, buttons)
 	return root
+
+
+## Vertical action menu (battle options, etc.). Each action: { "text": String, "callback": Callable }.
+func menu_overlay(
+		parent: Node,
+		title: String,
+		body: String,
+		actions: Array,
+		cancel_text: String = "Close",
+		on_cancel: Callable = Callable(),
+		min_width: float = 360.0,
+		z_index: int = DEFAULT_Z_INDEX,
+		overlay_name: StringName = OVERLAY_NAME) -> Control:
+	var shell: Dictionary = _make_overlay_shell(parent, min_width, z_index, overlay_name)
+	var vbox: VBoxContainer = shell["vbox"]
+	var root: Control = shell["root"]
+	_add_title_body(vbox, title, body)
+
+	var menu_col := VBoxContainer.new()
+	menu_col.add_theme_constant_override("separation", 10)
+	menu_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox.add_child(menu_col)
+
+	for action: Variant in actions:
+		if not (action is Dictionary):
+			continue
+		var text: String = str(action.get("text", "")).strip_edges()
+		if text.is_empty():
+			continue
+		var callback: Callable = action.get("callback", Callable()) as Callable
+		var btn := Button.new()
+		btn.text = text
+		style_menu_button(btn)
+		btn.pressed.connect(func() -> void:
+			root.queue_free()
+			if callback.is_valid():
+				callback.call())
+		menu_col.add_child(btn)
+
+	if not cancel_text.is_empty():
+		var cancel_btn := Button.new()
+		cancel_btn.text = cancel_text
+		style_menu_button(cancel_btn)
+		cancel_btn.add_theme_color_override("font_color", Color(0.72, 0.78, 0.88, 1.0))
+		cancel_btn.pressed.connect(func() -> void:
+			if on_cancel.is_valid():
+				on_cancel.call()
+			root.queue_free())
+		menu_col.add_child(cancel_btn)
+
+	return root
+
+
+## Shell for custom dialog content (scroll areas, lists). Returns { root, vbox, panel }.
+func content_overlay(
+		parent: Node,
+		min_width: float,
+		min_height: float = 0.0,
+		z_index: int = DEFAULT_Z_INDEX,
+		overlay_name: StringName = OVERLAY_NAME) -> Dictionary:
+	var shell: Dictionary = _make_overlay_shell(parent, min_width, z_index, overlay_name)
+	if min_height > 0.0:
+		var panel: PanelContainer = shell["panel"] as PanelContainer
+		panel.custom_minimum_size.y = min_height
+	return shell
 
 
 ## Text prompt with OK / Cancel. on_confirm receives entered text and returns true to close.
@@ -188,15 +259,6 @@ func prompt_overlay(
 	btn_row.add_theme_constant_override("separation", 12)
 	vbox.add_child(btn_row)
 
-	var cancel_btn := Button.new()
-	cancel_btn.text = cancel_text
-	style_button(cancel_btn)
-	cancel_btn.pressed.connect(func() -> void:
-		if on_cancel.is_valid():
-			on_cancel.call()
-		root.queue_free())
-	btn_row.add_child(cancel_btn)
-
 	var ok_btn := Button.new()
 	ok_btn.text = ok_text
 	style_button(ok_btn)
@@ -206,6 +268,15 @@ func prompt_overlay(
 				return
 		root.queue_free())
 	btn_row.add_child(ok_btn)
+
+	var cancel_btn := Button.new()
+	cancel_btn.text = cancel_text
+	style_button(cancel_btn)
+	cancel_btn.pressed.connect(func() -> void:
+		if on_cancel.is_valid():
+			on_cancel.call()
+		root.queue_free())
+	btn_row.add_child(cancel_btn)
 
 	line.text_submitted.connect(func(_text: String) -> void: ok_btn.pressed.emit())
 	line.call_deferred("grab_focus")
@@ -251,7 +322,7 @@ func _make_overlay_shell(
 
 	parent.add_child(root)
 	root.move_to_front()
-	return {"root": root, "vbox": vbox}
+	return {"root": root, "vbox": vbox, "panel": panel}
 
 
 func _add_title_body(vbox: VBoxContainer, title: String, body: String) -> void:
