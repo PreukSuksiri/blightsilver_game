@@ -25,7 +25,7 @@ const CARD_SETTLE_SECONDS: float = 0.2
 const HOLD_SKIP_ALL_SECONDS: float = 3.0
 const _ROUNDED_CLIP: Shader = preload("res://assets/shaders/rounded_clip.gdshader")
 const _CARD_CORNER_RADIUS_REF: float = 16.0   # px at 150px card width
-const _POSE_GLOW_COLOR: Color = Color(0.35, 0.92, 1.0, 0.95)
+const _POSE_FRAME_COLOR: Color = Color(0.40, 0.85, 1.0, 0.95)
 
 # Sizes computed from viewport at _ready; pack ~82% screen height, cards fill remaining width
 var _pack_w : float = 0.0
@@ -490,7 +490,6 @@ func _run_single_pose_reveal() -> void:
 	await get_tree().create_timer(CARD_SETTLE_SECONDS).timeout
 	_skip_requested = false
 	_dismiss_allowed = true
-	_start_glow_pulse(0)
 
 	var elapsed: float = 0.0
 	while elapsed < DISPLAY_HOLD_SECONDS and not _skip_requested and not GameState.quick_duel_reveal_skip_all:
@@ -669,19 +668,7 @@ func _make_pose_ctrl() -> Control:
 	wrapper.size = Vector2(_pose_w, _pose_h + label_h)
 	wrapper.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	var glow_panel := Panel.new()
-	glow_panel.size = Vector2(_pose_w, _pose_h)
-	glow_panel.position = Vector2.ZERO
-	glow_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var gp_sb := StyleBoxFlat.new()
-	gp_sb.bg_color = Color(0.0, 0.0, 0.0, 0.0)
-	gp_sb.draw_center = true
-	gp_sb.shadow_color = _POSE_GLOW_COLOR
-	gp_sb.shadow_size = int(_pose_h * 0.05)
-	gp_sb.shadow_offset = Vector2.ZERO
-	glow_panel.add_theme_stylebox_override("panel", gp_sb)
-	wrapper.add_child(glow_panel)
-	_glow_sbs[0] = gp_sb
+	var corner_radius: int = maxi(8, int(_pose_w * 0.03))
 
 	var portrait := TextureRect.new()
 	portrait.size = Vector2(_pose_w, _pose_h)
@@ -692,9 +679,22 @@ func _make_pose_ctrl() -> Control:
 	portrait.texture = _pose_tex
 	var rc_mat := ShaderMaterial.new()
 	rc_mat.shader = _ROUNDED_CLIP
-	rc_mat.set_shader_parameter("corner_radius", max(8.0, _pose_w * 0.03))
+	rc_mat.set_shader_parameter("corner_radius", float(corner_radius))
 	portrait.material = rc_mat
 	wrapper.add_child(portrait)
+
+	var frame_panel := Panel.new()
+	frame_panel.size = Vector2(_pose_w, _pose_h)
+	frame_panel.position = Vector2.ZERO
+	frame_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var frame_sb := StyleBoxFlat.new()
+	frame_sb.bg_color = Color(0.0, 0.0, 0.0, 0.0)
+	frame_sb.draw_center = false
+	frame_sb.border_color = _POSE_FRAME_COLOR
+	frame_sb.set_border_width_all(2)
+	frame_sb.set_corner_radius_all(corner_radius)
+	frame_panel.add_theme_stylebox_override("panel", frame_sb)
+	wrapper.add_child(frame_panel)
 
 	var title_lbl := Label.new()
 	title_lbl.text = "New Pose Unlocked"

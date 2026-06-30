@@ -21,7 +21,7 @@ func _ready() -> void:
 	panel.set_anchors_preset(Control.PRESET_CENTER)
 	panel.offset_left   = -210
 	panel.offset_top    = -110
-	panel.offset_right  = 210
+	panel.offset_right  = 222
 	panel.offset_bottom = 110
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(panel)
@@ -29,7 +29,7 @@ func _ready() -> void:
 	var vbox := VBoxContainer.new()
 	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
 	vbox.offset_left = 20; vbox.offset_top    = 16
-	vbox.offset_right = -20; vbox.offset_bottom = -16
+	vbox.offset_right = -32; vbox.offset_bottom = -16
 	vbox.add_theme_constant_override("separation", 14)
 	panel.add_child(vbox)
 

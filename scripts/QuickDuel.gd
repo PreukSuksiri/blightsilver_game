@@ -20,6 +20,10 @@ const PORTRAIT_REF_H := 720.0
 const PORTRAIT_PEEK := 0.4
 const SettingsMenuScene := preload("res://scenes/settings_menu.tscn")
 const ProtagonistOverlayScene := preload("res://scripts/ProtagonistOverlay.gd")
+const _ROUNDED_RECT_CLIP: Shader = preload("res://assets/shaders/rounded_rect_clip.gdshader")
+const CAPSULE_FRAME_RADIUS := 12.0
+const CAPSULE_FRAME_BORDER := 2.0
+const OVERLAY_Z_INDEX := 80
 
 var _picker_panel: Control = null
 var _status_lbl: Label = null
@@ -34,6 +38,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = MOUSE_FILTER_STOP
 	VNPlayer.dismiss_overlay_if_present(get_tree())
+	BGMManager.play_context(BGMManager.CONTEXT_MAIN_MENU, 0.6, 0.6)
 	_build_shell()
 	CheckerTransition.fade_in()
 	if SaveManager.is_attack_tutorial_complete():
@@ -179,7 +184,7 @@ func _apply_player_portrait_layout(tex: Texture2D) -> void:
 func _open_protagonist_overlay() -> void:
 	var overlay: ProtagonistOverlay = ProtagonistOverlayScene.new()
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	overlay.z_index = 80
+	overlay.z_index = OVERLAY_Z_INDEX
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	if overlay.has_signal("closed"):
 		overlay.closed.connect(func() -> void:
@@ -284,6 +289,8 @@ func _show_picker() -> void:
 	GameDialog.close_overlay(self)
 	_picker_panel.visible = true
 	_set_protagonist_zone_visible(true)
+	if SaveManager.reconcile_protagonist_selection():
+		SaveManager.save_data()
 	_sanitize_saved_offers_if_needed()
 	if GameState.quick_duel_reroll_previews or not SaveManager.has_quick_duel_offers():
 		_roll_all_tier_offers()
@@ -319,6 +326,7 @@ func _sanitize_saved_offers_if_needed() -> void:
 	for tier: String in ["easy", "normal", "hard"]:
 		var raw: Array = SaveManager.get_quick_duel_rewards(tier)
 		var fixed: Array = QuickDuelRewards.repair_tier_rewards(tier, raw)
+		fixed = QuickDuelRewards.dedupe_rewards(fixed)
 		rewards[tier] = fixed
 		if JSON.stringify(fixed) != JSON.stringify(raw):
 			changed = true
@@ -388,24 +396,26 @@ func _update_tier_capsule(tier: String, entry: Dictionary) -> void:
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.08, 0.10, 0.18, 0.95)
 	sb.border_color = Color(0.35, 0.55, 0.9, 0.6)
-	sb.set_border_width_all(2)
-	sb.set_corner_radius_all(12)
+	sb.set_border_width_all(int(CAPSULE_FRAME_BORDER))
+	sb.set_corner_radius_all(int(CAPSULE_FRAME_RADIUS))
 	frame.add_theme_stylebox_override("panel", sb)
 	btn.add_child(frame)
 
 	var inner := Control.new()
 	inner.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	inner.clip_contents = true
 	inner.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	frame.add_child(inner)
 
+	var image_clip := Control.new()
+	image_clip.name = "ImageClip"
+	image_clip.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	image_clip.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
+	image_clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	inner.add_child(image_clip)
+
 	if entry.is_empty():
 		btn.disabled = true
-		var ph := ColorRect.new()
-		ph.color = Color(0.12, 0.12, 0.16, 1.0)
-		ph.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		ph.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		inner.add_child(ph)
+		image_clip.add_child(_make_capsule_fill_panel(Color(0.12, 0.12, 0.16, 1.0), CAPSULE_FRAME_RADIUS))
 	else:
 		btn.disabled = false
 		var tex: Texture2D = AIDeckVault.resolve_preview_texture(entry)
@@ -416,13 +426,10 @@ func _update_tier_capsule(tier: String, entry: Dictionary) -> void:
 			img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 			img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 			img.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			inner.add_child(img)
+			_apply_rounded_rect_clip(img, CAPSULE_FRAME_RADIUS)
+			image_clip.add_child(img)
 		else:
-			var ph2 := ColorRect.new()
-			ph2.color = Color(0.12, 0.12, 0.16, 1.0)
-			ph2.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-			ph2.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			inner.add_child(ph2)
+			image_clip.add_child(_make_capsule_fill_panel(Color(0.12, 0.12, 0.16, 1.0), CAPSULE_FRAME_RADIUS))
 
 	var tier_lbl := Label.new()
 	tier_lbl.text = tier.capitalize()
@@ -463,17 +470,52 @@ func _update_tier_capsule(tier: String, entry: Dictionary) -> void:
 		if rw is Dictionary:
 			reward_vbox.add_child(_build_reward_hint_row(rw as Dictionary, multi))
 
-	var hover := ColorRect.new()
-	hover.color = HOVER_OVERLAY_COLOR
+	var hover := Panel.new()
 	hover.visible = false
 	hover.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hover.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hover.z_index = 10
+	var hover_sb := StyleBoxFlat.new()
+	hover_sb.bg_color = HOVER_OVERLAY_COLOR
+	hover_sb.set_corner_radius_all(int(CAPSULE_FRAME_RADIUS))
+	hover_sb.set_content_margin_all(0)
+	hover.add_theme_stylebox_override("panel", hover_sb)
 	inner.add_child(hover)
 
 	_clear_button_hover_connections(btn)
 	btn.mouse_entered.connect(_on_capsule_mouse_entered.bind(hover))
 	btn.mouse_exited.connect(_on_capsule_mouse_exited.bind(hover))
+
+
+func _apply_rounded_rect_clip(host: Control, corner_radius: float) -> void:
+	var rc_mat := ShaderMaterial.new()
+	rc_mat.shader = _ROUNDED_RECT_CLIP
+	rc_mat.set_shader_parameter("corner_radius", corner_radius)
+	var fallback := Vector2(
+		CAPSULE_W - CAPSULE_FRAME_BORDER * 2.0,
+		CAPSULE_H - CAPSULE_FRAME_BORDER * 2.0)
+	rc_mat.set_shader_parameter("rect_size", fallback)
+	host.material = rc_mat
+	var sync_size := func() -> void:
+		if not is_instance_valid(host):
+			return
+		var sz := host.size
+		if sz.x >= 1.0 and sz.y >= 1.0:
+			rc_mat.set_shader_parameter("rect_size", sz)
+	host.resized.connect(sync_size)
+	sync_size.call_deferred()
+
+
+func _make_capsule_fill_panel(color: Color, corner_radius: float) -> Panel:
+	var panel := Panel.new()
+	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var fill_sb := StyleBoxFlat.new()
+	fill_sb.bg_color = color
+	fill_sb.set_corner_radius_all(int(corner_radius))
+	fill_sb.set_content_margin_all(0)
+	panel.add_theme_stylebox_override("panel", fill_sb)
+	return panel
 
 
 func _clear_button_hover_connections(btn: Button) -> void:
@@ -483,12 +525,12 @@ func _clear_button_hover_connections(btn: Button) -> void:
 		btn.mouse_exited.disconnect(conn["callable"])
 
 
-func _on_capsule_mouse_entered(hover: ColorRect) -> void:
+func _on_capsule_mouse_entered(hover: Panel) -> void:
 	if hover != null and is_instance_valid(hover):
 		hover.visible = true
 
 
-func _on_capsule_mouse_exited(hover: ColorRect) -> void:
+func _on_capsule_mouse_exited(hover: Panel) -> void:
 	if hover != null and is_instance_valid(hover):
 		hover.visible = false
 
@@ -571,12 +613,19 @@ func _on_reroll_pressed() -> void:
 
 
 func _open_settings() -> void:
+	if get_node_or_null("SettingsMenuOverlay") != null:
+		return
 	var settings: Control = SettingsMenuScene.instantiate()
+	settings.name = "SettingsMenuOverlay"
+	settings.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	settings.z_index = OVERLAY_Z_INDEX
+	settings.mouse_filter = Control.MOUSE_FILTER_STOP
 	if settings.has_signal("closed"):
 		settings.closed.connect(func() -> void:
 			_refresh_casual_button()
 			_refresh_reroll_button())
 	add_child(settings)
+	settings.move_to_front()
 
 
 func _apply_protagonist_to_battle() -> void:

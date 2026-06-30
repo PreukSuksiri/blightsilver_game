@@ -73,7 +73,7 @@ const CRYSTAL_LOSS_NO_RECOVERY_REASONS: Array[String] = [
 const DEFAULT_BATTLE_BGM_START_SEC: float = 14.0
 const CURSOR_PATH: String = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
 const CURSOR_HOTSPOT: Vector2 = Vector2(4.0, 4.0)
-const CURSOR_LAYER: int = 256
+const CURSOR_LAYER: int = 320  # above VN overlay (300) and vellum anim (310)
 const POPUP_CURSOR_LAYER: int = 4096
 const UNIT_EFFECT_FLAGS: Array[String] = ["venom", "mutagen", "berserk"]
 
@@ -325,6 +325,7 @@ var quick_duel_reroll_previews: bool = false
 var quick_duel_pending_rewards: Array = []
 var quick_duel_reveal_queue: Array = []
 var quick_duel_reveal_skip_all: bool = false
+var quick_duel_rewards_settled: bool = false
 var pending_wishlist_cta: bool = false
 var quick_duel_protagonist_id: String = ""
 var vn_on_win: String = ""
@@ -390,6 +391,21 @@ var _finger_cursor_active: bool = false
 var _popup_cursors: Dictionary = {}  # Window -> TextureRect
 var _crystal_anim_pending: int = 0
 var _crystal_anim_board_registered: bool = false
+
+func mark_destroy_achievement_context(
+		source: String,
+		destroyer_player: int,
+		destroyed_player: int,
+		row: int,
+		col: int
+) -> void:
+	if destroyer_player != 0 or destroyed_player == destroyer_player:
+		return
+	var card: CardInstance = get_card(destroyed_player, row, col)
+	if card.card_type != "character" or card.was_destroyed:
+		return
+	analytics_destroy_source = source
+	analytics_destroy_by_player = destroyer_player
 
 static func load_portrait_texture(path: String) -> Texture2D:
 	if path.is_empty():
@@ -1144,6 +1160,8 @@ func is_stuck(player_index: int) -> bool:
 	return not can_player_attack(player_index)
 
 func _end_game(winner: int) -> void:
+	if current_phase == Phase.GAME_OVER:
+		return
 	set_phase(Phase.GAME_OVER)
 	emit_signal("game_over", winner)
 
@@ -1257,6 +1275,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	analytics_graph_path = ""
 	analytics_destroy_source = ""
 	analytics_destroy_by_player = -1
+	quick_duel_rewards_settled = false
 	_init_grids()
 	set_phase(Phase.SETUP_P1)
 
@@ -1277,6 +1296,7 @@ func abort_quick_duel_battle() -> void:
 	quick_duel_pending_rewards.clear()
 	quick_duel_reveal_queue.clear()
 	quick_duel_reveal_skip_all = false
+	quick_duel_rewards_settled = false
 	pending_wishlist_cta = false
 	quick_duel_protagonist_id = ""
 

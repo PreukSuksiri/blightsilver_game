@@ -349,7 +349,7 @@ func _run_missions(sid: int) -> void:
 		# Activate step 0
 		_mission_step = 0
 		_pending_effect_resolve = false
-		var radius := _undim_radius()
+		var radius := _undim_radius(m, _mission_step)
 		var instruction: String = m.get("instruction", "")
 		if _overlay != null and is_instance_valid(_overlay):
 			_overlay.show_mission(center0, radius, instruction)
@@ -383,7 +383,7 @@ func _run_missions(sid: int) -> void:
 			# Activate step 1
 			_mission_step = 1
 			if _overlay != null and is_instance_valid(_overlay):
-				_overlay.show_mission(center1, radius, instruction)
+				_overlay.show_mission(center1, _undim_radius(m, _mission_step), instruction)
 
 			if not await _await_mission_player_action(_mission_satisfied_sig, sid):
 				_handle_mission_await_failed(sid)
@@ -569,7 +569,12 @@ func _get_step_center(m: Dictionary, step: int) -> Vector2:
 func _is_two_step(m: Dictionary) -> bool:
 	return m.get("type", "") in ["attack", "bluff", "union_summon", "use_tech"]
 
-func _undim_radius() -> float:
+func _undim_radius(m: Dictionary, step: int) -> float:
+	var mtype: String = m.get("type", "")
+	match mtype:
+		"use_tech", "tap_tech":
+			# Tech chip (~76×96) and hand USE button are smaller than grid cells.
+			return 38.0 if step == 0 else 44.0
 	return 64.0  # 200% of a typical ~32px OS cursor
 
 func _mission_wait_seconds(m: Dictionary) -> float:

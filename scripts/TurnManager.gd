@@ -785,6 +785,8 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 			GameState.post_message(
 				"Siege Cannon: %s at (%d,%d) destroyed after surviving the attack!" % [
 					defender.card_name, target_pos.x, target_pos.y])
+			GameState.mark_destroy_achievement_context(
+				"tech", player, opponent, target_pos.x, target_pos.y)
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y)
 			await _wait_crystal_animation()
 			GameState.siege_cannon_active[player] = false
@@ -1069,6 +1071,7 @@ func _resolve_arcane_nova(player: int) -> void:
 				break
 			var card: GameState.CardInstance = GameState.get_card(opponent, r, c)
 			if card.card_type == "character" and card.face_up:
+				GameState.mark_destroy_achievement_context("tech", player, opponent, r, c)
 				GameState.destroy_card(opponent, r, c, false)
 				destroyed += 1
 				await _wait_crystal_animation()
@@ -1419,8 +1422,6 @@ func _handle_trap_effect(
 	var trap_data = params.get("trap_data") as TrapData
 	if trap_data == null:
 		return
-	GameState.analytics_destroy_source = "trap"
-	GameState.analytics_destroy_by_player = opponent
 
 	# Traps that destroy the attacker defer their own destruction until after
 	# the character card has visually disappeared.
@@ -1485,6 +1486,8 @@ func _handle_trap_effect(
 				await _wait_crystal_animation()
 				GameState.post_message("Checkpoint: Lost 500 Crystals.")
 			else:
+				GameState.mark_destroy_achievement_context(
+					"trap", opponent, player, attacker_pos.x, attacker_pos.y)
 				GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 				GameState.post_message("Checkpoint: %s destroyed!" % attacker.card_name)
 
@@ -1520,6 +1523,8 @@ func _handle_trap_effect(
 					return
 			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await _wait_crystal_animation()
+			GameState.mark_destroy_achievement_context(
+				"trap", opponent, player, attacker_pos.x, attacker_pos.y)
 			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 			await get_tree().create_timer(0.65).timeout
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
@@ -1536,6 +1541,8 @@ func _handle_trap_effect(
 		TrapData.TrapEffectType.DESTROY_ATTACKER:
 			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await _wait_crystal_animation()
+			GameState.mark_destroy_achievement_context(
+				"trap", opponent, player, attacker_pos.x, attacker_pos.y)
 			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 			await get_tree().create_timer(0.65).timeout
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
@@ -1648,6 +1655,8 @@ func _handle_trap_effect(
 		TrapData.TrapEffectType.DESTROY_ATTACKER_DEFENDER_PAYS:
 			GameState.lose_crystals(player, attacker.crystal_cost, "card lost")
 			await _wait_crystal_animation()
+			GameState.mark_destroy_achievement_context(
+				"trap", opponent, player, attacker_pos.x, attacker_pos.y)
 			GameState.destroy_card(player, attacker_pos.x, attacker_pos.y, false)
 			await get_tree().create_timer(0.65).timeout
 			GameState.destroy_card(opponent, target_pos.x, target_pos.y, false)
@@ -1832,8 +1841,10 @@ func _end_turn(player: int) -> void:
 				continue
 			match _te_card.ability_type:
 				CharacterData.AbilityType.PERM_ATK_LOSS_PER_OWN_TURN:
-					await await_card_effect_flash(_te_card.card_name)
-					_te_card.current_atk = max(0, _te_card.current_atk - _te_card.ability_params.get("amount", 2))
+					if not _te_card.has_mutagen_flag:
+						await await_card_effect_flash(_te_card.card_name)
+						var _atk_loss: int = int(_te_card.ability_params.get("amount", 10))
+						_te_card.current_atk = max(0, _te_card.current_atk - _atk_loss)
 				CharacterData.AbilityType.END_OF_TURN_COIN_FLIP_STAT_BOOST:
 					await await_card_effect_flash(_te_card.card_name)
 					var _cfst_r: Array = await _do_coin_flips(1)

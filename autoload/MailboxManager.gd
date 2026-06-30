@@ -52,6 +52,20 @@ func is_achievement_reward_mail(item: Dictionary) -> bool:
 	return str(item.get("subject", "")).begins_with("Achievement:")
 
 
+## True when the player has claimed mailbox reward for this achievement (pose / item rewards).
+func is_achievement_reward_claimed(achievement_id: String) -> bool:
+	var ach_id: String = achievement_id.strip_edges()
+	if ach_id.is_empty():
+		return false
+	for item: Dictionary in mail_items:
+		if not is_achievement_reward_mail(item):
+			continue
+		if str(item.get("achievement_id", "")).strip_edges() != ach_id:
+			continue
+		return bool(item.get("claimed", false))
+	return false
+
+
 func has_unnotified_achievement_reward_mail() -> bool:
 	for item: Dictionary in mail_items:
 		if item.get("claimed", false):
@@ -117,14 +131,14 @@ func get_unclaimed_count() -> int:
 		count += 1
 	return count
 
-## Claim a single mail by id. Returns the reward dict (may be empty).
+## Claim a single mail by id. Returns a copy of the claimed mail item, or {}.
 func claim_mail(mail_id: String) -> Dictionary:
 	for item: Dictionary in mail_items:
 		if item["id"] == mail_id and not item.get("claimed", false):
 			item["claimed"] = true
 			emit_signal("mailbox_changed")
 			SaveManager.save_data()
-			return item.get("reward", {})
+			return item.duplicate(true)
 	return {}
 
 ## True when the mail reward grants shop credits (legacy "coins" included).

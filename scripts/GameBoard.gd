@@ -74,7 +74,9 @@ var _ai_watchdog: Timer = null
 var _ai_union_resolve_in_progress: bool = false  # suppress watchdog during long union cinematics
 var _card_name_to_type: Dictionary = {}   # card_name -> "character"|"trap"|"tech"
 var _options_panel: Control = null
-var _options_btn: TextureButton = null
+var _options_btn_root: Control = null
+var _options_btn_art: TextureRect = null
+var _options_btn: Control = null
 var _music_changed_this_turn: bool = false
 
 # Union Suggestion Button (center HUD, visible when active player can summon a union)
@@ -1173,8 +1175,8 @@ func _show_handoff(player: int, context: String, callback: Callable) -> void:
 		_handoff_crystals_lbl.text = ""
 	_handoff_overlay.visible = true
 	_handoff_ready_btn.grab_focus()
-	if _options_btn:
-		_options_btn.visible = false
+	if _options_btn_root:
+		_options_btn_root.visible = false
 
 func _on_handoff_ready() -> void:
 	if _handoff_resolving:
@@ -2463,8 +2465,9 @@ func _update_tutorial_hud_lock() -> void:
 	if selection_state == SelectionState.CONFIRMING_ATTACK \
 			or (_attack_confirm_panel != null and _attack_confirm_panel.visible):
 		show_end = false
+	if _options_btn_root:
+		_options_btn_root.visible = show_opts
 	if _options_btn:
-		_options_btn.visible = show_opts
 		_options_btn.mouse_filter = Control.MOUSE_FILTER_STOP if show_opts else Control.MOUSE_FILTER_IGNORE
 	if not show_opts:
 		_close_options_panel()
@@ -3953,8 +3956,8 @@ func _update_crystal_visibility() -> void:
 		_turn_number_bg.visible = show
 	if _turn_number_hit:
 		_turn_number_hit.visible = show
-	if _options_btn:
-		_options_btn.visible = show and not TutorialBattleManager.should_hide_options_btn()
+	if _options_btn_root:
+		_options_btn_root.visible = show and not TutorialBattleManager.should_hide_options_btn()
 	if _fog_container:
 		_fog_container.visible = show
 
@@ -4080,26 +4083,51 @@ func _build_options_button() -> void:
 	# Display size: 230×230. Show upper 2/3 (~153px), hide lower 1/3 (~77px) below screen.
 	const BTN_W  : float = 230.0
 	const BTN_H  : float = 230.0
-	const SHOW_H : float = BTN_H * 2.0 / 3.0   # 120 px visible above bottom edge
-	const HIDE_H : float = BTN_H - SHOW_H        # 60 px below screen edge (clipped)
+	const SHOW_H : float = BTN_H * 2.0 / 3.0
+	const HIDE_H : float = BTN_H - SHOW_H
+	const HIT_W  : float = 72.0
+	const HIT_H  : float = 72.0
 
-	var btn := TextureButton.new()
-	btn.texture_normal = HudSkin.hud_tex("ui_battle_options.png")
-	btn.ignore_texture_size = true
-	btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	btn.layout_mode = 1
-	btn.anchor_left   = 0.5;  btn.anchor_right  = 0.5
-	btn.anchor_top    = 1.0;  btn.anchor_bottom = 1.0
-	btn.offset_left   = -(BTN_W * 0.5)
-	btn.offset_right  =  (BTN_W * 0.5)
-	btn.offset_top    = -SHOW_H - 20.0   # top edge = 140px above screen bottom
-	btn.offset_bottom =  HIDE_H - 20.0   # bottom edge = 40px below screen bottom (clipped)
-	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	btn.z_index = 5
-	btn.visible = false
-	btn.pressed.connect(_on_options_btn_pressed)
-	add_child(btn)
-	_options_btn = btn
+	var root := Control.new()
+	root.layout_mode = 1
+	root.anchor_left   = 0.5;  root.anchor_right  = 0.5
+	root.anchor_top    = 1.0;  root.anchor_bottom = 1.0
+	root.offset_left   = -(BTN_W * 0.5)
+	root.offset_right  =  (BTN_W * 0.5)
+	root.offset_top    = -SHOW_H - 20.0
+	root.offset_bottom =  HIDE_H - 20.0
+	root.mouse_filter  = Control.MOUSE_FILTER_IGNORE
+	root.z_index = 5
+	root.visible = false
+	add_child(root)
+	_options_btn_root = root
+
+	var art := TextureRect.new()
+	art.texture = HudSkin.hud_tex("ui_battle_options.png")
+	art.ignore_texture_size = true
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.set_anchors_preset(Control.PRESET_FULL_RECT)
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(art)
+	_options_btn_art = art
+
+	var hit := Control.new()
+	hit.layout_mode = 1
+	hit.anchor_left   = 0.5;  hit.anchor_right  = 0.5
+	hit.anchor_top    = 0.0;  hit.anchor_bottom = 0.0
+	hit.offset_left   = -(HIT_W * 0.5)
+	hit.offset_right  =  (HIT_W * 0.5)
+	hit.offset_top    = 24.0
+	hit.offset_bottom = 24.0 + HIT_H
+	hit.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	hit.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton:
+			var mb := event as InputEventMouseButton
+			if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT:
+				_on_options_btn_pressed())
+	root.add_child(hit)
+	_options_btn = hit
 
 	var opts_lbl := Label.new()
 	opts_lbl.text = "OPTIONS"
@@ -4121,7 +4149,7 @@ func _build_options_button() -> void:
 	opts_lbl.add_theme_constant_override("shadow_offset_x", 1)
 	opts_lbl.add_theme_constant_override("shadow_offset_y", 1)
 	opts_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	btn.add_child(opts_lbl)
+	root.add_child(opts_lbl)
 
 	_options_btn.mouse_entered.connect(func(): _show_hud_tooltip("Game options (concede, settings)"))
 	_options_btn.mouse_exited.connect(func(): _restore_game_guide())
@@ -4336,8 +4364,8 @@ func _reload_hud_skin(_new_version: String = "") -> void:
 	CTX_ICON_UNION  = HudSkin.hud_tex("ui_icon_union.png")
 	if is_instance_valid(_end_turn_btn):
 		_end_turn_btn.texture_normal     = HudSkin.hud_tex("ui_end_turn.png")
-	if is_instance_valid(_options_btn):
-		_options_btn.texture_normal      = HudSkin.hud_tex("ui_battle_options.png")
+	if is_instance_valid(_options_btn_art):
+		_options_btn_art.texture = HudSkin.hud_tex("ui_battle_options.png")
 	if is_instance_valid(_union_suggest_btn):
 		_union_suggest_btn.texture_normal = HudSkin.hud_tex("ui_icon_union.png")
 	if is_instance_valid(_union_suggest_glow):
@@ -6188,8 +6216,8 @@ func _start_ai_turn_flow() -> void:
 	_dismiss_tax_confirm_panel()
 	if _end_turn_btn:
 		_end_turn_btn.visible = false
-	if _options_btn:
-		_options_btn.visible = false
+	if _options_btn_root:
+		_options_btn_root.visible = false
 	_restart_ai_watchdog()
 	var _tech_royale_ai: bool = GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
 		and "tech_royale" in GameState.active_dungeon_modifiers
@@ -7269,12 +7297,12 @@ func _apply_tech_target_self_destruct(target_player: int, pos: Vector2i, card: G
 		return
 	GameState.post_message("%s: self-destructs when targeted by tech!" % card.card_name)
 	GameState.destruction_from_tech_self_destruct = true
+	GameState.mark_destroy_achievement_context(
+		"tech", GameState.current_player, target_player, pos.x, pos.y)
 	GameState.destroy_card(target_player, pos.x, pos.y, true)
 	GameState.destruction_from_tech_self_destruct = false
 
 func _handle_tech_target(player: int, pos: Vector2i) -> void:
-	GameState.analytics_destroy_source = "tech"
-	GameState.analytics_destroy_by_player = GameState.current_player
 	var current_player := GameState.current_player
 	var opponent := GameState.get_opponent(current_player)
 	var card: GameState.CardInstance = GameState.get_card(player, pos.x, pos.y)
@@ -7341,6 +7369,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				_pending_ability_destroy_player = player
 				var _cf: Array = await turn_manager._do_coin_flips(1)
 				if _cf[0]:
+					GameState.mark_destroy_achievement_context(
+						"tech", current_player, player, pos.x, pos.y)
 					GameState.destroy_card(player, pos.x, pos.y, true)
 					GameState.post_message("Rocket Peacock: Heads — %s destroyed!" % card.card_name)
 				else:
@@ -7553,6 +7583,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 	if pending_tech_filter in ["any_faceup_card", "opponent_faceup_no_cost"]:
 		if card.face_up and card.card_type != "dead_end":
 			var pay_cost := pending_tech_name != "Accident" and pending_tech_filter != "opponent_faceup_no_cost"
+			if player != current_player:
+				GameState.mark_destroy_achievement_context(
+					"tech", current_player, player, pos.x, pos.y)
 			GameState.destroy_card(player, pos.x, pos.y, pay_cost)
 			if pending_tech_filter == "opponent_faceup_no_cost":
 				_finish_trap_target_selection()
@@ -7570,6 +7603,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if card.card_type == "character" and "venom" in card.flags:
 			var _doubled_cost: int = card.crystal_cost * 2
 			card.crystal_cost = _doubled_cost
+			if player != current_player:
+				GameState.mark_destroy_achievement_context(
+					"tech", current_player, player, pos.x, pos.y)
 			GameState.destroy_card(player, pos.x, pos.y, true)
 			GameState.post_message("Potent Poison: %s destroyed (cost doubled to %d)." % [
 				card.card_name, _doubled_cost])
@@ -7863,6 +7899,8 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 					continue
 				var _rs_cell: GameState.CardInstance = GameState.get_card(opponent, _rs_row, _rs_c)
 				if _rs_cell.face_up and _rs_cell.card_type == "character":
+					GameState.mark_destroy_achievement_context(
+						"tech", current_player, opponent, _rs_row, _rs_c)
 					GameState.destroy_card(opponent, _rs_row, _rs_c, false)
 					_rs_destroyed += 1
 			GameState.post_message(
@@ -7960,6 +7998,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 					for _cc: int in range(GameState.GRID_SIZE):
 						var _rc_c: GameState.CardInstance = GameState.get_card(_p, _rc_row, _cc)
 						if _rc_c.face_up and _rc_c.card_type != "dead_end":
+							if _p != current_player:
+								GameState.mark_destroy_achievement_context(
+									"tech", current_player, _p, _rc_row, _cc)
 							GameState.destroy_card(_p, _rc_row, _cc)
 							_rc_destroyed += 1
 				if _rc_destroyed == 0:
@@ -7972,6 +8013,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 					for _rr: int in range(GameState.GRID_SIZE):
 						var _rc_r: GameState.CardInstance = GameState.get_card(_p, _rr, _rc_col)
 						if _rc_r.face_up and _rc_r.card_type != "dead_end":
+							if _p != current_player:
+								GameState.mark_destroy_achievement_context(
+									"tech", current_player, _p, _rr, _rc_col)
 							GameState.destroy_card(_p, _rr, _rc_col)
 							_rc_destroyed += 1
 				if _rc_destroyed == 0:
@@ -9930,11 +9974,18 @@ func _grant_vn_battle_loss_rewards() -> void:
 	GameState.vn_battle_loss_reward_once = ""
 
 func _handle_quick_duel_win_rewards() -> void:
+	if GameState.quick_duel_rewards_settled:
+		return
+	GameState.quick_duel_rewards_settled = true
+	GameState.quick_duel_reveal_queue.clear()
+
 	var tier: String = GameState.quick_duel_battle_tier
-	var picked: Array = SaveManager.get_quick_duel_rewards(tier)
+	var picked: Array = _sort_quick_duel_grant_order(
+		QuickDuelRewards.dedupe_rewards(SaveManager.get_quick_duel_rewards(tier)))
+	var granted_cards: Dictionary = {}
 	for reward: Variant in picked:
 		if reward is Dictionary:
-			_grant_quick_duel_reward(reward as Dictionary)
+			_grant_quick_duel_reward(reward as Dictionary, granted_cards)
 	if not picked.is_empty():
 		GameState.quick_duel_pending_rewards = picked.duplicate(true)
 	if not SaveManager.is_wishlist_cta_shown():
@@ -9992,7 +10043,21 @@ func _report_duel_finished(
 			GameState.analytics_battle_id, GameState.analytics_graph_path)
 
 
-func _grant_quick_duel_reward(reward: Dictionary) -> void:
+func _sort_quick_duel_grant_order(rewards: Array) -> Array:
+	var primary: Array = []
+	var packs: Array = []
+	for entry: Variant in rewards:
+		if not entry is Dictionary:
+			continue
+		if str((entry as Dictionary).get("type", "")) == "booster_pack":
+			packs.append(entry)
+		else:
+			primary.append(entry)
+	primary.append_array(packs)
+	return primary
+
+
+func _grant_quick_duel_reward(reward: Dictionary, granted_cards: Dictionary = {}) -> void:
 	match str(reward.get("type", "")):
 		"credits", "coins":
 			var amount: int = int(reward.get("amount", 0))
@@ -10000,10 +10065,18 @@ func _grant_quick_duel_reward(reward: Dictionary) -> void:
 				Collection.add_credits(amount)
 		"card":
 			var card_name: String = str(reward.get("card_name", "")).strip_edges()
-			if not card_name.is_empty():
-				Collection.add_card(card_name, _quick_duel_card_type(card_name), "Quick Duel")
+			if card_name.is_empty():
+				return
+			var granted: String = RewardGranter.grant_named_card_reward(card_name, "Quick Duel")
+			if granted == "card":
+				granted_cards[card_name] = true
 				GameState.quick_duel_reveal_queue.append({
 					"kind": "card",
+					"card_name": card_name,
+				})
+			elif granted == "union":
+				GameState.quick_duel_reveal_queue.append({
+					"kind": "union",
 					"card_name": card_name,
 				})
 		"union_scroll":
@@ -10015,11 +10088,15 @@ func _grant_quick_duel_reward(reward: Dictionary) -> void:
 			var pack_name: String = str(reward.get("pack_name", "")).strip_edges()
 			if pack_name.is_empty():
 				return
-			var drawn: Array = ShopManager.draw_pack_free(pack_name)
+			var drawn: Array = ShopManager.draw_pack_free(pack_name, granted_cards)
 			var card_names: Array[String] = []
 			for c: Variant in drawn:
 				if c is Dictionary:
-					card_names.append(str((c as Dictionary).get("name", "")))
+					var drawn_name: String = str((c as Dictionary).get("name", "")).strip_edges()
+					if drawn_name.is_empty():
+						continue
+					card_names.append(drawn_name)
+					granted_cards[drawn_name] = true
 			var pack_dict: Dictionary = ShopManager.get_pack_by_name(pack_name)
 			GameState.quick_duel_reveal_queue.append({
 				"kind": "pack",
@@ -10027,13 +10104,6 @@ func _grant_quick_duel_reward(reward: Dictionary) -> void:
 				"pack_image": str(pack_dict.get("pack_image", "")),
 				"cards": card_names,
 			})
-
-func _quick_duel_card_type(card_name: String) -> String:
-	if CardDatabase.get_trap(card_name) != null:
-		return "trap"
-	if CardDatabase.get_tech(card_name) != null:
-		return "tech"
-	return "character"
 
 func _present_quick_duel_reward_reveal_anims() -> void:
 	GameState.quick_duel_reveal_skip_all = false
@@ -10058,12 +10128,26 @@ func _present_quick_duel_reward_reveal_anims() -> void:
 					continue
 				PackOpeningOverlay.open_single_card_reveal(self, card_name, true)
 				await _await_pack_opening_overlay()
+			"union":
+				var union_name: String = str(item.get("card_name", "")).strip_edges()
+				if union_name.is_empty():
+					continue
+				UnionScrollOpeningOverlay.open(self, union_name)
+				await _await_union_opening_overlay()
 
 
 func _await_pack_opening_overlay() -> void:
 	await get_tree().process_frame
 	for child: Node in get_children():
 		if child is PackOpeningOverlay:
+			await child.tree_exiting
+			return
+
+
+func _await_union_opening_overlay() -> void:
+	await get_tree().process_frame
+	for child: Node in get_children():
+		if child is UnionScrollOpeningOverlay:
 			await child.tree_exiting
 			return
 

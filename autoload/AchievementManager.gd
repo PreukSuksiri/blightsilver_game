@@ -4,6 +4,8 @@ extends Node
 signal achievement_unlocked(achievement_id: String)
 
 const DATA_PATH := "res://data/achievements.json"
+const DEFAULT_ACHIEVEMENT_ICON := "res://assets/icon/game_icon.png"
+const LEGACY_ACHIEVEMENT_ICON := "res://icon.svg"
 
 const AFFINITY_TO_ACHIEVEMENT := {
 	CharacterData.Affinity.DIVINE: "union_summon_divine",
@@ -100,6 +102,17 @@ func get_definitions() -> Array:
 
 func get_definition(achievement_id: String) -> Dictionary:
 	return (_definitions_by_id.get(achievement_id, {}) as Dictionary).duplicate(true)
+
+
+func get_icon_path(def: Dictionary) -> String:
+	var path: String = str(def.get("icon", "")).strip_edges()
+	if path.is_empty() or path == LEGACY_ACHIEVEMENT_ICON:
+		path = DEFAULT_ACHIEVEMENT_ICON
+	if ResourceLoader.exists(path):
+		return path
+	if ResourceLoader.exists(DEFAULT_ACHIEVEMENT_ICON):
+		return DEFAULT_ACHIEVEMENT_ICON
+	return ""
 
 
 func is_unlocked(achievement_id: String) -> bool:

@@ -225,11 +225,11 @@ func _apply_filter() -> void:
 		if show and abil_q != "":
 			show = entry["desc"].to_lower().find(abil_q) >= 0
 		if show and _filter_count != "all":
-			var cnt: int = Collection.get_card_count(entry["card_name"])
+			var owned_entry: bool = _is_gallery_collected(entry["card_name"], entry["card_type"])
 			if _filter_count == "owned":
-				show = cnt > 0
+				show = owned_entry
 			elif _filter_count == "unowned":
-				show = cnt == 0
+				show = not owned_entry
 		entry["node"].visible = show
 	_update_stats()
 
@@ -240,7 +240,7 @@ func _update_stats() -> void:
 		if not is_instance_valid(entry["node"]) or not entry["node"].visible:
 			continue
 		total += 1
-		if Collection.has_card(entry["card_name"]):
+		if _is_gallery_collected(entry["card_name"], entry["card_type"]):
 			owned += 1
 	stats_label.text = "%d / %d collected" % [owned, total]
 
@@ -358,6 +358,12 @@ func _build_all_cards_async(gen: int) -> void:
 # ─────────────────────────────────────────────────────────────
 # Tile constructors
 # ─────────────────────────────────────────────────────────────
+func _is_gallery_collected(card_name: String, card_type: String) -> bool:
+	if card_type == "union":
+		return SaveManager.is_union_unlocked(card_name)
+	return Collection.has_card(card_name)
+
+
 func _wrap_card_tile(card_node: Control, card_name: String, card_type: String) -> Control:
 	# Wrapper so our grey modulate doesn't get overridden by Card.gd's _apply_rarity
 	var wrapper := Control.new()
@@ -365,32 +371,35 @@ func _wrap_card_tile(card_node: Control, card_name: String, card_type: String) -
 	card_node.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	wrapper.add_child(card_node)
 
-	var count: int = Collection.get_card_count(card_name)
+	var collected: bool = _is_gallery_collected(card_name, card_type)
 
-	if count == 0:
+	if not collected:
 		wrapper.modulate = Color(0.60, 0.60, 0.68, 1.0)
 
-	var badge := Label.new()
-	badge.text = "×%d" % count
-	badge.add_theme_font_override("font", _badge_font)
-	badge.add_theme_font_size_override("font_size", 12)
-	badge.add_theme_color_override("font_color",
-		Color(1.0, 1.0, 1.0, 1.0) if count > 0 else Color(1.0, 1.0, 1.0, 1.0))
-	badge.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
-	badge.add_theme_constant_override("shadow_offset_x", 1)
-	badge.add_theme_constant_override("shadow_offset_y", 1)
-	badge.layout_mode = 1
-	badge.anchor_left   = 0.0; badge.anchor_right  = 1.0
-	badge.anchor_top    = 0.0; badge.anchor_bottom = 0.0
-	badge.offset_left   = 0.0;  badge.offset_right  = 0.0
-	badge.offset_top    = 2.0; badge.offset_bottom = 18.0
-	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	badge.vertical_alignment   = VERTICAL_ALIGNMENT_TOP
-	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	wrapper.add_child(badge)
+	if card_type != "union":
+		var count: int = Collection.get_card_count(card_name)
+		var badge := Label.new()
+		badge.text = "×%d" % count
+		badge.add_theme_font_override("font", _badge_font)
+		badge.add_theme_font_size_override("font_size", 12)
+		badge.add_theme_color_override("font_color",
+			Color(1.0, 1.0, 1.0, 1.0) if count > 0 else Color(1.0, 1.0, 1.0, 1.0))
+		badge.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.85))
+		badge.add_theme_constant_override("shadow_offset_x", 1)
+		badge.add_theme_constant_override("shadow_offset_y", 1)
+		badge.layout_mode = 1
+		badge.anchor_left   = 0.0; badge.anchor_right  = 1.0
+		badge.anchor_top    = 0.0; badge.anchor_bottom = 0.0
+		badge.offset_left   = 0.0;  badge.offset_right  = 0.0
+		badge.offset_top    = 2.0; badge.offset_bottom = 18.0
+		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		badge.vertical_alignment   = VERTICAL_ALIGNMENT_TOP
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		wrapper.add_child(badge)
 
 	# Scrap-one button: shown only for non-union cards with >1 copy
-	if card_type != "union" and count > 1:
+	var count: int = Collection.get_card_count(card_name)
+	if count > 1:
 		var scrap_btn := Button.new()
 		scrap_btn.text = "✂"
 		scrap_btn.tooltip_text = "Scrap duplicates (keep 1)"

@@ -100,7 +100,19 @@ func pick_random_rewards(tier: String) -> Array:
 		if _is_duplicate_in_offer(reward, offer):
 			continue
 		offer.append(reward)
-	return offer
+	return dedupe_rewards(offer)
+
+
+func dedupe_rewards(rewards: Array) -> Array:
+	var out: Array = []
+	for entry: Variant in rewards:
+		if not entry is Dictionary:
+			continue
+		var reward: Dictionary = (entry as Dictionary).duplicate(true)
+		if _is_duplicate_in_offer(reward, out):
+			continue
+		out.append(reward)
+	return out
 
 
 func resolve_random_card_entry(entry: Dictionary) -> Dictionary:
@@ -179,9 +191,19 @@ func repair_tier_rewards(tier: String, rewards: Array) -> Array:
 			continue
 		var reward: Dictionary = (entry as Dictionary).duplicate(true)
 		if str(reward.get("type", "")) == "card" and not reward_card_in_tier_band(tier, reward):
-			reward = _pick_random_card_for_tier(tier)
+			reward = _pick_replacement_card_for_tier(tier, out)
+		if _is_duplicate_in_offer(reward, out):
+			continue
 		out.append(reward)
 	return out
+
+
+func _pick_replacement_card_for_tier(tier: String, existing: Array) -> Dictionary:
+	for _attempt: int in range(24):
+		var candidate: Dictionary = _pick_random_card_for_tier(tier)
+		if not _is_duplicate_in_offer(candidate, existing):
+			return candidate
+	return {"type": "credits", "amount": 100}
 
 
 func _pick_random_card_for_tier(tier: String) -> Dictionary:

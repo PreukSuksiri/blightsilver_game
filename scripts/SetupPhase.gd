@@ -29,6 +29,9 @@ class DraggableCard extends TextureRect:
 	var card_type:    String   = ""
 	var on_hover_cb:  Callable = Callable()
 	var on_detail_cb: Callable = Callable()
+	var on_hold_drag_cb: Callable = Callable()
+	var on_hold_hover_begin_cb: Callable = Callable()
+	var on_hold_hover_exit_cb: Callable = Callable()
 
 	func _gui_input(event: InputEvent) -> void:
 		if event is InputEventMouseButton:
@@ -38,6 +41,8 @@ class DraggableCard extends TextureRect:
 					on_detail_cb.call(card_name, card_type)
 
 	func _get_drag_data(_pos: Vector2) -> Variant:
+		if on_hold_drag_cb.is_valid():
+			on_hold_drag_cb.call(true)
 		# Keep info panel updated while dragging
 		if on_hover_cb.is_valid():
 			on_hover_cb.call(card_name, card_type)
@@ -54,8 +59,16 @@ class DraggableCard extends TextureRect:
 		}
 
 	func _notification(what: int) -> void:
-		if what == NOTIFICATION_MOUSE_ENTER and on_hover_cb.is_valid():
-			on_hover_cb.call(card_name, card_type)
+		if what == NOTIFICATION_MOUSE_ENTER:
+			if on_hover_cb.is_valid():
+				on_hover_cb.call(card_name, card_type)
+			if on_hold_hover_begin_cb.is_valid():
+				on_hold_hover_begin_cb.call(self, card_name, card_type)
+		elif what == NOTIFICATION_MOUSE_EXIT:
+			if on_hold_hover_exit_cb.is_valid():
+				on_hold_hover_exit_cb.call()
+		elif what == NOTIFICATION_DRAG_END and on_hold_drag_cb.is_valid():
+			on_hold_drag_cb.call(false)
 
 # ─────────────────────────────────────────────────────────────
 # Inner class: grid cell (drop target + drag source + tap to preview)
@@ -70,6 +83,9 @@ class GridCell extends Panel:
 	var on_hover_cb:   Callable = Callable()
 	var on_detail_cb:  Callable = Callable()
 	var on_bluff_cb:   Callable = Callable()
+	var on_hold_drag_cb: Callable = Callable()
+	var on_hold_hover_begin_cb: Callable = Callable()
+	var on_hold_hover_exit_cb: Callable = Callable()
 	var locked:         bool        = false  # forced placement — cannot be moved or removed
 	var _card_tex:      TextureRect = null
 	var _emoticon_lbl:  Label       = null
@@ -109,6 +125,8 @@ class GridCell extends Panel:
 	func _get_drag_data(_pos: Vector2) -> Variant:
 		if occupied_name.is_empty() or locked:
 			return null
+		if on_hold_drag_cb.is_valid():
+			on_hold_drag_cb.call(true)
 		_drag_started = true
 		# Keep info panel updated while dragging
 		if on_hover_cb.is_valid():
@@ -151,9 +169,33 @@ class GridCell extends Panel:
 				on_unplace_cb.call(grid_row, grid_col)
 
 	func _notification(what: int) -> void:
-		if what == NOTIFICATION_MOUSE_ENTER and on_hover_cb.is_valid():
+		if what == NOTIFICATION_MOUSE_ENTER:
 			if not occupied_name.is_empty():
-				on_hover_cb.call(occupied_name, occupied_type)
+				if on_hover_cb.is_valid():
+					on_hover_cb.call(occupied_name, occupied_type)
+				if on_hold_hover_begin_cb.is_valid():
+					on_hold_hover_begin_cb.call(self, occupied_name, occupied_type)
+		elif what == NOTIFICATION_MOUSE_EXIT:
+			if on_hold_hover_exit_cb.is_valid():
+				on_hold_hover_exit_cb.call()
+		elif what == NOTIFICATION_DRAG_END and on_hold_drag_cb.is_valid():
+			on_hold_drag_cb.call(false)
+
+# ─────────────────────────────────────────────────────────────
+# Inner class: union tile with hover-hold (no lambda capture on rebuild)
+# ─────────────────────────────────────────────────────────────
+class UnionHoverTile extends TextureRect:
+	var union_name: String = ""
+	var on_hold_hover_begin_cb: Callable = Callable()
+	var on_hold_hover_exit_cb: Callable = Callable()
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_MOUSE_ENTER:
+			if on_hold_hover_begin_cb.is_valid() and not union_name.is_empty():
+				on_hold_hover_begin_cb.call(self, union_name, "union")
+		elif what == NOTIFICATION_MOUSE_EXIT:
+			if on_hold_hover_exit_cb.is_valid():
+				on_hold_hover_exit_cb.call()
 
 # ─────────────────────────────────────────────────────────────
 # State
@@ -192,6 +234,7 @@ var _info_card_type : String      = ""
 
 var _union_flow:  HBoxContainer  = null
 var _flash_tween: Tween          = null
+var _hover_hold_hint: CardHoverHoldHint = null
 var _flash_cells: Array          = []
 var _confirm_in_progress: bool = false
 var _setup_complete_emitted: bool = false
@@ -428,6 +471,21 @@ func _build_ui() -> void:
 		add_child(_p2p)
 		_sp_p2_portrait = _p2p
 
+	_hover_hold_hint = CardHoverHoldHint.new()
+	add_child(_hover_hold_hint)
+
+func _bind_hover_hold_drag(paused: bool) -> void:
+	if _hover_hold_hint != null:
+		_hover_hold_hint.set_pause(&"drag", paused)
+
+func _on_hold_hover_begin(control: Control, card_name: String, card_type: String) -> void:
+	if _hover_hold_hint != null:
+		_hover_hold_hint.begin(self, control, card_name, card_type)
+
+func _on_hold_hover_exit() -> void:
+	if _hover_hold_hint != null:
+		_hover_hold_hint.on_hover_exited()
+
 func _build_grid_panel(parent: Control) -> void:
 	var grid_w: float = CELL_W * GRID_N + float(CELL_GAP) * (GRID_N - 1) + 24.0
 	var grid_h: float = CELL_H * GRID_N + float(CELL_GAP) * (GRID_N - 1) + 24.0
@@ -492,6 +550,9 @@ func _build_grid_panel(parent: Control) -> void:
 			flash_cr.z_index      = 5
 			cell._flash_overlay   = flash_cr
 			cell.add_child(flash_cr)
+			cell.on_hold_drag_cb = Callable(self, "_bind_hover_hold_drag")
+			cell.on_hold_hover_begin_cb = Callable(self, "_on_hold_hover_begin")
+			cell.on_hold_hover_exit_cb = Callable(self, "_on_hold_hover_exit")
 			grid_cont.add_child(cell)
 			row_arr.append(cell)
 		_grid_cells.append(row_arr)
@@ -798,6 +859,8 @@ func _load_card_tex(card_name: String, card_type: String = "") -> Texture2D:
 # Gallery
 # ─────────────────────────────────────────────────────────────
 func _refresh_gallery() -> void:
+	if _hover_hold_hint != null:
+		_hover_hold_hint.end()
 	for ch in _gallery_flow.get_children():
 		ch.queue_free()
 	for card_name: String in _chars_remaining:
@@ -809,6 +872,8 @@ func _refresh_gallery() -> void:
 # Union panel
 # ─────────────────────────────────────────────────────────────
 func _refresh_union_panel() -> void:
+	if _hover_hold_hint != null:
+		_hover_hold_hint.end()
 	for ch in _union_flow.get_children():
 		ch.queue_free()
 	var deck: DeckData = _active_setup_deck()
@@ -832,7 +897,10 @@ func _make_union_tile(u: UnionData) -> Control:
 	wrap.custom_minimum_size = Vector2(GAL_W, GAL_H + 22.0)
 	wrap.add_theme_constant_override("separation", 2)
 
-	var img := TextureRect.new()
+	var img := UnionHoverTile.new()
+	img.union_name            = u.card_name
+	img.on_hold_hover_begin_cb = Callable(self, "_on_hold_hover_begin")
+	img.on_hold_hover_exit_cb  = Callable(self, "_on_hold_hover_exit")
 	img.custom_minimum_size   = Vector2(GAL_W, GAL_H)
 	img.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	img.expand_mode           = TextureRect.EXPAND_IGNORE_SIZE
@@ -877,6 +945,8 @@ func _make_union_tile(u: UnionData) -> Control:
 
 func _start_zone_flash(u: UnionData) -> void:
 	_stop_zone_flash()
+	if _hover_hold_hint != null:
+		_hover_hold_hint.set_pause(&"union_flash", true)
 	_show_card_info(u.card_name, "union")
 
 	_flash_cells = []
@@ -885,6 +955,8 @@ func _start_zone_flash(u: UnionData) -> void:
 			_flash_cells.append(_grid_cells[zv.x][zv.y] as GridCell)
 
 	if _flash_cells.is_empty():
+		if _hover_hold_hint != null:
+			_hover_hold_hint.set_pause(&"union_flash", false)
 		return
 
 	# 3 blink cycles (fade in + fade out), then auto-stop
@@ -913,6 +985,8 @@ func _stop_zone_flash() -> void:
 		if cell._flash_overlay != null:
 			cell._flash_overlay.color.a = 0.0
 	_flash_cells.clear()
+	if _hover_hold_hint != null:
+		_hover_hold_hint.set_pause(&"union_flash", false)
 
 func _add_gallery_card(card_name: String, card_type: String) -> void:
 	var wrap := VBoxContainer.new()
@@ -925,6 +999,7 @@ func _add_gallery_card(card_name: String, card_type: String) -> void:
 	dc.card_type             = card_type
 	dc.on_hover_cb           = _show_card_info
 	dc.on_detail_cb          = _open_card_detail
+	dc.on_hold_drag_cb       = Callable(self, "_bind_hover_hold_drag")
 	dc.custom_minimum_size   = Vector2(GAL_W, GAL_H)
 	dc.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	dc.expand_mode           = TextureRect.EXPAND_IGNORE_SIZE

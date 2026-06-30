@@ -30,6 +30,7 @@ static func open(parent: Node) -> void:
 
 
 func _ready() -> void:
+	SaveManager.reconcile_protagonist_selection()
 	_selected_id = SaveManager.quick_duel_protagonist_id
 	_selected_portrait = SaveManager.get_protagonist_portrait_path()
 	_build_ui()
@@ -338,8 +339,11 @@ func _current_pose_index(portraits: Array[String]) -> int:
 
 
 func _portrait_path_for_capsule(protagonist_id: String) -> String:
-	if protagonist_id == _selected_id and not _selected_portrait.is_empty():
-		return _selected_portrait
+	if protagonist_id == _selected_id:
+		if ProtagonistVault.portrait_belongs_to(protagonist_id, _selected_portrait) \
+				and not _selected_portrait.is_empty():
+			return _selected_portrait
+		return ProtagonistVault.get_first_unlocked_portrait(protagonist_id)
 	return ProtagonistVault.get_default_portrait(protagonist_id)
 
 
@@ -499,8 +503,14 @@ func _refresh_capsules() -> void:
 
 
 func _on_done() -> void:
+	if _selected_id.is_empty():
+		return
 	if not ProtagonistVault.is_pose_portrait_unlocked(_selected_id, _selected_portrait):
-		_selected_portrait = ProtagonistVault.get_first_unlocked_portrait(_selected_id)
+		GameDialog.accept_overlay(
+			self,
+			"Pose Locked",
+			"This pose is locked. Select an unlocked pose before saving.")
+		return
 	if _selected_portrait.is_empty():
 		_selected_portrait = ProtagonistVault.get_default_portrait(_selected_id)
 	SaveManager.set_protagonist(_selected_id, _selected_portrait)

@@ -550,8 +550,37 @@ func _reward_label(r: Dictionary) -> String:
 # Actions
 # ─────────────────────────────────────────────────────────────
 func _on_claim(mail_id: String) -> void:
-	var reward := MailboxManager.claim_mail(mail_id)
-	_apply_reward(reward)
+	var item: Dictionary = MailboxManager.claim_mail(mail_id)
+	if item.is_empty():
+		return
+	_apply_reward(item.get("reward", {}))
+	_refresh_mail()
+	_play_achievement_pose_celebration.call_deferred(item)
+
+
+func _play_achievement_pose_celebration(item: Dictionary) -> void:
+	if not MailboxManager.is_achievement_reward_mail(item):
+		return
+	var ach_id: String = str(item.get("achievement_id", "")).strip_edges()
+	if ach_id.is_empty():
+		return
+	if ProtagonistVault.get_pose_reward_for_achievement(ach_id).is_empty():
+		return
+	await _await_active_reveal_overlays()
+	AchievementCelebrationRunner.play(get_tree().root, ach_id, {}, [], "")
+
+
+func _await_active_reveal_overlays() -> void:
+	var root: Node = get_tree().root
+	while true:
+		var pending: Array[PackOpeningOverlay] = []
+		for child: Node in root.get_children():
+			if child is PackOpeningOverlay:
+				pending.append(child as PackOpeningOverlay)
+		if pending.is_empty():
+			return
+		for overlay: PackOpeningOverlay in pending:
+			await overlay.reveal_finished
 
 func _on_claim_all() -> void:
 	pass  # Hidden — credit mail uses Claim Credits; packs stay per-mail.
@@ -572,14 +601,24 @@ func _apply_reward(reward: Dictionary) -> void:
 		"coins", "credits":
 			Collection.add_credits(reward.get("amount", 0))
 		"card":
-			var card_name: String = reward.get("card_name", "")
-			if card_name != "":
-				Collection.add_card(card_name, _detect_card_type(card_name), "Mailbox Reward")
+			var card_name: String = str(reward.get("card_name", "")).strip_edges()
+			if card_name.is_empty():
+				return
+			var granted: String = RewardGranter.grant_named_card_reward(
+				card_name, "Mailbox Reward")
+			if granted == "union":
+				UnionScrollOpeningOverlay.open(get_tree().root, card_name)
+			elif granted == "card":
 				_reveal_single_card(card_name)
 		"stage_bonus_card":
-			var card_name: String = reward.get("card_name", "")
-			if card_name != "":
-				Collection.add_card(card_name, _detect_card_type(card_name), "Stage Bonus")
+			var card_name: String = str(reward.get("card_name", "")).strip_edges()
+			if card_name.is_empty():
+				return
+			var granted_sb: String = RewardGranter.grant_named_card_reward(
+				card_name, "Stage Bonus")
+			if granted_sb == "union":
+				UnionScrollOpeningOverlay.open(get_tree().root, card_name)
+			elif granted_sb == "card":
 				_reveal_single_card(card_name)
 		"booster_pack":
 			var pack_nm: String = reward.get("pack_name", "")
@@ -610,12 +649,6 @@ func _open_pack_anim(cards: Array, pack_name: String = "") -> void:
 		var pack_dict: Dictionary = ShopManager.get_pack_by_name(pack_name)
 		pack_img = str(pack_dict.get("pack_image", ""))
 	overlay_script.open(get_tree().root, pack_img, get_name.call(0), get_name.call(1), get_name.call(2))
-
-func _detect_card_type(card_name: String) -> String:
-	if CardDatabase.get_character(card_name) != null: return "character"
-	if CardDatabase.get_trap(card_name)      != null: return "trap"
-	if CardDatabase.get_tech(card_name)      != null: return "tech"
-	return "unknown"
 
 func _on_close() -> void:
 	emit_signal("closed")

@@ -263,7 +263,7 @@ func purchase_pack(pack_id: String) -> Dictionary:
 ## Draws cards from the named pack without spending credits,
 ## and adds them to Collection. Used for mailbox booster rewards.
 ## Falls back to a balanced 1-of-each draw if pack_name is unknown.
-func draw_pack_free(pack_name: String) -> Array:
+func draw_pack_free(pack_name: String, exclude_names: Dictionary = {}) -> Array:
 	var pack := get_pack_by_name(pack_name)
 	if pack.is_empty():
 		pack = {
@@ -274,7 +274,7 @@ func draw_pack_free(pack_name: String) -> Array:
 				{"type": "tech",      "count": 1},
 			],
 		}
-	var cards := _draw_cards(pack)
+	var cards := _draw_cards(pack, exclude_names)
 	for card: Dictionary in cards:
 		Collection.add_card(card["name"], card["type"], card["from_pack"])
 	GlobalStatManager.on_pack_opened()
@@ -283,12 +283,12 @@ func draw_pack_free(pack_name: String) -> Array:
 # ─────────────────────────────────────────────────────────────
 # Internal drawing
 # ─────────────────────────────────────────────────────────────
-func _draw_cards(pack: Dictionary) -> Array:
+func _draw_cards(pack: Dictionary, extra_exclude: Dictionary = {}) -> Array:
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
 	var pack_name: String = pack.get("name", "Unknown Pack")
 	var result: Array = []
-	var drawn_names: Dictionary = {}  # card_name → true; no duplicates within one opening
+	var drawn_names: Dictionary = extra_exclude.duplicate()  # card_name → true; no duplicates within one opening
 
 	# Pool-based draw (custom packs with weighted card_pool)
 	var card_pool: Variant = pack.get("card_pool", null)

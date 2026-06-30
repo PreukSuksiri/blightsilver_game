@@ -351,9 +351,12 @@ func load_data() -> void:
 				quick_duel_tier_rewards[tier] = [((val as Dictionary).duplicate(true))]
 
 	_migrate_quick_duel_offers()
-	_ensure_protagonist_defaults()
+	if reconcile_protagonist_selection():
+		save_data()
 	GlobalStatManager.load_from_save(parsed as Dictionary)
 	AchievementManager.load_from_save(parsed as Dictionary)
+	if RewardGranter.reconcile_claimed_union_formula_rewards():
+		save_data()
 
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery VN beat checkpoints (pre-exploration progress)
@@ -460,6 +463,7 @@ func get_protagonist_display_name() -> String:
 	return ProtagonistVault.get_display_name(quick_duel_protagonist_id)
 
 func get_protagonist_portrait_path() -> String:
+	reconcile_protagonist_selection()
 	return ProtagonistVault.get_portrait_or_default(
 		quick_duel_protagonist_id, quick_duel_protagonist_portrait)
 
@@ -467,6 +471,9 @@ func set_protagonist(protagonist_id: String, portrait_path: String) -> void:
 	var prev_id: String = quick_duel_protagonist_id
 	var new_id: String = ProtagonistVault.normalize_id(protagonist_id)
 	var resolved_portrait: String = portrait_path.strip_edges()
+	var portrait_owner: String = ProtagonistVault.get_protagonist_for_portrait(resolved_portrait)
+	if not portrait_owner.is_empty():
+		new_id = portrait_owner
 	if not ProtagonistVault.is_pose_portrait_unlocked(new_id, resolved_portrait):
 		resolved_portrait = ProtagonistVault.get_first_unlocked_portrait(new_id)
 	quick_duel_protagonist_id = new_id
@@ -477,6 +484,25 @@ func set_protagonist(protagonist_id: String, portrait_path: String) -> void:
 	if prev_id != new_id and ProtagonistVault.is_valid_id(prev_id):
 		GlobalStatManager.on_protagonist_switched()
 	save_data()
+
+func reconcile_protagonist_selection() -> bool:
+	var before_id: String = quick_duel_protagonist_id
+	var before_portrait: String = quick_duel_protagonist_portrait
+	_ensure_protagonist_defaults()
+	var owner: String = ProtagonistVault.get_protagonist_for_portrait(
+		quick_duel_protagonist_portrait)
+	if not owner.is_empty():
+		quick_duel_protagonist_id = owner
+		if not ProtagonistVault.is_pose_portrait_unlocked(
+				owner, quick_duel_protagonist_portrait):
+			quick_duel_protagonist_portrait = ProtagonistVault.get_first_unlocked_portrait(
+				owner)
+	elif not ProtagonistVault.portrait_belongs_to(
+			quick_duel_protagonist_id, quick_duel_protagonist_portrait):
+		quick_duel_protagonist_portrait = ProtagonistVault.get_first_unlocked_portrait(
+			quick_duel_protagonist_id)
+	return before_id != quick_duel_protagonist_id \
+		or before_portrait != quick_duel_protagonist_portrait
 
 func _ensure_protagonist_defaults() -> void:
 	if not ProtagonistVault.is_valid_id(quick_duel_protagonist_id):

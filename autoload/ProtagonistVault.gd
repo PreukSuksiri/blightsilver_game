@@ -124,7 +124,10 @@ func is_pose_unlocked(protagonist_id: String, pose_index: int) -> bool:
 		if not bool(p.get("locked", false)):
 			return true
 		var ach: String = str(p.get("unlock_achievement_id", "")).strip_edges()
-		return ach.is_empty() or AchievementManager.is_unlocked(ach)
+		if ach.is_empty():
+			return true
+		return AchievementManager.is_unlocked(ach) \
+				and MailboxManager.is_achievement_reward_claimed(ach)
 	return false
 
 
@@ -132,6 +135,9 @@ func is_pose_portrait_unlocked(protagonist_id: String, portrait_path: String) ->
 	var path: String = portrait_path.strip_edges()
 	if path.is_empty():
 		return true
+	var owner: String = get_protagonist_for_portrait(path)
+	if not owner.is_empty() and owner != normalize_id(protagonist_id):
+		return false
 	for pose: Variant in get_poses(protagonist_id):
 		if not pose is Dictionary:
 			continue
@@ -142,14 +148,38 @@ func is_pose_portrait_unlocked(protagonist_id: String, portrait_path: String) ->
 	return true
 
 
+func get_protagonist_for_portrait(portrait_path: String) -> String:
+	var path: String = portrait_path.strip_edges()
+	if path.is_empty():
+		return ""
+	for pid: String in get_protagonist_ids():
+		for pose: Variant in get_poses(pid):
+			if not pose is Dictionary:
+				continue
+			if resolve_pose_portrait_path(pid, pose as Dictionary) == path:
+				return pid
+	return ""
+
+
+func portrait_belongs_to(protagonist_id: String, portrait_path: String) -> bool:
+	var path: String = portrait_path.strip_edges()
+	if path.is_empty():
+		return true
+	var owner: String = get_protagonist_for_portrait(path)
+	if owner.is_empty():
+		return true
+	return owner == normalize_id(protagonist_id)
+
+
 func get_first_unlocked_portrait(protagonist_id: String) -> String:
-	for pose: Variant in get_poses(protagonist_id):
+	var id := normalize_id(protagonist_id)
+	for pose: Variant in get_poses(id):
 		if not pose is Dictionary:
 			continue
 		var idx: int = int((pose as Dictionary).get("index", 0))
-		if is_pose_unlocked(protagonist_id, idx):
-			return resolve_pose_portrait_path(protagonist_id, pose as Dictionary)
-	return get_default_portrait(protagonist_id)
+		if is_pose_unlocked(id, idx):
+			return resolve_pose_portrait_path(id, pose as Dictionary)
+	return get_default_portrait(id)
 
 
 func list_portraits(protagonist_id: String) -> Array[String]:
@@ -197,15 +227,26 @@ func get_pose_reward_label_for_achievement(achievement_id: String) -> String:
 
 
 func get_default_portrait(protagonist_id: String) -> String:
-	return get_first_unlocked_portrait(protagonist_id)
+	var id := normalize_id(protagonist_id)
+	for pose: Variant in get_poses(id):
+		if not pose is Dictionary:
+			continue
+		var resolved: String = resolve_pose_portrait_path(id, pose as Dictionary)
+		if resolved != "":
+			return resolved
+	var paths: Array[String] = []
+	_collect_pngs(get_portrait_dir(id), paths)
+	paths.sort()
+	return paths[0] if not paths.is_empty() else ""
 
 
 func get_portrait_or_default(protagonist_id: String, portrait_path: String) -> String:
+	var id: String = normalize_id(protagonist_id)
 	var chosen: String = portrait_path.strip_edges()
 	if chosen != "" and (ResourceLoader.exists(chosen) or FileAccess.file_exists(chosen)):
-		if is_pose_portrait_unlocked(protagonist_id, chosen):
+		if portrait_belongs_to(id, chosen) and is_pose_portrait_unlocked(id, chosen):
 			return chosen
-	return get_first_unlocked_portrait(protagonist_id)
+	return get_first_unlocked_portrait(id)
 
 
 func _collect_pngs(dir_path: String, out: Array[String]) -> void:

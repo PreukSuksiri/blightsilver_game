@@ -72,12 +72,20 @@ static func _find_overlay_host(from: Node) -> Node:
 
 static func open(parent: Node, card_name: String, card_type: String,
 		card_inst: Variant = null, show_quantity: bool = false) -> void:
+	open_and_return(parent, card_name, card_type, card_inst, show_quantity)
+
+
+static func open_and_return(parent: Node, card_name: String, card_type: String,
+		card_inst: Variant = null, show_quantity: bool = false,
+		pin_to_parent: bool = false) -> CardDetailOverlay:
 	var overlay := CardDetailOverlay.new()
 	overlay._card_inst          = card_inst
 	overlay._show_quantity      = show_quantity
 	overlay._card_name_for_bug  = card_name
+	var host := parent if pin_to_parent else _find_overlay_host(parent)
 	overlay.z_index = 101
-	var host := _find_overlay_host(parent)
+	if pin_to_parent and host is Control:
+		overlay.z_index = (host as Control).z_index + 50
 	host.add_child(overlay)
 
 	# Size card to 94 % of viewport height (almost full screen)
@@ -129,6 +137,17 @@ static func open(parent: Node, card_name: String, card_type: String,
 			overlay._add_gallery_buttons(card_name, card_type, card_w, card_h)
 
 	overlay._attach_card_status_overlay(card_w, card_h)
+	return overlay
+
+
+static func find_first_in_tree(root: Node) -> CardDetailOverlay:
+	if root is CardDetailOverlay:
+		return root as CardDetailOverlay
+	for child: Node in root.get_children():
+		var found: CardDetailOverlay = find_first_in_tree(child)
+		if found != null:
+			return found
+	return null
 
 # ─────────────────────────────────────────────────────────────
 # UI construction — static image path (full_cards/ PNG/JPG)

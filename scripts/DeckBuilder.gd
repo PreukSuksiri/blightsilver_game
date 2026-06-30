@@ -144,12 +144,24 @@ class FEDraggableCard extends TextureRect:
 	var card_name:    String = ""
 	var card_type:    String = ""
 	var _want_detail: bool   = false
+	var on_hold_drag_cb: Callable = Callable()
+	var on_hold_hover_begin_cb: Callable = Callable()
+	var on_hold_hover_exit_cb: Callable = Callable()
 	var fe_drag_ghost_show: Callable = Callable()
 	var fe_drag_ghost_hide: Callable = Callable()
 
 	func _notification(what: int) -> void:
-		if what == NOTIFICATION_DRAG_END and fe_drag_ghost_hide.is_valid():
-			fe_drag_ghost_hide.call()
+		if what == NOTIFICATION_MOUSE_ENTER:
+			if on_hold_hover_begin_cb.is_valid():
+				on_hold_hover_begin_cb.call(self, card_name, card_type)
+		elif what == NOTIFICATION_MOUSE_EXIT:
+			if on_hold_hover_exit_cb.is_valid():
+				on_hold_hover_exit_cb.call()
+		elif what == NOTIFICATION_DRAG_END:
+			if fe_drag_ghost_hide.is_valid():
+				fe_drag_ghost_hide.call()
+			if on_hold_drag_cb.is_valid():
+				on_hold_drag_cb.call(false)
 
 	func _gui_input(event: InputEvent) -> void:
 		if not (event is InputEventMouseButton): return
@@ -166,6 +178,8 @@ class FEDraggableCard extends TextureRect:
 
 	func _get_drag_data(_pos: Vector2) -> Variant:
 		_want_detail = false   # cancel long-press when drag starts
+		if on_hold_drag_cb.is_valid():
+			on_hold_drag_cb.call(true)
 		var drag_tex: Texture2D = texture if texture != null \
 			else FormationDragPreview._resolve_tex(card_name, null)
 		var drag_size := Vector2(88.0, 121.0)
@@ -191,6 +205,9 @@ class FEGridCell extends Panel:
 	var on_drop_cb:       Callable = Callable()
 	var on_unplace_cb:    Callable = Callable()
 	var on_drag_start_cb: Callable = Callable()
+	var on_hold_drag_cb:  Callable = Callable()
+	var on_hold_hover_begin_cb: Callable = Callable()
+	var on_hold_hover_exit_cb: Callable = Callable()
 	var _card_tex:    TextureRect = null
 	var _name_lbl:    Label       = null
 	var _want_detail: bool        = false
@@ -198,8 +215,17 @@ class FEGridCell extends Panel:
 	var fe_drag_ghost_hide: Callable = Callable()
 
 	func _notification(what: int) -> void:
-		if what == NOTIFICATION_DRAG_END and fe_drag_ghost_hide.is_valid():
-			fe_drag_ghost_hide.call()
+		if what == NOTIFICATION_MOUSE_ENTER:
+			if on_hold_hover_begin_cb.is_valid() and not occupied_name.is_empty():
+				on_hold_hover_begin_cb.call(self, occupied_name, occupied_type)
+		elif what == NOTIFICATION_MOUSE_EXIT:
+			if on_hold_hover_exit_cb.is_valid():
+				on_hold_hover_exit_cb.call()
+		elif what == NOTIFICATION_DRAG_END:
+			if fe_drag_ghost_hide.is_valid():
+				fe_drag_ghost_hide.call()
+			if on_hold_drag_cb.is_valid():
+				on_hold_drag_cb.call(false)
 
 	func occupy(p_name: String, p_type: String, tex: Texture2D) -> void:
 		occupied_name = p_name
@@ -208,6 +234,7 @@ class FEGridCell extends Panel:
 			_card_tex.texture = tex
 		if _name_lbl != null:
 			_name_lbl.text = p_name
+			_name_lbl.visible = not p_name.is_empty()
 		self_modulate = Color(1.0, 1.0, 1.0, 1.0)
 		if tex == null and not p_name.is_empty():
 			self_modulate = Color(0.55, 0.85, 1.0) if p_type == "character" \
@@ -220,12 +247,15 @@ class FEGridCell extends Panel:
 			_card_tex.texture = null
 		if _name_lbl != null:
 			_name_lbl.text = ""
+			_name_lbl.visible = false
 		self_modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 	func _get_drag_data(_pos: Vector2) -> Variant:
 		if occupied_name.is_empty():
 			return null
 		_want_detail = false   # cancel long-press when drag starts
+		if on_hold_drag_cb.is_valid():
+			on_hold_drag_cb.call(true)
 		# Capture values BEFORE the callback vacates this cell (vacate() clears occupied_name/tex)
 		var captured_name: String   = occupied_name
 		var captured_type: String   = occupied_type
@@ -266,11 +296,26 @@ class FEGridCell extends Panel:
 			if not occupied_name.is_empty() and on_unplace_cb.is_valid():
 				on_unplace_cb.call(grid_row, grid_col)
 
+# ── Formation Editor — union tile with hover-hold (no lambda capture on rebuild)
+class FEUnionHoverTile extends TextureRect:
+	var union_name: String = ""
+	var on_hold_hover_begin_cb: Callable = Callable()
+	var on_hold_hover_exit_cb: Callable = Callable()
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_MOUSE_ENTER:
+			if on_hold_hover_begin_cb.is_valid() and not union_name.is_empty():
+				on_hold_hover_begin_cb.call(self, union_name, "union")
+		elif what == NOTIFICATION_MOUSE_EXIT:
+			if on_hold_hover_exit_cb.is_valid():
+				on_hold_hover_exit_cb.call()
+
 func _ready() -> void:
 	_deferring_initial_load = true
 	_show_loading_blocker()
 	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	_connect_buttons()
+	_refresh_tutorial_locked_controls()
 	_setup_status_row()
 	_refresh_deck_select()
 	status_label.text = "Loading deck…"
@@ -353,6 +398,13 @@ func _connect_buttons() -> void:
 	view_full_card_btn.pressed.connect(func() -> void:
 		if _preview_card_name != "":
 			CardDetailOverlay.open(self, _preview_card_name, _preview_card_type))
+
+
+func _refresh_tutorial_locked_controls() -> void:
+	var tutorial_done: bool = SaveManager.is_attack_tutorial_complete()
+	new_deck_btn.visible = tutorial_done
+	duplicate_btn.visible = tutorial_done
+	delete_deck_btn.visible = tutorial_done
 
 # ── Deck selector ─────────────────────────────────────────────
 func _deck_status_message(deck: DeckData) -> String:
@@ -1259,6 +1311,7 @@ var _fe_flash_tween:      Tween          = null
 var _fe_drag_ghost:       Control        = null
 var _fe_drag_ghost_active: bool          = false
 var _fe_saved_snapshot:   String         = ""
+var _fe_hover_hold_hint: CardHoverHoldHint = null
 
 const _FE_CELL_W:   float = 100.0
 const _FE_CELL_H:   float = 137.0
@@ -1268,6 +1321,12 @@ const _FE_GAL_H:    float = 121.0
 const _FE_GAL_GAP:  int   = 6
 
 func _open_formation_editor() -> void:
+	if not SaveManager.is_attack_tutorial_complete():
+		GameDialog.accept_overlay(
+			self,
+			"Formation Unavailable",
+			"Formation is unavailable until you finish the tutorial.")
+		return
 	if _deferring_initial_load:
 		return
 	if current_deck == null:
@@ -1447,6 +1506,9 @@ func _open_formation_editor() -> void:
 			cell.on_drag_start_cb = _fe_on_cell_drag_start
 			cell.fe_drag_ghost_show = _fe_show_drag_ghost
 			cell.fe_drag_ghost_hide = _fe_hide_drag_ghost
+			cell.on_hold_drag_cb    = Callable(self, "_fe_bind_hover_hold_drag")
+			cell.on_hold_hover_begin_cb = Callable(self, "_fe_on_hold_hover_begin")
+			cell.on_hold_hover_exit_cb  = Callable(self, "_fe_on_hold_hover_exit")
 			cell.custom_minimum_size = Vector2(_FE_CELL_W, _FE_CELL_H)
 			var cell_sb := StyleBoxFlat.new()
 			cell_sb.bg_color                   = Color(0.08, 0.10, 0.24, 1.0)
@@ -1482,6 +1544,7 @@ func _open_formation_editor() -> void:
 			var lbl_bg := StyleBoxFlat.new()
 			lbl_bg.bg_color = Color(0.0, 0.0, 0.0, 0.65)
 			cell_lbl.add_theme_stylebox_override("normal", lbl_bg)
+			cell_lbl.visible = false
 			cell.add_child(cell_lbl)
 			cell._name_lbl = cell_lbl
 			grid_cont.add_child(cell)
@@ -1499,6 +1562,8 @@ func _open_formation_editor() -> void:
 	_fe_build_union_panel(right)
 
 	add_child(_fe_overlay)
+	_fe_hover_hold_hint = CardHoverHoldHint.new()
+	_fe_overlay.add_child(_fe_hover_hold_hint)
 	_fe_rebuild_list()
 	if current_deck != null and current_deck.formations.size() > 0:
 		var preferred: int = current_deck.get_preferred_formation_index()
@@ -1533,10 +1598,25 @@ func _fe_show_unsaved_warning() -> void:
 func _fe_close_overlay() -> void:
 	_fe_stop_zone_flash()
 	_fe_hide_drag_ghost()
+	if _fe_hover_hold_hint != null and is_instance_valid(_fe_hover_hold_hint):
+		_fe_hover_hold_hint.end()
 	_fe_saved_snapshot = ""
 	if _fe_overlay != null and is_instance_valid(_fe_overlay):
 		_fe_overlay.queue_free()
 	_fe_overlay = null
+	_fe_hover_hold_hint = null
+
+func _fe_bind_hover_hold_drag(paused: bool) -> void:
+	if _fe_hover_hold_hint != null:
+		_fe_hover_hold_hint.set_pause(&"drag", paused)
+
+func _fe_on_hold_hover_begin(control: Control, card_name: String, card_type: String) -> void:
+	if _fe_hover_hold_hint != null:
+		_fe_hover_hold_hint.begin(_fe_overlay, control, card_name, card_type, true)
+
+func _fe_on_hold_hover_exit() -> void:
+	if _fe_hover_hold_hint != null:
+		_fe_hover_hold_hint.on_hover_exited()
 
 func _fe_build_gallery_panel(parent: Control) -> void:
 	const TWO_ROW_H: float = (_FE_GAL_H + 22.0) * 2.0 + float(_FE_GAL_GAP) + 38.0
@@ -1615,6 +1695,8 @@ func _fe_build_union_panel(parent: Control) -> void:
 
 func _fe_refresh_gallery() -> void:
 	if _fe_gallery_flow == null: return
+	if _fe_hover_hold_hint != null:
+		_fe_hover_hold_hint.end()
 	for ch in _fe_gallery_flow.get_children():
 		ch.queue_free()
 	for card_name: String in _fe_chars_remaining:
@@ -1633,6 +1715,9 @@ func _fe_add_gallery_card(card_name: String, card_type: String) -> void:
 	dc.card_type             = card_type
 	dc.fe_drag_ghost_show    = _fe_show_drag_ghost
 	dc.fe_drag_ghost_hide    = _fe_hide_drag_ghost
+	dc.on_hold_drag_cb       = Callable(self, "_fe_bind_hover_hold_drag")
+	dc.on_hold_hover_begin_cb = Callable(self, "_fe_on_hold_hover_begin")
+	dc.on_hold_hover_exit_cb  = Callable(self, "_fe_on_hold_hover_exit")
 	dc.custom_minimum_size   = Vector2(_FE_GAL_W, _FE_GAL_H)
 	dc.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	dc.expand_mode           = TextureRect.EXPAND_IGNORE_SIZE
@@ -1656,6 +1741,8 @@ func _fe_add_gallery_card(card_name: String, card_type: String) -> void:
 
 func _fe_refresh_union_panel() -> void:
 	if _fe_union_flow == null: return
+	if _fe_hover_hold_hint != null:
+		_fe_hover_hold_hint.end()
 	for ch in _fe_union_flow.get_children():
 		ch.queue_free()
 	if current_deck == null: return
@@ -1671,7 +1758,10 @@ func _fe_make_union_tile(u: UnionData) -> Control:
 	wrap.custom_minimum_size = Vector2(_FE_GAL_W, _FE_GAL_H + 22.0)
 	wrap.add_theme_constant_override("separation", 2)
 
-	var img := TextureRect.new()
+	var img := FEUnionHoverTile.new()
+	img.union_name            = u.card_name
+	img.on_hold_hover_begin_cb = Callable(self, "_fe_on_hold_hover_begin")
+	img.on_hold_hover_exit_cb  = Callable(self, "_fe_on_hold_hover_exit")
 	img.custom_minimum_size   = Vector2(_FE_GAL_W, _FE_GAL_H)
 	img.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	img.expand_mode           = TextureRect.EXPAND_IGNORE_SIZE
@@ -1716,11 +1806,15 @@ func _fe_make_union_tile(u: UnionData) -> Control:
 
 func _fe_start_zone_flash(u: UnionData) -> void:
 	_fe_stop_zone_flash()
+	if _fe_hover_hold_hint != null:
+		_fe_hover_hold_hint.set_pause(&"union_flash", true)
 	_fe_flash_cells = []
 	for zv: Vector2i in u.union_zone:
 		if zv.x >= 0 and zv.x < 5 and zv.y >= 0 and zv.y < 5:
 			_fe_flash_cells.append(_fe_grid_cells[zv.x][zv.y] as FEGridCell)
 	if _fe_flash_cells.is_empty():
+		if _fe_hover_hold_hint != null:
+			_fe_hover_hold_hint.set_pause(&"union_flash", false)
 		return
 	_fe_flash_tween = _fe_overlay.create_tween().set_loops(3)
 	var first: bool = true
@@ -1753,6 +1847,8 @@ func _fe_stop_zone_flash() -> void:
 		if flash_cr != null and is_instance_valid(flash_cr):
 			flash_cr.color.a = 0.0
 	_fe_flash_cells.clear()
+	if _fe_hover_hold_hint != null:
+		_fe_hover_hold_hint.set_pause(&"union_flash", false)
 
 func _fe_on_card_dropped(r: int, c: int, data: Dictionary) -> void:
 	if _fe_selected < 0: return
@@ -2103,6 +2199,12 @@ func _on_export_file_selected(path: String) -> void:
 
 # ── Save / Back ───────────────────────────────────────────────
 func _on_save() -> void:
+	if not SaveManager.is_attack_tutorial_complete():
+		GameDialog.accept_overlay(
+			self,
+			"Save Unavailable",
+			"Save is unavailable until you finish the tutorial.")
+		return
 	if current_deck == null or not current_deck.is_valid():
 		return
 	if _deck_cost_is_high(current_deck):

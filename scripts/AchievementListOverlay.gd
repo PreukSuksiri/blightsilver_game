@@ -157,8 +157,8 @@ func _make_row(id: String, def: Dictionary) -> PanelContainer:
 	icon.custom_minimum_size = Vector2(48, 48)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	var icon_path: String = str(def.get("icon", ""))
-	if icon_path != "" and ResourceLoader.exists(icon_path):
+	var icon_path: String = AchievementManager.get_icon_path(def)
+	if not icon_path.is_empty():
 		icon.texture = load(icon_path)
 	h.add_child(icon)
 

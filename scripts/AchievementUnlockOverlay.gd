@@ -92,8 +92,8 @@ func _build_ui() -> void:
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var def: Dictionary = AchievementManager.get_definition(_achievement_id)
-	var icon_path: String = str(def.get("icon", ""))
-	if icon_path != "" and ResourceLoader.exists(icon_path):
+	var icon_path: String = AchievementManager.get_icon_path(def)
+	if not icon_path.is_empty():
 		icon.texture = load(icon_path)
 	root.add_child(icon)
 
