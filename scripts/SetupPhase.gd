@@ -201,6 +201,7 @@ class UnionHoverTile extends TextureRect:
 # State
 # ─────────────────────────────────────────────────────────────
 var current_setup_player: int = 0
+var _setup_working_deck: DeckData = null
 var _chars_remaining: Array = []
 var _traps_remaining: Array = []
 var _grid_cells: Array = []          # [row][col] -> GridCell
@@ -250,6 +251,7 @@ func _ready() -> void:
 # ─────────────────────────────────────────────────────────────
 func start_setup(player_index: int) -> void:
 	current_setup_player = player_index
+	_setup_working_deck = null
 	_confirm_in_progress = false
 	_setup_complete_emitted = false
 	_clear_tutorial_formation_lock()
@@ -274,10 +276,22 @@ func start_setup(player_index: int) -> void:
 
 	_reset_grid()
 
-	var deck: DeckData = _active_setup_deck()
+	var deck: DeckData = null
+	if _uses_player_collection_deck():
+		var active: DeckData = SaveManager.get_active_deck()
+		if active != null:
+			_setup_working_deck = active.duplicate_deck() as DeckData
+			SaveManager.sanitize_deck_for_collection(_setup_working_deck)
+			deck = _setup_working_deck
+	else:
+		deck = _active_setup_deck()
+
 	if deck == null or not deck.is_valid():
-		_instr_lbl.text = "No valid deck found. Please build a deck first."
-		_confirm_btn.disabled = true
+		if _uses_player_collection_deck():
+			_show_invalid_deck_abort_dialog()
+		else:
+			_instr_lbl.text = "No valid deck found. Please build a deck first."
+			_confirm_btn.disabled = true
 		return
 
 	_chars_remaining = deck.characters.duplicate()
@@ -1137,7 +1151,35 @@ func _active_setup_deck() -> DeckData:
 	if GameState.game_mode == GameState.GameMode.VS_AI and current_setup_player == 0 \
 			and GameState.battle_player_deck != null:
 		return GameState.battle_player_deck as DeckData
+	if _setup_working_deck != null:
+		return _setup_working_deck
 	return SaveManager.get_active_deck()
+
+func _uses_player_collection_deck() -> bool:
+	if GameState.game_mode == GameState.GameMode.VS_AI and current_setup_player == 1 \
+			and GameState.battle_ai_deck != null:
+		return false
+	if GameState.game_mode == GameState.GameMode.VS_AI and current_setup_player == 0 \
+			and GameState.battle_player_deck != null:
+		return false
+	return true
+
+func _show_invalid_deck_abort_dialog() -> void:
+	if GameDialog.has_open_overlay(self):
+		return
+	_instr_lbl.text = "No valid deck found. Please build a deck first."
+	_confirm_btn.disabled = true
+	var body: String = (
+		"Some cards in this deck are not in your collection, "
+		+ "and the deck no longer meets requirements.\n\n"
+		+ SaveManager.get_active_deck_warning_message())
+	GameDialog.accept_overlay(
+		self,
+		"Deck Not Ready",
+		body,
+		"OK",
+		func() -> void:
+			get_tree().change_scene_to_file(SaveManager.get_setup_abort_return_scene()))
 
 func _formation_bar_left_offset() -> float:
 	if current_setup_player != 0:

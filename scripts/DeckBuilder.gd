@@ -2011,50 +2011,7 @@ func _fe_load_card_tex(card_name: String) -> Texture2D:
 func _purge_stale_formation_placements() -> int:
 	if current_deck == null:
 		return 0
-	var char_pool: Dictionary = {}
-	var trap_pool: Dictionary = {}
-	for card_name: Variant in current_deck.characters:
-		var n: String = str(card_name)
-		char_pool[n] = int(char_pool.get(n, 0)) + 1
-	for card_name: Variant in current_deck.traps:
-		var n: String = str(card_name)
-		trap_pool[n] = int(trap_pool.get(n, 0)) + 1
-
-	var removed: int = 0
-	for f: Variant in current_deck.formations:
-		if not f is Dictionary:
-			continue
-		var fd: Dictionary = f as Dictionary
-		var pls: Array = fd.get("placements", []) as Array
-		var used_chars: Dictionary = {}
-		var used_traps: Dictionary = {}
-		for i in range(pls.size() - 1, -1, -1):
-			if not pls[i] is Dictionary:
-				pls.remove_at(i)
-				removed += 1
-				continue
-			var p: Dictionary = pls[i] as Dictionary
-			var n: String = str(p.get("name", "")).strip_edges()
-			var t: String = str(p.get("type", ""))
-			var keep: bool = false
-			if not n.is_empty():
-				if t == "character":
-					var avail: int = int(char_pool.get(n, 0))
-					var used: int = int(used_chars.get(n, 0))
-					if used < avail:
-						keep = true
-						used_chars[n] = used + 1
-				else:
-					var avail: int = int(trap_pool.get(n, 0))
-					var used: int = int(used_traps.get(n, 0))
-					if used < avail:
-						keep = true
-						used_traps[n] = used + 1
-			if not keep:
-				pls.remove_at(i)
-				removed += 1
-		fd["placements"] = pls
-	return removed
+	return current_deck.purge_stale_formation_placements()
 
 ## Remove a card from every formation's placements (called when a card is deleted from the deck).
 func _fe_purge_card_from_formations(card_name: String) -> void:
@@ -2185,6 +2142,30 @@ func _on_import_file_selected(path: String) -> void:
 	_refresh_deck_select()
 	_load_deck(SaveManager.active_deck_index)
 	status_label.text = "Imported %d deck(s)." % count
+	var stripped: Dictionary = result.get("stripped", {}) as Dictionary
+	if SaveManager.sanitize_report_has_changes(stripped):
+		GameDialog.accept_overlay(
+			self,
+			"Deck Imported",
+			_format_import_stripped_message(count, stripped),
+			"OK")
+
+func _format_import_stripped_message(imported_count: int, stripped: Dictionary) -> String:
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append("Imported %d deck(s)." % imported_count)
+	var removed: Array = []
+	for key: String in ["removed_characters", "removed_traps", "removed_techs"]:
+		removed.append_array(stripped.get(key, []) as Array)
+	if not removed.is_empty():
+		lines.append(
+			"Removed %d card(s) you don't own: %s." % [removed.size(), ", ".join(removed)])
+	var deduped: Array = []
+	for key: String in ["deduped_characters", "deduped_traps", "deduped_techs"]:
+		deduped.append_array(stripped.get(key, []) as Array)
+	if not deduped.is_empty():
+		lines.append(
+			"Removed %d duplicate copy(ies): %s." % [deduped.size(), ", ".join(deduped)])
+	return "\n\n".join(lines)
 
 func _on_export_file_selected(path: String) -> void:
 	_flush_current_deck_to_manager()

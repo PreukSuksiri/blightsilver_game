@@ -101,6 +101,53 @@ func duplicate_deck() -> Resource:
 	copy.load_from_dict(to_dict())
 	return copy
 
+## Remove placements that reference cards no longer in the deck (or exceed deck copies).
+func purge_stale_formation_placements() -> int:
+	var char_pool: Dictionary = {}
+	var trap_pool: Dictionary = {}
+	for card_name: Variant in characters:
+		var n: String = str(card_name)
+		char_pool[n] = int(char_pool.get(n, 0)) + 1
+	for card_name: Variant in traps:
+		var n: String = str(card_name)
+		trap_pool[n] = int(trap_pool.get(n, 0)) + 1
+
+	var removed: int = 0
+	for f: Variant in formations:
+		if not f is Dictionary:
+			continue
+		var fd: Dictionary = f as Dictionary
+		var pls: Array = fd.get("placements", []) as Array
+		var used_chars: Dictionary = {}
+		var used_traps: Dictionary = {}
+		for i in range(pls.size() - 1, -1, -1):
+			if not pls[i] is Dictionary:
+				pls.remove_at(i)
+				removed += 1
+				continue
+			var p: Dictionary = pls[i] as Dictionary
+			var n: String = str(p.get("name", "")).strip_edges()
+			var t: String = str(p.get("type", ""))
+			var keep: bool = false
+			if not n.is_empty():
+				if t == "character":
+					var avail: int = int(char_pool.get(n, 0))
+					var used: int = int(used_chars.get(n, 0))
+					if used < avail:
+						keep = true
+						used_chars[n] = used + 1
+				else:
+					var avail: int = int(trap_pool.get(n, 0))
+					var used: int = int(used_traps.get(n, 0))
+					if used < avail:
+						keep = true
+						used_traps[n] = used + 1
+			if not keep:
+				pls.remove_at(i)
+				removed += 1
+		fd["placements"] = pls
+	return removed
+
 ## VN battle beats / campaign enemy config use "tech"; deckbuilder uses "techs".
 func to_vn_deck_dict() -> Dictionary:
 	return {

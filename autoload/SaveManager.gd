@@ -76,6 +76,171 @@ func get_active_deck() -> DeckData:
 		return null
 	return decks[clampi(active_deck_index, 0, decks.size() - 1)] as DeckData
 
+func is_active_deck_ready() -> bool:
+	var deck := get_active_deck()
+	return deck != null and deck.is_valid()
+
+func get_active_deck_warning_message() -> String:
+	var deck := get_active_deck()
+	if deck == null:
+		return "No deck saved. Please build a deck first."
+	return deck.validation_message()
+
+func show_deck_not_ready_overlay(parent: Node) -> void:
+	if GameDialog.has_open_overlay(parent):
+		return
+	GameDialog.accept_overlay(
+		parent,
+		"Deck Not Ready",
+		get_active_deck_warning_message(),
+		"OK")
+
+func get_setup_abort_return_scene() -> String:
+	if GameState.quick_duel_active:
+		return "res://scenes/quick_duel.tscn"
+	if GameState.game_mode == GameState.GameMode.CAMPAIGN:
+		return "res://scenes/campaign_map.tscn"
+	if GameState.game_mode == GameState.GameMode.EXPLORATION \
+			or GameState.vn_launched_from_exploration:
+		return ExplorationManager.EXPLORATION_PLAYER_SCENE
+	if DailyDungeonManager.is_story_session():
+		return DailyDungeonManager.DUNGEON_MAP_SCENE
+	return "res://scenes/main_menu.tscn"
+
+func sanitize_deck_for_collection(deck: DeckData) -> Dictionary:
+	var report: Dictionary = _empty_sanitize_report()
+	if deck == null:
+		return report
+
+	var deduped_chars: Array = []
+	var deduped_traps: Array = []
+	var deduped_techs: Array = []
+	var new_chars: Array = _dedupe_card_names(deck.characters, deduped_chars)
+	var new_traps: Array = _dedupe_card_names(deck.traps, deduped_traps)
+	var new_techs: Array = _dedupe_card_names(deck.techs, deduped_techs)
+	if new_chars.size() != deck.characters.size():
+		report["changed"] = true
+		deck.characters = new_chars
+	if new_traps.size() != deck.traps.size():
+		report["changed"] = true
+		deck.traps = new_traps
+	if new_techs.size() != deck.techs.size():
+		report["changed"] = true
+		deck.techs = new_techs
+	report["deduped_characters"] = deduped_chars
+	report["deduped_traps"] = deduped_traps
+	report["deduped_techs"] = deduped_techs
+
+	var removed_chars: Array = []
+	var removed_traps: Array = []
+	var removed_techs: Array = []
+	deck.characters = _filter_owned_cards(deck.characters, "character", removed_chars)
+	deck.traps = _filter_owned_cards(deck.traps, "trap", removed_traps)
+	deck.techs = _filter_owned_cards(deck.techs, "tech", removed_techs)
+	if not removed_chars.is_empty() or not removed_traps.is_empty() or not removed_techs.is_empty():
+		report["changed"] = true
+	report["removed_characters"] = removed_chars
+	report["removed_traps"] = removed_traps
+	report["removed_techs"] = removed_techs
+
+	var placements_removed: int = deck.purge_stale_formation_placements()
+	if placements_removed > 0:
+		report["changed"] = true
+		report["removed_placements"] = placements_removed
+	return report
+
+func _empty_sanitize_report() -> Dictionary:
+	return {
+		"removed_characters": [],
+		"removed_traps": [],
+		"removed_techs": [],
+		"deduped_characters": [],
+		"deduped_traps": [],
+		"deduped_techs": [],
+		"removed_placements": 0,
+		"changed": false,
+	}
+
+func _dedupe_card_names(cards: Array, deduped_out: Array) -> Array:
+	var seen: Dictionary = {}
+	var result: Array = []
+	for card_name: Variant in cards:
+		var n: String = str(card_name).strip_edges()
+		if n.is_empty():
+			continue
+		if seen.has(n):
+			if n not in deduped_out:
+				deduped_out.append(n)
+			continue
+		seen[n] = true
+		result.append(n)
+	return result
+
+func _filter_owned_cards(cards: Array, slot: String, removed_out: Array) -> Array:
+	var result: Array = []
+	for card_name: Variant in cards:
+		var n: String = str(card_name).strip_edges()
+		if _card_allowed_in_collection(n, slot):
+			result.append(n)
+		elif not n.is_empty() and n not in removed_out:
+			removed_out.append(n)
+	return result
+
+func _card_allowed_in_collection(card_name: String, slot: String) -> bool:
+	var n: String = card_name.strip_edges()
+	if n.is_empty():
+		return false
+	if Collection.get_card_count(n) <= 0:
+		return false
+	match slot:
+		"character":
+			var data: CharacterData = CardDatabase.get_character(n)
+			if data == null:
+				return false
+			if demo_mode and not data.include_in_demo:
+				return false
+			return true
+		"trap":
+			var trap_data: TrapData = CardDatabase.get_trap(n)
+			if trap_data == null:
+				return false
+			if demo_mode and not trap_data.include_in_demo:
+				return false
+			return true
+		"tech":
+			var tech_data: TechCardData = CardDatabase.get_tech(n)
+			if tech_data == null:
+				return false
+			if demo_mode and not tech_data.include_in_demo:
+				return false
+			return true
+	return false
+
+func _merge_sanitize_reports(into: Dictionary, report: Dictionary) -> void:
+	for key: String in [
+		"removed_characters", "removed_traps", "removed_techs",
+		"deduped_characters", "deduped_traps", "deduped_techs",
+	]:
+		var bucket: Array = into.get(key, []) as Array
+		for name: Variant in report.get(key, []):
+			var n: String = str(name)
+			if n not in bucket:
+				bucket.append(n)
+		into[key] = bucket
+	into["removed_placements"] = int(into.get("removed_placements", 0)) \
+		+ int(report.get("removed_placements", 0))
+	if bool(report.get("changed", false)):
+		into["changed"] = true
+
+func sanitize_report_has_changes(report: Dictionary) -> bool:
+	for key: String in [
+		"removed_characters", "removed_traps", "removed_techs",
+		"deduped_characters", "deduped_traps", "deduped_techs",
+	]:
+		if not (report.get(key, []) as Array).is_empty():
+			return true
+	return int(report.get("removed_placements", 0)) > 0
+
 func set_active_deck_index(index: int) -> void:
 	active_deck_index = clampi(index, 0, decks.size() - 1)
 	save_data()
@@ -104,6 +269,7 @@ func reset_title_cheats() -> void:
 
 # ── CRUD ─────────────────────────────────────────────────────
 func save_deck(deck: DeckData) -> void:
+	sanitize_deck_for_collection(deck)
 	for i in range(decks.size()):
 		if decks[i].deck_name == deck.deck_name:
 			decks[i] = deck
@@ -130,6 +296,7 @@ func duplicate_deck(index: int) -> void:
 	if index < 0 or index >= decks.size():
 		return
 	var copy: DeckData = decks[index].duplicate_deck()
+	sanitize_deck_for_collection(copy)
 	copy.deck_name = decks[index].deck_name + " (Copy)"
 	decks.append(copy)
 	active_deck_index = decks.size() - 1
@@ -172,11 +339,14 @@ func import_decks_from_payload(payload: Dictionary) -> Dictionary:
 	if not fmt.is_empty() and fmt != DECK_EXPORT_FORMAT:
 		return {"ok": false, "error": "Unrecognized deck export format.", "imported": 0}
 	var imported_count: int = 0
+	var stripped_report: Dictionary = _empty_sanitize_report()
 	for item: Variant in (decks_raw as Array):
 		if not item is Dictionary:
 			continue
 		var deck: DeckData = DeckData.new()
 		deck.load_from_dict(item as Dictionary)
+		var report: Dictionary = sanitize_deck_for_collection(deck)
+		_merge_sanitize_reports(stripped_report, report)
 		deck.deck_name = make_unique_deck_name(deck.deck_name)
 		decks.append(deck)
 		imported_count += 1
@@ -184,7 +354,7 @@ func import_decks_from_payload(payload: Dictionary) -> Dictionary:
 		return {"ok": false, "error": "No valid decks found in file.", "imported": 0}
 	active_deck_index = decks.size() - imported_count
 	save_data()
-	return {"ok": true, "error": "", "imported": imported_count}
+	return {"ok": true, "error": "", "imported": imported_count, "stripped": stripped_report}
 
 func make_unique_deck_name(base: String) -> String:
 	var name: String = base.strip_edges()
@@ -266,13 +436,19 @@ func load_data() -> void:
 			deck.load_from_dict(d)
 			decks.append(deck)
 
-	var mailbox_data = parsed.get("mailbox", null)
-	if mailbox_data is Dictionary:
-		MailboxManager.load_from_dict(mailbox_data)
-
 	var collection_data = parsed.get("collection", null)
 	if collection_data is Dictionary:
 		Collection.load_from_dict(collection_data)
+
+	var decks_sanitized: bool = false
+	for deck: DeckData in decks:
+		var report: Dictionary = sanitize_deck_for_collection(deck)
+		if bool(report.get("changed", false)):
+			decks_sanitized = true
+
+	var mailbox_data = parsed.get("mailbox", null)
+	if mailbox_data is Dictionary:
+		MailboxManager.load_from_dict(mailbox_data)
 
 	var campaign_data = parsed.get("campaign", null)
 	if campaign_data is Dictionary:
@@ -354,7 +530,7 @@ func load_data() -> void:
 				quick_duel_tier_rewards[tier] = [((val as Dictionary).duplicate(true))]
 
 	_migrate_quick_duel_offers()
-	if reconcile_protagonist_selection():
+	if decks_sanitized or reconcile_protagonist_selection():
 		save_data()
 	GlobalStatManager.load_from_save(parsed as Dictionary)
 	AchievementManager.load_from_save(parsed as Dictionary)

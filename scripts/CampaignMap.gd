@@ -408,7 +408,11 @@ func _on_action_pressed() -> void:
 	if node == null:
 		return
 	match node.node_type:
-		CampaignManager.NodeType.BATTLE: _show_prebattle_vn(node)
+		CampaignManager.NodeType.BATTLE:
+			if not SaveManager.is_active_deck_ready():
+				SaveManager.show_deck_not_ready_overlay(self)
+				return
+			_show_prebattle_vn(node)
 		CampaignManager.NodeType.STORY:  _show_story_vn(node)
 		CampaignManager.NodeType.REWARD: _claim_reward(node)
 

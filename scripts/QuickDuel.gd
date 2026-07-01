@@ -692,6 +692,9 @@ func _begin_guided_tutorial_battle(battle_path: String) -> void:
 
 
 func launch_vault_duel(tier: String) -> void:
+	if not SaveManager.is_active_deck_ready():
+		SaveManager.show_deck_not_ready_overlay(self)
+		return
 	GlobalStatManager.on_first_touch("quick_duel_battle")
 	var entry_id: String = SaveManager.get_quick_duel_preview(tier)
 	if entry_id.is_empty():

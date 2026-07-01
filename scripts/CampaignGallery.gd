@@ -248,6 +248,8 @@ func _add_saved_progress_badge(frame: Panel, save_kind: String) -> void:
 func _on_chapter_pressed(card: Dictionary) -> void:
 	if _is_chapter_locked(card):
 		return
+	if not _require_deck_ready_for_chapter():
+		return
 	var vn_path: String = str(card.get("vn_scene", "")).strip_edges()
 	if vn_path.is_empty():
 		return
@@ -347,6 +349,8 @@ func _show_restart_exploration_warning_dialog(
 
 
 func _resume_exploration(graph_path: String) -> void:
+	if not _require_deck_ready_for_chapter():
+		return
 	ExplorationManager.resume_saved_exploration(
 		graph_path,
 		"res://scenes/main_menu.tscn")
@@ -393,6 +397,8 @@ func _show_restart_warning_dialog(
 
 
 func _resume_story_dungeon(dungeon_id: String) -> void:
+	if not _require_deck_ready_for_chapter():
+		return
 	DailyDungeonManager.resume_story_dungeon(dungeon_id)
 	get_tree().change_scene_to_file(DUNGEON_MAP_SCENE)
 
@@ -401,6 +407,8 @@ func _play_vn(json_path: String, fresh_start: bool = true, card: Dictionary = {}
 	_play_vn_async(json_path, fresh_start, card)
 
 func _play_vn_async(json_path: String, fresh_start: bool = true, card: Dictionary = {}) -> void:
+	if not _require_deck_ready_for_chapter():
+		return
 	GlobalStatManager.on_first_touch("story_vn")
 	if json_path.find("ch0_s1_pre_DEMO_PART1") >= 0:
 		GlobalStatManager.on_first_touch("prologue_capsule")
@@ -432,6 +440,13 @@ func _is_chapter_locked(d: Dictionary) -> bool:
 	if prereq_vn == "":
 		return false
 	return not SaveManager.is_gallery_chapter_completed(prereq_vn)
+
+
+func _require_deck_ready_for_chapter() -> bool:
+	if SaveManager.is_active_deck_ready():
+		return true
+	SaveManager.show_deck_not_ready_overlay(self)
+	return false
 
 
 func _prerequisite_display_name(prereq_vn: String) -> String:

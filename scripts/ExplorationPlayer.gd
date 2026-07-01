@@ -22,6 +22,8 @@ const CHAT_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_e
 const INFO_ICON: String        = "res://assets/textures/ui/decorations/ui_icon_exploration_info.png"
 const DISSOLVE_FONT: Font      = preload("res://assets/fonts/digit-tech.7.ttf")
 const COMPASS_SIZE: float  = 110.0  # icon width/height in pixels
+const INFO_ICON_SIZE: float = 140.0  # info HUD icon — slightly larger than COMPASS_SIZE
+const CHAT_ICON_SIZE: float = 128.0  # chat HUD icon — slightly larger than COMPASS_SIZE
 const COMPASS_IDLE_GLOW_PAD: float = 40.0   # soft halo extends this far beyond compass icon
 const COMPASS_IDLE_HINT_DELAY: float = 10.0 # seconds of no interaction before compass hint
 const RADIAL_RADIUS: float = 210.0  # distance from center to item midpoint
@@ -578,18 +580,20 @@ func _build_compass_system() -> void:
 	_radial_menu_layer.add_child(_setting_hit)
 
 	# ── Info icon (+1×spacing) ────────────────────────────────
-	_info_idle_pos = Vector2(vp.x * 0.5 + ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
+	_info_idle_pos = Vector2(
+		vp.x * 0.5 + ICON_SPACING - INFO_ICON_SIZE * 0.5,
+		bottom_y + COMPASS_SIZE * 0.5 - INFO_ICON_SIZE * 0.5)
 
 	_info_icon          = TextureRect.new()
 	_info_icon.position = _info_idle_pos
-	_info_icon.size     = Vector2(COMPASS_SIZE, COMPASS_SIZE)
+	_info_icon.size     = Vector2(INFO_ICON_SIZE, INFO_ICON_SIZE)
 	_info_icon.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 	_info_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	if ResourceLoader.exists(INFO_ICON):
 		_info_icon.texture = load(INFO_ICON) as Texture2D
 	_compass_root.add_child(_info_icon)
 
-	_info_hit = _make_icon_hit_button(_info_idle_pos)
+	_info_hit = _make_icon_hit_button(_info_idle_pos, INFO_ICON_SIZE)
 	_info_hit.z_index = 10
 	_info_hit.pressed.connect(_on_info_clicked)
 	_radial_menu_layer.add_child(_info_hit)
@@ -612,18 +616,20 @@ func _build_compass_system() -> void:
 	_radial_menu_layer.add_child(_inv_hit)
 
 	# ── Chat icon (−1×spacing) ────────────────────────────────
-	_chat_idle_pos = Vector2(vp.x * 0.5 - ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
+	_chat_idle_pos = Vector2(
+		vp.x * 0.5 - ICON_SPACING - CHAT_ICON_SIZE * 0.5,
+		bottom_y + COMPASS_SIZE * 0.5 - CHAT_ICON_SIZE * 0.5)
 
 	_chat_icon          = TextureRect.new()
 	_chat_icon.position = _chat_idle_pos
-	_chat_icon.size     = Vector2(COMPASS_SIZE, COMPASS_SIZE)
+	_chat_icon.size     = Vector2(CHAT_ICON_SIZE, CHAT_ICON_SIZE)
 	_chat_icon.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 	_chat_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	if ResourceLoader.exists(CHAT_ICON):
 		_chat_icon.texture = load(CHAT_ICON) as Texture2D
 	_compass_root.add_child(_chat_icon)
 
-	_chat_hit = _make_icon_hit_button(_chat_idle_pos)
+	_chat_hit = _make_icon_hit_button(_chat_idle_pos, CHAT_ICON_SIZE)
 	_chat_hit.z_index = 10
 	_chat_hit.pressed.connect(_on_chat_clicked)
 	_radial_menu_layer.add_child(_chat_hit)
@@ -631,9 +637,9 @@ func _build_compass_system() -> void:
 	# Empty-chat overlay label
 	_chat_empty_lbl = Label.new()
 	_chat_empty_lbl.layout_mode = 0
-	var chat_lbl_w: float = COMPASS_SIZE + 120.0
+	var chat_lbl_w: float = CHAT_ICON_SIZE + 120.0
 	_chat_empty_lbl.position = Vector2(
-		_chat_idle_pos.x + COMPASS_SIZE * 0.5 - chat_lbl_w * 0.5,
+		_chat_idle_pos.x + CHAT_ICON_SIZE * 0.5 - chat_lbl_w * 0.5,
 		_chat_idle_pos.y - 36.0)
 	_chat_empty_lbl.size = Vector2(chat_lbl_w, 30.0)
 	_chat_empty_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -671,10 +677,10 @@ func _build_compass_system() -> void:
 	_compass_root.add_child(_inv_empty_lbl)
 
 ## Build an invisible full-size hit button for an icon at given position.
-func _make_icon_hit_button(pos: Vector2) -> Button:
+func _make_icon_hit_button(pos: Vector2, size: float = COMPASS_SIZE) -> Button:
 	var btn := Button.new()
 	btn.position     = pos
-	btn.size         = Vector2(COMPASS_SIZE, COMPASS_SIZE)
+	btn.size         = Vector2(size, size)
 	btn.flat         = true
 	btn.mouse_filter = Control.MOUSE_FILTER_STOP
 	var sb := StyleBoxEmpty.new()

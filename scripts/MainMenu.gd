@@ -138,27 +138,11 @@ func _refresh_deck_status() -> void:
 	deck_status_label.add_theme_color_override("font_color",
 		Color(0.4, 0.9, 1.0) if valid else Color(1.0, 0.5, 0.3))
 
-func _deck_warning_message() -> String:
-	var deck: DeckData = SaveManager.get_active_deck()
-	if deck == null:
-		return "No deck saved. Please build a deck first."
-	return deck.validation_message()
-
 func _is_deck_ready() -> bool:
-	var deck: DeckData = SaveManager.get_active_deck()
-	return deck != null and deck.is_valid()
+	return SaveManager.is_active_deck_ready()
 
 func _show_deck_warning() -> void:
-	if GameDialog.has_open_overlay(self):
-		return
-	GameDialog.accept_overlay(
-		self,
-		"Deck Not Ready",
-		_deck_warning_message(),
-		"OK",
-		Callable(),
-		GameDialog.DEFAULT_MIN_WIDTH,
-		20)
+	SaveManager.show_deck_not_ready_overlay(self)
 
 
 func _check_achievement_reward_mail_notice() -> void:
