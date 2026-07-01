@@ -43,35 +43,12 @@ func _build_ui() -> void:
 	bg.color = Color(0.07, 0.07, 0.09)
 	add_child(bg)
 
-	# ── Back button ───────────────────────────────────────────
-	var back_btn := Button.new()
-	back_btn.text = "← BACK"
-	back_btn.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	back_btn.offset_left   = 20.0
-	back_btn.offset_top    = 20.0
-	back_btn.offset_right  = 140.0
-	back_btn.offset_bottom = 52.0
-	back_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
-	back_btn.add_theme_font_size_override("font_size", 16)
-	back_btn.pressed.connect(queue_free)
-	add_child(back_btn)
-
-	# ── Title ─────────────────────────────────────────────────
-	var title := Label.new()
-	title.text = "CAMPAIGN"
-	title.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	title.offset_top    = 20.0
-	title.offset_bottom = 62.0
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_override("font", CHIVO_FONT)
-	title.add_theme_font_size_override("font_size", 32)
-	title.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
-	add_child(title)
+	MenuScreenHeader.build_top_bar(self, "CAMPAIGN", queue_free)
 
 	# ── Scroll container ──────────────────────────────────────
 	var scroll := ScrollContainer.new()
 	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
-	scroll.offset_top    = 76.0
+	scroll.offset_top    = MenuScreenHeader.HEADER_HEIGHT + 8.0
 	scroll.offset_left   = 32.0
 	scroll.offset_right  = -32.0
 	scroll.offset_bottom = -24.0

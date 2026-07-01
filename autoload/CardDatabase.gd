@@ -316,8 +316,8 @@ func _load_characters() -> void:
 
 		["Gamma Emitter", CharacterData.Affinity.BIO, 20, 15, 220,
 			CharacterData.AbilityType.ATK_DEF_BONUS_VS_AFFINITY,
-			{"affinity": CharacterData.Affinity.NATURE, "atk": 10, "def": 10},
-			"+10 ATK&DEF vs Nature",
+			{"affinity": CharacterData.Affinity.NATURE, "atk": 10, "def": 10, "mutagen_atk": 5},
+			"+10 ATK&DEF vs Nature. With Mutagen Flag : +5 ATK",
 			CharacterData.Rarity.COMMON,
 			true],
 
@@ -392,8 +392,8 @@ func _load_characters() -> void:
 
 		["Hairpin Assassin", CharacterData.Affinity.ANIMA, 25, 15, 300,
 			CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_ATK_BOOST,
-			{"cost": 100, "atk": 10},
-			"In Reckoning, you can pay 100 Crystal for +10 ATK bonus",
+			{"cost": 800, "atk": 10},
+			"In Reckoning, you can pay 800 Crystal for +10 ATK bonus",
 			CharacterData.Rarity.COMMON,
 			true],
 
@@ -607,8 +607,8 @@ func _load_characters() -> void:
 
 		["Miner Probe", CharacterData.Affinity.COSMIC, 10, 10, 200,
 			CharacterData.AbilityType.CRYSTAL_GAIN_ON_DEAD_END_ATTACK,
-			{"amount": 20},
-			"Gain 20 Crystals upon hitting Dead End",
+			{"amount": 200},
+			"Gain 200 Crystals upon hitting Dead End",
 			CharacterData.Rarity.COMMON],
 
 		["Moon Rover", CharacterData.Affinity.COSMIC, 15, 20, 200,
@@ -762,7 +762,7 @@ func _load_characters() -> void:
 			"+10 ATK vs Nature",
 			CharacterData.Rarity.COMMON],
 
-		["Rotten Shrieker", CharacterData.Affinity.BIO, 50, 30, 450,
+		["Rotten Shrieker", CharacterData.Affinity.BIO, 40, 30, 450,
 			CharacterData.AbilityType.PERM_ATK_LOSS_PER_OWN_TURN,
 			{"amount": 10},
 			"Without Mutagen Flag : -10 ATK permanently at the end of your turn.",
@@ -1265,7 +1265,7 @@ func _load_traps() -> void:
 
 		["Street Joke", 0, TrapData.TrapEffectType.REVEAL_OWN_GAIN_CRYSTAL,
 			{"amount": 100},
-			"You reveal 1 of your cell, they receive 100 Crystal",
+			"You reveal 1 of your cell, you receive 100 Crystal",
 			CharacterData.Rarity.COMMON,
 			true],
 

@@ -2,6 +2,8 @@ extends Control
 
 signal closed
 
+var include_casual_mode: bool = true
+
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
@@ -53,21 +55,22 @@ func _ready() -> void:
 		func(v: float) -> void: AudioManager.set_sfx_volume(v)
 	))
 
-	var casual_row := HBoxContainer.new()
-	casual_row.add_theme_constant_override("separation", 10)
-	var casual_lbl := Label.new()
-	casual_lbl.text = "Casual Mode"
-	casual_lbl.custom_minimum_size.x = 110
-	casual_lbl.add_theme_font_size_override("font_size", 12)
-	casual_lbl.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0))
-	casual_row.add_child(casual_lbl)
-	var casual_chk := CheckBox.new()
-	casual_chk.button_pressed = SaveManager.is_casual_mode()
-	casual_chk.text = "Enemy starts with 3000 crystals"
-	casual_chk.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	casual_chk.toggled.connect(func(on: bool) -> void: SaveManager.set_casual_mode(on))
-	casual_row.add_child(casual_chk)
-	vbox.add_child(casual_row)
+	if include_casual_mode:
+		var casual_row := HBoxContainer.new()
+		casual_row.add_theme_constant_override("separation", 10)
+		var casual_lbl := Label.new()
+		casual_lbl.text = "Casual Mode"
+		casual_lbl.custom_minimum_size.x = 110
+		casual_lbl.add_theme_font_size_override("font_size", 12)
+		casual_lbl.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0))
+		casual_row.add_child(casual_lbl)
+		var casual_chk := CheckBox.new()
+		casual_chk.button_pressed = SaveManager.is_casual_mode()
+		casual_chk.text = "Enemy starts with 3000 crystals"
+		casual_chk.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		casual_chk.toggled.connect(func(on: bool) -> void: SaveManager.set_casual_mode(on))
+		casual_row.add_child(casual_chk)
+		vbox.add_child(casual_row)
 
 	# Close button
 	var close_btn := Button.new()

@@ -49,9 +49,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "It's 50th exam this year. I'm sick of it"
-		}
+		"text": "It's the 50th exam this year. I'm sick of it"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -65,7 +63,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": "You're full of dramas. It's only been 14"
+		"text": "You're full of drama. It's only been 14."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -121,7 +119,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": "I hope it's not a black company like in an Ecchi Manga"
+		"text": "I hope it's not a black company"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -150,9 +148,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "Before starting your own company, let's finished the sample exam first, how's it's going? Everyone has already gone home, let's hurry and finish it."
-		}
+		"text": "Before starting your own company, let's finish the sample exam first, how's it going? Everyone has already gone home, let's hurry and finish it."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -238,13 +234,53 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_annoyed.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": "Too much detail? Don't try to trick me. You have photographic memory since you were kid."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_annoyed.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": "You're just too lazy and use that talent to remember all that manga characters' dialogues."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
 				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_neutral.png"
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "Did you use my kernel formula? The result will differ based on the kernel we used."
-		}
+		"text": "OK, here is the lecture. That result will differ based on the kernel we used."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_neutral.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": "If we use the same kernel formula, it would give the same result. Did you use my kernel formula, Nex? "
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -257,9 +293,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "Kernel...? What kernel...?"
-		}
+		"text": "Kernel...? What kernel...?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -302,9 +336,34 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "You dumb ass. You have been copying the author's kernel from year 1995"
-		}
+		"text": "You dumb ass. Where have you copied this formula into your head? Tell me the name of the book now."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
+			}
+		],
+		"speaker": "Nex",
+		"text": "Umm.... The Nature of Statistical Learning Theory...? Year 1995 may be..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/vn_char_mayu_cheerful.png"
+			}
+		],
+		"speaker": "Mayu",
+		"text": "At least you managed to remember the book's name and year, good boy!"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",
@@ -318,9 +377,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": {
-			"en": "I suggest you copy the kernel formula from my notebook instead. The one that you've borrowed me. The one with a lot of bookmarks. Did you bring it?"
-		}
+		"text": "I suggest you copy the formula from my notebook instead. The one that you've borrowed from me. The one with a lot of bookmarks. Did you bring it?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_library_light_on.png",

@@ -90,6 +90,7 @@ var _union_summoned_this_duel: Array[int] = [0, 0]
 var _setup_p1_resolved: bool = false
 var _setup_p2_resolved: bool = false
 var _battle_begun: bool = false
+var _was_tutorial_battle: bool = false
 var _handoff_resolving: bool = false
 # Tech card fan (bottom of screen, active player only)
 var _tech_fan: Control = null
@@ -4151,7 +4152,7 @@ func _build_options_button() -> void:
 	opts_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(opts_lbl)
 
-	_options_btn.mouse_entered.connect(func(): _show_hud_tooltip("Game options (concede, settings)"))
+	_options_btn.mouse_entered.connect(func(): _show_hud_tooltip("Game options (concede, rules)"))
 	_options_btn.mouse_exited.connect(func(): _restore_game_guide())
 
 func _on_options_btn_pressed() -> void:
@@ -4488,7 +4489,6 @@ func _show_options_panel() -> void:
 		[
 			{"text": "Battle Log", "callback": _show_battle_log_panel},
 			{"text": "Rules", "callback": _show_rules_panel},
-			{"text": "Settings", "callback": _show_settings_panel},
 			{"text": "Surrender", "callback": _show_surrender_confirm},
 		],
 		"Close")
@@ -4669,29 +4669,6 @@ func _show_rules_panel() -> void:
 		"[b]WINNING[/b]\nForce your opponent's Crystals to 0, or leave them with no valid moves."
 	)
 	scroll.add_child(rtl)
-
-	_add_back_btn(vbox, dimmer)
-
-# ─────────────────────────────────────────────────────────────
-# Settings sub-panel (placeholder)
-# ─────────────────────────────────────────────────────────────
-
-func _show_settings_panel() -> void:
-	var ovl: Dictionary = _make_sub_overlay(380.0, 220.0)
-	var dimmer: Control = ovl["dimmer"]
-	var vbox: VBoxContainer = ovl["vbox"]
-
-	var header := Label.new()
-	header.text = "Settings"
-	GameDialog.style_title_label(header)
-	vbox.add_child(header)
-
-	var placeholder := Label.new()
-	placeholder.text = "Settings coming soon."
-	GameDialog.style_body_label(placeholder)
-	placeholder.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	placeholder.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	vbox.add_child(placeholder)
 
 	_add_back_btn(vbox, dimmer)
 
@@ -7697,12 +7674,9 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 		if player == opponent and card.card_type != "dead_end" and not card.face_up:
 			GameState.reveal_card_by_ability(player, pos.x, pos.y)
 			var _sj_gain: int = turn_manager._pending_street_joke_crystal
-			var _sj_attacker: int = turn_manager._pending_street_joke_attacker
-			if _sj_attacker >= 0:
-				GameState.gain_crystals(_sj_attacker, _sj_gain, "trap")
-			GameState.post_message("Street Joke: Revealed %s — attacker gains %d Crystals!" % [card.card_name, _sj_gain])
+			GameState.gain_crystals(player, _sj_gain, "trap")
+			GameState.post_message("Street Joke: Revealed %s — you gain %d Crystals!" % [card.card_name, _sj_gain])
 			turn_manager._pending_street_joke_crystal = 0
-			turn_manager._pending_street_joke_attacker = -1
 			_finish_trap_target_selection()
 		return
 
@@ -9658,10 +9632,13 @@ func _process(delta: float) -> void:
 func _on_game_over(winner: int) -> void:
 	# Dismiss guide box immediately so it doesn't bleed into VN or win screen
 	_hide_guide()
+	_was_tutorial_battle = TutorialBattleManager.is_active
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.stop()
 		_update_reveal_buttons()
 		_update_tutorial_hud_lock()
+	if _was_tutorial_battle:
+		SaveManager.mark_attack_tutorial_complete()
 
 	# ── AI vs AI mode: hand off to AIvsAIManager which logs + returns to config ──
 	if GameState.game_mode == GameState.GameMode.AI_VS_AI:
@@ -9800,9 +9777,32 @@ func _on_game_over(winner: int) -> void:
 			SaveManager.mark_wishlist_cta_shown()
 			GameState.pending_wishlist_cta = false
 
+	if not player_won:
+		await _maybe_show_casual_mode_loss_tip()
+
 # ─────────────────────────────────────────────────────────────
 # Game-over helpers
 # ─────────────────────────────────────────────────────────────
+
+func _maybe_show_casual_mode_loss_tip() -> void:
+	if _was_tutorial_battle:
+		return
+	if SaveManager.is_casual_mode_tip_shown():
+		return
+	if GlobalStatManager.get_int("duel_loss") < 1:
+		return
+	SaveManager.mark_casual_mode_tip_shown()
+	var done: Array[bool] = [false]
+	GameDialog.accept_overlay(
+		self,
+		"TIPS",
+		"You can always turn on \"Casual Mode\" in Setting Menu to make duels easier",
+		"OK",
+		func() -> void: done[0] = true,
+		GameDialog.DEFAULT_MIN_WIDTH,
+		500)
+	while not done[0]:
+		await get_tree().process_frame
 
 func _resolve_endgame_background_path(is_win_screen: bool) -> String:
 	var protagonist_id: String = GameState.quick_duel_protagonist_id.strip_edges()
@@ -9873,20 +9873,20 @@ func _check_almost_win_bgm() -> void:
 		return
 	if not ResourceLoader.exists(_resolve_almost_win_bgm_path()):
 		return
+	# Only trigger when the OPPONENT (player 1 / AI) is low — not the human.
 	var triggered := false
-	for p: int in range(2):
-		if GameState.crystals[p] <= 1200:
-			triggered = true
-			break
+	const OPPONENT: int = 1
+	if GameState.crystals[OPPONENT] <= 1200:
+		triggered = true
+	else:
 		var count: int = 0
 		for r: int in range(GameState.GRID_SIZE):
 			for c: int in range(GameState.GRID_SIZE):
-				var inst: GameState.CardInstance = GameState.get_card(p, r, c)
+				var inst: GameState.CardInstance = GameState.get_card(OPPONENT, r, c)
 				if inst.card_type != "dead_end":
 					count += 1
-		if count <= 5:
+		if count <= 3:
 			triggered = true
-			break
 	if triggered:
 		_almost_win_bgm_active = true
 		var almost_path: String = _resolve_almost_win_bgm_path()

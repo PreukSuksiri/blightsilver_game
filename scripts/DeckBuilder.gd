@@ -313,7 +313,8 @@ class FEUnionHoverTile extends TextureRect:
 func _ready() -> void:
 	_deferring_initial_load = true
 	_show_loading_blocker()
-	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
+	MenuScreenHeader.style_title(get_node("TitleLabel") as Label)
+	MenuScreenHeader.style_close_button(close_btn)
 	_connect_buttons()
 	_refresh_tutorial_locked_controls()
 	_setup_status_row()
@@ -1031,11 +1032,12 @@ func _add_union_materials_to_deck(union_name: String) -> void:
 		return
 
 	var assigned: Array = []
-	var missing_conds: Array = UnionDatabase.deck_unmatched_conditions(
+	var pending_conds: Array = UnionDatabase.deck_unmatched_conditions(
 		current_deck.characters, u.material_conditions)
+	var still_missing: Array = []
 	var used_in_assign: Array = []
 
-	for cond: Dictionary in missing_conds:
+	for cond: Dictionary in pending_conds:
 		var candidates: Array = []
 		for cname: String in CardDatabase.get_all_character_names():
 			if Collection.get_card_count(cname) == 0:
@@ -1051,7 +1053,7 @@ func _add_union_materials_to_deck(union_name: String) -> void:
 				var data: CharacterData = CardDatabase.get_character(cname)
 				candidates.append({"name": cname, "cost": data.crystal_cost})
 		if candidates.is_empty():
-			missing_conds.append(cond)
+			still_missing.append(cond)
 		else:
 			candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 				return a["cost"] < b["cost"] if a["cost"] != b["cost"] else a["name"] < b["name"])
@@ -1059,10 +1061,10 @@ func _add_union_materials_to_deck(union_name: String) -> void:
 			assigned.append(chosen)
 			used_in_assign.append(chosen)
 
-	if missing_conds.size() > 0:
+	if still_missing.size() > 0:
 		var found_str: String = ", ".join(assigned) if assigned.size() > 0 else "none"
 		var missing_str: String = ""
-		for cond: Dictionary in missing_conds:
+		for cond: Dictionary in still_missing:
 			missing_str += "\n  • " + _describe_cond(cond)
 		GameDialog.accept_overlay(
 			self,
@@ -1216,7 +1218,8 @@ func _make_union_right_tile(u: UnionData) -> Control:
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
 	tile.tooltip_text = "%s  ATK %d / DEF %d  %d◆" % [u.card_name, u.base_atk, u.base_def, u.summon_cost]
-	var want_detail := false
+	var want_detail_ref: Array = [false]
+	var union_name: String = u.card_name
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
 			return
@@ -1225,18 +1228,18 @@ func _make_union_right_tile(u: UnionData) -> Control:
 			return
 		if mb.pressed:
 			if mb.double_click:
-				want_detail = false
-				CardDetailOverlay.open(self, u.card_name, "union")
+				want_detail_ref[0] = false
+				CardDetailOverlay.open(self, union_name, "union")
 			else:
-				want_detail = true
+				want_detail_ref[0] = true
 				tile.get_tree().create_timer(0.5).timeout.connect(func() -> void:
-					if want_detail:
-						want_detail = false
-						CardDetailOverlay.open(self, u.card_name, "union"))
+					if want_detail_ref[0]:
+						want_detail_ref[0] = false
+						CardDetailOverlay.open(self, union_name, "union"))
 		else:
-			if want_detail:
-				want_detail = false
-				_show_preview("union", u.card_name))
+			if want_detail_ref[0]:
+				want_detail_ref[0] = false
+				_show_preview("union", union_name))
 	return tile
 
 # ── Prologue lock overlay ────────────────────────────────────

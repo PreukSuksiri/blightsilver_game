@@ -11,7 +11,9 @@ const PANEL_VIEWPORT_MARGIN: Vector2 = Vector2(32.0, 40.0)
 const PANEL_MAX_SIZE: Vector2 = Vector2(1680.0, 900.0)
 
 @onready var panel: Panel                  = $Panel
+@onready var shop_vbox: VBoxContainer      = $Panel/VBox
 @onready var credits_label: Label         = $Panel/VBox/Header/CreditsLabel
+@onready var subtitle_label: Label        = $Panel/VBox/Header/SubtitleLabel
 @onready var pack_scroll: ScrollContainer = $Panel/VBox/PackScroll
 @onready var pack_row: HBoxContainer      = $Panel/VBox/PackScroll/PackRow
 @onready var result_overlay: Control      = $ResultOverlay
@@ -23,7 +25,14 @@ var _card_size: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	Collection.credits_changed.connect(_on_credits_changed)
-	$Panel/VBox/Header/CloseBtn.pressed.connect(_on_close)
+	var header_rebuild: Dictionary = MenuScreenHeader.rebuild_panel_header(
+		$Panel/VBox/Header,
+		$Panel/VBox/Header/TitleLabel,
+		$Panel/VBox/Header/CloseBtn)
+	var close_btn: Button = header_rebuild.get("close_btn", null) as Button
+	if close_btn != null:
+		close_btn.pressed.connect(_on_close)
+	_relocate_shop_header_extras()
 	result_ok_btn.pressed.connect(func() -> void: result_overlay.hide())
 	result_overlay.hide()
 	_apply_panel_to_viewport()
@@ -33,6 +42,17 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED and is_inside_tree():
 		call_deferred("_on_viewport_resized")
+
+func _relocate_shop_header_extras() -> void:
+	if is_instance_valid(subtitle_label):
+		subtitle_label.queue_free()
+	if is_instance_valid(credits_label):
+		if credits_label.get_parent():
+			credits_label.get_parent().remove_child(credits_label)
+		credits_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		credits_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		shop_vbox.add_child(credits_label)
+		shop_vbox.move_child(credits_label, pack_scroll.get_index())
 
 func _apply_panel_to_viewport() -> void:
 	var vp: Vector2 = get_viewport_rect().size
@@ -242,9 +262,10 @@ func _make_pack_card(pack: Dictionary, card_size: Vector2) -> Control:
 		vbox.add_child(vc_btn)
 
 	var req_chapter: String = str(pack.get("unlock_requires_chapter", "")).strip_edges()
-	if not shop_unlocked and not req_chapter.is_empty():
+	var needs_tutorial: bool = bool(pack.get("unlock_requires_tutorial", false))
+	if not shop_unlocked and (needs_tutorial or not req_chapter.is_empty()):
 		var lock_lbl := Label.new()
-		lock_lbl.text = ShopManager.get_chapter_unlock_hint(req_chapter)
+		lock_lbl.text = ShopManager.get_pack_unlock_hint(pack)
 		lock_lbl.add_theme_font_size_override("font_size", 11)
 		lock_lbl.add_theme_color_override("font_color", Color(0.95, 0.72, 0.35, 0.9))
 		lock_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER

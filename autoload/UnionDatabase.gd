@@ -472,7 +472,7 @@ func _load_unions() -> void:
 		_conds([{"affinity": A.COSMIC, "min_cost": 500}, {"affinity": A.COSMIC}], 12))
 
 	_add("Giant Mining Pod", A.COSMIC, 20, 80, 500, R.UNCOMMON,
-		AB.CRYSTAL_GAIN_ON_DEAD_END_ATTACK, {"amount": 200}, "If this card attacks a Dead End, receive 200 Crystals",
+		AB.CRYSTAL_GAIN_ON_DEAD_END_ATTACK, {"amount": 900}, "If this card attacks a Dead End, receive 900 Crystals",
 		"If this card attacks a Dead End, receive ??? Crystals",
 		"1 Miner probe + 1 Cosmic + 500 cost",
 		"1 ??? + 1 ??? + 500 cost",
@@ -505,7 +505,7 @@ func _load_unions() -> void:
 	_add("Team Galaxos", A.COSMIC, 85, 85, 800, R.RARE,
 		AB.UNION_SUMMON_COSMIC_ANIMA_IMMUNITY, {},
 		"Summoned: Until the end of foe’s turn, Cosmic and Anima units on your side are not destroyed",
-		"Summoned: Until the end of foe’s turn, ??? units on your side are ???",
+		"Summoned: Until the end of foe’s turn ??? are not destroyed",
 		"1 Cosmic (≥ 800 cost) + 1 Anima (≥ 800 cost) + 800 cost",
 		"1 ??? + 1 ??? + 800 cost",
 		_z([[0,1], [0,2], [0,3], [1,1], [2,1], [2,3], [2,4], [3,1], [3,2], [3,3]]),

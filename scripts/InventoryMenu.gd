@@ -57,31 +57,21 @@ func _build_ui() -> void:
 	panel.add_child(root_vbox)
 
 	# ── Header ───────────────────────────────────
-	var header := HBoxContainer.new()
-	header.add_theme_constant_override("separation", 0)
-	header.custom_minimum_size = Vector2(0, 48)
+	var header := Control.new()
+	header.custom_minimum_size = Vector2(0, int(MenuScreenHeader.HEADER_HEIGHT))
 	root_vbox.add_child(header)
 
 	var title := Label.new()
-	title.text = "INVENTORY"
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 18)
-	title.add_theme_color_override("font_color", Color(0.82, 0.93, 1.0))
-	title.add_theme_font_override("font", FontManager.make_font("primary", 400))
-	var title_margin := MarginContainer.new()
-	title_margin.add_theme_constant_override("margin_left", 18)
-	title_margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title_margin.add_child(title)
-	header.add_child(title_margin)
+	MenuScreenHeader.style_title(title, "INVENTORY")
+	var title_center := CenterContainer.new()
+	title_center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	title_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	header.add_child(title_center)
+	title_center.add_child(title)
 
 	var close_btn := Button.new()
-	close_btn.text = "✕"
-	close_btn.custom_minimum_size = Vector2(48, 48)
-	close_btn.flat = true
-	close_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
-	close_btn.add_theme_font_size_override("font_size", 18)
-	close_btn.add_theme_color_override("font_color", Color(0.6, 0.65, 0.7))
+	MenuScreenHeader.style_close_button(close_btn)
+	MenuScreenHeader.anchor_close_top_right(close_btn)
 	close_btn.pressed.connect(_on_close)
 	header.add_child(close_btn)
 
@@ -284,7 +274,7 @@ func _build_items_panel() -> Control:
 	_refresh_items()
 	return root
 
-func _refresh_items() -> void:
+func _refresh_items(_new_amount: int = 0) -> void:
 	if _credit_count_lbl != null:
 		_credit_count_lbl.text = "%d" % Collection.credits
 	if _scroll_count_lbl != null:

@@ -51,7 +51,6 @@ var _pending_rebel_king_owner: int = -1
 var _pending_rebel_king_foe_player: int = -1
 var _pending_trap_hostage_lock: bool = false
 var _pending_street_joke_crystal: int = 0
-var _pending_street_joke_attacker: int = -1
 var _pending_lockpicker_owner: int = -1
 var _pending_reveal_attacker_player: int = -1
 var _pending_wk17_foe_player: int = -1
@@ -1751,7 +1750,6 @@ func _handle_trap_effect(
 		TrapData.TrapEffectType.REVEAL_OWN_GAIN_CRYSTAL:
 			var _rogc_amount: int = trap_data.effect_params.get("amount", 300)
 			_pending_street_joke_crystal = _rogc_amount
-			_pending_street_joke_attacker = player
 			await _prompt_and_await_target_selection(
 				"%s: Choose 1 of your cells to reveal." % trap_data.card_name,
 				"trap_street_joke_reveal")
@@ -2143,21 +2141,6 @@ func _apply_post_battle_effects(
 				GameState.post_message("%s: Gained %d Crystals!" % [attacker.card_name, _crys])
 				await _wait_crystal_animation()
 
-		CharacterData.AbilityType.VENOM_TOAD_RECKONING:
-			var _vt_foe: GameState.CardInstance = defender
-			var _vt_foe_p: int = opponent
-			var _vt_foe_pos: Vector2i = target_pos
-			var _vt_foe_dead: bool = result.defender_destroyed
-			if defender.ability_type == CharacterData.AbilityType.VENOM_TOAD_RECKONING:
-				_vt_foe = attacker
-				_vt_foe_p = player
-				_vt_foe_pos = attacker_pos
-				_vt_foe_dead = result.attacker_destroyed
-			if _vt_foe.card_type == "character" and not _vt_foe_dead:
-				GameState.apply_unit_effect_flag(_vt_foe_p, _vt_foe_pos.x, _vt_foe_pos.y, "venom")
-				var _vt_src: GameState.CardInstance = attacker if attacker.ability_type == CharacterData.AbilityType.VENOM_TOAD_RECKONING else defender
-				GameState.post_message("%s: Venom on %s." % [_vt_src.card_name, _vt_foe.card_name])
-
 		CharacterData.AbilityType.ONE_USE_ATK_BOOST, \
 		CharacterData.AbilityType.ONE_USE_TEMP_BOOST_ATTACK_AND_DEFEND:
 			attacker.one_use_atk_boost_used = true
@@ -2249,6 +2232,27 @@ func _apply_post_battle_effects(
 			attacker.current_def = max(0, attacker.current_def - _dpdef)
 			GameState.post_message("%s: -%d ATK & -%d DEF permanently (non-%s battle)." % [
 				attacker.card_name, _dpatk, _dpdef, CharacterData.Affinity.keys()[_dpen_aff]])
+
+	# VENOM_TOAD_RECKONING: after reckoning, surviving foe receives venom (either battle role)
+	if not (GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \
+			and "bare_hands_brawling" in GameState.active_dungeon_modifiers):
+		var _vt_src: GameState.CardInstance = null
+		if attacker.card_type == "character" \
+				and attacker.ability_type == CharacterData.AbilityType.VENOM_TOAD_RECKONING \
+				and attacker.effect_nullified_until < GameState.turn_number:
+			_vt_src = attacker
+		elif defender.card_type == "character" \
+				and defender.ability_type == CharacterData.AbilityType.VENOM_TOAD_RECKONING \
+				and defender.effect_nullified_until < GameState.turn_number:
+			_vt_src = defender
+		if _vt_src != null:
+			var _vt_foe: GameState.CardInstance = defender if _vt_src == attacker else attacker
+			var _vt_foe_p: int = opponent if _vt_src == attacker else player
+			var _vt_foe_pos: Vector2i = target_pos if _vt_src == attacker else attacker_pos
+			var _vt_foe_dead: bool = result.defender_destroyed if _vt_src == attacker else result.attacker_destroyed
+			if _vt_foe.card_type == "character" and not _vt_foe_dead:
+				GameState.apply_unit_effect_flag(_vt_foe_p, _vt_foe_pos.x, _vt_foe_pos.y, "venom")
+				GameState.post_message("%s: Venom on %s." % [_vt_src.card_name, _vt_foe.card_name])
 
 	# COPY_ALLY_STATS_ON_DESTROY: Ectoplasm — triggered when an ally is destroyed in battle
 	if result.defender_destroyed and defender.card_type == "character" \

@@ -4,7 +4,6 @@ extends Node
 const SCROLL_IMAGE: String = "res://assets/textures/inventory/ui_union_scroll.png"
 const SCROLL_PRICE: int = 150
 const COMPENSATION_CREDITS: int = 150
-const UNLOCK_CHAPTER: String = "res://campaign/scenes/ch0_s1_pre_DEMO_PART1.json"
 const PRODUCT_ID: String = "union_scroll"
 const SHOP_NAME: String = "Union Scroll"
 const SHOP_DESCRIPTION: String = "Discover 1 Union Card's formula"
@@ -19,13 +18,13 @@ func get_shop_product() -> Dictionary:
 		"description": SHOP_DESCRIPTION,
 		"contents_tag": SHOP_CONTENTS,
 		"item_image": SCROLL_IMAGE,
-		"unlock_requires_chapter": UNLOCK_CHAPTER,
+		"unlock_requires_tutorial": true,
 		"shop_available": true,
 		"accent": [0.92, 0.92, 1.0],
 	}
 
 func is_scroll_purchasable() -> bool:
-	return SaveManager.is_gallery_chapter_completed(UNLOCK_CHAPTER)
+	return ShopManager.is_tutorial_requirement_met()
 
 func get_discoverable_union_names() -> Array[String]:
 	var result: Array[String] = []
@@ -76,7 +75,7 @@ func purchase_from_shop(parent: Node) -> Dictionary:
 	if not is_scroll_purchasable():
 		return {
 			"success": false,
-			"error": ShopManager.get_chapter_unlock_hint(UNLOCK_CHAPTER),
+			"error": ShopManager.get_tutorial_unlock_hint(),
 			"union_name": "",
 			"compensated": false,
 		}

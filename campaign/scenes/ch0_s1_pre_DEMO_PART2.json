@@ -1323,8 +1323,8 @@
 		"on_win": "res://campaign/scenes/ch0_s1_post.json",
 		"player1_name": "Nex Crowmont",
 		"player2_name": "Kelly Lastochkina",
-		"portrait_p1": "res://assets/textures/ui/portraits/profile_player_1_default.png",
-		"portrait_p2": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png",
+		"portrait_p1": "res://assets/textures/profile/battle_illustrations/profile_player_1_default.png",
+		"portrait_p2": "res://assets/textures/profile/battle_illustrations/profile_player_2_default.png",
 		"tutorial_battle": "res://data/tutorial_battles/example_attack_tutorial.json"
 	}
 ]

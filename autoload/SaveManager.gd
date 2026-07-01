@@ -32,6 +32,7 @@ var title_cheat_apartment_claimed: bool = false  # main-menu apartment-window ch
 var title_cheat_moon_claimed: bool = false       # main-menu moon cheat (once per save)
 var attack_tutorial_complete: bool = false
 var casual_mode: bool = false
+var casual_mode_tip_shown: bool = false
 var quick_duel_tier_previews: Dictionary = {}   # tier -> vault entry_id
 var quick_duel_tier_rewards: Dictionary = {}  # tier -> Array of reward dicts
 var quick_duel_loss_streak: int = 0
@@ -227,6 +228,7 @@ func save_data() -> void:
 		"title_cheat_moon_claimed":      title_cheat_moon_claimed,
 		"attack_tutorial_complete":      attack_tutorial_complete,
 		"casual_mode":                   casual_mode,
+		"casual_mode_tip_shown":         casual_mode_tip_shown,
 		"quick_duel_tier_previews":      quick_duel_tier_previews.duplicate(true),
 		"quick_duel_tier_rewards":       quick_duel_tier_rewards.duplicate(true),
 		"quick_duel_loss_streak":        quick_duel_loss_streak,
@@ -326,6 +328,7 @@ func load_data() -> void:
 	title_cheat_moon_claimed = bool(parsed.get("title_cheat_moon_claimed", false))
 	attack_tutorial_complete = bool(parsed.get("attack_tutorial_complete", false))
 	casual_mode = bool(parsed.get("casual_mode", false))
+	casual_mode_tip_shown = bool(parsed.get("casual_mode_tip_shown", false))
 	quick_duel_loss_streak = int(parsed.get("quick_duel_loss_streak", 0))
 	wishlist_cta_shown = bool(parsed.get("wishlist_cta_shown", false))
 	quick_duel_protagonist_id = ProtagonistVault.normalize_id(
@@ -424,6 +427,15 @@ func set_casual_mode(enabled: bool) -> void:
 	casual_mode = enabled
 	if enabled:
 		GlobalStatManager.on_casual_mode_enabled()
+	save_data()
+
+func is_casual_mode_tip_shown() -> bool:
+	return casual_mode_tip_shown
+
+func mark_casual_mode_tip_shown() -> void:
+	if casual_mode_tip_shown:
+		return
+	casual_mode_tip_shown = true
 	save_data()
 
 func get_quick_duel_preview(tier: String) -> String:

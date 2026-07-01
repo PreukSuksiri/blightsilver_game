@@ -73,7 +73,9 @@ const CRYSTAL_LOSS_NO_RECOVERY_REASONS: Array[String] = [
 const DEFAULT_BATTLE_BGM_START_SEC: float = 14.0
 const CURSOR_PATH: String = "res://assets/textures/ui/decorations/ui_cursor_finger_64.png"
 const CURSOR_HOTSPOT: Vector2 = Vector2(4.0, 4.0)
-const CURSOR_LAYER: int = 320  # above VN overlay (300) and vellum anim (310)
+## Godot draws embedded Popup/PopupMenu dropdowns on canvas layer 1024.
+const EMBEDDED_POPUP_LAYER: int = 1024
+const CURSOR_LAYER: int = EMBEDDED_POPUP_LAYER + 1  # above dropdowns; below editor popup overlays
 const POPUP_CURSOR_LAYER: int = 4096
 const UNIT_EFFECT_FLAGS: Array[String] = ["venom", "mutagen", "berserk"]
 

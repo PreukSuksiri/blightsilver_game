@@ -1278,7 +1278,7 @@ func admin_command(raw: String) -> String:
 					return "attack_tutorial_complete = true (tutorial skipped / Quick Duel picker unlocked)."
 				"off", "false", "0", "no":
 					SaveManager.set_attack_tutorial_complete(false)
-					return "attack_tutorial_complete = false (attack tutorial will be offered again)."
+					return "attack_tutorial_complete = false (tutorial will be offered again)."
 				"status":
 					var tut_state: String = "true" if SaveManager.is_attack_tutorial_complete() else "false"
 					return "attack_tutorial_complete = %s" % tut_state

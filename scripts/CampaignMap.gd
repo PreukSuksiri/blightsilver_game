@@ -65,7 +65,7 @@ func _build_ui() -> void:
 
 	var body := HBoxContainer.new()
 	body.set_anchors_preset(Control.PRESET_FULL_RECT)
-	body.offset_top = 52.0
+	body.offset_top = MenuScreenHeader.HEADER_HEIGHT + 4.0
 	body.add_theme_constant_override("separation", 0)
 	add_child(body)
 
@@ -85,7 +85,7 @@ func _build_ui() -> void:
 func _build_header() -> void:
 	var header := Panel.new()
 	header.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	header.offset_bottom = 52.0
+	header.offset_bottom = MenuScreenHeader.HEADER_HEIGHT + 4.0
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.025, 0.042, 0.10, 1.0)
 	sb.border_width_bottom = 1
@@ -93,20 +93,17 @@ func _build_header() -> void:
 	header.add_theme_stylebox_override("panel", sb)
 	add_child(header)
 
-	var hbox := HBoxContainer.new()
-	hbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-	hbox.offset_left  = 18.0
-	hbox.offset_right = -18.0
-	hbox.add_theme_constant_override("separation", 14)
-	header.add_child(hbox)
+	var shell := Control.new()
+	shell.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	header.add_child(shell)
 
 	var title_lbl := Label.new()
-	title_lbl.text = "CAMPAIGN"
-	title_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title_lbl.add_theme_font_size_override("font_size", 22)
-	title_lbl.add_theme_color_override("font_color", Color(0.55, 0.82, 1.0, 1.0))
-	title_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	hbox.add_child(title_lbl)
+	MenuScreenHeader.style_title(title_lbl, "CAMPAIGN")
+	var title_center := CenterContainer.new()
+	title_center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	title_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shell.add_child(title_center)
+	title_center.add_child(title_lbl)
 
 	var prog_lbl := Label.new()
 	prog_lbl.text = "%d / %d completed" % [
@@ -114,16 +111,22 @@ func _build_header() -> void:
 	prog_lbl.add_theme_font_size_override("font_size", 13)
 	prog_lbl.add_theme_color_override("font_color", Color(0.38, 0.65, 1.0, 0.55))
 	prog_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	hbox.add_child(prog_lbl)
 
-	var back_btn := Button.new()
-	back_btn.text = "MAIN MENU"
-	back_btn.custom_minimum_size = Vector2(130, 34)
-	back_btn.add_theme_font_size_override("font_size", 13)
-	back_btn.pressed.connect(func() -> void:
+	var trail := HBoxContainer.new()
+	trail.add_theme_constant_override("separation", 10)
+	trail.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
+	trail.offset_right = -(MenuScreenHeader.CLOSE_INSET + MenuScreenHeader.CLOSE_BTN_SIZE.x + 8.0)
+	trail.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	shell.add_child(trail)
+	trail.add_child(prog_lbl)
+
+	var close_btn := Button.new()
+	MenuScreenHeader.style_close_button(close_btn)
+	MenuScreenHeader.anchor_close_top_right(close_btn)
+	close_btn.pressed.connect(func() -> void:
 		closed.emit()
 		queue_free())
-	hbox.add_child(back_btn)
+	shell.add_child(close_btn)
 
 # ─────────────────────────────────────────────────────────────
 # Map canvas

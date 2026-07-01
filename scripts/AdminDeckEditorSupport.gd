@@ -120,11 +120,12 @@ static func add_union_materials_to_deck(
 		return result
 
 	var assigned: Array = []
-	var missing_conds: Array = UnionDatabase.deck_unmatched_conditions(
+	var pending_conds: Array = UnionDatabase.deck_unmatched_conditions(
 		deck.characters, u.material_conditions)
+	var still_missing: Array = []
 	var used_in_assign: Array = []
 
-	for cond: Dictionary in missing_conds:
+	for cond: Dictionary in pending_conds:
 		var candidates: Array = []
 		for cname: String in CardDatabase.get_all_character_names():
 			if demo_only and not card_include_in_demo(cname, "character"):
@@ -139,7 +140,7 @@ static func add_union_materials_to_deck(
 				var data: CharacterData = CardDatabase.get_character(cname)
 				candidates.append({"name": cname, "cost": data.crystal_cost})
 		if candidates.is_empty():
-			missing_conds.append(cond)
+			still_missing.append(cond)
 		else:
 			candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 				return a["cost"] < b["cost"] if a["cost"] != b["cost"] else a["name"] < b["name"])
@@ -147,10 +148,10 @@ static func add_union_materials_to_deck(
 			assigned.append(chosen)
 			used_in_assign.append(chosen)
 
-	if missing_conds.size() > 0:
+	if still_missing.size() > 0:
 		var found_str: String = ", ".join(assigned) if assigned.size() > 0 else "none"
 		var missing_str: String = ""
-		for cond: Dictionary in missing_conds:
+		for cond: Dictionary in still_missing:
 			missing_str += "\n  • " + describe_union_condition(cond)
 		_show_info_dialog(host, "Not Enough Union Material",
 			"Not enough union material.\n\nFormula: %s\n\nFound: %s\nMissing:%s"

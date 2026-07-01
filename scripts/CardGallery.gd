@@ -31,7 +31,6 @@ const WEB_TILES_PER_FRAME := 4
 const WEB_TEX_STARTS_PER_FRAME := 3
 
 @onready var stats_label: Label              = $Panel/VBox/Header/StatsLabel
-@onready var header_bar: HBoxContainer       = $Panel/VBox/Header
 @onready var filter_bar: HBoxContainer       = $Panel/VBox/FilterBar
 @onready var card_scroll: ScrollContainer    = $Panel/VBox/CardScroll
 @onready var card_flow: HFlowContainer       = $Panel/VBox/CardScroll/CardFlow
@@ -75,16 +74,24 @@ var _adv_def_min:   SpinBox
 var _adv_def_max:   SpinBox
 var _adv_ability:   LineEdit
 
+var _header_trailing: HBoxContainer = null
+
 func _ready() -> void:
 	_badge_font = FontVariation.new()
 	_badge_font.base_font = preload("res://assets/fonts/Chivo-VariableFont_wght.ttf")
 	_badge_font.variation_opentype = {"wght": 1200}
 	Collection.collection_changed.connect(_on_collection_changed)
-	$Panel/VBox/Header/CloseBtn.pressed.connect(_on_close)
+	var header_rebuild: Dictionary = MenuScreenHeader.rebuild_panel_header(
+		$Panel/VBox/Header,
+		$Panel/VBox/Header/TitleLabel,
+		$Panel/VBox/Header/CloseBtn)
+	_header_trailing = header_rebuild.get("trailing_row", null) as HBoxContainer
+	var close_btn: Button = header_rebuild.get("close_btn", null) as Button
+	if close_btn != null:
+		close_btn.pressed.connect(_on_close)
 	_build_filter_bar()
 	_build_count_filter_row()
 	_build_adv_gallery_filters()
-	_add_scrap_all_button()
 	_show_loading_label(true)
 	call_deferred("_begin_gallery_build")
 	# Apply initial union mechanism visibility and subscribe to changes
@@ -146,6 +153,16 @@ func _build_filter_bar() -> void:
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	filter_bar.add_child(spacer)
+
+	if is_instance_valid(stats_label):
+		if stats_label.get_parent():
+			stats_label.get_parent().remove_child(stats_label)
+		stats_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		stats_label.size_flags_horizontal = Control.SIZE_SHRINK_END
+		stats_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		filter_bar.add_child(stats_label)
+
+	_add_scrap_all_button()
 
 	var search := LineEdit.new()
 	search.placeholder_text = "Search by name..."
@@ -690,10 +707,7 @@ func _add_scrap_all_button() -> void:
 	btn.add_theme_color_override("font_color", Color(1.0, 0.55, 0.20))
 	btn.tooltip_text = "Scrap all duplicate copies, keeping 1 of each card (100 credits per scrapped copy)"
 	btn.pressed.connect(_confirm_scrap_all)
-	# Insert before the CloseBtn
-	var close_btn: Node = $Panel/VBox/Header/CloseBtn
-	header_bar.add_child(btn)
-	header_bar.move_child(btn, close_btn.get_index())
+	filter_bar.add_child(btn)
 
 func _get_scrap_value(card_name: String, card_type: String) -> int:
 	var rarity: CharacterData.Rarity = CharacterData.Rarity.COMMON

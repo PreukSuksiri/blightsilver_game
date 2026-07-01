@@ -170,7 +170,7 @@ func _check_achievement_reward_mail_notice() -> void:
 	GameDialog.accept_overlay(
 		self,
 		"Achievement Reward",
-		"There are achievement rewards waiting for you to claim in the Mailbox.",
+		"You have achievement rewards to claim in the Mailbox.",
 		"OK",
 		Callable(),
 		GameDialog.DEFAULT_MIN_WIDTH,

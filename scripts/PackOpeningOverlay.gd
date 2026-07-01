@@ -26,6 +26,7 @@ const HOLD_SKIP_ALL_SECONDS: float = 3.0
 const _ROUNDED_CLIP: Shader = preload("res://assets/shaders/rounded_clip.gdshader")
 const _CARD_CORNER_RADIUS_REF: float = 16.0   # px at 150px card width
 const _POSE_FRAME_COLOR: Color = Color(0.40, 0.85, 1.0, 0.95)
+const _POSE_FRAME_BG_COLOR: Color = Color(0.02, 0.04, 0.10, 0.88)
 
 # Sizes computed from viewport at _ready; pack ~82% screen height, cards fill remaining width
 var _pack_w : float = 0.0
@@ -669,6 +670,16 @@ func _make_pose_ctrl() -> Control:
 	wrapper.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	var corner_radius: int = maxi(8, int(_pose_w * 0.03))
+
+	var bg_panel := Panel.new()
+	bg_panel.size = Vector2(_pose_w, _pose_h)
+	bg_panel.position = Vector2.ZERO
+	bg_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var bg_sb := StyleBoxFlat.new()
+	bg_sb.bg_color = _POSE_FRAME_BG_COLOR
+	bg_sb.set_corner_radius_all(corner_radius)
+	bg_panel.add_theme_stylebox_override("panel", bg_sb)
+	wrapper.add_child(bg_panel)
 
 	var portrait := TextureRect.new()
 	portrait.size = Vector2(_pose_w, _pose_h)

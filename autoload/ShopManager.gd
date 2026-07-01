@@ -72,12 +72,36 @@ func get_gallery_chapter_label(vn_scene: String) -> String:
 func get_chapter_unlock_requirement(pack: Dictionary) -> String:
 	return str(pack.get("unlock_requires_chapter", "")).strip_edges()
 
+
+func requires_tutorial_completion(pack: Dictionary) -> bool:
+	return bool(pack.get("unlock_requires_tutorial", false))
+
+
+func is_tutorial_requirement_met() -> bool:
+	return SaveManager.is_attack_tutorial_complete()
+
+
+func get_tutorial_unlock_hint() -> String:
+	return "Finish the tutorial to unlock."
+
+
+func get_pack_unlock_hint(pack: Dictionary) -> String:
+	if requires_tutorial_completion(pack) and not is_tutorial_requirement_met():
+		return get_tutorial_unlock_hint()
+	var req: String = get_chapter_unlock_requirement(pack)
+	if not req.is_empty() and not SaveManager.is_gallery_chapter_completed(req):
+		return get_chapter_unlock_hint(req)
+	return ""
+
+
 func is_pack_listed_in_shop(pack: Dictionary) -> bool:
 	return bool(pack.get("shop_available", true))
 
-## True when the pack may be purchased (listed in shop and chapter requirement met).
+## True when the pack may be purchased (listed in shop and unlock requirements met).
 func is_pack_purchasable(pack: Dictionary) -> bool:
 	if not is_pack_listed_in_shop(pack):
+		return false
+	if requires_tutorial_completion(pack) and not is_tutorial_requirement_met():
 		return false
 	var req: String = get_chapter_unlock_requirement(pack)
 	if req.is_empty():
@@ -191,6 +215,7 @@ func get_shop_catalog() -> Array:
 		var copy: Dictionary = (p as Dictionary).duplicate(true)
 		copy["shop_unlocked"] = is_pack_purchasable(p)
 		copy["unlock_requires_chapter"] = get_chapter_unlock_requirement(p)
+		copy["unlock_requires_tutorial"] = requires_tutorial_completion(p)
 		result.append(copy)
 	for p: Dictionary in _custom_packs:
 		if not is_pack_listed_in_shop(p):
@@ -198,9 +223,11 @@ func get_shop_catalog() -> Array:
 		var copy: Dictionary = p.duplicate(true)
 		copy["shop_unlocked"] = is_pack_purchasable(p)
 		copy["unlock_requires_chapter"] = get_chapter_unlock_requirement(p)
+		copy["unlock_requires_tutorial"] = requires_tutorial_completion(p)
 		result.append(copy)
 	var scroll_copy: Dictionary = UnionScrollManager.get_shop_product().duplicate(true)
 	scroll_copy["shop_unlocked"] = UnionScrollManager.is_scroll_purchasable()
+	scroll_copy["unlock_requires_tutorial"] = requires_tutorial_completion(scroll_copy)
 	result.append(scroll_copy)
 	return result
 
@@ -244,9 +271,9 @@ func purchase_pack(pack_id: String) -> Dictionary:
 	if pack.is_empty():
 		return {"success": false, "cards": [], "error": "Unknown pack."}
 	if not is_pack_purchasable(pack):
-		var req: String = get_chapter_unlock_requirement(pack)
-		var hint: String = get_chapter_unlock_hint(req) if not req.is_empty() \
-				else "This pack is not available yet."
+		var hint: String = get_pack_unlock_hint(pack)
+		if hint.is_empty():
+			hint = "This pack is not available yet."
 		return {"success": false, "cards": [], "error": hint}
 
 	if not Collection.spend_credits(pack["price"]):

@@ -22,6 +22,8 @@ const ART_L_PCT    := 0.051
 const ART_R_PCT    := 0.949
 const ART_T_PCT    := 0.096
 const INFO_TOP_PCT := 0.520
+const CARD_REF_H := 1126.0
+const AFF_ABOVE_STATS_REF := 40.0
 const BADGE_H      := 56.0   # height of the stat badge strip above each card
 
 const TYPE_COLOR_CHARACTER := Color(1.0, 0.71, 0.2, 1.0)
@@ -384,7 +386,7 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	# Header
 	var hdr_h  := at
 	var fsz_hdr := maxi(int(cw * 0.044), 10)
-	var pad_x   := al + 10.0
+	var pad_x   := al + 15.0
 
 	var type_lbl := Label.new()
 	type_lbl.position = Vector2(pad_x, hdr_h * 0.2)
@@ -472,8 +474,9 @@ func _build_card_visual(parent: Control, inst: GameState.CardInstance) -> Textur
 	parent.set_meta("def_lbl", def_lbl)
 
 	var aff_lbl := Label.new()
-	aff_lbl.position = Vector2(pad_x, stats_y - 40.0)
-	aff_lbl.size = Vector2(cw - pad_x * 2.0, stats_h)
+	var aff_above_stats: float = AFF_ABOVE_STATS_REF / CARD_REF_H * ch
+	aff_lbl.position = Vector2(pad_x, stats_y - aff_above_stats)
+	aff_lbl.size = Vector2(cw - pad_x * 2.0, maxf(stats_h, float(fsz_stat + 12)))
 	aff_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	aff_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	aff_lbl.add_theme_font_size_override("font_size", fsz_stat + 10)

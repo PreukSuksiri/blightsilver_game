@@ -22,6 +22,7 @@ var _prop_desc_edit:  TextEdit = null
 var _prop_accent_edit: LineEdit = null   # hex colour string
 var _prop_image_edit:  LineEdit  = null   # res:// path to booster pack image
 var _prop_shop_check:  CheckBox  = null   # available in shop toggle
+var _prop_tutorial_check: CheckBox = null
 var _prop_unlock_chapter: OptionButton = null
 var _unlock_chapter_values: Array = []
 
@@ -254,6 +255,17 @@ func _build_right_panel(parent: Control) -> void:
 	_prop_shop_check.button_pressed = true
 	inner.add_child(_prop_shop_check)
 
+	_prop_tutorial_check = CheckBox.new()
+	_prop_tutorial_check.text = "Requires finished tutorial"
+	inner.add_child(_prop_tutorial_check)
+
+	var tutorial_note := Label.new()
+	tutorial_note.text = "Pack stays visible in the Shop but locked until the player completes the tutorial."
+	tutorial_note.add_theme_font_size_override("font_size", 11)
+	tutorial_note.add_theme_color_override("font_color", Color(0.65, 0.70, 0.80, 0.65))
+	tutorial_note.autowrap_mode = TextServer.AUTOWRAP_WORD
+	inner.add_child(tutorial_note)
+
 	inner.add_child(_lbl("Unlock requires chapter"))
 	var unlock_note := Label.new()
 	unlock_note.text = "Pack stays visible in the Shop but locked until the player completes this gallery chapter. Configure chapter list in Campaign Gallery Editor."
@@ -353,9 +365,15 @@ func _refresh_pack_list() -> void:
 		var p: Dictionary = _packs[i]
 		var listed: bool = bool(p.get("shop_available", true))
 		var req: String = str(p.get("unlock_requires_chapter", "")).strip_edges()
+		var needs_tutorial: bool = bool(p.get("unlock_requires_tutorial", false))
 		var icon: String = "○"
 		if listed:
-			if req.is_empty() or SaveManager.is_gallery_chapter_completed(req):
+			var unlocked: bool = true
+			if needs_tutorial and not SaveManager.is_attack_tutorial_complete():
+				unlocked = false
+			if req != "" and not SaveManager.is_gallery_chapter_completed(req):
+				unlocked = false
+			if unlocked:
 				icon = "●"
 			else:
 				icon = "◆"
@@ -369,6 +387,8 @@ func _refresh_pack_list() -> void:
 		elif not listed:
 			btn.add_theme_color_override("font_color", Color(0.5, 0.5, 0.55, 0.6))
 		elif req != "" and not SaveManager.is_gallery_chapter_completed(req):
+			btn.add_theme_color_override("font_color", Color(0.95, 0.72, 0.35, 0.75))
+		elif needs_tutorial and not SaveManager.is_attack_tutorial_complete():
 			btn.add_theme_color_override("font_color", Color(0.95, 0.72, 0.35, 0.75))
 		var idx_cap := i
 		btn.pressed.connect(func() -> void: _select_pack(idx_cap))
@@ -397,6 +417,7 @@ func _populate_props() -> void:
 		_prop_accent_edit.text = ""
 	_prop_image_edit.text = str(p.get("pack_image", ""))
 	_prop_shop_check.button_pressed = bool(p.get("shop_available", true))
+	_prop_tutorial_check.button_pressed = bool(p.get("unlock_requires_tutorial", false))
 	_rebuild_unlock_chapter_options(str(p.get("unlock_requires_chapter", "")).strip_edges())
 	var raw_pool: Variant = p.get("card_pool", [])
 	var pool: Array = raw_pool if raw_pool is Array else []
@@ -465,6 +486,10 @@ func _write_selected_props_to_packs() -> bool:
 		p["accent"] = [col.r, col.g, col.b]
 	p["pack_image"]     = _prop_image_edit.text.strip_edges()
 	p["shop_available"] = _prop_shop_check.button_pressed
+	if _prop_tutorial_check.button_pressed:
+		p["unlock_requires_tutorial"] = true
+	else:
+		p.erase("unlock_requires_tutorial")
 	var unlock_idx: int = _prop_unlock_chapter.selected
 	var unlock_vn: String = ""
 	if unlock_idx >= 0 and unlock_idx < _unlock_chapter_values.size():
