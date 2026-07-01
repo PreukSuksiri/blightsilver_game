@@ -23,6 +23,7 @@ const ProtagonistOverlayScene := preload("res://scripts/ProtagonistOverlay.gd")
 const _ROUNDED_RECT_CLIP: Shader = preload("res://assets/shaders/rounded_rect_clip.gdshader")
 const CAPSULE_FRAME_RADIUS := 12.0
 const CAPSULE_FRAME_BORDER := 2.0
+const CAPSULE_IMAGE_RADIUS := CAPSULE_FRAME_RADIUS - CAPSULE_FRAME_BORDER
 const OVERLAY_Z_INDEX := 80
 
 var _picker_panel: Control = null
@@ -83,31 +84,17 @@ func _build_header() -> void:
 	add_child(top_bg)
 
 	var title := Label.new()
-	title.text = "QUICK DUEL"
+	MenuScreenHeader.style_title(title, "QUICK DUEL")
 	title.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
 	title.offset_left = -240.0
 	title.offset_top = 8.0
 	title.offset_right = 240.0
 	title.offset_bottom = 36.0
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", TITLE_FONT_SIZE)
-	title.add_theme_color_override("font_color", TITLE_COLOR)
 	add_child(title)
 
 	var close_btn := Button.new()
-	close_btn.text = "✕"
-	close_btn.custom_minimum_size = Vector2(38, 32)
-	close_btn.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	close_btn.offset_left = -52.0
-	close_btn.offset_top = 6.0
-	close_btn.offset_right = -12.0
-	close_btn.offset_bottom = 38.0
-	close_btn.add_theme_font_size_override("font_size", 16)
-	close_btn.add_theme_color_override("font_color", Color(0.55, 0.72, 1.0, 0.85))
-	close_btn.add_theme_stylebox_override("normal", _make_close_stylebox())
-	close_btn.add_theme_stylebox_override("hover", _make_close_stylebox())
-	close_btn.add_theme_stylebox_override("pressed", _make_close_stylebox())
-	close_btn.add_theme_stylebox_override("focus", _make_close_stylebox())
+	MenuScreenHeader.style_close_button(close_btn)
+	MenuScreenHeader.anchor_close_top_right(close_btn)
 	close_btn.pressed.connect(func() -> void:
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
 	add_child(close_btn)
@@ -188,20 +175,8 @@ func _open_protagonist_overlay() -> void:
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	if overlay.has_signal("closed"):
 		overlay.closed.connect(func() -> void:
-			_refresh_player_portrait()
-			if _picker_panel.visible:
-				_roll_all_tier_offers()
-				_refresh_picker_capsules())
+			_refresh_player_portrait())
 	add_child(overlay)
-
-
-func _make_close_stylebox() -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.18, 0.04, 0.04, 1.0)
-	sb.set_border_width_all(1)
-	sb.border_color = Color(1.0, 0.30, 0.30, 0.7)
-	sb.set_corner_radius_all(4)
-	return sb
 
 
 func _set_protagonist_zone_visible(visible: bool) -> void:
@@ -409,13 +384,12 @@ func _update_tier_capsule(tier: String, entry: Dictionary) -> void:
 	var image_clip := Control.new()
 	image_clip.name = "ImageClip"
 	image_clip.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	image_clip.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
 	image_clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	inner.add_child(image_clip)
 
 	if entry.is_empty():
 		btn.disabled = true
-		image_clip.add_child(_make_capsule_fill_panel(Color(0.12, 0.12, 0.16, 1.0), CAPSULE_FRAME_RADIUS))
+		image_clip.add_child(_make_capsule_fill_panel(Color(0.12, 0.12, 0.16, 1.0), CAPSULE_IMAGE_RADIUS))
 	else:
 		btn.disabled = false
 		var tex: Texture2D = AIDeckVault.resolve_preview_texture(entry)
@@ -426,32 +400,47 @@ func _update_tier_capsule(tier: String, entry: Dictionary) -> void:
 			img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 			img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 			img.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			_apply_rounded_rect_clip(img, CAPSULE_FRAME_RADIUS)
+			# PanelContainer insets inner by border_width on every side, so
+			# img is (CAPSULE_W - 2*border) × (CAPSULE_H - 2*border).  Pass
+			# that actual size so all four arc centres land on the frame's
+			# inner-border arc, not just the top-left one.
+			_apply_rounded_rect_clip(img, CAPSULE_IMAGE_RADIUS,
+					Vector2(CAPSULE_W - 2.0 * CAPSULE_FRAME_BORDER,
+							CAPSULE_H - 2.0 * CAPSULE_FRAME_BORDER))
 			image_clip.add_child(img)
 		else:
-			image_clip.add_child(_make_capsule_fill_panel(Color(0.12, 0.12, 0.16, 1.0), CAPSULE_FRAME_RADIUS))
+			image_clip.add_child(_make_capsule_fill_panel(Color(0.12, 0.12, 0.16, 1.0), CAPSULE_IMAGE_RADIUS))
+
+	var tier_center := CenterContainer.new()
+	tier_center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	tier_center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tier_center.z_index = 2
+	inner.add_child(tier_center)
 
 	var tier_lbl := Label.new()
 	tier_lbl.text = tier.capitalize()
 	tier_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	tier_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	tier_lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	tier_lbl.offset_bottom = reward_h * 0.35
+	tier_lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 600))
 	tier_lbl.add_theme_font_size_override("font_size", TIER_FONT_SIZE)
 	tier_lbl.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	tier_lbl.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 1))
 	tier_lbl.add_theme_constant_override("shadow_offset_x", 2)
 	tier_lbl.add_theme_constant_override("shadow_offset_y", 2)
 	tier_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tier_lbl.z_index = 2
-	inner.add_child(tier_lbl)
+	tier_center.add_child(tier_lbl)
 
-	var reward_back := ColorRect.new()
-	reward_back.color = Color(0.0, 0.0, 0.0, 0.42)
+	var reward_back := Panel.new()
 	reward_back.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
 	reward_back.offset_top = -reward_h
 	reward_back.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	reward_back.z_index = 3
+	var reward_sb := StyleBoxFlat.new()
+	reward_sb.bg_color = Color(0.0, 0.0, 0.0, 0.42)
+	reward_sb.set_content_margin_all(0)
+	reward_sb.corner_radius_bottom_left = int(CAPSULE_IMAGE_RADIUS)
+	reward_sb.corner_radius_bottom_right = int(CAPSULE_IMAGE_RADIUS)
+	reward_back.add_theme_stylebox_override("panel", reward_sb)
 	inner.add_child(reward_back)
 
 	var reward_vbox := VBoxContainer.new()
@@ -487,23 +476,20 @@ func _update_tier_capsule(tier: String, entry: Dictionary) -> void:
 	btn.mouse_exited.connect(_on_capsule_mouse_exited.bind(hover))
 
 
-func _apply_rounded_rect_clip(host: Control, corner_radius: float) -> void:
+func _apply_rounded_rect_clip(
+		host: Control,
+		corner_radius: float,
+		rect_size: Vector2 = Vector2.ZERO
+) -> void:
 	var rc_mat := ShaderMaterial.new()
 	rc_mat.shader = _ROUNDED_RECT_CLIP
 	rc_mat.set_shader_parameter("corner_radius", corner_radius)
-	var fallback := Vector2(
-		CAPSULE_W - CAPSULE_FRAME_BORDER * 2.0,
-		CAPSULE_H - CAPSULE_FRAME_BORDER * 2.0)
-	rc_mat.set_shader_parameter("rect_size", fallback)
+	# rect_size is used for the SDF centre calculation. The shader reads local
+	# pixel position from VERTEX (not UV), so no dynamic sync is needed —
+	# UV-space crop from STRETCH_KEEP_ASPECT_COVERED no longer affects clipping.
+	if rect_size != Vector2.ZERO:
+		rc_mat.set_shader_parameter("rect_size", rect_size)
 	host.material = rc_mat
-	var sync_size := func() -> void:
-		if not is_instance_valid(host):
-			return
-		var sz := host.size
-		if sz.x >= 1.0 and sz.y >= 1.0:
-			rc_mat.set_shader_parameter("rect_size", sz)
-	host.resized.connect(sync_size)
-	sync_size.call_deferred()
 
 
 func _make_capsule_fill_panel(color: Color, corner_radius: float) -> Panel:
