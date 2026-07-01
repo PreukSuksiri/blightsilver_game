@@ -104,6 +104,9 @@ var _union_rebuild_gen: int = 0
 var _trunk_list_rebuild_gen: int = 0
 var _deferring_initial_load: bool = false
 var _loading_blocker: Control = null
+var _db_hover_hold_hint: CardHoverHoldHint = null
+var _db_drag_ghost: Control = null
+var _db_drag_ghost_active: bool = false
 
 const LOADING_BLOCKER_Z := 4096
 
@@ -331,6 +334,8 @@ func _ready() -> void:
 	_add_union_filter_button()
 	_update_filter_colors()
 	_setup_gallery_containers()
+	_db_hover_hold_hint = CardHoverHoldHint.new()
+	add_child(_db_hover_hold_hint)
 	_setup_union_section()
 	# Apply initial union mechanism visibility
 	_on_union_mechanism_changed(SaveManager.union_mechanism_unlocked)
@@ -1217,29 +1222,23 @@ func _make_union_right_tile(u: UnionData) -> Control:
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
-	tile.tooltip_text = "%s  ATK %d / DEF %d  %d◆" % [u.card_name, u.base_atk, u.base_def, u.summon_cost]
-	var want_detail_ref: Array = [false]
 	var union_name: String = u.card_name
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
 			return
 		var mb := ev as InputEventMouseButton
-		if mb.button_index != MOUSE_BUTTON_LEFT:
+		if mb.button_index != MOUSE_BUTTON_LEFT or not mb.pressed:
 			return
-		if mb.pressed:
-			if mb.double_click:
-				want_detail_ref[0] = false
-				CardDetailOverlay.open(self, union_name, "union")
-			else:
-				want_detail_ref[0] = true
-				tile.get_tree().create_timer(0.5).timeout.connect(func() -> void:
-					if want_detail_ref[0]:
-						want_detail_ref[0] = false
-						CardDetailOverlay.open(self, union_name, "union"))
+		if mb.double_click:
+			CardDetailOverlay.open(self, union_name, "union")
 		else:
-			if want_detail_ref[0]:
-				want_detail_ref[0] = false
-				_show_preview("union", union_name))
+			_show_preview("union", union_name))
+	tile.mouse_entered.connect(func() -> void:
+		if _db_hover_hold_hint != null:
+			_db_hover_hold_hint.begin(self, tile, union_name, "union"))
+	tile.mouse_exited.connect(func() -> void:
+		if _db_hover_hold_hint != null:
+			_db_hover_hold_hint.on_hover_exited())
 	return tile
 
 # ── Prologue lock overlay ────────────────────────────────────
@@ -2067,14 +2066,58 @@ func _fe_update_drag_ghost_pos() -> void:
 
 func _fe_hide_drag_ghost() -> void:
 	_fe_drag_ghost_active = false
-	set_process(false)
+	if not _db_drag_ghost_active:
+		set_process(false)
 	if _fe_drag_ghost != null and is_instance_valid(_fe_drag_ghost):
 		_fe_drag_ghost.queue_free()
 	_fe_drag_ghost = null
 
+func _db_show_drag_ghost(tex: Texture2D, size: Vector2) -> void:
+	_db_hide_drag_ghost()
+	var ghost := Control.new()
+	ghost.name = "DeckBuilderDragGhost"
+	ghost.custom_minimum_size = size
+	ghost.size = size
+	ghost.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ghost.z_index = 4096
+	ghost.top_level = true
+	if tex != null:
+		var art := TextureRect.new()
+		art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		art.texture = tex
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		art.modulate = Color(1.0, 1.0, 1.0, 0.82)
+		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		ghost.add_child(art)
+	add_child(ghost)
+	_db_drag_ghost = ghost
+	_db_drag_ghost_active = true
+	set_process(true)
+	_db_update_drag_ghost_pos()
+
+func _db_update_drag_ghost_pos() -> void:
+	if _db_drag_ghost == null or not is_instance_valid(_db_drag_ghost):
+		return
+	var mp: Vector2 = get_viewport().get_mouse_position()
+	_db_drag_ghost.global_position = mp - _db_drag_ghost.size * 0.5
+
+func _db_hide_drag_ghost() -> void:
+	_db_drag_ghost_active = false
+	if not _fe_drag_ghost_active:
+		set_process(false)
+	if _db_drag_ghost != null and is_instance_valid(_db_drag_ghost):
+		_db_drag_ghost.queue_free()
+	_db_drag_ghost = null
+
 func _process(_delta: float) -> void:
 	if _fe_drag_ghost_active:
 		_fe_update_drag_ghost_pos()
+	if _db_drag_ghost_active:
+		_db_update_drag_ghost_pos()
+		# No NOTIFICATION_DRAG_END on anonymous tiles — detect release via Input.
+		if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			_db_hide_drag_ghost()
 
 func _fe_save_formation() -> void:
 	if current_deck == null: return
@@ -2483,8 +2526,39 @@ func _setup_gallery_containers() -> void:
 	tech_section.add_child(_deck_tech_scroll_gal)
 	tech_section.move_child(_deck_tech_scroll_gal, tech_list.get_index())
 
+	# Drop targets: deck scroll containers accept drags from pool tiles.
+	for flow_scroll: ScrollContainer in [_deck_chars_scroll_gal, _deck_traps_scroll_gal, _deck_tech_scroll_gal]:
+		flow_scroll.set_drag_forwarding(
+			Callable(),
+			func(_p: Vector2, data: Variant) -> bool:
+				return data is Dictionary and bool((data as Dictionary).get("from_pool", false)),
+			func(_p: Vector2, data: Variant) -> void:
+				var d := data as Dictionary
+				_add_card_to_deck(str(d.get("card_type", "")), str(d.get("card_name", ""))))
+
+	# Drop target: pool scroll container accepts drags from deck tiles.
+	_trunk_gallery_scroll.set_drag_forwarding(
+		Callable(),
+		func(_p: Vector2, data: Variant) -> bool:
+			return data is Dictionary and bool((data as Dictionary).get("from_deck", false)),
+		func(_p: Vector2, data: Variant) -> void:
+			var d := data as Dictionary
+			_remove_card_gallery(str(d.get("card_name", "")), str(d.get("card_type", ""))))
+
 	_apply_view_mode()
 	call_deferred("_begin_initial_gallery_load")
+
+
+func _make_drag_preview(tex: Texture2D, size: Vector2) -> Control:
+	var prev := TextureRect.new()
+	prev.custom_minimum_size = size
+	prev.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
+	prev.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	prev.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	prev.modulate     = Color(1.0, 1.0, 1.0, 0.75)
+	if tex != null:
+		prev.texture = tex
+	return prev
 
 
 func _begin_initial_gallery_load() -> void:
@@ -2655,13 +2729,6 @@ func _make_pool_tile(card_name: String, card_type: String) -> Control:
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		tile.add_child(lbl)
-	tile.tooltip_text = card_name
-	var lp_pool := Timer.new()
-	lp_pool.one_shot = true
-	lp_pool.wait_time = 0.5
-	tile.add_child(lp_pool)
-	lp_pool.timeout.connect(func() -> void:
-		CardDetailOverlay.open(self, card_name, card_type))
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
 			return
@@ -2672,13 +2739,28 @@ func _make_pool_tile(card_name: String, card_type: String) -> Control:
 			_gallery_selected_name = card_name
 			_gallery_selected_type = card_type
 			if mb.double_click:
-				lp_pool.stop()
 				_add_card_to_deck(card_type, card_name)
 			else:
-				lp_pool.start()
-				_show_preview(card_type, card_name)
-		else:
-			lp_pool.stop())
+				_show_preview(card_type, card_name))
+	tile.mouse_entered.connect(func() -> void:
+		if _db_hover_hold_hint != null:
+			_db_hover_hold_hint.begin(self, tile, card_name, card_type))
+	tile.mouse_exited.connect(func() -> void:
+		if _db_hover_hold_hint != null:
+			_db_hover_hold_hint.on_hover_exited())
+	# Drag source + drop target (accepts from_deck to remove the dropped card).
+	tile.set_drag_forwarding(
+		func(_pos: Vector2) -> Variant:
+			if _db_hover_hold_hint != null:
+				_db_hover_hold_hint.end()
+			_db_show_drag_ghost(tex, Vector2(90, 124))
+			tile.set_drag_preview(_make_drag_preview(tex, Vector2(90, 124)))
+			return {"card_name": card_name, "card_type": card_type, "from_pool": true},
+		func(_p: Vector2, data: Variant) -> bool:
+			return data is Dictionary and bool((data as Dictionary).get("from_deck", false)),
+		func(_p: Vector2, data: Variant) -> void:
+			var d := data as Dictionary
+			_remove_card_gallery(str(d.get("card_name", "")), str(d.get("card_type", ""))))
 	return tile
 
 func _make_deck_tile(card_name: String, card_type: String) -> Control:
@@ -2721,13 +2803,6 @@ func _make_deck_tile(card_name: String, card_type: String) -> Control:
 	rm.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 0.9))
 	rm.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tile.add_child(rm)
-	tile.tooltip_text = card_name + "  (double-tap to remove)"
-	var lp_deck := Timer.new()
-	lp_deck.one_shot = true
-	lp_deck.wait_time = 0.5
-	tile.add_child(lp_deck)
-	lp_deck.timeout.connect(func() -> void:
-		CardDetailOverlay.open(self, card_name, card_type))
 	tile.gui_input.connect(func(ev: InputEvent) -> void:
 		if not (ev is InputEventMouseButton):
 			return
@@ -2736,13 +2811,28 @@ func _make_deck_tile(card_name: String, card_type: String) -> Control:
 			return
 		if mb.pressed:
 			if mb.double_click:
-				lp_deck.stop()
 				_remove_card_gallery(card_name, card_type)
 			else:
-				lp_deck.start()
-				_show_preview(card_type, card_name)
-		else:
-			lp_deck.stop())
+				_show_preview(card_type, card_name))
+	tile.mouse_entered.connect(func() -> void:
+		if _db_hover_hold_hint != null:
+			_db_hover_hold_hint.begin(self, tile, card_name, card_type))
+	tile.mouse_exited.connect(func() -> void:
+		if _db_hover_hold_hint != null:
+			_db_hover_hold_hint.on_hover_exited())
+	# Drag source + drop target (accepts from_pool to add the dropped card).
+	tile.set_drag_forwarding(
+		func(_pos: Vector2) -> Variant:
+			if _db_hover_hold_hint != null:
+				_db_hover_hold_hint.end()
+			_db_show_drag_ghost(tex, Vector2(76, 104))
+			tile.set_drag_preview(_make_drag_preview(tex, Vector2(76, 104)))
+			return {"card_name": card_name, "card_type": card_type, "from_deck": true},
+		func(_p: Vector2, data: Variant) -> bool:
+			return data is Dictionary and bool((data as Dictionary).get("from_pool", false)),
+		func(_p: Vector2, data: Variant) -> void:
+			var d := data as Dictionary
+			_add_card_to_deck(str(d.get("card_type", "")), str(d.get("card_name", ""))))
 	return tile
 
 func _remove_card_gallery(card_name: String, card_type: String) -> void:

@@ -71,21 +71,26 @@ static func _find_overlay_host(from: Node) -> Node:
 	return node
 
 static func open(parent: Node, card_name: String, card_type: String,
-		card_inst: Variant = null, show_quantity: bool = false) -> void:
-	open_and_return(parent, card_name, card_type, card_inst, show_quantity)
+		card_inst: Variant = null, show_quantity: bool = false,
+		pin_to_parent: bool = false, z_index_override: int = -1) -> void:
+	open_and_return(parent, card_name, card_type, card_inst, show_quantity,
+		pin_to_parent, z_index_override)
 
 
 static func open_and_return(parent: Node, card_name: String, card_type: String,
 		card_inst: Variant = null, show_quantity: bool = false,
-		pin_to_parent: bool = false) -> CardDetailOverlay:
+		pin_to_parent: bool = false, z_index_override: int = -1) -> CardDetailOverlay:
 	var overlay := CardDetailOverlay.new()
 	overlay._card_inst          = card_inst
 	overlay._show_quantity      = show_quantity
 	overlay._card_name_for_bug  = card_name
 	var host := parent if pin_to_parent else _find_overlay_host(parent)
-	overlay.z_index = 101
-	if pin_to_parent and host is Control:
+	if z_index_override >= 0:
+		overlay.z_index = z_index_override
+	elif pin_to_parent and host is Control:
 		overlay.z_index = (host as Control).z_index + 50
+	else:
+		overlay.z_index = 101
 	host.add_child(overlay)
 
 	# Size card to 94 % of viewport height (almost full screen)

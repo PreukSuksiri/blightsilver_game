@@ -4086,8 +4086,8 @@ func _build_options_button() -> void:
 	const BTN_H  : float = 230.0
 	const SHOW_H : float = BTN_H * 2.0 / 3.0
 	const HIDE_H : float = BTN_H - SHOW_H
-	const HIT_W  : float = 72.0
-	const HIT_H  : float = 72.0
+	const HIT_W  : float = 161.0   # 70 % of 230 px icon width
+	const HIT_H  : float = 107.0   # 70 % of 153 px visible height
 
 	var root := Control.new()
 	root.layout_mode = 1
@@ -4119,8 +4119,8 @@ func _build_options_button() -> void:
 	hit.anchor_top    = 0.0;  hit.anchor_bottom = 0.0
 	hit.offset_left   = -(HIT_W * 0.5)
 	hit.offset_right  =  (HIT_W * 0.5)
-	hit.offset_top    = 24.0
-	hit.offset_bottom = 24.0 + HIT_H
+	hit.offset_top    = (SHOW_H - HIT_H) * 0.5   # ≈ 23 — centers hit slab in visible area
+	hit.offset_bottom = hit.offset_top + HIT_H
 	hit.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	hit.gui_input.connect(func(event: InputEvent) -> void:
 		if event is InputEventMouseButton:
@@ -4621,7 +4621,8 @@ func _show_battle_log_panel() -> void:
 	rtl.meta_clicked.connect(func(meta: Variant) -> void:
 		var parts: PackedStringArray = str(meta).split("|")
 		if parts.size() == 2:
-			CardDetailOverlay.open(self, parts[0], parts[1]))
+			CardDetailOverlay.open(self, parts[0], parts[1], null, false, false,
+				GameDialog.DEFAULT_Z_INDEX + 100))
 
 	_add_back_btn(vbox, dimmer)
 	SFXManager.wire_prompt_buttons_in(vbox)
