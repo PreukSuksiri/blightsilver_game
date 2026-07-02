@@ -191,7 +191,7 @@ enum AbilityType {
 	# ── Demo sync additions ──
 	TURN_END_FOE_CRYSTAL_PER_MUTAGEN,    # Owner turn end: foe loses N crystals per mutagen flag on field
 	ON_EXPOSE_REVEAL_FOE_ONCE,           # Once when first exposed: reveal 1 foe cell (player chooses)
-	PRE_BATTLE_COIN_FLIP_2_REDIRECT_OR_DESTROY, # WK-17: 2 coins; both heads → foe picks ally; both tails → destroy self
+	PRE_BATTLE_COIN_FLIP_2_REDIRECT_OR_DESTROY, # WK-17: 2 coins; both heads → foe picks ally; attacker: ally fights in Siren's place; defender: redirect hit
 	TURN_END_REVEAL_OPPONENT_CELLS_ONCE, # Once at turn end: reveal N foe cells
 	ATK_BONUS_IF_TECH_PLAYED,            # +N ATK if a named tech was played this game (void stack)
 	PRE_BATTLE_PERM_DEF_DEBUFF_VS_AFFINITY, # Before reckoning: -N DEF permanently to foe of affinity

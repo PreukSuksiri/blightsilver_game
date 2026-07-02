@@ -6,6 +6,7 @@ var include_casual_mode: bool = true
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	UiTheme.apply_to_control(self)
 
 	# ── Full-screen dimmer (click outside to close) ──────────────
 	var dimmer := ColorRect.new()

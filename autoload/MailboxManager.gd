@@ -217,6 +217,8 @@ func delete_claimed() -> void:
 #   reset_credits [amount]
 #   reset_title_cheats
 #   attack_tutorial on|off|true|false|status
+#   wishlist_cta reset|on|off|true|false|status
+#   battle_crystals p1|p2 <amount>
 #   manage_bgm
 #   menu_loading
 
@@ -262,6 +264,7 @@ func admin_command(raw: String) -> String:
 				+ "  export_dead_end_card\n"
 				+ "  win_battle\n"
 				+ "  lose_battle\n"
+				+ "  battle_crystals p1|p2 <amount>\n"
 				+ "  map_editor\n"
 				+ "  vn_editor [filename]\n"
 				+ "  ai_vs_ai\n"
@@ -316,6 +319,7 @@ func admin_command(raw: String) -> String:
 				+ "  reset_credits [amount]\n"
 				+ "  reset_title_cheats\n"
 				+ "  attack_tutorial on|off|true|false|status\n"
+				+ "  wishlist_cta reset|on|off|true|false|status\n"
 				+ "  demo_on\n"
 				+ "  demo_off\n"
 				+ "  demo_status\n"
@@ -576,6 +580,27 @@ func admin_command(raw: String) -> String:
 				return "Not in a battle."
 			GameState.force_game_over(1)
 			return "Player 2 wins — battle ended."
+
+		"battle_crystals":
+			var battle_err: String = _admin_require_active_duel()
+			if not battle_err.is_empty():
+				return battle_err
+			if parts.size() < 3:
+				return "Usage: battle_crystals p1|p2 <amount>"
+			var bc_player: int = _parse_admin_battle_player(parts[1])
+			if bc_player < 0:
+				return "Unknown player. Use p1 or p2."
+			if not String(parts[2]).is_valid_int():
+				return "Amount must be an integer."
+			var bc_amount: int = int(parts[2])
+			var bc_before: int = GameState.crystals[bc_player]
+			GameState.admin_set_crystals(bc_player, bc_amount)
+			_dismiss_admin_console(get_tree().current_scene)
+			var bc_label: String = "P1" if bc_player == 0 else "P2"
+			if bc_amount <= 0 or GameState.current_phase == GameState.Phase.GAME_OVER:
+				return "%s crystals: %d → %d. Duel ended (crystal depletion)." % [
+					bc_label, bc_before, bc_amount]
+			return "%s crystals: %d → %d." % [bc_label, bc_before, bc_amount]
 
 		"map_editor":
 			var scene := get_tree().current_scene
@@ -1285,6 +1310,26 @@ func admin_command(raw: String) -> String:
 				_:
 					return "Usage: attack_tutorial on|off|true|false|status"
 
+		"wishlist_cta":
+			if parts.size() < 2:
+				return "Usage: wishlist_cta reset|on|off|true|false|status"
+			var wl_arg: String = parts[1].to_lower()
+			match wl_arg:
+				"reset", "off", "false", "0", "no":
+					SaveManager.reset_wishlist_cta_shown()
+					GameState.pending_wishlist_cta = false
+					return "wishlist_cta_shown = false (Steam wishlist CTA will show on next Quick Duel or exploration story win)."
+				"on", "true", "1", "yes":
+					SaveManager.mark_wishlist_cta_shown()
+					GameState.pending_wishlist_cta = false
+					return "wishlist_cta_shown = true (Steam wishlist CTA suppressed)."
+				"status":
+					var wl_state: String = "true" if SaveManager.is_wishlist_cta_shown() else "false"
+					var wl_pending: String = "true" if GameState.pending_wishlist_cta else "false"
+					return "wishlist_cta_shown = %s, pending_wishlist_cta = %s" % [wl_state, wl_pending]
+				_:
+					return "Usage: wishlist_cta reset|on|off|true|false|status"
+
 		"pack_editor":
 			var scene: Node = get_tree().current_scene
 			if scene.get_node_or_null("PackEditorOverlay") != null:
@@ -1506,6 +1551,32 @@ func admin_command(raw: String) -> String:
 
 		_:
 			return "Unknown command '%s'. Type 'help'." % cmd
+
+# ─────────────────────────────────────────────────────────────
+# Admin battle helpers
+# ─────────────────────────────────────────────────────────────
+
+func _admin_require_active_duel() -> String:
+	var scene: Node = get_tree().current_scene
+	if scene == null or scene.name != "GameBoard":
+		return "battle_crystals can only be used during an active duel (GameBoard)."
+	match GameState.current_phase:
+		GameState.Phase.GAME_OVER, GameState.Phase.NONE:
+			return "Not in a battle."
+		GameState.Phase.SETUP_P1, GameState.Phase.SETUP_P2:
+			return "Not in an active duel (still in setup)."
+		_:
+			return ""
+
+
+func _parse_admin_battle_player(arg: String) -> int:
+	match arg.to_lower():
+		"p1", "1", "player1", "player_1", "human", "0":
+			return 0
+		"p2", "2", "player2", "player_2", "ai", "opponent":
+			return 1
+		_:
+			return -1
 
 # ─────────────────────────────────────────────────────────────
 # Gallery helpers

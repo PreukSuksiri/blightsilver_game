@@ -44,6 +44,7 @@ var _active_ai: AIPlayer = null    # whichever AI is currently taking a turn
 var _vs_ai_deck: Variant = null    # captured before new_game() clears GameState.battle_ai_deck
 var _vs_ai_player_deck: Variant = null
 var _vs_ai_player_forced_cells: Array = []
+var _battle_ai_identity_id: String = ""  # captured before new_game() clears identity
 
 # Player portrait illustration nodes
 var _p1_portrait: TextureRect = null
@@ -51,6 +52,11 @@ var _p2_portrait: TextureRect = null
 
 # VN path to play after the win screen is dismissed (set by _on_game_over)
 var _pending_win_vn: String = ""
+signal endgame_overlay_dismissed
+var _endgame_nav_pending: Dictionary = {}
+var _endgame_dismiss_sent: bool = false
+var _endgame_black_backdrop: ColorRect = null
+var _wishlist_cta_win_eligible: bool = false
 
 # Corner crystal displays (icon + label, above portraits)
 var _p1_bottom_crystal: Label = null
@@ -405,6 +411,7 @@ func _ready() -> void:
 	_vs_ai_deck = GameState.battle_ai_deck
 	_vs_ai_player_deck = GameState.battle_player_deck
 	_vs_ai_player_forced_cells = GameState.battle_player_forced_cells.duplicate(true)
+	_battle_ai_identity_id = GameState.battle_ai_identity_id
 	if TutorialBattleManager.is_prepared:
 		TutorialBattleManager.on_board_ready(self)
 	_start_game()
@@ -1210,6 +1217,8 @@ func _start_game() -> void:
 			GameState.battle_player_deck = _vs_ai_player_deck
 		if not _vs_ai_player_forced_cells.is_empty():
 			GameState.battle_player_forced_cells = _vs_ai_player_forced_cells.duplicate(true)
+		if not _battle_ai_identity_id.is_empty():
+			GameState.battle_ai_identity_id = _battle_ai_identity_id
 	# Apply campaign-supplied player names if VNPlayer set them
 	if GameState.campaign_player_names.size() == 2:
 		var n1: String = GameState.campaign_player_names[0]
@@ -1470,6 +1479,8 @@ func _p1_magitech_name() -> String:
 
 func _p2_magitech_name() -> String:
 	var iid := GameState.battle_ai_identity_id.strip_edges()
+	if iid.is_empty() and GameState.quick_duel_active:
+		iid = SaveManager.get_quick_duel_identity(GameState.quick_duel_battle_tier)
 	if not iid.is_empty() and not AIIdentityVault.get_entry(iid).is_empty():
 		return AIIdentityVault.get_birth_name(iid)
 	return _player_names[1]
@@ -5331,10 +5342,9 @@ func _run_crystal_change_animation(player_index: int, new_amount: int) -> void:
 	if new_amount < old_amount:
 		await _play_crystal_burst(player_index, false)
 		await _tick_crystal(player_index, old_amount, new_amount)
-		_notify_crystal_animation_complete()
 		await get_tree().create_timer(1.0).timeout
-		if new_amount > 0:
-			_check_almost_win_bgm()
+		_check_almost_win_bgm()
+		_notify_crystal_animation_complete()
 	elif new_amount > old_amount:
 		await _play_crystal_burst(player_index, true)
 		await _tick_crystal(player_index, old_amount, new_amount)
@@ -7135,7 +7145,8 @@ func _on_awaiting_target_selection(prompt: String, filter: String) -> void:
 				_ab_target = _get_ai_for_player(_ab_owner).decide_target(filter)
 			elif filter == "wk17_foe_pick_character":
 				_ab_player = turn_manager._pending_wk17_foe_player
-				_ab_target = _get_ai_for_player(_ab_player).decide_target(filter)
+				_ab_target = _get_ai_for_player(_ab_player).decide_wk17_foe_pick(
+					turn_manager._pending_wk17_exclude_pick_pos)
 			else:
 				_ab_target = _active_ai.decide_target(filter)
 			if filter == "ability_rebel_king_swap":
@@ -7346,8 +7357,19 @@ func _handle_tech_target(player: int, pos: Vector2i) -> void:
 				var _wk17_att: GameState.CardInstance = GameState.attacker_card
 				if _wk17_att != null:
 					GameState.post_message("WK-17: %s will attack %s!" % [_wk17_att.card_name, card.card_name])
-			else:
-				turn_manager._pending_wk17_new_target_pos = pos
+			elif turn_manager._pending_wk17_mode == "substitute_foe_attacker":
+				if pos == turn_manager._pending_wk17_defender_pos:
+					return
+				turn_manager._wk17_substitute_battle = true
+				turn_manager._wk17_substitute_grid_player = _wk17_foe
+				turn_manager._wk17_substitute_attacker_pos = pos
+				turn_manager._wk17_substitute_defender_pos = turn_manager._pending_wk17_defender_pos
+				if not card.face_up:
+					GameState.reveal_card_by_ability(player, pos.x, pos.y)
+				var _wk17_siren: GameState.CardInstance = GameState.attacker_card
+				if _wk17_siren != null:
+					GameState.post_message("WK-17: %s will fight in place of %s!" % [
+						card.card_name, _wk17_siren.card_name])
 			_clear_after_ability()
 		return
 
@@ -8457,14 +8479,12 @@ func _highlight_tech_targets(filter: String) -> void:
 		var _wk17_foe: int = turn_manager._pending_wk17_foe_player
 		if _wk17_foe < 0:
 			_wk17_foe = opponent
-		var _wk17_att_pos: Vector2i = GameState.attacker_pos
+		var _exclude_pos: Vector2i = turn_manager._pending_wk17_exclude_pick_pos
 		for r in range(GameState.GRID_SIZE):
 			for c in range(GameState.GRID_SIZE):
 				var pos: Vector2i = Vector2i(r, c)
 				var card: GameState.CardInstance = GameState.get_card(_wk17_foe, r, c)
-				var ok: bool = card.card_type == "character"
-				if turn_manager._pending_wk17_mode == "redirect_attacker" and pos == _wk17_att_pos:
-					ok = false
+				var ok: bool = card.card_type == "character" and pos != _exclude_pos
 				grid_nodes[_wk17_foe][r][c].set_highlighted(ok)
 
 	elif filter == "opponent_character_ability_destroy":
@@ -9319,7 +9339,10 @@ func _maybe_flash_outside_reckoning_ability(prompt: String, filter: String) -> v
 	var info: Dictionary = _resolve_outside_reckoning_flash_card(prompt, filter)
 	if info.is_empty():
 		return
-	await _show_card_effect_flash(str(info.get("name", "")), str(info.get("type", "character")))
+	var flash_name: String = str(info.get("name", ""))
+	var flash_type: String = str(info.get("type", "character"))
+	BattleLogFormat.log_ability_trigger(flash_name, flash_type)
+	await _show_card_effect_flash(flash_name, flash_type)
 
 func _on_card_effect_triggered(card_name: String, card_type: String) -> void:
 	await _show_card_effect_flash(card_name, card_type)
@@ -9643,9 +9666,15 @@ func _process(delta: float) -> void:
 	_update_fog(delta)
 
 func _on_game_over(winner: int) -> void:
+	_endgame_nav_pending = {}
+	_endgame_dismiss_sent = false
+	_wishlist_cta_win_eligible = false
 	# Dismiss guide box immediately so it doesn't bleed into VN or win screen
 	_hide_guide()
 	_was_tutorial_battle = TutorialBattleManager.is_active
+	_wishlist_cta_win_eligible = _compute_wishlist_cta_win_eligible(winner)
+	if _wishlist_cta_win_eligible:
+		GameState.pending_wishlist_cta = true
 	if TutorialBattleManager.is_active:
 		TutorialBattleManager.stop()
 		_update_reveal_buttons()
@@ -9747,11 +9776,12 @@ func _on_game_over(winner: int) -> void:
 	var ml: Control = get_node("MainLayout")
 	_shake_origin = ml.position
 	_shake_active = true
-	var _crystal_end: bool = GameState.game_over_reason == "crystals"
-	if player_won and GameState.battle_almost_win_enabled and not _crystal_end and not _vs_ai_bgm_muted():
+	if player_won and GameState.battle_almost_win_enabled and not _vs_ai_bgm_muted():
 		# Win: switch to almost-win BGM at 00:00 with no fade-in.
 		# If it's already playing (triggered by the almost-win threshold mid-battle),
 		# leave it running — do not restart it.
+		# Crystal-depletion wins also use almost-win when it did not latch mid-battle
+		# (e.g. admin crystal set or a single hit from above threshold to zero).
 		var almost_path: String = _resolve_almost_win_bgm_path()
 		if BGMManager.get_current_path() != almost_path:
 			BGMManager.play_path(almost_path, 0.0, 0.0, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
@@ -9785,13 +9815,19 @@ func _on_game_over(winner: int) -> void:
 			await _present_quick_duel_reward_reveal_anims()
 			GameState.quick_duel_pending_rewards.clear()
 			GameState.quick_duel_reveal_queue.clear()
-		if GameState.pending_wishlist_cta:
-			await WishlistCtaOverlay.present(self)
-			SaveManager.mark_wishlist_cta_shown()
-			GameState.pending_wishlist_cta = false
+
+	await _await_endgame_overlay_dismissed()
+
+	if _should_show_wishlist_cta():
+		await WishlistCtaOverlay.present(self)
+		SaveManager.mark_wishlist_cta_shown()
+		GameState.pending_wishlist_cta = false
+		_wishlist_cta_win_eligible = false
 
 	if not player_won:
 		await _maybe_show_casual_mode_loss_tip()
+
+	_run_pending_endgame_navigation()
 
 # ─────────────────────────────────────────────────────────────
 # Game-over helpers
@@ -9945,6 +9981,8 @@ func _grant_vn_battle_loss_rewards() -> void:
 
 func _handle_quick_duel_win_rewards() -> void:
 	if GameState.quick_duel_rewards_settled:
+		if not SaveManager.is_wishlist_cta_shown():
+			GameState.pending_wishlist_cta = true
 		return
 	GameState.quick_duel_rewards_settled = true
 	GameState.quick_duel_reveal_queue.clear()
@@ -10221,6 +10259,15 @@ func _show_endgame_screen(winner: int) -> void:
 		_report_duel_finished(is_win_screen, was_quick_duel, quick_duel_tier_snapshot)
 
 	# ── Build full-screen overlay ────────────────────────────────────────────
+	if is_instance_valid(_endgame_black_backdrop):
+		_endgame_black_backdrop.queue_free()
+	_endgame_black_backdrop = ColorRect.new()
+	_endgame_black_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_endgame_black_backdrop.color = Color.BLACK
+	_endgame_black_backdrop.z_index = 9
+	_endgame_black_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_endgame_black_backdrop)
+
 	var overlay := Control.new()
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index = 10
@@ -10423,24 +10470,18 @@ func _show_endgame_screen(winner: int) -> void:
 		load_btn.pressed.connect(func() -> void:
 			if not has_save:
 				return
-			_fade_endgame_overlay_and_run(overlay, func() -> void:
-				_stop_battle_music()
-				GameState.vn_launched_from_exploration = false
-				if not ExplorationManager.resume_from_last_save_after_duel_loss():
-					ExplorationManager.quit_to_title_after_duel_loss()
-					get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
-					return
-				BGMManager.stop(0.5)
-				get_tree().change_scene_to_file(ExplorationManager.EXPLORATION_PLAYER_SCENE)))
+			_queue_endgame_navigation({
+				"type": "exploration_resume",
+			})
+			_dismiss_endgame_overlay(overlay))
 		choice_vbox.add_child(load_btn)
 
 		var title_btn := _make_defeat_choice_button("Title Screen")
 		title_btn.pressed.connect(func() -> void:
-			_fade_endgame_overlay_and_run(overlay, func() -> void:
-				_stop_battle_music()
-				GameState.vn_launched_from_exploration = false
-				ExplorationManager.quit_to_title_after_duel_loss()
-				get_tree().change_scene_to_file("res://scenes/main_menu.tscn")))
+			_queue_endgame_navigation({
+				"type": "exploration_title",
+			})
+			_dismiss_endgame_overlay(overlay))
 		choice_vbox.add_child(title_btn)
 	else:
 		var _clicked := [false]
@@ -10459,18 +10500,23 @@ func _show_endgame_screen(winner: int) -> void:
 			var pending_vn := _pending_win_vn
 			_pending_win_vn = ""
 			if pending_vn != "":
-				var post_vn_dest: String = dest
-				_fade_endgame_overlay_and_run(overlay, func() -> void:
-					_stop_battle_music()
-					var cb := func() -> void:
-						_on_quick_duel_tutorial_post_vn(post_vn_dest)
-						get_tree().change_scene_to_file(post_vn_dest)
-					VNPlayer.launch_overlay(pending_vn, cb))
+				_queue_endgame_navigation({
+					"type": "vn",
+					"vn_path": pending_vn,
+					"dest": dest,
+				})
+			elif from_exploration or is_exploration:
+				_queue_endgame_navigation({
+					"type": "scene",
+					"dest": dest,
+					"stop_bgm_soft": true,
+				})
 			else:
-				_fade_endgame_overlay_and_run(overlay, func() -> void:
-					if from_exploration or is_exploration:
-						BGMManager.stop(0.5)
-					get_tree().change_scene_to_file(dest)))
+				_queue_endgame_navigation({
+					"type": "scene",
+					"dest": dest,
+				})
+			_dismiss_endgame_overlay(overlay))
 
 	# Fade in the endgame screen
 	var ft := create_tween()
@@ -10520,6 +10566,118 @@ func _fade_endgame_overlay_and_run(overlay: Control, action: Callable) -> void:
 		black.queue_free()
 		if action.is_valid():
 			action.call())
+
+
+func _queue_endgame_navigation(nav: Dictionary) -> void:
+	_endgame_nav_pending = nav.duplicate(true)
+
+
+func _should_show_wishlist_cta() -> bool:
+	if SaveManager.is_wishlist_cta_shown():
+		return false
+	return _wishlist_cta_win_eligible or GameState.pending_wishlist_cta
+
+
+func _compute_wishlist_cta_win_eligible(winner: int) -> bool:
+	if winner != 0:
+		return false
+	if _was_tutorial_battle:
+		return false
+	if SaveManager.is_wishlist_cta_shown():
+		return false
+	var mode := GameState.game_mode
+	if mode == GameState.GameMode.EXPLORATION:
+		return ExplorationManager.is_session_active
+	if mode != GameState.GameMode.VS_AI:
+		return false
+	if GameState.quick_duel_active:
+		return true
+	if GameState.post_battle_return_scene == "res://scenes/quick_duel.tscn":
+		return true
+	# Story battles launched from exploration VN (e.g. surveillance room spot battles).
+	if GameState.vn_launched_from_exploration and ExplorationManager.is_session_active:
+		return true
+	return false
+
+
+func _await_endgame_overlay_dismissed() -> void:
+	if _endgame_dismiss_sent:
+		return
+	await endgame_overlay_dismissed
+
+
+func _dismiss_endgame_overlay(overlay: Control) -> void:
+	if _endgame_dismiss_sent:
+		return
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var black := ColorRect.new()
+	black.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	black.color = Color(0.0, 0.0, 0.0, 0.0)
+	black.z_index = 200
+	black.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(black)
+	var out_tw := create_tween()
+	out_tw.tween_property(black, "color:a", 1.0, 0.5).set_trans(Tween.TRANS_SINE)
+	out_tw.tween_callback(func() -> void:
+		if is_instance_valid(overlay):
+			overlay.queue_free()
+		black.queue_free()
+		_endgame_dismiss_sent = true
+		endgame_overlay_dismissed.emit())
+
+
+func _clear_endgame_black_backdrop() -> void:
+	if is_instance_valid(_endgame_black_backdrop):
+		_endgame_black_backdrop.queue_free()
+	_endgame_black_backdrop = null
+
+
+func _run_pending_endgame_navigation() -> void:
+	var nav: Dictionary = _endgame_nav_pending
+	_endgame_nav_pending = {}
+	if nav.is_empty():
+		return
+	match str(nav.get("type", "")):
+		"scene":
+			if bool(nav.get("stop_battle_music", false)):
+				_stop_battle_music()
+			if bool(nav.get("stop_bgm_soft", false)):
+				BGMManager.stop(0.5)
+			var scene_dest: String = str(nav.get("dest", "res://scenes/main_menu.tscn"))
+			_on_quick_duel_tutorial_post_vn(scene_dest)
+			_clear_endgame_black_backdrop()
+			get_tree().change_scene_to_file(scene_dest)
+		"vn":
+			_stop_battle_music()
+			var vn_dest: String = str(nav.get("dest", "res://scenes/main_menu.tscn"))
+			var vn_path: String = str(nav.get("vn_path", ""))
+			if vn_path.is_empty():
+				_on_quick_duel_tutorial_post_vn(vn_dest)
+				_clear_endgame_black_backdrop()
+				get_tree().change_scene_to_file(vn_dest)
+				return
+			var cb := func() -> void:
+				_on_quick_duel_tutorial_post_vn(vn_dest)
+				_clear_endgame_black_backdrop()
+				get_tree().change_scene_to_file(vn_dest)
+			VNPlayer.launch_overlay(vn_path, cb)
+		"exploration_resume":
+			_stop_battle_music()
+			GameState.vn_launched_from_exploration = false
+			if not ExplorationManager.resume_from_last_save_after_duel_loss():
+				ExplorationManager.quit_to_title_after_duel_loss()
+				_clear_endgame_black_backdrop()
+				get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+				return
+			BGMManager.stop(0.5)
+			_clear_endgame_black_backdrop()
+			get_tree().change_scene_to_file(ExplorationManager.EXPLORATION_PLAYER_SCENE)
+		"exploration_title":
+			_stop_battle_music()
+			GameState.vn_launched_from_exploration = false
+			ExplorationManager.quit_to_title_after_duel_loss()
+			_clear_endgame_black_backdrop()
+			get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 # ─────────────────────────────────────────────────────────────
 # Session log — lightweight file logging for VS_AI / HOT_SEAT

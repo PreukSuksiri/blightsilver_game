@@ -613,6 +613,12 @@ func mark_wishlist_cta_shown() -> void:
 	wishlist_cta_shown = true
 	save_data()
 
+func reset_wishlist_cta_shown() -> void:
+	if not wishlist_cta_shown:
+		return
+	wishlist_cta_shown = false
+	save_data()
+
 func is_casual_mode() -> bool:
 	return casual_mode
 

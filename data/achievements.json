@@ -36,7 +36,7 @@
 			"id": "win_duel_kelly",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 
 			},
@@ -50,7 +50,7 @@
 			"id": "union_summon_divine",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Choir Lead Amber",
 				"type": "card"
@@ -65,7 +65,7 @@
 			"id": "union_summon_chaos",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Ten Arms Yaksa",
 				"type": "card"
@@ -80,7 +80,7 @@
 			"id": "union_summon_nature",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Scarlet Shroom",
 				"type": "card"
@@ -95,7 +95,7 @@
 			"id": "union_summon_arcane",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Cloud Elemental",
 				"type": "card"
@@ -110,7 +110,7 @@
 			"id": "union_summon_bio",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Volatile Slasher",
 				"type": "card"
@@ -125,7 +125,7 @@
 			"id": "union_summon_cosmic",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Giant Meteor Vergaia",
 				"type": "card"
@@ -140,7 +140,7 @@
 			"id": "union_summon_anima",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Legendary Locksmith",
 				"type": "card"
@@ -155,7 +155,7 @@
 			"id": "union_champion_divine",
 			"implemented": true,
 			"progress_kind": "union_summon_divine_count",
-			"progress_target": 10,
+			"progress_target": 10.0,
 			"reward": {
 				"card_name": "Seraphim Fistmaster",
 				"type": "card"
@@ -170,7 +170,7 @@
 			"id": "union_champion_chaos",
 			"implemented": true,
 			"progress_kind": "union_summon_chaos_count",
-			"progress_target": 10,
+			"progress_target": 10.0,
 			"reward": {
 				"card_name": "Lord of Terror",
 				"type": "card"
@@ -185,7 +185,7 @@
 			"id": "union_champion_nature",
 			"implemented": true,
 			"progress_kind": "union_summon_nature_count",
-			"progress_target": 10,
+			"progress_target": 10.0,
 			"reward": {
 				"card_name": "Barros the Colossal",
 				"type": "card"
@@ -200,7 +200,7 @@
 			"id": "union_champion_arcane",
 			"implemented": true,
 			"progress_kind": "union_summon_arcane_count",
-			"progress_target": 10,
+			"progress_target": 10.0,
 			"reward": {
 				"card_name": "Burning Phoenix",
 				"type": "card"
@@ -215,7 +215,7 @@
 			"id": "union_champion_cosmic",
 			"implemented": true,
 			"progress_kind": "union_summon_cosmic_count",
-			"progress_target": 10,
+			"progress_target": 10.0,
 			"reward": {
 				"card_name": "Helios the Prideful Fortress",
 				"type": "card"
@@ -230,7 +230,7 @@
 			"id": "union_champion_bio",
 			"implemented": true,
 			"progress_kind": "union_summon_bio_count",
-			"progress_target": 10,
+			"progress_target": 10.0,
 			"reward": {
 				"card_name": "Bioterrorist",
 				"type": "card"
@@ -245,7 +245,7 @@
 			"id": "union_champion_anima",
 			"implemented": true,
 			"progress_kind": "union_summon_anima_count",
-			"progress_target": 10,
+			"progress_target": 10.0,
 			"reward": {
 				"card_name": "X-Death Squad",
 				"type": "card"
@@ -262,7 +262,7 @@
 			"progress_kind": "unique_cards",
 			"progress_target": 50,
 			"reward": {
-				"card_name": "Great Diplomacy",
+				"card_name": "Radar",
 				"type": "card"
 			},
 			"title": "Growing Collection I"
@@ -320,7 +320,7 @@
 			"id": "discover_unions_10",
 			"implemented": true,
 			"progress_kind": "unions_discovered",
-			"progress_target": 10,
+			"progress_target": 10.0,
 			"reward": {
 				"card_name": "Spike Trap",
 				"type": "card"
@@ -335,9 +335,9 @@
 			"id": "discover_unions_20",
 			"implemented": true,
 			"progress_kind": "unions_discovered",
-			"progress_target": 20,
+			"progress_target": 20.0,
 			"reward": {
-				"amount": 30000,
+				"amount": 30000.0,
 				"type": "credits"
 			},
 			"title": "Formula Hunter III"
@@ -365,7 +365,7 @@
 			"id": "destroy_by_tech",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Space Boy",
 				"type": "card"
@@ -380,7 +380,7 @@
 			"id": "destroy_by_trap",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Poltergeist",
 				"type": "card"
@@ -395,9 +395,9 @@
 			"id": "finish_chapter_1",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
-				"count": 10,
+				"count": 10.0,
 				"type": "union_scroll"
 			},
 			"title": "Silver Path"
@@ -410,7 +410,7 @@
 			"id": "ch1_all_exploration_enemies",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Spell Sniper",
 				"type": "card"
@@ -425,7 +425,7 @@
 			"id": "credits_10k",
 			"implemented": true,
 			"progress_kind": "credit_balance",
-			"progress_target": 10000,
+			"progress_target": 10000.0,
 			"reward": {
 				"card_name": "Pit Lord",
 				"type": "card"
@@ -440,7 +440,7 @@
 			"id": "credits_100k",
 			"implemented": true,
 			"progress_kind": "credit_balance",
-			"progress_target": 100000,
+			"progress_target": 100000.0,
 			"reward": {
 				"card_name": "Goddess of Virtue",
 				"type": "card"
@@ -455,7 +455,7 @@
 			"id": "win_hard_no_casual",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Siege Cannon",
 				"type": "card"
@@ -470,7 +470,7 @@
 			"id": "build_decks_5",
 			"implemented": true,
 			"progress_kind": "deck_count",
-			"progress_target": 5,
+			"progress_target": 5.0,
 			"reward": {
 				"card_name": "Bunker",
 				"type": "card"
@@ -485,7 +485,7 @@
 			"id": "build_decks_10",
 			"implemented": true,
 			"progress_kind": "deck_count",
-			"progress_target": 10,
+			"progress_target": 10.0,
 			"reward": {
 				"card_name": "Wandering Swordsman",
 				"type": "card"
@@ -500,7 +500,7 @@
 			"id": "first_exotic_card",
 			"implemented": true,
 			"progress_kind": "none",
-			"progress_target": 0,
+			"progress_target": 0.0,
 			"reward": {
 				"card_name": "Resurrection",
 				"type": "card"

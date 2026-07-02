@@ -55,9 +55,15 @@ var _pending_lockpicker_owner: int = -1
 var _pending_reveal_attacker_player: int = -1
 var _pending_wk17_foe_player: int = -1
 var _pending_wk17_mode: String = ""
-var _pending_wk17_new_target_pos: Vector2i = Vector2i(-1, -1)
+var _pending_wk17_exclude_pick_pos: Vector2i = Vector2i(-1, -1)
+var _pending_wk17_defender_pos: Vector2i = Vector2i(-1, -1)
 var _wk17_friendly_fire: bool = false
 var _wk17_friendly_fire_pos: Vector2i = Vector2i(-1, -1)
+var _wk17_substitute_battle: bool = false
+var _wk17_substitute_grid_player: int = -1
+var _wk17_substitute_attacker_pos: Vector2i = Vector2i(-1, -1)
+var _wk17_substitute_defender_pos: Vector2i = Vector2i(-1, -1)
+var _wk17_initiating_attacker_pos: Vector2i = Vector2i(-1, -1)
 
 ## Depth counter for async flows (target selection, brainwash, etc.) that must
 ## finish before turn/AI continuation is allowed.
@@ -468,6 +474,17 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		await resolve_brainwash_friendly_fire(player, _wk17_ff_pos)
 		return
 
+	if _wk17_substitute_battle \
+			and _wk17_substitute_attacker_pos != Vector2i(-1, -1) \
+			and _wk17_substitute_defender_pos != Vector2i(-1, -1):
+		var _wk17_sub_att: Vector2i = _wk17_substitute_attacker_pos
+		var _wk17_sub_def: Vector2i = _wk17_substitute_defender_pos
+		var _wk17_sub_grid: int = _wk17_substitute_grid_player
+		var _wk17_init_att: Vector2i = _wk17_initiating_attacker_pos
+		_clear_wk17_substitute_state()
+		await resolve_wk17_substitute_battle(player, _wk17_sub_grid, _wk17_sub_att, _wk17_sub_def, _wk17_init_att)
+		return
+
 	# OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT (X-Death Squad) — before overlay since it may abort
 	if attacker.ability_type == CharacterData.AbilityType.OPTIONAL_CRYSTAL_PAY_DESTROY_OPPONENT \
 			and defender.card_type == "character":
@@ -594,6 +611,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 		result.defender_log_label = BattleLogFormat.format_card(defender)
 	for msg in result.messages:
 		GameState.post_message(msg)
+	_log_reckoning_ability_triggers(attacker, defender, result)
 
 	# Force Shield: if the defender would be destroyed but is shielded, block the destruction
 	if result.defender_destroyed and defender.card_type == "character" and defender.force_shielded:
@@ -626,6 +644,11 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 
 	_preview_destruction_survival(
 		result, attacker, defender, player, opponent, attacker_pos, target_pos)
+
+	await _maybe_resolve_sacrifice_for_card_type(
+		result, player, opponent, attacker_pos, target_pos, attacker, defender)
+	if _battle_aborted():
+		return
 
 	# Show coin flip visual for any flips that happened inside BattleResolver
 	if not result.coin_flip_results.is_empty() and _pre_shown_reckoning_coins.is_empty():
@@ -1122,6 +1145,102 @@ func _preview_destruction_survival(
 		result.attacker_crystal_loss = 0
 
 
+func _card_has_sacrifice_for_card_type(card: GameState.CardInstance) -> bool:
+	if card == null or card.card_type != "character":
+		return false
+	if card.ability_type == CharacterData.AbilityType.SACRIFICE_FOR_CARD_TYPE:
+		return true
+	var data: CharacterData = CardDatabase.get_character(card.card_name)
+	return data != null and data.ability_type == CharacterData.AbilityType.SACRIFICE_FOR_CARD_TYPE
+
+
+func _sacrifice_name_filter(card: GameState.CardInstance) -> String:
+	if card.ability_type == CharacterData.AbilityType.SACRIFICE_FOR_CARD_TYPE:
+		var from_params: String = str(card.ability_params.get("name_contains", ""))
+		if not from_params.is_empty():
+			return from_params
+	var data: CharacterData = CardDatabase.get_character(card.card_name)
+	if data != null and data.ability_type == CharacterData.AbilityType.SACRIFICE_FOR_CARD_TYPE:
+		return str(data.ability_params.get("name_contains", ""))
+	return ""
+
+
+func _sync_sacrifice_ability_meta(card: GameState.CardInstance) -> void:
+	var data: CharacterData = CardDatabase.get_character(card.card_name)
+	if data == null or data.ability_type != CharacterData.AbilityType.SACRIFICE_FOR_CARD_TYPE:
+		return
+	card.ability_type = data.ability_type
+	card.ability_params = data.ability_params.duplicate()
+
+
+## SACRIFICE_FOR_CARD_TYPE — usable face-down; resolve before Reckoning overlay so the
+## animation reflects the final destruction outcome.
+func _maybe_resolve_sacrifice_for_card_type(
+		result: BattleResolver.BattleResult,
+		player: int,
+		opponent: int,
+		attacker_pos: Vector2i,
+		target_pos: Vector2i,
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance
+) -> void:
+	var dying_card: GameState.CardInstance = null
+	var dying_pos: Vector2i = Vector2i(-1, -1)
+	var field_owner: int = -1
+	var use_defender_choice: bool = true
+	if result.defender_destroyed and defender.card_type == "character":
+		dying_card = defender
+		dying_pos = target_pos
+		field_owner = opponent
+	elif result.attacker_destroyed and attacker.card_type == "character":
+		dying_card = attacker
+		dying_pos = attacker_pos
+		field_owner = player
+		use_defender_choice = false
+	else:
+		return
+
+	var dying_name: String = dying_card.card_name
+	for _sac_r: int in range(GameState.GRID_SIZE):
+		for _sac_c: int in range(GameState.GRID_SIZE):
+			var sac_pos: Vector2i = Vector2i(_sac_r, _sac_c)
+			if sac_pos == dying_pos:
+				continue
+			var sac_cand: GameState.CardInstance = GameState.get_card(field_owner, _sac_r, _sac_c)
+			if not _card_has_sacrifice_for_card_type(sac_cand):
+				continue
+			_sync_sacrifice_ability_meta(sac_cand)
+			var sac_name_filter: String = _sacrifice_name_filter(sac_cand)
+			if sac_name_filter.is_empty() or sac_name_filter not in dying_name:
+				continue
+			var sac_label: String = sac_cand.card_name
+			await await_card_effect_flash(sac_label)
+			var _sac_prompt: String = "%s sacrifices itself to save %s?" % [sac_label, dying_name]
+			var _sac_choices: Array = ["Sacrifice", "Let it be destroyed"]
+			if use_defender_choice:
+				emit_signal("awaiting_defender_choice", _sac_prompt, _sac_choices)
+			else:
+				emit_signal("awaiting_trap_choice", _sac_prompt, _sac_choices)
+			var sac_choice: int = await ability_choice_resolved
+			if sac_choice == 0:
+				if dying_card == defender:
+					result.defender_destroyed = false
+					result.defender_crystal_loss = 0
+					result.destruction_blocked_defender = false
+				elif dying_card == attacker:
+					result.attacker_destroyed = false
+					result.attacker_crystal_loss = 0
+					result.destruction_blocked_attacker = false
+				sac_cand = GameState.get_card(field_owner, _sac_r, _sac_c)
+				if sac_cand.card_type == "character" and _card_has_sacrifice_for_card_type(sac_cand):
+					if not sac_cand.face_up:
+						GameState.reveal_card(field_owner, _sac_r, _sac_c)
+					GameState.destroy_card(field_owner, _sac_r, _sac_c)
+					await _wait_crystal_animation()
+					GameState.post_message("%s sacrificed itself to save %s!" % [sac_label, dying_name])
+			return
+
+
 func _apply_battle_result(
 		result: BattleResolver.BattleResult,
 		player: int,
@@ -1186,35 +1305,6 @@ func _apply_battle_result(
 	if result.attacker_crystal_gain > 0 or result.defender_crystal_gain > 0:
 		await _wait_crystal_animation()
 
-	# SACRIFICE_FOR_CARD_TYPE: a field card sacrifices itself to save the defender
-	if result.defender_destroyed and defender.card_type == "character":
-		var _sac_found: bool = false
-		for _sac_r: int in range(GameState.GRID_SIZE):
-			if _sac_found:
-				break
-			for _sac_c: int in range(GameState.GRID_SIZE):
-				if Vector2i(_sac_r, _sac_c) == target_pos:
-					continue
-				var _sac_cand: GameState.CardInstance = GameState.get_card(opponent, _sac_r, _sac_c)
-				if _sac_cand.card_type == "character" \
-						and _sac_cand.ability_type == CharacterData.AbilityType.SACRIFICE_FOR_CARD_TYPE:
-					var _sac_name: String = _sac_cand.ability_params.get("name_contains", "")
-					if _sac_name != "" and _sac_name in defender.card_name:
-						await _witness_card(opponent, _sac_r, _sac_c)
-						await _witness_pause()
-						await await_card_effect_flash(_sac_cand.card_name)
-						emit_signal("awaiting_defender_choice",
-							"%s sacrifices itself to save %s?" % [_sac_cand.card_name, defender.card_name],
-							["Sacrifice", "Let it be destroyed"])
-						var _sac_choice: int = await ability_choice_resolved
-						if _sac_choice == 0:
-							GameState.destroy_card(opponent, _sac_r, _sac_c)
-							await _wait_crystal_animation()
-							result.defender_destroyed = false
-							GameState.post_message("%s sacrificed itself to save %s!" % [_sac_cand.card_name, defender.card_name])
-						_sac_found = true
-						break
-
 	# Dark Blob: survived Reckoning → eligible for +ATK at foe turn end
 	for _db_card: GameState.CardInstance in [attacker, defender]:
 		if _db_card.card_type != "character":
@@ -1277,6 +1367,104 @@ func complete_archbishop_redirect() -> void:
 func complete_brainwash_redirect() -> void:
 	emit_signal("brainwash_redirect_resolved")
 
+func _clear_wk17_substitute_state() -> void:
+	_wk17_substitute_battle = false
+	_wk17_substitute_grid_player = -1
+	_wk17_substitute_attacker_pos = Vector2i(-1, -1)
+	_wk17_substitute_defender_pos = Vector2i(-1, -1)
+	_wk17_initiating_attacker_pos = Vector2i(-1, -1)
+
+func resolve_wk17_substitute_battle(
+		initiating_player: int,
+		grid_player: int,
+		substitute_pos: Vector2i,
+		defender_pos: Vector2i,
+		initiating_attacker_pos: Vector2i
+) -> void:
+	var substitute: GameState.CardInstance = GameState.get_card(grid_player, substitute_pos.x, substitute_pos.y)
+	var defender: GameState.CardInstance = GameState.get_card(grid_player, defender_pos.x, defender_pos.y)
+	if substitute.card_type != "character" or defender.was_destroyed:
+		GameState.post_message("WK-17: Invalid substitute — effect fizzles.")
+		GameState.set_phase(GameState.Phase.MODE_SELECT)
+		return
+
+	var defender_was_exposed: bool = defender.face_up
+	if not substitute.face_up:
+		GameState.reveal_card_by_ability(grid_player, substitute_pos.x, substitute_pos.y)
+		substitute = GameState.get_card(grid_player, substitute_pos.x, substitute_pos.y)
+	if defender.card_type != "dead_end" and not defender.face_up:
+		GameState.reveal_card_by_ability(grid_player, defender_pos.x, defender_pos.y)
+		defender = GameState.get_card(grid_player, defender_pos.x, defender_pos.y)
+		defender_was_exposed = false
+
+	GameState.post_message("WK-17: %s fights in place of the attacker!" % substitute.card_name)
+	GameState.defender_pos = defender_pos
+	BattleResolver.calculate_field_bonuses(grid_player)
+	BattleResolver.calculate_field_bonuses(GameState.get_opponent(grid_player))
+
+	GameState.dice_result = DiceRoller.roll_attack_dice()
+	GameState.emit_signal("dice_rolled", GameState.dice_result)
+
+	var _pre_shown_reckoning_coins: Array = await _maybe_flip_reckoning_attacker_coins(substitute)
+	if not _pre_shown_reckoning_coins.is_empty():
+		BattleResolver.set_predetermined_coin_flips(_pre_shown_reckoning_coins)
+
+	BattleResolver.apply_swap_atk_def_when_attacking(substitute)
+
+	var preview_result := BattleResolver.resolve_battle(
+		substitute, defender, GameState.dice_result, grid_player, grid_player,
+		defender_was_exposed, defender_pos, true)
+	emit_signal("battle_preview_needed", grid_player, substitute, defender, preview_result)
+
+	BattleResolver.reset_predetermined_coin_flip_index()
+	var result := BattleResolver.resolve_battle(
+		substitute, defender, GameState.dice_result, grid_player, grid_player,
+		defender_was_exposed, defender_pos)
+	BattleResolver.clear_predetermined_coin_flips()
+	BattleResolver.copy_reckoning_pills_from(preview_result, result)
+	result.attacker_name = substitute.card_name
+	result.defender_name = defender.card_name
+	result.attacker_log_label = BattleLogFormat.format_unit(substitute)
+	if defender.card_type == "character":
+		result.defender_log_label = BattleLogFormat.format_unit(defender)
+	elif defender.card_type == "trap":
+		result.defender_log_label = BattleLogFormat.format_card(defender)
+	for msg in result.messages:
+		GameState.post_message(msg)
+	_log_reckoning_ability_triggers(substitute, defender, result)
+
+	if result.defender_destroyed and defender.card_type == "character" and defender.force_shielded:
+		result.defender_destroyed = false
+		result.defender_crystal_loss = 0
+		defender.force_shielded = false
+		GameState.post_message("Force Shield: %s blocked the attack!" % defender.card_name)
+
+	if not result.coin_flip_results.is_empty() and _pre_shown_reckoning_coins.is_empty():
+		emit_signal("coin_flip_visual_requested", result.coin_flip_results)
+		await coin_flip_visual_done
+		if _battle_aborted():
+			GameState.set_phase(GameState.Phase.MODE_SELECT)
+			return
+
+	emit_signal("battle_result_finalized", result)
+	await battle_preview_done
+	if _battle_aborted():
+		GameState.set_phase(GameState.Phase.MODE_SELECT)
+		return
+
+	await _apply_friendly_fire_battle_result(
+		result, grid_player, substitute_pos, defender_pos, substitute, defender)
+
+	var initiating_attacker: GameState.CardInstance = GameState.get_card(
+		initiating_player, initiating_attacker_pos.x, initiating_attacker_pos.y)
+	if initiating_attacker.card_type == "character":
+		initiating_attacker.attacked_this_turn = true
+		await _await_wait_badge_animation(initiating_player, initiating_attacker_pos.x, initiating_attacker_pos.y)
+	GameState.attacks_remaining = maxi(0, GameState.attacks_remaining - 1)
+
+	emit_signal("attack_completed", initiating_attacker_pos, defender_pos, result)
+	GameState.set_phase(GameState.Phase.MODE_SELECT)
+
 static func _has_brainwash_target(player: int, exclude_pos: Vector2i) -> bool:
 	for r: int in range(GameState.GRID_SIZE):
 		for c: int in range(GameState.GRID_SIZE):
@@ -1329,6 +1517,7 @@ func resolve_brainwash_friendly_fire(attacker_player: int, friendly_pos: Vector2
 	result.defender_log_label = BattleLogFormat.format_unit(ally)
 	for msg in result.messages:
 		GameState.post_message(msg)
+	_log_reckoning_ability_triggers(attacker, ally, result)
 
 	if result.defender_destroyed and ally.force_shielded:
 		result.defender_destroyed = false
@@ -2330,10 +2519,34 @@ func _apply_post_battle_effects(
 func await_card_effect_flash(card_name: String, card_type: String = "character") -> void:
 	if card_name.is_empty():
 		return
+	BattleLogFormat.log_ability_trigger(card_name, card_type)
 	if GameState.card_effect_triggered.get_connections().is_empty():
 		return
 	GameState.emit_signal("card_effect_triggered", card_name, card_type)
 	await card_effect_flash_done
+
+
+func _log_reckoning_ability_triggers(
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance,
+		result: BattleResolver.BattleResult
+) -> void:
+	if result.special_trigger in ["trap_effect", "trap_nullified"]:
+		return
+	if result.ability_triggered_attacker \
+			and attacker != null \
+			and attacker.card_type == "character" \
+			and not BattleLogFormat.result_has_card_ability_message(result, attacker.card_name):
+		var att_detail: String = BattleLogFormat.reckoning_ability_detail(attacker, result, true)
+		if not att_detail.is_empty():
+			GameState.post_message(BattleLogFormat.format_ability_trigger(attacker, att_detail))
+	if result.ability_triggered_defender \
+			and defender != null \
+			and defender.card_type == "character" \
+			and not BattleLogFormat.result_has_card_ability_message(result, defender.card_name):
+		var def_detail: String = BattleLogFormat.reckoning_ability_detail(defender, result, false)
+		if not def_detail.is_empty():
+			GameState.post_message(BattleLogFormat.format_ability_trigger(defender, def_detail))
 
 
 func apply_on_reveal_abilities(player: int, row: int, col: int) -> void:
@@ -2474,11 +2687,14 @@ static func _has_hidden_cells(player_index: int) -> bool:
 				return true
 	return false
 
-static func _has_wk17_foe_pick_target(foe_player: int, redirect_attacker: bool, attacker_pos: Vector2i) -> bool:
+static func _has_wk17_foe_pick_target(
+		foe_player: int, mode: String, attacker_pos: Vector2i, target_pos: Vector2i) -> bool:
 	for r: int in range(GameState.GRID_SIZE):
 		for c: int in range(GameState.GRID_SIZE):
 			var pos: Vector2i = Vector2i(r, c)
-			if redirect_attacker and pos == attacker_pos:
+			if mode == "redirect_attacker" and pos == attacker_pos:
+				continue
+			if mode == "substitute_foe_attacker" and pos == target_pos:
 				continue
 			var inst: GameState.CardInstance = GameState.get_card(foe_player, r, c)
 			if inst.card_type == "character":
@@ -2527,32 +2743,34 @@ func _apply_wk17_pre_battle(
 	if _heads == 2:
 		var wk17_foe: int = GameState.get_opponent(wk17_player)
 		_pending_wk17_foe_player = wk17_foe
-		_pending_wk17_mode = "redirect_attacker" if wk17_as_defender else "retarget_defender"
-		if not _has_wk17_foe_pick_target(wk17_foe, wk17_as_defender, attacker_pos):
+		_pending_wk17_mode = "redirect_attacker" if wk17_as_defender else "substitute_foe_attacker"
+		_pending_wk17_exclude_pick_pos = attacker_pos if wk17_as_defender else target_pos
+		_pending_wk17_defender_pos = target_pos
+		if wk17_as_defender:
+			_wk17_initiating_attacker_pos = attacker_pos
+		if not _has_wk17_foe_pick_target(
+				wk17_foe, _pending_wk17_mode, attacker_pos, target_pos):
 			GameState.post_message("%s: Both heads — no valid ally to target." % wk17_name)
 			_pending_wk17_foe_player = -1
 			_pending_wk17_mode = ""
+			_pending_wk17_exclude_pick_pos = Vector2i(-1, -1)
+			_pending_wk17_defender_pos = Vector2i(-1, -1)
 			return {"abort": false, "target_pos": target_pos, "defender_was_exposed": defender_was_exposed}
 		var _saved_cp: int = GameState.current_player
 		GameState.current_player = wk17_foe
-		await _prompt_and_await_target_selection(
-			"%s: Both heads! Choose one of your allies as the target." % wk17_name,
-			"wk17_foe_pick_character")
+		var _wk17_prompt: String
+		if _pending_wk17_mode == "substitute_foe_attacker":
+			_wk17_prompt = "%s: Both heads! Choose one of your allies to fight in place of %s." % [
+				wk17_name, wk17_name]
+			_wk17_initiating_attacker_pos = attacker_pos
+		else:
+			_wk17_prompt = "%s: Both heads! Choose one of your allies as the target." % wk17_name
+		await _prompt_and_await_target_selection(_wk17_prompt, "wk17_foe_pick_character")
 		GameState.current_player = _saved_cp
-		if _pending_wk17_mode == "retarget_defender" \
-				and _pending_wk17_new_target_pos != Vector2i(-1, -1):
-			target_pos = _pending_wk17_new_target_pos
-			defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
-			defender_was_exposed = defender.face_up
-			if defender.card_type != "dead_end" and not defender.face_up:
-				GameState.reveal_card_by_ability(opponent, target_pos.x, target_pos.y)
-				defender = GameState.get_card(opponent, target_pos.x, target_pos.y)
-				defender_was_exposed = false
-			BattleResolver.calculate_field_bonuses(player)
-			BattleResolver.calculate_field_bonuses(opponent)
 		_pending_wk17_foe_player = -1
 		_pending_wk17_mode = ""
-		_pending_wk17_new_target_pos = Vector2i(-1, -1)
+		_pending_wk17_exclude_pick_pos = Vector2i(-1, -1)
+		_pending_wk17_defender_pos = Vector2i(-1, -1)
 
 	return {"abort": false, "target_pos": target_pos, "defender_was_exposed": defender_was_exposed}
 

@@ -98,7 +98,7 @@
 		],
 		"fade_color": "#000000",
 		"speaker": "Kelly",
-		"text": "There it is!! It's Midnight Shadow!!"
+		"text": "There it is!! It's a demon!!"
 	},
 	{
 		"wait": 0.5
@@ -351,12 +351,40 @@
 		"text": "Damn... it escaped..."
 	},
 	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
 		"characters": [
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_crossed_arm.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"fade_color": "#000000",
+		"speaker": "Kelly",
+		"text": "Demons love to possess human, so they can hide their name..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_university_seclude_pool_of_blood.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"fade_color": "#000000",
+		"speaker": "Kelly",
+		"text": "If only we had their name, it will be a lot easier to track them down..."
+	},
+	{
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"position": "right",
+				"scale": 150.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		],
 		"wait": 0.5
@@ -382,7 +410,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -401,13 +429,13 @@
 				"flip": true,
 				"position": "left",
 				"scale": 150.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			},
 			{
 				"crop_bottom": 30.0,
 				"position": "right",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
 			}
 		],
 		"speaker": "Kelly",

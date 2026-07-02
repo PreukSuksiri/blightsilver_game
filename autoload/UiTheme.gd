@@ -19,6 +19,17 @@ const CHECKBOX_ICON_SIZE := 20
 const CHECKBOX_BORDER_WIDTH := 2
 
 
+func apply_to_control(control: Control) -> void:
+	var root: Window = get_tree().root
+	if root != null and root.theme != null:
+		control.theme = root.theme
+		return
+	var theme := Theme.new()
+	_apply_scrollbar_theme(theme)
+	_apply_checkbox_theme(theme)
+	control.theme = theme
+
+
 func _ready() -> void:
 	call_deferred("_apply_root_theme")
 

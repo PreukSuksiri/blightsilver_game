@@ -530,11 +530,16 @@
 							"key": "item_observatory_key",
 							"type": "has_item",
 							"value": ""
+						},
+						{
+							"key": "observatory_unlock",
+							"type": "var_equals",
+							"value": "9999"
 						}
 					],
 					"label": "Observatory",
 					"locked_hint": "Requires key",
-					"locked_mode": "disable",
+					"locked_mode": "hide",
 					"target": "node_observatory"
 				}
 			],

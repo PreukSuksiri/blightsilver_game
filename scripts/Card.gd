@@ -154,6 +154,13 @@ const BADGE_POST_ANIM_DELAY: float = 0.5
 const WAIT_ICON_SIZE: float = 44.0
 const WAIT_GLOW_SIZE: float = 54.0
 const WAIT_ICON_SHADOW_DROP: float = 2.0
+const FLAG_BAR_HEIGHT: float = 30.0
+const FLAG_BAR_SIDE_MARGIN: float = 6.0
+const FLAG_BADGE_HEIGHT: float = 28.0
+const FLAG_BADGE_FONT_SIZE: int = 16
+const FLAG_BADGE_MIN_WIDTH: float = 32.0
+const FLAG_BADGE_MAX_WIDTH: float = 50.0
+const FLAG_BADGE_SEPARATION: int = 4
 
 func _ready() -> void:
 	mouse_filter = MOUSE_FILTER_STOP
@@ -294,12 +301,12 @@ func _build_flag_bar() -> void:
 	_flag_bar = HBoxContainer.new()
 	# Anchor to the full bottom edge of the card; badges will be centred inside
 	_flag_bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	_flag_bar.offset_top    = -18.0   # badge height
+	_flag_bar.offset_top    = -FLAG_BAR_HEIGHT
 	_flag_bar.offset_bottom = 0.0
 	_flag_bar.offset_left   = 0.0
 	_flag_bar.offset_right  = 0.0
 	_flag_bar.alignment     = BoxContainer.ALIGNMENT_CENTER
-	_flag_bar.add_theme_constant_override("separation", 3)
+	_flag_bar.add_theme_constant_override("separation", FLAG_BADGE_SEPARATION)
 	_flag_bar.mouse_filter  = MOUSE_FILTER_IGNORE
 	_flag_bar.visible       = false
 	add_child(_flag_bar)
@@ -326,9 +333,24 @@ func _refresh_flag_badges() -> void:
 		_flag_bar.visible = false
 		return
 
+	var defined_flags: Array[String] = []
 	for flag_name: String in active_flags:
-		if flag_name not in FLAG_DEFS:
-			continue
+		if flag_name in FLAG_DEFS:
+			defined_flags.append(flag_name)
+	if defined_flags.is_empty():
+		_flag_bar.visible = false
+		return
+
+	var bar_w: float = size.x if size.x > 0.0 else custom_minimum_size.x
+	var avail_w: float = maxf(bar_w - FLAG_BAR_SIDE_MARGIN * 2.0, FLAG_BADGE_MIN_WIDTH)
+	var badge_count: int = defined_flags.size()
+	var badge_w: float = clampf(
+		(avail_w - FLAG_BADGE_SEPARATION * float(badge_count - 1)) / float(badge_count),
+		FLAG_BADGE_MIN_WIDTH,
+		FLAG_BADGE_MAX_WIDTH
+	)
+
+	for flag_name: String in defined_flags:
 		var def: Dictionary = FLAG_DEFS[flag_name]
 		var badge_color: Color = def["color"]
 		var emoji: String      = def["emoji"]
@@ -338,8 +360,8 @@ func _refresh_flag_badges() -> void:
 		var sb := StyleBoxFlat.new()
 		sb.bg_color = badge_color
 		# Rounded top corners → flag-tab look; flat bottom sits on card edge
-		sb.corner_radius_top_left     = 5
-		sb.corner_radius_top_right    = 5
+		sb.corner_radius_top_left     = 7
+		sb.corner_radius_top_right    = 7
 		sb.corner_radius_bottom_left  = 0
 		sb.corner_radius_bottom_right = 0
 		sb.shadow_color  = Color(badge_color.r * 0.5, badge_color.g * 0.5, badge_color.b * 0.5, 0.6)
@@ -351,7 +373,7 @@ func _refresh_flag_badges() -> void:
 		sb.border_width_top    = 2
 		sb.border_width_bottom = 2
 		panel.add_theme_stylebox_override("panel", sb)
-		panel.custom_minimum_size = Vector2(24.0, 17.0)
+		panel.custom_minimum_size = Vector2(badge_w, FLAG_BADGE_HEIGHT)
 		panel.set_meta("flag_name", flag_name)
 
 		var lbl := Label.new()
@@ -359,7 +381,7 @@ func _refresh_flag_badges() -> void:
 		lbl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.vertical_alignment   = VERTICAL_ALIGNMENT_CENTER
-		lbl.add_theme_font_size_override("font_size", 9)
+		lbl.add_theme_font_size_override("font_size", FLAG_BADGE_FONT_SIZE)
 		if def.has("icon_color"):
 			lbl.add_theme_color_override("font_color", def["icon_color"])
 		lbl.mouse_filter = MOUSE_FILTER_IGNORE

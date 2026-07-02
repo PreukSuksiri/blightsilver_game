@@ -136,7 +136,7 @@
 		},
 		"linger_characters": true,
 		"player1_name": "Nexus Crowmont",
-		"player2_name": "Foul Eye",
+		"player2_name": "Mogganoth",
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_green_wisp.png",
 		"start_battle": true
 	}

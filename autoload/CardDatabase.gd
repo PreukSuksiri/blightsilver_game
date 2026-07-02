@@ -1036,7 +1036,7 @@ func _load_characters() -> void:
 		["WK-17 the Siren", CharacterData.Affinity.BIO, 10, 25, 200,
 			CharacterData.AbilityType.PRE_BATTLE_COIN_FLIP_2_REDIRECT_OR_DESTROY,
 			{},
-			"Before Reckoning, flip 2 coin. Both are Heads : foe choose their ally for target. Both are Tails : Destroy this card.",
+			"Before Reckoning, flip 2 coin. Both are Heads : foe choose their ally to fight in place of this card. Both are Tails : Destroy this card.",
 			CharacterData.Rarity.COMMON,
 			true],
 

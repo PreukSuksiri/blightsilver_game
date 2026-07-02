@@ -532,6 +532,75 @@ static func _database_trap_cost(trap_name: String) -> int:
 	return data.crystal_cost if data != null else -1
 
 
+static func format_ability_trigger(card: GameState.CardInstance, detail: String = "") -> String:
+	var name: String = '"%s"' % card.card_name if card != null and not card.card_name.is_empty() else "?"
+	if detail.is_empty():
+		var kind: String = ability_type_label(card.ability_type if card != null else CharacterData.AbilityType.NONE)
+		if kind.is_empty():
+			return "Ability triggered: %s" % name
+		return "Ability triggered: %s (%s)" % [name, kind]
+	return "Ability triggered: %s — %s" % [name, detail]
+
+
+static func ability_type_label(ability_type: int) -> String:
+	if ability_type == CharacterData.AbilityType.NONE:
+		return ""
+	if ability_type < 0 or ability_type >= CharacterData.AbilityType.size():
+		return "special ability"
+	return CharacterData.AbilityType.keys()[ability_type].replace("_", " ").to_lower()
+
+
+static func find_card_on_field(card_name: String, card_type: String = "") -> GameState.CardInstance:
+	for player: int in range(2):
+		for row: int in range(GameState.GRID_SIZE):
+			for col: int in range(GameState.GRID_SIZE):
+				var card: GameState.CardInstance = GameState.get_card(player, row, col)
+				if card.card_name != card_name:
+					continue
+				if not card_type.is_empty() and card.card_type != card_type:
+					continue
+				return card
+	return null
+
+
+static func log_ability_trigger(card_name: String, card_type: String = "character", detail: String = "") -> void:
+	var card: GameState.CardInstance = find_card_on_field(card_name, card_type)
+	if card != null:
+		GameState.post_message(format_ability_trigger(card, detail))
+	elif not card_name.is_empty():
+		GameState.post_message('Ability triggered: "%s"' % card_name)
+
+
+## True when result.messages already includes a card-specific ability line (not the generic ATK vs DEF line).
+static func result_has_card_ability_message(result: BattleResolver.BattleResult, card_name: String) -> bool:
+	if card_name.is_empty():
+		return false
+	var generic_prefix: String = "%s ATK " % card_name
+	for msg: Variant in result.messages:
+		var s: String = str(msg)
+		if s.begins_with(generic_prefix) and " vs " in s:
+			continue
+		if card_name in s:
+			return true
+	return false
+
+
+static func reckoning_ability_detail(
+		card: GameState.CardInstance,
+		result: BattleResolver.BattleResult,
+		is_attacker_side: bool
+) -> String:
+	if is_attacker_side:
+		if result.attacker_atk_delta != 0:
+			return "%+d ATK in Reckoning" % result.attacker_atk_delta
+	else:
+		if result.defender_def_delta != 0:
+			return "%+d DEF in Reckoning" % result.defender_def_delta
+	if card != null and card.ability_type != CharacterData.AbilityType.NONE:
+		return "active in Reckoning"
+	return ""
+
+
 static func _effective_union_summon_cost(base_cost: int) -> int:
 	if GameState.game_mode != GameState.GameMode.DAILY_DUNGEON:
 		return base_cost

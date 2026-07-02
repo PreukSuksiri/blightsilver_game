@@ -931,7 +931,35 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "From what you've described, it seems like she has been possessed. And it's not a normal spirit. The glowing red eyes told us that it's probably a stronger one."
+		"text": "We call them [color=#FF4444]Anomalies[/color]"
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "From what you've described, it seems like she has been possessed."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "The glowing red eyes told us that it's probably a high-level anomaly."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -1310,11 +1338,11 @@
 	{
 		"battle_reward": [
 			{
-				"amount": 3000,
+				"amount": 3000.0,
 				"type": "credits"
 			},
 			{
-				"count": 1,
+				"count": 1.0,
 				"type": "union_scroll"
 			}
 		],

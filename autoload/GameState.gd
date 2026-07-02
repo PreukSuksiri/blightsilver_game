@@ -394,6 +394,7 @@ var _finger_cursor_active: bool = false
 var _popup_cursors: Dictionary = {}  # Window -> TextureRect
 var _crystal_anim_pending: int = 0
 var _crystal_anim_board_registered: bool = false
+var _pending_crystal_win_check: bool = false
 
 func mark_destroy_achievement_context(
 		source: String,
@@ -690,6 +691,8 @@ func complete_crystal_animation() -> void:
 		return
 	_crystal_anim_pending -= 1
 	crystal_animation_finished.emit()
+	if _pending_crystal_win_check and _crystal_anim_pending <= 0:
+		_check_crystal_win_condition()
 
 func wait_crystal_animation() -> void:
 	while _crystal_anim_pending > 0:
@@ -744,9 +747,26 @@ func gain_crystals(player_index: int, amount: int, reason: String = "") -> void:
 	_begin_crystal_animation()
 	emit_signal("crystals_changed", player_index, crystals[player_index], reason)
 
+
+## Admin/dev: set a player's crystal total directly (no card side-effects). May end the duel.
+func admin_set_crystals(player_index: int, amount: int) -> void:
+	crystals[player_index] = amount
+	_begin_crystal_animation()
+	emit_signal("crystals_changed", player_index, crystals[player_index], "admin")
+	_check_crystal_win_condition()
+
+
 func _check_crystal_win_condition() -> void:
 	var p0_zero: bool = crystals[0] <= 0
 	var p1_zero: bool = crystals[1] <= 0
+	if not p0_zero and not p1_zero:
+		_pending_crystal_win_check = false
+		return
+	# Let crystal burst/tick finish so almost-win BGM can latch before GAME_OVER.
+	if _crystal_anim_pending > 0:
+		_pending_crystal_win_check = true
+		return
+	_pending_crystal_win_check = false
 	if p0_zero and p1_zero:
 		game_over_reason = "crystals"
 		_end_game(-1)  # tie
@@ -1246,6 +1266,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 	hypnotized_cards = [[], []]
 	skip_counts = [0, 0]
 	_crystal_anim_pending = 0
+	_pending_crystal_win_check = false
 	reroll_dice_available = [false, false]
 	graveyards = [[], []]
 	locked_attack_positions = []

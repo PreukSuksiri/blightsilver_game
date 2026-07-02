@@ -12,8 +12,8 @@ const PHOTOS: PackedStringArray = [
 const BGM_PATH:      String = "res://assets/audio/bgm_ost_blind_cross.mp3"
 const CREDITS_SCENE: String = "res://scenes/credit_demo.tscn"
 const WISHLIST_MINI_PATH: String = "res://assets/textures/ui/decorations/wishlist_now_mini.png"
-const WISHLIST_MINI_MAX_WIDTH_RATIO: float = 0.34
-const WISHLIST_MINI_BOTTOM_MARGIN: float = 56.0
+const WISHLIST_MINI_MAX_WIDTH_RATIO: float = 0.11
+const WISHLIST_MINI_MARGIN: float = 28.0
 const WISHLIST_MINI_FADE_IN: float = 1.0
 
 # ── Final resting positions (offset from screen centre) ───────
@@ -243,8 +243,8 @@ func _fade_in_wishlist_mini() -> void:
 	_wishlist_mini.custom_minimum_size = Vector2(display_w, display_h)
 	_wishlist_mini.size = Vector2(display_w, display_h)
 	_wishlist_mini.position = Vector2(
-		(size.x - display_w) * 0.5,
-		size.y - display_h - WISHLIST_MINI_BOTTOM_MARGIN
+		size.x - display_w - WISHLIST_MINI_MARGIN,
+		WISHLIST_MINI_MARGIN
 	)
 	_wishlist_mini.modulate = Color(1.0, 1.0, 1.0, 0.0)
 	_wishlist_mini.z_index = 60

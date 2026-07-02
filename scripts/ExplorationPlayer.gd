@@ -2176,12 +2176,20 @@ func _show_next_obtained() -> void:
 	tw.tween_property(overlay, "modulate:a", 1.0, 0.45).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
 
 	# 5-second auto-dismiss
-	_obtained_dismiss_timer = get_tree().create_timer(5.0)
+	_arm_obtained_auto_dismiss(5.0, _dismiss_obtained_overlay)
+
+func _arm_obtained_auto_dismiss(seconds: float, dismiss_fn: Callable) -> void:
+	var expected_overlay: Control = _obtained_overlay
+	_obtained_dismiss_timer = get_tree().create_timer(seconds)
 	_obtained_dismiss_timer.timeout.connect(func() -> void:
-		if _obtained_overlay == null or not is_instance_valid(_obtained_overlay):
-			return
 		_obtained_dismiss_timer = null
-		_dismiss_obtained_overlay())
+		if expected_overlay == null or not is_instance_valid(expected_overlay):
+			return
+		if _obtained_overlay != expected_overlay:
+			return
+		if _obtained_dismissing:
+			return
+		dismiss_fn.call())
 
 func _dismiss_obtained_overlay() -> void:
 	if _obtained_dismissing:
@@ -2298,16 +2306,6 @@ func _show_mailbox_reward_overlay(info: Dictionary) -> void:
 	# 8-second auto-dismiss (gives player time to read, then dissolve plays automatically)
 	_arm_obtained_auto_dismiss(8.0, _dismiss_mailbox_reward_overlay)
 
-func _arm_obtained_auto_dismiss(seconds: float, dismiss_fn: Callable) -> void:
-	_obtained_dismiss_timer = get_tree().create_timer(seconds)
-	_obtained_dismiss_timer.timeout.connect(func() -> void:
-		_obtained_dismiss_timer = null
-		if _obtained_overlay == null or not is_instance_valid(_obtained_overlay):
-			return
-		if _obtained_dismissing:
-			return
-		dismiss_fn.call())
-
 func _dismiss_mailbox_reward_overlay() -> void:
 	if _obtained_dismissing:
 		return
@@ -2316,6 +2314,10 @@ func _dismiss_mailbox_reward_overlay() -> void:
 		_obtained_overlay     = null
 		_obtained_dismissing  = false
 		_show_next_obtained()
+		return
+	if not overlay.has_meta("mailbox_img"):
+		if _obtained_overlay == overlay:
+			_dismiss_obtained_overlay()
 		return
 
 	var img_tr: TextureRect = overlay.get_meta("mailbox_img") as TextureRect
@@ -2333,8 +2335,19 @@ func _dismiss_mailbox_reward_overlay() -> void:
 			break
 
 	# Hide hint and title — only image stays visible for dissolve
-	hint_lbl.visible = false
-	name_lbl.visible = false
+	if hint_lbl != null and is_instance_valid(hint_lbl):
+		hint_lbl.visible = false
+	if name_lbl != null and is_instance_valid(name_lbl):
+		name_lbl.visible = false
+
+	if img_tr == null or not is_instance_valid(img_tr):
+		var tw := create_tween()
+		tw.tween_property(overlay, "modulate:a", 0.0, 0.30).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_IN)
+		tw.tween_callback(overlay.queue_free)
+		tw.tween_callback(func() -> void:
+			_obtained_dismissing = false
+			_show_next_obtained())
+		return
 
 	_play_digital_dissolve(overlay, img_tr, func() -> void:
 		_obtained_dismissing = false

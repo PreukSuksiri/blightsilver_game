@@ -982,6 +982,9 @@ func decide_target(filter: String) -> Vector2i:
 		_:
 			return _random_unrevealed_opponent()
 
+func decide_wk17_foe_pick(exclude_pos: Vector2i) -> Vector2i:
+	return _worst_own_ally_excluding(exclude_pos)
+
 ## Plant-29 turn-start targeting after coin flip — venom on exposed ally/foe or mutagen on own unit.
 func decide_any_grid_target(filter: String) -> Dictionary:
 	var best_player: int = -1
@@ -1121,9 +1124,8 @@ func decide_trap_choice(prompt: String, choices: Array) -> int:
 
 	# SACRIFICE_FOR_CARD_TYPE — "X sacrifices itself to save Y?"
 	if "sacrifices itself to save" in prompt:
-		if _count_faceup(player_index) >= 3:
-			return 0  # sacrifice weaker card to save the target
-		return 1
+		# Servant is cheaper than most Vampire allies — save the ally.
+		return 0
 
 	# NULLIFY_ATTACK_CHOICE — legacy trap removed from demo roster
 	if "Lose 500 Crystals" in prompt or "NULLIFY_ATTACK_CHOICE" in prompt:
