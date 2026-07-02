@@ -96,7 +96,6 @@ func _run_excel_only_manual_tests() -> void:
 	_manual("TC-FUNC-Ancient-Lizard-001")
 	_manual("TC-FUNC-Berserk-Hyena-001")
 	_manual("TC-FUNC-Blood-hungry-Mutant-001")
-	_manual("TC-FUNC-Colorful-Mage-001")
 	_manual("TC-FUNC-False-Prophet-001")
 	_manual("TC-FUNC-Giant-Meteor-Vergaia-001")
 	_manual("TC-FUNC-Grand-Fort-Captain-001")
@@ -132,6 +131,7 @@ func _run_ability_tests(A: Dictionary, AB: Dictionary) -> void:
 	_ten_arms_yaksa_manual()
 	_armored_dino_manual()
 	_x_death_squad_manual()
+	_colorful_mage(A, AB)
 
 # TC-FUNC-Seraphim-Fistmaster-001
 # DOUBLE_STATS_VS_AFFINITY — doubles ATK and DEF vs CHAOS
@@ -246,6 +246,26 @@ func _gamma_mermaid(A: Dictionary, AB: Dictionary) -> void:
 
 func _lord_of_terror_manual() -> void:
 	_manual("TC-FUNC-Lord-of-Terror-001")  # ATK_PENALTY_VS_DEAD_END — TurnManager
+
+# TC-FUNC-Colorful-Mage-001
+# PERM_STAT_PENALTY_VS_NON_AFFINITY — foe non-Arcane gets -10 ATK&DEF during Reckoning
+func _colorful_mage(A: Dictionary, AB: Dictionary) -> void:
+	print("-- TC-FUNC-Colorful-Mage-001")
+	var tm := TurnManager.new()
+	var cm := _make_char("Colorful Mage", 40, 40, 500, A.ARCANE,
+			AB.PERM_STAT_PENALTY_VS_NON_AFFINITY, {"affinity": A.ARCANE, "atk": 10, "def": 10})
+	var divine_foe := _make_char("Sniping Fairy", 40, 20, 350, A.DIVINE)
+	tm._try_apply_perm_stat_penalty_vs_non_affinity(cm, divine_foe)
+	assert_eq(divine_foe.current_atk, 30, "TC-FUNC-Colorful-Mage-001: non-Arcane foe ATK -10")
+	assert_eq(divine_foe.current_def, 10, "TC-FUNC-Colorful-Mage-001: non-Arcane foe DEF -10")
+	var arcane_foe := _make_char("Mad Wyvern", 65, 40, 550, A.ARCANE)
+	tm._try_apply_perm_stat_penalty_vs_non_affinity(cm, arcane_foe)
+	assert_eq(arcane_foe.current_atk, 65, "TC-FUNC-Colorful-Mage-001: Arcane foe ATK unchanged")
+	assert_eq(arcane_foe.current_def, 40, "TC-FUNC-Colorful-Mage-001: Arcane foe DEF unchanged")
+	var anima_attacker := _make_char("Grand Fort Captain", 45, 40, 500, A.ANIMA)
+	tm._apply_reckoning_perm_stat_penalties(anima_attacker, cm)
+	assert_eq(anima_attacker.current_atk, 35, "TC-FUNC-Colorful-Mage-001: CM defender debuffs non-Arcane attacker ATK")
+	assert_eq(anima_attacker.current_def, 30, "TC-FUNC-Colorful-Mage-001: CM defender debuffs non-Arcane attacker DEF")
 
 func _giant_mining_pod_manual() -> void:
 	_manual("TC-FUNC-Giant-Mining-Pod-001") # CRYSTAL_GAIN_ON_DEAD_END_ATTACK — TurnManager

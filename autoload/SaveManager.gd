@@ -34,7 +34,7 @@ var onboarding_complete: bool = false        # true after first-run setup (or le
 var title_cheat_apartment_claimed: bool = false  # main-menu apartment-window cheat (once per save)
 var title_cheat_moon_claimed: bool = false       # main-menu moon cheat (once per save)
 var attack_tutorial_complete: bool = false
-var casual_mode: bool = false
+var casual_mode: bool = true
 var casual_mode_tip_shown: bool = false
 var quick_duel_tier_previews: Dictionary = {}   # tier -> vault entry_id
 var quick_duel_tier_rewards: Dictionary = {}  # tier -> Array of reward dicts
@@ -511,7 +511,7 @@ func load_data() -> void:
 	title_cheat_apartment_claimed = bool(parsed.get("title_cheat_apartment_claimed", false))
 	title_cheat_moon_claimed = bool(parsed.get("title_cheat_moon_claimed", false))
 	attack_tutorial_complete = bool(parsed.get("attack_tutorial_complete", false))
-	casual_mode = bool(parsed.get("casual_mode", false))
+	casual_mode = bool(parsed.get("casual_mode", true))
 	casual_mode_tip_shown = bool(parsed.get("casual_mode_tip_shown", false))
 	quick_duel_loss_streak = int(parsed.get("quick_duel_loss_streak", 0))
 	wishlist_cta_shown = bool(parsed.get("wishlist_cta_shown", false))

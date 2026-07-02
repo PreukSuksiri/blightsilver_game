@@ -709,6 +709,7 @@ func perform_attack(attacker_pos: Vector2i, target_pos: Vector2i, attacker_playe
 			CardRuleEngine.resolve_chain(
 				{"source_player": player, "attacker": attacker, "defender": defender})
 
+			_apply_reckoning_perm_stat_penalties(attacker, defender)
 			await _apply_battle_result(result, player, opponent, attacker_pos, target_pos, attacker, defender)
 			if _battle_aborted():
 				emit_signal("attack_completed", attacker_pos, target_pos, result)
@@ -2213,6 +2214,43 @@ func _lighthouse_reveal(player: int) -> void:
 	GameState.reveal_card_by_ability(opponent, cell.x, cell.y)
 	GameState.post_message("Lighthouse: One of Player %d's cards is revealed!" % (opponent + 1))
 
+
+## PERM_STAT_PENALTY_VS_NON_AFFINITY (Colorful Mage, Dimensional Virus, etc.)
+## Applies during Reckoning before destroy so it still fires when the source card is destroyed.
+func _apply_reckoning_perm_stat_penalties(
+		attacker: GameState.CardInstance,
+		defender: GameState.CardInstance
+) -> void:
+	if attacker.card_type == "character" \
+			and attacker.ability_type == CharacterData.AbilityType.PERM_STAT_PENALTY_VS_NON_AFFINITY \
+			and attacker.effect_nullified_until < GameState.turn_number \
+			and defender.card_type == "character":
+		_try_apply_perm_stat_penalty_vs_non_affinity(attacker, defender)
+	if defender.card_type == "character" \
+			and defender.ability_type == CharacterData.AbilityType.PERM_STAT_PENALTY_VS_NON_AFFINITY \
+			and defender.effect_nullified_until < GameState.turn_number \
+			and attacker.card_type == "character":
+		_try_apply_perm_stat_penalty_vs_non_affinity(defender, attacker)
+
+
+func _try_apply_perm_stat_penalty_vs_non_affinity(
+		source: GameState.CardInstance,
+		foe: GameState.CardInstance
+) -> void:
+	if foe.card_type != "character":
+		return
+	var req_aff: int = int(source.ability_params.get("affinity", -1))
+	if req_aff != -1 and foe.affinity == req_aff:
+		return
+	var patk: int = int(source.ability_params.get("atk", 10))
+	var pdef: int = int(source.ability_params.get("def", 10))
+	foe.current_atk = maxi(0, foe.current_atk - patk)
+	foe.current_def = maxi(0, foe.current_def - pdef)
+	var aff_label: String = CharacterData.Affinity.keys()[req_aff] if req_aff >= 0 else "MATCHING"
+	GameState.post_message("%s: -%d ATK & -%d DEF permanently (non-%s battle)." % [
+		foe.card_name, patk, pdef, aff_label])
+
+
 func _apply_post_battle_effects(
 		result: BattleResolver.BattleResult,
 		player: int, opponent: int,
@@ -2359,17 +2397,6 @@ func _apply_post_battle_effects(
 						attacker.card_name, _pa_gain,
 						CharacterData.Affinity.keys()[defender.affinity]])
 
-		CharacterData.AbilityType.PERM_STAT_PENALTY_VS_NON_AFFINITY:
-			if defender.card_type == "character":
-				var _pen_aff: int = attacker.ability_params.get("affinity", -1)
-				if _pen_aff == -1 or defender.affinity != _pen_aff:
-					var _patk: int = attacker.ability_params.get("atk", 10)
-					var _pdef: int = attacker.ability_params.get("def", 10)
-					defender.current_atk = max(0, defender.current_atk - _patk)
-					defender.current_def = max(0, defender.current_def - _pdef)
-					GameState.post_message("%s: -%d ATK & -%d DEF permanently (non-%s battle)." % [
-						defender.card_name, _patk, _pdef, CharacterData.Affinity.keys()[_pen_aff]])
-
 		CharacterData.AbilityType.GAIN_HALF_STATS_ON_SURVIVE:
 			if not result.attacker_destroyed and defender.card_type == "character" \
 					and not attacker.one_use_atk_boost_used:
@@ -2407,20 +2434,6 @@ func _apply_post_battle_effects(
 		defender.current_atk = maxi(0, defender.current_atk - _ds_atk_loss)
 		GameState.post_message("%s: +%d DEF, -%d ATK permanently (if possible)." % [
 			defender.card_name, _ds_def, _ds_atk_loss])
-
-	# PERM_STAT_PENALTY_VS_NON_AFFINITY (Colorful Mage): debuff non-matching foe when defending
-	if defender.card_type == "character" \
-			and defender.effect_nullified_until < GameState.turn_number \
-			and defender.ability_type == CharacterData.AbilityType.PERM_STAT_PENALTY_VS_NON_AFFINITY \
-			and attacker.card_type == "character":
-		var _dpen_aff: int = defender.ability_params.get("affinity", -1)
-		if _dpen_aff == -1 or attacker.affinity != _dpen_aff:
-			var _dpatk: int = defender.ability_params.get("atk", 10)
-			var _dpdef: int = defender.ability_params.get("def", 10)
-			attacker.current_atk = max(0, attacker.current_atk - _dpatk)
-			attacker.current_def = max(0, attacker.current_def - _dpdef)
-			GameState.post_message("%s: -%d ATK & -%d DEF permanently (non-%s battle)." % [
-				attacker.card_name, _dpatk, _dpdef, CharacterData.Affinity.keys()[_dpen_aff]])
 
 	# VENOM_TOAD_RECKONING: after reckoning, surviving foe receives venom (either battle role)
 	if not (GameState.game_mode == GameState.GameMode.DAILY_DUNGEON \

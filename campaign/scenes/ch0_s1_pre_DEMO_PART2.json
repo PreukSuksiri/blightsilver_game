@@ -669,7 +669,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			}
 		]
 	},
@@ -681,7 +681,7 @@
 				"flip": true,
 				"position": "left",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/vn_char_kelly_neutral.png"
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png"
 			},
 			{
 				"crop_bottom": 30.0,
@@ -690,7 +690,7 @@
 				"sprite": "res://assets/textures/vn/characters/vn_char_nex_shocked.png"
 			}
 		],
-		"shake_screen": 25.0,
+		"shake_screen": 10.0,
 		"wait": 1.0
 	},
 	{
@@ -884,9 +884,7 @@
 			}
 		],
 		"speaker": "Nex",
-		"text": {
-			"en": "I don't know... but she looked like being crazy. Her eyes glowed red. And she strangled me. I broke free... She broke everything in the library... I escaped... and met you..."
-		}
+		"text": "I don't know... but she looked like being crazy. Her eyes glowed red. And she grabbed my neck. I broke free... She broke everything in the library... I escaped... and met you..."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",

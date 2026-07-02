@@ -1171,8 +1171,16 @@ func set_highlighted(highlighted: bool) -> void:
 	highlight_border.visible = highlighted and not _is_enemy_view
 	if not highlighted:
 		set_ability_target_flash(false)
+		_kill_target_hover_tween()
+		modulate = Color.WHITE
+		_reset_target_highlight_border()
 	if changed and _is_peeking:
 		_refresh_display()
+
+func _kill_target_hover_tween() -> void:
+	if _target_hover_tween and _target_hover_tween.is_valid():
+		_target_hover_tween.kill()
+		_target_hover_tween = null
 
 func _reset_target_highlight_border() -> void:
 	var sb := highlight_border.get_theme_stylebox("panel") as StyleBoxFlat
@@ -1188,13 +1196,15 @@ func _reset_target_highlight_border() -> void:
 
 func set_target_hover(hovered: bool) -> void:
 	if not is_highlighted:
+		if not hovered:
+			_kill_target_hover_tween()
+			modulate = Color.WHITE
+			_reset_target_highlight_border()
 		return
 	var sb := highlight_border.get_theme_stylebox("panel") as StyleBoxFlat
 	if sb == null:
 		return
-	if _target_hover_tween and _target_hover_tween.is_valid():
-		_target_hover_tween.kill()
-		_target_hover_tween = null
+	_kill_target_hover_tween()
 	if hovered:
 		if _ability_target_flash_tween and _ability_target_flash_tween.is_valid():
 			_ability_target_flash_tween.kill()

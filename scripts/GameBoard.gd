@@ -2237,14 +2237,29 @@ func _open_void_modal(player: int) -> void:
 					"tech": path = "res://assets/textures/cards/full_cards/tech_" + snake + ".png"
 					_:      path = ""
 
+			var hit := Control.new()
+			hit.custom_minimum_size = Vector2(CARD_W, CARD_H)
+			hit.mouse_filter = Control.MOUSE_FILTER_STOP
+			hit.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+
 			var img := TextureRect.new()
-			img.custom_minimum_size = Vector2(CARD_W, CARD_H)
+			img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 			img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			img.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			if ResourceLoader.exists(path):
 				img.texture = load(path)
-			flow.add_child(img)
+			hit.add_child(img)
+
+			var name_snap: String = card_name
+			var type_snap: String = card_type
+			hit.gui_input.connect(func(ev: InputEvent) -> void:
+				if not ((ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) \
+						or (ev is InputEventScreenTouch and ev.pressed)):
+					return
+				get_viewport().set_input_as_handled()
+				_on_card_detail_requested(name_snap, type_snap, -1, -1, -1))
+			flow.add_child(hit)
 
 # ─────────────────────────────────────────────────────────────
 # Reveal (Peek) Buttons
@@ -6661,6 +6676,7 @@ func _on_card_node_clicked(player: int, row: int, col: int) -> void:
 					GameState.post_message("Potent Poison: Choose 1 card with Venom Flag.")
 				return
 			SFXManager.play(SFXManager.SFX_TARGET)
+			_set_tech_hover_node(null)
 			_handle_tech_target(player, pos)
 
 # ─────────────────────────────────────────────────────────────
@@ -8678,6 +8694,7 @@ func _count_opponent_facedown(opponent: int) -> int:
 	return count
 
 func _clear_highlights() -> void:
+	_set_tech_hover_node(null)
 	_clear_ability_target_flash_nodes()
 	for p in range(2):
 		for r in range(GameState.GRID_SIZE):
