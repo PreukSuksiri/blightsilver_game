@@ -118,9 +118,7 @@
 		"linger_characters": true,
 		"player1_name": "Nex Crowmont",
 		"player2_name": "Shady Woman",
-		"portrait_p1_offset_x": -40.0,
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_univ_break_room_ghost.png",
-		"portrait_p2_offset_x": -120.0,
 		"start_battle": true
 	}
 ]

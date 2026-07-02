@@ -169,6 +169,7 @@ var _talked_characters: Dictionary = {}  # "node_id:char_index" → true; charac
 var _pending_spot_on_complete: Callable = Callable()
 var _pending_spot_interaction: Dictionary = {}  # { node_id, spot_index, hide_after } while a spot queue runs
 var _pending_play_once_paths: Array = []  # VN paths to mark played when the current spot queue finishes
+var _exploration_checkpoint_pending: bool = false
 
 # Accumulated rewards — applied to main game when end_session(carry_rewards=true) is called.
 # { "credits": int, "flags": { key: value, ... } }
@@ -332,6 +333,7 @@ func _clear_session_memory() -> void:
 	_vn_resume_bgm = {}
 	_pending_spot_action_resume = {}
 	pending_battle_result = {}
+	_exploration_checkpoint_pending = false
 
 func _reset_session_state() -> void:
 	_clear_session_memory()
@@ -527,6 +529,25 @@ func _save_session_state(force: bool = false) -> void:
 ## Write the current session snapshot immediately (used by Save and Exit).
 func save_session_now() -> void:
 	_save_session_state(true)
+
+func mark_exploration_checkpoint_pending() -> void:
+	_exploration_checkpoint_pending = true
+
+func finalize_exploration_checkpoint() -> void:
+	if not _session_active:
+		return
+	if not SaveManager.exploration_auto_save:
+		return
+	_save_session_state()
+
+func clear_exploration_checkpoint_pending() -> void:
+	_exploration_checkpoint_pending = false
+
+func finalize_exploration_checkpoint_if_pending() -> void:
+	if not _exploration_checkpoint_pending:
+		return
+	finalize_exploration_checkpoint()
+	clear_exploration_checkpoint_pending()
 
 ## True when a resumable mid-session snapshot exists, optionally for a specific graph.
 func has_saved_session(graph_path: String = "") -> bool:

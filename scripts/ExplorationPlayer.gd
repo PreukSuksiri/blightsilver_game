@@ -2927,7 +2927,7 @@ func _open_exploration_options_popup() -> void:
 
 	var sync_auto_hint := func() -> void:
 		if SaveManager.exploration_auto_save:
-			auto_hint.text = "Progress is saved automatically as you explore."
+			auto_hint.text = "Progress is saved automatically as you explore, including after battles and puzzles."
 		else:
 			auto_hint.text = "Auto-save is off. Use Save and Exit to keep your progress."
 	auto_chk.toggled.connect(func(on: bool) -> void:
@@ -3376,6 +3376,7 @@ func _try_play_node_vn(node: ExplorationNode, is_story: bool = false) -> void:
 		if play_once:
 			ExplorationManager.mark_vn_played(vn_path)
 		_on_vn_finished(node)
+	ExplorationManager.mark_exploration_checkpoint_pending()
 	if after_actions.is_empty():
 		_play_vn(vn_path, done_cb, node.vn_keep_bgm)
 		return
@@ -3482,6 +3483,7 @@ func _play_vn(path: String, on_done: Callable, keep_bgm: bool = true) -> void:
 		on_done.call())
 
 func _on_vn_finished(_node: ExplorationNode) -> void:
+	ExplorationManager.finalize_exploration_checkpoint_if_pending()
 	_set_enter_vn_hud_blocked(false)
 	# VN done — restore compass so player can navigate
 	_compass_set_visible(true)
@@ -3541,6 +3543,7 @@ func _handle_post_battle_result() -> void:
 		var from_index: int = int(resume.get("from_index", 0))
 		var resume_tag: String = str(resume.get("resume_tag", ""))
 		if from_index < resume_actions.size():
+			ExplorationManager.mark_exploration_checkpoint_pending()
 			if resume_tag == "node_vn_after" and node != null:
 				var meta: Dictionary = resume.get("meta", {}) as Dictionary
 				call_deferred("_resume_node_vn_after_battle", resume_actions, from_index, node, meta)
@@ -3549,6 +3552,10 @@ func _handle_post_battle_result() -> void:
 				call_deferred("_resume_char_talk_after_battle", resume_actions, from_index, meta)
 			else:
 				call_deferred("_resume_spot_actions_after_battle", resume_actions, from_index)
+		else:
+			ExplorationManager.finalize_exploration_checkpoint()
+	else:
+		ExplorationManager.finalize_exploration_checkpoint()
 
 # ─────────────────────────────────────────────────────────────
 # Exit Integration
@@ -3862,6 +3869,7 @@ func _spot_actions_queue_complete() -> void:
 	ExplorationManager.clear_pending_spot_interaction()
 	if on_complete.is_valid():
 		on_complete.call()
+	ExplorationManager.finalize_exploration_checkpoint_if_pending()
 
 func _resume_spot_actions_after_battle(actions: Array, from_index: int) -> void:
 	_run_spot_actions_from_index(actions, from_index, _spot_actions_queue_complete)
@@ -3994,6 +4002,7 @@ func _run_spot_actions_from_index(actions: Array, index: int, on_complete: Calla
 				return
 			_play_puzzle(pid, func(success: bool) -> void:
 				if success:
+					ExplorationManager.mark_exploration_checkpoint_pending()
 					next.call()
 				else:
 					_abort_pending_spot_interaction()

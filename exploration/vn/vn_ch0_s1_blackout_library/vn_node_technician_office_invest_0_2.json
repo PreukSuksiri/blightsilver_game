@@ -29,78 +29,78 @@
 		"ai_forced_cells": [
 			{
 				"card_name": "Striker Comet",
-				"col": 1.0,
-				"row": 1.0
+				"col": 1,
+				"row": 1
 			},
 			{
 				"card_name": "Moon Rover",
-				"col": 2.0,
-				"row": 3.0
+				"col": 2,
+				"row": 3
 			},
 			{
 				"card_name": "Mine Guard",
-				"col": 3.0,
-				"row": 4.0
+				"col": 3,
+				"row": 4
 			},
 			{
 				"card_name": "Parom the Smuggler",
-				"col": 4.0,
-				"row": 3.0
+				"col": 4,
+				"row": 3
 			},
 			{
 				"card_name": "Scout Probe",
-				"col": 4.0,
-				"row": 4.0
+				"col": 4,
+				"row": 4
 			},
 			{
 				"card_name": "Mars Drill",
-				"col": 0.0,
-				"row": 0.0
+				"col": 0,
+				"row": 0
 			},
 			{
 				"card_name": "Flame Trap",
-				"col": 2.0,
-				"row": 2.0
+				"col": 2,
+				"row": 2
 			},
 			{
 				"card_name": "Self-destruct",
-				"col": 4.0,
-				"row": 0.0
+				"col": 4,
+				"row": 0
 			},
 			{
 				"card_name": "Cursed Reflection",
-				"col": 0.0,
-				"row": 4.0
+				"col": 0,
+				"row": 4
 			},
 			{
 				"card_name": "Laser Walker",
-				"col": 2.0,
-				"row": 4.0
+				"col": 2,
+				"row": 4
 			},
 			{
 				"card_name": "Neptune Diver",
-				"col": 3.0,
-				"row": 3.0
+				"col": 3,
+				"row": 3
 			},
 			{
 				"card_name": "Miner Probe",
-				"col": 0.0,
-				"row": 2.0
+				"col": 0,
+				"row": 2
 			},
 			{
 				"card_name": "Foul Gas",
-				"col": 2.0,
-				"row": 0.0
+				"col": 2,
+				"row": 0
 			},
 			{
 				"card_name": "Moon Tribe Twin Blader",
-				"col": 4.0,
-				"row": 2.0
+				"col": 4,
+				"row": 2
 			},
 			{
 				"card_name": "Moon Tribe Marksman",
-				"col": 3.0,
-				"row": 1.0
+				"col": 3,
+				"row": 1
 			}
 		],
 		"ai_forced_tech": [
@@ -137,9 +137,7 @@
 		"linger_characters": true,
 		"player1_name": "Nex Crowmont",
 		"player2_name": "Foul Eye",
-		"portrait_p1_offset_x": -40.0,
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_green_wisp.png",
-		"portrait_p2_offset_x": -120.0,
 		"start_battle": true
 	}
 ]

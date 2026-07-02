@@ -160,7 +160,7 @@
 			}
 		],
 		"speaker": "Mayu",
-		"text": "Let me see and squeeze your skin. Wonder how pretty it is when they swell?"
+		"text": "Let me squeeze them. Wonder how they would look like if they bleed?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/ch_0_1/vn_cut_mayu_strangle_censored.png",
@@ -1310,11 +1310,11 @@
 	{
 		"battle_reward": [
 			{
-				"amount": 3000,
+				"amount": 3000.0,
 				"type": "credits"
 			},
 			{
-				"count": 1,
+				"count": 1.0,
 				"type": "union_scroll"
 			}
 		],
