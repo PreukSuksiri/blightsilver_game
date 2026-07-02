@@ -2,6 +2,12 @@ extends Control
 # Main game board — manages grids, selection, turn flow, and AI.
 
 const CARD_SCENE: PackedScene = preload("res://scenes/card.tscn")
+const BATTLE_CARD_MIN := Vector2(110.0, 150.0)
+const BATTLE_GRID_SEP := 4
+const BATTLE_CENTER_MIN_W := 160.0
+const BATTLE_CARD_FLOOR := 80.0
+const BATTLE_LAYOUT_TOP := 220.0
+const BATTLE_LAYOUT_BOTTOM := 174.0
 const MAX_BATTLE_NAME_LENGTH: int = 24
 const MAX_CRYSTALS: int = 5000
 const MAX_LOG_LINES: int = 60
@@ -10,7 +16,7 @@ const SFX_CRYSTAL: AudioStream = preload("res://assets/audio/sound_crystal_1.mp3
 
 # ── Grid containers
 @onready var p1_grid: GridContainer = $MainLayout/P1Side/P1Grid
-@onready var p2_grid: GridContainer = $MainLayout/P2Side/P2GridHost/P2Grid
+@onready var p2_grid: GridContainer = $MainLayout/P2Side/P2Grid
 
 # ── Mode controls
 @onready var mode_panel: Panel = $MainLayout/CenterPanel/ModePanel
@@ -224,6 +230,7 @@ var _attack_hover_node: Control = null  # card node currently showing attack-tar
 var grid_nodes: Array = [[], []]
 # bluff_labels[player][row][col] -> Label overlaid on card node
 var bluff_labels: Array = [[], []]
+var _battle_layout_pending: bool = false
 
 # ── Campaign return button (added to game_over_panel at runtime)
 var _campaign_return_btn: Button = null
@@ -375,6 +382,8 @@ func _ready() -> void:
 	_setup_ai()
 	_connect_signals()
 	_build_grids()
+	call_deferred("_ensure_battle_layout")
+	get_node("MainLayout").resized.connect(_ensure_battle_layout)
 	_setup_buttons()
 	_build_handoff_overlay()
 	_build_bribe_overlay()
@@ -653,6 +662,83 @@ func _build_grids() -> void:
 			bluff_labels[p].append(lbl_row)
 	call_deferred("_add_grid_line_panels")
 	call_deferred("_refresh_all_bluff_labels")
+
+## Keep duel grids inside their lanes; shrink cards when the HBox slot is too narrow.
+func _ensure_battle_layout() -> void:
+	if _battle_layout_pending:
+		return
+	_battle_layout_pending = true
+	call_deferred("_run_battle_layout")
+
+func _run_battle_layout() -> void:
+	_battle_layout_pending = false
+	if grid_nodes.is_empty() or grid_nodes[0].is_empty():
+		return
+	await get_tree().process_frame
+
+	var ml: HBoxContainer = get_node("MainLayout") as HBoxContainer
+	ml.offset_top = BATTLE_LAYOUT_TOP
+	ml.offset_bottom = -BATTLE_LAYOUT_BOTTOM
+	await get_tree().process_frame
+
+	var center: VBoxContainer = ml.get_node("CenterPanel") as VBoxContainer
+	var p1_side: VBoxContainer = ml.get_node("P1Side") as VBoxContainer
+	var p2_side: VBoxContainer = ml.get_node("P2Side") as VBoxContainer
+
+	center.custom_minimum_size.x = maxf(center.custom_minimum_size.x, BATTLE_CENTER_MIN_W)
+	center.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	center.size_flags_stretch_ratio = 0.0
+	center.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	p1_side.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	p2_side.size_flags_horizontal = Control.SIZE_SHRINK_END
+	p1_side.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	p2_side.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	p1_grid.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	p2_grid.size_flags_horizontal = Control.SIZE_SHRINK_END
+	p1_grid.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	p2_grid.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+
+	var hsep: float = float(ml.get_theme_constant("separation"))
+	var cols: int = GameState.GRID_SIZE
+	var natural_grid_w: float = float(cols) * BATTLE_CARD_MIN.x + float(cols - 1) * BATTLE_GRID_SEP
+	var natural_grid_h: float = float(cols) * BATTLE_CARD_MIN.y + float(cols - 1) * BATTLE_GRID_SEP
+	var ml_width: float = ml.size.x
+	var ml_height: float = ml.size.y
+	var center_w: float = maxf(center.custom_minimum_size.x, center.size.x)
+	var slot_w: float = (ml_width - center_w - hsep * 2.0) * 0.5
+	var slot_h: float = ml_height
+
+	var max_card_w: float = (slot_w - float(cols - 1) * BATTLE_GRID_SEP) / float(cols)
+	var max_card_h: float = (slot_h - float(cols - 1) * BATTLE_GRID_SEP) / float(cols)
+	var fit_scale: float = minf(
+		1.0,
+		minf(max_card_w / BATTLE_CARD_MIN.x, max_card_h / BATTLE_CARD_MIN.y))
+	var card_w: float = maxf(BATTLE_CARD_FLOOR, BATTLE_CARD_MIN.x * fit_scale)
+	var card_h: float = maxf(BATTLE_CARD_FLOOR * (BATTLE_CARD_MIN.y / BATTLE_CARD_MIN.x), BATTLE_CARD_MIN.y * fit_scale)
+	# Re-check width after height clamp so both axes still fit.
+	if card_w > max_card_w:
+		card_w = maxf(BATTLE_CARD_FLOOR, max_card_w)
+		card_h = card_w * (BATTLE_CARD_MIN.y / BATTLE_CARD_MIN.x)
+	if card_h > max_card_h:
+		card_h = maxf(BATTLE_CARD_FLOOR * (BATTLE_CARD_MIN.y / BATTLE_CARD_MIN.x), max_card_h)
+		card_w = card_h * (BATTLE_CARD_MIN.x / BATTLE_CARD_MIN.y)
+
+	var card_size := Vector2(card_w, card_h)
+	for p: int in range(2):
+		for r: int in range(cols):
+			for c: int in range(cols):
+				var card: Control = grid_nodes[p][r][c]
+				card.custom_minimum_size = card_size
+
+	if BuildConfig.admin_tools_enabled():
+		print(
+			"[BattleLayout] ml=%s center_w=%.0f slot=%s natural=%s card=%s p1@%s p2@%s"
+			% [
+				ml.size, center_w, Vector2(slot_w, slot_h), Vector2(natural_grid_w, natural_grid_h),
+				card_size, p1_grid.global_position, p2_grid.global_position,
+			])
+
+	refresh_grid_borders()
 
 func _clear_grid_borders() -> void:
 	for node: Node in get_children():

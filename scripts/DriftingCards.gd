@@ -15,7 +15,6 @@ const Z_MIN      := 0.22   # card is too far — off camera
 const Z_MAX      := 1.65   # card is too close — off camera
 
 const TEX_BACK      := "res://assets/textures/cards/sample/card_back.png"
-const FULL_CARDS_DIR := "res://assets/textures/cards/full_cards/"
 
 var _tex_back:    Texture2D = null
 var _safe_paths:  Array[String] = []   # one entry per base card (safe art)
@@ -45,113 +44,56 @@ func _scan_front_textures() -> void:
 	_safe_paths.clear()
 	_nsfw_paths.clear()
 
-	var dir := DirAccess.open(FULL_CARDS_DIR)
-	if dir == null:
-		return
-
-	# Collect all image filenames
-	var all_files: Array[String] = []
-	dir.list_dir_begin()
-	var fname := dir.get_next()
-	while fname != "":
-		if not dir.current_is_dir():
-			var ext := fname.get_extension().to_lower()
-			if ext in ["png", "jpg", "jpeg"]:
-				all_files.append(fname)
-		fname = dir.get_next()
-	dir.list_dir_end()
-
-	# Build pools from old-style files (no type prefix, no _nsfw suffix).
-	# nsfw_map: bare_stem → _nsfw file path
-	var nsfw_map: Dictionary = {}
-	for f: String in all_files:
-		var stem: String = f.get_basename()
-		if stem.ends_with("_nsfw"):
-			nsfw_map[stem.trim_suffix("_nsfw")] = FULL_CARDS_DIR + f
-
-	for f: String in all_files:
-		var stem: String = f.get_basename()
-		if stem.ends_with("_nsfw"):
+	# Build from CardDatabase + ResourceLoader.exists — DirAccess folder scans
+	# often return nothing in exported PCK builds, leaving every face as card_back.
+	for cname: String in CardDatabase.characters:
+		var cd: CharacterData = CardDatabase.characters[cname] as CharacterData
+		if cd.placeholder_art:
 			continue
-		# Skip old type-prefixed exports (character_, union_, trap_, tech_)
-		const SKIP_PREFIXES: PackedStringArray = ["union_", "character_", "trap_", "tech_"]
-		var has_prefix: bool = false
-		for pfx: String in SKIP_PREFIXES:
-			if stem.begins_with(pfx):
-				has_prefix = true
-				break
-		if has_prefix:
+		if SaveManager.demo_mode and not cd.include_in_demo:
 			continue
-		# Current-style file: safe pool = this file; nsfw pool = _nsfw variant if it exists
-		_safe_paths.append(FULL_CARDS_DIR + f)
-		_nsfw_paths.append(nsfw_map.get(stem, FULL_CARDS_DIR + f) as String)
+		_append_card_paths(cname)
 
-	# Always exclude cards flagged as placeholder art
-	var placeholder_stems: Dictionary = _build_placeholder_stems()
-	var filtered_safe: Array[String] = []
-	var filtered_nsfw: Array[String] = []
-	for i: int in range(_safe_paths.size()):
-		var stem: String = _safe_paths[i].get_file().get_basename()
-		if stem not in placeholder_stems:
-			filtered_safe.append(_safe_paths[i])
-			filtered_nsfw.append(_nsfw_paths[i])
-	_safe_paths = filtered_safe
-	_nsfw_paths = filtered_nsfw
+	for tname: String in CardDatabase.traps:
+		var td: TrapData = CardDatabase.traps[tname] as TrapData
+		if td.placeholder_art:
+			continue
+		if SaveManager.demo_mode and not td.include_in_demo:
+			continue
+		_append_card_paths(tname)
 
-	# When demo mode is on, further restrict to cards flagged include_in_demo
-	if SaveManager.demo_mode:
-		var demo_stems: Dictionary = _build_demo_stems()
-		var demo_safe: Array[String] = []
-		var demo_nsfw: Array[String] = []
-		for i: int in range(_safe_paths.size()):
-			var stem: String = _safe_paths[i].get_file().get_basename()
-			if stem in demo_stems:
-				demo_safe.append(_safe_paths[i])
-				demo_nsfw.append(_nsfw_paths[i])
-		_safe_paths = demo_safe
-		_nsfw_paths = demo_nsfw
+	for ename: String in CardDatabase.tech_cards:
+		var ed: TechCardData = CardDatabase.tech_cards[ename] as TechCardData
+		if ed.placeholder_art:
+			continue
+		if SaveManager.demo_mode and not ed.include_in_demo:
+			continue
+		_append_card_paths(ename)
 
 	_safe_paths.shuffle()
 	_nsfw_paths.shuffle()
 
-func _build_placeholder_stems() -> Dictionary:
-	var stems: Dictionary = {}
-	for cname: String in CardDatabase.characters:
-		var cd: CharacterData = CardDatabase.characters[cname] as CharacterData
-		if cd.placeholder_art:
-			stems[cname.to_lower().replace(" ", "_")] = true
-	for tname: String in CardDatabase.traps:
-		var td: TrapData = CardDatabase.traps[tname] as TrapData
-		if td.placeholder_art:
-			stems[tname.to_lower().replace(" ", "_")] = true
-	for ename: String in CardDatabase.tech_cards:
-		var ed: TechCardData = CardDatabase.tech_cards[ename] as TechCardData
-		if ed.placeholder_art:
-			stems[ename.to_lower().replace(" ", "_")] = true
-	return stems
 
-func _build_demo_stems() -> Dictionary:
-	var stems: Dictionary = {}
-	for cname: String in CardDatabase.characters:
-		var cd: CharacterData = CardDatabase.characters[cname] as CharacterData
-		if cd.include_in_demo and not cd.placeholder_art:
-			stems[cname.to_lower().replace(" ", "_")] = true
-	for tname: String in CardDatabase.traps:
-		var td: TrapData = CardDatabase.traps[tname] as TrapData
-		if td.include_in_demo and not td.placeholder_art:
-			stems[tname.to_lower().replace(" ", "_")] = true
-	for ename: String in CardDatabase.tech_cards:
-		var ed: TechCardData = CardDatabase.tech_cards[ename] as TechCardData
-		if ed.include_in_demo and not ed.placeholder_art:
-			stems[ename.to_lower().replace(" ", "_")] = true
-	return stems
+func _append_card_paths(card_name: String) -> void:
+	var safe_path: String = CardDatabase.find_artwork(card_name, "full_cards", false)
+	if safe_path == "":
+		return
+	var nsfw_path: String = CardDatabase.find_artwork(card_name, "full_cards", true)
+	_safe_paths.append(safe_path)
+	_nsfw_paths.append(nsfw_path if nsfw_path != "" else safe_path)
+
 
 func _pick_front_tex() -> Texture2D:
 	var pool: Array[String] = _nsfw_paths if SaveManager.nsfw_enabled else _safe_paths
 	if pool.is_empty():
 		return _tex_back
-	var path: String = pool[randi() % pool.size()]
-	return load(path) as Texture2D
+	for _attempt: int in 8:
+		var path: String = pool[randi() % pool.size()]
+		var tex: Texture2D = load(path) as Texture2D
+		if tex != null:
+			return tex
+	return _tex_back
+
 
 func _on_nsfw_changed(_enabled: bool) -> void:
 	_scan_front_textures()

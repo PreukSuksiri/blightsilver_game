@@ -196,16 +196,19 @@ offset_bottom = 92.0
 
 [node name="MainLayout" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 160.0
-offset_top = 96.0
-offset_right = 1120.0
-offset_bottom = 720.0
+offset_top = 220.0
+offset_right = -160.0
+offset_bottom = -174.0
 theme_override_constants/separation = 6
 
 [node name="P1Side" type="VBoxContainer" parent="MainLayout"]
 layout_mode = 2
-size_flags_horizontal = 3
+clip_contents = true
+size_flags_horizontal = 4
 
 [node name="P1Label" type="Label" parent="MainLayout/P1Side"]
 layout_mode = 2
@@ -217,17 +220,20 @@ horizontal_alignment = 1
 
 [node name="P1Grid" type="GridContainer" parent="MainLayout/P1Side"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 4
 
 [node name="CenterPanel" type="VBoxContainer" parent="MainLayout"]
 layout_mode = 2
 custom_minimum_size = Vector2(160, 0)
+size_flags_horizontal = 8
+size_flags_stretch_ratio = 0.0
 
 [node name="ModePanel" type="Panel" parent="MainLayout/CenterPanel"]
 layout_mode = 2
+custom_minimum_size = Vector2(160, 118)
 theme_override_styles/panel = SubResource("SBF_mode_panel")
 
 [node name="AttackBtn" type="Button" parent="MainLayout/CenterPanel/ModePanel"]
@@ -314,7 +320,9 @@ autowrap_mode = 3
 
 [node name="P2Side" type="VBoxContainer" parent="MainLayout"]
 layout_mode = 2
-size_flags_horizontal = 3
+clip_contents = true
+size_flags_horizontal = 12
+alignment = 2
 
 [node name="P2Label" type="Label" parent="MainLayout/P2Side"]
 layout_mode = 2
@@ -324,22 +332,10 @@ theme_override_font_sizes/font_size = 11
 theme_override_colors/font_color = Color(1.0, 0.722, 0.722, 1)
 horizontal_alignment = 1
 
-[node name="P2GridHost" type="Control" parent="MainLayout/P2Side"]
+[node name="P2Grid" type="GridContainer" parent="MainLayout/P2Side"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-
-[node name="P2Grid" type="GridContainer" parent="MainLayout/P2Side/P2GridHost"]
-layout_mode = 1
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -24.0
-offset_top = 0.0
-offset_right = -24.0
-offset_bottom = 0.0
+size_flags_horizontal = 12
+size_flags_vertical = 4
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 4
 
