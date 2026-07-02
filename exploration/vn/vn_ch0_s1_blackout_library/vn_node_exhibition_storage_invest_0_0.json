@@ -154,7 +154,7 @@
 			]
 		},
 		"linger_characters": true,
-		"player1_name": "Nex Crowmont",
+		"player1_name": "Nexus Crowmont",
 		"player2_name": "Mad Mascot",
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_univ_mascot_ghost.png",
 		"start_battle": true

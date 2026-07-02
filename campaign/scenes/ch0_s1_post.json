@@ -351,7 +351,7 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "Ohhh. Nex Crowmont. I've forgot to mention that currently... You are a wanted fugitive."
+		"text": "Ohhh. \"Nexus\" Crowmont. I've forgot to mention that currently... You are a wanted fugitive."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -373,14 +373,13 @@
 		"characters": [
 			{
 				"crop_bottom": 30.0,
-				"flip": true,
-				"position": "left",
+				"position": "right",
 				"scale": 175.0,
-				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
+				"sprite": "res://assets/textures/vn/characters/vn_char_nex_surprised.png"
 			}
 		],
-		"speaker": "Kelly",
-		"text": "Most of the time, security cameras that we use everyday..."
+		"speaker": "Nex",
+		"text": "And how did you know my birth name?"
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
@@ -394,7 +393,38 @@
 			}
 		],
 		"speaker": "Kelly",
-		"text": "They would not capture images of people who got possessed by a high-level spirit."
+		"text": "A psychic maybe...?"
+	},
+	{
+		"wait": 0.5
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Anyway, let me tell you about the security cameras that we use everyday..."
+	},
+	{
+		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",
+		"characters": [
+			{
+				"crop_bottom": 30.0,
+				"flip": true,
+				"position": "left",
+				"scale": 175.0,
+				"sprite": "res://assets/textures/vn/characters/kelly/vn_char_kelly_crossed_arm_smile.png"
+			}
+		],
+		"speaker": "Kelly",
+		"text": "Sometimes, they might not able to capture images of people who got possessed by a high-level spirit."
 	},
 	{
 		"background": "res://assets/textures/vn/backgrounds/vn_bg_nex_dorm.png",

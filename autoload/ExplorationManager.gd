@@ -302,14 +302,19 @@ func restart_stage() -> void:
 
 ## End the current session.
 ## If carry_rewards is true, accumulated credits and flags are applied to the main game.
+## When clear_saved is false, the on-disk exploration snapshot is kept (chapter arc handoff).
 ## Emits session_ended with a copy of the rewards Dictionary.
-func end_session(carry_rewards: bool = true) -> void:
+func end_session(carry_rewards: bool = true, clear_saved: bool = true) -> void:
 	if not _session_active:
 		return
+	if not clear_saved:
+		_save_session_state(true)
 	var rewards: Dictionary = _session_rewards.duplicate(true) if carry_rewards else {}
 	if carry_rewards:
 		_apply_rewards(rewards)
-	_reset_session_state()
+	_clear_session_memory()
+	if clear_saved:
+		_clear_saved_session()
 	emit_signal("session_ended", rewards)
 
 func _clear_session_memory() -> void:
@@ -338,6 +343,10 @@ func _clear_session_memory() -> void:
 func _reset_session_state() -> void:
 	_clear_session_memory()
 	_clear_saved_session()
+
+## End live session but keep the saved exploration snapshot (chapter return VN handoff).
+func detach_session_keep_save(carry_rewards: bool = true) -> void:
+	end_session(carry_rewards, false)
 
 ## Mark a VN scene path as having been played this session.
 func mark_vn_played(path: String) -> void:

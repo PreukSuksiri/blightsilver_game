@@ -117,7 +117,7 @@
 			]
 		},
 		"linger_characters": true,
-		"player1_name": "Next Crowmont",
+		"player1_name": "Nexus Crowmont",
 		"player2_name": "Stained Doll",
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_library_puppet.png",
 		"start_battle": true

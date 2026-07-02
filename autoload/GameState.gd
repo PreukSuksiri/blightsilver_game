@@ -330,6 +330,7 @@ var quick_duel_reveal_skip_all: bool = false
 var quick_duel_rewards_settled: bool = false
 var pending_wishlist_cta: bool = false
 var quick_duel_protagonist_id: String = ""
+var battle_ai_identity_id: String = ""
 var vn_on_win: String = ""
 var vn_on_lose: String = ""
 var vn_battle_rewards: Array = []  # VN start_battle / tutorial_battle beat rewards — granted to mailbox on win
@@ -1263,6 +1264,7 @@ func new_game(mode: GameMode = GameMode.LOCAL_2P) -> void:
 		battle_ai_forced_tech.clear()
 		battle_ai_featured_union = ""
 		battle_featured_unions = ["", ""]
+		battle_ai_identity_id = ""
 		vn_launched_from_exploration = false
 		vn_battle_rewards.clear()
 		vn_battle_loss_rewards.clear()
@@ -1301,6 +1303,7 @@ func abort_quick_duel_battle() -> void:
 	quick_duel_rewards_settled = false
 	pending_wishlist_cta = false
 	quick_duel_protagonist_id = ""
+	battle_ai_identity_id = ""
 
 ## Double numeric tech values when the target has DOUBLE_TECH_EFFECT (Mountain Sage).
 func scaled_tech_effect_for_unit(target: CardInstance, value: int) -> int:
@@ -1364,3 +1367,57 @@ func post_message(text: String) -> void:
 func show_center_message(text: String) -> void:
 	emit_signal("message_posted", text)
 	emit_signal("center_message_requested", text)
+
+
+func grant_vn_mail_rewards(
+		rewards: Array,
+		mail_from: String = "Battle Reward",
+		credits_subject: String = "Credits Earned!",
+		pack_subject_prefix: String = "Victory Reward",
+		card_subject: String = "Card Reward",
+		scroll_subject: String = "Victory Reward — Union Scroll") -> void:
+	for entry: Variant in rewards:
+		if not entry is Dictionary:
+			continue
+		var reward: Dictionary = entry as Dictionary
+		match str(reward.get("type", "")):
+			"credits", "coins":
+				var amount: int = int(reward.get("amount", 0))
+				if amount <= 0:
+					continue
+				MailboxManager.send_mail(
+					mail_from,
+					credits_subject,
+					"You received %d Credits." % amount,
+					{"type": "credits", "amount": amount}
+				)
+			"booster_pack":
+				var pack_ref: String = str(reward.get("pack_name", "")).strip_edges()
+				if pack_ref.is_empty():
+					continue
+				var pack: Dictionary = ShopManager.get_pack_by_name(pack_ref)
+				if pack.is_empty():
+					push_warning("GameState: unknown booster pack '%s' in vn mail rewards." % pack_ref)
+					continue
+				var pack_name: String = str(pack.get("name", pack_ref))
+				MailboxManager.send_mail(
+					mail_from,
+					"%s — %s" % [pack_subject_prefix, pack_name],
+					"You earned a booster pack: %s. Claim it from your Inventory." % pack_name,
+					{"type": "booster_pack", "pack_name": pack_name}
+				)
+			"card":
+				var card_name: String = str(reward.get("card_name", "")).strip_edges()
+				if card_name.is_empty():
+					continue
+				MailboxManager.send_mail(
+					mail_from,
+					card_subject,
+					"You received the card: %s." % card_name,
+					{"type": "card", "card_name": card_name}
+				)
+			"union_scroll":
+				var scroll_count: int = int(reward.get("count", 1))
+				if scroll_count <= 0:
+					scroll_count = 1
+				UnionScrollManager.grant_union_scroll_mail(scroll_count, scroll_subject, mail_from)

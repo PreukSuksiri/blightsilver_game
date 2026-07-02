@@ -512,6 +512,11 @@
 		"linger_characters": true
 	},
 	{
+		"ai_forced_tech": [
+			"Radar",
+			"Harsh Training",
+			"Force Shield"
+		],
 		"ai_union_enabled": false,
 		"battle_bgm": "res://assets/audio/bgm_battle_3.mp3",
 		"comment": "Battle - Midnight Shadow",
@@ -539,7 +544,7 @@
 		"hidden": true,
 		"on_lose": "game_over",
 		"on_win": "res://campaign/scenes/ch1_s1_post.json",
-		"player1_name": "Nex Crowmont",
+		"player1_name": "Nexus Crowmont",
 		"player2_name": "Midnight Shadow",
 		"player_union_enabled": false,
 		"portrait_p1": "res://assets/textures/vn/characters/vn_char_nex_seething.png",

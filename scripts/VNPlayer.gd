@@ -52,6 +52,7 @@ var _beat_raw_indices: Array = []   # maps filtered index → raw JSON index
 var _scene_path: String = ""
 var _on_complete: Callable = Callable()
 var _track_campaign_checkpoint: bool = false
+var _chapter_arc_key: String = ""
 var _current_bg_path: String = ""
 var _accepting_input: bool = true
 var _battle_handoff_started: bool = false
@@ -355,9 +356,16 @@ func _spawn_vn_animation(anim_key: String) -> void:
 		anim.layer = 310
 	anim.call("launch", flip)
 
-func play_scene(json_path: String, on_complete: Callable, track_checkpoint: bool = false) -> void:
+func play_scene(
+		json_path: String,
+		on_complete: Callable,
+		track_checkpoint: bool = false,
+		chapter_arc_key: String = "") -> void:
 	_on_complete = on_complete
 	_track_campaign_checkpoint = track_checkpoint
+	_chapter_arc_key = chapter_arc_key.strip_edges()
+	if _chapter_arc_key.is_empty() and track_checkpoint:
+		_chapter_arc_key = SaveManager.resolve_chapter_key_for_vn(json_path)
 
 	var file := FileAccess.open(json_path, FileAccess.READ)
 	if file == null:
@@ -393,6 +401,10 @@ func play_scene(json_path: String, on_complete: Callable, track_checkpoint: bool
 	_beat_index = 0
 	if _track_campaign_checkpoint:
 		var resume_at: int = SaveManager.get_vn_checkpoint(json_path)
+		if resume_at <= 0 and not _chapter_arc_key.is_empty():
+			var arc: Dictionary = SaveManager.get_chapter_arc(_chapter_arc_key)
+			if str(arc.get("vn_path", "")).strip_edges() == json_path.strip_edges():
+				resume_at = int(arc.get("vn_beat_index", 0))
 		if resume_at > 0 and resume_at < _beats.size():
 			_beat_index = resume_at
 			# Campaign gallery fades BGM out before continue; replay music from skipped beats.
@@ -707,6 +719,9 @@ func _show_beat() -> void:
 	# ── Tutorial battle (config JSON — no builder UI) ──
 	var tutorial_path: String = str(beat.get("tutorial_battle", "")).strip_edges()
 	if tutorial_path != "":
+		if SaveManager.is_attack_tutorial_complete():
+			await _skip_completed_tutorial_battle(beat)
+			return
 		if not GameState.quick_duel_launch:
 			GlobalStatManager.on_prologue_tutorial_battle_reached()
 		_battle_handoff_started = true
@@ -723,10 +738,7 @@ func _show_beat() -> void:
 			_accepting_input = true
 			_show_beat()
 			return
-		if SaveManager.is_attack_tutorial_complete():
-			GameState.apply_casual_mode_crystals()
-		else:
-			GameState.apply_tutorial_opponent_crystals()
+		GameState.apply_tutorial_opponent_crystals()
 		_apply_beat_battle_display(beat, true)
 		GameState.vn_on_win  = str(beat.get("on_win",  ""))
 		GameState.vn_on_lose = str(beat.get("on_lose", ""))
@@ -827,8 +839,15 @@ func _show_beat() -> void:
 	# ── Exploration call ──
 	var expl_graph: String = str(beat.get("exploration_call", "")).strip_edges()
 	if expl_graph != "":
-		if _track_campaign_checkpoint:
-			SaveManager.clear_vn_checkpoint(_scene_path)
+		var chapter_key: String = _chapter_arc_key
+		if chapter_key.is_empty():
+			chapter_key = SaveManager.resolve_chapter_key_for_vn(_scene_path)
+		if chapter_key.is_empty():
+			chapter_key = _scene_path
+		_chapter_arc_key = chapter_key
+		var on_return: String = str(beat.get("exploration_on_return", "")).strip_edges()
+		SaveManager.update_chapter_arc_exploration(
+			chapter_key, expl_graph, on_return, _scene_path, _beat_index)
 		var keep_vn_bgm: bool = bool(beat.get("exploration_keep_vn_bgm", false))
 		if not keep_vn_bgm:
 			_set_music("", 0.0, 0.0)
@@ -837,11 +856,8 @@ func _show_beat() -> void:
 		if expl_params is Dictionary:
 			for k: Variant in (expl_params as Dictionary):
 				params[str(k)] = (expl_params as Dictionary)[k]
-		if bool(beat.get("exploration_force_fresh", true)):
-			params["force_fresh"] = true
 		if keep_vn_bgm:
 			params["keep_vn_bgm"] = true
-		var on_return: String = str(beat.get("exploration_on_return", "")).strip_edges()
 		ExplorationManager.pending_return_vn = on_return
 		ExplorationManager.launch_source_vn = _scene_path
 		var return_scene: String = get_tree().current_scene.scene_file_path
@@ -860,8 +876,13 @@ func _show_beat() -> void:
 	# ── Dungeon call ──
 	var dungeon_id: String = str(beat.get("dungeon_call", ""))
 	if dungeon_id != "":
-		if _track_campaign_checkpoint:
-			SaveManager.clear_vn_checkpoint(_scene_path)
+		var chapter_key: String = _chapter_arc_key
+		if chapter_key.is_empty():
+			chapter_key = SaveManager.resolve_chapter_key_for_vn(_scene_path)
+		if chapter_key.is_empty():
+			chapter_key = _scene_path
+		_chapter_arc_key = chapter_key
+		SaveManager.update_chapter_arc_dungeon(chapter_key, dungeon_id)
 		_set_music("", 0.0, 0.0)
 		DailyDungeonManager.begin_story_session(
 			dungeon_id,
@@ -876,8 +897,8 @@ func _show_beat() -> void:
 	# ── Campaign gallery unlock + navigation ──
 	var complete_gallery: String = _resolve_gallery_chapter_end(beat)
 	if not complete_gallery.is_empty():
-		SaveManager.mark_gallery_chapter_completed(complete_gallery)
-		ExplorationManager.clear_saved_session_for_chapter(complete_gallery)
+		var card: Dictionary = SaveManager.get_gallery_card_for_chapter(complete_gallery)
+		SaveManager.finalize_chapter_arc(complete_gallery, card)
 
 	if beat.get("go_to_campaign_gallery", false):
 		_set_music("", 0.0, 0.0)
@@ -964,11 +985,37 @@ func _finish() -> void:
 	_hide_hint_icon()
 	if not exploration_overlay:
 		_set_music("", 0.0, 0.0)
-	if _track_campaign_checkpoint:
-		SaveManager.clear_vn_checkpoint(_scene_path)
 	if _on_complete.is_valid():
 		_on_complete.call()
 	queue_free()
+
+
+func _await_game_dialog_accept(title: String, body: String) -> void:
+	if GameDialog.has_open_overlay(self):
+		return
+	var closed: Array[bool] = [false]
+	GameDialog.accept_overlay(
+		self,
+		title,
+		body,
+		"OK",
+		func() -> void: closed[0] = true)
+	while not closed[0]:
+		await get_tree().process_frame
+
+
+func _skip_completed_tutorial_battle(beat: Dictionary) -> void:
+	_accepting_input = false
+	_hide_hint_icon()
+	await _await_game_dialog_accept(
+		"Tutorial Already Complete",
+		"You've already finished the tutorial in Quick Duel mode. This tutorial will be skipped.")
+	var on_win: String = str(beat.get("on_win", "")).strip_edges()
+	if on_win.is_empty():
+		_accepting_input = true
+		_show_beat()
+		return
+	play_scene(on_win, _on_complete, _track_campaign_checkpoint, _chapter_arc_key)
 
 
 ## Fade to black and hide campaign-gallery chrome before scene handoffs.
@@ -995,7 +1042,10 @@ func _persist_campaign_checkpoint() -> void:
 		return
 	if _beat_index <= 0:
 		return
-	SaveManager.set_vn_checkpoint(_scene_path, _beat_index)
+	if not _chapter_arc_key.is_empty():
+		SaveManager.set_vn_checkpoint_for_chapter(_chapter_arc_key, _scene_path, _beat_index)
+	else:
+		SaveManager.set_vn_checkpoint(_scene_path, _beat_index)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST \

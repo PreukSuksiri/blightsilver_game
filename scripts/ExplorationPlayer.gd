@@ -376,10 +376,8 @@ func _build_ui() -> void:
 	# Back button
 	_back_btn = Button.new()
 	_back_btn.text = "← Go Back"
-	_back_btn.add_theme_font_size_override("font_size", 16)
-	_back_btn.add_theme_color_override("font_color", Color(0.55, 0.78, 0.95))
+	GameDialog.style_menu_button(_back_btn)
 	_back_btn.pressed.connect(_on_back_pressed)
-	_tag_ui(_back_btn, "font", 400)
 	vbox.add_child(_back_btn)
 
 	if BuildConfig.admin_tools_enabled():
@@ -2019,10 +2017,8 @@ func _show_item_preview(item_id: String) -> void:
 	var can_use: bool = _item_can_be_used(item_id)
 	if can_use:
 		var use_btn := Button.new()
-		use_btn.text = "  Use  "
-		use_btn.add_theme_font_size_override("font_size", 20)
-		use_btn.add_theme_color_override("font_color", Color(0.88, 0.96, 1.0))
-		use_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		use_btn.text = "Use"
+		GameDialog.style_button(use_btn)
 		var captured_id: String = item_id
 		use_btn.pressed.connect(func() -> void:
 			_close_item_preview()
@@ -2031,9 +2027,8 @@ func _show_item_preview(item_id: String) -> void:
 
 	var close_btn := Button.new()
 	close_btn.text = "Close"
-	close_btn.add_theme_font_size_override("font_size", 20)
-	close_btn.add_theme_color_override("font_color", Color(0.60, 0.65, 0.65))
-	close_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL if can_use else Control.SIZE_SHRINK_CENTER
+	GameDialog.style_button(close_btn)
+	close_btn.add_theme_color_override("font_color", Color(0.72, 0.78, 0.88, 1.0))
 	close_btn.pressed.connect(_close_item_preview)
 	btn_row.add_child(close_btn)
 
@@ -2940,18 +2935,15 @@ func _open_exploration_options_popup() -> void:
 
 	var game_settings_btn := Button.new()
 	game_settings_btn.text = "Game Settings..."
-	game_settings_btn.custom_minimum_size = Vector2(0, 36)
-	game_settings_btn.add_theme_font_size_override("font_size", 13)
-	game_settings_btn.add_theme_color_override("font_color", Color(0.6, 0.75, 1.0))
+	GameDialog.style_menu_button(game_settings_btn)
 	game_settings_btn.pressed.connect(func() -> void:
 		_open_settings_menu_popup())
 	vbox.add_child(game_settings_btn)
 
 	var close_btn := Button.new()
-	close_btn.text = "CLOSE"
-	close_btn.custom_minimum_size = Vector2(0, 36)
-	close_btn.add_theme_font_size_override("font_size", 13)
-	close_btn.add_theme_color_override("font_color", Color(0.6, 0.75, 1.0))
+	close_btn.text = "Close"
+	GameDialog.style_menu_button(close_btn)
+	close_btn.add_theme_color_override("font_color", Color(0.72, 0.78, 0.88, 1.0))
 	close_btn.pressed.connect(func() -> void:
 		if _exploration_options_overlay != null and is_instance_valid(_exploration_options_overlay):
 			_exploration_options_overlay.queue_free()
@@ -2964,10 +2956,9 @@ func _open_settings_menu_popup() -> void:
 	if _settings_menu != null and is_instance_valid(_settings_menu):
 		return
 	var sm: Node = load("res://scenes/settings_menu.tscn").instantiate()
-	sm.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	sm.z_index = 100
 	_settings_menu = sm
-	add_child(sm)
+	GameDialog.attach_viewport_overlay(sm as Control, self)
 	sm.closed.connect(func() -> void:
 		_settings_menu = null
 		sm.queue_free())
@@ -3502,10 +3493,8 @@ func _show_battle_prompt(node: ExplorationNode) -> void:
 		child.queue_free()
 
 	var btn := Button.new()
-	btn.text = "  Begin Battle"
-	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn.add_theme_font_size_override("font_size", 22)
-	btn.add_theme_color_override("font_color", Color(1.0, 0.55, 0.45))
+	btn.text = "Begin Battle"
+	GameDialog.style_menu_button(btn)
 	var captured_node: ExplorationNode = node
 	btn.pressed.connect(func() -> void:
 		SFXManager.play(SFXManager.SFX_EXPLORATION)
@@ -3569,10 +3558,8 @@ func _show_exit_prompt() -> void:
 		child.queue_free()
 
 	var btn := Button.new()
-	btn.text = "  Leave This Place"
-	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn.add_theme_font_size_override("font_size", 22)
-	btn.add_theme_color_override("font_color", Color(1.0, 0.90, 0.45))
+	btn.text = "Leave This Place"
+	GameDialog.style_menu_button(btn)
 	btn.pressed.connect(_on_exit_confirmed)
 	_hook_cursor(btn)
 	_choices_vbox.add_child(btn)
@@ -3598,17 +3585,28 @@ func _do_end_exploration() -> void:
 func _do_end_exploration_with_vn(vn_path: String) -> void:
 	if not ExplorationManager.is_session_active:
 		return
+	var vn_target: String = vn_path.strip_edges()
+	if vn_target.is_empty():
+		return
 	ExplorationManager.pending_return_vn = ""
-	ExplorationManager.end_session(true)
+	var chapter_key: String = str(SaveManager.exploration_session.get("source_vn_scene", "")).strip_edges()
+	if chapter_key.is_empty():
+		chapter_key = SaveManager.resolve_chapter_key_for_vn(vn_target)
+	ExplorationManager.detach_session_keep_save(true)
+	var resume_beat: int = SaveManager.get_vn_checkpoint(vn_target)
+	if resume_beat < 0:
+		resume_beat = 0
+	SaveManager.update_chapter_arc_vn(chapter_key, vn_target, resume_beat)
 	var dest: String = ExplorationManager.return_scene
-	# VNPlayer runs as an overlay on top of the still-alive exploration scene.
 	var vn: Control = VN_PLAYER_SCENE.instantiate() as Control
 	vn.keep_bgm = false
 	add_child(vn)
-	vn.play_scene(vn_path, func() -> void:
+	vn.play_scene(vn_target, func() -> void:
 		CheckerTransition.fade_out_to_battle(func() -> void:
 			get_tree().change_scene_to_file(dest)
-			CheckerTransition.fade_in()))
+			CheckerTransition.fade_in()),
+		true,
+		chapter_key)
 
 # ─────────────────────────────────────────────────────────────
 # UI helpers
@@ -3649,6 +3647,7 @@ func _show_no_session_error() -> void:
 		child.queue_free()
 	var btn := Button.new()
 	btn.text = "Return to Main Menu"
+	GameDialog.style_menu_button(btn)
 	btn.pressed.connect(func() -> void:
 		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
 	_choices_vbox.add_child(btn)

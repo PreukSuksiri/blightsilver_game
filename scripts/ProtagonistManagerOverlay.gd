@@ -9,6 +9,7 @@ var _selected_id: String = ""
 
 var _list: ItemList = null
 var _display_name_edit: LineEdit = null
+var _birth_name_edit: LineEdit = null
 var _portrait_dir_edit: LineEdit = null
 var _win_screen_edit: LineEdit = null
 var _poses_box: VBoxContainer = null
@@ -118,6 +119,8 @@ func _build_ui() -> void:
 
 	_display_name_edit = LineEdit.new()
 	right.add_child(_labeled_row("Display name", _display_name_edit))
+	_birth_name_edit = LineEdit.new()
+	right.add_child(_labeled_row("Birth name", _birth_name_edit))
 
 	var portrait_row := HBoxContainer.new()
 	portrait_row.add_theme_constant_override("separation", 8)
@@ -264,6 +267,8 @@ func _select_protagonist(protagonist_id: String) -> void:
 	var d: Dictionary = entry as Dictionary
 	if _display_name_edit:
 		_display_name_edit.text = str(d.get("display_name", protagonist_id.capitalize()))
+	if _birth_name_edit:
+		_birth_name_edit.text = str(d.get("birth_name", ""))
 	if _portrait_dir_edit:
 		_portrait_dir_edit.text = str(d.get("portrait_dir", ""))
 	if _win_screen_edit:
@@ -357,6 +362,7 @@ func _sync_current_protagonist() -> void:
 		return
 	var entry: Dictionary = (_data.get(_selected_id, {}) as Dictionary).duplicate(true)
 	entry["display_name"] = _display_name_edit.text.strip_edges() if _display_name_edit else _selected_id
+	entry["birth_name"] = _birth_name_edit.text.strip_edges() if _birth_name_edit else ""
 	entry["portrait_dir"] = _portrait_dir_edit.text.strip_edges() if _portrait_dir_edit else ""
 	entry["win_screen"] = _win_screen_edit.text.strip_edges() if _win_screen_edit else ""
 	entry["poses"] = _collect_poses_from_ui()

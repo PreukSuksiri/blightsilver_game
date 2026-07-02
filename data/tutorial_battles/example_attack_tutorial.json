@@ -227,7 +227,7 @@
 			},
 			{
 				"instruction": "",
-				"message": "Select 'Silver Spearman' card and attack opponent's cell. Remember : Higher ATK defeats lower DEF. Higher DEF defeats lower ATK.",
+				"message": "Select 'Silver Spearman' card and attack opponent's cell. TIPS : Higher ATK defeats lower DEF. Higher DEF defeats lower ATK.",
 				"type": "show_message"
 			},
 			{
@@ -242,12 +242,12 @@
 			},
 			{
 				"instruction": "",
-				"message": "Select 'Witchhunter' card and attack opponent's cell",
+				"message": "Select 'Witchhunter' card and attack opponent's cell. TIPS : Higher ATK defeats lower DEF. Higher DEF defeats lower ATK.",
 				"type": "show_message"
 			},
 			{
 				"card_name": "Witchhunter",
-				"instruction": "Attack using 'Witchhunter'. Remember : Higher ATK defeats lower DEF. Higher DEF defeats lower ATK.",
+				"instruction": "Attack using 'Witchhunter'",
 				"type": "attack"
 			},
 			{

@@ -224,18 +224,18 @@
 	{
 		"battle_reward": [
 			{
-				"amount": 3000.0,
+				"amount": 3000,
 				"type": "credits"
 			},
 			{
-				"count": 1.0,
+				"count": 1,
 				"type": "union_scroll"
 			}
 		],
 		"linger_characters": true,
 		"on_lose": "res://data/quick_duel/tutorial_intro_post.json",
 		"on_win": "res://data/quick_duel/tutorial_intro_post.json",
-		"player1_name": "Nex Crowmont",
+		"player1_name": "Nexus Crowmont",
 		"player2_name": "Kelly Lastochkina",
 		"portrait_p1": "res://assets/textures/profile/battle_illustrations/battler_nex_wet.png",
 		"portrait_p2": "res://assets/textures/vn/characters/kelly/vn_char_kelly_neutral.png",

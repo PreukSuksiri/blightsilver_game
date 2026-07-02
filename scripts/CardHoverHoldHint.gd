@@ -88,6 +88,7 @@ func _clear_session() -> void:
 	_hover_control = null
 	_host = null
 	_overlay_pause_active = false
+	_pause_reasons.clear()
 	_card_name = ""
 	_card_type = ""
 	_elapsed = 0.0
@@ -233,9 +234,9 @@ func _has_blocking_overlay() -> bool:
 		return false
 	if _hold_overlay != null and is_instance_valid(_hold_overlay):
 		return false
-	if GameDialog.has_open_overlay(_host):
+	if GameDialog.has_any_open_overlay():
 		return true
-	if GameDialog.has_open_overlay(_host, &"GameDialogContentOverlay"):
+	if GameDialog.has_any_open_overlay(&"GameDialogContentOverlay"):
 		return true
 	return CardDetailOverlay.find_first_in_tree(_host) != null
 

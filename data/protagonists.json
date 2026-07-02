@@ -1,5 +1,6 @@
 {
 	"nex": {
+		"birth_name": "Nexus Crowmont",
 		"display_name": "Nex Crowmont",
 		"portrait_dir": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/nex",
 		"win_screen": "res://assets/textures/profile/win_screen/img_win_screen_nex.png",
@@ -68,6 +69,7 @@
 		]
 	},
 	"kelly": {
+		"birth_name": "Kelly Lastochkina",
 		"display_name": "Kelly Lastochkina",
 		"portrait_dir": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/kelly",
 		"win_screen": "res://assets/textures/profile/win_screen/img_win_screen_kelly.png",

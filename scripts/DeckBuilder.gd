@@ -530,9 +530,20 @@ func _on_delete_deck() -> void:
 	if SaveManager.decks.size() <= 1:
 		status_label.text = "Cannot delete the last deck."
 		return
-	SaveManager.delete_deck(SaveManager.active_deck_index)
-	_refresh_deck_select()
-	_load_deck(SaveManager.active_deck_index)
+	if GameDialog.has_open_overlay(self):
+		return
+	var deck: DeckData = SaveManager.get_active_deck()
+	var deck_name: String = deck.deck_name if deck != null else "this deck"
+	GameDialog.confirmation_overlay_delayed(
+		self,
+		"Delete Deck",
+		"Delete \"%s\"?\n\nThis cannot be undone." % deck_name,
+		"I want to delete this deck",
+		"Go back and do nothing",
+		func() -> void:
+			SaveManager.delete_deck(SaveManager.active_deck_index)
+			_refresh_deck_select()
+			_load_deck(SaveManager.active_deck_index))
 
 func _on_duplicate_deck() -> void:
 	SaveManager.duplicate_deck(SaveManager.active_deck_index)

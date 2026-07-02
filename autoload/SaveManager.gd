@@ -27,6 +27,9 @@ var exploration_flags: Dictionary = {}       # flags written by ExplorationManag
 var exploration_session: Dictionary = {}    # mid-session snapshot; cleared on end_session()
 var exploration_auto_save: bool = true      # when false, only Save and Exit writes exploration_session
 var campaign_vn_checkpoints: Dictionary = {}  # vn_scene path → filtered beat index to resume
+var chapter_arc_progress: Dictionary = {}   # gallery chapter vn_scene → active arc segment
+const GALLERY_DATA_PATH: String = "res://campaign/gallery_data.json"
+var _gallery_entries_cache: Array = []
 var onboarding_complete: bool = false        # true after first-run setup (or legacy save migration)
 var title_cheat_apartment_claimed: bool = false  # main-menu apartment-window cheat (once per save)
 var title_cheat_moon_claimed: bool = false       # main-menu moon cheat (once per save)
@@ -393,6 +396,7 @@ func save_data() -> void:
 		"exploration_session":     exploration_session,
 		"exploration_auto_save":   exploration_auto_save,
 		"campaign_vn_checkpoints": campaign_vn_checkpoints,
+		"chapter_arc_progress":    chapter_arc_progress,
 		"onboarding_complete":     onboarding_complete,
 		"title_cheat_apartment_claimed": title_cheat_apartment_claimed,
 		"title_cheat_moon_claimed":      title_cheat_moon_claimed,
@@ -499,6 +503,10 @@ func load_data() -> void:
 	if vc is Dictionary:
 		campaign_vn_checkpoints = vc as Dictionary
 
+	var cap: Variant = parsed.get("chapter_arc_progress", {})
+	if cap is Dictionary:
+		chapter_arc_progress = cap as Dictionary
+
 	onboarding_complete = bool(parsed.get("onboarding_complete", false))
 	title_cheat_apartment_claimed = bool(parsed.get("title_cheat_apartment_claimed", false))
 	title_cheat_moon_claimed = bool(parsed.get("title_cheat_moon_claimed", false))
@@ -536,6 +544,7 @@ func load_data() -> void:
 	AchievementManager.load_from_save(parsed as Dictionary)
 	if RewardGranter.reconcile_claimed_union_formula_rewards():
 		save_data()
+	_migrate_chapter_arc_from_legacy()
 
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery VN beat checkpoints (pre-exploration progress)
@@ -546,6 +555,16 @@ func set_vn_checkpoint(vn_scene: String, beat_index: int) -> void:
 		return
 	campaign_vn_checkpoints[key] = beat_index
 	save_data()
+
+func set_vn_checkpoint_for_chapter(
+		chapter_key: String,
+		vn_scene: String,
+		beat_index: int) -> void:
+	set_vn_checkpoint(vn_scene, beat_index)
+	var ck: String = chapter_key.strip_edges()
+	if ck.is_empty():
+		return
+	update_chapter_arc_vn(ck, vn_scene, beat_index)
 
 func get_vn_checkpoint(vn_scene: String) -> int:
 	var key: String = vn_scene.strip_edges()
@@ -782,6 +801,220 @@ func clear_gallery_progress() -> Dictionary:
 	CampaignManager.emit_signal("progress_changed")
 	save_data()
 	return {"gallery_chapters": gallery_count, "campaign_nodes": campaign_count}
+
+# ─────────────────────────────────────────────────────────────
+# Chapter arc progress (multi-segment VN → exploration → VN queues)
+# ─────────────────────────────────────────────────────────────
+
+func _load_gallery_entries() -> Array:
+	if not _gallery_entries_cache.is_empty():
+		return _gallery_entries_cache
+	if not FileAccess.file_exists(GALLERY_DATA_PATH):
+		return []
+	var f := FileAccess.open(GALLERY_DATA_PATH, FileAccess.READ)
+	if f == null:
+		return []
+	var parsed: Variant = JSON.parse_string(f.get_as_text())
+	f.close()
+	if parsed is Array:
+		_gallery_entries_cache = parsed as Array
+	return _gallery_entries_cache
+
+
+func get_gallery_card_for_chapter(chapter_key: String) -> Dictionary:
+	var key: String = chapter_key.strip_edges()
+	if key.is_empty():
+		return {}
+	for raw: Variant in _load_gallery_entries():
+		if not raw is Dictionary:
+			continue
+		var card: Dictionary = raw as Dictionary
+		if str(card.get("vn_scene", "")).strip_edges() == key:
+			return card.duplicate(true)
+	return {}
+
+
+func resolve_chapter_key_for_vn(vn_path: String) -> String:
+	var path: String = vn_path.strip_edges()
+	if path.is_empty():
+		return ""
+	for raw: Variant in _load_gallery_entries():
+		if not raw is Dictionary:
+			continue
+		var card: Dictionary = raw as Dictionary
+		var chapter_vn: String = str(card.get("vn_scene", "")).strip_edges()
+		if chapter_vn.is_empty():
+			continue
+		if chapter_vn == path:
+			return chapter_vn
+		var expl: Dictionary = ExplorationManager.find_exploration_call_in_vn(chapter_vn)
+		var on_return: String = str(expl.get("exploration_on_return", "")).strip_edges()
+		if on_return == path:
+			return chapter_vn
+	return ""
+
+
+func has_chapter_arc_progress(chapter_key: String) -> bool:
+	var key: String = chapter_key.strip_edges()
+	return not key.is_empty() and chapter_arc_progress.has(key)
+
+
+func get_chapter_arc(chapter_key: String) -> Dictionary:
+	var key: String = chapter_key.strip_edges()
+	if key.is_empty():
+		return {}
+	var arc: Variant = chapter_arc_progress.get(key, {})
+	return arc.duplicate(true) if arc is Dictionary else {}
+
+
+func get_chapter_arc_segment_kind(chapter_key: String) -> String:
+	if not has_chapter_arc_progress(chapter_key):
+		return ""
+	return str(get_chapter_arc(chapter_key).get("segment", "")).strip_edges()
+
+
+func _write_chapter_arc(chapter_key: String, arc: Dictionary) -> void:
+	var key: String = chapter_key.strip_edges()
+	if key.is_empty():
+		return
+	chapter_arc_progress[key] = arc.duplicate(true)
+	save_data()
+
+
+func update_chapter_arc_vn(chapter_key: String, vn_path: String, beat_index: int) -> void:
+	var key: String = chapter_key.strip_edges()
+	var vp: String = vn_path.strip_edges()
+	if key.is_empty() or vp.is_empty():
+		return
+	var arc: Dictionary = get_chapter_arc(key)
+	arc["segment"] = "vn"
+	arc["vn_path"] = vp
+	arc["vn_beat_index"] = beat_index
+	_write_chapter_arc(key, arc)
+
+
+func update_chapter_arc_exploration(
+		chapter_key: String,
+		graph_path: String,
+		pending_return_vn: String,
+		source_vn: String,
+		source_beat_index: int) -> void:
+	var key: String = chapter_key.strip_edges()
+	var graph: String = graph_path.strip_edges()
+	if key.is_empty() or graph.is_empty():
+		return
+	var arc: Dictionary = {
+		"segment":           "exploration",
+		"exploration_graph": graph,
+		"pending_return_vn": pending_return_vn.strip_edges(),
+		"source_vn":         source_vn.strip_edges(),
+		"source_beat_index": source_beat_index,
+	}
+	_write_chapter_arc(key, arc)
+
+
+func update_chapter_arc_dungeon(chapter_key: String, dungeon_id: String) -> void:
+	var key: String = chapter_key.strip_edges()
+	var did: String = dungeon_id.strip_edges()
+	if key.is_empty() or did.is_empty():
+		return
+	var arc: Dictionary = {
+		"segment":    "dungeon",
+		"dungeon_id": did,
+	}
+	_write_chapter_arc(key, arc)
+
+
+func clear_chapter_arc_progress(chapter_key: String) -> void:
+	var key: String = chapter_key.strip_edges()
+	if key.is_empty() or not chapter_arc_progress.has(key):
+		return
+	chapter_arc_progress.erase(key)
+	save_data()
+
+
+func clear_chapter_arc_vn_checkpoints(chapter_key: String) -> void:
+	var key: String = chapter_key.strip_edges()
+	if key.is_empty():
+		return
+	clear_vn_checkpoint(key)
+	var expl: Dictionary = ExplorationManager.find_exploration_call_in_vn(key)
+	var on_return: String = str(expl.get("exploration_on_return", "")).strip_edges()
+	if not on_return.is_empty():
+		clear_vn_checkpoint(on_return)
+	var arc: Dictionary = get_chapter_arc(key)
+	var arc_vn: String = str(arc.get("vn_path", "")).strip_edges()
+	if not arc_vn.is_empty() and arc_vn != key and arc_vn != on_return:
+		clear_vn_checkpoint(arc_vn)
+
+
+## Wipe all in-progress data for a gallery chapter (Restart Chapter).
+func reset_chapter_arc_progress(chapter_key: String, card: Dictionary = {}) -> void:
+	var key: String = chapter_key.strip_edges()
+	if key.is_empty():
+		return
+	clear_chapter_arc_vn_checkpoints(key)
+	clear_chapter_arc_progress(key)
+	ExplorationManager.clear_saved_session_for_chapter(key, card)
+	var dungeon_info: Dictionary = DailyDungeonManager.find_dungeon_call_in_vn(key)
+	var dungeon_id: String = str(dungeon_info.get("dungeon_id", "")).strip_edges()
+	if not dungeon_id.is_empty():
+		DailyDungeonManager.reset_story_dungeon_chapter(dungeon_id)
+
+
+## Mark chapter complete and remove all arc / mid-progress saves.
+func finalize_chapter_arc(chapter_key: String, card: Dictionary = {}) -> void:
+	var key: String = chapter_key.strip_edges()
+	if key.is_empty():
+		return
+	mark_gallery_chapter_completed(key)
+	reset_chapter_arc_progress(key, card)
+
+
+func _migrate_chapter_arc_from_legacy() -> void:
+	var migrated: bool = false
+	for raw: Variant in _load_gallery_entries():
+		if not raw is Dictionary:
+			continue
+		var card: Dictionary = raw as Dictionary
+		var chapter_key: String = str(card.get("vn_scene", "")).strip_edges()
+		if chapter_key.is_empty() or is_gallery_chapter_completed(chapter_key):
+			continue
+		if has_chapter_arc_progress(chapter_key):
+			continue
+
+		var expl_info: Dictionary = ExplorationManager.find_exploration_call_in_vn(chapter_key)
+		var graph_path: String = ExplorationManager.resolve_chapter_exploration_graph(card, chapter_key)
+		var on_return: String = str(expl_info.get("exploration_on_return", "")).strip_edges()
+
+		# Prefer active exploration save tied to this chapter.
+		if not graph_path.is_empty() \
+				and exploration_session.get("active", false) \
+				and str(exploration_session.get("source_vn_scene", "")).strip_edges() == chapter_key:
+			update_chapter_arc_exploration(
+				chapter_key,
+				graph_path,
+				on_return,
+				chapter_key,
+				get_vn_checkpoint(chapter_key))
+			migrated = true
+			continue
+
+		# Return VN checkpoint (e.g. PART2 mid-play).
+		if not on_return.is_empty() and has_vn_checkpoint(on_return):
+			var beat: int = get_vn_checkpoint(on_return)
+			update_chapter_arc_vn(chapter_key, on_return, beat)
+			migrated = true
+			continue
+
+		# Entry VN checkpoint (e.g. PART1 mid-play).
+		if has_vn_checkpoint(chapter_key):
+			var beat: int = get_vn_checkpoint(chapter_key)
+			update_chapter_arc_vn(chapter_key, chapter_key, beat)
+			migrated = true
+
+	if migrated:
+		save_data()
 
 # ─────────────────────────────────────────────────────────────
 # Bug tagging

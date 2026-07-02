@@ -5,7 +5,8 @@
 			"exclude_protagonists": [],
 			"id": "easy_green_wisp",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_green_wisp.png",
-			"name": "Foul Eye"
+			"name": "Foul Eye",
+			"birth_name": "Foul Eye"
 		},
 		{
 			"difficulty": "easy",
@@ -14,7 +15,8 @@
 			],
 			"id": "easy_dusty_roach",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_dusty_roach.png",
-			"name": "Glowing Roach"
+			"name": "Glowing Roach",
+			"birth_name": "Glowing Roach"
 		},
 		{
 			"difficulty": "easy",
@@ -23,14 +25,16 @@
 			],
 			"id": "easy_kelly",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/profile_quick_duel_kelly_easy.png",
-			"name": "Kelly Lastochkina"
+			"name": "Kelly Lastochkina",
+			"birth_name": "Kelly Lastochkina"
 		},
 		{
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_big_thug",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_big_thug.png",
-			"name": "Big Thug"
+			"name": "Big Thug",
+			"birth_name": "Big Thug"
 		},
 		{
 			"difficulty": "normal",
@@ -39,7 +43,8 @@
 			],
 			"id": "normal_canyon_warg",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_canyon_warg.png",
-			"name": "Canyon Warg"
+			"name": "Canyon Warg",
+			"birth_name": "Canyon Warg"
 		},
 		{
 			"difficulty": "normal",
@@ -48,14 +53,16 @@
 			],
 			"id": "normal_mayu",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/profile_quick_duel_mayu_normal.png",
-			"name": "Mayu Kokawa"
+			"name": "Mayu Kokawa",
+			"birth_name": "Mayu Kokawa"
 		},
 		{
 			"difficulty": "hard",
 			"exclude_protagonists": [],
 			"id": "hard_midnight_shadow",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/battler_midnight_shadow.png",
-			"name": "Midnight Shadow"
+			"name": "Midnight Shadow",
+			"birth_name": "Midnight Shadow"
 		},
 		{
 			"difficulty": "hard",
@@ -64,7 +71,8 @@
 			],
 			"id": "hard_nex",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/profile_quick_duel_nex_hard.png",
-			"name": "Nex Crowmont"
+			"name": "Nex Crowmont",
+			"birth_name": "Nexus Crowmont"
 		},
 		{
 			"difficulty": "hard",
@@ -73,14 +81,16 @@
 			],
 			"id": "hard_kelly",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/profile_quick_duel_kelly_hard.png",
-			"name": "Kelly Lastochkina"
+			"name": "Kelly Lastochkina",
+			"birth_name": "Kelly Lastochkina"
 		},
 		{
 			"difficulty": "easy",
 			"exclude_protagonists": [],
 			"id": "easy_wicked_puppet",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/battler_library_puppet.png",
-			"name": "Wicked Puppet"
+			"name": "Wicked Puppet",
+			"birth_name": "Wicked Puppet"
 		},
 		{
 			"difficulty": "easy",
@@ -89,7 +99,8 @@
 			],
 			"id": "easy_mayu",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/profile_quick_duel_mayu_easy.png",
-			"name": "Mayu Kokawa"
+			"name": "Mayu Kokawa",
+			"birth_name": "Mayu Kokawa"
 		},
 		{
 			"difficulty": "easy",
@@ -98,28 +109,32 @@
 			],
 			"id": "easy_nex_crowmont",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/easy/profile_quick_duel_nex_easy.png",
-			"name": "Nex Crowmont"
+			"name": "Nex Crowmont",
+			"birth_name": "Nexus Crowmont"
 		},
 		{
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_shady_woman",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_univ_break_room_ghost.png",
-			"name": "Shady Woman"
+			"name": "Shady Woman",
+			"birth_name": "Shady Woman"
 		},
 		{
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_creepy_mascot",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_univ_mascot_ghost.png",
-			"name": "Creepy Mascot"
+			"name": "Creepy Mascot",
+			"birth_name": "Creepy Mascot"
 		},
 		{
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_diluted_man",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/battler_univ_meeting_room_ghost.png",
-			"name": "Diluted Man"
+			"name": "Diluted Man",
+			"birth_name": "Diluted Man"
 		},
 		{
 			"difficulty": "normal",
@@ -128,7 +143,8 @@
 			],
 			"id": "normal_kelly",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/profile_quick_duel_kelly_normal.png",
-			"name": "Kelly Lastochkina"
+			"name": "Kelly Lastochkina",
+			"birth_name": "Kelly Lastochkina"
 		},
 		{
 			"difficulty": "normal",
@@ -137,14 +153,16 @@
 			],
 			"id": "normal_nex",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/profile_quick_duel_nex_normal.png",
-			"name": "Nex Crowmont"
+			"name": "Nex Crowmont",
+			"birth_name": "Nexus Crowmont"
 		},
 		{
 			"difficulty": "normal",
 			"exclude_protagonists": [],
 			"id": "normal_hospital_director",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/normal/vn_char_hospital_director.png",
-			"name": "Theo Meunier"
+			"name": "Theo Meunier",
+			"birth_name": "Theo Meunier"
 		},
 		{
 			"difficulty": "hard",
@@ -153,21 +171,24 @@
 			],
 			"id": "hard_mayu",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/profile_quick_duel_mayu_hard.png",
-			"name": "Mayu Kokawa"
+			"name": "Mayu Kokawa",
+			"birth_name": "Mayu Kokawa"
 		},
 		{
 			"difficulty": "hard",
 			"exclude_protagonists": [],
 			"id": "hard_anna",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/profile_quick_duel_anna.png.png",
-			"name": "Anna Tesla"
+			"name": "Anna Tesla",
+			"birth_name": "Anna Tesla"
 		},
 		{
 			"difficulty": "hard",
 			"exclude_protagonists": [],
 			"id": "hard_fruit_granny",
 			"illustration": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/monsters/hard/fruit_granny.png",
-			"name": "Fruit Granny"
+			"name": "Fruit Granny",
+			"birth_name": "Fruit Granny"
 		}
 	]
 }

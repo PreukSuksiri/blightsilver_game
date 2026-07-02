@@ -19,9 +19,31 @@ const BTN_PRESSED := Color(0.06, 0.12, 0.30, 1.0)
 const BTN_BORDER := Color(0.38, 0.65, 1.0, 0.6)
 const BTN_TEXT := Color(0.88, 0.95, 1.0, 1.0)
 
+const OVERLAY_LAYER_NAME := &"GameDialogLayer"
+const OVERLAY_HOST_NAME := &"GameDialogHost"
+const REQUESTER_META := &"game_dialog_requester_id"
+const OVERLAY_CANVAS_LAYER := 500
 
-func has_open_overlay(parent: Node, overlay_name: StringName = OVERLAY_NAME) -> bool:
-	return parent.get_node_or_null(NodePath(str(overlay_name))) != null
+var _overlay_layer: CanvasLayer = null
+var _overlay_host: Control = null
+
+
+func _ready() -> void:
+	var tree_root: Window = get_tree().root
+	if not tree_root.size_changed.is_connected(_on_viewport_resized):
+		tree_root.size_changed.connect(_on_viewport_resized)
+
+
+func _on_viewport_resized() -> void:
+	_sync_overlay_host_size()
+
+
+func has_any_open_overlay(overlay_name: StringName = OVERLAY_NAME) -> bool:
+	return has_open_overlay(null, overlay_name)
+
+
+func has_open_overlay(parent: Node = null, overlay_name: StringName = OVERLAY_NAME) -> bool:
+	return _find_overlay(parent, overlay_name) != null
 
 
 func make_panel_stylebox(content_margin: float = 18.0) -> StyleBoxFlat:
@@ -115,6 +137,67 @@ func confirmation_overlay(
 				on_cancel.call()
 			root.queue_free()),
 	])
+	return root
+
+
+## Confirmation with a countdown before the primary button is enabled (destructive actions).
+func confirmation_overlay_delayed(
+		parent: Node,
+		title: String,
+		body: String,
+		ok_text: String = "OK",
+		cancel_text: String = "Cancel",
+		on_confirm: Callable = Callable(),
+		on_cancel: Callable = Callable(),
+		confirm_delay_sec: float = 3.0,
+		min_width: float = DEFAULT_MIN_WIDTH,
+		z_index: int = DEFAULT_Z_INDEX,
+		overlay_name: StringName = OVERLAY_NAME) -> Control:
+	var shell: Dictionary = _make_overlay_shell(parent, min_width, z_index, overlay_name)
+	var vbox: VBoxContainer = shell["vbox"]
+	var root: Control = shell["root"]
+	_add_title_body(vbox, title, body)
+
+	var btn_row := HBoxContainer.new()
+	btn_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	btn_row.add_theme_constant_override("separation", 12)
+	vbox.add_child(btn_row)
+
+	var delay_secs: int = maxi(1, int(ceil(confirm_delay_sec)))
+	var confirm_btn := Button.new()
+	confirm_btn.text = "%s (%d)" % [ok_text, delay_secs]
+	confirm_btn.disabled = true
+	style_button(confirm_btn)
+	_apply_disabled_button_style(confirm_btn)
+	confirm_btn.pressed.connect(func() -> void:
+		if on_confirm.is_valid():
+			on_confirm.call()
+		root.queue_free())
+	btn_row.add_child(confirm_btn)
+
+	var cancel_btn := Button.new()
+	cancel_btn.text = cancel_text
+	style_button(cancel_btn)
+	cancel_btn.pressed.connect(func() -> void:
+		if on_cancel.is_valid():
+			on_cancel.call()
+		root.queue_free())
+	btn_row.add_child(cancel_btn)
+
+	var remaining: Array[int] = [delay_secs]
+	var timer := Timer.new()
+	timer.wait_time = 1.0
+	timer.autostart = true
+	timer.timeout.connect(func() -> void:
+		remaining[0] -= 1
+		if remaining[0] > 0:
+			confirm_btn.text = "%s (%d)" % [ok_text, remaining[0]]
+		else:
+			confirm_btn.text = ok_text
+			confirm_btn.disabled = false
+			timer.stop())
+	root.add_child(timer)
+
 	return root
 
 
@@ -284,9 +367,76 @@ func prompt_overlay(
 
 
 func close_overlay(parent: Node, overlay_name: StringName = OVERLAY_NAME) -> void:
-	var overlay := parent.get_node_or_null(NodePath(str(overlay_name)))
+	var overlay: Control = _find_overlay(parent, overlay_name)
 	if overlay != null and is_instance_valid(overlay):
 		overlay.queue_free()
+
+
+## Full-screen overlay on the viewport host (SettingsMenu, etc.).
+func attach_viewport_overlay(control: Control, requester: Node = null) -> void:
+	var host: Control = _ensure_overlay_host()
+	control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if requester != null:
+		control.set_meta(REQUESTER_META, requester.get_instance_id())
+	host.add_child(control)
+	control.move_to_front()
+
+
+func _find_overlay(parent: Node, overlay_name: StringName) -> Control:
+	var host: Control = _get_overlay_host_if_exists()
+	if host != null:
+		for child: Node in host.get_children():
+			if child.name != str(overlay_name):
+				continue
+			if parent == null:
+				return child as Control
+			if child.has_meta(REQUESTER_META) \
+					and int(child.get_meta(REQUESTER_META)) == parent.get_instance_id():
+				return child as Control
+		return null
+	if parent != null:
+		return parent.get_node_or_null(NodePath(str(overlay_name))) as Control
+	return null
+
+
+func _ensure_overlay_host() -> Control:
+	var tree_root: Window = get_tree().root
+	if _overlay_layer == null or not is_instance_valid(_overlay_layer):
+		_overlay_layer = tree_root.get_node_or_null(NodePath(str(OVERLAY_LAYER_NAME))) as CanvasLayer
+	if _overlay_layer == null:
+		_overlay_layer = CanvasLayer.new()
+		_overlay_layer.name = String(OVERLAY_LAYER_NAME)
+		_overlay_layer.layer = OVERLAY_CANVAS_LAYER
+		tree_root.add_child(_overlay_layer)
+	if _overlay_host == null or not is_instance_valid(_overlay_host):
+		_overlay_host = _overlay_layer.get_node_or_null(NodePath(str(OVERLAY_HOST_NAME))) as Control
+	if _overlay_host == null:
+		_overlay_host = Control.new()
+		_overlay_host.name = String(OVERLAY_HOST_NAME)
+		_overlay_host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_overlay_layer.add_child(_overlay_host)
+		if not tree_root.size_changed.is_connected(_on_viewport_resized):
+			tree_root.size_changed.connect(_on_viewport_resized)
+	_sync_overlay_host_size()
+	return _overlay_host
+
+
+func _get_overlay_host_if_exists() -> Control:
+	if _overlay_host != null and is_instance_valid(_overlay_host):
+		return _overlay_host
+	var tree_root: Window = get_tree().root
+	var layer: CanvasLayer = tree_root.get_node_or_null(NodePath(str(OVERLAY_LAYER_NAME))) as CanvasLayer
+	if layer == null:
+		return null
+	return layer.get_node_or_null(NodePath(str(OVERLAY_HOST_NAME))) as Control
+
+
+func _sync_overlay_host_size() -> void:
+	if _overlay_host == null or not is_instance_valid(_overlay_host):
+		return
+	var vp_size: Vector2 = get_viewport().get_visible_rect().size
+	_overlay_host.position = Vector2.ZERO
+	_overlay_host.size = vp_size
 
 
 func _make_overlay_shell(
@@ -320,7 +470,10 @@ func _make_overlay_shell(
 	vbox.add_theme_constant_override("separation", 14)
 	panel.add_child(vbox)
 
-	parent.add_child(root)
+	var host: Control = _ensure_overlay_host()
+	if parent != null:
+		root.set_meta(REQUESTER_META, parent.get_instance_id())
+	host.add_child(root)
 	root.move_to_front()
 	return {"root": root, "vbox": vbox, "panel": panel}
 
@@ -370,3 +523,9 @@ func _make_button_style(bg: Color) -> StyleBoxFlat:
 	sb.set_corner_radius_all(6)
 	sb.set_content_margin_all(8)
 	return sb
+
+
+func _apply_disabled_button_style(btn: Button) -> void:
+	var disabled_sb := _make_button_style(Color(0.08, 0.10, 0.22, 0.85))
+	btn.add_theme_stylebox_override("disabled", disabled_sb)
+	btn.add_theme_color_override("font_disabled_color", Color(0.55, 0.62, 0.72, 0.85))

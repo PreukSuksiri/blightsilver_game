@@ -893,7 +893,8 @@ func _check_pending_result() -> void:
 			var run: Dictionary = DailyDungeonManager.dungeon_runs.get(vid, {})
 			var source_vn: String = str(run.get("source_vn_scene", "")).strip_edges()
 			if source_vn != "":
-				SaveManager.mark_gallery_chapter_completed(source_vn)
+				var card: Dictionary = SaveManager.get_gallery_card_for_chapter(source_vn)
+				SaveManager.finalize_chapter_arc(source_vn, card)
 			DailyDungeonManager.clear_story_dungeon_save(vid)
 			DailyDungeonManager.end_story_session()
 			if vow != "":

@@ -69,6 +69,16 @@ func get_display_name(protagonist_id: String) -> String:
 	return id.capitalize()
 
 
+func get_birth_name(protagonist_id: String) -> String:
+	var id := normalize_id(protagonist_id)
+	var entry: Variant = _protagonists.get(id, {})
+	if entry is Dictionary:
+		var birth: String = str((entry as Dictionary).get("birth_name", "")).strip_edges()
+		if not birth.is_empty():
+			return birth
+	return get_display_name(id)
+
+
 func get_portrait_dir(protagonist_id: String) -> String:
 	var id := normalize_id(protagonist_id)
 	var entry: Variant = _protagonists.get(id, {})
@@ -271,6 +281,7 @@ func _collect_pngs(dir_path: String, out: Array[String]) -> void:
 func _seed_fallback() -> void:
 	_protagonists = {
 		"nex": {
+			"birth_name": "Nexus Crowmont",
 			"display_name": "Nex Crowmont",
 			"portrait_dir": "res://assets/textures/profile/battle_illustrations/demo_vs_ai/players/nex",
 			"win_screen": "res://assets/textures/profile/win_screen/img_win_screen_nex.png",

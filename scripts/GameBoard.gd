@@ -1459,8 +1459,20 @@ func _show_name_entry(ask_p1: bool = true, ask_p2: bool = true, heading_text: St
 		p2_edit.grab_focus()
 
 func _apply_player_names() -> void:
-	if _p1_name_lbl: _p1_name_lbl.text = _player_names[0]
-	if _p2_name_lbl: _p2_name_lbl.text = _player_names[1]
+	if _p1_name_lbl: _p1_name_lbl.text = _p1_magitech_name()
+	if _p2_name_lbl: _p2_name_lbl.text = _p2_magitech_name()
+
+func _p1_magitech_name() -> String:
+	var pid := GameState.quick_duel_protagonist_id.strip_edges()
+	if ProtagonistVault.is_valid_id(pid):
+		return ProtagonistVault.get_birth_name(pid)
+	return _player_names[0]
+
+func _p2_magitech_name() -> String:
+	var iid := GameState.battle_ai_identity_id.strip_edges()
+	if not iid.is_empty() and not AIIdentityVault.get_entry(iid).is_empty():
+		return AIIdentityVault.get_birth_name(iid)
+	return _player_names[1]
 
 # ─────────────────────────────────────────────────────────────
 # Setup Phase Handlers
@@ -3692,7 +3704,7 @@ func _build_bottom_crystal_labels() -> void:
 	p1_vbox.mouse_exited.connect(func(): _restore_game_guide())
 
 	_p1_name_lbl = Label.new()
-	_p1_name_lbl.text = _player_names[0]
+	_p1_name_lbl.text = _p1_magitech_name()
 	_p1_name_lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 600))
 	_p1_name_lbl.add_theme_font_size_override("font_size", NAME_SIZE)
 	_p1_name_lbl.add_theme_color_override("font_color", NAME_COLOR)
@@ -3742,7 +3754,7 @@ func _build_bottom_crystal_labels() -> void:
 	p2_vbox.mouse_exited.connect(func(): _restore_game_guide())
 
 	_p2_name_lbl = Label.new()
-	_p2_name_lbl.text = _player_names[1]
+	_p2_name_lbl.text = _p2_magitech_name()
 	_p2_name_lbl.add_theme_font_override("font", FontManager.make_font("display_serif", 600))
 	_p2_name_lbl.add_theme_font_size_override("font_size", NAME_SIZE)
 	_p2_name_lbl.add_theme_color_override("font_color", NAME_COLOR)
@@ -9894,51 +9906,8 @@ func _check_almost_win_bgm() -> void:
 		BGMManager.play_path(almost_path, 0.0, 1.5, 100.0, BGMManager.CONTEXT_BATTLE, 0.0, 2.0)
 
 func _send_vn_mail_rewards(rewards: Array, mail_from: String, credits_subject: String, pack_subject_prefix: String, card_subject: String, scroll_subject: String) -> void:
-	for entry: Variant in rewards:
-		if not entry is Dictionary:
-			continue
-		var reward: Dictionary = entry as Dictionary
-		match str(reward.get("type", "")):
-			"credits", "coins":
-				var amount: int = int(reward.get("amount", 0))
-				if amount <= 0:
-					continue
-				MailboxManager.send_mail(
-					mail_from,
-					credits_subject,
-					"You received %d Credits." % amount,
-					{"type": "credits", "amount": amount}
-				)
-			"booster_pack":
-				var pack_ref: String = str(reward.get("pack_name", "")).strip_edges()
-				if pack_ref.is_empty():
-					continue
-				var pack: Dictionary = ShopManager.get_pack_by_name(pack_ref)
-				if pack.is_empty():
-					push_warning("GameBoard: unknown booster pack '%s' in vn mail rewards." % pack_ref)
-					continue
-				var pack_name: String = str(pack.get("name", pack_ref))
-				MailboxManager.send_mail(
-					mail_from,
-					"%s — %s" % [pack_subject_prefix, pack_name],
-					"You earned a booster pack: %s. Claim it from your Inventory." % pack_name,
-					{"type": "booster_pack", "pack_name": pack_name}
-				)
-			"card":
-				var card_name: String = str(reward.get("card_name", "")).strip_edges()
-				if card_name.is_empty():
-					continue
-				MailboxManager.send_mail(
-					mail_from,
-					card_subject,
-					"You received the card: %s." % card_name,
-					{"type": "card", "card_name": card_name}
-				)
-			"union_scroll":
-				var scroll_count: int = int(reward.get("count", 1))
-				if scroll_count <= 0:
-					scroll_count = 1
-				UnionScrollManager.grant_union_scroll_mail(scroll_count, scroll_subject, mail_from)
+	GameState.grant_vn_mail_rewards(
+		rewards, mail_from, credits_subject, pack_subject_prefix, card_subject, scroll_subject)
 
 func _grant_vn_battle_rewards() -> void:
 	_send_vn_mail_rewards(

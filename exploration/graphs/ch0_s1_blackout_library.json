@@ -1244,7 +1244,7 @@
 			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
-			"vn_scene": "",
+			"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_back_hallway_main.json",
 			"vn_scene_conditions": [],
 			"vn_trigger": "on_enter",
 			"vn_trigger_equals": "",
@@ -3108,7 +3108,7 @@
 			"vn_after_actions": [],
 			"vn_keep_bgm": true,
 			"vn_play_once": true,
-			"vn_scene": "",
+			"vn_scene": "res://exploration/vn/vn_ch0_s1_blackout_library/vn_node_smoking_room_main.json",
 			"vn_scene_conditions": [
 				{
 					"after_actions": [

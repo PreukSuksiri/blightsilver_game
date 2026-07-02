@@ -84,17 +84,22 @@ static func open_and_return(parent: Node, card_name: String, card_type: String,
 	overlay._card_inst          = card_inst
 	overlay._show_quantity      = show_quantity
 	overlay._card_name_for_bug  = card_name
-	var host := parent if pin_to_parent else _find_overlay_host(parent)
+	var viewport_host := parent if pin_to_parent else _find_overlay_host(parent)
+	var use_gamedialog_host := z_index_override >= GameDialog.DEFAULT_Z_INDEX
 	if z_index_override >= 0:
 		overlay.z_index = z_index_override
-	elif pin_to_parent and host is Control:
-		overlay.z_index = (host as Control).z_index + 50
+	elif pin_to_parent and viewport_host is Control:
+		overlay.z_index = (viewport_host as Control).z_index + 50
 	else:
 		overlay.z_index = 101
-	host.add_child(overlay)
+	if use_gamedialog_host:
+		GameDialog.attach_viewport_overlay(overlay, parent)
+		overlay.move_to_front()
+	else:
+		viewport_host.add_child(overlay)
 
 	# Size card to 94 % of viewport height (almost full screen)
-	var vp    := host.get_viewport().get_visible_rect().size
+	var vp    := viewport_host.get_viewport().get_visible_rect().size
 	var card_h := minf(vp.y * 0.94, vp.x * 0.94 / FRAME_ASPECT)
 	var card_w := card_h * FRAME_ASPECT
 

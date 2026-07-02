@@ -197,6 +197,10 @@ func _add_card_dim_overlay(frame: Panel) -> void:
 func _get_chapter_save_kind(card: Dictionary, vn_path: String) -> String:
 	if vn_path.is_empty() or _is_chapter_locked(card):
 		return ""
+	if SaveManager.has_chapter_arc_progress(vn_path):
+		var arc_kind: String = SaveManager.get_chapter_arc_segment_kind(vn_path)
+		if not arc_kind.is_empty():
+			return arc_kind
 	var dungeon_info: Dictionary = _resolve_chapter_dungeon(card, vn_path)
 	var dungeon_id: String = str(dungeon_info.get("dungeon_id", "")).strip_edges()
 	if dungeon_id != "" and DailyDungeonManager.has_story_dungeon_save(dungeon_id):
@@ -206,6 +210,10 @@ func _get_chapter_save_kind(card: Dictionary, vn_path: String) -> String:
 	if graph_path != "" and ExplorationManager.has_saved_session_for_chapter(vn_path, graph_path, card):
 		return "exploration"
 	if SaveManager.has_vn_checkpoint(vn_path):
+		return "vn"
+	var expl: Dictionary = ExplorationManager.find_exploration_call_in_vn(vn_path)
+	var on_return: String = str(expl.get("exploration_on_return", "")).strip_edges()
+	if not on_return.is_empty() and SaveManager.has_vn_checkpoint(on_return):
 		return "vn"
 	if SaveManager.is_gallery_chapter_completed(vn_path):
 		return ""
@@ -258,12 +266,8 @@ func _on_chapter_pressed(card: Dictionary) -> void:
 			var dungeon_info: Dictionary = _resolve_chapter_dungeon(card, vn_path)
 			var dungeon_id: String = str(dungeon_info.get("dungeon_id", "")).strip_edges()
 			_show_continue_or_restart_dialog(card, vn_path, dungeon_id)
-		"exploration":
-			var expl_info: Dictionary = _resolve_chapter_exploration(card, vn_path)
-			var graph_path: String = str(expl_info.get("graph_path", "")).strip_edges()
-			_show_continue_or_restart_exploration_dialog(card, vn_path, graph_path)
-		"vn":
-			_show_continue_or_restart_vn_dialog(card, vn_path)
+		"exploration", "vn":
+			_show_continue_or_restart_chapter_dialog(card, vn_path)
 		_:
 			_play_vn(vn_path, true, card)
 
@@ -286,39 +290,24 @@ func _resolve_chapter_exploration(card: Dictionary, vn_path: String) -> Dictiona
 	return {"graph_path": graph_path}
 
 
-func _show_continue_or_restart_vn_dialog(card: Dictionary, vn_path: String) -> void:
+func _show_continue_or_restart_chapter_dialog(card: Dictionary, chapter_key: String) -> void:
 	if GameDialog.has_open_overlay(self):
 		return
 	var chapter_label: String = str(card.get("line2", card.get("line1", "this chapter")))
+	var save_kind: String = _get_chapter_save_kind(card, chapter_key)
+	var body: String = "You have saved progress in %s.\n\nContinue from where you left off, or restart the chapter from the beginning." % chapter_label
+	if save_kind == "exploration":
+		body = "You have saved exploration progress in %s.\n\nContinue from where you left off, or restart the chapter from the beginning." % chapter_label
+	elif save_kind == "vn":
+		body = "You have saved story progress in %s.\n\nContinue from where you left off, or restart the chapter from the beginning." % chapter_label
 	GameDialog.choices_overlay(
 		self,
 		"Saved Progress Found",
-		"You have saved story progress in %s.\n\nContinue from where you left off, or restart the chapter from the beginning." % chapter_label,
+		body,
 		[
-			{"text": "Continue Saved Progress", "callback": func() -> void: _play_vn(vn_path, false)},
-			{"text": "Restart Chapter", "callback": func() -> void: _play_vn(vn_path, true, card)},
-		],
-		"Cancel",
-		Callable(),
-		520.0,
-		30)
-
-
-func _show_continue_or_restart_exploration_dialog(
-		card: Dictionary,
-		vn_path: String,
-		graph_path: String) -> void:
-	if GameDialog.has_open_overlay(self):
-		return
-	var chapter_label: String = str(card.get("line2", card.get("line1", "this chapter")))
-	GameDialog.choices_overlay(
-		self,
-		"Saved Progress Found",
-		"You have saved exploration progress in %s.\n\nContinue from where you left off, or restart the chapter from the beginning." % chapter_label,
-		[
-			{"text": "Continue Saved Progress", "callback": func() -> void: _resume_exploration(graph_path)},
+			{"text": "Continue Saved Progress", "callback": func() -> void: _continue_chapter_arc(card, chapter_key)},
 			{"text": "Restart Chapter", "callback": func() -> void:
-				_show_restart_exploration_warning_dialog(card, vn_path, graph_path, chapter_label)},
+				_show_restart_chapter_warning_dialog(card, chapter_key, chapter_label)},
 		],
 		"Cancel",
 		Callable(),
@@ -326,26 +315,78 @@ func _show_continue_or_restart_exploration_dialog(
 		30)
 
 
-func _show_restart_exploration_warning_dialog(
+func _show_restart_chapter_warning_dialog(
 		card: Dictionary,
-		vn_path: String,
-		_graph_path: String,
+		chapter_key: String,
 		chapter_label: String) -> void:
 	if GameDialog.has_open_overlay(self):
 		return
 	GameDialog.confirmation_overlay(
 		self,
 		"Restart Chapter?",
-		"Restarting %s will erase all saved exploration progress for this chapter." % chapter_label,
+		"Restarting %s will erase all saved story, exploration, and dungeon progress for this chapter." % chapter_label,
 		"Restart Chapter",
 		"Cancel",
 		func() -> void:
-			ExplorationManager.clear_saved_session()
-			SaveManager.clear_vn_checkpoint(vn_path)
-			_play_vn(vn_path, true, card),
+			SaveManager.reset_chapter_arc_progress(chapter_key, card)
+			var entry_vn: String = str(card.get("vn_scene", chapter_key)).strip_edges()
+			_play_vn(entry_vn, true, card, chapter_key),
 		Callable(),
 		520.0,
 		30)
+
+
+func _continue_chapter_arc(card: Dictionary, chapter_key: String) -> void:
+	if not _require_deck_ready_for_chapter():
+		return
+	var arc: Dictionary = SaveManager.get_chapter_arc(chapter_key)
+	var segment: String = str(arc.get("segment", "")).strip_edges()
+	if segment.is_empty():
+		segment = _get_chapter_save_kind(card, chapter_key)
+	match segment:
+		"exploration":
+			var graph_path: String = str(arc.get("exploration_graph", "")).strip_edges()
+			if graph_path.is_empty():
+				var expl_info: Dictionary = _resolve_chapter_exploration(card, chapter_key)
+				graph_path = str(expl_info.get("graph_path", "")).strip_edges()
+			if graph_path.is_empty():
+				return
+			var pending: String = str(arc.get("pending_return_vn", "")).strip_edges()
+			if pending.is_empty():
+				var expl: Dictionary = ExplorationManager.find_exploration_call_in_vn(chapter_key)
+				pending = str(expl.get("exploration_on_return", "")).strip_edges()
+			ExplorationManager.pending_return_vn = pending
+			_resume_exploration(graph_path)
+		"vn":
+			var play_path: String = str(arc.get("vn_path", "")).strip_edges()
+			if play_path.is_empty():
+				play_path = chapter_key
+			_play_vn(play_path, false, card, chapter_key)
+		_:
+			var entry_vn: String = str(card.get("vn_scene", chapter_key)).strip_edges()
+			if SaveManager.has_vn_checkpoint(entry_vn):
+				_play_vn(entry_vn, false, card, chapter_key)
+			else:
+				var expl: Dictionary = ExplorationManager.find_exploration_call_in_vn(chapter_key)
+				var on_return: String = str(expl.get("exploration_on_return", "")).strip_edges()
+				if not on_return.is_empty() and SaveManager.has_vn_checkpoint(on_return):
+					_play_vn(on_return, false, card, chapter_key)
+				else:
+					var expl_info: Dictionary = _resolve_chapter_exploration(card, chapter_key)
+					var graph_path: String = str(expl_info.get("graph_path", "")).strip_edges()
+					if not graph_path.is_empty():
+						_resume_exploration(graph_path)
+
+
+func _show_continue_or_restart_vn_dialog(card: Dictionary, vn_path: String) -> void:
+	_show_continue_or_restart_chapter_dialog(card, vn_path)
+
+
+func _show_continue_or_restart_exploration_dialog(
+		card: Dictionary,
+		vn_path: String,
+		_graph_path: String) -> void:
+	_show_continue_or_restart_chapter_dialog(card, vn_path)
 
 
 func _resume_exploration(graph_path: String) -> void:
@@ -390,7 +431,8 @@ func _show_restart_warning_dialog(
 		"Cancel",
 		func() -> void:
 			DailyDungeonManager.reset_story_dungeon_chapter(dungeon_id)
-			_play_vn(vn_path, true, card),
+			SaveManager.reset_chapter_arc_progress(vn_path, card)
+			_play_vn(vn_path, true, card, vn_path),
 		Callable(),
 		520.0,
 		30)
@@ -403,25 +445,32 @@ func _resume_story_dungeon(dungeon_id: String) -> void:
 	get_tree().change_scene_to_file(DUNGEON_MAP_SCENE)
 
 
-func _play_vn(json_path: String, fresh_start: bool = true, card: Dictionary = {}) -> void:
-	_play_vn_async(json_path, fresh_start, card)
+func _play_vn(json_path: String, fresh_start: bool = true, card: Dictionary = {}, chapter_arc_key: String = "") -> void:
+	_play_vn_async(json_path, fresh_start, card, chapter_arc_key)
 
-func _play_vn_async(json_path: String, fresh_start: bool = true, card: Dictionary = {}) -> void:
+func _play_vn_async(
+		json_path: String,
+		fresh_start: bool = true,
+		card: Dictionary = {},
+		chapter_arc_key: String = "") -> void:
 	if not _require_deck_ready_for_chapter():
 		return
 	GlobalStatManager.on_first_touch("story_vn")
 	if json_path.find("ch0_s1_pre_DEMO_PART1") >= 0:
 		GlobalStatManager.on_first_touch("prologue_capsule")
 	await BGMManager.fade_out_and_stop(BGMManager.DEFAULT_FADE)
+	var arc_key: String = chapter_arc_key.strip_edges()
+	if arc_key.is_empty():
+		arc_key = str(card.get("vn_scene", json_path)).strip_edges()
 	if fresh_start:
-		SaveManager.clear_vn_checkpoint(json_path)
+		SaveManager.reset_chapter_arc_progress(arc_key, card)
 	var vn_scene: Variant = load(VN_PLAYER_SCENE)
 	var vn := (vn_scene as PackedScene).instantiate()
 	add_child(vn)
 	vn.play_scene(json_path, func() -> void:
-		SaveManager.mark_gallery_chapter_completed(json_path)
-		ExplorationManager.clear_saved_session_for_chapter(json_path, card)
-	, true)
+		pass,
+		true,
+		arc_key)
 
 
 func _get_prerequisite_vn(d: Dictionary) -> String:

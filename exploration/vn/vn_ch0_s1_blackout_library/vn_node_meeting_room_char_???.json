@@ -109,7 +109,7 @@
 			]
 		},
 		"linger_characters": true,
-		"player1_name": "Nex Crowmont",
+		"player1_name": "Nexus Crowmont",
 		"player2_name": "Diluted Man",
 		"portrait_p2": "res://assets/textures/profile/battle_illustrations/monsters/battler_univ_meeting_room_ghost.png",
 		"start_battle": true

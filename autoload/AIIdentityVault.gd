@@ -39,6 +39,23 @@ func get_entry(entry_id: String) -> Dictionary:
 	return {}
 
 
+func get_birth_name(entry_id: String) -> String:
+	var entry: Dictionary = get_entry(entry_id)
+	if entry.is_empty():
+		return ""
+	var birth: String = str(entry.get("birth_name", "")).strip_edges()
+	if not birth.is_empty():
+		return birth
+	return str(entry.get("name", "")).strip_edges()
+
+
+func default_birth_name_for_entry(entry: Dictionary) -> String:
+	var name: String = str(entry.get("name", "")).strip_edges()
+	if name == "Nex Crowmont":
+		return "Nexus Crowmont"
+	return name
+
+
 func pick_random_for_tier(tier: String, protagonist_id: String) -> Dictionary:
 	var needle_tier := tier.strip_edges().to_lower()
 	var hero_id := ProtagonistVault.normalize_id(protagonist_id)

@@ -12,6 +12,7 @@ var _selected_idx: int = -1
 var _list: ItemList = null
 var _id_edit: LineEdit = null
 var _name_edit: LineEdit = null
+var _birth_name_edit: LineEdit = null
 var _illus_edit: LineEdit = null
 var _illus_preview: TextureRect = null
 var _illus_preview_hint: Label = null
@@ -42,6 +43,7 @@ func _make_blank_entry(entry_id: String, display_name: String) -> Dictionary:
 	return {
 		"id": entry_id,
 		"name": display_name,
+		"birth_name": display_name,
 		"illustration": "",
 		"difficulty": "easy",
 		"exclude_protagonists": [],
@@ -113,6 +115,8 @@ func _build_ui() -> void:
 	right.add_child(_labeled_row("ID", _id_edit))
 	_name_edit = LineEdit.new()
 	right.add_child(_labeled_row("Name", _name_edit))
+	_birth_name_edit = LineEdit.new()
+	right.add_child(_labeled_row("Birth name", _birth_name_edit))
 
 	var illus_row := HBoxContainer.new()
 	illus_row.add_theme_constant_override("separation", 8)
@@ -264,6 +268,7 @@ func _sync_current_entry() -> void:
 	var entry: Dictionary = _entries[_selected_idx] as Dictionary
 	entry["id"] = _id_edit.text.strip_edges() if _id_edit else str(entry.get("id", ""))
 	entry["name"] = _name_edit.text.strip_edges() if _name_edit else str(entry.get("name", ""))
+	entry["birth_name"] = _birth_name_edit.text.strip_edges() if _birth_name_edit else ""
 	entry["illustration"] = _illus_edit.text.strip_edges() if _illus_edit else ""
 	if _diff_opt != null and _diff_opt.selected >= 0:
 		entry["difficulty"] = str(_diff_opt.get_item_metadata(_diff_opt.selected))
@@ -287,6 +292,9 @@ func _select_entry(idx: int) -> void:
 		_id_edit.text = str(entry.get("id", ""))
 	if _name_edit:
 		_name_edit.text = str(entry.get("name", ""))
+	if _birth_name_edit:
+		var birth: String = str(entry.get("birth_name", "")).strip_edges()
+		_birth_name_edit.text = birth if not birth.is_empty() else AIIdentityVault.default_birth_name_for_entry(entry)
 	if _illus_edit:
 		_illus_edit.text = str(entry.get("illustration", ""))
 	_refresh_illustration_preview()

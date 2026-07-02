@@ -630,8 +630,10 @@ func _apply_ai_identity_to_battle(tier: String) -> void:
 	while GameState.player_portraits.size() < 2:
 		GameState.player_portraits.append(DEFAULT_PORTRAIT_P2)
 	var identity_id: String = SaveManager.get_quick_duel_identity(tier)
+	GameState.battle_ai_identity_id = identity_id
 	var identity: Dictionary = AIIdentityVault.get_entry(identity_id)
 	if identity.is_empty():
+		GameState.battle_ai_identity_id = ""
 		return
 	var illus: String = str(identity.get("illustration", "")).strip_edges()
 	if illus != "":
