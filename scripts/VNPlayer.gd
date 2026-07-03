@@ -14,6 +14,7 @@ const CHAR_H      := 560.0
 const CHAR_Y      := 80.0
 const DIALOG_Y    := 640.0
 const DIALOG_H    := 260.0
+const STAGE_DESIGN_SIZE := Vector2(1600.0, 900.0)
 
 const HINT_ICON_PATH  := "res://assets/textures/vn/etc/star_compass.png"
 const WINDOWSKIN_PATH := "res://assets/textures/ui/decorations/ui_window_skin.png"
@@ -75,7 +76,10 @@ var _hint_tween: Tween = null
 var _video_player: VideoStreamPlayer = null
 var _current_music_path: String = ""
 var _fade_rect: ColorRect = null
+var _backdrop: ColorRect = null
 var _kb_tween: Tween = null      # Ken Burns background animation
+var _stage_base_pos: Vector2 = Vector2.ZERO
+var _stage_layout_pending: bool = false
 
 # ─────────────────────────────────────────────────────────────
 # Localisation helper
@@ -125,6 +129,10 @@ func _ready() -> void:
 		FontManager.fonts_changed.connect(_on_fonts_changed)
 	if transparent_bg:
 		_bg_base.visible = false
+	if exploration_overlay and _backdrop != null:
+		_backdrop.visible = false
+	get_viewport().size_changed.connect(_ensure_stage_layout)
+	call_deferred("_reflow_stage")
 	# Mini command overlay (Ctrl+Shift+A to open during VN playback)
 	_cmd_panel = PanelContainer.new()
 	_cmd_panel.visible = false
@@ -151,30 +159,31 @@ func _ready() -> void:
 # Build UI
 # ─────────────────────────────────────────────────────────────
 func _build_ui() -> void:
-	if not transparent_bg:
-		var root_fill := ColorRect.new()
-		root_fill.set_anchors_preset(Control.PRESET_FULL_RECT)
-		root_fill.color = Color(0.04, 0.06, 0.14, 1.0)
-		root_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(root_fill)
+	_backdrop = ColorRect.new()
+	_backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_backdrop.color = Color.BLACK
+	_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_backdrop.z_index = -1
+	add_child(_backdrop)
+
 	# Stage container — everything visual goes here so screen shake works
 	_stage = Control.new()
-	_stage.position = Vector2(0.0, 0.0)
-	_stage.size     = Vector2(1600.0, 900.0)
+	_stage.position = Vector2.ZERO
+	_stage.size     = STAGE_DESIGN_SIZE
 	add_child(_stage)
 
 	# Dark base background (colour controllable via bg_color beat field)
 	_bg_base = ColorRect.new()
-	_bg_base.position = Vector2(0.0, 0.0)
-	_bg_base.size     = Vector2(1600.0, 900.0)
+	_bg_base.position = Vector2.ZERO
+	_bg_base.size     = STAGE_DESIGN_SIZE
 	_bg_base.color    = Color(0.04, 0.06, 0.14, 1.0)
 	_stage.add_child(_bg_base)
 
 	# Full-screen background image
 	_bg_rect = TextureRect.new()
-	_bg_rect.position     = Vector2(0.0, 0.0)
-	_bg_rect.size         = Vector2(1600.0, 900.0)
-	_bg_rect.pivot_offset = Vector2(800.0, 450.0)
+	_bg_rect.position     = Vector2.ZERO
+	_bg_rect.size         = STAGE_DESIGN_SIZE
+	_bg_rect.pivot_offset = STAGE_DESIGN_SIZE * 0.5
 	_bg_rect.expand_mode  = TextureRect.EXPAND_IGNORE_SIZE
 	_bg_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	_bg_rect.modulate     = Color(1.0, 1.0, 1.0, 0.0)
@@ -198,8 +207,8 @@ func _build_ui() -> void:
 	# Dialog panel (bottom strip)
 	_dialog_panel = Panel.new()
 	_dialog_panel.position            = Vector2(0.0, DIALOG_Y)
-	_dialog_panel.size                = Vector2(1600.0, DIALOG_H)
-	_dialog_panel.custom_minimum_size = Vector2(1600.0, DIALOG_H)
+	_dialog_panel.size                = Vector2(STAGE_DESIGN_SIZE.x, DIALOG_H)
+	_dialog_panel.custom_minimum_size = Vector2(STAGE_DESIGN_SIZE.x, DIALOG_H)
 	if USE_WINDOWSKIN:
 		_dialog_panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 		var nine := NinePatchRect.new()
@@ -269,8 +278,8 @@ func _build_ui() -> void:
 
 	# Video player — full-screen, above bg/chars, below fade overlay
 	_video_player = VideoStreamPlayer.new()
-	_video_player.position     = Vector2(0.0, 0.0)
-	_video_player.size         = Vector2(1600.0, 900.0)
+	_video_player.position     = Vector2.ZERO
+	_video_player.size         = STAGE_DESIGN_SIZE
 	_video_player.expand       = true
 	_video_player.z_index      = 5
 	_video_player.visible      = false
@@ -278,14 +287,44 @@ func _build_ui() -> void:
 	_video_player.finished.connect(_on_video_finished)
 	_stage.add_child(_video_player)
 
-	# Fade overlay — sits above everything; used for fade_in / fade_out beats
+	# Fade overlay — full viewport; used for fade_in / fade_out beats
 	_fade_rect = ColorRect.new()
-	_fade_rect.position     = Vector2(0.0, 0.0)
-	_fade_rect.size         = Vector2(1600.0, 900.0)
+	_fade_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_fade_rect.color        = Color(0.0, 0.0, 0.0, 0.0)
 	_fade_rect.z_index      = 10
 	_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_fade_rect)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		_ensure_stage_layout()
+	elif what == NOTIFICATION_WM_CLOSE_REQUEST \
+			or what == NOTIFICATION_APPLICATION_PAUSED:
+		_persist_campaign_checkpoint()
+
+## Scale the 1600×900 stage to the viewport and center it on screen.
+## Exploration overlay uses contain (full stage visible); campaign VN uses cover (fill viewport).
+func _ensure_stage_layout() -> void:
+	if _stage_layout_pending:
+		return
+	_stage_layout_pending = true
+	call_deferred("_reflow_stage")
+
+func _reflow_stage() -> void:
+	_stage_layout_pending = false
+	if _stage == null:
+		return
+	await get_tree().process_frame
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	if vp.x <= 0.0 or vp.y <= 0.0:
+		return
+	var sx: float = vp.x / STAGE_DESIGN_SIZE.x
+	var sy: float = vp.y / STAGE_DESIGN_SIZE.y
+	var s: float = minf(sx, sy) if exploration_overlay else maxf(sx, sy)
+	_stage.scale = Vector2(s, s)
+	var scaled: Vector2 = STAGE_DESIGN_SIZE * s
+	_stage_base_pos = (vp - scaled) * 0.5
+	_stage.position = _stage_base_pos
 
 # ─────────────────────────────────────────────────────────────
 # Hint icon — pulse animation
@@ -319,6 +358,7 @@ static func launch_overlay(json_path: String, on_complete: Callable, canvas_laye
 	host.name = "VNOverlayLayer"
 	tree.root.add_child(host)
 	var vn := preload("res://scenes/vn_player.tscn").instantiate()
+	vn.set_anchors_preset(Control.PRESET_FULL_RECT)
 	host.add_child(vn)
 	vn.play_scene(json_path, func() -> void:
 		host.queue_free()
@@ -1047,11 +1087,6 @@ func _persist_campaign_checkpoint() -> void:
 	else:
 		SaveManager.set_vn_checkpoint(_scene_path, _beat_index)
 
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST \
-			or what == NOTIFICATION_APPLICATION_PAUSED:
-		_persist_campaign_checkpoint()
-
 # ─────────────────────────────────────────────────────────────
 # Bug tagging (Ctrl+Shift+A → "tag_bug")
 # ─────────────────────────────────────────────────────────────
@@ -1207,8 +1242,8 @@ func _do_shake(shake_val, magnitude: float) -> void:
 # Screen shake — shakes the entire stage in 2D
 # ─────────────────────────────────────────────────────────────
 func _do_screen_shake(magnitude: float) -> void:
-	var ox: float = _stage.position.x
-	var oy: float = _stage.position.y
+	var ox: float = _stage_base_pos.x
+	var oy: float = _stage_base_pos.y
 	var m: float  = magnitude
 	var tw := create_tween()
 	tw.tween_property(_stage, "position", Vector2(ox + m,          oy + m * 0.4),  0.03)
@@ -1216,7 +1251,7 @@ func _do_screen_shake(magnitude: float) -> void:
 	tw.tween_property(_stage, "position", Vector2(ox + m * 0.6,    oy + m * 0.2),  0.025)
 	tw.tween_property(_stage, "position", Vector2(ox - m * 0.4,    oy - m * 0.15), 0.025)
 	tw.tween_property(_stage, "position", Vector2(ox + m * 0.2,    oy + m * 0.05), 0.02)
-	tw.tween_property(_stage, "position", Vector2(ox,              oy),             0.02)
+	tw.tween_property(_stage, "position", _stage_base_pos, 0.02)
 
 # ─────────────────────────────────────────────────────────────
 # Ken Burns — stop animation and reset bg to neutral transform

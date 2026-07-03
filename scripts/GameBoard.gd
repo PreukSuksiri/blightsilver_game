@@ -690,7 +690,7 @@ func _run_battle_layout() -> void:
 	center.size_flags_stretch_ratio = 0.0
 	center.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	p1_side.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	p2_side.size_flags_horizontal = Control.SIZE_SHRINK_END
+	p2_side.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	p1_side.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	p2_side.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	p1_grid.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN

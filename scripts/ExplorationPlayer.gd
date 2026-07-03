@@ -500,6 +500,68 @@ func _reflow_layout() -> void:
 		_radial_overlay.size = vp_size
 	if _radial_menu_layer != null:
 		_radial_menu_layer.size = vp_size
+	if _compass_root != null:
+		_layout_compass_hud(vp_size, true)
+
+## Recompute and apply bottom HUD icon positions from the current viewport size.
+func _layout_compass_hud(vp: Vector2, close_open_menus: bool = false) -> void:
+	if _compass_root == null or vp.x <= 0.0 or vp.y <= 0.0:
+		return
+	if close_open_menus:
+		if _compass_open:
+			_close_compass_menu(false)
+		if _setting_open:
+			_close_setting_menu(false)
+		if _inv_open:
+			_close_inventory_menu(false)
+		if _chat_open:
+			_close_chat_menu(false)
+
+	var bottom_y: float = vp.y - COMPASS_SIZE - 24.0
+
+	_compass_idle_pos = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, bottom_y)
+	_compass_center_pos = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, vp.y * 0.5 - COMPASS_SIZE * 0.5)
+	_setting_idle_pos = Vector2(vp.x * 0.5 + 2.0 * ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
+	_info_idle_pos = Vector2(
+		vp.x * 0.5 + ICON_SPACING - INFO_ICON_SIZE * 0.5,
+		bottom_y + COMPASS_SIZE * 0.5 - INFO_ICON_SIZE * 0.5)
+	_inv_idle_pos = Vector2(vp.x * 0.5 - 2.0 * ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
+	_chat_idle_pos = Vector2(
+		vp.x * 0.5 - ICON_SPACING - CHAT_ICON_SIZE * 0.5,
+		bottom_y + COMPASS_SIZE * 0.5 - CHAT_ICON_SIZE * 0.5)
+
+	if _compass_icon != null and not _compass_open:
+		_compass_icon.position = _compass_idle_pos
+	if _compass_hit != null and not _compass_open:
+		_compass_hit.position = _compass_idle_pos
+	if _setting_icon != null:
+		_setting_icon.position = _setting_idle_pos
+	if _setting_hit != null:
+		_setting_hit.position = _setting_idle_pos
+	if _info_icon != null:
+		_info_icon.position = _info_idle_pos
+	if _info_hit != null:
+		_info_hit.position = _info_idle_pos
+	if _inv_icon != null:
+		_inv_icon.position = _inv_idle_pos
+	if _inv_hit != null:
+		_inv_hit.position = _inv_idle_pos
+	if _chat_icon != null:
+		_chat_icon.position = _chat_idle_pos
+	if _chat_hit != null:
+		_chat_hit.position = _chat_idle_pos
+	if _chat_empty_lbl != null:
+		var chat_lbl_w: float = CHAT_ICON_SIZE + 120.0
+		_chat_empty_lbl.position = Vector2(
+			_chat_idle_pos.x + CHAT_ICON_SIZE * 0.5 - chat_lbl_w * 0.5,
+			_chat_idle_pos.y - 36.0)
+	if _inv_empty_lbl != null:
+		var inv_lbl_w: float = COMPASS_SIZE + 120.0
+		_inv_empty_lbl.position = Vector2(
+			_inv_idle_pos.x + COMPASS_SIZE * 0.5 - inv_lbl_w * 0.5,
+			_inv_idle_pos.y - 36.0)
+	for glow_key: String in ["compass", "inventory", "chat"]:
+		_sync_hud_glow_position(glow_key)
 
 # ─────────────────────────────────────────────────────────────
 # Compass Radial Menu
@@ -514,16 +576,9 @@ func _build_compass_system() -> void:
 	add_child(_compass_root)
 	_compass_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
-	# Viewport size for positioning.
-	var vp: Vector2 = get_viewport_rect().size
+	var vp: Vector2 = get_viewport().get_visible_rect().size
 	if vp == Vector2.ZERO:
 		vp = Vector2(1600.0, 900.0)
-	var bottom_y: float = vp.y - COMPASS_SIZE - 24.0
-	var center_y: float = vp.y * 0.5 - COMPASS_SIZE * 0.5
-
-	# ── Compass (center) ─────────────────────────────────────
-	_compass_idle_pos   = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, bottom_y)
-	_compass_center_pos = Vector2(vp.x * 0.5 - COMPASS_SIZE * 0.5, center_y)
 
 	# Full-screen click-catcher — sibling below icons (z=30) and radial items (z=40).
 	# Dismisses open menus when the player taps outside interactive HUD elements.
@@ -561,8 +616,6 @@ func _build_compass_system() -> void:
 	_radial_menu_layer.add_child(_compass_hit)
 
 	# ── Setting icon (far right, +2×spacing) ────────────────
-	_setting_idle_pos = Vector2(vp.x * 0.5 + 2.0 * ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
-
 	_setting_icon          = TextureRect.new()
 	_setting_icon.position = _setting_idle_pos
 	_setting_icon.size     = Vector2(COMPASS_SIZE, COMPASS_SIZE)
@@ -578,10 +631,6 @@ func _build_compass_system() -> void:
 	_radial_menu_layer.add_child(_setting_hit)
 
 	# ── Info icon (+1×spacing) ────────────────────────────────
-	_info_idle_pos = Vector2(
-		vp.x * 0.5 + ICON_SPACING - INFO_ICON_SIZE * 0.5,
-		bottom_y + COMPASS_SIZE * 0.5 - INFO_ICON_SIZE * 0.5)
-
 	_info_icon          = TextureRect.new()
 	_info_icon.position = _info_idle_pos
 	_info_icon.size     = Vector2(INFO_ICON_SIZE, INFO_ICON_SIZE)
@@ -597,8 +646,6 @@ func _build_compass_system() -> void:
 	_radial_menu_layer.add_child(_info_hit)
 
 	# ── Inventory icon (far left, −2×spacing) ────────────────
-	_inv_idle_pos = Vector2(vp.x * 0.5 - 2.0 * ICON_SPACING - COMPASS_SIZE * 0.5, bottom_y)
-
 	_inv_icon          = TextureRect.new()
 	_inv_icon.position = _inv_idle_pos
 	_inv_icon.size     = Vector2(COMPASS_SIZE, COMPASS_SIZE)
@@ -614,10 +661,6 @@ func _build_compass_system() -> void:
 	_radial_menu_layer.add_child(_inv_hit)
 
 	# ── Chat icon (−1×spacing) ────────────────────────────────
-	_chat_idle_pos = Vector2(
-		vp.x * 0.5 - ICON_SPACING - CHAT_ICON_SIZE * 0.5,
-		bottom_y + COMPASS_SIZE * 0.5 - CHAT_ICON_SIZE * 0.5)
-
 	_chat_icon          = TextureRect.new()
 	_chat_icon.position = _chat_idle_pos
 	_chat_icon.size     = Vector2(CHAT_ICON_SIZE, CHAT_ICON_SIZE)
@@ -673,6 +716,8 @@ func _build_compass_system() -> void:
 	_inv_empty_lbl.modulate.a  = 0.0
 	_inv_empty_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_compass_root.add_child(_inv_empty_lbl)
+
+	_layout_compass_hud(vp)
 
 ## Build an invisible full-size hit button for an icon at given position.
 func _make_icon_hit_button(pos: Vector2, size: float = COMPASS_SIZE) -> Button:
