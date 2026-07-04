@@ -318,26 +318,32 @@ func get_tutorial_intro_vn() -> String:
 	return str(_config.get("tutorial_intro_vn", "")).strip_edges()
 
 
-## Last non-empty tutorial_battle path on a beat in a VN JSON array file.
-func find_tutorial_battle_in_vn(vn_path: String) -> String:
+## Last beat in a VN JSON array file that declares tutorial_battle.
+func find_tutorial_battle_beat_in_vn(vn_path: String) -> Dictionary:
 	var trimmed := vn_path.strip_edges()
 	if trimmed.is_empty() or not FileAccess.file_exists(trimmed):
-		return ""
+		return {}
 	var file := FileAccess.open(trimmed, FileAccess.READ)
 	if file == null:
-		return ""
+		return {}
 	var parsed: Variant = JSON.parse_string(file.get_as_text())
 	file.close()
 	if not parsed is Array:
-		return ""
-	var found := ""
+		return {}
+	var found: Dictionary = {}
 	for beat: Variant in (parsed as Array):
 		if not beat is Dictionary:
 			continue
 		var path: String = str((beat as Dictionary).get("tutorial_battle", "")).strip_edges()
 		if not path.is_empty():
-			found = path
+			found = (beat as Dictionary).duplicate(true)
 	return found
+
+
+## Last non-empty tutorial_battle path on a beat in a VN JSON array file.
+func find_tutorial_battle_in_vn(vn_path: String) -> String:
+	var beat: Dictionary = find_tutorial_battle_beat_in_vn(vn_path)
+	return str(beat.get("tutorial_battle", "")).strip_edges()
 
 
 func save_data(data: Dictionary) -> bool:

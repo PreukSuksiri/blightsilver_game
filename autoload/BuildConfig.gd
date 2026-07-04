@@ -13,6 +13,11 @@ func admin_tools_enabled() -> bool:
 	return OS.has_feature("editor")
 
 
+## Battle log files under logs/results/ — editor and dev (admin) exports only.
+func battle_logs_enabled() -> bool:
+	return admin_tools_enabled()
+
+
 func can_write_shipped_data() -> bool:
 	# res://data/* is writable when Play is launched from the Godot editor (F5).
 	# Exported builds cannot write res://; admin tools should not persist there anyway.

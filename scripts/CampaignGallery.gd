@@ -14,6 +14,7 @@ const ROW_GAP:    float = 36.0
 const CARD_DIM_OVERLAY_COLOR := Color(0.0, 0.0, 0.0, 0.62)
 const CARD_DIM_LABEL_COLOR   := Color(0.65, 0.65, 0.68)
 const CARD_DIM_LABEL_SIZE    := 13
+const GALLERY_SAVED_PROGRESS_DIALOG_MIN_W := 840.0
 const DUNGEON_MAP_SCENE := DailyDungeonManager.DUNGEON_MAP_SCENE
 
 var _data: Array = []
@@ -300,7 +301,7 @@ func _show_continue_or_restart_chapter_dialog(card: Dictionary, chapter_key: Str
 		body = "You have saved exploration progress in %s.\n\nContinue from where you left off, or restart the chapter from the beginning." % chapter_label
 	elif save_kind == "vn":
 		body = "You have saved story progress in %s.\n\nContinue from where you left off, or restart the chapter from the beginning." % chapter_label
-	GameDialog.choices_overlay(
+	GameDialog.menu_overlay(
 		self,
 		"Saved Progress Found",
 		body,
@@ -311,7 +312,7 @@ func _show_continue_or_restart_chapter_dialog(card: Dictionary, chapter_key: Str
 		],
 		"Cancel",
 		Callable(),
-		520.0,
+		GALLERY_SAVED_PROGRESS_DIALOG_MIN_W,
 		30)
 
 
@@ -401,7 +402,7 @@ func _show_continue_or_restart_dialog(card: Dictionary, vn_path: String, dungeon
 	if GameDialog.has_open_overlay(self):
 		return
 	var chapter_label: String = str(card.get("line2", card.get("line1", "this chapter")))
-	GameDialog.choices_overlay(
+	GameDialog.menu_overlay(
 		self,
 		"Saved Progress Found",
 		"You have saved progress in %s.\n\nContinue from where you left off, or restart the chapter from the beginning." % chapter_label,
@@ -412,7 +413,7 @@ func _show_continue_or_restart_dialog(card: Dictionary, vn_path: String, dungeon
 		],
 		"Cancel",
 		Callable(),
-		520.0,
+		GALLERY_SAVED_PROGRESS_DIALOG_MIN_W,
 		30)
 
 
@@ -466,6 +467,7 @@ func _play_vn_async(
 		SaveManager.reset_chapter_arc_progress(arc_key, card)
 	var vn_scene: Variant = load(VN_PLAYER_SCENE)
 	var vn := (vn_scene as PackedScene).instantiate()
+	vn.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(vn)
 	vn.play_scene(json_path, func() -> void:
 		pass,

@@ -1195,12 +1195,19 @@ func _spawn_radial_items(connections: Array) -> void:
 func _navigate_with_fade(apply_navigation: Callable) -> void:
 	if not apply_navigation.is_valid():
 		return
-	if not apply_navigation.call():
-		return
-	ExplorationManager.save_navigation_checkpoint()
 	if _nav_fade_tween and _nav_fade_tween.is_valid():
 		_nav_fade_tween.kill()
+	# Block spot rebuilds while state applies — on_enter set_var would otherwise
+	# spawn the destination node's icons over the previous room's background.
 	_transition_active = true
+	_clear_spots()
+	_set_spots_layer_visible(false)
+	if not apply_navigation.call():
+		_transition_active = false
+		_set_spots_layer_visible(true)
+		_refresh_spots_for_state()
+		return
+	ExplorationManager.save_navigation_checkpoint()
 	_nav_fade_rect.modulate.a = 0.0
 	_nav_fade_tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_SINE)
 	_nav_fade_tween.tween_property(_nav_fade_rect, "modulate:a", 1.0, 0.5)
@@ -1208,7 +1215,9 @@ func _navigate_with_fade(apply_navigation: Callable) -> void:
 		ExplorationManager.commit_navigation_visuals()
 		var tw := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 		tw.tween_property(_nav_fade_rect, "modulate:a", 0.0, 0.3)
-		tw.tween_callback(func() -> void: _transition_active = false))
+		tw.tween_callback(func() -> void:
+			_transition_active = false
+			_set_spots_layer_visible(true)))
 
 func _on_radial_item_selected(target_id: String) -> void:
 	_register_exploration_activity()
@@ -1288,7 +1297,6 @@ func _spawn_setting_radial_items(center: Vector2) -> void:
 	var pad: float  = 8.0
 	var choices: Array = [
 		{"label": "Save and Exit",  "action": "save_exit"},
-		{"label": "Restart Stage",  "action": "restart"},
 		{"label": "Options",        "action": "options"},
 	]
 	var n: int = choices.size()
@@ -1330,15 +1338,6 @@ func _on_setting_action(action: String) -> void:
 			CheckerTransition.fade_out_to_battle(func() -> void:
 				get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 				CheckerTransition.fade_in())
-		"restart":
-			_show_confirm_dialog(
-				"Restart Stage?",
-				"All progress will be lost.",
-				func() -> void:
-					_dismiss_all_popups()
-					CheckerTransition.fade_out_to_battle(func() -> void:
-						ExplorationManager.restart_stage()
-						CheckerTransition.fade_in()))
 		"options":
 			_open_exploration_options_popup()
 
@@ -3520,11 +3519,13 @@ func _play_vn(path: String, on_done: Callable, keep_bgm: bool = true) -> void:
 	_close_inventory_menu(false)
 	_close_chat_menu(false)
 	_compass_set_visible(false)   # disable compass while VN is active
-	var vn: Node = VN_PLAYER_SCENE.instantiate()
-	vn.set("transparent_bg", true)   # show exploration scene behind VN dialog
+	var vn: Control = VN_PLAYER_SCENE.instantiate() as Control
+	vn.set("transparent_bg", true)   # hide stage colour base; black backdrop only when beat sets background
 	vn.set("keep_bgm", keep_bgm)
 	vn.set("exploration_overlay", true)
 	add_child(vn)
+	vn.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	vn.move_to_front()
 	vn.play_scene(path, func() -> void:
 		ExplorationManager.clear_vn_resume_bgm()
 		_vn_playing = false
@@ -3786,6 +3787,17 @@ func _rebuild_spots(node: ExplorationNode) -> void:
 		var spot_var: Variant = node.clickable_spots[i]
 		if spot_var is Dictionary:
 			_spawn_spot(spot_var as Dictionary, bg_w, bg_h, i)
+
+func _clear_spots() -> void:
+	if _spots_layer == null:
+		return
+	for child: Node in _spots_layer.get_children():
+		child.free()
+	_on_spot_hover_exit()
+
+func _set_spots_layer_visible(show: bool) -> void:
+	if _spots_layer != null:
+		_spots_layer.visible = show
 
 func _spawn_spot(spot: Dictionary, bg_w: float, bg_h: float, spot_index: int = 0) -> void:
 	# Check conditions — reuse ExplorationManager's connection-unlock logic (reads "conditions" key)

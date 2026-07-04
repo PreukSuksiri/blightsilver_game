@@ -254,6 +254,8 @@ func _ensure_log_dir() -> void:
 
 
 func _write_batch_summary_file() -> void:
+	if not BuildConfig.battle_logs_enabled():
+		return
 	var path: String = "%s/batch_summary.txt" % SessionLogNaming.session_folder_path
 	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
 	if file == null:

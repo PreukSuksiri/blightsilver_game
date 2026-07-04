@@ -129,13 +129,13 @@ func confirmation_overlay(
 	var root: Control = shell["root"]
 	_add_button_row(vbox, [
 		_make_button_def(ok_text, func() -> void:
+			root.queue_free()
 			if on_confirm.is_valid():
-				on_confirm.call()
-			root.queue_free()),
+				on_confirm.call()),
 		_make_button_def(cancel_text, func() -> void:
+			root.queue_free()
 			if on_cancel.is_valid():
-				on_cancel.call()
-			root.queue_free()),
+				on_cancel.call()),
 	])
 	return root
 
@@ -224,14 +224,14 @@ func choices_overlay(
 		var text: String = str(action.get("text", "OK"))
 		var callback: Callable = action.get("callback", Callable()) as Callable
 		buttons.append(_make_button_def(text, func() -> void:
+			root.queue_free()
 			if callback.is_valid():
-				callback.call()
-			root.queue_free()))
+				callback.call()))
 	if not cancel_text.is_empty():
 		buttons.append(_make_button_def(cancel_text, func() -> void:
+			root.queue_free()
 			if on_cancel.is_valid():
-				on_cancel.call()
-			root.queue_free()))
+				on_cancel.call()))
 	_add_button_row(vbox, buttons)
 	return root
 
@@ -279,9 +279,9 @@ func menu_overlay(
 		style_menu_button(cancel_btn)
 		cancel_btn.add_theme_color_override("font_color", Color(0.72, 0.78, 0.88, 1.0))
 		cancel_btn.pressed.connect(func() -> void:
+			root.queue_free()
 			if on_cancel.is_valid():
-				on_cancel.call()
-			root.queue_free())
+				on_cancel.call())
 		menu_col.add_child(cancel_btn)
 
 	return root
@@ -386,6 +386,8 @@ func _find_overlay(parent: Node, overlay_name: StringName) -> Control:
 	var host: Control = _get_overlay_host_if_exists()
 	if host != null:
 		for child: Node in host.get_children():
+			if not is_instance_valid(child) or child.is_queued_for_deletion():
+				continue
 			if child.name != str(overlay_name):
 				continue
 			if parent == null:

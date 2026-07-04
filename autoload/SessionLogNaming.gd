@@ -183,6 +183,8 @@ func _ready() -> void:
 
 
 func _init_session() -> void:
+	if not BuildConfig.battle_logs_enabled():
+		return
 	if _initialized:
 		return
 	_initialized = true
@@ -200,6 +202,16 @@ func _init_session() -> void:
 
 
 func begin_battle_log(mode_tag: String) -> Dictionary:
+	if not BuildConfig.battle_logs_enabled():
+		return {
+			"path": "",
+			"battle_display_name": "",
+			"battle_started_at": "",
+			"session_display_name": "",
+			"session_started_at": "",
+			"session_folder_path": "",
+			"mode_tag": mode_tag,
+		}
 	if not _initialized:
 		_init_session()
 

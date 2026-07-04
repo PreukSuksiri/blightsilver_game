@@ -15,6 +15,9 @@ const Z_MIN      := 0.22   # card is too far — off camera
 const Z_MAX      := 1.65   # card is too close — off camera
 
 const TEX_BACK      := "res://assets/textures/cards/sample/card_back.png"
+# Debug build: show card back on both faces (no full-card texture loads).
+# Set false before release to restore full-card art on the front face.
+const CARD_BACKS_ONLY := true
 
 var _tex_back:    Texture2D = null
 var _safe_paths:  Array[String] = []   # one entry per base card (safe art)
@@ -30,7 +33,8 @@ func _ready() -> void:
 	_screen_w = sz.x
 	_screen_h = sz.y
 	_tex_back = load(TEX_BACK) as Texture2D
-	_scan_front_textures()
+	if not CARD_BACKS_ONLY:
+		_scan_front_textures()
 	_init_cards()
 	SaveManager.nsfw_changed.connect(_on_nsfw_changed)
 	SaveManager.demo_mode_changed.connect(_on_demo_mode_changed)
@@ -84,6 +88,8 @@ func _append_card_paths(card_name: String) -> void:
 
 
 func _pick_front_tex() -> Texture2D:
+	if CARD_BACKS_ONLY:
+		return _tex_back
 	var pool: Array[String] = _nsfw_paths if SaveManager.nsfw_enabled else _safe_paths
 	if pool.is_empty():
 		return _tex_back
@@ -96,12 +102,14 @@ func _pick_front_tex() -> Texture2D:
 
 
 func _on_nsfw_changed(_enabled: bool) -> void:
-	_scan_front_textures()
+	if not CARD_BACKS_ONLY:
+		_scan_front_textures()
 	for card: Dictionary in _cards:
 		card["tex_front"] = _pick_front_tex()
 
 func _on_demo_mode_changed(_enabled: bool) -> void:
-	_scan_front_textures()
+	if not CARD_BACKS_ONLY:
+		_scan_front_textures()
 	for card: Dictionary in _cards:
 		card["tex_front"] = _pick_front_tex()
 
@@ -228,8 +236,10 @@ func _draw() -> void:
 		var flip_cos: float = cos(card["flip_angle"] as float)
 		# cos > 0 → primary face; cos < 0 → alternate face
 		var show_primary: bool = flip_cos >= 0.0
-		var is_front: bool = show_primary == ((card["primary_face"] as int) == 1)
-		var tex: Texture2D = (card["tex_front"] as Texture2D) if is_front else _tex_back
+		var tex: Texture2D = _tex_back
+		if not CARD_BACKS_ONLY:
+			var is_front: bool = show_primary == ((card["primary_face"] as int) == 1)
+			tex = (card["tex_front"] as Texture2D) if is_front else _tex_back
 		if tex == null:
 			continue
 

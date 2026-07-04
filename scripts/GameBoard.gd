@@ -1571,6 +1571,9 @@ func _p2_magitech_name() -> String:
 		return AIIdentityVault.get_birth_name(iid)
 	return _player_names[1]
 
+func _battle_display_name(player: int) -> String:
+	return _p1_magitech_name() if player == 0 else _p2_magitech_name()
+
 # ─────────────────────────────────────────────────────────────
 # Setup Phase Handlers
 # ─────────────────────────────────────────────────────────────
@@ -6616,7 +6619,7 @@ func _show_turn_banner(player: int) -> void:
 	fv.variation_opentype = {"wght": 700}
 
 	var lbl := Label.new()
-	lbl.text = "%s's Turn" % _player_names[player]
+	lbl.text = "%s's Turn" % _battle_display_name(player)
 	lbl.add_theme_font_override("font", fv)
 	lbl.add_theme_font_size_override("font_size", FONT_SIZE)
 	lbl.add_theme_color_override("font_color", Color.WHITE)
@@ -10787,6 +10790,8 @@ func _run_pending_endgame_navigation() -> void:
 # ─────────────────────────────────────────────────────────────
 
 func _open_session_log() -> void:
+	if not BuildConfig.battle_logs_enabled():
+		return
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://logs"))
 	var mode_tag: String = "vs_ai" if GameState.game_mode == GameState.GameMode.VS_AI else "hot_seat"
 	var log_info: Dictionary = SessionLogNaming.begin_battle_log(mode_tag)

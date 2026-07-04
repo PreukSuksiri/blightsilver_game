@@ -620,9 +620,12 @@ func _apply_protagonist_to_battle() -> void:
 		GameState.player_portraits.append(DEFAULT_PORTRAIT_P2)
 	GameState.player_portraits[0] = SaveManager.get_protagonist_portrait_path()
 	var names: Array[String] = GameState.campaign_player_names.duplicate()
-	if names.size() < 2:
-		names = [SaveManager.get_protagonist_display_name(), "Opponent"]
-	names[0] = SaveManager.get_protagonist_display_name()
+	while names.size() < 2:
+		names.append("")
+	if names[0].strip_edges().is_empty():
+		names[0] = SaveManager.get_protagonist_display_name()
+	if names[1].strip_edges().is_empty():
+		names[1] = "Opponent"
 	GameState.campaign_player_names = names
 
 
@@ -679,8 +682,37 @@ func _on_tutorial_intro_overlay_finished() -> void:
 	_begin_guided_tutorial_battle(battle_path)
 
 
+func _apply_tutorial_intro_battle_display() -> void:
+	var intro: String = QuickDuelRewards.get_tutorial_intro_vn()
+	var beat: Dictionary = QuickDuelRewards.find_tutorial_battle_beat_in_vn(intro)
+	if beat.is_empty():
+		return
+	var p1n: String = str(beat.get("player1_name", "")).strip_edges()
+	var p2n: String = str(beat.get("player2_name", "")).strip_edges()
+	if not p1n.is_empty() or not p2n.is_empty():
+		var names: Array[String] = GameState.campaign_player_names.duplicate()
+		while names.size() < 2:
+			names.append("")
+		if not p1n.is_empty():
+			names[0] = p1n
+		if not p2n.is_empty():
+			names[1] = p2n
+		GameState.campaign_player_names = names
+	var p1_port: String = str(beat.get("portrait_p1", "")).strip_edges()
+	if not p1_port.is_empty():
+		while GameState.player_portraits.size() < 2:
+			GameState.player_portraits.append(DEFAULT_PORTRAIT_P2)
+		GameState.player_portraits[0] = p1_port
+	var p2_port: String = str(beat.get("portrait_p2", "")).strip_edges()
+	if not p2_port.is_empty():
+		while GameState.player_portraits.size() < 2:
+			GameState.player_portraits.append(DEFAULT_PORTRAIT_P2)
+		GameState.player_portraits[1] = p2_port
+
+
 func _begin_guided_tutorial_battle(battle_path: String) -> void:
 	_prepare_quick_duel_tutorial_context()
+	_apply_tutorial_intro_battle_display()
 	GameState.new_game(GameState.GameMode.VS_AI)
 	var err: String = TutorialBattleManager.configure_battle_from_path(battle_path, true)
 	if not err.is_empty():

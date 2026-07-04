@@ -14,6 +14,8 @@ const CHAR_H      := 560.0
 const CHAR_Y      := 80.0
 const DIALOG_Y    := 640.0
 const DIALOG_H    := 260.0
+const DIALOG_SIDE_BORDER_W := 3.0
+const DIALOG_BORDER_CYAN := Color(0.38, 0.65, 1.0, 0.35)
 const STAGE_DESIGN_SIZE := Vector2(1600.0, 900.0)
 
 const HINT_ICON_PATH  := "res://assets/textures/vn/etc/star_compass.png"
@@ -28,7 +30,7 @@ const USE_WINDOWSKIN: bool = false
 # State
 # ─────────────────────────────────────────────────────────────
 var locale: String = "en"   # set before play_scene() to switch language
-## When true the opaque dark backdrop is hidden, letting the scene behind show through.
+## When true the stage's solid colour base is hidden (bg images can still show).
 ## Set before add_child() so _ready() picks it up.
 var transparent_bg: bool = false
 
@@ -63,7 +65,8 @@ var _cmd_input: LineEdit = null
 # ─────────────────────────────────────────────────────────────
 # UI refs
 # ─────────────────────────────────────────────────────────────
-var _stage: Control = null          # all visuals live here; shaken for screen shake
+var _stage: Control = null          # 1600×900 content; shaken locally for screen shake
+var _stage_holder: Control = null   # scaled + centered; layout reflow only touches this
 var _bg_rect:  TextureRect = null
 var _bg_base:  ColorRect   = null   # solid-colour base behind the background image
 var _char_slots: Dictionary = {}    # slot_name -> TextureRect
@@ -77,9 +80,11 @@ var _video_player: VideoStreamPlayer = null
 var _current_music_path: String = ""
 var _fade_rect: ColorRect = null
 var _backdrop: ColorRect = null
+var _letterbox_bars: Array[ColorRect] = []   # L, R, T, B gutters for exploration contain mode
 var _kb_tween: Tween = null      # Ken Burns background animation
 var _stage_base_pos: Vector2 = Vector2.ZERO
 var _stage_layout_pending: bool = false
+var _screen_shake_tween: Tween = null
 
 # ─────────────────────────────────────────────────────────────
 # Localisation helper
@@ -122,6 +127,7 @@ func _on_fonts_changed() -> void:
 # ─────────────────────────────────────────────────────────────
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
+	clip_contents = false
 	z_index = 100
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
@@ -129,8 +135,7 @@ func _ready() -> void:
 		FontManager.fonts_changed.connect(_on_fonts_changed)
 	if transparent_bg:
 		_bg_base.visible = false
-	if exploration_overlay and _backdrop != null:
-		_backdrop.visible = false
+	_update_backdrop_visibility()
 	get_viewport().size_changed.connect(_ensure_stage_layout)
 	call_deferred("_reflow_stage")
 	# Mini command overlay (Ctrl+Shift+A to open during VN playback)
@@ -160,17 +165,31 @@ func _ready() -> void:
 # ─────────────────────────────────────────────────────────────
 func _build_ui() -> void:
 	_backdrop = ColorRect.new()
-	_backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_backdrop.name = "ViewportBackdrop"
+	_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_backdrop.color = Color.BLACK
 	_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_backdrop.z_index = -1
+	_backdrop.z_index = 0
 	add_child(_backdrop)
 
-	# Stage container — everything visual goes here so screen shake works
+	for _i in 4:
+		var bar := ColorRect.new()
+		bar.color = Color.BLACK
+		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		bar.visible = false
+		bar.z_index = 3   # above scaled stage — covers contain letterbox gutters
+		add_child(bar)
+		_letterbox_bars.append(bar)
+
+	# Stage holder — scaled/centered by layout; _stage shakes locally inside it.
+	_stage_holder = Control.new()
+	_stage_holder.z_index = 1
+	add_child(_stage_holder)
+
 	_stage = Control.new()
 	_stage.position = Vector2.ZERO
 	_stage.size     = STAGE_DESIGN_SIZE
-	add_child(_stage)
+	_stage_holder.add_child(_stage)
 
 	# Dark base background (colour controllable via bg_color beat field)
 	_bg_base = ColorRect.new()
@@ -221,10 +240,9 @@ func _build_ui() -> void:
 		_dialog_panel.add_child(nine)
 	else:
 		var sb_dlg := StyleBoxFlat.new()
-		sb_dlg.bg_color         = Color(0.02, 0.04, 0.12, 0.93)
-		sb_dlg.border_width_top = 2
-		sb_dlg.border_color     = Color(0.38, 0.65, 1.0, 0.35)
+		sb_dlg.bg_color = Color(0.02, 0.04, 0.12, 0.93)
 		_dialog_panel.add_theme_stylebox_override("panel", sb_dlg)
+	_add_dialog_side_borders(_dialog_panel)
 	_dialog_panel.z_index = 1
 	_stage.add_child(_dialog_panel)
 
@@ -291,9 +309,28 @@ func _build_ui() -> void:
 	_fade_rect = ColorRect.new()
 	_fade_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_fade_rect.color        = Color(0.0, 0.0, 0.0, 0.0)
-	_fade_rect.z_index      = 10
+	_fade_rect.z_index      = 50
 	_fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_fade_rect)
+
+func _add_dialog_side_borders(panel: Panel) -> void:
+	var w := DIALOG_SIDE_BORDER_W
+	var top := ColorRect.new()
+	top.position     = Vector2(0.0, 0.0)
+	top.size         = Vector2(STAGE_DESIGN_SIZE.x, w)
+	top.color        = DIALOG_BORDER_CYAN
+	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	top.z_index      = 4
+	panel.add_child(top)
+	# Side strips start below the top strip so semi-transparent corners don't stack.
+	for x: float in [0.0, STAGE_DESIGN_SIZE.x - w]:
+		var edge := ColorRect.new()
+		edge.position     = Vector2(x, w)
+		edge.size         = Vector2(w, DIALOG_H - w)
+		edge.color        = DIALOG_BORDER_CYAN
+		edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		edge.z_index      = 4
+		panel.add_child(edge)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
@@ -302,8 +339,7 @@ func _notification(what: int) -> void:
 			or what == NOTIFICATION_APPLICATION_PAUSED:
 		_persist_campaign_checkpoint()
 
-## Scale the 1600×900 stage to the viewport and center it on screen.
-## Exploration overlay uses contain (full stage visible); campaign VN uses cover (fill viewport).
+## Scale the 1600×900 stage to fit inside the viewport (contain) and center it on screen.
 func _ensure_stage_layout() -> void:
 	if _stage_layout_pending:
 		return
@@ -312,7 +348,7 @@ func _ensure_stage_layout() -> void:
 
 func _reflow_stage() -> void:
 	_stage_layout_pending = false
-	if _stage == null:
+	if _stage_holder == null:
 		return
 	await get_tree().process_frame
 	var vp: Vector2 = get_viewport().get_visible_rect().size
@@ -320,11 +356,133 @@ func _reflow_stage() -> void:
 		return
 	var sx: float = vp.x / STAGE_DESIGN_SIZE.x
 	var sy: float = vp.y / STAGE_DESIGN_SIZE.y
-	var s: float = minf(sx, sy) if exploration_overlay else maxf(sx, sy)
-	_stage.scale = Vector2(s, s)
-	var scaled: Vector2 = STAGE_DESIGN_SIZE * s
-	_stage_base_pos = (vp - scaled) * 0.5
-	_stage.position = _stage_base_pos
+	var s: float = minf(sx, sy)
+	_apply_stage_layout(vp, s)
+
+func _apply_stage_layout(vp: Vector2, scale: float = -1.0) -> void:
+	if _stage_holder == null:
+		return
+	if scale < 0.0:
+		var sx: float = vp.x / STAGE_DESIGN_SIZE.x
+		var sy: float = vp.y / STAGE_DESIGN_SIZE.y
+		scale = minf(sx, sy)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_sync_viewport_backdrop(vp)
+	_sync_fade_overlay(vp)
+	_stage_holder.scale = Vector2(scale, scale)
+	var scaled: Vector2 = STAGE_DESIGN_SIZE * scale
+	var new_base: Vector2 = (vp - scaled) * 0.5
+	if _screen_shake_tween != null and _screen_shake_tween.is_running():
+		var offset: Vector2 = _stage_holder.position - _stage_base_pos
+		_stage_base_pos = new_base
+		_stage_holder.position = _stage_base_pos + offset
+	else:
+		_stage_base_pos = new_base
+		_stage_holder.position = _stage_base_pos
+	if _stage != null:
+		_stage.position = Vector2.ZERO
+	_sync_exploration_letterbox(vp, scaled, new_base)
+
+## Black bars in the contain-scale gutters (exploration overlay + bg image).
+func _sync_exploration_letterbox(vp: Vector2, scaled: Vector2, base: Vector2) -> void:
+	if _letterbox_bars.size() != 4:
+		return
+	for bar: ColorRect in _letterbox_bars:
+		bar.visible = false
+	if not exploration_overlay or not _is_vn_bg_image_visible():
+		return
+	var gap_l: float = base.x
+	var gap_t: float = base.y
+	var gap_r: float = maxf(0.0, vp.x - base.x - scaled.x)
+	var gap_b: float = maxf(0.0, vp.y - base.y - scaled.y)
+	if gap_l > 0.5:
+		var bar_l: ColorRect = _letterbox_bars[0]
+		bar_l.visible = true
+		bar_l.position = Vector2.ZERO
+		bar_l.size = Vector2(gap_l, vp.y)
+	if gap_r > 0.5:
+		var bar_r: ColorRect = _letterbox_bars[1]
+		bar_r.visible = true
+		bar_r.position = Vector2(base.x + scaled.x, 0.0)
+		bar_r.size = Vector2(gap_r, vp.y)
+	if gap_t > 0.5:
+		var bar_t: ColorRect = _letterbox_bars[2]
+		bar_t.visible = true
+		bar_t.position = Vector2(base.x, 0.0)
+		bar_t.size = Vector2(scaled.x, gap_t)
+	if gap_b > 0.5:
+		var bar_b: ColorRect = _letterbox_bars[3]
+		bar_b.visible = true
+		bar_b.position = Vector2(base.x, base.y + scaled.y)
+		bar_b.size = Vector2(scaled.x, gap_b)
+
+func _hide_letterbox_bars() -> void:
+	for bar: ColorRect in _letterbox_bars:
+		bar.visible = false
+
+## Full-viewport fade layer — sized explicitly for export (anchors alone can be 0×0 on first frame).
+func _sync_fade_overlay(vp: Vector2) -> void:
+	if _fade_rect == null:
+		return
+	_fade_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_fade_rect.position = Vector2.ZERO
+	var fill: Vector2 = size
+	if fill.x <= 0.0 or fill.y <= 0.0:
+		fill = vp
+	_fade_rect.size = fill
+
+func _ensure_fade_overlay_ready() -> void:
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	if vp.x <= 0.0 or vp.y <= 0.0:
+		return
+	_apply_stage_layout(vp)
+
+## True when the current beat is displaying a VN background image (not cleared with null).
+func _is_vn_bg_image_visible() -> bool:
+	return _current_bg_path != "" \
+		and _bg_rect != null \
+		and _bg_rect.texture != null \
+		and _bg_rect.modulate.a > 0.01
+
+## Exploration overlays only show the black letterbox when a background image is active.
+func _update_backdrop_visibility() -> void:
+	if exploration_overlay:
+		if _backdrop != null:
+			_backdrop.visible = false
+		if _is_vn_bg_image_visible():
+			var vp: Vector2 = get_viewport().get_visible_rect().size
+			if vp.x > 0.0 and vp.y > 0.0:
+				var sx: float = vp.x / STAGE_DESIGN_SIZE.x
+				var sy: float = vp.y / STAGE_DESIGN_SIZE.y
+				var s: float = minf(sx, sy)
+				var scaled: Vector2 = STAGE_DESIGN_SIZE * s
+				var base: Vector2 = (vp - scaled) * 0.5
+				_sync_exploration_letterbox(vp, scaled, base)
+		else:
+			_hide_letterbox_bars()
+		return
+	if _backdrop == null:
+		return
+	_hide_letterbox_bars()
+	_backdrop.visible = true
+	_apply_backdrop_geometry()
+
+## Full-viewport black letterbox — explicit size for export (anchors alone can be 0×0).
+func _apply_backdrop_geometry() -> void:
+	if _backdrop == null:
+		return
+	_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_backdrop.position = Vector2.ZERO
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	var fill: Vector2 = size
+	if fill.x <= 0.0 or fill.y <= 0.0:
+		fill = vp
+	_backdrop.size = fill
+
+## Keep the black letterbox backdrop covering the full overlay area (export-safe).
+func _sync_viewport_backdrop(vp: Vector2) -> void:
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_update_backdrop_visibility()
 
 # ─────────────────────────────────────────────────────────────
 # Hint icon — pulse animation
@@ -449,6 +607,12 @@ func play_scene(
 			_beat_index = resume_at
 			# Campaign gallery fades BGM out before continue; replay music from skipped beats.
 			_apply_music_state(_music_state_before_beat(_beat_index), true)
+	call_deferred("_start_playback")
+
+func _start_playback() -> void:
+	await get_tree().process_frame
+	var vp: Vector2 = get_viewport().get_visible_rect().size
+	_apply_stage_layout(vp)
 	_show_beat()
 
 # ─────────────────────────────────────────────────────────────
@@ -516,6 +680,7 @@ func _show_beat() -> void:
 		if beat.has("fade_color"):
 			var fc := Color.html(beat.get("fade_color", "#000000"))
 			_fade_rect.color = Color(fc.r, fc.g, fc.b, _fade_rect.color.a)
+		_ensure_fade_overlay_ready()
 		_accepting_input = false
 		_hide_hint_icon()
 		var tw := create_tween()
@@ -533,15 +698,18 @@ func _show_beat() -> void:
 			_current_bg_path  = ""
 		else:
 			var bg_path: String = bg_val
-			if bg_path != "" and bg_path != _current_bg_path:
-				_kb_stop_reset()
-				_current_bg_path = bg_path
-				var tex := load(bg_path) as Texture2D
-				if tex:
-					_bg_rect.texture  = tex
+			if bg_path != "":
+				if bg_path != _current_bg_path:
+					_kb_stop_reset()
+					_current_bg_path = bg_path
+					var tex := load(bg_path) as Texture2D
+					if tex:
+						_bg_rect.texture  = tex
+					else:
+						push_warning("VNPlayer: failed to load background '%s'" % bg_path)
+				if _bg_rect.texture != null:
 					_bg_rect.modulate = Color(1.0, 1.0, 1.0, 1.0)
-				else:
-					push_warning("VNPlayer: failed to load background '%s'" % bg_path)
+	_update_backdrop_visibility()
 
 	# ── Background colour ──
 	if beat.has("bg_color"):
@@ -672,6 +840,7 @@ func _show_beat() -> void:
 		if beat.has("fade_color"):
 			var fc := Color.html(beat.get("fade_color", "#000000"))
 			_fade_rect.color = Color(fc.r, fc.g, fc.b, _fade_rect.color.a)
+		_ensure_fade_overlay_ready()
 		_accepting_input = false
 		_hide_hint_icon()
 		var tw := create_tween()
@@ -734,7 +903,7 @@ func _show_beat() -> void:
 		lbl.position             = Vector2(0.0, 0.0)
 		lbl.size                 = Vector2(1600.0, 900.0)
 		lbl.modulate.a = 0.0
-		lbl.z_index    = 15    # above _fade_rect (z_index 10) so it always shows
+		lbl.z_index    = 60    # above _fade_rect so it always shows
 		add_child(lbl)
 		var fi: float = maxf(float(beat.get("center_text_fade_in",  0.8)), 0.01)
 		var ho: float = maxf(float(beat.get("center_text_hold",     1.5)), 0.0)
@@ -1072,6 +1241,7 @@ func _prepare_scene_handoff(fade_sec: float = 0.35) -> void:
 			if child != self:
 				child.visible = false
 	if _fade_rect != null:
+		_ensure_fade_overlay_ready()
 		_fade_rect.color = Color(0.0, 0.0, 0.0, _fade_rect.color.a)
 		var tw := create_tween()
 		tw.tween_property(_fade_rect, "color:a", 1.0, maxf(fade_sec, 0.01))
@@ -1242,16 +1412,26 @@ func _do_shake(shake_val, magnitude: float) -> void:
 # Screen shake — shakes the entire stage in 2D
 # ─────────────────────────────────────────────────────────────
 func _do_screen_shake(magnitude: float) -> void:
+	if _screen_shake_tween != null:
+		_screen_shake_tween.kill()
+		_screen_shake_tween = null
+	if _stage_holder != null:
+		_stage_holder.position = _stage_base_pos
 	var ox: float = _stage_base_pos.x
 	var oy: float = _stage_base_pos.y
 	var m: float  = magnitude
 	var tw := create_tween()
-	tw.tween_property(_stage, "position", Vector2(ox + m,          oy + m * 0.4),  0.03)
-	tw.tween_property(_stage, "position", Vector2(ox - m,          oy - m * 0.3),  0.03)
-	tw.tween_property(_stage, "position", Vector2(ox + m * 0.6,    oy + m * 0.2),  0.025)
-	tw.tween_property(_stage, "position", Vector2(ox - m * 0.4,    oy - m * 0.15), 0.025)
-	tw.tween_property(_stage, "position", Vector2(ox + m * 0.2,    oy + m * 0.05), 0.02)
-	tw.tween_property(_stage, "position", _stage_base_pos, 0.02)
+	_screen_shake_tween = tw
+	tw.tween_property(_stage_holder, "position", Vector2(ox + m,          oy + m * 0.4),  0.03)
+	tw.tween_property(_stage_holder, "position", Vector2(ox - m,          oy - m * 0.3),  0.03)
+	tw.tween_property(_stage_holder, "position", Vector2(ox + m * 0.6,    oy + m * 0.2),  0.025)
+	tw.tween_property(_stage_holder, "position", Vector2(ox - m * 0.4,    oy - m * 0.15), 0.025)
+	tw.tween_property(_stage_holder, "position", Vector2(ox + m * 0.2,    oy + m * 0.05), 0.02)
+	tw.tween_property(_stage_holder, "position", _stage_base_pos, 0.02)
+	tw.finished.connect(func() -> void:
+		if _screen_shake_tween == tw:
+			_screen_shake_tween = null
+	)
 
 # ─────────────────────────────────────────────────────────────
 # Ken Burns — stop animation and reset bg to neutral transform
@@ -1286,6 +1466,7 @@ func _do_flash(color: Color, count: int, duration: float, delay: float, target =
 	var use_screen: bool = target == "screen" or slots.is_empty()
 
 	if use_screen:
+		_ensure_fade_overlay_ready()
 		_fade_rect.color = Color(color.r, color.g, color.b, 0.0)
 		for i in count:
 			var tw := create_tween()
