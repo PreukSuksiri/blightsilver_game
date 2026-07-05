@@ -5,14 +5,73 @@ var characters: Dictionary = {}  # name -> CharacterData
 var traps: Dictionary = {}       # name -> TrapData
 var tech_cards: Dictionary = {}  # name -> TechCardData
 
+var _bootstrapped := false
+var _bootstrap_step_idx := 0
+
 
 func _ready() -> void:
+	pass
+
+
+func is_bootstrapped() -> bool:
+	return _bootstrapped
+
+
+func bootstrap() -> void:
+	if _bootstrapped:
+		return
 	_load_characters()
 	_load_traps()
 	_load_tech_cards()
 	_init_display_names()
 	_apply_demo_flags()
 	_apply_card_editor_overrides()
+	_bootstrapped = true
+	_bootstrap_step_idx = 0
+
+
+## One phase per call — splash yields a frame between steps so loading UI can animate.
+func bootstrap_step() -> bool:
+	if _bootstrapped:
+		return true
+	var phase_names: PackedStringArray = [
+		"characters", "traps", "tech_cards", "display_names", "editor_overrides"
+	]
+	var phase_name: String = phase_names[_bootstrap_step_idx] if _bootstrap_step_idx < phase_names.size() else "?"
+	StartupLoadDebug.log("CardDatabase.bootstrap_step: %s (idx %d)" % [phase_name, _bootstrap_step_idx])
+	match _bootstrap_step_idx:
+		0:
+			_load_characters()
+			_bootstrap_step_idx = 1
+		1:
+			_load_traps()
+			_bootstrap_step_idx = 2
+		2:
+			_load_tech_cards()
+			_bootstrap_step_idx = 3
+		3:
+			_init_display_names()
+			_apply_demo_flags()
+			_bootstrap_step_idx = 4
+		4:
+			_apply_card_editor_overrides()
+			_bootstrapped = true
+			_bootstrap_step_idx = 0
+			StartupLoadDebug.log("CardDatabase.bootstrap_step: complete")
+			return true
+	return false
+
+
+func bootstrap_async() -> void:
+	if _bootstrapped:
+		return
+	while not bootstrap_step():
+		await get_tree().process_frame
+
+
+func _ensure_bootstrapped() -> void:
+	if not _bootstrapped:
+		bootstrap()
 
 ## Seeds display_name from card_name for any card that doesn't have one set yet.
 func _init_display_names() -> void:
@@ -1490,21 +1549,27 @@ func _load_tech_cards() -> void:
 # Lookup helpers
 # ────────────────────────────────────────────────────────────
 func get_character(card_name: String) -> CharacterData:
+	_ensure_bootstrapped()
 	return characters.get(card_name, null)
 
 func get_trap(card_name: String) -> TrapData:
+	_ensure_bootstrapped()
 	return traps.get(card_name, null)
 
 func get_tech(card_name: String) -> TechCardData:
+	_ensure_bootstrapped()
 	return tech_cards.get(card_name, null)
 
 func get_all_character_names() -> Array:
+	_ensure_bootstrapped()
 	return characters.keys()
 
 func get_all_trap_names() -> Array:
+	_ensure_bootstrapped()
 	return traps.keys()
 
 func get_all_tech_names() -> Array:
+	_ensure_bootstrapped()
 	return tech_cards.keys()
 
 # ────────────────────────────────────────────────────────────
@@ -1712,6 +1777,7 @@ func save_demo_flags() -> void:
 var _art_cache: Dictionary = {}  # "subfolder/snake_name" -> full res:// path or ""
 
 func find_artwork(card_name: String, subfolder: String, prefer_nsfw: bool = false) -> String:
+	_ensure_bootstrapped()
 	var snake: String = card_name.to_lower() \
 		.replace(" ", "_").replace("'", "").replace("-", "_")
 

@@ -10,6 +10,10 @@ const SettingsMenuScene  = preload("res://scenes/settings_menu.tscn")
 const CampaignMapScene      = preload("res://scenes/campaign_map.tscn")
 const CampaignGalleryScene  = preload("res://scenes/campaign_gallery.tscn")
 const DailyDungeonMapScene  = preload("res://scenes/daily_dungeon_map.tscn")
+const QuickDuelOverlayScene = preload("res://scenes/quick_duel_overlay.tscn")
+
+## Set false to use production quick_duel.tscn scene swap instead of main-menu overlay.
+const QUICK_DUEL_OVERLAY_EXPERIMENT := true
 
 @onready var local_2p_btn:      Button = $NewGameBtn
 @onready var deck_build_btn:    Button = $DeckBuilderBtn
@@ -39,6 +43,8 @@ const MENU_LOADING_Z := 35
 const MENU_DROPDOWN_BACKDROP_Z := 40
 const MENU_DROPDOWN_Z := 41
 const MENU_STACK_GAP := 14.0
+const MENU_FADE_IN_DUR := 1.2
+const SPLASH_FADE_IN_DUR := 1.0
 
 const TITLE_BG_TEX_SIZE := Vector2(1216.0, 832.0)
 const TITLE_CHEAT_TAPS_REQUIRED := 20
@@ -58,7 +64,24 @@ var _title_cheat_apartment_zone: Control = null
 var _title_cheat_moon_zone: Control = null
 var _title_cheat_credit_demo_zone: Control = null
 
+func _enter_tree() -> void:
+	StartupLoadDebug.log(
+		"MainMenu._enter_tree (from_splash=%s)"
+		% str(GameState.entered_main_menu_from_splash)
+	)
+	if GameState.entered_main_menu_from_splash:
+		_set_fade_overlay_black()
+
+
+func _set_fade_overlay_black() -> void:
+	var overlay: ColorRect = get_node_or_null("FadeOverlay") as ColorRect
+	if overlay != null:
+		overlay.color = Color(0.0, 0.0, 0.0, 1.0)
+		overlay.modulate = Color.WHITE
+
+
 func _ready() -> void:
+	StartupLoadDebug.log("MainMenu._ready: begin")
 	if OS.has_feature("web"):
 		gui_input.connect(_on_web_audio_gate)
 	local_2p_btn.pressed.connect(_on_stack_primary_pressed)
@@ -83,9 +106,17 @@ func _ready() -> void:
 	BGMManager.play_context(BGMManager.CONTEXT_MAIN_MENU, 0.0, 0.0)
 	if deck_status_bg != null:
 		deck_status_bg.visible = false
-	var tween := create_tween()	
-	tween.tween_property(fade_overlay, "color:a", 0.0, 1.2) \
-		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	if GameState.entered_main_menu_from_splash:
+		GameState.entered_main_menu_from_splash = false
+		_set_fade_overlay_black()
+		StartupLoadDebug.log("MainMenu: fade in (%.1fs)" % SPLASH_FADE_IN_DUR)
+		var splash_fade := create_tween()
+		splash_fade.tween_property(fade_overlay, "color:a", 0.0, SPLASH_FADE_IN_DUR) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	else:
+		var tween := create_tween()
+		tween.tween_property(fade_overlay, "color:a", 0.0, MENU_FADE_IN_DUR) \
+			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_setup_mailbox_icon_badge()
 	_refresh_inventory_badge()
 	MailboxManager.mailbox_changed.connect(_refresh_inventory_badge)
@@ -104,6 +135,9 @@ func _ready() -> void:
 	elif GameState.open_campaign_gallery_on_menu:
 		GameState.open_campaign_gallery_on_menu = false
 		call_deferred("_on_campaign")
+	elif GameState.open_quick_duel_overlay_on_menu:
+		GameState.open_quick_duel_overlay_on_menu = false
+		call_deferred("_on_quick_duel")
 	_apply_menu_fonts()
 	if not FontManager.fonts_changed.is_connected(_on_fonts_changed):
 		FontManager.fonts_changed.connect(_on_fonts_changed)
@@ -112,6 +146,7 @@ func _ready() -> void:
 	if has_node("TitleLogo"):
 		$TitleLogo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	call_deferred("_check_achievement_reward_mail_notice")
+	StartupLoadDebug.log("MainMenu._ready: complete — title screen interactive")
 
 
 func _on_web_audio_gate(event: InputEvent) -> void:
@@ -736,7 +771,10 @@ func _on_stack_secondary_pressed() -> void:
 
 func _on_quick_duel() -> void:
 	GlobalStatManager.on_first_touch("quick_duel_menu")
-	get_tree().change_scene_to_file("res://scenes/quick_duel.tscn")
+	if QUICK_DUEL_OVERLAY_EXPERIMENT:
+		_open_menu_overlay(QuickDuelOverlayScene.instantiate(), "QuickDuelOverlay")
+	else:
+		get_tree().change_scene_to_file("res://scenes/quick_duel.tscn")
 
 
 func _on_local_play_pressed() -> void:

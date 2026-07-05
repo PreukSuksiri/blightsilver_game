@@ -15,12 +15,63 @@ extends Node
 # Registry
 # ─────────────────────────────────────────────────────────────
 var _unions: Dictionary = {}  # card_name → UnionData
+var _bootstrapped := false
+var _bootstrap_step_idx := 0
 
 func _ready() -> void:
+	pass
+
+
+func is_bootstrapped() -> bool:
+	return _bootstrapped
+
+
+func bootstrap() -> void:
+	if _bootstrapped:
+		return
+	CardDatabase.bootstrap()
 	_load_unions()
 	_init_display_names()
 	_apply_demo_flags()
 	CardDatabase.apply_union_editor_overrides()
+	_bootstrapped = true
+	_bootstrap_step_idx = 0
+
+
+func bootstrap_step() -> bool:
+	if _bootstrapped:
+		return true
+	match _bootstrap_step_idx:
+		0:
+			if CardDatabase.is_bootstrapped():
+				_bootstrap_step_idx = 1
+				StartupLoadDebug.log("UnionDatabase.bootstrap_step: CardDatabase already ready (external bootstrap)")
+			elif CardDatabase.bootstrap_step():
+				_bootstrap_step_idx = 1
+				StartupLoadDebug.log("UnionDatabase.bootstrap_step: CardDatabase ready")
+		1:
+			StartupLoadDebug.log("UnionDatabase.bootstrap_step: loading unions")
+			_load_unions()
+			_bootstrap_step_idx = 2
+		2:
+			_init_display_names()
+			_apply_demo_flags()
+			_bootstrap_step_idx = 3
+			StartupLoadDebug.log("UnionDatabase.bootstrap_step: display names + demo flags")
+		3:
+			CardDatabase.apply_union_editor_overrides()
+			_bootstrapped = true
+			_bootstrap_step_idx = 0
+			StartupLoadDebug.log("UnionDatabase.bootstrap_step: complete")
+			return true
+	return false
+
+
+func bootstrap_async() -> void:
+	if _bootstrapped:
+		return
+	while not bootstrap_step():
+		await get_tree().process_frame
 
 func _init_display_names() -> void:
 	for u: UnionData in _unions.values():

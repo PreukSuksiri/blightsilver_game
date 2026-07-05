@@ -10109,7 +10109,9 @@ func _handle_quick_duel_win_rewards() -> void:
 	GameState.quick_duel_battle_tier = ""
 
 func _on_quick_duel_tutorial_post_vn(dest: String) -> void:
-	if dest != "res://scenes/quick_duel.tscn":
+	var from_overlay: bool = dest == "res://scenes/main_menu.tscn" \
+			and GameState.open_quick_duel_overlay_on_menu
+	if dest != "res://scenes/quick_duel.tscn" and not from_overlay:
 		return
 	SaveManager.mark_attack_tutorial_complete()
 	GameState.quick_duel_reroll_previews = true
@@ -10536,6 +10538,8 @@ func _show_endgame_screen(winner: int) -> void:
 	elif mode == GameState.GameMode.VS_AI and GameState.post_battle_return_scene != "":
 		dest = GameState.post_battle_return_scene
 		if dest == "res://scenes/quick_duel.tscn":
+			GameState.quick_duel_reroll_previews = true
+		elif dest == "res://scenes/main_menu.tscn" and GameState.quick_duel_overlay_active:
 			GameState.quick_duel_reroll_previews = true
 		GameState.post_battle_return_scene = ""
 	else:

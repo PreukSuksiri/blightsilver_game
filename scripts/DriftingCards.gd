@@ -1,4 +1,5 @@
 extends Node2D
+class_name DriftingCards
 
 # ─────────────────────────────────────────────────────────────
 # Drifting Cards – title screen background animation
@@ -17,7 +18,7 @@ const Z_MAX      := 1.65   # card is too close — off camera
 const TEX_BACK      := "res://assets/textures/cards/sample/card_back.png"
 # Debug build: show card back on both faces (no full-card texture loads).
 # Set false before release to restore full-card art on the front face.
-const CARD_BACKS_ONLY := true
+const CARD_BACKS_ONLY := false
 
 var _tex_back:    Texture2D = null
 var _safe_paths:  Array[String] = []   # one entry per base card (safe art)
@@ -27,24 +28,179 @@ var _time       := 0.0
 var _screen_w   := 1280.0
 var _screen_h   := 720.0
 
+static var _prewarm_cache: Dictionary = {}
+
+## Splash prewarm host only — skip title-screen init/draw in _ready().
+var _prewarm_only := false
+
+# ─────────────────────────────────────────────────────────────
+## Yields frames during heavy work so splash loading UI and cursor stay responsive.
+func run_prewarm_async(screen_size: Vector2) -> bool:
+	StartupLoadDebug.log("DriftingCards.prewarm: begin (%.0fx%.0f)" % [screen_size.x, screen_size.y])
+	if not _prewarm_cache.is_empty():
+		StartupLoadDebug.log("DriftingCards.prewarm: skipped — cache already warm")
+		return true
+	_screen_w = screen_size.x
+	_screen_h = screen_size.y
+	_tex_back = load(TEX_BACK) as Texture2D
+	if _tex_back == null:
+		push_warning("DriftingCards.run_prewarm_async: card back texture missing")
+		StartupLoadDebug.log("DriftingCards.prewarm: FAILED — card back texture missing")
+		return false
+	StartupLoadDebug.log("DriftingCards.prewarm: card back loaded")
+	await get_tree().process_frame
+	if not CARD_BACKS_ONLY:
+		await _scan_front_textures_async()
+		StartupLoadDebug.log(
+			"DriftingCards.prewarm: scan done — %d safe / %d nsfw paths"
+			% [_safe_paths.size(), _nsfw_paths.size()]
+		)
+	StartupLoadDebug.log("DriftingCards.prewarm: building card pool…")
+	await _init_cards_async()
+	StartupLoadDebug.log("DriftingCards.prewarm: simulating 150 ticks…")
+	for i in 150:
+		_tick(0.2)
+		if i % 5 == 0:
+			await get_tree().process_frame
+	_store_prewarm_cache()
+	StartupLoadDebug.log("DriftingCards.prewarm: cache stored — complete")
+	return true
+
+
+func _store_prewarm_cache() -> void:
+	_prewarm_cache = {
+		"tex_back": _tex_back,
+		"safe_paths": _safe_paths.duplicate(),
+		"nsfw_paths": _nsfw_paths.duplicate(),
+		"cards": _duplicate_cards(_cards),
+		"time": _time,
+	}
+
+
+static func consume_prewarm() -> Dictionary:
+	if _prewarm_cache.is_empty():
+		return {}
+	var out: Dictionary = _prewarm_cache.duplicate(true)
+	_prewarm_cache.clear()
+	return out
+
+
+static func clear_prewarm() -> void:
+	_prewarm_cache.clear()
+
+
+func _duplicate_cards(src: Array[Dictionary]) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for card: Dictionary in src:
+		out.append(card.duplicate(true))
+	return out
+
 # ─────────────────────────────────────────────────────────────
 func _ready() -> void:
-	var sz   := get_viewport_rect().size
+	if _prewarm_only:
+		set_process(false)
+		visible = false
+		StartupLoadDebug.log("DriftingCards._ready: prewarm-only host (no draw/init)")
+		return
+
+	var sz := get_viewport_rect().size
 	_screen_w = sz.x
 	_screen_h = sz.y
+
+	var cache: Dictionary = consume_prewarm()
+	if not cache.is_empty():
+		StartupLoadDebug.log("DriftingCards._ready: applying prewarm cache (%d cards)" % cache.get("cards", []).size())
+		_apply_cache(cache)
+		_connect_save_signals()
+		set_process(true)
+		StartupLoadDebug.log("DriftingCards._ready: title animation running (from cache)")
+		return
+
+	StartupLoadDebug.log("DriftingCards._ready: no cache — sync init fallback")
+	_initialize_sync()
+	_connect_save_signals()
+	set_process(true)
+	StartupLoadDebug.log("DriftingCards._ready: title animation running (sync init)")
+
+
+func _apply_cache(cache: Dictionary) -> void:
+	_tex_back = cache.get("tex_back") as Texture2D
+	_safe_paths = (cache.get("safe_paths", []) as Array).duplicate()
+	_nsfw_paths = (cache.get("nsfw_paths", []) as Array).duplicate()
+	_cards = cache.get("cards", []) as Array[Dictionary]
+	_time = float(cache.get("time", 0.0))
+
+
+func _initialize_sync() -> void:
 	_tex_back = load(TEX_BACK) as Texture2D
 	if not CARD_BACKS_ONLY:
 		_scan_front_textures()
 	_init_cards()
-	SaveManager.nsfw_changed.connect(_on_nsfw_changed)
-	SaveManager.demo_mode_changed.connect(_on_demo_mode_changed)
-	# Pre-simulate 30 s so cards look mid-drift on the very first frame.
-	# 150 steps × 0.2 s = 30 s of physics, no rendering cost.
 	for _i in 150:
 		_tick(0.2)
 
 
+func _connect_save_signals() -> void:
+	if not SaveManager.nsfw_changed.is_connected(_on_nsfw_changed):
+		SaveManager.nsfw_changed.connect(_on_nsfw_changed)
+	if not SaveManager.demo_mode_changed.is_connected(_on_demo_mode_changed):
+		SaveManager.demo_mode_changed.connect(_on_demo_mode_changed)
+
+
 func _scan_front_textures() -> void:
+	CardDatabase.bootstrap()
+	_scan_front_textures_collect()
+
+
+func _scan_front_textures_async() -> void:
+	# Splash bootstrap owns CardDatabase init — wait for it instead of racing bootstrap().
+	while not CardDatabase.is_bootstrapped():
+		await get_tree().process_frame
+	StartupLoadDebug.log("DriftingCards.prewarm: scanning front textures…")
+	_safe_paths.clear()
+	_nsfw_paths.clear()
+	var batch := 0
+	for cname: String in CardDatabase.characters:
+		var cd: CharacterData = CardDatabase.characters[cname] as CharacterData
+		if cd.placeholder_art:
+			continue
+		if SaveManager.demo_mode and not cd.include_in_demo:
+			continue
+		_append_card_paths(cname)
+		batch += 1
+		if batch >= 2:
+			batch = 0
+			await get_tree().process_frame
+
+	for tname: String in CardDatabase.traps:
+		var td: TrapData = CardDatabase.traps[tname] as TrapData
+		if td.placeholder_art:
+			continue
+		if SaveManager.demo_mode and not td.include_in_demo:
+			continue
+		_append_card_paths(tname)
+		batch += 1
+		if batch >= 2:
+			batch = 0
+			await get_tree().process_frame
+
+	for ename: String in CardDatabase.tech_cards:
+		var ed: TechCardData = CardDatabase.tech_cards[ename] as TechCardData
+		if ed.placeholder_art:
+			continue
+		if SaveManager.demo_mode and not ed.include_in_demo:
+			continue
+		_append_card_paths(ename)
+		batch += 1
+		if batch >= 2:
+			batch = 0
+			await get_tree().process_frame
+
+	_safe_paths.shuffle()
+	_nsfw_paths.shuffle()
+
+
+func _scan_front_textures_collect() -> void:
 	_safe_paths.clear()
 	_nsfw_paths.clear()
 
@@ -116,46 +272,57 @@ func _on_demo_mode_changed(_enabled: bool) -> void:
 func _init_cards() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
+	_cards.clear()
 	for i in CARD_COUNT:
-		_cards.append({
-			"tex_front":   _pick_front_tex(),
-			# ── Flip (continuous slow Y-axis rotation) ───────────
-			# flip_angle advances forever; width = abs(cos(flip_angle)).
-			# Face is determined by sign of cos — no state machine needed.
-			# primary_face = which face shows when cos > 0.
-			"primary_face": 1 if i < 2 else 0,
-			"flip_angle":  rng.randf_range(0.0, TAU),   # random start phase
-			"flip_speed":  rng.randf_range(0.25, 0.55), # rad/s — one full turn every 11-25 s
-			# ── Position ─────────────────────────────────────
-			"x":           rng.randf_range(-CARD_W, _screen_w),
-			"y":           rng.randf_range(0.0, _screen_h),
-			"target_y":    rng.randf_range(0.0, _screen_h),
-			"card_scale":  rng.randf_range(0.3, 0.8),
-			"z_dir":       1 if rng.randf() > 0.5 else -1,
-			"z_speed":     rng.randf_range(0.012, 0.035),
-			"alpha":       1.0,
-			# ── Horizontal gust ──────────────────────────────
-			"base_speed":  rng.randf_range(38.0, 88.0),
-			"gust_freq":   rng.randf_range(0.12, 0.35),
-			"gust_phase":  rng.randf_range(0.0, TAU),
-			# ── Vertical turbulence (3 incommensurate sines) ─
-			"vy1_amp":     rng.randf_range(28.0, 60.0),
-			"vy1_freq":    rng.randf_range(0.18, 0.42),
-			"vy1_ph":      rng.randf_range(0.0, TAU),
-			"vy2_amp":     rng.randf_range(14.0, 30.0),
-			"vy2_freq":    rng.randf_range(0.53, 0.97),
-			"vy2_ph":      rng.randf_range(0.0, TAU),
-			"vy3_amp":     rng.randf_range(6.0,  16.0),
-			"vy3_freq":    rng.randf_range(1.31, 2.70),
-			"vy3_ph":      rng.randf_range(0.0, TAU),
-			# ── Rotation — angular-velocity model ────────────
-			"rot":         rng.randf_range(-PI, PI),
-			"rot_vel":     rng.randf_range(-1.2, 1.2),
-			"rot_drag":    rng.randf_range(0.20, 0.40),
-			"torque_amp":  rng.randf_range(0.4,  1.2),
-			"torque_freq": rng.randf_range(0.25, 0.70),
-			"torque_ph":   rng.randf_range(0.0, TAU),
-		})
+		_cards.append(_build_card_entry(i, rng))
+
+
+func _init_cards_async() -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	_cards.clear()
+	for i in CARD_COUNT:
+		_cards.append(_build_card_entry(i, rng))
+		await get_tree().process_frame
+
+
+func _build_card_entry(i: int, rng: RandomNumberGenerator) -> Dictionary:
+	return {
+		"tex_front":   _pick_front_tex(),
+		# ── Flip (continuous slow Y-axis rotation) ───────────
+		"primary_face": 1 if i < 2 else 0,
+		"flip_angle":  rng.randf_range(0.0, TAU),
+		"flip_speed":  rng.randf_range(0.25, 0.55),
+		# ── Position ─────────────────────────────────────
+		"x":           rng.randf_range(-CARD_W, _screen_w),
+		"y":           rng.randf_range(0.0, _screen_h),
+		"target_y":    rng.randf_range(0.0, _screen_h),
+		"card_scale":  rng.randf_range(0.3, 0.8),
+		"z_dir":       1 if rng.randf() > 0.5 else -1,
+		"z_speed":     rng.randf_range(0.012, 0.035),
+		"alpha":       1.0,
+		# ── Horizontal gust ──────────────────────────────
+		"base_speed":  rng.randf_range(38.0, 88.0),
+		"gust_freq":   rng.randf_range(0.12, 0.35),
+		"gust_phase":  rng.randf_range(0.0, TAU),
+		# ── Vertical turbulence (3 incommensurate sines) ─
+		"vy1_amp":     rng.randf_range(28.0, 60.0),
+		"vy1_freq":    rng.randf_range(0.18, 0.42),
+		"vy1_ph":      rng.randf_range(0.0, TAU),
+		"vy2_amp":     rng.randf_range(14.0, 30.0),
+		"vy2_freq":    rng.randf_range(0.53, 0.97),
+		"vy2_ph":      rng.randf_range(0.0, TAU),
+		"vy3_amp":     rng.randf_range(6.0,  16.0),
+		"vy3_freq":    rng.randf_range(1.31, 2.70),
+		"vy3_ph":      rng.randf_range(0.0, TAU),
+		# ── Rotation — angular-velocity model ────────────
+		"rot":         rng.randf_range(-PI, PI),
+		"rot_vel":     rng.randf_range(-1.2, 1.2),
+		"rot_drag":    rng.randf_range(0.20, 0.40),
+		"torque_amp":  rng.randf_range(0.4,  1.2),
+		"torque_freq": rng.randf_range(0.25, 0.70),
+		"torque_ph":   rng.randf_range(0.0, TAU),
+	}
 
 
 func _process(delta: float) -> void:

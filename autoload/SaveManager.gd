@@ -44,9 +44,47 @@ var quick_duel_protagonist_id: String = "nex"
 var quick_duel_protagonist_portrait: String = ""
 var quick_duel_tier_identities: Dictionary = {}
 
+var _bootstrapped := false
+
 func _ready() -> void:
 	_load_demo_config()
+
+
+func is_bootstrapped() -> bool:
+	return _bootstrapped
+
+
+func bootstrap() -> void:
+	if _bootstrapped:
+		return
+	UnionDatabase.bootstrap()
 	load_data()
+	_bootstrapped = true
+
+
+func bootstrap_step() -> bool:
+	if _bootstrapped:
+		return true
+	if not UnionDatabase.is_bootstrapped():
+		if UnionDatabase.bootstrap_step():
+			StartupLoadDebug.log("SaveManager.bootstrap_step: Union ready — loading save data")
+			load_data()
+			_bootstrapped = true
+			StartupLoadDebug.log("SaveManager.bootstrap_step: complete")
+			return true
+		return false
+	StartupLoadDebug.log("SaveManager.bootstrap_step: loading save data (Union already ready)")
+	load_data()
+	_bootstrapped = true
+	StartupLoadDebug.log("SaveManager.bootstrap_step: complete")
+	return true
+
+
+func bootstrap_async() -> void:
+	if _bootstrapped:
+		return
+	while not bootstrap_step():
+		await get_tree().process_frame
 
 func _load_demo_config() -> void:
 	if not FileAccess.file_exists(DEMO_CONFIG_PATH):
@@ -99,6 +137,9 @@ func show_deck_not_ready_overlay(parent: Node) -> void:
 		"OK")
 
 func get_setup_abort_return_scene() -> String:
+	if GameState.quick_duel_overlay_active:
+		GameState.open_quick_duel_overlay_on_menu = true
+		return "res://scenes/main_menu.tscn"
 	if GameState.quick_duel_active:
 		return "res://scenes/quick_duel.tscn"
 	if GameState.game_mode == GameState.GameMode.CAMPAIGN:

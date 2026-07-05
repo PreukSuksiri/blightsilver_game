@@ -33,6 +33,7 @@ func assert_not_null(val, msg: String) -> void:
 		printerr("  FAIL: %s — was null" % msg)
 
 func run_all_tests() -> void:
+	CardDatabase.bootstrap()
 	test_characters_loaded()
 	test_traps_loaded()
 	test_tech_loaded()

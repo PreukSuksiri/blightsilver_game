@@ -319,9 +319,12 @@ var void_pile_entries: Array = [[], []]
 # Special global flags
 # VN-driven battle outcome routing (set by VNPlayer after new_game(), persists across scene change)
 var open_campaign_gallery_on_menu: bool = false
+var open_quick_duel_overlay_on_menu: bool = false
+var entered_main_menu_from_splash: bool = false
 var post_battle_return_scene: String = ""
 var quick_duel_launch: bool = false
 var quick_duel_active: bool = false
+var quick_duel_overlay_active: bool = false
 var quick_duel_battle_tier: String = ""
 var quick_duel_reroll_previews: bool = false
 var quick_duel_pending_rewards: Array = []
@@ -1317,6 +1320,7 @@ func apply_tutorial_opponent_crystals() -> void:
 
 func abort_quick_duel_battle() -> void:
 	quick_duel_active = false
+	quick_duel_overlay_active = false
 	quick_duel_battle_tier = ""
 	quick_duel_pending_rewards.clear()
 	quick_duel_reveal_queue.clear()

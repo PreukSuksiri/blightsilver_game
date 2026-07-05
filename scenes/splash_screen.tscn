@@ -1,5 +1,6 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://scripts/SplashCoinFlip.gd" id="8"]
 [ext_resource type="Script"    path="res://scripts/SplashScreen.gd"                              id="1"]
 [ext_resource type="Texture2D" path="res://assets/textures/ui/backgrounds/bg_title_1.png"        id="2"]
 [ext_resource type="Texture2D" path="res://assets/textures/ui/decorations/ui_logo_quiet_eve.png" id="3"]
@@ -97,6 +98,32 @@ material = SubResource("SM_outline")
 texture = ExtResource("3")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="LoadingIndicator" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -72.0
+offset_right = -28.0
+offset_bottom = -28.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_constants/separation = 12
+alignment = 1
+mouse_filter = 2
+
+[node name="CoinFlip" type="TextureRect" parent="LoadingIndicator"]
+layout_mode = 2
+script = ExtResource("8")
+
+[node name="NowLoadingLabel" type="Label" parent="LoadingIndicator"]
+layout_mode = 2
+text = "Now Loading"
+vertical_alignment = 1
 
 [node name="FadeOverlay" type="ColorRect" parent="."]
 layout_mode = 1
