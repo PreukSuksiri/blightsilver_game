@@ -1118,7 +1118,7 @@ func _show_beat() -> void:
 		await gal_tw.finished
 		GameState.open_campaign_gallery_on_menu = true
 		queue_free()
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		MainMenuReturnLoader.return_to_main_menu()
 		return
 
 	if beat.get("go_to_quick_duel", false):
@@ -1129,7 +1129,9 @@ func _show_beat() -> void:
 		qd_tw.tween_property(_fade_rect, "color:a", 1.0, 1.0)
 		await qd_tw.finished
 		GlobalStatManager.on_first_touch("quick_duel_menu")
-		_finish()
+		GameState.open_quick_duel_overlay_on_menu = true
+		queue_free()
+		MainMenuReturnLoader.return_to_main_menu()
 		return
 
 	# ── Credits ──

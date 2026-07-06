@@ -104,11 +104,13 @@ var _union_rebuild_gen: int = 0
 var _trunk_list_rebuild_gen: int = 0
 var _deferring_initial_load: bool = false
 var _loading_blocker: Control = null
+var _loading_coin: SplashCoinFlip = null
 var _db_hover_hold_hint: CardHoverHoldHint = null
 var _db_drag_ghost: Control = null
 var _db_drag_ghost_active: bool = false
 
 const LOADING_BLOCKER_Z := 4096
+const LOADING_DIM_COLOR := Color(0.03, 0.05, 0.08, 0.36)
 
 # Union right-panel section
 var _union_section: VBoxContainer = null
@@ -2291,6 +2293,39 @@ func _show_loading_blocker() -> void:
 	_loading_blocker.z_index = LOADING_BLOCKER_Z
 	add_child(_loading_blocker)
 	_loading_blocker.move_to_front()
+
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = LOADING_DIM_COLOR
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_loading_blocker.add_child(dim)
+
+	var indicator := HBoxContainer.new()
+	indicator.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	indicator.anchor_left = 1.0
+	indicator.anchor_top = 1.0
+	indicator.anchor_right = 1.0
+	indicator.anchor_bottom = 1.0
+	indicator.offset_left = -280.0
+	indicator.offset_top = -72.0
+	indicator.offset_right = -28.0
+	indicator.offset_bottom = -28.0
+	indicator.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	indicator.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	indicator.add_theme_constant_override("separation", 12)
+	indicator.alignment = BoxContainer.ALIGNMENT_CENTER
+	indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_loading_blocker.add_child(indicator)
+
+	_loading_coin = SplashCoinFlip.new()
+	indicator.add_child(_loading_coin)
+
+	var loading_lbl := Label.new()
+	loading_lbl.text = "Now Loading"
+	loading_lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	loading_lbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	indicator.add_child(loading_lbl)
+
 	_loading_blocker.gui_input.connect(_on_loading_blocker_gui_input)
 	call_deferred("_grab_loading_blocker_focus")
 
@@ -2308,6 +2343,9 @@ func _on_loading_blocker_gui_input(event: InputEvent) -> void:
 
 
 func _hide_loading_blocker() -> void:
+	if _loading_coin != null and is_instance_valid(_loading_coin):
+		_loading_coin.stop()
+	_loading_coin = null
 	if _loading_blocker != null and is_instance_valid(_loading_blocker):
 		_loading_blocker.queue_free()
 	_loading_blocker = null

@@ -12,9 +12,6 @@ const CampaignGalleryScene  = preload("res://scenes/campaign_gallery.tscn")
 const DailyDungeonMapScene  = preload("res://scenes/daily_dungeon_map.tscn")
 const QuickDuelOverlayScene = preload("res://scenes/quick_duel_overlay.tscn")
 
-## Set false to use production quick_duel.tscn scene swap instead of main-menu overlay.
-const QUICK_DUEL_OVERLAY_EXPERIMENT := true
-
 @onready var local_2p_btn:      Button = $NewGameBtn
 @onready var deck_build_btn:    Button = $DeckBuilderBtn
 @onready var shop_btn:          Button = $ShopBtn
@@ -80,8 +77,30 @@ func _set_fade_overlay_black() -> void:
 		overlay.modulate = Color.WHITE
 
 
+func _fade_in_title(duration: float) -> void:
+	var tween := create_tween()
+	tween.tween_property(fade_overlay, "color:a", 0.0, duration) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await tween.finished
+
+
+func _finish_return_loading_screen() -> void:
+	StartupLoadDebug.log("MainMenu: finishing return loading screen")
+	if CheckerTransition.is_screen_covered():
+		await CheckerTransition.fade_in()
+	var drifting := get_node_or_null("DriftingCardsLayer") as DriftingCards
+	if drifting != null and not drifting.is_title_ready():
+		await drifting.title_ready
+	await MainMenuReturnLoader.finish_and_hide(SPLASH_FADE_IN_DUR)
+	await _fade_in_title(SPLASH_FADE_IN_DUR)
+
+
 func _ready() -> void:
 	StartupLoadDebug.log("MainMenu._ready: begin")
+	var from_splash := GameState.entered_main_menu_from_splash
+	var return_load := MainMenuReturnLoader.is_active() or GameState.returning_to_main_menu
+	GameState.returning_to_main_menu = false
+
 	if OS.has_feature("web"):
 		gui_input.connect(_on_web_audio_gate)
 	local_2p_btn.pressed.connect(_on_stack_primary_pressed)
@@ -106,17 +125,8 @@ func _ready() -> void:
 	BGMManager.play_context(BGMManager.CONTEXT_MAIN_MENU, 0.0, 0.0)
 	if deck_status_bg != null:
 		deck_status_bg.visible = false
-	if GameState.entered_main_menu_from_splash:
-		GameState.entered_main_menu_from_splash = false
+	if from_splash or return_load:
 		_set_fade_overlay_black()
-		StartupLoadDebug.log("MainMenu: fade in (%.1fs)" % SPLASH_FADE_IN_DUR)
-		var splash_fade := create_tween()
-		splash_fade.tween_property(fade_overlay, "color:a", 0.0, SPLASH_FADE_IN_DUR) \
-			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	else:
-		var tween := create_tween()
-		tween.tween_property(fade_overlay, "color:a", 0.0, MENU_FADE_IN_DUR) \
-			.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_setup_mailbox_icon_badge()
 	_refresh_inventory_badge()
 	MailboxManager.mailbox_changed.connect(_refresh_inventory_badge)
@@ -146,6 +156,15 @@ func _ready() -> void:
 	if has_node("TitleLogo"):
 		$TitleLogo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	call_deferred("_check_achievement_reward_mail_notice")
+
+	if return_load:
+		await _finish_return_loading_screen()
+	elif from_splash:
+		GameState.entered_main_menu_from_splash = false
+		StartupLoadDebug.log("MainMenu: fade in (%.1fs)" % SPLASH_FADE_IN_DUR)
+		await _fade_in_title(SPLASH_FADE_IN_DUR)
+	else:
+		await _fade_in_title(MENU_FADE_IN_DUR)
 	StartupLoadDebug.log("MainMenu._ready: complete — title screen interactive")
 
 
@@ -677,25 +696,8 @@ func _on_deck_builder() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
 	if get_node_or_null("DeckBuilderOverlay") != null:
 		return
-	var loading := MenuLoadingOverlay.new()
-	loading.name = "DeckBuilderLoadingOverlay"
-	loading.z_index = MENU_LOADING_Z
-	loading.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	loading.mouse_filter = Control.MOUSE_FILTER_STOP
-	add_child(loading)
-	loading.move_to_front()
-	await get_tree().process_frame
-	await get_tree().process_frame
 	var deck_builder: Control = DeckBuilderScene.instantiate()
-	var dismiss_loading := func() -> void:
-		if is_instance_valid(loading):
-			loading.queue_free()
-	if deck_builder.has_signal("initial_gallery_load_finished"):
-		deck_builder.initial_gallery_load_finished.connect(dismiss_loading, CONNECT_ONE_SHOT)
-	deck_builder.tree_exiting.connect(dismiss_loading, CONNECT_ONE_SHOT)
 	_open_menu_overlay(deck_builder, "DeckBuilderOverlay", _refresh_deck_status)
-	if is_instance_valid(loading):
-		loading.move_to_front()
 
 func _on_shop() -> void:
 	SFXManager.play(SFXManager.SFX_BTN)
@@ -771,10 +773,7 @@ func _on_stack_secondary_pressed() -> void:
 
 func _on_quick_duel() -> void:
 	GlobalStatManager.on_first_touch("quick_duel_menu")
-	if QUICK_DUEL_OVERLAY_EXPERIMENT:
-		_open_menu_overlay(QuickDuelOverlayScene.instantiate(), "QuickDuelOverlay")
-	else:
-		get_tree().change_scene_to_file("res://scenes/quick_duel.tscn")
+	_open_menu_overlay(QuickDuelOverlayScene.instantiate(), "QuickDuelOverlay")
 
 
 func _on_local_play_pressed() -> void:

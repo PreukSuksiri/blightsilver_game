@@ -23,9 +23,9 @@ func _ready() -> void:
 	panel.add_theme_stylebox_override("panel", GameDialog.make_panel_stylebox())
 	panel.set_anchors_preset(Control.PRESET_CENTER)
 	panel.offset_left   = -210
-	panel.offset_top    = -110
+	panel.offset_top    = -130
 	panel.offset_right  = 222
-	panel.offset_bottom = 110
+	panel.offset_bottom = 130
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(panel)
 
@@ -55,6 +55,25 @@ func _ready() -> void:
 		AudioManager.sfx_volume,
 		func(v: float) -> void: AudioManager.set_sfx_volume(v)
 	))
+
+	if DisplayManager.desktop_window_supported():
+		vbox.add_child(_make_section_label("Display"))
+		var borderless_row := HBoxContainer.new()
+		borderless_row.add_theme_constant_override("separation", 10)
+		var borderless_lbl := Label.new()
+		borderless_lbl.text = "Borderless"
+		borderless_lbl.custom_minimum_size.x = 110
+		borderless_lbl.add_theme_font_size_override("font_size", 12)
+		borderless_lbl.add_theme_color_override("font_color", Color(0.75, 0.85, 1.0))
+		borderless_row.add_child(borderless_lbl)
+		var borderless_chk := CheckBox.new()
+		borderless_chk.button_pressed = SaveManager.is_borderless_display()
+		borderless_chk.text = "Hide window frame (fullscreen)"
+		borderless_chk.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		borderless_chk.toggled.connect(func(on: bool) -> void:
+			SaveManager.set_borderless_display(on))
+		borderless_row.add_child(borderless_chk)
+		vbox.add_child(borderless_row)
 
 	if include_casual_mode:
 		var casual_row := HBoxContainer.new()
@@ -113,6 +132,14 @@ func _make_slider_row(label_text: String, initial: float, on_change: Callable) -
 		on_change.call(v))
 
 	return row
+
+
+func _make_section_label(text: String) -> Label:
+	var lbl := Label.new()
+	lbl.text = text
+	lbl.add_theme_font_size_override("font_size", 11)
+	lbl.add_theme_color_override("font_color", Color(0.45, 0.72, 1.0))
+	return lbl
 
 
 func _close() -> void:

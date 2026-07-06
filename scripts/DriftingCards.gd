@@ -16,9 +16,6 @@ const Z_MIN      := 0.22   # card is too far — off camera
 const Z_MAX      := 1.65   # card is too close — off camera
 
 const TEX_BACK      := "res://assets/textures/cards/sample/card_back.png"
-# Debug build: show card back on both faces (no full-card texture loads).
-# Set false before release to restore full-card art on the front face.
-const CARD_BACKS_ONLY := false
 
 var _tex_back:    Texture2D = null
 var _safe_paths:  Array[String] = []   # one entry per base card (safe art)
@@ -27,6 +24,9 @@ var _cards:       Array[Dictionary] = []
 var _time       := 0.0
 var _screen_w   := 1280.0
 var _screen_h   := 720.0
+var _title_ready := false
+
+signal title_ready
 
 static var _prewarm_cache: Dictionary = {}
 
@@ -36,8 +36,11 @@ var _prewarm_only := false
 # ─────────────────────────────────────────────────────────────
 ## Yields frames during heavy work so splash loading UI and cursor stay responsive.
 func run_prewarm_async(screen_size: Vector2) -> bool:
-	StartupLoadDebug.log("DriftingCards.prewarm: begin (%.0fx%.0f)" % [screen_size.x, screen_size.y])
-	if not _prewarm_cache.is_empty():
+	StartupLoadDebug.log(
+		"DriftingCards.prewarm: begin (%.0fx%.0f, mode=%s)"
+		% [screen_size.x, screen_size.y, DriftingCardsConfig.mode_name()]
+	)
+	if _prewarm_cache_matches_mode():
 		StartupLoadDebug.log("DriftingCards.prewarm: skipped — cache already warm")
 		return true
 	_screen_w = screen_size.x
@@ -49,7 +52,7 @@ func run_prewarm_async(screen_size: Vector2) -> bool:
 		return false
 	StartupLoadDebug.log("DriftingCards.prewarm: card back loaded")
 	await get_tree().process_frame
-	if not CARD_BACKS_ONLY:
+	if not DriftingCardsConfig.card_backs_only():
 		await _scan_front_textures_async()
 		StartupLoadDebug.log(
 			"DriftingCards.prewarm: scan done — %d safe / %d nsfw paths"
@@ -69,6 +72,7 @@ func run_prewarm_async(screen_size: Vector2) -> bool:
 
 func _store_prewarm_cache() -> void:
 	_prewarm_cache = {
+		"mode": DriftingCardsConfig.mode_name(),
 		"tex_back": _tex_back,
 		"safe_paths": _safe_paths.duplicate(),
 		"nsfw_paths": _nsfw_paths.duplicate(),
@@ -80,9 +84,15 @@ func _store_prewarm_cache() -> void:
 static func consume_prewarm() -> Dictionary:
 	if _prewarm_cache.is_empty():
 		return {}
-	var out: Dictionary = _prewarm_cache.duplicate(true)
-	_prewarm_cache.clear()
-	return out
+	if str(_prewarm_cache.get("mode", "")) != DriftingCardsConfig.mode_name():
+		_prewarm_cache.clear()
+		return {}
+	return _prewarm_cache.duplicate(true)
+
+
+static func _prewarm_cache_matches_mode() -> bool:
+	return not _prewarm_cache.is_empty() \
+		and str(_prewarm_cache.get("mode", "")) == DriftingCardsConfig.mode_name()
 
 
 static func clear_prewarm() -> void:
@@ -109,18 +119,54 @@ func _ready() -> void:
 
 	var cache: Dictionary = consume_prewarm()
 	if not cache.is_empty():
-		StartupLoadDebug.log("DriftingCards._ready: applying prewarm cache (%d cards)" % cache.get("cards", []).size())
+		StartupLoadDebug.log(
+			"DriftingCards._ready: applying prewarm cache (%d cards, mode=%s)"
+			% [cache.get("cards", []).size(), DriftingCardsConfig.mode_name()]
+		)
 		_apply_cache(cache)
 		_connect_save_signals()
 		set_process(true)
-		StartupLoadDebug.log("DriftingCards._ready: title animation running (from cache)")
+		_mark_title_ready("from cache")
 		return
 
-	StartupLoadDebug.log("DriftingCards._ready: no cache — sync init fallback")
-	_initialize_sync()
+	StartupLoadDebug.log("DriftingCards._ready: no cache — async init")
+	set_process(false)
+	_title_init_async()
+
+
+func is_title_ready() -> bool:
+	return _title_ready
+
+
+func _mark_title_ready(reason: String) -> void:
+	if _title_ready:
+		return
+	_title_ready = true
+	StartupLoadDebug.log("DriftingCards: title ready (%s)" % reason)
+	title_ready.emit()
+
+
+func _title_init_async() -> void:
+	await _initialize_async()
+	if not is_inside_tree():
+		return
 	_connect_save_signals()
 	set_process(true)
-	StartupLoadDebug.log("DriftingCards._ready: title animation running (sync init)")
+	_mark_title_ready("async init")
+
+
+func _initialize_async() -> void:
+	_tex_back = load(TEX_BACK) as Texture2D
+	if _tex_back == null:
+		push_warning("DriftingCards._initialize_async: card back texture missing")
+		return
+	if not DriftingCardsConfig.card_backs_only():
+		await _scan_front_textures_async()
+	await _init_cards_async()
+	for i in 150:
+		_tick(0.2)
+		if i % 5 == 0:
+			await get_tree().process_frame
 
 
 func _apply_cache(cache: Dictionary) -> void:
@@ -133,7 +179,7 @@ func _apply_cache(cache: Dictionary) -> void:
 
 func _initialize_sync() -> void:
 	_tex_back = load(TEX_BACK) as Texture2D
-	if not CARD_BACKS_ONLY:
+	if not DriftingCardsConfig.card_backs_only():
 		_scan_front_textures()
 	_init_cards()
 	for _i in 150:
@@ -244,7 +290,7 @@ func _append_card_paths(card_name: String) -> void:
 
 
 func _pick_front_tex() -> Texture2D:
-	if CARD_BACKS_ONLY:
+	if DriftingCardsConfig.card_backs_only():
 		return _tex_back
 	var pool: Array[String] = _nsfw_paths if SaveManager.nsfw_enabled else _safe_paths
 	if pool.is_empty():
@@ -258,14 +304,16 @@ func _pick_front_tex() -> Texture2D:
 
 
 func _on_nsfw_changed(_enabled: bool) -> void:
-	if not CARD_BACKS_ONLY:
-		_scan_front_textures()
+	if DriftingCardsConfig.card_backs_only():
+		return
+	_scan_front_textures()
 	for card: Dictionary in _cards:
 		card["tex_front"] = _pick_front_tex()
 
 func _on_demo_mode_changed(_enabled: bool) -> void:
-	if not CARD_BACKS_ONLY:
-		_scan_front_textures()
+	if DriftingCardsConfig.card_backs_only():
+		return
+	_scan_front_textures()
 	for card: Dictionary in _cards:
 		card["tex_front"] = _pick_front_tex()
 
@@ -401,10 +449,10 @@ func _draw() -> void:
 		return (a["card_scale"] as float) < (b["card_scale"] as float))
 	for card: Dictionary in sorted:
 		var flip_cos: float = cos(card["flip_angle"] as float)
-		# cos > 0 → primary face; cos < 0 → alternate face
-		var show_primary: bool = flip_cos >= 0.0
 		var tex: Texture2D = _tex_back
-		if not CARD_BACKS_ONLY:
+		if not DriftingCardsConfig.card_backs_only():
+			# cos > 0 → primary face; cos < 0 → alternate face
+			var show_primary: bool = flip_cos >= 0.0
 			var is_front: bool = show_primary == ((card["primary_face"] as int) == 1)
 			tex = (card["tex_front"] as Texture2D) if is_front else _tex_back
 		if tex == null:

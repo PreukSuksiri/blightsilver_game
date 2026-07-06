@@ -1335,9 +1335,7 @@ func _on_setting_action(action: String) -> void:
 	match action:
 		"save_exit":
 			ExplorationManager.save_session_now()
-			CheckerTransition.fade_out_to_battle(func() -> void:
-				get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
-				CheckerTransition.fade_in())
+			MainMenuReturnLoader.fade_out_to_main_menu()
 		"options":
 			_open_exploration_options_popup()
 
@@ -3638,8 +3636,7 @@ func _do_end_exploration() -> void:
 	ExplorationManager.end_session(true)
 	var dest: String = ExplorationManager.return_scene
 	CheckerTransition.fade_out_to_battle(func() -> void:
-		get_tree().change_scene_to_file(dest)
-		CheckerTransition.fade_in())
+		MainMenuReturnLoader.go_to_scene(dest))
 
 func _do_end_exploration_with_vn(vn_path: String) -> void:
 	if not ExplorationManager.is_session_active:
@@ -3662,8 +3659,7 @@ func _do_end_exploration_with_vn(vn_path: String) -> void:
 	add_child(vn)
 	vn.play_scene(vn_target, func() -> void:
 		CheckerTransition.fade_out_to_battle(func() -> void:
-			get_tree().change_scene_to_file(dest)
-			CheckerTransition.fade_in()),
+			MainMenuReturnLoader.go_to_scene(dest)),
 		true,
 		chapter_key)
 
@@ -3708,7 +3704,7 @@ func _show_no_session_error() -> void:
 	btn.text = "Return to Main Menu"
 	GameDialog.style_menu_button(btn)
 	btn.pressed.connect(func() -> void:
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		MainMenuReturnLoader.return_to_main_menu())
 	_choices_vbox.add_child(btn)
 	_content_panel.visible = true
 	_choices_vbox.visible = true

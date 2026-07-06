@@ -202,7 +202,7 @@ func _on_exit_to_main_menu() -> void:
 	if _is_walking:
 		return
 	DailyDungeonManager.exit_story_to_main_menu(_player_node_id)
-	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	MainMenuReturnLoader.return_to_main_menu()
 
 # ─────────────────────────────────────────────────────────────
 # Map canvas
@@ -900,7 +900,7 @@ func _check_pending_result() -> void:
 			if vow != "":
 				_play_vn_then_exit(vow)
 			else:
-				get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+				MainMenuReturnLoader.return_to_main_menu()
 
 	_show_result_banner(won, node_id, on_continue_extra)
 
@@ -983,7 +983,7 @@ func _play_vn_then_exit(vn_path: String) -> void:
 	get_tree().root.add_child(vn)
 	vn.play_scene(vn_path, func() -> void:
 		vn.queue_free()
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		MainMenuReturnLoader.return_to_main_menu())
 
 # ─────────────────────────────────────────────────────────────
 # Message dialog

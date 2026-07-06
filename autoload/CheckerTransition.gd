@@ -39,6 +39,9 @@ func fade_out_to_battle(on_black: Callable) -> void:
 
 ## Scene change helper — safe to call from nodes that queue_free() immediately after.
 func fade_out_to_scene(scene_path: String) -> void:
+	if MainMenuReturnLoader.is_main_menu_path(scene_path):
+		MainMenuReturnLoader.fade_out_to_main_menu()
+		return
 	fade_out_to_battle(get_tree().change_scene_to_file.bind(scene_path))
 
 ## True while checker tiles from fade_out_to_battle are still covering the screen.

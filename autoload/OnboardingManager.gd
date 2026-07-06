@@ -5,27 +5,55 @@ extends Node
 ## collection copies, initial credits, and unlocks the union mechanism.
 
 signal onboarding_applied()
+signal onboarding_settled
 
 const DeckData = preload("res://resources/DeckData.gd")
 const STARTING_DECK_PATH: String = "res://data/starting_deck.json"
 const STARTER_SOURCE: String = "Starter Deck"
 
+var _settled := false
+
+
+func is_settled() -> bool:
+	return _settled
+
+
+func wait_until_settled() -> void:
+	if _settled:
+		return
+	await onboarding_settled
+
+
+func _mark_settled() -> void:
+	if _settled:
+		return
+	_settled = true
+	onboarding_settled.emit()
+
 func _ready() -> void:
 	call_deferred("_run_onboarding_check")
 
 func _run_onboarding_check() -> void:
+	# Must load save data before checking decks — otherwise empty in-memory defaults
+	# look like a first-run and overwrite save_data.json (including tutorial skip).
+	await SaveManager.bootstrap_async()
+	if not is_inside_tree():
+		return
 	if SaveManager.decks.is_empty():
 		if SaveManager.onboarding_complete:
 			_recover_missing_decks()
 		else:
 			_apply_first_run_onboarding()
+		_mark_settled()
 		return
 	if SaveManager.onboarding_complete:
+		_mark_settled()
 		return
 	# Existing save with decks but no onboarding flag — legacy migration.
 	SaveManager.onboarding_complete = true
 	SaveManager.save_data()
 	print("[OnboardingManager] Existing save marked onboarded (no reset).")
+	_mark_settled()
 
 func _recover_missing_decks() -> void:
 	if not install_starter_deck(false, true):

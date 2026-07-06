@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://quick_duel_overlay_scene"]
 
-[ext_resource type="Script" path="res://scripts/QuickDuelOverlay.gd" id="1_quick_duel_overlay"]
+[ext_resource type="Script" path="res://scripts/QuickDuel.gd" id="1_quick_duel_overlay"]
 
 [node name="QuickDuelOverlay" type="Control"]
 layout_mode = 3

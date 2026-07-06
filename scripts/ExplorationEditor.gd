@@ -3684,7 +3684,7 @@ func _on_puzzles_pressed() -> void:
 	mgr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 func _on_back_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	MainMenuReturnLoader.return_to_main_menu()
 
 func _on_add_connection_pressed() -> void:
 	_add_connection_row(_prop_connections_vbox)

@@ -171,7 +171,7 @@ func _end_credits() -> void:
 	var tween := create_tween()
 	tween.tween_property(_fade, "color:a", 1.0, FADE_DURATION).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(func() -> void:
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		MainMenuReturnLoader.return_to_main_menu())
 
 func _build_shader_logo(vp_size: Vector2) -> void:
 	# Root container — horizontally centered, Y tracked by _logo_y

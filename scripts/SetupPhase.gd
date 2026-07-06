@@ -1179,7 +1179,7 @@ func _show_invalid_deck_abort_dialog() -> void:
 		body,
 		"OK",
 		func() -> void:
-			get_tree().change_scene_to_file(SaveManager.get_setup_abort_return_scene()))
+			MainMenuReturnLoader.go_to_scene(SaveManager.get_setup_abort_return_scene()))
 
 func _formation_bar_left_offset() -> float:
 	if current_setup_player != 0:

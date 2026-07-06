@@ -123,6 +123,15 @@ Main menu
 
 ### Prewarm / DriftingCards
 
+**Display mode:** edit `MODE` in [`resources/DriftingCardsConfig.gd`](../resources/DriftingCardsConfig.gd).
+
+| `MODE` | Behavior |
+|--------|----------|
+| `CARD_BACKS_ONLY` | Quick — card back on both faces; skips ~150 full-card path scan/load |
+| `FRONTS` | Normal — random full-card art on the front face while drifting |
+
+Prewarm cache is keyed by mode; changing `MODE` forces a fresh init.
+
 | Do | Don't |
 |----|--------|
 | Use hidden `_prewarm_only` host on splash | `add_child()` a visible `DriftingCards` on splash |
@@ -165,22 +174,35 @@ Main menu
 
 ---
 
-## Quick Duel overlay experiment
+## Quick Duel overlay
 
-Production Quick Duel remains [`scenes/quick_duel.tscn`](scenes/quick_duel.tscn) + [`scripts/QuickDuel.gd`](scripts/QuickDuel.gd) (unchanged).
-
-Experimental overlay fork:
+Quick Duel is a **main-menu overlay**, not a separate scene. Closing it uses `queue_free()` so the title screen (and DriftingCards) stay loaded.
 
 | Item | Location |
 |------|----------|
-| Overlay UI | [`scenes/quick_duel_overlay.tscn`](scenes/quick_duel_overlay.tscn), [`scripts/QuickDuelOverlay.gd`](scripts/QuickDuelOverlay.gd) |
-| Toggle | [`scripts/MainMenu.gd`](scripts/MainMenu.gd) → `QUICK_DUEL_OVERLAY_EXPERIMENT` |
+| Overlay UI | [`scenes/quick_duel_overlay.tscn`](scenes/quick_duel_overlay.tscn), [`scripts/QuickDuel.gd`](scripts/QuickDuel.gd) |
+| Open from menu | [`scripts/MainMenu.gd`](scripts/MainMenu.gd) → `_on_quick_duel()` |
 | Reopen after battle | `GameState.open_quick_duel_overlay_on_menu`, `GameState.quick_duel_overlay_active` |
 
-**Why it is faster:** closing the overlay calls `queue_free()` — main menu (and DriftingCards) stay loaded. Production path uses `change_scene_to_file(quick_duel.tscn)` which destroys and later reloads main menu.
+Legacy standalone scene (`scenes/quick_duel.tscn`) was removed — see `trash/scenes/`.
 
-**Enable experiment:** `QUICK_DUEL_OVERLAY_EXPERIMENT := true` in `MainMenu.gd`  
-**Revert to production:** `QUICK_DUEL_OVERLAY_EXPERIMENT := false`
+---
+
+## Return to main menu loading
+
+All returns to the title screen should use `MainMenuReturnLoader` (autoload):
+
+| API | Use when |
+|-----|----------|
+| `return_to_main_menu()` | Direct scene swap (lose screen, VN callback, exploration quit, etc.) |
+| `fade_out_to_main_menu()` | Checker fade-out then title (exploration save & exit) |
+| `go_to_scene(path)` | Variable destination — routes to loader when path is `main_menu.tscn` |
+
+`CheckerTransition.fade_out_to_scene(main_menu)` also routes through the loader.
+
+Flow: loader shows (black + coin + “Now Loading”) → main menu loads → `DriftingCards` finishes async init → loader fades out → title fades in.
+
+`DriftingCards` prewarm cache is kept across returns (not cleared on consume) so repeat visits are faster.
 
 ---
 

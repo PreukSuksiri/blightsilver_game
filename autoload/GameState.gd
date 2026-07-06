@@ -321,6 +321,7 @@ var void_pile_entries: Array = [[], []]
 var open_campaign_gallery_on_menu: bool = false
 var open_quick_duel_overlay_on_menu: bool = false
 var entered_main_menu_from_splash: bool = false
+var returning_to_main_menu: bool = false
 var post_battle_return_scene: String = ""
 var quick_duel_launch: bool = false
 var quick_duel_active: bool = false

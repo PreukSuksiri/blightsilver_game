@@ -163,10 +163,7 @@ var dungeon_session_kind: String = ""
 func _ready() -> void:
 	_load_modifier_catalog()
 	# State is populated by SaveManager.load_data() calling our load_from_dict().
-	# Seed the default playlist if none exists yet (first run).
-	if playlist.is_empty():
-		_seed_default_playlist()
-	_check_daily_reset()
+	# Daily reset runs there too — never call save_data() from _ready (pre-load race).
 
 # ─────────────────────────────────────────────────────────────
 # Layout loading
@@ -224,6 +221,12 @@ func save_layout(layout: Dictionary) -> void:
 # ─────────────────────────────────────────────────────────────
 # Daily reset
 # ─────────────────────────────────────────────────────────────
+
+func apply_daily_reset_after_load() -> void:
+	if playlist.is_empty():
+		_seed_default_playlist()
+	_check_daily_reset()
+
 
 func _check_daily_reset() -> void:
 	var today: String = _today_date_string()

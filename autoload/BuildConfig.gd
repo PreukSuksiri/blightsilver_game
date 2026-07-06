@@ -18,6 +18,12 @@ func battle_logs_enabled() -> bool:
 	return admin_tools_enabled()
 
 
+## Steam wishlist popup after battle wins (Quick Duel / exploration story).
+## Suppressed for now — flip to true when ready to show players.
+func wishlist_cta_enabled() -> bool:
+	return false
+
+
 func can_write_shipped_data() -> bool:
 	# res://data/* is writable when Play is launched from the Godot editor (F5).
 	# Exported builds cannot write res://; admin tools should not persist there anyway.

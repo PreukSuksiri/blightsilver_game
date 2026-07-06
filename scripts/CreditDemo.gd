@@ -189,7 +189,7 @@ func _end_credits() -> void:
 	var tween := create_tween()
 	tween.tween_property(_fade, "color:a", 1.0, FADE_DURATION).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(func() -> void:
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		MainMenuReturnLoader.return_to_main_menu())
 
 func _set_bgm_loop(player: AudioStreamPlayer) -> void:
 	var stream: AudioStreamMP3 = player.stream as AudioStreamMP3

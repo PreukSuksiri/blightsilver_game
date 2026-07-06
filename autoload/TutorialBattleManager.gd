@@ -272,14 +272,15 @@ func _end_tutorial_battle() -> void:
 		GameState.quick_duel_reroll_previews = true
 		return_scene = GameState.post_battle_return_scene.strip_edges()
 		if return_scene.is_empty():
-			return_scene = "res://scenes/quick_duel.tscn"
+			return_scene = "res://scenes/main_menu.tscn"
+			GameState.open_quick_duel_overlay_on_menu = true
 		GameState.post_battle_return_scene = ""
 	if return_scene != "":
 		CheckerTransition.fade_out_to_scene(return_scene)
 		return
 	if vn_win != "" and vn_win != "game_over":
 		VNPlayer.launch_overlay(vn_win, func() -> void:
-			get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+			MainMenuReturnLoader.return_to_main_menu())
 		return
 	CheckerTransition.fade_out_to_scene("res://scenes/main_menu.tscn")
 

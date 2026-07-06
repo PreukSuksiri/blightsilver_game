@@ -81,7 +81,7 @@ func _build_ui() -> void:
 	back_btn.add_theme_font_override("font", FontManager.make_font("primary", 400))
 	back_btn.add_theme_font_size_override("font_size", 14)
 	back_btn.pressed.connect(func() -> void:
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		MainMenuReturnLoader.return_to_main_menu())
 	title_hb.add_child(back_btn)
 
 	# ── Two-column config area ───────────────────────────────────────────────────

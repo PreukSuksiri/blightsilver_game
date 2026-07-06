@@ -176,7 +176,7 @@ static func add_union_materials_to_deck(
 	result["ok"] = not added.is_empty()
 	result["added"] = added
 	if added.is_empty() and result["message"].is_empty():
-		if missing_conds.is_empty():
+		if assigned.is_empty():
 			result["ok"] = true
 			result["message"] = "Union already achievable with current deck."
 		else:

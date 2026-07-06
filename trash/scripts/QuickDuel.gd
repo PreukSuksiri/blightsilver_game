@@ -1,9 +1,6 @@
 extends Control
-## Quick Duel overlay experiment — main-menu child; production scene is QuickDuel.gd.
+## Quick Duel — tutorial prompt, tier picker, and vault duel launcher.
 
-signal closed
-
-const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
 const DeckData = preload("res://resources/DeckData.gd")
 const CAPSULE_W := 280.0
 const CAPSULE_H := 440.0
@@ -44,6 +41,7 @@ func _ready() -> void:
 	VNPlayer.dismiss_overlay_if_present(get_tree())
 	BGMManager.play_context(BGMManager.CONTEXT_MAIN_MENU, 0.6, 0.6)
 	_build_shell()
+	CheckerTransition.fade_in()
 	if SaveManager.is_attack_tutorial_complete():
 		_show_picker()
 	else:
@@ -97,7 +95,8 @@ func _build_header() -> void:
 	var close_btn := Button.new()
 	MenuScreenHeader.style_close_button(close_btn)
 	MenuScreenHeader.anchor_close_top_right(close_btn)
-	close_btn.pressed.connect(_dismiss_overlay)
+	close_btn.pressed.connect(func() -> void:
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
 	add_child(close_btn)
 
 	var ach_btn := Button.new()
@@ -666,26 +665,10 @@ func launch_tutorial() -> void:
 
 
 func _prepare_quick_duel_tutorial_context() -> void:
-	_set_overlay_battle_return()
+	GameState.post_battle_return_scene = "res://scenes/quick_duel.tscn"
 	GameState.quick_duel_launch = true
 	GameState.quick_duel_active = false
 	_apply_protagonist_to_battle()
-
-
-func _set_overlay_battle_return() -> void:
-	GameState.post_battle_return_scene = MAIN_MENU_SCENE
-	GameState.open_quick_duel_overlay_on_menu = true
-	GameState.quick_duel_overlay_active = true
-
-
-func _dismiss_overlay() -> void:
-	GameState.quick_duel_overlay_active = false
-	closed.emit()
-	queue_free()
-
-
-func _exit_tree() -> void:
-	GameState.quick_duel_overlay_active = false
 
 
 func _on_tutorial_intro_overlay_finished() -> void:
@@ -755,7 +738,7 @@ func launch_vault_duel(tier: String) -> void:
 		_status_lbl.text = "Invalid opponent deck."
 		return
 
-	_set_overlay_battle_return()
+	GameState.post_battle_return_scene = "res://scenes/quick_duel.tscn"
 	GameState.quick_duel_launch = false
 	GameState.quick_duel_active = true
 	GameState.quick_duel_battle_tier = tier

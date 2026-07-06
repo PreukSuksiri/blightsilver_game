@@ -36,6 +36,7 @@ var title_cheat_moon_claimed: bool = false       # main-menu moon cheat (once pe
 var attack_tutorial_complete: bool = false
 var casual_mode: bool = true
 var casual_mode_tip_shown: bool = false
+var borderless_display: bool = false
 var quick_duel_tier_previews: Dictionary = {}   # tier -> vault entry_id
 var quick_duel_tier_rewards: Dictionary = {}  # tier -> Array of reward dicts
 var quick_duel_loss_streak: int = 0
@@ -45,6 +46,7 @@ var quick_duel_protagonist_portrait: String = ""
 var quick_duel_tier_identities: Dictionary = {}
 
 var _bootstrapped := false
+var _save_enabled := false
 
 func _ready() -> void:
 	_load_demo_config()
@@ -137,11 +139,9 @@ func show_deck_not_ready_overlay(parent: Node) -> void:
 		"OK")
 
 func get_setup_abort_return_scene() -> String:
-	if GameState.quick_duel_overlay_active:
+	if GameState.quick_duel_active or GameState.quick_duel_overlay_active:
 		GameState.open_quick_duel_overlay_on_menu = true
 		return "res://scenes/main_menu.tscn"
-	if GameState.quick_duel_active:
-		return "res://scenes/quick_duel.tscn"
 	if GameState.game_mode == GameState.GameMode.CAMPAIGN:
 		return "res://scenes/campaign_map.tscn"
 	if GameState.game_mode == GameState.GameMode.EXPLORATION \
@@ -419,6 +419,9 @@ func deck_name_exists(name: String) -> bool:
 
 # ── Persistence ───────────────────────────────────────────────
 func save_data() -> void:
+	if not _save_enabled:
+		StartupLoadDebug.log("SaveManager.save_data: ignored (save not loaded yet)")
+		return
 	var data: Dictionary = {
 		"active_deck_index": active_deck_index,
 		"decks": decks.map(func(d: DeckData) -> Dictionary: return d.to_dict()),
@@ -444,6 +447,7 @@ func save_data() -> void:
 		"attack_tutorial_complete":      attack_tutorial_complete,
 		"casual_mode":                   casual_mode,
 		"casual_mode_tip_shown":         casual_mode_tip_shown,
+		"borderless_display":            borderless_display,
 		"quick_duel_tier_previews":      quick_duel_tier_previews.duplicate(true),
 		"quick_duel_tier_rewards":       quick_duel_tier_rewards.duplicate(true),
 		"quick_duel_loss_streak":        quick_duel_loss_streak,
@@ -455,12 +459,15 @@ func save_data() -> void:
 	var progress: Dictionary = GlobalStatManager.to_save_dict()
 	data.merge(progress)
 	data.merge(AchievementManager.to_save_dict())
+	# Re-apply after merges so tutorial flag cannot be overwritten by stat payloads.
+	data["attack_tutorial_complete"] = attack_tutorial_complete
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
 		file.store_string(JSON.stringify(data, "\t"))
 		file.close()
 
 func load_data() -> void:
+	_save_enabled = true
 	if not FileAccess.file_exists(SAVE_PATH):
 		return
 	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
@@ -551,9 +558,11 @@ func load_data() -> void:
 	onboarding_complete = bool(parsed.get("onboarding_complete", false))
 	title_cheat_apartment_claimed = bool(parsed.get("title_cheat_apartment_claimed", false))
 	title_cheat_moon_claimed = bool(parsed.get("title_cheat_moon_claimed", false))
-	attack_tutorial_complete = bool(parsed.get("attack_tutorial_complete", false))
+	attack_tutorial_complete = bool(parsed.get("attack_tutorial_complete", false)) \
+		or bool(parsed.get("quick_duel_tutorial_dismissed", false))
 	casual_mode = bool(parsed.get("casual_mode", true))
 	casual_mode_tip_shown = bool(parsed.get("casual_mode_tip_shown", false))
+	borderless_display = bool(parsed.get("borderless_display", false))
 	quick_duel_loss_streak = int(parsed.get("quick_duel_loss_streak", 0))
 	wishlist_cta_shown = bool(parsed.get("wishlist_cta_shown", false))
 	quick_duel_protagonist_id = ProtagonistVault.normalize_id(
@@ -586,6 +595,8 @@ func load_data() -> void:
 	if RewardGranter.reconcile_claimed_union_formula_rewards():
 		save_data()
 	_migrate_chapter_arc_from_legacy()
+	DisplayManager.apply_saved_setting()
+	DailyDungeonManager.apply_daily_reset_after_load()
 
 # ─────────────────────────────────────────────────────────────
 # Campaign gallery VN beat checkpoints (pre-exploration progress)
@@ -642,6 +653,12 @@ func set_attack_tutorial_complete(enabled: bool) -> void:
 func mark_attack_tutorial_complete() -> void:
 	set_attack_tutorial_complete(true)
 
+
+## Quick Duel "No — Skip" — same flag + path as finishing the tutorial battle.
+func skip_attack_tutorial_prompt() -> void:
+	mark_attack_tutorial_complete()
+
+
 func is_attack_tutorial_complete() -> bool:
 	return attack_tutorial_complete
 
@@ -678,6 +695,16 @@ func mark_casual_mode_tip_shown() -> void:
 	if casual_mode_tip_shown:
 		return
 	casual_mode_tip_shown = true
+	save_data()
+
+func is_borderless_display() -> bool:
+	return borderless_display
+
+func set_borderless_display(enabled: bool) -> void:
+	if borderless_display == enabled:
+		return
+	borderless_display = enabled
+	DisplayManager.apply_borderless(enabled)
 	save_data()
 
 func get_quick_duel_preview(tier: String) -> String:

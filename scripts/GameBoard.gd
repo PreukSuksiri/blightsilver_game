@@ -9838,7 +9838,7 @@ func _on_game_over(winner: int) -> void:
 			lose_dest = "res://scenes/main_menu.tscn"
 		var lose_cb := func() -> void:
 			_on_quick_duel_tutorial_post_vn(lose_dest)
-			get_tree().change_scene_to_file(lose_dest)
+			MainMenuReturnLoader.go_to_scene(lose_dest)
 		VNPlayer.launch_overlay(vn_lose, lose_cb)
 		return
 	if player_won and vn_win != "" and vn_win != "game_over":
@@ -10109,9 +10109,8 @@ func _handle_quick_duel_win_rewards() -> void:
 	GameState.quick_duel_battle_tier = ""
 
 func _on_quick_duel_tutorial_post_vn(dest: String) -> void:
-	var from_overlay: bool = dest == "res://scenes/main_menu.tscn" \
-			and GameState.open_quick_duel_overlay_on_menu
-	if dest != "res://scenes/quick_duel.tscn" and not from_overlay:
+	if dest != "res://scenes/main_menu.tscn" \
+			or not GameState.open_quick_duel_overlay_on_menu:
 		return
 	SaveManager.mark_attack_tutorial_complete()
 	GameState.quick_duel_reroll_previews = true
@@ -10537,9 +10536,7 @@ func _show_endgame_screen(winner: int) -> void:
 		dest = ExplorationManager.EXPLORATION_PLAYER_SCENE
 	elif mode == GameState.GameMode.VS_AI and GameState.post_battle_return_scene != "":
 		dest = GameState.post_battle_return_scene
-		if dest == "res://scenes/quick_duel.tscn":
-			GameState.quick_duel_reroll_previews = true
-		elif dest == "res://scenes/main_menu.tscn" and GameState.quick_duel_overlay_active:
+		if dest == "res://scenes/main_menu.tscn" and GameState.open_quick_duel_overlay_on_menu:
 			GameState.quick_duel_reroll_previews = true
 		GameState.post_battle_return_scene = ""
 	else:
@@ -10683,6 +10680,8 @@ func _queue_endgame_navigation(nav: Dictionary) -> void:
 
 
 func _should_show_wishlist_cta() -> bool:
+	if not BuildConfig.wishlist_cta_enabled():
+		return false
 	if SaveManager.is_wishlist_cta_shown():
 		return false
 	return _wishlist_cta_win_eligible or GameState.pending_wishlist_cta
@@ -10701,8 +10700,6 @@ func _compute_wishlist_cta_win_eligible(winner: int) -> bool:
 	if mode != GameState.GameMode.VS_AI:
 		return false
 	if GameState.quick_duel_active:
-		return true
-	if GameState.post_battle_return_scene == "res://scenes/quick_duel.tscn":
 		return true
 	# Story battles launched from exploration VN (e.g. surveillance room spot battles).
 	if GameState.vn_launched_from_exploration and ExplorationManager.is_session_active:
@@ -10756,7 +10753,7 @@ func _run_pending_endgame_navigation() -> void:
 			var scene_dest: String = str(nav.get("dest", "res://scenes/main_menu.tscn"))
 			_on_quick_duel_tutorial_post_vn(scene_dest)
 			_clear_endgame_black_backdrop()
-			get_tree().change_scene_to_file(scene_dest)
+			MainMenuReturnLoader.go_to_scene(scene_dest)
 		"vn":
 			_stop_battle_music()
 			var vn_dest: String = str(nav.get("dest", "res://scenes/main_menu.tscn"))
@@ -10764,12 +10761,12 @@ func _run_pending_endgame_navigation() -> void:
 			if vn_path.is_empty():
 				_on_quick_duel_tutorial_post_vn(vn_dest)
 				_clear_endgame_black_backdrop()
-				get_tree().change_scene_to_file(vn_dest)
+				MainMenuReturnLoader.go_to_scene(vn_dest)
 				return
 			var cb := func() -> void:
 				_on_quick_duel_tutorial_post_vn(vn_dest)
 				_clear_endgame_black_backdrop()
-				get_tree().change_scene_to_file(vn_dest)
+				MainMenuReturnLoader.go_to_scene(vn_dest)
 			VNPlayer.launch_overlay(vn_path, cb)
 		"exploration_resume":
 			_stop_battle_music()
@@ -10777,7 +10774,7 @@ func _run_pending_endgame_navigation() -> void:
 			if not ExplorationManager.resume_from_last_save_after_duel_loss():
 				ExplorationManager.quit_to_title_after_duel_loss()
 				_clear_endgame_black_backdrop()
-				get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+				MainMenuReturnLoader.return_to_main_menu()
 				return
 			BGMManager.stop(0.5)
 			_clear_endgame_black_backdrop()
@@ -10787,7 +10784,7 @@ func _run_pending_endgame_navigation() -> void:
 			GameState.vn_launched_from_exploration = false
 			ExplorationManager.quit_to_title_after_duel_loss()
 			_clear_endgame_black_backdrop()
-			get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+			MainMenuReturnLoader.return_to_main_menu()
 
 # ─────────────────────────────────────────────────────────────
 # Session log — lightweight file logging for VS_AI / HOT_SEAT
