@@ -31,6 +31,7 @@ func reload() -> void:
 		var raw: Variant = (parsed as Dictionary).get("entries", [])
 		if raw is Array:
 			_entries = (raw as Array).duplicate(true)
+	_validate_entries_demo_scope()
 
 
 func get_entries() -> Array:
@@ -276,8 +277,6 @@ func get_entries_by_tag(tag: String) -> Array:
 
 
 func is_entry_demo_safe(entry: Dictionary) -> bool:
-	if not SaveManager.demo_mode:
-		return true
 	var deck_raw: Variant = entry.get("deck", {})
 	if not deck_raw is Dictionary:
 		return false
@@ -295,10 +294,28 @@ func is_entry_demo_safe(entry: Dictionary) -> bool:
 		var tc: TechCardData = CardDatabase.get_tech(ename)
 		if tc == null or not tc.include_in_demo:
 			return false
+	var featured: String = str(entry.get("featured_union", "")).strip_edges()
+	if not featured.is_empty():
+		var fu: UnionData = UnionDatabase.get_union(featured)
+		if fu == null or not fu.include_in_demo:
+			return false
 	return true
 
 
-func pick_random_entry_for_tags(tags: Array, demo_only: bool = false) -> Dictionary:
+func _validate_entries_demo_scope() -> void:
+	for e: Variant in _entries:
+		if not e is Dictionary:
+			continue
+		var entry: Dictionary = e as Dictionary
+		if is_entry_demo_safe(entry):
+			continue
+		push_warning(
+			"AIDeckVault: entry '%s' contains non-demo cards or featured union"
+			% str(entry.get("id", "")).strip_edges()
+		)
+
+
+func pick_random_entry_for_tags(tags: Array, demo_only: bool = true) -> Dictionary:
 	var candidates: Array = []
 	var seen: Dictionary = {}
 	for tag: Variant in tags:

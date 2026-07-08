@@ -275,10 +275,10 @@ func _load_characters() -> void:
 			"None",
 			CharacterData.Rarity.UNCOMMON, true],
 
-		["Dark Tengu", CharacterData.Affinity.CHAOS, 25, 25, 250,
+		["Dark Tengu", CharacterData.Affinity.CHAOS, 30, 30, 250,
 			CharacterData.AbilityType.SELF_DEBUFF_ON_ATTACK_AND_DEFEND,
 			{"atk": 5, "def": 5},
-			"-5 ATK once it successfully attacked. -5 DEF once it successfully defended.",
+			"-10 ATK once it successfully attacked. -10 DEF once it successfully defended.",
 			CharacterData.Rarity.COMMON],
 
 		["Death Cobra", CharacterData.Affinity.NATURE, 85, 50, 900,
@@ -290,13 +290,13 @@ func _load_characters() -> void:
 		["Death Knight", CharacterData.Affinity.CHAOS, 65, 65, 850,
 			CharacterData.AbilityType.BOOST_PER_TYPED_CARD_ON_FIELD,
 			{"atk_bonus": 5, "def_bonus": 0, "affinity": CharacterData.Affinity.CHAOS},
-			"+5 ATK per Chaos unit on your side",
+			"+5 ATK per Chaos unit on your side. +5 DEF per Chaos unit in your void.",
 			CharacterData.Rarity.RARE],
 
-		["Demon Spawn", CharacterData.Affinity.CHAOS, 40, 30, 400,
+		["Demon Spawn", CharacterData.Affinity.CHAOS, 40, 35, 400,
 			CharacterData.AbilityType.NONE,
 			{},
-			"None",
+			"Destroy this card in Reckoning with Divine units.",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Doom Wisp", CharacterData.Affinity.CHAOS, 15, 15, 100,
@@ -434,7 +434,7 @@ func _load_characters() -> void:
 		["Grave Worm", CharacterData.Affinity.CHAOS, 15, 30, 250,
 			CharacterData.AbilityType.OPPONENT_EXTRA_CRYSTAL_LOSS,
 			{"amount": 20},
-			"Each time foe loses Crystal: foe loses 20 more Crystals",
+			"Each time foe loses Crystal: foe loses 200 more Crystals",
 			CharacterData.Rarity.UNCOMMON],
 
 		["Green Mage", CharacterData.Affinity.ARCANE, 15, 15, 400,
@@ -489,7 +489,7 @@ func _load_characters() -> void:
 		["Immortal Vampire", CharacterData.Affinity.CHAOS, 30, 80, 1200,
 			CharacterData.AbilityType.DESTROY_SELF_VS_DIVINE_BOTH,
 			{"atk_bonus": 50, "def_bonus": 0, "affinity": CharacterData.Affinity.CHAOS},
-			"+50 ATK for each other exposed Chaos card on your side. In Reckoning with Divine, destroy this card.",
+			"+30 ATK for each other exposed Chaos card on your side. In Reckoning with Divine, destroy this card.",
 			CharacterData.Rarity.LEGENDARY],
 
 		["Jacob the Ski Mask", CharacterData.Affinity.CHAOS, 15, 20, 350,
@@ -737,7 +737,7 @@ func _load_characters() -> void:
 		["Nimrod the Wonder Seeker", CharacterData.Affinity.COSMIC, 65, 50, 720,
 			CharacterData.AbilityType.TURN_END_REVEAL_OPPONENT_CELLS_ONCE,
 			{"count": 2},
-			"Once, at this turn’s end, reveal 2 foe’s cell.",
+			"Once, at this turn’s end, reveal 2 foe’s cell and 1 of your cell.",
 			CharacterData.Rarity.RARE],
 
 		["Nuki the Tanuki", CharacterData.Affinity.NATURE, 10, 10, 100,
@@ -768,7 +768,7 @@ func _load_characters() -> void:
 		["Parom the Smuggler", CharacterData.Affinity.COSMIC, 30, 20, 300,
 			CharacterData.AbilityType.CRYSTAL_GAIN_ON_OPP_REVEAL,
 			{"amount": 40},
-			"Each time foe's cell got revealed by a card's ability: gain 40 Crystals.",
+			"Each time foe’s cell got revealed by a card’s ability: gain 40 Crystals.",
 			CharacterData.Rarity.UNCOMMON,
 			true],
 
@@ -895,7 +895,7 @@ func _load_characters() -> void:
 		["Skeleton Grappler", CharacterData.Affinity.CHAOS, 20, 5, 150,
 			CharacterData.AbilityType.LOCK_ATTACKER_ON_DEFEND,
 			{},
-			"After Reckoning: that foe's unit cannot attack until foe's turn ends",
+			"After Reckoning: that foe’s unit cannot attack until foe’s turn ends",
 			CharacterData.Rarity.COMMON],
 
 		["Skeleton Lancer", CharacterData.Affinity.CHAOS, 45, 5, 300,
@@ -1064,7 +1064,7 @@ func _load_characters() -> void:
 					CharacterData.Affinity.BIO,
 				],
 			},
-			"Once, if it's going to be destroyed by Anima or Bio card, it's not destroyed.",
+			"Once, if it’s going to be destroyed by Anima or Bio card, it’s not destroyed.",
 			CharacterData.Rarity.COMMON],
 
 		["Water Elemental", CharacterData.Affinity.ARCANE, 25, 35, 380,
@@ -1128,7 +1128,7 @@ func _load_characters() -> void:
 			"+10 ATK permanently if it destroyed a unit. This bonus does not exceed 30",
 			CharacterData.Rarity.UNCOMMON],
 
-		["Death Stag", CharacterData.Affinity.NATURE, 45, 40, 400,
+		["Death Stag", CharacterData.Affinity.NATURE, 45, 30, 400,
 			CharacterData.AbilityType.NONE, {}, "No ability.",
 			CharacterData.Rarity.UNCOMMON],
 
@@ -1218,7 +1218,7 @@ func _load_traps() -> void:
 
 		["Alarm", 0, TrapData.TrapEffectType.FIELD_BOOST_AFFINITY_DEF,
 			{"affinity": CharacterData.Affinity.ANIMA, "atk": 10, "def": 10},
-			"Until your turn ends, All your Anima monster gain +10 ATK&DEF in Reckoning",
+			"Until your turn ends, All your Anima units gain +10 ATK&DEF in Reckoning",
 			CharacterData.Rarity.COMMON,
 			true],
 

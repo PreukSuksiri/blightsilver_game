@@ -1,0 +1,148 @@
+{
+	"removed_entry": {
+		"deck": {
+			"characters": [
+				"Space Boy",
+				"Satellite Cannon",
+				"Echo Bringer",
+				"Scout Probe",
+				"Mars Drill",
+				"Methanomancer",
+				"Moon Rover",
+				"Miner Probe",
+				"Striker Comet",
+				"Laser Walker"
+			],
+			"deck_name": "Hard / Cos - Dreadnought",
+			"formations": [
+				{
+					"name": "Default Formation",
+					"placements": [
+						{
+							"c": 2.0,
+							"name": "Space Boy",
+							"r": 0.0,
+							"type": "character"
+						},
+						{
+							"c": 3.0,
+							"name": "Echo Bringer",
+							"r": 1.0,
+							"type": "character"
+						},
+						{
+							"c": 1.0,
+							"name": "Satellite Cannon",
+							"r": 1.0,
+							"type": "character"
+						},
+						{
+							"c": 0.0,
+							"name": "Mars Drill",
+							"r": 2.0,
+							"type": "character"
+						},
+						{
+							"c": 4.0,
+							"name": "Scout Probe",
+							"r": 2.0,
+							"type": "character"
+						},
+						{
+							"c": 3.0,
+							"name": "Methanomancer",
+							"r": 3.0,
+							"type": "character"
+						},
+						{
+							"c": 2.0,
+							"name": "Moon Rover",
+							"r": 4.0,
+							"type": "character"
+						},
+						{
+							"c": 1.0,
+							"name": "Miner Probe",
+							"r": 2.0,
+							"type": "character"
+						},
+						{
+							"c": 2.0,
+							"name": "Explosive Barrels",
+							"r": 2.0,
+							"type": "trap"
+						},
+						{
+							"c": 2.0,
+							"name": "Striker Comet",
+							"r": 3.0,
+							"type": "character"
+						},
+						{
+							"c": 1.0,
+							"name": "Laser Walker",
+							"r": 3.0,
+							"type": "character"
+						},
+						{
+							"c": 2.0,
+							"name": "Striker Comet",
+							"r": 1.0,
+							"type": "character"
+						},
+						{
+							"c": 4.0,
+							"name": "Pepper Spray",
+							"r": 4.0,
+							"type": "trap"
+						},
+						{
+							"c": 4.0,
+							"name": "Self-destruct",
+							"r": 0.0,
+							"type": "trap"
+						},
+						{
+							"c": 0.0,
+							"name": "Trap Hole",
+							"r": 0.0,
+							"type": "trap"
+						},
+						{
+							"c": 0.0,
+							"name": "Street Joke",
+							"r": 4.0,
+							"type": "trap"
+						},
+						{
+							"c": 4.0,
+							"name": "Cursed Reflection",
+							"r": 1.0,
+							"type": "trap"
+						}
+					]
+				}
+			],
+			"techs": [
+				"Spy",
+				"Tease",
+				"Radar"
+			],
+			"traps": [
+				"Explosive Barrels",
+				"Pepper Spray",
+				"Self-destruct",
+				"Trap Hole",
+				"Street Joke",
+				"Cursed Reflection"
+			]
+		},
+		"featured_union": "Helios the Prideful Fortress",
+		"featured_unit": "",
+		"id": "hard_cos_dreadnought",
+		"label": "Hard / Cos - Dreadnought",
+		"tags": [
+			"hard"
+		]
+	}
+}

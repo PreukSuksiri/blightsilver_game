@@ -398,48 +398,48 @@ func _load_unions() -> void:
 
 	_add("Cloud Elemental", A.ARCANE, 65, 65, 1000, R.RARE,
 		AB.ONE_USE_SURVIVE_DESTRUCTION, {}, "Once, this card is not destroyed",
-		"Once, this card is not destroyed",
+		"Once, this card is ???",
 		"Fire Elemental + Water Elemental + 1000 cost",
-		"Fire Elemental + Water Elemental + 1000 cost",
+		"??? + ??? + 1000 cost",
 		_z([[0,2], [1,2], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
 		_conds([{"card_name": "Fire Elemental"}, {"card_name": "Water Elemental"}], 8))
 
 	_add("Diamond Elemental", A.ARCANE, 60, 100, 1000, R.RARE,
 		AB.NONE, {}, "None", "None",
 		"Fire Elemental + Earth Elemental + 1000 cost",
-		"Fire Elemental + Earth Elemental + 1000 cost",
+		"??? + ??? + 1000 cost",
 		_z([[0,1], [0,3], [1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,2]]),
 		_conds([{"card_name": "Fire Elemental"}, {"card_name": "Earth Elemental"}], 9))
 
 	_add("Ice Elemental", A.ARCANE, 80, 50, 1000, R.RARE,
 		AB.LOCK_TARGET_ON_ATTACK, {}, "Card that battles this card cannot perform attack until the end of their next turn.",
-		"Card that battles this card cannot perform attack until the end of their next turn.",
+		"Card that battles this card cannot ??? until the end of their next turn.",
 		"Water Elemental + Wind Elemental + 1000 cost",
-		"Water Elemental + Wind Elemental + 1000 cost",
+		"??? + ??? + 1000 cost",
 		_z([[1,1], [1,2], [1,3], [2,2], [3,1], [3,2], [3,3]]),
 		_conds([{"card_name": "Water Elemental"}, {"card_name": "Wind Elemental"}], 7))
 
 	_add("Sand Elemental", A.ARCANE, 55, 55, 1000, R.RARE,
 		AB.ATK_DEF_BONUS_VS_NON_AFFINITY, {"affinity": A.ARCANE, "atk": 50, "def": 50}, "+50 ATK&DEF vs Non-Arcane cards",
-		"+50 ATK&DEF vs Non-Arcane cards",
+		"+??? vs Non-Arcane cards",
 		"Wind Elemental + Earth Elemental + 1000 cost",
-		"Wind Elemental + Earth Elemental + 1000 cost",
+		"??? + ??? + 1000 cost",
 		_z([[1,1], [1,2], [1,3], [2,1], [2,2], [2,3], [3,1], [3,2], [3,3]]),
 		_conds([{"card_name": "Wind Elemental"}, {"card_name": "Earth Elemental"}], 9))
 
 	_add("Thunder Elemental", A.ARCANE, 90, 55, 1000, R.RARE,
 		AB.REVEAL_ON_WIN, {}, "After a successful attack, reveal 1 foe’s card",
-		"After a successful attack, reveal 1 foe’s card",
+		"After a successful attack, ???",
 		"Fire Elemental + Wind Elemental + 1000 cost",
-		"Fire Elemental + Wind Elemental + 1000 cost",
+		"??? + ??? + 1000 cost",
 		_z([[0,3], [1,2], [1,3], [2,2], [3,1], [3,2], [4,1]]),
 		_conds([{"card_name": "Fire Elemental"}, {"card_name": "Wind Elemental"}], 7))
 
 	_add("Wood Elemental", A.ARCANE, 65, 85, 1000, R.RARE,
 		AB.PERM_DEF_ON_FOE_TURN_END, {"def": 5}, "At the end of each foe’s turn, +5 DEF permanently.",
-		"At the end of each foe’s turn, +5 DEF permanently.",
+		"At the end of each foe’s turn, ???",
 		"Water Elemental + Earth Elemental + 1000 cost",
-		"Water Elemental + Earth Elemental + 1000 cost",
+		"??? + ??? + 1000 cost",
 		_z([[2,1], [2,2], [2,3], [3,1], [3,2], [3,3], [4,1], [4,2], [4,3]]),
 		_conds([{"card_name": "Water Elemental"}, {"card_name": "Earth Elemental"}], 9))
 

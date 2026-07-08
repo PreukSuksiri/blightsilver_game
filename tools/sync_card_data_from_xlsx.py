@@ -72,6 +72,11 @@ RARITY = {
 }
 
 
+def is_demo_card(card: dict) -> bool:
+    demo = card.get("Demo")
+    return demo is not None and str(demo).strip().lower() == "yes"
+
+
 def load_workbook():
     # data_only=False keeps COUNTIF header formulas readable; card rows store plain "Yes"/None.
     return openpyxl.load_workbook(XLSX, data_only=False)
@@ -322,6 +327,8 @@ def conds_to_gd(conds: list[dict], zone_size: int) -> str:
 def sync_characters(text: str, units: list[dict]) -> tuple[str, int]:
     updated = 0
     for card in units:
+        if not is_demo_card(card):
+            continue
         name = gd_name(card["_name"])
         aff = AFFINITY.get(str(card.get("Affinity", "")).strip(), None)
         if not aff:
@@ -359,6 +366,8 @@ def sync_characters(text: str, units: list[dict]) -> tuple[str, int]:
 def sync_traps(text: str, traps: list[dict]) -> tuple[str, int]:
     updated = 0
     for card in traps:
+        if not is_demo_card(card):
+            continue
         name = gd_name(card["_name"])
         cost = int(card.get("Cost") or 0)
         pat = rf'(\["{re.escape(name)}",\s*)\d+(\,\s*TrapData)'
@@ -385,6 +394,8 @@ def sync_traps(text: str, traps: list[dict]) -> tuple[str, int]:
 def sync_tech(text: str, techs: list[dict]) -> tuple[str, int]:
     updated = 0
     for card in techs:
+        if not is_demo_card(card):
+            continue
         name = gd_name(card["_name"])
         cost = int(card.get("Cost") or 0)
         pat = rf'(\["{re.escape(name)}",\s*)\d+(\,\s*TechCardData)'
@@ -411,6 +422,8 @@ def sync_tech(text: str, techs: list[dict]) -> tuple[str, int]:
 def sync_unions(text: str, unions: list[dict]) -> tuple[str, int]:
     updated = 0
     for card in unions:
+        if not is_demo_card(card):
+            continue
         name = gd_name(card["_name"])
         aff = AFFINITY.get(str(card.get("Affinity", "")).strip())
         if not aff:
@@ -645,8 +658,8 @@ def main():
 
     demo_count = write_demo_flags(wb)
     pack_updates, pack_added, pack_removed = sync_custom_packs(wb)
-    print(f"CardDatabase: {u1} character stat/desc touches, {u2} traps, {u3} tech")
-    print(f"UnionDatabase: {u4} union touches")
+    print(f"CardDatabase: {u1} character stat/desc touches, {u2} traps, {u3} tech (DEMO=Yes only)")
+    print(f"UnionDatabase: {u4} union touches (DEMO=Yes only)")
     print(f"demo_flags.json: {demo_count} demo=yes entries")
     print(
         f"custom_packs.json: {pack_updates} pack(s) updated "
